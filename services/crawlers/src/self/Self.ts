@@ -3,35 +3,28 @@ import '@dish/common'
 import { sentryException } from '@dish/common'
 import {
   RESTAURANT_WEIGHTS,
-  RestaurantTag,
-  RestaurantTagWithID,
   RestaurantWithId,
   Scrape,
   ScrapeData,
-  Tag,
   deleteAllBy,
   menuItemUpsert,
   restaurantFindBatch,
   restaurantFindOne,
   restaurantFindOneWithTags,
-  restaurantGetAllPossibleTags,
   restaurantGetLatestScrape,
   restaurantUpdate,
   restaurantUpsertManyTags,
-  restaurantUpsertOrphanTags,
   scrapeGetData,
-  tagFindCountries,
-  tagSlug,
 } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
 import _ from 'lodash'
 import moment from 'moment'
-import Sentiment from 'sentiment'
 
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
-import { sanfran, sql } from '../utils'
+import { sanfran } from '../utils'
+import { Tagging } from './Tagging'
 
 const PER_PAGE = 50
 
@@ -47,12 +40,8 @@ export class Self extends WorkerJob {
   tripadvisor!: Scrape
   restaurant!: RestaurantWithId
   ratings!: { [key: string]: number }
-  restaurant_tag_ratings!: {
-    [key: string]: number[]
-  }
-  all_tags!: Tag[]
-  _found_tags!: { [key: string]: Partial<RestaurantTag> }
   _start_time!: [number, number]
+  tagging: Tagging
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -63,6 +52,11 @@ export class Self extends WorkerJob {
 
   static job_config: JobOptions = {
     attempts: 3,
+  }
+
+  constructor() {
+    super()
+    this.tagging = new Tagging(this)
   }
 
   async main() {
@@ -77,19 +71,16 @@ export class Self extends WorkerJob {
         previous_id = result.id as string
       }
     }
-    await this.setDefaultTagImages()
+    await this.tagging.setDefaultTagImages()
   }
 
   async mergeAll(id: string) {
-    this._start_time = process.hrtime()
     const restaurant = await restaurantFindOneWithTags({ id: id })
     if (restaurant) {
-      this.restaurant = restaurant as RestaurantWithId
-      console.log('Merging: ' + this.restaurant.name)
-      await this.getScrapeData()
+      await this.preMerge(restaurant)
       const async_steps = [
         this.mergeMainData,
-        this.mergeTags,
+        this.doTags,
         this.findPhotosForTags,
         this.scanReviews,
         this.upsertUberDishes,
@@ -97,9 +88,28 @@ export class Self extends WorkerJob {
       for (const async_func of async_steps) {
         await this._runFailableFunction(async_func)
       }
-      console.log(`Merged: ${this.restaurant.name} in ${this.elapsedTime()}s`)
+      await this.postMerge()
+      console.log(`Merged: ${this.restaurant.name}`)
     }
     return this.restaurant
+  }
+
+  async preMerge(restaurant: RestaurantWithId) {
+    this.restaurant = restaurant
+    console.log('Merging: ' + this.restaurant.name)
+    this._start_time = process.hrtime()
+    await this.getScrapeData()
+    this.logTime('scrapes fetched')
+  }
+
+  async postMerge() {
+    this.resetTimer()
+    await restaurantUpsertManyTags(
+      this.restaurant,
+      this.tagging.restaurant_tags
+    )
+    await this.tagging.updateTagRankings()
+    this.logTime('postMerge()')
   }
 
   async mergeMainData() {
@@ -115,11 +125,14 @@ export class Self extends WorkerJob {
       this.addPriceRange,
       this.addHours,
       this.getRatingFactors,
-    ].forEach((func) => this._runFailableFunction(func))
+    ].forEach((func) => {
+      this._runFailableFunction(func)
+    })
     await this.persist()
   }
 
   async _runFailableFunction(func: Function) {
+    this._start_time = process.hrtime()
     try {
       if (func.constructor.name == 'AsyncFunction') {
         await func.bind(this)()
@@ -133,6 +146,7 @@ export class Self extends WorkerJob {
         { source: 'Self crawler' }
       )
     }
+    this.logTime(func.name)
   }
 
   async persist() {
@@ -145,6 +159,18 @@ export class Self extends WorkerJob {
         throw e
       }
     }
+  }
+
+  async doTags() {
+    await this.tagging.main()
+  }
+
+  async findPhotosForTags() {
+    await this.tagging.findPhotosForTags()
+  }
+
+  async scanReviews() {
+    await this.tagging.scanReviews()
   }
 
   async handleRestaurantKeyConflict() {
@@ -424,49 +450,6 @@ export class Self extends WorkerJob {
     this.restaurant.image = hero
   }
 
-  async mergeTags() {
-    const yelps = scrapeGetData(
-      this.yelp,
-      'data_from_map_search.categories',
-      []
-    ).map((c) => c.title)
-    const tripadvisors = scrapeGetData(
-      this.tripadvisor,
-      'overview.detailCard.tagTexts.cuisines.tags',
-      []
-    ).map((c) => c.tagValue)
-    const tags = _.uniq([...yelps, ...tripadvisors])
-    const orphan_tags = await this.upsertCountryTags(tags)
-    if (orphan_tags.length) {
-      await restaurantUpsertOrphanTags(this.restaurant, orphan_tags)
-    }
-    await this.updateTagRankings()
-  }
-
-  async upsertCountryTags(tags: string[]) {
-    const country_tags = await tagFindCountries(tags)
-    await restaurantUpsertManyTags(
-      this.restaurant,
-      country_tags.map((tag: Tag) => {
-        return {
-          tag_id: tag.id,
-        }
-      })
-    )
-    return this._extractOrphanTags(tags, country_tags)
-  }
-
-  _extractOrphanTags(tags: string[], country_tags: Tag[]) {
-    return tags.filter((tag) => {
-      const is_not_a_country_name = !country_tags.find((ct) => {
-        const is_common_name_match = ct.name == tag
-        const is_alternate_name_match = (ct.alternates || ['']).includes(tag)
-        return is_common_name_match || is_alternate_name_match
-      })
-      return is_not_a_country_name
-    })
-  }
-
   async upsertUberDishes() {
     if (!this.ubereats?.id) {
       return
@@ -498,90 +481,6 @@ export class Self extends WorkerJob {
     ]
   }
 
-  async updateTagRankings() {
-    let restaurant_tags = [] as RestaurantTagWithID[]
-    this.restaurant = (await restaurantFindOneWithTags(this.restaurant))!
-    await Promise.all(
-      (this.restaurant.tags || []).map(async (i) => {
-        restaurant_tags.push({
-          tag_id: i.tag.id,
-          rank: await this.getRankForTag(i.tag),
-        })
-      })
-    )
-    this.restaurant = (await restaurantUpsertManyTags(
-      this.restaurant,
-      restaurant_tags
-    ))!
-  }
-
-  async getRankForTag(tag: Tag) {
-    const RADIUS = 0.1
-    const tag_name = tagSlug(tag)
-    const result = await sql(
-      `SELECT rank FROM (
-        SELECT id, DENSE_RANK() OVER(ORDER BY rating DESC NULLS LAST) AS rank
-        FROM restaurant WHERE
-          ST_DWithin(location, location, ${RADIUS})
-          AND
-          tag_names @> '"${tag_name}"'
-      ) league
-      WHERE id = '${this.restaurant.id}'`
-    )
-    return parseInt(result.rows[0].rank)
-  }
-
-  async setDefaultTagImages() {
-    await sql(
-      `UPDATE tag set default_images = (
-         SELECT photos FROM restaurant_tag rt
-         WHERE rt.tag_id = tag.id
-           AND photos IS NOT NULL
-         ORDER BY rt.rating DESC NULLS LAST
-         LIMIT 1
-      )`
-    )
-  }
-
-  async scanReviews() {
-    this._found_tags = {}
-    this.all_tags = await restaurantGetAllPossibleTags(this.restaurant)
-    this.restaurant_tag_ratings = {}
-    this._scanYelpReviewsForTags()
-    this._scanTripadvisorReviewsForTags()
-    await this._averageAndPersistTagRatings()
-  }
-
-  async findPhotosForTags() {
-    let restaurant_tags = [] as RestaurantTagWithID[]
-    const all_possible_tags = await restaurantGetAllPossibleTags(
-      this.restaurant
-    )
-    if (this.yelp?.data) {
-      const photos = this.getPaginatedData(this.yelp?.data, 'photos')
-      for (const tag of all_possible_tags) {
-        let restaurant_tag: RestaurantTag = {
-          tag_id: tag.id,
-          // @ts-ignore
-          photos: [] as string[],
-        }
-        for (const photo of photos) {
-          if (this._doesStringContainTag(photo.media_data?.caption, tag.name)) {
-            // @ts-ignore
-            restaurant_tag.photos.push(photo.src)
-          }
-        }
-        // @ts-ignore
-        if (restaurant_tag.photos.length > 0) {
-          // @ts-ignore
-          restaurant_tag.photos = _.uniq(restaurant_tag.photos)
-          restaurant_tags.push(restaurant_tag)
-        }
-      }
-    }
-    await restaurantUpsertManyTags(this.restaurant, restaurant_tags)
-  }
-
   getPaginatedData(data: ScrapeData, type: 'photos' | 'reviews') {
     let items: any[] = []
     let page = 0
@@ -606,87 +505,6 @@ export class Self extends WorkerJob {
     return items
   }
 
-  findDishesInText(text: string) {
-    for (const tag of this.all_tags) {
-      if (!this._doesStringContainTag(text, tag.name ?? '')) continue
-      this._found_tags[tag.id] = { tag_id: tag.id } as RestaurantTag
-      this.measureSentiment(text, tag)
-    }
-  }
-
-  _doesStringContainTag(text: string, tag_name: string | undefined) {
-    if (typeof tag_name === 'undefined') return false
-    const regex = new RegExp(`\\b${tag_name}\\b`, 'i')
-    return regex.test(text)
-  }
-
-  measureSentiment(text: string, tag: Tag) {
-    const sentiment = new Sentiment()
-    const sentences = text.match(/[^\.!\?]+[\.!\?]+/g) || [text]
-    this.restaurant_tag_ratings[tag.id] =
-      this.restaurant_tag_ratings[tag.id] || []
-    for (const sentence of sentences) {
-      if (!this._doesStringContainTag(sentence, tag.name ?? '')) continue
-      const rating = sentiment.analyze(sentence).score
-      this.restaurant_tag_ratings[tag.id].push(rating)
-    }
-  }
-
-  async _averageAndPersistTagRatings() {
-    let restaurant_tags = [] as RestaurantTagWithID[]
-    for (const tag_id of Object.keys(this.restaurant_tag_ratings)) {
-      restaurant_tags.push({
-        tag_id: tag_id,
-        rating: this._calculateTagRating(this.restaurant_tag_ratings[tag_id]),
-      })
-    }
-    await restaurantUpsertManyTags(this.restaurant, restaurant_tags)
-  }
-
-  _calculateTagRating(ratings: number[]) {
-    const averaged = _.mean(ratings)
-    const normalised = this._normaliseTagRating(averaged)
-    const max_restaurant_rating = 5
-    const neutral = max_restaurant_rating / 2
-    const amplifier = (this.restaurant.rating - neutral) / neutral
-    let potential = 0
-    if (amplifier > 0) {
-      potential = (1 - normalised) / 2
-    } else {
-      potential = normalised / 2
-    }
-    const weight = potential * amplifier
-    const weighted = normalised + weight
-    return weighted
-  }
-
-  _normaliseTagRating(rating: number) {
-    let normalised: number = 0
-    const percentiles = this._getApproximatedDistribution()
-    let lower: number = 0
-    let upper: number = 0
-    if (rating <= percentiles[0]) return 0
-    if (rating >= percentiles[percentiles.length - 1]) return 1
-    for (let i = 0; i < percentiles.length; i++) {
-      normalised = i
-      lower = percentiles[i]
-      upper = percentiles[i + 1]
-      if (rating >= lower && rating < upper) break
-    }
-    const distance_between = 1 - (upper - rating) / (upper - lower)
-    normalised += distance_between
-    return normalised / (percentiles.length - 1)
-  }
-
-  // All the percentiles for our tag rankings. You can get them with statements like:
-  // ```
-  // select percentile_disc(0.5) within group (order by restaurant_tag.rating)
-  //   from restaurant_tag
-  // ```
-  _getApproximatedDistribution() {
-    return [-15, -0.001, 0.001, 0.666, 1.081, 1.5, 2, 2.272, 3, 4, 44]
-  }
-
   getRatingFactors() {
     const factors = scrapeGetData(
       this.tripadvisor,
@@ -699,27 +517,6 @@ export class Self extends WorkerJob {
       service: factors.find((i) => i.name == 'Service')?.rating / 10,
       value: factors.find((i) => i.name == 'Value')?.rating / 10,
       ambience: factors.find((i) => i.name == 'Atmosphere')?.rating / 10,
-    }
-  }
-
-  _scanYelpReviewsForTags() {
-    // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
-    const reviews = this.getPaginatedData(this.yelp?.data, 'reviews')
-    for (const review of reviews) {
-      const all_text = [
-        review.comment?.text,
-        review.lightboxMediaItems?.map((i) => i.caption).join(' '),
-      ].join(' ')
-      this.findDishesInText(all_text)
-    }
-  }
-
-  _scanTripadvisorReviewsForTags() {
-    const td_data = this.tripadvisor?.data || {}
-    const reviews = this.getPaginatedData(td_data, 'reviews')
-    for (const review of reviews) {
-      const all_text = [review.text].join(' ')
-      this.findDishesInText(all_text)
     }
   }
 
@@ -752,5 +549,14 @@ export class Self extends WorkerJob {
     const elapsed = process.hrtime(this._start_time)[0]
     this._start_time = process.hrtime()
     return elapsed
+  }
+
+  resetTimer() {
+    this._start_time = process.hrtime()
+  }
+
+  logTime(message: string) {
+    if (process.env.LOG_TIMINGS != '1') return
+    console.log(message + ' ' + this.elapsedTime() + 's')
   }
 }

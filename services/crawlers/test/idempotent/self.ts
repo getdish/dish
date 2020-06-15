@@ -268,10 +268,14 @@ test('Tag rankings', async (t) => {
       rating: 5,
     },
   ])
-  await restaurantUpsertOrphanTags(self.restaurant, [tag_name])
   await restaurantUpsertOrphanTags(r1, [tag_name])
   await restaurantUpsertOrphanTags(r2, [tag_name])
-  await self.updateTagRankings()
+  self.restaurant = await restaurantUpsertOrphanTags(self.restaurant, [
+    tag_name,
+  ])
+  await self.preMerge(self.restaurant)
+  await self.tagging.updateTagRankings()
+  await self.postMerge()
   const restaurant = await restaurantFindOneWithTags(self.restaurant)
   t.is(!!restaurant, true)
   if (!restaurant) return
@@ -353,6 +357,7 @@ test('Dish sentiment analysis from reviews', async (t) => {
   self.restaurant = t.context.restaurant
   await self.getScrapeData()
   await self.scanReviews()
+  await self.postMerge()
   const updated = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   })
@@ -393,6 +398,7 @@ test('Find photos of dishes', async (t) => {
   self.restaurant = t.context.restaurant
   await self.getScrapeData()
   await self.findPhotosForTags()
+  await self.postMerge()
   await restaurantUpdate(self.restaurant)
   const updated = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
@@ -448,37 +454,37 @@ test('Calculating tag ratings', async (t) => {
   dish.restaurant = t.context.restaurant
   let rating: number
   dish.restaurant.rating = 2.5
-  rating = dish._calculateTagRating([0, 1, 2])
+  rating = dish.tagging._calculateTagRating([0, 1, 2])
   t.is(rating, 0.38048192771084337)
   dish.restaurant.rating = 3
-  rating = dish._calculateTagRating([0, 1, 2])
+  rating = dish.tagging._calculateTagRating([0, 1, 2])
   t.is(rating, 0.44243373493975907)
   dish.restaurant.rating = 5
-  rating = dish._calculateTagRating([-15])
+  rating = dish.tagging._calculateTagRating([-15])
   t.is(rating, 0.5)
   dish.restaurant.rating = 1.5
-  rating = dish._calculateTagRating([1])
+  rating = dish.tagging._calculateTagRating([1])
   t.is(rating, 0.3043855421686747)
   dish.restaurant.rating = 0
-  rating = dish._calculateTagRating([44])
+  rating = dish.tagging._calculateTagRating([44])
   t.is(rating, 0.5)
 })
 
 test('Normalising tag ratings', async (t) => {
   const dish = new Self()
   let normalised: number
-  normalised = dish._normaliseTagRating(-16)
+  normalised = dish.tagging._normaliseTagRating(-16)
   t.is(normalised, 0)
-  normalised = dish._normaliseTagRating(-15)
+  normalised = dish.tagging._normaliseTagRating(-15)
   t.is(normalised, 0)
-  normalised = dish._normaliseTagRating(1)
+  normalised = dish.tagging._normaliseTagRating(1)
   t.is(normalised, 0.38048192771084337)
-  normalised = dish._normaliseTagRating(3)
+  normalised = dish.tagging._normaliseTagRating(3)
   t.is(normalised, 0.8)
-  normalised = dish._normaliseTagRating(5)
+  normalised = dish.tagging._normaliseTagRating(5)
   t.is(normalised, 0.9025000000000001)
-  normalised = dish._normaliseTagRating(44)
+  normalised = dish.tagging._normaliseTagRating(44)
   t.is(normalised, 1)
-  normalised = dish._normaliseTagRating(45)
+  normalised = dish.tagging._normaliseTagRating(45)
   t.is(normalised, 1)
 })

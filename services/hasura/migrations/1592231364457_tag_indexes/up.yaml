@@ -1,0 +1,7 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: |-
+      create index tag_name_idx on tag (name);
+      create index tag_alternates_gin_idx on tag using gin(alternates);
+  type: run_sql

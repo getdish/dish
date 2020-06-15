@@ -35,8 +35,8 @@ export function createQueryHelpersFor<A>(
     async upsert(items: A[], constraint = defaultUpsertConstraint) {
       return await upsert<A>(modelName, constraint, items)
     },
-    async update(a: WithID<A>) {
-      return await update<WithID<A>>(modelName, a)
+    async update(a: WithID<A>, o?: CollectOptions) {
+      return await update<WithID<A>>(modelName, a, o)
     },
     async findOne(a: A, o?: CollectOptions) {
       return await findOne<WithID<A>>(modelName, a, o)
@@ -97,7 +97,8 @@ export async function upsert<T extends ModelType>(
 
 export async function update<T extends WithID<ModelType>>(
   table: ModelName,
-  objectIn: T
+  objectIn: T,
+  options: CollectOptions = {}
 ): Promise<WithID<T>> {
   const action = `update_${table}` as any
   const [object] = prepareData(table, [objectIn])
@@ -107,7 +108,7 @@ export async function update<T extends WithID<ModelType>>(
       _set: object,
     })
     return res as WithID<T>[]
-  })
+  }, options)
   return resolved
 }
 

@@ -25,17 +25,19 @@ export const restaurantUpdate = QueryHelpers.update
 export const restaurantFindOne = QueryHelpers.findOne
 export const restaurantRefresh = QueryHelpers.refresh
 
+const tagDataRelations = {
+  relations: ['tags.tag.categories.category', 'tags.tag.parent'],
+}
+
 export async function restaurantFindOneWithTags(
   restaurant: RestaurantWithId,
   extra_relations: string[] = []
 ) {
-  return await restaurantFindOne(restaurant, {
-    relations: [
-      'tags.tag.categories.category',
-      'tags.tag.parent',
-      ...extra_relations,
-    ],
-  })
+  const options = {
+    ...tagDataRelations,
+    relations: [...tagDataRelations.relations, ...extra_relations],
+  }
+  return await restaurantFindOne(restaurant, options)
 }
 
 export async function restaurantFindBatch(
@@ -163,6 +165,7 @@ export async function restaurantUpsertManyTags(
   restaurant: RestaurantWithId,
   restaurant_tags: RestaurantTag[]
 ) {
+  if (!restaurant_tags.length) return
   const populated = restaurant_tags.map((rt) => {
     const existing = getRestaurantTagFromTag(restaurant, rt.tag_id)
     return { ...existing, ...rt }
@@ -175,55 +178,52 @@ export async function restaurantUpsertOrphanTags(
   restaurant: RestaurantWithId,
   tag_strings: string[]
 ) {
+  const restaurant_tags = await convertSimpleTagsToRestaurantTags(tag_strings)
+  return await restaurantUpsertRestaurantTags(restaurant, restaurant_tags)
+}
+
+export async function convertSimpleTagsToRestaurantTags(tag_strings: string[]) {
   const tags = tag_strings.map<Tag>((tag_name) => ({
     name: tag_name,
   }))
   const full_tags = await tagUpsert(tags)
-  const restaurant_tags = full_tags.map<RestaurantTag>((tag) => ({
+  return full_tags.map<RestaurantTag>((tag) => ({
     tag_id: tag.id,
   }))
-  return await restaurantUpsertRestaurantTags(restaurant, restaurant_tags)
 }
 
 export async function restaurantUpsertRestaurantTags(
   restaurant: RestaurantWithId,
   restaurant_tags: RestaurantTag[]
 ) {
-  await restaurantTagUpsert(restaurant.id, restaurant_tags)
-  await restaurantUpdateTagNames(restaurant)
-  const next = await restaurantFindOneWithTags(restaurant)
-  return next
+  const updated_restaurant = await restaurantTagUpsert(
+    restaurant.id,
+    restaurant_tags
+  )
+  return await restaurantUpdateTagNames(updated_restaurant)
 }
 
 async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
-  restaurant = (await restaurantFindOneWithTags(restaurant))!
-  if (restaurant) {
-    const tags: RestaurantTag[] = restaurant.tags ?? []
-    const tag_names: string[] = [
-      ...new Set(
-        tags
-          .map((rt: RestaurantTag) => {
-            // @natew do you know why this has to be manually cast to a Tag?
-            return tagSlugs(rt.tag as Tag)
-          })
-          .flat()
-      ),
-    ]
-    await restaurantUpdate({
+  if (!restaurant) return
+  const tags: RestaurantTag[] = restaurant.tags ?? []
+  const tag_names: string[] = [
+    ...new Set(
+      tags
+        .map((rt: RestaurantTag) => {
+          // @natew do you know why this has to be manually cast to a Tag?
+          return tagSlugs(rt.tag as Tag)
+        })
+        .flat()
+    ),
+  ]
+  return await restaurantUpdate(
+    {
       ...restaurant,
       // @ts-ignore
       tag_names: tag_names,
-    })
-    return restaurant
-  }
-}
-
-// TODO: @natew did you make this? I don't remember why we use it?
-const keepTagsWithParent = (tag: RestaurantTag) => {
-  if (!tag.tag?.parent?.name) {
-    throw new Error(`No parent`)
-  }
-  return tag.tag as TagWithParent
+    },
+    tagDataRelations
+  )
 }
 
 function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {
