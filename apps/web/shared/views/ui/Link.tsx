@@ -58,18 +58,15 @@ export function Link<
       return
     }
     prevent(e)
-    console.log('click', { onClick, onPress })
-    setTimeout(() => {
-      if (onClick) {
-        onClick?.(e)
-      } else if (onPress) {
-        onPress?.()
-      } else {
-        if (!preventNavigate) {
-          om.actions.router.navigate(navItem)
-        }
+    if (onClick) {
+      onClick?.(e)
+    } else if (onPress) {
+      onPress?.()
+    } else {
+      if (!preventNavigate) {
+        om.actions.router.navigate(navItem)
       }
-    })
+    }
   }
   const content = (
     <Text

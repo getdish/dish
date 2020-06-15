@@ -560,19 +560,12 @@ const HomeSearchBarTags = memo(
                   type={tag.type}
                   icon={tag.icon ?? ''}
                   rgb={tag.rgb}
-                  closable
                   onPress={() => {
                     om.actions.home.setSearchBarFocusedTag(tag)
                   }}
+                  closable
                   onClose={() => {
                     om.actions.home.navigateToTag({ tags: [tag] })
-                    if (
-                      om.state.home.lastActiveTags.filter(
-                        (x) => x.type !== 'lense'
-                      ).length === 0
-                    ) {
-                      om.actions.home.popTo('home')
-                    }
                   }}
                 />
               )

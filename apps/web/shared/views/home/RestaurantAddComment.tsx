@@ -139,7 +139,7 @@ export const CommentBubble = ({
             {user.username}
           </Link>
           &nbsp;
-          <HoverablePopover
+          {/* <HoverablePopover
             inline
             contents={
               <Box>
@@ -151,16 +151,15 @@ export const CommentBubble = ({
                 </Text>
               </Box>
             }
-          >
-            <div className="inline-flex">
-              {['👨‍🍳'].map((x) => (
-                <Text selectable key={x} opacity={1}>
-                  {x}
-                </Text>
-              ))}
-            </div>
-          </HoverablePopover>{' '}
-          says
+          > */}
+          <div className="inline-flex">
+            {['👨‍🍳'].map((x) => (
+              <Text selectable key={x} opacity={1}>
+                {x}
+              </Text>
+            ))}
+          </div>
+          {/* </HoverablePopover> */} says
         </Text>
       </HStack>
       {children}

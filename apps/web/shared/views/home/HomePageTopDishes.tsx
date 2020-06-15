@@ -20,6 +20,7 @@ import {
 import { ChevronDown, ChevronRight, ChevronUp, Plus } from 'react-feather'
 
 import { HomeStateItemHome } from '../../state/home'
+import { getActiveTags } from '../../state/home-tag-helpers'
 import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../NotFoundPage'
 import { LinkButton } from '../ui/LinkButton'
@@ -63,8 +64,10 @@ const HomePageTopDishes = ({ state }: TopDishesProps) => {
     return <NotFoundPage title="Home not found" />
   }
 
-  const { topDishes } = om.state.home
-  const results = topDishes
+  const tagsDescription =
+    getActiveTags(om.state.home, state)
+      .find((x) => x.type === 'lense')
+      ?.descriptions?.plain.replace('Here', ``) ?? ''
 
   return (
     <>
@@ -106,28 +109,20 @@ const HomePageTopDishes = ({ state }: TopDishesProps) => {
                       fontWeight="600"
                       transform={[{ rotate: '-4deg' }]}
                     >
-                      {om.state.home.lastActiveTags
-                        .find((x) => x.type === 'lense')
-                        ?.descriptions?.plain.replace('Here', ``) ?? ''}
+                      {tagsDescription}
                     </LinkButton>
                   </ZStack>
                   <HorizontalLine />
                   <HomeLenseBarOnly
                     size="lg"
-                    activeTagIds={om.state.home.lastHomeState.activeTagIds}
+                    activeTagIds={state.activeTagIds}
                   />
                   <HorizontalLine />
                 </HStack>
-                <HomeFilterBar
-                  activeTagIds={om.state.home.lastHomeState.activeTagIds}
-                />
+                <HomeFilterBar activeTagIds={state.activeTagIds} />
               </VStack>
 
-              {!results.length && <LoadingItems />}
-
-              {results.map((country) => (
-                <TopDishesCuisineItem key={country.country} country={country} />
-              ))}
+              <HomeTopDishesContent />
             </VStack>
           </VStack>
         </HomeScrollView>
@@ -135,6 +130,21 @@ const HomePageTopDishes = ({ state }: TopDishesProps) => {
     </>
   )
 }
+
+const HomeTopDishesContent = memo(() => {
+  const om = useOvermind()
+  const { topDishes } = om.state.home
+  const results = topDishes
+  console.warn('HomeTopDishesContent.render')
+  return (
+    <>
+      {!results.length && <LoadingItems />}
+      {results.map((country) => (
+        <TopDishesCuisineItem key={country.country} country={country} />
+      ))}
+    </>
+  )
+})
 
 const dishHeight = 130
 const padding = 30

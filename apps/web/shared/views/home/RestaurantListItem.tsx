@@ -93,7 +93,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       <VStack className="ease-in-out-fast" flex={1}>
         <RestaurantListItemContent {...props} />
       </VStack>
-      <ZStack fullscreen zIndex={10} pointerEvents="none">
+      <ZStack fullscreen top={12} zIndex={10} pointerEvents="none">
         <RestaurantPeek
           restaurantSlug={props.restaurantSlug}
           searchState={props.searchState}
@@ -112,7 +112,8 @@ const RestaurantListItemContent = memo(
     const [state, setState] = useState({
       showAddComment: false,
     })
-    const showAddComment = state.showAddComment || isEditingUserPage(om.state)
+    const showAddComment =
+      state.showAddComment || isEditingUserPage(props.searchState, om.state)
     const adjustRankingLeft = 36
     const leftPad = 25
     const restaurant = restaurantQuery(restaurantSlug)
@@ -126,6 +127,8 @@ const RestaurantListItemContent = memo(
     const contentWidth = '40%'
     const paddingTop = 25
     const paddingBottom = 5
+
+    console.log('RestaurantListItemContent.render')
 
     return (
       <HStack alignItems="flex-start" justifyContent="flex-start">

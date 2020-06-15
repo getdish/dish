@@ -3,13 +3,14 @@ import { requestIdle } from '.'
 
 export async function fullyIdle({
   min = 16,
-  sleep = 2,
+  sleep,
   max = 1000,
 }: {
   min?: number
   max?: number
   sleep?: number
 } = {}) {
+  sleep = sleep ?? min / 2
   let hasIdled = false
   let start = Date.now()
   while (!hasIdled) {

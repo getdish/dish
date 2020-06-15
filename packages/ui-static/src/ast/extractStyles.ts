@@ -89,12 +89,6 @@ export function extractStyles(
   ast: t.File
   map: any // RawSourceMap from 'source-map'
 } {
-  const shouldPrintDebug =
-    !!process.env.DEBUG &&
-    (process.env.DEBUG_FILE
-      ? sourceFileName.includes(process.env.DEBUG_FILE)
-      : true)
-
   if (typeof src !== 'string') {
     throw new Error('`src` must be a string of javascript')
   }
@@ -106,6 +100,13 @@ export function extractStyles(
     typeof cacheObject === 'object' && cacheObject !== null,
     '`cacheObject` must be an object'
   )
+
+  const shouldPrintDebug =
+    (!!process.env.DEBUG &&
+      (process.env.DEBUG_FILE
+        ? sourceFileName.includes(process.env.DEBUG_FILE)
+        : true)) ||
+    src.startsWith('// debug')
 
   const options: ExtractStylesOptions = {
     evaluateVars: true,

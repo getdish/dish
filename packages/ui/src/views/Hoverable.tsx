@@ -5,14 +5,15 @@ import { combineFns } from '../helpers/combineFns'
 
 // import { isHoverEnabled } from './HoverState'
 
-const mousesUp = new Set<Function>()
-
-if (isBrowser) {
-  document.addEventListener('mouseup', (e) => {
-    mousesUp.forEach((cb) => cb(e))
-    mousesUp.clear()
-  })
-}
+// if we want to do nicer pressleave for pressStyle
+// but we need to do it fairly complex, requires a few steps, maybe not worth
+// const mousesUp = new Set<Function>()
+// if (isBrowser) {
+//   document.addEventListener('mouseup', (e) => {
+//     mousesUp.forEach((cb) => cb(e))
+//     mousesUp.clear()
+//   })
+// }
 
 export function Hoverable({
   onPressIn,
@@ -30,8 +31,8 @@ export function Hoverable({
   onPressOut?: Function
 }) {
   return React.cloneElement(React.Children.only(children), {
-    onMouseEnter: combineFns(onHoverIn),
-    onMouseLeave: combineFns(onPressOut, onHoverOut),
+    onMouseEnter: onHoverIn,
+    onMouseLeave: onHoverOut,
     onMouseMove: onHoverMove,
     onMouseDown: onPressIn,
     onMouseUp: onPressOut,
