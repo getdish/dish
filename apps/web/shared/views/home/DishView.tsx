@@ -8,6 +8,7 @@ import {
   VStack,
   ZStack,
 } from '@dish/ui'
+import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
 
@@ -152,7 +153,10 @@ export const DishView = memo(
                 color={isHovered ? '#000' : '#fff'}
                 textAlign="center"
               >
-                {dish.name}
+                {dish.name
+                  .split(' ')
+                  .map((x) => capitalize(x))
+                  .join(' ')}
               </Text>
             </Box>
           </HStack>

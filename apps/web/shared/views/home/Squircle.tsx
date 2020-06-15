@@ -47,7 +47,8 @@ export const Squircle = ({
         >
           <ZStack
             className={
-              isHovered ? 'ease-in-out inner-glow' : 'ease-in-out inner-shadow'
+              // isHovered ? 'ease-in-out inner-glow' :
+              'ease-in-out inner-shadow'
             }
             borderRadius={borderRadius}
             overflow="hidden"
