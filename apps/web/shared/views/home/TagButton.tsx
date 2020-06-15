@@ -201,16 +201,16 @@ export const TagButton = memo(
             </VStack>
           )}
           {!!closable && (
-            <LinkButton
+            <VStack
               paddingVertical={paddingVertical}
               backgroundColor={subtle ? 'transparent' : 'transparent'}
               borderRadius={10}
-              onPress={onClose}
+              onPressIn={prevent}
+              onPressOut={onClose}
               opacity={0.5}
-              // tag={tag}
               {...(!subtle && {
-                marginLeft: -4,
-                marginRight: 6,
+                marginLeft: -8,
+                marginRight: 2,
               })}
               position="relative"
               top="6%"
@@ -219,16 +219,14 @@ export const TagButton = memo(
                 top: -9,
                 right: -2,
               })}
-              width={16}
-              height={16}
-              maxHeight={16}
+              width={26}
+              height={26}
               alignItems="center"
               justifyContent="center"
               alignSelf="center"
               hoverStyle={{
                 opacity: 1,
               }}
-              onPressIn={prevent}
             >
               <X
                 size={subtle ? 12 : 14}
@@ -236,7 +234,7 @@ export const TagButton = memo(
                   color: subtle ? 'inherit' : color,
                 }}
               />
-            </LinkButton>
+            </VStack>
           )}
         </HStack>
       </>

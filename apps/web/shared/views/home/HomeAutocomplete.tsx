@@ -1,3 +1,4 @@
+// debug
 import { HStack, Text, ZStack } from '@dish/ui'
 import React, { memo, useEffect } from 'react'
 import { Plus } from 'react-feather'
@@ -28,6 +29,8 @@ export default memo(function HomeAutoComplete() {
   const showLocation = showAutocomplete == 'location'
   const showSearch = showAutocomplete == 'search'
   const isShowing = showSearch || showLocation
+
+  console.log('showAutocomplete', isShowing, showAutocomplete)
 
   // hide when moused away, show when moved back!
   useEffect(() => {
@@ -70,9 +73,6 @@ export default memo(function HomeAutoComplete() {
     >
       <HStack
         backgroundColor="rgba(0,0,0,0.95)"
-        // className="blur"
-        // borderBottomRightRadius={12}
-        // borderBottomLeftRadius={12}
         overflow="hidden"
         borderRadius={10}
         height={49}

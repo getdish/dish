@@ -1,11 +1,11 @@
 import { Box, HoverablePopover, Text } from '@dish/ui'
-import React from 'react'
+import React, { memo } from 'react'
 import { Plus } from 'react-feather'
 
 import { LinkButton } from '../ui/LinkButton'
 import { HomeLenseBarOnly } from './HomeLenseBar'
 
-export const RestaurantLenseVote = () => {
+export const RestaurantLenseVote = memo(() => {
   return (
     <HoverablePopover
       allowHoverOnContent
@@ -27,4 +27,4 @@ export const RestaurantLenseVote = () => {
       </LinkButton>
     </HoverablePopover>
   )
-}
+})

@@ -50,7 +50,7 @@ export function HomeStackView<A extends HomeStateItem>(props: {
         const isActive = i === items.length - 1
         return (
           <PopoverShowContext.Provider
-            key={`${i}`}
+            key={item.id}
             value={isActive == true ? null : false}
           >
             <HomeStackViewItem

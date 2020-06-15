@@ -212,9 +212,7 @@ export const getNavigateItemForState = (
     name = 'search'
   }
 
-  const isChangingType = ogState
-    ? ogState.type === home.currentState.type
-    : true
+  const isChangingType = name !== state.type
   const replace = !isChangingType
 
   return {
@@ -248,6 +246,7 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
 ) => {
   const next = getNavigateItemForState(om.state, state)
   if (om.actions.router.getShouldNavigate(next)) {
+    console.log('navigate via tags', next)
     om.actions.router.navigate(next)
     return true
   }

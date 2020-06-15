@@ -1,4 +1,4 @@
-import { fullyIdle } from '@dish/async'
+import { fullyIdle, series } from '@dish/async'
 import {
   Box,
   Circle,
@@ -8,7 +8,14 @@ import {
   Toast,
   VStack,
 } from '@dish/ui'
-import React, { Suspense, memo, useMemo, useState } from 'react'
+import React, {
+  Suspense,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { Edit2 } from 'react-feather'
 import { Image } from 'react-native'
 
@@ -107,6 +114,7 @@ const HomeSearchResultsViewContent = memo(
     const om = useOvermind()
     const allResults = state.results?.results?.restaurants ?? []
     const [chunk, setChunk] = useState(1)
+    const [loadMore, setLoadMore] = useState(0)
     const perChunk = 3
     // load a few at a time, less to start
     const isLoading =
@@ -132,6 +140,23 @@ const HomeSearchResultsViewContent = memo(
       }
     }
 
+    // in an effect so we can use series and get auto-cancel on unmount
+    useEffect(() => {
+      if (loadMore !== 0) {
+        if (results.length < allResults.length) {
+          return series([
+            () => isReadyToLoadMore(),
+            () => fullyIdle(),
+            () => {
+              setChunk((x) => x + 1)
+            },
+          ])
+        }
+      }
+    }, [loadMore])
+
+    const loadMoreCb = useCallback(() => setLoadMore(Date.now()), [])
+
     const results = useMemo(() => {
       const cur = allResults.slice(0, chunk * perChunk)
       const hasMoreToLoad = cur.length < allResults.length
@@ -146,13 +171,7 @@ const HomeSearchResultsViewContent = memo(
             onFinishRender={
               hasMoreToLoad && index == cur.length - 1
                 ? // load more
-                  async () => {
-                    if (results.length < allResults.length) {
-                      await isReadyToLoadMore()
-                      await fullyIdle()
-                      setChunk((x) => x + 1)
-                    }
-                  }
+                  loadMoreCb
                 : undefined
             }
           />

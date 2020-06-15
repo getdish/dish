@@ -195,8 +195,11 @@ export const isOnOwnProfile = (state: OmState) => {
   return username && slugify(username) === state.router.curPage.params?.username
 }
 
-export const isEditingUserPage = (state: OmState) => {
-  return state.home.currentStateType === 'userSearch' && isOnOwnProfile(state)
+export const isEditingUserPage = (
+  state: HomeStateItemSearch,
+  omState: OmState
+) => {
+  return state.type === 'userSearch' && isOnOwnProfile(omState)
 }
 
 // only await things that are required on first render
@@ -709,7 +712,7 @@ const runSearch: AsyncAction<{
 
   const shouldCancel = () => {
     const answer = !state || lastSearchAt != curId
-    if (answer) console.trace('search: cancel')
+    if (answer) console.log('search: cancel')
     return answer
   }
 
@@ -742,15 +745,12 @@ const runSearch: AsyncAction<{
   }
 
   // fetch
-  console.time('search')
   let restaurants = await search(searchArgs)
-  console.timeEnd('search')
   if (shouldCancel()) return
 
   // only update searchkey once finished
   lastSearchKey = searchKey
   state = om.state.home.lastSearchState
-  console.log('SETTING COMPLETE')
   state.results = {
     status: 'complete',
     results: {
@@ -893,6 +893,7 @@ if (typeof window !== 'undefined') {
 
 const setShowAutocomplete: Action<ShowAutocomplete> = (om, val) => {
   if (justFocusedWindow) {
+    console.warn('just focused ignore')
     return
   }
   om.state.home.showAutocomplete = val
@@ -1106,18 +1107,15 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
   next
 ) => {
   const state = om.state.home.currentState
-  console.log('going?', state.type, next.type, state, next)
   try {
     assert(state.type === next.type)
     assert('activeTagIds' in next)
-    assert(
-      !isEqual(state['activeStateIds'], next.activeTagIds) ||
-        !isEqual(state.searchQuery, next.searchQuery)
-    )
+    const sameTagIds = isEqual(state['activeStateIds'], next.activeTagIds)
+    const sameSearchQuery = isEqual(state.searchQuery, next.searchQuery)
+    assert(!sameTagIds || !sameSearchQuery)
     state.searchQuery = next.searchQuery
-    if ('activeTagIds' in state) {
-      state.activeTagIds = next.activeTagIds
-    }
+    console.log('now set', next)
+    state.activeTagIds = next.activeTagIds
     return await syncStateToRoute(om, next)
   } catch (err) {
     handleAssertionError(err)
