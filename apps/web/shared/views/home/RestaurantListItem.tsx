@@ -10,6 +10,7 @@ import {
   ZStack,
   useDebounceEffect,
 } from '@dish/ui'
+import { when } from 'overmind'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { MessageSquare } from 'react-feather'
 
@@ -34,6 +35,7 @@ import { restaurantQuery } from './restaurantQuery'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
+import { Squircle } from './Squircle'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 type RestaurantListItemProps = {
@@ -184,6 +186,7 @@ const RestaurantListItemContent = memo(
                     <Link name="restaurant" params={{ slug: restaurantSlug }}>
                       <Text
                         selectable
+                        ellipse
                         color="#000"
                         fontSize={22}
                         fontWeight="500"
@@ -337,10 +340,15 @@ const RestaurantPeek = memo(
     })
     const photos = allPhotos.slice(0, 5)
     const dishSize = (size === 'lg' ? 190 : 150) * (isMedium ? 0.85 : 1)
+    const [isLoaded, setIsLoaded] = useState(false)
 
     return (
       <HomeScrollViewHorizontal
-        onScroll={(e) => {
+        onScroll={async (e) => {
+          if (!isLoaded) {
+            await fullyIdle()
+            setIsLoaded(true)
+          }
           console.log('e', e, e.target)
         }}
         scrollEventThrottle={100}
@@ -360,6 +368,15 @@ const RestaurantPeek = memo(
             spacing={spacing}
           >
             {photos.map((photo, i) => {
+              if (!isLoaded) {
+                if (i > 1) {
+                  return (
+                    <Squircle size={dishSize} key={i}>
+                      <Text>...</Text>
+                    </Squircle>
+                  )
+                }
+              }
               return (
                 <DishView
                   key={i}
