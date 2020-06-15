@@ -350,7 +350,7 @@ export default memo(function HomeSearchBar() {
             }
             style={[
               styles.textInput,
-              { flex: 1, fontSize: 19, paddingRight: 0 },
+              { flex: 1, fontSize: 18, paddingRight: 0 },
             ]}
           />
         </HStack>
@@ -582,7 +582,6 @@ const styles = StyleSheet.create({
     padding: 11,
     paddingHorizontal: 16,
     flex: 1,
-    fontSize: 18,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
