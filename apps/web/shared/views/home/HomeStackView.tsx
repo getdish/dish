@@ -48,20 +48,22 @@ export function HomeStackView<A extends HomeStateItem>(props: {
     <ZStack fullscreen>
       {items.map((item, i) => {
         const isActive = i === items.length - 1
+        console.log('HomeStackView', item.id, { ...item })
         return (
-          <PopoverShowContext.Provider
+          // <PopoverShowContext.Provider
+          //   key={item.id}
+          //   value={isActive == true ? null : false}
+          // >
+          <HomeStackViewItem
             key={item.id}
-            value={isActive == true ? null : false}
+            item={item}
+            index={i}
+            isActive={isActive}
+            isRemoving={isRemoving && isActive}
           >
-            <HomeStackViewItem
-              item={item}
-              index={i}
-              isActive={isActive}
-              isRemoving={isRemoving && isActive}
-            >
-              {itemChildren[i]}
-            </HomeStackViewItem>
-          </PopoverShowContext.Provider>
+            {itemChildren[i]}
+          </HomeStackViewItem>
+          // </PopoverShowContext.Provider>
         )
       })}
     </ZStack>

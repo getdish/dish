@@ -41,7 +41,6 @@ export default memo(function HomePageSearchResults(props: {
   state: HomeStateItemSearch
 }) {
   const om = useOvermind()
-  const isSmall = useMediaQueryIsSmall()
   const state = om.state.home.lastSearchState ?? props.state
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const { title, subTitleElements, pageTitleElements } = getTitleForState(
@@ -87,12 +86,18 @@ export default memo(function HomePageSearchResults(props: {
         >
           <HomeLenseBarOnly activeTagIds={state.activeTagIds} />
           <HomeFilterBar activeTagIds={state.activeTagIds} />
-          <VStack flex={1} />
-          <VStack spacing={3} alignItems="flex-end" justifyContent="flex-end">
-            <Text fontSize={14} fontWeight="600">
+          <VStack
+            flex={1}
+            alignSelf="flex-end"
+            spacing={3}
+            alignItems="flex-end"
+            justifyContent="flex-end"
+            overflow="hidden"
+          >
+            <Text ellipse fontSize={14} fontWeight="600">
               {pageTitleElements}
             </Text>
-            <Text opacity={0.5} fontSize={14}>
+            <Text ellipse opacity={0.5} fontSize={14}>
               {subTitleElements}
             </Text>
           </VStack>
@@ -115,50 +120,14 @@ const HomeSearchResultsViewContent = memo(
     const allResults = state.results?.results?.restaurants ?? []
     const [chunk, setChunk] = useState(1)
     const [loadMore, setLoadMore] = useState(0)
-    const perChunk = 3
+    const perChunk = [0, 3, 6, 12, 24]
     // load a few at a time, less to start
-    const isLoading =
+    const isLoadingInitial =
       !state.results?.results || state.results.status === 'loading'
-
-    async function isReadyToLoadMore() {
-      const isOnSearch = (s: OmState) => s.home.currentStateType === 'search'
-      const isNotScrolling = (s: OmState) => s.home.isScrolling === false
-      const isReadyToLoad = (s: OmState) => isOnSearch(s) && isNotScrolling(s)
-      if (!isReadyToLoad(omStatic.state)) {
-        await new Promise((res) => {
-          const dispose = om.reaction(
-            // @ts-ignore why?
-            (state) => isReadyToLoad(state),
-            (isReady) => {
-              if (isReady) {
-                dispose()
-                res()
-              }
-            }
-          )
-        })
-      }
-    }
-
-    // in an effect so we can use series and get auto-cancel on unmount
-    useEffect(() => {
-      if (loadMore !== 0) {
-        if (results.length < allResults.length) {
-          return series([
-            () => isReadyToLoadMore(),
-            () => fullyIdle(),
-            () => {
-              setChunk((x) => x + 1)
-            },
-          ])
-        }
-      }
-    }, [loadMore])
-
     const loadMoreCb = useCallback(() => setLoadMore(Date.now()), [])
 
     const results = useMemo(() => {
-      const cur = allResults.slice(0, chunk * perChunk)
+      const cur = allResults.slice(0, chunk * perChunk[chunk])
       const hasMoreToLoad = cur.length < allResults.length
       return cur.map((item, index) => (
         <Suspense key={item.id} fallback={null}>
@@ -179,7 +148,44 @@ const HomeSearchResultsViewContent = memo(
       ))
     }, [allResults, chunk])
 
-    if (isLoading) {
+    // in an effect so we can use series and get auto-cancel on unmount
+    useEffect(() => {
+      if (loadMore !== 0) {
+        if (results.length < allResults.length) {
+          return series([
+            () => isReadyToLoadMore(),
+            () => fullyIdle(),
+            () => {
+              setChunk((x) => x + 1)
+            },
+          ])
+
+          async function isReadyToLoadMore() {
+            const isOnSearch = (s: OmState) =>
+              s.home.currentStateType === 'search'
+            const isNotScrolling = (s: OmState) => s.home.isScrolling === false
+            const isReadyToLoad = (s: OmState) =>
+              isOnSearch(s) && isNotScrolling(s)
+            if (!isReadyToLoad(omStatic.state)) {
+              await new Promise((res) => {
+                const dispose = om.reaction(
+                  // @ts-ignore why?
+                  (state) => isReadyToLoad(state),
+                  (isReady) => {
+                    if (isReady) {
+                      dispose()
+                      res()
+                    }
+                  }
+                )
+              })
+            }
+          }
+        }
+      }
+    }, [loadMore])
+
+    if (isLoadingInitial) {
       return (
         <VStack>
           <LoadingItems />
@@ -201,10 +207,19 @@ const HomeSearchResultsViewContent = memo(
       )
     }
 
+    const isLoadingMore = chunk > 1 && results.length < allResults.length
+
     return (
       <>
         <VStack paddingBottom={20} spacing={14}>
           {results}
+          {isLoadingMore && (
+            <VStack alignItems="center" minHeight={200} justifyContent="center">
+              <Text opacity={0.5} fontSize={12}>
+                Loading...
+              </Text>
+            </VStack>
+          )}
         </VStack>
       </>
     )
