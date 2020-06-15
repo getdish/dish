@@ -18,6 +18,7 @@ Week 2
 
 in progress
 
+- basic tag admin for managing dish tags
 - navigation/stackview bugs
 - delivery button/hover to see services/names
 - gallery view (click to see full)
