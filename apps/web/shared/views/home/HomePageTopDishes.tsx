@@ -194,6 +194,8 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
         endPoint={[1, 0]}
         style={{
           position: 'absolute',
+          // @ts-ignore
+          pointerEvents: 'none',
           top: 0,
           left: 0,
           bottom: 0,

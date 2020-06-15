@@ -42,12 +42,13 @@ export default memo(function HomePageSearchResults(props: {
 }) {
   const om = useOvermind()
   const state = om.state.home.lastSearchState ?? props.state
+  const isSmall = useMediaQueryIsSmall()
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const { title, subTitleElements, pageTitleElements } = getTitleForState(
     om.state,
     state
   )
-  const paddingTop = searchBarHeight + 10
+  const paddingTop = (isSmall ? 0 : searchBarHeight) + 10
   const titleHeight = paddingTop + 48
 
   return (
@@ -106,7 +107,7 @@ export default memo(function HomePageSearchResults(props: {
       </HStack>
 
       <HomeScrollView>
-        <VStack height={titleHeight - searchBarHeight} />
+        <VStack height={isSmall ? 58 : titleHeight - searchBarHeight} />
         {/* CONTENT */}
         <HomeSearchResultsViewContent state={{ ...state }} />
       </HomeScrollView>

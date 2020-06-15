@@ -217,7 +217,7 @@ const HomeMapContent = memo(function HomeMap({
     ? {
         left: 0,
         top: searchBarHeight + 15 + 15,
-        bottom: window.innerHeight * 0.6,
+        bottom: window.innerHeight * 0.7,
         right: 0,
       }
     : {
