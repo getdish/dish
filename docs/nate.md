@@ -14,7 +14,7 @@ big impact changes:
 
 ---
 
-Week 2
+Week 3
 
 in progress
 
@@ -53,8 +53,6 @@ unfinished
 - show cuisine dishes carousel when clicking cuisine ons earch results
 - reminder - a lot of perf issues could be fixed in CM
   - we'd just need to indicate/ensure busyness is set while scrolling/mapping
-
-Week 3
 
 - hover "closed until" to show full hours
 - horizontal scroll (load more on scroll, show one to start)

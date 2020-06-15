@@ -1,14 +1,17 @@
+import { versions } from 'process'
+
 import { Restaurant, TopCuisine } from '@dish/graph'
 import {
   HStack,
   HorizontalLine,
   LinearGradient,
   LoadingItems,
+  StackProps,
   Text,
   VStack,
   ZStack,
 } from '@dish/ui'
-import _ from 'lodash'
+import _, { size } from 'lodash'
 import {
   default as React,
   memo,
@@ -18,6 +21,7 @@ import {
   useState,
 } from 'react'
 import { ChevronDown, ChevronRight, ChevronUp, Plus } from 'react-feather'
+import { ViewStyle } from 'react-native'
 
 import { HomeStateItemHome } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
@@ -315,7 +319,6 @@ export const RestaurantButton = memo(
     trending?: 'up' | 'down'
     subtle?: boolean
   } & LinkButtonProps) => {
-    const TrendingIcon = trending === 'up' ? ChevronUp : ChevronDown
     return (
       <LinkButton
         key={restaurant.name}
@@ -342,12 +345,10 @@ export const RestaurantButton = memo(
         <HStack alignItems="center" spacing={5}>
           {!!trending && (
             <TrendingIcon
-              size={20}
-              color={trending === 'up' ? 'green' : 'red'}
-              style={{
-                marginTop: -4,
-                marginBottom: -4,
-              }}
+              size={22}
+              trending={trending}
+              marginTop={-4}
+              marginBottom={-4}
             />
           )}
           <Text ellipse fontWeight="400">
@@ -369,3 +370,21 @@ export const RestaurantButton = memo(
     )
   }
 )
+
+const TrendingIcon = ({
+  trending,
+  color = trending === 'up' ? 'green' : 'red',
+  size,
+  ...rest
+}: StackProps & {
+  color?: string
+  size?: number
+  trending?: 'up' | 'down'
+}) => {
+  const Icon = trending === 'up' ? ChevronUp : ChevronDown
+  return (
+    <VStack {...rest}>
+      <Icon color={color} size={size} />
+    </VStack>
+  )
+}

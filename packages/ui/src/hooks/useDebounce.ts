@@ -11,7 +11,7 @@ type DebounceSettings = {
 export function useDebounce<A extends (...args: any) => any>(
   fn: A,
   wait: number,
-  options: DebounceSettings = { leading: true },
+  options: DebounceSettings = { leading: false },
   mountArgs: any[] = []
 ): A & {
   cancel: () => void

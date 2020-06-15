@@ -350,7 +350,7 @@ export default memo(function HomeSearchBar() {
             }
             style={[
               styles.textInput,
-              { flex: 1, fontSize: 18, paddingRight: 0 },
+              { flex: 1, fontSize: 19, paddingRight: 0 },
             ]}
           />
         </HStack>
@@ -359,15 +359,15 @@ export default memo(function HomeSearchBar() {
     </>
   )
 
-  const borderRadius = 14
+  const borderRadius = 54
 
   return (
     <VStack
       zIndex={22}
       position="absolute"
       marginTop={searchBarTopOffset}
-      left={searchBarTopOffset + 8}
-      right={searchBarTopOffset + 8}
+      left={16}
+      right={16}
       alignItems="center"
       height={searchBarHeight}
     >
@@ -381,17 +381,18 @@ export default memo(function HomeSearchBar() {
         borderRadius={borderRadius}
         shadowColor="rgba(0,0,0,0.07)"
         shadowOffset={{ height: 5, width: 0 }}
-        shadowRadius={20}
+        shadowRadius={60}
       >
         <VStack
           position="relative"
           zIndex={100}
           flex={1}
           backgroundColor="#fff"
+          paddingHorizontal={8}
           flexDirection="row"
           borderRadius={borderRadius}
-          shadowColor="rgba(0,0,0,0.085)"
-          shadowRadius={5}
+          shadowColor="rgba(0,0,0,0.065)"
+          shadowRadius={3}
           shadowOffset={{ height: 3, width: 0 }}
           overflow="hidden"
           alignItems="center"
@@ -582,6 +583,7 @@ const styles = StyleSheet.create({
     padding: 11,
     paddingHorizontal: 16,
     flex: 1,
+    fontSize: 18,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
