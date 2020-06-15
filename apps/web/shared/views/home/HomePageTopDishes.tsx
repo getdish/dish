@@ -57,7 +57,7 @@ export default memo(function HomePageTopDishesContainer(props: TopDishesProps) {
   return null
 })
 
-const HomePageTopDishes = ({ state }: TopDishesProps) => {
+const HomePageTopDishes = memo(({ state }: TopDishesProps) => {
   const om = useOvermind()
 
   if (!state) {
@@ -129,7 +129,7 @@ const HomePageTopDishes = ({ state }: TopDishesProps) => {
       </VStack>
     </>
   )
-}
+})
 
 const HomeTopDishesContent = memo(() => {
   const om = useOvermind()

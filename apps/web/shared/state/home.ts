@@ -546,6 +546,8 @@ const loadHomeDishes: AsyncAction = async (om) => {
     om.state.home.currentState.span.lat
   )
 
+  console.log('loadHomeDishes', all)
+
   if (!all) {
     console.warn('none!!')
     return
