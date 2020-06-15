@@ -18,16 +18,7 @@ export function useAttachClassName(
     }
     const names = cn.trim().split(' ').filter(Boolean)
 
-    function addClassNames() {
-      const cl = new Set(node.classList)
-      for (const name of names) {
-        if (!cl.has(name)) {
-          node.classList?.add(name)
-        }
-      }
-    }
-
-    addClassNames()
+    addClassNames(node, names)
 
     if (!(node instanceof HTMLElement)) {
       // disable mutation observation in other envs
@@ -35,7 +26,7 @@ export function useAttachClassName(
     }
 
     const observer = new MutationObserver(() => {
-      addClassNames()
+      addClassNames(node, names)
     })
     observer.observe(node, {
       attributes: true,
@@ -43,7 +34,19 @@ export function useAttachClassName(
 
     return () => {
       observer.disconnect()
-      names.forEach((x) => node.classList.remove(x))
+      for (const name of names) {
+        node.classList.remove(name)
+      }
     }
   }, [...mountArgs, cn])
+}
+
+function addClassNames(node: HTMLElement, names: string[]) {
+  if (node.classList) {
+    for (const name of names) {
+      if (!node.classList.contains(name)) {
+        node.classList.add(name)
+      }
+    }
+  }
 }

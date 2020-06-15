@@ -120,7 +120,7 @@ const RestaurantListItemContent = memo(
 
     useEffect(() => {
       if (!!restaurant.name && props.onFinishRender) {
-        return series([() => fullyIdle(), () => props.onFinishRender!()])
+        props.onFinishRender!()
       }
     }, [restaurant.name])
 
