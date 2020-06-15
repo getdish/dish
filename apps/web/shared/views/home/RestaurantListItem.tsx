@@ -118,14 +118,10 @@ const RestaurantListItemContent = memo(
     const restaurant = restaurantQuery(restaurantSlug)
 
     useEffect(() => {
-      if (props.onFinishRender) {
-        return series([
-          () => sleep(100),
-          () => fullyIdle(),
-          () => props.onFinishRender!(),
-        ])
+      if (!!restaurant.name && props.onFinishRender) {
+        return series([() => fullyIdle(), () => props.onFinishRender!()])
       }
-    }, [])
+    }, [restaurant.name])
 
     const contentWidth = '40%'
     const paddingTop = 25

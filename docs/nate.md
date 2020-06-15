@@ -12,7 +12,7 @@ big impact changes:
 - resizable mid bar :P
   - would actually be cool if it snapped to isSmall when it got small enough and small also resized!
 
-side goal: write 15m in the morning every day
+---
 
 Week 2
 
