@@ -11,33 +11,43 @@ export type Spacing =
   | boolean
   | string
 
-export const Spacer = memo(
-  ({
-    size = 'md',
-    direction = 'both',
-    flex,
-  }: {
-    size?: Spacing
-    flex?: boolean | number
-    direction?: 'vertical' | 'horizontal' | 'both'
-  }) => {
-    const sizePx = spaceToPx(size)
-    const width = direction == 'vertical' ? 1 : sizePx
-    const height = direction == 'horizontal' ? 1 : sizePx
-    if (flex) {
-      return (
-        <View
-          style={{
-            flex: flex === true ? 1 : flex,
-            minWidth: width,
-            minHeight: height,
-          }}
-        />
-      )
+export type SpacerProps = {
+  size?: Spacing
+  flex?: boolean | number
+  direction?: 'vertical' | 'horizontal' | 'both'
+}
+
+export const Spacer = memo((props: SpacerProps) => {
+  const flexProps = getFlex(props)
+  const sizeProps = getSize(props)
+  // @ts-ignore
+  return <View style={{ ...flexProps, ...sizeProps }} />
+})
+
+const getFlex = ({ flex }: SpacerProps) => {
+  return { flex: flex === true ? 1 : flex }
+}
+
+const getSize = ({ flex, size = 'md', direction = 'both' }: SpacerProps) => {
+  const sizePx = spaceToPx(size)
+  const width = direction == 'vertical' ? 1 : sizePx
+  const height = direction == 'horizontal' ? 1 : sizePx
+  if (flex) {
+    return {
+      minWidth: width,
+      minHeight: height,
     }
-    return <View style={{ width, height }} />
   }
-)
+  return { width, height }
+}
+
+// @ts-ignore
+Spacer.staticConfig = {
+  styleExpansionProps: {
+    flex: getFlex,
+    size: getSize,
+  },
+}
 
 export const spaceToPx = (space: Spacing) => {
   if (space === 'md' || space === true) return 12

@@ -2,7 +2,6 @@
 
 big impact changes:
 
-- searchbar expands as you type, "in location" goes left
 - emojis for dishes (autocomplete, dishview)
 - top comments everywhere
 - add comment + rate being really slick

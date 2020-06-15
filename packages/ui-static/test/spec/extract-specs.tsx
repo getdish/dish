@@ -1,4 +1,4 @@
-import { Box, Text, VStack, ZStack } from '@dish/ui'
+import { Box, Spacer, Text, VStack, ZStack } from '@dish/ui'
 import React from 'react'
 
 import { baseStyle, nestedStyle } from './extract-spec-constants'
@@ -209,4 +209,8 @@ export function Test14() {
       }}
     />
   )
+}
+
+export function Test15() {
+  return <Spacer flex={1} size={10} />
 }

@@ -16,7 +16,7 @@ export const getRankingColor = (percent: number) =>
 export const RatingView = forwardRef(
   (
     {
-      color,
+      color = 'red',
       percent,
       subtle,
       size: sizeIn,
@@ -25,10 +25,6 @@ export const RatingView = forwardRef(
     }: RatingViewProps,
     ref
   ) => {
-    if (!percent || !color) {
-      console.warn('no percent/color', percent, color, sizeIn)
-      return null
-    }
     const borderColor =
       percent >= 0.8
         ? 'rgba(190, 250, 200, 0.85)'

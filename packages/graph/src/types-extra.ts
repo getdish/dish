@@ -1,6 +1,9 @@
 import { MenuItem, Restaurant, Tag } from './types'
 
-export type RestaurantOnlyIds = Pick<Restaurant, 'id' | 'slug'>
+export type RestaurantOnlyIds = {
+  id: Restaurant['id']
+  slug: Restaurant['slug']
+}
 
 export type TagType =
   | 'lense'

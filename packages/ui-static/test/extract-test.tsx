@@ -35,6 +35,7 @@ const test = anyTest as TestInterface<{
   test12: TestApp
   test13: TestApp
   test14: TestApp
+  test15: TestApp
   app: any
 }>
 
@@ -199,6 +200,13 @@ test('13. text with complex conditional and local vars', async (t) => {
 test('14. extracts psuedo styles', async (t) => {
   const { test14 } = t.context
   const out = test14.renderer.toJSON()
+  t.snapshot(out)
+})
+
+test('15. extracts spacer (complex expansion)', async (t) => {
+  const { test15 } = t.context
+  const out = test15.renderer.toJSON()
+  console.log('out', out)
   t.snapshot(out)
 })
 

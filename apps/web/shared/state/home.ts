@@ -1,4 +1,4 @@
-import { requestIdle, sleep } from '@dish/async'
+import { fullyIdle, requestIdle, sleep } from '@dish/async'
 import {
   RestaurantOnlyIds,
   RestaurantSearchArgs,
@@ -612,18 +612,21 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
     return
   }
 
-  const [restaurantsResults, locationResults] = await Promise.all([
-    search({
-      center: state.center,
-      span: padSpan(state.span),
-      query,
-      limit: 5,
-    }),
-    searchLocations(state.searchQuery),
-  ])
+  console.time('autocomplete')
+  // const restaurantsPromise = search({
+  //   center: state.center,
+  //   span: padSpan(state.span),
+  //   query,
+  //   limit: 5,
+  // })
+  const locationResults = await searchLocations(state.searchQuery)
+  console.timeEnd('autocomplete')
+  console.log({ locationResults })
 
   const autocompleteDishes = om.state.home.autocompleteDishes
+  console.time('autocomplete.fuzzy')
   let found = await fuzzyFind(query, autocompleteDishes)
+  console.timeEnd('autocomplete.fuzzy')
   if (found.length < 10) {
     found = [...found, ...autocompleteDishes.slice(0, 10 - found.length)]
   }
@@ -639,14 +642,14 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
   const unsortedResults: AutocompleteItem[] = _.uniqBy(
     [
       ...dishResults,
-      ...restaurantsResults.map((restaurant) =>
-        createAutocomplete({
-          name: restaurant.name,
-          // TODO tom - can we get the cuisine tag icon here? we can load common ones somewhere
-          icon: '🏘',
-          type: 'restaurant',
-        })
-      ),
+      // ...restaurantsResults.map((restaurant) =>
+      //   createAutocomplete({
+      //     name: restaurant.name,
+      //     // TODO tom - can we get the cuisine tag icon here? we can load common ones somewhere
+      //     icon: '🏘',
+      //     type: 'restaurant',
+      //   })
+      // ),
       ...locationResults.map(locationToAutocomplete),
     ],
     (x) => `${x.name}${x.type}`
@@ -691,6 +694,7 @@ const runSearch: AsyncAction<{
 
   if (await om.actions.home.navigateToCurrentState()) {
     // navigate will trigger new search
+    console.warn('nav ended, but will trigger new search')
     return
   }
 
@@ -705,13 +709,13 @@ const runSearch: AsyncAction<{
 
   const shouldCancel = () => {
     const answer = !state || lastSearchAt != curId
-    if (answer) console.log('search: cancel')
+    if (answer) console.trace('search: cancel')
     return answer
   }
 
   // dont be so eager if started
   if (!opts.force && om.state.home.started) {
-    await Promise.all([sleep(10), requestIdle()])
+    await fullyIdle()
     if (shouldCancel()) return
   }
 
@@ -738,7 +742,9 @@ const runSearch: AsyncAction<{
   }
 
   // fetch
+  console.time('search')
   let restaurants = await search(searchArgs)
+  console.timeEnd('search')
   if (shouldCancel()) return
 
   // only update searchkey once finished

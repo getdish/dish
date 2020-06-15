@@ -317,7 +317,7 @@ export default memo(function HomeSearchBar() {
           }
         }}
       >
-        <HStack spacing={0} alignItems="center" flex={1} overflow="hidden">
+        <HStack alignItems="center" flex={1} overflow="hidden">
           <HomeSearchBarTags input={input} />
           <TextInput
             ref={inputRef}
@@ -404,7 +404,7 @@ export default memo(function HomeSearchBar() {
           </MediaQuery>
 
           <HStack
-            flex={1}
+            flex={145}
             maxWidth={550}
             alignItems="center"
             spacing
