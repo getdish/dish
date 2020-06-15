@@ -59,7 +59,7 @@ textarea {
   transition: top ease-out 140ms;
 }
 
-.ease-in-out-superfast {
+.ease-in-out-faster {
   transition: all ease-in-out 80ms;
 }
 .ease-in-out-fast {

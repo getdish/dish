@@ -12,7 +12,7 @@ import {
 import { useOvermindStatic } from '../../state/useOvermind'
 import { combineFns } from './combineFns'
 import { LinkProps } from './LinkProps'
-import { useNormalizeLinkProps } from './useNormalizedLink'
+import { linkActionIdle, useNormalizeLinkProps } from './useNormalizedLink'
 
 export function Link<
   Name extends keyof RoutesTable = keyof RoutesTable,
@@ -65,7 +65,7 @@ export function Link<
     }
     prevent(e)
     if (asyncClick) {
-      await fullyIdle({ min: 40 })
+      await fullyIdle(linkActionIdle)
     }
     if (onClick) {
       onClick?.(e)

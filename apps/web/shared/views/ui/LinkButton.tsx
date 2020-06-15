@@ -103,7 +103,7 @@ export function LinkButton<
       {...(props.fastClick
         ? { onPressIn: onPressCb }
         : { onPressOut: onPressCb })}
-      className={`cursor-pointer ${props.className ?? 'ease-in-out-superfast'}`}
+      className={`cursor-pointer ${props.className ?? 'ease-in-out-faster'}`}
     >
       {contents}
     </VStack>

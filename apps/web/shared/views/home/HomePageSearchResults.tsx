@@ -123,9 +123,11 @@ const HomeSearchResultsViewContent = memo(
     const [loadMore, setLoadMore] = useState(0)
     const perChunk = [0, 3, 6, 12, 24]
     // load a few at a time, less to start
-    const isLoadingInitial =
-      !state.results?.results || state.results.status === 'loading'
     const loadMoreCb = useCallback(() => setLoadMore(Date.now()), [])
+    const isLoading =
+      loadMore === 0 ||
+      !state.results?.results ||
+      state.results.status === 'loading'
 
     const results = useMemo(() => {
       const cur = allResults.slice(0, chunk * perChunk[chunk])
@@ -186,10 +188,11 @@ const HomeSearchResultsViewContent = memo(
       }
     }, [loadMore])
 
-    if (isLoadingInitial) {
+    if (isLoading) {
       return (
         <VStack>
           <LoadingItems />
+          <VStack display="none">{results}</VStack>
         </VStack>
       )
     }

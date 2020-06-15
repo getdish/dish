@@ -25,7 +25,7 @@ import { getTagId } from '../../state/Tag'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
 import { CloseButton } from './CloseButton'
-import { brandColorLight } from './colors'
+import { brandColorLight, brandColorLighter } from './colors'
 import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
 import { HomeAutocompleteBackground } from './HomeAutocompleteBackground'
@@ -164,7 +164,13 @@ export default memo(function HomeSearchBar() {
       switch (code) {
         case 13: {
           // enter
-          om.actions.home.runSearch({ force: true })
+          if (isAutocompleteActive) {
+            const item = om.state.home.autocompleteResults[autocompleteIndex]
+            if (item.type === 'restaurant') {
+            }
+          } else {
+            om.actions.home.runSearch({ force: true })
+          }
           om.actions.home.setShowAutocomplete(false)
           focusedInput.blur()
           return
@@ -263,7 +269,14 @@ export default memo(function HomeSearchBar() {
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
 
   const locationSearchElement = (
-    <VStack position="relative" flex={65} minWidth={180}>
+    <VStack
+      position="relative"
+      flex={65}
+      minWidth={180}
+      borderColor="#eee"
+      borderWidth={1}
+      borderRadius={100}
+    >
       <TextInput
         ref={locationInputRef}
         value={locationSearch}
@@ -363,7 +376,7 @@ export default memo(function HomeSearchBar() {
 
   return (
     <VStack
-      zIndex={22}
+      zIndex={2000}
       position="absolute"
       marginTop={searchBarTopOffset}
       left={16}
@@ -430,9 +443,6 @@ export default memo(function HomeSearchBar() {
 
           {!isSmall && (
             <>
-              {/* IN */}
-              <HomeSearchBarSeparator />
-
               {locationSearchElement}
               {divider}
               <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
@@ -542,6 +552,7 @@ const HomeSearchBarTags = memo(
               const isActive = om.state.home.searchbarFocusedTag === tag
               return (
                 <TagButton
+                  className=""
                   key={getTagId(tag)}
                   subtleIcon
                   backgroundColor={brandColorLight}
@@ -550,10 +561,11 @@ const HomeSearchBarTags = memo(
                   {...(isActive && {
                     backgroundColor: '#777',
                     color: '#fff',
-                    transform: [{ scale: 1.065 }, { rotate: '-1.3deg' }],
+                    transform: [{ scale: 1.05 }, { rotate: '-1.3deg' }],
                   })}
                   hoverStyle={{
-                    backgroundColor: brandColorLight,
+                    backgroundColor: brandColorLighter,
+                    transform: [{ scale: 1.02 }],
                   }}
                   size="lg"
                   fontSize={16}

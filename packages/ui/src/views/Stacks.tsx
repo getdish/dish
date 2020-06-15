@@ -1,3 +1,4 @@
+// debug
 import React, { forwardRef, useRef, useState } from 'react'
 import { View, ViewProps, ViewStyle } from 'react-native'
 
@@ -30,7 +31,7 @@ export type StackProps = Omit<
       // stronger version of pointer-events: none;
       disabled?: boolean
       contain?: 'none' | 'strict' | 'content' | 'size' | 'layout' | 'paint'
-      display?: 'inherit'
+      display?: 'inherit' | 'none' | 'inline' | 'block'
     },
   // because who tf uses alignContent or backfaceVisibility
   'alignContent' | 'backfaceVisibility'

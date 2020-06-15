@@ -78,7 +78,7 @@ export const TagButton = memo(
     }
     const tag = { name, type: type as TagType, icon, rgb }
     const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1 : 1
-    const paddingVertical = (subtle ? 0 : 6) * scale
+    const height = scale * 30
     const lineHeight = 22 * scale
     const defaultColor = noColor ? 'inherit' : getTagColor(rgb)
     const bg = backgroundColor ?? (subtle ? defaultColor : 'white')
@@ -92,7 +92,7 @@ export const TagButton = memo(
       <>
         <HStack
           className="ease-in-out-fast"
-          height={scale * 31}
+          height={height}
           backgroundColor={bg}
           borderRadius={9 * scale}
           borderWidth={1}
@@ -102,13 +102,13 @@ export const TagButton = memo(
           justifyContent="center"
           position="relative"
           minHeight={lineHeight}
-          {...(!subtle && {
-            hoverStyle: {
-              // TODO WHY SCALE NOT WORKING???
-              transform: [{ rotate: '-2deg', scale: 1.1 }],
-              ...hoverStyle,
-            },
-          })}
+          hoverStyle={hoverStyle}
+          {...(!subtle &&
+            !hoverStyle && {
+              hoverStyle: {
+                transform: [{ rotate: '-2deg', scale: 1.1 }],
+              },
+            })}
           {...rest}
         >
           {!!rank && (
@@ -141,7 +141,6 @@ export const TagButton = memo(
             fontWeight={size == 'lg' ? '500' : 'inherit'}
             // @ts-ignore
             lineHeight="inherit"
-            paddingVertical={paddingVertical}
             paddingHorizontal={subtle ? 0 : 7 * scale}
             color={fg}
             marginVertical={-7}
@@ -202,7 +201,6 @@ export const TagButton = memo(
           )}
           {!!closable && (
             <VStack
-              paddingVertical={paddingVertical}
               backgroundColor={subtle ? 'transparent' : 'transparent'}
               borderRadius={10}
               onPressIn={prevent}
