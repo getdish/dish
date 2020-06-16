@@ -1,5 +1,5 @@
 // debug
-import { Circle, HStack, Spacer, Text, ZStack } from '@dish/ui'
+import { Circle, HStack, Spacer, Text, VStack, ZStack } from '@dish/ui'
 import React, { memo, useEffect } from 'react'
 import { Plus } from 'react-feather'
 import { ScrollView } from 'react-native'
@@ -64,7 +64,6 @@ export default memo(function HomeAutoComplete() {
       left="2%"
       right="2%"
       zIndex={3000}
-      overflow="hidden"
       paddingBottom={30}
       paddingHorizontal={15}
       opacity={isShowing ? 1 : 0}
@@ -73,7 +72,6 @@ export default memo(function HomeAutoComplete() {
     >
       <HStack
         backgroundColor="rgba(0,0,0,0.95)"
-        overflow="hidden"
         borderRadius={100}
         height={49}
         paddingBottom={1} // looks better 1px up
@@ -92,14 +90,14 @@ export default memo(function HomeAutoComplete() {
             paddingHorizontal={10}
             spacing={6}
           >
-            {autocompleteResultsActive.map((x, index) => {
+            {autocompleteResultsActive.map((tag, index) => {
               const restaurantLinkProps: LinkButtonProps | null =
-                x.type == 'restaurant'
+                tag.type == 'restaurant'
                   ? {
                       tag: null,
                       name: 'restaurant',
                       params: {
-                        slug: x.tagId,
+                        slug: tag.tagId,
                       },
                       onPress: () => {
                         console.log('press')
@@ -109,55 +107,56 @@ export default memo(function HomeAutoComplete() {
                   : null
 
               const plusButtonEl =
-                x.type === 'dish' && index !== 0 && om.state.user.isLoggedIn ? (
+                tag.type === 'dish' &&
+                index !== 0 &&
+                om.state.user.isLoggedIn ? (
                   <AutocompleteAddButton />
                 ) : null
 
               const isActive = autocompleteIndex === index
 
-              const iconElement =
-                x.icon?.indexOf('http') === 0 ? (
-                  <img
-                    src={x.icon}
-                    style={{
-                      width: 26,
-                      height: 26,
-                      borderRadius: 100,
-                      marginTop: 'auto',
-                      marginBottom: 'auto',
-                    }}
-                  />
-                ) : x.icon ? (
-                  <Circle size={26} backgroundColor="rgba(150,150,150,0.1)">
-                    <Text>{x.icon} </Text>
-                  </Circle>
-                ) : null
+              const iconElement = (
+                <VStack marginVertical={-2}>
+                  {tag.icon?.indexOf('http') === 0 ? (
+                    <img
+                      src={tag.icon}
+                      style={{
+                        width: 26,
+                        height: 26,
+                        borderRadius: 100,
+                      }}
+                    />
+                  ) : tag.icon ? (
+                    <Circle size={26} backgroundColor="rgba(150,150,150,0.1)">
+                      <Text>{tag.icon} </Text>
+                    </Circle>
+                  ) : null}
+                </VStack>
+              )
 
               return (
                 <LinkButton
-                  key={`${x.tagId}${index}`}
+                  key={`${tag.tagId}${index}`}
                   className=""
                   onPress={() => {
                     setAvoidNextAutocompleteShowOnFocus()
                     if (showLocation) {
-                      om.actions.home.setLocation(x.name)
+                      om.actions.home.setLocation(tag.name)
                     }
                     console.log('set false')
                     om.actions.home.setShowAutocomplete(false)
                   }}
                   {...(!showLocation && {
-                    tag: x,
+                    tag,
                   })}
-                  flexDirection="row"
                   alignItems="center"
                   justifyContent="center"
-                  height={32}
                   lineHeight={24}
                   paddingVertical={5}
                   paddingHorizontal={10}
                   borderRadius={100}
                   backgroundColor={'transparent'}
-                  fontSize={15}
+                  fontSize={14}
                   maxWidth="17vw"
                   hoverStyle={{
                     backgroundColor: 'rgba(100,100,100,0.65)',
@@ -165,14 +164,15 @@ export default memo(function HomeAutoComplete() {
                   {...(isActive && {
                     backgroundColor: '#fff',
                   })}
-                  ellipse
                   {...restaurantLinkProps}
                 >
-                  {iconElement}
-                  {!!iconElement && <Spacer size={6} />}
-                  <Text color={isActive ? '#000' : '#fff'}>
-                    {x.name} {plusButtonEl}
-                  </Text>
+                  <HStack>
+                    {iconElement}
+                    {!!iconElement && <Spacer size={6} />}
+                    <Text ellipse color={isActive ? '#000' : '#fff'}>
+                      {tag.name} {plusButtonEl}
+                    </Text>
+                  </HStack>
                 </LinkButton>
               )
             })}

@@ -108,6 +108,18 @@ const derivations = {
   previousState: derived<HomeState, HomeStateItem>(
     (state) => state.states[state.states.length - 2]
   ),
+  lastActiveTags: derived<HomeState, Tag[]>((state) => {
+    const lastTaggable = _.findLast(
+      state.states,
+      (x) => isHomeState(x) || isSearchState(x)
+    ) as HomeStateItemSearch | HomeStateItemHome
+    console.log(
+      'deirving active tags',
+      lastTaggable,
+      getActiveTags(state, lastTaggable)
+    )
+    return getActiveTags(state, lastTaggable)
+  }),
   searchBarTags: derived<HomeState, Tag[]>((state) =>
     state.lastActiveTags.filter(isSearchBarTag)
   ),
@@ -148,13 +160,6 @@ const derivations = {
       return cur.results.status === 'loading'
     }
     return false
-  }),
-  lastActiveTags: derived<HomeState, Tag[]>((state) => {
-    const lastTaggable = _.findLast(
-      state.states,
-      (x) => isHomeState(x) || isSearchState(x)
-    ) as HomeStateItemSearch | HomeStateItemHome
-    return getActiveTags(state, lastTaggable)
   }),
 }
 
@@ -1115,9 +1120,11 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
     const sameTagIds = isEqual(state['activeStateIds'], next.activeTagIds)
     const sameSearchQuery = isEqual(state.searchQuery, next.searchQuery)
     assert(!sameTagIds || !sameSearchQuery)
-    state.searchQuery = next.searchQuery
-    console.log('now set', next)
-    state.activeTagIds = next.activeTagIds
+    console.log('now set', JSON.stringify(next, null, 2))
+    om.state.home.states[om.state.home.states.length - 1] = {
+      ...state,
+      ...next,
+    }
     return await syncStateToRoute(om, next)
   } catch (err) {
     handleAssertionError(err)
