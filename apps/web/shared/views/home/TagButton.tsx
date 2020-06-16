@@ -211,7 +211,7 @@ export const TagButton = memo(
                 marginRight: 2,
               })}
               position="relative"
-              top="6%"
+              top="1px"
               {...(subtle && {
                 position: 'absolute',
                 top: -9,
