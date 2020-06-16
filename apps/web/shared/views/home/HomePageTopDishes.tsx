@@ -150,9 +150,9 @@ const HomeTopDishesContent = memo(() => {
   )
 })
 
-const dishHeight = 130
+const dishHeight = 140
 const padding = 30
-const spacing = 25
+const spacing = 6
 const pctRestaurant = 0.3
 
 const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
@@ -239,7 +239,7 @@ const TopDishesRestaurantsSide = memo(
     const [
       hoveredRestaurant,
       setHoveredRestaurant,
-    ] = useState<Restaurant | null>(null)
+    ] = useState<Restaurant | null>(country.top_restaurants?.[0] ?? null)
     const onHoverRestaurant = useCallback((restaurant: Restaurant) => {
       setHoveredRestaurant(restaurant)
     }, [])
@@ -328,11 +328,12 @@ export const RestaurantButton = memo(
           backgroundColor: 'transparent',
         })}
         fontSize={14}
-        zIndex={active ? 2 : 1}
+        zIndex={1}
         {...(active && {
           borderColor: '#eee',
           shadowColor: 'rgba(0,0,0,0.1)',
           shadowRadius: 5,
+          zIndex: 2,
         })}
         paddingRight={34}
         {...props}
@@ -351,7 +352,12 @@ export const RestaurantButton = memo(
               marginBottom={-4}
             />
           )}
-          <Text ellipse fontWeight="400">
+          <Text
+            ellipse
+            fontSize={14}
+            fontWeight={active ? '500' : '300'}
+            color={active ? '#000' : '#666'}
+          >
             {typeof rank === 'number' ? `${rank}. ` : ''}
             {restaurant.name}
           </Text>

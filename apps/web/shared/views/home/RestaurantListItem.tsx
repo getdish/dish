@@ -331,7 +331,7 @@ const RestaurantPeek = memo(
     const drawerWidth = useHomeDrawerWidth()
     const { searchState, size = 'md' } = props
     const tag_names = Object.keys(searchState?.activeTagIds || {})
-    const spacing = size == 'lg' ? 16 : 24
+    const spacing = size == 'lg' ? 8 : 6
     const isMedium = useMediaQueryIsMedium()
     const restaurant = restaurantQuery(props.restaurantSlug)
     const allPhotos = restaurantPhotosForCarousel({
@@ -339,7 +339,7 @@ const RestaurantPeek = memo(
       tag_names,
     })
     const photos = allPhotos.slice(0, 5)
-    const dishSize = (size === 'lg' ? 190 : 150) * (isMedium ? 0.85 : 1)
+    const dishSize = (size === 'lg' ? 220 : 180) * (isMedium ? 0.85 : 1)
     const [isLoaded, setIsLoaded] = useState(false)
 
     return (

@@ -11,12 +11,12 @@ export const Squircle = ({
   isHovered?: boolean
   size: number
 }) => {
-  const borderRadius = 40
+  const borderRadius = 10
   return (
     <>
       {/* frame (shadow) */}
       <VStack
-        width={size}
+        width={size * 0.8}
         height={size}
         // shadowColor="rgba(0,0,0,0.032)"
         // shadowRadius={20}
