@@ -113,11 +113,6 @@ const derivations = {
       state.states,
       (x) => isHomeState(x) || isSearchState(x)
     ) as HomeStateItemSearch | HomeStateItemHome
-    console.log(
-      'deirving active tags',
-      lastTaggable,
-      getActiveTags(state, lastTaggable)
-    )
     return getActiveTags(state, lastTaggable)
   }),
   searchBarTags: derived<HomeState, Tag[]>((state) =>

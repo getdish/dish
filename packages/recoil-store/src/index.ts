@@ -31,7 +31,7 @@ const storeToRecoilStore = new WeakMap<any, any>()
 const storeToAttributes = new WeakMap<any, StoreAttributes>()
 
 export function useRecoilStore<A extends Store<B>, B>(
-  StoreKlass: new (props: B) => A,
+  StoreKlass: new (props?: B) => A,
   props?: B
 ): A {
   let recoilStore = storeToRecoilStore.get(StoreKlass)

@@ -1,14 +1,15 @@
 import { fullyIdle } from '@dish/async'
+import { useRecoilStore } from '@dish/recoil-store'
 import { useForceUpdate } from '@dish/ui'
 import { isEqual } from 'lodash'
-import { useContext, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { memoize } from '../../helpers/memoizeWeak'
 import { HomeStateItem } from '../../state/home'
 import { getNavigateToTags } from '../../state/home-tag-helpers'
 import { NavigableTag } from '../../state/Tag'
 import { omStatic } from '../../state/useOvermind'
-import { CurrentStateID } from '../home/CurrentStateID'
+import { HomeStateStore } from '../home/HomeStackView'
 import { LinkButtonNamedProps, LinkButtonProps } from './LinkProps'
 
 export const useNormalizeLinkProps = (
@@ -29,8 +30,10 @@ const useNormalizedLink = (
   props: Partial<LinkButtonProps>
 ): LinkButtonNamedProps | null => {
   const forceUpdate = useForceUpdate()
-  const currentStateID = useContext(CurrentStateID)
-  const state = omStatic.state.home.states.find((x) => x.id === currentStateID)!
+  const homeState = useRecoilStore(HomeStateStore)
+  const state = omStatic.state.home.states.find(
+    (x) => x.id === homeState.currentId
+  )!
   const linkProps = getNormalizedLink(props, state)
   return useMemo(() => {
     if (linkProps) {
