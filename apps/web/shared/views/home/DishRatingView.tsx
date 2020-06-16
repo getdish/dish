@@ -7,19 +7,19 @@ export type DishRatingViewProps = Omit<RatingViewProps, 'percent' | 'color'> & {
   dish: TopCuisineDish
 }
 
-export const getDishRating = (dish: TopCuisineDish) => {
+export const getDishRatingPercent = (dish: TopCuisineDish) => {
   if (typeof dish.rating == 'undefined') return
-  return Math.round(dish.rating * 2)
+  return Math.round(dish.rating * 10)
 }
 
-export const getRankingColor = (percent: number | undefined) => {
-  if (!percent) return
-  return percent >= 8 ? 'green' : percent >= 5 ? 'orange' : 'red'
+export const getRankingColor = (rating: number | undefined) => {
+  if (!rating) return
+  return rating >= 0.8 ? 'green' : rating >= 0.5 ? 'orange' : 'red'
 }
 
 export const DishRatingView = forwardRef(
   ({ dish, ...rest }: DishRatingViewProps, ref) => {
-    const percent = getDishRating(dish)
+    const percent = getDishRatingPercent(dish)
     const color = getRankingColor(percent)
     return (
       <RatingView
