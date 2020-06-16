@@ -42,6 +42,7 @@ WITH by_country AS (
               SELECT id FROM tag WHERE tag.name = (SELECT DISTINCT t.name)
             )
             AND tag.type != 'category'
+            AND tag.frequency < 4
         ) as tags_by_cuisine
         ORDER by count DESC
         LIMIT 10

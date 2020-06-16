@@ -27,6 +27,7 @@ BEGIN
         )
       )
         AND type != 'country'
+        AND frequency < 4
   );
   RETURN QUERY
   SELECT * FROM (
