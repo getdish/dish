@@ -12,6 +12,11 @@ const TerserPlugin = require('terser-webpack-plugin')
 // const ReactRefreshPlugin = require('@webhotelier/webpack-fast-refresh')
 const { UIStaticWebpackPlugin } = require('@dish/ui-static')
 
+const ExtractCssChunks = require('extract-css-chunks-webpack-plugin')
+const DedupeParentCssFromChunksWebpackPlugin = require('dedupe-parent-css-from-chunks-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
 // 'ssr' | 'worker' | 'preact' | 'client'
@@ -105,7 +110,19 @@ module.exports = function getWebpackConfig(
         minimize: !process.env.NO_MINIFY && isProduction && TARGET !== 'ssr',
         concatenateModules: isProduction && !process.env.ANALYZE_BUNDLE,
         usedExports: isProduction,
-        splitChunks: false,
+        splitChunks:
+          isProduction && TARGET != 'ssr'
+            ? {
+                cacheGroups: {
+                  styles: {
+                    name: 'styles',
+                    test: /\.css$/,
+                    chunks: 'all',
+                    enforce: true,
+                  },
+                },
+              }
+            : false,
         // isProduction && TARGET !== 'ssr'
         //   ? {
         //       // http2
@@ -116,10 +133,14 @@ module.exports = function getWebpackConfig(
         //     }
         //   : false,
         runtimeChunk: false,
-        minimizer: [
-          // new ClosurePlugin(),
-          new TerserPlugin(),
-        ],
+        minimizer:
+          TARGET === 'ssr'
+            ? []
+            : [
+                // new ClosurePlugin(),
+                new TerserPlugin(),
+                new OptimizeCSSAssetsPlugin({}),
+              ],
       },
       externals: {
         [path.join(__dirname, 'web/mapkit.js')]: 'mapkit',
@@ -148,9 +169,15 @@ module.exports = function getWebpackConfig(
               {
                 test: /\.css$/i,
                 use:
-                  // isProduction
-                  //   ? ['file-loader', 'extract-loader', 'css-loader']
-                  ['style-loader', 'css-loader'],
+                  isProduction && TARGET !== 'ssr'
+                    ? [
+                        MiniCssExtractPlugin.loader,
+                        // 'file-loader',
+                        // ExtractCssChunks.loader,
+                        // 'style-loader',
+                        'css-loader',
+                      ]
+                    : ['style-loader', 'css-loader'],
               },
               {
                 test: /\.(png|svg|jpe?g|gif)$/,
@@ -181,7 +208,22 @@ module.exports = function getWebpackConfig(
         // breaks a couple things, possible to ignore
         // isClient && isProduction && new ShakePlugin({}),
 
-        isProduction && new LodashPlugin(),
+        ...((isProduction &&
+          TARGET != 'ssr' && [
+            new LodashPlugin(),
+            new MiniCssExtractPlugin({
+              // Options similar to the same options in webpackOptions.output
+              // both options are optional
+              filename: '[name].css',
+              chunkFilename: '[id].css',
+            }),
+            // new ExtractCssChunks(),
+            // new DedupeParentCssFromChunksWebpackPlugin({
+            //   assetNameRegExp: /\.optimize\.css$/g, // the default is /\.css$/g
+            //   canPrint: true, // the default is true
+            // }),
+          ]) ||
+          []),
 
         // extract static styles in production
         isStaticExtracted && new UIStaticWebpackPlugin(),

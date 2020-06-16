@@ -1,12 +1,5 @@
-import {
-  LinearGradient,
-  VStack,
-  ZStack,
-  useDebounceEffect,
-  useWaterfall,
-} from '@dish/ui'
-import React, { Suspense, memo, useState } from 'react'
-import { StyleSheet } from 'react-native'
+import { VStack } from '@dish/ui'
+import React, { Suspense, memo } from 'react'
 
 import { frameWidthMax, isWorker } from '../../constants'
 import {
@@ -16,7 +9,6 @@ import {
   isUserState,
 } from '../../state/home-helpers'
 import { ErrorBoundary } from '../ErrorBoundary'
-import { CurrentStateID } from './CurrentStateID'
 import { HomeMap } from './HomeMap'
 import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
 import { HomeMapPIP } from './HomeMapPIP'
@@ -88,23 +80,22 @@ const HomePageContent = memo(() => {
         <HomeViewDrawer>
           <HomeStackView>
             {(homeState, isActive, index) => {
+              console.warn('we could try using key={homeState.id} for search')
               return (
-                <CurrentStateID.Provider value={homeState.id}>
-                  <Suspense fallback={null}>
-                    {isHomeState(homeState) && (
-                      <HomePageTopDishes key={0} state={homeState} />
-                    )}
-                    {isUserState(homeState) && (
-                      <HomePageUser key={1} state={homeState} />
-                    )}
-                    {isSearchState(homeState) && (
-                      <HomePageSearchResults key={2} state={homeState} />
-                    )}
-                    {isRestaurantState(homeState) && (
-                      <HomePageRestaurant key={3} state={homeState} />
-                    )}
-                  </Suspense>
-                </CurrentStateID.Provider>
+                <Suspense fallback={null}>
+                  {isHomeState(homeState) && (
+                    <HomePageTopDishes key={0} state={homeState} />
+                  )}
+                  {isUserState(homeState) && (
+                    <HomePageUser key={homeState} state={homeState} />
+                  )}
+                  {isSearchState(homeState) && (
+                    <HomePageSearchResults key={2} state={homeState} />
+                  )}
+                  {isRestaurantState(homeState) && (
+                    <HomePageRestaurant key={3} state={homeState} />
+                  )}
+                </Suspense>
               )
             }}
           </HomeStackView>

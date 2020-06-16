@@ -1,4 +1,3 @@
-// debug
 import { Circle, HStack, Spacer, Text, VStack, ZStack } from '@dish/ui'
 import React, { memo, useEffect } from 'react'
 import { Plus } from 'react-feather'

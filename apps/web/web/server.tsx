@@ -58,14 +58,20 @@ server.get('/hello', (_, res) => res.send('hello world'))
 const clientBuildPath = Path.join(rootDir, 'web-build')
 const clientBuildLegacyPath = Path.join(rootDir, 'web-build-legacy')
 
-server.use('/static', express.static(Path.join(clientBuildPath, 'static')))
-server.use(
-  '/static',
-  express.static(Path.join(clientBuildLegacyPath, 'static'))
-)
+server.use('/', express.static(clientBuildPath))
+server.use('/', express.static(clientBuildLegacyPath))
 
 // TODO amp
 // setHeaders: res => res.setHeader('AMP-Access-Control-Allow-Source-Origin', `http://localhost:${PORT}`),
+
+const clientHTMLModern = readFileSync(
+  Path.join(clientBuildPath, 'index.html'),
+  'utf8'
+)
+const clientHTMLLegacy = readFileSync(
+  Path.join(clientBuildLegacyPath, 'index.html'),
+  'utf8'
+)
 
 server.get('*', async (req, res) => {
   const htmlPath = Path.join(rootDir, 'web', 'index.html')
@@ -85,15 +91,11 @@ server.get('*', async (req, res) => {
     allowHigherVersions: true,
   })
 
-  const clientHTML = readFileSync(
-    Path.join(
-      isModernUser ? clientBuildPath : clientBuildLegacyPath,
-      'index.html'
-    ),
-    'utf8'
-  )
+  const clientHTML = isModernUser ? clientHTMLModern : clientHTMLLegacy
   const clientScripts =
     clientHTML.match(/<script\b[^>]*>([\s\S]*?)<\/script>/gm) ?? []
+  const clientLinks = clientHTML.match(/<link\b[^>]*>/gm) ?? []
+  console.log('clientLinks', clientHTML, clientLinks)
 
   let out = ''
   for (const line of template.split('\n')) {
@@ -115,6 +117,11 @@ server.get('*', async (req, res) => {
         window.__OVERMIND_MUTATIONS = ${JSON.stringify(overmind.hydrate())}
       </script>
       ${clientScripts.join('\n')}\n`
+      continue
+    }
+    if (line.indexOf('<!-- links -->') >= 0) {
+      out += `
+      ${clientLinks.join('\n')}\n`
       continue
     }
     out += line

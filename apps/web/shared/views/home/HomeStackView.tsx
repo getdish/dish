@@ -1,3 +1,4 @@
+import { Store, useRecoilStore } from '@dish/recoil-store'
 import { PopoverShowContext, VStack, ZStack, useDebounceValue } from '@dish/ui'
 import _ from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
@@ -8,9 +9,14 @@ import { useOvermind, useOvermindStatic } from '../../state/useOvermind'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 
+export class HomeStateStore extends Store {
+  currentId = ''
+}
+
 export function HomeStackView<A extends HomeStateItem>(props: {
   children: (a: A, isActive: boolean, index: number) => React.ReactNode
 }) {
+  const currentState = useRecoilStore(HomeStateStore)
   const om = useOvermind()
   const breadcrumbs = om.state.home.breadcrumbStates
   const homeStates = useMemo(() => {
@@ -25,6 +31,13 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   const items = isRemoving ? states : homeStates
   const key = `${items.map((x) => x.id).join(' ')}`
   const lastHomeStates = useMemo(() => om.state.home.states, [key])
+
+  const activeItem = items[items.length - 1]
+  useEffect(() => {
+    if (activeItem) {
+      currentState.currentId = activeItem.id
+    }
+  }, [activeItem?.id])
 
   const itemChildren = useMemo(() => {
     return items.map((item, index) => {

@@ -166,10 +166,22 @@ export default memo(function HomeSearchBar() {
           // enter
           if (isAutocompleteActive) {
             const item = om.state.home.autocompleteResults[autocompleteIndex]
-            if (item.type === 'restaurant') {
+            console.log('item', item)
+            switch (item.type) {
+              case 'restaurant': {
+                break
+              }
+              case 'dish':
+              case 'country': {
+                break
+              }
             }
           } else {
-            om.actions.home.runSearch({ force: true })
+            if (om.state.home.currentStateType !== 'search') {
+              om.actions.home.popTo('search')
+            } else {
+              om.actions.home.runSearch({ force: true })
+            }
           }
           om.actions.home.setShowAutocomplete(false)
           focusedInput.blur()
