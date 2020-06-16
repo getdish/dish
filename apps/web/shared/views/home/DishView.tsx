@@ -75,8 +75,8 @@ export const DishView = memo(
               size={size > 170 ? 'sm' : 'xs'}
               dish={dish}
               position="absolute"
-              top={2}
-              right={-6}
+              top={-3}
+              left={-3}
             />
           )}
         </ZStack>
@@ -133,9 +133,9 @@ export const DishView = memo(
               borderRadius={80}
               paddingVertical={3}
               paddingHorizontal={8}
-              maxWidth="100%"
+              maxWidth="calc(90% - 30px)"
               overflow="hidden"
-              shadowColor="rgba(0,0,0,0.1)"
+              shadowColor="rgba(0,0,0,0.2)"
               shadowRadius={2}
               top={0}
               {...(isHovered && {

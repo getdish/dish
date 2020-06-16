@@ -215,7 +215,7 @@ const HomeSearchResultsViewContent = memo(
 
     return (
       <>
-        <VStack paddingBottom={20} spacing={14}>
+        <VStack paddingBottom={20} spacing={6}>
           {results}
           {isLoadingMore && (
             <VStack alignItems="center" minHeight={200} justifyContent="center">
