@@ -32,7 +32,7 @@ export const SmallCircleButton = (props: StackProps) => {
       spacing="xs"
       {...props}
       hoverStyle={{
-        backgroundColor: 'rgba(0,0,0,0.4)',
+        backgroundColor: 'rgba(100,100,100,0.6)',
         ...props.hoverStyle,
       }}
       pressStyle={{

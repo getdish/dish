@@ -17,12 +17,15 @@ const fsStyle = {
 export type StackProps = Omit<
   ViewStyle &
     ViewProps & {
+      // give it a descriptive name for static extraction (TODO)
+      name?: string
       fullscreen?: boolean
       children?: any
       hoverStyle?: ViewStyle | null
       pressStyle?: ViewStyle | null
       onHoverIn?: Function
       onHoverOut?: Function
+      onPress?: Function
       onPressIn?: Function
       onPressOut?: Function
       spacing?: Spacing
@@ -45,6 +48,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
         pointerEvents,
         style = null,
         pressStyle = null,
+        onPress,
         onPressIn,
         onPressOut,
         hoverStyle = null,
@@ -120,7 +124,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
         </View>
       )
 
-      const attachPress = !!(pressStyle || onPressIn || onPressOut)
+      const attachPress = !!(pressStyle || onPressIn || onPressOut || onPress)
       const attachHover = !!(
         hoverStyle ||
         onHoverIn ||
@@ -155,6 +159,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
                 e.preventDefault()
                 setPrs(false)
                 onPressOut?.(e)
+                onPress?.(e)
                 // onMouseUp?.(e)
               },
             })}

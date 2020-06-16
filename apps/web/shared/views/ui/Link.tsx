@@ -20,6 +20,7 @@ export function Link<
 >(
   allProps: LinkProps<Name, Params> & {
     asyncClick?: boolean
+    navigateAfterPress?: boolean
   }
 ) {
   const {
@@ -31,7 +32,6 @@ export function Link<
     children,
     ellipse,
     lineHeight,
-    fastClick,
     padding,
     color,
     onClick,
@@ -41,6 +41,7 @@ export function Link<
     className,
     asyncClick,
     textAlign,
+    navigateAfterPress,
     ...restProps
   } = allProps
   const { onPress, onMouseDown, ...linkProps } = useNormalizeLinkProps(
@@ -71,6 +72,9 @@ export function Link<
       onClick?.(e)
     } else if (onPress) {
       onPress?.()
+      if (navigateAfterPress) {
+        om.actions.router.navigate(navItem)
+      }
     } else {
       if (!preventNavigate) {
         om.actions.router.navigate(navItem)
@@ -94,15 +98,9 @@ export function Link<
     elementName,
     {
       href: getPathFromParams(navItem),
-      ...restProps,
-      onMouseDown: combineFns(
-        onMouseDown,
-        restProps['onMouseDown'],
-        fastClick ? handleClick : null
-      ),
-      ...(!fastClick && {
-        onClick: handleClick,
-      }),
+      onMouseDown,
+      ...linkProps,
+      onClick: handleClick,
       className: `${className ?? ''} ${inline ? 'inline-flex' : ' flex'}`,
       style: {
         cursor: 'pointer',

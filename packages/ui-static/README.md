@@ -8,6 +8,7 @@
   - final step is hoverStyle={{ color: x, ...parent.hoverStyle, }}
 - extract media queries
 - pass in config to be able to create static extracted easily within web
+  - OverlayLinkButton
 - SmallCircleButton case spreads
 - Circle, EmojiButton, LinearGradient, VoteButton
 - LinkButton - getting this to just extract styles would be big
@@ -20,3 +21,4 @@
   - transition, cursor
 - Link - can maybe fully extract, if we can just run the actual component and then return the results???
 - CSS variables for color!
+- <LinearGradient name="MySpecificGradient" /> option for dev mode

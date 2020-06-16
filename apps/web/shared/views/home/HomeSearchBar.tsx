@@ -1,3 +1,4 @@
+import { fullyIdle } from '@dish/async'
 import {
   Circle,
   Divider,
@@ -25,7 +26,6 @@ import { getTagId } from '../../state/Tag'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
 import { CloseButton } from './CloseButton'
-import { brandColorLight, brandColorLighter } from './colors'
 import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
 import { HomeAutocompleteBackground } from './HomeAutocompleteBackground'
@@ -166,21 +166,21 @@ export default memo(function HomeSearchBar() {
           // enter
           if (isAutocompleteActive) {
             const item = om.state.home.autocompleteResults[autocompleteIndex]
-            console.log('item', item)
-            switch (item.type) {
-              case 'restaurant': {
-                break
-              }
-              case 'dish':
-              case 'country': {
-                break
-              }
+            if (item && 'tagId' in item) {
+              om.actions.home.navigateToTag({
+                tags: [{ id: item.tagId, name: item.name, type: item.type }],
+              })
+              return
             }
+            console.warn('implement:', item)
           } else {
             if (om.state.home.currentStateType !== 'search') {
               om.actions.home.popTo('search')
             } else {
-              om.actions.home.runSearch({ force: true })
+              om.actions.home.runSearch({
+                searchQuery: e.target.value,
+                force: true,
+              })
             }
           }
           om.actions.home.setShowAutocomplete(false)
@@ -564,11 +564,11 @@ const HomeSearchBarTags = memo(
               const isActive = om.state.home.searchbarFocusedTag === tag
               return (
                 <TagButton
-                  className=""
+                  className="no-transition"
                   key={getTagId(tag)}
                   subtleIcon
-                  backgroundColor={brandColorLight}
-                  color="#fff"
+                  backgroundColor="#eee"
+                  color="#666"
                   borderColor={'transparent'}
                   {...(isActive && {
                     backgroundColor: '#777',
@@ -576,8 +576,8 @@ const HomeSearchBarTags = memo(
                     transform: [{ scale: 1.05 }, { rotate: '-1.3deg' }],
                   })}
                   hoverStyle={{
-                    backgroundColor: brandColorLighter,
-                    transform: [{ scale: 1.02 }],
+                    backgroundColor: '#f2f2f2',
+                    // transform: [{ scale: 1.02 }],
                   }}
                   size="lg"
                   fontSize={16}
@@ -589,8 +589,10 @@ const HomeSearchBarTags = memo(
                     om.actions.home.setSearchBarFocusedTag(tag)
                   }}
                   closable
-                  onClose={() => {
+                  onClose={async () => {
                     om.actions.home.navigateToTag({ tags: [tag] })
+                    await fullyIdle()
+                    input?.focus()
                   }}
                 />
               )

@@ -24,7 +24,6 @@ export type LinkSharedProps = {
   fontSize?: TextProps['fontSize']
   lineHeight?: TextProps['lineHeight']
   ellipse?: boolean
-  fastClick?: boolean
   replace?: boolean
   disabledIfActive?: boolean
   tagName?: string

@@ -95,7 +95,6 @@ server.get('*', async (req, res) => {
   const clientScripts =
     clientHTML.match(/<script\b[^>]*>([\s\S]*?)<\/script>/gm) ?? []
   const clientLinks = clientHTML.match(/<link\b[^>]*>/gm) ?? []
-  console.log('clientLinks', clientHTML, clientLinks)
 
   let out = ''
   for (const line of template.split('\n')) {

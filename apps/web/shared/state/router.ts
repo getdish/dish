@@ -314,11 +314,13 @@ export const actions = {
 
 export const effects = {
   open(url: string) {
+    console.log('open', url)
     ignoreNextRoute = true
     page.show(url)
   },
 
   replace(url: string) {
+    console.log('replace', url)
     ignoreNextRoute = true
     page.replace(url)
   },
@@ -353,7 +355,7 @@ export function getPathFromParams({
     if (path.indexOf(':') > -1) {
       path = path.replace(
         `:${key}`,
-        convertToSlug ? slugify(params[key], '-') : params[key]
+        convertToSlug ? slugify(params[key]) : params[key]
       )
     } else if (path.indexOf('*') > -1) {
       replaceSplatParams.push(key)

@@ -1,4 +1,4 @@
-import { StackProps, Text, VStack, prevent } from '@dish/ui'
+import { StackProps, Text, VStack, combineFns, prevent } from '@dish/ui'
 import React, { useRef } from 'react'
 
 import { RoutesTable } from '../../state/router'
@@ -12,7 +12,6 @@ export function LinkButton<
 >(allProps: LinkButtonProps<Name, Params>) {
   let restProps: StackProps
   let contents: React.ReactElement
-  let onPress: any
   const containerRef = useRef<any>()
 
   // this handles the tag/name/params props
@@ -26,7 +25,6 @@ export function LinkButton<
       onPress,
       fontSize,
       ellipse,
-      fastClick,
       lineHeight,
       fontWeight,
       padding,
@@ -51,7 +49,6 @@ export function LinkButton<
         fontWeight={fontWeight}
         ellipse={ellipse}
         textAlign={textAlign}
-        fastClick={fastClick}
         preventNavigate={preventNavigate}
         padding={getStylePadding({
           padding,
@@ -88,8 +85,6 @@ export function LinkButton<
     )
   }
 
-  const onPressCb = onPress ? asyncLinkAction(onPress) : null
-
   return (
     <VStack
       // only handle click events on non-a links (we handle them in Link separately)
@@ -100,9 +95,6 @@ export function LinkButton<
         transform: [{ scale: 0.98 }],
       }}
       {...restProps}
-      {...(props.fastClick
-        ? { onPressIn: onPressCb }
-        : { onPressOut: onPressCb })}
       className={`cursor-pointer ${props.className ?? 'ease-in-out-faster'}`}
     >
       {contents}

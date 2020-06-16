@@ -28,14 +28,19 @@ const sets = [
   { to: '-', from: "[·/_,:;']" },
 ]
 
-export function slugify(text: string, separator = '-') {
-  text = text.toString().toLowerCase().trim()
+const cache = new Map()
+
+export function slugify(text: string) {
+  if (cache.has(text)) {
+    return cache.get(text)
+  }
+  let next = text.toString().toLowerCase().trim()
 
   sets.forEach((set) => {
-    text = text.replace(new RegExp(set.from, 'gi'), set.to)
+    next = next.replace(new RegExp(set.from, 'gi'), set.to)
   })
 
-  text = text
+  next = next
     .toString()
     .toLowerCase()
     .replace(/\s+/g, '-') // Replace spaces with -
@@ -46,12 +51,18 @@ export function slugify(text: string, separator = '-') {
     .replace(/-+$/, '') // Trim - from end of text
 
   if (typeof separator !== 'undefined' && separator !== '-') {
-    text = text.replace(/-/g, separator)
+    next = next.replace(/-/g, separator)
   }
 
-  if (text == '') {
-    return `no-slug`
+  if (next == '') {
+    next = `no-slug`
   }
 
-  return text
+  cache.set(text, next)
+  if (cache.size > 300) {
+    console.warn(
+      'memory may be high, we can optimize this & slice first ~1/3 off here'
+    )
+  }
+  return next
 }

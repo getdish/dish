@@ -77,6 +77,10 @@ textarea {
   pointer-events: none !important;
 }
 
+.no-transition {
+  transition: unset;
+}
+
 /* fix pointer events bug */
 .react-tiny-popover-container {
   pointer-events: none;

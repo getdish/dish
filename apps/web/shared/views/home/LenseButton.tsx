@@ -62,7 +62,6 @@ export const LenseButton = memoIsEqualDeep(
             height={sizePx * 0.9 * scale}
             fontWeight="400"
             textAlign="center"
-            marginTop={(isActive ? -4 : 0) * scale}
           >
             {(lense.icon ?? '').trim()}
             {!minimal

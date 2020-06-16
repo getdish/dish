@@ -7,7 +7,6 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "files": ["./types/recoil.d.ts"],
-  "include": ["src"],
+  "include": ["src", "types"],
   "references": [{ "path": "../react-test-env" }]
 }

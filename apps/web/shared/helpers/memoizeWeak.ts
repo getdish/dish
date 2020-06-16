@@ -20,12 +20,16 @@ class MemoCache {
   }
 }
 
-export function memoize<A extends Function>(fn: A, { ttl = Infinity } = {}): A {
+export function memoize<A extends Function>(
+  fn: A,
+  { ttl = Infinity, debugId = 0 } = {}
+): A {
   const cache = new MemoCache()
   return function (this: A, ...args: any[]) {
     // get (or create) a cache item
     const item = cache.get(args)
     if (item.hasOwnProperty('value') && item.expires >= Date.now()) {
+      if (debugId) console.log('cache hit', debugId)
       return item.value
     }
     item.expires = Date.now() + ttl
