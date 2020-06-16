@@ -10,7 +10,7 @@
 # └─────────────────────  Minute   (0..59)
 
 
-0  0  *  *  0  node /app/services/crawlers/_/google/all.js
+0  0  *  *  0  xvfb-run node /app/services/crawlers/_/google/all.js
 0 12  *  *  1  node /app/services/crawlers/_/infatuated/all.js
 0  0  *  *  1  node /app/services/crawlers/_/michelin/all.js
 0  0  *  *  2  node /app/services/crawlers/_/self/all.js
