@@ -1,10 +1,8 @@
 import {
   RestaurantTag,
-  RestaurantTagWithID,
   Tag,
   convertSimpleTagsToRestaurantTags,
   restaurantGetAllPossibleTags,
-  restaurantUpsertManyTags,
   scrapeGetData,
   tagFindCountries,
   tagSlug,
@@ -258,5 +256,16 @@ export class Tagging {
       const all_text = [review.text].join(' ')
       this.findDishesInText(all_text)
     }
+  }
+
+  deDepulicateTags() {
+    const map = new Map()
+    this.restaurant_tags.forEach((rt: RestaurantTag) => {
+      map.set(rt.tag_id, {
+        ...rt,
+        ...map.get(rt.tag_id),
+      })
+    })
+    this.restaurant_tags = Array.from(map.values())
   }
 }

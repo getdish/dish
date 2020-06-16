@@ -97,13 +97,14 @@ export class Self extends WorkerJob {
   async preMerge(restaurant: RestaurantWithId) {
     this.restaurant = restaurant
     console.log('Merging: ' + this.restaurant.name)
-    this._start_time = process.hrtime()
+    this.resetTimer()
     await this.getScrapeData()
     this.logTime('scrapes fetched')
   }
 
   async postMerge() {
     this.resetTimer()
+    this.tagging.deDepulicateTags()
     await restaurantUpsertManyTags(
       this.restaurant,
       this.tagging.restaurant_tags

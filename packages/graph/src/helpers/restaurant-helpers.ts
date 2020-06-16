@@ -12,7 +12,7 @@ import { levenshteinDistance } from './levenshteinDistance'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 import { restaurantTagUpsert } from './restaurantTag'
-import { TagWithParent, tagSlugs } from './tag-extension-helpers'
+import { tagSlugs } from './tag-extension-helpers'
 import { tagGetAllChildren, tagUpsert } from './tag-helpers'
 
 const QueryHelpers = createQueryHelpersFor<Restaurant>(
