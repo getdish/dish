@@ -5,8 +5,8 @@ import { RecoilRoot, Store, get, useRecoilStore } from '../../_'
 const sleep = () => new Promise((res) => setTimeout(res, 100))
 
 // TODO testing using in combination
-class CustomTodoList extends Store<{ namespace: string }> {
-  todoList = get(TodoList, this.props.namespace)
+class CustomTodoList extends Store<{ id: number }> {
+  todoList = get(TodoList, this.props.id)
 
   get items() {
     return this.todoList.items
@@ -16,7 +16,7 @@ class CustomTodoList extends Store<{ namespace: string }> {
 type Todo = { text: string; done: boolean }
 
 class TodoList extends Store<{
-  namespace: string
+  id: number
 }> {
   items: Todo[] = [{ text: 'hi', done: false }]
 
@@ -37,20 +37,18 @@ class TodoList extends Store<{
   }
 }
 
-export function SimpleStoreTest() {
+export function SimpleStoreTest({ id }: { id: number }) {
   return (
     <RecoilRoot initializeState={null}>
-      <SimpleStoreTestComponent />
+      <SimpleStoreTestComponent key={id} id={id} />
     </RecoilRoot>
   )
 }
 
 type x = typeof TodoList
 
-function SimpleStoreTestComponent() {
-  const store = useRecoilStore(TodoList, {
-    namespace: 'hello',
-  })
+function SimpleStoreTestComponent(props: { id: number }) {
+  const store = useRecoilStore(TodoList, props)
   return (
     <>
       <div id="x">{store.items[store.items.length - 1].text}</div>

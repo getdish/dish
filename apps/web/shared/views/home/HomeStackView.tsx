@@ -1,7 +1,20 @@
 import { Store, useRecoilStore } from '@dish/recoil-store'
-import { PopoverShowContext, VStack, ZStack, useDebounceValue } from '@dish/ui'
+import {
+  PopoverContext,
+  PopoverStore,
+  VStack,
+  ZStack,
+  useDebounceValue,
+} from '@dish/ui'
 import _ from 'lodash'
-import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
+import React, {
+  Suspense,
+  memo,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItem, HomeStateItemSimple } from '../../state/home'
@@ -9,14 +22,14 @@ import { useOvermind, useOvermindStatic } from '../../state/useOvermind'
 import { ErrorBoundary } from '../ErrorBoundary'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 
-export class HomeStateStore extends Store {
-  currentId = ''
-}
+// export class HomeStateStore extends Store {
+//   currentId = ''
+// }
 
 export function HomeStackView<A extends HomeStateItem>(props: {
   children: (a: A, isActive: boolean, index: number) => React.ReactNode
 }) {
-  const currentState = useRecoilStore(HomeStateStore)
+  // const currentStateStore = useRecoilStore(HomeStateStore)
   const om = useOvermind()
   const breadcrumbs = om.state.home.breadcrumbStates
   const homeStates = useMemo(() => {
@@ -32,12 +45,12 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   const key = `${items.map((x) => x.id).join(' ')}`
   const lastHomeStates = useMemo(() => om.state.home.states, [key])
 
-  const activeItem = items[items.length - 1]
-  useEffect(() => {
-    if (activeItem) {
-      currentState.currentId = activeItem.id
-    }
-  }, [activeItem?.id])
+  // const activeItem = items[items.length - 1]
+  // useEffect(() => {
+  //   if (activeItem) {
+  //     currentStateStore.currentId = activeItem.id
+  //   }
+  // }, [activeItem?.id])
 
   const itemChildren = useMemo(() => {
     return items.map((item, index) => {
@@ -99,6 +112,8 @@ const HomeStackViewItem = memo(
     isActive: boolean
     isRemoving: boolean
   }) => {
+    const id = useRef(Math.random()).current
+    // const popoverStore = useRecoilStore(PopoverStore, { id })
     const [isMounted, setIsMounted] = useState(false)
     const isSmall = useMediaQueryIsSmall()
     useEffect(() => {
@@ -109,35 +124,42 @@ const HomeStackViewItem = memo(
     }, [])
     const top = isSmall ? 0 : index * (index == 0 ? 0 : 10)
     const left = isSmall ? -3 : Math.max(0, index) * 7
+
+    // useEffect(() => {
+    //   popoverStore.show = isActive
+    // }, [isActive])
+
     return (
-      <VStack
-        className={`animate-up ${isMounted && !isRemoving ? 'active' : ''}`}
-        position="absolute"
-        top={0}
-        left={0}
-        right={0}
-        bottom={0}
-      >
-        <ZStack pointerEvents={isActive ? 'none' : 'auto'} fullscreen>
-          <ZStack
-            flex={1}
-            zIndex={index}
-            top={top}
-            left={left}
-            bottom={-(index * 5)}
-            width="100%"
-            {...(index !== 0 && {
-              shadowColor: 'rgba(0,0,0,0.1)',
-              shadowRadius: 15,
-              shadowOffset: { width: 0, height: 2 },
-            })}
-            borderRadius={drawerBorderRadius}
-            pointerEvents="auto"
-          >
-            {children}
+      <PopoverContext.Provider value={useMemo(() => ({ id }), [id])}>
+        <VStack
+          className={`animate-up ${isMounted && !isRemoving ? 'active' : ''}`}
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+        >
+          <ZStack pointerEvents={isActive ? 'none' : 'auto'} fullscreen>
+            <ZStack
+              flex={1}
+              zIndex={index}
+              top={top}
+              left={left}
+              bottom={-(index * 5)}
+              width="100%"
+              {...(index !== 0 && {
+                shadowColor: 'rgba(0,0,0,0.1)',
+                shadowRadius: 15,
+                shadowOffset: { width: 0, height: 2 },
+              })}
+              borderRadius={drawerBorderRadius}
+              pointerEvents="auto"
+            >
+              {children}
+            </ZStack>
           </ZStack>
-        </ZStack>
-      </VStack>
+        </VStack>
+      </PopoverContext.Provider>
     )
   }
 )

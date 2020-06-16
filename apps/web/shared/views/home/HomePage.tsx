@@ -1,5 +1,6 @@
-import { VStack } from '@dish/ui'
+import { LinearGradient, VStack, ZStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
+import { StyleSheet } from 'react-native'
 
 import { frameWidthMax, isWorker } from '../../constants'
 import {
@@ -64,7 +65,7 @@ const HomePageContent = memo(() => {
         </Suspense>
 
         {/* overlay map subtle */}
-        {/* <ZStack
+        <ZStack
           fullscreen
           bottom="auto"
           height={100}
@@ -75,7 +76,7 @@ const HomePageContent = memo(() => {
             colors={['rgba(255,255,255,0.1)', 'rgba(255,255,255,0)']}
             style={StyleSheet.absoluteFill}
           />
-        </ZStack> */}
+        </ZStack>
 
         <HomeViewDrawer>
           <HomeStackView>

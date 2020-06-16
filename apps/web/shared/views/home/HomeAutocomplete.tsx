@@ -29,8 +29,6 @@ export default memo(function HomeAutoComplete() {
   const showSearch = showAutocomplete == 'search'
   const isShowing = showSearch || showLocation
 
-  console.log('HomeAutoComplete', { isShowing, showAutocomplete })
-
   // hide when moused away, show when moved back!
   useEffect(() => {
     let tmOff
@@ -76,8 +74,8 @@ export default memo(function HomeAutoComplete() {
         paddingBottom={1} // looks better 1px up
         shadowColor="rgba(0,0,0,0.28)"
         shadowRadius={18}
+        overflow="hidden"
         shadowOffset={{ width: 0, height: 3 }}
-        spacing
         position="relative"
       >
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -87,7 +85,6 @@ export default memo(function HomeAutoComplete() {
             flex={1}
             alignItems="center"
             paddingHorizontal={10}
-            spacing={6}
           >
             {autocompleteResultsActive.map((tag, index) => {
               const restaurantLinkProps: LinkButtonProps | null =
@@ -134,45 +131,50 @@ export default memo(function HomeAutoComplete() {
               )
 
               return (
-                <LinkButton
-                  key={`${tag.tagId}${index}`}
-                  className=""
-                  onPress={() => {
-                    setAvoidNextAutocompleteShowOnFocus()
-                    if (showLocation) {
-                      om.actions.home.setLocation(tag.name)
-                    }
-                    console.log('set false')
-                    om.actions.home.setShowAutocomplete(false)
-                  }}
-                  {...(!showLocation && {
-                    tag,
-                  })}
-                  alignItems="center"
-                  justifyContent="center"
-                  lineHeight={24}
-                  paddingVertical={5}
-                  paddingHorizontal={10}
-                  borderRadius={100}
-                  backgroundColor={'transparent'}
-                  fontSize={14}
-                  maxWidth="17vw"
-                  hoverStyle={{
-                    backgroundColor: 'rgba(100,100,100,0.65)',
-                  }}
-                  {...(isActive && {
-                    backgroundColor: '#fff',
-                  })}
-                  {...restaurantLinkProps}
-                >
-                  <HStack>
-                    {iconElement}
-                    {!!iconElement && <Spacer size={6} />}
-                    <Text ellipse color={isActive ? '#000' : '#fff'}>
-                      {tag.name} {plusButtonEl}
-                    </Text>
-                  </HStack>
-                </LinkButton>
+                <React.Fragment key={`${tag.tagId}${index}`}>
+                  <LinkButton
+                    className="no-transition"
+                    onPress={() => {
+                      setAvoidNextAutocompleteShowOnFocus()
+                      if (showLocation) {
+                        om.actions.home.setLocation(tag.name)
+                      }
+                      om.actions.home.setShowAutocomplete(false)
+                    }}
+                    {...(!showLocation && {
+                      tag,
+                      // navigateAfterPress: true,
+                      onPress() {
+                        om.actions.home.setAutocompleteIndex(index)
+                      },
+                    })}
+                    alignItems="center"
+                    justifyContent="center"
+                    lineHeight={24}
+                    paddingVertical={5}
+                    paddingHorizontal={10}
+                    borderRadius={100}
+                    backgroundColor={'transparent'}
+                    fontSize={14}
+                    maxWidth="17vw"
+                    hoverStyle={{
+                      backgroundColor: 'rgba(100,100,100,0.65)',
+                    }}
+                    {...(isActive && {
+                      backgroundColor: '#fff',
+                    })}
+                    {...restaurantLinkProps}
+                  >
+                    <HStack>
+                      {iconElement}
+                      {!!iconElement && <Spacer size={6} />}
+                      <Text ellipse color={isActive ? '#000' : '#fff'}>
+                        {tag.name} {plusButtonEl}
+                      </Text>
+                    </HStack>
+                  </LinkButton>
+                  <Spacer />
+                </React.Fragment>
               )
             })}
           </HStack>

@@ -9,6 +9,7 @@ import {
   search,
   slugify,
 } from '@dish/graph'
+import { stringify } from '@dish/helpers'
 import { assert, handleAssertionError } from '@dish/helpers'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
@@ -108,6 +109,9 @@ const derivations = {
   previousState: derived<HomeState, HomeStateItem>(
     (state) => state.states[state.states.length - 2]
   ),
+  searchBarTags: derived<HomeState, Tag[]>((state) =>
+    state.lastActiveTags.filter(isSearchBarTag)
+  ),
   lastActiveTags: derived<HomeState, Tag[]>((state) => {
     const lastTaggable = _.findLast(
       state.states,
@@ -115,9 +119,6 @@ const derivations = {
     ) as HomeStateItemSearch | HomeStateItemHome
     return getActiveTags(state, lastTaggable)
   }),
-  searchBarTags: derived<HomeState, Tag[]>((state) =>
-    state.lastActiveTags.filter(isSearchBarTag)
-  ),
   autocompleteFocusedTag: derived<HomeState, Tag | null>((state) => {
     const { autocompleteIndex } = state
     if (autocompleteIndex < 0) return null
@@ -590,12 +591,10 @@ const loadHomeDishes: AsyncAction = async (om) => {
 const DEBOUNCE_AUTOCOMPLETE = 120
 
 let lastRunAt = Date.now()
-let curQuery = ''
 const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
   // also reset runSearch! hacky!
   lastSearchAt = Date.now()
   lastRunAt = Date.now()
-  curQuery = query
   let id = lastRunAt
   const state = om.state.home.currentState
   const isDeleting = query.length < state.searchQuery.length
@@ -686,6 +685,7 @@ const locationToAutocomplete = (location: {
 let lastSearchKey = ''
 let lastSearchAt = Date.now()
 const runSearch: AsyncAction<{
+  searchQuery?: string
   quiet?: boolean
   force?: boolean
 } | void> = async (om, opts) => {
@@ -693,8 +693,11 @@ const runSearch: AsyncAction<{
   lastSearchAt = Date.now()
   let curId = lastSearchAt
 
-  if (om.state.home.currentState.searchQuery !== curQuery) {
-    om.state.home.currentState.searchQuery = curQuery
+  if (
+    opts.searchQuery &&
+    om.state.home.currentState.searchQuery !== opts.searchQuery
+  ) {
+    om.state.home.currentState.searchQuery = opts.searchQuery
   }
 
   if (await om.actions.home.navigateToCurrentState()) {
@@ -732,7 +735,7 @@ const runSearch: AsyncAction<{
   }
 
   // prevent duplicate searches
-  const searchKey = JSON.stringify(searchArgs)
+  const searchKey = stringify(searchArgs)
   if (!opts.force && searchKey === lastSearchKey) return
 
   state = om.state.home.lastSearchState
@@ -1112,10 +1115,12 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
   try {
     assert(state.type === next.type)
     assert('activeTagIds' in next)
-    const sameTagIds = isEqual(state['activeStateIds'], next.activeTagIds)
+    const stateActiveTagIds =
+      'activeTagIds' in state ? state.activeTagIds : null
+    const sameTagIds =
+      stringify(stateActiveTagIds) === stringify(next.activeTagIds)
     const sameSearchQuery = isEqual(state.searchQuery, next.searchQuery)
     assert(!sameTagIds || !sameSearchQuery)
-    console.log('now set', JSON.stringify(next, null, 2))
     om.state.home.states[om.state.home.states.length - 1] = {
       ...state,
       ...next,
@@ -1123,6 +1128,7 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
     return await syncStateToRoute(om, next)
   } catch (err) {
     handleAssertionError(err)
+    return false
   }
 }
 

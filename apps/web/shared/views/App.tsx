@@ -1,4 +1,4 @@
-import { RecoilRoot } from '@dish/recoil-store'
+// import { RecoilRoot } from '@dish/recoil-store'
 import { LoadingItems, ToastRoot } from '@dish/ui'
 import { Provider } from 'overmind-react'
 import React, { Suspense } from 'react'
@@ -10,7 +10,7 @@ import { WelcomeModal } from './WelcomeModal'
 
 export function App({ overmind }: { overmind?: any }) {
   return (
-    <RecoilRoot>
+    <>
       <ToastRoot />
       <Provider value={overmind}>
         <Suspense fallback={<LoadingItems />}>
@@ -29,6 +29,6 @@ export function App({ overmind }: { overmind?: any }) {
           <WelcomeModal />
         </Suspense>
       </Provider>
-    </RecoilRoot>
+    </>
   )
 }

@@ -1,6 +1,13 @@
+import { Store } from '@dish/recoil-store'
 import { createContext } from 'react'
 
-export const PopoverShowContext = createContext<boolean | null>(null)
+export const PopoverContext = createContext({
+  id: 0,
+})
+
+export class PopoverStore extends Store<{ id: number }> {
+  show: boolean | null = null
+}
 
 export const popoverCloseCbs = new Set<Function>()
 export const closeAllPopovers = () => {

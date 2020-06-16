@@ -20,7 +20,13 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { ChevronDown, ChevronRight, ChevronUp, Plus } from 'react-feather'
+import {
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
+  Minus,
+  Plus,
+} from 'react-feather'
 import { ViewStyle } from 'react-native'
 
 import { HomeStateItemHome } from '../../state/home'
@@ -150,15 +156,16 @@ const HomeTopDishesContent = memo(() => {
   )
 })
 
-const dishHeight = 140
+const dishHeight = 145
 const padding = 30
 const spacing = 6
-const pctRestaurant = 0.3
+const pctRestaurant = 0.25
 
 const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
   return (
     <VStack
       paddingVertical={5}
+      paddingLeft={12}
       className="home-top-dish"
       position="relative"
       // onHoverIn={() => setHovered(true)}
@@ -251,7 +258,13 @@ const TopDishesRestaurantsSide = memo(
           .map((restaurant, index) => {
             return (
               <RestaurantButton
-                trending={index % 2 == 0 ? 'up' : 'down'}
+                trending={
+                  (index % 5) - 1 == 0
+                    ? 'neutral'
+                    : index % 2 == 0
+                    ? 'up'
+                    : 'down'
+                }
                 subtle
                 key={restaurant.name}
                 restaurant={restaurant as any}
@@ -295,7 +308,7 @@ const HomeTopDishMain = memo((props) => {
       padding={padding}
       paddingTop={padding}
       paddingHorizontal={30}
-      paddingLeft={drawerWidth * pctRestaurant + 30}
+      paddingLeft={drawerWidth * pctRestaurant + 10}
       spacing={spacing}
       {...props}
     />
@@ -316,7 +329,7 @@ export const RestaurantButton = memo(
     active?: boolean
     rank?: number
     restaurant: Partial<Restaurant>
-    trending?: 'up' | 'down'
+    trending?: 'up' | 'down' | 'neutral'
     subtle?: boolean
   } & LinkButtonProps) => {
     return (
@@ -346,7 +359,7 @@ export const RestaurantButton = memo(
         <HStack alignItems="center" spacing={5}>
           {!!trending && (
             <TrendingIcon
-              size={22}
+              size={18}
               trending={trending}
               marginTop={-4}
               marginBottom={-4}
@@ -379,15 +392,16 @@ export const RestaurantButton = memo(
 
 const TrendingIcon = ({
   trending,
-  color = trending === 'up' ? 'green' : 'red',
+  color = trending === 'up' ? 'green' : '#ff559999',
   size,
   ...rest
 }: StackProps & {
   color?: string
   size?: number
-  trending?: 'up' | 'down'
+  trending?: 'up' | 'down' | 'neutral'
 }) => {
-  const Icon = trending === 'up' ? ChevronUp : ChevronDown
+  const Icon =
+    trending == 'neutral' ? Minus : trending === 'up' ? ChevronUp : ChevronDown
   return (
     <VStack {...rest}>
       <Icon color={color} size={size} />

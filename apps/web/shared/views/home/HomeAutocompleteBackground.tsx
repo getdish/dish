@@ -26,10 +26,10 @@ export const HomeAutocompleteBackground = memo(() => {
         opacity: 0.6,
       }}
     >
-      {/* <LinearGradient
-        colors={['rgba(255,255,255,0.3)', 'rgba(255,255,255,0)']}
+      <LinearGradient
+        colors={['rgba(0,0,0,0.06)', 'rgba(255,255,255,0)']}
         style={[StyleSheet.absoluteFill, { height: 160 }]}
-      /> */}
+      />
     </ZStack>
   )
 })

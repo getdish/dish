@@ -7,8 +7,14 @@ import { CloseButton } from './CloseButton'
 export const StackViewCloseButton = memo(() => {
   const om = useOvermind()
   return (
-    <ZStack right={10} top={10} pointerEvents="auto" zIndex={100}>
-      <CloseButton onPressOut={() => om.actions.home.up()} />
+    <ZStack
+      className="cursor-pointer"
+      right={10}
+      top={10}
+      pointerEvents="auto"
+      zIndex={100}
+    >
+      <CloseButton size={20} onPressOut={() => om.actions.home.up()} />
     </ZStack>
   )
 })

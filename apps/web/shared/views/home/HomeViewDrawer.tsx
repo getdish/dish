@@ -12,7 +12,7 @@ import { StyleSheet } from 'react-native'
 import { drawerBorderRadius, drawerPad, drawerWidthMax } from '../../constants'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
-const bgColor = 'white'
+const bgColor = 'rgb(255,255,255)'
 
 const colors = [
   'rgba(255,255,255,0.15)',
@@ -58,8 +58,9 @@ export function HomeViewDrawer(props: { children: any }) {
       bottom={0}
       zIndex={10}
       width={drawerWidth}
-      shadowColor="rgba(0,0,0,0.15)"
+      shadowColor="rgba(0,0,0,0.25)"
       shadowRadius={44}
+      backgroundColor="#fff"
       // borderRightWidth={1}
       // borderColor="#ddd"
       borderBottomRightRadius={drawerBorderRadius * 1.5}
@@ -68,39 +69,6 @@ export function HomeViewDrawer(props: { children: any }) {
       justifyContent="flex-end"
       {...(isSmall && positionSmall)}
     >
-      {/* background */}
-      <ZStack
-        fullscreen
-        borderBottomRightRadius={drawerBorderRadius * 0.5}
-        borderTopRightRadius={drawerBorderRadius * 0.5}
-        overflow="hidden"
-      >
-        <LinearGradient
-          colors={[
-            bgColor,
-            bgColor,
-            bgColor,
-            bgColor,
-            bgColor,
-            bgColor,
-            bgColor,
-            // bgColor,
-            'rgba(255,255,255,0.9)',
-          ]}
-          style={[StyleSheet.absoluteFill]}
-          startPoint={[0, 0]}
-          endPoint={[1, 0]}
-        />
-        {/* <ZStack key={1} fullscreen right={200}>
-            <LinearGradient
-              colors={['white', 'white', 'rgba(255,255,255,0)']}
-              style={[StyleSheet.absoluteFill]}
-              startPoint={[0, 0]}
-              endPoint={[1, 0]}
-            />
-          </ZStack> */}
-      </ZStack>
-
       {/* overlay / under searchbar */}
       <ZStack
         opacity={isSmall ? 0 : 1}

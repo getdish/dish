@@ -19,6 +19,7 @@ export const restaurantPhotosForCarousel = ({
   tag_names?: string[]
   max?: number
 }) => {
+  let x = Date.now()
   // @ts-ignore
   const tags = restaurant.top_tags({
     args: {
@@ -59,5 +60,6 @@ export const restaurantPhotosForCarousel = ({
       if (photos.length >= max) break
     }
   }
+  console.warn('restaurantPhotosForCarousel time', Date.now() - x, 'ms')
   return photos
 }

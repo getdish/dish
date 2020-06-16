@@ -1,3 +1,4 @@
+import { useRecoilStore } from '@dish/recoil-store'
 import React, {
   useCallback,
   useContext,
@@ -11,11 +12,13 @@ import { Platform } from 'react-native'
 import { useOverlay } from '../hooks/useOverlay'
 import { useWaterfall } from '../hooks/useWaterfall'
 import { PopoverProps } from './PopoverProps'
-import { PopoverShowContext, popoverCloseCbs } from './PopoverShared'
+import { PopoverContext, PopoverStore, popoverCloseCbs } from './PopoverShared'
 
 export default function PopoverMain(props: PopoverProps) {
-  const forceShow = useContext(PopoverShowContext)
-  const isOpen = typeof forceShow == 'boolean' ? forceShow : props.isOpen
+  // const { id } = useContext(PopoverContext)
+  // const { show } = useRecoilStore(PopoverStore, { id })
+  // console.log('PopoverMain', { id, show })
+  const isOpen = /* show == false ? false :  */ props.isOpen
   const onChangeOpenCb = useCallback(props.onChangeOpen as any, [
     props.onChangeOpen,
   ])
