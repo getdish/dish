@@ -135,9 +135,8 @@ server.get('*', async (req, res) => {
 })
 
 const port = 19006
-server.listen(port)
-// server.listen(port, '0.0.0.0')
-// server.listen(port, 'localhost')
+// server.listen(port)
+server.listen(port, '0.0.0.0')
 console.log(`Listening on ${19006}`)
 
 function cors() {
