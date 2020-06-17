@@ -127,8 +127,8 @@ const RestaurantListItemContent = memo(
     }, [restaurant.name])
 
     const contentWidth = '40%'
-    const paddingTop = 25
-    const paddingBottom = 5
+    const paddingTop = 35
+    const paddingBottom = 10
 
     console.log('RestaurantListItemContent.render')
 
@@ -148,7 +148,6 @@ const RestaurantListItemContent = memo(
             {/* ROW: TITLE */}
             <VStack
               paddingTop={paddingTop}
-              // backgroundColor={bgLightLight}
               hoverStyle={{ backgroundColor: bgLightLight }}
               marginLeft={-adjustRankingLeft}
               width={900}

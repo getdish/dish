@@ -14,8 +14,11 @@
   "scripts": {
     "start": "",
     "start:docker": "docker-compose up",
-    "start:docker:web": "docker run -it --rm --net host dish/web",
+    "start:docker:web": "yarn stop:docker:web && yarn start:docker:web:simple & sleep 2 && yarn logs:docker:web",
+    "start:docker:web:simple": "docker run --name dish-web -it -d -p 19006:19006 --rm dish/web",
     "build:docker:web": "docker build -t dish/web -f apps/web/Dockerfile .",
+    "logs:docker:web": "docker logs -f dish-web",
+    "stop:docker:web": "docker rm -f dish-web || true",
     "build": "ultra -r --no-pretty build",
     "build:watch": "ultra -r --no-pretty --concurrency 500 watch",
     "build:monitor": "ultra --monitor",
