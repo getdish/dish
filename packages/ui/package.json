@@ -13,10 +13,10 @@
   "scripts": {
     "build": "npm-run-all --parallel build:main build:web",
     "build:main": "tsc -b || true",
-    "build:web": "ttsc -b tsconfig.node.json || true",
+    "build:web": "ttsc -p tsconfig.node.json || true",
     "watch": "npm-run-all --parallel watch:main watch:web",
     "watch:main": "tsc -b --watch --preserveWatchOutput",
-    "watch:web": "ttsc -b tsconfig.node.json --watch --preserveWatchOutput"
+    "watch:web": "ttsc -p tsconfig.node.json --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@dish/async": "*",
