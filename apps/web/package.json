@@ -33,6 +33,7 @@
     "watch": "npm-run-all --parallel watch:types watch:output",
     "watch:output": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
     "watch:types": "tsc --watch --preserveWatchOutput",
+    "watch:web:ssr": "yarn build:web:ssr --watch",
     "build:web": "./etc/build_web.sh",
     "build:web:ssr": "VERBOSE=1 NODE_ENV=production TARGET=ssr webpack",
     "build:web:client": "VERBOSE=1 NODE_ENV=production webpack",

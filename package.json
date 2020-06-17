@@ -15,6 +15,7 @@
     "start": "",
     "start:docker": "docker-compose up",
     "start:docker:web": "docker run -it --rm --net host dish/web",
+    "build:docker:web": "docker build -t dish/web -f apps/web/Dockerfile .",
     "build": "ultra -r --no-pretty build",
     "build:watch": "ultra -r --no-pretty --concurrency 500 watch",
     "build:monitor": "ultra --monitor",

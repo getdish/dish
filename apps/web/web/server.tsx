@@ -1,6 +1,6 @@
 import 'isomorphic-unfetch'
 
-import { readFileSync } from 'fs'
+import { existsSync, readFileSync, renameSync, unlinkSync } from 'fs'
 import Path from 'path'
 
 import bodyParser from 'body-parser'
@@ -58,22 +58,26 @@ server.get('/hello', (_, res) => res.send('hello world'))
 const clientBuildPath = Path.join(rootDir, 'web-build')
 const clientBuildLegacyPath = Path.join(rootDir, 'web-build-legacy')
 
+// move index.html to backup location so we dont serve via express.static
+const [clientHTMLModern, clientHTMLLegacy] = [
+  Path.join(clientBuildPath, 'index.html'),
+  Path.join(clientBuildLegacyPath, 'index.html'),
+].map((path) => {
+  const outPath = Path.join(Path.dirname(path), 'index-original.html')
+  if (existsSync(path)) {
+    renameSync(path, outPath)
+  }
+  return readFileSync(outPath, 'utf8')
+})
+
 server.use('/', express.static(clientBuildPath))
 server.use('/', express.static(clientBuildLegacyPath))
 
 // TODO amp
 // setHeaders: res => res.setHeader('AMP-Access-Control-Allow-Source-Origin', `http://localhost:${PORT}`),
 
-const clientHTMLModern = readFileSync(
-  Path.join(clientBuildPath, 'index.html'),
-  'utf8'
-)
-const clientHTMLLegacy = readFileSync(
-  Path.join(clientBuildLegacyPath, 'index.html'),
-  'utf8'
-)
-
 server.get('*', async (req, res) => {
+  console.log('req', req.hostname, req.path)
   const htmlPath = Path.join(rootDir, 'web', 'index.html')
   const template = readFileSync(htmlPath, 'utf8')
   const overmind = createOvermindSSR(config)
@@ -126,11 +130,14 @@ server.get('*', async (req, res) => {
     out += line
   }
 
+  console.log('resolve', req.hostname, req.path, out.length)
   res.send(out)
 })
 
 const port = 19006
 server.listen(port)
+// server.listen(port, '0.0.0.0')
+// server.listen(port, 'localhost')
 console.log(`Listening on ${19006}`)
 
 function cors() {
