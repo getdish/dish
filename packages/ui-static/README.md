@@ -1,3 +1,5 @@
+- make pressStyle override hoverStyle always
+- activeStyle may be desirable...
 - multi level const eval
   - const x = 1, const y = x + 10, paddingTop={y} (current in RestaurantListItem)
 - <Image />

@@ -28,10 +28,9 @@ const useNormalizedLink = (
   props: Partial<LinkButtonProps>
 ): LinkButtonNamedProps | null => {
   const forceUpdate = useForceUpdate()
-  const currentStateId =
-    omStatic.state.home.breadcrumbStates[
-      omStatic.state.home.breadcrumbStates.length - 1
-    ].id
+  const { breadcrumbStates } = omStatic.state.home
+  const lastBreadcrumb = breadcrumbStates[breadcrumbStates.length - 1]
+  const currentStateId = lastBreadcrumb?.id
   const state = omStatic.state.home.states.find((x) => x.id === currentStateId)!
   const linkProps = getNormalizedLink(props, state)
   return useMemo(() => {
