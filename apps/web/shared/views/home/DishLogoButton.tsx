@@ -14,6 +14,10 @@ export const DishLogoButton = memo(() => {
       hoverStyle={{
         transform: [{ scale: 1.05 }],
       }}
+      pressStyle={{
+        opacity: 0.8,
+        transform: [{ scale: 0.95 }],
+      }}
     >
       <Image
         source={require('../../assets/logo.svg').default}
