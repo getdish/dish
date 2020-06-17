@@ -156,7 +156,7 @@ const HomeTopDishesContent = memo(() => {
   )
 })
 
-const dishHeight = 145
+const dishHeight = 155
 const padding = 30
 const spacing = 6
 const pctRestaurant = 0.25

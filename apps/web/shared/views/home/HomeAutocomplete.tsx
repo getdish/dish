@@ -146,6 +146,7 @@ export default memo(function HomeAutoComplete() {
                       // navigateAfterPress: true,
                       onPress() {
                         om.actions.home.setAutocompleteIndex(index)
+                        om.actions.home.setShowAutocomplete(false)
                       },
                     })}
                     alignItems="center"
