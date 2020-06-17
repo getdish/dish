@@ -207,10 +207,13 @@ export const isEditingUserPage = (
 const start: AsyncAction = async (om) => {
   om.actions.home.updateBreadcrumbs()
   om.actions.home.updateCurrentMapAreaInformation()
-  // promises are nice here, dont wait on anything top level unless necessary
-  loadHomeDishes(om).then(async () => {
+  const fullyLoadedPromise = loadHomeDishes(om).then(async () => {
     await om.actions.home.startAutocomplete()
   })
+  if (process.env.TARGET === 'ssr') {
+    console.log('Server mode, waiting for top dishes to fully load...')
+    await fullyLoadedPromise
+  }
 }
 
 let defaultAutocompleteResults: AutocompleteItem[] | null = null
@@ -574,18 +577,7 @@ const loadHomeDishes: AsyncAction = async (om) => {
     om.actions.home.addTagsToCache(dishTags)
   }
 
-  const chunks: TopCuisine[][] = _.chunk(all, 4)
-
-  if (isWorker) {
-    let now: TopCuisine[] = []
-    for (const chunk of chunks) {
-      await sleep(300)
-      now = [...now, ...chunk]
-      om.state.home.topDishes = now
-    }
-  } else {
-    om.state.home.topDishes = all
-  }
+  om.state.home.topDishes = all
 }
 
 const DEBOUNCE_AUTOCOMPLETE = 120

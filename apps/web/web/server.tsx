@@ -85,6 +85,7 @@ server.get('*', async (req, res) => {
   global['window']['om'] = overmind
   const appHtml = ReactDOMServer.renderToString(<App overmind={overmind} />)
   // need to fool helmet back into thinking were in the node
+  // @ts-ignore
   const helmet = Helmet.renderStatic()
 
   const useragent = req.get('User-Agent')
@@ -130,14 +131,19 @@ server.get('*', async (req, res) => {
     out += line
   }
 
+  if (process.env.DEBUG) {
+    console.log('debug', { isModernUser, helmet, appHtml, out })
+  }
+
   console.log('resolve', req.hostname, req.path, out.length)
   res.send(out)
 })
 
 const port = 19006
+const host = '0.0.0.0'
 // server.listen(port)
-server.listen(port, '0.0.0.0')
-console.log(`Listening on ${19006}`)
+server.listen(port, host)
+console.log(`Listening on ${host}:${19006}`)
 
 function cors() {
   const HEADER_ALLOWED =

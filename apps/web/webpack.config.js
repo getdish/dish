@@ -245,6 +245,7 @@ module.exports = function getWebpackConfig(
 
         new HTMLWebpackPlugin({
           inject: true,
+          favicon: 'web/favicon.png',
           template: path.join(__dirname, 'web/index.html'),
         }),
 
