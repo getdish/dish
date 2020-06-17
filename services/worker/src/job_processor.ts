@@ -2,6 +2,7 @@
 // job processor.
 import {
   CI,
+  DoorDash,
   Google,
   Infatuated,
   Michelin,
@@ -22,6 +23,7 @@ import { Job } from 'bull'
 
 const all: typeof WorkerJob[] = [
   UberEats,
+  DoorDash,
   Yelp,
   Self,
   Infatuated,

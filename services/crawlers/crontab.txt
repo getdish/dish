@@ -17,3 +17,4 @@
 0  0  *  *  3  node /app/services/crawlers/_/tripadvisor/all.js
 0  0  1  *  4  node /app/services/crawlers/_/ubereats/all.js
 0  0  *  *  5  node /app/services/crawlers/_/yelp/all.js
+0  0  *  *  6  node /app/services/crawlers/_/doordash/all.js
