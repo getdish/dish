@@ -45,7 +45,7 @@ export function Link<
     ...restProps
   } = allProps
   const { onPress, onMouseDown, ...linkProps } = useNormalizeLinkProps(
-    allProps as any
+    restProps as any
   )
   const om = useOvermindStatic()
   const item = {

@@ -592,6 +592,7 @@ const HomeSearchBarTags = memo(
                   onClose={async () => {
                     om.actions.home.navigateToTag({ tags: [tag] })
                     await fullyIdle()
+                    setAvoidNextAutocompleteShowOnFocus()
                     input?.focus()
                   }}
                 />

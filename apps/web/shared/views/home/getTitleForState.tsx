@@ -19,9 +19,7 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
   const tags = getActiveTags(omState.home, state)
   const lense = tags.find((x) => x.type === 'lense')
   const countryTag = tags.find((x) => x.type === 'country')
-  const countryTagName = countryTag?.name ?? ''
   const dishTag = tags.find((x) => x.type === 'dish')
-  const dishTagName = dishTag?.name ?? ''
   const hasUser = state.type === 'userSearch'
   const userPrefix = state.type === 'userSearch' ? `${state.username}'s ` : ''
   let lensePlaceholder = lense?.name ?? ''
@@ -32,24 +30,34 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
     else lensePlaceholder = descriptions.plain
   }
 
-  let titleTags: NavigableTag[] = []
+  let titleParts: string[] = []
+  console.log('tags', tags)
+  const cheap = tags.some((t) => t.name == 'cheap')
+  const midRange = tags.some((t) => t.name == 'midrange')
+  const expensive = tags.some((t) => t.name == 'expensive')
+  if (cheap && !midRange && !expensive) {
+    titleParts.push('cheap')
+  }
+  if (!cheap && midRange && !expensive) {
+    titleParts.push('nice')
+  }
+  if (!cheap && !midRange && expensive) {
+    titleParts.push('high end')
+  }
   if (countryTag) {
-    titleTags.push(countryTag)
+    titleParts.push(countryTag.name)
   }
   if (dishTag) {
-    titleTags.push(dishTag)
+    titleParts.push(dishTag.name)
   }
 
   if (hasUser) {
     lensePlaceholder = lensePlaceholder.toLowerCase()
   }
 
-  const titleSpace = titleTags.length ? ' ' : ''
+  const titleSpace = titleParts.length ? ' ' : ''
   const searchName = getTitleForQuery(state.searchQuery ?? '')
-  let titleTagsString = titleTags
-    .map((x) => `${x.name ?? ''}`)
-    .filter(Boolean)
-    .join(' ')
+  let titleTagsString = titleParts.filter(Boolean).join(' ')
 
   // lowercase when not at front
   if (!countryTag && lensePlaceholder.indexOf('🍔') > 0) {
@@ -60,12 +68,9 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
 
   // build subtitle
   let subTitleParts: string[] = []
-  // if (countryTagName) {
-  //   subTitleParts.push(countryTagName)
-  // }
-  // if (dishTagName) {
-  //   subTitleParts.push(dishTagName)
-  // }
+  if (tags.some((tag) => tag.name === 'Delivery')) {
+    subTitleParts.push(`Delivery`)
+  }
   if (searchName) {
     subTitleParts.push(`${searchName[0].toUpperCase()}${searchName.slice(1)}`)
   }
@@ -91,7 +96,7 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
         if (x === '🍔') {
           return (
             <>
-              {titleTags.map((tag) => (
+              {titleParts.map((tag) => (
                 <TagButton
                   key={getTagId(tag)}
                   {...getTagButtonProps(tag)}
