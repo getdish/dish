@@ -2,12 +2,14 @@ import '@dish/common'
 
 import { sentryException } from '@dish/common'
 import {
+  MenuItem,
   RESTAURANT_WEIGHTS,
   RestaurantWithId,
   Scrape,
   ScrapeData,
   deleteAllBy,
   menuItemUpsert,
+  menuItemsUpsertMerge,
   restaurantFindBatch,
   restaurantFindOne,
   restaurantFindOneWithTags,
@@ -38,6 +40,7 @@ export class Self extends WorkerJob {
   infatuated!: Scrape
   michelin!: Scrape
   tripadvisor!: Scrape
+  doordash!: Scrape
   restaurant!: RestaurantWithId
   ratings!: { [key: string]: number }
   _start_time!: [number, number]
@@ -84,6 +87,7 @@ export class Self extends WorkerJob {
         this.findPhotosForTags,
         this.scanReviews,
         this.upsertUberDishes,
+        this.upsertDoorDashDishes,
       ]
       for (const async_func of async_steps) {
         await this._runFailableFunction(async_func)
@@ -216,6 +220,7 @@ export class Self extends WorkerJob {
       this.restaurant,
       'tripadvisor'
     )
+    this.doordash = await restaurantGetLatestScrape(this.restaurant, 'doordash')
   }
 
   // TODO: If we really want to be careful about being found out for scraping then we
@@ -272,6 +277,7 @@ export class Self extends WorkerJob {
         scrapeGetData(this.tripadvisor, 'overview.rating.primaryRating')
       ),
       michelin: this._getMichelinRating(),
+      doordash: parseFloat(scrapeGetData(this.doordash, 'main.averageRating')),
     }
     this.restaurant.rating = this.weightRatings(
       this.ratings,
@@ -336,6 +342,7 @@ export class Self extends WorkerJob {
       scrapeGetData(this.infatuated, 'data_from_map_search.street'),
       scrapeGetData(this.michelin, 'main.title'),
       scrapeGetData(this.tripadvisor, 'overview.contact.address'),
+      scrapeGetData(this.doordash, 'main.address.printableAddress'),
     ])
   }
 
@@ -415,14 +422,25 @@ export class Self extends WorkerJob {
       }
     }
 
-    const json = JSON.parse(
+    const json_ue = JSON.parse(
       scrapeGetData(this.ubereats, 'main.metaJson', '"{}"')
     )
-    if (json['@id']) {
+    if (json_ue['@id']) {
       // @ts-ignore
       this.restaurant.sources.ubereats = {
-        url: json['@id'],
+        url: json_ue['@id'],
         rating: this.ratings?.ubereats,
+      }
+    }
+
+    const json_dd = JSON.parse(
+      scrapeGetData(this.ubereats, 'storeMenuSeo', '"{}"')
+    )
+    if (json_dd['@id']) {
+      // @ts-ignore
+      this.restaurant.sources.doordash = {
+        url: json_dd['@id'],
+        rating: this.ratings?.doordash,
       }
     }
   }
@@ -455,21 +473,49 @@ export class Self extends WorkerJob {
     if (!this.ubereats?.id) {
       return
     }
+    let dishes: MenuItem[] = []
     // @ts-ignore
-    const dishes = this.ubereats?.data?.dishes
-    for (const data of dishes) {
+    const raw_dishes = this.ubereats?.data?.dishes
+    for (const data of raw_dishes) {
       if (data.title) {
-        await menuItemUpsert([
-          {
+        const matches = dishes.filter((i) => {
+          return i.name == data.title
+        })
+        if (matches.length > 0) continue
+
+        dishes.push({
+          restaurant_id: this.restaurant.id,
+          name: data.title,
+          description: data.description,
+          price: data.price,
+          image: data.imageUrl,
+        })
+      }
+    }
+    await menuItemsUpsertMerge(dishes)
+  }
+
+  async upsertDoorDashDishes() {
+    if (!this.doordash?.id) {
+      return
+    }
+    let dishes: MenuItem[] = []
+    // @ts-ignore
+    const categories = this.doordash?.data?.menus.currentMenu.menuCategories
+    for (const category of categories) {
+      for (const data of category.items) {
+        if (data.name) {
+          dishes.push({
             restaurant_id: this.restaurant.id,
-            name: data.title,
+            name: data.name,
             description: data.description,
             price: data.price,
             image: data.imageUrl,
-          },
-        ])
+          })
+        }
       }
     }
+    await menuItemsUpsertMerge(dishes)
   }
 
   mergePhotos() {

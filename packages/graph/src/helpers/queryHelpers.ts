@@ -41,6 +41,9 @@ export function createQueryHelpersFor<A>(
     async findOne(a: A, o?: CollectOptions) {
       return await findOne<WithID<A>>(modelName, a, o)
     },
+    async findAll(a: A, o?: CollectOptions) {
+      return await findAll<WithID<A>>(modelName, a, o)
+    },
     async refresh(a: WithID<A>) {
       const next = await findOne(modelName, { id: a.id })
       if (!next) throw new Error('@dish/graph: object refresh failed')
@@ -54,11 +57,20 @@ export async function findOne<T extends ModelType>(
   hash: Partial<T>,
   options?: CollectOptions
 ): Promise<T | null> {
-  const [first] = await resolvedWithFields(() => {
+  const [first] = await findAll(table, hash, options)
+  return first ?? null
+}
+
+export async function findAll<T extends ModelType>(
+  table: ModelName,
+  hash: Partial<T>,
+  options?: CollectOptions
+): Promise<T[]> {
+  const results = await resolvedWithFields(() => {
     const args = objectToWhere(hash)
     return query[table](args)
   }, options)
-  return first ?? null
+  return results ?? []
 }
 
 export async function insert<T extends ModelType>(

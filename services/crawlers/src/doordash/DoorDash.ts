@@ -151,6 +151,7 @@ export class DoorDash extends WorkerJob {
         data: {
           main,
           menus: response.storeMenus,
+          storeMenuSeo: response.storeMenuSeo,
         },
       },
     ])

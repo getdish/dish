@@ -16,6 +16,7 @@ export const RESTAURANT_WEIGHTS = {
   michelin: 1.0,
   infatuated: 0.9,
   ubereats: 0.2,
+  doordash: 0.2,
 }
 
 export let SEARCH_DOMAIN: string

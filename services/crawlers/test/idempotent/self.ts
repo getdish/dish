@@ -117,11 +117,42 @@ const ubereats: Partial<Scrape> = {
     dishes: [
       {
         title: 'Nice Dish',
-        description: 'Tastes good :p',
+        description: '',
         price: 1,
-        image: 'https://img.com',
+        imageUrl: 'https://img.com',
       },
     ],
+  },
+}
+
+const doordash: Partial<Scrape> = {
+  source: 'doordash',
+  id_from_source: 'test125',
+  // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
+  data: {
+    main: {
+      location: { address: '123 Street, Big City, America' },
+      title: 'Test Name DoorDash',
+      rating: {
+        ratingValue: 4.7,
+      },
+    },
+    menus: {
+      currentMenu: {
+        menuCategories: [
+          {
+            items: [
+              {
+                name: 'Nice Dish',
+                description: 'I am unique to DoorDash',
+                price: 1,
+                imageUrl: 'https://img.com',
+              },
+            ],
+          },
+        ],
+      },
+    },
   },
 }
 
@@ -170,7 +201,7 @@ const tripadvisor: Partial<Scrape> = {
 
 async function reset(t: ExecutionContext<Context>) {
   await flushTestData()
-  const [restaurant, r2] = await restaurantInsert([
+  const [restaurant, _] = await restaurantInsert([
     restaurant_fixture,
     restaurant_fixture_nearly_matches,
   ])
@@ -178,6 +209,7 @@ async function reset(t: ExecutionContext<Context>) {
   await scrapeInsert([
     { restaurant_id: restaurant.id, ...yelp },
     { restaurant_id: restaurant.id, ...ubereats },
+    { restaurant_id: restaurant.id, ...doordash },
     { restaurant_id: restaurant.id, ...tripadvisor },
   ])
 }
@@ -210,7 +242,6 @@ test('Merging', async (t) => {
   t.is(updated.tags.length, 3)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Mexican'), true)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Pizza'), true)
-  t.is(updated.menu_items[0].name, 'Nice Dish')
   t.is(updated.photos?.[0], 'https://yelp.com/image.jpg')
   t.is(updated.photos?.[1], 'https://yelp.com/image2.jpg')
   t.is(updated.rating, 4.1)
@@ -221,6 +252,22 @@ test('Merging', async (t) => {
     ambience: 2,
   })
   t.is(updated.website, 'http://www.intercontinentalsanfrancisco.com/')
+})
+
+test('Merging dishes', async (t) => {
+  const self = new Self()
+  await self.mergeAll(t.context.restaurant.id)
+  const updated = await restaurantFindOneWithTags(
+    {
+      id: t.context.restaurant.id,
+    },
+    ['menu_items']
+  )
+  t.is(!!updated, true)
+  if (!updated) return
+  t.is(updated.menu_items.length, 1)
+  t.is(updated.menu_items[0].name, 'Nice Dish')
+  t.is(updated.menu_items[0].description, 'I am unique to DoorDash')
 })
 
 test('Weighted ratings when all sources are present', (t) => {
