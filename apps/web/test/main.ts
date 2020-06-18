@@ -1,3 +1,5 @@
+import 'isomorphic-unfetch'
+
 import { Selector } from 'testcafe'
 
 fixture('Home page').page('http://localhost:19006/')
