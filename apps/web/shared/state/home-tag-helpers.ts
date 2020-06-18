@@ -69,7 +69,7 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps | null> = (
   om,
   props
 ) => {
-  if (!props.tags.length) {
+  if (!props.tags?.length) {
     console.log('no tags for nav?', props)
     return null
   }

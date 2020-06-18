@@ -1110,9 +1110,18 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
   om,
   next
 ) => {
-  const state = om.state.home.currentState
+  let state = om.state.home.currentState
+  if (!('activeTagIds' in state)) {
+    state = _.findLast(
+      om.state.home.states,
+      (state) => isSearchState(state) || isHomeState(state)
+    )!
+    if (!state) {
+      console.warn('no state!')
+      return false
+    }
+  }
   try {
-    assert(state.type === next.type)
     assert('activeTagIds' in next)
     const stateActiveTagIds =
       'activeTagIds' in state ? state.activeTagIds : null
