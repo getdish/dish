@@ -896,7 +896,7 @@ if (typeof window !== 'undefined') {
 
 const setShowAutocomplete: Action<ShowAutocomplete> = (om, val) => {
   if (justFocusedWindow) {
-    console.warn('just focused ignore')
+    console.log('just focused, ignore showing autocomplete')
     return
   }
   om.state.home.showAutocomplete = val

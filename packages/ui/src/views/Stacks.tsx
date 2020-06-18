@@ -16,7 +16,7 @@ const fsStyle = {
 
 export type StackProps = Omit<
   ViewStyle &
-    ViewProps & {
+    Omit<ViewProps, 'display'> & {
       // give it a descriptive name for static extraction (TODO)
       name?: string
       fullscreen?: boolean
@@ -33,7 +33,7 @@ export type StackProps = Omit<
       // stronger version of pointer-events: none;
       disabled?: boolean
       contain?: 'none' | 'strict' | 'content' | 'size' | 'layout' | 'paint'
-      display?: 'inherit' | 'none' | 'inline' | 'block'
+      display?: 'inherit' | 'none' | 'inline' | 'block' | 'contents'
     },
   // because who tf uses alignContent or backfaceVisibility
   'alignContent' | 'backfaceVisibility'

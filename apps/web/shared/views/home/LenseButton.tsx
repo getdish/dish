@@ -39,8 +39,8 @@ export const LenseButton = memoIsEqualDeep(
           borderWidth={1}
           borderBottomColor="transparent"
           hoverStyle={{
-            borderColor: lenseColorLight,
-            opacity: 1,
+            // borderColor: lenseColorLight,
+            // opacity: 1,
             transform: [{ scale: 1.1 }],
           }}
           {...(isActive && {
@@ -86,8 +86,8 @@ export const LenseButton = memoIsEqualDeep(
         position="bottom"
         contents={
           <Box
-            marginTop={-5}
-            transform={isActive ? [{ scale: 0.65 }, { translateY: -20 }] : null}
+            marginTop={-3}
+            transform={isActive ? [{ scale: 0.65 }, { translateY: -20 }] : []}
             backgroundColor={isActive ? '#000' : '#fff'}
           >
             <Text

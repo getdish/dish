@@ -181,15 +181,17 @@ export default memo(function HomeSearchBar() {
         }
         case 8: {
           // delete
-          if (!isAutocompleteActive) return
-          // if selected onto a tag, we can send remove command
-          if (autocompleteIndex < 0) {
-            if (om.state.home.searchbarFocusedTag) {
-              om.actions.home.navigateToTag({
-                tags: [om.state.home.searchbarFocusedTag],
-              })
+          console.log('delete', autocompleteIndex)
+          if (isAutocompleteActive) {
+            // if selected onto a tag, we can send remove command
+            if (autocompleteIndex < 0) {
+              if (om.state.home.searchbarFocusedTag) {
+                om.actions.home.navigateToTag({
+                  tags: [om.state.home.searchbarFocusedTag],
+                })
+              }
+              next()
             }
-            next()
           }
           if (autocompleteIndex === 0) {
             prev()
@@ -440,8 +442,17 @@ export default memo(function HomeSearchBar() {
             </MediaQuery>
 
             {/* Search Input Start */}
-            {isSmall && showLocation ? locationSearchElement : searchElement}
-
+            {isSmall && (
+              <>
+                {/* keep both in dom so we have access to ref */}
+                <VStack display={showLocation ? 'contents' : 'none'}>
+                  {locationSearchElement}
+                </VStack>
+                <VStack display={!showLocation ? 'contents' : 'none'}>
+                  {searchElement}
+                </VStack>
+              </>
+            )}
             <Spacer size={1} />
           </HStack>
 

@@ -51,6 +51,8 @@ export default memo(function HomePageSearchResults(props: {
   const paddingTop = (isSmall ? 0 : searchBarHeight) + 10
   const titleHeight = paddingTop + 48
 
+  console.warn('HomePageSearchResults.render')
+
   return (
     <VStack
       flex={1}
