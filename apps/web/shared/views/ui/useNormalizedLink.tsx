@@ -1,6 +1,6 @@
 import { fullyIdle } from '@dish/async'
 import { useForceUpdate } from '@dish/ui'
-import { isEqual } from 'lodash'
+import { isEqual, omit } from 'lodash'
 import { useMemo, useRef } from 'react'
 
 import { memoize } from '../../helpers/memoizeWeak'
@@ -24,19 +24,20 @@ export const useNormalizeLinkProps = (
   return next
 }
 
-const getState = (id: string) =>
-  omStatic.state.home.states.find((x) => x.id === id)!
+const getLatestState = () => {
+  const { breadcrumbStates } = omStatic.state.home
+  const lastBreadcrumb = breadcrumbStates[breadcrumbStates.length - 1]
+  const currentStateId = lastBreadcrumb?.id
+  return omStatic.state.home.states.find((x) => x.id === currentStateId)!
+}
 
 const useNormalizedLink = (
   props: Partial<LinkButtonProps>
 ): LinkButtonNamedProps | null => {
   const forceUpdate = useForceUpdate()
   const cur = useRef<any>()
-  const { breadcrumbStates } = omStatic.state.home
-  const lastBreadcrumb = breadcrumbStates[breadcrumbStates.length - 1]
-  const currentStateId = lastBreadcrumb?.id
   if (!cur.current) {
-    cur.current = getNormalizedLink(props, getState(currentStateId))
+    cur.current = getNormalizedLink(props, getLatestState())
   }
   const linkProps = cur.current
   return useMemo(() => {
@@ -44,8 +45,9 @@ const useNormalizedLink = (
       return {
         ...linkProps,
         onMouseEnter(e) {
-          const next = getNormalizedLink(props, getState(currentStateId))
-          if (!isEqual(next, linkProps)) {
+          const next = getNormalizedLink(props, getLatestState())
+          if (!isEqual(omit(next, 'onPress'), omit(cur.current, 'onPress'))) {
+            console.log('force update new info', next, linkProps)
             cur.current = next
             forceUpdate()
           }

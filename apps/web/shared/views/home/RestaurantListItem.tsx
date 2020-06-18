@@ -19,7 +19,11 @@ import {
   HomeStateItemSearch,
   isEditingUserPage,
 } from '../../state/home'
-import { omStatic, useOvermind } from '../../state/useOvermind'
+import {
+  omStatic,
+  useOvermind,
+  useOvermindStatic,
+} from '../../state/useOvermind'
 import { Link } from '../ui/Link'
 import { bgLightLight } from './colors'
 import { DishView } from './DishView'
@@ -58,7 +62,7 @@ type RestaurantListItemProps = {
 export const RestaurantListItem = memo(function RestaurantListItem(
   props: RestaurantListItemProps
 ) {
-  const om = useOvermind()
+  const om = useOvermindStatic()
   const [isHovered, setIsHovered] = useState(false)
 
   console.log('RestaurantListItem.render', props.rank)
@@ -80,6 +84,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
     return om.reaction(
       (state) => state.home.activeIndex,
       (activeIndex) => {
+        console.log('setting is hovered via active index...')
         setIsHovered(props.rank == activeIndex + 1)
       }
     )
@@ -108,7 +113,6 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 const RestaurantListItemContent = memo(
   graphql((props: RestaurantListItemProps) => {
     const { rank, restaurantId, restaurantSlug, currentLocationInfo } = props
-    const om = useOvermind()
     const pad = 18
     const isSmall = useMediaQueryIsSmall()
     const [state, setState] = useState({
