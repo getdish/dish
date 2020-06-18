@@ -122,16 +122,17 @@ const HomeSearchResultsViewContent = memo(
     const [chunk, setChunk] = useState(1)
     const [loadMore, setLoadMore] = useState(0)
     const perChunk = [0, 3, 3, 6, 12, 12]
+    const totalToShow = chunk * perChunk[chunk]
+    const hasMoreToLoad = allResults.length > totalToShow
     // load a few at a time, less to start
     const loadMoreCb = useCallback(() => setLoadMore(Date.now()), [])
     const isLoading =
-      loadMore === 0 ||
+      (hasMoreToLoad && loadMore === 0) ||
       !state.results?.results ||
       state.results.status === 'loading'
 
     const results = useMemo(() => {
-      const cur = allResults.slice(0, chunk * perChunk[chunk])
-      const hasMoreToLoad = cur.length < allResults.length
+      const cur = allResults.slice(0, totalToShow)
       return cur.map((item, index) => (
         <Suspense key={item.id} fallback={null}>
           <RestaurantListItem

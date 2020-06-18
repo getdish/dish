@@ -8,6 +8,7 @@ import {
   HomeActiveTagIds,
   HomeStateItem,
   HomeStateTagNavigable,
+  Om,
   OmState,
   OmStateHome,
 } from './home-types'
@@ -23,8 +24,8 @@ export const allTags = allTagsList.reduce((acc, cur) => {
   return acc
 }, {})
 
-type HomeStateNav = {
-  tags: NavigableTag[]
+export type HomeStateNav = {
+  tags?: NavigableTag[]
   state?: HomeStateItem
   disabledIfActive?: boolean
   replace?: boolean
@@ -72,7 +73,7 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps | null> = (
     console.log('no tags for nav?', props)
     return null
   }
-  const nextState = getNextStateWithTags(om, props)
+  const nextState = getNextState(om, props)
   if (nextState) {
     const navigateItem = getNavigateItemForState(om.state, nextState)
     return {
@@ -85,18 +86,13 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps | null> = (
   return null
 }
 
-export const getNextStateWithTags: Action<
-  HomeStateNav,
-  HomeStateTagNavigable | null
-> = (
-  om,
-  {
+export const getNextState = (om: Om, navState?: HomeStateNav) => {
+  const {
     state = om.state.home.currentState,
-    tags,
+    tags = [],
     disabledIfActive = false,
     replace = false,
-  }
-) => {
+  } = navState ?? {}
   let searchQuery = state.searchQuery ?? ''
   let activeTagIds: HomeActiveTagIds = {}
 

@@ -117,9 +117,7 @@ export default memo(function HomeSearchBar() {
 
   const handleCancel = useCallback(() => {
     om.actions.home.setShowAutocomplete(false)
-    // setTimeout(() => {
-    //   input.focus()
-    // }, 100)
+    om.actions.home.clearSearch()
   }, [input])
 
   useEffect(() => {
@@ -172,17 +170,11 @@ export default memo(function HomeSearchBar() {
               })
               return
             }
-            console.warn('implement:', item)
-          } else {
-            if (om.state.home.currentStateType !== 'search') {
-              om.actions.home.popTo('search')
-            } else {
-              om.actions.home.runSearch({
-                searchQuery: e.target.value,
-                force: true,
-              })
-            }
           }
+          om.actions.home.runSearch({
+            searchQuery: e.target.value,
+            force: true,
+          })
           om.actions.home.setShowAutocomplete(false)
           focusedInput.blur()
           return
@@ -487,9 +479,8 @@ const HomeSearchBarHomeButton = memo(() => {
         pointerEvents="auto"
         paddingHorizontal={4}
         marginRight={20}
-        // marginLeft={-14} //undo spacing
         opacity={om.state.home.currentStateType === 'home' ? 0 : 1}
-        onPress={() => om.actions.home.popTo('home')}
+        onPress={() => om.actions.home.popTo(-1)}
         pressStyle={{
           opacity: 0.6,
         }}

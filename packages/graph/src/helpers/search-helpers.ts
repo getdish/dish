@@ -22,7 +22,9 @@ export async function search({
     'tags=' + tags.map((t) => t.toLowerCase().trim()).join(','),
   ]
   const url = SEARCH_DOMAIN + '/search?' + params.join('&')
+  console.time('search')
   const response = await fetch(url).then((res) => res.json())
+  console.timeEnd('search')
   return response
 }
 

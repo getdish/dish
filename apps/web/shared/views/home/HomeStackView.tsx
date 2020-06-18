@@ -43,7 +43,9 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   const isRemoving = states.length > breadcrumbs.length
   const items = isRemoving ? states : homeStates
   const key = `${items.map((x) => x.id).join(' ')}`
-  const lastHomeStates = useMemo(() => om.state.home.states, [key])
+  const lastHomeStates = om.state.home.states
+
+  console.log('HomeStackView', key)
 
   // const activeItem = items[items.length - 1]
   // useEffect(() => {
@@ -74,7 +76,6 @@ export function HomeStackView<A extends HomeStateItem>(props: {
     <ZStack fullscreen>
       {items.map((item, i) => {
         const isActive = i === items.length - 1
-        console.log('HomeStackView', item.id, { ...item })
         return (
           // <PopoverShowContext.Provider
           //   key={item.id}

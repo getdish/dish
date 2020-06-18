@@ -19,7 +19,7 @@ import {
   HomeStateItemSearch,
   isEditingUserPage,
 } from '../../state/home'
-import { useOvermind } from '../../state/useOvermind'
+import { omStatic, useOvermind } from '../../state/useOvermind'
 import { Link } from '../ui/Link'
 import { bgLightLight } from './colors'
 import { DishView } from './DishView'
@@ -115,7 +115,9 @@ const RestaurantListItemContent = memo(
       showAddComment: false,
     })
     const showAddComment =
-      state.showAddComment || isEditingUserPage(props.searchState, om.state)
+      state.showAddComment ||
+      // note static for now... caused big perf issue
+      isEditingUserPage(props.searchState, omStatic.state)
     const adjustRankingLeft = 36
     const leftPad = 25
     const restaurant = restaurantQuery(restaurantSlug)
@@ -130,7 +132,7 @@ const RestaurantListItemContent = memo(
     const paddingTop = 35
     const paddingBottom = 10
 
-    console.log('RestaurantListItemContent.render')
+    console.log('RestaurantListItemContent.render', props.rank)
 
     return (
       <HStack alignItems="flex-start" justifyContent="flex-start">
@@ -213,7 +215,6 @@ const RestaurantListItemContent = memo(
                       subtle
                       showMore={true}
                       restaurantSlug={restaurantSlug}
-                      divider={<></>}
                     />
                     <RestaurantLenseVote />
                   </HStack>

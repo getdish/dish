@@ -81,7 +81,6 @@ const HomePageContent = memo(() => {
         <HomeViewDrawer>
           <HomeStackView>
             {(homeState, isActive, index) => {
-              console.warn('we could try using key={homeState.id} for search')
               return (
                 <Suspense fallback={null}>
                   {isHomeState(homeState) && (

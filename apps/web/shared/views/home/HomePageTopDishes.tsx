@@ -54,6 +54,8 @@ export default memo(function HomePageTopDishesContainer(props: TopDishesProps) {
   const isOnHome = om.state.home.currentStateType === 'home'
   const [isLoaded, setIsLoaded] = useState(false)
 
+  console.warn('HomePageTopDishesContainer.render')
+
   useEffect(() => {
     if (isOnHome) {
       setIsLoaded(true)
@@ -141,15 +143,16 @@ const HomePageTopDishes = memo(({ state }: TopDishesProps) => {
 const HomeTopDishesContent = memo(() => {
   const om = useOvermind()
   const { topDishes } = om.state.home
-  const results = topDishes
-  console.warn('HomeTopDishesContent.render')
-  return (
-    <>
-      {!results.length && <LoadingItems />}
-      {results.map((country) => (
-        <TopDishesCuisineItem key={country.country} country={country} />
-      ))}
-    </>
+  return useMemo(
+    () => (
+      <>
+        {!topDishes.length && <LoadingItems />}
+        {topDishes.map((country) => (
+          <TopDishesCuisineItem key={country.country} country={country} />
+        ))}
+      </>
+    ),
+    [topDishes]
   )
 })
 

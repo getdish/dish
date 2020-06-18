@@ -1,32 +1,30 @@
-import { fullyIdle, requestIdle, sleep } from '@dish/async'
+import { fullyIdle, sleep } from '@dish/async'
 import {
   RestaurantOnlyIds,
   RestaurantSearchArgs,
-  TopCuisine,
   getHomeDishes,
   query,
   resolved,
   search,
   slugify,
 } from '@dish/graph'
-import { stringify } from '@dish/helpers'
-import { assert, handleAssertionError } from '@dish/helpers'
+import { assert, handleAssertionError, stringify } from '@dish/helpers'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
 import _, { findLast, last } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
 
-import { isWorker } from '../constants'
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
 import { timer } from '../helpers/timer'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
 import {
+  HomeStateNav,
   allTags,
   getActiveTags,
   getFullTags,
   getNavigateItemForState,
   getNavigateToTags,
-  getNextStateWithTags,
+  getNextState,
   getTagsFromRoute,
   isSearchBarTag,
   navigateToTag,
@@ -44,6 +42,7 @@ import {
   HomeStateItemSimple,
   HomeStateTagNavigable,
   LngLat,
+  Om,
   OmState,
   ShowAutocomplete,
 } from './home-types'
@@ -263,7 +262,7 @@ const pushHomeState: AsyncAction<
   const { started, currentState } = om.state.home
   const historyId = item.id
   const id = item.replace ? currentState.id : `${Math.random()}`
-  const fallbackState = {
+  const base = {
     id,
     center: currentState?.center ?? initialHomeState.center,
     span: currentState?.span ?? initialHomeState.span,
@@ -282,18 +281,16 @@ const pushHomeState: AsyncAction<
   switch (type) {
     // home
     case 'home': {
-      activeTagIds = om.state.home.lastHomeState.activeTagIds
-
+      let activeTagIds = {}
       // be sure to remove all searchbar tags
-      activeTagIds = Object.keys(activeTagIds).reduce((acc, id) => {
-        if (!isSearchBarTag(om.state.home.allTags[id])) {
-          acc[id] = true
+      for (const tagId in om.state.home.lastHomeState.activeTagIds) {
+        if (!isSearchBarTag(om.state.home.allTags[tagId])) {
+          activeTagIds[tagId] = true
         }
-        return acc
-      }, {})
-
+      }
+      console.log('next active tags', activeTagIds)
       nextState = {
-        ...fallbackState,
+        ...base,
         ...om.state.home.lastHomeState,
         type,
         ...newState,
@@ -326,9 +323,9 @@ const pushHomeState: AsyncAction<
 
       const username =
         type == 'userSearch' ? om.state.router.curPage.params.username : ''
-      const searchQuery = item.params.search ?? fallbackState.searchQuery
+      const searchQuery = item.params.search ?? base.searchQuery
       const searchState: HomeStateItemSearch = {
-        ...fallbackState,
+        ...base,
         hasMovedMap: false,
         results: { status: 'loading' },
         ...om.state.home.lastSearchState,
@@ -346,7 +343,7 @@ const pushHomeState: AsyncAction<
     // restaurant
     case 'restaurant': {
       nextState = {
-        ...fallbackState,
+        ...base,
         type,
         restaurantId: null,
         restaurantSlug: item.params.slug,
@@ -358,7 +355,7 @@ const pushHomeState: AsyncAction<
 
     case 'user': {
       nextState = {
-        ...fallbackState,
+        ...base,
         type: 'user',
         username: item.params.username,
         ...newState,
@@ -368,7 +365,7 @@ const pushHomeState: AsyncAction<
 
     case 'gallery': {
       nextState = {
-        ...fallbackState,
+        ...base,
         type: 'gallery',
         restaurantSlug: item.params.restaurantSlug,
         dishId: item.params.dishId,
@@ -395,6 +392,7 @@ const pushHomeState: AsyncAction<
   // we are going back to a prev state!
   // hacky for now
   if (nextPushIsReallyAPop) {
+    console.log('nextPushIsReallyAPop', nextPushIsReallyAPop)
     nextPushIsReallyAPop = false
     const prev = _.findLast(om.state.home.states, (x) => x.type === item.name)
     if (prev) {
@@ -421,13 +419,14 @@ const pushHomeState: AsyncAction<
     const lastState = om.state.home.states[om.state.home.states.length - 1]
     for (const key in nextState) {
       if (!isEqual(nextState[key], lastState[key])) {
-        // console.log('update value', key, lastState[key], 'to', nextState[key])
+        console.log('granular update...', key)
         lastState[key] = _.isPlainObject(nextState[key])
           ? { ...nextState[key] }
           : nextState[key]
       }
     }
   } else {
+    console.log('replacing state, should trigger stackview no?')
     om.state.home.states = [...om.state.home.states, nextState]
   }
 
@@ -577,6 +576,7 @@ const loadHomeDishes: AsyncAction = async (om) => {
     om.actions.home.addTagsToCache(dishTags)
   }
 
+  console.warn('SET TOP DISHES')
   om.state.home.topDishes = all
 }
 
@@ -608,7 +608,7 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
     return
   }
 
-  console.time('autocomplete')
+  console.time('searchLocations')
   // const restaurantsPromise = search({
   //   center: state.center,
   //   span: padSpan(state.span),
@@ -616,13 +616,14 @@ const runAutocomplete: AsyncAction<string> = async (om, query) => {
   //   limit: 5,
   // })
   const locationResults = await searchLocations(state.searchQuery)
-  console.timeEnd('autocomplete')
+  console.timeEnd('searchLocations')
   console.log({ locationResults })
 
   const autocompleteDishes = om.state.home.autocompleteDishes
   console.time('autocomplete.fuzzy')
   let found = await fuzzyFind(query, autocompleteDishes)
   console.timeEnd('autocomplete.fuzzy')
+  console.log('autocompleteDishes', autocompleteDishes)
   if (found.length < 10) {
     found = [...found, ...autocompleteDishes.slice(0, 10 - found.length)]
   }
@@ -685,26 +686,21 @@ const runSearch: AsyncAction<{
   lastSearchAt = Date.now()
   let curId = lastSearchAt
 
+  const curState = om.state.home.currentState
   if (
-    opts.searchQuery &&
-    om.state.home.currentState.searchQuery !== opts.searchQuery
+    await navigateToCurrentState(om, {
+      state: {
+        ...curState,
+        searchQuery: opts.searchQuery ?? curState['searchQuery'] ?? '',
+      },
+    })
   ) {
-    om.state.home.currentState.searchQuery = opts.searchQuery
-  }
-
-  if (await om.actions.home.navigateToCurrentState()) {
     // navigate will trigger new search
     console.warn('nav ended, but will trigger new search')
     return
   }
 
-  let state = om.state.home.currentState
-
-  if (!isSearchState(state)) {
-    console.warn('NO SEARCH?')
-    return
-  }
-
+  let state = om.state.home.lastSearchState
   const tags = getActiveTags(om.state.home)
 
   const shouldCancel = () => {
@@ -728,7 +724,10 @@ const runSearch: AsyncAction<{
 
   // prevent duplicate searches
   const searchKey = stringify(searchArgs)
-  if (!opts.force && searchKey === lastSearchKey) return
+  if (!opts.force && searchKey === lastSearchKey) {
+    console.log('same searchkey as last, ignore')
+    return
+  }
 
   state = om.state.home.lastSearchState
 
@@ -755,6 +754,12 @@ const runSearch: AsyncAction<{
       dishes: [],
       locations: [],
     },
+  }
+
+  // overmind seems unhappy to just let us mutate
+  const index = om.state.home.states.findIndex((x) => x.id === state.id)
+  om.state.home.states[index] = {
+    ...state,
   }
 }
 
@@ -870,6 +875,7 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
     }
   }
 
+  console.log('update breadcrumbs NOW')
   om.actions.home.updateBreadcrumbs()
   currentStates = om.state.home.states
   await Promise.all([...promises])
@@ -1043,7 +1049,8 @@ const setHasMovedMap: Action<boolean | void> = (om, val = true) => {
 
 const updateBreadcrumbs: Action = (om) => {
   const next = createBreadcrumbs(om.state.home)
-  if (!isEqual(next, om.state.home.breadcrumbStates)) {
+  if (next && !isEqual(next, om.state.home.breadcrumbStates)) {
+    console.log('now setting new breadcurmbs', next)
     om.state.home.breadcrumbStates = next
   }
 }
@@ -1113,10 +1120,12 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
       stringify(stateActiveTagIds) === stringify(next.activeTagIds)
     const sameSearchQuery = isEqual(state.searchQuery, next.searchQuery)
     assert(!sameTagIds || !sameSearchQuery)
-    om.state.home.states[om.state.home.states.length - 1] = {
+    const nextState = {
       ...state,
       ...next,
     }
+    console.log('updating active tags', nextState)
+    om.state.home.states[om.state.home.states.length - 1] = nextState
     return await syncStateToRoute(om, next)
   } catch (err) {
     handleAssertionError(err)
@@ -1127,10 +1136,8 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
 // this is useful for search where we mutate the current state while you type,
 // but then later you hit "enter" and we need to navigate to search (or home)
 // we definitely can clean up / name better some of this once things settle
-const navigateToCurrentState: AsyncAction<undefined, boolean> = async (om) => {
-  const nextState = getNextStateWithTags(om, {
-    tags: [],
-  })!
+const navigateToCurrentState = async (om: Om, navState?: HomeStateNav) => {
+  const nextState = getNextState(om, navState)
   return await om.actions.home.updateActiveTags(nextState)
 }
 
@@ -1185,5 +1192,4 @@ export const actions = {
   updateActiveTags,
   addTagsToCache,
   setAutocompleteResults,
-  navigateToCurrentState,
 }

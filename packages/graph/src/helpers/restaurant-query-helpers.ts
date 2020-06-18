@@ -60,6 +60,8 @@ export const restaurantPhotosForCarousel = ({
       if (photos.length >= max) break
     }
   }
-  console.warn('restaurantPhotosForCarousel time', Date.now() - x, 'ms')
+  if (Date.now() - x > 50) {
+    console.warn('restaurantPhotosForCarousel SLOW')
+  }
   return photos
 }

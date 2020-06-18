@@ -1,3 +1,5 @@
+// TODO replace with flexsearch light
+
 const SEQUENTIAL_BONUS = 15 // bonus for adjacent matches
 const SEPARATOR_BONUS = 30 // bonus if match occurs after a separator
 const CAMEL_BONUS = 30 // bonus if match is uppercase and prev is lower

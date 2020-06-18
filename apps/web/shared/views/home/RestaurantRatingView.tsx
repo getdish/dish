@@ -25,7 +25,6 @@ export default memo(
       const restaurant = restaurantQuery(restaurantSlug)
       rating = restaurant.rating
     }
-    console.log('rating', rating)
     const percent = getRestaurantRating(rating)
     const color = getRankingColor(percent)
     return (
