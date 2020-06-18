@@ -19,19 +19,12 @@ Week 3
 in progress
 
 - basic tag admin for managing dish tags
-- navigation/stackview bugs
 - delivery button/hover to see services/names
-- gallery view (click to see full)
-- searchbar fixes for:
-  - delete tag
-  - keyboard
+  - add an inline section on restuanrantlistitem
 - clicking tags:
   - restaurantdetail
   - search result
   - click to see map
-
-unfinished
-
 - map
   - better occlusion or grouping
   - click item to scroll to row
@@ -43,25 +36,16 @@ unfinished
 - autocomplete
   - dishes given cuisine
   - go to restaurant if searched
-  - fix any nav issues
 - location search
 
-  - working search
-  - working initial items
-
 - dont show autocomplete unless they dont type for ~2s feels less aggressive
-- show cuisine dishes carousel when clicking cuisine ons earch results
-- reminder - a lot of perf issues could be fixed in CM
-  - we'd just need to indicate/ensure busyness is set while scrolling/mapping
+- show cuisine dishes carousel when clicking cuisine on search results
 
 - hover "closed until" to show full hours
-- horizontal scroll (load more on scroll, show one to start)
 - user features
 - add tip/comment
-- Make sure toasts are working for actions
 - Upvote tags
 - Better breakdown of rating
-- Some sort of way to highlight comments or at least summaries of features (bert?) on restaurant detail or else it feels too empty
 - Various user flows (expo auth?)
 - Add o tag, upvote/downvote, star
 - [ ] hover on left side should show a "banner" on bottom of right

@@ -39,7 +39,7 @@ import { PageTitleTag } from '../ui/PageTitleTag'
 import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
 import { DishView } from './DishView'
 import HomeFilterBar from './HomeFilterBar'
-import { HomeLenseBarOnly } from './HomeLenseBar'
+import { HomeLenseBar } from './HomeLenseBar'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import RestaurantRatingView from './RestaurantRatingView'
 import { Squircle } from './Squircle'
@@ -123,10 +123,7 @@ const HomePageTopDishes = memo(({ state }: TopDishesProps) => {
                     </LinkButton>
                   </ZStack>
                   <HorizontalLine />
-                  <HomeLenseBarOnly
-                    size="lg"
-                    activeTagIds={state.activeTagIds}
-                  />
+                  <HomeLenseBar size="lg" activeTagIds={state.activeTagIds} />
                   <HorizontalLine />
                 </HStack>
                 <HomeFilterBar activeTagIds={state.activeTagIds} />
@@ -359,7 +356,7 @@ export const RestaurantButton = memo(
         <HStack alignItems="center" spacing={5}>
           {!!trending && (
             <TrendingIcon
-              size={18}
+              size={16}
               trending={trending}
               marginTop={-4}
               marginBottom={-4}

@@ -157,7 +157,7 @@ const RestaurantListItemContent = memo(
                 fullscreen
                 zIndex={100}
                 left={-1}
-                top={-paddingTop + 3}
+                top={paddingTop - 8}
                 height={120}
                 justifyContent="center"
                 pointerEvents="none"

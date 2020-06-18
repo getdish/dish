@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 import { Plus } from 'react-feather'
 
 import { LinkButton } from '../ui/LinkButton'
-import { HomeLenseBarOnly } from './HomeLenseBar'
+import { HomeLenseBar } from './HomeLenseBar'
 
 export const RestaurantLenseVote = memo(() => {
   return (
@@ -11,8 +11,13 @@ export const RestaurantLenseVote = memo(() => {
       allowHoverOnContent
       position="bottom"
       contents={
-        <Box pointerEvents="auto">
-          <HomeLenseBarOnly activeTagIds={{}} />
+        <Box
+          pointerEvents="auto"
+          alignItems="center"
+          justifyContent="center"
+          padding={20}
+        >
+          <HomeLenseBar minimal activeTagIds={{}} />
         </Box>
       }
     >

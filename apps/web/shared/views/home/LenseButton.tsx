@@ -31,13 +31,12 @@ export const LenseButton = memoIsEqualDeep(
         <HStack
           alignItems="center"
           justifyContent="center"
-          marginVertical={-10 * scale}
+          marginVertical={-12 * scale}
           width={sizePx * scale}
           height={sizePx * scale}
-          paddingVertical={3 * scale}
           borderRadius={100}
           borderColor="transparent"
-          borderBottomWidth={10}
+          borderWidth={1}
           borderBottomColor="transparent"
           hoverStyle={{
             borderColor: lenseColorLight,
@@ -46,44 +45,56 @@ export const LenseButton = memoIsEqualDeep(
           }}
           {...(isActive && {
             opacity: 1,
-            backgroundColor: 'white',
             borderColor: lenseColor,
-            transform: [{ scale: 1.5 }],
+            transform: [{ scale: 1.35 }],
             hoverStyle: {
-              backgroundColor: 'white',
+              transform: [{ scale: 1.35 }],
             },
           })}
         >
           <Text
             color={isActive ? '#fff' : '#454545'}
-            fontSize={sizePx * 0.5 * scale}
-            lineHeight={sizePx * scale}
-            width={sizePx * 0.9 * scale}
-            height={sizePx * 0.9 * scale}
+            fontSize={sizePx * 0.65 * scale}
+            lineHeight={16}
+            {...(!minimal && {
+              lineHeight: sizePx * scale,
+            })}
             fontWeight="400"
             textAlign="center"
           >
             {(lense.icon ?? '').trim()}
-            {!minimal
-              ? ` ${`${lense.displayName ?? lense.name ?? ''}`.trim()}`
-              : null}
+            {minimal ? (
+              <Text fontSize={12}>
+                {(lense.displayName ?? lense.name ?? '').trim()}
+              </Text>
+            ) : null}
           </Text>
         </HStack>
       </LinkButton>
     )
 
-    if (!minimal) {
+    if (minimal) {
       return buttonContent
     }
 
     return (
       <HoverablePopover
+        {...(isActive && {
+          isOpen: true,
+        })}
         noArrow
-        position="right"
-        anchor={anchor.RIGHT_BOTTOM}
+        position="bottom"
         contents={
-          <Box top={35} left={-35}>
-            <Text fontSize={16} fontWeight="700">
+          <Box
+            marginTop={-5}
+            transform={isActive ? [{ scale: 0.65 }, { translateY: -20 }] : null}
+            backgroundColor={isActive ? '#000' : '#fff'}
+          >
+            <Text
+              fontSize={16}
+              fontWeight="700"
+              color={isActive ? '#fff' : '#000'}
+            >
               {lense.displayName ?? lense.name}
             </Text>
           </Box>

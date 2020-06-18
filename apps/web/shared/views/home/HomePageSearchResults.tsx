@@ -27,7 +27,7 @@ import { PageTitleTag } from '../ui/PageTitleTag'
 import { flatButtonStyle } from './baseButtonStyle'
 import { getTitleForState } from './getTitleForState'
 import HomeFilterBar from './HomeFilterBar'
-import { HomeLenseBarOnly } from './HomeLenseBar'
+import { HomeLenseBar } from './HomeLenseBar'
 import { HomeScrollView } from './HomeScrollView'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
@@ -85,7 +85,7 @@ export default memo(function HomePageSearchResults(props: {
           flexDirection="row-reverse"
           spacing={15}
         >
-          <HomeLenseBarOnly activeTagIds={state.activeTagIds} />
+          <HomeLenseBar activeTagIds={state.activeTagIds} />
           <HomeFilterBar activeTagIds={state.activeTagIds} />
           <VStack
             flex={1}

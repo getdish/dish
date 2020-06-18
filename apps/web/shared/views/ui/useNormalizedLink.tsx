@@ -24,6 +24,9 @@ export const useNormalizeLinkProps = (
   return next
 }
 
+const getState = (id: string) =>
+  omStatic.state.home.states.find((x) => x.id === id)!
+
 const useNormalizedLink = (
   props: Partial<LinkButtonProps>
 ): LinkButtonNamedProps | null => {
@@ -31,14 +34,14 @@ const useNormalizedLink = (
   const { breadcrumbStates } = omStatic.state.home
   const lastBreadcrumb = breadcrumbStates[breadcrumbStates.length - 1]
   const currentStateId = lastBreadcrumb?.id
-  const state = omStatic.state.home.states.find((x) => x.id === currentStateId)!
-  const linkProps = getNormalizedLink(props, state)
+  const linkProps = getNormalizedLink(props, getState(currentStateId))
   return useMemo(() => {
     if (linkProps) {
       return {
         ...linkProps,
         onMouseEnter(e) {
-          const next = getNormalizedLink(props, state)
+          const next = getNormalizedLink(props, getState(currentStateId))
+          console.log('next', props, getState(currentStateId), next)
           if (!isEqual(next, linkProps)) {
             console.log('not equal')
             forceUpdate()
