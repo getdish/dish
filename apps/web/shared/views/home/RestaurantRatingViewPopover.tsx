@@ -11,7 +11,7 @@ import {
   VStack,
 } from '@dish/ui'
 import React, { memo } from 'react'
-import { Image } from 'react-native'
+import { Image, Linking } from 'react-native'
 
 import { RatingViewProps } from './RatingView'
 import { restaurantQuery } from './restaurantQuery'
@@ -66,6 +66,8 @@ export const RestaurantRatingViewPopover = memo(
                       marginHorizontal={-10}
                       paddingHorizontal={10}
                       key={source}
+                      style={{ cursor: 'pointer' }}
+                      onPress={() => Linking.openURL(item.url)}
                     >
                       <HStack width="50%" spacing={6} alignItems="center">
                         {info?.image ? (
