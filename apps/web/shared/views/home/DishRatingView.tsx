@@ -8,8 +8,7 @@ export type DishRatingViewProps = Omit<RatingViewProps, 'percent' | 'color'> & {
 }
 
 export const getDishRatingPercent = (dish: TopCuisineDish) => {
-  if (typeof dish.rating == 'undefined') return
-  return Math.round(dish.rating * 10)
+  return (dish.rating ?? 0) * 10
 }
 
 export const getRankingColor = (rating: number | undefined) => {

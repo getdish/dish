@@ -19,8 +19,7 @@ Week 3
 in progress
 
 - basic tag admin for managing dish tags
-- delivery button/hover to see services/names
-  - add an inline section on restuanrantlistitem
+- add an inline section on restuanrantlistitem
 - clicking tags:
   - restaurantdetail
   - search result

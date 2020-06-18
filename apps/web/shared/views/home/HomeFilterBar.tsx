@@ -8,14 +8,14 @@ import {
 } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
-import { Image } from 'react-native'
+import { CheckBox, Image } from 'react-native'
 
 import { HomeActiveTagIds } from '../../state/home'
 import { Tag, getTagId } from '../../state/Tag'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
-import { deliveryServices } from './deliveryServices'
 import { SmallButton } from './SmallButton'
+import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 
 export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
   const height = 29
@@ -57,39 +57,7 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
 
               if (tag.name === 'Delivery') {
                 return (
-                  <HoverablePopover
-                    key={tag.id}
-                    allowHoverOnContent
-                    position="bottom"
-                    contents={
-                      <Box>
-                        <HStack flexWrap="wrap" marginTop={10}>
-                          {Object.keys(deliveryServices).map((key) => {
-                            const item = deliveryServices[key]
-                            return (
-                              <VStack
-                                key={key}
-                                spacing={3}
-                                alignItems="center"
-                                width="50%"
-                                marginBottom={10}
-                              >
-                                <Image
-                                  source={item.image}
-                                  style={{ width: 40, height: 40 }}
-                                />
-                                <Text fontSize={12} opacity={0.5}>
-                                  {item.name}
-                                </Text>
-                              </VStack>
-                            )
-                          })}
-                        </HStack>
-                      </Box>
-                    }
-                  >
-                    {button}
-                  </HoverablePopover>
+                  <HomeFilterDelivery key={tag.id}>{button}</HomeFilterDelivery>
                 )
               }
 
@@ -99,6 +67,51 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
         )
       })}
     </HStack>
+  )
+})
+
+const HomeFilterDelivery = memo(({ children }: { children: any }) => {
+  const om = useOvermind()
+  return (
+    <HoverablePopover
+      allowHoverOnContent
+      position="bottom"
+      contents={
+        <Box>
+          <VStack>
+            {Object.keys(thirdPartyCrawlSources).map((key) => {
+              const item = thirdPartyCrawlSources[key]
+              if (item.delivery === false) {
+                return null
+              }
+              return (
+                <HStack
+                  key={key}
+                  spacing={8}
+                  alignItems="center"
+                  paddingVertical={4}
+                  paddingHorizontal={10}
+                  hoverStyle={{
+                    backgroundColor: '#f2f2f2',
+                  }}
+                >
+                  <CheckBox value={true} />
+                  <Image
+                    source={item.image}
+                    style={{ width: 24, height: 24, borderRadius: 4 }}
+                  />
+                  <Text ellipse fontSize={12} opacity={0.5}>
+                    {item.name}
+                  </Text>
+                </HStack>
+              )
+            })}
+          </VStack>
+        </Box>
+      }
+    >
+      {children}
+    </HoverablePopover>
   )
 })
 

@@ -17,7 +17,7 @@ export const RatingView = forwardRef(
   (
     {
       color = 'red',
-      percent,
+      percent = 0,
       subtle,
       size: sizeIn,
       hideEmoji,
@@ -51,7 +51,7 @@ export const RatingView = forwardRef(
       </Text>
     )
 
-    const ranking = percent * 10
+    const ranking = Math.round(percent * 10)
     const number = (
       <Text
         fontSize={

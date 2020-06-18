@@ -1,10 +1,9 @@
-import { RESTAURANT_WEIGHTS, graphql, query } from '@dish/graph'
+import { RESTAURANT_WEIGHTS, graphql } from '@dish/graph'
 import {
   Box,
   HStack,
   HoverablePopover,
   SmallTitle,
-  StackProps,
   TableCell,
   TableRow,
   Text,
@@ -12,12 +11,12 @@ import {
   VStack,
 } from '@dish/ui'
 import React, { memo } from 'react'
-import { Image, ViewStyle } from 'react-native'
+import { Image } from 'react-native'
 
-import { deliveryServices } from './deliveryServices'
 import { RatingViewProps } from './RatingView'
 import { restaurantQuery } from './restaurantQuery'
 import RestaurantRatingView from './RestaurantRatingView'
+import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 
 export const RestaurantRatingViewPopover = memo(
   graphql(
@@ -60,11 +59,12 @@ export const RestaurantRatingViewPopover = memo(
                   if (!item) {
                     return null
                   }
-                  const info = deliveryServices[source]
+                  const info = thirdPartyCrawlSources[source]
                   return (
                     <TableRow
                       backgroundColor={i % 2 == 0 ? 'white' : '#f7f7f7'}
                       marginHorizontal={-10}
+                      paddingHorizontal={10}
                       key={source}
                     >
                       <HStack width="50%" spacing={6} alignItems="center">

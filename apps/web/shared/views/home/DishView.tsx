@@ -1,16 +1,8 @@
 import { TopCuisineDish } from '@dish/graph'
-import {
-  Box,
-  HStack,
-  LinearGradient,
-  StackProps,
-  Text,
-  VStack,
-  ZStack,
-} from '@dish/ui'
+import { Box, HStack, StackProps, Text, ZStack } from '@dish/ui'
 import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { Image } from 'react-native'
 
 import { NavigableTag } from '../../state/Tag'
 import { LinkButton } from '../ui/LinkButton'

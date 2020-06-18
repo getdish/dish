@@ -12,7 +12,7 @@ export type RestaurantRatingViewProps = Omit<
   rating: number
 }
 
-export const getRestaurantRating = (rating: number) => Math.round(rating * 2)
+export const getRestaurantRating = (rating: number) => rating * 2
 
 export const getRankingColor = (percent: number) =>
   percent >= 8 ? 'green' : percent >= 5 ? 'orange' : 'red'
@@ -25,6 +25,7 @@ export default memo(
       const restaurant = restaurantQuery(restaurantSlug)
       rating = restaurant.rating
     }
+    console.log('rating', rating)
     const percent = getRestaurantRating(rating)
     const color = getRankingColor(percent)
     return (

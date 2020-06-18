@@ -219,7 +219,10 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
               <DishView
                 size={dishHeight}
                 key={index}
-                dish={top_dish as any}
+                dish={{
+                  ...top_dish,
+                  rating: (top_dish.rating ?? 0) / 5,
+                }}
                 cuisine={{
                   id: country.country,
                   name: country.country,

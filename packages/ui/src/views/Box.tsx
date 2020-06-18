@@ -5,7 +5,7 @@ import { StackProps, VStack } from './Stacks'
 
 const defaultStyle: StackProps = {
   backgroundColor: '#fff',
-  padding: 6,
+  padding: 5,
   borderRadius: 12,
   shadowColor: 'rgba(0,0,0,0.175)',
   shadowRadius: 13,
