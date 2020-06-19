@@ -1,14 +1,10 @@
 import '@dish/common'
 
-import {
-  restaurantSaveCanonical,
-  scrapeInsert,
-  scrapeMergeData,
-} from '@dish/graph'
+import { restaurantSaveCanonical, scrapeInsert } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
-import axios_base, { AxiosResponse } from 'axios'
+import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
-import _, { uniq } from 'lodash'
+import _ from 'lodash'
 
 import { aroundCoords, geocode } from '../utils'
 

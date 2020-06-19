@@ -4,6 +4,7 @@ import {
   CI,
   DoorDash,
   Google,
+  GrubHub,
   Infatuated,
   Michelin,
   Self,
@@ -30,6 +31,7 @@ const all: typeof WorkerJob[] = [
   Michelin,
   Tripadvisor,
   Google,
+  GrubHub,
 ]
 
 if (process.env.DISH_ENV != 'production') {

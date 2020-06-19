@@ -12,6 +12,7 @@
 
 0  0  *  *  0  xvfb-run node /app/services/crawlers/_/google/all.js > /dev/stdout
 0 12  *  *  1  node /app/services/crawlers/_/infatuated/all.js > /dev/stdout
+0  0  *  *  2  node /app/services/crawlers/_/grubhub/all.js > /dev/stdout
 0  0  *  *  1  node /app/services/crawlers/_/michelin/all.js > /dev/stdout
 0  0  *  *  2  node /app/services/crawlers/_/self/all.js > /dev/stdout
 0  0  *  *  3  node /app/services/crawlers/_/tripadvisor/all.js > /dev/stdout
