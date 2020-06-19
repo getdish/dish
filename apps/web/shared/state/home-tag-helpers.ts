@@ -35,6 +35,30 @@ export const navigateToTag: Action<HomeStateNav> = (om, nav) => {
   getNavigateToTags(om, nav)?.onPress?.()
 }
 
+// for easy use with Link / LinkButton
+export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps | null> = (
+  om,
+  props
+) => {
+  if (!props.tags?.length) {
+    console.log('no tags for nav?', props)
+    return null
+  }
+  let nextState = getNextState(om, props)
+  if (nextState) {
+    const navigateItem = getNavigateItemForState(om.state, nextState)
+    return {
+      ...navigateItem,
+      onPress() {
+        nextState = getNextState(om, props)
+        console.log('pressing', { props, nextState })
+        om.actions.home.updateActiveTags(nextState)
+      },
+    }
+  }
+  return null
+}
+
 export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
   return await Promise.all(
     tags.map(async (tag) => {
@@ -62,28 +86,6 @@ export const getActiveTags = memoize(
 
 type LinkButtonProps = NavigateItem & {
   onPress?: Function
-}
-
-// for easy use with Link / LinkButton
-export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps | null> = (
-  om,
-  props
-) => {
-  if (!props.tags?.length) {
-    console.log('no tags for nav?', props)
-    return null
-  }
-  const nextState = getNextState(om, props)
-  if (nextState) {
-    const navigateItem = getNavigateItemForState(om.state, nextState)
-    return {
-      ...navigateItem,
-      onPress() {
-        om.actions.home.updateActiveTags(nextState)
-      },
-    }
-  }
-  return null
 }
 
 export const getNextState = (om: Om, navState?: HomeStateNav) => {

@@ -58,22 +58,22 @@ export const RatingView = forwardRef(
         ? ''
         : `.${Math.round(((ranking / 10) % rankingPre) * 10)}`.slice(0, 2)
     const number = (
-      <Text
-        fontSize={Math.max(13, size * 0.5)}
-        fontWeight={subtle ? '300' : '700'}
-        color={color}
-        letterSpacing={-(size / 90)}
-        ellipse
-        width="120%"
-        marginRight="-40%"
-      >
-        {rankingPre}
+      <HStack>
+        <Text
+          fontSize={Math.max(13, size * 0.5)}
+          fontWeight={subtle ? '300' : '700'}
+          color={color}
+          width="100%"
+          textAlign="center"
+        >
+          {rankingPre}
+        </Text>
         {!!rankingPost && (
-          <SuperScriptText fontSize={9} marginRight={-5}>
+          <Text fontWeight={300} opacity={(1 / size) * 20}>
             {rankingPost}
-          </SuperScriptText>
+          </Text>
         )}
-      </Text>
+      </HStack>
     )
 
     if (subtle) {

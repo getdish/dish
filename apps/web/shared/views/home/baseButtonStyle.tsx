@@ -3,9 +3,12 @@ import { StackProps } from '@dish/ui'
 import { bgLight, bgLightHover } from './colors'
 
 export const baseButtonStyle: StackProps = {
+  // @ts-ignore
+  cursor: 'pointer',
   paddingVertical: 5,
   borderRadius: 5,
   paddingHorizontal: 8,
+  alignSelf: 'flex-start',
 }
 
 export const flatButtonStyle: StackProps = {

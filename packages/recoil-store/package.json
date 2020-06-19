@@ -12,7 +12,7 @@
     "test:tmp": "ava test/* --verbose"
   },
   "dependencies": {
-    "@o/recoil": "0.0.7"
+    "@o/recoil": "0.0.10"
   },
   "devDependencies": {
     "@dish/react-test-env": "*"

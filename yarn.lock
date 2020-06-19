@@ -1314,10 +1314,10 @@
     "@gqless/utils" "^0.0.1-alpha.26"
     tslib "^1.11.1"
 
-"@o/recoil@0.0.7":
-  version "0.0.7"
-  resolved "https://registry.npmjs.org/@o/recoil/-/recoil-0.0.7.tgz#a396b0e29a197c50e391995f297705af25e4d1c5"
-  integrity sha512-2Dd/vv3xP1yjAbESVBEsacRQdvFMenulpF+U+CmFUrUbM8Q9EgyVV7P3deeP5jOSzRrm74w9PnLkOC+cUQdkzg==
+"@o/recoil@0.0.10":
+  version "0.0.10"
+  resolved "https://registry.npmjs.org/@o/recoil/-/recoil-0.0.10.tgz#5aca1e78f939166b532f8b274b0e3bc454db01aa"
+  integrity sha512-u90hW/O6/Namo4mJUJubtta9N420EJkDNZT1VnP4JLiTGq8VmjAlYEy5AZ0jDYT1bIvoJOflnFra4pVFRI9ocQ==
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.3.3":
   version "0.3.3"

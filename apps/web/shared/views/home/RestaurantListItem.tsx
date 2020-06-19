@@ -13,6 +13,7 @@ import {
 import { when } from 'overmind'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { MessageSquare } from 'react-feather'
+import { Button } from 'react-native'
 
 import {
   GeocodePlace,
@@ -39,6 +40,7 @@ import { restaurantQuery } from './restaurantQuery'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
+import { SmallButton } from './SmallButton'
 import { Squircle } from './Squircle'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
@@ -244,7 +246,7 @@ const RestaurantListItemContent = memo(
               <RestaurantTopReview restaurantId={restaurantId} />
             </VStack>
 
-            <Spacer size={20} />
+            <Spacer size={10} />
 
             {/* ROW: BOTTOM INFO */}
             <HStack paddingLeft={10} alignItems="center" spacing>
@@ -303,8 +305,24 @@ const RestaurantListItemContent = memo(
   })
 )
 
+const listItems = [
+  {
+    category: 'Food',
+    review: 'The ',
+  },
+  {
+    category: 'Vibe',
+    review: 'Laid back',
+  },
+  {
+    category: 'Wait',
+    review: 'Not bad',
+  },
+]
+
 const RestaurantTopReview = memo(
   graphql(({ restaurantId }: { restaurantId: string }) => {
+    const [showMore, setShowMore] = useState(false)
     const [topReview] = query.review({
       limit: 1,
       where: {
@@ -314,18 +332,44 @@ const RestaurantTopReview = memo(
       },
     })
     return (
-      <CommentBubble user={{ username: topReview?.user?.username ?? 'Peach' }}>
-        <Text
-          selectable
-          opacity={0.8}
-          lineHeight={20}
-          fontSize={14}
-          marginVertical={5}
+      <>
+        <VStack marginTop={4} marginBottom={12} spacing={10}>
+          {listItems.map((item) => (
+            <li key={item.category}>
+              <Text fontSize={14}>
+                <Text fontWeight="600">{item.category}</Text> —{' '}
+                <Text>{item.review}</Text>
+              </Text>
+            </li>
+          ))}
+        </VStack>
+
+        <SmallButton
+          onPress={() => {
+            setShowMore((x) => !x)
+          }}
         >
-          {topReview?.text ||
-            `Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet sit amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.`}
-        </Text>
-      </CommentBubble>
+          <Text fontSize={14} opacity={0.7}>
+            {showMore ? 'Show less' : 'Top comments'}
+          </Text>
+        </SmallButton>
+
+        {showMore && (
+          <VStack paddingTop={20} spacing={10}>
+            {[1, 2, 3].map((i) => (
+              <CommentBubble
+                key={i}
+                user={{ username: topReview?.user?.username ?? 'PeachBot' }}
+              >
+                <Text selectable opacity={0.8} lineHeight={20} fontSize={14}>
+                  {topReview?.text ||
+                    `Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet sit amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.`}
+                </Text>
+              </CommentBubble>
+            ))}
+          </VStack>
+        )}
+      </>
     )
   })
 )
@@ -342,11 +386,11 @@ const RestaurantPeek = memo(
     const spacing = size == 'lg' ? 8 : 6
     const isMedium = useMediaQueryIsMedium()
     const restaurant = restaurantQuery(props.restaurantSlug)
-    const allPhotos = restaurantPhotosForCarousel({
+    const photos = restaurantPhotosForCarousel({
       restaurant,
       tag_names,
+      max: 5,
     })
-    const photos = allPhotos.slice(0, 5)
     const dishSize = (size === 'lg' ? 220 : 180) * (isMedium ? 0.85 : 1)
     const [isLoaded, setIsLoaded] = useState(false)
 
