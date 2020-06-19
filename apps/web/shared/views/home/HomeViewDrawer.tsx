@@ -9,7 +9,12 @@ import {
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
-import { drawerBorderRadius, drawerPad, drawerWidthMax } from '../../constants'
+import {
+  drawerBorderRadius,
+  drawerPad,
+  drawerWidthMax,
+  searchBarHeight,
+} from '../../constants'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 const bgColor = 'rgb(255,255,255)'
@@ -76,7 +81,7 @@ export function HomeViewDrawer(props: { children: any }) {
         fullscreen
         zIndex={1000000}
         bottom="auto"
-        height={100}
+        height={searchBarHeight + 20}
       >
         <LinearGradient
           colors={['white', 'rgba(255,255,255,0)']}

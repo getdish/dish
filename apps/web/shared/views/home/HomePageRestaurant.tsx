@@ -1,3 +1,4 @@
+// debug
 import { graphql, query, restaurantPhotosForCarousel } from '@dish/graph'
 import {
   Divider,
@@ -10,8 +11,9 @@ import {
   ZStack,
 } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
+import { Image } from 'react-native'
 
-import { drawerBorderRadius } from '../../constants'
+import { drawerBorderRadius, searchBarHeight } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { DishView } from './DishView'
@@ -52,9 +54,11 @@ export default memo(
     return (
       <VStack
         flex={1}
-        backgroundColor="rgba(255,255,255,0.5)"
         borderRadius={drawerBorderRadius}
+        position="relative"
+        backgroundColor="#fff"
         overflow="hidden"
+        marginTop={searchBarHeight}
       >
         <PageTitleTag>
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
@@ -73,119 +77,101 @@ export default memo(
           </ZStack>
         )}
 
-        <>
-          <VStack
-            backgroundColor="#fff"
-            width="100%"
-            padding={18}
-            paddingBottom={0}
-            paddingRight={16}
-            flex={1}
-          >
-            <HomeScrollView>
-              <HStack position="relative">
-                <RestaurantRatingViewPopover size="lg" restaurantSlug={slug} />
+        <HomeScrollView paddingTop={20}>
+          <VStack paddingHorizontal={14}>
+            <HStack position="relative">
+              <RestaurantRatingViewPopover size="lg" restaurantSlug={slug} />
 
-                <Spacer size={16} />
+              <Spacer size={16} />
 
-                <HStack>
-                  <VStack flex={1}>
-                    <Text
-                      selectable
-                      fontSize={26}
-                      fontWeight="bold"
-                      paddingRight={30}
-                    >
-                      {restaurant.name}
+              <HStack>
+                <VStack flex={1}>
+                  <Text
+                    selectable
+                    fontSize={26}
+                    fontWeight="bold"
+                    paddingRight={30}
+                  >
+                    {restaurant.name}
+                  </Text>
+                  <Spacer size={6} />
+                  <RestaurantAddressLinksRow
+                    currentLocationInfo={state.currentLocationInfo}
+                    showMenu
+                    size="lg"
+                    restaurantSlug={slug}
+                  />
+                  <Spacer size={10} />
+                  <HStack>
+                    <Text selectable color="#777" fontSize={14}>
+                      {restaurant.address}
                     </Text>
-                    <Spacer size={6} />
-                    <RestaurantAddressLinksRow
-                      currentLocationInfo={state.currentLocationInfo}
-                      showMenu
-                      size="lg"
-                      restaurantSlug={slug}
-                    />
-                    <Spacer size={10} />
-                    <HStack>
-                      <Text selectable color="#777" fontSize={14}>
-                        {restaurant.address}
-                      </Text>
-                    </HStack>
-                    <Spacer size={6} />
-                  </VStack>
-                </HStack>
+                  </HStack>
+                  <Spacer size={6} />
+                </VStack>
+              </HStack>
+            </HStack>
+
+            <RestaurantTagsRow size="lg" restaurantSlug={slug} />
+
+            <Spacer />
+
+            <SmallTitle divider="center">
+              <RestaurantFavoriteStar restaurantId={restaurant.id} size="lg" />
+            </SmallTitle>
+
+            <Spacer />
+
+            <VStack spacing="md" alignItems="center">
+              <HStack paddingVertical={8} minWidth={400}>
+                <RestaurantDetailRow
+                  centered
+                  justifyContent="center"
+                  restaurantSlug={slug}
+                  flex={1}
+                />
               </HStack>
 
-              <RestaurantTagsRow size="lg" restaurantSlug={slug} />
-
-              <Spacer />
-              <Divider />
-              <Spacer />
-
-              <VStack alignItems="center" paddingVertical={20}>
-                <Spacer flex />
-                <RestaurantFavoriteStar
+              <VStack spacing={10}>
+                <SmallTitle divider="center">Reviews</SmallTitle>
+                <RestaurantTopReviews
+                  expandTopComments
                   restaurantId={restaurant.id}
-                  size="lg"
                 />
               </VStack>
 
-              <Spacer />
+              <Suspense fallback={null}>
+                <RestaurantPhotos restaurantSlug={slug} />
+              </Suspense>
 
-              <VStack spacing="md" alignItems="center">
-                <HStack paddingVertical={8} minWidth={400}>
-                  <RestaurantDetailRow
-                    centered
-                    justifyContent="center"
-                    restaurantSlug={slug}
-                    flex={1}
-                  />
-                </HStack>
-
-                <Divider />
-
-                <VStack spacing={10}>
-                  <SmallTitle divider="center">Reviews</SmallTitle>
-                  <RestaurantTopReviews
-                    expandTopComments
-                    restaurantId={restaurant.id}
-                  />
-                </VStack>
-
-                <Suspense fallback={null}>
-                  <RestaurantPhotos restaurantSlug={slug} />
-                </Suspense>
-
-                {/* <VStack>
+              <VStack>
                 <SmallTitle>Images</SmallTitle>
                 <HStack
                   flexWrap="wrap"
-                  height={100}
-                  marginLeft={-10}
-                  marginRight={-20}
                   alignItems="center"
                   justifyContent="center"
                 >
-                  {(restaurant.photos ?? []).map((photo, key) => (
-                    <Image
-                      key={key}
-                      source={{ uri: photo }}
-                      style={{
-                        height: 180,
-                        width: '31%',
-                        marginRight: 10,
-                        marginBottom: 10,
-                        borderRadius: 12,
-                      }}
-                      resizeMode="cover"
-                    />
-                  ))}
+                  {(restaurant.photos() ?? [])
+                    .slice(0, 10)
+                    .map((photo, key) => (
+                      <Image
+                        key={key}
+                        source={{ uri: photo }}
+                        style={{
+                          height: 180,
+                          width: '31%',
+                          marginRight: 10,
+                          marginBottom: 10,
+                          borderRadius: 12,
+                        }}
+                        resizeMode="cover"
+                      />
+                    ))}
                 </HStack>
-              </VStack> */}
               </VStack>
-            </HomeScrollView>
+            </VStack>
           </VStack>
-        </>
+        </HomeScrollView>
       </VStack>
     )
   })

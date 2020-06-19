@@ -14,7 +14,7 @@ export const StackViewCloseButton = memo(() => {
       pointerEvents="auto"
       zIndex={100}
     >
-      <CloseButton size={20} onPressOut={() => om.actions.home.up()} />
+      <CloseButton size={16} onPressOut={() => om.actions.home.up()} />
     </ZStack>
   )
 })

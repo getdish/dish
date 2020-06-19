@@ -123,8 +123,8 @@ const HomeStackViewItem = memo(
       }, 50)
       return () => clearTimeout(tm)
     }, [])
-    const top = isSmall ? 0 : index * (index == 0 ? 0 : 10)
-    const left = isSmall ? -3 : Math.max(0, index) * 7
+    const top = isSmall ? 0 : index * (index == 0 ? 0 : 5)
+    const left = isSmall ? -3 : Math.max(0, index) * 3
 
     // useEffect(() => {
     //   popoverStore.show = isActive
@@ -151,7 +151,6 @@ const HomeStackViewItem = memo(
             {...(index !== 0 && {
               shadowColor: 'rgba(0,0,0,0.1)',
               shadowRadius: 15,
-              shadowOffset: { width: 0, height: 2 },
             })}
             borderRadius={drawerBorderRadius}
             pointerEvents="auto"
