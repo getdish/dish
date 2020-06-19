@@ -10,11 +10,11 @@
 # └─────────────────────  Minute   (0..59)
 
 
-0  0  *  *  0  xvfb-run node /app/services/crawlers/_/google/all.js
-0 12  *  *  1  node /app/services/crawlers/_/infatuated/all.js
-0  0  *  *  1  node /app/services/crawlers/_/michelin/all.js
-0  0  *  *  2  node /app/services/crawlers/_/self/all.js
-0  0  *  *  3  node /app/services/crawlers/_/tripadvisor/all.js
-0  0  1  *  4  node /app/services/crawlers/_/ubereats/all.js
-0  0  *  *  5  node /app/services/crawlers/_/yelp/all.js
-0  0  *  *  6  node /app/services/crawlers/_/doordash/all.js
+0  0  *  *  0  xvfb-run node /app/services/crawlers/_/google/all.js > /dev/stdout
+0 12  *  *  1  node /app/services/crawlers/_/infatuated/all.js > /dev/stdout
+0  0  *  *  1  node /app/services/crawlers/_/michelin/all.js > /dev/stdout
+0  0  *  *  2  node /app/services/crawlers/_/self/all.js > /dev/stdout
+0  0  *  *  3  node /app/services/crawlers/_/tripadvisor/all.js > /dev/stdout
+0  0  1  *  4  node /app/services/crawlers/_/ubereats/all.js > /dev/stdout
+0  0  *  *  5  node /app/services/crawlers/_/yelp/all.js > /dev/stdout
+0  0  *  *  6  node /app/services/crawlers/_/doordash/all.js > /dev/stdout
