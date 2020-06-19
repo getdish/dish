@@ -67,12 +67,12 @@ export class Tagging {
 
   _extractOrphanTags(tags: string[], country_tags: Tag[]) {
     return tags.filter((tag) => {
-      const is_not_a_country_name = !country_tags.find((ct) => {
+      const is_a_country_name = country_tags.find((ct) => {
         const is_common_name_match = ct.name == tag
         const is_alternate_name_match = (ct.alternates || ['']).includes(tag)
         return is_common_name_match || is_alternate_name_match
       })
-      return is_not_a_country_name
+      return !is_a_country_name
     })
   }
 
