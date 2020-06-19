@@ -5,6 +5,7 @@ import {
   restaurant_tag,
   review,
   scrape,
+  setting,
   tag,
   tag_tag,
   user,
@@ -37,6 +38,7 @@ export interface UserQuery extends user {}
 export interface ReviewQuery extends review {}
 export interface MenuItemQuery extends menu_item {}
 export interface ScrapeQuery extends scrape {}
+export interface SettingQuery extends setting {}
 
 // SECTION 1
 // this flattens them to a partial of all resolved values, minus sub-nodes
@@ -49,6 +51,7 @@ export interface User extends FlatResolvedModel<UserQuery> {}
 export interface Review extends FlatResolvedModel<ReviewQuery> {}
 export interface MenuItem extends FlatResolvedModel<MenuItemQuery> {}
 export interface Scrape extends FlatResolvedModel<ScrapeQuery> {}
+export interface Setting extends FlatResolvedModel<SettingQuery> {}
 
 // SECTION 3
 // this just adds a requirement on the id being present, for things like update()
@@ -61,6 +64,7 @@ export interface UserWithId extends WithID<User> {}
 export interface ReviewWithId extends WithID<Review> {}
 export interface MenuItemWithId extends WithID<MenuItem> {}
 export interface ScrapeWithId extends WithID<Scrape> {}
+export interface SettingWithId extends WithID<Setting> {}
 
 // SECTION 4
 // a nice union so we can limit what we accept in our various helpers
@@ -72,6 +76,7 @@ export type ModelType =
   | User
   | Review
   | MenuItem
+  | Setting
   | Scrape
 
 // DONE

@@ -1333,6 +1333,20 @@ export const schema = {
             true
           )
         },
+        get delete_setting() {
+          return new FieldNode(
+            schema.setting_mutation_response,
+            new Arguments(
+              {
+                get where() {
+                  return new ArgumentsField(schema.setting_bool_exp, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
         get delete_tag() {
           return new FieldNode(
             schema.tag_mutation_response,
@@ -1458,6 +1472,23 @@ export const schema = {
               },
               get on_conflict() {
                 return new ArgumentsField(schema.scrape_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get insert_setting() {
+          return new FieldNode(
+            schema.setting_mutation_response,
+            new Arguments({
+              get objects() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.setting_insert_input, false),
+                  false
+                )
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.setting_on_conflict, true)
               },
             }),
             true
@@ -1675,6 +1706,41 @@ export const schema = {
               },
               get where() {
                 return new ArgumentsField(schema.scrape_bool_exp, false)
+              },
+            }),
+            true
+          )
+        },
+        get update_setting() {
+          return new FieldNode(
+            schema.setting_mutation_response,
+            new Arguments({
+              get _append() {
+                return new ArgumentsField(schema.setting_append_input, true)
+              },
+              get _delete_at_path() {
+                return new ArgumentsField(
+                  schema.setting_delete_at_path_input,
+                  true
+                )
+              },
+              get _delete_elem() {
+                return new ArgumentsField(
+                  schema.setting_delete_elem_input,
+                  true
+                )
+              },
+              get _delete_key() {
+                return new ArgumentsField(schema.setting_delete_key_input, true)
+              },
+              get _prepend() {
+                return new ArgumentsField(schema.setting_prepend_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.setting_set_input, true)
+              },
+              get where() {
+                return new ArgumentsField(schema.setting_bool_exp, false)
               },
             }),
             true
@@ -2149,6 +2215,78 @@ export const schema = {
               {
                 get id() {
                   return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get setting() {
+          return new FieldNode(
+            new ArrayNode(schema.setting, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.setting_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.setting_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.setting_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get setting_aggregate() {
+          return new FieldNode(
+            schema.setting_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.setting_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.setting_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.setting_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get setting_by_pk() {
+          return new FieldNode(
+            schema.setting,
+            new Arguments(
+              {
+                get key() {
+                  return new ArgumentsField(schema.String, false)
                 },
               },
               true
@@ -5855,6 +5993,405 @@ export const schema = {
   get scrape_update_column() {
     return new EnumNode({ name: 'scrape_update_column' })
   },
+  get setting() {
+    return new ObjectNode(
+      {
+        get created_at() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, false)
+        },
+        get key() {
+          return new FieldNode(schema.String, undefined, false)
+        },
+        get updated_at() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get value() {
+          return new FieldNode(
+            schema.jsonb,
+            new Arguments({
+              get path() {
+                return new ArgumentsField(schema.String, true)
+              },
+            }),
+            false
+          )
+        },
+      },
+      { name: 'setting', extension: ((extensions as any) || {}).setting }
+    )
+  },
+  get setting_aggregate() {
+    return new ObjectNode(
+      {
+        get aggregate() {
+          return new FieldNode(schema.setting_aggregate_fields, undefined, true)
+        },
+        get nodes() {
+          return new FieldNode(
+            new ArrayNode(schema.setting, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'setting_aggregate',
+        extension: ((extensions as any) || {}).setting_aggregate,
+      }
+    )
+  },
+  get setting_aggregate_fields() {
+    return new ObjectNode(
+      {
+        get count() {
+          return new FieldNode(
+            schema.Int,
+            new Arguments({
+              get columns() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.setting_select_column, true),
+                  true
+                )
+              },
+              get distinct() {
+                return new ArgumentsField(schema.Boolean, true)
+              },
+            }),
+            true
+          )
+        },
+        get max() {
+          return new FieldNode(schema.setting_max_fields, undefined, true)
+        },
+        get min() {
+          return new FieldNode(schema.setting_min_fields, undefined, true)
+        },
+      },
+      {
+        name: 'setting_aggregate_fields',
+        extension: ((extensions as any) || {}).setting_aggregate_fields,
+      }
+    )
+  },
+  get setting_aggregate_order_by() {
+    return new InputNode(
+      {
+        get count() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get max() {
+          return new InputNodeField(schema.setting_max_order_by, true)
+        },
+        get min() {
+          return new InputNodeField(schema.setting_min_order_by, true)
+        },
+      },
+      { name: 'setting_aggregate_order_by' }
+    )
+  },
+  get setting_append_input() {
+    return new InputNode(
+      {
+        get value() {
+          return new InputNodeField(schema.jsonb, true)
+        },
+      },
+      { name: 'setting_append_input' }
+    )
+  },
+  get setting_arr_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(
+            new ArrayNode(schema.setting_insert_input, false),
+            false
+          )
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.setting_on_conflict, true)
+        },
+      },
+      { name: 'setting_arr_rel_insert_input' }
+    )
+  },
+  get setting_bool_exp() {
+    return new InputNode(
+      {
+        get _and() {
+          return new InputNodeField(
+            new ArrayNode(schema.setting_bool_exp, true),
+            true
+          )
+        },
+        get _not() {
+          return new InputNodeField(schema.setting_bool_exp, true)
+        },
+        get _or() {
+          return new InputNodeField(
+            new ArrayNode(schema.setting_bool_exp, true),
+            true
+          )
+        },
+        get created_at() {
+          return new InputNodeField(schema.timestamptz_comparison_exp, true)
+        },
+        get id() {
+          return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get key() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get updated_at() {
+          return new InputNodeField(schema.timestamptz_comparison_exp, true)
+        },
+        get value() {
+          return new InputNodeField(schema.jsonb_comparison_exp, true)
+        },
+      },
+      { name: 'setting_bool_exp' }
+    )
+  },
+  get setting_constraint() {
+    return new EnumNode({ name: 'setting_constraint' })
+  },
+  get setting_delete_at_path_input() {
+    return new InputNode(
+      {
+        get value() {
+          return new InputNodeField(new ArrayNode(schema.String, true), true)
+        },
+      },
+      { name: 'setting_delete_at_path_input' }
+    )
+  },
+  get setting_delete_elem_input() {
+    return new InputNode(
+      {
+        get value() {
+          return new InputNodeField(schema.Int, true)
+        },
+      },
+      { name: 'setting_delete_elem_input' }
+    )
+  },
+  get setting_delete_key_input() {
+    return new InputNode(
+      {
+        get value() {
+          return new InputNodeField(schema.String, true)
+        },
+      },
+      { name: 'setting_delete_key_input' }
+    )
+  },
+  get setting_insert_input() {
+    return new InputNode(
+      {
+        get created_at() {
+          return new InputNodeField(schema.timestamptz, true)
+        },
+        get id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get key() {
+          return new InputNodeField(schema.String, true)
+        },
+        get updated_at() {
+          return new InputNodeField(schema.timestamptz, true)
+        },
+        get value() {
+          return new InputNodeField(schema.jsonb, true)
+        },
+      },
+      { name: 'setting_insert_input' }
+    )
+  },
+  get setting_max_fields() {
+    return new ObjectNode(
+      {
+        get created_at() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get key() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get updated_at() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
+      },
+      {
+        name: 'setting_max_fields',
+        extension: ((extensions as any) || {}).setting_max_fields,
+      }
+    )
+  },
+  get setting_max_order_by() {
+    return new InputNode(
+      {
+        get created_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get key() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get updated_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'setting_max_order_by' }
+    )
+  },
+  get setting_min_fields() {
+    return new ObjectNode(
+      {
+        get created_at() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get key() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get updated_at() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
+      },
+      {
+        name: 'setting_min_fields',
+        extension: ((extensions as any) || {}).setting_min_fields,
+      }
+    )
+  },
+  get setting_min_order_by() {
+    return new InputNode(
+      {
+        get created_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get key() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get updated_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'setting_min_order_by' }
+    )
+  },
+  get setting_mutation_response() {
+    return new ObjectNode(
+      {
+        get affected_rows() {
+          return new FieldNode(schema.Int, undefined, false)
+        },
+        get returning() {
+          return new FieldNode(
+            new ArrayNode(schema.setting, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'setting_mutation_response',
+        extension: ((extensions as any) || {}).setting_mutation_response,
+      }
+    )
+  },
+  get setting_obj_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(schema.setting_insert_input, false)
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.setting_on_conflict, true)
+        },
+      },
+      { name: 'setting_obj_rel_insert_input' }
+    )
+  },
+  get setting_on_conflict() {
+    return new InputNode(
+      {
+        get constraint() {
+          return new InputNodeField(schema.setting_constraint, false)
+        },
+        get update_columns() {
+          return new InputNodeField(
+            new ArrayNode(schema.setting_update_column, false),
+            false
+          )
+        },
+        get where() {
+          return new InputNodeField(schema.setting_bool_exp, true)
+        },
+      },
+      { name: 'setting_on_conflict' }
+    )
+  },
+  get setting_order_by() {
+    return new InputNode(
+      {
+        get created_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get key() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get updated_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get value() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'setting_order_by' }
+    )
+  },
+  get setting_prepend_input() {
+    return new InputNode(
+      {
+        get value() {
+          return new InputNodeField(schema.jsonb, true)
+        },
+      },
+      { name: 'setting_prepend_input' }
+    )
+  },
+  get setting_select_column() {
+    return new EnumNode({ name: 'setting_select_column' })
+  },
+  get setting_set_input() {
+    return new InputNode(
+      {
+        get created_at() {
+          return new InputNodeField(schema.timestamptz, true)
+        },
+        get id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get key() {
+          return new InputNodeField(schema.String, true)
+        },
+        get updated_at() {
+          return new InputNodeField(schema.timestamptz, true)
+        },
+        get value() {
+          return new InputNodeField(schema.jsonb, true)
+        },
+      },
+      { name: 'setting_set_input' }
+    )
+  },
+  get setting_update_column() {
+    return new EnumNode({ name: 'setting_update_column' })
+  },
   get st_d_within_geography_input() {
     return new InputNode(
       {
@@ -6250,6 +6787,78 @@ export const schema = {
             true
           )
         },
+        get setting() {
+          return new FieldNode(
+            new ArrayNode(schema.setting, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.setting_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.setting_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.setting_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get setting_aggregate() {
+          return new FieldNode(
+            schema.setting_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.setting_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.setting_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.setting_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get setting_by_pk() {
+          return new FieldNode(
+            schema.setting,
+            new Arguments(
+              {
+                get key() {
+                  return new ArgumentsField(schema.String, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
         get tag() {
           return new FieldNode(
             new ArrayNode(schema.tag, false),
@@ -6565,6 +7174,9 @@ export const schema = {
         get displayName() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get frequency() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
         get icon() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -6831,6 +7443,9 @@ export const schema = {
   get tag_avg_fields() {
     return new ObjectNode(
       {
+        get frequency() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get order() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -6844,6 +7459,9 @@ export const schema = {
   get tag_avg_order_by() {
     return new InputNode(
       {
+        get frequency() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get order() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6883,6 +7501,9 @@ export const schema = {
         },
         get displayName() {
           return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get frequency() {
+          return new InputNodeField(schema.Int_comparison_exp, true)
         },
         get icon() {
           return new InputNodeField(schema.String_comparison_exp, true)
@@ -6987,6 +7608,9 @@ export const schema = {
   get tag_inc_input() {
     return new InputNode(
       {
+        get frequency() {
+          return new InputNodeField(schema.Int, true)
+        },
         get order() {
           return new InputNodeField(schema.Int, true)
         },
@@ -7011,6 +7635,9 @@ export const schema = {
         },
         get displayName() {
           return new InputNodeField(schema.String, true)
+        },
+        get frequency() {
+          return new InputNodeField(schema.Int, true)
         },
         get icon() {
           return new InputNodeField(schema.String, true)
@@ -7064,6 +7691,9 @@ export const schema = {
         get displayName() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get frequency() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
         get icon() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -7095,6 +7725,9 @@ export const schema = {
         get displayName() {
           return new InputNodeField(schema.order_by, true)
         },
+        get frequency() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get icon() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7122,6 +7755,9 @@ export const schema = {
         },
         get displayName() {
           return new FieldNode(schema.String, undefined, true)
+        },
+        get frequency() {
+          return new FieldNode(schema.Int, undefined, true)
         },
         get icon() {
           return new FieldNode(schema.String, undefined, true)
@@ -7152,6 +7788,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get displayName() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get frequency() {
           return new InputNodeField(schema.order_by, true)
         },
         get icon() {
@@ -7243,6 +7882,9 @@ export const schema = {
         get displayName() {
           return new InputNodeField(schema.order_by, true)
         },
+        get frequency() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get icon() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7323,6 +7965,9 @@ export const schema = {
         get displayName() {
           return new InputNodeField(schema.String, true)
         },
+        get frequency() {
+          return new InputNodeField(schema.Int, true)
+        },
         get icon() {
           return new InputNodeField(schema.String, true)
         },
@@ -7360,6 +8005,9 @@ export const schema = {
   get tag_stddev_fields() {
     return new ObjectNode(
       {
+        get frequency() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get order() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -7373,6 +8021,9 @@ export const schema = {
   get tag_stddev_order_by() {
     return new InputNode(
       {
+        get frequency() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get order() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7383,6 +8034,9 @@ export const schema = {
   get tag_stddev_pop_fields() {
     return new ObjectNode(
       {
+        get frequency() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get order() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -7396,6 +8050,9 @@ export const schema = {
   get tag_stddev_pop_order_by() {
     return new InputNode(
       {
+        get frequency() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get order() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7406,6 +8063,9 @@ export const schema = {
   get tag_stddev_samp_fields() {
     return new ObjectNode(
       {
+        get frequency() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get order() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -7419,6 +8079,9 @@ export const schema = {
   get tag_stddev_samp_order_by() {
     return new InputNode(
       {
+        get frequency() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get order() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7429,6 +8092,9 @@ export const schema = {
   get tag_sum_fields() {
     return new ObjectNode(
       {
+        get frequency() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
         get order() {
           return new FieldNode(schema.Int, undefined, true)
         },
@@ -7442,6 +8108,9 @@ export const schema = {
   get tag_sum_order_by() {
     return new InputNode(
       {
+        get frequency() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get order() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7693,6 +8362,9 @@ export const schema = {
   get tag_var_pop_fields() {
     return new ObjectNode(
       {
+        get frequency() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get order() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -7706,6 +8378,9 @@ export const schema = {
   get tag_var_pop_order_by() {
     return new InputNode(
       {
+        get frequency() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get order() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7716,6 +8391,9 @@ export const schema = {
   get tag_var_samp_fields() {
     return new ObjectNode(
       {
+        get frequency() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get order() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -7729,6 +8407,9 @@ export const schema = {
   get tag_var_samp_order_by() {
     return new InputNode(
       {
+        get frequency() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get order() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7739,6 +8420,9 @@ export const schema = {
   get tag_variance_fields() {
     return new ObjectNode(
       {
+        get frequency() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get order() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -7752,6 +8436,9 @@ export const schema = {
   get tag_variance_order_by() {
     return new InputNode(
       {
+        get frequency() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get order() {
           return new InputNodeField(schema.order_by, true)
         },

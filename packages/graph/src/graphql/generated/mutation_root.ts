@@ -57,6 +57,18 @@ import {
   scrape_set_input,
   t_scrape_mutation_response,
 } from './scrape'
+import {
+  setting_append_input,
+  setting_bool_exp,
+  setting_delete_at_path_input,
+  setting_delete_elem_input,
+  setting_delete_key_input,
+  setting_insert_input,
+  setting_on_conflict,
+  setting_prepend_input,
+  setting_set_input,
+  t_setting_mutation_response,
+} from './setting'
 import { t_String } from './String'
 import {
   t_tag_mutation_response,
@@ -111,6 +123,10 @@ export type t_mutation_root = FieldsType<
       { where: scrape_bool_exp },
       t_scrape_mutation_response | null
     >
+    delete_setting: FieldsTypeArg<
+      { where: setting_bool_exp },
+      t_setting_mutation_response | null
+    >
     delete_tag: FieldsTypeArg<
       { where: tag_bool_exp },
       t_tag_mutation_response | null
@@ -157,6 +173,13 @@ export type t_mutation_root = FieldsType<
         on_conflict?: scrape_on_conflict | null
       },
       t_scrape_mutation_response | null
+    >
+    insert_setting: FieldsTypeArg<
+      {
+        objects: setting_insert_input[]
+        on_conflict?: setting_on_conflict | null
+      },
+      t_setting_mutation_response | null
     >
     insert_tag: FieldsTypeArg<
       { objects: tag_insert_input[]; on_conflict?: tag_on_conflict | null },
@@ -229,6 +252,18 @@ export type t_mutation_root = FieldsType<
         where: scrape_bool_exp
       },
       t_scrape_mutation_response | null
+    >
+    update_setting: FieldsTypeArg<
+      {
+        _append?: setting_append_input | null
+        _delete_at_path?: setting_delete_at_path_input | null
+        _delete_elem?: setting_delete_elem_input | null
+        _delete_key?: setting_delete_key_input | null
+        _prepend?: setting_prepend_input | null
+        _set?: setting_set_input | null
+        where: setting_bool_exp
+      },
+      t_setting_mutation_response | null
     >
     update_tag: FieldsTypeArg<
       {

@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE ONLY "public"."setting" ALTER COLUMN "id" SET DEFAULT gen_random_uuid();
+  type: run_sql

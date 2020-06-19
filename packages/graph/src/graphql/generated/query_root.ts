@@ -36,6 +36,13 @@ import {
   t_scrape,
   t_scrape_aggregate,
 } from './scrape'
+import {
+  setting_bool_exp,
+  setting_order_by,
+  setting_select_column,
+  t_setting,
+  t_setting_aggregate,
+} from './setting'
 import { t_String } from './String'
 import {
   t_tag,
@@ -173,6 +180,27 @@ export type t_query_root = FieldsType<
       t_scrape_aggregate
     >
     scrape_by_pk?: FieldsTypeArg<{ id: any }, t_scrape | null>
+    setting: FieldsTypeArg<
+      {
+        distinct_on?: setting_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: setting_order_by[] | null
+        where?: setting_bool_exp | null
+      },
+      t_setting[]
+    >
+    setting_aggregate: FieldsTypeArg<
+      {
+        distinct_on?: setting_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: setting_order_by[] | null
+        where?: setting_bool_exp | null
+      },
+      t_setting_aggregate
+    >
+    setting_by_pk?: FieldsTypeArg<{ key: string }, t_setting | null>
     tag: FieldsTypeArg<
       {
         distinct_on?: tag_select_column[] | null

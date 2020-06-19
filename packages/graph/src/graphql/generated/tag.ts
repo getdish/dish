@@ -51,6 +51,7 @@ export type t_tag = FieldsType<
     created_at: t_timestamptz
     default_images?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     displayName?: t_String | null
+    frequency?: t_Int | null
     icon?: t_String | null
     id: t_uuid
     is_ambiguous: t_Boolean
@@ -169,6 +170,7 @@ export type tag_arr_rel_insert_input = {
 export type t_tag_avg_fields = FieldsType<
   {
     __typename: t_String<'tag_avg_fields'>
+    frequency?: t_Float | null
     order?: t_Float | null
   },
   Extension<'tag_avg_fields'>
@@ -178,7 +180,10 @@ export type t_tag_avg_fields = FieldsType<
  * @name tag_avg_order_by
  * @type INPUT_OBJECT
  */
-export type tag_avg_order_by = { order?: order_by | null }
+export type tag_avg_order_by = {
+  frequency?: order_by | null
+  order?: order_by | null
+}
 
 /**
  * @name tag_bool_exp
@@ -193,6 +198,7 @@ export type tag_bool_exp = {
   created_at?: timestamptz_comparison_exp | null
   default_images?: jsonb_comparison_exp | null
   displayName?: String_comparison_exp | null
+  frequency?: Int_comparison_exp | null
   icon?: String_comparison_exp | null
   id?: uuid_comparison_exp | null
   is_ambiguous?: Boolean_comparison_exp | null
@@ -252,7 +258,7 @@ export type tag_delete_key_input = {
  * @name tag_inc_input
  * @type INPUT_OBJECT
  */
-export type tag_inc_input = { order?: number | null }
+export type tag_inc_input = { frequency?: number | null; order?: number | null }
 
 /**
  * @name tag_insert_input
@@ -264,6 +270,7 @@ export type tag_insert_input = {
   created_at?: any | null
   default_images?: any | null
   displayName?: string | null
+  frequency?: number | null
   icon?: string | null
   id?: any | null
   is_ambiguous?: boolean | null
@@ -287,6 +294,7 @@ export type t_tag_max_fields = FieldsType<
     __typename: t_String<'tag_max_fields'>
     created_at?: t_timestamptz | null
     displayName?: t_String | null
+    frequency?: t_Int | null
     icon?: t_String | null
     name?: t_String | null
     order?: t_Int | null
@@ -303,6 +311,7 @@ export type t_tag_max_fields = FieldsType<
 export type tag_max_order_by = {
   created_at?: order_by | null
   displayName?: order_by | null
+  frequency?: order_by | null
   icon?: order_by | null
   name?: order_by | null
   order?: order_by | null
@@ -319,6 +328,7 @@ export type t_tag_min_fields = FieldsType<
     __typename: t_String<'tag_min_fields'>
     created_at?: t_timestamptz | null
     displayName?: t_String | null
+    frequency?: t_Int | null
     icon?: t_String | null
     name?: t_String | null
     order?: t_Int | null
@@ -335,6 +345,7 @@ export type t_tag_min_fields = FieldsType<
 export type tag_min_order_by = {
   created_at?: order_by | null
   displayName?: order_by | null
+  frequency?: order_by | null
   icon?: order_by | null
   name?: order_by | null
   order?: order_by | null
@@ -384,6 +395,7 @@ export type tag_order_by = {
   created_at?: order_by | null
   default_images?: order_by | null
   displayName?: order_by | null
+  frequency?: order_by | null
   icon?: order_by | null
   id?: order_by | null
   is_ambiguous?: order_by | null
@@ -418,6 +430,7 @@ export type t_tag_select_column = EnumType<
   | 'created_at'
   | 'default_images'
   | 'displayName'
+  | 'frequency'
   | 'icon'
   | 'id'
   | 'is_ambiguous'
@@ -439,6 +452,7 @@ export type tag_set_input = {
   created_at?: any | null
   default_images?: any | null
   displayName?: string | null
+  frequency?: number | null
   icon?: string | null
   id?: any | null
   is_ambiguous?: boolean | null
@@ -458,6 +472,7 @@ export type tag_set_input = {
 export type t_tag_stddev_fields = FieldsType<
   {
     __typename: t_String<'tag_stddev_fields'>
+    frequency?: t_Float | null
     order?: t_Float | null
   },
   Extension<'tag_stddev_fields'>
@@ -467,7 +482,10 @@ export type t_tag_stddev_fields = FieldsType<
  * @name tag_stddev_order_by
  * @type INPUT_OBJECT
  */
-export type tag_stddev_order_by = { order?: order_by | null }
+export type tag_stddev_order_by = {
+  frequency?: order_by | null
+  order?: order_by | null
+}
 
 /**
  * @name tag_stddev_pop_fields
@@ -476,6 +494,7 @@ export type tag_stddev_order_by = { order?: order_by | null }
 export type t_tag_stddev_pop_fields = FieldsType<
   {
     __typename: t_String<'tag_stddev_pop_fields'>
+    frequency?: t_Float | null
     order?: t_Float | null
   },
   Extension<'tag_stddev_pop_fields'>
@@ -485,7 +504,10 @@ export type t_tag_stddev_pop_fields = FieldsType<
  * @name tag_stddev_pop_order_by
  * @type INPUT_OBJECT
  */
-export type tag_stddev_pop_order_by = { order?: order_by | null }
+export type tag_stddev_pop_order_by = {
+  frequency?: order_by | null
+  order?: order_by | null
+}
 
 /**
  * @name tag_stddev_samp_fields
@@ -494,6 +516,7 @@ export type tag_stddev_pop_order_by = { order?: order_by | null }
 export type t_tag_stddev_samp_fields = FieldsType<
   {
     __typename: t_String<'tag_stddev_samp_fields'>
+    frequency?: t_Float | null
     order?: t_Float | null
   },
   Extension<'tag_stddev_samp_fields'>
@@ -503,7 +526,10 @@ export type t_tag_stddev_samp_fields = FieldsType<
  * @name tag_stddev_samp_order_by
  * @type INPUT_OBJECT
  */
-export type tag_stddev_samp_order_by = { order?: order_by | null }
+export type tag_stddev_samp_order_by = {
+  frequency?: order_by | null
+  order?: order_by | null
+}
 
 /**
  * @name tag_sum_fields
@@ -512,6 +538,7 @@ export type tag_stddev_samp_order_by = { order?: order_by | null }
 export type t_tag_sum_fields = FieldsType<
   {
     __typename: t_String<'tag_sum_fields'>
+    frequency?: t_Int | null
     order?: t_Int | null
   },
   Extension<'tag_sum_fields'>
@@ -521,7 +548,10 @@ export type t_tag_sum_fields = FieldsType<
  * @name tag_sum_order_by
  * @type INPUT_OBJECT
  */
-export type tag_sum_order_by = { order?: order_by | null }
+export type tag_sum_order_by = {
+  frequency?: order_by | null
+  order?: order_by | null
+}
 
 /**
  * @name tag_tag
@@ -685,6 +715,7 @@ export type t_tag_update_column = EnumType<
   | 'created_at'
   | 'default_images'
   | 'displayName'
+  | 'frequency'
   | 'icon'
   | 'id'
   | 'is_ambiguous'
@@ -704,6 +735,7 @@ export type t_tag_update_column = EnumType<
 export type t_tag_var_pop_fields = FieldsType<
   {
     __typename: t_String<'tag_var_pop_fields'>
+    frequency?: t_Float | null
     order?: t_Float | null
   },
   Extension<'tag_var_pop_fields'>
@@ -713,7 +745,10 @@ export type t_tag_var_pop_fields = FieldsType<
  * @name tag_var_pop_order_by
  * @type INPUT_OBJECT
  */
-export type tag_var_pop_order_by = { order?: order_by | null }
+export type tag_var_pop_order_by = {
+  frequency?: order_by | null
+  order?: order_by | null
+}
 
 /**
  * @name tag_var_samp_fields
@@ -722,6 +757,7 @@ export type tag_var_pop_order_by = { order?: order_by | null }
 export type t_tag_var_samp_fields = FieldsType<
   {
     __typename: t_String<'tag_var_samp_fields'>
+    frequency?: t_Float | null
     order?: t_Float | null
   },
   Extension<'tag_var_samp_fields'>
@@ -731,7 +767,10 @@ export type t_tag_var_samp_fields = FieldsType<
  * @name tag_var_samp_order_by
  * @type INPUT_OBJECT
  */
-export type tag_var_samp_order_by = { order?: order_by | null }
+export type tag_var_samp_order_by = {
+  frequency?: order_by | null
+  order?: order_by | null
+}
 
 /**
  * @name tag_variance_fields
@@ -740,6 +779,7 @@ export type tag_var_samp_order_by = { order?: order_by | null }
 export type t_tag_variance_fields = FieldsType<
   {
     __typename: t_String<'tag_variance_fields'>
+    frequency?: t_Float | null
     order?: t_Float | null
   },
   Extension<'tag_variance_fields'>
@@ -749,7 +789,10 @@ export type t_tag_variance_fields = FieldsType<
  * @name tag_variance_order_by
  * @type INPUT_OBJECT
  */
-export type tag_variance_order_by = { order?: order_by | null }
+export type tag_variance_order_by = {
+  frequency?: order_by | null
+  order?: order_by | null
+}
 
 /**
  * @name tag
@@ -813,6 +856,7 @@ export enum tag_select_column {
   created_at = 'created_at',
   default_images = 'default_images',
   displayName = 'displayName',
+  frequency = 'frequency',
   icon = 'icon',
   id = 'id',
   is_ambiguous = 'is_ambiguous',
@@ -908,6 +952,7 @@ export enum tag_update_column {
   created_at = 'created_at',
   default_images = 'default_images',
   displayName = 'displayName',
+  frequency = 'frequency',
   icon = 'icon',
   id = 'id',
   is_ambiguous = 'is_ambiguous',

@@ -1,6 +1,12 @@
 import '@dish/common'
 
-import { Restaurant, restaurantFindBatch, scrapeInsert } from '@dish/graph'
+import {
+  Restaurant,
+  restaurantFindBatch,
+  scrapeInsert,
+  settingFindOne,
+  settingUpsert,
+} from '@dish/graph'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
@@ -26,6 +32,7 @@ const googleAPI = new ProxiedRequests(
   }
 )
 
+const GOOGLE_SEARCH_ENDPOINT_KEY = 'GOOGLE_SEARCH_ENDPOINT'
 const PER_PAGE = 50
 
 String.prototype.replaceAll = function (search, replacement) {
@@ -44,8 +51,8 @@ export class Google extends WorkerJob {
 
   static queue_config: QueueOptions = {
     limiter: {
-      max: 5,
-      duration: 1000,
+      max: 1,
+      duration: 5000,
     },
   }
 
@@ -85,7 +92,7 @@ export class Google extends WorkerJob {
     }
     this.name = restaurant.name
     if (!this.searchEndpoint) {
-      await this.getNewSearchEndpoint()
+      await this.getSearchEndpoint()
     }
     this.googleRestaurantID = await this.searchForID()
     await this.getMainPage()
@@ -121,6 +128,17 @@ export class Google extends WorkerJob {
     await this.puppeteer.page.goto(url)
   }
 
+  async getSearchEndpoint() {
+    const result = await settingFindOne({
+      key: GOOGLE_SEARCH_ENDPOINT_KEY,
+    })
+    if (result) {
+      this.searchEndpoint = result.value
+    } else {
+      await this.getNewSearchEndpoint()
+    }
+  }
+
   // So, because of a problem with using the search box in Puppeteer, we need to
   // manually make search API requests with our HTTP client. But in order to do
   // this we need a particular string in the API request that seems to be some
@@ -129,9 +147,14 @@ export class Google extends WorkerJob {
   // the relevant search API request.
   async getNewSearchEndpoint() {
     console.log('GOOGLE CRAWLER: getting new search endpoint')
-    await this._theBrokenSearchBoxInteraction(this.lon, this.lat)
-    await this._waitForSearchAPIRequest()
+    await this._catchSearchEndpoint()
     this._templatiseSearchEndpoint()
+    await settingUpsert([
+      {
+        key: GOOGLE_SEARCH_ENDPOINT_KEY,
+        value: this.searchEndpoint,
+      },
+    ])
   }
 
   // This seems pointless, but it's the interaction that triggers the page into
@@ -152,12 +175,29 @@ export class Google extends WorkerJob {
     await page.keyboard.press('Enter')
   }
 
+  async _catchSearchEndpoint() {
+    let retries = 0
+    while (retries < 4) {
+      await this._theBrokenSearchBoxInteraction(this.lon, this.lat)
+      await this._waitForSearchAPIRequest()
+      if (this.puppeteer.found_watched_request) {
+        break
+      } else {
+        await this.puppeteer.page.reload()
+        retries++
+      }
+    }
+    if (!this.puppeteer.found_watched_request) {
+      throw new Error('Google search API not seen after ' + retries + ' tries')
+    }
+  }
+
   async _waitForSearchAPIRequest() {
     let count = 0
     while (!this.puppeteer.found_watched_request) {
       await sleep(50)
       count++
-      if (count > 500) throw new Error('Google search API not seen')
+      if (count > 500) break
     }
   }
 
@@ -177,12 +217,13 @@ export class Google extends WorkerJob {
 
   async searchForID() {
     let retries = 0
-    while (retries < 10) {
+    while (retries < 3) {
       try {
         return await this._searchForID()
       } catch (e) {
         if (e.message.includes('no ID found for')) {
           retries++
+          await this.getNewSearchEndpoint()
         } else {
           throw new Error(e)
         }
@@ -198,7 +239,7 @@ export class Google extends WorkerJob {
     const response = await googleAPI.get(url, {
       headers: { 'user-agent': 'PLEASE' },
     })
-    const matches = response.data.match(/(0x[a-f0-9]+:0x[a-f0-9]+)/)
+    const matches = response.data.match(/(0x[a-f0-9]{16}:0x[a-f0-9]{16})/)
     if (matches) {
       return matches[0]
     } else {

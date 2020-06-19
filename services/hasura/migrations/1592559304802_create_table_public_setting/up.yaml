@@ -1,0 +1,10 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE TABLE "public"."setting"("key" text NOT NULL, "value" jsonb NOT NULL,
+      PRIMARY KEY ("key") , UNIQUE ("key"));
+  type: run_sql
+- args:
+    name: setting
+    schema: public
+  type: add_existing_table_or_view

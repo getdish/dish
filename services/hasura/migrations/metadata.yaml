@@ -411,6 +411,9 @@ tables:
       foreign_key_constraint_on: restaurant_id
 - table:
     schema: public
+    name: setting
+- table:
+    schema: public
     name: tag
   object_relationships:
   - name: parent
