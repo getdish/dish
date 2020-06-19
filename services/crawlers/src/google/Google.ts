@@ -48,6 +48,7 @@ export class Google extends WorkerJob {
   name!: string
   googleRestaurantID!: string
   scrape_data: any = {}
+  booted = false
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -68,6 +69,7 @@ export class Google extends WorkerJob {
 
   async boot() {
     await this.puppeteer.boot()
+    this.booted = true
   }
 
   async main() {
@@ -85,6 +87,7 @@ export class Google extends WorkerJob {
   }
 
   async getRestaurant(restaurant: Restaurant) {
+    if (!this.booted) await this.boot()
     this.lon = restaurant.location.coordinates[0]
     this.lat = restaurant.location.coordinates[1]
     if (!restaurant.name) {
