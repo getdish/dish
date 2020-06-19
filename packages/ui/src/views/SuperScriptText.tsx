@@ -11,7 +11,7 @@ const defaultStyle: TextStyle = {
 }
 
 export function SuperScriptText(props: TextProps) {
-  return <Text {...props} />
+  return <Text {...defaultStyle} {...props} />
 }
 
 SuperScriptText.staticConfig = extendStaticConfig(Text, {

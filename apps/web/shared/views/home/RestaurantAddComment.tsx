@@ -122,10 +122,14 @@ export const CommentBubble = ({
       padding={4}
       alignItems="flex-start"
       justifyContent="flex-start"
-      spacing={1}
       {...rest}
     >
-      <HStack alignItems="center" spacing={6} flexWrap="nowrap">
+      <HStack
+        alignItems="center"
+        spacing={6}
+        flexWrap="nowrap"
+        marginBottom={10}
+      >
         <Circle size={18} marginBottom={-2}>
           <Image source={avatar} style={{ width: 18, height: 18 }} />
         </Circle>
@@ -139,28 +143,7 @@ export const CommentBubble = ({
           >
             {user.username}
           </Link>
-          &nbsp;
-          {/* <HoverablePopover
-            inline
-            contents={
-              <Box>
-                <Text selectable opacity={0.65}>
-                  <ul>
-                    <li>👨‍🍳 Chef ✔️</li>
-                    <li>🇯🇵 Japanese Exprt ✔️</li>
-                  </ul>
-                </Text>
-              </Box>
-            }
-          > */}
-          {/* <div className="inline-flex">
-            {['👨‍🍳'].map((x) => (
-              <Text selectable key={x} opacity={1}>
-                {x}
-              </Text>
-            ))}
-          </div> */}
-          {/* </HoverablePopover> */} says
+          &nbsp; says
         </Text>
       </HStack>
       {children}

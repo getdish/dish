@@ -3,6 +3,7 @@ import {
   Divider,
   HStack,
   LoadingItems,
+  SmallTitle,
   Spacer,
   Text,
   VStack,
@@ -21,6 +22,7 @@ import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { restaurantQuery } from './restaurantQuery'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
+import { RestaurantTopReviews } from './RestaurantTopReviews'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 
@@ -84,9 +86,9 @@ export default memo(
               <HStack position="relative">
                 <RestaurantRatingViewPopover size="lg" restaurantSlug={slug} />
 
-                <Spacer size={32} />
+                <Spacer size={16} />
 
-                <HStack width="80%">
+                <HStack>
                   <VStack flex={1}>
                     <Text
                       selectable
@@ -111,19 +113,23 @@ export default memo(
                     </HStack>
                     <Spacer size={6} />
                   </VStack>
-
-                  <VStack paddingRight={20}>
-                    <Spacer flex />
-                    <RestaurantFavoriteStar
-                      restaurantId={restaurant.id}
-                      size="lg"
-                    />
-                  </VStack>
                 </HStack>
               </HStack>
+
               <RestaurantTagsRow size="lg" restaurantSlug={slug} />
+
               <Spacer />
               <Divider />
+              <Spacer />
+
+              <VStack alignItems="center" paddingVertical={20}>
+                <Spacer flex />
+                <RestaurantFavoriteStar
+                  restaurantId={restaurant.id}
+                  size="lg"
+                />
+              </VStack>
+
               <Spacer />
 
               <VStack spacing="md" alignItems="center">
@@ -137,6 +143,14 @@ export default memo(
                 </HStack>
 
                 <Divider />
+
+                <VStack spacing={10}>
+                  <SmallTitle divider="center">Reviews</SmallTitle>
+                  <RestaurantTopReviews
+                    expandTopComments
+                    restaurantId={restaurant.id}
+                  />
+                </VStack>
 
                 <Suspense fallback={null}>
                   <RestaurantPhotos restaurantSlug={slug} />
