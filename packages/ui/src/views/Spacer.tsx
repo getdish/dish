@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { View } from 'react-native'
+import { View, ViewStyle } from 'react-native'
 
 export type Spacing =
   | 'xs'
@@ -17,19 +17,30 @@ export type SpacerProps = {
   direction?: 'vertical' | 'horizontal' | 'both'
 }
 
-export const Spacer = memo((props: SpacerProps) => {
-  const flexProps = getFlex(props)
-  const sizeProps = getSize(props)
-  // @ts-ignore
-  return <View style={{ ...flexProps, ...sizeProps }} />
-})
-
-const getFlex = ({ flex }: SpacerProps) => {
-  return { flex: flex === true ? 1 : flex }
+const defaultProps: SpacerProps = {
+  size: 'md',
+  direction: 'both',
 }
 
-const getSize = ({ flex, size = 'md', direction = 'both' }: SpacerProps) => {
-  const sizePx = spaceToPx(size)
+export const Spacer = memo((props: SpacerProps) => {
+  return <View style={getStyle(props)} />
+})
+
+const getStyle = (props: SpacerProps = defaultProps): ViewStyle => {
+  return {
+    ...getFlex(props),
+    ...getSize(props),
+  }
+}
+
+const getFlex = ({ flex }: SpacerProps = defaultProps): ViewStyle => {
+  return {
+    flex: flex === true ? 1 : flex === false ? 0 : flex ?? 0,
+  }
+}
+
+const getSize = ({ flex, size, direction } = defaultProps): ViewStyle => {
+  const sizePx = spaceToPx(size ?? 0)
   const width = direction == 'vertical' ? 1 : sizePx
   const height = direction == 'horizontal' ? 1 : sizePx
   if (flex) {
@@ -43,13 +54,14 @@ const getSize = ({ flex, size = 'md', direction = 'both' }: SpacerProps) => {
 
 // @ts-ignore
 Spacer.staticConfig = {
+  defaultStyle: getStyle(),
   styleExpansionProps: {
     flex: getFlex,
     size: getSize,
   },
 }
 
-export const spaceToPx = (space: Spacing) => {
+function spaceToPx(space: Spacing) {
   if (space === 'md' || space === true) return 12
   if (space == 'sm') return 8
   if (space == 'xs') return 4

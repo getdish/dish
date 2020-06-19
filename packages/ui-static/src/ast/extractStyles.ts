@@ -8,7 +8,7 @@ import * as t from '@babel/types'
 import * as AllExports from '@dish/ui/node'
 // import literalToAst from 'babel-literal-to-ast'
 import invariant from 'invariant'
-import { ViewBase, ViewStyle } from 'react-native'
+import { ViewStyle } from 'react-native'
 
 import { GLOSS_CSS_FILE } from '../constants'
 import { getStylesAtomic, pseudos } from '../style/getStylesAtomic'
