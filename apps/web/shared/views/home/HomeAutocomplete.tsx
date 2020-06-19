@@ -1,5 +1,13 @@
-import { Circle, HStack, Spacer, Text, VStack, ZStack } from '@dish/ui'
-import React, { memo, useEffect } from 'react'
+import {
+  Circle,
+  HStack,
+  Hoverable,
+  Spacer,
+  Text,
+  VStack,
+  ZStack,
+} from '@dish/ui'
+import React, { memo, useEffect, useRef } from 'react'
 import { Plus } from 'react-feather'
 import { ScrollView } from 'react-native'
 
@@ -8,7 +16,7 @@ import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
 import { LinkButtonProps } from '../ui/LinkProps'
 import { SmallCircleButton } from './CloseButton'
-import { setAvoidNextAutocompleteShowOnFocus } from './HomeSearchBar'
+import { setAvoidNextAutocompleteShowOnFocus } from './HomeSearchInput'
 
 export const useShowAutocomplete = () => {
   const om = useOvermind()
@@ -180,6 +188,41 @@ export default memo(function HomeAutoComplete() {
     </ZStack>
   )
 })
+
+export const HomeAutocompleteHoverableInput = ({
+  children,
+  input,
+  autocompleteTarget,
+}: {
+  children: any
+  input?: HTMLInputElement | null
+  autocompleteTarget: 'search' | 'location'
+}) => {
+  const om = useOvermind()
+  const tm = useRef(0)
+  const tm2 = useRef(0)
+
+  return (
+    <Hoverable
+      onHoverOut={() => {
+        clearTimeout(tm.current)
+        clearTimeout(tm2.current)
+      }}
+      onHoverMove={() => {
+        clearTimeout(tm.current)
+        if (om.state.home.currentState.searchQuery) {
+          tm.current = setTimeout(() => {
+            if (document.activeElement == input) {
+              om.actions.home.setShowAutocomplete(autocompleteTarget)
+            }
+          }, 150)
+        }
+      }}
+    >
+      {children}
+    </Hoverable>
+  )
+}
 
 function AutocompleteAddButton() {
   const om = useOvermind()
