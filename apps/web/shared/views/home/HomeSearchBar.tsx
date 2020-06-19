@@ -453,6 +453,7 @@ export default memo(function HomeSearchBar() {
                 </VStack>
               </>
             )}
+            {!isSmall && <>{searchElement}</>}
             <Spacer size={1} />
           </HStack>
 

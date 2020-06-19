@@ -1,4 +1,4 @@
-import { ProgressCircle, Text } from '@dish/ui'
+import { ProgressCircle, SuperScriptText, Text } from '@dish/ui'
 import { HStack, StackProps, VStack } from '@dish/ui'
 import React, { forwardRef } from 'react'
 
@@ -52,6 +52,10 @@ export const RatingView = forwardRef(
     )
 
     const ranking = Math.round(percent * 10)
+    const rankingPre = Math.round(ranking / 10)
+    const rankingPost = `${Math.round(
+      ((ranking / 10) % rankingPre) * 10
+    )}`.slice(0, 1)
     const number = (
       <Text
         fontSize={
@@ -60,8 +64,14 @@ export const RatingView = forwardRef(
         fontWeight={subtle ? '300' : '700'}
         color={color}
         letterSpacing={-(size / 90)}
+        ellipse
+        width="120%"
+        marginRight="-40%"
       >
-        {ranking}
+        {rankingPre}
+        <SuperScriptText fontSize={9} marginRight={-5}>
+          .{rankingPost}
+        </SuperScriptText>
       </Text>
     )
 
