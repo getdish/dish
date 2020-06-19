@@ -39,17 +39,14 @@ const getFlex = ({ flex }: SpacerProps = defaultProps): ViewStyle => {
   }
 }
 
-const getSize = ({ flex, size, direction } = defaultProps): ViewStyle => {
+const getSize = ({ size, direction } = defaultProps): ViewStyle => {
   const sizePx = spaceToPx(size ?? 0)
   const width = direction == 'vertical' ? 1 : sizePx
   const height = direction == 'horizontal' ? 1 : sizePx
-  if (flex) {
-    return {
-      minWidth: width,
-      minHeight: height,
-    }
+  return {
+    minWidth: width,
+    minHeight: height,
   }
-  return { width, height }
 }
 
 // @ts-ignore

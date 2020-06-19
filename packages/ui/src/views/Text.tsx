@@ -41,6 +41,7 @@ Text.staticConfig = {
   },
 }
 
+const textNonStylePropReg = /^(allow.*|on[A-Z].*|.*[Mm]ode)/
 const useTextStyle = (allProps: TextProps) => {
   return useMemo(() => {
     const props: ReactTextProps = {}
@@ -58,8 +59,7 @@ const useTextStyle = (allProps: TextProps) => {
           continue
         }
       }
-      const isProp =
-        textNonStyleProps[key] ?? /^(allow.*|on[A-Z].*|.*[Mm]ode)/.test(key)
+      const isProp = textNonStyleProps[key] ?? textNonStylePropReg.test(key)
       if (isProp) {
         props[key] = val
       } else {

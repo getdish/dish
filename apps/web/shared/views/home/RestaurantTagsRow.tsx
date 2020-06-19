@@ -1,6 +1,6 @@
 import { graphql, query } from '@dish/graph'
 import { HStack } from '@dish/ui'
-import React, { memo } from 'react'
+import React, { memo, useMemo } from 'react'
 
 import { memoize } from '../../helpers/memoizeWeak'
 import { useOvermind } from '../../state/useOvermind'
@@ -19,38 +19,12 @@ type TagRowProps = {
 
 export const RestaurantTagsRow = memo(
   graphql(function RestaurantTagsRow(props: TagRowProps) {
-    console.log(
-      'RestaurantTagsRow - for whatever reason this takes a while and renders in a wierd time'
-    )
-    const drawerWidth = 100 //useHomeDrawerWidthInner()
-    // const om = useOvermind()
-    const tagElements = getTagElements(true, props)
-    return (
-      <HStack
-        justifyContent="center"
-        minWidth={props.size === 'lg' ? drawerWidth : 0}
-        spacing={props.size == 'lg' ? 10 : 10}
-      >
-        {tagElements}
-      </HStack>
-    )
-  })
-)
-
-RestaurantTagsRow['defaultProps'] = {
-  size: 'md',
-}
-
-export const getTagElements = memoize(
-  (votable: boolean, props: TagRowProps) => {
+    const drawerWidth = useHomeDrawerWidthInner()
     const { restaurantSlug, showMore } = props
-
     if (!restaurantSlug) {
       return null
     }
-
     let tags: TagButtonTagProps[] = []
-
     if (props.tags) {
       tags = props.tags
     } else {
@@ -61,23 +35,37 @@ export const getTagElements = memoize(
       // @ts-ignore
       tags = restaurantTags.map((tag) => tag.tag)
     }
-
     if (showMore) {
       tags = tags.slice(0, 2)
     }
-
-    return tags.map((tag, index) => {
-      return (
-        <TagButton
-          replace
-          size="sm"
-          rank={index}
-          key={`${index}${tag.name}`}
-          {...getTagButtonProps(tag)}
-          subtle={props.subtle}
-          votable={votable}
-        />
-      )
-    })
-  }
+    console.log('tags', tags)
+    return (
+      <HStack
+        justifyContent="center"
+        flexWrap="wrap"
+        minWidth={props.size === 'lg' ? drawerWidth : 0}
+      >
+        {tags.map((tag, index) => {
+          return (
+            <React.Fragment key={`${index}${tag.name}`}>
+              <TagButton
+                replace
+                size="sm"
+                rank={index}
+                {...getTagButtonProps(tag)}
+                subtle={props.subtle}
+                votable
+                marginRight={5}
+                marginBottom={5}
+              />
+            </React.Fragment>
+          )
+        })}
+      </HStack>
+    )
+  })
 )
+
+RestaurantTagsRow['defaultProps'] = {
+  size: 'md',
+}

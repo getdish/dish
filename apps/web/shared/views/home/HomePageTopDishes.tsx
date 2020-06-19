@@ -46,11 +46,7 @@ import RestaurantRatingView from './RestaurantRatingView'
 import { Squircle } from './Squircle'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
-type TopDishesProps = {
-  state: HomeStateItemHome
-}
-
-export default memo(function HomePageTopDishesContainer(props: TopDishesProps) {
+export default memo(function HomePageTopDishesContainer() {
   const om = useOvermind()
   const isOnHome = om.state.home.currentStateType === 'home'
   const [isLoaded, setIsLoaded] = useState(false)
@@ -64,7 +60,7 @@ export default memo(function HomePageTopDishesContainer(props: TopDishesProps) {
   }, [isOnHome])
 
   if (isOnHome || isLoaded) {
-    return <HomePageTopDishes {...props} />
+    return <HomePageTopDishes />
   }
 
   return null

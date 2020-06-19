@@ -9,8 +9,9 @@ import { useMediaQueryIsSmall } from './HomeViewDrawer'
 
 export const HomeScrollView = ({
   children,
+  paddingTop,
   ...props
-}: ScrollViewProps & { children: any }) => {
+}: ScrollViewProps & { children: any; paddingTop?: any }) => {
   const om = useOvermind()
   const isSmall = useMediaQueryIsSmall()
   const tm = useRef<any>(0)
@@ -29,7 +30,7 @@ export const HomeScrollView = ({
       scrollEventThrottle={200}
       {...props}
       style={[
-        { flex: 1, paddingTop: isSmall ? 0 : searchBarHeight },
+        { flex: 1, paddingTop: paddingTop ?? (isSmall ? 0 : searchBarHeight) },
         props.style,
       ]}
     >

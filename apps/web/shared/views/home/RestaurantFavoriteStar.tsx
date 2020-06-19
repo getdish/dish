@@ -40,8 +40,8 @@ export const RestaurantFavoriteStar = memo(
 
       return (
         <LinkButton
-          hoverStyle={{ opacity: 0.8 }}
-          pressStyle={{ opacity: 0.5 }}
+          hoverStyle={{ opacity: 0.5 }}
+          pressStyle={{ opacity: 0.2 }}
           onPress={() => setRating(isStarred ? 0 : 1)}
         >
           <VStack

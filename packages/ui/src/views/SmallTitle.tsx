@@ -24,7 +24,7 @@ export const SmallTitle = memo(
           <Text
             paddingHorizontal={30}
             letterSpacing={-1}
-            opacity={isActive ? 1 : 0.5}
+            color={isActive ? '#000' : '#888'}
             fontSize={16}
             fontWeight="400"
           >
