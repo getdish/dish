@@ -171,12 +171,12 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
       // onHoverIn={() => setHovered(true)}
       // onHoverOut={() => setHovered(false)}
     >
-      <HStack position="relative" zIndex={10} paddingHorizontal={20}>
+      <HStack position="relative" zIndex={10}>
         {/* <RankingView rank={rank} marginLeft={-36} /> */}
         <LinkButton
           {...flatButtonStyle}
           paddingVertical={4}
-          marginBottom={-10}
+          marginBottom={-22}
           style={{
             transform: [{ rotate: '-2deg' }],
           }}
