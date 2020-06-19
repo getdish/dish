@@ -1,6 +1,6 @@
 import { fullyIdle } from '@dish/async'
 import { useForceUpdate } from '@dish/ui'
-import { isEqual, omit } from 'lodash'
+import { findLast, isEqual, omit } from 'lodash'
 import { useMemo, useRef } from 'react'
 
 import { memoize } from '../../helpers/memoizeWeak'
@@ -28,7 +28,7 @@ const getLatestState = () => {
   const { breadcrumbStates } = omStatic.state.home
   const lastBreadcrumb = breadcrumbStates[breadcrumbStates.length - 1]
   const currentStateId = lastBreadcrumb?.id
-  return omStatic.state.home.states.find((x) => x.id === currentStateId)!
+  return findLast(omStatic.state.home.states, (x) => x.id === currentStateId)!
 }
 
 const useNormalizedLink = (
