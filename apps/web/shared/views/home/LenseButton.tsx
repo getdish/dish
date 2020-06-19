@@ -1,4 +1,11 @@
-import { Box, HStack, HoverablePopover, Text, memoIsEqualDeep } from '@dish/ui'
+import {
+  Box,
+  HStack,
+  HoverablePopover,
+  Text,
+  VStack,
+  memoIsEqualDeep,
+} from '@dish/ui'
 import React from 'react'
 import { anchor } from 'react-laag'
 
@@ -26,9 +33,9 @@ export const LenseButton = memoIsEqualDeep(
     const scale = size == 'md' ? 1 : 1.35
     const sizePx = 40
 
-    const buttonContent = (
+    return (
       <LinkButton tag={lense}>
-        <HStack
+        <VStack
           alignItems="center"
           justifyContent="center"
           marginVertical={-12 * scale}
@@ -39,22 +46,20 @@ export const LenseButton = memoIsEqualDeep(
           borderWidth={1}
           borderBottomColor="transparent"
           hoverStyle={{
-            // borderColor: lenseColorLight,
-            // opacity: 1,
             transform: [{ scale: 1.1 }],
           }}
           {...(isActive && {
             opacity: 1,
             borderColor: lenseColor,
-            transform: [{ scale: 1.35 }],
+            transform: [{ scale: 1.15 }],
             hoverStyle: {
-              transform: [{ scale: 1.35 }],
+              transform: [{ scale: 1.15 }],
             },
           })}
         >
           <Text
             color={isActive ? '#fff' : '#454545'}
-            fontSize={sizePx * 0.65 * scale}
+            fontSize={sizePx * 0.5 * scale}
             lineHeight={16}
             {...(!minimal && {
               lineHeight: sizePx * scale,
@@ -63,45 +68,27 @@ export const LenseButton = memoIsEqualDeep(
             textAlign="center"
           >
             {(lense.icon ?? '').trim()}
-            {minimal ? (
-              <Text fontSize={12}>
-                {(lense.displayName ?? lense.name ?? '').trim()}
-              </Text>
-            ) : null}
           </Text>
-        </HStack>
-      </LinkButton>
-    )
-
-    if (minimal) {
-      return buttonContent
-    }
-
-    return (
-      <HoverablePopover
-        {...(isActive && {
-          isOpen: true,
-        })}
-        noArrow
-        position="bottom"
-        contents={
-          <Box
-            marginTop={-3}
-            transform={isActive ? [{ scale: 0.65 }, { translateY: -20 }] : []}
-            backgroundColor={isActive ? '#000' : '#fff'}
+          <VStack
+            transform={[{ rotate: '-10deg' }]}
+            zIndex={100}
+            alignItems="center"
+            marginBottom={-5}
+            marginTop={-10}
+            {...(isActive && {
+              backgroundColor: '#000',
+            })}
           >
             <Text
-              fontSize={16}
-              fontWeight="700"
+              fontSize={13}
+              fontWeight="400"
               color={isActive ? '#fff' : '#000'}
             >
               {lense.displayName ?? lense.name}
             </Text>
-          </Box>
-        }
-      >
-        {buttonContent}
-      </HoverablePopover>
+          </VStack>
+        </VStack>
+      </LinkButton>
     )
   }
 )

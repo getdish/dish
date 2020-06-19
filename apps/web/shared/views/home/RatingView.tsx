@@ -34,7 +34,7 @@ export const RatingView = forwardRef(
 
     // size!
     const size =
-      sizeIn == 'xs' ? 32 : sizeIn === 'sm' ? 38 : sizeIn == 'md' ? 48 : 76
+      sizeIn == 'xs' ? 32 : sizeIn === 'sm' ? 42 : sizeIn == 'md' ? 48 : 76
 
     const badgeOffset =
       sizeIn === 'xs' || sizeIn === 'sm' ? Math.max(-size * 0.0025, -3) : 0
@@ -53,14 +53,13 @@ export const RatingView = forwardRef(
 
     const ranking = Math.round(percent * 10)
     const rankingPre = Math.round(ranking / 10)
-    const rankingPost = `${Math.round(
-      ((ranking / 10) % rankingPre) * 10
-    )}`.slice(0, 1)
+    const rankingPost =
+      rankingPre === 10
+        ? ''
+        : `.${Math.round(((ranking / 10) % rankingPre) * 10)}`.slice(0, 2)
     const number = (
       <Text
-        fontSize={
-          Math.max(13, size * 0.5) * (!subtle && ranking === 100 ? 0.75 : 1)
-        }
+        fontSize={Math.max(13, size * 0.5)}
         fontWeight={subtle ? '300' : '700'}
         color={color}
         letterSpacing={-(size / 90)}
@@ -69,9 +68,11 @@ export const RatingView = forwardRef(
         marginRight="-40%"
       >
         {rankingPre}
-        <SuperScriptText fontSize={9} marginRight={-5}>
-          .{rankingPost}
-        </SuperScriptText>
+        {!!rankingPost && (
+          <SuperScriptText fontSize={9} marginRight={-5}>
+            {rankingPost}
+          </SuperScriptText>
+        )}
       </Text>
     )
 

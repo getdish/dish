@@ -131,36 +131,36 @@ const HomeStackViewItem = memo(
     // }, [isActive])
 
     return (
-      <PopoverContext.Provider value={useMemo(() => ({ id }), [id])}>
-        <VStack
-          className={`animate-up ${isMounted && !isRemoving ? 'active' : ''}`}
-          position="absolute"
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
-        >
-          <ZStack pointerEvents={isActive ? 'none' : 'auto'} fullscreen>
-            <ZStack
-              flex={1}
-              zIndex={index}
-              top={top}
-              left={left}
-              bottom={-(index * 5)}
-              width="100%"
-              {...(index !== 0 && {
-                shadowColor: 'rgba(0,0,0,0.1)',
-                shadowRadius: 15,
-                shadowOffset: { width: 0, height: 2 },
-              })}
-              borderRadius={drawerBorderRadius}
-              pointerEvents="auto"
-            >
-              {children}
-            </ZStack>
+      // <PopoverContext.Provider value={useMemo(() => ({ id }), [id])}>
+      <VStack
+        className={`animate-up ${isMounted && !isRemoving ? 'active' : ''}`}
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+      >
+        <ZStack pointerEvents={isActive ? 'none' : 'auto'} fullscreen>
+          <ZStack
+            flex={1}
+            zIndex={index}
+            top={top}
+            left={left}
+            bottom={-(index * 5)}
+            width="100%"
+            {...(index !== 0 && {
+              shadowColor: 'rgba(0,0,0,0.1)',
+              shadowRadius: 15,
+              shadowOffset: { width: 0, height: 2 },
+            })}
+            borderRadius={drawerBorderRadius}
+            pointerEvents="auto"
+          >
+            {children}
           </ZStack>
-        </VStack>
-      </PopoverContext.Provider>
+        </ZStack>
+      </VStack>
+      // </PopoverContext.Provider>
     )
   }
 )

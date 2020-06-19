@@ -6,6 +6,7 @@ import {
   HorizontalLine,
   LinearGradient,
   LoadingItems,
+  Spacer,
   StackProps,
   Text,
   VStack,
@@ -71,6 +72,7 @@ export default memo(function HomePageTopDishesContainer(props: TopDishesProps) {
 
 const HomePageTopDishes = memo(({ state }: TopDishesProps) => {
   const om = useOvermind()
+  const { activeTagIds } = om.state.home.lastHomeState
 
   if (!state) {
     return <NotFoundPage title="Home not found" />
@@ -87,9 +89,6 @@ const HomePageTopDishes = memo(({ state }: TopDishesProps) => {
       <VStack position="relative" flex={1} overflow="hidden">
         <HomeScrollView>
           <VStack paddingTop={28} paddingBottom={34} spacing="xl">
-            {/* TRENDING */}
-            {/* <HomeViewTopDishesTrending /> */}
-
             {/* LENSES - UNIQUELY GOOD HERE */}
             <VStack spacing="md">
               <VStack spacing alignItems="center">
@@ -125,10 +124,11 @@ const HomePageTopDishes = memo(({ state }: TopDishesProps) => {
                     </LinkButton>
                   </ZStack>
                   <HorizontalLine />
-                  <HomeLenseBar size="lg" activeTagIds={state.activeTagIds} />
+                  <HomeLenseBar size="lg" activeTagIds={activeTagIds} />
                   <HorizontalLine />
                 </HStack>
-                <HomeFilterBar activeTagIds={state.activeTagIds} />
+                <Spacer size={8} />
+                <HomeFilterBar activeTagIds={activeTagIds} />
               </VStack>
 
               <HomeTopDishesContent />
@@ -143,17 +143,17 @@ const HomePageTopDishes = memo(({ state }: TopDishesProps) => {
 const HomeTopDishesContent = memo(() => {
   const om = useOvermind()
   const { topDishes } = om.state.home
-  return useMemo(
-    () => (
+  return useMemo(() => {
+    console.warn('rendering contnet more expensive', topDishes)
+    return (
       <>
         {!topDishes.length && <LoadingItems />}
         {topDishes.map((country) => (
           <TopDishesCuisineItem key={country.country} country={country} />
         ))}
       </>
-    ),
-    [topDishes]
-  )
+    )
+  }, [topDishes])
 })
 
 const dishHeight = 155

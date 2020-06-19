@@ -29,6 +29,8 @@ export type LinkSharedProps = {
   tagName?: string
   preventNavigate?: boolean
   onMouseDown?: Function
+  asyncClick?: boolean
+  navigateAfterPress?: boolean
 }
 
 export type LinkButtonNamedProps<A = any, B = any> = {

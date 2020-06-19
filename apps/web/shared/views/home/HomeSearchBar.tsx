@@ -400,7 +400,7 @@ export default memo(function HomeSearchBar() {
         borderRadius={borderRadius}
         shadowColor="rgba(0,0,0,0.07)"
         shadowOffset={{ height: 5, width: 0 }}
-        shadowRadius={60}
+        shadowRadius={40}
       >
         <VStack
           position="relative"
