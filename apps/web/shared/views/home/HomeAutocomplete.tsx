@@ -95,10 +95,6 @@ export default memo(function HomeAutoComplete() {
                       params: {
                         slug: tag.tagId,
                       },
-                      onPress: () => {
-                        console.log('press')
-                        om.actions.home.setShowAutocomplete(false)
-                      },
                     }
                   : null
 
@@ -136,19 +132,19 @@ export default memo(function HomeAutoComplete() {
                     className="no-transition"
                     onPress={() => {
                       setAvoidNextAutocompleteShowOnFocus()
+                      om.actions.home.setShowAutocomplete(false)
+                      om.actions.home.setAutocompleteIndex(index)
+
                       if (showLocation) {
                         om.actions.home.setLocation(tag.name)
+                      } else {
+                        console.log('not location should be handled by tag={}')
                       }
-                      om.actions.home.setShowAutocomplete(false)
                     }}
                     {...(!showLocation && {
                       tag,
-                      // navigateAfterPress: true,
-                      onPress() {
-                        om.actions.home.setAutocompleteIndex(index)
-                        om.actions.home.setShowAutocomplete(false)
-                      },
                     })}
+                    navigateAfterPress
                     alignItems="center"
                     justifyContent="center"
                     lineHeight={24}

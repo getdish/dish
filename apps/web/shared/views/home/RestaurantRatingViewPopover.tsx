@@ -74,7 +74,7 @@ export const RestaurantRatingViewPopover = memo(
                             style={{ width: 26, height: 26, marginBottom: -4 }}
                           />
                         ) : null}
-                        {info?.name ?? source}
+                        <Text>{info?.name ?? source}</Text>
                       </HStack>
                       <TableCell width="25%">{item.rating}</TableCell>
                       <TableCell flex={1}>

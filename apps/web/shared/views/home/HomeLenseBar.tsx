@@ -14,13 +14,7 @@ export const HomeLenseBar = memo(
   }) => {
     const om = useOvermind()
     return (
-      <HStack
-        borderRadius={100}
-        padding={6}
-        alignItems="center"
-        justifyContent="center"
-        spacing={2}
-      >
+      <HStack alignItems="center" justifyContent="center" spacing={2}>
         {om.state.home.allLenseTags.map((lense, index) => (
           <LenseButton
             key={lense.id + index}

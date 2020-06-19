@@ -178,8 +178,8 @@ const createStack = (defaultStyle?: ViewStyle) => {
     defaultStyle,
     styleExpansionProps: {
       fullscreen: fsStyle,
-      contain: (val) => ({
-        contain: val,
+      contain: ({ contain }) => ({
+        contain,
       }),
       disabled: {
         pointerEvents: 'none',

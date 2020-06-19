@@ -10,19 +10,13 @@ import {
   getPathFromParams,
 } from '../../state/router'
 import { useOvermindStatic } from '../../state/useOvermind'
-import { combineFns } from './combineFns'
 import { LinkProps } from './LinkProps'
 import { linkActionIdle, useNormalizeLinkProps } from './useNormalizedLink'
 
 export function Link<
   Name extends keyof RoutesTable = keyof RoutesTable,
   Params = RoutesTable[Name]['params']
->(
-  allProps: LinkProps<Name, Params> & {
-    asyncClick?: boolean
-    navigateAfterPress?: boolean
-  }
-) {
+>(allProps: LinkProps<Name, Params>) {
   const {
     name,
     params,

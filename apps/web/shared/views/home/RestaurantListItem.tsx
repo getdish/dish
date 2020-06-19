@@ -139,7 +139,11 @@ const RestaurantListItemContent = memo(
     console.log('RestaurantListItemContent.render', props.rank)
 
     return (
-      <HStack alignItems="flex-start" justifyContent="flex-start">
+      <HStack
+        alignItems="flex-start"
+        justifyContent="flex-start"
+        contain="layout"
+      >
         <VStack
           className="123"
           paddingHorizontal={pad + 6}

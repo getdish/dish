@@ -1,10 +1,10 @@
-import { StackProps, Text, VStack, combineFns, prevent } from '@dish/ui'
+import { StackProps, Text, VStack } from '@dish/ui'
 import React, { useRef } from 'react'
 
 import { RoutesTable } from '../../state/router'
 import { Link, getStylePadding } from './Link'
 import { LinkButtonProps } from './LinkProps'
-import { asyncLinkAction, useNormalizeLinkProps } from './useNormalizedLink'
+import { useNormalizeLinkProps } from './useNormalizedLink'
 
 export function LinkButton<
   Name extends keyof RoutesTable = keyof RoutesTable,
@@ -20,6 +20,7 @@ export function LinkButton<
   if ('name' in props) {
     const {
       name,
+      // @ts-ignore
       params,
       children,
       onPress,
@@ -33,6 +34,8 @@ export function LinkButton<
       disabledIfActive,
       replace,
       preventNavigate,
+      navigateAfterPress,
+      asyncClick,
       textAlign,
       ...rest
     } = props
@@ -43,13 +46,14 @@ export function LinkButton<
         params={params}
         replace={replace}
         onClick={onPress}
-        asyncClick
+        asyncClick={asyncClick ?? true}
         lineHeight={lineHeight}
         fontSize={fontSize}
         fontWeight={fontWeight}
         ellipse={ellipse}
         textAlign={textAlign}
         preventNavigate={preventNavigate}
+        navigateAfterPress={navigateAfterPress}
         padding={getStylePadding({
           padding,
           paddingVertical,

@@ -4,6 +4,7 @@ import {
   Circle,
   HStack,
   LoadingItems,
+  Spacer,
   Text,
   Toast,
   VStack,
@@ -19,7 +20,11 @@ import React, {
 import { Edit2 } from 'react-feather'
 import { Image } from 'react-native'
 
-import { drawerBorderRadius, searchBarHeight } from '../../constants'
+import {
+  drawerBorderRadius,
+  searchBarHeight,
+  searchBarTopOffset,
+} from '../../constants'
 import { HomeStateItemSearch, OmState } from '../../state/home'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
@@ -44,11 +49,14 @@ export default memo(function HomePageSearchResults(props: {
   const state = om.state.home.lastSearchState ?? props.state
   const isSmall = useMediaQueryIsSmall()
   // const isEditingUserList = !!isEditingUserPage(om.state)
-  const { title, subTitleElements, pageTitleElements } = getTitleForState(
+  const { title, subTitle, pageTitleElements } = getTitleForState(
     om.state,
     state
   )
-  const paddingTop = (isSmall ? 0 : searchBarHeight) + 10
+  const topBarVPad = 12
+  const paddingTop = isSmall
+    ? 0
+    : searchBarHeight - searchBarTopOffset + topBarVPad
   const titleHeight = paddingTop + 48
 
   console.warn('HomePageSearchResults.render')
@@ -68,11 +76,12 @@ export default memo(function HomePageSearchResults(props: {
       {/* Title */}
       <HStack
         position="absolute"
+        top={0}
         left={0}
         right={0}
         paddingTop={paddingTop}
+        paddingBottom={topBarVPad}
         height={titleHeight}
-        paddingBottom={12}
         paddingHorizontal={18}
         backgroundColor="#fff"
         borderBottomColor="#eee"
@@ -87,21 +96,23 @@ export default memo(function HomePageSearchResults(props: {
           flexDirection="row-reverse"
           spacing={15}
         >
-          <HomeLenseBar activeTagIds={state.activeTagIds} />
+          <VStack marginTop={6} marginBottom={-10}>
+            <HomeLenseBar activeTagIds={state.activeTagIds} />
+          </VStack>
           <HomeFilterBar activeTagIds={state.activeTagIds} />
           <VStack
-            flex={1}
+            flex={10}
             alignSelf="flex-end"
             spacing={3}
             alignItems="flex-end"
             justifyContent="flex-end"
             overflow="hidden"
           >
-            <Text ellipse fontSize={14} fontWeight="600">
+            <Text ellipse fontSize={15} fontWeight="700">
               {pageTitleElements}
             </Text>
-            <Text ellipse opacity={0.5} fontSize={14}>
-              {subTitleElements}
+            <Text ellipse opacity={0.5} fontWeight="300" fontSize={15}>
+              {subTitle}
             </Text>
           </VStack>
         </HStack>

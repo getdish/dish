@@ -99,12 +99,4 @@ const getNormalizedLink = memoize(
   }
 )
 
-export const linkActionIdle = { min: 20, max: 80 }
-
-export const asyncLinkAction = memoize((cb?: Function) => async (e: any) => {
-  e.persist()
-  e.preventDefault()
-  e.stopPropagation()
-  await fullyIdle(linkActionIdle)
-  cb?.(e)
-})
+export const linkActionIdle = { min: 30, max: 50 }

@@ -2,7 +2,7 @@ import { LinearGradient, VStack, ZStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { StyleSheet } from 'react-native'
 
-import { frameWidthMax, isWorker } from '../../constants'
+import { frameWidthMax, isWorker, searchBarHeight } from '../../constants'
 import {
   isHomeState,
   isRestaurantState,
@@ -63,20 +63,6 @@ const HomePageContent = memo(() => {
         <Suspense fallback={null}>
           <HomeSearchBar />
         </Suspense>
-
-        {/* overlay map subtle */}
-        <ZStack
-          fullscreen
-          bottom="auto"
-          height={100}
-          pointerEvents="none"
-          zIndex={2}
-        >
-          <LinearGradient
-            colors={['rgba(255,255,255,0.1)', 'rgba(255,255,255,0)']}
-            style={StyleSheet.absoluteFill}
-          />
-        </ZStack>
 
         <HomeViewDrawer>
           <HomeStackView>

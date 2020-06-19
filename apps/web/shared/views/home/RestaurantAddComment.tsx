@@ -18,7 +18,7 @@ import { useOvermind } from '../../state/useOvermind'
 import { Link } from '../ui/Link'
 import { LinkButton } from '../ui/LinkButton'
 import { flatButtonStyleSelected } from './baseButtonStyle'
-import { bgLight } from './colors'
+import { bgLight, brandColor } from './colors'
 
 // @ts-ignore
 
@@ -135,6 +135,7 @@ export const CommentBubble = ({
             name="user"
             params={{ username: user.username }}
             fontWeight="600"
+            color="#666"
           >
             {user.username}
           </Link>
@@ -152,13 +153,13 @@ export const CommentBubble = ({
               </Box>
             }
           > */}
-          <div className="inline-flex">
+          {/* <div className="inline-flex">
             {['👨‍🍳'].map((x) => (
               <Text selectable key={x} opacity={1}>
                 {x}
               </Text>
             ))}
-          </div>
+          </div> */}
           {/* </HoverablePopover> */} says
         </Text>
       </HStack>
