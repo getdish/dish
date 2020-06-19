@@ -113,12 +113,11 @@ export const HomeSearchInput = memo(() => {
           console.log('delete', autocompleteIndex)
           if (isAutocompleteActive) {
             // if selected onto a tag, we can send remove command
-            if (autocompleteIndex < 0) {
-              if (om.state.home.searchbarFocusedTag) {
-                om.actions.home.navigateToTag({
-                  tags: [om.state.home.searchbarFocusedTag],
-                })
-              }
+            if (om.state.home.searchbarFocusedTag) {
+              console.log('delete tag', om.state.home.searchbarFocusedTag)
+              om.actions.home.navigateToTag({
+                tags: [om.state.home.searchbarFocusedTag],
+              })
               next()
             }
           }

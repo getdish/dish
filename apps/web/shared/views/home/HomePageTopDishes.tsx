@@ -70,9 +70,10 @@ export default memo(function HomePageTopDishesContainer(props: TopDishesProps) {
   return null
 })
 
-const HomePageTopDishes = memo(({ state }: TopDishesProps) => {
+const HomePageTopDishes = memo(() => {
   const om = useOvermind()
-  const { activeTagIds } = om.state.home.lastHomeState
+  const state = om.state.home.lastHomeState
+  const { activeTagIds } = state
 
   if (!state) {
     return <NotFoundPage title="Home not found" />
@@ -101,7 +102,7 @@ const HomePageTopDishes = memo(({ state }: TopDishesProps) => {
                 >
                   <ZStack
                     position="absolute"
-                    top={10}
+                    top={0}
                     left="0%"
                     width="36%"
                     zIndex={1000}

@@ -21,6 +21,7 @@ export type LngLat = { lng: number; lat: number }
 
 export type TopCuisineDish = Partial<MenuItem> & {
   rating?: number
+  icon?: string
   count?: number
   image: string
   isFallback?: boolean

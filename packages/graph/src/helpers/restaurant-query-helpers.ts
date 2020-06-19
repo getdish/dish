@@ -35,7 +35,7 @@ export const restaurantPhotosForCarousel = ({
     let [photo] = t.photos() || []
     let isFallback = false
     const fallback = t.tag?.default_images()?.[0]
-    const photoName = t.tag.icon ? t.tag.icon + tagName : tagName
+    const photoName = tagName
     const photoRating = t.rating
     if (!photo && fallback) {
       photo = fallback
@@ -46,6 +46,7 @@ export const restaurantPhotosForCarousel = ({
     }
     photos.push({
       name: photoName,
+      icon: t.tag.icon,
       image: photo,
       rating: photoRating,
       isFallback,

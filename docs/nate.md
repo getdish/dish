@@ -1,3 +1,5 @@
+- babel plugin to make #{} #[] work with immer
+
 # June
 
 big impact changes:

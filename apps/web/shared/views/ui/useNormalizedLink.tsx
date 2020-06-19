@@ -1,5 +1,5 @@
 import { fullyIdle } from '@dish/async'
-import { useForceUpdate } from '@dish/ui'
+import { useForceUpdate, useLazyRef } from '@dish/ui'
 import { findLast, isEqual, omit } from 'lodash'
 import { useMemo, useRef } from 'react'
 
@@ -32,23 +32,24 @@ const getLatestState = () => {
 }
 
 const useNormalizedLink = (
-  props: Partial<LinkButtonProps>
+  linkProps: Partial<LinkButtonProps>
 ): LinkButtonNamedProps | null => {
   const forceUpdate = useForceUpdate()
-  const cur = useRef<any>()
-  if (!cur.current) {
-    cur.current = getNormalizedLink(props, getLatestState())
-  }
-  const linkProps = cur.current
+  const propsRef = useLazyRef(() =>
+    getNormalizedLink(linkProps, getLatestState())
+  )
+  const props = propsRef.current
   return useMemo(() => {
-    if (linkProps) {
+    if (props) {
       return {
-        ...linkProps,
+        ...props,
         onMouseEnter(e) {
           const next = getNormalizedLink(props, getLatestState())
-          if (!isEqual(omit(next, 'onPress'), omit(cur.current, 'onPress'))) {
-            console.log('force update new info', next, linkProps)
-            cur.current = next
+          if (
+            !isEqual(omit(next, 'onPress'), omit(propsRef.current, 'onPress'))
+          ) {
+            console.log('force update new info', next, props)
+            propsRef.current = next
             forceUpdate()
           }
           props['onMouseEnter']?.(e)
@@ -56,7 +57,7 @@ const useNormalizedLink = (
       }
     }
     return null
-  }, [linkProps])
+  }, [props])
 }
 
 const getNormalizedLink = memoize(

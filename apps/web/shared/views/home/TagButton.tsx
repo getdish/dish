@@ -150,7 +150,7 @@ export const TagButton = memo(
           >
             {hideIcon ? (
               <>&nbsp;</>
-            ) : (
+            ) : !!tag.icon ? (
               <span
                 style={{
                   ...(subtle && { marginLeft: 4 }),
@@ -158,12 +158,13 @@ export const TagButton = memo(
                     fontSize: '90%',
                     marginTop: '-2px',
                     marginBottom: '-2px',
+                    marginRight: 8,
                   }),
                 }}
               >
                 {tag.icon}
               </span>
-            )}
+            ) : null}
             {tag['displayName'] ?? _.capitalize(tag.name)}
           </Text>
           {!!votable && (
