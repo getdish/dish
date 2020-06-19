@@ -51,8 +51,8 @@ export class Google extends WorkerJob {
 
   static queue_config: QueueOptions = {
     limiter: {
-      max: 1,
-      duration: 5000,
+      max: 4,
+      duration: 20000,
     },
   }
 
