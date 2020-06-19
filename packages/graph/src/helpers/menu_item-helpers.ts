@@ -16,15 +16,21 @@ export const menuItemRefresh = QueryHelpers.refresh
 export const menuItemsUpsertMerge = async (items: MenuItem[]) => {
   const restaurant_id = items[0].restaurant_id
   const existing_items = await menuItemFindAll({ restaurant_id })
+  let updated_items: MenuItem[] = []
   for (let item of items) {
+    const matches = updated_items.filter((i) => {
+      return i.name == item.name
+    })
+    if (matches.length > 0) continue
     const match = existing_items.find(
       (e) => e.name == item.name && e.price == item.price
     )
     if (match) {
       item = merge(match, item)
     }
+    updated_items.push(item)
   }
-  await menuItemUpsert(items)
+  await menuItemUpsert(updated_items)
 }
 
 // Only update _missing_ data

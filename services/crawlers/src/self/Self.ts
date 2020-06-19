@@ -478,11 +478,6 @@ export class Self extends WorkerJob {
     const raw_dishes = this.ubereats?.data?.dishes
     for (const data of raw_dishes) {
       if (data.title) {
-        const matches = dishes.filter((i) => {
-          return i.name == data.title
-        })
-        if (matches.length > 0) continue
-
         dishes.push({
           restaurant_id: this.restaurant.id,
           name: data.title,
