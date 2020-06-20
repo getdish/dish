@@ -26,7 +26,7 @@ import {
   useOvermindStatic,
 } from '../../state/useOvermind'
 import { Link } from '../ui/Link'
-import { bgLightLight } from './colors'
+import { bgLight, bgLightLight } from './colors'
 import { DishView } from './DishView'
 import { HomeScrollViewHorizontal } from './HomeScrollView'
 import { useMediaQueryIsMedium, useMediaQueryIsSmall } from './HomeViewDrawer'
@@ -162,6 +162,7 @@ const RestaurantListItemContent = memo(
             <VStack
               paddingTop={paddingTop}
               hoverStyle={{ backgroundColor: bgLightLight }}
+              pressStyle={{ backgroundColor: bgLight }}
               marginLeft={-adjustRankingLeft}
               width={900}
             >

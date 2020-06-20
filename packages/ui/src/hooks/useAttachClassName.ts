@@ -1,4 +1,4 @@
-import { Ref, RefObject, useLayoutEffect } from 'react'
+import { RefObject, useLayoutEffect } from 'react'
 
 import { getNode } from '../helpers/getNode'
 
