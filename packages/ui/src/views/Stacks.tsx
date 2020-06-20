@@ -3,6 +3,7 @@ import { View, ViewProps, ViewStyle } from 'react-native'
 
 import { combineRefs } from '../helpers/combineRefs'
 import { StaticComponent } from '../helpers/extendStaticConfig'
+import { getNode } from '../helpers/getNode'
 import { useAttachClassName } from '../hooks/useAttachClassName'
 import { Hoverable } from './Hoverable'
 import { Spacer, Spacing } from './Spacer'
@@ -38,6 +39,14 @@ export type StackProps = Omit<
   // because who tf uses alignContent or backfaceVisibility
   'alignContent' | 'backfaceVisibility'
 >
+
+const mouseUps = new Set<Function>()
+if (typeof document !== 'undefined') {
+  document.addEventListener('mouseup', () => {
+    mouseUps.forEach((x) => x())
+    mouseUps.clear()
+  })
+}
 
 const createStack = (defaultStyle?: ViewStyle) => {
   const component = forwardRef<View, StackProps>(
@@ -76,8 +85,11 @@ const createStack = (defaultStyle?: ViewStyle) => {
       ref
     ) => {
       const innerRef = useRef<any>()
-      const [isHovered, setHvr] = useState(false)
-      const [isPressed, setPrs] = useState(false)
+      const [state, set] = useState({
+        hover: false,
+        press: false,
+        pressIn: false,
+      })
       const cn = `${className ?? ''} ${disabled ? 'force-disable' : ''}`.trim()
 
       useAttachClassName(cn, innerRef)
@@ -116,8 +128,8 @@ const createStack = (defaultStyle?: ViewStyle) => {
               ...props,
             },
             style,
-            isHovered ? hoverStyle : null,
-            isPressed ? pressStyle : null,
+            state.hover ? hoverStyle : null,
+            state.press ? pressStyle : null,
           ]}
         >
           {spacedChildren}
@@ -136,31 +148,58 @@ const createStack = (defaultStyle?: ViewStyle) => {
       if (attachHover || attachPress) {
         content = (
           <Hoverable
-            {...(!!attachHover && {
+            {...(!!(attachHover || attachPress) && {
               onHoverIn: () => {
-                setHvr(true)
-                onHoverIn?.()
-                onMouseEnter?.()
+                let next = { ...state }
+                if (attachHover) {
+                  next.hover = true
+                  onHoverIn?.()
+                  onMouseEnter?.()
+                }
+                if (state.pressIn) {
+                  next.press = true
+                }
+                set(next)
               },
               onHoverOut: () => {
-                setHvr(false)
-                onHoverOut?.()
-                onMouseLeave?.()
+                let next = { ...state }
+                mouseUps.add(() => {
+                  set((x) => ({
+                    ...x,
+                    press: false,
+                    pressIn: false,
+                  }))
+                })
+                if (attachHover) {
+                  next.hover = false
+                  onHoverOut?.()
+                  onMouseLeave?.()
+                }
+                if (state.pressIn) {
+                  next.press = false
+                }
+                set(next)
               },
             })}
             {...(!!attachPress && {
               onPressIn: (e) => {
                 e.preventDefault()
-                setPrs(true)
+                set({
+                  ...state,
+                  press: true,
+                  pressIn: true,
+                })
                 onPressIn?.(e)
-                // onMouseDown?.(e)
               },
               onPressOut: (e) => {
                 e.preventDefault()
-                setPrs(false)
+                set({
+                  ...state,
+                  press: false,
+                  pressIn: false,
+                })
                 onPressOut?.(e)
                 onPress?.(e)
-                // onMouseUp?.(e)
               },
             })}
           >
