@@ -13,7 +13,7 @@ import {
 import { when } from 'overmind'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { MessageSquare } from 'react-feather'
-import { Button } from 'react-native'
+import { Image } from 'react-native'
 
 import {
   GeocodePlace,
@@ -33,6 +33,7 @@ import { useMediaQueryIsMedium, useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RankingView } from './RankingView'
 import { CommentBubble, RestaurantAddComment } from './RestaurantAddComment'
 import { getAddressText } from './RestaurantAddressLinksRow'
+import { RestaurantDeliveryButton } from './RestaurantDeliveryButton'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
@@ -43,6 +44,7 @@ import { RestaurantTopReviews } from './RestaurantTopReviews'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 import { SmallButton } from './SmallButton'
 import { Squircle } from './Squircle'
+import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 type RestaurantListItemProps = {
@@ -236,7 +238,7 @@ const RestaurantListItemContent = memo(
               </Link>
             </VStack>
 
-            <Spacer size={14} />
+            <Spacer />
 
             {/* ROW: COMMENT */}
             <VStack
@@ -245,10 +247,15 @@ const RestaurantListItemContent = memo(
               borderLeftColor="#eee"
               borderLeftWidth={2}
             >
-              <RestaurantTopReviews restaurantId={restaurantId} />
+              <RestaurantTopReviews
+                restaurantId={restaurantId}
+                afterTopCommentButton={
+                  <RestaurantDeliveryButton restaurantId={restaurantId} />
+                }
+              />
             </VStack>
 
-            <Spacer size={10} />
+            <Spacer />
 
             {/* ROW: BOTTOM INFO */}
             <HStack paddingLeft={10} alignItems="center" spacing>
