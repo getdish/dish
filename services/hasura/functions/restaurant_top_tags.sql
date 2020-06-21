@@ -12,40 +12,36 @@ CREATE OR REPLACE FUNCTION restaurant_top_tags(
   _restaurant restaurant,
   tag_names TEXT
 ) RETURNS SETOF restaurant_tag AS $$
-DECLARE
-  dish_ids UUID[];
-BEGIN
-  dish_ids := ARRAY(
-    SELECT id
-      FROM tag
-      WHERE name ILIKE ANY (
-        SELECT UNNEST(
-          -- TODO use our formal slugify() format.
-          -- Speed optimisation isn't so important here because the tag
-          -- table should always be relatively small
-          string_to_array(LOWER(REPLACE(tag_names, '-', ' ')), ',')
-        )
-      )
-        AND type != 'country'
-        AND frequency < 4
-  );
-  RETURN QUERY
-  SELECT * FROM (
-    -- Put searched for tags first
-    SELECT * FROM (
-      SELECT * FROM restaurant_tag rt
-      WHERE rt.restaurant_id = _restaurant.id
-      AND rt.tag_id = ANY (dish_ids)
-      ORDER BY rt.rating DESC NULLS LAST
-    ) searched_for_tags
+WITH
+-- TODO use our formal slugify() format.
+-- Speed optimisation isn't so important here because the tag
+-- table should always be relatively small
+tag_slugs AS (
+  SELECT UNNEST(
+    string_to_array(LOWER(REPLACE(tag_names, '-', ' ')), ',')
+  )
+),
+restaurant_tags AS (
+  SELECT *
+    FROM restaurant_tag
+    JOIN tag ON restaurant_tag.tag_id = tag.id
+    WHERE restaurant_tag.restaurant_id = _restaurant.id
+      AND tag.type != 'country'
+      AND tag.frequency < 4
+    ORDER BY restaurant_tag.rating DESC NULLS LAST
+)
+
+-- TODO: How to programmtically choose just the restaurant_tag fields?
+--       Selecting * conflicts with the strict return type of restaurant_tag
+--       because of the JOIN.
+SELECT tag_id, restaurant_id, rating, rank, photos
+  FROM (
+    SELECT *
+      FROM restaurant_tags
+      WHERE restaurant_tags.name ILIKE ANY (SELECT * FROM tag_slugs)
     UNION ALL
-    -- All other tags
-    SELECT * FROM (
-      SELECT * FROM restaurant_tag rt
-      WHERE rt.restaurant_id = _restaurant.id
-      AND NOT (rt.tag_id = ANY (dish_ids))
-      ORDER BY rt.rating DESC NULLS LAST
-    ) all_other_tags
-  ) top_tags;
-END
-$$ LANGUAGE plpgsql STABLE;
+    SELECT *
+      FROM restaurant_tags
+      WHERE NOT (restaurant_tags.name ILIKE ANY (SELECT * FROM tag_slugs))
+  ) s
+$$ LANGUAGE sql STABLE;
