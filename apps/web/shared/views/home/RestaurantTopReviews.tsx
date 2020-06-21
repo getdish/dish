@@ -25,9 +25,11 @@ export const RestaurantTopReviews = memo(
     ({
       restaurantId,
       expandTopComments,
+      afterTopCommentButton,
     }: {
       restaurantId: string
       expandTopComments?: boolean
+      afterTopCommentButton?: any
     }) => {
       const [showMore, setShowMore] = useState(false)
       const [topReview] = query.review({
@@ -51,17 +53,20 @@ export const RestaurantTopReviews = memo(
             ))}
           </VStack>
 
-          {!expandTopComments && (
-            <SmallButton
-              onPress={() => {
-                setShowMore((x) => !x)
-              }}
-            >
-              <Text fontSize={14} opacity={0.7}>
-                {showMore ? 'Show less' : 'Top comments'}
-              </Text>
-            </SmallButton>
-          )}
+          <HStack>
+            {!expandTopComments && (
+              <SmallButton
+                onPress={() => {
+                  setShowMore((x) => !x)
+                }}
+              >
+                <Text fontSize={13} opacity={0.7}>
+                  {showMore ? 'Show less' : 'Top comments'}
+                </Text>
+              </SmallButton>
+            )}
+            {afterTopCommentButton}
+          </HStack>
 
           {(showMore || expandTopComments) && (
             <VStack paddingTop={20} spacing={10}>
