@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, TextInput, View } from 'react-native'
 
 import { useOvermind } from '../../state/useOvermind'
+import { SmallButton } from '../home/SmallButton'
 import { Link } from '../ui/Link'
 import { textStyles } from './textStyles'
 
@@ -82,7 +83,7 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
 
       <HStack width="100%">
         <VStack flex={1} />
-        <Button
+        <SmallButton
           onPress={async () => {
             if (isRegister) {
               const result = await om.actions.user.register({
@@ -100,8 +101,9 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
               })
             }
           }}
-          title={button_text()}
-        ></Button>
+        >
+          {button_text()}
+        </SmallButton>
       </HStack>
 
       {username.length > 3 && (

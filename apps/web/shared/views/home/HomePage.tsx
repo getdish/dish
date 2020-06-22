@@ -1,8 +1,7 @@
-import { LinearGradient, VStack, ZStack } from '@dish/ui'
+import { VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
-import { StyleSheet } from 'react-native'
 
-import { frameWidthMax, isWorker, searchBarHeight } from '../../constants'
+import { frameWidthMax, isWorker } from '../../constants'
 import {
   isHomeState,
   isRestaurantState,

@@ -55,7 +55,7 @@ export default memo(function HomePageSearchResults(props: {
   )
   const topBarVPad = 12
   const paddingTop = isSmall
-    ? 0
+    ? topBarVPad
     : searchBarHeight - searchBarTopOffset + topBarVPad
   const titleHeight = paddingTop + 48
 

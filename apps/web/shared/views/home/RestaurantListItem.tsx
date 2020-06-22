@@ -150,12 +150,11 @@ const RestaurantListItemContent = memo(
         contain="layout"
       >
         <VStack
-          className="123"
           paddingHorizontal={pad + 6}
           paddingBottom={paddingBottom}
-          width={isSmall ? '50vw' : contentWidth}
+          width={isSmall ? '80%' : contentWidth}
           minWidth={isSmall ? '50%' : 500}
-          maxWidth={isSmall ? '80vw' : contentWidth}
+          maxWidth={isSmall ? '90vw' : contentWidth}
           position="relative"
           spacing={5}
         >
@@ -324,14 +323,14 @@ const RestaurantPeek = memo(
     const { searchState, size = 'md' } = props
     const tag_names = Object.keys(searchState?.activeTagIds || {})
     const spacing = size == 'lg' ? 8 : 6
-    const isMedium = useMediaQueryIsMedium()
+    const isSmall = useMediaQueryIsSmall()
     const restaurant = restaurantQuery(props.restaurantSlug)
     const photos = restaurantPhotosForCarousel({
       restaurant,
       tag_names,
       max: 5,
     })
-    const dishSize = (size === 'lg' ? 220 : 180) * (isMedium ? 0.85 : 1)
+    const dishSize = size === 'lg' ? 220 : 180
     const [isLoaded, setIsLoaded] = useState(false)
 
     return (
@@ -349,7 +348,7 @@ const RestaurantPeek = memo(
           position="relative"
           marginRight={-spacing}
           marginBottom={-spacing}
-          paddingLeft={0.63 * drawerWidth}
+          paddingLeft={isSmall ? '55vw' : 0.63 * drawerWidth}
         >
           <HStack
             pointerEvents="auto"

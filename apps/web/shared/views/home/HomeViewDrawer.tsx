@@ -45,24 +45,13 @@ export function HomeViewDrawer(props: { children: any }) {
   const isSmall = useMediaQueryIsSmall()
   const drawerWidth = useHomeDrawerWidth()
 
-  const positionSmall: StackProps = {
-    top: '24%',
-    left: 0,
-    right: 0,
-    width: '100%',
-    paddingTop: 0,
-    borderTopRightRadius: 0,
-    borderTopLeftRadius: 0,
-    overflow: 'hidden',
-  }
-
   return (
     <HStack
       position="absolute"
       top={0}
       bottom={0}
       zIndex={10}
-      width={drawerWidth}
+      width={isSmall ? '100%' : drawerWidth}
       shadowColor="rgba(0,0,0,0.25)"
       shadowRadius={44}
       backgroundColor="#fff"
@@ -72,7 +61,17 @@ export function HomeViewDrawer(props: { children: any }) {
       borderTopRightRadius={drawerBorderRadius * 1.5}
       flex={1}
       justifyContent="flex-end"
-      {...(isSmall && positionSmall)}
+      {...(isSmall && {
+        top: '24%',
+        left: 0,
+        right: 0,
+        // TODO ui-static this fails if i remove conditional above!
+        width: '100%',
+        paddingTop: 0,
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+        overflow: 'hidden',
+      })}
     >
       {/* overlay / under searchbar */}
       <ZStack
@@ -91,7 +90,7 @@ export function HomeViewDrawer(props: { children: any }) {
 
       <VStack
         flex={1}
-        paddingLeft={drawerPad}
+        paddingLeft={isSmall ? 0 : drawerPad}
         maxWidth={isSmall ? '100%' : drawerWidthMax}
         marginLeft={isSmall ? 0 : 'auto'}
       >

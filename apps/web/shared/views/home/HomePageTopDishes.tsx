@@ -214,7 +214,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
           top: 0,
           left: 0,
           bottom: 0,
-          width: `${pctRestaurant * 100 + 4}%`,
+          width: `${pctRestaurant * 100 - 1}%`,
           zIndex: 1,
         }}
       />

@@ -124,7 +124,7 @@ const HomeStackViewItem = memo(
       return () => clearTimeout(tm)
     }, [])
     const top = isSmall ? 0 : index * (index == 0 ? 0 : 5)
-    const left = isSmall ? -3 : Math.max(0, index) * 3
+    const left = isSmall ? 0 : Math.max(0, index) * 3
 
     // useEffect(() => {
     //   popoverStore.show = isActive
