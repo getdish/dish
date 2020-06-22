@@ -264,6 +264,7 @@ export function extractStyles(
             t.isObjectExpression(obj) &&
             obj.properties.every(
               (prop) =>
+                // @ts-ignore TODO remove this is only an issue on CI
                 t.isObjectProperty(prop) && isStaticAttributeName(prop.key.name)
             )
           )
@@ -755,6 +756,7 @@ export function extractStyles(
           if (classNamePropValueForReals) {
             classNamePropValueForReals = t.binaryExpression(
               '+',
+              // @ts-ignore TODO remove this is only an issue on CI
               buildClassNamePropValue(ternaryExprs),
               t.binaryExpression(
                 '+',

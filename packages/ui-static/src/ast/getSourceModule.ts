@@ -72,6 +72,7 @@ export function getSourceModule(
           objProp.value.name === itemName
         ) {
           local = objProp.value.name
+          // @ts-ignore TODO remove this is only an issue on CI
           imported = objProp.key.name
           destructured = true
           break
