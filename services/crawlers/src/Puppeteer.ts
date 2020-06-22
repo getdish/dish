@@ -1,7 +1,14 @@
 import '@dish/common'
 
 import ProxyChain from 'proxy-chain'
-import puppeteer, { Browser, Page, Request } from 'puppeteer'
+import { Browser, Page, Request } from 'puppeteer'
+import puppeteer from 'puppeteer-extra'
+import StealthPlugin from 'puppeteer-extra-plugin-stealth'
+
+const stealth = StealthPlugin()
+// @ts-ignore
+stealth.onBrowser = () => {}
+puppeteer.use(stealth)
 
 const USER_AGENT =
   'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36'
@@ -35,8 +42,19 @@ export class Puppeteer {
 
   async boot() {
     await this.startProxyServer()
+    await this.startBrowser()
+  }
+
+  async startBrowser() {
     await this.startPuppeteer()
     await this.interceptRequests()
+  }
+
+  async restartBrowser() {
+    console.log('PUPETEER: Restarting browser...')
+    await this.close()
+    await this.startBrowser()
+    console.log('PUPETEER: Browser restarted.')
   }
 
   async close() {
@@ -76,6 +94,7 @@ export class Puppeteer {
   async startPuppeteer() {
     this.browser = await puppeteer.launch({
       headless: false,
+      ignoreDefaultArgs: ['--enable-automation'],
       args: ['--proxy-server=localhost:8000', '--no-sandbox'],
     })
 

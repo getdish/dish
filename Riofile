@@ -64,11 +64,6 @@ services:
       - LUMINATI_PROXY_DATACENTRE_PASSWORD=${LUMINATI_PROXY_DATACENTRE_PASSWORD}
       - LUMINATI_PROXY_RESIDENTIAL_USER=${LUMINATI_PROXY_RESIDENTIAL_USER}
       - LUMINATI_PROXY_RESIDENTIAL_PASSWORD=${LUMINATI_PROXY_RESIDENTIAL_PASSWORD}
-    command:
-      - xvfb-run
-    args:
-      - node
-      - _/index.js
   crawlers:
     image: docker.k8s.dishapp.com/dish/crawlers
     imagePullSecrets:

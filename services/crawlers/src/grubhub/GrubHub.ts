@@ -55,7 +55,7 @@ export class GrubHub extends WorkerJob {
       const ids = restaurants.map((r) => r.restaurant_id)
       all = [...all, ...ids]
     }
-    console.log(`DOORDASH: Found ${all.length} restaurants`)
+    console.log(`GRUBHUB: Found ${all.length} restaurants`)
     for (const id of all) {
       await this.runOnWorker('getRestaurant', [id])
     }

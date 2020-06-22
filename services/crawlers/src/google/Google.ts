@@ -1,5 +1,6 @@
 import '@dish/common'
 
+import { sentryException } from '@dish/common'
 import {
   Restaurant,
   restaurantFindBatch,
@@ -46,6 +47,7 @@ export class Google extends WorkerJob {
   lon!: number
   lat!: number
   name!: string
+  address!: string
   googleRestaurantID!: string
   scrape_data: any = {}
   booted = false
@@ -94,21 +96,12 @@ export class Google extends WorkerJob {
       throw new Error("Google crawler: restaurant doesn't have a name")
     }
     this.name = restaurant.name
+    this.address = restaurant.address?.split(',')[0] || ''
     if (!this.searchEndpoint) {
       await this.getSearchEndpoint()
     }
     this.googleRestaurantID = await this.searchForID()
-    await this.getMainPage()
-    await this.getHeroImage()
-    await this.getPricing()
-    await this.getRating()
-    await this.getAddress()
-    await this.getHours()
-    await this.getWebsite()
-    await this.getPhone()
-    await this.getSynopsis()
-    await this.getPhotos()
-    await this.getReviews()
+    await this.getAllData(restaurant)
     await scrapeInsert([
       {
         source: 'google',
@@ -119,6 +112,50 @@ export class Google extends WorkerJob {
     ])
     if (process.env.DISH_ENV != 'production') {
       this.puppeteer.close()
+    }
+  }
+
+  async getAllData(restaurant: Restaurant) {
+    const steps = [
+      this.getMainPage,
+      this.getHeroImage,
+      this.getPricing,
+      this.getRating,
+      this.getAddress,
+      this.getHours,
+      this.getWebsite,
+      this.getPhone,
+      this.getSynopsis,
+      this.getPhotos,
+      this.getReviews,
+    ]
+    for (const step of steps) {
+      await this._runFailableFunction(step, restaurant)
+    }
+  }
+
+  async _runFailableFunction(func: Function, restaurant: Restaurant) {
+    console.log('GOOGLE: Running failable step: ' + func.name)
+    let retries = 0
+    while (retries < 2) {
+      try {
+        await func.bind(this)()
+        break
+      } catch (e) {
+        if (retries < 2 && e.message.includes('waiting for selector')) {
+          const url = this.puppeteer.page.url()
+          await this.getNewSearchEndpoint()
+          await this.puppeteer.page.goto(url)
+          retries++
+        } else {
+          sentryException(
+            e,
+            { function: func.name, restaurant: restaurant },
+            { source: 'Google crawler' }
+          )
+          break
+        }
+      }
     }
   }
 
@@ -150,6 +187,7 @@ export class Google extends WorkerJob {
   // the relevant search API request.
   async getNewSearchEndpoint() {
     console.log('GOOGLE CRAWLER: getting new search endpoint')
+    await this.puppeteer.restartBrowser()
     await this._catchSearchEndpoint()
     this._templatiseSearchEndpoint()
     await settingUpsert([
@@ -212,10 +250,11 @@ export class Google extends WorkerJob {
   }
 
   getSearchURL() {
+    const term = this.name + ', ' + this.address
     return this.searchEndpoint
       .replaceAll(LON_TOKEN, this.lon.toString())
       .replaceAll(LAT_TOKEN, this.lat.toString())
-      .replaceAll(PLEASE, encodeURIComponent(this.name))
+      .replaceAll(PLEASE, encodeURIComponent(term))
   }
 
   async searchForID() {

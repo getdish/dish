@@ -5,8 +5,7 @@ echo "Testing crawler-worker interaction..."
 docker run \
   -e CI=true \
   --net host \
-  $DISH_REGISTRY/dish/worker \
-  node _/index.js > worker.logs 2>&1 &
+  $DISH_REGISTRY/dish/worker > worker.logs 2>&1 &
 
 docker run \
   -e CI=true \

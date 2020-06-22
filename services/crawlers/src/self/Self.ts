@@ -8,7 +8,6 @@ import {
   Scrape,
   ScrapeData,
   deleteAllBy,
-  menuItemUpsert,
   menuItemsUpsertMerge,
   restaurantFindBatch,
   restaurantFindOne,

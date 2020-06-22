@@ -27,7 +27,7 @@
     "moment": "^2.25.3",
     "pg": "^7.18.2",
     "proxy-chain": "^0.4.4",
-    "puppeteer": "^3.2.0",
+    "puppeteer": "^3.3.0",
     "sentiment": "^5.0.2",
     "tabletojson": "^2.0.4",
     "transliteration": "^2.1.8"

@@ -30,4 +30,5 @@ RUN apt-get update && apt-get install -y \
       lsb-release xdg-utils wget xvfb
 WORKDIR /app/services/worker
 
-CMD ["node", "_/index.js"]
+COPY services/worker/entry.sh /app/entry.sh
+CMD ["/app/entry.sh"]
