@@ -50,7 +50,13 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps | null> = (
     return {
       ...navigateItem,
       onPress() {
-        nextState = getNextState(om, props)
+        // we dont want to re-render every link on the page on every transition
+        // so we do lazy loading onPress to re-fetch the url
+        // see <Link /> which also does a lazy-load on hover to show the right url
+        nextState = getNextState(om, {
+          ...props,
+          state: om.state.home.currentState,
+        })
         console.log('pressing', { props, nextState })
         om.actions.home.updateActiveTags(nextState)
       },
