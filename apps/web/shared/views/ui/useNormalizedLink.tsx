@@ -40,23 +40,21 @@ const useNormalizedLink = (
   )
   const props = propsRef.current
   return useMemo(() => {
-    if (props) {
-      return {
-        ...props,
-        onMouseEnter(e) {
-          const next = getNormalizedLink(props, getLatestState())
-          if (
-            !isEqual(omit(next, 'onPress'), omit(propsRef.current, 'onPress'))
-          ) {
-            console.log('force update new info', next, props)
-            propsRef.current = next
-            forceUpdate()
-          }
-          props['onMouseEnter']?.(e)
-        },
-      }
+    if (!props) return null
+    return {
+      ...props,
+      onMouseEnter(e) {
+        const next = getNormalizedLink(props, getLatestState())
+        if (
+          !isEqual(omit(next, 'onPress'), omit(propsRef.current, 'onPress'))
+        ) {
+          console.log('force update new info', next, props)
+          propsRef.current = next
+          forceUpdate()
+        }
+        props['onMouseEnter']?.(e)
+      },
     }
-    return null
   }, [props])
 }
 

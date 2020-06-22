@@ -48,6 +48,7 @@
     "@dish/helpers": "*",
     "@dish/async": "*",
     "@o/fast-compare": "2.7.6",
+    "@expo/html-elements": "^0.0.0-alpha.5",
     "expo-linear-gradient": "^8.1.0",
     "mapkit-typescript": "^5.18.2",
     "overmind": "23.1.0-1589389364682",

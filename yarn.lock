@@ -1139,6 +1139,11 @@
   dependencies:
     arrify "^1.0.1"
 
+"@expo/html-elements@^0.0.0-alpha.5":
+  version "0.0.0-alpha.5"
+  resolved "https://registry.npmjs.org/@expo/html-elements/-/html-elements-0.0.0-alpha.5.tgz#132ccfa5e9150fc510e484d3d9a26fc99adb1370"
+  integrity sha512-2b9iiWyWoiKJF/IOIQwmOusGyiRZsXVT1EVuHwEshNRDWOyfOqg9mpZMlZQBizQywm+l7sDwql4BcRC4o00rbg==
+
 "@gqless/logger@0.0.1-alpha.27":
   version "0.0.1-alpha.27"
   resolved "https://registry.yarnpkg.com/@gqless/logger/-/logger-0.0.1-alpha.27.tgz#16e27648c22abc0dc87b878dc5022a530a87f0c4"

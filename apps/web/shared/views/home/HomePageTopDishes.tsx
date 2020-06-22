@@ -12,7 +12,7 @@ import {
   VStack,
   ZStack,
 } from '@dish/ui'
-import _, { size } from 'lodash'
+import _, { clamp, size } from 'lodash'
 import {
   default as React,
   memo,
@@ -156,7 +156,14 @@ const HomeTopDishesContent = memo(() => {
 const dishHeight = 155
 const padding = 30
 const spacing = 6
-const pctRestaurant = 0.25
+const pctRestaurant = 0.3
+
+const useHomeSideWidth = () => {
+  const drawerWidth = useHomeDrawerWidth()
+  const min = 200
+  const max = 240
+  return clamp(drawerWidth * pctRestaurant + 10, min, max)
+}
 
 const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
   return (
@@ -286,14 +293,14 @@ const TopDishesRestaurantsSide = memo(
 // these two do optimized updates
 
 const HomeTopDishesSide = memo((props) => {
-  const drawerWidth = useHomeDrawerWidth()
+  const sideWidth = useHomeSideWidth()
   return (
     <ZStack
       fullscreen
       paddingTop={padding + 4}
       pointerEvents="none"
       right="auto"
-      maxWidth={drawerWidth * pctRestaurant + 10}
+      maxWidth={sideWidth}
       zIndex={100}
       {...props}
     />
@@ -301,14 +308,14 @@ const HomeTopDishesSide = memo((props) => {
 })
 
 const HomeTopDishMain = memo((props) => {
-  const drawerWidth = useHomeDrawerWidth()
+  const sideWidth = useHomeSideWidth()
   return (
     <HStack
       alignItems="center"
       padding={padding}
       paddingTop={padding}
       paddingHorizontal={30}
-      paddingLeft={drawerWidth * pctRestaurant + 10}
+      paddingLeft={sideWidth}
       spacing={spacing}
       {...props}
     />
