@@ -18,6 +18,7 @@ import { HomeStateItemRestaurant } from '../../state/home'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { DishView } from './DishView'
 import { HomeScrollView } from './HomeScrollView'
+import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
@@ -37,6 +38,7 @@ export default memo(
     if (!state) {
       return null
     }
+    const isSmall = useMediaQueryIsSmall()
     const slug = state.restaurantSlug
     const [restaurant] = query.restaurant({
       where: {
@@ -58,7 +60,7 @@ export default memo(
         position="relative"
         backgroundColor="#fff"
         overflow="hidden"
-        marginTop={searchBarHeight}
+        marginTop={isSmall ? 0 : searchBarHeight}
       >
         <PageTitleTag>
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.

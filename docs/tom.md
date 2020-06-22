@@ -15,11 +15,8 @@ TL;DR:
 
 New
 
-- Search page is somewhat slow RestaurantListItem.RestaurantPeek
-- Home tags cleanup
-  - we should remove common ones
-  - "tea" "beer" etc shouldnt be dishes
-  - make sure we have a "type" = "dish" filter
+- Search results: review results a bit and see what we can improve
+  - Notice a few searches that looks weak overall, basically, we should start pivoting into results quality
 
 ✔️ : Done
 👷: Currently or will actively work on
