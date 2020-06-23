@@ -15,6 +15,8 @@ TL;DR:
 
 New
 
+- Images: storing them ourselves + thumbnails!
+- Sentiment/rating breakdown: storing reviews in a separate table perhaps
 - Search results: review results a bit and see what we can improve
   - Notice a few searches that looks weak overall, basically, we should start pivoting into results quality
 
