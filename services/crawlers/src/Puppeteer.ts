@@ -92,10 +92,16 @@ export class Puppeteer {
   }
 
   async startPuppeteer() {
+    const fireprox_host_sig = '*.execute-api.us-west-2.amazonaws.com'
+    const proxy_bypass = fireprox_host_sig
     this.browser = await puppeteer.launch({
       headless: false,
       ignoreDefaultArgs: ['--enable-automation'],
-      args: ['--proxy-server=localhost:8000', '--no-sandbox'],
+      args: [
+        '--proxy-server=localhost:8000',
+        `--proxy-bypass-list=${proxy_bypass}`,
+        '--no-sandbox',
+      ],
     })
 
     this.page = await this.browser.newPage()
