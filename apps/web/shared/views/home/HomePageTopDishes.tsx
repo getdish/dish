@@ -85,10 +85,10 @@ const HomePageTopDishes = memo(() => {
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <VStack position="relative" flex={1} overflow="hidden">
         <HomeScrollView>
-          <VStack paddingTop={28} paddingBottom={34} spacing="xl">
+          <VStack paddingTop={34} paddingBottom={34} spacing="xl">
             {/* LENSES - UNIQUELY GOOD HERE */}
-            <VStack spacing="md">
-              <VStack spacing alignItems="center">
+            <VStack>
+              <VStack alignItems="center">
                 <HStack
                   width="100%"
                   alignItems="center"
@@ -124,7 +124,7 @@ const HomePageTopDishes = memo(() => {
                   <HomeLenseBar size="lg" activeTagIds={activeTagIds} />
                   <HorizontalLine />
                 </HStack>
-                <Spacer size={8} />
+                <Spacer size={40} />
                 <HomeFilterBar activeTagIds={activeTagIds} />
               </VStack>
 

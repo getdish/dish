@@ -114,8 +114,6 @@ export default memo(
               </HStack>
             </HStack>
 
-            <RestaurantTagsRow size="lg" restaurantSlug={slug} />
-
             <Spacer />
 
             <SmallTitle divider="center">
@@ -124,8 +122,8 @@ export default memo(
 
             <Spacer />
 
-            <VStack spacing="md" alignItems="center">
-              <HStack paddingVertical={8} minWidth={400}>
+            <VStack alignItems="center">
+              <HStack minWidth={400}>
                 <RestaurantDetailRow
                   centered
                   justifyContent="center"
@@ -134,21 +132,47 @@ export default memo(
                 />
               </HStack>
 
-              <VStack spacing={10}>
-                <SmallTitle divider="center">Reviews</SmallTitle>
-                <RestaurantTopReviews
-                  expandTopComments
-                  restaurantId={restaurant.id}
-                />
-              </VStack>
+              <Spacer />
+              <Spacer />
 
-              <Suspense fallback={null}>
-                <RestaurantPhotos restaurantSlug={slug} />
-              </Suspense>
+              <HStack>
+                <VStack width="50%">
+                  <SmallTitle divider="center">Reviews</SmallTitle>
+                  <Spacer />
+                  <RestaurantTopReviews
+                    expandTopComments={2}
+                    restaurantId={restaurant.id}
+                  />
 
-              <VStack>
+                  <Spacer />
+                  <Spacer />
+
+                  <SmallTitle divider="center">Menu</SmallTitle>
+                  <Spacer />
+                  <Suspense fallback={null}>
+                    <RestaurantMenu restaurantSlug={slug} />
+                  </Suspense>
+                </VStack>
+                <VStack width="50%">
+                  <SmallTitle divider="center">Top tags</SmallTitle>
+                  <Spacer />
+                  <RestaurantTagsRow size="lg" restaurantSlug={slug} />
+
+                  <Spacer />
+                  <Spacer />
+
+                  <SmallTitle divider="center">Top dishes</SmallTitle>
+                  <Spacer />
+                  <Suspense fallback={null}>
+                    <RestaurantPhotos restaurantSlug={slug} />
+                  </Suspense>
+                </VStack>
+              </HStack>
+
+              <VStack width="100%">
                 <SmallTitle>Images</SmallTitle>
                 <HStack
+                  width="100%"
                   flexWrap="wrap"
                   alignItems="center"
                   justifyContent="center"
@@ -185,12 +209,12 @@ const RestaurantPhotos = memo(
     const photos = restaurantPhotosForCarousel({ restaurant })
     const drawerWidth = useHomeDrawerWidthInner()
     const spacing = 20
-    const perRow = Math.round(drawerWidth / 250)
+    const perRow = Math.round(drawerWidth / 500)
 
     return (
       <>
         {!!photos?.length && (
-          <VStack spacing="xl">
+          <VStack>
             {/* <HStack justifyContent="center" spacing>
               <LinkButton {...flatButtonStyleActive}>Top Dishes</LinkButton>
               <LinkButton {...flatButtonStyle}>Menu</LinkButton>
@@ -209,7 +233,7 @@ const RestaurantPhotos = memo(
                 return (
                   <DishView
                     key={index}
-                    size={(drawerWidth - perRow * spacing) / perRow - 15}
+                    size={(drawerWidth / 2 - perRow * spacing) / perRow}
                     restaurantSlug={restaurantSlug}
                     marginBottom={30}
                     dish={photo}
@@ -217,6 +241,31 @@ const RestaurantPhotos = memo(
                 )
               })}
             </HStack>
+          </VStack>
+        )}
+      </>
+    )
+  })
+)
+
+const RestaurantMenu = memo(
+  graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
+    const restaurant = restaurantQuery(restaurantSlug)
+    const items = restaurant.menu_items({ limit: 20 })
+    return (
+      <>
+        {!items?.length && (
+          <VStack>
+            <Text>No menu found.</Text>
+          </VStack>
+        )}
+        {!!items?.length && (
+          <VStack>
+            {items.map((item, i) => (
+              <Text key={i}>
+                {item.name} - {item.description}
+              </Text>
+            ))}
           </VStack>
         )}
       </>
