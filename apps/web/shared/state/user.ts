@@ -7,7 +7,6 @@ type UserState = {
   loading: boolean
   messages: string[]
   isLoggedIn: boolean
-  allReviews: { [id: string]: Review }
   allVotes: { [id: string]: Review }
 }
 
@@ -16,7 +15,6 @@ export const state: UserState = {
   loading: false,
   messages: [],
   isLoggedIn: false,
-  allReviews: {},
   allVotes: {},
 }
 

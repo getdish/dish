@@ -280,7 +280,6 @@ const HomeSearchBarTags = memo(
                     // transform: [{ scale: 1.02 }],
                   }}
                   size="lg"
-                  fontSize={16}
                   name={tag.name}
                   type={tag.type}
                   icon={tag.icon ?? ''}

@@ -1,10 +1,14 @@
 import { graphql, query } from '@dish/graph'
-import { HStack, Spacer, Text, VStack } from '@dish/ui'
+import { HStack, SmallTitle, Spacer, Text, VStack } from '@dish/ui'
 import { memo, useState } from 'react'
 import React from 'react'
 import { MessageSquare } from 'react-feather'
 
-import { CommentBubble, RestaurantAddComment } from './RestaurantAddComment'
+import {
+  CommentBubble,
+  RestaurantAddComment,
+  RestaurantAddCommentButton,
+} from './RestaurantAddComment'
 import { SmallButton } from './SmallButton'
 
 const listItems = [
@@ -37,20 +41,12 @@ export const RestaurantTopReviews = memo(
         showAddComment: false,
         showMore: false,
       })
-      const [topReview] = query.review({
-        limit: 1,
-        where: {
-          restaurant_id: {
-            _eq: restaurantId,
-          },
-        },
-      })
-      const comments = [1, 2, 3]
+      const totalToShow = 3
       const expandCommentButton = (
         <>
           <SmallButton
             onPress={() => {
-              setState((x) => ({ ...x, showMore: true }))
+              setState((x) => ({ ...x, showMore: !x.showMore }))
             }}
           >
             <Text fontSize={13} opacity={0.7}>
@@ -100,56 +96,73 @@ export const RestaurantTopReviews = memo(
 
           {!!(state.showMore || expandTopComments) && (
             <VStack paddingTop={20} spacing={10}>
-              {comments
-                .slice(
-                  0,
-                  state.showMore ? Infinity : expandTopComments ?? Infinity
-                )
-                .map((i) => (
-                  <CommentBubble
-                    key={i}
-                    user={{ username: topReview?.user?.username ?? 'PeachBot' }}
-                  >
-                    <Text
-                      selectable
-                      opacity={0.8}
-                      lineHeight={20}
-                      fontSize={14}
-                    >
-                      {topReview?.text ||
-                        `Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet sit amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.`}
-                    </Text>
-                  </CommentBubble>
-                ))}
-              {expandTopComments < comments.length ? expandCommentButton : null}
+              <SmallTitle divider="center">Top comments</SmallTitle>
 
-              <SmallButton
-                pressStyle={{
-                  opacity: 0.6,
-                }}
-                onPressOut={() =>
-                  setState((state) => ({
-                    ...state,
-                    showAddComment: !state.showAddComment,
-                  }))
-                }
-              >
-                <MessageSquare
-                  size={16}
-                  color={state.showAddComment ? 'blue' : '#999'}
+              <HStack>
+                <Spacer flex={1} />
+                <RestaurantAddCommentButton
+                  onPress={() =>
+                    setState((state) => ({
+                      ...state,
+                      showAddComment: !state.showAddComment,
+                    }))
+                  }
+                  restuarantId={restaurantId}
                 />
-                Add comment
-              </SmallButton>
+              </HStack>
+
+              {state.showAddComment && (
+                <>
+                  <Spacer />
+                  <RestaurantAddComment restaurantId={restaurantId} />
+                </>
+              )}
+
+              <RestaurantTopReviewsContent
+                numToShow={
+                  state.showMore ? Infinity : expandTopComments ?? Infinity
+                }
+                restaurantId={restaurantId}
+              />
+              {expandTopComments < totalToShow ? expandCommentButton : null}
             </VStack>
           )}
-
-          {state.showAddComment && (
-            <>
-              <Spacer size="lg" />
-              <RestaurantAddComment restaurantId={restaurantId} />
-            </>
-          )}
         </VStack>
+      )
+    }
+  )
+)
+
+const RestaurantTopReviewsContent = memo(
+  graphql(
+    ({
+      restaurantId,
+      numToShow,
+    }: {
+      restaurantId: string
+      numToShow: number
+    }) => {
+      const topReviews = query.review({
+        limit: 3,
+        where: {
+          restaurant_id: {
+            _eq: restaurantId,
+          },
+        },
+      })
+
+      const all = [...topReviews, 0, 1, 2].slice(0, numToShow)
+
+      return (
+        <>
+          {all.map((_, i) => (
+            <CommentBubble key={i} user={{ username: 'PeachBot' }}>
+              <Text selectable opacity={0.8} lineHeight={20} fontSize={14}>
+                {`Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet sit amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.`}
+              </Text>
+            </CommentBubble>
+          ))}
+        </>
       )
     }
   )
