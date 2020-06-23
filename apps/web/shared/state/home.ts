@@ -149,17 +149,11 @@ const derivations = {
         : state.autocompleteResults ?? []),
     ]
   }),
-  isLoading: derived<HomeState, boolean>((state) => {
-    const cur = state.currentState
-    if (isSearchState(cur)) {
-      return cur.results.status === 'loading'
-    }
-    return false
-  }),
 }
 
 export const state: HomeState = {
   started: false,
+  isLoading: false,
   isScrolling: false,
   skipNextPageFetchData: false,
   activeIndex: -1,
@@ -259,6 +253,8 @@ const pushHomeState: AsyncAction<
     fetchDataPromise: Promise<any>
   } | null
 > = async (om, item) => {
+  om.state.home.isLoading = true
+
   const { started, currentState } = om.state.home
   const historyId = item.id
   const id = item.replace ? currentState.id : `${Math.random()}`
@@ -275,7 +271,6 @@ const pushHomeState: AsyncAction<
   let nextState: HomeStateItem | null = null
   let fetchData: PageAction | null = null
   let activeTagIds: HomeActiveTagIds
-
   const type = item.name
 
   switch (type) {
@@ -448,7 +443,16 @@ const pushHomeState: AsyncAction<
       rej = rej2
     })
     setTimeout(() => {
-      runFetchData().then(res, rej)
+      runFetchData().then(
+        () => {
+          om.state.home.isLoading = false
+          res()
+        },
+        () => {
+          om.state.home.isLoading = false
+          rej()
+        }
+      )
     }, 16)
   }
 
@@ -457,6 +461,8 @@ const pushHomeState: AsyncAction<
       fetchDataPromise,
     }
   }
+
+  om.state.home.isLoading = false
 
   return null
 }
