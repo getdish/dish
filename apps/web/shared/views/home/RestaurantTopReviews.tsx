@@ -2,8 +2,9 @@ import { graphql, query } from '@dish/graph'
 import { HStack, Spacer, Text, VStack } from '@dish/ui'
 import { memo, useState } from 'react'
 import React from 'react'
+import { MessageSquare } from 'react-feather'
 
-import { CommentBubble } from './RestaurantAddComment'
+import { CommentBubble, RestaurantAddComment } from './RestaurantAddComment'
 import { SmallButton } from './SmallButton'
 
 const listItems = [
@@ -32,7 +33,10 @@ export const RestaurantTopReviews = memo(
       expandTopComments?: number
       afterTopCommentButton?: any
     }) => {
-      const [showMore, setShowMore] = useState(false)
+      const [state, setState] = useState({
+        showAddComment: false,
+        showMore: false,
+      })
       const [topReview] = query.review({
         limit: 1,
         where: {
@@ -46,11 +50,11 @@ export const RestaurantTopReviews = memo(
         <>
           <SmallButton
             onPress={() => {
-              setShowMore((x) => !x)
+              setState((x) => ({ ...x, showMore: true }))
             }}
           >
             <Text fontSize={13} opacity={0.7}>
-              {showMore ? 'Show less' : 'Top comments'}
+              {state.showMore ? 'Show less' : 'Comments'}
             </Text>
           </SmallButton>
           {afterTopCommentButton ? (
@@ -90,12 +94,17 @@ export const RestaurantTopReviews = memo(
             ))}
           </VStack>
 
+          <Spacer />
+
           {!expandTopComments && <HStack>{expandCommentButton}</HStack>}
 
-          {!!(showMore || expandTopComments) && (
+          {!!(state.showMore || expandTopComments) && (
             <VStack paddingTop={20} spacing={10}>
               {comments
-                .slice(0, showMore ? Infinity : expandTopComments ?? Infinity)
+                .slice(
+                  0,
+                  state.showMore ? Infinity : expandTopComments ?? Infinity
+                )
                 .map((i) => (
                   <CommentBubble
                     key={i}
@@ -113,7 +122,32 @@ export const RestaurantTopReviews = memo(
                   </CommentBubble>
                 ))}
               {expandTopComments < comments.length ? expandCommentButton : null}
+
+              <SmallButton
+                pressStyle={{
+                  opacity: 0.6,
+                }}
+                onPressOut={() =>
+                  setState((state) => ({
+                    ...state,
+                    showAddComment: !state.showAddComment,
+                  }))
+                }
+              >
+                <MessageSquare
+                  size={16}
+                  color={state.showAddComment ? 'blue' : '#999'}
+                />
+                Add comment
+              </SmallButton>
             </VStack>
+          )}
+
+          {state.showAddComment && (
+            <>
+              <Spacer size="lg" />
+              <RestaurantAddComment restaurantId={restaurantId} />
+            </>
           )}
         </VStack>
       )

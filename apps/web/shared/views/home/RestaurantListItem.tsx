@@ -120,13 +120,8 @@ const RestaurantListItemContent = memo(
     const { rank, restaurantId, restaurantSlug, currentLocationInfo } = props
     const pad = 18
     const isSmall = useMediaQueryIsSmall()
-    const [state, setState] = useState({
-      showAddComment: false,
-    })
-    const showAddComment =
-      state.showAddComment ||
-      // note static for now... caused big perf issue
-      isEditingUserPage(props.searchState, omStatic.state)
+    // note static for now... caused big perf issue
+    isEditingUserPage(props.searchState, omStatic.state)
     const adjustRankingLeft = 36
     const leftPad = 25
     const restaurant = restaurantQuery(restaurantSlug)
@@ -139,7 +134,6 @@ const RestaurantListItemContent = memo(
 
     const contentWidth = '40%'
     const paddingTop = 35
-    const paddingBottom = 10
 
     console.log('RestaurantListItemContent.render', props.rank)
 
@@ -151,7 +145,6 @@ const RestaurantListItemContent = memo(
       >
         <VStack
           paddingHorizontal={pad + 6}
-          paddingBottom={paddingBottom}
           width={isSmall ? '80%' : contentWidth}
           minWidth={isSmall ? '50%' : 500}
           maxWidth={isSmall ? '90vw' : contentWidth}
@@ -230,6 +223,7 @@ const RestaurantListItemContent = memo(
                       size="sm"
                       restaurantSlug={restaurantSlug}
                     />
+                    <RestaurantFavoriteStar restaurantId={restaurantId} />
                     <RestaurantTagsRow
                       subtle
                       showMore={true}
@@ -255,64 +249,38 @@ const RestaurantListItemContent = memo(
               <RestaurantTopReviews
                 restaurantId={restaurantId}
                 afterTopCommentButton={
-                  <RestaurantDeliveryButton restaurantId={restaurantId} />
+                  <HStack spacing alignItems="center">
+                    <RestaurantDeliveryButton restaurantId={restaurantId} />
+
+                    <Divider vertical />
+
+                    <RestaurantDetailRow
+                      size="sm"
+                      restaurantSlug={restaurantSlug}
+                    />
+
+                    {!!restaurant.address && (
+                      <Text fontSize={13} selectable color="#555">
+                        <Link
+                          inline
+                          target="_blank"
+                          href={`https://www.google.com/maps/search/?api=1&${encodeURIComponent(
+                            restaurant.address
+                          )}`}
+                        >
+                          {getAddressText(
+                            currentLocationInfo,
+                            restaurant.address,
+                            'xs'
+                          )}
+                        </Link>
+                      </Text>
+                    )}
+                  </HStack>
                 }
               />
             </VStack>
-
-            <Spacer />
-
-            {/* ROW: BOTTOM INFO */}
-            <HStack paddingLeft={10} alignItems="center" spacing>
-              <RestaurantFavoriteStar restaurantId={restaurantId} />
-
-              <VStack
-                pressStyle={{
-                  opacity: 0.6,
-                }}
-                onPressOut={() =>
-                  setState((state) => ({
-                    ...state,
-                    showAddComment: !state.showAddComment,
-                  }))
-                }
-              >
-                <MessageSquare
-                  size={16}
-                  color={state.showAddComment ? 'blue' : '#999'}
-                />
-              </VStack>
-
-              <Divider vertical />
-
-              <RestaurantDetailRow size="sm" restaurantSlug={restaurantSlug} />
-
-              {!!restaurant.address && (
-                <Text fontSize={13} selectable color="#555">
-                  <Link
-                    inline
-                    target="_blank"
-                    href={`https://www.google.com/maps/search/?api=1&${encodeURIComponent(
-                      restaurant.address
-                    )}`}
-                  >
-                    {getAddressText(
-                      currentLocationInfo,
-                      restaurant.address,
-                      'xs'
-                    )}
-                  </Link>
-                </Text>
-              )}
-            </HStack>
           </VStack>
-
-          {showAddComment && (
-            <>
-              <Spacer size="lg" />
-              <RestaurantAddComment restaurantId={restaurantId} />
-            </>
-          )}
         </VStack>
       </HStack>
     )
