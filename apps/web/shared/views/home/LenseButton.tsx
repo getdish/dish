@@ -34,8 +34,9 @@ export const LenseButton = memoIsEqualDeep(
     const sizePx = 40
 
     return (
-      <LinkButton tag={lense}>
+      <LinkButton tag={lense} position="relative" zIndex={isActive ? 1 : 0}>
         <VStack
+          className="ease-in-out-fast"
           alignItems="center"
           justifyContent="center"
           marginVertical={-12 * scale}
@@ -46,7 +47,7 @@ export const LenseButton = memoIsEqualDeep(
           borderWidth={1}
           borderBottomColor="transparent"
           hoverStyle={{
-            transform: [{ scale: 1.1 }],
+            borderColor: '#ccc',
           }}
           {...(isActive && {
             opacity: 1,
@@ -74,9 +75,11 @@ export const LenseButton = memoIsEqualDeep(
             zIndex={100}
             alignItems="center"
             marginBottom={-5}
-            marginTop={-10}
+            borderRadius={4}
+            paddingHorizontal={3}
+            marginTop={-12}
             {...(isActive && {
-              backgroundColor: '#000',
+              backgroundColor: lenseColor,
             })}
           >
             <Text

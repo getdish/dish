@@ -1,17 +1,19 @@
-import { graphql, query } from '@dish/graph'
+import { graphql } from '@dish/graph'
 import { HStack } from '@dish/ui'
-import React, { memo, useMemo } from 'react'
+import React, { memo } from 'react'
 
-import { memoize } from '../../helpers/memoizeWeak'
-import { useOvermind } from '../../state/useOvermind'
 import { restaurantQuery } from './restaurantQuery'
-import { TagButton, TagButtonTagProps, getTagButtonProps } from './TagButton'
-import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
+import {
+  TagButton,
+  TagButtonProps,
+  TagButtonTagProps,
+  getTagButtonProps,
+} from './TagButton'
 
 type TagRowProps = {
   restaurantSlug: string
   showMore?: boolean
-  size?: 'lg' | 'md'
+  size?: TagButtonProps['size']
   divider?: any
   tags?: TagButtonTagProps[]
   subtle?: boolean
@@ -19,8 +21,8 @@ type TagRowProps = {
 
 export const RestaurantTagsRow = memo(
   graphql(function RestaurantTagsRow(props: TagRowProps) {
-    const drawerWidth = useHomeDrawerWidthInner()
-    const { restaurantSlug, showMore } = props
+    // const drawerWidth = useHomeDrawerWidthInner()
+    const { size, restaurantSlug, showMore } = props
     if (!restaurantSlug) {
       return null
     }
@@ -40,17 +42,13 @@ export const RestaurantTagsRow = memo(
     }
     console.log('tags', tags)
     return (
-      <HStack
-        justifyContent="center"
-        flexWrap="wrap"
-        minWidth={props.size === 'lg' ? drawerWidth : 0}
-      >
+      <HStack justifyContent="center" flexWrap="wrap">
         {tags.map((tag, index) => {
           return (
             <React.Fragment key={`${index}${tag.name}`}>
               <TagButton
                 replace
-                size="sm"
+                size={size ?? 'sm'}
                 rank={index}
                 {...getTagButtonProps(tag)}
                 subtle={props.subtle}

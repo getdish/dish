@@ -87,7 +87,6 @@ export default memo(function HomePageSearchResults(props: {
         borderBottomColor="#eee"
         borderBottomWidth={1}
         zIndex={1000}
-        overflow="hidden"
         alignItems="center"
       >
         <HStack
@@ -96,7 +95,7 @@ export default memo(function HomePageSearchResults(props: {
           flexDirection="row-reverse"
           spacing={15}
         >
-          <VStack marginTop={6} marginBottom={-10}>
+          <VStack marginTop={12} marginBottom={-20}>
             <HomeLenseBar activeTagIds={state.activeTagIds} />
           </VStack>
           <HomeFilterBar activeTagIds={state.activeTagIds} />
