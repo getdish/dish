@@ -5,15 +5,17 @@ import { TextStyle } from 'react-native'
 import { flatButtonStyle } from './baseButtonStyle'
 import { bg, bgLight, bgLightHover } from './colors'
 
+export type SmallButtonProps = StackProps & {
+  isActive?: boolean
+  textStyle?: TextStyle
+}
+
 export const SmallButton = ({
   isActive,
   children,
   textStyle,
   ...rest
-}: StackProps & {
-  isActive?: boolean
-  textStyle?: TextStyle
-}) => {
+}: SmallButtonProps) => {
   return (
     <HStack
       alignItems="center"

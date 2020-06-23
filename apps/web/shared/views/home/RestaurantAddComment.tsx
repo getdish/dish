@@ -1,49 +1,66 @@
-import { User } from '@dish/graph'
+import { User as UserModel, graphql, mutation } from '@dish/graph'
 import {
-  Box,
   Circle,
   HStack,
-  HoverablePopover,
+  SmallButtonProps,
   StackProps,
   Text,
   Toast,
   VStack,
 } from '@dish/ui'
-import React, { memo, useLayoutEffect, useState } from 'react'
-import { Image, TextInput } from 'react-native'
+import { isUndefined } from 'lodash'
+import React, { memo, useEffect, useState } from 'react'
+import { MessageSquare, User } from 'react-feather'
+import { TextInput } from 'react-native'
 
-// @ts-ignore
-import avatar from '../../assets/peach.jpg'
 import { useOvermind } from '../../state/useOvermind'
 import { Link } from '../ui/Link'
 import { LinkButton } from '../ui/LinkButton'
 import { flatButtonStyleSelected } from './baseButtonStyle'
-import { bgLight, brandColor } from './colors'
+import { bgLight } from './colors'
+import { SmallButton } from './SmallButton'
+import { useUserReview } from './useUserReview'
 
-// @ts-ignore
+export const RestaurantAddCommentButton = ({
+  restaurantId,
+  ...props
+}: SmallButtonProps & { restaurantId?: string }) => {
+  const review = useUserReview(restaurantId)
+  return (
+    <SmallButton
+      pressStyle={{
+        opacity: 0.6,
+      }}
+      {...props}
+    >
+      <MessageSquare
+        size={16}
+        color="#000"
+        style={{
+          margin: -4,
+          marginRight: 5,
+        }}
+      />
+      {review?.text ? 'Edit review' : 'Add review'}
+    </SmallButton>
+  )
+}
 
 export const RestaurantAddComment = memo(
-  ({ restaurantId }: { restaurantId: string }) => {
+  graphql(({ restaurantId }: { restaurantId: string }) => {
     const om = useOvermind()
     const user = om.state.user.user
-    const review = om.state.user.allReviews[restaurantId]
-    const [isFocused, setIsFocused] = useState(false)
+    const review = useUserReview(restaurantId)
     const [reviewText, setReviewText] = useState('')
     const [isSaved, setIsSaved] = useState(true)
     const lineHeight = 22
     const [height, setHeight] = useState(lineHeight)
-    // const [insertReview, { data, fetchState, errors }] = useReviewMutation()
-    // console.log('addcomment', data, fetchState, errors)
 
-    const updateReview = (text: string) => {
-      setReviewText(text)
-    }
-
-    useLayoutEffect(() => {
-      if (review?.text) {
-        updateReview(review.text)
+    useEffect(() => {
+      if (!isUndefined(review?.text)) {
+        setReviewText(review?.text)
       }
-    }, [review])
+    }, [review?.text])
 
     if (!user) {
       console.warn('no user')
@@ -64,7 +81,7 @@ export const RestaurantAddComment = memo(
               if (isSaved) {
                 setIsSaved(false)
               }
-              updateReview(text)
+              setReviewText(text)
             }}
             multiline
             placeholder="Be sure to..."
@@ -74,10 +91,8 @@ export const RestaurantAddComment = memo(
               flex: 1,
               padding: 10,
             }}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
           />
-          {!!(isFocused || !isSaved) && (
+          {!isSaved && (
             <LinkButton
               {...flatButtonStyleSelected}
               position="absolute"
@@ -85,6 +100,21 @@ export const RestaurantAddComment = memo(
               onPress={async () => {
                 Toast.show('Saving...')
                 console.log('inserting', review)
+
+                if (review) {
+                  review.text = reviewText
+                } else {
+                  mutation.insert_review({
+                    objects: [
+                      {
+                        restaurant_id: restaurantId,
+                        rating: 0,
+                        user_id: user.id,
+                        text: reviewText,
+                      },
+                    ],
+                  })
+                }
                 // insertReview({
                 //   review: {
                 //     text: reviewText,
@@ -104,7 +134,7 @@ export const RestaurantAddComment = memo(
         </HStack>
       </CommentBubble>
     )
-  }
+  })
 )
 
 export const CommentBubble = ({
@@ -112,7 +142,7 @@ export const CommentBubble = ({
   children,
   ...rest
 }: StackProps & {
-  user: Partial<User>
+  user: Partial<UserModel>
   children: any
 }) => {
   return (
@@ -131,7 +161,7 @@ export const CommentBubble = ({
         marginBottom={10}
       >
         <Circle size={18} marginBottom={-2}>
-          <Image source={avatar} style={{ width: 18, height: 18 }} />
+          <User color="#000" size={12} />
         </Circle>
         <Text selectable color="#999" fontSize={13}>
           <Link

@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { Text, Toast, VStack, useForceUpdate } from '@dish/ui'
+import { Text, Toast, VStack, prevent, useForceUpdate } from '@dish/ui'
 import React, { memo, useState } from 'react'
 import { Star } from 'react-feather'
 
@@ -42,7 +42,10 @@ export const RestaurantFavoriteStar = memo(
         <LinkButton
           hoverStyle={{ opacity: 0.5 }}
           pressStyle={{ opacity: 0.2 }}
-          onPress={() => setRating(isStarred ? 0 : 1)}
+          onPress={(e) => {
+            prevent(e)
+            setRating(isStarred ? 0 : 1)
+          }}
         >
           <VStack
             marginTop={2}

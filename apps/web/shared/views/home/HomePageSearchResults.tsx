@@ -235,6 +235,13 @@ const HomeSearchResultsViewContent = memo(
               <LoadingItems />
             </VStack>
           )}
+          {!isLoading && !isLoadingMore && (
+            <VStack alignItems="center" justifyContent="center" minHeight={300}>
+              <Text fontSize={12} opacity={0.5}>
+                End of results (for now)
+              </Text>
+            </VStack>
+          )}
         </VStack>
       </>
     )
