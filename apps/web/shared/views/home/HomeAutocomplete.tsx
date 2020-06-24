@@ -17,6 +17,7 @@ import { LinkButton } from '../ui/LinkButton'
 import { LinkButtonProps } from '../ui/LinkProps'
 import { SmallCircleButton } from './CloseButton'
 import { setAvoidNextAutocompleteShowOnFocus } from './HomeSearchInput'
+import { useMediaQueryIsSmall } from './HomeViewDrawer'
 
 export const useShowAutocomplete = () => {
   const om = useOvermind()
@@ -27,6 +28,7 @@ export const useShowAutocomplete = () => {
 }
 
 export default memo(function HomeAutoComplete() {
+  const isSmall = useMediaQueryIsSmall()
   const om = useOvermind()
   const {
     showAutocomplete,
@@ -61,6 +63,138 @@ export default memo(function HomeAutoComplete() {
     }
   }, [isShowing])
 
+  const resultsElements = autocompleteResultsActive.map((tag, index) => {
+    const restaurantLinkProps: LinkButtonProps | null =
+      tag.type == 'restaurant'
+        ? {
+            tag: null,
+            name: 'restaurant',
+            params: {
+              slug: tag.tagId,
+            },
+          }
+        : null
+
+    const plusButtonEl =
+      tag.type === 'dish' && index !== 0 && om.state.user.isLoggedIn ? (
+        <AutocompleteAddButton />
+      ) : null
+
+    const isActive = autocompleteIndex === index
+
+    const iconElement = (
+      <VStack marginVertical={-2}>
+        {tag.icon?.indexOf('http') === 0 ? (
+          <img
+            src={tag.icon}
+            style={{
+              width: 26,
+              height: 26,
+              borderRadius: 100,
+            }}
+          />
+        ) : tag.icon ? (
+          <Circle size={26} backgroundColor="rgba(150,150,150,0.1)">
+            <Text>{tag.icon} </Text>
+          </Circle>
+        ) : null}
+      </VStack>
+    )
+
+    return (
+      <React.Fragment key={`${tag.tagId}${index}`}>
+        <LinkButton
+          className="no-transition"
+          onPress={() => {
+            setAvoidNextAutocompleteShowOnFocus()
+            om.actions.home.setShowAutocomplete(false)
+            om.actions.home.setAutocompleteIndex(index)
+
+            if (showLocation) {
+              om.actions.home.setLocation(tag.name)
+            } else {
+              console.log('not location should be handled by tag={}')
+            }
+          }}
+          {...(!showLocation && {
+            tag,
+          })}
+          navigateAfterPress
+          alignItems="center"
+          justifyContent="center"
+          lineHeight={24}
+          paddingVertical={5}
+          paddingHorizontal={10}
+          borderRadius={isSmall ? 0 : 100}
+          backgroundColor={'transparent'}
+          fontSize={14}
+          hoverStyle={{
+            backgroundColor: 'rgba(100,100,100,0.65)',
+          }}
+          {...(isActive && {
+            backgroundColor: '#fff',
+          })}
+          {...(isSmall && {
+            width: '100%',
+          })}
+          {...(!isSmall && {
+            maxWidth: '17vw',
+            textAlign: 'left',
+          })}
+          {...restaurantLinkProps}
+        >
+          <HStack>
+            {iconElement}
+            {!!iconElement && <Spacer size={6} />}
+            <Text ellipse color={isActive ? '#000' : '#fff'}>
+              {tag.name} {plusButtonEl}
+            </Text>
+          </HStack>
+        </LinkButton>
+        <Spacer />
+      </React.Fragment>
+    )
+  })
+
+  const contentElements = isSmall ? (
+    <VStack
+      backgroundColor="rgba(0,0,0,0.9)"
+      borderRadius={isSmall ? 0 : 100}
+      shadowColor="rgba(0,0,0,0.28)"
+      shadowRadius={18}
+      maxHeight="70vh"
+      width="100%"
+    >
+      <ScrollView>
+        <VStack paddingVertical={10}>{resultsElements}</VStack>
+      </ScrollView>
+    </VStack>
+  ) : (
+    <HStack
+      backgroundColor="rgba(0,0,0,0.95)"
+      borderRadius={100}
+      height={49}
+      paddingBottom={1} // looks better 1px up
+      shadowColor="rgba(0,0,0,0.28)"
+      shadowRadius={18}
+      overflow="hidden"
+      shadowOffset={{ width: 0, height: 3 }}
+      position="relative"
+    >
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <HStack
+          height="100%"
+          paddingLeft={100}
+          flex={1}
+          alignItems="center"
+          paddingHorizontal={10}
+        >
+          {resultsElements}
+        </HStack>
+      </ScrollView>
+    </HStack>
+  )
+
   return (
     <ZStack
       className="ease-in-out-faster"
@@ -75,116 +209,7 @@ export default memo(function HomeAutoComplete() {
       transform={isShowing ? [] : [{ translateY: -10 }]}
       disabled={!isShowing}
     >
-      <HStack
-        backgroundColor="rgba(0,0,0,0.95)"
-        borderRadius={100}
-        height={49}
-        paddingBottom={1} // looks better 1px up
-        shadowColor="rgba(0,0,0,0.28)"
-        shadowRadius={18}
-        overflow="hidden"
-        shadowOffset={{ width: 0, height: 3 }}
-        position="relative"
-      >
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <HStack
-            height="100%"
-            paddingLeft={100}
-            flex={1}
-            alignItems="center"
-            paddingHorizontal={10}
-          >
-            {autocompleteResultsActive.map((tag, index) => {
-              const restaurantLinkProps: LinkButtonProps | null =
-                tag.type == 'restaurant'
-                  ? {
-                      tag: null,
-                      name: 'restaurant',
-                      params: {
-                        slug: tag.tagId,
-                      },
-                    }
-                  : null
-
-              const plusButtonEl =
-                tag.type === 'dish' &&
-                index !== 0 &&
-                om.state.user.isLoggedIn ? (
-                  <AutocompleteAddButton />
-                ) : null
-
-              const isActive = autocompleteIndex === index
-
-              const iconElement = (
-                <VStack marginVertical={-2}>
-                  {tag.icon?.indexOf('http') === 0 ? (
-                    <img
-                      src={tag.icon}
-                      style={{
-                        width: 26,
-                        height: 26,
-                        borderRadius: 100,
-                      }}
-                    />
-                  ) : tag.icon ? (
-                    <Circle size={26} backgroundColor="rgba(150,150,150,0.1)">
-                      <Text>{tag.icon} </Text>
-                    </Circle>
-                  ) : null}
-                </VStack>
-              )
-
-              return (
-                <React.Fragment key={`${tag.tagId}${index}`}>
-                  <LinkButton
-                    className="no-transition"
-                    onPress={() => {
-                      setAvoidNextAutocompleteShowOnFocus()
-                      om.actions.home.setShowAutocomplete(false)
-                      om.actions.home.setAutocompleteIndex(index)
-
-                      if (showLocation) {
-                        om.actions.home.setLocation(tag.name)
-                      } else {
-                        console.log('not location should be handled by tag={}')
-                      }
-                    }}
-                    {...(!showLocation && {
-                      tag,
-                    })}
-                    navigateAfterPress
-                    alignItems="center"
-                    justifyContent="center"
-                    lineHeight={24}
-                    paddingVertical={5}
-                    paddingHorizontal={10}
-                    borderRadius={100}
-                    backgroundColor={'transparent'}
-                    fontSize={14}
-                    maxWidth="17vw"
-                    hoverStyle={{
-                      backgroundColor: 'rgba(100,100,100,0.65)',
-                    }}
-                    {...(isActive && {
-                      backgroundColor: '#fff',
-                    })}
-                    {...restaurantLinkProps}
-                  >
-                    <HStack>
-                      {iconElement}
-                      {!!iconElement && <Spacer size={6} />}
-                      <Text ellipse color={isActive ? '#000' : '#fff'}>
-                        {tag.name} {plusButtonEl}
-                      </Text>
-                    </HStack>
-                  </LinkButton>
-                  <Spacer />
-                </React.Fragment>
-              )
-            })}
-          </HStack>
-        </ScrollView>
-      </HStack>
+      {contentElements}
     </ZStack>
   )
 })

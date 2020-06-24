@@ -82,11 +82,23 @@ export default memo(function HomeSearchBar() {
           shadowColor="rgba(0,0,0,0.065)"
           shadowRadius={3}
           shadowOffset={{ height: 3, width: 0 }}
-          overflow="hidden"
           alignItems="center"
           justifyContent="center"
         >
-          <DishLogoButton />
+          <VStack
+            {...(isSmall && {
+              position: 'absolute',
+              top: -20,
+              left: -10,
+              transform: [{ scale: 0.65 }],
+              backgroundColor: '#fff',
+              paddingVertical: 3,
+              paddingHorizontal: 5,
+              borderRadius: 100,
+            })}
+          >
+            <DishLogoButton />
+          </VStack>
 
           <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
             <HomeSearchBarHomeButton />

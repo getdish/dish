@@ -1,5 +1,3 @@
-import { versions } from 'process'
-
 import { Restaurant, TopCuisine } from '@dish/graph'
 import {
   HStack,
@@ -12,7 +10,7 @@ import {
   VStack,
   ZStack,
 } from '@dish/ui'
-import _, { clamp, size } from 'lodash'
+import _, { clamp } from 'lodash'
 import {
   default as React,
   memo,
@@ -21,16 +19,8 @@ import {
   useMemo,
   useState,
 } from 'react'
-import {
-  ChevronDown,
-  ChevronRight,
-  ChevronUp,
-  Minus,
-  Plus,
-} from 'react-feather'
-import { ViewStyle } from 'react-native'
+import { ChevronDown, ChevronRight, ChevronUp, Minus } from 'react-feather'
 
-import { HomeStateItemHome } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../NotFoundPage'
@@ -42,6 +32,7 @@ import { DishView } from './DishView'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
+import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import RestaurantRatingView from './RestaurantRatingView'
 import { Squircle } from './Squircle'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
@@ -67,6 +58,7 @@ export default memo(function HomePageTopDishesContainer() {
 })
 
 const HomePageTopDishes = memo(() => {
+  const isSmall = useMediaQueryIsSmall()
   const om = useOvermind()
   const state = om.state.home.lastHomeState
   const { activeTagIds } = state
@@ -96,36 +88,39 @@ const HomePageTopDishes = memo(() => {
                   paddingHorizontal={20}
                   spacing={20}
                 >
-                  <ZStack
-                    position="absolute"
-                    top={0}
-                    left="0%"
-                    width="36%"
-                    zIndex={1000}
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <LinkButton
-                      paddingVertical={5}
-                      paddingHorizontal={6}
-                      fontSize={15}
-                      shadowColor={'rgba(0,0,0,0.1)'}
-                      shadowRadius={8}
-                      shadowOffset={{ height: 2, width: 0 }}
-                      backgroundColor="#fff"
-                      borderRadius={8}
-                      fontWeight="600"
-                      transform={[{ rotate: '-4deg' }]}
+                  {!isSmall && (
+                    <ZStack
+                      position="absolute"
+                      top={0}
+                      left="0%"
+                      width="36%"
+                      zIndex={1000}
+                      justifyContent="center"
+                      alignItems="center"
                     >
-                      {tagsDescription}
-                    </LinkButton>
-                  </ZStack>
+                      <LinkButton
+                        paddingVertical={5}
+                        paddingHorizontal={6}
+                        fontSize={15}
+                        shadowColor={'rgba(0,0,0,0.1)'}
+                        shadowRadius={8}
+                        shadowOffset={{ height: 2, width: 0 }}
+                        backgroundColor="#fff"
+                        borderRadius={8}
+                        fontWeight="600"
+                        transform={[{ rotate: '-4deg' }]}
+                      >
+                        {tagsDescription}
+                      </LinkButton>
+                    </ZStack>
+                  )}
                   <HorizontalLine />
                   <HomeLenseBar size="lg" activeTagIds={activeTagIds} />
                   <HorizontalLine />
                 </HStack>
                 <Spacer size={40} />
                 <HomeFilterBar activeTagIds={activeTagIds} />
+                {isSmall && <Spacer size={40} />}
               </VStack>
 
               <HomeTopDishesContent />
@@ -179,8 +174,8 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
         {/* <RankingView rank={rank} marginLeft={-36} /> */}
         <LinkButton
           {...flatButtonStyle}
-          paddingVertical={4}
-          marginBottom={-22}
+          // paddingVertical={4}
+          // marginBottom={-26}
           style={{
             transform: [{ rotate: '-2deg' }],
           }}
@@ -189,7 +184,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
             name: country.country,
           }}
         >
-          <Text ellipse fontSize={18} fontWeight={'700'}>
+          <Text ellipse fontSize={18} marginVertical={-20} fontWeight={'700'}>
             {country.country} {country.icon}
           </Text>
         </LinkButton>

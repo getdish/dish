@@ -1,3 +1,9 @@
+Tony's Pizza - Seafood Linguini with White W(h)ine Sauce
+
+- know when to go?
+- do they let you sit at the bar?
+- where to park?
+
 - babel plugin to make #{} #[] work with immer
 
 # June
