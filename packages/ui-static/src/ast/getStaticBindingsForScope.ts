@@ -28,7 +28,8 @@ export function getStaticBindingsForScope(
   scope: any,
   whitelist: string[] = [],
   sourceFileName: string,
-  bindingCache: Record<string, string | null>
+  bindingCache: Record<string, string | null>,
+  shouldPrintDebug: boolean
 ): Record<string, any> {
   const bindings: Record<string, Binding> = scope.getAllBindings()
   const ret: Record<string, any> = {}
@@ -59,7 +60,7 @@ export function getStaticBindingsForScope(
         moduleName = path.resolve(sourceDir, moduleName)
       }
 
-      if (whitelist.indexOf(moduleName) > -1) {
+      if (whitelist.includes(moduleName)) {
         const src = require(moduleName)
         if (sourceModule.destructured) {
           if (sourceModule.imported) {

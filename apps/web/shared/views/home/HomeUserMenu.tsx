@@ -70,7 +70,7 @@ export const HomeUserMenu = memo(() => {
       <LinkButton
         flexDirection="row"
         pointerEvents="auto"
-        padding={15}
+        padding={12}
         onPress={() =>
           om.actions.home.setShowUserMenu(!om.state.home.showUserMenu)
         }
