@@ -55,7 +55,7 @@ export const RestaurantTopReviews = memo(
           </SmallButton>
           {afterTopCommentButton ? (
             <>
-              <Spacer />
+              <Spacer size="sm" />
               {afterTopCommentButton}
             </>
           ) : null}

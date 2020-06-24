@@ -52,7 +52,7 @@ export function HomeViewDrawer(props: { children: any }) {
       bottom={0}
       zIndex={10}
       width={isSmall ? '100%' : drawerWidth}
-      shadowColor="rgba(0,0,0,0.25)"
+      shadowColor="rgba(0,0,0,0.18)"
       shadowRadius={44}
       backgroundColor="#fff"
       // borderRightWidth={1}

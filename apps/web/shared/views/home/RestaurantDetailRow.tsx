@@ -55,36 +55,38 @@ export const RestaurantDetailRow = memo(
       const contentEl = ({ color, content }: Item) => (
         <Text
           ellipse
-          fontSize={13}
+          fontSize={isSm ? 12 : 13}
           textAlign={centered ? 'center' : 'left'}
           color={isSm ? color : 'inherit'}
         >
-          {content}
+          {content !== '' ? content : isSm ? '' : '~'}
         </Text>
       )
 
       return (
         <HStack alignItems="center" spacing={spaceSize} {...rest}>
-          {rows.map((row, index) => (
-            <HStack
-              {...(!isSm && { width: '32%' })}
-              key={`${index}${row.title}`}
-            >
-              <VStack
-                {...(isSm && { flexDirection: 'row', alignItems: 'center' })}
-                {...(!isSm && { flex: 10 })}
+          {rows
+            .filter((x) => !isSm || x.content !== '')
+            .map((row, index) => (
+              <HStack
+                {...(!isSm && { width: '32%' })}
+                key={`${index}${row.title}`}
               >
-                {!isSm && titleEl(row)}
-                {contentEl(row)}
-              </VStack>
-              {after}
-              {isSm && index !== rows.length - 1 && (
-                <>
-                  <Divider vertical height={25} />
-                </>
-              )}
-            </HStack>
-          ))}
+                <VStack
+                  {...(isSm && { flexDirection: 'row', alignItems: 'center' })}
+                  {...(!isSm && { flex: 10 })}
+                >
+                  {!isSm && titleEl(row)}
+                  {contentEl(row)}
+                </VStack>
+                {after}
+                {isSm && index !== rows.length - 1 && (
+                  <>
+                    <Divider vertical height={25} />
+                  </>
+                )}
+              </HStack>
+            ))}
         </HStack>
       )
     }
@@ -109,10 +111,10 @@ function openingHours(restaurant: RestaurantQuery) {
     if (tomorrow == 7) {
       tomorrow = 0
     }
-    const opens_at = (restaurant.hours[tomorrow]?.hoursInfo.hours[0] ?? '~')
+    const opens_at = (restaurant.hours[tomorrow]?.hoursInfo.hours[0] ?? '')
       .replace(/"/g, '')
       .split('-')[0]
-    const closes_at = (restaurant.hours[day]?.hoursInfo.hours[0] ?? '~')
+    const closes_at = (restaurant.hours[day]?.hoursInfo.hours[0] ?? '')
       .replace(/"/g, '')
       .split('-')[1]
     next_time = restaurant.is_open_now ? closes_at : opens_at
@@ -123,7 +125,7 @@ function openingHours(restaurant: RestaurantQuery) {
 function priceRange(restaurant: RestaurantQuery) {
   let label = 'Price'
   let color = 'grey'
-  let price_range = 'unknown'
+  let price_range = ''
   if (restaurant.price_range != null) {
     const [low, high] = `${restaurant.price_range}`
       .replace(/\$/g, '')
@@ -150,27 +152,23 @@ function priceRange(restaurant: RestaurantQuery) {
 }
 
 function deliveryLinks(sources: Sources) {
-  const empty = null
+  const empty = ''
   if (!sources) return empty
   const delivery_sources = ['ubereats']
-  let count = 0
   const delivers = Object.keys(sources)
     .map((source, index) => {
       if (!delivery_sources.includes(source)) return
-      count++
       const name = source.charAt(0).toUpperCase() + source.slice(1)
       return (
-        <Text key={index}>
-          <Text
-            color="blue"
-            onPress={() => Linking.openURL(sources[source].url)}
-          >
-            🔗 {name}
-          </Text>
-          {count > 1 && <Text>, </Text>}
+        <Text
+          key={index}
+          color="blue"
+          onPress={() => Linking.openURL(sources[source].url)}
+        >
+          🔗 {name}
         </Text>
       )
     })
-    .filter((i) => i != null)
+    .filter(Boolean)
   return delivers.length > 0 ? delivers : empty
 }

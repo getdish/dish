@@ -27,7 +27,7 @@ export const RestaurantLenseVote = memo(() => {
         paddingHorizontal={5}
       >
         <Text color="#fff" fontWeight="500" fontSize={12}>
-          <Plus size={16} color="#888" />
+          <Plus size={14} color="#ccc" />
         </Text>
       </LinkButton>
     </HoverablePopover>

@@ -18,8 +18,6 @@ export function Link<
   Params = RoutesTable[Name]['params']
 >(allProps: LinkProps<Name, Params>) {
   const {
-    name,
-    params,
     inline,
     fontSize,
     fontWeight,
@@ -42,15 +40,10 @@ export function Link<
     restProps as any
   )
   const om = useOvermindStatic()
-  const item = {
+  const navItem: NavigateItem = {
     name: linkProps['name'],
     params: linkProps['params'],
-    replace: linkProps.replace,
-  }
-  const navItem: NavigateItem = {
-    name: name ?? item?.name,
-    params: params ?? item?.params,
-    replace: !!(replace ?? item?.replace),
+    replace: linkProps['replace'],
   }
   const elementName = tagName ?? 'a'
   const handleClick = async (e) => {

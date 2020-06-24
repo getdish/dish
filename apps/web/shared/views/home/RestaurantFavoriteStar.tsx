@@ -42,17 +42,12 @@ export const RestaurantFavoriteStar = memo(
         <LinkButton
           hoverStyle={{ opacity: 0.5 }}
           pressStyle={{ opacity: 0.2 }}
-          onPress={(e) => {
+          onPressOut={(e) => {
             prevent(e)
             setRating(isStarred ? 0 : 1)
           }}
         >
-          <VStack
-            marginTop={2}
-            width={sizePx}
-            height={sizePx}
-            overflow="hidden"
-          >
+          <VStack width={sizePx} height={sizePx} overflow="hidden">
             {isStarred && (
               <Text
                 fontSize={sizePx * 0.88}

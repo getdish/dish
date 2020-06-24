@@ -3,7 +3,9 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 
 export const Squircle = ({
-  size,
+  width = 100,
+  height = 100,
+  borderRadius = 10,
   isHovered,
   children,
   ...rest
@@ -11,16 +13,12 @@ export const Squircle = ({
   isHovered?: boolean
   size: number
 }) => {
-  const borderRadius = 10
   return (
     <>
       {/* frame (shadow) */}
       <VStack
-        width={size * 0.8}
-        height={size}
-        // shadowColor="rgba(0,0,0,0.032)"
-        // shadowRadius={20}
-        // shadowOffset={{ width: 0, height: 20 }}
+        width={width}
+        height={height}
         borderRadius={borderRadius}
         {...rest}
       >

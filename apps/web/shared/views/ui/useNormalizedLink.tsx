@@ -77,6 +77,7 @@ const getNormalizedLink = memoize(
         state,
         tags,
         disabledIfActive: props.disabledIfActive,
+        replace: props.replace,
       })
       return {
         onPress: props.onPress,
