@@ -141,3 +141,18 @@ resource "kubernetes_secret" "docker-config-json" {
 
   type = "kubernetes.io/dockerconfigjson"
 }
+
+resource "kubernetes_persistent_volume_claim" "image-proxy" {
+  metadata {
+    name = "image-proxy-pvc"
+  }
+  spec {
+    access_modes = ["ReadWriteOnce"]
+    resources {
+      requests = {
+        storage = "5Gi"
+      }
+    }
+    storage_class_name = "do-block-storage"
+  }
+}

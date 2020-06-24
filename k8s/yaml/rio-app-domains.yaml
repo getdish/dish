@@ -42,3 +42,12 @@ spec:
   targetApp: web
   targetNamespace: default
 ---
+
+apiVersion: admin.rio.cattle.io/v1
+kind: PublicDomain
+metadata:
+  name: images.rio.dishapp.com
+spec:
+  targetApp: image-proxy
+  targetNamespace: default
+---

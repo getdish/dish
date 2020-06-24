@@ -117,6 +117,17 @@ services:
       - DO_SPACES_API_ID=${TF_VAR_DO_SPACES_ID}
       - DO_SPACES_API_SECRET=${TF_VAR_DO_SPACES_SECRET}
       - DB_PASSWORD=${TF_VAR_POSTGRES_PASSWORD}
+  image-proxy:
+    app: image-proxy
+    image: willnorris/imageproxy@sha256:9cc15ad4b0f61e371a982c5fa0520cd6f6cebba317bb1a9188ac9169a826fc35
+    ports:
+      - 8080/http
+    volumes:
+      name: image-proxy-pvc
+      path: /image-cache
+    args:
+      - -cache
+      - /image-cache
 {{- end}}
 
 template:

@@ -4,6 +4,7 @@ import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'
 import { Image } from 'react-native'
 
+import { IMAGE_PROXY_DOMAIN } from '../../constants'
 import { NavigableTag } from '../../state/Tag'
 import { LinkButton } from '../ui/LinkButton'
 import { LinkButtonProps } from '../ui/LinkProps'
@@ -44,6 +45,7 @@ export const DishView = memo(
           }),
     }
 
+    const image_url = IMAGE_PROXY_DOMAIN + '/x180/' + dish.image
     return (
       <LinkButton
         className="ease-in-out-fast"
@@ -81,7 +83,7 @@ export const DishView = memo(
         >
           {!!dish.image && (
             <Image
-              source={{ uri: dish.image }}
+              source={{ uri: image_url }}
               style={{
                 width: '100%',
                 height: '100%',
