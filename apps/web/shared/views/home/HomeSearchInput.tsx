@@ -3,6 +3,7 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { StyleSheet, TextInput } from 'react-native'
 
 import { fullyIdle } from '../../../../../packages/async/src'
+import { isWorker } from '../../constants'
 import {
   inputCaretPosition,
   inputClearSelection,
@@ -32,6 +33,7 @@ export const HomeSearchInput = memo(() => {
   const [search, setSearch] = useState('')
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
   const input = inputGetNode(inputRef.current)
+  const { showAutocomplete } = om.state.home
 
   useOnMount(() => {
     setSearch(om.state.home.currentStateSearchQuery)
@@ -52,21 +54,25 @@ export const HomeSearchInput = memo(() => {
     )
   }, [])
 
+  // disabled because it steals focus from autocomplete rn
+  // focus/blur search on show autocomplete
   // useEffect(() => {
   //   if (!input) return
   //   const isFocused = document.activeElement === input
-  //   if (isFocused) return // ONE way sync
-  //   if (showAutocomplete !== isFocused) {
-  //     const target = showAutocomplete == 'location' ? locationInput : input
-  //     if (!isWorker) {
-  //       if (showAutocomplete) {
-  //         target?.focus()
-  //       } else {
-  //         target?.blur()
-  //       }
+  //   // on focus change
+  //   if (isFocused) return
+  //   // when changed
+  //   if (showAutocomplete === isFocused) return
+  //   const targetInput =
+  //     showAutocomplete == 'location' ? inputRef.current : input
+  //   if (!isWorker) {
+  //     if (showAutocomplete) {
+  //       targetInput?.focus()
+  //     } else {
+  //       // targetInput?.blur()
   //     }
   //   }
-  // }, [input, locationInput, showAutocomplete])
+  // }, [input, inputRef, showAutocomplete])
 
   useEffect(() => {
     if (!input) return

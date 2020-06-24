@@ -72,7 +72,7 @@ export const RestaurantDetailRow = memo(
             >
               <VStack
                 {...(isSm && { flexDirection: 'row', alignItems: 'center' })}
-                flex={10}
+                {...(!isSm && { flex: 10 })}
               >
                 {!isSm && titleEl(row)}
                 {contentEl(row)}
@@ -80,9 +80,7 @@ export const RestaurantDetailRow = memo(
               {after}
               {isSm && index !== rows.length - 1 && (
                 <>
-                  <Spacer flex={0.5} />
                   <Divider vertical height={25} />
-                  <Spacer flex={0.5} />
                 </>
               )}
             </HStack>
@@ -136,15 +134,15 @@ function priceRange(restaurant: RestaurantQuery) {
     switch (true) {
       case average <= 10:
         label = 'Cheap'
-        color = 'green'
+        color = '#000'
         break
       case average > 10 && average <= 30:
         label = 'Average'
-        color = 'orange'
+        color = '#888'
         break
       case average > 30:
         label = 'Expensive'
-        color = 'red'
+        color = '#ccc'
         break
     }
   }
@@ -152,7 +150,7 @@ function priceRange(restaurant: RestaurantQuery) {
 }
 
 function deliveryLinks(sources: Sources) {
-  const empty = <Text>~</Text>
+  const empty = null
   if (!sources) return empty
   const delivery_sources = ['ubereats']
   let count = 0
