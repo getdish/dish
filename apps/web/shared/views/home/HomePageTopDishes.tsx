@@ -67,6 +67,8 @@ const HomePageTopDishes = memo(() => {
     return <NotFoundPage title="Home not found" />
   }
 
+  console.warn('HomePageTopDishes.render')
+
   const tagsDescription =
     getActiveTags(om.state.home, state)
       .find((x) => x.type === 'lense')

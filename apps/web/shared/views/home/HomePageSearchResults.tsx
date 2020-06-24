@@ -38,8 +38,6 @@ import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
 import { StackViewCloseButton } from './StackViewCloseButton'
 
-// @ts-ignore
-
 export const avatar = require('../../assets/peach.jpg').default
 
 export default memo(function HomePageSearchResults(props: {
@@ -118,21 +116,21 @@ export default memo(function HomePageSearchResults(props: {
         {/* <MyListButton isEditingUserList={isEditingUserList} /> */}
       </HStack>
 
-      <HomeScrollView>
-        <VStack height={isSmall ? 58 : titleHeight - searchBarHeight} />
-        {/* CONTENT */}
-        <HomeSearchResultsViewContent state={{ ...state }} />
-      </HomeScrollView>
+      <HomeSearchResultsViewContent
+        paddingTop={isSmall ? 58 : titleHeight - searchBarHeight}
+      />
     </VStack>
   )
 })
 
 const HomeSearchResultsViewContent = memo(
-  ({ state }: { state: HomeStateItemSearch }) => {
+  ({ paddingTop }: { paddingTop: number }) => {
     const om = useOvermind()
+    const state = om.state.home.lastSearchState
     const allResults = state.results?.results?.restaurants ?? []
     const [chunk, setChunk] = useState(1)
     const [loadMore, setLoadMore] = useState(0)
+    const [nearBottomAt, setNearBottomAt] = useState(0)
     const perChunk = [0, 3, 3, 6, 12, 12]
     const totalToShow = chunk * perChunk[chunk]
     const hasMoreToLoad = allResults.length > totalToShow
@@ -142,6 +140,20 @@ const HomeSearchResultsViewContent = memo(
       (hasMoreToLoad && loadMore === 0) ||
       !state.results?.results ||
       state.results.status === 'loading'
+
+    const handleScrollToBottom = useCallback(() => {
+      console.warn('did scroll to bottom, TODO')
+      setNearBottomAt(Date.now())
+    }, [])
+
+    const contentWrap = (children: any) => {
+      return (
+        <HomeScrollView onScrollNearBottom={handleScrollToBottom}>
+          <VStack height={paddingTop} />
+          {children}
+        </HomeScrollView>
+      )
+    }
 
     const results = useMemo(() => {
       const cur = allResults.slice(0, totalToShow)
@@ -179,9 +191,11 @@ const HomeSearchResultsViewContent = memo(
           async function isReadyToLoadMore() {
             const isOnSearch = (s: OmState) =>
               s.home.currentStateType === 'search'
-            const isNotScrolling = (s: OmState) => s.home.isScrolling === false
-            const isReadyToLoad = (s: OmState) =>
-              isOnSearch(s) && isNotScrolling(s)
+
+            const isReadyToLoad = (s: OmState) => {
+              return isOnSearch(s) && s.home.isScrolling === false
+            }
+
             if (!isReadyToLoad(omStatic.state)) {
               await new Promise((res) => {
                 const dispose = om.reaction(
@@ -202,7 +216,7 @@ const HomeSearchResultsViewContent = memo(
     }, [loadMore])
 
     if (isLoading) {
-      return (
+      return contentWrap(
         <VStack>
           <LoadingItems />
           <VStack display="none">{results}</VStack>
@@ -211,7 +225,7 @@ const HomeSearchResultsViewContent = memo(
     }
 
     if (!results.length) {
-      return (
+      return contentWrap(
         <VStack
           height="100vh"
           alignItems="center"
@@ -226,7 +240,7 @@ const HomeSearchResultsViewContent = memo(
 
     const isLoadingMore = chunk > 1 && results.length < allResults.length
 
-    return (
+    return contentWrap(
       <>
         <VStack paddingBottom={20} spacing={6}>
           {results}

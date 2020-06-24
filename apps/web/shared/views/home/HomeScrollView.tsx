@@ -10,12 +10,25 @@ import { useMediaQueryIsSmall } from './HomeViewDrawer'
 export const HomeScrollView = ({
   children,
   paddingTop,
+  onScrollNearBottom,
   ...props
-}: ScrollViewProps & { children: any; paddingTop?: any }) => {
+}: ScrollViewProps & {
+  children: any
+  paddingTop?: any
+  onScrollNearBottom?: Function
+}) => {
   const om = useOvermind()
   const isSmall = useMediaQueryIsSmall()
   const tm = useRef<any>(0)
-  const setIsScrolling = () => {
+  const setIsScrolling = (e) => {
+    if (
+      e.nativeEvent.contentOffset.y >
+      e.nativeEvent.contentSize.height * 0.66
+    ) {
+      console.warn('scroll near bottom!')
+      onScrollNearBottom?.()
+    }
+
     if (!om.state.home.isScrolling) {
       om.actions.home.setIsScrolling(true)
     }

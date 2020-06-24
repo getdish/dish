@@ -663,12 +663,8 @@ export function extractStyles(
           node.name.name = domNode
         }
 
-        // deopt fully
-        if (
-          inlinePropCount &&
-          staticTernaries.length &&
-          !isSingleSimpleSpread
-        ) {
+        // if inlining + spreading + ternary, deopt fully
+        if (inlinePropCount && staticTernaries.length && lastSpreadIndex > -1) {
           node.attributes = ogAttributes
           return
         }

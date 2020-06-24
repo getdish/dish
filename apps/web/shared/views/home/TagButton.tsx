@@ -191,10 +191,9 @@ export const TagButton = memo(
                 hoverStyle={{
                   backgroundColor: '#eee',
                 }}
-                onPress={(e) => {
-                  alert('SHOULD VOTE')
-                  e.stopPropagation()
-                  e.preventDefault()
+                onPressOut={(e) => {
+                  prevent(e)
+                  console.warn('should vote')
                 }}
               >
                 <ChevronUp size={14 * scale} />

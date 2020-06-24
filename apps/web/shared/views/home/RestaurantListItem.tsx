@@ -132,7 +132,6 @@ const RestaurantListItemContent = memo(
       }
     }, [restaurant.name])
 
-    const contentWidth = '40%'
     const paddingTop = 35
 
     console.log('RestaurantListItemContent.render', props.rank)
@@ -141,16 +140,14 @@ const RestaurantListItemContent = memo(
       <HStack
         alignItems="flex-start"
         justifyContent="flex-start"
-        contain="layout"
+        contain="layout paint"
       >
         <VStack
           paddingHorizontal={pad + 6}
-          width={isSmall ? '80%' : contentWidth}
+          width={isSmall ? '80%' : '100%'}
           minWidth={isSmall ? '50%' : 380}
-          maxWidth={isSmall ? '90vw' : contentWidth}
+          maxWidth={isSmall ? '90vw' : '50%'}
           position="relative"
-          spacing={5}
-          overflow="hidden"
         >
           <VStack flex={1} alignItems="flex-start" width="100%">
             {/* ROW: TITLE */}
@@ -214,17 +211,14 @@ const RestaurantListItemContent = memo(
                   <Spacer size={12} />
 
                   {/* TITLE ROW: Ranking + TAGS */}
-                  <HStack
-                    paddingLeft={leftPad + 18}
-                    spacing={12}
-                    alignItems="center"
-                    marginBottom={-2}
-                  >
+                  <HStack paddingLeft={leftPad + 18} alignItems="center">
                     <RestaurantRatingViewPopover
                       size="sm"
                       restaurantSlug={restaurantSlug}
                     />
+                    <Spacer size={16} />
                     <RestaurantFavoriteStar restaurantId={restaurantId} />
+                    <Spacer size={12} />
                     <RestaurantTagsRow
                       subtle
                       showMore={true}
@@ -256,7 +250,7 @@ const RestaurantListItemContent = memo(
                     />
 
                     {!!restaurant.address && (
-                      <Text fontSize={13} selectable color="#555">
+                      <Text fontSize={12} selectable color="#999">
                         <Link
                           inline
                           target="_blank"

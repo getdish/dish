@@ -45,7 +45,11 @@ export const DishView = memo(
           }),
     }
 
-    const image_url = IMAGE_PROXY_DOMAIN + '/x180/' + dish.image
+    const width = size * 0.8
+    const height = size
+    const quality = size > 160 ? 80 : 60
+    const imageUrl = `${IMAGE_PROXY_DOMAIN}/${width}x${height},q${quality}/${dish.image}`
+
     return (
       <LinkButton
         className="ease-in-out-fast"
@@ -75,7 +79,8 @@ export const DishView = memo(
           )}
         </ZStack>
         <Squircle
-          size={size}
+          width={width}
+          height={height}
           isHovered={isHovered}
           {...(dish.isFallback && {
             opacity: 0.8,
@@ -83,7 +88,7 @@ export const DishView = memo(
         >
           {!!dish.image && (
             <Image
-              source={{ uri: image_url }}
+              source={{ uri: imageUrl }}
               style={{
                 width: '100%',
                 height: '100%',

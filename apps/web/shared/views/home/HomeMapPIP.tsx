@@ -1,3 +1,4 @@
+// debug
 import { RestaurantQuery, graphql, query } from '@dish/graph'
 import { ZStack, useOnMount } from '@dish/ui'
 import _ from 'lodash'
@@ -41,6 +42,8 @@ const HomeMapPIPContent = graphql(() => {
     isScrollEnabled: true,
     showsCompass: mapkit.FeatureVisibility.Hidden,
   })
+
+  console.log('pip', { center, span })
 
   const enabled = state.type === 'restaurant' && span.lat < 0.02
 
@@ -102,8 +105,8 @@ const HomeMapPIPContent = graphql(() => {
       shadowColor="rgba(0,0,0,0.25)"
       shadowRadius={14}
       shadowOffset={{ height: 3, width: 0 }}
-      disabled={!enabled}
       className="ease-in-out-slow"
+      disabled={!enabled}
       {...(!enabled && {
         opacity: 0,
         transform: [{ translateY: 10 }],

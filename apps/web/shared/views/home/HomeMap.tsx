@@ -46,7 +46,6 @@ export const HomeMap = memo(function HomeMap() {
     <>
       <Suspense fallback={null}>
         <HomeMapDataLoader
-          key={state.type === 'search' ? state.results.status : state.type}
           onLoadedRestaurants={setRestaurants}
           onLoadedRestaurantDetail={setRestaurantDetail}
         />
@@ -72,7 +71,13 @@ const HomeMapDataLoader = memo(
       onLoadedRestaurants: Function
     }) => {
       const om = useOvermind()
-      const state = om.state.home.currentState
+
+      let state = om.state.home.currentState
+
+      // for going deeper than search, leave the last search state on map
+      if (!isRestaurantState(state) && !isSearchState(state)) {
+        state = om.state.home.lastSearchState
+      }
 
       // restaurants
       const restaurantDetailInfo = isRestaurantState(state)
@@ -96,9 +101,14 @@ const HomeMapDataLoader = memo(
           }))[0]
       })
 
+      const restaurantsMemo = useMemo(() => {
+        return restaurants
+      }, [JSON.stringify(restaurants.map((x) => x.location))])
+
       useEffect(() => {
-        props.onLoadedRestaurants?.(restaurants)
-      }, [props.onLoadedRestaurants, JSON.stringify(restaurants)])
+        console.warn('ON LOADED MAP RESTS', restaurantsMemo)
+        props.onLoadedRestaurants?.(restaurantsMemo)
+      }, [restaurantsMemo])
 
       // restaurantDetail
       const restaurantDetail = restaurantDetailInfo
@@ -107,7 +117,7 @@ const HomeMapDataLoader = memo(
 
       useEffect(() => {
         props.onLoadedRestaurantDetail?.(restaurantDetail)
-      }, [props.onLoadedRestaurantDetail, JSON.stringify(restaurantDetail)])
+      }, [JSON.stringify(restaurantDetail)])
     }
   )
 )

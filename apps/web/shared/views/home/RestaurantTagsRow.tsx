@@ -40,7 +40,6 @@ export const RestaurantTagsRow = memo(
     if (showMore) {
       tags = tags.slice(0, 2)
     }
-    console.log('tags', tags)
     return (
       <HStack justifyContent="center" flexWrap="wrap">
         {tags.map((tag, index) => {
