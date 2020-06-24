@@ -163,6 +163,9 @@ module.exports = function getWebpackConfig(
                   // },
                   isStaticExtracted && {
                     loader: require.resolve('@dish/ui-static/loader'),
+                    options: {
+                      evaluateImportsWhitelist: ['constants.js', 'colors.js'],
+                    },
                   },
                 ].filter(Boolean),
               },

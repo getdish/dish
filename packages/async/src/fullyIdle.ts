@@ -10,7 +10,7 @@ export async function fullyIdle({
   max?: number
   sleep?: number
 } = {}) {
-  sleep = sleep ?? min / 2
+  sleep = sleep ?? min * 0.33
   let hasIdled = false
   let start = Date.now()
   while (!hasIdled) {

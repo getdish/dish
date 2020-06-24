@@ -151,7 +151,7 @@ export default memo(function HomeAutoComplete() {
             </Text>
           </HStack>
         </LinkButton>
-        <Spacer />
+        <Spacer size={3} />
       </React.Fragment>
     )
   })

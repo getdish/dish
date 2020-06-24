@@ -203,10 +203,14 @@ export function extractStyles(
               // Generate scope object at this level
               const staticNamespace = getStaticBindingsForScope(
                 traversePath.scope,
-                [],
+                userOptions.evaluateImportsWhitelist ?? ['constants.js'],
                 sourceFileName,
-                bindingCache
+                bindingCache,
+                shouldPrintDebug
               )
+              if (shouldPrintDebug) {
+                console.log('staticNamespace', staticNamespace)
+              }
               const evalContext = vm.createContext(staticNamespace)
 
               // called when evaluateAstNode encounters a dynamic-looking prop
@@ -359,6 +363,10 @@ export function extractStyles(
         node.attributes = flattenedAttributes
 
         const styleExpansions: { name: string; value: any }[] = []
+
+        // if (shouldPrintDebug) {
+        //   console.log('flattenedAttributes', flattenedAttributes.map(x => x))
+        // }
 
         const hasOneEndingSpread =
           flattenedAttributes.findIndex((x) => t.isJSXSpreadAttribute(x)) ===
@@ -524,7 +532,10 @@ export function extractStyles(
                 }
               } catch (err) {
                 if (shouldPrintDebug) {
-                  console.log('couldnt statically evaluate conditional', err)
+                  console.log(
+                    'couldnt statically evaluate conditional',
+                    err.message
+                  )
                 }
               }
             }

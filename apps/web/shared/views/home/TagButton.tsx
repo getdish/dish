@@ -65,12 +65,10 @@ export const TagButton = memo(
     color,
     icon,
     rgb,
-    backgroundColor,
     subtleIcon,
     hideIcon,
     replace,
     onPress,
-    hoverStyle,
     ...rest
   }: TagButtonProps) => {
     if (name === null) {
@@ -81,7 +79,6 @@ export const TagButton = memo(
     const height = scale * 30
     const lineHeight = 22 * scale
     const defaultColor = noColor ? 'inherit' : getTagColor(rgb)
-    const bg = backgroundColor ?? (subtle ? defaultColor : 'white')
     const fg = color ?? (subtle ? 'rgba(0,0,0,0.6)' : defaultColor)
     const fontSize = fontSizeProp ?? (subtle ? 'inherit' : 16 * scale)
     const rankFontSize =
@@ -93,7 +90,7 @@ export const TagButton = memo(
         <HStack
           className="ease-in-out-fast"
           height={height}
-          backgroundColor={bg}
+          backgroundColor={subtle ? defaultColor : 'white'}
           borderRadius={9 * scale}
           borderWidth={1}
           borderColor={subtle ? 'transparent' : 'rgba(0,0,0,0.15)'}
@@ -102,13 +99,17 @@ export const TagButton = memo(
           justifyContent="center"
           position="relative"
           minHeight={lineHeight}
-          hoverStyle={hoverStyle}
-          {...(!subtle &&
-            !hoverStyle && {
-              hoverStyle: {
-                transform: [{ rotate: '-2deg', scale: 1.1 }],
-              },
-            })}
+          {...(!subtle && {
+            hoverStyle: {
+              transform: [{ rotate: '-2deg', scale: 1.1 }],
+            },
+          })}
+          {...(subtle && {
+            backgroundColor: '#000',
+            hoverStyle: {
+              backgroundColor: '#f2f2f2',
+            },
+          })}
           {...rest}
         >
           {!!rank && (

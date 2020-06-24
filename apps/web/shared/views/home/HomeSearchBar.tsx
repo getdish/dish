@@ -67,7 +67,7 @@ export default memo(function HomeSearchBar() {
         width="100%"
         height="100%"
         borderRadius={borderRadius}
-        shadowColor="rgba(0,0,0,0.07)"
+        shadowColor="rgba(0,0,0,0.12)"
         shadowOffset={{ height: 5, width: 0 }}
         shadowRadius={40}
       >
@@ -79,6 +79,7 @@ export default memo(function HomeSearchBar() {
           paddingHorizontal={8}
           flexDirection="row"
           borderRadius={borderRadius}
+          // height={searchBarHeight}
           shadowColor="rgba(0,0,0,0.065)"
           shadowRadius={3}
           shadowOffset={{ height: 3, width: 0 }}
@@ -100,9 +101,7 @@ export default memo(function HomeSearchBar() {
             <DishLogoButton />
           </VStack>
 
-          <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
-            <HomeSearchBarHomeButton />
-          </MediaQuery>
+          {!isSmall && <HomeSearchBarHomeButton />}
 
           <HStack
             flex={145}
@@ -112,15 +111,17 @@ export default memo(function HomeSearchBar() {
             overflow="hidden"
           >
             {/* Loading / Search Icon */}
-            <MediaQuery query={mediaQueries.sm} style={{ display: 'none' }}>
-              {om.state.home.isLoading ? (
-                <VStack className="rotating" opacity={0.5}>
-                  <Loader size={18} />
-                </VStack>
-              ) : (
-                <Search size={18} opacity={0.5} />
-              )}
-            </MediaQuery>
+            {!isSmall && (
+              <>
+                {om.state.home.isLoading ? (
+                  <VStack className="rotating" opacity={0.5}>
+                    <Loader size={18} />
+                  </VStack>
+                ) : (
+                  <Search size={18} opacity={0.5} />
+                )}
+              </>
+            )}
 
             {/* Search Input Start */}
             {isSmall && (
@@ -142,14 +143,12 @@ export default memo(function HomeSearchBar() {
             <>
               {locationSearchElement}
               {divider}
-              <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
-                <VStack flex={1} />
-              </MediaQuery>
+              <VStack flex={1} />
             </>
           )}
 
           {isSmall && (
-            <LinkButton onPress={() => setShowLocation((x) => !x)} padding={15}>
+            <LinkButton onPress={() => setShowLocation((x) => !x)} padding={12}>
               <MapPin size={22} opacity={0.5} />
             </LinkButton>
           )}

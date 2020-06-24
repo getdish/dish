@@ -146,19 +146,20 @@ const RestaurantListItemContent = memo(
         <VStack
           paddingHorizontal={pad + 6}
           width={isSmall ? '80%' : contentWidth}
-          minWidth={isSmall ? '50%' : 500}
+          minWidth={isSmall ? '50%' : 380}
           maxWidth={isSmall ? '90vw' : contentWidth}
           position="relative"
           spacing={5}
+          overflow="hidden"
         >
-          <VStack alignItems="flex-start" width="100%">
+          <VStack flex={1} alignItems="flex-start" width="100%">
             {/* ROW: TITLE */}
             <VStack
               paddingTop={paddingTop}
               hoverStyle={{ backgroundColor: bgLightLight }}
               pressStyle={{ backgroundColor: bgLight }}
               marginLeft={-adjustRankingLeft}
-              width={900}
+              width={950}
             >
               {/* VOTE */}
               <ZStack
@@ -240,16 +241,11 @@ const RestaurantListItemContent = memo(
             <Spacer />
 
             {/* ROW: COMMENT */}
-            <VStack
-              paddingLeft={3}
-              paddingRight={20}
-              borderLeftColor="#eee"
-              borderLeftWidth={2}
-            >
+            <VStack>
               <RestaurantTopReviews
                 restaurantId={restaurantId}
                 afterTopCommentButton={
-                  <HStack spacing alignItems="center">
+                  <HStack flex={1} spacing alignItems="center" flexWrap="wrap">
                     <RestaurantDeliveryButton restaurantId={restaurantId} />
 
                     <Divider vertical />

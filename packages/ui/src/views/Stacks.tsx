@@ -3,7 +3,6 @@ import { View, ViewProps, ViewStyle } from 'react-native'
 
 import { combineRefs } from '../helpers/combineRefs'
 import { StaticComponent } from '../helpers/extendStaticConfig'
-import { getNode } from '../helpers/getNode'
 import { useAttachClassName } from '../hooks/useAttachClassName'
 import { Hoverable } from './Hoverable'
 import { Spacer, Spacing } from './Spacer'

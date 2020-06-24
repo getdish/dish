@@ -1,4 +1,3 @@
-// debug
 import { graphql, query, restaurantPhotosForCarousel } from '@dish/graph'
 import {
   Divider,

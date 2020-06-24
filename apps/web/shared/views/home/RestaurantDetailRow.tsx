@@ -64,7 +64,7 @@ export const RestaurantDetailRow = memo(
       )
 
       return (
-        <HStack flex={1} alignItems="center" spacing={spaceSize} {...rest}>
+        <HStack alignItems="center" spacing={spaceSize} {...rest}>
           {rows.map((row, index) => (
             <HStack
               {...(!isSm && { width: '32%' })}
