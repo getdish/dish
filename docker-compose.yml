@@ -16,7 +16,7 @@ services:
     ports:
       - 6379:6379
   hasura:
-    image: hasura/graphql-engine:v1.1.0
+    image: hasura/graphql-engine:v1.2.2
     ports:
       - 8080:8080
     environment:

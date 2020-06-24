@@ -22,8 +22,8 @@ docker-compose down
 docker-compose up -d
 
 pushd services/hasura
-curl -L https://github.com/hasura/graphql-engine/raw/master/cli/get.sh | bash
-hasura migrate apply --endpoint $HASURA_ENDPOINT --admin-secret password
+yarn global add hasura-cli@v1.2.2
+$(yarn global bin)/hasura migrate apply --endpoint $HASURA_ENDPOINT --admin-secret password
 popd
 
 # JWT server won't start until migrations have been applied

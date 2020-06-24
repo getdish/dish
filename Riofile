@@ -2,7 +2,7 @@
 services:
   hasura:
     app: hasura
-    image: hasura/graphql-engine:v1.1.0
+    image: hasura/graphql-engine:v1.2.2
     resources:
       requests:
         cpu: 500m
