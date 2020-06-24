@@ -16,10 +16,7 @@
     "@dish/common": "*",
     "@dish/crawlers": "*",
     "@dish/worker": "*",
-    "bull": "^3.12.1",
-    "puppeteer": "^4.0.0",
-    "puppeteer-extra": "^3.1.9",
-    "puppeteer-extra-plugin-stealth": "^2.4.9"
+    "bull": "^3.12.1"
   },
   "devDependencies": {
     "@types/bull": "^3.12.0",
