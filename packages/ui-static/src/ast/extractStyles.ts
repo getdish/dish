@@ -336,7 +336,7 @@ export function extractStyles(
                     )
                   )
                 } else if (value === null) {
-                  // why would you ever do this
+                  // rare case
                   flattenedAttributes.push(
                     t.jsxAttribute(
                       t.jsxIdentifier(k),
@@ -345,7 +345,6 @@ export function extractStyles(
                   )
                 } else {
                   // toString anything else
-                  // TODO: is this a bad idea
                   flattenedAttributes.push(
                     t.jsxAttribute(
                       t.jsxIdentifier(k),
@@ -364,13 +363,10 @@ export function extractStyles(
 
         const styleExpansions: { name: string; value: any }[] = []
 
-        // if (shouldPrintDebug) {
-        //   console.log('flattenedAttributes', flattenedAttributes.map(x => x))
-        // }
-
         const hasOneEndingSpread =
+          staticTernaries.length === 0 &&
           flattenedAttributes.findIndex((x) => t.isJSXSpreadAttribute(x)) ===
-          lastSpreadIndex
+            lastSpreadIndex
         let simpleSpreadIdentifier: t.Identifier | null = null
         const isSingleSimpleSpread =
           hasOneEndingSpread &&
@@ -385,8 +381,11 @@ export function extractStyles(
         let inlinePropCount = 0
 
         if (shouldPrintDebug) {
+          console.log('spreads:', { hasOneEndingSpread, isSingleSimpleSpread })
           console.log('attrs:', node.attributes.map(attrGetName).join(', '))
         }
+
+        const ogAttributes = node.attributes
 
         node.attributes = node.attributes.filter((attribute, idx) => {
           if (
@@ -662,6 +661,16 @@ export function extractStyles(
           }
           // change to div
           node.name.name = domNode
+        }
+
+        // deopt fully
+        if (
+          inlinePropCount &&
+          staticTernaries.length &&
+          !isSingleSimpleSpread
+        ) {
+          node.attributes = ogAttributes
+          return
         }
 
         if (inlinePropCount) {

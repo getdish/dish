@@ -211,6 +211,21 @@ export function Test14() {
   )
 }
 
+// spacer
 export function Test15() {
   return <Spacer flex={1} size={10} />
+}
+
+// override props when spread is used
+export function Test16(props: TestProps) {
+  return (
+    <VStack
+      flex={props.conditional ? 1 : 0}
+      backgroundColor="blue"
+      {...(props.conditional && {
+        backgroundColor: 'red',
+      })}
+      {...props}
+    />
+  )
 }

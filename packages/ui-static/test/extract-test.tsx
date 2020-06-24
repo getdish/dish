@@ -36,6 +36,7 @@ const test = anyTest as TestInterface<{
   test13: TestApp
   test14: TestApp
   test15: TestApp
+  test16: TestApp
   app: any
 }>
 
@@ -207,6 +208,12 @@ test('15. extracts spacer (complex expansion)', async (t) => {
   const { test15 } = t.context
   const out = test15.renderer.toJSON()
   console.log('out', out)
+  t.snapshot(out)
+})
+
+test('16. deopt when spreading multiple', async (t) => {
+  const { test16 } = t.context
+  const out = test16.renderer.toJSON()
   t.snapshot(out)
 })
 

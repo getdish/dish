@@ -1,10 +1,11 @@
+- (done) evaluate constants in other files
+  - add test / test
 - make pressStyle override hoverStyle always
 - activeStyle may be desirable...
 - multi level const eval
   - const x = 1, const y = x + 10, paddingTop={y} (current in RestaurantListItem)
 - <Image />
 - spacing
-- evaluate constants in other files
   - SmallButton good example case of constant
 - hoverStyle/pressStyle (spread + constant too - TagButton, DishView)
   - final step is hoverStyle={{ color: x, ...parent.hoverStyle, }}
