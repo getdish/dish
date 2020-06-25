@@ -313,7 +313,7 @@ const RestaurantPeek = memo(
               if (!isLoaded) {
                 if (i > 1) {
                   return (
-                    <Squircle size={dishSize} key={i}>
+                    <Squircle width={dishSize * 0.8} height={dishSize} key={i}>
                       <Text>...</Text>
                     </Squircle>
                   )

@@ -54,7 +54,7 @@ export default memo(function HomePageSearchResults(props: {
   const topBarVPad = 12
   const paddingTop = isSmall
     ? topBarVPad
-    : searchBarHeight - searchBarTopOffset + topBarVPad
+    : searchBarHeight - searchBarTopOffset + topBarVPad + 4
   const titleHeight = paddingTop + 48
   const contentKey = `${state.id}${state.results.status}`
 
@@ -89,7 +89,7 @@ export default memo(function HomePageSearchResults(props: {
         alignItems="center"
       >
         <HStack flex={1} justifyContent="space-between">
-          <VStack marginTop={0} marginBottom={-6}>
+          <VStack marginTop={0} marginBottom={-10}>
             <HomeLenseBar activeTagIds={state.activeTagIds} />
           </VStack>
           <Spacer size={16} />

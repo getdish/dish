@@ -9,6 +9,7 @@ import {
   RestaurantAddComment,
   RestaurantAddCommentButton,
 } from './RestaurantAddComment'
+import { RestaurantReview } from './RestaurantReview'
 import { SmallButton } from './SmallButton'
 
 const listItems = [
@@ -96,7 +97,7 @@ export const RestaurantTopReviews = memo(
 
           {!!(state.showMore || expandTopComments) && (
             <VStack paddingTop={20} spacing={10}>
-              <SmallTitle divider="center">Top comments</SmallTitle>
+              <SmallTitle divider="center">Top reviews</SmallTitle>
 
               <HStack>
                 <Spacer flex={1} />
@@ -142,7 +143,7 @@ const RestaurantTopReviewsContent = memo(
       restaurantId: string
       numToShow: number
     }) => {
-      const topReviews = query.review({
+      let topReviews = query.review({
         limit: 3,
         where: {
           restaurant_id: {
@@ -151,17 +152,22 @@ const RestaurantTopReviewsContent = memo(
         },
       })
 
-      const all = [...topReviews, 0, 1, 2].slice(0, numToShow)
-
       return (
         <>
-          {all.map((_, i) => (
-            <CommentBubble key={i} user={{ username: 'PeachBot' }}>
-              <Text selectable opacity={0.8} lineHeight={20} fontSize={14}>
-                {`Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet sit amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.`}
-              </Text>
-            </CommentBubble>
+          {topReviews.map((review, i) => (
+            <RestaurantReview
+              key={i}
+              userName={review.user.username}
+              reviewText={review.text}
+            />
           ))}
+          {!topReviews.length && (
+            <VStack minHeight={100} alignItems="center" justifyContent="center">
+              <Text opacity={0.5} fontSize={12}>
+                No reviews, yet!
+              </Text>
+            </VStack>
+          )}
         </>
       )
     }

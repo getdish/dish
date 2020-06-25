@@ -115,12 +115,13 @@ export const DishView = memo(
             alignItems="center"
             justifyContent="center"
             backgroundColor="rgba(255,255,255,0.4)"
-            borderTopColor="rgba(255,255,255,1)"
+            borderTopColor="rgba(255,255,255,0.3)"
             borderTopWidth={1}
             // shadowColor="rgba(0,0,0,0.075)"
             // shadowRadius={8}
             // shadowOffset={{ height: -3, width: 0 }}
             {...(isHovered && {
+              borderTopColor: 'transparent',
               backgroundColor: 'transparent',
               shadowColor: 'transparent',
             })}
