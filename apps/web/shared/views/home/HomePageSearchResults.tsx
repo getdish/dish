@@ -60,8 +60,9 @@ export default memo(function HomePageSearchResults(props: {
     ? topBarVPad
     : searchBarHeight - searchBarTopOffset + topBarVPad
   const titleHeight = paddingTop + 48
+  const contentKey = `${state.id}${state.results.status}`
 
-  console.warn('HomePageSearchResults.render')
+  console.warn('HomePageSearchResults.render', { contentKey })
 
   return (
     <VStack
@@ -121,6 +122,7 @@ export default memo(function HomePageSearchResults(props: {
       </HStack>
 
       <HomeSearchResultsViewContent
+        key={contentKey}
         paddingTop={isSmall ? 58 : titleHeight - searchBarHeight}
       />
     </VStack>
@@ -188,6 +190,7 @@ const HomeSearchResultsViewContent = memo(
     }, [allResults, state.chunk])
 
     console.log('HomeSearchResultsViewContent.render', {
+      searchState,
       state,
       hasMoreToLoad,
       totalToShow,
