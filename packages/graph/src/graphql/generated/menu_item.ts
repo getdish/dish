@@ -177,9 +177,11 @@ export type t_menu_item_max_fields = FieldsType<
     __typename: t_String<'menu_item_max_fields'>
     created_at?: t_timestamptz | null
     description?: t_String | null
+    id?: t_uuid | null
     image?: t_String | null
     name?: t_String | null
     price?: t_Int | null
+    restaurant_id?: t_uuid | null
     updated_at?: t_timestamptz | null
   },
   Extension<'menu_item_max_fields'>
@@ -192,9 +194,11 @@ export type t_menu_item_max_fields = FieldsType<
 export type menu_item_max_order_by = {
   created_at?: order_by | null
   description?: order_by | null
+  id?: order_by | null
   image?: order_by | null
   name?: order_by | null
   price?: order_by | null
+  restaurant_id?: order_by | null
   updated_at?: order_by | null
 }
 
@@ -207,9 +211,11 @@ export type t_menu_item_min_fields = FieldsType<
     __typename: t_String<'menu_item_min_fields'>
     created_at?: t_timestamptz | null
     description?: t_String | null
+    id?: t_uuid | null
     image?: t_String | null
     name?: t_String | null
     price?: t_Int | null
+    restaurant_id?: t_uuid | null
     updated_at?: t_timestamptz | null
   },
   Extension<'menu_item_min_fields'>
@@ -222,9 +228,11 @@ export type t_menu_item_min_fields = FieldsType<
 export type menu_item_min_order_by = {
   created_at?: order_by | null
   description?: order_by | null
+  id?: order_by | null
   image?: order_by | null
   name?: order_by | null
   price?: order_by | null
+  restaurant_id?: order_by | null
   updated_at?: order_by | null
 }
 
@@ -275,6 +283,12 @@ export type menu_item_order_by = {
   restaurant_id?: order_by | null
   updated_at?: order_by | null
 }
+
+/**
+ * @name menu_item_pk_columns_input
+ * @type INPUT_OBJECT
+ */
+export type menu_item_pk_columns_input = { id: any }
 
 /**
  * @name menu_item_select_column

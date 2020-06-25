@@ -1,6 +1,7 @@
 // 🚨
 // technically this should all use TagQuery but it breaks ts (slow)
 
+import { globalTagId } from '../helpers/queryHelpers'
 import { Tag } from '../types'
 import { slugify } from './slugify'
 
@@ -41,7 +42,7 @@ export const tagSlugs = (tag: Tag) => {
 
 export const tagIsOrphan = (tag: Tag) => {
   if (!tag.parent) return true
-  return tag.parent?.id == '00000000-0000-0000-0000-000000000000'
+  return tag.parent?.id == globalTagId
 }
 
 export function getTagNameWithIcon(tag: Tag) {

@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."review" DROP COLUMN "favorited";
+  type: run_sql

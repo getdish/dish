@@ -7,7 +7,9 @@ import {
   menu_item_inc_input,
   menu_item_insert_input,
   menu_item_on_conflict,
+  menu_item_pk_columns_input,
   menu_item_set_input,
+  t_menu_item,
   t_menu_item_mutation_response,
 } from './menu_item'
 import {
@@ -16,8 +18,10 @@ import {
   restaurant_delete_at_path_input,
   restaurant_delete_elem_input,
   restaurant_delete_key_input,
+  restaurant_inc_input,
   restaurant_insert_input,
   restaurant_on_conflict,
+  restaurant_pk_columns_input,
   restaurant_prepend_input,
   restaurant_set_input,
   restaurant_tag_append_input,
@@ -28,9 +32,12 @@ import {
   restaurant_tag_inc_input,
   restaurant_tag_insert_input,
   restaurant_tag_on_conflict,
+  restaurant_tag_pk_columns_input,
   restaurant_tag_prepend_input,
   restaurant_tag_set_input,
+  t_restaurant,
   t_restaurant_mutation_response,
+  t_restaurant_tag,
   t_restaurant_tag_mutation_response,
 } from './restaurant'
 import {
@@ -39,10 +46,13 @@ import {
   review_delete_at_path_input,
   review_delete_elem_input,
   review_delete_key_input,
+  review_inc_input,
   review_insert_input,
   review_on_conflict,
+  review_pk_columns_input,
   review_prepend_input,
   review_set_input,
+  t_review,
   t_review_mutation_response,
 } from './review'
 import {
@@ -53,8 +63,10 @@ import {
   scrape_delete_key_input,
   scrape_insert_input,
   scrape_on_conflict,
+  scrape_pk_columns_input,
   scrape_prepend_input,
   scrape_set_input,
+  t_scrape,
   t_scrape_mutation_response,
 } from './scrape'
 import {
@@ -65,13 +77,17 @@ import {
   setting_delete_key_input,
   setting_insert_input,
   setting_on_conflict,
+  setting_pk_columns_input,
   setting_prepend_input,
   setting_set_input,
+  t_setting,
   t_setting_mutation_response,
 } from './setting'
 import { t_String } from './String'
 import {
+  t_tag,
   t_tag_mutation_response,
+  t_tag_tag,
   t_tag_tag_mutation_response,
   tag_append_input,
   tag_bool_exp,
@@ -81,20 +97,25 @@ import {
   tag_inc_input,
   tag_insert_input,
   tag_on_conflict,
+  tag_pk_columns_input,
   tag_prepend_input,
   tag_set_input,
   tag_tag_bool_exp,
   tag_tag_insert_input,
   tag_tag_on_conflict,
+  tag_tag_pk_columns_input,
   tag_tag_set_input,
 } from './tag'
 import {
+  t_user,
   t_user_mutation_response,
   user_bool_exp,
   user_insert_input,
   user_on_conflict,
+  user_pk_columns_input,
   user_set_input,
 } from './user'
+import { t_uuid } from './uuid'
 
 /**
  * @name mutation_root
@@ -107,44 +128,66 @@ export type t_mutation_root = FieldsType<
       { where: menu_item_bool_exp },
       t_menu_item_mutation_response | null
     >
+    delete_menu_item_by_pk?: FieldsTypeArg<{ id: any }, t_menu_item | null>
     delete_restaurant: FieldsTypeArg<
       { where: restaurant_bool_exp },
       t_restaurant_mutation_response | null
     >
+    delete_restaurant_by_pk?: FieldsTypeArg<{ id: any }, t_restaurant | null>
     delete_restaurant_tag: FieldsTypeArg<
       { where: restaurant_tag_bool_exp },
       t_restaurant_tag_mutation_response | null
+    >
+    delete_restaurant_tag_by_pk?: FieldsTypeArg<
+      { restaurant_id: any; tag_id: any },
+      t_restaurant_tag | null
     >
     delete_review: FieldsTypeArg<
       { where: review_bool_exp },
       t_review_mutation_response | null
     >
+    delete_review_by_pk?: FieldsTypeArg<{ id: any }, t_review | null>
     delete_scrape: FieldsTypeArg<
       { where: scrape_bool_exp },
       t_scrape_mutation_response | null
     >
+    delete_scrape_by_pk?: FieldsTypeArg<{ id: any }, t_scrape | null>
     delete_setting: FieldsTypeArg<
       { where: setting_bool_exp },
       t_setting_mutation_response | null
     >
+    delete_setting_by_pk?: FieldsTypeArg<{ key: string }, t_setting | null>
     delete_tag: FieldsTypeArg<
       { where: tag_bool_exp },
       t_tag_mutation_response | null
     >
+    delete_tag_by_pk?: FieldsTypeArg<{ id: any }, t_tag | null>
     delete_tag_tag: FieldsTypeArg<
       { where: tag_tag_bool_exp },
       t_tag_tag_mutation_response | null
+    >
+    delete_tag_tag_by_pk?: FieldsTypeArg<
+      { category_tag_id: any; tag_id: any },
+      t_tag_tag | null
     >
     delete_user: FieldsTypeArg<
       { where: user_bool_exp },
       t_user_mutation_response | null
     >
+    delete_user_by_pk?: FieldsTypeArg<{ id: any }, t_user | null>
     insert_menu_item: FieldsTypeArg<
       {
         objects: menu_item_insert_input[]
         on_conflict?: menu_item_on_conflict | null
       },
       t_menu_item_mutation_response | null
+    >
+    insert_menu_item_one?: FieldsTypeArg<
+      {
+        object: menu_item_insert_input
+        on_conflict?: menu_item_on_conflict | null
+      },
+      t_menu_item | null
     >
     insert_restaurant: FieldsTypeArg<
       {
@@ -153,12 +196,26 @@ export type t_mutation_root = FieldsType<
       },
       t_restaurant_mutation_response | null
     >
+    insert_restaurant_one?: FieldsTypeArg<
+      {
+        object: restaurant_insert_input
+        on_conflict?: restaurant_on_conflict | null
+      },
+      t_restaurant | null
+    >
     insert_restaurant_tag: FieldsTypeArg<
       {
         objects: restaurant_tag_insert_input[]
         on_conflict?: restaurant_tag_on_conflict | null
       },
       t_restaurant_tag_mutation_response | null
+    >
+    insert_restaurant_tag_one?: FieldsTypeArg<
+      {
+        object: restaurant_tag_insert_input
+        on_conflict?: restaurant_tag_on_conflict | null
+      },
+      t_restaurant_tag | null
     >
     insert_review: FieldsTypeArg<
       {
@@ -167,12 +224,20 @@ export type t_mutation_root = FieldsType<
       },
       t_review_mutation_response | null
     >
+    insert_review_one?: FieldsTypeArg<
+      { object: review_insert_input; on_conflict?: review_on_conflict | null },
+      t_review | null
+    >
     insert_scrape: FieldsTypeArg<
       {
         objects: scrape_insert_input[]
         on_conflict?: scrape_on_conflict | null
       },
       t_scrape_mutation_response | null
+    >
+    insert_scrape_one?: FieldsTypeArg<
+      { object: scrape_insert_input; on_conflict?: scrape_on_conflict | null },
+      t_scrape | null
     >
     insert_setting: FieldsTypeArg<
       {
@@ -181,9 +246,20 @@ export type t_mutation_root = FieldsType<
       },
       t_setting_mutation_response | null
     >
+    insert_setting_one?: FieldsTypeArg<
+      {
+        object: setting_insert_input
+        on_conflict?: setting_on_conflict | null
+      },
+      t_setting | null
+    >
     insert_tag: FieldsTypeArg<
       { objects: tag_insert_input[]; on_conflict?: tag_on_conflict | null },
       t_tag_mutation_response | null
+    >
+    insert_tag_one?: FieldsTypeArg<
+      { object: tag_insert_input; on_conflict?: tag_on_conflict | null },
+      t_tag | null
     >
     insert_tag_tag: FieldsTypeArg<
       {
@@ -192,9 +268,20 @@ export type t_mutation_root = FieldsType<
       },
       t_tag_tag_mutation_response | null
     >
+    insert_tag_tag_one?: FieldsTypeArg<
+      {
+        object: tag_tag_insert_input
+        on_conflict?: tag_tag_on_conflict | null
+      },
+      t_tag_tag | null
+    >
     insert_user: FieldsTypeArg<
       { objects: user_insert_input[]; on_conflict?: user_on_conflict | null },
       t_user_mutation_response | null
+    >
+    insert_user_one?: FieldsTypeArg<
+      { object: user_insert_input; on_conflict?: user_on_conflict | null },
+      t_user | null
     >
     update_menu_item: FieldsTypeArg<
       {
@@ -204,17 +291,39 @@ export type t_mutation_root = FieldsType<
       },
       t_menu_item_mutation_response | null
     >
+    update_menu_item_by_pk?: FieldsTypeArg<
+      {
+        _inc?: menu_item_inc_input | null
+        _set?: menu_item_set_input | null
+        pk_columns: menu_item_pk_columns_input
+      },
+      t_menu_item | null
+    >
     update_restaurant: FieldsTypeArg<
       {
         _append?: restaurant_append_input | null
         _delete_at_path?: restaurant_delete_at_path_input | null
         _delete_elem?: restaurant_delete_elem_input | null
         _delete_key?: restaurant_delete_key_input | null
+        _inc?: restaurant_inc_input | null
         _prepend?: restaurant_prepend_input | null
         _set?: restaurant_set_input | null
         where: restaurant_bool_exp
       },
       t_restaurant_mutation_response | null
+    >
+    update_restaurant_by_pk?: FieldsTypeArg<
+      {
+        _append?: restaurant_append_input | null
+        _delete_at_path?: restaurant_delete_at_path_input | null
+        _delete_elem?: restaurant_delete_elem_input | null
+        _delete_key?: restaurant_delete_key_input | null
+        _inc?: restaurant_inc_input | null
+        _prepend?: restaurant_prepend_input | null
+        _set?: restaurant_set_input | null
+        pk_columns: restaurant_pk_columns_input
+      },
+      t_restaurant | null
     >
     update_restaurant_tag: FieldsTypeArg<
       {
@@ -229,17 +338,44 @@ export type t_mutation_root = FieldsType<
       },
       t_restaurant_tag_mutation_response | null
     >
+    update_restaurant_tag_by_pk?: FieldsTypeArg<
+      {
+        _append?: restaurant_tag_append_input | null
+        _delete_at_path?: restaurant_tag_delete_at_path_input | null
+        _delete_elem?: restaurant_tag_delete_elem_input | null
+        _delete_key?: restaurant_tag_delete_key_input | null
+        _inc?: restaurant_tag_inc_input | null
+        _prepend?: restaurant_tag_prepend_input | null
+        _set?: restaurant_tag_set_input | null
+        pk_columns: restaurant_tag_pk_columns_input
+      },
+      t_restaurant_tag | null
+    >
     update_review: FieldsTypeArg<
       {
         _append?: review_append_input | null
         _delete_at_path?: review_delete_at_path_input | null
         _delete_elem?: review_delete_elem_input | null
         _delete_key?: review_delete_key_input | null
+        _inc?: review_inc_input | null
         _prepend?: review_prepend_input | null
         _set?: review_set_input | null
         where: review_bool_exp
       },
       t_review_mutation_response | null
+    >
+    update_review_by_pk?: FieldsTypeArg<
+      {
+        _append?: review_append_input | null
+        _delete_at_path?: review_delete_at_path_input | null
+        _delete_elem?: review_delete_elem_input | null
+        _delete_key?: review_delete_key_input | null
+        _inc?: review_inc_input | null
+        _prepend?: review_prepend_input | null
+        _set?: review_set_input | null
+        pk_columns: review_pk_columns_input
+      },
+      t_review | null
     >
     update_scrape: FieldsTypeArg<
       {
@@ -253,6 +389,18 @@ export type t_mutation_root = FieldsType<
       },
       t_scrape_mutation_response | null
     >
+    update_scrape_by_pk?: FieldsTypeArg<
+      {
+        _append?: scrape_append_input | null
+        _delete_at_path?: scrape_delete_at_path_input | null
+        _delete_elem?: scrape_delete_elem_input | null
+        _delete_key?: scrape_delete_key_input | null
+        _prepend?: scrape_prepend_input | null
+        _set?: scrape_set_input | null
+        pk_columns: scrape_pk_columns_input
+      },
+      t_scrape | null
+    >
     update_setting: FieldsTypeArg<
       {
         _append?: setting_append_input | null
@@ -264,6 +412,18 @@ export type t_mutation_root = FieldsType<
         where: setting_bool_exp
       },
       t_setting_mutation_response | null
+    >
+    update_setting_by_pk?: FieldsTypeArg<
+      {
+        _append?: setting_append_input | null
+        _delete_at_path?: setting_delete_at_path_input | null
+        _delete_elem?: setting_delete_elem_input | null
+        _delete_key?: setting_delete_key_input | null
+        _prepend?: setting_prepend_input | null
+        _set?: setting_set_input | null
+        pk_columns: setting_pk_columns_input
+      },
+      t_setting | null
     >
     update_tag: FieldsTypeArg<
       {
@@ -278,13 +438,34 @@ export type t_mutation_root = FieldsType<
       },
       t_tag_mutation_response | null
     >
+    update_tag_by_pk?: FieldsTypeArg<
+      {
+        _append?: tag_append_input | null
+        _delete_at_path?: tag_delete_at_path_input | null
+        _delete_elem?: tag_delete_elem_input | null
+        _delete_key?: tag_delete_key_input | null
+        _inc?: tag_inc_input | null
+        _prepend?: tag_prepend_input | null
+        _set?: tag_set_input | null
+        pk_columns: tag_pk_columns_input
+      },
+      t_tag | null
+    >
     update_tag_tag: FieldsTypeArg<
       { _set?: tag_tag_set_input | null; where: tag_tag_bool_exp },
       t_tag_tag_mutation_response | null
     >
+    update_tag_tag_by_pk?: FieldsTypeArg<
+      { _set?: tag_tag_set_input | null; pk_columns: tag_tag_pk_columns_input },
+      t_tag_tag | null
+    >
     update_user: FieldsTypeArg<
       { _set?: user_set_input | null; where: user_bool_exp },
       t_user_mutation_response | null
+    >
+    update_user_by_pk?: FieldsTypeArg<
+      { _set?: user_set_input | null; pk_columns: user_pk_columns_input },
+      t_user | null
     >
   },
   Extension<'mutation_root'>

@@ -140,6 +140,7 @@ export type t_setting_max_fields = FieldsType<
   {
     __typename: t_String<'setting_max_fields'>
     created_at?: t_timestamptz | null
+    id?: t_uuid | null
     key?: t_String | null
     updated_at?: t_timestamptz | null
   },
@@ -152,6 +153,7 @@ export type t_setting_max_fields = FieldsType<
  */
 export type setting_max_order_by = {
   created_at?: order_by | null
+  id?: order_by | null
   key?: order_by | null
   updated_at?: order_by | null
 }
@@ -164,6 +166,7 @@ export type t_setting_min_fields = FieldsType<
   {
     __typename: t_String<'setting_min_fields'>
     created_at?: t_timestamptz | null
+    id?: t_uuid | null
     key?: t_String | null
     updated_at?: t_timestamptz | null
   },
@@ -176,6 +179,7 @@ export type t_setting_min_fields = FieldsType<
  */
 export type setting_min_order_by = {
   created_at?: order_by | null
+  id?: order_by | null
   key?: order_by | null
   updated_at?: order_by | null
 }
@@ -223,6 +227,12 @@ export type setting_order_by = {
   updated_at?: order_by | null
   value?: order_by | null
 }
+
+/**
+ * @name setting_pk_columns_input
+ * @type INPUT_OBJECT
+ */
+export type setting_pk_columns_input = { key: string }
 
 /**
  * @name setting_prepend_input

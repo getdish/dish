@@ -12,6 +12,8 @@ import {
   reviewFindAllForRestaurant,
   reviewInsert,
   tagInsert,
+  userFavoriteARestaurant,
+  userFavorites,
 } from '../src'
 import { restaurant_fixture } from './etc/fixtures'
 
@@ -59,4 +61,22 @@ test('Add a review for restaurant by tag', async (t) => {
   ])
   const results = await reviewFindAllForRestaurant(t.context.restaurant.id)
   t.deepEqual(review.id, results[0].id)
+})
+
+test('Favorite a restaurant', async (t) => {
+  const r1 = await userFavoriteARestaurant(
+    t.context.user.id,
+    t.context.restaurant.id
+  )
+  const f1 = await userFavorites(t.context.user.id)
+  t.is(r1.id, f1[0].id)
+  t.is(r1.favorited, true)
+
+  await userFavoriteARestaurant(
+    t.context.user.id,
+    t.context.restaurant.id,
+    false
+  )
+  const f2 = await userFavorites(t.context.user.id)
+  t.is(f2.length, 0)
 })

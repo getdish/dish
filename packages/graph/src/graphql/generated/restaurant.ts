@@ -352,6 +352,12 @@ export type restaurant_delete_key_input = {
 }
 
 /**
+ * @name restaurant_inc_input
+ * @type INPUT_OBJECT
+ */
+export type restaurant_inc_input = { rating?: any | null; zip?: any | null }
+
+/**
  * @name restaurant_insert_input
  * @type INPUT_OBJECT
  */
@@ -394,6 +400,7 @@ export type t_restaurant_max_fields = FieldsType<
     city?: t_String | null
     created_at?: t_timestamptz | null
     description?: t_String | null
+    id?: t_uuid | null
     image?: t_String | null
     name?: t_String | null
     price_range?: t_String | null
@@ -417,6 +424,7 @@ export type restaurant_max_order_by = {
   city?: order_by | null
   created_at?: order_by | null
   description?: order_by | null
+  id?: order_by | null
   image?: order_by | null
   name?: order_by | null
   price_range?: order_by | null
@@ -440,6 +448,7 @@ export type t_restaurant_min_fields = FieldsType<
     city?: t_String | null
     created_at?: t_timestamptz | null
     description?: t_String | null
+    id?: t_uuid | null
     image?: t_String | null
     name?: t_String | null
     price_range?: t_String | null
@@ -463,6 +472,7 @@ export type restaurant_min_order_by = {
   city?: order_by | null
   created_at?: order_by | null
   description?: order_by | null
+  id?: order_by | null
   image?: order_by | null
   name?: order_by | null
   price_range?: order_by | null
@@ -538,6 +548,12 @@ export type restaurant_order_by = {
   website?: order_by | null
   zip?: order_by | null
 }
+
+/**
+ * @name restaurant_pk_columns_input
+ * @type INPUT_OBJECT
+ */
+export type restaurant_pk_columns_input = { id: any }
 
 /**
  * @name restaurant_prepend_input
@@ -856,7 +872,10 @@ export type restaurant_tag_delete_key_input = { photos?: string | null }
  * @name restaurant_tag_inc_input
  * @type INPUT_OBJECT
  */
-export type restaurant_tag_inc_input = { rank?: number | null }
+export type restaurant_tag_inc_input = {
+  rank?: number | null
+  rating?: any | null
+}
 
 /**
  * @name restaurant_tag_insert_input
@@ -881,6 +900,8 @@ export type t_restaurant_tag_max_fields = FieldsType<
     __typename: t_String<'restaurant_tag_max_fields'>
     rank?: t_Int | null
     rating?: t_numeric | null
+    restaurant_id?: t_uuid | null
+    tag_id?: t_uuid | null
   },
   Extension<'restaurant_tag_max_fields'>
 >
@@ -892,6 +913,8 @@ export type t_restaurant_tag_max_fields = FieldsType<
 export type restaurant_tag_max_order_by = {
   rank?: order_by | null
   rating?: order_by | null
+  restaurant_id?: order_by | null
+  tag_id?: order_by | null
 }
 
 /**
@@ -903,6 +926,8 @@ export type t_restaurant_tag_min_fields = FieldsType<
     __typename: t_String<'restaurant_tag_min_fields'>
     rank?: t_Int | null
     rating?: t_numeric | null
+    restaurant_id?: t_uuid | null
+    tag_id?: t_uuid | null
   },
   Extension<'restaurant_tag_min_fields'>
 >
@@ -914,6 +939,8 @@ export type t_restaurant_tag_min_fields = FieldsType<
 export type restaurant_tag_min_order_by = {
   rank?: order_by | null
   rating?: order_by | null
+  restaurant_id?: order_by | null
+  tag_id?: order_by | null
 }
 
 /**
@@ -960,6 +987,15 @@ export type restaurant_tag_order_by = {
   restaurant_id?: order_by | null
   tag?: tag_order_by | null
   tag_id?: order_by | null
+}
+
+/**
+ * @name restaurant_tag_pk_columns_input
+ * @type INPUT_OBJECT
+ */
+export type restaurant_tag_pk_columns_input = {
+  restaurant_id: any
+  tag_id: any
 }
 
 /**

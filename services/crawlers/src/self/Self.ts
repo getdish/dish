@@ -17,6 +17,7 @@ import {
   restaurantUpsertManyTags,
   scrapeGetData,
 } from '@dish/graph'
+import { globalTagId } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
@@ -62,7 +63,7 @@ export class Self extends WorkerJob {
   }
 
   async main() {
-    let previous_id = '00000000-0000-0000-0000-000000000000'
+    let previous_id = globalTagId
     while (true) {
       const results = await restaurantFindBatch(PER_PAGE, previous_id, sanfran)
       if (results.length == 0) {

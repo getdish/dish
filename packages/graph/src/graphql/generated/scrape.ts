@@ -159,7 +159,9 @@ export type t_scrape_max_fields = FieldsType<
   {
     __typename: t_String<'scrape_max_fields'>
     created_at?: t_timestamptz | null
+    id?: t_uuid | null
     id_from_source?: t_String | null
+    restaurant_id?: t_uuid | null
     source?: t_String | null
     updated_at?: t_timestamptz | null
   },
@@ -172,7 +174,9 @@ export type t_scrape_max_fields = FieldsType<
  */
 export type scrape_max_order_by = {
   created_at?: order_by | null
+  id?: order_by | null
   id_from_source?: order_by | null
+  restaurant_id?: order_by | null
   source?: order_by | null
   updated_at?: order_by | null
 }
@@ -185,7 +189,9 @@ export type t_scrape_min_fields = FieldsType<
   {
     __typename: t_String<'scrape_min_fields'>
     created_at?: t_timestamptz | null
+    id?: t_uuid | null
     id_from_source?: t_String | null
+    restaurant_id?: t_uuid | null
     source?: t_String | null
     updated_at?: t_timestamptz | null
   },
@@ -198,7 +204,9 @@ export type t_scrape_min_fields = FieldsType<
  */
 export type scrape_min_order_by = {
   created_at?: order_by | null
+  id?: order_by | null
   id_from_source?: order_by | null
+  restaurant_id?: order_by | null
   source?: order_by | null
   updated_at?: order_by | null
 }
@@ -250,6 +258,12 @@ export type scrape_order_by = {
   source?: order_by | null
   updated_at?: order_by | null
 }
+
+/**
+ * @name scrape_pk_columns_input
+ * @type INPUT_OBJECT
+ */
+export type scrape_pk_columns_input = { id: any }
 
 /**
  * @name scrape_prepend_input

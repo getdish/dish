@@ -63,6 +63,7 @@ tables:
       - price
       - restaurant_id
       filter: {}
+      check: null
   delete_permissions:
   - role: contributor
     permission:
@@ -214,6 +215,7 @@ tables:
       - website
       - zip
       filter: {}
+      check: null
   delete_permissions:
   - role: contributor
     permission:
@@ -272,6 +274,7 @@ tables:
       - restaurant_id
       - tag_id
       filter: {}
+      check: null
   delete_permissions:
   - role: contributor
     permission:
@@ -298,6 +301,7 @@ tables:
       columns:
       - categories
       - created_at
+      - favorited
       - id
       - rating
       - restaurant_id
@@ -313,6 +317,7 @@ tables:
       columns:
       - categories
       - created_at
+      - favorited
       - id
       - rating
       - restaurant_id
@@ -352,6 +357,7 @@ tables:
       columns:
       - categories
       - created_at
+      - favorited
       - id
       - rating
       - restaurant_id
@@ -376,11 +382,13 @@ tables:
       filter:
         user_id:
           _eq: X-Hasura-User-Id
+      check: null
   - role: user
     permission:
       columns:
       - categories
       - created_at
+      - favorited
       - id
       - rating
       - restaurant_id
@@ -391,6 +399,7 @@ tables:
       filter:
         user_id:
           _eq: X-Hasura-User-Id
+      check: null
   delete_permissions:
   - role: contributor
     permission:
@@ -522,6 +531,7 @@ tables:
       - type
       - updated_at
       filter: {}
+      check: null
   delete_permissions:
   - role: contributor
     permission:

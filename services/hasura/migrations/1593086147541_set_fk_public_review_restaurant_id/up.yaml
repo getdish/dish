@@ -1,0 +1,10 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: |-
+      alter table "public"."review" drop constraint "review_restaurant_id_fkey",
+                   add constraint "review_restaurant_id_fkey"
+                   foreign key ("restaurant_id")
+                   references "public"."restaurant"
+                   ("id") on update cascade on delete cascade;
+  type: run_sql

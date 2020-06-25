@@ -1,7 +1,7 @@
 import { EnumType, FieldsType, FieldsTypeArg, TypeData } from 'gqless'
 
 import * as extensions from '../extensions'
-import { t_Boolean } from './Boolean'
+import { Boolean_comparison_exp, t_Boolean } from './Boolean'
 import { Extension } from './extensionsTypes'
 import { t_Float } from './Float'
 import { t_Int } from './Int'
@@ -39,8 +39,9 @@ export type t_review = FieldsType<
     __typename: t_String<'review'>
     categories?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     created_at: t_timestamptz
+    favorited?: t_Boolean | null
     id: t_uuid
-    rating: t_numeric
+    rating?: t_numeric | null
     restaurant: t_restaurant
     restaurant_id: t_uuid
     tag_id?: t_uuid | null
@@ -152,6 +153,7 @@ export type review_bool_exp = {
   _or?: (review_bool_exp | null)[] | null
   categories?: jsonb_comparison_exp | null
   created_at?: timestamptz_comparison_exp | null
+  favorited?: Boolean_comparison_exp | null
   id?: uuid_comparison_exp | null
   rating?: numeric_comparison_exp | null
   restaurant?: restaurant_bool_exp | null
@@ -193,12 +195,19 @@ export type review_delete_elem_input = { categories?: number | null }
 export type review_delete_key_input = { categories?: string | null }
 
 /**
+ * @name review_inc_input
+ * @type INPUT_OBJECT
+ */
+export type review_inc_input = { rating?: any | null }
+
+/**
  * @name review_insert_input
  * @type INPUT_OBJECT
  */
 export type review_insert_input = {
   categories?: any | null
   created_at?: any | null
+  favorited?: boolean | null
   id?: any | null
   rating?: any | null
   restaurant?: restaurant_obj_rel_insert_input | null
@@ -219,9 +228,13 @@ export type t_review_max_fields = FieldsType<
   {
     __typename: t_String<'review_max_fields'>
     created_at?: t_timestamptz | null
+    id?: t_uuid | null
     rating?: t_numeric | null
+    restaurant_id?: t_uuid | null
+    tag_id?: t_uuid | null
     text?: t_String | null
     updated_at?: t_timestamptz | null
+    user_id?: t_uuid | null
   },
   Extension<'review_max_fields'>
 >
@@ -232,9 +245,13 @@ export type t_review_max_fields = FieldsType<
  */
 export type review_max_order_by = {
   created_at?: order_by | null
+  id?: order_by | null
   rating?: order_by | null
+  restaurant_id?: order_by | null
+  tag_id?: order_by | null
   text?: order_by | null
   updated_at?: order_by | null
+  user_id?: order_by | null
 }
 
 /**
@@ -245,9 +262,13 @@ export type t_review_min_fields = FieldsType<
   {
     __typename: t_String<'review_min_fields'>
     created_at?: t_timestamptz | null
+    id?: t_uuid | null
     rating?: t_numeric | null
+    restaurant_id?: t_uuid | null
+    tag_id?: t_uuid | null
     text?: t_String | null
     updated_at?: t_timestamptz | null
+    user_id?: t_uuid | null
   },
   Extension<'review_min_fields'>
 >
@@ -258,9 +279,13 @@ export type t_review_min_fields = FieldsType<
  */
 export type review_min_order_by = {
   created_at?: order_by | null
+  id?: order_by | null
   rating?: order_by | null
+  restaurant_id?: order_by | null
+  tag_id?: order_by | null
   text?: order_by | null
   updated_at?: order_by | null
+  user_id?: order_by | null
 }
 
 /**
@@ -302,6 +327,7 @@ export type review_on_conflict = {
 export type review_order_by = {
   categories?: order_by | null
   created_at?: order_by | null
+  favorited?: order_by | null
   id?: order_by | null
   rating?: order_by | null
   restaurant?: restaurant_order_by | null
@@ -313,6 +339,12 @@ export type review_order_by = {
   user?: user_order_by | null
   user_id?: order_by | null
 }
+
+/**
+ * @name review_pk_columns_input
+ * @type INPUT_OBJECT
+ */
+export type review_pk_columns_input = { id: any }
 
 /**
  * @name review_prepend_input
@@ -327,6 +359,7 @@ export type review_prepend_input = { categories?: any | null }
 export type t_review_select_column = EnumType<
   | 'categories'
   | 'created_at'
+  | 'favorited'
   | 'id'
   | 'rating'
   | 'restaurant_id'
@@ -343,6 +376,7 @@ export type t_review_select_column = EnumType<
 export type review_set_input = {
   categories?: any | null
   created_at?: any | null
+  favorited?: boolean | null
   id?: any | null
   rating?: any | null
   restaurant_id?: any | null
@@ -431,6 +465,7 @@ export type review_sum_order_by = { rating?: order_by | null }
 export type t_review_update_column = EnumType<
   | 'categories'
   | 'created_at'
+  | 'favorited'
   | 'id'
   | 'rating'
   | 'restaurant_id'
@@ -552,6 +587,7 @@ export type review_mutation_response = TypeData<t_review_mutation_response>
 export enum review_select_column {
   categories = 'categories',
   created_at = 'created_at',
+  favorited = 'favorited',
   id = 'id',
   rating = 'rating',
   restaurant_id = 'restaurant_id',
@@ -592,6 +628,7 @@ export type review_sum_fields = TypeData<t_review_sum_fields>
 export enum review_update_column {
   categories = 'categories',
   created_at = 'created_at',
+  favorited = 'favorited',
   id = 'id',
   rating = 'rating',
   restaurant_id = 'restaurant_id',

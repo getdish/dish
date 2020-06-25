@@ -876,6 +876,9 @@ export const schema = {
         get description() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get image() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -884,6 +887,9 @@ export const schema = {
         },
         get price() {
           return new FieldNode(schema.Int, undefined, true)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
         get updated_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
@@ -904,6 +910,9 @@ export const schema = {
         get description() {
           return new InputNodeField(schema.order_by, true)
         },
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get image() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -911,6 +920,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get price() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant_id() {
           return new InputNodeField(schema.order_by, true)
         },
         get updated_at() {
@@ -929,6 +941,9 @@ export const schema = {
         get description() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get image() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -937,6 +952,9 @@ export const schema = {
         },
         get price() {
           return new FieldNode(schema.Int, undefined, true)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
         get updated_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
@@ -957,6 +975,9 @@ export const schema = {
         get description() {
           return new InputNodeField(schema.order_by, true)
         },
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get image() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -964,6 +985,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get price() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant_id() {
           return new InputNodeField(schema.order_by, true)
         },
         get updated_at() {
@@ -1057,6 +1081,16 @@ export const schema = {
         },
       },
       { name: 'menu_item_order_by' }
+    )
+  },
+  get menu_item_pk_columns_input() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.uuid, false)
+        },
+      },
+      { name: 'menu_item_pk_columns_input' }
     )
   },
   get menu_item_select_column() {
@@ -1274,6 +1308,20 @@ export const schema = {
             true
           )
         },
+        get delete_menu_item_by_pk() {
+          return new FieldNode(
+            schema.menu_item,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
         get delete_restaurant() {
           return new FieldNode(
             schema.restaurant_mutation_response,
@@ -1281,6 +1329,20 @@ export const schema = {
               {
                 get where() {
                   return new ArgumentsField(schema.restaurant_bool_exp, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get delete_restaurant_by_pk() {
+          return new FieldNode(
+            schema.restaurant,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
                 },
               },
               true
@@ -1305,6 +1367,23 @@ export const schema = {
             true
           )
         },
+        get delete_restaurant_tag_by_pk() {
+          return new FieldNode(
+            schema.restaurant_tag,
+            new Arguments(
+              {
+                get restaurant_id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+                get tag_id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
         get delete_review() {
           return new FieldNode(
             schema.review_mutation_response,
@@ -1312,6 +1391,20 @@ export const schema = {
               {
                 get where() {
                   return new ArgumentsField(schema.review_bool_exp, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get delete_review_by_pk() {
+          return new FieldNode(
+            schema.review,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
                 },
               },
               true
@@ -1333,6 +1426,20 @@ export const schema = {
             true
           )
         },
+        get delete_scrape_by_pk() {
+          return new FieldNode(
+            schema.scrape,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
         get delete_setting() {
           return new FieldNode(
             schema.setting_mutation_response,
@@ -1340,6 +1447,20 @@ export const schema = {
               {
                 get where() {
                   return new ArgumentsField(schema.setting_bool_exp, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get delete_setting_by_pk() {
+          return new FieldNode(
+            schema.setting,
+            new Arguments(
+              {
+                get key() {
+                  return new ArgumentsField(schema.String, false)
                 },
               },
               true
@@ -1361,6 +1482,20 @@ export const schema = {
             true
           )
         },
+        get delete_tag_by_pk() {
+          return new FieldNode(
+            schema.tag,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
         get delete_tag_tag() {
           return new FieldNode(
             schema.tag_tag_mutation_response,
@@ -1368,6 +1503,23 @@ export const schema = {
               {
                 get where() {
                   return new ArgumentsField(schema.tag_tag_bool_exp, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get delete_tag_tag_by_pk() {
+          return new FieldNode(
+            schema.tag_tag,
+            new Arguments(
+              {
+                get category_tag_id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+                get tag_id() {
+                  return new ArgumentsField(schema.uuid, false)
                 },
               },
               true
@@ -1389,6 +1541,20 @@ export const schema = {
             true
           )
         },
+        get delete_user_by_pk() {
+          return new FieldNode(
+            schema.user,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
         get insert_menu_item() {
           return new FieldNode(
             schema.menu_item_mutation_response,
@@ -1398,6 +1564,20 @@ export const schema = {
                   new ArrayNode(schema.menu_item_insert_input, false),
                   false
                 )
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.menu_item_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get insert_menu_item_one() {
+          return new FieldNode(
+            schema.menu_item,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(schema.menu_item_insert_input, false)
               },
               get on_conflict() {
                 return new ArgumentsField(schema.menu_item_on_conflict, true)
@@ -1423,6 +1603,20 @@ export const schema = {
             true
           )
         },
+        get insert_restaurant_one() {
+          return new FieldNode(
+            schema.restaurant,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(schema.restaurant_insert_input, false)
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.restaurant_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
         get insert_restaurant_tag() {
           return new FieldNode(
             schema.restaurant_tag_mutation_response,
@@ -1430,6 +1624,26 @@ export const schema = {
               get objects() {
                 return new ArgumentsField(
                   new ArrayNode(schema.restaurant_tag_insert_input, false),
+                  false
+                )
+              },
+              get on_conflict() {
+                return new ArgumentsField(
+                  schema.restaurant_tag_on_conflict,
+                  true
+                )
+              },
+            }),
+            true
+          )
+        },
+        get insert_restaurant_tag_one() {
+          return new FieldNode(
+            schema.restaurant_tag,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(
+                  schema.restaurant_tag_insert_input,
                   false
                 )
               },
@@ -1460,6 +1674,20 @@ export const schema = {
             true
           )
         },
+        get insert_review_one() {
+          return new FieldNode(
+            schema.review,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(schema.review_insert_input, false)
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.review_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
         get insert_scrape() {
           return new FieldNode(
             schema.scrape_mutation_response,
@@ -1469,6 +1697,20 @@ export const schema = {
                   new ArrayNode(schema.scrape_insert_input, false),
                   false
                 )
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.scrape_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get insert_scrape_one() {
+          return new FieldNode(
+            schema.scrape,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(schema.scrape_insert_input, false)
               },
               get on_conflict() {
                 return new ArgumentsField(schema.scrape_on_conflict, true)
@@ -1494,6 +1736,20 @@ export const schema = {
             true
           )
         },
+        get insert_setting_one() {
+          return new FieldNode(
+            schema.setting,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(schema.setting_insert_input, false)
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.setting_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
         get insert_tag() {
           return new FieldNode(
             schema.tag_mutation_response,
@@ -1503,6 +1759,20 @@ export const schema = {
                   new ArrayNode(schema.tag_insert_input, false),
                   false
                 )
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.tag_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get insert_tag_one() {
+          return new FieldNode(
+            schema.tag,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(schema.tag_insert_input, false)
               },
               get on_conflict() {
                 return new ArgumentsField(schema.tag_on_conflict, true)
@@ -1528,6 +1798,20 @@ export const schema = {
             true
           )
         },
+        get insert_tag_tag_one() {
+          return new FieldNode(
+            schema.tag_tag,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(schema.tag_tag_insert_input, false)
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.tag_tag_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
         get insert_user() {
           return new FieldNode(
             schema.user_mutation_response,
@@ -1537,6 +1821,20 @@ export const schema = {
                   new ArrayNode(schema.user_insert_input, false),
                   false
                 )
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.user_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get insert_user_one() {
+          return new FieldNode(
+            schema.user,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(schema.user_insert_input, false)
               },
               get on_conflict() {
                 return new ArgumentsField(schema.user_on_conflict, true)
@@ -1557,6 +1855,26 @@ export const schema = {
               },
               get where() {
                 return new ArgumentsField(schema.menu_item_bool_exp, false)
+              },
+            }),
+            true
+          )
+        },
+        get update_menu_item_by_pk() {
+          return new FieldNode(
+            schema.menu_item,
+            new Arguments({
+              get _inc() {
+                return new ArgumentsField(schema.menu_item_inc_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.menu_item_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(
+                  schema.menu_item_pk_columns_input,
+                  false
+                )
               },
             }),
             true
@@ -1587,6 +1905,9 @@ export const schema = {
                   true
                 )
               },
+              get _inc() {
+                return new ArgumentsField(schema.restaurant_inc_input, true)
+              },
               get _prepend() {
                 return new ArgumentsField(schema.restaurant_prepend_input, true)
               },
@@ -1595,6 +1916,50 @@ export const schema = {
               },
               get where() {
                 return new ArgumentsField(schema.restaurant_bool_exp, false)
+              },
+            }),
+            true
+          )
+        },
+        get update_restaurant_by_pk() {
+          return new FieldNode(
+            schema.restaurant,
+            new Arguments({
+              get _append() {
+                return new ArgumentsField(schema.restaurant_append_input, true)
+              },
+              get _delete_at_path() {
+                return new ArgumentsField(
+                  schema.restaurant_delete_at_path_input,
+                  true
+                )
+              },
+              get _delete_elem() {
+                return new ArgumentsField(
+                  schema.restaurant_delete_elem_input,
+                  true
+                )
+              },
+              get _delete_key() {
+                return new ArgumentsField(
+                  schema.restaurant_delete_key_input,
+                  true
+                )
+              },
+              get _inc() {
+                return new ArgumentsField(schema.restaurant_inc_input, true)
+              },
+              get _prepend() {
+                return new ArgumentsField(schema.restaurant_prepend_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.restaurant_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(
+                  schema.restaurant_pk_columns_input,
+                  false
+                )
               },
             }),
             true
@@ -1647,6 +2012,56 @@ export const schema = {
             true
           )
         },
+        get update_restaurant_tag_by_pk() {
+          return new FieldNode(
+            schema.restaurant_tag,
+            new Arguments({
+              get _append() {
+                return new ArgumentsField(
+                  schema.restaurant_tag_append_input,
+                  true
+                )
+              },
+              get _delete_at_path() {
+                return new ArgumentsField(
+                  schema.restaurant_tag_delete_at_path_input,
+                  true
+                )
+              },
+              get _delete_elem() {
+                return new ArgumentsField(
+                  schema.restaurant_tag_delete_elem_input,
+                  true
+                )
+              },
+              get _delete_key() {
+                return new ArgumentsField(
+                  schema.restaurant_tag_delete_key_input,
+                  true
+                )
+              },
+              get _inc() {
+                return new ArgumentsField(schema.restaurant_tag_inc_input, true)
+              },
+              get _prepend() {
+                return new ArgumentsField(
+                  schema.restaurant_tag_prepend_input,
+                  true
+                )
+              },
+              get _set() {
+                return new ArgumentsField(schema.restaurant_tag_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(
+                  schema.restaurant_tag_pk_columns_input,
+                  false
+                )
+              },
+            }),
+            true
+          )
+        },
         get update_review() {
           return new FieldNode(
             schema.review_mutation_response,
@@ -1666,6 +2081,9 @@ export const schema = {
               get _delete_key() {
                 return new ArgumentsField(schema.review_delete_key_input, true)
               },
+              get _inc() {
+                return new ArgumentsField(schema.review_inc_input, true)
+              },
               get _prepend() {
                 return new ArgumentsField(schema.review_prepend_input, true)
               },
@@ -1674,6 +2092,41 @@ export const schema = {
               },
               get where() {
                 return new ArgumentsField(schema.review_bool_exp, false)
+              },
+            }),
+            true
+          )
+        },
+        get update_review_by_pk() {
+          return new FieldNode(
+            schema.review,
+            new Arguments({
+              get _append() {
+                return new ArgumentsField(schema.review_append_input, true)
+              },
+              get _delete_at_path() {
+                return new ArgumentsField(
+                  schema.review_delete_at_path_input,
+                  true
+                )
+              },
+              get _delete_elem() {
+                return new ArgumentsField(schema.review_delete_elem_input, true)
+              },
+              get _delete_key() {
+                return new ArgumentsField(schema.review_delete_key_input, true)
+              },
+              get _inc() {
+                return new ArgumentsField(schema.review_inc_input, true)
+              },
+              get _prepend() {
+                return new ArgumentsField(schema.review_prepend_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.review_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(schema.review_pk_columns_input, false)
               },
             }),
             true
@@ -1706,6 +2159,38 @@ export const schema = {
               },
               get where() {
                 return new ArgumentsField(schema.scrape_bool_exp, false)
+              },
+            }),
+            true
+          )
+        },
+        get update_scrape_by_pk() {
+          return new FieldNode(
+            schema.scrape,
+            new Arguments({
+              get _append() {
+                return new ArgumentsField(schema.scrape_append_input, true)
+              },
+              get _delete_at_path() {
+                return new ArgumentsField(
+                  schema.scrape_delete_at_path_input,
+                  true
+                )
+              },
+              get _delete_elem() {
+                return new ArgumentsField(schema.scrape_delete_elem_input, true)
+              },
+              get _delete_key() {
+                return new ArgumentsField(schema.scrape_delete_key_input, true)
+              },
+              get _prepend() {
+                return new ArgumentsField(schema.scrape_prepend_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.scrape_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(schema.scrape_pk_columns_input, false)
               },
             }),
             true
@@ -1746,6 +2231,44 @@ export const schema = {
             true
           )
         },
+        get update_setting_by_pk() {
+          return new FieldNode(
+            schema.setting,
+            new Arguments({
+              get _append() {
+                return new ArgumentsField(schema.setting_append_input, true)
+              },
+              get _delete_at_path() {
+                return new ArgumentsField(
+                  schema.setting_delete_at_path_input,
+                  true
+                )
+              },
+              get _delete_elem() {
+                return new ArgumentsField(
+                  schema.setting_delete_elem_input,
+                  true
+                )
+              },
+              get _delete_key() {
+                return new ArgumentsField(schema.setting_delete_key_input, true)
+              },
+              get _prepend() {
+                return new ArgumentsField(schema.setting_prepend_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.setting_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(
+                  schema.setting_pk_columns_input,
+                  false
+                )
+              },
+            }),
+            true
+          )
+        },
         get update_tag() {
           return new FieldNode(
             schema.tag_mutation_response,
@@ -1778,6 +2301,38 @@ export const schema = {
             true
           )
         },
+        get update_tag_by_pk() {
+          return new FieldNode(
+            schema.tag,
+            new Arguments({
+              get _append() {
+                return new ArgumentsField(schema.tag_append_input, true)
+              },
+              get _delete_at_path() {
+                return new ArgumentsField(schema.tag_delete_at_path_input, true)
+              },
+              get _delete_elem() {
+                return new ArgumentsField(schema.tag_delete_elem_input, true)
+              },
+              get _delete_key() {
+                return new ArgumentsField(schema.tag_delete_key_input, true)
+              },
+              get _inc() {
+                return new ArgumentsField(schema.tag_inc_input, true)
+              },
+              get _prepend() {
+                return new ArgumentsField(schema.tag_prepend_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.tag_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(schema.tag_pk_columns_input, false)
+              },
+            }),
+            true
+          )
+        },
         get update_tag_tag() {
           return new FieldNode(
             schema.tag_tag_mutation_response,
@@ -1792,6 +2347,23 @@ export const schema = {
             true
           )
         },
+        get update_tag_tag_by_pk() {
+          return new FieldNode(
+            schema.tag_tag,
+            new Arguments({
+              get _set() {
+                return new ArgumentsField(schema.tag_tag_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(
+                  schema.tag_tag_pk_columns_input,
+                  false
+                )
+              },
+            }),
+            true
+          )
+        },
         get update_user() {
           return new FieldNode(
             schema.user_mutation_response,
@@ -1801,6 +2373,20 @@ export const schema = {
               },
               get where() {
                 return new ArgumentsField(schema.user_bool_exp, false)
+              },
+            }),
+            true
+          )
+        },
+        get update_user_by_pk() {
+          return new FieldNode(
+            schema.user,
+            new Arguments({
+              get _set() {
+                return new ArgumentsField(schema.user_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(schema.user_pk_columns_input, false)
               },
             }),
             true
@@ -3274,6 +3860,19 @@ export const schema = {
       { name: 'restaurant_delete_key_input' }
     )
   },
+  get restaurant_inc_input() {
+    return new InputNode(
+      {
+        get rating() {
+          return new InputNodeField(schema.numeric, true)
+        },
+        get zip() {
+          return new InputNodeField(schema.numeric, true)
+        },
+      },
+      { name: 'restaurant_inc_input' }
+    )
+  },
   get restaurant_insert_input() {
     return new InputNode(
       {
@@ -3374,6 +3973,9 @@ export const schema = {
         get description() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get image() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -3426,6 +4028,9 @@ export const schema = {
         get description() {
           return new InputNodeField(schema.order_by, true)
         },
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get image() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -3474,6 +4079,9 @@ export const schema = {
         },
         get description() {
           return new FieldNode(schema.String, undefined, true)
+        },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
         get image() {
           return new FieldNode(schema.String, undefined, true)
@@ -3525,6 +4133,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get description() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get id() {
           return new InputNodeField(schema.order_by, true)
         },
         get image() {
@@ -3696,6 +4307,16 @@ export const schema = {
         },
       },
       { name: 'restaurant_order_by' }
+    )
+  },
+  get restaurant_pk_columns_input() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.uuid, false)
+        },
+      },
+      { name: 'restaurant_pk_columns_input' }
     )
   },
   get restaurant_prepend_input() {
@@ -4261,6 +4882,9 @@ export const schema = {
         get rank() {
           return new InputNodeField(schema.Int, true)
         },
+        get rating() {
+          return new InputNodeField(schema.numeric, true)
+        },
       },
       { name: 'restaurant_tag_inc_input' }
     )
@@ -4305,6 +4929,12 @@ export const schema = {
         get rating() {
           return new FieldNode(schema.numeric, undefined, true)
         },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get tag_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
       },
       {
         name: 'restaurant_tag_max_fields',
@@ -4321,6 +4951,12 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
+        get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'restaurant_tag_max_order_by' }
     )
@@ -4333,6 +4969,12 @@ export const schema = {
         },
         get rating() {
           return new FieldNode(schema.numeric, undefined, true)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get tag_id() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
       },
       {
@@ -4348,6 +4990,12 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get rating() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get tag_id() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -4432,6 +5080,19 @@ export const schema = {
         },
       },
       { name: 'restaurant_tag_order_by' }
+    )
+  },
+  get restaurant_tag_pk_columns_input() {
+    return new InputNode(
+      {
+        get restaurant_id() {
+          return new InputNodeField(schema.uuid, false)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.uuid, false)
+        },
+      },
+      { name: 'restaurant_tag_pk_columns_input' }
     )
   },
   get restaurant_tag_prepend_input() {
@@ -4793,11 +5454,14 @@ export const schema = {
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, false)
         },
+        get favorited() {
+          return new FieldNode(schema.Boolean, undefined, true)
+        },
         get id() {
           return new FieldNode(schema.uuid, undefined, false)
         },
         get rating() {
-          return new FieldNode(schema.numeric, undefined, false)
+          return new FieldNode(schema.numeric, undefined, true)
         },
         get restaurant() {
           return new FieldNode(schema.restaurant, undefined, false)
@@ -5021,6 +5685,9 @@ export const schema = {
         get created_at() {
           return new InputNodeField(schema.timestamptz_comparison_exp, true)
         },
+        get favorited() {
+          return new InputNodeField(schema.Boolean_comparison_exp, true)
+        },
         get id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
         },
@@ -5088,6 +5755,16 @@ export const schema = {
       { name: 'review_delete_key_input' }
     )
   },
+  get review_inc_input() {
+    return new InputNode(
+      {
+        get rating() {
+          return new InputNodeField(schema.numeric, true)
+        },
+      },
+      { name: 'review_inc_input' }
+    )
+  },
   get review_insert_input() {
     return new InputNode(
       {
@@ -5096,6 +5773,9 @@ export const schema = {
         },
         get created_at() {
           return new InputNodeField(schema.timestamptz, true)
+        },
+        get favorited() {
+          return new InputNodeField(schema.Boolean, true)
         },
         get id() {
           return new InputNodeField(schema.uuid, true)
@@ -5140,14 +5820,26 @@ export const schema = {
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
         },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get rating() {
           return new FieldNode(schema.numeric, undefined, true)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get tag_id() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
         get text() {
           return new FieldNode(schema.String, undefined, true)
         },
         get updated_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get user_id() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
       },
       {
@@ -5162,13 +5854,25 @@ export const schema = {
         get created_at() {
           return new InputNodeField(schema.order_by, true)
         },
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rating() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get tag_id() {
           return new InputNodeField(schema.order_by, true)
         },
         get text() {
           return new InputNodeField(schema.order_by, true)
         },
         get updated_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get user_id() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -5181,14 +5885,26 @@ export const schema = {
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
         },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get rating() {
           return new FieldNode(schema.numeric, undefined, true)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get tag_id() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
         get text() {
           return new FieldNode(schema.String, undefined, true)
         },
         get updated_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get user_id() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
       },
       {
@@ -5203,13 +5919,25 @@ export const schema = {
         get created_at() {
           return new InputNodeField(schema.order_by, true)
         },
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rating() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get tag_id() {
           return new InputNodeField(schema.order_by, true)
         },
         get text() {
           return new InputNodeField(schema.order_by, true)
         },
         get updated_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get user_id() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -5277,6 +6005,9 @@ export const schema = {
         get created_at() {
           return new InputNodeField(schema.order_by, true)
         },
+        get favorited() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get id() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -5311,6 +6042,16 @@ export const schema = {
       { name: 'review_order_by' }
     )
   },
+  get review_pk_columns_input() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.uuid, false)
+        },
+      },
+      { name: 'review_pk_columns_input' }
+    )
+  },
   get review_prepend_input() {
     return new InputNode(
       {
@@ -5332,6 +6073,9 @@ export const schema = {
         },
         get created_at() {
           return new InputNodeField(schema.timestamptz, true)
+        },
+        get favorited() {
+          return new InputNodeField(schema.Boolean, true)
         },
         get id() {
           return new InputNodeField(schema.uuid, true)
@@ -5784,8 +6528,14 @@ export const schema = {
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
         },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get id_from_source() {
           return new FieldNode(schema.String, undefined, true)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
         get source() {
           return new FieldNode(schema.String, undefined, true)
@@ -5806,7 +6556,13 @@ export const schema = {
         get created_at() {
           return new InputNodeField(schema.order_by, true)
         },
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get id_from_source() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant_id() {
           return new InputNodeField(schema.order_by, true)
         },
         get source() {
@@ -5825,8 +6581,14 @@ export const schema = {
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
         },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get id_from_source() {
           return new FieldNode(schema.String, undefined, true)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
         get source() {
           return new FieldNode(schema.String, undefined, true)
@@ -5847,7 +6609,13 @@ export const schema = {
         get created_at() {
           return new InputNodeField(schema.order_by, true)
         },
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get id_from_source() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant_id() {
           return new InputNodeField(schema.order_by, true)
         },
         get source() {
@@ -5944,6 +6712,16 @@ export const schema = {
         },
       },
       { name: 'scrape_order_by' }
+    )
+  },
+  get scrape_pk_columns_input() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.uuid, false)
+        },
+      },
+      { name: 'scrape_pk_columns_input' }
     )
   },
   get scrape_prepend_input() {
@@ -6216,6 +6994,9 @@ export const schema = {
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
         },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get key() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -6235,6 +7016,9 @@ export const schema = {
         get created_at() {
           return new InputNodeField(schema.order_by, true)
         },
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get key() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6250,6 +7034,9 @@ export const schema = {
       {
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
         get key() {
           return new FieldNode(schema.String, undefined, true)
@@ -6268,6 +7055,9 @@ export const schema = {
     return new InputNode(
       {
         get created_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get id() {
           return new InputNodeField(schema.order_by, true)
         },
         get key() {
@@ -6352,6 +7142,16 @@ export const schema = {
         },
       },
       { name: 'setting_order_by' }
+    )
+  },
+  get setting_pk_columns_input() {
+    return new InputNode(
+      {
+        get key() {
+          return new InputNodeField(schema.String, false)
+        },
+      },
+      { name: 'setting_pk_columns_input' }
     )
   },
   get setting_prepend_input() {
@@ -7697,11 +8497,17 @@ export const schema = {
         get icon() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get name() {
           return new FieldNode(schema.String, undefined, true)
         },
         get order() {
           return new FieldNode(schema.Int, undefined, true)
+        },
+        get parentId() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
         get type() {
           return new FieldNode(schema.String, undefined, true)
@@ -7731,10 +8537,16 @@ export const schema = {
         get icon() {
           return new InputNodeField(schema.order_by, true)
         },
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get name() {
           return new InputNodeField(schema.order_by, true)
         },
         get order() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get parentId() {
           return new InputNodeField(schema.order_by, true)
         },
         get type() {
@@ -7762,11 +8574,17 @@ export const schema = {
         get icon() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get name() {
           return new FieldNode(schema.String, undefined, true)
         },
         get order() {
           return new FieldNode(schema.Int, undefined, true)
+        },
+        get parentId() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
         get type() {
           return new FieldNode(schema.String, undefined, true)
@@ -7796,10 +8614,16 @@ export const schema = {
         get icon() {
           return new InputNodeField(schema.order_by, true)
         },
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get name() {
           return new InputNodeField(schema.order_by, true)
         },
         get order() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get parentId() {
           return new InputNodeField(schema.order_by, true)
         },
         get type() {
@@ -7926,6 +8750,16 @@ export const schema = {
         },
       },
       { name: 'tag_order_by' }
+    )
+  },
+  get tag_pk_columns_input() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.uuid, false)
+        },
+      },
+      { name: 'tag_pk_columns_input' }
     )
   },
   get tag_prepend_input() {
@@ -8177,6 +9011,12 @@ export const schema = {
             true
           )
         },
+        get max() {
+          return new FieldNode(schema.tag_tag_max_fields, undefined, true)
+        },
+        get min() {
+          return new FieldNode(schema.tag_tag_min_fields, undefined, true)
+        },
       },
       {
         name: 'tag_tag_aggregate_fields',
@@ -8189,6 +9029,12 @@ export const schema = {
       {
         get count() {
           return new InputNodeField(schema.order_by, true)
+        },
+        get max() {
+          return new InputNodeField(schema.tag_tag_max_order_by, true)
+        },
+        get min() {
+          return new InputNodeField(schema.tag_tag_min_order_by, true)
         },
       },
       { name: 'tag_tag_aggregate_order_by' }
@@ -8266,6 +9112,64 @@ export const schema = {
       { name: 'tag_tag_insert_input' }
     )
   },
+  get tag_tag_max_fields() {
+    return new ObjectNode(
+      {
+        get category_tag_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get tag_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+      },
+      {
+        name: 'tag_tag_max_fields',
+        extension: ((extensions as any) || {}).tag_tag_max_fields,
+      }
+    )
+  },
+  get tag_tag_max_order_by() {
+    return new InputNode(
+      {
+        get category_tag_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'tag_tag_max_order_by' }
+    )
+  },
+  get tag_tag_min_fields() {
+    return new ObjectNode(
+      {
+        get category_tag_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get tag_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+      },
+      {
+        name: 'tag_tag_min_fields',
+        extension: ((extensions as any) || {}).tag_tag_min_fields,
+      }
+    )
+  },
+  get tag_tag_min_order_by() {
+    return new InputNode(
+      {
+        get category_tag_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'tag_tag_min_order_by' }
+    )
+  },
   get tag_tag_mutation_response() {
     return new ObjectNode(
       {
@@ -8335,6 +9239,19 @@ export const schema = {
         },
       },
       { name: 'tag_tag_order_by' }
+    )
+  },
+  get tag_tag_pk_columns_input() {
+    return new InputNode(
+      {
+        get category_tag_id() {
+          return new InputNodeField(schema.uuid, false)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.uuid, false)
+        },
+      },
+      { name: 'tag_tag_pk_columns_input' }
     )
   },
   get tag_tag_select_column() {
@@ -8740,6 +9657,9 @@ export const schema = {
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
         },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get password() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -8765,6 +9685,9 @@ export const schema = {
         get created_at() {
           return new InputNodeField(schema.order_by, true)
         },
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get password() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -8786,6 +9709,9 @@ export const schema = {
       {
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
         get password() {
           return new FieldNode(schema.String, undefined, true)
@@ -8810,6 +9736,9 @@ export const schema = {
     return new InputNode(
       {
         get created_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get id() {
           return new InputNodeField(schema.order_by, true)
         },
         get password() {
@@ -8906,6 +9835,16 @@ export const schema = {
         },
       },
       { name: 'user_order_by' }
+    )
+  },
+  get user_pk_columns_input() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.uuid, false)
+        },
+      },
+      { name: 'user_pk_columns_input' }
     )
   },
   get user_select_column() {

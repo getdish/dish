@@ -296,8 +296,10 @@ export type t_tag_max_fields = FieldsType<
     displayName?: t_String | null
     frequency?: t_Int | null
     icon?: t_String | null
+    id?: t_uuid | null
     name?: t_String | null
     order?: t_Int | null
+    parentId?: t_uuid | null
     type?: t_String | null
     updated_at?: t_timestamptz | null
   },
@@ -313,8 +315,10 @@ export type tag_max_order_by = {
   displayName?: order_by | null
   frequency?: order_by | null
   icon?: order_by | null
+  id?: order_by | null
   name?: order_by | null
   order?: order_by | null
+  parentId?: order_by | null
   type?: order_by | null
   updated_at?: order_by | null
 }
@@ -330,8 +334,10 @@ export type t_tag_min_fields = FieldsType<
     displayName?: t_String | null
     frequency?: t_Int | null
     icon?: t_String | null
+    id?: t_uuid | null
     name?: t_String | null
     order?: t_Int | null
+    parentId?: t_uuid | null
     type?: t_String | null
     updated_at?: t_timestamptz | null
   },
@@ -347,8 +353,10 @@ export type tag_min_order_by = {
   displayName?: order_by | null
   frequency?: order_by | null
   icon?: order_by | null
+  id?: order_by | null
   name?: order_by | null
   order?: order_by | null
+  parentId?: order_by | null
   type?: order_by | null
   updated_at?: order_by | null
 }
@@ -409,6 +417,12 @@ export type tag_order_by = {
   type?: order_by | null
   updated_at?: order_by | null
 }
+
+/**
+ * @name tag_pk_columns_input
+ * @type INPUT_OBJECT
+ */
+export type tag_pk_columns_input = { id: any }
 
 /**
  * @name tag_prepend_input
@@ -592,6 +606,8 @@ export type t_tag_tag_aggregate_fields = FieldsType<
       { columns?: tag_tag_select_column[] | null; distinct?: boolean | null },
       t_Int | null
     >
+    max?: t_tag_tag_max_fields | null
+    min?: t_tag_tag_min_fields | null
   },
   Extension<'tag_tag_aggregate_fields'>
 >
@@ -600,7 +616,11 @@ export type t_tag_tag_aggregate_fields = FieldsType<
  * @name tag_tag_aggregate_order_by
  * @type INPUT_OBJECT
  */
-export type tag_tag_aggregate_order_by = { count?: order_by | null }
+export type tag_tag_aggregate_order_by = {
+  count?: order_by | null
+  max?: tag_tag_max_order_by | null
+  min?: tag_tag_min_order_by | null
+}
 
 /**
  * @name tag_tag_arr_rel_insert_input
@@ -640,6 +660,50 @@ export type tag_tag_insert_input = {
   category_tag_id?: any | null
   main?: tag_obj_rel_insert_input | null
   tag_id?: any | null
+}
+
+/**
+ * @name tag_tag_max_fields
+ * @type OBJECT
+ */
+export type t_tag_tag_max_fields = FieldsType<
+  {
+    __typename: t_String<'tag_tag_max_fields'>
+    category_tag_id?: t_uuid | null
+    tag_id?: t_uuid | null
+  },
+  Extension<'tag_tag_max_fields'>
+>
+
+/**
+ * @name tag_tag_max_order_by
+ * @type INPUT_OBJECT
+ */
+export type tag_tag_max_order_by = {
+  category_tag_id?: order_by | null
+  tag_id?: order_by | null
+}
+
+/**
+ * @name tag_tag_min_fields
+ * @type OBJECT
+ */
+export type t_tag_tag_min_fields = FieldsType<
+  {
+    __typename: t_String<'tag_tag_min_fields'>
+    category_tag_id?: t_uuid | null
+    tag_id?: t_uuid | null
+  },
+  Extension<'tag_tag_min_fields'>
+>
+
+/**
+ * @name tag_tag_min_order_by
+ * @type INPUT_OBJECT
+ */
+export type tag_tag_min_order_by = {
+  category_tag_id?: order_by | null
+  tag_id?: order_by | null
 }
 
 /**
@@ -684,6 +748,12 @@ export type tag_tag_order_by = {
   main?: tag_order_by | null
   tag_id?: order_by | null
 }
+
+/**
+ * @name tag_tag_pk_columns_input
+ * @type INPUT_OBJECT
+ */
+export type tag_tag_pk_columns_input = { category_tag_id: any; tag_id: any }
 
 /**
  * @name tag_tag_select_column
@@ -918,6 +988,18 @@ export type tag_tag_aggregate_fields = TypeData<t_tag_tag_aggregate_fields>
 export enum tag_tag_constraint {
   tag_tag_pkey = 'tag_tag_pkey',
 }
+
+/**
+ * @name tag_tag_max_fields
+ * @type OBJECT
+ */
+export type tag_tag_max_fields = TypeData<t_tag_tag_max_fields>
+
+/**
+ * @name tag_tag_min_fields
+ * @type OBJECT
+ */
+export type tag_tag_min_fields = TypeData<t_tag_tag_min_fields>
 
 /**
  * @name tag_tag_mutation_response

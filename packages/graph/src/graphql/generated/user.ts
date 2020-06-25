@@ -149,6 +149,7 @@ export type t_user_max_fields = FieldsType<
   {
     __typename: t_String<'user_max_fields'>
     created_at?: t_timestamptz | null
+    id?: t_uuid | null
     password?: t_String | null
     role?: t_String | null
     updated_at?: t_timestamptz | null
@@ -163,6 +164,7 @@ export type t_user_max_fields = FieldsType<
  */
 export type user_max_order_by = {
   created_at?: order_by | null
+  id?: order_by | null
   password?: order_by | null
   role?: order_by | null
   updated_at?: order_by | null
@@ -177,6 +179,7 @@ export type t_user_min_fields = FieldsType<
   {
     __typename: t_String<'user_min_fields'>
     created_at?: t_timestamptz | null
+    id?: t_uuid | null
     password?: t_String | null
     role?: t_String | null
     updated_at?: t_timestamptz | null
@@ -191,6 +194,7 @@ export type t_user_min_fields = FieldsType<
  */
 export type user_min_order_by = {
   created_at?: order_by | null
+  id?: order_by | null
   password?: order_by | null
   role?: order_by | null
   updated_at?: order_by | null
@@ -242,6 +246,12 @@ export type user_order_by = {
   updated_at?: order_by | null
   username?: order_by | null
 }
+
+/**
+ * @name user_pk_columns_input
+ * @type INPUT_OBJECT
+ */
+export type user_pk_columns_input = { id: any }
 
 /**
  * @name user_select_column
