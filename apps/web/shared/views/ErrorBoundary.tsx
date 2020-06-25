@@ -4,7 +4,6 @@ import {
   FallbackProps,
   ErrorBoundary as ReactErrorBoundary,
 } from 'react-error-boundary'
-import { Button } from 'react-native'
 
 function ErrorFallback({
   error,
@@ -27,7 +26,9 @@ function ErrorFallback({
           <pre>{error?.stack}</pre>
         </Text>
       </VStack>
-      <Button title="Try Again" onPress={resetErrorBoundary}></Button>
+      <VStack padding={10} backgroundColor="red" onPress={resetErrorBoundary}>
+        <Text>Try Again</Text>
+      </VStack>
     </AbsoluteVStack>
   )
 }

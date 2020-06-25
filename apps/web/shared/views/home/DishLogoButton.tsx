@@ -10,7 +10,6 @@ export const DishLogoButton = memo(() => {
       name="home"
       paddingVertical={10}
       paddingHorizontal={20}
-      marginVertical={-4}
       hoverStyle={{
         transform: [{ scale: 1.05 }],
       }}

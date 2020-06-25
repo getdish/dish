@@ -91,12 +91,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       alignItems="center"
       position="relative"
     >
-      <VStack
-        className="test123 ease-in-out-fast"
-        flex={1}
-        borderBottomWidth={1}
-        borderBottomColor="red"
-      >
+      <VStack className="ease-in-out-fast" flex={1}>
         <RestaurantListItemContent {...props} />
       </VStack>
       <AbsoluteVStack fullscreen top={12} zIndex={10} pointerEvents="none">
@@ -126,7 +121,7 @@ const RestaurantListItemContent = memo(
       }
     }, [restaurant.name])
 
-    const paddingTop = 35
+    const paddingTop = 30
 
     console.log('RestaurantListItemContent.render', props.rank)
 
@@ -146,7 +141,6 @@ const RestaurantListItemContent = memo(
           <VStack flex={1} alignItems="flex-start" width="100%">
             {/* ROW: TITLE */}
             <VStack
-              paddingTop={paddingTop}
               hoverStyle={{ backgroundColor: bgLightLight }}
               pressStyle={{ backgroundColor: bgLight }}
               marginLeft={-adjustRankingLeft}
@@ -175,12 +169,8 @@ const RestaurantListItemContent = memo(
                 name="restaurant"
                 params={{ slug: restaurantSlug }}
               >
-                <VStack>
-                  <HStack
-                    paddingLeft={40}
-                    alignItems="center"
-                    marginVertical={-3}
-                  >
+                <VStack paddingTop={paddingTop}>
+                  <HStack paddingLeft={40} alignItems="center">
                     {/* SECOND LINK WITH actual <a /> */}
                     <Link name="restaurant" params={{ slug: restaurantSlug }}>
                       <Text

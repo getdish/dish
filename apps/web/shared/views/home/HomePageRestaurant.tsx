@@ -226,7 +226,6 @@ const RestaurantPhotos = memo(
               marginTop={10}
               alignItems="center"
               justifyContent="center"
-              spacing={spacing}
             >
               {photos.map((photo, index) => {
                 return (
@@ -234,7 +233,7 @@ const RestaurantPhotos = memo(
                     key={index}
                     size={(drawerWidth / 2 - perRow * spacing) / perRow}
                     restaurantSlug={restaurantSlug}
-                    marginBottom={30}
+                    margin={6}
                     dish={photo}
                   />
                 )

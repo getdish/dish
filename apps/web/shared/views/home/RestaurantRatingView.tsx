@@ -1,6 +1,7 @@
 import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
 
+import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
 import { RatingView, RatingViewProps } from './RatingView'
 import { restaurantQuery } from './restaurantQuery'
 
@@ -11,11 +12,6 @@ export type RestaurantRatingViewProps = Omit<
   restaurantSlug: string
   rating: number
 }
-
-export const getRestaurantRating = (rating: number) => rating * 2
-
-export const getRankingColor = (percent: number) =>
-  percent >= 8 ? 'green' : percent >= 5 ? 'orange' : 'red'
 
 export default memo(
   graphql(function RestaurantRatingView(props: RestaurantRatingViewProps) {
