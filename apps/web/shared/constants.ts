@@ -1,6 +1,9 @@
-export const OVERMIND_MUTATIONS = window['__OVERMIND_MUTATIONS']
-export const rootEl = document.getElementById('root')
-export const isSSR = !!window['IS_SSR_RENDERING']
+export const OVERMIND_MUTATIONS =
+  typeof window !== 'undefined' && window['__OVERMIND_MUTATIONS']
+export const rootEl =
+  typeof document !== 'undefined' && document.getElementById('root')
+export const isSSR =
+  typeof window !== 'undefined' && !!window['IS_SSR_RENDERING']
 export const isWorker = !rootEl && !isSSR
 export const isNative = false // until we start on any native apps
 export const isPreact = process.env.TARGET === 'preact'

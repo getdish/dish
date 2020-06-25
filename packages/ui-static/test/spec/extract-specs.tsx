@@ -1,4 +1,3 @@
-// debug
 import { AbsoluteVStack, Box, Spacer, Text, VStack } from '@dish/ui'
 import React from 'react'
 
