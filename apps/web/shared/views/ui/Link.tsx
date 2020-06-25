@@ -2,7 +2,7 @@ import './Link.css'
 
 import { fullyIdle, series } from '@dish/async'
 import { Text, prevent } from '@dish/ui'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import {
   NavigateItem,
@@ -52,14 +52,22 @@ export function Link<
   }
   const elementName = tagName ?? 'a'
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!clickEvent) return
     return series([
       () => (asyncClick ? fullyIdle(linkActionIdle) : null),
-      () => (onClick ? onClick?.(clickEvent) : onPress?.(clickEvent)),
       () => {
-        if (navigateAfterPress) {
-          om.actions.router.navigate(navItem)
+        if (onClick) {
+          onClick?.(clickEvent!)
+        } else if (onPress) {
+          onPress?.(clickEvent)
+          if (navigateAfterPress) {
+            om.actions.router.navigate(navItem)
+          }
+        } else {
+          if (!preventNavigate) {
+            om.actions.router.navigate(navItem)
+          }
         }
       },
     ])
@@ -85,7 +93,7 @@ export function Link<
       onMouseDown,
       ...linkProps,
       onClick: (e) => {
-        prevent(clickEvent)
+        prevent(e)
         e.persist()
         setClickEvent(e)
       },

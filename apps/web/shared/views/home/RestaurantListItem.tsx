@@ -170,12 +170,7 @@ const RestaurantListItemContent = memo(
                 params={{ slug: restaurantSlug }}
               >
                 <VStack paddingTop={paddingTop}>
-                  <HStack
-                    paddingLeft={40}
-                    alignItems="center"
-                    maxWidth="50%"
-                    overflow="hidden"
-                  >
+                  <HStack paddingLeft={40} alignItems="center" maxWidth="50%">
                     {/* SECOND LINK WITH actual <a /> */}
                     <Link name="restaurant" params={{ slug: restaurantSlug }}>
                       <Text
