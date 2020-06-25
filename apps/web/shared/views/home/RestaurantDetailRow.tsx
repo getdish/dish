@@ -1,5 +1,5 @@
-import { RestaurantQuery, Sources, graphql, query } from '@dish/graph'
-import { Divider, HStack, Spacer, StackProps, Text, VStack } from '@dish/ui'
+import { RestaurantQuery, Sources, graphql } from '@dish/graph'
+import { Divider, HStack, StackProps, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Linking } from 'react-native'
 
@@ -80,7 +80,7 @@ export const RestaurantDetailRow = memo(
                   {contentEl(row)}
                 </VStack>
                 {after}
-                {isSm && index !== rows.length - 1 && (
+                {!isSm && index !== rows.length - 1 && (
                   <>
                     <Divider vertical height={25} />
                   </>
@@ -96,7 +96,7 @@ export const RestaurantDetailRow = memo(
 function openingHours(restaurant: RestaurantQuery) {
   let text = 'Opens at'
   let color = 'grey'
-  let next_time = 'unknown'
+  let next_time = ''
   if (restaurant.is_open_now != null) {
     text = restaurant.is_open_now ? 'Opens at' : 'Closed until'
     color = restaurant.is_open_now ? 'green' : 'red'

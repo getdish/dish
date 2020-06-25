@@ -65,7 +65,7 @@ const HomePageContent = memo(() => {
 
         <HomeViewDrawer>
           <HomeStackView>
-            {(homeState, isActive, index) => {
+            {(homeState) => {
               return (
                 <Suspense fallback={null}>
                   {isHomeState(homeState) && (

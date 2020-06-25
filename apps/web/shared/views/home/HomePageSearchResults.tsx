@@ -40,11 +40,12 @@ import { StackViewCloseButton } from './StackViewCloseButton'
 
 export const avatar = require('../../assets/peach.jpg').default
 
-export default memo(function HomePageSearchResults(props: {
+export default memo(function HomePageSearchResults({
+  state,
+}: {
   state: HomeStateItemSearch
 }) {
   const om = useOvermind()
-  const state = om.state.home.lastSearchState ?? props.state
   const isSmall = useMediaQueryIsSmall()
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const { title, subTitle, pageTitleElements } = getTitleForState(
@@ -56,7 +57,7 @@ export default memo(function HomePageSearchResults(props: {
     ? topBarVPad
     : searchBarHeight - searchBarTopOffset + topBarVPad + 4
   const titleHeight = paddingTop + 48
-  const contentKey = `${state.id}${state.results.status}`
+  const contentKey = `${state.id}${state.results?.status ?? ''}`
 
   console.warn('HomePageSearchResults.render', { contentKey })
 
@@ -116,15 +117,21 @@ export default memo(function HomePageSearchResults(props: {
       <HomeSearchResultsViewContent
         key={contentKey}
         paddingTop={isSmall ? 58 : titleHeight - searchBarHeight}
+        searchState={state}
       />
     </VStack>
   )
 })
 
 const HomeSearchResultsViewContent = memo(
-  ({ paddingTop }: { paddingTop: number }) => {
+  ({
+    paddingTop,
+    searchState,
+  }: {
+    paddingTop: number
+    searchState: HomeStateItemSearch
+  }) => {
     const om = useOvermind()
-    const searchState = om.state.home.lastSearchState
     const [state, setState] = useState({
       chunk: 1,
       hasLoaded: 1,

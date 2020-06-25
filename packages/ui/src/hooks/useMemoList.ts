@@ -11,12 +11,17 @@ import { useEffect, useRef } from 'react'
  * @param mountArgs Optional arguments if you want to change the getItemMemoKey
  */
 
-export function useMemoList<T, R>(
-  items: T[],
-  getItemMemoKey: (item: T, index: number) => any[],
-  getItem: (item: T, index: number) => R,
+export function useMemoList<T, R>({
+  items,
+  getItem,
+  getItemMemoKey,
+  mountArgs,
+}: {
+  items: T[]
+  getItemMemoKey: (item: T, index: number) => any
+  getItem: (item: T, index: number) => R
   mountArgs?: any[]
-): (T | R)[] {
+}): (T | R)[] {
   const state = useRef<{ items: (T | R)[]; keys: any[] }>({
     items: [],
     keys: [],
@@ -25,7 +30,7 @@ export function useMemoList<T, R>(
     for (const [index, item] of items.entries()) {
       const key = getItemMemoKey(item, index)
       const curKey = state.current.keys[index]
-      if (!curKey || !curKey.every((k, i) => k === key[i])) {
+      if (!curKey || curKey !== key) {
         state.current.keys[index] = key
         state.current.items[index] = getItem ? getItem(item, index) : item
       }
