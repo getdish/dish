@@ -1,6 +1,7 @@
+import { globalTagId } from '../constants'
 import { order_by, query, review_constraint, t_uuid } from '../graphql'
 import { Review } from '../types'
-import { createQueryHelpersFor, globalTagId } from './queryHelpers'
+import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 
 const QueryHelpers = createQueryHelpersFor<Review>(

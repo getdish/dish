@@ -9,8 +9,6 @@ import {
   resolvedWithFields,
 } from './queryResolvers'
 
-export const globalTagId = '00000000-0000-0000-0000-000000000000'
-
 export function objectToWhere(hash: { [key: string]: any }): any {
   // default if id exists just use id
   if ('id' in hash) {

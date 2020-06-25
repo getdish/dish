@@ -10,6 +10,8 @@ export const isWorker =
 // matters is simply the relative differences between them. For example therefore
 // there is no need to ensure that the maximum value is 1.0 or 100%.
 
+export const globalTagId = '00000000-0000-0000-0000-000000000000'
+
 export const RESTAURANT_WEIGHTS = {
   yelp: 0.6,
   tripadvisor: 0.6,

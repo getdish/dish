@@ -1,7 +1,7 @@
 // 🚨
 // technically this should all use TagQuery but it breaks ts (slow)
 
-import { globalTagId } from '../helpers/queryHelpers'
+import { globalTagId } from '../constants'
 import { Tag } from '../types'
 import { slugify } from './slugify'
 
