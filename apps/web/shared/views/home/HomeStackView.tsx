@@ -5,6 +5,7 @@ import {
   PopoverStore,
   VStack,
   useDebounceValue,
+  useMemoList,
 } from '@dish/ui'
 import _ from 'lodash'
 import React, {
@@ -26,33 +27,33 @@ import { useMediaQueryIsSmall } from './HomeViewDrawer'
 //   currentId = ''
 // }
 
-let lastState
+const transitionDuration = 280
+
+type GetChildren<A> = (a: A) => React.ReactNode
+
 export function HomeStackView<A extends HomeStateItem>(props: {
-  children: (a: A, isActive: boolean, index: number) => React.ReactNode
+  children: GetChildren<A>
 }) {
   // const currentStateStore = useRecoilStore(HomeStateStore)
   const om = useOvermind()
   const breadcrumbs = om.state.home.breadcrumbStates
+  console.log('SATES', om.state.home.states)
+  console.time('ok')
+  const key = JSON.stringify(om.state.home.states)
+  console.timeEnd('ok')
   const homeStates = useMemo(() => {
+    console.log('get home states', breadcrumbs)
     return breadcrumbs
       .map((item) => {
         return om.state.home.states.find((x) => x.id === item.id)!
       })
       .filter(Boolean)
-  }, [breadcrumbs])
-  const states = useDebounceValue(homeStates, transitionDuration) ?? homeStates
-  const isRemoving = states.length > breadcrumbs.length
-  const items = isRemoving ? states : homeStates
-  const key = `${items.map((x) => x.id).join(' ')}`
-  const lastHomeStates = om.state.home.states
-
-  console.log(
-    'HomeStackView',
-    { key, states },
-    'lastState === states',
-    lastState === states
-  )
-  lastState = states
+  }, [key])
+  const currentStates =
+    useDebounceValue(homeStates, transitionDuration) ?? homeStates
+  const isRemoving = currentStates.length > breadcrumbs.length
+  const items = isRemoving ? currentStates : homeStates
+  console.log('what is', homeStates, isRemoving)
 
   // const activeItem = items[items.length - 1]
   // useEffect(() => {
@@ -60,24 +61,6 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   //     currentStateStore.currentId = activeItem.id
   //   }
   // }, [activeItem?.id])
-
-  const itemChildren = useMemo(() => {
-    return items.map((item, index) => {
-      const stackItemIndex = _.findLastIndex(
-        lastHomeStates,
-        (x) => x.id === item.id
-      )
-      const homeItem = lastHomeStates[stackItemIndex] as A
-      const isActive = index === items.length - 1
-      return (
-        <ErrorBoundary name={`HomeStackView.${item.type}`}>
-          <Suspense fallback={null}>
-            {props.children(homeItem, isActive, stackItemIndex)}
-          </Suspense>
-        </ErrorBoundary>
-      )
-    })
-  }, [key])
 
   return (
     <AbsoluteVStack fullscreen>
@@ -94,9 +77,8 @@ export function HomeStackView<A extends HomeStateItem>(props: {
             index={i}
             isActive={isActive}
             isRemoving={isRemoving && isActive}
-          >
-            {itemChildren[i]}
-          </HomeStackViewItem>
+            getChildren={props.children}
+          />
           // </PopoverShowContext.Provider>
         )
       })}
@@ -104,17 +86,15 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   )
 }
 
-const transitionDuration = 280
-
 const HomeStackViewItem = memo(
   ({
-    children,
     item,
     index,
     isActive,
     isRemoving,
+    getChildren,
   }: {
-    children: React.ReactNode
+    getChildren: GetChildren<HomeStateItem>
     item: HomeStateItemSimple
     index: number
     isActive: boolean
@@ -135,6 +115,10 @@ const HomeStackViewItem = memo(
     // useEffect(() => {
     //   popoverStore.show = isActive
     // }, [isActive])
+
+    const memoChildren = useMemo(() => {
+      return getChildren(item as any)
+    }, [item])
 
     return (
       // <PopoverContext.Provider value={useMemo(() => ({ id }), [id])}>
@@ -157,7 +141,9 @@ const HomeStackViewItem = memo(
             borderRadius={drawerBorderRadius}
             pointerEvents="auto"
           >
-            {children}
+            <ErrorBoundary name={`HomeStackView.${item.type}`}>
+              <Suspense fallback={null}>{memoChildren}</Suspense>
+            </ErrorBoundary>
           </AbsoluteVStack>
         </AbsoluteVStack>
       </VStack>

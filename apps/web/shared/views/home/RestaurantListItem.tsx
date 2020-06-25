@@ -172,16 +172,20 @@ const RestaurantListItemContent = memo(
                 <VStack paddingTop={paddingTop}>
                   <HStack paddingLeft={40} alignItems="center" maxWidth="50%">
                     {/* SECOND LINK WITH actual <a /> */}
-                    <Link name="restaurant" params={{ slug: restaurantSlug }}>
-                      <Text
-                        selectable
-                        maxWidth="100%"
+                    <Text
+                      selectable
+                      maxWidth="100%"
+                      fontSize={20}
+                      fontWeight="500"
+                      lineHeight={27}
+                      marginVertical={-4}
+                      textDecorationColor="transparent"
+                    >
+                      <Link
+                        inline
                         color="#000"
-                        fontSize={20}
-                        fontWeight="500"
-                        lineHeight={27}
-                        marginVertical={-4}
-                        textDecorationColor="transparent"
+                        name="restaurant"
+                        params={{ slug: restaurantSlug }}
                       >
                         <Text
                           marginRight={10}
@@ -197,26 +201,26 @@ const RestaurantListItemContent = memo(
                         >
                           {(restaurant.name ?? '').slice(0, 1000)}
                         </Text>
-                        {!!restaurant.address && (
-                          <Text fontSize={14} fontWeight="300" selectable>
-                            <Link
-                              inline
-                              color="#999"
-                              target="_blank"
-                              href={`https://www.google.com/maps/search/?api=1&${encodeURIComponent(
-                                restaurant.address
-                              )}`}
-                            >
-                              {getAddressText(
-                                currentLocationInfo,
-                                restaurant.address,
-                                'xs'
-                              )}
-                            </Link>
-                          </Text>
-                        )}
-                      </Text>
-                    </Link>
+                      </Link>
+                      {!!restaurant.address && (
+                        <Text fontSize={14} fontWeight="300" selectable>
+                          <Link
+                            inline
+                            color="#999"
+                            target="_blank"
+                            href={`https://www.google.com/maps/search/?api=1&${encodeURIComponent(
+                              restaurant.address
+                            )}`}
+                          >
+                            {getAddressText(
+                              currentLocationInfo,
+                              restaurant.address,
+                              'xs'
+                            )}
+                          </Link>
+                        </Text>
+                      )}
+                    </Text>
                   </HStack>
 
                   <Spacer size={12} />
@@ -252,9 +256,7 @@ const RestaurantListItemContent = memo(
                 afterTopCommentButton={
                   <HStack flex={1} spacing alignItems="center" flexWrap="wrap">
                     <RestaurantDeliveryButton restaurantId={restaurantId} />
-
-                    <Divider vertical />
-
+                    <Spacer size={8} />
                     <RestaurantDetailRow
                       size="sm"
                       restaurantSlug={restaurantSlug}

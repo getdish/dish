@@ -101,7 +101,7 @@ export function Link<
       style: {
         cursor: 'pointer',
         maxWidth: '100%',
-        flex: 1,
+        flex: inline ? 0 : 1,
         padding,
       },
     },
