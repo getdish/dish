@@ -145,14 +145,14 @@ const RestaurantListItemContent = memo(
               pressStyle={{ backgroundColor: bgLight }}
               marginLeft={-adjustRankingLeft}
               width={950}
+              position="relative"
             >
               {/* VOTE */}
               <AbsoluteVStack
-                fullscreen
                 zIndex={100}
                 left={-1}
-                top={paddingTop - 8}
                 height={120}
+                bottom={-40}
                 justifyContent="center"
                 pointerEvents="none"
               >
@@ -170,22 +170,29 @@ const RestaurantListItemContent = memo(
                 params={{ slug: restaurantSlug }}
               >
                 <VStack paddingTop={paddingTop}>
-                  <HStack paddingLeft={40} alignItems="center">
+                  <HStack
+                    paddingLeft={40}
+                    alignItems="center"
+                    maxWidth="50%"
+                    overflow="hidden"
+                  >
                     {/* SECOND LINK WITH actual <a /> */}
                     <Link name="restaurant" params={{ slug: restaurantSlug }}>
                       <Text
                         selectable
-                        ellipse
+                        maxWidth="100%"
                         color="#000"
                         fontSize={20}
                         fontWeight="500"
+                        lineHeight={27}
+                        marginVertical={-4}
                         textDecorationColor="transparent"
                       >
-                        <VStack
-                          // @ts-ignore TODO INLINE
-                          display="inline-flex"
+                        <Text
+                          marginRight={10}
                           borderBottomColor="#f2f2f2"
                           borderBottomWidth={2}
+                          // @ts-ignore
                           hoverStyle={{
                             borderBottomColor: '#000',
                           }}
@@ -193,17 +200,10 @@ const RestaurantListItemContent = memo(
                             borderBottomColor: brandColor,
                           }}
                         >
-                          {restaurant.name}
-                          {restaurant.name}
-                          {restaurant.name}
-                        </VStack>
+                          {(restaurant.name ?? '').slice(0, 1000)}
+                        </Text>
                         {!!restaurant.address && (
-                          <Text
-                            fontSize={14}
-                            marginLeft={10}
-                            fontWeight="300"
-                            selectable
-                          >
+                          <Text fontSize={14} fontWeight="300" selectable>
                             <Link
                               inline
                               color="#999"
@@ -248,7 +248,7 @@ const RestaurantListItemContent = memo(
               </Link>
             </VStack>
 
-            <Spacer />
+            <Spacer size={8} />
 
             {/* ROW: COMMENT */}
             <VStack>
