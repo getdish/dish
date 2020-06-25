@@ -26,6 +26,7 @@ import { useMediaQueryIsSmall } from './HomeViewDrawer'
 //   currentId = ''
 // }
 
+let lastState
 export function HomeStackView<A extends HomeStateItem>(props: {
   children: (a: A, isActive: boolean, index: number) => React.ReactNode
 }) {
@@ -45,7 +46,13 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   const key = `${items.map((x) => x.id).join(' ')}`
   const lastHomeStates = om.state.home.states
 
-  console.log('HomeStackView', key)
+  console.log(
+    'HomeStackView',
+    { key, states },
+    'lastState === states',
+    lastState === states
+  )
+  lastState = states
 
   // const activeItem = items[items.length - 1]
   // useEffect(() => {
@@ -113,7 +120,6 @@ const HomeStackViewItem = memo(
     isActive: boolean
     isRemoving: boolean
   }) => {
-    const id = useRef(Math.random()).current
     // const popoverStore = useRecoilStore(PopoverStore, { id })
     const [isMounted, setIsMounted] = useState(false)
     const isSmall = useMediaQueryIsSmall()

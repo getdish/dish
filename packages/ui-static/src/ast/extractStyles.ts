@@ -216,6 +216,7 @@ export function extractStyles(
               // called when evaluateAstNode encounters a dynamic-looking prop
               const evalFn = (n: t.Node) => {
                 // variable
+                console.log('look at this', n)
                 if (t.isIdentifier(n)) {
                   invariant(
                     staticNamespace.hasOwnProperty(n.name),

@@ -1,7 +1,7 @@
 import { CancelFn, cancelPromise } from './cancellablePromise'
 import { sleep } from './sleep'
 
-export const series = (fns: (() => Promise<any> | any)[]): CancelFn => {
+export const series = (fns: (() => Promise<any> | any)[] | any): CancelFn => {
   let current: any
   let cancelled = false
 
@@ -9,7 +9,9 @@ export const series = (fns: (() => Promise<any> | any)[]): CancelFn => {
     for (const fn of fns) {
       if (cancelled) break
       current = fn()
-      await current
+      if (current instanceof Promise) {
+        await current
+      }
     }
   }
 

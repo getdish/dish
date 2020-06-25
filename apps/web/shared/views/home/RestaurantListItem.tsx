@@ -1,3 +1,4 @@
+// debug
 import { fullyIdle } from '@dish/async'
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import {
@@ -18,7 +19,7 @@ import {
 } from '../../state/home'
 import { omStatic, useOvermindStatic } from '../../state/useOvermind'
 import { Link } from '../ui/Link'
-import { bgLight, bgLightLight } from './colors'
+import { bgLight, bgLightLight, brandColor } from './colors'
 import { DishView } from './DishView'
 import { HomeScrollViewHorizontal } from './HomeScrollView'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
@@ -180,17 +181,46 @@ const RestaurantListItemContent = memo(
                         fontSize={20}
                         fontWeight="500"
                         textDecorationColor="transparent"
-                        borderBottomColor="transparent"
-                        borderBottomWidth={2}
-                        // @ts-ignore
-                        hoverStyle={{
-                          borderBottomColor: '#000',
-                        }}
-                        pressStyle={{
-                          borderBottomColor: 'red',
-                        }}
                       >
-                        {restaurant.name}
+                        <VStack
+                          // @ts-ignore TODO INLINE
+                          display="inline-flex"
+                          borderBottomColor="#f2f2f2"
+                          borderBottomWidth={2}
+                          hoverStyle={{
+                            borderBottomColor: '#000',
+                          }}
+                          pressStyle={{
+                            borderBottomColor: brandColor,
+                          }}
+                        >
+                          {restaurant.name}
+                          {restaurant.name}
+                          {restaurant.name}
+                        </VStack>
+                        {!!restaurant.address && (
+                          <Text
+                            fontSize={14}
+                            marginLeft={10}
+                            fontWeight="300"
+                            selectable
+                          >
+                            <Link
+                              inline
+                              color="#999"
+                              target="_blank"
+                              href={`https://www.google.com/maps/search/?api=1&${encodeURIComponent(
+                                restaurant.address
+                              )}`}
+                            >
+                              {getAddressText(
+                                currentLocationInfo,
+                                restaurant.address,
+                                'xs'
+                              )}
+                            </Link>
+                          </Text>
+                        )}
                       </Text>
                     </Link>
                   </HStack>
@@ -235,24 +265,6 @@ const RestaurantListItemContent = memo(
                       size="sm"
                       restaurantSlug={restaurantSlug}
                     />
-
-                    {!!restaurant.address && (
-                      <Text fontSize={12} selectable color="#999">
-                        <Link
-                          inline
-                          target="_blank"
-                          href={`https://www.google.com/maps/search/?api=1&${encodeURIComponent(
-                            restaurant.address
-                          )}`}
-                        >
-                          {getAddressText(
-                            currentLocationInfo,
-                            restaurant.address,
-                            'xs'
-                          )}
-                        </Link>
-                      </Text>
-                    )}
                   </HStack>
                 }
               />

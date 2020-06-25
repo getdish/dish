@@ -204,7 +204,7 @@ test('13. text with complex conditional and local vars', async (t) => {
   t.is(1, 1)
 })
 
-test('14. extracts psuedo styles', async (t) => {
+test('14. extracts psuedo styles and evaluates constants', async (t) => {
   const { test14 } = t.context
   const out = test14.renderer.toJSON()
   t.snapshot(out)
@@ -257,7 +257,9 @@ async function extractStaticApp() {
             },
             {
               loader: require.resolve('../loader'),
-              options: {},
+              options: {
+                evaluateImportsWhitelist: ['constants.js'],
+              },
             },
           ],
         },
