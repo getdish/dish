@@ -91,10 +91,8 @@ export const TagButton = memo(
         <HStack
           className="ease-in-out-fast"
           height={height}
-          backgroundColor={subtle ? defaultColor : 'white'}
+          backgroundColor={subtle ? 'transparent' : '#fafafa'}
           borderRadius={9 * scale}
-          borderWidth={1}
-          borderColor={subtle ? 'transparent' : 'rgba(0,0,0,0.15)'}
           overflow="hidden"
           alignItems="center"
           justifyContent="center"

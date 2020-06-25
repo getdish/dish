@@ -67,14 +67,20 @@ test('converts a style object to class names', async (t) => {
     transform: [{ rotateY: '10deg' }],
     shadowRadius: 10,
     shadowColor: 'red',
+    borderBottomWidth: 1,
+    borderBottomColor: 'blue',
   }
   const styles = getStylesAtomic(style)
+  console.log('styles', styles)
   const style1 = styles.find((x) => x.property === 'backgroundColor')
   const style2 = styles.find((x) => x.property === 'transform')
   const style3 = styles.find((x) => x.property === 'boxShadow')
   t.assert(!!style1)
   t.assert(!!style2)
   t.assert(!!style3)
+  t.assert(
+    styles.find((x) => x.property === 'borderBottomStyle').value === 'solid'
+  )
   t.deepEqual(style1!.rules, [
     '.r-backgroundColor-1g6456j{background-color:rgba(255,0,0,1.00);}',
   ])

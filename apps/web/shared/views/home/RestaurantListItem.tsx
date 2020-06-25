@@ -1,4 +1,3 @@
-// debug
 import { fullyIdle } from '@dish/async'
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import {
@@ -92,7 +91,12 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       alignItems="center"
       position="relative"
     >
-      <VStack className="ease-in-out-fast" flex={1}>
+      <VStack
+        className="test123 ease-in-out-fast"
+        flex={1}
+        borderBottomWidth={1}
+        borderBottomColor="red"
+      >
         <RestaurantListItemContent {...props} />
       </VStack>
       <AbsoluteVStack fullscreen top={12} zIndex={10} pointerEvents="none">
@@ -111,7 +115,7 @@ const RestaurantListItemContent = memo(
     const pad = 18
     const isSmall = useMediaQueryIsSmall()
     // note static for now... caused big perf issue
-    isEditingUserPage(props.searchState, omStatic.state)
+    // const isEditing = isEditingUserPage(props.searchState, omStatic.state)
     const adjustRankingLeft = 36
     const leftPad = 25
     const restaurant = restaurantQuery(restaurantSlug)
@@ -135,7 +139,7 @@ const RestaurantListItemContent = memo(
         <VStack
           paddingHorizontal={pad + 6}
           width={isSmall ? '80%' : '100%'}
-          minWidth={isSmall ? '50%' : 380}
+          minWidth={isSmall ? '50%' : 320}
           maxWidth={isSmall ? '90vw' : '50%'}
           position="relative"
         >
@@ -305,7 +309,7 @@ const RestaurantPeek = memo(
           position="relative"
           marginRight={-spacing}
           marginBottom={-spacing}
-          paddingLeft={isSmall ? '55vw' : 0.63 * drawerWidth}
+          paddingLeft={isSmall ? '63vw' : 0.63 * drawerWidth}
         >
           <HStack
             pointerEvents="auto"

@@ -22,6 +22,14 @@ export const pseudos = {
   },
 }
 
+const borderDefaults = {
+  borderWidth: 'borderStyle',
+  borderBottomWidth: 'borderBottomStyle',
+  borderTopWidth: 'borderTopStyle',
+  borderLeftWidth: 'borderLeftStyle',
+  borderRightWidth: 'borderRightStyle',
+}
+
 export function getStylesAtomic(
   style: any,
   classList?: string[] | null,
@@ -51,8 +59,10 @@ export function getStylesAtomic(
     pseudoConfig?: { name: string; priority: number }
   ) {
     // why is this diff from react-native-web!? we need to figure out
-    if (Object.keys(style).some((k) => k.includes('borderWidth'))) {
-      style.borderStyle = style.borderStyle ?? 'solid'
+    for (const key in borderDefaults) {
+      if (key in style) {
+        style[borderDefaults[key]] = style[borderDefaults[key]] ?? 'solid'
+      }
     }
     const all = _.cloneDeep(
       atomic(createCompileableStyle(createReactDOMStyle(i18Style(style))))

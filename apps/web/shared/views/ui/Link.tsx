@@ -36,13 +36,17 @@ export function Link<
     navigateAfterPress,
     ...restProps
   } = allProps
-  const { onPress, onMouseDown, ...linkProps } = useNormalizeLinkProps(
-    restProps as any
-  )
+  const {
+    onPress,
+    onMouseDown,
+    name,
+    params,
+    ...linkProps
+  } = useNormalizeLinkProps(restProps as any) as any
   const om = useOvermindStatic()
   const navItem: NavigateItem = {
-    name: linkProps['name'],
-    params: linkProps['params'],
+    name,
+    params,
     replace: linkProps['replace'],
   }
   const elementName = tagName ?? 'a'
