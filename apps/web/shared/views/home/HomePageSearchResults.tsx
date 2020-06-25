@@ -1,14 +1,10 @@
-import {
-  CancellablePromise,
-  createCancellablePromise,
-  fullyIdle,
-  series,
-} from '@dish/async'
+import { createCancellablePromise, fullyIdle, series } from '@dish/async'
 import {
   Box,
   Circle,
   HStack,
   LoadingItems,
+  Spacer,
   Text,
   Toast,
   VStack,
@@ -30,7 +26,7 @@ import {
   searchBarTopOffset,
 } from '../../constants'
 import { HomeStateItemSearch, OmState } from '../../state/home'
-import { omStatic, useOvermind } from '../../state/useOvermind'
+import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { flatButtonStyle } from './baseButtonStyle'
@@ -92,22 +88,18 @@ export default memo(function HomePageSearchResults(props: {
         zIndex={1000}
         alignItems="center"
       >
-        <HStack
-          flex={1}
-          justifyContent="space-between"
-          flexDirection="row-reverse"
-          spacing={15}
-        >
+        <HStack flex={1} justifyContent="space-between">
           <VStack marginTop={12} marginBottom={-20}>
             <HomeLenseBar activeTagIds={state.activeTagIds} />
           </VStack>
+          <Spacer size={16} />
           <HomeFilterBar activeTagIds={state.activeTagIds} />
+          <Spacer size={16} />
           <VStack
             flex={10}
-            alignSelf="flex-end"
             spacing={3}
-            alignItems="flex-end"
             justifyContent="flex-end"
+            alignItems="flex-end"
             overflow="hidden"
           >
             <Text ellipse fontSize={15} fontWeight="700">

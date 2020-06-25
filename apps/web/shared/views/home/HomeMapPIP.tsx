@@ -1,6 +1,5 @@
-// debug
 import { RestaurantQuery, graphql, query } from '@dish/graph'
-import { ZStack, useOnMount } from '@dish/ui'
+import { AbsoluteVStack, useOnMount } from '@dish/ui'
 import _ from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
@@ -89,7 +88,7 @@ const HomeMapPIPContent = graphql(() => {
   }, [map, annotation])
 
   return (
-    <ZStack
+    <AbsoluteVStack
       position="absolute"
       bottom={30}
       right={30}
@@ -110,9 +109,9 @@ const HomeMapPIPContent = graphql(() => {
         transform: [{ translateY: 10 }],
       })}
     >
-      <ZStack fullscreen bottom={-30} top={-30}>
+      <AbsoluteVStack fullscreen bottom={-30} top={-30}>
         <Map {...mapProps} />
-      </ZStack>
-    </ZStack>
+      </AbsoluteVStack>
+    </AbsoluteVStack>
   )
 })

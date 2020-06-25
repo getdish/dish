@@ -1,10 +1,10 @@
 import {
+  AbsoluteVStack,
   Divider,
   HStack,
   MediaQuery,
   Spacer,
   VStack,
-  ZStack,
   mediaQueries,
 } from '@dish/ui'
 import React, { memo, useState } from 'react'
@@ -186,7 +186,7 @@ const HomeSearchBarHomeButton = memo(() => {
 const SearchLocationButton = memo(() => {
   const om = useOvermind()
   return (
-    <ZStack fullscreen pointerEvents="none">
+    <AbsoluteVStack fullscreen pointerEvents="none">
       <HStack flex={1} alignItems="center" justifyContent="center">
         <Spacer flex={1} />
         <VStack
@@ -205,6 +205,6 @@ const SearchLocationButton = memo(() => {
           <Navigation size={18} color="blue" />
         </VStack>
       </HStack>
-    </ZStack>
+    </AbsoluteVStack>
   )
 })

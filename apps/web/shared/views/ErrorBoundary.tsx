@@ -1,4 +1,4 @@
-import { Text, VStack, ZStack } from '@dish/ui'
+import { AbsoluteVStack, Text, VStack } from '@dish/ui'
 import React from 'react'
 import {
   FallbackProps,
@@ -12,7 +12,7 @@ function ErrorFallback({
   resetErrorBoundary,
 }: FallbackProps) {
   return (
-    <ZStack
+    <AbsoluteVStack
       fullscreen
       alignItems="center"
       justifyContent="center"
@@ -28,7 +28,7 @@ function ErrorFallback({
         </Text>
       </VStack>
       <Button title="Try Again" onPress={resetErrorBoundary}></Button>
-    </ZStack>
+    </AbsoluteVStack>
   )
 }
 

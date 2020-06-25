@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 
 import { useOverlay } from '../hooks/useOverlay'
 import { Box } from './Box'
-import { StackProps, ZStack } from './Stacks'
+import { AbsoluteVStack, StackProps } from './Stacks'
 
 export const Modal = ({
   isOpen,
@@ -23,7 +23,7 @@ export const Modal = ({
   }
 
   return createPortal(
-    <ZStack
+    <AbsoluteVStack
       fullscreen
       zIndex={zIndex}
       alignItems="center"
@@ -38,7 +38,7 @@ export const Modal = ({
         maxHeight="90%"
         {...rest}
       ></Box>
-    </ZStack>,
+    </AbsoluteVStack>,
     document.getElementById('modals')!
   )
 }

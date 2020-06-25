@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useRef } from 'react'
 
 import { useForceUpdate } from '../hooks/useForceUpdate'
-import { VStack, ZStack } from './Stacks'
+import { AbsoluteVStack, VStack } from './Stacks'
 import { Text } from './Text'
 
 let show: (text: string, duration: number) => void = (text) => {
@@ -45,7 +45,7 @@ export const ToastRoot = memo(function ToastRoot() {
   )
 
   return (
-    <ZStack fullscreen alignItems="flex-end" justifyContent="center">
+    <AbsoluteVStack fullscreen alignItems="flex-end" justifyContent="center">
       {stateRef.current.show && (
         <VStack
           backgroundColor="rgba(0,0,0,0.95)"
@@ -59,6 +59,6 @@ export const ToastRoot = memo(function ToastRoot() {
           </Text>
         </VStack>
       )}
-    </ZStack>
+    </AbsoluteVStack>
   )
 })

@@ -1,4 +1,4 @@
-import { LinearGradient, StackProps, VStack, ZStack } from '@dish/ui'
+import { AbsoluteVStack, LinearGradient, StackProps, VStack } from '@dish/ui'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
@@ -43,7 +43,7 @@ export const Squircle = ({
             zIndex: 10000,
           })}
         >
-          <ZStack
+          <AbsoluteVStack
             className={
               // isHovered ? 'ease-in-out inner-glow' :
               'ease-in-out inner-shadow'
@@ -63,7 +63,7 @@ export const Squircle = ({
               ]}
               style={[StyleSheet.absoluteFill]}
             />
-          </ZStack>
+          </AbsoluteVStack>
           {children}
         </VStack>
       </VStack>

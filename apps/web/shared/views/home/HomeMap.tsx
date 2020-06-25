@@ -1,6 +1,6 @@
 import { sleep } from '@dish/async'
 import { Restaurant, graphql, query } from '@dish/graph'
-import { VStack, ZStack, useDebounceEffect, useOnMount } from '@dish/ui'
+import { AbsoluteVStack, VStack, useDebounceEffect, useOnMount } from '@dish/ui'
 import React, {
   Suspense,
   memo,
@@ -454,9 +454,15 @@ const HomeMapContent = memo(function HomeMap({
   )
 
   return (
-    <ZStack position="absolute" top={0} right={0} bottom={0} width={mapWidth}>
+    <AbsoluteVStack
+      position="absolute"
+      top={0}
+      right={0}
+      bottom={0}
+      width={mapWidth}
+    >
       <Map {...mapProps} />
-    </ZStack>
+    </AbsoluteVStack>
   )
 })
 
