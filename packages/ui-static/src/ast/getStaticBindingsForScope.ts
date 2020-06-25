@@ -47,9 +47,6 @@ export function getStaticBindingsForScope(
 
     // check to see if the item is a module
     const sourceModule = getSourceModule(k, binding)
-    if (shouldPrintDebug) {
-      console.log('>> sourceModule', sourceModule)
-    }
     if (sourceModule) {
       if (!sourceModule.sourceModule) {
         continue
@@ -69,9 +66,6 @@ export function getStaticBindingsForScope(
       const isOnWhitelist = whitelist.some(
         (x) => basename(x) === basename(moduleName)
       )
-      if (shouldPrintDebug) {
-        console.log('>> ', { whitelist, moduleName, isOnWhitelist })
-      }
       if (isOnWhitelist) {
         let src: any
         const filenames = [
@@ -80,10 +74,8 @@ export function getStaticBindingsForScope(
           moduleName,
         ]
         for (const file of filenames) {
-          console.log('file', file)
           if (existsSync(file)) {
             src = require(file)
-            console.log(file, src)
             break
           }
         }
@@ -136,6 +128,12 @@ export function getStaticBindingsForScope(
     }
 
     const cacheKey = `${dec.id.name}_${dec.id.start}-${dec.id.end}`
+
+    // retrieve value from cache
+    if (bindingCache.hasOwnProperty(cacheKey)) {
+      ret[k] = bindingCache[cacheKey]
+      continue
+    }
 
     // retrieve value from cache
     if (bindingCache.hasOwnProperty(cacheKey)) {

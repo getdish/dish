@@ -1,4 +1,3 @@
-// debug
 import { fullyIdle } from '@dish/async'
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import {
