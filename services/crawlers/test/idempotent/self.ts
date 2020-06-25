@@ -4,13 +4,13 @@ import {
   Scrape,
   Tag,
   flushTestData,
+  restaurantFindOneWithTags,
   restaurantInsert,
   restaurantUpdate,
   restaurantUpsertOrphanTags,
   scrapeInsert,
   tagInsert,
 } from '@dish/graph'
-import { restaurantFindOneWithTags } from '@dish/graph/src'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
 import { Self } from '../../src/self/Self'

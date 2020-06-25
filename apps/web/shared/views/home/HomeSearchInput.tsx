@@ -1,9 +1,8 @@
-import { HStack, Hoverable, useOnMount } from '@dish/ui'
+import { fullyIdle } from '@dish/async'
+import { HStack, useOnMount } from '@dish/ui'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { StyleSheet, TextInput } from 'react-native'
 
-import { fullyIdle } from '../../../../../packages/async/src'
-import { isWorker } from '../../constants'
 import {
   inputCaretPosition,
   inputClearSelection,

@@ -1,5 +1,5 @@
 import { slugify } from '@dish/graph'
-import { Box, Divider, HStack, Popover, Toast, VStack } from '@dish/ui'
+import { Box, Divider, HStack, Popover, Text, Toast, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { User } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
@@ -77,14 +77,7 @@ export const HomeUserMenu = memo(() => {
       >
         <HStack spacing alignItems="center" justifyContent="center">
           <User size={22} opacity={0.5} />
-          {/* {om.state.user.isLoggedIn ? (
-            <Text
-              ellipse
-              style={{ fontSize: 12, opacity: 0.5, maxWidth: 50 }}
-            >
-              {om.state.user.user.username}
-            </Text>
-          ) : null} */}
+          {!om.state.user.isLoggedIn && <Text opacity={0.5}>Signup</Text>}
         </HStack>
       </LinkButton>
     </Popover>

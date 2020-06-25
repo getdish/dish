@@ -1,5 +1,4 @@
 import {
-  AbsoluteVStack,
   Divider,
   HStack,
   MediaQuery,
@@ -8,7 +7,7 @@ import {
   mediaQueries,
 } from '@dish/ui'
 import React, { memo, useState } from 'react'
-import { ChevronLeft, Loader, MapPin, Navigation, Search } from 'react-feather'
+import { ChevronLeft, Loader, MapPin, Search } from 'react-feather'
 
 import {
   pageWidthMax,
@@ -32,20 +31,6 @@ export default memo(function HomeSearchBar() {
   const isSmall = useMediaQueryIsSmall()
   const om = useOvermind()
   const borderRadius = 54
-
-  const locationSearchElement = (
-    <VStack
-      position="relative"
-      flex={65}
-      minWidth={180}
-      borderColor="#eee"
-      borderWidth={1}
-      borderRadius={100}
-    >
-      <HomeSearchLocationInput />
-      <SearchLocationButton />
-    </VStack>
-  )
 
   const searchElement = <HomeSearchInput />
 
@@ -128,7 +113,7 @@ export default memo(function HomeSearchBar() {
               <>
                 {/* keep both in dom so we have access to ref */}
                 <VStack display={showLocation ? 'contents' : 'none'}>
-                  {locationSearchElement}
+                  <HomeSearchLocationInput />
                 </VStack>
                 <VStack display={!showLocation ? 'contents' : 'none'}>
                   {searchElement}
@@ -141,7 +126,7 @@ export default memo(function HomeSearchBar() {
 
           {!isSmall && (
             <>
-              {locationSearchElement}
+              <HomeSearchLocationInput />
               {divider}
               <VStack flex={1} />
             </>
@@ -180,31 +165,5 @@ const HomeSearchBarHomeButton = memo(() => {
         <ChevronLeft size={22} opacity={0.6} style={{ marginTop: 4 }} />
       </LinkButton>
     </MediaQuery>
-  )
-})
-
-const SearchLocationButton = memo(() => {
-  const om = useOvermind()
-  return (
-    <AbsoluteVStack fullscreen pointerEvents="none">
-      <HStack flex={1} alignItems="center" justifyContent="center">
-        <Spacer flex={1} />
-        <VStack
-          pointerEvents="auto"
-          alignItems="center"
-          justifyContent="center"
-          padding={10}
-          opacity={0.5}
-          pressStyle={{
-            opacity: 0.4,
-          }}
-          onPressOut={() => {
-            om.actions.home.popTo('home')
-          }}
-        >
-          <Navigation size={18} color="blue" />
-        </VStack>
-      </HStack>
-    </AbsoluteVStack>
   )
 })
