@@ -1,6 +1,8 @@
+// debug
 import { AbsoluteVStack, Box, Spacer, Text, VStack } from '@dish/ui'
 import React from 'react'
 
+import { testColor } from './constants'
 import { baseStyle, nestedStyle } from './extract-spec-constants'
 
 const nonStaticInt = eval(`10`)
@@ -198,6 +200,7 @@ export function Test13(props: TestProps) {
   )
 }
 
+// pressStyle + external constants
 export function Test14() {
   return (
     <VStack
@@ -205,7 +208,7 @@ export function Test14() {
         backgroundColor: 'red',
       }}
       pressStyle={{
-        backgroundColor: 'blue',
+        backgroundColor: testColor,
       }}
     />
   )

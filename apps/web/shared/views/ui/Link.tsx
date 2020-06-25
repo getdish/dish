@@ -1,8 +1,8 @@
 import './Link.css'
 
-import { fullyIdle } from '@dish/async'
+import { fullyIdle, series } from '@dish/async'
 import { Text, prevent } from '@dish/ui'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import {
   NavigateItem,
@@ -44,34 +44,27 @@ export function Link<
     ...linkProps
   } = useNormalizeLinkProps(restProps as any) as any
   const om = useOvermindStatic()
+  const [clickEvent, setClickEvent] = useState(null)
   const navItem: NavigateItem = {
     name,
     params,
     replace: linkProps['replace'],
   }
   const elementName = tagName ?? 'a'
-  const handleClick = async (e) => {
-    if (allProps.href) {
-      e.stopPropagation()
-      return
-    }
-    prevent(e)
-    if (asyncClick) {
-      await fullyIdle(linkActionIdle)
-    }
-    if (onClick) {
-      onClick?.(e)
-    } else if (onPress) {
-      onPress?.()
-      if (navigateAfterPress) {
-        om.actions.router.navigate(navItem)
-      }
-    } else {
-      if (!preventNavigate) {
-        om.actions.router.navigate(navItem)
-      }
-    }
-  }
+
+  useEffect(() => {
+    if (!clickEvent) return
+    return series([
+      () => (asyncClick ? fullyIdle(linkActionIdle) : null),
+      () => (onClick ? onClick?.(clickEvent) : onPress?.(clickEvent)),
+      () => {
+        if (navigateAfterPress) {
+          om.actions.router.navigate(navItem)
+        }
+      },
+    ])
+  }, [clickEvent])
+
   const content = (
     <Text
       ellipse={ellipse}
@@ -91,7 +84,11 @@ export function Link<
       href: getPathFromParams(navItem),
       onMouseDown,
       ...linkProps,
-      onClick: handleClick,
+      onClick: (e) => {
+        prevent(clickEvent)
+        e.persist()
+        setClickEvent(e)
+      },
       className: `${className ?? ''} ${inline ? 'inline-flex' : ' flex'}`,
       style: {
         cursor: 'pointer',

@@ -70,7 +70,7 @@ export const RatingView = forwardRef(
           <Text
             fontWeight="300"
             marginTop={1}
-            fontSize={size * 0.33}
+            fontSize={size * 0.4}
             opacity={(1 / size) * 20}
           >
             {rankingPost}

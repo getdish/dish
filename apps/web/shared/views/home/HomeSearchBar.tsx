@@ -52,9 +52,9 @@ export default memo(function HomeSearchBar() {
         width="100%"
         height="100%"
         borderRadius={borderRadius}
-        shadowColor="rgba(0,0,0,0.12)"
+        shadowColor="rgba(0,0,0,0.05)"
         shadowOffset={{ height: 5, width: 0 }}
-        shadowRadius={40}
+        shadowRadius={26}
       >
         <VStack
           position="relative"

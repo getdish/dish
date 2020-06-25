@@ -39,7 +39,7 @@ export function evaluateAstNode(
         throw new Error('key must be either a string or a number')
       }
 
-      ret[key] = evaluateAstNode(value.value)
+      ret[key] = evaluateAstNode(value.value, evalFn)
     }
     return ret
   }

@@ -53,6 +53,26 @@ export const HomeSearchInput = memo(() => {
     )
   }, [])
 
+  // shortcuts
+  useEffect(() => {
+    const handleKeyUp = (e) => {
+      console.log(
+        'document.activeElement',
+        document.activeElement,
+        input,
+        document.activeElement === input
+      )
+      if (document.activeElement !== input) {
+        if (e.keyCode == 191) {
+          // forward-slash (/)
+          input.focus()
+        }
+      }
+    }
+    window.addEventListener('keyup', handleKeyUp)
+    return () => window.removeEventListener('keyup', handleKeyUp)
+  }, [])
+
   // disabled because it steals focus from autocomplete rn
   // focus/blur search on show autocomplete
   // useEffect(() => {
@@ -264,7 +284,7 @@ const HomeSearchBarTags = memo(
     return (
       <>
         {!!om.state.home.searchBarTags.length && (
-          <HStack marginLeft={10} marginTop={-1} spacing={5}>
+          <HStack marginLeft={10} marginTop={-1} spacing={8}>
             {om.state.home.searchBarTags.map((tag) => {
               const isActive = om.state.home.searchbarFocusedTag === tag
               return (

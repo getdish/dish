@@ -1,6 +1,7 @@
-import path from 'path'
+import path, { basename } from 'path'
 
 import * as t from '@babel/types'
+import { existsSync } from 'fs-extra'
 
 import { evaluateAstNode } from './evaluateAstNode'
 import { getSourceModule } from './getSourceModule'
@@ -24,6 +25,8 @@ interface Binding {
   value: any
 }
 
+require('ts-node').register({})
+
 export function getStaticBindingsForScope(
   scope: any,
   whitelist: string[] = [],
@@ -44,6 +47,9 @@ export function getStaticBindingsForScope(
 
     // check to see if the item is a module
     const sourceModule = getSourceModule(k, binding)
+    if (shouldPrintDebug) {
+      console.log('>> sourceModule', sourceModule)
+    }
     if (sourceModule) {
       if (!sourceModule.sourceModule) {
         continue
@@ -60,8 +66,27 @@ export function getStaticBindingsForScope(
         moduleName = path.resolve(sourceDir, moduleName)
       }
 
-      if (whitelist.includes(moduleName)) {
-        const src = require(moduleName)
+      const isOnWhitelist = whitelist.some(
+        (x) => basename(x) === basename(moduleName)
+      )
+      if (shouldPrintDebug) {
+        console.log('>> ', { whitelist, moduleName, isOnWhitelist })
+      }
+      if (isOnWhitelist) {
+        let src: any
+        const filenames = [
+          moduleName.replace('.js', '.ts'),
+          moduleName.replace('.js', '.tsx'),
+          moduleName,
+        ]
+        for (const file of filenames) {
+          console.log('file', file)
+          if (existsSync(file)) {
+            src = require(file)
+            console.log(file, src)
+            break
+          }
+        }
         if (sourceModule.destructured) {
           if (sourceModule.imported) {
             ret[k] = src[sourceModule.imported]
@@ -74,6 +99,9 @@ export function getStaticBindingsForScope(
           } else {
             ret[k] = src
           }
+        }
+        if (shouldPrintDebug) {
+          console.log('>> module on whitelist', moduleName, src, ret)
         }
       }
       continue
