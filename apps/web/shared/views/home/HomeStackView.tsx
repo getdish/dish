@@ -148,10 +148,6 @@ const HomeStackViewItem = memo(
             left={left}
             bottom={-(index * 5)}
             width="100%"
-            {...(index !== 0 && {
-              shadowColor: 'rgba(0,0,0,0.1)',
-              shadowRadius: 15,
-            })}
             borderRadius={drawerBorderRadius}
             pointerEvents="auto"
           >

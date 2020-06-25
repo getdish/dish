@@ -59,6 +59,8 @@ export default memo(
         position="relative"
         backgroundColor="#fff"
         overflow="hidden"
+        shadowRadius={10}
+        shadowColor="rgba(0,0,0,0.1)"
         marginTop={isSmall ? 0 : searchBarHeight}
       >
         <PageTitleTag>
@@ -136,7 +138,7 @@ export default memo(
 
               <HStack>
                 <VStack width="50%">
-                  <SmallTitle divider="center">Reviews</SmallTitle>
+                  <SmallTitle divider="center">Overview</SmallTitle>
                   <Spacer />
                   <RestaurantTopReviews
                     expandTopComments={2}
@@ -207,8 +209,8 @@ const RestaurantPhotos = memo(
     const restaurant = restaurantQuery(restaurantSlug)
     const photos = restaurantPhotosForCarousel({ restaurant })
     const drawerWidth = useHomeDrawerWidthInner()
-    const spacing = 20
-    const perRow = Math.round(drawerWidth / 500)
+    const spacing = 12
+    const perRow = drawerWidth > 800 ? 3 : 2
 
     return (
       <>
@@ -233,7 +235,8 @@ const RestaurantPhotos = memo(
                     key={index}
                     size={(drawerWidth / 2 - perRow * spacing) / perRow}
                     restaurantSlug={restaurantSlug}
-                    margin={6}
+                    margin={spacing / 2}
+                    marginBottom={16}
                     dish={photo}
                   />
                 )

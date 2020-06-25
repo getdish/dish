@@ -18,6 +18,7 @@ import { Link } from '../ui/Link'
 import { LinkButton } from '../ui/LinkButton'
 import { flatButtonStyleSelected } from './baseButtonStyle'
 import { bgLight } from './colors'
+import { RestaurantReview } from './RestaurantReview'
 import { SmallButton } from './SmallButton'
 import { useUserReview } from './useUserReview'
 
@@ -68,71 +69,79 @@ export const RestaurantAddComment = memo(
     }
 
     return (
-      <CommentBubble backgroundColor={bgLight} user={user}>
-        <HStack position="relative" width="100%">
-          <TextInput
-            value={reviewText}
-            onChange={(e) => {
-              // @ts-ignore
-              const height = e.nativeEvent.srcElement.scrollHeight
-              setHeight(height)
-            }}
-            onChangeText={(text) => {
-              if (isSaved) {
-                setIsSaved(false)
-              }
-              setReviewText(text)
-            }}
-            multiline
-            placeholder="Be sure to..."
-            style={{
-              minHeight: height,
-              lineHeight: 22,
-              flex: 1,
-              padding: 10,
-            }}
+      <VStack>
+        {!!review && (
+          <RestaurantReview
+            userName={review.user.username}
+            reviewText={review.text}
           />
-          {!isSaved && (
-            <LinkButton
-              {...flatButtonStyleSelected}
-              position="absolute"
-              right={0}
-              onPress={async () => {
-                Toast.show('Saving...')
-                console.log('inserting', review)
-
-                if (review) {
-                  review.text = reviewText
-                } else {
-                  mutation.insert_review({
-                    objects: [
-                      {
-                        restaurant_id: restaurantId,
-                        rating: 0,
-                        user_id: user.id,
-                        text: reviewText,
-                      },
-                    ],
-                  })
-                }
-                // insertReview({
-                //   review: {
-                //     text: reviewText,
-                //     restaurant_id: restaurantId,
-                //     tag_id: null,
-                //     user_id: om.state.user.user.id,
-                //     rating: 0,
-                //   },
-                // })
-                Toast.show('Saved!')
-                setIsSaved(true)
+        )}
+        <CommentBubble backgroundColor={bgLight} user={user}>
+          <HStack position="relative" width="100%">
+            <TextInput
+              value={reviewText}
+              onChange={(e) => {
+                // @ts-ignore
+                const height = e.nativeEvent.srcElement.scrollHeight
+                setHeight(height)
               }}
-            >
-              Save
-            </LinkButton>
-          )}
-        </HStack>
-      </CommentBubble>
+              onChangeText={(text) => {
+                if (isSaved) {
+                  setIsSaved(false)
+                }
+                setReviewText(text)
+              }}
+              multiline
+              placeholder="Be sure to..."
+              style={{
+                minHeight: height,
+                lineHeight: 22,
+                flex: 1,
+                padding: 10,
+              }}
+            />
+            {!isSaved && (
+              <LinkButton
+                {...flatButtonStyleSelected}
+                position="absolute"
+                right={0}
+                onPress={async () => {
+                  Toast.show('Saving...')
+                  console.log('inserting', review)
+
+                  if (review) {
+                    review.text = reviewText
+                  } else {
+                    mutation.insert_review({
+                      objects: [
+                        {
+                          restaurant_id: restaurantId,
+                          rating: 0,
+                          user_id: user.id,
+                          text: reviewText,
+                        },
+                      ],
+                    })
+                  }
+                  // insertReview({
+                  //   review: {
+                  //     text: reviewText,
+                  //     restaurant_id: restaurantId,
+                  //     tag_id: null,
+                  //     user_id: om.state.user.user.id,
+                  //     rating: 0,
+                  //   },
+                  // })
+                  Toast.show('Saved!')
+                  setIsSaved(true)
+                }}
+              >
+                Save
+              </LinkButton>
+            )}
+          </HStack>
+        </CommentBubble>
+      </VStack>
     )
   })
 )

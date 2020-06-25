@@ -11,7 +11,6 @@ export const Squircle = ({
   ...rest
 }: StackProps & {
   isHovered?: boolean
-  size: number
 }) => {
   return (
     <>

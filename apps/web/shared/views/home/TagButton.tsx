@@ -11,7 +11,7 @@ import {
 } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
-import { ChevronUp, X } from 'react-feather'
+import { ChevronUp, ThumbsUp, X } from 'react-feather'
 
 import { LinkButton } from '../ui/LinkButton'
 
@@ -115,10 +115,8 @@ export const TagButton = memo(
               fontWeight="bold"
               margin="auto"
               marginVertical="-2%"
-              paddingHorizontal={6 * scale}
-              backgroundColor={
-                subtle ? 'transparent' : 'rgba(255,255,255,0.99)'
-              }
+              paddingHorizontal={8 * scale}
+              backgroundColor={subtle ? 'transparent' : 'rgba(0,0,0,0.05)'}
               lineHeight={lineHeight}
               alignSelf="stretch"
               alignContent="center"
@@ -167,36 +165,27 @@ export const TagButton = memo(
             {tag['displayName'] ?? _.capitalize(tag.name)}
           </Text>
           {!!votable && (
-            <VStack
-              // paddingVertical={paddingVertical}
-              // marginLeft={-8 * scale}
-              // marginTop={size === 'sm' ? -24 : 0}
-              backgroundColor={subtle ? 'transparent' : '#fff'}
-              // borderLeftColor="#eee"
-              // borderLeftWidth={1}
+            <LinkButton
+              paddingHorizontal={5 * scale}
+              alignItems="center"
+              justifyContent="center"
+              borderRadius={100}
+              width={24 * scale}
+              height={24 * scale}
+              {...(subtle && {
+                marginLeft: 4,
+                overflow: 'hidden',
+              })}
+              hoverStyle={{
+                backgroundColor: '#ccc',
+              }}
+              onPressOut={(e) => {
+                prevent(e)
+                console.warn('should vote')
+              }}
             >
-              <LinkButton
-                paddingHorizontal={5 * scale}
-                alignItems="center"
-                justifyContent="center"
-                {...(subtle && {
-                  borderRadius: 100,
-                  width: 24 * scale,
-                  height: 24 * scale,
-                  marginLeft: 4,
-                  overflow: 'hidden',
-                })}
-                hoverStyle={{
-                  backgroundColor: '#eee',
-                }}
-                onPressOut={(e) => {
-                  prevent(e)
-                  console.warn('should vote')
-                }}
-              >
-                <ChevronUp size={12 * scale} color="#ccc" />
-              </LinkButton>
-            </VStack>
+              <ThumbsUp size={12 * scale} color={subtle ? '#ccc' : '#666'} />
+            </LinkButton>
           )}
           {!!closable && (
             <VStack
