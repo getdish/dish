@@ -89,7 +89,7 @@ export default memo(function HomePageSearchResults(props: {
         alignItems="center"
       >
         <HStack flex={1} justifyContent="space-between">
-          <VStack marginTop={12} marginBottom={-20}>
+          <VStack marginTop={0} marginBottom={-6}>
             <HomeLenseBar activeTagIds={state.activeTagIds} />
           </VStack>
           <Spacer size={16} />
