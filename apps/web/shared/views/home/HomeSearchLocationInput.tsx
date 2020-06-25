@@ -1,9 +1,9 @@
+import { AbsoluteVStack, HStack, Spacer, VStack } from '@dish/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
+import { Navigation } from 'react-feather'
 import { TextInput } from 'react-native'
 
-import { HStack } from '../../../../../packages/ui/src'
 import {
-  inputCaretPosition,
   inputClearSelection,
   inputGetNode,
   inputIsTextSelected,
@@ -11,6 +11,8 @@ import {
 import { useOvermind } from '../../state/useOvermind'
 import { HomeAutocompleteHoverableInput } from './HomeAutocomplete'
 import { inputTextStyles, onFocusAnyInput } from './HomeSearchInput'
+
+const paddingHorizontal = 16
 
 export const HomeSearchLocationInput = memo(() => {
   const om = useOvermind()
@@ -69,29 +71,66 @@ export const HomeSearchLocationInput = memo(() => {
   }, [locationInput])
 
   return (
-    <HomeAutocompleteHoverableInput
-      input={locationInput}
-      autocompleteTarget="location"
+    <VStack
+      position="relative"
+      flex={65}
+      minWidth={180}
+      borderColor="#eee"
+      borderWidth={1}
+      borderRadius={100}
     >
-      <HStack>
-        <TextInput
-          ref={locationInputRef}
-          value={locationSearch}
-          placeholder="San Francisco"
-          style={[
-            inputTextStyles.textInput,
-            { paddingRight: 32, fontSize: 16 },
-          ]}
-          onFocus={() => {
-            onFocusAnyInput()
-            om.actions.home.setShowAutocomplete('location')
+      <HomeAutocompleteHoverableInput
+        input={locationInput}
+        autocompleteTarget="location"
+      >
+        <HStack>
+          <TextInput
+            ref={locationInputRef}
+            value={locationSearch}
+            placeholder="San Francisco"
+            style={[
+              inputTextStyles.textInput,
+              { paddingHorizontal: paddingHorizontal, fontSize: 16 },
+            ]}
+            onFocus={() => {
+              onFocusAnyInput()
+              om.actions.home.setShowAutocomplete('location')
+            }}
+            onChangeText={(text) => {
+              setLocationSearch(text)
+              om.actions.home.setLocationSearchQuery(text)
+            }}
+          />
+        </HStack>
+      </HomeAutocompleteHoverableInput>
+      <SearchLocationButton />
+    </VStack>
+  )
+})
+
+const SearchLocationButton = memo(() => {
+  const om = useOvermind()
+  return (
+    <AbsoluteVStack fullscreen pointerEvents="none">
+      <HStack flex={1} alignItems="center" justifyContent="center">
+        <Spacer flex={1} />
+        <VStack
+          pointerEvents="auto"
+          alignItems="center"
+          justifyContent="center"
+          padding={10}
+          paddingHorizontal={paddingHorizontal}
+          opacity={0.5}
+          pressStyle={{
+            opacity: 0.4,
           }}
-          onChangeText={(text) => {
-            setLocationSearch(text)
-            om.actions.home.setLocationSearchQuery(text)
+          onPressOut={() => {
+            om.actions.home.popTo('home')
           }}
-        />
+        >
+          <Navigation size={18} color="blue" />
+        </VStack>
       </HStack>
-    </HomeAutocompleteHoverableInput>
+    </AbsoluteVStack>
   )
 })

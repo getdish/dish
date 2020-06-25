@@ -1,18 +1,16 @@
 import {
   Auth,
   RestaurantWithId,
+  UserWithId,
   deleteAllBy,
   deleteAllFuzzyBy,
-  userFindOne,
-  userUpdate,
-} from '@dish/graph'
-import {
-  UserWithId,
   restaurantFindOne,
   restaurantInsert,
   restaurantUpsert,
   scrapeFindOne,
-} from '@dish/graph/src'
+  userFindOne,
+  userUpdate,
+} from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
 
 interface Context {}
