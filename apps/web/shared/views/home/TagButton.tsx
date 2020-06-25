@@ -1,6 +1,7 @@
 import { NonNullObject, Tag, TagType } from '@dish/graph'
 import {
   HStack,
+  Spacer,
   StackProps,
   SuperScriptText,
   Text,
@@ -76,10 +77,10 @@ export const TagButton = memo(
     }
     const tag = { name, type: type as TagType, icon, rgb }
     const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1 : 1
-    const height = scale * 30
+    const height = scale * (subtle ? 26 : 30)
     const lineHeight = 22 * scale
     const defaultColor = noColor ? 'inherit' : getTagColor(rgb)
-    const fg = color ?? (subtle ? 'rgba(0,0,0,0.6)' : defaultColor)
+    const fg = color ?? (subtle ? 'rgba(0,0,0,0.65)' : defaultColor)
     const fontSize = fontSizeProp ?? (subtle ? 'inherit' : 16 * scale)
     const rankFontSize =
       typeof fontSize === 'number' ? fontSize * 0.9 : fontSize
@@ -99,20 +100,17 @@ export const TagButton = memo(
           justifyContent="center"
           position="relative"
           minHeight={lineHeight}
+          hoverStyle={{
+            backgroundColor: '#f2f2f2',
+          }}
           {...(!subtle && {
             hoverStyle: {
               transform: [{ rotate: '-2deg', scale: 1.1 }],
             },
           })}
-          {...(subtle && {
-            backgroundColor: '#000',
-            hoverStyle: {
-              backgroundColor: '#f2f2f2',
-            },
-          })}
           {...rest}
         >
-          {!!rank && (
+          {rank ? (
             <Text
               // @ts-ignore
               fontSize={rankFontSize}
@@ -133,6 +131,8 @@ export const TagButton = memo(
               <SuperScriptText opacity={0.5}>#</SuperScriptText>
               {rank}
             </Text>
+          ) : (
+            <Spacer size={scale * 5} />
           )}
           <Text
             ellipse
@@ -196,7 +196,7 @@ export const TagButton = memo(
                   console.warn('should vote')
                 }}
               >
-                <ChevronUp size={14 * scale} />
+                <ChevronUp size={12 * scale} color="#ccc" />
               </LinkButton>
             </VStack>
           )}
