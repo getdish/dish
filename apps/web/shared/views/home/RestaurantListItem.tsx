@@ -1,37 +1,29 @@
-import { fullyIdle, series, sleep } from '@dish/async'
-import { graphql, query, restaurantPhotosForCarousel } from '@dish/graph'
+// debug
+import { fullyIdle } from '@dish/async'
+import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import {
+  AbsoluteVStack,
   Divider,
   HStack,
-  HoverablePopover,
   Spacer,
   Text,
   VStack,
-  ZStack,
   useDebounceEffect,
 } from '@dish/ui'
-import { when } from 'overmind'
-import React, { memo, useCallback, useEffect, useState } from 'react'
-import { MessageSquare } from 'react-feather'
-import { Image } from 'react-native'
+import React, { memo, useEffect, useState } from 'react'
 
 import {
   GeocodePlace,
   HomeStateItemSearch,
   isEditingUserPage,
 } from '../../state/home'
-import {
-  omStatic,
-  useOvermind,
-  useOvermindStatic,
-} from '../../state/useOvermind'
+import { omStatic, useOvermindStatic } from '../../state/useOvermind'
 import { Link } from '../ui/Link'
 import { bgLight, bgLightLight } from './colors'
 import { DishView } from './DishView'
 import { HomeScrollViewHorizontal } from './HomeScrollView'
-import { useMediaQueryIsMedium, useMediaQueryIsSmall } from './HomeViewDrawer'
+import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RankingView } from './RankingView'
-import { CommentBubble, RestaurantAddComment } from './RestaurantAddComment'
 import { getAddressText } from './RestaurantAddressLinksRow'
 import { RestaurantDeliveryButton } from './RestaurantDeliveryButton'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
@@ -42,9 +34,7 @@ import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantTopReviews } from './RestaurantTopReviews'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
-import { SmallButton } from './SmallButton'
 import { Squircle } from './Squircle'
-import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 type RestaurantListItemProps = {
@@ -105,12 +95,12 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       <VStack className="ease-in-out-fast" flex={1}>
         <RestaurantListItemContent {...props} />
       </VStack>
-      <ZStack fullscreen top={12} zIndex={10} pointerEvents="none">
+      <AbsoluteVStack fullscreen top={12} zIndex={10} pointerEvents="none">
         <RestaurantPeek
           restaurantSlug={props.restaurantSlug}
           searchState={props.searchState}
         />
-      </ZStack>
+      </AbsoluteVStack>
     </HStack>
   )
 })
@@ -159,7 +149,7 @@ const RestaurantListItemContent = memo(
               width={950}
             >
               {/* VOTE */}
-              <ZStack
+              <AbsoluteVStack
                 fullscreen
                 zIndex={100}
                 left={-1}
@@ -168,12 +158,12 @@ const RestaurantListItemContent = memo(
                 justifyContent="center"
                 pointerEvents="none"
               >
-                <ZStack position="absolute" top={24} left={17}>
+                <AbsoluteVStack position="absolute" top={24} left={17}>
                   <RestaurantUpVoteDownVote restaurantId={restaurantId} />
-                </ZStack>
+                </AbsoluteVStack>
 
                 <RankingView rank={rank} />
-              </ZStack>
+              </AbsoluteVStack>
 
               {/* LINK */}
               <Link
@@ -193,7 +183,7 @@ const RestaurantListItemContent = memo(
                         selectable
                         ellipse
                         color="#000"
-                        fontSize={22}
+                        fontSize={20}
                         fontWeight="500"
                         textDecorationColor="transparent"
                         borderBottomColor="transparent"
@@ -201,6 +191,9 @@ const RestaurantListItemContent = memo(
                         // @ts-ignore
                         hoverStyle={{
                           borderBottomColor: '#000',
+                        }}
+                        pressStyle={{
+                          borderBottomColor: 'red',
                         }}
                       >
                         {restaurant.name}

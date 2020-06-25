@@ -1,4 +1,4 @@
-import { LinearGradient, ZStack } from '@dish/ui'
+import { AbsoluteVStack, LinearGradient } from '@dish/ui'
 import React, { memo } from 'react'
 import { StyleSheet } from 'react-native'
 
@@ -10,7 +10,7 @@ export const HomeAutocompleteBackground = memo(() => {
   const om = useOvermind()
   const show = useShowAutocomplete()
   return (
-    <ZStack
+    <AbsoluteVStack
       className="ease-in-out-fast"
       opacity={show ? 1 : 0}
       disabled={!show}
@@ -30,6 +30,6 @@ export const HomeAutocompleteBackground = memo(() => {
         colors={['rgba(0,0,0,0.06)', 'rgba(255,255,255,0)']}
         style={[StyleSheet.absoluteFill, { height: 160 }]}
       />
-    </ZStack>
+    </AbsoluteVStack>
   )
 })

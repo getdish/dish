@@ -1,9 +1,9 @@
 import {
+  AbsoluteVStack,
   HStack,
   LinearGradient,
   StackProps,
   VStack,
-  ZStack,
   useMedia,
 } from '@dish/ui'
 import React from 'react'
@@ -74,7 +74,7 @@ export function HomeViewDrawer(props: { children: any }) {
       })}
     >
       {/* overlay / under searchbar */}
-      <ZStack
+      <AbsoluteVStack
         opacity={isSmall ? 0 : 1}
         pointerEvents="none"
         fullscreen
@@ -86,7 +86,7 @@ export function HomeViewDrawer(props: { children: any }) {
           colors={['white', 'rgba(255,255,255,0)']}
           style={[StyleSheet.absoluteFill]}
         />
-      </ZStack>
+      </AbsoluteVStack>
 
       <VStack
         flex={1}
@@ -94,7 +94,7 @@ export function HomeViewDrawer(props: { children: any }) {
         maxWidth={isSmall ? '100%' : drawerWidthMax}
         marginLeft={isSmall ? 0 : 'auto'}
       >
-        <ZStack position="relative" flex={1}>
+        <AbsoluteVStack position="relative" flex={1}>
           {/* <LinearGradient
               colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
               style={{
@@ -106,7 +106,7 @@ export function HomeViewDrawer(props: { children: any }) {
               }}
             /> */}
           {props.children}
-        </ZStack>
+        </AbsoluteVStack>
       </VStack>
     </HStack>
   )

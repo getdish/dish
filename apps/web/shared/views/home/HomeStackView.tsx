@@ -1,9 +1,9 @@
 import { Store, useRecoilStore } from '@dish/recoil-store'
 import {
+  AbsoluteVStack,
   PopoverContext,
   PopoverStore,
   VStack,
-  ZStack,
   useDebounceValue,
 } from '@dish/ui'
 import _ from 'lodash'
@@ -73,7 +73,7 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   }, [key])
 
   return (
-    <ZStack fullscreen>
+    <AbsoluteVStack fullscreen>
       {items.map((item, i) => {
         const isActive = i === items.length - 1
         return (
@@ -93,7 +93,7 @@ export function HomeStackView<A extends HomeStateItem>(props: {
           // </PopoverShowContext.Provider>
         )
       })}
-    </ZStack>
+    </AbsoluteVStack>
   )
 }
 
@@ -140,8 +140,8 @@ const HomeStackViewItem = memo(
         right={0}
         bottom={0}
       >
-        <ZStack pointerEvents={isActive ? 'none' : 'auto'} fullscreen>
-          <ZStack
+        <AbsoluteVStack pointerEvents={isActive ? 'none' : 'auto'} fullscreen>
+          <AbsoluteVStack
             flex={1}
             zIndex={index}
             top={top}
@@ -156,8 +156,8 @@ const HomeStackViewItem = memo(
             pointerEvents="auto"
           >
             {children}
-          </ZStack>
-        </ZStack>
+          </AbsoluteVStack>
+        </AbsoluteVStack>
       </VStack>
       // </PopoverContext.Provider>
     )

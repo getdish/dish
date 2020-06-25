@@ -8,9 +8,18 @@ import i18Style from 'react-native-web/dist/cjs/exports/StyleSheet/i18nStyle'
 import { StyleObject } from '../types'
 
 export const pseudos = {
-  activeStyle: 'active',
-  pressStyle: 'focus',
-  hoverStyle: 'hover',
+  activeStyle: {
+    name: 'active',
+    priority: 3,
+  },
+  pressStyle: {
+    name: 'focus',
+    priority: 2,
+  },
+  hoverStyle: {
+    name: 'hover',
+    priority: 1,
+  },
 }
 
 export function getStylesAtomic(
@@ -24,7 +33,7 @@ export function getStylesAtomic(
 
   // split psuedos
   for (const key in style) {
-    if (pseudos[key]) {
+    if (!!pseudos[key]) {
       styles[key] = style[key]
     } else {
       styles.base[key] = style[key]
@@ -37,7 +46,10 @@ export function getStylesAtomic(
     })
     .flat()
 
-  function getAtomicStyle(style: ViewStyle, pseudoKey?: string) {
+  function getAtomicStyle(
+    style: ViewStyle,
+    pseudoConfig?: { name: string; priority: number }
+  ) {
     // why is this diff from react-native-web!? we need to figure out
     if (Object.keys(style).some((k) => k.includes('borderWidth'))) {
       style.borderStyle = style.borderStyle ?? 'solid'
@@ -47,11 +59,17 @@ export function getStylesAtomic(
     )
     for (const key in all) {
       const styleObj = all[key]
-      if (pseudoKey) {
+      if (pseudoConfig) {
         const ogId = styleObj.identifier
-        styleObj.identifier = `${styleObj.identifier}-${pseudoKey.slice(0, 2)}`
+        const prefix = pseudoConfig.name.slice(0, 2)
+        styleObj.identifier = `${styleObj.identifier}-${prefix}`
+        const newSelector = [...Array(pseudoConfig.priority)]
+          .map((x) => `.${styleObj.identifier}`)
+          .join('')
         styleObj.rules = styleObj.rules.map((rule) =>
-          rule.replace(ogId, styleObj.identifier).replace('{', `:${pseudoKey}{`)
+          rule
+            .replace(`.${ogId}`, newSelector)
+            .replace('{', `:${pseudoConfig.name}{`)
         )
       }
       styleObj.className = `.${styleObj.identifier}`

@@ -1,11 +1,11 @@
 import {
+  AbsoluteVStack,
   Circle,
   HStack,
   Hoverable,
   Spacer,
   Text,
   VStack,
-  ZStack,
 } from '@dish/ui'
 import React, { memo, useEffect, useRef } from 'react'
 import { Plus } from 'react-feather'
@@ -196,7 +196,7 @@ export default memo(function HomeAutoComplete() {
   )
 
   return (
-    <ZStack
+    <AbsoluteVStack
       className="ease-in-out-faster"
       position="absolute"
       top={searchBarTopOffset + searchBarHeight}
@@ -210,7 +210,7 @@ export default memo(function HomeAutoComplete() {
       disabled={!isShowing}
     >
       {contentElements}
-    </ZStack>
+    </AbsoluteVStack>
   )
 })
 

@@ -128,11 +128,9 @@ const createStack = (defaultStyle?: ViewStyle) => {
           ref={combineRefs(innerRef, ref)}
           pointerEvents={pointerEvents}
           style={[
-            {
-              ...defaultStyle,
-              ...(fullscreen && fsStyle),
-              ...props,
-            },
+            defaultStyle,
+            fullscreen ? fsStyle : null,
+            props,
             style,
             state.hover ? hoverStyle : null,
             state.press ? pressStyle : null,
@@ -235,6 +233,9 @@ const createStack = (defaultStyle?: ViewStyle) => {
   return (component as any) as StaticComponent<StackProps>
 }
 
-export const ZStack = createStack({ position: 'absolute' })
+export const AbsoluteVStack = createStack({
+  position: 'absolute',
+  flexDirection: 'column',
+})
 export const HStack = createStack({ flexDirection: 'row' })
 export const VStack = createStack({ flexDirection: 'column' })

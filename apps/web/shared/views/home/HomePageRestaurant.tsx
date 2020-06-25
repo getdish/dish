@@ -1,5 +1,6 @@
 import { graphql, query, restaurantPhotosForCarousel } from '@dish/graph'
 import {
+  AbsoluteVStack,
   Divider,
   HStack,
   LoadingItems,
@@ -7,7 +8,6 @@ import {
   Spacer,
   Text,
   VStack,
-  ZStack,
 } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
@@ -68,14 +68,14 @@ export default memo(
         <StackViewCloseButton />
 
         {isLoading && (
-          <ZStack
+          <AbsoluteVStack
             fullscreen
             backgroundColor="white"
             zIndex={1000}
             borderRadius={drawerBorderRadius}
           >
             <LoadingItems />
-          </ZStack>
+          </AbsoluteVStack>
         )}
 
         <HomeScrollView paddingTop={20}>

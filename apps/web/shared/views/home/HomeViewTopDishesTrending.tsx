@@ -1,10 +1,10 @@
 import {
+  AbsoluteVStack,
   HStack,
   LoadingItem,
   MediaQuery,
   SmallerTitle,
   VStack,
-  ZStack,
   mediaQueries,
 } from '@dish/ui'
 import React, { memo } from 'react'
@@ -42,7 +42,7 @@ export const HomeViewTopDishesTrending = memo(() => {
     <VStack height={188 + listSpace * (total - 1)}>
       <HStack spacing="lg" paddingHorizontal={10}>
         <VStack flex={1}>
-          <ZStack position="absolute" top={-5} left={-12} zIndex={100}>
+          <AbsoluteVStack position="absolute" top={-5} left={-12} zIndex={100}>
             <LinkButton
               paddingVertical={5}
               paddingHorizontal={6}
@@ -57,7 +57,7 @@ export const HomeViewTopDishesTrending = memo(() => {
             >
               Trending
             </LinkButton>
-          </ZStack>
+          </AbsoluteVStack>
           <VStack spacing={6}>
             <SmallerTitle marginBottom={5}>Restaurants</SmallerTitle>
             <VStack spacing={listSpace} overflow="hidden">

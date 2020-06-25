@@ -1,5 +1,6 @@
 import { Restaurant, TopCuisine } from '@dish/graph'
 import {
+  AbsoluteVStack,
   HStack,
   HorizontalLine,
   LinearGradient,
@@ -8,7 +9,6 @@ import {
   StackProps,
   Text,
   VStack,
-  ZStack,
 } from '@dish/ui'
 import _, { clamp } from 'lodash'
 import {
@@ -91,7 +91,7 @@ const HomePageTopDishes = memo(() => {
                   spacing={20}
                 >
                   {!isSmall && (
-                    <ZStack
+                    <AbsoluteVStack
                       position="absolute"
                       top={0}
                       left="0%"
@@ -114,7 +114,7 @@ const HomePageTopDishes = memo(() => {
                       >
                         {tagsDescription}
                       </LinkButton>
-                    </ZStack>
+                    </AbsoluteVStack>
                   )}
                   <HorizontalLine />
                   <HomeLenseBar size="lg" activeTagIds={activeTagIds} />
@@ -292,7 +292,7 @@ const TopDishesRestaurantsSide = memo(
 const HomeTopDishesSide = memo((props) => {
   const sideWidth = useHomeSideWidth()
   return (
-    <ZStack
+    <AbsoluteVStack
       fullscreen
       paddingTop={padding + 4}
       pointerEvents="none"

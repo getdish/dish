@@ -1,10 +1,10 @@
-import { Text, ZStack } from '@dish/ui'
+import { AbsoluteVStack, Text } from '@dish/ui'
 import React from 'react'
 
 export function Splash() {
   return (
-    <ZStack fullscreen backgroundColor="red">
+    <AbsoluteVStack fullscreen backgroundColor="red">
       <Text>Loading</Text>
-    </ZStack>
+    </AbsoluteVStack>
   )
 }

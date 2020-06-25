@@ -1,4 +1,4 @@
-import { HStack, Text, VStack, ZStack } from '@dish/ui'
+import { AbsoluteVStack, HStack, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { RefreshCcw } from 'react-feather'
 
@@ -14,7 +14,7 @@ export const HomeMapControlsOverlay = memo(() => {
   const drawerWidth = useHomeDrawerWidth()
   const isSmall = useMediaQueryIsSmall()
   return (
-    <ZStack
+    <AbsoluteVStack
       fullscreen
       padding={20}
       pointerEvents="none"
@@ -63,6 +63,6 @@ export const HomeMapControlsOverlay = memo(() => {
       >
         <VStack flex={1} />
       </HStack>
-    </ZStack>
+    </AbsoluteVStack>
   )
 })

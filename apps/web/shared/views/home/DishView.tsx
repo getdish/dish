@@ -1,5 +1,5 @@
 import { TopCuisineDish } from '@dish/graph'
-import { Box, HStack, StackProps, Text, ZStack } from '@dish/ui'
+import { AbsoluteVStack, Box, HStack, StackProps, Text } from '@dish/ui'
 import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'
 import { Image } from 'react-native'
@@ -67,7 +67,7 @@ export const DishView = memo(
         {...rest}
       >
         {/* rating */}
-        <ZStack pointerEvents="none" fullscreen zIndex={10}>
+        <AbsoluteVStack pointerEvents="none" fullscreen zIndex={10}>
           {!!dish.rating && (
             <DishRatingView
               size={size > 220 ? 'sm' : 'xs'}
@@ -77,7 +77,7 @@ export const DishView = memo(
               left={-3}
             />
           )}
-        </ZStack>
+        </AbsoluteVStack>
         <Squircle
           width={width}
           height={height}

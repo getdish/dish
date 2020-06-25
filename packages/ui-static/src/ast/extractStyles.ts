@@ -193,7 +193,7 @@ export function extractStyles(
           return (
             !!styleProps[name] ||
             !!staticConfig?.styleExpansionProps?.[name] ||
-            pseudos[name]
+            !!pseudos[name]
           )
         }
 
@@ -630,6 +630,8 @@ export function extractStyles(
           node.attributes.splice(classNamePropIndex, 1)
         }
 
+        const defaultStyle = component.staticConfig?.defaultStyle ?? {}
+
         // if all style props have been extracted, gloss component can be
         // converted to a div or the specified component
         if (inlinePropCount === 0) {
@@ -651,7 +653,6 @@ export function extractStyles(
             )
           }
           // since were removing down to div, we need to push the default styles onto this classname
-          const defaultStyle = component.staticConfig?.defaultStyle ?? {}
           if (shouldPrintDebug) {
             console.log({ component, originalNodeName, defaultStyle })
           }
@@ -670,18 +671,16 @@ export function extractStyles(
         }
 
         if (inlinePropCount) {
-          if (lastSpreadIndex > -1) {
-            if (!isSingleSimpleSpread) {
-              // if only some style props were extracted AND additional props are spread onto the component,
-              // add the props back with null values to prevent spread props from incorrectly overwriting the extracted prop value
-              Object.keys(viewStyles).forEach((attr) => {
-                node.attributes.push(
-                  t.jsxAttribute(
-                    t.jsxIdentifier(attr),
-                    t.jsxExpressionContainer(t.nullLiteral())
-                  )
+          // if only some style props were extracted AND additional props are spread onto the component,
+          // add the props back with null values to prevent spread props from incorrectly overwriting the extracted prop value
+          for (const key in defaultStyle) {
+            if (key in viewStyles) {
+              node.attributes.push(
+                t.jsxAttribute(
+                  t.jsxIdentifier(key),
+                  t.jsxExpressionContainer(t.nullLiteral())
                 )
-              })
+              )
             }
           }
         }

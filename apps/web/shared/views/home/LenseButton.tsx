@@ -39,7 +39,7 @@ export const LenseButton = memoIsEqualDeep(
           className="ease-in-out-fast"
           alignItems="center"
           justifyContent="center"
-          marginVertical={-12 * scale}
+          marginVertical={-5 * scale}
           width={sizePx * scale}
           height={sizePx * scale}
           borderRadius={100}
@@ -59,8 +59,8 @@ export const LenseButton = memoIsEqualDeep(
           })}
         >
           <Text
-            color={isActive ? '#fff' : '#454545'}
-            fontSize={sizePx * 0.5 * scale}
+            opacity={isActive ? 1 : 0.5}
+            fontSize={sizePx * (isActive ? 0.7 : 0.4) * scale}
             lineHeight={16}
             {...(!minimal && {
               lineHeight: sizePx * scale,
@@ -74,21 +74,29 @@ export const LenseButton = memoIsEqualDeep(
             transform={[{ rotate: '-10deg' }]}
             zIndex={100}
             alignItems="center"
-            marginBottom={-5}
             borderRadius={4}
             paddingHorizontal={3}
-            marginTop={-12}
+            marginTop={-8}
+            marginBottom={-5}
             {...(isActive && {
               backgroundColor: lenseColor,
             })}
           >
-            <Text
-              fontSize={13}
-              fontWeight="400"
-              color={isActive ? '#fff' : '#000'}
+            <VStack
+              opacity={isActive ? 1 : 0.8}
+              hoverStyle={{
+                opacity: 1,
+              }}
             >
-              {lense.displayName ?? lense.name}
-            </Text>
+              <Text
+                fontSize={13}
+                fontWeight="400"
+                lineHeight={15}
+                color={isActive ? '#fff' : '#000'}
+              >
+                {lense.displayName ?? lense.name}
+              </Text>
+            </VStack>
           </VStack>
         </VStack>
       </LinkButton>

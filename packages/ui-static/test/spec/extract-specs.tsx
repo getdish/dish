@@ -1,4 +1,4 @@
-import { Box, Spacer, Text, VStack, ZStack } from '@dish/ui'
+import { AbsoluteVStack, Box, Spacer, Text, VStack } from '@dish/ui'
 import React from 'react'
 
 import { baseStyle, nestedStyle } from './extract-spec-constants'
@@ -121,11 +121,11 @@ export function Test7() {
 // style expasion + imported constants
 export function Test8() {
   return (
-    <ZStack fullscreen position="relative">
-      <ZStack {...baseStyle}>
-        <ZStack fullscreen position="relative" {...nestedStyle} />
-      </ZStack>
-    </ZStack>
+    <AbsoluteVStack fullscreen position="relative">
+      <AbsoluteVStack {...baseStyle}>
+        <AbsoluteVStack fullscreen position="relative" {...nestedStyle} />
+      </AbsoluteVStack>
+    </AbsoluteVStack>
   )
 }
 

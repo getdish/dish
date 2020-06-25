@@ -1,4 +1,4 @@
-import { HStack } from '@dish/ui'
+import { HStack, Spacer } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { HomeActiveTagIds } from '../../state/home'
@@ -14,15 +14,19 @@ export const HomeLenseBar = memo(
   }) => {
     const om = useOvermind()
     return (
-      <HStack alignItems="center" justifyContent="center" spacing={2}>
+      <HStack alignItems="center" justifyContent="center">
         {om.state.home.allLenseTags.map((lense, index) => (
-          <LenseButton
-            key={lense.id + index}
-            lense={lense}
-            isActive={props.activeTagIds[getTagId(lense)]}
-            minimal={props.minimal}
-            size={props.size}
-          />
+          <React.Fragment key={lense.id + index}>
+            <LenseButton
+              lense={lense}
+              isActive={props.activeTagIds[getTagId(lense)]}
+              minimal={props.minimal}
+              size={props.size}
+            />
+            {index < om.state.home.allLenseTags.length - 1 && (
+              <Spacer size={2} />
+            )}
+          </React.Fragment>
         ))}
       </HStack>
     )

@@ -1,12 +1,11 @@
 import { graphql, query, restaurantPhotosForCarousel } from '@dish/graph'
-import { HStack, Text, VStack, ZStack } from '@dish/ui'
+import { AbsoluteVStack, HStack, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Image, ScrollView } from 'react-native'
 
 import { pageWidthMax } from '../../constants'
 import { HomeStateItemGallery } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
-import { CloseButton } from './CloseButton'
 import { StackViewCloseButton } from './StackViewCloseButton'
 
 export default memo(function HomePageGallery() {
@@ -33,7 +32,7 @@ const HomePageGalleryContent = memo(
     })
     const photos = restaurantPhotosForCarousel({ restaurant, max: 100 })
     return (
-      <ZStack
+      <AbsoluteVStack
         fullscreen
         backgroundColor="rgba(0,0,0,0.75)"
         alignItems="center"
@@ -75,7 +74,7 @@ const HomePageGalleryContent = memo(
             </HStack>
           </ScrollView>
         </VStack>
-      </ZStack>
+      </AbsoluteVStack>
     )
   })
 )
