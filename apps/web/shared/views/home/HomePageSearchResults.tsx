@@ -1,10 +1,14 @@
-import { fullyIdle, series } from '@dish/async'
+import {
+  CancellablePromise,
+  createCancellablePromise,
+  fullyIdle,
+  series,
+} from '@dish/async'
 import {
   Box,
   Circle,
   HStack,
   LoadingItems,
-  Spacer,
   Text,
   Toast,
   VStack,
@@ -126,24 +130,31 @@ export default memo(function HomePageSearchResults(props: {
 const HomeSearchResultsViewContent = memo(
   ({ paddingTop }: { paddingTop: number }) => {
     const om = useOvermind()
-    const state = om.state.home.lastSearchState
-    const allResults = state.results?.results?.restaurants ?? []
-    const [chunk, setChunk] = useState(1)
-    const [loadMore, setLoadMore] = useState(0)
-    const [nearBottomAt, setNearBottomAt] = useState(0)
-    const perChunk = [0, 3, 3, 6, 12, 12]
-    const totalToShow = chunk * perChunk[chunk]
+    const searchState = om.state.home.lastSearchState
+    const [state, setState] = useState({
+      chunk: 1,
+      hasLoaded: 1,
+      scrollToEndOf: 1,
+    })
+    const perChunk = [3, 3, 6, 12, 12]
+    const totalToShow =
+      state.chunk *
+      perChunk.slice(0, state.chunk).reduce((a, b) => a + b, perChunk[0])
+    const allResults = searchState.results?.results?.restaurants ?? []
     const hasMoreToLoad = allResults.length > totalToShow
-    // load a few at a time, less to start
-    const loadMoreCb = useCallback(() => setLoadMore(Date.now()), [])
     const isLoading =
-      (hasMoreToLoad && loadMore === 0) ||
-      !state.results?.results ||
-      state.results.status === 'loading'
+      (hasMoreToLoad && state.hasLoaded === 1) ||
+      !searchState.results?.results ||
+      searchState.results.status === 'loading'
 
     const handleScrollToBottom = useCallback(() => {
-      console.warn('did scroll to bottom, TODO')
-      setNearBottomAt(Date.now())
+      setState((x) => {
+        if (x.scrollToEndOf !== x.hasLoaded) {
+          console.warn('scroll to bottom, update state')
+          return { ...x, scrollToEndOf: x.hasLoaded }
+        }
+        return x
+      })
     }, [])
 
     const contentWrap = (children: any) => {
@@ -160,60 +171,72 @@ const HomeSearchResultsViewContent = memo(
       return cur.map((item, index) => (
         <Suspense key={item.id} fallback={null}>
           <RestaurantListItem
-            currentLocationInfo={state.currentLocationInfo ?? null}
+            currentLocationInfo={searchState.currentLocationInfo ?? null}
             restaurantId={item.id}
             restaurantSlug={item.slug}
             rank={index + 1}
-            searchState={state}
+            searchState={searchState}
             onFinishRender={
               hasMoreToLoad && index == cur.length - 1
                 ? // load more
-                  loadMoreCb
+                  () => setState((x) => ({ ...x, hasLoaded: Date.now() }))
                 : undefined
             }
           />
         </Suspense>
       ))
-    }, [allResults, chunk])
+    }, [allResults, state.chunk])
+
+    console.log('HomeSearchResultsViewContent.render', {
+      state,
+      hasMoreToLoad,
+      totalToShow,
+      results,
+      allResults,
+    })
 
     // in an effect so we can use series and get auto-cancel on unmount
     useEffect(() => {
-      if (loadMore !== 0) {
-        if (results.length < allResults.length) {
-          return series([
-            () => isReadyToLoadMore(),
-            () => fullyIdle({ min: 100 }),
-            () => {
-              setChunk((x) => x + 1)
-            },
-          ])
-
-          async function isReadyToLoadMore() {
-            const isOnSearch = (s: OmState) =>
-              s.home.currentStateType === 'search'
-
-            const isReadyToLoad = (s: OmState) => {
-              return isOnSearch(s) && s.home.isScrolling === false
-            }
-
-            if (!isReadyToLoad(omStatic.state)) {
-              await new Promise((res) => {
-                const dispose = om.reaction(
-                  // @ts-ignore why?
-                  (state) => isReadyToLoad(state),
-                  (isReady) => {
-                    if (isReady) {
-                      dispose()
-                      res()
-                    }
-                  }
-                )
-              })
-            }
-          }
-        }
+      if (state.hasLoaded <= 1) {
+        return
       }
-    }, [loadMore])
+      if (results.length === allResults.length) {
+        return
+      }
+      if (state.scrollToEndOf < state.hasLoaded) {
+        console.warn('hasnt scrolled to end of')
+        return
+      }
+
+      return series([
+        () => isReadyToLoadMore(),
+        () => fullyIdle(),
+        () => {
+          setState((x) => ({ ...x, chunk: x.chunk + 1 }))
+        },
+      ])
+
+      function isReadyToLoad(s: OmState) {
+        return (
+          s.home.currentStateType === 'search' && s.home.isScrolling === false
+        )
+      }
+
+      function isReadyToLoadMore() {
+        return createCancellablePromise((res, _, onCancel) => {
+          const dispose = om.reaction(
+            (state) => isReadyToLoad(state),
+            (isReady) => {
+              if (!isReady) return
+              console.log('ready to load more')
+              dispose()
+              res()
+            }
+          )
+          onCancel(dispose)
+        })
+      }
+    }, [state.hasLoaded, state.scrollToEndOf])
 
     if (isLoading) {
       return contentWrap(
@@ -238,18 +261,16 @@ const HomeSearchResultsViewContent = memo(
       )
     }
 
-    const isLoadingMore = chunk > 1 && results.length < allResults.length
-
     return contentWrap(
       <>
         <VStack paddingBottom={20} spacing={6}>
           {results}
-          {isLoadingMore && (
+          {hasMoreToLoad && (
             <VStack flex={1} width="100%" minHeight={400}>
               <LoadingItems />
             </VStack>
           )}
-          {!isLoading && !isLoadingMore && (
+          {!isLoading && !hasMoreToLoad && (
             <VStack alignItems="center" justifyContent="center" minHeight={300}>
               <Text fontSize={12} opacity={0.5}>
                 End of results (for now)

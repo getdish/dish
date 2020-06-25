@@ -23,9 +23,8 @@ export const HomeScrollView = ({
   const setIsScrolling = (e) => {
     if (
       e.nativeEvent.contentOffset.y >
-      e.nativeEvent.contentSize.height * 0.66
+      e.nativeEvent.contentSize.height * 0.45
     ) {
-      console.warn('scroll near bottom!')
       onScrollNearBottom?.()
     }
 
