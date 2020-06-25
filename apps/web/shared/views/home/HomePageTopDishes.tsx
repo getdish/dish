@@ -1,3 +1,4 @@
+import { fullyIdle } from '@dish/async'
 import { Restaurant, TopCuisine } from '@dish/graph'
 import {
   AbsoluteVStack,
@@ -9,6 +10,7 @@ import {
   StackProps,
   Text,
   VStack,
+  useOnMount,
 } from '@dish/ui'
 import _, { clamp } from 'lodash'
 import {
@@ -137,6 +139,7 @@ const HomePageTopDishes = memo(() => {
 const HomeTopDishesContent = memo(() => {
   const om = useOvermind()
   const { topDishes } = om.state.home
+
   return useMemo(() => {
     console.warn('rendering contnet more expensive', topDishes)
     return (

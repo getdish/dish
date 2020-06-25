@@ -548,6 +548,11 @@ const popHomeState: Action<HistoryItem> = (om, item) => {
 }
 
 const loadHomeDishes: AsyncAction = async (om) => {
+  if (om.state.home.topDishes.length) {
+    // load only once
+    return
+  }
+
   const all = await getHomeDishes(
     om.state.home.currentState.center.lat,
     om.state.home.currentState.center.lng,
@@ -1170,6 +1175,7 @@ const setAutocompleteResults: Action<AutocompleteItem[]> = (om, results) => {
 }
 
 export const actions = {
+  loadHomeDishes,
   setIsScrolling,
   navigateToTag,
   setHasMovedMap,
