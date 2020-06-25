@@ -1,13 +1,13 @@
-import { RestaurantQuery, graphql, query } from '@dish/graph'
+import { RestaurantQuery, graphql } from '@dish/graph'
 import { AbsoluteVStack, useOnMount } from '@dish/ui'
-import _ from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
 import { useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../map'
-import { centerMapToRegion, onMapLoadedCallback } from './HomeMap'
+import { centerMapToRegion } from './centerMapToRegion'
+import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
+import { onMapLoadedCallback } from './onMapLoadedCallback'
 import { restaurantQuery } from './restaurantQuery'
-import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
 
 export const HomeMapPIP = memo(() => {
   const [isLoaded, setIsLoaded] = useState(false)

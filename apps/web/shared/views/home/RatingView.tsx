@@ -1,5 +1,4 @@
-import { ProgressCircle, SuperScriptText, Text } from '@dish/ui'
-import { HStack, StackProps, VStack } from '@dish/ui'
+import { HStack, ProgressCircle, StackProps, Text, VStack } from '@dish/ui'
 import React, { forwardRef } from 'react'
 
 export type RatingViewProps = StackProps & {
@@ -60,16 +59,19 @@ export const RatingView = forwardRef(
     const number = (
       <HStack>
         <Text
-          fontSize={Math.max(13, size * 0.5)}
+          fontSize={Math.max(12, size * 0.5)}
           fontWeight={subtle ? '300' : '700'}
           color={color}
-          width="100%"
           textAlign="center"
         >
           {rankingPre}
         </Text>
         {!!rankingPost && (
-          <Text fontWeight={300} opacity={(1 / size) * 20}>
+          <Text
+            fontWeight="300"
+            fontSize={size * 0.25}
+            opacity={(1 / size) * 20}
+          >
             {rankingPost}
           </Text>
         )}

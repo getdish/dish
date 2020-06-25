@@ -1,8 +1,8 @@
 export const bgLightLight = '#B8E0F322'
 
-export const bgLight = 'rgb(230, 244, 255)'
+export const bgLight = 'rgb(230, 250, 255)'
 export const bgLightTranslucent = 'rgba(220, 234, 255, 0.5)'
-export const bgLightHover = `rgba(216, 230, 245, 1)`
+export const bgLightHover = `rgba(220, 235, 245, 1)`
 
 export const bg = '#7154AD'
 export const bgHover = `#7154ADee`

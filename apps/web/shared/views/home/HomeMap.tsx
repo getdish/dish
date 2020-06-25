@@ -15,8 +15,10 @@ import { LngLat, setMapView } from '../../state/home'
 import { isRestaurantState, isSearchState } from '../../state/home-helpers'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../map'
+import { centerMapToRegion } from './centerMapToRegion'
+import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
-import { getRankingColor, getRestaurantRating } from './RestaurantRatingView'
+import { setMapIsLoaded } from './onMapLoadedCallback'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 type MapLoadState = 'wait' | 'loading' | 'loaded'
@@ -149,7 +151,7 @@ const resumeMap = (force: boolean = false) => {
   }
 }
 
-export function centerMapToRegion(p: {
+export function centerMapToRegionMain(p: {
   map: mapkit.Map
   center: LngLat
   span: LngLat
@@ -158,14 +160,7 @@ export function centerMapToRegion(p: {
     console.warn('paused no centering')
     return
   }
-  const newCenter = new mapkit.Coordinate(p.center.lat, p.center.lng)
-  const coordspan = new mapkit.CoordinateSpan(p.span.lat, p.span.lng)
-  const region = new mapkit.CoordinateRegion(newCenter, coordspan)
-  try {
-    p.map?.setRegionAnimated(region)
-  } catch (err) {
-    console.warn('map hmr err', err.message)
-  }
+  centerMapToRegion(p)
 }
 
 // appears *above* all markers and cant go below...
@@ -283,7 +278,7 @@ const HomeMapContent = memo(function HomeMap({
     if (!map) return
     // set initial zoom level
     const tm = requestIdleCallback(() => {
-      centerMapToRegion({
+      centerMapToRegionMain({
         map,
         center,
         span,
@@ -332,7 +327,7 @@ const HomeMapContent = memo(function HomeMap({
       () => {
         pauseMap()
         tm = requestIdleCallback(() => {
-          centerMapToRegion({
+          centerMapToRegionMain({
             map,
             center: om.state.home.currentState.center,
             span: om.state.home.currentState.span,
@@ -364,7 +359,7 @@ const HomeMapContent = memo(function HomeMap({
             }
           }
           if (hoveredRestaurant.location?.coordinates) {
-            centerMapToRegion({
+            centerMapToRegionMain({
               map,
               center: {
                 lat: hoveredRestaurant.location.coordinates[1],
@@ -398,7 +393,7 @@ const HomeMapContent = memo(function HomeMap({
         }
       }
       if (restaurantDetail.location?.coordinates) {
-        centerMapToRegion({
+        centerMapToRegionMain({
           map,
           center: {
             lat: restaurantDetail.location.coordinates[1],
@@ -512,26 +507,49 @@ function getRestaurantAnnotations(
     .reverse()
 }
 
+async function startMapKit() {
+  return await new Promise((res) => {
+    function setup() {
+      // hmr resilient logic
+      if (window['MAPKIT_STARTED']) {
+        return
+      }
+      window['MAPKIT_STARTED'] = true
+      const token = `eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzQ1RLNTYzUlQifQ.eyJpYXQiOjE1ODQ0MDU5MzYuMjAxLCJpc3MiOiIzOTlXWThYOUhZIn0.wAw2qtwuJkcL6T6aI-nLZlVuwJZnlCNg2em6V1uopx9hkUgWZE1ISAWePMoRttzH_NPOem4mQfrpmSTRCkh2bg`
+      // init mapkit
+      const mapkit = require('../../../web/mapkitExport')
+      // @ts-ignore
+      mapkit.init({
+        authorizationCallback: (done) => {
+          done(token)
+        },
+      })
+      setMapIsLoaded()
+      res()
+    }
+    if (document.readyState == 'complete') {
+      setup()
+    } else {
+      window.addEventListener('load', setup)
+    }
+  })
+}
+
 // map.addEventListener('select', (e) => {
 // console.log('select', e, map)
 // })
-
 // map.addEventListener('deselect', (e) => {
 // console.log('deselect', e, map)
 // })
-
 // map.addEventListener('drag-start', (e) => {
 //   console.log('drag-start', e, map)
 // })
-
 // map.addEventListener('drag-end', (e) => {
 //   console.log('drag-end', e, map)
 // })
-
 // map.addEventListener('user-location-change', (e) => {
 //   console.log('user-location-change', e, map)
 // })
-
 // // hover on map annotation
 // const annotationsContainer = document.querySelector(
 //   '.mk-annotation-container'
@@ -544,10 +562,8 @@ function getRestaurantAnnotations(
 //       '.mk-annotations'
 //     )
 //     if (!annotationsRoot) return
-
 //     let annotationElements: ChildNode[] = []
 //     let dispose = () => {}
-
 //     const onMouseEnter = (e: MouseEvent | any) => {
 //       const index = annotationElements.indexOf(e.target as any)
 //       console.log('index', index, restaurants[index], restaurants)
@@ -568,7 +584,6 @@ function getRestaurantAnnotations(
 //     observer.observe(annotationsRoot, {
 //       childList: true,
 //     })
-
 //     return () => {
 //       dispose()
 //       observer.disconnect()
@@ -577,7 +592,6 @@ function getRestaurantAnnotations(
 //   100,
 //   [annotationsContainer, restaurantsVersion]
 // )
-
 // selected on map
 // useEffect(() => {
 //   if (!focusedRestaurant) return
@@ -587,39 +601,3 @@ function getRestaurantAnnotations(
 //     true
 //   )
 // }, [map, focusedRestaurant])
-
-let isLoaded = false
-const loadedCallbacks = new Set<Function>()
-export const onMapLoadedCallback = (cb: Function) => {
-  if (isLoaded) cb()
-  loadedCallbacks.add(cb)
-}
-
-async function startMapKit() {
-  return await new Promise((res) => {
-    function setup() {
-      // hmr resilient logic
-      if (window['MAPKIT_STARTED']) {
-        return
-      }
-      window['MAPKIT_STARTED'] = true
-      const token = `eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzQ1RLNTYzUlQifQ.eyJpYXQiOjE1ODQ0MDU5MzYuMjAxLCJpc3MiOiIzOTlXWThYOUhZIn0.wAw2qtwuJkcL6T6aI-nLZlVuwJZnlCNg2em6V1uopx9hkUgWZE1ISAWePMoRttzH_NPOem4mQfrpmSTRCkh2bg`
-      // init mapkit
-      const mapkit = require('../../../web/mapkitExport')
-      // @ts-ignore
-      mapkit.init({
-        authorizationCallback: (done) => {
-          done(token)
-        },
-      })
-      isLoaded = true
-      loadedCallbacks.forEach((cb) => cb())
-      res()
-    }
-    if (document.readyState == 'complete') {
-      setup()
-    } else {
-      window.addEventListener('load', setup)
-    }
-  })
-}
