@@ -43,8 +43,6 @@ const HomeMapPIPContent = graphql(() => {
     showsCompass: mapkit.FeatureVisibility.Hidden,
   })
 
-  console.log('pip', { center, span })
-
   const enabled = state.type === 'restaurant' && span.lat < 0.02
 
   let restaurant: RestaurantQuery | null = null
