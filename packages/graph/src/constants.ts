@@ -19,6 +19,8 @@ export const RESTAURANT_WEIGHTS = {
   infatuated: 0.9,
   ubereats: 0.2,
   doordash: 0.2,
+  grubhub: 0.2,
+  google: 0.4,
 }
 
 export let SEARCH_DOMAIN: string

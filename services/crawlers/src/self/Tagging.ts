@@ -121,6 +121,7 @@ export class Tagging {
     this.restaurant_tag_ratings = {}
     this._scanYelpReviewsForTags()
     this._scanTripadvisorReviewsForTags()
+    this._scanGoogleReviewsForTags()
     await this._averageAndPersistTagRatings()
   }
 
@@ -255,6 +256,16 @@ export class Tagging {
     for (const review of reviews) {
       const all_text = [review.text].join(' ')
       this.findDishesInText(all_text)
+    }
+  }
+
+  _scanGoogleReviewsForTags() {
+    // @ts-ignore
+    const reviews = this.crawler.google?.data?.reviews || []
+    for (const review of reviews) {
+      const text = review.split('\n')[3]
+      if (!text) continue
+      this.findDishesInText(text)
     }
   }
 

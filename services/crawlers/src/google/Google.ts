@@ -3,6 +3,7 @@ import '@dish/common'
 import { sentryException } from '@dish/common'
 import {
   Restaurant,
+  globalTagId,
   restaurantFindBatch,
   scrapeInsert,
   settingFindOne,
@@ -75,7 +76,7 @@ export class Google extends WorkerJob {
   }
 
   async main() {
-    let previous_id = '00000000-0000-0000-0000-000000000000'
+    let previous_id = globalTagId
     while (true) {
       const results = await restaurantFindBatch(PER_PAGE, previous_id, sanfran)
       if (results.length == 0) {
@@ -104,6 +105,7 @@ export class Google extends WorkerJob {
     await this.getAllData(restaurant)
     await scrapeInsert([
       {
+        restaurant_id: restaurant.id,
         source: 'google',
         id_from_source: this.googleRestaurantID,
         location: restaurant.location,

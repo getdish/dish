@@ -8,6 +8,7 @@ import {
   Scrape,
   ScrapeData,
   deleteAllBy,
+  globalTagId,
   menuItemsUpsertMerge,
   restaurantFindBatch,
   restaurantFindOne,
@@ -17,7 +18,6 @@ import {
   restaurantUpsertManyTags,
   scrapeGetData,
 } from '@dish/graph'
-import { globalTagId } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
@@ -41,6 +41,9 @@ export class Self extends WorkerJob {
   michelin!: Scrape
   tripadvisor!: Scrape
   doordash!: Scrape
+  grubhub!: Scrape
+  google!: Scrape
+
   restaurant!: RestaurantWithId
   ratings!: { [key: string]: number }
   _start_time!: [number, number]
@@ -88,6 +91,7 @@ export class Self extends WorkerJob {
         this.scanReviews,
         this.upsertUberDishes,
         this.upsertDoorDashDishes,
+        this.upsertGrubHubDishes,
       ]
       for (const async_func of async_steps) {
         await this._runFailableFunction(async_func)
@@ -209,18 +213,19 @@ export class Self extends WorkerJob {
   }
 
   async getScrapeData() {
-    this.yelp = await restaurantGetLatestScrape(this.restaurant, 'yelp')
-    this.ubereats = await restaurantGetLatestScrape(this.restaurant, 'ubereats')
-    this.infatuated = await restaurantGetLatestScrape(
-      this.restaurant,
-      'infatuation'
-    )
-    this.michelin = await restaurantGetLatestScrape(this.restaurant, 'michelin')
-    this.tripadvisor = await restaurantGetLatestScrape(
-      this.restaurant,
-      'tripadvisor'
-    )
-    this.doordash = await restaurantGetLatestScrape(this.restaurant, 'doordash')
+    const sources = [
+      'yelp',
+      'ubereats',
+      'infatuated',
+      'michelin',
+      'tripadvisor',
+      'doordash',
+      'grubhub',
+      'google',
+    ]
+    for (const source of sources) {
+      this[source] = await restaurantGetLatestScrape(this.restaurant, source)
+    }
   }
 
   // TODO: If we really want to be careful about being found out for scraping then we
@@ -253,6 +258,7 @@ export class Self extends WorkerJob {
       scrapeGetData(this.ubereats, 'main.title'),
       scrapeGetData(this.infatuated, 'data_from_map_search.name'),
       scrapeGetData(this.michelin, 'main.name'),
+      scrapeGetData(this.grubhub, 'main.name'),
       tripadvisor_name,
     ])
   }
@@ -263,6 +269,7 @@ export class Self extends WorkerJob {
       scrapeGetData(this.ubereats, 'main.phoneNumber'),
       scrapeGetData(this.infatuated, 'data_from_html_embed.phone_number'),
       scrapeGetData(this.tripadvisor, 'overview.contact.phone'),
+      scrapeGetData(this.google, 'telephone'),
     ])
   }
 
@@ -278,6 +285,10 @@ export class Self extends WorkerJob {
       ),
       michelin: this._getMichelinRating(),
       doordash: parseFloat(scrapeGetData(this.doordash, 'main.averageRating')),
+      grubhub: parseFloat(
+        scrapeGetData(this.grubhub, 'main.rating.rating_value')
+      ),
+      google: parseFloat(scrapeGetData(this.google, 'rating')),
     }
     this.restaurant.rating = this.weightRatings(
       this.ratings,
@@ -353,6 +364,11 @@ export class Self extends WorkerJob {
     parts.shift()
     parts.pop()
     this.restaurant.website = parts.join('_')
+
+    if (!this.restaurant.website) {
+      this.restaurant.website =
+        'https://' + scrapeGetData(this.google, 'website')
+    }
   }
 
   addPriceRange() {
@@ -360,6 +376,9 @@ export class Self extends WorkerJob {
       this.tripadvisor,
       'overview.detailCard.numericalPrice'
     )
+    if (!this.restaurant.price_range) {
+      this.restaurant.price_range = scrapeGetData(this.google, 'pricing')
+    }
   }
 
   addHours() {
@@ -443,6 +462,31 @@ export class Self extends WorkerJob {
         rating: this.ratings?.doordash,
       }
     }
+
+    const gh_id = scrapeGetData(this.grubhub, 'main.id')
+    if (gh_id) {
+      // @ts-ignore
+      this.restaurant.sources.grubhub = {
+        url: 'https://www.grubhub.com/restaurant/' + gh_id,
+        rating: this.ratings?.grubhub,
+      }
+    }
+    this._getGoogleSource()
+  }
+
+  _getGoogleSource() {
+    if (!this.google) return
+    const id = this.google.id_from_source
+    const lon = this.restaurant.location.coordinates[0]
+    const lat = this.restaurant.location.coordinates[1]
+    const source =
+      `https://www.google.com/maps/place/` +
+      `@${lat},${lon},11z/data=!3m1!4b1!4m5!3m4!1s${id}!8m2!3d${lat}!4d${lon}`
+    // @ts-ignore
+    this.restaurant.sources.google = {
+      url: source,
+      rating: this.ratings?.google,
+    }
   }
 
   mergeImage() {
@@ -453,6 +497,10 @@ export class Self extends WorkerJob {
     )
     if (yelps) {
       hero = yelps[0].srcUrl
+    }
+    const googles = scrapeGetData(this.google, 'hero_image')
+    if (googles) {
+      hero = googles
     }
     const infatuateds = scrapeGetData(
       this.infatuated,
@@ -513,14 +561,44 @@ export class Self extends WorkerJob {
     await menuItemsUpsertMerge(dishes)
   }
 
+  async upsertGrubHubDishes() {
+    if (!this.grubhub?.id) return
+    let dishes: MenuItem[] = []
+    const categories = scrapeGetData(this.grubhub, 'main.menu_category_list')
+    for (const category of categories) {
+      for (const data of category.menu_item_list) {
+        if (data.name) {
+          dishes.push({
+            restaurant_id: this.restaurant.id,
+            name: data.name,
+            description: data.description,
+            price: data.price.amount,
+          })
+        }
+      }
+    }
+    await menuItemsUpsertMerge(dishes)
+  }
+
   mergePhotos() {
     // @ts-ignore
     const yelp_data = this.yelp?.data || {}
     // @ts-ignore
     this.restaurant.photos = [
       // ...scrapeGetData(this.tripadvisor, 'photos', []),
+      ...this._getGooglePhotos(),
       ...this.getPaginatedData(yelp_data, 'photos').map((i) => i.src),
     ]
+  }
+
+  _getGooglePhotos() {
+    if (!this.google) return []
+    const raw = scrapeGetData(this.google, 'photos')
+    if (!raw) return []
+    const urls = raw.filter((p) => {
+      return p.includes('googleusercontent')
+    })
+    return urls
   }
 
   getPaginatedData(data: ScrapeData, type: 'photos' | 'reviews') {

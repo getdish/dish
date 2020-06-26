@@ -4,7 +4,7 @@ import { restaurantSaveCanonical, scrapeInsert } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
-import _ from 'lodash'
+import { shuffle } from 'lodash'
 
 import { aroundCoords, geocode } from '../utils'
 
@@ -42,7 +42,7 @@ export class GrubHub extends WorkerJob {
     console.log('Starting GrubHub crawler. Using domain: ' + GRUBHUB_DOMAIN)
     let all: string[] = []
     const coords = await geocode(city_name)
-    const region_coords = _.shuffle(
+    const region_coords = shuffle(
       aroundCoords(
         coords[0],
         coords[1],
