@@ -56,7 +56,7 @@ index 12268bf..dd6ac74 100644
          return Promise.resolve(Promise.all(promises)).then(function () {});
        }, function (e) {
 -        console.error(e);
-+       throw e;
++        global['latestUnhandledGQLessRejection'] = e;
        });
  
        return Promise.resolve(_temp && _temp.then ? _temp.then(_temp2) : _temp2(_temp));

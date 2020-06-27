@@ -201,6 +201,7 @@ tables:
       - created_at
       - description
       - hours
+      - id
       - image
       - location
       - name
@@ -208,6 +209,7 @@ tables:
       - price_range
       - rating
       - rating_factors
+      - slug
       - sources
       - state
       - telephone
