@@ -114,6 +114,9 @@ export async function update<T extends WithID<ModelType>>(
 ): Promise<WithID<T>> {
   const action = `update_${table}` as any
   const [object] = prepareData(table, [objectIn])
+  for (const key of Object.keys(object)) {
+    if (object[key] == null) delete object[key]
+  }
   const [resolved] = await resolvedMutationWithFields(() => {
     const res = mutation[action]({
       where: { id: { _eq: object.id } },
