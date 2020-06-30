@@ -37,6 +37,7 @@
   "devDependencies": {
     "@types/cheerio": "^0.22.16",
     "@types/lodash": "^4.14.149",
+    "@types/puppeteer": "^3.0.1",
     "@zeit/ncc": "^0.20.5",
     "ava": "^3.8.2",
     "nodemon": "^2.0.2",
