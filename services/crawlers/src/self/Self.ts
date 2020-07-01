@@ -284,7 +284,7 @@ export class Self extends WorkerJob {
         scrapeGetData(this.tripadvisor, 'overview.rating.primaryRating')
       ),
       michelin: this._getMichelinRating(),
-      doordash: parseFloat(scrapeGetData(this.doordash, 'main.averageRating')),
+      doordash: this._doorDashRating(),
       grubhub: parseFloat(
         scrapeGetData(this.grubhub, 'main.rating.rating_value')
       ),
@@ -303,6 +303,11 @@ export class Self extends WorkerJob {
     )
     if (rating < 0) return NaN
     return parseFloat(rating) / 2
+  }
+
+  _doorDashRating() {
+    const rating = scrapeGetData(this.doordash, 'main.averageRating')
+    return rating == 0 ? null : rating
   }
 
   weightRatings(
@@ -452,13 +457,11 @@ export class Self extends WorkerJob {
       }
     }
 
-    const json_dd = JSON.parse(
-      scrapeGetData(this.ubereats, 'storeMenuSeo', '"{}"')
-    )
-    if (json_dd['@id']) {
+    let json_dd = scrapeGetData(this.doordash, 'storeMenuSeo', '"{}"')
+    if (json_dd['id']) {
       // @ts-ignore
       this.restaurant.sources.doordash = {
-        url: json_dd['@id'],
+        url: json_dd['id'].split('?')[0],
         rating: this.ratings?.doordash,
       }
     }
