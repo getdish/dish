@@ -1,17 +1,10 @@
-# Stage 1: copy/install
-FROM mhart/alpine-node:12.16.1
-WORKDIR /app
-ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
-ENV NODE_OPTIONS="--max_old_space_size=4096"
-RUN apk add python bash parallel build-base alpine-sdk \
-      cairo pixman pango pixman-dev cairo-dev pango-dev \
-      libjpeg-turbo-dev giflib-dev patch
+ARG DISH_BASE_VERSION=latest
+FROM docker.k8s.dishapp.com/dish/base:$DISH_BASE_VERSION
 
-COPY package.json .
-COPY tsconfig.json .
-COPY tsconfig.build.json .
-COPY tsconfig.base.json .
-COPY packages packages
+RUN apt-get update && apt-get install -y parallel build-essential \
+      libcairo2-dev libpixman-1-dev libpango1.0-dev \
+      libjpeg62-turbo-dev libgif-dev patch
+
 COPY apps/web apps/web
 
 RUN yarn install
@@ -20,10 +13,11 @@ RUN yarn build
 WORKDIR /app/apps/web
 RUN yarn build:web
 
-## Stage 2: run
-FROM mhart/alpine-node:slim-12.16.1
+## Slim it
+FROM node:12.16.1-buster-slim
 COPY --from=0 /app /app
 WORKDIR /app/apps/web
-RUN apk add pixman cairo pango libjpeg giflib curl bash
+RUN apt-get update && apt-get install -y \
+      libpixman-1.0 libcairo2 libpango1.0-0 libjpeg62-turbo libgif7
 
 CMD ["node", "_/web/server.js"]

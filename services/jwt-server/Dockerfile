@@ -1,16 +1,6 @@
-# Stage 1: copy/install
-FROM mhart/alpine-node:12.16.1
-WORKDIR /app
-RUN apk add --no-cache patch
-ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
-ENV NODE_OPTIONS="--max_old_space_size=4096"
+ARG DISH_BASE_VERSION=latest
+FROM docker.k8s.dishapp.com/dish/base:$DISH_BASE_VERSION
 
-COPY package.json .
-COPY tsconfig.json .
-COPY tsconfig.build.json .
-COPY tsconfig.base.json .
-
-COPY packages packages
 COPY services/jwt-server services/jwt-server
 
 RUN yarn install
