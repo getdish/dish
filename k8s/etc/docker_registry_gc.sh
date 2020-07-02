@@ -4,7 +4,12 @@ PATH=$PATH:$HOME/bin
 echo "Checking Docker Registry free disk space..."
 
 MINIMUM_FREE_SPACE=5000000
-docker_registry_container=$(kubectl get pods -n docker-registry | grep Running | awk '{print $1}')
+docker_registry_container=$(\
+  kubectl get pods \
+    -n docker-registry \
+  | grep Running | grep docker-registry \
+  | awk '{print $1}'
+)
 
 free_space=$(
   kubectl exec \
@@ -17,6 +22,7 @@ if (( $free_space < $MINIMUM_FREE_SPACE )); then
   echo "Running Docker Registry garbage collection..."
   kubectl exec \
     $docker_registry_container \
+    -c docker-registry \
     -n docker-registry \
     -- sh -c \
       '/bin/registry garbage-collect \
@@ -24,3 +30,4 @@ if (( $free_space < $MINIMUM_FREE_SPACE )); then
 else
   echo "Docker Registry has $free_space free disk space remaining"
 fi
+
