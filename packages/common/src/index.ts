@@ -36,6 +36,10 @@ export const sentryException = (
   data?: any,
   tags?: { [key: string]: string }
 ) => {
+  if (process.env.DISH_ENV != 'production') {
+    console.error(error)
+    return
+  }
   Sentry.withScope((scope) => {
     if (tags) {
       scope.setTags(tags)

@@ -21,6 +21,7 @@ export class Tagging {
   } = {}
   all_tags: Tag[] = []
   _found_tags: { [key: string]: Partial<RestaurantTag> } = {}
+  SPECIAL_FILTER_THRESHOLD = 3
 
   constructor(crawler: Self) {
     this.crawler = crawler
@@ -121,9 +122,13 @@ export class Tagging {
     this._found_tags = {}
     this.all_tags = await restaurantGetAllPossibleTags(this.crawler.restaurant)
     this.restaurant_tag_ratings = {}
-    this._scanYelpReviewsForTags()
-    this._scanTripadvisorReviewsForTags()
-    this._scanGoogleReviewsForTags()
+    const all_reviews = [
+      ...this._scanYelpReviewsForTags(),
+      ...this._scanTripadvisorReviewsForTags(),
+      ...this._scanGoogleReviewsForTags(),
+    ]
+    this.findDishesInText(all_reviews)
+    await this.findVegInText(all_reviews)
     await this._averageAndPersistTagRatings()
   }
 
@@ -158,11 +163,24 @@ export class Tagging {
     }
   }
 
-  findDishesInText(text: string) {
-    for (const tag of this.all_tags) {
-      if (!this._doesStringContainTag(text, tag.name ?? '')) continue
-      this._found_tags[tag.id] = { tag_id: tag.id } as RestaurantTag
-      this.measureSentiment(text, tag)
+  findDishesInText(all_reviews: string[]) {
+    for (const text of all_reviews) {
+      for (const tag of this.all_tags) {
+        if (!this._doesStringContainTag(text, tag.name ?? '')) continue
+        this._found_tags[tag.id] = { tag_id: tag.id } as RestaurantTag
+        this.measureSentiment(text, tag)
+      }
+    }
+  }
+
+  async findVegInText(all_reviews: string[]) {
+    let matches = 0
+    for (const text of all_reviews) {
+      if (this._doesStringContainTag(text, 'vegetarian')) matches += 1
+      if (this._doesStringContainTag(text, 'vegan')) matches += 1
+    }
+    if (matches > this.SPECIAL_FILTER_THRESHOLD) {
+      await this.addSimpleTags(['veg'])
     }
   }
 
@@ -243,32 +261,38 @@ export class Tagging {
       this.crawler.yelp?.data,
       'reviews'
     )
+    let texts: string[] = []
     for (const review of reviews) {
-      const all_text = [
-        review.comment?.text,
-        review.lightboxMediaItems?.map((i) => i.caption).join(' '),
-      ].join(' ')
-      this.findDishesInText(all_text)
+      texts.push(
+        [
+          review.comment?.text,
+          review.lightboxMediaItems?.map((i) => i.caption).join(' '),
+        ].join(' ')
+      )
     }
+    return texts
   }
 
   _scanTripadvisorReviewsForTags() {
     const td_data = this.crawler.tripadvisor?.data || {}
     const reviews = this.crawler.getPaginatedData(td_data, 'reviews')
+    let texts: string[] = []
     for (const review of reviews) {
-      const all_text = [review.text].join(' ')
-      this.findDishesInText(all_text)
+      texts.push([review.text].join(' '))
     }
+    return texts
   }
 
   _scanGoogleReviewsForTags() {
     // @ts-ignore
     const reviews = this.crawler.google?.data?.reviews || []
+    let texts: string[] = []
     for (const review of reviews) {
       const text = review.split('\n')[3]
       if (!text) continue
-      this.findDishesInText(text)
+      texts.push(text)
     }
+    return texts
   }
 
   deDepulicateTags() {

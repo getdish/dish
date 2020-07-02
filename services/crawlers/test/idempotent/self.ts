@@ -86,7 +86,8 @@ const yelp: Partial<Scrape> = {
         photos: [{ src: '' }],
         rating: 5,
         comment: {
-          text: 'This restaurant had terrible Test tag existing 1 dishes!',
+          text:
+            'This restaurant had terrible Test tag existing 1 dishes! Vegetarian',
           language: 'en',
         },
         lightboxMediaItems: [
@@ -191,7 +192,7 @@ const tripadvisor: Partial<Scrape> = {
     photosp1: [{ src: 'https://tripadvisor.com/image2.jpg' }],
     reviewsp0: [
       {
-        text: 'Test tag existing 3 was ok',
+        text: 'Test tag existing 3 was ok. Vegan',
         rating: 5,
         username: 'tauser',
       },
@@ -244,7 +245,7 @@ test('Merging', async (t) => {
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Pizza'), true)
   t.is(updated.photos?.[0], 'https://yelp.com/image.jpg')
   t.is(updated.photos?.[1], 'https://yelp.com/image2.jpg')
-  t.is(updated.rating, 4.1)
+  t.is(updated.rating, 3.2800000000000002)
   t.deepEqual(updated.rating_factors as any, {
     food: 5,
     service: 4.5,
@@ -419,6 +420,21 @@ test('Dish sentiment analysis from reviews', async (t) => {
   t.is(tag1.rating, 0.17200480032002136)
   t.is(tag2.rating, 0.91)
   t.is(tag3.rating, 0.235)
+})
+
+test('Finding veg in reviews', async (t) => {
+  const self = new Self()
+  self.tagging.SPECIAL_FILTER_THRESHOLD = 1
+  self.restaurant = t.context.restaurant
+  await self.getScrapeData()
+  await self.scanReviews()
+  await self.postMerge()
+  const updated = await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })
+  t.assert(!!updated, 'not found')
+  if (!updated) return
+  t.assert(updated.tag_names.includes('veg'))
 })
 
 test('Find photos of dishes', async (t) => {
