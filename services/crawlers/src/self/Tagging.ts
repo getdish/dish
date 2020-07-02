@@ -40,10 +40,12 @@ export class Tagging {
     const tags = uniq([...yelps, ...tripadvisors])
     const orphan_tags = await this.upsertCountryTags(tags)
     if (orphan_tags.length) {
-      this.addRestaurantTags(
-        await convertSimpleTagsToRestaurantTags(orphan_tags)
-      )
+      await this.addSimpleTags(orphan_tags)
     }
+  }
+
+  async addSimpleTags(tags: string[]) {
+    this.addRestaurantTags(await convertSimpleTagsToRestaurantTags(tags))
   }
 
   addRestaurantTags(restaurant_tags: RestaurantTag[]) {

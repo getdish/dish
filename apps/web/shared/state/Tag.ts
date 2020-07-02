@@ -108,7 +108,7 @@ export const tagLenses: Tag[] = [
 export const tagFilters: Tag[] = [
   {
     id: '01',
-    name: 'cheap',
+    name: 'price-low',
     displayName: '$',
     type: 'filter',
     // @ts-ignore
@@ -117,7 +117,7 @@ export const tagFilters: Tag[] = [
   },
   {
     id: '21',
-    name: 'midrange',
+    name: 'price-mid',
     displayName: '$$',
     type: 'filter',
     // @ts-ignore
@@ -125,7 +125,7 @@ export const tagFilters: Tag[] = [
   },
   {
     id: '31',
-    name: 'expensive',
+    name: 'price-high',
     displayName: '$$$',
     type: 'filter',
     // @ts-ignore

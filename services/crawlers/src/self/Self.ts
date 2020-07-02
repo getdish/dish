@@ -87,6 +87,7 @@ export class Self extends WorkerJob {
       const async_steps = [
         this.mergeMainData,
         this.doTags,
+        this.addPriceTags,
         this.findPhotosForTags,
         this.scanReviews,
         this.upsertUberDishes,
@@ -172,6 +173,32 @@ export class Self extends WorkerJob {
 
   async doTags() {
     await this.tagging.main()
+  }
+
+  async addPriceTags() {
+    if (this.restaurant.price_range?.includes('$')) {
+      let word: string = ''
+      switch (this.restaurant.price_range) {
+        case '$':
+          word = 'low'
+          break
+        case '$$':
+          word = 'mid'
+          break
+        case '$$$':
+          word = 'high'
+          break
+        case '$$$$':
+          word = 'higher'
+          break
+        case '$$$$$':
+          word = 'highest'
+          break
+      }
+      if (word != '') {
+        await this.tagging.addSimpleTags(['price-' + word])
+      }
+    }
   }
 
   async findPhotosForTags() {
@@ -377,12 +404,23 @@ export class Self extends WorkerJob {
   }
 
   addPriceRange() {
-    this.restaurant.price_range = scrapeGetData(
-      this.tripadvisor,
-      'overview.detailCard.numericalPrice'
-    )
-    if (!this.restaurant.price_range) {
-      this.restaurant.price_range = scrapeGetData(this.google, 'pricing')
+    this.restaurant.price_range = scrapeGetData(this.google, 'pricing')
+
+    if (!this.restaurant.price_range?.includes('$')) {
+      const text = scrapeGetData(
+        this.tripadvisor,
+        'overview.detailCard.tagTexts.priceRange.tags[0].tagValue'
+      )
+      if (text.includes('Low')) this.restaurant.price_range = '$'
+      if (text.includes('Mid')) this.restaurant.price_range = '$$'
+      if (text.includes('High')) this.restaurant.price_range = '$$$'
+    }
+
+    if (!this.restaurant.price_range?.includes('$')) {
+      this.restaurant.price_range = scrapeGetData(
+        this.yelp,
+        'data_from_map_search.priceRange'
+      )
     }
   }
 
