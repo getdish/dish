@@ -94,7 +94,7 @@ func search(w http.ResponseWriter, r *http.Request) {
 		x1, y1, x2, y2,
 		ignore_bounding_box,
 		filter_by["unique"],
-		filter_by["delivers"],
+		filter_by["delivery"],
 		filter_by["gems"],
 		filter_by["vibe"],
 		filter_by["coffee"],
@@ -116,7 +116,7 @@ func handleSpecialTags(tags string, r *http.Request) (map[string]string, string)
 	filter_by := make(map[string]string)
 	special_tags := [...]string{
 		"unique",
-		"delivers",
+		"delivery",
 		"gems",
 		"vibe",
 		"coffee",

@@ -52,7 +52,7 @@ SELECT jsonb_agg(
     )
 
     AND (
-      ?12 != 'FILTER BY DELIVERS'
+      ?12 != 'FILTER BY DELIVERY'
       OR
       sources->>'ubereats' IS NOT NULL
       OR
