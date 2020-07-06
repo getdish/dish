@@ -14,6 +14,8 @@ import {
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
 import { Self } from '../../src/self/Self'
+import { sql } from '../../src/utils'
+import { yelp_hours } from '../yelp_hours'
 
 interface Context {
   restaurant: RestaurantWithId
@@ -58,6 +60,9 @@ const yelp: Partial<Scrape> = {
         addressProps: {
           addressLines: ['123 Street', 'Big City'],
         },
+      },
+      bizHoursProps: {
+        hoursInfoRows: yelp_hours,
       },
     },
     photosp0: [
@@ -550,4 +555,24 @@ test('Normalising tag ratings', async (t) => {
   t.is(normalised, 1)
   normalised = dish.tagging._normaliseTagRating(45)
   t.is(normalised, 1)
+})
+
+test('Adding opening hours', async (t) => {
+  const dish = new Self()
+  dish.restaurant = t.context.restaurant
+  await dish.getScrapeData()
+  const count = await dish.addHours()
+  t.is(count, 7)
+  const openers = await sql(`
+    SELECT restaurant_id
+      FROM opening_hours
+      WHERE hours @> f_opening_hours_normalised_time('1996-01-01 13:00');
+  `)
+  t.is(dish.restaurant.id, openers.rows[0].restaurant_id)
+  const closers = await sql(`
+    SELECT restaurant_id
+      FROM opening_hours
+      WHERE hours @> f_opening_hours_normalised_time('1996-01-01 10:59');
+  `)
+  t.is(closers.rows.length, 0)
 })

@@ -1,0 +1,8 @@
+- args:
+    name: restaurant
+    table:
+      name: opening_hours
+      schema: public
+    using:
+      foreign_key_constraint_on: restaurant_id
+  type: create_object_relationship

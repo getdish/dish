@@ -25,7 +25,7 @@ import _ from 'lodash'
 import moment from 'moment'
 
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
-import { sanfran } from '../utils'
+import { sanfran, sql } from '../utils'
 import { Tagging } from './Tagging'
 
 const PER_PAGE = 50
@@ -86,6 +86,7 @@ export class Self extends WorkerJob {
       await this.preMerge(restaurant)
       const async_steps = [
         this.mergeMainData,
+        this.addHours,
         this.doTags,
         this.addPriceTags,
         this.findPhotosForTags,
@@ -133,7 +134,6 @@ export class Self extends WorkerJob {
       this.addWebsite,
       this.addSources,
       this.addPriceRange,
-      this.addHours,
       this.getRatingFactors,
     ].forEach((func) => {
       this._runFailableFunction(func)
@@ -424,12 +424,48 @@ export class Self extends WorkerJob {
     }
   }
 
-  addHours() {
+  async addHours() {
     this.restaurant.hours = scrapeGetData(
       this.yelp,
       'data_from_html_embed.bizHoursProps.hoursInfoRows',
       []
     )
+    let records: string[] = []
+    for (const hours of this.restaurant.hours) {
+      for (const session of hours.hoursInfo.hours) {
+        const times = session.split(' - ')
+        const _open = times[0].replace(' ', '')
+        const _close = times[1].replace(' ', '')
+        const open = this._toPostgresTime(hours.hoursInfo.day, _open)
+        const close = this._toPostgresTime(hours.hoursInfo.day, _close)
+        const record = `('${this.restaurant.id}'::UUID, timestamp '${open}', timestamp '${close}')`
+        records.push(record)
+      }
+    }
+    const query = `
+        BEGIN TRANSACTION;
+        DELETE FROM opening_hours
+          WHERE restaurant_id = '${this.restaurant.id}'::UUID;
+        INSERT INTO opening_hours(restaurant_id, hours)
+          SELECT id, hours
+          FROM  (
+             VALUES ${records.join(',')}
+             ) t(id, f, t), f_opening_hours_hours(f, t) hours;
+        END TRANSACTION;
+      `
+    const result = await sql(query)
+    return result[2].rowCount
+  }
+
+  _dateString(day: string, time: string) {}
+
+  _toPostgresTime(day: string, time: string) {
+    const CALIFORNIAN_TZ = '-07'
+    const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    const doftw = weekdays.indexOf(day) + 1
+    const mDate = moment(`1996 01 ${doftw} ${time}`, 'YYYY MM D hh:mmA')
+    const timestamp = mDate.format(`YYYY-MM-DD HH:mm:ss${CALIFORNIAN_TZ}`)
+    return timestamp
   }
 
   addSources() {

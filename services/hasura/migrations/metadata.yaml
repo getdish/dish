@@ -70,6 +70,13 @@ tables:
       filter: {}
 - table:
     schema: public
+    name: opening_hours
+  object_relationships:
+  - name: restaurant
+    using:
+      foreign_key_constraint_on: restaurant_id
+- table:
+    schema: public
     name: restaurant
   array_relationships:
   - name: menu_items

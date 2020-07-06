@@ -15,10 +15,11 @@ WITH
 
 SELECT jsonb_agg(
   json_build_object(
-    'id', data.id,
+    'id', data.restaurant_id,
     'slug', data.slug
   )) FROM (
-  SELECT * FROM restaurant
+  SELECT restaurant.id as restaurant_id, slug FROM restaurant
+  LEFT JOIN opening_hours ON opening_hours.restaurant_id = restaurant.id
   WHERE (
     (ST_DWithin(location, ST_MakePoint(?0, ?1), ?2) OR ?2 = '0')
     AND
@@ -74,27 +75,23 @@ SELECT jsonb_agg(
     )
 
     AND (
-      ?15 != 'FILTER BY COFFEE'
+      ?15 != 'FILTER BY VEGETARIAN'
       OR
       TRUE
     )
 
     AND (
-      ?16 != 'FILTER BY WINE'
+      ?16 != 'FILTER BY QUIET'
       OR
       TRUE
     )
 
     AND (
-      ?14 != 'FILTER BY VEGETARIAN'
+      ?17 != 'FILTER BY OPEN'
       OR
-      TRUE
-    )
-
-    AND (
-      ?14 != 'FILTER BY QUIET'
-      OR
-      TRUE
+      opening_hours.hours @> f_opening_hours_normalised_time(
+        timezone('America/Los_Angeles', now())::timestamptz
+      )
     )
   )
 

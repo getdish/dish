@@ -1,0 +1,17 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE EXTENSION IF NOT EXISTS pgcrypto;
+  type: run_sql
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE TABLE "public"."opening_hours"("id" uuid NOT NULL DEFAULT gen_random_uuid(),
+      "hours" tsrange NOT NULL, "restaurant_id" uuid NOT NULL, PRIMARY KEY ("id")
+      , FOREIGN KEY ("restaurant_id") REFERENCES "public"."restaurant"("id") ON UPDATE
+      cascade ON DELETE cascade);
+  type: run_sql
+- args:
+    name: opening_hours
+    schema: public
+  type: add_existing_table_or_view

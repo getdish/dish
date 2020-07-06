@@ -66,6 +66,10 @@ func search(w http.ResponseWriter, r *http.Request) {
 	var json string
 	filter_by := make(map[string]string)
 	tags := getParam("tags", r)
+	var limit = getParam("limit", r)
+	if limit == "" {
+		limit = "10"
+	}
 	ignore_bounding_box := ""
 	distance := "0"
 	x1, y1, x2, y2 := getBoundingBox(r)
@@ -90,17 +94,16 @@ func search(w http.ResponseWriter, r *http.Request) {
 		distance,
 		getParam("query", r),
 		tags,
-		getParam("limit", r),
+		limit,
 		x1, y1, x2, y2,
 		ignore_bounding_box,
 		filter_by["unique"],
 		filter_by["delivery"],
 		filter_by["gems"],
 		filter_by["vibe"],
-		filter_by["coffee"],
-		filter_by["wine"],
 		filter_by["vegetarian"],
 		filter_by["quiet"],
+		filter_by["open"],
 	)
 	if err != nil {
 		fmt.Println(err)
@@ -119,10 +122,9 @@ func handleSpecialTags(tags string, r *http.Request) (map[string]string, string)
 		"delivery",
 		"gems",
 		"vibe",
-		"coffee",
-		"wine",
 		"vegetarian",
 		"quiet",
+		"open",
 	}
 
 	for _, tag := range special_tags {

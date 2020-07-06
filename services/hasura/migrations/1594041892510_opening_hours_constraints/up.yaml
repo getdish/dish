@@ -1,0 +1,10 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: "CREATE EXTENSION btree_gist;\r\n\r\nALTER TABLE opening_hours ADD \r\n  CONSTRAINT
+      opening_hours_no_overlap EXCLUDE USING gist (restaurant_id with =, hours WITH
+      &&);\r\nALTER TABLE opening_hours ADD\r\n  CONSTRAINT opening_hours_bounds_inclusive
+      CHECK (lower_inc(hours) AND upper_inc(hours));\r\nALTER TABLE opening_hours
+      ADD\r\n  CONSTRAINT opening_hours_standard_week CHECK (hours <@ tsrange '[1996-01-01
+      0:0, 1996-01-08 0:0]');"
+  type: run_sql

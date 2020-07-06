@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE INDEX opening_hours_spgist_idx on opening_hours USING spgist (hours);
+  type: run_sql
