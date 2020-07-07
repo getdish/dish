@@ -75,9 +75,8 @@ export const HomeSearchLocationInput = memo(() => {
       position="relative"
       flex={65}
       minWidth={180}
-      borderColor="#eee"
-      borderWidth={1}
-      borderRadius={100}
+      backgroundColor="rgba(255,255,255,0.1)"
+      borderRadius={8}
     >
       <HomeAutocompleteHoverableInput
         input={locationInput}
@@ -90,7 +89,7 @@ export const HomeSearchLocationInput = memo(() => {
             placeholder="San Francisco"
             style={[
               inputTextStyles.textInput,
-              { paddingHorizontal: paddingHorizontal, fontSize: 16 },
+              { paddingHorizontal, fontSize: 16 },
             ]}
             onFocus={() => {
               onFocusAnyInput()
@@ -120,7 +119,7 @@ const SearchLocationButton = memo(() => {
           justifyContent="center"
           padding={10}
           paddingHorizontal={paddingHorizontal}
-          opacity={0.5}
+          opacity={0.65}
           pressStyle={{
             opacity: 0.4,
           }}
@@ -128,7 +127,7 @@ const SearchLocationButton = memo(() => {
             om.actions.home.popTo('home')
           }}
         >
-          <Navigation size={18} color="blue" />
+          <Navigation size={22} color="#fff" />
         </VStack>
       </HStack>
     </AbsoluteVStack>

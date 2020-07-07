@@ -3,6 +3,7 @@ import { HStack, useOnMount } from '@dish/ui'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { StyleSheet, TextInput } from 'react-native'
 
+import { searchBarHeight } from '../../constants'
 import {
   inputCaretPosition,
   inputClearSelection,
@@ -32,7 +33,7 @@ export const HomeSearchInput = memo(() => {
   const [search, setSearch] = useState('')
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
   const input = inputGetNode(inputRef.current)
-  const { showAutocomplete } = om.state.home
+  // const { showAutocomplete } = om.state.home
 
   useOnMount(() => {
     setSearch(om.state.home.currentStateSearchQuery)
@@ -249,11 +250,13 @@ export const HomeSearchInput = memo(() => {
               om.actions.home.setSearchQuery(text ?? '')
             }}
             placeholder={
-              isSearchingCuisine ? '...' : 'Search dish, cuisine, restaurant'
+              isSearchingCuisine
+                ? '...'
+                : 'Find the best dishes and restaurants'
             }
             style={[
               inputTextStyles.textInput,
-              { flex: 1, fontSize: 19, paddingRight: 0 },
+              { flex: 1, fontSize: 18, paddingRight: 0 },
             ]}
           />
         </HStack>
@@ -293,7 +296,7 @@ const HomeSearchBarTags = memo(
                   key={getTagId(tag)}
                   subtleIcon
                   backgroundColor="#eee"
-                  color="#666"
+                  color="#fff"
                   borderColor={'transparent'}
                   {...(isActive && {
                     backgroundColor: '#777',
@@ -331,10 +334,12 @@ const HomeSearchBarTags = memo(
 
 export const inputTextStyles = StyleSheet.create({
   textInput: {
-    padding: 11,
+    color: '#fff',
+    height: searchBarHeight - 6,
     paddingHorizontal: 16,
     flex: 1,
     fontSize: 18,
+    fontWeight: '500',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
