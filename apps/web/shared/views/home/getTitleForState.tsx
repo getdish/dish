@@ -31,7 +31,6 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
   }
 
   let titleParts: string[] = []
-  console.log('tags', tags)
   const cheap = tags.some((t) => t.name == 'cheap')
   const midRange = tags.some((t) => t.name == 'midrange')
   const expensive = tags.some((t) => t.name == 'expensive')

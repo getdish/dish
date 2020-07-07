@@ -27,7 +27,7 @@ export const RestaurantAddressLinksRow = memo(
       showMenu?: boolean
     }) => {
       const restaurant = restaurantQuery(restaurantSlug)
-      const fontSize = size == 'lg' ? 15 : 13
+      const fontSize = size == 'lg' ? 16 : 13
       const sep = ' '
 
       const linkElements = (

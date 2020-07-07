@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 import { Divider } from './Divider'
 import { Spacer } from './Spacer'
 import { HStack, StackProps, VStack } from './Stacks'
-import { Text } from './Text'
+import { Text, TextProps } from './Text'
 
 export const SmallTitle = memo(
   ({
@@ -11,22 +11,33 @@ export const SmallTitle = memo(
     isActive,
     divider = 'bottom',
     after,
+    color,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    letterSpacing,
+    textAlign,
     ...rest
-  }: StackProps & {
-    after?: any
-    isActive?: boolean
-    divider?: 'center' | 'bottom' | 'off'
-  }) => {
+  }: StackProps &
+    TextProps & {
+      after?: any
+      isActive?: boolean
+      divider?: 'center' | 'bottom' | 'off'
+    }) => {
     return (
       <VStack alignItems="center" {...rest}>
         <HStack width="100%" alignItems="center" justifyContent="center">
           {divider === 'center' && <Divider flex />}
           <Text
             paddingHorizontal={30}
-            letterSpacing={-1}
-            color={isActive ? '#000' : '#888'}
-            fontSize={16}
-            fontWeight="400"
+            {...{
+              letterSpacing: letterSpacing ?? -1,
+              color: color ?? (isActive ? '#000' : '#888'),
+              fontSize: fontSize ?? 16,
+              fontWeight: fontWeight ?? '400',
+              lineHeight,
+              textAlign,
+            }}
           >
             {children}
           </Text>

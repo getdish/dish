@@ -4,10 +4,6 @@ import { OVERMIND_MUTATIONS } from '../constants'
 
 const LOG_OVERMIND = window.location.search === '?verbose'
 
-const TIME_ID = 'load'
-const tlog = (...args: any[]) => console.timeLog(TIME_ID, ...args)
-console.time(TIME_ID)
-
 export const onInitialize: OnInitialize = async (
   { state, actions, effects },
   overmind
@@ -39,7 +35,6 @@ export const onInitialize: OnInitialize = async (
   await actions.router.start({
     onRouteChange: actions.home.handleRouteChange,
   })
-  tlog('onInitialize()')
 }
 
 if (process.env.NODE_ENV === 'development') {

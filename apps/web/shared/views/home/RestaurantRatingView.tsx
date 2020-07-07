@@ -41,10 +41,8 @@ export default memo(
 //         },
 //       },
 //     })
-
 //     // @ts-ignore bad generate
 //     const ratingFactors = restaurant.rating_factors()
-
 //     return (
 //       <>
 //         <HoverablePopover
@@ -70,7 +68,6 @@ export default memo(
 //                       name="Food"
 //                     />
 //                   </VStack>
-
 //                   <VStack
 //                     zIndex={9}
 //                     flex={1}
@@ -84,7 +81,6 @@ export default memo(
 //                       name="Service"
 //                     />
 //                   </VStack>
-
 //                   <VStack
 //                     zIndex={8}
 //                     flex={1}
@@ -137,7 +133,6 @@ export default memo(
 //     )
 //   })
 // )
-
 // const RatingBreakdownCircle = memo(
 //   ({
 //     emoji,

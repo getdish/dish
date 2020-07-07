@@ -26,7 +26,7 @@ import {
   searchBarTopOffset,
 } from '../../constants'
 import { HomeStateItemSearch, OmState } from '../../state/home'
-import { useOvermind } from '../../state/useOvermind'
+import { useOvermind, useOvermindStatic } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { flatButtonStyle } from './baseButtonStyle'
@@ -45,11 +45,10 @@ export default memo(function HomePageSearchResults({
 }: {
   state: HomeStateItemSearch
 }) {
-  const om = useOvermind()
   const isSmall = useMediaQueryIsSmall()
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const { title, subTitle, pageTitleElements } = getTitleForState(
-    om.state,
+    useOvermindStatic().state,
     state
   )
   const topBarVPad = 12

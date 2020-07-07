@@ -1,4 +1,4 @@
-import { fullyIdle } from '@dish/async'
+import { fullyIdle, series } from '@dish/async'
 import { HStack, useOnMount } from '@dish/ui'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { StyleSheet, TextInput } from 'react-native'
@@ -32,22 +32,24 @@ export const HomeSearchInput = memo(() => {
   const inputRef = useRef<any>()
   const [search, setSearch] = useState('')
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
-  const input = inputGetNode(inputRef.current)
   // const { showAutocomplete } = om.state.home
 
   useOnMount(() => {
     setSearch(om.state.home.currentStateSearchQuery)
 
-    setTimeout(() => {
-      const input = inputGetNode(inputRef.current)
-      input?.focus()
-    }, 100)
+    series([
+      () => fullyIdle({ max: 1000 }),
+      () => {
+        const input = inputGetNode(inputRef.current)
+        input?.focus()
+      },
+    ])
   })
 
   // one way sync down for more perf
   useEffect(() => {
     return om.reaction(
-      (state) => state.home.currentState.searchQuery,
+      (state) => state.home.currentStateSearchQuery,
       (val) => {
         setSearch(val)
       }
@@ -57,12 +59,7 @@ export const HomeSearchInput = memo(() => {
   // shortcuts
   useEffect(() => {
     const handleKeyUp = (e) => {
-      console.log(
-        'document.activeElement',
-        document.activeElement,
-        input,
-        document.activeElement === input
-      )
+      const input = inputGetNode(inputRef.current)
       if (document.activeElement !== input) {
         if (e.keyCode == 191) {
           // forward-slash (/)
@@ -94,6 +91,7 @@ export const HomeSearchInput = memo(() => {
   //   }
   // }, [input, inputRef, showAutocomplete])
 
+  const input = inputGetNode(inputRef.current)
   useEffect(() => {
     if (!input) return
     const prev = () => {

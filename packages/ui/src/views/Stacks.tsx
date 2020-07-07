@@ -32,7 +32,14 @@ export type StackProps = Omit<
       className?: string
       // stronger version of pointer-events: none;
       disabled?: boolean
-      contain?: 'none' | 'strict' | 'content' | 'size' | 'layout' | 'paint'
+      contain?:
+        | 'none'
+        | 'strict'
+        | 'content'
+        | 'size'
+        | 'layout'
+        | 'paint'
+        | string
       display?:
         | 'inherit'
         | 'none'

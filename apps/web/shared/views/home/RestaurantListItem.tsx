@@ -4,6 +4,7 @@ import {
   AbsoluteVStack,
   Divider,
   HStack,
+  SmallTitle,
   Spacer,
   Text,
   VStack,
@@ -18,7 +19,7 @@ import {
 } from '../../state/home'
 import { omStatic, useOvermindStatic } from '../../state/useOvermind'
 import { Link } from '../ui/Link'
-import { bgLight, bgLightLight, brandColor } from './colors'
+import { bg, bgLight, bgLightLight, brandColor } from './colors'
 import { DishView } from './DishView'
 import { HomeScrollViewHorizontal } from './HomeScrollView'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
@@ -123,8 +124,6 @@ const RestaurantListItemContent = memo(
 
     const paddingTop = 30
 
-    console.log('RestaurantListItemContent.render', props.rank)
-
     return (
       <HStack
         alignItems="flex-start"
@@ -141,8 +140,9 @@ const RestaurantListItemContent = memo(
           <VStack flex={1} alignItems="flex-start" width="100%">
             {/* ROW: TITLE */}
             <VStack
-              hoverStyle={{ backgroundColor: bgLightLight }}
-              pressStyle={{ backgroundColor: bgLight }}
+              backgroundColor={bgLightLight}
+              hoverStyle={{ backgroundColor: bgLight }}
+              pressStyle={{ backgroundColor: bg }}
               marginLeft={-adjustRankingLeft}
               width={950}
               position="relative"
@@ -265,6 +265,8 @@ const RestaurantListItemContent = memo(
                 }
               />
             </VStack>
+
+            <Spacer />
           </VStack>
         </VStack>
       </HStack>

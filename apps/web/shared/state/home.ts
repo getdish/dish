@@ -289,6 +289,7 @@ const pushHomeState: AsyncAction<
         ...om.state.home.lastHomeState,
         type,
         ...newState,
+        searchQuery: '',
         activeTagIds,
       } as HomeStateItemHome
       break
@@ -414,14 +415,12 @@ const pushHomeState: AsyncAction<
     const lastState = om.state.home.states[om.state.home.states.length - 1]
     for (const key in nextState) {
       if (!isEqual(nextState[key], lastState[key])) {
-        console.log('granular update...', key)
         lastState[key] = _.isPlainObject(nextState[key])
           ? { ...nextState[key] }
           : nextState[key]
       }
     }
   } else {
-    console.log('replacing state, should trigger stackview no?')
     om.state.home.states = [...om.state.home.states, nextState]
   }
 
@@ -543,7 +542,25 @@ const popTo: Action<HomeStateItem['type'] | number> = (om, item) => {
 const popHomeState: Action<HistoryItem> = (om, item) => {
   if (om.state.home.states.length > 1) {
     om.actions.home.setShowAutocomplete(false)
-    om.state.home.states = _.dropRight(om.state.home.states)
+    console.log('POP')
+
+    const nextStates = _.dropRight(om.state.home.states)
+    const curState = _.last(om.state.home.states)
+    let nextState = curState
+
+    // TODO should this just be the same as pushHomeState minus the fetchData?
+    switch (curState.type) {
+      case 'home': {
+        nextState = {
+          ...nextState,
+          searchQuery: '',
+        }
+        break
+      }
+    }
+
+    nextStates[nextStates.length - 1] = nextState
+    om.state.home.states = nextStates
   }
 }
 
@@ -891,7 +908,6 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
     }
   }
 
-  console.log('update breadcrumbs NOW')
   om.actions.home.updateBreadcrumbs()
   currentStates = om.state.home.states
   await Promise.all([...promises])
@@ -1066,7 +1082,6 @@ const setHasMovedMap: Action<boolean | void> = (om, val = true) => {
 const updateBreadcrumbs: Action = (om) => {
   const next = createBreadcrumbs(om.state.home)
   if (next && !isEqual(next, om.state.home.breadcrumbStates)) {
-    console.log('now setting new breadcurmbs', next)
     om.state.home.breadcrumbStates = next
   }
 }
