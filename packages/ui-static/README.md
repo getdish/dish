@@ -1,3 +1,4 @@
+- have seen bugs with <Spacer flex /> and <VStack fullscreen />
 - (done) evaluate constants in other files
   - add test / test
 - make pressStyle override hoverStyle always

@@ -1,8 +1,10 @@
+import { onGraphError } from '@dish/graph'
 // import { RecoilRoot } from '@dish/recoil-store'
-import { LoadingItems, ToastRoot } from '@dish/ui'
+import { LoadingItems, Toast, ToastRoot, useOnMount } from '@dish/ui'
 import { Provider } from 'overmind-react'
 import React, { Suspense } from 'react'
 
+import { useOvermind } from '../state/useOvermind'
 import HomePage from './home/HomePage'
 import { NotFoundPage } from './NotFoundPage'
 import { Route, RouteSwitch } from './router/Route'
@@ -13,6 +15,7 @@ export function App({ overmind }: { overmind?: any }) {
     <>
       <ToastRoot />
       <Provider value={overmind}>
+        <ErrorHandler />
         <Suspense fallback={<LoadingItems />}>
           <RouteSwitch>
             {/* <PrivateRoute name="tag">
@@ -26,9 +29,28 @@ export function App({ overmind }: { overmind?: any }) {
             </Route>
           </RouteSwitch>
 
-          <WelcomeModal />
+          {/* <WelcomeModal /> */}
         </Suspense>
       </Provider>
     </>
   )
+}
+
+function ErrorHandler() {
+  const om = useOvermind()
+
+  useOnMount(() => {
+    onGraphError((errors) => {
+      console.warn('got errors', errors)
+
+      if (errors.some((err) => err.message.includes('JWTExpired')))
+        for (const err of errors) {
+          console.warn('HANDLING JWT ERR')
+          Toast.show(`Login has expired`)
+          om.actions.user.logout()
+        }
+    })
+  })
+
+  return null
 }

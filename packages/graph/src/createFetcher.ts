@@ -50,6 +50,9 @@ export const createFetcher = (
       if (options?.silenceNotFound && response.status == 404) {
         return data
       } else {
+        if (graphErrorListeners.size) {
+          graphErrorListeners.forEach((cb) => cb(data.errors))
+        }
         throw new HasuraError(query, data.errors)
       }
     }
@@ -57,9 +60,18 @@ export const createFetcher = (
   }
 }
 
+type ErrorListener = (errors: { message: string }[]) => void
+
+const graphErrorListeners = new Set<ErrorListener>()
+
+export function onGraphError(cb: ErrorListener) {
+  graphErrorListeners.add(cb)
+}
+
 class HasuraError extends Error {
-  errors: {}
-  constructor(query: string, errors: {} = {}) {
+  errors: Error[] | null = null
+
+  constructor(query: string, errors: any[] | null = null) {
     super()
     // Maintains proper stack trace for where our error was thrown (only available on V8)
     if (Error.captureStackTrace) {
@@ -67,7 +79,7 @@ class HasuraError extends Error {
     }
     this.errors = errors
     this.message =
-      errors[0]?.extensions?.internal?.error?.message || errors[0]?.message
+      errors?.[0]?.extensions?.internal?.error?.message || errors?.[0]?.message
     if (isBrowserProd) {
       this.name = 'Dish API Error'
     } else {

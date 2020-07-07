@@ -567,6 +567,8 @@ const loadHomeDishes: AsyncAction = async (om) => {
     return
   }
 
+  let allDishTags: Tag[] = []
+
   // update tags
   for (const topDishes of all) {
     // country tag
@@ -584,8 +586,11 @@ const loadHomeDishes: AsyncAction = async (om) => {
       name: dish.name ?? '',
       type: 'dish',
     }))
-    om.actions.home.addTagsToCache(dishTags)
+    allDishTags = [...allDishTags, ...dishTags]
   }
+
+  console.log('dishTags', allDishTags)
+  om.actions.home.addTagsToCache(allDishTags)
 
   console.warn('SET TOP DISHES')
   om.state.home.topDishes = all
@@ -1164,9 +1169,14 @@ const navigateToCurrentState = async (om: Om, navState?: HomeStateNav) => {
 // adds to allTags + allTagsNameToID
 const addTagsToCache: Action<Tag[]> = (om, tags) => {
   for (const tag of tags) {
-    const id = getTagId(tag)
-    om.state.home.allTags[id] = tag
-    om.state.home.allTagsNameToID[tag.name.toLowerCase()] = id
+    try {
+      const id = getTagId(tag)
+      om.state.home.allTags[id] = tag
+      om.state.home.allTagsNameToID[tag.name.toLowerCase()] = id
+    } catch (err) {
+      // fix bug with weird tag name... can remove easily if not happening
+      console.warn(err)
+    }
   }
 }
 

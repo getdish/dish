@@ -6,6 +6,7 @@ import {
   HorizontalLine,
   LinearGradient,
   LoadingItems,
+  SmallTitle,
   Spacer,
   StackProps,
   Text,
@@ -22,6 +23,7 @@ import {
   useState,
 } from 'react'
 import { ChevronDown, ChevronRight, ChevronUp, Minus } from 'react-feather'
+import { useStorageState } from 'react-storage-hooks'
 
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { useOvermind } from '../../state/useOvermind'
@@ -30,12 +32,15 @@ import { LinkButton } from '../ui/LinkButton'
 import { LinkButtonProps } from '../ui/LinkProps'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
+import { CloseButton } from './CloseButton'
+import { bgLight, bgLightLight } from './colors'
 import { DishView } from './DishView'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import RestaurantRatingView from './RestaurantRatingView'
+import { SmallButton } from './SmallButton'
 import { Squircle } from './Squircle'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
@@ -122,8 +127,16 @@ const HomePageTopDishes = memo(() => {
                   <HomeLenseBar size="lg" activeTagIds={activeTagIds} />
                   <HorizontalLine />
                 </HStack>
+
                 <Spacer size={40} />
-                <HomeFilterBar activeTagIds={activeTagIds} />
+
+                <HomeIntroLetter />
+
+                <SmallTitle divider="center">
+                  Uniquely good in San Francisco...
+                </SmallTitle>
+
+                {/* <HomeFilterBar activeTagIds={activeTagIds} /> */}
                 {isSmall && <Spacer size={40} />}
               </VStack>
 
@@ -133,6 +146,64 @@ const HomePageTopDishes = memo(() => {
         </HomeScrollView>
       </VStack>
     </>
+  )
+})
+
+const HomeIntroLetter = memo(() => {
+  const [showInto, setShowIntro] = useStorageState(
+    localStorage,
+    'showIntro',
+    true
+  )
+
+  if (!showInto) {
+    return null
+  }
+
+  return (
+    <VStack alignItems="center" justifyContent="center">
+      <VStack
+        borderColor={bgLight}
+        borderWidth={2}
+        borderRadius={10}
+        maxWidth="75%"
+        margin="auto"
+        padding={20}
+      >
+        <HStack>
+          <Text fontSize={18} fontWeight="600">
+            Welcome to Dish!
+          </Text>
+          <Spacer flex={1} />
+          <CloseButton onPress={() => setShowIntro(false)} />
+        </HStack>
+        <Spacer size="sm" />
+        <Text fontSize={16} lineHeight={22} opacity={0.8}>
+          It's not easy to find the Pho, Tacos, and other dishes in your city –
+          other food rating apps mix ratings for everything into one big score.
+          Dish is a food review aggregator that uses novel analysis to figure
+          out which dishes are actually the best.
+        </Text>
+        <Spacer size="sm" />
+        <Text fontSize={14} lineHeight={20} opacity={0.8}>
+          We want to build a fun community where you can explore the world of
+          food, find unique popups, amazing insider tips, and track all your
+          food advertures.
+        </Text>
+        <Spacer size="sm" />
+        <Text fontSize={14} lineHeight={20} opacity={0.8}>
+          <strong>Beta</strong>... watch for bugs! Report using the (?) on the
+          bottom right.
+        </Text>
+        <Spacer size="lg" />
+        <HStack justifyContent="center">
+          <SmallButton textStyle={{ fontSize: 16 }}>
+            Learn how dish breaks down data &nbsp; ➡️
+          </SmallButton>
+        </HStack>
+      </VStack>
+      <Spacer size={30} />
+    </VStack>
   )
 })
 
@@ -153,9 +224,9 @@ const HomeTopDishesContent = memo(() => {
   }, [topDishes])
 })
 
-const dishHeight = 155
+const dishHeight = 175
 const padding = 30
-const spacing = 6
+const spacing = 12
 const pctRestaurant = 0.3
 
 const useHomeSideWidth = () => {
@@ -172,24 +243,19 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
       paddingLeft={12}
       className="home-top-dish"
       position="relative"
-      // onHoverIn={() => setHovered(true)}
-      // onHoverOut={() => setHovered(false)}
     >
       <HStack position="relative" zIndex={10}>
-        {/* <RankingView rank={rank} marginLeft={-36} /> */}
         <LinkButton
           {...flatButtonStyle}
-          // paddingVertical={4}
-          // marginBottom={-26}
           style={{
-            transform: [{ rotate: '-2deg' }],
+            transform: [{ rotate: '-2.5deg' }],
           }}
           tag={{
             type: 'country',
             name: country.country,
           }}
         >
-          <Text ellipse fontSize={18} marginVertical={-20} fontWeight={'700'}>
+          <Text ellipse fontSize={18} fontWeight={'700'}>
             {country.country} {country.icon}
           </Text>
         </LinkButton>
@@ -198,6 +264,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
       <HomeTopDishesSide>
         <TopDishesRestaurantsSide country={country} />
       </HomeTopDishesSide>
+
       {/* left shadow */}
       <LinearGradient
         colors={[
@@ -239,7 +306,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
             )
           })}
 
-          <Squircle size={dishHeight}>
+          <Squircle width={dishHeight * 0.8} height={dishHeight}>
             <ChevronRight size={40} color="black" />
           </Squircle>
         </HomeTopDishMain>
@@ -313,7 +380,7 @@ const HomeTopDishMain = memo((props) => {
     <HStack
       alignItems="center"
       padding={padding}
-      paddingTop={padding}
+      paddingTop={0}
       paddingHorizontal={30}
       paddingLeft={sideWidth}
       spacing={spacing}
