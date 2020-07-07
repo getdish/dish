@@ -14,7 +14,7 @@ DISH_PG_PASS=$(\
 popd
 
 pushd $PROJECT_ROOT/services/hasura
-hasura migrate apply \
+$(yarn global bin)/hasura migrate apply \
   --skip-update-check \
   --endpoint https://hasura.rio.dishapp.com \
   --admin-secret $HASURA_ADMIN

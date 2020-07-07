@@ -47,5 +47,5 @@ BEGIN
         AND hours @> f_opening_hours_normalised_time(now())
   );
 END;
-$$ LANGUAGE plpgsql STABLE
+$$ LANGUAGE plpgsql STABLE;
 

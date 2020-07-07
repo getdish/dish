@@ -26,7 +26,18 @@ docker-compose up -d hasura postgres
 
 pushd services/hasura
 yarn global add hasura-cli@v1.2.2
-$(yarn global bin)/hasura migrate apply --endpoint $HASURA_ENDPOINT --admin-secret password
+$(yarn global bin)/hasura migrate apply \
+  --skip-update-check \
+  --endpoint $HASURA_ENDPOINT \
+  --admin-secret password
+
+cat functions/*.sql | \
+  PGPASSWORD=postgres psql \
+    -p 5432 \
+    -h localhost \
+    -U postgres \
+    -d dish \
+    --single-transaction
 popd
 
 # JWT server won't start until migrations have been applied
