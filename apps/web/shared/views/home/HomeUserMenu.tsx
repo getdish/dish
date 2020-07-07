@@ -11,21 +11,21 @@ import { flatButtonStyle } from './baseButtonStyle'
 
 export const HomeUserMenu = memo(() => {
   const om = useOvermind()
-  const [firstTime, setFirstTime] = useStorageState(
-    localStorage,
-    'firstTime',
-    true
-  )
+  // const [firstTime, setFirstTime] = useStorageState(
+  //   localStorage,
+  //   'firstTime',
+  //   true
+  // )
 
   const close = () => {
-    setFirstTime(false)
+    // setFirstTime(false)
     om.actions.home.setShowUserMenu(false)
   }
 
   return (
     <Popover
       position="bottom"
-      isOpen={firstTime || om.state.home.showUserMenu}
+      isOpen={om.state.home.showUserMenu}
       onChangeOpen={(val) => val === false && close()}
       style={{
         flex: 0,

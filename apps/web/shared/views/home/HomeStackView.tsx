@@ -39,7 +39,10 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   const breadcrumbs = om.state.home.breadcrumbStates
   console.log('SATES', om.state.home.states)
   console.time('ok')
-  const key = JSON.stringify(om.state.home.states)
+  const key = JSON.stringify([
+    om.state.home.states,
+    om.state.home.breadcrumbStates,
+  ])
   console.timeEnd('ok')
   const homeStates = useMemo(() => {
     console.log('get home states', breadcrumbs)

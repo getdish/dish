@@ -203,6 +203,9 @@ export const HomeSearchInput = memo(() => {
       }
     }
     const showAutocomplete = () => {
+      if (input.value === '') {
+        return
+      }
       if (!om.state.home.showAutocomplete) {
         om.actions.home.setShowAutocomplete('search')
       }
@@ -295,17 +298,16 @@ const HomeSearchBarTags = memo(
                   className="no-transition"
                   key={getTagId(tag)}
                   subtleIcon
-                  backgroundColor="#eee"
+                  backgroundColor="rgba(0,0,0,0.3)"
                   color="#fff"
                   borderColor={'transparent'}
                   {...(isActive && {
-                    backgroundColor: '#777',
+                    backgroundColor: 'rgba(255,255,255,0.3)',
                     color: '#fff',
-                    transform: [{ scale: 1.05 }, { rotate: '-1.3deg' }],
+                    transform: [{ scale: 1.1 }, { rotate: '-1.5deg' }],
                   })}
                   hoverStyle={{
-                    backgroundColor: '#f2f2f2',
-                    // transform: [{ scale: 1.02 }],
+                    backgroundColor: 'rgba(0,0,0,0.5)',
                   }}
                   size="lg"
                   name={tag.name}

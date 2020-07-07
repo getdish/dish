@@ -6,8 +6,8 @@ export const baseButtonStyle: StackProps = {
   // @ts-ignore
   cursor: 'pointer',
   paddingVertical: 5,
-  borderRadius: 5,
   paddingHorizontal: 8,
+  borderRadius: 5,
   alignSelf: 'flex-start',
 }
 

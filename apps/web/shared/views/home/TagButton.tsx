@@ -210,9 +210,6 @@ export const TagButton = memo(
               alignItems="center"
               justifyContent="center"
               alignSelf="center"
-              hoverStyle={{
-                opacity: 1,
-              }}
             >
               <X
                 size={subtle ? 12 : 14}
