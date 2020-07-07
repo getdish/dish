@@ -108,7 +108,6 @@ const HomeMapDataLoader = memo(
       }, [JSON.stringify(restaurants.map((x) => x.location))])
 
       useEffect(() => {
-        console.warn('ON LOADED MAP RESTS', restaurantsMemo)
         props.onLoadedRestaurants?.(restaurantsMemo)
       }, [restaurantsMemo])
 

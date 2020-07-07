@@ -36,7 +36,7 @@ export const LenseButton = memoIsEqualDeep(
     return (
       <LinkButton tag={lense} position="relative" zIndex={isActive ? 1 : 0}>
         <VStack
-          className="ease-in-out-fast"
+          className="ease-in-out-faster"
           alignItems="center"
           justifyContent="center"
           marginVertical={-5 * scale}
@@ -59,7 +59,6 @@ export const LenseButton = memoIsEqualDeep(
           })}
         >
           <Text
-            opacity={isActive ? 1 : 0.5}
             fontSize={sizePx * (isActive ? 0.7 : 0.4) * scale}
             lineHeight={16}
             {...(!minimal && {

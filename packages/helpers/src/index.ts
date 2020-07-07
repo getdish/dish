@@ -28,7 +28,11 @@ export function assert(value: unknown): asserts value {
 export function handleAssertionError(err: any) {
   if (err instanceof AssertionError) {
     if (process.env.DEBUG || process.env.DEBUG_ASSERT) {
-      console.log('assert failed', err)
+      if (+(process.env.DEBUG ?? 0) > 1) {
+        console.log('assert failed', err)
+      } else {
+        console.log('assert failed')
+      }
     }
     return
   }

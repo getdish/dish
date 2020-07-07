@@ -97,8 +97,6 @@ export const RestaurantTopReviews = memo(
 
           {!!(state.showMore || expandTopComments) && (
             <VStack paddingTop={20} spacing={10}>
-              <SmallTitle divider="center">Top reviews</SmallTitle>
-
               <HStack>
                 <Spacer flex={1} />
                 <RestaurantAddCommentButton
@@ -119,7 +117,7 @@ export const RestaurantTopReviews = memo(
                 </>
               )}
 
-              <RestaurantTopReviewsContent
+              <Content
                 numToShow={
                   state.showMore ? Infinity : expandTopComments ?? Infinity
                 }
@@ -134,7 +132,7 @@ export const RestaurantTopReviews = memo(
   )
 )
 
-const RestaurantTopReviewsContent = memo(
+const Content = memo(
   graphql(
     ({
       restaurantId,

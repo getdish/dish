@@ -1,21 +1,6 @@
-import { Store, useRecoilStore } from '@dish/recoil-store'
-import {
-  AbsoluteVStack,
-  PopoverContext,
-  PopoverStore,
-  VStack,
-  useDebounceValue,
-  useMemoList,
-} from '@dish/ui'
+import { AbsoluteVStack, VStack, useDebounceValue } from '@dish/ui'
 import _ from 'lodash'
-import React, {
-  Suspense,
-  memo,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItem, HomeStateItemSimple } from '../../state/home'
@@ -37,15 +22,15 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   // const currentStateStore = useRecoilStore(HomeStateStore)
   const om = useOvermind()
   const breadcrumbs = om.state.home.breadcrumbStates
-  console.log('SATES', om.state.home.states)
-  console.time('ok')
+  console.log(
+    'HomeStackView',
+    _.cloneDeep(useOvermindStatic().state.home.states)
+  )
   const key = JSON.stringify([
     om.state.home.states,
     om.state.home.breadcrumbStates,
   ])
-  console.timeEnd('ok')
   const homeStates = useMemo(() => {
-    console.log('get home states', breadcrumbs)
     return breadcrumbs
       .map((item) => {
         return om.state.home.states.find((x) => x.id === item.id)!
@@ -56,7 +41,6 @@ export function HomeStackView<A extends HomeStateItem>(props: {
     useDebounceValue(homeStates, transitionDuration) ?? homeStates
   const isRemoving = currentStates.length > breadcrumbs.length
   const items = isRemoving ? currentStates : homeStates
-  console.log('what is', homeStates, isRemoving)
 
   // const activeItem = items[items.length - 1]
   // useEffect(() => {

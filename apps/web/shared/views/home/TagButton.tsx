@@ -14,6 +14,7 @@ import React, { memo } from 'react'
 import { ChevronUp, ThumbsUp, X } from 'react-feather'
 
 import { LinkButton } from '../ui/LinkButton'
+import { bg, bgLight } from './colors'
 
 export type TagButtonTagProps = NonNullObject<
   Required<Pick<Tag, 'name' | 'type'>>
@@ -89,9 +90,9 @@ export const TagButton = memo(
     const contents = (
       <>
         <HStack
-          className="ease-in-out-fast"
           height={height}
-          backgroundColor={subtle ? 'transparent' : '#fafafa'}
+          borderColor={subtle ? 'transparent' : 'rgba(0,0,0,0.1)'}
+          borderWidth={1}
           borderRadius={6 * scale}
           overflow="hidden"
           alignItems="center"
@@ -99,7 +100,7 @@ export const TagButton = memo(
           position="relative"
           minHeight={lineHeight}
           hoverStyle={{
-            backgroundColor: '#f2f2f2',
+            backgroundColor: bgLight,
           }}
           {...(!subtle && {
             hoverStyle: {
@@ -176,15 +177,19 @@ export const TagButton = memo(
                 marginLeft: 4,
                 overflow: 'hidden',
               })}
+              opacity={0.5}
               hoverStyle={{
-                backgroundColor: '#ccc',
+                opacity: 1,
               }}
               onPressOut={(e) => {
                 prevent(e)
                 console.warn('should vote')
               }}
             >
-              <ThumbsUp size={12 * scale} color={subtle ? '#ccc' : '#666'} />
+              <ThumbsUp
+                size={12 * scale}
+                color={subtle ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)'}
+              />
             </LinkButton>
           )}
           {!!closable && (

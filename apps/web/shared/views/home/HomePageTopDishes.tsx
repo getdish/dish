@@ -1,4 +1,4 @@
-import { fullyIdle } from '@dish/async'
+import { fullyIdle, series } from '@dish/async'
 import { Restaurant, TopCuisine } from '@dish/graph'
 import {
   AbsoluteVStack,
@@ -11,7 +11,6 @@ import {
   StackProps,
   Text,
   VStack,
-  useOnMount,
 } from '@dish/ui'
 import _, { clamp } from 'lodash'
 import {
@@ -33,9 +32,8 @@ import { LinkButtonProps } from '../ui/LinkProps'
 import { PageTitleTag } from '../ui/PageTitleTag'
 import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
 import { CloseButton } from './CloseButton'
-import { bgLight, bgLightLight } from './colors'
+import { bgLight } from './colors'
 import { DishView } from './DishView'
-import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
@@ -49,11 +47,16 @@ export default memo(function HomePageTopDishesContainer() {
   const isOnHome = om.state.home.currentStateType === 'home'
   const [isLoaded, setIsLoaded] = useState(false)
 
-  console.warn('HomePageTopDishesContainer.render')
-
   useEffect(() => {
     if (isOnHome) {
       setIsLoaded(true)
+    } else {
+      return series([
+        fullyIdle,
+        () => {
+          setIsLoaded(true)
+        },
+      ])
     }
   }, [isOnHome])
 
@@ -132,8 +135,8 @@ const HomePageTopDishes = memo(() => {
 
                 <HomeIntroLetter />
 
-                <SmallTitle divider="center">
-                  Uniquely good in San Francisco...
+                <SmallTitle fontSize={22} divider="center">
+                  What's good in San Francisco...
                 </SmallTitle>
 
                 {/* <HomeFilterBar activeTagIds={activeTagIds} /> */}
@@ -224,14 +227,14 @@ const HomeTopDishesContent = memo(() => {
   }, [topDishes])
 })
 
-const dishHeight = 175
+const dishHeight = 195
 const padding = 30
 const spacing = 12
-const pctRestaurant = 0.3
+const pctRestaurant = 0.23
 
 const useHomeSideWidth = () => {
   const drawerWidth = useHomeDrawerWidth()
-  const min = 200
+  const min = 180
   const max = 240
   return clamp(drawerWidth * pctRestaurant + 10, min, max)
 }
@@ -240,7 +243,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
   return (
     <VStack
       paddingVertical={5}
-      paddingLeft={12}
+      paddingLeft={18}
       className="home-top-dish"
       position="relative"
     >
@@ -255,7 +258,13 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
             name: country.country,
           }}
         >
-          <Text ellipse fontSize={18} fontWeight={'700'}>
+          <Text
+            ellipse
+            fontSize={20}
+            fontWeight={'800'}
+            height={24}
+            lineHeight={24}
+          >
             {country.country} {country.icon}
           </Text>
         </LinkButton>
@@ -286,31 +295,33 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
         }}
       />
 
-      <HomeScrollViewHorizontal>
-        <HomeTopDishMain>
-          {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
-            return (
-              <DishView
-                size={dishHeight}
-                key={index}
-                dish={{
-                  ...top_dish,
-                  rating: (top_dish.rating ?? 0) / 5,
-                }}
-                cuisine={{
-                  id: country.country,
-                  name: country.country,
-                  type: 'country',
-                }}
-              />
-            )
-          })}
+      <VStack marginTop={-20}>
+        <HomeScrollViewHorizontal>
+          <HomeTopDishMain>
+            {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
+              return (
+                <DishView
+                  size={dishHeight}
+                  key={index}
+                  dish={{
+                    ...top_dish,
+                    rating: (top_dish.rating ?? 0) / 5,
+                  }}
+                  cuisine={{
+                    id: country.country,
+                    name: country.country,
+                    type: 'country',
+                  }}
+                />
+              )
+            })}
 
-          <Squircle width={dishHeight * 0.8} height={dishHeight}>
-            <ChevronRight size={40} color="black" />
-          </Squircle>
-        </HomeTopDishMain>
-      </HomeScrollViewHorizontal>
+            <Squircle width={dishHeight * 0.8} height={dishHeight}>
+              <ChevronRight size={40} color="black" />
+            </Squircle>
+          </HomeTopDishMain>
+        </HomeScrollViewHorizontal>
+      </VStack>
     </VStack>
   )
 })
@@ -326,7 +337,7 @@ const TopDishesRestaurantsSide = memo(
     }, [])
 
     return (
-      <VStack flex={1} padding={10} spacing={4} alignItems="flex-start">
+      <VStack flex={1} padding={10} spacing={6} alignItems="flex-start">
         {_.uniqBy(country.top_restaurants, (x) => x.name)
           .slice(0, 5)
           .map((restaurant, index) => {
@@ -364,7 +375,7 @@ const HomeTopDishesSide = memo((props) => {
   return (
     <AbsoluteVStack
       fullscreen
-      paddingTop={padding + 4}
+      paddingTop={padding + 10}
       pointerEvents="none"
       right="auto"
       maxWidth={sideWidth}
@@ -380,7 +391,7 @@ const HomeTopDishMain = memo((props) => {
     <HStack
       alignItems="center"
       padding={padding}
-      paddingTop={0}
+      paddingTop={5}
       paddingHorizontal={30}
       paddingLeft={sideWidth}
       spacing={spacing}

@@ -60,16 +60,16 @@ textarea {
 }
 
 .ease-in-out-faster {
-  transition: all ease-in-out 80ms;
+  transition: all ease-in-out 50ms;
 }
 .ease-in-out-fast {
-  transition: all ease-in-out 150ms;
+  transition: all ease-in-out 100ms;
 }
 .ease-in-out {
-  transition: all ease-in-out 250ms;
+  transition: all ease-in-out 180ms;
 }
 .ease-in-out-slow {
-  transition: all ease-in-out 350ms;
+  transition: all ease-in-out 300ms;
 }
 
 .force-disable,

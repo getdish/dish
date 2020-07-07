@@ -143,6 +143,7 @@ export default memo(function HomeSearchBar() {
 
             {!isSmall && (
               <>
+                <Spacer />
                 <HomeSearchLocationInput />
                 {divider}
                 <VStack flex={1} />
