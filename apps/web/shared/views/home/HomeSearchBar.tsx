@@ -1,13 +1,16 @@
 import {
   Divider,
   HStack,
+  LinearGradient,
   MediaQuery,
   Spacer,
+  Text,
   VStack,
   mediaQueries,
 } from '@dish/ui'
 import React, { memo, useState } from 'react'
 import { ChevronLeft, Loader, MapPin, Search } from 'react-feather'
+import { StyleSheet } from 'react-native'
 
 import {
   pageWidthMax,
@@ -16,6 +19,7 @@ import {
 } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
+import { brandColor, brandColorDark } from './colors'
 import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
 import { HomeAutocompleteBackground } from './HomeAutocompleteBackground'
@@ -30,115 +34,132 @@ export default memo(function HomeSearchBar() {
   const [showLocation, setShowLocation] = useState(false)
   const isSmall = useMediaQueryIsSmall()
   const om = useOvermind()
-  const borderRadius = 54
-
-  const searchElement = <HomeSearchInput />
+  const borderRadius = 12
 
   return (
     <VStack
+      className="searchbar-container"
       zIndex={2000}
       position="absolute"
       marginTop={searchBarTopOffset}
       left={isSmall ? 2 : 16}
       right={isSmall ? 2 : 16}
       alignItems="center"
-      height={searchBarHeight}
     >
       <HomeAutocompleteBackground />
       <VStack
-        maxWidth={pageWidthMax - 90}
+        maxWidth={pageWidthMax - 150}
         zIndex={12}
         position="relative"
         width="100%"
-        height="100%"
+        height={searchBarHeight}
         borderRadius={borderRadius}
-        shadowColor="rgba(0,0,0,0.05)"
-        shadowOffset={{ height: 5, width: 0 }}
-        shadowRadius={26}
       >
+        {/* shadow */}
         <VStack
+          height={searchBarHeight}
+          borderRadius={borderRadius}
+          className="skewX"
+          position="absolute"
+          top={0}
+          right={0}
+          bottom={0}
+          left={0}
+          shadowColor="rgba(0,0,0,0.2)"
+          shadowRadius={14}
+        />
+        <VStack
+          className="skewX"
           position="relative"
           zIndex={100}
           flex={1}
-          backgroundColor="#fff"
           paddingHorizontal={8}
-          flexDirection="row"
+          height={searchBarHeight}
           borderRadius={borderRadius}
-          // height={searchBarHeight}
-          shadowColor="rgba(0,0,0,0.065)"
-          shadowRadius={3}
-          shadowOffset={{ height: 3, width: 0 }}
-          alignItems="center"
+          shadowColor={brandColor}
+          shadowOpacity={0.25}
+          shadowRadius={0}
+          shadowOffset={{ height: 3, width: 3 }}
           justifyContent="center"
+          overflow="hidden"
         >
+          {/* bg */}
           <VStack
-            {...(isSmall && {
-              position: 'absolute',
-              top: -20,
-              left: -10,
-              transform: [{ scale: 0.65 }],
-              backgroundColor: '#fff',
-              paddingVertical: 3,
-              paddingHorizontal: 5,
-              borderRadius: 100,
-            })}
+            position="absolute"
+            top={0}
+            bottom={0}
+            right={-100}
+            left={-100}
+          >
+            <LinearGradient
+              colors={[brandColor, brandColorDark]}
+              style={[StyleSheet.absoluteFill]}
+            />
+          </VStack>
+          <HStack
+            className="unskewX"
+            alignItems="center"
+            justifyContent="center"
+            marginTop={-1}
           >
             <DishLogoButton />
-          </VStack>
 
-          {!isSmall && <HomeSearchBarHomeButton />}
+            {!isSmall && <HomeSearchBarHomeButton />}
 
-          <HStack
-            flex={145}
-            maxWidth={550}
-            alignItems="center"
-            spacing
-            overflow="hidden"
-          >
-            {/* Loading / Search Icon */}
+            <HStack
+              flex={100}
+              maxWidth={550}
+              alignItems="center"
+              overflow="hidden"
+            >
+              {/* Loading / Search Icon */}
+              {!isSmall && (
+                <>
+                  {om.state.home.isLoading ? (
+                    <VStack className="rotating" opacity={0.45}>
+                      <Loader color="#fff" size={18} />
+                    </VStack>
+                  ) : (
+                    <Search color="#fff" size={18} opacity={0.45} />
+                  )}
+                </>
+              )}
+
+              {/* Search Input Start */}
+              {isSmall && (
+                <>
+                  {/* keep both in dom so we have access to ref */}
+                  <VStack display={showLocation ? 'contents' : 'none'}>
+                    <HomeSearchLocationInput />
+                  </VStack>
+                  <VStack display={!showLocation ? 'contents' : 'none'}>
+                    <HomeSearchInput />
+                  </VStack>
+                </>
+              )}
+              {!isSmall && <HomeSearchInput />}
+              <Spacer size={1} />
+            </HStack>
+
             {!isSmall && (
               <>
-                {om.state.home.isLoading ? (
-                  <VStack className="rotating" opacity={0.5}>
-                    <Loader size={18} />
-                  </VStack>
-                ) : (
-                  <Search size={18} opacity={0.5} />
-                )}
+                <HomeSearchLocationInput />
+                {divider}
+                <VStack flex={1} />
               </>
             )}
 
-            {/* Search Input Start */}
             {isSmall && (
-              <>
-                {/* keep both in dom so we have access to ref */}
-                <VStack display={showLocation ? 'contents' : 'none'}>
-                  <HomeSearchLocationInput />
-                </VStack>
-                <VStack display={!showLocation ? 'contents' : 'none'}>
-                  {searchElement}
-                </VStack>
-              </>
+              <LinkButton
+                onPress={() => setShowLocation((x) => !x)}
+                padding={12}
+              >
+                <MapPin color="#fff" size={22} opacity={0.65} />
+              </LinkButton>
             )}
-            {!isSmall && <>{searchElement}</>}
-            <Spacer size={1} />
+
+            <HomeUserMenu />
           </HStack>
-
-          {!isSmall && (
-            <>
-              <HomeSearchLocationInput />
-              {divider}
-              <VStack flex={1} />
-            </>
-          )}
-
-          {isSmall && (
-            <LinkButton onPress={() => setShowLocation((x) => !x)} padding={12}>
-              <MapPin size={22} opacity={0.5} />
-            </LinkButton>
-          )}
-
-          <HomeUserMenu />
         </VStack>
         <HomeAutocomplete />
       </VStack>
@@ -154,8 +175,7 @@ const HomeSearchBarHomeButton = memo(() => {
         justifyContent="center"
         alignItems="center"
         pointerEvents="auto"
-        paddingHorizontal={4}
-        marginRight={20}
+        marginRight={10}
         opacity={om.state.home.currentStateType === 'home' ? 0 : 1}
         onPress={() => om.actions.home.popTo(-1)}
         pressStyle={{

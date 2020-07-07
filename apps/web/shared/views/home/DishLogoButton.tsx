@@ -4,12 +4,12 @@ import { Image } from 'react-native'
 import { LinkButton } from '../ui/LinkButton'
 
 export const DishLogoButton = memo(() => {
-  const scale = 0.056
+  const scale = 0.061
   return (
     <LinkButton
       name="home"
-      paddingVertical={10}
-      paddingHorizontal={20}
+      // paddingVertical={10}
+      paddingHorizontal={16}
       hoverStyle={{
         transform: [{ scale: 1.05 }],
       }}

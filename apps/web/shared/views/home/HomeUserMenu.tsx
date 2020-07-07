@@ -76,8 +76,12 @@ export const HomeUserMenu = memo(() => {
         }
       >
         <HStack spacing alignItems="center" justifyContent="center">
-          <User size={22} opacity={0.5} />
-          {!om.state.user.isLoggedIn && <Text opacity={0.5}>Signup</Text>}
+          <User color="#fff" size={22} opacity={0.65} />
+          {!om.state.user.isLoggedIn && (
+            <Text opacity={0.5} color="#fff">
+              Signup
+            </Text>
+          )}
         </HStack>
       </LinkButton>
     </Popover>

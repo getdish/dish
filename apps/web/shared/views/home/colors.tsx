@@ -11,6 +11,7 @@ export const bgAlt = 'rgba(0, 34, 60, 0.8)'
 export const bgAltHover = `rgba(0, 34, 60, 1)`
 
 export const brandColor = `#DF0843`
-export const brandColorDark = `#395595`
+export const brandColorDark = `#B12F41`
+export const brandColorDarker = `#962235`
 export const brandColorLight = `#8376ce`
 export const brandColorLighter = `#8376ceee`

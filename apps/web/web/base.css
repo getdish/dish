@@ -169,6 +169,11 @@ textarea {
   z-index: -1;
 }
 
+.searchbar-container ::placeholder {
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 300;
+}
+
 ::placeholder {
   text-overflow: ellipsis;
 }
@@ -256,4 +261,12 @@ li::before {
   font-weight: 300;
   display: inline-block;
   width: 1em;
+}
+
+.skewX {
+  transform: skewX(-9deg);
+}
+
+.unskewX {
+  transform: skewX(9deg);
 }
