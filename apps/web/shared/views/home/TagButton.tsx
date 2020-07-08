@@ -160,7 +160,7 @@ export const TagButton = memo(
                   }),
                 }}
               >
-                {tag.icon}
+                {tag.icon}{' '}
               </span>
             ) : null}
             {tag['displayName'] ?? _.capitalize(tag.name)}
@@ -187,7 +187,7 @@ export const TagButton = memo(
               }}
             >
               <ThumbsUp
-                size={12 * scale}
+                size={10 * scale}
                 color={subtle ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)'}
               />
             </LinkButton>

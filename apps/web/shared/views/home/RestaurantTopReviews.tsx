@@ -1,11 +1,8 @@
 import { graphql, query } from '@dish/graph'
-import { HStack, SmallTitle, Spacer, Text, VStack } from '@dish/ui'
-import { memo, useState } from 'react'
-import React from 'react'
-import { MessageSquare } from 'react-feather'
+import { HStack, Spacer, Text, VStack } from '@dish/ui'
+import React, { memo, useState } from 'react'
 
 import {
-  CommentBubble,
   RestaurantAddComment,
   RestaurantAddCommentButton,
 } from './RestaurantAddComment'
@@ -22,7 +19,7 @@ const listItems = [
     review: 'Laid back, good service',
   },
   {
-    category: 'Rest',
+    category: 'Tips',
     review: 'Quick, cheap, local favorite',
   },
 ]
@@ -64,29 +61,30 @@ export const RestaurantTopReviews = memo(
       )
       return (
         <VStack alignSelf="stretch" paddingRight={20}>
-          <VStack marginTop={4} marginBottom={12} spacing={10}>
-            {listItems.map((item) => (
+          <VStack marginTop={4} marginBottom={12}>
+            {listItems.map((item, index) => (
               <React.Fragment key={item.category}>
                 <Text fontSize={14}>
                   <HStack
                     display="inline-flex"
                     width={45}
-                    marginRight={5}
+                    marginRight={2}
                     alignItems="center"
                     justifyContent="flex-end"
                   >
                     <Text
-                      backgroundColor="#f2f2f2"
                       paddingVertical={2}
                       paddingHorizontal={5}
                       borderRadius={6}
-                      fontWeight="500"
+                      fontWeight="600"
+                      opacity={0.65}
                     >
-                      {item.category}
+                      {item.category}:
                     </Text>
                   </HStack>
                   <Text>{item.review}</Text>
                 </Text>
+                {index < listItems.length - 1 && <Spacer size={8} />}
               </React.Fragment>
             ))}
           </VStack>
