@@ -95,6 +95,8 @@ SELECT jsonb_agg(
     )
   )
 
+  GROUP BY restaurant.id
+
   ORDER BY
 
     CASE
