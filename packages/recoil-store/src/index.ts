@@ -179,6 +179,7 @@ function getStoreDescriptors(storeInstance: any) {
     ...protoDescriptors,
     ...instanceDescriptors,
   }
+  // @ts-ignore
   delete descriptors.constructor
   return descriptors
 }
