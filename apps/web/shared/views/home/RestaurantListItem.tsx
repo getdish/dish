@@ -4,13 +4,15 @@ import {
   AbsoluteVStack,
   Divider,
   HStack,
+  LoadingItem,
+  LoadingItems,
   SmallTitle,
   Spacer,
   Text,
   VStack,
   useDebounceEffect,
 } from '@dish/ui'
-import React, { memo, useEffect, useState } from 'react'
+import React, { Suspense, memo, useEffect, useState } from 'react'
 
 import {
   GeocodePlace,
@@ -140,9 +142,9 @@ const RestaurantListItemContent = memo(
           <VStack flex={1} alignItems="flex-start" width="100%">
             {/* ROW: TITLE */}
             <VStack
-              backgroundColor={bgLightLight}
-              hoverStyle={{ backgroundColor: bgLight }}
-              pressStyle={{ backgroundColor: bg }}
+              // backgroundColor={bgLightLight}
+              hoverStyle={{ backgroundColor: bgLightLight }}
+              pressStyle={{ backgroundColor: bgLight }}
               marginLeft={-adjustRankingLeft}
               width={950}
               position="relative"
@@ -251,19 +253,26 @@ const RestaurantListItemContent = memo(
 
             {/* ROW: COMMENT */}
             <VStack>
-              <RestaurantTopReviews
-                restaurantId={restaurantId}
-                afterTopCommentButton={
-                  <HStack flex={1} spacing alignItems="center" flexWrap="wrap">
-                    <RestaurantDeliveryButton restaurantId={restaurantId} />
-                    <Spacer size={8} />
-                    <RestaurantDetailRow
-                      size="sm"
-                      restaurantSlug={restaurantSlug}
-                    />
-                  </HStack>
-                }
-              />
+              <Suspense fallback={<LoadingItems />}>
+                <RestaurantTopReviews
+                  restaurantId={restaurantId}
+                  afterTopCommentButton={
+                    <HStack
+                      flex={1}
+                      spacing
+                      alignItems="center"
+                      flexWrap="wrap"
+                    >
+                      <RestaurantDeliveryButton restaurantId={restaurantId} />
+                      <Spacer size={8} />
+                      <RestaurantDetailRow
+                        size="sm"
+                        restaurantSlug={restaurantSlug}
+                      />
+                    </HStack>
+                  }
+                />
+              </Suspense>
             </VStack>
 
             <Spacer />
@@ -283,7 +292,7 @@ const RestaurantPeek = memo(
     const drawerWidth = useHomeDrawerWidth()
     const { searchState, size = 'md' } = props
     const tag_names = Object.keys(searchState?.activeTagIds || {})
-    const spacing = size == 'lg' ? 8 : 6
+    const spacing = size == 'lg' ? 16 : 12
     const isSmall = useMediaQueryIsSmall()
     const restaurant = restaurantQuery(props.restaurantSlug)
     const photos = restaurantPhotosForCarousel({
