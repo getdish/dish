@@ -12,7 +12,7 @@ set -e
 # Eg; `brew install buildkitd`
 
 # You also need to be logged in to our Docker registry:
-#   docker docker login docker.k8s.dishapp.com -u dish -p $password
+#   docker login docker.k8s.dishapp.com -u dish -p $password
 # The password is in `env.enc.production.yaml`
 
 echo "Hot deploying $1 service..."
@@ -23,16 +23,33 @@ DISH_REGISTRY=docker.k8s.dishapp.com
 branch=$(git rev-parse --abbrev-ref HEAD)
 DISH_BASE_VERSION=${branch//\//-}
 
-base_name=$DISH_REGISTRY/dish/base:$DISH_BASE_VERSION
-buildctl \
-  --addr tcp://127.0.0.1:1234 \
-  build \
-    --frontend=dockerfile.v0 \
-    --local context=. \
-    --local dockerfile=. \
-    --output type=image,name=$base_name,push=true \
-    --export-cache type=inline \
-    --import-cache type=registry,ref=$base_name
+echo "Waiting for connection to buildkitd..."
+kubectl port-forward svc/buildkitd 1234:1234 -n docker-registry &
+pid=$!
+function finish {
+  kill $pid
+}
+trap finish EXIT
+
+while ! netstat -tna | grep 'LISTEN\>' | grep -q ':1234\>'; do
+  sleep 0.1
+done
+echo "...connected to buildkitd."
+
+if [[ $2 = 'with-base' ]]; then
+  base_name=$DISH_REGISTRY/dish/base:$DISH_BASE_VERSION
+  buildctl \
+    --addr tcp://127.0.0.1:1234 \
+    build \
+      --frontend=dockerfile.v0 \
+      --local context=. \
+      --local dockerfile=. \
+      --output type=image,name=$base_name,push=true \
+      --export-cache type=inline \
+      --import-cache type=registry,ref=$base_name
+else
+  echo "Excluding base image build."
+fi
 
 
 NAME=$DISH_REGISTRY/dish/$1

@@ -102,17 +102,21 @@ If you need to deploy something quickly and are willing to skip CI, you can run 
 
 You'll need a few things set up first:
 
-    - `kubectl` and `doctl` installed
+    - `buildkitd`, `kubectl` and `doctl` installed
     - `doctl auth init -t $TF_VAR_DO_DISH_KEY` token is avaiable in enc.env.production.yaml
     - `doctl kubernetes cluster kubeconfig save dish`
+    - Login to our Docker registry:
+        `docker login docker.k8s.dishapp.com -u dish -p $password`
+        Password is in `env.enc.production.yaml`
 
 Then you can use the `./k8s/etc/hot_deploy.sh` script (see comments in the script for more detailed instructions):
 
 ```
-./k8s/etc/hot_deploy.sh $service
+./k8s/etc/hot_deploy.sh $service [with-base]
 ```
 
-Where `$service` is the name of a service in your `Riofile`.
+Where `$service` is the name of a service in your `Riofile`. And optionally specify 'with-base'
+if you've changed anything relevant in our packages.
 
 ## Hasura
 
