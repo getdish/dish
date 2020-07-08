@@ -65,7 +65,8 @@ export default memo(function HomeSearchBar() {
           right={0}
           bottom={0}
           left={0}
-          shadowColor="rgba(0,0,0,0.2)"
+          shadowColor="rgba(0,0,0,0.3)"
+          shadowOffset={{ height: 1, width: 0 }}
           shadowRadius={14}
         />
         <VStack

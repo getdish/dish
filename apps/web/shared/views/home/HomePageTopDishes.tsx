@@ -135,7 +135,12 @@ const HomePageTopDishes = memo(() => {
 
                 <HomeIntroLetter />
 
-                <SmallTitle fontSize={22} divider="center">
+                <SmallTitle
+                  fontWeight="300"
+                  letterSpacing={0}
+                  fontSize={20}
+                  divider="center"
+                >
                   What's good in San Francisco...
                 </SmallTitle>
 
@@ -229,7 +234,7 @@ const HomeTopDishesContent = memo(() => {
 
 const dishHeight = 195
 const padding = 30
-const spacing = 12
+const spacing = 16
 const pctRestaurant = 0.23
 
 const useHomeSideWidth = () => {

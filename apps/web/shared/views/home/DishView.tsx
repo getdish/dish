@@ -115,11 +115,11 @@ export const DishView = memo(
             alignItems="center"
             justifyContent="center"
             backgroundColor="rgba(255,255,255,0.4)"
-            borderTopColor="rgba(255,255,255,0.3)"
+            borderTopColor="rgba(255,255,255,0.1)"
             borderTopWidth={1}
-            // shadowColor="rgba(0,0,0,0.075)"
-            // shadowRadius={8}
-            // shadowOffset={{ height: -3, width: 0 }}
+            shadowColor="rgba(0,0,0,0.2)"
+            shadowRadius={8}
+            shadowOffset={{ height: -3, width: 0 }}
             {...(isHovered && {
               borderTopColor: 'transparent',
               backgroundColor: 'transparent',
@@ -136,7 +136,7 @@ export const DishView = memo(
               maxWidth="calc(90% - 30px)"
               overflow="hidden"
               shadowColor="rgba(0,0,0,0.2)"
-              shadowRadius={2}
+              shadowRadius={3}
               top={0}
               {...(isHovered && {
                 top: -4,
@@ -148,8 +148,8 @@ export const DishView = memo(
                 ellipse
                 flex={1}
                 overflow="hidden"
-                fontSize={13}
-                fontWeight="400"
+                fontSize={height > 180 ? 14 : 12}
+                fontWeight="500"
                 color={isHovered ? '#000' : '#fff'}
                 textAlign="center"
               >
