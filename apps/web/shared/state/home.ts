@@ -1164,7 +1164,6 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
       ...state,
       ...next,
     }
-    console.log('updating active tags', { next, state, nextState })
     om.state.home.states[om.state.home.states.length - 1] = nextState
     return await syncStateToRoute(om, next)
   } catch (err) {

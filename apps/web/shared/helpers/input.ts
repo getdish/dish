@@ -1,5 +1,7 @@
 export const inputGetNode = (instance: any): HTMLInputElement | null => {
-  return instance?.['_node'] ?? null
+  return (
+    (instance instanceof HTMLElement ? instance : instance?.['_node']) ?? null
+  )
 }
 
 export const inputCaretPosition = (input?: HTMLInputElement) => {

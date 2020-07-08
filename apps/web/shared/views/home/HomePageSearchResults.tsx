@@ -205,7 +205,6 @@ const HomeSearchResultsViewContent = memo(
         return
       }
       if (state.scrollToEndOf < state.hasLoaded) {
-        console.warn('hasnt scrolled to end of')
         return
       }
 

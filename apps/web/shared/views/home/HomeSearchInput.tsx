@@ -27,6 +27,139 @@ export const onFocusAnyInput = () => {
   }
 }
 
+function searchInputEffect(input: HTMLInputElement) {
+  const om = omStatic
+  const prev = () => {
+    om.actions.home.moveAutocompleteIndex(-1)
+  }
+  const next = () => {
+    om.actions.home.moveAutocompleteIndex(1)
+  }
+  const handleKeyPress = (e) => {
+    // @ts-ignore
+    const code = e.keyCode
+    console.log('code', code)
+    const focusedInput = document.activeElement
+    if (!(focusedInput instanceof HTMLInputElement)) {
+      return
+    }
+    const { isAutocompleteActive, autocompleteIndex } = om.state.home
+    const isCaretAtEnd = inputCaretPosition() == focusedInput.selectionEnd
+    const isCaretAtStart = focusedInput.selectionEnd == 0
+
+    switch (code) {
+      case 13: {
+        // enter
+        if (isAutocompleteActive) {
+          const item = om.state.home.autocompleteResults[autocompleteIndex]
+          if (item && 'tagId' in item) {
+            om.actions.home.navigateToTag({
+              tags: [{ id: item.tagId, name: item.name, type: item.type }],
+            })
+            return
+          }
+        }
+        om.actions.home.runSearch({
+          searchQuery: e.target.value,
+          force: true,
+        })
+        om.actions.home.setShowAutocomplete(false)
+        focusedInput.blur()
+        return
+      }
+      case 8: {
+        // delete
+        console.log('delete', autocompleteIndex)
+        if (isAutocompleteActive) {
+          // if selected onto a tag, we can send remove command
+          if (om.state.home.searchbarFocusedTag) {
+            console.log('delete tag', om.state.home.searchbarFocusedTag)
+            om.actions.home.navigateToTag({
+              tags: [om.state.home.searchbarFocusedTag],
+            })
+            next()
+          }
+        }
+        if (autocompleteIndex === 0) {
+          prev()
+        }
+        return
+      }
+      case 39: {
+        // right
+        if (isAutocompleteActive && isCaretAtEnd) {
+          // at end
+          next()
+        }
+        return
+      }
+      case 37: {
+        // left
+        if (isCaretAtStart) {
+          // at start, go into selecting searchbar tags if we have em
+          if (isAutocompleteActive) {
+            prev()
+            return
+          }
+        }
+        if (isAutocompleteActive && autocompleteIndex > 0 && isCaretAtEnd) {
+          e.preventDefault()
+          prev()
+        }
+        return
+      }
+      case 27: {
+        // esc
+        if (inputIsTextSelected(focusedInput)) {
+          inputClearSelection(focusedInput)
+          return
+        }
+        if (om.state.home.showAutocomplete) {
+          om.actions.home.setShowAutocomplete(false)
+        } else {
+          focusedInput.blur()
+        }
+        return
+      }
+      case 38: {
+        // up
+        e.preventDefault()
+        om.actions.home.moveActiveUp()
+        return
+      }
+      case 40: {
+        // down
+        e.preventDefault()
+        om.actions.home.moveActiveDown()
+        return
+      }
+    }
+  }
+  const handleClick = () => {
+    if (om.state.home.searchbarFocusedTag) {
+      om.actions.home.setAutocompleteIndex(0)
+    } else {
+      showAutocomplete()
+    }
+  }
+  const showAutocomplete = () => {
+    if (input.value === '') {
+      return
+    }
+    if (!om.state.home.showAutocomplete) {
+      om.actions.home.setShowAutocomplete('search')
+    }
+  }
+  input.addEventListener('keydown', handleKeyPress)
+  input.addEventListener('click', handleClick)
+  input.addEventListener('focus', showAutocomplete)
+  return () => {
+    input.removeEventListener('keydown', handleKeyPress)
+    input.removeEventListener('click', handleClick)
+    input.removeEventListener('focus', showAutocomplete)
+  }
+}
+
 export const HomeSearchInput = memo(() => {
   const om = useOvermind()
   const inputRef = useRef<any>()
@@ -93,128 +226,8 @@ export const HomeSearchInput = memo(() => {
 
   const input = inputGetNode(inputRef.current)
   useEffect(() => {
-    if (!input) return
-    const prev = () => {
-      om.actions.home.moveAutocompleteIndex(-1)
-    }
-    const next = () => {
-      om.actions.home.moveAutocompleteIndex(1)
-    }
-    const handleKeyPress = (e) => {
-      // @ts-ignore
-      const code = e.keyCode
-      console.log('code', code)
-      const focusedInput = document.activeElement
-      if (!(focusedInput instanceof HTMLInputElement)) {
-        return
-      }
-      const { isAutocompleteActive, autocompleteIndex } = om.state.home
-      const isCaretAtEnd = inputCaretPosition() == focusedInput.selectionEnd
-      const isCaretAtStart = focusedInput.selectionEnd == 0
-
-      switch (code) {
-        case 13: {
-          // enter
-          if (isAutocompleteActive) {
-            const item = om.state.home.autocompleteResults[autocompleteIndex]
-            if (item && 'tagId' in item) {
-              om.actions.home.navigateToTag({
-                tags: [{ id: item.tagId, name: item.name, type: item.type }],
-              })
-              return
-            }
-          }
-          om.actions.home.runSearch({
-            searchQuery: e.target.value,
-            force: true,
-          })
-          om.actions.home.setShowAutocomplete(false)
-          focusedInput.blur()
-          return
-        }
-        case 8: {
-          // delete
-          console.log('delete', autocompleteIndex)
-          if (isAutocompleteActive) {
-            // if selected onto a tag, we can send remove command
-            if (om.state.home.searchbarFocusedTag) {
-              console.log('delete tag', om.state.home.searchbarFocusedTag)
-              om.actions.home.navigateToTag({
-                tags: [om.state.home.searchbarFocusedTag],
-              })
-              next()
-            }
-          }
-          if (autocompleteIndex === 0) {
-            prev()
-          }
-          return
-        }
-        case 39: {
-          // right
-          if (isAutocompleteActive && isCaretAtEnd) {
-            // at end
-            next()
-          }
-          return
-        }
-        case 37: {
-          // left
-          if (isCaretAtStart) {
-            // at start, go into selecting searchbar tags if we have em
-            if (isAutocompleteActive) {
-              prev()
-              return
-            }
-          }
-          if (isAutocompleteActive && autocompleteIndex > 0 && isCaretAtEnd) {
-            e.preventDefault()
-            prev()
-          }
-          return
-        }
-        case 27: {
-          // esc
-          if (inputIsTextSelected(focusedInput)) {
-            inputClearSelection(focusedInput)
-            return
-          }
-          if (om.state.home.showAutocomplete) {
-            om.actions.home.setShowAutocomplete(false)
-          } else {
-            focusedInput.blur()
-          }
-          return
-        }
-        case 38: {
-          // up
-          e.preventDefault()
-          om.actions.home.moveActiveUp()
-          return
-        }
-        case 40: {
-          // down
-          e.preventDefault()
-          om.actions.home.moveActiveDown()
-          return
-        }
-      }
-    }
-    const showAutocomplete = () => {
-      if (input.value === '') {
-        return
-      }
-      if (!om.state.home.showAutocomplete) {
-        om.actions.home.setShowAutocomplete('search')
-      }
-    }
-    input.addEventListener('keydown', handleKeyPress)
-    input.addEventListener('click', showAutocomplete)
-    input.addEventListener('focus', showAutocomplete)
-    return () => {
-      input.removeEventListener('keydown', handleKeyPress)
-      input.removeEventListener('click', showAutocomplete)
-      input.removeEventListener('focus', showAutocomplete)
+    if (input) {
+      return searchInputEffect(input)
     }
   }, [input])
 
@@ -299,14 +312,17 @@ const HomeSearchBarTags = memo(
                   backgroundColor="rgba(0,0,0,0.3)"
                   color="#fff"
                   borderColor={'transparent'}
-                  {...(isActive && {
-                    backgroundColor: 'rgba(255,255,255,0.3)',
-                    color: '#fff',
-                    transform: [{ scale: 1.1 }, { rotate: '-1.5deg' }],
-                  })}
                   hoverStyle={{
                     backgroundColor: 'rgba(0,0,0,0.5)',
                   }}
+                  {...(isActive && {
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    color: '#fff',
+                    hoverStyle: {
+                      backgroundColor: 'rgba(255,255,255,0.1)',
+                    },
+                    // transform: [{ rotate: '-1.5deg' }],
+                  })}
                   size="lg"
                   name={tag.name}
                   type={tag.type}

@@ -57,7 +57,6 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps | null> = (
           ...props,
           state: om.state.home.currentState,
         })
-        console.log('pressing', { props, nextState })
         om.actions.home.updateActiveTags(nextState)
       },
     }
@@ -250,7 +249,6 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
 ) => {
   const next = getNavigateItemForState(om.state, state)
   if (om.actions.router.getShouldNavigate(next)) {
-    console.log('navigate via tags', next)
     om.actions.router.navigate(next)
     return true
   }

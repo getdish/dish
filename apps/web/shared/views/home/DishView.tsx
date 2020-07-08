@@ -148,7 +148,7 @@ export const DishView = memo(
                 ellipse
                 flex={1}
                 overflow="hidden"
-                fontSize={height > 180 ? 14 : 12}
+                fontSize={height > 170 ? 14 : 12}
                 fontWeight="500"
                 color={isHovered ? '#000' : '#fff'}
                 textAlign="center"
