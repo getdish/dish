@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native'
 export const Squircle = ({
   width = 100,
   height = 100,
-  borderRadius = 10,
+  borderRadius = 20,
   isHovered,
   children,
   ...rest
@@ -24,9 +24,9 @@ export const Squircle = ({
         {/* frame (inner) */}
         <VStack
           className="ease-in-out-fast"
-          shadowColor="rgba(0,0,0,0.2)"
+          shadowColor="rgba(0,0,0,0.4)"
           shadowRadius={4}
-          shadowOffset={{ width: 0, height: 4 }}
+          shadowOffset={{ width: 0, height: 3 }}
           flex={1}
           borderRadius={borderRadius}
           overflow="hidden"
@@ -36,8 +36,8 @@ export const Squircle = ({
           {...(isHovered && {
             borderColor: 'rgba(0,0,0,0.75)',
             backgroundColor: '#fff',
-            shadowRadius: 13,
-            shadowColor: 'rgba(0,0,0,0.1)',
+            shadowRadius: 10,
+            shadowColor: 'rgba(0,0,0,0.25)',
             shadowOffset: { width: 0, height: 6 },
             zIndex: 10000,
           })}
