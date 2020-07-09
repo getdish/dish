@@ -80,7 +80,7 @@ SELECT json_agg(t) FROM (
     UNION ALL
 
     SELECT * FROM by_country
-      WHERE frequency > 10
+      WHERE frequency > 50
       AND country != 'Vietnamese'
 
     ORDER BY avg_rating DESC
