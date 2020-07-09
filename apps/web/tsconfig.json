@@ -11,24 +11,15 @@
   },
   "include": ["web", "shared", "types"],
   "exclude": ["**"],
-  "references": [
-    {
-      "path": "../../packages/recoil-store"
-    },
-    {
-      "path": "../../packages/tsickle-loader"
-    },
-    {
-      "path": "../../packages/graph"
-    },
-    {
-      "path": "../../packages/ui"
-    },
-    {
-      "path": "../../packages/helpers"
-    },
-    {
-      "path": "../../packages/async"
-    }
-  ]
+  "references": [{
+    "path": "../../packages/recoil-store"
+  }, {
+    "path": "../../packages/async"
+  }, {
+    "path": "../../packages/graph"
+  }, {
+    "path": "../../packages/helpers"
+  }, {
+    "path": "../../packages/ui"
+  }]
 }

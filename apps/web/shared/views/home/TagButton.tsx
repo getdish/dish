@@ -184,6 +184,7 @@ export const TagButton = memo(
               onPressOut={(e) => {
                 prevent(e)
                 console.warn('should vote')
+                debugger
               }}
             >
               <ThumbsUp

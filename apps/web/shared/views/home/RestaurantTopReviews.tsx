@@ -48,7 +48,7 @@ export const RestaurantTopReviews = memo(
             }}
           >
             <Text fontSize={13} opacity={0.7}>
-              {state.showMore ? 'Show less' : 'Comments'}
+              {state.showMore ? 'Show less' : 'Tips'}
             </Text>
           </SmallButton>
           {afterTopCommentButton ? (

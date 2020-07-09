@@ -1,13 +1,13 @@
-import { CancelFn, cancelPromise } from './cancellablePromise'
+import { cancelPromise } from './cancellablePromise'
 import { sleep } from './sleep'
 
-export const series = (fns: (() => Promise<any> | any)[] | any): CancelFn => {
+export const series = (fns: (() => Promise<any> | any)[] | any) => {
   let current: any
   let cancelled = false
 
   async function run() {
     for (const fn of fns) {
-      if (cancelled) break
+      if (cancelled) return
       current = fn()
       if (current instanceof Promise) {
         await current

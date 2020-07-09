@@ -14,7 +14,7 @@ export const RankingView = memo(
         {...props}
       >
         <Text
-          fontSize={rank > 9 ? 16 : 30}
+          fontSize={rank > 9 ? 16 : 26}
           lineHeight={22}
           letterSpacing={-2}
           fontWeight="700"

@@ -140,7 +140,8 @@ export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>
 export type AutocompleteItem = {
   icon?: string
   name: string
-  tagId: string
-  type: Tag['type']
+  tagId?: string
+  restaurantId?: string
+  type: Tag['type'] | 'restaurant'
   center?: LngLat
 }

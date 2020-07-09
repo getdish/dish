@@ -24,12 +24,14 @@ export const getTagId = (tag: NavigableTag) => {
   return tagSlug(tag)
 }
 
+export const pctTo255 = (x) => x.map((x) => x * 255) as typeof x
+
 export const tagLenses: Tag[] = [
   {
     id: '3',
     name: 'Gems',
     icon: ' 💎',
-    rgb: [0.6, 0.1, 0.5],
+    rgb: pctTo255([0.2, 0.3, 0.5]),
     descriptions: {
       dish: 'The best 🍔',
       cuisine: 'The Best 🍔 Restaurants',
@@ -42,9 +44,9 @@ export const tagLenses: Tag[] = [
     id: '6',
     name: 'Vibe',
     icon: '🌃',
-    rgb: [0.35, 0.2, 0.65],
+    rgb: pctTo255([0.35, 0.2, 0.65]),
     descriptions: {
-      dish: 'Grab some 🍔',
+      dish: '🍔',
       cuisine: 'Nice 🍔 to meet',
       plain: 'Vibes',
     },
@@ -55,7 +57,7 @@ export const tagLenses: Tag[] = [
   //   id: '6',
   //   name: 'Coffee',
   //   icon: '☕',
-  //   rgb: [0.35, 0.2, 0.65],
+  //   rgb: pctTo255([0.35, 0.2, 0.65]),
   //   descriptions: {
   //     dish: '🍔 & coffee',
   //     cuisine: '🍔 Food & Coffee',
@@ -68,7 +70,7 @@ export const tagLenses: Tag[] = [
     id: '5',
     name: 'Drink',
     icon: '🍷',
-    rgb: [0.35, 0.2, 0.65],
+    rgb: pctTo255([0.35, 0.2, 0.65]),
     descriptions: {
       dish: '🍔 & drinks',
       cuisine: '🍔 with a Bar',
@@ -81,7 +83,7 @@ export const tagLenses: Tag[] = [
     id: '9',
     name: 'Veg',
     icon: '🥬',
-    rgb: [0.05, 0.8, 0.15],
+    rgb: pctTo255([0.05, 0.7, 0.1]),
     descriptions: {
       dish: 'Vegetarian 🍔',
       cuisine: 'Vegetarian 🍔 Restaurants',

@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { HStack, useOnMount } from '@dish/ui'
+import { HStack, useDebounce, useGet, useOnMount } from '@dish/ui'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { StyleSheet, TextInput } from 'react-native'
 
@@ -164,7 +164,11 @@ export const HomeSearchInput = memo(() => {
   const om = useOvermind()
   const inputRef = useRef<any>()
   const [search, setSearch] = useState('')
+  const getSearch = useGet(search)
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
+  const runAutocomplete = useDebounce(() => {
+    om.actions.homegetSearch()
+  }, 50)
   // const { showAutocomplete } = om.state.home
 
   useOnMount(() => {
@@ -261,7 +265,6 @@ export const HomeSearchInput = memo(() => {
                 om.actions.home.setShowAutocomplete(false)
               }
               setSearch(text)
-              om.actions.home.setSearchQuery(text ?? '')
             }}
             placeholder={
               isSearchingCuisine

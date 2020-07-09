@@ -1,3 +1,5 @@
+import { fullyIdle, series } from '@dish/async'
+import { query, resolved } from '@dish/graph'
 import {
   AbsoluteVStack,
   Circle,
@@ -7,17 +9,29 @@ import {
   Text,
   VStack,
 } from '@dish/ui'
+import FlexSearch from 'flexsearch'
 import React, { memo, useEffect, useRef } from 'react'
 import { Plus } from 'react-feather'
 import { ScrollView } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
-import { useOvermind } from '../../state/useOvermind'
+import {
+  AutocompleteItem,
+  LngLat,
+  ShowAutocomplete,
+  ShowAutocomplete,
+  locationToAutocomplete,
+  searchLocations,
+} from '../../state/home'
+import { omStatic, useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
 import { LinkButtonProps } from '../ui/LinkProps'
 import { SmallCircleButton } from './CloseButton'
 import { setAvoidNextAutocompleteShowOnFocus } from './HomeSearchInput'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
+
+const flexSearch = new FlexSearch('speed')
+console.log('FlexSearch', FlexSearch)
 
 export const useShowAutocomplete = () => {
   const om = useOvermind()
@@ -27,7 +41,120 @@ export const useShowAutocomplete = () => {
   return showSearch || showLocation
 }
 
-export default memo(function HomeAutoComplete() {
+export default memo(function HomeAutocomplete() {
+  const om = useOvermind()
+  const { showAutocomplete, currentStateSearchQuery } = om.state.home
+
+  useEffect(() => runAutocomplete(showAutocomplete, currentStateSearchQuery), [
+    showAutocomplete,
+    currentStateSearchQuery,
+  ])
+
+  return <HomeAutoCompleteContents />
+})
+
+function runAutocomplete(
+  showAutocomplete: ShowAutocomplete,
+  searchQuery: string
+) {
+  const om = omStatic
+  const state = om.state.home.currentState
+
+  let results: AutocompleteItem[] = []
+
+  return series([
+    () => fullyIdle(),
+    async () => {
+      if (showAutocomplete === 'location') {
+        results = (await searchLocations(searchQuery)).map(
+          locationToAutocomplete
+        )
+      }
+      if (showAutocomplete === 'search') {
+        results = await searchAutocomplete(searchQuery, state.center)
+      }
+    },
+    () => fullyIdle(),
+    async () => {
+      if (results.length) {
+        flexSearch.clear()
+        for (const res of results) {
+          flexSearch.scan(res.id, res)
+        }
+        const filtered = await flexSearch.search(searchQuery, 10)
+        console.log('got', filtered)
+
+        if (showAutocomplete === 'location') {
+          om.actions.home.setLocationAutocompleteResults(filtered)
+        }
+        if (showAutocomplete === 'search') {
+          om.actions.home.setAutocompleteResults(filtered)
+        }
+      }
+    },
+  ])
+}
+
+function searchAutocomplete(searchQuery: string, center: LngLat) {
+  const iLikeQuery = `%${searchQuery.split(' ').join('%')}%`
+  return resolved(() => {
+    return [
+      ...query
+        .restaurant({
+          where: {
+            location: {
+              _st_d_within: {
+                distance: 0.015,
+                from: {
+                  type: 'Point',
+                  coordinates: [center.lat, center.lng],
+                },
+              },
+            },
+            name: {
+              _ilike: iLikeQuery,
+            },
+          },
+        })
+        .map((r) => ({
+          id: r.id,
+          name: r.name,
+        })),
+      ...query
+        .tag({
+          where: {
+            name: {
+              _ilike: iLikeQuery,
+            },
+            type: {
+              _eq: 'dish',
+            },
+          },
+        })
+        .map((r) => ({
+          id: r.id,
+          name: r.name,
+        })),
+      ...query
+        .tag({
+          where: {
+            name: {
+              _ilike: iLikeQuery,
+            },
+            type: {
+              _eq: 'country',
+            },
+          },
+        })
+        .map((r) => ({
+          id: r.id,
+          name: r.name,
+        })),
+    ]
+  })
+}
+
+const HomeAutoCompleteContents = memo(() => {
   const isSmall = useMediaQueryIsSmall()
   const om = useOvermind()
   const {
