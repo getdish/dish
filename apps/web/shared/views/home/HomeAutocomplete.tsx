@@ -19,7 +19,6 @@ import {
   AutocompleteItem,
   LngLat,
   ShowAutocomplete,
-  ShowAutocomplete,
   locationToAutocomplete,
   searchLocations,
 } from '../../state/home'

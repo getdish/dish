@@ -249,8 +249,7 @@ const startAutocomplete: AsyncAction = async (om) => {
     .filter(Boolean)
     .slice(0, 20)
   defaultAutocompleteResults = results
-  om.state.home.autocompleteResults = results
-  await om.actions.home.runAutocomplete(om.state.home.currentState.searchQuery)
+  om.actions.home.setAutocompleteResults(results)
 }
 
 type PageAction = () => Promise<void>

@@ -1,7 +1,9 @@
 import {
   RecoilState,
   RecoilValueReadOnly,
+  atom,
   atomFamily,
+  selector,
   selectorFamily,
   useRecoilInterface,
 } from '@o/recoil'
@@ -20,32 +22,63 @@ export function get<A>(
 }
 
 type StoreAttribute =
-  | { type: 'value'; key: string; value: (params: unknown) => RecoilState<any> }
+  | { type: 'value'; key: string; value: RecoilState<any> }
   | { type: 'action'; key: string; value: Function }
   | {
       type: 'selector'
       key: string
-      value: (params: { get: any }) => RecoilValueReadOnly<unknown>
+      value: RecoilValueReadOnly<unknown>
     }
 
 type StoreAttributes = { [key: string]: StoreAttribute }
 
 const keys = new Set<string>()
-const storeToRecoilStore = new WeakMap<any, any>()
-const storeToAttributes = new WeakMap<any, StoreAttributes>()
 
 export function useRecoilStore<A extends Store<B>, B>(
   StoreKlass: new (props: B) => A | (new () => A),
   props?: B
 ): A {
-  let recoilStore = storeToRecoilStore.get(StoreKlass)
-  if (recoilStore) {
-    return useRecoilStoreInstance(
-      recoilStore,
-      storeToAttributes.get(StoreKlass)!,
-      props
-    )
+  const [storeInstance, attrs] = useStoreInstance(StoreKlass, props)
+  const { getSetRecoilState, getRecoilValue } = useRecoilInterface()
+  const isMounted = useRef(true)
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false
+    }
+  }, [])
+
+  return useMemo(() => {
+    return new Proxy(storeInstance as A, {
+      get(target, key) {
+        return getProxyValue(target, key, attrs, getRecoilValue, props)
+      },
+      set(target, key, value, receiver) {
+        if (isMounted.current === false) {
+          return true
+        }
+        if (typeof key === 'string') {
+          const prev = getRecoilValue(attrs[key].value)
+          if (prev !== value) {
+            const setter = getSetRecoilState(attrs[key].value)
+            setter(value)
+          }
+          return true
+        }
+        return Reflect.set(target, key, value, receiver)
+      },
+    })
+  }, [])
+}
+
+const cache = {}
+function useStoreInstance(StoreKlass: any, props: any) {
+  const propsKey = props ? JSON.stringify(props) : ''
+  const cached = cache[StoreKlass]?.[propsKey]
+  if (cached) {
+    return cached
   }
+
   const storeName = StoreKlass.name
   if (keys.has(storeName)) {
     throw new Error(`Store name already used`)
@@ -61,13 +94,13 @@ export function useRecoilStore<A extends Store<B>, B>(
   for (const prop in descriptors) {
     attrs[prop] = getDescription(
       storeProxy,
-      `${storeName}/${prop}`,
+      `${storeName}/${prop}/${propsKey}`,
       descriptors[prop]
     )
   }
-  storeToRecoilStore.set(StoreKlass, storeInstance)
-  storeToAttributes.set(StoreKlass, attrs)
-  return useRecoilStoreInstance(storeInstance, attrs, props)
+  cache[StoreKlass] = cache[StoreKlass] ?? {}
+  cache[StoreKlass][propsKey] = [storeInstance, attrs]
+  return [storeInstance, attrs]
 }
 
 let curGetter: any = null
@@ -87,13 +120,11 @@ function getDescription(
     return {
       type: 'selector',
       key,
-      value: selectorFamily({
+      value: selector({
         key,
-        get: (props) => ({ get }) => {
+        get: ({ get }) => {
           curGetter = get
           const res = descriptor.get!.call(target)
-          console.log('returning now', props, res)
-          curGetter = null
           return res
         },
       }),
@@ -102,49 +133,11 @@ function getDescription(
   return {
     type: 'value',
     key,
-    value: atomFamily({
+    value: atom({
       key,
       default: descriptor.value,
     }),
   }
-}
-
-function useRecoilStoreInstance(
-  store: any,
-  attrs: StoreAttributes,
-  props: any
-) {
-  const { getSetRecoilState, getRecoilValue } = useRecoilInterface()
-  const isMounted = useRef(false)
-
-  useEffect(() => {
-    return () => {
-      isMounted.current = false
-    }
-  }, [])
-
-  return useMemo(() => {
-    return new Proxy(store, {
-      get(target, key) {
-        return getProxyValue(target, key, attrs, getRecoilValue, props)
-      },
-      set(target, key, value, receiver) {
-        if (isMounted.current === false) {
-          return true
-        }
-        if (typeof key === 'string') {
-          const prev = getRecoilValue(attrs[key].value(props))
-          if (prev !== value) {
-            console.log('setting', key, value)
-            const setter = getSetRecoilState(attrs[key].value(props))
-            setter(value)
-          }
-          return true
-        }
-        return Reflect.set(target, key, value, receiver)
-      },
-    })
-  }, [])
 }
 
 function getProxyValue(
@@ -154,18 +147,13 @@ function getProxyValue(
   getter: Function,
   props?: any
 ) {
-  if (!getter) {
-    console.log('no getter!?')
-    return Reflect.get(target, key)
-  }
   if (typeof key === 'string') {
-    console.log('getProxyValue', props, getter, attrs[key].value)
     switch (attrs[key].type) {
       case 'action':
         return attrs[key].value
       case 'value':
       case 'selector':
-        return getter(attrs[key].value(props))
+        return getter(attrs[key].value)
     }
   }
   return Reflect.get(target, key)
