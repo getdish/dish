@@ -71,6 +71,11 @@ export const routes = {
   ),
   // search after userSearch
   search: new Route<SearchRouteParams>('/:lense/:location/:tags?/:search?'),
+
+  // admin
+  admin: new Route('/admin'),
+  adminDishes: new Route('/admin/dishes'),
+
   notFound: new Route('*'),
 }
 

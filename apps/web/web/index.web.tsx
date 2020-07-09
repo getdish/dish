@@ -8,9 +8,9 @@ import React from 'react'
 import { createRoot, hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
+import { App } from '../shared/App'
 import { OVERMIND_MUTATIONS, isWorker } from '../shared/constants'
 import { config } from '../shared/state/om'
-import { App } from '../shared/views/App'
 
 // non-invasive test for closure compiler + fixed rollup-tscc
 // import { importable } from './xy'
