@@ -77,17 +77,24 @@ export function Route(props: {
 
   if (props.exact) {
     if (isExactMatching) {
-      return props.children
+      return getChildren(props.children)
     }
     return null
   }
 
   // parent matching
   if (isParentMatching) {
-    return props.children
+    return getChildren(props.children)
   }
 
   return null
+}
+
+function getChildren(children: Function | any) {
+  if (typeof children === 'function') {
+    return children()
+  }
+  return children
 }
 
 export function PrivateRoute(props: { name: string; children: any }) {
