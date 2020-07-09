@@ -42,6 +42,7 @@ export type HomeState = {
   isAutocompleteActive: boolean
   isLoading: boolean
   autocompleteResultsActive: AutocompleteItem[]
+  currentStateLense: Tag | null
   lastActiveTags: Tag[]
   searchbarFocusedTag: Tag | null
   autocompleteFocusedTag: Tag | null

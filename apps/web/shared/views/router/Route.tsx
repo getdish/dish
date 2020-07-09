@@ -1,50 +1,62 @@
+import { VStack } from '@dish/ui'
 import React, {
   createContext,
-  useCallback,
   useContext,
   useLayoutEffect,
+  useMemo,
   useState,
 } from 'react'
-import { View } from 'react-native'
 
 import { HistoryItem, routePathToName, routes } from '../../state/router'
 import { useOvermind } from '../../state/useOvermind'
 
-const RouteContext = createContext<
-  ((name: string, showing: boolean) => void) | null
->(null)
+type RouteContextI = {
+  state: 'collect' | 'active' | 'inactive'
+  setRoute: ((name: string, showing: boolean) => void) | null
+}
+
+const RouteContext = createContext<RouteContextI>(null)
 
 export function RouteSwitch(props: { children: any }) {
   const children = React.Children.toArray(props.children)
-  const [val, setVal] = useState({})
+  const [activeRoutes, setActiveRoutes] = useState({})
   const names = children.map((x) => x['props'].name)
-  const activeIndex = names.findIndex((x) => val[x])
+  const activeIndex = names.findIndex((x) => activeRoutes[x])
   const [_, update] = useState(0)
+
   return (
     <>
       {children.map((child, index) => {
         // todo not in loop
-        const cb = useCallback((name, next) => {
-          val[name] = next
-          setVal(val)
-          update(Math.random())
-        }, [])
+        const state =
+          activeIndex === -1
+            ? 'collect'
+            : activeIndex === index
+            ? 'active'
+            : 'inactive'
 
-        // hide non-active routes
-        if (activeIndex != -1 && activeIndex != index) {
-          return null
-        }
+        console.log('state', state, index)
+
+        const contextValue = useMemo<RouteContextI>(() => {
+          return {
+            state,
+            setRoute: (name, next) => {
+              activeRoutes[name] = next
+              setActiveRoutes(activeRoutes)
+              update(Math.random())
+            },
+          }
+        }, [state])
 
         return (
-          <RouteContext.Provider key={index} value={cb}>
-            <View
-              style={{
-                flex: 1,
-                display: index == -1 || activeIndex == index ? 'flex' : 'none',
-              }}
+          <RouteContext.Provider key={index} value={contextValue}>
+            <VStack
+              width="100%"
+              height="100%"
+              display={index == -1 || activeIndex == index ? 'flex' : 'none'}
             >
               {child}
-            </View>
+            </VStack>
           </RouteContext.Provider>
         )
       })}
@@ -60,7 +72,7 @@ export function Route(props: {
 }) {
   const om = useOvermind()
   const activeName = props.forHistory?.name ?? om.state.router.curPage.name
-  const setRouteInfo = useContext(RouteContext)
+  const routeContext = useContext(RouteContext)
   const isExactMatching = props.exact && activeName === props.name
   const routePath = routes[props.name].path
   const routePaths: string[] = Object.keys(routes).map((x) => routes[x].path)
@@ -68,12 +80,23 @@ export function Route(props: {
     .filter((p) => p.indexOf(routePath) === 0)
     .map((path) => routePathToName[path])
   const isParentMatching = childRouteNames.some((x) => x === activeName)
+  const isMatched = !!(isParentMatching || isExactMatching)
 
-  const match = !!(isParentMatching || isExactMatching)
+  console.log(
+    props.name,
+    activeName,
+    childRouteNames,
+    isParentMatching,
+    isExactMatching
+  )
+
   useLayoutEffect(() => {
-    if (!setRouteInfo) return
-    setRouteInfo(props.name, match)
-  }, [props.name, match])
+    routeContext?.setRoute(props.name, isMatched)
+  }, [props.name, isMatched])
+
+  if (routeContext.state === 'collect') {
+    return null
+  }
 
   if (props.exact) {
     if (isExactMatching) {

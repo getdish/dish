@@ -45,7 +45,12 @@ export const ToastRoot = memo(function ToastRoot() {
   )
 
   return (
-    <AbsoluteVStack fullscreen alignItems="flex-end" justifyContent="center">
+    <AbsoluteVStack
+      pointerEvents="none"
+      fullscreen
+      alignItems="flex-end"
+      justifyContent="center"
+    >
       {stateRef.current.show && (
         <VStack
           backgroundColor="rgba(0,0,0,0.95)"

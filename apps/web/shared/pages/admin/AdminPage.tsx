@@ -1,17 +1,25 @@
-import { VStack } from '@dish/ui'
+import { HStack, PageTitle, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
-import { Route } from '../../views/router/Route'
+import { Route, RouteSwitch } from '../../views/router/Route'
+import { Link } from '../../views/ui/Link'
 
 export default memo(function AdminPage() {
   return (
     <VStack flex={1} alignItems="center">
-      <Route name="adminDishes">{() => <AdminDishes />}</Route>
+      <HStack backgroundColor="#eee" width="100%" spacing={20} padding={5}>
+        <Text fontWeight="700">Admin</Text>
+        <Link name="home">Dish ⤴️</Link>
+        <Link name="adminTags">Tags</Link>
+      </HStack>
+      <RouteSwitch>
+        <Route name="adminTags">{() => <AdminTagsPage />}</Route>
+      </RouteSwitch>
     </VStack>
   )
 })
 
-const AdminDishes =
+const AdminTagsPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./AdminDishesPage').default
-    : React.lazy(() => import('./AdminDishesPage'))
+    ? require('./AdminTagsPage').default
+    : React.lazy(() => import('./AdminTagsPage'))

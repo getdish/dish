@@ -808,8 +808,6 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
     om.state.home.hoveredRestaurant = null
   }
 
-  console.log('handleRouteChange', { type, name, item })
-
   const promises = new Set<Promise<any>>()
 
   // actions per-route
@@ -831,7 +829,6 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
       break
     }
     default: {
-      console.log('not handled by home', name)
       return
     }
   }
