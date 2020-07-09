@@ -97,11 +97,10 @@ export function Link<
         e.persist()
         setClickEvent(e)
       },
-      className: `${className ?? ''} ${inline ? 'inline-flex' : ' flex'}`,
+      className: `${className ?? ''}${inline ? ' inline-flex' : ''}`,
       style: {
         cursor: 'pointer',
         maxWidth: '100%',
-        flex: inline ? 0 : 1,
         padding,
       },
     },

@@ -8,7 +8,7 @@ import {
   mediaQueries,
 } from '@dish/ui'
 import React, { memo, useState } from 'react'
-import { ChevronLeft, Loader, MapPin, Search } from 'react-feather'
+import { ChevronLeft, Loader, MapPin, Search, Settings } from 'react-feather'
 import { StyleSheet } from 'react-native'
 
 import {
@@ -34,10 +34,8 @@ export default memo(function HomeSearchBar() {
   const isSmall = useMediaQueryIsSmall()
   const om = useOvermind()
   const lense = om.state.home.currentStateLense
-  console.log('lense is', lense)
   const color = rgbString(lense?.rgb ?? [0, 0, 0])
   const colorBottom = rgbString(lense?.rgb.map((x) => x - 10) ?? [30, 30, 30])
-  console.log({ color, colorBottom })
   const borderRadius = 12
 
   return (
@@ -165,6 +163,12 @@ export default memo(function HomeSearchBar() {
             )}
 
             <HomeUserMenu />
+
+            {om.state.user.user?.username === 'admin' && (
+              <LinkButton padding={12} name="admin">
+                <Settings color="#fff" size={22} opacity={0.65} />
+              </LinkButton>
+            )}
           </HStack>
         </VStack>
         <HomeAutocomplete />

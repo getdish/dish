@@ -50,10 +50,13 @@ export type SearchRouteParams = {
 
 export const routes = {
   home: new Route('/'),
+
+  // all pages go here
   user: new Route<{ username: string; pane?: string }>('/u/:username/:pane?'),
   gallery: new Route<{ restaurantSlug: string; dishId?: string }>(
     '/gallery/:restaurantSlug/:dishId?'
   ),
+
   login: new Route('/login'),
   register: new Route('/register'),
   forgotPassword: new Route('/forgot-password'),
@@ -64,6 +67,13 @@ export const routes = {
   contact: new Route<{ pane: string }>('/contact'),
   privacy: new Route<{ pane: string }>('/privacy'),
   restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
+
+  // admin
+  admin: new Route('/admin'),
+  adminTags: new Route('/admin/dishes'),
+
+  // below pages, more catch-all routes (search)
+
   // NOTE keep userSearch and search in sync
   // after user/restaurant
   userSearch: new Route<SearchRouteParams>(
@@ -71,10 +81,6 @@ export const routes = {
   ),
   // search after userSearch
   search: new Route<SearchRouteParams>('/:lense/:location/:tags?/:search?'),
-
-  // admin
-  admin: new Route('/admin'),
-  adminDishes: new Route('/admin/dishes'),
 
   notFound: new Route('*'),
 }

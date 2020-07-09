@@ -8,7 +8,7 @@ import AdminPage from './pages/admin/AdminPage'
 import HomePage from './pages/home/HomePage'
 import { useOvermind } from './state/useOvermind'
 import { NotFoundPage } from './views/NotFoundPage'
-import { Route, RouteSwitch } from './views/router/Route'
+import { PrivateRoute, Route, RouteSwitch } from './views/router/Route'
 
 export function App({ overmind }: { overmind?: any }) {
   return (
@@ -18,17 +18,15 @@ export function App({ overmind }: { overmind?: any }) {
         <ErrorHandler />
         <Suspense fallback={<LoadingItems />}>
           <RouteSwitch>
-            {/* <PrivateRoute name="tag">
-              <TagPage />
-            </PrivateRoute> */}
-            <Route name="home">
-              <HomePage />
-            </Route>
-            <Route name="admin">
-              <AdminPage />
-            </Route>
             <Route name="notFound">
               <NotFoundPage title="404 Not Found" />
+            </Route>
+            <PrivateRoute name="admin">
+              <AdminPage />
+            </PrivateRoute>
+            {/* home route last because it matches / */}
+            <Route name="home">
+              <HomePage />
             </Route>
           </RouteSwitch>
 

@@ -270,3 +270,8 @@ li::before {
 .unskewX {
   transform: skewX(12deg);
 }
+
+.scrollable {
+  overflow-y: auto;
+  flex: 1;
+}

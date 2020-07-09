@@ -7,9 +7,11 @@ import { useOvermind } from '../../state/useOvermind'
 import { AuthLoginRegisterView } from '../../views/auth/AuthLoginRegisterView'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { flatButtonStyle } from './baseButtonStyle'
+import { useMediaQueryIsSmall } from './HomeViewDrawer'
 
 export const HomeUserMenu = memo(() => {
   const om = useOvermind()
+  const isSmall = useMediaQueryIsSmall()
   // const [firstTime, setFirstTime] = useStorageState(
   //   localStorage,
   //   'firstTime',
@@ -67,8 +69,6 @@ export const HomeUserMenu = memo(() => {
       }
     >
       <LinkButton
-        flexDirection="row"
-        pointerEvents="auto"
         padding={12}
         onPress={() =>
           om.actions.home.setShowUserMenu(!om.state.home.showUserMenu)
@@ -76,7 +76,7 @@ export const HomeUserMenu = memo(() => {
       >
         <HStack spacing alignItems="center" justifyContent="center">
           <User color="#fff" size={22} opacity={0.65} />
-          {!om.state.user.isLoggedIn && (
+          {!isSmall && !om.state.user.isLoggedIn && (
             <Text opacity={0.5} color="#fff">
               Signup
             </Text>
