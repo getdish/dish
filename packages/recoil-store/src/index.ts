@@ -51,7 +51,7 @@ export function useRecoilStore<A extends Store<B>, B>(
   return useMemo(() => {
     return new Proxy(storeInstance as A, {
       get(target, key) {
-        return getProxyValue(target, key, attrs, getRecoilValue, props)
+        return getProxyValue(target, key, attrs, getRecoilValue)
       },
       set(target, key, value, receiver) {
         if (isMounted.current === false) {
@@ -62,6 +62,7 @@ export function useRecoilStore<A extends Store<B>, B>(
           if (prev !== value) {
             const setter = getSetRecoilState(attrs[key].value)
             setter(value)
+            Reflect.set(target, key, value, receiver)
           }
           return true
         }
@@ -88,7 +89,7 @@ function useStoreInstance(StoreKlass: any, props: any) {
   const attrs: StoreAttributes = {}
   const storeProxy = new Proxy(storeInstance as any, {
     get(target, key) {
-      return getProxyValue(target, key, attrs, curGetter, props)
+      return getProxyValue(target, key, attrs, curGetter)
     },
   })
   for (const prop in descriptors) {
@@ -144,8 +145,7 @@ function getProxyValue(
   target: any,
   key: string | number | symbol,
   attrs: StoreAttributes,
-  getter: Function,
-  props?: any
+  getter: Function
 ) {
   if (typeof key === 'string') {
     switch (attrs[key].type) {

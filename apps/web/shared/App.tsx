@@ -1,3 +1,5 @@
+import './start'
+
 import { onGraphError } from '@dish/graph'
 // import { RecoilRoot } from '@dish/recoil-store'
 import { LoadingItems, Toast, ToastRoot, useOnMount } from '@dish/ui'
