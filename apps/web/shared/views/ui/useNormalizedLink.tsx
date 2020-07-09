@@ -76,7 +76,7 @@ const getNormalizedLink = memoize(
       const tagProps = getNavigateToTags(omStatic, {
         state,
         tags,
-        disabledIfActive: props.disabledIfActive,
+        disallowDisableWhenActive: props.disallowDisableWhenActive,
         replace: props.replace,
       })
       return {
