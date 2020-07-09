@@ -1,4 +1,5 @@
-import { TagRecord, TagType, graphql, query } from '@dish/graph'
+import { fullyIdle, series } from '@dish/async'
+import { Tag, TagRecord, TagType, graphql, query } from '@dish/graph'
 import { RecoilRoot, Store, useRecoilStore } from '@dish/recoil-store'
 import {
   HStack,
@@ -9,32 +10,13 @@ import {
   VStack,
   useDebounceValue,
 } from '@dish/ui'
-import { Suspense, memo, useRef, useState } from 'react'
+import immer from 'immer'
+import { capitalize, uniqBy } from 'lodash'
+import { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
 
+import { emojiRegex } from '../../helpers/emojiRegex'
 import { SmallButton } from '../../views/ui/SmallButton'
-
-class Tags extends Store {
-  selected = [0, 0]
-
-  selections = {
-    continent: null,
-    country: null,
-    dish: null,
-  }
-
-  draft: TagRecord = {
-    type: 'continent',
-  }
-
-  setSelected(selected: [number, number]) {
-    this.selected = selected
-  }
-
-  updateDraft(next: Partial<TagRecord>) {
-    this.draft = { ...this.draft, ...next }
-  }
-}
 
 export default graphql(function AdminTagsPage() {
   return (
@@ -44,6 +26,29 @@ export default graphql(function AdminTagsPage() {
   )
 })
 
+class Tags extends Store {
+  selected = [0, 0]
+  selectedNames = [] as string[]
+
+  draft: TagRecord = {
+    type: 'continent',
+  }
+
+  setSelected(selected: [number, number]) {
+    this.selected = selected
+  }
+
+  setSelectedName(row: number, name: string) {
+    this.selectedNames = immer(this.selectedNames, (next) => {
+      next[row] = name
+    })
+  }
+
+  updateDraft(next: Partial<TagRecord>) {
+    this.draft = { ...this.draft, ...next }
+  }
+}
+
 const VerticalColumn = ({ children, ...props }: StackProps) => {
   return (
     <VStack flex={1} borderLeftColor="#eee" borderLeftWidth={1} {...props}>
@@ -52,10 +57,27 @@ const VerticalColumn = ({ children, ...props }: StackProps) => {
   )
 }
 
+const Search = memo(
+  graphql(() => {
+    const [search, setSearch] = useState('')
+    const searchDebounced = useDebounceValue(search, 200)
+    return (
+      <>
+        <TextInput
+          style={styles.textInput}
+          onChange={(e) => setSearch(e.target['value'])}
+          placeholder="Search all MenuItems"
+        />
+        <Suspense fallback={<LoadingItems />}>
+          <MenuItemsResults search={searchDebounced} />
+        </Suspense>
+      </>
+    )
+  })
+)
+
 const AdminTagsPageContent = graphql(() => {
   const store = useRecoilStore(Tags)
-
-  console.log('what is', store.selected)
 
   // useEffect(() => {
   //   activeByRow[active[0]] = active[1]
@@ -89,7 +111,7 @@ const AdminTagsPageContent = graphql(() => {
 
         <VerticalColumn>
           <Text>Search Menus</Text>
-          <MenuItems />
+          <Search />
         </VerticalColumn>
 
         <VerticalColumn>
@@ -143,29 +165,26 @@ const AdminTagsPageContent = graphql(() => {
 const TagList = memo(
   graphql(({ type, row }: { type: TagType; row: number }) => {
     const store = useRecoilStore(Tags)
-    const parentType: TagType =
-      type === 'continent'
-        ? 'continent'
-        : type === 'country'
-        ? 'continent'
-        : 'country'
-
-    console.log('selected', parentType, store.selections[parentType])
-
+    const lastRowSelection = store.selectedNames[row - 1]
     const results = query.tag({
       where: {
         type: { _eq: type },
-        ...(store.selections[parentType] && {
-          parent: { name: { _eq: store.selections[parentType] } },
-        }),
+        ...(type !== 'continent' &&
+          lastRowSelection && {
+            parent: { name: { _eq: lastRowSelection } },
+          }),
       },
       limit: 100,
     })
 
+    const allResults = uniqBy([{ name: '' }, ...results], (x) => x.name)
+
     return (
       <VStack flex={1} maxHeight="100%">
         <HStack borderBottomColor="#ddd" borderBottomWidth={1}>
-          <Text>{type}</Text>
+          <Text>
+            {capitalize(type)} {lastRowSelection ? `(${lastRowSelection})` : ''}
+          </Text>
           <Spacer flex={1} />
           <SmallButton
             onPress={() => {
@@ -186,13 +205,15 @@ const TagList = memo(
           </SmallButton>
         </HStack>
         <ScrollView>
-          {results.map((tag, index) => {
+          {allResults.map((tag, index) => {
             return (
               <ListItem
-                key={`${tag.id}${tag.updated_at}`}
+                key={tag.name}
                 row={row}
                 col={index}
                 tag={tag}
+                type={type}
+                isFormerlyActive={store.selectedNames[row] === tag.name}
                 isActive={
                   store.selected[0] == row && store.selected[1] == index
                 }
@@ -209,6 +230,7 @@ const ListItem = memo(
   ({
     row,
     col,
+    type,
     tag,
     isFormerlyActive,
     isActive,
@@ -219,6 +241,7 @@ const ListItem = memo(
     editable?: boolean
     deletable?: boolean
     row?: number
+    type: TagType
     col?: number
     isActive: boolean
     tag: TagRecord
@@ -230,6 +253,25 @@ const ListItem = memo(
     const [isEditing, setIsEditing] = useState(false)
     const [hidden, setHidden] = useState(false)
     const lastTap = useRef(Date.now())
+    const textInput = useRef<HTMLInputElement | null>(null)
+
+    useEffect(() => {
+      if (isEditing) {
+        return series([
+          () => fullyIdle({ max: 30 }),
+          () => {
+            textInput.current?.focus()
+            textInput.current?.select()
+          },
+        ])
+      }
+    }, [isEditing])
+
+    useEffect(() => {
+      if (!isActive) {
+        setIsEditing(false)
+      }
+    }, [isActive])
 
     if (hidden) {
       return null
@@ -238,6 +280,12 @@ const ListItem = memo(
     return (
       <HStack
         height={32}
+        {...(!isActive &&
+          !isFormerlyActive && {
+            hoverStyle: {
+              backgroundColor: '#f2f2f2',
+            },
+          })}
         onPress={() => {
           if (Date.now() - lastTap.current < 250) {
             if (editable) {
@@ -246,76 +294,77 @@ const ListItem = memo(
           } else {
             lastTap.current = Date.now()
             store.setSelected([row, col])
+            store.setSelectedName(row, tag.name)
           }
         }}
         padding={6}
+        alignItems="center"
+        {...(isFormerlyActive && {
+          backgroundColor: '#aaa',
+        })}
         {...(isActive && {
-          backgroundColor: '#eee',
+          backgroundColor: 'blue',
         })}
       >
-        <HStack flex={1}>
-          {isEditing && (
-            <TextInput
-              style={styles.textInput}
-              defaultValue={text as any}
-              onBlur={(e) => {
-                setIsEditing(false)
-                const [icon, ...nameParts] = e.target['value'].split(' ')
-                const name = nameParts.join(' ')
-                const next: TagRecord = {
-                  ...tag,
-                  icon,
-                  name,
-                }
-                console.log('next is', next)
-                upsert(next)
-              }}
-            />
-          )}
-          {!isEditing && <Text fontSize={16}>{text}</Text>}
+        {(() => {
+          if (isEditing) {
+            return (
+              <TextInput
+                ref={textInput as any}
+                style={[
+                  styles.textInput,
+                  {
+                    margin: -5,
+                    padding: 5,
+                    color: '#fff',
+                  },
+                ]}
+                defaultValue={text as any}
+                onBlur={(e) => {
+                  setIsEditing(false)
+                  const value = e.target['value']
+                  if (emojiRegex.test(value)) {
+                    const [icon, ...nameParts] = value.split(' ')
+                    const name = nameParts.join(' ')
+                    tag.icon = icon
+                    tag.name = name
+                  } else {
+                    tag.name = value
+                  }
+                }}
+              />
+            )
+          }
 
-          <div style={{ flex: 1 }} />
+          return (
+            <Text color={isActive ? '#fff' : '#000'} fontSize={16}>
+              {text}
+            </Text>
+          )
+        })()}
 
-          {deletable && (
-            <VStack
-              onPress={(e) => {
-                e.stopPropagation()
-                setHidden(true)
-                // client.mutate({
-                //   variables: {
-                //     id: tag.id,
-                //   },
-                //   mutation: TAXONOMY_DELETE,
-                // })
-              }}
-            >
-              <Text>✅</Text>
-              {/* <CheckMark name="md-checkmark-circle" /> */}
-            </VStack>
-          )}
-        </HStack>
+        <div style={{ flex: 1 }} />
+
+        {deletable && (
+          <VStack
+            onPress={(e) => {
+              e.stopPropagation()
+              setHidden(true)
+              // client.mutate({
+              //   variables: {
+              //     id: tag.id,
+              //   },
+              //   mutation: TAXONOMY_DELETE,
+              // })
+            }}
+          >
+            <Text>✅</Text>
+            {/* <CheckMark name="md-checkmark-circle" /> */}
+          </VStack>
+        )}
       </HStack>
     )
   }
-)
-
-const MenuItems = memo(
-  graphql(() => {
-    const [search, setSearch] = useState('')
-    const searchDebounced = useDebounceValue(search, 200)
-    return (
-      <>
-        <TextInput
-          style={styles.textInput}
-          onChange={(e) => setSearch(e.target['value'])}
-          placeholder="Search all MenuItems"
-        />
-        <Suspense fallback={<LoadingItems />}>
-          <MenuItemsResults search={searchDebounced} />
-        </Suspense>
-      </>
-    )
-  })
 )
 
 const MenuItemsResults = memo(

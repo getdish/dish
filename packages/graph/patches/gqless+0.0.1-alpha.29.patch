@@ -17,7 +17,7 @@ index 27c8f79..379ee7f 100644
 +
  export {};
 diff --git a/node_modules/gqless/dist/gqless.cjs.development.js b/node_modules/gqless/dist/gqless.cjs.development.js
-index 12268bf..dd6ac74 100644
+index 12268bf..238a4de 100644
 --- a/node_modules/gqless/dist/gqless.cjs.development.js
 +++ b/node_modules/gqless/dist/gqless.cjs.development.js
 @@ -135,7 +135,7 @@ const deepReference = rootValue => {
@@ -61,10 +61,18 @@ index 12268bf..dd6ac74 100644
  
        return Promise.resolve(_temp && _temp.then ? _temp.then(_temp2) : _temp2(_temp));
 diff --git a/node_modules/gqless/dist/gqless.esm.js b/node_modules/gqless/dist/gqless.esm.js
-index cc6eb3f..8ed3f20 100644
+index cc6eb3f..714413c 100644
 --- a/node_modules/gqless/dist/gqless.esm.js
 +++ b/node_modules/gqless/dist/gqless.esm.js
-@@ -482,6 +482,8 @@ const buildSelections = ({
+@@ -412,6 +412,7 @@ const buildArguments = ({
+ 
+       if (context) {
+         const field = context.node.inputs[key];
++        if (!field) return
+         keyContext = {
+           node: field.ofNode,
+           nullable: field.nullable
+@@ -482,6 +483,8 @@ const buildSelections = ({
    const includeTypename = // When no selections or not on ObjectNode
    (!tree.children.length || !(innerNode instanceof ObjectNode)) && // fragments should never need __typename
    !(tree.selection instanceof Fragment);
@@ -73,7 +81,7 @@ index cc6eb3f..8ed3f20 100644
    const selections = [includeTypename && '__typename', ...tree.children.map(tree => buildSelectionTree(formatter, tree, variables))].filter(Boolean);
    if (!selections.length) return '';
    return selections.join(LINE_SEPARATOR);
-@@ -554,22 +556,15 @@ const buildSelectionTree = ({
+@@ -554,22 +557,15 @@ const buildSelectionTree = ({
    return buildSelections(formatter, tree, variables);
  };
  
@@ -103,3 +111,14 @@ index cc6eb3f..8ed3f20 100644
  };
  
  /**
+@@ -1883,7 +1879,9 @@ class Accessor extends Disposable {
+ 
+   setData(data) {
+     // @TODO
+-    console.log('set', this.path.toString(), data);
++    if (typeof window !== 'undefined' && window['gqlessSetListener']) {
++      window['gqlessSetListener'](this, data)
++    }
+     this.cache.merge(this, data);
+   }
+ 
