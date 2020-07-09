@@ -31,7 +31,7 @@ export function LinkButton<
       padding,
       paddingVertical,
       paddingHorizontal,
-      disabledIfActive,
+      disallowDisableWhenActive,
       replace,
       preventNavigate,
       navigateAfterPress,
@@ -72,7 +72,7 @@ export function LinkButton<
       textAlign,
       ellipse,
       replace,
-      disabledIfActive,
+      disallowDisableWhenActive,
       ...rest
     } = props
     restProps = rest

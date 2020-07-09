@@ -238,7 +238,7 @@ export const TagButton = memo(
     }
 
     return (
-      <LinkButton tag={tag} disabledIfActive replace={replace}>
+      <LinkButton tag={tag} disallowDisableWhenActive replace={replace}>
         {contents}
       </LinkButton>
     )

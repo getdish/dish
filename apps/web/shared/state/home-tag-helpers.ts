@@ -27,7 +27,7 @@ export const allTags = allTagsList.reduce((acc, cur) => {
 export type HomeStateNav = {
   tags?: NavigableTag[]
   state?: HomeStateItem
-  disabledIfActive?: boolean
+  disallowDisableWhenActive?: boolean
   replace?: boolean
 }
 
@@ -97,7 +97,7 @@ export const getNextState = (om: Om, navState?: HomeStateNav) => {
   const {
     state = om.state.home.currentState,
     tags = [],
-    disabledIfActive = false,
+    disallowDisableWhenActive = false,
     replace = false,
   } = navState ?? {}
   let searchQuery = state.searchQuery ?? ''
@@ -132,7 +132,7 @@ export const getNextState = (om: Om, navState?: HomeStateNav) => {
 
   for (const tag of tags) {
     const key = getTagId(tag)
-    if (activeTagIds[key] === true && !disabledIfActive) {
+    if (activeTagIds[key] === true && !disallowDisableWhenActive) {
       activeTagIds[key] = false
     } else {
       activeTagIds[key] = true

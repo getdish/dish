@@ -25,7 +25,12 @@ export const LenseButton = memoIsEqualDeep(
     const sizePx = 40
 
     return (
-      <LinkButton tag={lense} position="relative" zIndex={isActive ? 1 : 0}>
+      <LinkButton
+        tag={lense}
+        disallowDisableWhenActive
+        position="relative"
+        zIndex={isActive ? 1 : 0}
+      >
         <VStack
           className="ease-in-out-faster"
           alignItems="center"
