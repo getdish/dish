@@ -10,7 +10,7 @@ RUN yarn build
 FROM node:12.16.1-buster-slim
 COPY --from=0 /app /app
 
-RUN apt-get update && apt-get install -y cron
+RUN apt-get update && apt-get install -y cron rsyslog
 ADD services/crawlers/crontab.txt /app/crontab.txt
 ADD services/crawlers/entry.sh /app/entry.sh
 RUN /usr/bin/crontab /app/crontab.txt
