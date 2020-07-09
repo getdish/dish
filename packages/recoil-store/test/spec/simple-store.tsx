@@ -24,6 +24,10 @@ class TodoList extends Store<{
     return this.items.map((x, i) => i)
   }
 
+  get lastItem() {
+    return this.items[this.items.length - 1]
+  }
+
   add() {
     this.items = [
       ...this.items,
@@ -45,13 +49,11 @@ export function SimpleStoreTest({ id }: { id: number }) {
   )
 }
 
-type x = typeof TodoList
-
 function SimpleStoreTestComponent(props: { id: number }) {
   const store = useRecoilStore(TodoList, props)
   return (
     <>
-      <div id="x">{store.items[store.items.length - 1].text}</div>
+      <div id="x">{store.lastItem.text}</div>
       <div id="y">{store.itemsDiff[store.itemsDiff.length - 1]}</div>
       <button id="add" onClick={() => store.add()}></button>
       <button id="add-async" onClick={() => store.asyncAdd()}></button>

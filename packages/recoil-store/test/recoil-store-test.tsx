@@ -43,7 +43,7 @@ async function testSimpleStore(
 }
 
 test('creates a simple store and action works', async (t) => {
-  const r = TestRenderer.create(<Test.SimpleStoreTest id={0} />)
+  const r = TestRenderer.create(<Test.SimpleStoreTest id={1} />)
   await testSimpleStore(t, r)
 })
 
