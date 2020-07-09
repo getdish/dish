@@ -1,14 +1,7 @@
-import {
-  Box,
-  HStack,
-  HoverablePopover,
-  Text,
-  VStack,
-  memoIsEqualDeep,
-} from '@dish/ui'
+import { Text, VStack, memoIsEqualDeep } from '@dish/ui'
 import React from 'react'
-import { anchor } from 'react-laag'
 
+import { rgbString } from '../../helpers/rgbString'
 import { Tag } from '../../state/Tag'
 import { LinkButton } from '../ui/LinkButton'
 
@@ -26,9 +19,7 @@ export const LenseButton = memoIsEqualDeep(
     minimal?: boolean
     size?: LenseButtonSize
   }) => {
-    const [r, g, b] = lense.rgb ?? [1, 1, 1]
-    const rgbInner = `${r * 255}, ${g * 255}, ${b * 255}`
-    const lenseColor = `rgb(${rgbInner})`
+    const lenseColor = rgbString(lense.rgb)
     // const lenseColorLight = `rgba(${rgbInner}, 0.2)`
     const scale = size == 'md' ? 1 : 1.35
     const sizePx = 40

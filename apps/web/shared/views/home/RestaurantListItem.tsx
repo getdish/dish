@@ -62,8 +62,6 @@ export const RestaurantListItem = memo(function RestaurantListItem(
   const om = useOvermindStatic()
   const [isHovered, setIsHovered] = useState(false)
 
-  console.log('RestaurantListItem.render', props.rank)
-
   useDebounceEffect(
     () => {
       if (isHovered) {

@@ -95,7 +95,7 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
         if (x === '🍔') {
           return (
             <>
-              {titleParts.map((tag) => (
+              {tags.map((tag) => (
                 <TagButton
                   key={getTagId(tag)}
                   {...getTagButtonProps(tag)}

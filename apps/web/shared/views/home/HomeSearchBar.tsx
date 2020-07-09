@@ -17,9 +17,10 @@ import {
   searchBarHeight,
   searchBarTopOffset,
 } from '../../constants'
+import { rgbString } from '../../helpers/rgbString'
+import { tagLenses } from '../../state/Tag'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../ui/LinkButton'
-import { brandColor, brandColorDark } from './colors'
 import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
 import { HomeAutocompleteBackground } from './HomeAutocompleteBackground'
@@ -34,6 +35,11 @@ export default memo(function HomeSearchBar() {
   const [showLocation, setShowLocation] = useState(false)
   const isSmall = useMediaQueryIsSmall()
   const om = useOvermind()
+  const lense = om.state.home.currentStateLense
+  console.log('lense is', lense)
+  const color = rgbString(lense?.rgb ?? [0, 0, 0])
+  const colorBottom = rgbString(lense?.rgb.map((x) => x - 10) ?? [30, 30, 30])
+  console.log({ color, colorBottom })
   const borderRadius = 12
 
   return (
@@ -77,7 +83,7 @@ export default memo(function HomeSearchBar() {
           paddingHorizontal={8}
           height={searchBarHeight}
           borderRadius={borderRadius}
-          shadowColor={brandColor}
+          shadowColor={color}
           shadowOpacity={0.25}
           shadowRadius={0}
           shadowOffset={{ height: 3, width: 3 }}
@@ -93,7 +99,7 @@ export default memo(function HomeSearchBar() {
             left={-100}
           >
             <LinearGradient
-              colors={[brandColor, brandColorDark]}
+              colors={[color, colorBottom]}
               style={[StyleSheet.absoluteFill]}
             />
           </VStack>

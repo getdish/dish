@@ -133,6 +133,17 @@ const derivations = {
     const index = state.searchBarTags.length + autocompleteIndex
     return state.searchBarTags[index]
   }),
+  currentStateLense: derived<HomeState, Tag | null>((state) => {
+    if ('activeTagIds' in state.currentState) {
+      for (const id in state.currentState.activeTagIds) {
+        const tag = state.allTags[id]
+        if (tag.type == 'lense') {
+          return tag
+        }
+      }
+    }
+    return null
+  }),
   autocompleteResultsActive: derived<HomeState, AutocompleteItem[]>((state) => {
     const prefix: AutocompleteItem[] = [
       {
@@ -231,16 +242,15 @@ const startAutocomplete: AsyncAction = async (om) => {
     icon: x.icon,
     tagId: getTagId({ type: 'country', name: x.country }),
   }))
-
-  const results = [
+  const results = ([
     ...dishes.slice(0, 3),
     ..._.zip(countries, dishes.slice(3)).flat(),
-  ]
+  ] as AutocompleteItem[])
     .filter(Boolean)
-    .slice(0, 20) as AutocompleteItem[]
+    .slice(0, 20)
   defaultAutocompleteResults = results
   om.state.home.autocompleteResults = results
-  await runAutocomplete(om, om.state.home.currentState.searchQuery)
+  await om.actions.home.runAutocomplete(om.state.home.currentState.searchQuery)
 }
 
 type PageAction = () => Promise<void>
@@ -283,7 +293,6 @@ const pushHomeState: AsyncAction<
           activeTagIds[tagId] = true
         }
       }
-      console.log('next active tags', activeTagIds)
       nextState = {
         ...base,
         ...om.state.home.lastHomeState,
@@ -613,87 +622,7 @@ const loadHomeDishes: AsyncAction = async (om) => {
   om.state.home.topDishes = all
 }
 
-const DEBOUNCE_AUTOCOMPLETE = 120
-
-let lastRunAt = Date.now()
-const setSearchQuery: AsyncAction<string> = async (om, query: string) => {
-  // also reset runSearch! hacky!
-  lastSearchAt = Date.now()
-  lastRunAt = Date.now()
-  let id = lastRunAt
-  const state = om.state.home.currentState
-  const isDeleting = query.length < state.searchQuery.length
-  // AUTOCOMPLETE
-  const delayByX = isDeleting ? 2 : 1
-  await sleep(DEBOUNCE_AUTOCOMPLETE * delayByX)
-  if (id != lastRunAt) return
-  // fast actions
-  om.actions.home.setShowAutocomplete('search')
-  runAutocomplete(om, query)
-}
-
-const runAutocomplete: AsyncAction<string> = async (om, query) => {
-  const state = om.state.home.currentState
-
-  if (query === '') {
-    om.state.home.autocompleteResults = defaultAutocompleteResults ?? []
-    om.state.home.locationAutocompleteResults = defaultLocationAutocompleteResults
-    return
-  }
-
-  console.time('searchLocations')
-  // const restaurantsPromise = search({
-  //   center: state.center,
-  //   span: padSpan(state.span),
-  //   query,
-  //   limit: 5,
-  // })
-  const locationResults = await searchLocations(state.searchQuery)
-  console.timeEnd('searchLocations')
-  console.log({ locationResults })
-
-  const autocompleteDishes = om.state.home.autocompleteDishes
-  console.time('autocomplete.fuzzy')
-  let found = await fuzzyFind(query, autocompleteDishes)
-  console.timeEnd('autocomplete.fuzzy')
-  console.log('autocompleteDishes', autocompleteDishes)
-  if (found.length < 10) {
-    found = [...found, ...autocompleteDishes.slice(0, 10 - found.length)]
-  }
-  const dishResults: AutocompleteItem[] = _.uniqBy(found, (x) => x.name).map(
-    (x) =>
-      createAutocomplete({
-        name: x.name,
-        type: 'dish',
-        icon: `🍛`,
-      })
-  )
-
-  const unsortedResults: AutocompleteItem[] = _.uniqBy(
-    [
-      ...dishResults,
-      // ...restaurantsResults.map((restaurant) =>
-      //   createAutocomplete({
-      //     name: restaurant.name,
-      //     // TODO tom - can we get the cuisine tag icon here? we can load common ones somewhere
-      //     icon: '🏘',
-      //     type: 'restaurant',
-      //   })
-      // ),
-      ...locationResults.map(locationToAutocomplete),
-    ],
-    (x) => `${x.name}${x.type}`
-  )
-
-  // final fuzzy...
-  const results = query
-    ? await fuzzyFind(query, unsortedResults)
-    : unsortedResults
-
-  om.actions.home.setAutocompleteResults(results)
-}
-
-const locationToAutocomplete = (location: {
+export const locationToAutocomplete = (location: {
   name: string
   coordinate: { latitude: number; longitude: number }
 }) => {
@@ -961,7 +890,7 @@ const setLocationSearchQuery: AsyncAction<string> = async (om, val) => {
   )
 }
 
-function searchLocations(query: string) {
+export function searchLocations(query: string) {
   if (!query) {
     return Promise.resolve([])
   }
@@ -1194,13 +1123,25 @@ const addTagsToCache: Action<Tag[]> = (om, tags) => {
   }
 }
 
-const setAutocompleteResults: Action<AutocompleteItem[]> = (om, results) => {
-  om.state.home.autocompleteResults = results
+const setAutocompleteResults: Action<AutocompleteItem[] | null> = (
+  om,
+  results
+) => {
+  om.state.home.autocompleteResults = results ?? defaultAutocompleteResults
+}
+
+const setLocationAutocompleteResults: Action<AutocompleteItem[] | null> = (
+  om,
+  results
+) => {
+  om.state.home.autocompleteResults =
+    results ?? defaultLocationAutocompleteResults
 }
 
 export const actions = {
   loadHomeDishes,
   setIsScrolling,
+  setLocationAutocompleteResults,
   navigateToTag,
   setHasMovedMap,
   getNavigateToTags,
@@ -1223,7 +1164,6 @@ export const actions = {
   setLocationSearchQuery,
   setMapArea,
   setSearchBarFocusedTag,
-  setSearchQuery,
   setAutocompleteIndex,
   setShowAutocomplete,
   setShowUserMenu,

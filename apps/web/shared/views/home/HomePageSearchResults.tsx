@@ -187,14 +187,7 @@ const HomeSearchResultsViewContent = memo(
       ))
     }, [allResults, state.chunk])
 
-    console.log('HomeSearchResultsViewContent.render', {
-      searchState,
-      state,
-      hasMoreToLoad,
-      totalToShow,
-      results,
-      allResults,
-    })
+    console.log('HomeSearchResultsViewContent.render')
 
     // in an effect so we can use series and get auto-cancel on unmount
     useEffect(() => {
@@ -217,8 +210,11 @@ const HomeSearchResultsViewContent = memo(
       ])
 
       function isReadyToLoad(s: OmState) {
+        console.log('s.home.isScrolling ', s.home.isScrolling)
         return (
-          s.home.currentStateType === 'search' && s.home.isScrolling === false
+          (s.home.currentStateType === 'search' ||
+            s.home.currentStateType === 'userSearch') &&
+          s.home.isScrolling === false
         )
       }
 

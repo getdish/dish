@@ -92,7 +92,7 @@ export default memo(
                 <VStack flex={1}>
                   <Text
                     selectable
-                    fontSize={restaurant.name.length > 25 ? 30 : 36}
+                    fontSize={restaurant.name?.length > 25 ? 30 : 36}
                     fontWeight="800"
                     paddingRight={30}
                   >

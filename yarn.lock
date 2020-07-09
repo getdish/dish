@@ -7365,6 +7365,11 @@ flatted@^2.0.1:
   resolved "https://registry.npmjs.org/flatted/-/flatted-2.0.2.tgz#4575b21e2bcee7434aa9be662f4b7b5f9c2b5138"
   integrity sha512-r5wGx7YeOwNWNlCA0wQ86zKyDLMQr+/RB8xy74M4hTphfmjlijTSSXGuH8rnvKZnfT9i+75zmd8jcKdMR4O6jA==
 
+flexsearch@^0.6.32:
+  version "0.6.32"
+  resolved "https://registry.npmjs.org/flexsearch/-/flexsearch-0.6.32.tgz#1e20684d317af65baa445cdd9864a5f5b320f510"
+  integrity sha512-EF1BWkhwoeLtbIlDbY/vDSLBen/E5l/f1Vg7iX5CDymQCamcx1vhlc3tIZxIDplPjgi0jhG37c67idFbjg+v+Q==
+
 flow-parser@0.*:
   version "0.128.0"
   resolved "https://registry.npmjs.org/flow-parser/-/flow-parser-0.128.0.tgz#6bee9bc4f578c8b66f59ad52dd769464a36a029d"
