@@ -8,8 +8,10 @@ import {
   Spacer,
   Text,
   VStack,
+  useDebounce,
 } from '@dish/ui'
 import FlexSearch from 'flexsearch'
+import { uniqBy } from 'lodash'
 import React, { memo, useEffect, useRef } from 'react'
 import { Plus } from 'react-feather'
 import { ScrollView } from 'react-native'
@@ -19,6 +21,7 @@ import {
   AutocompleteItem,
   LngLat,
   ShowAutocomplete,
+  createAutocomplete,
   locationToAutocomplete,
   searchLocations,
 } from '../../state/home'
@@ -26,11 +29,11 @@ import { omStatic, useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { SmallCircleButton } from './CloseButton'
-import { setAvoidNextAutocompleteShowOnFocus } from './HomeSearchInput'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 
-const flexSearch = new FlexSearch('speed')
-console.log('FlexSearch', FlexSearch)
+const flexSearch = FlexSearch.create<number>({
+  profile: 'speed',
+})
 
 export const useShowAutocomplete = () => {
   const om = useOvermind()
@@ -41,6 +44,15 @@ export const useShowAutocomplete = () => {
 }
 
 export default memo(function HomeAutocomplete() {
+  return (
+    <>
+      <HomeAutocompleteEffects />
+      <HomeAutoCompleteContents />
+    </>
+  )
+})
+
+const HomeAutocompleteEffects = memo(() => {
   const om = useOvermind()
   const { showAutocomplete, currentStateSearchQuery } = om.state.home
 
@@ -49,109 +61,8 @@ export default memo(function HomeAutocomplete() {
     currentStateSearchQuery,
   ])
 
-  return <HomeAutoCompleteContents />
+  return null
 })
-
-function runAutocomplete(
-  showAutocomplete: ShowAutocomplete,
-  searchQuery: string
-) {
-  const om = omStatic
-  const state = om.state.home.currentState
-
-  let results: AutocompleteItem[] = []
-
-  return series([
-    () => fullyIdle(),
-    async () => {
-      if (showAutocomplete === 'location') {
-        results = (await searchLocations(searchQuery)).map(
-          locationToAutocomplete
-        )
-      }
-      if (showAutocomplete === 'search') {
-        results = await searchAutocomplete(searchQuery, state.center)
-      }
-    },
-    () => fullyIdle(),
-    async () => {
-      if (results.length) {
-        flexSearch.clear()
-        for (const res of results) {
-          flexSearch.scan(res.id, res)
-        }
-        const filtered = await flexSearch.search(searchQuery, 10)
-        console.log('got', filtered)
-
-        if (showAutocomplete === 'location') {
-          om.actions.home.setLocationAutocompleteResults(filtered)
-        }
-        if (showAutocomplete === 'search') {
-          om.actions.home.setAutocompleteResults(filtered)
-        }
-      }
-    },
-  ])
-}
-
-function searchAutocomplete(searchQuery: string, center: LngLat) {
-  const iLikeQuery = `%${searchQuery.split(' ').join('%')}%`
-  return resolved(() => {
-    return [
-      ...query
-        .restaurant({
-          where: {
-            location: {
-              _st_d_within: {
-                distance: 0.015,
-                from: {
-                  type: 'Point',
-                  coordinates: [center.lat, center.lng],
-                },
-              },
-            },
-            name: {
-              _ilike: iLikeQuery,
-            },
-          },
-        })
-        .map((r) => ({
-          id: r.id,
-          name: r.name,
-        })),
-      ...query
-        .tag({
-          where: {
-            name: {
-              _ilike: iLikeQuery,
-            },
-            type: {
-              _eq: 'dish',
-            },
-          },
-        })
-        .map((r) => ({
-          id: r.id,
-          name: r.name,
-        })),
-      ...query
-        .tag({
-          where: {
-            name: {
-              _ilike: iLikeQuery,
-            },
-            type: {
-              _eq: 'country',
-            },
-          },
-        })
-        .map((r) => ({
-          id: r.id,
-          name: r.name,
-        })),
-    ]
-  })
-}
 
 const HomeAutoCompleteContents = memo(() => {
   const isSmall = useMediaQueryIsSmall()
@@ -164,6 +75,10 @@ const HomeAutoCompleteContents = memo(() => {
   const showLocation = showAutocomplete == 'location'
   const showSearch = showAutocomplete == 'search'
   const isShowing = showSearch || showLocation
+  const hideAutocomplete = useDebounce(
+    () => om.actions.home.setShowAutocomplete(false),
+    400
+  )
 
   // hide when moused away, show when moved back!
   useEffect(() => {
@@ -174,7 +89,10 @@ const HomeAutoCompleteContents = memo(() => {
       if (showAutocomplete) {
         if (y > 140) {
           tmOff = setTimeout(() => {
-            om.actions.home.setShowAutocomplete(false)
+            // if > 0 dont autohide
+            if (om.state.home.autocompleteIndex >= 0) {
+              om.actions.home.setShowAutocomplete(false)
+            }
           }, 80)
         }
       } else {
@@ -189,77 +107,74 @@ const HomeAutoCompleteContents = memo(() => {
     }
   }, [isShowing])
 
-  const resultsElements = autocompleteResultsActive.map((tag, index) => {
-    const restaurantLinkProps: LinkButtonProps | null =
-      tag.type == 'restaurant'
-        ? {
-            tag: null,
-            name: 'restaurant',
-            params: {
-              slug: tag.tagId,
-            },
-          }
-        : null
-
+  const resultsElements = autocompleteResultsActive.map((result, index) => {
     const plusButtonEl =
-      tag.type === 'dish' && index !== 0 && om.state.user.isLoggedIn ? (
+      result.type === 'dish' && index !== 0 && om.state.user.isLoggedIn ? (
         <AutocompleteAddButton />
       ) : null
 
     const isActive = autocompleteIndex === index
 
     const iconElement = (
-      <VStack marginVertical={-2}>
-        {tag.icon?.indexOf('http') === 0 ? (
-          <img
-            src={tag.icon}
-            style={{
-              width: 26,
-              height: 26,
-              borderRadius: 100,
-            }}
-          />
-        ) : tag.icon ? (
-          <Circle size={26} backgroundColor="rgba(150,150,150,0.1)">
-            <Text>{tag.icon} </Text>
-          </Circle>
-        ) : null}
-      </VStack>
+      <>
+        {!!result.icon && (
+          <VStack marginVertical={-2}>
+            {result.icon?.indexOf('http') === 0 ? (
+              <img
+                src={result.icon}
+                style={{
+                  width: 26,
+                  height: 26,
+                  borderRadius: 100,
+                }}
+              />
+            ) : result.icon ? (
+              <Circle size={26} backgroundColor="rgba(150,150,150,0.1)">
+                <Text>{result.icon} </Text>
+              </Circle>
+            ) : null}
+          </VStack>
+        )}
+      </>
     )
 
+    const spacerElement = !!(result.icon && result.name) && <Spacer size={6} />
+
     return (
-      <React.Fragment key={`${tag.tagId}${index}`}>
+      <React.Fragment key={`${result.tagId}${index}`}>
         <LinkButton
           className="no-transition"
           onPress={() => {
-            setAvoidNextAutocompleteShowOnFocus()
-            om.actions.home.setShowAutocomplete(false)
+            hideAutocomplete()
             om.actions.home.setAutocompleteIndex(index)
 
             if (showLocation) {
-              om.actions.home.setLocation(tag.name)
+              om.actions.home.setLocation(result.name)
             } else {
-              console.log('not location should be handled by tag={}')
+              // SEE BELOW, tag={tag}
+              // clear query
+              console.warn('CLEAR SEARCH', result)
+              om.actions.home.setSearchQuery('')
             }
           }}
           {...(!showLocation && {
-            tag,
+            tag: result,
+          })}
+          {...(result.type == 'restaurant' && {
+            tag: null,
+            name: 'restaurant',
+            params: {
+              slug: result.slug,
+            },
           })}
           navigateAfterPress
           alignItems="center"
           justifyContent="center"
           lineHeight={24}
-          paddingVertical={5}
-          paddingHorizontal={10}
-          borderRadius={isSmall ? 0 : 100}
-          backgroundColor={'transparent'}
-          fontSize={14}
-          hoverStyle={{
-            backgroundColor: 'rgba(100,100,100,0.65)',
-          }}
-          {...(isActive && {
-            backgroundColor: '#fff',
-          })}
+          height={38}
+          paddingHorizontal={3}
+          fontSize={15}
+          fontWeight="500"
           {...(isSmall && {
             width: '100%',
           })}
@@ -267,24 +182,33 @@ const HomeAutoCompleteContents = memo(() => {
             maxWidth: '17vw',
             textAlign: 'left',
           })}
-          {...restaurantLinkProps}
+          borderBottomWidth={4}
+          borderTopWidth={4}
+          borderTopColor="transparent"
+          borderBottomColor="transparent"
+          hoverStyle={{
+            borderBottomColor: 'rgba(100,100,100,0.65)',
+          }}
+          {...(isActive && {
+            borderBottomColor: '#fff',
+            hoverStyle: {
+              borderBottomColor: '#fff',
+            },
+          })}
         >
-          <HStack>
-            {iconElement}
-            {!!iconElement && <Spacer size={6} />}
-            <Text ellipse color={isActive ? '#000' : '#fff'}>
-              {tag.name} {plusButtonEl}
-            </Text>
-          </HStack>
+          {iconElement}
+          {spacerElement}
+          <Text ellipse color={'#fff'}>
+            {result.name} {plusButtonEl}
+          </Text>
         </LinkButton>
-        <Spacer size={3} />
+        <Spacer size={10} />
       </React.Fragment>
     )
   })
 
   const contentElements = isSmall ? (
     <VStack
-      backgroundColor="rgba(0,0,0,0.9)"
       borderRadius={isSmall ? 0 : 100}
       shadowColor="rgba(0,0,0,0.28)"
       shadowRadius={18}
@@ -297,7 +221,7 @@ const HomeAutoCompleteContents = memo(() => {
     </VStack>
   ) : (
     <HStack
-      backgroundColor="rgba(0,0,0,0.95)"
+      backgroundColor="rgba(0,0,0,0.9)"
       borderRadius={100}
       height={49}
       paddingBottom={1} // looks better 1px up
@@ -350,8 +274,8 @@ export const HomeAutocompleteHoverableInput = ({
   autocompleteTarget: 'search' | 'location'
 }) => {
   const om = useOvermind()
-  const tm = useRef(0)
-  const tm2 = useRef(0)
+  const tm = useRef(null)
+  const tm2 = useRef(null)
 
   return (
     <Hoverable
@@ -390,4 +314,120 @@ function AutocompleteAddButton() {
       <Plus size={12} />
     </SmallCircleButton>
   )
+}
+
+function runAutocomplete(
+  showAutocomplete: ShowAutocomplete,
+  searchQuery: string
+) {
+  const om = omStatic
+  const state = om.state.home.currentState
+
+  let results: AutocompleteItem[] = []
+
+  return series([
+    () => fullyIdle(),
+    async () => {
+      if (showAutocomplete === 'location') {
+        results = (await searchLocations(searchQuery)).map(
+          locationToAutocomplete
+        )
+      }
+      if (showAutocomplete === 'search') {
+        results = await searchAutocomplete(searchQuery, state.center)
+      }
+    },
+    () => fullyIdle(),
+    async () => {
+      if (results.length) {
+        flexSearch.clear()
+        for (const [index, res] of results.entries()) {
+          flexSearch.add(index, res.name)
+        }
+        const foundIndices = await flexSearch.search(searchQuery, 10)
+        const found = foundIndices.map((index) => results[index])
+        const all = uniqBy([...found, ...results], (x) => x.id)
+        if (showAutocomplete === 'location') {
+          om.actions.home.setLocationAutocompleteResults(all)
+        }
+        if (showAutocomplete === 'search') {
+          om.actions.home.setAutocompleteResults(all)
+        }
+      }
+    },
+  ])
+}
+
+function searchAutocomplete(searchQuery: string, center: LngLat) {
+  const iLikeQuery = `%${searchQuery.split(' ').join('%')}%`
+  return resolved(() => {
+    return [
+      ...query
+        .restaurant({
+          where: {
+            location: {
+              _st_d_within: {
+                distance: 0.015,
+                from: {
+                  type: 'Point',
+                  coordinates: [center.lat, center.lng],
+                },
+              },
+            },
+            name: {
+              _ilike: iLikeQuery,
+            },
+          },
+          limit: 5,
+        })
+        .map((r) =>
+          createAutocomplete({
+            id: r.id,
+            name: r.name,
+            slug: r.slug,
+            type: 'restaurant',
+          })
+        ),
+      ...query
+        .tag({
+          where: {
+            name: {
+              _ilike: iLikeQuery,
+            },
+            type: {
+              _eq: 'dish',
+            },
+          },
+          limit: 5,
+        })
+        .map((r) =>
+          createAutocomplete({
+            id: r.id,
+            name: r.name,
+            icon: r.icon,
+            type: 'dish',
+          })
+        ),
+      ...query
+        .tag({
+          where: {
+            name: {
+              _ilike: iLikeQuery,
+            },
+            type: {
+              _eq: 'country',
+            },
+          },
+          limit: 3,
+        })
+        .map((r) =>
+          createAutocomplete({
+            id: r.id,
+            name: r.name,
+            type: 'country',
+            icon: r.icon,
+          })
+        ),
+    ]
+  })
 }

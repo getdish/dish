@@ -5,11 +5,10 @@ import { LinkButton } from '../../views/ui/LinkButton'
 
 export const DishLogoButton = memo(() => {
   const scale = 0.061
+  const style = { width: 1201 * scale, height: 544 * scale }
   return (
     <LinkButton
       name="home"
-      // paddingVertical={10}
-      paddingHorizontal={16}
       hoverStyle={{
         transform: [{ scale: 1.05 }],
       }}
@@ -17,11 +16,9 @@ export const DishLogoButton = memo(() => {
         opacity: 0.8,
         transform: [{ scale: 0.95 }],
       }}
+      {...style}
     >
-      <Image
-        source={require('../../assets/logo.svg').default}
-        style={{ width: 1201 * scale, height: 544 * scale }}
-      />
+      <Image source={require('../../assets/logo.svg').default} style={style} />
     </LinkButton>
   )
 })

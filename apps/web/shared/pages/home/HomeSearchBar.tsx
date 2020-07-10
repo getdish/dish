@@ -1,4 +1,5 @@
 import {
+  AbsoluteVStack,
   Divider,
   HStack,
   LinearGradient,
@@ -39,14 +40,16 @@ export default memo(function HomeSearchBar() {
   const borderRadius = 12
 
   return (
-    <VStack
+    <AbsoluteVStack
       className="searchbar-container"
       zIndex={2000}
       position="absolute"
+      fullscreen
       marginTop={searchBarTopOffset}
       left={isSmall ? 2 : 16}
       right={isSmall ? 2 : 16}
       alignItems="center"
+      pointerEvents="none"
     >
       <HomeAutocompleteBackground />
       <VStack
@@ -56,6 +59,7 @@ export default memo(function HomeSearchBar() {
         width="100%"
         height={searchBarHeight}
         borderRadius={borderRadius}
+        pointerEvents="auto"
       >
         {/* shadow */}
         <VStack
@@ -105,9 +109,11 @@ export default memo(function HomeSearchBar() {
             justifyContent="center"
             marginTop={-1}
           >
-            <DishLogoButton />
+            <VStack paddingHorizontal={14}>
+              <DishLogoButton />
+            </VStack>
 
-            {!isSmall && <HomeSearchBarHomeButton />}
+            {!isSmall && <HomeSearchBarHomeBackButton />}
 
             <HStack
               flex={100}
@@ -123,7 +129,7 @@ export default memo(function HomeSearchBar() {
                       <Loader color="#fff" size={18} />
                     </VStack>
                   ) : (
-                    <Search color="#fff" size={18} opacity={0.45} />
+                    <Search color="#fff" size={18} opacity={0.25} />
                   )}
                 </>
               )}
@@ -173,11 +179,11 @@ export default memo(function HomeSearchBar() {
         </VStack>
         <HomeAutocomplete />
       </VStack>
-    </VStack>
+    </AbsoluteVStack>
   )
 })
 
-const HomeSearchBarHomeButton = memo(() => {
+const HomeSearchBarHomeBackButton = memo(() => {
   const om = useOvermind()
   return (
     <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
@@ -186,18 +192,16 @@ const HomeSearchBarHomeButton = memo(() => {
         alignItems="center"
         pointerEvents="auto"
         paddingRight={16}
-        opacity={om.state.home.currentStateType === 'home' ? 0 : 1}
-        onPress={() => om.actions.home.popTo(-1)}
+        opacity={om.state.home.currentStateType === 'home' ? 0 : 0.7}
+        onPress={() => om.actions.home.popBack()}
+        hoverStyle={{
+          opacity: 1,
+        }}
         pressStyle={{
-          opacity: 0.6,
+          opacity: 0.2,
         }}
       >
-        <ChevronLeft
-          color="#fff"
-          size={22}
-          opacity={0.6}
-          style={{ marginTop: 3 }}
-        />
+        <ChevronLeft color="#fff" size={22} style={{ marginTop: 3 }} />
       </LinkButton>
     </MediaQuery>
   )

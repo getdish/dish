@@ -1,4 +1,4 @@
-import { StackProps, Text, VStack } from '@dish/ui'
+import { HStack, StackProps, Text, VStack } from '@dish/ui'
 import React, { useRef } from 'react'
 
 import { RoutesTable } from '../../state/router'
@@ -33,6 +33,7 @@ export function LinkButton<
       paddingHorizontal,
       disallowDisableWhenActive,
       replace,
+      replaceSearch,
       preventNavigate,
       navigateAfterPress,
       asyncClick,
@@ -45,6 +46,7 @@ export function LinkButton<
         name={name}
         params={params}
         replace={replace}
+        replaceSearch={replaceSearch}
         onClick={onPress}
         asyncClick={asyncClick ?? true}
         lineHeight={lineHeight}
@@ -83,6 +85,8 @@ export function LinkButton<
         lineHeight={lineHeight}
         fontWeight={fontWeight}
         textAlign={textAlign}
+        flexDirection={props.flexDirection ?? 'row'}
+        flexWrap={props.flexWrap}
       >
         {children ?? ''}
       </Text>
@@ -90,7 +94,7 @@ export function LinkButton<
   }
 
   return (
-    <VStack
+    <HStack
       // only handle click events on non-a links (we handle them in Link separately)
       // @ts-ignore
       ref={'name' in props ? null : containerRef}
@@ -102,6 +106,6 @@ export function LinkButton<
       className={`cursor-pointer ${props.className ?? 'ease-in-out-faster'}`}
     >
       {contents}
-    </VStack>
+    </HStack>
   )
 }

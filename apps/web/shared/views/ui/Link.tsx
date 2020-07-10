@@ -28,6 +28,7 @@ export function Link<
     color,
     onClick,
     replace,
+    replaceSearch,
     tagName,
     preventNavigate,
     className,
@@ -57,17 +58,27 @@ export function Link<
     return series([
       () => (asyncClick ? fullyIdle(linkActionIdle) : null),
       () => {
-        if (onClick) {
-          onClick?.(clickEvent!)
-        } else if (onPress) {
-          onPress?.(clickEvent)
-          if (navigateAfterPress) {
-            om.actions.router.navigate(navItem)
+        const go = async () => {
+          if (replaceSearch) {
+            om.actions.home.clearSearch()
           }
-        } else {
           if (!preventNavigate) {
             om.actions.router.navigate(navItem)
           }
+        }
+
+        if (onClick || onPress) {
+          if (onClick && onPress) {
+            console.log('BOTH>>>', onClick, onPress)
+            debugger
+          }
+          onClick?.(clickEvent!)
+          onPress?.(clickEvent)
+          if (navigateAfterPress) {
+            go()
+          }
+        } else {
+          go()
         }
       },
     ])
@@ -79,7 +90,8 @@ export function Link<
       fontSize={fontSize}
       lineHeight={lineHeight}
       fontWeight={fontWeight}
-      display="inherit"
+      // @ts-ignore
+      display="inline-flex"
       color={color}
       textAlign={textAlign}
     >
@@ -101,6 +113,7 @@ export function Link<
       style: {
         cursor: 'pointer',
         maxWidth: '100%',
+        flexDirection: 'inherit',
         padding,
       },
     },

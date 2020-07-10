@@ -149,11 +149,11 @@ export const DishView = memo(
                 flex={1}
                 overflow="hidden"
                 fontSize={height > 170 ? 14 : 12}
-                fontWeight="500"
+                fontWeight="700"
                 color={isHovered ? '#000' : '#fff'}
                 textAlign="center"
               >
-                {dish.name
+                {(dish.name ?? '')
                   .split(' ')
                   .map((x) => capitalize(x))
                   .join(' ')}

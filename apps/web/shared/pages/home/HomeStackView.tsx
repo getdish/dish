@@ -22,10 +22,6 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   // const currentStateStore = useRecoilStore(HomeStateStore)
   const om = useOvermind()
   const breadcrumbs = om.state.home.breadcrumbStates
-  console.log(
-    'HomeStackView',
-    _.cloneDeep(useOvermindStatic().state.home.states)
-  )
   const key = JSON.stringify([
     om.state.home.states,
     om.state.home.breadcrumbStates,
@@ -41,6 +37,8 @@ export function HomeStackView<A extends HomeStateItem>(props: {
     useDebounceValue(homeStates, transitionDuration) ?? homeStates
   const isRemoving = currentStates.length > breadcrumbs.length
   const items = isRemoving ? currentStates : homeStates
+
+  console.log('HomeStackView', { isRemoving, items })
 
   // const activeItem = items[items.length - 1]
   // useEffect(() => {

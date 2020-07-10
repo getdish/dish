@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { HStack, useDebounce, useGet, useOnMount } from '@dish/ui'
+import { HStack, VStack, useDebounce, useGet, useOnMount } from '@dish/ui'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { StyleSheet, TextInput } from 'react-native'
 
@@ -16,7 +16,7 @@ import { CloseButton } from './CloseButton'
 import { HomeAutocompleteHoverableInput } from './HomeAutocomplete'
 import { TagButton } from './TagButton'
 
-let avoidNextShowautocompleteOnFocus = true
+let avoidNextShowautocompleteOnFocus = false
 export function setAvoidNextAutocompleteShowOnFocus() {
   avoidNextShowautocompleteOnFocus = true
 }
@@ -38,38 +38,46 @@ function searchInputEffect(input: HTMLInputElement) {
   const handleKeyPress = (e) => {
     // @ts-ignore
     const code = e.keyCode
-    console.log('code', code)
     const focusedInput = document.activeElement
+    console.log('go', code, focusedInput)
     if (!(focusedInput instanceof HTMLInputElement)) {
       return
     }
     const { isAutocompleteActive, autocompleteIndex } = om.state.home
-    const isCaretAtEnd = inputCaretPosition() == focusedInput.selectionEnd
+    const isSelecting =
+      focusedInput.selectionStart !== focusedInput.selectionEnd
+    const isCaretAtEnd =
+      !isSelecting && focusedInput.selectionEnd === focusedInput.value.length
     const isCaretAtStart = focusedInput.selectionEnd == 0
 
     switch (code) {
       case 13: {
         // enter
-        if (isAutocompleteActive) {
-          const item = om.state.home.autocompleteResults[autocompleteIndex]
-          if (item && 'tagId' in item) {
-            om.actions.home.navigateToTag({
-              tags: [{ id: item.tagId, name: item.name, type: item.type }],
+        console.log('autocompleteIndex', autocompleteIndex)
+        const item = om.state.home.autocompleteResults[autocompleteIndex - 1]
+        if (isAutocompleteActive && item && autocompleteIndex !== 0) {
+          if (item.type === 'restaurant') {
+            om.actions.router.navigate({
+              name: 'restaurant',
+              params: { slug: item.slug },
             })
-            return
+          } else if ('tagId' in item) {
+            om.actions.home.navigateToTag({
+              tags: [item],
+            })
           }
+        } else {
+          om.actions.home.runSearch({
+            searchQuery: e.target.value,
+            force: true,
+          })
         }
-        om.actions.home.runSearch({
-          searchQuery: e.target.value,
-          force: true,
-        })
         om.actions.home.setShowAutocomplete(false)
         focusedInput.blur()
         return
       }
       case 8: {
         // delete
-        console.log('delete', autocompleteIndex)
         if (isAutocompleteActive) {
           // if selected onto a tag, we can send remove command
           if (om.state.home.searchbarFocusedTag) {
@@ -78,15 +86,18 @@ function searchInputEffect(input: HTMLInputElement) {
               tags: [om.state.home.searchbarFocusedTag],
             })
             next()
+            return
+          }
+          if (autocompleteIndex >= 0) {
+            om.actions.home.setAutocompleteIndex(-1)
           }
         }
-        if (autocompleteIndex === 0) {
-          prev()
-        }
+        prev()
         return
       }
       case 39: {
         // right
+        console.log('waht', isAutocompleteActive, isCaretAtEnd)
         if (isAutocompleteActive && isCaretAtEnd) {
           // at end
           next()
@@ -166,9 +177,6 @@ export const HomeSearchInput = memo(() => {
   const [search, setSearch] = useState('')
   const getSearch = useGet(search)
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
-  const runAutocomplete = useDebounce(() => {
-    om.actions.homegetSearch()
-  }, 50)
   // const { showAutocomplete } = om.state.home
 
   useOnMount(() => {
@@ -188,7 +196,9 @@ export const HomeSearchInput = memo(() => {
     return om.reaction(
       (state) => state.home.currentStateSearchQuery,
       (val) => {
-        setSearch(val)
+        if (val !== getSearch()) {
+          setSearch(val)
+        }
       }
     )
   }, [])
@@ -204,8 +214,17 @@ export const HomeSearchInput = memo(() => {
         }
       }
     }
+
+    const handleClick = () => {
+      om.actions.home.setShowAutocomplete('search')
+    }
+
     window.addEventListener('keyup', handleKeyUp)
-    return () => window.removeEventListener('keyup', handleKeyUp)
+    inputRef.current.addEventListener('click', handleClick)
+    return () => {
+      window.removeEventListener('keyup', handleKeyUp)
+      inputRef.current.removeEventListener('click', handleClick)
+    }
   }, [])
 
   // disabled because it steals focus from autocomplete rn
@@ -228,18 +247,14 @@ export const HomeSearchInput = memo(() => {
   //   }
   // }, [input, inputRef, showAutocomplete])
 
-  const input = inputGetNode(inputRef.current)
   useEffect(() => {
+    const input = inputGetNode(inputRef.current)
     if (input) {
       return searchInputEffect(input)
     }
-  }, [input])
+  }, [inputRef.current])
 
-  const handleCancel = useCallback(() => {
-    om.actions.home.setShowAutocomplete(false)
-    om.actions.home.clearSearch()
-  }, [input])
-
+  const input = inputGetNode(inputRef.current)
   return (
     <>
       <HomeAutocompleteHoverableInput input={input} autocompleteTarget="search">
@@ -261,10 +276,8 @@ export const HomeSearchInput = memo(() => {
               avoidNextShowautocompleteOnFocus = false
             }}
             onChangeText={(text) => {
-              if (text === '') {
-                om.actions.home.setShowAutocomplete(false)
-              }
               setSearch(text)
+              om.actions.home.setSearchQuery(text)
             }}
             placeholder={
               isSearchingCuisine
@@ -278,20 +291,22 @@ export const HomeSearchInput = memo(() => {
           />
         </HStack>
       </HomeAutocompleteHoverableInput>
-      <SearchCancelButton onCancel={handleCancel} />
+      <SearchCancelButton />
     </>
   )
 })
 
 const SearchCancelButton = memo(({ onCancel }: { onCancel?: Function }) => {
   const om = useOvermind()
+  const hasSearch = om.state.home.currentStateSearchQuery !== ''
+  const hasSearchTags = !!om.state.home.searchBarTags.length
+  const isActive = hasSearch || hasSearchTags
   return (
     <CloseButton
-      opacity={om.state.home.currentStateSearchQuery === '' ? 0 : 1}
-      disabled={om.state.home.currentStateSearchQuery === ''}
+      opacity={isActive ? 1 : 0}
+      disabled={!isActive}
       onPress={() => {
         om.actions.home.clearSearch()
-        onCancel?.()
       }}
     />
   )

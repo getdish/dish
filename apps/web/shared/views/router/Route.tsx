@@ -15,7 +15,7 @@ type RouteContextI = {
   setRoute: ((name: string, showing: boolean) => void) | null
 }
 
-const RouteContext = createContext<RouteContextI>(null)
+const RouteContext = createContext<RouteContextI | null>(null)
 
 export function RouteSwitch(props: { children: any }) {
   const children = React.Children.toArray(props.children)
@@ -34,8 +34,6 @@ export function RouteSwitch(props: { children: any }) {
             : activeIndex === index
             ? 'active'
             : 'inactive'
-
-        console.log('state', state, index)
 
         const contextValue = useMemo<RouteContextI>(() => {
           return {
@@ -81,14 +79,6 @@ export function Route(props: {
     .map((path) => routePathToName[path])
   const isParentMatching = childRouteNames.some((x) => x === activeName)
   const isMatched = !!(isParentMatching || isExactMatching)
-
-  console.log(
-    props.name,
-    activeName,
-    childRouteNames,
-    isParentMatching,
-    isExactMatching
-  )
 
   useLayoutEffect(() => {
     routeContext?.setRoute(props.name, isMatched)

@@ -48,7 +48,6 @@ const useNormalizedLink = (
         if (
           !isEqual(omit(next, 'onPress'), omit(propsRef.current, 'onPress'))
         ) {
-          console.log('force update new info', next, props)
           propsRef.current = next
           forceUpdate()
         }
@@ -77,7 +76,7 @@ const getNormalizedLink = memoize(
         state,
         tags,
         disallowDisableWhenActive: props.disallowDisableWhenActive,
-        replace: props.replace,
+        replaceSearch: props.replaceSearch,
       })
       return {
         onPress: props.onPress,
