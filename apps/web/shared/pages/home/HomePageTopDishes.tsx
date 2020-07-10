@@ -71,6 +71,7 @@ const HomePageTopDishes = memo(() => {
   const isSmall = useMediaQueryIsSmall()
   const om = useOvermind()
   const state = om.state.home.lastHomeState
+  console.log('home state', state, om.state.home.states)
   const { activeTagIds } = state
 
   if (!state) {

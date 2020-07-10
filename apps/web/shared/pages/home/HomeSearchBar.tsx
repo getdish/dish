@@ -185,6 +185,7 @@ export default memo(function HomeSearchBar() {
 
 const HomeSearchBarHomeBackButton = memo(() => {
   const om = useOvermind()
+  const isDisabled = om.state.home.currentStateType === 'home'
   return (
     <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
       <LinkButton
@@ -192,14 +193,17 @@ const HomeSearchBarHomeBackButton = memo(() => {
         alignItems="center"
         pointerEvents="auto"
         paddingRight={16}
-        opacity={om.state.home.currentStateType === 'home' ? 0 : 0.7}
+        opacity={isDisabled ? 0 : 0.7}
+        disabled={isDisabled}
         onPress={() => om.actions.home.popBack()}
-        hoverStyle={{
-          opacity: 1,
-        }}
-        pressStyle={{
-          opacity: 0.2,
-        }}
+        {...(!isDisabled && {
+          hoverStyle: {
+            opacity: 1,
+          },
+          pressStyle: {
+            opacity: 0.2,
+          },
+        })}
       >
         <ChevronLeft color="#fff" size={22} style={{ marginTop: 3 }} />
       </LinkButton>

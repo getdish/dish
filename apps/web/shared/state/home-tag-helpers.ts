@@ -1,4 +1,5 @@
 import { slugify } from '@dish/graph'
+import { cloneDeep } from 'lodash'
 import { Action, AsyncAction } from 'overmind'
 
 import { LIVE_SEARCH_DOMAIN } from '../constants'
@@ -109,12 +110,7 @@ export const getNextState = (om: Om, navState?: HomeStateNav) => {
     activeTagIds,
     type: state.type as any,
   }
-  if (isSearchState(nextState)) {
-    nextState.type = 'search'
-  }
-  if (isHomeState(nextState)) {
-    nextState.type = 'home'
-  }
+  nextState.type = shouldBeOnHome(om.state.home, nextState) ? 'home' : 'search'
   return nextState
 }
 
@@ -210,7 +206,7 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
   state
 ) => {
   const next = getNavigateItemForState(om.state, state)
-  console.log('syncStateToRoute', next)
+  console.log('syncStateToRoute', cloneDeep({ next, state }))
   if (om.actions.router.getShouldNavigate(next)) {
     om.actions.router.navigate(next)
     return true

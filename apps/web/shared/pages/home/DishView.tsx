@@ -26,25 +26,6 @@ export const DishView = memo(
   } & StackProps) => {
     const [isHovered, setIsHovered] = useState(false)
 
-    const linkButtonProps: LinkButtonProps = {
-      onHoverIn: () => setIsHovered(true),
-      onHoverOut: () => setIsHovered(false),
-      ...(restaurantSlug
-        ? {
-            name: 'gallery',
-            params: {
-              restaurantSlug,
-              dishId: dish.id,
-            },
-          }
-        : {
-            tags: [
-              cuisine,
-              { type: 'dish', name: dish.name },
-            ] as NavigableTag[],
-          }),
-    }
-
     const width = size * 0.8
     const height = size
     const quality = size > 160 ? 80 : 60
@@ -63,7 +44,22 @@ export const DishView = memo(
         hoverStyle={{
           transform: [{ scale: 1.03 }],
         }}
-        {...linkButtonProps}
+        onHoverIn={() => setIsHovered(true)}
+        onHoverOut={() => setIsHovered(false)}
+        {...(restaurantSlug
+          ? {
+              name: 'gallery',
+              params: {
+                restaurantSlug,
+                dishId: dish.id,
+              },
+            }
+          : {
+              tags: [
+                cuisine,
+                { type: 'dish', name: dish.name },
+              ] as NavigableTag[],
+            })}
         {...rest}
       >
         {/* rating */}

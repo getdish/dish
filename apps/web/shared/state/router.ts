@@ -211,6 +211,7 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
     return
   }
 
+  console.trace('router.navigate', item)
   if (item.replace) {
     const next = _.dropRight(om.state.router.history)
     om.state.router.history = [...next, item]

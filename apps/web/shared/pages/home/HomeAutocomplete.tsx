@@ -27,7 +27,6 @@ import {
 } from '../../state/home'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { SmallCircleButton } from './CloseButton'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 
@@ -153,8 +152,10 @@ const HomeAutoCompleteContents = memo(() => {
             } else {
               // SEE BELOW, tag={tag}
               // clear query
-              console.warn('CLEAR SEARCH', result)
-              om.actions.home.setSearchQuery('')
+              if (result.type !== 'restaurant') {
+                console.warn('CLEAR SEARCH', result)
+                om.actions.home.setSearchQuery('')
+              }
             }
           }}
           {...(!showLocation && {

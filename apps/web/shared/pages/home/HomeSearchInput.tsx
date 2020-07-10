@@ -1,11 +1,10 @@
 import { fullyIdle, series } from '@dish/async'
-import { HStack, VStack, useDebounce, useGet, useOnMount } from '@dish/ui'
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { HStack, useGet, useOnMount } from '@dish/ui'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { StyleSheet, TextInput } from 'react-native'
 
 import { searchBarHeight } from '../../constants'
 import {
-  inputCaretPosition,
   inputClearSelection,
   inputGetNode,
   inputIsTextSelected,
@@ -16,7 +15,8 @@ import { CloseButton } from './CloseButton'
 import { HomeAutocompleteHoverableInput } from './HomeAutocomplete'
 import { TagButton } from './TagButton'
 
-let avoidNextShowautocompleteOnFocus = false
+// avoid first one on iniital focus
+let avoidNextShowautocompleteOnFocus = true
 export function setAvoidNextAutocompleteShowOnFocus() {
   avoidNextShowautocompleteOnFocus = true
 }
@@ -53,7 +53,6 @@ function searchInputEffect(input: HTMLInputElement) {
     switch (code) {
       case 13: {
         // enter
-        console.log('autocompleteIndex', autocompleteIndex)
         const item = om.state.home.autocompleteResults[autocompleteIndex - 1]
         if (isAutocompleteActive && item && autocompleteIndex !== 0) {
           if (item.type === 'restaurant') {
@@ -61,7 +60,9 @@ function searchInputEffect(input: HTMLInputElement) {
               name: 'restaurant',
               params: { slug: item.slug },
             })
+            return
           } else if ('tagId' in item) {
+            om.actions.home.clearSearch()
             om.actions.home.navigateTo({
               tags: [item],
             })
@@ -81,7 +82,6 @@ function searchInputEffect(input: HTMLInputElement) {
         if (isAutocompleteActive) {
           // if selected onto a tag, we can send remove command
           if (om.state.home.searchbarFocusedTag) {
-            console.log('delete tag', om.state.home.searchbarFocusedTag)
             om.actions.home.navigateTo({
               tags: [om.state.home.searchbarFocusedTag],
             })
@@ -90,6 +90,7 @@ function searchInputEffect(input: HTMLInputElement) {
           }
           if (autocompleteIndex >= 0) {
             om.actions.home.setAutocompleteIndex(-1)
+            return
           }
         }
         prev()
@@ -276,6 +277,9 @@ export const HomeSearchInput = memo(() => {
               avoidNextShowautocompleteOnFocus = false
             }}
             onChangeText={(text) => {
+              if (getSearch() == '' && text !== '') {
+                om.actions.home.setShowAutocomplete('search')
+              }
               setSearch(text)
               om.actions.home.setSearchQuery(text)
             }}
@@ -296,7 +300,7 @@ export const HomeSearchInput = memo(() => {
   )
 })
 
-const SearchCancelButton = memo(({ onCancel }: { onCancel?: Function }) => {
+const SearchCancelButton = memo(() => {
   const om = useOvermind()
   const hasSearch = om.state.home.currentStateSearchQuery !== ''
   const hasSearchTags = !!om.state.home.searchBarTags.length

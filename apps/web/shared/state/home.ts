@@ -11,7 +11,7 @@ import {
 import { assert, handleAssertionError, stringify } from '@dish/helpers'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
-import _, { findLast, last } from 'lodash'
+import _, { clamp, cloneDeep, findLast, last } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
 
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
@@ -377,7 +377,7 @@ const pushHomeState: AsyncAction<
     }
   }
 
-  console.log('pushHomeState', { item, nextState })
+  console.log('pushHomeState', cloneDeep({ item, nextState }))
 
   async function runFetchData() {
     if (!fetchData) {
@@ -414,10 +414,13 @@ const pushHomeState: AsyncAction<
     return null
   }
 
-  const replace =
-    item.replace || om.state.home.currentStateType === nextState.type
+  const replace = item.replace
 
-  if (replace) {
+  if (
+    replace &&
+    // dont replace the only home with something else
+    (nextState.type === 'home' || om.state.home.states.length > 1)
+  ) {
     // try granular update
     const lastState = om.state.home.states[om.state.home.states.length - 1]
     for (const key in nextState) {
@@ -799,7 +802,7 @@ const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
     const [firstResult] = (await reverseGeocode(center)) ?? []
     const placeName = firstResult.subLocality ?? firstResult.locality
     if (placeName) {
-      currentState.currentLocationInfo = firstResult
+      currentState.currentLocationInfo = { ...firstResult }
       currentState.currentLocationName = spanToLocationName(span, firstResult)
     }
   } catch (err) {
@@ -921,10 +924,9 @@ const moveAutocompleteIndex: Action<number> = (om, val) => {
 const setAutocompleteIndex: Action<number> = (om, val) => {
   const tags = om.state.home.searchBarTags
   const min = 0 - tags.length
-  const next = Math.min(
-    Math.max(min, val),
-    om.state.home.autocompleteResults.length - 1
-  )
+  const max = om.state.home.autocompleteResults.length - 1
+  const next = clamp(val, min, max)
+  console.log('set', min, max, next)
   om.state.home.autocompleteIndex = next
 }
 
@@ -1072,21 +1074,11 @@ const setIsScrolling: Action<boolean> = (om, val) => {
   om.state.home.isScrolling = val
 }
 
-const updateActiveTags: AsyncAction<HomeStateTagNavigable> = async (
-  om,
-  next
-) => {
-  let state = om.state.home.currentState
-  if (!('activeTagIds' in state)) {
-    state = _.findLast(
-      om.state.home.states,
-      (state) => isSearchState(state) || isHomeState(state)
-    )!
-    if (!state) {
-      console.warn('no state!')
-      return false
-    }
-  }
+const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
+  const state = _.findLast(
+    om.state.home.states,
+    (state) => isSearchState(state) || isHomeState(state)
+  )!
   try {
     assert('activeTagIds' in next)
     const stateActiveTagIds =
@@ -1149,6 +1141,22 @@ const clearTags: AsyncAction = async (om, val) => {
   })
 }
 
+const clearTag: AsyncAction<NavigableTag> = async (om, tag) => {
+  const state = om.state.home.currentState
+  if ('activeTagIds' in state) {
+    const nextState = {
+      ...state,
+      activeTagIds: {
+        ...state.activeTagIds,
+        [getTagId(tag)]: false,
+      },
+    }
+    await navigate(om, {
+      state: nextState,
+    })
+  }
+}
+
 export const navigateTo: Action<HomeStateNav> = (om, nav) => {
   getNavigateTo(om, nav)?.onPress?.()
 }
@@ -1167,6 +1175,7 @@ export const getNavigateTo: Action<HomeStateNav, LinkButtonProps | null> = (
     const navigateItem = getNavigateItemForState(om.state, nextState)
     return {
       ...navigateItem,
+      preventNavigate: true,
       onPress() {
         // we dont want to re-render every link on the page on every transition
         // so we do lazy loading onPress to re-fetch the url
@@ -1189,9 +1198,29 @@ const navigate = async (om: Om, navState?: HomeStateNav) => {
     om.actions.home.addTagsToCache(navState.tags)
   }
   const nextState = getNextState(om, navState)
-  console.log('navigateToCurrentState', nextState)
+
+  // do a quick update first
+  const curState = om.state.home.currentState
+  const curType = curState.type
+  const nextType = nextState.type
+  if (nextType === curType || (curType === 'search' && nextType === 'home')) {
+    console.log(
+      'quikc update current state...',
+      cloneDeep({ curState, nextState })
+    )
+    om.actions.home.updateActiveTags({
+      id: curState.id,
+      // @ts-ignore
+      type: curState.type,
+      searchQuery: nextState.searchQuery,
+      activeTagIds: nextState.activeTagIds,
+    })
+    await fullyIdle()
+  }
+
   const didNav = await syncStateToRoute(om, nextState)
-  await om.actions.home.updateActiveTags(nextState)
+  console.log('did nav?', didNav)
+  om.actions.home.updateActiveTags(nextState)
   return didNav
 }
 
@@ -1211,6 +1240,7 @@ export const actions = {
   moveActiveDown,
   moveActiveUp,
   up,
+  clearTag,
   moveAutocompleteIndex,
   popTo,
   requestLocation,

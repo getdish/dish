@@ -1,5 +1,5 @@
 import { AbsoluteVStack, VStack, useDebounceValue } from '@dish/ui'
-import _ from 'lodash'
+import _, { cloneDeep } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
 import { drawerBorderRadius } from '../../constants'
@@ -38,7 +38,10 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   const isRemoving = currentStates.length > breadcrumbs.length
   const items = isRemoving ? currentStates : homeStates
 
-  console.log('HomeStackView', { isRemoving, items })
+  console.log(
+    'HomeStackView',
+    cloneDeep({ isRemoving, items, breadcrumbs, homeStates })
+  )
 
   // const activeItem = items[items.length - 1]
   // useEffect(() => {
