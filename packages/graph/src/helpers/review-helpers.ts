@@ -4,10 +4,7 @@ import { Review } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 
-const QueryHelpers = createQueryHelpersFor<Review>(
-  'review',
-  review_constraint.review_user_id_restaurant_id_taxonomy_id_key
-)
+const QueryHelpers = createQueryHelpersFor<Review>('review')
 export const reviewInsert = QueryHelpers.insert
 export const reviewUpsert = QueryHelpers.upsert
 export const reviewUpdate = QueryHelpers.update

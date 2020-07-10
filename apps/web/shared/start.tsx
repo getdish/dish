@@ -1,4 +1,4 @@
-import { mutation, resolved } from '@dish/graph'
+import { update } from '@dish/graph'
 
 // startup stuff (can put in some other file eventually)
 const queue = new Map<
@@ -17,8 +17,12 @@ window['gqlessSetListener'] = function gqlessSetListener(
   const parentAccessor = fieldAccessor.parent
   const model = parentAccessor.data
   if (!queue.has(model)) {
+    const item = {}
+    for (const key in parentAccessor.value.data) {
+      item[key] = parentAccessor.value.data[key].data
+    }
     queue.set(model, {
-      item: { ...parentAccessor._data },
+      item,
       tableName: parentAccessor.node.name,
     })
   }
@@ -31,24 +35,12 @@ window['gqlessSetListener'] = function gqlessSetListener(
 const scheduleSet = () => {
   clearTimeout(cur)
   cur = setTimeout(() => {
-    const now = [...queue.values()]
+    const values = [...queue.values()]
     queue.clear()
     const promises = new Set<Promise<any>>()
-    for (const { tableName, item } of now) {
-      const mutate = mutation[`update_${tableName}`]
-      if (!mutate) return
-      const key = 'id' in item ? 'id' : 'name'
-      if (!item[key]) {
-        throw new Error(`No valid id? TODO support custom`)
-      }
-      const args = {
-        where: { [key]: { _eq: item[key] } },
-        _append: {
-          data: item,
-        },
-      }
-      console.log('write', tableName, item, args)
-      promises.add(resolved(() => mutate(args).returning))
+    for (const { tableName, item } of values) {
+      console.log('item', item)
+      promises.add(update(tableName, item as any))
     }
     Promise.all([...promises]).then((res) => {
       console.log(

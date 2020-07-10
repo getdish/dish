@@ -221,7 +221,7 @@ const TagList = memo(
           {allResults.map((tag, index) => {
             return (
               <ListItem
-                key={tag.name}
+                key={tag.id}
                 row={row}
                 col={index}
                 tag={tag}

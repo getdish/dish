@@ -1,4 +1,14 @@
-import { query, schema } from '../graphql'
+import {
+  query,
+  restaurant_constraint,
+  review_constraint,
+  schema,
+  scrape_constraint,
+  setting_constraint,
+  tag_constraint,
+  tag_tag_constraint,
+  user_constraint,
+} from '../graphql'
 import { mutation } from '../graphql/mutation'
 import { ModelName, ModelType, WithID } from '../types'
 import { CollectOptions } from './collect'
@@ -24,16 +34,30 @@ export function objectToWhere(hash: { [key: string]: any }): any {
   }
 }
 
+const defaultConstraints = {
+  tag: tag_constraint.tag_parentId_name_key,
+  restaurant: restaurant_constraint.restaurant_name_address_key,
+  review: review_constraint.review_user_id_restaurant_id_taxonomy_id_key,
+  scrape: scrape_constraint.scrape_pkey,
+  setting: setting_constraint.setting_pkey,
+  tag_tag: tag_tag_constraint.tag_tag_pkey,
+  user: user_constraint.user_username_key,
+}
+
 export function createQueryHelpersFor<A>(
   modelName: ModelName,
-  defaultUpsertConstraint: any
+  defaultUpsertConstraint?: string
 ) {
   return {
     async insert(items: A[]) {
       return await insert<A>(modelName, items)
     },
-    async upsert(items: A[], constraint = defaultUpsertConstraint) {
-      return await upsert<A>(modelName, constraint, items)
+    async upsert(items: A[], constraint?: string) {
+      return await upsert<A>(
+        modelName,
+        items,
+        constraint ?? defaultUpsertConstraint
+      )
     },
     async update(a: WithID<A>, o?: CollectOptions) {
       return await update<WithID<A>>(modelName, a, o)
@@ -88,9 +112,10 @@ export async function insert<T extends ModelType>(
 
 export async function upsert<T extends ModelType>(
   table: ModelName,
-  constraint: string,
-  objectsIn: T[]
+  objectsIn: T[],
+  constraint?: string
 ): Promise<WithID<T>[]> {
+  constraint = constraint ?? defaultConstraints[table]
   const objects = prepareData(table, objectsIn)
   // TODO: Is there a better way to get the updateable columns?
   const update_columns = Object.keys(objects[0])
