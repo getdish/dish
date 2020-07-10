@@ -4,8 +4,7 @@ import { findLast, isEqual, omit } from 'lodash'
 import { useMemo, useRef } from 'react'
 
 import { memoize } from '../../helpers/memoizeWeak'
-import { HomeStateItem } from '../../state/home'
-import { getNavigateToTags } from '../../state/home-tag-helpers'
+import { HomeStateItem, getNavigateTo } from '../../state/home'
 import { NavigableTag } from '../../state/Tag'
 import { omStatic } from '../../state/useOvermind'
 import { LinkButtonNamedProps, LinkButtonProps } from './LinkProps'
@@ -72,7 +71,7 @@ const getNormalizedLink = memoize(
     tags = tags.filter(Boolean)
 
     if (tags.length) {
-      const tagProps = getNavigateToTags(omStatic, {
+      const tagProps = getNavigateTo(omStatic, {
         state,
         tags,
         disallowDisableWhenActive: props.disallowDisableWhenActive,

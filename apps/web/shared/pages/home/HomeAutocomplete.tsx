@@ -167,7 +167,6 @@ const HomeAutoCompleteContents = memo(() => {
               slug: result.slug,
             },
           })}
-          navigateAfterPress
           alignItems="center"
           justifyContent="center"
           lineHeight={24}

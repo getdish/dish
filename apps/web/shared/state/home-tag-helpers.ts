@@ -31,40 +31,6 @@ export type HomeStateNav = {
   replaceSearch?: boolean
 }
 
-export const navigateToTag: Action<HomeStateNav> = (om, nav) => {
-  om.actions.home.getNavigateToTags(nav)?.onPress?.()
-}
-
-// for easy use with Link / LinkButton
-export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps | null> = (
-  om,
-  props
-) => {
-  if (!props.tags?.length) {
-    console.log('no tags for nav?', props)
-    return null
-  }
-  let nextState = getNextState(om, props)
-  if (nextState) {
-    const navigateItem = getNavigateItemForState(om.state, nextState)
-    return {
-      ...navigateItem,
-      onPress() {
-        om.actions.home.addTagsToCache(props.tags)
-        // we dont want to re-render every link on the page on every transition
-        // so we do lazy loading onPress to re-fetch the url
-        // see <Link /> which also does a lazy-load on hover to show the right url
-        nextState = getNextState(om, {
-          ...props,
-          state: om.state.home.currentState,
-        })
-        om.actions.home.updateActiveTags(nextState)
-      },
-    }
-  }
-  return null
-}
-
 export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
   return await Promise.all(
     tags.map(async (tag) => {
