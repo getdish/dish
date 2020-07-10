@@ -40,7 +40,7 @@ window['gqless'] = {
 
 // exports
 if (process.env.TARGET === 'ssr') {
-  exports.App = require('../shared/views/App').App
+  exports.App = require('../shared/App').App
   exports.config = config
   exports.ReactDOMServer = require('react-dom/server')
 }

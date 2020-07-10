@@ -4,10 +4,7 @@ import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 import { tagTagUpsert } from './tag_tag-helpers'
 
-const QueryHelpers = createQueryHelpersFor<Tag>(
-  'tag',
-  tag_constraint.tag_parentId_name_key
-)
+const QueryHelpers = createQueryHelpersFor<Tag>('tag')
 export const tagInsert = QueryHelpers.insert
 export const tagUpsert = QueryHelpers.upsert
 export const tagUpdate = QueryHelpers.update

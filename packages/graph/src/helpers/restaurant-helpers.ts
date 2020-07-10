@@ -15,10 +15,7 @@ import { restaurantTagUpsert } from './restaurantTag'
 import { tagSlugs } from './tag-extension-helpers'
 import { tagGetAllChildren, tagUpsert } from './tag-helpers'
 
-const QueryHelpers = createQueryHelpersFor<Restaurant>(
-  'restaurant',
-  restaurant_constraint.restaurant_name_address_key
-)
+const QueryHelpers = createQueryHelpersFor<Restaurant>('restaurant')
 export const restaurantInsert = QueryHelpers.insert
 export const restaurantUpsert = QueryHelpers.upsert
 export const restaurantUpdate = QueryHelpers.update

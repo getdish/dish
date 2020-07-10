@@ -2,10 +2,7 @@ import { user_constraint } from '../graphql'
 import { User } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
 
-const QueryHelpers = createQueryHelpersFor<User>(
-  'user',
-  user_constraint.user_username_key
-)
+const QueryHelpers = createQueryHelpersFor<User>('user')
 export const userInsert = QueryHelpers.insert
 export const userUpsert = QueryHelpers.upsert
 export const userUpdate = QueryHelpers.update

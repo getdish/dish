@@ -6,10 +6,7 @@ import { resolvedMutationWithFields } from './queryResolvers'
 
 export type ScrapeData = { [key: string]: any }
 
-const QueryHelpers = createQueryHelpersFor<Scrape>(
-  'scrape',
-  scrape_constraint.scrape_pkey
-)
+const QueryHelpers = createQueryHelpersFor<Scrape>('scrape')
 export const scrapeInsert = QueryHelpers.insert
 export const scrapeUpsert = QueryHelpers.upsert
 export const scrapeUpdate = QueryHelpers.update
