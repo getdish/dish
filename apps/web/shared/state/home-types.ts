@@ -139,10 +139,11 @@ export type HomeStateItemGallery = HomeStateItemBase & {
 export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>
 
 export type AutocompleteItem = {
+  id?: string
   icon?: string
   name: string
   tagId?: string
-  restaurantId?: string
+  slug?: string
   type: Tag['type'] | 'restaurant'
   center?: LngLat
 }

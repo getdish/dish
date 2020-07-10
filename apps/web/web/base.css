@@ -273,5 +273,5 @@ li::before {
 
 .scrollable {
   overflow-y: auto;
-  flex: 1;
+  flex: ;
 }

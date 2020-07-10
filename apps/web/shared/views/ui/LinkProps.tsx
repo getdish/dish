@@ -25,6 +25,7 @@ export type LinkSharedProps = {
   lineHeight?: TextProps['lineHeight']
   ellipse?: boolean
   replace?: boolean
+  replaceSearch?: boolean
   disallowDisableWhenActive?: boolean
   tagName?: string
   preventNavigate?: boolean

@@ -266,7 +266,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
           <Text
             ellipse
             fontSize={20}
-            fontWeight={'800'}
+            fontWeight={'400'}
             height={24}
             lineHeight={24}
           >

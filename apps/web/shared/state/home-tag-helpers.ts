@@ -28,11 +28,11 @@ export type HomeStateNav = {
   tags?: NavigableTag[]
   state?: HomeStateItem
   disallowDisableWhenActive?: boolean
-  replace?: boolean
+  replaceSearch?: boolean
 }
 
 export const navigateToTag: Action<HomeStateNav> = (om, nav) => {
-  getNavigateToTags(om, nav)?.onPress?.()
+  om.actions.home.getNavigateToTags(nav)?.onPress?.()
 }
 
 // for easy use with Link / LinkButton
@@ -50,6 +50,7 @@ export const getNavigateToTags: Action<HomeStateNav, LinkButtonProps | null> = (
     return {
       ...navigateItem,
       onPress() {
+        om.actions.home.addTagsToCache(props.tags)
         // we dont want to re-render every link on the page on every transition
         // so we do lazy loading onPress to re-fetch the url
         // see <Link /> which also does a lazy-load on hover to show the right url
@@ -98,19 +99,14 @@ export const getNextState = (om: Om, navState?: HomeStateNav) => {
     state = om.state.home.currentState,
     tags = [],
     disallowDisableWhenActive = false,
-    replace = false,
+    replaceSearch = false,
   } = navState ?? {}
   let searchQuery = state.searchQuery ?? ''
-  let activeTagIds: HomeActiveTagIds = {}
-
-  // clone it to avoid confusing overmind
-  if ('activeTagIds' in state) {
-    if (!replace) {
-      for (const key in state.activeTagIds) {
-        activeTagIds[key] = state.activeTagIds[key]
-      }
-    }
-  }
+  let activeTagIds: HomeActiveTagIds = replaceSearch
+    ? {}
+    : 'activeTagIds' in state
+    ? { ...state.activeTagIds }
+    : {}
 
   // if they words match tag exactly, convert to tags
   let words = searchQuery.toLowerCase().split(' ')
@@ -248,6 +244,7 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
   state
 ) => {
   const next = getNavigateItemForState(om.state, state)
+  console.log('syncStateToRoute', next)
   if (om.actions.router.getShouldNavigate(next)) {
     om.actions.router.navigate(next)
     return true

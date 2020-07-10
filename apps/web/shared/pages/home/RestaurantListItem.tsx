@@ -235,19 +235,19 @@ const RestaurantListItemContent = memo(
                     <RestaurantLenseVote />
                   </HStack>
                 </VStack>
-
-                {/* <Divider noGap zIndex={-1} /> */}
               </Link>
             </VStack>
 
             <Spacer size={8} />
 
-            {/* ROW: COMMENT */}
+            {/* ROW: Reviews/Comment */}
             <VStack>
               <Suspense fallback={<LoadingItems />}>
+                {/* REVIEWS */}
                 <RestaurantTopReviews
                   restaurantId={restaurantId}
                   afterTopCommentButton={
+                    // comments
                     <HStack
                       flex={1}
                       spacing

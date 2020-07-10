@@ -73,7 +73,7 @@ export const RestaurantTopReviews = memo(
                     justifyContent="flex-end"
                   >
                     <Text
-                      paddingVertical={2}
+                      // paddingVertical={2}
                       paddingHorizontal={5}
                       borderRadius={6}
                       fontWeight="600"
@@ -82,7 +82,7 @@ export const RestaurantTopReviews = memo(
                       {item.category}:
                     </Text>
                   </HStack>
-                  <Text>{item.review}</Text>
+                  {item.review}
                 </Text>
                 {index < listItems.length - 1 && <Spacer size={8} />}
               </React.Fragment>

@@ -12,6 +12,7 @@ import {
 import _ from 'lodash'
 import React, { memo } from 'react'
 import { ThumbsUp, X } from 'react-feather'
+import { Image } from 'react-native'
 
 import { bgLight } from '../../colors'
 import { LinkButton } from '../../views/ui/LinkButton'
@@ -160,7 +161,21 @@ export const TagButton = memo(
                   }),
                 }}
               >
-                {tag.icon}{' '}
+                {tag.icon.startsWith('http') ? (
+                  <Image
+                    source={{ uri: tag.icon }}
+                    style={{
+                      width: fontSize,
+                      height: fontSize,
+                      borderRadius: 1000,
+                      display: 'inline-flex' as any,
+                      marginRight: 8,
+                      marginVertical: -2,
+                    }}
+                  />
+                ) : (
+                  `${tag.icon}`
+                )}
               </span>
             ) : null}
             {tag['displayName'] ?? _.capitalize(tag.name)}

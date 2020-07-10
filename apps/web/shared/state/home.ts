@@ -47,7 +47,7 @@ import {
   ShowAutocomplete,
 } from './home-types'
 import { HistoryItem, NavigateItem, RouteItem } from './router'
-import { Tag, getTagId, tagFilters, tagLenses } from './Tag'
+import { NavigableTag, getTagId, tagFilters, tagLenses } from './Tag'
 
 const INITIAL_RADIUS = 0.16
 
@@ -108,17 +108,17 @@ const derivations = {
   previousState: derived<HomeState, HomeStateItem>(
     (state) => state.states[state.states.length - 2]
   ),
-  searchBarTags: derived<HomeState, Tag[]>((state) =>
+  searchBarTags: derived<HomeState, NavigableTag[]>((state) =>
     state.lastActiveTags.filter(isSearchBarTag)
   ),
-  lastActiveTags: derived<HomeState, Tag[]>((state) => {
+  lastActiveTags: derived<HomeState, NavigableTag[]>((state) => {
     const lastTaggable = _.findLast(
       state.states,
       (x) => isHomeState(x) || isSearchState(x)
     ) as HomeStateItemSearch | HomeStateItemHome
     return getActiveTags(state, lastTaggable)
   }),
-  autocompleteFocusedTag: derived<HomeState, Tag | null>((state) => {
+  autocompleteFocusedTag: derived<HomeState, NavigableTag | null>((state) => {
     const { autocompleteIndex } = state
     if (autocompleteIndex < 0) return null
     if (!state.autocompleteResults) return null
@@ -127,13 +127,13 @@ const derivations = {
       null
     )
   }),
-  searchbarFocusedTag: derived<HomeState, Tag | null>((state) => {
+  searchbarFocusedTag: derived<HomeState, NavigableTag | null>((state) => {
     const { autocompleteIndex } = state
     if (autocompleteIndex > -1) return null
     const index = state.searchBarTags.length + autocompleteIndex
     return state.searchBarTags[index]
   }),
-  currentStateLense: derived<HomeState, Tag | null>((state) => {
+  currentStateLense: derived<HomeState, NavigableTag | null>((state) => {
     if ('activeTagIds' in state.currentState) {
       for (const id in state.currentState.activeTagIds) {
         const tag = state.allTags[id]
@@ -147,7 +147,7 @@ const derivations = {
   autocompleteResultsActive: derived<HomeState, AutocompleteItem[]>((state) => {
     const prefix: AutocompleteItem[] = [
       {
-        name: 'Search',
+        name: '',
         icon: '🔍',
         tagId: '',
         type: 'orphan' as const,
@@ -512,7 +512,13 @@ const refresh: AsyncAction = async (om) => {
   await currentAction()
 }
 
-const popTo: Action<HomeStateItem['type'] | number> = (om, item) => {
+const popBack: Action = (om, item) => {
+  const cur = om.state.home.currentState
+  const next = findLast(om.state.home.states, (x) => x.type !== cur.type)
+  om.actions.home.popTo(next.type)
+}
+
+const popTo: Action<HomeStateItem['type']> = (om, item) => {
   if (om.state.home.currentState === om.state.home.lastHomeState) {
     return
   }
@@ -549,7 +555,7 @@ const popTo: Action<HomeStateItem['type'] | number> = (om, item) => {
 
 const popHomeState: Action<HistoryItem> = (om, item) => {
   if (om.state.home.states.length > 1) {
-    om.actions.home.setShowAutocomplete(false)
+    // om.actions.home.setShowAutocomplete(false)
     console.log('POP')
 
     const nextStates = _.dropRight(om.state.home.states)
@@ -585,19 +591,17 @@ const loadHomeDishes: AsyncAction = async (om) => {
     om.state.home.currentState.span.lat
   )
 
-  console.log('loadHomeDishes', all)
-
   if (!all) {
     console.warn('none!!')
     return
   }
 
-  let allDishTags: Tag[] = []
+  let allDishTags: NavigableTag[] = []
 
   // update tags
   for (const topDishes of all) {
     // country tag
-    const tag: Tag = {
+    const tag: NavigableTag = {
       id: `${topDishes.country}`,
       name: topDishes.country,
       type: 'country',
@@ -606,7 +610,7 @@ const loadHomeDishes: AsyncAction = async (om) => {
     om.state.home.allTags[getTagId(tag)] = tag
 
     // dish tags
-    const dishTags: Tag[] = (topDishes.dishes ?? []).map((dish) => ({
+    const dishTags: NavigableTag[] = (topDishes.dishes ?? []).map((dish) => ({
       id: dish.name ?? '',
       name: dish.name ?? '',
       type: 'dish',
@@ -648,11 +652,12 @@ const runSearch: AsyncAction<{
   let curId = lastSearchAt
 
   const curState = om.state.home.currentState
+  const searchQuery = opts.searchQuery ?? curState.searchQuery ?? ''
   if (
     await navigateToCurrentState(om, {
       state: {
         ...curState,
-        searchQuery: opts.searchQuery ?? curState['searchQuery'] ?? '',
+        searchQuery,
       },
     })
   ) {
@@ -675,6 +680,8 @@ const runSearch: AsyncAction<{
     await fullyIdle()
     if (shouldCancel()) return
   }
+
+  console.log('runSearch', state)
 
   const searchArgs: RestaurantSearchArgs = {
     center: roundLngLat(state.center),
@@ -724,10 +731,13 @@ const runSearch: AsyncAction<{
   }
 }
 
-const clearSearch: Action = (om) => {
-  const state = om.state.home.currentState
-  if (isSearchState(state)) {
-    om.actions.home.popTo('home')
+const clearSearch: AsyncAction = async (om) => {
+  om.actions.home.setShowAutocomplete(false)
+  const hasQuery = !!om.state.home.currentStateSearchQuery
+  if (!hasQuery) {
+    om.actions.home.clearTags()
+  } else {
+    om.actions.home.setSearchQuery('')
   }
 }
 
@@ -941,7 +951,7 @@ const runHomeSearch: AsyncAction<string> = async (om, query) => {
 
 const requestLocation: Action = (om) => {}
 
-const setSearchBarFocusedTag: Action<Tag | null> = (om, val) => {
+const setSearchBarFocusedTag: Action<NavigableTag | null> = (om, val) => {
   if (!val) {
     om.state.home.autocompleteIndex = 0
     return
@@ -1049,7 +1059,9 @@ const createBreadcrumbs = (state: HomeState) => {
   }
 }
 
-function createAutocomplete(x: Partial<AutocompleteItem>): AutocompleteItem {
+export function createAutocomplete(
+  x: Partial<AutocompleteItem>
+): AutocompleteItem {
   return {
     name: x.name ?? '',
     type: x.type ?? 'dish',
@@ -1090,10 +1102,8 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
       ...next,
     }
     om.state.home.states[om.state.home.states.length - 1] = nextState
-    return await syncStateToRoute(om, next)
   } catch (err) {
     handleAssertionError(err)
-    return false
   }
 }
 
@@ -1102,15 +1112,18 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
 // we definitely can clean up / name better some of this once things settle
 const navigateToCurrentState = async (om: Om, navState?: HomeStateNav) => {
   const nextState = getNextState(om, navState)
-  return await om.actions.home.updateActiveTags(nextState)
+  console.log('navigateToCurrentState', nextState)
+  const didNav = await syncStateToRoute(om, nextState)
+  await om.actions.home.updateActiveTags(nextState)
+  return didNav
 }
 
 // adds to allTags + allTagsNameToID
-const addTagsToCache: Action<Tag[]> = (om, tags) => {
+const addTagsToCache: Action<NavigableTag[] | null> = (om, tags) => {
   for (const tag of tags) {
     try {
       const id = getTagId(tag)
-      om.state.home.allTags[id] = tag
+      om.state.home.allTags[id] = { ...tag } as any
       om.state.home.allTagsNameToID[tag.name.toLowerCase()] = id
     } catch (err) {
       // fix bug with weird tag name... can remove easily if not happening
@@ -1134,6 +1147,19 @@ const setLocationAutocompleteResults: Action<AutocompleteItem[] | null> = (
     results ?? defaultLocationAutocompleteResults
 }
 
+const setSearchQuery: Action<string> = (om, val) => {
+  const last = om.state.home.states[om.state.home.states.length - 1]
+  last.searchQuery = val
+}
+
+const clearTags: Action = (om, val) => {
+  const state = om.state.home.currentState
+  if ('activeTagIds' in state) {
+    state.activeTagIds = {}
+    om.state.home.states = [...om.state.home.states]
+  }
+}
+
 export const actions = {
   loadHomeDishes,
   setIsScrolling,
@@ -1143,6 +1169,7 @@ export const actions = {
   getNavigateToTags,
   startAutocomplete,
   runHomeSearch,
+  setSearchQuery,
   updateCurrentMapAreaInformation,
   clearSearch,
   forkCurrentList,
@@ -1164,6 +1191,7 @@ export const actions = {
   setShowAutocomplete,
   setShowUserMenu,
   start,
+  popBack,
   refresh,
   suggestTags,
   updateBreadcrumbs,
@@ -1171,6 +1199,7 @@ export const actions = {
   loadPageRestaurant,
   popHomeState,
   updateActiveTags,
-  addTagsToCache,
   setAutocompleteResults,
+  clearTags,
+  addTagsToCache,
 }

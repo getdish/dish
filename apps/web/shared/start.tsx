@@ -31,24 +31,30 @@ window['gqlessSetListener'] = function gqlessSetListener(
 const scheduleSet = () => {
   clearTimeout(cur)
   cur = setTimeout(() => {
-    for (const { tableName, item } of queue.values()) {
+    const now = [...queue.values()]
+    queue.clear()
+    const promises = new Set<Promise<any>>()
+    for (const { tableName, item } of now) {
       const mutate = mutation[`update_${tableName}`]
       if (!mutate) return
       const key = 'id' in item ? 'id' : 'name'
       if (!item[key]) {
         throw new Error(`No valid id? TODO support custom`)
       }
-      resolved(() => {
-        const arg = {
-          where: { [key]: { _eq: item[key] } },
-          _append: {
-            data: item,
-          },
-        }
-        console.log('write', arg)
-        return mutate(arg)
-      })
+      const args = {
+        where: { [key]: { _eq: item[key] } },
+        _append: {
+          data: item,
+        },
+      }
+      console.log('write', tableName, item, args)
+      promises.add(resolved(() => mutate(args).returning))
     }
-    queue.clear()
+    Promise.all([...promises]).then((res) => {
+      console.log(
+        'saved',
+        res.map((x) => JSON.stringify(x))
+      )
+    })
   }, 100)
 }

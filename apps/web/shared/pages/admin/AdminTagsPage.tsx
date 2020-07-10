@@ -1,10 +1,9 @@
 import { fullyIdle, series } from '@dish/async'
-import { Tag, TagRecord, TagType, graphql, query } from '@dish/graph'
+import { TagRecord, TagType, graphql, query, tagInsert } from '@dish/graph'
 import { RecoilRoot, Store, useRecoilStore } from '@dish/recoil-store'
 import {
   HStack,
   LoadingItems,
-  Spacer,
   StackProps,
   Text,
   VStack,
@@ -116,46 +115,56 @@ const AdminTagsPageContent = graphql(() => {
 
         <VerticalColumn>
           <Text>Create</Text>
-          <Text>ID</Text>
-          <TextInput
-            style={styles.textInput}
-            onChange={(e) => store.updateDraft({ id: e.target['value'] })}
-            defaultValue={store.draft.id}
-            // onBlur={() => upsertDraft()}
-          />
-          <Text>Name</Text>
-          <TextInput
-            style={styles.textInput}
-            onChange={(e) => store.updateDraft({ name: e.target['value'] })}
-            defaultValue={store.draft.name}
-            // onBlur={() => upsertDraft()}
-          />
-          <Text>Icon</Text>
-          <TextInput
-            style={styles.textInput}
-            onChange={(e) => store.updateDraft({ icon: e.target['value'] })}
-            defaultValue={store.draft.icon}
-            // onBlur={() => upsertDraft()}
-          />
-          <select
-            onChange={(e) => store.updateDraft({ type: e.target.value as any })}
+          <VStack
+            margin={5}
+            padding={10}
+            borderColor="#eee"
+            borderWidth={1}
+            borderRadius={10}
           >
-            <option id="continent">Continent</option>
-            <option id="country">Country</option>
-            <option id="dish">Dish</option>
-          </select>
-          <SmallButton
-            onPress={() => {
-              // upsertDraft({ type: 'continent' })
-            }}
-          >
-            Clear
-          </SmallButton>
-          <SmallButton
-          // onPress={() => upsertDraft()}
-          >
-            Create
-          </SmallButton>
+            <Text>ID</Text>
+            <TextInput
+              style={styles.textInput}
+              onChange={(e) => store.updateDraft({ id: e.target['value'] })}
+              defaultValue={store.draft.id}
+              // onBlur={() => upsertDraft()}
+            />
+            <Text>Name</Text>
+            <TextInput
+              style={styles.textInput}
+              onChange={(e) => store.updateDraft({ name: e.target['value'] })}
+              defaultValue={store.draft.name}
+              // onBlur={() => upsertDraft()}
+            />
+            <Text>Icon</Text>
+            <TextInput
+              style={styles.textInput}
+              onChange={(e) => store.updateDraft({ icon: e.target['value'] })}
+              defaultValue={store.draft.icon}
+              // onBlur={() => upsertDraft()}
+            />
+            <select
+              onChange={(e) =>
+                store.updateDraft({ type: e.target.value as any })
+              }
+            >
+              <option id="continent">Continent</option>
+              <option id="country">Country</option>
+              <option id="dish">Dish</option>
+            </select>
+            <SmallButton
+              onPress={() => {
+                // upsertDraft({ type: 'continent' })
+              }}
+            >
+              Clear
+            </SmallButton>
+            <SmallButton
+            // onPress={() => upsertDraft()}
+            >
+              Create
+            </SmallButton>
+          </VStack>
         </VerticalColumn>
       </HStack>
     </VStack>
@@ -177,33 +186,37 @@ const TagList = memo(
       limit: 100,
     })
 
+    const [parent] = query.tag({
+      where: {
+        name: { _eq: lastRowSelection },
+      },
+      limit: 1,
+    })
+    const parentId = parent.id
     const allResults = uniqBy([{ name: '' }, ...results], (x) => x.name)
 
     return (
       <VStack flex={1} maxHeight="100%">
-        <HStack borderBottomColor="#ddd" borderBottomWidth={1}>
-          <Text>
-            {capitalize(type)} {lastRowSelection ? `(${lastRowSelection})` : ''}
-          </Text>
-          <Spacer flex={1} />
-          <SmallButton
-            onPress={() => {
-              // upsert({
-              //   type,
-              //   name: `⭐️ new ${Math.random()}`,
-              //   icon: '',
-              //   parentId:
-              //     parentType === 'country'
-              //       ? selectedCountryId
-              //       : parentType == 'continent'
-              //       ? selectedContinentId
-              //       : '',
-              // })
-            }}
-          >
-            Add New
-          </SmallButton>
-        </HStack>
+        <ColumnHeader
+          after={
+            <SmallButton
+              onPress={() => {
+                tagInsert([
+                  {
+                    type,
+                    name: `⭐️ new ${Math.random()}`,
+                    icon: '',
+                    parentId,
+                  },
+                ])
+              }}
+            >
+              Add New
+            </SmallButton>
+          }
+        >
+          {capitalize(type)} {lastRowSelection ? `(${lastRowSelection})` : ''}
+        </ColumnHeader>
         <ScrollView>
           {allResults.map((tag, index) => {
             return (
@@ -225,6 +238,23 @@ const TagList = memo(
     )
   })
 )
+
+const ColumnHeader = ({ children, after }) => {
+  return (
+    <HStack
+      height={30}
+      borderBottomColor="#ddd"
+      borderBottomWidth={1}
+      justifyContent="space-between"
+      alignItems="center"
+    >
+      <Text fontWeight="600" fontSize={13}>
+        {children}
+      </Text>
+      {after}
+    </HStack>
+  )
+}
 
 const ListItem = memo(
   ({
@@ -337,7 +367,11 @@ const ListItem = memo(
           }
 
           return (
-            <Text color={isActive ? '#fff' : '#000'} fontSize={16}>
+            <Text
+              cursor="default"
+              color={isActive ? '#fff' : '#000'}
+              fontSize={16}
+            >
               {text}
             </Text>
           )

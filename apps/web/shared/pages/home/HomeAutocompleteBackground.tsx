@@ -14,6 +14,7 @@ export const HomeAutocompleteBackground = memo(() => {
       className="ease-in-out-fast"
       opacity={show ? 1 : 0}
       disabled={!show}
+      pointerEvents={show ? 'auto' : 'none'}
       fullscreen
       top={-homePageBorderRadius}
       left={-homePageBorderRadius}
