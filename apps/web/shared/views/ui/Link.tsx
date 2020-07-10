@@ -62,9 +62,6 @@ export function Link<
         if (replaceSearch) {
           om.actions.home.clearSearch()
         }
-        if (!preventNavigate) {
-          om.actions.router.navigate(navItem)
-        }
       },
     ])
   }, [clickEvent])

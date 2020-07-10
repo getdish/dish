@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, useState } from 'react'
+import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import { View, ViewProps, ViewStyle } from 'react-native'
 
 import { combineRefs } from '../helpers/combineRefs'
@@ -7,11 +7,17 @@ import { useAttachClassName } from '../hooks/useAttachClassName'
 import { Hoverable } from './Hoverable'
 import { Spacer, Spacing } from './Spacer'
 
-const fsStyle = {
+const fullscreenStyle: ViewStyle = {
   top: 0,
   left: 0,
   right: 0,
   bottom: 0,
+}
+
+const disabledStyle: ViewStyle = {
+  // @ts-ignore
+  pointerEvents: 'none',
+  userSelect: 'none',
 }
 
 export type StackProps = Omit<
@@ -98,14 +104,19 @@ const createStack = (defaultStyle?: ViewStyle) => {
       ref
     ) => {
       const innerRef = useRef<any>()
+      const isMounted = useRef(false)
+      useEffect(() => {
+        return () => {
+          isMounted.current = false
+        }
+      })
       const [state, set] = useState({
         hover: false,
         press: false,
         pressIn: false,
       })
-      const cn = `${className ?? ''} ${disabled ? 'force-disable' : ''}`.trim()
 
-      useAttachClassName(cn, innerRef)
+      useAttachClassName(className, innerRef)
 
       let spacedChildren = children
       if (typeof spacing !== 'undefined') {
@@ -136,11 +147,12 @@ const createStack = (defaultStyle?: ViewStyle) => {
           pointerEvents={pointerEvents}
           style={[
             defaultStyle,
-            fullscreen ? fsStyle : null,
+            fullscreen ? fullscreenStyle : null,
             props,
             style,
             state.hover ? hoverStyle : null,
             state.press ? pressStyle : null,
+            disabled ? disabledStyle : null,
           ]}
         >
           {spacedChildren}
@@ -175,6 +187,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
               onHoverOut: () => {
                 let next = { ...state }
                 mouseUps.add(() => {
+                  if (!isMounted.current) return
                   set((x) => ({
                     ...x,
                     press: false,
@@ -227,13 +240,11 @@ const createStack = (defaultStyle?: ViewStyle) => {
   component.staticConfig = {
     defaultStyle,
     styleExpansionProps: {
-      fullscreen: fsStyle,
+      fullscreen: fullscreenStyle,
+      disabled: disabledStyle,
       contain: ({ contain }) => ({
         contain,
       }),
-      disabled: {
-        pointerEvents: 'none',
-      },
     },
   }
 
