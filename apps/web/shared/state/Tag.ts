@@ -1,18 +1,4 @@
-import { TagType, tagSlug } from '@dish/graph'
-
-type TagDescriptionKey = 'dish' | 'cuisine' | 'plain'
-
-export type Tag = {
-  id: string
-  name: string
-  displayName?: string
-  icon?: string
-  rgb?: [number, number, number]
-  descriptions?: { [type in TagDescriptionKey]: string }
-  type: TagType
-  isActive?: boolean
-  isVotable?: boolean
-}
+import { Tag, tagSlug } from '@dish/graph'
 
 export type NavigableTag = Partial<Tag> & Pick<Tag, 'name' | 'type'>
 
@@ -32,6 +18,7 @@ export const tagLenses: Tag[] = [
     name: 'Gems',
     icon: ' 💎',
     rgb: pctTo255([0.2, 0.3, 0.5]),
+    // @ts-ignore
     descriptions: {
       dish: 'The best 🍔',
       cuisine: 'The Best 🍔 Restaurants',
@@ -45,6 +32,7 @@ export const tagLenses: Tag[] = [
     name: 'Vibe',
     icon: '🌃',
     rgb: pctTo255([0.35, 0.2, 0.65]),
+    // @ts-ignore
     descriptions: {
       dish: '🍔',
       cuisine: 'Nice 🍔 to meet',
@@ -71,6 +59,7 @@ export const tagLenses: Tag[] = [
     name: 'Drink',
     icon: '🍷',
     rgb: pctTo255([0.35, 0.2, 0.65]),
+    // @ts-ignore
     descriptions: {
       dish: '🍔 & drinks',
       cuisine: '🍔 with a Bar',
@@ -84,6 +73,7 @@ export const tagLenses: Tag[] = [
     name: 'Veg',
     icon: '🥬',
     rgb: pctTo255([0.05, 0.7, 0.1]),
+    // @ts-ignore
     descriptions: {
       dish: 'Vegetarian 🍔',
       cuisine: 'Vegetarian 🍔 Restaurants',

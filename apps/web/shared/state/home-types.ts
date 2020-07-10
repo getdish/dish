@@ -1,8 +1,8 @@
-import { RestaurantOnlyIds, TopCuisine, User } from '@dish/graph'
+import { RestaurantOnlyIds, Tag, TopCuisine, User } from '@dish/graph'
 import { Config, IContext } from 'overmind'
 
 import { NavigateItem } from './router'
-import { Tag } from './Tag'
+import { NavigableTag } from './Tag'
 
 export type Om = IContext<Config>
 export type OmState = Om['state']
@@ -42,7 +42,7 @@ export type HomeState = {
   isAutocompleteActive: boolean
   isLoading: boolean
   autocompleteResultsActive: AutocompleteItem[]
-  currentStateLense: Tag | null
+  currentStateLense: NavigableTag | null
   lastActiveTags: Tag[]
   searchbarFocusedTag: Tag | null
   autocompleteFocusedTag: Tag | null

@@ -21,7 +21,6 @@ import {
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
-import _ from 'lodash'
 import moment from 'moment'
 
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
@@ -431,7 +430,7 @@ export class Self extends WorkerJob {
       []
     )
     let records: string[] = []
-    for (const hours of this.restaurant.hours) {
+    for (const hours of this.restaurant.hours ?? ([] as any)) {
       for (const session of hours.hoursInfo.hours) {
         const times = session.split(' - ')
         const _open = times[0].replace(' ', '')

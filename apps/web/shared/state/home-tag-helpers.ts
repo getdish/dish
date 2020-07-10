@@ -1,6 +1,6 @@
-import { slugify } from '@dish/graph'
+import { Tag, slugify } from '@dish/graph'
 import { cloneDeep } from 'lodash'
-import { Action, AsyncAction } from 'overmind'
+import { AsyncAction } from 'overmind'
 
 import { LIVE_SEARCH_DOMAIN } from '../constants'
 import { memoize } from '../helpers/memoizeWeak'
@@ -8,22 +8,21 @@ import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
 import {
   HomeActiveTagIds,
   HomeStateItem,
-  HomeStateTagNavigable,
   Om,
   OmState,
   OmStateHome,
 } from './home-types'
 import { HistoryItem, NavigateItem, SearchRouteParams } from './router'
-import { NavigableTag, Tag, getTagId, tagFilters, tagLenses } from './Tag'
+import { NavigableTag, getTagId, tagFilters, tagLenses } from './Tag'
 
 const SPLIT_TAG = '_'
 const SPLIT_TAG_TYPE = '~'
 
 export const allTagsList = [...tagFilters, ...tagLenses]
-export const allTags = allTagsList.reduce((acc, cur) => {
-  acc[getTagId(cur)] = cur
-  return acc
-}, {})
+export const allTags: { [key: string]: Tag } = {}
+for (const tag of allTagsList) {
+  allTags[getTagId(tag)] = tag
+}
 
 export type HomeStateNav = {
   tags?: NavigableTag[]
@@ -206,8 +205,8 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
   state
 ) => {
   const next = getNavigateItemForState(om.state, state)
-  console.log('syncStateToRoute', cloneDeep({ next, state }))
   if (om.actions.router.getShouldNavigate(next)) {
+    console.log('syncStateToRoute true', cloneDeep({ next, state }))
     om.actions.router.navigate(next)
     return true
   }

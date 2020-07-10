@@ -143,7 +143,7 @@ const HomeAutoCompleteContents = memo(() => {
       <React.Fragment key={`${result.tagId}${index}`}>
         <LinkButton
           className="no-transition"
-          onPress={() => {
+          onPressOut={() => {
             hideAutocomplete()
             om.actions.home.setAutocompleteIndex(index)
 
