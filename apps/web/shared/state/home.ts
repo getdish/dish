@@ -16,6 +16,7 @@ import { Action, AsyncAction, derived } from 'overmind'
 
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
 import { timer } from '../helpers/timer'
+import { LinkButtonProps } from '../views/ui/LinkProps'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
 import {
   HomeStateNav,
@@ -23,11 +24,9 @@ import {
   getActiveTags,
   getFullTags,
   getNavigateItemForState,
-  getNavigateToTags,
   getNextState,
   getTagsFromRoute,
   isSearchBarTag,
-  navigateToTag,
   syncStateToRoute,
 } from './home-tag-helpers'
 import {
@@ -618,7 +617,6 @@ const loadHomeDishes: AsyncAction = async (om) => {
     allDishTags = [...allDishTags, ...dishTags]
   }
 
-  console.log('dishTags', allDishTags)
   om.actions.home.addTagsToCache(allDishTags)
 
   console.warn('SET TOP DISHES')
@@ -654,7 +652,7 @@ const runSearch: AsyncAction<{
   const curState = om.state.home.currentState
   const searchQuery = opts.searchQuery ?? curState.searchQuery ?? ''
   if (
-    await navigateToCurrentState(om, {
+    await navigate(om, {
       state: {
         ...curState,
         searchQuery,
@@ -1074,7 +1072,7 @@ const setIsScrolling: Action<boolean> = (om, val) => {
   om.state.home.isScrolling = val
 }
 
-const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
+const updateActiveTags: AsyncAction<HomeStateTagNavigable> = async (
   om,
   next
 ) => {
@@ -1105,17 +1103,6 @@ const updateActiveTags: AsyncAction<HomeStateTagNavigable, boolean> = async (
   } catch (err) {
     handleAssertionError(err)
   }
-}
-
-// this is useful for search where we mutate the current state while you type,
-// but then later you hit "enter" and we need to navigate to search (or home)
-// we definitely can clean up / name better some of this once things settle
-const navigateToCurrentState = async (om: Om, navState?: HomeStateNav) => {
-  const nextState = getNextState(om, navState)
-  console.log('navigateToCurrentState', nextState)
-  const didNav = await syncStateToRoute(om, nextState)
-  await om.actions.home.updateActiveTags(nextState)
-  return didNav
 }
 
 // adds to allTags + allTagsNameToID
@@ -1152,21 +1139,68 @@ const setSearchQuery: Action<string> = (om, val) => {
   last.searchQuery = val
 }
 
-const clearTags: Action = (om, val) => {
-  const state = om.state.home.currentState
-  if ('activeTagIds' in state) {
-    state.activeTagIds = {}
-    om.state.home.states = [...om.state.home.states]
+const clearTags: AsyncAction = async (om, val) => {
+  const nextState = {
+    ...om.state.home.currentState,
+    activeTagIds: {},
   }
+  await navigate(om, {
+    state: nextState,
+  })
+}
+
+export const navigateTo: Action<HomeStateNav> = (om, nav) => {
+  getNavigateTo(om, nav)?.onPress?.()
+}
+
+// for easy use with Link / LinkButton
+export const getNavigateTo: Action<HomeStateNav, LinkButtonProps | null> = (
+  om,
+  props
+) => {
+  if (!props.tags?.length) {
+    console.log('no tags for nav?', props)
+    return null
+  }
+  let nextState = getNextState(om, props)
+  if (nextState) {
+    const navigateItem = getNavigateItemForState(om.state, nextState)
+    return {
+      ...navigateItem,
+      onPress() {
+        // we dont want to re-render every link on the page on every transition
+        // so we do lazy loading onPress to re-fetch the url
+        // see <Link /> which also does a lazy-load on hover to show the right url
+        navigate(om, {
+          ...props,
+          state: om.state.home.currentState,
+        })
+      },
+    }
+  }
+  return null
+}
+
+// this is useful for search where we mutate the current state while you type,
+// but then later you hit "enter" and we need to navigate to search (or home)
+// we definitely can clean up / name better some of this once things settle
+const navigate = async (om: Om, navState?: HomeStateNav) => {
+  if (navState.tags) {
+    om.actions.home.addTagsToCache(navState.tags)
+  }
+  const nextState = getNextState(om, navState)
+  console.log('navigateToCurrentState', nextState)
+  const didNav = await syncStateToRoute(om, nextState)
+  await om.actions.home.updateActiveTags(nextState)
+  return didNav
 }
 
 export const actions = {
   loadHomeDishes,
   setIsScrolling,
   setLocationAutocompleteResults,
-  navigateToTag,
+  navigateTo,
   setHasMovedMap,
-  getNavigateToTags,
   startAutocomplete,
   runHomeSearch,
   setSearchQuery,

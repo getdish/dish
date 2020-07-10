@@ -34,7 +34,6 @@ export function Link<
     className,
     asyncClick,
     textAlign,
-    navigateAfterPress,
     ...restProps
   } = allProps
   const {
@@ -49,36 +48,22 @@ export function Link<
   const navItem: NavigateItem = {
     name,
     params,
-    replace: linkProps['replace'],
+    replace,
   }
   const elementName = tagName ?? 'a'
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!clickEvent) return
     return series([
       () => (asyncClick ? fullyIdle(linkActionIdle) : null),
       () => {
-        const go = async () => {
-          if (replaceSearch) {
-            om.actions.home.clearSearch()
-          }
-          if (!preventNavigate) {
-            om.actions.router.navigate(navItem)
-          }
+        onClick?.(clickEvent!)
+        onPress?.(clickEvent)
+        if (replaceSearch) {
+          om.actions.home.clearSearch()
         }
-
-        if (onClick || onPress) {
-          if (onClick && onPress) {
-            console.log('BOTH>>>', onClick, onPress)
-            debugger
-          }
-          onClick?.(clickEvent!)
-          onPress?.(clickEvent)
-          if (navigateAfterPress) {
-            go()
-          }
-        } else {
-          go()
+        if (!preventNavigate) {
+          om.actions.router.navigate(navItem)
         }
       },
     ])

@@ -39,10 +39,10 @@ function searchInputEffect(input: HTMLInputElement) {
     // @ts-ignore
     const code = e.keyCode
     const focusedInput = document.activeElement
-    console.log('go', code, focusedInput)
     if (!(focusedInput instanceof HTMLInputElement)) {
       return
     }
+    console.log('key', code)
     const { isAutocompleteActive, autocompleteIndex } = om.state.home
     const isSelecting =
       focusedInput.selectionStart !== focusedInput.selectionEnd
@@ -62,7 +62,7 @@ function searchInputEffect(input: HTMLInputElement) {
               params: { slug: item.slug },
             })
           } else if ('tagId' in item) {
-            om.actions.home.navigateToTag({
+            om.actions.home.navigateTo({
               tags: [item],
             })
           }
@@ -82,7 +82,7 @@ function searchInputEffect(input: HTMLInputElement) {
           // if selected onto a tag, we can send remove command
           if (om.state.home.searchbarFocusedTag) {
             console.log('delete tag', om.state.home.searchbarFocusedTag)
-            om.actions.home.navigateToTag({
+            om.actions.home.navigateTo({
               tags: [om.state.home.searchbarFocusedTag],
             })
             next()
@@ -351,7 +351,7 @@ const HomeSearchBarTags = memo(
                   }}
                   closable
                   onClose={async () => {
-                    om.actions.home.navigateToTag({ tags: [tag] })
+                    om.actions.home.navigateTo({ tags: [tag] })
                     await fullyIdle()
                     setAvoidNextAutocompleteShowOnFocus()
                     input?.focus()

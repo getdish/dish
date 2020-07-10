@@ -35,7 +35,6 @@ export function LinkButton<
       replace,
       replaceSearch,
       preventNavigate,
-      navigateAfterPress,
       asyncClick,
       textAlign,
       ...rest
@@ -55,7 +54,6 @@ export function LinkButton<
         ellipse={ellipse}
         textAlign={textAlign}
         preventNavigate={preventNavigate}
-        navigateAfterPress={navigateAfterPress}
         padding={getStylePadding({
           padding,
           paddingVertical,
