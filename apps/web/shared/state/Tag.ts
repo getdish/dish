@@ -4,7 +4,6 @@ export type NavigableTag = Partial<Tag> & Pick<Tag, 'name' | 'type'>
 
 export const getTagId = (tag: NavigableTag) => {
   if (!tag?.name) {
-    console.warn('no name tag', tag)
     return 'no-slug'
   }
   return tagSlug(tag)

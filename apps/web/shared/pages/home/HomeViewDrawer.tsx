@@ -8,34 +8,8 @@ import {
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
-import {
-  drawerBorderRadius,
-  drawerPad,
-  drawerWidthMax,
-  searchBarHeight,
-} from '../../constants'
+import { drawerPad, drawerWidthMax, searchBarHeight } from '../../constants'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
-
-const bgColor = 'rgb(255,255,255)'
-
-const colors = [
-  'rgba(255,255,255,0.15)',
-  'rgba(255,255,255,0.9)', //rgba(255,255,255,0.9)',
-  'rgba(255,255,255,0.95)', //'rgba(255,255,255,0.95)',
-  'rgba(255,255,255,0.95)', //'rgba(255,255,255,0.95)',
-  'rgba(255,255,255,1)', //'rgba(255,255,255,0.99)',
-  'rgba(255,255,255,1)', //'rgba(255,255,255,0.95)',
-  'rgba(255,255,255,1)', //'rgba(255,255,255,0.9)',
-  'rgba(255,255,255,1)', //'rgba(255,255,255,0.9)',
-  'rgba(255,255,255,1)', //'rgba(255,255,255,0.9)',
-  'rgba(255,255,255,1)', //'rgba(255,255,255,0.888)',
-  'rgba(255,255,255,1)', //'rgba(255,255,255,0.777)',
-  'rgba(255,255,255,1)', //'rgba(255,255,255,0.666)',
-  'rgba(255,255,255,1)', //'rgba(255,255,255,0.666)',
-  // 'rgba(255,255,255,0.5)', //'rgba(255,255,255,0.666)',
-]
-
-const colorsSmall = colors.slice(2)
 
 export const useMediaQueryIsSmall = () => useMedia({ maxWidth: 860 })
 export const useMediaQueryIsMedium = () => useMedia({ maxWidth: 960 })

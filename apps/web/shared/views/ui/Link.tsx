@@ -1,6 +1,6 @@
 import './Link.css'
 
-import { fullyIdle, series } from '@dish/async'
+import { idle, series } from '@dish/async'
 import { Text, prevent } from '@dish/ui'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
@@ -55,7 +55,7 @@ export function Link<
   useEffect(() => {
     if (!clickEvent) return
     return series([
-      () => (asyncClick ? fullyIdle(linkActionIdle) : null),
+      () => (asyncClick ? idle(40) : null),
       () => {
         if (onPress || onClick) {
           onClick?.(clickEvent!)

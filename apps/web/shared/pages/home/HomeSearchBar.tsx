@@ -39,8 +39,6 @@ export default memo(function HomeSearchBar() {
   const colorBottom = rgbString(lense?.rgb.map((x) => x - 10) ?? [30, 30, 30])
   const borderRadius = 12
 
-  console.log('ok', color, colorBottom)
-
   return (
     <AbsoluteVStack
       className="searchbar-container"

@@ -1,6 +1,8 @@
 import { sleep as sleepFn } from './sleep'
 import { requestIdle } from '.'
 
+// a bit more conservative
+
 export async function fullyIdle({
   min = 16,
   sleep,
