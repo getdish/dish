@@ -18,6 +18,7 @@ import {
   memo,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useState,
 } from 'react'
@@ -36,17 +37,30 @@ import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
 import { CloseButton } from './CloseButton'
 import { DishView } from './DishView'
 import { HomeLenseBar } from './HomeLenseBar'
+import { HomePagePaneProps } from './HomePage'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import RestaurantRatingView from './RestaurantRatingView'
 import { Squircle } from './Squircle'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
-export default memo(function HomePageTopDishesContainer() {
+// top dishes
+
+export default memo(function HomePageHomePane(props: HomePagePaneProps) {
   const om = useOvermind()
   const isOnHome = om.state.home.currentStateType === 'home'
   const [isLoaded, setIsLoaded] = useState(false)
 
+  // on load home clear search effect!
+  useLayoutEffect(() => {
+    if (props.isActive) {
+      console.log('clear tings')
+      om.actions.home.clearSearch()
+      om.actions.home.clearTags()
+    }
+  }, [props.isActive])
+
+  // load effect!
   useEffect(() => {
     if (isOnHome) {
       setIsLoaded(true)
@@ -71,7 +85,6 @@ const HomePageTopDishes = memo(() => {
   const isSmall = useMediaQueryIsSmall()
   const om = useOvermind()
   const state = om.state.home.lastHomeState
-  console.log('home state', state, om.state.home.states)
   const { activeTagIds } = state
 
   if (!state) {
@@ -83,6 +96,7 @@ const HomePageTopDishes = memo(() => {
   const tagsDescription =
     getActiveTags(om.state.home, state)
       .find((x) => x.type === 'lense')
+      // @ts-ignore
       ?.descriptions?.plain.replace('Here', ``) ?? ''
 
   return (
@@ -301,7 +315,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
         }}
       />
 
-      <VStack marginTop={-20}>
+      <VStack marginTop={-5}>
         <HomeScrollViewHorizontal>
           <HomeTopDishMain>
             {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
@@ -431,7 +445,6 @@ export const RestaurantButton = memo(
         {...(subtle && {
           backgroundColor: 'transparent',
         })}
-        fontSize={14}
         zIndex={1}
         {...(active && {
           borderColor: '#eee',
@@ -447,7 +460,7 @@ export const RestaurantButton = memo(
           onHoverIn?.(restaurant)
         }}
       >
-        <HStack alignItems="center" spacing={5}>
+        <HStack flex={1} alignItems="center" spacing={5}>
           {!!trending && (
             <TrendingIcon
               size={16}

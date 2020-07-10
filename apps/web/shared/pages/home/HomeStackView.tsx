@@ -14,7 +14,7 @@ import { useMediaQueryIsSmall } from './HomeViewDrawer'
 
 const transitionDuration = 280
 
-type GetChildren<A> = (a: A) => React.ReactNode
+type GetChildren<A> = (a: A, isActive: boolean) => React.ReactNode
 
 export function HomeStackView<A extends HomeStateItem>(props: {
   children: GetChildren<A>
@@ -22,10 +22,8 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   // const currentStateStore = useRecoilStore(HomeStateStore)
   const om = useOvermind()
   const breadcrumbs = om.state.home.breadcrumbStates
-  const key = JSON.stringify([
-    om.state.home.states,
-    om.state.home.breadcrumbStates,
-  ])
+  const states = om.state.home.states
+  const key = JSON.stringify([states, breadcrumbs])
   const homeStates = useMemo(() => {
     return breadcrumbs
       .map((item) => {
@@ -40,7 +38,7 @@ export function HomeStackView<A extends HomeStateItem>(props: {
 
   console.log(
     'HomeStackView',
-    cloneDeep({ isRemoving, items, breadcrumbs, homeStates })
+    cloneDeep({ isRemoving, states, breadcrumbs, homeStates, items })
   )
 
   // const activeItem = items[items.length - 1]
@@ -91,12 +89,14 @@ const HomeStackViewItem = memo(
     // const popoverStore = useRecoilStore(PopoverStore, { id })
     const [isMounted, setIsMounted] = useState(false)
     const isSmall = useMediaQueryIsSmall()
+
     useEffect(() => {
       let tm = setTimeout(() => {
         setIsMounted(true)
       }, 50)
       return () => clearTimeout(tm)
     }, [])
+
     const top = isSmall ? 0 : index * (index == 0 ? 0 : 5)
     const left = isSmall ? 0 : Math.max(0, index) * 3
 
@@ -105,7 +105,7 @@ const HomeStackViewItem = memo(
     // }, [isActive])
 
     const memoChildren = useMemo(() => {
-      return getChildren(item as any)
+      return getChildren(item as any, isActive)
     }, [item])
 
     return (

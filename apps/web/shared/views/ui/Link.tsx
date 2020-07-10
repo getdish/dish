@@ -57,8 +57,14 @@ export function Link<
     return series([
       () => (asyncClick ? fullyIdle(linkActionIdle) : null),
       () => {
-        onClick?.(clickEvent!)
-        onPress?.(clickEvent)
+        if (onPress || onClick) {
+          onClick?.(clickEvent!)
+          onPress?.(clickEvent)
+        } else {
+          if (!preventNavigate) {
+            om.actions.router.navigate(navItem)
+          }
+        }
         if (replaceSearch) {
           om.actions.home.clearSearch()
         }
@@ -72,10 +78,11 @@ export function Link<
       fontSize={fontSize}
       lineHeight={lineHeight}
       fontWeight={fontWeight}
-      // @ts-ignore
-      display="inline-flex"
       color={color}
       textAlign={textAlign}
+      // @ts-ignore
+      display="inline-flex"
+      maxWidth="100%"
     >
       {children}
     </Text>

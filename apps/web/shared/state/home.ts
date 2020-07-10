@@ -2,6 +2,7 @@ import { fullyIdle, sleep } from '@dish/async'
 import {
   RestaurantOnlyIds,
   RestaurantSearchArgs,
+  Tag,
   getHomeDishes,
   query,
   resolved,
@@ -11,10 +12,11 @@ import {
 import { assert, handleAssertionError, stringify } from '@dish/helpers'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
-import _, { clamp, cloneDeep, findLast, last } from 'lodash'
+import _, { clamp, cloneDeep, findLast, last, pick } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
 
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
+import { memoize } from '../helpers/memoizeWeak'
 import { timer } from '../helpers/timer'
 import { LinkButtonProps } from '../views/ui/LinkProps'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
@@ -107,17 +109,17 @@ const derivations = {
   previousState: derived<HomeState, HomeStateItem>(
     (state) => state.states[state.states.length - 2]
   ),
-  searchBarTags: derived<HomeState, NavigableTag[]>((state) =>
+  searchBarTags: derived<HomeState, Tag[]>((state) =>
     state.lastActiveTags.filter(isSearchBarTag)
   ),
-  lastActiveTags: derived<HomeState, NavigableTag[]>((state) => {
+  lastActiveTags: derived<HomeState, Tag[]>((state) => {
     const lastTaggable = _.findLast(
       state.states,
       (x) => isHomeState(x) || isSearchState(x)
     ) as HomeStateItemSearch | HomeStateItemHome
     return getActiveTags(state, lastTaggable)
   }),
-  autocompleteFocusedTag: derived<HomeState, NavigableTag | null>((state) => {
+  autocompleteFocusedTag: derived<HomeState, Tag | null>((state) => {
     const { autocompleteIndex } = state
     if (autocompleteIndex < 0) return null
     if (!state.autocompleteResults) return null
@@ -126,11 +128,14 @@ const derivations = {
       null
     )
   }),
-  searchbarFocusedTag: derived<HomeState, NavigableTag | null>((state) => {
+  searchbarFocusedTag: derived<HomeState, Tag | null>((state) => {
     const { autocompleteIndex } = state
     if (autocompleteIndex > -1) return null
     const index = state.searchBarTags.length + autocompleteIndex
     return state.searchBarTags[index]
+  }),
+  breadcrumbStates: derived<HomeState, HomeStateItemSimple[]>((state) => {
+    return createBreadcrumbs(state)
   }),
   currentStateLense: derived<HomeState, NavigableTag | null>((state) => {
     if ('activeTagIds' in state.currentState) {
@@ -208,7 +213,6 @@ export const isEditingUserPage = (
 
 // only await things that are required on first render
 const start: AsyncAction = async (om) => {
-  om.actions.home.updateBreadcrumbs()
   om.actions.home.updateCurrentMapAreaInformation()
   const fullyLoadedPromise = loadHomeDishes(om).then(async () => {
     await om.actions.home.startAutocomplete()
@@ -265,7 +269,16 @@ const pushHomeState: AsyncAction<
 
   const { started, currentState } = om.state.home
   const historyId = item.id
-  const id = item.replace ? currentState.id : `${Math.random()}`
+  const shouldReplace =
+    !!item.replace &&
+    // dont replace home with something else
+    !(item.name !== 'home' && currentState.type === 'home')
+  const id =
+    item.name === 'home'
+      ? '0'
+      : shouldReplace
+      ? currentState.id
+      : `${Math.random()}`
   const base = {
     id,
     center: currentState?.center ?? initialHomeState.center,
@@ -293,7 +306,6 @@ const pushHomeState: AsyncAction<
       }
       nextState = {
         ...base,
-        ...om.state.home.lastHomeState,
         type,
         ...newState,
         searchQuery: '',
@@ -377,8 +389,6 @@ const pushHomeState: AsyncAction<
     }
   }
 
-  console.log('pushHomeState', cloneDeep({ item, nextState }))
-
   async function runFetchData() {
     if (!fetchData) {
       return
@@ -395,13 +405,12 @@ const pushHomeState: AsyncAction<
   // we are going back to a prev state!
   // hacky for now
   if (nextPushIsReallyAPop) {
-    console.log('nextPushIsReallyAPop', nextPushIsReallyAPop)
+    console.log('nextPushIsReallyAPop', nextPushIsReallyAPop, item)
     nextPushIsReallyAPop = false
     const prev = _.findLast(om.state.home.states, (x) => x.type === item.name)
     if (prev) {
-      const prevIndex = om.state.home.states.indexOf(prev)
-      om.state.home.states.splice(prevIndex)
-      om.state.home.states.push({ ...prev, id })
+      om.actions.home.updateHomeState(prev)
+      om.actions.home.setIsLoading(false)
     } else {
       throw new Error('unreachable')
     }
@@ -414,24 +423,15 @@ const pushHomeState: AsyncAction<
     return null
   }
 
-  const replace = item.replace
+  console.log(
+    'pushHomeState',
+    cloneDeep({ shouldReplace, item, nextState, id })
+  )
 
-  if (
-    replace &&
-    // dont replace the only home with something else
-    (nextState.type === 'home' || om.state.home.states.length > 1)
-  ) {
-    // try granular update
-    const lastState = om.state.home.states[om.state.home.states.length - 1]
-    for (const key in nextState) {
-      if (!isEqual(nextState[key], lastState[key])) {
-        lastState[key] = _.isPlainObject(nextState[key])
-          ? { ...nextState[key] }
-          : nextState[key]
-      }
-    }
+  if (shouldReplace) {
+    om.actions.home.replaceHomeState(nextState)
   } else {
-    om.state.home.states = [...om.state.home.states, nextState]
+    om.actions.home.updateHomeState(nextState)
   }
 
   if (!om.state.home.started) {
@@ -451,27 +451,25 @@ const pushHomeState: AsyncAction<
       res = res2
       rej = rej2
     })
-    setTimeout(() => {
-      runFetchData().then(
-        () => {
-          om.state.home.isLoading = false
-          res()
-        },
-        () => {
-          om.state.home.isLoading = false
-          rej()
-        }
-      )
-    }, 16)
+    runFetchData().then(
+      () => {
+        om.actions.home.setIsLoading(false)
+        res()
+      },
+      () => {
+        om.actions.home.setIsLoading(false)
+        rej()
+      }
+    )
   }
 
   if (fetchDataPromise) {
     return {
       fetchDataPromise,
     }
+  } else {
+    om.actions.home.setIsLoading(false)
   }
-
-  om.state.home.isLoading = false
 
   return null
 }
@@ -540,7 +538,6 @@ const popTo: Action<HomeStateItem['type']> = (om, item) => {
 
   // we can just use router history directly, no? and go back?
   const prevPage = om.state.router.prevPage
-  console.log({ type, prevPage })
   if (prevPage?.name === type && prevPage.type === 'push') {
     console.log('history matches, testing going back directly')
     om.actions.router.back()
@@ -553,31 +550,6 @@ const popTo: Action<HomeStateItem['type']> = (om, item) => {
     name: type,
     params: stateItem?.params ?? {},
   })
-}
-
-const popHomeState: Action<HistoryItem> = (om, item) => {
-  if (om.state.home.states.length > 1) {
-    // om.actions.home.setShowAutocomplete(false)
-    console.log('POP')
-
-    const nextStates = _.dropRight(om.state.home.states)
-    const curState = _.last(om.state.home.states)
-    let nextState = curState
-
-    // TODO should this just be the same as pushHomeState minus the fetchData?
-    switch (curState.type) {
-      case 'home': {
-        nextState = {
-          ...nextState,
-          searchQuery: '',
-        }
-        break
-      }
-    }
-
-    nextStates[nextStates.length - 1] = nextState
-    om.state.home.states = nextStates
-  }
 }
 
 const loadHomeDishes: AsyncAction = async (om) => {
@@ -726,9 +698,39 @@ const runSearch: AsyncAction<{
   }
 
   // overmind seems unhappy to just let us mutate
-  const index = om.state.home.states.findIndex((x) => x.id === state.id)
-  om.state.home.states[index] = {
-    ...state,
+  om.actions.home.updateHomeState(state)
+}
+
+const popHomeState: Action<HistoryItem> = (om, item) => {
+  console.log('popHomeState', item)
+  assert(om.state.home.currentState.type !== 'home')
+  const nextStates = _.dropRight(om.state.home.states)
+  om.state.home.states = nextStates
+  if (!nextStates.some((x) => x.type === 'home')) {
+    debugger
+  }
+}
+
+const updateHomeState: Action<HomeStateItem> = (om, val) => {
+  let next = [...om.state.home.states]
+  let index = next.findIndex((x) => x.id === val.id && x.type === val.type)
+  if (index !== -1) {
+    next.splice(index, 1)
+  }
+  next.push(val)
+  if (!next.some((x) => x.type === 'home')) {
+    debugger
+  }
+  om.state.home.states = next
+}
+
+const replaceHomeState: Action<HomeStateItem> = (om, val) => {
+  // try granular update
+  const lastState = om.state.home.states[om.state.home.states.length - 1]
+  for (const key in val) {
+    if (!isEqual(val[key], lastState[key])) {
+      lastState[key] = _.isPlainObject(val[key]) ? { ...val[key] } : val[key]
+    }
   }
 }
 
@@ -844,7 +846,6 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
     }
   }
 
-  om.actions.home.updateBreadcrumbs()
   currentStates = om.state.home.states
   await Promise.all([...promises])
 }
@@ -1014,25 +1015,20 @@ const setHasMovedMap: Action<boolean | void> = (om, val = true) => {
   }
 }
 
-const updateBreadcrumbs: Action = (om) => {
-  const next = createBreadcrumbs(om.state.home)
-  if (next && !isEqual(next, om.state.home.breadcrumbStates)) {
-    om.state.home.breadcrumbStates = next
-  }
+const createBreadcrumbs = (state: HomeState) => {
+  return createBreadcrumbsMemo(state.states)
 }
 
-const createBreadcrumbs = (state: HomeState) => {
+const createBreadcrumbsMemo = memoize((states: HomeStateItem[]) => {
   let crumbs: HomeStateItemSimple[] = []
   // reverse loop to find latest
-  for (let i = state.states.length - 1; i >= 0; i--) {
-    const cur = state.states[i]
+  for (let i = states.length - 1; i >= 0; i--) {
+    const cur = states[i]
     switch (cur.type) {
       case 'home': {
         crumbs.unshift(cur)
-        return crumbs.map((x) => ({
-          id: x.id,
-          type: x.type,
-        }))
+        console.log('returning', cloneDeep(crumbs), cloneDeep(states))
+        return crumbs.map((x) => pick(x, 'id', 'type'))
       }
       case 'search':
       case 'userSearch':
@@ -1057,7 +1053,7 @@ const createBreadcrumbs = (state: HomeState) => {
       }
     }
   }
-}
+})
 
 export function createAutocomplete(
   x: Partial<AutocompleteItem>
@@ -1078,7 +1074,8 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
   const state = _.findLast(
     om.state.home.states,
     (state) => isSearchState(state) || isHomeState(state)
-  )!
+  )
+  if (!state) return
   try {
     assert('activeTagIds' in next)
     const stateActiveTagIds =
@@ -1090,8 +1087,14 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
     const nextState = {
       ...state,
       ...next,
+      id: state.id,
     }
-    om.state.home.states[om.state.home.states.length - 1] = nextState
+    console.log(
+      'updating active tags...',
+      nextState,
+      cloneDeep(om.state.home.states)
+    )
+    om.actions.home.updateHomeState(nextState)
   } catch (err) {
     handleAssertionError(err)
   }
@@ -1134,7 +1137,9 @@ const setSearchQuery: Action<string> = (om, val) => {
 const clearTags: AsyncAction = async (om, val) => {
   const nextState = {
     ...om.state.home.currentState,
-    activeTagIds: {},
+    activeTagIds: {
+      gems: true,
+    },
   }
   await navigate(om, {
     state: nextState,
@@ -1203,7 +1208,7 @@ const navigate = async (om: Om, navState?: HomeStateNav) => {
   const curState = om.state.home.currentState
   const curType = curState.type
   const nextType = nextState.type
-  if (nextType === curType || (curType === 'search' && nextType === 'home')) {
+  if (nextType !== curType) {
     console.log(
       'quikc update current state...',
       cloneDeep({ curState, nextState })
@@ -1219,9 +1224,12 @@ const navigate = async (om: Om, navState?: HomeStateNav) => {
   }
 
   const didNav = await syncStateToRoute(om, nextState)
-  console.log('did nav?', didNav)
   om.actions.home.updateActiveTags(nextState)
   return didNav
+}
+
+const setIsLoading: Action<boolean> = (om, val) => {
+  om.state.home.isLoading = val
 }
 
 export const actions = {
@@ -1258,7 +1266,6 @@ export const actions = {
   popBack,
   refresh,
   suggestTags,
-  updateBreadcrumbs,
   loadPageSearch,
   loadPageRestaurant,
   popHomeState,
@@ -1266,4 +1273,7 @@ export const actions = {
   setAutocompleteResults,
   clearTags,
   addTagsToCache,
+  setIsLoading,
+  replaceHomeState,
+  updateHomeState,
 }

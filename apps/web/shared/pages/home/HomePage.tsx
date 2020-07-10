@@ -1,7 +1,8 @@
 import { VStack } from '@dish/ui'
-import React, { Suspense, memo } from 'react'
+import React, { Suspense, memo, useEffect } from 'react'
 
 import { frameWidthMax, isWorker } from '../../constants'
+import { HomeStateItem } from '../../state/home'
 import {
   isHomeState,
   isRestaurantState,
@@ -65,23 +66,8 @@ const HomePageContent = memo(() => {
 
         <HomeViewDrawer>
           <HomeStackView>
-            {(homeState) => {
-              return (
-                <Suspense fallback={null}>
-                  {isHomeState(homeState) && (
-                    <HomePageTopDishes key={0} state={homeState} />
-                  )}
-                  {isUserState(homeState) && (
-                    <HomePageUser key={homeState} state={homeState} />
-                  )}
-                  {isSearchState(homeState) && (
-                    <HomePageSearchResults key={2} state={homeState} />
-                  )}
-                  {isRestaurantState(homeState) && (
-                    <HomePageRestaurant key={3} state={homeState} />
-                  )}
-                </Suspense>
-              )
+            {(homeState, isActive) => {
+              return <HomePagePane state={homeState} isActive={isActive} />
             }}
           </HomeStackView>
         </HomeViewDrawer>
@@ -94,6 +80,20 @@ const HomePageContent = memo(() => {
   )
 })
 
+export type HomePagePaneProps = { state: HomeStateItem; isActive: boolean }
+
+const HomePagePane = (props: HomePagePaneProps) => {
+  const { state } = props
+  return (
+    <Suspense fallback={null}>
+      {isHomeState(state) && <HomePageHomePane {...props} />}
+      {isUserState(state) && <HomePageUser {...props} />}
+      {isSearchState(state) && <HomePageSearchResults {...props} />}
+      {isRestaurantState(state) && <HomePageRestaurant {...props} />}
+    </Suspense>
+  )
+}
+
 const HomePageRestaurant =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageRestaurant').default
@@ -104,10 +104,10 @@ const HomePageSearchResults =
     ? require('./HomePageSearchResults').default
     : React.lazy(() => import('./HomePageSearchResults'))
 
-const HomePageTopDishes =
+const HomePageHomePane =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./HomePageTopDishes').default
-    : React.lazy(() => import('./HomePageTopDishes'))
+    ? require('./HomePageHomePane').default
+    : React.lazy(() => import('./HomePageHomePane'))
 
 const HomePageUser =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'

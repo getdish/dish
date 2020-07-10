@@ -39,6 +39,8 @@ export default memo(function HomeSearchBar() {
   const colorBottom = rgbString(lense?.rgb.map((x) => x - 10) ?? [30, 30, 30])
   const borderRadius = 12
 
+  console.log('ok', color, colorBottom)
+
   return (
     <AbsoluteVStack
       className="searchbar-container"
@@ -71,7 +73,7 @@ export default memo(function HomeSearchBar() {
           right={0}
           bottom={0}
           left={0}
-          shadowColor="rgba(0,0,0,0.3)"
+          shadowColor="rgba(0,0,0,0.4)"
           shadowOffset={{ height: 1, width: 0 }}
           shadowRadius={14}
         />
