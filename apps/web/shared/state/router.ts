@@ -194,8 +194,8 @@ const navItemToHistoryItem = (navItem: NavigateItem): HistoryItem => {
 const getShouldNavigate: Action<NavigateItem, boolean> = (om, navItem) => {
   const historyItem = navItemToHistoryItem(navItem)
   return !isEqual(
-    _.omit(historyItem, 'id', 'replace'),
-    _.omit(om.state.router.curPage, 'id', 'replace')
+    _.omit(historyItem, ['id', 'replace']),
+    _.omit(om.state.router.curPage, ['id', 'replace'])
   )
 }
 

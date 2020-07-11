@@ -1027,8 +1027,7 @@ const createBreadcrumbsMemo = memoize((states: HomeStateItem[]) => {
     switch (cur.type) {
       case 'home': {
         crumbs.unshift(cur)
-        console.log('returning', cloneDeep(crumbs), cloneDeep(states))
-        return crumbs.map((x) => pick(x, 'id', 'type'))
+        return crumbs.map((x) => pick(x, ['id', 'type']))
       }
       case 'search':
       case 'userSearch':
