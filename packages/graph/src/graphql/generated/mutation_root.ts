@@ -13,6 +13,15 @@ import {
   t_menu_item_mutation_response,
 } from './menu_item'
 import {
+  opening_hours_bool_exp,
+  opening_hours_insert_input,
+  opening_hours_on_conflict,
+  opening_hours_pk_columns_input,
+  opening_hours_set_input,
+  t_opening_hours,
+  t_opening_hours_mutation_response,
+} from './opening_hours'
+import {
   restaurant_append_input,
   restaurant_bool_exp,
   restaurant_delete_at_path_input,
@@ -129,6 +138,14 @@ export type t_mutation_root = FieldsType<
       t_menu_item_mutation_response | null
     >
     delete_menu_item_by_pk?: FieldsTypeArg<{ id: any }, t_menu_item | null>
+    delete_opening_hours: FieldsTypeArg<
+      { where: opening_hours_bool_exp },
+      t_opening_hours_mutation_response | null
+    >
+    delete_opening_hours_by_pk?: FieldsTypeArg<
+      { id: any },
+      t_opening_hours | null
+    >
     delete_restaurant: FieldsTypeArg<
       { where: restaurant_bool_exp },
       t_restaurant_mutation_response | null
@@ -188,6 +205,20 @@ export type t_mutation_root = FieldsType<
         on_conflict?: menu_item_on_conflict | null
       },
       t_menu_item | null
+    >
+    insert_opening_hours: FieldsTypeArg<
+      {
+        objects: opening_hours_insert_input[]
+        on_conflict?: opening_hours_on_conflict | null
+      },
+      t_opening_hours_mutation_response | null
+    >
+    insert_opening_hours_one?: FieldsTypeArg<
+      {
+        object: opening_hours_insert_input
+        on_conflict?: opening_hours_on_conflict | null
+      },
+      t_opening_hours | null
     >
     insert_restaurant: FieldsTypeArg<
       {
@@ -298,6 +329,17 @@ export type t_mutation_root = FieldsType<
         pk_columns: menu_item_pk_columns_input
       },
       t_menu_item | null
+    >
+    update_opening_hours: FieldsTypeArg<
+      { _set?: opening_hours_set_input | null; where: opening_hours_bool_exp },
+      t_opening_hours_mutation_response | null
+    >
+    update_opening_hours_by_pk?: FieldsTypeArg<
+      {
+        _set?: opening_hours_set_input | null
+        pk_columns: opening_hours_pk_columns_input
+      },
+      t_opening_hours | null
     >
     update_restaurant: FieldsTypeArg<
       {

@@ -11,6 +11,13 @@ import {
   t_menu_item_aggregate,
 } from './menu_item'
 import {
+  opening_hours_bool_exp,
+  opening_hours_order_by,
+  opening_hours_select_column,
+  t_opening_hours,
+  t_opening_hours_aggregate,
+} from './opening_hours'
+import {
   restaurant_bool_exp,
   restaurant_order_by,
   restaurant_select_column,
@@ -93,6 +100,27 @@ export type t_query_root = FieldsType<
       t_menu_item_aggregate
     >
     menu_item_by_pk?: FieldsTypeArg<{ id: any }, t_menu_item | null>
+    opening_hours: FieldsTypeArg<
+      {
+        distinct_on?: opening_hours_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: opening_hours_order_by[] | null
+        where?: opening_hours_bool_exp | null
+      },
+      t_opening_hours[]
+    >
+    opening_hours_aggregate: FieldsTypeArg<
+      {
+        distinct_on?: opening_hours_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: opening_hours_order_by[] | null
+        where?: opening_hours_bool_exp | null
+      },
+      t_opening_hours_aggregate
+    >
+    opening_hours_by_pk?: FieldsTypeArg<{ id: any }, t_opening_hours | null>
     restaurant: FieldsTypeArg<
       {
         distinct_on?: restaurant_select_column[] | null

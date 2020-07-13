@@ -1322,6 +1322,37 @@ export const schema = {
             true
           )
         },
+        get delete_opening_hours() {
+          return new FieldNode(
+            schema.opening_hours_mutation_response,
+            new Arguments(
+              {
+                get where() {
+                  return new ArgumentsField(
+                    schema.opening_hours_bool_exp,
+                    false
+                  )
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get delete_opening_hours_by_pk() {
+          return new FieldNode(
+            schema.opening_hours,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
         get delete_restaurant() {
           return new FieldNode(
             schema.restaurant_mutation_response,
@@ -1581,6 +1612,46 @@ export const schema = {
               },
               get on_conflict() {
                 return new ArgumentsField(schema.menu_item_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get insert_opening_hours() {
+          return new FieldNode(
+            schema.opening_hours_mutation_response,
+            new Arguments({
+              get objects() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.opening_hours_insert_input, false),
+                  false
+                )
+              },
+              get on_conflict() {
+                return new ArgumentsField(
+                  schema.opening_hours_on_conflict,
+                  true
+                )
+              },
+            }),
+            true
+          )
+        },
+        get insert_opening_hours_one() {
+          return new FieldNode(
+            schema.opening_hours,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(
+                  schema.opening_hours_insert_input,
+                  false
+                )
+              },
+              get on_conflict() {
+                return new ArgumentsField(
+                  schema.opening_hours_on_conflict,
+                  true
+                )
               },
             }),
             true
@@ -1873,6 +1944,37 @@ export const schema = {
               get pk_columns() {
                 return new ArgumentsField(
                   schema.menu_item_pk_columns_input,
+                  false
+                )
+              },
+            }),
+            true
+          )
+        },
+        get update_opening_hours() {
+          return new FieldNode(
+            schema.opening_hours_mutation_response,
+            new Arguments({
+              get _set() {
+                return new ArgumentsField(schema.opening_hours_set_input, true)
+              },
+              get where() {
+                return new ArgumentsField(schema.opening_hours_bool_exp, false)
+              },
+            }),
+            true
+          )
+        },
+        get update_opening_hours_by_pk() {
+          return new FieldNode(
+            schema.opening_hours,
+            new Arguments({
+              get _set() {
+                return new ArgumentsField(schema.opening_hours_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(
+                  schema.opening_hours_pk_columns_input,
                   false
                 )
               },
@@ -2439,6 +2541,337 @@ export const schema = {
       { name: 'numeric_comparison_exp' }
     )
   },
+  get opening_hours() {
+    return new ObjectNode(
+      {
+        get hours() {
+          return new FieldNode(schema.tsrange, undefined, false)
+        },
+        get id() {
+          return new FieldNode(schema.uuid, undefined, false)
+        },
+        get restaurant() {
+          return new FieldNode(schema.restaurant, undefined, false)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, false)
+        },
+      },
+      {
+        name: 'opening_hours',
+        extension: ((extensions as any) || {}).opening_hours,
+      }
+    )
+  },
+  get opening_hours_aggregate() {
+    return new ObjectNode(
+      {
+        get aggregate() {
+          return new FieldNode(
+            schema.opening_hours_aggregate_fields,
+            undefined,
+            true
+          )
+        },
+        get nodes() {
+          return new FieldNode(
+            new ArrayNode(schema.opening_hours, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'opening_hours_aggregate',
+        extension: ((extensions as any) || {}).opening_hours_aggregate,
+      }
+    )
+  },
+  get opening_hours_aggregate_fields() {
+    return new ObjectNode(
+      {
+        get count() {
+          return new FieldNode(
+            schema.Int,
+            new Arguments({
+              get columns() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.opening_hours_select_column, true),
+                  true
+                )
+              },
+              get distinct() {
+                return new ArgumentsField(schema.Boolean, true)
+              },
+            }),
+            true
+          )
+        },
+        get max() {
+          return new FieldNode(schema.opening_hours_max_fields, undefined, true)
+        },
+        get min() {
+          return new FieldNode(schema.opening_hours_min_fields, undefined, true)
+        },
+      },
+      {
+        name: 'opening_hours_aggregate_fields',
+        extension: ((extensions as any) || {}).opening_hours_aggregate_fields,
+      }
+    )
+  },
+  get opening_hours_aggregate_order_by() {
+    return new InputNode(
+      {
+        get count() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get max() {
+          return new InputNodeField(schema.opening_hours_max_order_by, true)
+        },
+        get min() {
+          return new InputNodeField(schema.opening_hours_min_order_by, true)
+        },
+      },
+      { name: 'opening_hours_aggregate_order_by' }
+    )
+  },
+  get opening_hours_arr_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(
+            new ArrayNode(schema.opening_hours_insert_input, false),
+            false
+          )
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.opening_hours_on_conflict, true)
+        },
+      },
+      { name: 'opening_hours_arr_rel_insert_input' }
+    )
+  },
+  get opening_hours_bool_exp() {
+    return new InputNode(
+      {
+        get _and() {
+          return new InputNodeField(
+            new ArrayNode(schema.opening_hours_bool_exp, true),
+            true
+          )
+        },
+        get _not() {
+          return new InputNodeField(schema.opening_hours_bool_exp, true)
+        },
+        get _or() {
+          return new InputNodeField(
+            new ArrayNode(schema.opening_hours_bool_exp, true),
+            true
+          )
+        },
+        get hours() {
+          return new InputNodeField(schema.tsrange_comparison_exp, true)
+        },
+        get id() {
+          return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get restaurant() {
+          return new InputNodeField(schema.restaurant_bool_exp, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+      },
+      { name: 'opening_hours_bool_exp' }
+    )
+  },
+  get opening_hours_constraint() {
+    return new EnumNode({ name: 'opening_hours_constraint' })
+  },
+  get opening_hours_insert_input() {
+    return new InputNode(
+      {
+        get hours() {
+          return new InputNodeField(schema.tsrange, true)
+        },
+        get id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get restaurant() {
+          return new InputNodeField(
+            schema.restaurant_obj_rel_insert_input,
+            true
+          )
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+      },
+      { name: 'opening_hours_insert_input' }
+    )
+  },
+  get opening_hours_max_fields() {
+    return new ObjectNode(
+      {
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+      },
+      {
+        name: 'opening_hours_max_fields',
+        extension: ((extensions as any) || {}).opening_hours_max_fields,
+      }
+    )
+  },
+  get opening_hours_max_order_by() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'opening_hours_max_order_by' }
+    )
+  },
+  get opening_hours_min_fields() {
+    return new ObjectNode(
+      {
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+      },
+      {
+        name: 'opening_hours_min_fields',
+        extension: ((extensions as any) || {}).opening_hours_min_fields,
+      }
+    )
+  },
+  get opening_hours_min_order_by() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'opening_hours_min_order_by' }
+    )
+  },
+  get opening_hours_mutation_response() {
+    return new ObjectNode(
+      {
+        get affected_rows() {
+          return new FieldNode(schema.Int, undefined, false)
+        },
+        get returning() {
+          return new FieldNode(
+            new ArrayNode(schema.opening_hours, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'opening_hours_mutation_response',
+        extension: ((extensions as any) || {}).opening_hours_mutation_response,
+      }
+    )
+  },
+  get opening_hours_obj_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(schema.opening_hours_insert_input, false)
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.opening_hours_on_conflict, true)
+        },
+      },
+      { name: 'opening_hours_obj_rel_insert_input' }
+    )
+  },
+  get opening_hours_on_conflict() {
+    return new InputNode(
+      {
+        get constraint() {
+          return new InputNodeField(schema.opening_hours_constraint, false)
+        },
+        get update_columns() {
+          return new InputNodeField(
+            new ArrayNode(schema.opening_hours_update_column, false),
+            false
+          )
+        },
+        get where() {
+          return new InputNodeField(schema.opening_hours_bool_exp, true)
+        },
+      },
+      { name: 'opening_hours_on_conflict' }
+    )
+  },
+  get opening_hours_order_by() {
+    return new InputNode(
+      {
+        get hours() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant() {
+          return new InputNodeField(schema.restaurant_order_by, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'opening_hours_order_by' }
+    )
+  },
+  get opening_hours_pk_columns_input() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.uuid, false)
+        },
+      },
+      { name: 'opening_hours_pk_columns_input' }
+    )
+  },
+  get opening_hours_select_column() {
+    return new EnumNode({ name: 'opening_hours_select_column' })
+  },
+  get opening_hours_set_input() {
+    return new InputNode(
+      {
+        get hours() {
+          return new InputNodeField(schema.tsrange, true)
+        },
+        get id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+      },
+      { name: 'opening_hours_set_input' }
+    )
+  },
+  get opening_hours_update_column() {
+    return new EnumNode({ name: 'opening_hours_update_column' })
+  },
   get order_by() {
     return new EnumNode({ name: 'order_by' })
   },
@@ -2506,6 +2939,78 @@ export const schema = {
         get menu_item_by_pk() {
           return new FieldNode(
             schema.menu_item,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get opening_hours() {
+          return new FieldNode(
+            new ArrayNode(schema.opening_hours, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.opening_hours_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.opening_hours_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.opening_hours_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get opening_hours_aggregate() {
+          return new FieldNode(
+            schema.opening_hours_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.opening_hours_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.opening_hours_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.opening_hours_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get opening_hours_by_pk() {
+          return new FieldNode(
+            schema.opening_hours,
             new Arguments(
               {
                 get id() {
@@ -7296,6 +7801,78 @@ export const schema = {
             true
           )
         },
+        get opening_hours() {
+          return new FieldNode(
+            new ArrayNode(schema.opening_hours, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.opening_hours_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.opening_hours_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.opening_hours_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get opening_hours_aggregate() {
+          return new FieldNode(
+            schema.opening_hours_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.opening_hours_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.opening_hours_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.opening_hours_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get opening_hours_by_pk() {
+          return new FieldNode(
+            schema.opening_hours,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
         get restaurant() {
           return new FieldNode(
             new ArrayNode(schema.restaurant, false),
@@ -9407,6 +9984,46 @@ export const schema = {
         },
       },
       { name: 'timestamptz_comparison_exp' }
+    )
+  },
+  get tsrange() {
+    return new ScalarNode({
+      name: 'tsrange',
+      extension: ((extensions as any) || {}).tsrange,
+    })
+  },
+  get tsrange_comparison_exp() {
+    return new InputNode(
+      {
+        get _eq() {
+          return new InputNodeField(schema.tsrange, true)
+        },
+        get _gt() {
+          return new InputNodeField(schema.tsrange, true)
+        },
+        get _gte() {
+          return new InputNodeField(schema.tsrange, true)
+        },
+        get _in() {
+          return new InputNodeField(new ArrayNode(schema.tsrange, true), true)
+        },
+        get _is_null() {
+          return new InputNodeField(schema.Boolean, true)
+        },
+        get _lt() {
+          return new InputNodeField(schema.tsrange, true)
+        },
+        get _lte() {
+          return new InputNodeField(schema.tsrange, true)
+        },
+        get _neq() {
+          return new InputNodeField(schema.tsrange, true)
+        },
+        get _nin() {
+          return new InputNodeField(new ArrayNode(schema.tsrange, true), true)
+        },
+      },
+      { name: 'tsrange_comparison_exp' }
     )
   },
   get user() {
