@@ -23,16 +23,19 @@ WITH by_country AS (
               AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
               AND rating IS NOT NULL
           ),
-          'count', count,
+          'count', matching_restaurants_count,
           'slug', tag_slug
         )
       ) FROM (
         SELECT *,
           (
-            SELECT COUNT(*) FROM restaurant
-              WHERE tag_names @> to_jsonb(tag_slug)
-              AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
-          ) AS count
+            SELECT COUNT(restaurant.id) FROM restaurant
+              JOIN restaurant_tag ON restaurant_id = restaurant.id
+              WHERE tags_by_cuisine.id = restaurant_tag.tag_id
+                AND restaurant.id = restaurant_tag.restaurant_id
+                AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
+                AND restaurant.rating > 4
+          ) AS matching_restaurants_count
         FROM (
           SELECT
             *,
@@ -44,9 +47,10 @@ WITH by_country AS (
             AND tag.type != 'category'
             AND tag.frequency < 4
         ) as tags_by_cuisine
-        ORDER by count DESC
+        ORDER BY matching_restaurants_count DESC
         LIMIT 10
       ) as hot_tags
+      WHERE matching_restaurants_count > 0
     ) as dishes,
     (
       SELECT json_agg(t) FROM (
