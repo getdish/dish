@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
       libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 \
       libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 \
       ca-certificates fonts-liberation libappindicator1 libnss3 \
-      lsb-release xdg-utils wget xvfb
+      lsb-release xdg-utils wget xvfb procps psmisc htop
 WORKDIR /app/services/worker
 
 COPY services/worker/entry.sh /app/entry.sh
