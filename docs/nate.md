@@ -1,12 +1,13 @@
-Tony's Pizza - Seafood Linguini with White W(h)ine Sauce
+## Open GPT-3
 
-- know when to go?
-- do they let you sit at the bar?
-- where to park?
+- Dish Sentiment
+- Tips
+  - when to go to beat the rush?
+  - can you sit at the bar?
+  - where to park?
+  - pull out anything that mentions "tip"
 
-- babel plugin to make #{} #[] work with immer
-
-# June
+# July
 
 big impact changes:
 
@@ -20,14 +21,18 @@ big impact changes:
 - resizable mid bar :P
   - would actually be cool if it snapped to isSmall when it got small enough and small also resized!
 
+# Ratings
+
+- Get experts on board
+- have them easily rate/comment, etc
+- Use them as profiles
+
 ---
 
 Week 3
 
 in progress
 
-- basic tag admin for managing dish tags
-- add an inline section on restuanrantlistitem
 - clicking tags:
   - restaurantdetail
   - search result
@@ -74,6 +79,8 @@ Week 4
 - spreadsheet view into all data next to a simple map
 - actually a full review card could show at bottom of map when restaurant opened all the way
 - RestaurantDetail social media links
+
+---
 
 ---
 
@@ -130,3 +137,5 @@ triage:
 - embed stack of search results > detail fully into url so it retains search in shared link even
 
 ---
+
+- babel plugin to make #{} #[] work with immer
