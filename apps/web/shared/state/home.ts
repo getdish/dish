@@ -627,15 +627,14 @@ const runSearch: AsyncAction<{
   const curState = om.state.home.currentState
   const searchQuery = opts.searchQuery ?? curState.searchQuery ?? ''
   if (
-    await navigate(om, {
+    await om.actions.home.navigate({
       state: {
         ...curState,
         searchQuery,
       },
     })
   ) {
-    // navigate will trigger new search
-    console.warn('nav ended, but will trigger new search')
+    // nav will trigger search
     return
   }
 
@@ -654,7 +653,7 @@ const runSearch: AsyncAction<{
     if (shouldCancel()) return
   }
 
-  console.log('runSearch', state)
+  console.log('runSearch', cloneDeep(state))
 
   const searchArgs: RestaurantSearchArgs = {
     center: roundLngLat(state.center),
@@ -927,7 +926,7 @@ const setAutocompleteIndex: Action<number> = (om, val) => {
   const min = 0 - tags.length
   const max = om.state.home.autocompleteResults.length - 1
   const next = clamp(val, min, max)
-  console.log('set', min, max, next)
+  console.log('setAutocompleteIndex', min, max, next)
   om.state.home.autocompleteIndex = next
 }
 
@@ -1102,13 +1101,13 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
 // adds to allTags + allTagsNameToID
 const addTagsToCache: Action<NavigableTag[] | null> = (om, tags) => {
   for (const tag of tags) {
+    const id = getTagId(tag)
+    om.state.home.allTags[id] = { ...tag } as any
+    om.state.home.allTagsNameToID[slugify(tag.name.toLowerCase(), ' ')] = id
     try {
-      const id = getTagId(tag)
-      om.state.home.allTags[id] = { ...tag } as any
-      om.state.home.allTagsNameToID[tag.name.toLowerCase()] = id
+      om.state.home.allTagsNameToID[tag.name] = id
     } catch (err) {
-      // fix bug with weird tag name... can remove easily if not happening
-      console.warn(err)
+      // overmind blows up adding names with periods
     }
   }
 }
@@ -1140,7 +1139,7 @@ const clearTags: AsyncAction = async (om, val) => {
       gems: true,
     },
   }
-  await navigate(om, {
+  await om.actions.home.navigate({
     state: nextState,
   })
 }
@@ -1155,14 +1154,14 @@ const clearTag: AsyncAction<NavigableTag> = async (om, tag) => {
         [getTagId(tag)]: false,
       },
     }
-    await navigate(om, {
+    await om.actions.home.navigate({
       state: nextState,
     })
   }
 }
 
-export const navigateTo: Action<HomeStateNav> = (om, nav) => {
-  getNavigateTo(om, nav)?.onPress?.()
+const setIsLoading: Action<boolean> = (om, val) => {
+  om.state.home.isLoading = val
 }
 
 // for easy use with Link / LinkButton
@@ -1181,11 +1180,9 @@ export const getNavigateTo: Action<HomeStateNav, LinkButtonProps | null> = (
       ...navigateItem,
       preventNavigate: true,
       onPress() {
-        // we dont want to re-render every link on the page on every transition
-        // so we do lazy loading onPress to re-fetch the url
-        // see <Link /> which also does a lazy-load on hover to show the right url
-        navigate(om, {
+        om.actions.home.navigate({
           ...props,
+          // use latest state
           state: om.state.home.currentState,
         })
       },
@@ -1197,21 +1194,18 @@ export const getNavigateTo: Action<HomeStateNav, LinkButtonProps | null> = (
 // this is useful for search where we mutate the current state while you type,
 // but then later you hit "enter" and we need to navigate to search (or home)
 // we definitely can clean up / name better some of this once things settle
-const navigate = async (om: Om, navState?: HomeStateNav) => {
+const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
   if (navState.tags) {
     om.actions.home.addTagsToCache(navState.tags)
   }
+  navState.state = navState.state ?? om.state.home.currentState
   const nextState = getNextState(om, navState)
 
   // do a quick update first
   const curState = om.state.home.currentState
   const curType = curState.type
   const nextType = nextState.type
-  if (nextType !== curType) {
-    console.log(
-      'quikc update current state...',
-      cloneDeep({ curState, nextState })
-    )
+  if (nextType !== curType || isSearchState(curState)) {
     om.actions.home.updateActiveTags({
       id: curState.id,
       // @ts-ignore
@@ -1227,15 +1221,10 @@ const navigate = async (om: Om, navState?: HomeStateNav) => {
   return didNav
 }
 
-const setIsLoading: Action<boolean> = (om, val) => {
-  om.state.home.isLoading = val
-}
-
 export const actions = {
   loadHomeDishes,
   setIsScrolling,
   setLocationAutocompleteResults,
-  navigateTo,
   setHasMovedMap,
   startAutocomplete,
   runHomeSearch,
@@ -1275,4 +1264,5 @@ export const actions = {
   setIsLoading,
   replaceHomeState,
   updateHomeState,
+  navigate,
 }

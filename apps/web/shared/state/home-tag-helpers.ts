@@ -40,7 +40,7 @@ export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
 }
 
 export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
-  tag?.type === 'country' || tag?.type === 'dish'
+  tag?.type != 'lense' && tag.type != 'filter'
 
 export const getActiveTags = memoize(
   (home: OmStateHome, state: HomeStateItem = home.currentState) => {
@@ -78,7 +78,8 @@ export const getNextState = (om: Om, navState?: HomeStateNav) => {
   let words = searchQuery.toLowerCase().split(' ')
   while (words.length) {
     const [word, ...rest] = words
-    const foundTagId = om.state.home.allTagsNameToID[word.toLowerCase()]
+    const foundTagId =
+      om.state.home.allTagsNameToID[slugify(word, ' ').toLowerCase()]
     if (foundTagId) {
       // remove from words
       words = rest
@@ -205,8 +206,9 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
   state
 ) => {
   const next = getNavigateItemForState(om.state, state)
-  if (om.actions.router.getShouldNavigate(next)) {
-    console.log('syncStateToRoute true', cloneDeep({ next, state }))
+  const should = om.actions.router.getShouldNavigate(next)
+  console.log('syncStateToRoute', should, cloneDeep({ next, state }))
+  if (should) {
     om.actions.router.navigate(next)
     return true
   }

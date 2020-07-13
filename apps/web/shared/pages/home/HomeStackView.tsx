@@ -36,10 +36,12 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   const isRemoving = currentStates.length > breadcrumbs.length
   const items = isRemoving ? currentStates : homeStates
 
-  console.log(
-    'HomeStackView',
-    cloneDeep({ isRemoving, states, breadcrumbs, homeStates, items })
-  )
+  if (false) {
+    console.log(
+      'HomeStackView',
+      cloneDeep({ isRemoving, states, breadcrumbs, homeStates, items })
+    )
+  }
 
   // const activeItem = items[items.length - 1]
   // useEffect(() => {
