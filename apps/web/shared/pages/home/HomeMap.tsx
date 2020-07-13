@@ -156,7 +156,7 @@ export function centerMapToRegionMain(p: {
   span: LngLat
 }) {
   if (pauseMapUpdates) {
-    console.warn('paused no centering')
+    console.debug('paused no centering')
     return
   }
   centerMapToRegion(p)

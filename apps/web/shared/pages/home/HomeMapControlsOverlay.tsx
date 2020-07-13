@@ -1,5 +1,5 @@
 import { AbsoluteVStack, HStack, Text, VStack } from '@dish/ui'
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import { RefreshCcw } from 'react-feather'
 
 import { pageWidthMax, searchBarHeight } from '../../constants'
@@ -13,6 +13,7 @@ export const HomeMapControlsOverlay = memo(() => {
   const hasMovedMap = om.state.home.currentState?.['hasMovedMap']
   const drawerWidth = useHomeDrawerWidth()
   const isSmall = useMediaQueryIsSmall()
+  const [isLoading, setIsLoading] = useState(false)
   return (
     <AbsoluteVStack
       fullscreen
@@ -48,8 +49,9 @@ export const HomeMapControlsOverlay = memo(() => {
             om.actions.home.refresh()
           }}
         >
+          <RefreshCcw size={16} style={{ margin: -3, marginRight: 10 }} />
           <Text fontSize={13} fontWeight="500">
-            <RefreshCcw size={12} /> Redo search in map area
+            Redo search in map area
           </Text>
         </OverlayLinkButton>
       </HStack>

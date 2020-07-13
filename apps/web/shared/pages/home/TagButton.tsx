@@ -130,7 +130,7 @@ export const TagButton = memo(
               {rank}
             </Text>
           ) : (
-            <Spacer size={scale * 5} />
+            <Spacer size={scale * 2} />
           )}
           <Text
             ellipse

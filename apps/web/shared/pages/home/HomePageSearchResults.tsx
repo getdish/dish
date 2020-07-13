@@ -179,15 +179,16 @@ const HomeSearchResultsViewContent = memo(
             onFinishRender={
               hasMoreToLoad && index == cur.length - 1
                 ? // load more
-                  () => setState((x) => ({ ...x, hasLoaded: Date.now() }))
+                  () => {
+                    console.log('finished rendering', item)
+                    setState((x) => ({ ...x, hasLoaded: Date.now() }))
+                  }
                 : undefined
             }
           />
         </Suspense>
       ))
     }, [allResults, state.chunk])
-
-    console.log('HomeSearchResultsViewContent.render')
 
     // in an effect so we can use series and get auto-cancel on unmount
     useEffect(() => {

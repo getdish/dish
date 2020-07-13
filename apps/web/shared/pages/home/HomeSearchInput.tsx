@@ -63,7 +63,7 @@ function searchInputEffect(input: HTMLInputElement) {
             return
           } else if ('tagId' in item) {
             om.actions.home.clearSearch()
-            om.actions.home.navigateTo({
+            om.actions.home.navigate({
               tags: [item],
             })
           }
@@ -82,7 +82,7 @@ function searchInputEffect(input: HTMLInputElement) {
         if (isAutocompleteActive) {
           // if selected onto a tag, we can send remove command
           if (om.state.home.searchbarFocusedTag) {
-            om.actions.home.navigateTo({
+            om.actions.home.navigate({
               tags: [om.state.home.searchbarFocusedTag],
             })
             next()
@@ -323,7 +323,7 @@ const HomeSearchBarTags = memo(
     return (
       <>
         {!!om.state.home.searchBarTags.length && (
-          <HStack marginLeft={10} marginTop={-1} spacing={8}>
+          <HStack marginLeft={10} marginTop={-1} spacing={4}>
             {om.state.home.searchBarTags.map((tag) => {
               const isActive = om.state.home.searchbarFocusedTag === tag
               return (
@@ -335,7 +335,7 @@ const HomeSearchBarTags = memo(
                   color="#fff"
                   borderColor={'transparent'}
                   hoverStyle={{
-                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    backgroundColor: 'rgba(0,0,0,0.2)',
                   }}
                   {...(isActive && {
                     backgroundColor: 'rgba(255,255,255,0.1)',
@@ -355,7 +355,7 @@ const HomeSearchBarTags = memo(
                   }}
                   closable
                   onClose={async () => {
-                    om.actions.home.navigateTo({ tags: [tag] })
+                    om.actions.home.navigate({ tags: [tag] })
                     await fullyIdle()
                     setAvoidNextAutocompleteShowOnFocus()
                     input?.focus()
