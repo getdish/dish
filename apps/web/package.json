@@ -47,7 +47,7 @@
     "@dish/graph": "*",
     "@dish/helpers": "*",
     "@dish/ui": "*",
-    "@expo/html-elements": "^0.0.0-alpha.5",
+    "@expo/html-elements": "0.0.0",
     "@o/fast-compare": "2.7.6",
     "expo-linear-gradient": "^8.1.0",
     "flexsearch": "^0.6.32",

@@ -704,6 +704,7 @@ const runSearch: AsyncAction<{
 const popHomeState: Action<HistoryItem> = (om, item) => {
   console.log('popHomeState', item)
   assert(om.state.home.currentState.type !== 'home')
+  assert(om.state.home.state.length > 1)
   const nextStates = _.dropRight(om.state.home.states)
   om.state.home.states = nextStates
   if (!nextStates.some((x) => x.type === 'home')) {

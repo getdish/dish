@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native'
 
 export const textStyles = StyleSheet.create({
-  login_box: {},
   login_messages: {
     paddingTop: '0.5em',
     marginTop: '0.5em',

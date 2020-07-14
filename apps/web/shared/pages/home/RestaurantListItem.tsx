@@ -24,13 +24,13 @@ import { RestaurantDeliveryButton } from './RestaurantDeliveryButton'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
-import { restaurantQuery } from './restaurantQuery'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantTopReviews } from './RestaurantTopReviews'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 import { Squircle } from './Squircle'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import { useRestaurantQuery } from './useRestaurantQuery'
 
 type RestaurantListItemProps = {
   currentLocationInfo: GeocodePlace | null
@@ -107,8 +107,9 @@ const RestaurantListItemContent = memo(
     // const isEditing = isEditingUserPage(props.searchState, omStatic.state)
     const adjustRankingLeft = 36
     const leftPad = 25
-    const restaurant = restaurantQuery(restaurantSlug)
+    const restaurant = useRestaurantQuery(restaurantSlug)
 
+    console.log('restaurant.name && props.onFinishRender', restaurant.name, props.onFinishRender)
     useEffect(() => {
       if (!!restaurant.name && props.onFinishRender) {
         props.onFinishRender!()
@@ -182,11 +183,11 @@ const RestaurantListItemContent = memo(
                       >
                         <Text
                           marginRight={10}
-                          borderBottomColor="#f2f2f2"
+                          borderBottomColor="transparent"
                           borderBottomWidth={2}
                           // @ts-ignore
                           hoverStyle={{
-                            borderBottomColor: '#000',
+                            borderBottomColor: '#f2f2f2',
                           }}
                           pressStyle={{
                             borderBottomColor: brandColor,
@@ -285,7 +286,7 @@ const RestaurantPeek = memo(
     const tag_names = Object.keys(searchState?.activeTagIds || {})
     const spacing = size == 'lg' ? 16 : 12
     const isSmall = useMediaQueryIsSmall()
-    const restaurant = restaurantQuery(props.restaurantSlug)
+    const restaurant = useRestaurantQuery(props.restaurantSlug)
     const photos = restaurantPhotosForCarousel({
       restaurant,
       tag_names,

@@ -14,9 +14,9 @@ import React, { memo } from 'react'
 import { Image, Linking } from 'react-native'
 
 import { RatingViewProps } from './RatingView'
-import { restaurantQuery } from './restaurantQuery'
 import RestaurantRatingView from './RestaurantRatingView'
 import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
+import { useRestaurantQuery } from './useRestaurantQuery'
 
 export const RestaurantRatingViewPopover = memo(
   graphql(
@@ -24,7 +24,7 @@ export const RestaurantRatingViewPopover = memo(
       size = 'md',
       restaurantSlug,
     }: Partial<RatingViewProps> & { restaurantSlug: string }) => {
-      const restaurant = restaurantQuery(restaurantSlug)
+      const restaurant = useRestaurantQuery(restaurantSlug)
       const sources = restaurant?.sources?.() ?? {}
       const headStyle: TextProps = {
         fontWeight: '300',

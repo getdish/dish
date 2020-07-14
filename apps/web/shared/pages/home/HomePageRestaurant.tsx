@@ -19,12 +19,13 @@ import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
-import { restaurantQuery } from './restaurantQuery'
+import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantTopReviews } from './RestaurantTopReviews'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
+import { useRestaurantQuery } from './useRestaurantQuery'
 
 export default memo(
   graphql(function HomePageRestaurant({
@@ -37,13 +38,7 @@ export default memo(
     }
     const isSmall = useMediaQueryIsSmall()
     const slug = state.restaurantSlug
-    const [restaurant] = query.restaurant({
-      where: {
-        slug: {
-          _eq: slug,
-        },
-      },
-    })
+    const restaurant = useRestaurantQuery(slug)
     const isLoading = !restaurant?.name
     // const isCanTag =
     //   om.state.user.isLoggedIn &&
@@ -80,57 +75,10 @@ export default memo(
 
         <HomeScrollView paddingTop={0}>
           <VStack paddingHorizontal={14} paddingTop={30}>
-            <HStack position="relative">
-              <RestaurantRatingViewPopover size="lg" restaurantSlug={slug} />
-
-              <Spacer size={16} />
-
-              <HStack>
-                <VStack flex={1}>
-                  <Text
-                    selectable
-                    fontSize={restaurant.name?.length > 25 ? 30 : 36}
-                    fontWeight="800"
-                    paddingRight={30}
-                  >
-                    {restaurant.name}
-                  </Text>
-                  <Spacer size="sm" />
-                  <RestaurantAddressLinksRow
-                    currentLocationInfo={state.currentLocationInfo}
-                    showMenu
-                    size="lg"
-                    restaurantSlug={slug}
-                  />
-                  <Spacer size="md" />
-                  <HStack>
-                    <Text selectable color="#777" fontSize={16}>
-                      {restaurant.address}
-                    </Text>
-                  </HStack>
-                  <Spacer size={6} />
-                </VStack>
-              </HStack>
-            </HStack>
-
-            <Spacer />
-
-            <SmallTitle divider="center">
-              <RestaurantFavoriteStar restaurantId={restaurant.id} size="lg" />
-            </SmallTitle>
-
-            <Spacer />
+            {/* HEADER */}
+            <RestaurantHeader restaurantSlug={restaurant.slug} />
 
             <VStack alignItems="center">
-              <HStack minWidth={400}>
-                <RestaurantDetailRow
-                  centered
-                  justifyContent="center"
-                  restaurantSlug={slug}
-                  flex={1}
-                />
-              </HStack>
-
               <Spacer />
               <Spacer />
 
@@ -214,7 +162,7 @@ export default memo(
 
 const RestaurantPhotos = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
-    const restaurant = restaurantQuery(restaurantSlug)
+    const restaurant = useRestaurantQuery(restaurantSlug)
     const photos = restaurantPhotosForCarousel({ restaurant })
     const drawerWidth = useHomeDrawerWidthInner()
     const spacing = 12
@@ -259,7 +207,7 @@ const RestaurantPhotos = memo(
 
 const RestaurantMenu = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
-    const restaurant = restaurantQuery(restaurantSlug)
+    const restaurant = useRestaurantQuery(restaurantSlug)
     const items = restaurant.menu_items({ limit: 20 })
     return (
       <>

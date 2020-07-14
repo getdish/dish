@@ -66,7 +66,11 @@ export default memo(function HomePageHomePane(props: HomePagePaneProps) {
       setIsLoaded(true)
     } else {
       return series([
-        fullyIdle,
+        () =>
+          fullyIdle({
+            min: 1000 * 2,
+            max: 1000 * 10,
+          }),
         () => {
           setIsLoaded(true)
         },

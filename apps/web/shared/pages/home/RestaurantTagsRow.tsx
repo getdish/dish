@@ -2,13 +2,13 @@ import { graphql } from '@dish/graph'
 import { HStack } from '@dish/ui'
 import React, { memo } from 'react'
 
-import { restaurantQuery } from './restaurantQuery'
 import {
   TagButton,
   TagButtonProps,
   TagButtonTagProps,
   getTagButtonProps,
 } from './TagButton'
+import { useRestaurantQuery } from './useRestaurantQuery'
 
 type TagRowProps = {
   restaurantSlug: string
@@ -30,7 +30,7 @@ export const RestaurantTagsRow = memo(
     if (props.tags) {
       tags = props.tags
     } else {
-      const restaurant = restaurantQuery(restaurantSlug)
+      const restaurant = useRestaurantQuery(restaurantSlug)
       const restaurantTags = restaurant.tags({
         limit: 6,
       })
