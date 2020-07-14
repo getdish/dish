@@ -24,12 +24,12 @@ import { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
 
+import { emojiRegex } from '../../helpers/emojiRegex'
+import { SmallButton } from '../../views/ui/SmallButton'
+
 // whats still broken:
 //   - "New" item
 //   - "Create" form
-
-import { emojiRegex } from '../../helpers/emojiRegex'
-import { SmallButton } from '../../views/ui/SmallButton'
 
 export default graphql(function AdminTagsPage() {
   return (
