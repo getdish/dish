@@ -89,7 +89,7 @@ const HomeAutoCompleteContents = memo(() => {
         if (y > 140) {
           tmOff = setTimeout(() => {
             // if > 0 dont autohide
-            if (om.state.home.autocompleteIndex >= 0) {
+            if (om.state.home.autocompleteIndex <= 0) {
               om.actions.home.setShowAutocomplete(false)
             }
           }, 80)

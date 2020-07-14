@@ -96,11 +96,16 @@ export const tagLenses: Tag[] = [
   // },
 ]
 
+export const tagDisplayNames = {
+  'price-low': '$',
+  'price-mid': '$$',
+  'price-high': '$$$',
+}
+
 export const tagFilters: Tag[] = [
   {
     id: '01',
     name: 'price-low',
-    displayName: '$',
     type: 'filter',
     // @ts-ignore
     groupId: 'price',
@@ -109,7 +114,6 @@ export const tagFilters: Tag[] = [
   {
     id: '21',
     name: 'price-mid',
-    displayName: '$$',
     type: 'filter',
     // @ts-ignore
     groupId: 'price',
@@ -117,7 +121,6 @@ export const tagFilters: Tag[] = [
   {
     id: '31',
     name: 'price-high',
-    displayName: '$$$',
     type: 'filter',
     // @ts-ignore
     groupId: 'price',

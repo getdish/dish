@@ -1,5 +1,12 @@
 import { fullyIdle, series } from '@dish/async'
-import { TagRecord, TagType, graphql, query, tagInsert } from '@dish/graph'
+import {
+  TagRecord,
+  TagType,
+  graphql,
+  query,
+  tagDelete,
+  tagInsert,
+} from '@dish/graph'
 import { RecoilRoot, Store, useRecoilStore } from '@dish/recoil-store'
 import {
   HStack,
@@ -12,6 +19,7 @@ import {
 import immer from 'immer'
 import { capitalize, uniqBy } from 'lodash'
 import { Suspense, memo, useEffect, useRef, useState } from 'react'
+import { X } from 'react-feather'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
 
 import { emojiRegex } from '../../helpers/emojiRegex'
@@ -230,6 +238,7 @@ const TagList = memo(
                 isActive={
                   store.selected[0] == row && store.selected[1] == index
                 }
+                deletable
               />
             )
           })}
@@ -288,7 +297,7 @@ const ListItem = memo(
     useEffect(() => {
       if (isEditing) {
         return series([
-          () => fullyIdle({ max: 30 }),
+          () => fullyIdle({ max: 40 }),
           () => {
             textInput.current?.focus()
             textInput.current?.select()
@@ -381,19 +390,16 @@ const ListItem = memo(
 
         {deletable && (
           <VStack
+            padding={4}
             onPress={(e) => {
               e.stopPropagation()
-              setHidden(true)
-              // client.mutate({
-              //   variables: {
-              //     id: tag.id,
-              //   },
-              //   mutation: TAXONOMY_DELETE,
-              // })
+              if (confirm('Delete?')) {
+                setHidden(true)
+                tagDelete(tag)
+              }
             }}
           >
-            <Text>✅</Text>
-            {/* <CheckMark name="md-checkmark-circle" /> */}
+            <X size={12} color="#999" />
           </VStack>
         )}
       </HStack>

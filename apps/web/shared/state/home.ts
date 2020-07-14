@@ -325,17 +325,6 @@ const pushHomeState: AsyncAction<
       // use last home or search to get most up to date
       activeTagIds = lastHomeOrSearch.activeTagIds
 
-      if (!started) {
-        const fakeTags = getTagsFromRoute(om.state.router.curPage)
-        const tags = await getFullTags(fakeTags)
-        activeTagIds = tags.reduce((acc, tag) => {
-          const id = getTagId(tag)
-          acc[id] = true
-          return acc
-        }, {})
-        om.actions.home.addTagsToCache(tags)
-      }
-
       const username =
         type == 'userSearch' ? om.state.router.curPage.params.username : ''
       const searchQuery = item.params.search ?? base.searchQuery
@@ -451,16 +440,9 @@ const pushHomeState: AsyncAction<
       res = res2
       rej = rej2
     })
-    runFetchData().then(
-      () => {
-        om.actions.home.setIsLoading(false)
-        res()
-      },
-      () => {
-        om.actions.home.setIsLoading(false)
-        rej()
-      }
-    )
+    runFetchData().finally(() => {
+      om.actions.home.setIsLoading(false)
+    })
   }
 
   if (fetchDataPromise) {
@@ -499,9 +481,22 @@ const loadPageRestaurant: AsyncAction = async (om) => {
   }
 }
 
+let hasLoadedSearchOnce = false
+
 const loadPageSearch: AsyncAction = async (om) => {
   const state = om.state.home.currentState
-  if (state.type !== 'search' && state.type !== 'userSearch') return
+  if (!isSearchState(state)) return
+
+  console.log('om.state.router.history.length', om.state.router.history.length)
+  if (!hasLoadedSearchOnce && om.state.router.history.length === 1) {
+    hasLoadedSearchOnce = true
+    const fakeTags = getTagsFromRoute(om.state.router.curPage)
+    const tags = await getFullTags(fakeTags)
+    console.log('tags', tags)
+    om.actions.home.addTagsToCache(tags)
+    om.actions.home.updateActiveTags(state)
+  }
+
   om.actions.home.runSearch({ force: true })
 }
 
@@ -687,6 +682,7 @@ const runSearch: AsyncAction<{
   // only update searchkey once finished
   lastSearchKey = searchKey
   state = om.state.home.lastSearchState
+  console.log('search found restaurants', restaurants)
   state.results = {
     status: 'complete',
     results: {
@@ -1195,6 +1191,7 @@ export const getNavigateTo: Action<HomeStateNav, LinkButtonProps | null> = (
 // but then later you hit "enter" and we need to navigate to search (or home)
 // we definitely can clean up / name better some of this once things settle
 const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
+  console.trace('what')
   if (navState.tags) {
     om.actions.home.addTagsToCache(navState.tags)
   }

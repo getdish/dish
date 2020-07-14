@@ -15,6 +15,7 @@ import { ThumbsUp, X } from 'react-feather'
 import { Image } from 'react-native'
 
 import { bgLight } from '../../colors'
+import { tagDisplayNames } from '../../state/Tag'
 import { LinkButton } from '../../views/ui/LinkButton'
 
 export type TagButtonTagProps = NonNullObject<
@@ -178,7 +179,7 @@ export const TagButton = memo(
                 )}
               </span>
             ) : null}
-            {tag['displayName'] ?? _.capitalize(tag.name)}
+            {tagDisplayNames[tag.name] ?? _.capitalize(tag.name)}
           </Text>
           {!!votable && (
             <LinkButton

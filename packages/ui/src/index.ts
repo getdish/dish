@@ -30,6 +30,7 @@ export * from './hooks/useWindowSize'
 
 export * from './views/BlurView'
 export * from './views/Box'
+export * from './views/Button'
 export * from './views/Circle'
 export * from './views/Color'
 export * from './views/Divider'

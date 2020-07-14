@@ -53,8 +53,8 @@ export default memo(function HomePageHomePane(props: HomePagePaneProps) {
 
   // on load home clear search effect!
   useLayoutEffect(() => {
-    if (props.isActive) {
-      console.log('clear tings')
+    // not on first load
+    if (props.isActive && isLoaded) {
       om.actions.home.clearSearch()
       om.actions.home.clearTags()
     }

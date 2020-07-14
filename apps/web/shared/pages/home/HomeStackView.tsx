@@ -23,6 +23,7 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   const om = useOvermind()
   const breadcrumbs = om.state.home.breadcrumbStates
   const states = om.state.home.states
+  const isInAdmin = om.state.router.curPage.name.startsWith('admin')
   const key = JSON.stringify([states, breadcrumbs])
   const homeStates = useMemo(() => {
     return breadcrumbs
@@ -53,7 +54,7 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   return (
     <AbsoluteVStack fullscreen>
       {items.map((item, i) => {
-        const isActive = i === items.length - 1
+        const isActive = !isInAdmin && i === items.length - 1
         return (
           // <PopoverShowContext.Provider
           //   key={item.id}
