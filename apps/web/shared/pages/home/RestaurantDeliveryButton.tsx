@@ -23,13 +23,14 @@ export const RestaurantDeliveryButton = memo(
                   backgroundColor: '#f2f2f2',
                 }}
               >
-                <Image
-                  source={item.image}
+                <img
+                  src={item.image}
                   style={{
                     width: 22,
                     height: 22,
                     borderRadius: 40,
-                    marginVertical: -8,
+                    marginTop: -8,
+                    marginBottom: -8,
                     marginRight: -8,
                     borderWidth: 1,
                     borderColor: '#fff',

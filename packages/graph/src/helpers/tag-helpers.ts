@@ -9,6 +9,7 @@ export const tagInsert = QueryHelpers.insert
 export const tagUpsert = QueryHelpers.upsert
 export const tagUpdate = QueryHelpers.update
 export const tagFindOne = QueryHelpers.findOne
+export const tagDelete = QueryHelpers.delete
 export const tagRefresh = QueryHelpers.refresh
 
 export const tagFindOneWithCategories = async (tag: Tag) => {

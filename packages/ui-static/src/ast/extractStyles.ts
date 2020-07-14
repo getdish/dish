@@ -343,12 +343,14 @@ export function extractStyles(
                       t.jsxExpressionContainer(t.nullLiteral())
                     )
                   )
+                } else if (typeof value === 'object') {
+                  throw new Error(`Dont handle objects for now`)
                 } else {
                   // toString anything else
                   flattenedAttributes.push(
                     t.jsxAttribute(
                       t.jsxIdentifier(k),
-                      t.jsxExpressionContainer(t.stringLiteral('' + value))
+                      t.stringLiteral('' + value)
                     )
                   )
                 }
@@ -409,10 +411,6 @@ export function extractStyles(
             ? attribute.value.expression
             : attribute.value
 
-          if (shouldPrintDebug) {
-            console.log('attr', { name, inlinePropCount })
-          }
-
           // value == null means boolean (true)
           const isBoolean = value == null
           const isBooleanTruthy =
@@ -462,6 +460,15 @@ export function extractStyles(
           let styleValue: any = UNUSED
           try {
             styleValue = attemptEval(value)
+            if (shouldPrintDebug) {
+              console.log('attr', {
+                name,
+                inlinePropCount,
+                styleValue,
+                value,
+                attribute: attribute?.value?.['expression'],
+              })
+            }
           } catch (err) {
             if (shouldPrintDebug) {
               console.log('err evaluating, could be dynamic:', err.message)
@@ -710,6 +717,17 @@ export function extractStyles(
         const classNames: string[] = []
         const hasViewStyle = Object.keys(viewStyles).length > 0
         if (hasViewStyle) {
+          if (viewStyles['hoverStyle']) {
+            console.log(
+              'viewStyles',
+              viewStyles,
+              defaultStyle,
+              componentName,
+              sourceFileName,
+              node.name.name,
+              component.staticConfig
+            )
+          }
           const styles = addStylesAtomic(viewStyles)
           for (const style of styles) {
             classNames.push(style.identifier)

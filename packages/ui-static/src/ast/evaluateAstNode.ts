@@ -29,8 +29,7 @@ export function evaluateAstNode(
         t.isNumberLiteral(value.key) ||
         t.isNumericLiteral(value.key)
       ) {
-        // @ts-ignore TODO remove this is only an issue on CI
-        key = value.key.value
+        key = value.key['value']
       } else {
         throw new Error('Unsupported key type: ' + value.key.type)
       }

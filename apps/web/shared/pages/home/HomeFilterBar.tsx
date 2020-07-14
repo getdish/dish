@@ -11,7 +11,7 @@ import React, { memo } from 'react'
 import { CheckBox, Image } from 'react-native'
 
 import { HomeActiveTagIds } from '../../state/home'
-import { Tag, getTagId } from '../../state/Tag'
+import { Tag, getTagId, tagDisplayNames } from '../../state/Tag'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallButton } from '../../views/ui/SmallButton'
@@ -124,7 +124,7 @@ const FilterButton = memo(
     return (
       <LinkButton tag={filter}>
         <SmallButton isActive={isActive} {...rest}>
-          {filter.displayName ?? filter.name}
+          {tagDisplayNames[filter.name] ?? filter.name}
         </SmallButton>
       </LinkButton>
     )
