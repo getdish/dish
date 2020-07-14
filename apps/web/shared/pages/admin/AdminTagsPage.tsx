@@ -12,6 +12,7 @@ import { RecoilRoot, Store, useRecoilStore } from '@dish/recoil-store'
 import {
   HStack,
   LoadingItems,
+  Spacer,
   StackProps,
   Text,
   VStack,
@@ -22,6 +23,10 @@ import { capitalize, uniqBy } from 'lodash'
 import { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
+
+// whats still broken:
+//   - "New" item
+//   - "Create" form
 
 import { emojiRegex } from '../../helpers/emojiRegex'
 import { SmallButton } from '../../views/ui/SmallButton'
@@ -184,6 +189,78 @@ const TagList = memo(
   graphql(({ type, row }: { type: TagType; row: number }) => {
     const store = useRecoilStore(Tags)
     const lastRowSelection = store.selectedNames[row - 1]
+    const [searchRaw, setSearch] = useState('')
+    const search = useDebounceValue(searchRaw, 100)
+    const [parent] = query.tag({
+      where: {
+        name: { _eq: lastRowSelection },
+      },
+      limit: 1,
+    })
+    const parentId = parent.id
+
+    return (
+      <VStack flex={1} maxHeight="100%">
+        <ColumnHeader
+          after={
+            <HStack
+              flex={1}
+              spacing={10}
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <TextInput
+                placeholder="Search..."
+                style={[styles.textInput, { flex: 1, maxWidth: '50%' }]}
+                onChangeText={(text) => {
+                  setSearch(text)
+                }}
+              />
+              <SmallButton
+                onPress={() => {
+                  tagInsert([
+                    {
+                      type,
+                      name: `⭐️ new ${Math.random()}`,
+                      icon: '',
+                      parentId,
+                    },
+                  ])
+                }}
+              >
+                New
+              </SmallButton>
+            </HStack>
+          }
+        >
+          {capitalize(type)} {lastRowSelection ? `(${lastRowSelection})` : ''}
+        </ColumnHeader>
+        <Suspense fallback={<LoadingItems />}>
+          <TagListContent
+            search={search}
+            row={row}
+            type={type}
+            lastRowSelection={lastRowSelection}
+          />
+        </Suspense>
+      </VStack>
+    )
+  })
+)
+
+const TagListContent = graphql(
+  ({
+    row,
+    search,
+    type,
+    lastRowSelection,
+  }: {
+    search: string
+    row: number
+    type: TagType
+    lastRowSelection: string
+  }) => {
+    const store = useRecoilStore(Tags)
     const limit = 200
     const [page, setPage] = useState(1)
     const results = query.tag({
@@ -193,6 +270,11 @@ const TagList = memo(
           lastRowSelection && {
             parent: { name: { _eq: lastRowSelection } },
           }),
+        ...(!!search && {
+          name: {
+            _ilike: `%${search}%`,
+          },
+        }),
       },
       limit: limit,
       offset: (page - 1) * limit,
@@ -202,88 +284,60 @@ const TagList = memo(
         },
       ],
     })
-
-    const [parent] = query.tag({
-      where: {
-        name: { _eq: lastRowSelection },
-      },
-      limit: 1,
-    })
-    const parentId = parent.id
-    const allResults = uniqBy([{ name: '' }, ...results], (x) => x.name)
+    const allResults = uniqBy([{ id: 0, name: '' }, ...results], (x) => x.name)
 
     return (
-      <VStack flex={1} maxHeight="100%">
-        <ColumnHeader
-          after={
-            <SmallButton
-              onPress={() => {
-                tagInsert([
-                  {
-                    type,
-                    name: `⭐️ new ${Math.random()}`,
-                    icon: '',
-                    parentId,
-                  },
-                ])
-              }}
-            >
-              Add New
-            </SmallButton>
-          }
-        >
-          {capitalize(type)} {lastRowSelection ? `(${lastRowSelection})` : ''}
-        </ColumnHeader>
-        <ScrollView style={{ paddingBottom: 100 }}>
-          {allResults.map((tag, index) => {
-            return (
-              <ListItem
-                key={tag.id}
-                row={row}
-                col={index}
-                tag={tag}
-                type={type}
-                isFormerlyActive={store.selectedNames[row] === tag.name}
-                isActive={
-                  store.selected[0] == row && store.selected[1] == index
-                }
-                deletable
-              />
-            )
-          })}
+      <ScrollView style={{ paddingBottom: 100 }}>
+        {allResults.map((tag, index) => {
+          return (
+            <ListItem
+              key={tag.id}
+              row={row}
+              col={index}
+              tag={tag}
+              type={type}
+              isFormerlyActive={store.selectedNames[row] === tag.name}
+              isActive={store.selected[0] == row && store.selected[1] == index}
+              deletable={index > 0}
+              editable={index > 0}
+            />
+          )
+        })}
 
-          {results.length === limit && (
-            <HStack
-              height={32}
-              padding={6}
-              hoverStyle={{
-                backgroundColor: '#f2f2f2',
-              }}
-              onPress={() => {
-                setPage((x) => x + 1)
-              }}
-            >
-              <Text>Next page</Text>
-            </HStack>
-          )}
-        </ScrollView>
-      </VStack>
+        {results.length === limit && (
+          <HStack
+            height={32}
+            padding={6}
+            hoverStyle={{
+              backgroundColor: '#f2f2f2',
+            }}
+            onPress={() => {
+              setPage((x) => x + 1)
+            }}
+          >
+            <Text>Next page</Text>
+          </HStack>
+        )}
+      </ScrollView>
     )
-  })
+  }
 )
 
 const ColumnHeader = ({ children, after }) => {
   return (
     <HStack
-      height={30}
+      minHeight={30}
+      maxWidth="100%"
+      overflow="hidden"
       borderBottomColor="#ddd"
       borderBottomWidth={1}
       justifyContent="space-between"
       alignItems="center"
     >
-      <Text fontWeight="600" fontSize={13}>
+      <Text paddingHorizontal={5} fontWeight="600" fontSize={13}>
         {children}
       </Text>
+      <Spacer />
       {after}
     </HStack>
   )
@@ -299,7 +353,6 @@ const ListItem = memo(
     isActive,
     editable = true,
     deletable = false,
-    upsert,
   }: {
     editable?: boolean
     deletable?: boolean
@@ -309,7 +362,6 @@ const ListItem = memo(
     isActive: boolean
     tag: TagRecord
     isFormerlyActive?: boolean
-    upsert?: Function
   }) => {
     const store = useRecoilStore(Tags)
     const text = `${tag.icon ?? ''} ${tag.name}`.trim()

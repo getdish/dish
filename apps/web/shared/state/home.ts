@@ -491,9 +491,15 @@ const loadPageSearch: AsyncAction = async (om) => {
     hasLoadedSearchOnce = true
     const fakeTags = getTagsFromRoute(om.state.router.curPage)
     const tags = await getFullTags(fakeTags)
-    console.log('tags', tags)
+    console.log('full tags', tags)
     om.actions.home.addTagsToCache(tags)
-    om.actions.home.updateActiveTags(state)
+    om.actions.home.updateActiveTags({
+      ...state,
+      activeTagIds: tags.reduce<any>((acc, tag) => {
+        acc[getTagId(tag)] = true
+        return acc
+      }, {}),
+    })
   }
 
   om.actions.home.runSearch({ force: true })
