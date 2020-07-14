@@ -49,6 +49,7 @@ export type TagButtonProps = Omit<StackProps & TagButtonTagProps, 'rgb'> & {
   hideIcon?: boolean
   subtleIcon?: boolean
   fontSize?: TextProps['fontSize']
+  fontWeight?: TextProps['fontWeight']
   noColor?: boolean
   replace?: boolean
   onPress?: Function
@@ -66,6 +67,7 @@ export const TagButton = memo(
     onClose,
     votable,
     fontSize: fontSizeProp,
+    fontWeight,
     color,
     icon,
     rgb,
@@ -115,7 +117,7 @@ export const TagButton = memo(
             <Text
               // @ts-ignore
               fontSize={rankFontSize}
-              fontWeight="bold"
+              fontWeight="600"
               margin="auto"
               marginVertical="-2%"
               paddingHorizontal={8 * scale}
@@ -138,7 +140,7 @@ export const TagButton = memo(
             // @ts-ignore
             fontSize={fontSize}
             // @ts-ignore
-            fontWeight={size == 'lg' ? '500' : 'inherit'}
+            fontWeight={fontWeight ?? (size == 'lg' ? '500' : 'inherit')}
             // @ts-ignore
             lineHeight="inherit"
             paddingHorizontal={subtle ? 0 : 7 * scale}

@@ -1,4 +1,4 @@
-import { HStack, PageTitle, Spacer, Text, VStack } from '@dish/ui'
+import { HStack, SmallTitle, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { Route, RouteSwitch } from '../../views/router/Route'
@@ -8,12 +8,17 @@ export default memo(function AdminPage() {
   return (
     <VStack flex={1} alignItems="center">
       <HStack backgroundColor="#eee" width="100%" spacing={20} padding={5}>
-        <Text fontWeight="700">Admin</Text>
+        <Link name="admin">
+          <Text fontWeight="700">Admin</Text>
+        </Link>
         <Link name="home">Dish ⤴️</Link>
         <Link name="adminTags">Tags</Link>
       </HStack>
       <RouteSwitch>
         <Route name="adminTags">{() => <AdminTagsPage />}</Route>
+        <Route name="admin">
+          <SmallTitle>Welcome to admin</SmallTitle>
+        </Route>
       </RouteSwitch>
     </VStack>
   )

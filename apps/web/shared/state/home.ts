@@ -18,6 +18,7 @@ import { Action, AsyncAction, derived } from 'overmind'
 import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
 import { memoize } from '../helpers/memoizeWeak'
 import { timer } from '../helpers/timer'
+import { useRestaurantQuery } from '../pages/home/useRestaurantQuery'
 import { LinkButtonProps } from '../views/ui/LinkProps'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
 import {
@@ -265,9 +266,10 @@ const pushHomeState: AsyncAction<
     fetchDataPromise: Promise<any>
   } | null
 > = async (om, item) => {
-  om.state.home.isLoading = true
+  // start loading
+  om.actions.home.setIsLoading(true)
 
-  const { started, currentState } = om.state.home
+  const { currentState } = om.state.home
   const historyId = item.id
   const shouldReplace =
     !!item.replace &&
@@ -285,11 +287,8 @@ const pushHomeState: AsyncAction<
     span: currentState?.span ?? initialHomeState.span,
     searchQuery: item.params.query ?? currentState?.searchQuery ?? '',
   }
-  const newState = {
-    historyId,
-  }
 
-  let nextState: HomeStateItem | null = null
+  let nextState: Partial<HomeStateItem> | null = null
   let fetchData: PageAction | null = null
   let activeTagIds: HomeActiveTagIds
   const type = item.name
@@ -305,12 +304,10 @@ const pushHomeState: AsyncAction<
         }
       }
       nextState = {
-        ...base,
         type,
-        ...newState,
         searchQuery: '',
         activeTagIds,
-      } as HomeStateItemHome
+      }
       break
     }
 
@@ -329,11 +326,9 @@ const pushHomeState: AsyncAction<
         type == 'userSearch' ? om.state.router.curPage.params.username : ''
       const searchQuery = item.params.search ?? base.searchQuery
       const searchState: HomeStateItemSearch = {
-        ...base,
         hasMovedMap: false,
         results: { status: 'loading' },
         ...om.state.home.lastSearchState,
-        ...newState,
         type,
         username,
         activeTagIds,
@@ -347,11 +342,9 @@ const pushHomeState: AsyncAction<
     // restaurant
     case 'restaurant': {
       nextState = {
-        ...base,
         type,
         restaurantId: null,
         restaurantSlug: item.params.slug,
-        ...newState,
       }
       fetchData = om.actions.home.loadPageRestaurant
       break
@@ -359,23 +352,26 @@ const pushHomeState: AsyncAction<
 
     case 'user': {
       nextState = {
-        ...base,
         type: 'user',
         username: item.params.username,
-        ...newState,
       }
       break
     }
 
     case 'gallery': {
       nextState = {
-        ...base,
         type: 'gallery',
         restaurantSlug: item.params.restaurantSlug,
         dishId: item.params.dishId,
       }
       break
     }
+  }
+
+  nextState = {
+    ...base,
+    ...nextState,
+    historyId,
   }
 
   async function runFetchData() {
@@ -461,9 +457,7 @@ const loadPageRestaurant: AsyncAction = async (om) => {
   if (state.type !== 'restaurant') return
   const slug = state.restaurantSlug
   const restaurant = await resolved(() => {
-    const [{ location, id }] = query.restaurant({
-      where: { slug: { _eq: slug } },
-    })
+    const { location, id } = useRestaurantQuery(slug)
     location?.coordinates
     return { location, id }
   })
@@ -704,7 +698,7 @@ const runSearch: AsyncAction<{
 const popHomeState: Action<HistoryItem> = (om, item) => {
   console.log('popHomeState', item)
   assert(om.state.home.currentState.type !== 'home')
-  assert(om.state.home.state.length > 1)
+  assert(om.state.home.states.length > 1)
   const nextStates = _.dropRight(om.state.home.states)
   om.state.home.states = nextStates
   if (!nextStates.some((x) => x.type === 'home')) {
@@ -805,7 +799,13 @@ const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
     const [firstResult] = (await reverseGeocode(center)) ?? []
     const placeName = firstResult.subLocality ?? firstResult.locality
     if (placeName) {
-      currentState.currentLocationInfo = { ...firstResult }
+      console.log('user location', firstResult)
+      currentState.currentLocationInfo = {
+        country: firstResult?.country,
+        coordinate: firstResult?.coordinate,
+        locality: firstResult?.locality,
+        subLocality: firstResult?.subLocality,
+      }
       currentState.currentLocationName = spanToLocationName(span, firstResult)
     }
   } catch (err) {
@@ -817,7 +817,9 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
   om,
   { type, name, item }
 ) => {
-  // actions on every route
+  console.log('handling route change...', name, type, item)
+
+  // happens on *any* route push or pop
   if (om.state.home.hoveredRestaurant) {
     om.state.home.hoveredRestaurant = null
   }

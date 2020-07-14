@@ -23,7 +23,7 @@ export const restaurantPhotosForCarousel = ({
   // @ts-ignore
   const tags = restaurant.top_tags({
     args: {
-      tag_names: tag_names.join(','),
+      tag_names: '123',
     },
   })
   // @ts-ignore
@@ -46,7 +46,7 @@ export const restaurantPhotosForCarousel = ({
     }
     photos.push({
       name: photoName,
-      icon: t.tag.icon,
+      // icon: t.tag.icon,
       image: photo,
       rating: photoRating,
       isFallback,

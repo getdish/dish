@@ -342,6 +342,7 @@ const HomeSearchBarTags = memo(
                   subtleIcon
                   backgroundColor="rgba(0,0,0,0.3)"
                   color="#fff"
+                  fontWeight="600"
                   borderColor={'transparent'}
                   hoverStyle={{
                     backgroundColor: 'rgba(0,0,0,0.2)',

@@ -1,6 +1,6 @@
-import { AbsoluteVStack, HStack, Text, VStack } from '@dish/ui'
+import { AbsoluteVStack, HStack, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo, useState } from 'react'
-import { RefreshCcw } from 'react-feather'
+import { ChevronUp, RefreshCcw, X } from 'react-feather'
 
 import { pageWidthMax, searchBarHeight } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
@@ -53,6 +53,15 @@ export const HomeMapControlsOverlay = memo(() => {
           <Text fontSize={14} fontWeight="400" opacity={0.85}>
             Re-run search in map
           </Text>
+          <ChevronUp
+            onMouseUp={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              om.actions.home.setHasMovedMap(false)
+            }}
+            size={12}
+            style={{ margin: -6, marginLeft: 4, padding: 4, opacity: 0.4 }}
+          />
         </OverlayLinkButton>
       </HStack>
 

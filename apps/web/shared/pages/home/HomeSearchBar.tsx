@@ -208,7 +208,7 @@ const HomeSearchBarHomeBackButton = memo(() => {
   const om = useOvermind()
   const isDisabled = om.state.home.currentStateType === 'home'
   return (
-    <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
+    <MediaQuery query={mediaQueries.md}>
       <LinkButton
         justifyContent="center"
         alignItems="center"

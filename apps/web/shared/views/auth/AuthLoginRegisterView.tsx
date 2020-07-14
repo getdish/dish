@@ -58,7 +58,14 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
   }
 
   return (
-    <form style={{ width: '100%', height: '100%' }}>
+    <form
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       {/* <Text style={{ fontSize: 16 }}>
         // some pitch on features for login here
       </Text> */}

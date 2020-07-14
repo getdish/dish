@@ -18,7 +18,7 @@ export const RestaurantAddTagButton = ({
       onChangeOpen={setIsOpen}
       contents={
         <Box>
-          <HomeLenseBar activeTagIds={{}} />
+          <HomeLenseBar />
         </Box>
       }
     >

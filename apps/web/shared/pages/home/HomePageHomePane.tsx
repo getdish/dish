@@ -103,6 +103,8 @@ const HomePageTopDishes = memo(() => {
       // @ts-ignore
       ?.descriptions?.plain.replace('Here', ``) ?? ''
 
+  const locationName = om.state.home.currentState.currentLocationName
+
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
@@ -146,7 +148,10 @@ const HomePageTopDishes = memo(() => {
                     </AbsoluteVStack>
                   )}
                   <HorizontalLine />
-                  <HomeLenseBar size="lg" activeTagIds={activeTagIds} />
+
+                  <HStack alignItems="center" justifyContent="center">
+                    <HomeLenseBar size="lg" activeTagIds={activeTagIds} />
+                  </HStack>
                   <HorizontalLine />
                 </HStack>
 
@@ -154,13 +159,8 @@ const HomePageTopDishes = memo(() => {
 
                 <HomeIntroLetter />
 
-                <SmallTitle
-                  fontWeight="300"
-                  letterSpacing={0}
-                  fontSize={20}
-                  divider="center"
-                >
-                  What's good in San Francisco...
+                <SmallTitle fontWeight="300" letterSpacing={0} divider="center">
+                  {locationName ? `What's good in ${locationName}` : ' '}
                 </SmallTitle>
 
                 {/* <HomeFilterBar activeTagIds={activeTagIds} /> */}
@@ -284,12 +284,17 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
         >
           <Text
             ellipse
-            fontSize={20}
+            fontSize={24}
             fontWeight={'400'}
             height={24}
             lineHeight={24}
           >
-            {country.country} {country.icon}
+            {country.country}{' '}
+            {country.icon ? (
+              <Text marginLeft={3} fontSize="120%">
+                {country.icon}
+              </Text>
+            ) : null}
           </Text>
         </LinkButton>
       </HStack>

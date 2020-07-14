@@ -1,4 +1,4 @@
-import { sleep } from '@dish/async'
+import { fullyIdle, series, sleep } from '@dish/async'
 import { Restaurant, graphql, query } from '@dish/graph'
 import { AbsoluteVStack, VStack, useDebounceEffect, useOnMount } from '@dish/ui'
 import React, {
@@ -20,6 +20,7 @@ import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { setMapIsLoaded } from './onMapLoadedCallback'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import { useRestaurantQuery } from './useRestaurantQuery'
 
 type MapLoadState = 'wait' | 'loading' | 'loaded'
 
@@ -92,15 +93,12 @@ const HomeMapDataLoader = memo(
 
       // for now to avoid so many large db calls just have search api return it instead of re-fetch here
       const restaurants = restaurantResults.map(({ id, slug }) => {
-        return query
-          .restaurant({
-            where: { slug: { _eq: slug } },
-          })
-          .map((r) => ({
-            id,
-            slug,
-            location: r.location,
-          }))[0]
+        const r = useRestaurantQuery(slug)
+        return {
+          id,
+          slug,
+          location: r.location,
+        }
       })
 
       const restaurantsMemo = useMemo(() => {
@@ -176,12 +174,6 @@ const handleRegionChangeEnd = () => {
     console.log('pausing update region change')
     // dont update while were transitioning to new state!
     return
-  }
-
-  // were hovering avoid
-  if (omStatic.state.home.hoveredRestaurant) {
-    console.log('we used to avoid hovers, why? disabled for now')
-    // return
   }
 
   omStatic.actions.home.setHasMovedMap()
@@ -306,41 +298,23 @@ const HomeMapContent = memo(function HomeMap({
 
   // Navigate - return to previous map position
   // why not just useEffect for center/span? because not always wanted
+  const next = {
+    center: om.state.home.currentState.center,
+    span: om.state.home.currentState.span,
+  }
   useEffect(() => {
-    if (!map) return
-    let tm: any
-    let tm2: any
-
-    const dispose1 = () => {
-      clearTimeout(tm)
-      clearTimeout(tm2)
-    }
-
-    // react to changed center specifically
-    const dispose2 = om.reaction(
-      (state) =>
-        JSON.stringify([
-          state.home.currentState.center,
-          state.home.currentState.span,
-        ]),
+    return series([
+      fullyIdle,
       () => {
-        pauseMap()
-        tm = requestIdleCallback(() => {
-          centerMapToRegionMain({
-            map,
-            center: om.state.home.currentState.center,
-            span: om.state.home.currentState.span,
-          })
-          tm2 = setTimeout(resumeMap, 300)
+        centerMapToRegionMain({
+          map,
+          ...next,
         })
-      }
-    )
-    return () => {
-      pauseMapUpdates = false
-      dispose1()
-      dispose2()
-    }
-  }, [map])
+      },
+      fullyIdle,
+      resumeMap,
+    ])
+  }, [JSON.stringify(next)])
 
   // Search - hover restaurant
   useDebounceEffect(

@@ -1,4 +1,4 @@
-import { fullyIdle } from '@dish/async'
+import { fullyIdle, series } from '@dish/async'
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import {
   AbsoluteVStack,
@@ -109,10 +109,9 @@ const RestaurantListItemContent = memo(
     const leftPad = 25
     const restaurant = useRestaurantQuery(restaurantSlug)
 
-    console.log('restaurant.name && props.onFinishRender', restaurant.name, props.onFinishRender)
     useEffect(() => {
       if (!!restaurant.name && props.onFinishRender) {
-        props.onFinishRender!()
+        return series([() => fullyIdle({ min: 50 }), props.onFinishRender!])
       }
     }, [restaurant.name])
 
@@ -169,7 +168,7 @@ const RestaurantListItemContent = memo(
                     <Text
                       selectable
                       maxWidth="100%"
-                      fontSize={20}
+                      fontSize={26}
                       fontWeight="500"
                       lineHeight={27}
                       marginVertical={-4}
@@ -302,7 +301,6 @@ const RestaurantPeek = memo(
             await fullyIdle()
             setIsLoaded(true)
           }
-          console.log('e', e, e.target)
         }}
         scrollEventThrottle={100}
       >
