@@ -717,17 +717,6 @@ export function extractStyles(
         const classNames: string[] = []
         const hasViewStyle = Object.keys(viewStyles).length > 0
         if (hasViewStyle) {
-          if (viewStyles['hoverStyle']) {
-            console.log(
-              'viewStyles',
-              viewStyles,
-              defaultStyle,
-              componentName,
-              sourceFileName,
-              node.name.name,
-              component.staticConfig
-            )
-          }
           const styles = addStylesAtomic(viewStyles)
           for (const style of styles) {
             classNames.push(style.identifier)

@@ -487,7 +487,6 @@ const loadPageSearch: AsyncAction = async (om) => {
   const state = om.state.home.currentState
   if (!isSearchState(state)) return
 
-  console.log('om.state.router.history.length', om.state.router.history.length)
   if (!hasLoadedSearchOnce && om.state.router.history.length === 1) {
     hasLoadedSearchOnce = true
     const fakeTags = getTagsFromRoute(om.state.router.curPage)
@@ -1191,7 +1190,6 @@ export const getNavigateTo: Action<HomeStateNav, LinkButtonProps | null> = (
 // but then later you hit "enter" and we need to navigate to search (or home)
 // we definitely can clean up / name better some of this once things settle
 const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
-  console.trace('what')
   if (navState.tags) {
     om.actions.home.addTagsToCache(navState.tags)
   }

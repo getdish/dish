@@ -59,7 +59,6 @@ export function getStylesAtomic(
     pseudoConfig?: { name: string; priority: number }
   ) {
     if (style == null || typeof style !== 'object') {
-      console.log('WRONG')
       throw new Error(`Wrong style type: "${typeof style}": ${style}`)
     }
     // why is this diff from react-native-web!? we need to figure out
