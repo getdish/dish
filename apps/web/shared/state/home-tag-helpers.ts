@@ -261,6 +261,10 @@ const getRouteFromTags = (
 }
 
 const getFullTag = (tag: NavigableTag): Promise<Tag | null> =>
-  fetch(`${LIVE_SEARCH_DOMAIN}/tags?query=${tag.name}&type=${tag.type}&limit=1`)
+  fetch(
+    `${LIVE_SEARCH_DOMAIN}/tags?query=${encodeURIComponent(
+      tag.name.replace(/-/g, ' ')
+    )}&type=${tag.type}&limit=1`
+  )
     .then((res) => res.json())
     .then((tags) => tags?.[0] ?? null)
