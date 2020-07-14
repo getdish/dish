@@ -7,6 +7,7 @@ import {
   tagDelete,
   tagInsert,
 } from '@dish/graph'
+import { order_by } from '@dish/graph/_/graphql'
 import { RecoilRoot, Store, useRecoilStore } from '@dish/recoil-store'
 import {
   HStack,
@@ -191,7 +192,12 @@ const TagList = memo(
             parent: { name: { _eq: lastRowSelection } },
           }),
       },
-      limit: 100,
+      limit: 200,
+      order_by: [
+        {
+          name: order_by.asc,
+        },
+      ],
     })
 
     const [parent] = query.tag({
@@ -413,6 +419,11 @@ const MenuItemsResults = memo(
     const dishes = query.tag({
       where: { name: { _ilike: search } },
       limit: 100,
+      order_by: [
+        {
+          name: order_by.asc,
+        },
+      ],
     })
     return (
       <VStack flex={1}>
