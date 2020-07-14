@@ -184,6 +184,8 @@ const TagList = memo(
   graphql(({ type, row }: { type: TagType; row: number }) => {
     const store = useRecoilStore(Tags)
     const lastRowSelection = store.selectedNames[row - 1]
+    const limit = 200
+    const [page, setPage] = useState(1)
     const results = query.tag({
       where: {
         type: { _eq: type },
@@ -192,7 +194,8 @@ const TagList = memo(
             parent: { name: { _eq: lastRowSelection } },
           }),
       },
-      limit: 200,
+      limit: limit,
+      offset: (page - 1) * limit,
       order_by: [
         {
           name: order_by.asc,
@@ -231,7 +234,7 @@ const TagList = memo(
         >
           {capitalize(type)} {lastRowSelection ? `(${lastRowSelection})` : ''}
         </ColumnHeader>
-        <ScrollView>
+        <ScrollView style={{ paddingBottom: 100 }}>
           {allResults.map((tag, index) => {
             return (
               <ListItem
@@ -248,6 +251,21 @@ const TagList = memo(
               />
             )
           })}
+
+          {results.length === limit && (
+            <HStack
+              height={32}
+              padding={6}
+              hoverStyle={{
+                backgroundColor: '#f2f2f2',
+              }}
+              onPress={() => {
+                setPage((x) => x + 1)
+              }}
+            >
+              <Text>Next page</Text>
+            </HStack>
+          )}
         </ScrollView>
       </VStack>
     )
