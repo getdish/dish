@@ -10,7 +10,7 @@ export function OverlayLinkButton<
 >(props: LinkButtonProps<Name, Params>) {
   return (
     <LinkButton
-      backgroundColor="#fff"
+      backgroundColor="rgba(255,255,255,0.8)"
       paddingVertical={9}
       paddingHorizontal={14}
       borderRadius={90}

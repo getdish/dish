@@ -73,7 +73,7 @@ export const HomeViewTopDishesTrending = memo(() => {
             {topRestaurants.slice(0, total).map(getTrending)}
           </VStack>
         </VStack>
-        <MediaQuery query={mediaQueries.md} style={{ display: 'none' }}>
+        <MediaQuery query={mediaQueries.md}>
           <VStack flex={1} spacing={6}>
             <SmallerTitle marginBottom={5}>Topics</SmallerTitle>
             <VStack spacing={listSpace} overflow="hidden">

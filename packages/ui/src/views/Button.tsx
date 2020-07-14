@@ -14,15 +14,15 @@ export const Button = (props: ButtonProps) => {
 }
 
 const defaultStyle: ButtonProps = {
-  paddingHorizontal: 5,
-  paddingVertical: 4,
+  pointerEvents: 'auto',
+  padding: 5,
   borderRadius: 5,
   backgroundColor: 'rgba(150,150,150,0.05)',
   hoverStyle: {
-    backgroundColor: 'rgba(150,150,150,0.08)',
+    backgroundColor: 'rgba(150,150,150,0.1)',
   },
   pressStyle: {
-    backgroundColor: 'rgba(150,150,150,0.1)',
+    backgroundColor: 'rgba(150,150,150,0.2)',
   },
 }
 

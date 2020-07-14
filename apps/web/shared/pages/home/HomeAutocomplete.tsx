@@ -81,6 +81,9 @@ const HomeAutoCompleteContents = memo(() => {
 
   // hide when moused away, show when moved back!
   useEffect(() => {
+    if (isSmall) {
+      return
+    }
     let tmOff
     const handleMove = (e) => {
       const y = e.pageY
@@ -104,7 +107,7 @@ const HomeAutoCompleteContents = memo(() => {
     return () => {
       window.removeEventListener('mousemove', handleMove)
     }
-  }, [isShowing])
+  }, [isSmall, isShowing])
 
   const resultsElements = autocompleteResultsActive.map((result, index) => {
     const plusButtonEl =
@@ -214,6 +217,7 @@ const HomeAutoCompleteContents = memo(() => {
       shadowRadius={18}
       maxHeight="70vh"
       width="100%"
+      backgroundColor="#000"
     >
       <ScrollView>
         <VStack paddingVertical={10}>{resultsElements}</VStack>

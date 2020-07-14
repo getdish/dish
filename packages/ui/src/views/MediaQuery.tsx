@@ -5,30 +5,16 @@ import { classic } from 'react-native-web/dist/cjs/exports/StyleSheet/compile'
 import compileStyle from 'react-native-web/dist/cjs/exports/StyleSheet/createCompileableStyle'
 import i18nStyle from 'react-native-web/dist/cjs/exports/StyleSheet/i18nStyle'
 
-const isNative = false
-
-const getCSS = (selector: string, styles: ViewStyle): string => {
-  const out = classic(compileStyle(i18nStyle(styles)))
-  const key = Object.keys(out)[0]
-  const rulesStr = out[key].rules[0]
-  return rulesStr.replace(`.${key}`, selector)
-}
-
-export const mediaQueries = {
-  xs: '@media screen and (max-width: 640px)',
-  sm: '@media screen and (max-width: 800px)',
-  md: '@media screen and (max-width: 980px)',
-  lg: '@media screen and (max-width: 1160px)',
-}
+// TODO remove? remove stylesheet possible?
 
 export function MediaQuery({
   children,
   query,
-  style,
+  style = { display: 'none' },
 }: {
   children: any
   query: string
-  style: ViewStyle
+  style?: ViewStyle
 }) {
   if (isNative) {
     return children
@@ -49,4 +35,20 @@ export function MediaQuery({
   return (
     <div className={`display-contents ${className.current}`}>{children}</div>
   )
+}
+
+const isNative = false
+
+const getCSS = (selector: string, styles: ViewStyle): string => {
+  const out = classic(compileStyle(i18nStyle(styles)))
+  const key = Object.keys(out)[0]
+  const rulesStr = out[key].rules[0]
+  return rulesStr.replace(`.${key}`, selector)
+}
+
+export const mediaQueries = {
+  xs: '@media screen and (max-width: 640px)',
+  sm: '@media screen and (max-width: 800px)',
+  md: '@media screen and (max-width: 980px)',
+  lg: '@media screen and (max-width: 1160px)',
 }

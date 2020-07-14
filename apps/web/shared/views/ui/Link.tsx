@@ -61,7 +61,7 @@ export function Link<
           onClick?.(clickEvent!)
           onPress?.(clickEvent)
         } else {
-          if (!preventNavigate) {
+          if (!preventNavigate && !!navItem.name) {
             om.actions.router.navigate(navItem)
           }
         }

@@ -92,9 +92,9 @@ export default memo(function HomePageSearchResults({
         alignItems="center"
       >
         <HStack flex={1} justifyContent="space-between">
-          <VStack marginTop={0} marginBottom={-10}>
+          <HStack marginTop={-14} alignItems="center" justifyContent="center">
             <HomeLenseBar activeTagIds={state.activeTagIds} />
-          </VStack>
+          </HStack>
           <Spacer size={16} />
           <HomeFilterBar activeTagIds={state.activeTagIds} />
           <Spacer size={16} />
@@ -140,16 +140,17 @@ const HomeSearchResultsViewContent = memo(
       scrollToEndOf: 1,
       scrollToTop: 0,
     })
-    const scrollRef = useRef()
+    const scrollRef = useRef(null)
     const perChunk = [3, 3, 6, 12, 12]
     const totalToShow =
       state.chunk *
       perChunk.slice(0, state.chunk).reduce((a, b) => a + b, perChunk[0])
     const allResults = searchState.results?.results?.restaurants ?? []
-    const hasMoreToLoad = allResults.length > totalToShow
+    const hasMoreToLoad =
+      allResults.length > 0 && allResults.length < totalToShow
     const isLoading =
-      (hasMoreToLoad && state.hasLoaded === 1) ||
-      !searchState.results?.results ||
+      (allResults.length > 0 &&
+        (state.hasLoaded === 1 || !searchState.results?.results)) ||
       searchState.results.status === 'loading'
 
     const handleScrollToBottom = useCallback(() => {
@@ -164,7 +165,7 @@ const HomeSearchResultsViewContent = memo(
 
     useEffect(() => {
       if (state.scrollToTop > 0) {
-        console.log('scroll to', scrollRef)
+        scrollRef.current?.scrollTo(0, 0)
       }
     }, [state.scrollToTop])
 
@@ -184,11 +185,10 @@ const HomeSearchResultsViewContent = memo(
       const cur = allResults.slice(0, totalToShow)
       return cur.map((item, index) => {
         const onFinishRender =
-          hasMoreToLoad && index == cur.length - 1
+          index == cur.length - 1
             ? // load more
               () => {
-                console.log('finished rendering', item)
-                setState((x) => ({ ...x, hasLoaded: Date.now() }))
+                setState((x) => ({ ...x, hasLoaded: x.hasLoaded + 1 }))
               }
             : undefined
         console.log({ hasMoreToLoad, onFinishRender }, index, cur.length - 1)
@@ -291,11 +291,18 @@ const HomeSearchResultsViewContent = memo(
               minHeight={300}
               width="100%"
             >
-              {/* <Button>loaded all</Button> */}
+              <HStack alignItems="center" justifyContent="center">
+                <HomeLenseBar
+                  size="lg"
+                  activeTagIds={searchState.activeTagIds}
+                />
+              </HStack>
+              <Spacer size={40} />
               <Button
-                borderRadius={100}
                 onPress={() => {
+                  console.log('go')
                   if (om.state.home.isAutocompleteActive) {
+                    setState((x) => ({ ...x, scrollToTop: Math.random() }))
                   } else {
                     focusSearchInput()
                   }

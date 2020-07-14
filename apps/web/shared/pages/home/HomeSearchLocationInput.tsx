@@ -1,4 +1,4 @@
-import { AbsoluteVStack, HStack, Spacer, VStack } from '@dish/ui'
+import { AbsoluteVStack, Button, HStack, Spacer, VStack } from '@dish/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { Navigation } from 'react-feather'
 import { TextInput } from 'react-native'
@@ -19,6 +19,7 @@ export const HomeSearchLocationInput = memo(() => {
   const [locationSearch, setLocationSearch] = useState('')
   const locationInputRef = useRef<any>()
   const locationInput = inputGetNode(locationInputRef.current)
+  const { currentLocationName } = om.state.home.currentState
 
   // one way sync down for more perf
   useEffect(() => {
@@ -86,7 +87,7 @@ export const HomeSearchLocationInput = memo(() => {
           <TextInput
             ref={locationInputRef}
             value={locationSearch}
-            placeholder="San Francisco"
+            placeholder={currentLocationName ?? 'San Francisco'}
             style={[
               inputTextStyles.textInput,
               { paddingHorizontal, fontSize: 16 },
@@ -113,22 +114,17 @@ const SearchLocationButton = memo(() => {
     <AbsoluteVStack fullscreen pointerEvents="none">
       <HStack flex={1} alignItems="center" justifyContent="center">
         <Spacer flex={1} />
-        <VStack
-          pointerEvents="auto"
-          alignItems="center"
-          justifyContent="center"
-          padding={10}
-          paddingHorizontal={paddingHorizontal}
-          opacity={0.65}
-          pressStyle={{
-            opacity: 0.4,
-          }}
-          onPressOut={() => {
-            om.actions.home.popTo('home')
+        <Button
+          padding={8}
+          marginRight={5}
+          borderRadius={1000}
+          onPress={() => {
+            console.warn('getting location')
+            om.actions.home.updateCurrentMapAreaInformation()
           }}
         >
-          <Navigation size={22} color="#fff" />
-        </VStack>
+          <Navigation size={20} color="rgba(255,255,255,0.8)" />
+        </Button>
       </HStack>
     </AbsoluteVStack>
   )

@@ -8,18 +8,18 @@ import { LenseButton, LenseButtonSize } from './LenseButton'
 
 export const HomeLenseBar = memo(
   (props: {
-    activeTagIds: HomeActiveTagIds
+    activeTagIds?: HomeActiveTagIds
     size?: LenseButtonSize
     minimal?: boolean
   }) => {
     const om = useOvermind()
     return (
-      <HStack alignItems="center" justifyContent="center">
+      <>
         {om.state.home.allLenseTags.map((lense, index) => (
           <React.Fragment key={lense.id + index}>
             <LenseButton
               lense={lense}
-              isActive={props.activeTagIds[getTagId(lense)]}
+              isActive={props.activeTagIds?.[getTagId(lense)] ?? false}
               minimal={props.minimal}
               size={props.size}
             />
@@ -28,7 +28,7 @@ export const HomeLenseBar = memo(
             )}
           </React.Fragment>
         ))}
-      </HStack>
+      </>
     )
   }
 )
