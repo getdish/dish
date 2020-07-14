@@ -7,7 +7,7 @@ import { Map, useMap } from '../../views/map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
 import { onMapLoadedCallback } from './onMapLoadedCallback'
-import { restaurantQuery } from './restaurantQuery'
+import { useRestaurantQuery } from './useRestaurantQuery'
 
 export const HomeMapPIP = memo(() => {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -46,7 +46,7 @@ const HomeMapPIPContent = graphql(() => {
 
   let restaurant: RestaurantQuery | null = null
   if (state.type === 'restaurant') {
-    restaurant = restaurantQuery(state.restaurantSlug)
+    restaurant = useRestaurantQuery(state.restaurantSlug)
   }
 
   const coordinates = restaurant?.location?.coordinates

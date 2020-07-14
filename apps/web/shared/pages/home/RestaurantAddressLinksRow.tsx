@@ -7,7 +7,7 @@ import { Image, Linking } from 'react-native'
 import { GeocodePlace } from '../../state/home'
 import { Link } from '../../views/ui/Link'
 import { SmallCircleButton } from './CloseButton'
-import { restaurantQuery } from './restaurantQuery'
+import { useRestaurantQuery } from './useRestaurantQuery'
 
 type AddressSize = 'lg' | 'md' | 'sm' | 'xs'
 
@@ -26,7 +26,7 @@ export const RestaurantAddressLinksRow = memo(
       showAddress?: AddressSize
       showMenu?: boolean
     }) => {
-      const restaurant = restaurantQuery(restaurantSlug)
+      const restaurant = useRestaurantQuery(restaurantSlug)
       const fontSize = size == 'lg' ? 16 : 13
       const sep = ' '
 

@@ -17,12 +17,12 @@ const defaultStyle: ButtonProps = {
   paddingHorizontal: 5,
   paddingVertical: 4,
   borderRadius: 5,
-  backgroundColor: 'blue',
+  backgroundColor: 'rgba(150,150,150,0.05)',
   hoverStyle: {
-    backgroundColor: 'lightblue',
+    backgroundColor: 'rgba(150,150,150,0.08)',
   },
   pressStyle: {
-    backgroundColor: 'darkblue',
+    backgroundColor: 'rgba(150,150,150,0.1)',
   },
 }
 

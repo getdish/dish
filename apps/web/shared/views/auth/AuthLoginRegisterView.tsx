@@ -58,7 +58,7 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
   }
 
   return (
-    <View style={textStyles.login_box}>
+    <form style={{ width: '100%', height: '100%' }}>
       {/* <Text style={{ fontSize: 16 }}>
         // some pitch on features for login here
       </Text> */}
@@ -117,6 +117,6 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
       )}
 
       {messages()}
-    </View>
+    </form>
   )
 }

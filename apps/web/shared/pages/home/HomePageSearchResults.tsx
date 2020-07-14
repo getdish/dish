@@ -1,6 +1,7 @@
 import { createCancellablePromise, fullyIdle, series } from '@dish/async'
 import {
   Box,
+  Button,
   Circle,
   HStack,
   LoadingItems,
@@ -15,9 +16,10 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
-import { Edit2 } from 'react-feather'
+import { ArrowUp, Edit2 } from 'react-feather'
 import { Image } from 'react-native'
 
 import {
@@ -34,6 +36,7 @@ import { getTitleForState } from './getTitleForState'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
 import { HomeScrollView } from './HomeScrollView'
+import { focusSearchInput } from './HomeSearchInput'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
 import { StackViewCloseButton } from './StackViewCloseButton'
@@ -135,7 +138,9 @@ const HomeSearchResultsViewContent = memo(
       chunk: 1,
       hasLoaded: 1,
       scrollToEndOf: 1,
+      scrollToTop: 0,
     })
+    const scrollRef = useRef()
     const perChunk = [3, 3, 6, 12, 12]
     const totalToShow =
       state.chunk *
@@ -157,9 +162,18 @@ const HomeSearchResultsViewContent = memo(
       })
     }, [])
 
+    useEffect(() => {
+      if (state.scrollToTop > 0) {
+        console.log('scroll to', scrollRef)
+      }
+    }, [state.scrollToTop])
+
     const contentWrap = (children: any) => {
       return (
-        <HomeScrollView onScrollNearBottom={handleScrollToBottom}>
+        <HomeScrollView
+          ref={scrollRef}
+          onScrollNearBottom={handleScrollToBottom}
+        >
           <VStack height={paddingTop} />
           {children}
         </HomeScrollView>
@@ -168,26 +182,29 @@ const HomeSearchResultsViewContent = memo(
 
     const results = useMemo(() => {
       const cur = allResults.slice(0, totalToShow)
-      return cur.map((item, index) => (
-        <Suspense key={item.id} fallback={null}>
-          <RestaurantListItem
-            currentLocationInfo={searchState.currentLocationInfo ?? null}
-            restaurantId={item.id}
-            restaurantSlug={item.slug}
-            rank={index + 1}
-            searchState={searchState}
-            onFinishRender={
-              hasMoreToLoad && index == cur.length - 1
-                ? // load more
-                  () => {
-                    console.log('finished rendering', item)
-                    setState((x) => ({ ...x, hasLoaded: Date.now() }))
-                  }
-                : undefined
-            }
-          />
-        </Suspense>
-      ))
+      return cur.map((item, index) => {
+        const onFinishRender =
+          hasMoreToLoad && index == cur.length - 1
+            ? // load more
+              () => {
+                console.log('finished rendering', item)
+                setState((x) => ({ ...x, hasLoaded: Date.now() }))
+              }
+            : undefined
+        console.log({ hasMoreToLoad, onFinishRender }, index, cur.length - 1)
+        return (
+          <Suspense key={item.id} fallback={null}>
+            <RestaurantListItem
+              currentLocationInfo={searchState.currentLocationInfo ?? null}
+              restaurantId={item.id}
+              restaurantSlug={item.slug}
+              rank={index + 1}
+              searchState={searchState}
+              onFinishRender={onFinishRender}
+            />
+          </Suspense>
+        )
+      })
     }, [allResults, state.chunk])
 
     // in an effect so we can use series and get auto-cancel on unmount
@@ -268,10 +285,24 @@ const HomeSearchResultsViewContent = memo(
             </VStack>
           )}
           {!isLoading && !hasMoreToLoad && (
-            <VStack alignItems="center" justifyContent="center" minHeight={300}>
-              <Text fontSize={12} opacity={0.5}>
-                End of results (for now)
-              </Text>
+            <VStack
+              alignItems="center"
+              justifyContent="center"
+              minHeight={300}
+              width="100%"
+            >
+              {/* <Button>loaded all</Button> */}
+              <Button
+                borderRadius={100}
+                onPress={() => {
+                  if (om.state.home.isAutocompleteActive) {
+                  } else {
+                    focusSearchInput()
+                  }
+                }}
+              >
+                <ArrowUp />
+              </Button>
             </VStack>
           )}
         </VStack>

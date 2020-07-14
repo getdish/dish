@@ -3,7 +3,7 @@ import { Divider, HStack, StackProps, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Linking } from 'react-native'
 
-import { restaurantQuery } from './restaurantQuery'
+import { useRestaurantQuery } from './useRestaurantQuery'
 
 export const RestaurantDetailRow = memo(
   graphql(
@@ -20,7 +20,7 @@ export const RestaurantDetailRow = memo(
       after?: any
     }) => {
       const isSm = size === 'sm'
-      const restaurant = restaurantQuery(restaurantSlug)
+      const restaurant = useRestaurantQuery(restaurantSlug)
       const [open_text, open_color, next_time] = openingHours(restaurant)
       const [price_label, price_color, price_range] = priceRange(restaurant)
 

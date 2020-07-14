@@ -49,9 +49,9 @@ export const HomeMapControlsOverlay = memo(() => {
             om.actions.home.refresh()
           }}
         >
-          <RefreshCcw size={16} style={{ margin: -3, marginRight: 10 }} />
-          <Text fontSize={13} fontWeight="500">
-            Redo search in map area
+          <RefreshCcw size={15} style={{ margin: -3, marginRight: 10 }} />
+          <Text fontSize={14} fontWeight="400" opacity={0.85}>
+            Re-run search in map
           </Text>
         </OverlayLinkButton>
       </HStack>

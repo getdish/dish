@@ -1,11 +1,12 @@
 import { query } from '@dish/graph'
 
-export const restaurantQuery = (slug: string) => {
+export const useRestaurantQuery = (slug: string) => {
   return query.restaurant({
     where: {
       slug: {
         _eq: slug,
       },
     },
+    limit: 1,
   })[0]
 }

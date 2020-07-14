@@ -359,7 +359,10 @@ function runAutocomplete(
 }
 
 function searchAutocomplete(searchQuery: string, center: LngLat) {
-  const iLikeQuery = `%${searchQuery.split(' ').join('%')}%`
+  const iLikeQuery = `%${searchQuery.split(' ').join('%')}%`.replace(
+    /%%+/g,
+    '%'
+  )
   return resolved(() => {
     return [
       ...query

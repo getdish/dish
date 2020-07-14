@@ -1086,7 +1086,7 @@
   dependencies:
     arrify "^1.0.1"
 
-"@expo/html-elements@^0.0.0-alpha.5":
+"@expo/html-elements@0.0.0":
   version "0.0.0"
   resolved "https://registry.npmjs.org/@expo/html-elements/-/html-elements-0.0.0.tgz#39088559629141dc9e7127db165bf963900df333"
   integrity sha512-z1tgdz+Mmt/jzWwq5tIWvu6NGVpD/yMMS7Q20hGcrEAmcfgj599AqKNr1dT2TZGBvTjwVYrr3Yk4ZdR+IvtuDA==

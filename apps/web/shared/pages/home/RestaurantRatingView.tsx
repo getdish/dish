@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
 import { RatingView, RatingViewProps } from './RatingView'
-import { restaurantQuery } from './restaurantQuery'
+import { useRestaurantQuery } from './useRestaurantQuery'
 
 export type RestaurantRatingViewProps = Omit<
   Pick<RatingViewProps, 'size'>,
@@ -18,7 +18,7 @@ export default memo(
     let { restaurantSlug, rating, ...rest } = props
     // optionally fetch
     if (typeof rating === 'undefined') {
-      const restaurant = restaurantQuery(restaurantSlug)
+      const restaurant = useRestaurantQuery(restaurantSlug)
       rating = restaurant.rating
     }
     const percent = getRestaurantRating(rating)
