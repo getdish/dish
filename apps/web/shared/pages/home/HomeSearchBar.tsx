@@ -8,7 +8,13 @@ import {
   VStack,
   mediaQueries,
 } from '@dish/ui'
-import React, { memo, useState } from 'react'
+import React, {
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import { ChevronLeft, Loader, MapPin, Search, Settings } from 'react-feather'
 import { StyleSheet } from 'react-native'
 
@@ -30,14 +36,27 @@ import { useMediaQueryIsSmall } from './HomeViewDrawer'
 
 const divider = <Divider vertical flexLine={1} marginHorizontal={4} />
 
+const brandRgb = [50, 80, 120] as const
+
 export default memo(function HomeSearchBar() {
   const [showLocation, setShowLocation] = useState(false)
   const isSmall = useMediaQueryIsSmall()
   const om = useOvermind()
   const lense = om.state.home.currentStateLense
-  const color = rgbString(lense?.rgb ?? [0, 0, 0])
-  const colorBottom = rgbString(lense?.rgb.map((x) => x - 10) ?? [30, 30, 30])
+  const lastLenseRgb = useRef(brandRgb)
+  const rgb = lense?.rgb ?? lastLenseRgb.current ?? brandRgb
+  const color = rgbString(rgb)
+  const colorBottom = rgbString(rgb.map((x) => x - 10) ?? [30, 30, 30])
   const borderRadius = 12
+
+  useEffect(() => {
+    if (lense?.rgb) {
+      const [r, g, b] = lense?.rgb
+      if (r > 0 || g > 0 || b > 0) {
+        lastLenseRgb.current = lense?.rgb
+      }
+    }
+  }, [lense?.rgb])
 
   return (
     <AbsoluteVStack
