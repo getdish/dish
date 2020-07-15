@@ -11,6 +11,7 @@ import {
   StackProps,
   Text,
   VStack,
+  useDebounce,
 } from '@dish/ui'
 import _, { clamp } from 'lodash'
 import {
@@ -20,6 +21,7 @@ import {
   useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { ChevronDown, ChevronRight, ChevronUp, Minus } from 'react-feather'
@@ -53,9 +55,23 @@ export default memo(function HomePageHomePane(props: Props) {
   const om = useOvermind()
   const isOnHome = props.isActive
   const [isLoaded, setIsLoaded] = useState(false)
+  const lastTopDishesLoad = useRef('')
+  const loadTopDishesDelayed = useDebounce(om.actions.home.loadHomeDishes, 200)
+
+  useEffect(() => {
+    if (!props.isActive) return
+    const key = JSON.stringify(props.item.center)
+    if (lastTopDishesLoad.current === key) return
+    if (lastTopDishesLoad.current === '') {
+      om.actions.home.loadHomeDishes()
+    } else {
+      loadTopDishesDelayed()
+    }
+    lastTopDishesLoad.current = key
+  }, [props.item.center, props.isActive, lastTopDishesLoad])
 
   // on load home clear search effect!
-  useLayoutEffect(() => {
+  useEffect(() => {
     // not on first load
     if (props.isActive && isLoaded) {
       om.actions.home.clearSearch()
@@ -69,11 +85,7 @@ export default memo(function HomePageHomePane(props: Props) {
       setIsLoaded(true)
     } else {
       return series([
-        () =>
-          fullyIdle({
-            min: 1000 * 2,
-            max: 1000 * 10,
-          }),
+        fullyIdle,
         () => {
           setIsLoaded(true)
         },

@@ -187,7 +187,7 @@ function searchInputEffect(input: HTMLInputElement) {
   const next = () => {
     om.actions.home.moveSearchBarTagIndex(1)
   }
-  const handleKeyPress = (e) => {
+  const handleKeyPress = async (e) => {
     // @ts-ignore
     const code = e.keyCode
     const focusedInput = document.activeElement
@@ -210,6 +210,7 @@ function searchInputEffect(input: HTMLInputElement) {
       case 13: {
         // enter
         const item = om.state.home.autocompleteResults[autocompleteIndex - 1]
+        // just searching normal
         if (isAutocompleteActive && item && autocompleteIndex !== 0) {
           if (item.type === 'restaurant') {
             if (!item.slug) {
@@ -227,6 +228,9 @@ function searchInputEffect(input: HTMLInputElement) {
             })
           }
         } else {
+          if (!item) {
+            await om.actions.home.clearTags()
+          }
           om.actions.home.runSearch({
             searchQuery: e.target.value,
             force: true,

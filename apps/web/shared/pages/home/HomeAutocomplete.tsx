@@ -25,6 +25,7 @@ import {
   LngLat,
   ShowAutocomplete,
   createAutocomplete,
+  defaultLocationAutocompleteResults,
   locationToAutocomplete,
   searchLocations,
 } from '../../state/home'
@@ -175,18 +176,22 @@ const AutocompleteResults = memo(() => {
   const resultsElements = useMemo(() => {
     console.warn('rendering autocomplete')
     lastKey.current = key
-    const autocompleteResultsActive = [
-      {
-        name: `Search "${currentStateSearchQuery}"`,
-        icon: '🔍',
-        tagId: '',
-        type: 'orphan' as const,
-        description: '⏎',
-      },
-      ...(showAutocomplete === 'location'
-        ? locationAutocompleteResults ?? []
-        : autocompleteResults ?? []),
-    ].slice(0, 13)
+    const autocompleteResultsActive =
+      showAutocomplete === 'location'
+        ? [
+            ...locationAutocompleteResults,
+            ...defaultLocationAutocompleteResults,
+          ]
+        : [
+            {
+              name: `Search "${currentStateSearchQuery}"`,
+              icon: '🔍',
+              tagId: '',
+              type: 'orphan' as const,
+              description: '⏎',
+            },
+            ...(autocompleteResults ?? []),
+          ].slice(0, 13)
 
     return autocompleteResultsActive.map((result, index) => {
       const plusButtonEl =
@@ -207,14 +212,18 @@ const AutocompleteResults = memo(() => {
               } else {
                 // SEE BELOW, tag={tag}
                 // clear query
-                if (result.type !== 'restaurant') {
+                if (result.type === 'ophan') {
+                  om.actions.home.clearTags()
+                  om.actions.home.setSearchQuery(currentStateSearchQuery)
+                } else if (result.type !== 'restaurant') {
                   om.actions.home.setSearchQuery('')
                 }
               }
             }}
-            {...(!showLocation && {
-              tag: result,
-            })}
+            {...(!showLocation &&
+              result?.type !== 'orphan' && {
+                tag: result,
+              })}
             {...(result.type == 'restaurant' && {
               tag: null,
               name: 'restaurant',
@@ -347,9 +356,10 @@ function runAutocomplete(
     () => fullyIdle(),
     async () => {
       if (showAutocomplete === 'location') {
-        results = (await searchLocations(searchQuery)).map(
-          locationToAutocomplete
-        )
+        results = [
+          ...(await searchLocations(searchQuery)).map(locationToAutocomplete),
+          ...defaultLocationAutocompleteResults,
+        ]
       }
       if (showAutocomplete === 'search') {
         results = await searchAutocomplete(

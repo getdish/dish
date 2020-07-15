@@ -70,13 +70,61 @@ export const initialHomeState: HomeStateItemHome = {
   span: { lng: INITIAL_RADIUS / 2, lat: INITIAL_RADIUS },
 }
 
-const defaultLocationAutocompleteResults: AutocompleteItem[] = [
-  createAutocomplete({ name: 'New York', icon: '📍', type: 'country' }),
-  createAutocomplete({ name: 'Los Angeles', icon: '📍', type: 'country' }),
-  createAutocomplete({ name: 'Las Vegas', icon: '📍', type: 'country' }),
-  createAutocomplete({ name: 'Miami', icon: '📍', type: 'country' }),
-  createAutocomplete({ name: 'Chicago', icon: '📍', type: 'country' }),
-  createAutocomplete({ name: 'New Orleans', icon: '📍', type: 'country' }),
+export const defaultLocationAutocompleteResults: AutocompleteItem[] = [
+  createAutocomplete({
+    name: 'New York',
+    center: {
+      lat: 40.7130125,
+      lng: -74.0071296,
+    },
+    icon: '📍',
+    type: 'country',
+  }),
+  createAutocomplete({
+    name: 'Los Angeles',
+    center: {
+      lat: 34.053345,
+      lng: -118.242349,
+    },
+    icon: '📍',
+    type: 'country',
+  }),
+  createAutocomplete({
+    name: 'Las Vegas',
+    center: {
+      lat: 36.1667469,
+      lng: -115.1487083,
+    },
+    icon: '📍',
+    type: 'country',
+  }),
+  createAutocomplete({
+    name: 'Miami',
+    center: {
+      lat: 25.7279534,
+      lng: -80.2340487,
+    },
+    icon: '📍',
+    type: 'country',
+  }),
+  createAutocomplete({
+    name: 'Chicago',
+    center: {
+      lat: 41.883718,
+      lng: -87.632382,
+    },
+    icon: '📍',
+    type: 'country',
+  }),
+  createAutocomplete({
+    name: 'New Orleans',
+    center: {
+      lat: 29.952535,
+      lng: -90.076688,
+    },
+    icon: '📍',
+    type: 'country',
+  }),
 ]
 
 const derivations = {
@@ -833,11 +881,14 @@ const setShowAutocomplete: Action<ShowAutocomplete> = (om, val) => {
 
 // TODO this sort of duplicates HomeStateItem.center... we should move it there
 const setLocation: AsyncAction<string> = async (om, val) => {
-  const current = om.state.home.locationAutocompleteResults
+  const current = [
+    ...om.state.home.locationAutocompleteResults,
+    ...defaultLocationAutocompleteResults,
+  ]
   om.actions.home.setLocationSearchQuery(val)
   const exact = current.find((x) => x.name === val)
+  console.log('we found', exact, val)
   if (exact?.center) {
-    om.state.home.location = { ...exact }
     om.state.home.currentState.center = { ...exact.center }
   }
 }
