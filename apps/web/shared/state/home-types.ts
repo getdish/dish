@@ -9,6 +9,7 @@ export type OmState = Om['state']
 export type OmStateHome = OmState['home']
 
 export type HomeState = {
+  isOptimisticUpdating: boolean
   isScrolling: boolean
   started: boolean
   activeIndex: number // index for vertical (in page), -1 = autocomplete

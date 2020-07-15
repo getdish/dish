@@ -92,7 +92,7 @@ textarea {
 }
 
 .shine:after {
-  animation: shine 1.25s linear infinite;
+  animation: shine 1.5s linear infinite;
   animation-fill-mode: forwards;
   content: ' ';
   position: absolute;
@@ -105,24 +105,23 @@ textarea {
   background: linear-gradient(
     to right,
     rgba(255, 255, 255, 0.13) 0%,
-    rgba(255, 255, 255, 0.13) 77%,
-    rgba(255, 255, 255, 0.5) 92%,
+    rgba(255, 255, 255, 0.4) 92%,
     rgba(255, 255, 255, 0) 100%
   );
 }
 
 @keyframes shine {
-  10% {
+  0%, 10% {
     opacity: 1;
     top: 0;
-    left: 0;
+    left: -100%;
     transition-property: left, top, opacity;
     transition-timing-function: ease;
   }
-  100% {
+  50% {
     opacity: 0;
     top: 0;
-    left: 0;
+    left: 100%;
     transition-property: left, top, opacity;
   }
 }

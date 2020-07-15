@@ -194,7 +194,11 @@ function searchInputEffect(input: HTMLInputElement) {
       return
     }
     console.log('key', code)
-    const { isAutocompleteActive, autocompleteIndex } = om.state.home
+    const {
+      isAutocompleteActive,
+      autocompleteIndex,
+      searchBarTagIndex,
+    } = om.state.home
     const isSelecting =
       focusedInput.selectionStart !== focusedInput.selectionEnd
     const isCaretAtEnd =
@@ -242,7 +246,7 @@ function searchInputEffect(input: HTMLInputElement) {
             next()
             return
           }
-          if (autocompleteIndex >= 0) {
+          if (searchBarTagIndex >= 0) {
             om.actions.home.setSearchBarTagIndex(-1)
             return
           }
@@ -252,9 +256,7 @@ function searchInputEffect(input: HTMLInputElement) {
       }
       case 39: {
         // right
-        console.log('waht', isAutocompleteActive, isCaretAtEnd)
-        if (isAutocompleteActive && isCaretAtEnd) {
-          // at end
+        if (isCaretAtEnd) {
           next()
         }
         return
@@ -263,14 +265,8 @@ function searchInputEffect(input: HTMLInputElement) {
         // left
         if (isCaretAtStart) {
           // at start, go into selecting searchbar tags if we have em
-          if (isAutocompleteActive) {
-            prev()
-            return
-          }
-        }
-        if (isAutocompleteActive && autocompleteIndex > 0 && isCaretAtEnd) {
-          e.preventDefault()
           prev()
+          return
         }
         return
       }

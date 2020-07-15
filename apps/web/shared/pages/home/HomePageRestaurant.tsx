@@ -1,4 +1,4 @@
-import { graphql, query, restaurantPhotosForCarousel } from '@dish/graph'
+import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import {
   AbsoluteVStack,
   HStack,
@@ -14,30 +14,25 @@ import { drawerBorderRadius, searchBarHeight } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { DishView } from './DishView'
+import { HomePagePaneProps } from './HomePage'
 import { HomeScrollView } from './HomeScrollView'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
-import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
-import { RestaurantDetailRow } from './RestaurantDetailRow'
-import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantHeader } from './RestaurantHeader'
-import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantTopReviews } from './RestaurantTopReviews'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
+type Props = HomePagePaneProps<HomeStateItemRestaurant>
+
 export default memo(
-  graphql(function HomePageRestaurant({
-    state,
-  }: {
-    state: HomeStateItemRestaurant
-  }) {
-    if (!state) {
+  graphql(function HomePageRestaurant({ item }: Props) {
+    if (!item) {
       return null
     }
     const isSmall = useMediaQueryIsSmall()
-    const slug = state.restaurantSlug
+    const slug = item.restaurantSlug
     const restaurant = useRestaurantQuery(slug)
     const isLoading = !restaurant?.name
     // const isCanTag =

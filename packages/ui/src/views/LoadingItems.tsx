@@ -13,7 +13,7 @@ export const LoadingItems = () => (
 export const LoadingItem = () => {
   const seed = useRef(Math.max(3, Math.min(6, Math.round(Math.random() * 10))))
   return (
-    <VStack padding={20} spacing={10}>
+    <VStack overflow="hidden" className="shine" padding={20} spacing={10}>
       <HStack
         width={`${seed.current * 12}%`}
         height={26}
@@ -26,7 +26,6 @@ export const LoadingItem = () => {
         {[1, 2, 3, 4].map((index) => (
           <HStack
             key={index}
-            className="shine"
             width={`${
               seed.current * (15 - (2 - index > -1 ? index : -index) * 4)
             }%`}

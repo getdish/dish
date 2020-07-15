@@ -55,13 +55,13 @@ export function Link<
   useEffect(() => {
     if (!clickEvent) return
     return series([
-      () => (asyncClick ? idle(40) : null),
+      // idle helps our pressOut animations run smoother...
+      () => (asyncClick ? idle(20) : null),
       () => {
         if (onPress || onClick) {
           onClick?.(clickEvent!)
           onPress?.(clickEvent)
         } else {
-          console.log('should nav?', navItem)
           if (!preventNavigate && !!navItem.name) {
             om.actions.router.navigate(navItem)
           }

@@ -47,7 +47,9 @@ import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 // top dishes
 
-export default memo(function HomePageHomePane(props: HomePagePaneProps) {
+type Props = HomePagePaneProps<HomeStateItemHome>
+
+export default memo(function HomePageHomePane(props: Props) {
   const om = useOvermind()
   const isOnHome = props.isActive
   const [isLoaded, setIsLoaded] = useState(false)
@@ -86,9 +88,9 @@ export default memo(function HomePageHomePane(props: HomePagePaneProps) {
   return null
 })
 
-const HomePageTopDishes = memo((props: HomePagePaneProps) => {
+const HomePageTopDishes = memo((props: Props) => {
   const isSmall = useMediaQueryIsSmall()
-  const state = props.state as HomeStateItemHome
+  const state = props.item as HomeStateItemHome
   const { currentLocationName, activeTagIds } = state
 
   if (!state) {

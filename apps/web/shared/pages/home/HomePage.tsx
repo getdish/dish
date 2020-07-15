@@ -14,7 +14,7 @@ import { HomeMap } from './HomeMap'
 import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
 import { HomeMapPIP } from './HomeMapPIP'
 import HomeSearchBar from './HomeSearchBar'
-import { HomeStackView } from './HomeStackView'
+import { HomeStackView, StackItemProps } from './HomeStackView'
 import { HomeViewDrawer, useMediaQueryIsSmall } from './HomeViewDrawer'
 
 export const homePageBorderRadius = 12
@@ -66,8 +66,8 @@ const HomePageContent = memo(() => {
 
         <HomeViewDrawer>
           <HomeStackView>
-            {(homeState, isActive) => {
-              return <HomePagePane state={homeState} isActive={isActive} />
+            {(props) => {
+              return <HomePagePane {...props} />
             }}
           </HomeStackView>
         </HomeViewDrawer>
@@ -80,16 +80,18 @@ const HomePageContent = memo(() => {
   )
 })
 
-export type HomePagePaneProps = { state: HomeStateItem; isActive: boolean }
+export type HomePagePaneProps<
+  A extends HomeStateItem = HomeStateItem
+> = StackItemProps<A>
 
 const HomePagePane = (props: HomePagePaneProps) => {
-  const { state } = props
+  const { item } = props
   return (
     <Suspense fallback={null}>
-      {isHomeState(state) && <HomePageHomePane {...props} />}
-      {isUserState(state) && <HomePageUser {...props} />}
-      {isSearchState(state) && <HomePageSearchResults {...props} />}
-      {isRestaurantState(state) && <HomePageRestaurant {...props} />}
+      {isHomeState(item) && <HomePageHomePane {...props} />}
+      {isUserState(item) && <HomePageUser {...props} />}
+      {isSearchState(item) && <HomePageSearchResults {...props} />}
+      {isRestaurantState(item) && <HomePageRestaurant {...props} />}
     </Suspense>
   )
 }

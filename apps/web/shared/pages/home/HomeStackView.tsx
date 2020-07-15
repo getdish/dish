@@ -1,6 +1,13 @@
 import { AbsoluteVStack, VStack, useDebounceValue } from '@dish/ui'
 import _, { cloneDeep } from 'lodash'
-import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
+import React, {
+  Suspense,
+  memo,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItem, HomeStateItemSimple } from '../../state/home'
@@ -14,7 +21,13 @@ import { useMediaQueryIsSmall } from './HomeViewDrawer'
 
 const transitionDuration = 280
 
-type GetChildren<A> = (a: A, isActive: boolean) => React.ReactNode
+export type StackItemProps<A> = {
+  item: A
+  isActive: boolean
+  isRemoving: boolean
+}
+
+type GetChildren<A> = (props: StackItemProps<A>) => React.ReactNode
 
 export function HomeStackView<A extends HomeStateItem>(props: {
   children: GetChildren<A>
@@ -24,7 +37,15 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   const breadcrumbs = om.state.home.breadcrumbStates
   const states = om.state.home.states
   const isInAdmin = om.state.router.curPage.name.startsWith('admin')
-  const key = JSON.stringify([states, breadcrumbs])
+  const isOptimisticUpdating = om.state.home.isOptimisticUpdating
+  const keyRef = useRef('')
+  if (!isOptimisticUpdating) {
+    const nextKey = JSON.stringify([states, breadcrumbs])
+    if (keyRef.current !== nextKey) {
+      keyRef.current = nextKey
+    }
+  }
+  const key = keyRef.current
   const homeStates = useMemo(() => {
     return breadcrumbs
       .map((item) => {
@@ -43,13 +64,6 @@ export function HomeStackView<A extends HomeStateItem>(props: {
       cloneDeep({ isRemoving, states, breadcrumbs, homeStates, items })
     )
   }
-
-  // const activeItem = items[items.length - 1]
-  // useEffect(() => {
-  //   if (activeItem) {
-  //     currentStateStore.currentId = activeItem.id
-  //   }
-  // }, [activeItem?.id])
 
   return (
     <AbsoluteVStack fullscreen>
@@ -108,7 +122,13 @@ const HomeStackViewItem = memo(
     // }, [isActive])
 
     const memoChildren = useMemo(() => {
-      return getChildren(item as any, isActive)
+      return getChildren({
+        // @ts-ignore
+        item,
+        index,
+        isActive,
+        isRemoving,
+      })
     }, [item])
 
     return (

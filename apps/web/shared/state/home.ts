@@ -1,4 +1,4 @@
-import { fullyIdle, sleep } from '@dish/async'
+import { fullyIdle, idle, sleep } from '@dish/async'
 import {
   RestaurantOnlyIds,
   RestaurantSearchArgs,
@@ -162,6 +162,7 @@ export const state: HomeState = {
   locationSearchQuery: '',
   breadcrumbStates: [],
   hoveredRestaurant: null,
+  isOptimisticUpdating: false,
   showUserMenu: false,
   states: [initialHomeState],
   topDishes: [],
@@ -1167,6 +1168,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
   const curType = curState.type
   const nextType = nextState.type
   if (nextType !== curType || isSearchState(curState)) {
+    om.state.home.isOptimisticUpdating = true
     om.actions.home.updateActiveTags({
       id: curState.id,
       // @ts-ignore
@@ -1174,7 +1176,8 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
       searchQuery: nextState.searchQuery,
       activeTagIds: nextState.activeTagIds,
     })
-    await fullyIdle({ max: 30 })
+    await idle(30)
+    om.state.home.isOptimisticUpdating = false
   }
 
   const didNav = await syncStateToRoute(om, nextState)
