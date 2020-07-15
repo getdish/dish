@@ -16,9 +16,14 @@ resource "kubernetes_deployment" "buildkitd" {
         }
       }
       spec {
+        node_selector = {
+          "doks.digitalocean.com/node-pool" = "dish-ci-pool"
+        }
+
         container {
           name  = "buildkitd"
           image = "moby/buildkit:master"
+
           env {
             name = "DOCKER_CONFIG"
             value = "/app"

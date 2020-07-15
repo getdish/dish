@@ -17,8 +17,35 @@ resource "digitalocean_kubernetes_cluster" "dish" {
   node_pool {
     name       = "dish-pool"
     size       = "s-4vcpu-8gb"
-    node_count = 4 // changing this doesn't delete the cluster
+    auto_scale = true
+    min_nodes = 2
+    node_count = 2 // changing this doesn't delete the cluster
+    max_nodes = 5
+
+    labels = {
+      dish_node_type = "main"
+    }
   }
+}
+
+resource "digitalocean_kubernetes_node_pool" "workers" {
+  cluster_id = digitalocean_kubernetes_cluster.dish.id
+  name       = "dish-worker-pool"
+  size       = "s-4vcpu-8gb"
+  auto_scale = true
+  min_nodes = 1
+  node_count = 2
+  max_nodes = 5
+}
+
+resource "digitalocean_kubernetes_node_pool" "ci" {
+  cluster_id = digitalocean_kubernetes_cluster.dish.id
+  name       = "dish-ci-pool"
+  size       = "s-4vcpu-8gb"
+  auto_scale = true
+  min_nodes = 1
+  node_count = 1
+  max_nodes = 3
 }
 
 # Once the cluster is created, all other Terraform commands will reference the cluster

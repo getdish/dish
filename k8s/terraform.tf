@@ -1,8 +1,8 @@
 terraform {
   required_providers {
-    digitalocean = "~> 1.12"
+    digitalocean = "~> 1.20"
     helm = "~> 0.10"
-    kubernetes = "~> 1.10"
+    kubernetes = "~> 1.11.3"
     local = "~> 1.4"
     null = "~> 2.1"
   }

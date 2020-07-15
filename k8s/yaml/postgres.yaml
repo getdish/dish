@@ -311,7 +311,9 @@ master:
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#taints-and-tolerations-beta-feature
   ## ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption
-  nodeSelector: {}
+  nodeSelector: {
+    doks.digitalocean.com/node-pool: "dish-pool"
+  }
   affinity: {}
   tolerations: []
   labels: {}

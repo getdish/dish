@@ -3,6 +3,14 @@ services:
   hasura:
     app: hasura
     image: hasura/graphql-engine:v1.2.2
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: doks.digitalocean.com/node-pool
+            operator: In
+            values:
+            - dish-pool
     resources:
       requests:
         cpu: 500m
@@ -22,6 +30,14 @@ services:
     imagePullSecrets:
       - docker-config-json
     imagePullPolicy: always
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: doks.digitalocean.com/node-pool
+            operator: In
+            values:
+            - dish-pool
     ports:
       - 10000/http
     env:
@@ -37,6 +53,14 @@ services:
     imagePullSecrets:
       - docker-config-json
     imagePullPolicy: always
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: doks.digitalocean.com/node-pool
+            operator: In
+            values:
+            - dish-worker-pool
     resources:
       limits:
         cpu: 2000m
@@ -88,6 +112,14 @@ services:
     imagePullSecrets:
       - docker-config-json
     imagePullPolicy: always
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: doks.digitalocean.com/node-pool
+            operator: In
+            values:
+            - dish-pool
     ports:
       - 19006/http
     env:
@@ -99,6 +131,14 @@ services:
     imagePullSecrets:
       - docker-config-json
     imagePullPolicy: always
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: doks.digitalocean.com/node-pool
+            operator: In
+            values:
+            - dish-pool
     ports:
       - 3000/http
     env:
@@ -120,6 +160,14 @@ services:
   image-proxy:
     app: image-proxy
     image: willnorris/imageproxy@sha256:9cc15ad4b0f61e371a982c5fa0520cd6f6cebba317bb1a9188ac9169a826fc35
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: doks.digitalocean.com/node-pool
+            operator: In
+            values:
+            - dish-pool
     ports:
       - 8080/http
     volumes:
