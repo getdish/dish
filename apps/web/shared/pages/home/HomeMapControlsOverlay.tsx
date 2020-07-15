@@ -51,7 +51,7 @@ export const HomeMapControlsOverlay = memo(() => {
         >
           <RefreshCcw size={15} style={{ margin: -3, marginRight: 10 }} />
           <Text fontSize={14} fontWeight="400" opacity={0.85}>
-            Re-run search in map
+            Search in map
           </Text>
           <ChevronUp
             onMouseUp={(e) => {

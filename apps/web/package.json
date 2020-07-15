@@ -12,7 +12,7 @@
     "generate": "node _/src/generate.js",
     "start:android": "react-native run-android",
     "start:ios": "react-native run-ios",
-    "start:web": "DEBUG_ASSERT=1 VERBOSE=1 webpack-dev-server --port 19006 --progress",
+    "start:web": "VERBOSE=1 webpack-dev-server --port 19006 --progress",
     "start:devtools": "npx overmind-devtools@24.0.0",
     "start:web:no-extract": "NO_EXTRACT=1 yarn start:web",
     "start:web:webpack5": "VERBOSE=1 webpack serve --port 19006 --progress",

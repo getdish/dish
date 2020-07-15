@@ -368,11 +368,11 @@ const pushHomeState: AsyncAction<
     }
   }
 
-  nextState = {
+  const finalState = {
     ...base,
     ...nextState,
     historyId,
-  }
+  } as HomeStateItem
 
   async function runFetchData() {
     if (!fetchData) {
@@ -396,27 +396,20 @@ const pushHomeState: AsyncAction<
     if (prev) {
       om.actions.home.updateHomeState(prev)
       om.actions.home.setIsLoading(false)
-    } else {
-      throw new Error('unreachable')
+      currentAction = runFetchData
+      return { fetchDataPromise: Promise.resolve(null) }
     }
-    currentAction = runFetchData
-    return { fetchDataPromise: Promise.resolve(null) }
-  }
-
-  if (!nextState) {
-    console.warn('no nextstate', item)
-    return null
   }
 
   console.log(
-    'pushHomeState',
-    cloneDeep({ shouldReplace, item, nextState, id })
+    'pushHomeState'
+    // cloneDeep({ shouldReplace, item, finalState, id })
   )
 
   if (shouldReplace) {
-    om.actions.home.replaceHomeState(nextState)
+    om.actions.home.replaceHomeState(finalState)
   } else {
-    om.actions.home.updateHomeState(nextState)
+    om.actions.home.updateHomeState(finalState)
   }
 
   if (!om.state.home.started) {
@@ -1091,11 +1084,7 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
       ...next,
       id: state.id,
     }
-    console.log(
-      'updating active tags...',
-      nextState,
-      cloneDeep(om.state.home.states)
-    )
+    console.log('updating active tags...')
     om.actions.home.updateHomeState(nextState)
   } catch (err) {
     handleAssertionError(err)
@@ -1217,7 +1206,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
       searchQuery: nextState.searchQuery,
       activeTagIds: nextState.activeTagIds,
     })
-    await fullyIdle()
+    await fullyIdle({ max: 30 })
   }
 
   const didNav = await syncStateToRoute(om, nextState)
