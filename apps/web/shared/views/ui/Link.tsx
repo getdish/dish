@@ -2,7 +2,7 @@ import './Link.css'
 
 import { idle, series } from '@dish/async'
 import { Text } from '@dish/ui'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import {
   NavigateItem,
@@ -36,15 +36,11 @@ export function Link<
     style,
     ...restProps
   } = allProps
-  const {
-    onPress,
-    onMouseDown,
-    name,
-    params,
-    ...linkProps
-  } = useNormalizeLinkProps(restProps as any) as any
+  const { onPress, name, params, ...linkProps } = useNormalizeLinkProps(
+    restProps as any
+  )
   const om = useOvermindStatic()
-  const [clickEvent, setClickEvent] = useState(null)
+  const linkRef = useRef<HTMLElement | null>(null)
   const navItem: NavigateItem = {
     name,
     params,
@@ -53,28 +49,61 @@ export function Link<
   const elementName = tagName ?? 'a'
 
   useEffect(() => {
-    if (!clickEvent) return
-    return series([
-      // idle helps our pressOut animations run smoother...
-      () => (asyncClick ? idle(20) : null),
-      () => {
-        if (onPress || onClick) {
-          onClick?.(clickEvent!)
-          onPress?.(clickEvent)
-        } else {
-          if (!preventNavigate && !!navItem.name) {
-            om.actions.router.navigate(navItem)
-          }
-        }
-        if (replaceSearch) {
-          om.actions.home.clearSearch()
-        }
-        setClickEvent(null)
-      },
-    ])
-  }, [clickEvent, name, params, replace])
+    if (!linkRef.current) return
+    let cancel = null
+    let event = null
 
-  const content = (
+    const nav = () => {
+      if (onPress || onClick) {
+        onClick?.(event!)
+        onPress?.(event)
+      } else {
+        if (!preventNavigate && !!navItem.name) {
+          om.actions.router.navigate(navItem)
+        }
+      }
+      if (replaceSearch) {
+        om.actions.home.clearSearch()
+      }
+    }
+
+    const handleClick = (e: any) => {
+      e.stopPropagation()
+      if (allProps.target) {
+        // let it go
+      } else {
+        e.preventDefault()
+        event = e
+        if (asyncClick) {
+          cancel = series([() => idle(20), nav])
+        } else {
+          nav()
+        }
+      }
+    }
+
+    linkRef.current.addEventListener('click', handleClick)
+
+    return () => {
+      linkRef.current.removeEventListener('click', handleClick)
+      if (cancel) {
+        nav()
+        cancel()
+      }
+    }
+  }, [])
+
+  const props = {
+    ref: linkRef,
+    href: getPathFromParams(navItem),
+    ...linkProps,
+    className: `${className ?? ''} dish-link`,
+    style,
+  }
+
+  return React.createElement<any>(
+    elementName,
+    props,
     <Text
       ellipse={ellipse}
       fontSize={fontSize}
@@ -88,31 +117,5 @@ export function Link<
     >
       {children}
     </Text>
-  )
-  return React.createElement(
-    elementName,
-    {
-      href: getPathFromParams(navItem),
-      onMouseDown,
-      ...linkProps,
-      onClick: (e) => {
-        e.stopPropagation()
-        if (allProps.target) {
-          // let it go
-        } else {
-          e.preventDefault()
-          e.persist()
-          setClickEvent(e)
-        }
-      },
-      className,
-      style: {
-        cursor: 'pointer',
-        maxWidth: '100%',
-        flexDirection: 'inherit',
-        ...style,
-      },
-    },
-    content
   )
 }

@@ -11,7 +11,7 @@ import { LinkButtonNamedProps, LinkButtonProps } from './LinkProps'
 
 export const useNormalizeLinkProps = (
   props: Partial<LinkButtonProps>
-): LinkButtonProps => {
+): LinkButtonProps & { params?: Object } => {
   const normalized = useNormalizedLink(props)
   const next = { ...props, ...normalized }
   if ('tag' in next) {

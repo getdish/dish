@@ -569,8 +569,6 @@ const loadHomeDishes: AsyncAction = async (om) => {
   }
 
   om.actions.home.addTagsToCache(allDishTags)
-
-  console.warn('SET TOP DISHES')
   om.state.home.topDishes = all
 }
 
@@ -709,7 +707,6 @@ const replaceHomeState: Action<HomeStateItem> = (om, val) => {
 }
 
 const clearSearch: AsyncAction = async (om) => {
-  om.actions.home.setShowAutocomplete(false)
   const hasQuery = !!om.state.home.currentStateSearchQuery
   if (!hasQuery) {
     om.actions.home.clearTags()

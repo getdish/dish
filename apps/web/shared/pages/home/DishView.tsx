@@ -78,6 +78,7 @@ export const DishView = memo(
           width={width}
           height={height}
           isHovered={isHovered}
+          backgroundColor="#fff"
           {...(dish.isFallback && {
             opacity: 0.8,
           })}

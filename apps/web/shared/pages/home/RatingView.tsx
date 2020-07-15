@@ -56,6 +56,7 @@ export const RatingView = forwardRef(
       rankingPre === 10
         ? ''
         : `.${Math.round(((ranking / 10) % rankingPre) * 10)}`.slice(0, 2)
+
     const number = (
       <HStack>
         <Text
@@ -121,7 +122,7 @@ export const RatingView = forwardRef(
           // justifyContent="center"
         >
           <ProgressCircle
-            percent={percent * 10}
+            percent={Math.max(Math.min(100, ranking), 0)}
             radius={size * 0.5}
             borderWidth={size * 0.07}
             color={borderColor}
