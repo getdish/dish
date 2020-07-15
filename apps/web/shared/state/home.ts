@@ -121,9 +121,9 @@ const derivations = {
     return getActiveTags(state, lastTaggable)
   }),
   searchbarFocusedTag: derived<HomeState, Tag | null>((state) => {
-    const { autocompleteIndex } = state
-    if (autocompleteIndex > -1) return null
-    const index = state.searchBarTags.length + autocompleteIndex
+    const { searchBarTagIndex } = state
+    if (searchBarTagIndex > -1) return null
+    const index = state.searchBarTags.length + searchBarTagIndex
     return state.searchBarTags[index]
   }),
   breadcrumbStates: derived<HomeState, HomeStateItemSimple[]>((state) => {
@@ -1190,6 +1190,7 @@ const moveSearchBarTagIndex: Action<number> = (om, val) => {
 }
 
 const setSearchBarTagIndex: Action<number> = (om, val) => {
+  console.log('set', val, om.state.home.searchBarTagIndex)
   om.state.home.searchBarTagIndex = clamp(
     val,
     -om.state.home.searchBarTags.length,

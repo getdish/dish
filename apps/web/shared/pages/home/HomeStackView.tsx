@@ -37,15 +37,7 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   const breadcrumbs = om.state.home.breadcrumbStates
   const states = om.state.home.states
   const isInAdmin = om.state.router.curPage.name.startsWith('admin')
-  const isOptimisticUpdating = om.state.home.isOptimisticUpdating
-  const keyRef = useRef('')
-  if (!isOptimisticUpdating) {
-    const nextKey = JSON.stringify([states, breadcrumbs])
-    if (keyRef.current !== nextKey) {
-      keyRef.current = nextKey
-    }
-  }
-  const key = keyRef.current
+  const key = JSON.stringify([states, breadcrumbs])
   const homeStates = useMemo(() => {
     return breadcrumbs
       .map((item) => {
