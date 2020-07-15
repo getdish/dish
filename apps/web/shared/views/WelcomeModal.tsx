@@ -65,9 +65,7 @@ export const WelcomeModal = () => {
               </Box>
             }
           >
-            <Link inline name="promise">
-              doesn't sell us out
-            </Link>
+            <Link name="promise">doesn't sell us out</Link>
           </HoverablePopover>
           .
         </Text>

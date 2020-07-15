@@ -1,8 +1,8 @@
 import './Link.css'
 
 import { idle, series } from '@dish/async'
-import { Text, prevent } from '@dish/ui'
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Text } from '@dish/ui'
+import React, { useEffect, useState } from 'react'
 
 import {
   NavigateItem,
@@ -11,7 +11,7 @@ import {
 } from '../../state/router'
 import { useOvermindStatic } from '../../state/useOvermind'
 import { LinkProps } from './LinkProps'
-import { linkActionIdle, useNormalizeLinkProps } from './useNormalizedLink'
+import { useNormalizeLinkProps } from './useNormalizedLink'
 
 export function Link<
   Name extends keyof RoutesTable = keyof RoutesTable,
@@ -96,9 +96,14 @@ export function Link<
       onMouseDown,
       ...linkProps,
       onClick: (e) => {
-        prevent(e)
-        e.persist()
-        setClickEvent(e)
+        e.stopPropagation()
+        if (allProps.target) {
+          // let it go
+        } else {
+          e.preventDefault()
+          e.persist()
+          setClickEvent(e)
+        }
       },
       className,
       style: {

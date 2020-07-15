@@ -35,7 +35,7 @@ export const RestaurantAddressLinksRow = memo(
           {showMenu && (
             <Text selectable>
               {showAddress ? <>&nbsp; {sep} &nbsp;</> : null}
-              <Link inline name="restaurant" params={{ slug: '' }}>
+              <Link name="restaurant" params={{ slug: '' }}>
                 Menu
               </Link>
             </Text>
