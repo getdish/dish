@@ -31,6 +31,7 @@ import {
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallCircleButton } from './CloseButton'
+import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { getAddressText } from './RestaurantAddressLinksRow'
 
 const flexSearch = FlexSearch.create<number>({
@@ -82,6 +83,7 @@ const HomeAutocompleteEffects = memo(() => {
 const HomeAutoCompleteContents = memo(() => {
   const om = useOvermind()
   const { showAutocomplete } = om.state.home
+  const isSmall = useMediaQueryIsSmall()
   const showLocation = showAutocomplete == 'location'
   const showSearch = showAutocomplete == 'search'
   const isShowing = showSearch || showLocation
@@ -126,9 +128,9 @@ const HomeAutoCompleteContents = memo(() => {
         }}
       >
         <VStack
-          className="ease-in-out-slow"
+          className="ease-in-out-slower"
           position="relative"
-          left={showLocation ? 100 : 0}
+          left={isSmall ? 0 : showLocation ? 150 : -150}
           shadowColor="rgba(0,0,0,0.4)"
           shadowRadius={18}
           width="100%"

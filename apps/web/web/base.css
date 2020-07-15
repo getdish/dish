@@ -71,6 +71,9 @@ textarea {
 .ease-in-out-slow {
   transition: all ease-in-out 300ms;
 }
+.ease-in-out-slower {
+  transition: all ease-in-out 400ms;
+}
 
 .force-disable,
 .force-disable * {
