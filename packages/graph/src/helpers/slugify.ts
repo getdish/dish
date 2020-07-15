@@ -60,9 +60,8 @@ export function slugify(text: string, separator = '-') {
 
   cache.set(text, next)
   if (cache.size > 300) {
-    console.warn(
-      'memory may be high, we can optimize this & slice first ~1/3 off here'
-    )
+    // memory leak prevent
+    cache.clear()
   }
   return next
 }

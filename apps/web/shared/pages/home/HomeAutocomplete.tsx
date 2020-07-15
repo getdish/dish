@@ -2,7 +2,6 @@ import { fullyIdle, series } from '@dish/async'
 import { query, resolved } from '@dish/graph'
 import {
   AbsoluteVStack,
-  Circle,
   HStack,
   Hoverable,
   Spacer,
@@ -12,7 +11,7 @@ import {
 } from '@dish/ui'
 import FlexSearch from 'flexsearch'
 import { uniqBy } from 'lodash'
-import React, { memo, useEffect, useRef } from 'react'
+import React, { memo, useEffect, useMemo, useRef } from 'react'
 import { Plus } from 'react-feather'
 import { ScrollView } from 'react-native'
 
@@ -32,7 +31,6 @@ import {
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallCircleButton } from './CloseButton'
-import { focusSearchInput } from './HomeSearchInput'
 import { getAddressText } from './RestaurantAddressLinksRow'
 
 const flexSearch = FlexSearch.create<number>({
@@ -123,10 +121,13 @@ const HomeAutoCompleteContents = memo(() => {
       }}
     >
       <VStack
+        className="ease-in-out-slow"
+        position="relative"
+        left={showLocation ? 100 : 0}
         shadowColor="rgba(0,0,0,0.4)"
         shadowRadius={18}
         width="100%"
-        maxWidth={pageWidthMax - 400}
+        maxWidth={pageWidthMax * 0.4}
         backgroundColor="rgba(0,0,0,0.93)"
         padding={5}
         borderRadius={10}
@@ -151,107 +152,118 @@ const AutocompleteResults = memo(() => {
   const showLocation = showAutocomplete == 'location'
   const hideAutocomplete = useDebounce(
     () => om.actions.home.setShowAutocomplete(false),
-    200
+    50
   )
+  const lastKey = useRef<any[]>([0, 0, 0, 0, 0])
+  const key = showAutocomplete
+    ? [
+        currentStateSearchQuery,
+        showAutocomplete,
+        autocompleteResults,
+        locationAutocompleteResults,
+        autocompleteIndex,
+      ]
+    : lastKey.current
 
-  const autocompleteResultsActive = [
-    {
-      name: `Search "${currentStateSearchQuery}"`,
-      icon: '🔍',
-      tagId: '',
-      type: 'orphan' as const,
-      description: '⏎',
-    },
-    ...(showAutocomplete === 'location'
-      ? locationAutocompleteResults ?? []
-      : autocompleteResults ?? []),
-  ].slice(0, 13)
+  const resultsElements = useMemo(() => {
+    console.warn('rendering autocomplete')
+    lastKey.current = key
+    const autocompleteResultsActive = [
+      {
+        name: `Search "${currentStateSearchQuery}"`,
+        icon: '🔍',
+        tagId: '',
+        type: 'orphan' as const,
+        description: '⏎',
+      },
+      ...(showAutocomplete === 'location'
+        ? locationAutocompleteResults ?? []
+        : autocompleteResults ?? []),
+    ].slice(0, 13)
 
-  return (
-    <>
-      {autocompleteResultsActive.map((result, index) => {
-        const plusButtonEl =
-          result.type === 'dish' && index !== 0 && om.state.user.isLoggedIn ? (
-            <AutocompleteAddButton />
-          ) : null
+    return autocompleteResultsActive.map((result, index) => {
+      const plusButtonEl =
+        result.type === 'dish' && index !== 0 && om.state.user.isLoggedIn ? (
+          <AutocompleteAddButton />
+        ) : null
 
-        const isActive = autocompleteIndex === index
-        console.log('result', result)
+      const isActive = autocompleteIndex === index
 
-        return (
-          <React.Fragment key={`${result.tagId}${index}`}>
-            <LinkButton
-              className="no-transition"
-              onPressOut={() => {
-                hideAutocomplete()
-                if (showLocation) {
-                  om.actions.home.setLocation(result.name)
-                } else {
-                  // SEE BELOW, tag={tag}
-                  // clear query
-                  if (result.type !== 'restaurant') {
-                    om.actions.home.setSearchQuery('')
-                  }
+      return (
+        <React.Fragment key={`${result.tagId}${index}`}>
+          <LinkButton
+            className="no-transition"
+            onPressOut={() => {
+              hideAutocomplete()
+              if (showLocation) {
+                om.actions.home.setLocation(result.name)
+              } else {
+                // SEE BELOW, tag={tag}
+                // clear query
+                if (result.type !== 'restaurant') {
+                  om.actions.home.setSearchQuery('')
                 }
-              }}
-              {...(!showLocation && {
-                tag: result,
-              })}
-              {...(result.type == 'restaurant' && {
-                tag: null,
-                name: 'restaurant',
-                params: {
-                  slug: result.slug,
-                },
-              })}
-              lineHeight={20}
-              paddingHorizontal={4}
-              paddingVertical={7}
-              fontWeight="500"
-              borderRadius={5}
-              hoverStyle={{
-                backgroundColor: 'rgba(255,255,255,0.1)',
-              }}
-              {...(isActive && {
+              }
+            }}
+            {...(!showLocation && {
+              tag: result,
+            })}
+            {...(result.type == 'restaurant' && {
+              tag: null,
+              name: 'restaurant',
+              params: {
+                slug: result.slug,
+              },
+            })}
+            lineHeight={20}
+            paddingHorizontal={4}
+            paddingVertical={7}
+            fontWeight="500"
+            borderRadius={5}
+            hoverStyle={{
+              backgroundColor: 'rgba(255,255,255,0.1)',
+            }}
+            {...(isActive && {
+              backgroundColor: 'rgba(255,255,255,0.2)',
+              hoverStyle: {
                 backgroundColor: 'rgba(255,255,255,0.2)',
-                hoverStyle: {
-                  backgroundColor: 'rgba(255,255,255,0.2)',
-                },
-              })}
-            >
-              <HStack alignItems="center">
-                <VStack height={22} width={22} marginRight={10}>
-                  {result.icon?.indexOf('http') === 0 ? (
-                    <img
-                      src={result.icon}
-                      style={{
-                        width: 22,
-                        height: 22,
-                        borderRadius: 100,
-                      }}
-                    />
-                  ) : result.icon ? (
-                    <Text fontSize={20}>{result.icon} </Text>
-                  ) : null}
-                </VStack>
-                <VStack>
-                  <Text ellipse color={'#fff'} fontSize={16}>
-                    {result.name} {plusButtonEl}
+              },
+            })}
+          >
+            <HStack alignItems="center">
+              <VStack height={22} width={22} marginRight={10}>
+                {result.icon?.indexOf('http') === 0 ? (
+                  <img
+                    src={result.icon}
+                    style={{
+                      width: 22,
+                      height: 22,
+                      borderRadius: 100,
+                    }}
+                  />
+                ) : result.icon ? (
+                  <Text fontSize={20}>{result.icon} </Text>
+                ) : null}
+              </VStack>
+              <VStack>
+                <Text ellipse color={'#fff'} fontSize={16}>
+                  {result.name} {plusButtonEl}
+                </Text>
+                {!!result.description && (
+                  <Text ellipse color="rgba(255,255,255,0.5)" fontSize={12}>
+                    {result.description}
                   </Text>
-                  {!!result.description && (
-                    <Text ellipse color="rgba(255,255,255,0.5)" fontSize={12}>
-                      {result.description}
-                    </Text>
-                  )}
-                </VStack>
-              </HStack>
-            </LinkButton>
-            <Spacer size={1} />
-          </React.Fragment>
-        )
-      })}
-    </>
-  )
+                )}
+              </VStack>
+            </HStack>
+          </LinkButton>
+          <Spacer size={1} />
+        </React.Fragment>
+      )
+    })
+  }, key)
+
+  return <>{resultsElements}</>
 })
 
 export const HomeAutocompleteHoverableInput = ({

@@ -116,6 +116,7 @@ const RestaurantListItemContent = memo(
     }, [restaurant.name])
 
     const paddingTop = 30
+    const restaurantName = (restaurant.name ?? '').slice(0, 300)
 
     return (
       <HStack
@@ -163,14 +164,17 @@ const RestaurantListItemContent = memo(
                 params={{ slug: restaurantSlug }}
               >
                 <VStack paddingTop={paddingTop}>
-                  <HStack paddingLeft={40} alignItems="center" maxWidth="50%">
+                  <HStack paddingLeft={40} alignItems="center" maxWidth="40%">
                     {/* SECOND LINK WITH actual <a /> */}
                     <Text
                       selectable
                       maxWidth="100%"
-                      fontSize={isSmall ? 22 : 26}
-                      fontWeight="500"
-                      lineHeight={27}
+                      fontSize={
+                        (isSmall ? 22 : 26) *
+                        (restaurantName.length > 20 ? 0.85 : 1)
+                      }
+                      fontWeight="600"
+                      lineHeight={26}
                       marginVertical={-4}
                       textDecorationColor="transparent"
                     >
@@ -191,7 +195,7 @@ const RestaurantListItemContent = memo(
                             borderBottomColor: brandColor,
                           }}
                         >
-                          {(restaurant.name ?? '').slice(0, 1000)}
+                          {restaurantName}
                         </Text>
                       </Link>
                       {!!restaurant.address && (

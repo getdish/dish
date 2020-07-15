@@ -9,16 +9,15 @@ import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { Link } from '../../views/ui/Link'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
+import { HomePagePaneProps } from './HomePage'
 import { avatar } from './HomePageSearchResults'
+import { StackItemProps } from './HomeStackView'
 import { StackViewCloseButton } from './StackViewCloseButton'
 
 export default graphql(function HomePageUser({
-  state,
-}: {
-  state: HomeStateItemUser
-}) {
-  const om = useOvermind()
-  const username = state?.username ?? ''
+  item,
+}: StackItemProps<HomeStateItemUser>) {
+  const username = item?.username ?? ''
   const [user] = query.user({
     where: {
       username: {

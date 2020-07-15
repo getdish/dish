@@ -1,4 +1,4 @@
-import { createCancellablePromise, fullyIdle, series } from '@dish/async'
+import { createCancellablePromise, fullyIdle, idle, series } from '@dish/async'
 import {
   Box,
   Button,
@@ -19,7 +19,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { ArrowUp, Edit2 } from 'react-feather'
+import { ArrowUp, Edit2, Search } from 'react-feather'
 import { Image, ScrollView } from 'react-native'
 
 import {
@@ -36,6 +36,7 @@ import { flatButtonStyle } from './baseButtonStyle'
 import { getTitleForState } from './getTitleForState'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
+import { HomePagePaneProps } from './HomePage'
 import { HomeScrollView } from './HomeScrollView'
 import { focusSearchInput } from './HomeSearchInput'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
@@ -44,16 +45,14 @@ import { StackViewCloseButton } from './StackViewCloseButton'
 
 export const avatar = require('../../assets/peach.jpg').default
 
-export default memo(function HomePageSearchResults({
-  state,
-}: {
-  state: HomeStateItemSearch
-}) {
+type Props = HomePagePaneProps<HomeStateItemSearch>
+
+export default memo(function HomePageSearchResults({ item }: Props) {
   const isSmall = useMediaQueryIsSmall()
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const { title, subTitle, pageTitleElements } = getTitleForState(
     useOvermindStatic().state,
-    state
+    item
   )
   const topBarVPad = 12
   const paddingTop = isSmall
@@ -61,7 +60,7 @@ export default memo(function HomePageSearchResults({
     : searchBarHeight - searchBarTopOffset + topBarVPad + 4
   const titleHeight = paddingTop + 48
 
-  console.warn('HomePageSearchResults.render', state, weakKey(state))
+  console.warn('HomePageSearchResults.render', item, weakKey(item))
 
   return (
     <VStack
@@ -86,7 +85,11 @@ export default memo(function HomePageSearchResults({
         zIndex={1000}
         alignItems="center"
       >
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ width: '100%' }}
+        >
           <HStack
             paddingTop={paddingTop}
             paddingBottom={topBarVPad}
@@ -97,10 +100,10 @@ export default memo(function HomePageSearchResults({
             justifyContent="space-between"
           >
             <HStack marginTop={-14} alignItems="center" justifyContent="center">
-              <HomeLenseBar activeTagIds={state.activeTagIds} />
+              <HomeLenseBar activeTagIds={item.activeTagIds} />
             </HStack>
             <Spacer size={16} />
-            <HomeFilterBar activeTagIds={state.activeTagIds} />
+            <HomeFilterBar activeTagIds={item.activeTagIds} />
             <Spacer size={16} />
             <VStack
               flex={10}
@@ -122,9 +125,9 @@ export default memo(function HomePageSearchResults({
       </HStack>
 
       <HomeSearchResultsViewContent
-        key={weakKey(state)}
+        key={weakKey(item)}
         paddingTop={isSmall ? 58 : titleHeight - searchBarHeight}
-        searchState={state}
+        searchState={item}
       />
     </VStack>
   )
@@ -145,18 +148,14 @@ const HomeSearchResultsViewContent = memo(
       scrollToEndOf: 1,
       scrollToTop: 0,
     })
-    const scrollRef = useRef(null)
+    const scrollRef = useRef<HTMLDivElement | null>(null)
     const perChunk = [3, 3, 6, 12, 12]
-    const totalToShow =
-      state.chunk *
-      perChunk.slice(0, state.chunk).reduce((a, b) => a + b, perChunk[0])
     const allResults = searchState.results?.results?.restaurants ?? []
-    const hasMoreToLoad =
-      allResults.length > 0 && allResults.length < totalToShow
-    const isLoading =
-      (allResults.length > 0 &&
-        (state.hasLoaded === 1 || !searchState.results?.results)) ||
-      searchState.results.status === 'loading'
+    const currentlyShowing = Math.min(
+      allResults.length,
+      state.chunk *
+        perChunk.slice(0, state.chunk).reduce((a, b) => a + b, perChunk[0])
+    )
 
     const handleScrollToBottom = useCallback(() => {
       setState((x) => {
@@ -187,7 +186,7 @@ const HomeSearchResultsViewContent = memo(
     }
 
     const results = useMemo(() => {
-      const cur = allResults.slice(0, totalToShow)
+      const cur = allResults.slice(0, currentlyShowing)
       return cur.map((item, index) => {
         const onFinishRender =
           index == cur.length - 1
@@ -196,7 +195,6 @@ const HomeSearchResultsViewContent = memo(
                 setState((x) => ({ ...x, hasLoaded: x.hasLoaded + 1 }))
               }
             : undefined
-        console.log({ hasMoreToLoad, onFinishRender }, index, cur.length - 1)
         return (
           <Suspense key={item.id} fallback={null}>
             <RestaurantListItem
@@ -210,14 +208,39 @@ const HomeSearchResultsViewContent = memo(
           </Suspense>
         )
       })
-    }, [allResults, state.chunk])
+    }, [allResults, currentlyShowing, state.chunk])
+
+    const isOnLastChunk = currentlyShowing === allResults.length
+    const isLoading =
+      !isOnLastChunk ||
+      !searchState.results?.results ||
+      searchState.results.status === 'loading' ||
+      state.hasLoaded <= state.chunk
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log(
+        'HomePageSearchResults',
+        JSON.stringify(
+          {
+            state,
+            currentlyShowing,
+            len: results.length,
+            allLen: allResults.length,
+            isOnLastChunk,
+            isLoading,
+          },
+          null,
+          2
+        )
+      )
+    }
 
     // in an effect so we can use series and get auto-cancel on unmount
     useEffect(() => {
       if (state.hasLoaded <= 1) {
         return
       }
-      if (results.length === allResults.length) {
+      if (isOnLastChunk) {
         return
       }
       if (state.scrollToEndOf < state.hasLoaded) {
@@ -226,7 +249,7 @@ const HomeSearchResultsViewContent = memo(
 
       return series([
         () => isReadyToLoadMore(),
-        () => fullyIdle(),
+        () => idle(30),
         () => {
           setState((x) => ({ ...x, chunk: x.chunk + 1 }))
         },
@@ -255,16 +278,7 @@ const HomeSearchResultsViewContent = memo(
           onCancel(dispose)
         })
       }
-    }, [state.hasLoaded, state.scrollToEndOf])
-
-    if (isLoading) {
-      return contentWrap(
-        <VStack>
-          <LoadingItems />
-          <VStack display="none">{results}</VStack>
-        </VStack>
-      )
-    }
+    }, [isOnLastChunk, state.hasLoaded, state.scrollToEndOf])
 
     if (!results.length) {
       return contentWrap(
@@ -284,12 +298,12 @@ const HomeSearchResultsViewContent = memo(
       <>
         <VStack paddingBottom={20} spacing={6}>
           {results}
-          {hasMoreToLoad && (
+          {isLoading && (
             <VStack flex={1} width="100%" minHeight={400}>
               <LoadingItems />
             </VStack>
           )}
-          {!isLoading && !hasMoreToLoad && (
+          {!isLoading && (
             <VStack
               alignItems="center"
               justifyContent="center"
@@ -305,7 +319,6 @@ const HomeSearchResultsViewContent = memo(
               <Spacer size={40} />
               <Button
                 onPress={() => {
-                  console.log('go')
                   if (om.state.home.isAutocompleteActive) {
                     setState((x) => ({ ...x, scrollToTop: Math.random() }))
                   } else {
@@ -315,6 +328,10 @@ const HomeSearchResultsViewContent = memo(
               >
                 <ArrowUp />
               </Button>
+              <Spacer size={40} />
+              <Text opacity={0.5} fontSize={12}>
+                Showing {results.length} / {allResults.length} results
+              </Text>
             </VStack>
           )}
         </VStack>
@@ -396,52 +413,52 @@ const HomeSearchResultsViewContent = memo(
 //     : props.loading ?? <View style={{ height: props.estimatedHeight }} />
 // }
 
-const MyListButton = memo(
-  ({ isEditingUserList }: { isEditingUserList: boolean }) => {
-    const om = useOvermind()
-    return (
-      <HStack alignItems="center" spacing="sm">
-        <Circle size={26} marginVertical={-26 / 2}>
-          <Image source={avatar} style={{ width: 26, height: 26 }} />
-        </Circle>
-        {isEditingUserList && (
-          <>
-            <LinkButton
-              pointerEvents="auto"
-              {...flatButtonStyle}
-              {...{
-                name: 'search',
-                params: {
-                  ...om.state.router.curPage.params,
-                  username: '',
-                },
-              }}
-              onPress={() => {
-                Toast.show('Saved')
-              }}
-            >
-              <Text>Done</Text>
-            </LinkButton>
-          </>
-        )}
-        {!isEditingUserList && (
-          <LinkButton
-            pointerEvents="auto"
-            onPress={() => {
-              om.actions.home.forkCurrentList()
-            }}
-          >
-            <Box padding={5} paddingHorizontal={5} backgroundColor="#fff">
-              <HStack alignItems="center" spacing={6}>
-                <Edit2 size={12} color="#777" />
-                <Text color="inherit" fontSize={16} fontWeight="700">
-                  My list
-                </Text>
-              </HStack>
-            </Box>
-          </LinkButton>
-        )}
-      </HStack>
-    )
-  }
-)
+// const MyListButton = memo(
+//   ({ isEditingUserList }: { isEditingUserList: boolean }) => {
+//     const om = useOvermind()
+//     return (
+//       <HStack alignItems="center" spacing="sm">
+//         <Circle size={26} marginVertical={-26 / 2}>
+//           <Image source={avatar} style={{ width: 26, height: 26 }} />
+//         </Circle>
+//         {isEditingUserList && (
+//           <>
+//             <LinkButton
+//               pointerEvents="auto"
+//               {...flatButtonStyle}
+//               {...{
+//                 name: 'search',
+//                 params: {
+//                   ...om.state.router.curPage.params,
+//                   username: '',
+//                 },
+//               }}
+//               onPress={() => {
+//                 Toast.show('Saved')
+//               }}
+//             >
+//               <Text>Done</Text>
+//             </LinkButton>
+//           </>
+//         )}
+//         {!isEditingUserList && (
+//           <LinkButton
+//             pointerEvents="auto"
+//             onPress={() => {
+//               om.actions.home.forkCurrentList()
+//             }}
+//           >
+//             <Box padding={5} paddingHorizontal={5} backgroundColor="#fff">
+//               <HStack alignItems="center" spacing={6}>
+//                 <Edit2 size={12} color="#777" />
+//                 <Text color="inherit" fontSize={16} fontWeight="700">
+//                   My list
+//                 </Text>
+//               </HStack>
+//             </Box>
+//           </LinkButton>
+//         )}
+//       </HStack>
+//     )
+//   }
+// )
