@@ -17,7 +17,6 @@ export type HomeState = {
   allTagsNameToID: { [name: string]: string }
   allLenseTags: Tag[]
   allFilterTags: Tag[]
-  autocompleteDishes: TopCuisine['dishes']
   autocompleteIndex: number // index for horizontal row (autocomplete)
   autocompleteResults: AutocompleteItem[]
   hoveredRestaurant: RestaurantOnlyIds | null
@@ -41,11 +40,10 @@ export type HomeState = {
   previousState: HomeStateItem
   isAutocompleteActive: boolean
   isLoading: boolean
-  autocompleteResultsActive: AutocompleteItem[]
   currentStateLense: NavigableTag | null
   lastActiveTags: Tag[]
   searchbarFocusedTag: Tag | null
-  autocompleteFocusedTag: Tag | null
+  searchBarTagIndex: number
   searchBarTags: Tag[]
 }
 
@@ -142,6 +140,7 @@ export type AutocompleteItem = {
   id?: string
   icon?: string
   name: string
+  description?: string
   tagId?: string
   slug?: string
   type: Tag['type'] | 'restaurant'

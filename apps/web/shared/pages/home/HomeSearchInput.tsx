@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { HStack, useGet, useOnMount } from '@dish/ui'
+import { HStack, Toast, useGet, useOnMount } from '@dish/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { StyleSheet, TextInput } from 'react-native'
 
@@ -181,10 +181,10 @@ const SearchCancelButton = memo(() => {
 function searchInputEffect(input: HTMLInputElement) {
   const om = omStatic
   const prev = () => {
-    om.actions.home.moveAutocompleteIndex(-1)
+    om.actions.home.moveSearchBarTagIndex(-1)
   }
   const next = () => {
-    om.actions.home.moveAutocompleteIndex(1)
+    om.actions.home.moveSearchBarTagIndex(1)
   }
   const handleKeyPress = (e) => {
     // @ts-ignore
@@ -207,11 +207,14 @@ function searchInputEffect(input: HTMLInputElement) {
         const item = om.state.home.autocompleteResults[autocompleteIndex - 1]
         if (isAutocompleteActive && item && autocompleteIndex !== 0) {
           if (item.type === 'restaurant') {
+            if (!item.slug) {
+              Toast.show(`No slug, err`)
+              return
+            }
             om.actions.router.navigate({
               name: 'restaurant',
               params: { slug: item.slug },
             })
-            return
           } else if ('tagId' in item) {
             om.actions.home.clearSearch()
             om.actions.home.navigate({
@@ -240,7 +243,7 @@ function searchInputEffect(input: HTMLInputElement) {
             return
           }
           if (autocompleteIndex >= 0) {
-            om.actions.home.setAutocompleteIndex(-1)
+            om.actions.home.setSearchBarTagIndex(-1)
             return
           }
         }
@@ -287,20 +290,20 @@ function searchInputEffect(input: HTMLInputElement) {
       case 38: {
         // up
         e.preventDefault()
-        om.actions.home.moveActiveUp()
+        om.actions.home.moveActive(-1)
         return
       }
       case 40: {
         // down
         e.preventDefault()
-        om.actions.home.moveActiveDown()
+        om.actions.home.moveActive(1)
         return
       }
     }
   }
   const handleClick = () => {
     if (om.state.home.searchbarFocusedTag) {
-      om.actions.home.setAutocompleteIndex(0)
+      om.actions.home.setSearchBarTagIndex(0)
     } else {
       showAutocomplete()
     }
@@ -356,7 +359,9 @@ const HomeSearchBarTags = memo(
                     // transform: [{ rotate: '-1.5deg' }],
                   })}
                   size="lg"
+                  // @ts-ignore
                   name={tag.name}
+                  // @ts-ignore
                   type={tag.type}
                   icon={tag.icon ?? ''}
                   rgb={tag.rgb}

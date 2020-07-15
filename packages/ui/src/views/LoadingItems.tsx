@@ -26,6 +26,7 @@ export const LoadingItem = () => {
         {[1, 2, 3, 4].map((index) => (
           <HStack
             key={index}
+            className="shine"
             width={`${
               seed.current * (15 - (2 - index > -1 ? index : -index) * 4)
             }%`}
@@ -33,7 +34,6 @@ export const LoadingItem = () => {
             maxWidth="100%"
             backgroundColor="#eee"
             borderRadius={5}
-            className="shine"
           />
         ))}
       </VStack>

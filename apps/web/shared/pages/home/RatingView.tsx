@@ -50,8 +50,8 @@ export const RatingView = forwardRef(
       </Text>
     )
 
-    const ranking = Math.round(percent * 10)
-    const rankingPre = Math.round(ranking / 10)
+    const ranking = percent * 10
+    const rankingPre = Math.floor(ranking / 10)
     const rankingPost =
       rankingPre === 10
         ? ''

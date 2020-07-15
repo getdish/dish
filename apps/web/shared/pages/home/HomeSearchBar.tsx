@@ -70,7 +70,7 @@ export default memo(function HomeSearchBar() {
       alignItems="center"
       pointerEvents="none"
     >
-      <HomeAutocompleteBackground />
+      <HomeAutocomplete />
       <VStack
         zIndex={12}
         position="relative"
@@ -78,9 +78,12 @@ export default memo(function HomeSearchBar() {
         width="100%"
         height={searchBarHeight}
         borderRadius={borderRadius}
-        pointerEvents="auto"
       >
-        <VStack maxWidth={pageWidthMax - 240} position="relative">
+        <VStack
+          pointerEvents="auto"
+          maxWidth={pageWidthMax - 240}
+          position="relative"
+        >
           {/* shadow */}
           <VStack
             height={searchBarHeight}
@@ -198,7 +201,6 @@ export default memo(function HomeSearchBar() {
             </HStack>
           </VStack>
         </VStack>
-        <HomeAutocomplete />
       </VStack>
     </AbsoluteVStack>
   )

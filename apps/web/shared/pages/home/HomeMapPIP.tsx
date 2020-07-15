@@ -6,10 +6,12 @@ import { useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../../views/map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
+import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { onMapLoadedCallback } from './onMapLoadedCallback'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 export const HomeMapPIP = memo(() => {
+  const isSmall = useMediaQueryIsSmall()
   const [isLoaded, setIsLoaded] = useState(false)
 
   useOnMount(() => {
@@ -18,7 +20,7 @@ export const HomeMapPIP = memo(() => {
     })
   })
 
-  if (!isLoaded) {
+  if (!isLoaded || isSmall) {
     return null
   }
 

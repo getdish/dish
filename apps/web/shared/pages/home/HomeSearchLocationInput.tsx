@@ -35,7 +35,6 @@ export const HomeSearchLocationInput = memo(() => {
       // @ts-ignore
       const code = e.keyCode
       console.log('code', code)
-      const { isAutocompleteActive, autocompleteIndex } = om.state.home
 
       switch (code) {
         case 13: {
@@ -52,6 +51,18 @@ export const HomeSearchLocationInput = memo(() => {
             om.actions.home.setShowAutocomplete(false)
           }
           locationInput.blur()
+          return
+        }
+        case 38: {
+          // up
+          e.preventDefault()
+          om.actions.home.moveActive(-1)
+          return
+        }
+        case 40: {
+          // down
+          e.preventDefault()
+          om.actions.home.moveActive(1)
           return
         }
       }
