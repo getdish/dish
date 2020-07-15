@@ -1,13 +1,14 @@
 import { fullyIdle, series } from '@dish/async'
 import {
+  Tag,
   TagRecord,
   TagType,
   graphql,
+  order_by,
   query,
   tagDelete,
   tagInsert,
 } from '@dish/graph'
-import { order_by } from '@dish/graph/_/graphql'
 import { RecoilRoot, Store, useRecoilStore } from '@dish/recoil-store'
 import {
   HStack,
@@ -15,11 +16,12 @@ import {
   Spacer,
   StackProps,
   Text,
+  Toast,
   VStack,
   useDebounceValue,
 } from '@dish/ui'
 import immer from 'immer'
-import { capitalize, uniqBy } from 'lodash'
+import { capitalize, pick, uniqBy } from 'lodash'
 import { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
@@ -40,15 +42,17 @@ export default graphql(function AdminTagsPage() {
 })
 
 class Tags extends Store {
-  selected = [0, 0]
+  selectedId = ''
+  selectedIndices = [0, 0]
   selectedNames = [] as string[]
 
   draft: TagRecord = {
     type: 'continent',
   }
 
-  setSelected(selected: [number, number]) {
-    this.selected = selected
+  setSelected(id: string, indices: [number, number]) {
+    this.selectedId = id
+    this.selectedIndices = indices
   }
 
   setSelectedName(row: number, name: string) {
@@ -90,8 +94,6 @@ const Search = memo(
 )
 
 const AdminTagsPageContent = graphql(() => {
-  const store = useRecoilStore(Tags)
-
   // useEffect(() => {
   //   activeByRow[active[0]] = active[1]
   //   setSelectedByRow(activeByRow)
@@ -124,61 +126,15 @@ const AdminTagsPageContent = graphql(() => {
 
         <VerticalColumn>
           <Text>Search Menus</Text>
-          <Search />
+          <Suspense fallback={<LoadingItems />}>
+            <Search />
+          </Suspense>
         </VerticalColumn>
 
         <VerticalColumn>
-          <Text>Create</Text>
-          <VStack
-            margin={5}
-            padding={10}
-            borderColor="#eee"
-            borderWidth={1}
-            borderRadius={10}
-          >
-            <Text>ID</Text>
-            <TextInput
-              style={styles.textInput}
-              onChange={(e) => store.updateDraft({ id: e.target['value'] })}
-              defaultValue={store.draft.id}
-              // onBlur={() => upsertDraft()}
-            />
-            <Text>Name</Text>
-            <TextInput
-              style={styles.textInput}
-              onChange={(e) => store.updateDraft({ name: e.target['value'] })}
-              defaultValue={store.draft.name}
-              // onBlur={() => upsertDraft()}
-            />
-            <Text>Icon</Text>
-            <TextInput
-              style={styles.textInput}
-              onChange={(e) => store.updateDraft({ icon: e.target['value'] })}
-              defaultValue={store.draft.icon}
-              // onBlur={() => upsertDraft()}
-            />
-            <select
-              onChange={(e) =>
-                store.updateDraft({ type: e.target.value as any })
-              }
-            >
-              <option id="continent">Continent</option>
-              <option id="country">Country</option>
-              <option id="dish">Dish</option>
-            </select>
-            <SmallButton
-              onPress={() => {
-                // upsertDraft({ type: 'continent' })
-              }}
-            >
-              Clear
-            </SmallButton>
-            <SmallButton
-            // onPress={() => upsertDraft()}
-            >
-              Create
-            </SmallButton>
-          </VStack>
+          <Suspense fallback={<LoadingItems />}>
+            <TagEditColumn />
+          </Suspense>
         </VerticalColumn>
       </HStack>
     </VStack>
@@ -297,7 +253,10 @@ const TagListContent = graphql(
               tag={tag}
               type={type}
               isFormerlyActive={store.selectedNames[row] === tag.name}
-              isActive={store.selected[0] == row && store.selected[1] == index}
+              isActive={
+                store.selectedIndices[0] == row &&
+                store.selectedIndices[1] == index
+              }
               deletable={index > 0}
               editable={index > 0}
             />
@@ -322,6 +281,103 @@ const TagListContent = graphql(
     )
   }
 )
+
+const TagEditColumn = memo(() => {
+  const store = useRecoilStore(Tags)
+  return (
+    <VStack spacing="lg">
+      <>
+        <Text>Create</Text>
+        <TagCRUD tag={store.draft} onChange={(x) => store.updateDraft(x)} />
+        <SmallButton
+          onPress={() => {
+            tagInsert([store.draft])
+            Toast.show('Saved')
+          }}
+        >
+          Save
+        </SmallButton>
+      </>
+
+      <>
+        <Text>Edit</Text>
+        <Suspense fallback={<LoadingItems />}>
+          <TagEdit />
+        </Suspense>
+      </>
+    </VStack>
+  )
+})
+
+const TagEdit = memo(
+  graphql(() => {
+    const store = useRecoilStore(Tags)
+    if (store.selectedId) {
+      const [tag] = query.tag({
+        where: {
+          id: { _eq: store.selectedId },
+        },
+        limit: 1,
+      })
+      return (
+        <TagCRUD
+          tag={{
+            name: tag.name,
+            type: tag.type,
+            icon: tag.icon,
+          }}
+          onChange={(x) => {
+            for (const key in x) {
+              tag[key] = x[key]
+            }
+          }}
+        />
+      )
+    }
+
+    return null
+  })
+)
+
+const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
+  console.log('edit tag', tag)
+  return (
+    <VStack
+      margin={5}
+      padding={10}
+      borderColor="#eee"
+      borderWidth={1}
+      borderRadius={10}
+    >
+      <Text>ID</Text>
+      <TextInput
+        style={styles.textInput}
+        onChange={(e) => onChange({ id: e.target['value'] })}
+        defaultValue={tag.id}
+        // onBlur={() => upsertDraft()}
+      />
+      <Text>Name</Text>
+      <TextInput
+        style={styles.textInput}
+        onChange={(e) => onChange({ name: e.target['value'] })}
+        defaultValue={tag.name}
+        // onBlur={() => upsertDraft()}
+      />
+      <Text>Icon</Text>
+      <TextInput
+        style={styles.textInput}
+        onChange={(e) => onChange({ icon: e.target['value'] })}
+        defaultValue={tag.icon}
+        // onBlur={() => upsertDraft()}
+      />
+      <select onChange={(e) => onChange({ type: e.target.value as any })}>
+        <option id="continent">Continent</option>
+        <option id="country">Country</option>
+        <option id="dish">Dish</option>
+      </select>
+    </VStack>
+  )
+}
 
 const ColumnHeader = ({ children, after }) => {
   return (
@@ -408,7 +464,7 @@ const ListItem = memo(
             }
           } else {
             lastTap.current = Date.now()
-            store.setSelected([row, col])
+            store.setSelected(tag.id, [row, col])
             store.setSelectedName(row, tag.name)
           }
         }}
@@ -456,6 +512,7 @@ const ListItem = memo(
               cursor="default"
               color={isActive ? '#fff' : '#000'}
               fontSize={16}
+              ellipse
             >
               {text}
             </Text>
@@ -499,14 +556,14 @@ const MenuItemsResults = memo(
       <VStack flex={1}>
         {dishes.map((dish, index) => {
           const isActive =
-            store.selected[0] === 0 && index === store.selected[1]
+            store.selectedIndices[0] === 0 && index === store.selectedIndices[1]
           return (
             <VStack
               key={dish.id}
               onPress={() => {
                 setTimeout(() => {
                   if (!isActive) {
-                    store.setSelected([4, index])
+                    store.setSelected(dish.id, [4, index])
                   }
                 })
               }}
