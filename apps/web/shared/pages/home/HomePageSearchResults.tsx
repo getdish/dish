@@ -94,6 +94,7 @@ const SearchResultsTitle = memo(({ item }: Props) => {
       borderBottomWidth={1}
       zIndex={1000}
       alignItems="center"
+      backgroundColor="#fff"
     >
       <ScrollView
         horizontal

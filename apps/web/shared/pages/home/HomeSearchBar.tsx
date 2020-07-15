@@ -79,15 +79,13 @@ export default memo(function HomeSearchBar() {
         >
           {/* shadow */}
           <VStack
-            height={searchBarHeight}
+            height={searchBarHeight - 1}
             borderRadius={borderRadius}
             className="skewX"
             position="absolute"
             top={0}
-            right={0}
-            bottom={0}
-            left={0}
-            shadowColor="rgba(0,0,0,0.4)"
+            width="100%"
+            shadowColor="rgba(0,0,0,0.3)"
             shadowOffset={{ height: 1, width: 0 }}
             shadowRadius={14}
           />

@@ -166,33 +166,31 @@ export const state: RouterState = {
 
 const uid = () => `${Math.random()}`
 
-const navItemToHistoryItem = memoize(
-  (navItem: NavigateItem): HistoryItem => {
-    const params = {}
+const navItemToHistoryItem = (navItem: NavigateItem): HistoryItem => {
+  const params = {}
 
-    // remove undefined params
-    if ('params' in navItem && !!navItem.params) {
-      for (const key in navItem.params) {
-        const value = navItem.params[key]
-        if (typeof value !== 'undefined') {
-          params[key] = value
-        }
+  // remove undefined params
+  if ('params' in navItem && !!navItem.params) {
+    for (const key in navItem.params) {
+      const value = navItem.params[key]
+      if (typeof value !== 'undefined') {
+        params[key] = value
       }
     }
-
-    return {
-      id: uid(),
-      ...navItem,
-      type: 'push',
-      params,
-      path: getPathFromParams({
-        name: navItem.name,
-        params,
-      }),
-      search: curSearch,
-    }
   }
-)
+
+  return {
+    id: uid(),
+    ...navItem,
+    type: 'push',
+    params,
+    path: getPathFromParams({
+      name: navItem.name,
+      params,
+    }),
+    search: curSearch,
+  }
+}
 
 const getShouldNavigate: Action<NavigateItem, boolean> = (om, navItem) => {
   const historyItem = navItemToHistoryItem(navItem)
@@ -326,11 +324,13 @@ export const actions = {
 
 export const effects = {
   open(url: string) {
+    console.log('open', url)
     ignoreNextRoute = true
     page.show(url)
   },
 
   replace(url: string) {
+    console.log('replace', url)
     ignoreNextRoute = true
     page.replace(url)
   },

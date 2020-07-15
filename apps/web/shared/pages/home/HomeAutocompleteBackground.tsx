@@ -20,9 +20,6 @@ export const HomeAutocompleteBackground = memo(() => {
       left={-homePageBorderRadius}
       right={-homePageBorderRadius}
       zIndex={11}
-      onPressOut={() => {
-        om.actions.home.setShowAutocomplete(false)
-      }}
       pressStyle={{
         opacity: 0.6,
       }}

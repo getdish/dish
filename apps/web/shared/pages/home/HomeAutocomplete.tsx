@@ -55,7 +55,10 @@ export default memo(function HomeAutocomplete() {
       curPagePos.x = e.pageX
       curPagePos.y = e.pageY
     }
-    document.addEventListener('mousemove', handleMove)
+    document.addEventListener('mousemove', handleMove, {
+      capture: false,
+      passive: true,
+    })
     return () => {
       document.removeEventListener('mousemove', handleMove)
     }
@@ -155,17 +158,16 @@ const AutocompleteResults = memo(() => {
     autocompleteIndex,
     autocompleteResults,
     locationAutocompleteResults,
-    currentStateSearchQuery,
+    // currentStateSearchQuery,
   } = om.state.home
   const showLocation = showAutocomplete == 'location'
   const hideAutocomplete = useDebounce(
     () => om.actions.home.setShowAutocomplete(false),
     50
   )
-  const lastKey = useRef<any[]>([0, 0, 0, 0, 0])
+  const lastKey = useRef<any[]>([0, 0, 0, 0])
   const key = showAutocomplete
     ? [
-        currentStateSearchQuery,
         showAutocomplete,
         autocompleteResults,
         locationAutocompleteResults,
@@ -174,7 +176,7 @@ const AutocompleteResults = memo(() => {
     : lastKey.current
 
   const resultsElements = useMemo(() => {
-    console.warn('rendering autocomplete')
+    console.log('updating autocomplete', key)
     lastKey.current = key
     const autocompleteResultsActive =
       showAutocomplete === 'location'
@@ -184,7 +186,7 @@ const AutocompleteResults = memo(() => {
           ]
         : [
             {
-              name: `Search "${currentStateSearchQuery}"`,
+              name: 'Search',
               icon: '🔍',
               tagId: '',
               type: 'orphan' as const,
@@ -201,36 +203,40 @@ const AutocompleteResults = memo(() => {
 
       const isActive = autocompleteIndex === index
 
+      const linkProps = {
+        onPressOut: () => {
+          hideAutocomplete()
+          if (showLocation) {
+            om.actions.home.setLocation(result.name)
+          } else {
+            // SEE BELOW, tag={tag}
+            // clear query
+            if (result.type === 'ophan') {
+              om.actions.home.clearTags()
+              om.actions.home.setSearchQuery(currentStateSearchQuery)
+            } else if (result.type !== 'restaurant') {
+              om.actions.home.setSearchQuery('')
+            }
+          }
+        },
+        ...(!showLocation &&
+          result?.type !== 'orphan' && {
+            tag: result,
+          }),
+        ...(result.type == 'restaurant' && {
+          tag: null,
+          name: 'restaurant',
+          params: {
+            slug: result.slug,
+          },
+        }),
+      }
+
       return (
         <React.Fragment key={`${result.tagId}${index}`}>
           <LinkButton
             className="no-transition"
-            onPressOut={() => {
-              hideAutocomplete()
-              if (showLocation) {
-                om.actions.home.setLocation(result.name)
-              } else {
-                // SEE BELOW, tag={tag}
-                // clear query
-                if (result.type === 'ophan') {
-                  om.actions.home.clearTags()
-                  om.actions.home.setSearchQuery(currentStateSearchQuery)
-                } else if (result.type !== 'restaurant') {
-                  om.actions.home.setSearchQuery('')
-                }
-              }
-            }}
-            {...(!showLocation &&
-              result?.type !== 'orphan' && {
-                tag: result,
-              })}
-            {...(result.type == 'restaurant' && {
-              tag: null,
-              name: 'restaurant',
-              params: {
-                slug: result.slug,
-              },
-            })}
+            {...linkProps}
             lineHeight={20}
             paddingHorizontal={4}
             paddingVertical={7}
