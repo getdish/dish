@@ -27,6 +27,7 @@ import {
   searchBarHeight,
   searchBarTopOffset,
 } from '../../constants'
+import { weakKey } from '../../helpers/weakKey'
 import { HomeStateItemSearch, OmState } from '../../state/home'
 import { useOvermind, useOvermindStatic } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
@@ -59,9 +60,8 @@ export default memo(function HomePageSearchResults({
     ? topBarVPad
     : searchBarHeight - searchBarTopOffset + topBarVPad + 4
   const titleHeight = paddingTop + 48
-  const contentKey = `${state.id}${state.results?.status ?? ''}`
 
-  console.warn('HomePageSearchResults.render', { contentKey })
+  console.warn('HomePageSearchResults.render', state, weakKey(state))
 
   return (
     <VStack
@@ -117,7 +117,7 @@ export default memo(function HomePageSearchResults({
       </HStack>
 
       <HomeSearchResultsViewContent
-        key={contentKey}
+        key={weakKey(state)}
         paddingTop={isSmall ? 58 : titleHeight - searchBarHeight}
         searchState={state}
       />

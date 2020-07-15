@@ -26,8 +26,9 @@ import { ChevronDown, ChevronRight, ChevronUp, Minus } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
 
 import { bgLight } from '../../colors'
+import { HomeStateItemHome } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
-import { useOvermind } from '../../state/useOvermind'
+import { omStatic, useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
@@ -48,7 +49,7 @@ import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
 export default memo(function HomePageHomePane(props: HomePagePaneProps) {
   const om = useOvermind()
-  const isOnHome = om.state.home.currentStateType === 'home'
+  const isOnHome = props.isActive
   const [isLoaded, setIsLoaded] = useState(false)
 
   // on load home clear search effect!
@@ -79,38 +80,40 @@ export default memo(function HomePageHomePane(props: HomePagePaneProps) {
   }, [isOnHome])
 
   if (isOnHome || isLoaded) {
-    return <HomePageTopDishes />
+    return <HomePageTopDishes {...props} />
   }
 
   return null
 })
 
-const HomePageTopDishes = memo(() => {
+const HomePageTopDishes = memo((props: HomePagePaneProps) => {
   const isSmall = useMediaQueryIsSmall()
-  const om = useOvermind()
-  const state = om.state.home.lastHomeState
-  const { activeTagIds } = state
+  const state = props.state as HomeStateItemHome
+  const { currentLocationName, activeTagIds } = state
 
   if (!state) {
     return <NotFoundPage title="Home not found" />
   }
 
   console.warn('HomePageTopDishes.render')
+  // console.warn('HomePageTopDishes.render', JSON.stringify(state, null, 2))
 
   const tagsDescription =
-    getActiveTags(om.state.home, state)
+    getActiveTags(omStatic.state.home, state)
       .find((x) => x.type === 'lense')
       // @ts-ignore
       ?.descriptions?.plain.replace('Here', ``) ?? ''
-
-  const locationName = om.state.home.currentState.currentLocationName
 
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <VStack position="relative" flex={1} overflow="hidden">
         <HomeScrollView>
-          <VStack paddingTop={34} paddingBottom={34} spacing="xl">
+          <VStack
+            paddingTop={isSmall ? 20 : 34}
+            paddingBottom={34}
+            spacing="xl"
+          >
             {/* LENSES - UNIQUELY GOOD HERE */}
             <VStack>
               <VStack alignItems="center">
@@ -160,11 +163,13 @@ const HomePageTopDishes = memo(() => {
                 <HomeIntroLetter />
 
                 <SmallTitle fontWeight="300" letterSpacing={0} divider="center">
-                  {locationName ? `What's good in ${locationName}` : ' '}
+                  {currentLocationName
+                    ? `What's good in ${currentLocationName}`
+                    : `What's good here`}
                 </SmallTitle>
 
                 {/* <HomeFilterBar activeTagIds={activeTagIds} /> */}
-                {isSmall && <Spacer size={40} />}
+                {isSmall && <Spacer size={20} />}
               </VStack>
 
               <HomeTopDishesContent />

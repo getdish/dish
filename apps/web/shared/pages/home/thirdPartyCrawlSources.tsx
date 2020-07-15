@@ -1,4 +1,8 @@
 export const thirdPartyCrawlSources = {
+  google: {
+    name: 'Google',
+    image: require('../../assets/google.svg').default,
+  },
   ubereats: {
     name: 'Uber Eats',
     image: require('../../assets/ubereats.jpg').default,
