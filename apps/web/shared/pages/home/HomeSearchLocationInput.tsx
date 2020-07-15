@@ -130,8 +130,7 @@ const SearchLocationButton = memo(() => {
           marginRight={5}
           borderRadius={1000}
           onPress={() => {
-            console.warn('getting location')
-            om.actions.home.updateCurrentMapAreaInformation()
+            om.actions.home.moveMapToUserLocation()
           }}
         >
           <Navigation size={20} color="rgba(255,255,255,0.8)" />

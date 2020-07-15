@@ -130,7 +130,7 @@ const HomeAutoCompleteContents = memo(() => {
         <VStack
           className="ease-in-out-slower"
           position="relative"
-          left={isSmall ? 0 : showLocation ? 150 : -150}
+          left={isSmall ? 0 : showLocation ? 150 : -200}
           shadowColor="rgba(0,0,0,0.4)"
           shadowRadius={18}
           width="100%"
