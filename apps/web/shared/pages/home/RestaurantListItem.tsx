@@ -125,7 +125,7 @@ const RestaurantListItemContent = memo(
       >
         <VStack
           paddingHorizontal={pad + 6}
-          width={isSmall ? '80%' : '100%'}
+          width={isSmall ? '60%' : '100%'}
           minWidth={isSmall ? '50%' : 320}
           maxWidth={isSmall ? '90vw' : '50%'}
           position="relative"
@@ -168,14 +168,13 @@ const RestaurantListItemContent = memo(
                     <Text
                       selectable
                       maxWidth="100%"
-                      fontSize={26}
+                      fontSize={isSmall ? 22 : 26}
                       fontWeight="500"
                       lineHeight={27}
                       marginVertical={-4}
                       textDecorationColor="transparent"
                     >
                       <Link
-                        inline
                         color="#000"
                         name="restaurant"
                         params={{ slug: restaurantSlug }}
@@ -198,7 +197,6 @@ const RestaurantListItemContent = memo(
                       {!!restaurant.address && (
                         <Text fontSize={14} fontWeight="300" selectable>
                           <Link
-                            inline
                             color="#999"
                             target="_blank"
                             href={`https://www.google.com/maps/search/?api=1&${encodeURIComponent(
@@ -308,7 +306,7 @@ const RestaurantPeek = memo(
           position="relative"
           marginRight={-spacing}
           marginBottom={-spacing}
-          paddingLeft={isSmall ? '63vw' : 0.63 * drawerWidth}
+          paddingLeft={isSmall ? '73vw' : 0.63 * drawerWidth}
         >
           <HStack
             pointerEvents="auto"

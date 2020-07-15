@@ -1,3 +1,4 @@
+import { Tag } from '@dish/graph'
 import {
   Box,
   HStack,
@@ -11,7 +12,7 @@ import React, { memo } from 'react'
 import { CheckBox, Image } from 'react-native'
 
 import { HomeActiveTagIds } from '../../state/home'
-import { Tag, getTagId, tagDisplayNames } from '../../state/Tag'
+import { getTagId, tagDisplayNames } from '../../state/Tag'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallButton } from '../../views/ui/SmallButton'
