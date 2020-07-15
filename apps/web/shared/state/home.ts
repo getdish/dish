@@ -165,6 +165,7 @@ export const state: HomeState = {
   states: [initialHomeState],
   topDishes: [],
   topDishesFilteredIndices: [],
+  userLocation: null,
   ...derivations,
 }
 
@@ -189,46 +190,9 @@ export const isEditingUserPage = (
 // only await things that are required on first render
 const start: AsyncAction = async (om) => {
   om.actions.home.updateCurrentMapAreaInformation()
-  const fullyLoadedPromise = loadHomeDishes(om).then(async () => {
-    await om.actions.home.startAutocomplete()
-  })
-  if (process.env.TARGET === 'ssr') {
-    console.log('Server mode, waiting for top dishes to fully load...')
-    await fullyLoadedPromise
-  }
 }
 
 let defaultAutocompleteResults: AutocompleteItem[] | null = null
-
-const startAutocomplete: AsyncAction = async (om) => {
-  const dishes = om.state.home.topDishes
-    .map((x) => x.dishes)
-    .flat()
-    .filter(Boolean)
-    .slice(0, 20)
-    .map((d) => ({
-      id: d.name,
-      name: d.name,
-      type: 'dish',
-      icon: d.image,
-      tagId: getTagId({ type: 'dish', name: d.name ?? '' }),
-    }))
-  const countries = om.state.home.topDishes.map((x) => ({
-    id: x.country,
-    type: 'country',
-    name: x.country,
-    icon: x.icon,
-    tagId: getTagId({ type: 'country', name: x.country }),
-  }))
-  const results = ([
-    ...dishes.slice(0, 3),
-    ..._.zip(countries, dishes.slice(3)).flat(),
-  ] as AutocompleteItem[])
-    .filter(Boolean)
-    .slice(0, 20)
-  defaultAutocompleteResults = results
-  om.actions.home.setAutocompleteResults(results)
-}
 
 type PageAction = () => Promise<void>
 
@@ -375,10 +339,12 @@ const pushHomeState: AsyncAction<
     }
   }
 
-  console.log(
-    'pushHomeState'
-    // cloneDeep({ shouldReplace, item, finalState, id })
-  )
+  if (false) {
+    console.log(
+      'pushHomeState',
+      JSON.stringify({ shouldReplace, item, finalState, id }, null, 2)
+    )
+  }
 
   if (shouldReplace) {
     om.actions.home.replaceHomeState(finalState)
@@ -451,8 +417,9 @@ const loadPageSearch: AsyncAction = async (om) => {
   if (!hasLoadedSearchOnce && om.state.router.history.length === 1) {
     hasLoadedSearchOnce = true
     const fakeTags = getTagsFromRoute(om.state.router.curPage)
+    console.time('getFullTags')
     const tags = await getFullTags(fakeTags)
-    console.log('full tags', tags)
+    console.timeEnd('getFullTags')
     om.actions.home.addTagsToCache(tags)
     om.actions.home.updateActiveTags({
       ...state,
@@ -680,9 +647,6 @@ const updateHomeState: Action<HomeStateItem> = (om, val) => {
     next.splice(index, 1)
   }
   next.push(val)
-  if (!next.some((x) => x.type === 'home')) {
-    debugger
-  }
   om.state.home.states = next
 }
 
@@ -720,10 +684,13 @@ const suggestTags: AsyncAction<string> = async (om, tags) => {
   // none
 }
 
-function reverseGeocode(center: LngLat): Promise<GeocodePlace[]> {
+function reverseGeocode(
+  center: LngLat,
+  requestLocation = false
+): Promise<GeocodePlace[]> {
   const mapGeocoder = new mapkit.Geocoder({
     language: 'en-GB',
-    getsUserLocation: true,
+    getsUserLocation: requestLocation,
   })
   return new Promise((res, rej) => {
     mapGeocoder.reverseLookup(
@@ -746,7 +713,6 @@ const setMapArea: AsyncAction<{ center: LngLat; span: LngLat }> = async (
   }
   om.state.home.currentState.center = center
   om.state.home.currentState.span = span
-
   // reverse geocode location
   await om.actions.home.updateCurrentMapAreaInformation()
 }
@@ -758,23 +724,46 @@ const spanToLocationName = (span: LngLat, place: GeocodePlace): string => {
   return place.locality // San Francisco
 }
 
+const getUserPosition = () => {
+  return new Promise<Position>((res, rej) => {
+    navigator.geolocation.getCurrentPosition(res, rej)
+  })
+}
+
+const moveMapToUserLocation: AsyncAction = async (om) => {
+  const position = await getUserPosition()
+  const location: LngLat = {
+    lng: position.coords.longitude,
+    lat: position.coords.latitude,
+  }
+  om.state.home.userLocation = location
+  const state = om.state.home.currentState
+  state.center = { ...location }
+  // om.actions.home.updateHomeState({
+  //   ...state,
+  //   center: { ...location },
+  // })
+}
+
 const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
   const currentState = om.state.home.currentState
   const center = currentState.center!
   const span = currentState.span!
+  const hasUserLocation = !!om.state.home.userLocation
   try {
-    const [firstResult] = (await reverseGeocode(center)) ?? []
+    const [firstResult] = (await reverseGeocode(center, hasUserLocation)) ?? []
     const placeName = firstResult.subLocality ?? firstResult.locality
     if (placeName) {
-      console.log('user location', firstResult)
-      // @ts-ignore
-      currentState.currentLocationInfo = {
+      const name = spanToLocationName(span, firstResult)
+      const info: GeocodePlace = {
         country: firstResult?.country,
         coordinate: firstResult?.coordinate,
         locality: firstResult?.locality,
         subLocality: firstResult?.subLocality,
       }
-      currentState.currentLocationName = spanToLocationName(span, firstResult)
+      // @ts-ignore
+      om.state.home.currentLocationInfo = info
+      currentState.currentLocationName = name
     }
   } catch (err) {
     return
@@ -1217,7 +1206,6 @@ export const actions = {
   setIsScrolling,
   setLocationAutocompleteResults,
   setHasMovedMap,
-  startAutocomplete,
   runHomeSearch,
   setSearchQuery,
   updateCurrentMapAreaInformation,
@@ -1255,4 +1243,5 @@ export const actions = {
   replaceHomeState,
   updateHomeState,
   navigate,
+  moveMapToUserLocation,
 }

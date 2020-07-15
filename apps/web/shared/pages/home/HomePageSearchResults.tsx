@@ -79,7 +79,7 @@ export default memo((props: Props) => {
 })
 
 const SearchResultsTitle = memo(({ item }: Props) => {
-  const { paddingTop, titleHeight } = useSpacing()
+  const { isSmall, paddingTop, titleHeight } = useSpacing()
   const { subTitle, pageTitleElements } = getTitleForState(
     useOvermindStatic().state,
     item
@@ -101,6 +101,7 @@ const SearchResultsTitle = memo(({ item }: Props) => {
         contentContainerStyle={{
           width: '100%',
           maxWidth: '100%',
+          paddingRight: isSmall ? 25 : 0,
         }}
       >
         <HStack

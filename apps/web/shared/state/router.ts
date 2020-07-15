@@ -275,12 +275,9 @@ const routeListen: Action<{
       }
     }
 
-    console.log('page.js routing', {
-      url,
-      params,
-      isGoingBack,
-      ignoreNextRoute,
-    })
+    if (process.env.NODE_ENV === 'development') {
+      console.debug('page.js routing', url)
+    }
 
     curSearch = queryString.parse(querystring)
 
@@ -329,13 +326,11 @@ export const actions = {
 
 export const effects = {
   open(url: string) {
-    console.log('open', url)
     ignoreNextRoute = true
     page.show(url)
   },
 
   replace(url: string) {
-    console.log('replace', url)
     ignoreNextRoute = true
     page.replace(url)
   },

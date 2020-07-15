@@ -39,6 +39,10 @@ export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
   )
 }
 
+const isValidTag = (tag?: NavigableTag) => {
+  return tag && tag.name !== 'no-slug'
+}
+
 export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
   tag?.type != 'lense' && tag.type != 'filter'
 
@@ -50,7 +54,7 @@ export const getActiveTags = memoize(
       const tags: Tag[] = tagIds.map(
         (x) => home.allTags[x] ?? { id: '-1', name: x, type: 'dish' }
       )
-      return tags.filter(Boolean)
+      return tags.filter(isValidTag)
     }
     return []
   }
