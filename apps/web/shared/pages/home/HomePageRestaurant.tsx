@@ -77,8 +77,8 @@ export default memo(
               <Spacer />
               <Spacer />
 
-              <HStack>
-                <VStack width="50%">
+              <HStack flexWrap="wrap">
+                <VStack flex={1} minWidth={340}>
                   <SmallTitle fontSize={22} divider="off">
                     Overview
                   </SmallTitle>
@@ -97,7 +97,7 @@ export default memo(
                     <RestaurantMenu restaurantSlug={slug} />
                   </Suspense>
                 </VStack>
-                <VStack width="50%">
+                <VStack flex={1} minWidth={340}>
                   <VStack
                     padding={10}
                     margin={10}

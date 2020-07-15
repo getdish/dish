@@ -116,9 +116,7 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
       {username.length > 3 && (
         <HStack>
           <Text fontSize={16}>
-            <Link inline name="forgotPassword">
-              Forgot password?
-            </Link>{' '}
+            <Link name="forgotPassword">Forgot password?</Link>{' '}
           </Text>
         </HStack>
       )}
