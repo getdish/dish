@@ -4,7 +4,6 @@ import {
   RestaurantSearchArgs,
   Tag,
   getHomeDishes,
-  query,
   resolved,
   search,
   slugify,
@@ -44,7 +43,6 @@ import {
   HomeStateItemSimple,
   HomeStateTagNavigable,
   LngLat,
-  Om,
   OmState,
   ShowAutocomplete,
 } from './home-types'
@@ -762,13 +760,14 @@ const spanToLocationName = (span: LngLat, place: GeocodePlace): string => {
 
 const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
   const currentState = om.state.home.currentState
-  const center = currentState.center
-  const span = currentState.span
+  const center = currentState.center!
+  const span = currentState.span!
   try {
     const [firstResult] = (await reverseGeocode(center)) ?? []
     const placeName = firstResult.subLocality ?? firstResult.locality
     if (placeName) {
       console.log('user location', firstResult)
+      // @ts-ignore
       currentState.currentLocationInfo = {
         country: firstResult?.country,
         coordinate: firstResult?.coordinate,

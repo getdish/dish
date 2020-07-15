@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { HStack, Toast, useGet, useOnMount } from '@dish/ui'
+import { HStack, Spacer, Toast, useGet, useOnMount } from '@dish/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { StyleSheet, TextInput } from 'react-native'
 
@@ -158,6 +158,7 @@ export const HomeSearchInput = memo(() => {
         </HStack>
       </HomeAutocompleteHoverableInput>
       <SearchCancelButton />
+      <Spacer size={6} />
     </>
   )
 })

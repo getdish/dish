@@ -8,13 +8,7 @@ import {
   VStack,
   mediaQueries,
 } from '@dish/ui'
-import React, {
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { ChevronLeft, Loader, MapPin, Search, Settings } from 'react-feather'
 import { StyleSheet } from 'react-native'
 
@@ -28,7 +22,6 @@ import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
-import { HomeAutocompleteBackground } from './HomeAutocompleteBackground'
 import { HomeSearchInput } from './HomeSearchInput'
 import { HomeSearchLocationInput } from './HomeSearchLocationInput'
 import { HomeUserMenu } from './HomeUserMenu'

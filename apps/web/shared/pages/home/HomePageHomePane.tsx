@@ -468,7 +468,7 @@ export const RestaurantButton = memo(
           shadowRadius: 5,
           zIndex: 2,
         })}
-        paddingRight={34}
+        paddingRight={40}
         {...props}
         name="restaurant"
         params={{ slug: restaurant.slug }}
@@ -476,13 +476,20 @@ export const RestaurantButton = memo(
           onHoverIn?.(restaurant)
         }}
       >
-        <HStack flex={1} alignItems="center" spacing={5}>
+        <HStack
+          maxWidth="100%"
+          flex={1}
+          alignItems="center"
+          position="relative"
+          justifyContent="center"
+        >
           {!!trending && (
             <TrendingIcon
               size={16}
               trending={trending}
               marginTop={-4}
-              marginBottom={-4}
+              marginRight={5}
+              marginBottom={-5}
             />
           )}
           <Text
@@ -501,7 +508,7 @@ export const RestaurantButton = memo(
             // @ts-ignore
             position="absolute"
             top={0}
-            right={-35}
+            right={-30}
             subtle={subtle}
           />
         </HStack>

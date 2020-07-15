@@ -1,4 +1,5 @@
 import { useMemo, useRef } from 'react'
+
 export const useLastValueWhen = <A extends () => any>(
   memoFn: A,
   conditional: boolean
