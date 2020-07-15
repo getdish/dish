@@ -2,7 +2,7 @@ import { restaurantFindOne } from '@dish/graph'
 
 import { Google } from './Google'
 
-const name = 'Cafe Coco'
+const name = 'Kokkari Estiatorio'
 
 async function one() {
   const restaurant = await restaurantFindOne({ name })

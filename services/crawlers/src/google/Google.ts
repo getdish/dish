@@ -118,6 +118,7 @@ export class Google extends WorkerJob {
   }
 
   async getAllData(restaurant: Restaurant) {
+    this.scrape_data.page_url = this.puppeteer.page.url()
     const steps = [
       this.getMainPage,
       this.getHeroImage,
@@ -138,36 +139,47 @@ export class Google extends WorkerJob {
 
   async _runFailableFunction(func: Function, restaurant: Restaurant) {
     console.log('GOOGLE: Running failable step: ' + func.name)
-    let retries = 0
-    while (retries < 2) {
-      try {
-        await func.bind(this)()
-        break
-      } catch (e) {
-        if (retries < 2 && e.message.includes('waiting for selector')) {
-          const url = this.puppeteer.page.url()
-          await this.getNewSearchEndpoint()
-          await this.puppeteer.page.goto(url)
-          retries++
-        } else {
-          sentryException(
-            e,
-            { function: func.name, restaurant: restaurant },
-            { source: 'Google crawler' }
-          )
-          break
-        }
+    try {
+      await func.bind(this)()
+    } catch (e) {
+      if (!e.message.includes('waiting for selector')) {
+        sentryException(
+          e,
+          { function: func.name, restaurant: restaurant },
+          { source: 'Google crawler' }
+        )
       }
     }
   }
 
   async getMainPage() {
-    const url =
-      GOOGLE_DOMAIN +
-      `/maps/place/@${this.lat},${this.lon},17z/` +
-      `data=!3m1!4b1!4m5!3m4!1s${this.googleRestaurantID}` +
-      `!8m2!3d${this.lat}!4d${this.lon}`
-    await this.puppeteer.page.goto(url)
+    let retries = 0
+    while (retries < 4) {
+      const url =
+        GOOGLE_DOMAIN +
+        `/maps/place/@${this.lat},${this.lon},17z/` +
+        `data=!3m1!4b1!4m5!3m4!1s${this.googleRestaurantID}` +
+        `!8m2!3d${this.lat}!4d${this.lon}`
+      await this.puppeteer.page.goto(url)
+      if (await this._hasSearchExpired()) {
+        await this.getNewSearchEndpoint()
+        this.googleRestaurantID = await this.searchForID()
+        retries += 1
+      } else {
+        return
+      }
+    }
+    throw "GOOGLE CRAWLER: Couldn't get main page for: " + this.name
+  }
+
+  // Example of expired search:
+  // "search?tbm=map&authuser=0&hl=en&gl=us&pb=!4m9!1m3!1d3285.0632427323467!2d%LON%!3d%LAT%!2m0!3m2!1i1366!2i800!4f13.1!7i20!10b1!12m8!1m1!18b1!2m3!5m1!6e2!20e3!10b1!16b1!19m4!2m3!1i360!2i120!4i8!20m57!2m2!1i203!2i100!3m2!2i4!5b1!6m6!1m2!1i86!2i86!1m2!1i408!2i240!7m42!1m3!1e1!2b0!3e3!1m3!1e2!2b1!3e2!1m3!1e2!2b0!3e3!1m3!1e3!2b0!3e3!1m3!1e8!2b0!3e3!1m3!1e3!2b1!3e2!1m3!1e9!2b1!3e2!1m3!1e10!2b0!3e3!1m3!1e10!2b1!3e2!1m3!1e10!2b0!3e4!2b1!4b1!9b0!22m6!1schwPX7CqB9H99AOy-r0o%3A1!2s1i%3A0%2Ct%3A11886%2Cp%3AchwPX7CqB9H99AOy-r0o%3A1!7e81!12e5!17schwPX7CqB9H99AOy-r0o%3A2!18e15!24m50!1m12!13m6!2b1!3b1!4b1!6i1!8b1!9b1!18m4!3b1!4b1!5b1!6b1!2b1!5m5!2b1!3b1!5b1!6b1!7b1!10m1!8e3!14m1!3b1!17b1!20m4!1e3!1e6!1e14!1e15!24b1!25b1!26b1!30m1!2b1!36b1!43b1!52b1!54m1!1b1!55b1!56m2!1b1!3b1!65m5!3m4!1m3!1m2!1i224!2i298!26m4!2m3!1i80!2i92!4i8!30m28!1m6!1m2!1i0!2i0!2m2!1i458!2i800!1m6!1m2!1i1316!2i0!2m2!1i1366!2i800!1m6!1m2!1i0!2i0!2m2!1i1366!2i20!1m6!1m2!1i0!2i780!2m2!1i1366!2i800!34m14!2b1!3b1!4b1!6b1!8m4!1b1!3b1!4b1!6b1!9b1!12b1!14b1!20b1!23b1!37m1!1e81!42b1!47m0!49m1!3b1!50m4!2e2!3m2!1b1!3b1!65m0&q=P%20LEASE&oq=P%20LEASE&gs_l=maps.3...158.237.1.246.5.1.0.0.0.0.0.0..0.0....0...1ac.1.64.maps..5.0.0....0.&tch=1&ech=1&psi=chwPX7CqB9H99AOy-r0o.1594825843774.1"
+  async _hasSearchExpired() {
+    const title = await this.puppeteer.getElementText(
+      '.section-hero-header-title-title'
+    )
+    const is_blank_page = this.puppeteer.page.url() == 'about:blank'
+    return is_blank_page || title.toLowerCase().includes('please')
   }
 
   async getSearchEndpoint() {
