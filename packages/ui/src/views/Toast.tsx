@@ -5,12 +5,11 @@ import { AbsoluteVStack, VStack } from './Stacks'
 import { Text } from './Text'
 
 let show: (text: string, duration: number) => void = (text) => {
-  console.warn(text)
+  console.warn('NO SHOW', text)
 }
 
 export const Toast = {
-  // @ts-ignore
-  show: (...args) => show(...args),
+  show: (text: string, duration = 1000) => show(text, duration),
 }
 
 export const ToastRoot = memo(function ToastRoot() {
@@ -26,7 +25,7 @@ export const ToastRoot = memo(function ToastRoot() {
   }
 
   show = useCallback(
-    (text: string, duration: number = 1000) => {
+    (text: string, duration = 1000) => {
       clearTimeout(stateRef.current.timeout ?? 0)
       const timeout = setTimeout(() => {
         setState({

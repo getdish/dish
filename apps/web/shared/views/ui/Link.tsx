@@ -18,7 +18,6 @@ export function Link<
   Params = RoutesTable[Name]['params']
 >(allProps: LinkProps<Name, Params>) {
   const {
-    inline,
     fontSize,
     fontWeight,
     children,
@@ -34,6 +33,7 @@ export function Link<
     className,
     asyncClick,
     textAlign,
+    style,
     ...restProps
   } = allProps
   const {
@@ -61,6 +61,7 @@ export function Link<
           onClick?.(clickEvent!)
           onPress?.(clickEvent)
         } else {
+          console.log('should nav?', navItem)
           if (!preventNavigate && !!navItem.name) {
             om.actions.router.navigate(navItem)
           }
@@ -68,9 +69,10 @@ export function Link<
         if (replaceSearch) {
           om.actions.home.clearSearch()
         }
+        setClickEvent(null)
       },
     ])
-  }, [clickEvent])
+  }, [clickEvent, name, params, replace])
 
   const content = (
     <Text
@@ -98,31 +100,14 @@ export function Link<
         e.persist()
         setClickEvent(e)
       },
-      className: `${className ?? ''}${inline ? ' inline-flex' : ''}`,
+      className,
       style: {
         cursor: 'pointer',
         maxWidth: '100%',
         flexDirection: 'inherit',
-        padding,
+        ...style,
       },
     },
     content
   )
-}
-
-export const getStylePadding = ({
-  padding,
-  paddingHorizontal,
-  paddingVertical,
-}: {
-  padding: any
-  paddingVertical: any
-  paddingHorizontal: any
-}) => {
-  if (paddingHorizontal || paddingVertical) {
-    return [paddingVertical ?? padding ?? 0, paddingHorizontal ?? padding ?? 0]
-      .map((x) => (typeof x === 'number' ? `${x}px` : x))
-      .join(' ')
-  }
-  return padding
 }

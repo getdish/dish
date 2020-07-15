@@ -120,15 +120,6 @@ const derivations = {
     ) as HomeStateItemSearch | HomeStateItemHome
     return getActiveTags(state, lastTaggable)
   }),
-  autocompleteFocusedTag: derived<HomeState, Tag | null>((state) => {
-    const { autocompleteIndex } = state
-    if (autocompleteIndex < 0) return null
-    if (!state.autocompleteResults) return null
-    return (
-      state.allTags[state.autocompleteResults[autocompleteIndex - 1]?.tagId] ||
-      null
-    )
-  }),
   searchbarFocusedTag: derived<HomeState, Tag | null>((state) => {
     const { autocompleteIndex } = state
     if (autocompleteIndex > -1) return null
@@ -149,22 +140,6 @@ const derivations = {
     }
     return null
   }),
-  autocompleteResultsActive: derived<HomeState, AutocompleteItem[]>((state) => {
-    const prefix: AutocompleteItem[] = [
-      {
-        name: '',
-        icon: '🔍',
-        tagId: '',
-        type: 'orphan' as const,
-      },
-    ]
-    return [
-      ...prefix,
-      ...(state.showAutocomplete === 'location'
-        ? state.locationAutocompleteResults ?? []
-        : state.autocompleteResults ?? []),
-    ]
-  }),
 }
 
 export const state: HomeState = {
@@ -173,20 +148,20 @@ export const state: HomeState = {
   isScrolling: false,
   skipNextPageFetchData: false,
   activeIndex: -1,
+  searchBarTagIndex: 0,
   allTags,
   allTagsNameToID: {},
   allUsers: {},
   allLenseTags: tagLenses,
   allFilterTags: tagFilters,
-  autocompleteDishes: [],
+  showAutocomplete: false,
   autocompleteIndex: 0,
   autocompleteResults: [],
+  locationAutocompleteResults: defaultLocationAutocompleteResults,
+  location: null,
+  locationSearchQuery: '',
   breadcrumbStates: [],
   hoveredRestaurant: null,
-  location: null,
-  locationAutocompleteResults: defaultLocationAutocompleteResults,
-  locationSearchQuery: '',
-  showAutocomplete: false,
   showUserMenu: false,
   states: [initialHomeState],
   topDishes: [],
@@ -912,31 +887,16 @@ export function searchLocations(query: string) {
   })
 }
 
-const moveAutocompleteIndex: Action<number> = (om, val) => {
-  const cur = om.state.home.autocompleteIndex
-  om.actions.home.setAutocompleteIndex(cur + val)
-}
-
-// see setSearchBarFocusedTag
-const setAutocompleteIndex: Action<number> = (om, val) => {
-  const tags = om.state.home.searchBarTags
-  const min = 0 - tags.length
-  const max = om.state.home.autocompleteResults.length - 1
-  const next = clamp(val, min, max)
-  console.log('setAutocompleteIndex', min, max, next)
-  om.state.home.autocompleteIndex = next
-}
-
 const setActiveIndex: Action<number> = (om, val) => {
   om.state.home.activeIndex = Math.min(Math.max(-1, val), 1000) // TODO
 }
 
-const moveActiveDown: Action = (om) => {
-  om.actions.home.setActiveIndex(om.state.home.activeIndex + 1)
-}
-
-const moveActiveUp: Action = (om) => {
-  om.actions.home.setActiveIndex(om.state.home.activeIndex - 1)
+const moveActive: Action<number> = (om, num) => {
+  if (om.state.home.isAutocompleteActive) {
+    om.actions.home.moveAutocompleteIndex(num)
+  } else {
+    om.actions.home.setActiveIndex(om.state.home.activeIndex + num)
+  }
 }
 
 const runHomeSearch: AsyncAction<string> = async (om, query) => {
@@ -950,7 +910,7 @@ const requestLocation: Action = (om) => {}
 
 const setSearchBarFocusedTag: Action<NavigableTag | null> = (om, val) => {
   if (!val) {
-    om.state.home.autocompleteIndex = 0
+    om.state.home.searchBarTagIndex = 0
     return
   }
   const tags = om.state.home.searchBarTags
@@ -1051,13 +1011,16 @@ const createBreadcrumbsMemo = memoize((states: HomeStateItem[]) => {
 })
 
 export function createAutocomplete(
-  x: Partial<AutocompleteItem>
+  item: Partial<AutocompleteItem>
 ): AutocompleteItem {
+  const next = {
+    name: '',
+    type: 'dish',
+    ...item,
+  }
   return {
-    name: x.name ?? '',
-    type: x.type ?? 'dish',
-    ...x,
-    tagId: getTagId({ name: x.name ?? '', type: x.type ?? 'dish' }),
+    ...next,
+    tagId: getTagId(next),
   }
 }
 
@@ -1093,14 +1056,16 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
 
 // adds to allTags + allTagsNameToID
 const addTagsToCache: Action<NavigableTag[] | null> = (om, tags) => {
-  for (const tag of tags) {
-    const id = getTagId(tag)
-    om.state.home.allTags[id] = { ...tag } as any
-    om.state.home.allTagsNameToID[slugify(tag.name.toLowerCase(), ' ')] = id
-    try {
-      om.state.home.allTagsNameToID[tag.name] = id
-    } catch (err) {
-      // overmind blows up adding names with periods
+  for (const tag of tags ?? []) {
+    if (tag.name) {
+      const id = getTagId(tag)
+      om.state.home.allTags[id] = { ...tag } as any
+      om.state.home.allTagsNameToID[slugify(tag.name.toLowerCase(), ' ')] = id
+      try {
+        om.state.home.allTagsNameToID[tag.name] = id
+      } catch (err) {
+        // overmind blows up adding names with periods
+      }
     }
   }
 }
@@ -1109,15 +1074,18 @@ const setAutocompleteResults: Action<AutocompleteItem[] | null> = (
   om,
   results
 ) => {
-  om.state.home.autocompleteResults = results ?? defaultAutocompleteResults
+  om.state.home.autocompleteIndex = 0
+  om.state.home.autocompleteResults =
+    results ?? defaultAutocompleteResults ?? []
 }
 
 const setLocationAutocompleteResults: Action<AutocompleteItem[] | null> = (
   om,
   results
 ) => {
+  om.state.home.autocompleteIndex = 0
   om.state.home.autocompleteResults =
-    results ?? defaultLocationAutocompleteResults
+    results ?? defaultLocationAutocompleteResults ?? []
 }
 
 const setSearchQuery: Action<string> = (om, val) => {
@@ -1214,7 +1182,34 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
   return didNav
 }
 
+const moveSearchBarTagIndex: Action<number> = (om, val) => {
+  om.actions.home.setSearchBarTagIndex(om.state.home.searchBarTagIndex + val)
+}
+
+const setSearchBarTagIndex: Action<number> = (om, val) => {
+  om.state.home.searchBarTagIndex = clamp(
+    val,
+    -om.state.home.searchBarTags.length,
+    0
+  )
+}
+
+const moveAutocompleteIndex: Action<number> = (om, val) => {
+  om.actions.home.setAutocompleteIndex(om.state.home.autocompleteIndex + val)
+}
+
+const setAutocompleteIndex: Action<number> = (om, val) => {
+  om.state.home.autocompleteIndex = clamp(
+    val,
+    0,
+    // not -1 because we show a fake "search" entry first
+    om.state.home.autocompleteResults.length
+  )
+}
+
 export const actions = {
+  moveAutocompleteIndex,
+  setAutocompleteIndex,
   loadHomeDishes,
   setIsScrolling,
   setLocationAutocompleteResults,
@@ -1226,11 +1221,9 @@ export const actions = {
   clearSearch,
   forkCurrentList,
   handleRouteChange,
-  moveActiveDown,
-  moveActiveUp,
+  moveActive,
   up,
   clearTag,
-  moveAutocompleteIndex,
   popTo,
   requestLocation,
   runSearch,
@@ -1240,7 +1233,8 @@ export const actions = {
   setLocationSearchQuery,
   setMapArea,
   setSearchBarFocusedTag,
-  setAutocompleteIndex,
+  moveSearchBarTagIndex,
+  setSearchBarTagIndex,
   setShowAutocomplete,
   setShowUserMenu,
   start,

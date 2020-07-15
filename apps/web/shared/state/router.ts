@@ -6,6 +6,7 @@ import { Action, AsyncAction, Derive, derived } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
 
+import { memoize } from '../helpers/memoizeWeak'
 import { race } from '../helpers/race'
 
 export type HistoryItem<A extends RouteName = any> = {
@@ -165,31 +166,33 @@ export const state: RouterState = {
 
 const uid = () => `${Math.random()}`
 
-const navItemToHistoryItem = (navItem: NavigateItem): HistoryItem => {
-  const params = {}
+const navItemToHistoryItem = memoize(
+  (navItem: NavigateItem): HistoryItem => {
+    const params = {}
 
-  // remove undefined params
-  if ('params' in navItem && !!navItem.params) {
-    for (const key in navItem.params) {
-      const value = navItem.params[key]
-      if (typeof value !== 'undefined') {
-        params[key] = value
+    // remove undefined params
+    if ('params' in navItem && !!navItem.params) {
+      for (const key in navItem.params) {
+        const value = navItem.params[key]
+        if (typeof value !== 'undefined') {
+          params[key] = value
+        }
       }
     }
-  }
 
-  return {
-    id: uid(),
-    ...navItem,
-    type: 'push',
-    params,
-    path: getPathFromParams({
-      name: navItem.name,
+    return {
+      id: uid(),
+      ...navItem,
+      type: 'push',
       params,
-    }),
-    search: curSearch,
+      path: getPathFromParams({
+        name: navItem.name,
+        params,
+      }),
+      search: curSearch,
+    }
   }
-}
+)
 
 const getShouldNavigate: Action<NavigateItem, boolean> = (om, navItem) => {
   const historyItem = navItemToHistoryItem(navItem)
@@ -338,7 +341,7 @@ export const effects = {
   },
 }
 
-export function getPathFromParams({
+export const getPathFromParams = ({
   name,
   params,
   convertToSlug,
@@ -346,7 +349,7 @@ export function getPathFromParams({
   name: string
   params?: Object | void
   convertToSlug?: boolean
-}) {
+}) => {
   // object to path
   let route = routes[name]
   if (!route) {

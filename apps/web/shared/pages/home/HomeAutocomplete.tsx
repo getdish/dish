@@ -16,7 +16,11 @@ import React, { memo, useEffect, useRef } from 'react'
 import { Plus } from 'react-feather'
 import { ScrollView } from 'react-native'
 
-import { searchBarHeight, searchBarTopOffset } from '../../constants'
+import {
+  pageWidthMax,
+  searchBarHeight,
+  searchBarTopOffset,
+} from '../../constants'
 import {
   AutocompleteItem,
   LngLat,
@@ -28,11 +32,14 @@ import {
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallCircleButton } from './CloseButton'
-import { useMediaQueryIsSmall } from './HomeViewDrawer'
+import { focusSearchInput } from './HomeSearchInput'
+import { getAddressText } from './RestaurantAddressLinksRow'
 
 const flexSearch = FlexSearch.create<number>({
   profile: 'speed',
 })
+
+let curPagePos = { x: 0, y: 0 }
 
 export const useShowAutocomplete = () => {
   const om = useOvermind()
@@ -43,6 +50,17 @@ export const useShowAutocomplete = () => {
 }
 
 export default memo(function HomeAutocomplete() {
+  useEffect(() => {
+    const handleMove = (e) => {
+      curPagePos.x = e.pageX
+      curPagePos.y = e.pageY
+    }
+    document.addEventListener('mousemove', handleMove)
+    return () => {
+      document.removeEventListener('mousemove', handleMove)
+    }
+  })
+
   return (
     <>
       <HomeAutocompleteEffects />
@@ -64,207 +82,175 @@ const HomeAutocompleteEffects = memo(() => {
 })
 
 const HomeAutoCompleteContents = memo(() => {
-  const isSmall = useMediaQueryIsSmall()
   const om = useOvermind()
-  const {
-    showAutocomplete,
-    autocompleteIndex,
-    autocompleteResultsActive,
-  } = om.state.home
+  const { showAutocomplete } = om.state.home
   const showLocation = showAutocomplete == 'location'
   const showSearch = showAutocomplete == 'search'
   const isShowing = showSearch || showLocation
   const hideAutocomplete = useDebounce(
     () => om.actions.home.setShowAutocomplete(false),
-    400
+    200
   )
 
-  // hide when moused away, show when moved back!
-  useEffect(() => {
-    if (isSmall) {
-      return
-    }
-    let tmOff
-    const handleMove = (e) => {
-      const y = e.pageY
-      const showAutocomplete = om.state.home.showAutocomplete
-      if (showAutocomplete) {
-        if (y > 140) {
-          tmOff = setTimeout(() => {
-            // if > 0 dont autohide
-            if (om.state.home.autocompleteIndex <= 0) {
-              om.actions.home.setShowAutocomplete(false)
-            }
-          }, 80)
-        }
-      } else {
-        if (y < 140) {
-          clearTimeout(tmOff)
-        }
-      }
-    }
-    window.addEventListener('mousemove', handleMove)
-    return () => {
-      window.removeEventListener('mousemove', handleMove)
-    }
-  }, [isSmall, isShowing])
-
-  const resultsElements = autocompleteResultsActive.map((result, index) => {
-    const plusButtonEl =
-      result.type === 'dish' && index !== 0 && om.state.user.isLoggedIn ? (
-        <AutocompleteAddButton />
-      ) : null
-
-    const isActive = autocompleteIndex === index
-
-    const iconElement = (
-      <>
-        {!!result.icon && (
-          <VStack marginVertical={-2}>
-            {result.icon?.indexOf('http') === 0 ? (
-              <img
-                src={result.icon}
-                style={{
-                  width: 26,
-                  height: 26,
-                  borderRadius: 100,
-                }}
-              />
-            ) : result.icon ? (
-              <Circle size={26} backgroundColor="rgba(150,150,150,0.1)">
-                <Text>{result.icon} </Text>
-              </Circle>
-            ) : null}
-          </VStack>
-        )}
-      </>
-    )
-
-    const spacerElement = !!(result.icon && result.name) && <Spacer size={6} />
-
-    return (
-      <React.Fragment key={`${result.tagId}${index}`}>
-        <LinkButton
-          className="no-transition"
-          onPressOut={() => {
-            hideAutocomplete()
-            om.actions.home.setAutocompleteIndex(index)
-
-            if (showLocation) {
-              om.actions.home.setLocation(result.name)
-            } else {
-              // SEE BELOW, tag={tag}
-              // clear query
-              if (result.type !== 'restaurant') {
-                console.warn('CLEAR SEARCH', result)
-                om.actions.home.setSearchQuery('')
-              }
-            }
-          }}
-          {...(!showLocation && {
-            tag: result,
-          })}
-          {...(result.type == 'restaurant' && {
-            tag: null,
-            name: 'restaurant',
-            params: {
-              slug: result.slug,
-            },
-          })}
-          alignItems="center"
-          justifyContent="center"
-          lineHeight={24}
-          height={38}
-          paddingHorizontal={3}
-          fontSize={15}
-          fontWeight="500"
-          {...(isSmall && {
-            width: '100%',
-          })}
-          {...(!isSmall && {
-            maxWidth: '17vw',
-            textAlign: 'left',
-          })}
-          borderBottomWidth={4}
-          borderTopWidth={4}
-          borderTopColor="transparent"
-          borderBottomColor="transparent"
-          hoverStyle={{
-            borderBottomColor: 'rgba(100,100,100,0.65)',
-          }}
-          {...(isActive && {
-            borderBottomColor: '#fff',
-            hoverStyle: {
-              borderBottomColor: '#fff',
-            },
-          })}
-        >
-          {iconElement}
-          {spacerElement}
-          <Text ellipse color={'#fff'}>
-            {result.name} {plusButtonEl}
-          </Text>
-        </LinkButton>
-        <Spacer size={10} />
-      </React.Fragment>
-    )
-  })
-
-  const contentElements = isSmall ? (
-    <VStack
-      borderRadius={isSmall ? 0 : 100}
-      shadowColor="rgba(0,0,0,0.28)"
-      shadowRadius={18}
-      maxHeight="70vh"
-      width="100%"
-      backgroundColor="#000"
-    >
-      <ScrollView>
-        <VStack paddingVertical={10}>{resultsElements}</VStack>
-      </ScrollView>
-    </VStack>
-  ) : (
-    <HStack
-      backgroundColor="rgba(0,0,0,0.9)"
-      borderRadius={100}
-      height={49}
-      paddingBottom={1} // looks better 1px up
-      shadowColor="rgba(0,0,0,0.28)"
-      shadowRadius={18}
-      overflow="hidden"
-      shadowOffset={{ width: 0, height: 3 }}
-      position="relative"
-    >
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <HStack
-          height="100%"
-          paddingLeft={100}
-          flex={1}
-          alignItems="center"
-          paddingHorizontal={10}
-        >
-          {resultsElements}
-        </HStack>
-      </ScrollView>
-    </HStack>
-  )
+  const searchYEnd = searchBarTopOffset + searchBarHeight
 
   return (
     <AbsoluteVStack
       className="ease-in-out-faster"
+      pointerEvents="auto"
       position="absolute"
-      top={searchBarTopOffset + searchBarHeight}
+      paddingTop={searchYEnd}
+      maxHeight={`calc(100vh - ${searchYEnd}px)`}
       left="2%"
       right="2%"
-      zIndex={3000}
+      alignItems="center"
+      justifyContent="center"
+      zIndex={-1}
       paddingBottom={30}
       paddingHorizontal={15}
       opacity={isShowing ? 1 : 0}
       transform={isShowing ? [] : [{ translateY: -10 }]}
       disabled={!isShowing}
+      // @ts-ignore
+      onMouseLeave={() => {
+        if (curPagePos.y > searchYEnd) {
+          hideAutocomplete()
+        }
+      }}
+      // @ts-ignore
+      onMouseEnter={() => {
+        hideAutocomplete.cancel()
+      }}
     >
-      {contentElements}
+      <VStack
+        shadowColor="rgba(0,0,0,0.4)"
+        shadowRadius={18}
+        width="100%"
+        maxWidth={pageWidthMax - 400}
+        backgroundColor="rgba(0,0,0,0.93)"
+        padding={5}
+        borderRadius={10}
+      >
+        <ScrollView>
+          <AutocompleteResults />
+        </ScrollView>
+      </VStack>
     </AbsoluteVStack>
+  )
+})
+
+const AutocompleteResults = memo(() => {
+  const om = useOvermind()
+  const {
+    showAutocomplete,
+    autocompleteIndex,
+    autocompleteResults,
+    locationAutocompleteResults,
+    currentStateSearchQuery,
+  } = om.state.home
+  const showLocation = showAutocomplete == 'location'
+  const hideAutocomplete = useDebounce(
+    () => om.actions.home.setShowAutocomplete(false),
+    200
+  )
+
+  const autocompleteResultsActive = [
+    {
+      name: `Search "${currentStateSearchQuery}"`,
+      icon: '🔍',
+      tagId: '',
+      type: 'orphan' as const,
+      description: '⏎',
+    },
+    ...(showAutocomplete === 'location'
+      ? locationAutocompleteResults ?? []
+      : autocompleteResults ?? []),
+  ].slice(0, 13)
+
+  return (
+    <>
+      {autocompleteResultsActive.map((result, index) => {
+        const plusButtonEl =
+          result.type === 'dish' && index !== 0 && om.state.user.isLoggedIn ? (
+            <AutocompleteAddButton />
+          ) : null
+
+        const isActive = autocompleteIndex === index
+        console.log('result', result)
+
+        return (
+          <React.Fragment key={`${result.tagId}${index}`}>
+            <LinkButton
+              className="no-transition"
+              onPressOut={() => {
+                hideAutocomplete()
+                if (showLocation) {
+                  om.actions.home.setLocation(result.name)
+                } else {
+                  // SEE BELOW, tag={tag}
+                  // clear query
+                  if (result.type !== 'restaurant') {
+                    om.actions.home.setSearchQuery('')
+                  }
+                }
+              }}
+              {...(!showLocation && {
+                tag: result,
+              })}
+              {...(result.type == 'restaurant' && {
+                tag: null,
+                name: 'restaurant',
+                params: {
+                  slug: result.slug,
+                },
+              })}
+              lineHeight={20}
+              paddingHorizontal={4}
+              paddingVertical={7}
+              fontWeight="500"
+              borderRadius={5}
+              hoverStyle={{
+                backgroundColor: 'rgba(255,255,255,0.1)',
+              }}
+              {...(isActive && {
+                backgroundColor: 'rgba(255,255,255,0.2)',
+                hoverStyle: {
+                  backgroundColor: 'rgba(255,255,255,0.2)',
+                },
+              })}
+            >
+              <HStack alignItems="center">
+                <VStack height={22} width={22} marginRight={10}>
+                  {result.icon?.indexOf('http') === 0 ? (
+                    <img
+                      src={result.icon}
+                      style={{
+                        width: 22,
+                        height: 22,
+                        borderRadius: 100,
+                      }}
+                    />
+                  ) : result.icon ? (
+                    <Text fontSize={20}>{result.icon} </Text>
+                  ) : null}
+                </VStack>
+                <VStack>
+                  <Text ellipse color={'#fff'} fontSize={16}>
+                    {result.name} {plusButtonEl}
+                  </Text>
+                  {!!result.description && (
+                    <Text ellipse color="rgba(255,255,255,0.5)" fontSize={12}>
+                      {result.description}
+                    </Text>
+                  )}
+                </VStack>
+              </HStack>
+            </LinkButton>
+            <Spacer size={1} />
+          </React.Fragment>
+        )
+      })}
+    </>
   )
 })
 
@@ -325,8 +311,17 @@ function runAutocomplete(
   searchQuery: string
 ) {
   const om = omStatic
-  const state = om.state.home.currentState
 
+  if (searchQuery === '') {
+    if (showAutocomplete === 'location') {
+      om.actions.home.setLocationAutocompleteResults(null)
+    } else if (showAutocomplete === 'search') {
+      om.actions.home.setAutocompleteResults(null)
+    }
+    return
+  }
+
+  const state = om.state.home.currentState
   let results: AutocompleteItem[] = []
 
   return series([
@@ -338,31 +333,50 @@ function runAutocomplete(
         )
       }
       if (showAutocomplete === 'search') {
-        results = await searchAutocomplete(searchQuery, state.center)
+        results = await searchAutocomplete(
+          searchQuery,
+          state.center!,
+          state.span!
+        )
       }
     },
     () => fullyIdle(),
     async () => {
+      let all: AutocompleteItem[] = []
+
       if (results.length) {
         flexSearch.clear()
+        let foundIndices: number[] = []
         for (const [index, res] of results.entries()) {
-          flexSearch.add(index, res.name)
+          if (!res.name) {
+            continue
+          }
+          // for some reason flexsearch not pulling exact matches to front?
+          if (res.name.toLowerCase() === searchQuery) {
+            foundIndices.push(index)
+            continue
+          }
+          const searchable = `${res.name} ${res.description ?? ''}`.trim()
+          flexSearch.add(index, searchable)
         }
-        const foundIndices = await flexSearch.search(searchQuery, 10)
+        foundIndices = [
+          ...foundIndices,
+          ...(await flexSearch.search(searchQuery, 10)),
+        ]
         const found = foundIndices.map((index) => results[index])
-        const all = uniqBy([...found, ...results], (x) => x.id)
-        if (showAutocomplete === 'location') {
-          om.actions.home.setLocationAutocompleteResults(all)
-        }
-        if (showAutocomplete === 'search') {
-          om.actions.home.setAutocompleteResults(all)
-        }
+        all = uniqBy([...found, ...results], (x) => x.id)
+      }
+
+      if (showAutocomplete === 'location') {
+        om.actions.home.setLocationAutocompleteResults(all)
+      } else if (showAutocomplete === 'search') {
+        om.actions.home.setAutocompleteResults(all)
       }
     },
   ])
 }
 
-function searchAutocomplete(searchQuery: string, center: LngLat) {
+function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {
   const iLikeQuery = `%${searchQuery.split(' ').join('%')}%`.replace(
     /%%+/g,
     '%'
@@ -374,10 +388,11 @@ function searchAutocomplete(searchQuery: string, center: LngLat) {
           where: {
             location: {
               _st_d_within: {
-                distance: 0.015,
+                // search outside current bounds a bit
+                distance: Math.max(span.lng, span.lat) * 3,
                 from: {
                   type: 'Point',
-                  coordinates: [center.lat, center.lng],
+                  coordinates: [center.lng, center.lat],
                 },
               },
             },
@@ -393,6 +408,13 @@ function searchAutocomplete(searchQuery: string, center: LngLat) {
             name: r.name,
             slug: r.slug,
             type: 'restaurant',
+            icon: r.image || '📍',
+            description:
+              getAddressText(
+                omStatic.state.home.currentState.currentLocationInfo ?? null,
+                r.address ?? '',
+                'xs'
+              ) || 'No Address',
           })
         ),
       ...query
@@ -411,8 +433,9 @@ function searchAutocomplete(searchQuery: string, center: LngLat) {
           createAutocomplete({
             id: r.id,
             name: r.name,
-            icon: r.icon,
+            icon: r.icon ?? '🍽',
             type: 'dish',
+            description: r.parent?.name ?? '',
           })
         ),
       ...query
@@ -432,7 +455,8 @@ function searchAutocomplete(searchQuery: string, center: LngLat) {
             id: r.id,
             name: r.name,
             type: 'country',
-            icon: r.icon,
+            icon: r.icon ?? '🌎',
+            description: 'Cuisine',
           })
         ),
     ]

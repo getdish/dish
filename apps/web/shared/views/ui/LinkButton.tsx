@@ -2,7 +2,7 @@ import { HStack, StackProps, Text, VStack } from '@dish/ui'
 import React, { useRef } from 'react'
 
 import { RoutesTable } from '../../state/router'
-import { Link, getStylePadding } from './Link'
+import { Link } from './Link'
 import { LinkButtonProps } from './LinkProps'
 import { useNormalizeLinkProps } from './useNormalizedLink'
 
@@ -54,11 +54,14 @@ export function LinkButton<
         ellipse={ellipse}
         textAlign={textAlign}
         preventNavigate={preventNavigate}
-        padding={getStylePadding({
-          padding,
-          paddingVertical,
-          paddingHorizontal,
-        })}
+        style={{
+          padding: getStylePadding({
+            padding,
+            paddingVertical,
+            paddingHorizontal,
+          }),
+          width: '100%',
+        }}
       >
         {children ?? ''}
       </Link>
@@ -106,4 +109,21 @@ export function LinkButton<
       {contents}
     </HStack>
   )
+}
+
+const getStylePadding = ({
+  padding,
+  paddingHorizontal,
+  paddingVertical,
+}: {
+  padding: any
+  paddingVertical: any
+  paddingHorizontal: any
+}) => {
+  if (paddingHorizontal || paddingVertical) {
+    return [paddingVertical ?? padding ?? 0, paddingHorizontal ?? padding ?? 0]
+      .map((x) => (typeof x === 'number' ? `${x}px` : x))
+      .join(' ')
+  }
+  return padding
 }
