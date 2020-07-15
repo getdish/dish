@@ -15,9 +15,11 @@ export const RestaurantHeader = memo(
     ({
       state,
       restaurantSlug,
+      hideDetails,
     }: {
       state?: HomeStateItemRestaurant
       restaurantSlug: any
+      hideDetails?: boolean
     }) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
       const om = useOvermind()
@@ -63,17 +65,21 @@ export const RestaurantHeader = memo(
           <SmallTitle divider="center">
             <RestaurantFavoriteStar restaurantId={restaurant.id} size="lg" />
           </SmallTitle>
-          <Spacer />
-          <VStack alignItems="center">
-            <HStack minWidth={400}>
-              <RestaurantDetailRow
-                centered
-                justifyContent="center"
-                restaurantSlug={restaurantSlug}
-                flex={1}
-              />
-            </HStack>
-          </VStack>
+          {!hideDetails && (
+            <>
+              <Spacer />
+              <VStack alignItems="center">
+                <HStack minWidth={400}>
+                  <RestaurantDetailRow
+                    centered
+                    justifyContent="center"
+                    restaurantSlug={restaurantSlug}
+                    flex={1}
+                  />
+                </HStack>
+              </VStack>
+            </>
+          )}
         </>
       )
     }

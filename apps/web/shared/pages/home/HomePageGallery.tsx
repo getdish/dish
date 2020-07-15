@@ -55,20 +55,27 @@ const HomePageGalleryContent = memo(
           alignItems="center"
           paddingVertical={20}
           position="relative"
+          overflow="hidden"
         >
           <AbsoluteVStack top={20} right={10}>
             <StackViewCloseButton />
           </AbsoluteVStack>
 
-          <ScrollView style={{ flex: 1 }}>
+          <ScrollView
+            style={{ width: '100%' }}
+            contentContainerStyle={{
+              width: '100%',
+            }}
+          >
             <VStack>
               <HStack
                 paddingRight={40}
                 paddingLeft={20}
                 alignItems="center"
                 justifyContent="space-between"
+                flexWrap="wrap"
               >
-                <RestaurantHeader restaurantSlug={slug} />
+                <RestaurantHeader hideDetails restaurantSlug={slug} />
               </HStack>
               <HStack flexWrap="wrap">
                 {dish?.default_images()?.map((dish, i) => {
@@ -89,22 +96,16 @@ const HomePageGalleryContent = memo(
                 })}
               </HStack>
 
-              <HStack paddingVertical={20} flexWrap="wrap">
+              <HStack paddingVertical={20} flexWrap="wrap" maxWidth="100%">
                 {photos.map((photo, i) => {
                   return (
-                    <HStack
-                      key={i}
-                      width="33%"
-                      height="33%"
-                      minWidth={100}
-                      minHeight={100}
-                    >
+                    <HStack key={i} width="33%" height="33%">
                       <Image
                         source={{ uri: photo.image }}
                         resizeMode="cover"
                         style={{
                           width: '100%',
-                          height: 300,
+                          height: 250,
                           margin: 2,
                         }}
                       />

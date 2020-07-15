@@ -1,15 +1,5 @@
-import { createCancellablePromise, fullyIdle, idle, series } from '@dish/async'
-import {
-  Box,
-  Button,
-  Circle,
-  HStack,
-  LoadingItems,
-  Spacer,
-  Text,
-  Toast,
-  VStack,
-} from '@dish/ui'
+import { createCancellablePromise, idle, series } from '@dish/async'
+import { Button, HStack, LoadingItems, Spacer, Text, VStack } from '@dish/ui'
 import { cloneDeep } from 'lodash'
 import React, {
   Suspense,
@@ -20,8 +10,8 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { ArrowUp, Edit2, Search } from 'react-feather'
-import { Image, ScrollView } from 'react-native'
+import { ArrowUp } from 'react-feather'
+import { ScrollView } from 'react-native'
 
 import {
   drawerBorderRadius,
@@ -33,7 +23,6 @@ import { HomeStateItemSearch, OmState } from '../../state/home'
 import { useOvermind, useOvermindStatic } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { flatButtonStyle } from './baseButtonStyle'
 import { getTitleForState } from './getTitleForState'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
@@ -43,7 +32,6 @@ import { focusSearchInput } from './HomeSearchInput'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
 import { StackViewCloseButton } from './StackViewCloseButton'
-import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useLastValueWhen } from './useLastValueWhen'
 
 export const avatar = require('../../assets/peach.jpg').default
