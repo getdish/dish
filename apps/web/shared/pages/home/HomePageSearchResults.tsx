@@ -20,7 +20,7 @@ import React, {
   useState,
 } from 'react'
 import { ArrowUp, Edit2 } from 'react-feather'
-import { Image } from 'react-native'
+import { Image, ScrollView } from 'react-native'
 
 import {
   drawerBorderRadius,
@@ -81,38 +81,43 @@ export default memo(function HomePageSearchResults({
         top={0}
         left={0}
         right={0}
-        paddingTop={paddingTop}
-        paddingBottom={topBarVPad}
-        height={titleHeight}
-        paddingHorizontal={18}
-        backgroundColor="#fff"
         borderBottomColor="#eee"
         borderBottomWidth={1}
         zIndex={1000}
         alignItems="center"
       >
-        <HStack flex={1} justifyContent="space-between">
-          <HStack marginTop={-14} alignItems="center" justifyContent="center">
-            <HomeLenseBar activeTagIds={state.activeTagIds} />
-          </HStack>
-          <Spacer size={16} />
-          <HomeFilterBar activeTagIds={state.activeTagIds} />
-          <Spacer size={16} />
-          <VStack
-            flex={10}
-            spacing={3}
-            justifyContent="flex-end"
-            alignItems="flex-end"
-            overflow="hidden"
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <HStack
+            paddingTop={paddingTop}
+            paddingBottom={topBarVPad}
+            height={titleHeight}
+            paddingHorizontal={18}
+            backgroundColor="#fff"
+            flex={1}
+            justifyContent="space-between"
           >
-            <Text ellipse fontSize={15} fontWeight="700">
-              {pageTitleElements}
-            </Text>
-            <Text ellipse opacity={0.5} fontWeight="300" fontSize={15}>
-              {subTitle}
-            </Text>
-          </VStack>
-        </HStack>
+            <HStack marginTop={-14} alignItems="center" justifyContent="center">
+              <HomeLenseBar activeTagIds={state.activeTagIds} />
+            </HStack>
+            <Spacer size={16} />
+            <HomeFilterBar activeTagIds={state.activeTagIds} />
+            <Spacer size={16} />
+            <VStack
+              flex={10}
+              spacing={3}
+              justifyContent="flex-end"
+              alignItems="flex-end"
+              overflow="hidden"
+            >
+              <Text ellipse fontSize={15} fontWeight="700">
+                {pageTitleElements}
+              </Text>
+              <Text ellipse opacity={0.5} fontWeight="300" fontSize={15}>
+                {subTitle}
+              </Text>
+            </VStack>
+          </HStack>
+        </ScrollView>
         {/* <MyListButton isEditingUserList={isEditingUserList} /> */}
       </HStack>
 
