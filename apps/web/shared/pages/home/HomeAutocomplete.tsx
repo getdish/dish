@@ -95,7 +95,7 @@ const HomeAutoCompleteContents = memo(() => {
   return (
     <AbsoluteVStack
       className="ease-in-out-faster"
-      pointerEvents="auto"
+      pointerEvents="none"
       position="absolute"
       paddingTop={searchYEnd}
       maxHeight={`calc(100vh - ${searchYEnd}px)`}
@@ -109,32 +109,37 @@ const HomeAutoCompleteContents = memo(() => {
       opacity={isShowing ? 1 : 0}
       transform={isShowing ? [] : [{ translateY: -10 }]}
       disabled={!isShowing}
-      // @ts-ignore
-      onMouseLeave={() => {
-        if (curPagePos.y > searchYEnd) {
-          hideAutocomplete()
-        }
-      }}
-      // @ts-ignore
-      onMouseEnter={() => {
-        hideAutocomplete.cancel()
-      }}
     >
       <VStack
-        className="ease-in-out-slow"
-        position="relative"
-        left={showLocation ? 100 : 0}
-        shadowColor="rgba(0,0,0,0.4)"
-        shadowRadius={18}
         width="100%"
+        pointerEvents={isShowing ? 'auto' : 'none'}
         maxWidth={pageWidthMax * 0.4}
-        backgroundColor="rgba(0,0,0,0.93)"
-        padding={5}
-        borderRadius={10}
+        // @ts-ignore
+        onMouseLeave={() => {
+          if (curPagePos.y > searchYEnd) {
+            hideAutocomplete()
+          }
+        }}
+        // @ts-ignore
+        onMouseEnter={() => {
+          hideAutocomplete.cancel()
+        }}
       >
-        <ScrollView>
-          <AutocompleteResults />
-        </ScrollView>
+        <VStack
+          className="ease-in-out-slow"
+          position="relative"
+          left={showLocation ? 100 : 0}
+          shadowColor="rgba(0,0,0,0.4)"
+          shadowRadius={18}
+          width="100%"
+          backgroundColor="rgba(0,0,0,0.93)"
+          padding={5}
+          borderRadius={10}
+        >
+          <ScrollView>
+            <AutocompleteResults />
+          </ScrollView>
+        </VStack>
       </VStack>
     </AbsoluteVStack>
   )

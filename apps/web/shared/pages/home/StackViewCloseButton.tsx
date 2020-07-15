@@ -12,7 +12,7 @@ export const StackViewCloseButton = memo(() => {
       right={10}
       top={10}
       pointerEvents="auto"
-      zIndex={100}
+      zIndex={100000}
     >
       <CloseButton size={16} onPressOut={() => om.actions.home.up()} />
     </AbsoluteVStack>

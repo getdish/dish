@@ -246,12 +246,10 @@ function searchInputEffect(input: HTMLInputElement) {
             next()
             return
           }
-          if (searchBarTagIndex >= 0) {
-            om.actions.home.setSearchBarTagIndex(-1)
-            return
-          }
         }
-        prev()
+        if (isCaretAtStart) {
+          prev()
+        }
         return
       }
       case 39: {
