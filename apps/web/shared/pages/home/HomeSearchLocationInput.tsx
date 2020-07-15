@@ -39,6 +39,14 @@ export const HomeSearchLocationInput = memo(() => {
       switch (code) {
         case 13: {
           // enter
+          const result =
+            om.state.home.locationAutocompleteResults[
+              om.state.home.autocompleteIndex
+            ]
+          if (result) {
+            om.actions.home.setLocation(result.name)
+            om.actions.home.setShowAutocomplete(false)
+          }
           return
         }
         case 27: {
