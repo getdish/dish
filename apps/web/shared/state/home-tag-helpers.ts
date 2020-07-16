@@ -40,28 +40,25 @@ export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
 }
 
 const isValidTag = (tag?: NavigableTag) => {
-  return tag && tag.name !== 'no-slug'
+  return tag && tag.name && tag.name !== 'no-slug'
 }
 
 export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
   tag?.type != 'lense' && tag.type != 'filter'
 
-export const getActiveTags = memoize(
-  (home: OmStateHome, state: HomeStateItem = home.currentState) => {
-    if ('activeTagIds' in state) {
-      const { activeTagIds } = state
-      const tagIds = Object.keys(activeTagIds).filter((x) => activeTagIds[x])
-      const tags: Tag[] = tagIds.map(
-        (x) => home.allTags[x] ?? { id: '-1', name: x, type: 'dish' }
-      )
-      return tags.filter(isValidTag)
-    }
-    return []
+export const getActiveTags = (
+  home: OmStateHome,
+  state: HomeStateItem = home.currentState
+) => {
+  if ('activeTagIds' in state) {
+    const { activeTagIds } = state
+    const tagIds = Object.keys(activeTagIds).filter((x) => !!activeTagIds[x])
+    const tags: Tag[] = tagIds.map(
+      (x) => home.allTags[x] ?? { id: slugify(x), name: x, type: 'dish' }
+    )
+    return tags.filter(isValidTag)
   }
-)
-
-type LinkButtonProps = NavigateItem & {
-  onPress?: Function
+  return []
 }
 
 export const getNextState = (om: Om, navState?: HomeStateNav) => {

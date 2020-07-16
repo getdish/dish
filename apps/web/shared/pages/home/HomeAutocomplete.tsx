@@ -180,10 +180,7 @@ const AutocompleteResults = memo(() => {
     lastKey.current = key
     const autocompleteResultsActive =
       showAutocomplete === 'location'
-        ? [
-            ...locationAutocompleteResults,
-            ...defaultLocationAutocompleteResults,
-          ]
+        ? locationAutocompleteResults
         : [
             {
               name: 'Search',

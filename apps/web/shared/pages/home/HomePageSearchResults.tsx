@@ -226,29 +226,29 @@ const SearchResultsContent = memo((props: Props) => {
 
   const isOnLastChunk = currentlyShowing === allResults.length
   const isLoading =
-    !isOnLastChunk ||
-    !item.results?.results ||
-    item.results.status === 'loading' ||
-    state.hasLoaded <= state.chunk
+    item.results?.results.restaurants?.length === 0
+      ? false
+      : !isOnLastChunk ||
+        !item.results?.results ||
+        item.results.status === 'loading' ||
+        state.hasLoaded <= state.chunk
 
-  if (process.env.NODE_ENV === 'development') {
-    console.log(
-      'SearchResults',
-      JSON.stringify(
-        {
-          state,
-          currentlyShowing,
-          firstResult: JSON.stringify(allResults[0]),
-          len: results.length,
-          allLen: allResults.length,
-          isOnLastChunk,
-          isLoading,
-        },
-        null,
-        2
-      )
+  console.log(
+    'SearchResults',
+    JSON.stringify(
+      {
+        state,
+        currentlyShowing,
+        firstResult: JSON.stringify(allResults[0]),
+        len: results.length,
+        allLen: allResults.length,
+        isOnLastChunk,
+        isLoading,
+      },
+      null,
+      2
     )
-  }
+  )
 
   // in an effect so we can use series and get auto-cancel on unmount
   useEffect(() => {

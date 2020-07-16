@@ -348,12 +348,7 @@ export const getPathFromParams = ({
 }) => {
   // object to path
   let route = routes[name]
-  if (!route) {
-    console.debug(`no route`, name, routes)
-    return ``
-  }
-  if (!route.path) {
-    console.debug(`no route path`, route, name, routes)
+  if (!route?.path) {
     return ``
   }
   let path = route.path
