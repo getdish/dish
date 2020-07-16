@@ -30,6 +30,9 @@ export const ToastRoot = memo(function ToastRoot() {
 
   show = useCallback(
     (text: string, duration = 1000) => {
+      if (!text || text === 'undefined') {
+        debugger
+      }
       clearTimeout(stateRef.current.timeout ?? 0)
       const timeout = setTimeout(() => {
         setState({
@@ -51,13 +54,15 @@ export const ToastRoot = memo(function ToastRoot() {
     <AbsoluteVStack
       pointerEvents="none"
       fullscreen
-      alignItems="flex-end"
-      justifyContent="center"
+      alignItems="center"
+      justifyContent="flex-end"
+      zIndex={10000000000}
+      padding="5%"
     >
-      {stateRef.current.show && (
+      {stateRef.current.show && !!stateRef.current.text && (
         <VStack
           backgroundColor="rgba(0,0,0,0.95)"
-          shadowColor="rgba(0,0,0,0.4)"
+          shadowColor="rgba(0,0,0,0.6)"
           shadowRadius={50}
           borderRadius={9}
           padding={10}

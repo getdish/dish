@@ -14,7 +14,11 @@ export const RestaurantDeliveryButton = memo(
         },
       },
     })
-    // console.log('restauran123t', restaurant.sources())
+    const sources2 = restaurant.sources()
+    if (sources2 && Object.keys(sources2).length) {
+      console.log('todo', sources2)
+      debugger
+    }
     const sources = Object.values(thirdPartyCrawlSources).filter(
       (item) => item.delivery
     )

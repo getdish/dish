@@ -89,7 +89,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       <VStack className="ease-in-out-fast" flex={1}>
         <RestaurantListItemContent {...props} />
       </VStack>
-      <AbsoluteVStack fullscreen top={28} zIndex={10} pointerEvents="none">
+      <AbsoluteVStack fullscreen top={14} zIndex={10} pointerEvents="none">
         <RestaurantPeek
           restaurantSlug={props.restaurantSlug}
           searchState={props.searchState}
