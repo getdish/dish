@@ -10,12 +10,14 @@ export const LoadingItems = () => (
   </VStack>
 )
 
+// same across all instances, less flickers
+const seed = Math.max(3, Math.min(6, Math.round(Math.random() * 10)))
+
 export const LoadingItem = () => {
-  const seed = useRef(Math.max(3, Math.min(6, Math.round(Math.random() * 10))))
   return (
     <VStack overflow="hidden" className="shine" padding={20} spacing={10}>
       <HStack
-        width={`${seed.current * 12}%`}
+        width={`${seed * 12}%`}
         height={26}
         backgroundColor="#dedede"
         borderRadius={7}
@@ -26,9 +28,7 @@ export const LoadingItem = () => {
         {[1, 2, 3, 4].map((index) => (
           <HStack
             key={index}
-            width={`${
-              seed.current * (15 - (2 - index > -1 ? index : -index) * 4)
-            }%`}
+            width={`${seed * (15 - (2 - index > -1 ? index : -index) * 4)}%`}
             height={14}
             maxWidth="100%"
             backgroundColor="#eee"

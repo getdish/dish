@@ -627,8 +627,6 @@ const runSearch: AsyncAction<{
     if (shouldCancel()) return
   }
 
-  console.log('runSearch', cloneDeep(state))
-
   const searchArgs: RestaurantSearchArgs = {
     center: roundLngLat(state.center),
     span: roundLngLat(padSpan(state.span)),
@@ -643,15 +641,8 @@ const runSearch: AsyncAction<{
     return
   }
 
-  state = om.state.home.lastSearchState
-
   if (!opts?.quiet) {
-    state.hasMovedMap = false
-    state.results = {
-      // preserve last results
-      results: state.results.results,
-      status: 'loading',
-    }
+    om.actions.home.clearSearchResults()
   }
 
   // fetch
@@ -673,6 +664,17 @@ const runSearch: AsyncAction<{
 
   // overmind seems unhappy to just let us mutate
   om.actions.home.updateHomeState(state)
+}
+
+const defaultSearchResults = {
+  results: { restaurants: [], locations: [], dishes: [] },
+  status: 'loading' as const,
+}
+
+const clearSearchResults: Action = (om) => {
+  const state = om.state.home.lastSearchState
+  state.hasMovedMap = false
+  state.results = defaultSearchResults
 }
 
 const popHomeState: Action<HistoryItem> = (om, item) => {
@@ -819,8 +821,6 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
   om,
   { type, name, item }
 ) => {
-  console.log('handling route change...', name, type, item)
-
   // happens on *any* route push or pop
   if (om.state.home.hoveredRestaurant) {
     om.state.home.hoveredRestaurant = null
@@ -1207,10 +1207,10 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     om.state.home.isOptimisticUpdating = true
     om.actions.home.updateActiveTags({
       id: curState.id,
-      // @ts-ignore
-      type: curState.type,
+      type: curState.type as any,
       searchQuery: nextState.searchQuery,
       activeTagIds: nextState.activeTagIds,
+      results: defaultSearchResults,
     })
     await idle(30)
     om.state.home.isOptimisticUpdating = false
@@ -1292,4 +1292,5 @@ export const actions = {
   updateHomeState,
   navigate,
   moveMapToUserLocation,
+  clearSearchResults,
 }

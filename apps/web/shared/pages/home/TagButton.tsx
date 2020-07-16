@@ -17,6 +17,7 @@ import { Image } from 'react-native'
 import { bgLight } from '../../colors'
 import { tagDisplayNames } from '../../state/Tag'
 import { LinkButton } from '../../views/ui/LinkButton'
+import { LinkButtonProps } from '../../views/ui/LinkProps'
 
 export type TagButtonTagProps = NonNullObject<
   Required<Pick<Tag, 'name' | 'type'>>
@@ -52,6 +53,7 @@ export type TagButtonProps = Omit<StackProps & TagButtonTagProps, 'rgb'> & {
   fontWeight?: TextProps['fontWeight']
   noColor?: boolean
   replace?: boolean
+  replaceSearch?: boolean
   onPress?: Function
 }
 
@@ -65,6 +67,7 @@ export const TagButton = memo(
     noColor,
     closable,
     onClose,
+    replaceSearch,
     votable,
     fontSize: fontSizeProp,
     fontWeight,
@@ -247,16 +250,19 @@ export const TagButton = memo(
       </>
     )
 
-    if (onPress) {
-      return (
-        <LinkButton onPress={onPress} replace={replace}>
-          {contents}
-        </LinkButton>
-      )
+    const props: LinkButtonProps = {
+      ...(onPress && {
+        onPress,
+      }),
+      ...(tag && {
+        tag,
+      }),
+      replace,
+      replaceSearch,
     }
 
     return (
-      <LinkButton tag={tag} disallowDisableWhenActive replace={replace}>
+      <LinkButton disallowDisableWhenActive {...props}>
         {contents}
       </LinkButton>
     )

@@ -51,14 +51,18 @@ const useSpacing = () => {
   }
 }
 
-export default memo((props: Props) => {
-  const om = useOvermind()
-  const isOptimisticUpdating = om.state.home.isOptimisticUpdating
+export default memo(function HomePageSearchResults(props: Props) {
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const { title } = getTitleForState(useOvermindStatic().state, props.item)
+  const om = useOvermind()
+  const isOptimisticUpdating = om.state.home.isOptimisticUpdating
+
+  if (isOptimisticUpdating) {
+    console.warn('isOptimisticUpdating')
+  }
+
   const content = useLastValueWhen(() => {
     const key = weakKey(props.item)
-    console.log('content key is', key, cloneDeep(props.item))
     return <SearchResultsContent key={key} {...props} />
   }, isOptimisticUpdating)
 
@@ -73,8 +77,18 @@ export default memo((props: Props) => {
       <PageTitleTag>{title}</PageTitleTag>
       <StackViewCloseButton />
       <SearchResultsTitle {...props} />
-      {content}
+      {isOptimisticUpdating ? <HomeEmptyLoading /> : content}
     </VStack>
+  )
+})
+
+const HomeEmptyLoading = memo(() => {
+  const { paddingTop } = useSpacing()
+  return (
+    <HomeScrollView>
+      <VStack height={paddingTop} />
+      <HomeLoadingItems />
+    </HomeScrollView>
   )
 })
 
@@ -224,6 +238,7 @@ const SearchResultsContent = memo((props: Props) => {
         {
           state,
           currentlyShowing,
+          firstResult: JSON.stringify(allResults[0]),
           len: results.length,
           allLen: allResults.length,
           isOnLastChunk,
@@ -280,7 +295,7 @@ const SearchResultsContent = memo((props: Props) => {
     }
   }, [isOnLastChunk, state.hasLoaded, state.scrollToEndOf])
 
-  if (!results.length) {
+  if (!isLoading && !results.length) {
     return contentWrap(
       <VStack
         height="100vh"
@@ -295,46 +310,48 @@ const SearchResultsContent = memo((props: Props) => {
   }
 
   return contentWrap(
-    <>
-      <VStack paddingBottom={20} spacing={6}>
-        {results}
-        {isLoading && (
-          <VStack flex={1} width="100%" minHeight={400}>
-            <LoadingItems />
-          </VStack>
-        )}
-        {!isLoading && (
-          <VStack
-            alignItems="center"
-            justifyContent="center"
-            minHeight={300}
-            width="100%"
+    <VStack paddingBottom={20} spacing={6}>
+      {results}
+      {isLoading && <HomeLoadingItems />}
+      {!isLoading && (
+        <VStack
+          alignItems="center"
+          justifyContent="center"
+          minHeight={300}
+          width="100%"
+        >
+          <HStack alignItems="center" justifyContent="center">
+            <HomeLenseBar size="lg" activeTagIds={item.activeTagIds} />
+          </HStack>
+          <Spacer size={40} />
+          <Button
+            onPress={() => {
+              if (om.state.home.isAutocompleteActive) {
+                setState((x) => ({ ...x, scrollToTop: Math.random() }))
+              } else {
+                focusSearchInput()
+              }
+            }}
           >
-            <HStack alignItems="center" justifyContent="center">
-              <HomeLenseBar size="lg" activeTagIds={item.activeTagIds} />
-            </HStack>
-            <Spacer size={40} />
-            <Button
-              onPress={() => {
-                if (om.state.home.isAutocompleteActive) {
-                  setState((x) => ({ ...x, scrollToTop: Math.random() }))
-                } else {
-                  focusSearchInput()
-                }
-              }}
-            >
-              <ArrowUp />
-            </Button>
-            <Spacer size={40} />
-            <Text opacity={0.5} fontSize={12}>
-              Showing {results.length} / {allResults.length} results
-            </Text>
-          </VStack>
-        )}
-      </VStack>
-    </>
+            <ArrowUp />
+          </Button>
+          <Spacer size={40} />
+          <Text opacity={0.5} fontSize={12}>
+            Showing {results.length} / {allResults.length} results
+          </Text>
+        </VStack>
+      )}
+    </VStack>
   )
 })
+
+const HomeLoadingItems = () => {
+  return (
+    <VStack flex={1} width="100%" minHeight={400}>
+      <LoadingItems />
+    </VStack>
+  )
+}
 
 // count it as two votes
 

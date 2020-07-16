@@ -212,7 +212,10 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
     return
   }
 
-  console.log('router.navigate', item)
+  if (process.env.NODE_ENV === 'development') {
+    console.log('router.navigate', JSON.stringify(item))
+  }
+
   if (item.replace) {
     const next = _.dropRight(om.state.router.history)
     om.state.router.history = [...next, item]
@@ -324,13 +327,11 @@ export const actions = {
 
 export const effects = {
   open(url: string) {
-    console.log('open', url)
     ignoreNextRoute = true
     page.show(url)
   },
 
   replace(url: string) {
-    console.log('replace', url)
     ignoreNextRoute = true
     page.replace(url)
   },
