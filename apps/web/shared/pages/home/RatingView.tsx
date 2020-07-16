@@ -52,7 +52,7 @@ export const RatingView = forwardRef(
     const ranking = percent * 10
     const rankingPre = Math.floor(ranking / 10)
     const rankingPost =
-      rankingPre === 10
+      rankingPre === 10 || ranking === 0
         ? ''
         : `.${Math.round(((ranking / 10) % rankingPre) * 10)}`.slice(0, 2)
 

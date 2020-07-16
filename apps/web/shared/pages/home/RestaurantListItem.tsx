@@ -24,12 +24,10 @@ import { RestaurantDeliveryButton } from './RestaurantDeliveryButton'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
+import { RestaurantOverview } from './RestaurantOverview'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
-import {
-  RestaurantOverview,
-  RestaurantTopReviews,
-} from './RestaurantTopReviews'
+import { RestaurantTopReviews } from './RestaurantTopReviews'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 import { Squircle } from './Squircle'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
@@ -149,7 +147,7 @@ const RestaurantListItemContent = memo(
               {/* VOTE */}
               <AbsoluteVStack
                 zIndex={100}
-                left={-1}
+                left={4}
                 height={120}
                 bottom={-40}
                 justifyContent="center"
@@ -216,14 +214,14 @@ const RestaurantListItemContent = memo(
                   <Spacer size={8} />
 
                   {/* TITLE ROW: Ranking + TAGS */}
-                  <HStack paddingLeft={leftPad + 18} alignItems="center">
+                  <HStack paddingLeft={leftPad + 24} alignItems="center">
                     <RestaurantRatingViewPopover
                       size="sm"
                       restaurantSlug={restaurantSlug}
                     />
-                    <Spacer size={16} />
+                    <Spacer size={10} />
                     <RestaurantFavoriteStar restaurantId={restaurantId} />
-                    <Spacer size={12} />
+                    <Spacer size={6} />
                     <RestaurantTagsRow
                       subtle
                       showMore={true}

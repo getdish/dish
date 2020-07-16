@@ -65,7 +65,7 @@ export function HomeStackView<A extends HomeStateItem>(props: {
             index={i}
             isActive={isActive}
             isRemoving={isRemoving && isActive}
-            getChildren={props.children}
+            getChildren={props.children as any}
           />
           // </PopoverShowContext.Provider>
         )
@@ -99,7 +99,7 @@ const HomeStackViewItem = memo(
       return () => clearTimeout(tm)
     }, [])
 
-    const top = isSmall ? 0 : index * (index == 0 ? 0 : 5)
+    const top = isSmall || index == 0 ? 0 : index * 5
     const left = isSmall ? 0 : Math.max(0, index) * 3
 
     // useEffect(() => {

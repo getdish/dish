@@ -30,7 +30,7 @@ export const RestaurantAddress = ({
         <MapPin
           size={14}
           opacity={0.5}
-          style={{ marginTop: 2, marginBottom: -2, marginRight: 5 }}
+          style={{ marginTop: 6, marginBottom: -6, marginRight: 5 }}
         />
         {getAddressText(currentLocationInfo, address, size)}
       </Link>

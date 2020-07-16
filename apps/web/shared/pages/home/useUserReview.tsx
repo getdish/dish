@@ -21,3 +21,7 @@ export const useUserReview = (restaurantId: string): Review | null => {
   }
   return null
 }
+
+function useDraft<A>(item: A) {
+  return item
+}

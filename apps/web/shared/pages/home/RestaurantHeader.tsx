@@ -57,11 +57,10 @@ export const RestaurantHeader = memo(
               <HStack>
                 <RestaurantAddress
                   size="lg"
-                  address={restaurant.address}
+                  address={restaurant.address ?? ''}
                   currentLocationInfo={state?.currentLocationInfo ?? {}}
                 />
               </HStack>
-              <Spacer size={6} />
             </VStack>
           </HStack>
           <Spacer />
