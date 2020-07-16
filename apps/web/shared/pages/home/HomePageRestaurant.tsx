@@ -12,7 +12,7 @@ import {
   VStack,
 } from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
-import { StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
 
 import { drawerBorderRadius, searchBarHeight } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
@@ -88,16 +88,22 @@ export default memo(
               <Spacer />
 
               <HStack flexWrap="wrap">
-                <VStack flex={1} minWidth={370}>
+                <VStack flex={1} minWidth={370} marginBottom={20}>
+                  <SmallTitle divider="center">Top dishes</SmallTitle>
+                  <Spacer />
+                  <Suspense fallback={null}>
+                    <RestaurantPhotos restaurantSlug={slug} />
+                  </Suspense>
+                </VStack>
+
+                <VStack flex={1} minWidth={370} marginBottom={20}>
                   <SmallTitle divider="center">Menu</SmallTitle>
                   <Spacer />
                   <Suspense fallback={null}>
                     <RestaurantMenu restaurantSlug={slug} />
                   </Suspense>
-                  <Spacer size="lg" />
-                </VStack>
-                <VStack flex={1} minWidth={370}>
-                  <Spacer size="lg" />
+
+                  <Spacer size="xl" />
 
                   <SmallTitle>Tips</SmallTitle>
                   <Suspense fallback={<LoadingItems />}>
@@ -146,44 +152,41 @@ export default memo(
 const RestaurantPhotos = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
     const restaurant = useRestaurantQuery(restaurantSlug)
-    const photos = restaurantPhotosForCarousel({ restaurant })
+    const photos = restaurantPhotosForCarousel({ restaurant, max: 30 })
     const drawerWidth = useHomeDrawerWidthInner()
     const spacing = 12
     const perRow = drawerWidth > 800 ? 3 : 2
 
     return (
-      <>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{
+          marginHorizontal: -20,
+        }}
+      >
         {!!photos?.length && (
-          <VStack>
-            {/* <HStack justifyContent="center" spacing>
-              <LinkButton {...flatButtonStyleActive}>Top Dishes</LinkButton>
-              <LinkButton {...flatButtonStyle}>Menu</LinkButton>
-              <LinkButton {...flatButtonStyle}>Inside</LinkButton>
-              <LinkButton {...flatButtonStyle}>Outside</LinkButton>
-            </HStack> */}
-
-            <HStack
-              flexWrap="wrap"
-              marginTop={10}
-              alignItems="center"
-              justifyContent="center"
-            >
-              {photos.map((photo, index) => {
-                return (
-                  <DishView
-                    key={index}
-                    size={(drawerWidth / 2 - perRow * spacing) / perRow}
-                    restaurantSlug={restaurantSlug}
-                    margin={spacing / 2}
-                    marginBottom={16}
-                    dish={photo}
-                  />
-                )
-              })}
-            </HStack>
-          </VStack>
+          <HStack
+            paddingHorizontal={20}
+            marginTop={10}
+            alignItems="center"
+            justifyContent="center"
+          >
+            {photos.map((photo, index) => {
+              return (
+                <DishView
+                  key={index}
+                  size={(drawerWidth / 2 - perRow * spacing) / perRow}
+                  restaurantSlug={restaurantSlug}
+                  margin={spacing / 2}
+                  marginBottom={16}
+                  dish={photo}
+                />
+              )
+            })}
+          </HStack>
         )}
-      </>
+      </ScrollView>
     )
   })
 )

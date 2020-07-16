@@ -379,7 +379,7 @@ const pushHomeState: AsyncAction<
     }
   }
 
-  if (false) {
+  if (true) {
     console.log(
       'pushHomeState',
       JSON.stringify({ shouldReplace, item, finalState, id }, null, 2)

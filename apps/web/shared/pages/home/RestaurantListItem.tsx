@@ -205,6 +205,7 @@ const RestaurantListItemContent = memo(
                       </Link>
                       {!!restaurant.address && (
                         <RestaurantAddress
+                          size="xs"
                           currentLocationInfo={currentLocationInfo}
                           address={restaurant.address}
                         />
@@ -212,7 +213,7 @@ const RestaurantListItemContent = memo(
                     </Text>
                   </HStack>
 
-                  <Spacer size={12} />
+                  <Spacer size={8} />
 
                   {/* TITLE ROW: Ranking + TAGS */}
                   <HStack paddingLeft={leftPad + 18} alignItems="center">
@@ -238,11 +239,13 @@ const RestaurantListItemContent = memo(
 
             {/* ROW: Overview / Reviews / Comment */}
             <VStack>
-              <Suspense fallback={<LoadingItems />}>
-                <Text fontSize={14} lineHeight={21}>
+              <Text fontSize={14} lineHeight={21}>
+                <Suspense fallback={<LoadingItems />}>
                   <RestaurantOverview />
-                </Text>
-                <Spacer />
+                </Suspense>
+              </Text>
+              <Spacer />
+              <Suspense fallback={<LoadingItems />}>
                 <RestaurantTopReviews
                   restaurantId={restaurantId}
                   afterTopCommentButton={
@@ -253,12 +256,14 @@ const RestaurantListItemContent = memo(
                       alignItems="center"
                       flexWrap="wrap"
                     >
-                      <RestaurantDeliveryButton restaurantId={restaurantId} />
-                      <Spacer size={8} />
-                      <RestaurantDetailRow
-                        size="sm"
-                        restaurantSlug={restaurantSlug}
-                      />
+                      <Suspense fallback={null}>
+                        <RestaurantDeliveryButton restaurantId={restaurantId} />
+                        <Spacer size={8} />
+                        <RestaurantDetailRow
+                          size="sm"
+                          restaurantSlug={restaurantSlug}
+                        />
+                      </Suspense>
                     </HStack>
                   }
                 />
