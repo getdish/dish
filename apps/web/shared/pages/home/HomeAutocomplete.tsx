@@ -11,7 +11,7 @@ import {
 } from '@dish/ui'
 import FlexSearch from 'flexsearch'
 import { uniqBy } from 'lodash'
-import React, { memo, useEffect, useMemo, useRef } from 'react'
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { Plus } from 'react-feather'
 import { ScrollView } from 'react-native'
 
@@ -22,13 +22,13 @@ import {
 } from '../../constants'
 import {
   AutocompleteItem,
+  GeocodePlace,
   LngLat,
   ShowAutocomplete,
   createAutocomplete,
   defaultLocationAutocompleteResults,
-  locationToAutocomplete,
-  searchLocations,
 } from '../../state/home'
+import { mapView } from '../../state/mapView'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallCircleButton } from './CloseButton'
@@ -50,6 +50,8 @@ export const useShowAutocomplete = () => {
 }
 
 export default memo(function HomeAutocomplete() {
+  const [isLoading, setIsLoading] = useState(false)
+
   useEffect(() => {
     const handleMove = (e) => {
       curPagePos.x = e.pageX
@@ -66,90 +68,111 @@ export default memo(function HomeAutocomplete() {
 
   return (
     <>
-      <HomeAutocompleteEffects />
-      <HomeAutoCompleteContents />
+      <HomeAutocompleteEffects onChangeStatus={setIsLoading} />
+      <HomeAutoCompleteContents isLoading={isLoading} />
     </>
   )
 })
 
-const HomeAutocompleteEffects = memo(() => {
-  const om = useOvermind()
-  const { showAutocomplete, currentStateSearchQuery } = om.state.home
+const HomeAutocompleteEffects = memo(
+  ({ onChangeStatus }: { onChangeStatus: (isLoading: boolean) => void }) => {
+    const om = useOvermind()
+    const {
+      showAutocomplete,
+      locationSearchQuery,
+      currentStateSearchQuery,
+    } = om.state.home
+    const query =
+      showAutocomplete === 'location'
+        ? locationSearchQuery
+        : currentStateSearchQuery
 
-  useEffect(() => runAutocomplete(showAutocomplete, currentStateSearchQuery), [
-    showAutocomplete,
-    currentStateSearchQuery,
-  ])
+    useEffect(() => {
+      if (showAutocomplete) {
+        onChangeStatus(true)
+        const cancel = runAutocomplete(showAutocomplete, query, () => {
+          onChangeStatus(false)
+        })
+        return () => {
+          cancel?.()
+          onChangeStatus(false)
+        }
+      }
+    }, [query])
 
-  return null
-})
+    return null
+  }
+)
 
-const HomeAutoCompleteContents = memo(() => {
-  const om = useOvermind()
-  const { showAutocomplete } = om.state.home
-  const isSmall = useMediaQueryIsSmall()
-  const showLocation = showAutocomplete == 'location'
-  const showSearch = showAutocomplete == 'search'
-  const isShowing = showSearch || showLocation
-  const hideAutocomplete = useDebounce(
-    () => om.actions.home.setShowAutocomplete(false),
-    200
-  )
+const HomeAutoCompleteContents = memo(
+  ({ isLoading }: { isLoading: boolean }) => {
+    const om = useOvermind()
+    const { showAutocomplete } = om.state.home
+    const isSmall = useMediaQueryIsSmall()
+    const showLocation = showAutocomplete == 'location'
+    const showSearch = showAutocomplete == 'search'
+    const isShowing = showSearch || showLocation
+    const hideAutocomplete = useDebounce(
+      () => om.actions.home.setShowAutocomplete(false),
+      200
+    )
+    const searchYEnd = searchBarTopOffset + searchBarHeight
 
-  const searchYEnd = searchBarTopOffset + searchBarHeight
-
-  return (
-    <AbsoluteVStack
-      className="ease-in-out-faster"
-      pointerEvents="none"
-      position="absolute"
-      paddingTop={searchYEnd}
-      maxHeight={`calc(100vh - ${searchYEnd}px)`}
-      left="2%"
-      right="2%"
-      alignItems="center"
-      justifyContent="center"
-      zIndex={-1}
-      paddingBottom={30}
-      paddingHorizontal={15}
-      opacity={isShowing ? 1 : 0}
-      transform={isShowing ? [] : [{ translateY: -10 }]}
-      disabled={!isShowing}
-    >
-      <VStack
-        width="100%"
-        pointerEvents={isShowing ? 'auto' : 'none'}
-        maxWidth={pageWidthMax * 0.4}
-        // @ts-ignore
-        onMouseLeave={() => {
-          if (curPagePos.y > searchYEnd) {
-            hideAutocomplete()
-          }
-        }}
-        // @ts-ignore
-        onMouseEnter={() => {
-          hideAutocomplete.cancel()
-        }}
+    return (
+      <AbsoluteVStack
+        className="ease-in-out-faster"
+        pointerEvents="none"
+        position="absolute"
+        paddingTop={searchYEnd}
+        left="2%"
+        right="2%"
+        overflow="hidden"
+        alignItems="center"
+        justifyContent="center"
+        zIndex={-1}
+        paddingBottom={30}
+        paddingHorizontal={15}
+        opacity={isShowing ? 1 : 0}
+        transform={isShowing ? [] : [{ translateY: -10 }]}
+        disabled={!isShowing}
       >
         <VStack
-          className="ease-in-out-slower"
-          position="relative"
-          left={isSmall ? 0 : showLocation ? 150 : -200}
-          shadowColor="rgba(0,0,0,0.4)"
-          shadowRadius={18}
           width="100%"
-          backgroundColor="rgba(0,0,0,0.93)"
-          padding={5}
-          borderRadius={10}
+          pointerEvents={isShowing ? 'auto' : 'none'}
+          maxWidth={pageWidthMax * 0.4}
+          maxHeight={`calc(100vh - ${searchYEnd + 20}px)`}
+          // @ts-ignore
+          onMouseLeave={() => {
+            if (curPagePos.y > searchYEnd) {
+              hideAutocomplete()
+            }
+          }}
+          // @ts-ignore
+          onMouseEnter={() => {
+            hideAutocomplete.cancel()
+          }}
         >
-          <ScrollView>
-            <AutocompleteResults />
-          </ScrollView>
+          <VStack
+            className="ease-in-out-slower"
+            position="relative"
+            left={isSmall ? 0 : showLocation ? 150 : -200}
+            shadowColor="rgba(0,0,0,0.4)"
+            shadowRadius={18}
+            width="100%"
+            flex={1}
+            backgroundColor="rgba(0,0,0,0.93)"
+            padding={5}
+            borderRadius={10}
+          >
+            <ScrollView style={{ opacity: isLoading ? 0.5 : 1 }}>
+              <AutocompleteResults />
+            </ScrollView>
+          </VStack>
         </VStack>
-      </VStack>
-    </AbsoluteVStack>
-  )
-})
+      </AbsoluteVStack>
+    )
+  }
+)
 
 const AutocompleteResults = memo(() => {
   const om = useOvermind()
@@ -176,7 +199,7 @@ const AutocompleteResults = memo(() => {
     : lastKey.current
 
   const resultsElements = useMemo(() => {
-    console.log('updating autocomplete', key)
+    console.log('updating autocomplete', key, locationAutocompleteResults)
     lastKey.current = key
     const autocompleteResultsActive =
       showAutocomplete === 'location'
@@ -210,7 +233,9 @@ const AutocompleteResults = memo(() => {
             // clear query
             if (result.type === 'ophan') {
               om.actions.home.clearTags()
-              om.actions.home.setSearchQuery(currentStateSearchQuery)
+              om.actions.home.setSearchQuery(
+                om.state.home.currentStateSearchQuery
+              )
             } else if (result.type !== 'restaurant') {
               om.actions.home.setSearchQuery('')
             }
@@ -339,16 +364,20 @@ function AutocompleteAddButton() {
 
 function runAutocomplete(
   showAutocomplete: ShowAutocomplete,
-  searchQuery: string
+  searchQuery: string,
+  onFinish?: Function
 ) {
   const om = omStatic
 
   if (searchQuery === '') {
+    console.log('clear')
     if (showAutocomplete === 'location') {
       om.actions.home.setLocationAutocompleteResults(null)
     } else if (showAutocomplete === 'search') {
-      om.actions.home.setAutocompleteResults(null)
+      // leave last one
+      // om.actions.home.setAutocompleteResults([])
     }
+    onFinish?.()
     return
   }
 
@@ -356,11 +385,13 @@ function runAutocomplete(
   let results: AutocompleteItem[] = []
 
   return series([
-    () => fullyIdle(),
+    () => fullyIdle({ max: 80 }),
     async () => {
       if (showAutocomplete === 'location') {
         results = [
-          ...(await searchLocations(searchQuery)).map(locationToAutocomplete),
+          ...(await searchLocations(searchQuery))
+            .map(locationToAutocomplete)
+            .filter(Boolean),
           ...defaultLocationAutocompleteResults,
         ]
       }
@@ -371,10 +402,11 @@ function runAutocomplete(
           state.span!
         )
       }
+      console.log('results', showAutocomplete, searchQuery, results)
     },
-    () => fullyIdle(),
+    () => fullyIdle({ max: 30 }),
     async () => {
-      let all: AutocompleteItem[] = []
+      let matched: AutocompleteItem[] = []
 
       if (results.length) {
         flexSearch.clear()
@@ -395,15 +427,29 @@ function runAutocomplete(
           ...foundIndices,
           ...(await flexSearch.search(searchQuery, 10)),
         ]
-        const found = foundIndices.map((index) => results[index])
-        all = uniqBy([...found, ...results], (x) => x.id)
+        matched = foundIndices.map((index) => results[index])
       }
 
+      matched = uniqBy(
+        [
+          ...matched,
+          ...results,
+          ...((showAutocomplete === 'location' &&
+            defaultLocationAutocompleteResults) ??
+            []),
+        ],
+        (x) => x.name
+      )
+      console.log('all', matched)
+
       if (showAutocomplete === 'location') {
-        om.actions.home.setLocationAutocompleteResults(all)
+        om.actions.home.setLocationAutocompleteResults(matched)
       } else if (showAutocomplete === 'search') {
-        om.actions.home.setAutocompleteResults(all)
+        om.actions.home.setAutocompleteResults(matched)
       }
+    },
+    () => {
+      onFinish?.()
     },
   ])
 }
@@ -492,5 +538,48 @@ function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {
           })
         ),
     ]
+  })
+}
+
+export function searchLocations(query: string) {
+  if (!query) {
+    return Promise.resolve([])
+  }
+  const locationSearch = new mapkit.Search({
+    region: mapView?.region,
+
+    // includePointsOfInterest: false,
+    // includeAddresses: false,
+  })
+  return new Promise<
+    { name: string; formattedAddress: string; coordinate: any }[]
+  >((res, rej) => {
+    locationSearch.autocomplete(query, (err, data) => {
+      console.log('got', data)
+      if (err) {
+        console.log('network failure')
+        return res([])
+      }
+      res(data.results)
+    })
+  })
+}
+
+const locationToAutocomplete = (place: GeocodePlace) => {
+  const name = (place.displayLines?.[0] ?? place.locality).replace(
+    ', United States',
+    ''
+  )
+  if (!name || !place.coordinate || name.includes('Airport')) {
+    return null
+  }
+  return createAutocomplete({
+    name,
+    type: 'country',
+    icon: '📍',
+    center: {
+      lat: place.coordinate.latitude,
+      lng: place.coordinate.longitude,
+    },
   })
 }

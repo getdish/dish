@@ -6,10 +6,9 @@
     "module": "CommonJS",
     "sourceMap": false,
     "outDir": "_",
-    "typeRoots": ["types", "node_modules/@types"],
     "composite": true
   },
-  "include": ["web", "shared", "types"],
+  "include": ["web", "shared", "node_modules/@types"],
   "exclude": ["**"],
   "references": [{
     "path": "../../packages/recoil-store"

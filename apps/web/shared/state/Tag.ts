@@ -14,7 +14,7 @@ export const pctTo255 = (x) => x.map((x) => x * 255) as typeof x
 export const tagLenses: Tag[] = [
   {
     id: '3',
-    name: 'Gem',
+    name: 'Gems',
     icon: ' 💎',
     rgb: pctTo255([0.4, 0.35, 0.45]),
     // @ts-ignore

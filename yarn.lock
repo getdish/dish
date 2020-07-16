@@ -1648,6 +1648,11 @@
   resolved "https://registry.npmjs.org/@types/anymatch/-/anymatch-1.3.1.tgz#336badc1beecb9dacc38bea2cf32adf627a8421a"
   integrity sha512-/+CRPXpBDpo2RK9C68N3b2cOvO0Cf5B9aPijHsoDQTHivnGSObdOF2BRQOYjojWTDy6nQvMjmqRXIxH55VjxxA==
 
+"@types/apple-mapkit-js@^5.18.0":
+  version "5.18.0"
+  resolved "https://registry.npmjs.org/@types/apple-mapkit-js/-/apple-mapkit-js-5.18.0.tgz#35c189d6a0d8ac72b2a3bd327902ad51208c06ff"
+  integrity sha512-3hcT3HIDtthGnTdWV9vSxLnX50N+ZMspurtBbgaNixXEY3wPtjzTepdfCyihJLDPMWFRQiekYWWAYCr81QFqfw==
+
 "@types/aria-query@^4.2.0":
   version "4.2.0"
   resolved "https://registry.npmjs.org/@types/aria-query/-/aria-query-4.2.0.tgz#14264692a9d6e2fa4db3df5e56e94b5e25647ac0"

@@ -8,7 +8,6 @@ import {
   LoadingItems,
   SmallTitle,
   Spacer,
-  StackProps,
   Text,
   VStack,
   useDebounce,
@@ -24,7 +23,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { ChevronDown, ChevronRight, ChevronUp, Minus } from 'react-feather'
+import { ChevronRight } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
 
 import { bgLight } from '../../colors'
@@ -33,17 +32,16 @@ import { getActiveTags } from '../../state/home-tag-helpers'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { SmallButton } from '../../views/ui/SmallButton'
-import { flatButtonStyle, flatButtonStyleSelected } from './baseButtonStyle'
+import { flatButtonStyle } from './baseButtonStyle'
 import { CloseButton } from './CloseButton'
 import { DishView } from './DishView'
 import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePage'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
-import RestaurantRatingView from './RestaurantRatingView'
+import { RestaurantButton } from './RestaurantButton'
 import { Squircle } from './Squircle'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 
@@ -433,103 +431,3 @@ const HomeTopDishMain = memo((props) => {
     />
   )
 })
-
-export const RestaurantButton = memo(
-  ({
-    restaurant,
-    active,
-    zIndex,
-    rank,
-    trending,
-    subtle,
-    onHoverIn,
-    ...props
-  }: {
-    active?: boolean
-    rank?: number
-    restaurant: Partial<Restaurant>
-    trending?: 'up' | 'down' | 'neutral'
-    subtle?: boolean
-  } & LinkButtonProps) => {
-    return (
-      <LinkButton
-        key={restaurant.name}
-        pointerEvents="auto"
-        {...(active ? flatButtonStyleSelected : flatButtonStyle)}
-        {...(subtle && {
-          backgroundColor: 'transparent',
-        })}
-        zIndex={1}
-        {...(active && {
-          borderColor: '#eee',
-          shadowColor: 'rgba(0,0,0,0.1)',
-          shadowRadius: 5,
-          zIndex: 2,
-        })}
-        paddingRight={40}
-        {...props}
-        name="restaurant"
-        params={{ slug: restaurant.slug }}
-        onHoverIn={() => {
-          onHoverIn?.(restaurant)
-        }}
-      >
-        <HStack
-          maxWidth="100%"
-          flex={1}
-          alignItems="center"
-          position="relative"
-          justifyContent="center"
-        >
-          {!!trending && (
-            <TrendingIcon
-              size={16}
-              trending={trending}
-              marginTop={-4}
-              marginRight={5}
-              marginBottom={-5}
-            />
-          )}
-          <Text
-            ellipse
-            fontSize={14}
-            fontWeight={active ? '500' : '300'}
-            color={active ? '#000' : '#666'}
-          >
-            {typeof rank === 'number' ? `${rank}. ` : ''}
-            {restaurant.name}
-          </Text>
-          <RestaurantRatingView
-            size="xs"
-            restaurantSlug={restaurant.slug ?? ''}
-            rating={restaurant.rating}
-            // @ts-ignore
-            position="absolute"
-            top={0}
-            right={-30}
-            subtle={subtle}
-          />
-        </HStack>
-      </LinkButton>
-    )
-  }
-)
-
-const TrendingIcon = ({
-  trending,
-  color = trending === 'up' ? 'green' : '#ff559999',
-  size,
-  ...rest
-}: StackProps & {
-  color?: string
-  size?: number
-  trending?: 'up' | 'down' | 'neutral'
-}) => {
-  const Icon =
-    trending == 'neutral' ? Minus : trending === 'up' ? ChevronUp : ChevronDown
-  return (
-    <VStack {...rest}>
-      <Icon color={color} size={size} />
-    </VStack>
-  )
-}
