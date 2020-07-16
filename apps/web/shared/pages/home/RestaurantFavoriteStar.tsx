@@ -1,10 +1,9 @@
 import { graphql, reviewInsert } from '@dish/graph'
-import { HStack, Text, Toast, VStack, prevent, useForceUpdate } from '@dish/ui'
-import React, { memo } from 'react'
+import { HStack, Text, Toast, VStack } from '@dish/ui'
+import React, { memo, useState } from 'react'
 import { Star } from 'react-feather'
 
 import { useOvermind } from '../../state/useOvermind'
-import { LinkButton } from '../../views/ui/LinkButton'
 import { useUserReview } from './useUserReview'
 
 export const RestaurantFavoriteStar = memo(
@@ -21,7 +20,8 @@ export const RestaurantFavoriteStar = memo(
       const om = useOvermind()
       // const forceUpdate = useForceUpdate()
       const review = useUserReview(restaurantId)
-      const isStarred = review?.rating > 0
+      const [optimisticRating, setOptimisticRating] = useState(0)
+      const isStarred = (optimisticRating ?? review?.rating) > 0
 
       const setRating = (r: number) => {
         const user = om.state.user.user
@@ -39,13 +39,15 @@ export const RestaurantFavoriteStar = memo(
         } else {
           review.rating = r
         }
-        Toast.show('Saved')
+        setOptimisticRating(r)
+        Toast.show(r ? 'Added favorite' : 'Removed favorite')
       }
 
       return (
         <HStack
           hoverStyle={{ opacity: 0.5 }}
           pressStyle={{ opacity: 0.4 }}
+          pointerEvents="auto"
           onPress={(e) => {
             e.stopPropagation()
             e.preventDefault()

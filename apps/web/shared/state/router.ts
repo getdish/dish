@@ -225,21 +225,11 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
     om.effects.router.open(item.path)
   }
 
-  if (onRouteChange) {
-    try {
-      await race(
-        onRouteChange({
-          type: item.replace ? 'replace' : 'push',
-          name: item.name,
-          item: _.last(om.state.router.history)!,
-        }),
-        2000,
-        'router.onRouteChange'
-      )
-    } catch (err) {
-      Toast.show(`${err.message}`)
-    }
-  }
+  onRouteChange?.({
+    type: item.replace ? 'replace' : 'push',
+    name: item.name,
+    item: _.last(om.state.router.history)!,
+  })
 }
 
 const back: Action = (om) => {
