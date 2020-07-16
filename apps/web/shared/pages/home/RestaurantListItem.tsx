@@ -13,7 +13,7 @@ import React, { Suspense, memo, useEffect, useState } from 'react'
 
 import { bgLight, bgLightLight, brandColor } from '../../colors'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home'
-import { useOvermindStatic } from '../../state/useOvermind'
+import { omStatic, useOvermindStatic } from '../../state/useOvermind'
 import { Link } from '../../views/ui/Link'
 import { DishView } from './DishView'
 import { HomeScrollViewHorizontal } from './HomeScrollView'
@@ -234,12 +234,15 @@ const RestaurantListItemContent = memo(
               </Link>
             </VStack>
 
-            <Spacer size={8} />
+            <Spacer />
 
             {/* ROW: Overview / Reviews / Comment */}
             <VStack>
               <Suspense fallback={<LoadingItems />}>
-                <RestaurantOverview />
+                <Text fontSize={14} lineHeight={21}>
+                  <RestaurantOverview />
+                </Text>
+                <Spacer />
                 <RestaurantTopReviews
                   restaurantId={restaurantId}
                   afterTopCommentButton={
@@ -278,7 +281,12 @@ const RestaurantPeek = memo(
   }) {
     const drawerWidth = useHomeDrawerWidth()
     const { searchState, size = 'md' } = props
-    const tag_names = Object.keys(searchState?.activeTagIds || {})
+    const tag_names = Object.keys(searchState?.activeTagIds || {}).filter(
+      (x) => {
+        const type = omStatic.state.home.allTags[x].type
+        return type != 'lense' && type != 'filter' && type != 'outlier'
+      }
+    )
     const spacing = size == 'lg' ? 16 : 12
     const isSmall = useMediaQueryIsSmall()
     const restaurant = useRestaurantQuery(props.restaurantSlug)

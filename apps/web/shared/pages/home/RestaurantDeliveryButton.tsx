@@ -1,4 +1,4 @@
-import { graphql } from '@dish/graph/_'
+import { graphql, query } from '@dish/graph'
 import { HStack, Text } from '@dish/ui'
 import React, { memo } from 'react'
 
@@ -7,14 +7,13 @@ import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 
 export const RestaurantDeliveryButton = memo(
   graphql(({ restaurantId }: { restaurantId: string }) => {
-    // const [restaurant] = query.restaurant({
-    //   where: {
-    //     id: {
-    //       _eq: restaurantId,
-    //     },
-    //   },
-    // })
-    debugger
+    const [restaurant] = query.restaurant({
+      where: {
+        id: {
+          _eq: restaurantId,
+        },
+      },
+    })
     // console.log('restauran123t', restaurant.sources())
     const sources = Object.values(thirdPartyCrawlSources).filter(
       (item) => item.delivery

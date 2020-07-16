@@ -4,6 +4,7 @@ import React, { memo } from 'react'
 
 import { HomeStateItemRestaurant } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
+import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
@@ -54,9 +55,11 @@ export const RestaurantHeader = memo(
               />
               <Spacer size="md" />
               <HStack>
-                <Text selectable color="#777" fontSize={16}>
-                  {restaurant.address}
-                </Text>
+                <RestaurantAddress
+                  size="lg"
+                  address={restaurant.address}
+                  currentLocationInfo={state?.currentLocationInfo ?? {}}
+                />
               </HStack>
               <Spacer size={6} />
             </VStack>

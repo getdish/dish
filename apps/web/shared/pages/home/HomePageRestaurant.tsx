@@ -80,46 +80,32 @@ export default memo(
             {/* HEADER */}
             <RestaurantHeader restaurantSlug={restaurant.slug} />
 
+            <Spacer size="xl" />
+            <RestaurantTagsRow size="md" restaurantSlug={slug} />
+
             <VStack alignItems="center">
               <Spacer />
               <Spacer />
 
               <HStack flexWrap="wrap">
                 <VStack flex={1} minWidth={370}>
-                  <>
-                    <SmallTitle divider="center">Menu</SmallTitle>
-                    <Spacer />
-                    <Suspense fallback={null}>
-                      <RestaurantMenu restaurantSlug={slug} />
-                    </Suspense>
-                    <Spacer size="lg" />
-                  </>
+                  <SmallTitle divider="center">Menu</SmallTitle>
+                  <Spacer />
+                  <Suspense fallback={null}>
+                    <RestaurantMenu restaurantSlug={slug} />
+                  </Suspense>
+                  <Spacer size="lg" />
                 </VStack>
                 <VStack flex={1} minWidth={370}>
-                  <SmallTitle divider="center">Overview</SmallTitle>
-                  <Spacer />
-                  <Text fontSize={18}>
-                    <RestaurantOverview />
-                  </Text>
+                  <Spacer size="lg" />
 
-                  <VStack
-                    borderRadius={10}
-                    // backgroundColor="#f2f2f2"
-                  >
-                    <SmallTitle divider="center">Top tags</SmallTitle>
-                    <Spacer />
-                    <RestaurantTagsRow size="lg" restaurantSlug={slug} />
-
-                    <Spacer size="lg" />
-
-                    <SmallTitle>Tips</SmallTitle>
-                    <Suspense fallback={<LoadingItems />}>
-                      <RestaurantTopReviews
-                        expandTopComments={2}
-                        restaurantId={restaurant.id}
-                      />
-                    </Suspense>
-                  </VStack>
+                  <SmallTitle>Tips</SmallTitle>
+                  <Suspense fallback={<LoadingItems />}>
+                    <RestaurantTopReviews
+                      expandTopComments={2}
+                      restaurantId={restaurant.id}
+                    />
+                  </Suspense>
                 </VStack>
               </HStack>
 

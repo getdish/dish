@@ -10,7 +10,7 @@ export async function search({
   span,
   query,
   tags = [],
-  limit = 45,
+  limit = 50,
 }: RestaurantSearchArgs): Promise<RestaurantOnlyIds[]> {
   const params = [
     'query=' + query,

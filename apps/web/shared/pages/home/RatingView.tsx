@@ -10,7 +10,11 @@ export type RatingViewProps = StackProps & {
 }
 
 export const getRankingColor = (percent: number) =>
-  percent >= 0.8 ? '#00BA00' : percent >= 0.5 ? 'blue' : 'red'
+  percent >= 0.8
+    ? 'rgba(200, 260, 220, 0.85)'
+    : percent >= 0.5
+    ? '#C6BC1A'
+    : 'rgba(250, 100, 100, 0.85)'
 
 export const RatingView = forwardRef(
   (
@@ -24,16 +28,11 @@ export const RatingView = forwardRef(
     }: RatingViewProps,
     ref
   ) => {
-    const borderColor =
-      percent >= 0.8
-        ? 'rgba(190, 250, 200, 0.85)'
-        : percent >= 0.5
-        ? 'gold'
-        : 'rgba(250, 100, 100, 0.85)'
+    const borderColor = getRankingColor(percent)
 
     // size!
     const size =
-      sizeIn == 'xs' ? 32 : sizeIn === 'sm' ? 42 : sizeIn == 'md' ? 48 : 76
+      sizeIn == 'xs' ? 32 : sizeIn === 'sm' ? 42 : sizeIn == 'md' ? 48 : 82
 
     const badgeOffset =
       sizeIn === 'xs' || sizeIn === 'sm' ? Math.max(-size * 0.0025, -3) : 0
@@ -60,7 +59,7 @@ export const RatingView = forwardRef(
     const number = (
       <HStack>
         <Text
-          fontSize={Math.max(12, size * 0.5)}
+          fontSize={Math.max(12, size * 0.65)}
           fontWeight={subtle ? '300' : '700'}
           color={color}
           textAlign="center"
@@ -69,10 +68,11 @@ export const RatingView = forwardRef(
         </Text>
         {!!rankingPost && (
           <Text
-            fontWeight="300"
-            marginTop={1}
-            fontSize={size * 0.4}
-            opacity={(1 / size) * 20}
+            fontWeight="500"
+            marginTop="25%"
+            fontSize={size * 0.33}
+            letterSpacing={-1}
+            opacity={(1 / size) * 10}
           >
             {rankingPost}
           </Text>
@@ -83,7 +83,7 @@ export const RatingView = forwardRef(
     if (subtle) {
       return (
         <HStack spacing={2} {...rest}>
-          {/* {emoji} */}
+          {emoji}
           {number}
         </HStack>
       )
@@ -113,9 +113,9 @@ export const RatingView = forwardRef(
         <VStack
           backgroundColor={bgColor}
           borderRadius={100}
-          shadowColor={`rgba(0,0,0,${sizeIn == 'lg' ? 0.05 : 0.25})`}
-          shadowRadius={size / 10}
-          shadowOffset={{ height: 3, width: 0 }}
+          shadowColor={`rgba(0,0,0,${sizeIn == 'lg' ? 0.1 : 0.25})`}
+          shadowRadius={size / 5}
+          shadowOffset={{ height: 5, width: 0 }}
           width={size}
           height={size}
           alignItems="center"
@@ -124,8 +124,8 @@ export const RatingView = forwardRef(
           <ProgressCircle
             percent={Math.max(Math.min(100, ranking), 0)}
             radius={size * 0.5}
-            borderWidth={size * 0.07}
-            color={borderColor}
+            borderWidth={Math.max(1, size * 0.035)}
+            color={color}
           >
             <VStack
               width="100%"

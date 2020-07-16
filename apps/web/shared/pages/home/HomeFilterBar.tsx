@@ -58,7 +58,34 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
 
               if (tag.name === 'Delivery') {
                 return (
-                  <HomeFilterDelivery key={tag.id}>{button}</HomeFilterDelivery>
+                  <>
+                    {button}
+
+                    {activeTagIds['delivery'] &&
+                      Object.keys(thirdPartyCrawlSources).map((key) => {
+                        const item = thirdPartyCrawlSources[key]
+                        if (item.delivery === false) {
+                          return null
+                        }
+                        return (
+                          <HStack
+                            key={key}
+                            marginHorizontal={1}
+                            alignItems="center"
+                            padding={3}
+                            borderRadius={6}
+                            hoverStyle={{
+                              backgroundColor: '#f2f2f2',
+                            }}
+                          >
+                            <Image
+                              source={item.image}
+                              style={{ width: 20, height: 20, borderRadius: 4 }}
+                            />
+                          </HStack>
+                        )
+                      })}
+                  </>
                 )
               }
 
@@ -68,51 +95,6 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
         )
       })}
     </HStack>
-  )
-})
-
-const HomeFilterDelivery = memo(({ children }: { children: any }) => {
-  const om = useOvermind()
-  return (
-    <HoverablePopover
-      allowHoverOnContent
-      position="bottom"
-      contents={
-        <Box>
-          <VStack>
-            {Object.keys(thirdPartyCrawlSources).map((key) => {
-              const item = thirdPartyCrawlSources[key]
-              if (item.delivery === false) {
-                return null
-              }
-              return (
-                <HStack
-                  key={key}
-                  spacing={8}
-                  alignItems="center"
-                  paddingVertical={4}
-                  paddingHorizontal={10}
-                  hoverStyle={{
-                    backgroundColor: '#f2f2f2',
-                  }}
-                >
-                  <CheckBox value={true} />
-                  <Image
-                    source={item.image}
-                    style={{ width: 24, height: 24, borderRadius: 4 }}
-                  />
-                  <Text ellipse fontSize={12} opacity={0.5}>
-                    {item.name}
-                  </Text>
-                </HStack>
-              )
-            })}
-          </VStack>
-        </Box>
-      }
-    >
-      {children}
-    </HoverablePopover>
   )
 })
 

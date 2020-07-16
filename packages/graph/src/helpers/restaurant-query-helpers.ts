@@ -1,4 +1,3 @@
-import { RestaurantQuery } from '../types'
 import { TopCuisineDish } from '../types-extra'
 
 /**
@@ -15,15 +14,14 @@ export const restaurantPhotosForCarousel = ({
   tag_names = [],
   max = 6,
 }: {
-  restaurant: RestaurantQuery
+  restaurant: any
   tag_names?: string[]
   max?: number
 }) => {
   let x = Date.now()
-  // @ts-ignore
   const tags = restaurant.top_tags({
     args: {
-      tag_names: '123',
+      tag_names: tag_names,
     },
   })
   // @ts-ignore
@@ -46,6 +44,7 @@ export const restaurantPhotosForCarousel = ({
     }
     photos.push({
       name: photoName,
+      // enablig this causes double queries
       // icon: t.tag.icon,
       image: photo,
       rating: photoRating,

@@ -9,7 +9,7 @@ import { Link } from '../../views/ui/Link'
 import { SmallCircleButton } from './CloseButton'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
-type AddressSize = 'lg' | 'md' | 'sm' | 'xs'
+export type AddressSize = 'lg' | 'md' | 'sm' | 'xs'
 
 export const RestaurantAddressLinksRow = memo(
   graphql(

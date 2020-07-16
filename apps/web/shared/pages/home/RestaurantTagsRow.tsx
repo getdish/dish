@@ -32,7 +32,7 @@ export const RestaurantTagsRow = memo(
     } else {
       const restaurant = useRestaurantQuery(restaurantSlug)
       const restaurantTags = restaurant.tags({
-        limit: 6,
+        limit: 10,
       })
       // @ts-ignore
       tags = restaurantTags.map((tag) => tag.tag)

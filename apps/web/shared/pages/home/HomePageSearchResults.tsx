@@ -110,8 +110,6 @@ const HomeEmptyLoading = memo(() => {
 const SearchResultsTitle = ({ item, title }: Props & { title: any }) => {
   const { isSmall, paddingTop, titleHeight } = useSpacing()
 
-  console.log('rendering', item)
-
   return (
     <HStack
       position="absolute"
