@@ -13,20 +13,43 @@ export const restaurantPhotosForCarousel = ({
   restaurant,
   tag_names = [],
   max = 6,
+  gallery = false,
 }: {
   restaurant: any
   tag_names?: string[]
   max?: number
+  gallery?: boolean
 }) => {
   let x = Date.now()
+  // @ts-ignore
+  const restaurantPhotos = restaurant.photos() || []
+  let photos = [] as TopCuisineDish[]
+  if (!gallery) {
+    photos = prependDishPhotos(photos, restaurant, tag_names, max)
+  }
+  if (photos.length <= max) {
+    for (const photo of restaurantPhotos) {
+      photos.push({ name: ' ', image: photo })
+      if (photos.length >= max) break
+    }
+  }
+  if (Date.now() - x > 50) {
+    console.warn('restaurantPhotosForCarousel SLOW')
+  }
+  return photos
+}
+
+const prependDishPhotos = (
+  photos: TopCuisineDish[],
+  restaurant: any,
+  tag_names: string[],
+  max: number
+) => {
   const tags = restaurant.top_tags({
     args: {
       tag_names: tag_names,
     },
   })
-  // @ts-ignore
-  const restaurantPhotos = restaurant.photos() || []
-  let photos = [] as TopCuisineDish[]
   for (const t of tags) {
     const tagName = t.tag.name ?? ''
     const isSearchedForTag = tag_names?.includes(tagName.toLowerCase())
@@ -58,15 +81,6 @@ export const restaurantPhotosForCarousel = ({
     if (photos.length >= max) {
       break
     }
-  }
-  if (photos.length <= max) {
-    for (const photo of restaurantPhotos) {
-      photos.push({ name: ' ', image: photo })
-      if (photos.length >= max) break
-    }
-  }
-  if (Date.now() - x > 50) {
-    console.warn('restaurantPhotosForCarousel SLOW')
   }
   return photos
 }

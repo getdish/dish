@@ -83,7 +83,11 @@ const HomePageGalleryContent = memo(
       : null
     const slug = props.state.restaurantSlug
     const restaurant = useRestaurantQuery(slug)
-    const photos = restaurantPhotosForCarousel({ restaurant, max: 100 })
+    const photos = restaurantPhotosForCarousel({
+      restaurant,
+      max: 100,
+      gallery: true,
+    })
 
     console.log('gallery', photos, dish?.default_images())
 

@@ -176,6 +176,23 @@ services:
     args:
       - -cache
       - /image-cache
+  image-quality-api:
+    app: image-quality-api
+    image: docker.k8s.dishapp.com/dish/image-quality-server
+    imagePullSecrets:
+      - docker-config-json
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: doks.digitalocean.com/node-pool
+            operator: In
+            values:
+            - dish-worker-pool
+    cpu: 2000m
+    memory: 2Gi
+    ports:
+      - 5005/http
 {{- end}}
 
 template:

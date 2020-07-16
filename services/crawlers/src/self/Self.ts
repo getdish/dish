@@ -1,5 +1,7 @@
 import '@dish/common'
 
+import crypto from 'crypto'
+
 import { sentryException } from '@dish/common'
 import {
   MenuItem,
@@ -21,6 +23,7 @@ import {
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
+import { orderBy } from 'lodash'
 import moment from 'moment'
 
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
@@ -84,6 +87,7 @@ export class Self extends WorkerJob {
     if (restaurant) {
       await this.preMerge(restaurant)
       const async_steps = [
+        this.mergePhotos,
         this.mergeMainData,
         this.addHours,
         this.doTags,
@@ -129,7 +133,6 @@ export class Self extends WorkerJob {
       this.mergeAddress,
       this.mergeRatings,
       this.mergeImage,
-      this.mergePhotos,
       this.addWebsite,
       this.addSources,
       this.addPriceRange,
@@ -656,7 +659,7 @@ export class Self extends WorkerJob {
     await menuItemsUpsertMerge(dishes)
   }
 
-  mergePhotos() {
+  async mergePhotos() {
     // @ts-ignore
     const yelp_data = this.yelp?.data || {}
     // @ts-ignore
@@ -665,6 +668,29 @@ export class Self extends WorkerJob {
       ...this._getGooglePhotos(),
       ...this.getPaginatedData(yelp_data, 'photos').map((i) => i.src),
     ]
+    await this.assessPhotoQuality()
+  }
+
+  async assessPhotoQuality() {
+    const IMAGE_QUALITY_API = 'https://image-quality.rio.dishapp.com/prediction'
+    const response = await fetch(IMAGE_QUALITY_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(this.restaurant.photos),
+    })
+    let results = await response.json()
+    results = orderBy(results, ['mean_score_prediction']).reverse()
+    let sorted: string[] = []
+    for (const result of results) {
+      const photo = this.restaurant.photos.find((p) => {
+        const id = crypto.createHash('md5').update(p).digest('hex')
+        return id == result.image_id
+      })
+      sorted.push(photo)
+    }
+    this.restaurant.photos = sorted
   }
 
   _getGooglePhotos() {
