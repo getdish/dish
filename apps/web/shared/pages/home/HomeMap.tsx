@@ -11,8 +11,9 @@ import React, {
 } from 'react'
 
 import { frameWidthMax, searchBarHeight } from '../../constants'
-import { LngLat, setMapView } from '../../state/home'
+import { LngLat } from '../../state/home'
 import { isRestaurantState, isSearchState } from '../../state/home-helpers'
+import { setMapView } from '../../state/mapView'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../../views/map'
 import { centerMapToRegion } from './centerMapToRegion'
@@ -30,8 +31,6 @@ export const HomeMap = memo(function HomeMap() {
   const [restaurantDetail, setRestaurantDetail] = useState<Restaurant | null>(
     null
   )
-  const om = useOvermind()
-  const state = om.state.home.currentState
 
   useOnMount(async () => {
     await startMapKit()

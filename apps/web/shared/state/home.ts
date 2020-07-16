@@ -1,4 +1,4 @@
-import { fullyIdle, idle, sleep } from '@dish/async'
+import { fullyIdle, idle } from '@dish/async'
 import {
   RestaurantOnlyIds,
   RestaurantSearchArgs,
@@ -11,10 +11,10 @@ import {
 import { assert, handleAssertionError, stringify } from '@dish/helpers'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
-import _, { clamp, cloneDeep, findLast, last, pick } from 'lodash'
+import _, { clamp, findLast, last, pick } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
 
-import { fuzzyFind, fuzzyFindIndices } from '../helpers/fuzzy'
+import { fuzzyFindIndices } from '../helpers/fuzzy'
 import { memoize } from '../helpers/memoizeWeak'
 import { timer } from '../helpers/timer'
 import { useRestaurantQuery } from '../pages/home/useRestaurantQuery'
@@ -179,7 +179,7 @@ const derivations = {
     if ('activeTagIds' in state.currentState) {
       for (const id in state.currentState.activeTagIds) {
         const tag = state.allTags[id]
-        if (tag.type == 'lense') {
+        if (tag?.type == 'lense') {
           return tag
         }
       }
@@ -217,12 +217,6 @@ export const state: HomeState = {
   ...derivations,
 }
 
-// TODO type
-let mapView: mapkit.Map | null = null
-export function setMapView(x: mapkit.Map) {
-  mapView = x
-}
-
 export const isOnOwnProfile = (state: OmState) => {
   const username = state.user?.user?.username
   return username && slugify(username) === state.router.curPage.params?.username
@@ -239,8 +233,6 @@ export const isEditingUserPage = (
 const start: AsyncAction = async (om) => {
   om.actions.home.updateCurrentMapAreaInformation()
 }
-
-let defaultAutocompleteResults: AutocompleteItem[] | null = null
 
 type PageAction = () => Promise<void>
 
@@ -572,21 +564,6 @@ const loadHomeDishes: AsyncAction = async (om) => {
   om.state.home.topDishes = all
 }
 
-export const locationToAutocomplete = (location: {
-  name: string
-  coordinate: { latitude: number; longitude: number }
-}) => {
-  return createAutocomplete({
-    name: location.name,
-    type: 'country',
-    icon: '📍',
-    center: {
-      lat: location.coordinate.latitude,
-      lng: location.coordinate.longitude,
-    },
-  })
-}
-
 let lastSearchKey = ''
 let lastSearchAt = Date.now()
 const runSearch: AsyncAction<{
@@ -857,22 +834,7 @@ const handleRouteChange: AsyncAction<RouteItem> = async (
 
 export let currentStates: HomeStateItem[] = []
 
-// for use in avoiding autofocus focus on focus
-let justFocusedWindow = false
-if (typeof window !== 'undefined') {
-  window.addEventListener('focus', () => {
-    justFocusedWindow = true
-    setTimeout(() => {
-      justFocusedWindow = false
-    }, 100)
-  })
-}
-
 const setShowAutocomplete: Action<ShowAutocomplete> = (om, val) => {
-  if (justFocusedWindow) {
-    console.log('just focused, ignore showing autocomplete')
-    return
-  }
   om.state.home.showAutocomplete = val
 }
 
@@ -890,38 +852,8 @@ const setLocation: AsyncAction<string> = async (om, val) => {
   }
 }
 
-let locationSearchId = 0
 const setLocationSearchQuery: AsyncAction<string> = async (om, val) => {
   om.state.home.locationSearchQuery = val
-  locationSearchId = Math.random()
-  let curId = locationSearchId
-  await sleep(70)
-  if (curId !== locationSearchId) return
-  const results = (await searchLocations(val)).map(locationToAutocomplete)
-  const orderedResults = await fuzzyFind(val, results)
-  if (curId !== locationSearchId) return
-  om.state.home.locationAutocompleteResults = _.uniqBy(
-    orderedResults,
-    (x) => x.tagId
-  )
-}
-
-export function searchLocations(query: string) {
-  if (!query) {
-    return Promise.resolve([])
-  }
-  const locationSearch = new mapkit.Search({ region: mapView?.region })
-  return new Promise<
-    { name: string; formattedAddress: string; coordinate: any }[]
-  >((res, rej) => {
-    locationSearch.search(query, (err, data) => {
-      if (err) {
-        console.log('network failure')
-        return res([])
-      }
-      res(data.places)
-    })
-  })
 }
 
 const setActiveIndex: Action<number> = (om, val) => {
@@ -1112,8 +1044,7 @@ const setAutocompleteResults: Action<AutocompleteItem[] | null> = (
   results
 ) => {
   om.state.home.autocompleteIndex = 0
-  om.state.home.autocompleteResults =
-    results ?? defaultAutocompleteResults ?? []
+  om.state.home.autocompleteResults = results ?? []
 }
 
 const setLocationAutocompleteResults: Action<AutocompleteItem[] | null> = (
@@ -1121,7 +1052,7 @@ const setLocationAutocompleteResults: Action<AutocompleteItem[] | null> = (
   results
 ) => {
   om.state.home.autocompleteIndex = 0
-  om.state.home.autocompleteResults =
+  om.state.home.locationAutocompleteResults =
     results ?? defaultLocationAutocompleteResults ?? []
 }
 

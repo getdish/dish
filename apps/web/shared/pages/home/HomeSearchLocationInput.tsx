@@ -76,9 +76,7 @@ export const HomeSearchLocationInput = memo(() => {
       }
     }
     const showLocationAutocomplete = () => {
-      if (!om.state.home.showAutocomplete) {
-        om.actions.home.setShowAutocomplete('location')
-      }
+      om.actions.home.setShowAutocomplete('location')
     }
     locationInput.addEventListener('keydown', handleKeyPress)
     locationInput.addEventListener('focus', showLocationAutocomplete)
@@ -97,6 +95,7 @@ export const HomeSearchLocationInput = memo(() => {
       minWidth={180}
       backgroundColor="rgba(255,255,255,0.1)"
       borderRadius={8}
+      justifyContent="center"
     >
       <HomeAutocompleteHoverableInput
         input={locationInput}
@@ -118,6 +117,9 @@ export const HomeSearchLocationInput = memo(() => {
             onChangeText={(text) => {
               setLocationSearch(text)
               om.actions.home.setLocationSearchQuery(text)
+              if (text && om.state.home.showAutocomplete === false) {
+                om.actions.home.setShowAutocomplete('location')
+              }
             }}
           />
         </HStack>
@@ -135,6 +137,7 @@ const SearchLocationButton = memo(() => {
         <Spacer flex={1} />
         <Button
           padding={8}
+          alignSelf="center"
           marginRight={5}
           borderRadius={1000}
           onPress={() => {
