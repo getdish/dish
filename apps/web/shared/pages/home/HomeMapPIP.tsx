@@ -79,21 +79,27 @@ const HomeMapPIPContent = graphql(() => {
 
   useEffect(() => {
     if (!map || !annotation) return
-    map.addAnnotation(annotation)
+    try {
+      map.addAnnotation(annotation)
+    } catch (err) {
+      console.warn(err.message)
+    }
     return () => {
       try {
         map.removeAnnotation(annotation)
       } catch (err) {
-        console.error(err)
+        console.warn(err.message)
       }
     }
   }, [map, annotation])
 
   return (
     <AbsoluteVStack
+      pointerEvents="none"
+      transform={[{ scale: 0.8 }]}
       position="absolute"
-      bottom={30}
-      right={30}
+      bottom={15}
+      right={8}
       zIndex={1000}
       width="20%"
       height="20%"

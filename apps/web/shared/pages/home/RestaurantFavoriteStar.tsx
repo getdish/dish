@@ -19,13 +19,9 @@ export const RestaurantFavoriteStar = memo(
     }) => {
       const sizePx = size == 'lg' ? 26 : 16
       const om = useOvermind()
-      const forceUpdate = useForceUpdate()
+      // const forceUpdate = useForceUpdate()
       const review = useUserReview(restaurantId)
       const isStarred = review?.rating > 0
-
-      const persist = async () => {
-        Toast.show('Saved')
-      }
 
       const setRating = (r: number) => {
         if (!review) return
@@ -34,15 +30,14 @@ export const RestaurantFavoriteStar = memo(
         }
         review.rating = r
         review.restaurant_id = restaurantId
-        persist()
-        forceUpdate()
+        Toast.show('Saved')
       }
 
       return (
         <LinkButton
           hoverStyle={{ opacity: 0.5 }}
           pressStyle={{ opacity: 0.2 }}
-          onPressOut={(e) => {
+          onPress={(e) => {
             prevent(e)
             setRating(isStarred ? 0 : 1)
           }}

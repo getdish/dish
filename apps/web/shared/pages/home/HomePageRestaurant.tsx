@@ -1,6 +1,7 @@
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import {
   AbsoluteVStack,
+  Button,
   HStack,
   LoadingItems,
   SmallTitle,
@@ -8,7 +9,7 @@ import {
   Text,
   VStack,
 } from '@dish/ui'
-import React, { Suspense, memo } from 'react'
+import React, { Suspense, memo, useState } from 'react'
 
 import { drawerBorderRadius, searchBarHeight } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
@@ -19,7 +20,10 @@ import { HomeScrollView } from './HomeScrollView'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
-import { RestaurantTopReviews } from './RestaurantTopReviews'
+import {
+  RestaurantOverview,
+  RestaurantTopReviews,
+} from './RestaurantTopReviews'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 import { useRestaurantQuery } from './useRestaurantQuery'
@@ -79,44 +83,41 @@ export default memo(
 
               <HStack flexWrap="wrap">
                 <VStack flex={1} minWidth={340}>
+                  <>
+                    <SmallTitle>Menu</SmallTitle>
+                    <Spacer />
+                    <Suspense fallback={null}>
+                      <RestaurantMenu restaurantSlug={slug} />
+                    </Suspense>
+                    <Spacer />
+                  </>
+                </VStack>
+                <VStack flex={1} minWidth={340}>
                   <SmallTitle fontSize={22} divider="off">
                     Overview
                   </SmallTitle>
                   <Spacer />
-                  <RestaurantTopReviews
-                    expandTopComments={2}
-                    restaurantId={restaurant.id}
-                  />
+                  <Text>
+                    <RestaurantOverview />
+                  </Text>
 
-                  <Spacer />
-                  <Spacer />
-
-                  <SmallTitle>Menu</SmallTitle>
-                  <Spacer />
-                  <Suspense fallback={null}>
-                    <RestaurantMenu restaurantSlug={slug} />
-                  </Suspense>
-                </VStack>
-                <VStack flex={1} minWidth={340}>
                   <VStack
                     padding={10}
                     margin={10}
-                    borderRadius={20}
-                    borderWidth={1}
-                    borderColor="#ccc"
+                    borderRadius={10}
+                    // backgroundColor="#f2f2f2"
                   >
-                    <SmallTitle divider="center">Top tags</SmallTitle>
+                    <SmallTitle divider="off">Top tags</SmallTitle>
                     <Spacer />
                     <RestaurantTagsRow size="lg" restaurantSlug={slug} />
 
-                    <Spacer />
-                    <Spacer />
+                    <Spacer size="lg" />
 
-                    <SmallTitle divider="center">Top dishes</SmallTitle>
-                    <Spacer />
-                    <Suspense fallback={null}>
-                      <RestaurantPhotos restaurantSlug={slug} />
-                    </Suspense>
+                    <SmallTitle divider="off">Tips</SmallTitle>
+                    <RestaurantTopReviews
+                      expandTopComments={2}
+                      restaurantId={restaurant.id}
+                    />
                   </VStack>
                 </VStack>
               </HStack>
@@ -202,8 +203,9 @@ const RestaurantPhotos = memo(
 
 const RestaurantMenu = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
+    const [isExpanded, setIsExpanded] = useState(false)
     const restaurant = useRestaurantQuery(restaurantSlug)
-    const items = restaurant.menu_items({ limit: 20 })
+    const items = restaurant.menu_items({ limit: 25 })
     return (
       <>
         {!items?.length && (
@@ -213,14 +215,37 @@ const RestaurantMenu = memo(
         )}
         {!!items?.length && (
           <VStack>
-            {items.map((item, i) => (
-              <VStack paddingVertical={4} key={i}>
-                <Text>{item.name}</Text>
-                <Text fontSize={13} opacity={0.5}>
-                  {item.description}
-                </Text>
-              </VStack>
-            ))}
+            <HStack spacing={3}>
+              {items.slice(0, isExpanded ? Infinity : 4).map((item, i) => (
+                <VStack
+                  minWidth={isExpanded ? 200 : 140}
+                  paddingBottom={10}
+                  borderBottomWidth={1}
+                  marginBottom={10}
+                  borderBottomColor="#f2f2f2"
+                  flex={1}
+                  overflow="hidden"
+                  paddingVertical={4}
+                  key={i}
+                >
+                  <Text>{item.name}</Text>
+                  <Text fontSize={13} opacity={0.5}>
+                    {item.description}
+                  </Text>
+                </VStack>
+              ))}
+            </HStack>
+            <Button
+              marginTop={-25}
+              zIndex={100}
+              position="relative"
+              alignSelf="flex-end"
+              onPress={() => {
+                setIsExpanded((x) => !x)
+              }}
+            >
+              <Text fontSize={12}>{isExpanded ? 'Close' : 'Expand'}</Text>
+            </Button>
           </VStack>
         )}
       </>

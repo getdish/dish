@@ -215,38 +215,24 @@ const HomeIntroLetter = memo(() => {
         maxWidth="75%"
         margin="auto"
         padding={20}
+        position="relative"
       >
-        <HStack>
-          <Text fontSize={18} fontWeight="600">
-            Welcome to Dish!
-          </Text>
-          <Spacer flex={1} />
+        <HStack position="absolute" top={10} right={10}>
           <CloseButton onPress={() => setShowIntro(false)} />
         </HStack>
         <Spacer size="sm" />
         <Text fontSize={16} lineHeight={22} opacity={0.8}>
-          It's not easy to find the Pho, Tacos, and other dishes in your city –
-          other food rating apps mix ratings for everything into one big score.
-          Dish is a food review aggregator that uses novel analysis to figure
-          out which dishes are actually the best.
+          Welcome to beta, please send any bugs to bugs@dishapp.com
         </Text>
         <Spacer size="sm" />
-        <Text fontSize={14} lineHeight={20} opacity={0.8}>
-          We want to build a fun community where you can explore the world of
-          food, find unique popups, amazing insider tips, and track all your
-          food advertures.
-        </Text>
-        <Spacer size="sm" />
-        <Text fontSize={14} lineHeight={20} opacity={0.8}>
-          <strong>Beta</strong>... watch for bugs! Report using the (?) on the
+        {/* <Text fontSize={14} lineHeight={20} opacity={0.8}>
+          <strong>Beta</strong>. Report using the (?) on the
           bottom right.
-        </Text>
-        <Spacer size="lg" />
+        </Text> */}
+        {/* <Spacer size="lg" />
         <HStack justifyContent="center">
-          <SmallButton textStyle={{ fontSize: 16 }}>
-            Learn how dish breaks down data &nbsp; ➡️
-          </SmallButton>
-        </HStack>
+          <SmallButton textStyle={{ fontSize: 13 }}>More</SmallButton>
+        </HStack> */}
       </VStack>
       <Spacer size={30} />
     </VStack>

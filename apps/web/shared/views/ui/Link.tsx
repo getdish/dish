@@ -74,11 +74,7 @@ export function Link<
       } else {
         e.preventDefault()
         event = e
-        if (asyncClick) {
-          cancel = series([() => idle(20), nav])
-        } else {
-          nav()
-        }
+        cancel = series([() => idle(asyncClick ? 100 : 10), nav])
       }
     }
 

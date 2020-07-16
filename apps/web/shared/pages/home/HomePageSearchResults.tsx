@@ -1,6 +1,5 @@
 import { createCancellablePromise, idle, series } from '@dish/async'
 import { Button, HStack, LoadingItems, Spacer, Text, VStack } from '@dish/ui'
-import { cloneDeep } from 'lodash'
 import React, {
   Suspense,
   memo,
@@ -53,13 +52,29 @@ const useSpacing = () => {
 
 export default memo(function HomePageSearchResults(props: Props) {
   // const isEditingUserList = !!isEditingUserPage(om.state)
-  const { title } = getTitleForState(useOvermindStatic().state, props.item)
+  const { title, subTitle, pageTitleElements } = getTitleForState(
+    useOvermindStatic().state,
+    props.item
+  )
   const om = useOvermind()
   const isOptimisticUpdating = om.state.home.isOptimisticUpdating
 
   if (isOptimisticUpdating) {
     console.warn('isOptimisticUpdating')
   }
+
+  const titleElements = useMemo(() => {
+    return (
+      <>
+        <Text ellipse fontSize={15} fontWeight="700">
+          {pageTitleElements}
+        </Text>
+        <Text ellipse opacity={0.5} fontWeight="300" fontSize={15}>
+          {subTitle}
+        </Text>
+      </>
+    )
+  }, [subTitle, pageTitleElements])
 
   const content = useLastValueWhen(() => {
     const key = weakKey(props.item)
@@ -76,7 +91,7 @@ export default memo(function HomePageSearchResults(props: Props) {
     >
       <PageTitleTag>{title}</PageTitleTag>
       <StackViewCloseButton />
-      <SearchResultsTitle {...props} />
+      <SearchResultsTitle title={titleElements} {...props} />
       {isOptimisticUpdating ? <HomeEmptyLoading /> : content}
     </VStack>
   )
@@ -92,12 +107,11 @@ const HomeEmptyLoading = memo(() => {
   )
 })
 
-const SearchResultsTitle = memo(({ item }: Props) => {
+const SearchResultsTitle = ({ item, title }: Props & { title: any }) => {
   const { isSmall, paddingTop, titleHeight } = useSpacing()
-  const { subTitle, pageTitleElements } = getTitleForState(
-    useOvermindStatic().state,
-    item
-  )
+
+  console.log('rendering', item)
+
   return (
     <HStack
       position="absolute"
@@ -140,19 +154,14 @@ const SearchResultsTitle = memo(({ item }: Props) => {
             alignItems="flex-end"
             overflow="hidden"
           >
-            <Text ellipse fontSize={15} fontWeight="700">
-              {pageTitleElements}
-            </Text>
-            <Text ellipse opacity={0.5} fontWeight="300" fontSize={15}>
-              {subTitle}
-            </Text>
+            {title}
           </VStack>
         </HStack>
       </ScrollView>
       {/* <MyListButton isEditingUserList={isEditingUserList} /> */}
     </HStack>
   )
-})
+}
 
 const SearchResultsContent = memo((props: Props) => {
   const { item } = props
@@ -226,12 +235,12 @@ const SearchResultsContent = memo((props: Props) => {
 
   const isOnLastChunk = currentlyShowing === allResults.length
   const isLoading =
-    item.results?.results.restaurants?.length === 0
+    item.results.status === 'loading' ||
+    (item.results?.results.restaurants?.length === 0
       ? false
       : !isOnLastChunk ||
         !item.results?.results ||
-        item.results.status === 'loading' ||
-        state.hasLoaded <= state.chunk
+        state.hasLoaded <= state.chunk)
 
   console.log(
     'SearchResults',
@@ -304,7 +313,7 @@ const SearchResultsContent = memo((props: Props) => {
         spacing
       >
         <Text fontSize={22}>No results 😞</Text>
-        <LinkButton name="contact">Report problem</LinkButton>
+        {/* <LinkButton name="contact">Report problem</LinkButton> */}
       </VStack>
     )
   }

@@ -13,7 +13,10 @@ export const Button = (props: ButtonProps) => {
 }
 
 const defaultStyle: ButtonProps = {
+  alignSelf: 'flex-start',
   pointerEvents: 'auto',
+  // @ts-ignore
+  cursor: 'pointer',
   padding: 5,
   borderRadius: 5,
   backgroundColor: 'rgba(150,150,150,0.05)',

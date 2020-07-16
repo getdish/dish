@@ -9,21 +9,6 @@ import {
 } from './RestaurantAddComment'
 import { RestaurantReview } from './RestaurantReview'
 
-const listItems = [
-  {
-    category: 'Food',
-    review: `Authentic. Don't miss: lychee tempura ice cream`,
-  },
-  {
-    category: 'Vibe',
-    review: 'Laid back, good service',
-  },
-  {
-    category: 'Tips',
-    review: 'Quick, cheap, local favorite',
-  },
-]
-
 export const RestaurantTopReviews = memo(
   graphql(
     ({
@@ -61,36 +46,6 @@ export const RestaurantTopReviews = memo(
       )
       return (
         <VStack alignSelf="stretch" paddingRight={20}>
-          <VStack marginTop={4} marginBottom={12}>
-            {listItems.map((item, index) => (
-              <React.Fragment key={item.category}>
-                <Text fontSize={14}>
-                  <HStack
-                    display="inline-flex"
-                    width={45}
-                    marginRight={2}
-                    alignItems="center"
-                    justifyContent="flex-end"
-                  >
-                    <Text
-                      // paddingVertical={2}
-                      paddingHorizontal={5}
-                      borderRadius={6}
-                      fontWeight="600"
-                      opacity={0.65}
-                    >
-                      {item.category}:
-                    </Text>
-                  </HStack>
-                  {item.review}
-                </Text>
-                {index < listItems.length - 1 && <Spacer size={8} />}
-              </React.Fragment>
-            ))}
-          </VStack>
-
-          <Spacer />
-
           {!expandTopComments && <HStack>{expandCommentButton}</HStack>}
 
           {!!(state.showMore || expandTopComments) && (
@@ -129,6 +84,54 @@ export const RestaurantTopReviews = memo(
     }
   )
 )
+
+export const RestaurantOverview = memo(() => {
+  const listItems = [
+    {
+      category: 'Food',
+      review: `Authentic. Don't miss: lychee tempura ice cream`,
+    },
+    {
+      category: 'Vibe',
+      review: 'Laid back, good service',
+    },
+    {
+      category: 'Tips',
+      review: 'Quick, cheap, local favorite',
+    },
+  ]
+
+  return (
+    <VStack marginTop={4} marginBottom={12}>
+      {listItems.map((item, index) => (
+        <React.Fragment key={item.category}>
+          <Text fontSize={14}>
+            <HStack
+              // @ts-ignore
+              display="inline-flex"
+              width={45}
+              marginRight={2}
+              alignItems="center"
+              justifyContent="flex-end"
+            >
+              <Text
+                // paddingVertical={2}
+                paddingHorizontal={5}
+                borderRadius={6}
+                fontWeight="600"
+                opacity={0.65}
+              >
+                {item.category}:
+              </Text>
+            </HStack>
+            {item.review}
+          </Text>
+          {index < listItems.length - 1 && <Spacer size={8} />}
+        </React.Fragment>
+      ))}
+    </VStack>
+  )
+})
 
 const Content = memo(
   graphql(

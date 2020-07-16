@@ -202,6 +202,8 @@ export const getTagsFromRoute = (
   return tags
 }
 
+let recentTries = 0
+let tm
 export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
   om,
   state
@@ -209,6 +211,17 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
   const next = getNavigateItemForState(om.state, state)
   const should = om.actions.router.getShouldNavigate(next)
   if (should) {
+    recentTries++
+    clearTimeout(tm)
+    if (recentTries > 4) {
+      console.warn('bailing loop')
+      recentTries = 0
+      // break loop
+      return false
+    }
+    tm = setTimeout(() => {
+      recentTries++
+    }, 300)
     console.log('syncStateToRoute', should, cloneDeep({ next, state }))
     om.actions.router.navigate(next)
     return true

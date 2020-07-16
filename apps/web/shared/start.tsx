@@ -18,6 +18,7 @@ window['gqlessSetListener'] = function gqlessSetListener(
   const model = parentAccessor.data
   if (!queue.has(model)) {
     const item = {}
+    console.log('parentAccessor', parentAccessor, fieldAccessor)
     for (const key in parentAccessor.value.data) {
       item[key] = parentAccessor.value.data[key].data
     }

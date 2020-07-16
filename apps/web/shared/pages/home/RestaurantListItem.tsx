@@ -19,6 +19,7 @@ import { DishView } from './DishView'
 import { HomeScrollViewHorizontal } from './HomeScrollView'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RankingView } from './RankingView'
+import { RestaurantAddress } from './RestaurantAddress'
 import { getAddressText } from './RestaurantAddressLinksRow'
 import { RestaurantDeliveryButton } from './RestaurantDeliveryButton'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
@@ -26,7 +27,10 @@ import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
-import { RestaurantTopReviews } from './RestaurantTopReviews'
+import {
+  RestaurantOverview,
+  RestaurantTopReviews,
+} from './RestaurantTopReviews'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 import { Squircle } from './Squircle'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
@@ -201,21 +205,10 @@ const RestaurantListItemContent = memo(
                         </Text>
                       </Link>
                       {!!restaurant.address && (
-                        <Text fontSize={14} fontWeight="300" selectable>
-                          <Link
-                            color="#999"
-                            target="_blank"
-                            href={`https://www.google.com/maps/search/?api=1&${encodeURIComponent(
-                              restaurant.address
-                            )}`}
-                          >
-                            {getAddressText(
-                              currentLocationInfo,
-                              restaurant.address,
-                              'xs'
-                            )}
-                          </Link>
-                        </Text>
+                        <RestaurantAddress
+                          currentLocationInfo={currentLocationInfo}
+                          address={restaurant.address}
+                        />
                       )}
                     </Text>
                   </HStack>
@@ -244,10 +237,10 @@ const RestaurantListItemContent = memo(
 
             <Spacer size={8} />
 
-            {/* ROW: Reviews/Comment */}
+            {/* ROW: Overview / Reviews / Comment */}
             <VStack>
               <Suspense fallback={<LoadingItems />}>
-                {/* REVIEWS */}
+                <RestaurantOverview />
                 <RestaurantTopReviews
                   restaurantId={restaurantId}
                   afterTopCommentButton={

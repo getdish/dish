@@ -174,7 +174,6 @@ export const CommentBubble = ({
         </Circle>
         <Text selectable color="#999" fontSize={13}>
           <Link
-            inline
             name="user"
             params={{ username: user.username }}
             fontWeight="600"
