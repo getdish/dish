@@ -91,7 +91,7 @@ test('Tagging a restaurant with a tag that has categories', async (t) => {
   t.is(restaurant.tag_names.includes('test-tag-with-category'), true)
   t.is(restaurant.tag_names.includes('test-tag-existing'), true)
   if (restaurant.tag_names.length > 2) {
-    console.log(restaurant.tag_names.length)
+    console.log(restaurant.tag_names)
   }
   t.is(restaurant.tag_names.length, 2)
 })
