@@ -25,7 +25,7 @@ import HomeAutocomplete from './HomeAutocomplete'
 import { HomeSearchInput } from './HomeSearchInput'
 import { HomeSearchLocationInput } from './HomeSearchLocationInput'
 import { HomeUserMenu } from './HomeUserMenu'
-import { useMediaQueryIsSmall } from './HomeViewDrawer'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 const divider = <Divider vertical flexLine={1} marginHorizontal={4} />
 
@@ -38,8 +38,8 @@ export default memo(function HomeSearchBar() {
   const lense = om.state.home.currentStateLense
   const lastLenseRgb = useRef(brandRgb)
   const rgb = lense?.rgb ?? lastLenseRgb.current ?? brandRgb
-  const color = rgbString(rgb)
-  const colorBottom = rgbString(rgb.map((x) => x - 10) ?? [30, 30, 30])
+  const color = rgbString(rgb.map((x) => x + 5))
+  const colorBottom = rgbString(rgb.map((x) => x - 5) ?? [30, 30, 30])
   const borderRadius = 12
 
   useEffect(() => {
@@ -81,13 +81,26 @@ export default memo(function HomeSearchBar() {
           <VStack
             height={searchBarHeight - 1}
             borderRadius={borderRadius}
+            zIndex={0}
             className="skewX"
             position="absolute"
             top={0}
             width="100%"
             shadowColor="rgba(0,0,0,0.3)"
-            shadowOffset={{ height: 1, width: 0 }}
+            shadowOffset={{ height: 2, width: 4 }}
             shadowRadius={14}
+          />
+          <VStack
+            height={searchBarHeight - 1}
+            borderRadius={borderRadius}
+            zIndex={-1}
+            className="skewX"
+            position="absolute"
+            top={0}
+            width="100%"
+            shadowColor="rgba(255,255,255,0.3)"
+            shadowOffset={{ height: 5, width: 5 }}
+            shadowRadius={0}
           />
           <VStack
             className="skewX"

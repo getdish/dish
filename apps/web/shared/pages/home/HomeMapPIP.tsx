@@ -6,8 +6,8 @@ import { useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../../views/map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
-import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { onMapLoadedCallback } from './onMapLoadedCallback'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 export const HomeMapPIP = memo(() => {

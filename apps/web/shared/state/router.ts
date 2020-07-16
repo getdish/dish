@@ -5,6 +5,7 @@ import _ from 'lodash'
 import { Action, AsyncAction, Derive, derived } from 'overmind'
 import page from 'page'
 import queryString from 'query-string'
+import { CornerUpRight } from 'react-feather'
 
 import { memoize } from '../helpers/memoizeWeak'
 import { race } from '../helpers/race'
@@ -192,11 +193,12 @@ const navItemToHistoryItem = (navItem: NavigateItem): HistoryItem => {
   }
 }
 
-const getShouldNavigate: Action<NavigateItem, boolean> = (om, navItem) => {
-  const historyItem = navItemToHistoryItem(navItem)
-  return !isEqual(
-    _.omit(historyItem, ['id', 'replace']),
-    _.omit(om.state.router.curPage, ['id', 'replace'])
+const getShouldNavigate: Action<NavigateItem, boolean> = (om, val) => {
+  const historyItem = navItemToHistoryItem(val)
+  const curPage = om.state.router.curPage
+  return (
+    historyItem.name !== curPage.name ||
+    JSON.stringify(historyItem.params) !== JSON.stringify(curPage.params)
   )
 }
 
@@ -208,7 +210,7 @@ const navigate: AsyncAction<NavigateItem> = async (om, navItem) => {
   }
 
   if (!getShouldNavigate(om, navItem)) {
-    console.debug('already on page')
+    console.log('already on page', navItem)
     return
   }
 

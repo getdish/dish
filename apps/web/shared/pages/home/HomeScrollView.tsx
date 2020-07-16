@@ -4,7 +4,7 @@ import { ScrollView, ScrollViewProps } from 'react-native'
 
 import { searchBarHeight } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
-import { useMediaQueryIsSmall } from './HomeViewDrawer'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export const HomeScrollView = forwardRef(
   (

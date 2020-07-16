@@ -5,8 +5,8 @@ import { ChevronUp, RefreshCcw, X } from 'react-feather'
 import { pageWidthMax, searchBarHeight } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
 import { OverlayLinkButton } from '../../views/ui/OverlayLinkButton'
-import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export const HomeMapControlsOverlay = memo(() => {
   const om = useOvermind()

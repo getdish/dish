@@ -15,7 +15,8 @@ import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
 import { HomeMapPIP } from './HomeMapPIP'
 import HomeSearchBar from './HomeSearchBar'
 import { HomeStackView, StackItemProps } from './HomeStackView'
-import { HomeViewDrawer, useMediaQueryIsSmall } from './HomeViewDrawer'
+import { HomeViewDrawer } from './HomeViewDrawer'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export const homePageBorderRadius = 12
 

@@ -1,18 +1,10 @@
-import {
-  AbsoluteVStack,
-  HStack,
-  LinearGradient,
-  VStack,
-  useMedia,
-} from '@dish/ui'
+import { AbsoluteVStack, HStack, LinearGradient, VStack } from '@dish/ui'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
 import { drawerPad, drawerWidthMax, searchBarHeight } from '../../constants'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
-
-export const useMediaQueryIsSmall = () => useMedia({ maxWidth: 860 })
-export const useMediaQueryIsMedium = () => useMedia({ maxWidth: 960 })
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export function HomeViewDrawer(props: { children: any }) {
   const isSmall = useMediaQueryIsSmall()

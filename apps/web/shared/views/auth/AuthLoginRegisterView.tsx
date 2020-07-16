@@ -66,6 +66,8 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
         flexDirection: 'column',
       }}
     >
+      {/* enter to submit */}
+      <input type="submit" style={{ display: 'none' }} />
       {/* <Text style={{ fontSize: 16 }}>
         // some pitch on features for login here
       </Text> */}

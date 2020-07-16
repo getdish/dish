@@ -28,10 +28,10 @@ import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePage'
 import { HomeScrollView } from './HomeScrollView'
 import { focusSearchInput } from './HomeSearchInput'
-import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { useLastValueWhen } from './useLastValueWhen'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export const avatar = require('../../assets/peach.jpg').default
 
@@ -339,6 +339,7 @@ const SearchResultsContent = memo((props: Props) => {
           </HStack>
           <Spacer size={40} />
           <Button
+            alignSelf="center"
             onPress={() => {
               if (om.state.home.isAutocompleteActive) {
                 setState((x) => ({ ...x, scrollToTop: Math.random() }))

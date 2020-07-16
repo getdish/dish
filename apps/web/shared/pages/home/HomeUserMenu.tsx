@@ -7,7 +7,7 @@ import { useOvermind } from '../../state/useOvermind'
 import { AuthLoginRegisterView } from '../../views/auth/AuthLoginRegisterView'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { flatButtonStyle } from './baseButtonStyle'
-import { useMediaQueryIsSmall } from './HomeViewDrawer'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export const HomeUserMenu = memo(() => {
   const om = useOvermind()
