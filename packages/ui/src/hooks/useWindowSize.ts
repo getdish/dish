@@ -17,7 +17,7 @@ class WindowSizeStore {
     window.addEventListener('resize', this.update)
   }
 
-  update = _.debounce(() => {
+  update = _.throttle(() => {
     this.size = getWindowSize()
     this.listeners.forEach((x) => x())
   }, 350)
@@ -26,9 +26,10 @@ class WindowSizeStore {
 let store: any | null = null
 
 export function useWindowSize({
-  debounce = 0,
   adjust = idFn,
-}: { debounce?: number; adjust?: (x: Size) => Size } = {}): Size {
+}: {
+  adjust?: (x: Size) => Size
+} = {}): Size {
   store = store || new WindowSizeStore()
   const size = store.size
   const forceUpdate = useForceUpdate()

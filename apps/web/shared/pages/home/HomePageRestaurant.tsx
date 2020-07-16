@@ -2,7 +2,9 @@ import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import {
   AbsoluteVStack,
   Button,
+  Divider,
   HStack,
+  LinearGradient,
   LoadingItems,
   SmallTitle,
   Spacer,
@@ -10,6 +12,7 @@ import {
   VStack,
 } from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
+import { StyleSheet } from 'react-native'
 
 import { drawerBorderRadius, searchBarHeight } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
@@ -82,42 +85,40 @@ export default memo(
               <Spacer />
 
               <HStack flexWrap="wrap">
-                <VStack flex={1} minWidth={340}>
+                <VStack flex={1} minWidth={370}>
                   <>
-                    <SmallTitle>Menu</SmallTitle>
+                    <SmallTitle divider="center">Menu</SmallTitle>
                     <Spacer />
                     <Suspense fallback={null}>
                       <RestaurantMenu restaurantSlug={slug} />
                     </Suspense>
-                    <Spacer />
+                    <Spacer size="lg" />
                   </>
                 </VStack>
-                <VStack flex={1} minWidth={340}>
-                  <SmallTitle fontSize={22} divider="off">
-                    Overview
-                  </SmallTitle>
+                <VStack flex={1} minWidth={370}>
+                  <SmallTitle divider="center">Overview</SmallTitle>
                   <Spacer />
-                  <Text>
+                  <Text fontSize={18}>
                     <RestaurantOverview />
                   </Text>
 
                   <VStack
-                    padding={10}
-                    margin={10}
                     borderRadius={10}
                     // backgroundColor="#f2f2f2"
                   >
-                    <SmallTitle divider="off">Top tags</SmallTitle>
+                    <SmallTitle divider="center">Top tags</SmallTitle>
                     <Spacer />
                     <RestaurantTagsRow size="lg" restaurantSlug={slug} />
 
                     <Spacer size="lg" />
 
-                    <SmallTitle divider="off">Tips</SmallTitle>
-                    <RestaurantTopReviews
-                      expandTopComments={2}
-                      restaurantId={restaurant.id}
-                    />
+                    <SmallTitle>Tips</SmallTitle>
+                    <Suspense fallback={<LoadingItems />}>
+                      <RestaurantTopReviews
+                        expandTopComments={2}
+                        restaurantId={restaurant.id}
+                      />
+                    </Suspense>
                   </VStack>
                 </VStack>
               </HStack>
@@ -214,8 +215,12 @@ const RestaurantMenu = memo(
           </VStack>
         )}
         {!!items?.length && (
-          <VStack>
-            <HStack spacing={3}>
+          <VStack position="relative">
+            <HStack
+              height={isExpanded ? 'auto' : 60}
+              overflow="hidden"
+              spacing={3}
+            >
               {items.slice(0, isExpanded ? Infinity : 4).map((item, i) => (
                 <VStack
                   minWidth={isExpanded ? 200 : 140}
@@ -235,16 +240,24 @@ const RestaurantMenu = memo(
                 </VStack>
               ))}
             </HStack>
+            {!isExpanded && (
+              <LinearGradient
+                colors={['rgba(255,255,255,0)', '#fff']}
+                style={[StyleSheet.absoluteFill]}
+              />
+            )}
             <Button
-              marginTop={-25}
+              marginTop={-5}
               zIndex={100}
               position="relative"
-              alignSelf="flex-end"
+              alignSelf="center"
               onPress={() => {
                 setIsExpanded((x) => !x)
               }}
             >
-              <Text fontSize={12}>{isExpanded ? 'Close' : 'Expand'}</Text>
+              <Text fontWeight="800" fontSize={13}>
+                {isExpanded ? 'Close' : 'Expand'}
+              </Text>
             </Button>
           </VStack>
         )}

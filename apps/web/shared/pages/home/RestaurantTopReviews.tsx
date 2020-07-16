@@ -105,11 +105,11 @@ export const RestaurantOverview = memo(() => {
     <VStack marginTop={4} marginBottom={12}>
       {listItems.map((item, index) => (
         <React.Fragment key={item.category}>
-          <Text fontSize={14}>
+          <Text>
             <HStack
               // @ts-ignore
               display="inline-flex"
-              width={45}
+              width="10%"
               marginRight={2}
               alignItems="center"
               justifyContent="flex-end"

@@ -20,7 +20,6 @@ import { HomeScrollViewHorizontal } from './HomeScrollView'
 import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RankingView } from './RankingView'
 import { RestaurantAddress } from './RestaurantAddress'
-import { getAddressText } from './RestaurantAddressLinksRow'
 import { RestaurantDeliveryButton } from './RestaurantDeliveryButton'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
@@ -293,12 +292,14 @@ const RestaurantPeek = memo(
 
     return (
       <HomeScrollViewHorizontal
-        onScroll={async (e) => {
-          if (!isLoaded) {
-            await fullyIdle()
-            setIsLoaded(true)
-          }
-        }}
+        onScroll={
+          isLoaded
+            ? null
+            : async (e) => {
+                await fullyIdle()
+                setIsLoaded(true)
+              }
+        }
         scrollEventThrottle={100}
       >
         <VStack

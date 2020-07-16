@@ -1,12 +1,21 @@
+import { graphql } from '@dish/graph/_'
 import { HStack, Text } from '@dish/ui'
 import React, { memo } from 'react'
-import { Image } from 'react-native'
 
 import { SmallButton } from '../../views/ui/SmallButton'
 import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 
 export const RestaurantDeliveryButton = memo(
-  ({ restaurantId }: { restaurantId: string }) => {
+  graphql(({ restaurantId }: { restaurantId: string }) => {
+    // const [restaurant] = query.restaurant({
+    //   where: {
+    //     id: {
+    //       _eq: restaurantId,
+    //     },
+    //   },
+    // })
+    debugger
+    // console.log('restauran123t', restaurant.sources())
     const sources = Object.values(thirdPartyCrawlSources).filter(
       (item) => item.delivery
     )
@@ -47,5 +56,5 @@ export const RestaurantDeliveryButton = memo(
         </HStack>
       </SmallButton>
     )
-  }
+  })
 )
