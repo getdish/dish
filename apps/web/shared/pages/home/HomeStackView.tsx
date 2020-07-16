@@ -6,7 +6,7 @@ import { drawerBorderRadius } from '../../constants'
 import { HomeStateItem, HomeStateItemSimple } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
-import { useMediaQueryIsSmall } from './HomeViewDrawer'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 // export class HomeStateStore extends Store {
 //   currentId = ''

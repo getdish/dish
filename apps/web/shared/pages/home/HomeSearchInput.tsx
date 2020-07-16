@@ -15,6 +15,28 @@ import { CloseButton } from './CloseButton'
 import { HomeAutocompleteHoverableInput } from './HomeAutocomplete'
 import { TagButton } from './TagButton'
 
+const placeholders = [
+  'Pho',
+  'Tacos',
+  'Dim sum',
+  'Gyro',
+  'Bibimbap',
+  'Poke',
+  'Dosa',
+  'Onigiri',
+  'Banh mi',
+  'Barbeque',
+  'Ceasar salad',
+  'Sushi',
+  'Sisig',
+  'Szechuan chicken',
+  'Italian',
+]
+
+const placeHolder = `${
+  placeholders[Math.floor(placeholders.length * Math.random())]
+}...`
+
 // avoid first one on iniital focus
 let avoidNextShowautocompleteOnFocus = true
 export function setAvoidNextAutocompleteShowOnFocus() {
@@ -145,11 +167,7 @@ export const HomeSearchInput = memo(() => {
               setSearch(text)
               om.actions.home.setSearchQuery(text)
             }}
-            placeholder={
-              isSearchingCuisine
-                ? '...'
-                : 'Find the best dishes and restaurants'
-            }
+            placeholder={isSearchingCuisine ? '...' : placeHolder}
             style={[
               inputTextStyles.textInput,
               { flex: 1, fontSize: 18, paddingRight: 0 },

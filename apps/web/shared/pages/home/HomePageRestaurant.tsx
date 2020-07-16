@@ -20,7 +20,6 @@ import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { DishView } from './DishView'
 import { HomePagePaneProps } from './HomePage'
 import { HomeScrollView } from './HomeScrollView'
-import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import {
@@ -29,6 +28,7 @@ import {
 } from './RestaurantTopReviews'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 type Props = HomePagePaneProps<HomeStateItemRestaurant>
@@ -80,40 +80,38 @@ export default memo(
             {/* HEADER */}
             <RestaurantHeader restaurantSlug={restaurant.slug} />
 
-            <Spacer size="xl" />
-            <RestaurantTagsRow size="md" restaurantSlug={slug} />
-
             <VStack alignItems="center">
-              <Spacer />
-              <Spacer />
+              <Spacer size="xl" />
 
-              <HStack flexWrap="wrap">
-                <VStack flex={1} minWidth={370} marginBottom={20}>
-                  <SmallTitle divider="center">Top dishes</SmallTitle>
-                  <Spacer />
-                  <Suspense fallback={null}>
-                    <RestaurantPhotos restaurantSlug={slug} />
-                  </Suspense>
-                </VStack>
+              <>
+                <Suspense fallback={null}>
+                  <RestaurantPhotos restaurantSlug={slug} />
+                </Suspense>
+              </>
 
-                <VStack flex={1} minWidth={370} marginBottom={20}>
-                  <SmallTitle divider="center">Menu</SmallTitle>
-                  <Spacer />
-                  <Suspense fallback={null}>
-                    <RestaurantMenu restaurantSlug={slug} />
-                  </Suspense>
+              <Spacer size="xl" />
 
-                  <Spacer size="xl" />
+              <RestaurantTagsRow size="sm" restaurantSlug={slug} />
 
-                  <SmallTitle>Tips</SmallTitle>
-                  <Suspense fallback={<LoadingItems />}>
-                    <RestaurantTopReviews
-                      expandTopComments={2}
-                      restaurantId={restaurant.id}
-                    />
-                  </Suspense>
-                </VStack>
-              </HStack>
+              <Spacer size="xl" />
+
+              <VStack flex={1} marginBottom={20}>
+                <SmallTitle divider="center">Menu</SmallTitle>
+                <Spacer />
+                <Suspense fallback={null}>
+                  <RestaurantMenu restaurantSlug={slug} />
+                </Suspense>
+
+                <Spacer size="xl" />
+
+                <SmallTitle>Tips</SmallTitle>
+                <Suspense fallback={<LoadingItems />}>
+                  <RestaurantTopReviews
+                    expandTopComments={2}
+                    restaurantId={restaurant.id}
+                  />
+                </Suspense>
+              </VStack>
 
               {/* <VStack width="100%">
                 <SmallTitle>Images</SmallTitle>
@@ -162,12 +160,13 @@ const RestaurantPhotos = memo(
         horizontal
         showsHorizontalScrollIndicator={false}
         style={{
-          marginHorizontal: -20,
+          width: 'calc(100% + 30px)',
+          marginHorizontal: -15,
         }}
       >
         {!!photos?.length && (
           <HStack
-            paddingHorizontal={20}
+            paddingHorizontal={60}
             marginTop={10}
             alignItems="center"
             justifyContent="center"

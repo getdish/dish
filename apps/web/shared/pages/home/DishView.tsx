@@ -7,7 +7,6 @@ import { Image } from 'react-native'
 import { IMAGE_PROXY_DOMAIN } from '../../constants'
 import { NavigableTag } from '../../state/Tag'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { DishRatingView } from './DishRatingView'
 import { Squircle } from './Squircle'
 
@@ -111,12 +110,7 @@ export const DishView = memo(
             padding={6}
             alignItems="center"
             justifyContent="center"
-            backgroundColor="rgba(255,255,255,0.4)"
-            borderTopColor="rgba(255,255,255,0.1)"
-            borderTopWidth={1}
-            shadowColor="rgba(0,0,0,0.2)"
-            shadowRadius={8}
-            shadowOffset={{ height: -3, width: 0 }}
+            backgroundColor="rgba(255,255,255,0.25)"
             {...(isHovered && {
               borderTopColor: 'transparent',
               backgroundColor: 'transparent',

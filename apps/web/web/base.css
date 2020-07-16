@@ -173,7 +173,7 @@ textarea {
 
 .searchbar-container ::placeholder {
   color: rgba(255, 255, 255, 0.65);
-  font-weight: 300;
+  font-weight: 400;
 }
 
 ::placeholder {

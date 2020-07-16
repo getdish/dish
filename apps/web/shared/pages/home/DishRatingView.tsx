@@ -20,6 +20,12 @@ export const DishRatingView = forwardRef(
   ({ dish, ...rest }: DishRatingViewProps, ref) => {
     const percent = getDishRatingPercent(dish)
     const color = getRankingColor(percent)
+
+    // TODO should be ratings
+    if (percent < 4) {
+      return null
+    }
+
     return (
       <RatingView
         ref={ref}

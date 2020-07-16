@@ -40,10 +40,10 @@ import { DishView } from './DishView'
 import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePage'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
-import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { RestaurantButton } from './RestaurantButton'
 import { Squircle } from './Squircle'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 // top dishes
 
@@ -287,7 +287,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
         >
           <Text
             ellipse
-            fontSize={24}
+            fontSize={20}
             fontWeight={'400'}
             height={24}
             lineHeight={24}
@@ -422,10 +422,10 @@ const HomeTopDishMain = memo((props) => {
   return (
     <HStack
       alignItems="center"
-      padding={padding}
-      paddingTop={5}
+      paddingTop={10}
       paddingHorizontal={30}
       paddingLeft={sideWidth}
+      paddingBottom={padding}
       spacing={spacing}
       {...props}
     />

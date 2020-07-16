@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { HStack } from '@dish/ui'
+import { HStack, StackProps } from '@dish/ui'
 import React, { memo } from 'react'
 
 import {
@@ -17,6 +17,7 @@ type TagRowProps = {
   divider?: any
   tags?: TagButtonTagProps[]
   subtle?: boolean
+  containerProps?: StackProps
 }
 
 export const RestaurantTagsRow = memo(
@@ -41,7 +42,12 @@ export const RestaurantTagsRow = memo(
       tags = tags.slice(0, 2)
     }
     return (
-      <HStack marginBottom={-5} justifyContent="center" flexWrap="wrap">
+      <HStack
+        marginBottom={-5}
+        justifyContent="center"
+        flexWrap="wrap"
+        {...props.containerProps}
+      >
         {tags.map((tag, index) => {
           return (
             <TagButton

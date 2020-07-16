@@ -32,8 +32,8 @@ import { mapView } from '../../state/mapView'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallCircleButton } from './CloseButton'
-import { useMediaQueryIsSmall } from './HomeViewDrawer'
 import { getAddressText } from './RestaurantAddressLinksRow'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 const flexSearch = FlexSearch.create<number>({
   profile: 'speed',
@@ -77,6 +77,12 @@ export default memo(function HomeAutocomplete() {
 const HomeAutocompleteEffects = memo(
   ({ onChangeStatus }: { onChangeStatus: (isLoading: boolean) => void }) => {
     const om = useOvermind()
+
+    const { curPage } = om.state.router
+    useEffect(() => {
+      om.actions.home.setShowAutocomplete(false)
+    }, [curPage])
+
     const {
       showAutocomplete,
       locationSearchQuery,
@@ -143,6 +149,7 @@ const HomeAutoCompleteContents = memo(
           maxHeight={`calc(100vh - ${searchYEnd + 20}px)`}
           // @ts-ignore
           onMouseLeave={() => {
+            console.log('curPagePos.y', curPagePos.y, searchYEnd)
             if (curPagePos.y > searchYEnd) {
               hideAutocomplete()
             }
