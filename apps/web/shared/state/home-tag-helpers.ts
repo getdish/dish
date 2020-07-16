@@ -213,15 +213,15 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
   if (should) {
     recentTries++
     clearTimeout(tm)
-    if (recentTries > 4) {
+    if (recentTries > 6) {
       console.warn('bailing loop')
       recentTries = 0
       // break loop
       return false
     }
     tm = setTimeout(() => {
-      recentTries++
-    }, 300)
+      recentTries = 0
+    }, 200)
     console.log('syncStateToRoute', should, cloneDeep({ next, state }))
     om.actions.router.navigate(next)
     return true

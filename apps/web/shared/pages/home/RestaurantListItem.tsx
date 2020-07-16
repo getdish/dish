@@ -281,12 +281,13 @@ const RestaurantPeek = memo(
   }) {
     const drawerWidth = useHomeDrawerWidth()
     const { searchState, size = 'md' } = props
-    const tag_names = Object.keys(searchState?.activeTagIds || {}).filter(
-      (x) => {
+    const tag_names = [
+      searchState.searchQuery.toLowerCase(),
+      ...Object.keys(searchState?.activeTagIds || {}).filter((x) => {
         const type = omStatic.state.home.allTags[x].type
         return type != 'lense' && type != 'filter' && type != 'outlier'
-      }
-    )
+      }),
+    ]
     const spacing = size == 'lg' ? 16 : 12
     const isSmall = useMediaQueryIsSmall()
     const restaurant = useRestaurantQuery(props.restaurantSlug)

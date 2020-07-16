@@ -42,16 +42,17 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
               extraProps.borderBottomLeftRadius = hasPrev ? 0 : 30
               extraProps.borderTopRightRadius = hasNext ? 0 : 30
               extraProps.borderBottomRightRadius = hasNext ? 0 : 30
+              const isActive = activeTagIds[getTagId(tag)]
               const button = (
                 <FilterButton
                   key={`tag-${tag.id}`}
                   filter={tag}
-                  isActive={activeTagIds[getTagId(tag)]}
+                  isActive={isActive}
                   {...(hasPrev && { marginLeft: -1 })}
                   {...(hasNext && { marginRight: 0 })}
                   {...extraProps}
                   position="relative"
-                  zIndex={100 - index}
+                  zIndex={100 - index - groupIndex + (isActive ? 1 : 0)}
                   height={height}
                 />
               )
@@ -102,14 +103,19 @@ const FilterButton = memo(
   ({
     filter,
     isActive,
+    zIndex,
+    position,
+    margin,
     ...rest
   }: StackProps & { filter: Tag; isActive: boolean }) => {
     return (
-      <LinkButton tag={filter}>
-        <SmallButton isActive={isActive} {...rest}>
-          {tagDisplayNames[filter.name] ?? filter.name}
-        </SmallButton>
-      </LinkButton>
+      <VStack {...{ zIndex, position, margin }}>
+        <LinkButton tag={filter}>
+          <SmallButton isActive={isActive} {...rest}>
+            {tagDisplayNames[filter.name] ?? filter.name}
+          </SmallButton>
+        </LinkButton>
+      </VStack>
     )
   }
 )

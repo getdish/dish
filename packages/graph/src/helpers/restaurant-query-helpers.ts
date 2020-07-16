@@ -42,14 +42,19 @@ export const restaurantPhotosForCarousel = ({
     if (!photo && !isSearchedForTag) {
       continue
     }
-    photos.push({
+    const photoItem = {
       name: photoName,
       // enablig this causes double queries
       // icon: t.tag.icon,
       image: photo,
       rating: photoRating,
       isFallback,
-    })
+    }
+    if (isSearchedForTag) {
+      photos.unshift(photoItem)
+    } else {
+      photos.push(photoItem)
+    }
     if (photos.length >= max) {
       break
     }
