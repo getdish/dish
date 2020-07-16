@@ -19,7 +19,6 @@ resource "digitalocean_kubernetes_cluster" "dish" {
     size       = "s-4vcpu-8gb"
     auto_scale = true
     min_nodes = 2
-    node_count = 2 // changing this doesn't delete the cluster
     max_nodes = 5
 
     labels = {
@@ -34,7 +33,6 @@ resource "digitalocean_kubernetes_node_pool" "workers" {
   size       = "s-4vcpu-8gb"
   auto_scale = true
   min_nodes = 1
-  node_count = 2
   max_nodes = 5
 }
 
@@ -44,7 +42,6 @@ resource "digitalocean_kubernetes_node_pool" "ci" {
   size       = "s-4vcpu-8gb"
   auto_scale = true
   min_nodes = 1
-  node_count = 1
   max_nodes = 3
 }
 
