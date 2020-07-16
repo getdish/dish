@@ -244,6 +244,7 @@ const pushHomeState: AsyncAction<
     fetchDataPromise: Promise<any>
   } | null
 > = async (om, item) => {
+  console.log('pushHomeState', item.type)
   // start loading
   om.actions.home.setIsLoading(true)
 
@@ -1134,7 +1135,10 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
   const curState = om.state.home.currentState
   const curType = curState.type
   const nextType = nextState.type
-  if (nextType !== curType || isSearchState(curState)) {
+  if (
+    nextType !== curType ||
+    (isSearchState(curState) && nextType === 'search')
+  ) {
     om.state.home.isOptimisticUpdating = true
     om.actions.home.updateActiveTags({
       id: curState.id,

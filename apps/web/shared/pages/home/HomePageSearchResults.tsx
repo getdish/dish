@@ -76,10 +76,17 @@ export default memo(function HomePageSearchResults(props: Props) {
     )
   }, [subTitle, pageTitleElements])
 
+  const shouldAvoidContentUpdates =
+    isOptimisticUpdating || props.isRemoving || !props.isActive
+
+  if (shouldAvoidContentUpdates) {
+    console.log('shouldAvoidContentUpdates')
+  }
+
   const content = useLastValueWhen(() => {
     const key = weakKey(props.item)
     return <SearchResultsContent key={key} {...props} />
-  }, isOptimisticUpdating)
+  }, shouldAvoidContentUpdates)
 
   return (
     <VStack

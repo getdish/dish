@@ -41,21 +41,20 @@ export const RestaurantTagsRow = memo(
       tags = tags.slice(0, 2)
     }
     return (
-      <HStack justifyContent="center" flexWrap="wrap">
+      <HStack marginBottom={-5} justifyContent="center" flexWrap="wrap">
         {tags.map((tag, index) => {
           return (
-            <React.Fragment key={`${index}${tag.name}`}>
-              <TagButton
-                replaceSearch
-                size={size ?? 'sm'}
-                rank={index}
-                {...getTagButtonProps(tag)}
-                subtle={props.subtle}
-                votable
-                marginRight={5}
-                marginBottom={5}
-              />
-            </React.Fragment>
+            <TagButton
+              key={`${index}${tag.name}`}
+              replaceSearch
+              size={size ?? 'sm'}
+              rank={index}
+              {...getTagButtonProps(tag)}
+              subtle={props.subtle}
+              votable
+              marginRight={5}
+              marginBottom={5}
+            />
           )
         })}
       </HStack>

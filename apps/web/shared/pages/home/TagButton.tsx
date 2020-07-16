@@ -158,6 +158,7 @@ export const TagButton = memo(
             ) : !!tag.icon ? (
               <span
                 style={{
+                  marginRight: 5,
                   ...(subtle && { marginLeft: 4 }),
                   ...(subtleIcon && {
                     fontSize: '90%',
@@ -198,7 +199,7 @@ export const TagButton = memo(
                 marginLeft: 4,
                 overflow: 'hidden',
               })}
-              opacity={0.5}
+              opacity={subtle ? 0.2 : 0.5}
               hoverStyle={{
                 opacity: 1,
               }}

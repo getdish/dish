@@ -1,5 +1,5 @@
-import { graphql } from '@dish/graph'
-import { Text, Toast, VStack, prevent, useForceUpdate } from '@dish/ui'
+import { graphql, reviewInsert } from '@dish/graph'
+import { HStack, Text, Toast, VStack, prevent, useForceUpdate } from '@dish/ui'
 import React, { memo } from 'react'
 import { Star } from 'react-feather'
 
@@ -24,19 +24,28 @@ export const RestaurantFavoriteStar = memo(
       const isStarred = review?.rating > 0
 
       const setRating = (r: number) => {
-        if (!review) return
-        if (!om.actions.user.ensureLoggedIn()) {
+        const user = om.state.user.user
+        if (!user) {
           return
         }
-        review.rating = r
-        review.restaurant_id = restaurantId
+        if (!review) {
+          reviewInsert([
+            {
+              user_id: user.id,
+              rating: r,
+              restaurant_id: restaurantId,
+            },
+          ])
+        } else {
+          review.rating = r
+        }
         Toast.show('Saved')
       }
 
       return (
-        <LinkButton
+        <HStack
           hoverStyle={{ opacity: 0.5 }}
-          pressStyle={{ opacity: 0.2 }}
+          pressStyle={{ opacity: 0.4 }}
           onPress={(e) => {
             e.stopPropagation()
             e.preventDefault()
@@ -63,7 +72,7 @@ export const RestaurantFavoriteStar = memo(
             )}
             {!isStarred && <Star size={sizePx} color={'goldenrod'} />}
           </VStack>
-        </LinkButton>
+        </HStack>
       )
     }
   )

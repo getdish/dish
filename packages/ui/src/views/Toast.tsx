@@ -12,6 +12,10 @@ export const Toast = {
   show: (text: string, duration = 1000) => show(text, duration),
 }
 
+if (typeof window !== 'undefined') {
+  window['Toast'] = Toast
+}
+
 export const ToastRoot = memo(function ToastRoot() {
   const forceUpdate = useForceUpdate()
   const stateRef = useRef({
