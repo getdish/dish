@@ -123,6 +123,8 @@ const RestaurantListItemContent = memo(
         alignItems="flex-start"
         justifyContent="flex-start"
         contain="layout paint"
+        // prevent jitter/layout moving until loaded
+        display={restaurant.name === null ? 'none' : 'flex'}
       >
         <VStack
           paddingHorizontal={pad + 6}

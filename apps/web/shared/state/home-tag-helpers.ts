@@ -211,8 +211,8 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
 ) => {
   const next = getNavigateItemForState(om.state, state)
   const should = om.actions.router.getShouldNavigate(next)
-  console.log('syncStateToRoute', should, cloneDeep({ next, state }))
   if (should) {
+    console.log('syncStateToRoute', should, cloneDeep({ next, state }))
     om.actions.router.navigate(next)
     return true
   }

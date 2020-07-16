@@ -74,7 +74,7 @@ export default memo(function HomeSearchBar() {
       >
         <VStack
           pointerEvents="auto"
-          maxWidth={pageWidthMax - 240}
+          maxWidth={pageWidthMax - 160}
           position="relative"
         >
           {/* shadow */}

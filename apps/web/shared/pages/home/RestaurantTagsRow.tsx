@@ -46,7 +46,7 @@ export const RestaurantTagsRow = memo(
           return (
             <React.Fragment key={`${index}${tag.name}`}>
               <TagButton
-                replace
+                replaceSearch
                 size={size ?? 'sm'}
                 rank={index}
                 {...getTagButtonProps(tag)}
