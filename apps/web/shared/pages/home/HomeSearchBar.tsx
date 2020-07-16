@@ -67,14 +67,14 @@ export default memo(function HomeSearchBar() {
       <VStack
         zIndex={12}
         position="relative"
-        maxWidth={pageWidthMax - 20}
+        maxWidth={pageWidthMax - 150}
         width="100%"
         height={searchBarHeight}
         borderRadius={borderRadius}
       >
         <VStack
           pointerEvents="auto"
-          maxWidth={pageWidthMax - 160}
+          maxWidth={pageWidthMax - 190}
           position="relative"
         >
           {/* shadow */}
