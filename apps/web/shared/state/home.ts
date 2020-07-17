@@ -661,9 +661,6 @@ const popHomeState: Action<HistoryItem> = (om, item) => {
   assert(om.state.home.states.length > 1)
   const nextStates = _.dropRight(om.state.home.states)
   om.state.home.states = nextStates
-  if (!nextStates.some((x) => x.type === 'home')) {
-    debugger
-  }
 }
 
 const updateHomeState: Action<HomeStateItem> = (om, val) => {

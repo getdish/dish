@@ -5,7 +5,7 @@ import React from 'react'
 import { rgbString } from '../../helpers/rgbString'
 import { LinkButton } from '../../views/ui/LinkButton'
 
-export type LenseButtonSize = 'md' | 'lg'
+export type LenseButtonSize = 'md' | 'lg' | 'xl'
 
 export const LenseButton = memoIsEqualDeep(
   ({
@@ -21,7 +21,7 @@ export const LenseButton = memoIsEqualDeep(
   }) => {
     const lenseColor = rgbString(lense.rgb)
     // const lenseColorLight = `rgba(${rgbInner}, 0.2)`
-    const scale = size == 'md' ? 1 : 1.3
+    const scale = size == 'md' ? 1 : size === 'lg' ? 1.3 : 1.5
     const sizePx = 35
 
     return (
@@ -40,12 +40,9 @@ export const LenseButton = memoIsEqualDeep(
           height={sizePx * scale}
           backgroundColor="#fff"
           borderRadius={100}
-          borderColor="#ddd"
+          borderColor="#eee"
           borderWidth={1}
           borderBottomColor="transparent"
-          hoverStyle={{
-            borderColor: '#ccc',
-          }}
           {...(isActive && {
             opacity: 1,
             borderColor: lenseColor,
@@ -56,7 +53,7 @@ export const LenseButton = memoIsEqualDeep(
           })}
         >
           <Text
-            fontSize={sizePx * (isActive ? 0.7 : 0.4) * scale}
+            fontSize={sizePx * (isActive ? 0.7 : 0.5) * scale}
             lineHeight={16}
             {...(!minimal && {
               lineHeight: sizePx * scale,
@@ -74,7 +71,11 @@ export const LenseButton = memoIsEqualDeep(
             paddingHorizontal={3}
             marginTop={-8}
             marginBottom={-5}
+            backgroundColor="#fff"
+            borderWidth={1}
+            borderColor="#ddd"
             {...(isActive && {
+              borderColor: lenseColor,
               backgroundColor: lenseColor,
             })}
           >

@@ -78,10 +78,9 @@ export default memo(
         )}
 
         <HomeScrollView paddingTop={0}>
-          <VStack paddingHorizontal={14} paddingTop={30}>
-            {/* HEADER */}
-            <RestaurantHeader restaurantSlug={restaurant.slug} />
-
+          {/* HEADER */}
+          <RestaurantHeader restaurantSlug={restaurant.slug} />
+          <VStack paddingHorizontal={14}>
             <VStack alignItems="center">
               <Spacer size="xl" />
 

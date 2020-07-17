@@ -203,7 +203,7 @@ export const TagButton = memo(
               hoverStyle={{
                 opacity: 1,
               }}
-              onPressOut={(e) => {
+              onPress={(e) => {
                 prevent(e)
                 console.warn('should vote')
                 debugger

@@ -3,7 +3,6 @@ import { Restaurant, TopCuisine } from '@dish/graph'
 import {
   AbsoluteVStack,
   HStack,
-  HorizontalLine,
   LinearGradient,
   LoadingItems,
   SmallTitle,
@@ -18,7 +17,6 @@ import {
   memo,
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -33,7 +31,6 @@ import { omStatic, useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { SmallButton } from '../../views/ui/SmallButton'
 import { flatButtonStyle } from './baseButtonStyle'
 import { CloseButton } from './CloseButton'
 import { DishView } from './DishView'
@@ -119,61 +116,70 @@ const HomePageTopDishes = memo((props: Props) => {
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
-      <VStack position="relative" flex={1}>
+      <VStack position="relative" flex={1} maxHeight="100%" overflow="visible">
         {isSmall && (
-          <HStack alignItems="center" justifyContent="center" marginTop={-10}>
+          <HStack
+            alignItems="center"
+            justifyContent="center"
+            top={-20}
+            zIndex={1000}
+            position="absolute"
+            left={0}
+            right={0}
+          >
             <HomeLenseBar size="lg" activeTagIds={activeTagIds} />
           </HStack>
         )}
         <HomeScrollView>
           <VStack
-            paddingTop={isSmall ? 20 : 34}
+            paddingTop={isSmall ? 34 : 34}
             paddingBottom={34}
             spacing="xl"
           >
             {/* LENSES - UNIQUELY GOOD HERE */}
             <VStack>
               <VStack alignItems="center">
-                <HStack
-                  width="100%"
-                  alignItems="center"
-                  justifyContent="center"
-                  paddingHorizontal={20}
-                  spacing={20}
-                >
-                  {!isSmall && (
-                    <AbsoluteVStack
-                      position="absolute"
-                      top={0}
-                      left="0%"
-                      width="36%"
-                      zIndex={1000}
-                      justifyContent="center"
+                {!isSmall && (
+                  <>
+                    <HStack
+                      width="100%"
                       alignItems="center"
+                      justifyContent="center"
+                      paddingHorizontal={20}
+                      spacing={20}
                     >
-                      <LinkButton
-                        paddingVertical={5}
-                        paddingHorizontal={6}
-                        fontSize={15}
-                        shadowColor={'rgba(0,0,0,0.1)'}
-                        shadowRadius={8}
-                        shadowOffset={{ height: 2, width: 0 }}
-                        backgroundColor="#fff"
-                        borderRadius={8}
-                        fontWeight="600"
-                        transform={[{ rotate: '-4deg' }]}
+                      <AbsoluteVStack
+                        position="absolute"
+                        top={0}
+                        left="0%"
+                        width="36%"
+                        zIndex={1000}
+                        justifyContent="center"
+                        alignItems="center"
                       >
-                        {tagsDescription}
-                      </LinkButton>
-                    </AbsoluteVStack>
-                  )}
+                        <LinkButton
+                          paddingVertical={5}
+                          paddingHorizontal={6}
+                          fontSize={15}
+                          shadowColor={'rgba(0,0,0,0.1)'}
+                          shadowRadius={8}
+                          shadowOffset={{ height: 2, width: 0 }}
+                          backgroundColor="#fff"
+                          borderRadius={8}
+                          fontWeight="600"
+                          transform={[{ rotate: '-4deg' }]}
+                        >
+                          {tagsDescription}
+                        </LinkButton>
+                      </AbsoluteVStack>
 
-                  {!isSmall && (
-                    <HStack alignItems="center" justifyContent="center">
-                      <HomeLenseBar size="lg" activeTagIds={activeTagIds} />
+                      <HStack alignItems="center" justifyContent="center">
+                        <HomeLenseBar size="xl" activeTagIds={activeTagIds} />
+                      </HStack>
                     </HStack>
-                  )}
-                </HStack>
+                    <Spacer size="xl" />
+                  </>
+                )}
 
                 <Spacer size={15} />
 

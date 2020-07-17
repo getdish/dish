@@ -1,7 +1,17 @@
 import { graphql } from '@dish/graph'
-import { HStack, SmallTitle, Spacer, Text, VStack, useOverlay } from '@dish/ui'
+import {
+  AbsoluteVStack,
+  HStack,
+  LinearGradient,
+  SmallTitle,
+  Spacer,
+  Text,
+  VStack,
+} from '@dish/ui'
 import React, { memo } from 'react'
+import { Image, StyleSheet } from 'react-native'
 
+import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
 import { RestaurantAddress } from './RestaurantAddress'
@@ -26,45 +36,77 @@ export const RestaurantHeader = memo(
       const om = useOvermind()
       return (
         <>
-          <HStack>
-            <HStack position="relative">
-              <RestaurantRatingViewPopover
-                size="lg"
-                restaurantSlug={restaurantSlug}
-              />
-            </HStack>
-            <Spacer size={16} />
-            <VStack flex={1}>
-              <Text
-                selectable
-                fontSize={restaurant.name?.length > 25 ? 32 : 34}
-                fontWeight="300"
-                paddingRight={30}
-              >
-                {restaurant.name}
-              </Text>
-              <Spacer size="sm" />
-              <RestaurantAddressLinksRow
-                currentLocationInfo={
-                  state?.currentLocationInfo ??
-                  om.state.home.currentState.currentLocationInfo
-                }
-                showMenu
-                size="lg"
-                restaurantSlug={restaurantSlug}
-              />
-              <Spacer size="md" />
-              <HStack>
-                <RestaurantAddress
+          <VStack
+            borderTopRightRadius={drawerBorderRadius}
+            borderTopLeftRadius={drawerBorderRadius}
+            overflow="hidden"
+            position="relative"
+            padding={20}
+          >
+            {!!restaurant.image && (
+              <AbsoluteVStack fullscreen zIndex={-1}>
+                <AbsoluteVStack
+                  backgroundColor="rgba(255,255,255,0.25)"
+                  fullscreen
+                  zIndex={1}
+                />
+                <Image
+                  resizeMode="cover"
+                  source={{ uri: restaurant.image }}
+                  style={StyleSheet.absoluteFill}
+                />
+                <LinearGradient
+                  colors={[
+                    'rgba(255,255,255,1)',
+                    'rgba(255,255,255,1)',
+                    'rgba(255,255,255,0)',
+                  ]}
+                  startPoint={[0, 0]}
+                  endPoint={[1, 0]}
+                  style={StyleSheet.absoluteFill}
+                />
+              </AbsoluteVStack>
+            )}
+            <HStack>
+              <HStack position="relative">
+                <RestaurantRatingViewPopover
                   size="lg"
-                  address={restaurant.address ?? ''}
-                  currentLocationInfo={state?.currentLocationInfo ?? {}}
+                  restaurantSlug={restaurantSlug}
                 />
               </HStack>
-            </VStack>
-          </HStack>
-          <Spacer />
-          <SmallTitle divider="center">
+              <Spacer size={16} />
+              <VStack flex={1}>
+                <Text
+                  selectable
+                  fontSize={restaurant.name?.length > 25 ? 32 : 34}
+                  fontWeight="300"
+                  paddingRight={30}
+                >
+                  {restaurant.name}
+                </Text>
+                <Spacer size="sm" />
+                <RestaurantAddressLinksRow
+                  currentLocationInfo={
+                    state?.currentLocationInfo ??
+                    om.state.home.currentState.currentLocationInfo
+                  }
+                  showMenu
+                  size="lg"
+                  restaurantSlug={restaurantSlug}
+                />
+                <Spacer size="md" />
+                <HStack>
+                  <RestaurantAddress
+                    size="lg"
+                    address={restaurant.address ?? ''}
+                    currentLocationInfo={state?.currentLocationInfo ?? {}}
+                  />
+                </HStack>
+              </VStack>
+            </HStack>
+            <Spacer />
+          </VStack>
+          <SmallTitle marginTop={-18} divider="center">
             <RestaurantFavoriteStar restaurantId={restaurant.id} size="lg" />
           </SmallTitle>
           {!hideDetails && (

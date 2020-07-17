@@ -30,9 +30,6 @@ export const ToastRoot = memo(function ToastRoot() {
 
   show = useCallback(
     (text: string, duration = 1000) => {
-      if (!text || text === 'undefined') {
-        debugger
-      }
       clearTimeout(stateRef.current.timeout ?? 0)
       const timeout = setTimeout(() => {
         setState({
