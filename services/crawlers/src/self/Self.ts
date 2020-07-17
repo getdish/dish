@@ -672,6 +672,7 @@ export class Self extends WorkerJob {
   }
 
   async assessPhotoQuality() {
+    this._proxyYelpCDN()
     const IMAGE_QUALITY_API = 'https://image-quality.rio.dishapp.com/prediction'
     const response = await fetch(IMAGE_QUALITY_API, {
       method: 'POST',
@@ -691,6 +692,15 @@ export class Self extends WorkerJob {
       sorted.push(photo)
     }
     this.restaurant.photos = sorted
+  }
+
+  _proxyYelpCDN() {
+    this.restaurant.photos = this.restaurant.photos.map((p) => {
+      return p.replace(
+        'https://s3-media0.fl.yelpcdn.com/',
+        process.env.YELP_CDN_AWS_PROXY
+      )
+    })
   }
 
   _getGooglePhotos() {
