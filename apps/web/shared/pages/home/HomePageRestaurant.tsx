@@ -31,6 +31,8 @@ import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
+// Rating => Header
+
 type Props = HomePagePaneProps<HomeStateItemRestaurant>
 
 export default memo(
@@ -56,7 +58,7 @@ export default memo(
         overflow="hidden"
         shadowRadius={10}
         shadowColor="rgba(0,0,0,0.1)"
-        marginTop={isSmall ? 0 : searchBarHeight}
+        marginTop={isSmall ? -10 : searchBarHeight}
       >
         <PageTitleTag>
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.

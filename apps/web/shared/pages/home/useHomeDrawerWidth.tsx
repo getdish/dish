@@ -8,9 +8,9 @@ export function useHomeDrawerWidth(): number {
   if (width < 1150) {
     scaleFactor = 0.7
   } else if (width < 1350) {
-    scaleFactor = 0.55
+    scaleFactor = 0.65
   } else {
-    scaleFactor = 0.53
+    scaleFactor = 0.65
   }
   return Math.min(Math.max(650, width * scaleFactor), Infinity)
 }

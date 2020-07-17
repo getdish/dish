@@ -1,8 +1,8 @@
+import { Tag } from '@dish/graph'
 import { Text, VStack, memoIsEqualDeep } from '@dish/ui'
 import React from 'react'
 
 import { rgbString } from '../../helpers/rgbString'
-import { Tag } from '../../state/Tag'
 import { LinkButton } from '../../views/ui/LinkButton'
 
 export type LenseButtonSize = 'md' | 'lg'
@@ -21,8 +21,8 @@ export const LenseButton = memoIsEqualDeep(
   }) => {
     const lenseColor = rgbString(lense.rgb)
     // const lenseColorLight = `rgba(${rgbInner}, 0.2)`
-    const scale = size == 'md' ? 1 : 1.35
-    const sizePx = 40
+    const scale = size == 'md' ? 1 : 1.3
+    const sizePx = 35
 
     return (
       <LinkButton
@@ -38,8 +38,9 @@ export const LenseButton = memoIsEqualDeep(
           marginVertical={-5 * scale}
           width={sizePx * scale}
           height={sizePx * scale}
+          backgroundColor="#fff"
           borderRadius={100}
-          borderColor="transparent"
+          borderColor="#ddd"
           borderWidth={1}
           borderBottomColor="transparent"
           hoverStyle={{

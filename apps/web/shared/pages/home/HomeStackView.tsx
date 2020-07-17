@@ -134,7 +134,6 @@ const HomeStackViewItem = memo(
             left={left}
             bottom={-(index * 5)}
             width="100%"
-            borderRadius={drawerBorderRadius}
             pointerEvents="auto"
           >
             <ErrorBoundary name={`HomeStackView.${item.type}`}>

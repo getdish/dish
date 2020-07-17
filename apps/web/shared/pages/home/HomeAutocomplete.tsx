@@ -160,7 +160,7 @@ const HomeAutoCompleteContents = memo(
           }}
         >
           <VStack
-            className="ease-in-out-slower"
+            className="ease-in-out"
             position="relative"
             left={isSmall ? 0 : showLocation ? 150 : -150}
             shadowColor="rgba(0,0,0,0.4)"

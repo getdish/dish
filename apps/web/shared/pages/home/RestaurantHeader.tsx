@@ -37,8 +37,8 @@ export const RestaurantHeader = memo(
             <VStack flex={1}>
               <Text
                 selectable
-                fontSize={restaurant.name?.length > 25 ? 30 : 36}
-                fontWeight="800"
+                fontSize={restaurant.name?.length > 25 ? 32 : 34}
+                fontWeight="300"
                 paddingRight={30}
               >
                 {restaurant.name}

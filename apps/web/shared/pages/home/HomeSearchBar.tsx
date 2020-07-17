@@ -25,7 +25,10 @@ import HomeAutocomplete from './HomeAutocomplete'
 import { HomeSearchInput } from './HomeSearchInput'
 import { HomeSearchLocationInput } from './HomeSearchLocationInput'
 import { HomeUserMenu } from './HomeUserMenu'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import {
+  useMediaQueryIsReallySmall,
+  useMediaQueryIsSmall,
+} from './useMediaQueryIs'
 
 const divider = <Divider vertical flexLine={1} marginHorizontal={4} />
 
@@ -34,6 +37,7 @@ const brandRgb = [50, 80, 120] as const
 export default memo(function HomeSearchBar() {
   const [showLocation, setShowLocation] = useState(false)
   const isSmall = useMediaQueryIsSmall()
+  const isReallySmall = useMediaQueryIsReallySmall()
   const om = useOvermind()
   const lense = om.state.home.currentStateLense
   const lastLenseRgb = useRef(brandRgb)
@@ -149,7 +153,7 @@ export default memo(function HomeSearchBar() {
                 overflow="hidden"
               >
                 {/* Loading / Search Icon */}
-                {!isSmall && (
+                {!isReallySmall && (
                   <>
                     {om.state.home.isLoading ? (
                       <VStack className="rotating" opacity={0.45}>
@@ -162,7 +166,7 @@ export default memo(function HomeSearchBar() {
                 )}
 
                 {/* Search Input Start */}
-                {isSmall && (
+                {isReallySmall && (
                   <>
                     {/* keep both in dom so we have access to ref */}
                     <VStack display={showLocation ? 'contents' : 'none'}>
@@ -173,11 +177,11 @@ export default memo(function HomeSearchBar() {
                     </VStack>
                   </>
                 )}
-                {!isSmall && <HomeSearchInput />}
+                {!isReallySmall && <HomeSearchInput />}
                 <Spacer size={1} />
               </HStack>
 
-              {!isSmall && (
+              {!isReallySmall && (
                 <>
                   <Spacer />
                   <HomeSearchLocationInput />
@@ -186,7 +190,7 @@ export default memo(function HomeSearchBar() {
                 </>
               )}
 
-              {isSmall && (
+              {isReallySmall && (
                 <LinkButton
                   onPress={() => setShowLocation((x) => !x)}
                   padding={12}

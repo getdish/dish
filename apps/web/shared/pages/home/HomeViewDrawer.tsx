@@ -20,8 +20,6 @@ export function HomeViewDrawer(props: { children: any }) {
       shadowColor="rgba(0,0,0,0.18)"
       shadowRadius={44}
       backgroundColor="#fff"
-      // borderRightWidth={1}
-      // borderColor="#ddd"
       flex={1}
       justifyContent="flex-end"
       {...(isSmall && {
@@ -31,9 +29,8 @@ export function HomeViewDrawer(props: { children: any }) {
         // TODO ui-static this fails if i remove conditional above!
         width: '100%',
         paddingTop: 0,
-        borderTopRightRadius: 20,
-        borderTopLeftRadius: 20,
-        overflow: 'hidden',
+        borderTopRightRadius: 10,
+        borderTopLeftRadius: 10,
       })}
     >
       {/* overlay / under searchbar */}

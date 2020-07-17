@@ -119,7 +119,12 @@ const HomePageTopDishes = memo((props: Props) => {
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
-      <VStack position="relative" flex={1} overflow="hidden">
+      <VStack position="relative" flex={1}>
+        {isSmall && (
+          <HStack alignItems="center" justifyContent="center" marginTop={-10}>
+            <HomeLenseBar size="lg" activeTagIds={activeTagIds} />
+          </HStack>
+        )}
         <HomeScrollView>
           <VStack
             paddingTop={isSmall ? 20 : 34}
@@ -162,15 +167,15 @@ const HomePageTopDishes = memo((props: Props) => {
                       </LinkButton>
                     </AbsoluteVStack>
                   )}
-                  <HorizontalLine />
 
-                  <HStack alignItems="center" justifyContent="center">
-                    <HomeLenseBar size="lg" activeTagIds={activeTagIds} />
-                  </HStack>
-                  <HorizontalLine />
+                  {!isSmall && (
+                    <HStack alignItems="center" justifyContent="center">
+                      <HomeLenseBar size="lg" activeTagIds={activeTagIds} />
+                    </HStack>
+                  )}
                 </HStack>
 
-                <Spacer size={40} />
+                <Spacer size={15} />
 
                 <HomeIntroLetter />
 
