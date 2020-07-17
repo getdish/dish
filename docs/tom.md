@@ -1,12 +1,13 @@
 # July
 
+- Crawling more cities
+  - Crawl "Mo’orea" for nick
 - Auth - work you need to do for backend for social login?
   - Apple Login is probably best, Google would be second I think
-- Make dishapp.com work live (no more web.rio.\*)!
+- Point dishapp.com
 - Dish rating sorting order
-- Crawling more cities
 - Sentiment introspection
-  - Storing sentiment + review so we can make admin to overview
+  - store/show (dish + sentiment + reviewText) somewhere
 - Instagram crawler
   - Images AND news/events
   - Really helpful at start for SF / homepage
