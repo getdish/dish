@@ -48,11 +48,14 @@ export const RestaurantFavoriteStar = memo(
           hoverStyle={{ opacity: 0.5 }}
           pressStyle={{ opacity: 0.4 }}
           pointerEvents="auto"
+          // @ts-ignore
+          userSelect="none"
           onPress={(e) => {
             e.stopPropagation()
             e.preventDefault()
             setRating(isStarred ? 0 : 1)
           }}
+          height={sizePx * 1.4}
         >
           <VStack
             hoverStyle={{

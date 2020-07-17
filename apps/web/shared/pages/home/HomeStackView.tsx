@@ -2,7 +2,6 @@ import { AbsoluteVStack, VStack, useDebounceValue } from '@dish/ui'
 import { cloneDeep } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
-import { drawerBorderRadius } from '../../constants'
 import { HomeStateItem, HomeStateItemSimple } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
 import { ErrorBoundary } from '../../views/ErrorBoundary'

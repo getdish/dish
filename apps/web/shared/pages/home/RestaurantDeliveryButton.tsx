@@ -16,8 +16,25 @@ export const RestaurantDeliveryButton = memo(
     })
     const sources2 = restaurant.sources()
     if (sources2 && Object.keys(sources2).length) {
-      console.log('todo', sources2)
-      debugger
+      console.log('todo', JSON.stringify(sources2, null, 2))
+      // {
+      //   "yelp": {
+      //     "url": "https://www.yelp.com/biz/pink-onion-san-francisco",
+      //     "rating": 4.5
+      //   },
+      //   "grubhub": {
+      //     "url": "https://www.grubhub.com/restaurant/406796",
+      //     "rating": 5
+      //   },
+      //   "doordash": {
+      //     "url": "https://www.doordash.com/store/pink-onion-san-francisco-86910/",
+      //     "rating": 4.8
+      //   },
+      //   "tripadvisor": {
+      //     "url": "https://www.tripadvisor.com/g60713-d12330580-Pink_Onion-San_Francisco_California.html",
+      //     "rating": 5
+      //   }
+      // }
     }
     const sources = Object.values(thirdPartyCrawlSources).filter(
       (item) => item.delivery

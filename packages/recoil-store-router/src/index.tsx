@@ -1,7 +1,7 @@
 import { Store, useRecoilStore } from '@dish/recoil-store'
 import * as React from 'react'
 import { createContext, useContext } from 'react'
-import { Router } from 'tiny-request-router'
+import { Router as TinyRouter } from 'tiny-request-router'
 
 // need them to declare the types here
 export type RoutesTable = { [key: string]: Route }
@@ -38,13 +38,37 @@ export type RouteItem = {
   item: HistoryItem
 }
 
+const isObject = (x: any) => x && `${x}` === `[object Object]`
+const isEqual = (a: any, b: any) => {
+  console.log('compare', a, b)
+  const eqLen = Object.keys(a).length === Object.keys(b).length
+  if (!eqLen) {
+    return false
+  }
+  for (const k in a) {
+    if (k in b) {
+      if (isObject(a[k]) && isObject(b[k])) {
+        if (!isEqual(a[k], b[k])) {
+          return false
+        }
+      }
+      if (a[k] !== b[k]) {
+        return false
+      }
+    }
+  }
+  return true
+}
+
 export type OnRouteChangeCb = (item: RouteItem) => Promise<void>
 
 type RouterProps = { routes: RoutesTable }
 
-class RouterStore extends Store<RouterProps> {
+type HistoryCb = (HistoryItem) => void
+
+export class Router extends Store<RouterProps> {
   started = false
-  router = new Router()
+  router = new TinyRouter()
   routes: RoutesTable = {}
   routeNames: string[] = []
   routePathToName = {}
@@ -81,9 +105,11 @@ class RouterStore extends Store<RouterProps> {
     this.router = nextRouter
     this.started = true
 
-    window.addEventListener('popstate', (event) => {
+    addEventListener('popstate', (event) => {
+      console.log('got event', event)
       this.handlePath(event.state.path, this.getPopDirection())
     })
+    // should push one event no?
     this.handlePath(window.location.pathname)
   }
 
@@ -94,26 +120,33 @@ class RouterStore extends Store<RouterProps> {
   ) {
     const match = this.router.match('GET', pathname)
     if (match) {
-      this.history = [
-        ...this.history,
-        {
-          id: uid(),
-          type: direction,
-          name: match.handler,
-          path: pathname,
-          params: match.params as any,
-          replace: navItem?.replace,
-          search: navItem?.search,
-        },
-      ]
+      const next: HistoryItem = {
+        id: uid(),
+        type: direction,
+        name: match.handler,
+        path: pathname,
+        params: match.params as any,
+        replace: navItem?.replace,
+        search: navItem?.search,
+      }
+      this.history = [...this.history, next]
+      this.routeChangeListeners.forEach((x) => x(next))
+    } else {
+      console.log('no match', pathname, direction, navItem)
     }
   }
 
-  private getShouldNavigate(navItem: NavigateItem) {
+  routeChangeListeners = new Set<HistoryCb>()
+  onRouteChange(cb: HistoryCb) {
+    this.routeChangeListeners.add(cb)
+  }
+
+  getShouldNavigate(navItem: NavigateItem) {
     const historyItem = this.navItemToHistoryItem(navItem)
-    const { id: _1, replace: _2, ...compareA } = historyItem
-    const { id: _3, replace: _4, ...compareB } = this.curPage
-    return JSON.stringify(compareA) !== JSON.stringify(compareB)
+    const sameName = historyItem.name === this.curPage.name
+    const sameParams = isEqual(historyItem.params, this.curPage.params)
+    console.log('ok', sameParams)
+    return !sameName || !sameParams
   }
 
   async navigate(navItem: NavigateItem) {
@@ -141,7 +174,7 @@ class RouterStore extends Store<RouterProps> {
     window.history.forward()
   }
 
-  private getPathFromParams({
+  getPathFromParams({
     name,
     params,
   }: {
@@ -191,7 +224,7 @@ class RouterStore extends Store<RouterProps> {
     return path
   }
 
-  private navItemToHistoryItem(navItem: NavigateItem): HistoryItem {
+  navItemToHistoryItem(navItem: NavigateItem): HistoryItem {
     const params: any = {}
     // remove undefined params
     if ('params' in navItem && !!navItem.params) {
@@ -232,6 +265,8 @@ class RouterStore extends Store<RouterProps> {
   }
 }
 
+// react stuff
+
 const RouterContext = createContext<RouterProps['routes'] | null>(null)
 
 export function ProvideRouter({
@@ -242,7 +277,7 @@ export function ProvideRouter({
   children: any
 }) {
   // just sets it up
-  useRecoilStore(RouterStore, {
+  useRecoilStore(Router, {
     routes,
   })
   return (
@@ -255,7 +290,7 @@ export function useRouter() {
   if (!routes) {
     throw new Error(`no routes`)
   }
-  return useRecoilStore(RouterStore, { routes })
+  return useRecoilStore(Router, { routes })
 }
 
 // we could enable functionality like this

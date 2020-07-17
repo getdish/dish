@@ -1,4 +1,4 @@
-import { fullyIdle, idle } from '@dish/async'
+import { fullyIdle, idle, sleep } from '@dish/async'
 import {
   RestaurantOnlyIds,
   RestaurantSearchArgs,
@@ -244,7 +244,11 @@ const pushHomeState: AsyncAction<
     fetchDataPromise: Promise<any>
   } | null
 > = async (om, item) => {
-  console.log('pushHomeState', item.type)
+  console.log('pushHomeState', item?.type)
+  if (!item) {
+    console.warn('no item?')
+    return null
+  }
   // start loading
   om.actions.home.setIsLoading(true)
 
@@ -380,12 +384,12 @@ const pushHomeState: AsyncAction<
     }
   }
 
-  if (true) {
-    console.log(
-      'pushHomeState',
-      JSON.stringify({ shouldReplace, item, finalState, id }, null, 2)
-    )
-  }
+  // if (true) {
+  //   console.log(
+  //     'pushHomeState',
+  //     JSON.stringify({ shouldReplace, item, finalState, id }, null, 2)
+  //   )
+  // }
 
   if (shouldReplace) {
     om.actions.home.replaceHomeState(finalState)
@@ -605,6 +609,11 @@ const runSearch: AsyncAction<{
     if (shouldCancel()) return
   }
 
+  state = om.state.home.lastSearchState
+  if (!state) {
+    debugger
+  }
+
   const searchArgs: RestaurantSearchArgs = {
     center: roundLngLat(state.center),
     span: roundLngLat(padSpan(state.span)),
@@ -661,9 +670,6 @@ const popHomeState: Action<HistoryItem> = (om, item) => {
   assert(om.state.home.states.length > 1)
   const nextStates = _.dropRight(om.state.home.states)
   om.state.home.states = nextStates
-  if (!nextStates.some((x) => x.type === 'home')) {
-    debugger
-  }
 }
 
 const updateHomeState: Action<HomeStateItem> = (om, val) => {
@@ -1125,6 +1131,7 @@ export const getNavigateTo: Action<HomeStateNav, LinkButtonProps | null> = (
 // but then later you hit "enter" and we need to navigate to search (or home)
 // we definitely can clean up / name better some of this once things settle
 const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
+  console.log('home.navigate', navState)
   if (navState.tags) {
     om.actions.home.addTagsToCache(navState.tags)
   }
@@ -1147,6 +1154,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
       activeTagIds: nextState.activeTagIds,
       results: defaultSearchResults,
     })
+    await sleep(30)
     await idle(30)
     om.state.home.isOptimisticUpdating = false
   }

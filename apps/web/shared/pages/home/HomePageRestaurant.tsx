@@ -2,7 +2,6 @@ import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import {
   AbsoluteVStack,
   Button,
-  Divider,
   HStack,
   LinearGradient,
   LoadingItems,
@@ -20,23 +19,30 @@ import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { DishView } from './DishView'
 import { HomePagePaneProps } from './HomePage'
 import { HomeScrollView } from './HomeScrollView'
+import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
-import {
-  RestaurantOverview,
-  RestaurantTopReviews,
-} from './RestaurantTopReviews'
+import { RestaurantTopReviews } from './RestaurantTopReviews'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
-// Rating => Header
-
 type Props = HomePagePaneProps<HomeStateItemRestaurant>
 
-export default memo(
-  graphql(function HomePageRestaurant({ item }: Props) {
+export default memo(function HomePageRestaurantContainer(props: Props) {
+  return (
+    <HomeStackDrawer>
+      <StackViewCloseButton />
+      <Suspense fallback={<LoadingItems />}>
+        <HomePageRestaurant {...props} />
+      </Suspense>
+    </HomeStackDrawer>
+  )
+})
+
+const HomePageRestaurant = memo(
+  graphql(({ item }: Props) => {
     if (!item) {
       return null
     }
@@ -50,21 +56,10 @@ export default memo(
     //     om.state.user.user.role == 'contributor')
 
     return (
-      <VStack
-        flex={1}
-        borderRadius={drawerBorderRadius}
-        position="relative"
-        backgroundColor="#fff"
-        overflow="hidden"
-        shadowRadius={10}
-        shadowColor="rgba(0,0,0,0.1)"
-        marginTop={isSmall ? -10 : searchBarHeight}
-      >
+      <VStack marginTop={isSmall ? -10 : searchBarHeight}>
         <PageTitleTag>
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
-
-        <StackViewCloseButton />
 
         {isLoading && (
           <AbsoluteVStack
@@ -78,10 +73,9 @@ export default memo(
         )}
 
         <HomeScrollView paddingTop={0}>
-          <VStack paddingHorizontal={14} paddingTop={30}>
-            {/* HEADER */}
-            <RestaurantHeader restaurantSlug={restaurant.slug} />
-
+          {/* HEADER */}
+          <RestaurantHeader restaurantSlug={restaurant.slug} />
+          <VStack paddingHorizontal={14}>
             <VStack alignItems="center">
               <Spacer size="xl" />
 

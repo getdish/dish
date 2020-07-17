@@ -59,10 +59,10 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
 
               if (tag.name === 'Delivery') {
                 return (
-                  <>
+                  <React.Fragment key="tag-delivery">
                     {button}
 
-                    {activeTagIds['delivery'] &&
+                    {!!activeTagIds['delivery'] &&
                       Object.keys(thirdPartyCrawlSources).map((key) => {
                         const item = thirdPartyCrawlSources[key]
                         if (item.delivery === false) {
@@ -86,7 +86,7 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
                           </HStack>
                         )
                       })}
-                  </>
+                  </React.Fragment>
                 )
               }
 

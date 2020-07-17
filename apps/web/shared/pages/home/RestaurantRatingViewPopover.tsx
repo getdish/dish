@@ -66,6 +66,7 @@ export const RestaurantRatingViewPopover = memo(
                       marginHorizontal={-10}
                       paddingHorizontal={10}
                       key={source}
+                      // @ts-ignore
                       style={{ cursor: 'pointer' }}
                       onPress={() => Linking.openURL(item.url)}
                     >

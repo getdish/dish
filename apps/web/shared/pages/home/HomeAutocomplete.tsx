@@ -206,7 +206,6 @@ const AutocompleteResults = memo(() => {
     : lastKey.current
 
   const resultsElements = useMemo(() => {
-    console.log('updating autocomplete', key, locationAutocompleteResults)
     lastKey.current = key
     const autocompleteResultsActive =
       showAutocomplete === 'location'
@@ -437,17 +436,8 @@ function runAutocomplete(
         matched = foundIndices.map((index) => results[index])
       }
 
-      matched = uniqBy(
-        [
-          ...matched,
-          ...results,
-          ...((showAutocomplete === 'location' &&
-            defaultLocationAutocompleteResults) ??
-            []),
-        ],
-        (x) => x.name
-      )
-      console.log('all', matched)
+      matched = uniqBy([...matched, ...results], (x) => x.name)
+      console.log('autocomplete', results, matched)
 
       if (showAutocomplete === 'location') {
         om.actions.home.setLocationAutocompleteResults(matched)
