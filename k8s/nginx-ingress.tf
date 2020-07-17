@@ -7,6 +7,10 @@ resource "helm_release" "nginx-ingress" {
   chart     = "stable/nginx-ingress"
   version = "1.36.3"
 
+  values = [
+    file("yaml/nginx-ingress.yaml")
+  ]
+
   set {
     name = "controller.service.type"
     value = "LoadBalancer"
