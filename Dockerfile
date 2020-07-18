@@ -4,13 +4,14 @@ ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=4096"
 
 COPY package.json .
+COPY .yarnrc .
 COPY tsconfig.json .
 COPY tsconfig.build.json .
 COPY tsconfig.base.json .
 
 COPY packages packages
 
-RUN yarn install --network-timeout 1000000
+RUN yarn install
 RUN yarn build
 
 CMD ["true"]
