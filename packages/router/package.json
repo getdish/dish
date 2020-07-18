@@ -1,5 +1,5 @@
 {
-  "name": "@dish/recoil-store-router",
+  "name": "@dish/router",
   "version": "0.0.1",
   "main": "_/index.js",
   "tsmain": "src/index",
@@ -12,6 +12,7 @@
     "test:tmp": "ava test/* --verbose"
   },
   "dependencies": {
+    "history": "^5.0.0",
     "@dish/recoil-store": "*",
     "tiny-request-router": "^1.2.2"
   },

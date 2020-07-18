@@ -1,9 +1,9 @@
 import { Tag, slugify } from '@dish/graph'
+import { HistoryItem, NavigateItem } from '@dish/router'
 import { cloneDeep } from 'lodash'
 import { AsyncAction } from 'overmind'
 
 import { LIVE_SEARCH_DOMAIN } from '../constants'
-import { memoize } from '../helpers/memoizeWeak'
 import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
 import {
   HomeActiveTagIds,
@@ -12,7 +12,7 @@ import {
   OmState,
   OmStateHome,
 } from './home-types'
-import { HistoryItem, NavigateItem, SearchRouteParams } from './router'
+import { SearchRouteParams, router } from './router'
 import { NavigableTag, getTagId, tagFilters, tagLenses } from './Tag'
 
 const SPLIT_TAG = '_'
@@ -213,7 +213,7 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
   if (should) {
     recentTries++
     clearTimeout(tm)
-    if (recentTries > 6) {
+    if (recentTries > 3) {
       console.warn('bailing loop')
       recentTries = 0
       // break loop
@@ -221,8 +221,16 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
     }
     tm = setTimeout(() => {
       recentTries = 0
-    }, 200)
-    console.log('syncStateToRoute', should, cloneDeep({ next, state }))
+    }, 130)
+    console.log(
+      'syncStateToRoute',
+      should,
+      cloneDeep({ next, state }),
+      'now',
+      cloneDeep(om.state.router.curPage),
+      'vs',
+      router.navItemToHistoryItem(next)
+    )
     om.actions.router.navigate(next)
     return true
   }
@@ -250,13 +258,13 @@ const getRouteFromTags = (
   const otherTags = allActiveTags.filter(
     (x) => x.type !== 'lense' && x.type !== 'filter'
   )
-  let tags = `${filterTags.map((x) => slugify(x.name)).join(SPLIT_TAG)}`
+  let tags = `${filterTags.map((x) => slugify(x.name ?? '')).join(SPLIT_TAG)}`
   if (otherTags.length) {
     if (tags.length) {
       tags += SPLIT_TAG
     }
     tags += `${otherTags
-      .map((t) => `${t.type}${SPLIT_TAG_TYPE}${slugify(t.name)}`)
+      .map((t) => `${t.type}${SPLIT_TAG_TYPE}${slugify(t.name ?? '')}`)
       .join(SPLIT_TAG)}`
   }
   const params: any = {
@@ -277,7 +285,7 @@ const getRouteFromTags = (
 const getFullTag = (tag: NavigableTag): Promise<Tag | null> =>
   fetch(
     `${LIVE_SEARCH_DOMAIN}/tags?query=${encodeURIComponent(
-      tag.name.replace(/-/g, ' ')
+      tag.name?.replace(/-/g, ' ') ?? ''
     )}&type=${tag.type}&limit=1`
   )
     .then((res) => res.json())

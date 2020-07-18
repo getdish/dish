@@ -1,22 +1,27 @@
 import { Store, useRecoilStore } from '@dish/recoil-store'
+import { createBrowserHistory } from 'history'
 import * as React from 'react'
 import { createContext, useContext } from 'react'
-import { Router } from 'tiny-request-router'
+import { Router as TinyRouter } from 'tiny-request-router'
+
+const history = createBrowserHistory()
 
 // need them to declare the types here
 export type RoutesTable = { [key: string]: Route }
 export type RouteName = keyof RoutesTable
 
-type HistoryDirection = 'push' | 'pop'
+export type HistoryType = 'push' | 'pop'
+export type HistoryDirection = 'forward' | 'backward' | 'none'
 
 export type HistoryItem<A extends RouteName = any> = {
   id: string
   name: A
   path: string
-  type?: HistoryDirection
+  type?: HistoryType
   search?: Object
   params?: RoutesTable[A]['params']
   replace?: boolean
+  direction?: HistoryDirection
 }
 
 export type NavigateItem<
@@ -32,19 +37,13 @@ export type NavigateItem<
   callback?: OnRouteChangeCb
 }
 
-export type RouteItem = {
-  type: 'push' | 'pop' | 'replace'
-  name: RouteName
-  item: HistoryItem
-}
-
-export type OnRouteChangeCb = (item: RouteItem) => Promise<void>
-
+export type OnRouteChangeCb = (item: HistoryItem) => Promise<void>
 type RouterProps = { routes: RoutesTable }
+type HistoryCb = (cb: HistoryItem) => void
 
-class RouterStore extends Store<RouterProps> {
+export class Router extends Store<RouterProps> {
   started = false
-  router = new Router()
+  router = new TinyRouter()
   routes: RoutesTable = {}
   routeNames: string[] = []
   routePathToName = {}
@@ -81,39 +80,51 @@ class RouterStore extends Store<RouterProps> {
     this.router = nextRouter
     this.started = true
 
-    window.addEventListener('popstate', (event) => {
-      this.handlePath(event.state.path, this.getPopDirection())
+    history.listen((event) => {
+      const state = event.location.state
+      console.log('event', event, state)
+      this.handlePath(event.location.pathname, 'pop', {
+        replace: event.action === 'REPLACE',
+      })
     })
+
+    // should push one event no?
     this.handlePath(window.location.pathname)
   }
 
   private handlePath(
     pathname: string,
-    direction?: HistoryDirection,
-    navItem?: NavigateItem
+    type: HistoryType = 'push',
+    item?: Partial<HistoryItem>
   ) {
     const match = this.router.match('GET', pathname)
     if (match) {
-      this.history = [
-        ...this.history,
-        {
-          id: uid(),
-          type: direction,
-          name: match.handler,
-          path: pathname,
-          params: match.params as any,
-          replace: navItem?.replace,
-          search: navItem?.search,
-        },
-      ]
+      const next: HistoryItem = {
+        id: uid(),
+        type,
+        name: match.handler,
+        path: pathname,
+        params: match.params as any,
+        ...item,
+      }
+      this.history = [...this.history, next]
+      this.routeChangeListeners.forEach((x) => x(next))
+    } else {
+      console.log('no match', pathname, item)
     }
   }
 
-  private getShouldNavigate(navItem: NavigateItem) {
+  routeChangeListeners = new Set<HistoryCb>()
+  onRouteChange(cb: HistoryCb) {
+    this.routeChangeListeners.add(cb)
+  }
+
+  getShouldNavigate(navItem: NavigateItem) {
     const historyItem = this.navItemToHistoryItem(navItem)
-    const { id: _1, replace: _2, ...compareA } = historyItem
-    const { id: _3, replace: _4, ...compareB } = this.curPage
-    return JSON.stringify(compareA) !== JSON.stringify(compareB)
+    const sameName = historyItem.name === this.curPage.name
+    const sameParams = isEqual(historyItem.params, this.curPage.params)
+    console.log('ok', sameParams)
+    return !sameName || !sameParams
   }
 
   async navigate(navItem: NavigateItem) {
@@ -125,12 +136,14 @@ class RouterStore extends Store<RouterProps> {
       console.log('already on page')
       return
     }
-    if (item.replace) {
-      history.replaceState({}, '', item.path)
-    } else {
-      history.pushState({}, '', item.path)
+    const params = {
+      id: `${Math.random()}`,
     }
-    this.handlePath(item.path, 'push', navItem)
+    if (item.replace) {
+      history.replace(item.path, params)
+    } else {
+      history.push(item.path, params)
+    }
   }
 
   back() {
@@ -141,7 +154,7 @@ class RouterStore extends Store<RouterProps> {
     window.history.forward()
   }
 
-  private getPathFromParams({
+  getPathFromParams({
     name,
     params,
   }: {
@@ -191,7 +204,7 @@ class RouterStore extends Store<RouterProps> {
     return path
   }
 
-  private navItemToHistoryItem(navItem: NavigateItem): HistoryItem {
+  navItemToHistoryItem(navItem: NavigateItem): HistoryItem {
     const params: any = {}
     // remove undefined params
     if ('params' in navItem && !!navItem.params) {
@@ -214,23 +227,9 @@ class RouterStore extends Store<RouterProps> {
       search: curSearch,
     }
   }
-
-  // 1 is forward
-  // -1 is back
-  private getPopDirection(): HistoryDirection {
-    const positionLastShown = Number(
-      sessionStorage.getItem('positionLastShown')
-    )
-    let position = history.state
-    if (position === null) {
-      position = positionLastShown + 1
-      history.replaceState(position, '')
-    }
-    sessionStorage.setItem('positionLastShown', `${position}`)
-    const direction = Math.sign(position - positionLastShown)
-    return direction === 1 ? 'push' : 'pop'
-  }
 }
+
+// react stuff
 
 const RouterContext = createContext<RouterProps['routes'] | null>(null)
 
@@ -242,7 +241,7 @@ export function ProvideRouter({
   children: any
 }) {
   // just sets it up
-  useRecoilStore(RouterStore, {
+  useRecoilStore(Router, {
     routes,
   })
   return (
@@ -255,7 +254,7 @@ export function useRouter() {
   if (!routes) {
     throw new Error(`no routes`)
   }
-  return useRecoilStore(RouterStore, { routes })
+  return useRecoilStore(Router, { routes })
 }
 
 // we could enable functionality like this
@@ -356,3 +355,24 @@ let curSearch = {}
 //     page.replace(url)
 //   },
 // }
+
+const isObject = (x: any) => x && `${x}` === `[object Object]`
+const isEqual = (a: any, b: any) => {
+  const eqLen = Object.keys(a).length === Object.keys(b).length
+  if (!eqLen) {
+    return false
+  }
+  for (const k in a) {
+    if (k in b) {
+      if (isObject(a[k]) && isObject(b[k])) {
+        if (!isEqual(a[k], b[k])) {
+          return false
+        }
+      }
+      if (a[k] !== b[k]) {
+        return false
+      }
+    }
+  }
+  return true
+}

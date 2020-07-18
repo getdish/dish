@@ -206,7 +206,6 @@ const AutocompleteResults = memo(() => {
     : lastKey.current
 
   const resultsElements = useMemo(() => {
-    console.log('updating autocomplete', key, locationAutocompleteResults)
     lastKey.current = key
     const autocompleteResultsActive =
       showAutocomplete === 'location'

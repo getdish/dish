@@ -28,6 +28,7 @@ import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePage'
 import { HomeScrollView } from './HomeScrollView'
 import { focusSearchInput } from './HomeSearchInput'
+import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { useLastValueWhen } from './useLastValueWhen'
@@ -59,10 +60,6 @@ export default memo(function HomePageSearchResults(props: Props) {
   const om = useOvermind()
   const isOptimisticUpdating = om.state.home.isOptimisticUpdating
 
-  if (isOptimisticUpdating) {
-    console.warn('isOptimisticUpdating')
-  }
-
   const titleElements = useMemo(() => {
     return (
       <>
@@ -79,28 +76,20 @@ export default memo(function HomePageSearchResults(props: Props) {
   const shouldAvoidContentUpdates =
     isOptimisticUpdating || props.isRemoving || !props.isActive
 
-  if (shouldAvoidContentUpdates) {
-    console.log('shouldAvoidContentUpdates')
-  }
-
   const content = useLastValueWhen(() => {
     const key = weakKey(props.item)
     return <SearchResultsContent key={key} {...props} />
   }, shouldAvoidContentUpdates)
 
   return (
-    <VStack
-      flex={1}
-      borderRadius={drawerBorderRadius}
-      position="relative"
-      backgroundColor="#fff"
-      overflow="hidden"
-    >
+    <HomeStackDrawer>
       <PageTitleTag>{title}</PageTitleTag>
       <StackViewCloseButton />
-      <SearchResultsTitle title={titleElements} {...props} />
-      {isOptimisticUpdating ? <HomeEmptyLoading /> : content}
-    </VStack>
+      <Suspense fallback={<LoadingItems />}>
+        <SearchResultsTitle title={titleElements} {...props} />
+        {isOptimisticUpdating ? <HomeEmptyLoading /> : content}
+      </Suspense>
+    </HomeStackDrawer>
   )
 })
 
@@ -247,22 +236,22 @@ const SearchResultsContent = memo((props: Props) => {
         !item.results?.results ||
         state.hasLoaded <= state.chunk)
 
-  console.log(
-    'SearchResults',
-    JSON.stringify(
-      {
-        state,
-        currentlyShowing,
-        firstResult: JSON.stringify(allResults[0]),
-        len: results.length,
-        allLen: allResults.length,
-        isOnLastChunk,
-        isLoading,
-      },
-      null,
-      2
-    )
-  )
+  // console.log(
+  //   'SearchResults',
+  //   JSON.stringify(
+  //     {
+  //       state,
+  //       currentlyShowing,
+  //       firstResult: JSON.stringify(allResults[0]),
+  //       len: results.length,
+  //       allLen: allResults.length,
+  //       isOnLastChunk,
+  //       isLoading,
+  //     },
+  //     null,
+  //     2
+  //   )
+  // )
 
   // in an effect so we can use series and get auto-cancel on unmount
   useEffect(() => {
@@ -311,12 +300,7 @@ const SearchResultsContent = memo((props: Props) => {
 
   if (!isLoading && !results.length) {
     return contentWrap(
-      <VStack
-        height="100vh"
-        alignItems="center"
-        justifyContent="center"
-        spacing
-      >
+      <VStack height="50vh" alignItems="center" justifyContent="center" spacing>
         <Text fontSize={22}>No results 😞</Text>
         {/* <LinkButton name="contact">Report problem</LinkButton> */}
       </VStack>

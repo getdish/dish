@@ -29,6 +29,7 @@ import { HomeStateItemHome } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../../views/NotFoundPage'
+import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { flatButtonStyle } from './baseButtonStyle'
@@ -121,7 +122,7 @@ const HomePageTopDishes = memo((props: Props) => {
           <HStack
             alignItems="center"
             justifyContent="center"
-            top={-20}
+            top={-10}
             zIndex={1000}
             position="absolute"
             left={0}
@@ -130,12 +131,17 @@ const HomePageTopDishes = memo((props: Props) => {
             <HomeLenseBar size="lg" activeTagIds={activeTagIds} />
           </HStack>
         )}
+
         <HomeScrollView>
           <VStack
             paddingTop={isSmall ? 34 : 34}
             paddingBottom={34}
             spacing="xl"
           >
+            <Link name="user" params={{ username: 'admin' }}>
+              Test
+            </Link>
+
             {/* LENSES - UNIQUELY GOOD HERE */}
             <VStack>
               <VStack alignItems="center">
