@@ -10,7 +10,7 @@ COPY tsconfig.base.json .
 
 COPY packages packages
 
-RUN yarn install
+RUN yarn install --network-timeout 1000000
 RUN yarn build
 
 CMD ["true"]
