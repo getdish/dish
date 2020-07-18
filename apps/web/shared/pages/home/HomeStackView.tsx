@@ -1,9 +1,12 @@
+import { fullyIdle, idle, series } from '@dish/async'
 import { AbsoluteVStack, VStack, useDebounceValue } from '@dish/ui'
 import { cloneDeep } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
+import { memoize } from '../../helpers/memoizeWeak'
 import { HomeStateItem, HomeStateItemSimple } from '../../state/home'
-import { useOvermind } from '../../state/useOvermind'
+import { isSearchState } from '../../state/home-helpers'
+import { omStatic, useOvermind } from '../../state/useOvermind'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
@@ -21,38 +24,67 @@ export type StackItemProps<A> = {
 
 type GetChildren<A> = (props: StackItemProps<A>) => React.ReactNode
 
+const getStackItems = memoize((states: HomeStateItem[]) => {
+  let crumbs: HomeStateItemSimple[] = []
+  // reverse loop to find latest
+  for (let i = states.length - 1; i >= 0; i--) {
+    const cur = states[i]
+    switch (cur.type) {
+      case 'home': {
+        crumbs.unshift(cur)
+        return crumbs
+      }
+      case 'search':
+      case 'userSearch':
+      case 'user':
+      case 'restaurant': {
+        if (crumbs.some((x) => x.type === cur.type)) {
+          break
+        }
+        if (
+          (cur.type === 'restaurant' ||
+            cur.type === 'user' ||
+            cur.type == 'userSearch') &&
+          crumbs.some(isSearchState)
+        ) {
+          break
+        }
+        if (isSearchState(cur) && crumbs.some(isSearchState)) {
+          break
+        }
+        crumbs.unshift(cur)
+        break
+      }
+    }
+  }
+})
+
 export function HomeStackView<A extends HomeStateItem>(props: {
   children: GetChildren<A>
 }) {
   // const currentStateStore = useRecoilStore(HomeStateStore)
   const om = useOvermind()
-  const breadcrumbs = om.state.home.breadcrumbStates
-  const states = om.state.home.states
-  const isInAdmin = om.state.router.curPage.name.startsWith('admin')
-  const key = JSON.stringify([states, breadcrumbs])
-  const homeStates = useMemo(() => {
-    return breadcrumbs
-      .map((item) => {
-        return om.state.home.states.find((x) => x.id === item.id)!
-      })
-      .filter(Boolean)
-  }, [key])
+  om.state.home.stateIds
+  const states = omStatic.state.home.states
+  const stackItems = getStackItems(states)!
+  const key = JSON.stringify(stackItems.map((x) => x.id))
+  const homeStates = useMemo(() => stackItems, [key])
   const currentStates =
     useDebounceValue(homeStates, transitionDuration) ?? homeStates
-  const isRemoving = currentStates.length > breadcrumbs.length
+  const isRemoving = currentStates.length > homeStates.length
   const items = isRemoving ? currentStates : homeStates
 
-  if (false) {
-    console.log(
-      'HomeStackView',
-      cloneDeep({ isRemoving, states, breadcrumbs, homeStates, items })
-    )
-  }
+  // if (true) {
+  //   console.log(
+  //     'HomeStackView',
+  //     cloneDeep({ isRemoving, states, homeStates, items })
+  //   )
+  // }
 
   return (
     <AbsoluteVStack fullscreen>
       {items.map((item, i) => {
-        const isActive = !isInAdmin && i === items.length - 1
+        const isActive = i === items.length - 1
         return (
           // <PopoverShowContext.Provider
           //   key={item.id}
@@ -88,15 +120,7 @@ const HomeStackViewItem = memo(
     isRemoving: boolean
   }) => {
     // const popoverStore = useRecoilStore(PopoverStore, { id })
-    const [isMounted, setIsMounted] = useState(false)
     const isSmall = useMediaQueryIsSmall()
-
-    useEffect(() => {
-      let tm = setTimeout(() => {
-        setIsMounted(true)
-      }, 50)
-      return () => clearTimeout(tm)
-    }, [])
 
     const top = isSmall || index == 0 ? 0 : index * 5
     const left = isSmall ? 0 : Math.max(0, index) * 3
@@ -111,14 +135,13 @@ const HomeStackViewItem = memo(
         item,
         index,
         isActive,
-        isRemoving,
       })
-    }, [item])
+    }, [isActive, index, item])
 
     return (
       // <PopoverContext.Provider value={useMemo(() => ({ id }), [id])}>
       <VStack
-        className={`animate-up ${isMounted && !isRemoving ? 'active' : ''}`}
+        className={`animate-up ${!isRemoving ? 'active' : ''}`}
         position="absolute"
         top={0}
         left={0}

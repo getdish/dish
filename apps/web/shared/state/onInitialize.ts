@@ -31,10 +31,10 @@ export const onInitialize: OnInitialize = async (
     await actions.user.checkForExistingLogin()
   }
   await Promise.all([initAuth()])
-  await actions.home.start()
   await actions.router.start({
     onRouteChange: actions.home.handleRouteChange,
   })
+  await actions.home.updateCurrentMapAreaInformation()
 }
 
 if (process.env.NODE_ENV === 'development') {

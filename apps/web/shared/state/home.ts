@@ -9,13 +9,13 @@ import {
   slugify,
 } from '@dish/graph'
 import { assert, handleAssertionError, stringify } from '@dish/helpers'
+import { HistoryItem, NavigateItem } from '@dish/router'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
-import _, { clamp, findLast, last, pick } from 'lodash'
+import _, { clamp, findLast, isPlainObject, last } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
 
 import { fuzzyFindIndices } from '../helpers/fuzzy'
-import { memoize } from '../helpers/memoizeWeak'
 import { timer } from '../helpers/timer'
 import { useRestaurantQuery } from '../pages/home/useRestaurantQuery'
 import { LinkButtonProps } from '../views/ui/LinkProps'
@@ -46,7 +46,7 @@ import {
   OmState,
   ShowAutocomplete,
 } from './home-types'
-import { HistoryItem, NavigateItem, RouteItem } from './router'
+import { router } from './router'
 import { NavigableTag, getTagId, tagFilters, tagLenses } from './Tag'
 
 const INITIAL_RADIUS = 0.16
@@ -172,8 +172,20 @@ const derivations = {
     const index = state.searchBarTags.length + searchBarTagIndex
     return state.searchBarTags[index]
   }),
-  breadcrumbStates: derived<HomeState, HomeStateItemSimple[]>((state) => {
-    return createBreadcrumbs(state)
+  states: derived<HomeState, HomeStateItem[]>((state) => {
+    const index = state.stateIndex
+    const activeStateIds = state.stateIds.slice(0, index + 1)
+    const states: HomeStateItemSimple[] = []
+    let i = activeStateIds.length - 1
+    for (; i > -1; i--) {
+      const curId = activeStateIds[i]
+      const curState = state.allStates[curId]
+      states.push(curState)
+      if (curState.type === 'home') {
+        break
+      }
+    }
+    return _.reverse(states) as HomeStateItem[]
   }),
   currentStateLense: derived<HomeState, NavigableTag | null>((state) => {
     if ('activeTagIds' in state.currentState) {
@@ -206,11 +218,14 @@ export const state: HomeState = {
   locationAutocompleteResults: defaultLocationAutocompleteResults,
   location: null,
   locationSearchQuery: '',
-  breadcrumbStates: [],
   hoveredRestaurant: null,
   isOptimisticUpdating: false,
   showUserMenu: false,
-  states: [initialHomeState],
+  stateIndex: 0,
+  stateIds: ['0'],
+  allStates: {
+    '0': initialHomeState,
+  },
   topDishes: [],
   topDishesFilteredIndices: [],
   userLocation: null,
@@ -229,229 +244,7 @@ export const isEditingUserPage = (
   return state.type === 'userSearch' && isOnOwnProfile(omState)
 }
 
-// only await things that are required on first render
-const start: AsyncAction = async (om) => {
-  om.actions.home.updateCurrentMapAreaInformation()
-}
-
 type PageAction = () => Promise<void>
-
-let nextPushIsReallyAPop = false
-
-const pushHomeState: AsyncAction<
-  HistoryItem,
-  {
-    fetchDataPromise: Promise<any>
-  } | null
-> = async (om, item) => {
-  console.log('pushHomeState', item?.type)
-  if (!item) {
-    console.warn('no item?')
-    return null
-  }
-  // start loading
-  om.actions.home.setIsLoading(true)
-
-  const { currentState } = om.state.home
-  const historyId = item.id
-  const shouldReplace =
-    !!item.replace &&
-    // dont replace home with something else
-    !(item.name !== 'home' && currentState.type === 'home')
-  const id =
-    item.name === 'home'
-      ? '0'
-      : shouldReplace
-      ? currentState.id
-      : `${Math.random()}`
-  const base = {
-    id,
-    center: currentState?.center ?? initialHomeState.center,
-    span: currentState?.span ?? initialHomeState.span,
-    searchQuery: item.params.query ?? currentState?.searchQuery ?? '',
-  }
-
-  let nextState: Partial<HomeStateItem> | null = null
-  let fetchData: PageAction | null = null
-  let activeTagIds: HomeActiveTagIds
-  const type = item.name
-
-  switch (type) {
-    // home
-    case 'home': {
-      let activeTagIds = {}
-      // be sure to remove all searchbar tags
-      for (const tagId in om.state.home.lastHomeState.activeTagIds) {
-        if (!isSearchBarTag(om.state.home.allTags[tagId])) {
-          activeTagIds[tagId] = true
-        }
-      }
-      nextState = {
-        type,
-        searchQuery: '',
-        activeTagIds,
-      }
-      break
-    }
-
-    // search or userSearch
-    case 'userSearch':
-    case 'search': {
-      const lastHomeOrSearch = _.findLast(
-        om.state.home.states,
-        (x) => isHomeState(x) || isSearchState(x)
-      ) as HomeStateItemHome | HomeStateItemSearch
-
-      // use last home or search to get most up to date
-      activeTagIds = lastHomeOrSearch.activeTagIds
-
-      const username =
-        type == 'userSearch' ? om.state.router.curPage.params.username : ''
-      const searchQuery = item.params.search ?? base.searchQuery
-      const searchState: HomeStateItemSearch = {
-        hasMovedMap: false,
-        results: { status: 'loading' },
-        ...om.state.home.lastSearchState,
-        type,
-        username,
-        activeTagIds,
-        searchQuery,
-      }
-      nextState = searchState
-      fetchData = om.actions.home.loadPageSearch
-      break
-    }
-
-    // restaurant
-    case 'restaurant': {
-      nextState = {
-        type,
-        restaurantId: null,
-        restaurantSlug: item.params.slug,
-      }
-      fetchData = om.actions.home.loadPageRestaurant
-      break
-    }
-
-    case 'user': {
-      nextState = {
-        type: 'user',
-        username: item.params.username,
-      }
-      break
-    }
-
-    case 'gallery': {
-      nextState = {
-        type: 'gallery',
-        restaurantSlug: item.params.restaurantSlug,
-        dishId: item.params.dishId,
-      }
-      break
-    }
-  }
-
-  const finalState = {
-    ...base,
-    ...nextState,
-    historyId,
-  } as HomeStateItem
-
-  async function runFetchData() {
-    if (!fetchData) {
-      return
-    }
-    try {
-      await fetchData()
-    } catch (err) {
-      console.error(err)
-      Toast.show(`Error loading page`)
-    }
-  }
-
-  // is going back
-  // we are going back to a prev state!
-  // hacky for now
-  if (nextPushIsReallyAPop) {
-    console.log('nextPushIsReallyAPop', nextPushIsReallyAPop, item)
-    nextPushIsReallyAPop = false
-    const prev = _.findLast(om.state.home.states, (x) => x.type === item.name)
-    if (prev) {
-      om.actions.home.updateHomeState(prev)
-      om.actions.home.setIsLoading(false)
-      currentAction = runFetchData
-      return { fetchDataPromise: Promise.resolve(null) }
-    }
-  }
-
-  // if (true) {
-  //   console.log(
-  //     'pushHomeState',
-  //     JSON.stringify({ shouldReplace, item, finalState, id }, null, 2)
-  //   )
-  // }
-
-  if (shouldReplace) {
-    om.actions.home.replaceHomeState(finalState)
-  } else {
-    om.actions.home.updateHomeState(finalState)
-  }
-
-  if (!om.state.home.started) {
-    om.state.home.started = true
-  }
-
-  const shouldSkip = om.state.home.skipNextPageFetchData
-  om.state.home.skipNextPageFetchData = false
-
-  let fetchDataPromise: Promise<any> | null = null
-  if (!shouldSkip && fetchData) {
-    currentAction = runFetchData
-    // start
-    let res: any
-    let rej: any
-    fetchDataPromise = new Promise((res2, rej2) => {
-      res = res2
-      rej = rej2
-    })
-    runFetchData().finally(() => {
-      om.actions.home.setIsLoading(false)
-    })
-  }
-
-  if (fetchDataPromise) {
-    return {
-      fetchDataPromise,
-    }
-  } else {
-    om.actions.home.setIsLoading(false)
-  }
-
-  return null
-}
-
-const loadPageRestaurant: AsyncAction = async (om) => {
-  const state = om.state.home.currentState
-  if (state.type !== 'restaurant') return
-  const slug = state.restaurantSlug
-  const restaurant = await resolved(() => {
-    const { location, id } = useRestaurantQuery(slug)
-    location?.coordinates
-    return { location, id }
-  })
-  if (state && restaurant) {
-    state.restaurantId = restaurant.id
-    state.center = {
-      lng: restaurant.location.coordinates[0],
-      lat: restaurant.location.coordinates[1],
-    }
-    // zoom in a bit
-    state.span = {
-      lng: 0.008, // Math.max(0.010675285275539181, currentState.span.lng * 0.5),
-      lat: 0.003, // Math.max(0.004697178346440012, currentState.span.lat * 0.5),
-    }
-  }
-}
 
 let hasLoadedSearchOnce = false
 
@@ -459,9 +252,9 @@ const loadPageSearch: AsyncAction = async (om) => {
   const state = om.state.home.currentState
   if (!isSearchState(state)) return
 
-  if (!hasLoadedSearchOnce && om.state.router.history.length === 1) {
+  if (!hasLoadedSearchOnce && router.history.length === 1) {
     hasLoadedSearchOnce = true
-    const fakeTags = getTagsFromRoute(om.state.router.curPage)
+    const fakeTags = getTagsFromRoute(router.curPage)
     console.time('getFullTags')
     const tags = await getFullTags(fakeTags)
     console.timeEnd('getFullTags')
@@ -510,16 +303,15 @@ const popTo: Action<HomeStateItem['type']> = (om, item) => {
   }
 
   // we can just use router history directly, no? and go back?
-  const prevPage = om.state.router.prevPage
-  if (prevPage?.name === type && prevPage.type === 'push') {
+  const prevHistory = router.prevHistory
+  if (prevHistory?.name === type && prevHistory.type === 'push') {
     console.log('history matches, testing going back directly')
-    om.actions.router.back()
+    router.back()
     return
   }
 
-  const stateItem = _.findLast(om.state.router.history, (x) => x.name == type)
-  nextPushIsReallyAPop = true
-  om.actions.router.navigate({
+  const stateItem = _.findLast(router.history, (x) => x.name == type)
+  router.navigate({
     name: type,
     params: stateItem?.params ?? {},
   })
@@ -532,10 +324,10 @@ const loadHomeDishes: AsyncAction = async (om) => {
   }
 
   const all = await getHomeDishes(
-    om.state.home.currentState.center.lat,
-    om.state.home.currentState.center.lng,
+    om.state.home.currentState.center!.lat,
+    om.state.home.currentState.center!.lng,
     // TODO span
-    om.state.home.currentState.span.lat
+    om.state.home.currentState.span!.lat
   )
 
   if (!all) {
@@ -639,6 +431,8 @@ const runSearch: AsyncAction<{
   // only update searchkey once finished
   lastSearchKey = searchKey
   state = om.state.home.lastSearchState
+  if (!state) return
+
   console.log('search found restaurants', restaurants)
   state.results = {
     status: 'complete',
@@ -660,35 +454,32 @@ const defaultSearchResults = {
 
 const clearSearchResults: Action = (om) => {
   const state = om.state.home.lastSearchState
-  state.hasMovedMap = false
-  state.results = defaultSearchResults
+  if (state) {
+    state.hasMovedMap = false
+    state.results = defaultSearchResults
+  }
 }
 
-const popHomeState: Action<HistoryItem> = (om, item) => {
-  console.log('popHomeState', item)
-  assert(om.state.home.currentState.type !== 'home')
-  assert(om.state.home.states.length > 1)
-  const nextStates = _.dropRight(om.state.home.states)
-  om.state.home.states = nextStates
+const deepAssign = (a: Object, b: Object) => {
+  for (const key in b) {
+    if (a[key] != b[key]) {
+      if (isPlainObject(a[key]) && isPlainObject(b[key])) {
+        deepAssign(a[key], b[key])
+        continue
+      }
+      a[key] = b[key]
+    }
+  }
 }
 
 const updateHomeState: Action<HomeStateItem> = (om, val) => {
-  let next = [...om.state.home.states]
-  let index = next.findIndex((x) => x.id === val.id && x.type === val.type)
-  if (index !== -1) {
-    next.splice(index, 1)
-  }
-  next.push(val)
-  om.state.home.states = next
-}
-
-const replaceHomeState: Action<HomeStateItem> = (om, val) => {
-  // try granular update
-  const lastState = om.state.home.states[om.state.home.states.length - 1]
-  for (const key in val) {
-    if (!isEqual(val[key], lastState[key])) {
-      lastState[key] = _.isPlainObject(val[key]) ? { ...val[key] } : val[key]
-    }
+  const state = om.state.home.allStates[val.id]
+  if (state) {
+    deepAssign(state, val)
+  } else {
+    om.state.home.allStates[val.id] = { ...val }
+    om.state.home.stateIds = [...new Set([...om.state.home.stateIds, val.id])]
+    om.state.home.stateIndex = om.state.home.stateIds.length - 1
   }
 }
 
@@ -801,42 +592,269 @@ const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
   }
 }
 
-const handleRouteChange: AsyncAction<RouteItem> = async (
-  om,
-  { type, name, item }
-) => {
+const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
+  console.log('handleRouteChange', item)
+
   // happens on *any* route push or pop
   if (om.state.home.hoveredRestaurant) {
     om.state.home.hoveredRestaurant = null
   }
 
+  if (item.type === 'pop') {
+    if (item.direction === 'forward') {
+      om.state.home.stateIndex += 1
+    }
+    if (item.direction === 'backward') {
+      om.state.home.stateIndex -= 1
+    }
+    return
+  }
+
   const promises = new Set<Promise<any>>()
 
   // actions per-route
-  switch (name) {
-    case 'home':
-    case 'search':
-    case 'user':
-    case 'gallery':
-    case 'userSearch':
-    case 'restaurant': {
-      if (type === 'push' || type === 'replace') {
+  if (item.type === 'push' || item.type === 'replace') {
+    switch (item.name) {
+      case 'home':
+      case 'search':
+      case 'user':
+      case 'gallery':
+      case 'userSearch':
+      case 'restaurant': {
+        if (item.type === 'push') {
+          // clear future states past current index
+          if (om.state.home.stateIndex > om.state.home.stateIds.length - 1) {
+            console.warn('clearing future states as were rewriting history')
+            const toClearStates = om.state.home.stateIds.slice(
+              om.state.home.stateIndex
+            )
+            for (const id of toClearStates) {
+              delete om.state.home.allStates[id]
+            }
+            const next = om.state.home.stateIds.slice(
+              0,
+              om.state.home.stateIndex
+            )
+            om.state.home.stateIds = next
+          }
+        }
         const res = await pushHomeState(om, item)
         if (res?.fetchDataPromise) {
           promises.add(res.fetchDataPromise)
         }
-      } else {
-        om.actions.home.popHomeState(item)
+        break
       }
-      break
-    }
-    default: {
-      return
+      default: {
+        return
+      }
     }
   }
 
   currentStates = om.state.home.states
   await Promise.all([...promises])
+}
+
+const uid = () => `${Math.random()}`.replace('.', '')
+
+const pushHomeState: AsyncAction<
+  HistoryItem,
+  {
+    fetchDataPromise: Promise<any>
+  } | null
+> = async (om, item) => {
+  if (!item) {
+    console.warn('no item?')
+    return null
+  }
+  console.log('pushHomeState', item.type, item.name)
+  // start loading
+  om.actions.home.setIsLoading(true)
+
+  const { currentState } = om.state.home
+  const historyId = item.id
+  const base = {
+    id: item.id,
+    center: currentState?.center ?? initialHomeState.center,
+    span: currentState?.span ?? initialHomeState.span,
+    searchQuery: item?.params?.query ?? currentState?.searchQuery ?? '',
+  }
+
+  let nextState: Partial<HomeStateItem> | null = null
+  let fetchData: PageAction | null = null
+  let activeTagIds: HomeActiveTagIds
+  const type = item.name
+
+  switch (type) {
+    // home
+    case 'home': {
+      let activeTagIds = {}
+      // be sure to remove all searchbar tags
+      for (const tagId in om.state.home.lastHomeState.activeTagIds) {
+        if (!isSearchBarTag(om.state.home.allTags[tagId])) {
+          activeTagIds[tagId] = true
+        }
+      }
+      nextState = {
+        type,
+        searchQuery: '',
+        activeTagIds,
+      }
+      break
+    }
+
+    // search or userSearch
+    case 'userSearch':
+    case 'search': {
+      const lastHomeOrSearch = _.findLast(
+        om.state.home.states,
+        (x) => isHomeState(x) || isSearchState(x)
+      ) as HomeStateItemHome | HomeStateItemSearch
+
+      // use last home or search to get most up to date
+      activeTagIds = lastHomeOrSearch.activeTagIds
+
+      const username =
+        type == 'userSearch' ? om.state.router.curPage.params.username : ''
+      const searchQuery = item.params.search ?? base.searchQuery
+      nextState = {
+        ...base,
+        hasMovedMap: false,
+        results: { status: 'loading' },
+        ...om.state.home.lastSearchState,
+        type,
+        username,
+        activeTagIds,
+        searchQuery,
+      }
+      fetchData = om.actions.home.loadPageSearch
+      break
+    }
+
+    // restaurant
+    case 'restaurant': {
+      nextState = {
+        type,
+        restaurantId: null,
+        restaurantSlug: item.params.slug,
+      }
+      fetchData = om.actions.home.loadPageRestaurant
+      break
+    }
+
+    case 'user': {
+      nextState = {
+        type: 'user',
+        username: item.params.username,
+      }
+      break
+    }
+
+    case 'gallery': {
+      nextState = {
+        type: 'gallery',
+        restaurantSlug: item.params.restaurantSlug,
+        dishId: item.params.dishId,
+      }
+      break
+    }
+  }
+
+  const finalState = {
+    ...base,
+    ...nextState,
+    historyId,
+  } as HomeStateItem
+
+  async function runFetchData() {
+    if (!fetchData) {
+      return
+    }
+    try {
+      await fetchData()
+    } catch (err) {
+      console.error(err)
+      Toast.show(`Error loading page`)
+    }
+  }
+
+  // is going back
+  // we are going back to a prev state!
+  // hacky for now
+  // if (nextPushIsReallyAPop) {
+  //   console.log('nextPushIsReallyAPop', nextPushIsReallyAPop, item)
+  //   nextPushIsReallyAPop = false
+  //   const prev = _.findLast(om.state.home.states, (x) => x.type === item.name)
+  //   if (prev) {
+  //     om.actions.home.updateHomeState(prev)
+  //     om.actions.home.setIsLoading(false)
+  //     currentAction = runFetchData
+  //     return { fetchDataPromise: Promise.resolve(null) }
+  //   }
+  // }
+
+  // if (true) {
+  //   console.log(
+  //     'pushHomeState',
+  //     JSON.stringify({ shouldReplace, item, finalState, id }, null, 2)
+  //   )
+  // }
+
+  om.actions.home.updateHomeState(finalState)
+
+  if (!om.state.home.started) {
+    om.state.home.started = true
+  }
+
+  const shouldSkip = om.state.home.skipNextPageFetchData
+  om.state.home.skipNextPageFetchData = false
+
+  let fetchDataPromise: Promise<any> | null = null
+  if (!shouldSkip && fetchData) {
+    currentAction = runFetchData
+    // start
+    let res: any
+    let rej: any
+    fetchDataPromise = new Promise((res2, rej2) => {
+      res = res2
+      rej = rej2
+    })
+    runFetchData().finally(() => {
+      om.actions.home.setIsLoading(false)
+    })
+  }
+
+  if (fetchDataPromise) {
+    return {
+      fetchDataPromise,
+    }
+  } else {
+    om.actions.home.setIsLoading(false)
+  }
+
+  return null
+}
+
+const loadPageRestaurant: AsyncAction = async (om) => {
+  const state = om.state.home.currentState
+  if (state.type !== 'restaurant') return
+  const slug = state.restaurantSlug
+  const restaurant = await resolved(() => {
+    const { location, id } = useRestaurantQuery(slug)
+    location?.coordinates
+    return { location, id }
+  })
+  if (state && restaurant) {
+    state.restaurantId = restaurant.id
+    state.center = {
+      lng: restaurant.location.coordinates[0],
+      lat: restaurant.location.coordinates[1],
+    }
+    // zoom in a bit
+    state.span = {
+      lng: 0.008, // Math.max(0.010675285275539181, currentState.span.lng * 0.5),
+      lat: 0.003, // Math.max(0.004697178346440012, currentState.span.lat * 0.5),
+    }
+  }
 }
 
 export let currentStates: HomeStateItem[] = []
@@ -905,7 +923,7 @@ const forkCurrentList: Action = (om) => {
     Toast.show(`Can't fork a non-search page`)
     return
   }
-  om.actions.router.navigate({
+  router.navigate({
     ...curPage,
     name: 'userSearch',
     params: {
@@ -946,45 +964,6 @@ const setHasMovedMap: Action<boolean | void> = (om, val = true) => {
     lastSearchState.hasMovedMap = next
   }
 }
-
-const createBreadcrumbs = (state: HomeState) => {
-  return createBreadcrumbsMemo(state.states)
-}
-
-const createBreadcrumbsMemo = memoize((states: HomeStateItem[]) => {
-  let crumbs: HomeStateItemSimple[] = []
-  // reverse loop to find latest
-  for (let i = states.length - 1; i >= 0; i--) {
-    const cur = states[i]
-    switch (cur.type) {
-      case 'home': {
-        crumbs.unshift(cur)
-        return crumbs.map((x) => pick(x, ['id', 'type']))
-      }
-      case 'search':
-      case 'userSearch':
-      case 'user':
-      case 'restaurant': {
-        if (crumbs.some((x) => x.type === cur.type)) {
-          break
-        }
-        if (
-          (cur.type === 'restaurant' ||
-            cur.type === 'user' ||
-            cur.type == 'userSearch') &&
-          crumbs.some(isSearchState)
-        ) {
-          break
-        }
-        if (isSearchState(cur) && crumbs.some(isSearchState)) {
-          break
-        }
-        crumbs.unshift(cur)
-        break
-      }
-    }
-  }
-})
 
 export function createAutocomplete(
   item: Partial<AutocompleteItem>
@@ -1131,7 +1110,7 @@ export const getNavigateTo: Action<HomeStateNav, LinkButtonProps | null> = (
 // but then later you hit "enter" and we need to navigate to search (or home)
 // we definitely can clean up / name better some of this once things settle
 const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
-  console.log('home.navigate', navState)
+  console.warn('home.navigate', navState)
   if (navState.tags) {
     om.actions.home.addTagsToCache(navState.tags)
   }
@@ -1147,6 +1126,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     (isSearchState(curState) && nextType === 'search')
   ) {
     om.state.home.isOptimisticUpdating = true
+    // optimistic update active tags
     om.actions.home.updateActiveTags({
       id: curState.id,
       type: curState.type as any,
@@ -1219,19 +1199,16 @@ export const actions = {
   setSearchBarTagIndex,
   setShowAutocomplete,
   setShowUserMenu,
-  start,
   popBack,
   refresh,
   suggestTags,
   loadPageSearch,
   loadPageRestaurant,
-  popHomeState,
   updateActiveTags,
   setAutocompleteResults,
   clearTags,
   addTagsToCache,
   setIsLoading,
-  replaceHomeState,
   updateHomeState,
   navigate,
   moveMapToUserLocation,

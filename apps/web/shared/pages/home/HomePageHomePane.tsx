@@ -55,21 +55,23 @@ export default memo(function HomePageHomePane(props: Props) {
   const loadTopDishesDelayed = useDebounce(om.actions.home.loadHomeDishes, 200)
 
   useEffect(() => {
-    if (!props.isActive) return
-    const key = JSON.stringify(props.item.center)
-    if (lastTopDishesLoad.current === key) return
-    if (lastTopDishesLoad.current === '') {
-      om.actions.home.loadHomeDishes()
-    } else {
-      loadTopDishesDelayed()
+    if (props.isActive) {
+      const key = JSON.stringify(props.item.center)
+      if (lastTopDishesLoad.current === key) return
+      if (lastTopDishesLoad.current === '') {
+        om.actions.home.loadHomeDishes()
+      } else {
+        loadTopDishesDelayed()
+      }
+      lastTopDishesLoad.current = key
     }
-    lastTopDishesLoad.current = key
   }, [props.item.center, props.isActive, lastTopDishesLoad])
 
   // on load home clear search effect!
   useEffect(() => {
     // not on first load
     if (props.isActive && isLoaded) {
+      console.log('should clear search and tags')
       om.actions.home.clearSearch()
       om.actions.home.clearTags()
     }

@@ -3,7 +3,7 @@ import './Link.css'
 import { idle, series } from '@dish/async'
 import { NavigateItem } from '@dish/router'
 import { Text } from '@dish/ui'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 import { RoutesTable, router } from '../../state/router'
 import { useOvermindStatic } from '../../state/useOvermind'
@@ -56,7 +56,7 @@ export function Link<
         onPress?.(event)
       } else {
         if (!preventNavigate && !!navItem.name) {
-          om.actions.router.navigate(navItem)
+          router.navigate(navItem)
         }
       }
       if (replaceSearch) {

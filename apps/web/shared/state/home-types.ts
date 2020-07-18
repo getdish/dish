@@ -1,7 +1,7 @@
 import { RestaurantOnlyIds, Tag, TopCuisine, User } from '@dish/graph'
+import { NavigateItem } from '@dish/router'
 import { Config, IContext } from 'overmind'
 
-import { NavigateItem } from './router'
 import { NavigableTag } from './Tag'
 
 export type Om = IContext<Config>
@@ -27,10 +27,12 @@ export type HomeState = {
   showAutocomplete: ShowAutocomplete
   showUserMenu: boolean
   states: HomeStateItem[]
+  allStates: { [key: string]: HomeStateItem }
+  stateIndex: number
+  stateIds: string[]
   topDishes: TopCuisine[]
   topDishesFilteredIndices: number[]
   skipNextPageFetchData: boolean
-  breadcrumbStates: HomeStateItemSimple[]
   lastHomeState: HomeStateItemHome
   lastSearchState: HomeStateItemSearch | undefined
   lastRestaurantState: HomeStateItemRestaurant | undefined

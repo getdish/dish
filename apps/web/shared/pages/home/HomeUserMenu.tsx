@@ -1,7 +1,7 @@
 import { slugify } from '@dish/graph'
 import { Box, Divider, HStack, Popover, Text, Toast, VStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { User } from 'react-feather'
+import { Settings, User } from 'react-feather'
 
 import { useOvermind } from '../../state/useOvermind'
 import { AuthLoginRegisterView } from '../../views/auth/AuthLoginRegisterView'
@@ -32,7 +32,14 @@ export const HomeUserMenu = memo(() => {
         flex: 0,
       }}
       contents={
-        <Box padding={20} width="30vw" minWidth={250}>
+        <Box
+          onPressOut={() => {
+            close()
+          }}
+          padding={20}
+          width="30vw"
+          minWidth={250}
+        >
           {!om.state.user.isLoggedIn && (
             <AuthLoginRegisterView
               setMenuOpen={(x) => om.actions.home.setShowUserMenu(x)}
@@ -41,13 +48,33 @@ export const HomeUserMenu = memo(() => {
 
           {om.state.user.isLoggedIn && (
             <VStack spacing>
+              {om.state.user.user?.username === 'admin' && (
+                <VStack spacing>
+                  <LinkButton {...flatButtonStyle} name="admin">
+                    <Settings
+                      size={16}
+                      opacity={0.25}
+                      style={{ marginRight: 5 }}
+                    />
+                    Admin
+                  </LinkButton>
+                  <LinkButton {...flatButtonStyle} name="adminTags">
+                    <Settings
+                      size={16}
+                      opacity={0.25}
+                      style={{ marginRight: 5 }}
+                    />
+                    Admin Tags
+                  </LinkButton>
+                </VStack>
+              )}
+
               <LinkButton
                 {...flatButtonStyle}
                 name="user"
                 params={{
                   username: slugify(om.state.user.user?.username ?? ''),
                 }}
-                onPress={() => close()}
               >
                 Profile
               </LinkButton>
@@ -57,7 +84,6 @@ export const HomeUserMenu = memo(() => {
                   Toast.show(`Logging out...`)
                   setTimeout(() => {
                     om.actions.user.logout()
-                    close()
                   }, 1000)
                 }}
               >

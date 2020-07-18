@@ -155,28 +155,34 @@ export const getNavigateItemForState = (
   }
   // if going home, just go there
   const shouldBeHome = shouldBeOnHome(home, state)
+
+  let name = state.type
+  if (name === 'home' && !shouldBeHome) {
+    name = 'search'
+  } else if (name === 'search' && shouldBeHome) {
+    name = 'home'
+  }
+
+  const isChangingType = name !== router.curPage.name
+  const replace = !isChangingType
+
   if (shouldBeHome) {
-    return { name: 'home' }
+    return {
+      name: 'home',
+      replace,
+    }
   }
 
   // build params
-  const params = getRouteFromTags(omState, state)
-
+  const params = getRouteFromTags(omState, state) as any
+  // TODO wtf is this doing here
   if (state.searchQuery) {
     params.search = state.searchQuery
   }
   if (state.type === 'userSearch') {
+    // @ts-ignore
     params.username = curParams.username
   }
-
-  let name = state.type as any
-  if (name === 'home' && !shouldBeHome) {
-    name = 'search'
-  }
-
-  const isChangingType = name !== state.type
-  const replace = !isChangingType
-
   return {
     name,
     params,
@@ -209,7 +215,7 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
   state
 ) => {
   const next = getNavigateItemForState(om.state, state)
-  const should = om.actions.router.getShouldNavigate(next)
+  const should = router.getShouldNavigate(next)
   if (should) {
     recentTries++
     clearTimeout(tm)
@@ -224,14 +230,11 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
     }, 130)
     console.log(
       'syncStateToRoute',
-      should,
-      cloneDeep({ next, state }),
-      'now',
-      cloneDeep(om.state.router.curPage),
-      'vs',
-      router.navItemToHistoryItem(next)
+      cloneDeep({ should, next, state })
+      // cloneDeep(om.state.router.curPage),
+      // router.navItemToHistoryItem(next)
     )
-    om.actions.router.navigate(next)
+    router.navigate(next)
     return true
   }
   return false

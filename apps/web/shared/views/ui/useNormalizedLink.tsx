@@ -24,10 +24,8 @@ export const useNormalizeLinkProps = (
 }
 
 const getLatestState = () => {
-  const { breadcrumbStates } = omStatic.state.home
-  const lastBreadcrumb = breadcrumbStates[breadcrumbStates.length - 1]
-  const currentStateId = lastBreadcrumb?.id
-  return findLast(omStatic.state.home.states, (x) => x.id === currentStateId)!
+  const { states } = omStatic.state.home
+  return states[states.length - 1]
 }
 
 const useNormalizedLink = (

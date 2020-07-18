@@ -1,3 +1,4 @@
+import { HistoryItem } from '@dish/router'
 import { VStack } from '@dish/ui'
 import React, {
   createContext,
@@ -7,7 +8,7 @@ import React, {
   useState,
 } from 'react'
 
-import { HistoryItem, routePathToName, routes } from '../../state/router'
+import { routePathToName, router, routes } from '../../state/router'
 import { useOvermind } from '../../state/useOvermind'
 
 type RouteContextI = {
@@ -62,14 +63,10 @@ export function RouteSwitch(props: { children: any }) {
   )
 }
 
-export function Route(props: {
-  name: string
-  exact?: boolean
-  children: any
-  forHistory?: HistoryItem
-}) {
+export function Route(props: { name: string; exact?: boolean; children: any }) {
   const om = useOvermind()
-  const activeName = props.forHistory?.name ?? om.state.router.curPage.name
+  const activeName = om.state.router.curPage.name
+  // console.log(activeName)
   const routeContext = useContext(RouteContext)
   const isExactMatching = props.exact && activeName === props.name
   const routePath = routes[props.name].path
@@ -81,26 +78,36 @@ export function Route(props: {
   const isMatched = !!(isParentMatching || isExactMatching)
 
   useLayoutEffect(() => {
-    routeContext?.setRoute(props.name, isMatched)
+    routeContext?.setRoute?.(props.name, isMatched)
   }, [props.name, isMatched])
 
-  if (routeContext.state === 'collect') {
-    return null
-  }
+  const children = useMemo(() => {
+    if (props.exact) {
+      if (isExactMatching) {
+        return getChildren(props.children)
+      }
+      return null
+    }
 
-  if (props.exact) {
-    if (isExactMatching) {
+    // parent matching
+    if (isParentMatching) {
       return getChildren(props.children)
     }
+
+    return null
+  }, [
+    props.exact,
+    props.children,
+    isMatched,
+    isExactMatching,
+    isParentMatching,
+  ])
+
+  if (routeContext?.state === 'collect') {
     return null
   }
 
-  // parent matching
-  if (isParentMatching) {
-    return getChildren(props.children)
-  }
-
-  return null
+  return children
 }
 
 function getChildren(children: Function | any) {
@@ -118,7 +125,7 @@ export function PrivateRoute(props: { name: string; children: any }) {
   useLayoutEffect(() => {
     if (curPageName === props.name) {
       if (!isLoggedIn) {
-        om.actions.router.navigate({ name: 'login' })
+        router.navigate({ name: 'login' })
       }
     }
   }, [curPageName, isLoggedIn])

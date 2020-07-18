@@ -1,5 +1,8 @@
 # July
 
+- Photos table separation
+- Duplicate images being selected from home
+  - Can we make those come from dishes?
 - Crawling more cities
   - Crawl "Mo’orea" for nick
 - Auth - work you need to do for backend for social login?
