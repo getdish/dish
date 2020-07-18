@@ -77,7 +77,6 @@
     "@dish/recoil-store": "*",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.3.3",
     "@types/apple-mapkit-js": "^5.18.0",
-    "history": "^5.0.0",
     "@types/jsdom": "^16.2.0",
     "@types/lodash": "^4.14.155",
     "@types/page": "1.8.0",

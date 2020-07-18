@@ -300,12 +300,7 @@ const SearchResultsContent = memo((props: Props) => {
 
   if (!isLoading && !results.length) {
     return contentWrap(
-      <VStack
-        height="100vh"
-        alignItems="center"
-        justifyContent="center"
-        spacing
-      >
+      <VStack height="50vh" alignItems="center" justifyContent="center" spacing>
         <Text fontSize={22}>No results 😞</Text>
         {/* <LinkButton name="contact">Report problem</LinkButton> */}
       </VStack>

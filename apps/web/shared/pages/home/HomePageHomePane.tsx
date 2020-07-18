@@ -122,11 +122,7 @@ const HomePageTopDishes = memo((props: Props) => {
           <HStack
             alignItems="center"
             justifyContent="center"
-<<<<<<< HEAD
-            top={-20}
-=======
             top={-10}
->>>>>>> nate/recover
             zIndex={1000}
             position="absolute"
             left={0}
