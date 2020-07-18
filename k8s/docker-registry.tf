@@ -11,6 +11,11 @@ resource "helm_release" "docker-registry" {
   version = "1.9.3"
 
   set {
+    name ="config.configYml"
+    value = file("yaml/docker-registry.yaml")
+  }
+
+  set {
     name = "persistence.enabled"
     value = true
   }

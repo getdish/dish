@@ -5,6 +5,11 @@ resource "helm_release" "redis" {
   version = "10.5.7"
 
   set {
+    name ="config.configYml"
+    value = file("yaml/redis.yaml")
+  }
+
+  set {
     name = "cluster.enabled"
     value = "false"
   }
