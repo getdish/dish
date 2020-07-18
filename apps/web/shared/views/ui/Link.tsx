@@ -1,14 +1,11 @@
 import './Link.css'
 
 import { idle, series } from '@dish/async'
+import { NavigateItem } from '@dish/router'
 import { Text } from '@dish/ui'
 import React, { useEffect, useRef, useState } from 'react'
 
-import {
-  NavigateItem,
-  RoutesTable,
-  getPathFromParams,
-} from '../../state/router'
+import { RoutesTable, router } from '../../state/router'
 import { useOvermindStatic } from '../../state/useOvermind'
 import { LinkProps } from './LinkProps'
 import { useNormalizeLinkProps } from './useNormalizedLink'
@@ -50,7 +47,7 @@ export function Link<
 
   useEffect(() => {
     if (!linkRef.current) return
-    let cancel = null
+    let cancel: Function | null = null
     let event = null
 
     const nav = () => {
@@ -78,20 +75,24 @@ export function Link<
       }
     }
 
-    linkRef.current.addEventListener('click', handleClick)
+    linkRef.current?.addEventListener('click', handleClick)
 
     return () => {
-      linkRef.current.removeEventListener('click', handleClick)
+      linkRef.current?.removeEventListener('click', handleClick)
       if (cancel) {
-        nav()
-        cancel()
+        console.warn(
+          'TEST SKIPPING THIS TO SEE IF IT WAS CAUSING LOOP, DID YOU WANT TO NAV?',
+          navItem
+        )
+        // nav()
+        // cancel()
       }
     }
   }, [])
 
   const props = {
     ref: linkRef,
-    href: getPathFromParams(navItem),
+    href: router.getPathFromParams(navItem),
     ...linkProps,
     className: `${className ?? ''} dish-link`,
     style,
