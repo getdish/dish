@@ -619,6 +619,27 @@ function yaml_to_env() {
   parse_yaml $PROJECT_ROOT/env.enc.production.yaml | sed 's/\$/\\$/g' | xargs -0
 }
 
+function buildkit_build() {
+  dockerfile_path=$1
+  name=$2
+  dish_base_version=${3:-''}
+  buildctl \
+    --addr tcp://buildkit.k8s.dishapp.com:1234 \
+    --tlscacert k8s/etc/certs/buildkit/client/ca.pem \
+    --tlscert k8s/etc/certs/buildkit/client/cert.pem \
+    --tlskey k8s/etc/certs/buildkit/client/key.pem \
+    --tlsservername buildkit.k8s.dishapp.com \
+    build \
+      --frontend=dockerfile.v0 \
+      --local context=. \
+      --local dockerfile=$dockerfile_path \
+      --opt build-arg:DISH_BASE_VERSION=$dish_base_version \
+      --output type=image,name=$name,push=true \
+      --export-cache type=inline \
+      --import-cache type=registry,ref=$name
+  echo "\`buildctl\` ($NAME) exited with: $?"
+}
+
 if command -v git &> /dev/null; then
   PROJECT_ROOT=$(git rev-parse --show-toplevel)
   pushd $PROJECT_ROOT >/dev/null
