@@ -1,0 +1,6 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: alter table "public"."photos" add constraint "photos_restaurant_id_url_key"
+      unique ("restaurant_id", "url");
+  type: run_sql

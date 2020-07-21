@@ -1,7 +1,5 @@
 import '@dish/common'
 
-import crypto from 'crypto'
-
 import { sentryException } from '@dish/common'
 import {
   MenuItem,
@@ -9,9 +7,11 @@ import {
   RestaurantWithId,
   Scrape,
   ScrapeData,
+  bestPhotosForRestaurant,
   deleteAllBy,
   globalTagId,
   menuItemsUpsertMerge,
+  photosUpsert,
   restaurantFindBatch,
   restaurantFindOne,
   restaurantFindOneWithTags,
@@ -19,15 +19,16 @@ import {
   restaurantUpdate,
   restaurantUpsertManyTags,
   scrapeGetData,
+  unassessedPhotosForRestaurant,
 } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
-import { orderBy } from 'lodash'
 import moment from 'moment'
 
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
 import { sanfran, sql } from '../utils'
+import { Photoing } from './Photoing'
 import { Tagging } from './Tagging'
 
 const PER_PAGE = 50
@@ -50,6 +51,7 @@ export class Self extends WorkerJob {
   ratings!: { [key: string]: number }
   _start_time!: [number, number]
   tagging: Tagging
+  photoing: Photoing
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -65,6 +67,7 @@ export class Self extends WorkerJob {
   constructor() {
     super()
     this.tagging = new Tagging(this)
+    this.photoing = new Photoing(this)
   }
 
   async main() {
@@ -459,8 +462,6 @@ export class Self extends WorkerJob {
     return result[2].rowCount
   }
 
-  _dateString(day: string, time: string) {}
-
   _toPostgresTime(day: string, time: string) {
     const CALIFORNIAN_TZ = '-07'
     const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -663,44 +664,26 @@ export class Self extends WorkerJob {
     // @ts-ignore
     const yelp_data = this.yelp?.data || {}
     // @ts-ignore
-    this.restaurant.photos = [
+    let photos_urls = [
       // ...scrapeGetData(this.tripadvisor, 'photos', []),
       ...this._getGooglePhotos(),
       ...this.getPaginatedData(yelp_data, 'photos').map((i) => i.src),
     ]
-    await this.assessPhotoQuality()
-  }
-
-  async assessPhotoQuality() {
-    this._proxyYelpCDN()
-    const IMAGE_QUALITY_API = 'https://image-quality.rio.dishapp.com/prediction'
-    const response = await fetch(IMAGE_QUALITY_API, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(this.restaurant.photos),
+    photos_urls = this.photoing._proxyYelpCDN(photos_urls)
+    let photos = photos_urls.map((url: string) => {
+      return {
+        restaurant_id: this.restaurant.id,
+        url: url,
+      }
     })
-    let results = await response.json()
-    results = orderBy(results, ['mean_score_prediction']).reverse()
-    let sorted: string[] = []
-    for (const result of results) {
-      const photo = this.restaurant.photos.find((p) => {
-        const id = crypto.createHash('md5').update(p).digest('hex')
-        return id == result.image_id
-      })
-      sorted.push(photo)
-    }
-    this.restaurant.photos = sorted
-  }
-
-  _proxyYelpCDN() {
-    this.restaurant.photos = this.restaurant.photos.map((p) => {
-      return p.replace(
-        'https://s3-media0.fl.yelpcdn.com/',
-        process.env.YELP_CDN_AWS_PROXY
-      )
-    })
+    await photosUpsert(photos)
+    const unassessed_photos = await unassessedPhotosForRestaurant(
+      this.restaurant.id
+    )
+    await this.photoing.assessNewPhotos(unassessed_photos)
+    const most_aesthetic = await bestPhotosForRestaurant(this.restaurant.id)
+    //@ts-ignore
+    this.restaurant.photos = most_aesthetic.map((p) => p.url)
   }
 
   _getGooglePhotos() {

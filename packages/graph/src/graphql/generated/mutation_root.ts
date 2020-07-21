@@ -22,6 +22,16 @@ import {
   t_opening_hours_mutation_response,
 } from './opening_hours'
 import {
+  photos_bool_exp,
+  photos_inc_input,
+  photos_insert_input,
+  photos_on_conflict,
+  photos_pk_columns_input,
+  photos_set_input,
+  t_photos,
+  t_photos_mutation_response,
+} from './photos'
+import {
   restaurant_append_input,
   restaurant_bool_exp,
   restaurant_delete_at_path_input,
@@ -146,6 +156,11 @@ export type t_mutation_root = FieldsType<
       { id: any },
       t_opening_hours | null
     >
+    delete_photos: FieldsTypeArg<
+      { where: photos_bool_exp },
+      t_photos_mutation_response | null
+    >
+    delete_photos_by_pk?: FieldsTypeArg<{ id: any }, t_photos | null>
     delete_restaurant: FieldsTypeArg<
       { where: restaurant_bool_exp },
       t_restaurant_mutation_response | null
@@ -219,6 +234,17 @@ export type t_mutation_root = FieldsType<
         on_conflict?: opening_hours_on_conflict | null
       },
       t_opening_hours | null
+    >
+    insert_photos: FieldsTypeArg<
+      {
+        objects: photos_insert_input[]
+        on_conflict?: photos_on_conflict | null
+      },
+      t_photos_mutation_response | null
+    >
+    insert_photos_one?: FieldsTypeArg<
+      { object: photos_insert_input; on_conflict?: photos_on_conflict | null },
+      t_photos | null
     >
     insert_restaurant: FieldsTypeArg<
       {
@@ -340,6 +366,22 @@ export type t_mutation_root = FieldsType<
         pk_columns: opening_hours_pk_columns_input
       },
       t_opening_hours | null
+    >
+    update_photos: FieldsTypeArg<
+      {
+        _inc?: photos_inc_input | null
+        _set?: photos_set_input | null
+        where: photos_bool_exp
+      },
+      t_photos_mutation_response | null
+    >
+    update_photos_by_pk?: FieldsTypeArg<
+      {
+        _inc?: photos_inc_input | null
+        _set?: photos_set_input | null
+        pk_columns: photos_pk_columns_input
+      },
+      t_photos | null
     >
     update_restaurant: FieldsTypeArg<
       {

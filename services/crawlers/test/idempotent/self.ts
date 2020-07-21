@@ -3,6 +3,7 @@ import {
   RestaurantWithId,
   Scrape,
   Tag,
+  bestPhotosForRestaurant,
   flushTestData,
   restaurantFindOneWithTags,
   restaurantInsert,
@@ -67,7 +68,7 @@ const yelp: Partial<Scrape> = {
     },
     photosp0: [
       {
-        src: 'https://yelp.com/image.jpg',
+        src: 'https://i.imgur.com/92a8cNI.jpg',
         media_data: {
           caption: 'Test tag existing 1',
         },
@@ -75,7 +76,7 @@ const yelp: Partial<Scrape> = {
     ],
     photosp1: [
       {
-        src: 'https://yelp.com/image2.jpg',
+        src: 'https://i.imgur.com/N6YtgRI.jpeg',
         media_data: {
           caption: 'Test tag existing 2',
         },
@@ -241,6 +242,11 @@ test('Merging', async (t) => {
     },
     ['menu_items']
   )
+  const photos = await bestPhotosForRestaurant(t.context.restaurant.id)
+  t.is(photos[0].url, 'https://i.imgur.com/N6YtgRI.jpeg')
+  t.is(photos[0].quality, 5.3742065027199715)
+  t.is(photos[1].url, 'https://i.imgur.com/92a8cNI.jpg')
+  t.is(photos[1].quality, 4.575530681464443)
   t.is(!!updated, true)
   if (!updated) return
   t.is(updated.name, 'Test Name Yelp')
@@ -248,8 +254,8 @@ test('Merging', async (t) => {
   t.is(updated.tags.length, 3)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Mexican'), true)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Pizza'), true)
-  t.is(updated.photos?.[0], 'https://yelp.com/image.jpg')
-  t.is(updated.photos?.[1], 'https://yelp.com/image2.jpg')
+  t.is(updated.photos?.[0], 'https://i.imgur.com/N6YtgRI.jpeg')
+  t.is(updated.photos?.[1], 'https://i.imgur.com/92a8cNI.jpg')
   t.is(updated.rating, 3.2800000000000002)
   t.deepEqual(updated.rating_factors as any, {
     food: 5,
@@ -479,9 +485,9 @@ test('Find photos of dishes', async (t) => {
     updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
   t.is(updated.tags.length, 3)
   t.is(tag1.tag.name, existing_tag1.name)
-  t.deepEqual(tag1.photos, ['https://yelp.com/image.jpg'])
+  t.deepEqual(tag1.photos, ['https://i.imgur.com/92a8cNI.jpg'])
   t.is(tag2.tag.name, existing_tag2.name)
-  t.deepEqual(tag2.photos, ['https://yelp.com/image2.jpg'])
+  t.deepEqual(tag2.photos, ['https://i.imgur.com/N6YtgRI.jpeg'])
 })
 
 test('Identifying country tags', async (t) => {

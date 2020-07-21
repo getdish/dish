@@ -18,6 +18,13 @@ import {
   t_opening_hours_aggregate,
 } from './opening_hours'
 import {
+  photos_bool_exp,
+  photos_order_by,
+  photos_select_column,
+  t_photos,
+  t_photos_aggregate,
+} from './photos'
+import {
   restaurant_bool_exp,
   restaurant_order_by,
   restaurant_select_column,
@@ -121,6 +128,27 @@ export type t_subscription_root = FieldsType<
       t_opening_hours_aggregate
     >
     opening_hours_by_pk?: FieldsTypeArg<{ id: any }, t_opening_hours | null>
+    photos: FieldsTypeArg<
+      {
+        distinct_on?: photos_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: photos_order_by[] | null
+        where?: photos_bool_exp | null
+      },
+      t_photos[]
+    >
+    photos_aggregate: FieldsTypeArg<
+      {
+        distinct_on?: photos_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: photos_order_by[] | null
+        where?: photos_bool_exp | null
+      },
+      t_photos_aggregate
+    >
+    photos_by_pk?: FieldsTypeArg<{ id: any }, t_photos | null>
     restaurant: FieldsTypeArg<
       {
         distinct_on?: restaurant_select_column[] | null
