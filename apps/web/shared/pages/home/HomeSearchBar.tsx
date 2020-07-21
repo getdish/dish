@@ -90,9 +90,9 @@ export default memo(function HomeSearchBar() {
             position="absolute"
             top={0}
             width="100%"
-            shadowColor="rgba(0,0,0,0.3)"
+            shadowColor="rgba(0,0,0,0.2)"
             shadowOffset={{ height: 2, width: 4 }}
-            shadowRadius={14}
+            shadowRadius={18}
           />
           <VStack
             height={searchBarHeight - 1}
@@ -102,9 +102,9 @@ export default memo(function HomeSearchBar() {
             position="absolute"
             top={0}
             width="100%"
-            shadowColor="rgba(255,255,255,0.3)"
-            shadowOffset={{ height: 5, width: 5 }}
-            shadowRadius={0}
+            shadowColor="rgba(0,0,0,0.1)"
+            shadowOffset={{ height: 2, width: 3 }}
+            shadowRadius={3}
           />
           <VStack
             className="skewX"
@@ -140,7 +140,7 @@ export default memo(function HomeSearchBar() {
               justifyContent="center"
               marginTop={-1}
             >
-              <VStack paddingHorizontal={14}>
+              <VStack paddingHorizontal={10}>
                 <DishLogoButton />
               </VStack>
 

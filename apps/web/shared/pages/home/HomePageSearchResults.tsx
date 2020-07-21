@@ -20,7 +20,7 @@ import { useOvermind, useOvermindStatic } from '../../state/useOvermind'
 import { getTitleForState } from './getTitleForState'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
-import { HomePagePaneProps } from './HomePage'
+import { HomePagePaneProps } from './HomePagePane'
 import { HomeScrollView } from './HomeScrollView'
 import { focusSearchInput } from './HomeSearchInput'
 import { HomeStackDrawer } from './HomeStackDrawer'
@@ -40,7 +40,7 @@ const useSpacing = () => {
     : searchBarHeight - searchBarTopOffset + topBarVPad + 4
   return {
     paddingTop,
-    titleHeight: paddingTop + 48,
+    titleHeight: 61,
     isSmall,
   }
 }
@@ -97,7 +97,7 @@ const SearchResultsTitle = memo(
   ({ stateId, title }: { stateId: string; title: any }) => {
     const om = useOvermind()
     const state = om.state.home.allStates[stateId]
-    const { isSmall, paddingTop, titleHeight } = useSpacing()
+    const { isSmall, titleHeight } = useSpacing()
 
     if (!isSearchState(state)) {
       return null
@@ -125,9 +125,7 @@ const SearchResultsTitle = memo(
           }}
         >
           <HStack
-            paddingTop={paddingTop}
-            paddingBottom={topBarVPad}
-            height={titleHeight}
+            paddingVertical={topBarVPad}
             paddingHorizontal={18}
             flex={1}
             justifyContent="space-between"
