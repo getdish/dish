@@ -23,6 +23,11 @@ resource "helm_release" "cert-manager" {
   version = "v${var.cert_manager_version}.0"
 
   set {
+    name ="config.configYml"
+    value = file("yaml/cert-man-helm.yaml")
+  }
+
+  set {
     name = "installCRDs"
     value = true
   }

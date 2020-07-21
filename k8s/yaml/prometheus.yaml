@@ -1,3 +1,6 @@
+prometheusOperator.nodeSelector:
+  "doks.digitalocean.com/node-pool": "dish-ancillary-pool"
+
 # Define persistent storage for Prometheus (PVC)
 prometheus:
   prometheusSpec:

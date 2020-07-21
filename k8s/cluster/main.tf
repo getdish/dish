@@ -27,6 +27,15 @@ resource "digitalocean_kubernetes_cluster" "dish" {
   }
 }
 
+resource "digitalocean_kubernetes_node_pool" "ancillary" {
+  cluster_id = digitalocean_kubernetes_cluster.dish.id
+  name       = "dish-ancillary-pool"
+  size       = "s-4vcpu-8gb"
+  auto_scale = true
+  min_nodes = 1
+  max_nodes = 3
+}
+
 resource "digitalocean_kubernetes_node_pool" "workers" {
   cluster_id = digitalocean_kubernetes_cluster.dish.id
   name       = "dish-worker-pool"
@@ -39,10 +48,8 @@ resource "digitalocean_kubernetes_node_pool" "workers" {
 resource "digitalocean_kubernetes_node_pool" "ci" {
   cluster_id = digitalocean_kubernetes_cluster.dish.id
   name       = "dish-ci-pool"
-  size       = "s-4vcpu-8gb"
-  auto_scale = true
-  min_nodes = 1
-  max_nodes = 3
+  size       = "s-6vcpu-16gb"
+  node_count = 1
 }
 
 # Once the cluster is created, all other Terraform commands will reference the cluster

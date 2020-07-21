@@ -38,6 +38,13 @@ resource "kubernetes_deployment" "buildkitd" {
             container_port = 1234
           }
 
+          resources {
+            limits {
+              cpu    = "5"
+              memory = "12Gi"
+            }
+          }
+
           liveness_probe {
             exec {
               command = [

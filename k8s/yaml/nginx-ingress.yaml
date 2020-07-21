@@ -1,0 +1,3 @@
+controller.nodeSelector:
+  "doks.digitalocean.com/node-pool": "dish-pool"
+
