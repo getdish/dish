@@ -200,12 +200,6 @@ export default memo(function HomeSearchBar() {
               )}
 
               <HomeUserMenu />
-
-              {om.state.user.user?.username === 'admin' && (
-                <LinkButton padding={12} name="admin">
-                  <Settings color="#fff" size={22} opacity={0.65} />
-                </LinkButton>
-              )}
             </HStack>
           </VStack>
         </VStack>

@@ -23,7 +23,6 @@ import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantTopReviews } from './RestaurantTopReviews'
-import { StackViewCloseButton } from './StackViewCloseButton'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
@@ -32,11 +31,8 @@ type Props = HomePagePaneProps<HomeStateItemRestaurant>
 
 export default memo(function HomePageRestaurantContainer(props: Props) {
   return (
-    <HomeStackDrawer>
-      <StackViewCloseButton />
-      <Suspense fallback={<LoadingItems />}>
-        <HomePageRestaurant {...props} />
-      </Suspense>
+    <HomeStackDrawer closable>
+      <HomePageRestaurant {...props} />
     </HomeStackDrawer>
   )
 })

@@ -12,16 +12,11 @@ import React, {
 import { ArrowUp } from 'react-feather'
 import { ScrollView } from 'react-native'
 
-import {
-  drawerBorderRadius,
-  searchBarHeight,
-  searchBarTopOffset,
-} from '../../constants'
+import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { weakKey } from '../../helpers/weakKey'
 import { HomeStateItemSearch, OmState } from '../../state/home'
+import { isSearchState } from '../../state/home-helpers'
 import { useOvermind, useOvermindStatic } from '../../state/useOvermind'
-import { LinkButton } from '../../views/ui/LinkButton'
-import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { getTitleForState } from './getTitleForState'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
@@ -30,7 +25,6 @@ import { HomeScrollView } from './HomeScrollView'
 import { focusSearchInput } from './HomeSearchInput'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
-import { StackViewCloseButton } from './StackViewCloseButton'
 import { useLastValueWhen } from './useLastValueWhen'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
@@ -82,13 +76,9 @@ export default memo(function HomePageSearchResults(props: Props) {
   }, shouldAvoidContentUpdates)
 
   return (
-    <HomeStackDrawer>
-      <PageTitleTag>{title}</PageTitleTag>
-      <StackViewCloseButton />
-      <Suspense fallback={<LoadingItems />}>
-        <SearchResultsTitle title={titleElements} {...props} />
-        {isOptimisticUpdating ? <HomeEmptyLoading /> : content}
-      </Suspense>
+    <HomeStackDrawer title={title} closable>
+      <SearchResultsTitle title={titleElements} stateId={props.item.id} />
+      {isOptimisticUpdating ? <HomeEmptyLoading /> : content}
     </HomeStackDrawer>
   )
 })
@@ -103,59 +93,67 @@ const HomeEmptyLoading = memo(() => {
   )
 })
 
-const SearchResultsTitle = ({ item, title }: Props & { title: any }) => {
-  const { isSmall, paddingTop, titleHeight } = useSpacing()
+const SearchResultsTitle = memo(
+  ({ stateId, title }: { stateId: string; title: any }) => {
+    const om = useOvermind()
+    const state = om.state.home.allStates[stateId]
+    const { isSmall, paddingTop, titleHeight } = useSpacing()
 
-  return (
-    <HStack
-      position="absolute"
-      top={0}
-      left={0}
-      right={0}
-      borderBottomColor="#eee"
-      borderBottomWidth={1}
-      zIndex={1000}
-      alignItems="center"
-      backgroundColor="#fff"
-    >
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{
-          width: '100%',
-          maxWidth: '100%',
-          paddingRight: isSmall ? 25 : 0,
-        }}
+    if (!isSearchState(state)) {
+      return null
+    }
+
+    return (
+      <HStack
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        borderBottomColor="#eee"
+        borderBottomWidth={1}
+        zIndex={1000}
+        alignItems="center"
+        backgroundColor="#fff"
       >
-        <HStack
-          paddingTop={paddingTop}
-          paddingBottom={topBarVPad}
-          height={titleHeight}
-          paddingHorizontal={18}
-          flex={1}
-          justifyContent="space-between"
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            width: '100%',
+            maxWidth: '100%',
+            paddingRight: isSmall ? 25 : 0,
+          }}
         >
-          <HStack marginTop={-14} alignItems="center" justifyContent="center">
-            <HomeLenseBar activeTagIds={item.activeTagIds} />
-          </HStack>
-          <Spacer size={16} />
-          <HomeFilterBar activeTagIds={item.activeTagIds} />
-          <Spacer size={16} />
-          <VStack
-            flex={10}
-            spacing={3}
-            justifyContent="flex-end"
-            alignItems="flex-end"
-            overflow="hidden"
+          <HStack
+            paddingTop={paddingTop}
+            paddingBottom={topBarVPad}
+            height={titleHeight}
+            paddingHorizontal={18}
+            flex={1}
+            justifyContent="space-between"
           >
-            {title}
-          </VStack>
-        </HStack>
-      </ScrollView>
-      {/* <MyListButton isEditingUserList={isEditingUserList} /> */}
-    </HStack>
-  )
-}
+            <HStack marginTop={-14} alignItems="center" justifyContent="center">
+              <HomeLenseBar activeTagIds={state.activeTagIds} />
+            </HStack>
+            <Spacer size={16} />
+            <HomeFilterBar activeTagIds={state.activeTagIds} />
+            <Spacer size={16} />
+            <VStack
+              flex={10}
+              spacing={3}
+              justifyContent="flex-end"
+              alignItems="flex-end"
+              overflow="hidden"
+            >
+              {title}
+            </VStack>
+          </HStack>
+        </ScrollView>
+        {/* <MyListButton isEditingUserList={isEditingUserList} /> */}
+      </HStack>
+    )
+  }
+)
 
 const SearchResultsContent = memo((props: Props) => {
   const { item } = props

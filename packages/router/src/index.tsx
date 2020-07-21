@@ -10,25 +10,24 @@ const history = createBrowserHistory()
 export type RoutesTable = { [key: string]: Route }
 export type RouteName = keyof RoutesTable
 
-export type HistoryType = 'push' | 'pop'
+export type HistoryType = 'push' | 'pop' | 'replace'
 export type HistoryDirection = 'forward' | 'backward' | 'none'
 
 export type HistoryItem<A extends RouteName = any> = {
   id: string
   name: A
   path: string
-  type?: HistoryType
-  search?: Object
-  params?: RoutesTable[A]['params']
-  replace?: boolean
-  direction?: HistoryDirection
+  type: HistoryType
+  search: string
+  params: Exclude<RoutesTable[A]['params'], void> | { [key: string]: string }
+  direction: HistoryDirection
 }
 
 export type NavigateItem<
   T = {
     [K in keyof RoutesTable]: {
       name: K
-      params?: RoutesTable[K]['params']
+      params?: RoutesTable[K]['params'] | Object
     }
   }
 > = T[keyof T] & {
@@ -49,12 +48,22 @@ export class Router extends Store<RouterProps> {
   routePathToName = {}
   notFound = false
   history: HistoryItem[] = []
+  stack: HistoryItem[] = []
+  stackIndex = 0
 
   get prevPage() {
-    return this.history[this.history.length - 2]
+    return this.stack[this.stack.length - 2]
   }
 
   get curPage() {
+    return this.stack[this.stack.length - 1] ?? defaultPage
+  }
+
+  get prevHistory() {
+    return this.history[this.history.length - 2]
+  }
+
+  get curHistory() {
     return this.history[this.history.length - 1] ?? defaultPage
   }
 
@@ -81,41 +90,111 @@ export class Router extends Store<RouterProps> {
     this.started = true
 
     history.listen((event) => {
-      const state = event.location.state
-      console.log('event', event, state)
-      this.handlePath(event.location.pathname, 'pop', {
-        replace: event.action === 'REPLACE',
+      const state = event.location.state as any
+      const id = state?.id
+      const prevItem = this.stack[this.stackIndex - 1]
+      const nextItem = this.stack[this.stackIndex + 1]
+      const direction: HistoryDirection =
+        prevItem?.id === id
+          ? 'backward'
+          : nextItem?.id === id
+          ? 'forward'
+          : 'none'
+      console.log('event.action', event.action)
+      const type: HistoryType =
+        event.action === 'REPLACE'
+          ? 'replace'
+          : event.action === 'POP'
+          ? 'pop'
+          : 'push'
+      console.log(
+        'event',
+        { type, direction, event, state },
+        this.history,
+        this.stack
+      )
+      this.handlePath(event.location.pathname, {
+        id,
+        direction,
+        type,
       })
     })
 
-    // should push one event no?
-    this.handlePath(window.location.pathname)
+    window['router'] = this
+
+    // initial entry
+    history.push(
+      {
+        pathname: window.location.pathname,
+        search: window.location.search,
+        hash: window.location.hash,
+      },
+      {
+        id: uid(),
+      }
+    )
   }
 
   private handlePath(
     pathname: string,
-    type: HistoryType = 'push',
-    item?: Partial<HistoryItem>
+    item: Pick<HistoryItem, 'id' | 'type' | 'direction'>
   ) {
     const match = this.router.match('GET', pathname)
     if (match) {
       const next: HistoryItem = {
-        id: uid(),
-        type,
+        id: item.id ?? uid(),
+        type: item.type,
+        direction: item.direction,
         name: match.handler,
         path: pathname,
-        params: match.params as any,
-        ...item,
+        params: match.params,
+        search: window.location.search,
       }
       this.history = [...this.history, next]
+
+      switch (item.direction) {
+        case 'forward':
+          this.stackIndex += 1
+          break
+        case 'backward':
+          this.stackIndex -= 1
+          break
+        case 'none':
+          if (item.type === 'replace') {
+            this.stack[this.stackIndex] = next
+          } else {
+            if (this.stack.length - 1 > this.stackIndex) {
+              // remove future states on next push
+              this.stack = this.stack.slice(0, this.stackIndex)
+            }
+            this.stack = [...this.stack, next]
+            this.stackIndex = this.stack.length - 1
+          }
+          break
+      }
+
+      console.log(
+        'now',
+        JSON.stringify(
+          { item, stack: this.stack, stackIndex: this.stackIndex },
+          null,
+          2
+        )
+      )
+
       this.routeChangeListeners.forEach((x) => x(next))
     } else {
       console.log('no match', pathname, item)
     }
   }
 
-  routeChangeListeners = new Set<HistoryCb>()
+  private routeChangeListeners = new Set<HistoryCb>()
   onRouteChange(cb: HistoryCb) {
+    if (this.history.length) {
+      for (const item of this.history) {
+        cb(item)
+      }
+    }
     this.routeChangeListeners.add(cb)
   }
 
@@ -123,7 +202,6 @@ export class Router extends Store<RouterProps> {
     const historyItem = this.navItemToHistoryItem(navItem)
     const sameName = historyItem.name === this.curPage.name
     const sameParams = isEqual(historyItem.params, this.curPage.params)
-    console.log('ok', sameParams)
     return !sameName || !sameParams
   }
 
@@ -137,9 +215,10 @@ export class Router extends Store<RouterProps> {
       return
     }
     const params = {
-      id: `${Math.random()}`,
+      id: item?.id ?? uid(),
     }
-    if (item.replace) {
+    console.warn('router.navigate', navItem, item)
+    if (item.type === 'replace') {
       history.replace(item.path, params)
     } else {
       history.push(item.path, params)
@@ -147,11 +226,11 @@ export class Router extends Store<RouterProps> {
   }
 
   back() {
-    window.history.back()
+    history.back()
   }
 
   forward() {
-    window.history.forward()
+    history.forward()
   }
 
   getPathFromParams({
@@ -217,14 +296,15 @@ export class Router extends Store<RouterProps> {
     }
     return {
       id: uid(),
-      ...navItem,
-      type: 'push',
+      direction: 'none',
+      name: navItem.name,
+      type: navItem.replace ? 'replace' : 'push',
       params,
       path: this.getPathFromParams({
         name: navItem.name,
         params,
       }),
-      search: curSearch,
+      search: window.location.search,
     }
   }
 }
@@ -281,80 +361,8 @@ const defaultPage = {
   params: {},
 }
 
-const uid = () => `${Math.random()}`
+const uid = () => `${Math.random()}`.replace('.', '')
 let curSearch = {}
-
-// const routeListen: Action<{
-//   url: string
-//   name: RouteName
-// }> = (om, { name, url }) => {
-//   page(url, async ({ params, querystring }) => {
-//     let isGoingBack = false
-//     if (pop && Date.now() - pop.at < 30) {
-//       if (pop.path == getPathFromParams({ name, params })) {
-//         const history = om.state.router.history
-//         const last = history[history.length - 2] ?? history[history.length - 1]
-//         const lastPath = last.path
-//         const lastMatches = lastPath == pop.path
-//         isGoingBack = lastMatches
-//       }
-//     }
-
-//     if (!ignoreNextRoute) {
-//       console.log('page.js routing', {
-//         url,
-//         params,
-//         isGoingBack,
-//       })
-//     }
-
-//     curSearch = queryString.parse(querystring)
-
-//     if (isGoingBack) {
-//       const last = _.last(om.state.router.history)
-//       if (last && onRouteChange) {
-//         onRouteChange({ type: 'pop', name, item: last })
-//       }
-//     } else {
-//       if (ignoreNextRoute) {
-//         ignoreNextRoute = false
-//         return
-//       }
-//       const paramsClean = Object.keys(params).reduce((acc, cur) => {
-//         if (params[cur]) {
-//           acc[cur] = params[cur]
-//         }
-//         return acc
-//       }, {})
-
-//       const args: NavigateItem = {
-//         name,
-//         params: paramsClean,
-//       } as any
-
-//       // go go go
-//       await race(om.actions.router.navigate(args), 2000, 'router.navigate', {
-//         warnOnly: true,
-//       })
-
-//       finishStart()
-//     }
-//   })
-// }
-
-// effects
-
-// export const effects = {
-//   open(url: string) {
-//     ignoreNextRoute = true
-//     page.show(url)
-//   },
-
-//   replace(url: string) {
-//     ignoreNextRoute = true
-//     page.replace(url)
-//   },
-// }
 
 const isObject = (x: any) => x && `${x}` === `[object Object]`
 const isEqual = (a: any, b: any) => {

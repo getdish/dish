@@ -1,4 +1,4 @@
-import { fullyIdle, series } from '@dish/async'
+import { fullyIdle, idle, series } from '@dish/async'
 import { HStack, Spacer, Toast, useGet, useOnMount } from '@dish/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { StyleSheet, TextInput } from 'react-native'
@@ -9,6 +9,7 @@ import {
   inputGetNode,
   inputIsTextSelected,
 } from '../../helpers/input'
+import { router } from '../../state/router'
 import { getTagId } from '../../state/Tag'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { CloseButton } from './CloseButton'
@@ -227,15 +228,15 @@ function searchInputEffect(input: HTMLInputElement) {
     switch (code) {
       case 13: {
         // enter
-        const item = om.state.home.autocompleteResults[autocompleteIndex - 1]
         // just searching normal
+        const item = om.state.home.autocompleteResults[autocompleteIndex - 1]
         if (isAutocompleteActive && item && autocompleteIndex !== 0) {
           if (item.type === 'restaurant') {
             if (!item.slug) {
               Toast.show(`No slug, err`)
               return
             }
-            om.actions.router.navigate({
+            router.navigate({
               name: 'restaurant',
               params: { slug: item.slug },
             })
@@ -246,13 +247,11 @@ function searchInputEffect(input: HTMLInputElement) {
             })
           }
         } else {
-          if (!item) {
-            await om.actions.home.clearTags()
-          }
           om.actions.home.runSearch({
             searchQuery: e.target.value,
             force: true,
           })
+          await idle(40)
         }
         om.actions.home.setShowAutocomplete(false)
         focusedInput.blur()

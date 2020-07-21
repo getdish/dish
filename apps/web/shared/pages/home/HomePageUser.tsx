@@ -3,16 +3,12 @@ import { Circle, Divider, HStack, Spacer, Text, VStack } from '@dish/ui'
 import React from 'react'
 import { Image, ScrollView } from 'react-native'
 
-import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemUser } from '../../state/home'
-import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { Link } from '../../views/ui/Link'
-import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { HomePagePaneProps } from './HomePage'
 import { avatar } from './HomePageSearchResults'
+import { HomeStackDrawer } from './HomeStackDrawer'
 import { StackItemProps } from './HomeStackView'
-import { StackViewCloseButton } from './StackViewCloseButton'
 
 export default graphql(function HomePageUser({
   item,
@@ -34,17 +30,7 @@ export default graphql(function HomePageUser({
     }) ?? []
 
   return (
-    <VStack
-      flex={1}
-      borderRadius={drawerBorderRadius}
-      position="relative"
-      backgroundColor="#fff"
-      overflow="hidden"
-    >
-      <PageTitleTag>Dish - User profile</PageTitleTag>
-
-      <StackViewCloseButton />
-
+    <HomeStackDrawer closable title="Dish - User profile">
       <VStack padding={18} paddingBottom={0} paddingRight={16}>
         <HStack position="relative">
           <Circle size={64}>
@@ -87,6 +73,6 @@ export default graphql(function HomePageUser({
           </VStack>
         </VStack>
       </ScrollView>
-    </VStack>
+    </HomeStackDrawer>
   )
 })
