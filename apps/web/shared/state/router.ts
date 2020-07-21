@@ -68,7 +68,6 @@ const start: AsyncAction<{
   onRouteChange?: OnRouteChangeCb
 }> = async (om, opts) => {
   router.onRouteChange((item) => {
-    console.log('getem', item)
     om.actions.router._update()
     opts.onRouteChange?.(item)
   })
@@ -77,6 +76,7 @@ const start: AsyncAction<{
 type RouterState = {
   _update: number
   curPage: HistoryItem
+  curPageName: string
 }
 
 export const state: RouterState = {
@@ -84,6 +84,9 @@ export const state: RouterState = {
   curPage: derived<RouterState, HistoryItem>((state) => {
     state._update
     return router.curPage
+  }),
+  curPageName: derived<RouterState, string>((state) => {
+    return state.curPage.name
   }),
 }
 

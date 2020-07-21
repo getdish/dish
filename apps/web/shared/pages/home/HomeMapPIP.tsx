@@ -14,11 +14,11 @@ export const HomeMapPIP = memo(() => {
   const isSmall = useMediaQueryIsSmall()
   const [isLoaded, setIsLoaded] = useState(false)
 
-  useOnMount(() => {
-    onMapLoadedCallback(() => {
+  useEffect(() => {
+    return onMapLoadedCallback(() => {
       setIsLoaded(true)
     })
-  })
+  }, [])
 
   if (!isLoaded || isSmall) {
     return null
