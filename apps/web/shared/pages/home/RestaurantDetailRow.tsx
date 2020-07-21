@@ -28,56 +28,57 @@ export const RestaurantDetailRow = memo(
       const rows = [
         { title: open_text, content: next_time, color: open_color },
         { title: price_label, content: price_range, color: price_color },
-        {
+        !isSm && {
           title: 'Delivers',
           content: <RestaurantDeliveryButton restaurantSlug={restaurantSlug} />,
           color: 'gray',
         },
-      ]
+      ].filter(Boolean)
 
       const spaceSize = isSm ? 0 : '6%'
 
-      type Item = typeof rows[0]
-
-      const titleEl = ({ title, color }: Item) => (
-        <Text
-          ellipse
-          textAlign={centered ? 'center' : 'left'}
-          fontWeight="600"
-          fontSize={14}
-          color={color}
-          marginBottom={3}
-        >
-          {title}
-        </Text>
-      )
-
-      const contentEl = ({ color, content }: Item) => (
-        <Text
-          ellipse
-          fontSize={isSm ? 12 : 13}
-          textAlign={centered ? 'center' : 'left'}
-          color={isSm ? color : 'inherit'}
-        >
-          {content !== '' ? content : isSm ? '' : '~'}
-        </Text>
-      )
-
       return (
-        <HStack alignItems="center" spacing={spaceSize} {...rest}>
+        <HStack
+          alignItems="center"
+          spacing={spaceSize}
+          overflow="visible"
+          {...rest}
+        >
           {rows
             .filter((x) => !isSm || x.content !== '')
             .map((row, index) => (
               <HStack
                 {...(!isSm && { width: '32%' })}
+                {...(isSm && {
+                  paddingHorizontal: 10,
+                  overflow: 'visible',
+                })}
                 key={`${index}${row.title}`}
               >
                 <VStack
                   {...(isSm && { flexDirection: 'row', alignItems: 'center' })}
                   {...(!isSm && { flex: 10 })}
                 >
-                  {!isSm && titleEl(row)}
-                  {contentEl(row)}
+                  {!isSm && (
+                    <Text
+                      ellipse
+                      textAlign={centered ? 'center' : 'left'}
+                      fontWeight="600"
+                      fontSize={14}
+                      color={row.color}
+                      marginBottom={3}
+                    >
+                      {row.title}
+                    </Text>
+                  )}
+                  <Text
+                    ellipse
+                    fontSize={isSm ? 12 : 13}
+                    textAlign={centered ? 'center' : 'left'}
+                    color={isSm ? row.color : 'inherit'}
+                  >
+                    {row.content !== '' ? row.content : isSm ? '' : '~'}
+                  </Text>
                 </VStack>
                 {after}
                 {!isSm && index !== rows.length - 1 && (

@@ -1,5 +1,14 @@
 import { createCancellablePromise, idle, series } from '@dish/async'
-import { Button, HStack, LoadingItems, Spacer, Text, VStack } from '@dish/ui'
+import {
+  Button,
+  HStack,
+  LoadingItems,
+  Spacer,
+  Text,
+  VStack,
+  useDebounce,
+  useDebounceValue,
+} from '@dish/ui'
 import React, {
   Suspense,
   memo,
@@ -16,11 +25,15 @@ import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { weakKey } from '../../helpers/weakKey'
 import { HomeStateItemSearch, OmState } from '../../state/home'
 import { isSearchState } from '../../state/home-helpers'
-import { useOvermind, useOvermindStatic } from '../../state/useOvermind'
+import {
+  omStatic,
+  useOvermind,
+  useOvermindStatic,
+} from '../../state/useOvermind'
 import { getTitleForState } from './getTitleForState'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
-import { HomePagePaneProps } from './HomePage'
+import { HomePagePaneProps } from './HomePagePane'
 import { HomeScrollView } from './HomeScrollView'
 import { focusSearchInput } from './HomeSearchInput'
 import { HomeStackDrawer } from './HomeStackDrawer'
@@ -40,7 +53,7 @@ const useSpacing = () => {
     : searchBarHeight - searchBarTopOffset + topBarVPad + 4
   return {
     paddingTop,
-    titleHeight: paddingTop + 48,
+    titleHeight: 61,
     isSmall,
   }
 }
@@ -53,6 +66,10 @@ export default memo(function HomePageSearchResults(props: Props) {
   )
   const om = useOvermind()
   const isOptimisticUpdating = om.state.home.isOptimisticUpdating
+  const isOptimisticUpdatingDelayed = useDebounceValue(
+    isOptimisticUpdating,
+    200
+  )
 
   const titleElements = useMemo(() => {
     return (
@@ -78,7 +95,11 @@ export default memo(function HomePageSearchResults(props: Props) {
   return (
     <HomeStackDrawer title={title} closable>
       <SearchResultsTitle title={titleElements} stateId={props.item.id} />
-      {isOptimisticUpdating ? <HomeEmptyLoading /> : content}
+      {isOptimisticUpdatingDelayed && isOptimisticUpdating ? (
+        <HomeEmptyLoading />
+      ) : (
+        content
+      )}
     </HomeStackDrawer>
   )
 })
@@ -97,7 +118,6 @@ const SearchResultsTitle = memo(
   ({ stateId, title }: { stateId: string; title: any }) => {
     const om = useOvermind()
     const state = om.state.home.allStates[stateId]
-    const { isSmall, paddingTop, titleHeight } = useSpacing()
 
     if (!isSearchState(state)) {
       return null
@@ -121,13 +141,10 @@ const SearchResultsTitle = memo(
           contentContainerStyle={{
             width: '100%',
             maxWidth: '100%',
-            paddingRight: isSmall ? 25 : 0,
           }}
         >
           <HStack
-            paddingTop={paddingTop}
-            paddingBottom={topBarVPad}
-            height={titleHeight}
+            paddingVertical={topBarVPad}
             paddingHorizontal={18}
             flex={1}
             justifyContent="space-between"
@@ -156,10 +173,14 @@ const SearchResultsTitle = memo(
 )
 
 const SearchResultsContent = memo((props: Props) => {
-  const { item } = props
+  const om = useOvermind()
+  const searchState = om.state.home.allStates[props.item.id]
+  if (!isSearchState(searchState)) {
+    console.warn('impossibke')
+    return null
+  }
   const { isSmall, titleHeight } = useSpacing()
   const paddingTop = isSmall ? 58 : titleHeight - searchBarHeight
-  const om = useOvermind()
   const [state, setState] = useState({
     chunk: 1,
     hasLoaded: 1,
@@ -168,7 +189,7 @@ const SearchResultsContent = memo((props: Props) => {
   })
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const perChunk = [3, 3, 6, 12, 12]
-  const allResults = item.results?.results?.restaurants ?? []
+  const allResults = searchState.results?.results?.restaurants ?? []
   const currentlyShowing = Math.min(
     allResults.length,
     state.chunk *
@@ -213,11 +234,11 @@ const SearchResultsContent = memo((props: Props) => {
       return (
         <Suspense key={result.id} fallback={null}>
           <RestaurantListItem
-            currentLocationInfo={item.currentLocationInfo ?? null}
+            currentLocationInfo={searchState.currentLocationInfo ?? null}
             restaurantId={result.id}
             restaurantSlug={result.slug}
             rank={index + 1}
-            searchState={item}
+            searchState={searchState}
             onFinishRender={onFinishRender}
           />
         </Suspense>
@@ -227,12 +248,14 @@ const SearchResultsContent = memo((props: Props) => {
 
   const isOnLastChunk = currentlyShowing === allResults.length
   const isLoading =
-    item.results.status === 'loading' ||
-    (item.results?.results.restaurants?.length === 0
+    searchState.results.status === 'loading' ||
+    (searchState.results?.results.restaurants?.length === 0
       ? false
       : !isOnLastChunk ||
-        !item.results?.results ||
+        !searchState.results?.results ||
         state.hasLoaded <= state.chunk)
+
+  console.log('ok', isLoading, results, currentlyShowing, allResults)
 
   // console.log(
   //   'SearchResults',
@@ -282,7 +305,7 @@ const SearchResultsContent = memo((props: Props) => {
 
     function isReadyToLoadMore() {
       return createCancellablePromise((res, _, onCancel) => {
-        const dispose = om.reaction(
+        const dispose = omStatic.reaction(
           (state) => isReadyToLoad(state),
           (isReady) => {
             if (!isReady) return
@@ -305,6 +328,8 @@ const SearchResultsContent = memo((props: Props) => {
     )
   }
 
+  console.warn('SearchContent', { isLoading })
+
   return contentWrap(
     <VStack paddingBottom={20} spacing={6}>
       {results}
@@ -317,13 +342,13 @@ const SearchResultsContent = memo((props: Props) => {
           width="100%"
         >
           <HStack alignItems="center" justifyContent="center">
-            <HomeLenseBar size="lg" activeTagIds={item.activeTagIds} />
+            <HomeLenseBar size="lg" activeTagIds={searchState.activeTagIds} />
           </HStack>
           <Spacer size={40} />
           <Button
             alignSelf="center"
             onPress={() => {
-              if (om.state.home.isAutocompleteActive) {
+              if (omStatic.state.home.isAutocompleteActive) {
                 setState((x) => ({ ...x, scrollToTop: Math.random() }))
               } else {
                 focusSearchInput()

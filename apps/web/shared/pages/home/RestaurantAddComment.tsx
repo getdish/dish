@@ -20,7 +20,7 @@ import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { flatButtonStyleSelected } from './baseButtonStyle'
 import { RestaurantReview } from './RestaurantReview'
-import { useUserReview } from './useUserReview'
+import { useUserReview, useUserReviews } from './useUserReview'
 
 export const RestaurantAddCommentButton = ({
   restaurantId,
@@ -51,7 +51,7 @@ export const RestaurantAddComment = memo(
   graphql(({ restaurantId }: { restaurantId: string }) => {
     const om = useOvermind()
     const user = om.state.user.user
-    const review = useUserReview(restaurantId)
+    const review = useUserReviews(restaurantId)
     const [reviewText, setReviewText] = useState('')
     const [isSaved, setIsSaved] = useState(true)
     const lineHeight = 22

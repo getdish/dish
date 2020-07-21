@@ -392,6 +392,7 @@ const runSearch: AsyncAction<{
   const tags = getActiveTags(om.state.home)
 
   const shouldCancel = () => {
+    const state = om.state.home.lastSearchState
     const answer = !state || lastSearchAt != curId
     if (answer) console.log('search: cancel')
     return answer
@@ -404,9 +405,7 @@ const runSearch: AsyncAction<{
   }
 
   state = om.state.home.lastSearchState
-  if (!state) {
-    debugger
-  }
+  if (shouldCancel()) return
 
   const searchArgs: RestaurantSearchArgs = {
     center: roundLngLat(state.center),
@@ -470,6 +469,11 @@ const deepAssign = (a: Object, b: Object) => {
         continue
       }
       a[key] = b[key]
+    }
+  }
+  for (const key in a) {
+    if (!(key in b)) {
+      delete a[key]
     }
   }
 }
@@ -1004,7 +1008,7 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
       ...next,
       id: state.id,
     }
-    console.log('updating active tags...')
+    console.log('updating active tags...', nextState)
     om.actions.home.updateHomeState(nextState)
   } catch (err) {
     handleAssertionError(err)
@@ -1136,7 +1140,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
       activeTagIds: nextState.activeTagIds,
       results: defaultSearchResults,
     })
-    await sleep(140)
+    await sleep(1000)
     await idle(30)
     om.state.home.isOptimisticUpdating = false
   }
@@ -1151,7 +1155,6 @@ const moveSearchBarTagIndex: Action<number> = (om, val) => {
 }
 
 const setSearchBarTagIndex: Action<number> = (om, val) => {
-  console.log('set', val, om.state.home.searchBarTagIndex)
   om.state.home.searchBarTagIndex = clamp(
     val,
     -om.state.home.searchBarTags.length,

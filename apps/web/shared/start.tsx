@@ -16,20 +16,36 @@ window['gqlessSetListener'] = function gqlessSetListener(
 ) {
   const parentAccessor = fieldAccessor.parent
   const model = parentAccessor.data
-  if (!queue.has(model)) {
+  const fieldName = fieldAccessor.selection.field.name
+  updateItem(model, parentAccessor.node.name, fieldName, value, () => {
     const item = {}
-    console.log('parentAccessor', parentAccessor, fieldAccessor)
     for (const key in parentAccessor.value.data) {
       item[key] = parentAccessor.value.data[key].data
     }
-    queue.set(model, {
-      item,
-      tableName: parentAccessor.node.name,
+    return item
+  })
+}
+
+const updateItem = (
+  key: string,
+  tableName: string,
+  keyName: string,
+  value: any,
+  getDefaultItem?: () => any
+) => {
+  if (!queue.has(key)) {
+    queue.set(key, {
+      item: getDefaultItem ?? {},
+      tableName,
     })
   }
-  const { item } = queue.get(model)!
-  const fieldName = fieldAccessor.selection.field.name
-  item[fieldName] = value
+  const item = queue.get(key)!.item
+  item[keyName] = value
+  scheduleSet()
+}
+
+export const gqlessSet = (tableName: string, item: any) => {
+  queue.set({}, { item, tableName })
   scheduleSet()
 }
 

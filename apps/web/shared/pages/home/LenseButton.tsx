@@ -22,7 +22,8 @@ export const LenseButton = memoIsEqualDeep(
     const lenseColor = rgbString(lense.rgb)
     // const lenseColorLight = `rgba(${rgbInner}, 0.2)`
     const scale = size == 'md' ? 1 : size === 'lg' ? 1.3 : 1.5
-    const sizePx = 35
+    const sizePx = 42
+    const borderColor = minimal ? 'transparent' : '#f5f5f5'
 
     return (
       <LinkButton
@@ -40,7 +41,7 @@ export const LenseButton = memoIsEqualDeep(
           height={sizePx * scale}
           backgroundColor="#fff"
           borderRadius={100}
-          borderColor="#eee"
+          borderColor={borderColor}
           borderWidth={1}
           borderBottomColor="transparent"
           {...(isActive && {
@@ -54,10 +55,7 @@ export const LenseButton = memoIsEqualDeep(
         >
           <Text
             fontSize={sizePx * (isActive ? 0.7 : 0.5) * scale}
-            lineHeight={16}
-            {...(!minimal && {
-              lineHeight: sizePx * scale,
-            })}
+            lineHeight={sizePx * scale}
             fontWeight="400"
             textAlign="center"
           >

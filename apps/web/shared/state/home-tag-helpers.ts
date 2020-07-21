@@ -227,13 +227,13 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
     }
     tm = setTimeout(() => {
       recentTries = 0
-    }, 130)
-    console.log(
-      'syncStateToRoute',
-      cloneDeep({ should, next, state })
-      // cloneDeep(om.state.router.curPage),
-      // router.navItemToHistoryItem(next)
-    )
+    }, 200)
+    // console.log(
+    //   'syncStateToRoute',
+    //   cloneDeep({ should, next, state })
+    //   // cloneDeep(om.state.router.curPage),
+    //   // router.navItemToHistoryItem(next)
+    // )
     router.navigate(next)
     return true
   }

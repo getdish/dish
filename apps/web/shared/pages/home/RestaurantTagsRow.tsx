@@ -43,7 +43,7 @@ export const RestaurantTagsRow = memo(
     }
     return (
       <HStack
-        marginBottom={-5}
+        marginBottom={-3}
         justifyContent="center"
         flexWrap="wrap"
         {...props.containerProps}

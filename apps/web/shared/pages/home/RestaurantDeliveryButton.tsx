@@ -24,6 +24,10 @@ export const RestaurantDeliveryButton = memo(
     const width = sources.length * buttonWidth + sources.length * spacing
     const framePad = 2
 
+    if (!sources.length) {
+      return null
+    }
+
     return (
       <SmallButton
         position="relative"
@@ -52,6 +56,7 @@ export const RestaurantDeliveryButton = memo(
             shadowOpacity={1}
             shadowRadius={4}
             shadowOffset={{ height: 1, width: 0 }}
+            pointerEvents={isHovered ? 'auto' : 'none'}
           >
             {sources.map((item, i) => {
               return (
@@ -75,7 +80,6 @@ export const RestaurantDeliveryButton = memo(
                       framePad
                     }
                     top={framePad}
-                    pointerEvents={isHovered ? 'auto' : 'none'}
                     backgroundColor={bgLight}
                     borderRadius={20}
                     hoverStyle={{

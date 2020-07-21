@@ -10,26 +10,45 @@ export const HomeStackDrawer = ({
   title,
   closable,
   children,
-  fallback = <LoadingItems />,
+  fallback,
   ...props
 }: StackProps & { title?: string; closable?: boolean; fallback?: any }) => {
   const isSmall = useMediaQueryIsSmall()
   return (
     <VStack
-      className="HomeStackDrawer"
-      flex={1}
-      borderRadius={drawerBorderRadius}
       position="relative"
+      flex={1}
+      maxHeight="100%"
+      borderRadius={drawerBorderRadius}
       backgroundColor="#fff"
-      overflow="hidden"
-      shadowRadius={10}
-      shadowColor="rgba(0,0,0,0.1)"
+      overflow="visible"
       marginTop={isSmall ? -10 : searchBarHeight}
-      {...props}
     >
-      {closable && <StackViewCloseButton />}
+      {closable && (
+        <StackViewCloseButton
+          right={isSmall ? 6 : -23}
+          top={isSmall ? -28 : 12}
+          backgroundColor="#fff"
+          padding={5}
+          borderRadius={20}
+          shadowColor="rgba(0,0,0,0.1)"
+          shadowRadius={5}
+          shadowOffset={{ width: 2, height: 0 }}
+        />
+      )}
       {!!title && <PageTitleTag>{title}</PageTitleTag>}
-      <Suspense fallback={fallback}>{children}</Suspense>
+      <VStack
+        className="HomeStackDrawer"
+        position="relative"
+        borderRadius={drawerBorderRadius}
+        overflow="hidden"
+        shadowRadius={10}
+        shadowColor="rgba(0,0,0,0.1)"
+        flex={1}
+        {...props}
+      >
+        <Suspense fallback={fallback ?? <LoadingItems />}>{children}</Suspense>
+      </VStack>
     </VStack>
   )
 }
