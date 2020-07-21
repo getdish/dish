@@ -472,6 +472,11 @@ const deepAssign = (a: Object, b: Object) => {
       a[key] = b[key]
     }
   }
+  for (const key in a) {
+    if (!(key in b)) {
+      delete a[key]
+    }
+  }
 }
 
 const updateHomeState: Action<HomeStateItem> = (om, val) => {
@@ -1004,7 +1009,7 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
       ...next,
       id: state.id,
     }
-    console.log('updating active tags...')
+    console.log('updating active tags...', nextState)
     om.actions.home.updateHomeState(nextState)
   } catch (err) {
     handleAssertionError(err)

@@ -173,7 +173,7 @@ const RestaurantListItemContent = memo(
                       selectable
                       maxWidth="100%"
                       fontSize={
-                        (isSmall ? 22 : 26) *
+                        (isSmall ? 20 : 24) *
                         (restaurantName.length > 20 ? 0.85 : 1)
                       }
                       fontWeight="600"
@@ -303,6 +303,10 @@ const RestaurantPeek = memo(
     })
     const dishSize = size === 'lg' ? 200 : 150
     const [isLoaded, setIsLoaded] = useState(false)
+    const paddingLeft =
+      (drawerWidth > 820 ? 0.6 : drawerWidth < 600 ? 0.8 : 0.7) * drawerWidth
+
+    // console.log('peek', { drawerWidth, paddingLeft })
 
     return (
       <HomeScrollViewHorizontal
@@ -320,7 +324,7 @@ const RestaurantPeek = memo(
           position="relative"
           marginRight={-spacing}
           marginBottom={-spacing}
-          paddingLeft={isSmall ? '73vw' : 0.63 * drawerWidth}
+          paddingLeft={paddingLeft}
         >
           <HStack
             pointerEvents="auto"

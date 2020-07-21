@@ -1,20 +1,14 @@
 import { VStack } from '@dish/ui'
-import React, { Suspense, memo, useEffect } from 'react'
+import React, { Suspense, memo } from 'react'
 
 import { frameWidthMax, isWorker } from '../../constants'
-import { HomeStateItem } from '../../state/home'
-import {
-  isHomeState,
-  isRestaurantState,
-  isSearchState,
-  isUserState,
-} from '../../state/home-helpers'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
 import { HomeMap } from './HomeMap'
 import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
 import { HomeMapPIP } from './HomeMapPIP'
+import { HomePagePane } from './HomePagePane'
 import HomeSearchBar from './HomeSearchBar'
-import { HomeStackView, StackItemProps } from './HomeStackView'
+import { HomeStackView } from './HomeStackView'
 import { HomeViewDrawer } from './HomeViewDrawer'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
@@ -69,6 +63,7 @@ const HomePageContent = memo(() => {
         <HomeViewDrawer>
           <HomeStackView>
             {(props) => {
+              console.log('HomePagePane', HomePagePane)
               return <HomePagePane {...props} />
             }}
           </HomeStackView>
@@ -81,42 +76,6 @@ const HomePageContent = memo(() => {
     </>
   )
 })
-
-export type HomePagePaneProps<
-  A extends HomeStateItem = HomeStateItem
-> = StackItemProps<A>
-
-const HomePagePane = (props: HomePagePaneProps) => {
-  const { item } = props
-  return (
-    <Suspense fallback={null}>
-      {isHomeState(item) && <HomePageHomePane {...props} />}
-      {isUserState(item) && <HomePageUser {...props} />}
-      {isSearchState(item) && <HomePageSearchResults {...props} />}
-      {isRestaurantState(item) && <HomePageRestaurant {...props} />}
-    </Suspense>
-  )
-}
-
-const HomePageRestaurant =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./HomePageRestaurant').default
-    : React.lazy(() => import('./HomePageRestaurant'))
-
-const HomePageSearchResults =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./HomePageSearchResults').default
-    : React.lazy(() => import('./HomePageSearchResults'))
-
-const HomePageHomePane =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./HomePageHomePane').default
-    : React.lazy(() => import('./HomePageHomePane'))
-
-const HomePageUser =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./HomePageUser').default
-    : React.lazy(() => import('./HomePageUser'))
 
 const HomePageGallery =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'

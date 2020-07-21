@@ -359,12 +359,11 @@ const HomeSearchBarTags = memo(
                   className="no-transition"
                   key={getTagId(tag)}
                   subtleIcon
-                  backgroundColor="rgba(0,0,0,0.3)"
+                  backgroundColor="rgba(0,0,0,0.2)"
                   color="#fff"
-                  fontWeight="600"
                   borderColor={'transparent'}
                   hoverStyle={{
-                    backgroundColor: 'rgba(0,0,0,0.2)',
+                    backgroundColor: 'rgba(0,0,0,0.15)',
                   }}
                   {...(isActive && {
                     backgroundColor: 'rgba(255,255,255,0.1)',
