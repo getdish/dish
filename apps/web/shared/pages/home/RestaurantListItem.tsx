@@ -255,7 +255,9 @@ const RestaurantListItemContent = memo(
                       flexWrap="wrap"
                     >
                       <Suspense fallback={null}>
-                        <RestaurantDeliveryButton restaurantId={restaurantId} />
+                        <RestaurantDeliveryButton
+                          restaurantSlug={restaurantSlug}
+                        />
                         <Spacer size={8} />
                         <RestaurantDetailRow
                           size="sm"

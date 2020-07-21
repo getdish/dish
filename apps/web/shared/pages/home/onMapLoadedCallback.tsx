@@ -9,4 +9,7 @@ export const setMapIsLoaded = () => {
 export const onMapLoadedCallback = (cb: Function) => {
   if (isLoaded) cb()
   loadedCallbacks.add(cb)
+  return () => {
+    loadedCallbacks.delete(cb)
+  }
 }

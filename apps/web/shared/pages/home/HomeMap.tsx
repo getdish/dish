@@ -1,6 +1,12 @@
 import { fullyIdle, series, sleep } from '@dish/async'
 import { Restaurant, graphql, query } from '@dish/graph'
-import { AbsoluteVStack, VStack, useDebounceEffect, useOnMount } from '@dish/ui'
+import {
+  AbsoluteVStack,
+  VStack,
+  useDebounce,
+  useDebounceEffect,
+  useOnMount,
+} from '@dish/ui'
 import React, {
   Suspense,
   memo,
@@ -27,18 +33,22 @@ type MapLoadState = 'wait' | 'loading' | 'loaded'
 
 export const HomeMap = memo(function HomeMap() {
   const [status, setLoadStatus] = useState<MapLoadState>('wait')
-  const [restaurants, setRestaurants] = useState<Restaurant[]>([])
-  const [restaurantDetail, setRestaurantDetail] = useState<Restaurant | null>(
-    null
-  )
+  const [restaurants, setRestaurantsFast] = useState<Restaurant[]>([])
+  const [
+    restaurantDetail,
+    setRestaurantDetailFast,
+  ] = useState<Restaurant | null>(null)
+  const setRestaurants = useDebounce(setRestaurantsFast, 150)
+  const setRestaurantDetail = useDebounce(setRestaurantDetailFast, 150)
 
-  useOnMount(async () => {
-    await startMapKit()
-    setLoadStatus('loading')
-    // time for map to render more fully, a bit arbitrary
-    await sleep(700)
-    setLoadStatus('loaded')
-  })
+  useEffect(() => {
+    return series([
+      startMapKit,
+      () => setLoadStatus('loading'),
+      () => sleep(500),
+      () => setLoadStatus('loaded'),
+    ])
+  }, [])
 
   if (status === 'wait') {
     return null
@@ -93,29 +103,27 @@ const HomeMapDataLoader = memo(
       // for now to avoid so many large db calls just have search api return it instead of re-fetch here
       const restaurants = restaurantResults.map(({ id, slug }) => {
         const r = useRestaurantQuery(slug)
+        const coords = r.location?.coordinates
         return {
           id,
           slug,
-          location: r.location,
+          location: {
+            coordinates: [coords?.[0], coords?.[1]],
+          },
         }
       })
 
-      const restaurantsMemo = useMemo(() => {
-        return restaurants
-      }, [JSON.stringify(restaurants.map((x) => x.location))])
-
       useEffect(() => {
-        props.onLoadedRestaurants?.(restaurantsMemo)
-      }, [restaurantsMemo])
+        props.onLoadedRestaurants?.(restaurants)
+      }, [JSON.stringify(restaurants.map((x) => x.location?.coordinates))])
 
       // restaurantDetail
       const restaurantDetail = restaurantDetailInfo
         ? restaurants.find((x) => x.id === restaurantDetailInfo.id)
         : null
-
       useEffect(() => {
         props.onLoadedRestaurantDetail?.(restaurantDetail)
-      }, [JSON.stringify(restaurantDetail)])
+      }, [JSON.stringify(restaurantDetail?.location?.coordinates ?? null)])
     }
   )
 )
@@ -410,6 +418,7 @@ const HomeMapContent = memo(function HomeMap({
       return () => {
         cancels.forEach((x) => x())
         try {
+          console.warn('REMOVING ANNOTATIONS')
           map.removeAnnotations(annotations)
         } catch (err) {
           console.error('Error removing annotations', err)

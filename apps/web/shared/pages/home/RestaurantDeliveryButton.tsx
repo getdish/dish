@@ -1,78 +1,113 @@
 import { graphql, query } from '@dish/graph'
-import { HStack, Text } from '@dish/ui'
-import React, { memo } from 'react'
+import { HStack, Spacer, Text } from '@dish/ui'
+import React, { memo, useState } from 'react'
 
+import { bgLight, bgLightHover } from '../../colors'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
+import { useRestaurantQuery } from './useRestaurantQuery'
 
 export const RestaurantDeliveryButton = memo(
-  graphql(({ restaurantId }: { restaurantId: string }) => {
-    const [restaurant] = query.restaurant({
-      where: {
-        id: {
-          _eq: restaurantId,
-        },
-      },
-    })
-    const sources2 = restaurant.sources()
-    if (sources2 && Object.keys(sources2).length) {
-      console.log('todo', JSON.stringify(sources2, null, 2))
-      // {
-      //   "yelp": {
-      //     "url": "https://www.yelp.com/biz/pink-onion-san-francisco",
-      //     "rating": 4.5
-      //   },
-      //   "grubhub": {
-      //     "url": "https://www.grubhub.com/restaurant/406796",
-      //     "rating": 5
-      //   },
-      //   "doordash": {
-      //     "url": "https://www.doordash.com/store/pink-onion-san-francisco-86910/",
-      //     "rating": 4.8
-      //   },
-      //   "tripadvisor": {
-      //     "url": "https://www.tripadvisor.com/g60713-d12330580-Pink_Onion-San_Francisco_California.html",
-      //     "rating": 5
-      //   }
-      // }
-    }
-    const sources = Object.values(thirdPartyCrawlSources).filter(
-      (item) => item.delivery
-    )
+  graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
+    const [isHovered, setIsHovered] = useState(false)
+    const restaurant = useRestaurantQuery(restaurantSlug)
+    const restaurantSources = restaurant.sources()
+    const sources = Object.keys(restaurantSources ?? {})
+      .map((id) => ({
+        ...thirdPartyCrawlSources[id],
+        id,
+      }))
+      .filter((x) => x?.delivery)
+
+    const buttonWidth = 103
+    const spacing = -2
+    const width = sources.length * buttonWidth + sources.length * spacing
+    const framePad = 2
+
     return (
-      <SmallButton paddingRight={0}>
+      <SmallButton
+        position="relative"
+        zIndex={1000}
+        paddingRight={sources.length ? 30 : 0}
+        onHoverIn={() => {
+          setIsHovered(true)
+        }}
+        onHoverOut={() => {
+          setIsHovered(false)
+        }}
+      >
         <HStack>
           <Text marginRight={5}>Delivery</Text>
-          {sources.map((item, i) => {
-            return (
-              <HStack
-                key={item.name}
-                paddingVertical={4}
-                hoverStyle={{
-                  backgroundColor: '#f2f2f2',
-                }}
-              >
-                <img
-                  src={item.image}
-                  style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: 40,
-                    marginTop: -8,
-                    marginBottom: -8,
-                    marginRight: -8,
-                    borderWidth: 1,
-                    borderColor: '#fff',
-                    zIndex: 10 - i,
-                  }}
-                />
-                {/* <Spacer size={6} />
-                <Text ellipse fontSize={12} opacity={0.5}>
-                  {item.name}
-                </Text> */}
-              </HStack>
-            )
-          })}
+
+          <HStack
+            position="absolute"
+            className="ease-in-out"
+            top={-4}
+            right={-width - framePad * 2 + (isHovered ? 26 : 40)}
+            width={width + framePad * 2}
+            backgroundColor={!isHovered ? 'transparent' : '#fff'}
+            height={25 + framePad * 2}
+            borderRadius={100}
+            shadowColor={!isHovered ? 'transparent' : 'rgba(0,0,0,0.1)'}
+            shadowOpacity={1}
+            shadowRadius={4}
+            shadowOffset={{ height: 1, width: 0 }}
+          >
+            {sources.map((item, i) => {
+              return (
+                <a
+                  key={item.name}
+                  className="see-through"
+                  href={restaurantSources[item.id]?.url}
+                  target="_blank"
+                >
+                  <HStack
+                    flex={1}
+                    className="ease-in-out-fast"
+                    overflow="hidden"
+                    key={item.name}
+                    paddingVertical={5}
+                    paddingHorizontal={8}
+                    position="absolute"
+                    width={buttonWidth - -spacing}
+                    left={
+                      (isHovered ? (buttonWidth + spacing) * i : 4 * i) +
+                      framePad
+                    }
+                    top={framePad}
+                    pointerEvents={isHovered ? 'auto' : 'none'}
+                    backgroundColor={bgLight}
+                    borderRadius={20}
+                    hoverStyle={{
+                      backgroundColor: bgLightHover,
+                    }}
+                    {...(!isHovered && {
+                      backgroundColor: 'transparent',
+                      borderColor: 'transparent',
+                    })}
+                  >
+                    <HStack>
+                      <img
+                        src={item.image}
+                        style={{
+                          width: 16,
+                          height: 16,
+                          borderRadius: 40,
+                          borderWidth: 1,
+                          borderColor: '#fff',
+                          zIndex: 10 - i,
+                        }}
+                      />
+                      <Spacer size={6} />
+                      <Text opacity={isHovered ? 1 : 0} ellipse>
+                        {item.name}
+                      </Text>
+                    </HStack>
+                  </HStack>
+                </a>
+              )
+            })}
+          </HStack>
         </HStack>
       </SmallButton>
     )

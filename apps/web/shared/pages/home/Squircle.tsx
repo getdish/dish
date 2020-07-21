@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native'
 export const Squircle = ({
   width = 100,
   height = 100,
-  borderRadius = 20,
+  borderRadius = 18,
   isHovered,
   children,
   ...rest

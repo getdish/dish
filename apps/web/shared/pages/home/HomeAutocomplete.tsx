@@ -423,7 +423,7 @@ function runAutocomplete(
           }
           // for some reason flexsearch not pulling exact matches to front?
           if (res.name.toLowerCase() === searchQuery) {
-            foundIndices.push(index)
+            foundIndices.unshift(index)
             continue
           }
           const searchable = `${res.name} ${res.description ?? ''}`.trim()
@@ -451,74 +451,30 @@ function runAutocomplete(
   ])
 }
 
+const getFuzzyMatchQuery = (searchQuery: string) => {
+  return `%${searchQuery.split(' ').join('%')} %`.replace(/%%+/g, '%')
+}
+
 function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {
-  const iLikeQuery = `%${searchQuery.split(' ').join('%')}%`.replace(
-    /%%+/g,
-    '%'
-  )
   return resolved(() => {
     return [
+      ...searchRestaurants(searchQuery, center, span),
+      ...searchDishTags(searchQuery),
       ...query
-        .restaurant({
+        .tag({
           where: {
-            location: {
-              _st_d_within: {
-                // search outside current bounds a bit
-                distance: Math.max(span.lng, span.lat) * 3,
-                from: {
-                  type: 'Point',
-                  coordinates: [center.lng, center.lat],
+            _or: [
+              {
+                name: {
+                  _ilike: searchQuery,
                 },
               },
-            },
-            name: {
-              _ilike: iLikeQuery,
-            },
-          },
-          limit: 5,
-        })
-        .map((r) =>
-          createAutocomplete({
-            id: r.id,
-            name: r.name,
-            slug: r.slug,
-            type: 'restaurant',
-            icon: r.image || '📍',
-            description:
-              getAddressText(
-                omStatic.state.home.currentState.currentLocationInfo ?? null,
-                r.address ?? '',
-                'xs'
-              ) || 'No Address',
-          })
-        ),
-      ...query
-        .tag({
-          where: {
-            name: {
-              _ilike: iLikeQuery,
-            },
-            type: {
-              _eq: 'dish',
-            },
-          },
-          limit: 5,
-        })
-        .map((r) =>
-          createAutocomplete({
-            id: r.id,
-            name: r.name,
-            icon: r.icon ?? '🍽',
-            type: 'dish',
-            description: r.parent?.name ?? '',
-          })
-        ),
-      ...query
-        .tag({
-          where: {
-            name: {
-              _ilike: iLikeQuery,
-            },
+              {
+                name: {
+                  _ilike: getFuzzyMatchQuery(searchQuery),
+                },
+              },
+            ],
             type: {
               _eq: 'country',
             },
@@ -536,6 +492,88 @@ function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {
         ),
     ]
   })
+}
+
+function searchDishTags(searchQuery: string) {
+  const search = (whereCondition: any) => {
+    return query.tag({
+      where: {
+        ...whereCondition,
+        type: {
+          _eq: 'dish',
+        },
+      },
+      limit: 5,
+    })
+  }
+  return [
+    ...search({
+      name: {
+        _ilike: searchQuery,
+      },
+    }),
+    ...search({
+      name: {
+        _ilike: getFuzzyMatchQuery(searchQuery),
+      },
+    }),
+  ].map((r) =>
+    createAutocomplete({
+      id: r.id,
+      name: r.name,
+      icon: r.icon ?? '🍽',
+      type: 'dish',
+      description: r.parent?.name ?? '',
+    })
+  )
+}
+
+function searchRestaurants(searchQuery: string, center: LngLat, span: LngLat) {
+  const search = (whereCondition: any) => {
+    return query.restaurant({
+      where: {
+        ...whereCondition,
+        location: {
+          _st_d_within: {
+            // search outside current bounds a bit
+            distance: Math.max(span.lng, span.lat) * 3,
+            from: {
+              type: 'Point',
+              coordinates: [center.lng, center.lat],
+            },
+          },
+        },
+      },
+      limit: 5,
+    })
+  }
+
+  return [
+    ...search({
+      name: {
+        _ilike: searchQuery,
+      },
+    }),
+    ...search({
+      name: {
+        _ilike: getFuzzyMatchQuery(searchQuery),
+      },
+    }),
+  ].map((r) =>
+    createAutocomplete({
+      id: r.id,
+      name: r.name,
+      slug: r.slug,
+      type: 'restaurant',
+      icon: r.image || '📍',
+      description:
+        getAddressText(
+          omStatic.state.home.currentState.currentLocationInfo ?? null,
+          r.address ?? '',
+          'xs'
+        ) || 'No Address',
+    })
+  )
 }
 
 export function searchLocations(query: string) {

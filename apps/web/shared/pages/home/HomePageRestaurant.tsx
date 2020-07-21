@@ -13,7 +13,7 @@ import {
 import React, { Suspense, memo, useState } from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
 
-import { drawerBorderRadius, searchBarHeight } from '../../constants'
+import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { DishView } from './DishView'
@@ -24,7 +24,6 @@ import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantTopReviews } from './RestaurantTopReviews'
 import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 type Props = HomePagePaneProps<HomeStateItemRestaurant>
@@ -42,7 +41,6 @@ const HomePageRestaurant = memo(
     if (!item) {
       return null
     }
-    const isSmall = useMediaQueryIsSmall()
     const slug = item.restaurantSlug
     const restaurant = useRestaurantQuery(slug)
     const isLoading = !restaurant?.name
@@ -52,7 +50,7 @@ const HomePageRestaurant = memo(
     //     om.state.user.user.role == 'contributor')
 
     return (
-      <VStack marginTop={isSmall ? -10 : searchBarHeight}>
+      <VStack>
         <PageTitleTag>
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>

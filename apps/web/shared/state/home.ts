@@ -357,8 +357,10 @@ const loadHomeDishes: AsyncAction = async (om) => {
     allDishTags = [...allDishTags, ...dishTags]
   }
 
-  om.actions.home.addTagsToCache(allDishTags)
-  om.state.home.topDishes = all
+  if (!isEqual(all, om.state.home.topDishes)) {
+    om.actions.home.addTagsToCache(allDishTags)
+    om.state.home.topDishes = all
+  }
 }
 
 let lastSearchKey = ''
@@ -593,7 +595,7 @@ const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
 }
 
 const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
-  console.log('handleRouteChange', item)
+  // console.log('handleRouteChange', item)
 
   // happens on *any* route push or pop
   if (om.state.home.hoveredRestaurant) {
@@ -1134,7 +1136,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
       activeTagIds: nextState.activeTagIds,
       results: defaultSearchResults,
     })
-    await sleep(30)
+    await sleep(140)
     await idle(30)
     om.state.home.isOptimisticUpdating = false
   }

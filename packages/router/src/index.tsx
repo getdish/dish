@@ -100,7 +100,6 @@ export class Router extends Store<RouterProps> {
           : nextItem?.id === id
           ? 'forward'
           : 'none'
-      console.log('event.action', event.action)
       const type: HistoryType =
         event.action === 'REPLACE'
           ? 'replace'
@@ -173,14 +172,14 @@ export class Router extends Store<RouterProps> {
           break
       }
 
-      console.log(
-        'now',
-        JSON.stringify(
-          { item, stack: this.stack, stackIndex: this.stackIndex },
-          null,
-          2
-        )
-      )
+      // console.log(
+      //   'now',
+      //   JSON.stringify(
+      //     { item, stack: this.stack, stackIndex: this.stackIndex },
+      //     null,
+      //     2
+      //   )
+      // )
 
       this.routeChangeListeners.forEach((x) => x(next))
     } else {

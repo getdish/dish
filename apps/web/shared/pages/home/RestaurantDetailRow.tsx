@@ -3,6 +3,7 @@ import { Divider, HStack, StackProps, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Linking } from 'react-native'
 
+import { RestaurantDeliveryButton } from './RestaurantDeliveryButton'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 export const RestaurantDetailRow = memo(
@@ -29,8 +30,7 @@ export const RestaurantDetailRow = memo(
         { title: price_label, content: price_range, color: price_color },
         {
           title: 'Delivers',
-          // @ts-ignore bad type gen?
-          content: deliveryLinks(restaurant.sources()),
+          content: <RestaurantDeliveryButton restaurantSlug={restaurantSlug} />,
           color: 'gray',
         },
       ]
@@ -117,7 +117,7 @@ function openingHours(restaurant: RestaurantQuery) {
     const closes_at = (restaurant.hours[day]?.hoursInfo.hours[0] ?? '')
       .replace(/"/g, '')
       .split('-')[1]
-    next_time = restaurant.is_open_now ? closes_at : opens_at
+    next_time = (restaurant.is_open_now ? closes_at : opens_at) || '~'
   }
   return [text, color, next_time]
 }
@@ -132,7 +132,7 @@ function priceRange(restaurant: RestaurantQuery) {
       .split('-')
       .map((i) => parseInt(i))
     const average = (low + high) / 2
-    price_range = '~' + restaurant.price_range
+    price_range = restaurant.price_range
     switch (true) {
       case average <= 10:
         label = 'Cheap'
@@ -149,26 +149,4 @@ function priceRange(restaurant: RestaurantQuery) {
     }
   }
   return [label, color, price_range]
-}
-
-function deliveryLinks(sources: Sources) {
-  const empty = ''
-  if (!sources) return empty
-  const delivery_sources = ['ubereats']
-  const delivers = Object.keys(sources)
-    .map((source, index) => {
-      if (!delivery_sources.includes(source)) return
-      const name = source.charAt(0).toUpperCase() + source.slice(1)
-      return (
-        <Text
-          key={index}
-          color="blue"
-          onPress={() => Linking.openURL(sources[source].url)}
-        >
-          🔗 {name}
-        </Text>
-      )
-    })
-    .filter(Boolean)
-  return delivers.length > 0 ? delivers : empty
 }

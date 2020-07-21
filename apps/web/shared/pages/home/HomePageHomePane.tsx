@@ -140,10 +140,6 @@ const HomePageTopDishes = memo((props: Props) => {
             paddingBottom={34}
             spacing="xl"
           >
-            <Link name="user" params={{ username: 'admin' }}>
-              Test
-            </Link>
-
             {/* LENSES - UNIQUELY GOOD HERE */}
             <VStack>
               <VStack alignItems="center">

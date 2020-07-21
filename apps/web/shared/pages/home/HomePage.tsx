@@ -22,8 +22,9 @@ export const homePageBorderRadius = 12
 
 export default memo(function HomePage() {
   const isSmall = useMediaQueryIsSmall()
+  console.log('rendering me...')
   return (
-    <VStack flex={1} alignItems="center">
+    <VStack className="hellow-rol" flex={1} alignItems="center">
       <VStack
         // apple maps ocean color
         backgroundColor="#B8E0F3"

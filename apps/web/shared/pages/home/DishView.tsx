@@ -25,7 +25,7 @@ export const DishView = memo(
   } & StackProps) => {
     const [isHovered, setIsHovered] = useState(false)
 
-    const width = size * 0.8
+    const width = size * 0.82
     const height = size
     const quality = size > 160 ? 80 : 60
     const imageUrl = `${IMAGE_PROXY_DOMAIN}/${width}x${height},q${quality}/${dish.image}`
