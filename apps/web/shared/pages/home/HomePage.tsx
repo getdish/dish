@@ -16,7 +16,6 @@ export const homePageBorderRadius = 12
 
 export default memo(function HomePage() {
   const isSmall = useMediaQueryIsSmall()
-  console.log('rendering me...')
   return (
     <VStack className="hellow-rol" flex={1} alignItems="center">
       <VStack

@@ -26,16 +26,14 @@ export const HomeStackDrawer = ({
     >
       {closable && (
         <StackViewCloseButton
-          right={isSmall ? 10 : -23}
-          top={isSmall ? 10 : 12}
-          {...(!isSmall && {
-            backgroundColor: '#fff',
-            padding: 5,
-            borderRadius: 20,
-            shadowColor: 'rgba(0,0,0,0.1)',
-            shadowRadius: 5,
-            shadowOffset: { width: 2, height: 0 },
-          })}
+          right={isSmall ? 6 : -23}
+          top={isSmall ? -28 : 12}
+          backgroundColor="#fff"
+          padding={5}
+          borderRadius={20}
+          shadowColor="rgba(0,0,0,0.1)"
+          shadowRadius={5}
+          shadowOffset={{ width: 2, height: 0 }}
         />
       )}
       {!!title && <PageTitleTag>{title}</PageTitleTag>}

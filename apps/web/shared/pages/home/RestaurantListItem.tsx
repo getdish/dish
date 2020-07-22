@@ -119,6 +119,9 @@ const RestaurantListItemContent = memo(
     const paddingTop = 30
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
 
+    const curState = omStatic.state.home.currentState
+    const tagIds = 'activeTagIds' in curState ? curState.activeTagIds : null
+
     return (
       <HStack
         alignItems="flex-start"
@@ -154,7 +157,10 @@ const RestaurantListItemContent = memo(
                 pointerEvents="none"
               >
                 <AbsoluteVStack position="absolute" top={24} left={17}>
-                  <RestaurantUpVoteDownVote restaurantId={restaurantId} />
+                  <RestaurantUpVoteDownVote
+                    restaurantId={restaurantId}
+                    activeTagIds={tagIds ?? {}}
+                  />
                 </AbsoluteVStack>
 
                 <RankingView rank={rank} />
@@ -237,11 +243,13 @@ const RestaurantListItemContent = memo(
 
             {/* ROW: Overview / Reviews / Comment */}
             <VStack>
-              <Text fontSize={14} lineHeight={21}>
-                <Suspense fallback={<LoadingItems />}>
-                  <RestaurantOverview />
-                </Suspense>
-              </Text>
+              <VStack paddingLeft={26}>
+                <Text fontSize={16} lineHeight={21}>
+                  <Suspense fallback={<LoadingItems />}>
+                    <RestaurantOverview />
+                  </Suspense>
+                </Text>
+              </VStack>
               <Spacer />
               <Suspense fallback={<LoadingItems />}>
                 <RestaurantTopReviews

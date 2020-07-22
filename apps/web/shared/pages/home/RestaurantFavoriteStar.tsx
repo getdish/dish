@@ -4,7 +4,7 @@ import React, { memo, useState } from 'react'
 import { Star } from 'react-feather'
 
 import { useOvermind } from '../../state/useOvermind'
-import { useUserReview } from './useUserReview'
+import { useUserFavorite, useUserReviews } from './useUserReview'
 
 export const RestaurantFavoriteStar = memo(
   graphql(
@@ -19,7 +19,7 @@ export const RestaurantFavoriteStar = memo(
       const sizePx = size == 'lg' ? 26 : 16
       const om = useOvermind()
       // const forceUpdate = useForceUpdate()
-      const review = useUserReview(restaurantId)
+      const review = useUserFavorite(restaurantId)
       const [optimisticRating, setOptimisticRating] = useState(0)
       const isStarred = (optimisticRating ?? review?.rating) > 0
 

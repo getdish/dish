@@ -2,10 +2,10 @@ import { HStack, Text, VStack } from '@dish/ui'
 import React, { useEffect, useState } from 'react'
 import { TextInput, View } from 'react-native'
 
+import { Input } from '../../pages/home/Input'
 import { useOvermind } from '../../state/useOvermind'
 import { Link } from '../ui/Link'
 import { SmallButton } from '../ui/SmallButton'
-import { textStyles } from './textStyles'
 
 export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
   const om = useOvermind()
@@ -71,19 +71,15 @@ export const AuthLoginRegisterView = (props: { setMenuOpen: Function }) => {
       {/* <Text style={{ fontSize: 16 }}>
         // some pitch on features for login here
       </Text> */}
-      <TextInput
-        // @ts-ignore
+      <Input
         name="email"
-        style={textStyles.textField}
         placeholder="Login/signup with email"
         value={username}
         onChange={(event) => setUsername(event.target['value'])}
       />
 
-      <TextInput
-        // @ts-ignore
+      <Input
         name="password"
-        style={textStyles.textField}
         placeholder="Password"
         value={password}
         secureTextEntry={true}

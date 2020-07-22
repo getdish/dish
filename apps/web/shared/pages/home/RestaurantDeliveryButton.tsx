@@ -24,6 +24,10 @@ export const RestaurantDeliveryButton = memo(
     const width = sources.length * buttonWidth + sources.length * spacing
     const framePad = 2
 
+    if (!sources.length) {
+      return null
+    }
+
     return (
       <SmallButton
         position="relative"

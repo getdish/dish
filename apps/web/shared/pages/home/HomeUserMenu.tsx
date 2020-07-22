@@ -32,14 +32,7 @@ export const HomeUserMenu = memo(() => {
         flex: 0,
       }}
       contents={
-        <Box
-          onPressOut={() => {
-            close()
-          }}
-          padding={20}
-          width="30vw"
-          minWidth={250}
-        >
+        <Box padding={20} width="35vw" minWidth={290} maxWidth={400}>
           {!om.state.user.isLoggedIn && (
             <AuthLoginRegisterView
               setMenuOpen={(x) => om.actions.home.setShowUserMenu(x)}
@@ -47,7 +40,12 @@ export const HomeUserMenu = memo(() => {
           )}
 
           {om.state.user.isLoggedIn && (
-            <VStack spacing>
+            <VStack
+              spacing
+              onPressOut={(e) => {
+                close()
+              }}
+            >
               {om.state.user.user?.username === 'admin' && (
                 <VStack spacing>
                   <LinkButton {...flatButtonStyle} name="admin">

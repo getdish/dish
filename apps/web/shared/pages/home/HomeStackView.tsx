@@ -1,7 +1,5 @@
-import { fullyIdle, idle, series } from '@dish/async'
 import { AbsoluteVStack, VStack, useDebounceValue } from '@dish/ui'
-import { cloneDeep } from 'lodash'
-import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, memo, useMemo } from 'react'
 
 import { memoize } from '../../helpers/memoizeWeak'
 import { HomeStateItem, HomeStateItemSimple } from '../../state/home'

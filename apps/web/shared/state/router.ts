@@ -1,4 +1,4 @@
-import { HistoryItem, NavigateItem, Route, Router } from '@dish/router'
+import { HistoryItem, Route, Router } from '@dish/router'
 import { Action, AsyncAction, derived } from 'overmind'
 
 export type SearchRouteParams = {

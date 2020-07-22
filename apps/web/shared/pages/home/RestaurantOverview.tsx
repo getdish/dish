@@ -5,11 +5,11 @@ export const RestaurantOverview = memo(() => {
   const listItems = [
     {
       category: 'Food',
-      review: `Authentic. Don't miss: lychee tempura ice cream`,
+      review: `Don't miss the lychee tempura ice cream`,
     },
     {
-      category: 'Tips',
-      review: 'Quick, cheap, local favorite',
+      category: 'Place',
+      review: 'Authentic. Big bar area outside with shade',
     },
     // {
     //   category: 'Tips',
@@ -34,7 +34,7 @@ export const RestaurantOverview = memo(() => {
                 // paddingVertical={2}
                 paddingHorizontal={5}
                 borderRadius={6}
-                fontWeight="600"
+                fontWeight="300"
                 opacity={0.65}
               >
                 {item.category}:
