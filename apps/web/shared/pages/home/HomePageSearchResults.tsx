@@ -95,11 +95,13 @@ export default memo(function HomePageSearchResults(props: Props) {
   return (
     <HomeStackDrawer title={title} closable>
       <SearchResultsTitle title={titleElements} stateId={props.item.id} />
-      {isOptimisticUpdatingDelayed && isOptimisticUpdating ? (
-        <HomeEmptyLoading />
-      ) : (
-        content
-      )}
+      <Suspense fallback={<HomeLoadingItems />}>
+        {isOptimisticUpdatingDelayed && isOptimisticUpdating ? (
+          <HomeEmptyLoading />
+        ) : (
+          content
+        )}
+      </Suspense>
     </HomeStackDrawer>
   )
 })

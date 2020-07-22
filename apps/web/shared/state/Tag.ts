@@ -16,7 +16,7 @@ export const tagLenses: Tag[] = [
     id: '3',
     name: 'Gems',
     icon: ' 💎',
-    rgb: [197, 117, 48],
+    rgb: [190, 112, 58],
     // @ts-ignore
     descriptions: {
       dish: 'The best 🍔',

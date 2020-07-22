@@ -1,6 +1,6 @@
 import { AbsoluteVStack, Button, HStack, Spacer, VStack } from '@dish/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
-import { Navigation } from 'react-feather'
+import { MapPin, Navigation } from 'react-feather'
 import { TextInput } from 'react-native'
 
 import {
@@ -93,7 +93,8 @@ export const HomeSearchLocationInput = memo(() => {
       position="relative"
       flex={65}
       minWidth={180}
-      backgroundColor="rgba(255,255,255,0.1)"
+      borderColor="rgba(255,255,255,0.1)"
+      borderWidth={1}
       borderRadius={8}
       justifyContent="center"
     >
@@ -101,7 +102,13 @@ export const HomeSearchLocationInput = memo(() => {
         input={locationInput}
         autocompleteTarget="location"
       >
-        <HStack>
+        <HStack alignItems="center">
+          <MapPin
+            color="#fff"
+            size={18}
+            opacity={0.5}
+            style={{ marginLeft: 10, marginRight: -5 }}
+          />
           <TextInput
             ref={locationInputRef}
             value={locationSearch}

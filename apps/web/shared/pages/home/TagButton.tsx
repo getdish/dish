@@ -100,7 +100,7 @@ export const TagButton = memo(
           height={height}
           borderColor={subtle ? 'transparent' : 'rgba(0,0,0,0.1)'}
           borderWidth={1}
-          borderRadius={6 * scale}
+          borderRadius={8 * scale}
           overflow="hidden"
           alignItems="center"
           justifyContent="center"
@@ -221,13 +221,11 @@ export const TagButton = memo(
               borderRadius={10}
               onPressIn={prevent}
               onPressOut={onClose}
-              opacity={0.5}
+              opacity={0.35}
               {...(!subtle && {
-                marginLeft: -8,
-                marginRight: 2,
+                marginLeft: -10,
               })}
               position="relative"
-              top="1px"
               {...(subtle && {
                 position: 'absolute',
                 top: -9,
@@ -240,7 +238,7 @@ export const TagButton = memo(
               alignSelf="center"
             >
               <X
-                size={subtle ? 12 : 14}
+                size={subtle ? 11 : 13}
                 style={{
                   color: subtle ? 'inherit' : color,
                 }}
