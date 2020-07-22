@@ -1,3 +1,4 @@
+// debug
 import { Tag } from '@dish/graph'
 import { Text, VStack, memoIsEqualDeep } from '@dish/ui'
 import React from 'react'
@@ -26,34 +27,34 @@ export const LenseButton = memoIsEqualDeep(
     const borderColor = minimal ? 'transparent' : '#f5f5f5'
 
     return (
-      <LinkButton
-        tag={lense}
-        disallowDisableWhenActive
-        position="relative"
-        zIndex={isActive ? 1 : 0}
-      >
-        <VStack
-          className="ease-in-out-faster"
-          alignItems="center"
-          justifyContent="center"
-          marginVertical={-5 * scale}
-          width={sizePx * scale}
-          height={sizePx * scale}
-          backgroundColor="#fff"
-          borderRadius={100}
-          borderColor={borderColor}
-          borderWidth={1}
-          borderBottomColor="transparent"
-          {...(isActive && {
-            opacity: 1,
-            borderColor: lenseColor,
+      // <LinkButton
+      //   tag={lense}
+      //   disallowDisableWhenActive
+      //   position="relative"
+      //   zIndex={isActive ? 1 : 0}
+      // >
+      <VStack
+        className="ease-in-out-fast"
+        alignItems="center"
+        justifyContent="center"
+        marginVertical={-5 * scale}
+        width={sizePx * scale}
+        height={sizePx * scale}
+        backgroundColor="#fff"
+        borderRadius={100}
+        borderColor={borderColor}
+        borderWidth={1}
+        borderBottomColor="transparent"
+        {...(isActive && {
+          opacity: 1,
+          borderColor: lenseColor,
+          transform: [{ scale: 1.15 }],
+          hoverStyle: {
             transform: [{ scale: 1.15 }],
-            hoverStyle: {
-              transform: [{ scale: 1.15 }],
-            },
-          })}
-        >
-          <Text
+          },
+        })}
+      >
+        {/* <Text
             fontSize={sizePx * (isActive ? 0.7 : 0.5) * scale}
             lineHeight={sizePx * scale}
             fontWeight="400"
@@ -92,9 +93,9 @@ export const LenseButton = memoIsEqualDeep(
                 {lense.displayName ?? lense.name}
               </Text>
             </VStack>
-          </VStack>
-        </VStack>
-      </LinkButton>
+          </VStack> */}
+      </VStack>
+      // </LinkButton>
     )
   }
 )

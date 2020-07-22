@@ -1,4 +1,6 @@
+import generate from '@babel/generator'
 import * as t from '@babel/types'
+import invariant from 'invariant'
 
 import { accessSafe } from './accessSafe'
 
@@ -62,13 +64,14 @@ export function getPropValueFromAttributes(
       // 2. attr is a spread operator
       (attr, idx): attr is t.JSXSpreadAttribute => {
         if (t.isJSXSpreadAttribute(attr)) {
-          // invariant(
-          //   // only allow member expressions and identifiers to be spread for now
-          //   t.isIdentifier(attr.argument) || t.isMemberExpression(attr.argument),
-          //   'Unhandled spread operator value of type `%s` (`%s`)',
-          //   attr.argument.type,
-          //   generate(attr).code,
-          // )
+          invariant(
+            // only allow member expressions and identifiers to be spread for now
+            t.isIdentifier(attr.argument) ||
+              t.isMemberExpression(attr.argument),
+            'Unhandled spread operator value of type `%s` (`%s`)',
+            attr.argument.type,
+            generate(attr).code
+          )
           return idx > propIndex
         }
         return false

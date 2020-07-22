@@ -1,42 +1,46 @@
 import { fullyIdle, idle, series } from '@dish/async'
-import { HStack, Spacer, Toast, useGet, useOnMount } from '@dish/ui'
+import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from '@dish/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
+import { Loader, Search } from 'react-feather'
 import { StyleSheet, TextInput } from 'react-native'
 
+import { brandRgb } from '../../colors'
 import { searchBarHeight } from '../../constants'
 import {
   inputClearSelection,
   inputGetNode,
   inputIsTextSelected,
 } from '../../helpers/input'
+import { rgbString } from '../../helpers/rgbString'
 import { router } from '../../state/router'
 import { getTagId } from '../../state/Tag'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { CloseButton } from './CloseButton'
 import { HomeAutocompleteHoverableInput } from './HomeAutocomplete'
 import { TagButton } from './TagButton'
+import { useMediaQueryIsReallySmall } from './useMediaQueryIs'
 
 const placeholders = [
-  'Pho',
-  'Tacos',
-  'Dim sum',
-  'Gyro',
-  'Bibimbap',
-  'Poke',
-  'Dosa',
-  'Onigiri',
-  'Banh mi',
-  'Barbeque',
-  'Ceasar salad',
-  'Sushi',
-  'Sisig',
-  'Szechuan chicken',
-  'Italian',
+  'pho',
+  'tacos',
+  'dim sum',
+  'gyro',
+  'bibimbap',
+  'poke',
+  'dosa',
+  'onigiri',
+  'banh mi',
+  'barbeque',
+  'ceasar salad',
+  'sushi',
+  'sisig',
+  'szechuan chicken',
+  'italian',
 ]
 
 const placeHolder = `${
   placeholders[Math.floor(placeholders.length * Math.random())]
-}...`
+}`
 
 // avoid first one on iniital focus
 let avoidNextShowautocompleteOnFocus = true
@@ -57,6 +61,7 @@ export function focusSearchInput() {
 
 export const HomeSearchInput = memo(() => {
   const om = useOvermind()
+  const isReallySmall = useMediaQueryIsReallySmall()
   const inputRef = useRef<any>()
   const [search, setSearch] = useState('')
   const getSearch = useGet(search)
@@ -142,43 +147,64 @@ export const HomeSearchInput = memo(() => {
 
   const input = inputGetNode(inputRef.current)
   return (
-    <>
-      <HomeAutocompleteHoverableInput input={input} autocompleteTarget="search">
-        <HStack alignItems="center" flex={1} overflow="hidden">
-          <HomeSearchBarTags input={input} />
-          <TextInput
-            ref={inputRef}
-            // leave uncontrolled for perf?
-            value={search}
-            onFocus={() => {
-              onFocusAnyInput()
-              if (avoidNextShowautocompleteOnFocus) {
-                avoidNextShowautocompleteOnFocus = false
-              } else {
-                om.actions.home.setShowAutocomplete('search')
-              }
-            }}
-            onBlur={() => {
+    <HomeAutocompleteHoverableInput input={input} autocompleteTarget="search">
+      <HStack
+        backgroundColor="rgba(255,255,255,0.1)"
+        alignItems="center"
+        paddingHorizontal={15}
+        borderRadius={100}
+        flex={1}
+        overflow="hidden"
+      >
+        {/* Loading / Search Icon */}
+        {!isReallySmall && (
+          <>
+            {om.state.home.isLoading ? (
+              <VStack className="rotating" opacity={0.9}>
+                <Loader color="#fff" size={18} />
+              </VStack>
+            ) : (
+              <Search
+                color="#fff"
+                size={18}
+                opacity={0.6}
+                onClick={() => input?.focus()}
+              />
+            )}
+          </>
+        )}
+        <HomeSearchBarTags input={input} />
+        <TextInput
+          ref={inputRef}
+          // leave uncontrolled for perf?
+          value={search}
+          onFocus={() => {
+            onFocusAnyInput()
+            if (avoidNextShowautocompleteOnFocus) {
               avoidNextShowautocompleteOnFocus = false
-            }}
-            onChangeText={(text) => {
-              if (getSearch() == '' && text !== '') {
-                om.actions.home.setShowAutocomplete('search')
-              }
-              setSearch(text)
-              om.actions.home.setSearchQuery(text)
-            }}
-            placeholder={isSearchingCuisine ? '...' : placeHolder}
-            style={[
-              inputTextStyles.textInput,
-              { flex: 1, fontSize: 18, paddingRight: 0 },
-            ]}
-          />
-        </HStack>
-      </HomeAutocompleteHoverableInput>
-      <SearchCancelButton />
-      <Spacer size={6} />
-    </>
+            } else {
+              om.actions.home.setShowAutocomplete('search')
+            }
+          }}
+          onBlur={() => {
+            avoidNextShowautocompleteOnFocus = false
+          }}
+          onChangeText={(text) => {
+            if (getSearch() == '' && text !== '') {
+              om.actions.home.setShowAutocomplete('search')
+            }
+            setSearch(text)
+            om.actions.home.setSearchQuery(text)
+          }}
+          placeholder={isSearchingCuisine ? '...' : `${placeHolder}...`}
+          style={[
+            inputTextStyles.textInput,
+            { flex: 1, fontSize: 18, paddingRight: 0 },
+          ]}
+        />
+        <SearchCancelButton />
+      </HStack>
+    </HomeAutocompleteHoverableInput>
   )
 })
 
@@ -347,6 +373,10 @@ function searchInputEffect(input: HTMLInputElement) {
 const HomeSearchBarTags = memo(
   ({ input }: { input: HTMLInputElement | null }) => {
     const om = useOvermind()
+    const lense = om.state.home.currentStateLense
+    const rgb = lense?.rgb ?? brandRgb
+    const backgroundColor = rgbString(rgb.map((x) => x * 0.6))
+    const backgroundColorHover = rgbString(rgb.map((x) => x * 0.7))
 
     return (
       <>
@@ -359,11 +389,15 @@ const HomeSearchBarTags = memo(
                   className="no-transition"
                   key={getTagId(tag)}
                   subtleIcon
-                  backgroundColor="rgba(0,0,0,0.2)"
-                  color="#fff"
+                  backgroundColor={backgroundColor}
+                  color={'#fff'}
+                  shadowColor="#00000022"
+                  fontWeight="400"
+                  shadowRadius={10}
+                  shadowOffset={{ height: 2, width: 0 }}
                   borderColor={'transparent'}
                   hoverStyle={{
-                    backgroundColor: 'rgba(0,0,0,0.15)',
+                    backgroundColor: backgroundColorHover,
                   }}
                   {...(isActive && {
                     backgroundColor: 'rgba(255,255,255,0.1)',
@@ -404,7 +438,7 @@ export const inputTextStyles = StyleSheet.create({
   textInput: {
     color: '#fff',
     height: searchBarHeight - 6,
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     flex: 1,
     fontSize: 18,
     fontWeight: '500',

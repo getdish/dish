@@ -35,10 +35,10 @@ export const RestaurantHeader = memo(
       const restaurant = useRestaurantQuery(restaurantSlug)
       const om = useOvermind()
       return (
-        <>
+        <VStack width="100%">
           <VStack
-            borderTopRightRadius={drawerBorderRadius}
-            borderTopLeftRadius={drawerBorderRadius}
+            borderTopRightRadius={drawerBorderRadius - 1}
+            borderTopLeftRadius={drawerBorderRadius - 1}
             overflow="hidden"
             position="relative"
             padding={20}
@@ -67,14 +67,14 @@ export const RestaurantHeader = memo(
                 />
               </AbsoluteVStack>
             )}
-            <HStack>
+            <HStack alignItems="center">
               <HStack position="relative">
                 <RestaurantRatingViewPopover
                   size="lg"
                   restaurantSlug={restaurantSlug}
                 />
               </HStack>
-              <Spacer size={16} />
+              <Spacer size={20} />
               <VStack flex={1}>
                 <Text
                   selectable
@@ -104,7 +104,6 @@ export const RestaurantHeader = memo(
                 </HStack>
               </VStack>
             </HStack>
-            <Spacer />
           </VStack>
           <SmallTitle marginTop={-18} divider="center">
             <RestaurantFavoriteStar restaurantId={restaurant.id} size="lg" />
@@ -124,7 +123,7 @@ export const RestaurantHeader = memo(
               </VStack>
             </>
           )}
-        </>
+        </VStack>
       )
     }
   )

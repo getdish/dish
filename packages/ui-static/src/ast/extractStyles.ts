@@ -26,6 +26,7 @@ import {
 } from './extractStaticTernaries'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
+import { literalToAst } from './literalToAst'
 import { parse } from './parse'
 
 type OptimizableComponent = Function & {
@@ -157,6 +158,7 @@ export function extractStyles(
   }
 
   const existingHoists = {}
+  let couldntParse = false
 
   /**
    * Step 2: Statically extract from JSX < /> nodes
@@ -319,47 +321,42 @@ export function extractStyles(
           }
 
           // handle all other spreads
+          let spreadValue: any
           try {
-            const spreadValue = attemptEval(attr.argument)
+            spreadValue = attemptEval(attr.argument)
+          } catch (e) {
+            lastSpreadIndex = flattenedAttributes.push(attr) - 1
+          }
 
-            if (typeof spreadValue !== 'object' || spreadValue == null) {
-              lastSpreadIndex = flattenedAttributes.push(attr) - 1
-            } else {
-              for (const k in spreadValue) {
-                const value = spreadValue[k]
-
-                if (typeof value === 'number') {
+          if (spreadValue) {
+            try {
+              if (typeof spreadValue !== 'object' || spreadValue == null) {
+                lastSpreadIndex = flattenedAttributes.push(attr) - 1
+              } else {
+                for (const k in spreadValue) {
+                  const value = spreadValue[k]
+                  if (value && typeof value === 'object') {
+                    continue
+                  }
                   flattenedAttributes.push(
                     t.jsxAttribute(
                       t.jsxIdentifier(k),
-                      t.jsxExpressionContainer(t.numericLiteral(value))
-                    )
-                  )
-                } else if (value === null) {
-                  // rare case
-                  flattenedAttributes.push(
-                    t.jsxAttribute(
-                      t.jsxIdentifier(k),
-                      t.jsxExpressionContainer(t.nullLiteral())
-                    )
-                  )
-                } else if (typeof value === 'object') {
-                  throw new Error(`Dont handle objects for now`)
-                } else {
-                  // toString anything else
-                  flattenedAttributes.push(
-                    t.jsxAttribute(
-                      t.jsxIdentifier(k),
-                      t.stringLiteral('' + value)
+                      t.jsxExpressionContainer(literalToAst(value))
                     )
                   )
                 }
               }
+            } catch (err) {
+              console.warn('caught object err', err)
+              couldntParse = true
             }
-          } catch (e) {
-            lastSpreadIndex = flattenedAttributes.push(attr) - 1
           }
         })
+
+        if (couldntParse) {
+          console.log('COULDNT PARSE')
+          return
+        }
 
         node.attributes = flattenedAttributes
 
@@ -387,9 +384,14 @@ export function extractStyles(
           console.log('attrs:', node.attributes.map(attrGetName).join(', '))
         }
 
+        // if (hasOneEndingSpread && !isSingleSimpleSpread) {
+        //   return
+        // }
+
         const ogAttributes = node.attributes
 
         node.attributes = node.attributes.filter((attribute, idx) => {
+          const notToLastSpread = idx < lastSpreadIndex && !isSingleSimpleSpread
           if (
             t.isJSXSpreadAttribute(attribute) ||
             // keep the weirdos
@@ -397,10 +399,10 @@ export function extractStyles(
             // filter out JSXIdentifiers
             typeof attribute.name.name !== 'string' ||
             // haven't hit the last spread operator (we can optimize single simple spreads still)
-            (idx < lastSpreadIndex && !isSingleSimpleSpread)
+            notToLastSpread
           ) {
             if (shouldPrintDebug) {
-              console.log('attr inline via non normal attr', attribute['name'])
+              console.log('attr inline via non normal attr', notToLastSpread)
             }
             inlinePropCount++
             return true
@@ -703,12 +705,23 @@ export function extractStyles(
         if (classNamePropValue) {
           try {
             const evaluatedValue = attemptEval(classNamePropValue)
+            if (shouldPrintDebug) {
+              console.log('got', evaluatedValue)
+            }
             classNameObjects.push(t.stringLiteral(evaluatedValue))
           } catch (e) {
             classNameObjects.push(classNamePropValue)
           }
         }
 
+        if (shouldPrintDebug) {
+          console.log(
+            '123',
+            classNamePropValue?.['left'],
+            classNamePropValue?.['left']?.['left'],
+            classNamePropValue?.['left']?.['right']
+          )
+        }
         let classNamePropValueForReals = buildClassNamePropValue(
           classNameObjects
         )

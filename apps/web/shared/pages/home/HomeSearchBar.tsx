@@ -9,9 +9,10 @@ import {
   mediaQueries,
 } from '@dish/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
-import { ChevronLeft, Loader, MapPin, Search, Settings } from 'react-feather'
+import { ChevronLeft, MapPin } from 'react-feather'
 import { StyleSheet } from 'react-native'
 
+import { brandRgb } from '../../colors'
 import {
   pageWidthMax,
   searchBarHeight,
@@ -31,8 +32,6 @@ import {
 } from './useMediaQueryIs'
 
 const divider = <Divider vertical flexLine={1} marginHorizontal={4} />
-
-const brandRgb = [50, 80, 120] as const
 
 export default memo(function HomeSearchBar() {
   const [showLocation, setShowLocation] = useState(false)
@@ -144,7 +143,11 @@ export default memo(function HomeSearchBar() {
                 <DishLogoButton />
               </VStack>
 
-              {!isSmall && <HomeSearchBarHomeBackButton />}
+              {!isSmall && (
+                <>
+                  <HomeSearchBarHomeBackButton />
+                </>
+              )}
 
               <HStack
                 flex={100}
@@ -152,19 +155,6 @@ export default memo(function HomeSearchBar() {
                 alignItems="center"
                 overflow="hidden"
               >
-                {/* Loading / Search Icon */}
-                {!isReallySmall && (
-                  <>
-                    {om.state.home.isLoading ? (
-                      <VStack className="rotating" opacity={0.45}>
-                        <Loader color="#fff" size={18} />
-                      </VStack>
-                    ) : (
-                      <Search color="#fff" size={18} opacity={0.25} />
-                    )}
-                  </>
-                )}
-
                 {/* Search Input Start */}
                 {isReallySmall && (
                   <>
@@ -178,14 +168,12 @@ export default memo(function HomeSearchBar() {
                   </>
                 )}
                 {!isReallySmall && <HomeSearchInput />}
-                <Spacer size={1} />
               </HStack>
 
               {!isReallySmall && (
                 <>
-                  <Spacer />
+                  <Spacer size={6} />
                   <HomeSearchLocationInput />
-                  {divider}
                   <VStack flex={1} />
                 </>
               )}
@@ -211,13 +199,19 @@ export default memo(function HomeSearchBar() {
 const HomeSearchBarHomeBackButton = memo(() => {
   const om = useOvermind()
   const isDisabled = om.state.home.currentStateType === 'home'
+  const isOneLevelUpFromHome = om.state.home.previousState?.type === 'home'
+  const iconProps = {
+    color: '#fff',
+    size: 20,
+    style: { marginTop: 3 },
+  }
   return (
     <MediaQuery query={mediaQueries.md}>
       <LinkButton
         justifyContent="center"
         alignItems="center"
         pointerEvents="auto"
-        paddingRight={16}
+        width={30}
         opacity={isDisabled ? 0 : 0.7}
         disabled={isDisabled}
         onPress={() => om.actions.home.popBack()}
@@ -230,7 +224,7 @@ const HomeSearchBarHomeBackButton = memo(() => {
           },
         })}
       >
-        <ChevronLeft color="#fff" size={22} style={{ marginTop: 3 }} />
+        <ChevronLeft {...iconProps} />
       </LinkButton>
     </MediaQuery>
   )

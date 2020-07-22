@@ -1,6 +1,6 @@
 import { graphql, query, restaurantPhotosForCarousel } from '@dish/graph'
 import { AbsoluteVStack, HStack, VStack } from '@dish/ui'
-import React, { memo } from 'react'
+import React, { Suspense, memo } from 'react'
 import { Image, ScrollView } from 'react-native'
 
 import { pageWidthMax } from '../../constants'
@@ -31,11 +31,10 @@ export default memo(function HomePageGallery() {
           borderRadius={15}
           maxWidth={pageWidthMax}
           alignItems="center"
-          paddingVertical={20}
           position="relative"
           overflow="hidden"
         >
-          <AbsoluteVStack top={20} right={10}>
+          <AbsoluteVStack top={20} right={40}>
             <StackViewCloseButton />
           </AbsoluteVStack>
 
@@ -47,16 +46,16 @@ export default memo(function HomePageGallery() {
           >
             <VStack>
               <HStack
-                paddingRight={40}
-                paddingLeft={20}
                 alignItems="center"
                 justifyContent="space-between"
                 flexWrap="wrap"
               >
-                <RestaurantHeader
-                  hideDetails
-                  restaurantSlug={state.restaurantSlug}
-                />
+                <Suspense fallback={null}>
+                  <RestaurantHeader
+                    hideDetails
+                    restaurantSlug={state.restaurantSlug}
+                  />
+                </Suspense>
               </HStack>
 
               <HomePageGalleryContent state={state} />

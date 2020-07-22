@@ -24,6 +24,10 @@ export default function GlossWebpackLoader(this: any, content) {
   const options: LoaderOptions = loaderUtils.getOptions(this) || {}
   const { memoryFS, cacheObject } = pluginContext
 
+  if (content.startsWith('// static-ui-ignore')) {
+    return content
+  }
+
   const rv = extractStyles(
     content,
     this.resourcePath,
