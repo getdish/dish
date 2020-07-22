@@ -62,7 +62,6 @@ const HomePageContent = memo(() => {
         <HomeViewDrawer>
           <HomeStackView>
             {(props) => {
-              console.log('HomePagePane', HomePagePane)
               return <HomePagePane {...props} />
             }}
           </HomeStackView>

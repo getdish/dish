@@ -391,8 +391,9 @@ function runAutocomplete(
   let results: AutocompleteItem[] = []
 
   return series([
-    () => fullyIdle({ max: 80 }),
+    () => fullyIdle({ max: 100, min: 50 }),
     async () => {
+      console.log('runAutocomplete', showAutocomplete, searchQuery)
       if (showAutocomplete === 'location') {
         results = [
           ...(await searchLocations(searchQuery))
@@ -408,7 +409,7 @@ function runAutocomplete(
           state.span!
         )
       }
-      console.log('results', showAutocomplete, searchQuery, results)
+      console.log('runAutocomplete.results', results)
     },
     () => fullyIdle({ max: 30 }),
     async () => {

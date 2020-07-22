@@ -221,7 +221,7 @@ export function extractStyles(
                 if (t.isIdentifier(n)) {
                   invariant(
                     staticNamespace.hasOwnProperty(n.name),
-                    'identifier not in staticNamespace'
+                    `identifier not in staticNamespace: "${n.name}"`
                   )
                   return staticNamespace[n.name]
                 }
@@ -236,7 +236,10 @@ export function extractStyles(
         const attemptEvalSafe = (n: t.Node) => {
           try {
             return attemptEval(n)
-          } catch {
+          } catch (err) {
+            if (shouldPrintDebug) {
+              console.log('attemptEvalSafe failed', err.message)
+            }
             return null
           }
         }
@@ -268,11 +271,12 @@ export function extractStyles(
         const isStyleObject = (obj: t.Node): obj is t.ObjectExpression => {
           return (
             t.isObjectExpression(obj) &&
-            obj.properties.every(
-              (prop) =>
-                // @ts-ignore TODO remove this is only an issue on CI
-                t.isObjectProperty(prop) && isStaticAttributeName(prop.key.name)
-            )
+            obj.properties.every((prop) => {
+              return (
+                t.isObjectProperty(prop) &&
+                isStaticAttributeName(prop.key['name'])
+              )
+            })
           )
         }
 
@@ -383,10 +387,6 @@ export function extractStyles(
           console.log('spreads:', { hasOneEndingSpread, isSingleSimpleSpread })
           console.log('attrs:', node.attributes.map(attrGetName).join(', '))
         }
-
-        // if (hasOneEndingSpread && !isSingleSimpleSpread) {
-        //   return
-        // }
 
         const ogAttributes = node.attributes
 
@@ -705,23 +705,12 @@ export function extractStyles(
         if (classNamePropValue) {
           try {
             const evaluatedValue = attemptEval(classNamePropValue)
-            if (shouldPrintDebug) {
-              console.log('got', evaluatedValue)
-            }
             classNameObjects.push(t.stringLiteral(evaluatedValue))
           } catch (e) {
             classNameObjects.push(classNamePropValue)
           }
         }
 
-        if (shouldPrintDebug) {
-          console.log(
-            '123',
-            classNamePropValue?.['left'],
-            classNamePropValue?.['left']?.['left'],
-            classNamePropValue?.['left']?.['right']
-          )
-        }
         let classNamePropValueForReals = buildClassNamePropValue(
           classNameObjects
         )

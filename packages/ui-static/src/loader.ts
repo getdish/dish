@@ -1,7 +1,6 @@
 import path from 'path'
 import util from 'util'
 
-import { mkdirpSync, writeFileSync } from 'fs-extra'
 import invariant from 'invariant'
 import loaderUtils from 'loader-utils'
 
