@@ -106,12 +106,7 @@ export class Router extends Store<RouterProps> {
           : event.action === 'POP'
           ? 'pop'
           : 'push'
-      console.log(
-        'event',
-        { type, direction, event, state },
-        this.history,
-        this.stack
-      )
+      console.log('router.history', { type, direction, event, state })
       this.handlePath(event.location.pathname, {
         id,
         direction,

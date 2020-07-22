@@ -1115,8 +1115,12 @@ export const getNavigateTo: Action<HomeStateNav, LinkButtonProps | null> = (
 // this is useful for search where we mutate the current state while you type,
 // but then later you hit "enter" and we need to navigate to search (or home)
 // we definitely can clean up / name better some of this once things settle
+let lastNav = Date.now()
 const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
   console.warn('home.navigate', navState)
+  lastNav = Date.now()
+  let curNav = lastNav
+  om.state.home.isOptimisticUpdating = false
   if (navState.tags) {
     om.actions.home.addTagsToCache(navState.tags)
   }
@@ -1140,12 +1144,14 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
       activeTagIds: nextState.activeTagIds,
       results: defaultSearchResults,
     })
-    await sleep(1000)
+    await sleep(40)
     await idle(30)
+    if (curNav !== lastNav) return
     om.state.home.isOptimisticUpdating = false
   }
 
   const didNav = await syncStateToRoute(om, nextState)
+  if (curNav !== lastNav) return
   om.actions.home.updateActiveTags(nextState)
   return didNav
 }

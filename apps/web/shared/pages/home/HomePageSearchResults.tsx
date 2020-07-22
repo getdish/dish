@@ -257,8 +257,6 @@ const SearchResultsContent = memo((props: Props) => {
         !searchState.results?.results ||
         state.hasLoaded <= state.chunk)
 
-  console.log('ok', isLoading, results, currentlyShowing, allResults)
-
   // console.log(
   //   'SearchResults',
   //   JSON.stringify(

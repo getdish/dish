@@ -93,8 +93,8 @@ export const HomeSearchLocationInput = memo(() => {
       position="relative"
       flex={65}
       minWidth={180}
-      borderColor="rgba(255,255,255,0.1)"
-      borderWidth={1}
+      backgroundColor="rgba(255,255,255,0.1)"
+      // borderWidth={1}
       borderRadius={8}
       justifyContent="center"
     >

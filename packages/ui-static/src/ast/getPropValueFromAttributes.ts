@@ -64,15 +64,20 @@ export function getPropValueFromAttributes(
       // 2. attr is a spread operator
       (attr, idx): attr is t.JSXSpreadAttribute => {
         if (t.isJSXSpreadAttribute(attr)) {
-          invariant(
-            // only allow member expressions and identifiers to be spread for now
+          if (
             t.isIdentifier(attr.argument) ||
-              t.isMemberExpression(attr.argument),
-            'Unhandled spread operator value of type `%s` (`%s`)',
-            attr.argument.type,
-            generate(attr).code
+            t.isMemberExpression(attr.argument)
+          ) {
+            return idx > propIndex
+          }
+          if (t.isLogicalExpression(attr.argument)) {
+            return false
+          }
+          throw new Error(
+            `unsupported spread of type "${attr.argument.type}": ${
+              generate(attr).code
+            }`
           )
-          return idx > propIndex
         }
         return false
       }
