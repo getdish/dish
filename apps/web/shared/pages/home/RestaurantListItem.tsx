@@ -299,12 +299,15 @@ const RestaurantPeek = memo(
     const tag_names = [
       searchState.searchQuery.toLowerCase(),
       ...Object.keys(searchState?.activeTagIds || {}).filter((x) => {
+        const isActive = searchState?.activeTagIds[x]
+        if (!isActive) {
+          return false
+        }
         const type = omStatic.state.home.allTags[x].type
         return type != 'lense' && type != 'filter' && type != 'outlier'
       }),
-    ]
+    ].filter(Boolean)
     const spacing = size == 'lg' ? 16 : 12
-    const isSmall = useMediaQueryIsSmall()
     const restaurant = useRestaurantQuery(props.restaurantSlug)
     const photos = restaurantPhotosForCarousel({
       restaurant,

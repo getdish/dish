@@ -20,7 +20,6 @@ export const restaurantPhotosForCarousel = ({
   max?: number
   gallery?: boolean
 }) => {
-  let x = Date.now()
   // @ts-ignore
   const restaurantPhotos = (restaurant.photos() || []).filter(Boolean)
   let photos = [] as TopCuisineDish[]
@@ -32,9 +31,6 @@ export const restaurantPhotosForCarousel = ({
       photos.push({ name: 'Item', image: photo })
       if (photos.length >= max) break
     }
-  }
-  if (Date.now() - x > 50) {
-    console.warn('restaurantPhotosForCarousel SLOW')
   }
   return photos.filter(Boolean)
 }
@@ -52,35 +48,34 @@ const prependDishPhotos = (
   })
   for (const t of tags) {
     const tagName = t.tag.name ?? ''
-    const isSearchedForTag = tag_names?.includes(tagName.toLowerCase())
-    let [photo] = t.photos() || []
-    let isFallback = false
-    const fallback = t.tag?.default_images()?.[0]
-    const photoName = tagName
-    const photoRating = t.rating
-    if (!photo && fallback) {
-      photo = fallback
-      isFallback = true
-    }
-    if (!photo && !isSearchedForTag) {
-      continue
-    }
-    const photoItem = {
-      name: photoName,
-      // enablig this causes double queries
-      // icon: t.tag.icon,
-      image: photo,
-      rating: photoRating,
-      isFallback,
-    }
-    if (isSearchedForTag) {
-      photos.unshift(photoItem)
-    } else {
-      photos.push(photoItem)
-    }
-    if (photos.length >= max) {
-      break
+    if (tagName) {
+      const isSearchedForTag = tag_names?.includes(tagName.toLowerCase())
+      let [photo] = t.photos() || []
+      let isFallback = false
+      const fallback = t.tag?.default_images()?.[0]
+      const photoName = tagName
+      const photoRating = t.rating
+      if (!photo && fallback) {
+        photo = fallback
+        isFallback = true
+      }
+      if (!photo && !isSearchedForTag) {
+        continue
+      }
+      const photoItem = {
+        name: photoName,
+        // enablig this causes double queries
+        // icon: t.tag.icon,
+        image: photo,
+        rating: photoRating,
+        isFallback,
+      }
+      if (isSearchedForTag) {
+        photos.unshift(photoItem)
+      } else {
+        photos.push(photoItem)
+      }
     }
   }
-  return photos
+  return photos.slice(0, max)
 }

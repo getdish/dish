@@ -169,9 +169,9 @@ export class Router extends Store<RouterProps> {
           if (item.type === 'replace') {
             this.stack[this.stackIndex] = next
           } else {
-            if (this.stack.length - 1 > this.stackIndex) {
+            if (this.stackIndex < this.stack.length - 1) {
               // remove future states on next push
-              this.stack = this.stack.slice(0, this.stackIndex)
+              this.stack = this.stack.slice(0, this.stackIndex + 1)
             }
             this.stack = [...this.stack, next]
             this.stackIndex = this.stack.length - 1
