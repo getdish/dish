@@ -18,7 +18,7 @@ export const RestaurantAddress = ({
   currentLocationInfo: GeocodePlace
 }) => {
   return (
-    <Text fontSize={14} fontWeight="300" selectable>
+    <Text lineHeight={16} fontSize={14} fontWeight="300" selectable>
       <Link
         className="hover-underline"
         color="#999"
@@ -30,7 +30,7 @@ export const RestaurantAddress = ({
         <MapPin
           size={14}
           opacity={0.5}
-          style={{ marginTop: 1, marginBottom: -7, marginRight: 4 }}
+          style={{ marginBottom: -7, marginRight: 4 }}
         />
         {getAddressText(currentLocationInfo, address, size)}
       </Link>

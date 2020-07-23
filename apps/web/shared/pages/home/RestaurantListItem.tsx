@@ -122,6 +122,8 @@ const RestaurantListItemContent = memo(
     const curState = omStatic.state.home.currentState
     const tagIds = 'activeTagIds' in curState ? curState.activeTagIds : null
 
+    console.warn(`RestaurantListItemContent.${props.rank}`)
+
     return (
       <HStack
         alignItems="flex-start"

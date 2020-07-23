@@ -36,7 +36,6 @@ export function Link<
   const { onPress, name, params, ...linkProps } = useNormalizeLinkProps(
     restProps as any
   )
-  const om = useOvermindStatic()
   const linkRef = useRef<HTMLElement | null>(null)
   const navItem: NavigateItem = {
     name,
@@ -58,9 +57,6 @@ export function Link<
         if (!preventNavigate && !!navItem.name) {
           router.navigate(navItem)
         }
-      }
-      if (replaceSearch) {
-        om.actions.home.clearSearch()
       }
     }
 

@@ -303,18 +303,27 @@ const popTo: Action<HomeStateItem['type']> = (om, item) => {
   }
 
   // we can just use router history directly, no? and go back?
-  const prevHistory = router.prevHistory
-  if (prevHistory?.name === type && prevHistory.type === 'push') {
+  if (router.prevHistory?.name === type && router.curHistory?.type === 'push') {
     console.log('history matches, testing going back directly')
     router.back()
     return
   }
 
-  const stateItem = _.findLast(router.history, (x) => x.name == type)
-  router.navigate({
-    name: type,
-    params: stateItem?.params ?? {},
-  })
+  const stateItem = _.findLast(router.stack, (x) => x.name == type)
+  if (stateItem) {
+    router.navigate({
+      name: type,
+      params: stateItem?.params ?? {},
+    })
+  } else {
+    if (router.history.length > 1) {
+      router.back()
+    } else {
+      router.navigate({
+        name: 'home',
+      })
+    }
+  }
 }
 
 const loadHomeDishes: AsyncAction = async (om) => {
@@ -1124,7 +1133,7 @@ export const getNavigateTo: Action<HomeStateNav, LinkButtonProps | null> = (
 // we definitely can clean up / name better some of this once things settle
 let lastNav = Date.now()
 const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
-  console.warn('home.navigate', navState)
+  console.trace('home.navigate', navState)
   lastNav = Date.now()
   let curNav = lastNav
   om.state.home.isOptimisticUpdating = false

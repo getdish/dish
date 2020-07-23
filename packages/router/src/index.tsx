@@ -115,6 +115,10 @@ export class Router extends Store<RouterProps> {
         nextItem,
         stack: this.stack,
       })
+      if (type === 'pop' && direction == 'none') {
+        // shouldnt happen
+        debugger
+      }
       this.handlePath(event.location.pathname, {
         id,
         direction,
@@ -213,7 +217,12 @@ export class Router extends Store<RouterProps> {
       this.notFound = false
     }
     if (!this.getShouldNavigate(navItem)) {
-      console.log('already on page')
+      console.log(
+        'already on page',
+        navItem,
+        this.curPage.name,
+        this.curPage.params
+      )
       return
     }
     const params = {

@@ -305,7 +305,8 @@ const SearchResultsContent = memo((props: Props) => {
 
     function isReadyToLoadMore() {
       return createCancellablePromise((res, _, onCancel) => {
-        const dispose = omStatic.reaction(
+        const reaction = omStatic['reaction']
+        const dispose = reaction(
           (state) => isReadyToLoad(state),
           (isReady) => {
             if (!isReady) return
