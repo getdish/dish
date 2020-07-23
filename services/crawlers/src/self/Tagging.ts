@@ -1,4 +1,5 @@
 import {
+  Photos,
   RestaurantTag,
   Tag,
   convertSimpleTagsToRestaurantTags,
@@ -136,6 +137,7 @@ export class Tagging {
     const all_possible_tags = await restaurantGetAllPossibleTags(
       this.crawler.restaurant
     )
+    const all_tag_photos: Photos[] = []
     if (this.crawler.yelp?.data) {
       const photos = this.crawler.getPaginatedData(
         this.crawler.yelp?.data,
@@ -147,20 +149,23 @@ export class Tagging {
           // @ts-ignore
           photos: [] as string[],
         }
+        let is_at_least_one_photo = false
         for (const photo of photos) {
           if (this._doesStringContainTag(photo.media_data?.caption, tag.name)) {
-            // @ts-ignore
-            restaurant_tag.photos.push(photo.src)
+            is_at_least_one_photo = true
+            all_tag_photos.push({
+              restaurant_id: this.crawler.restaurant.id,
+              tag_id: tag.id,
+              url: photo.src,
+            })
           }
         }
-        // @ts-ignore
-        if (restaurant_tag.photos.length > 0) {
-          // @ts-ignore
-          restaurant_tag.photos = uniq(restaurant_tag.photos)
+        if (is_at_least_one_photo) {
           this.restaurant_tags.push(restaurant_tag)
         }
       }
     }
+    return all_tag_photos
   }
 
   findDishesInText(all_reviews: string[]) {

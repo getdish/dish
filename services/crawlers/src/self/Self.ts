@@ -8,6 +8,7 @@ import {
   Scrape,
   ScrapeData,
   bestPhotosForRestaurant,
+  bestPhotosForRestaurantTags,
   deleteAllBy,
   globalTagId,
   menuItemsUpsertMerge,
@@ -19,7 +20,6 @@ import {
   restaurantUpdate,
   restaurantUpsertManyTags,
   scrapeGetData,
-  unassessedPhotosForRestaurant,
 } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
@@ -28,7 +28,6 @@ import moment from 'moment'
 
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
 import { sanfran, sql } from '../utils'
-import { Photoing } from './Photoing'
 import { Tagging } from './Tagging'
 
 const PER_PAGE = 50
@@ -51,7 +50,6 @@ export class Self extends WorkerJob {
   ratings!: { [key: string]: number }
   _start_time!: [number, number]
   tagging: Tagging
-  photoing: Photoing
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -67,7 +65,6 @@ export class Self extends WorkerJob {
   constructor() {
     super()
     this.tagging = new Tagging(this)
-    this.photoing = new Photoing(this)
   }
 
   async main() {
@@ -207,7 +204,15 @@ export class Self extends WorkerJob {
   }
 
   async findPhotosForTags() {
-    await this.tagging.findPhotosForTags()
+    const all_tag_photos = await this.tagging.findPhotosForTags()
+    await photosUpsert(all_tag_photos)
+    const most_aesthetic = await bestPhotosForRestaurantTags(this.restaurant.id)
+    for (const photo of most_aesthetic) {
+      const match = this.tagging.restaurant_tags.find(
+        (rt) => rt.tag_id == photo.tag_id
+      )
+      match?.photos.push(photo.url)
+    }
   }
 
   async scanReviews() {
@@ -669,7 +674,6 @@ export class Self extends WorkerJob {
       ...this._getGooglePhotos(),
       ...this.getPaginatedData(yelp_data, 'photos').map((i) => i.src),
     ]
-    photos_urls = this.photoing._proxyYelpCDN(photos_urls)
     let photos = photos_urls.map((url: string) => {
       return {
         restaurant_id: this.restaurant.id,
@@ -677,10 +681,6 @@ export class Self extends WorkerJob {
       }
     })
     await photosUpsert(photos)
-    const unassessed_photos = await unassessedPhotosForRestaurant(
-      this.restaurant.id
-    )
-    await this.photoing.assessNewPhotos(unassessed_photos)
     const most_aesthetic = await bestPhotosForRestaurant(this.restaurant.id)
     //@ts-ignore
     this.restaurant.photos = most_aesthetic.map((p) => p.url)

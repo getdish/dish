@@ -134,7 +134,10 @@ export type photos_bool_exp = {
  * @type ENUM
  */
 export type t_photos_constraint = EnumType<
-  'photos_pkey' | 'photos_restaurant_id_url_key' | 'photos_tag_id_url_key'
+  | 'photos_pkey'
+  | 'photos_restaurant_id_tag_id_url_key'
+  | 'photos_restaurant_id_url_key'
+  | 'photos_tag_id_url_key'
 >
 
 /**
@@ -471,6 +474,7 @@ export type photos_avg_fields = TypeData<t_photos_avg_fields>
  */
 export enum photos_constraint {
   photos_pkey = 'photos_pkey',
+  photos_restaurant_id_tag_id_url_key = 'photos_restaurant_id_tag_id_url_key',
   photos_restaurant_id_url_key = 'photos_restaurant_id_url_key',
   photos_tag_id_url_key = 'photos_tag_id_url_key',
 }
