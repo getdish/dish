@@ -2,6 +2,7 @@ import React, { Suspense } from 'react'
 
 import { HomeStateItem } from '../../state/home'
 import {
+  isAboutState,
   isHomeState,
   isRestaurantState,
   isSearchState,
@@ -15,15 +16,22 @@ export type HomePagePaneProps<
 
 export const HomePagePane = (props: HomePagePaneProps) => {
   const { item } = props
+  console.log('we have', item)
   return (
     <Suspense fallback={null}>
       {isHomeState(item) && <HomePageHomePane {...props} />}
       {isUserState(item) && <HomePageUser {...props} />}
       {isSearchState(item) && <HomePageSearchResults {...props} />}
       {isRestaurantState(item) && <HomePageRestaurant {...props} />}
+      {isAboutState(item) && <HomePageAbout {...props} />}
     </Suspense>
   )
 }
+
+const HomePageAbout =
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+    ? require('./HomePageAbout').default
+    : React.lazy(() => import('./HomePageAbout'))
 
 const HomePageRestaurant =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'

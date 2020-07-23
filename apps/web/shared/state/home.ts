@@ -209,7 +209,6 @@ export const state: HomeState = {
   locationSearchQuery: '',
   hoveredRestaurant: null,
   isOptimisticUpdating: false,
-  showUserMenu: false,
   stateIndex: 0,
   stateIds: ['0'],
   allStates: {
@@ -517,10 +516,6 @@ const setHoveredRestaurant: Action<RestaurantOnlyIds> = (om, val) => {
   om.state.home.hoveredRestaurant = val
 }
 
-const setShowUserMenu: Action<boolean> = (om, val) => {
-  om.state.home.showUserMenu = val
-}
-
 const suggestTags: AsyncAction<string> = async (om, tags) => {
   let state = om.state.home.currentState
   if (!isRestaurantState(state)) return
@@ -644,6 +639,7 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
   if (item.type === 'push' || item.type === 'replace') {
     switch (item.name) {
       case 'home':
+      case 'about':
       case 'search':
       case 'user':
       case 'gallery':
@@ -720,10 +716,13 @@ const pushHomeState: AsyncAction<
         }
       }
       nextState = {
-        type,
         searchQuery: '',
         activeTagIds,
       }
+      break
+    }
+
+    case 'about': {
       break
     }
 
@@ -742,11 +741,8 @@ const pushHomeState: AsyncAction<
         type == 'userSearch' ? om.state.router.curPage.params.username : ''
       const searchQuery = item.params.search ?? base.searchQuery
       nextState = {
-        // ...om.state.home.lastSearchState,
-        ...base,
         hasMovedMap: false,
         results: { status: 'loading' },
-        type,
         username,
         activeTagIds,
         searchQuery,
@@ -758,7 +754,6 @@ const pushHomeState: AsyncAction<
     // restaurant
     case 'restaurant': {
       nextState = {
-        type,
         restaurantId: null,
         restaurantSlug: item.params.slug,
       }
@@ -768,7 +763,6 @@ const pushHomeState: AsyncAction<
 
     case 'user': {
       nextState = {
-        type: 'user',
         username: item.params.username,
       }
       break
@@ -776,7 +770,6 @@ const pushHomeState: AsyncAction<
 
     case 'gallery': {
       nextState = {
-        type: 'gallery',
         restaurantSlug: item.params.restaurantSlug,
         dishId: item.params.dishId,
       }
@@ -787,6 +780,7 @@ const pushHomeState: AsyncAction<
   const finalState = {
     ...base,
     ...nextState,
+    type,
     id: item.id ?? uid(),
   } as HomeStateItem
 
@@ -1226,7 +1220,6 @@ export const actions = {
   moveSearchBarTagIndex,
   setSearchBarTagIndex,
   setShowAutocomplete,
-  setShowUserMenu,
   popBack,
   refresh,
   suggestTags,

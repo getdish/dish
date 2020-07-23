@@ -27,6 +27,7 @@ export const routes = {
   account: new Route<{ pane: string }>('/account/:pane'),
   contact: new Route<{ pane: string }>('/contact'),
   privacy: new Route<{ pane: string }>('/privacy'),
+  about: new Route<{ pane: string }>('/about'),
   restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
 
   // admin
