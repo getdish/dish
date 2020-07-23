@@ -163,8 +163,19 @@ export const getNavigateItemForState = (
     name = 'home'
   }
 
-  const isChangingType = name !== router.curPage.name
+  const curName = router.curPage.name
+  const isChangingType = name !== curName
   const replace = !isChangingType
+
+  // console.log('getNavigateItemForState', {
+  //   isHome,
+  //   shouldBeOnHome,
+  //   name,
+  //   curName,
+  //   isChangingType,
+  //   replace,
+  //   curPage: router.curPage,
+  // })
 
   if (shouldBeHome) {
     return {
@@ -214,8 +225,8 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
   om,
   state
 ) => {
-  const next = getNavigateItemForState(om.state, state)
-  const should = router.getShouldNavigate(next)
+  const navItem = getNavigateItemForState(om.state, state)
+  const should = router.getShouldNavigate(navItem)
   if (should) {
     recentTries++
     clearTimeout(tm)
@@ -228,13 +239,8 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
     tm = setTimeout(() => {
       recentTries = 0
     }, 200)
-    // console.log(
-    //   'syncStateToRoute',
-    //   cloneDeep({ should, next, state })
-    //   // cloneDeep(om.state.router.curPage),
-    //   // router.navItemToHistoryItem(next)
-    // )
-    router.navigate(next)
+    console.log('syncStateToRoute', cloneDeep({ should, navItem, state }))
+    router.navigate(navItem)
     return true
   }
   return false

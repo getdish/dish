@@ -599,7 +599,7 @@ const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
 }
 
 const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
-  // console.log('handleRouteChange', item)
+  console.log('handleRouteChange', item)
 
   // happens on *any* route push or pop
   if (om.state.home.hoveredRestaurant) {
@@ -607,13 +607,20 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
   }
 
   if (item.type === 'pop') {
-    if (item.direction === 'forward') {
-      om.state.home.stateIndex += 1
+    switch (item.direction) {
+      case 'forward': {
+        om.state.home.stateIndex += 1
+        return
+      }
+      case 'backward': {
+        om.state.home.stateIndex -= 1
+        return
+      }
+      default: {
+        console.error('NO DIRECTION FOR A POP??')
+        return
+      }
     }
-    if (item.direction === 'backward') {
-      om.state.home.stateIndex -= 1
-    }
-    return
   }
 
   const promises = new Set<Promise<any>>()

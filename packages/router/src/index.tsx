@@ -52,11 +52,11 @@ export class Router extends Store<RouterProps> {
   stackIndex = 0
 
   get prevPage() {
-    return this.stack[this.stack.length - 2]
+    return this.stack[this.stackIndex - 1]
   }
 
   get curPage() {
-    return this.stack[this.stack.length - 1] ?? defaultPage
+    return this.stack[this.stackIndex] ?? defaultPage
   }
 
   get prevHistory() {
@@ -106,7 +106,15 @@ export class Router extends Store<RouterProps> {
           : event.action === 'POP'
           ? 'pop'
           : 'push'
-      console.log('router.history', { type, direction, event, state })
+      console.log('router.history', {
+        type,
+        direction,
+        event,
+        state,
+        prevItem,
+        nextItem,
+        stack: this.stack,
+      })
       this.handlePath(event.location.pathname, {
         id,
         direction,

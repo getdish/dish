@@ -37,7 +37,7 @@ const getStackItems = memoize((states: HomeStateItem[]) => {
       case 'user':
       case 'restaurant': {
         if (crumbs.some((x) => x.type === cur.type)) {
-          break
+          continue
         }
         if (
           (cur.type === 'restaurant' ||
@@ -45,16 +45,17 @@ const getStackItems = memoize((states: HomeStateItem[]) => {
             cur.type == 'userSearch') &&
           crumbs.some(isSearchState)
         ) {
-          break
+          continue
         }
         if (isSearchState(cur) && crumbs.some(isSearchState)) {
-          break
+          continue
         }
         crumbs.unshift(cur)
-        break
+        continue
       }
     }
   }
+  return crumbs
 })
 
 export function HomeStackView<A extends HomeStateItem>(props: {
@@ -65,6 +66,7 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   om.state.home.stateIds
   const states = omStatic.state.home.states
   const stackItems = getStackItems(states)!
+  console.log('stackItems', stackItems, states)
   const key = JSON.stringify(stackItems.map((x) => x.id))
   const homeStates = useMemo(() => stackItems, [key])
   const currentStates =

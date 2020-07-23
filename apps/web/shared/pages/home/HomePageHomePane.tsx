@@ -257,7 +257,9 @@ const HomeTopDishesContent = memo(() => {
   const { topDishes } = om.state.home
 
   return useMemo(() => {
-    console.warn('rendering contnet more expensive', topDishes)
+    if (topDishes.length) {
+      console.warn('rendering contnet more expensive', topDishes)
+    }
     return (
       <>
         {!topDishes.length && <LoadingItems />}
