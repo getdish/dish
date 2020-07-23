@@ -1,4 +1,4 @@
-import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
+import { graphql } from '@dish/graph'
 import {
   AbsoluteVStack,
   Button,
@@ -11,19 +11,18 @@ import {
   VStack,
 } from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
-import { ScrollView, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { DishView } from './DishView'
 import { HomePagePaneProps } from './HomePagePane'
 import { HomeScrollView } from './HomeScrollView'
 import { HomeStackDrawer } from './HomeStackDrawer'
+import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantTopReviews } from './RestaurantTopReviews'
-import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 type Props = HomePagePaneProps<HomeStateItemRestaurant>
@@ -75,7 +74,7 @@ const HomePageRestaurant = memo(
 
               <>
                 <Suspense fallback={null}>
-                  <RestaurantPhotos restaurantSlug={slug} />
+                  <RestaurantDishPhotos restaurantSlug={slug} />
                 </Suspense>
               </>
 
@@ -133,49 +132,6 @@ const HomePageRestaurant = memo(
           </VStack>
         </HomeScrollView>
       </VStack>
-    )
-  })
-)
-
-const RestaurantPhotos = memo(
-  graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
-    const restaurant = useRestaurantQuery(restaurantSlug)
-    const photos = restaurantPhotosForCarousel({ restaurant, max: 30 })
-    const drawerWidth = useHomeDrawerWidthInner()
-    const spacing = 12
-    const perRow = drawerWidth > 800 ? 3 : 2
-
-    return (
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{
-          width: 'calc(100% + 30px)',
-          marginHorizontal: -15,
-        }}
-      >
-        {!!photos?.length && (
-          <HStack
-            paddingHorizontal={60}
-            marginTop={10}
-            alignItems="center"
-            justifyContent="center"
-          >
-            {photos.map((photo, index) => {
-              return (
-                <DishView
-                  key={index}
-                  size={(drawerWidth / 2 - perRow * spacing) / perRow}
-                  restaurantSlug={restaurantSlug}
-                  margin={spacing / 2}
-                  marginBottom={16}
-                  dish={photo}
-                />
-              )
-            })}
-          </HStack>
-        )}
-      </ScrollView>
     )
   })
 )
