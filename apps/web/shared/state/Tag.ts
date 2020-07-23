@@ -16,29 +16,15 @@ export const tagLenses: Tag[] = [
     id: '3',
     name: 'Gems',
     icon: ' 💎',
-    rgb: [190, 112, 58],
-    // @ts-ignore
-    descriptions: {
-      dish: 'The best 🍔',
-      cuisine: 'The Best 🍔 Restaurants',
-      plain: 'Uniquely Good Here',
-    },
+    rgb: pctTo255([0.35, 0.2, 0.65]),
     type: 'lense',
-    isVotable: true,
   },
   {
     id: '6',
     name: 'Vibe',
     icon: '🌃',
-    rgb: pctTo255([0.35, 0.2, 0.65]),
-    // @ts-ignore
-    descriptions: {
-      dish: '🍔',
-      cuisine: 'Nice 🍔 to meet',
-      plain: 'Vibes',
-    },
+    rgb: [190, 112, 58],
     type: 'lense',
-    isVotable: true,
   },
   // {
   //   id: '6',
@@ -51,35 +37,20 @@ export const tagLenses: Tag[] = [
   //     plain: 'Top Coffee Shops',
   //   },
   //   type: 'lense',
-  //   isVotable: true,
   // },
   {
     id: '5',
     name: 'Drink',
     icon: '🍷',
     rgb: pctTo255([0.6, 0.3, 0.3]),
-    // @ts-ignore
-    descriptions: {
-      dish: '🍔 & drinks',
-      cuisine: '🍔 with a Bar',
-      plain: 'Good Drinks',
-    },
     type: 'lense',
-    isVotable: true,
   },
   {
     id: '9',
     name: 'Veg',
     icon: '🥬',
     rgb: pctTo255([0.05, 0.7, 0.1]),
-    // @ts-ignore
-    descriptions: {
-      dish: 'Vegetarian 🍔',
-      cuisine: 'Vegetarian 🍔 Restaurants',
-      plain: 'Vegetarian',
-    },
     type: 'lense',
-    isVotable: true,
   },
   // {
   //   id: '6',
@@ -92,9 +63,31 @@ export const tagLenses: Tag[] = [
   //     plain: 'Quiet, Work-friendly Spots',
   //   },
   //   type: 'lense',
-  //   isVotable: true,
   // },
 ]
+
+export const tagDescriptions = {
+  gems: {
+    dish: 'The best 🍔',
+    cuisine: 'The Best 🍔 Restaurants',
+    plain: 'Uniquely Good Here',
+  },
+  vibe: {
+    dish: '🍔',
+    cuisine: 'Nice 🍔 to meet',
+    plain: 'Vibes',
+  },
+  drink: {
+    dish: '🍔 & drinks',
+    cuisine: '🍔 with a Bar',
+    plain: 'Good Drinks',
+  },
+  veg: {
+    dish: 'Vegetarian 🍔',
+    cuisine: 'Vegetarian 🍔 Restaurants',
+    plain: 'Vegetarian',
+  },
+}
 
 export const tagDisplayNames = {
   'price-low': '$',

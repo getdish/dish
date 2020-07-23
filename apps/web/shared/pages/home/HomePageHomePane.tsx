@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { Restaurant, TopCuisine } from '@dish/graph'
+import { Restaurant, TopCuisine, tagDelete } from '@dish/graph'
 import {
   AbsoluteVStack,
   HStack,
@@ -27,6 +27,7 @@ import { useStorageState } from 'react-storage-hooks'
 import { bgLight } from '../../colors'
 import { HomeStateItemHome } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
+import { tagDescriptions } from '../../state/Tag'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { Link } from '../../views/ui/Link'
@@ -107,14 +108,11 @@ const HomePageTopDishes = memo((props: Props) => {
     return <NotFoundPage title="Home not found" />
   }
 
-  console.warn('HomePageTopDishes.render')
-  // console.warn('HomePageTopDishes.render', JSON.stringify(state, null, 2))
-
-  const tagsDescription =
-    getActiveTags(omStatic.state.home, state)
-      .find((x) => x.type === 'lense')
-      // @ts-ignore
-      ?.descriptions?.plain.replace('Here', ``) ?? ''
+  const lense = getActiveTags(omStatic.state.home, state).find(
+    (x) => x.type === 'lense'
+  )
+  const tagsDescriptions = tagDescriptions[(lense.name ?? '').toLowerCase()]
+  const tagsDescription = tagsDescriptions?.plain.replace('Here', ``) ?? ''
 
   return (
     <>

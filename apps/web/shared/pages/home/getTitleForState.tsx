@@ -4,7 +4,7 @@ import React from 'react'
 import { HomeStateItem } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { OmState } from '../../state/home-types'
-import { getTagId } from '../../state/Tag'
+import { getTagId, tagDescriptions } from '../../state/Tag'
 import { TagButton, getTagButtonProps } from './TagButton'
 
 const getTitleForQuery = (query: string) => {
@@ -22,7 +22,7 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
   const hasUser = state.type === 'userSearch'
   const userPrefix = state.type === 'userSearch' ? `${state.username}'s ` : ''
   let lensePlaceholder = lense?.name ?? ''
-  const descriptions = lense?.descriptions
+  const descriptions = tagDescriptions[lense?.name.toLowerCase()]
   if (descriptions) {
     if (dishTag) lensePlaceholder = descriptions.dish
     else if (countryTag) lensePlaceholder = descriptions.cuisine
