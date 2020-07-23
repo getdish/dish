@@ -12,7 +12,7 @@ import { assert, handleAssertionError, stringify } from '@dish/helpers'
 import { HistoryItem, NavigateItem } from '@dish/router'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
-import _, { clamp, findLast, isPlainObject, last, pick } from 'lodash'
+import _, { clamp, findLast, isPlainObject, last } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
 
 import { fuzzyFindIndices } from '../helpers/fuzzy'
@@ -40,7 +40,6 @@ import {
   HomeStateItemHome,
   HomeStateItemRestaurant,
   HomeStateItemSearch,
-  HomeStateItemSimple,
   HomeStateTagNavigable,
   LngLat,
   OmState,
@@ -487,6 +486,7 @@ const deepAssign = (a: Object, b: Object) => {
 
 const updateHomeState: Action<HomeStateItem> = (om, val) => {
   const state = om.state.home.allStates[val.id]
+  console.log('updateHomeState', !!state, val.id)
   if (state) {
     deepAssign(state, val)
   } else {
@@ -698,9 +698,7 @@ const pushHomeState: AsyncAction<
   om.actions.home.setIsLoading(true)
 
   const { currentState } = om.state.home
-  const historyId = item.id
   const base = {
-    id: item.id,
     center: currentState?.center ?? initialHomeState.center,
     span: currentState?.span ?? initialHomeState.span,
     searchQuery: item?.params?.query ?? currentState?.searchQuery ?? '',
@@ -744,10 +742,10 @@ const pushHomeState: AsyncAction<
         type == 'userSearch' ? om.state.router.curPage.params.username : ''
       const searchQuery = item.params.search ?? base.searchQuery
       nextState = {
+        // ...om.state.home.lastSearchState,
         ...base,
         hasMovedMap: false,
         results: { status: 'loading' },
-        ...om.state.home.lastSearchState,
         type,
         username,
         activeTagIds,
@@ -789,7 +787,7 @@ const pushHomeState: AsyncAction<
   const finalState = {
     ...base,
     ...nextState,
-    historyId,
+    id: item.id ?? uid(),
   } as HomeStateItem
 
   async function runFetchData() {

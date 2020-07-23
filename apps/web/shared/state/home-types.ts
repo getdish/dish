@@ -83,7 +83,6 @@ export type HomeStateItemBase = {
   center: LngLat
   span: LngLat
   id: string
-  historyId?: string
   currentLocationName?: string
   currentLocationInfo?: GeocodePlace | null
 }
