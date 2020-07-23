@@ -1,4 +1,4 @@
-import { TopCuisineDish } from '@dish/graph'
+import { TopCuisineDish, slugify } from '@dish/graph'
 import { AbsoluteVStack, Box, HStack, StackProps, Text } from '@dish/ui'
 import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'
@@ -16,12 +16,14 @@ export const DishView = memo(
     cuisine,
     size = 100,
     restaurantSlug,
+    selected,
     ...rest
   }: {
     cuisine?: NavigableTag
     dish: TopCuisineDish
     size?: number
     restaurantSlug?: string
+    selected?: boolean
   } & StackProps) => {
     const [isHovered, setIsHovered] = useState(false)
 
@@ -50,7 +52,7 @@ export const DishView = memo(
               name: 'gallery',
               params: {
                 restaurantSlug,
-                dishId: dish.id,
+                dishId: slugify(dish.name),
               },
             }
           : {
@@ -74,6 +76,10 @@ export const DishView = memo(
           backgroundColor="#fff"
           {...(dish.isFallback && {
             opacity: 0.8,
+          })}
+          {...(selected && {
+            borderWidth: 2,
+            borderColor: 'blue',
           })}
         >
           {!!dish.image && (

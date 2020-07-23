@@ -12,6 +12,7 @@ import {
 import React, { Suspense, memo, useEffect, useState } from 'react'
 
 import { bgLight, bgLightLight, brandColor } from '../../colors'
+import { drawerWidthMax } from '../../constants'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home'
 import { omStatic, useOvermindStatic } from '../../state/useOvermind'
 import { Link } from '../../views/ui/Link'
@@ -86,7 +87,8 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       alignItems="center"
       position="relative"
     >
-      <VStack className="ease-in-out-fast" flex={1}>
+      {/* dont remove overflow HIDDEN causes flex issues down */}
+      <VStack overflow="hidden" className="ease-in-out-fast" flex={1}>
         <RestaurantListItemContent {...props} />
       </VStack>
       <AbsoluteVStack fullscreen top={14} zIndex={10} pointerEvents="none">
@@ -136,10 +138,11 @@ const RestaurantListItemContent = memo(
           paddingHorizontal={pad + 6}
           width={isSmall ? '60%' : '100%'}
           minWidth={isSmall ? '50%' : 320}
-          maxWidth={isSmall ? '90vw' : '50%'}
+          maxWidth={isSmall ? '90vw' : '64%'}
           position="relative"
+          overflow="hidden"
         >
-          <VStack flex={1} alignItems="flex-start" width="100%">
+          <VStack flex={1} alignItems="flex-start" maxWidth="100%">
             {/* ROW: TITLE */}
             <VStack
               // backgroundColor={bgLightLight}
@@ -244,8 +247,8 @@ const RestaurantListItemContent = memo(
             <Spacer />
 
             {/* ROW: Overview / Reviews / Comment */}
-            <VStack>
-              <VStack paddingLeft={26}>
+            <VStack flex={1} maxWidth="100%" overflow="hidden">
+              <VStack flex={1} paddingLeft={26}>
                 <Text fontSize={16} lineHeight={21}>
                   <Suspense fallback={<LoadingItems />}>
                     <RestaurantOverview />

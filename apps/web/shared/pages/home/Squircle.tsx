@@ -28,7 +28,7 @@ export const Squircle = ({
           shadowRadius={4}
           shadowOffset={{ width: 0, height: 3 }}
           flex={1}
-          borderRadius={borderRadius}
+          borderRadius={borderRadius - 1}
           overflow="hidden"
           alignItems="center"
           justifyContent="center"
@@ -47,7 +47,7 @@ export const Squircle = ({
               // isHovered ? 'ease-in-out inner-glow' :
               'ease-in-out inner-shadow'
             }
-            borderRadius={borderRadius}
+            borderRadius={borderRadius - 1}
             overflow="hidden"
             fullscreen
             zIndex={2}

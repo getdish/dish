@@ -9,6 +9,7 @@ import { useOvermind } from '../../state/useOvermind'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { StackViewCloseButton } from './StackViewCloseButton'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 export default memo(function HomePageGallery() {
@@ -26,8 +27,8 @@ export default memo(function HomePageGallery() {
       >
         <VStack
           width="95%"
-          height="95%"
-          maxHeight="88vh"
+          height="98%"
+          maxHeight="95vh"
           backgroundColor="#fff"
           borderRadius={15}
           maxWidth={pageWidthMax}
@@ -39,32 +40,26 @@ export default memo(function HomePageGallery() {
             <StackViewCloseButton />
           </AbsoluteVStack>
 
-          <ScrollView
-            style={{ width: '100%' }}
-            contentContainerStyle={{
-              width: '100%',
-              height: '100%',
-            }}
-          >
-            <VStack flex={1}>
-              <HStack
-                alignItems="center"
-                justifyContent="space-between"
-                flexWrap="wrap"
-              >
-                <Suspense fallback={null}>
-                  <RestaurantHeader
-                    hideDetails
-                    restaurantSlug={state.restaurantSlug}
-                  />
-                </Suspense>
-              </HStack>
-
-              <Suspense fallback={<LoadingItems />}>
-                <HomePageGalleryContent state={state} />
+          <VStack width="100%" height="100%" flex={1}>
+            <HStack
+              alignItems="center"
+              justifyContent="space-between"
+              marginBottom={-10}
+              position="relative"
+              zIndex={100}
+            >
+              <Suspense fallback={null}>
+                <RestaurantHeader
+                  hideDetails
+                  restaurantSlug={state.restaurantSlug}
+                />
               </Suspense>
-            </VStack>
-          </ScrollView>
+            </HStack>
+
+            <Suspense fallback={<LoadingItems />}>
+              <HomePageGalleryContent state={state} />
+            </Suspense>
+          </VStack>
         </VStack>
       </AbsoluteVStack>
     )
@@ -74,51 +69,75 @@ export default memo(function HomePageGallery() {
 })
 
 const HomePageGalleryContent = memo(
-  graphql(function HomePageGalleryContent(props: {
+  graphql(function HomePageGalleryContent({
+    state,
+  }: {
     state: HomeStateItemGallery
   }) {
-    const { dishId } = props.state
-    const dish = dishId
-      ? query.tag({
-          where: { type: { _eq: 'dish' }, id: { _eq: dishId } },
-          limit: 1,
-        })[0]
-      : null
-    const slug = props.state.restaurantSlug
-    const restaurant = useRestaurantQuery(slug)
+    const isSmall = useMediaQueryIsSmall()
+    // const dish = state.dishId
+    //   ? query.tag({
+    //       where: {
+    //         type: { _eq: 'dish' },
+    //         name: { _ilike: `%${state.dishId.replace(/-/g, '%')}%` },
+    //       },
+    //       limit: 1,
+    //     })[0]
+    //   : null
+    const restaurant = useRestaurantQuery(state.restaurantSlug)
+    const tag_names = state.dishId ? [state.dishId] : []
     const photos = restaurantPhotosForCarousel({
       restaurant,
       max: 100,
-      gallery: true,
+      tag_names,
+      // turned off for now it excludes dish images and we want those
+      // also most are empty
+      // gallery: true,
     })
 
-    console.log('gallery', photos, dish?.default_images())
+    console.log('gallery', photos)
 
     return (
-      <VStack flex={1}>
-        <HStack flex={10} paddingVertical={20} flexWrap="wrap" maxWidth="100%">
-          {photos.map((photo, i) => {
-            return (
-              <HStack key={i} width="33%" height="33%">
-                <Image
-                  source={{ uri: photo.image }}
-                  resizeMode="cover"
-                  style={{
-                    width: '100%',
-                    height: 250,
-                    margin: 2,
-                  }}
-                />
-              </HStack>
-            )
-          })}
+      <VStack flex={1} overflow="hidden">
+        <ScrollView
+          style={{ width: '100%' }}
+          contentContainerStyle={{
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          <HStack flex={10} flexWrap="wrap" maxWidth="100%">
+            {photos.map((photo, i) => {
+              return (
+                <HStack key={i} width="33%" height="33%">
+                  <Image
+                    source={{ uri: photo.image }}
+                    resizeMode="cover"
+                    style={{
+                      width: 'calc(100% - 4px)',
+                      height: 300,
+                      margin: 2,
+                    }}
+                  />
+                </HStack>
+              )
+            })}
 
-          {!photos.length && <Text>No photos found!</Text>}
-        </HStack>
+            {!photos.length && <Text>No photos found!</Text>}
+          </HStack>
+        </ScrollView>
 
-        <VStack paddingVertical={20} borderTopColor={'#eee'} borderTopWidth={1}>
+        <VStack paddingVertical={10} borderTopColor={'#eee'} borderTopWidth={1}>
           <Suspense fallback={null}>
-            <RestaurantDishPhotos restaurantSlug={slug} />
+            <RestaurantDishPhotos
+              size={isSmall ? 100 : 150}
+              restaurantSlug={state.restaurantSlug}
+              selectable
+              defaultSelectedId={state.dishId}
+              onSelect={(selected) => {
+                console.log('got em', selected)
+              }}
+            />
           </Suspense>
         </VStack>
       </VStack>

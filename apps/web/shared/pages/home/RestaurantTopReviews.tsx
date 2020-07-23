@@ -1,5 +1,12 @@
 import { graphql, query } from '@dish/graph'
-import { HStack, LoadingItems, Spacer, Text, VStack } from '@dish/ui'
+import {
+  HStack,
+  LoadingItem,
+  LoadingItems,
+  Spacer,
+  Text,
+  VStack,
+} from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
 
 import { SmallButton } from '../../views/ui/SmallButton'
@@ -33,7 +40,7 @@ export const RestaurantTopReviews = memo(
             }}
           >
             <Text fontSize={13} opacity={0.7}>
-              {state.showMore ? 'Show less' : 'Tips'}
+              {state.showMore ? 'Show less' : 'Comments'}
             </Text>
           </SmallButton>
           {afterTopCommentButton ? (
@@ -70,7 +77,7 @@ export const RestaurantTopReviews = memo(
                 </>
               )}
 
-              <Suspense fallback={<LoadingItems />}>
+              <Suspense fallback={null}>
                 <Content
                   numToShow={
                     state.showMore ? Infinity : expandTopComments ?? Infinity
