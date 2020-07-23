@@ -1,25 +1,37 @@
+## July
+
+- Lots of bugfixing
+- location - improve state when permission is active (current location)
+- tips horizontal carousel on detail page
+- Search vietnamese can show top dishes in search results header
+- Restaurant page
+  - each dish should have a summary
+  - better rating breakdown! on actual page
+- Basic user profile improvements
+- routing and various bugs moving around site
+- user input features and refine
+- Various user flows (expo auth?)
+
 ## Open GPT-3
 
-- Dish Sentiment
+- Dish Sentiment + summary for search results
+- Each lense could get a summary too - Vibe / Drinks / Vegetarian
 - Tips
   - when to go to beat the rush?
   - can you sit at the bar?
   - where to park?
   - pull out anything that mentions "tip"
 
-# July
+## bigger impact changes
 
-big impact changes:
-
-- emojis for dishes (autocomplete, dishview)
-- top comments everywhere
-- add comment + rate being really slick
+- better breakdown of rating
 - profiles being nice
+- emojis for dishes (autocomplete, dishview)
+- add comment + rate being really slick
 - importing instagram and other feed data to have more aliveness
 - top dishes <=> map pins + easily moving around cities
+  - mapbox...
   - then easily filter it down to any cuisine (top right input opposite "Uniquely Good")
-- resizable mid bar :P
-  - would actually be cool if it snapped to isSmall when it got small enough and small also resized!
 
 # Ratings
 
@@ -29,58 +41,9 @@ big impact changes:
 
 ---
 
-Week 3
-
-in progress
-
-- clicking tags:
-  - restaurantdetail
-  - search result
-  - click to see map
-- map
-  - better occlusion or grouping
-  - click item to scroll to row
-- restaurant
-  - click to call
-- restaurantdetail
-  - fix general layout
-  - add example top_comment
-- autocomplete
-  - dishes given cuisine
-  - go to restaurant if searched
-- location search
-
-- dont show autocomplete unless they dont type for ~2s feels less aggressive
-- show cuisine dishes carousel when clicking cuisine on search results
-
-- hover "closed until" to show full hours
-- user features
-- add tip/comment
-- Upvote tags
-- Better breakdown of rating
-- Various user flows (expo auth?)
-- Add o tag, upvote/downvote, star
-- [ ] hover on left side should show a "banner" on bottom of right
-
-Week 4
-
-- [reserved for productionizing]
-- Search vietnamese can show top dishes in search results header
-- current location / permissions access (only if they click location?)
-- "Tips" - horizontal carousel on restaurant page
-- [ ] make a list of articles for luke
-- [ ] crawler for "header" images for dishes (Pho) (Instagram?)
-- [ ] start crawler to find restaurants instagrams
-- splash page for home
-
----
-
-- have it round the focus of the map to the nearest citycenter if its close - so on san francisco, looks really nice if zoomed out a bit and we can show pins
 - spreadsheet view into all data next to a simple map
 - actually a full review card could show at bottom of map when restaurant opened all the way
 - RestaurantDetail social media links
-
----
 
 ---
 
