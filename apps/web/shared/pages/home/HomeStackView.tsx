@@ -1,4 +1,5 @@
 import { AbsoluteVStack, VStack, useDebounceValue } from '@dish/ui'
+import { cloneDeep } from 'lodash'
 import React, { Suspense, memo, useMemo } from 'react'
 
 import { memoize } from '../../helpers/memoizeWeak'
@@ -32,6 +33,7 @@ const getStackItems = memoize((states: HomeStateItem[]) => {
         crumbs.unshift(cur)
         return crumbs
       }
+      case 'about':
       case 'search':
       case 'userSearch':
       case 'user':
@@ -66,7 +68,6 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   om.state.home.stateIds
   const states = omStatic.state.home.states
   const stackItems = getStackItems(states)!
-  console.log('stackItems', stackItems, states)
   const key = JSON.stringify(stackItems.map((x) => x.id))
   const homeStates = useMemo(() => stackItems, [key])
   const currentStates =

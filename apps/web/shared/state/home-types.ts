@@ -25,7 +25,6 @@ export type HomeState = {
   locationAutocompleteResults: AutocompleteItem[]
   locationSearchQuery: string
   showAutocomplete: ShowAutocomplete
-  showUserMenu: boolean
   states: HomeStateItem[]
   allStates: { [key: string]: HomeStateItem }
   stateIndex: number
@@ -93,6 +92,7 @@ export type HomeStateItem =
   | HomeStateItemRestaurant
   | HomeStateItemUser
   | HomeStateItemGallery
+  | HomeStateItemAbout
   | HomeStateTagNavigable
 
 export type HomeStateTagNavigable = Pick<
@@ -106,6 +106,10 @@ export type HomeActiveTagIds = { [id: string]: boolean }
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
   activeTagIds: HomeActiveTagIds
+}
+
+export type HomeStateItemAbout = HomeStateItemBase & {
+  type: 'about'
 }
 
 export type HomeStateItemSearch = HomeStateItemBase & {

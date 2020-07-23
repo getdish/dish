@@ -23,9 +23,9 @@ import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { DishLogoButton } from './DishLogoButton'
 import HomeAutocomplete from './HomeAutocomplete'
+import { HomeMenu } from './HomeMenu'
 import { HomeSearchInput } from './HomeSearchInput'
 import { HomeSearchLocationInput } from './HomeSearchLocationInput'
-import { HomeUserMenu } from './HomeUserMenu'
 import {
   useMediaQueryIsReallySmall,
   useMediaQueryIsSmall,
@@ -187,7 +187,7 @@ export default memo(function HomeSearchBar() {
                 </LinkButton>
               )}
 
-              <HomeUserMenu />
+              <HomeMenu />
             </HStack>
           </VStack>
         </VStack>
