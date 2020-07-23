@@ -77,6 +77,7 @@ export const HomeSearchInput = memo(() => {
       () => fullyIdle({ max: 1000 }),
       () => {
         const input = inputGetNode(inputRef.current)
+        console.log('ficus inptu')
         input?.focus()
       },
     ])

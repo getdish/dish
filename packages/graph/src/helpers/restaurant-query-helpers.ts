@@ -26,11 +26,9 @@ export const restaurantPhotosForCarousel = ({
   if (!gallery) {
     photos = prependDishPhotos(photos, restaurant, tag_names, max)
   }
-  if (photos.length <= max) {
-    for (const photo of restaurantPhotos) {
-      photos.push({ name: 'Item', image: photo })
-      if (photos.length >= max) break
-    }
+  for (const photo of restaurantPhotos) {
+    if (photos.length >= max) break
+    photos.push({ name: 'Item', image: photo })
   }
   return photos.filter(Boolean)
 }
