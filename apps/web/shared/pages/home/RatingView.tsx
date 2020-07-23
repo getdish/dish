@@ -31,8 +31,8 @@ export const RatingView = forwardRef(
     const borderColor = getRankingColor(percent)
 
     // size!
-    const size =
-      sizeIn == 'xs' ? 32 : sizeIn === 'sm' ? 40 : sizeIn == 'md' ? 48 : 72
+    let size =
+      sizeIn == 'xs' ? 30 : sizeIn === 'sm' ? 40 : sizeIn == 'md' ? 48 : 72
 
     const badgeOffset =
       sizeIn === 'xs' || sizeIn === 'sm' ? Math.max(-size * 0.0025, -3) : 0
@@ -83,8 +83,16 @@ export const RatingView = forwardRef(
 
     if (subtle) {
       return (
-        <HStack spacing={2} {...rest}>
-          {/* {emoji} */}
+        <HStack
+          borderRadius={100}
+          borderWidth={1}
+          borderColor="rgba(0,0,0,0.05)"
+          width={size}
+          height={size}
+          alignItems="center"
+          justifyContent="center"
+          {...rest}
+        >
           {number}
         </HStack>
       )
