@@ -62,15 +62,9 @@ export const DishView = memo(
         {...rest}
       >
         {/* rating */}
-        <AbsoluteVStack pointerEvents="none" fullscreen zIndex={10}>
+        <AbsoluteVStack pointerEvents="none" zIndex={10} top={-3} left={-8}>
           {!!dish.rating && (
-            <DishRatingView
-              size={size > 220 ? 'sm' : 'xs'}
-              dish={dish}
-              position="absolute"
-              top={-3}
-              left={-3}
-            />
+            <DishRatingView size={size > 220 ? 'sm' : 'xs'} dish={dish} />
           )}
         </AbsoluteVStack>
         <Squircle

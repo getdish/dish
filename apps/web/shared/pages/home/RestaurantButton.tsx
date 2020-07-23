@@ -69,6 +69,7 @@ export const RestaurantButton = memo(
             fontSize={14}
             fontWeight={active ? '500' : '300'}
             color={active ? '#000' : '#666'}
+            marginRight={5}
           >
             {typeof rank === 'number' ? `${rank}. ` : ''}
             {restaurant.name}
@@ -79,7 +80,7 @@ export const RestaurantButton = memo(
             rating={restaurant.rating}
             // @ts-ignore
             position="absolute"
-            top={0}
+            top={-5}
             right={-30}
             subtle={subtle}
           />
