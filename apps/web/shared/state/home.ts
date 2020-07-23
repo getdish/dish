@@ -12,7 +12,7 @@ import { assert, handleAssertionError, stringify } from '@dish/helpers'
 import { HistoryItem, NavigateItem } from '@dish/router'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
-import _, { clamp, findLast, isPlainObject, last } from 'lodash'
+import _, { clamp, findLast, isPlainObject, last, pick } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
 
 import { fuzzyFindIndices } from '../helpers/fuzzy'
@@ -154,7 +154,7 @@ const derivations = {
     (state) => state.activeIndex === -1
   ),
   previousState: derived<HomeState, HomeStateItem>(
-    (state) => state.states[state.states.length - 2]
+    (state) => state.states[state.stateIndex - 1]
   ),
   searchBarTags: derived<HomeState, Tag[]>((state) =>
     state.lastActiveTags.filter(isSearchBarTag)
@@ -173,19 +173,9 @@ const derivations = {
     return state.searchBarTags[index]
   }),
   states: derived<HomeState, HomeStateItem[]>((state) => {
-    const index = state.stateIndex
-    const activeStateIds = state.stateIds.slice(0, index + 1)
-    const states: HomeStateItemSimple[] = []
-    let i = activeStateIds.length - 1
-    for (; i > -1; i--) {
-      const curId = activeStateIds[i]
-      const curState = state.allStates[curId]
-      states.push(curState)
-      if (curState.type === 'home') {
-        break
-      }
-    }
-    return _.reverse(states) as HomeStateItem[]
+    return state.stateIds
+      .map((x) => state.allStates[x])
+      .slice(0, state.stateIndex + 1)
   }),
   currentStateLense: derived<HomeState, NavigableTag | null>((state) => {
     if ('activeTagIds' in state.currentState) {
@@ -303,13 +293,19 @@ const popTo: Action<HomeStateItem['type']> = (om, item) => {
   }
 
   // we can just use router history directly, no? and go back?
-  if (router.prevHistory?.name === type && router.curHistory?.type === 'push') {
-    console.log('history matches, testing going back directly')
+  // if router stack works fine, this should be unecessary
+  if (
+    om.state.home.previousState?.type === type &&
+    router.prevPage?.name === type
+  ) {
     router.back()
     return
   }
 
-  const stateItem = _.findLast(router.stack, (x) => x.name == type)
+  const stateItem = _.findLast(
+    router.stack.slice(router.stack.length - 2),
+    (x) => x.name == type
+  )
   if (stateItem) {
     router.navigate({
       name: type,
@@ -317,6 +313,8 @@ const popTo: Action<HomeStateItem['type']> = (om, item) => {
     })
   } else {
     if (router.history.length > 1) {
+      console.log('going back because no matching state item')
+      debugger
       router.back()
     } else {
       router.navigate({
@@ -493,8 +491,16 @@ const updateHomeState: Action<HomeStateItem> = (om, val) => {
     deepAssign(state, val)
   } else {
     om.state.home.allStates[val.id] = { ...val }
+    // cleanup old from backward
+    if (om.state.home.stateIds.length - 1 > om.state.home.stateIndex) {
+      om.state.home.stateIds = om.state.home.stateIds.slice(
+        0,
+        om.state.home.stateIndex + 1
+      )
+    }
     om.state.home.stateIds = [...new Set([...om.state.home.stateIds, val.id])]
-    om.state.home.stateIndex = om.state.home.stateIds.length - 1
+    const nextIndex = om.state.home.stateIds.length - 1
+    om.state.home.stateIndex = nextIndex
   }
 }
 
@@ -645,19 +651,18 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
       case 'restaurant': {
         if (item.type === 'push') {
           // clear future states past current index
-          if (om.state.home.stateIndex > om.state.home.stateIds.length - 1) {
+          const stateIndex = om.state.home.stateIndex
+          if (stateIndex < om.state.home.states.length - 1) {
             console.warn('clearing future states as were rewriting history')
-            const toClearStates = om.state.home.stateIds.slice(
-              om.state.home.stateIndex
-            )
-            for (const id of toClearStates) {
-              delete om.state.home.allStates[id]
-            }
-            const next = om.state.home.stateIds.slice(
-              0,
-              om.state.home.stateIndex
-            )
+            const nextStateIds = om.state.home.states.map((x) => x.id)
+            // can garbage collect here if wanted, likely want to do in a deferred way
+            // const toClearStates = nextStateIds.slice(stateIndex)
+            // for (const id of toClearStates) {
+            //   delete om.state.home.allStates[id]
+            // }
+            const next = nextStateIds.slice(0, stateIndex)
             om.state.home.stateIds = next
+            debugger
           }
         }
         const res = await pushHomeState(om, item)
@@ -964,9 +969,7 @@ function padSpan(val: LngLat, by = 0.9): LngLat {
 }
 
 const up: Action = (om) => {
-  const { states } = om.state.home
-  if (states.length == 1) return
-  const prev = states[states.length - 2]
+  const prev = om.state.home.previousState
   om.actions.home.popTo(prev?.type ?? 'home')
 }
 
@@ -1133,7 +1136,7 @@ export const getNavigateTo: Action<HomeStateNav, LinkButtonProps | null> = (
 // we definitely can clean up / name better some of this once things settle
 let lastNav = Date.now()
 const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
-  console.trace('home.navigate', navState)
+  console.warn('home.navigate', navState)
   lastNav = Date.now()
   let curNav = lastNav
   om.state.home.isOptimisticUpdating = false
