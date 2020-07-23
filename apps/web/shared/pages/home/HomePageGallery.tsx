@@ -1,11 +1,12 @@
 import { graphql, query, restaurantPhotosForCarousel } from '@dish/graph'
-import { AbsoluteVStack, HStack, VStack } from '@dish/ui'
+import { AbsoluteVStack, HStack, LoadingItems, Text, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { Image, ScrollView } from 'react-native'
 
 import { pageWidthMax } from '../../constants'
 import { HomeStateItemGallery } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
+import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { useRestaurantQuery } from './useRestaurantQuery'
@@ -42,9 +43,10 @@ export default memo(function HomePageGallery() {
             style={{ width: '100%' }}
             contentContainerStyle={{
               width: '100%',
+              height: '100%',
             }}
           >
-            <VStack>
+            <VStack flex={1}>
               <HStack
                 alignItems="center"
                 justifyContent="space-between"
@@ -58,7 +60,9 @@ export default memo(function HomePageGallery() {
                 </Suspense>
               </HStack>
 
-              <HomePageGalleryContent state={state} />
+              <Suspense fallback={<LoadingItems />}>
+                <HomePageGalleryContent state={state} />
+              </Suspense>
             </VStack>
           </ScrollView>
         </VStack>
@@ -91,27 +95,8 @@ const HomePageGalleryContent = memo(
     console.log('gallery', photos, dish?.default_images())
 
     return (
-      <>
-        <HStack flexWrap="wrap">
-          {dish?.default_images()?.map((dish, i) => {
-            return (
-              <Image
-                key={i}
-                source={{ uri: dish.image }}
-                style={{
-                  // maxWidth: 405,
-                  // maxHeight: 405,
-                  width: 300,
-                  height: 300,
-                  marginVertical: 2,
-                  marginHorizontal: 2,
-                }}
-              />
-            )
-          })}
-        </HStack>
-
-        <HStack paddingVertical={20} flexWrap="wrap" maxWidth="100%">
+      <VStack flex={1}>
+        <HStack flex={10} paddingVertical={20} flexWrap="wrap" maxWidth="100%">
           {photos.map((photo, i) => {
             return (
               <HStack key={i} width="33%" height="33%">
@@ -127,8 +112,16 @@ const HomePageGalleryContent = memo(
               </HStack>
             )
           })}
+
+          {!photos.length && <Text>No photos found!</Text>}
         </HStack>
-      </>
+
+        <VStack paddingVertical={20} borderTopColor={'#eee'} borderTopWidth={1}>
+          <Suspense fallback={null}>
+            <RestaurantDishPhotos restaurantSlug={slug} />
+          </Suspense>
+        </VStack>
+      </VStack>
     )
   })
 )

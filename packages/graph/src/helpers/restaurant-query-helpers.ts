@@ -22,21 +22,21 @@ export const restaurantPhotosForCarousel = ({
 }) => {
   let x = Date.now()
   // @ts-ignore
-  const restaurantPhotos = restaurant.photos() || []
+  const restaurantPhotos = (restaurant.photos() || []).filter(Boolean)
   let photos = [] as TopCuisineDish[]
   if (!gallery) {
     photos = prependDishPhotos(photos, restaurant, tag_names, max)
   }
   if (photos.length <= max) {
     for (const photo of restaurantPhotos) {
-      photos.push({ name: ' ', image: photo })
+      photos.push({ name: 'Item', image: photo })
       if (photos.length >= max) break
     }
   }
   if (Date.now() - x > 50) {
     console.warn('restaurantPhotosForCarousel SLOW')
   }
-  return photos
+  return photos.filter(Boolean)
 }
 
 const prependDishPhotos = (
