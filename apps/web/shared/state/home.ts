@@ -1147,6 +1147,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     (isSearchState(curState) && nextType === 'search')
   ) {
     om.state.home.isOptimisticUpdating = true
+    om.state.home.isLoading = true
     // optimistic update active tags
     om.actions.home.updateActiveTags({
       id: curState.id,

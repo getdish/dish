@@ -19,7 +19,10 @@ import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { HomePagePaneProps } from './HomePagePane'
 import { HomeScrollView } from './HomeScrollView'
 import { HomeStackDrawer } from './HomeStackDrawer'
+import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
+// deliverybutton
+// favoritestar
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantTopReviews } from './RestaurantTopReviews'
@@ -67,16 +70,27 @@ const HomePageRestaurant = memo(
 
         <HomeScrollView paddingTop={0}>
           {/* HEADER */}
-          <RestaurantHeader restaurantSlug={restaurant.slug} />
+          <RestaurantHeader restaurantSlug={slug} />
+
+          <Spacer />
+          <VStack alignItems="center">
+            <HStack minWidth={400}>
+              <RestaurantDetailRow
+                centered
+                justifyContent="center"
+                restaurantSlug={slug}
+                flex={1}
+              />
+            </HStack>
+          </VStack>
+
           <VStack paddingHorizontal={14}>
             <VStack alignItems="center">
               <Spacer size="xl" />
 
-              <>
-                <Suspense fallback={null}>
-                  <RestaurantDishPhotos restaurantSlug={slug} />
-                </Suspense>
-              </>
+              <Suspense fallback={null}>
+                <RestaurantDishPhotos restaurantSlug={slug} />
+              </Suspense>
 
               <Spacer size="xl" />
 

@@ -31,6 +31,7 @@ export function Link<
     asyncClick,
     textAlign,
     style,
+    navigateAfterPress,
     ...restProps
   } = allProps
   const { onPress, name, params, ...linkProps } = useNormalizeLinkProps(
@@ -50,7 +51,9 @@ export function Link<
     let event = null
 
     const nav = () => {
+      console.warn('nav', onPress, onClick, preventNavigate)
       if (onPress || onClick) {
+        event.navigate = () => router.navigate(navItem)
         onClick?.(event!)
         onPress?.(event)
       } else {
@@ -67,7 +70,11 @@ export function Link<
       } else {
         e.preventDefault()
         event = e
-        cancel = series([() => idle(asyncClick ? 100 : 10), nav])
+        if (asyncClick) {
+          cancel = series([() => idle(asyncClick ? 100 : 10), nav])
+        } else {
+          nav()
+        }
       }
     }
 
@@ -75,14 +82,7 @@ export function Link<
 
     return () => {
       linkRef.current?.removeEventListener('click', handleClick)
-      if (cancel) {
-        console.warn(
-          'TEST SKIPPING THIS TO SEE IF IT WAS CAUSING LOOP, DID YOU WANT TO NAV?',
-          navItem
-        )
-        // nav()
-        // cancel()
-      }
+      // cancel?.()
     }
   }, [])
 

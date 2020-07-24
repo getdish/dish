@@ -1,6 +1,6 @@
 import { StackProps, TextProps } from '@dish/ui'
 import React from 'react'
-import { ViewStyle } from 'react-native'
+import { TextStyle, ViewStyle } from 'react-native'
 
 import { RouteName } from '../../state/router'
 import { NavigableTag } from '../../state/Tag'
@@ -29,6 +29,7 @@ export type LinkSharedProps = {
   disallowDisableWhenActive?: boolean
   tagName?: string
   preventNavigate?: boolean
+  navigateAfterPress?: boolean
   onMouseDown?: Function
   asyncClick?: boolean
 }
@@ -44,8 +45,10 @@ export type LinkButtonProps<
   Name extends RouteName = any,
   Params = any
 > = StackProps &
-  LinkSharedProps &
-  (
+  LinkSharedProps & {
+    activeStyle?: ViewStyle
+    activeTextStyle?: TextStyle
+  } & (
     | LinkButtonNamedProps<Name, Params>
     | {
         onPress?: any
