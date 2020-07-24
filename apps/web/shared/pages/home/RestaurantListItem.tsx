@@ -201,6 +201,7 @@ const RestaurantListItemContent = memo(
                           marginRight={10}
                           borderBottomColor="transparent"
                           borderBottomWidth={2}
+                          fontWeight="400"
                           // @ts-ignore
                           hoverStyle={{
                             borderBottomColor: '#f2f2f2',

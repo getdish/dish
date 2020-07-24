@@ -1,13 +1,5 @@
 import { User as UserModel, graphql, mutation } from '@dish/graph'
-import {
-  Circle,
-  HStack,
-  SmallButtonProps,
-  StackProps,
-  Text,
-  Toast,
-  VStack,
-} from '@dish/ui'
+import { Circle, HStack, StackProps, Text, Toast, VStack } from '@dish/ui'
 import { isUndefined } from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
 import { MessageSquare, User } from 'react-feather'
@@ -17,10 +9,10 @@ import { bgLight } from '../../colors'
 import { useOvermind } from '../../state/useOvermind'
 import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { SmallButton } from '../../views/ui/SmallButton'
+import { SmallButton, SmallButtonProps } from '../../views/ui/SmallButton'
 import { flatButtonStyleSelected } from './baseButtonStyle'
 import { RestaurantReview } from './RestaurantReview'
-import { useUserReview, useUserReviews } from './useUserReview'
+import { useUserReview } from './useUserReview'
 
 export const RestaurantAddCommentButton = graphql(
   ({

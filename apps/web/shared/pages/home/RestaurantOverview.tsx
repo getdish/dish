@@ -35,14 +35,12 @@ export const RestaurantOverview = memo(() => {
               justifyContent="flex-end"
             >
               <Text
-                // paddingVertical={2}
                 paddingHorizontal={5}
                 borderRadius={6}
                 fontWeight="300"
-                fontSize={18}
+                fontSize={16}
                 color="rgba(0,0,0,0.5)"
                 className="unselectable"
-                // userSelect="none"
               >
                 {item.category}
               </Text>

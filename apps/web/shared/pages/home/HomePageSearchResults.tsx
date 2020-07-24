@@ -2,6 +2,7 @@ import { createCancellablePromise, idle, series } from '@dish/async'
 import {
   Button,
   HStack,
+  LoadingItem,
   LoadingItems,
   Spacer,
   StackProps,
@@ -175,7 +176,7 @@ const SearchResultsTitle = memo(
             flex={1}
             justifyContent="space-between"
           >
-            <HStack marginTop={-10} alignItems="center" justifyContent="center">
+            <HStack marginTop={-11} alignItems="center" justifyContent="center">
               <HomeLenseBar activeTagIds={state.activeTagIds} />
             </HStack>
             <Spacer size={16} />
@@ -265,7 +266,7 @@ const SearchResultsContent = memo((props: Props) => {
                 }
               : undefined
           return (
-            <Suspense key={result.id} fallback={null}>
+            <Suspense key={result.id} fallback={<LoadingItem />}>
               <RestaurantListItem
                 currentLocationInfo={searchState.currentLocationInfo ?? null}
                 restaurantId={result.id}

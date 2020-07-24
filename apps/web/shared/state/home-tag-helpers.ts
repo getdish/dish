@@ -56,6 +56,9 @@ export const getActiveTags = (
     const tags: Tag[] = tagIds.map(
       (x) => home.allTags[x] ?? { id: slugify(x), name: x, type: 'dish' }
     )
+    if (!tags.some((tag) => tag.type === 'lense')) {
+      tags.push({ type: 'lense', name: 'Gems' })
+    }
     return tags.filter(isValidTag)
   }
   return []

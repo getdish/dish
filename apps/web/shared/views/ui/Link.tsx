@@ -82,7 +82,7 @@ export function Link<
 
     return () => {
       linkRef.current?.removeEventListener('click', handleClick)
-      // cancel?.()
+      cancel?.()
     }
   }, [])
 

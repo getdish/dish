@@ -260,7 +260,12 @@ const HomeTopDishesContent = memo(() => {
     }
     return (
       <>
-        {!topDishes.length && <LoadingItems />}
+        {!topDishes.length && (
+          <>
+            <LoadingItems />
+            <LoadingItems />
+          </>
+        )}
         {topDishes.map((country) => (
           <TopDishesCuisineItem key={country.country} country={country} />
         ))}

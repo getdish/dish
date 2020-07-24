@@ -40,7 +40,7 @@ export const RestaurantDeliveryButton = memo(
           {sources.map((item, i) => {
             const button = (
               <a
-                key={item.name}
+                key={item.name + 'button'}
                 className="see-through"
                 href={restaurantSources[item.id]?.url}
                 target="_blank"
@@ -48,8 +48,6 @@ export const RestaurantDeliveryButton = memo(
                 <HStack
                   flex={1}
                   className="ease-in-out-fast"
-                  // overflow="hidden"
-                  key={item.name}
                   paddingVertical={5}
                   paddingHorizontal={8}
                   backgroundColor={bgLight}
@@ -94,6 +92,7 @@ export const RestaurantDeliveryButton = memo(
 
             return (
               <HStack
+                key={item.name}
                 position="absolute"
                 width={buttonWidth - -spacing}
                 left={

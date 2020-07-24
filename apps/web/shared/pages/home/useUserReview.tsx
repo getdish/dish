@@ -64,7 +64,7 @@ export const useUserFavorite = (restaurantId: string) => {
   const review = useUserReviews(restaurantId, key).filter(
     (x) => !isTagReview(x) && x.favorited
   )[0]
-  const [optimistic, setOptimistic] = useState(false)
+  const [optimistic, setOptimistic] = useState(null)
   const isStarred = optimistic ?? review?.favorited
   return [
     isStarred,
@@ -122,14 +122,21 @@ export const useUserUpvoteDownvote = (
           name,
         }))
         const fullTags = await getFullTags(partialTags)
-        const insertTags = activeTagIds.map<Review>((name) => {
-          return {
-            tag_id: fullTags.find((x) => x.name === name).id,
-            user_id: userId,
-            restaurant_id: restaurantId,
-            rating,
-          }
-        })
+        const insertTags = activeTagIds
+          .map<Review>((name) => {
+            const tagId = fullTags.find((x) => x.name === name)?.id
+            if (!tagId) {
+              debugger
+              return null
+            }
+            return {
+              tag_id: tagId,
+              user_id: userId,
+              restaurant_id: restaurantId,
+              rating,
+            }
+          })
+          .filter(Boolean)
         console.log('fullTags', partialTags, fullTags, insertTags)
         reviewUpsert(insertTags).then((res) => {
           if (res.length) {
