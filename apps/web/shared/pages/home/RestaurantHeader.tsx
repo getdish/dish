@@ -16,7 +16,6 @@ import { HomeStateItemRestaurant } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
-import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { useRestaurantQuery } from './useRestaurantQuery'
@@ -115,7 +114,10 @@ const RestaurantHeaderContent = memo(
           </HStack>
         </VStack>
         <SmallTitle marginTop={-18} divider="center">
-          <RestaurantFavoriteStar restaurantId={restaurant.id} size="lg" />
+          <RestaurantFavoriteStar
+            restaurantId={state?.restaurantId ?? restaurant.id}
+            size="lg"
+          />
         </SmallTitle>
       </VStack>
     )

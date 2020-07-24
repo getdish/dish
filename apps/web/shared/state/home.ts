@@ -268,59 +268,46 @@ const refresh: AsyncAction = async (om) => {
   await currentAction()
 }
 
-const popBack: Action = (om, item) => {
+const popBack: Action = (om) => {
   const cur = om.state.home.currentState
   const next = findLast(om.state.home.states, (x) => x.type !== cur.type)
   om.actions.home.popTo(next.type)
 }
 
-const popTo: Action<HomeStateItem['type']> = (om, item) => {
-  if (om.state.home.currentState === om.state.home.lastHomeState) {
-    return
-  }
+const popTo: Action<HomeStateItem['type']> = (om, type) => {
+  const currentState = om.state.home.currentState
 
-  let type: HomeStateItem['type']
-  if (typeof item == 'number') {
-    const lastIndex = om.state.home.states.length - 1
-    const index = lastIndex + item
-    type = om.state.home.states[index]?.type
-    if (!type) {
-      console.warn('no item at index', index)
-      return
-    }
-  } else {
-    type = item
+  if (currentState.type === 'home') {
+    return
   }
 
   // we can just use router history directly, no? and go back?
   // if router stack works fine, this should be unecessary
   if (
     om.state.home.previousState?.type === type &&
+    // router.prevPage.type !== 'pop' &&
     router.prevPage?.name === type
   ) {
     router.back()
     return
   }
 
-  const stateItem = _.findLast(
-    router.stack.slice(router.stack.length - 2),
-    (x) => x.name == type
-  )
-  if (stateItem) {
+  const states = om.state.home.states
+  const prevStates = states.slice(0, states.length - 1)
+  const stateItem = _.findLast(prevStates, (x) => x.type === type)
+  const routerItem =
+    router.history.find((x) => x.id === stateItem.id) ??
+    _.findLast(router.history, (x) => x.name === type)
+  if (routerItem) {
     router.navigate({
       name: type,
-      params: stateItem?.params ?? {},
+      params: routerItem?.params ?? {},
     })
   } else {
-    if (router.history.length > 1) {
-      console.log('going back because no matching state item')
-      debugger
-      router.back()
-    } else {
-      router.navigate({
-        name: 'home',
-      })
-    }
+    console.warn('no match')
+    router.navigate({
+      name: 'home',
+    })
   }
 }
 
@@ -672,11 +659,7 @@ const pushHomeState: AsyncAction<
   om.actions.home.setIsLoading(true)
 
   const { currentState } = om.state.home
-  const base = {
-    center: currentState?.center ?? initialHomeState.center,
-    span: currentState?.span ?? initialHomeState.span,
-    searchQuery: item?.params?.query ?? currentState?.searchQuery ?? '',
-  }
+  const searchQuery = item?.params?.query ?? currentState?.searchQuery ?? ''
 
   let nextState: Partial<HomeStateItem> | null = null
   let fetchData: PageAction | null = null
@@ -725,14 +708,19 @@ const pushHomeState: AsyncAction<
 
       const username =
         type == 'userSearch' ? om.state.router.curPage.params.username : ''
-      const searchQuery = item.params.search ?? base.searchQuery
+
+      // preserve results if staying on search
+      const results =
+        om.state.home.previousState?.type === 'search'
+          ? om.state.home.lastSearchState?.results ?? []
+          : []
+
       nextState = {
         hasMovedMap: false,
         status: 'loading',
-        results: [],
+        results,
         username,
         activeTagIds,
-        searchQuery,
       }
       fetchData = om.actions.home.loadPageSearch
       break
@@ -765,7 +753,9 @@ const pushHomeState: AsyncAction<
   }
 
   const finalState = {
-    ...base,
+    center: currentState?.center ?? initialHomeState.center,
+    span: currentState?.span ?? initialHomeState.span,
+    searchQuery,
     ...nextState,
     type,
     id: item.id ?? uid(),
@@ -1012,9 +1002,6 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
       id: state.id,
     }
     console.log('updating active tags...', nextState)
-    if (nextState.activeTagIds['here']) {
-      debugger
-    }
     om.actions.home.updateHomeState(nextState)
   } catch (err) {
     handleAssertionError(err)
@@ -1087,8 +1074,16 @@ const clearTag: AsyncAction<NavigableTag> = async (om, tag) => {
   }
 }
 
+let tm
 const setIsLoading: Action<boolean> = (om, val) => {
   om.state.home.isLoading = val
+  // prevent infinite spinners
+  clearTimeout(tm)
+  tm = setTimeout(() => {
+    if (val) {
+      om.state.home.isLoading = false
+    }
+  }, 2000)
 }
 
 // for easy use with Link / LinkButton

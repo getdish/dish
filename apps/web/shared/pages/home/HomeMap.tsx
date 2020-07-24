@@ -8,6 +8,7 @@ import {
   useGet,
   useOnMount,
 } from '@dish/ui'
+import { uniqBy } from 'lodash'
 import React, {
   Suspense,
   memo,
@@ -18,15 +19,18 @@ import React, {
 } from 'react'
 
 import { frameWidthMax, searchBarHeight } from '../../constants'
+import { memoize } from '../../helpers/memoizeWeak'
 import { LngLat } from '../../state/home'
 import { isRestaurantState, isSearchState } from '../../state/home-helpers'
 import { setMapView } from '../../state/mapView'
+import { router } from '../../state/router'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../../views/map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
 import { setMapIsLoaded } from './onMapLoadedCallback'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import { useLastValueWhen } from './useLastValueWhen'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
@@ -84,44 +88,38 @@ const HomeMapDataLoader = memo(
       onLoadedRestaurants: Function
     }) => {
       const om = useOvermind()
-
-      let state = om.state.home.currentState
-
-      // for going deeper than search, leave the last search state on map
-      if (!isRestaurantState(state) && !isSearchState(state)) {
-        state = om.state.home.lastSearchState
-      }
-
-      // restaurants
-      const restaurantDetailInfo = isRestaurantState(state)
+      const state = om.state.home.currentState
+      const searchState = om.state.home.lastSearchState
+      const detail = isRestaurantState(state)
         ? { id: state.restaurantId, slug: state.restaurantSlug }
         : null
-      const restaurantResults = (isSearchState(state)
-        ? state.results
-        : [restaurantDetailInfo]
-      ).filter(Boolean)
-
-      // for now to avoid so many large db calls just have search api return it instead of re-fetch here
-      const restaurants = restaurantResults.map(({ id, slug }) => {
-        const r = useRestaurantQuery(slug)
-        const coords = r.location?.coordinates
-        return {
-          id,
-          slug,
-          location: {
-            coordinates: [coords?.[0], coords?.[1]],
-          },
-        }
-      })
-
+      const all = [...(detail ? [detail] : []), ...(searchState?.results ?? [])]
+      const allIds = [...new Set(all.map((x) => x.id))]
+      const allResults = allIds
+        .map((id) => all.find((x) => x.id === id))
+        .filter(Boolean)
+      const restaurants = _.uniqBy(
+        allResults.map(({ id, slug }) => {
+          const r = useRestaurantQuery(slug)
+          const coords = r.location?.coordinates
+          return {
+            id,
+            slug,
+            location: {
+              coordinates: [coords?.[0], coords?.[1]],
+            },
+          }
+        }),
+        (x) => `${x.location.coordinates[0]}${x.location.coordinates[1]}`
+      )
+      const restaurantDetail = detail
+        ? restaurants.find((x) => x.id === detail.id)
+        : null
       useEffect(() => {
+        console.log('restaurants', restaurants, restaurantDetail)
         props.onLoadedRestaurants?.(restaurants)
       }, [JSON.stringify(restaurants.map((x) => x.location?.coordinates))])
 
-      // restaurantDetail
-      const restaurantDetail = restaurantDetailInfo
-        ? restaurants.find((x) => x.id === restaurantDetailInfo.id)
-        : null
       useEffect(() => {
         props.onLoadedRestaurantDetail?.(restaurantDetail)
       }, [JSON.stringify(restaurantDetail?.location?.coordinates ?? null)])
@@ -253,13 +251,15 @@ const HomeMapContent = memo(function HomeMap({
     }
   })
 
-  const annotations = useMemo(
-    () =>
-      getRestaurantAnnotations(
-        (restaurantDetail ? [restaurantDetail] : restaurants) ?? []
-      ),
-    [restaurants, restaurantDetail]
+  const isLoading = restaurants[0]?.location?.coordinates[0] === null
+  const key = useLastValueWhen(
+    () => JSON.stringify(restaurants.map((x) => x.location?.coordinates)),
+    isLoading
   )
+  const annotations = useMemo(() => {
+    console.log('getannotations', key)
+    return getRestaurantAnnotations(restaurants)
+  }, [key])
 
   useEffect(() => {
     if (!map) return
@@ -321,22 +321,24 @@ const HomeMapContent = memo(function HomeMap({
         (state) => state.home.hoveredRestaurant,
         (hoveredRestaurant) => {
           if (!hoveredRestaurant) return
-          if (om.state.home.isScrolling) return
+          if (omStatic.state.home.isScrolling) return
           for (const annotation of map.annotations) {
             if (annotation.data?.id === hoveredRestaurant.id) {
               annotation.selected = true
             }
           }
           const restaurants = getRestaurants()
-          console.log('hovered', hoveredRestaurant, restaurants)
           const restaurant = restaurants.find(
             (x) =>
               x.id === hoveredRestaurant.id || x.slug === hoveredRestaurant.slug
           )
           const coordinates = restaurant?.location?.coordinates
-          console.log('ok', restaurant, coordinates)
+          console.log('gotem', coordinates)
           if (coordinates) {
+            // keep current span
             resumeMap()
+
+            const state = omStatic.state.home.currentState
             centerMapToRegionMain({
               map,
               center: {
@@ -344,8 +346,8 @@ const HomeMapContent = memo(function HomeMap({
                 lng: coordinates[0],
               },
               span: {
-                lat: state.span.lat,
-                lng: state.span.lng,
+                lat: Math.max(state.span.lat, 0.014),
+                lng: Math.max(state.span.lng, 0.014),
               },
             })
           }
@@ -389,35 +391,52 @@ const HomeMapContent = memo(function HomeMap({
   )
 
   // update annotations
-  useDebounceEffect(
-    () => {
-      if (!map) return
-      if (!restaurants?.length) return
+  useEffect(() => {
+    if (!map) return
+    if (!restaurants?.length) return
 
-      // debounce
-      const cancels = new Set<Function>()
-      const cb = (e) => {
-        const selected = e.annotation.data.id || ''
-        console.log('selected is', selected)
+    // debounce
+    const cancels = new Set<Function>()
+    const cb = (e) => {
+      if (omStatic.state.home.currentStateType === 'search') {
+        const index = restaurants.findIndex(
+          (x) => x.id === e.annotation.data.id
+        )
+        console.log('index', index)
+        om.actions.home.setActiveIndex(index)
+      } else {
+        if (omStatic.state.home.currentStateType != 'restaurant') {
+          router.navigate({
+            name: 'restaurant',
+            params: {
+              slug: e.annotation.data.slug ?? '',
+            },
+          })
+        }
       }
-      map.addEventListener('select', cb)
-      cancels.add(() => map.removeEventListener('select', cb))
+    }
+    map.addEventListener('select', cb)
+    cancels.add(() => map.removeEventListener('select', cb))
 
-      // map.showAnnotations(annotations)
+    // map.showAnnotations(annotations)
+    const hasAnnotations = !!annotations.length
+    if (hasAnnotations) {
       try {
         map.addAnnotations(annotations)
       } catch (err) {
         console.error(err)
       }
+    }
 
-      // animate to them
-      // map.showItems(annotations, {
-      //   animate: false,
-      //   minimumSpan: createCoordinateSpan(radius, radius),
-      // })
+    // animate to them
+    // map.showItems(annotations, {
+    //   animate: false,
+    //   minimumSpan: createCoordinateSpan(radius, radius),
+    // })
 
-      return () => {
-        cancels.forEach((x) => x())
+    return () => {
+      cancels.forEach((x) => x())
+      if (hasAnnotations) {
         try {
           console.warn('REMOVING ANNOTATIONS')
           map.removeAnnotations(annotations)
@@ -425,10 +444,8 @@ const HomeMapContent = memo(function HomeMap({
           console.error('Error removing annotations', err)
         }
       }
-    },
-    40,
-    [!!map, annotations]
-  )
+    }
+  }, [!!map, annotations])
 
   return (
     <AbsoluteVStack
@@ -443,9 +460,9 @@ const HomeMapContent = memo(function HomeMap({
   )
 })
 
-function getRestaurantAnnotations(
+const getRestaurantAnnotations = (
   restaurants: Restaurant[]
-): mapkit.MarkerAnnotation[] {
+): mapkit.MarkerAnnotation[] => {
   const coordinates = restaurants
     .filter((restaurant) => !!restaurant.location?.coordinates)
     .map(
@@ -483,6 +500,7 @@ function getRestaurantAnnotations(
             : mapkit.Annotation.DisplayPriority.Low,
         data: {
           id: restaurant.id,
+          slug: restaurant.slug,
         },
       })
     })

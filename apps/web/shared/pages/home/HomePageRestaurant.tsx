@@ -57,70 +57,58 @@ const HomePageRestaurant = memo(
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
 
-        {isLoading && (
-          <AbsoluteVStack
-            fullscreen
-            backgroundColor="white"
-            zIndex={1000}
-            borderRadius={drawerBorderRadius}
-          >
-            <LoadingItems />
-          </AbsoluteVStack>
-        )}
-
         <HomeScrollView paddingTop={0}>
           {/* HEADER */}
           <RestaurantHeader restaurantSlug={slug} />
-
           <Spacer />
-          <VStack alignItems="center">
-            <HStack minWidth={400}>
-              <RestaurantDetailRow
-                centered
-                justifyContent="center"
-                restaurantSlug={slug}
-                flex={1}
-              />
-            </HStack>
-          </VStack>
 
-          <VStack paddingHorizontal={14}>
+          <Suspense fallback={<LoadingItems />}>
             <VStack alignItems="center">
-              <Spacer size="xl" />
+              <HStack minWidth={400}>
+                <RestaurantDetailRow
+                  centered
+                  justifyContent="center"
+                  restaurantSlug={slug}
+                  flex={1}
+                />
+              </HStack>
+            </VStack>
 
-              <Suspense fallback={null}>
-                <RestaurantDishPhotos restaurantSlug={slug} />
-              </Suspense>
+            <VStack paddingHorizontal={14}>
+              <VStack alignItems="center">
+                <Spacer size="xl" />
 
-              <Spacer size="xl" />
-
-              <RestaurantTagsRow
-                size="sm"
-                restaurantSlug={slug}
-                restaurantId={restaurant.id}
-              />
-
-              <Spacer size="xl" />
-
-              <VStack flex={1} marginBottom={20}>
-                <SmallTitle divider="center">Menu</SmallTitle>
-                <Spacer />
                 <Suspense fallback={null}>
-                  <RestaurantMenu restaurantSlug={slug} />
+                  <RestaurantDishPhotos restaurantSlug={slug} />
                 </Suspense>
 
                 <Spacer size="xl" />
 
-                <SmallTitle>Tips</SmallTitle>
-                <Suspense fallback={<LoadingItems />}>
+                <RestaurantTagsRow
+                  size="sm"
+                  restaurantSlug={slug}
+                  restaurantId={restaurant.id}
+                />
+
+                <Spacer size="xl" />
+
+                <VStack flex={1} marginBottom={20}>
+                  <SmallTitle divider="center">Menu</SmallTitle>
+                  <Spacer />
+                  <Suspense fallback={null}>
+                    <RestaurantMenu restaurantSlug={slug} />
+                  </Suspense>
+
+                  <Spacer size="xl" />
+
+                  <SmallTitle>Tips</SmallTitle>
                   <RestaurantTopReviews
                     expandTopComments={2}
                     restaurantId={restaurant.id}
                   />
-                </Suspense>
-              </VStack>
+                </VStack>
 
-              {/* <VStack width="100%">
+                {/* <VStack width="100%">
                 <SmallTitle>Images</SmallTitle>
                 <HStack
                   width="100%"
@@ -146,8 +134,9 @@ const HomePageRestaurant = memo(
                     ))}
                 </HStack>
               </VStack> */}
+              </VStack>
             </VStack>
-          </VStack>
+          </Suspense>
 
           {/* bottom space */}
           <VStack height={200} />
@@ -172,14 +161,14 @@ const RestaurantMenu = memo(
         {!!items?.length && (
           <VStack position="relative">
             <HStack
-              height={isExpanded ? 'auto' : 60}
+              height={isExpanded ? 'auto' : 120}
               overflow="hidden"
               spacing={3}
               flexWrap="wrap"
             >
-              {items.slice(0, isExpanded ? Infinity : 4).map((item, i) => (
+              {items.slice(0, isExpanded ? Infinity : 8).map((item, i) => (
                 <VStack
-                  minWidth={isExpanded ? 200 : 140}
+                  minWidth={200}
                   paddingBottom={10}
                   borderBottomWidth={1}
                   marginBottom={10}

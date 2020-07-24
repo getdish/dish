@@ -8,6 +8,7 @@ import {
   Text,
   VStack,
   useDebounceEffect,
+  useGet,
 } from '@dish/ui'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 
@@ -55,6 +56,8 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 ) {
   const om = useOvermindStatic()
   const [isHovered, setIsHovered] = useState(false)
+  const [isActive, setIsActive] = useState(false)
+  const getIsActive = useGet(isActive)
 
   useDebounceEffect(
     () => {
@@ -71,10 +74,11 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 
   useEffect(() => {
     return om.reaction(
-      (state) => state.home.activeIndex,
-      (activeIndex) => {
-        console.log('setting is hovered via active index...')
-        setIsHovered(props.rank == activeIndex + 1)
+      (state) => props.rank == state.home.activeIndex + 1,
+      (isActive) => {
+        if (getIsActive() !== isActive) {
+          setIsActive(isActive)
+        }
       }
     )
   }, [props.rank])
@@ -90,7 +94,13 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       <VStack overflow="hidden" className="ease-in-out-fast" flex={1}>
         <RestaurantListItemContent {...props} />
       </VStack>
-      <AbsoluteVStack fullscreen top={-10} zIndex={10} pointerEvents="none">
+      <AbsoluteVStack
+        opacity={isActive ? 1 : 0.8}
+        fullscreen
+        top={-10}
+        zIndex={10}
+        pointerEvents="none"
+      >
         <RestaurantPeek
           restaurantSlug={props.restaurantSlug}
           searchState={props.searchState}
@@ -328,7 +338,6 @@ const RestaurantPeek = memo(
     const [isLoaded, setIsLoaded] = useState(false)
     const paddingLeftSmall =
       (0.75 + (1 / (drawerWidth / 950 + 0.0001)) * 0.1) * drawerWidth
-    console.log('paddingLeftSmall', paddingLeftSmall)
     const paddingLeft =
       drawerWidth < 600 ? paddingLeftSmall : 0.65 * drawerWidth
 

@@ -14,6 +14,7 @@ import {
 import _, { clamp } from 'lodash'
 import {
   default as React,
+  Suspense,
   memo,
   useCallback,
   useEffect,
@@ -197,7 +198,9 @@ const HomePageTopDishes = memo((props: Props) => {
                 {isSmall && <Spacer size={20} />}
               </VStack>
 
-              <HomeTopDishesContent />
+              <Suspense fallback={null}>
+                <HomeTopDishesContent />
+              </Suspense>
             </VStack>
           </VStack>
         </HomeScrollView>
