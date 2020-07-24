@@ -1,10 +1,10 @@
-import { graphql, reviewInsert } from '@dish/graph'
+import { graphql, reviewInsert, reviewUpsert } from '@dish/graph'
 import { HStack, Text, Toast, VStack } from '@dish/ui'
 import React, { memo, useState } from 'react'
 import { Star } from 'react-feather'
 
 import { useOvermind } from '../../state/useOvermind'
-import { useUserFavorite, useUserReviews } from './useUserReview'
+import { useUserFavorite } from './useUserReview'
 
 export const RestaurantFavoriteStar = memo(
   graphql(
@@ -29,7 +29,7 @@ export const RestaurantFavoriteStar = memo(
           return
         }
         if (!review) {
-          reviewInsert([
+          reviewUpsert([
             {
               user_id: user.id,
               rating: r,
@@ -40,13 +40,15 @@ export const RestaurantFavoriteStar = memo(
           review.rating = r
         }
         setOptimisticRating(r)
-        Toast.show(r ? 'Added favorite' : 'Removed favorite')
+        Toast.show(r ? 'Favorited' : 'Un-favorited')
       }
 
       return (
         <HStack
-          hoverStyle={{ opacity: 0.5 }}
           pressStyle={{ opacity: 0.4 }}
+          hoverStyle={{
+            borderColor: '#999',
+          }}
           pointerEvents="auto"
           // @ts-ignore
           userSelect="none"
@@ -56,22 +58,23 @@ export const RestaurantFavoriteStar = memo(
             setRating(isStarred ? 0 : 1)
           }}
           height={sizePx * 1.4}
+          width={sizePx * 1.4}
+          alignItems="center"
+          justifyContent="center"
+          backgroundColor="#fff"
+          borderRadius={100}
+          borderWidth={1}
+          borderColor="#eee"
         >
           <VStack
             hoverStyle={{
               backgroundColor: '#fff',
             }}
-            padding={4}
             borderRadius={100}
             overflow="hidden"
           >
             {isStarred && (
-              <Text
-                fontSize={sizePx * 0.88}
-                lineHeight={sizePx * 0.88}
-                marginTop={3}
-                marginLeft={2}
-              >
+              <Text fontSize={sizePx * 0.88} lineHeight={sizePx * 0.88}>
                 ⭐️
               </Text>
             )}

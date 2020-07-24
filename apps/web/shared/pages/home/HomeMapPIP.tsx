@@ -1,4 +1,4 @@
-import { RestaurantQuery, graphql } from '@dish/graph'
+import { LngLat, RestaurantQuery, graphql } from '@dish/graph'
 import { AbsoluteVStack, useOnMount } from '@dish/ui'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
@@ -34,7 +34,6 @@ export const HomeMapPIP = memo(() => {
 const HomeMapPIPContent = graphql(() => {
   const om = useOvermind()
   const state = om.state.home.currentState
-  const { center, span } = state
   const { map, mapProps } = useMap({
     // @ts-ignore
     showsZoomControl: false,
@@ -44,14 +43,39 @@ const HomeMapPIPContent = graphql(() => {
     showsCompass: mapkit.FeatureVisibility.Hidden,
   })
 
-  const enabled = state.type === 'restaurant' && span.lat < 0.02
+  const hoveredRestuarant = om.state.home.hoveredRestaurant
 
   let restaurant: RestaurantQuery | null = null
+  let span: LngLat = state.span
+
   if (state.type === 'restaurant') {
     restaurant = useRestaurantQuery(state.restaurantSlug)
+    // zoom out on pip for restaurant
+    span = {
+      lat: span.lat * 2.5,
+      lng: span.lng * 2.5,
+    }
+  } else if (hoveredRestuarant) {
+    restaurant = useRestaurantQuery(hoveredRestuarant.slug)
+    // zoom in on pip for search
+    span = {
+      lat: 0.005,
+      lng: 0.005,
+    }
   }
 
+  const enabled = hoveredRestuarant
+    ? hoveredRestuarant
+    : state.type === 'restaurant'
+
   const coordinates = restaurant?.location?.coordinates
+  const center: LngLat = coordinates
+    ? {
+        lat: coordinates[1],
+        lng: coordinates[0],
+      }
+    : state.center
+
   const coordinate = useMemo(
     () => coordinates && new mapkit.Coordinate(coordinates[1], coordinates[0]),
     [JSON.stringify(coordinates)]
@@ -71,8 +95,8 @@ const HomeMapPIPContent = graphql(() => {
       map,
       center,
       span: {
-        lat: Math.max(span.lat * 2.5, 0.035),
-        lng: Math.max(span.lng * 2.5, 0.035),
+        lat: Math.max(span.lat, 0.005),
+        lng: Math.max(span.lng, 0.005),
       },
     })
   }, [map, center, span])
