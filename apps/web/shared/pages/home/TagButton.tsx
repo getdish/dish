@@ -267,7 +267,7 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
         opacity: 1,
       }}
       onPressIn={prevent}
-      onPressOut={(e) => {
+      onPress={(e) => {
         prevent(e)
         setVote(vote == 1 ? 0 : 1)
       }}

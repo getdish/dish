@@ -7,6 +7,7 @@ import { HomeStateItem, HomeStateItemSimple } from '../../state/home'
 import { isSearchState } from '../../state/home-helpers'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
+import { getBreadcrumbs } from './getBreadcrumbs'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 // export class HomeStateStore extends Store {
@@ -23,51 +24,13 @@ export type StackItemProps<A> = {
 
 type GetChildren<A> = (props: StackItemProps<A>) => React.ReactNode
 
-const getStackItems = memoize((states: HomeStateItem[]) => {
-  let crumbs: HomeStateItemSimple[] = []
-  // reverse loop to find latest
-  for (let i = states.length - 1; i >= 0; i--) {
-    const cur = states[i]
-    switch (cur.type) {
-      case 'home': {
-        crumbs.unshift(cur)
-        return crumbs
-      }
-      case 'about':
-      case 'search':
-      case 'userSearch':
-      case 'user':
-      case 'restaurant': {
-        if (crumbs.some((x) => x.type === cur.type)) {
-          continue
-        }
-        if (
-          (cur.type === 'restaurant' ||
-            cur.type === 'user' ||
-            cur.type == 'userSearch') &&
-          crumbs.some(isSearchState)
-        ) {
-          continue
-        }
-        if (isSearchState(cur) && crumbs.some(isSearchState)) {
-          continue
-        }
-        crumbs.unshift(cur)
-        continue
-      }
-    }
-  }
-  return crumbs
-})
-
 export function HomeStackView<A extends HomeStateItem>(props: {
   children: GetChildren<A>
 }) {
   // const currentStateStore = useRecoilStore(HomeStateStore)
   const om = useOvermind()
   om.state.home.stateIds
-  const states = omStatic.state.home.states
-  const stackItems = getStackItems(states)!
+  const stackItems = getBreadcrumbs(omStatic.state.home.states)
   const key = JSON.stringify(stackItems.map((x) => x.id))
   const homeStates = useMemo(() => stackItems, [key])
   const currentStates =

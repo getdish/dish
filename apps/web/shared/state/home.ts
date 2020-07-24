@@ -17,6 +17,7 @@ import { Action, AsyncAction, derived } from 'overmind'
 
 import { fuzzyFindIndices } from '../helpers/fuzzy'
 import { timer } from '../helpers/timer'
+import { getBreadcrumbs } from '../pages/home/getBreadcrumbs'
 import { useRestaurantQuery } from '../pages/home/useRestaurantQuery'
 import { LinkButtonProps } from '../views/ui/LinkProps'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
@@ -952,7 +953,8 @@ function padSpan(val: LngLat, by = 0.9): LngLat {
 }
 
 const up: Action = (om) => {
-  const prev = om.state.home.previousState
+  const breadcrumbs = getBreadcrumbs(om.state.home.states)
+  const prev = breadcrumbs[breadcrumbs.length - 2]
   om.actions.home.popTo(prev?.type ?? 'home')
 }
 
@@ -1143,13 +1145,16 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     om.state.home.isOptimisticUpdating = true
     om.state.home.isLoading = true
     // optimistic update active tags
+    const type = curState.type as any
     om.actions.home.updateActiveTags({
       id: curState.id,
-      type: curState.type as any,
+      type,
       searchQuery: nextState.searchQuery,
       activeTagIds: nextState.activeTagIds,
-      status: 'loading',
-      results: [],
+      ...(type === 'search' && {
+        status: 'loading',
+        results: [],
+      }),
     })
     await sleep(40)
     await idle(30)
