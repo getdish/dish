@@ -1,19 +1,12 @@
 import { graphql } from '@dish/graph'
 import { Spacer, StackProps, VStack } from '@dish/ui'
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
 import { bgLight } from '../../colors'
 import { HomeActiveTagIds } from '../../state/home'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useUserUpvoteDownvote } from './useUserReview'
-
-const voteButtonStyle: StackProps = {
-  borderRadius: 100,
-  width: 20,
-  height: 20,
-  alignItems: 'center',
-  justifyContent: 'center',
-}
 
 export const RestaurantUpVoteDownVote = memo(
   graphql(
@@ -25,7 +18,6 @@ export const RestaurantUpVoteDownVote = memo(
       activeTagIds: HomeActiveTagIds
     }) => {
       const [vote, setVote] = useUserUpvoteDownvote(restaurantId, activeTagIds)
-      const iconSize = 14
       return (
         <div
           style={{
@@ -34,30 +26,22 @@ export const RestaurantUpVoteDownVote = memo(
         >
           <VStack pointerEvents="auto" width={22}>
             <VoteButton
-              {...voteButtonStyle}
+              Icon={ChevronUp}
               voted={vote == 1}
+              color={vote === 1 ? 'green' : null}
               onPressOut={() => {
                 setVote(vote === 1 ? 0 : 1)
               }}
-            >
-              <ChevronUp
-                size={iconSize}
-                color={vote === 1 ? 'green' : '#ccc'}
-              />
-            </VoteButton>
+            />
             <Spacer size={32} />
             <VoteButton
-              {...voteButtonStyle}
+              Icon={ChevronDown}
               voted={vote == -1}
+              color={vote === -1 ? 'red' : null}
               onPressOut={() => {
                 setVote(vote == -1 ? 0 : -1)
               }}
-            >
-              <ChevronDown
-                size={iconSize}
-                style={{ color: vote === -1 ? 'red' : '#ccc' }}
-              />
-            </VoteButton>
+            />
           </VStack>
         </div>
       )
@@ -65,20 +49,26 @@ export const RestaurantUpVoteDownVote = memo(
   )
 )
 
-const VoteButton = (props: StackProps & { voted?: boolean }) => {
+const VoteButton = ({
+  color,
+  Icon,
+  ...props
+}: StackProps & { voted?: boolean; Icon: any; color?: string }) => {
+  const isSmall = useMediaQueryIsSmall()
+  const scale = isSmall ? 1.1 : 1
+  const [hovered, setHovered] = useState(false)
   return (
     <VStack
-      height={24}
-      width={20}
-      borderWidth={1}
+      width={24 * scale}
+      height={24 * scale}
+      borderRadius={100}
       alignItems="center"
       justifyContent="center"
+      borderWidth={1}
       backgroundColor="#fff"
       borderColor="white"
-      hoverStyle={{
-        backgroundColor: '#eee',
-        borderColor: '#ddd',
-      }}
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
       pressStyle={{
         backgroundColor: bgLight,
         borderColor: '#aaa',
@@ -87,6 +77,12 @@ const VoteButton = (props: StackProps & { voted?: boolean }) => {
         backgroundColor: '#999',
       })}
       {...props}
-    />
+    >
+      <Icon
+        size={28}
+        color={color ?? (hovered ? '#000' : '#eee')}
+        style={{ ...styleMedia }}
+      />
+    </VStack>
   )
 }

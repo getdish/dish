@@ -1,6 +1,7 @@
 import { slugify } from '@dish/graph'
 import {
   Box,
+  Circle,
   Divider,
   HStack,
   HoverablePopover,
@@ -11,7 +12,14 @@ import {
   VStack,
 } from '@dish/ui'
 import React, { memo, useState } from 'react'
-import { ChevronDown, ChevronUp, Menu, Settings, User } from 'react-feather'
+import {
+  ChevronDown,
+  ChevronUp,
+  Hexagon,
+  Menu,
+  Settings,
+  User,
+} from 'react-feather'
 
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { AuthLoginRegisterView } from '../../views/auth/AuthLoginRegisterView'
@@ -99,7 +107,7 @@ export const HomeMenu = memo(() => {
           <HoverablePopover contents={<VStack></VStack>}>
             <MenuButton
               name="about"
-              Icon={ChevronDown}
+              Icon={Hexagon}
               ActiveIcon={ChevronUp}
               onPress={(e) => {
                 if (omStatic.state.router.curPageName === 'about') {

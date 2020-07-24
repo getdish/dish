@@ -7,12 +7,13 @@ import {
   Text,
   TextProps,
   VStack,
+  getNode,
   prevent,
 } from '@dish/ui'
 import _ from 'lodash'
-import React, { memo } from 'react'
+import React, { memo, useEffect, useRef } from 'react'
 import { ThumbsUp, X } from 'react-feather'
-import { Image } from 'react-native'
+import { Image, View } from 'react-native'
 
 import { bgLight } from '../../colors'
 import { getTagId, tagDisplayNames } from '../../state/Tag'
@@ -250,8 +251,21 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   const [vote, setVote] = useUserUpvoteDownvote(props.restaurantId, {
     [getTagId(props)]: true,
   })
+  const buttonRef = useRef()
+
+  // only way i could get it to stop bubbling up wtf
+  useEffect(() => {
+    const node = getNode(buttonRef?.current)
+    node.addEventListener('click', prevent)
+    return () => {
+      node.removeEventListener('click', prevent)
+    }
+  }, [])
+
   return (
     <VStack
+      // @ts-ignore
+      ref={buttonRef}
       paddingHorizontal={5 * scale}
       alignItems="center"
       justifyContent="center"
@@ -262,7 +276,7 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
         marginLeft: 4,
         overflow: 'hidden',
       })}
-      opacity={subtle ? 0.3 : 0.6}
+      opacity={subtle ? 0.1 : 0.6}
       hoverStyle={{
         opacity: 1,
       }}
@@ -272,10 +286,12 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
         setVote(vote == 1 ? 0 : 1)
       }}
     >
-      <ThumbsUp
-        size={12 * scale}
-        color={subtle ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)'}
-      />
+      <VStack onClick={prevent}>
+        <ThumbsUp
+          size={12 * scale}
+          color={subtle ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)'}
+        />
+      </VStack>
     </VStack>
   )
 }

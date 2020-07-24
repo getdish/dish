@@ -606,8 +606,7 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
         return
       }
       default: {
-        console.error('NO DIRECTION FOR A POP??')
-        return
+        console.error('NO DIRECTION FOR A POP??', item)
       }
     }
   }

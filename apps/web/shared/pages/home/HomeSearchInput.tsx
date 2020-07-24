@@ -179,6 +179,7 @@ export const HomeSearchInput = memo(() => {
   return (
     <HomeAutocompleteHoverableInput input={input} autocompleteTarget="search">
       <HStack
+        contain="paint"
         // backgroundColor="rgba(255,255,255,0.1)"
         alignItems="center"
         paddingHorizontal={15}
@@ -404,7 +405,7 @@ const HomeSearchBarTags = memo(
     const lense = om.state.home.currentStateLense
     const rgb = lense?.rgb ?? brandRgb
     const backgroundColor = rgbString(rgb.map((x) => x * 0.6))
-    const backgroundColorHover = rgbString(rgb.map((x) => x * 0.7))
+    const backgroundColorHover = rgbString(rgb.map((x) => x * 0.75))
 
     return (
       <>
