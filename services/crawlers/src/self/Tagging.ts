@@ -23,6 +23,7 @@ export class Tagging {
   all_tags: Tag[] = []
   _found_tags: { [key: string]: Partial<RestaurantTag> } = {}
   SPECIAL_FILTER_THRESHOLD = 3
+  GEM_UIID = 'da0e0c85-86b5-4b9e-b372-97e133eccb43'
 
   constructor(crawler: Self) {
     this.crawler = crawler
@@ -43,6 +44,15 @@ export class Tagging {
     const orphan_tags = await this.upsertCountryTags(tags)
     if (orphan_tags.length) {
       await this.addSimpleTags(orphan_tags)
+    }
+    this.tagIfGem()
+  }
+
+  tagIfGem() {
+    if (this.crawler.restaurant.rating > 4) {
+      this.restaurant_tags.push({
+        tag_id: this.GEM_UIID,
+      })
     }
   }
 

@@ -279,8 +279,12 @@ test('Merging dishes', async (t) => {
   t.is(!!updated, true)
   if (!updated) return
   t.is(updated.menu_items.length, 2)
-  t.is(updated.menu_items[0].name, 'Nice Dish')
-  t.is(updated.menu_items[1].description, 'I am unique to DoorDash')
+  t.assert(updated.menu_items.map((m) => m.name).includes('Nice Dish'))
+  t.assert(
+    updated.menu_items
+      .map((m) => m.description)
+      .includes('I am unique to DoorDash')
+  )
 })
 
 test('Weighted ratings when all sources are present', (t) => {
