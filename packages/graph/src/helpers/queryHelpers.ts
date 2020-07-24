@@ -1,5 +1,6 @@
 import {
-  photos_constraint,
+  photo_constraint,
+  photo_xref_constraint,
   query,
   restaurant_constraint,
   review_constraint,
@@ -13,7 +14,7 @@ import {
 import { mutation } from '../graphql/mutation'
 import { ModelName, ModelType, WithID } from '../types'
 import { CollectOptions } from './collect'
-import { isMutatableField } from './isMutatableField'
+import { isMutatableField, isMutatableRelation } from './isMutatableField'
 import {
   resolvedMutation,
   resolvedMutationWithFields,
@@ -43,6 +44,9 @@ const defaultConstraints = {
   setting: setting_constraint.setting_pkey,
   tag_tag: tag_tag_constraint.tag_tag_pkey,
   user: user_constraint.user_username_key,
+  photo: photo_constraint.photo_url_key,
+  photo_xref:
+    photo_xref_constraint.photos_xref_photos_id_restaurant_id_tag_id_key,
 }
 
 export function createQueryHelpersFor<A>(
@@ -121,8 +125,7 @@ export async function upsert<T extends ModelType>(
 ): Promise<WithID<T>[]> {
   constraint = constraint ?? defaultConstraints[table]
   const objects = prepareData(table, objectsIn)
-  // TODO: Is there a better way to get the updateable columns?
-  const update_columns = Object.keys(objects[0])
+  const update_columns = updateableColumns(table, objects[0])
   const action = `insert_${table}` as any
   // @ts-ignore
   return await resolvedMutationWithFields(() => {
@@ -182,6 +185,7 @@ export async function deleteAllBy(
 
 function prepareData<T>(table: string, objects: T[]): T[] {
   objects = removeReadOnlyProperties<T>(table, objects)
+  objects = formatObjectRelationData<T>(table, objects)
   objects = objects.map((o) => ensureJSONSyntax(o) as T)
   return objects
 }
@@ -191,6 +195,28 @@ function removeReadOnlyProperties<T>(table: string, objects: T[]): T[] {
     return Object.keys(cur).reduce((acc, key) => {
       const field = schema[table].fields[key]
       if (isMutatableField(field)) {
+        acc[key] = cur[key]
+      }
+      return acc
+    }, {} as T)
+  })
+}
+
+function formatObjectRelationData<T>(table: string, objects: T[]) {
+  return objects.map((cur) => {
+    return Object.keys(cur).reduce((acc, key) => {
+      const field = schema[table].fields[key]
+      if (isMutatableRelation(field)) {
+        const constraint = defaultConstraints[key]
+        const update_columns = updateableColumns(key, cur[key])
+        acc[key] = {
+          data: cur[key],
+          on_conflict: {
+            constraint,
+            update_columns,
+          },
+        }
+      } else {
         acc[key] = cur[key]
       }
       return acc
@@ -235,4 +261,14 @@ function deJSONStringify(object: {}, key: string, value: any) {
   try {
     object[key] = ensureJSONSyntax(JSON.parse(value))
   } catch {}
+}
+
+function updateableColumns(table: string, object: any) {
+  if (!object || object.length == 0) return []
+  let columns: string[] = []
+  for (const key of Object.keys(object)) {
+    const field = schema[table].fields[key]
+    if (!isMutatableRelation(field)) columns.push(key)
+  }
+  return columns
 }

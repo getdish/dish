@@ -1,7 +1,14 @@
-import { FieldNode, ScalarNode } from 'gqless'
+import { FieldNode, ObjectNode, ScalarNode } from 'gqless'
 
 const isSimpleField = (field: FieldNode) => {
   return field.ofNode instanceof ScalarNode && !field.args?.required
+}
+
+const isRelation = (field: FieldNode) => {
+  //if (field.ofNode instanceof ObjectNode) {
+  //console.log(field.ofNode.fields.__typename)
+  //}
+  return field.ofNode instanceof ObjectNode
 }
 
 const FILTER_FIELDS = {
@@ -27,8 +34,12 @@ export const isMutatableField = (field: FieldNode) => {
   return (
     !FILTER_FIELDS[field.name] &&
     !READ_ONLY_FIELDS[field.name] &&
-    isSimpleField(field)
+    (isSimpleField(field) || isRelation(field))
   )
+}
+
+export const isMutatableRelation = (field: FieldNode) => {
+  return isMutatableField(field) && isRelation(field)
 }
 
 export const isMutableReturningField = (name: string) => {
