@@ -139,10 +139,13 @@ const HomeStackViewItem = memo(
       })
     }, [isActive, index, item])
 
+    const className = `animate-up ${!isRemoving ? 'active' : ''}`
+    console.log('className', className)
+
     return (
       // <PopoverContext.Provider value={useMemo(() => ({ id }), [id])}>
       <VStack
-        className={`animate-up ${!isRemoving ? 'active' : ''}`}
+        className={className}
         position="absolute"
         top={0}
         left={0}

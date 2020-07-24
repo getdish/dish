@@ -8,7 +8,7 @@ import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export function HomeViewDrawer(props: { children: any }) {
   const isSmall = useMediaQueryIsSmall()
-  const drawerWidth = useHomeDrawerWidth()
+  const drawerWidth = useHomeDrawerWidth(Infinity)
 
   return (
     <HStack

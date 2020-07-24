@@ -1,10 +1,18 @@
 import { HStack, StackProps, Text, VStack } from '@dish/ui'
-import React, { useRef } from 'react'
+import React, { useLayoutEffect, useRef, useState } from 'react'
 
 import { RoutesTable } from '../../state/router'
+import { omStatic, useOvermindStatic } from '../../state/useOvermind'
 import { Link } from './Link'
 import { LinkButtonProps } from './LinkProps'
 import { useNormalizeLinkProps } from './useNormalizedLink'
+
+const getChildren = (props: LinkButtonProps, isActive: boolean) => {
+  if (typeof props.children === 'function') {
+    return props.children(isActive)
+  }
+  return props.children
+}
 
 export function LinkButton<
   Name extends keyof RoutesTable = keyof RoutesTable,
@@ -13,9 +21,24 @@ export function LinkButton<
   let restProps: StackProps
   let contents: React.ReactElement
   const containerRef = useRef<any>()
-
   // this handles the tag/name/params props
   let props = useNormalizeLinkProps(allProps)
+  const [isActive, setIsActive] = useState(false)
+  const om = useOvermindStatic()
+
+  useLayoutEffect(() => {
+    if (props.name) {
+      let last = false
+      const check = (val: string) => {
+        const match = val === props.name
+        if (match == last) return
+        setIsActive(match)
+        last = match
+      }
+      check(omStatic.state.router.curPageName)
+      return om.reaction((state) => state.router.curPageName, check)
+    }
+  }, [props.name])
 
   if ('name' in props) {
     const {
@@ -37,6 +60,7 @@ export function LinkButton<
       preventNavigate,
       asyncClick,
       textAlign,
+      activeTextStyle,
       ...rest
     } = props
     restProps = rest
@@ -54,6 +78,7 @@ export function LinkButton<
         ellipse={ellipse}
         textAlign={textAlign}
         preventNavigate={preventNavigate}
+        {...(isActive && activeTextStyle)}
         style={{
           padding: getStylePadding({
             padding,
@@ -63,7 +88,7 @@ export function LinkButton<
           width: '100%',
         }}
       >
-        {children ?? ''}
+        {getChildren(props, isActive)}
       </Link>
     )
   } else {
@@ -89,7 +114,7 @@ export function LinkButton<
         flexDirection={props.flexDirection ?? 'row'}
         flexWrap={props.flexWrap}
       >
-        {children ?? ''}
+        {getChildren(props, isActive)}
       </Text>
     )
   }
@@ -104,6 +129,7 @@ export function LinkButton<
         transform: [{ scale: 0.98 }],
       }}
       {...restProps}
+      {...(isActive && allProps.activeStyle)}
       className={`cursor-pointer ${props.className ?? 'ease-in-out-faster'}`}
     >
       {contents}

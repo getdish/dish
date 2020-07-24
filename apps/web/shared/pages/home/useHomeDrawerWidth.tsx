@@ -2,7 +2,7 @@ import { useWindowSize } from '@dish/ui'
 
 import { drawerWidthMax } from '../../constants'
 
-export function useHomeDrawerWidth(): number {
+export function useHomeDrawerWidth(max = drawerWidthMax): number {
   const [width] = useWindowSize()
   let scaleFactor = 0
   if (width < 1150) {
@@ -10,9 +10,9 @@ export function useHomeDrawerWidth(): number {
   } else if (width < 1350) {
     scaleFactor = 0.65
   } else {
-    scaleFactor = 0.65
+    scaleFactor = 0.6
   }
-  return Math.min(Math.max(650, width * scaleFactor), Infinity)
+  return Math.min(Math.max(100, width * scaleFactor), max)
 }
 
 export function useHomeDrawerWidthInner(): number {

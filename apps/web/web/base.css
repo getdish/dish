@@ -288,3 +288,7 @@ li::before {
   text-decoration: underline;
   text-decoration-color: rgba(150, 150, 150, 1);
 }
+
+.unselectable {
+  user-select: none;
+}

@@ -96,7 +96,7 @@ const HomeMapDataLoader = memo(
         ? { id: state.restaurantId, slug: state.restaurantSlug }
         : null
       const restaurantResults = (isSearchState(state)
-        ? state.results?.results?.restaurants ?? []
+        ? state.results
         : [restaurantDetailInfo]
       ).filter(Boolean)
 
@@ -206,7 +206,7 @@ const HomeMapContent = memo(function HomeMap({
   restaurants: Restaurant[] | null
 }) {
   const om = useOvermind()
-  const drawerWidth = useHomeDrawerWidth()
+  const drawerWidth = useHomeDrawerWidth(Infinity)
   const isSmall = useMediaQueryIsSmall()
   const state = om.state.home.currentState
   const { center, span } = state

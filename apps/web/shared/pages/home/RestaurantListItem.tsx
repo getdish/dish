@@ -91,7 +91,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       <VStack overflow="hidden" className="ease-in-out-fast" flex={1}>
         <RestaurantListItemContent {...props} />
       </VStack>
-      <AbsoluteVStack fullscreen top={14} zIndex={10} pointerEvents="none">
+      <AbsoluteVStack fullscreen top={-10} zIndex={10} pointerEvents="none">
         <RestaurantPeek
           restaurantSlug={props.restaurantSlug}
           searchState={props.searchState}
@@ -118,7 +118,7 @@ const RestaurantListItemContent = memo(
       }
     }, [restaurant.name])
 
-    const paddingTop = 30
+    const paddingTop = 25
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
 
     const curState = omStatic.state.home.currentState
@@ -138,7 +138,7 @@ const RestaurantListItemContent = memo(
           paddingHorizontal={pad + 6}
           width={isSmall ? '60%' : '100%'}
           minWidth={isSmall ? '50%' : 320}
-          maxWidth={isSmall ? '90vw' : '64%'}
+          maxWidth={isSmall ? '90vw' : '62%'}
           position="relative"
           overflow="hidden"
         >
@@ -184,7 +184,7 @@ const RestaurantListItemContent = memo(
                       selectable
                       maxWidth="100%"
                       fontSize={
-                        (isSmall ? 20 : 24) *
+                        (isSmall ? 20 : 22) *
                         (restaurantName.length > 20 ? 0.85 : 1)
                       }
                       fontWeight="600"
@@ -238,46 +238,52 @@ const RestaurantListItemContent = memo(
                       showMore={true}
                       restaurantSlug={restaurantSlug}
                     />
-                    <RestaurantLenseVote />
+                    <RestaurantLenseVote restaurantId={restaurantId} />
                   </HStack>
                 </VStack>
               </Link>
             </VStack>
 
-            <Spacer />
+            <Spacer size="sm" />
 
             {/* ROW: Overview / Reviews / Comment */}
-            <VStack flex={1} maxWidth="100%" overflow="hidden">
-              <VStack flex={1} paddingLeft={26}>
+            <VStack
+              flex={1}
+              maxWidth="100%"
+              overflow="hidden"
+              paddingBottom={10}
+              marginBottom={-10}
+            >
+              <VStack flex={1} paddingLeft={0}>
                 <Text fontSize={16} lineHeight={21}>
                   <Suspense fallback={<LoadingItems />}>
                     <RestaurantOverview />
                   </Suspense>
                 </Text>
               </VStack>
-              <Spacer />
+              <Spacer size="xs" />
               <Suspense fallback={<LoadingItems />}>
                 <RestaurantTopReviews
                   restaurantId={restaurantId}
                   afterTopCommentButton={
                     // comments
-                    <HStack
-                      flex={1}
-                      spacing
-                      alignItems="center"
-                      flexWrap="wrap"
-                    >
-                      <Suspense fallback={null}>
+                    <Suspense fallback={null}>
+                      <HStack
+                        flex={1}
+                        spacing
+                        alignItems="center"
+                        flexWrap="wrap"
+                      >
                         <RestaurantDeliveryButton
                           restaurantSlug={restaurantSlug}
                         />
-                        <Spacer size={8} />
+                        <VStack flex={1} />
                         <RestaurantDetailRow
                           size="sm"
                           restaurantSlug={restaurantSlug}
                         />
-                      </Suspense>
-                    </HStack>
+                      </HStack>
+                    </Suspense>
                   }
                 />
               </Suspense>
@@ -317,12 +323,13 @@ const RestaurantPeek = memo(
       tag_names,
       max: 5,
     })
-    const dishSize = size === 'lg' ? 200 : 150
+    const dishSize = size === 'lg' ? 150 : 140
     const [isLoaded, setIsLoaded] = useState(false)
+    const paddingLeftSmall =
+      (0.75 + (1 / (drawerWidth / 950 + 0.0001)) * 0.1) * drawerWidth
+    console.log('paddingLeftSmall', paddingLeftSmall)
     const paddingLeft =
-      (drawerWidth > 820 ? 0.6 : drawerWidth < 600 ? 0.8 : 0.7) * drawerWidth
-
-    // console.log('peek', { drawerWidth, paddingLeft })
+      drawerWidth < 600 ? paddingLeftSmall : 0.65 * drawerWidth
 
     return (
       <HomeScrollViewHorizontal
@@ -341,6 +348,8 @@ const RestaurantPeek = memo(
           marginRight={-spacing}
           marginBottom={-spacing}
           paddingLeft={paddingLeft}
+          // className="ease-in-out"
+          contain="paint layout"
         >
           <HStack
             pointerEvents="auto"

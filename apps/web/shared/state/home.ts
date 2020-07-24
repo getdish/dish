@@ -426,10 +426,6 @@ const runSearch: AsyncAction<{
     return
   }
 
-  if (!opts?.quiet) {
-    om.actions.home.clearSearchResults()
-  }
-
   // fetch
   let restaurants = await search(searchArgs)
   if (shouldCancel()) return
@@ -440,30 +436,11 @@ const runSearch: AsyncAction<{
   if (!state) return
 
   console.log('search found restaurants', restaurants)
-  state.results = {
-    status: 'complete',
-    results: {
-      restaurants: restaurants.filter(Boolean),
-      dishes: [],
-      locations: [],
-    },
-  }
+  state.status = 'complete'
+  state.results = restaurants.filter(Boolean)
 
   // overmind seems unhappy to just let us mutate
   om.actions.home.updateHomeState(state)
-}
-
-const defaultSearchResults = {
-  results: { restaurants: [], locations: [], dishes: [] },
-  status: 'loading' as const,
-}
-
-const clearSearchResults: Action = (om) => {
-  const state = om.state.home.lastSearchState
-  if (state) {
-    state.hasMovedMap = false
-    state.results = defaultSearchResults
-  }
 }
 
 const deepAssign = (a: Object, b: Object) => {
@@ -742,7 +719,8 @@ const pushHomeState: AsyncAction<
       const searchQuery = item.params.search ?? base.searchQuery
       nextState = {
         hasMovedMap: false,
-        results: { status: 'loading' },
+        status: 'loading',
+        results: [],
         username,
         activeTagIds,
         searchQuery,
@@ -1147,13 +1125,15 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     (isSearchState(curState) && nextType === 'search')
   ) {
     om.state.home.isOptimisticUpdating = true
+    om.state.home.isLoading = true
     // optimistic update active tags
     om.actions.home.updateActiveTags({
       id: curState.id,
       type: curState.type as any,
       searchQuery: nextState.searchQuery,
       activeTagIds: nextState.activeTagIds,
-      results: defaultSearchResults,
+      status: 'loading',
+      results: [],
     })
     await sleep(40)
     await idle(30)
@@ -1233,5 +1213,4 @@ export const actions = {
   updateHomeState,
   navigate,
   moveMapToUserLocation,
-  clearSearchResults,
 }

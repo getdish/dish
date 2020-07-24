@@ -39,16 +39,16 @@ export const RatingView = forwardRef(
 
     const bgColor = 'rgba(255,255,255,0.3)'
 
-    const emoji = (
-      <Text
-        fontSize={Math.max(sizeIn === 'xs' ? 12 : 14, size * 0.4)}
-        marginTop={size < 43 ? 0 : -size * 0.13}
-        textShadowColor="rgba(0,0,0,0.25)"
-        textShadowRadius={size * 0.015}
-      >
-        {percent >= 0.9 ? '💎' : '⭐️'}
-      </Text>
-    )
+    // const emoji = (
+    //   <Text
+    //     fontSize={Math.max(sizeIn === 'xs' ? 12 : 14, size * 0.4)}
+    //     marginTop={size < 43 ? 0 : -size * 0.13}
+    //     textShadowColor="rgba(0,0,0,0.25)"
+    //     textShadowRadius={size * 0.015}
+    //   >
+    //     {percent >= 0.9 ? '♥️' : '⭐️'}
+    //   </Text>
+    // )
 
     const ranking = percent * 10
     const rankingPre = Math.floor(ranking / 10)
@@ -107,7 +107,7 @@ export const RatingView = forwardRef(
         height={size}
         {...rest}
       >
-        {!hideEmoji && percent >= 7 && (
+        {/* {!hideEmoji && percent >= 7 && (
           <VStack
             position="absolute"
             top={badgeOffset * size}
@@ -118,7 +118,7 @@ export const RatingView = forwardRef(
           >
             {emoji}
           </VStack>
-        )}
+        )} */}
         <VStack
           backgroundColor={bgColor}
           borderRadius={100}
