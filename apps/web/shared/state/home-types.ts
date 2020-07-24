@@ -62,19 +62,6 @@ export type GeocodePlace = mapkit.Place & {
 
 export type ShowAutocomplete = 'search' | 'location' | false
 
-type SearchResultsResults = {
-  restaurants: { id: string; slug: string }[]
-  dishes: string[]
-  locations: string[]
-}
-
-export type SearchResults =
-  | { status: 'loading'; results?: SearchResultsResults }
-  | {
-      status: 'complete'
-      results: SearchResultsResults
-    }
-
 export type LngLat = { lng: number; lat: number }
 
 export type HomeStateItemBase = {
@@ -115,7 +102,8 @@ export type HomeStateItemAbout = HomeStateItemBase & {
 export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search' | 'userSearch'
   activeTagIds: HomeActiveTagIds
-  results: SearchResults
+  status: 'loading' | 'complete'
+  results: { id: string; slug: string }[]
   // for not forcing map to be always synced
   searchedCenter?: LngLat
   searchedSpan?: LngLat

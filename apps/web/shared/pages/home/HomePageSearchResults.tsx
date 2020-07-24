@@ -10,6 +10,7 @@ import {
   useDebounce,
   useDebounceValue,
 } from '@dish/ui'
+import { pick } from 'lodash'
 import React, {
   Suspense,
   SuspenseList,
@@ -78,7 +79,6 @@ export default memo(function HomePageSearchResults(props: Props) {
   // )
 
   const isOptimisticUpdating = om.state.home.isOptimisticUpdating
-  const wasOptimisticUpdating = useDebounceValue(isOptimisticUpdating, 100)
 
   const titleElements = useMemo(() => {
     return (
@@ -93,17 +93,23 @@ export default memo(function HomePageSearchResults(props: Props) {
     )
   }, [subTitle, pageTitleElements])
 
-  const changingFilters = state.results.status === 'loading'
+  const changingFilters = state.status === 'loading'
   const shouldAvoidContentUpdates =
     isOptimisticUpdating ||
     props.isRemoving ||
     !props.isActive ||
     changingFilters
 
-  const content = useLastValueWhen(() => {
-    const key = JSON.stringify(state)
+  const key = JSON.stringify(pick(state, 'status', 'id', 'results'))
+  console.log('state', state, key)
+  const contentInner = useMemo(() => {
     return <SearchResultsContent key={key} {...props} item={state} />
-  }, shouldAvoidContentUpdates)
+  }, [key])
+
+  const content = useLastValueWhen(
+    () => contentInner,
+    shouldAvoidContentUpdates
+  )
 
   return (
     <HomeStackDrawer title={title} closable>
@@ -196,7 +202,7 @@ const SearchResultsContent = memo((props: Props) => {
   })
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const perChunk = [3, 3, 6, 12, 12]
-  const allResults = searchState.results?.results?.restaurants ?? []
+  const allResults = searchState.results
   const currentlyShowing = Math.min(
     allResults.length,
     state.chunk *
@@ -259,12 +265,10 @@ const SearchResultsContent = memo((props: Props) => {
 
   const isOnLastChunk = currentlyShowing === allResults.length
   const isLoading =
-    searchState.results.status === 'loading' ||
-    (searchState.results?.results.restaurants?.length === 0
+    searchState.status === 'loading' ||
+    (searchState.results.length === 0
       ? false
-      : !isOnLastChunk ||
-        !searchState.results?.results ||
-        state.hasLoaded <= state.chunk)
+      : !isOnLastChunk || state.hasLoaded <= state.chunk)
 
   // console.log(
   //   'SearchResults',

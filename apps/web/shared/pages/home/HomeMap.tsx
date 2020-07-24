@@ -96,7 +96,7 @@ const HomeMapDataLoader = memo(
         ? { id: state.restaurantId, slug: state.restaurantSlug }
         : null
       const restaurantResults = (isSearchState(state)
-        ? state.results?.results?.restaurants ?? []
+        ? state.results
         : [restaurantDetailInfo]
       ).filter(Boolean)
 
