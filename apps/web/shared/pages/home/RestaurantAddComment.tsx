@@ -1,13 +1,5 @@
 import { User as UserModel, graphql, mutation } from '@dish/graph'
-import {
-  Circle,
-  HStack,
-  SmallButtonProps,
-  StackProps,
-  Text,
-  Toast,
-  VStack,
-} from '@dish/ui'
+import { Circle, HStack, StackProps, Text, Toast, VStack } from '@dish/ui'
 import { isUndefined } from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
 import { MessageSquare, User } from 'react-feather'
@@ -17,35 +9,37 @@ import { bgLight } from '../../colors'
 import { useOvermind } from '../../state/useOvermind'
 import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { SmallButton } from '../../views/ui/SmallButton'
+import { SmallButton, SmallButtonProps } from '../../views/ui/SmallButton'
 import { flatButtonStyleSelected } from './baseButtonStyle'
 import { RestaurantReview } from './RestaurantReview'
-import { useUserReview, useUserReviews } from './useUserReview'
+import { useUserReview } from './useUserReview'
 
-export const RestaurantAddCommentButton = ({
-  restaurantId,
-  ...props
-}: SmallButtonProps & { restaurantId?: string }) => {
-  const review = useUserReview(restaurantId)
-  return (
-    <SmallButton
-      pressStyle={{
-        opacity: 0.6,
-      }}
-      {...props}
-    >
-      <MessageSquare
-        size={16}
-        color="#000"
-        style={{
-          margin: -4,
-          marginRight: 5,
+export const RestaurantAddCommentButton = graphql(
+  ({
+    restaurantId,
+    ...props
+  }: SmallButtonProps & { restaurantId?: string }) => {
+    const review = useUserReview(restaurantId)
+    return (
+      <SmallButton
+        pressStyle={{
+          opacity: 0.6,
         }}
-      />
-      {review?.text ? 'Edit review' : 'Add review'}
-    </SmallButton>
-  )
-}
+        {...props}
+      >
+        <MessageSquare
+          size={16}
+          color="#000"
+          style={{
+            margin: -4,
+            marginRight: 5,
+          }}
+        />
+        {review?.text ? 'Edit review' : 'Add review'}
+      </SmallButton>
+    )
+  }
+)
 
 export const RestaurantAddComment = memo(
   graphql(({ restaurantId }: { restaurantId: string }) => {

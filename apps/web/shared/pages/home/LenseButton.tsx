@@ -34,7 +34,7 @@ export const LenseButton = memoIsEqualDeep(
         zIndex={isActive ? 1 : 0}
       >
         <VStack
-          className="test123 ease-in-out-fast"
+          className="ease-in-out"
           alignItems="center"
           justifyContent="center"
           marginVertical={-5 * scale}
@@ -46,15 +46,15 @@ export const LenseButton = memoIsEqualDeep(
           borderWidth={1}
           borderBottomColor="transparent"
           {...(isActive && {
-            opacity: 1,
             borderColor: lenseColor,
-            transform: [{ scale: 1.15 }],
+            transform: [{ scale: 1.2 }],
             hoverStyle: {
               transform: [{ scale: 1.15 }],
             },
           })}
         >
           <Text
+            className="ease-in-out"
             fontSize={sizePx * (isActive ? 0.7 : 0.5) * scale}
             lineHeight={sizePx * scale}
             fontWeight="400"
@@ -63,6 +63,7 @@ export const LenseButton = memoIsEqualDeep(
             {(lense.icon ?? '').trim()}
           </Text>
           <VStack
+            className="ease-in-out"
             transform={[{ rotate: '-10deg' }]}
             zIndex={100}
             alignItems="center"

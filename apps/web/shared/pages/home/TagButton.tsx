@@ -1,10 +1,4 @@
-import {
-  NonNullObject,
-  Tag,
-  TagType,
-  reviewUpsert,
-  tagUpsert,
-} from '@dish/graph'
+import { NonNullObject, Tag, TagType } from '@dish/graph'
 import {
   HStack,
   Spacer,
@@ -21,7 +15,7 @@ import { ThumbsUp, X } from 'react-feather'
 import { Image } from 'react-native'
 
 import { bgLight } from '../../colors'
-import { tagDisplayNames } from '../../state/Tag'
+import { getTagId, tagDisplayNames } from '../../state/Tag'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { useUserUpvoteDownvote } from './useUserReview'
@@ -254,10 +248,10 @@ export const TagButton = memo((props: TagButtonProps) => {
 const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   const { scale, subtle } = props
   const [vote, setVote] = useUserUpvoteDownvote(props.restaurantId, {
-    [props.name]: true,
+    [getTagId(props)]: true,
   })
   return (
-    <LinkButton
+    <VStack
       paddingHorizontal={5 * scale}
       alignItems="center"
       justifyContent="center"
@@ -268,21 +262,20 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
         marginLeft: 4,
         overflow: 'hidden',
       })}
-      opacity={subtle ? 0.2 : 0.5}
+      opacity={subtle ? 0.3 : 0.6}
       hoverStyle={{
         opacity: 1,
       }}
-      asyncClick={false}
-      onPress={(e) => {
-        debugger
+      onPressIn={prevent}
+      onPressOut={(e) => {
         prevent(e)
         setVote(vote == 1 ? 0 : 1)
       }}
     >
       <ThumbsUp
-        size={10 * scale}
+        size={12 * scale}
         color={subtle ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)'}
       />
-    </LinkButton>
+    </VStack>
   )
 }

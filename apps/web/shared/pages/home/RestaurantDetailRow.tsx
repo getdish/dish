@@ -30,7 +30,12 @@ export const RestaurantDetailRow = memo(
         !isSm && {
           title: 'Delivers',
           content: (
-            <RestaurantDeliveryButton inline restaurantSlug={restaurantSlug} />
+            <HStack>
+              <RestaurantDeliveryButton
+                inline
+                restaurantSlug={restaurantSlug}
+              />
+            </HStack>
           ),
           color: 'gray',
         },

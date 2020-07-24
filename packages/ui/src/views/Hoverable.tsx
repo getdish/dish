@@ -35,7 +35,7 @@ export function Hoverable({
     onMouseLeave: onHoverOut,
     onMouseMove: onHoverMove,
     onMouseDown: onPressIn,
-    onMouseUp: onPressOut,
+    onClick: onPressOut,
     // prevent hover showing while responder
     // onResponderGrant: () => setShowHover(false),
     // onResponderRelease: () => setShowHover(true),

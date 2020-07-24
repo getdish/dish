@@ -201,6 +201,7 @@ const RestaurantListItemContent = memo(
                           marginRight={10}
                           borderBottomColor="transparent"
                           borderBottomWidth={2}
+                          fontWeight="400"
                           // @ts-ignore
                           hoverStyle={{
                             borderBottomColor: '#f2f2f2',
@@ -235,8 +236,9 @@ const RestaurantListItemContent = memo(
                     <Spacer size={6} />
                     <RestaurantTagsRow
                       subtle
-                      showMore={true}
+                      showMore
                       restaurantSlug={restaurantSlug}
+                      restaurantId={restaurantId}
                     />
                     <RestaurantLenseVote restaurantId={restaurantId} />
                   </HStack>

@@ -136,7 +136,7 @@ const HomePageGalleryContent = memo(
           paddingBottom={10}
           borderTopColor={'#eee'}
           borderTopWidth={1}
-          shadowColor="rgba(0,0,0,0.4)"
+          shadowColor="rgba(0,0,0,0.1)"
           shadowRadius={30}
         >
           <VStack>

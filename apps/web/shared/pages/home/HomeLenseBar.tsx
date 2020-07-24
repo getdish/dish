@@ -1,4 +1,4 @@
-import { HStack, Spacer } from '@dish/ui'
+import { Spacer } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { HomeActiveTagIds } from '../../state/home'

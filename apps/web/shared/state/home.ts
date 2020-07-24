@@ -247,12 +247,13 @@ const loadPageSearch: AsyncAction = async (om) => {
     const tags = await getFullTags(fakeTags)
     console.timeEnd('getFullTags')
     om.actions.home.addTagsToCache(tags)
+    const activeTagIds: HomeActiveTagIds = tags.reduce<any>((acc, tag) => {
+      acc[getTagId(tag)] = true
+      return acc
+    }, {})
     om.actions.home.updateActiveTags({
       ...state,
-      activeTagIds: tags.reduce<any>((acc, tag) => {
-        acc[getTagId(tag)] = true
-        return acc
-      }, {}),
+      activeTagIds,
     })
   }
 
@@ -706,10 +707,18 @@ const pushHomeState: AsyncAction<
     // search or userSearch
     case 'userSearch':
     case 'search': {
-      const lastHomeOrSearch = _.findLast(
-        om.state.home.states,
-        (x) => isHomeState(x) || isSearchState(x)
-      ) as HomeStateItemHome | HomeStateItemSearch
+      let lastHomeOrSearch: HomeStateItemHome | HomeStateItemSearch = null
+      for (const id of _.reverse([...om.state.home.stateIds])) {
+        const state = om.state.home.allStates[id]
+        if (isHomeState(state) || isSearchState(state)) {
+          lastHomeOrSearch = state
+          break
+        }
+      }
+      if (!lastHomeOrSearch) {
+        debugger
+        throw new Error('unreachable')
+      }
 
       // use last home or search to get most up to date
       activeTagIds = lastHomeOrSearch.activeTagIds
@@ -761,6 +770,10 @@ const pushHomeState: AsyncAction<
     type,
     id: item.id ?? uid(),
   } as HomeStateItem
+
+  if (finalState.id === '0' && type !== 'home') {
+    debugger
+  }
 
   async function runFetchData() {
     if (!fetchData) {
@@ -998,6 +1011,9 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
       id: state.id,
     }
     console.log('updating active tags...', nextState)
+    if (nextState.activeTagIds['here']) {
+      debugger
+    }
     om.actions.home.updateHomeState(nextState)
   } catch (err) {
     handleAssertionError(err)

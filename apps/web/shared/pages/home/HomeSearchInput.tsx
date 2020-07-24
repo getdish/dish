@@ -1,5 +1,13 @@
 import { fullyIdle, idle, series } from '@dish/async'
-import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from '@dish/ui'
+import {
+  HStack,
+  Spacer,
+  Toast,
+  VStack,
+  useDebounce,
+  useGet,
+  useOnMount,
+} from '@dish/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { Loader, Search } from 'react-feather'
 import { StyleSheet, TextInput } from 'react-native'
@@ -43,9 +51,10 @@ const placeHolder = `${
 }`
 
 // avoid first one on iniital focus
-let avoidNextShowautocompleteOnFocus = true
+let avoidNextFocus = true
 export function setAvoidNextAutocompleteShowOnFocus() {
-  avoidNextShowautocompleteOnFocus = true
+  avoidNextFocus = true
+  console.log('avoid next')
 }
 
 export const onFocusAnyInput = () => {
@@ -76,12 +85,21 @@ export const HomeSearchInput = memo(() => {
     series([
       () => fullyIdle({ max: 1000 }),
       () => {
-        const input = inputGetNode(inputRef.current)
-        console.log('ficus inptu')
-        input?.focus()
+        focusSearchInput()
       },
     ])
   })
+
+  useEffect(() => {
+    const onFocus = () => {
+      setAvoidNextAutocompleteShowOnFocus()
+      focusSearchInput()
+    }
+    window.addEventListener('focus', onFocus)
+    return () => {
+      window.removeEventListener('focus', onFocus)
+    }
+  }, [])
 
   // one way sync down for more perf
   useEffect(() => {
@@ -102,7 +120,7 @@ export const HomeSearchInput = memo(() => {
       if (document.activeElement !== input) {
         if (e.keyCode == 191) {
           // forward-slash (/)
-          input.focus()
+          focusSearchInput()
         }
       }
     }
@@ -146,7 +164,18 @@ export const HomeSearchInput = memo(() => {
     }
   }, [inputRef.current])
 
+  const handleFocus = useDebounce(() => {
+    onFocusAnyInput()
+    console.log('avoidNextFocus', avoidNextFocus)
+    if (avoidNextFocus) {
+      avoidNextFocus = false
+    } else {
+      om.actions.home.setShowAutocomplete('search')
+    }
+  }, 100)
+
   const input = inputGetNode(inputRef.current)
+
   return (
     <HomeAutocompleteHoverableInput input={input} autocompleteTarget="search">
       <HStack
@@ -169,7 +198,7 @@ export const HomeSearchInput = memo(() => {
                 color="#fff"
                 size={18}
                 opacity={0.6}
-                onClick={() => input?.focus()}
+                onClick={focusSearchInput}
               />
             )}
           </>
@@ -179,16 +208,9 @@ export const HomeSearchInput = memo(() => {
           ref={inputRef}
           // leave uncontrolled for perf?
           value={search}
-          onFocus={() => {
-            onFocusAnyInput()
-            if (avoidNextShowautocompleteOnFocus) {
-              avoidNextShowautocompleteOnFocus = false
-            } else {
-              om.actions.home.setShowAutocomplete('search')
-            }
-          }}
+          onFocus={handleFocus}
           onBlur={() => {
-            avoidNextShowautocompleteOnFocus = false
+            avoidNextFocus = false
           }}
           onChangeText={(text) => {
             if (getSearch() == '' && text !== '') {
@@ -359,13 +381,18 @@ function searchInputEffect(input: HTMLInputElement) {
       om.actions.home.setShowAutocomplete('search')
     }
   }
+  const hideAutocomplete = () => {
+    om.actions.home.setShowAutocomplete(false)
+  }
   input.addEventListener('keydown', handleKeyPress)
   input.addEventListener('click', handleClick)
   input.addEventListener('focus', showAutocomplete)
+  input.addEventListener('blur', hideAutocomplete)
   return () => {
     input.removeEventListener('keydown', handleKeyPress)
     input.removeEventListener('click', handleClick)
     input.removeEventListener('focus', showAutocomplete)
+    input.removeEventListener('blur', hideAutocomplete)
   }
 }
 
@@ -423,7 +450,7 @@ const HomeSearchBarTags = memo(
                     om.actions.home.navigate({ tags: [tag] })
                     await fullyIdle()
                     setAvoidNextAutocompleteShowOnFocus()
-                    input?.focus()
+                    focusSearchInput()
                   }}
                 />
               )

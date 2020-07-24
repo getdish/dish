@@ -169,67 +169,69 @@ const createStack = (defaultStyle?: ViewStyle) => {
       )
 
       if (attachHover || attachPress) {
-        content = (
-          <Hoverable
-            {...(!!(attachHover || attachPress) && {
-              onHoverIn: () => {
-                let next = { ...state }
-                if (attachHover) {
-                  next.hover = true
-                  onHoverIn?.()
-                  onMouseEnter?.()
+        content = React.cloneElement(content, {
+          onMouseEnter:
+            attachHover || attachPress
+              ? () => {
+                  let next = { ...state }
+                  if (attachHover) {
+                    next.hover = true
+                    onHoverIn?.()
+                    onMouseEnter?.()
+                  }
+                  if (state.pressIn) {
+                    next.press = true
+                  }
+                  set(next)
                 }
-                if (state.pressIn) {
-                  next.press = true
+              : null,
+          onMouseLeave:
+            attachHover || attachPress
+              ? () => {
+                  let next = { ...state }
+                  mouseUps.add(() => {
+                    if (!isMounted.current) return
+                    set((x) => ({
+                      ...x,
+                      press: false,
+                      pressIn: false,
+                    }))
+                  })
+                  if (attachHover) {
+                    next.hover = false
+                    onHoverOut?.()
+                    onMouseLeave?.()
+                  }
+                  if (state.pressIn) {
+                    next.press = false
+                  }
+                  set(next)
                 }
-                set(next)
-              },
-              onHoverOut: () => {
-                let next = { ...state }
-                mouseUps.add(() => {
-                  if (!isMounted.current) return
-                  set((x) => ({
-                    ...x,
-                    press: false,
-                    pressIn: false,
-                  }))
-                })
-                if (attachHover) {
-                  next.hover = false
-                  onHoverOut?.()
-                  onMouseLeave?.()
-                }
-                if (state.pressIn) {
-                  next.press = false
-                }
-                set(next)
-              },
-            })}
-            {...(!!attachPress && {
-              onPressIn: (e) => {
+              : null,
+          onMouseDown: attachPress
+            ? (e) => {
                 e.preventDefault()
+                onPressIn?.(e)
                 set({
                   ...state,
                   press: true,
                   pressIn: true,
                 })
-                onPressIn?.(e)
-              },
-              onPressOut: (e) => {
+              }
+            : null,
+          onMouseUp: attachPress
+            ? (e) => {
                 e.preventDefault()
+                onPressOut?.(e)
+                onPress?.(e)
                 set({
                   ...state,
                   press: false,
                   pressIn: false,
                 })
-                onPressOut?.(e)
-                onPress?.(e)
-              },
-            })}
-          >
-            {content}
-          </Hoverable>
-        )
+              }
+            : null,
+        })
       }
 
       return content

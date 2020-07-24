@@ -52,7 +52,7 @@ const HomePageRestaurant = memo(
     //     om.state.user.user.role == 'contributor')
 
     return (
-      <VStack>
+      <VStack flex={1} overflow="hidden">
         <PageTitleTag>
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
@@ -94,7 +94,11 @@ const HomePageRestaurant = memo(
 
               <Spacer size="xl" />
 
-              <RestaurantTagsRow size="sm" restaurantSlug={slug} />
+              <RestaurantTagsRow
+                size="sm"
+                restaurantSlug={slug}
+                restaurantId={restaurant.id}
+              />
 
               <Spacer size="xl" />
 
@@ -144,6 +148,9 @@ const HomePageRestaurant = memo(
               </VStack> */}
             </VStack>
           </VStack>
+
+          {/* bottom space */}
+          <VStack height={200} />
         </HomeScrollView>
       </VStack>
     )
@@ -168,6 +175,7 @@ const RestaurantMenu = memo(
               height={isExpanded ? 'auto' : 60}
               overflow="hidden"
               spacing={3}
+              flexWrap="wrap"
             >
               {items.slice(0, isExpanded ? Infinity : 4).map((item, i) => (
                 <VStack
