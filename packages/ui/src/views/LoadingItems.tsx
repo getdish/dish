@@ -3,7 +3,7 @@ import React, { useRef } from 'react'
 import { HStack, VStack } from './Stacks'
 
 export const LoadingItems = () => (
-  <VStack spacing="lg">
+  <VStack spacing="sm">
     <LoadingItem />
     <LoadingItem />
     <LoadingItem />
@@ -15,7 +15,7 @@ const seed = Math.max(3, Math.min(6, Math.round(Math.random() * 10)))
 
 export const LoadingItem = () => {
   return (
-    <VStack overflow="hidden" className="shine" padding={20} spacing={10}>
+    <VStack overflow="hidden" className="shine" padding={20} spacing={6}>
       <HStack
         width={`${seed * 12}%`}
         height={26}
