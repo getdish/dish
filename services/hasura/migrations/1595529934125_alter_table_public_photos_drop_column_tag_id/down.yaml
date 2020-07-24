@@ -1,0 +1,16 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."photos" ADD COLUMN "tag_id" uuid;
+  type: run_sql
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."photos" ALTER COLUMN "tag_id" DROP NOT NULL;
+  type: run_sql
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."photos" ADD CONSTRAINT photos_tag_id_fkey FOREIGN KEY
+      (tag_id) REFERENCES "public"."tag" (id) ON DELETE cascade ON UPDATE cascade;
+  type: run_sql

@@ -7,4 +7,5 @@ export async function flushTestData() {
   await deleteAllFuzzyBy('user', 'username', 'test')
   await deleteAllFuzzyBy('menu_item', 'name', 'Test')
   await deleteAllFuzzyBy('restaurant', 'name', 'Test')
+  await deleteAllFuzzyBy('photo', 'url', 'imgur.com')
 }

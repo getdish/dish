@@ -1,7 +1,8 @@
 import {
   menu_item,
   mutation_root,
-  photos,
+  photo,
+  photo_xref,
   restaurant,
   restaurant_tag,
   review,
@@ -40,7 +41,8 @@ export interface ReviewQuery extends review {}
 export interface MenuItemQuery extends menu_item {}
 export interface ScrapeQuery extends scrape {}
 export interface SettingQuery extends setting {}
-export interface PhotosQuery extends photos {}
+export interface PhotoBaseQuery extends photo {}
+export interface PhotoXrefQuery extends photo_xref {}
 
 // SECTION 1
 // this flattens them to a partial of all resolved values, minus sub-nodes
@@ -54,7 +56,8 @@ export interface Review extends FlatResolvedModel<ReviewQuery> {}
 export interface MenuItem extends FlatResolvedModel<MenuItemQuery> {}
 export interface Scrape extends FlatResolvedModel<ScrapeQuery> {}
 export interface Setting extends FlatResolvedModel<SettingQuery> {}
-export interface Photos extends FlatResolvedModel<PhotosQuery> {}
+export interface PhotoBase extends FlatResolvedModel<PhotoBaseQuery> {}
+export interface PhotoXref extends FlatResolvedModel<PhotoXrefQuery> {}
 
 // SECTION 3
 // this just adds a requirement on the id being present, for things like update()
@@ -79,7 +82,8 @@ export type ModelType =
   | User
   | Review
   | MenuItem
-  | Photos
+  | PhotoBase
+  | PhotoXref
   | Setting
   | Scrape
 

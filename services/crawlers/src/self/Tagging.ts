@@ -1,5 +1,5 @@
 import {
-  Photos,
+  PhotoXref,
   RestaurantTag,
   Tag,
   convertSimpleTagsToRestaurantTags,
@@ -137,7 +137,7 @@ export class Tagging {
     const all_possible_tags = await restaurantGetAllPossibleTags(
       this.crawler.restaurant
     )
-    const all_tag_photos: Photos[] = []
+    const all_tag_photos: PhotoXref[] = []
     if (this.crawler.yelp?.data) {
       const photos = this.crawler.getPaginatedData(
         this.crawler.yelp?.data,
@@ -156,7 +156,9 @@ export class Tagging {
             all_tag_photos.push({
               restaurant_id: this.crawler.restaurant.id,
               tag_id: tag.id,
-              url: photo.src,
+              photo: {
+                url: photo.src,
+              },
             })
           }
         }

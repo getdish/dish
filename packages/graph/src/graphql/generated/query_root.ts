@@ -18,12 +18,17 @@ import {
   t_opening_hours_aggregate,
 } from './opening_hours'
 import {
-  photos_bool_exp,
-  photos_order_by,
-  photos_select_column,
-  t_photos,
-  t_photos_aggregate,
-} from './photos'
+  photo_bool_exp,
+  photo_order_by,
+  photo_select_column,
+  photo_xref_bool_exp,
+  photo_xref_order_by,
+  photo_xref_select_column,
+  t_photo,
+  t_photo_aggregate,
+  t_photo_xref,
+  t_photo_xref_aggregate,
+} from './photo'
 import {
   restaurant_bool_exp,
   restaurant_order_by,
@@ -128,27 +133,48 @@ export type t_query_root = FieldsType<
       t_opening_hours_aggregate
     >
     opening_hours_by_pk?: FieldsTypeArg<{ id: any }, t_opening_hours | null>
-    photos: FieldsTypeArg<
+    photo: FieldsTypeArg<
       {
-        distinct_on?: photos_select_column[] | null
+        distinct_on?: photo_select_column[] | null
         limit?: number | null
         offset?: number | null
-        order_by?: photos_order_by[] | null
-        where?: photos_bool_exp | null
+        order_by?: photo_order_by[] | null
+        where?: photo_bool_exp | null
       },
-      t_photos[]
+      t_photo[]
     >
-    photos_aggregate: FieldsTypeArg<
+    photo_aggregate: FieldsTypeArg<
       {
-        distinct_on?: photos_select_column[] | null
+        distinct_on?: photo_select_column[] | null
         limit?: number | null
         offset?: number | null
-        order_by?: photos_order_by[] | null
-        where?: photos_bool_exp | null
+        order_by?: photo_order_by[] | null
+        where?: photo_bool_exp | null
       },
-      t_photos_aggregate
+      t_photo_aggregate
     >
-    photos_by_pk?: FieldsTypeArg<{ id: any }, t_photos | null>
+    photo_by_pk?: FieldsTypeArg<{ id: any }, t_photo | null>
+    photo_xref: FieldsTypeArg<
+      {
+        distinct_on?: photo_xref_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: photo_xref_order_by[] | null
+        where?: photo_xref_bool_exp | null
+      },
+      t_photo_xref[]
+    >
+    photo_xref_aggregate: FieldsTypeArg<
+      {
+        distinct_on?: photo_xref_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: photo_xref_order_by[] | null
+        where?: photo_xref_bool_exp | null
+      },
+      t_photo_xref_aggregate
+    >
+    photo_xref_by_pk?: FieldsTypeArg<{ id: any }, t_photo_xref | null>
     restaurant: FieldsTypeArg<
       {
         distinct_on?: restaurant_select_column[] | null

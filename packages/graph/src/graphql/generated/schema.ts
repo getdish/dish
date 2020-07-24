@@ -1353,13 +1353,13 @@ export const schema = {
             true
           )
         },
-        get delete_photos() {
+        get delete_photo() {
           return new FieldNode(
-            schema.photos_mutation_response,
+            schema.photo_mutation_response,
             new Arguments(
               {
                 get where() {
-                  return new ArgumentsField(schema.photos_bool_exp, false)
+                  return new ArgumentsField(schema.photo_bool_exp, false)
                 },
               },
               true
@@ -1367,9 +1367,37 @@ export const schema = {
             true
           )
         },
-        get delete_photos_by_pk() {
+        get delete_photo_by_pk() {
           return new FieldNode(
-            schema.photos,
+            schema.photo,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get delete_photo_xref() {
+          return new FieldNode(
+            schema.photo_xref_mutation_response,
+            new Arguments(
+              {
+                get where() {
+                  return new ArgumentsField(schema.photo_xref_bool_exp, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get delete_photo_xref_by_pk() {
+          return new FieldNode(
+            schema.photo_xref,
             new Arguments(
               {
                 get id() {
@@ -1685,32 +1713,63 @@ export const schema = {
             true
           )
         },
-        get insert_photos() {
+        get insert_photo() {
           return new FieldNode(
-            schema.photos_mutation_response,
+            schema.photo_mutation_response,
             new Arguments({
               get objects() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.photos_insert_input, false),
+                  new ArrayNode(schema.photo_insert_input, false),
                   false
                 )
               },
               get on_conflict() {
-                return new ArgumentsField(schema.photos_on_conflict, true)
+                return new ArgumentsField(schema.photo_on_conflict, true)
               },
             }),
             true
           )
         },
-        get insert_photos_one() {
+        get insert_photo_one() {
           return new FieldNode(
-            schema.photos,
+            schema.photo,
             new Arguments({
               get object() {
-                return new ArgumentsField(schema.photos_insert_input, false)
+                return new ArgumentsField(schema.photo_insert_input, false)
               },
               get on_conflict() {
-                return new ArgumentsField(schema.photos_on_conflict, true)
+                return new ArgumentsField(schema.photo_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get insert_photo_xref() {
+          return new FieldNode(
+            schema.photo_xref_mutation_response,
+            new Arguments({
+              get objects() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.photo_xref_insert_input, false),
+                  false
+                )
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.photo_xref_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get insert_photo_xref_one() {
+          return new FieldNode(
+            schema.photo_xref,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(schema.photo_xref_insert_input, false)
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.photo_xref_on_conflict, true)
               },
             }),
             true
@@ -2041,35 +2100,66 @@ export const schema = {
             true
           )
         },
-        get update_photos() {
+        get update_photo() {
           return new FieldNode(
-            schema.photos_mutation_response,
+            schema.photo_mutation_response,
             new Arguments({
               get _inc() {
-                return new ArgumentsField(schema.photos_inc_input, true)
+                return new ArgumentsField(schema.photo_inc_input, true)
               },
               get _set() {
-                return new ArgumentsField(schema.photos_set_input, true)
+                return new ArgumentsField(schema.photo_set_input, true)
               },
               get where() {
-                return new ArgumentsField(schema.photos_bool_exp, false)
+                return new ArgumentsField(schema.photo_bool_exp, false)
               },
             }),
             true
           )
         },
-        get update_photos_by_pk() {
+        get update_photo_by_pk() {
           return new FieldNode(
-            schema.photos,
+            schema.photo,
             new Arguments({
               get _inc() {
-                return new ArgumentsField(schema.photos_inc_input, true)
+                return new ArgumentsField(schema.photo_inc_input, true)
               },
               get _set() {
-                return new ArgumentsField(schema.photos_set_input, true)
+                return new ArgumentsField(schema.photo_set_input, true)
               },
               get pk_columns() {
-                return new ArgumentsField(schema.photos_pk_columns_input, false)
+                return new ArgumentsField(schema.photo_pk_columns_input, false)
+              },
+            }),
+            true
+          )
+        },
+        get update_photo_xref() {
+          return new FieldNode(
+            schema.photo_xref_mutation_response,
+            new Arguments({
+              get _set() {
+                return new ArgumentsField(schema.photo_xref_set_input, true)
+              },
+              get where() {
+                return new ArgumentsField(schema.photo_xref_bool_exp, false)
+              },
+            }),
+            true
+          )
+        },
+        get update_photo_xref_by_pk() {
+          return new FieldNode(
+            schema.photo_xref,
+            new Arguments({
+              get _set() {
+                return new ArgumentsField(schema.photo_xref_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(
+                  schema.photo_xref_pk_columns_input,
+                  false
+                )
               },
             }),
             true
@@ -2968,7 +3058,7 @@ export const schema = {
   get order_by() {
     return new EnumNode({ name: 'order_by' })
   },
-  get photos() {
+  get photo() {
     return new ObjectNode(
       {
         get created_at() {
@@ -2977,14 +3067,11 @@ export const schema = {
         get id() {
           return new FieldNode(schema.uuid, undefined, false)
         },
+        get origin() {
+          return new FieldNode(schema.String, undefined, false)
+        },
         get quality() {
           return new FieldNode(schema.numeric, undefined, true)
-        },
-        get restaurant_id() {
-          return new FieldNode(schema.uuid, undefined, true)
-        },
-        get tag_id() {
-          return new FieldNode(schema.uuid, undefined, true)
         },
         get updated_at() {
           return new FieldNode(schema.timestamptz, undefined, false)
@@ -2993,34 +3080,34 @@ export const schema = {
           return new FieldNode(schema.String, undefined, false)
         },
       },
-      { name: 'photos', extension: ((extensions as any) || {}).photos }
+      { name: 'photo', extension: ((extensions as any) || {}).photo }
     )
   },
-  get photos_aggregate() {
+  get photo_aggregate() {
     return new ObjectNode(
       {
         get aggregate() {
-          return new FieldNode(schema.photos_aggregate_fields, undefined, true)
+          return new FieldNode(schema.photo_aggregate_fields, undefined, true)
         },
         get nodes() {
           return new FieldNode(
-            new ArrayNode(schema.photos, false),
+            new ArrayNode(schema.photo, false),
             undefined,
             false
           )
         },
       },
       {
-        name: 'photos_aggregate',
-        extension: ((extensions as any) || {}).photos_aggregate,
+        name: 'photo_aggregate',
+        extension: ((extensions as any) || {}).photo_aggregate,
       }
     )
   },
-  get photos_aggregate_fields() {
+  get photo_aggregate_fields() {
     return new ObjectNode(
       {
         get avg() {
-          return new FieldNode(schema.photos_avg_fields, undefined, true)
+          return new FieldNode(schema.photo_avg_fields, undefined, true)
         },
         get count() {
           return new FieldNode(
@@ -3028,7 +3115,7 @@ export const schema = {
             new Arguments({
               get columns() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.photos_select_column, true),
+                  new ArrayNode(schema.photo_select_column, true),
                   true
                 )
               },
@@ -3040,100 +3127,96 @@ export const schema = {
           )
         },
         get max() {
-          return new FieldNode(schema.photos_max_fields, undefined, true)
+          return new FieldNode(schema.photo_max_fields, undefined, true)
         },
         get min() {
-          return new FieldNode(schema.photos_min_fields, undefined, true)
+          return new FieldNode(schema.photo_min_fields, undefined, true)
         },
         get stddev() {
-          return new FieldNode(schema.photos_stddev_fields, undefined, true)
+          return new FieldNode(schema.photo_stddev_fields, undefined, true)
         },
         get stddev_pop() {
-          return new FieldNode(schema.photos_stddev_pop_fields, undefined, true)
+          return new FieldNode(schema.photo_stddev_pop_fields, undefined, true)
         },
         get stddev_samp() {
-          return new FieldNode(
-            schema.photos_stddev_samp_fields,
-            undefined,
-            true
-          )
+          return new FieldNode(schema.photo_stddev_samp_fields, undefined, true)
         },
         get sum() {
-          return new FieldNode(schema.photos_sum_fields, undefined, true)
+          return new FieldNode(schema.photo_sum_fields, undefined, true)
         },
         get var_pop() {
-          return new FieldNode(schema.photos_var_pop_fields, undefined, true)
+          return new FieldNode(schema.photo_var_pop_fields, undefined, true)
         },
         get var_samp() {
-          return new FieldNode(schema.photos_var_samp_fields, undefined, true)
+          return new FieldNode(schema.photo_var_samp_fields, undefined, true)
         },
         get variance() {
-          return new FieldNode(schema.photos_variance_fields, undefined, true)
+          return new FieldNode(schema.photo_variance_fields, undefined, true)
         },
       },
       {
-        name: 'photos_aggregate_fields',
-        extension: ((extensions as any) || {}).photos_aggregate_fields,
+        name: 'photo_aggregate_fields',
+        extension: ((extensions as any) || {}).photo_aggregate_fields,
       }
     )
   },
-  get photos_aggregate_order_by() {
+  get photo_aggregate_order_by() {
     return new InputNode(
       {
         get avg() {
-          return new InputNodeField(schema.photos_avg_order_by, true)
+          return new InputNodeField(schema.photo_avg_order_by, true)
         },
         get count() {
           return new InputNodeField(schema.order_by, true)
         },
         get max() {
-          return new InputNodeField(schema.photos_max_order_by, true)
+          return new InputNodeField(schema.photo_max_order_by, true)
         },
         get min() {
-          return new InputNodeField(schema.photos_min_order_by, true)
+          return new InputNodeField(schema.photo_min_order_by, true)
         },
         get stddev() {
-          return new InputNodeField(schema.photos_stddev_order_by, true)
+          return new InputNodeField(schema.photo_stddev_order_by, true)
         },
         get stddev_pop() {
-          return new InputNodeField(schema.photos_stddev_pop_order_by, true)
+          return new InputNodeField(schema.photo_stddev_pop_order_by, true)
         },
         get stddev_samp() {
-          return new InputNodeField(schema.photos_stddev_samp_order_by, true)
+          return new InputNodeField(schema.photo_stddev_samp_order_by, true)
         },
         get sum() {
-          return new InputNodeField(schema.photos_sum_order_by, true)
+          return new InputNodeField(schema.photo_sum_order_by, true)
         },
         get var_pop() {
-          return new InputNodeField(schema.photos_var_pop_order_by, true)
+          return new InputNodeField(schema.photo_var_pop_order_by, true)
         },
         get var_samp() {
-          return new InputNodeField(schema.photos_var_samp_order_by, true)
+          return new InputNodeField(schema.photo_var_samp_order_by, true)
         },
         get variance() {
-          return new InputNodeField(schema.photos_variance_order_by, true)
+          return new InputNodeField(schema.photo_variance_order_by, true)
         },
       },
-      { name: 'photos_aggregate_order_by' }
+      { name: 'photo_aggregate_order_by' }
     )
   },
-  get photos_arr_rel_insert_input() {
+  get photo_arr_rel_insert_input() {
     return new InputNode(
       {
         get data() {
           return new InputNodeField(
-            new ArrayNode(schema.photos_insert_input, false),
+            new ArrayNode(schema.photo_insert_input, false),
             false
           )
         },
         get on_conflict() {
-          return new InputNodeField(schema.photos_on_conflict, true)
+          return new InputNodeField(schema.photo_on_conflict, true)
         },
       },
-      { name: 'photos_arr_rel_insert_input' }
+      { name: 'photo_arr_rel_insert_input' }
     )
   },
-  get photos_avg_fields() {
+  get photo_avg_fields() {
     return new ObjectNode(
       {
         get quality() {
@@ -3141,36 +3224,36 @@ export const schema = {
         },
       },
       {
-        name: 'photos_avg_fields',
-        extension: ((extensions as any) || {}).photos_avg_fields,
+        name: 'photo_avg_fields',
+        extension: ((extensions as any) || {}).photo_avg_fields,
       }
     )
   },
-  get photos_avg_order_by() {
+  get photo_avg_order_by() {
     return new InputNode(
       {
         get quality() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'photos_avg_order_by' }
+      { name: 'photo_avg_order_by' }
     )
   },
-  get photos_bool_exp() {
+  get photo_bool_exp() {
     return new InputNode(
       {
         get _and() {
           return new InputNodeField(
-            new ArrayNode(schema.photos_bool_exp, true),
+            new ArrayNode(schema.photo_bool_exp, true),
             true
           )
         },
         get _not() {
-          return new InputNodeField(schema.photos_bool_exp, true)
+          return new InputNodeField(schema.photo_bool_exp, true)
         },
         get _or() {
           return new InputNodeField(
-            new ArrayNode(schema.photos_bool_exp, true),
+            new ArrayNode(schema.photo_bool_exp, true),
             true
           )
         },
@@ -3180,14 +3263,11 @@ export const schema = {
         get id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
         },
+        get origin() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
         get quality() {
           return new InputNodeField(schema.numeric_comparison_exp, true)
-        },
-        get restaurant_id() {
-          return new InputNodeField(schema.uuid_comparison_exp, true)
-        },
-        get tag_id() {
-          return new InputNodeField(schema.uuid_comparison_exp, true)
         },
         get updated_at() {
           return new InputNodeField(schema.timestamptz_comparison_exp, true)
@@ -3196,23 +3276,23 @@ export const schema = {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
       },
-      { name: 'photos_bool_exp' }
+      { name: 'photo_bool_exp' }
     )
   },
-  get photos_constraint() {
-    return new EnumNode({ name: 'photos_constraint' })
+  get photo_constraint() {
+    return new EnumNode({ name: 'photo_constraint' })
   },
-  get photos_inc_input() {
+  get photo_inc_input() {
     return new InputNode(
       {
         get quality() {
           return new InputNodeField(schema.numeric, true)
         },
       },
-      { name: 'photos_inc_input' }
+      { name: 'photo_inc_input' }
     )
   },
-  get photos_insert_input() {
+  get photo_insert_input() {
     return new InputNode(
       {
         get created_at() {
@@ -3221,14 +3301,11 @@ export const schema = {
         get id() {
           return new InputNodeField(schema.uuid, true)
         },
+        get origin() {
+          return new InputNodeField(schema.String, true)
+        },
         get quality() {
           return new InputNodeField(schema.numeric, true)
-        },
-        get restaurant_id() {
-          return new InputNodeField(schema.uuid, true)
-        },
-        get tag_id() {
-          return new InputNodeField(schema.uuid, true)
         },
         get updated_at() {
           return new InputNodeField(schema.timestamptz, true)
@@ -3237,10 +3314,10 @@ export const schema = {
           return new InputNodeField(schema.String, true)
         },
       },
-      { name: 'photos_insert_input' }
+      { name: 'photo_insert_input' }
     )
   },
-  get photos_max_fields() {
+  get photo_max_fields() {
     return new ObjectNode(
       {
         get created_at() {
@@ -3249,14 +3326,11 @@ export const schema = {
         get id() {
           return new FieldNode(schema.uuid, undefined, true)
         },
+        get origin() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get quality() {
           return new FieldNode(schema.numeric, undefined, true)
-        },
-        get restaurant_id() {
-          return new FieldNode(schema.uuid, undefined, true)
-        },
-        get tag_id() {
-          return new FieldNode(schema.uuid, undefined, true)
         },
         get updated_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
@@ -3266,12 +3340,12 @@ export const schema = {
         },
       },
       {
-        name: 'photos_max_fields',
-        extension: ((extensions as any) || {}).photos_max_fields,
+        name: 'photo_max_fields',
+        extension: ((extensions as any) || {}).photo_max_fields,
       }
     )
   },
-  get photos_max_order_by() {
+  get photo_max_order_by() {
     return new InputNode(
       {
         get created_at() {
@@ -3280,13 +3354,10 @@ export const schema = {
         get id() {
           return new InputNodeField(schema.order_by, true)
         },
+        get origin() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get quality() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get restaurant_id() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get tag_id() {
           return new InputNodeField(schema.order_by, true)
         },
         get updated_at() {
@@ -3296,10 +3367,10 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'photos_max_order_by' }
+      { name: 'photo_max_order_by' }
     )
   },
-  get photos_min_fields() {
+  get photo_min_fields() {
     return new ObjectNode(
       {
         get created_at() {
@@ -3308,14 +3379,11 @@ export const schema = {
         get id() {
           return new FieldNode(schema.uuid, undefined, true)
         },
+        get origin() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get quality() {
           return new FieldNode(schema.numeric, undefined, true)
-        },
-        get restaurant_id() {
-          return new FieldNode(schema.uuid, undefined, true)
-        },
-        get tag_id() {
-          return new FieldNode(schema.uuid, undefined, true)
         },
         get updated_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
@@ -3325,12 +3393,12 @@ export const schema = {
         },
       },
       {
-        name: 'photos_min_fields',
-        extension: ((extensions as any) || {}).photos_min_fields,
+        name: 'photo_min_fields',
+        extension: ((extensions as any) || {}).photo_min_fields,
       }
     )
   },
-  get photos_min_order_by() {
+  get photo_min_order_by() {
     return new InputNode(
       {
         get created_at() {
@@ -3339,13 +3407,10 @@ export const schema = {
         get id() {
           return new InputNodeField(schema.order_by, true)
         },
+        get origin() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get quality() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get restaurant_id() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get tag_id() {
           return new InputNodeField(schema.order_by, true)
         },
         get updated_at() {
@@ -3355,10 +3420,10 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'photos_min_order_by' }
+      { name: 'photo_min_order_by' }
     )
   },
-  get photos_mutation_response() {
+  get photo_mutation_response() {
     return new ObjectNode(
       {
         get affected_rows() {
@@ -3366,51 +3431,51 @@ export const schema = {
         },
         get returning() {
           return new FieldNode(
-            new ArrayNode(schema.photos, false),
+            new ArrayNode(schema.photo, false),
             undefined,
             false
           )
         },
       },
       {
-        name: 'photos_mutation_response',
-        extension: ((extensions as any) || {}).photos_mutation_response,
+        name: 'photo_mutation_response',
+        extension: ((extensions as any) || {}).photo_mutation_response,
       }
     )
   },
-  get photos_obj_rel_insert_input() {
+  get photo_obj_rel_insert_input() {
     return new InputNode(
       {
         get data() {
-          return new InputNodeField(schema.photos_insert_input, false)
+          return new InputNodeField(schema.photo_insert_input, false)
         },
         get on_conflict() {
-          return new InputNodeField(schema.photos_on_conflict, true)
+          return new InputNodeField(schema.photo_on_conflict, true)
         },
       },
-      { name: 'photos_obj_rel_insert_input' }
+      { name: 'photo_obj_rel_insert_input' }
     )
   },
-  get photos_on_conflict() {
+  get photo_on_conflict() {
     return new InputNode(
       {
         get constraint() {
-          return new InputNodeField(schema.photos_constraint, false)
+          return new InputNodeField(schema.photo_constraint, false)
         },
         get update_columns() {
           return new InputNodeField(
-            new ArrayNode(schema.photos_update_column, false),
+            new ArrayNode(schema.photo_update_column, false),
             false
           )
         },
         get where() {
-          return new InputNodeField(schema.photos_bool_exp, true)
+          return new InputNodeField(schema.photo_bool_exp, true)
         },
       },
-      { name: 'photos_on_conflict' }
+      { name: 'photo_on_conflict' }
     )
   },
-  get photos_order_by() {
+  get photo_order_by() {
     return new InputNode(
       {
         get created_at() {
@@ -3419,13 +3484,10 @@ export const schema = {
         get id() {
           return new InputNodeField(schema.order_by, true)
         },
+        get origin() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get quality() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get restaurant_id() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get tag_id() {
           return new InputNodeField(schema.order_by, true)
         },
         get updated_at() {
@@ -3435,23 +3497,23 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'photos_order_by' }
+      { name: 'photo_order_by' }
     )
   },
-  get photos_pk_columns_input() {
+  get photo_pk_columns_input() {
     return new InputNode(
       {
         get id() {
           return new InputNodeField(schema.uuid, false)
         },
       },
-      { name: 'photos_pk_columns_input' }
+      { name: 'photo_pk_columns_input' }
     )
   },
-  get photos_select_column() {
-    return new EnumNode({ name: 'photos_select_column' })
+  get photo_select_column() {
+    return new EnumNode({ name: 'photo_select_column' })
   },
-  get photos_set_input() {
+  get photo_set_input() {
     return new InputNode(
       {
         get created_at() {
@@ -3460,14 +3522,11 @@ export const schema = {
         get id() {
           return new InputNodeField(schema.uuid, true)
         },
+        get origin() {
+          return new InputNodeField(schema.String, true)
+        },
         get quality() {
           return new InputNodeField(schema.numeric, true)
-        },
-        get restaurant_id() {
-          return new InputNodeField(schema.uuid, true)
-        },
-        get tag_id() {
-          return new InputNodeField(schema.uuid, true)
         },
         get updated_at() {
           return new InputNodeField(schema.timestamptz, true)
@@ -3476,10 +3535,10 @@ export const schema = {
           return new InputNodeField(schema.String, true)
         },
       },
-      { name: 'photos_set_input' }
+      { name: 'photo_set_input' }
     )
   },
-  get photos_stddev_fields() {
+  get photo_stddev_fields() {
     return new ObjectNode(
       {
         get quality() {
@@ -3487,22 +3546,22 @@ export const schema = {
         },
       },
       {
-        name: 'photos_stddev_fields',
-        extension: ((extensions as any) || {}).photos_stddev_fields,
+        name: 'photo_stddev_fields',
+        extension: ((extensions as any) || {}).photo_stddev_fields,
       }
     )
   },
-  get photos_stddev_order_by() {
+  get photo_stddev_order_by() {
     return new InputNode(
       {
         get quality() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'photos_stddev_order_by' }
+      { name: 'photo_stddev_order_by' }
     )
   },
-  get photos_stddev_pop_fields() {
+  get photo_stddev_pop_fields() {
     return new ObjectNode(
       {
         get quality() {
@@ -3510,22 +3569,22 @@ export const schema = {
         },
       },
       {
-        name: 'photos_stddev_pop_fields',
-        extension: ((extensions as any) || {}).photos_stddev_pop_fields,
+        name: 'photo_stddev_pop_fields',
+        extension: ((extensions as any) || {}).photo_stddev_pop_fields,
       }
     )
   },
-  get photos_stddev_pop_order_by() {
+  get photo_stddev_pop_order_by() {
     return new InputNode(
       {
         get quality() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'photos_stddev_pop_order_by' }
+      { name: 'photo_stddev_pop_order_by' }
     )
   },
-  get photos_stddev_samp_fields() {
+  get photo_stddev_samp_fields() {
     return new ObjectNode(
       {
         get quality() {
@@ -3533,22 +3592,22 @@ export const schema = {
         },
       },
       {
-        name: 'photos_stddev_samp_fields',
-        extension: ((extensions as any) || {}).photos_stddev_samp_fields,
+        name: 'photo_stddev_samp_fields',
+        extension: ((extensions as any) || {}).photo_stddev_samp_fields,
       }
     )
   },
-  get photos_stddev_samp_order_by() {
+  get photo_stddev_samp_order_by() {
     return new InputNode(
       {
         get quality() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'photos_stddev_samp_order_by' }
+      { name: 'photo_stddev_samp_order_by' }
     )
   },
-  get photos_sum_fields() {
+  get photo_sum_fields() {
     return new ObjectNode(
       {
         get quality() {
@@ -3556,25 +3615,25 @@ export const schema = {
         },
       },
       {
-        name: 'photos_sum_fields',
-        extension: ((extensions as any) || {}).photos_sum_fields,
+        name: 'photo_sum_fields',
+        extension: ((extensions as any) || {}).photo_sum_fields,
       }
     )
   },
-  get photos_sum_order_by() {
+  get photo_sum_order_by() {
     return new InputNode(
       {
         get quality() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'photos_sum_order_by' }
+      { name: 'photo_sum_order_by' }
     )
   },
-  get photos_update_column() {
-    return new EnumNode({ name: 'photos_update_column' })
+  get photo_update_column() {
+    return new EnumNode({ name: 'photo_update_column' })
   },
-  get photos_var_pop_fields() {
+  get photo_var_pop_fields() {
     return new ObjectNode(
       {
         get quality() {
@@ -3582,22 +3641,22 @@ export const schema = {
         },
       },
       {
-        name: 'photos_var_pop_fields',
-        extension: ((extensions as any) || {}).photos_var_pop_fields,
+        name: 'photo_var_pop_fields',
+        extension: ((extensions as any) || {}).photo_var_pop_fields,
       }
     )
   },
-  get photos_var_pop_order_by() {
+  get photo_var_pop_order_by() {
     return new InputNode(
       {
         get quality() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'photos_var_pop_order_by' }
+      { name: 'photo_var_pop_order_by' }
     )
   },
-  get photos_var_samp_fields() {
+  get photo_var_samp_fields() {
     return new ObjectNode(
       {
         get quality() {
@@ -3605,22 +3664,22 @@ export const schema = {
         },
       },
       {
-        name: 'photos_var_samp_fields',
-        extension: ((extensions as any) || {}).photos_var_samp_fields,
+        name: 'photo_var_samp_fields',
+        extension: ((extensions as any) || {}).photo_var_samp_fields,
       }
     )
   },
-  get photos_var_samp_order_by() {
+  get photo_var_samp_order_by() {
     return new InputNode(
       {
         get quality() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'photos_var_samp_order_by' }
+      { name: 'photo_var_samp_order_by' }
     )
   },
-  get photos_variance_fields() {
+  get photo_variance_fields() {
     return new ObjectNode(
       {
         get quality() {
@@ -3628,20 +3687,384 @@ export const schema = {
         },
       },
       {
-        name: 'photos_variance_fields',
-        extension: ((extensions as any) || {}).photos_variance_fields,
+        name: 'photo_variance_fields',
+        extension: ((extensions as any) || {}).photo_variance_fields,
       }
     )
   },
-  get photos_variance_order_by() {
+  get photo_variance_order_by() {
     return new InputNode(
       {
         get quality() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'photos_variance_order_by' }
+      { name: 'photo_variance_order_by' }
     )
+  },
+  get photo_xref() {
+    return new ObjectNode(
+      {
+        get id() {
+          return new FieldNode(schema.uuid, undefined, false)
+        },
+        get photo() {
+          return new FieldNode(schema.photo, undefined, false)
+        },
+        get photo_id() {
+          return new FieldNode(schema.uuid, undefined, false)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, false)
+        },
+        get tag_id() {
+          return new FieldNode(schema.uuid, undefined, false)
+        },
+      },
+      { name: 'photo_xref', extension: ((extensions as any) || {}).photo_xref }
+    )
+  },
+  get photo_xref_aggregate() {
+    return new ObjectNode(
+      {
+        get aggregate() {
+          return new FieldNode(
+            schema.photo_xref_aggregate_fields,
+            undefined,
+            true
+          )
+        },
+        get nodes() {
+          return new FieldNode(
+            new ArrayNode(schema.photo_xref, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'photo_xref_aggregate',
+        extension: ((extensions as any) || {}).photo_xref_aggregate,
+      }
+    )
+  },
+  get photo_xref_aggregate_fields() {
+    return new ObjectNode(
+      {
+        get count() {
+          return new FieldNode(
+            schema.Int,
+            new Arguments({
+              get columns() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.photo_xref_select_column, true),
+                  true
+                )
+              },
+              get distinct() {
+                return new ArgumentsField(schema.Boolean, true)
+              },
+            }),
+            true
+          )
+        },
+        get max() {
+          return new FieldNode(schema.photo_xref_max_fields, undefined, true)
+        },
+        get min() {
+          return new FieldNode(schema.photo_xref_min_fields, undefined, true)
+        },
+      },
+      {
+        name: 'photo_xref_aggregate_fields',
+        extension: ((extensions as any) || {}).photo_xref_aggregate_fields,
+      }
+    )
+  },
+  get photo_xref_aggregate_order_by() {
+    return new InputNode(
+      {
+        get count() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get max() {
+          return new InputNodeField(schema.photo_xref_max_order_by, true)
+        },
+        get min() {
+          return new InputNodeField(schema.photo_xref_min_order_by, true)
+        },
+      },
+      { name: 'photo_xref_aggregate_order_by' }
+    )
+  },
+  get photo_xref_arr_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(
+            new ArrayNode(schema.photo_xref_insert_input, false),
+            false
+          )
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.photo_xref_on_conflict, true)
+        },
+      },
+      { name: 'photo_xref_arr_rel_insert_input' }
+    )
+  },
+  get photo_xref_bool_exp() {
+    return new InputNode(
+      {
+        get _and() {
+          return new InputNodeField(
+            new ArrayNode(schema.photo_xref_bool_exp, true),
+            true
+          )
+        },
+        get _not() {
+          return new InputNodeField(schema.photo_xref_bool_exp, true)
+        },
+        get _or() {
+          return new InputNodeField(
+            new ArrayNode(schema.photo_xref_bool_exp, true),
+            true
+          )
+        },
+        get id() {
+          return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get photo() {
+          return new InputNodeField(schema.photo_bool_exp, true)
+        },
+        get photo_id() {
+          return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+      },
+      { name: 'photo_xref_bool_exp' }
+    )
+  },
+  get photo_xref_constraint() {
+    return new EnumNode({ name: 'photo_xref_constraint' })
+  },
+  get photo_xref_insert_input() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get photo() {
+          return new InputNodeField(schema.photo_obj_rel_insert_input, true)
+        },
+        get photo_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+      },
+      { name: 'photo_xref_insert_input' }
+    )
+  },
+  get photo_xref_max_fields() {
+    return new ObjectNode(
+      {
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get photo_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get tag_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+      },
+      {
+        name: 'photo_xref_max_fields',
+        extension: ((extensions as any) || {}).photo_xref_max_fields,
+      }
+    )
+  },
+  get photo_xref_max_order_by() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get photo_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'photo_xref_max_order_by' }
+    )
+  },
+  get photo_xref_min_fields() {
+    return new ObjectNode(
+      {
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get photo_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get tag_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+      },
+      {
+        name: 'photo_xref_min_fields',
+        extension: ((extensions as any) || {}).photo_xref_min_fields,
+      }
+    )
+  },
+  get photo_xref_min_order_by() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get photo_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'photo_xref_min_order_by' }
+    )
+  },
+  get photo_xref_mutation_response() {
+    return new ObjectNode(
+      {
+        get affected_rows() {
+          return new FieldNode(schema.Int, undefined, false)
+        },
+        get returning() {
+          return new FieldNode(
+            new ArrayNode(schema.photo_xref, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'photo_xref_mutation_response',
+        extension: ((extensions as any) || {}).photo_xref_mutation_response,
+      }
+    )
+  },
+  get photo_xref_obj_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(schema.photo_xref_insert_input, false)
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.photo_xref_on_conflict, true)
+        },
+      },
+      { name: 'photo_xref_obj_rel_insert_input' }
+    )
+  },
+  get photo_xref_on_conflict() {
+    return new InputNode(
+      {
+        get constraint() {
+          return new InputNodeField(schema.photo_xref_constraint, false)
+        },
+        get update_columns() {
+          return new InputNodeField(
+            new ArrayNode(schema.photo_xref_update_column, false),
+            false
+          )
+        },
+        get where() {
+          return new InputNodeField(schema.photo_xref_bool_exp, true)
+        },
+      },
+      { name: 'photo_xref_on_conflict' }
+    )
+  },
+  get photo_xref_order_by() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get photo() {
+          return new InputNodeField(schema.photo_order_by, true)
+        },
+        get photo_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'photo_xref_order_by' }
+    )
+  },
+  get photo_xref_pk_columns_input() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.uuid, false)
+        },
+      },
+      { name: 'photo_xref_pk_columns_input' }
+    )
+  },
+  get photo_xref_select_column() {
+    return new EnumNode({ name: 'photo_xref_select_column' })
+  },
+  get photo_xref_set_input() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get photo_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+      },
+      { name: 'photo_xref_set_input' }
+    )
+  },
+  get photo_xref_update_column() {
+    return new EnumNode({ name: 'photo_xref_update_column' })
   },
   get query_root() {
     return new ObjectNode(
@@ -3790,13 +4213,13 @@ export const schema = {
             true
           )
         },
-        get photos() {
+        get photo() {
           return new FieldNode(
-            new ArrayNode(schema.photos, false),
+            new ArrayNode(schema.photo, false),
             new Arguments({
               get distinct_on() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.photos_select_column, true),
+                  new ArrayNode(schema.photo_select_column, true),
                   true
                 )
               },
@@ -3808,24 +4231,24 @@ export const schema = {
               },
               get order_by() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.photos_order_by, true),
+                  new ArrayNode(schema.photo_order_by, true),
                   true
                 )
               },
               get where() {
-                return new ArgumentsField(schema.photos_bool_exp, true)
+                return new ArgumentsField(schema.photo_bool_exp, true)
               },
             }),
             false
           )
         },
-        get photos_aggregate() {
+        get photo_aggregate() {
           return new FieldNode(
-            schema.photos_aggregate,
+            schema.photo_aggregate,
             new Arguments({
               get distinct_on() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.photos_select_column, true),
+                  new ArrayNode(schema.photo_select_column, true),
                   true
                 )
               },
@@ -3837,20 +4260,92 @@ export const schema = {
               },
               get order_by() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.photos_order_by, true),
+                  new ArrayNode(schema.photo_order_by, true),
                   true
                 )
               },
               get where() {
-                return new ArgumentsField(schema.photos_bool_exp, true)
+                return new ArgumentsField(schema.photo_bool_exp, true)
               },
             }),
             false
           )
         },
-        get photos_by_pk() {
+        get photo_by_pk() {
           return new FieldNode(
-            schema.photos,
+            schema.photo,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get photo_xref() {
+          return new FieldNode(
+            new ArrayNode(schema.photo_xref, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.photo_xref_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.photo_xref_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.photo_xref_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get photo_xref_aggregate() {
+          return new FieldNode(
+            schema.photo_xref_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.photo_xref_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.photo_xref_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.photo_xref_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get photo_xref_by_pk() {
+          return new FieldNode(
+            schema.photo_xref,
             new Arguments(
               {
                 get id() {
@@ -8713,13 +9208,13 @@ export const schema = {
             true
           )
         },
-        get photos() {
+        get photo() {
           return new FieldNode(
-            new ArrayNode(schema.photos, false),
+            new ArrayNode(schema.photo, false),
             new Arguments({
               get distinct_on() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.photos_select_column, true),
+                  new ArrayNode(schema.photo_select_column, true),
                   true
                 )
               },
@@ -8731,24 +9226,24 @@ export const schema = {
               },
               get order_by() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.photos_order_by, true),
+                  new ArrayNode(schema.photo_order_by, true),
                   true
                 )
               },
               get where() {
-                return new ArgumentsField(schema.photos_bool_exp, true)
+                return new ArgumentsField(schema.photo_bool_exp, true)
               },
             }),
             false
           )
         },
-        get photos_aggregate() {
+        get photo_aggregate() {
           return new FieldNode(
-            schema.photos_aggregate,
+            schema.photo_aggregate,
             new Arguments({
               get distinct_on() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.photos_select_column, true),
+                  new ArrayNode(schema.photo_select_column, true),
                   true
                 )
               },
@@ -8760,20 +9255,92 @@ export const schema = {
               },
               get order_by() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.photos_order_by, true),
+                  new ArrayNode(schema.photo_order_by, true),
                   true
                 )
               },
               get where() {
-                return new ArgumentsField(schema.photos_bool_exp, true)
+                return new ArgumentsField(schema.photo_bool_exp, true)
               },
             }),
             false
           )
         },
-        get photos_by_pk() {
+        get photo_by_pk() {
           return new FieldNode(
-            schema.photos,
+            schema.photo,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get photo_xref() {
+          return new FieldNode(
+            new ArrayNode(schema.photo_xref, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.photo_xref_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.photo_xref_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.photo_xref_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get photo_xref_aggregate() {
+          return new FieldNode(
+            schema.photo_xref_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.photo_xref_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.photo_xref_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.photo_xref_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get photo_xref_by_pk() {
+          return new FieldNode(
+            schema.photo_xref,
             new Arguments(
               {
                 get id() {

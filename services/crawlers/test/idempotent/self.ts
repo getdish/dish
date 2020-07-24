@@ -3,7 +3,6 @@ import {
   RestaurantWithId,
   Scrape,
   Tag,
-  bestPhotosForRestaurant,
   flushTestData,
   restaurantFindOneWithTags,
   restaurantInsert,
@@ -14,6 +13,7 @@ import {
 } from '@dish/graph'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
+import { bestPhotosForRestaurant } from '../../src/self/photo-helpers'
 import { Self } from '../../src/self/Self'
 import { sql } from '../../src/utils'
 import { yelp_hours } from '../yelp_hours'
@@ -243,10 +243,10 @@ test('Merging', async (t) => {
     ['menu_items']
   )
   const photos = await bestPhotosForRestaurant(t.context.restaurant.id)
-  t.is(photos[0].url, 'https://i.imgur.com/N6YtgRI.jpeg')
-  t.is(photos[0].quality, 5.3742065027199715)
-  t.is(photos[1].url, 'https://i.imgur.com/92a8cNI.jpg')
-  t.is(photos[1].quality, 4.575530681464443)
+  t.is(photos[0].photo.url, 'https://i.imgur.com/N6YtgRI.jpeg')
+  t.is(photos[0].photo.quality, 5.3742065027199715)
+  t.is(photos[1].photo.url, 'https://i.imgur.com/92a8cNI.jpg')
+  t.is(photos[1].photo.quality, 4.575530681464443)
   t.is(!!updated, true)
   if (!updated) return
   t.is(updated.name, 'Test Name Yelp')

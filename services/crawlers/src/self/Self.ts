@@ -3,16 +3,14 @@ import '@dish/common'
 import { sentryException } from '@dish/common'
 import {
   MenuItem,
+  PhotoXref,
   RESTAURANT_WEIGHTS,
   RestaurantWithId,
   Scrape,
   ScrapeData,
-  bestPhotosForRestaurant,
-  bestPhotosForRestaurantTags,
   deleteAllBy,
   globalTagId,
   menuItemsUpsertMerge,
-  photosUpsert,
   restaurantFindBatch,
   restaurantFindOne,
   restaurantFindOneWithTags,
@@ -28,6 +26,11 @@ import moment from 'moment'
 
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
 import { sanfran, sql } from '../utils'
+import {
+  bestPhotosForRestaurant,
+  bestPhotosForRestaurantTags,
+  photoUpsert,
+} from './photo-helpers'
 import { Tagging } from './Tagging'
 
 const PER_PAGE = 50
@@ -205,13 +208,13 @@ export class Self extends WorkerJob {
 
   async findPhotosForTags() {
     const all_tag_photos = await this.tagging.findPhotosForTags()
-    await photosUpsert(all_tag_photos)
+    await photoUpsert(all_tag_photos)
     const most_aesthetic = await bestPhotosForRestaurantTags(this.restaurant.id)
-    for (const photo of most_aesthetic) {
+    for (const photo_xref of most_aesthetic) {
       const match = this.tagging.restaurant_tags.find(
-        (rt) => rt.tag_id == photo.tag_id
+        (rt) => rt.tag_id == photo_xref.tag_id
       )
-      match?.photos.push(photo.url)
+      match?.photos.push(photo_xref.photo?.url)
     }
   }
 
@@ -674,16 +677,18 @@ export class Self extends WorkerJob {
       ...this._getGooglePhotos(),
       ...this.getPaginatedData(yelp_data, 'photos').map((i) => i.src),
     ]
-    let photos = photos_urls.map((url: string) => {
+    let photos: PhotoXref[] = photos_urls.map((url: string) => {
       return {
         restaurant_id: this.restaurant.id,
-        url: url,
+        photo: {
+          url: url,
+        },
       }
     })
-    await photosUpsert(photos)
+    await photoUpsert(photos)
     const most_aesthetic = await bestPhotosForRestaurant(this.restaurant.id)
     //@ts-ignore
-    this.restaurant.photos = most_aesthetic.map((p) => p.url)
+    this.restaurant.photos = most_aesthetic.map((p) => p.photo.url)
   }
 
   _getGooglePhotos() {

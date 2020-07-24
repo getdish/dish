@@ -6,7 +6,8 @@ export const isBrowserProd =
 export const isWorker =
   typeof document !== 'undefined' && !document.getElementById('root')
 
-export const globalTagId = '00000000-0000-0000-0000-000000000000'
+export const ZeroUUID = '00000000-0000-0000-0000-000000000000'
+export const globalTagId = ZeroUUID
 
 // Note that there is no unit or reference point for these values. All that
 // matters is simply the relative differences between them. For example therefore

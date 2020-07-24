@@ -77,7 +77,14 @@ tables:
       foreign_key_constraint_on: restaurant_id
 - table:
     schema: public
-    name: photos
+    name: photo
+- table:
+    schema: public
+    name: photo_xref
+  object_relationships:
+  - name: photo
+    using:
+      foreign_key_constraint_on: photo_id
 - table:
     schema: public
     name: restaurant

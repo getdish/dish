@@ -1,0 +1,19 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE EXTENSION IF NOT EXISTS pgcrypto;
+  type: run_sql
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE TABLE "public"."photos_xref"("photos_id" uuid NOT NULL, "restaurant_id"
+      uuid NOT NULL, "tag_id" uuid NOT NULL, "id" uuid NOT NULL DEFAULT gen_random_uuid(),
+      PRIMARY KEY ("id") , FOREIGN KEY ("restaurant_id") REFERENCES "public"."restaurant"("id")
+      ON UPDATE cascade ON DELETE cascade, FOREIGN KEY ("photos_id") REFERENCES "public"."photos"("id")
+      ON UPDATE cascade ON DELETE cascade, FOREIGN KEY ("tag_id") REFERENCES "public"."tag"("id")
+      ON UPDATE cascade ON DELETE cascade, UNIQUE ("photos_id", "restaurant_id", "tag_id"));
+  type: run_sql
+- args:
+    name: photos_xref
+    schema: public
+  type: add_existing_table_or_view

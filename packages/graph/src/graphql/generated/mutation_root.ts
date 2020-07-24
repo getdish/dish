@@ -22,15 +22,22 @@ import {
   t_opening_hours_mutation_response,
 } from './opening_hours'
 import {
-  photos_bool_exp,
-  photos_inc_input,
-  photos_insert_input,
-  photos_on_conflict,
-  photos_pk_columns_input,
-  photos_set_input,
-  t_photos,
-  t_photos_mutation_response,
-} from './photos'
+  photo_bool_exp,
+  photo_inc_input,
+  photo_insert_input,
+  photo_on_conflict,
+  photo_pk_columns_input,
+  photo_set_input,
+  photo_xref_bool_exp,
+  photo_xref_insert_input,
+  photo_xref_on_conflict,
+  photo_xref_pk_columns_input,
+  photo_xref_set_input,
+  t_photo,
+  t_photo_mutation_response,
+  t_photo_xref,
+  t_photo_xref_mutation_response,
+} from './photo'
 import {
   restaurant_append_input,
   restaurant_bool_exp,
@@ -156,11 +163,16 @@ export type t_mutation_root = FieldsType<
       { id: any },
       t_opening_hours | null
     >
-    delete_photos: FieldsTypeArg<
-      { where: photos_bool_exp },
-      t_photos_mutation_response | null
+    delete_photo: FieldsTypeArg<
+      { where: photo_bool_exp },
+      t_photo_mutation_response | null
     >
-    delete_photos_by_pk?: FieldsTypeArg<{ id: any }, t_photos | null>
+    delete_photo_by_pk?: FieldsTypeArg<{ id: any }, t_photo | null>
+    delete_photo_xref: FieldsTypeArg<
+      { where: photo_xref_bool_exp },
+      t_photo_xref_mutation_response | null
+    >
+    delete_photo_xref_by_pk?: FieldsTypeArg<{ id: any }, t_photo_xref | null>
     delete_restaurant: FieldsTypeArg<
       { where: restaurant_bool_exp },
       t_restaurant_mutation_response | null
@@ -235,16 +247,27 @@ export type t_mutation_root = FieldsType<
       },
       t_opening_hours | null
     >
-    insert_photos: FieldsTypeArg<
-      {
-        objects: photos_insert_input[]
-        on_conflict?: photos_on_conflict | null
-      },
-      t_photos_mutation_response | null
+    insert_photo: FieldsTypeArg<
+      { objects: photo_insert_input[]; on_conflict?: photo_on_conflict | null },
+      t_photo_mutation_response | null
     >
-    insert_photos_one?: FieldsTypeArg<
-      { object: photos_insert_input; on_conflict?: photos_on_conflict | null },
-      t_photos | null
+    insert_photo_one?: FieldsTypeArg<
+      { object: photo_insert_input; on_conflict?: photo_on_conflict | null },
+      t_photo | null
+    >
+    insert_photo_xref: FieldsTypeArg<
+      {
+        objects: photo_xref_insert_input[]
+        on_conflict?: photo_xref_on_conflict | null
+      },
+      t_photo_xref_mutation_response | null
+    >
+    insert_photo_xref_one?: FieldsTypeArg<
+      {
+        object: photo_xref_insert_input
+        on_conflict?: photo_xref_on_conflict | null
+      },
+      t_photo_xref | null
     >
     insert_restaurant: FieldsTypeArg<
       {
@@ -367,21 +390,32 @@ export type t_mutation_root = FieldsType<
       },
       t_opening_hours | null
     >
-    update_photos: FieldsTypeArg<
+    update_photo: FieldsTypeArg<
       {
-        _inc?: photos_inc_input | null
-        _set?: photos_set_input | null
-        where: photos_bool_exp
+        _inc?: photo_inc_input | null
+        _set?: photo_set_input | null
+        where: photo_bool_exp
       },
-      t_photos_mutation_response | null
+      t_photo_mutation_response | null
     >
-    update_photos_by_pk?: FieldsTypeArg<
+    update_photo_by_pk?: FieldsTypeArg<
       {
-        _inc?: photos_inc_input | null
-        _set?: photos_set_input | null
-        pk_columns: photos_pk_columns_input
+        _inc?: photo_inc_input | null
+        _set?: photo_set_input | null
+        pk_columns: photo_pk_columns_input
       },
-      t_photos | null
+      t_photo | null
+    >
+    update_photo_xref: FieldsTypeArg<
+      { _set?: photo_xref_set_input | null; where: photo_xref_bool_exp },
+      t_photo_xref_mutation_response | null
+    >
+    update_photo_xref_by_pk?: FieldsTypeArg<
+      {
+        _set?: photo_xref_set_input | null
+        pk_columns: photo_xref_pk_columns_input
+      },
+      t_photo_xref | null
     >
     update_restaurant: FieldsTypeArg<
       {
