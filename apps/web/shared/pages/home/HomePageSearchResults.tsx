@@ -61,6 +61,14 @@ const useSpacing = () => {
   }
 }
 
+const useLastValue = (a: any) => {
+  const last = useRef(a)
+  return useMemo(() => {
+    last.current = a
+    return last.current
+  }, [a])
+}
+
 export default memo(function HomePageSearchResults(props: Props) {
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const om = useOvermind()
@@ -79,6 +87,7 @@ export default memo(function HomePageSearchResults(props: Props) {
   // )
 
   const isOptimisticUpdating = om.state.home.isOptimisticUpdating
+  const wasOptimisticUpdating = useLastValue(isOptimisticUpdating)
 
   const titleElements = useMemo(() => {
     return (
@@ -93,15 +102,18 @@ export default memo(function HomePageSearchResults(props: Props) {
     )
   }, [subTitle, pageTitleElements])
 
-  const changingFilters = state.status === 'loading'
+  const changingFilters = wasOptimisticUpdating && state.status === 'loading'
   const shouldAvoidContentUpdates =
     isOptimisticUpdating ||
     props.isRemoving ||
     !props.isActive ||
     changingFilters
 
-  const key = JSON.stringify(pick(state, 'status', 'id', 'results'))
-  console.log('state', state, key)
+  const key = useLastValueWhen(
+    () => JSON.stringify(pick(state, 'status', 'id', 'results')),
+    shouldAvoidContentUpdates
+  )
+
   const contentInner = useMemo(() => {
     return <SearchResultsContent key={key} {...props} item={state} />
   }, [key])
@@ -229,7 +241,13 @@ const SearchResultsContent = memo((props: Props) => {
     return (
       <HomeScrollView ref={scrollRef} onScrollNearBottom={handleScrollToBottom}>
         <VStack height={paddingTop} />
-        {children}
+        <VStack minHeight="40vh">{children}</VStack>
+        <SearchFooter
+          scrollToTop={() =>
+            setState((x) => ({ ...x, scrollToTop: Math.random() }))
+          }
+          searchState={searchState}
+        />
       </HomeScrollView>
     )
   }
@@ -333,7 +351,39 @@ const SearchResultsContent = memo((props: Props) => {
     }
   }, [isOnLastChunk, state.hasLoaded, state.scrollToEndOf])
 
-  const searchFooter = (
+  if (!isLoading && !allResults.length) {
+    return contentWrap(
+      <VStack
+        margin="auto"
+        paddingVertical="10vh"
+        alignItems="center"
+        justifyContent="center"
+        spacing
+      >
+        <Text fontSize={22}>No results 😞</Text>
+        {/* <LinkButton name="contact">Report problem</LinkButton> */}
+      </VStack>
+    )
+  }
+
+  console.warn('SearchContent', { isLoading })
+
+  return contentWrap(
+    <VStack paddingBottom={20} spacing={6}>
+      {results}
+      {isLoading && <HomeLoadingItems />}
+    </VStack>
+  )
+})
+
+const SearchFooter = ({
+  searchState,
+  scrollToTop,
+}: {
+  searchState: HomeStateItemSearch
+  scrollToTop: Function
+}) => {
+  return (
     <VStack
       alignItems="center"
       justifyContent="center"
@@ -348,7 +398,7 @@ const SearchResultsContent = memo((props: Props) => {
         alignSelf="center"
         onPress={() => {
           if (omStatic.state.home.isAutocompleteActive) {
-            setState((x) => ({ ...x, scrollToTop: Math.random() }))
+            scrollToTop()
           } else {
             focusSearchInput()
           }
@@ -358,35 +408,16 @@ const SearchResultsContent = memo((props: Props) => {
       </Button>
       <Spacer size={40} />
       <Text opacity={0.5} fontSize={12}>
-        Showing {allResults.length} / {allResults.length} results
+        Showing {searchState.results.length} / {searchState.results.length}{' '}
+        results
       </Text>
     </VStack>
   )
-
-  if (!isLoading && !allResults.length) {
-    return contentWrap(
-      <VStack height="50vh" alignItems="center" justifyContent="center" spacing>
-        <Text fontSize={22}>No results 😞</Text>
-        {/* <LinkButton name="contact">Report problem</LinkButton> */}
-        {searchFooter}
-      </VStack>
-    )
-  }
-
-  console.warn('SearchContent', { isLoading })
-
-  return contentWrap(
-    <VStack paddingBottom={20} spacing={6}>
-      {results}
-      {isLoading && <HomeLoadingItems />}
-      {!isLoading && searchFooter}
-    </VStack>
-  )
-})
+}
 
 const HomeLoadingItems = (props: StackProps) => {
   return (
-    <VStack flex={1} width="100%" minHeight={400} {...props}>
+    <VStack flex={1} width="100%" minHeight={300} {...props}>
       <LoadingItems />
     </VStack>
   )

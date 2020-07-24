@@ -184,7 +184,7 @@ const RestaurantListItemContent = memo(
                       selectable
                       maxWidth="100%"
                       fontSize={
-                        (isSmall ? 20 : 24) *
+                        (isSmall ? 20 : 22) *
                         (restaurantName.length > 20 ? 0.85 : 1)
                       }
                       fontWeight="600"

@@ -39,7 +39,7 @@ export const RestaurantOverview = memo(() => {
                 paddingHorizontal={5}
                 borderRadius={6}
                 fontWeight="300"
-                fontSize={22}
+                fontSize={18}
                 color="rgba(0,0,0,0.5)"
                 className="unselectable"
                 // userSelect="none"
