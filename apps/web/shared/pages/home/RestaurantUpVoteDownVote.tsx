@@ -1,12 +1,11 @@
-import { graphql, mutation, reviewUpsert } from '@dish/graph'
+import { graphql } from '@dish/graph'
 import { Spacer, StackProps, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
 import { bgLight } from '../../colors'
 import { HomeActiveTagIds } from '../../state/home'
-import { useOvermind } from '../../state/useOvermind'
-import { useUserReviews, useUserUpvoteDownvote } from './useUserReview'
+import { useUserUpvoteDownvote } from './useUserReview'
 
 export const RestaurantUpVoteDownVote = memo(
   graphql(
@@ -17,8 +16,8 @@ export const RestaurantUpVoteDownVote = memo(
       restaurantId: string
       activeTagIds: HomeActiveTagIds
     }) => {
-      const om = useOvermind()
-      const userId = om.state.user.user?.id
+      // const om = useOvermind()
+      // const userId = om.state.user.user?.id
       const [vote, setVote] = useUserUpvoteDownvote(restaurantId, activeTagIds)
       console.log('vote', vote)
       const iconSize = 14

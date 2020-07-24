@@ -24,8 +24,8 @@ export const LoadingItem = () => {
         // casued bug with filters, if we contain maybe wont
         // className="shine"
       />
-      <VStack spacing={10}>
-        {[1, 2, 3, 4].map((index) => (
+      <VStack spacing={5}>
+        {[1, 2, 3].map((index) => (
           <HStack
             key={index}
             width={`${seed * (15 - (2 - index > -1 ? index : -index) * 4)}%`}

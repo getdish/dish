@@ -4,11 +4,11 @@ import React, { memo } from 'react'
 export const RestaurantOverview = memo(() => {
   const listItems = [
     {
-      category: 'Food',
+      category: 'food',
       review: `Don't miss the lychee tempura ice cream`,
     },
     {
-      category: 'Place',
+      category: 'vibe',
       review: 'Authentic. Big bar area outside with shade',
     },
     // {
@@ -39,9 +39,12 @@ export const RestaurantOverview = memo(() => {
                 paddingHorizontal={5}
                 borderRadius={6}
                 fontWeight="300"
-                opacity={0.65}
+                fontSize={22}
+                color="rgba(0,0,0,0.5)"
+                className="unselectable"
+                // userSelect="none"
               >
-                {item.category}:
+                {item.category}
               </Text>
             </HStack>
             {item.review}

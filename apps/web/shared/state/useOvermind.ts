@@ -13,7 +13,8 @@ export const omStatic = new Proxy(
       return (window['om'] ?? config)[key]
     },
   }
-) as IContext<Config>
+  // this type fixes omStatic.reaction(, not sure waht iContext fixed if any
+) as Overmind<typeof config> //IContext<Config>
 
 if (process.env.NODE_ENV === 'development') {
   // @ts-ignore

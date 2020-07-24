@@ -40,12 +40,12 @@ export const useUserFavorite = (restaurantId: string) => {
 
 export const useUserUpvoteDownvote = (
   restaurantId: string,
-  activeTagIds: HomeActiveTagIds
+  tags: HomeActiveTagIds
 ) => {
   const om = useOvermind()
   const userId = om.state.user.user?.id
   const votes = useUserTagVotes(restaurantId)
-  const vote = getTagUpvoteDownvote(votes, activeTagIds)
+  const vote = getTagUpvoteDownvote(votes, tags)
   const [userVote, setUserVote] = useState<number | null>(null)
   return [
     userVote ?? vote,
@@ -58,8 +58,8 @@ export const useUserUpvoteDownvote = (
       } else {
         setUserVote(rating)
         reviewUpsert(
-          Object.keys(activeTagIds)
-            .filter((x) => activeTagIds[x])
+          Object.keys(tags)
+            .filter((x) => tags[x])
             .map<Review>((tagId) => {
               return {
                 tag_id: tagId,

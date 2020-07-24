@@ -1,7 +1,6 @@
-import { RestaurantQuery, Sources, graphql } from '@dish/graph'
+import { RestaurantQuery, graphql } from '@dish/graph'
 import { Divider, HStack, StackProps, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { Linking } from 'react-native'
 
 import { RestaurantDeliveryButton } from './RestaurantDeliveryButton'
 import { useRestaurantQuery } from './useRestaurantQuery'
@@ -30,7 +29,9 @@ export const RestaurantDetailRow = memo(
         { title: price_label, content: price_range, color: price_color },
         !isSm && {
           title: 'Delivers',
-          content: <RestaurantDeliveryButton restaurantSlug={restaurantSlug} />,
+          content: (
+            <RestaurantDeliveryButton inline restaurantSlug={restaurantSlug} />
+          ),
           color: 'gray',
         },
       ].filter(Boolean)
@@ -72,7 +73,6 @@ export const RestaurantDetailRow = memo(
                     </Text>
                   )}
                   <Text
-                    ellipse
                     fontSize={isSm ? 12 : 13}
                     textAlign={centered ? 'center' : 'left'}
                     color={isSm ? row.color : 'inherit'}

@@ -87,6 +87,7 @@ export const state: RouterState = {
     return router.curPage
   }),
   curPageName: derived<RouterState, string>((state) => {
+    state._update
     return state.curPage.name
   }),
 }

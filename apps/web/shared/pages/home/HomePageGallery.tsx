@@ -44,16 +44,11 @@ export default memo(function HomePageGallery() {
             <HStack
               alignItems="center"
               justifyContent="space-between"
-              marginBottom={-10}
+              marginBottom={-20}
               position="relative"
               zIndex={100}
             >
-              <Suspense fallback={null}>
-                <RestaurantHeader
-                  hideDetails
-                  restaurantSlug={state.restaurantSlug}
-                />
-              </Suspense>
+              <RestaurantHeader restaurantSlug={state.restaurantSlug} />
             </HStack>
 
             <Suspense fallback={<LoadingItems />}>
@@ -95,28 +90,31 @@ const HomePageGalleryContent = memo(
       // gallery: true,
     })
 
-    console.log('gallery', photos)
-
     return (
       <VStack flex={1} overflow="hidden">
-        <ScrollView
-          style={{ width: '100%' }}
-          contentContainerStyle={{
-            width: '100%',
-            height: '100%',
-          }}
-        >
-          <HStack flex={10} flexWrap="wrap" maxWidth="100%">
+        <ScrollView style={{ width: '100%' }}>
+          <HStack
+            flex={10}
+            flexWrap="wrap"
+            maxWidth="100%"
+            paddingVertical={20}
+            // add for carousel bottom
+            paddingBottom={300}
+            alignItems="flex-start"
+            justifyContent="flex-start"
+            backgroundColor="#eee"
+          >
             {photos.map((photo, i) => {
               return (
-                <HStack key={i} width="33%" height="33%">
+                <HStack key={i} width={isSmall ? '50%' : '33%'}>
                   <Image
                     source={{ uri: photo.image }}
                     resizeMode="cover"
                     style={{
                       width: 'calc(100% - 4px)',
-                      height: 300,
-                      margin: 2,
+                      height: isSmall ? 250 : 340,
+                      marginTop: 2,
+                      marginLeft: 2,
                     }}
                   />
                 </HStack>
@@ -127,18 +125,33 @@ const HomePageGalleryContent = memo(
           </HStack>
         </ScrollView>
 
-        <VStack paddingVertical={10} borderTopColor={'#eee'} borderTopWidth={1}>
-          <Suspense fallback={null}>
-            <RestaurantDishPhotos
-              size={isSmall ? 100 : 150}
-              restaurantSlug={state.restaurantSlug}
-              selectable
-              defaultSelectedId={state.dishId}
-              onSelect={(selected) => {
-                console.log('got em', selected)
-              }}
-            />
-          </Suspense>
+        <VStack
+          position="absolute"
+          bottom={0}
+          left={-20}
+          right={-20}
+          paddingRight={20}
+          backgroundColor="#fff"
+          paddingVertical={0}
+          paddingBottom={10}
+          borderTopColor={'#eee'}
+          borderTopWidth={1}
+          shadowColor="rgba(0,0,0,0.4)"
+          shadowRadius={30}
+        >
+          <VStack>
+            <Suspense fallback={null}>
+              <RestaurantDishPhotos
+                size={isSmall ? 100 : 150}
+                restaurantSlug={state.restaurantSlug}
+                selectable
+                defaultSelectedId={state.dishId}
+                onSelect={(selected) => {
+                  console.log('got em', selected)
+                }}
+              />
+            </Suspense>
+          </VStack>
         </VStack>
       </VStack>
     )

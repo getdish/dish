@@ -1,7 +1,7 @@
-import { useRecoilStore } from '@dish/recoil-store'
+import { fullyIdle, series } from '@dish/async'
 import React, {
   useCallback,
-  useContext,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -10,9 +10,8 @@ import { ToggleLayer, Transition, anchor } from 'react-laag'
 import { Platform } from 'react-native'
 
 import { useOverlay } from '../hooks/useOverlay'
-import { useWaterfall } from '../hooks/useWaterfall'
 import { PopoverProps } from './PopoverProps'
-import { PopoverContext, PopoverStore, popoverCloseCbs } from './PopoverShared'
+import { popoverCloseCbs } from './PopoverShared'
 
 export default function PopoverMain(props: PopoverProps) {
   // const { id } = useContext(PopoverContext)
@@ -27,8 +26,8 @@ export default function PopoverMain(props: PopoverProps) {
   const [isMounted, setIsMounted] = useState(false)
 
   // THIS CALLS TO getClientBoundingRect ruining mount performance
-  useWaterfall(() => {
-    setIsMounted(true)
+  useEffect(() => {
+    return series([fullyIdle, () => setIsMounted(true)])
   })
 
   useLayoutEffect(() => {

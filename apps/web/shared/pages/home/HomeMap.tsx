@@ -206,7 +206,7 @@ const HomeMapContent = memo(function HomeMap({
   restaurants: Restaurant[] | null
 }) {
   const om = useOvermind()
-  const drawerWidth = useHomeDrawerWidth()
+  const drawerWidth = useHomeDrawerWidth(Infinity)
   const isSmall = useMediaQueryIsSmall()
   const state = om.state.home.currentState
   const { center, span } = state

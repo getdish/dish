@@ -1,9 +1,19 @@
 import { slugify } from '@dish/graph'
-import { Box, Divider, HStack, Popover, Text, Toast, VStack } from '@dish/ui'
+import {
+  Box,
+  Divider,
+  HStack,
+  HoverablePopover,
+  Popover,
+  Text,
+  Toast,
+  Tooltip,
+  VStack,
+} from '@dish/ui'
 import React, { memo, useState } from 'react'
-import { Menu, Settings, User } from 'react-feather'
+import { ChevronDown, ChevronUp, Menu, Settings, User } from 'react-feather'
 
-import { useOvermind } from '../../state/useOvermind'
+import { omStatic, useOvermind } from '../../state/useOvermind'
 import { AuthLoginRegisterView } from '../../views/auth/AuthLoginRegisterView'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
@@ -25,7 +35,7 @@ export const HomeMenu = memo(() => {
       <Popover
         position="bottom"
         isOpen={showUserMenu}
-        onChangeOpen={(val) => val === false && close()}
+        onChangeOpen={(val) => val === false && setShowUserMenu(false)}
         style={{
           flex: 0,
         }}
@@ -42,26 +52,14 @@ export const HomeMenu = memo(() => {
                   close()
                 }}
               >
-                {om.state.user.user?.username === 'admin' && (
-                  <VStack spacing>
-                    <LinkButton {...flatButtonStyle} name="admin">
-                      <Settings
-                        size={16}
-                        opacity={0.25}
-                        style={{ marginRight: 5 }}
-                      />
-                      Admin
-                    </LinkButton>
-                    <LinkButton {...flatButtonStyle} name="adminTags">
-                      <Settings
-                        size={16}
-                        opacity={0.25}
-                        style={{ marginRight: 5 }}
-                      />
-                      Admin Tags
-                    </LinkButton>
-                  </VStack>
-                )}
+                <LinkButton {...flatButtonStyle} name="adminTags">
+                  <Settings
+                    size={16}
+                    opacity={0.25}
+                    style={{ marginRight: 5 }}
+                  />
+                  Admin
+                </LinkButton>
 
                 <LinkButton
                   {...flatButtonStyle}
@@ -95,26 +93,67 @@ export const HomeMenu = memo(() => {
         />
       </Popover>
 
-      {isAboveMedium && <MenuButton name="about" Icon={Menu} />}
+      {isAboveMedium && (
+        <>
+          {/*  */}
+          <HoverablePopover contents={<VStack></VStack>}>
+            <MenuButton
+              name="about"
+              Icon={ChevronDown}
+              ActiveIcon={ChevronUp}
+              onPress={(e) => {
+                if (omStatic.state.router.curPageName === 'about') {
+                  e.preventDefault()
+                  omStatic.actions.home.up()
+                } else {
+                  e.navigate()
+                }
+              }}
+            />
+          </HoverablePopover>
+        </>
+      )}
     </HStack>
   )
 })
 
 const MenuButton = ({
   Icon,
+  ActiveIcon,
   text,
+  tooltip,
   ...props
-}: LinkButtonProps & { Icon: any; text?: any }) => {
-  return (
-    <LinkButton padding={12} {...props}>
-      <HStack spacing alignItems="center" justifyContent="center">
-        <Icon color="#fff" size={22} opacity={0.65} />
-        {!!text && (
-          <Text fontSize={13} opacity={0.5} color="#fff">
-            {text}
-          </Text>
-        )}
-      </HStack>
+}: LinkButtonProps & {
+  Icon: any
+  ActiveIcon?: any
+  text?: any
+  tooltip?: string
+}) => {
+  const linkButtonElement = (
+    <LinkButton
+      className="ease-in-out-fast"
+      padding={12}
+      opacity={0.65}
+      activeStyle={{
+        opacity: 1,
+        transform: [{ scale: 1.1 }],
+      }}
+      {...props}
+    >
+      {(isActive) => {
+        const IconElement = isActive ? ActiveIcon : Icon
+        return (
+          <HStack spacing alignItems="center" justifyContent="center">
+            <IconElement color="#fff" size={22} />
+            {!!text && <Text fontSize={13}>{text}</Text>}
+          </HStack>
+        )
+      }}
     </LinkButton>
   )
+
+  if (!!tooltip) {
+    return <Tooltip contents={tooltip}>{linkButtonElement}</Tooltip>
+  }
+  return linkButtonElement
 }

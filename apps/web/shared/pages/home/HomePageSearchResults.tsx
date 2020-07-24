@@ -4,6 +4,7 @@ import {
   HStack,
   LoadingItems,
   Spacer,
+  StackProps,
   Text,
   VStack,
   useDebounce,
@@ -11,6 +12,7 @@ import {
 } from '@dish/ui'
 import React, {
   Suspense,
+  SuspenseList,
   memo,
   useCallback,
   useEffect,
@@ -60,16 +62,23 @@ const useSpacing = () => {
 
 export default memo(function HomePageSearchResults(props: Props) {
   // const isEditingUserList = !!isEditingUserPage(om.state)
-  const { title, subTitle, pageTitleElements } = getTitleForState(
-    useOvermindStatic().state,
-    props.item
-  )
   const om = useOvermind()
-  const isOptimisticUpdating = om.state.home.isOptimisticUpdating
-  const isOptimisticUpdatingDelayed = useDebounceValue(
-    isOptimisticUpdating,
-    200
+  const state = om.state.home.allStates[props.item.id] as HomeStateItemSearch
+  const { title, subTitle, pageTitleElements } = getTitleForState(
+    om.state,
+    state
   )
+  // console.log(
+  //   'pageTitleElements',
+  //   pageTitleElements,
+  //   title,
+  //   subTitle,
+  //   JSON.stringify(state, null, 2),
+  //   props.item
+  // )
+
+  const isOptimisticUpdating = om.state.home.isOptimisticUpdating
+  const wasOptimisticUpdating = useDebounceValue(isOptimisticUpdating, 100)
 
   const titleElements = useMemo(() => {
     return (
@@ -84,35 +93,31 @@ export default memo(function HomePageSearchResults(props: Props) {
     )
   }, [subTitle, pageTitleElements])
 
+  const changingFilters = state.results.status === 'loading'
   const shouldAvoidContentUpdates =
-    isOptimisticUpdating || props.isRemoving || !props.isActive
+    isOptimisticUpdating ||
+    props.isRemoving ||
+    !props.isActive ||
+    changingFilters
 
   const content = useLastValueWhen(() => {
-    const key = weakKey(props.item)
-    return <SearchResultsContent key={key} {...props} />
+    const key = JSON.stringify(state)
+    return <SearchResultsContent key={key} {...props} item={state} />
   }, shouldAvoidContentUpdates)
 
   return (
     <HomeStackDrawer title={title} closable>
       <SearchResultsTitle title={titleElements} stateId={props.item.id} />
       <Suspense fallback={<HomeLoadingItems />}>
-        {isOptimisticUpdatingDelayed && isOptimisticUpdating ? (
-          <HomeEmptyLoading />
-        ) : (
-          content
-        )}
+        <VStack
+          flex={1}
+          overflow="hidden"
+          opacity={isOptimisticUpdating ? 0.5 : 1}
+        >
+          {content}
+        </VStack>
       </Suspense>
     </HomeStackDrawer>
-  )
-})
-
-const HomeEmptyLoading = memo(() => {
-  const { paddingTop } = useSpacing()
-  return (
-    <HomeScrollView>
-      <VStack height={paddingTop} />
-      <HomeLoadingItems />
-    </HomeScrollView>
   )
 })
 
@@ -136,6 +141,7 @@ const SearchResultsTitle = memo(
         zIndex={1000}
         alignItems="center"
         backgroundColor="#fff"
+        height={62}
       >
         <ScrollView
           horizontal
@@ -151,7 +157,7 @@ const SearchResultsTitle = memo(
             flex={1}
             justifyContent="space-between"
           >
-            <HStack marginTop={-14} alignItems="center" justifyContent="center">
+            <HStack marginTop={-10} alignItems="center" justifyContent="center">
               <HomeLenseBar activeTagIds={state.activeTagIds} />
             </HStack>
             <Spacer size={16} />
@@ -175,8 +181,7 @@ const SearchResultsTitle = memo(
 )
 
 const SearchResultsContent = memo((props: Props) => {
-  const om = useOvermind()
-  const searchState = om.state.home.allStates[props.item.id]
+  const searchState = props.item
   if (!isSearchState(searchState)) {
     console.warn('impossibke')
     return null
@@ -225,27 +230,31 @@ const SearchResultsContent = memo((props: Props) => {
 
   const results = useMemo(() => {
     const cur = allResults.slice(0, currentlyShowing)
-    return cur.map((result, index) => {
-      const onFinishRender =
-        index == cur.length - 1
-          ? // load more
-            () => {
-              setState((x) => ({ ...x, hasLoaded: x.hasLoaded + 1 }))
-            }
-          : undefined
-      return (
-        <Suspense key={result.id} fallback={null}>
-          <RestaurantListItem
-            currentLocationInfo={searchState.currentLocationInfo ?? null}
-            restaurantId={result.id}
-            restaurantSlug={result.slug}
-            rank={index + 1}
-            searchState={searchState}
-            onFinishRender={onFinishRender}
-          />
-        </Suspense>
-      )
-    })
+    return (
+      <SuspenseList revealOrder="forwards">
+        {cur.map((result, index) => {
+          const onFinishRender =
+            index == cur.length - 1
+              ? // load more
+                () => {
+                  setState((x) => ({ ...x, hasLoaded: x.hasLoaded + 1 }))
+                }
+              : undefined
+          return (
+            <Suspense key={result.id} fallback={null}>
+              <RestaurantListItem
+                currentLocationInfo={searchState.currentLocationInfo ?? null}
+                restaurantId={result.id}
+                restaurantSlug={result.slug}
+                rank={index + 1}
+                searchState={searchState}
+                onFinishRender={onFinishRender}
+              />
+            </Suspense>
+          )
+        })}
+      </SuspenseList>
+    )
   }, [allResults, currentlyShowing, state.chunk])
 
   const isOnLastChunk = currentlyShowing === allResults.length
@@ -320,11 +329,42 @@ const SearchResultsContent = memo((props: Props) => {
     }
   }, [isOnLastChunk, state.hasLoaded, state.scrollToEndOf])
 
-  if (!isLoading && !results.length) {
+  const searchFooter = (
+    <VStack
+      alignItems="center"
+      justifyContent="center"
+      minHeight={300}
+      width="100%"
+    >
+      <HStack alignItems="center" justifyContent="center">
+        <HomeLenseBar size="lg" activeTagIds={searchState.activeTagIds} />
+      </HStack>
+      <Spacer size={40} />
+      <Button
+        alignSelf="center"
+        onPress={() => {
+          if (omStatic.state.home.isAutocompleteActive) {
+            setState((x) => ({ ...x, scrollToTop: Math.random() }))
+          } else {
+            focusSearchInput()
+          }
+        }}
+      >
+        <ArrowUp />
+      </Button>
+      <Spacer size={40} />
+      <Text opacity={0.5} fontSize={12}>
+        Showing {allResults.length} / {allResults.length} results
+      </Text>
+    </VStack>
+  )
+
+  if (!isLoading && !allResults.length) {
     return contentWrap(
       <VStack height="50vh" alignItems="center" justifyContent="center" spacing>
         <Text fontSize={22}>No results 😞</Text>
         {/* <LinkButton name="contact">Report problem</LinkButton> */}
+        {searchFooter}
       </VStack>
     )
   }
@@ -335,42 +375,14 @@ const SearchResultsContent = memo((props: Props) => {
     <VStack paddingBottom={20} spacing={6}>
       {results}
       {isLoading && <HomeLoadingItems />}
-      {!isLoading && (
-        <VStack
-          alignItems="center"
-          justifyContent="center"
-          minHeight={300}
-          width="100%"
-        >
-          <HStack alignItems="center" justifyContent="center">
-            <HomeLenseBar size="lg" activeTagIds={searchState.activeTagIds} />
-          </HStack>
-          <Spacer size={40} />
-          <Button
-            alignSelf="center"
-            onPress={() => {
-              if (omStatic.state.home.isAutocompleteActive) {
-                setState((x) => ({ ...x, scrollToTop: Math.random() }))
-              } else {
-                focusSearchInput()
-              }
-            }}
-          >
-            <ArrowUp />
-          </Button>
-          <Spacer size={40} />
-          <Text opacity={0.5} fontSize={12}>
-            Showing {results.length} / {allResults.length} results
-          </Text>
-        </VStack>
-      )}
+      {!isLoading && searchFooter}
     </VStack>
   )
 })
 
-const HomeLoadingItems = () => {
+const HomeLoadingItems = (props: StackProps) => {
   return (
-    <VStack flex={1} width="100%" minHeight={400}>
+    <VStack flex={1} width="100%" minHeight={400} {...props}>
       <LoadingItems />
     </VStack>
   )
@@ -441,9 +453,6 @@ const HomeLoadingItems = () => {
 
 // function ListItem(props) {
 //   const [isMounted, setIsMounted] = useState(false)
-//   useWaterfall(() => {
-//     setIsMounted(true)
-//   })
 //   return isMounted
 //     ? props.children
 //     : props.loading ?? <View style={{ height: props.estimatedHeight }} />
