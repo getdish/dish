@@ -119,7 +119,7 @@ export class Tagging {
     )
   }
 
-  async scanReviews() {
+  async scanCorpus() {
     this._found_tags = {}
     this.all_tags = await restaurantGetAllPossibleTags(this.crawler.restaurant)
     this.restaurant_tag_ratings = {}
@@ -127,6 +127,7 @@ export class Tagging {
       ...this._scanYelpReviewsForTags(),
       ...this._scanTripadvisorReviewsForTags(),
       ...this._scanGoogleReviewsForTags(),
+      ...this._scanMenuItemsForTags(),
     ]
     this.findDishesInText(all_reviews)
     await this.findVegInText(all_reviews)
@@ -296,6 +297,16 @@ export class Tagging {
     let texts: string[] = []
     for (const review of reviews) {
       const text = review.split('\n')[3]
+      if (!text) continue
+      texts.push(text)
+    }
+    return texts
+  }
+
+  _scanMenuItemsForTags() {
+    let texts: string[] = []
+    for (const review of this.crawler.menu_items) {
+      const text = review.description
       if (!text) continue
       texts.push(text)
     }

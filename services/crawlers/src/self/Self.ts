@@ -53,6 +53,7 @@ export class Self extends WorkerJob {
   ratings!: { [key: string]: number }
   _start_time!: [number, number]
   tagging: Tagging
+  menu_items: MenuItem[] = []
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -96,10 +97,10 @@ export class Self extends WorkerJob {
         this.doTags,
         this.addPriceTags,
         this.findPhotosForTags,
-        this.scanReviews,
-        this.upsertUberDishes,
-        this.upsertDoorDashDishes,
-        this.upsertGrubHubDishes,
+        this.getUberDishes,
+        this.getDoorDashDishes,
+        this.getGrubHubDishes,
+        this.scanCorpus,
       ]
       for (const async_func of async_steps) {
         await this._runFailableFunction(async_func)
@@ -126,6 +127,9 @@ export class Self extends WorkerJob {
       this.tagging.restaurant_tags
     )
     await this.tagging.updateTagRankings()
+    if (this.menu_items.length != 0) {
+      await menuItemsUpsertMerge(this.menu_items)
+    }
     this.logTime('postMerge()')
   }
 
@@ -218,8 +222,8 @@ export class Self extends WorkerJob {
     }
   }
 
-  async scanReviews() {
-    await this.tagging.scanReviews()
+  async scanCorpus() {
+    await this.tagging.scanCorpus()
   }
 
   async handleRestaurantKeyConflict() {
@@ -605,16 +609,15 @@ export class Self extends WorkerJob {
     this.restaurant.image = hero
   }
 
-  async upsertUberDishes() {
+  async getUberDishes() {
     if (!this.ubereats?.id) {
       return
     }
-    let dishes: MenuItem[] = []
     // @ts-ignore
     const raw_dishes = this.ubereats?.data?.dishes
     for (const data of raw_dishes) {
       if (data.title) {
-        dishes.push({
+        this.menu_items.push({
           restaurant_id: this.restaurant.id,
           name: data.title,
           description: data.description,
@@ -623,20 +626,18 @@ export class Self extends WorkerJob {
         })
       }
     }
-    await menuItemsUpsertMerge(dishes)
   }
 
-  async upsertDoorDashDishes() {
+  async getDoorDashDishes() {
     if (!this.doordash?.id) {
       return
     }
-    let dishes: MenuItem[] = []
     // @ts-ignore
     const categories = this.doordash?.data?.menus.currentMenu.menuCategories
     for (const category of categories) {
       for (const data of category.items) {
         if (data.name) {
-          dishes.push({
+          this.menu_items.push({
             restaurant_id: this.restaurant.id,
             name: data.name,
             description: data.description,
@@ -646,17 +647,15 @@ export class Self extends WorkerJob {
         }
       }
     }
-    await menuItemsUpsertMerge(dishes)
   }
 
-  async upsertGrubHubDishes() {
+  async getGrubHubDishes() {
     if (!this.grubhub?.id) return
-    let dishes: MenuItem[] = []
     const categories = scrapeGetData(this.grubhub, 'main.menu_category_list')
     for (const category of categories) {
       for (const data of category.menu_item_list) {
         if (data.name) {
-          dishes.push({
+          this.menu_items.push({
             restaurant_id: this.restaurant.id,
             name: data.name,
             description: data.description,
@@ -665,7 +664,6 @@ export class Self extends WorkerJob {
         }
       }
     }
-    await menuItemsUpsertMerge(dishes)
   }
 
   async mergePhotos() {

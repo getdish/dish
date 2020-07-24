@@ -124,7 +124,7 @@ const ubereats: Partial<Scrape> = {
     dishes: [
       {
         title: 'Nice Dish',
-        description: '',
+        description: 'Test tag existing 4',
         price: 1,
         imageUrl: 'https://img.com',
       },
@@ -150,10 +150,10 @@ const doordash: Partial<Scrape> = {
           {
             items: [
               {
-                name: 'Nice Dish',
+                name: 'Nice DD Dish',
                 description: 'I am unique to DoorDash',
-                price: 1,
-                imageUrl: 'https://img.com',
+                price: 2,
+                imageUrl: 'https://imgur.com',
               },
             ],
           },
@@ -269,6 +269,7 @@ test('Merging', async (t) => {
 test('Merging dishes', async (t) => {
   const self = new Self()
   await self.mergeAll(t.context.restaurant.id)
+  await self.postMerge()
   const updated = await restaurantFindOneWithTags(
     {
       id: t.context.restaurant.id,
@@ -277,9 +278,9 @@ test('Merging dishes', async (t) => {
   )
   t.is(!!updated, true)
   if (!updated) return
-  t.is(updated.menu_items.length, 1)
+  t.is(updated.menu_items.length, 2)
   t.is(updated.menu_items[0].name, 'Nice Dish')
-  t.is(updated.menu_items[0].description, 'I am unique to DoorDash')
+  t.is(updated.menu_items[1].description, 'I am unique to DoorDash')
 })
 
 test('Weighted ratings when all sources are present', (t) => {
@@ -342,12 +343,17 @@ test('Tag rankings', async (t) => {
   t.is(restaurant.tags[0].rank, 3)
 })
 
-test('Finding dishes in reviews', async (t) => {
+test('Finding dishes in the corpus', async (t) => {
   const self = new Self()
   const tag = { name: 'Test country' }
 
   const [tag_parent] = await tagInsert([tag])
-  const [existing_tag1, existing_tag2, existing_tag3] = await tagInsert([
+  const [
+    existing_tag1,
+    existing_tag2,
+    existing_tag3,
+    existing_tag4,
+  ] = await tagInsert([
     {
       name: 'Test tag existing 1',
       parentId: tag_parent.id,
@@ -360,6 +366,10 @@ test('Finding dishes in reviews', async (t) => {
       name: 'Test tag existing 3',
       parentId: tag_parent.id,
     },
+    {
+      name: 'Test tag existing 4',
+      parentId: tag_parent.id,
+    },
   ])
 
   await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
@@ -368,24 +378,18 @@ test('Finding dishes in reviews', async (t) => {
   }))!
   self.restaurant = t.context.restaurant
   await self.getScrapeData()
-  await self.scanReviews()
+  await self.getUberDishes()
+  await self.scanCorpus()
+  await self.postMerge()
   const updated = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   })
   t.assert(!!updated, 'not found')
   if (!updated) return
-  t.assert(
-    updated.tags.map((i) => i.tag.id),
-    existing_tag1.id
-  )
-  t.assert(
-    updated.tags.map((i) => i.tag.id),
-    existing_tag2.id
-  )
-  t.assert(
-    updated.tags.map((i) => i.tag.id),
-    existing_tag3.id
-  )
+  t.assert(updated.tags.map((i) => i.tag.id).includes(existing_tag1.id))
+  t.assert(updated.tags.map((i) => i.tag.id).includes(existing_tag2.id))
+  t.assert(updated.tags.map((i) => i.tag.id).includes(existing_tag3.id))
+  t.assert(updated.tags.map((i) => i.tag.id).includes(existing_tag4.id))
 })
 
 test('Dish sentiment analysis from reviews', async (t) => {
@@ -415,7 +419,7 @@ test('Dish sentiment analysis from reviews', async (t) => {
   t.context.restaurant = restaurant as RestaurantWithId
   self.restaurant = t.context.restaurant
   await self.getScrapeData()
-  await self.scanReviews()
+  await self.scanCorpus()
   await self.postMerge()
   const updated = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
@@ -438,7 +442,7 @@ test('Finding veg in reviews', async (t) => {
   self.tagging.SPECIAL_FILTER_THRESHOLD = 1
   self.restaurant = t.context.restaurant
   await self.getScrapeData()
-  await self.scanReviews()
+  await self.scanCorpus()
   await self.postMerge()
   const updated = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
