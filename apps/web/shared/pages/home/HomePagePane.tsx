@@ -16,7 +16,6 @@ export type HomePagePaneProps<
 
 export const HomePagePane = (props: HomePagePaneProps) => {
   const { item } = props
-  console.log('we have', item)
   return (
     <Suspense fallback={null}>
       {isHomeState(item) && <HomePageHomePane {...props} />}

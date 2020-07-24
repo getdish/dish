@@ -11,9 +11,9 @@ export function OverlayLinkButton<
 >({ Icon, children, ...props }: LinkButtonProps<Name, Params> & { Icon: any }) {
   return (
     <LinkButton
-      backgroundColor="rgba(0,0,0,0.5)"
-      paddingVertical={9}
-      paddingHorizontal={14}
+      backgroundColor="rgba(0,0,0,0.65)"
+      paddingVertical={7}
+      paddingHorizontal={11}
       borderRadius={90}
       shadowColor="rgba(0,0,0,0.175)"
       shadowRadius={13}
@@ -27,9 +27,9 @@ export function OverlayLinkButton<
       <Icon
         size={12}
         color="rgba(255,255,255,0.5)"
-        style={{ marginBottom: -2, marginRight: 8 }}
+        style={{ marginBottom: -1, marginRight: 6 }}
       />
-      <Text color="#fff" fontSize={12} fontWeight="400" opacity={0.85}>
+      <Text color="#fff" fontSize={14} fontWeight="500" opacity={0.85}>
         {children}
       </Text>
     </LinkButton>

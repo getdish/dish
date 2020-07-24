@@ -63,8 +63,16 @@ export const onFocusAnyInput = () => {
   }
 }
 
+export const isIOS =
+  (/iPad|iPhone|iPod/.test(navigator.platform) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) &&
+  !window.MSStream
+
 let searchBar: HTMLInputElement | null = null
 export function focusSearchInput() {
+  if (isIOS) {
+    return
+  }
   searchBar?.focus()
 }
 
@@ -309,15 +317,13 @@ function searchInputEffect(input: HTMLInputElement) {
       }
       case 8: {
         // delete
-        if (isAutocompleteActive) {
-          // if selected onto a tag, we can send remove command
-          if (om.state.home.searchbarFocusedTag) {
-            om.actions.home.navigate({
-              tags: [om.state.home.searchbarFocusedTag],
-            })
-            next()
-            return
-          }
+        if (om.state.home.searchbarFocusedTag) {
+          // will remove it if active
+          om.actions.home.navigate({
+            tags: [om.state.home.searchbarFocusedTag],
+          })
+          next()
+          return
         }
         if (isCaretAtStart) {
           prev()

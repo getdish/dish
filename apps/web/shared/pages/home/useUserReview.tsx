@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 
 import { HomeActiveTagIds } from '../../state/home'
 import { getFullTags } from '../../state/home-tag-helpers'
-import { getTagId } from '../../state/Tag'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 
 export const useUserReviews = (
@@ -15,9 +14,9 @@ export const useUserReviews = (
   const om = useOvermind()
   const forceUpdate = useForceUpdate()
   const userId = om.state.user.user?.id
-  if (userId && !restaurantId) {
-    console.trace('no restaurantId')
-  }
+  // if (userId && !restaurantId) {
+  //   console.log('no restaurantId')
+  // }
 
   let reviews = []
 

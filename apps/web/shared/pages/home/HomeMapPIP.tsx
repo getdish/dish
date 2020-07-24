@@ -92,6 +92,7 @@ const HomeMapPIPContent = graphql(() => {
   useEffect(() => {
     if (!map) return
     centerMapToRegion({
+      animated: false,
       map,
       center,
       span: {
@@ -127,7 +128,7 @@ const HomeMapPIPContent = graphql(() => {
       zIndex={1000}
       width="20%"
       height="20%"
-      maxWidth={175}
+      maxWidth={155}
       maxHeight={150}
       borderRadius={20}
       overflow="hidden"

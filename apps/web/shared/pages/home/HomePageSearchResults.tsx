@@ -127,7 +127,7 @@ export default memo(function HomePageSearchResults(props: Props) {
   return (
     <HomeStackDrawer title={title} closable>
       <SearchResultsTitle title={titleElements} stateId={props.item.id} />
-      <Suspense fallback={<HomeLoadingItems />}>
+      <Suspense fallback={<HomeLoading />}>
         <VStack
           flex={1}
           overflow="hidden"
@@ -213,7 +213,7 @@ const SearchResultsContent = memo((props: Props) => {
     scrollToEndOf: 1,
     scrollToTop: 0,
   })
-  const scrollRef = useRef<HTMLDivElement | null>(null)
+  const scrollRef = useRef<ScrollView | null>(null)
   const perChunk = [3, 3, 6, 12, 12]
   const allResults = searchState.results
   const currentlyShowing = Math.min(
@@ -233,8 +233,19 @@ const SearchResultsContent = memo((props: Props) => {
   }, [])
 
   useEffect(() => {
+    return omStatic.reaction(
+      (state) => state.home.activeIndex,
+      (index) => {
+        if (!omStatic.state.home.hoveredRestaurant) {
+          scrollRef.current?.scrollTo({ x: 0, y: 200 * index, animated: true })
+        }
+      }
+    )
+  }, [])
+
+  useEffect(() => {
     if (state.scrollToTop > 0) {
-      scrollRef.current?.scrollTo(0, 0)
+      scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
     }
   }, [state.scrollToTop])
 
@@ -372,7 +383,7 @@ const SearchResultsContent = memo((props: Props) => {
   return contentWrap(
     <VStack paddingBottom={20} spacing={6}>
       {results}
-      {isLoading && <HomeLoadingItems />}
+      {isLoading && <HomeLoading />}
     </VStack>
   )
 })
@@ -416,10 +427,10 @@ const SearchFooter = ({
   )
 }
 
-const HomeLoadingItems = (props: StackProps) => {
+const HomeLoading = (props: StackProps) => {
   return (
     <VStack flex={1} width="100%" minHeight={300} {...props}>
-      <LoadingItems />
+      <LoadingItem />
     </VStack>
   )
 }
