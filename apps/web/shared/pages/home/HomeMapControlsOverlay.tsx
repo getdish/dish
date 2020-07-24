@@ -41,18 +41,17 @@ export const HomeMapControlsOverlay = memo(() => {
         justifyContent="center"
       >
         <OverlayLinkButton
+          Icon={RefreshCcw}
           className={`animate-up ${hasMovedMap ? 'active' : ''}`}
           pointerEvents="auto"
           alignItems="center"
           justifyContent="center"
           onPress={() => {
+            om.actions.home.setHasMovedMap(false)
             om.actions.home.refresh()
           }}
         >
-          <RefreshCcw size={15} style={{ margin: -3, marginRight: 10 }} />
-          <Text fontSize={14} fontWeight="400" opacity={0.85}>
-            Search in map
-          </Text>
+          Refresh
           <ChevronUp
             onMouseUp={(e) => {
               e.preventDefault()
@@ -60,6 +59,7 @@ export const HomeMapControlsOverlay = memo(() => {
               om.actions.home.setHasMovedMap(false)
             }}
             size={12}
+            color="#fff"
             style={{ margin: -6, marginLeft: 4, padding: 4, opacity: 0.4 }}
           />
         </OverlayLinkButton>

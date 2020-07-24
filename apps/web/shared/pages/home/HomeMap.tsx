@@ -1,10 +1,11 @@
-import { fullyIdle, series, sleep } from '@dish/async'
+import { fullyIdle, idle, series, sleep } from '@dish/async'
 import { Restaurant, graphql, query } from '@dish/graph'
 import {
   AbsoluteVStack,
   VStack,
   useDebounce,
   useDebounceEffect,
+  useGet,
   useOnMount,
 } from '@dish/ui'
 import React, {
@@ -141,7 +142,7 @@ const pauseMap = () => {
 }
 const forceResumeMap = async () => {
   const id = version
-  await sleep(0)
+  await idle(20)
   if (id === version) {
     resumeMap(true)
   }
@@ -151,7 +152,25 @@ const resumeMap = (force: boolean = false) => {
   pauseMapUpdates = false
   if (force || pendingUpdates) {
     pendingUpdates = false
-    handleRegionChangeEnd()
+    if (pauseMapUpdates) {
+      pendingUpdates = true
+      console.log('pausing update region change')
+      // dont update while were transitioning to new state!
+      return
+    }
+    omStatic.actions.home.setHasMovedMap()
+    const span = mapView.region.span
+    pendingUpdates = false
+    omStatic.actions.home.setMapArea({
+      center: {
+        lng: mapView.center.longitude,
+        lat: mapView.center.latitude,
+      },
+      span: {
+        lat: span.latitudeDelta,
+        lng: span.longitudeDelta,
+      },
+    })
   }
 }
 
@@ -167,37 +186,6 @@ export function centerMapToRegionMain(p: {
   centerMapToRegion(p)
 }
 
-// appears *above* all markers and cant go below...
-// const dotFactory = (coordinate, options) => {
-//   const div = document.createElement('div')
-//   // div.textContent = 'HI'
-//   div.className = 'dot-annotation'
-//   return div
-// }
-
-const handleRegionChangeEnd = () => {
-  if (pauseMapUpdates) {
-    pendingUpdates = true
-    console.log('pausing update region change')
-    // dont update while were transitioning to new state!
-    return
-  }
-
-  omStatic.actions.home.setHasMovedMap()
-  const span = mapView.region.span
-  pendingUpdates = false
-  omStatic.actions.home.setMapArea({
-    center: {
-      lng: mapView.center.longitude,
-      lat: mapView.center.latitude,
-    },
-    span: {
-      lat: span.latitudeDelta,
-      lng: span.longitudeDelta,
-    },
-  })
-}
-
 const HomeMapContent = memo(function HomeMap({
   restaurants,
   restaurantDetail,
@@ -209,6 +197,7 @@ const HomeMapContent = memo(function HomeMap({
   const drawerWidth = useHomeDrawerWidth(Infinity)
   const isSmall = useMediaQueryIsSmall()
   const state = om.state.home.currentState
+  const getRestaurants = useGet(restaurants)
   const { center, span } = state
 
   const mapWidth = isSmall
@@ -338,14 +327,26 @@ const HomeMapContent = memo(function HomeMap({
               annotation.selected = true
             }
           }
-          if (hoveredRestaurant.location?.coordinates) {
+          const restaurants = getRestaurants()
+          console.log('hovered', hoveredRestaurant, restaurants)
+          const restaurant = restaurants.find(
+            (x) =>
+              x.id === hoveredRestaurant.id || x.slug === hoveredRestaurant.slug
+          )
+          const coordinates = restaurant?.location?.coordinates
+          console.log('ok', restaurant, coordinates)
+          if (coordinates) {
+            resumeMap()
             centerMapToRegionMain({
               map,
               center: {
-                lat: hoveredRestaurant.location.coordinates[1],
-                lng: hoveredRestaurant.location.coordinates[0],
+                lat: coordinates[1],
+                lng: coordinates[0],
               },
-              span: state.span,
+              span: {
+                lat: state.span.lat,
+                lng: state.span.lng,
+              },
             })
           }
         }

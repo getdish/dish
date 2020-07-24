@@ -12,7 +12,6 @@ import {
 import React, { Suspense, memo, useEffect, useState } from 'react'
 
 import { bgLight, bgLightLight, brandColor } from '../../colors'
-import { drawerWidthMax } from '../../constants'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home'
 import { omStatic, useOvermindStatic } from '../../state/useOvermind'
 import { Link } from '../../views/ui/Link'
@@ -161,7 +160,7 @@ const RestaurantListItemContent = memo(
                 justifyContent="center"
                 pointerEvents="none"
               >
-                <AbsoluteVStack position="absolute" top={24} left={17}>
+                <AbsoluteVStack position="absolute" top={20} left={10}>
                   <RestaurantUpVoteDownVote
                     restaurantId={restaurantId}
                     activeTagIds={tagIds ?? {}}

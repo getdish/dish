@@ -58,7 +58,7 @@ export const RestaurantTagsRow = memo(
               rank={index}
               {...getTagButtonProps(tag)}
               subtle={props.subtle}
-              votable
+              votable={!props.subtle}
               marginRight={5}
               marginBottom={5}
               restaurantId={props.restaurantId}

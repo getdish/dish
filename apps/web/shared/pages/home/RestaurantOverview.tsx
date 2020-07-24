@@ -40,7 +40,6 @@ export const RestaurantOverview = memo(() => {
                 fontWeight="300"
                 fontSize={16}
                 color="rgba(0,0,0,0.5)"
-                className="unselectable"
               >
                 {item.category}
               </Text>

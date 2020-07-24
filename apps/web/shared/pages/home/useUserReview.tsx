@@ -126,7 +126,7 @@ export const useUserUpvoteDownvote = (
           .map<Review>((name) => {
             const tagId = fullTags.find((x) => x.name === name)?.id
             if (!tagId) {
-              debugger
+              console.warn('no tag', name, tagId, fullTags, activeTagIds)
               return null
             }
             return {
@@ -138,11 +138,13 @@ export const useUserUpvoteDownvote = (
           })
           .filter(Boolean)
         console.log('fullTags', partialTags, fullTags, insertTags)
-        reviewUpsert(insertTags).then((res) => {
-          if (res.length) {
-            Toast.show(`Voted`)
-          }
-        })
+        if (insertTags.length) {
+          reviewUpsert(insertTags).then((res) => {
+            if (res.length) {
+              Toast.show(`Voted`)
+            }
+          })
+        }
       }
     },
   ] as const

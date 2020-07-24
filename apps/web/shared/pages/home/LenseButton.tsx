@@ -32,9 +32,13 @@ export const LenseButton = memoIsEqualDeep(
         disallowDisableWhenActive
         position="relative"
         zIndex={isActive ? 1 : 0}
+        pressStyle={{
+          opacity: 0.8,
+          transform: [{ scale: 0.9 }],
+        }}
       >
         <VStack
-          className="ease-in-out"
+          className="ease-in-out-fast"
           alignItems="center"
           justifyContent="center"
           marginVertical={-5 * scale}
@@ -45,16 +49,16 @@ export const LenseButton = memoIsEqualDeep(
           borderColor={borderColor}
           borderWidth={1}
           borderBottomColor="transparent"
+          transform={[{ scale: 1 }]}
           {...(isActive && {
             borderColor: lenseColor,
             transform: [{ scale: 1.2 }],
             hoverStyle: {
-              transform: [{ scale: 1.15 }],
+              transform: [{ scale: 1.2 }],
             },
           })}
         >
           <Text
-            className="ease-in-out"
             fontSize={sizePx * (isActive ? 0.7 : 0.5) * scale}
             lineHeight={sizePx * scale}
             fontWeight="400"
@@ -63,7 +67,6 @@ export const LenseButton = memoIsEqualDeep(
             {(lense.icon ?? '').trim()}
           </Text>
           <VStack
-            className="ease-in-out"
             transform={[{ rotate: '-10deg' }]}
             zIndex={100}
             alignItems="center"

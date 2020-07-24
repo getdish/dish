@@ -90,6 +90,7 @@ export const HomeSearchLocationInput = memo(() => {
 
   return (
     <VStack
+      contain="paint"
       position="relative"
       flex={65}
       minWidth={180}
