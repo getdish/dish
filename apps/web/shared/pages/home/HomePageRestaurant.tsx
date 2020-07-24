@@ -94,7 +94,11 @@ const HomePageRestaurant = memo(
 
               <Spacer size="xl" />
 
-              <RestaurantTagsRow size="sm" restaurantSlug={slug} />
+              <RestaurantTagsRow
+                size="sm"
+                restaurantSlug={slug}
+                restaurantId={restaurant.id}
+              />
 
               <Spacer size="xl" />
 

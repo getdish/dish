@@ -274,7 +274,6 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
       }}
       asyncClick={false}
       onPress={(e) => {
-        debugger
         prevent(e)
         setVote(vote == 1 ? 0 : 1)
       }}

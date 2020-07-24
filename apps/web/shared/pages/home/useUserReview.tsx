@@ -1,15 +1,29 @@
-import { Review, Tag, query, reviewUpsert, tagUpsert } from '@dish/graph'
-import { useState } from 'react'
+import { series, sleep } from '@dish/async'
+import { Review, query, refetch, reviewUpsert } from '@dish/graph'
+import { Toast, useForceUpdate } from '@dish/ui'
+import { useEffect, useState } from 'react'
 
 import { HomeActiveTagIds } from '../../state/home'
-import { useOvermind } from '../../state/useOvermind'
+import { getFullTags } from '../../state/home-tag-helpers'
+import { getTagId } from '../../state/Tag'
+import { omStatic, useOvermind } from '../../state/useOvermind'
 
-export const useUserReviews = (restaurantId: string): Review[] => {
+export const useUserReviews = (
+  restaurantId: string,
+  refetchKey?: string
+): Review[] => {
   const om = useOvermind()
+  const forceUpdate = useForceUpdate()
   const userId = om.state.user.user?.id
-  if (userId) {
-    const reviews = query.review({
-      limit: 1,
+  if (userId && !restaurantId) {
+    console.trace('no restaurantId')
+  }
+
+  let reviews = []
+
+  const shouldFetch = userId && restaurantId
+  if (shouldFetch) {
+    reviews = query.review({
       where: {
         restaurant_id: {
           _eq: restaurantId,
@@ -19,9 +33,22 @@ export const useUserReviews = (restaurantId: string): Review[] => {
         },
       },
     })
-    return reviews
   }
-  return []
+
+  useEffect(() => {
+    if (refetchKey && shouldFetch) {
+      console.log('refetching')
+      refetch(reviews)
+      return series([
+        () => sleep(250),
+        () => {
+          forceUpdate()
+        },
+      ])
+    }
+  }, [refetchKey])
+
+  return reviews
 }
 
 const isTagReview = (r: Review) => !!r.tag_id
@@ -33,9 +60,41 @@ export const useUserReview = (restaurantId: string) => {
 }
 
 export const useUserFavorite = (restaurantId: string) => {
-  return useUserReviews(restaurantId).filter(
+  const [key, setKey] = useState('')
+  const review = useUserReviews(restaurantId, key).filter(
     (x) => !isTagReview(x) && x.favorited
   )[0]
+  const [optimistic, setOptimistic] = useState(false)
+  const isStarred = optimistic ?? review?.favorited
+  return [
+    isStarred,
+    (next: boolean) => {
+      const user = omStatic.state.user.user
+      if (!user) {
+        return
+      }
+      if (!review) {
+        reviewUpsert([
+          {
+            user_id: user.id,
+            favorited: next,
+            restaurant_id: restaurantId,
+          },
+        ]).then((res) => {
+          setKey(`${Math.random()}`)
+          if (!res?.length) {
+            Toast.show('Error saving')
+            return
+          }
+          console.log('favorited', res)
+        })
+      } else {
+        review.favorited = next
+      }
+      setOptimistic(next)
+      Toast.show(next ? 'Favorited' : 'Un-favorited')
+    },
+  ] as const
 }
 
 export const useUserUpvoteDownvote = (
@@ -49,7 +108,7 @@ export const useUserUpvoteDownvote = (
   const [userVote, setUserVote] = useState<number | null>(null)
   return [
     userVote ?? vote,
-    (rating: number) => {
+    async (rating: number) => {
       if (votes.length) {
         votes.forEach((vote) => {
           vote.rating = rating
@@ -57,18 +116,26 @@ export const useUserUpvoteDownvote = (
         })
       } else {
         setUserVote(rating)
-        reviewUpsert(
-          Object.keys(tags)
-            .filter((x) => tags[x])
-            .map<Review>((tagId) => {
-              return {
-                tag_id: tagId,
-                user_id: userId,
-                restaurant_id: restaurantId,
-                rating,
-              }
-            })
-        )
+        const activeTagIds = Object.keys(tags).filter((x) => tags[x])
+        const partialTags = activeTagIds.map((id) => ({
+          ...omStatic.state.home.allTags[id],
+          name,
+        }))
+        const fullTags = await getFullTags(partialTags)
+        const insertTags = activeTagIds.map<Review>((name) => {
+          return {
+            tag_id: fullTags.find((x) => x.name === name).id,
+            user_id: userId,
+            restaurant_id: restaurantId,
+            rating,
+          }
+        })
+        console.log('fullTags', partialTags, fullTags, insertTags)
+        reviewUpsert(insertTags).then((res) => {
+          if (res.length) {
+            Toast.show(`Voted`)
+          }
+        })
       }
     },
   ] as const

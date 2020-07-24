@@ -1,9 +1,8 @@
-import { graphql, reviewInsert, reviewUpsert } from '@dish/graph'
-import { HStack, Text, Toast, VStack } from '@dish/ui'
-import React, { memo, useState } from 'react'
+import { graphql } from '@dish/graph'
+import { HStack, Text, VStack, prevent } from '@dish/ui'
+import React, { memo } from 'react'
 import { Star } from 'react-feather'
 
-import { useOvermind } from '../../state/useOvermind'
 import { useUserFavorite } from './useUserReview'
 
 export const RestaurantFavoriteStar = memo(
@@ -17,31 +16,7 @@ export const RestaurantFavoriteStar = memo(
       restaurantId: string
     }) => {
       const sizePx = size == 'lg' ? 26 : 16
-      const om = useOvermind()
-      // const forceUpdate = useForceUpdate()
-      const review = useUserFavorite(restaurantId)
-      const [optimisticRating, setOptimisticRating] = useState(0)
-      const isStarred = (optimisticRating ?? review?.rating) > 0
-
-      const setRating = (r: number) => {
-        const user = om.state.user.user
-        if (!user) {
-          return
-        }
-        if (!review) {
-          reviewUpsert([
-            {
-              user_id: user.id,
-              rating: r,
-              restaurant_id: restaurantId,
-            },
-          ])
-        } else {
-          review.rating = r
-        }
-        setOptimisticRating(r)
-        Toast.show(r ? 'Favorited' : 'Un-favorited')
-      }
+      const [isFavorite, setIsFavorite] = useUserFavorite(restaurantId)
 
       return (
         <HStack
@@ -53,9 +28,8 @@ export const RestaurantFavoriteStar = memo(
           // @ts-ignore
           userSelect="none"
           onPress={(e) => {
-            e.stopPropagation()
-            e.preventDefault()
-            setRating(isStarred ? 0 : 1)
+            prevent(e)
+            setIsFavorite(!isFavorite)
           }}
           height={sizePx * 1.4}
           width={sizePx * 1.4}
@@ -73,12 +47,12 @@ export const RestaurantFavoriteStar = memo(
             borderRadius={100}
             overflow="hidden"
           >
-            {isStarred && (
+            {isFavorite && (
               <Text fontSize={sizePx * 0.88} lineHeight={sizePx * 0.88}>
                 ⭐️
               </Text>
             )}
-            {!isStarred && <Star size={sizePx} color={'goldenrod'} />}
+            {!isFavorite && <Star size={sizePx} color={'goldenrod'} />}
           </VStack>
         </HStack>
       )

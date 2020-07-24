@@ -22,30 +22,32 @@ import { flatButtonStyleSelected } from './baseButtonStyle'
 import { RestaurantReview } from './RestaurantReview'
 import { useUserReview, useUserReviews } from './useUserReview'
 
-export const RestaurantAddCommentButton = ({
-  restaurantId,
-  ...props
-}: SmallButtonProps & { restaurantId?: string }) => {
-  const review = useUserReview(restaurantId)
-  return (
-    <SmallButton
-      pressStyle={{
-        opacity: 0.6,
-      }}
-      {...props}
-    >
-      <MessageSquare
-        size={16}
-        color="#000"
-        style={{
-          margin: -4,
-          marginRight: 5,
+export const RestaurantAddCommentButton = graphql(
+  ({
+    restaurantId,
+    ...props
+  }: SmallButtonProps & { restaurantId?: string }) => {
+    const review = useUserReview(restaurantId)
+    return (
+      <SmallButton
+        pressStyle={{
+          opacity: 0.6,
         }}
-      />
-      {review?.text ? 'Edit review' : 'Add review'}
-    </SmallButton>
-  )
-}
+        {...props}
+      >
+        <MessageSquare
+          size={16}
+          color="#000"
+          style={{
+            margin: -4,
+            marginRight: 5,
+          }}
+        />
+        {review?.text ? 'Edit review' : 'Add review'}
+      </SmallButton>
+    )
+  }
+)
 
 export const RestaurantAddComment = memo(
   graphql(({ restaurantId }: { restaurantId: string }) => {

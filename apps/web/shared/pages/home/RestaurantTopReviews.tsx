@@ -60,13 +60,13 @@ export const RestaurantTopReviews = memo(
               <HStack>
                 <Spacer flex={1} />
                 <RestaurantAddCommentButton
+                  restuarantId={restaurantId}
                   onPress={() =>
                     setState((state) => ({
                       ...state,
                       showAddComment: !state.showAddComment,
                     }))
                   }
-                  restuarantId={restaurantId}
                 />
               </HStack>
 

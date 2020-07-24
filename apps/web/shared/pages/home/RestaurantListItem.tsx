@@ -235,8 +235,9 @@ const RestaurantListItemContent = memo(
                     <Spacer size={6} />
                     <RestaurantTagsRow
                       subtle
-                      showMore={true}
+                      showMore
                       restaurantSlug={restaurantSlug}
+                      restaurantId={restaurantId}
                     />
                     <RestaurantLenseVote restaurantId={restaurantId} />
                   </HStack>

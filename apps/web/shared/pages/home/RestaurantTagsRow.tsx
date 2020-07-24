@@ -18,6 +18,7 @@ type TagRowProps = {
   tags?: TagButtonTagProps[]
   subtle?: boolean
   containerProps?: StackProps
+  restaurantId?: string
 }
 
 export const RestaurantTagsRow = memo(
@@ -60,6 +61,7 @@ export const RestaurantTagsRow = memo(
               votable
               marginRight={5}
               marginBottom={5}
+              restaurantId={props.restaurantId}
             />
           )
         })}

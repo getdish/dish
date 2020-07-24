@@ -7,6 +7,14 @@ import { bgLight } from '../../colors'
 import { HomeActiveTagIds } from '../../state/home'
 import { useUserUpvoteDownvote } from './useUserReview'
 
+const voteButtonStyle: StackProps = {
+  borderRadius: 100,
+  width: 20,
+  height: 20,
+  alignItems: 'center',
+  justifyContent: 'center',
+}
+
 export const RestaurantUpVoteDownVote = memo(
   graphql(
     ({
@@ -16,19 +24,8 @@ export const RestaurantUpVoteDownVote = memo(
       restaurantId: string
       activeTagIds: HomeActiveTagIds
     }) => {
-      // const om = useOvermind()
-      // const userId = om.state.user.user?.id
       const [vote, setVote] = useUserUpvoteDownvote(restaurantId, activeTagIds)
-      console.log('vote', vote)
       const iconSize = 14
-      const voteButtonStyle: StackProps = {
-        borderRadius: 100,
-        width: 20,
-        height: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-        // padding: 10,
-      }
       return (
         <div
           style={{
@@ -40,15 +37,7 @@ export const RestaurantUpVoteDownVote = memo(
               {...voteButtonStyle}
               voted={vote == 1}
               onPressOut={() => {
-                const rating = vote === 1 ? 0 : 1
-                setVote(rating)
-                // reviewUpsert([
-                //   {
-                //     restaurant_id: restaurantId,
-                //     rating,
-                //     user_id: userId,
-                //   },
-                // ])
+                setVote(vote === 1 ? 0 : 1)
               }}
             >
               <ChevronUp
@@ -61,15 +50,7 @@ export const RestaurantUpVoteDownVote = memo(
               {...voteButtonStyle}
               voted={vote == -1}
               onPressOut={() => {
-                const rating = vote == -1 ? 0 : -1
-                setVote(rating)
-                // reviewUpsert([
-                //   {
-                //     restaurant_id: restaurantId,
-                //     rating,
-                //     user_id: userId,
-                //   },
-                // ])
+                setVote(vote == -1 ? 0 : -1)
               }}
             >
               <ChevronDown
@@ -94,9 +75,6 @@ const VoteButton = (props: StackProps & { voted?: boolean }) => {
       justifyContent="center"
       backgroundColor="#fff"
       borderColor="white"
-      // shadowColor="rgba(0,0,0,0.035)"
-      // shadowRadius={2}
-      // shadowOffset={{ height: 2, width: -2 }}
       hoverStyle={{
         backgroundColor: '#eee',
         borderColor: '#ddd',
