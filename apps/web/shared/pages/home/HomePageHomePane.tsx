@@ -1,17 +1,15 @@
 import { fullyIdle, series } from '@dish/async'
-import { Restaurant, TopCuisine, tagDelete } from '@dish/graph'
+import { Restaurant, TopCuisine } from '@dish/graph'
 import {
   AbsoluteVStack,
   HStack,
-  LinearGradient,
   LoadingItems,
-  SmallTitle,
   Spacer,
   Text,
   VStack,
   useDebounce,
 } from '@dish/ui'
-import _, { clamp } from 'lodash'
+import _ from 'lodash'
 import {
   default as React,
   Suspense,
@@ -25,16 +23,14 @@ import {
 import { ChevronRight } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
 
-import { bgAlt, bgLight } from '../../colors'
+import { bgLight } from '../../colors'
 import { HomeStateItemHome } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { tagDescriptions } from '../../state/Tag'
-import { omStatic, useOvermind } from '../../state/useOvermind'
+import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../../views/NotFoundPage'
-import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { flatButtonStyle } from './baseButtonStyle'
 import { CloseButton } from './CloseButton'
 import { DishView } from './DishView'
 import { HomeLenseBar } from './HomeLenseBar'
@@ -42,7 +38,6 @@ import { HomePagePaneProps } from './HomePagePane'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { RestaurantButton } from './RestaurantButton'
 import { Squircle } from './Squircle'
-import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 // top dishes
@@ -109,13 +104,6 @@ const HomePageTopDishes = memo((props: Props) => {
     return <NotFoundPage title="Home not found" />
   }
 
-  const om = useOvermind()
-  const lense = getActiveTags(om.state.home, state).find(
-    (x) => x.type === 'lense'
-  )
-  const tagsDescriptions = tagDescriptions[(lense.name ?? '').toLowerCase()]
-  const tagsDescription = tagsDescriptions?.plain.replace('Here', ``) ?? ''
-
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
@@ -152,31 +140,7 @@ const HomePageTopDishes = memo((props: Props) => {
                       paddingHorizontal={20}
                       position="relative"
                     >
-                      <AbsoluteVStack
-                        position="absolute"
-                        top="50%"
-                        marginTop={-10}
-                        left="2%"
-                        width="36%"
-                        zIndex={1000}
-                        justifyContent="center"
-                        alignItems="center"
-                      >
-                        <LinkButton
-                          paddingVertical={5}
-                          paddingHorizontal={6}
-                          fontSize={15}
-                          shadowColor={'rgba(0,0,0,0.1)'}
-                          shadowRadius={8}
-                          shadowOffset={{ height: 2, width: 0 }}
-                          backgroundColor="#fff"
-                          borderRadius={8}
-                          fontWeight="600"
-                          transform={[{ rotate: '-4deg' }]}
-                        >
-                          {tagsDescription}
-                        </LinkButton>
-                      </AbsoluteVStack>
+                      <HomeLenseTitle state={state} />
 
                       <HStack alignItems="center" justifyContent="center">
                         <HomeLenseBar
@@ -219,6 +183,43 @@ const HomePageTopDishes = memo((props: Props) => {
     </>
   )
 })
+
+const HomeLenseTitle = ({ state }) => {
+  const om = useOvermind()
+  const lense = getActiveTags(om.state.home, state).find(
+    (x) => x.type === 'lense'
+  )
+  const tagsDescriptions = tagDescriptions[(lense.name ?? '').toLowerCase()]
+  const tagsDescription = tagsDescriptions?.plain.replace('Here', ``) ?? ''
+  return (
+    <AbsoluteVStack
+      position="absolute"
+      top="50%"
+      marginTop={-10}
+      left="2%"
+      width="36%"
+      zIndex={1000}
+      justifyContent="center"
+      alignItems="center"
+      pointerEvents="none"
+    >
+      <LinkButton
+        paddingVertical={5}
+        paddingHorizontal={6}
+        fontSize={15}
+        shadowColor={'rgba(0,0,0,0.1)'}
+        shadowRadius={8}
+        shadowOffset={{ height: 2, width: 0 }}
+        backgroundColor="#fff"
+        borderRadius={8}
+        fontWeight="600"
+        transform={[{ rotate: '-4deg' }]}
+      >
+        {tagsDescription}
+      </LinkButton>
+    </AbsoluteVStack>
+  )
+}
 
 const HomeIntroLetter = memo(() => {
   const [showInto, setShowIntro] = useStorageState(
@@ -296,7 +297,7 @@ const dishHeight = 160
 const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
   return (
     <HStack marginTop={16} className="home-top-dish" position="relative">
-      <VStack width="24%" minWidth={200}>
+      <VStack paddingLeft={10} width="24%" minWidth={200}>
         <LinkButton
           transform={[{ rotate: '-2.5deg' }]}
           marginTop={-16}
@@ -370,7 +371,7 @@ const TopDishesRestaurantsSide = memo(
     }, [])
 
     return (
-      <VStack flex={1} padding={10} spacing={6} alignItems="flex-start">
+      <VStack flex={1} padding={10} spacing={4} alignItems="flex-start">
         {_.uniqBy(country.top_restaurants, (x) => x.name)
           .slice(0, 5)
           .map((restaurant, index) => {
