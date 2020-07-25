@@ -1,7 +1,7 @@
 import { Tag, slugify } from '@dish/graph'
 import { HistoryItem, NavigateItem } from '@dish/router'
 import { cloneDeep } from 'lodash'
-import { AsyncAction } from 'overmind'
+import { Action, AsyncAction } from 'overmind'
 
 import { LIVE_SEARCH_DOMAIN } from '../constants'
 import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
@@ -240,14 +240,21 @@ export const getTagsFromRoute = (
   return tags
 }
 
+export const getShouldNavigate: Action<HomeStateItem, boolean> = (
+  om,
+  state
+) => {
+  const navItem = getNavigateItemForState(om.state, state)
+  return router.getShouldNavigate(navItem)
+}
+
 let recentTries = 0
 let tm
 export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
   om,
   state
 ) => {
-  const navItem = getNavigateItemForState(om.state, state)
-  const should = router.getShouldNavigate(navItem)
+  const should = getShouldNavigate(om, state)
   if (should) {
     recentTries++
     clearTimeout(tm)
@@ -260,6 +267,7 @@ export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
     tm = setTimeout(() => {
       recentTries = 0
     }, 200)
+    const navItem = getNavigateItemForState(om.state, state)
     console.log('syncStateToRoute', cloneDeep({ should, navItem, state }))
     router.navigate(navItem)
     return true
