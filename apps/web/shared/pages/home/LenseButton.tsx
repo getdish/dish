@@ -1,4 +1,3 @@
-// debug
 import { Tag } from '@dish/graph'
 import { Text, VStack, memoIsEqualDeep } from '@dish/ui'
 import React from 'react'
