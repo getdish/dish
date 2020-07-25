@@ -10,6 +10,7 @@ import {
   tag_constraint,
   tag_tag_constraint,
   user_constraint,
+  uuid,
 } from '../graphql'
 import { mutation } from '../graphql/mutation'
 import { ModelName, ModelType, WithID } from '../types'
@@ -44,7 +45,7 @@ const defaultConstraints = {
   setting: setting_constraint.setting_pkey,
   tag_tag: tag_tag_constraint.tag_tag_pkey,
   user: user_constraint.user_username_key,
-  photo: photo_constraint.photo_url_key,
+  photo: photo_constraint.photo_origin_key,
   photo_xref:
     photo_xref_constraint.photos_xref_photos_id_restaurant_id_tag_id_key,
 }
@@ -179,6 +180,14 @@ export async function deleteAllBy(
   await resolvedMutation(() => {
     return mutation[`delete_${table}`]?.({
       where: { [key]: { _eq: value } },
+    })
+  })
+}
+
+export async function deleteByIDs(table: string, ids: uuid[]): Promise<void> {
+  await resolvedMutation(() => {
+    return mutation[`delete_${table}`]?.({
+      where: { id: { _in: ids } },
     })
   })
 }

@@ -685,8 +685,7 @@ export class Self extends WorkerJob {
     })
     await photoUpsert(photos)
     const most_aesthetic = await bestPhotosForRestaurant(this.restaurant.id)
-    //@ts-ignore
-    this.restaurant.photos = most_aesthetic.map((p) => p.photo.url)
+    this.restaurant.photos = most_aesthetic.map((p) => p.photo?.url)
   }
 
   _getGooglePhotos() {

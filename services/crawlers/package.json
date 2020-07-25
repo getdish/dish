@@ -18,6 +18,7 @@
     "@dish/worker": "*",
     "@types/puppeteer": "^3.0.0",
     "acorn": "^7.1.1",
+    "aws-sdk": "^2.719.0",
     "axios": "^0.19.1",
     "bull": "^3.12.1",
     "cheerio": "^1.0.0-rc.3",

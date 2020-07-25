@@ -20,7 +20,7 @@ export type t_photo = FieldsType<
     __typename: t_String<'photo'>
     created_at: t_timestamptz
     id: t_uuid
-    origin: t_String
+    origin?: t_String | null
     quality?: t_numeric | null
     updated_at: t_timestamptz
     url: t_String
@@ -131,7 +131,9 @@ export type photo_bool_exp = {
  * @name photo_constraint
  * @type ENUM
  */
-export type t_photo_constraint = EnumType<'photo_url_key' | 'photos_pkey'>
+export type t_photo_constraint = EnumType<
+  'photo_origin_key' | 'photo_url_key' | 'photos_pkey'
+>
 
 /**
  * @name photo_inc_input
@@ -679,6 +681,7 @@ export type photo_avg_fields = TypeData<t_photo_avg_fields>
  * @type ENUM
  */
 export enum photo_constraint {
+  photo_origin_key = 'photo_origin_key',
   photo_url_key = 'photo_url_key',
   photos_pkey = 'photos_pkey',
 }

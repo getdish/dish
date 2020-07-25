@@ -1,21 +1,38 @@
+import '@dish/common'
+
 import crypto from 'crypto'
 
+import { sentryException, sentryMessage } from '@dish/common'
 import {
   PhotoBase,
   PhotoXref,
   ZeroUUID,
   createQueryHelpersFor,
+  deleteByIDs,
   order_by,
+  photo_constraint,
+  photo_xref_select_column,
   query,
   resolvedWithFields,
   uuid,
 } from '@dish/graph'
+import AWS from 'aws-sdk'
 import { chunk, clone, uniqBy } from 'lodash'
+import fetch, { Response } from 'node-fetch'
 
 const PhotoBaseQueryHelpers = createQueryHelpersFor<PhotoBase>('photo')
 const PhotoXrefQueryHelpers = createQueryHelpersFor<PhotoXref>('photo_xref')
 const photoBaseUpsert = PhotoBaseQueryHelpers.upsert
 const photoXrefUpsert = PhotoXrefQueryHelpers.upsert
+
+const DO_BASE = 'https://dish-images.sfo2.digitaloceanspaces.com/'
+
+const spacesEndpoint = new AWS.Endpoint('sfo2.digitaloceanspaces.com')
+const s3 = new AWS.S3({
+  endpoint: spacesEndpoint.href,
+  accessKeyId: process.env.DO_SPACES_ID,
+  secretAccessKey: process.env.DO_SPACES_SECRET,
+})
 
 export async function photoUpsert(photos: PhotoXref[]) {
   if (photos.length == 0) return
@@ -25,24 +42,86 @@ export async function photoUpsert(photos: PhotoXref[]) {
   if (photos[0].tag_id && !photos[0].restaurant_id) {
     photos.map((p) => (p.restaurant_id = ZeroUUID))
   }
-
   photos = uniqBy(photos, (el) =>
     [el.tag_id, el.restaurant_id, el.photo?.url].join()
   )
-
   photos.map((p) => {
     if (!p.photo || !p.photo.url) throw 'Photo must have URL'
     p.photo.origin = clone(p.photo?.url)
-    p.photo.url = proxyYelpCDN(p.photo?.url)
+    delete p.photo.url
   })
 
   await photoXrefUpsert(photos)
+  await postUpsert(photos)
+}
 
+async function postUpsert(photos: PhotoXref[]) {
+  if (process.env.NODE_ENV != 'test') {
+    await uploadToDO(photos)
+  } else {
+    //@ts-ignore
+    photos.map((p) => (p.photo.url = p.photo.origin))
+    await photoXrefUpsert(photos)
+  }
+  await updatePhotoQuality(photos)
+}
+
+async function uploadToDO(photos: PhotoXref[]) {
+  const not_uploaded = await findNotUploadedPhotos(photos[0].restaurant_id)
+  await uploadToDOSpaces(not_uploaded)
+  const updated = not_uploaded.map((p) => {
+    if (!p.photo) throw 'uploadToDO() No photo!?'
+    return {
+      id: p.photo.id,
+      url: DO_BASE + p.photo_id,
+    } as PhotoBase
+  })
+  await photoBaseUpsert(updated, photo_constraint.photos_pkey)
+}
+
+async function updatePhotoQuality(photos: PhotoXref[]) {
   const unassessed_photos = await findUnassessedPhotos(photos)
   await assessNewPhotos(unassessed_photos)
 }
 
-export async function unassessedPhotosForRestaurant(
+async function findNotUploadedPhotos(
+  restaurant_id: uuid
+): Promise<PhotoXref[]> {
+  const photos = await resolvedWithFields(
+    () =>
+      query.photo_xref({
+        where: {
+          _or: [
+            {
+              restaurant_id: {
+                _eq: restaurant_id,
+              },
+              photo: {
+                url: {
+                  _nlike: '%digitalocean%',
+                },
+              },
+            },
+            {
+              restaurant_id: {
+                _eq: restaurant_id,
+              },
+              photo: {
+                url: {
+                  _is_null: true,
+                },
+              },
+            },
+          ],
+        },
+        distinct_on: [photo_xref_select_column.photo_id],
+      }),
+    { relations: ['photo'] }
+  )
+  return photos
+}
+
+async function unassessedPhotosForRestaurant(
   restaurant_id: uuid
 ): Promise<PhotoXref[]> {
   const photos = await resolvedWithFields(
@@ -58,15 +137,14 @@ export async function unassessedPhotosForRestaurant(
             },
           },
         },
+        distinct_on: [photo_xref_select_column.photo_id],
       }),
     { relations: ['photo'] }
   )
   return photos
 }
 
-export async function unassessedPhotosForTag(
-  tag_id: uuid
-): Promise<PhotoXref[]> {
+async function unassessedPhotosForTag(tag_id: uuid): Promise<PhotoXref[]> {
   const photos = await resolvedWithFields(
     () =>
       query.photo_xref({
@@ -80,13 +158,14 @@ export async function unassessedPhotosForTag(
             },
           },
         },
+        distinct_on: [photo_xref_select_column.photo_id],
       }),
     { relations: ['photo'] }
   )
   return photos
 }
 
-export async function unassessedPhotosForRestaurantTag(
+async function unassessedPhotosForRestaurantTag(
   restaurant_id: uuid
 ): Promise<PhotoXref[]> {
   const photos = await resolvedWithFields(
@@ -105,6 +184,7 @@ export async function unassessedPhotosForRestaurantTag(
             },
           },
         },
+        distinct_on: [photo_xref_select_column.photo_id],
       }),
     { relations: ['photo'] }
   )
@@ -129,10 +209,11 @@ export async function bestPhotosForRestaurant(
             },
           },
         ],
+        limit: 50,
       }),
     { relations: ['photo'] }
   )
-  return photos
+  return uniqBy(photos, (p) => p.photo_id)
 }
 
 export async function bestPhotosForTag(tag_id: uuid): Promise<PhotoXref[]> {
@@ -151,10 +232,11 @@ export async function bestPhotosForTag(tag_id: uuid): Promise<PhotoXref[]> {
             },
           },
         ],
+        limit: 10,
       }),
     { relations: ['photo'] }
   )
-  return photos
+  return uniqBy(photos, (p) => p.photo_id)
 }
 
 export async function bestPhotosForRestaurantTags(
@@ -178,10 +260,11 @@ export async function bestPhotosForRestaurantTags(
             },
           },
         ],
+        limit: 10,
       }),
     { relations: ['photo'] }
   )
-  return photos
+  return uniqBy(photos, (p) => p.photo_id)
 }
 
 async function assessNewPhotos(unassessed_photos: string[]) {
@@ -190,7 +273,7 @@ async function assessNewPhotos(unassessed_photos: string[]) {
   for (const batch of chunk(unassessed_photos, IMAGE_QUALITY_API_BATCH_SIZE)) {
     assessed.push(...(await assessPhotoQuality(batch)))
   }
-  await photoBaseUpsert(assessed)
+  await photoBaseUpsert(assessed, photo_constraint.photo_url_key)
 }
 
 async function assessPhotoQuality(urls: string[]) {
@@ -250,4 +333,60 @@ async function findUnassessedPhotos(photos: PhotoXref[]): Promise<string[]> {
     if (!p.photo || !p.photo.url) throw 'Photo.url NOT NULL violation'
     return p.photo.url
   })
+}
+
+async function uploadToDOSpaces(photos: PhotoXref[]) {
+  console.log('Uploading images to DO Spaces...')
+  const DO_API_RATE_LIMIT_DELAY = 50
+  const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
+  const failed_ids = await Promise.all(
+    photos.map(async (p) => {
+      if (!p.photo || !p.photo.origin) throw 'Photo must have URL'
+      await sleep(DO_API_RATE_LIMIT_DELAY)
+      return sendToDO(p.photo.origin, p.photo.id)
+    })
+  )
+  await deleteByIDs('photo', failed_ids)
+  console.log('...images uploaded DO Spaces.')
+}
+
+async function sendToDO(url: string, id: uuid) {
+  url = proxyYelpCDN(url)
+  let response: Response
+  try {
+    response = await fetch(url)
+  } catch (e) {
+    sentryMessage('Failed downloading image', { url })
+    return id
+  }
+  const image_data = await response.buffer()
+
+  while (true) {
+    let retries = 1
+    try {
+      await doPut(image_data, id, response.headers.get('content-type'))
+      break
+    } catch (e) {
+      if (e.code == 408) retries += 1
+      if (retries > 10) {
+        sentryException(new Error('DO Spaces PUT Rate Limit'), {
+          url: url,
+          id: id,
+        })
+        break
+      }
+    }
+  }
+}
+
+async function doPut(image_data: Buffer, id: uuid, content_type: string) {
+  await s3
+    .putObject({
+      Body: image_data,
+      Bucket: 'dish-images',
+      Key: id,
+      ACL: 'public-read',
+      ContentType: content_type,
+    })
+    .promise()
 }

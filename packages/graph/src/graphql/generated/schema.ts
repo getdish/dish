@@ -3068,7 +3068,7 @@ export const schema = {
           return new FieldNode(schema.uuid, undefined, false)
         },
         get origin() {
-          return new FieldNode(schema.String, undefined, false)
+          return new FieldNode(schema.String, undefined, true)
         },
         get quality() {
           return new FieldNode(schema.numeric, undefined, true)
