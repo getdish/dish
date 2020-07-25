@@ -113,11 +113,18 @@ const RestaurantHeaderContent = memo(
             </VStack>
           </HStack>
         </VStack>
-        <SmallTitle marginTop={-18} divider="center">
-          <RestaurantFavoriteStar
-            restaurantId={state?.restaurantId ?? restaurant.id}
-            size="lg"
-          />
+        <SmallTitle marginVertical={-18} divider="center">
+          <VStack
+            borderRadius={1000}
+            shadowColor="rgba(0,0,0,0.1)"
+            shadowRadius={8}
+            shadowOffset={{ height: 2, width: 0 }}
+          >
+            <RestaurantFavoriteStar
+              restaurantId={state?.restaurantId ?? restaurant.id}
+              size="lg"
+            />
+          </VStack>
         </SmallTitle>
       </VStack>
     )

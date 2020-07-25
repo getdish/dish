@@ -22,7 +22,7 @@ export const RestaurantFavoriteStar = memo(
         <HStack
           pressStyle={{ opacity: 0.4 }}
           hoverStyle={{
-            borderColor: '#999',
+            borderColor: '#aaa',
           }}
           pointerEvents="auto"
           // @ts-ignore
@@ -52,7 +52,7 @@ export const RestaurantFavoriteStar = memo(
                 ⭐️
               </Text>
             )}
-            {!isFavorite && <Star size={sizePx} color={'goldenrod'} />}
+            {!isFavorite && <Star size={sizePx} color={'#aaa'} />}
           </VStack>
         </HStack>
       )

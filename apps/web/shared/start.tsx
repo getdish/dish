@@ -1,4 +1,4 @@
-import { update } from '@dish/graph'
+import { resolved, update } from '@dish/graph'
 
 // startup stuff (can put in some other file eventually)
 const queue = new Map<
@@ -35,7 +35,7 @@ const updateItem = (
 ) => {
   if (!queue.has(key)) {
     queue.set(key, {
-      item: getDefaultItem ?? {},
+      item: getDefaultItem?.() ?? {},
       tableName,
     })
   }
@@ -56,8 +56,9 @@ const scheduleSet = () => {
     queue.clear()
     const promises = new Set<Promise<any>>()
     for (const { tableName, item } of values) {
-      console.log('item', item)
-      promises.add(update(tableName, item as any))
+      const out = update(tableName, item as any)
+      console.log('saving', item, out)
+      promises.add(resolved(out))
     }
     Promise.all([...promises]).then((res) => {
       console.log(

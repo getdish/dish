@@ -224,6 +224,7 @@ export const TagButton = memo((props: TagButtonProps) => {
             />
           </VStack>
         )}
+        {!closable && !votable && <Spacer size={6} />}
       </HStack>
     </>
   )
@@ -286,12 +287,10 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
         setVote(vote == 1 ? 0 : 1)
       }}
     >
-      <VStack onClick={prevent}>
-        <ThumbsUp
-          size={12 * scale}
-          color={subtle ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)'}
-        />
-      </VStack>
+      <ThumbsUp
+        size={12 * scale}
+        color={subtle ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)'}
+      />
     </VStack>
   )
 }

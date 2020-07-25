@@ -4,18 +4,16 @@ import { View, ViewProps, ViewStyle } from 'react-native'
 import { combineRefs } from '../helpers/combineRefs'
 import { StaticComponent } from '../helpers/extendStaticConfig'
 import { useAttachClassName } from '../hooks/useAttachClassName'
-import { Hoverable } from './Hoverable'
 import { Spacer, Spacing } from './Spacer'
 
-const fullscreenStyle: ViewStyle = {
+const fullscreenStyle: StackProps = {
   top: 0,
   left: 0,
   right: 0,
   bottom: 0,
 }
 
-const disabledStyle: ViewStyle = {
-  // @ts-ignore
+const disabledStyle: StackProps = {
   pointerEvents: 'none',
   userSelect: 'none',
 }
@@ -35,6 +33,9 @@ export type StackProps = Omit<
       onPressIn?: Function
       onPressOut?: Function
       spacing?: Spacing
+      cursor?: string
+      pointerEvents?: string
+      userSelect?: string
       className?: string
       // stronger version of pointer-events: none;
       disabled?: boolean
@@ -219,7 +220,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
                 })
               }
             : null,
-          onMouseUp: attachPress
+          onClick: attachPress
             ? (e) => {
                 e.preventDefault()
                 onPressOut?.(e)

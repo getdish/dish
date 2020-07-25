@@ -30,14 +30,18 @@ export function Hoverable({
   onPressIn?: Function
   onPressOut?: Function
 }) {
-  return React.cloneElement(React.Children.only(children), {
-    onMouseEnter: onHoverIn,
-    onMouseLeave: onHoverOut,
-    onMouseMove: onHoverMove,
-    onMouseDown: onPressIn,
-    onClick: onPressOut,
-    // prevent hover showing while responder
-    // onResponderGrant: () => setShowHover(false),
-    // onResponderRelease: () => setShowHover(true),
-  })
+  return (
+    <span
+      className="see-through"
+      {...({
+        onMouseEnter: onHoverIn,
+        onMouseLeave: onHoverOut,
+        onMouseMove: onHoverMove,
+        onMouseDown: onPressIn,
+        onClick: onPressOut,
+      } as any)}
+    >
+      {children}
+    </span>
+  )
 }

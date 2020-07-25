@@ -98,7 +98,7 @@ const HomeMapDataLoader = memo(
       const allResults = allIds
         .map((id) => all.find((x) => x.id === id))
         .filter(Boolean)
-      const restaurants = _.uniqBy(
+      const restaurants = uniqBy(
         allResults.map(({ id, slug }) => {
           const r = useRestaurantQuery(slug)
           const coords = r.location?.coordinates
