@@ -8,14 +8,14 @@ import { isSearchState } from '../../state/home-helpers'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
 import { getBreadcrumbs } from './getBreadcrumbs'
+import { HomeStackDrawer } from './HomeStackDrawer'
+import { StackViewCloseButton } from './StackViewCloseButton'
 import { useLastValueWhen } from './useLastValueWhen'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 // export class HomeStateStore extends Store {
 //   currentId = ''
 // }
-
-const transitionDuration = 280
 
 export type StackItemProps<A> = {
   item: A
@@ -34,9 +34,9 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   const stackItems = getBreadcrumbs(omStatic.state.home.states)
   const key = JSON.stringify(stackItems.map((x) => x.id))
   const homeStates = useMemo(() => stackItems, [key])
-  const currentStates =
-    useDebounceValue(homeStates, transitionDuration) ?? homeStates
+  const currentStates = useDebounceValue(homeStates, 80) ?? homeStates
   const isRemoving = currentStates.length > homeStates.length
+  const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
 
   // if (true) {
@@ -61,6 +61,7 @@ export function HomeStackView<A extends HomeStateItem>(props: {
             index={i}
             isActive={isActive}
             isRemoving={isRemoving && isActive}
+            isAdding={isAdding && isActive}
             getChildren={props.children as any}
           />
           // </PopoverShowContext.Provider>
@@ -76,6 +77,7 @@ const HomeStackViewItem = memo(
     index,
     isActive,
     isRemoving,
+    isAdding,
     getChildren,
   }: {
     getChildren: GetChildren<HomeStateItem>
@@ -83,18 +85,20 @@ const HomeStackViewItem = memo(
     index: number
     isActive: boolean
     isRemoving: boolean
+    isAdding: boolean
   }) => {
     // const popoverStore = useRecoilStore(PopoverStore, { id })
     const isSmall = useMediaQueryIsSmall()
 
     const top = isSmall || index == 0 ? 0 : index * 5
-    const left = isSmall ? 0 : Math.max(0, index) * 3
+    // const left = isSmall ? 0 : Math.max(0, index) * 3
 
     // useEffect(() => {
     //   popoverStore.show = isActive
     // }, [isActive])
 
     let children = useMemo(() => {
+      // return <HomeStackDrawer closable />
       return getChildren({
         item: item as any,
         index,
@@ -104,7 +108,7 @@ const HomeStackViewItem = memo(
 
     children = useLastValueWhen(() => children, isRemoving)
 
-    const className = `animate-up ${!isRemoving ? 'active' : ''}`
+    const className = `animate-up ${!isRemoving && !isAdding ? 'active' : ''}`
     console.log('className', className)
 
     return (

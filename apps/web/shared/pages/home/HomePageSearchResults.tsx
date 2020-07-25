@@ -3,13 +3,10 @@ import {
   Button,
   HStack,
   LoadingItem,
-  LoadingItems,
   Spacer,
   StackProps,
   Text,
   VStack,
-  useDebounce,
-  useDebounceValue,
 } from '@dish/ui'
 import { pick } from 'lodash'
 import React, {
@@ -26,14 +23,9 @@ import { ArrowUp } from 'react-feather'
 import { ScrollView } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
-import { weakKey } from '../../helpers/weakKey'
 import { HomeStateItemSearch, OmState } from '../../state/home'
 import { isSearchState } from '../../state/home-helpers'
-import {
-  omStatic,
-  useOvermind,
-  useOvermindStatic,
-} from '../../state/useOvermind'
+import { omStatic, useOvermind } from '../../state/useOvermind'
 import { getTitleForState } from './getTitleForState'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'

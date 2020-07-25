@@ -16,7 +16,7 @@ export const tagLenses: Tag[] = [
     id: '3',
     name: 'Gems',
     icon: ' 💎',
-    rgb: [128, 67, 103],
+    rgb: [158, 77, 83],
     type: 'lense',
   },
   {
