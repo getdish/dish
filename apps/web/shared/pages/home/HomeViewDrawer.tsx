@@ -2,6 +2,7 @@ import { AbsoluteVStack, HStack, LinearGradient, VStack } from '@dish/ui'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
+import { bgAlt } from '../../colors'
 import { drawerPad, drawerWidthMax, searchBarHeight } from '../../constants'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
@@ -43,8 +44,19 @@ export function HomeViewDrawer(props: { children: any }) {
         height={searchBarHeight + 20}
       >
         <LinearGradient
-          colors={['white', 'rgba(255,255,255,0)']}
+          colors={[bgAlt, 'rgba(255,255,255,0)']}
           style={[StyleSheet.absoluteFill]}
+        />
+      </AbsoluteVStack>
+
+      <AbsoluteVStack fullscreen pointerEvents="none" overflow="hidden">
+        <AbsoluteVStack
+          height={400}
+          width={2000}
+          right="-10%"
+          top="-20%"
+          backgroundColor={bgAlt}
+          transform={[{ rotate: '-4deg' }]}
         />
       </AbsoluteVStack>
 

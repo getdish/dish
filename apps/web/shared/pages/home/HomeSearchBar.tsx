@@ -71,14 +71,16 @@ export default memo(function HomeSearchBar() {
         zIndex={12}
         position="relative"
         maxWidth={pageWidthMax}
-        alignItems="stretch"
+        alignItems="center"
         width="100%"
         height={searchBarHeight}
         borderRadius={borderRadius}
       >
         <VStack
+          flex={1}
           pointerEvents="auto"
-          maxWidth={pageWidthMax - 100}
+          width="100%"
+          maxWidth={pageWidthMax - 200}
           position="relative"
         >
           {/* shadow */}

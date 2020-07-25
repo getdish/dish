@@ -11,6 +11,7 @@ export const HomeLenseBar = memo(
     activeTagIds?: HomeActiveTagIds
     size?: LenseButtonSize
     minimal?: boolean
+    backgroundColor?: string
   }) => {
     const om = useOvermind()
     return (
@@ -22,6 +23,7 @@ export const HomeLenseBar = memo(
               isActive={props.activeTagIds?.[getTagId(lense)] ?? false}
               minimal={props.minimal}
               size={props.size}
+              backgroundColor={props.backgroundColor}
             />
             {index < om.state.home.allLenseTags.length - 1 && (
               <Spacer size={2} />
