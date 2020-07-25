@@ -38,6 +38,8 @@ export const DishView = memo(
         alignItems="center"
         position="relative"
         justifyContent="center"
+        width={width}
+        height={height}
         pressStyle={{
           transform: [{ scale: 0.98 }],
           opacity: 1,
@@ -110,7 +112,7 @@ export const DishView = memo(
             padding={6}
             alignItems="center"
             justifyContent="center"
-            backgroundColor="rgba(255,255,255,0.25)"
+            // backgroundColor="rgba(255,255,255,0.25)"
             {...(isHovered && {
               borderTopColor: 'transparent',
               backgroundColor: 'transparent',
@@ -139,7 +141,7 @@ export const DishView = memo(
                 ellipse
                 flex={1}
                 overflow="hidden"
-                fontSize={height > 170 ? 14 : 12}
+                fontSize={height > 170 ? 16 : 14}
                 fontWeight="700"
                 color={isHovered ? '#000' : '#fff'}
                 textAlign="center"

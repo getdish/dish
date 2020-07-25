@@ -25,7 +25,7 @@ import {
 import { ChevronRight } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
 
-import { bgLight } from '../../colors'
+import { bgAlt, bgLight } from '../../colors'
 import { HomeStateItemHome } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { tagDescriptions } from '../../state/Tag'
@@ -109,7 +109,8 @@ const HomePageTopDishes = memo((props: Props) => {
     return <NotFoundPage title="Home not found" />
   }
 
-  const lense = getActiveTags(omStatic.state.home, state).find(
+  const om = useOvermind()
+  const lense = getActiveTags(om.state.home, state).find(
     (x) => x.type === 'lense'
   )
   const tagsDescriptions = tagDescriptions[(lense.name ?? '').toLowerCase()]
@@ -149,12 +150,13 @@ const HomePageTopDishes = memo((props: Props) => {
                       alignItems="center"
                       justifyContent="center"
                       paddingHorizontal={20}
-                      spacing={20}
+                      position="relative"
                     >
                       <AbsoluteVStack
                         position="absolute"
-                        top={0}
-                        left="0%"
+                        top="50%"
+                        marginTop={-10}
+                        left="2%"
                         width="36%"
                         zIndex={1000}
                         justifyContent="center"
@@ -177,7 +179,11 @@ const HomePageTopDishes = memo((props: Props) => {
                       </AbsoluteVStack>
 
                       <HStack alignItems="center" justifyContent="center">
-                        <HomeLenseBar size="xl" activeTagIds={activeTagIds} />
+                        <HomeLenseBar
+                          backgroundColor="transparent"
+                          size="xl"
+                          activeTagIds={activeTagIds}
+                        />
                       </HStack>
                     </HStack>
                     <Spacer size="xl" />
@@ -188,11 +194,16 @@ const HomePageTopDishes = memo((props: Props) => {
 
                 <HomeIntroLetter />
 
-                <SmallTitle fontWeight="300" letterSpacing={0} divider="center">
+                <Text
+                  marginTop={15}
+                  fontWeight="300"
+                  fontSize={18}
+                  letterSpacing={-0.25}
+                >
                   {currentLocationName
                     ? `What's good in ${currentLocationName}`
                     : `What's good here`}
-                </SmallTitle>
+                </Text>
 
                 {/* <HomeFilterBar activeTagIds={activeTagIds} /> */}
                 {isSmall && <Spacer size={20} />}
@@ -270,39 +281,26 @@ const HomeTopDishesContent = memo(() => {
           </>
         )}
         {topDishes.map((country) => (
-          <TopDishesCuisineItem key={country.country} country={country} />
+          <React.Fragment key={country.country}>
+            <TopDishesCuisineItem country={country} />
+            <Spacer size="lg" />
+          </React.Fragment>
         ))}
       </>
     )
   }, [topDishes])
 })
 
-const dishHeight = 180
-const padding = 30
-const spacing = 16
-const pctRestaurant = 0.23
-
-const useHomeSideWidth = () => {
-  const drawerWidth = useHomeDrawerWidth()
-  const min = 180
-  const max = 240
-  return clamp(drawerWidth * pctRestaurant + 10, min, max)
-}
+const dishHeight = 160
 
 const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
   return (
-    <VStack
-      paddingVertical={5}
-      paddingLeft={18}
-      className="home-top-dish"
-      position="relative"
-    >
-      <HStack position="relative" zIndex={10}>
+    <HStack marginTop={16} className="home-top-dish" position="relative">
+      <VStack width="24%" minWidth={200}>
         <LinkButton
-          {...flatButtonStyle}
-          style={{
-            transform: [{ rotate: '-2.5deg' }],
-          }}
+          transform={[{ rotate: '-2.5deg' }]}
+          marginTop={-16}
+          marginBottom={3}
           tag={{
             type: 'country',
             name: country.country,
@@ -314,6 +312,10 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
             fontWeight={'400'}
             height={24}
             lineHeight={24}
+            // @ts-ignore
+            hoverStyle={{
+              textDecoration: 'underline',
+            }}
           >
             {country.country}{' '}
             {country.icon ? (
@@ -323,36 +325,12 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
             ) : null}
           </Text>
         </LinkButton>
-      </HStack>
-
-      <HomeTopDishesSide>
         <TopDishesRestaurantsSide country={country} />
-      </HomeTopDishesSide>
+      </VStack>
 
-      {/* left shadow */}
-      <LinearGradient
-        colors={[
-          'rgba(255,255,255,1)',
-          'rgba(255,255,255,1)',
-          'rgba(255,255,255,0)',
-        ]}
-        startPoint={[0, 0]}
-        endPoint={[1, 0]}
-        style={{
-          position: 'absolute',
-          // @ts-ignore
-          pointerEvents: 'none',
-          top: 0,
-          left: 0,
-          bottom: 0,
-          width: `${pctRestaurant * 100 - 1}%`,
-          zIndex: 1,
-        }}
-      />
-
-      <VStack marginTop={-5}>
-        <HomeScrollViewHorizontal>
-          <HomeTopDishMain>
+      <VStack flex={1} overflow="hidden" position="relative">
+        <HomeScrollViewHorizontal style={{ paddingVertical: 10 }}>
+          <HStack alignItems="center" spacing={16} paddingHorizontal={20}>
             {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
               return (
                 <DishView
@@ -370,14 +348,14 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
                 />
               )
             })}
+          </HStack>
 
-            <Squircle width={dishHeight * 0.8} height={dishHeight}>
-              <ChevronRight size={40} color="black" />
-            </Squircle>
-          </HomeTopDishMain>
+          <Squircle width={dishHeight * 0.8} height={dishHeight}>
+            <ChevronRight size={40} color="black" />
+          </Squircle>
         </HomeScrollViewHorizontal>
       </VStack>
-    </VStack>
+    </HStack>
   )
 })
 
@@ -424,33 +402,3 @@ const TopDishesRestaurantsSide = memo(
 )
 
 // these two do optimized updates
-
-const HomeTopDishesSide = memo((props) => {
-  const sideWidth = useHomeSideWidth()
-  return (
-    <AbsoluteVStack
-      fullscreen
-      paddingTop={padding + 10}
-      pointerEvents="none"
-      right="auto"
-      maxWidth={sideWidth}
-      zIndex={100}
-      {...props}
-    />
-  )
-})
-
-const HomeTopDishMain = memo((props) => {
-  const sideWidth = useHomeSideWidth()
-  return (
-    <HStack
-      alignItems="center"
-      paddingTop={10}
-      paddingHorizontal={30}
-      paddingLeft={sideWidth}
-      paddingBottom={padding}
-      spacing={spacing}
-      {...props}
-    />
-  )
-})

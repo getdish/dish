@@ -7,8 +7,7 @@ export const bgLightHover = `rgba(220, 235, 245, 1)`
 export const bg = '#7154AD'
 export const bgHover = `#7154ADee`
 
-export const bgAlt = 'rgba(0, 34, 60, 0.8)'
-export const bgAltHover = `rgba(0, 34, 60, 1)`
+export const bgAlt = 'rgb(230, 250, 255)'
 
 export const brandRgb = [0, 30, 100] as const
 export const brandColor = `#000`

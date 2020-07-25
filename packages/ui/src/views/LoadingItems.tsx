@@ -19,7 +19,7 @@ export const LoadingItem = () => {
       <HStack
         width={`${seed * 12}%`}
         height={28}
-        backgroundColor="#dedede"
+        backgroundColor="rgba(0,0,0,0.05)"
         borderRadius={7}
         // casued bug with filters, if we contain maybe wont
         // className="shine"

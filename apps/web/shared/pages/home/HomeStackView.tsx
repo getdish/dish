@@ -19,15 +19,11 @@ const transitionDuration = 280
 
 export type StackItemProps<A> = {
   item: A
-  isActive: boolean
-  isRemoving: boolean
-}
-
-type GetChildren<A> = (props: {
-  item: A
   index: number
   isActive: boolean
-}) => React.ReactNode
+}
+
+type GetChildren<A> = (props: StackItemProps<A>) => React.ReactNode
 
 export function HomeStackView<A extends HomeStateItem>(props: {
   children: GetChildren<A>
@@ -126,7 +122,7 @@ const HomeStackViewItem = memo(
             flex={1}
             zIndex={index}
             top={top}
-            left={left}
+            left={0}
             bottom={-(index * 5)}
             width="100%"
             pointerEvents="auto"

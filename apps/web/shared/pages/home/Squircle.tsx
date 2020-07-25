@@ -19,6 +19,7 @@ export const Squircle = ({
         width={width}
         height={height}
         borderRadius={borderRadius}
+        position="relative"
         {...rest}
       >
         {/* frame (inner) */}

@@ -13,9 +13,11 @@ export const LenseButton = memoIsEqualDeep(
     isActive,
     minimal,
     size = 'md',
+    backgroundColor,
   }: {
     lense: Tag
     isActive?: boolean
+    backgroundColor?: string
     minimal?: boolean
     size?: LenseButtonSize
   }) => {
@@ -43,7 +45,7 @@ export const LenseButton = memoIsEqualDeep(
           marginVertical={-5 * scale}
           width={sizePx * scale}
           height={sizePx * scale}
-          backgroundColor="#fff"
+          backgroundColor={backgroundColor ?? '#fff'}
           borderRadius={100}
           borderColor={borderColor}
           borderWidth={1}
