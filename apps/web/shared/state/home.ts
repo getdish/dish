@@ -1129,28 +1129,9 @@ let lastNav = Date.now()
 const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
   navState.state = navState.state ?? om.state.home.currentState
   const nextState = getNextState(om, navState)
-  if (!getShouldNavigate(om, nextState)) {
-    return false
-  }
-  console.warn('home.navigate', navState)
-  lastNav = Date.now()
-  let curNav = lastNav
-  om.state.home.isOptimisticUpdating = false
-  if (navState.tags) {
-    om.actions.home.addTagsToCache(navState.tags)
-  }
-
-  // do a quick update first
   const curState = om.state.home.currentState
-  const curType = curState.type
-  const nextType = nextState.type
-  if (
-    nextType !== curType ||
-    (isSearchState(curState) && nextType === 'search')
-  ) {
-    om.state.home.isOptimisticUpdating = true
-    om.state.home.isLoading = true
-    // optimistic update active tags
+
+  const updateTags = () => {
     const type = curState.type as any
     om.actions.home.updateActiveTags({
       id: curState.id,
@@ -1162,6 +1143,32 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
         results: [],
       }),
     })
+  }
+
+  if (!getShouldNavigate(om, nextState)) {
+    updateTags()
+    return false
+  }
+
+  console.warn('home.navigate', navState)
+  lastNav = Date.now()
+  let curNav = lastNav
+  om.state.home.isOptimisticUpdating = false
+  if (navState.tags) {
+    om.actions.home.addTagsToCache(navState.tags)
+  }
+
+  // do a quick update first
+  const curType = curState.type
+  const nextType = nextState.type
+  if (
+    nextType !== curType ||
+    (isSearchState(curState) && nextType === 'search')
+  ) {
+    om.state.home.isOptimisticUpdating = true
+    om.state.home.isLoading = true
+    // optimistic update active tags
+    updateTags()
     await sleep(40)
     await idle(30)
     if (curNav !== lastNav) return false
