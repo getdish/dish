@@ -1,6 +1,6 @@
 import './Link.css'
 
-import { idle, series } from '@dish/async'
+import { idle, series, sleep } from '@dish/async'
 import { NavigateItem } from '@dish/router'
 import { Text } from '@dish/ui'
 import React, { useEffect, useRef } from 'react'
@@ -37,7 +37,7 @@ export function Link<
   const { onPress, name, params, ...linkProps } = useNormalizeLinkProps(
     restProps as any
   )
-  const cancel = useRef(null)
+  const cancel = useRef<Function | null>(null)
   const linkRef = useRef<HTMLElement | null>(null)
   const navItem: NavigateItem = {
     name,
@@ -67,10 +67,10 @@ export function Link<
         event = e
         if (asyncClick) {
           cancel.current = series([
-            () => idle(asyncClick ? 100 : 10),
-            nav,
+            () => sleep(50),
             () => {
               cancel.current = null
+              nav()
             },
           ])
         } else {

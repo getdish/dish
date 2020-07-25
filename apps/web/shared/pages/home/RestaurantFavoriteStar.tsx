@@ -15,15 +15,12 @@ export const RestaurantFavoriteStar = memo(
       size?: 'lg' | 'md'
       restaurantId: string
     }) => {
-      const sizePx = size == 'lg' ? 26 : 16
+      const sizePx = size == 'lg' ? 26 : 18
       const [isFavorite, setIsFavorite] = useUserFavorite(restaurantId)
 
       return (
         <HStack
           pressStyle={{ opacity: 0.4 }}
-          hoverStyle={{
-            borderColor: '#aaa',
-          }}
           pointerEvents="auto"
           // @ts-ignore
           userSelect="none"
@@ -38,7 +35,10 @@ export const RestaurantFavoriteStar = memo(
           backgroundColor="#fff"
           borderRadius={100}
           borderWidth={1}
-          borderColor="#eee"
+          borderColor={size === 'md' ? 'transparent' : '#eee'}
+          hoverStyle={{
+            borderColor: size === 'md' ? 'transparent' : '#aaa',
+          }}
         >
           <VStack
             hoverStyle={{

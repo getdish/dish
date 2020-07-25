@@ -103,7 +103,7 @@ export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search' | 'userSearch'
   activeTagIds: HomeActiveTagIds
   status: 'loading' | 'complete'
-  results: { id: string; slug: string }[]
+  results: RestaurantOnlyIds[]
   // for not forcing map to be always synced
   searchedCenter?: LngLat
   searchedSpan?: LngLat

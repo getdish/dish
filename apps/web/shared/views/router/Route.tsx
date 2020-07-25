@@ -102,13 +102,14 @@ export function Route(props: { name: string; exact?: boolean; children: any }) {
   const isMatched = !!(isParentMatching || isExactMatching)
 
   useLayoutEffect(() => {
-    return routeContext.onChangeState((state) => {
+    console.log('new route context')
+    return routeContext?.onChangeState((state) => {
       if (state != stateRef.current) {
         stateRef.current = state
         forceUpdate()
       }
     })
-  }, [])
+  }, [routeContext])
 
   useLayoutEffect(() => {
     routeContext?.setRoute?.(props.name, isMatched)

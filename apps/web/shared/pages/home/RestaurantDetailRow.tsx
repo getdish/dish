@@ -2,7 +2,7 @@ import { RestaurantQuery, graphql } from '@dish/graph'
 import { Divider, HStack, StackProps, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
-import { RestaurantDeliveryButton } from './RestaurantDeliveryButton'
+import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 export const RestaurantDetailRow = memo(
@@ -31,7 +31,7 @@ export const RestaurantDetailRow = memo(
           title: 'Delivers',
           content: (
             <HStack>
-              <RestaurantDeliveryButton
+              <RestaurantDeliveryButtons
                 inline
                 restaurantSlug={restaurantSlug}
               />

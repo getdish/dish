@@ -353,6 +353,7 @@ const loadHomeDishes: AsyncAction = async (om) => {
 
   if (!isEqual(all, om.state.home.topDishes)) {
     om.actions.home.addTagsToCache(allDishTags)
+    console.warn('updating top dishes')
     om.state.home.topDishes = all
   }
 }
@@ -451,7 +452,7 @@ const deepAssign = (a: Object, b: Object) => {
 
 const updateHomeState: Action<HomeStateItem> = (om, val) => {
   const state = om.state.home.allStates[val.id]
-  console.log('updateHomeState', !!state, val.id)
+  console.log('updateHomeState', !!state, val)
   if (state) {
     deepAssign(state, val)
   } else {

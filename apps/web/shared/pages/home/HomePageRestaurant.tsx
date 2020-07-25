@@ -60,7 +60,7 @@ const HomePageRestaurant = memo(
         <HomeScrollView paddingTop={0}>
           {/* HEADER */}
           <RestaurantHeader restaurantSlug={slug} />
-          <Spacer />
+          <Spacer size="xl" />
 
           <Suspense fallback={<LoadingItems />}>
             <VStack alignItems="center">
