@@ -54,11 +54,11 @@ export const Squircle = ({
           >
             <LinearGradient
               colors={[
-                'rgba(255,255,255,0.45)',
+                'rgba(255,255,255,0.2)',
                 'rgba(255,255,255,0)',
                 'rgba(255,255,255,0)',
                 'rgba(0,0,0,0)',
-                'rgba(30,30,30,0.123)',
+                'rgba(0,0,0,0.13)',
               ]}
               style={[StyleSheet.absoluteFill]}
             />

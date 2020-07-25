@@ -44,7 +44,6 @@ export default memo(function HomePageGallery() {
             <HStack
               alignItems="center"
               justifyContent="space-between"
-              marginBottom={-20}
               position="relative"
               zIndex={100}
             >
@@ -97,7 +96,6 @@ const HomePageGalleryContent = memo(
             flex={10}
             flexWrap="wrap"
             maxWidth="100%"
-            paddingVertical={20}
             // add for carousel bottom
             paddingBottom={300}
             alignItems="flex-start"

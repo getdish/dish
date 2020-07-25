@@ -56,8 +56,6 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 ) {
   const om = useOvermindStatic()
   const [isHovered, setIsHovered] = useState(false)
-  const [isActive, setIsActive] = useState(false)
-  const getIsActive = useGet(isActive)
 
   useDebounceEffect(
     () => {
@@ -72,17 +70,6 @@ export const RestaurantListItem = memo(function RestaurantListItem(
     [isHovered]
   )
 
-  useEffect(() => {
-    return om.reaction(
-      (state) => props.rank == state.home.activeIndex + 1,
-      (isActive) => {
-        if (getIsActive() !== isActive) {
-          setIsActive(isActive)
-        }
-      }
-    )
-  }, [props.rank])
-
   return (
     <HStack
       onHoverIn={() => setIsHovered(true)}
@@ -94,13 +81,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       <VStack overflow="hidden" className="ease-in-out-fast" flex={1}>
         <RestaurantListItemContent {...props} />
       </VStack>
-      <AbsoluteVStack
-        opacity={isActive ? 1 : 0.8}
-        fullscreen
-        top={-10}
-        zIndex={10}
-        pointerEvents="none"
-      >
+      <AbsoluteVStack fullscreen top={-10} zIndex={10} pointerEvents="none">
         <RestaurantPeek
           restaurantSlug={props.restaurantSlug}
           searchState={props.searchState}
@@ -133,6 +114,19 @@ const RestaurantListItemContent = memo(
     const curState = omStatic.state.home.currentState
     const tagIds = 'activeTagIds' in curState ? curState.activeTagIds : null
 
+    const [isActive, setIsActive] = useState(false)
+    const getIsActive = useGet(isActive)
+    useEffect(() => {
+      return omStatic.reaction(
+        (state) => props.rank == state.home.activeIndex + 1,
+        (isActive) => {
+          if (getIsActive() !== isActive) {
+            setIsActive(isActive)
+          }
+        }
+      )
+    }, [props.rank])
+
     console.warn(`RestaurantListItemContent.${props.rank}`)
 
     return (
@@ -142,6 +136,11 @@ const RestaurantListItemContent = memo(
         contain="layout paint"
         // prevent jitter/layout moving until loaded
         display={restaurant.name === null ? 'none' : 'flex'}
+        backgroundColor={isActive ? 'transparent' : '#fcfcfc'}
+        borderTopWidth={1}
+        borderTopColor={isActive ? '#eee' : 'transparent'}
+        borderBottomWidth={1}
+        borderBottomColor={isActive ? '#eee' : 'transparent'}
       >
         <VStack
           paddingHorizontal={pad + 6}
@@ -155,7 +154,7 @@ const RestaurantListItemContent = memo(
             {/* ROW: TITLE */}
             <VStack
               // backgroundColor={bgLightLight}
-              hoverStyle={{ backgroundColor: bgLightLight }}
+              // hoverStyle={{ backgroundColor: bgLightLight }}
               pressStyle={{ backgroundColor: bgLight }}
               marginLeft={-adjustRankingLeft}
               width={950}
@@ -210,7 +209,7 @@ const RestaurantListItemContent = memo(
                           marginRight={10}
                           borderBottomColor="transparent"
                           borderBottomWidth={2}
-                          fontWeight="400"
+                          fontWeight="500"
                           // @ts-ignore
                           hoverStyle={{
                             borderBottomColor: '#f2f2f2',

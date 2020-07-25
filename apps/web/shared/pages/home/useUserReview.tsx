@@ -72,24 +72,20 @@ export const useUserFavorite = (restaurantId: string) => {
       if (!user) {
         return
       }
-      if (!review) {
-        reviewUpsert([
-          {
-            user_id: user.id,
-            favorited: next,
-            restaurant_id: restaurantId,
-          },
-        ]).then((res) => {
-          setKey(`${Math.random()}`)
-          if (!res?.length) {
-            Toast.show('Error saving')
-            return
-          }
-          console.log('favorited', res)
-        })
-      } else {
-        review.favorited = next
-      }
+      reviewUpsert([
+        {
+          user_id: user.id,
+          favorited: next,
+          restaurant_id: restaurantId,
+        },
+      ]).then((res) => {
+        setKey(`${Math.random()}`)
+        if (!res?.length) {
+          Toast.show('Error saving')
+          return
+        }
+        console.log('favorited', res)
+      })
       setOptimistic(next)
       Toast.show(next ? 'Favorited' : 'Un-favorited')
     },

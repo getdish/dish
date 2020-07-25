@@ -9,6 +9,7 @@ import {
   Text,
   TextProps,
   VStack,
+  prevent,
 } from '@dish/ui'
 import React, { memo } from 'react'
 import { Image, Linking } from 'react-native'
@@ -90,11 +91,13 @@ export const RestaurantRatingViewPopover = memo(
             </Box>
           }
         >
-          <RestaurantRatingView
-            size={size}
-            rating={restaurant?.rating}
-            restaurantSlug={restaurantSlug}
-          />
+          <VStack cursor="default" pointerEvents="auto" onPress={prevent}>
+            <RestaurantRatingView
+              size={size}
+              rating={restaurant?.rating}
+              restaurantSlug={restaurantSlug}
+            />
+          </VStack>
         </HoverablePopover>
       )
     }

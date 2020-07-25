@@ -1,5 +1,7 @@
 export const stylePropsView = {
   pointerEvents: true,
+  userSelect: true,
+  cursor: true,
   backfaceVisibility: true,
   backgroundColor: true,
   borderBottomColor: true,

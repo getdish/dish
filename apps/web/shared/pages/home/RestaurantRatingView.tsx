@@ -23,12 +23,7 @@ export default memo(
     }
     const percent = getRestaurantRating(rating)
     const color = getRankingColor(percent)
-    return (
-      <>
-        <RatingView percent={percent} color={color} {...rest} />
-        {/* {rest.size === 'lg' && <RestaurantRatingBreakdownView {...props} />} */}
-      </>
-    )
+    return <RatingView percent={percent} color={color} {...rest} />
   })
 )
 

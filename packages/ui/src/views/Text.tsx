@@ -14,6 +14,9 @@ export type TextProps = Omit<ReactTextProps, 'style'> &
     selectable?: boolean
     children?: any
     className?: string
+    pointerEvents?: string
+    cursor?: string
+    userSelect?: string
   }
 
 const selectableStyle = {
