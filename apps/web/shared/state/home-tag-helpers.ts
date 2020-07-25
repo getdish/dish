@@ -14,6 +14,7 @@ import {
 } from './home-types'
 import { SearchRouteParams, router } from './router'
 import { NavigableTag, getTagId, tagFilters, tagLenses } from './Tag'
+import { omStatic } from './useOvermind'
 
 const SPLIT_TAG = '_'
 const SPLIT_TAG_TYPE = '~'
@@ -108,6 +109,8 @@ export const getNextState = (om: Om, navState?: HomeStateNav) => {
     }
   }
 
+  ensureHasLense(activeTagIds)
+
   const nextState = {
     id: state.id,
     searchQuery,
@@ -116,6 +119,17 @@ export const getNextState = (om: Om, navState?: HomeStateNav) => {
   }
   nextState.type = shouldBeOnHome(om.state.home, nextState) ? 'home' : 'search'
   return nextState
+}
+
+function ensureHasLense(activeTagIds: HomeActiveTagIds) {
+  if (
+    !Object.keys(activeTagIds)
+      .filter((k) => activeTagIds[k])
+      .some((k) => omStatic.state.home.allTags[k]?.type === 'lense')
+  ) {
+    // need to add lense!
+    activeTagIds['gems'] = true
+  }
 }
 
 // mutating
@@ -133,7 +147,11 @@ function ensureUniqueActiveTagIds(
       continue
     }
     const type = home.allTags[key]?.type
-    if (ensureUniqueTagOfType.has(type) && type === nextActiveTag.type) {
+    if (
+      type &&
+      ensureUniqueTagOfType.has(type) &&
+      type === nextActiveTag.type
+    ) {
       delete activeTagIds[key]
     }
   }

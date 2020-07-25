@@ -20,7 +20,7 @@ import { DishView } from './DishView'
 import { HomeScrollViewHorizontal } from './HomeScrollView'
 import { RankingView } from './RankingView'
 import { RestaurantAddress } from './RestaurantAddress'
-import { RestaurantDeliveryButton } from './RestaurantDeliveryButton'
+import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
@@ -136,10 +136,10 @@ const RestaurantListItemContent = memo(
         contain="layout paint"
         // prevent jitter/layout moving until loaded
         display={restaurant.name === null ? 'none' : 'flex'}
-        backgroundColor={isActive ? 'transparent' : '#fcfcfc'}
         borderTopWidth={1}
-        borderTopColor={isActive ? '#eee' : 'transparent'}
         borderBottomWidth={1}
+        backgroundColor={isActive ? 'transparent' : '#fcfcfc'}
+        borderTopColor={isActive ? '#eee' : 'transparent'}
         borderBottomColor={isActive ? '#eee' : 'transparent'}
       >
         <VStack
@@ -240,7 +240,10 @@ const RestaurantListItemContent = memo(
                       restaurantSlug={restaurantSlug}
                     />
                     <Spacer size={10} />
-                    <RestaurantFavoriteStar restaurantId={restaurantId} />
+                    <RestaurantFavoriteStar
+                      size="md"
+                      restaurantId={restaurantId}
+                    />
                     <Spacer size={6} />
                     <RestaurantTagsRow
                       subtle
@@ -278,15 +281,13 @@ const RestaurantListItemContent = memo(
                   afterTopCommentButton={
                     // comments
                     <Suspense fallback={null}>
-                      <HStack
-                        flex={1}
-                        spacing
-                        alignItems="center"
-                        flexWrap="wrap"
-                      >
-                        <RestaurantDeliveryButton
-                          restaurantSlug={restaurantSlug}
-                        />
+                      <HStack flex={1} alignItems="center" flexWrap="wrap">
+                        <HStack marginTop={-3} marginBottom={-1}>
+                          <RestaurantDeliveryButtons
+                            label="Delivers"
+                            restaurantSlug={restaurantSlug}
+                          />
+                        </HStack>
                         <VStack flex={1} />
                         <RestaurantDetailRow
                           size="sm"

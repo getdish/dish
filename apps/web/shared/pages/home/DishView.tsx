@@ -52,7 +52,7 @@ export const DishView = memo(
               name: 'gallery',
               params: {
                 restaurantSlug,
-                dishId: slugify(dish.name),
+                dishId: slugify(dish.name ?? ''),
               },
             }
           : {
@@ -66,7 +66,7 @@ export const DishView = memo(
         {/* rating */}
         <AbsoluteVStack pointerEvents="none" zIndex={10} top={-3} left={-8}>
           {!!dish.rating && (
-            <DishRatingView size={size > 220 ? 'sm' : 'xs'} dish={dish} />
+            <DishRatingView size={size > 160 ? 'sm' : 'xs'} dish={dish} />
           )}
         </AbsoluteVStack>
         <Squircle

@@ -292,3 +292,7 @@ li::before {
 .unselectable {
   user-select: none;
 }
+
+.searchbar-inner-shadow {
+  box-shadow: inset 0 0 30px rgba(255,255,255,0.1);
+}

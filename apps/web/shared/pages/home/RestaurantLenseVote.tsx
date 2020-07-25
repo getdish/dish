@@ -11,7 +11,6 @@ export const RestaurantLenseVote = memo(
   ({ restaurantId }: { restaurantId: string }) => {
     const votes = useUserTagVotes(restaurantId)
     console.log('votes', votes)
-
     return (
       <HoverablePopover
         allowHoverOnContent

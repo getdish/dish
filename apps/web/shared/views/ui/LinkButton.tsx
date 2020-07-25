@@ -1,4 +1,4 @@
-import { HStack, StackProps, Text, VStack } from '@dish/ui'
+import { HStack, StackProps, Text } from '@dish/ui'
 import React, { useLayoutEffect, useRef, useState } from 'react'
 
 import { RoutesTable } from '../../state/router'
