@@ -56,10 +56,6 @@ export function Link<
     ref: linkRef,
     href: router.getPathFromParams(navItem),
     onClick: (e: any) => {
-      e.stopPropagation()
-      if (window['prevent_']) {
-        return
-      }
       if (allProps.target) {
         // let it go
       } else {

@@ -8,6 +8,7 @@ import { isSearchState } from '../../state/home-helpers'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
 import { getBreadcrumbs } from './getBreadcrumbs'
+import { useLastValueWhen } from './useLastValueWhen'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 // export class HomeStateStore extends Store {
@@ -22,7 +23,11 @@ export type StackItemProps<A> = {
   isRemoving: boolean
 }
 
-type GetChildren<A> = (props: StackItemProps<A>) => React.ReactNode
+type GetChildren<A> = (props: {
+  item: A
+  index: number
+  isActive: boolean
+}) => React.ReactNode
 
 export function HomeStackView<A extends HomeStateItem>(props: {
   children: GetChildren<A>
@@ -93,14 +98,15 @@ const HomeStackViewItem = memo(
     //   popoverStore.show = isActive
     // }, [isActive])
 
-    const memoChildren = useMemo(() => {
+    let children = useMemo(() => {
       return getChildren({
-        // @ts-ignore
-        item,
+        item: item as any,
         index,
         isActive,
       })
-    }, [isActive, index, item])
+    }, [index, item, isActive])
+
+    children = useLastValueWhen(() => children, isRemoving)
 
     const className = `animate-up ${!isRemoving ? 'active' : ''}`
     console.log('className', className)
@@ -126,7 +132,7 @@ const HomeStackViewItem = memo(
             pointerEvents="auto"
           >
             <ErrorBoundary name={`HomeStackView.${item.type}`}>
-              <Suspense fallback={null}>{memoChildren}</Suspense>
+              <Suspense fallback={null}>{children}</Suspense>
             </ErrorBoundary>
           </AbsoluteVStack>
         </AbsoluteVStack>

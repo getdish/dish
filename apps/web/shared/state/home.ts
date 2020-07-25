@@ -28,6 +28,7 @@ import {
   getFullTags,
   getNavigateItemForState,
   getNextState,
+  getShouldNavigate,
   getTagsFromRoute,
   isSearchBarTag,
   syncStateToRoute,
@@ -153,9 +154,16 @@ const derivations = {
   isAutocompleteActive: derived<HomeState, boolean>(
     (state) => state.activeIndex === -1
   ),
-  previousState: derived<HomeState, HomeStateItem>(
-    (state) => state.states[state.stateIndex - 1]
-  ),
+  previousState: derived<HomeState, HomeStateItem>((state) => {
+    const curState = state.states[state.stateIndex]
+    for (let i = state.stateIndex - 1; i >= 0; i--) {
+      const next = state.states[i]
+      if (next?.type !== curState!.type) {
+        return next
+      }
+    }
+    return state.states[0]
+  }),
   searchBarTags: derived<HomeState, Tag[]>((state) =>
     state.lastActiveTags.filter(isSearchBarTag)
   ),
@@ -271,7 +279,7 @@ const refresh: AsyncAction = async (om) => {
 const popBack: Action = (om) => {
   const cur = om.state.home.currentState
   const next = findLast(om.state.home.states, (x) => x.type !== cur.type)
-  om.actions.home.popTo(next.type)
+  om.actions.home.popTo(next?.type ?? 'home')
 }
 
 const popTo: Action<HomeStateItem['type']> = (om, type) => {
@@ -296,7 +304,7 @@ const popTo: Action<HomeStateItem['type']> = (om, type) => {
   const prevStates = states.slice(0, states.length - 1)
   const stateItem = _.findLast(prevStates, (x) => x.type === type)
   const routerItem =
-    router.history.find((x) => x.id === stateItem.id) ??
+    router.history.find((x) => x.id === stateItem?.id) ??
     _.findLast(router.history, (x) => x.name === type)
   if (routerItem) {
     router.navigate({
@@ -800,6 +808,7 @@ const pushHomeState: AsyncAction<
   //   )
   // }
 
+  console.log('pushState finalState', finalState)
   om.actions.home.updateHomeState(finalState)
 
   if (!om.state.home.started) {
@@ -943,9 +952,8 @@ function padSpan(val: LngLat, by = 0.9): LngLat {
 }
 
 const up: Action = (om) => {
-  const breadcrumbs = getBreadcrumbs(om.state.home.states)
-  const prev = breadcrumbs[breadcrumbs.length - 2]
-  om.actions.home.popTo(prev?.type ?? 'home')
+  const prev = om.state.home.previousState?.type
+  om.actions.home.popTo(prev ?? 'home')
 }
 
 // used to help prevent duplicate searches on slight diff in map move
@@ -1119,6 +1127,11 @@ export const getNavigateTo: Action<HomeStateNav, LinkButtonProps | null> = (
 // we definitely can clean up / name better some of this once things settle
 let lastNav = Date.now()
 const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
+  navState.state = navState.state ?? om.state.home.currentState
+  const nextState = getNextState(om, navState)
+  if (!getShouldNavigate(om, nextState)) {
+    return false
+  }
   console.warn('home.navigate', navState)
   lastNav = Date.now()
   let curNav = lastNav
@@ -1126,8 +1139,6 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
   if (navState.tags) {
     om.actions.home.addTagsToCache(navState.tags)
   }
-  navState.state = navState.state ?? om.state.home.currentState
-  const nextState = getNextState(om, navState)
 
   // do a quick update first
   const curState = om.state.home.currentState
@@ -1153,12 +1164,12 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     })
     await sleep(40)
     await idle(30)
-    if (curNav !== lastNav) return
+    if (curNav !== lastNav) return false
     om.state.home.isOptimisticUpdating = false
   }
 
   const didNav = await syncStateToRoute(om, nextState)
-  if (curNav !== lastNav) return
+  if (curNav !== lastNav) return false
   om.actions.home.updateActiveTags(nextState)
   return didNav
 }
