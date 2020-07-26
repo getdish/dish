@@ -244,9 +244,9 @@ test('Merging', async (t) => {
   )
   const photos = await bestPhotosForRestaurant(t.context.restaurant.id)
   t.is(photos[0].photo.origin, 'https://i.imgur.com/N6YtgRI.jpeg')
-  t.is(photos[0].photo.quality, 5.3742065027199715)
+  t.assert(parseFloat(photos[0].photo.quality).toFixed(3), '5.374')
   t.is(photos[1].photo.origin, 'https://i.imgur.com/92a8cNI.jpg')
-  t.is(photos[1].photo.quality, 4.575530681464443)
+  t.assert(parseFloat(photos[0].photo.quality).toFixed(3), '4.575')
   t.is(!!updated, true)
   if (!updated) return
   t.is(updated.name, 'Test Name Yelp')
