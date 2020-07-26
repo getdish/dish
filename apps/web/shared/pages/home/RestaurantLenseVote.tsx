@@ -1,3 +1,4 @@
+import { graphql } from '@dish/graph'
 import { Box, HStack, HoverablePopover, prevent } from '@dish/ui'
 import React, { memo } from 'react'
 import { Tag } from 'react-feather'
@@ -7,7 +8,7 @@ import { HomeLenseBar } from './HomeLenseBar'
 import { useUserTagVotes } from './useUserReview'
 
 export const RestaurantLenseVote = memo(
-  ({ restaurantId }: { restaurantId: string }) => {
+  graphql(({ restaurantId }: { restaurantId: string }) => {
     const votes = useUserTagVotes(restaurantId)
     console.log('votes', votes)
     return (
@@ -17,7 +18,13 @@ export const RestaurantLenseVote = memo(
         contents={
           <Box pointerEvents="auto" padding={15}>
             <HStack marginTop={-10} marginBottom={8}>
-              <HomeLenseBar minimal activeTagIds={{}} />
+              <HomeLenseBar
+                minimal
+                activeTagIds={{}}
+                onPressLense={(lense) => {
+                  console.warn('should vote for lense')
+                }}
+              />
             </HStack>
 
             {/* <Input /> */}
@@ -29,5 +36,5 @@ export const RestaurantLenseVote = memo(
         </SmallButton>
       </HoverablePopover>
     )
-  }
+  })
 )

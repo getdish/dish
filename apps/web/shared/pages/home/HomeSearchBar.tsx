@@ -56,15 +56,20 @@ export default memo(function HomeSearchBar() {
 
   return (
     <AbsoluteVStack
-      className="searchbar-container"
+      className="searchbar-container ease-in-out"
       zIndex={2000}
       position="absolute"
       fullscreen
       marginTop={searchBarTopOffset}
-      left={isSmall ? 2 : 16}
-      right={isSmall ? 2 : 16}
+      left={16}
+      right={16}
       alignItems="center"
       pointerEvents="none"
+      {...(isSmall && {
+        left: -2,
+        right: -2,
+        top: '21%',
+      })}
     >
       <HomeAutocomplete />
       <VStack

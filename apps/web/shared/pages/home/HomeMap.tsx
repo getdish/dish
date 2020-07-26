@@ -1,5 +1,5 @@
 import { fullyIdle, idle, series, sleep } from '@dish/async'
-import { Restaurant, graphql, query } from '@dish/graph'
+import { Restaurant, graphql } from '@dish/graph'
 import {
   AbsoluteVStack,
   VStack,
@@ -19,9 +19,8 @@ import React, {
 } from 'react'
 
 import { frameWidthMax, searchBarHeight } from '../../constants'
-import { memoize } from '../../helpers/memoizeWeak'
 import { LngLat } from '../../state/home'
-import { isRestaurantState, isSearchState } from '../../state/home-helpers'
+import { isRestaurantState } from '../../state/home-helpers'
 import { setMapView } from '../../state/mapView'
 import { router } from '../../state/router'
 import { omStatic, useOvermind } from '../../state/useOvermind'
@@ -207,8 +206,8 @@ const HomeMapContent = memo(function HomeMap({
   const padding = isSmall
     ? {
         left: 0,
-        top: searchBarHeight + 15 + 15,
-        bottom: window.innerHeight * 0.7,
+        top: 0,
+        bottom: window.innerHeight * 0.7 + searchBarHeight,
         right: 0,
       }
     : {
@@ -457,7 +456,7 @@ const HomeMapContent = memo(function HomeMap({
       width={mapWidth}
     >
       <Suspense fallback={null}>
-        <HomeMapControlsOverlay />
+        <HomeMapControlsOverlay paddingLeft={paddingLeft} />
       </Suspense>
       <Map {...mapProps} />
     </AbsoluteVStack>

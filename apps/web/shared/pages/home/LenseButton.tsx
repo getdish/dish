@@ -14,12 +14,14 @@ export const LenseButton = memoIsEqualDeep(
     minimal,
     size = 'md',
     backgroundColor,
+    onPress,
   }: {
     lense: Tag
     isActive?: boolean
     backgroundColor?: string
     minimal?: boolean
     size?: LenseButtonSize
+    onPress?: Function
   }) => {
     const lenseColor = rgbString(lense.rgb)
     // const lenseColorLight = `rgba(${rgbInner}, 0.2)`
@@ -29,7 +31,7 @@ export const LenseButton = memoIsEqualDeep(
 
     return (
       <LinkButton
-        tag={lense}
+        {...(onPress ? { onPress } : { tag: lense })}
         disallowDisableWhenActive
         position="relative"
         zIndex={isActive ? 1 : 0}
