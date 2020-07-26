@@ -20,8 +20,8 @@ export const HomeMapControlsOverlay = memo(() => {
       padding={20}
       pointerEvents="none"
       top={searchBarHeight + 10}
-      left={drawerWidth + 20}
-      maxWidth={pageWidthMax * 0.4}
+      left={0}
+      right={0}
       {...(isSmall && {
         maxWidth: '100%',
         left: 0,

@@ -52,10 +52,6 @@ const HomePageContent = memo(() => {
         )}
 
         <Suspense fallback={null}>
-          <HomeMapControlsOverlay />
-        </Suspense>
-
-        <Suspense fallback={null}>
           <HomeSearchBar />
         </Suspense>
 

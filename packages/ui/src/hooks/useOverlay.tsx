@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react'
 
 export const useOverlay = ({
-  zIndex = 1,
+  zIndex = 100,
   isOpen,
   onClick,
   pointerEvents,
