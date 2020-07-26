@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { Spacer, StackProps, VStack } from '@dish/ui'
+import { Spacer, StackProps, Tooltip, VStack } from '@dish/ui'
 import React, { memo, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
@@ -18,6 +18,12 @@ export const RestaurantUpVoteDownVote = memo(
       activeTagIds: HomeActiveTagIds
     }) => {
       const [vote, setVote] = useUserUpvoteDownvote(restaurantId, activeTagIds)
+      const isOpenProp =
+        vote === 0
+          ? null
+          : {
+              isOpen: false,
+            }
       return (
         <div
           style={{
@@ -25,23 +31,27 @@ export const RestaurantUpVoteDownVote = memo(
           }}
         >
           <VStack pointerEvents="auto" width={22}>
-            <VoteButton
-              Icon={ChevronUp}
-              voted={vote == 1}
-              color={vote === 1 ? 'green' : null}
-              onPressOut={() => {
-                setVote(vote === 1 ? 0 : 1)
-              }}
-            />
+            <Tooltip contents="Underrated" {...isOpenProp}>
+              <VoteButton
+                Icon={ChevronUp}
+                voted={vote == 1}
+                color={vote === 1 ? 'green' : null}
+                onPressOut={() => {
+                  setVote(vote === 1 ? 0 : 1)
+                }}
+              />
+            </Tooltip>
             <Spacer size={32} />
-            <VoteButton
-              Icon={ChevronDown}
-              voted={vote == -1}
-              color={vote === -1 ? 'red' : null}
-              onPressOut={() => {
-                setVote(vote == -1 ? 0 : -1)
-              }}
-            />
+            <Tooltip contents="Overrated" {...isOpenProp}>
+              <VoteButton
+                Icon={ChevronDown}
+                voted={vote == -1}
+                color={vote === -1 ? 'red' : null}
+                onPressOut={() => {
+                  setVote(vote == -1 ? 0 : -1)
+                }}
+              />
+            </Tooltip>
           </VStack>
         </div>
       )
@@ -80,7 +90,7 @@ const VoteButton = ({
     >
       <Icon
         size={28}
-        color={color ?? (hovered ? '#000' : '#eee')}
+        color={color ?? (hovered ? '#000' : '#ccc')}
         style={{ ...styleMedia }}
       />
     </VStack>

@@ -8,7 +8,7 @@ import { Text } from './Text'
 export const Tooltip = ({
   contents,
   ...props
-}: PopoverProps & { contents: any }) => {
+}: Omit<PopoverProps, 'contents'> & { contents: any }) => {
   return (
     <HoverablePopover
       noArrow
