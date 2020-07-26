@@ -28,6 +28,7 @@ import { omStatic, useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../../views/map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
+import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
 import { setMapIsLoaded } from './onMapLoadedCallback'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useLastValueWhen } from './useLastValueWhen'
@@ -455,6 +456,9 @@ const HomeMapContent = memo(function HomeMap({
       bottom={0}
       width={mapWidth}
     >
+      <Suspense fallback={null}>
+        <HomeMapControlsOverlay />
+      </Suspense>
       <Map {...mapProps} />
     </AbsoluteVStack>
   )

@@ -1,13 +1,7 @@
 import { graphql, query } from '@dish/graph'
-import {
-  HStack,
-  LoadingItem,
-  LoadingItems,
-  Spacer,
-  Text,
-  VStack,
-} from '@dish/ui'
+import { HStack, Spacer, Text, VStack } from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
+import { MessageCircle } from 'react-feather'
 
 import { SmallButton } from '../../views/ui/SmallButton'
 import {
@@ -39,9 +33,7 @@ export const RestaurantTopReviews = memo(
               setState((x) => ({ ...x, showMore: !x.showMore }))
             }}
           >
-            <Text fontSize={13} opacity={0.7}>
-              {state.showMore ? 'Show less' : 'Comments'}
-            </Text>
+            <MessageCircle size={18} />
           </SmallButton>
           {afterTopCommentButton ? (
             <>

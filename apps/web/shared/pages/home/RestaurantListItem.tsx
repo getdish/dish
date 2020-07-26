@@ -16,6 +16,7 @@ import { bgLight, bgLightLight, brandColor } from '../../colors'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home'
 import { omStatic, useOvermindStatic } from '../../state/useOvermind'
 import { Link } from '../../views/ui/Link'
+import { SmallButton } from '../../views/ui/SmallButton'
 import { DishView } from './DishView'
 import { HomeScrollViewHorizontal } from './HomeScrollView'
 import { RankingView } from './RankingView'
@@ -251,7 +252,6 @@ const RestaurantListItemContent = memo(
                       restaurantSlug={restaurantSlug}
                       restaurantId={restaurantId}
                     />
-                    <RestaurantLenseVote restaurantId={restaurantId} />
                   </HStack>
                 </VStack>
               </Link>
@@ -275,19 +275,26 @@ const RestaurantListItemContent = memo(
                 </Text>
               </VStack>
               <Spacer size="xs" />
-              <Suspense fallback={<LoadingItems />}>
+              <Suspense fallback={null}>
                 <RestaurantTopReviews
                   restaurantId={restaurantId}
                   afterTopCommentButton={
                     // comments
                     <Suspense fallback={null}>
                       <HStack flex={1} alignItems="center" flexWrap="wrap">
+                        <VStack>
+                          <RestaurantLenseVote restaurantId={restaurantId} />
+                        </VStack>
+
+                        <Spacer />
+
                         <HStack marginTop={-3} marginBottom={-1}>
                           <RestaurantDeliveryButtons
                             label="Delivers"
                             restaurantSlug={restaurantSlug}
                           />
                         </HStack>
+
                         <VStack flex={1} />
                         <RestaurantDetailRow
                           size="sm"

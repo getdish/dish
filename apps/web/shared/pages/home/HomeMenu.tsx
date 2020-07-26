@@ -13,8 +13,11 @@ import {
 } from '@dish/ui'
 import React, { memo, useState } from 'react'
 import {
+  Activity,
+  Bold,
   ChevronDown,
   ChevronUp,
+  Coffee,
   Hexagon,
   Menu,
   Settings,
@@ -94,20 +97,21 @@ export const HomeMenu = memo(() => {
           </Box>
         }
       >
-        <MenuButton
-          Icon={User}
-          onPress={() => setShowUserMenu(!showUserMenu)}
-          text={!isSmall && !om.state.user.isLoggedIn ? 'Signup' : ''}
-        />
+        <Tooltip contents={om.state.user.isLoggedIn ? 'User' : 'Login'}>
+          <MenuButton
+            Icon={User}
+            onPress={() => setShowUserMenu(!showUserMenu)}
+            text={!isSmall && !om.state.user.isLoggedIn ? 'Signup' : ''}
+          />
+        </Tooltip>
       </Popover>
 
       {isAboveMedium && (
         <>
-          {/*  */}
-          <HoverablePopover contents={<VStack></VStack>}>
+          <Tooltip contents="About">
             <MenuButton
               name="about"
-              Icon={Hexagon}
+              Icon={Coffee}
               ActiveIcon={ChevronUp}
               onPress={(e) => {
                 if (omStatic.state.router.curPageName === 'about') {
@@ -118,7 +122,7 @@ export const HomeMenu = memo(() => {
                 }
               }}
             />
-          </HoverablePopover>
+          </Tooltip>
         </>
       )}
     </HStack>
