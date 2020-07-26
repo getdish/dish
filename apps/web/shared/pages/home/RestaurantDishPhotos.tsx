@@ -26,7 +26,6 @@ export const RestaurantDishPhotos = memo(
       const photos = restaurantPhotosForCarousel({ restaurant, max: 30 })
       const drawerWidth = useHomeDrawerWidthInner()
       const spacing = 12
-      const perRow = drawerWidth > 800 ? 3 : 2
       const [selected, setSelected] = useState(
         selectable
           ? defaultSelectedId
@@ -55,7 +54,7 @@ export const RestaurantDishPhotos = memo(
                 return (
                   <DishView
                     key={index}
-                    size={size ?? (drawerWidth / 2 - perRow * spacing) / perRow}
+                    size={size ?? 180}
                     restaurantSlug={restaurantSlug}
                     margin={spacing / 2}
                     marginBottom={16}
