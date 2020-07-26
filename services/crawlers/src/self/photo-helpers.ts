@@ -277,6 +277,30 @@ async function assessNewPhotos(unassessed_photos: string[]) {
 }
 
 async function assessPhotoQuality(urls: string[]) {
+  const MAX_RETRIES = 5
+  let retries = 0
+  while (true) {
+    try {
+      return await assessPhotoQualityWithoutRetries(urls)
+    } catch (error) {
+      console.log(error.message)
+      if (!error.message.includes('json')) {
+        throw error
+      }
+      retries += 1
+      if (retries > MAX_RETRIES) {
+        sentryMessage(
+          MAX_RETRIES + ' failed attempts requesting image quality',
+          urls
+        )
+        return []
+      }
+      console.log('Retrying Image Quality API')
+    }
+  }
+}
+
+async function assessPhotoQualityWithoutRetries(urls: string[]) {
   const IMAGE_QUALITY_API = 'https://image-quality.rio.dishapp.com/prediction'
   if (process.env.LOG_TIMINGS == '1') {
     console.log('Fetching Image Quality API batch...')
