@@ -6,6 +6,7 @@ export type RatingViewProps = StackProps & {
   percent?: number
   color?: string
   hideEmoji?: boolean
+  hideDecimal?: boolean
   subtle?: boolean
 }
 
@@ -23,6 +24,7 @@ export const RatingView = forwardRef(
       percent = 0,
       subtle,
       size: sizeIn,
+      hideDecimal,
       hideEmoji,
       ...rest
     }: RatingViewProps,
@@ -38,17 +40,6 @@ export const RatingView = forwardRef(
       sizeIn === 'xs' || sizeIn === 'sm' ? Math.max(-size * 0.0025, -3) : 0
 
     const bgColor = 'rgba(255,255,255,0.3)'
-
-    // const emoji = (
-    //   <Text
-    //     fontSize={Math.max(sizeIn === 'xs' ? 12 : 14, size * 0.4)}
-    //     marginTop={size < 43 ? 0 : -size * 0.13}
-    //     textShadowColor="rgba(0,0,0,0.25)"
-    //     textShadowRadius={size * 0.015}
-    //   >
-    //     {percent >= 0.9 ? '♥️' : '⭐️'}
-    //   </Text>
-    // )
 
     const ranking = percent * 10
     const rankingPre = Math.floor(ranking / 10)
@@ -67,7 +58,7 @@ export const RatingView = forwardRef(
         >
           {rankingPre}
         </Text>
-        {!!rankingPost && (
+        {!!rankingPost && !hideDecimal && (
           <Text
             fontWeight="500"
             marginTop="25%"
@@ -107,18 +98,25 @@ export const RatingView = forwardRef(
         height={size}
         {...rest}
       >
-        {/* {!hideEmoji && percent >= 7 && (
+        {!hideEmoji && percent >= 7 && (
           <VStack
             position="absolute"
             top={badgeOffset * size}
-            right={badgeOffset * size}
+            right={badgeOffset * size + 3}
             alignItems="center"
             justifyContent="center"
             zIndex={100}
           >
-            {emoji}
+            <Text
+              fontSize={Math.max(sizeIn === 'xs' ? 13 : 14, size * 0.4)}
+              marginTop={size < 43 ? -size * 0.1 : -size * 0.13}
+              textShadowColor="rgba(0,0,0,0.25)"
+              textShadowRadius={size * 0.015}
+            >
+              {percent >= 0.9 ? '💎' : '⭐️'}
+            </Text>
           </VStack>
-        )} */}
+        )}
         <VStack
           backgroundColor={bgColor}
           borderRadius={100}

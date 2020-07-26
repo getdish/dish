@@ -8,6 +8,7 @@ import React, { Suspense } from 'react'
 
 import AdminPage from './pages/admin/AdminPage'
 import HomePage from './pages/home/HomePage'
+import { Shortcuts } from './Shortcuts'
 import { useOvermind } from './state/useOvermind'
 import { NotFoundPage } from './views/NotFoundPage'
 import { PrivateRoute, Route, RouteSwitch } from './views/router/Route'
@@ -16,6 +17,7 @@ export function App({ overmind }: { overmind?: any }) {
   return (
     <>
       <ToastRoot />
+      <Shortcuts />
       <Provider value={overmind}>
         <ErrorHandler />
         <Suspense fallback={<LoadingItems />}>

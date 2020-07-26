@@ -76,6 +76,10 @@ export function focusSearchInput() {
   searchBar?.focus()
 }
 
+export const getSearchInput = () => {
+  return searchBar
+}
+
 export const HomeSearchInput = memo(() => {
   const om = useOvermind()
   const isReallySmall = useMediaQueryIsReallySmall()
@@ -123,24 +127,12 @@ export const HomeSearchInput = memo(() => {
 
   // shortcuts
   useEffect(() => {
-    const handleKeyUp = (e) => {
-      const input = inputGetNode(inputRef.current)
-      if (document.activeElement !== input) {
-        if (e.keyCode == 191) {
-          // forward-slash (/)
-          focusSearchInput()
-        }
-      }
-    }
-
     const handleClick = () => {
       om.actions.home.setShowAutocomplete('search')
     }
 
-    window.addEventListener('keyup', handleKeyUp)
     inputRef.current.addEventListener('click', handleClick)
     return () => {
-      window.removeEventListener('keyup', handleKeyUp)
       inputRef.current.removeEventListener('click', handleClick)
     }
   }, [])
@@ -190,8 +182,9 @@ export const HomeSearchInput = memo(() => {
         contain="paint"
         // backgroundColor="rgba(255,255,255,0.1)"
         alignItems="center"
-        paddingHorizontal={15}
+        // paddingHorizontal={15}
         borderRadius={100}
+        maxWidth="100%"
         flex={1}
         overflow="hidden"
       >

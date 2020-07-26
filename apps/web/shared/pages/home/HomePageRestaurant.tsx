@@ -1,6 +1,5 @@
 import { graphql } from '@dish/graph'
 import {
-  AbsoluteVStack,
   Button,
   HStack,
   LinearGradient,
@@ -13,7 +12,6 @@ import {
 import React, { Suspense, memo, useState } from 'react'
 import { StyleSheet } from 'react-native'
 
-import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { HomePagePaneProps } from './HomePagePane'

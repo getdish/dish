@@ -1,5 +1,7 @@
 ## July
 
+- A bit of user profile page polish
+  - show their favorites on the map!
 - Lots of bugfixing
 - location - improve state when permission is active (current location)
 - tips horizontal carousel on detail page
