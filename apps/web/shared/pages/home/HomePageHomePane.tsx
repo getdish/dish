@@ -108,20 +108,6 @@ const HomePageTopDishes = memo((props: Props) => {
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
       <VStack position="relative" flex={1} maxHeight="100%" overflow="visible">
-        {isSmall && (
-          <HStack
-            alignItems="center"
-            justifyContent="center"
-            top={-10}
-            zIndex={1000}
-            position="absolute"
-            left={0}
-            right={0}
-          >
-            <HomeLenseBar size="lg" activeTagIds={activeTagIds} />
-          </HStack>
-        )}
-
         <HomeScrollView>
           <VStack
             paddingTop={isSmall ? 34 : 34}
@@ -131,30 +117,28 @@ const HomePageTopDishes = memo((props: Props) => {
             {/* LENSES - UNIQUELY GOOD HERE */}
             <VStack>
               <VStack alignItems="center">
-                {!isSmall && (
-                  <>
-                    <HStack
-                      width="100%"
-                      alignItems="center"
-                      justifyContent="center"
-                      paddingHorizontal={20}
-                      position="relative"
-                    >
-                      <HomeLenseTitle state={state} />
+                <>
+                  <HStack
+                    width="100%"
+                    alignItems="center"
+                    justifyContent="center"
+                    paddingHorizontal={20}
+                    position="relative"
+                  >
+                    {!isSmall && <HomeLenseTitle state={state} />}
 
-                      <HStack alignItems="center" justifyContent="center">
-                        <HomeLenseBar
-                          backgroundColor="transparent"
-                          size="xl"
-                          activeTagIds={activeTagIds}
-                        />
-                      </HStack>
+                    <HStack alignItems="center" justifyContent="center">
+                      <HomeLenseBar
+                        backgroundColor="transparent"
+                        size="xl"
+                        activeTagIds={activeTagIds}
+                      />
                     </HStack>
-                    <Spacer size="xl" />
-                  </>
-                )}
+                  </HStack>
+                  <Spacer size={isSmall ? 5 : 15} />
+                </>
 
-                <Spacer size={15} />
+                <Spacer size={isSmall ? 5 : 15} />
 
                 <HomeIntroLetter />
 

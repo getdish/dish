@@ -1,3 +1,4 @@
+import { Tag } from '@dish/graph'
 import { Spacer } from '@dish/ui'
 import React, { memo } from 'react'
 
@@ -12,6 +13,7 @@ export const HomeLenseBar = memo(
     size?: LenseButtonSize
     minimal?: boolean
     backgroundColor?: string
+    onPressLense?: (lense: Tag) => void
   }) => {
     const om = useOvermind()
     return (
@@ -24,6 +26,12 @@ export const HomeLenseBar = memo(
               minimal={props.minimal}
               size={props.size}
               backgroundColor={props.backgroundColor}
+              {...(props.onPressLense && {
+                onPress: (e) => {
+                  e.stopPropagation()
+                  props.onPressLense(lense)
+                },
+              })}
             />
             {index < om.state.home.allLenseTags.length - 1 && (
               <Spacer size={2} />

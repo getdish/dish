@@ -24,7 +24,7 @@ export function HomeViewDrawer(props: { children: any }) {
       flex={1}
       justifyContent="flex-end"
       {...(isSmall && {
-        top: '27%',
+        top: '26%',
         left: 0,
         right: 0,
         // TODO ui-static this fails if i remove conditional above!

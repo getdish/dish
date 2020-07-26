@@ -10,10 +10,10 @@ type MapContextType = {
   mapkit?: typeof mapkit
 }
 
-export const MapContext = React.createContext({
+export const MapContext = React.createContext<MapContextType>({
   map: undefined,
   mapkit: undefined,
-} as MapContextType)
+})
 
 const MapProvider: React.FC<{ context: MapContextType }> = ({
   children,

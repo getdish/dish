@@ -89,7 +89,7 @@ export const TagButton = memo((props: TagButtonProps) => {
   }
   const tag = { name, type: type as TagType, icon, rgb }
   const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1 : 1
-  const height = scale * (subtle ? 26 : 30)
+  const height = scale * (subtle ? 26 : 32)
   const lineHeight = 22 * scale
   const defaultColor = noColor ? 'inherit' : getTagColor(rgb)
   const fg = color ?? (subtle ? 'rgba(0,0,0,0.65)' : defaultColor)
