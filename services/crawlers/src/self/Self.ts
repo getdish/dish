@@ -24,18 +24,14 @@ import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
 import moment from 'moment'
 
-import { Tripadvisor } from '../tripadvisor/Tripadvisor'
-import { sanfran, sql } from '../utils'
 import {
-  DO_BASE,
   bestPhotosForRestaurant,
   bestPhotosForRestaurantTags,
-  findHeroImage,
   photoUpsert,
-  photoXrefUpsert,
-  sendToDO,
   uploadHeroImage,
-} from './photo-helpers'
+} from '../photo-helpers'
+import { Tripadvisor } from '../tripadvisor/Tripadvisor'
+import { sanfran, sql } from '../utils'
 import { Tagging } from './Tagging'
 
 const PER_PAGE = 50
@@ -88,7 +84,6 @@ export class Self extends WorkerJob {
         previous_id = result.id as string
       }
     }
-    await this.tagging.setDefaultTagImages()
   }
 
   async mergeAll(id: string) {

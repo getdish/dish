@@ -10,12 +10,7 @@ WITH by_country AS (
         json_agg(jsonb_build_object(
           'name', name,
           'image', (
-            SELECT image FROM restaurant
-              WHERE tag_names @> to_jsonb(hot_tags.tag_slug)
-              AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
-              AND image IS NOT NULL
-              ORDER BY rating DESC NULLS LAST
-              LIMIT 1
+            SELECT hot_tags.default_images->0
           ),
           'rating', (
             SELECT AVG(rating) FROM restaurant

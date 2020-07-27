@@ -1,5 +1,5 @@
-import { query, tag_constraint } from '../graphql'
-import { Tag, TagQuery, TagTag, TagWithId } from '../types'
+import { order_by, query } from '../graphql'
+import { Tag, TagTag, TagWithId } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 import { tagTagUpsert } from './tag_tag-helpers'
@@ -44,6 +44,31 @@ export async function tagFindCountries(countries: string[]): Promise<Tag[]> {
       },
     })
   })
+}
+
+export async function tagGetAllCuisinesWithDishes(
+  batch_size: number,
+  page: number
+) {
+  return await resolvedWithFields(
+    () => {
+      return query.tag({
+        where: {
+          parent: {
+            type: { _eq: 'country' },
+          },
+        },
+        limit: batch_size,
+        offset: page * batch_size,
+        order_by: [
+          {
+            name: order_by.asc,
+          },
+        ],
+      })
+    },
+    { relations: ['parent'] }
+  )
 }
 
 export async function tagUpsertCategorizations(

@@ -117,18 +117,6 @@ export class Tagging {
     return parseInt(result.rows[0].rank)
   }
 
-  async setDefaultTagImages() {
-    await sql(
-      `UPDATE tag set default_images = (
-         SELECT photos FROM restaurant_tag rt
-         WHERE rt.tag_id = tag.id
-           AND photos IS NOT NULL
-         ORDER BY rt.rating DESC NULLS LAST
-         LIMIT 1
-      )`
-    )
-  }
-
   async scanCorpus() {
     this._found_tags = {}
     this.all_tags = await restaurantGetAllPossibleTags(this.crawler.restaurant)

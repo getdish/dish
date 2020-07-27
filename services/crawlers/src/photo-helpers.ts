@@ -67,8 +67,9 @@ async function postUpsert(photos: PhotoXref[]) {
   await updatePhotoQuality(photos)
 }
 
-async function uploadToDO(photos: PhotoXref[]) {
-  const not_uploaded = await findNotUploadedPhotos(photos[0].restaurant_id)
+export async function uploadToDO(photos: PhotoXref[]) {
+  const not_uploaded = await findNotUploadedPhotos(photos)
+  if (!not_uploaded) return
   await uploadToDOSpaces(not_uploaded)
   const updated = not_uploaded.map((p) => {
     if (!p.photo) throw 'uploadToDO() No photo!?'
@@ -80,12 +81,12 @@ async function uploadToDO(photos: PhotoXref[]) {
   await photoBaseUpsert(updated, photo_constraint.photos_pkey)
 }
 
-async function updatePhotoQuality(photos: PhotoXref[]) {
+export async function updatePhotoQuality(photos: PhotoXref[]) {
   const unassessed_photos = await findUnassessedPhotos(photos)
   await assessNewPhotos(unassessed_photos)
 }
 
-async function findNotUploadedPhotos(
+async function findNotUploadedRestaurantPhotos(
   restaurant_id: uuid
 ): Promise<PhotoXref[]> {
   const photos = await resolvedWithFields(
@@ -106,6 +107,43 @@ async function findNotUploadedPhotos(
             {
               restaurant_id: {
                 _eq: restaurant_id,
+              },
+              photo: {
+                url: {
+                  _is_null: true,
+                },
+              },
+            },
+          ],
+        },
+        distinct_on: [photo_xref_select_column.photo_id],
+      }),
+    { relations: ['photo'] }
+  )
+  return photos
+}
+
+export async function findNotUploadedTagPhotos(
+  tag_id: uuid
+): Promise<PhotoXref[]> {
+  const photos = await resolvedWithFields(
+    () =>
+      query.photo_xref({
+        where: {
+          _or: [
+            {
+              tag_id: {
+                _eq: tag_id,
+              },
+              photo: {
+                url: {
+                  _nlike: '%digitalocean%',
+                },
+              },
+            },
+            {
+              tag_id: {
+                _eq: tag_id,
               },
               photo: {
                 url: {
@@ -355,9 +393,28 @@ async function findUnassessedPhotos(photos: PhotoXref[]): Promise<string[]> {
     unassessed_photos = await unassessedPhotosForTag(photos[0].tag_id)
   }
   return unassessed_photos.map((p) => {
-    if (!p.photo || !p.photo.url) throw 'Photo.url NOT NULL violation'
+    if (!p.photo || !p.photo.url)
+      throw 'findUnassessedPhotos(): Photo.url NOT NULL violation'
     return p.photo.url
   })
+}
+
+async function findNotUploadedPhotos(photos: PhotoXref[]) {
+  let not_uploaded: PhotoXref[] = []
+  if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id == ZeroUUID) {
+    not_uploaded = await findNotUploadedRestaurantPhotos(
+      photos[0].restaurant_id
+    )
+  }
+  if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id != ZeroUUID) {
+    not_uploaded = await findNotUploadedRestaurantPhotos(
+      photos[0].restaurant_id
+    )
+  }
+  if (photos[0].tag_id != ZeroUUID && photos[0].restaurant_id == ZeroUUID) {
+    not_uploaded = await findNotUploadedTagPhotos(photos[0].tag_id)
+  }
+  return not_uploaded
 }
 
 async function uploadToDOSpaces(photos: PhotoXref[]) {

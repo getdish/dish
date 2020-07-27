@@ -13,7 +13,7 @@ import {
 } from '@dish/graph'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
-import { bestPhotosForRestaurant } from '../../src/self/photo-helpers'
+import { bestPhotosForRestaurant } from '../../src/photo-helpers'
 import { Self } from '../../src/self/Self'
 import { sql } from '../../src/utils'
 import { yelp_hours } from '../yelp_hours'
