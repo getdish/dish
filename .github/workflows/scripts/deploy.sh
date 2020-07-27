@@ -11,8 +11,6 @@ kubectl port-forward svc/postgres-postgresql 15432:5432 -n postgres &
 sleep 5
 ./services/hasura/etc/migrate.sh
 
-./k8s/etc/docker_registry_gc.sh
-
 echo "Pushing new docker images to production registry..."
 DISH_REGISTRY_PASSWORD=$(\
   grep 'DOCKER_REGISTRY_PASSWORD:' env.enc.production.yaml \
