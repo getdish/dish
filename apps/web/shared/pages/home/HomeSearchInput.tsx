@@ -177,59 +177,62 @@ export const HomeSearchInput = memo(() => {
   const input = inputGetNode(inputRef.current)
 
   return (
-    <HomeAutocompleteHoverableInput input={input} autocompleteTarget="search">
-      <HStack
-        contain="paint"
-        // backgroundColor="rgba(255,255,255,0.1)"
-        alignItems="center"
-        // paddingHorizontal={15}
-        borderRadius={100}
-        maxWidth="100%"
-        flex={1}
-        overflow="hidden"
-      >
-        {/* Loading / Search Icon */}
-        {!isReallySmall && (
-          <>
-            {om.state.home.isLoading ? (
-              <VStack className="rotating" opacity={0.9}>
-                <Loader color="#fff" size={18} />
-              </VStack>
-            ) : (
-              <Search
-                color="#fff"
-                size={18}
-                opacity={0.6}
-                onClick={focusSearchInput}
-              />
-            )}
-          </>
-        )}
-        <HomeSearchBarTags input={input} />
-        <TextInput
-          ref={inputRef}
-          // leave uncontrolled for perf?
-          value={search}
-          onFocus={handleFocus}
-          onBlur={() => {
-            avoidNextFocus = false
-          }}
-          onChangeText={(text) => {
-            if (getSearch() == '' && text !== '') {
-              om.actions.home.setShowAutocomplete('search')
-            }
-            setSearch(text)
-            om.actions.home.setSearchQuery(text)
-          }}
-          placeholder={isSearchingCuisine ? '...' : `${placeHolder}...`}
-          style={[
-            inputTextStyles.textInput,
-            { flex: 1, fontSize: 18, paddingRight: 0 },
-          ]}
-        />
-        <SearchCancelButton />
-      </HStack>
-    </HomeAutocompleteHoverableInput>
+    <HStack flex={1} overflow="hidden">
+      <HomeAutocompleteHoverableInput input={input} autocompleteTarget="search">
+        <HStack
+          contain="paint"
+          // backgroundColor="rgba(255,255,255,0.1)"
+          alignItems="center"
+          // paddingHorizontal={15}
+          borderRadius={100}
+          flex={1}
+          maxWidth="100%"
+          paddingRight={6}
+          overflow="hidden"
+        >
+          {/* Loading / Search Icon */}
+          {!isReallySmall && (
+            <>
+              {om.state.home.isLoading ? (
+                <VStack className="rotating" opacity={0.9}>
+                  <Loader color="#fff" size={18} />
+                </VStack>
+              ) : (
+                <Search
+                  color="#fff"
+                  size={18}
+                  opacity={0.6}
+                  onClick={focusSearchInput}
+                />
+              )}
+            </>
+          )}
+          <HomeSearchBarTags input={input} />
+          <TextInput
+            ref={inputRef}
+            // leave uncontrolled for perf?
+            value={search}
+            onFocus={handleFocus}
+            onBlur={() => {
+              avoidNextFocus = false
+            }}
+            onChangeText={(text) => {
+              if (getSearch() == '' && text !== '') {
+                om.actions.home.setShowAutocomplete('search')
+              }
+              setSearch(text)
+              om.actions.home.setSearchQuery(text)
+            }}
+            placeholder={isSearchingCuisine ? '...' : `${placeHolder}...`}
+            style={[
+              inputTextStyles.textInput,
+              { flex: 1, fontSize: 18, paddingRight: 0 },
+            ]}
+          />
+          <SearchCancelButton />
+        </HStack>
+      </HomeAutocompleteHoverableInput>
+    </HStack>
   )
 })
 

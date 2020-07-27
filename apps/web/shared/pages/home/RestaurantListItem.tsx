@@ -137,11 +137,11 @@ const RestaurantListItemContent = memo(
         contain="layout paint"
         // prevent jitter/layout moving until loaded
         display={restaurant.name === null ? 'none' : 'flex'}
-        borderTopWidth={1}
-        borderBottomWidth={1}
-        backgroundColor={isActive ? 'transparent' : '#fcfcfc'}
-        borderTopColor={isActive ? '#eee' : 'transparent'}
-        borderBottomColor={isActive ? '#eee' : 'transparent'}
+        // borderTopWidth={1}
+        // borderBottomWidth={1}
+        // backgroundColor={isActive ? 'transparent' : '#fcfcfc'}
+        // borderTopColor={isActive ? '#eee' : 'transparent'}
+        // borderBottomColor={isActive ? '#eee' : 'transparent'}
       >
         <VStack
           paddingHorizontal={pad + 6}
@@ -267,7 +267,7 @@ const RestaurantListItemContent = memo(
               paddingBottom={10}
               marginBottom={-10}
             >
-              <VStack flex={1} paddingLeft={0}>
+              <VStack flex={1} paddingLeft={isSmall ? 10 : 0}>
                 <Text fontSize={16} lineHeight={21}>
                   <Suspense fallback={<LoadingItems />}>
                     <RestaurantOverview />

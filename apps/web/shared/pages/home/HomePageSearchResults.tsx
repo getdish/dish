@@ -97,10 +97,7 @@ export default memo(function HomePageSearchResults(props: Props) {
 
   const changingFilters = wasOptimisticUpdating && state.status === 'loading'
   const shouldAvoidContentUpdates =
-    isOptimisticUpdating ||
-    props.isRemoving ||
-    !props.isActive ||
-    changingFilters
+    isOptimisticUpdating || !props.isActive || changingFilters
 
   const key = useLastValueWhen(
     () => JSON.stringify(pick(state, 'status', 'id', 'results')),

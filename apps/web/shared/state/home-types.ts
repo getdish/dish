@@ -21,6 +21,7 @@ export type HomeState = {
   autocompleteIndex: number // index for horizontal row (autocomplete)
   autocompleteResults: AutocompleteItem[]
   hoveredRestaurant: RestaurantOnlyIds | null
+  searchBarY: number
   location: AutocompleteItem | null // for now just autocomplete item
   locationAutocompleteResults: AutocompleteItem[]
   locationSearchQuery: string
