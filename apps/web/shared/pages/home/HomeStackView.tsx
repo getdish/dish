@@ -90,7 +90,7 @@ const HomeStackViewItem = memo(
     // const popoverStore = useRecoilStore(PopoverStore, { id })
     const isSmall = useMediaQueryIsSmall()
 
-    const top = isSmall || index == 0 ? 0 : index * 5
+    const top = isSmall ? 10 : index == 0 ? 0 : index * 5
     // const left = isSmall ? 0 : Math.max(0, index) * 3
 
     // useEffect(() => {

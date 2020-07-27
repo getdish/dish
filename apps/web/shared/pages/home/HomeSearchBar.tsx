@@ -68,7 +68,7 @@ export default memo(function HomeSearchBar() {
       {...(isSmall && {
         left: -2,
         right: -2,
-        top: '21%',
+        top: '20%',
       })}
     >
       <HomeAutocomplete />

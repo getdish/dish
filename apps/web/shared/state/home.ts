@@ -211,6 +211,7 @@ export const state: HomeState = {
   allLenseTags: tagLenses,
   allFilterTags: tagFilters,
   showAutocomplete: false,
+  searchBarY: 23,
   autocompleteIndex: 0,
   autocompleteResults: [],
   locationAutocompleteResults: defaultLocationAutocompleteResults,
@@ -1206,6 +1207,10 @@ const setAutocompleteIndex: Action<number> = (om, val) => {
   )
 }
 
+const setSearchBarY: Action<number> = (om, val) => {
+  om.state.home.searchBarY = val
+}
+
 export const actions = {
   moveAutocompleteIndex,
   setAutocompleteIndex,
@@ -1247,4 +1252,5 @@ export const actions = {
   updateHomeState,
   navigate,
   moveMapToUserLocation,
+  setSearchBarY
 }
