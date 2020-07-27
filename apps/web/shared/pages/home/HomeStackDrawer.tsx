@@ -26,8 +26,8 @@ export const HomeStackDrawer = ({
     >
       {closable && (
         <StackViewCloseButton
-          right={isSmall ? 6 : -14}
-          top={isSmall ? -28 : -5}
+          right={isSmall ? 10 : -14}
+          top={isSmall ? 10 : -5}
           backgroundColor="#fff"
           padding={5}
           borderRadius={20}

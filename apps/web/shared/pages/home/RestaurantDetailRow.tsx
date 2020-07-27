@@ -30,12 +30,7 @@ export const RestaurantDetailRow = memo(
         !isSm && {
           title: 'Delivers',
           content: (
-            <HStack>
-              <RestaurantDeliveryButtons
-                inline
-                restaurantSlug={restaurantSlug}
-              />
-            </HStack>
+            <RestaurantDeliveryButtons restaurantSlug={restaurantSlug} />
           ),
           color: 'gray',
         },
@@ -81,6 +76,8 @@ export const RestaurantDetailRow = memo(
                     fontSize={isSm ? 12 : 13}
                     textAlign={centered ? 'center' : 'left'}
                     color={isSm ? row.color : 'inherit'}
+                    margin="auto"
+                    minHeight={24}
                   >
                     {row.content !== '' ? row.content : isSm ? '' : '~'}
                   </Text>

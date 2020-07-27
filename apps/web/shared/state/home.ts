@@ -1252,5 +1252,5 @@ export const actions = {
   updateHomeState,
   navigate,
   moveMapToUserLocation,
-  setSearchBarY
+  setSearchBarY,
 }

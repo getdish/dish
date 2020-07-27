@@ -18,6 +18,7 @@ import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
+import { useCurrentLenseColor } from './useCurrentLenseColor'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 type RestaurantHeaderProps = {
@@ -46,6 +47,7 @@ const RestaurantHeaderContent = memo(
   graphql(({ state, restaurantSlug }: RestaurantHeaderProps) => {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const om = useOvermind()
+    const [r, g, b] = useCurrentLenseColor()
     return (
       <VStack width="100%">
         <VStack
@@ -56,23 +58,29 @@ const RestaurantHeaderContent = memo(
           padding={20}
         >
           {!!restaurant.image && (
-            <AbsoluteVStack fullscreen left="65%" zIndex={-1}>
-              <AbsoluteVStack
-                backgroundColor="rgba(255,255,255,0.25)"
-                fullscreen
-                zIndex={1}
-              />
+            <AbsoluteVStack fullscreen left="70%" zIndex={-1}>
               <Image
                 resizeMode="cover"
                 source={{ uri: restaurant.image }}
                 style={StyleSheet.absoluteFill}
               />
-              <LinearGradient
+              <AbsoluteVStack
+                top={0}
+                left="-2.5%"
+                bottom={0}
+                width="5%"
+                transform={[{ skewX: '-5deg' }]}
+                backgroundColor={`rgb(${r},${g},${b})`}
+                borderColor="#fff"
+                borderLeftWidth={4}
+                borderRightWidth={4}
+              />
+              {/* <LinearGradient
                 colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
                 startPoint={[0, 0]}
                 endPoint={[1, 0]}
                 style={StyleSheet.absoluteFill}
-              />
+              /> */}
             </AbsoluteVStack>
           )}
           <HStack alignItems="center">

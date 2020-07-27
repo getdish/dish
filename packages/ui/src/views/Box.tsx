@@ -7,8 +7,8 @@ const defaultStyle: StackProps = {
   backgroundColor: '#fff',
   padding: 5,
   borderRadius: 12,
-  shadowColor: 'rgba(0,0,0,0.15)',
-  shadowRadius: 13,
+  shadowColor: 'rgba(0,0,0,0.12)',
+  shadowRadius: 10,
   shadowOffset: { width: 0, height: 3 },
   overflow: 'hidden',
 }
