@@ -1,31 +1,34 @@
 # July
 
-- Photos table separation
-- Duplicate images being selected from home
-  - Can we make those come from dishes?
-- Crawling more cities
-  - Crawl "Mo’orea" for nick
+✔️ Photos table separation
+✔️ Duplicate images being selected from home
+  👷 Can we make those come from dishes?
+👷 Crawling more cities
+  👷 Crawl "Mo’orea" for nick
 - Auth - work you need to do for backend for social login?
   - Apple Login is probably best, Google would be second I think
-- Point dishapp.com
-- Dish rating sorting order
+👷 Point dishapp.com
+✔️ Dish rating sorting order (is it fixed?)
 - Sentiment introspection
   - store/show (dish + sentiment + reviewText) somewhere
-- Instagram crawler
+⚠️ Instagram crawler (I'll wait to see what affect the Google images have)
   - Images AND news/events
   - Really helpful at start for SF / homepage
-- Images
-  - Split photos into own table so we can limit/sort/save jsonb time
-  - Dish images improvements
-    - pick higher res? read metadata?
-    - ML model or similar to choose quality
-  - Google images?
-- Dish improvements
-  - matching images => dish could be upgraded a lot
-  - how do we resolve menu / dish?
+✔️ Images
+  ✔️ Split photos into own table so we can limit/sort/save jsonb time
+  ✔️ Dish images improvements
+    ✔️ pick higher res? read metadata?
+    ✔️ ML model or similar to choose quality
+  👷 Google images?
+👷 Dish improvements
+  - matching images => dish could be upgraded a lot (could you clarify?)
+  - how do we resolve menu / dish? (what's an example of the problem?)
     - In the UI it should show them all as "one thing", but we may need to do some work backend to fix that.
 - Crawlers
   - Postmates / Caviar
+
+- OR prices
+- Start on text summary
 
 ✔️ : Done
 👷: Currently or will actively work on
