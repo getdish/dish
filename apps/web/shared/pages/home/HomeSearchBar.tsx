@@ -8,11 +8,10 @@ import {
   VStack,
   mediaQueries,
 } from '@dish/ui'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { ChevronLeft, MapPin } from 'react-feather'
 import { StyleSheet } from 'react-native'
 
-import { brandRgb } from '../../colors'
 import {
   pageWidthMax,
   searchBarHeight,
@@ -26,6 +25,7 @@ import HomeAutocomplete from './HomeAutocomplete'
 import { HomeMenu } from './HomeMenu'
 import { HomeSearchInput } from './HomeSearchInput'
 import { HomeSearchLocationInput } from './HomeSearchLocationInput'
+import { useCurrentLenseColor } from './useCurrentLenseColor'
 import {
   useMediaQueryIsReallySmall,
   useMediaQueryIsSmall,
@@ -37,22 +37,10 @@ export default memo(function HomeSearchBar() {
   const [showLocation, setShowLocation] = useState(false)
   const isSmall = useMediaQueryIsSmall()
   const isReallySmall = useMediaQueryIsReallySmall()
-  const om = useOvermind()
-  const lense = om.state.home.currentStateLense
-  const lastLenseRgb = useRef(brandRgb)
-  const rgb = lense?.rgb ?? lastLenseRgb.current ?? brandRgb
+  const rgb = useCurrentLenseColor()
   const color = rgbString(rgb.map((x) => x + 5))
   const colorBottom = rgbString(rgb.map((x) => x - 5) ?? [30, 30, 30])
   const borderRadius = 12
-
-  useEffect(() => {
-    if (lense?.rgb) {
-      const [r, g, b] = lense?.rgb
-      if (r > 0 || g > 0 || b > 0) {
-        lastLenseRgb.current = lense?.rgb
-      }
-    }
-  }, [lense?.rgb])
 
   return (
     <AbsoluteVStack

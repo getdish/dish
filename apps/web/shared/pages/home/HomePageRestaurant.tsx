@@ -1,5 +1,6 @@
 import { graphql } from '@dish/graph'
 import {
+  Box,
   Button,
   HStack,
   LinearGradient,
@@ -10,7 +11,7 @@ import {
   VStack,
 } from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
-import { StyleSheet } from 'react-native'
+import { Image, StyleSheet } from 'react-native'
 
 import { HomeStateItemRestaurant } from '../../state/home'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
@@ -24,6 +25,7 @@ import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantTopReviews } from './RestaurantTopReviews'
+import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 type Props = HomePagePaneProps<HomeStateItemRestaurant>
@@ -62,7 +64,7 @@ const HomePageRestaurant = memo(
 
           <Suspense fallback={<LoadingItems />}>
             <VStack alignItems="center">
-              <HStack minWidth={400}>
+              <HStack minWidth={380}>
                 <RestaurantDetailRow
                   centered
                   justifyContent="center"
@@ -72,10 +74,14 @@ const HomePageRestaurant = memo(
               </HStack>
             </VStack>
 
+            <Spacer size="lg" />
+
+            <RestaurantRatingBreakdown restaurantSlug={slug} />
+
+            <Spacer size="lg" />
+
             <VStack paddingHorizontal={14}>
               <VStack alignItems="center">
-                <Spacer size="xl" />
-
                 <Suspense fallback={null}>
                   <RestaurantDishPhotos restaurantSlug={slug} />
                 </Suspense>
@@ -91,11 +97,19 @@ const HomePageRestaurant = memo(
                 <Spacer size="xl" />
 
                 <VStack flex={1} marginBottom={20}>
-                  <SmallTitle divider="center">Menu</SmallTitle>
-                  <Spacer />
-                  <Suspense fallback={null}>
-                    <RestaurantMenu restaurantSlug={slug} />
-                  </Suspense>
+                  <VStack
+                    margin={3}
+                    borderWidth={1}
+                    borderColor="#eee"
+                    borderRadius={10}
+                    padding={10}
+                  >
+                    <SmallTitle divider="off">Menu</SmallTitle>
+                    <Spacer />
+                    <Suspense fallback={null}>
+                      <RestaurantMenu restaurantSlug={slug} />
+                    </Suspense>
+                  </VStack>
 
                   <Spacer size="xl" />
 
@@ -144,11 +158,57 @@ const HomePageRestaurant = memo(
   })
 )
 
+export const RestaurantRatingBreakdown = memo(
+  graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
+    const restaurant = useRestaurantQuery(restaurantSlug)
+    const sources = restaurant?.sources?.() ?? {}
+    return (
+      <Box padding={0} marginHorizontal={20}>
+        <SmallTitle paddingTop={5}>Rating Summary</SmallTitle>
+
+        <HStack>
+          {Object.keys(sources).map((source, i) => {
+            const item = sources[source]
+            if (!item) {
+              return null
+            }
+            const info = thirdPartyCrawlSources[source]
+            return (
+              <VStack
+                key={source}
+                backgroundColor={i % 2 == 0 ? 'white' : '#f7f7f7'}
+                padding={10}
+                alignItems="center"
+                cursor="pointer"
+                flex={1}
+                // onPress={() => Linking.openURL(item.url)}
+              >
+                <a className="see-through" href={item.url} target="_blank">
+                  {info?.image ? (
+                    <Image
+                      source={info.image}
+                      style={{ width: 24, height: 24, borderRadius: 100 }}
+                    />
+                  ) : null}
+                  <Text fontSize={12} opacity={0.5} marginVertical={3}>
+                    {info?.name ?? source}
+                  </Text>
+                  <Text>{item.rating ?? '-'}</Text>
+                </a>
+              </VStack>
+            )
+          })}
+        </HStack>
+      </Box>
+    )
+  })
+)
+
 const RestaurantMenu = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
     const [isExpanded, setIsExpanded] = useState(false)
     const restaurant = useRestaurantQuery(restaurantSlug)
-    const items = restaurant.menu_items({ limit: 25 })
+    const items = restaurant.menu_items({ limit: 40 })
     return (
       <>
         {!items?.length && (
@@ -176,7 +236,7 @@ const RestaurantMenu = memo(
                   paddingVertical={4}
                   key={i}
                 >
-                  <Text>{item.name}</Text>
+                  <Text fontSize={14}>{item.name}</Text>
                   <Text fontSize={13} opacity={0.5}>
                     {item.description}
                   </Text>

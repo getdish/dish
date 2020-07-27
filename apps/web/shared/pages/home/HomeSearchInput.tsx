@@ -404,10 +404,6 @@ function searchInputEffect(input: HTMLInputElement) {
 const HomeSearchBarTags = memo(
   ({ input }: { input: HTMLInputElement | null }) => {
     const om = useOvermind()
-    const lense = om.state.home.currentStateLense
-    const rgb = lense?.rgb ?? brandRgb
-    const backgroundColor = rgbString(rgb.map((x) => x * 0.6))
-    const backgroundColorHover = rgbString(rgb.map((x) => x * 0.75))
 
     return (
       <>
@@ -420,7 +416,7 @@ const HomeSearchBarTags = memo(
                   className="no-transition"
                   key={getTagId(tag)}
                   subtleIcon
-                  backgroundColor={backgroundColor}
+                  backgroundColor="rgba(0,0,0,0.3)"
                   color={'#fff'}
                   shadowColor="#00000022"
                   fontWeight="400"
@@ -428,7 +424,7 @@ const HomeSearchBarTags = memo(
                   shadowOffset={{ height: 2, width: 0 }}
                   borderColor={'transparent'}
                   hoverStyle={{
-                    backgroundColor: backgroundColorHover,
+                    backgroundColor: 'rgba(0,0,0,0.4)',
                   }}
                   {...(isActive && {
                     backgroundColor: 'rgba(255,255,255,0.1)',
