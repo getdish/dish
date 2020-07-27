@@ -23,7 +23,7 @@ export type t_photo = FieldsType<
     origin?: t_String | null
     quality?: t_numeric | null
     updated_at: t_timestamptz
-    url: t_String
+    url?: t_String | null
   },
   Extension<'photo'>
 >
@@ -432,6 +432,7 @@ export type t_photo_xref = FieldsType<
     photo_id: t_uuid
     restaurant_id: t_uuid
     tag_id: t_uuid
+    type?: t_String | null
   },
   Extension<'photo_xref'>
 >
@@ -501,6 +502,7 @@ export type photo_xref_bool_exp = {
   photo_id?: uuid_comparison_exp | null
   restaurant_id?: uuid_comparison_exp | null
   tag_id?: uuid_comparison_exp | null
+  type?: String_comparison_exp | null
 }
 
 /**
@@ -521,6 +523,7 @@ export type photo_xref_insert_input = {
   photo_id?: any | null
   restaurant_id?: any | null
   tag_id?: any | null
+  type?: string | null
 }
 
 /**
@@ -534,6 +537,7 @@ export type t_photo_xref_max_fields = FieldsType<
     photo_id?: t_uuid | null
     restaurant_id?: t_uuid | null
     tag_id?: t_uuid | null
+    type?: t_String | null
   },
   Extension<'photo_xref_max_fields'>
 >
@@ -547,6 +551,7 @@ export type photo_xref_max_order_by = {
   photo_id?: order_by | null
   restaurant_id?: order_by | null
   tag_id?: order_by | null
+  type?: order_by | null
 }
 
 /**
@@ -560,6 +565,7 @@ export type t_photo_xref_min_fields = FieldsType<
     photo_id?: t_uuid | null
     restaurant_id?: t_uuid | null
     tag_id?: t_uuid | null
+    type?: t_String | null
   },
   Extension<'photo_xref_min_fields'>
 >
@@ -573,6 +579,7 @@ export type photo_xref_min_order_by = {
   photo_id?: order_by | null
   restaurant_id?: order_by | null
   tag_id?: order_by | null
+  type?: order_by | null
 }
 
 /**
@@ -617,6 +624,7 @@ export type photo_xref_order_by = {
   photo_id?: order_by | null
   restaurant_id?: order_by | null
   tag_id?: order_by | null
+  type?: order_by | null
 }
 
 /**
@@ -630,7 +638,7 @@ export type photo_xref_pk_columns_input = { id: any }
  * @type ENUM
  */
 export type t_photo_xref_select_column = EnumType<
-  'id' | 'photo_id' | 'restaurant_id' | 'tag_id'
+  'id' | 'photo_id' | 'restaurant_id' | 'tag_id' | 'type'
 >
 
 /**
@@ -642,6 +650,7 @@ export type photo_xref_set_input = {
   photo_id?: any | null
   restaurant_id?: any | null
   tag_id?: any | null
+  type?: string | null
 }
 
 /**
@@ -649,7 +658,7 @@ export type photo_xref_set_input = {
  * @type ENUM
  */
 export type t_photo_xref_update_column = EnumType<
-  'id' | 'photo_id' | 'restaurant_id' | 'tag_id'
+  'id' | 'photo_id' | 'restaurant_id' | 'tag_id' | 'type'
 >
 
 /**
@@ -830,6 +839,7 @@ export enum photo_xref_select_column {
   photo_id = 'photo_id',
   restaurant_id = 'restaurant_id',
   tag_id = 'tag_id',
+  type = 'type',
 }
 
 /**
@@ -841,4 +851,5 @@ export enum photo_xref_update_column {
   photo_id = 'photo_id',
   restaurant_id = 'restaurant_id',
   tag_id = 'tag_id',
+  type = 'type',
 }

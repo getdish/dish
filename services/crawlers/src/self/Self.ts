@@ -27,9 +27,14 @@ import moment from 'moment'
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
 import { sanfran, sql } from '../utils'
 import {
+  DO_BASE,
   bestPhotosForRestaurant,
   bestPhotosForRestaurantTags,
+  findHeroImage,
   photoUpsert,
+  photoXrefUpsert,
+  sendToDO,
+  uploadHeroImage,
 } from './photo-helpers'
 import { Tagging } from './Tagging'
 
@@ -92,6 +97,7 @@ export class Self extends WorkerJob {
       await this.preMerge(restaurant)
       const async_steps = [
         this.mergePhotos,
+        this.mergeImage,
         this.mergeMainData,
         this.addHours,
         this.doTags,
@@ -139,7 +145,6 @@ export class Self extends WorkerJob {
       this.mergeTelephone,
       this.mergeAddress,
       this.mergeRatings,
-      this.mergeImage,
       this.addWebsite,
       this.addSources,
       this.addPriceRange,
@@ -581,7 +586,7 @@ export class Self extends WorkerJob {
     }
   }
 
-  mergeImage() {
+  async mergeImage() {
     let hero = ''
     const yelps = scrapeGetData(
       this.yelp,
@@ -606,7 +611,9 @@ export class Self extends WorkerJob {
       hero = michelins
     }
 
-    this.restaurant.image = hero
+    if (hero != '') {
+      this.restaurant.image = await uploadHeroImage(hero, this.restaurant.id)
+    }
   }
 
   async getUberDishes() {

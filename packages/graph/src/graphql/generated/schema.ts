@@ -3077,7 +3077,7 @@ export const schema = {
           return new FieldNode(schema.timestamptz, undefined, false)
         },
         get url() {
-          return new FieldNode(schema.String, undefined, false)
+          return new FieldNode(schema.String, undefined, true)
         },
       },
       { name: 'photo', extension: ((extensions as any) || {}).photo }
@@ -3720,6 +3720,9 @@ export const schema = {
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, false)
         },
+        get type() {
+          return new FieldNode(schema.String, undefined, true)
+        },
       },
       { name: 'photo_xref', extension: ((extensions as any) || {}).photo_xref }
     )
@@ -3846,6 +3849,9 @@ export const schema = {
         get tag_id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
         },
+        get type() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
       },
       { name: 'photo_xref_bool_exp' }
     )
@@ -3871,6 +3877,9 @@ export const schema = {
         get tag_id() {
           return new InputNodeField(schema.uuid, true)
         },
+        get type() {
+          return new InputNodeField(schema.String, true)
+        },
       },
       { name: 'photo_xref_insert_input' }
     )
@@ -3889,6 +3898,9 @@ export const schema = {
         },
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, true)
+        },
+        get type() {
+          return new FieldNode(schema.String, undefined, true)
         },
       },
       {
@@ -3912,6 +3924,9 @@ export const schema = {
         get tag_id() {
           return new InputNodeField(schema.order_by, true)
         },
+        get type() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'photo_xref_max_order_by' }
     )
@@ -3930,6 +3945,9 @@ export const schema = {
         },
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, true)
+        },
+        get type() {
+          return new FieldNode(schema.String, undefined, true)
         },
       },
       {
@@ -3951,6 +3969,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get tag_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get type() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -4027,6 +4048,9 @@ export const schema = {
         get tag_id() {
           return new InputNodeField(schema.order_by, true)
         },
+        get type() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'photo_xref_order_by' }
     )
@@ -4058,6 +4082,9 @@ export const schema = {
         },
         get tag_id() {
           return new InputNodeField(schema.uuid, true)
+        },
+        get type() {
+          return new InputNodeField(schema.String, true)
         },
       },
       { name: 'photo_xref_set_input' }

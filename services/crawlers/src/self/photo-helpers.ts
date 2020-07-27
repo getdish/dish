@@ -9,6 +9,7 @@ import {
   ZeroUUID,
   createQueryHelpersFor,
   deleteByIDs,
+  globalTagId,
   order_by,
   photo_constraint,
   photo_xref_select_column,
@@ -23,9 +24,9 @@ import fetch, { Response } from 'node-fetch'
 const PhotoBaseQueryHelpers = createQueryHelpersFor<PhotoBase>('photo')
 const PhotoXrefQueryHelpers = createQueryHelpersFor<PhotoXref>('photo_xref')
 const photoBaseUpsert = PhotoBaseQueryHelpers.upsert
-const photoXrefUpsert = PhotoXrefQueryHelpers.upsert
+export const photoXrefUpsert = PhotoXrefQueryHelpers.upsert
 
-const DO_BASE = 'https://dish-images.sfo2.digitaloceanspaces.com/'
+export const DO_BASE = 'https://dish-images.sfo2.digitaloceanspaces.com/'
 
 const spacesEndpoint = new AWS.Endpoint('sfo2.digitaloceanspaces.com')
 const s3 = new AWS.S3({
@@ -374,7 +375,7 @@ async function uploadToDOSpaces(photos: PhotoXref[]) {
   console.log('...images uploaded DO Spaces.')
 }
 
-async function sendToDO(url: string, id: uuid) {
+export async function sendToDO(url: string, id: string) {
   url = proxyYelpCDN(url)
   let response: Response
   try {
@@ -413,4 +414,38 @@ async function doPut(image_data: Buffer, id: uuid, content_type: string) {
       ContentType: content_type,
     })
     .promise()
+}
+
+export async function findHeroImage(restaurant_id: uuid) {
+  return await PhotoXrefQueryHelpers.findOne(
+    {
+      restaurant_id: restaurant_id,
+      type: 'hero',
+    },
+    { relations: ['photo'] }
+  )
+}
+
+export async function uploadHeroImage(url: string, restaurant_id: uuid) {
+  const existing = await findHeroImage(restaurant_id)
+  const do_url = DO_BASE + restaurant_id
+  let is_needs_uploading = false
+  if (existing) {
+    if (existing.photo?.origin != url) is_needs_uploading = true
+  }
+  if (!existing || is_needs_uploading) {
+    await sendToDO(url, restaurant_id)
+    await photoXrefUpsert([
+      {
+        restaurant_id: restaurant_id,
+        tag_id: globalTagId,
+        type: 'hero',
+        photo: {
+          origin: url,
+          url: do_url,
+        },
+      },
+    ])
+  }
+  return do_url
 }
