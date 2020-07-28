@@ -67,14 +67,17 @@ export const isIOS =
 
 let searchBar: HTMLInputElement | null = null
 export function focusSearchInput() {
-  if (isIOS) {
-    return
-  }
+  if (isIOS) return
   searchBar?.focus()
 }
 
 export const getSearchInput = () => {
   return searchBar
+}
+
+let isFocused = false
+export const isSearchInputFocused = () => {
+  return isFocused
 }
 
 export const HomeSearchInput = memo(() => {
@@ -374,9 +377,7 @@ function searchInputEffect(input: HTMLInputElement) {
     }
   }
   const showAutocomplete = () => {
-    if (input.value === '') {
-      return
-    }
+    if (input.value === '') return
     if (!om.state.home.showAutocomplete) {
       om.actions.home.setShowAutocomplete('search')
     }
@@ -384,15 +385,23 @@ function searchInputEffect(input: HTMLInputElement) {
   const hideAutocomplete = () => {
     om.actions.home.setShowAutocomplete(false)
   }
+  const handleFocus = () => {
+    showAutocomplete()
+    isFocused = true
+  }
+  const handleBlur = () => {
+    hideAutocomplete()
+    isFocused = false
+  }
   input.addEventListener('keydown', handleKeyPress)
   input.addEventListener('click', handleClick)
-  input.addEventListener('focus', showAutocomplete)
-  input.addEventListener('blur', hideAutocomplete)
+  input.addEventListener('focus', handleFocus)
+  input.addEventListener('blur', handleBlur)
   return () => {
     input.removeEventListener('keydown', handleKeyPress)
     input.removeEventListener('click', handleClick)
-    input.removeEventListener('focus', showAutocomplete)
-    input.removeEventListener('blur', hideAutocomplete)
+    input.removeEventListener('focus', handleFocus)
+    input.removeEventListener('blur', handleBlur)
   }
 }
 

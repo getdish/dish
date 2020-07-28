@@ -20,13 +20,13 @@ import {
   searchBarHeight,
   searchBarTopOffset,
 } from '../../constants'
+import { createAutocomplete } from '../../state/createAutocomplete'
+import { defaultLocationAutocompleteResults } from '../../state/defaultLocationAutocompleteResults'
 import {
   AutocompleteItem,
   GeocodePlace,
   LngLat,
   ShowAutocomplete,
-  createAutocomplete,
-  defaultLocationAutocompleteResults,
 } from '../../state/home'
 import { mapView } from '../../state/mapView'
 import { omStatic, useOvermind } from '../../state/useOvermind'

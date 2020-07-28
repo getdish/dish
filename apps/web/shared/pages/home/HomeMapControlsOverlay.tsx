@@ -70,7 +70,7 @@ export const HomeMapControlsOverlay = memo(
               om.actions.home.setHoveredRestaurant(false)
             }}
           >
-            Fit to results
+            Show all
           </OverlayLinkButton>
         </HStack>
 

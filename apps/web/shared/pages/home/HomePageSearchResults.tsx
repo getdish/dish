@@ -31,9 +31,10 @@ import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePagePane'
 import { HomeScrollView } from './HomeScrollView'
-import { focusSearchInput } from './HomeSearchInput'
+import { focusSearchInput, isSearchInputFocused } from './HomeSearchInput'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
+import { useLastValue } from './useLastValue'
 import { useLastValueWhen } from './useLastValueWhen'
 import {
   useMediaQueryIsReallySmall,
@@ -57,14 +58,6 @@ const useSpacing = () => {
   }
 }
 
-const useLastValue = (a: any) => {
-  const last = useRef(a)
-  return useMemo(() => {
-    last.current = a
-    return last.current
-  }, [a])
-}
-
 export default memo(function HomePageSearchResults(props: Props) {
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const om = useOvermind()
@@ -73,14 +66,6 @@ export default memo(function HomePageSearchResults(props: Props) {
     om.state,
     state
   )
-  // console.log(
-  //   'pageTitleElements',
-  //   pageTitleElements,
-  //   title,
-  //   subTitle,
-  //   JSON.stringify(state, null, 2),
-  //   props.item
-  // )
 
   const isOptimisticUpdating = om.state.home.isOptimisticUpdating
   const wasOptimisticUpdating = useLastValue(isOptimisticUpdating)
@@ -104,12 +89,32 @@ export default memo(function HomePageSearchResults(props: Props) {
     isOptimisticUpdating || !props.isActive || changingFilters
 
   const key = useLastValueWhen(
-    () => JSON.stringify(pick(state, 'status', 'id', 'results')),
+    () =>
+      JSON.stringify({
+        status: state.status,
+        id: state.id,
+        results: state.results.map((x) => x.id),
+      }),
     shouldAvoidContentUpdates
   )
 
+  // console.log(
+  //   'HomePageSearchResults',
+  //   {
+  //     key,
+  //     shouldAvoidContentUpdates,
+  //     isOptimisticUpdating,
+  //     pageTitleElements,
+  //     title,
+  //     subTitle,
+  //     props,
+  //   },
+  //   'resultsLen',
+  //   state.results.length
+  // )
+
   const contentInner = useMemo(() => {
-    return <SearchResultsContent key={key} {...props} item={state} />
+    return <SearchResultsContent {...props} item={state} />
   }, [key])
 
   const content = useLastValueWhen(
@@ -191,12 +196,8 @@ const SearchResultsTitle = memo(
   }
 )
 
-const SearchResultsContent = memo((props: Props) => {
+const SearchResultsContent = (props: Props) => {
   const searchState = props.item
-  if (!isSearchState(searchState)) {
-    console.warn('impossibke')
-    return null
-  }
   const { isSmall, titleHeight } = useSpacing()
   const paddingTop = isSmall ? 58 : titleHeight - searchBarHeight + 2
   const [state, setState] = useState({
@@ -228,7 +229,10 @@ const SearchResultsContent = memo((props: Props) => {
     return omStatic.reaction(
       (state) => state.home.activeIndex,
       (index) => {
-        if (!omStatic.state.home.hoveredRestaurant) {
+        if (
+          omStatic.state.home.activeEvent === 'pin' ||
+          omStatic.state.home.activeEvent === 'key'
+        ) {
           scrollRef.current?.scrollTo({ x: 0, y: 200 * index, animated: true })
         }
       }
@@ -245,7 +249,7 @@ const SearchResultsContent = memo((props: Props) => {
     return (
       <HomeScrollView ref={scrollRef} onScrollNearBottom={handleScrollToBottom}>
         <VStack height={paddingTop} />
-        <VStack minHeight="40vh">{children}</VStack>
+        <VStack minHeight="30vh">{children}</VStack>
         <SearchFooter
           scrollToTop={() =>
             setState((x) => ({ ...x, scrollToTop: Math.random() }))
@@ -292,22 +296,21 @@ const SearchResultsContent = memo((props: Props) => {
       ? false
       : !isOnLastChunk || state.hasLoaded <= state.chunk)
 
-  // console.log(
-  //   'SearchResults',
-  //   JSON.stringify(
-  //     {
-  //       state,
-  //       currentlyShowing,
-  //       firstResult: JSON.stringify(allResults[0]),
-  //       len: results.length,
-  //       allLen: allResults.length,
-  //       isOnLastChunk,
-  //       isLoading,
-  //     },
-  //     null,
-  //     2
-  //   )
-  // )
+  console.log(
+    'SearchResults',
+    JSON.stringify(
+      {
+        state,
+        currentlyShowing,
+        firstResult: JSON.stringify(allResults[0]),
+        allLen: allResults.length,
+        isOnLastChunk,
+        isLoading,
+      },
+      null,
+      2
+    )
+  )
 
   // in an effect so we can use series and get auto-cancel on unmount
   useEffect(() => {
@@ -378,7 +381,7 @@ const SearchResultsContent = memo((props: Props) => {
       {isLoading && <HomeLoading />}
     </VStack>
   )
-})
+}
 
 const SearchFooter = ({
   searchState,

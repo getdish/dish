@@ -112,9 +112,9 @@ const HomeMapDataLoader = memo(
         // @ts-ignore
         all = om.state.home.topDishes
           .map((x) => x.top_restaurants)
-          .map((x) => pick(x, 'id', 'slug'))
           .flat()
           .filter((x) => x?.id)
+          .map((x) => ({ id: x.id, slug: x.slug }))
       }
 
       const allIds = [...new Set(all.map((x) => x.id))]
@@ -361,6 +361,9 @@ const HomeMapContent = memo(function HomeMap({
             })
             return
           }
+          if (!hoveredRestaurant) {
+            return
+          }
           if (omStatic.state.home.isScrolling) return
           for (const annotation of map.annotations) {
             if (annotation.data?.id === hoveredRestaurant.id) {
@@ -440,8 +443,10 @@ const HomeMapContent = memo(function HomeMap({
         const index = restaurants.findIndex(
           (x) => x.id === e.annotation.data.id
         )
-        console.log('index', index)
-        om.actions.home.setActiveIndex(index)
+        om.actions.home.setActiveIndex({
+          index,
+          event: om.state.home.isHoveringRestaurant ? 'hover' : 'pin',
+        })
       } else {
         if (omStatic.state.home.currentStateType != 'restaurant') {
           router.navigate({

@@ -7,6 +7,7 @@ import {
   Spacer,
   Text,
   VStack,
+  useDebounce,
   useDebounceEffect,
   useGet,
 } from '@dish/ui'
@@ -57,19 +58,26 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 ) {
   const om = useOvermindStatic()
   const [isHovered, setIsHovered] = useState(false)
-
-  useDebounceEffect(
-    () => {
-      if (isHovered) {
-        om.actions.home.setHoveredRestaurant({
-          id: props.restaurantId,
-          slug: props.restaurantSlug,
-        })
-      }
-    },
-    60,
-    [isHovered]
+  const setHoveredDebounce = useDebounce(
+    om.actions.home.setHoveredRestaurant,
+    60
   )
+
+  useEffect(() => {
+    if (isHovered) {
+      setHoveredDebounce({
+        id: props.restaurantId,
+        slug: props.restaurantSlug,
+      })
+    } else {
+      if (
+        om.state.home.hoveredRestaurant &&
+        om.state.home.hoveredRestaurant?.slug === props.restaurantSlug
+      ) {
+        om.actions.home.setIsHoveringRestaurant(false)
+      }
+    }
+  }, [isHovered])
 
   return (
     <HStack
