@@ -1,4 +1,4 @@
-import { HStack, SmallTitle, Text, VStack } from '@dish/ui'
+import { HStack, SmallTitle, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { Route, RouteSwitch } from '../../views/router/Route'
@@ -11,11 +11,17 @@ export default memo(function AdminPage() {
         <Link name="admin">
           <Text fontWeight="700">Admin</Text>
         </Link>
-        <Link name="home">Dish ⤴️</Link>
+
         <Link name="adminTags">Tags</Link>
+        <Link name="adminReviews">Reviews</Link>
+
+        <Spacer flex={1} />
+
+        <Link name="home">Dish ⤴️</Link>
       </HStack>
       <RouteSwitch>
         <Route name="adminTags">{() => <AdminTagsPage />}</Route>
+        <Route name="adminReviews">{() => <AdminReviewsPage />}</Route>
         <Route name="admin">
           <SmallTitle>Welcome to admin</SmallTitle>
         </Route>
@@ -28,3 +34,8 @@ const AdminTagsPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./AdminTagsPage').default
     : React.lazy(() => import('./AdminTagsPage'))
+
+const AdminReviewsPage =
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+    ? require('./AdminReviewsPage').default
+    : React.lazy(() => import('./AdminReviewsPage'))
