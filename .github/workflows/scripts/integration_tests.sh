@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 set -e
 
+bin/yaml_to_env.sh > .env
+
 echo "Testing crawler-worker interaction..."
 docker run \
+  --env-file .env \
   -e CI=true \
   --net host \
   $DISH_REGISTRY/dish/worker > worker.logs 2>&1 &
 
 docker run \
+  --env-file .env \
   -e CI=true \
   --net host \
   $DISH_REGISTRY/dish/crawlers \
