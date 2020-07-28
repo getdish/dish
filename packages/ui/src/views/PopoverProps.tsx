@@ -21,7 +21,10 @@ export type PopoverProps = {
   anchor?: AnchorEnum
   position?: 'top' | 'left' | 'right' | 'bottom'
   children: React.ReactElement | null
-  contents: React.ReactElement | null
+  contents:
+    | React.ReactElement
+    | ((isOpen: boolean) => React.ReactElement | null)
+    | null
   isOpen?: boolean
   noArrow?: boolean
   overlay?: boolean

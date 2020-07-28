@@ -29,18 +29,19 @@ export const RestaurantButton = memo(
       <LinkButton
         key={restaurant.name}
         pointerEvents="auto"
-        {...(active ? flatButtonStyleSelected : flatButtonStyle)}
         {...(subtle && {
           backgroundColor: 'transparent',
         })}
         zIndex={1}
-        {...(active && {
+        padding={5}
+        borderRadius={6}
+        hoverStyle={{
           borderColor: '#eee',
           shadowColor: 'rgba(0,0,0,0.1)',
           shadowRadius: 5,
           zIndex: 2,
-        })}
-        paddingRight={40}
+        }}
+        paddingRight={32}
         {...props}
         name="restaurant"
         params={{ slug: restaurant.slug }}
@@ -59,9 +60,10 @@ export const RestaurantButton = memo(
             <TrendingIcon
               size={16}
               trending={trending}
-              marginTop={-4}
+              marginTop={-8}
               marginRight={5}
-              marginBottom={-5}
+              marginBottom={-7}
+              top={1}
             />
           )}
           <Text

@@ -61,7 +61,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
   const [isHovered, setIsHovered] = useState(false)
   const setHoveredDebounce = useDebounce(
     om.actions.home.setHoveredRestaurant,
-    60
+    150
   )
 
   useEffect(() => {
@@ -84,7 +84,10 @@ export const RestaurantListItem = memo(function RestaurantListItem(
     <HStack
       {...(!isIOS && {
         onHoverIn: () => setIsHovered(true),
-        onHoverOut: () => setIsHovered(false),
+        onHoverOut: () => {
+          setIsHovered(false)
+          setHoveredDebounce.cancel()
+        },
       })}
       alignItems="center"
       position="relative"

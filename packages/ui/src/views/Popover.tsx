@@ -82,7 +82,9 @@ export default function PopoverMain(props: PopoverProps) {
                       transition: '0.2s ease-in-out',
                     }}
                   >
-                    {props.contents}
+                    {typeof props.contents === 'function'
+                      ? props.contents(isOpen)
+                      : props.contents}
                     {!props.noArrow && (
                       <Arrow
                         style={{

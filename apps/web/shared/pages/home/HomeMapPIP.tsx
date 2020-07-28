@@ -121,15 +121,15 @@ const HomeMapPIPContent = graphql(() => {
   return (
     <AbsoluteVStack
       pointerEvents="none"
-      transform={[{ scale: 0.8 }]}
+      transform={[{ scale: 0.75 }]}
       position="absolute"
-      bottom={15}
+      bottom={0}
       right={8}
       zIndex={1000}
-      width="20%"
-      height="20%"
-      maxWidth={155}
-      maxHeight={150}
+      width="16%"
+      height="16%"
+      maxWidth={125}
+      maxHeight={120}
       borderRadius={20}
       overflow="hidden"
       shadowColor="rgba(0,0,0,0.25)"
