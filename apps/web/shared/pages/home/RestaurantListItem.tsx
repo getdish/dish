@@ -129,8 +129,6 @@ const RestaurantListItemContent = memo(
       )
     }, [props.rank])
 
-    console.warn(`RestaurantListItemContent.${props.rank}`)
-
     return (
       <HStack
         alignItems="flex-start"

@@ -217,12 +217,6 @@ export class Router extends Store<RouterProps> {
       this.notFound = false
     }
     if (!this.getShouldNavigate(navItem)) {
-      console.log(
-        'already on page',
-        navItem,
-        this.curPage.name,
-        this.curPage.params
-      )
       return
     }
     const params = {

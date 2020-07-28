@@ -8,7 +8,7 @@ import {
   useGet,
   useOnMount,
 } from '@dish/ui'
-import { uniqBy } from 'lodash'
+import { pick, uniqBy } from 'lodash'
 import React, {
   Suspense,
   memo,
@@ -106,10 +106,13 @@ const HomeMapDataLoader = memo(
         const searchState = om.state.home.lastSearchState
         all = [single, ...(searchState?.results ?? [])]
       } else if (isSearchState(state)) {
-        all = state?.results ?? []
+        const searchState = om.state.home.lastSearchState
+        all = searchState?.results ?? []
       } else if (isHomeState(state)) {
+        // @ts-ignore
         all = om.state.home.topDishes
           .map((x) => x.top_restaurants)
+          .map((x) => pick(x, 'id', 'slug'))
           .flat()
           .filter((x) => x?.id)
       }
