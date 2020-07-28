@@ -183,6 +183,15 @@ const resumeMap = (force: boolean = false) => {
     omStatic.actions.home.setHasMovedMap()
     const span = mapView.region.span
     pendingUpdates = false
+
+    if (
+      omStatic.state.home.hoveredRestaurant &&
+      omStatic.state.home.currentStateType === 'search'
+    ) {
+      console.log('avoid while hovered')
+      return
+    }
+
     omStatic.actions.home.setMapArea({
       center: {
         lng: mapView.center.longitude,
@@ -344,7 +353,14 @@ const HomeMapContent = memo(function HomeMap({
       const disposeReaction = om.reaction(
         (state) => state.home.hoveredRestaurant,
         (hoveredRestaurant) => {
-          if (!hoveredRestaurant) return
+          if (hoveredRestaurant === false) {
+            centerMapToRegionMain({
+              map,
+              center,
+              span,
+            })
+            return
+          }
           if (omStatic.state.home.isScrolling) return
           for (const annotation of map.annotations) {
             if (annotation.data?.id === hoveredRestaurant.id) {
@@ -357,11 +373,9 @@ const HomeMapContent = memo(function HomeMap({
               x.id === hoveredRestaurant.id || x.slug === hoveredRestaurant.slug
           )
           const coordinates = restaurant?.location?.coordinates
-          console.log('gotem', coordinates)
           if (coordinates) {
             // keep current span
             resumeMap()
-
             const state = omStatic.state.home.currentState
             centerMapToRegionMain({
               map,
@@ -370,8 +384,8 @@ const HomeMapContent = memo(function HomeMap({
                 lng: coordinates[0],
               },
               span: {
-                lat: Math.max(state.span.lat, 0.014),
-                lng: Math.max(state.span.lng, 0.014),
+                lat: Math.min(state.span.lat, 0.014),
+                lng: Math.min(state.span.lng, 0.014),
               },
             })
           }

@@ -503,7 +503,10 @@ const clearSearch: AsyncAction = async (om) => {
   }
 }
 
-const setHoveredRestaurant: Action<RestaurantOnlyIds> = (om, val) => {
+const setHoveredRestaurant: Action<RestaurantOnlyIds | null | false> = (
+  om,
+  val
+) => {
   om.state.home.hoveredRestaurant = val
 }
 
