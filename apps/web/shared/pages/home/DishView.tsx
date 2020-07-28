@@ -45,7 +45,7 @@ export const DishView = memo(
           opacity: 1,
         }}
         hoverStyle={{
-          transform: [{ scale: 1.03 }],
+          transform: [{ scale: 1.08 }],
         }}
         onHoverIn={() => setIsHovered(true)}
         onHoverOut={() => setIsHovered(false)}
@@ -130,17 +130,16 @@ export const DishView = memo(
               shadowRadius={3}
               top={0}
               {...(isHovered && {
-                // top: -4,
+                top: -10,
                 backgroundColor: '#fff',
-                transform: [{ scale: 1.1 }],
               })}
             >
               <Text
                 ellipse
                 flex={1}
                 overflow="hidden"
-                fontSize={height > 170 ? 16 : 14}
-                fontWeight="700"
+                fontSize={height > 150 ? 16 : 12}
+                fontWeight={height > 150 ? '500' : '400'}
                 color={isHovered ? '#000' : '#fff'}
                 textAlign="center"
               >

@@ -25,9 +25,9 @@ export const Squircle = ({
         {/* frame (inner) */}
         <VStack
           className="ease-in-out-fast"
-          shadowColor="rgba(0,0,0,0.4)"
-          shadowRadius={4}
-          shadowOffset={{ width: 0, height: 3 }}
+          shadowColor="rgba(0,0,0,0.125)"
+          shadowRadius={10}
+          shadowOffset={{ width: 0, height: 2 }}
           flex={1}
           borderRadius={borderRadius - 1}
           overflow="hidden"
@@ -37,9 +37,9 @@ export const Squircle = ({
           {...(isHovered && {
             // borderColor: 'rgba(0,0,0,0.75)',
             backgroundColor: '#fff',
-            shadowRadius: 10,
-            shadowColor: 'rgba(0,0,0,0.25)',
-            shadowOffset: { width: 0, height: 6 },
+            shadowRadius: 14,
+            shadowColor: 'rgba(0,0,0,0.15)',
+            shadowOffset: { width: 0, height: 5 },
             zIndex: 10000,
           })}
         >

@@ -144,12 +144,9 @@ const HomePageTopDishes = memo((props: Props) => {
 
                 <HomeIntroLetter />
 
-                <Text
-                  marginTop={15}
-                  fontWeight="300"
-                  fontSize={18}
-                  letterSpacing={-0.25}
-                >
+                <Spacer size="xl" />
+
+                <Text fontWeight="300" fontSize={18} letterSpacing={-0.25}>
                   {currentLocationName
                     ? `What's good in ${currentLocationName}`
                     : `What's good here`}
@@ -287,7 +284,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
         <LinkButton
           transform={[{ rotate: '-2.5deg' }]}
           marginTop={-16}
-          marginBottom={3}
+          marginBottom={12}
           tag={{
             type: 'country',
             name: country.country,
@@ -317,7 +314,12 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
 
       <VStack flex={1} overflow="hidden" position="relative">
         <HomeScrollViewHorizontal style={{ paddingVertical: 10 }}>
-          <HStack alignItems="center" spacing={16} paddingHorizontal={20}>
+          <HStack
+            alignItems="center"
+            spacing={16}
+            paddingVertical={18}
+            paddingHorizontal={20}
+          >
             {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
               return (
                 <DishView

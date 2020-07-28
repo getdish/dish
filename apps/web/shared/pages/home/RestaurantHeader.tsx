@@ -95,30 +95,20 @@ const RestaurantHeaderContent = memo(
               </HStack>
             </VStack>
 
-            {!!(after || restaurant.image) && (
-              <VStack maxWidth="50%" zIndex={-1}>
-                {after ?? (
-                  <>
-                    <Image
-                      resizeMode="cover"
-                      source={{ uri: restaurant.image }}
-                      style={StyleSheet.absoluteFill}
-                    />
-                    <AbsoluteVStack
-                      top={0}
-                      left="-2.5%"
-                      bottom={0}
-                      width="5%"
-                      transform={[{ skewX: '-5deg' }]}
-                      backgroundColor={`rgb(${r},${g},${b})`}
-                      borderColor="#fff"
-                      borderLeftWidth={4}
-                      borderRightWidth={4}
-                    />
-                  </>
-                )}
-              </VStack>
+            {!after && !!restaurant.image && (
+              <Image
+                resizeMode="cover"
+                source={{ uri: restaurant.image }}
+                style={{
+                  marginVertical: -10,
+                  height: 115,
+                  width: 115,
+                  borderRadius: 100,
+                }}
+              />
             )}
+
+            {after && <VStack maxWidth="50%">{after}</VStack>}
           </HStack>
         </VStack>
         <SmallTitle marginVertical={-18} divider="center">

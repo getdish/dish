@@ -198,7 +198,7 @@ const SearchResultsContent = memo((props: Props) => {
     return null
   }
   const { isSmall, titleHeight } = useSpacing()
-  const paddingTop = isSmall ? 58 : titleHeight - searchBarHeight
+  const paddingTop = isSmall ? 58 : titleHeight - searchBarHeight + 2
   const [state, setState] = useState({
     chunk: 1,
     hasLoaded: 1,

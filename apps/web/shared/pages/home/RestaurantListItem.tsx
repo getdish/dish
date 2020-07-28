@@ -12,7 +12,7 @@ import {
 } from '@dish/ui'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 
-import { bgLight, bgLightLight, brandColor } from '../../colors'
+import { bgAlt, bgLight, bgLightLight, brandColor } from '../../colors'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home'
 import { omStatic, useOvermindStatic } from '../../state/useOvermind'
 import { Link } from '../../views/ui/Link'
@@ -154,8 +154,7 @@ const RestaurantListItemContent = memo(
             {/* ROW: TITLE */}
             <VStack
               // backgroundColor={bgLightLight}
-              // hoverStyle={{ backgroundColor: bgLightLight }}
-              pressStyle={{ backgroundColor: bgLight }}
+              hoverStyle={{ backgroundColor: bgLightLight }}
               marginLeft={-adjustRankingLeft}
               width={950}
               position="relative"
