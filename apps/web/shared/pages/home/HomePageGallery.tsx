@@ -118,9 +118,7 @@ const HomePageGalleryContent = memo(
       restaurant,
       max: 100,
       tag_names,
-      // turned off for now it excludes dish images and we want those
-      // also most are empty
-      // gallery: true,
+      gallery: true,
     })
 
     return (

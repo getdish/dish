@@ -23,22 +23,18 @@ export const restaurantPhotosForCarousel = ({
   // @ts-ignore
   const restaurantPhotos = (restaurant.photos() || []).filter(Boolean)
   let photos = [] as TopCuisineDish[]
-  if (!gallery) {
-    photos = prependDishPhotos(photos, restaurant, tag_names, max)
-  }
   for (const photo of restaurantPhotos) {
     if (photos.length >= max) break
     photos.push({ name: 'Item', image: photo })
   }
-  return photos.filter(Boolean)
+  if (!gallery || photos.length == 0) {
+    photos = [...dishPhotos(restaurant, tag_names), ...photos]
+  }
+  return photos.slice(0, max).filter(Boolean)
 }
 
-const prependDishPhotos = (
-  photos: TopCuisineDish[],
-  restaurant: any,
-  tag_names: string[],
-  max: number
-) => {
+const dishPhotos = (restaurant: any, tag_names: string[]) => {
+  let photos: TopCuisineDish[] = []
   const tags = restaurant.top_tags({
     args: {
       tag_names: tag_names,
@@ -75,5 +71,5 @@ const prependDishPhotos = (
       }
     }
   }
-  return photos.slice(0, max)
+  return photos
 }
