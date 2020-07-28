@@ -13,7 +13,7 @@
       "path": "../react-test-env"
     },
     {
-      "path": "../recoil-store"
+      "path": "../use-store"
     }
   ]
 }

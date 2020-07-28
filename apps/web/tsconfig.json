@@ -11,7 +11,7 @@
   "include": ["web", "shared", "node_modules/@types"],
   "exclude": ["**"],
   "references": [{
-    "path": "../../packages/recoil-store"
+    "path": "../../packages/use-store"
   }, {
     "path": "../../packages/async"
   }, {
