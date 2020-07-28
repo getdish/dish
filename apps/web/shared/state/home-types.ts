@@ -8,10 +8,13 @@ export type Om = IContext<Config>
 export type OmState = Om['state']
 export type OmStateHome = OmState['home']
 
+export type ActiveEvent = 'key' | 'pin' | 'hover' | null
+
 export type HomeState = {
   isOptimisticUpdating: boolean
   isScrolling: boolean
   started: boolean
+  activeEvent: ActiveEvent
   activeIndex: number // index for vertical (in page), -1 = autocomplete
   allUsers: { [id: string]: User }
   allTags: { [keyPath: string]: Tag }
@@ -21,6 +24,7 @@ export type HomeState = {
   autocompleteIndex: number // index for horizontal row (autocomplete)
   autocompleteResults: AutocompleteItem[]
   hoveredRestaurant: RestaurantOnlyIds | null | false
+  isHoveringRestaurant: boolean
   searchBarY: number
   location: AutocompleteItem | null // for now just autocomplete item
   locationAutocompleteResults: AutocompleteItem[]

@@ -20,6 +20,7 @@ import { timer } from '../helpers/timer'
 import { getBreadcrumbs, isBreadcrumbState } from '../pages/home/getBreadcrumbs'
 import { useRestaurantQuery } from '../pages/home/useRestaurantQuery'
 import { LinkButtonProps } from '../views/ui/LinkProps'
+import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
 import { getTagId } from './getTagId'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
 import {
@@ -35,6 +36,7 @@ import {
   syncStateToRoute,
 } from './home-tag-helpers'
 import {
+  ActiveEvent,
   AutocompleteItem,
   GeocodePlace,
   HomeActiveTagIds,
@@ -73,63 +75,6 @@ export const initialHomeState: HomeStateItemHome = {
   },
   span: { lng: INITIAL_RADIUS / 2, lat: INITIAL_RADIUS },
 }
-
-export const defaultLocationAutocompleteResults: AutocompleteItem[] = [
-  createAutocomplete({
-    name: 'New York',
-    center: {
-      lat: 40.7130125,
-      lng: -74.0071296,
-    },
-    icon: '📍',
-    type: 'country',
-  }),
-  createAutocomplete({
-    name: 'Los Angeles',
-    center: {
-      lat: 34.053345,
-      lng: -118.242349,
-    },
-    icon: '📍',
-    type: 'country',
-  }),
-  createAutocomplete({
-    name: 'Las Vegas',
-    center: {
-      lat: 36.1667469,
-      lng: -115.1487083,
-    },
-    icon: '📍',
-    type: 'country',
-  }),
-  createAutocomplete({
-    name: 'Miami',
-    center: {
-      lat: 25.7279534,
-      lng: -80.2340487,
-    },
-    icon: '📍',
-    type: 'country',
-  }),
-  createAutocomplete({
-    name: 'Chicago',
-    center: {
-      lat: 41.883718,
-      lng: -87.632382,
-    },
-    icon: '📍',
-    type: 'country',
-  }),
-  createAutocomplete({
-    name: 'New Orleans',
-    center: {
-      lat: 29.952535,
-      lng: -90.076688,
-    },
-    icon: '📍',
-    type: 'country',
-  }),
-]
 
 const derivations = {
   currentNavItem: derived<HomeState, NavigateItem>((state, om) =>
@@ -206,6 +151,7 @@ export const state: HomeState = {
   isLoading: false,
   isScrolling: false,
   skipNextPageFetchData: false,
+  activeEvent: null,
   activeIndex: -1,
   searchBarTagIndex: 0,
   allTags,
@@ -221,6 +167,7 @@ export const state: HomeState = {
   location: null,
   locationSearchQuery: '',
   hoveredRestaurant: null,
+  isHoveringRestaurant: false,
   isOptimisticUpdating: false,
   stateIndex: 0,
   stateIds: ['0'],
@@ -508,6 +455,7 @@ const setHoveredRestaurant: Action<RestaurantOnlyIds | null | false> = (
   val
 ) => {
   om.state.home.hoveredRestaurant = val
+  om.state.home.isHoveringRestaurant = true
 }
 
 const suggestTags: AsyncAction<string> = async (om, tags) => {
@@ -910,15 +858,22 @@ const setLocationSearchQuery: AsyncAction<string> = async (om, val) => {
   om.state.home.locationSearchQuery = val
 }
 
-const setActiveIndex: Action<number> = (om, val) => {
-  om.state.home.activeIndex = Math.min(Math.max(-1, val), 1000) // TODO
+const setActiveIndex: Action<{ index: number; event: ActiveEvent }> = (
+  om,
+  { index, event }
+) => {
+  om.state.home.activeIndex = Math.min(Math.max(-1, index), 1000) // TODO
+  om.state.home.activeEvent = event
 }
 
 const moveActive: Action<number> = (om, num) => {
   if (om.state.home.isAutocompleteActive) {
     om.actions.home.moveAutocompleteIndex(num)
   } else {
-    om.actions.home.setActiveIndex(om.state.home.activeIndex + num)
+    om.actions.home.setActiveIndex({
+      index: om.state.home.activeIndex + num,
+      event: 'key',
+    })
   }
 }
 
@@ -984,20 +939,6 @@ const setHasMovedMap: Action<boolean | void> = (om, val = true) => {
   const { lastSearchState } = om.state.home
   if (lastSearchState && lastSearchState.hasMovedMap !== next) {
     lastSearchState.hasMovedMap = next
-  }
-}
-
-export function createAutocomplete(
-  item: Partial<AutocompleteItem>
-): AutocompleteItem {
-  const next = {
-    name: '',
-    type: 'dish',
-    ...item,
-  }
-  return {
-    ...next,
-    tagId: getTagId(next),
   }
 }
 
@@ -1224,6 +1165,10 @@ const setSearchBarY: Action<number> = (om, val) => {
   om.state.home.searchBarY = val
 }
 
+const setIsHoveringRestaurant: Action<boolean> = (om, val) => {
+  om.state.home.isHoveringRestaurant = val
+}
+
 export const actions = {
   moveAutocompleteIndex,
   setAutocompleteIndex,
@@ -1266,4 +1211,5 @@ export const actions = {
   navigate,
   moveMapToUserLocation,
   setSearchBarY,
+  setIsHoveringRestaurant,
 }

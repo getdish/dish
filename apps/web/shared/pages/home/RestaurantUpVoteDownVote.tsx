@@ -86,11 +86,7 @@ const VoteButton = ({
       })}
       {...props}
     >
-      <Icon
-        size={28}
-        color={color ?? (hovered ? '#000' : '#ccc')}
-        style={{ ...styleMedia }}
-      />
+      <Icon size={28} color={color ?? (hovered ? '#000' : '#ccc')} />
     </VStack>
   )
 }
