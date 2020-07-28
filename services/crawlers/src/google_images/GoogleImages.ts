@@ -92,6 +92,7 @@ export class GoogleImages extends WorkerJob {
     })
     const updated_dish: TagWithId = {
       id: dish.id,
+      //@ts-ignore
       default_images,
     }
     await tagUpdate(updated_dish)

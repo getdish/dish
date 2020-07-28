@@ -218,6 +218,7 @@ export class Self extends WorkerJob {
       const match = this.tagging.restaurant_tags.find(
         (rt) => rt.tag_id == photo_xref.tag_id
       )
+      //@ts-ignore
       match?.photos.push(photo_xref.photo?.url)
     }
   }
@@ -687,6 +688,7 @@ export class Self extends WorkerJob {
     })
     await photoUpsert(photos)
     const most_aesthetic = await bestPhotosForRestaurant(this.restaurant.id)
+    //@ts-ignore
     this.restaurant.photos = most_aesthetic.map((p) => p.photo?.url)
   }
 
