@@ -1,5 +1,5 @@
 {
-  "name": "@dish/recoil-store",
+  "name": "@dish/use-store",
   "version": "0.0.1",
   "main": "_/index.js",
   "tsmain": "src/index",

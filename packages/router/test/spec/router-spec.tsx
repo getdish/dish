@@ -1,4 +1,4 @@
-import { RecoilRoot } from '@dish/recoil-store'
+import { RecoilRoot } from '@dish/use-store'
 import React from 'react'
 
 import { ProvideRouter, Route, useRouter } from '../../_'

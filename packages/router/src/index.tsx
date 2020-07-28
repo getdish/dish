@@ -1,4 +1,4 @@
-import { Store, useRecoilStore } from '@dish/recoil-store'
+import { Store, useRecoilStore } from '@dish/use-store'
 import { createBrowserHistory } from 'history'
 import * as React from 'react'
 import { createContext, useContext } from 'react'

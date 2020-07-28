@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "history": "^5.0.0",
-    "@dish/recoil-store": "*",
+    "@dish/use-store": "*",
     "tiny-request-router": "^1.2.2"
   },
   "devDependencies": {

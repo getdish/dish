@@ -1,4 +1,4 @@
-import { Store } from '@dish/recoil-store'
+import { Store } from '@dish/use-store'
 import { createContext } from 'react'
 
 export const PopoverContext = createContext({

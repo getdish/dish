@@ -1,7 +1,7 @@
 import './start'
 
 import { onGraphError } from '@dish/graph'
-// import { RecoilRoot } from '@dish/recoil-store'
+// import { RecoilRoot } from '@dish/use-store'
 import { LoadingItems, Toast, ToastRoot, useOnMount } from '@dish/ui'
 import { Provider } from 'overmind-react'
 import React, { Suspense } from 'react'

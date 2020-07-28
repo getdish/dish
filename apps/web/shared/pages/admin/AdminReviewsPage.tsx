@@ -1,6 +1,6 @@
 import { graphql, order_by, query } from '@dish/graph'
-import { RecoilRoot, Store, useRecoilStore } from '@dish/recoil-store'
 import { HStack, Text, VStack, useDebounceValue } from '@dish/ui'
+import { RecoilRoot, Store, useRecoilStore } from '@dish/use-store'
 import React, { memo, useState } from 'react'
 import { ScrollView } from 'react-native'
 

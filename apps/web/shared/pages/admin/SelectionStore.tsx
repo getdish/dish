@@ -1,4 +1,4 @@
-import { Store, useRecoilStore } from '@dish/recoil-store'
+import { Store, useRecoilStore } from '@dish/use-store'
 import immer from 'immer'
 
 class SelectionStore extends Store<{ id: string }> {
