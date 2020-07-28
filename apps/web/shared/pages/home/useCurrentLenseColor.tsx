@@ -1,12 +1,11 @@
 import { useEffect, useRef } from 'react'
 
-import { brandRgb } from '../../colors'
 import { useOvermind } from '../../state/useOvermind'
 
 export const useCurrentLenseColor = (): [number, number, number] => {
   const om = useOvermind()
   const lense = om.state.home.currentStateLense
-  const lastLenseRgb = useRef(brandRgb)
+  const lastLenseRgb = useRef([])
 
   useEffect(() => {
     if (lense?.rgb) {
@@ -17,5 +16,5 @@ export const useCurrentLenseColor = (): [number, number, number] => {
     }
   }, [lense?.rgb])
 
-  return lense?.rgb ?? lastLenseRgb.current ?? brandRgb
+  return lense?.rgb ?? lastLenseRgb.current ?? []
 }

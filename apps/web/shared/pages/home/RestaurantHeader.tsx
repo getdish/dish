@@ -2,7 +2,6 @@ import { graphql } from '@dish/graph'
 import {
   AbsoluteVStack,
   HStack,
-  LinearGradient,
   SmallTitle,
   Spacer,
   Text,
@@ -24,6 +23,7 @@ import { useRestaurantQuery } from './useRestaurantQuery'
 type RestaurantHeaderProps = {
   state?: HomeStateItemRestaurant
   restaurantSlug: any
+  after?: any
 }
 
 export const RestaurantHeader = (props: RestaurantHeaderProps) => {
@@ -44,7 +44,7 @@ export const RestaurantHeader = (props: RestaurantHeaderProps) => {
 }
 
 const RestaurantHeaderContent = memo(
-  graphql(({ state, restaurantSlug }: RestaurantHeaderProps) => {
+  graphql(({ state, restaurantSlug, after }: RestaurantHeaderProps) => {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const om = useOvermind()
     const [r, g, b] = useCurrentLenseColor()
@@ -57,32 +57,6 @@ const RestaurantHeaderContent = memo(
           position="relative"
           padding={20}
         >
-          {!!restaurant.image && (
-            <AbsoluteVStack fullscreen left="70%" zIndex={-1}>
-              <Image
-                resizeMode="cover"
-                source={{ uri: restaurant.image }}
-                style={StyleSheet.absoluteFill}
-              />
-              <AbsoluteVStack
-                top={0}
-                left="-2.5%"
-                bottom={0}
-                width="5%"
-                transform={[{ skewX: '-5deg' }]}
-                backgroundColor={`rgb(${r},${g},${b})`}
-                borderColor="#fff"
-                borderLeftWidth={4}
-                borderRightWidth={4}
-              />
-              {/* <LinearGradient
-                colors={['rgba(255,255,255,1)', 'rgba(255,255,255,0)']}
-                startPoint={[0, 0]}
-                endPoint={[1, 0]}
-                style={StyleSheet.absoluteFill}
-              /> */}
-            </AbsoluteVStack>
-          )}
           <HStack alignItems="center">
             <HStack position="relative">
               <RestaurantRatingViewPopover
@@ -91,7 +65,8 @@ const RestaurantHeaderContent = memo(
               />
             </HStack>
             <Spacer size={20} />
-            <VStack flex={1}>
+
+            <VStack flex={10}>
               <Text
                 selectable
                 fontSize={restaurant.name?.length > 25 ? 32 : 34}
@@ -119,6 +94,31 @@ const RestaurantHeaderContent = memo(
                 />
               </HStack>
             </VStack>
+
+            {!!(after || restaurant.image) && (
+              <VStack maxWidth="50%" zIndex={-1}>
+                {after ?? (
+                  <>
+                    <Image
+                      resizeMode="cover"
+                      source={{ uri: restaurant.image }}
+                      style={StyleSheet.absoluteFill}
+                    />
+                    <AbsoluteVStack
+                      top={0}
+                      left="-2.5%"
+                      bottom={0}
+                      width="5%"
+                      transform={[{ skewX: '-5deg' }]}
+                      backgroundColor={`rgb(${r},${g},${b})`}
+                      borderColor="#fff"
+                      borderLeftWidth={4}
+                      borderRightWidth={4}
+                    />
+                  </>
+                )}
+              </VStack>
+            )}
           </HStack>
         </VStack>
         <SmallTitle marginVertical={-18} divider="center">

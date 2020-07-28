@@ -1,10 +1,11 @@
 import { Text } from '@dish/ui'
 import React from 'react'
 
+import { getTagId } from '../../state/getTagId'
 import { HomeStateItem } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { OmState } from '../../state/home-types'
-import { getTagId, tagDescriptions } from '../../state/Tag'
+import { tagDescriptions } from '../../state/tagDescriptions'
 import { TagButton, getTagButtonProps } from './TagButton'
 
 const getTitleForQuery = (query: string) => {

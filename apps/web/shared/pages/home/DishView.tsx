@@ -5,7 +5,7 @@ import React, { memo, useState } from 'react'
 import { Image } from 'react-native'
 
 import { IMAGE_PROXY_DOMAIN } from '../../constants'
-import { NavigableTag } from '../../state/Tag'
+import { NavigableTag } from '../../state/NavigableTag'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { DishRatingView } from './DishRatingView'
 import { Squircle } from './Squircle'

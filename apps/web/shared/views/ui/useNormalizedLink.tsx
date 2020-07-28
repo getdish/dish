@@ -1,11 +1,10 @@
-import { fullyIdle } from '@dish/async'
 import { useForceUpdate, useLazyRef } from '@dish/ui'
-import { findLast, isEqual, omit } from 'lodash'
-import { useMemo, useRef } from 'react'
+import { isEqual, omit } from 'lodash'
+import { useMemo } from 'react'
 
 import { memoize } from '../../helpers/memoizeWeak'
 import { HomeStateItem, getNavigateTo } from '../../state/home'
-import { NavigableTag } from '../../state/Tag'
+import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic } from '../../state/useOvermind'
 import { LinkButtonNamedProps, LinkButtonProps } from './LinkProps'
 

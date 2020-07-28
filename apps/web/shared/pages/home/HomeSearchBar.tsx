@@ -1,6 +1,5 @@
 import {
   AbsoluteVStack,
-  Divider,
   HStack,
   LinearGradient,
   MediaQuery,
@@ -31,15 +30,13 @@ import {
   useMediaQueryIsSmall,
 } from './useMediaQueryIs'
 
-const divider = <Divider vertical flexLine={1} marginHorizontal={4} />
-
 export default memo(function HomeSearchBar() {
   const [showLocation, setShowLocation] = useState(false)
   const isSmall = useMediaQueryIsSmall()
   const isReallySmall = useMediaQueryIsReallySmall()
   const rgb = useCurrentLenseColor()
-  const color = rgbString(rgb.map((x) => x + 5))
-  const colorBottom = rgbString(rgb.map((x) => x - 5) ?? [30, 30, 30])
+  const backgroundColor = rgbString(rgb.map((x) => x + 5))
+  const backgroundColorBottom = rgbString(rgb.map((x) => x - 5) ?? [30, 30, 30])
   const borderRadius = 10
 
   return (
@@ -109,7 +106,7 @@ export default memo(function HomeSearchBar() {
             paddingHorizontal={8}
             height={searchBarHeight}
             borderRadius={borderRadius}
-            shadowColor={color}
+            shadowColor={backgroundColor}
             shadowOpacity={0.25}
             shadowRadius={0}
             shadowOffset={{ height: 3, width: 3 }}
@@ -125,7 +122,7 @@ export default memo(function HomeSearchBar() {
               left={-100}
             >
               <LinearGradient
-                colors={[color, colorBottom]}
+                colors={[backgroundColor, backgroundColorBottom]}
                 style={[StyleSheet.absoluteFill]}
               />
             </VStack>

@@ -1,7 +1,6 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import {
   HStack,
-  Spacer,
   Toast,
   VStack,
   useDebounce,
@@ -12,16 +11,14 @@ import React, { memo, useEffect, useRef, useState } from 'react'
 import { Loader, Search } from 'react-feather'
 import { StyleSheet, TextInput } from 'react-native'
 
-import { brandRgb } from '../../colors'
 import { searchBarHeight } from '../../constants'
 import {
   inputClearSelection,
   inputGetNode,
   inputIsTextSelected,
 } from '../../helpers/input'
-import { rgbString } from '../../helpers/rgbString'
+import { getTagId } from '../../state/getTagId'
 import { router } from '../../state/router'
-import { getTagId } from '../../state/Tag'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { CloseButton } from './CloseButton'
 import { HomeAutocompleteHoverableInput } from './HomeAutocomplete'

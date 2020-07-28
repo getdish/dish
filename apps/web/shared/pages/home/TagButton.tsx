@@ -10,13 +10,13 @@ import {
   getNode,
   prevent,
 } from '@dish/ui'
-import _ from 'lodash'
 import React, { memo, useEffect, useRef } from 'react'
 import { ThumbsUp, X } from 'react-feather'
-import { Image, View } from 'react-native'
+import { Image } from 'react-native'
 
 import { bgLight } from '../../colors'
-import { getTagId, tagDisplayName, tagDisplayNames } from '../../state/Tag'
+import { getTagId } from '../../state/getTagId'
+import { tagDisplayName } from '../../state/tagDisplayName'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { useUserUpvoteDownvote } from './useUserReview'

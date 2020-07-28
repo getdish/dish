@@ -2,8 +2,8 @@ import { Tag } from '@dish/graph'
 import { Spacer } from '@dish/ui'
 import React, { memo } from 'react'
 
+import { getTagId } from '../../state/getTagId'
 import { HomeActiveTagIds } from '../../state/home'
-import { getTagId } from '../../state/Tag'
 import { useOvermind } from '../../state/useOvermind'
 import { LenseButton, LenseButtonSize } from './LenseButton'
 

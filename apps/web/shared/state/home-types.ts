@@ -2,7 +2,7 @@ import { RestaurantOnlyIds, Tag, TopCuisine, User } from '@dish/graph'
 import { NavigateItem } from '@dish/router'
 import { Config, IContext } from 'overmind'
 
-import { NavigableTag } from './Tag'
+import { NavigableTag } from './NavigableTag'
 
 export type Om = IContext<Config>
 export type OmState = Om['state']

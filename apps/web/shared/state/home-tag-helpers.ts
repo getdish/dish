@@ -4,6 +4,7 @@ import { cloneDeep } from 'lodash'
 import { Action, AsyncAction } from 'overmind'
 
 import { LIVE_SEARCH_DOMAIN } from '../constants'
+import { getTagId } from './getTagId'
 import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
 import {
   HomeActiveTagIds,
@@ -12,8 +13,10 @@ import {
   OmState,
   OmStateHome,
 } from './home-types'
+import { NavigableTag } from './NavigableTag'
 import { SearchRouteParams, router } from './router'
-import { NavigableTag, getTagId, tagFilters, tagLenses } from './Tag'
+import { tagFilters } from './tagFilters'
+import { tagLenses } from './tagLenses'
 import { omStatic } from './useOvermind'
 
 const SPLIT_TAG = '_'

@@ -20,6 +20,7 @@ import { timer } from '../helpers/timer'
 import { getBreadcrumbs, isBreadcrumbState } from '../pages/home/getBreadcrumbs'
 import { useRestaurantQuery } from '../pages/home/useRestaurantQuery'
 import { LinkButtonProps } from '../views/ui/LinkProps'
+import { getTagId } from './getTagId'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
 import {
   HomeStateNav,
@@ -47,8 +48,10 @@ import {
   OmState,
   ShowAutocomplete,
 } from './home-types'
+import { NavigableTag } from './NavigableTag'
 import { router } from './router'
-import { NavigableTag, getTagId, tagFilters, tagLenses } from './Tag'
+import { tagFilters } from './tagFilters'
+import { tagLenses } from './tagLenses'
 
 const INITIAL_RADIUS = 0.16
 
