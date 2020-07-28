@@ -104,6 +104,8 @@ export const useUserUpvoteDownvote = (
   return [
     userVote ?? vote,
     async (rating: number) => {
+      Toast.show(`Voted!`)
+
       if (votes.length) {
         votes.forEach((vote) => {
           vote.rating = rating
