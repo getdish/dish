@@ -129,9 +129,9 @@ export const HomeSearchLocationInput = memo(() => {
               }
             }}
           />
+          <SearchLocationButton />
         </HStack>
       </HomeAutocompleteHoverableInput>
-      <SearchLocationButton />
     </VStack>
   )
 })
@@ -139,21 +139,16 @@ export const HomeSearchLocationInput = memo(() => {
 const SearchLocationButton = memo(() => {
   const om = useOvermind()
   return (
-    <AbsoluteVStack fullscreen pointerEvents="none">
-      <HStack flex={1} alignItems="center" justifyContent="center">
-        <Spacer flex={1} />
-        <Button
-          padding={8}
-          alignSelf="center"
-          marginRight={5}
-          borderRadius={1000}
-          onPress={() => {
-            om.actions.home.moveMapToUserLocation()
-          }}
-        >
-          <Navigation size={20} color="rgba(255,255,255,0.8)" />
-        </Button>
-      </HStack>
-    </AbsoluteVStack>
+    <Button
+      padding={8}
+      alignSelf="center"
+      marginRight={5}
+      borderRadius={1000}
+      onPress={() => {
+        om.actions.home.moveMapToUserLocation()
+      }}
+    >
+      <Navigation size={20} color="rgba(255,255,255,0.8)" />
+    </Button>
   )
 })
