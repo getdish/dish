@@ -1,6 +1,6 @@
 import { AbsoluteVStack, HStack, VStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { ChevronUp, RefreshCcw } from 'react-feather'
+import { ChevronUp, Map, RefreshCcw, ZoomOut } from 'react-feather'
 
 import { searchBarHeight } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
@@ -38,6 +38,7 @@ export const HomeMapControlsOverlay = memo(
           left={0}
           alignItems="center"
           justifyContent="center"
+          spacing={20}
         >
           <OverlayLinkButton
             Icon={RefreshCcw}
@@ -50,17 +51,26 @@ export const HomeMapControlsOverlay = memo(
               om.actions.home.refresh()
             }}
           >
-            Refresh
-            <ChevronUp
-              onMouseUp={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                om.actions.home.setHasMovedMap(false)
-              }}
-              size={12}
-              color="#fff"
-              style={{ margin: -6, marginLeft: 4, padding: 4, opacity: 0.4 }}
-            />
+            Search here
+          </OverlayLinkButton>
+
+          <OverlayLinkButton
+            Icon={Map}
+            className={`animate-up ${
+              om.state.home.hoveredRestaurant &&
+              om.state.home.currentStateType === 'search'
+                ? 'active'
+                : ''
+            }`}
+            pointerEvents="auto"
+            alignItems="center"
+            justifyContent="center"
+            onPress={() => {
+              om.actions.home.setHasMovedMap(false)
+              om.actions.home.setHoveredRestaurant(false)
+            }}
+          >
+            Fit to results
           </OverlayLinkButton>
         </HStack>
 
