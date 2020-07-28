@@ -45,7 +45,7 @@ export const DishView = memo(
           opacity: 1,
         }}
         hoverStyle={{
-          transform: [{ scale: 1.08 }],
+          transform: [{ scale: 1.05 }],
         }}
         onHoverIn={() => setIsHovered(true)}
         onHoverOut={() => setIsHovered(false)}
@@ -126,12 +126,13 @@ export const DishView = memo(
               paddingHorizontal={8}
               maxWidth="calc(90% - 30px)"
               overflow="hidden"
-              shadowColor="rgba(0,0,0,0.2)"
-              shadowRadius={3}
+              shadowColor="rgba(0,0,0,0.1)"
+              shadowRadius={2}
               top={0}
               {...(isHovered && {
                 top: -10,
                 backgroundColor: '#fff',
+                shadowColor: 'rgba(0,0,0,0.2)',
               })}
             >
               <Text

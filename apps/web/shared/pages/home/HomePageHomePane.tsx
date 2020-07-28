@@ -11,7 +11,7 @@ import {
   VStack,
   useDebounce,
 } from '@dish/ui'
-import _ from 'lodash'
+import _, { rest } from 'lodash'
 import {
   default as React,
   Suspense,
@@ -29,7 +29,7 @@ import { bgLight } from '../../colors'
 import { HomeStateItemHome } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { tagDescriptions } from '../../state/tagDescriptions'
-import { useOvermind } from '../../state/useOvermind'
+import { omStatic, useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
@@ -334,7 +334,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
             paddingRight={20}
             pointerEvents="auto"
           >
-            <TopDishesRestaurantsSide country={country} />
+            <TopDishesTrendingRestaurants country={country} />
 
             {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
               return (
@@ -363,15 +363,19 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
   )
 })
 
-const TopDishesRestaurantsSide = memo(
+let lastHoveredId
+const clearHoveredRestaurant = _.debounce(() => {
+  const hovered = omStatic.state.home.hoveredRestaurant
+  if (hovered && hovered.id == lastHoveredId) {
+    omStatic.actions.home.setHoveredRestaurant(false)
+  }
+}, 200)
+
+const TopDishesTrendingRestaurants = memo(
   ({ country }: { country: TopCuisine }) => {
-    const [
-      hoveredRestaurant,
-      setHoveredRestaurant,
-    ] = useState<Restaurant | null>(country.top_restaurants?.[0] ?? null)
-    const onHoverRestaurant = useCallback((restaurant: Restaurant) => {
-      setHoveredRestaurant(restaurant)
-    }, [])
+    const setHoveredRestaurant = useDebounce((val) => {
+      omStatic.actions.home.setHoveredRestaurant(val)
+    }, 200)
 
     return (
       <VStack flex={1} padding={10} spacing={4} alignItems="flex-start">
@@ -391,7 +395,16 @@ const TopDishesRestaurantsSide = memo(
                 key={restaurant.name}
                 restaurant={restaurant as any}
                 maxWidth="100%"
-                // onHoverIn={onHoverRestaurant}
+                onHoverIn={() => {
+                  lastHoveredId = restaurant.id
+                  setHoveredRestaurant({
+                    id: restaurant.id,
+                    slug: restaurant.slug,
+                  })
+                }}
+                onHoverOut={() => {
+                  clearHoveredRestaurant()
+                }}
                 // active={
                 //   (hoveredRestaurant &&
                 //     restaurant?.name === hoveredRestaurant?.name) ||

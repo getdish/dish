@@ -8,11 +8,11 @@
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "true",
-    "test:tmp": "ava test/* --verbose"
+    "test": "ava test/* --verbose"
   },
   "dependencies": {
-    "@o/recoil": "0.0.10"
+    "@o/recoil": "0.0.10",
+    "use-atom": "^0.5.6"
   },
   "devDependencies": {
     "@dish/react-test-env": "*"
