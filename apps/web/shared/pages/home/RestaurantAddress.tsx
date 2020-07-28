@@ -23,7 +23,7 @@ export const RestaurantAddress = ({
         className="hover-underline"
         color="#999"
         target="_blank"
-        href={`https://www.google.com/maps/search/?api=1&${encodeURIComponent(
+        href={`https://www.google.com/maps/search/?q=${encodeURIComponent(
           address
         )}`}
       >

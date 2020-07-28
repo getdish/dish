@@ -15,8 +15,23 @@ import { useRestaurantQuery } from './useRestaurantQuery'
 export default memo(function HomePageGallery() {
   const om = useOvermind()
   const state = om.state.home.currentState
+  const isSmall = useMediaQueryIsSmall()
 
   if (state.type === 'gallery') {
+    const dishPhotosElement = (
+      <Suspense fallback={null}>
+        <RestaurantDishPhotos
+          size={100}
+          restaurantSlug={state.restaurantSlug}
+          selectable
+          defaultSelectedId={state.dishId}
+          onSelect={(selected) => {
+            console.log('got em', selected)
+          }}
+        />
+      </Suspense>
+    )
+
     return (
       <AbsoluteVStack
         fullscreen
@@ -35,12 +50,13 @@ export default memo(function HomePageGallery() {
           alignItems="center"
           position="relative"
           overflow="hidden"
+          shadowColor="rgba(0,0,0,0.75)"
+          shadowRadius={40}
         >
-          <AbsoluteVStack top={8} right={30}>
-            <StackViewCloseButton />
-          </AbsoluteVStack>
-
           <VStack width="100%" height="100%" flex={1}>
+            <AbsoluteVStack top={5} right={26}>
+              <StackViewCloseButton />
+            </AbsoluteVStack>
             <HStack
               alignItems="center"
               justifyContent="space-between"
@@ -50,18 +66,8 @@ export default memo(function HomePageGallery() {
               <RestaurantHeader
                 restaurantSlug={state.restaurantSlug}
                 after={
-                  <VStack>
-                    <Suspense fallback={null}>
-                      <RestaurantDishPhotos
-                        size={100}
-                        restaurantSlug={state.restaurantSlug}
-                        selectable
-                        defaultSelectedId={state.dishId}
-                        onSelect={(selected) => {
-                          console.log('got em', selected)
-                        }}
-                      />
-                    </Suspense>
+                  <VStack marginVertical={-15}>
+                    {isSmall ? null : dishPhotosElement}
                   </VStack>
                 }
               />
@@ -69,6 +75,17 @@ export default memo(function HomePageGallery() {
 
             <Suspense fallback={<LoadingItems />}>
               <HomePageGalleryContent state={state} />
+              {isSmall ? (
+                <AbsoluteVStack
+                  backgroundColor="#fff"
+                  padding={5}
+                  bottom={0}
+                  left={0}
+                  right={0}
+                >
+                  {dishPhotosElement}
+                </AbsoluteVStack>
+              ) : null}
             </Suspense>
           </VStack>
         </VStack>
