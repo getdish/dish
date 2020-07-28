@@ -3,6 +3,7 @@ import React, { Suspense } from 'react'
 
 import {
   drawerBorderRadius,
+  drawerPad,
   drawerWidthMax,
   searchBarHeight,
 } from '../../constants'

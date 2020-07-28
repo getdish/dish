@@ -1,6 +1,5 @@
 import { createCancellablePromise, idle, series } from '@dish/async'
 import {
-  Box,
   Button,
   HStack,
   LoadingItem,
@@ -162,6 +161,7 @@ const SearchResultsTitle = memo(
           paddingVertical={topBarVPad}
           paddingHorizontal={18}
           flex={1}
+          overflow="hidden"
           justifyContent="space-between"
         >
           <HStack marginTop={-11} alignItems="center" justifyContent="center">

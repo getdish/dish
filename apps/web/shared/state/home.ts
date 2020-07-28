@@ -17,7 +17,7 @@ import { Action, AsyncAction, derived } from 'overmind'
 
 import { fuzzyFindIndices } from '../helpers/fuzzy'
 import { timer } from '../helpers/timer'
-import { getBreadcrumbs } from '../pages/home/getBreadcrumbs'
+import { getBreadcrumbs, isBreadcrumbState } from '../pages/home/getBreadcrumbs'
 import { useRestaurantQuery } from '../pages/home/useRestaurantQuery'
 import { LinkButtonProps } from '../views/ui/LinkProps'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
@@ -953,8 +953,16 @@ function padSpan(val: LngLat, by = 0.9): LngLat {
 }
 
 const up: Action = (om) => {
-  const prev = om.state.home.previousState?.type
-  om.actions.home.popTo(prev ?? 'home')
+  const curType = om.state.home.currentStateType
+  if (isBreadcrumbState(curType)) {
+    const crumbs = getBreadcrumbs(om.state.home.states)
+    const prevCrumb = _.findLast(crumbs, (x) => x.type !== curType)
+    console.log('cur is', curType, 'last is', prevCrumb, 'of', crumbs)
+    om.actions.home.popTo(prevCrumb?.type ?? 'home')
+  } else {
+    const prev = om.state.home.previousState?.type
+    om.actions.home.popTo(prev ?? 'home')
+  }
 }
 
 // used to help prevent duplicate searches on slight diff in map move

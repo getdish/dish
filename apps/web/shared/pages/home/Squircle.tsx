@@ -35,7 +35,7 @@ export const Squircle = ({
           justifyContent="center"
           pointerEvents="none"
           {...(isHovered && {
-            borderColor: 'rgba(0,0,0,0.75)',
+            // borderColor: 'rgba(0,0,0,0.75)',
             backgroundColor: '#fff',
             shadowRadius: 10,
             shadowColor: 'rgba(0,0,0,0.25)',
@@ -43,27 +43,6 @@ export const Squircle = ({
             zIndex: 10000,
           })}
         >
-          <AbsoluteVStack
-            className={
-              // isHovered ? 'ease-in-out inner-glow' :
-              'ease-in-out inner-shadow'
-            }
-            borderRadius={borderRadius - 1}
-            overflow="hidden"
-            fullscreen
-            zIndex={2}
-          >
-            <LinearGradient
-              colors={[
-                'rgba(255,255,255,0.2)',
-                'rgba(255,255,255,0)',
-                'rgba(255,255,255,0)',
-                'rgba(0,0,0,0)',
-                'rgba(0,0,0,0.13)',
-              ]}
-              style={[StyleSheet.absoluteFill]}
-            />
-          </AbsoluteVStack>
           {children}
         </VStack>
       </VStack>
