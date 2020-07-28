@@ -20,6 +20,7 @@ import { Link } from '../../views/ui/Link'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { DishView } from './DishView'
 import { HomeScrollViewHorizontal } from './HomeScrollView'
+import { isIOS } from './isIOS'
 import { RankingView } from './RankingView'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
@@ -81,8 +82,10 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 
   return (
     <HStack
-      onHoverIn={() => setIsHovered(true)}
-      onHoverOut={() => setIsHovered(false)}
+      {...(!isIOS && {
+        onHoverIn: () => setIsHovered(true),
+        onHoverOut: () => setIsHovered(false),
+      })}
       alignItems="center"
       position="relative"
       className="hover-to-reveal-parent"
@@ -149,6 +152,8 @@ const RestaurantListItemContent = memo(
         // backgroundColor={isActive ? 'transparent' : '#fcfcfc'}
         // borderTopColor={isActive ? '#eee' : 'transparent'}
         // borderBottomColor={isActive ? '#eee' : 'transparent'}
+        borderLeftWidth={2}
+        borderLeftColor={isActive ? 'blue' : 'transparent'}
       >
         <VStack
           paddingHorizontal={pad + 6}
