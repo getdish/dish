@@ -292,14 +292,15 @@ const popTo: Action<HomeStateItem['type']> = (om, type) => {
 
   // we can just use router history directly, no? and go back?
   // if router stack works fine, this should be unecessary
-  if (
-    om.state.home.previousState?.type === type &&
-    // router.prevPage.type !== 'pop' &&
-    router.prevPage?.name === type
-  ) {
-    router.back()
-    return
-  }
+  // this did auto back
+  // if (
+  //   om.state.home.previousState?.type === type &&
+  //   // router.prevPage.type !== 'pop' &&
+  //   router.prevPage?.name === type
+  // ) {
+  //   router.back()
+  //   return
+  // }
 
   const states = om.state.home.states
   const prevStates = states.slice(0, states.length - 1)
@@ -957,7 +958,6 @@ const up: Action = (om) => {
   if (isBreadcrumbState(curType)) {
     const crumbs = getBreadcrumbs(om.state.home.states)
     const prevCrumb = _.findLast(crumbs, (x) => x.type !== curType)
-    console.log('cur is', curType, 'last is', prevCrumb, 'of', crumbs)
     om.actions.home.popTo(prevCrumb?.type ?? 'home')
   } else {
     const prev = om.state.home.previousState?.type
