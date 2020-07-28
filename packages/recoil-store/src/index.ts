@@ -70,14 +70,21 @@ export function useRecoilStore<A extends Store<B>, B>(
   }, [])
 }
 
-const cache = {}
+const cache: {
+  [storeKey: string]: { [key: string]: [any, StoreAttributes] }
+} = {}
+const getKey = (props: Object) =>
+  Object.keys(props)
+    .sort()
+    .map((x) => `${x}${props[x]}`)
+    .join('')
+
 function useStoreInstance(StoreKlass: any, props: any) {
-  const propsKey = props ? JSON.stringify(props) : ''
+  const propsKey = props ? getKey(props) : ''
   const cached = cache[StoreKlass]?.[propsKey]
   if (cached) {
     return cached
   }
-
   const storeName = StoreKlass.name
   if (keys.has(storeName)) {
     throw new Error(`Store name already used`)
@@ -99,7 +106,7 @@ function useStoreInstance(StoreKlass: any, props: any) {
   }
   cache[StoreKlass] = cache[StoreKlass] ?? {}
   cache[StoreKlass][propsKey] = [storeInstance, attrs]
-  return [storeInstance, attrs]
+  return [storeInstance, attrs] as const
 }
 
 let curGetter: any = null
