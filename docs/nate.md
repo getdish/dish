@@ -1,8 +1,6 @@
 ## July
 
-- prod fix broken build
 - writing
-
 - autocomplete = higher ranking higher
 
 - A bit of user profile page polish
