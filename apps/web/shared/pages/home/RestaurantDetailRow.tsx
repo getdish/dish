@@ -97,6 +97,9 @@ export const RestaurantDetailRow = memo(
 )
 
 function openingHours(restaurant: RestaurantQuery) {
+  if (restaurant.hours() == null) {
+    return ['Uknown Opening Hours', 'grey', '']
+  }
   let text = 'Opens at'
   let color = 'grey'
   let next_time = ''
@@ -114,10 +117,10 @@ function openingHours(restaurant: RestaurantQuery) {
     if (tomorrow == 7) {
       tomorrow = 0
     }
-    const opens_at = (restaurant.hours[tomorrow]?.hoursInfo.hours[0] ?? '')
+    const opens_at = (restaurant.hours()[tomorrow]?.hoursInfo.hours[0] ?? '')
       .replace(/"/g, '')
       .split('-')[0]
-    const closes_at = (restaurant.hours[day]?.hoursInfo.hours[0] ?? '')
+    const closes_at = (restaurant.hours()[day]?.hoursInfo.hours[0] ?? '')
       .replace(/"/g, '')
       .split('-')[1]
     next_time = (restaurant.is_open_now ? closes_at : opens_at) || '~'
@@ -125,31 +128,65 @@ function openingHours(restaurant: RestaurantQuery) {
   return [text, color, next_time]
 }
 
+// @tombh: I seem to have got confused about the type of this field.
+// Is it a numerical price range or just a $$$-style?? I need to go
+// into the crawlers and sort it out. But for now let's support both.
 function priceRange(restaurant: RestaurantQuery) {
+  if (restaurant.price_range == null) {
+    return ['Price', 'grey', '']
+  }
+  if (/\d/.test(restaurant.price_range)) {
+    return priceRangeNumeric(restaurant)
+  }
+  if (restaurant.price_range.includes('$')) {
+    return priceRangeDollar(restaurant)
+  }
+  return ['Price', 'grey', '']
+}
+
+function priceRangeDollar(restaurant: RestaurantQuery) {
+  let label = 'Price'
+  let color = 'grey'
+  switch (true) {
+    case restaurant.price_range == '$':
+      label = 'Cheap'
+      color = '#000'
+      break
+    case restaurant.price_range == '$$':
+      label = 'Average'
+      color = '#888'
+      break
+    case restaurant.price_range == '$$$':
+      label = 'Expensive'
+      color = '#ccc'
+      break
+  }
+  return [label, color, restaurant.price_range]
+}
+
+function priceRangeNumeric(restaurant: RestaurantQuery) {
   let label = 'Price'
   let color = 'grey'
   let price_range = ''
-  if (restaurant.price_range != null) {
-    const [low, high] = `${restaurant.price_range}`
-      .replace(/\$/g, '')
-      .split('-')
-      .map((i) => parseInt(i))
-    const average = (low + high) / 2
-    price_range = restaurant.price_range
-    switch (true) {
-      case average <= 10:
-        label = 'Cheap'
-        color = '#000'
-        break
-      case average > 10 && average <= 30:
-        label = 'Average'
-        color = '#888'
-        break
-      case average > 30:
-        label = 'Expensive'
-        color = '#ccc'
-        break
-    }
+  const [low, high] = `${restaurant.price_range}`
+    .replace(/\$/g, '')
+    .split('-')
+    .map((i) => parseInt(i))
+  const average = (low + high) / 2
+  price_range = restaurant.price_range
+  switch (true) {
+    case average <= 10:
+      label = 'Cheap'
+      color = '#000'
+      break
+    case average > 10 && average <= 30:
+      label = 'Average'
+      color = '#888'
+      break
+    case average > 30:
+      label = 'Expensive'
+      color = '#ccc'
+      break
   }
   return [label, color, price_range]
 }
