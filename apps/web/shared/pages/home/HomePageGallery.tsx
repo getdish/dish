@@ -36,7 +36,7 @@ export default memo(function HomePageGallery() {
           position="relative"
           overflow="hidden"
         >
-          <AbsoluteVStack top={20} right={40}>
+          <AbsoluteVStack top={8} right={30}>
             <StackViewCloseButton />
           </AbsoluteVStack>
 
@@ -47,7 +47,24 @@ export default memo(function HomePageGallery() {
               position="relative"
               zIndex={100}
             >
-              <RestaurantHeader restaurantSlug={state.restaurantSlug} />
+              <RestaurantHeader
+                restaurantSlug={state.restaurantSlug}
+                after={
+                  <VStack>
+                    <Suspense fallback={null}>
+                      <RestaurantDishPhotos
+                        size={100}
+                        restaurantSlug={state.restaurantSlug}
+                        selectable
+                        defaultSelectedId={state.dishId}
+                        onSelect={(selected) => {
+                          console.log('got em', selected)
+                        }}
+                      />
+                    </Suspense>
+                  </VStack>
+                }
+              />
             </HStack>
 
             <Suspense fallback={<LoadingItems />}>
@@ -104,13 +121,13 @@ const HomePageGalleryContent = memo(
           >
             {photos.map((photo, i) => {
               return (
-                <HStack key={i} width={isSmall ? '50%' : '33%'}>
+                <HStack key={i} width={isSmall ? '100%' : '50%'}>
                   <Image
                     source={{ uri: photo.image }}
                     resizeMode="cover"
                     style={{
                       width: 'calc(100% - 4px)',
-                      height: isSmall ? 250 : 340,
+                      height: isSmall ? 250 : 380,
                       marginTop: 2,
                       marginLeft: 2,
                     }}
@@ -122,35 +139,6 @@ const HomePageGalleryContent = memo(
             {!photos.length && <Text>No photos found!</Text>}
           </HStack>
         </ScrollView>
-
-        <VStack
-          position="absolute"
-          bottom={0}
-          left={-20}
-          right={-20}
-          paddingRight={20}
-          backgroundColor="#fff"
-          paddingVertical={0}
-          paddingBottom={10}
-          borderTopColor={'#eee'}
-          borderTopWidth={1}
-          shadowColor="rgba(0,0,0,0.1)"
-          shadowRadius={30}
-        >
-          <VStack>
-            <Suspense fallback={null}>
-              <RestaurantDishPhotos
-                size={isSmall ? 100 : 150}
-                restaurantSlug={state.restaurantSlug}
-                selectable
-                defaultSelectedId={state.dishId}
-                onSelect={(selected) => {
-                  console.log('got em', selected)
-                }}
-              />
-            </Suspense>
-          </VStack>
-        </VStack>
       </VStack>
     )
   })

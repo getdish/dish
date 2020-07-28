@@ -3,7 +3,7 @@ import { Text, VStack, memoIsEqualDeep } from '@dish/ui'
 import React from 'react'
 
 import { rgbString } from '../../helpers/rgbString'
-import { tagDisplayName, tagDisplayNames } from '../../state/Tag'
+import { tagDisplayName } from '../../state/tagDisplayName'
 import { LinkButton } from '../../views/ui/LinkButton'
 
 export type LenseButtonSize = 'md' | 'lg' | 'xl'

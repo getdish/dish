@@ -4,7 +4,6 @@ import React, { memo, useState } from 'react'
 import { ScrollView } from 'react-native'
 
 import { DishView } from './DishView'
-import { useHomeDrawerWidthInner } from './useHomeDrawerWidth'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 export const RestaurantDishPhotos = memo(

@@ -1,18 +1,12 @@
 import { Tag } from '@dish/graph'
-import {
-  Box,
-  HStack,
-  HoverablePopover,
-  StackProps,
-  Text,
-  VStack,
-} from '@dish/ui'
+import { HStack, StackProps, VStack } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
-import { CheckBox, Image } from 'react-native'
+import { Image } from 'react-native'
 
+import { getTagId } from '../../state/getTagId'
 import { HomeActiveTagIds } from '../../state/home'
-import { getTagId, tagDisplayNames } from '../../state/Tag'
+import { tagDisplayNames } from '../../state/tagDisplayName'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallButton } from '../../views/ui/SmallButton'

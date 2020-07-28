@@ -2,8 +2,8 @@ import { StackProps, TextProps } from '@dish/ui'
 import React from 'react'
 import { TextStyle, ViewStyle } from 'react-native'
 
+import { NavigableTag } from '../../state/NavigableTag'
 import { RouteName } from '../../state/router'
-import { NavigableTag } from '../../state/Tag'
 
 export type LinkProps<A, B> = React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
