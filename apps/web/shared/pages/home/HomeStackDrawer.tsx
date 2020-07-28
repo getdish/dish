@@ -1,7 +1,11 @@
 import { LoadingItems, StackProps, VStack } from '@dish/ui'
 import React, { Suspense } from 'react'
 
-import { drawerBorderRadius, searchBarHeight } from '../../constants'
+import {
+  drawerBorderRadius,
+  drawerWidthMax,
+  searchBarHeight,
+} from '../../constants'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
@@ -16,13 +20,17 @@ export const HomeStackDrawer = ({
   const isSmall = useMediaQueryIsSmall()
   return (
     <VStack
-      position="relative"
+      position="absolute"
+      right={0}
       flex={1}
       maxHeight="100%"
+      height="100%"
       borderRadius={drawerBorderRadius}
       backgroundColor="#fff"
       overflow="visible"
       marginTop={isSmall ? -10 : searchBarHeight}
+      maxWidth={drawerWidthMax}
+      width="100%"
     >
       {closable && (
         <StackViewCloseButton

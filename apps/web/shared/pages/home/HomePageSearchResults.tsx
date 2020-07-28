@@ -1,5 +1,6 @@
 import { createCancellablePromise, idle, series } from '@dish/async'
 import {
+  Box,
   Button,
   HStack,
   LoadingItem,
@@ -35,7 +36,10 @@ import { focusSearchInput } from './HomeSearchInput'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
 import { useLastValueWhen } from './useLastValueWhen'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import {
+  useMediaQueryIsReallySmall,
+  useMediaQueryIsSmall,
+} from './useMediaQueryIs'
 
 export const avatar = require('../../assets/peach.jpg').default
 
@@ -85,10 +89,11 @@ export default memo(function HomePageSearchResults(props: Props) {
   const titleElements = useMemo(() => {
     return (
       <>
-        <Text ellipse fontSize={15} fontWeight="700">
+        <Text ellipse fontSize={16} fontWeight="400">
           {pageTitleElements}
         </Text>
-        <Text ellipse opacity={0.5} fontWeight="300" fontSize={15}>
+        <Spacer size={3} />
+        <Text ellipse opacity={0.5} fontWeight="300" fontSize={14}>
           {subTitle}
         </Text>
       </>
@@ -133,6 +138,8 @@ const SearchResultsTitle = memo(
   ({ stateId, title }: { stateId: string; title: any }) => {
     const om = useOvermind()
     const state = om.state.home.allStates[stateId]
+    const isReallySmall = useMediaQueryIsReallySmall()
+    const isSmall = useMediaQueryIsSmall()
 
     if (!isSearchState(state)) {
       return null
@@ -151,37 +158,33 @@ const SearchResultsTitle = memo(
         backgroundColor="#fff"
         height={62}
       >
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            width: '100%',
-            maxWidth: '100%',
-          }}
+        <HStack
+          paddingVertical={topBarVPad}
+          paddingHorizontal={18}
+          flex={1}
+          justifyContent="space-between"
         >
-          <HStack
-            paddingVertical={topBarVPad}
-            paddingHorizontal={18}
-            flex={1}
-            justifyContent="space-between"
-          >
-            <HStack marginTop={-11} alignItems="center" justifyContent="center">
-              <HomeLenseBar activeTagIds={state.activeTagIds} />
-            </HStack>
-            <Spacer size={16} />
-            <HomeFilterBar activeTagIds={state.activeTagIds} />
-            <Spacer size={16} />
+          <HStack marginTop={-11} alignItems="center" justifyContent="center">
+            <HomeLenseBar activeTagIds={state.activeTagIds} />
+          </HStack>
+          <Spacer flex={1} size={16} />
+
+          {!isReallySmall && (
             <VStack
               flex={10}
               spacing={3}
-              justifyContent="flex-end"
-              alignItems="flex-end"
+              justifyContent="center"
+              alignItems="center"
               overflow="hidden"
             >
               {title}
             </VStack>
-          </HStack>
-        </ScrollView>
+          )}
+
+          <Spacer flex={1} size={16} />
+          <HomeFilterBar activeTagIds={state.activeTagIds} />
+          {isSmall && <Spacer size={40} />}
+        </HStack>
         {/* <MyListButton isEditingUserList={isEditingUserList} /> */}
       </HStack>
     )

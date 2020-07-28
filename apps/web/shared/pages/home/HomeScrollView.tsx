@@ -2,7 +2,7 @@ import { VStack } from '@dish/ui'
 import React, { forwardRef, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 
-import { searchBarHeight } from '../../constants'
+import { drawerWidthMax, searchBarHeight } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
@@ -57,6 +57,9 @@ export const HomeScrollView = forwardRef(
           // @ts-ignore
           display="inherit"
           pointerEvents={om.state.home.isScrolling ? 'none' : 'auto'}
+          maxWidth={drawerWidthMax}
+          alignSelf="flex-end"
+          width="100%"
         >
           {children}
         </VStack>

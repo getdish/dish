@@ -3,56 +3,82 @@ import React, { memo } from 'react'
 
 import { useMediaQueryIsReallySmall } from './useMediaQueryIs'
 
-export const RestaurantOverview = memo(() => {
-  const isReallySmall = useMediaQueryIsReallySmall()
+export const RestaurantOverview = memo(
+  ({
+    inline,
+    number,
+  }: {
+    restaurantSlug: string
+    inline?: boolean
+    limit?: number
+  }) => {
+    const isReallySmall = useMediaQueryIsReallySmall()
 
-  if (isReallySmall) {
-    return listItems.map((item) => {
+    if (isReallySmall) {
       return (
-        <Text key={item.category}>
-          <Text color="rgba(0,0,0,0.5)">{item.category}</Text> {item.review}
-          .&nbsp;
-        </Text>
-      )
-    })
-  }
-
-  return (
-    <VStack marginTop={4} marginBottom={12} maxWidth="100%" flex={1}>
-      {/* this ensures the content flexes all the way across, hacky... */}
-      <Text opacity={0} lineHeight={0}>
-        wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-      </Text>
-      {listItems.map((item, index) => (
-        <React.Fragment key={item.category}>
-          <Text>
-            <HStack
-              // @ts-ignore
-              display="inline-flex"
-              width="10%"
-              minWidth={50}
-              marginRight={2}
-              alignItems="center"
-              justifyContent="flex-end"
-            >
-              <Text
-                paddingHorizontal={5}
-                borderRadius={6}
-                fontWeight="300"
-                fontSize={16}
-                color="rgba(0,0,0,0.5)"
-              >
-                {item.category}
+        <>
+          {listItems.map((item) => {
+            return (
+              <Text key={item.category}>
+                <Text color="rgba(0,0,0,0.5)">{item.category}</Text>{' '}
+                {item.review}
+                .&nbsp;
               </Text>
-            </HStack>
-            {item.review}
-          </Text>
-          {index < listItems.length - 1 && <Spacer size={4} />}
-        </React.Fragment>
-      ))}
-    </VStack>
-  )
-})
+            )
+          })}
+        </>
+      )
+    }
+
+    return (
+      <>
+        {listItems.map((item, index) => (
+          <React.Fragment key={item.category}>
+            <VStack
+              {...(!inline && {
+                borderWidth: 1,
+                borderColor: '#eee',
+                borderRadius: 8,
+                margin: 4,
+                marginBottom: 0,
+                marginRight: 0,
+                padding: 10,
+                flex: 1,
+              })}
+            >
+              <Text fontSize={15}>
+                <HStack
+                  // @ts-ignore
+                  display="inline-flex"
+                  width="10%"
+                  minWidth={50}
+                  marginRight={2}
+                  alignItems="center"
+                  justifyContent="flex-end"
+                  {...(!inline && {
+                    width: 'auto',
+                    minWidth: 'auto',
+                  })}
+                >
+                  <Text
+                    paddingHorizontal={5}
+                    borderRadius={18}
+                    fontWeight="400"
+                    color="rgba(0,0,0,0.5)"
+                  >
+                    {item.category}
+                  </Text>
+                </HStack>
+                {item.review}
+              </Text>
+            </VStack>
+            {index < listItems.length - 1 && <Spacer size={4} />}
+          </React.Fragment>
+        ))}
+      </>
+    )
+  }
+)
 
 const listItems = [
   {

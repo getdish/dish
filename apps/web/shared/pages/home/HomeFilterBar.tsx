@@ -19,7 +19,6 @@ import { SmallButton } from '../../views/ui/SmallButton'
 import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 
 export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
-  const height = 29
   const om = useOvermind()
 
   let last = 0
@@ -53,7 +52,6 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
                   {...extraProps}
                   position="relative"
                   zIndex={100 - index - groupIndex + (isActive ? 1 : 0)}
-                  height={height}
                 />
               )
 
@@ -69,7 +67,7 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
                           return null
                         }
                         return (
-                          <HStack
+                          <VStack
                             key={key}
                             marginHorizontal={1}
                             alignItems="center"
@@ -83,7 +81,7 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
                               source={item.image}
                               style={{ width: 20, height: 20, borderRadius: 4 }}
                             />
-                          </HStack>
+                          </VStack>
                         )
                       })}
                   </React.Fragment>
@@ -109,13 +107,15 @@ const FilterButton = memo(
     ...rest
   }: StackProps & { filter: Tag; isActive: boolean }) => {
     return (
-      <VStack {...{ zIndex, position, margin }}>
-        <LinkButton tag={filter}>
-          <SmallButton isActive={isActive} {...rest}>
-            {tagDisplayNames[filter.name] ?? filter.name}
-          </SmallButton>
-        </LinkButton>
-      </VStack>
+      <LinkButton {...{ zIndex, position, margin }} tag={filter}>
+        <SmallButton
+          textStyle={{ fontSize: 13, fontWeight: '500' }}
+          isActive={isActive}
+          {...rest}
+        >
+          {tagDisplayNames[filter.name] ?? filter.name}
+        </SmallButton>
+      </LinkButton>
     )
   }
 )

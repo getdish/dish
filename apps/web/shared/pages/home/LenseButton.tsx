@@ -3,6 +3,7 @@ import { Text, VStack, memoIsEqualDeep } from '@dish/ui'
 import React from 'react'
 
 import { rgbString } from '../../helpers/rgbString'
+import { tagDisplayName, tagDisplayNames } from '../../state/Tag'
 import { LinkButton } from '../../views/ui/LinkButton'
 
 export type LenseButtonSize = 'md' | 'lg' | 'xl'
@@ -26,7 +27,7 @@ export const LenseButton = memoIsEqualDeep(
     const lenseColor = rgbString(lense.rgb)
     // const lenseColorLight = `rgba(${rgbInner}, 0.2)`
     const scale = size == 'md' ? 1 : size === 'lg' ? 1.3 : 1.5
-    const sizePx = 42
+    const sizePx = 46
     const borderColor = minimal ? 'transparent' : '#f5f5f5'
 
     return (
@@ -55,9 +56,9 @@ export const LenseButton = memoIsEqualDeep(
           transform={[{ scale: 1 }]}
           {...(isActive && {
             borderColor: lenseColor,
-            transform: [{ scale: 1.2 }],
+            transform: [{ scale: 1.12 }],
             hoverStyle: {
-              transform: [{ scale: 1.2 }],
+              transform: [{ scale: 1.12 }],
             },
           })}
         >
@@ -78,8 +79,8 @@ export const LenseButton = memoIsEqualDeep(
             marginTop={-8}
             marginBottom={-5}
             backgroundColor="#fff"
-            borderWidth={1}
-            borderColor="#ddd"
+            // borderWidth={1}
+            // borderColor="#ddd"
             {...(isActive && {
               borderColor: lenseColor,
               backgroundColor: lenseColor,
@@ -97,7 +98,7 @@ export const LenseButton = memoIsEqualDeep(
                 lineHeight={15}
                 color={isActive ? '#fff' : '#000'}
               >
-                {lense.displayName ?? lense.name}
+                {tagDisplayName(lense)}
               </Text>
             </VStack>
           </VStack>

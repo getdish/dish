@@ -5,10 +5,9 @@ import { HoverablePopover } from './HoverablePopover'
 import { PopoverProps } from './PopoverProps'
 import { Text } from './Text'
 
-export const Tooltip = ({
-  contents,
-  ...props
-}: Omit<PopoverProps, 'contents'> & { contents: any }) => {
+export type TooltipProps = Omit<PopoverProps, 'contents'> & { contents: any }
+
+export const Tooltip = ({ contents, ...props }: TooltipProps) => {
   return (
     <HoverablePopover
       noArrow

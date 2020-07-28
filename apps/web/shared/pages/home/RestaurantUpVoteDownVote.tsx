@@ -25,35 +25,33 @@ export const RestaurantUpVoteDownVote = memo(
               isOpen: false,
             }
       return (
-        <div
-          style={{
-            filter: vote !== 0 ? '' : 'grayscale(100%)',
-          }}
+        <VStack
+          className="hover-to-reveal-child"
+          pointerEvents="auto"
+          width={22}
         >
-          <VStack pointerEvents="auto" width={22}>
-            <Tooltip contents="Underrated" {...isOpenProp}>
-              <VoteButton
-                Icon={ChevronUp}
-                voted={vote == 1}
-                color={vote === 1 ? 'green' : null}
-                onPressOut={() => {
-                  setVote(vote === 1 ? 0 : 1)
-                }}
-              />
-            </Tooltip>
-            <Spacer size={32} />
-            <Tooltip contents="Overrated" {...isOpenProp}>
-              <VoteButton
-                Icon={ChevronDown}
-                voted={vote == -1}
-                color={vote === -1 ? 'red' : null}
-                onPressOut={() => {
-                  setVote(vote == -1 ? 0 : -1)
-                }}
-              />
-            </Tooltip>
-          </VStack>
-        </div>
+          <Tooltip position="right" contents="Underrated" {...isOpenProp}>
+            <VoteButton
+              Icon={ChevronUp}
+              voted={vote == 1}
+              color={vote === 1 ? 'green' : null}
+              onPressOut={() => {
+                setVote(vote === 1 ? 0 : 1)
+              }}
+            />
+          </Tooltip>
+          <Spacer size={32} />
+          <Tooltip position="right" contents="Overrated" {...isOpenProp}>
+            <VoteButton
+              Icon={ChevronDown}
+              voted={vote == -1}
+              color={vote === -1 ? 'red' : null}
+              onPressOut={() => {
+                setVote(vote == -1 ? 0 : -1)
+              }}
+            />
+          </Tooltip>
+        </VStack>
       )
     }
   )
