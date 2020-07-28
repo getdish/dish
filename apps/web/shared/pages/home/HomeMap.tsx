@@ -449,12 +449,13 @@ const HomeMapContent = memo(function HomeMap({
         })
       } else {
         if (omStatic.state.home.currentStateType != 'restaurant') {
-          router.navigate({
-            name: 'restaurant',
-            params: {
-              slug: e.annotation.data.slug ?? '',
-            },
-          })
+          console.warn('show a little popover in large mode?')
+          // router.navigate({
+          //   name: 'restaurant',
+          //   params: {
+          //     slug: e.annotation.data.slug ?? '',
+          //   },
+          // })
         }
       }
     }
