@@ -18,22 +18,22 @@ export const RestaurantAddress = ({
   currentLocationInfo: GeocodePlace
 }) => {
   return (
-    <Text lineHeight={16} fontSize={14} fontWeight="300" selectable>
-      <Link
-        className="hover-underline"
-        color="#999"
-        target="_blank"
-        href={`https://www.google.com/maps/search/?q=${encodeURIComponent(
-          address
-        )}`}
-      >
-        <MapPin
-          size={14}
-          opacity={0.5}
-          style={{ marginBottom: -7, marginRight: 4 }}
-        />
+    <Link
+      className="hover-underline"
+      color="#999"
+      target="_blank"
+      href={`https://www.google.com/maps/search/?q=${encodeURIComponent(
+        address
+      )}`}
+    >
+      <MapPin
+        size={14}
+        opacity={0.5}
+        style={{ marginBottom: -7, marginRight: 4 }}
+      />
+      <Text ellipse lineHeight={16} fontSize={14} fontWeight="300" selectable>
         {getAddressText(currentLocationInfo, address, size)}
-      </Link>
-    </Text>
+      </Text>
+    </Link>
   )
 }

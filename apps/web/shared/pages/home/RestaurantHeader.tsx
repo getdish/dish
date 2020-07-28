@@ -8,7 +8,7 @@ import {
   VStack,
 } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { Image, ScrollView, StyleSheet } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
@@ -24,6 +24,7 @@ type RestaurantHeaderProps = {
   state?: HomeStateItemRestaurant
   restaurantSlug: any
   after?: any
+  afterAddress?: any
 }
 
 export const RestaurantHeader = (props: RestaurantHeaderProps) => {
@@ -44,87 +45,92 @@ export const RestaurantHeader = (props: RestaurantHeaderProps) => {
 }
 
 const RestaurantHeaderContent = memo(
-  graphql(({ state, restaurantSlug, after }: RestaurantHeaderProps) => {
-    const restaurant = useRestaurantQuery(restaurantSlug)
-    const om = useOvermind()
-    const [r, g, b] = useCurrentLenseColor()
-    return (
-      <VStack width="100%">
-        <VStack
-          borderTopRightRadius={drawerBorderRadius - 1}
-          borderTopLeftRadius={drawerBorderRadius - 1}
-          overflow="hidden"
-          position="relative"
-          padding={20}
-        >
-          <HStack alignItems="center">
-            <HStack position="relative">
-              <RestaurantRatingViewPopover
-                size="lg"
-                restaurantSlug={restaurantSlug}
-              />
-            </HStack>
-            <Spacer size={20} />
-
-            <VStack flex={10}>
-              <Text
-                selectable
-                fontSize={restaurant.name?.length > 25 ? 32 : 34}
-                fontWeight="300"
-                paddingRight={30}
-              >
-                {restaurant.name}
-              </Text>
-              <Spacer size="sm" />
-              <RestaurantAddressLinksRow
-                currentLocationInfo={
-                  state?.currentLocationInfo ??
-                  om.state.home.currentState.currentLocationInfo
-                }
-                showMenu
-                size="lg"
-                restaurantSlug={restaurantSlug}
-              />
-              <Spacer size="md" />
-              <HStack>
-                <RestaurantAddress
+  graphql(
+    ({ state, restaurantSlug, after, afterAddress }: RestaurantHeaderProps) => {
+      const restaurant = useRestaurantQuery(restaurantSlug)
+      const om = useOvermind()
+      const [r, g, b] = useCurrentLenseColor()
+      return (
+        <VStack width="100%">
+          <VStack
+            borderTopRightRadius={drawerBorderRadius - 1}
+            borderTopLeftRadius={drawerBorderRadius - 1}
+            overflow="hidden"
+            position="relative"
+            padding={20}
+          >
+            <HStack alignItems="center">
+              <HStack position="relative">
+                <RestaurantRatingViewPopover
                   size="lg"
-                  address={restaurant.address ?? ''}
-                  currentLocationInfo={state?.currentLocationInfo ?? {}}
+                  restaurantSlug={restaurantSlug}
                 />
               </HStack>
-            </VStack>
+              <Spacer size={20} />
 
-            {!after && !!restaurant.image && (
-              <Image
-                resizeMode="cover"
-                source={{ uri: restaurant.image }}
-                style={{
-                  marginVertical: -10,
-                  height: 115,
-                  width: 115,
-                  borderRadius: 100,
-                }}
-              />
-            )}
+              <VStack flex={10}>
+                <Text
+                  selectable
+                  fontSize={restaurant.name?.length > 25 ? 32 : 34}
+                  fontWeight="300"
+                  paddingRight={30}
+                >
+                  {restaurant.name}
+                </Text>
+                <Spacer size="sm" />
+                <RestaurantAddressLinksRow
+                  currentLocationInfo={
+                    state?.currentLocationInfo ??
+                    om.state.home.currentState.currentLocationInfo
+                  }
+                  showMenu
+                  size="lg"
+                  restaurantSlug={restaurantSlug}
+                />
+                <Spacer size="md" />
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  <HStack alignItems="center">
+                    <RestaurantAddress
+                      size="sm"
+                      address={restaurant.address ?? ''}
+                      currentLocationInfo={state?.currentLocationInfo ?? {}}
+                    />
+                    {afterAddress}
+                  </HStack>
+                </ScrollView>
+              </VStack>
 
-            {after && <VStack maxWidth="50%">{after}</VStack>}
-          </HStack>
-        </VStack>
-        <SmallTitle marginVertical={-18} divider="center">
-          <VStack
-            borderRadius={1000}
-            shadowColor="rgba(0,0,0,0.1)"
-            shadowRadius={8}
-            shadowOffset={{ height: 2, width: 0 }}
-          >
-            <RestaurantFavoriteStar
-              restaurantId={state?.restaurantId ?? restaurant.id}
-              size="lg"
-            />
+              {!after && !!restaurant.image && (
+                <Image
+                  resizeMode="cover"
+                  source={{ uri: restaurant.image }}
+                  style={{
+                    marginVertical: -10,
+                    height: 115,
+                    width: 115,
+                    borderRadius: 100,
+                  }}
+                />
+              )}
+
+              {after && <VStack maxWidth="50%">{after}</VStack>}
+            </HStack>
           </VStack>
-        </SmallTitle>
-      </VStack>
-    )
-  })
+          <SmallTitle marginVertical={-18} divider="center">
+            <VStack
+              borderRadius={1000}
+              shadowColor="rgba(0,0,0,0.1)"
+              shadowRadius={8}
+              shadowOffset={{ height: 2, width: 0 }}
+            >
+              <RestaurantFavoriteStar
+                restaurantId={state?.restaurantId ?? restaurant.id}
+                size="lg"
+              />
+            </VStack>
+          </SmallTitle>
+        </VStack>
+      )
+    }
+  )
 )

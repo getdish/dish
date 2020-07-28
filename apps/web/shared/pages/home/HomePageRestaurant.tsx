@@ -59,7 +59,20 @@ const HomePageRestaurant = memo(
 
         <HomeScrollView paddingTop={0}>
           {/* HEADER */}
-          <RestaurantHeader restaurantSlug={slug} />
+          <RestaurantHeader
+            restaurantSlug={slug}
+            afterAddress={
+              <HStack>
+                <Spacer size="xl" />
+                <RestaurantTagsRow
+                  subtle
+                  size="sm"
+                  restaurantSlug={slug}
+                  restaurantId={restaurant.id}
+                />
+              </HStack>
+            }
+          />
 
           <Spacer size="xl" />
           <Spacer size="sm" />
@@ -96,17 +109,11 @@ const HomePageRestaurant = memo(
 
             <VStack paddingHorizontal={14}>
               <VStack alignItems="center">
-                <Suspense fallback={null}>
-                  <RestaurantDishPhotos restaurantSlug={slug} />
-                </Suspense>
-
-                <Spacer size="xl" />
-
-                <RestaurantTagsRow
-                  size="sm"
-                  restaurantSlug={slug}
-                  restaurantId={restaurant.id}
-                />
+                <VStack width="100%">
+                  <Suspense fallback={null}>
+                    <RestaurantDishPhotos size={160} restaurantSlug={slug} />
+                  </Suspense>
+                </VStack>
 
                 <Spacer size="xl" />
 
