@@ -136,6 +136,8 @@ const HomeMapDataLoader = memo(
         }),
         (x) => `${x.location.coordinates[0]}${x.location.coordinates[1]}`
       )
+        // ensure has location
+        .filter((x) => !!x.location.coordinates[0])
 
       useEffect(() => {
         props.onLoadedRestaurants?.(restaurants)
@@ -438,11 +440,20 @@ const HomeMapContent = memo(function HomeMap({
 
     // debounce
     const cancels = new Set<Function>()
-    const cb = (e) => {
+
+    const handleSelect = (e) => {
+      const id = e.annotation.data.id
+      const restaurant = restaurants.find((x) => x.id === id)
+
+      if (restaurant) {
+        om.actions.home.setSelectedRestaurant({
+          id: restaurant.id,
+          slug: restaurant.slug,
+        })
+      }
+
       if (omStatic.state.home.currentStateType === 'search') {
-        const index = restaurants.findIndex(
-          (x) => x.id === e.annotation.data.id
-        )
+        const index = restaurants.findIndex((x) => x.id === id)
         om.actions.home.setActiveIndex({
           index,
           event: om.state.home.isHoveringRestaurant ? 'hover' : 'pin',
@@ -459,13 +470,25 @@ const HomeMapContent = memo(function HomeMap({
         }
       }
     }
-    map.addEventListener('select', cb)
-    cancels.add(() => map.removeEventListener('select', cb))
+
+    const handleDeselect = () => {
+      if (om.state.home.selectedRestaurant) {
+        om.actions.home.setSelectedRestaurant(null)
+      }
+    }
+
+    map.addEventListener('select', handleSelect)
+    map.addEventListener('deselect', handleDeselect)
+    cancels.add(() => {
+      map.removeEventListener('select', handleSelect)
+      map.removeEventListener('deselect', handleDeselect)
+    })
 
     // map.showAnnotations(annotations)
     const hasAnnotations = !!annotations.length
     if (hasAnnotations) {
       try {
+        handleDeselect()
         map.addAnnotations(annotations)
       } catch (err) {
         console.error(err)

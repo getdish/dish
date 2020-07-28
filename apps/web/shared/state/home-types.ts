@@ -23,6 +23,7 @@ export type HomeState = {
   allFilterTags: Tag[]
   autocompleteIndex: number // index for horizontal row (autocomplete)
   autocompleteResults: AutocompleteItem[]
+  selectedRestaurant: RestaurantOnlyIds | null
   hoveredRestaurant: RestaurantOnlyIds | null | false
   isHoveringRestaurant: boolean
   searchBarY: number

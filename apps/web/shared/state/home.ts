@@ -55,12 +55,8 @@ import { router } from './router'
 import { tagFilters } from './tagFilters'
 import { tagLenses } from './tagLenses'
 
-const INITIAL_RADIUS = 0.16
-
 // backward compat
 export * from './home-types'
-
-export const homeTimer = timer('home')
 
 export const initialHomeState: HomeStateItemHome = {
   id: '0',
@@ -73,10 +69,41 @@ export const initialHomeState: HomeStateItemHome = {
     lng: -122.421351,
     lat: 37.759251,
   },
-  span: { lng: INITIAL_RADIUS / 2, lat: INITIAL_RADIUS },
+  span: { lng: 0.2 / 2, lat: 0.2 },
 }
 
-const derivations = {
+export const state: HomeState = {
+  started: false,
+  isLoading: false,
+  isScrolling: false,
+  skipNextPageFetchData: false,
+  activeEvent: null,
+  activeIndex: -1,
+  selectedRestaurant: null,
+  searchBarTagIndex: 0,
+  allTags,
+  allTagsNameToID: {},
+  allUsers: {},
+  allLenseTags: tagLenses,
+  allFilterTags: tagFilters,
+  showAutocomplete: false,
+  searchBarY: 25,
+  autocompleteIndex: 0,
+  autocompleteResults: [],
+  locationAutocompleteResults: defaultLocationAutocompleteResults,
+  location: null,
+  locationSearchQuery: '',
+  hoveredRestaurant: null,
+  isHoveringRestaurant: false,
+  isOptimisticUpdating: false,
+  stateIndex: 0,
+  stateIds: ['0'],
+  allStates: {
+    '0': initialHomeState,
+  },
+  topDishes: [],
+  topDishesFilteredIndices: [],
+  userLocation: null,
   currentNavItem: derived<HomeState, NavigateItem>((state, om) =>
     getNavigateItemForState(om, last(state.states)!)
   ),
@@ -144,40 +171,6 @@ const derivations = {
     }
     return null
   }),
-}
-
-export const state: HomeState = {
-  started: false,
-  isLoading: false,
-  isScrolling: false,
-  skipNextPageFetchData: false,
-  activeEvent: null,
-  activeIndex: -1,
-  searchBarTagIndex: 0,
-  allTags,
-  allTagsNameToID: {},
-  allUsers: {},
-  allLenseTags: tagLenses,
-  allFilterTags: tagFilters,
-  showAutocomplete: false,
-  searchBarY: 25,
-  autocompleteIndex: 0,
-  autocompleteResults: [],
-  locationAutocompleteResults: defaultLocationAutocompleteResults,
-  location: null,
-  locationSearchQuery: '',
-  hoveredRestaurant: null,
-  isHoveringRestaurant: false,
-  isOptimisticUpdating: false,
-  stateIndex: 0,
-  stateIds: ['0'],
-  allStates: {
-    '0': initialHomeState,
-  },
-  topDishes: [],
-  topDishesFilteredIndices: [],
-  userLocation: null,
-  ...derivations,
 }
 
 export const isOnOwnProfile = (state: OmState) => {
@@ -1169,6 +1162,10 @@ const setIsHoveringRestaurant: Action<boolean> = (om, val) => {
   om.state.home.isHoveringRestaurant = val
 }
 
+const setSelectedRestaurant: Action<RestaurantOnlyIds | null> = (om, val) => {
+  om.state.home.selectedRestaurant = val
+}
+
 export const actions = {
   moveAutocompleteIndex,
   setAutocompleteIndex,
@@ -1212,4 +1209,5 @@ export const actions = {
   moveMapToUserLocation,
   setSearchBarY,
   setIsHoveringRestaurant,
+  setSelectedRestaurant,
 }
