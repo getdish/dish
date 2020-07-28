@@ -22,6 +22,7 @@ import { router } from '../../state/router'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { CloseButton } from './CloseButton'
 import { HomeAutocompleteHoverableInput } from './HomeAutocomplete'
+import { isIOS } from './isIOS'
 import { TagButton } from './TagButton'
 import { useMediaQueryIsReallySmall } from './useMediaQueryIs'
 
@@ -59,11 +60,6 @@ export const onFocusAnyInput = () => {
     omStatic.actions.home.setSearchBarFocusedTag(null)
   }
 }
-
-export const isIOS =
-  (/iPad|iPhone|iPod/.test(navigator.platform) ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) &&
-  !window.MSStream
 
 let searchBar: HTMLInputElement | null = null
 export function focusSearchInput() {
