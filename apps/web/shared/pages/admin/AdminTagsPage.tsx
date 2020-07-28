@@ -177,7 +177,7 @@ const TagList = memo(
       },
       limit: 1,
     })
-    const parentId = parent.id
+    const parentId = parent?.id
     const [contentKey, setContentKey] = useState(0)
     const refresh = () => {
       setContentKey(Math.random())

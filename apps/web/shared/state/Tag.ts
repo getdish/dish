@@ -1,5 +1,7 @@
 import { Tag, tagSlug } from '@dish/graph'
 
+import { brandRgb } from '../colors'
+
 export type NavigableTag = Partial<Tag> & Pick<Tag, 'name' | 'type'>
 
 export const getTagId = (tag: NavigableTag) => {
@@ -16,7 +18,7 @@ export const tagLenses: Tag[] = [
     id: '3',
     name: 'Gems',
     icon: ' 💎',
-    rgb: [158, 77, 83],
+    rgb: brandRgb,
     type: 'lense',
   },
   {
@@ -93,7 +95,11 @@ export const tagDisplayNames = {
   'price-low': '$',
   'price-mid': '$$',
   'price-high': '$$$',
+  veg: 'Planty',
 }
+
+export const tagDisplayName = (tag: Tag) =>
+  tagDisplayNames[tag.name] ?? tag.displayName ?? tag.name ?? ''
 
 export const tagFilters: Tag[] = [
   {

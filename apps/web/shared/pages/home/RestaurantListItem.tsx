@@ -77,6 +77,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       onHoverOut={() => setIsHovered(false)}
       alignItems="center"
       position="relative"
+      className="hover-to-reveal-parent"
     >
       {/* dont remove overflow HIDDEN causes flex issues down */}
       <VStack overflow="hidden" className="ease-in-out-fast" flex={1}>
@@ -164,13 +165,13 @@ const RestaurantListItemContent = memo(
               {/* VOTE */}
               <AbsoluteVStack
                 zIndex={100}
-                left={4}
+                left={-2}
                 height={120}
                 bottom={-40}
                 justifyContent="center"
                 pointerEvents="none"
               >
-                <AbsoluteVStack position="absolute" top={20} left={10}>
+                <AbsoluteVStack position="absolute" top={20} left={15}>
                   <RestaurantUpVoteDownVote
                     restaurantId={restaurantId}
                     activeTagIds={tagIds ?? {}}
@@ -269,9 +270,23 @@ const RestaurantListItemContent = memo(
             >
               <VStack flex={1} paddingLeft={isSmall ? 10 : 0}>
                 <Text fontSize={16} lineHeight={21}>
-                  <Suspense fallback={<LoadingItems />}>
-                    <RestaurantOverview />
-                  </Suspense>
+                  <VStack
+                    marginTop={4}
+                    marginBottom={12}
+                    maxWidth="100%"
+                    flex={1}
+                  >
+                    {/* this ensures the content flexes all the way across, hacky... */}
+                    <Text opacity={0} lineHeight={0}>
+                      wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+                    </Text>
+                    <Suspense fallback={<LoadingItems />}>
+                      <RestaurantOverview
+                        restaurantSlug={restaurantSlug}
+                        inline
+                      />
+                    </Suspense>
+                  </VStack>
                 </Text>
               </VStack>
               <Spacer size="xs" />

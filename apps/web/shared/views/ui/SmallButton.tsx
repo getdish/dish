@@ -22,7 +22,7 @@ export const SmallButton = ({
       justifyContent="center"
       {...flatButtonStyle}
       paddingHorizontal={11}
-      paddingVertical={3}
+      paddingVertical="0.45rem"
       backgroundColor={isActive ? 'transparent' : bgLight}
       borderRadius={20}
       borderWidth={1}

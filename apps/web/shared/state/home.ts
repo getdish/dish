@@ -152,7 +152,7 @@ const derivations = {
     (state) => state.currentState.type
   ),
   isAutocompleteActive: derived<HomeState, boolean>(
-    (state) => state.activeIndex === -1
+    (state) => !!state.showAutocomplete
   ),
   previousState: derived<HomeState, HomeStateItem>((state) => {
     const curState = state.states[state.stateIndex]
@@ -211,7 +211,7 @@ export const state: HomeState = {
   allLenseTags: tagLenses,
   allFilterTags: tagFilters,
   showAutocomplete: false,
-  searchBarY: 23,
+  searchBarY: 25,
   autocompleteIndex: 0,
   autocompleteResults: [],
   locationAutocompleteResults: defaultLocationAutocompleteResults,

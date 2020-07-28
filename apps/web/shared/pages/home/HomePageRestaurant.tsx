@@ -23,6 +23,7 @@ import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 // deliverybutton
 // favoritestar
 import { RestaurantHeader } from './RestaurantHeader'
+import { RestaurantOverview } from './RestaurantOverview'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantTopReviews } from './RestaurantTopReviews'
 import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
@@ -45,14 +46,13 @@ const HomePageRestaurant = memo(
     }
     const slug = item.restaurantSlug
     const restaurant = useRestaurantQuery(slug)
-    const isLoading = !restaurant?.name
     // const isCanTag =
     //   om.state.user.isLoggedIn &&
     //   (om.state.user.user.role == 'admin' ||
     //     om.state.user.user.role == 'contributor')
 
     return (
-      <VStack flex={1} overflow="hidden">
+      <>
         <PageTitleTag>
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
@@ -60,7 +60,9 @@ const HomePageRestaurant = memo(
         <HomeScrollView paddingTop={0}>
           {/* HEADER */}
           <RestaurantHeader restaurantSlug={slug} />
+
           <Spacer size="xl" />
+          <Spacer size="sm" />
 
           <Suspense fallback={<LoadingItems />}>
             <VStack alignItems="center">
@@ -76,7 +78,19 @@ const HomePageRestaurant = memo(
 
             <Spacer size="lg" />
 
-            <RestaurantRatingBreakdown restaurantSlug={slug} />
+            <Box
+              borderWidth={1}
+              borderColor="#eee"
+              padding={0}
+              marginHorizontal={20}
+            >
+              <HStack backgroundColor="#f9f9f9">
+                <RestaurantRatingBreakdown restaurantSlug={slug} />
+              </HStack>
+              <HStack padding={10}>
+                <RestaurantOverview restaurantSlug={slug} />
+              </HStack>
+            </Box>
 
             <Spacer size="lg" />
 
@@ -153,7 +167,7 @@ const HomePageRestaurant = memo(
           {/* bottom space */}
           <VStack height={200} />
         </HomeScrollView>
-      </VStack>
+      </>
     )
   })
 )
@@ -163,43 +177,47 @@ export const RestaurantRatingBreakdown = memo(
     const restaurant = useRestaurantQuery(restaurantSlug)
     const sources = restaurant?.sources?.() ?? {}
     return (
-      <Box padding={0} marginHorizontal={20}>
-        <SmallTitle paddingTop={5}>Rating Summary</SmallTitle>
-
-        <HStack>
-          {Object.keys(sources).map((source, i) => {
-            const item = sources[source]
-            if (!item) {
-              return null
-            }
-            const info = thirdPartyCrawlSources[source]
-            return (
+      <>
+        {Object.keys(sources).map((source, i) => {
+          const item = sources[source]
+          if (!item) {
+            return null
+          }
+          const info = thirdPartyCrawlSources[source]
+          return (
+            <a
+              className="see-through"
+              style={{ flex: 1 }}
+              key={source}
+              href={item.url}
+              target="_blank"
+            >
               <VStack
-                key={source}
-                backgroundColor={i % 2 == 0 ? 'white' : '#f7f7f7'}
                 padding={10}
                 alignItems="center"
-                cursor="pointer"
                 flex={1}
+                borderRadius={10}
+                margin={3}
+                hoverStyle={{
+                  backgroundColor: '#fff',
+                }}
                 // onPress={() => Linking.openURL(item.url)}
               >
-                <a className="see-through" href={item.url} target="_blank">
-                  {info?.image ? (
-                    <Image
-                      source={info.image}
-                      style={{ width: 24, height: 24, borderRadius: 100 }}
-                    />
-                  ) : null}
-                  <Text fontSize={12} opacity={0.5} marginVertical={3}>
-                    {info?.name ?? source}
-                  </Text>
-                  <Text>{item.rating ?? '-'}</Text>
-                </a>
+                {info?.image ? (
+                  <Image
+                    source={info.image}
+                    style={{ width: 24, height: 24, borderRadius: 100 }}
+                  />
+                ) : null}
+                <Text fontSize={12} opacity={0.5} marginVertical={3}>
+                  {info?.name ?? source}
+                </Text>
+                <Text>{item.rating ?? '-'}</Text>
               </VStack>
-            )
-          })}
-        </HStack>
-      </Box>
+            </a>
+          )
+        })}
+      </>
     )
   })
 )

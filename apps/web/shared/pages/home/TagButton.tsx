@@ -16,7 +16,7 @@ import { ThumbsUp, X } from 'react-feather'
 import { Image, View } from 'react-native'
 
 import { bgLight } from '../../colors'
-import { getTagId, tagDisplayNames } from '../../state/Tag'
+import { getTagId, tagDisplayName, tagDisplayNames } from '../../state/Tag'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { useUserUpvoteDownvote } from './useUserReview'
@@ -94,7 +94,6 @@ export const TagButton = memo((props: TagButtonProps) => {
   const defaultColor = noColor ? 'inherit' : getTagColor(rgb)
   const fg = color ?? (subtle ? 'rgba(0,0,0,0.65)' : defaultColor)
   const fontSize = fontSizeProp ?? (subtle ? 'inherit' : 16 * scale)
-  const rankFontSize = typeof fontSize === 'number' ? fontSize * 0.9 : fontSize
   // const moveInPx = size === 'sm' ? 0 : 3.5 * (1 / scale)
 
   const contents = (
@@ -119,16 +118,13 @@ export const TagButton = memo((props: TagButtonProps) => {
         })}
         {...rest}
       >
-        {rank ? (
+        {!!rank ? (
           <Text
             // @ts-ignore
-            fontSize={rankFontSize}
-            fontWeight="600"
+            fontSize={typeof fontSize === 'number' ? fontSize * 0.85 : fontSize}
+            fontWeight="500"
             margin="auto"
-            marginVertical="-2%"
             paddingHorizontal={8 * scale}
-            backgroundColor={subtle ? 'transparent' : 'rgba(0,0,0,0.05)'}
-            lineHeight={lineHeight}
             alignSelf="stretch"
             alignContent="center"
             justifyContent="center"
@@ -141,6 +137,7 @@ export const TagButton = memo((props: TagButtonProps) => {
         ) : (
           <Spacer size={scale * 2} />
         )}
+        {/* tag name */}
         <Text
           ellipse
           // @ts-ignore
@@ -188,7 +185,8 @@ export const TagButton = memo((props: TagButtonProps) => {
               )}
             </span>
           ) : null}
-          {tagDisplayNames[tag.name] ?? _.capitalize(tag.name)}
+          {/* // tagDisplayNames[tag.name] ?? _.capitalize(tag.name) */}
+          {tagDisplayName(tag)}
         </Text>
         {!!votable && (
           //

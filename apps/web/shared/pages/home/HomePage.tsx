@@ -3,13 +3,13 @@ import React, { Suspense, memo } from 'react'
 
 import { frameWidthMax, isWorker } from '../../constants'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
+import { HomeContainer } from './HomeContainer'
 import { HomeMap } from './HomeMap'
 import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
 import { HomeMapPIP } from './HomeMapPIP'
 import { HomePagePane } from './HomePagePane'
 import HomeSearchBar from './HomeSearchBar'
 import { HomeStackView } from './HomeStackView'
-import { HomeViewDrawer } from './HomeViewDrawer'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export const homePageBorderRadius = 12
@@ -55,13 +55,13 @@ const HomePageContent = memo(() => {
           <HomeSearchBar />
         </Suspense>
 
-        <HomeViewDrawer>
+        <HomeContainer>
           <HomeStackView>
             {(props) => {
               return <HomePagePane {...props} />
             }}
           </HomeStackView>
-        </HomeViewDrawer>
+        </HomeContainer>
 
         <Suspense fallback={null}>
           <HomePageGallery />

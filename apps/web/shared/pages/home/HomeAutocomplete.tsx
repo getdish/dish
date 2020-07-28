@@ -41,14 +41,6 @@ const flexSearch = FlexSearch.create<number>({
 
 let curPagePos = { x: 0, y: 0 }
 
-export const useShowAutocomplete = () => {
-  const om = useOvermind()
-  const { showAutocomplete } = om.state.home
-  const showLocation = showAutocomplete == 'location'
-  const showSearch = showAutocomplete == 'search'
-  return showSearch || showLocation
-}
-
 export default memo(function HomeAutocomplete() {
   const [isLoading, setIsLoading] = useState(false)
 
@@ -73,6 +65,14 @@ export default memo(function HomeAutocomplete() {
     </>
   )
 })
+
+export const useShowAutocomplete = () => {
+  const om = useOvermind()
+  const { showAutocomplete } = om.state.home
+  const showLocation = showAutocomplete == 'location'
+  const showSearch = showAutocomplete == 'search'
+  return showSearch || showLocation
+}
 
 const HomeAutocompleteEffects = memo(
   ({ onChangeStatus }: { onChangeStatus: (isLoading: boolean) => void }) => {

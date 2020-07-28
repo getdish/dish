@@ -24,6 +24,7 @@ import { ChevronRight } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
 
 import { bgLight } from '../../colors'
+import { drawerWidthMax } from '../../constants'
 import { HomeStateItemHome } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { tagDescriptions } from '../../state/Tag'
@@ -110,8 +111,10 @@ const HomePageTopDishes = memo((props: Props) => {
       <VStack position="relative" flex={1} maxHeight="100%" overflow="visible">
         <HomeScrollView>
           <VStack
+            className="hello-wrold"
             paddingTop={isSmall ? 34 : 34}
             paddingBottom={34}
+            paddingLeft={10}
             spacing="xl"
           >
             {/* LENSES - UNIQUELY GOOD HERE */}
@@ -281,7 +284,7 @@ const dishHeight = 160
 const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
   return (
     <HStack marginTop={16} className="home-top-dish" position="relative">
-      <VStack paddingLeft={10} width="24%" minWidth={200}>
+      <VStack paddingLeft={10} width="24%" minWidth={218}>
         <LinkButton
           transform={[{ rotate: '-2.5deg' }]}
           marginTop={-16}
