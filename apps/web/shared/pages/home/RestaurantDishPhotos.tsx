@@ -13,7 +13,7 @@ export const RestaurantDishPhotos = memo(
       selectable,
       onSelect,
       defaultSelectedId,
-      size,
+      size = 180,
     }: {
       restaurantSlug: string
       selectable?: boolean
@@ -52,7 +52,7 @@ export const RestaurantDishPhotos = memo(
                 return (
                   <DishView
                     key={index}
-                    size={size ?? 180}
+                    size={size}
                     restaurantSlug={restaurantSlug}
                     margin={spacing / 2}
                     marginBottom={16}
