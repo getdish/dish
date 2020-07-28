@@ -2,8 +2,10 @@ import { fullyIdle, series } from '@dish/async'
 import { Restaurant, TopCuisine } from '@dish/graph'
 import {
   AbsoluteVStack,
+  Box,
   HStack,
   LoadingItems,
+  SmallTitle,
   Spacer,
   Text,
   VStack,
@@ -31,6 +33,7 @@ import { useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
+import { flatButtonStyle } from './baseButtonStyle'
 import { CloseButton } from './CloseButton'
 import { DishView } from './DishView'
 import { HomeLenseBar } from './HomeLenseBar'
@@ -140,21 +143,19 @@ const HomePageTopDishes = memo((props: Props) => {
                   <Spacer size={isSmall ? 5 : 15} />
                 </>
 
-                <Spacer size={isSmall ? 5 : 15} />
-
-                <HomeIntroLetter />
-
-                <Spacer size="xl" />
-
-                <Text fontWeight="300" fontSize={18} letterSpacing={-0.25}>
+                <Text
+                  marginTop={30}
+                  fontWeight="300"
+                  fontSize={18}
+                  letterSpacing={-0.25}
+                >
                   {currentLocationName
                     ? `What's good in ${currentLocationName}`
                     : `What's good here`}
                 </Text>
-
-                {/* <HomeFilterBar activeTagIds={activeTagIds} /> */}
-                {isSmall && <Spacer size={20} />}
               </VStack>
+
+              <HomeIntroLetter />
 
               <Suspense fallback={null}>
                 <HomeTopDishesContent />
@@ -216,12 +217,10 @@ const HomeIntroLetter = memo(() => {
   }
 
   return (
-    <VStack alignItems="center" justifyContent="center">
-      <VStack
-        borderColor={bgLight}
-        borderWidth={2}
-        borderRadius={10}
-        maxWidth="75%"
+    <VStack marginTop={30} alignItems="center" justifyContent="center">
+      <Box
+        maxWidth="85%"
+        minWidth="75%"
         margin="auto"
         padding={20}
         position="relative"
@@ -231,18 +230,32 @@ const HomeIntroLetter = memo(() => {
         </HStack>
         <Spacer size="sm" />
         <Text fontSize={16} lineHeight={22} opacity={0.8}>
-          Welcome to beta, please send any bugs to bugs@dishapp.com
+          <SmallTitle>Welcome</SmallTitle>
+          <Spacer size="lg" />
+          <Text fontSize={16} lineHeight={26}>
+            <Text fontSize={18} lineHeight={38}>
+              Dish is <strong>better food discovery</strong> meets a{' '}
+              <strong>curation community</strong>.
+            </Text>
+            <ul>
+              <li>🎖 Accurate ratings, down to the dish</li>
+              <li style={{ marginLeft: 20, fontSize: 14, opacity: 0.8 }}>
+                Foursquare, Yelp, Google, The Infatuation, Michelin and more
+              </li>
+              <li>🔎 Search every delivery service</li>
+              <li>🤝 Discuss, curate, and explore the map</li>
+            </ul>
+          </Text>
         </Text>
         <Spacer size="sm" />
         {/* <Text fontSize={14} lineHeight={20} opacity={0.8}>
           <strong>Beta</strong>. Report using the (?) on the
           bottom right.
         </Text> */}
-        {/* <Spacer size="lg" />
-        <HStack justifyContent="center">
-          <SmallButton textStyle={{ fontSize: 13 }}>More</SmallButton>
-        </HStack> */}
-      </VStack>
+        <LinkButton {...flatButtonStyle} name="about">
+          Read more
+        </LinkButton>
+      </Box>
       <Spacer size={30} />
     </VStack>
   )
@@ -267,7 +280,7 @@ const HomeTopDishesContent = memo(() => {
         {topDishes.map((country) => (
           <React.Fragment key={country.country}>
             <TopDishesCuisineItem country={country} />
-            <Spacer size="lg" />
+            {/* <Spacer size="sm" /> */}
           </React.Fragment>
         ))}
       </>
@@ -279,47 +292,50 @@ const dishHeight = 160
 
 const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
   return (
-    <HStack marginTop={16} className="home-top-dish" position="relative">
-      <VStack paddingLeft={10} width="24%" minWidth={218}>
-        <LinkButton
-          transform={[{ rotate: '-2.5deg' }]}
-          marginTop={-16}
-          marginBottom={12}
-          tag={{
-            type: 'country',
-            name: country.country,
-          }}
+    <VStack className="home-top-dish" position="relative">
+      <LinkButton
+        {...flatButtonStyle}
+        transform={[{ rotate: '-2.5deg' }]}
+        marginTop={0}
+        marginBottom={0}
+        marginLeft={20}
+        tag={{
+          type: 'country',
+          name: country.country,
+        }}
+      >
+        <Text
+          ellipse
+          fontSize={20}
+          fontWeight={'400'}
+          height={24}
+          lineHeight={24}
         >
-          <Text
-            ellipse
-            fontSize={20}
-            fontWeight={'400'}
-            height={24}
-            lineHeight={24}
-            // @ts-ignore
-            hoverStyle={{
-              textDecoration: 'underline',
-            }}
-          >
-            {country.country}{' '}
-            {country.icon ? (
-              <Text marginLeft={3} fontSize="120%">
-                {country.icon}
-              </Text>
-            ) : null}
-          </Text>
-        </LinkButton>
-        <TopDishesRestaurantsSide country={country} />
-      </VStack>
-
-      <VStack flex={1} overflow="hidden" position="relative">
+          {country.country}{' '}
+          {country.icon ? (
+            <Text marginLeft={3} fontSize="120%">
+              {country.icon}
+            </Text>
+          ) : null}
+        </Text>
+      </LinkButton>
+      <VStack
+        marginTop={-20}
+        pointerEvents="none"
+        flex={1}
+        overflow="hidden"
+        position="relative"
+      >
         <HomeScrollViewHorizontal style={{ paddingVertical: 10 }}>
           <HStack
             alignItems="center"
             spacing={16}
             paddingVertical={18}
-            paddingHorizontal={20}
+            paddingRight={20}
+            pointerEvents="auto"
           >
+            <TopDishesRestaurantsSide country={country} />
+
             {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
               return (
                 <DishView
@@ -337,14 +353,13 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
                 />
               )
             })}
+            <Squircle width={dishHeight * 0.8} height={dishHeight}>
+              <ChevronRight size={40} color="black" />
+            </Squircle>
           </HStack>
-
-          <Squircle width={dishHeight * 0.8} height={dishHeight}>
-            <ChevronRight size={40} color="black" />
-          </Squircle>
         </HomeScrollViewHorizontal>
       </VStack>
-    </HStack>
+    </VStack>
   )
 })
 
@@ -375,13 +390,13 @@ const TopDishesRestaurantsSide = memo(
                 subtle
                 key={restaurant.name}
                 restaurant={restaurant as any}
-                onHoverIn={onHoverRestaurant}
                 maxWidth="100%"
-                active={
-                  (hoveredRestaurant &&
-                    restaurant?.name === hoveredRestaurant?.name) ||
-                  false
-                }
+                // onHoverIn={onHoverRestaurant}
+                // active={
+                //   (hoveredRestaurant &&
+                //     restaurant?.name === hoveredRestaurant?.name) ||
+                //   false
+                // }
               />
             )
           })}
