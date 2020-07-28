@@ -157,7 +157,11 @@ const MenuButton = ({
         return (
           <HStack spacing alignItems="center" justifyContent="center">
             <IconElement color="#fff" size={22} />
-            {!!text && <Text fontSize={13}>{text}</Text>}
+            {!!text && (
+              <Text color="#fff" fontSize={13} fontWeight="500">
+                {text}
+              </Text>
+            )}
           </HStack>
         )
       }}
