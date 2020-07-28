@@ -33,6 +33,7 @@ export const routes = {
   // admin
   admin: new Route('/admin'),
   adminTags: new Route('/admin/tags'),
+  adminReviews: new Route('/admin/reviews'),
 
   // below pages, more catch-all routes (search)
 
