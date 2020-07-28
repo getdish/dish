@@ -85,6 +85,7 @@ func search(w http.ResponseWriter, r *http.Request) {
 	if getParam("distance", r) != "" {
 		distance = getParam("distance", r)
 	}
+	prices := getPrices(r)
 	filter_by, tags = handleSpecialTags(tags, r)
 	_, err := db.Query(
 		pg.Scan(&json),
@@ -104,6 +105,8 @@ func search(w http.ResponseWriter, r *http.Request) {
 		filter_by["vegetarian"],
 		filter_by["quiet"],
 		filter_by["open"],
+		filter_by["price"],
+		prices,
 	)
 	if err != nil {
 		fmt.Println(err)
@@ -125,6 +128,7 @@ func handleSpecialTags(tags string, r *http.Request) (map[string]string, string)
 		"vegetarian",
 		"quiet",
 		"open",
+		"price",
 	}
 
 	for _, tag := range special_tags {
@@ -193,6 +197,9 @@ func tagsHas(target_tag string, r *http.Request) bool {
 	for _, tag := range tags {
 		tag = strings.TrimSpace(tag)
 		tag = strings.ToLower(tag)
+		if target_tag == "price" && strings.HasPrefix(tag, "price-") {
+			return true
+		}
 		if tag == target_tag {
 			return true
 		}
@@ -200,15 +207,30 @@ func tagsHas(target_tag string, r *http.Request) bool {
 	return false
 }
 
-func removeTag(tags_param string, tag_to_remove string) string {
-	tags := strings.Split(tags_param, ",")
-	for i, tag := range tags {
-		if tag == tag_to_remove {
-			tags = append(tags[:i], tags[i+1:]...)
-			break
+func getPrices(r *http.Request) string {
+	prices := ""
+	tags := strings.Split(getParam("tags", r), ",")
+	for _, tag := range tags {
+		tag = strings.TrimSpace(tag)
+		tag = strings.ToLower(tag)
+		if strings.HasPrefix(tag, "price-") {
+			prices = prices + tag + ","
 		}
 	}
-	return strings.Join(tags, ",")
+	return prices
+}
+
+func removeTag(tags_param string, tag_to_remove string) string {
+	tags := strings.Split(tags_param, ",")
+	var updated_tags []string
+	for _, tag := range tags {
+		is_matched_tag := tag == tag_to_remove
+		is_price_tag := tag_to_remove == "price" && strings.Contains(tag, "price-")
+		if !(is_matched_tag || is_price_tag) {
+			updated_tags = append(updated_tags, tag)
+		}
+	}
+	return strings.Join(updated_tags, ",")
 }
 
 func handleRequests() {

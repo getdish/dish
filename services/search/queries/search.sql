@@ -34,15 +34,15 @@ SELECT jsonb_agg(
   AND (
 
     (
-      ?3 != ''
-      AND
-      name ILIKE '%' || ?3 || '%'
-    )
-
-    OR (
-      ?4 != ''
-      AND
-      tag_names @> to_json(string_to_array(?4, ','))::jsonb
+      (
+        ?3 != ''
+        AND
+        name ILIKE '%' || ?3 || '%'
+      ) OR (
+        ?4 != ''
+        AND
+        tag_names @> to_json(string_to_array(?4, ','))::jsonb
+      )
     )
 
     AND (
@@ -91,6 +91,22 @@ SELECT jsonb_agg(
       OR
       opening_hours.hours @> f_opening_hours_normalised_time(
         timezone('America/Los_Angeles', now())::timestamptz
+      )
+    )
+
+    AND (
+      ?18 != 'FILTER BY PRICE'
+      OR
+      (
+        (tag_names @> '["price-low"]' AND ?19 LIKE '%price-low%')
+        OR
+        (tag_names @> '["price-mid"]' AND ?19 LIKE '%price-mid%')
+        OR
+        (tag_names @> '["price-high"]' AND ?19 LIKE '%price-high%')
+        OR
+        (tag_names @> '["price-higher"]' AND ?19 LIKE '%price-higher%')
+        OR
+        (tag_names @> '["price-highest"]' AND ?19 LIKE '%price-highest%')
       )
     )
   )
