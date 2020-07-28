@@ -1,15 +1,10 @@
 import { AbsoluteVStack, VStack, useDebounceValue } from '@dish/ui'
-import { cloneDeep } from 'lodash'
 import React, { Suspense, memo, useMemo } from 'react'
 
-import { memoize } from '../../helpers/memoizeWeak'
 import { HomeStateItem, HomeStateItemSimple } from '../../state/home'
-import { isSearchState } from '../../state/home-helpers'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
 import { getBreadcrumbs } from './getBreadcrumbs'
-import { HomeStackDrawer } from './HomeStackDrawer'
-import { StackViewCloseButton } from './StackViewCloseButton'
 import { useLastValueWhen } from './useLastValueWhen'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
@@ -98,7 +93,6 @@ const HomeStackViewItem = memo(
     // }, [isActive])
 
     let children = useMemo(() => {
-      // return <HomeStackDrawer closable />
       return getChildren({
         item: item as any,
         index,
@@ -109,7 +103,6 @@ const HomeStackViewItem = memo(
     children = useLastValueWhen(() => children, isRemoving)
 
     const className = `animate-up ${!isRemoving && !isAdding ? 'active' : ''}`
-    console.log('className', className)
 
     return (
       // <PopoverContext.Provider value={useMemo(() => ({ id }), [id])}>

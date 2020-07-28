@@ -49,10 +49,10 @@ WITH by_country AS (
     ) as dishes,
     (
       SELECT json_agg(t) FROM (
-        SELECT name, slug, rating FROM restaurant
+        SELECT id, name, slug, rating FROM restaurant
         WHERE tag_names @> to_jsonb(LOWER((SELECT DISTINCT t.name)))
         ORDER BY rating DESC NULLS LAST
-        LIMIT 10
+        LIMIT 6
       ) t
     ) as top_restaurants
   FROM restaurant

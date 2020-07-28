@@ -24,7 +24,6 @@ export const RestaurantDishPhotos = memo(
     }) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
       const photos = restaurantPhotosForCarousel({ restaurant, max: 30 })
-      const drawerWidth = useHomeDrawerWidthInner()
       const spacing = 12
       const [selected, setSelected] = useState(
         selectable

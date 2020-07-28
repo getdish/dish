@@ -3,7 +3,7 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 
 import { bgAlt, bgLightTranslucent } from '../../colors'
-import { drawerPad, drawerWidthMax, searchBarHeight } from '../../constants'
+import { drawerPad, searchBarHeight } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
@@ -17,7 +17,7 @@ export function HomeContainer(props: { children: any }) {
     <VStack
       fullscreen
       // TODO ui-static this fails if i remove conditional above!
-      width={isSmall ? '100%' : drawerWidth}
+      width={isSmall ? '100%' : drawerWidth + drawerPad}
       flex={1}
       position="absolute"
       top={isSmall ? `${om.state.home.searchBarY}%` : 0}

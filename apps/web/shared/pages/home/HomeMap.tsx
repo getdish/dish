@@ -20,7 +20,11 @@ import React, {
 
 import { frameWidthMax, searchBarHeight } from '../../constants'
 import { LngLat } from '../../state/home'
-import { isRestaurantState } from '../../state/home-helpers'
+import {
+  isHomeState,
+  isRestaurantState,
+  isSearchState,
+} from '../../state/home-helpers'
 import { setMapView } from '../../state/mapView'
 import { router } from '../../state/router'
 import { omStatic, useOvermind } from '../../state/useOvermind'
@@ -81,6 +85,8 @@ export const HomeMap = memo(function HomeMap() {
   )
 })
 
+type RestaurantIdentified = Required<Pick<Restaurant, 'slug' | 'id'>>
+
 const HomeMapDataLoader = memo(
   graphql(
     (props: {
@@ -89,15 +95,30 @@ const HomeMapDataLoader = memo(
     }) => {
       const om = useOvermind()
       const state = om.state.home.currentState
-      const searchState = om.state.home.lastSearchState
-      const detail = isRestaurantState(state)
-        ? { id: state.restaurantId, slug: state.restaurantSlug }
-        : null
-      const all = [...(detail ? [detail] : []), ...(searchState?.results ?? [])]
+      let all: RestaurantIdentified[] = []
+      let single: RestaurantIdentified | null = null
+
+      if (isRestaurantState(state)) {
+        single = {
+          id: state.restaurantId,
+          slug: state.restaurantSlug,
+        }
+        const searchState = om.state.home.lastSearchState
+        all = [single, ...(searchState?.results ?? [])]
+      } else if (isSearchState(state)) {
+        all = state?.results ?? []
+      } else if (isHomeState(state)) {
+        all = om.state.home.topDishes
+          .map((x) => x.top_restaurants)
+          .flat()
+          .filter((x) => x?.id)
+      }
+
       const allIds = [...new Set(all.map((x) => x.id))]
       const allResults = allIds
         .map((id) => all.find((x) => x.id === id))
         .filter(Boolean)
+
       const restaurants = uniqBy(
         allResults.map(({ id, slug }) => {
           const r = useRestaurantQuery(slug)
@@ -112,14 +133,14 @@ const HomeMapDataLoader = memo(
         }),
         (x) => `${x.location.coordinates[0]}${x.location.coordinates[1]}`
       )
-      const restaurantDetail = detail
-        ? restaurants.find((x) => x.id === detail.id)
-        : null
+
       useEffect(() => {
-        console.log('restaurants', restaurants, restaurantDetail)
         props.onLoadedRestaurants?.(restaurants)
       }, [JSON.stringify(restaurants.map((x) => x.location?.coordinates))])
 
+      const restaurantDetail = single
+        ? restaurants.find((x) => x.id === single.id)
+        : null
       useEffect(() => {
         props.onLoadedRestaurantDetail?.(restaurantDetail)
       }, [JSON.stringify(restaurantDetail?.location?.coordinates ?? null)])
