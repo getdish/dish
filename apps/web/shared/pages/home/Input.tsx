@@ -21,7 +21,7 @@ export const Input = forwardRef(
   }
 )
 
-const textStyles = StyleSheet.create({
+export const textStyles = StyleSheet.create({
   textField: {
     fontSize: 18,
     borderWidth: 0,
