@@ -80,6 +80,7 @@ export const state: HomeState = {
   activeEvent: null,
   activeIndex: -1,
   selectedRestaurant: null,
+  showUserMenu: false,
   searchBarTagIndex: 0,
   allTags,
   allTagsNameToID: {},
@@ -1166,6 +1167,20 @@ const setSelectedRestaurant: Action<RestaurantOnlyIds | null> = (om, val) => {
   om.state.home.selectedRestaurant = val
 }
 
+const setShowUserMenu: Action<boolean> = (om, val) => {
+  om.state.home.showUserMenu = val
+}
+
+const promptLogin: Action<undefined, boolean> = (om) => {
+  const user = om.state.user.user
+  if (!user || !om.state.user.isLoggedIn) {
+    om.actions.home.setShowUserMenu(true)
+    Toast.show(`Please signup or login to do this`)
+    return true
+  }
+  return false
+}
+
 export const actions = {
   moveAutocompleteIndex,
   setAutocompleteIndex,
@@ -1210,4 +1225,6 @@ export const actions = {
   setSearchBarY,
   setIsHoveringRestaurant,
   setSelectedRestaurant,
+  setShowUserMenu,
+  promptLogin,
 }

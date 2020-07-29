@@ -9,7 +9,7 @@ let show: (text: string, duration: number) => void = (text) => {
 }
 
 export const Toast = {
-  show: (text: string, duration = 1000) => show(text, duration),
+  show: (text: string, duration = 2500) => show(text, duration),
 }
 
 if (typeof window !== 'undefined') {
@@ -29,7 +29,7 @@ export const ToastRoot = memo(function ToastRoot() {
   }
 
   show = useCallback(
-    (text: string, duration = 1000) => {
+    (text: string, duration = 2500) => {
       clearTimeout(stateRef.current.timeout ?? 0)
       const timeout = setTimeout(() => {
         setState({

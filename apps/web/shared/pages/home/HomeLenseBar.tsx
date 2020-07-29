@@ -1,5 +1,5 @@
 import { Tag } from '@dish/graph'
-import { Spacer } from '@dish/ui'
+import { Spacer, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { getTagId } from '../../state/getTagId'
@@ -19,7 +19,7 @@ export const HomeLenseBar = memo(
     return (
       <>
         {om.state.home.allLenseTags.map((lense, index) => (
-          <React.Fragment key={lense.id + index}>
+          <VStack marginRight={-2} key={lense.id + index}>
             <LenseButton
               lense={lense}
               isActive={props.activeTagIds?.[getTagId(lense)] ?? false}
@@ -29,14 +29,11 @@ export const HomeLenseBar = memo(
               {...(props.onPressLense && {
                 onPress: (e) => {
                   e.stopPropagation()
-                  props.onPressLense(lense)
+                  props.onPressLense?.(lense)
                 },
               })}
             />
-            {index < om.state.home.allLenseTags.length - 1 && (
-              <Spacer size={2} />
-            )}
-          </React.Fragment>
+          </VStack>
         ))}
       </>
     )

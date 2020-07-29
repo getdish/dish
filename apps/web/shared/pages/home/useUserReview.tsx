@@ -1,5 +1,5 @@
 import { series, sleep } from '@dish/async'
-import { Review, query, refetch, reviewUpsert } from '@dish/graph'
+import { Review, query, refetch, resolved, reviewUpsert } from '@dish/graph'
 import { Toast, useForceUpdate } from '@dish/ui'
 import { useEffect, useState } from 'react'
 
@@ -14,36 +14,24 @@ export const useUserReviews = (
   const om = useOvermind()
   const forceUpdate = useForceUpdate()
   const userId = om.state.user.user?.id
-  // if (userId && !restaurantId) {
-  //   console.log('no restaurantId')
-  // }
-
-  let reviews = []
 
   const shouldFetch = userId && restaurantId
-  if (shouldFetch) {
-    reviews = query.review({
-      where: {
-        restaurant_id: {
-          _eq: restaurantId,
+  const reviews = shouldFetch
+    ? query.review({
+        where: {
+          restaurant_id: {
+            _eq: restaurantId,
+          },
+          user_id: {
+            _eq: userId,
+          },
         },
-        user_id: {
-          _eq: userId,
-        },
-      },
-    })
-  }
+      })
+    : []
 
   useEffect(() => {
     if (refetchKey && shouldFetch) {
-      console.log('refetching')
-      refetch(reviews)
-      return series([
-        () => sleep(250),
-        () => {
-          forceUpdate()
-        },
-      ])
+      return series([() => resolved(refetch(reviews)), forceUpdate])
     }
   }, [refetchKey])
 
@@ -63,15 +51,15 @@ export const useUserFavorite = (restaurantId: string) => {
   const review = useUserReviews(restaurantId, key).filter(
     (x) => !isTagReview(x) && x.favorited
   )[0]
-  const [optimistic, setOptimistic] = useState(null)
+  const [optimistic, setOptimistic] = useState<boolean | null>(null)
   const isStarred = optimistic ?? review?.favorited
   return [
     isStarred,
     (next: boolean) => {
-      const user = omStatic.state.user.user
-      if (!user) {
+      if (omStatic.actions.home.promptLogin()) {
         return
       }
+      const user = omStatic.state.user.user!
       reviewUpsert([
         {
           user_id: user.id,
@@ -104,6 +92,10 @@ export const useUserUpvoteDownvote = (
   return [
     userVote ?? vote,
     async (rating: number) => {
+      if (omStatic.actions.home.promptLogin()) {
+        return
+      }
+
       Toast.show(`Voted!`)
 
       if (votes.length) {
@@ -119,21 +111,19 @@ export const useUserUpvoteDownvote = (
           name,
         }))
         const fullTags = await getFullTags(partialTags)
-        const insertTags = activeTagIds
-          .map<Review>((name) => {
-            const tagId = fullTags.find((x) => x.name === name)?.id
-            if (!tagId) {
-              console.warn('no tag', name, tagId, fullTags, activeTagIds)
-              return null
-            }
-            return {
-              tag_id: tagId,
-              user_id: userId,
-              restaurant_id: restaurantId,
-              rating,
-            }
-          })
-          .filter(Boolean)
+        const insertTags = activeTagIds.map<Review>((name) => {
+          const tagId = fullTags.find((x) => x.name === name)?.id
+          if (!tagId) {
+            console.warn('no tag', name, tagId, fullTags, activeTagIds)
+            throw new Error('no tag')
+          }
+          return {
+            tag_id: tagId,
+            user_id: userId,
+            restaurant_id: restaurantId,
+            rating,
+          }
+        })
         console.log('fullTags', partialTags, fullTags, insertTags)
         if (insertTags.length) {
           reviewUpsert(insertTags).then((res) => {
@@ -175,8 +165,4 @@ export const useUserTagVotesByTagId = (restaurantId: string) => {
       [vote.tag_id]: vote,
     }
   }, {})
-}
-
-function draft<A>(item: A) {
-  return item
 }
