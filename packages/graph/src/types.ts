@@ -13,7 +13,7 @@ import {
   user,
 } from './graphql'
 
-// i had this "smarter" where it inferred returns from functions
+// used to infer returns from functions
 // but the problme is extensions... they should be excluded
 // most of the stuff in this file could be folded into gqless and fixed
 export type FlatResolvedModel<O> = {

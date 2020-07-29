@@ -5,6 +5,50 @@ import React, { memo } from 'react'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
+function openingHours(restaurant: RestaurantQuery) {
+  if (restaurant.hours() == null) {
+    return ['Uknown Hours', 'grey', '']
+  }
+  let text = 'Opens at'
+  let color = 'grey'
+  let next_time = ''
+  if (restaurant.is_open_now != null) {
+    text = restaurant.is_open_now ? 'Opens at' : 'Closed'
+    color = restaurant.is_open_now ? '#33aa99' : '#999'
+    const now = new Date()
+    let day = now.getDay() - 1
+    if (day == -1) {
+      day = 6
+    }
+    // TODO: Tomorrow isn't always when the next opening time is.
+    // Eg; when it's the morning and the restaurant opens in the evening.
+    let tomorrow = day + 1
+    if (tomorrow == 7) {
+      tomorrow = 0
+    }
+    const openHour = restaurant.hours()[tomorrow]?.hoursInfo.hours[0] ?? ''
+    const closesHour = restaurant.hours()[day]?.hoursInfo.hours[0] ?? ''
+
+    if (openHour && closesHour) {
+      const opens_at = openHour
+        .replace(/"/g, '')
+        .replace(' am', 'am')
+        .replace(' pm', 'pm')
+        .split('-')[0]
+      const closes_at = closesHour
+        .replace(/"/g, '')
+        .replace(' am', 'am')
+        .replace(' pm', 'pm')
+        .split('-')[1]
+
+      next_time = `${opens_at} - ${closes_at}`
+    }
+
+    // next_time = (restaurant.is_open_now ? closes_at : opens_at) || '~'
+  }
+  return [text, color, next_time]
+}
+
 export const RestaurantDetailRow = memo(
   graphql(
     ({
@@ -27,14 +71,18 @@ export const RestaurantDetailRow = memo(
       const rows = [
         { title: open_text, content: next_time, color: open_color },
         { title: price_label, content: price_range, color: price_color },
-        !isSm && {
+      ]
+
+      if (size !== 'sm') {
+        rows.push({
           title: 'Delivers',
+          // @ts-ignore
           content: (
             <RestaurantDeliveryButtons restaurantSlug={restaurantSlug} />
           ),
           color: 'gray',
-        },
-      ].filter(Boolean)
+        })
+      }
 
       const spaceSize = isSm ? 0 : '6%'
 
@@ -66,16 +114,17 @@ export const RestaurantDetailRow = memo(
                       textAlign={centered ? 'center' : 'left'}
                       fontWeight="600"
                       fontSize={14}
-                      color={row.color}
+                      color={row.color ?? ''}
                       marginBottom={3}
                     >
                       {row.title}
                     </Text>
                   )}
                   <Text
+                    ellipse
                     fontSize={isSm ? 12 : 13}
                     textAlign={centered ? 'center' : 'left'}
-                    color={isSm ? row.color : 'inherit'}
+                    color={isSm ? row.color ?? '' : 'inherit'}
                     margin="auto"
                     minHeight={24}
                   >
@@ -95,38 +144,6 @@ export const RestaurantDetailRow = memo(
     }
   )
 )
-
-function openingHours(restaurant: RestaurantQuery) {
-  if (restaurant.hours() == null) {
-    return ['Uknown Opening Hours', 'grey', '']
-  }
-  let text = 'Opens at'
-  let color = 'grey'
-  let next_time = ''
-  if (restaurant.is_open_now != null) {
-    text = restaurant.is_open_now ? 'Opens at' : 'Closed until'
-    color = restaurant.is_open_now ? 'green' : 'red'
-    const now = new Date()
-    let day = now.getDay() - 1
-    if (day == -1) {
-      day = 6
-    }
-    // TODO: Tomorrow isn't always when the next opening time is.
-    // Eg; when it's the morning and the restaurant opens in the evening.
-    let tomorrow = day + 1
-    if (tomorrow == 7) {
-      tomorrow = 0
-    }
-    const opens_at = (restaurant.hours()[tomorrow]?.hoursInfo.hours[0] ?? '')
-      .replace(/"/g, '')
-      .split('-')[0]
-    const closes_at = (restaurant.hours()[day]?.hoursInfo.hours[0] ?? '')
-      .replace(/"/g, '')
-      .split('-')[1]
-    next_time = (restaurant.is_open_now ? closes_at : opens_at) || '~'
-  }
-  return [text, color, next_time]
-}
 
 // @tombh: I seem to have got confused about the type of this field.
 // Is it a numerical price range or just a $$$-style?? I need to go
@@ -153,7 +170,7 @@ function priceRangeDollar(restaurant: RestaurantQuery) {
       color = '#000'
       break
     case restaurant.price_range == '$$':
-      label = 'Average'
+      label = 'Price'
       color = '#888'
       break
     case restaurant.price_range == '$$$':

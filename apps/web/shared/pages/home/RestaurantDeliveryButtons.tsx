@@ -70,8 +70,8 @@ const RestaurantDeliveryButton = ({
           alt={source.name}
           src={source.image}
           style={{
-            width: 20,
-            height: 20,
+            width: showLabels ? 20 : 24,
+            height: showLabels ? 20 : 24,
             margin: -3,
             marginRight: 0,
             borderRadius: 40,

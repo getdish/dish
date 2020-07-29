@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { Button, Spacer, Text, TextProps, VStack } from '@dish/ui'
+import { Button, Divider, Spacer, Text, TextProps, VStack } from '@dish/ui'
 import React from 'react'
 import { ScrollView } from 'react-native'
 
@@ -19,37 +19,31 @@ export default graphql(function HomePageAbout({
       >
         <VStack spacing="xl">
           <Text selectable fontSize={32} fontWeight="300" paddingRight={30}>
-            Find that taco
+            Find the best 🍜
           </Text>
 
           <VStack spacing="lg">
-            <Paragraph>
-              It's Saturday night and you want to order delivery. Specifically,
-              you're craving a delicious crispy taco. But you'd like to find
-              something actually good. What are you to do?
-            </Paragraph>
+            <Paragraph>Dish is a good food finder.</Paragraph>
+
+            <Paragraph>Like RottenTomatoes, for cuisine.</Paragraph>
+
+            <Paragraph>Search across all food delivery apps at once.</Paragraph>
+
+            <Paragraph>See reviews down to the dish.</Paragraph>
 
             <Paragraph>
-              Searching Yelp doesn't work - you can't search across delivery
-              services - and their 5 star review captures service, ambiance,
-              delivery speed, and wait time all in one. Plus, expert opinions
-              count the same as first-timers.
+              So you can find that "ultimate pho hole in the wall" .
             </Paragraph>
+
+            <Divider marginVertical={40} />
 
             <Paragraph>
-              Dish aggregates all food reviewers and all delivery services, and
-              puts the community in charge of curation. Think RottenTomatoes
-              meets Reddit, for food. We index Yelp, Google, TripAdvisor, The
-              Infatuation, Michelin, and every delivery service.
+              We'd like to grow into your real world food Pokedex.
             </Paragraph>
 
-            <Paragraph>
-              We're still getting started, so things will be a little shaky. But
-              we have a great foundation, and push updates every day. We'd love
-              to hear feedback.
-            </Paragraph>
+            <Paragraph>Let us know what you'd like in it:</Paragraph>
 
-            <Spacer size="xl" />
+            <Spacer size="sm" />
 
             <form>
               <VStack>
@@ -68,7 +62,7 @@ export default graphql(function HomePageAbout({
 const Paragraph = (props: TextProps) => {
   return (
     <Text
-      fontSize={18}
+      fontSize={22}
       lineHeight={30}
       opacity={0.85}
       fontWeight="400"
