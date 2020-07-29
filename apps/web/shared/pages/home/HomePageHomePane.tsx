@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { Restaurant, TopCuisine } from '@dish/graph'
+import { TopCuisine } from '@dish/graph'
 import {
   AbsoluteVStack,
   Box,
@@ -11,12 +11,11 @@ import {
   VStack,
   useDebounce,
 } from '@dish/ui'
-import _, { rest } from 'lodash'
+import _ from 'lodash'
 import {
   default as React,
   Suspense,
   memo,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -25,7 +24,6 @@ import {
 import { ChevronRight } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
 
-import { bgLight } from '../../colors'
 import { HomeStateItemHome } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { tagDescriptions } from '../../state/tagDescriptions'
@@ -288,7 +286,7 @@ const HomeTopDishesContent = memo(() => {
   }, [topDishes])
 })
 
-const dishHeight = 160
+const dishHeight = 150
 
 const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
   return (
@@ -329,7 +327,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
         <HomeScrollViewHorizontal style={{ paddingVertical: 10 }}>
           <HStack
             alignItems="center"
-            spacing={16}
+            spacing={10}
             paddingVertical={18}
             paddingRight={20}
             pointerEvents="auto"
@@ -378,7 +376,7 @@ const TopDishesTrendingRestaurants = memo(
     }, 200)
 
     return (
-      <VStack flex={1} padding={10} spacing={4} alignItems="flex-start">
+      <VStack width={220} padding={10} spacing={4} alignItems="flex-start">
         {_.uniqBy(country.top_restaurants, (x) => x.name)
           .slice(0, 5)
           .map((restaurant, index) => {

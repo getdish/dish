@@ -39,7 +39,8 @@ export const HomeMenu = memo(() => {
   const om = useOvermind()
   const isSmall = useMediaQueryIsSmall()
   const isAboveMedium = useMediaQueryIsAboveMedium()
-  const [showUserMenu, setShowUserMenu] = useState(false)
+  const showUserMenu = om.state.home.showUserMenu
+  const setShowUserMenu = om.actions.home.setShowUserMenu
 
   return (
     <HStack>
