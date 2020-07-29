@@ -16361,10 +16361,10 @@ typescript@*, typescript@^3.2.4, typescript@^3.3.3:
   resolved "https://registry.npmjs.org/typescript/-/typescript-3.9.6.tgz#8f3e0198a34c3ae17091b35571d3afd31999365a"
   integrity sha512-Pspx3oKAPJtjNwE92YS05HQoY7z2SFyOpHo9MqJor3BXAGNaPUs83CuVp9VISFkSjyRfiTpmKuAYGJB7S7hOxw==
 
-typescript@4.0.0-beta:
-  version "4.0.0-beta"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-4.0.0-beta.tgz#a6a65e430562131de69496a3ef5484346bc0cdd2"
-  integrity sha512-d3s/CogGtB2uPZ2Z8ts6eoUxxyB9PH3R27/UrzvpthuOvpCg4FWWnBbBiqJ0K4eu6eTlgmLiqQkh2dquReJweA==
+typescript@4.0.0-dev.20200729:
+  version "4.0.0-dev.20200729"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-4.0.0-dev.20200729.tgz#3e335af3ed54513bbfd9485799837b95bdfd15a0"
+  integrity sha512-jzPalday93NlFVuRkY7Vixd7I9dLKoefoB2dvIhoqWaAGc5WPbOQmCHOilEGPSXNd9gb+uy97RH6+EwM/cf1gQ==
 
 typical@^4.0.0:
   version "4.0.0"

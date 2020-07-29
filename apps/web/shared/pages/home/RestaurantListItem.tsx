@@ -25,7 +25,7 @@ import { RankingView } from './RankingView'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
-import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
+import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
 import { RestaurantOverview } from './RestaurantOverview'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
@@ -255,7 +255,7 @@ const RestaurantListItemContent = memo(
                       restaurantSlug={restaurantSlug}
                     />
                     <Spacer size={10} />
-                    <RestaurantFavoriteStar
+                    <RestaurantFavoriteButton
                       size="md"
                       restaurantId={restaurantId}
                     />

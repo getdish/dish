@@ -2,11 +2,14 @@ import React, { memo } from 'react'
 import { View, ViewStyle } from 'react-native'
 
 export type Spacing =
+  | 'xxs'
   | 'xs'
   | 'sm'
   | 'md'
   | 'lg'
   | 'xl'
+  | 'xxl'
+  | 'xxxl'
   | number
   | boolean
   | string
@@ -59,11 +62,14 @@ Spacer.staticConfig = {
 }
 
 function spaceToPx(space: Spacing) {
-  if (space === 'md' || space === true) return 12
-  if (space == 'sm') return 8
+  if (space == 'xxs') return 2
   if (space == 'xs') return 4
+  if (space == 'sm') return 8
+  if (space === 'md' || space === true) return 12
   if (space == 'lg') return 16
   if (space == 'xl') return 24
+  if (space == 'xxl') return 36
+  if (space == 'xxxl') return 48
   if (typeof space === 'number') return space
   if (typeof space === 'string') return space
   return 0

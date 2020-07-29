@@ -31,7 +31,7 @@ export const LoadingItem = () => {
             width={`${seed * (15 - (2 - index > -1 ? index : -index) * 4)}%`}
             height={20}
             maxWidth="100%"
-            backgroundColor="#eee"
+            backgroundColor="rgba(0,0,0,0.025)"
             borderRadius={5}
           />
         ))}

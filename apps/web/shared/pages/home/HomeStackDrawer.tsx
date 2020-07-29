@@ -29,7 +29,7 @@ export const HomeStackDrawer = ({
       borderRadius={drawerBorderRadius}
       backgroundColor="#fff"
       overflow="visible"
-      marginTop={isSmall ? -10 : searchBarHeight}
+      marginTop={isSmall ? 0 : searchBarHeight}
       maxWidth={drawerWidthMax}
       width="100%"
     >

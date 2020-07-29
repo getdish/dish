@@ -24,10 +24,8 @@ export function Link<
     padding,
     color = brandColor,
     onClick,
-    replace,
     replaceSearch,
     tagName,
-    preventNavigate,
     className,
     asyncClick,
     textAlign,
@@ -35,9 +33,14 @@ export function Link<
     navigateAfterPress,
     ...restProps
   } = allProps
-  const { onPress, name, params, ...linkProps } = useNormalizeLinkProps(
-    restProps as any
-  )
+  const {
+    onPress,
+    name,
+    params,
+    replace,
+    preventNavigate,
+    ...linkProps
+  } = useNormalizeLinkProps(restProps as any)
   const cancel = useRef<Function | null>(null)
   const linkRef = useRef<HTMLElement | null>(null)
   const navItem: NavigateItem = {

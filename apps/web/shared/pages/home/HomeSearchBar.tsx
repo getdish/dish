@@ -72,18 +72,19 @@ export default memo(function HomeSearchBar() {
         top: '20%',
       })}
     >
+      <HomeAutocomplete />
       <Animated.View
         style={{
           transform: [{ translateY: pan.y }],
+          maxWidth: pageWidthMax,
+          alignItems: 'center',
           width: '100%',
         }}
         {...panResponder.panHandlers}
       >
-        <HomeAutocomplete />
         <VStack
           zIndex={12}
           position="relative"
-          maxWidth={pageWidthMax}
           alignItems="center"
           width="100%"
           height={searchBarHeight}

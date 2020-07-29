@@ -43,27 +43,35 @@ export function HomeStackView<A extends HomeStateItem>(props: {
 
   return (
     <AbsoluteVStack fullscreen>
-      {items.map((item, i) => {
-        const isActive = i === items.length - 1
-        return (
-          // <PopoverShowContext.Provider
-          //   key={item.id}
-          //   value={isActive == true ? null : false}
-          // >
-          <HomeStackViewItem
-            key={item.id}
-            item={item}
-            index={i}
-            isActive={isActive}
-            isRemoving={isRemoving && isActive}
-            isAdding={isAdding && isActive}
-            getChildren={props.children as any}
-          />
-          // </PopoverShowContext.Provider>
-        )
-      })}
+      <StackItemsAdjustableFrame>
+        {items.map((item, i) => {
+          const isActive = i === items.length - 1
+          return (
+            // <PopoverShowContext.Provider
+            //   key={item.id}
+            //   value={isActive == true ? null : false}
+            // >
+            <HomeStackViewItem
+              key={item.id}
+              item={item}
+              index={i}
+              isActive={isActive}
+              isRemoving={isRemoving && isActive}
+              isAdding={isAdding && isActive}
+              getChildren={props.children as any}
+            />
+            // </PopoverShowContext.Provider>
+          )
+        })}
+      </StackItemsAdjustableFrame>
     </AbsoluteVStack>
   )
+}
+
+const StackItemsAdjustableFrame = (props: { children: any }) => {
+  const om = useOvermind()
+
+  return <AbsoluteVStack fullscreen>{props.children}</AbsoluteVStack>
 }
 
 const HomeStackViewItem = memo(
@@ -85,7 +93,7 @@ const HomeStackViewItem = memo(
     // const popoverStore = useRecoilStore(PopoverStore, { id })
     const isSmall = useMediaQueryIsSmall()
 
-    const top = isSmall ? 10 : index == 0 ? 0 : index * 5
+    const top = index == 0 ? 0 : isSmall ? 5 : index * 5
     // const left = isSmall ? 0 : Math.max(0, index) * 3
 
     // useEffect(() => {
@@ -119,7 +127,7 @@ const HomeStackViewItem = memo(
             flex={1}
             zIndex={index}
             top={top}
-            left={index > 0 ? 12 : 0}
+            left={!isSmall && index > 0 ? 12 : 0}
             bottom={-(index * 5)}
             width="100%"
             pointerEvents="auto"

@@ -10,12 +10,14 @@ export const RestaurantDishPhotos = memo(
   graphql(
     ({
       restaurantSlug,
+      restaurantId,
       selectable,
       onSelect,
       defaultSelectedId,
       size = 180,
     }: {
       restaurantSlug: string
+      restaurantId?: string
       selectable?: boolean
       onSelect?: (dish: string) => any
       defaultSelectedId?: string
@@ -27,7 +29,9 @@ export const RestaurantDishPhotos = memo(
       const [selected, setSelected] = useState(
         selectable
           ? defaultSelectedId
-            ? photos.findIndex((x) => slugify(x.name) === defaultSelectedId)
+            ? photos.findIndex(
+                (x) => slugify(x.name ?? '') === defaultSelectedId
+              )
             : 0
           : 1
       )
@@ -54,6 +58,7 @@ export const RestaurantDishPhotos = memo(
                     key={index}
                     size={size}
                     restaurantSlug={restaurantSlug}
+                    restaurantId={restaurantId}
                     margin={spacing / 2}
                     marginBottom={16}
                     dish={photo}
