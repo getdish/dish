@@ -129,10 +129,10 @@ export default memo(function HomeSearchBar() {
               paddingHorizontal={8}
               height={searchBarHeight}
               borderRadius={borderRadius}
-              shadowColor={backgroundColor}
-              shadowOpacity={0.25}
+              shadowColor="#fff"
+              shadowOpacity={0.5}
               shadowRadius={0}
-              shadowOffset={{ height: 3, width: 3 }}
+              shadowOffset={{ height: 4, width: -3 }}
               justifyContent="center"
               overflow="hidden"
             >

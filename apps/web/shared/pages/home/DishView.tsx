@@ -119,9 +119,9 @@ export const DishView = memo(
           >
             <Box
               position="relative"
-              className="ease-in-out-top"
+              className="skewX ease-in-out-top"
               backgroundColor="rgba(0,0,0,0.8)"
-              borderRadius={80}
+              borderRadius={8}
               paddingVertical={3}
               paddingHorizontal={8}
               maxWidth="calc(90% - 30px)"
@@ -137,6 +137,7 @@ export const DishView = memo(
             >
               <Text
                 ellipse
+                className="unskewX"
                 flex={1}
                 overflow="hidden"
                 fontSize={height > 150 ? 16 : 12}
