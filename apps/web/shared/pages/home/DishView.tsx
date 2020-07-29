@@ -7,6 +7,7 @@ import { Image } from 'react-native'
 import { IMAGE_PROXY_DOMAIN } from '../../constants'
 import { NavigableTag } from '../../state/NavigableTag'
 import { LinkButton } from '../../views/ui/LinkButton'
+import { DishFavoriteButton } from './DishFavoriteButton'
 import { DishRatingView } from './DishRatingView'
 import { Squircle } from './Squircle'
 
@@ -16,6 +17,7 @@ export const DishView = memo(
     cuisine,
     size = 100,
     restaurantSlug,
+    restaurantId,
     selected,
     ...rest
   }: {
@@ -23,6 +25,7 @@ export const DishView = memo(
     dish: TopCuisineDish
     size?: number
     restaurantSlug?: string
+    restaurantId?: string
     selected?: boolean
   } & StackProps) => {
     const [isHovered, setIsHovered] = useState(false)
@@ -45,7 +48,7 @@ export const DishView = memo(
           opacity: 1,
         }}
         hoverStyle={{
-          transform: [{ scale: 1.05 }],
+          transform: [{ scale: 1.025 }],
         }}
         onHoverIn={() => setIsHovered(true)}
         onHoverOut={() => setIsHovered(false)}
@@ -71,6 +74,15 @@ export const DishView = memo(
             <DishRatingView size={size > 160 ? 'sm' : 'xs'} dish={dish} />
           )}
         </AbsoluteVStack>
+        {restaurantId && (
+          <AbsoluteVStack top={-3} right={-8} zIndex={1000}>
+            <DishFavoriteButton
+              size={size > 130 ? 'md' : 'sm'}
+              dishTagId={dish.name ?? ''}
+              restaurantId={restaurantId}
+            />
+          </AbsoluteVStack>
+        )}
         <Squircle
           width={width}
           height={height}

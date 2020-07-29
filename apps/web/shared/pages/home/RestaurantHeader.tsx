@@ -1,21 +1,14 @@
 import { graphql } from '@dish/graph'
-import {
-  AbsoluteVStack,
-  HStack,
-  SmallTitle,
-  Spacer,
-  Text,
-  VStack,
-} from '@dish/ui'
+import { HStack, SmallTitle, Spacer, Text, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
-import { Image, ScrollView, StyleSheet } from 'react-native'
+import { Image, ScrollView } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
-import { RestaurantFavoriteStar } from './RestaurantFavoriteStar'
+import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { useCurrentLenseColor } from './useCurrentLenseColor'
 import { useRestaurantQuery } from './useRestaurantQuery'
@@ -50,16 +43,18 @@ const RestaurantHeaderContent = memo(
       const restaurant = useRestaurantQuery(restaurantSlug)
       const om = useOvermind()
       const [r, g, b] = useCurrentLenseColor()
+      const padding = <Spacer size={20} />
       return (
         <VStack width="100%">
+          {padding}
           <VStack
             borderTopRightRadius={drawerBorderRadius - 1}
             borderTopLeftRadius={drawerBorderRadius - 1}
             overflow="hidden"
             position="relative"
-            padding={20}
           >
             <HStack alignItems="center">
+              {padding}
               <HStack position="relative">
                 <RestaurantRatingViewPopover
                   size="lg"
@@ -67,7 +62,6 @@ const RestaurantHeaderContent = memo(
                 />
               </HStack>
               <Spacer size={20} />
-
               <VStack flex={10}>
                 <Text
                   selectable
@@ -99,22 +93,29 @@ const RestaurantHeaderContent = memo(
                   </HStack>
                 </ScrollView>
               </VStack>
-
               {!after && !!restaurant.image && (
-                <Image
-                  resizeMode="cover"
-                  source={{ uri: restaurant.image }}
-                  style={{
-                    marginVertical: -10,
-                    height: 115,
-                    width: 115,
-                    borderRadius: 100,
-                  }}
-                />
+                <>
+                  <Image
+                    resizeMode="cover"
+                    source={{ uri: restaurant.image }}
+                    style={{
+                      marginVertical: -10,
+                      height: 115,
+                      width: 115,
+                      borderRadius: 100,
+                    }}
+                  />
+                  {padding}
+                </>
               )}
-
-              {after && <VStack maxWidth="50%">{after}</VStack>}
+              {after && (
+                <>
+                  <VStack maxWidth="50%">{after}</VStack>
+                  {padding}
+                </>
+              )}
             </HStack>
+            {padding}
           </VStack>
           <SmallTitle marginVertical={-18} divider="center">
             <VStack
@@ -123,7 +124,7 @@ const RestaurantHeaderContent = memo(
               shadowRadius={8}
               shadowOffset={{ height: 2, width: 0 }}
             >
-              <RestaurantFavoriteStar
+              <RestaurantFavoriteButton
                 restaurantId={state?.restaurantId ?? restaurant.id}
                 size="lg"
               />

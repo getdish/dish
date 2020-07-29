@@ -233,6 +233,10 @@ const HomeMapContent = memo(function HomeMap({
   const getRestaurants = useGet(restaurants)
   const { center, span } = state
 
+  if (!center || !span) {
+    return null
+  }
+
   const mapWidth = isSmall
     ? window.innerWidth
     : Math.min(window.innerWidth, frameWidthMax - 20) - drawerWidth + 300
@@ -330,8 +334,8 @@ const HomeMapContent = memo(function HomeMap({
   // Navigate - return to previous map position
   // why not just useEffect for center/span? because not always wanted
   const next = {
-    center: om.state.home.currentState.center,
-    span: om.state.home.currentState.span,
+    center: om.state.home.currentState.center!,
+    span: om.state.home.currentState.span!,
   }
   useEffect(() => {
     return series([
@@ -389,8 +393,8 @@ const HomeMapContent = memo(function HomeMap({
                 lng: coordinates[0],
               },
               span: {
-                lat: Math.min(state.span.lat, 0.014),
-                lng: Math.min(state.span.lng, 0.014),
+                lat: Math.min(state.span.lat, 0.022),
+                lng: Math.min(state.span.lng, 0.022),
               },
             })
           }
@@ -604,70 +608,3 @@ async function startMapKit() {
     }
   })
 }
-
-// map.addEventListener('select', (e) => {
-// console.log('select', e, map)
-// })
-// map.addEventListener('deselect', (e) => {
-// console.log('deselect', e, map)
-// })
-// map.addEventListener('drag-start', (e) => {
-//   console.log('drag-start', e, map)
-// })
-// map.addEventListener('drag-end', (e) => {
-//   console.log('drag-end', e, map)
-// })
-// map.addEventListener('user-location-change', (e) => {
-//   console.log('user-location-change', e, map)
-// })
-// // hover on map annotation
-// const annotationsContainer = document.querySelector(
-//   '.mk-annotation-container'
-// )
-//  broke, mapkit stopped insertings the divs in the same order?
-// useDebounceEffect(
-//   () => {
-//     if (!annotationsContainer) return
-//     const annotationsRoot: HTMLElement = annotationsContainer.shadowRoot.querySelector(
-//       '.mk-annotations'
-//     )
-//     if (!annotationsRoot) return
-//     let annotationElements: ChildNode[] = []
-//     let dispose = () => {}
-//     const onMouseEnter = (e: MouseEvent | any) => {
-//       const index = annotationElements.indexOf(e.target as any)
-//       console.log('index', index, restaurants[index], restaurants)
-//       om.actions.home.setHoveredRestaurant(restaurants[index])
-//     }
-//     const observer = new MutationObserver(() => {
-//       dispose()
-//       annotationElements = Array.from(annotationsRoot.childNodes)
-//       for (const el of annotationElements) {
-//         el.addEventListener('mouseenter', onMouseEnter)
-//       }
-//       dispose = () => {
-//         for (const el of annotationElements) {
-//           el.removeEventListener('mouseenter', onMouseEnter)
-//         }
-//       }
-//     })
-//     observer.observe(annotationsRoot, {
-//       childList: true,
-//     })
-//     return () => {
-//       dispose()
-//       observer.disconnect()
-//     }
-//   },
-//   100,
-//   [annotationsContainer, restaurantsVersion]
-// )
-// selected on map
-// useEffect(() => {
-//   if (!focusedRestaurant) return
-//   if (!map) return
-//   map.setCenterAnimated(
-//     coordinates[restaurants.findIndex((x) => x.id === focusedRestaurant.id)],
-//     true
-//   )
-// }, [map, focusedRestaurant])

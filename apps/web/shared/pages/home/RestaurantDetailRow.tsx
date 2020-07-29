@@ -9,11 +9,11 @@ function openingHours(restaurant: RestaurantQuery) {
   if (restaurant.hours() == null) {
     return ['Uknown Hours', 'grey', '']
   }
-  let text = 'Opens at'
+  let text = 'Closed'
   let color = 'grey'
   let next_time = ''
   if (restaurant.is_open_now != null) {
-    text = restaurant.is_open_now ? 'Opens at' : 'Closed'
+    text = restaurant.is_open_now ? 'Open' : 'Closed'
     color = restaurant.is_open_now ? '#33aa99' : '#999'
     const now = new Date()
     let day = now.getDay() - 1

@@ -113,34 +113,31 @@ const HomePageTopDishes = memo((props: Props) => {
         <HomeScrollView>
           <VStack
             className="hello-wrold"
-            paddingTop={isSmall ? 34 : 34}
-            paddingBottom={34}
-            paddingLeft={10}
+            paddingTop={isSmall ? 20 : 34}
+            paddingBottom={30}
             spacing="xl"
           >
             {/* LENSES - UNIQUELY GOOD HERE */}
             <VStack>
               <VStack alignItems="center">
-                <>
-                  <HStack
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="center"
-                    paddingHorizontal={20}
-                    position="relative"
-                  >
-                    {!isSmall && <HomeLenseTitle state={state} />}
+                <HStack
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="center"
+                  paddingHorizontal={20}
+                  position="relative"
+                >
+                  {!isSmall && <HomeLenseTitle state={state} />}
 
-                    <HStack alignItems="center" justifyContent="center">
-                      <HomeLenseBar
-                        backgroundColor="transparent"
-                        size="xl"
-                        activeTagIds={activeTagIds}
-                      />
-                    </HStack>
+                  <HStack alignItems="center" justifyContent="center">
+                    <HomeLenseBar
+                      backgroundColor="transparent"
+                      size="xl"
+                      activeTagIds={activeTagIds}
+                    />
                   </HStack>
-                  <Spacer size={isSmall ? 5 : 15} />
-                </>
+                </HStack>
+                <Spacer size={isSmall ? 5 : 15} />
 
                 <Text
                   marginTop={30}

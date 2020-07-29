@@ -82,12 +82,12 @@ export const useUserFavorite = (restaurantId: string) => {
 
 export const useUserUpvoteDownvote = (
   restaurantId: string,
-  tags: HomeActiveTagIds
+  activeTagIds: HomeActiveTagIds
 ) => {
   const om = useOvermind()
   const userId = om.state.user.user?.id
   const votes = useUserTagVotes(restaurantId)
-  const vote = getTagUpvoteDownvote(votes, tags)
+  const vote = getTagUpvoteDownvote(votes, activeTagIds)
   const [userVote, setUserVote] = useState<number | null>(null)
   return [
     userVote ?? vote,
@@ -96,8 +96,6 @@ export const useUserUpvoteDownvote = (
         return
       }
 
-      Toast.show(`Voted!`)
-
       if (votes.length) {
         votes.forEach((vote) => {
           vote.rating = rating
@@ -105,16 +103,20 @@ export const useUserUpvoteDownvote = (
         })
       } else {
         setUserVote(rating)
-        const activeTagIds = Object.keys(tags).filter((x) => tags[x])
-        const partialTags = activeTagIds.map((id) => ({
-          ...omStatic.state.home.allTags[id],
+        const activeTags = Object.keys(activeTagIds).filter(
+          (x) => activeTagIds[x]
+        )
+        const partialTags = activeTags.map((name) => ({
+          type: 'dish',
+          ...omStatic.state.home.allTags[name],
           name,
         }))
         const fullTags = await getFullTags(partialTags)
-        const insertTags = activeTagIds.map<Review>((name) => {
+        console.log('got', { partialTags, fullTags, activeTags })
+        const insertTags = activeTags.map<Review>((name) => {
           const tagId = fullTags.find((x) => x.name === name)?.id
           if (!tagId) {
-            console.warn('no tag', name, tagId, fullTags, activeTagIds)
+            console.warn('no tag', name, tagId, fullTags, activeTags)
             throw new Error('no tag')
           }
           return {
@@ -128,7 +130,7 @@ export const useUserUpvoteDownvote = (
         if (insertTags.length) {
           reviewUpsert(insertTags).then((res) => {
             if (res.length) {
-              Toast.show(`Voted`)
+              Toast.show(`Saved`)
             }
           })
         }
