@@ -37,7 +37,7 @@ spec:
 apiVersion: admin.rio.cattle.io/v1
 kind: PublicDomain
 metadata:
-  name: web.rio.dishapp.com
+  name: dishapp.com
 spec:
   targetApp: web
   targetNamespace: default
