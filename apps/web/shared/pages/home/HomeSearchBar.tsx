@@ -7,9 +7,9 @@ import {
   VStack,
   mediaQueries,
 } from '@dish/ui'
-import React, { memo, useState } from 'react'
+import React, { memo, useRef, useState } from 'react'
 import { ChevronLeft, MapPin } from 'react-feather'
-import { StyleSheet } from 'react-native'
+import { Animated, PanResponder, StyleSheet } from 'react-native'
 
 import {
   pageWidthMax,
@@ -38,6 +38,22 @@ export default memo(function HomeSearchBar() {
   const backgroundColor = rgbString(rgb.map((x) => x + 5))
   const backgroundColorBottom = rgbString(rgb.map((x) => x - 5) ?? [30, 30, 30])
   const borderRadius = 10
+  const pan = useRef(new Animated.ValueXY()).current
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        pan.setOffset({
+          x: pan.x['_value'],
+          y: pan.y['_value'],
+        })
+      },
+      onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }]),
+      onPanResponderRelease: () => {
+        pan.flattenOffset()
+      },
+    })
+  ).current
 
   return (
     <AbsoluteVStack
@@ -56,135 +72,143 @@ export default memo(function HomeSearchBar() {
         top: '20%',
       })}
     >
-      <HomeAutocomplete />
-      <VStack
-        zIndex={12}
-        position="relative"
-        maxWidth={pageWidthMax}
-        alignItems="center"
-        width="100%"
-        height={searchBarHeight}
-        borderRadius={borderRadius}
+      <Animated.View
+        style={{
+          transform: [{ translateY: pan.y }],
+          width: '100%',
+        }}
+        {...panResponder.panHandlers}
       >
+        <HomeAutocomplete />
         <VStack
-          flex={1}
-          pointerEvents="auto"
-          width="100%"
-          maxWidth={pageWidthMax - 200}
+          zIndex={12}
           position="relative"
+          maxWidth={pageWidthMax}
+          alignItems="center"
+          width="100%"
+          height={searchBarHeight}
+          borderRadius={borderRadius}
         >
-          {/* shadow */}
           <VStack
-            height={searchBarHeight - 1}
-            borderRadius={borderRadius}
-            zIndex={0}
-            className="skewX"
-            position="absolute"
-            top={0}
-            width="100%"
-            shadowColor="rgba(0,0,0,0.3)"
-            shadowOffset={{ height: 2, width: 4 }}
-            shadowRadius={18}
-          />
-          <VStack
-            height={searchBarHeight - 1}
-            borderRadius={borderRadius}
-            zIndex={-1}
-            className="skewX"
-            position="absolute"
-            top={0}
-            width="100%"
-            shadowColor="rgba(0,0,0,0.1)"
-            shadowOffset={{ height: 2, width: 3 }}
-            shadowRadius={3}
-          />
-          <VStack
-            className="skewX"
-            position="relative"
-            zIndex={100}
             flex={1}
-            paddingHorizontal={8}
-            height={searchBarHeight}
-            borderRadius={borderRadius}
-            shadowColor={backgroundColor}
-            shadowOpacity={0.25}
-            shadowRadius={0}
-            shadowOffset={{ height: 3, width: 3 }}
-            justifyContent="center"
-            overflow="hidden"
+            pointerEvents="auto"
+            width="100%"
+            maxWidth={pageWidthMax - 200}
+            position="relative"
           >
-            {/* bg */}
+            {/* shadow */}
             <VStack
+              height={searchBarHeight - 1}
+              borderRadius={borderRadius}
+              zIndex={0}
+              className="skewX"
               position="absolute"
               top={0}
-              bottom={0}
-              right={-100}
-              left={-100}
-            >
-              <LinearGradient
-                colors={[backgroundColor, backgroundColorBottom]}
-                style={[StyleSheet.absoluteFill]}
-              />
-            </VStack>
-            <HStack
-              className="unskewX"
-              alignItems="center"
+              width="100%"
+              shadowColor="rgba(0,0,0,0.3)"
+              shadowOffset={{ height: 2, width: 4 }}
+              shadowRadius={18}
+            />
+            <VStack
+              height={searchBarHeight - 1}
+              borderRadius={borderRadius}
+              zIndex={-1}
+              className="skewX"
+              position="absolute"
+              top={0}
+              width="100%"
+              shadowColor="rgba(0,0,0,0.1)"
+              shadowOffset={{ height: 2, width: 3 }}
+              shadowRadius={3}
+            />
+            <VStack
+              className="skewX"
+              position="relative"
+              zIndex={100}
+              flex={1}
+              paddingHorizontal={8}
+              height={searchBarHeight}
+              borderRadius={borderRadius}
+              shadowColor={backgroundColor}
+              shadowOpacity={0.25}
+              shadowRadius={0}
+              shadowOffset={{ height: 3, width: 3 }}
               justifyContent="center"
-              marginTop={-1}
+              overflow="hidden"
             >
-              <VStack paddingHorizontal={10}>
-                <DishLogoButton />
-              </VStack>
-
-              {!isSmall && (
-                <>
-                  <HomeSearchBarHomeBackButton />
-                </>
-              )}
-
-              <HStack
-                flex={100}
-                maxWidth={550}
-                alignItems="center"
-                overflow="hidden"
+              {/* bg */}
+              <VStack
+                position="absolute"
+                top={0}
+                bottom={0}
+                right={-100}
+                left={-100}
               >
-                {/* Search Input Start */}
-                {isReallySmall && (
+                <LinearGradient
+                  colors={[backgroundColor, backgroundColorBottom]}
+                  style={[StyleSheet.absoluteFill]}
+                />
+              </VStack>
+              <HStack
+                className="unskewX"
+                alignItems="center"
+                justifyContent="center"
+                marginTop={-1}
+              >
+                <VStack paddingHorizontal={10}>
+                  <DishLogoButton />
+                </VStack>
+
+                {!isSmall && (
                   <>
-                    {/* keep both in dom so we have access to ref */}
-                    <VStack display={showLocation ? 'contents' : 'none'}>
-                      <HomeSearchLocationInput />
-                    </VStack>
-                    <VStack display={!showLocation ? 'contents' : 'none'}>
-                      <HomeSearchInput />
-                    </VStack>
+                    <HomeSearchBarHomeBackButton />
                   </>
                 )}
-                {!isReallySmall && <HomeSearchInput />}
-              </HStack>
 
-              {!isReallySmall && (
-                <>
-                  <Spacer size={6} />
-                  <HomeSearchLocationInput />
-                  <VStack flex={1} />
-                </>
-              )}
-
-              {isReallySmall && (
-                <LinkButton
-                  onPress={() => setShowLocation((x) => !x)}
-                  padding={12}
+                <HStack
+                  flex={100}
+                  maxWidth={550}
+                  alignItems="center"
+                  overflow="hidden"
                 >
-                  <MapPin color="#fff" size={22} opacity={0.65} />
-                </LinkButton>
-              )}
+                  {/* Search Input Start */}
+                  {isReallySmall && (
+                    <>
+                      {/* keep both in dom so we have access to ref */}
+                      <VStack display={showLocation ? 'contents' : 'none'}>
+                        <HomeSearchLocationInput />
+                      </VStack>
+                      <VStack display={!showLocation ? 'contents' : 'none'}>
+                        <HomeSearchInput />
+                      </VStack>
+                    </>
+                  )}
+                  {!isReallySmall && <HomeSearchInput />}
+                </HStack>
 
-              <HomeMenu />
-            </HStack>
+                {!isReallySmall && (
+                  <>
+                    <Spacer size={6} />
+                    <HomeSearchLocationInput />
+                    <VStack flex={1} />
+                  </>
+                )}
+
+                {isReallySmall && (
+                  <LinkButton
+                    onPress={() => setShowLocation((x) => !x)}
+                    padding={12}
+                  >
+                    <MapPin color="#fff" size={22} opacity={0.65} />
+                  </LinkButton>
+                )}
+
+                <HomeMenu />
+              </HStack>
+            </VStack>
           </VStack>
         </VStack>
-      </VStack>
+      </Animated.View>
     </AbsoluteVStack>
   )
 })
