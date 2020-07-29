@@ -44,9 +44,10 @@ export const RestaurantTagsRow = memo(
     }
     return (
       <HStack
-        marginBottom={-3}
+        alignItems="center"
         justifyContent="center"
         flexWrap="wrap"
+        spacing={4}
         {...props.containerProps}
       >
         {tags.map((tag, index) => {
@@ -59,8 +60,6 @@ export const RestaurantTagsRow = memo(
               {...getTagButtonProps(tag)}
               subtle={props.subtle}
               votable={!props.subtle}
-              marginRight={5}
-              marginBottom={5}
               restaurantId={props.restaurantId}
             />
           )

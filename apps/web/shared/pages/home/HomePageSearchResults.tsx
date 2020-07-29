@@ -3,6 +3,7 @@ import {
   Button,
   HStack,
   LoadingItem,
+  PageTitle,
   Spacer,
   StackProps,
   Text,
@@ -26,6 +27,7 @@ import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { HomeStateItemSearch, OmState } from '../../state/home'
 import { isSearchState } from '../../state/home-helpers'
 import { omStatic, useOvermind } from '../../state/useOvermind'
+import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { getTitleForState } from './getTitleForState'
 import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
@@ -37,6 +39,7 @@ import { RestaurantListItem } from './RestaurantListItem'
 import { useLastValue } from './useLastValue'
 import { useLastValueWhen } from './useLastValueWhen'
 import {
+  useMediaQueryIsAboveMedium,
   useMediaQueryIsReallySmall,
   useMediaQueryIsSmall,
 } from './useMediaQueryIs'
@@ -62,27 +65,8 @@ export default memo(function HomePageSearchResults(props: Props) {
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const om = useOvermind()
   const state = om.state.home.allStates[props.item.id] as HomeStateItemSearch
-  const { title, subTitle, pageTitleElements } = getTitleForState(
-    om.state,
-    state
-  )
-
   const isOptimisticUpdating = om.state.home.isOptimisticUpdating
   const wasOptimisticUpdating = useLastValue(isOptimisticUpdating)
-
-  const titleElements = useMemo(() => {
-    return (
-      <>
-        <Text ellipse fontSize={16} fontWeight="400">
-          {pageTitleElements}
-        </Text>
-        <Spacer size={3} />
-        <Text ellipse opacity={0.5} fontWeight="300" fontSize={14}>
-          {subTitle}
-        </Text>
-      </>
-    )
-  }, [subTitle, pageTitleElements])
 
   const changingFilters = wasOptimisticUpdating && state.status === 'loading'
   const shouldAvoidContentUpdates =
@@ -123,8 +107,8 @@ export default memo(function HomePageSearchResults(props: Props) {
   )
 
   return (
-    <HomeStackDrawer title={title} closable>
-      <SearchResultsTitle title={titleElements} stateId={props.item.id} />
+    <HomeStackDrawer closable>
+      <SearchResultsTitle stateId={props.item.id} />
       <Suspense fallback={<HomeLoading />}>
         <VStack
           flex={1}
@@ -138,18 +122,24 @@ export default memo(function HomePageSearchResults(props: Props) {
   )
 })
 
-const SearchResultsTitle = memo(
-  ({ stateId, title }: { stateId: string; title: any }) => {
-    const om = useOvermind()
-    const state = om.state.home.allStates[stateId]
-    const isReallySmall = useMediaQueryIsReallySmall()
-    const isSmall = useMediaQueryIsSmall()
+const SearchResultsTitle = memo(({ stateId }: { stateId: string }) => {
+  const om = useOvermind()
+  const state = om.state.home.allStates[stateId]
+  const isReallySmall = useMediaQueryIsReallySmall()
+  const isSmall = useMediaQueryIsSmall()
+  const isAboveMedium = useMediaQueryIsAboveMedium()
+  const { title, subTitle, pageTitleElements } = getTitleForState(
+    om.state,
+    state
+  )
 
-    if (!isSearchState(state)) {
-      return null
-    }
+  if (!isSearchState(state)) {
+    return null
+  }
 
-    return (
+  return (
+    <>
+      <PageTitleTag>{title}</PageTitleTag>
       <HStack
         position="absolute"
         top={0}
@@ -177,12 +167,17 @@ const SearchResultsTitle = memo(
           {!isReallySmall && (
             <VStack
               flex={10}
-              spacing={3}
               justifyContent="center"
               alignItems="center"
               overflow="hidden"
             >
-              {title}
+              <Text ellipse fontSize={isAboveMedium ? 18 : 16} fontWeight="400">
+                {pageTitleElements}
+              </Text>
+              <Spacer size={3} />
+              <Text ellipse opacity={0.5} fontWeight="300" fontSize={14}>
+                {subTitle}
+              </Text>
             </VStack>
           )}
 
@@ -192,9 +187,9 @@ const SearchResultsTitle = memo(
         </HStack>
         {/* <MyListButton isEditingUserList={isEditingUserList} /> */}
       </HStack>
-    )
-  }
-)
+    </>
+  )
+})
 
 const SearchResultsContent = (props: Props) => {
   const searchState = props.item

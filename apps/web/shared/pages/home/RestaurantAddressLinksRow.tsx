@@ -32,21 +32,23 @@ export const RestaurantAddressLinksRow = memo(
 
       const linkElements = (
         <HStack alignItems="center" spacing={size}>
-          {showMenu && (
+          {showMenu && !!restaurant.website && (
             <Text selectable>
               {showAddress ? <>&nbsp; {sep} &nbsp;</> : null}
-              <Link name="restaurant" params={{ slug: '' }}>
+              <Link href={restaurant.website ?? ''} target="_blank">
                 Menu
               </Link>
             </Text>
           )}
-          {!!restaurant.website && <Text onPress={() => {}}>Call</Text>}
-          {!!restaurant.website && (
-            <Text onPress={() => Linking.openURL(restaurant.website ?? '')}>
-              Website
-            </Text>
+          {!!restaurant.telephone && (
+            <Link href={`tel:${restaurant.telephone}`}>Call</Link>
           )}
           {!!restaurant.website && (
+            <Link href={restaurant.website ?? ''} target="_blank">
+              Website
+            </Link>
+          )}
+          {/* {!!restaurant.website && (
             <Text onPress={() => Linking.openURL(restaurant.website ?? '')}>
               <Image
                 source={require('../../assets/instagram.png')}
@@ -58,7 +60,7 @@ export const RestaurantAddressLinksRow = memo(
                 }}
               />
             </Text>
-          )}
+          )} */}
         </HStack>
       )
 

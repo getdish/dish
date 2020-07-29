@@ -11,7 +11,7 @@ import {
   VStack,
 } from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 import { HomeStateItemRestaurant } from '../../state/home'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
@@ -24,9 +24,9 @@ import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 // favoritestar
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantOverview } from './RestaurantOverview'
+import { RestaurantRatingBreakdown } from './RestaurantRatingBreakdown'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantTopReviews } from './RestaurantTopReviews'
-import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 type Props = HomePagePaneProps<HomeStateItemRestaurant>
@@ -70,6 +70,7 @@ const HomePageRestaurant = memo(
                   restaurantSlug={slug}
                   restaurantId={restaurant.id}
                 />
+                <Spacer size="xl" />
               </HStack>
             }
           />
@@ -117,7 +118,7 @@ const HomePageRestaurant = memo(
 
                 <Spacer size="xl" />
 
-                <VStack flex={1} marginBottom={20}>
+                <VStack flex={1} marginBottom={20} width="100%">
                   <VStack
                     margin={3}
                     borderWidth={1}
@@ -179,61 +180,11 @@ const HomePageRestaurant = memo(
   })
 )
 
-export const RestaurantRatingBreakdown = memo(
-  graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
-    const restaurant = useRestaurantQuery(restaurantSlug)
-    const sources = restaurant?.sources?.() ?? {}
-    return (
-      <>
-        {Object.keys(sources).map((source, i) => {
-          const item = sources[source]
-          if (!item) {
-            return null
-          }
-          const info = thirdPartyCrawlSources[source]
-          return (
-            <a
-              className="see-through"
-              style={{ flex: 1 }}
-              key={source}
-              href={item.url}
-              target="_blank"
-            >
-              <VStack
-                padding={10}
-                alignItems="center"
-                flex={1}
-                borderRadius={10}
-                margin={3}
-                hoverStyle={{
-                  backgroundColor: '#fff',
-                }}
-                // onPress={() => Linking.openURL(item.url)}
-              >
-                {info?.image ? (
-                  <Image
-                    source={info.image}
-                    style={{ width: 24, height: 24, borderRadius: 100 }}
-                  />
-                ) : null}
-                <Text fontSize={12} opacity={0.5} marginVertical={3}>
-                  {info?.name ?? source}
-                </Text>
-                <Text>{item.rating ?? '-'}</Text>
-              </VStack>
-            </a>
-          )
-        })}
-      </>
-    )
-  })
-)
-
 const RestaurantMenu = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
     const [isExpanded, setIsExpanded] = useState(false)
     const restaurant = useRestaurantQuery(restaurantSlug)
-    const items = restaurant.menu_items({ limit: 40 })
+    const items = restaurant.menu_items({ limit: 70 })
     return (
       <>
         {!items?.length && (
@@ -244,7 +195,7 @@ const RestaurantMenu = memo(
         {!!items?.length && (
           <VStack position="relative">
             <HStack
-              height={isExpanded ? 'auto' : 120}
+              maxHeight={isExpanded ? 'auto' : 520}
               overflow="hidden"
               spacing={3}
               flexWrap="wrap"

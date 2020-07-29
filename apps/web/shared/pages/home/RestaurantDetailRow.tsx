@@ -1,5 +1,5 @@
 import { RestaurantQuery, graphql } from '@dish/graph'
-import { Divider, HStack, StackProps, Text, VStack } from '@dish/ui'
+import { Divider, HStack, Spacer, StackProps, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
@@ -63,7 +63,7 @@ export const RestaurantDetailRow = memo(
       centered?: boolean
       after?: any
     }) => {
-      const isSm = size === 'sm'
+      const sizeSm = size === 'sm'
       const restaurant = useRestaurantQuery(restaurantSlug)
       const [open_text, open_color, next_time] = openingHours(restaurant)
       const [price_label, price_color, price_range] = priceRange(restaurant)
@@ -84,7 +84,7 @@ export const RestaurantDetailRow = memo(
         })
       }
 
-      const spaceSize = isSm ? 0 : '6%'
+      const spaceSize = sizeSm ? 0 : '6%'
 
       return (
         <HStack
@@ -94,21 +94,23 @@ export const RestaurantDetailRow = memo(
           {...rest}
         >
           {rows
-            .filter((x) => !isSm || x.content !== '')
+            .filter((x) => !sizeSm || x.content !== '')
             .map((row, index) => (
               <HStack
-                {...(!isSm && { width: '32%' })}
-                {...(isSm && {
+                flex={1}
+                {...(sizeSm && {
                   paddingHorizontal: 10,
-                  overflow: 'visible',
                 })}
                 key={`${index}${row.title}`}
               >
                 <VStack
-                  {...(isSm && { flexDirection: 'row', alignItems: 'center' })}
-                  {...(!isSm && { flex: 10 })}
+                  {...(sizeSm && {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  })}
+                  {...(!sizeSm && { flex: 10 })}
                 >
-                  {!isSm && (
+                  {!sizeSm && (
                     <Text
                       ellipse
                       textAlign={centered ? 'center' : 'left'}
@@ -122,18 +124,19 @@ export const RestaurantDetailRow = memo(
                   )}
                   <Text
                     ellipse
-                    fontSize={isSm ? 12 : 13}
+                    fontSize={sizeSm ? 12 : 13}
                     textAlign={centered ? 'center' : 'left'}
-                    color={isSm ? row.color ?? '' : 'inherit'}
+                    color={sizeSm ? row.color ?? '' : 'inherit'}
                     margin="auto"
                     minHeight={24}
                   >
-                    {row.content !== '' ? row.content : isSm ? '' : '~'}
+                    {row.content !== '' ? row.content : sizeSm ? '' : '~'}
                   </Text>
                 </VStack>
                 {after}
-                {!isSm && index !== rows.length - 1 && (
+                {!sizeSm && index !== rows.length - 1 && (
                   <>
+                    <Spacer size="xl" />
                     <Divider vertical height={25} />
                   </>
                 )}

@@ -122,9 +122,8 @@ export const TagButton = memo((props: TagButtonProps) => {
           <Text
             // @ts-ignore
             fontSize={typeof fontSize === 'number' ? fontSize * 0.85 : fontSize}
-            fontWeight="500"
             margin="auto"
-            paddingHorizontal={8 * scale}
+            paddingHorizontal={6 * scale}
             alignSelf="stretch"
             alignContent="center"
             justifyContent="center"
@@ -134,9 +133,7 @@ export const TagButton = memo((props: TagButtonProps) => {
             <SuperScriptText opacity={0.5}>#</SuperScriptText>
             {rank}
           </Text>
-        ) : (
-          <Spacer size={scale * 2} />
-        )}
+        ) : null}
         {/* tag name */}
         <Text
           ellipse
