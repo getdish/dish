@@ -1,7 +1,14 @@
 import './base.css'
 import './bootstrapEnv'
 
-import { client, mutation, query, schema, startLogging } from '@dish/graph'
+import {
+  client,
+  mutation,
+  query,
+  resolved,
+  schema,
+  startLogging,
+} from '@dish/graph'
 import { createOvermind } from 'overmind'
 import React from 'react'
 // @ts-ignore
@@ -36,6 +43,7 @@ window['gqless'] = {
   mutation,
   schema,
   client,
+  resolved,
 }
 
 // exports
