@@ -20,6 +20,10 @@ resource "digitalocean_kubernetes_cluster" "dish" {
     auto_scale = true
     min_nodes = 2
     max_nodes = 5
+
+    labels = {
+      dish_node_type = "main"
+    }
   }
 }
 

@@ -32,9 +32,6 @@ resource "kubernetes_deployment" "buildkitd" {
           args = [
             "--addr", "unix:///run/buildkit/buildkitd.sock",
             "--addr", "tcp://0.0.0.0:1234",
-            "--tlscacert", "/certs/ca.pem",
-            "--tlscert", "/certs/cert.pem",
-            "--tlskey", "/certs/key.pem"
           ]
 
           port {
@@ -77,25 +74,12 @@ resource "kubernetes_deployment" "buildkitd" {
             mount_path = "/app/config.json"
             sub_path = "config.json"
           }
-
-          volume_mount {
-            name = "buildkitd-certs"
-            read_only = true
-            mount_path = "/certs"
-          }
         }
 
         volume {
           name = "buildkitd-config"
           config_map {
             name = "buildkitd-config"
-          }
-        }
-
-        volume {
-          name = "buildkitd-certs"
-          secret {
-            secret_name = "buildkitd-certs"
           }
         }
       }
@@ -113,21 +97,6 @@ resource "kubernetes_config_map" "buildkitd-config" {
   }
 }
 
-resource "kubernetes_secret" "buildkitd-certs" {
-  metadata {
-    name      = "buildkitd-certs"
-    namespace = "docker-registry"
-  }
-
-  data = {
-   "ca.pem" = file("etc/builkitd-certs/daemon/ca.pem")
-   "cert.pem" = file("etc/builkitd-certs/daemon/cert.pem")
-   "key.pem" = file("etc/builkitd-certs/daemon/key.pem")
-  }
-
-  type = "generic"
-}
-
 resource "kubernetes_service" "buildkitd" {
   metadata {
     name = "buildkitd"
@@ -140,7 +109,7 @@ resource "kubernetes_service" "buildkitd" {
     }
 
     port {
-      name = "tcp"
+      name = "http"
       port = 1234
       target_port = 1234
     }
