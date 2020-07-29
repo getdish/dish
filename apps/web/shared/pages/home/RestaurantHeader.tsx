@@ -53,6 +53,7 @@ const RestaurantHeaderContent = memo(
             overflow="hidden"
             position="relative"
           >
+            {padding}
             <HStack alignItems="center">
               {padding}
               <HStack position="relative">
