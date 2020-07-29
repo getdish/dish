@@ -1,5 +1,6 @@
 SELECT jsonb_agg(t) FROM (
   SELECT
+    tag.id as id,
     tag.name as name,
     parent.name as parent,
     tag.type as type
