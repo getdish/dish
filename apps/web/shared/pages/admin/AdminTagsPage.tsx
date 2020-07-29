@@ -1,3 +1,4 @@
+import { sleep } from '@dish/async'
 import {
   Tag,
   TagRecord,
@@ -14,6 +15,7 @@ import {
 import {
   HStack,
   LoadingItems,
+  Spacer,
   Text,
   Toast,
   VStack,
@@ -22,21 +24,15 @@ import {
 } from '@dish/ui'
 import { RecoilRoot, Store, useRecoilStore } from '@dish/use-store'
 import { capitalize, uniqBy } from 'lodash'
-import React, { Suspense, memo, useEffect, useState } from 'react'
+import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
 
 import { emojiRegex } from '../../helpers/emojiRegex'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { AdminListItem } from './AdminListItem'
 import { ColumnHeader } from './ColumnHeader'
-import {
-  SelectionStore,
-  useSelectionStore,
-  useTagSelectionStore,
-} from './SelectionStore'
+import { useTagSelectionStore } from './SelectionStore'
 import { VerticalColumn } from './VerticalColumn'
-
-const SELECTION_ID = 'tags'
 
 // whats still broken:
 //   - "New" item
@@ -155,6 +151,8 @@ const TagList = memo(
       setContentKey(Math.random())
     }
 
+    console.log('contentKey', contentKey)
+
     return (
       <VStack flex={1} maxHeight="100%">
         <ColumnHeader
@@ -207,148 +205,152 @@ const TagList = memo(
   })
 )
 
-const TagListContent = graphql(
-  ({
-    row,
-    search,
-    newTag,
-    type,
-    lastRowSelection,
-  }: {
-    search: string
-    row: number
-    type: TagType
-    newTag?: Tag
-    lastRowSelection: string
-  }) => {
-    const tagStore = useRecoilStore(TagStore)
-    const selectionStore = useTagSelectionStore()
-    const limit = 200
-    const [page, setPage] = useState(1)
-    const forceUpdate = useForceUpdate()
-    const results = query.tag({
-      where: {
-        type: { _eq: type },
-        ...(type !== 'continent' &&
-          lastRowSelection && {
-            parent: { name: { _eq: lastRowSelection } },
+const TagListContent = memo(
+  graphql(
+    ({
+      row,
+      search,
+      newTag,
+      type,
+      lastRowSelection,
+    }: {
+      search: string
+      row: number
+      type: TagType
+      newTag?: Tag
+      lastRowSelection: string
+    }) => {
+      const tagStore = useRecoilStore(TagStore)
+      const selectionStore = useTagSelectionStore()
+      const limit = 40
+      const [page, setPage] = useState(1)
+      const forceUpdate = useForceUpdate()
+
+      const results = query.tag({
+        where: {
+          type: { _eq: type },
+          ...(type !== 'continent' &&
+            lastRowSelection && {
+              parent: { name: { _eq: lastRowSelection } },
+            }),
+          ...(!!search && {
+            name: {
+              _ilike: `%${search}%`,
+            },
           }),
-        ...(!!search && {
-          name: {
-            _ilike: `%${search}%`,
-          },
-        }),
-      },
-      limit: limit,
-      offset: (page - 1) * limit,
-      order_by: [
-        {
-          name: order_by.asc,
         },
-      ],
-    })
+        limit: limit,
+        offset: (page - 1) * limit,
+        order_by: [
+          {
+            name: order_by.asc,
+          },
+        ],
+      })
 
-    console.log('got results', results)
+      const allResults = uniqBy(
+        [{ id: 0, name: '' } as WithID<Tag>, ...results],
+        (x) => x.name
+      )
 
-    const allResults = uniqBy(
-      [{ id: 0, name: '' } as WithID<Tag>, ...results],
-      (x) => x.name
-    )
+      useEffect(() => {
+        if (tagStore.forceRefreshColumnByType === type) {
+          refetch(results)
+          setTimeout(() => {
+            forceUpdate()
+          }, 1000)
+        }
+      }, [tagStore.forceRefreshColumnByType])
 
-    useEffect(() => {
-      if (tagStore.forceRefreshColumnByType === type) {
-        refetch(results)
-        setTimeout(() => {
-          forceUpdate()
-        }, 1000)
-      }
-    }, [tagStore.forceRefreshColumnByType])
+      // didnt work with gqless
+      // useEffect(() => {
+      //   if (newTag) {
+      //     console.warn('inserting new tag', newTag)
+      //     // @ts-ignore
+      //     results.push(newTag)
+      //   }
+      // }, [JSON.stringify(newTag ?? null)])
 
-    // didnt work with gqless
-    // useEffect(() => {
-    //   if (newTag) {
-    //     console.warn('inserting new tag', newTag)
-    //     // @ts-ignore
-    //     results.push(newTag)
-    //   }
-    // }, [JSON.stringify(newTag ?? null)])
-
-    return (
-      <ScrollView style={{ paddingBottom: 100 }}>
-        {allResults.map((tag, col) => {
-          return (
-            <AdminListItem
-              key={tag.id}
-              text={`${tag.icon ?? ''} ${tag.name}`.trim()}
-              onSelect={() => {
-                tagStore.selectedId = tag.id
-                selectionStore.setSelected([row, col])
-                selectionStore.setSelectedName(row, tag.name ?? '')
-              }}
-              onEdit={(text) => {
-                if (emojiRegex.test(text)) {
-                  const [icon, ...nameParts] = text.split(' ')
-                  const name = nameParts.join(' ')
-                  tag.icon = icon
-                  tag.name = name
-                } else {
-                  tag.name = text
+      return (
+        <ScrollView style={{ paddingBottom: 100 }}>
+          {allResults.map((tag, col) => {
+            return (
+              <AdminListItem
+                key={tag.id}
+                text={`${tag.icon ?? ''} ${tag.name}`.trim()}
+                onSelect={() => {
+                  tagStore.selectedId = tag.id
+                  selectionStore.setSelected([row, col])
+                  selectionStore.setSelectedName(row, tag.name ?? '')
+                }}
+                onEdit={(text) => {
+                  setTagNameAndIcon(tag, text)
+                }}
+                onDelete={() => {
+                  tagDelete(tag)
+                }}
+                isFormerlyActive={
+                  selectionStore.selectedNames[row] === tag.name
                 }
-              }}
-              onDelete={() => {
-                tagDelete(tag)
-              }}
-              isFormerlyActive={selectionStore.selectedNames[row] === tag.name}
-              isActive={
-                selectionStore.selectedIndices[0] == row &&
-                selectionStore.selectedIndices[1] == col
-              }
-              deletable={col > 0}
-              editable={col > 0}
-            />
-          )
-        })}
+                isActive={
+                  selectionStore.selectedIndices[0] == row &&
+                  selectionStore.selectedIndices[1] == col
+                }
+                deletable={col > 0}
+                editable={col > 0}
+              />
+            )
+          })}
 
-        {results.length === limit && (
-          <HStack
-            height={32}
-            padding={6}
-            hoverStyle={{
-              backgroundColor: '#f2f2f2',
-            }}
-            onPress={() => {
-              setPage((x) => x + 1)
-            }}
-          >
-            <Text>Next page</Text>
-          </HStack>
-        )}
-      </ScrollView>
-    )
-  }
+          {results.length === limit && (
+            <HStack
+              height={32}
+              padding={6}
+              hoverStyle={{
+                backgroundColor: '#f2f2f2',
+              }}
+              onPress={() => {
+                setPage((x) => x + 1)
+              }}
+            >
+              <Text>Next page</Text>
+            </HStack>
+          )}
+        </ScrollView>
+      )
+    }
+  )
 )
 
 const TagEditColumn = memo(() => {
   const tagStore = useRecoilStore(TagStore)
+  const [showCreate, setShowCreate] = useState(false)
   return (
     <VStack spacing="lg">
       <>
         <Text>Create</Text>
-        <TagCRUD
-          tag={tagStore.draft}
-          onChange={(x) => tagStore.updateDraft(x)}
-        />
-        <SmallButton
-          onPress={async () => {
-            console.log('upserting', tagStore.draft)
-            const reply = await tagUpsert([tagStore.draft])
-            console.log('got', reply)
-            Toast.show('Saved')
-            tagStore.forceRefreshColumnByType = tagStore.draft.type ?? ''
-          }}
-        >
-          Save
+        <SmallButton onPress={() => setShowCreate((x) => !x)}>
+          {showCreate ? 'Hide' : 'Create'}
         </SmallButton>
+        {showCreate && (
+          <>
+            <TagCRUD
+              tag={tagStore.draft}
+              onChange={(x) => tagStore.updateDraft(x)}
+            />
+            <SmallButton
+              onPress={async () => {
+                console.log('upserting', tagStore.draft)
+                const reply = await tagUpsert([tagStore.draft])
+                console.log('got', reply)
+                Toast.show('Saved')
+                tagStore.forceRefreshColumnByType = tagStore.draft.type ?? ''
+              }}
+            >
+              Save
+            </SmallButton>
+          </>
+        )}
       </>
 
       <>
@@ -371,6 +373,7 @@ const TagEdit = memo(
         },
         limit: 1,
       })
+      console.log('got now', tag)
       return (
         <TagCRUD
           tag={{
@@ -382,6 +385,10 @@ const TagEdit = memo(
             for (const key in x) {
               tag[key] = x[key]
             }
+            sleep(500).then(() => {
+              refetch(tag)
+            })
+            Toast.show('Saved')
           }}
         />
       )
@@ -391,7 +398,65 @@ const TagEdit = memo(
   })
 )
 
+const setTagNameAndIcon = (tag: Tag, text: string) => {
+  if (emojiRegex.test(text)) {
+    const [icon, ...nameParts] = text.split(' ')
+    const name = nameParts.join(' ')
+    tag.icon = icon
+    tag.name = name
+  } else {
+    tag.name = text
+  }
+}
+
+const getWikiInfo = (term: string) => {
+  return fetch(
+    `https://en.wikipedia.org/w/api.php?format=json&origin=*&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=${encodeURIComponent(
+      term
+    )}`
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      const pages = data.query.pages
+      const page = Object.keys(pages).find((k) => k !== '-1')
+      if (page) {
+        return pages[page].extract
+      }
+    })
+}
+
 const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
+  const [info, setInfo] = useState<{ name: string; description: string }[]>([])
+
+  useEffect(() => {
+    if (tag.name) {
+      let unmounted = false
+
+      const subNames = tag.name.split(' ')
+      console.log('subNames', subNames)
+
+      Promise.all([
+        getWikiInfo(tag.name).then((description) => ({
+          name: tag.name,
+          description,
+        })),
+        ...(subNames.length > 1
+          ? subNames.map((name) =>
+              getWikiInfo(name).then((description) => ({ name, description }))
+            )
+          : []),
+      ]).then((results) => {
+        if (!unmounted) {
+          setInfo(results)
+        }
+      })
+
+      return () => {
+        unmounted = true
+      }
+    }
+  }, [tag.name])
+
   console.log('edit tag', tag)
   return (
     <VStack
@@ -400,39 +465,89 @@ const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
       borderColor="#eee"
       borderWidth={1}
       borderRadius={10}
+      spacing={10}
     >
-      <Text>ID</Text>
-      <TextInput
-        style={styles.textInput}
-        onChange={(e) => onChange?.({ id: e.target['value'] })}
-        defaultValue={tag.id}
-        // onBlur={() => upsertDraft()}
-      />
-      <Text>Name</Text>
-      <TextInput
-        style={styles.textInput}
-        onChange={(e) => onChange?.({ name: e.target['value'] })}
-        defaultValue={tag.name}
-        // onBlur={() => upsertDraft()}
-      />
-      <Text>Icon</Text>
-      <TextInput
-        style={styles.textInput}
-        onChange={(e) => onChange?.({ icon: e.target['value'] })}
-        defaultValue={tag.icon ?? ''}
-        // onBlur={() => upsertDraft()}
-      />
-      <select
-        onChange={(e) => {
-          const id = e.target.options[e.target.selectedIndex].id
-          onChange?.({ type: id })
-        }}
-      >
-        <option id="continent">Continent</option>
-        <option id="country">Country</option>
-        <option id="dish">Dish</option>
-        <option id="lense">Lense</option>
-      </select>
+      <TableRow label="ID">
+        <TextInput
+          style={styles.textInput}
+          onChange={(e) => onChange?.({ id: e.target['value'] })}
+          defaultValue={tag.id}
+          // onBlur={() => upsertDraft()}
+        />
+      </TableRow>
+
+      <TableRow label="Name">
+        <TextInput
+          style={styles.textInput}
+          onChange={(e) => onChange?.({ name: e.target['value'] })}
+          defaultValue={tag.name}
+          // onBlur={() => upsertDraft()}
+        />
+      </TableRow>
+
+      <TableRow label="Type">
+        <select
+          onChange={(e) => {
+            const id = e.target.options[e.target.selectedIndex].id
+            onChange?.({ type: id })
+          }}
+        >
+          <option id="continent">Continent</option>
+          <option id="country">Country</option>
+          <option id="dish">Dish</option>
+          <option id="lense">Lense</option>
+        </select>
+      </TableRow>
+
+      <TableRow label="Icon">
+        <TextInput
+          style={styles.textInput}
+          onChange={(e) => onChange?.({ icon: e.target['value'] })}
+          defaultValue={tag.icon ?? ''}
+          // onBlur={() => upsertDraft()}
+        />
+        <ScrollView style={{ maxHeight: 330 }}>
+          <HStack flexWrap="wrap">
+            {foodIcons.map((icon, index) => (
+              <VStack
+                cursor="default"
+                onPress={() => onChange?.({ icon })}
+                minWidth={22}
+                flex={1}
+                key={index}
+                borderRadius={5}
+                hoverStyle={{
+                  backgroundColor: '#eee',
+                }}
+              >
+                <Text fontSize={22}>{icon}</Text>
+              </VStack>
+            ))}
+          </HStack>
+        </ScrollView>
+
+        {info.length && (
+          <ScrollView style={{ marginTop: 20, maxHeight: 300 }}>
+            {info.map(({ name, description }) => {
+              return (
+                <VStack marginBottom={10} key={name}>
+                  <Text fontWeight="600">{name}</Text>
+                  <Text>{description ?? 'None found'}</Text>
+                </VStack>
+              )
+            })}
+          </ScrollView>
+        )}
+      </TableRow>
+    </VStack>
+  )
+}
+
+const TableRow = ({ label, children }: { label: string; children: any }) => {
+  return (
+    <VStack>
+      <Text fontSize={13}>{label}</Text>
+      {children}
     </VStack>
   )
 }
@@ -482,3 +597,92 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
   },
 })
+
+const foodIcons = [
+  '🎂',
+  '🍆',
+  '🍑',
+  '🍰',
+  '🍕',
+  '🍔',
+  '🍪',
+  '🍓',
+  '🍩',
+  '🍒',
+  '🌮',
+  '🥑',
+  '🍌',
+  '🍎',
+  '🍊',
+  '🍦',
+  '🍍',
+  '🌶',
+  '🍟',
+  '🍋',
+  '🍿',
+  '🥥',
+  '🍗',
+  '🥓',
+  '🥚',
+  '🧀',
+  '🍇',
+  '🍓',
+  '🍈',
+  '🥦',
+  '🥭',
+  '🥝',
+  '🍉',
+  '🥬',
+  '🥒',
+  '🌽',
+  '🥕',
+  '🥐',
+  '🍠',
+  '🥔',
+  '🧅',
+  '🧄',
+  '🥯',
+  '🍞',
+  '🥖',
+  '🥨',
+  '🧇',
+  '🥞',
+  '🍗',
+  '🍖',
+  '🦴',
+  '🥪',
+  '🥩',
+  '🌭',
+  '🥙',
+  '🧆',
+  '🌯',
+  '🥗',
+  '🍲',
+  '🍜',
+  '🍝',
+  '🥫',
+  '🥘',
+  '🍛',
+  '🍣',
+  '🍱',
+  '🥟',
+  '🦪',
+  '🍘',
+  '🍥',
+  '🍚',
+  '🍙',
+  '🍤',
+  '🥮',
+  '🍢',
+  '🍡',
+  '🍧',
+  '🧁',
+  '🥧',
+  '🍨',
+  '🍺',
+  '🍷',
+  '🍶',
+  '🍸',
+  '🥃',
+  '🍾',
+]

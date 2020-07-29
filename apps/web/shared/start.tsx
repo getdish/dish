@@ -1,11 +1,11 @@
-import { resolved, update } from '@dish/graph'
+import { mutation, resolved, update } from '@dish/graph'
 
 // startup stuff (can put in some other file eventually)
 const queue = new Map<
   any,
   {
     item: Object
-    tableName: string
+    tableName?: string
   }
 >()
 let cur = null
@@ -34,6 +34,7 @@ const updateItem = (
   getDefaultItem?: () => any
 ) => {
   if (!queue.has(key)) {
+    console.log('updateItem', tableName)
     queue.set(key, {
       item: getDefaultItem?.() ?? {},
       tableName,
@@ -56,9 +57,20 @@ const scheduleSet = () => {
     queue.clear()
     const promises = new Set<Promise<any>>()
     for (const { tableName, item } of values) {
-      const out = update(tableName, item as any)
-      console.log('saving', item, out)
-      promises.add(resolved(out))
+      const mutate = mutation[`update_${tableName}`]
+      if (!mutate) return
+      const key = 'id' in item ? 'id' : 'name'
+      if (!item[key]) {
+        throw new Error(`No valid id? TODO support custom`)
+      }
+      const args = {
+        where: { [key]: { _eq: item[key] } },
+        _set: {
+          ...item,
+        },
+      }
+      console.log('write', tableName, item, args)
+      promises.add(resolved(() => mutate(args).affected_rows))
     }
     Promise.all([...promises]).then((res) => {
       console.log(
