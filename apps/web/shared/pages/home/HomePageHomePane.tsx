@@ -29,6 +29,7 @@ import { getActiveTags } from '../../state/home-tag-helpers'
 import { tagDescriptions } from '../../state/tagDescriptions'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../../views/NotFoundPage'
+import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { flatButtonStyle } from './baseButtonStyle'
@@ -351,9 +352,14 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
                 />
               )
             })}
-            <Squircle width={dishHeight * 0.8} height={dishHeight}>
-              <ChevronRight size={40} color="black" />
-            </Squircle>
+            <Link
+              className="see-through"
+              tag={{ type: 'country', name: country.country ?? '' }}
+            >
+              <Squircle width={dishHeight * 0.8} height={dishHeight}>
+                <ChevronRight size={40} color="black" />
+              </Squircle>
+            </Link>
           </HStack>
         </HomeScrollViewHorizontal>
       </VStack>

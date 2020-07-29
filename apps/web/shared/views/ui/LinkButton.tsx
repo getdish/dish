@@ -61,6 +61,7 @@ export function LinkButton<
       asyncClick,
       textAlign,
       activeTextStyle,
+      color,
       ...rest
     } = props
     restProps = rest
@@ -77,6 +78,7 @@ export function LinkButton<
         fontWeight={fontWeight}
         ellipse={ellipse}
         textAlign={textAlign}
+        color={color ?? '#222'}
         preventNavigate={preventNavigate}
         {...(isActive && activeTextStyle)}
         style={{
@@ -100,6 +102,7 @@ export function LinkButton<
       textAlign,
       ellipse,
       replace,
+      color,
       disallowDisableWhenActive,
       ...rest
     } = props
@@ -113,6 +116,7 @@ export function LinkButton<
         textAlign={textAlign}
         flexDirection={props.flexDirection ?? 'row'}
         flexWrap={props.flexWrap}
+        color={color}
       >
         {getChildren(props, isActive)}
       </Text>

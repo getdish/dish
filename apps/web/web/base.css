@@ -37,6 +37,11 @@ body {
 
 a {
   text-decoration: none;
+  color: #4B2EA8;
+}
+
+a:hover {
+  color: #4B2EA8cc;
 }
 
 p a {

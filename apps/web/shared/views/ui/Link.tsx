@@ -5,6 +5,7 @@ import { NavigateItem } from '@dish/router'
 import { Text } from '@dish/ui'
 import React, { useEffect, useRef } from 'react'
 
+import { brandColor } from '../../colors'
 import { RoutesTable, router } from '../../state/router'
 import { useOvermindStatic } from '../../state/useOvermind'
 import { LinkProps } from './LinkProps'
@@ -21,7 +22,7 @@ export function Link<
     ellipse,
     lineHeight,
     padding,
-    color,
+    color = brandColor,
     onClick,
     replace,
     replaceSearch,

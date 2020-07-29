@@ -23,7 +23,7 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
   const hasUser = state.type === 'userSearch'
   const userPrefix = state.type === 'userSearch' ? `${state.username}'s ` : ''
   let lensePlaceholder = lense?.name ?? ''
-  const descriptions = tagDescriptions[lense?.name.toLowerCase()]
+  const descriptions = tagDescriptions[lense?.name?.toLowerCase() ?? '']
   if (descriptions) {
     if (dishTag) lensePlaceholder = descriptions.dish
     else if (countryTag) lensePlaceholder = descriptions.cuisine
@@ -43,17 +43,15 @@ export function getTitleForState(omState: OmState, state: HomeStateItem) {
   if (!cheap && !midRange && expensive) {
     titleParts.push('high end')
   }
-  if (countryTag) {
+  if (countryTag?.name) {
     titleParts.push(countryTag.name)
   }
-  if (dishTag) {
+  if (dishTag?.name) {
     titleParts.push(dishTag.name)
   }
-
   if (hasUser) {
     lensePlaceholder = lensePlaceholder.toLowerCase()
   }
-
   const titleSpace = titleParts.length ? ' ' : ''
   const searchName = getTitleForQuery(state.searchQuery ?? '')
   let titleTagsString = titleParts.filter(Boolean).join(' ')

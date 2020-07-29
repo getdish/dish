@@ -32,6 +32,7 @@ export type LinkSharedProps = {
   navigateAfterPress?: boolean
   onMouseDown?: Function
   asyncClick?: boolean
+  color?: string
 }
 
 export type LinkButtonNamedProps<A = any, B = any> = {

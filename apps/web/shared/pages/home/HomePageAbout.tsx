@@ -23,23 +23,25 @@ export default graphql(function HomePageAbout({
           </Text>
 
           <VStack spacing="lg">
-            <Paragraph>Dish is a good food finder.</Paragraph>
-
-            <Paragraph>Like RottenTomatoes, for cuisine.</Paragraph>
-
-            <Paragraph>Search across all food delivery apps at once.</Paragraph>
-
-            <Paragraph>See reviews down to the dish.</Paragraph>
+            <Paragraph>
+              Dish finds great food you'd have missed otherwise.
+            </Paragraph>
 
             <Paragraph>
-              So you can find that "ultimate pho hole in the wall" .
+              Think RottenTomatoes - for dining and delivery.
+            </Paragraph>
+
+            <Paragraph>Search across every food delivery app!</Paragraph>
+
+            <Paragraph>Find the best dishes in your city.</Paragraph>
+
+            <Paragraph>
+              Don't miss that "ultimate pho hole in the wall" .
             </Paragraph>
 
             <Divider marginVertical={40} />
 
-            <Paragraph>
-              We'd like to grow into your real world food Pokedex.
-            </Paragraph>
+            <Paragraph>We're growing into a real-world food Pokedex.</Paragraph>
 
             <Paragraph>Let us know what you'd like in it:</Paragraph>
 

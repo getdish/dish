@@ -156,7 +156,7 @@ const RestaurantListItemContent = memo(
         // borderTopColor={isActive ? '#eee' : 'transparent'}
         // borderBottomColor={isActive ? '#eee' : 'transparent'}
         borderLeftWidth={2}
-        borderLeftColor={isActive ? 'blue' : 'transparent'}
+        borderLeftColor={isActive ? brandColor : 'transparent'}
       >
         <VStack
           paddingHorizontal={pad + 6}
@@ -207,8 +207,8 @@ const RestaurantListItemContent = memo(
                       selectable
                       maxWidth="100%"
                       fontSize={
-                        (isSmall ? 20 : 22) *
-                        (restaurantName.length > 20 ? 0.85 : 1)
+                        (isSmall ? 18 : 20) *
+                        (restaurantName.length > 25 ? 0.85 : 1)
                       }
                       fontWeight="600"
                       lineHeight={26}
