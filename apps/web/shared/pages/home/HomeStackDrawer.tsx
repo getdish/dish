@@ -51,7 +51,7 @@ export const HomeStackDrawer = ({
         position="relative"
         borderRadius={drawerBorderRadius}
         overflow="hidden"
-        shadowRadius={10}
+        shadowRadius={isSmall ? 5 : 10}
         shadowColor="rgba(0,0,0,0.1)"
         flex={1}
         {...props}

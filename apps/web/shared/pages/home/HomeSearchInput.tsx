@@ -22,6 +22,7 @@ import { router } from '../../state/router'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { CloseButton } from './CloseButton'
 import { HomeAutocompleteHoverableInput } from './HomeAutocomplete'
+import { useSearchBarTheme } from './HomeSearchBar'
 import { isIOS } from './isIOS'
 import { TagButton } from './TagButton'
 import { useMediaQueryIsReallySmall } from './useMediaQueryIs'
@@ -78,6 +79,7 @@ export const isSearchInputFocused = () => {
 
 export const HomeSearchInput = memo(() => {
   const om = useOvermind()
+  const { color, background } = useSearchBarTheme()
   const isReallySmall = useMediaQueryIsReallySmall()
   const inputRef = useRef<any>()
   const [search, setSearch] = useState('')
@@ -177,25 +179,24 @@ export const HomeSearchInput = memo(() => {
       <HomeAutocompleteHoverableInput input={input} autocompleteTarget="search">
         <HStack
           contain="paint"
-          // backgroundColor="rgba(255,255,255,0.1)"
           alignItems="center"
-          // paddingHorizontal={15}
-          borderRadius={100}
+          borderRadius={10}
           flex={1}
           maxWidth="100%"
-          paddingRight={6}
+          paddingHorizontal={10}
           overflow="hidden"
+          backgroundColor={background}
         >
           {/* Loading / Search Icon */}
           {!isReallySmall && (
             <>
               {om.state.home.isLoading ? (
                 <VStack className="rotating" opacity={0.9}>
-                  <Loader color="#fff" size={18} />
+                  <Loader color={color} size={18} />
                 </VStack>
               ) : (
                 <Search
-                  color="#fff"
+                  color={color}
                   size={18}
                   opacity={0.6}
                   onClick={focusSearchInput}
@@ -222,7 +223,7 @@ export const HomeSearchInput = memo(() => {
             placeholder={isSearchingCuisine ? '...' : `${placeHolder}...`}
             style={[
               inputTextStyles.textInput,
-              { flex: 1, fontSize: 18, paddingRight: 0 },
+              { color, flex: 1, fontSize: 18, paddingRight: 0 },
             ]}
           />
           <SearchCancelButton />

@@ -25,7 +25,7 @@ export const restaurantPhotosForCarousel = ({
   let photos = [] as TopCuisineDish[]
   for (const photo of restaurantPhotos) {
     if (photos.length >= max) break
-    photos.push({ name: 'Item', image: photo })
+    photos.push({ name: '', image: photo })
   }
   if (!gallery || photos.length == 0) {
     photos = [...dishPhotos(restaurant, tag_names), ...photos]

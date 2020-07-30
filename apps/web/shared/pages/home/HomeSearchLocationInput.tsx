@@ -10,12 +10,14 @@ import {
 } from '../../helpers/input'
 import { useOvermind } from '../../state/useOvermind'
 import { HomeAutocompleteHoverableInput } from './HomeAutocomplete'
+import { useSearchBarTheme } from './HomeSearchBar'
 import { inputTextStyles, onFocusAnyInput } from './HomeSearchInput'
 
 const paddingHorizontal = 16
 
 export const HomeSearchLocationInput = memo(() => {
   const om = useOvermind()
+  const { theme, color, background } = useSearchBarTheme()
   const [locationSearch, setLocationSearch] = useState('')
   const locationInputRef = useRef<any>()
   const locationInput = inputGetNode(locationInputRef.current)
@@ -94,7 +96,7 @@ export const HomeSearchLocationInput = memo(() => {
       position="relative"
       flex={65}
       minWidth={180}
-      backgroundColor="rgba(255,255,255,0.1)"
+      backgroundColor={theme === 'dark' ? 'rgba(255,255,255,0.1)' : background}
       borderRadius={8}
       justifyContent="center"
     >
@@ -104,7 +106,7 @@ export const HomeSearchLocationInput = memo(() => {
       >
         <HStack alignItems="center">
           <MapPin
-            color="#fff"
+            color={color}
             size={18}
             opacity={0.5}
             style={{ marginLeft: 10, marginRight: -5 }}
@@ -115,7 +117,7 @@ export const HomeSearchLocationInput = memo(() => {
             placeholder={currentLocationName ?? 'San Francisco'}
             style={[
               inputTextStyles.textInput,
-              { paddingHorizontal, fontSize: 16 },
+              { color, paddingHorizontal, fontSize: 16 },
             ]}
             onFocus={() => {
               onFocusAnyInput()
@@ -129,26 +131,19 @@ export const HomeSearchLocationInput = memo(() => {
               }
             }}
           />
-          <SearchLocationButton />
+          <Button
+            padding={8}
+            alignSelf="center"
+            marginRight={5}
+            borderRadius={1000}
+            onPress={() => {
+              om.actions.home.moveMapToUserLocation()
+            }}
+          >
+            <Navigation size={20} opacity={0.7} color={color} />
+          </Button>
         </HStack>
       </HomeAutocompleteHoverableInput>
     </VStack>
-  )
-})
-
-const SearchLocationButton = memo(() => {
-  const om = useOvermind()
-  return (
-    <Button
-      padding={8}
-      alignSelf="center"
-      marginRight={5}
-      borderRadius={1000}
-      onPress={() => {
-        om.actions.home.moveMapToUserLocation()
-      }}
-    >
-      <Navigation size={20} color="rgba(255,255,255,0.8)" />
-    </Button>
   )
 })

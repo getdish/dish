@@ -1,5 +1,5 @@
 import { Tag } from '@dish/graph'
-import { Spacer, VStack } from '@dish/ui'
+import { VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { getTagId } from '../../state/getTagId'

@@ -3,11 +3,12 @@ import React, { Suspense, memo } from 'react'
 
 import { frameWidthMax, isWorker } from '../../constants'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
+import HomeAutocomplete from './HomeAutocomplete'
 import { HomeContainer } from './HomeContainer'
 import { HomeMap } from './HomeMap'
 import { HomeMapPIP } from './HomeMapPIP'
 import { HomePagePane } from './HomePagePane'
-import HomeSearchBar from './HomeSearchBar'
+import { HomeSearchBarDrawer, HomeSearchBarFloating } from './HomeSearchBar'
 import { HomeStackView } from './HomeStackView'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
@@ -50,11 +51,11 @@ const HomePageContent = memo(() => {
           </ErrorBoundary>
         )}
 
-        <Suspense fallback={null}>
-          <HomeSearchBar />
-        </Suspense>
+        <HomeSearchBarFloating />
+        <HomeAutocomplete />
 
         <HomeContainer>
+          <HomeSearchBarDrawer />
           <HomeStackView>
             {(props) => {
               return <HomePagePane {...props} />

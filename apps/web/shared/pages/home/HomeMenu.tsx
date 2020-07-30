@@ -29,6 +29,7 @@ import { AuthLoginRegisterView } from '../../views/auth/AuthLoginRegisterView'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { flatButtonStyle } from './baseButtonStyle'
+import { useSearchBarTheme } from './HomeSearchBar'
 import {
   useMediaQueryIsAboveMedium,
   useMediaQueryIsMedium,
@@ -142,6 +143,7 @@ const MenuButton = ({
   text?: any
   tooltip?: string
 }) => {
+  const { color } = useSearchBarTheme()
   const linkButtonElement = (
     <LinkButton
       className="ease-in-out-fast"
@@ -157,9 +159,9 @@ const MenuButton = ({
         const IconElement = isActive ? ActiveIcon : Icon
         return (
           <HStack spacing alignItems="center" justifyContent="center">
-            <IconElement color="#fff" size={22} />
+            <IconElement color={color} size={22} />
             {!!text && (
-              <Text color="#fff" fontSize={13} fontWeight="500">
+              <Text color={color} fontSize={13} fontWeight="500">
                 {text}
               </Text>
             )}

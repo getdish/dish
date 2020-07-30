@@ -3,16 +3,13 @@ import {
   Button,
   HStack,
   LoadingItem,
-  PageTitle,
   Spacer,
   StackProps,
   Text,
   VStack,
 } from '@dish/ui'
-import { pick } from 'lodash'
 import React, {
   Suspense,
-  SuspenseList,
   memo,
   useCallback,
   useEffect,
@@ -33,7 +30,7 @@ import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePagePane'
 import { HomeScrollView } from './HomeScrollView'
-import { focusSearchInput, isSearchInputFocused } from './HomeSearchInput'
+import { focusSearchInput } from './HomeSearchInput'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
 import { useLastValue } from './useLastValue'
@@ -258,7 +255,7 @@ const SearchResultsContent = (props: Props) => {
   const results = useMemo(() => {
     const cur = allResults.slice(0, currentlyShowing)
     return (
-      <SuspenseList revealOrder="forwards">
+      <>
         {cur.map((result, index) => {
           const onFinishRender =
             index == cur.length - 1
@@ -280,7 +277,7 @@ const SearchResultsContent = (props: Props) => {
             </Suspense>
           )
         })}
-      </SuspenseList>
+      </>
     )
   }, [allResults, currentlyShowing, state.chunk])
 

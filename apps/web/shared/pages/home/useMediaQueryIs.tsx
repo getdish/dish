@@ -1,4 +1,4 @@
-import { useMedia } from '@dish/ui'
+import { useMediaLayout } from '@dish/ui'
 
 const mediaQueries = {
   xs: { maxWidth: 660 },
@@ -9,8 +9,10 @@ const mediaQueries = {
 }
 
 export const useMediaQueryIs = () => {}
-export const useMediaQueryIsReallySmall = () => useMedia(mediaQueries.xs)
-export const useMediaQueryIsSmall = () => useMedia(mediaQueries.sm)
-export const useMediaQueryIsAboveSmall = () => useMedia(mediaQueries.aboveSm)
-export const useMediaQueryIsMedium = () => useMedia(mediaQueries.md)
-export const useMediaQueryIsAboveMedium = () => useMedia(mediaQueries.aboveMd)
+export const useMediaQueryIsReallySmall = () => useMediaLayout(mediaQueries.xs)
+export const useMediaQueryIsSmall = () => useMediaLayout(mediaQueries.sm)
+export const useMediaQueryIsAboveSmall = () =>
+  useMediaLayout(mediaQueries.aboveSm)
+export const useMediaQueryIsMedium = () => useMediaLayout(mediaQueries.md)
+export const useMediaQueryIsAboveMedium = () =>
+  useMediaLayout(mediaQueries.aboveMd)

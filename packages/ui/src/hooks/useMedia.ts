@@ -2,6 +2,8 @@ import { isEqual } from '@o/fast-compare'
 import { debounce } from 'lodash'
 import React, { DependencyList, EffectCallback } from 'react'
 
+import { weakKey } from '../helpers/weakKey'
+
 const { useState, useEffect, useLayoutEffect } = React
 
 type MediaQueryObject = { [key: string]: string | number | boolean }
@@ -81,10 +83,10 @@ const createUseMedia = (effect: EitherEffect) =>
         }
       }
 
-      const onChange = debounce(() => {
+      const onChange = () => {
         if (!mounted) return
         update()
-      })
+      }
 
       mqls.forEach((mql) => mql.addListener(onChange))
       update()
@@ -93,7 +95,7 @@ const createUseMedia = (effect: EitherEffect) =>
         mounted = false
         mqls.forEach((x) => x.removeListener(onChange))
       }
-    }, [JSON.stringify(rawQueries)])
+    }, [weakKey(rawQueries)])
 
     return state as any
   }
