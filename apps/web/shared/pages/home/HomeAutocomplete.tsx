@@ -32,6 +32,7 @@ import { mapView } from '../../state/mapView'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallCircleButton } from './CloseButton'
+import { snapPoints } from './HomeContainer'
 import { getAddressText } from './RestaurantAddressLinksRow'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
@@ -122,11 +123,14 @@ const HomeAutoCompleteContents = memo(
       () => om.actions.home.setShowAutocomplete(false),
       200
     )
-    const searchYEnd = searchBarTopOffset + searchBarHeight
+    const searchYEnd =
+      searchBarTopOffset +
+      searchBarHeight +
+      (isSmall ? window.innerHeight * snapPoints[0] + 10 : 0)
 
     return (
       <AbsoluteVStack
-        className="ease-in-out-faster"
+        className="ease-in-out transition-delay"
         pointerEvents="none"
         position="absolute"
         paddingTop={searchYEnd}
@@ -135,11 +139,11 @@ const HomeAutoCompleteContents = memo(
         overflow="hidden"
         alignItems="center"
         justifyContent="center"
-        zIndex={-1}
+        zIndex={10000}
         paddingBottom={30}
         paddingHorizontal={15}
         opacity={isShowing ? 1 : 0}
-        transform={isShowing ? [] : [{ translateY: -10 }]}
+        transform={isShowing ? [] : [{ translateY: 15 }]}
         disabled={!isShowing}
       >
         <VStack
@@ -149,7 +153,9 @@ const HomeAutoCompleteContents = memo(
           maxHeight={`calc(100vh - ${searchYEnd + 20}px)`}
           // @ts-ignore
           onMouseLeave={() => {
-            console.log('curPagePos.y', curPagePos.y, searchYEnd)
+            if (isSmall) {
+              return
+            }
             if (curPagePos.y > searchYEnd) {
               hideAutocomplete()
             }

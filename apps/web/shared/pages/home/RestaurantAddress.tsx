@@ -1,4 +1,5 @@
 import { Text } from '@dish/ui'
+import React from 'react'
 import { MapPin } from 'react-feather'
 
 import {
