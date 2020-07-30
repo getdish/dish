@@ -46,7 +46,6 @@ const RestaurantHeaderContent = memo(
       const padding = <Spacer size={20} />
       return (
         <VStack width="100%">
-          {padding}
           <VStack
             borderTopRightRadius={drawerBorderRadius - 1}
             borderTopLeftRadius={drawerBorderRadius - 1}

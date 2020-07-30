@@ -25,7 +25,7 @@ export const Squircle = ({
         {/* frame (inner) */}
         <VStack
           className="ease-in-out-fast"
-          shadowColor="rgba(0,0,0,0.2)"
+          shadowColor="rgba(0,0,0,0.33)"
           shadowRadius={6}
           shadowOffset={{ width: 0, height: 2 }}
           flex={1}

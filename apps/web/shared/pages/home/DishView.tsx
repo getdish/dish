@@ -1,14 +1,14 @@
 import { TopCuisineDish, slugify } from '@dish/graph'
 import { AbsoluteVStack, Box, HStack, StackProps, Text } from '@dish/ui'
 import { capitalize } from 'lodash'
-import React, { memo, useState } from 'react'
+import React, { Suspense, memo, useState } from 'react'
 import { Image } from 'react-native'
 
 import { IMAGE_PROXY_DOMAIN } from '../../constants'
 import { NavigableTag } from '../../state/NavigableTag'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { DishFavoriteButton } from './DishFavoriteButton'
 import { DishRatingView } from './DishRatingView'
+import { DishVoteButton } from './DishVoteButton'
 import { Squircle } from './Squircle'
 
 export const DishView = memo(
@@ -71,16 +71,31 @@ export const DishView = memo(
         {/* rating */}
         <AbsoluteVStack pointerEvents="none" zIndex={10} top={-3} left={-8}>
           {!!dish.rating && (
-            <DishRatingView size={size > 160 ? 'sm' : 'xs'} dish={dish} />
+            <DishRatingView
+              size={size > 160 ? 'sm' : 'xs'}
+              rating={dish.rating}
+            />
           )}
         </AbsoluteVStack>
         {restaurantId && (
-          <AbsoluteVStack top={-3} right={-8} zIndex={1000}>
-            <DishFavoriteButton
-              size={size > 130 ? 'md' : 'sm'}
-              dishTagId={dish.name ?? ''}
-              restaurantId={restaurantId}
-            />
+          <AbsoluteVStack
+            fullscreen
+            alignItems="flex-end"
+            right={-5}
+            justifyContent="center"
+            opacity={0}
+            hoverStyle={{
+              opacity: 1,
+            }}
+            zIndex={1000}
+          >
+            <Suspense fallback={null}>
+              <DishVoteButton
+                size={size > 130 ? 'md' : 'sm'}
+                dishTagId={dish.name ?? ''}
+                restaurantId={restaurantId}
+              />
+            </Suspense>
           </AbsoluteVStack>
         )}
         <Squircle
@@ -152,7 +167,7 @@ export const DishView = memo(
                 className="unskewX"
                 flex={1}
                 overflow="hidden"
-                fontSize={height > 150 ? 16 : 12}
+                fontSize={height > 150 ? 14 : 12}
                 fontWeight={height > 150 ? '500' : '400'}
                 color={isHovered ? '#000' : '#fff'}
                 textAlign="center"

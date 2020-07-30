@@ -26,7 +26,7 @@ export const HomeScrollView = forwardRef(
     const setIsScrolling = (e) => {
       if (
         e.nativeEvent.contentOffset.y >
-        e.nativeEvent.contentSize.height * 0.45
+        e.nativeEvent.contentSize.height * 0.4
       ) {
         onScrollNearBottom?.()
       }
@@ -43,7 +43,7 @@ export const HomeScrollView = forwardRef(
       <ScrollView
         ref={ref as any}
         onScroll={setIsScrolling}
-        scrollEventThrottle={200}
+        scrollEventThrottle={150}
         {...props}
         style={[
           {
