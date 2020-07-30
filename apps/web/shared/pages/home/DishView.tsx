@@ -121,65 +121,68 @@ export const DishView = memo(
           )}
           {!dish.image && <Text fontSize={80}>🥗</Text>}
         </Squircle>
-        <HStack
-          position="absolute"
-          bottom={-15}
-          overflow="hidden"
-          width="100%"
-          // marginHorizontal={-15}
-          height={55}
-        >
+
+        {!!dish.name && (
           <HStack
             position="absolute"
-            bottom={0}
-            left={-16}
-            right={-16}
-            padding={6}
-            alignItems="center"
-            justifyContent="center"
-            // backgroundColor="rgba(255,255,255,0.25)"
-            {...(isHovered && {
-              borderTopColor: 'transparent',
-              backgroundColor: 'transparent',
-              shadowColor: 'transparent',
-            })}
+            bottom={-15}
+            overflow="hidden"
+            width="100%"
+            // marginHorizontal={-15}
+            height={55}
           >
-            <Box
-              position="relative"
-              className="skewX ease-in-out-top"
-              backgroundColor="rgba(0,0,0,0.8)"
-              borderRadius={8}
-              paddingVertical={3}
-              paddingHorizontal={8}
-              maxWidth="calc(90% - 30px)"
-              overflow="hidden"
-              shadowColor="rgba(0,0,0,0.1)"
-              shadowRadius={2}
-              top={0}
+            <HStack
+              position="absolute"
+              bottom={0}
+              left={-16}
+              right={-16}
+              padding={6}
+              alignItems="center"
+              justifyContent="center"
+              // backgroundColor="rgba(255,255,255,0.25)"
               {...(isHovered && {
-                top: -10,
-                backgroundColor: '#fff',
-                shadowColor: 'rgba(0,0,0,0.2)',
+                borderTopColor: 'transparent',
+                backgroundColor: 'transparent',
+                shadowColor: 'transparent',
               })}
             >
-              <Text
-                ellipse
-                className="unskewX"
-                flex={1}
+              <Box
+                position="relative"
+                className="skewX ease-in-out-top"
+                backgroundColor="rgba(0,0,0,0.8)"
+                borderRadius={8}
+                paddingVertical={3}
+                paddingHorizontal={8}
+                maxWidth="calc(90% - 30px)"
                 overflow="hidden"
-                fontSize={height > 150 ? 14 : 12}
-                fontWeight={height > 150 ? '500' : '400'}
-                color={isHovered ? '#000' : '#fff'}
-                textAlign="center"
+                shadowColor="rgba(0,0,0,0.1)"
+                shadowRadius={2}
+                top={0}
+                {...(isHovered && {
+                  top: -10,
+                  backgroundColor: '#fff',
+                  shadowColor: 'rgba(0,0,0,0.2)',
+                })}
               >
-                {(dish.name ?? '')
-                  .split(' ')
-                  .map((x) => capitalize(x))
-                  .join(' ')}
-              </Text>
-            </Box>
+                <Text
+                  ellipse
+                  className="unskewX"
+                  flex={1}
+                  overflow="hidden"
+                  fontSize={height > 150 ? 14 : 12}
+                  fontWeight={height > 150 ? '500' : '400'}
+                  color={isHovered ? '#000' : '#fff'}
+                  textAlign="center"
+                >
+                  {(dish.name ?? '')
+                    .split(' ')
+                    .map((x) => capitalize(x))
+                    .join(' ')}
+                </Text>
+              </Box>
+            </HStack>
           </HStack>
-        </HStack>
+        )}
       </LinkButton>
     )
   }

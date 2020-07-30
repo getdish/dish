@@ -51,10 +51,11 @@
     "@o/fast-compare": "2.7.6",
     "expo-linear-gradient": "^8.1.0",
     "flexsearch": "^0.6.32",
+    "immer": "^7.0.5",
+    "mapbox-gl": "1.11.1",
     "mapkit-typescript": "^5.18.2",
     "overmind": "23.1.0-1589389364682",
     "overmind-react": "24.1.0-1589389364682",
-    "immer": "^7.0.5",
     "page": "1.11.5",
     "query-string": "6.11.1",
     "react": "*",
@@ -68,9 +69,9 @@
     "react-native-gesture-handler": "1.5.0",
     "react-native-unimodules": "~0.7.0",
     "react-native-web": "0.13.3",
+    "react-reparenting": "^0.4.0",
     "react-storage-hooks": "^4.0.1",
-    "resize-observer-polyfill": "1.5.1",
-    "mapbox-gl": "1.11.1"
+    "resize-observer-polyfill": "1.5.1"
   },
   "devDependencies": {
     "@dish/babel-preset": "*",
