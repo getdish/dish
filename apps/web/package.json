@@ -68,6 +68,7 @@
     "react-native-dotenv": "^0.2.0",
     "react-native-unimodules": "~0.7.0",
     "react-native-gesture-handler": "1.5.0",
+    "react-reparenting": "^0.4.0",
     "react-native-web": "^0.13.3",
     "react-storage-hooks": "^4.0.1",
     "resize-observer-polyfill": "1.5.1"

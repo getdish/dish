@@ -1,4 +1,7 @@
-import { useMediaLayout } from '@dish/ui'
+import { useMedia, useMediaLayout } from '@dish/ui'
+
+// seems faster probably avoids multiple calls..
+const use = useMediaLayout ?? useMedia
 
 const mediaQueries = {
   xs: { maxWidth: 660 },
@@ -8,11 +11,8 @@ const mediaQueries = {
   aboveMd: { minWidth: 960 },
 }
 
-export const useMediaQueryIs = () => {}
-export const useMediaQueryIsReallySmall = () => useMediaLayout(mediaQueries.xs)
-export const useMediaQueryIsSmall = () => useMediaLayout(mediaQueries.sm)
-export const useMediaQueryIsAboveSmall = () =>
-  useMediaLayout(mediaQueries.aboveSm)
-export const useMediaQueryIsMedium = () => useMediaLayout(mediaQueries.md)
-export const useMediaQueryIsAboveMedium = () =>
-  useMediaLayout(mediaQueries.aboveMd)
+export const useMediaQueryIsReallySmall = () => use(mediaQueries.xs)
+export const useMediaQueryIsSmall = () => use(mediaQueries.sm)
+export const useMediaQueryIsAboveSmall = () => use(mediaQueries.aboveSm)
+export const useMediaQueryIsMedium = () => use(mediaQueries.md)
+export const useMediaQueryIsAboveMedium = () => use(mediaQueries.aboveMd)
