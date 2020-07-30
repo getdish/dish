@@ -29,7 +29,7 @@ import { ScrollView, StyleSheet, TextInput } from 'react-native'
 
 import { emojiRegex } from '../../helpers/emojiRegex'
 import { SmallButton } from '../../views/ui/SmallButton'
-import { AdminListItem } from './AdminListItem'
+import { AdminListItem, AdminListItemProps } from './AdminListItem'
 import { ColumnHeader } from './ColumnHeader'
 import { useTagSelectionStore } from './SelectionStore'
 import { VerticalColumn } from './VerticalColumn'
@@ -122,7 +122,7 @@ const AdminTagsPageContent = graphql(() => {
           </HStack>
         </ScrollView>
 
-        <VerticalColumn>
+        <VerticalColumn flex={3} minWidth={340}>
           <Suspense fallback={<LoadingItems />}>
             <TagEditColumn />
           </Suspense>
@@ -275,19 +275,14 @@ const TagListContent = memo(
         <ScrollView style={{ paddingBottom: 100 }}>
           {allResults.map((tag, col) => {
             return (
-              <AdminListItem
-                key={tag.id}
-                text={`${tag.icon ?? ''} ${tag.name}`.trim()}
+              <TagListItem
+                tagId={tag.id}
+                col={col}
+                row={row}
                 onSelect={() => {
                   tagStore.selectedId = tag.id
                   selectionStore.setSelected([row, col])
                   selectionStore.setSelectedName(row, tag.name ?? '')
-                }}
-                onEdit={(text) => {
-                  setTagNameAndIcon(tag, text)
-                }}
-                onDelete={() => {
-                  tagDelete(tag)
                 }}
                 isFormerlyActive={
                   selectionStore.selectedNames[row] === tag.name
@@ -296,8 +291,6 @@ const TagListContent = memo(
                   selectionStore.selectedIndices[0] == row &&
                   selectionStore.selectedIndices[1] == col
                 }
-                deletable={col > 0}
-                editable={col > 0}
               />
             )
           })}
@@ -320,6 +313,38 @@ const TagListContent = memo(
       )
     }
   )
+)
+
+const TagListItem = graphql(
+  ({
+    tagId,
+    row,
+    col,
+    ...rest
+  }: { tagId?: string; col: number; row: number } & Partial<
+    AdminListItemProps
+  >) => {
+    if (tagId) {
+      const tag = useTag(tagId)
+      const text = `${tag.icon ?? ''} ${tag.name}`.trim()
+      return (
+        <AdminListItem
+          text={text}
+          onDelete={() => {
+            tagDelete(tag)
+          }}
+          onEdit={(text) => {
+            setTagNameAndIcon(tag, text)
+          }}
+          deletable={col > 0}
+          editable={col > 0}
+          {...rest}
+        />
+      )
+    }
+
+    return <AdminListItem text="All" />
+  }
 )
 
 const TagEditColumn = memo(() => {
@@ -363,16 +388,20 @@ const TagEditColumn = memo(() => {
   )
 })
 
+const useTag = (id: string) => {
+  return query.tag({
+    where: {
+      id: { _eq: id },
+    },
+    limit: 1,
+  })[0]
+}
+
 const TagEdit = memo(
   graphql(() => {
     const tagStore = useRecoilStore(TagStore)
     if (tagStore.selectedId) {
-      const [tag] = query.tag({
-        where: {
-          id: { _eq: tagStore.selectedId },
-        },
-        limit: 1,
-      })
+      const tag = useTag(tagStore.selectedId)
       console.log('got now', tag)
       return (
         <TagCRUD
@@ -428,13 +457,11 @@ const getWikiInfo = (term: string) => {
 const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
   const [info, setInfo] = useState<{ name: string; description: string }[]>([])
 
+  // get wiki info
   useEffect(() => {
     if (tag.name) {
       let unmounted = false
-
       const subNames = tag.name.split(' ')
-      console.log('subNames', subNames)
-
       Promise.all([
         getWikiInfo(tag.name).then((description) => ({
           name: tag.name,
@@ -512,15 +539,16 @@ const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
               <VStack
                 cursor="default"
                 onPress={() => onChange?.({ icon })}
-                minWidth={22}
-                flex={1}
+                padding={4}
                 key={index}
                 borderRadius={5}
                 hoverStyle={{
                   backgroundColor: '#eee',
                 }}
               >
-                <Text fontSize={22}>{icon}</Text>
+                <Text lineHeight={24} fontSize={26}>
+                  {icon}
+                </Text>
               </VStack>
             ))}
           </HStack>
@@ -599,59 +627,7 @@ const styles = StyleSheet.create({
 })
 
 const foodIcons = [
-  '🎂',
-  '🍆',
-  '🍑',
-  '🍰',
-  '🍕',
-  '🍔',
-  '🍪',
-  '🍓',
-  '🍩',
-  '🍒',
-  '🌮',
-  '🥑',
-  '🍌',
-  '🍎',
-  '🍊',
-  '🍦',
-  '🍍',
-  '🌶',
-  '🍟',
-  '🍋',
-  '🍿',
-  '🥥',
-  '🍗',
-  '🥓',
-  '🥚',
-  '🧀',
-  '🍇',
-  '🍓',
-  '🍈',
-  '🥦',
-  '🥭',
-  '🥝',
-  '🍉',
-  '🥬',
-  '🥒',
-  '🌽',
-  '🥕',
-  '🥐',
-  '🍠',
-  '🥔',
-  '🧅',
-  '🧄',
-  '🥯',
-  '🍞',
-  '🥖',
-  '🥨',
-  '🧇',
-  '🥞',
-  '🍗',
-  '🍖',
-  '🦴',
   '🥪',
-  '🥩',
   '🌭',
   '🥙',
   '🧆',
@@ -660,24 +636,75 @@ const foodIcons = [
   '🍲',
   '🍜',
   '🍝',
-  '🥫',
   '🥘',
+  '🍔',
+  '🌮',
+  '🍟',
+  '🍗',
+  '🍖',
+  '🥩',
   '🍛',
   '🍣',
   '🍱',
   '🥟',
-  '🦪',
   '🍘',
-  '🍥',
   '🍚',
+  '🍈',
+  '🍑',
+  '🍓',
+  '🍒',
+  '🍌',
+  '🍎',
+  '🥭',
+  '🥝',
+  '🍉',
+  '🍊',
+  '🍍',
+  '🍋',
+  '🥥',
+  '🍇',
+  '🍓',
+  '🍕',
+  '🌶',
+  '🍿',
+  '🦪',
   '🍙',
   '🍤',
+  '🍡',
+  '🥧',
+  '🥓',
+  '🥚',
+  '🧀',
+  '🍆',
+  '🥑',
+  '🥦',
+  '🥬',
+  '🥒',
+  '🌽',
+  '🥕',
+  '🍠',
+  '🥔',
+  '🧅',
+  '🧄',
+  '🥐',
+  '🥯',
+  '🍞',
+  '🥖',
+  '🥨',
+  '🧇',
+  '🥞',
+  '🎂',
+  '🍰',
+  '🍩',
+  '🍦',
+  '🍪',
+  '🦴',
+  '🥫',
+  '🍥',
   '🥮',
   '🍢',
-  '🍡',
   '🍧',
   '🧁',
-  '🥧',
   '🍨',
   '🍺',
   '🍷',
