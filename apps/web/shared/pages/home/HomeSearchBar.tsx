@@ -95,9 +95,6 @@ export const HomeSearchBarFloating = () => {
           top: '20%',
         })}
       >
-        {/* <Reparentable id={parentIds.large}>
-          {isSmall ? null : <HomeSearchBar />}
-        </Reparentable> */}
         <VStack
           zIndex={12}
           position="relative"
