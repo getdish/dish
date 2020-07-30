@@ -60,6 +60,10 @@ textarea {
   max-width: 100%;
 }
 
+.transition-delay {
+  transition-delay: 250ms;
+}
+
 .ease-in-out-top {
   transition: top ease-out 140ms;
 }
@@ -322,4 +326,9 @@ li::before {
 
 .hover-to-reveal-parent:hover .hover-to-reveal-child {
   opacity: 1;
+}
+
+.all-input-blur input {
+  user-select: none;
+  pointer-events: none;
 }

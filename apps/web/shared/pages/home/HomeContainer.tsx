@@ -1,18 +1,18 @@
 import { AbsoluteVStack, HStack, LinearGradient, VStack } from '@dish/ui'
-import React, { useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 
 import { bgAlt, bgLightTranslucent } from '../../colors'
 import { drawerPad, pageWidthMax, searchBarHeight } from '../../constants'
-import { useOvermind } from '../../state/useOvermind'
+import { omStatic, useOvermind } from '../../state/useOvermind'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
-const snapPoints = [0.05, 0.25, 0.6]
+export const snapPoints = [0.02, 0.25, 0.6]
 let snapIndex = 1
 const getSnapPoint = (px?: number) => {
-  if (px) {
+  if (typeof px === 'number') {
     for (const [index, point] of snapPoints.entries()) {
       const cur = point * window.innerHeight
       const next = (snapPoints[index + 1] ?? 1) * window.innerHeight
@@ -23,35 +23,64 @@ const getSnapPoint = (px?: number) => {
       }
     }
   }
+  console.trace('go to', px, snapIndex)
   return snapPoints[snapIndex] * window.innerHeight
+}
+
+const animateDrawerToPx = (px?: number) => {
+  spring = Animated.spring(pan, {
+    useNativeDriver: true,
+    toValue: getSnapPoint(typeof px === 'number' ? px : undefined),
+  })
+  spring.start(() => {
+    spring = null
+  })
+}
+
+const animateDrawerToSnapPoint = (point: number) => {
+  snapIndex = point
+  animateDrawerToPx()
 }
 
 const pan = new Animated.Value(getSnapPoint())
 let spring: any
 const panResponder = PanResponder.create({
-  onMoveShouldSetPanResponder: () => true,
+  onMoveShouldSetPanResponder: (_, { dy }) => {
+    const threshold = 15
+    return Math.abs(dy) > threshold
+  },
   onPanResponderGrant: () => {
-    // document.body.classList.add('unselectable-all')
     spring?.stop()
     spring = null
     pan.setOffset(pan['_value'])
+    document.body.classList.add('all-input-blur')
   },
   onPanResponderMove: Animated.event([null, { dy: pan }]),
-  onPanResponderRelease: () => {
+  onPanResponderRelease: (_, gesture) => {
     pan.flattenOffset()
-    spring = Animated.spring(pan, {
-      useNativeDriver: true,
-      toValue: getSnapPoint(pan['_value']),
-    })
-    spring.start(() => {
-      spring = null
-    })
-    // document.body.classList.remove('unselectable-all')
+    console.log('released at', gesture.dy, pan['_value'])
+    animateDrawerToPx(pan['_value'])
+    document.body.classList.remove('all-input-blur')
   },
 })
 
 const DraggableDrawer = (props: { children: any }) => {
   const children = useMemo(() => props.children, [props.children])
+
+  useEffect(() => {
+    let lastIndex: number
+    return omStatic.reaction(
+      (state) => !!state.home.showAutocomplete,
+      (show) => {
+        if (show) {
+          lastIndex = snapIndex
+          animateDrawerToSnapPoint(0)
+        } else {
+          animateDrawerToSnapPoint(lastIndex)
+        }
+      }
+    )
+  }, [])
 
   return (
     <Animated.View
@@ -69,6 +98,7 @@ const DraggableDrawer = (props: { children: any }) => {
         left: 0,
         right: 0,
         bottom: 0,
+        zIndex: 100,
       }}
     >
       {/* handle */}

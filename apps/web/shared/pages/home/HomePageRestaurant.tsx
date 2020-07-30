@@ -130,10 +130,12 @@ const HomePageRestaurant = memo(
                   <Spacer size="xl" />
 
                   <SmallTitle>Tips</SmallTitle>
-                  <RestaurantTopReviews
-                    expandTopComments={2}
-                    restaurantId={restaurant.id}
-                  />
+                  <Suspense fallback={null}>
+                    <RestaurantTopReviews
+                      expandTopComments={2}
+                      restaurantId={restaurant.id}
+                    />
+                  </Suspense>
                 </VStack>
 
                 {/* <VStack width="100%">

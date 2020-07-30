@@ -117,17 +117,19 @@ const RestaurantHeaderContent = memo(
             </HStack>
             {padding}
           </VStack>
-          <SmallTitle marginVertical={-18} divider="center">
+          <SmallTitle marginVertical={-12} divider="center">
             <VStack
               borderRadius={1000}
               shadowColor="rgba(0,0,0,0.1)"
               shadowRadius={8}
               shadowOffset={{ height: 2, width: 0 }}
             >
-              <RestaurantFavoriteButton
-                restaurantId={state?.restaurantId ?? restaurant.id}
-                size="lg"
-              />
+              <Suspense fallback={null}>
+                <RestaurantFavoriteButton
+                  restaurantId={state?.restaurantId ?? restaurant.id}
+                  size="lg"
+                />
+              </Suspense>
             </VStack>
           </SmallTitle>
         </VStack>
