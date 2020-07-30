@@ -13727,6 +13727,13 @@ react-refresh@^0.8.3:
   resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
 
+react-reparenting@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.npmjs.org/react-reparenting/-/react-reparenting-0.4.0.tgz#370b281e4162f098019256f8f03694f3e8f1db27"
+  integrity sha512-/4s7AZpJjpN5K2JZH35yRiKOcMymx0Nj4iey4WtyensaQzTmY5hpV6urGk0L2uw+HLL3eyD59s8g6PCVzbHRzA==
+  dependencies:
+    "@babel/runtime" "^7.9.6"
+
 react-side-effect@^1.1.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/react-side-effect/-/react-side-effect-1.2.0.tgz#0e940c78faba0c73b9b0eba9cd3dda8dfb7e7dae"

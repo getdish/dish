@@ -8,7 +8,7 @@ import { HomeContainer } from './HomeContainer'
 import { HomeMap } from './HomeMap'
 import { HomeMapPIP } from './HomeMapPIP'
 import { HomePagePane } from './HomePagePane'
-import { HomeSearchBarDrawer, HomeSearchBarFloating } from './HomeSearchBar'
+import { HomeSearchBarFloating } from './HomeSearchBar'
 import { HomeStackView } from './HomeStackView'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
