@@ -49,7 +49,8 @@ const RestaurantHeaderContent = memo(
           <VStack
             borderTopRightRadius={drawerBorderRadius - 1}
             borderTopLeftRadius={drawerBorderRadius - 1}
-            overflow="hidden"
+            // overflow="hidden"
+            maxWidth="100%"
             position="relative"
           >
             {padding}
@@ -99,13 +100,13 @@ const RestaurantHeaderContent = memo(
                     resizeMode="cover"
                     source={{ uri: restaurant.image }}
                     style={{
-                      marginVertical: -10,
-                      height: 115,
-                      width: 115,
+                      marginVertical: -30,
+                      marginRight: -30,
+                      height: 150,
+                      width: 150,
                       borderRadius: 100,
                     }}
                   />
-                  {padding}
                 </>
               )}
               {after && (

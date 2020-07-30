@@ -141,8 +141,9 @@ const HomePageTopDishes = memo((props: Props) => {
                 <Text
                   marginTop={30}
                   fontWeight="300"
-                  fontSize={18}
+                  fontSize={16}
                   letterSpacing={-0.25}
+                  opacity={0.6}
                 >
                   {currentLocationName
                     ? `What's good in ${currentLocationName}`
