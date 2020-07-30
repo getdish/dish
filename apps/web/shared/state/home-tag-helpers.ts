@@ -41,8 +41,8 @@ export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
   )
 }
 
-const isValidTag = (tag?: NavigableTag) => {
-  return tag && tag.name && tag.name !== 'no-slug'
+const isValidTag = (name?: string) => {
+  return name !== 'no-slug'
 }
 
 export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
@@ -54,14 +54,16 @@ export const getActiveTags = (
 ) => {
   if ('activeTagIds' in state) {
     const { activeTagIds } = state
-    const tagIds = Object.keys(activeTagIds).filter((x) => !!activeTagIds[x])
+    const tagIds = Object.keys(activeTagIds)
+      .filter(isValidTag)
+      .filter((x) => !!activeTagIds[x])
     const tags: Tag[] = tagIds.map(
       (x) => home.allTags[x] ?? { id: slugify(x), name: x, type: 'dish' }
     )
     if (!tags.some((tag) => tag.type === 'lense')) {
       tags.push({ type: 'lense', name: 'Gems' })
     }
-    return tags.filter(isValidTag)
+    return tags
   }
   return []
 }
