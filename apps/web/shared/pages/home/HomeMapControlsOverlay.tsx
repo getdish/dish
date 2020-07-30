@@ -1,26 +1,34 @@
-import { AbsoluteVStack, Box, HStack, Text, VStack } from '@dish/ui'
-import React, { memo } from 'react'
-import { ChevronUp, Map, RefreshCcw, ZoomOut } from 'react-feather'
+// debug
+import { AbsoluteVStack, HStack, VStack } from '@dish/ui'
+import React, { Suspense, memo } from 'react'
+import { Map, RefreshCcw } from 'react-feather'
 
-import { searchBarHeight } from '../../constants'
+import { searchBarHeight, zIndexMapControls } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
 import { OverlayLinkButton } from '../../views/ui/OverlayLinkButton'
+import { useMapSize } from './HomeMap'
+import { HomeMapPIP } from './HomeMapPIP'
 import { HomeMapRestaurantPeek } from './HomeMapRestaurantPeek'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
-export const HomeMapControlsOverlay = memo(
-  ({ paddingLeft }: { paddingLeft: number }) => {
-    const om = useOvermind()
-    const hasMovedMap = om.state.home.currentState?.['hasMovedMap']
-    const isSmall = useMediaQueryIsSmall()
-    return (
+export const HomeMapControlsOverlay = memo(() => {
+  const om = useOvermind()
+  const hasMovedMap = om.state.home.currentState?.['hasMovedMap']
+  const isSmall = useMediaQueryIsSmall()
+  const { paddingLeft, width } = useMapSize(isSmall)
+  return (
+    <AbsoluteVStack
+      zIndex={zIndexMapControls}
+      marginLeft="auto"
+      fullscreen
+      width={width}
+      pointerEvents="none"
+    >
       <AbsoluteVStack
         fullscreen
         padding={20}
-        pointerEvents="none"
         top={searchBarHeight + 10}
         left={paddingLeft}
-        maxWidth={600}
         right={0}
         {...(isSmall && {
           maxWidth: '100%',
@@ -73,17 +81,28 @@ export const HomeMapControlsOverlay = memo(
             )}
         </HStack>
 
-        <HStack
-          position="absolute"
-          bottom={15}
-          right={0}
-          left={30}
-          alignItems="flex-end"
-        >
-          {!isSmall && <HomeMapRestaurantPeek />}
-          <VStack flex={1} />
+        <HStack position="absolute" bottom={0} right={0} left={0}>
+          {!isSmall && (
+            <HStack
+              flexDirection="row-reverse"
+              alignItems="flex-end"
+              flex={1}
+              overflow="hidden"
+              justifyContent="space-between"
+              flexWrap="wrap"
+              paddingLeft={30}
+              paddingRight={15}
+              paddingBottom={15}
+              paddingTop={20}
+            >
+              <Suspense fallback={null}>
+                <HomeMapPIP />
+              </Suspense>
+              <HomeMapRestaurantPeek />
+            </HStack>
+          )}
         </HStack>
       </AbsoluteVStack>
-    )
-  }
-)
+    </AbsoluteVStack>
+  )
+})

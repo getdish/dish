@@ -27,3 +27,9 @@ export const IMAGE_PROXY_DOMAIN = 'https://images.rio.dishapp.com'
 
 export const emptyObj = Object.freeze(Object.create(null))
 export const emptyArr = Object.freeze([])
+
+export const zIndexMap = 100
+export const zIndexMapPIP = 150
+export const zIndexDrawer = 300
+export const zIndexMapControls = 400
+export const zIndexGallery = 500

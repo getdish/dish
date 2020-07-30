@@ -112,7 +112,6 @@ const HomePageTopDishes = memo((props: Props) => {
       <VStack position="relative" flex={1} maxHeight="100%" overflow="visible">
         <HomeScrollView>
           <VStack
-            className="hello-wrold"
             paddingTop={isSmall ? 20 : 34}
             paddingBottom={30}
             spacing="xl"

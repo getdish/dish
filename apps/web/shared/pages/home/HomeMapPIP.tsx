@@ -1,7 +1,8 @@
 import { LngLat, RestaurantQuery, graphql } from '@dish/graph'
-import { AbsoluteVStack, useOnMount } from '@dish/ui'
+import { AbsoluteVStack, VStack, useOnMount } from '@dish/ui'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
+import { zIndexMapPIP } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../../views/map'
 import { centerMapToRegion } from './centerMapToRegion'
@@ -119,32 +120,28 @@ const HomeMapPIPContent = graphql(() => {
   }, [map, annotation])
 
   return (
-    <AbsoluteVStack
+    <VStack
+      // @ts-ignore TODO fix ui-static
+      debug
       pointerEvents="none"
-      transform={[{ scale: 0.75 }]}
-      position="absolute"
-      bottom={0}
-      right={8}
-      zIndex={1000}
-      width="16%"
-      height="16%"
-      maxWidth={125}
-      maxHeight={120}
+      zIndex={zIndexMapPIP}
+      width={140}
+      height={120}
       borderRadius={20}
+      // keeps spacing when wrapped
+      marginTop={10}
       overflow="hidden"
       shadowColor="rgba(0,0,0,0.25)"
       shadowRadius={14}
       shadowOffset={{ height: 3, width: 0 }}
       className="ease-in-out-slow"
-      disabled={!enabled}
       {...(!enabled && {
-        opacity: 0,
-        transform: [{ translateY: 10 }],
+        display: 'none',
       })}
     >
       <AbsoluteVStack fullscreen bottom={-30} top={-30}>
         <Map {...mapProps} />
       </AbsoluteVStack>
-    </AbsoluteVStack>
+    </VStack>
   )
 })

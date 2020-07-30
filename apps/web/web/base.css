@@ -332,3 +332,11 @@ li::before {
   user-select: none;
   pointer-events: none;
 }
+
+.untouchable, .untouchable * {
+  pointer-events: none !important;
+}
+
+.invisible {
+  opacity: 0;
+}

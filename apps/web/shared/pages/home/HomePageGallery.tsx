@@ -3,7 +3,7 @@ import { AbsoluteVStack, HStack, LoadingItems, Text, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { Image, ScrollView } from 'react-native'
 
-import { pageWidthMax } from '../../constants'
+import { pageWidthMax, zIndexGallery } from '../../constants'
 import { HomeStateItemGallery } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
@@ -38,7 +38,7 @@ export default memo(function HomePageGallery() {
         backgroundColor="rgba(0,0,0,0.75)"
         alignItems="center"
         justifyContent="center"
-        zIndex={10000000000}
+        zIndex={zIndexGallery}
       >
         <VStack
           width="95%"

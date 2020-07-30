@@ -6,6 +6,7 @@ import { ErrorBoundary } from '../../views/ErrorBoundary'
 import HomeAutocomplete from './HomeAutocomplete'
 import { HomeContainer } from './HomeContainer'
 import { HomeMap } from './HomeMap'
+import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
 import { HomeMapPIP } from './HomeMapPIP'
 import { HomePagePane } from './HomePagePane'
 import { HomeSearchBarFloating } from './HomeSearchBar'
@@ -16,7 +17,6 @@ export const homePageBorderRadius = 12
 
 export default memo(function HomePage() {
   const isSmall = useMediaQueryIsSmall()
-
   return (
     <VStack
       // apple maps ocean color
@@ -39,16 +39,15 @@ const HomePageContent = memo(() => {
   return (
     <>
       <Suspense fallback={null}>
-        {!isWorker && (
-          <ErrorBoundary name="maps">
-            <Suspense fallback={null}>
-              <HomeMap />
-            </Suspense>
-            <Suspense fallback={null}>
-              <HomeMapPIP />
-            </Suspense>
-          </ErrorBoundary>
-        )}
+        <ErrorBoundary name="main-map">
+          <Suspense fallback={null}>
+            <HomeMap />
+          </Suspense>
+        </ErrorBoundary>
+
+        <Suspense fallback={null}>
+          <HomeMapControlsOverlay />
+        </Suspense>
 
         <HomeSearchBarFloating />
         <HomeAutocomplete />

@@ -26,58 +26,58 @@ export const DraggableDrawer = (props: { children: any }) => {
   }, [])
 
   return (
-    <Animated.View
-      style={{
-        transform: [
-          {
-            translateY: pan,
-          },
-        ],
-        maxWidth: pageWidthMax,
-        alignItems: 'center',
-        width: '100%',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 100,
-        opacity: isSmall ? 1 : 0,
-        pointerEvents: isSmall ? 'auto' : 'none',
-      }}
-    >
-      <View
+    <VStack className={`see-through ${isSmall ? '' : 'untouchable invisible'}`}>
+      <Animated.View
         style={{
+          transform: [
+            {
+              translateY: pan,
+            },
+          ],
+          maxWidth: pageWidthMax,
+          alignItems: 'center',
+          width: '100%',
           position: 'absolute',
-          top: -30,
-          padding: 15,
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 100,
         }}
-        {...panResponder.panHandlers}
       >
-        <VStack
-          backgroundColor="rgba(100,100,100,0.5)"
-          width={60}
-          height={8}
-          borderRadius={100}
-        />
-      </View>
-
-      <VStack
-        width="100%"
-        height="100%"
-        backgroundColor="#fff"
-        shadowColor="rgba(0,0,0,0.13)"
-        shadowRadius={44}
-        shadowOffset={{ width: 10, height: 0 }}
-        borderTopRightRadius={10}
-        borderTopLeftRadius={10}
-      >
-        <View {...panResponder.panHandlers}>
-          <HomeSearchBarDrawer />
+        <View
+          style={{
+            position: 'absolute',
+            top: -30,
+            padding: 15,
+          }}
+          {...panResponder.panHandlers}
+        >
+          <VStack
+            backgroundColor="rgba(100,100,100,0.5)"
+            width={60}
+            height={8}
+            borderRadius={100}
+          />
         </View>
-        {props.children}
-      </VStack>
-    </Animated.View>
+
+        <VStack
+          width="100%"
+          height="100%"
+          backgroundColor="#fff"
+          shadowColor="rgba(0,0,0,0.13)"
+          shadowRadius={44}
+          shadowOffset={{ width: 10, height: 0 }}
+          borderTopRightRadius={10}
+          borderTopLeftRadius={10}
+        >
+          <View {...panResponder.panHandlers}>
+            <HomeSearchBarDrawer />
+          </View>
+          {props.children}
+        </VStack>
+      </Animated.View>
+    </VStack>
   )
 }
 

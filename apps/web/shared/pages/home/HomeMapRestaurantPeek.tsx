@@ -20,11 +20,16 @@ export const HomeMapRestaurantPeek = memo(
       return (
         <Box
           overflow="visible"
-          width="55%"
-          maxWidth={250}
-          padding={0}
-          className={`animate-up ${selectedRestaurant ? 'active' : ''}`}
+          minWidth={200}
           pointerEvents="auto"
+          // flex-wrap spacing
+          marginTop={15}
+          maxWidth="98%"
+          paddingHorizontal={0}
+          paddingVertical={0}
+          className={`animate-up ${
+            selectedRestaurant ? 'active' : 'untouchable'
+          }`}
         >
           {children}
         </Box>
@@ -48,12 +53,11 @@ export const HomeMapRestaurantPeek = memo(
         </AbsoluteVStack>
         <HStack
           flex={1}
-          paddingHorizontal={10}
-          paddingVertical={14}
+          paddingHorizontal={16}
+          paddingVertical={18}
           overflow="hidden"
           alignItems="center"
         >
-          <Spacer size="sm" />
           <VStack flex={5} overflow="hidden">
             <LinkButton
               key={restaurantSlug}
@@ -63,24 +67,23 @@ export const HomeMapRestaurantPeek = memo(
               <Text
                 ellipse
                 selectable
-                fontSize={18}
-                fontWeight="300"
+                fontSize={16}
+                fontWeight="400"
                 paddingRight={30}
               >
-                {restaurant.name}
+                {restaurant.name} &nbsp;
+                <RestaurantAddressLinksRow
+                  currentLocationInfo={
+                    state?.currentLocationInfo ??
+                    om.state.home.currentState.currentLocationInfo
+                  }
+                  showMenu
+                  size="sm"
+                  restaurantSlug={restaurantSlug}
+                />
               </Text>
             </LinkButton>
             <Spacer size="sm" />
-            <RestaurantAddressLinksRow
-              currentLocationInfo={
-                state?.currentLocationInfo ??
-                om.state.home.currentState.currentLocationInfo
-              }
-              showMenu
-              size="sm"
-              restaurantSlug={restaurantSlug}
-            />
-            <Spacer size="md" />
             <HStack>
               <RestaurantAddress
                 size="sm"
@@ -91,16 +94,20 @@ export const HomeMapRestaurantPeek = memo(
           </VStack>
 
           {!!restaurant.image && (
-            <Image
-              resizeMode="cover"
-              source={{ uri: restaurant.image }}
-              style={{
-                marginVertical: -10,
-                height: 70,
-                width: 70,
-                borderRadius: 100,
-              }}
-            />
+            <>
+              <Spacer size="sm" />
+              <Image
+                resizeMode="cover"
+                source={{ uri: restaurant.image }}
+                style={{
+                  marginVertical: -40,
+                  marginRight: -30,
+                  height: 90,
+                  width: 90,
+                  borderRadius: 100,
+                }}
+              />
+            </>
           )}
         </HStack>
       </>

@@ -18,7 +18,7 @@ import React, {
   useState,
 } from 'react'
 
-import { frameWidthMax, searchBarHeight } from '../../constants'
+import { frameWidthMax, searchBarHeight, zIndexMap } from '../../constants'
 import { LngLat } from '../../state/home'
 import {
   isHomeState,
@@ -218,6 +218,15 @@ export function centerMapToRegionMain(p: {
   centerMapToRegion(p)
 }
 
+export const useMapSize = (isSmall: boolean) => {
+  const drawerWidth = useHomeDrawerWidth(Infinity)
+  const width = isSmall
+    ? window.innerWidth
+    : Math.min(window.innerWidth, frameWidthMax - 20) - drawerWidth + 300
+  let paddingLeft = isSmall ? 0 : 300 - 20
+  return { width, paddingLeft, drawerWidth }
+}
+
 const HomeMapContent = memo(function HomeMap({
   restaurants,
   restaurantDetail,
@@ -226,20 +235,15 @@ const HomeMapContent = memo(function HomeMap({
   restaurants: Restaurant[] | null
 }) {
   const om = useOvermind()
-  const drawerWidth = useHomeDrawerWidth(Infinity)
   const isSmall = useMediaQueryIsSmall()
   const state = om.state.home.currentState
   const getRestaurants = useGet(restaurants)
   const { center, span } = state
+  const { drawerWidth, width, paddingLeft } = useMapSize(isSmall)
 
   if (!center || !span) {
     return null
   }
-
-  const mapWidth = isSmall
-    ? window.innerWidth
-    : Math.min(window.innerWidth, frameWidthMax - 20) - drawerWidth + 300
-  let paddingLeft = isSmall ? 0 : 300 - 20
 
   const padding = isSmall
     ? {
@@ -523,11 +527,9 @@ const HomeMapContent = memo(function HomeMap({
       top={0}
       right={0}
       bottom={0}
-      width={mapWidth}
+      zIndex={zIndexMap}
+      width={width}
     >
-      <Suspense fallback={null}>
-        <HomeMapControlsOverlay paddingLeft={paddingLeft} />
-      </Suspense>
       <Map {...mapProps} />
     </AbsoluteVStack>
   )
