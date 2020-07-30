@@ -1,7 +1,5 @@
 import { Tag, slugify } from '@dish/graph'
-import { HistoryItem, NavigateItem } from '@dish/router'
-import { cloneDeep } from 'lodash'
-import { Action, AsyncAction } from 'overmind'
+import { HistoryItem } from '@dish/router'
 
 import { LIVE_SEARCH_DOMAIN } from '../constants'
 import { getTagId } from './getTagId'
@@ -14,7 +12,7 @@ import {
   OmStateHome,
 } from './home-types'
 import { NavigableTag } from './NavigableTag'
-import { SearchRouteParams, router } from './router'
+import { SearchRouteParams } from './router'
 import { tagFilters } from './tagFilters'
 import { tagLenses } from './tagLenses'
 import { omStatic } from './useOvermind'
@@ -160,71 +158,6 @@ function ensureUniqueActiveTagIds(
   }
 }
 
-export const getNavigateItemForState = (
-  omState: OmState,
-  ogState: HomeStateItem
-): NavigateItem => {
-  const { home, router } = omState
-  const state = ogState || home.currentState
-  const isHome = isHomeState(state)
-  const isSearch = isSearchState(state)
-  const curParams = router.curPage.params
-
-  // we only handle "special" states here (home/search)
-  if (!isHome && !isSearch) {
-    return {
-      name: state.type,
-      params: curParams,
-    }
-  }
-  // if going home, just go there
-  const shouldBeHome = shouldBeOnHome(home, state)
-
-  let name = state.type
-  if (name === 'home' && !shouldBeHome) {
-    name = 'search'
-  } else if (name === 'search' && shouldBeHome) {
-    name = 'home'
-  }
-
-  const curName = router.curPage.name
-  const isChangingType = name !== curName
-  const replace = !isChangingType
-
-  // console.log('getNavigateItemForState', {
-  //   isHome,
-  //   shouldBeOnHome,
-  //   name,
-  //   curName,
-  //   isChangingType,
-  //   replace,
-  //   curPage: router.curPage,
-  // })
-
-  if (shouldBeHome) {
-    return {
-      name: 'home',
-      replace,
-    }
-  }
-
-  // build params
-  const params = getRouteFromTags(omState, state) as any
-  // TODO wtf is this doing here
-  if (state.searchQuery) {
-    params.search = state.searchQuery
-  }
-  if (state.type === 'userSearch') {
-    // @ts-ignore
-    params.username = curParams.username
-  }
-  return {
-    name,
-    params,
-    replace,
-  }
-}
-
 export const getTagsFromRoute = (
   item: HistoryItem<'userSearch'>
 ): NavigableTag[] => {
@@ -243,41 +176,6 @@ export const getTagsFromRoute = (
   return tags
 }
 
-export const getShouldNavigate: Action<HomeStateItem, boolean> = (
-  om,
-  state
-) => {
-  const navItem = getNavigateItemForState(om.state, state)
-  return router.getShouldNavigate(navItem)
-}
-
-let recentTries = 0
-let tm
-export const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
-  om,
-  state
-) => {
-  const should = getShouldNavigate(om, state)
-  if (should) {
-    recentTries++
-    clearTimeout(tm)
-    if (recentTries > 3) {
-      console.warn('bailing loop')
-      recentTries = 0
-      // break loop
-      return false
-    }
-    tm = setTimeout(() => {
-      recentTries = 0
-    }, 200)
-    const navItem = getNavigateItemForState(om.state, state)
-    console.log('syncStateToRoute', cloneDeep({ should, navItem, state }))
-    router.navigate(navItem)
-    return true
-  }
-  return false
-}
-
 const getUrlTagInfo = (part: string, defaultType: any = ''): NavigableTag => {
   if (part.indexOf(SPLIT_TAG_TYPE) > -1) {
     const [type, name] = part.split(SPLIT_TAG_TYPE)
@@ -286,7 +184,7 @@ const getUrlTagInfo = (part: string, defaultType: any = ''): NavigableTag => {
   return { type: defaultType, name: part }
 }
 
-const getRouteFromTags = (
+export const getRouteFromTags = (
   { home }: OmState,
   state = home.currentState
 ): SearchRouteParams => {

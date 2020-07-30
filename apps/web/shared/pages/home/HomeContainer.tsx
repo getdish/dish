@@ -23,7 +23,6 @@ const getSnapPoint = (px?: number) => {
       }
     }
   }
-  console.trace('go to', px, snapIndex)
   return snapPoints[snapIndex] * window.innerHeight
 }
 

@@ -4,6 +4,7 @@ import {
   FallbackProps,
   ErrorBoundary as ReactErrorBoundary,
 } from 'react-error-boundary'
+import { ScrollView } from 'react-native'
 
 function ErrorFallback({
   error,
@@ -16,17 +17,24 @@ function ErrorFallback({
       alignItems="center"
       justifyContent="center"
       backgroundColor="darkred"
-      padding={20}
+      padding={15}
       overflow="hidden"
     >
-      <VStack left={50} flex={1} overflow="hidden">
-        <Text color="#fff">
-          <pre>{error?.message}</pre>
-          <pre>{componentStack}</pre>
-          <pre>{error?.stack}</pre>
-        </Text>
+      <VStack maxWidth="100%" flex={1} overflow="hidden">
+        <ScrollView>
+          <Text color="#fff">
+            <pre>{error?.message}</pre>
+            <pre>{componentStack}</pre>
+            <pre>{error?.stack}</pre>
+          </Text>
+        </ScrollView>
       </VStack>
-      <VStack padding={10} backgroundColor="red" onPress={resetErrorBoundary}>
+      <VStack
+        minHeight={100}
+        padding={10}
+        backgroundColor="red"
+        onPress={resetErrorBoundary}
+      >
         <Text>Try Again</Text>
       </VStack>
     </AbsoluteVStack>

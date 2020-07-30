@@ -12,28 +12,30 @@ import { assert, handleAssertionError, stringify } from '@dish/helpers'
 import { HistoryItem, NavigateItem } from '@dish/router'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
-import _, { clamp, findLast, isPlainObject, last } from 'lodash'
+import _, { clamp, cloneDeep, findLast, isPlainObject, last } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
 
 import { fuzzyFindIndices } from '../helpers/fuzzy'
-import { timer } from '../helpers/timer'
 import { getBreadcrumbs, isBreadcrumbState } from '../pages/home/getBreadcrumbs'
 import { useRestaurantQuery } from '../pages/home/useRestaurantQuery'
 import { LinkButtonProps } from '../views/ui/LinkProps'
 import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
 import { getTagId } from './getTagId'
-import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
+import {
+  isHomeState,
+  isRestaurantState,
+  isSearchState,
+  shouldBeOnHome,
+} from './home-helpers'
 import {
   HomeStateNav,
   allTags,
   getActiveTags,
   getFullTags,
-  getNavigateItemForState,
   getNextState,
-  getShouldNavigate,
+  getRouteFromTags,
   getTagsFromRoute,
   isSearchBarTag,
-  syncStateToRoute,
 } from './home-tag-helpers'
 import {
   ActiveEvent,
@@ -106,7 +108,7 @@ export const state: HomeState = {
   topDishesFilteredIndices: [],
   userLocation: null,
   currentNavItem: derived<HomeState, NavigateItem>((state, om) =>
-    getNavigateItemForState(om, last(state.states)!)
+    getNavigateItemForStateInternal(om, last(state.states)!)
   ),
 
   lastHomeState: derived<HomeState, HomeStateItemHome>(
@@ -1055,7 +1057,7 @@ export const getNavigateTo: Action<HomeStateNav, LinkButtonProps | null> = (
   }
   let nextState = getNextState(om, props)
   if (nextState) {
-    const navigateItem = getNavigateItemForState(om.state, nextState)
+    const navigateItem = om.actions.home.getNavigateItemForState(nextState)
     return {
       ...navigateItem,
       preventNavigate: true,
@@ -1181,7 +1183,120 @@ const promptLogin: Action<undefined, boolean> = (om) => {
   return false
 }
 
+export const getNavigateItemForState: Action<HomeStateItem, NavigateItem> = (
+  om,
+  _state
+): NavigateItem => {
+  return getNavigateItemForStateInternal(om.state, _state)
+}
+
+const getNavigateItemForStateInternal = (
+  omState: OmState,
+  _state: HomeStateItem
+): NavigateItem => {
+  const { home, router } = omState
+  const state = _state || home.currentState
+  const isHome = isHomeState(state)
+  const isSearch = isSearchState(state)
+  const curParams = router.curPage.params
+
+  // we only handle "special" states here (home/search)
+  if (!isHome && !isSearch) {
+    return {
+      name: state.type,
+      params: curParams,
+    }
+  }
+  // if going home, just go there
+  const shouldBeHome = shouldBeOnHome(home, state)
+
+  let name = state.type
+  if (name === 'home' && !shouldBeHome) {
+    name = 'search'
+  } else if (name === 'search' && shouldBeHome) {
+    name = 'home'
+  }
+
+  const curName = router.curPage.name
+  const isChangingType = name !== curName
+  const replace = !isChangingType
+
+  // console.log('getNavigateItemForState', {
+  //   isHome,
+  //   shouldBeOnHome,
+  //   name,
+  //   curName,
+  //   isChangingType,
+  //   replace,
+  //   curPage: router.curPage,
+  // })
+
+  if (shouldBeHome) {
+    return {
+      name: 'home',
+      replace,
+    }
+  }
+
+  // build params
+  const params = getRouteFromTags(omState, state)
+  // TODO wtf is this doing here
+  if (state.searchQuery) {
+    params.search = state.searchQuery
+  }
+  if (state.type === 'userSearch') {
+    // @ts-ignore
+    params.username = curParams.username
+  }
+
+  return {
+    name,
+    params,
+    replace,
+  }
+}
+
+const getShouldNavigate: Action<HomeStateItem, boolean> = (om, state) => {
+  const navItem = om.actions.home.getNavigateItemForState(state)
+  return router.getShouldNavigate(navItem)
+}
+
+let recentTries = 0
+let synctm
+const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
+  om,
+  state
+) => {
+  const should = getShouldNavigate(om, state)
+  if (should) {
+    recentTries++
+    clearTimeout(synctm)
+    if (recentTries > 3) {
+      console.warn('bailing loop')
+      recentTries = 0
+      // break loop
+      return false
+    }
+    synctm = setTimeout(() => {
+      recentTries = 0
+    }, 200)
+    const navItem = om.actions.home.getNavigateItemForState(state)
+    if (process.env.NODE_ENV === 'development') {
+      console.log(
+        'syncStateToRoute',
+        cloneDeep({ should, navItem, state, recentTries })
+      )
+    }
+    router.navigate(navItem)
+    return true
+  }
+  return false
+}
+
 export const actions = {
+  getShouldNavigate,
+  syncStateToRoute,
+  getNavigateItemForState,
   moveAutocompleteIndex,
   setAutocompleteIndex,
   loadHomeDishes,
@@ -1227,4 +1342,5 @@ export const actions = {
   setSelectedRestaurant,
   setShowUserMenu,
   promptLogin,
+  getNavigateTo,
 }
