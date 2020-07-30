@@ -2,23 +2,9 @@ import '@dish/common'
 
 import axios from 'axios'
 import _ from 'lodash'
-import { Client, Result } from 'pg'
+import { Pool, Result } from 'pg'
 
 const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN
-
-process.env.PGUSER = 'postgres'
-process.env.PGDATABASE = 'dish'
-process.env.PGPASSWORD = process.env.PGPASSWORD || 'postgres'
-
-class DB {
-  client: Client
-  start() {
-    this.client = new Client()
-    ;(async () => {
-      await this.client.connect()
-    })()
-  }
-}
 
 type Coord = [number, number]
 
@@ -27,26 +13,41 @@ export const sanfran = {
     _st_d_within: {
       distance: 0.5,
       from: {
-        type: 'Point',
         coordinates: [-122.421351, 37.759251],
+        type: 'Point',
       },
     },
   },
 }
 
-export async function sql(query: string) {
-  let result: Result
-  const db = new DB()
-  db.start()
-  try {
-    result = await db.client.query(query)
-  } catch (e) {
-    throw e
-  } finally {
-    db.client.end()
+export class DB {
+  pool: Pool
+  constructor(config: object) {
+    this.pool = new Pool(config)
   }
-  return result
+
+  async query(query: string) {
+    let result: Result
+    const client = await this.pool.connect()
+    try {
+      result = await client.query(query)
+    } catch (e) {
+      console.error(query)
+      throw e
+    } finally {
+      client.release()
+    }
+    return result
+  }
 }
+
+export const main_db = new DB({
+  host: process.env.TIMESCALEDB_HOST || 'localhost',
+  port: process.env.TIMESCALEDB_PORT || '5432',
+  user: process.env.PGUSER || 'postgres',
+  password: process.env.PGPASSWORD || 'postgres',
+  database: 'dish',
+})
 
 export function shiftLatLonByMetres(
   lat: number,

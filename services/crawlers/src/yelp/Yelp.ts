@@ -1,18 +1,17 @@
 import url from 'url'
 
 import { sentryMessage } from '@dish/common'
-import {
-  Scrape,
-  ScrapeData,
-  restaurantSaveCanonical,
-  scrapeInsert,
-  scrapeMergeData,
-  scrapeUpdate,
-} from '@dish/graph'
+import { ZeroUUID, restaurantSaveCanonical } from '@dish/graph'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 
+import {
+  ScrapeData,
+  scrapeInsert,
+  scrapeMergeData,
+  scrapeUpdate,
+} from '../scrape-helpers'
 import { aroundCoords, boundingBoxFromcenter, geocode } from '../utils'
 
 const BB_SEARCH = '/search/snippet?cflt=restaurants&l='
@@ -144,17 +143,19 @@ export class Yelp extends WorkerJob {
   }
 
   async saveDataFromMapSearch(data: ScrapeData) {
-    const [scrape] = await scrapeInsert([
-      {
-        source: 'yelp',
-        id_from_source: data.bizId,
-        // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
-        data: {
-          data_from_map_search: data.searchResultBusiness,
-        },
+    const id = await scrapeInsert({
+      source: 'yelp',
+      restaurant_id: ZeroUUID,
+      location: {
+        lat: 0,
+        lon: 0,
       },
-    ])
-    return scrape.id
+      id_from_source: data.bizId,
+      data: {
+        data_from_map_search: data.searchResultBusiness,
+      },
+    })
+    return id
   }
 
   async getEmbeddedJSONData(id: string, yelp_path: string) {
@@ -190,17 +191,14 @@ export class Yelp extends WorkerJob {
     const canonical = await restaurantSaveCanonical(
       lon,
       lat,
-      // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
       scrape.data.data_from_map_search.name,
-      // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
       scrape.data.data_from_map_search.formattedAddress
     )
     scrape.location = {
-      type: 'Point',
-      coordinates: [lon, lat],
+      lon: lon,
+      lat: lat,
     }
     scrape.restaurant_id = canonical.id
-    // @ts-ignore
     await scrapeUpdate(scrape)
     await this.getNextScrapes(id, data)
   }

@@ -5,7 +5,6 @@ import {
   Restaurant,
   globalTagId,
   restaurantFindBatch,
-  scrapeInsert,
   settingFindOne,
   settingUpsert,
 } from '@dish/graph'
@@ -15,6 +14,7 @@ import _ from 'lodash'
 import { Tabletojson } from 'tabletojson'
 
 import { Puppeteer } from '../Puppeteer'
+import { scrapeInsert } from '../scrape-helpers'
 import { sanfran } from '../utils'
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
@@ -103,15 +103,16 @@ export class Google extends WorkerJob {
     }
     this.googleRestaurantID = await this.searchForID()
     await this.getAllData(restaurant)
-    await scrapeInsert([
-      {
-        restaurant_id: restaurant.id,
-        source: 'google',
-        id_from_source: this.googleRestaurantID,
-        location: restaurant.location,
-        data: this.scrape_data,
+    await scrapeInsert({
+      restaurant_id: restaurant.id,
+      source: 'google',
+      id_from_source: this.googleRestaurantID,
+      location: {
+        lon: restaurant.location.coordinates[0],
+        lat: restaurant.location.coordinates[1],
       },
-    ])
+      data: this.scrape_data,
+    })
     if (process.env.DISH_ENV != 'production') {
       this.puppeteer.close()
     }

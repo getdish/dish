@@ -6,18 +6,14 @@ import {
   PhotoXref,
   RESTAURANT_WEIGHTS,
   RestaurantWithId,
-  Scrape,
-  ScrapeData,
   deleteAllBy,
   globalTagId,
   menuItemsUpsertMerge,
   restaurantFindBatch,
   restaurantFindOne,
   restaurantFindOneWithTags,
-  restaurantGetLatestScrape,
   restaurantUpdate,
   restaurantUpsertManyTags,
-  scrapeGetData,
 } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
@@ -30,8 +26,14 @@ import {
   photoUpsert,
   uploadHeroImage,
 } from '../photo-helpers'
+import {
+  Scrape,
+  ScrapeData,
+  latestScrapeForRestaurant,
+  scrapeGetData,
+} from '../scrape-helpers'
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
-import { sanfran, sql } from '../utils'
+import { main_db, sanfran } from '../utils'
 import { Tagging } from './Tagging'
 
 const PER_PAGE = 50
@@ -269,7 +271,7 @@ export class Self extends WorkerJob {
       'google',
     ]
     for (const source of sources) {
-      this[source] = await restaurantGetLatestScrape(this.restaurant, source)
+      this[source] = await latestScrapeForRestaurant(this.restaurant, source)
     }
   }
 
@@ -460,6 +462,7 @@ export class Self extends WorkerJob {
         records.push(record)
       }
     }
+    if (records.length == 0) return 0
     const query = `
         BEGIN TRANSACTION;
         DELETE FROM opening_hours
@@ -471,7 +474,7 @@ export class Self extends WorkerJob {
              ) t(id, f, t), f_opening_hours_hours(f, t) hours;
         END TRANSACTION;
       `
-    const result = await sql(query)
+    const result = await main_db.query(query)
     return result[2].rowCount
   }
 

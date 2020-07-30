@@ -16,6 +16,16 @@ services:
       BITNAMI_DEBUG: 'true'
     ports:
       - 5432:5432
+  timescaledb:
+    image: timescale/timescaledb-postgis:1.7.2-pg11
+    volumes:
+      - ${HOME}/.dish/timescaledb:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: scrape_data
+    ports:
+      - 5433:5432
   redis:
     image: redis
     ports:

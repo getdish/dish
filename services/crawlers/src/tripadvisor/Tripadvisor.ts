@@ -1,11 +1,6 @@
 import '@dish/common'
 
-import {
-  ScrapeData,
-  restaurantSaveCanonical,
-  scrapeInsert,
-  scrapeMergeData,
-} from '@dish/graph'
+import { restaurantSaveCanonical } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import * as acorn from 'acorn'
 import axios_base from 'axios'
@@ -13,6 +8,7 @@ import { JobOptions, QueueOptions } from 'bull'
 import cheerio from 'cheerio'
 import _ from 'lodash'
 
+import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 
 const TRIPADVISOR_DOMAIN =
@@ -101,23 +97,20 @@ export class Tripadvisor extends WorkerJob {
       restaurant_name,
       overview.contact.address
     )
-    const [scrape] = await scrapeInsert([
-      {
-        source: 'tripadvisor',
-        restaurant_id: canonical.id,
-        id_from_source: overview.detailId.toString(),
-        location: {
-          type: 'Point',
-          coordinates: [lon, lat],
-        },
-        // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
-        data: {
-          overview: overview,
-          menu: menu,
-        },
+    const id = await scrapeInsert({
+      source: 'tripadvisor',
+      restaurant_id: canonical.id,
+      id_from_source: overview.detailId.toString(),
+      location: {
+        lon: lon,
+        lat: lat,
       },
-    ])
-    return scrape.id
+      data: {
+        overview: overview,
+        menu: menu,
+      },
+    })
+    return id
   }
 
   async saveReviews(

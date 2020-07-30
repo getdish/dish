@@ -5,7 +5,6 @@ import {
   ZeroUUID,
   tagGetAllCuisinesWithDishes,
   tagUpdate,
-  tagUpsert,
 } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'

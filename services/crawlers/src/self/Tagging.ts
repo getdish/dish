@@ -4,14 +4,14 @@ import {
   Tag,
   convertSimpleTagsToRestaurantTags,
   restaurantGetAllPossibleTags,
-  scrapeGetData,
   tagFindCountries,
   tagSlug,
 } from '@dish/graph'
 import { mean, uniq } from 'lodash'
 import Sentiment from 'sentiment'
 
-import { sql } from '../utils'
+import { scrapeGetData } from '../scrape-helpers'
+import { main_db } from '../utils'
 import { Self } from './Self'
 
 export class Tagging {
@@ -104,7 +104,7 @@ export class Tagging {
   async getRankForTag(tag: Tag) {
     const RADIUS = 0.1
     const tag_name = tagSlug(tag)
-    const result = await sql(
+    const result = await main_db.query(
       `SELECT rank FROM (
         SELECT id, DENSE_RANK() OVER(ORDER BY rating DESC NULLS LAST) AS rank
         FROM restaurant WHERE

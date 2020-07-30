@@ -1,11 +1,12 @@
 import '@dish/common'
 
-import { restaurantSaveCanonical, scrapeInsert } from '@dish/graph'
+import { restaurantSaveCanonical } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import { shuffle } from 'lodash'
 
+import { scrapeInsert } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 
 const GRUBHUB_DOMAIN =
@@ -109,22 +110,19 @@ export class GrubHub extends WorkerJob {
       data.name,
       data.address.street_address
     )
-    await scrapeInsert([
-      {
-        source: 'grubhub',
-        restaurant_id: canonical.id,
-        id_from_source: data.id,
-        location: {
-          type: 'Point',
-          coordinates: [lng, lat],
-        },
-        // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
-        data: {
-          main: data,
-          reviews: await this.getReviews(data.id),
-        },
+    await scrapeInsert({
+      source: 'grubhub',
+      restaurant_id: canonical.id,
+      id_from_source: data.id,
+      location: {
+        lon: lng,
+        lat: lat,
       },
-    ])
+      data: {
+        main: data,
+        reviews: await this.getReviews(data.id),
+      },
+    })
     return data
   }
 

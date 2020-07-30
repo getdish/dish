@@ -1,17 +1,12 @@
 import '@dish/common'
 
-import {
-  Scrape,
-  ScrapeData,
-  insert,
-  restaurantSaveCanonical,
-  scrapeInsert,
-} from '@dish/graph'
+import { restaurantSaveCanonical } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 
+import { Scrape, ScrapeData, scrapeInsert } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 
 const INFATUATED_DOMAIN =
@@ -91,21 +86,18 @@ export class Infatuated extends WorkerJob {
       data.name,
       data.street
     )
-    const [scrape] = await scrapeInsert([
-      {
-        source: 'infatuation',
-        restaurant_id: canonical.id,
-        id_from_source: data.id.toString(),
-        location: {
-          type: 'Point',
-          coordinates: [lon, lat],
-        },
-        // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
-        data: {
-          data_from_map_search: data,
-        },
+    const id = await scrapeInsert({
+      source: 'infatuation',
+      restaurant_id: canonical.id,
+      id_from_source: data.id.toString(),
+      location: {
+        lon: lon,
+        lat: lat,
       },
-    ])
-    return scrape.id
+      data: {
+        data_from_map_search: data,
+      },
+    })
+    return id
   }
 }

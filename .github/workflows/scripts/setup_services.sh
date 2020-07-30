@@ -22,7 +22,7 @@ mkdir -p $HOME/.dish/postgres/data
 docker-compose up -d postgres
 sleep 10 # Postgres needs 2 starts to get everything set up
 docker-compose down
-docker-compose up -d hasura postgres
+docker-compose up -d hasura postgres timescaledb
 
 pushd services/hasura
 yarn global add hasura-cli@v1.2.2
@@ -38,6 +38,10 @@ cat functions/*.sql | \
     -U postgres \
     -d dish \
     --single-transaction
+popd
+
+pushd services/timescaledb
+./migrate.sh
 popd
 
 # JWT server won't start until migrations have been applied

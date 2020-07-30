@@ -88,18 +88,6 @@ test('Normal user cannot delete things', async (t) => {
   )
 })
 
-test('Normal user cannot get scrapes', async (t) => {
-  await Auth.register('tester', 'password')
-  await Auth.login('tester', 'password')
-  Auth.as('user')
-  await scrapeFindOne({ id: 'example' })
-  await sleep(10)
-  t.is(
-    global['latestUnhandledGQLessRejection'].errors[0].message,
-    'field "scrape" not found in type: \'query_root\''
-  )
-})
-
 test('Normal user can see restaurants', async (t) => {
   await restaurantInsert([
     {

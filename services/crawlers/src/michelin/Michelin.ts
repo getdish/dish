@@ -1,10 +1,12 @@
 import '@dish/common'
 
 import { sentryException } from '@dish/common'
-import { ScrapeData, restaurantSaveCanonical, scrapeInsert } from '@dish/graph'
+import { restaurantSaveCanonical } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
+
+import { ScrapeData, scrapeInsert } from '../scrape-helpers'
 
 const MICHELIN_DOMAIN =
   process.env.MICHELIN_PROXY || 'https://8nvhrd7onv-dsn.algolia.net'
@@ -91,21 +93,18 @@ export class Michelin extends WorkerJob {
       data.name,
       data._highlightResult.street.value
     )
-    const [scrape] = await scrapeInsert([
-      {
-        source: 'michelin',
-        restaurant_id: canonical.id,
-        id_from_source: data.objectID,
-        location: {
-          type: 'Point',
-          coordinates: [lon, lat],
-        },
-        // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
-        data: {
-          main: data,
-        },
+    const id = await scrapeInsert({
+      source: 'michelin',
+      restaurant_id: canonical.id,
+      id_from_source: data.objectID,
+      location: {
+        lon: lon,
+        lat: lat,
       },
-    ])
-    return scrape.id
+      data: {
+        main: data,
+      },
+    })
+    return id
   }
 }

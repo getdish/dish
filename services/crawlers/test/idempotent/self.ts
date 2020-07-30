@@ -8,14 +8,14 @@ import {
   restaurantInsert,
   restaurantUpdate,
   restaurantUpsertOrphanTags,
-  scrapeInsert,
   tagInsert,
 } from '@dish/graph'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
 import { bestPhotosForRestaurant } from '../../src/photo-helpers'
+import { scrapeInsert } from '../../src/scrape-helpers'
 import { Self } from '../../src/self/Self'
-import { sql } from '../../src/utils'
+import { main_db } from '../../src/utils'
 import { yelp_hours } from '../yelp_hours'
 
 interface Context {
@@ -45,7 +45,6 @@ const restaurant_fixture_nearly_matches: Partial<Restaurant> = {
 const yelp: Partial<Scrape> = {
   source: 'yelp',
   id_from_source: 'test123',
-  // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
   data: {
     data_from_map_search: {
       name: 'Test Name Yelp',
@@ -213,12 +212,14 @@ async function reset(t: ExecutionContext<Context>) {
     restaurant_fixture_nearly_matches,
   ])
   t.context.restaurant = restaurant
-  await scrapeInsert([
-    { restaurant_id: restaurant.id, ...yelp },
-    { restaurant_id: restaurant.id, ...ubereats },
-    { restaurant_id: restaurant.id, ...doordash },
-    { restaurant_id: restaurant.id, ...tripadvisor },
-  ])
+  const zero_coord = { lat: 0, lon: 0 }
+  const scrapes = [
+    { restaurant_id: restaurant.id, location: zero_coord, ...yelp },
+    { restaurant_id: restaurant.id, location: zero_coord, ...ubereats },
+    { restaurant_id: restaurant.id, location: zero_coord, ...doordash },
+    { restaurant_id: restaurant.id, location: zero_coord, ...tripadvisor },
+  ]
+  scrapes.map(async (s) => await scrapeInsert(s))
 }
 
 test.beforeEach(async (t) => {
@@ -577,13 +578,13 @@ test('Adding opening hours', async (t) => {
   await dish.getScrapeData()
   const count = await dish.addHours()
   t.is(count, 7)
-  const openers = await sql(`
+  const openers = await main_db.query(`
     SELECT restaurant_id
       FROM opening_hours
       WHERE hours @> f_opening_hours_normalised_time('1996-01-01 13:00');
   `)
   t.is(dish.restaurant.id, openers.rows[0].restaurant_id)
-  const closers = await sql(`
+  const closers = await main_db.query(`
     SELECT restaurant_id
       FROM opening_hours
       WHERE hours @> f_opening_hours_normalised_time('1996-01-01 10:59');

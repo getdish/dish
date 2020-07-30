@@ -1,11 +1,12 @@
 import '@dish/common'
 
-import { restaurantSaveCanonical, scrapeInsert } from '@dish/graph'
+import { restaurantSaveCanonical } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 
+import { scrapeInsert } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 
 type BasicStore = {
@@ -134,24 +135,21 @@ export class DoorDash extends WorkerJob {
       main.name,
       main.address.printableAddress
     )
-    const [scrape] = await scrapeInsert([
-      {
-        source: 'doordash',
-        restaurant_id: canonical.id,
-        id_from_source: main.id,
-        location: {
-          type: 'Point',
-          coordinates: [store.lng, store.lat],
-        },
-        // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
-        data: {
-          main,
-          menus: response.storeMenus,
-          storeMenuSeo: response.storeMenuSeo,
-        },
+    const id = await scrapeInsert({
+      source: 'doordash',
+      restaurant_id: canonical.id,
+      id_from_source: main.id,
+      location: {
+        lon: store.lng,
+        lat: store.lat,
       },
-    ])
-    return scrape.id
+      data: {
+        main,
+        menus: response.storeMenus,
+        storeMenuSeo: response.storeMenuSeo,
+      },
+    })
+    return id
   }
 
   _searchGQL(lat: number, lng: number, page: number = 0) {

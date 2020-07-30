@@ -1,0 +1,11 @@
+{
+  "name": "timescaledb",
+  "version": "0.0.1",
+  "description": "Dish's TimescaleDB instance for storing scrape data",
+  "main": "index.js",
+  "author": "The Dish Team",
+  "dependencies": {
+    "pg": "^8.3.0",
+    "postgrator-cli": "^4.0.0"
+  }
+}

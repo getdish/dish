@@ -238,31 +238,6 @@ function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {
   return rt
 }
 
-export async function restaurantGetLatestScrape(
-  restaurant: RestaurantWithId,
-  source: string
-): Promise<Scrape> {
-  const [first] = await resolvedWithFields(() =>
-    query.scrape({
-      where: {
-        restaurant_id: {
-          _eq: restaurant.id,
-        },
-        source: {
-          _eq: source,
-        },
-      },
-      order_by: [
-        {
-          updated_at: order_by.desc,
-        },
-      ],
-      limit: 1,
-    })
-  )
-  return first
-}
-
 export async function restaurantGetAllPossibleTags(restaurant: Restaurant) {
   return await tagGetAllChildren(
     (restaurant.tags ?? []).map((i) => {

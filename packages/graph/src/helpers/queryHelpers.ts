@@ -242,7 +242,7 @@ function _traverse(o: any, fn: (obj: any, prop: string, value: any) => void) {
   }
 }
 
-function ensureJSONSyntax(json: {}) {
+export function ensureJSONSyntax(json: {}) {
   _traverse(json, (object, key, value) => {
     ensureJSONKeySyntax(object, key, value)
     deJSONStringify(object, key, value)

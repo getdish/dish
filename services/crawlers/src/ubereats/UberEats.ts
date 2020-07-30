@@ -1,15 +1,12 @@
 import '@dish/common'
 
-import {
-  restaurantSaveCanonical,
-  scrapeInsert,
-  scrapeMergeData,
-} from '@dish/graph'
+import { restaurantSaveCanonical } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base, { AxiosResponse } from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 
+import { scrapeInsert, scrapeMergeData } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 import categories from './categories.json'
 
@@ -148,8 +145,8 @@ export class UberEats extends WorkerJob {
       }
     )
     const data = response.data.data
-    const scrape = await this.saveRestaurant(data, uuid)
-    await this.getDishes(data, scrape.id)
+    const scrape_id = await this.saveRestaurant(data, uuid)
+    await this.getDishes(data, scrape_id)
   }
 
   private async saveRestaurant(data: any, uuid: string) {
@@ -165,22 +162,19 @@ export class UberEats extends WorkerJob {
   }
 
   private async saveScrape(uuid: string, data: any, canonical_id: string) {
-    const [scrape] = await scrapeInsert([
-      {
-        source: 'ubereats',
-        id_from_source: uuid,
-        // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
-        data: {
-          main: data,
-        },
-        location: {
-          type: 'Point',
-          coordinates: [data.location.longitude, data.location.latitude],
-        },
-        restaurant_id: canonical_id,
+    const id = await scrapeInsert({
+      source: 'ubereats',
+      id_from_source: uuid,
+      data: {
+        main: data,
       },
-    ])
-    return scrape
+      location: {
+        lon: data.location.longitude,
+        lat: data.location.latitude,
+      },
+      restaurant_id: canonical_id,
+    })
+    return id
   }
 
   private async getDishes(data: any, scrape_id: string) {

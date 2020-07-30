@@ -1,27 +1,31 @@
 import fs from 'fs'
 import path from 'path'
 
-import { deleteAllBy, restaurantFindOne, scrapeFindOne } from '@dish/graph'
+import { restaurantFindOne } from '@dish/graph'
 import test from 'ava'
 
 import { Google } from '../../src/google/Google'
+import {
+  deleteAllScrapesBySourceID,
+  scrapeFindOneBySourceID,
+} from '../../src/scrape-helpers'
 
 const name = 'Fresh Brew Coffee'
 
 const ID = '0x8085808d932ad877:0x6b0a1f17813a870d'
 
 test.beforeEach(async () => {
-  await deleteAllBy('scrape', 'id_from_source', ID)
+  await deleteAllScrapesBySourceID(ID)
 })
 
-test('Gets and persists a restaurant', async (t) => {
+test.skip('Gets and persists a restaurant', async (t) => {
   let restaurant = await restaurantFindOne({ name })
   t.assert(restaurant)
   if (!restaurant) return
   const google = new Google()
   await google.boot()
   await google.getRestaurant(restaurant)
-  const scrape = await scrapeFindOne({ id_from_source: ID })
+  const scrape = await scrapeFindOneBySourceID(ID)
   t.assert(scrape)
   if (!scrape) return
   t.assert(
