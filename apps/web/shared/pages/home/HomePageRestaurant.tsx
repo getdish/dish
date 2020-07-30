@@ -86,15 +86,20 @@ const HomePageRestaurant = memo(
               borderWidth={1}
               borderColor="#eee"
               padding={0}
+              paddingTop={5}
               marginHorizontal={20}
             >
-              <HStack backgroundColor="#f9f9f9">
+              <SmallTitle>Rating</SmallTitle>
+              <HStack>
                 <RestaurantRatingBreakdown restaurantSlug={slug} />
               </HStack>
-              <HStack padding={10}>
-                <RestaurantOverview restaurantSlug={slug} />
-              </HStack>
             </Box>
+
+            <HStack padding={10} maxWidth="100%" flexWrap="wrap">
+              <RestaurantOverview restaurantSlug={slug} />
+              <RestaurantOverview restaurantSlug={slug} />
+              <RestaurantOverview restaurantSlug={slug} />
+            </HStack>
 
             <Spacer size="lg" />
 

@@ -36,13 +36,14 @@ export const RestaurantOverview = memo(
           <React.Fragment key={item.category}>
             <VStack
               {...(!inline && {
+                minWidth: 150,
                 borderWidth: 1,
                 borderColor: '#eee',
                 borderRadius: 8,
                 margin: 4,
                 marginBottom: 0,
                 marginRight: 0,
-                padding: 10,
+                padding: 16,
                 flex: 1,
               })}
             >
