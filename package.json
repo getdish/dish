@@ -36,6 +36,7 @@
     "tslib": "1.11.2",
     "react": "0.0.0-experimental-aae83a4b9",
     "react-dom": "0.0.0-experimental-aae83a4b9",
+    "react-native-web": "0.13.4",
     "@types/react": "16.9.35",
     "@types/react-dom": "16.9.8",
     "@types/react-native": "0.62.12",

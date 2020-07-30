@@ -13758,23 +13758,7 @@ react-native-unimodules@~0.7.0:
     unimodules-sensors-interface "~5.0.0"
     unimodules-task-manager-interface "~5.0.0"
 
-react-native-web@*:
-  version "0.13.3"
-  resolved "https://registry.npmjs.org/react-native-web/-/react-native-web-0.13.3.tgz#fe6799a1a341b60a617194b51042c40f57bfb34c"
-  integrity sha512-szUf/qDMZileJKglUmMT5UdPYltmmF2ywZ0OFeW7/6XmYDJP+Bepo3eGaCwm1bMcopLBq+lNdbn854CHfU8yBw==
-  dependencies:
-    array-find-index "^1.0.2"
-    create-react-class "^15.6.2"
-    debounce "^1.2.0"
-    deep-assign "^3.0.0"
-    fbjs "^1.0.0"
-    hyphenate-style-name "^1.0.3"
-    inline-style-prefixer "^5.1.0"
-    normalize-css-color "^1.0.2"
-    prop-types "^15.6.0"
-    react-timer-mixin "^0.13.4"
-
-react-native-web@^0.13.4:
+react-native-web@*, react-native-web@0.13.4, react-native-web@^0.13.4:
   version "0.13.4"
   resolved "https://registry.npmjs.org/react-native-web/-/react-native-web-0.13.4.tgz#b934b9ec3e23119dc7c143cdc316b22d75467b60"
   integrity sha512-SXplf0ksAeZZPvo7Gq8y/A0BcdqdJouPCmHLUQ5a9P85uMPclJXwUynvVIwl7vxP9qmg39MatOMD8A7K0neTPQ==
