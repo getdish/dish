@@ -54,7 +54,6 @@ const HomePageContent = memo(() => {
         <HomeAutocomplete />
 
         <HomeContainer>
-          <HomeSearchBarDrawer />
           <HomeStackView>
             {(props) => {
               return <HomePagePane {...props} />
