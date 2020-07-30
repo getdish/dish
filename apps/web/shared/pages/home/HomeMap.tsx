@@ -392,8 +392,8 @@ const HomeMapContent = memo(function HomeMap({
                 lng: coordinates[0],
               },
               span: {
-                lat: Math.max(state.span.lat / 2, 0.022),
-                lng: Math.max(state.span.lng / 2, 0.022),
+                lat: Math.min(state.span.lat, 0.025),
+                lng: Math.min(state.span.lng, 0.025),
               },
             })
           }
