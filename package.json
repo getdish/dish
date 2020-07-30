@@ -40,7 +40,7 @@
     "@types/react-dom": "16.9.8",
     "@types/react-native": "0.62.12",
     "@types/puppeteer": "3.0.1",
-    "react-native": "0.62.2"
+    "react-native": "0.63.2"
   },
   "devDependencies": {
     "@zerollup/ts-transform-paths": "^1.7.18",
