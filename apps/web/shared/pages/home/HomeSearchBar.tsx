@@ -194,6 +194,7 @@ const HomeSearchBar = memo(() => {
   return (
     <HStack
       flex={1}
+      overflow="hidden"
       pointerEvents="auto"
       alignItems="center"
       justifyContent="center"
