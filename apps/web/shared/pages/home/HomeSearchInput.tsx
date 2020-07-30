@@ -129,9 +129,12 @@ export const HomeSearchInput = memo(() => {
       om.actions.home.setShowAutocomplete('search')
     }
 
-    inputRef.current.addEventListener('click', handleClick)
-    return () => {
-      inputRef.current.removeEventListener('click', handleClick)
+    const node = inputGetNode(inputRef.current)
+    if (node) {
+      node.addEventListener('click', handleClick)
+      return () => {
+        node.removeEventListener('click', handleClick)
+      }
     }
   }, [])
 

@@ -16,6 +16,7 @@ export const homePageBorderRadius = 12
 
 export default memo(function HomePage() {
   const isSmall = useMediaQueryIsSmall()
+
   return (
     <VStack
       // apple maps ocean color
