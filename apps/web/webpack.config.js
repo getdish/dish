@@ -75,12 +75,12 @@ module.exports = function getWebpackConfig(
       },
       // webpack 4
       node: {
+        global: true,
         process: 'mock',
         Buffer: false,
         util: false,
         console: false,
         setImmediate: false,
-        global: false,
         __filename: false,
         __dirname: false,
       },
