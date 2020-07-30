@@ -6,6 +6,17 @@ import { TextInput } from 'react-native'
 
 import { styles } from './styles'
 
+export type AdminListItemProps = {
+  editable?: boolean
+  deletable?: boolean
+  isActive?: boolean
+  text: string
+  isFormerlyActive?: boolean
+  onDelete?: () => void
+  onSelect?: () => void
+  onEdit?: (name: string) => void
+}
+
 export const AdminListItem = memo(
   ({
     text,
@@ -16,16 +27,7 @@ export const AdminListItem = memo(
     onSelect,
     onDelete,
     onEdit,
-  }: {
-    editable?: boolean
-    deletable?: boolean
-    isActive: boolean
-    text: string
-    isFormerlyActive?: boolean
-    onDelete?: () => void
-    onSelect?: () => void
-    onEdit?: (name: string) => void
-  }) => {
+  }: AdminListItemProps) => {
     const [isEditing, setIsEditing] = useState(false)
     const [hidden, setHidden] = useState(false)
     const lastTap = useRef(Date.now())

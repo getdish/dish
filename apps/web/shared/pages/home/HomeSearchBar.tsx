@@ -67,8 +67,8 @@ export default memo(function HomeSearchBar() {
       alignItems="center"
       pointerEvents="none"
       {...(isSmall && {
-        left: -2,
-        right: -2,
+        left: -6,
+        right: -6,
         top: '20%',
       })}
     >
@@ -98,30 +98,34 @@ export default memo(function HomeSearchBar() {
             position="relative"
           >
             {/* shadow */}
-            <VStack
-              height={searchBarHeight - 1}
-              borderRadius={borderRadius}
-              zIndex={0}
-              className="skewX"
-              position="absolute"
-              top={0}
-              width="100%"
-              shadowColor="rgba(0,0,0,0.3)"
-              shadowOffset={{ height: 2, width: 4 }}
-              shadowRadius={18}
-            />
-            <VStack
-              height={searchBarHeight - 1}
-              borderRadius={borderRadius}
-              zIndex={-1}
-              className="skewX"
-              position="absolute"
-              top={0}
-              width="100%"
-              shadowColor="rgba(0,0,0,0.1)"
-              shadowOffset={{ height: 2, width: 3 }}
-              shadowRadius={3}
-            />
+            {!isSmall && (
+              <>
+                <VStack
+                  height={searchBarHeight - 1}
+                  borderRadius={borderRadius}
+                  zIndex={0}
+                  className="skewX"
+                  position="absolute"
+                  top={0}
+                  width="100%"
+                  shadowColor="rgba(0,0,0,0.3)"
+                  shadowOffset={{ height: 2, width: 4 }}
+                  shadowRadius={18}
+                />
+                <VStack
+                  height={searchBarHeight - 1}
+                  borderRadius={borderRadius}
+                  zIndex={-1}
+                  className="skewX"
+                  position="absolute"
+                  top={0}
+                  width="100%"
+                  shadowColor="rgba(0,0,0,0.1)"
+                  shadowOffset={{ height: 2, width: 3 }}
+                  shadowRadius={3}
+                />
+              </>
+            )}
             <VStack
               className="skewX"
               position="relative"
