@@ -11,9 +11,10 @@ export const Tooltip = ({ contents, ...props }: TooltipProps) => {
   return (
     <HoverablePopover
       noArrow
+      delay={200}
       contents={
         <Box backgroundColor="#000" paddingHorizontal={9} borderRadius={1000}>
-          <Text fontSize={14} color="#fff">
+          <Text fontSize={13} color="#fff">
             {contents}
           </Text>
         </Box>

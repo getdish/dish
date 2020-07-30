@@ -8,7 +8,7 @@ import {
   useGet,
   useOnMount,
 } from '@dish/ui'
-import { pick, uniqBy } from 'lodash'
+import { uniqBy } from 'lodash'
 import React, {
   Suspense,
   memo,
@@ -26,7 +26,6 @@ import {
   isSearchState,
 } from '../../state/home-helpers'
 import { setMapView } from '../../state/mapView'
-import { router } from '../../state/router'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../../views/map'
 import { centerMapToRegion } from './centerMapToRegion'
@@ -54,7 +53,7 @@ export const HomeMap = memo(function HomeMap() {
     return series([
       startMapKit,
       () => setLoadStatus('loading'),
-      () => sleep(500),
+      () => sleep(800),
       () => setLoadStatus('loaded'),
     ])
   }, [])
@@ -393,8 +392,8 @@ const HomeMapContent = memo(function HomeMap({
                 lng: coordinates[0],
               },
               span: {
-                lat: Math.min(state.span.lat, 0.022),
-                lng: Math.min(state.span.lng, 0.022),
+                lat: Math.max(state.span.lat / 2, 0.022),
+                lng: Math.max(state.span.lng / 2, 0.022),
               },
             })
           }
