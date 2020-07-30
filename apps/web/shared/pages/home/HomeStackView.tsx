@@ -1,3 +1,4 @@
+// debug
 import { AbsoluteVStack, VStack, useDebounceValue } from '@dish/ui'
 import React, { Suspense, memo, useMemo } from 'react'
 
@@ -89,7 +90,8 @@ const HomeStackViewItem = memo(
     const top = isSmall
       ? searchBarHeight + 5 + Math.max(0, index - 1) * 5
       : index * 5 //index == 0 ? 0 : isSmall ? 5 : index * 5
-    // const left = isSmall ? 0 : Math.max(0, index) * 3
+
+    const left = 0
 
     // useEffect(() => {
     //   popoverStore.show = isActive
@@ -105,16 +107,22 @@ const HomeStackViewItem = memo(
 
     children = useLastValueWhen(() => children, isRemoving)
 
-    const className = `animate-up ${!isRemoving && !isAdding ? 'active' : ''}`
+    const className = `animate-up ${
+      !isRemoving && !isAdding ? 'active' : 'untouchable'
+    }`
 
     return (
       // <PopoverContext.Provider value={useMemo(() => ({ id }), [id])}>
-      <AbsoluteVStack className={className} fullscreen pointerEvents="none">
+      <AbsoluteVStack
+        zIndex={index}
+        className={className}
+        fullscreen
+        pointerEvents="none"
+      >
         <AbsoluteVStack
           flex={1}
-          zIndex={index}
           top={top}
-          left={!isSmall && index > 0 ? 12 : 0}
+          left={left}
           bottom={-(index * 5)}
           width="100%"
           pointerEvents={isActive ? 'auto' : 'none'}

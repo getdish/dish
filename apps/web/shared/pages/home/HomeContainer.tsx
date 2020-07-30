@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native'
 import { Reparentable, sendReparentableChild } from 'react-reparenting'
 
 import { bgAlt, bgLightTranslucent } from '../../colors'
-import { drawerPad, searchBarHeight } from '../../constants'
+import { drawerPad, searchBarHeight, zIndexDrawer } from '../../constants'
 import { DraggableDrawer } from './DraggableDrawer'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useLastValueWhen } from './useLastValueWhen'
@@ -26,7 +26,7 @@ export function HomeContainer(props: { children: any }) {
   }, [isSmall])
 
   return (
-    <>
+    <AbsoluteVStack fullscreen pointerEvents="none" zIndex={zIndexDrawer}>
       <DraggableDrawer>
         <Reparentable id="sm">{parent === 'sm' ? children : []}</Reparentable>
       </DraggableDrawer>
@@ -34,7 +34,7 @@ export function HomeContainer(props: { children: any }) {
       <HomeContainerLarge>
         <Reparentable id="lg">{parent === 'lg' ? children : []}</Reparentable>
       </HomeContainerLarge>
-    </>
+    </AbsoluteVStack>
   )
 }
 
@@ -47,16 +47,13 @@ const HomeContainerLarge = (props) => {
     <VStack
       fullscreen
       // TODO ui-static this fails if i remove conditional above!
-      width={lastWidth + drawerPad}
+      width={lastWidth}
       flex={1}
       position="absolute"
       top={0}
       pointerEvents="none"
       alignItems="flex-end"
-      {...(isSmall && {
-        opacity: 0,
-        pointerEvents: 'none',
-      })}
+      className={isSmall ? 'invisible untouchable' : ''}
     >
       <HStack
         pointerEvents="auto"
@@ -68,7 +65,7 @@ const HomeContainerLarge = (props) => {
         flex={1}
         backgroundColor="#fff"
         shadowColor="rgba(0,0,0,0.13)"
-        shadowRadius={44}
+        shadowRadius={10}
         shadowOffset={{ width: 10, height: 0 }}
         justifyContent="flex-end"
       >
