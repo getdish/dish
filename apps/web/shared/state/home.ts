@@ -1308,7 +1308,7 @@ const updateCurrentState: Action<Partial<HomeStateItem>> = (om, val) => {
   })
 }
 
-const setDrawerSnapPoint: Action<boolean> = (om, val) => {
+const setDrawerSnapPoint: Action<number> = (om, val) => {
   om.state.home.drawerSnapPoint = val
 }
 

@@ -62,6 +62,8 @@ export function LinkButton<
       textAlign,
       activeTextStyle,
       color,
+      alignItems,
+      justifyContent,
       ...rest
     } = props
     restProps = rest
@@ -88,6 +90,9 @@ export function LinkButton<
             paddingHorizontal,
           }),
           width: '100%',
+          flex: 1,
+          alignItems,
+          justifyContent,
         }}
       >
         {getChildren(props, isActive)}

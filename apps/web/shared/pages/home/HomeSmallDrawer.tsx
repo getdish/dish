@@ -6,12 +6,16 @@ import { Animated, PanResponder, View } from 'react-native'
 import { pageWidthMax, zIndexDrawer } from '../../constants'
 import { omStatic } from '../../state/useOvermind'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
+import { blurSearchInput } from './HomeSearchInput'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export const snapPoints = [0.02, 0.25, 0.6]
 let snapIndex = 1
 
-const setDrawer = debounce(omStatic.actions.home.setDrawerSnapPoint, 100)
+const setDrawer = debounce(
+  (val) => omStatic.actions.home.setDrawerSnapPoint(val),
+  100
+)
 
 const setSnapIndex = (x: number) => {
   snapIndex = x
@@ -61,11 +65,14 @@ const panResponder = PanResponder.create({
     spring = null
     pan.setOffset(pan['_value'])
     document.body.classList.add('all-input-blur')
+    if (omStatic.state.home.showAutocomplete) {
+      omStatic.actions.home.setShowAutocomplete(false)
+    }
+    blurSearchInput()
   },
   onPanResponderMove: Animated.event([null, { dy: pan }]),
-  onPanResponderRelease: (_, gesture) => {
+  onPanResponderRelease: () => {
     pan.flattenOffset()
-    console.log('released at', gesture.dy, pan['_value'])
     animateDrawerToPx(pan['_value'])
     document.body.classList.remove('all-input-blur')
   },

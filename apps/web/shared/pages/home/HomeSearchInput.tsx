@@ -68,6 +68,10 @@ export function focusSearchInput() {
   searchBar?.focus()
 }
 
+export function blurSearchInput() {
+  searchBar?.blur()
+}
+
 export const getSearchInput = () => {
   return searchBar
 }
@@ -80,7 +84,6 @@ export const isSearchInputFocused = () => {
 export const HomeSearchInput = memo(() => {
   const om = useOvermind()
   const { color, background } = useSearchBarTheme()
-  const isReallySmall = useMediaQueryIsReallySmall()
   const inputRef = useRef<any>()
   const [search, setSearch] = useState('')
   const getSearch = useGet(search)
@@ -191,22 +194,20 @@ export const HomeSearchInput = memo(() => {
           backgroundColor={background}
         >
           {/* Loading / Search Icon */}
-          {!isReallySmall && (
-            <>
-              {om.state.home.isLoading ? (
-                <VStack className="rotating" opacity={0.9}>
-                  <Loader color={color} size={18} />
-                </VStack>
-              ) : (
-                <Search
-                  color={color}
-                  size={18}
-                  opacity={0.6}
-                  onClick={focusSearchInput}
-                />
-              )}
-            </>
-          )}
+          <>
+            {om.state.home.isLoading ? (
+              <VStack className="rotating" opacity={0.9}>
+                <Loader color={color} size={18} />
+              </VStack>
+            ) : (
+              <Search
+                color={color}
+                size={18}
+                opacity={0.6}
+                onClick={focusSearchInput}
+              />
+            )}
+          </>
           <HomeSearchBarTags input={input} />
           <TextInput
             ref={inputRef}

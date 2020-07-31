@@ -63,6 +63,9 @@ textarea {
 .transition-delay {
   transition-delay: 250ms;
 }
+.transition-delay-long {
+  transition-delay: 400ms;
+}
 
 .ease-in-out-top {
   transition: top ease-out 140ms;

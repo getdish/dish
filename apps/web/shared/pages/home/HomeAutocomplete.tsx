@@ -130,7 +130,7 @@ const HomeAutoCompleteContents = memo(
 
     return (
       <AbsoluteVStack
-        className="ease-in-out transition-delay"
+        className={`ease-in-out ${isSmall ? 'transition-delay-long' : ''}`}
         pointerEvents="none"
         position="absolute"
         paddingTop={searchYEnd}
@@ -149,7 +149,7 @@ const HomeAutoCompleteContents = memo(
         <VStack
           width="100%"
           pointerEvents={isShowing ? 'auto' : 'none'}
-          maxWidth={pageWidthMax * 0.4}
+          maxWidth={pageWidthMax * 0.45}
           maxHeight={`calc(100vh - ${searchYEnd + 20}px)`}
           // @ts-ignore
           onMouseLeave={() => {
