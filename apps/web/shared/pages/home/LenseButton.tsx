@@ -33,6 +33,7 @@ export const LenseButton = memoIsEqualDeep(
     return (
       <LinkButton
         {...(onPress ? { onPress } : { tag: lense })}
+        className="unselectable"
         disallowDisableWhenActive
         position="relative"
         zIndex={isActive ? 1 : 0}

@@ -27,7 +27,6 @@ export const HomeSearchLocationInput = memo(() => {
   const { theme, color, background } = useSearchBarTheme()
   const [locationSearch, setLocationSearch] = useState('')
   const locationInputRef = useRef<any>()
-  const locationInput = inputGetNode(locationInputRef.current)
   const { currentLocationName } = om.state.home.currentState
 
   // one way sync down for more perf
@@ -39,7 +38,8 @@ export const HomeSearchLocationInput = memo(() => {
   }, [])
 
   useEffect(() => {
-    if (!locationInput) return
+    if (!locationInputRef.current) return
+    const locationInput = inputGetNode(locationInputRef.current)
     const handleKeyPress = (e) => {
       // @ts-ignore
       const code = e.keyCode
@@ -87,25 +87,15 @@ export const HomeSearchLocationInput = memo(() => {
     const showLocationAutocomplete = () => {
       om.actions.home.setShowAutocomplete('location')
     }
-    const handleFocus = () => {
-      om.actions.home.setSearchFocusLocationInput(true)
-    }
-    const handleBlur = () => {
-      om.actions.home.setSearchFocusLocationInput(false)
-    }
     locationInput.addEventListener('keydown', handleKeyPress)
-    locationInput.addEventListener('focus', showLocationAutocomplete)
+    // locationInput.addEventListener('focus', showLocationAutocomplete)
     locationInput.addEventListener('click', showLocationAutocomplete)
-    locationInput.addEventListener('focus', handleFocus)
-    locationInput.addEventListener('blur', handleBlur)
     return () => {
       locationInput.removeEventListener('keydown', handleKeyPress)
-      locationInput.addEventListener('focus', showLocationAutocomplete)
+      // locationInput.addEventListener('focus', showLocationAutocomplete)
       locationInput.removeEventListener('click', showLocationAutocomplete)
-      locationInput.removeEventListener('focus', handleFocus)
-      locationInput.removeEventListener('blur', handleBlur)
     }
-  }, [locationInput])
+  }, [])
 
   return (
     <VStack
@@ -118,7 +108,7 @@ export const HomeSearchLocationInput = memo(() => {
       justifyContent="center"
     >
       <HomeAutocompleteHoverableInput
-        input={locationInput}
+        input={locationInputRef.current}
         autocompleteTarget="location"
       >
         <HStack alignItems="center">
@@ -129,7 +119,7 @@ export const HomeSearchLocationInput = memo(() => {
             style={{ marginLeft: 10, marginRight: -5 }}
             onClick={(e) => {
               prevent(e)
-              locationInput?.focus()
+              locationInputRef.current?.focus()
             }}
           />
           <TextInput
@@ -140,10 +130,12 @@ export const HomeSearchLocationInput = memo(() => {
               inputTextStyles.textInput,
               { color, paddingHorizontal, fontSize: 16 },
             ]}
-            onFocus={() => {
-              onFocusAnyInput()
-              om.actions.home.setShowAutocomplete('location')
-            }}
+            // onFocus={(e) => {
+            //   debugger
+            //   // e.preventDefault()
+            //   // onFocusAnyInput()
+            //   // om.actions.home.setShowAutocomplete('location')
+            // }}
             onChangeText={(text) => {
               setLocationSearch(text)
               om.actions.home.setLocationSearchQuery(text)

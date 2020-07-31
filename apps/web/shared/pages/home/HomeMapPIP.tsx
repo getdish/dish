@@ -4,7 +4,7 @@ import { isEqual } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
 import { useOvermind } from '../../state/useOvermind'
-import { Map, useMap } from '../../views/map'
+import { Map } from '../../views/Map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
 import { getZoomLevel, mapZoomToMedium } from './HomeMapControlsUnderlay'
@@ -57,14 +57,14 @@ const HomeMapPIPContent = graphql(() => {
   const om = useOvermind()
   // const isSmall = useMediaQueryIsSmall()
   const state = om.state.home.currentState
-  const { map, mapProps } = useMap({
-    // @ts-ignore
-    showsZoomControl: false,
-    showsMapTypeControl: false,
-    isZoomEnabled: true,
-    isScrollEnabled: true,
-    showsCompass: mapkit.FeatureVisibility.Hidden,
-  })
+  // const { map, mapProps } = useMap({
+  //   // @ts-ignore
+  //   showsZoomControl: false,
+  //   showsMapTypeControl: false,
+  //   isZoomEnabled: true,
+  //   isScrollEnabled: true,
+  //   showsCompass: mapkit.FeatureVisibility.Hidden,
+  // })
 
   const focusedRestaurant =
     om.state.home.hoveredRestaurant ?? om.state.home.selectedRestaurant

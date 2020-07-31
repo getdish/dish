@@ -142,9 +142,6 @@ module.exports = function getWebpackConfig(
                 new OptimizeCSSAssetsPlugin({}),
               ],
       },
-      externals: {
-        [path.join(__dirname, 'web/mapkit.js')]: 'mapkit',
-      },
       module: {
         rules: [
           {
@@ -339,11 +336,6 @@ module.exports = function getWebpackConfig(
       config.output.path = path.join(__dirname, 'web-build-ssr')
       config.output.libraryTarget = 'commonjs'
       config.output.filename = `static/js/app.ssr.js`
-      config.plugins.push(
-        new Webpack.ProvidePlugin({
-          mapkit: path.join(__dirname, 'web/mapkitExport.js'),
-        })
-      )
     }
 
     return config

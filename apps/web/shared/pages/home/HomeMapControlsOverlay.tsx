@@ -64,9 +64,7 @@ export const HomeMapControlsOverlay = memo(() => {
             paddingBottom={15}
             paddingTop={20}
           >
-            <Suspense fallback={null}>
-              <HomeMapPIP />
-            </Suspense>
+            <Suspense fallback={null}>{/* <HomeMapPIP /> */}</Suspense>
             {!isReallySmall && <HomeMapRestaurantPeek />}
           </HStack>
         </HStack>

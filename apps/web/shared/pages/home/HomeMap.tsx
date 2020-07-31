@@ -1,17 +1,19 @@
-import { fullyIdle, idle, series, sleep } from '@dish/async'
+import { idle } from '@dish/async'
 import { Restaurant, graphql } from '@dish/graph'
 import {
   AbsoluteVStack,
   VStack,
   useDebounce,
-  useDebounceEffect,
   useGet,
   useOnMount,
+  useStateFn,
 } from '@dish/ui'
 import { uniqBy } from 'lodash'
+import mapboxgl from 'mapbox-gl'
 import React, {
   Suspense,
   memo,
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -20,7 +22,7 @@ import React, {
 
 import { frameWidthMax, searchBarHeight, zIndexMap } from '../../constants'
 import { getWindowHeight, getWindowWidth } from '../../helpers/getWindow'
-import { LngLat } from '../../state/home'
+import { HomeStateItem, LngLat } from '../../state/home'
 import {
   isHomeState,
   isRestaurantState,
@@ -28,20 +30,16 @@ import {
 } from '../../state/home-helpers'
 import { setMapView } from '../../state/mapView'
 import { omStatic, useOvermind } from '../../state/useOvermind'
-import { Map, useMap } from '../../views/map'
+import { Map } from '../../views/Map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
 import { snapPoints } from './HomeSmallDrawer'
-import { setMapIsLoaded } from './onMapLoadedCallback'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useLastValueWhen } from './useLastValueWhen'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
-type MapLoadState = 'wait' | 'loading' | 'loaded'
-
 export const HomeMap = memo(function HomeMap() {
-  const [status, setLoadStatus] = useState<MapLoadState>('wait')
   const [restaurants, setRestaurantsFast] = useState<Restaurant[]>([])
   const [
     restaurantDetail,
@@ -49,19 +47,6 @@ export const HomeMap = memo(function HomeMap() {
   ] = useState<Restaurant | null>(null)
   const setRestaurants = useDebounce(setRestaurantsFast, 150)
   const setRestaurantDetail = useDebounce(setRestaurantDetailFast, 150)
-
-  useEffect(() => {
-    return series([
-      startMapKit,
-      () => setLoadStatus('loading'),
-      () => sleep(800),
-      () => setLoadStatus('loaded'),
-    ])
-  }, [])
-
-  if (status === 'wait') {
-    return null
-  }
 
   return (
     <>
@@ -153,7 +138,7 @@ const HomeMapDataLoader = memo(
   )
 )
 
-let mapView: mapkit.Map
+let mapView: mapboxgl.Map
 
 // pause/unpause, need to define better
 // start paused, first map update we ignore because its slightly off
@@ -183,7 +168,7 @@ const resumeMap = (force: boolean = false) => {
       return
     }
     omStatic.actions.home.setHasMovedMap()
-    const span = mapView.region.span
+    const span = mapView.span
     pendingUpdates = false
 
     if (
@@ -207,11 +192,7 @@ const resumeMap = (force: boolean = false) => {
   }
 }
 
-export function centerMapToRegionMain(p: {
-  map: mapkit.Map
-  center: LngLat
-  span: LngLat
-}) {
+function centerMapTo(p: { map: mapboxgl.Map; center: LngLat; span: LngLat }) {
   if (pauseMapUpdates) {
     console.debug('paused no centering')
     return
@@ -228,6 +209,11 @@ export const useMapSize = (isSmall: boolean) => {
   return { width, paddingLeft, drawerWidth }
 }
 
+const getStateLocation = (state: HomeStateItem) => ({
+  center: state.center,
+  span: state.span,
+})
+
 const HomeMapContent = memo(function HomeMap({
   restaurants,
   restaurantDetail,
@@ -239,18 +225,18 @@ const HomeMapContent = memo(function HomeMap({
   const isSmall = useMediaQueryIsSmall()
   const state = om.state.home.currentState
   const getRestaurants = useGet(restaurants)
-  const { center, span } = state
   const { drawerWidth, width, paddingLeft } = useMapSize(isSmall)
+  const [map, setMap] = useState<mapboxgl.Map | null>(null)
+  const [getLocation, setLocation] = useStateFn(getStateLocation(state))
 
-  if (!center || !span) {
-    return null
-  }
+  useEffect(() => {
+    setLocation(getStateLocation(state))
+  }, [JSON.stringify(state.center), JSON.stringify(state.span)])
 
   const snapPoint = isSmall
     ? // avoid resizing to top "fully open drawer" snap
       Math.max(1, om.state.home.drawerSnapPoint)
     : 0
-
   const padding = isSmall
     ? {
         left: 0,
@@ -265,32 +251,6 @@ const HomeMapContent = memo(function HomeMap({
         right: drawerWidth > 600 ? 6 : 0,
       }
 
-  const { map, mapProps } = useMap({
-    region: {
-      latitude: center.lat,
-      longitude: center.lng,
-      latitudeSpan: span.lat,
-      longitudeSpan: span.lng,
-    },
-    // @ts-ignore
-    showsZoomControl: false,
-    showsMapTypeControl: false,
-    isZoomEnabled: true,
-    isScrollEnabled: true,
-    showsCompass: mapkit.FeatureVisibility.Hidden,
-    padding,
-  })
-
-  if (map) {
-    setMapView(map)
-    mapView = map
-  }
-
-  // wheel zoom
-  if (map && map['_allowWheelToZoom'] == false) {
-    map['_allowWheelToZoom'] = true
-  }
-
   useOnMount(() => {
     // fix: dont send initial map location update, wait for ~fully loaded
     const tm = setTimeout(resumeMap, 100)
@@ -304,228 +264,190 @@ const HomeMapContent = memo(function HomeMap({
     () => JSON.stringify(restaurants.map((x) => x.location?.coordinates)),
     isLoading
   )
-  const annotations = useMemo(() => {
-    console.log('getannotations', key)
-    return getRestaurantAnnotations(restaurants)
+  const features = useMemo(() => {
+    return getRestaurantMarkers(restaurants)
   }, [key])
 
   useEffect(() => {
     if (!map) return
-    // set initial zoom level
-    const tm = requestIdleCallback(() => {
-      centerMapToRegionMain({
-        map,
-        center,
-        span,
-      })
-    })
-
-    map.addEventListener('region-change-end', forceResumeMap)
-    map.addEventListener('region-change-start', pauseMap)
-
+    map.on('moveend', forceResumeMap)
+    map.on('region-change-start', pauseMap)
     return () => {
-      clearTimeout(tm)
-      map.removeEventListener('region-change-end', forceResumeMap)
-      map.removeEventListener('region-change-start', pauseMap)
+      map.off('moveend', forceResumeMap)
+      map.off('movestart', pauseMap)
     }
   }, [map])
 
   // stop map animation when moving away from page (see if this fixes some animation glitching/tearing)
   useLayoutEffect(() => {
-    // equivalent to map.pauseAnimation() i think?
-    try {
-      map?.setRegionAnimated(map?.region, false)
-    } catch (err) {
-      console.warn('map hmr err', err.message)
-    }
+    if (!map) return
+    console.warn('test removing this')
+    map.stop()
   }, [map, restaurants])
 
-  // Navigate - return to previous map position
-  // why not just useEffect for center/span? because not always wanted
-  const next = {
-    center: om.state.home.currentState.center!,
-    span: om.state.home.currentState.span!,
-  }
-  useEffect(() => {
-    return series([
-      fullyIdle,
-      () => {
-        centerMapToRegionMain({
-          map,
-          ...next,
-        })
-      },
-      fullyIdle,
-      resumeMap,
-    ])
-  }, [JSON.stringify(next)])
-
   // Search - hover restaurant
-  useDebounceEffect(
-    () => {
-      if (!map) return
+  // useEffect(
+  //   () => {
+  //     if (!map) return
 
-      const disposeReaction = om.reaction(
-        (state) => state.home.hoveredRestaurant,
-        (hoveredRestaurant) => {
-          if (hoveredRestaurant === false) {
-            centerMapToRegionMain({
-              map,
-              center,
-              span,
-            })
-            return
-          }
-          if (!hoveredRestaurant) {
-            return
-          }
-          if (omStatic.state.home.isScrolling) return
-          for (const annotation of map.annotations) {
-            if (annotation.data?.id === hoveredRestaurant.id) {
-              annotation.selected = true
-            }
-          }
-          const restaurants = getRestaurants()
-          const restaurant = restaurants.find(
-            (x) =>
-              x.id === hoveredRestaurant.id || x.slug === hoveredRestaurant.slug
-          )
-          const coordinates = restaurant?.location?.coordinates
-          if (coordinates) {
-            // keep current span
-            resumeMap()
-            const state = omStatic.state.home.currentState
-            centerMapToRegionMain({
-              map,
-              center: {
-                lat: coordinates[1],
-                lng: coordinates[0],
-              },
-              span: {
-                lat: Math.min(state.span.lat, 0.036),
-                lng: Math.min(state.span.lng, 0.036),
-              },
-            })
-          }
-        }
-      )
-
-      return () => {
-        disposeReaction()
-      }
-    },
-    250,
-    [map]
-  )
+  //     return om.reaction(
+  //       (state) => state.home.hoveredRestaurant,
+  //       (hoveredRestaurant) => {
+  //         if (hoveredRestaurant === false) {
+  //           setCenter(getStateLocation(om.state.home.currentState))
+  //           return
+  //         }
+  //         if (!hoveredRestaurant) {
+  //           return
+  //         }
+  //         if (omStatic.state.home.isScrolling) return
+  //         for (const annotation of map.annotations) {
+  //           if (annotation.data?.id === hoveredRestaurant.id) {
+  //             annotation.selected = true
+  //           }
+  //         }
+  //         const restaurants = getRestaurants()
+  //         const restaurant = restaurants.find(
+  //           (x) =>
+  //             x.id === hoveredRestaurant.id || x.slug === hoveredRestaurant.slug
+  //         )
+  //         const coordinates = restaurant?.location?.coordinates
+  //         if (coordinates) {
+  //           // keep current span
+  //           resumeMap()
+  //           const state = omStatic.state.home.currentState
+  //           centerMapTo({
+  //             map,
+  //             center: {
+  //               lat: coordinates[1],
+  //               lng: coordinates[0],
+  //             },
+  //             span: {
+  //               lat: Math.min(state.span.lat, 0.036),
+  //               lng: Math.min(state.span.lng, 0.036),
+  //             },
+  //           })
+  //         }
+  //       }
+  //     )
+  //   },
+  //   [map]
+  // )
 
   // Detail - center to restaurant
-  useDebounceEffect(
-    () => {
-      if (!map || !restaurantDetail?.location) return
-      const index =
-        restaurants?.findIndex((x) => x.id === restaurantDetail.id) ?? -1
-      if (index > -1) {
-        if (map.annotations[index]) {
-          map.annotations[index].selected = true
-        } else {
-          console.warn('no annotations?', index, map.annotations)
-        }
-      }
-      if (restaurantDetail.location?.coordinates) {
-        centerMapToRegionMain({
-          map,
-          center: {
-            lat: restaurantDetail.location.coordinates[1],
-            lng: restaurantDetail.location.coordinates[0],
-          },
-          span: state.span,
-        })
-      }
-    },
-    350,
-    [map, restaurants, restaurantDetail]
-  )
+  // useDebounceEffect(
+  //   () => {
+  //     if (!map || !restaurantDetail?.location) return
+  //     const index =
+  //       restaurants?.findIndex((x) => x.id === restaurantDetail.id) ?? -1
+  //     if (index > -1) {
+  //       if (map.annotations[index]) {
+  //         map.annotations[index].selected = true
+  //       } else {
+  //         console.warn('no annotations?', index, map.annotations)
+  //       }
+  //     }
+  //     if (restaurantDetail.location?.coordinates) {
+  //       centerMapTo({
+  //         map,
+  //         center: {
+  //           lat: restaurantDetail.location.coordinates[1],
+  //           lng: restaurantDetail.location.coordinates[0],
+  //         },
+  //         span: state.span,
+  //       })
+  //     }
+  //   },
+  //   350,
+  //   [map, restaurants, restaurantDetail]
+  // )
 
   // update annotations
-  useEffect(() => {
-    if (!map) return
-    if (!restaurants?.length) return
+  // useEffect(() => {
+  //   if (!map) return
+  //   if (!restaurants?.length) return
 
-    // debounce
-    const cancels = new Set<Function>()
+  //   // debounce
+  //   const cancels = new Set<Function>()
 
-    const handleSelect = (e) => {
-      const id = e.annotation.data.id
-      const restaurant = restaurants.find((x) => x.id === id)
+  //   const handleSelect = (e) => {
+  //     const id = e.annotation.data.id
+  //     const restaurant = restaurants.find((x) => x.id === id)
 
-      if (restaurant) {
-        om.actions.home.setSelectedRestaurant({
-          id: restaurant.id,
-          slug: restaurant.slug,
-        })
-      }
+  //     if (restaurant) {
+  //       om.actions.home.setSelectedRestaurant({
+  //         id: restaurant.id,
+  //         slug: restaurant.slug,
+  //       })
+  //     }
 
-      if (omStatic.state.home.currentStateType === 'search') {
-        const index = restaurants.findIndex((x) => x.id === id)
-        om.actions.home.setActiveIndex({
-          index,
-          event: om.state.home.isHoveringRestaurant ? 'hover' : 'pin',
-        })
-      } else {
-        if (omStatic.state.home.currentStateType != 'restaurant') {
-          console.warn('show a little popover in large mode?')
-          // router.navigate({
-          //   name: 'restaurant',
-          //   params: {
-          //     slug: e.annotation.data.slug ?? '',
-          //   },
-          // })
-        }
-      }
-    }
+  //     if (omStatic.state.home.currentStateType === 'search') {
+  //       const index = restaurants.findIndex((x) => x.id === id)
+  //       om.actions.home.setActiveIndex({
+  //         index,
+  //         event: om.state.home.isHoveringRestaurant ? 'hover' : 'pin',
+  //       })
+  //     } else {
+  //       if (omStatic.state.home.currentStateType != 'restaurant') {
+  //         console.warn('show a little popover in large mode?')
+  //         // router.navigate({
+  //         //   name: 'restaurant',
+  //         //   params: {
+  //         //     slug: e.annotation.data.slug ?? '',
+  //         //   },
+  //         // })
+  //       }
+  //     }
+  //   }
 
-    const handleDeselect = () => {
-      if (om.state.home.selectedRestaurant) {
-        om.actions.home.setSelectedRestaurant(null)
-      }
-    }
+  //   const handleDeselect = () => {
+  //     if (om.state.home.selectedRestaurant) {
+  //       om.actions.home.setSelectedRestaurant(null)
+  //     }
+  //   }
 
-    map.addEventListener('select', handleSelect)
-    map.addEventListener('deselect', handleDeselect)
-    cancels.add(() => {
-      map.removeEventListener('select', handleSelect)
-      map.removeEventListener('deselect', handleDeselect)
-    })
+  //   map.addEventListener('select', handleSelect)
+  //   map.addEventListener('deselect', handleDeselect)
+  //   cancels.add(() => {
+  //     map.removeEventListener('select', handleSelect)
+  //     map.removeEventListener('deselect', handleDeselect)
+  //   })
 
-    // map.showAnnotations(annotations)
-    const hasAnnotations = !!annotations.length
-    if (hasAnnotations) {
-      try {
-        handleDeselect()
-        map.addAnnotations(annotations)
-      } catch (err) {
-        console.error(err)
-      }
-    }
+  //   // map.showAnnotations(annotations)
+  //   const hasAnnotations = !!annotations.length
+  //   if (hasAnnotations) {
+  //     try {
+  //       handleDeselect()
+  //       map.addAnnotations(annotations)
+  //     } catch (err) {
+  //       console.error(err)
+  //     }
+  //   }
 
-    // animate to them
-    // map.showItems(annotations, {
-    //   animate: false,
-    //   minimumSpan: createCoordinateSpan(radius, radius),
-    // })
+  //   // animate to them
+  //   // map.showItems(annotations, {
+  //   //   animate: false,
+  //   //   minimumSpan: createCoordinateSpan(radius, radius),
+  //   // })
 
-    return () => {
-      cancels.forEach((x) => x())
-      if (hasAnnotations) {
-        try {
-          console.warn('REMOVING ANNOTATIONS')
-          map.removeAnnotations(annotations)
-        } catch (err) {
-          console.error('Error removing annotations', err)
-        }
-      }
-    }
-  }, [!!map, annotations])
+  //   return () => {
+  //     cancels.forEach((x) => x())
+  //     if (hasAnnotations) {
+  //       try {
+  //         console.warn('REMOVING ANNOTATIONS')
+  //         map.removeAnnotations(annotations)
+  //       } catch (err) {
+  //         console.error('Error removing annotations', err)
+  //       }
+  //     }
+  //   }
+  // }, [!!map, annotations])
+
+  const setMapRef = useCallback((map: mapboxgl.Map) => {
+    setMap(map)
+    setMapView(map)
+    mapView = map
+  }, [])
 
   return (
     <AbsoluteVStack
@@ -536,82 +458,67 @@ const HomeMapContent = memo(function HomeMap({
       zIndex={zIndexMap}
       width={width}
     >
-      <Map {...mapProps} />
+      <Map
+        {...getLocation()}
+        padding={padding}
+        features={features}
+        mapRef={setMapRef}
+      />
     </AbsoluteVStack>
   )
 })
 
-const getRestaurantAnnotations = (
-  restaurants: Restaurant[]
-): mapkit.MarkerAnnotation[] => {
-  const coordinates = restaurants
-    .filter((restaurant) => !!restaurant.location?.coordinates)
-    .map(
-      (restaurant) =>
-        new mapkit.Coordinate(
-          restaurant.location.coordinates[1],
-          restaurant.location.coordinates[0]
-        )
-    )
-
-  if (!coordinates.length) {
-    return []
-  }
-
-  return restaurants
-    .filter((_, index) => {
-      if (!coordinates[index]) {
-        console.warn('noo coordinate')
-        return false
-      }
-      return true
-    })
-    .map((restaurant, index) => {
-      const percent = getRestaurantRating(restaurant.rating)
-      const color = getRankingColor(percent)
-      return new mapkit.MarkerAnnotation(coordinates[index], {
-        glyphText: index <= 12 ? `${index + 1}` : ``,
+const getRestaurantMarkers = (restaurants: Restaurant[]) => {
+  const result: GeoJSON.Feature[] = []
+  for (const restaurant of restaurants) {
+    if (!restaurant.location?.coordinates) {
+      continue
+    }
+    const percent = getRestaurantRating(restaurant.rating)
+    const color = getRankingColor(percent)
+    result.push({
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: restaurant.location.coordinates,
+      },
+      properties: {
+        id: restaurant.id,
+        title: restaurant.name,
         color: color,
-        title: index <= 3 ? restaurant.name : '',
-        subtitle: index >= 10 ? restaurant.name : '',
-        collisionMode: mapkit.Annotation.CollisionMode.Circle,
-        displayPriority:
-          index <= 10
-            ? mapkit.Annotation.DisplayPriority.Required // change to High to hide overlaps
-            : mapkit.Annotation.DisplayPriority.Low,
-        data: {
-          id: restaurant.id,
-          slug: restaurant.slug,
-        },
-      })
+      },
     })
-    .reverse()
+    // result.push(
+    //   new mapboxgl.Marker({
+    //     color,
+    //   }).setLngLat(restaurant.location.coordinates)
+    // )
+  }
+  return result
 }
-
-async function startMapKit() {
-  return await new Promise((res) => {
-    function setup() {
-      // hmr resilient logic
-      if (window['MAPKIT_STARTED']) {
-        return
-      }
-      window['MAPKIT_STARTED'] = true
-      const token = `eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkwzQ1RLNTYzUlQifQ.eyJpYXQiOjE1ODQ0MDU5MzYuMjAxLCJpc3MiOiIzOTlXWThYOUhZIn0.wAw2qtwuJkcL6T6aI-nLZlVuwJZnlCNg2em6V1uopx9hkUgWZE1ISAWePMoRttzH_NPOem4mQfrpmSTRCkh2bg`
-      // init mapkit
-      const mapkit = require('../../../web/mapkitExport')
-      // @ts-ignore
-      mapkit.init({
-        authorizationCallback: (done) => {
-          done(token)
-        },
-      })
-      setMapIsLoaded()
-      res()
-    }
-    if (document.readyState == 'complete') {
-      setup()
-    } else {
-      window.addEventListener('load', setup)
-    }
-  })
-}
+// return restaurants
+//   .filter((_, index) => {
+//     if (!coordinates[index]) {
+//       console.warn('noo coordinate')
+//       return false
+//     }
+//     return true
+//   })
+//   .map((restaurant, index) => {
+//     return new mapkit.MarkerAnnotation(coordinates[index], {
+//       glyphText: index <= 12 ? `${index + 1}` : ``,
+//       color: color,
+//       title: index <= 3 ? restaurant.name : '',
+//       subtitle: index >= 10 ? restaurant.name : '',
+//       collisionMode: mapkit.Annotation.CollisionMode.Circle,
+//       displayPriority:
+//         index <= 10
+//           ? mapkit.Annotation.DisplayPriority.Required // change to High to hide overlaps
+//           : mapkit.Annotation.DisplayPriority.Low,
+//       data: {
+//         id: restaurant.id,
+//         slug: restaurant.slug,
+//       },
+//     })
+//   })
+//   .reverse()

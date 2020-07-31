@@ -8,6 +8,7 @@ body,
   padding: 0px;
   min-height: 100%;
 }
+
 #root {
   flex-shrink: 0;
   flex-basis: auto;
@@ -307,7 +308,6 @@ li::before {
 
 .scrollable {
   overflow-y: auto;
-  flex: ;
 }
 
 .dish-link {

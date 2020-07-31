@@ -184,11 +184,8 @@ const HomeSearchBar = memo(() => {
   const isSmall = useMediaQueryIsSmall()
   const isReallySmall = useMediaQueryIsReallySmall()
   const { color } = useSearchBarTheme()
-  const focus = om.state.home.searchFocusInput
-    ? 'search'
-    : om.state.home.searchFocusLocationInput
-    ? 'location'
-    : false
+  const isShowingAutocompleteWhenSmall =
+    !!om.state.home.showAutocomplete && isSmall
 
   return (
     <HStack
@@ -203,14 +200,18 @@ const HomeSearchBar = memo(() => {
         <DishLogoButton />
       </VStack>
 
-      <HomeSearchBarHomeBackButton />
+      {!isShowingAutocompleteWhenSmall && <HomeSearchBarHomeBackButton />}
 
       <HStack
         className="ease-in-out"
         position="relative"
-        flex={1}
+        flex={100}
         maxWidth={
-          !isReallySmall && isSmall && focus === 'location' ? 120 : 'auto'
+          !isReallySmall &&
+          isSmall &&
+          om.state.home.showAutocomplete === 'location'
+            ? 120
+            : 'auto'
         }
         alignItems="center"
         overflow="hidden"

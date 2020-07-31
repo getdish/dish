@@ -1,6 +1,5 @@
 import { HStack, Text, VStack } from '@dish/ui'
 import React, { useEffect, useState } from 'react'
-import { TextInput, View } from 'react-native'
 
 import { Input } from '../../pages/home/Input'
 import { useOvermind } from '../../state/useOvermind'
