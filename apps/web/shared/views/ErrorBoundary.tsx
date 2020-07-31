@@ -1,10 +1,12 @@
-import { AbsoluteVStack, Text, VStack } from '@dish/ui'
+import { AbsoluteVStack, Button, Text, VStack } from '@dish/ui'
 import React from 'react'
 import {
   FallbackProps,
   ErrorBoundary as ReactErrorBoundary,
 } from 'react-error-boundary'
 import { ScrollView } from 'react-native'
+
+import { SmallButton } from './ui/SmallButton'
 
 function ErrorFallback({
   error,
@@ -29,14 +31,16 @@ function ErrorFallback({
           </Text>
         </ScrollView>
       </VStack>
-      <VStack
-        minHeight={100}
-        padding={10}
+      <Button
+        position="absolute"
+        top={20}
+        right={20}
         backgroundColor="red"
+        color="white"
         onPress={resetErrorBoundary}
       >
         <Text>Try Again</Text>
-      </VStack>
+      </Button>
     </AbsoluteVStack>
   )
 }

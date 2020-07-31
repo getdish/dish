@@ -33,7 +33,6 @@ export const RatingView = forwardRef(
     const borderColor = `rgb(${getRankingColor(percent)
       .map((x) => x + 40)
       .join(',')})`
-    console.log('borderColor', borderColor)
 
     // size!
     let size =

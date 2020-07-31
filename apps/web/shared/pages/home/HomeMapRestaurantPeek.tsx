@@ -24,6 +24,7 @@ export const HomeMapRestaurantPeek = memo(
           pointerEvents="auto"
           // flex-wrap spacing
           marginTop={15}
+          borderRadius={20}
           maxWidth="98%"
           paddingHorizontal={0}
           paddingVertical={0}
@@ -57,6 +58,7 @@ export const HomeMapRestaurantPeek = memo(
           paddingVertical={18}
           overflow="hidden"
           alignItems="center"
+          borderRadius={20}
         >
           <VStack flex={5} overflow="hidden">
             <LinkButton
@@ -100,10 +102,10 @@ export const HomeMapRestaurantPeek = memo(
                 resizeMode="cover"
                 source={{ uri: restaurant.image }}
                 style={{
-                  marginVertical: -40,
-                  marginRight: -30,
-                  height: 90,
-                  width: 90,
+                  marginVertical: -50,
+                  marginRight: -40,
+                  height: 80,
+                  width: 80,
                   borderRadius: 100,
                 }}
               />

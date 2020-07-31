@@ -1,4 +1,11 @@
-import { AbsoluteVStack, Button, HStack, Spacer, VStack } from '@dish/ui'
+import {
+  AbsoluteVStack,
+  Button,
+  HStack,
+  Spacer,
+  VStack,
+  prevent,
+} from '@dish/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { MapPin, Navigation } from 'react-feather'
 import { TextInput } from 'react-native'
@@ -80,22 +87,32 @@ export const HomeSearchLocationInput = memo(() => {
     const showLocationAutocomplete = () => {
       om.actions.home.setShowAutocomplete('location')
     }
+    const handleFocus = () => {
+      om.actions.home.setSearchFocusLocationInput(true)
+    }
+    const handleBlur = () => {
+      om.actions.home.setSearchFocusLocationInput(false)
+    }
     locationInput.addEventListener('keydown', handleKeyPress)
     locationInput.addEventListener('focus', showLocationAutocomplete)
     locationInput.addEventListener('click', showLocationAutocomplete)
+    locationInput.addEventListener('focus', handleFocus)
+    locationInput.addEventListener('blur', handleBlur)
     return () => {
       locationInput.removeEventListener('keydown', handleKeyPress)
       locationInput.addEventListener('focus', showLocationAutocomplete)
       locationInput.removeEventListener('click', showLocationAutocomplete)
+      locationInput.removeEventListener('focus', handleFocus)
+      locationInput.removeEventListener('blur', handleBlur)
     }
   }, [locationInput])
 
   return (
     <VStack
-      contain="paint"
+      // contain="paint"
       position="relative"
-      flex={65}
-      minWidth={180}
+      // flex={1}
+      // minWidth={100}
       backgroundColor={theme === 'dark' ? 'rgba(255,255,255,0.1)' : background}
       borderRadius={8}
       justifyContent="center"
@@ -110,6 +127,10 @@ export const HomeSearchLocationInput = memo(() => {
             size={18}
             opacity={0.5}
             style={{ marginLeft: 10, marginRight: -5 }}
+            onClick={(e) => {
+              prevent(e)
+              locationInput?.focus()
+            }}
           />
           <TextInput
             ref={locationInputRef}

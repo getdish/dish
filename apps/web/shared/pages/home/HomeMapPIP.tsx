@@ -9,11 +9,18 @@ import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
 import { getZoomLevel, mapZoomToMedium } from './HomeMapControlsUnderlay'
 import { onMapLoadedCallback } from './onMapLoadedCallback'
+import {
+  useMediaQueryIsReallySmall,
+  useMediaQueryIsSmall,
+} from './useMediaQueryIs'
 import { restaurantQuery } from './useRestaurantQuery'
 
 export const HomeMapPIP = memo(() => {
-  // const isSmall = useMediaQueryIsSmall()
+  const isSmall = useMediaQueryIsSmall()
+  const isReallySmall = useMediaQueryIsReallySmall()
   const [isLoaded, setIsLoaded] = useState(false)
+  const om = useOvermind()
+  const drawerSnapPoint = om.state.home.drawerSnapPoint
 
   useEffect(() => {
     return onMapLoadedCallback(() => {
@@ -27,7 +34,21 @@ export const HomeMapPIP = memo(() => {
 
   return (
     <Suspense fallback={null}>
-      <HomeMapPIPContent />
+      <VStack
+        className="ease-in-out"
+        transform={[
+          { scale: isSmall ? 0.8 : 1 },
+          { translateX: isSmall ? 15 : 0 },
+          { translateY: isSmall ? 15 : 0 },
+        ]}
+        {...(isReallySmall &&
+          drawerSnapPoint === 2 && {
+            opacity: 0,
+            pointerEvents: 'none',
+          })}
+      >
+        <HomeMapPIPContent />
+      </VStack>
     </Suspense>
   )
 })

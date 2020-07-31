@@ -5,46 +5,49 @@ import React, { memo } from 'react'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
+const getDayOfWeek = () => {
+  const day = new Date().getDay() - 1
+  return day == -1 ? 6 : day
+}
+
 function openingHours(restaurant: RestaurantQuery) {
   if (restaurant.hours() == null) {
-    return ['Uknown Hours', 'grey', '']
+    return ['Unknown Hours', 'grey', '']
   }
+
   let text = 'Closed'
-  let color = 'grey'
+  let color = '#999'
   let next_time = ''
+
   if (restaurant.is_open_now != null) {
     text = restaurant.is_open_now ? 'Open' : 'Closed'
     color = restaurant.is_open_now ? '#33aa99' : '#999'
-    const now = new Date()
-    let day = now.getDay() - 1
-    if (day == -1) {
-      day = 6
-    }
+
+    const dayOfWeek = getDayOfWeek()
     // TODO: Tomorrow isn't always when the next opening time is.
     // Eg; when it's the morning and the restaurant opens in the evening.
-    let tomorrow = day + 1
-    if (tomorrow == 7) {
-      tomorrow = 0
-    }
-    const openHour = restaurant.hours()[tomorrow]?.hoursInfo.hours[0] ?? ''
-    const closesHour = restaurant.hours()[day]?.hoursInfo.hours[0] ?? ''
+    const tomorrow = (dayOfWeek + 1) % 7
+    const tomorrowsHours =
+      restaurant.hours()[tomorrow]?.hoursInfo.hours[0] ?? ''
+    const todaysHours = restaurant.hours()[dayOfWeek]?.hoursInfo.hours[0] ?? ''
 
-    if (openHour && closesHour) {
-      const opens_at = openHour
-        .replace(/"/g, '')
-        .replace(' am', 'am')
-        .replace(' pm', 'pm')
-        .split('-')[0]
-      const closes_at = closesHour
-        .replace(/"/g, '')
-        .replace(' am', 'am')
-        .replace(' pm', 'pm')
-        .split('-')[1]
-
-      next_time = `${opens_at} - ${closes_at}`
+    const getHours = (hours: string) => {
+      const [opens, closes] = hours.split(' - ')
+      if (opens && closes) {
+        const opens_at = opens.replace(' ', '').replace(':00', '')
+        const closes_at = closes.replace(' ', '').replace(':00', '')
+        return `${opens_at} - ${closes_at}`
+      }
+      return ''
     }
 
-    // next_time = (restaurant.is_open_now ? closes_at : opens_at) || '~'
+    if (restaurant.is_open_now) {
+      text = 'Open'
+      color = '#33aa99'
+      next_time = getHours(todaysHours)
+    } else {
+      next_time = getHours(tomorrowsHours)
+    }
   }
   return [text, color, next_time]
 }
