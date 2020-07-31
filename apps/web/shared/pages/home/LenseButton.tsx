@@ -24,11 +24,11 @@ export const LenseButton = memoIsEqualDeep(
     size?: LenseButtonSize
     onPress?: Function
   }) => {
+    const borderColor = '#f0f0f0'
     const lenseColor = rgbString(lense.rgb)
     // const lenseColorLight = `rgba(${rgbInner}, 0.2)`
     const scale = size == 'md' ? 1 : size === 'lg' ? 1.2 : 1.3
-    const sizePx = 46
-    const borderColor = 'transparent'
+    const sizePx = 38
 
     return (
       <LinkButton
@@ -63,7 +63,7 @@ export const LenseButton = memoIsEqualDeep(
           })}
         >
           <Text
-            fontSize={sizePx * (isActive ? 0.7 : 0.5) * scale}
+            fontSize={sizePx * (isActive ? 0.95 : 0.8) * scale}
             lineHeight={sizePx * scale}
             fontWeight="400"
             textAlign="center"
@@ -76,26 +76,28 @@ export const LenseButton = memoIsEqualDeep(
             alignItems="center"
             borderRadius={4}
             paddingHorizontal={3}
-            marginTop={-8}
-            marginBottom={-5}
+            marginTop={-10}
+            marginBottom={-8}
             backgroundColor="#fff"
-            // borderWidth={1}
-            // borderColor="#ddd"
+            borderWidth={1}
+            borderColor="#ddd"
             {...(isActive && {
               borderColor: lenseColor,
               backgroundColor: lenseColor,
             })}
           >
             <VStack
-              opacity={isActive ? 1 : 0.8}
+              opacity={
+                size !== 'lg' ? (isActive ? 1 : 0.5) : isActive ? 1 : 0.8
+              }
               hoverStyle={{
                 opacity: 1,
               }}
             >
               <Text
-                fontSize={13}
+                fontSize={sizePx * scale * 0.32}
                 fontWeight="400"
-                lineHeight={15}
+                lineHeight={sizePx * scale * 0.39}
                 color={isActive ? '#fff' : '#000'}
               >
                 {tagDisplayName(lense)}

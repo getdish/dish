@@ -167,7 +167,7 @@ const SearchResultsTitle = memo(({ stateId }: { stateId: string }) => {
             overflow="hidden"
             justifyContent="space-between"
           >
-            <HStack marginTop={-10} alignItems="center" justifyContent="center">
+            <HStack marginTop={-12} alignItems="center" justifyContent="center">
               <HomeLenseBar activeTagIds={state.activeTagIds} />
             </HStack>
             <Spacer flex={1} size={16} />
