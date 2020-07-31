@@ -5,7 +5,7 @@ import { LIVE_SEARCH_DOMAIN } from '../constants'
 import { getTagId } from './getTagId'
 import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
 import {
-  HomeActiveTagIds,
+  HomeActiveTagsRecord,
   HomeStateItem,
   Om,
   OmState,
@@ -76,7 +76,7 @@ export const getNextState = (om: Om, navState?: HomeStateNav) => {
     replaceSearch = false,
   } = navState ?? {}
   let searchQuery = state.searchQuery ?? ''
-  let activeTagIds: HomeActiveTagIds = replaceSearch
+  let activeTagIds: HomeActiveTagsRecord = replaceSearch
     ? {}
     : 'activeTagIds' in state
     ? { ...state.activeTagIds }
@@ -124,7 +124,7 @@ export const getNextState = (om: Om, navState?: HomeStateNav) => {
   return nextState
 }
 
-function ensureHasLense(activeTagIds: HomeActiveTagIds) {
+function ensureHasLense(activeTagIds: HomeActiveTagsRecord) {
   if (
     !Object.keys(activeTagIds)
       .filter((k) => activeTagIds[k])
@@ -138,7 +138,7 @@ function ensureHasLense(activeTagIds: HomeActiveTagIds) {
 // mutating
 const ensureUniqueTagOfType = new Set(['lense', 'country', 'dish'])
 function ensureUniqueActiveTagIds(
-  activeTagIds: HomeActiveTagIds,
+  activeTagIds: HomeActiveTagsRecord,
   home: OmStateHome,
   nextActiveTag: NavigableTag
 ) {

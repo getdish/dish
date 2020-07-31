@@ -58,13 +58,13 @@ export const ToastRoot = memo(function ToastRoot() {
     >
       {stateRef.current.show && !!stateRef.current.text && (
         <VStack
-          backgroundColor="rgba(0,0,0,0.95)"
-          shadowColor="rgba(0,0,0,0.6)"
+          backgroundColor="rgba(0,100,0,0.95)"
+          shadowColor="rgba(0,0,0,0.9)"
           shadowRadius={50}
           borderRadius={9}
           padding={10}
         >
-          <Text color="white" fontSize={16}>
+          <Text color="white" fontSize={18} fontWeight="600">
             {stateRef.current.text}
           </Text>
         </VStack>

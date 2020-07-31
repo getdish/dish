@@ -4,7 +4,7 @@ import React, { memo, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
 import { bgLight } from '../../colors'
-import { HomeActiveTagIds } from '../../state/home'
+import { HomeActiveTagsRecord } from '../../state/home'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useUserUpvoteDownvote } from './useUserReview'
 
@@ -15,7 +15,7 @@ export const RestaurantUpVoteDownVote = memo(
       activeTagIds,
     }: {
       restaurantId: string
-      activeTagIds: HomeActiveTagIds
+      activeTagIds: HomeActiveTagsRecord
     }) => {
       const [vote, setVote] = useUserUpvoteDownvote(restaurantId, activeTagIds)
       const isOpenProp =

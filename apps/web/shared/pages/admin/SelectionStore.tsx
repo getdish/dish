@@ -1,5 +1,4 @@
 import { Store, useRecoilStore } from '@dish/use-store'
-import immer from 'immer'
 
 class SelectionStore extends Store<{ id: string }> {
   selectedIndices = [0, 0]
@@ -10,9 +9,10 @@ class SelectionStore extends Store<{ id: string }> {
   }
 
   setSelectedName(row: number, name: string) {
-    this.selectedNames = immer(this.selectedNames, (next) => {
-      next[row] = name
-    })
+    if (typeof row === 'number') {
+      this.selectedNames[row] = name
+      this.selectedNames = [...this.selectedNames]
+    }
   }
 }
 

@@ -108,11 +108,11 @@ export function Link<
       // @ts-ignore
       display="inline-flex"
       // @ts-ignore
-      alignItems={style.alignItems}
+      alignItems={style?.alignItems}
       // @ts-ignore
-      justifyContent={style.justifyContent}
+      justifyContent={style?.justifyContent}
       maxWidth="100%"
-      {...(style.flex && {
+      {...(style?.flex && {
         flex: style.flex as any,
         display: 'flex',
       })}

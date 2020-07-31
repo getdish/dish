@@ -96,11 +96,11 @@ export type HomeStateTagNavigable = Pick<
 > &
   Partial<Omit<HomeStateItemSearch, 'type'>>
 
-export type HomeActiveTagIds = { [id: string]: boolean }
+export type HomeActiveTagsRecord = { [id: string]: boolean }
 
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
-  activeTagIds: HomeActiveTagIds
+  activeTagIds: HomeActiveTagsRecord
 }
 
 export type HomeStateItemAbout = HomeStateItemBase & {
@@ -109,7 +109,7 @@ export type HomeStateItemAbout = HomeStateItemBase & {
 
 export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search' | 'userSearch'
-  activeTagIds: HomeActiveTagIds
+  activeTagIds: HomeActiveTagsRecord
   status: 'loading' | 'complete'
   results: RestaurantOnlyIds[]
   // for not forcing map to be always synced
