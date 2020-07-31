@@ -27,11 +27,13 @@ export const RestaurantAddress = ({
         address
       )}`}
     >
-      <MapPin
-        size={14}
-        opacity={0.5}
-        style={{ marginBottom: -7, marginRight: 4 }}
-      />
+      {size !== 'xs' && (
+        <MapPin
+          size={14}
+          opacity={0.5}
+          style={{ marginBottom: -7, marginRight: 4 }}
+        />
+      )}
       <Text ellipse lineHeight={16} fontSize={14} fontWeight="300" selectable>
         {getAddressText(currentLocationInfo, address, size)}
       </Text>

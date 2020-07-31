@@ -5,7 +5,7 @@ import { Reparentable, sendReparentableChild } from 'react-reparenting'
 
 import { bgAlt, bgLightTranslucent } from '../../colors'
 import { drawerPad, searchBarHeight, zIndexDrawer } from '../../constants'
-import { DraggableDrawer } from './DraggableDrawer'
+import { HomeSmallDrawer } from './HomeSmallDrawer'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useLastValueWhen } from './useLastValueWhen'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
@@ -27,9 +27,9 @@ export function HomeContainer(props: { children: any }) {
 
   return (
     <AbsoluteVStack fullscreen pointerEvents="none" zIndex={zIndexDrawer}>
-      <DraggableDrawer>
+      <HomeSmallDrawer>
         <Reparentable id="sm">{parent === 'sm' ? children : []}</Reparentable>
-      </DraggableDrawer>
+      </HomeSmallDrawer>
 
       <HomeContainerLarge>
         <Reparentable id="lg">{parent === 'lg' ? children : []}</Reparentable>
@@ -56,7 +56,7 @@ const HomeContainerLarge = (props) => {
       className={isSmall ? 'invisible untouchable' : ''}
     >
       <HStack
-        pointerEvents="auto"
+        pointerEvents={isSmall ? 'none' : 'auto'}
         position="absolute"
         top={0}
         bottom={0}
@@ -64,7 +64,7 @@ const HomeContainerLarge = (props) => {
         width="100%"
         flex={1}
         backgroundColor="#fff"
-        shadowColor="rgba(0,0,0,0.13)"
+        shadowColor="rgba(0,0,0,0.08)"
         shadowRadius={10}
         shadowOffset={{ width: 10, height: 0 }}
         justifyContent="flex-end"
@@ -99,7 +99,7 @@ const HomeContainerLarge = (props) => {
         <VStack
           flex={1}
           maxWidth="100%"
-          marginLeft={'auto'}
+          marginLeft="auto"
           position="relative"
           opacity={1}
           {...(isSmall && {

@@ -7,6 +7,7 @@ import HomeAutocomplete from './HomeAutocomplete'
 import { HomeContainer } from './HomeContainer'
 import { HomeMap } from './HomeMap'
 import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
+import { HomeMapControlsUnderlay } from './HomeMapControlsUnderlay'
 import { HomeMapPIP } from './HomeMapPIP'
 import { HomePagePane } from './HomePagePane'
 import { HomeSearchBarFloating } from './HomeSearchBar'
@@ -46,6 +47,7 @@ const HomePageContent = memo(() => {
         </ErrorBoundary>
 
         <Suspense fallback={null}>
+          <HomeMapControlsUnderlay />
           <HomeMapControlsOverlay />
         </Suspense>
 

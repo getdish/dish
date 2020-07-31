@@ -32,7 +32,7 @@ import { mapView } from '../../state/mapView'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallCircleButton } from './CloseButton'
-import { snapPoints } from './DraggableDrawer'
+import { snapPoints } from './HomeSmallDrawer'
 import { getAddressText } from './RestaurantAddressLinksRow'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 

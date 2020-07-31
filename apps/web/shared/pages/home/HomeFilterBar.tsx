@@ -2,18 +2,21 @@ import { Tag } from '@dish/graph'
 import { HStack, StackProps, VStack } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
+import { Clock, ShoppingBag } from 'react-feather'
 import { Image } from 'react-native'
 
 import { getTagId } from '../../state/getTagId'
 import { HomeActiveTagIds } from '../../state/home'
-import { tagDisplayNames } from '../../state/tagDisplayName'
+import { tagDisplayIcons, tagDisplayNames } from '../../state/tagDisplayName'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
   const om = useOvermind()
+  const isSmall = useMediaQueryIsSmall()
 
   let last = 0
   const grouped = _.groupBy(
@@ -49,39 +52,6 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
                 />
               )
 
-              if (tag.name === 'Delivery') {
-                return (
-                  <React.Fragment key="tag-delivery">
-                    {button}
-
-                    {!!activeTagIds['delivery'] &&
-                      Object.keys(thirdPartyCrawlSources).map((key) => {
-                        const item = thirdPartyCrawlSources[key]
-                        if (item.delivery === false) {
-                          return null
-                        }
-                        return (
-                          <VStack
-                            key={key}
-                            marginHorizontal={1}
-                            alignItems="center"
-                            padding={3}
-                            borderRadius={6}
-                            hoverStyle={{
-                              backgroundColor: '#f2f2f2',
-                            }}
-                          >
-                            <Image
-                              source={item.image}
-                              style={{ width: 20, height: 20, borderRadius: 4 }}
-                            />
-                          </VStack>
-                        )
-                      })}
-                  </React.Fragment>
-                )
-              }
-
               return button
             })}
           </HStack>
@@ -91,23 +61,39 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
   )
 })
 
-const FilterButton = memo(
+export const FilterButton = memo(
   ({
     filter,
     isActive,
     zIndex,
     position,
     margin,
+    flex,
     ...rest
   }: StackProps & { filter: Tag; isActive: boolean }) => {
+    const isSmall = useMediaQueryIsSmall()
+    let content: any =
+      rest.children ?? tagDisplayNames[filter.name] ?? filter.name
+
+    if (isSmall) {
+      switch (content) {
+        case 'Open':
+          content = <Clock size={18} />
+          break
+        case 'Delivery':
+          content = <ShoppingBag size={18} />
+          break
+      }
+    }
+
     return (
-      <LinkButton {...{ zIndex, position, margin }} tag={filter}>
+      <LinkButton {...{ zIndex, flex, position, margin }} tag={filter}>
         <SmallButton
           textStyle={{ fontSize: 13, fontWeight: '500' }}
           isActive={isActive}
           {...rest}
         >
-          {tagDisplayNames[filter.name] ?? filter.name}
+          {content}
         </SmallButton>
       </LinkButton>
     )

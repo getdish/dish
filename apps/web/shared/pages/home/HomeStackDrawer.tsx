@@ -1,4 +1,4 @@
-import { LoadingItems, StackProps, VStack } from '@dish/ui'
+import { HStack, LoadingItems, StackProps, VStack } from '@dish/ui'
 import React, { Suspense } from 'react'
 
 import {
@@ -20,20 +20,21 @@ export const HomeStackDrawer = ({
 }: StackProps & { title?: string; closable?: boolean; fallback?: any }) => {
   const isSmall = useMediaQueryIsSmall()
   return (
-    <VStack
+    <HStack
       position="absolute"
-      right={0}
+      left={isSmall ? -5 : 0}
+      right={isSmall ? -5 : 0}
       flex={1}
       maxHeight="100%"
       height="100%"
       borderRadius={drawerBorderRadius}
-      backgroundColor="#fff"
       overflow="visible"
       marginTop={isSmall ? 0 : searchBarHeight}
       maxWidth={drawerWidthMax}
-      width="100%"
+      minWidth="100%"
+      justifyContent="flex-end"
     >
-      {closable && (
+      {closable && !isSmall && (
         <StackViewCloseButton
           right={isSmall ? 10 : -14}
           top={isSmall ? 10 : -5}
@@ -47,17 +48,18 @@ export const HomeStackDrawer = ({
       )}
       {!!title && <PageTitleTag>{title}</PageTitleTag>}
       <VStack
-        className="HomeStackDrawer"
         position="relative"
+        flex={1}
         borderRadius={drawerBorderRadius}
         overflow="hidden"
         shadowRadius={isSmall ? 5 : 10}
+        maxWidth={drawerWidthMax}
         shadowColor="rgba(0,0,0,0.1)"
-        flex={1}
+        backgroundColor="#fff"
         {...props}
       >
         <Suspense fallback={fallback ?? <LoadingItems />}>{children}</Suspense>
       </VStack>
-    </VStack>
+    </HStack>
   )
 }

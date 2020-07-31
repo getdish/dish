@@ -18,21 +18,28 @@ import React, {
   useState,
 } from 'react'
 import { ArrowUp } from 'react-feather'
-import { ScrollView } from 'react-native'
+import { Image, ScrollView } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
-import { HomeStateItemSearch, OmState } from '../../state/home'
+import { getTagId } from '../../state/getTagId'
+import {
+  HomeActiveTagIds,
+  HomeStateItemSearch,
+  OmState,
+} from '../../state/home'
 import { isSearchState } from '../../state/home-helpers'
 import { omStatic, useOvermind } from '../../state/useOvermind'
+import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { getTitleForState } from './getTitleForState'
-import HomeFilterBar from './HomeFilterBar'
+import HomeFilterBar, { FilterButton } from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePagePane'
 import { HomeScrollView } from './HomeScrollView'
 import { focusSearchInput } from './HomeSearchInput'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
+import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 import { useLastValue } from './useLastValue'
 import { useLastValueWhen } from './useLastValueWhen'
 import {
@@ -137,56 +144,131 @@ const SearchResultsTitle = memo(({ stateId }: { stateId: string }) => {
   return (
     <>
       <PageTitleTag>{title}</PageTitleTag>
-      <HStack
-        position="absolute"
-        top={0}
-        left={0}
-        right={0}
-        borderBottomColor="#eee"
-        borderBottomWidth={1}
-        zIndex={1000}
-        alignItems="center"
-        backgroundColor="#fff"
-        height={62}
-      >
-        <HStack
-          paddingVertical={topBarVPad}
-          paddingHorizontal={18}
-          flex={1}
-          overflow="hidden"
-          justifyContent="space-between"
+      <>
+        <VStack
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          borderBottomColor="#eee"
+          borderBottomWidth={1}
+          zIndex={1000}
+          alignItems="center"
+          backgroundColor="#fff"
+          height={62}
+          paddingHorizontal={12}
         >
-          <HStack marginTop={-11} alignItems="center" justifyContent="center">
-            <HomeLenseBar activeTagIds={state.activeTagIds} />
+          <HStack
+            paddingVertical={topBarVPad}
+            paddingHorizontal={18}
+            width="100%"
+            alignItems="center"
+            flex={1}
+            overflow="hidden"
+            justifyContent="space-between"
+          >
+            <HStack marginTop={-10} alignItems="center" justifyContent="center">
+              <HomeLenseBar activeTagIds={state.activeTagIds} />
+            </HStack>
+            <Spacer flex={1} size={16} />
+
+            {!isReallySmall && (
+              <VStack
+                flex={20}
+                justifyContent="center"
+                alignItems="center"
+                overflow="hidden"
+              >
+                <Text
+                  ellipse
+                  fontSize={isAboveMedium ? 18 : 16}
+                  fontWeight="400"
+                >
+                  {pageTitleElements}
+                </Text>
+                <Spacer size={3} />
+                <Text ellipse opacity={0.5} fontWeight="300" fontSize={14}>
+                  {subTitle}
+                </Text>
+              </VStack>
+            )}
+
+            <Spacer flex={1} size={16} />
+            <HomeFilterBar activeTagIds={state.activeTagIds} />
           </HStack>
-          <Spacer flex={1} size={16} />
+        </VStack>
 
-          {!isReallySmall && (
-            <VStack
-              flex={10}
-              justifyContent="center"
-              alignItems="center"
-              overflow="hidden"
-            >
-              <Text ellipse fontSize={isAboveMedium ? 18 : 16} fontWeight="400">
-                {pageTitleElements}
-              </Text>
-              <Spacer size={3} />
-              <Text ellipse opacity={0.5} fontWeight="300" fontSize={14}>
-                {subTitle}
-              </Text>
-            </VStack>
-          )}
-
-          <Spacer flex={1} size={16} />
-          <HomeFilterBar activeTagIds={state.activeTagIds} />
-          {isSmall && <Spacer size={40} />}
-        </HStack>
-        {/* <MyListButton isEditingUserList={isEditingUserList} /> */}
-      </HStack>
+        <HomeDeliveryFilterButtons activeTagIds={state.activeTagIds} />
+      </>
     </>
   )
 })
+
+const HomeDeliveryFilterButtons = ({
+  activeTagIds,
+}: {
+  activeTagIds: HomeActiveTagIds
+}) => {
+  if (!activeTagIds['delivery']) {
+    return null
+  }
+
+  return (
+    <HStack
+      marginTop={62}
+      marginBottom={-62}
+      spacing={10}
+      backgroundColor="#fff"
+      borderBottomColor="#eee"
+      borderBottomWidth={1}
+      zIndex={1000}
+      position="relative"
+      padding={5}
+    >
+      {Object.keys(thirdPartyCrawlSources).map((key) => {
+        const item = thirdPartyCrawlSources[key]
+        if (item.delivery === false) {
+          return null
+        }
+        const isActive = activeTagIds[item]
+        return (
+          <FilterButton
+            filter={{
+              name: key,
+            }}
+            isActive={isActive}
+            key={key}
+            flex={1}
+            alignItems="center"
+            justifyContent="center"
+            padding={5}
+            borderRadius={100}
+            spacing={5}
+            cursor="pointer"
+            hoverStyle={{
+              backgroundColor: '#f2f2f2',
+            }}
+          >
+            <HStack>
+              <Image
+                source={item.image}
+                style={{
+                  width: 16,
+                  height: 16,
+                  borderRadius: 100,
+                  margin: -3,
+                }}
+              />
+              <Text fontSize={13} fontWeight="500">
+                {item.name}
+              </Text>
+            </HStack>
+          </FilterButton>
+        )
+      })}
+    </HStack>
+  )
+}
 
 const SearchResultsContent = (props: Props) => {
   const searchState = props.item

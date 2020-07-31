@@ -7,6 +7,16 @@ export const tagDisplayNames = {
   'price-low': '$',
   'price-mid': '$$',
   'price-high': '$$$',
+  Vibe: 'Vibe',
+  Veg: 'Green',
+  Drink: 'Bar',
+  Gems: 'Great',
+}
+
+export const tagDisplayIcons = {
+  'price-low': '$',
+  'price-mid': '$$',
+  'price-high': '$$$',
   Vibe: 'Date',
   Veg: 'Green',
   Drink: 'Drink',

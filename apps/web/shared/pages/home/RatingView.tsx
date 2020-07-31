@@ -10,12 +10,12 @@ export type RatingViewProps = StackProps & {
   subtle?: boolean
 }
 
+const yellow = [0, 220, 220]
+const green = [100, 255, 100]
+const gray = [160, 160, 160]
+
 export const getRankingColor = (percent: number) =>
-  percent >= 0.8
-    ? 'rgba(200, 260, 220, 0.85)'
-    : percent >= 0.5
-    ? '#C6BC1A'
-    : 'rgba(250, 100, 100, 0.85)'
+  percent >= 0.8 ? green : percent >= 0.5 ? yellow : gray
 
 export const RatingView = forwardRef(
   (
@@ -30,7 +30,10 @@ export const RatingView = forwardRef(
     }: RatingViewProps,
     ref
   ) => {
-    const borderColor = getRankingColor(percent)
+    const borderColor = `rgb(${getRankingColor(percent)
+      .map((x) => x + 40)
+      .join(',')})`
+    console.log('borderColor', borderColor)
 
     // size!
     let size =
@@ -62,7 +65,7 @@ export const RatingView = forwardRef(
           <Text
             fontWeight="500"
             marginTop="25%"
-            fontSize={size * 0.33}
+            fontSize={size * 0.25}
             letterSpacing={-1}
             opacity={(1 / size) * 10}
           >
@@ -118,7 +121,6 @@ export const RatingView = forwardRef(
           </VStack>
         )}
         <VStack
-          backgroundColor={bgColor}
           borderRadius={100}
           shadowColor={`rgba(0,0,0,${sizeIn == 'lg' ? 0.1 : 0.25})`}
           shadowRadius={size / 5}
@@ -132,7 +134,7 @@ export const RatingView = forwardRef(
             percent={Math.max(Math.min(100, ranking), 0)}
             radius={size * 0.5}
             borderWidth={Math.max(1, size * 0.035)}
-            color={color}
+            color={borderColor}
           >
             <VStack
               width="100%"
@@ -147,7 +149,7 @@ export const RatingView = forwardRef(
           </ProgressCircle>
           <VStack
             borderRadius={100}
-            borderColor={borderColor}
+            // borderColor={borderColor}
             borderWidth={1 + (sizeIn == 'lg' ? 1 : 0)}
             width="100%"
             height="100%"

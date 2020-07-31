@@ -59,14 +59,11 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 ) {
   const om = useOvermindStatic()
   const [isHovered, setIsHovered] = useState(false)
-  const setHoveredDebounce = useDebounce(
-    om.actions.home.setHoveredRestaurant,
-    150
-  )
+  const setHoveredSlow = useDebounce(om.actions.home.setHoveredRestaurant, 200)
 
   useEffect(() => {
     if (isHovered) {
-      setHoveredDebounce({
+      setHoveredSlow({
         id: props.restaurantId,
         slug: props.restaurantSlug,
       })
@@ -86,7 +83,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
         onHoverIn: () => setIsHovered(true),
         onHoverOut: () => {
           setIsHovered(false)
-          setHoveredDebounce.cancel()
+          setHoveredSlow.cancel()
         },
       })}
       alignItems="center"
@@ -164,7 +161,7 @@ const RestaurantListItemContent = memo(
           minWidth={isSmall ? '50%' : 320}
           maxWidth={isSmall ? '90vw' : '62%'}
           position="relative"
-          overflow="hidden"
+          // overflow="hidden"
         >
           <VStack flex={1} alignItems="flex-start" maxWidth="100%">
             {/* ROW: TITLE */}

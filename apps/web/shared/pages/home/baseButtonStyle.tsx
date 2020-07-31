@@ -13,7 +13,7 @@ export const baseButtonStyle: StackProps = {
 
 export const flatButtonStyle: StackProps = {
   ...baseButtonStyle,
-  backgroundColor: bgLight,
+  // backgroundColor: bgLight,
   hoverStyle: {
     backgroundColor: bgLightHover,
   },

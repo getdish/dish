@@ -31,9 +31,12 @@ export const useUserReviews = (
 
   useEffect(() => {
     if (refetchKey && shouldFetch) {
-      return series([() => resolved(refetch(reviews)), forceUpdate])
+      const fetcher = refetch(reviews) as any
+      if (fetcher) {
+        return series([() => resolved(fetcher), forceUpdate])
+      }
     }
-  }, [refetchKey])
+  }, [reviews, refetchKey])
 
   return reviews
 }

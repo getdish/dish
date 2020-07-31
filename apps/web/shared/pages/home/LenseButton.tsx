@@ -55,7 +55,7 @@ export const LenseButton = memoIsEqualDeep(
           borderBottomColor="transparent"
           transform={[{ scale: 1 }]}
           {...(isActive && {
-            borderColor: lenseColor,
+            // borderColor: lenseColor,
             transform: [{ scale: 1.12 }],
             hoverStyle: {
               transform: [{ scale: 1.12 }],
