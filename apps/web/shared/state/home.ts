@@ -371,11 +371,17 @@ const runSearch: AsyncAction<{
   state = om.state.home.lastSearchState
   if (shouldCancel()) return
 
+  const hasSearchBarTag = tags.some(isSearchBarTag)
   const searchArgs: RestaurantSearchArgs = {
     center: roundLngLat(state.center),
     span: roundLngLat(padSpan(state.span)),
     query: state.searchQuery,
-    tags: tags.map((tag) => getTagId(tag)),
+    tags: [
+      ...tags.map((tag) => getTagId(tag)),
+      ...(!hasSearchBarTag && [
+        getTagId({ name: state.searchQuery, type: 'dish' }),
+      ]),
+    ],
   }
 
   // prevent duplicate searches
