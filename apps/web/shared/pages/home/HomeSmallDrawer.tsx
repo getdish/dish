@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import { Animated, PanResponder, View } from 'react-native'
 
 import { pageWidthMax, zIndexDrawer } from '../../constants'
+import { getWindowHeight } from '../../helpers/getWindow'
 import { omStatic } from '../../state/useOvermind'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
 import { blurSearchInput } from './HomeSearchInput'
@@ -25,8 +26,8 @@ const setSnapIndex = (x: number) => {
 const getSnapPoint = (px?: number) => {
   if (typeof px === 'number') {
     for (const [index, point] of snapPoints.entries()) {
-      const cur = point * window.innerHeight
-      const next = (snapPoints[index + 1] ?? 1) * window.innerHeight
+      const cur = point * getWindowHeight()
+      const next = (snapPoints[index + 1] ?? 1) * getWindowHeight()
       const midWayToNext = cur + (next - cur) / 2
       if (px < midWayToNext) {
         setSnapIndex(index)
@@ -34,7 +35,7 @@ const getSnapPoint = (px?: number) => {
       }
     }
   }
-  return snapPoints[snapIndex] * window.innerHeight
+  return snapPoints[snapIndex] * getWindowHeight()
 }
 
 const animateDrawerToPx = (px?: number) => {

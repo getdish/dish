@@ -19,6 +19,7 @@ import React, {
 } from 'react'
 
 import { frameWidthMax, searchBarHeight, zIndexMap } from '../../constants'
+import { getWindowHeight, getWindowWidth } from '../../helpers/getWindow'
 import { LngLat } from '../../state/home'
 import {
   isHomeState,
@@ -221,8 +222,8 @@ export function centerMapToRegionMain(p: {
 export const useMapSize = (isSmall: boolean) => {
   const drawerWidth = useHomeDrawerWidth(Infinity)
   const width = isSmall
-    ? window.innerWidth
-    : Math.min(window.innerWidth, frameWidthMax - 20) - drawerWidth + 300
+    ? getWindowWidth()
+    : Math.min(getWindowWidth(), frameWidthMax - 20) - drawerWidth + 300
   let paddingLeft = isSmall ? 0 : 300 - 20
   return { width, paddingLeft, drawerWidth }
 }
@@ -254,7 +255,7 @@ const HomeMapContent = memo(function HomeMap({
     ? {
         left: 0,
         top: 0,
-        bottom: window.innerHeight - window.innerHeight * snapPoints[snapPoint],
+        bottom: getWindowHeight() - getWindowHeight() * snapPoints[snapPoint],
         right: 0,
       }
     : {
@@ -401,8 +402,8 @@ const HomeMapContent = memo(function HomeMap({
                 lng: coordinates[0],
               },
               span: {
-                lat: Math.min(state.span.lat, 0.025),
-                lng: Math.min(state.span.lng, 0.025),
+                lat: Math.min(state.span.lat, 0.036),
+                lng: Math.min(state.span.lng, 0.036),
               },
             })
           }

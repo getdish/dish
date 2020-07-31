@@ -20,6 +20,7 @@ import {
   searchBarHeight,
   searchBarTopOffset,
 } from '../../constants'
+import { getWindowHeight } from '../../helpers/getWindow'
 import { createAutocomplete } from '../../state/createAutocomplete'
 import { defaultLocationAutocompleteResults } from '../../state/defaultLocationAutocompleteResults'
 import {
@@ -126,7 +127,7 @@ const HomeAutoCompleteContents = memo(
     const searchYEnd =
       searchBarTopOffset +
       searchBarHeight +
-      (isSmall ? window.innerHeight * snapPoints[0] + 10 : 0)
+      (isSmall ? getWindowHeight() * snapPoints[0] + 10 : 0)
 
     return (
       <AbsoluteVStack
