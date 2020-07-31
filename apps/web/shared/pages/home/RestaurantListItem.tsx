@@ -8,16 +8,15 @@ import {
   Text,
   VStack,
   useDebounce,
-  useDebounceEffect,
   useGet,
 } from '@dish/ui'
 import React, { Suspense, memo, useEffect, useState } from 'react'
+import { Platform } from 'react-native'
 
-import { bgAlt, bgLight, bgLightLight, brandColor } from '../../colors'
+import { bgLightLight, brandColor } from '../../colors'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home'
 import { omStatic, useOvermindStatic } from '../../state/useOvermind'
 import { Link } from '../../views/ui/Link'
-import { SmallButton } from '../../views/ui/SmallButton'
 import { DishView } from './DishView'
 import { HomeScrollViewHorizontal } from './HomeScrollView'
 import { isIOS } from './isIOS'

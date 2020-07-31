@@ -75,15 +75,15 @@ export const HomeSmallDrawer = (props: { children: any }) => {
   const isSmall = useMediaQueryIsSmall()
 
   useEffect(() => {
-    let lastIndex: number
+    // let lastIndex: number
     return omStatic.reaction(
       (state) => !!state.home.showAutocomplete,
       (show) => {
         if (show) {
-          lastIndex = snapIndex
+          // lastIndex = snapIndex
           animateDrawerToSnapPoint(0)
         } else {
-          animateDrawerToSnapPoint(lastIndex)
+          animateDrawerToSnapPoint(1)
         }
       }
     )

@@ -2,14 +2,12 @@ import {
   AbsoluteVStack,
   HStack,
   LinearGradient,
-  MediaQuery,
   Spacer,
   VStack,
-  mediaQueries,
 } from '@dish/ui'
-import React, { Suspense, memo, useRef, useState } from 'react'
+import React, { Suspense, memo, useState } from 'react'
 import { ChevronLeft, MapPin } from 'react-feather'
-import { Animated, PanResponder, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 import {
   pageWidthMax,

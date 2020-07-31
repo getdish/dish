@@ -1,6 +1,7 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import { View, ViewProps, ViewStyle } from 'react-native'
 
+import { isIOS } from '../constants'
 import { combineRefs } from '../helpers/combineRefs'
 import { StaticComponent } from '../helpers/extendStaticConfig'
 import { useAttachClassName } from '../hooks/useAttachClassName'
@@ -174,22 +175,26 @@ const createStack = (defaultStyle?: ViewStyle) => {
           onMouseEnter:
             attachHover || attachPress
               ? () => {
-                  let next = { ...state }
+                  let next: Partial<typeof state> = {}
                   if (attachHover) {
-                    next.hover = true
+                    if (!isIOS) {
+                      next.hover = true
+                    }
                     onHoverIn?.()
                     onMouseEnter?.()
                   }
                   if (state.pressIn) {
                     next.press = true
                   }
-                  set(next)
+                  if (Object.keys(next)) {
+                    set({ ...state, ...next })
+                  }
                 }
               : null,
           onMouseLeave:
             attachHover || attachPress
               ? () => {
-                  let next = { ...state }
+                  let next: Partial<typeof state> = {}
                   mouseUps.add(() => {
                     if (!isMounted.current) return
                     set((x) => ({
@@ -199,14 +204,18 @@ const createStack = (defaultStyle?: ViewStyle) => {
                     }))
                   })
                   if (attachHover) {
-                    next.hover = false
+                    if (!isIOS) {
+                      next.hover = false
+                    }
                     onHoverOut?.()
                     onMouseLeave?.()
                   }
                   if (state.pressIn) {
                     next.press = false
                   }
-                  set(next)
+                  if (Object.keys(next)) {
+                    set({ ...state, ...next })
+                  }
                 }
               : null,
           onMouseDown: attachPress
