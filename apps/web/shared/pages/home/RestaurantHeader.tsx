@@ -18,6 +18,7 @@ type RestaurantHeaderProps = {
   restaurantSlug: any
   after?: any
   afterAddress?: any
+  size?: 'sm' | 'md'
 }
 
 export const RestaurantHeader = (props: RestaurantHeaderProps) => {
@@ -39,11 +40,17 @@ export const RestaurantHeader = (props: RestaurantHeaderProps) => {
 
 const RestaurantHeaderContent = memo(
   graphql(
-    ({ state, restaurantSlug, after, afterAddress }: RestaurantHeaderProps) => {
+    ({
+      state,
+      restaurantSlug,
+      after,
+      afterAddress,
+      size,
+    }: RestaurantHeaderProps) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
       const om = useOvermind()
       const [r, g, b] = useCurrentLenseColor()
-      const padding = <Spacer size={20} />
+      const padding = <Spacer size={size === 'sm' ? 10 : 20} />
       return (
         <VStack width="100%">
           <VStack
@@ -67,7 +74,10 @@ const RestaurantHeaderContent = memo(
               <VStack flex={10}>
                 <Text
                   selectable
-                  fontSize={restaurant.name?.length > 25 ? 32 : 34}
+                  fontSize={
+                    (restaurant.name?.length > 25 ? 32 : 34) *
+                    (size === 'sm' ? 0.8 : 1)
+                  }
                   fontWeight="300"
                   paddingRight={30}
                 >
@@ -83,7 +93,7 @@ const RestaurantHeaderContent = memo(
                   size="lg"
                   restaurantSlug={restaurantSlug}
                 />
-                <Spacer size="md" />
+                <Spacer size="sm" />
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   <HStack alignItems="center">
                     <RestaurantAddress

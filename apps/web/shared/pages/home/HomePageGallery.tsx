@@ -57,28 +57,32 @@ export default memo(function HomePageGallery() {
             <AbsoluteVStack top={5} right={26}>
               <StackViewCloseButton />
             </AbsoluteVStack>
-            <HStack
-              alignItems="center"
-              justifyContent="space-between"
-              position="relative"
-              zIndex={100}
-            >
-              <RestaurantHeader
-                restaurantSlug={state.restaurantSlug}
-                after={
-                  <VStack marginVertical={-15}>
-                    {isSmall ? null : dishPhotosElement}
-                  </VStack>
+            <Suspense fallback={<LoadingItems />}>
+              <HomePageGalleryContent
+                state={state}
+                header={
+                  <HStack
+                    alignItems="center"
+                    justifyContent="space-between"
+                    position="relative"
+                    zIndex={100}
+                  >
+                    <RestaurantHeader
+                      size="sm"
+                      restaurantSlug={state.restaurantSlug}
+                      after={
+                        <VStack marginVertical={-15}>
+                          {isSmall ? null : dishPhotosElement}
+                        </VStack>
+                      }
+                    />
+                  </HStack>
                 }
               />
-            </HStack>
-
-            <Suspense fallback={<LoadingItems />}>
-              <HomePageGalleryContent state={state} />
               {isSmall ? (
                 <AbsoluteVStack
                   backgroundColor="#fff"
-                  padding={5}
+                  padding={0}
                   bottom={0}
                   left={0}
                   right={0}
@@ -99,8 +103,10 @@ export default memo(function HomePageGallery() {
 const HomePageGalleryContent = memo(
   graphql(function HomePageGalleryContent({
     state,
+    header,
   }: {
     state: HomeStateItemGallery
+    header?: any
   }) {
     const isSmall = useMediaQueryIsSmall()
     // const dish = state.dishId
@@ -124,6 +130,7 @@ const HomePageGalleryContent = memo(
     return (
       <VStack flex={1} overflow="hidden">
         <ScrollView style={{ width: '100%' }}>
+          {header}
           <HStack
             flex={10}
             flexWrap="wrap"
