@@ -32,4 +32,5 @@ export const zIndexMap = 100
 export const zIndexMapPIP = 150
 export const zIndexDrawer = 300
 export const zIndexMapControls = 400
+export const zIndexSearchBarFloating = 450
 export const zIndexGallery = 500

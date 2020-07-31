@@ -15,6 +15,7 @@ import {
   pageWidthMax,
   searchBarHeight,
   searchBarTopOffset,
+  zIndexSearchBarFloating,
 } from '../../constants'
 import { rgbString } from '../../helpers/rgbString'
 import { useOvermind } from '../../state/useOvermind'
@@ -77,7 +78,7 @@ export const HomeSearchBarFloating = () => {
     <Suspense fallback={null}>
       <AbsoluteVStack
         className="searchbar-container ease-in-out"
-        zIndex={2000}
+        zIndex={zIndexSearchBarFloating}
         position="absolute"
         fullscreen
         marginTop={searchBarTopOffset}
