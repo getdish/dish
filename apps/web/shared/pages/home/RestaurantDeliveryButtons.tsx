@@ -65,13 +65,19 @@ const RestaurantDeliveryButton = ({
         marginBottom: 2,
       }}
     >
-      <HStack paddingVertical={6} paddingHorizontal={4}>
+      <HStack
+        padding={8}
+        borderRadius={100}
+        hoverStyle={{
+          backgroundColor: bgLight,
+        }}
+      >
         <img
           alt={source.name}
           src={source.image}
           style={{
-            width: showLabels ? 20 : 24,
-            height: showLabels ? 20 : 24,
+            width: showLabels ? 20 : 20,
+            height: showLabels ? 20 : 20,
             margin: -3,
             marginRight: 0,
             borderRadius: 40,
