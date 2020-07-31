@@ -3,13 +3,13 @@ import { VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { getTagId } from '../../state/getTagId'
-import { HomeActiveTagIds } from '../../state/home'
+import { HomeActiveTagsRecord } from '../../state/home'
 import { useOvermind } from '../../state/useOvermind'
 import { LenseButton, LenseButtonSize } from './LenseButton'
 
 export const HomeLenseBar = memo(
   (props: {
-    activeTagIds?: HomeActiveTagIds
+    activeTagIds?: HomeActiveTagsRecord
     size?: LenseButtonSize
     minimal?: boolean
     backgroundColor?: string

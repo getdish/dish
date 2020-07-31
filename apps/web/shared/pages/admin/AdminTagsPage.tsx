@@ -110,7 +110,7 @@ const AdminTagsPageContent = graphql(() => {
             </VerticalColumn>
 
             <VerticalColumn title="Manage Lenses">
-              <TagList type="lense" />
+              <TagList row={3} type="lense" />
             </VerticalColumn>
 
             <VerticalColumn>
@@ -282,6 +282,7 @@ const TagListContent = memo(
                 onSelect={() => {
                   tagStore.selectedId = tag.id
                   selectionStore.setSelected([row, col])
+                  if (typeof row === 'undefined') debugger
                   selectionStore.setSelectedName(row, tag.name ?? '')
                 }}
                 isFormerlyActive={
@@ -405,7 +406,9 @@ const TagEdit = memo(
       console.log('got now', tag)
       return (
         <TagCRUD
+          key={tagStore.selectedId}
           tag={{
+            id: tagStore.selectedId,
             name: tag.name,
             type: tag.type,
             icon: tag.icon,
@@ -499,7 +502,6 @@ const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
           style={styles.textInput}
           onChange={(e) => onChange?.({ id: e.target['value'] })}
           defaultValue={tag.id}
-          // onBlur={() => upsertDraft()}
         />
       </TableRow>
 
@@ -508,7 +510,6 @@ const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
           style={styles.textInput}
           onChange={(e) => onChange?.({ name: e.target['value'] })}
           defaultValue={tag.name}
-          // onBlur={() => upsertDraft()}
         />
       </TableRow>
 
@@ -531,7 +532,6 @@ const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
           style={styles.textInput}
           onChange={(e) => onChange?.({ icon: e.target['value'] })}
           defaultValue={tag.icon ?? ''}
-          // onBlur={() => upsertDraft()}
         />
         <ScrollView style={{ maxHeight: 330 }}>
           <HStack flexWrap="wrap">

@@ -41,7 +41,7 @@ import {
   ActiveEvent,
   AutocompleteItem,
   GeocodePlace,
-  HomeActiveTagIds,
+  HomeActiveTagsRecord,
   HomeState,
   HomeStateItem,
   HomeStateItemHome,
@@ -204,7 +204,7 @@ const loadPageSearch: AsyncAction = async (om) => {
     const tags = await getFullTags(fakeTags)
     console.timeEnd('getFullTags')
     om.actions.home.addTagsToCache(tags)
-    const activeTagIds: HomeActiveTagIds = tags.reduce<any>((acc, tag) => {
+    const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>((acc, tag) => {
       acc[getTagId(tag)] = true
       return acc
     }, {})
@@ -378,9 +378,9 @@ const runSearch: AsyncAction<{
     query: state.searchQuery,
     tags: [
       ...tags.map((tag) => getTagId(tag)),
-      ...(!hasSearchBarTag && [
-        getTagId({ name: state.searchQuery, type: 'dish' }),
-      ]),
+      ...(!hasSearchBarTag
+        ? [getTagId({ name: state.searchQuery, type: 'dish' })]
+        : []),
     ],
   }
 
@@ -643,7 +643,7 @@ const pushHomeState: AsyncAction<
 
   let nextState: Partial<HomeStateItem> | null = null
   let fetchData: PageAction | null = null
-  let activeTagIds: HomeActiveTagIds
+  let activeTagIds: HomeActiveTagsRecord
   const type = item.name
 
   switch (type) {
