@@ -26,11 +26,11 @@ export function OverlayLinkButton<
     >
       <HStack alignItems="center">
         <Icon
-          size={16}
+          size={12}
           color="rgba(255,255,255,0.5)"
           style={{ marginRight: 6 }}
         />
-        <Text color="#fff" fontSize={14} fontWeight="500" opacity={0.85}>
+        <Text color="#fff" fontSize={12} fontWeight="500" opacity={0.85}>
           {children}
         </Text>
       </HStack>

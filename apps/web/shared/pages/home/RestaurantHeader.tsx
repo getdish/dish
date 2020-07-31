@@ -52,6 +52,7 @@ const RestaurantHeaderContent = memo(
             // overflow="hidden"
             maxWidth="100%"
             position="relative"
+            overflow="hidden"
           >
             {padding}
             <HStack alignItems="center">
@@ -100,10 +101,10 @@ const RestaurantHeaderContent = memo(
                     resizeMode="cover"
                     source={{ uri: restaurant.image }}
                     style={{
-                      marginVertical: -30,
+                      marginVertical: -60,
                       marginRight: -30,
-                      height: 150,
-                      width: 150,
+                      height: 200,
+                      width: 200,
                       borderRadius: 100,
                     }}
                   />
@@ -118,7 +119,7 @@ const RestaurantHeaderContent = memo(
             </HStack>
             {padding}
           </VStack>
-          <SmallTitle marginVertical={-12} divider="center">
+          <SmallTitle marginVertical={-18} divider="center">
             <VStack
               borderRadius={1000}
               shadowColor="rgba(0,0,0,0.1)"

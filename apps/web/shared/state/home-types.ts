@@ -11,6 +11,7 @@ export type OmStateHome = OmState['home']
 export type ActiveEvent = 'key' | 'pin' | 'hover' | null
 
 export type HomeState = {
+  drawerSnapPoint: boolean
   isOptimisticUpdating: boolean
   isScrolling: boolean
   started: boolean

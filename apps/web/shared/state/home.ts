@@ -90,6 +90,7 @@ export const state: HomeState = {
   allLenseTags: tagLenses,
   allFilterTags: tagFilters,
   showAutocomplete: false,
+  drawerSnapPoint: 0,
   searchBarY: 25,
   autocompleteIndex: 0,
   autocompleteResults: [],
@@ -209,6 +210,7 @@ const loadPageSearch: AsyncAction = async (om) => {
     }, {})
     om.actions.home.updateActiveTags({
       ...state,
+      searchQuery: router.curPage.params.search,
       activeTagIds,
     })
   }
@@ -1293,9 +1295,21 @@ const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
   return false
 }
 
+const updateCurrentState: Action<Partial<HomeStateItem>> = (om, val) => {
+  om.actions.home.updateHomeState({
+    ...om.state.home.currentState,
+    ...(val as any),
+  })
+}
+
+const setDrawerSnapPoint: Action<boolean> = (om, val) => {
+  om.state.home.drawerSnapPoint = val
+}
+
 export const actions = {
   getShouldNavigate,
   syncStateToRoute,
+  updateCurrentState,
   getNavigateItemForState,
   moveAutocompleteIndex,
   setAutocompleteIndex,
@@ -1343,4 +1357,5 @@ export const actions = {
   setShowUserMenu,
   promptLogin,
   getNavigateTo,
+  setDrawerSnapPoint,
 }

@@ -68,7 +68,7 @@ export const HomeMapRestaurantPeek = memo(
                 ellipse
                 selectable
                 fontSize={16}
-                fontWeight="400"
+                fontWeight="600"
                 paddingRight={30}
               >
                 {restaurant.name} &nbsp;

@@ -118,8 +118,8 @@ export const HomeSearchBarFloating = () => {
                   top={0}
                   width="100%"
                   shadowColor="rgba(0,0,0,0.3)"
-                  shadowOffset={{ height: 2, width: 4 }}
-                  shadowRadius={18}
+                  shadowOffset={{ height: 2, width: 0 }}
+                  shadowRadius={5}
                 />
                 <VStack
                   height={searchBarHeight - 1}

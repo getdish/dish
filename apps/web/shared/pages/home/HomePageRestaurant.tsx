@@ -1,6 +1,7 @@
 import { graphql } from '@dish/graph'
 import { Box, HStack, LoadingItems, SmallTitle, Spacer, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
+import { ScrollView } from 'react-native'
 
 import { HomeStateItemRestaurant } from '../../state/home'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
@@ -90,9 +91,18 @@ const HomePageRestaurant = memo(
               marginHorizontal={20}
             >
               <SmallTitle>Rating</SmallTitle>
-              <HStack>
+              <ScrollView
+                style={{ width: '100%' }}
+                contentContainerStyle={{
+                  minWidth: '100%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              >
                 <RestaurantRatingBreakdown restaurantSlug={slug} />
-              </HStack>
+              </ScrollView>
             </Box>
 
             <HStack padding={10} maxWidth="100%" flexWrap="wrap">

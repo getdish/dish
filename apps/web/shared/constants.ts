@@ -29,8 +29,9 @@ export const emptyObj = Object.freeze(Object.create(null))
 export const emptyArr = Object.freeze([])
 
 export const zIndexMap = 100
-export const zIndexMapPIP = 150
+export const zIndexMapControlsUnderlay = 150
 export const zIndexDrawer = 300
 export const zIndexMapControls = 400
+export const zIndexMapControlsUnderlaySmall = 500
 export const zIndexSearchBarFloating = 450
 export const zIndexGallery = 500

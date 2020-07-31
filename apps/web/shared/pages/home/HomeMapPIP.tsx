@@ -1,18 +1,18 @@
-import { LngLat, RestaurantQuery, graphql } from '@dish/graph'
-import { AbsoluteVStack, VStack, useOnMount } from '@dish/ui'
+import { LngLat, Restaurant, graphql, refetch } from '@dish/graph'
+import { AbsoluteVStack, VStack } from '@dish/ui'
+import { isEqual } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
-import { zIndexMapPIP } from '../../constants'
 import { useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../../views/map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
+import { getZoomLevel, mapZoomToMedium } from './HomeMapControlsUnderlay'
 import { onMapLoadedCallback } from './onMapLoadedCallback'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
-import { useRestaurantQuery } from './useRestaurantQuery'
+import { restaurantQuery } from './useRestaurantQuery'
 
 export const HomeMapPIP = memo(() => {
-  const isSmall = useMediaQueryIsSmall()
+  // const isSmall = useMediaQueryIsSmall()
   const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export const HomeMapPIP = memo(() => {
     })
   }, [])
 
-  if (!isLoaded || isSmall) {
+  if (!isLoaded) {
     return null
   }
 
@@ -34,6 +34,7 @@ export const HomeMapPIP = memo(() => {
 
 const HomeMapPIPContent = graphql(() => {
   const om = useOvermind()
+  // const isSmall = useMediaQueryIsSmall()
   const state = om.state.home.currentState
   const { map, mapProps } = useMap({
     // @ts-ignore
@@ -44,20 +45,24 @@ const HomeMapPIPContent = graphql(() => {
     showsCompass: mapkit.FeatureVisibility.Hidden,
   })
 
-  const hoveredRestuarant = om.state.home.hoveredRestaurant
+  const focusedRestaurant =
+    om.state.home.hoveredRestaurant ?? om.state.home.selectedRestaurant
 
-  let restaurant: RestaurantQuery | null = null
+  let restaurants: Restaurant[] | null = null
+  let slug: string | null = null
   let span: LngLat = state.span
 
   if (state.type === 'restaurant') {
-    restaurant = useRestaurantQuery(state.restaurantSlug)
+    slug = state.restaurantSlug
+    restaurants = restaurantQuery(slug)
     // zoom out on pip for restaurant
     span = {
       lat: span.lat * 2.5,
       lng: span.lng * 2.5,
     }
-  } else if (hoveredRestuarant) {
-    restaurant = useRestaurantQuery(hoveredRestuarant.slug)
+  } else if (focusedRestaurant) {
+    slug = focusedRestaurant.slug
+    restaurants = restaurantQuery(slug)
     // zoom in on pip for search
     span = {
       lat: 0.005,
@@ -65,21 +70,36 @@ const HomeMapPIPContent = graphql(() => {
     }
   }
 
-  const enabled = hoveredRestuarant
-    ? hoveredRestuarant
-    : state.type === 'restaurant'
+  const restaurant = restaurants?.[0]
+  const curCenter = om.state.home.currentState.center
+  const coords = restaurant?.location?.coordinates ?? [
+    curCenter.lng,
+    curCenter.lat,
+  ]
+  const center: LngLat = {
+    lat: coords[1] ?? 0.1,
+    lng: coords[0] ?? 0.1,
+  }
 
-  const coordinates = restaurant?.location?.coordinates
-  const center: LngLat = coordinates
-    ? {
-        lat: coordinates[1],
-        lng: coordinates[0],
+  function getPipAction() {
+    if (coords[0] && !isEqual(center, om.state.home.currentState.center)) {
+      return () => {
+        om.actions.home.updateCurrentState({
+          center: center,
+          span: pipSpan(span),
+        })
       }
-    : state.center
+    } else if (getZoomLevel(span) !== 'medium') {
+      return mapZoomToMedium
+    } else {
+    }
+  }
+
+  const pipAction = getPipAction()
 
   const coordinate = useMemo(
-    () => coordinates && new mapkit.Coordinate(coordinates[1], coordinates[0]),
-    [JSON.stringify(coordinates)]
+    () => coords && new mapkit.Coordinate(coords[1], coords[0]),
+    [JSON.stringify(coords)]
   )
   const annotation = useMemo(() => {
     if (!coordinate || !restaurant) return null
@@ -90,16 +110,20 @@ const HomeMapPIPContent = graphql(() => {
     })
   }, [coordinate])
 
+  const pipSpan = (span: LngLat) => {
+    return {
+      lat: Math.max(span.lat, 0.005),
+      lng: Math.max(span.lng, 0.005),
+    }
+  }
+
   useEffect(() => {
     if (!map) return
     centerMapToRegion({
       animated: false,
       map,
       center,
-      span: {
-        lat: Math.max(span.lat, 0.005),
-        lng: Math.max(span.lng, 0.005),
-      },
+      span: pipSpan(span),
     })
   }, [map, center, span])
 
@@ -121,25 +145,27 @@ const HomeMapPIPContent = graphql(() => {
 
   return (
     <VStack
-      // @ts-ignore TODO fix ui-static
-      debug
-      pointerEvents="none"
-      zIndex={zIndexMapPIP}
-      width={140}
-      height={120}
+      pointerEvents="auto"
+      width={120}
+      height={100}
       borderRadius={20}
       // keeps spacing when wrapped
       marginTop={10}
       overflow="hidden"
-      shadowColor="rgba(0,0,0,0.25)"
+      shadowColor="rgba(0,0,0,0.1)"
       shadowRadius={14}
       shadowOffset={{ height: 3, width: 0 }}
       className="ease-in-out-slow"
-      {...(!enabled && {
+      transform={[{ scale: 1 }]}
+      pressStyle={{
+        transform: [{ scale: 0.9 }],
+      }}
+      {...(!pipAction && {
         display: 'none',
       })}
+      onPress={pipAction}
     >
-      <AbsoluteVStack fullscreen bottom={-30} top={-30}>
+      <AbsoluteVStack pointerEvents="none" fullscreen bottom={-30} top={-15}>
         <Map {...mapProps} />
       </AbsoluteVStack>
     </VStack>

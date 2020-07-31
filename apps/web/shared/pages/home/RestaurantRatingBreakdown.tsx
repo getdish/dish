@@ -21,19 +21,20 @@ export const RestaurantRatingBreakdown = memo(
           return (
             <a
               className="see-through"
-              style={{ flex: 1 }}
+              style={{ flex: 1, maxWidth: 200 }}
               key={source}
               href={item.url}
               target="_blank"
             >
               <VStack
                 padding={10}
+                paddingHorizontal={20}
                 alignItems="center"
                 flex={1}
                 borderRadius={10}
                 margin={3}
                 hoverStyle={{
-                  backgroundColor: '#fff',
+                  backgroundColor: '#f2f2f2',
                 }}
               >
                 {info?.image ? (
