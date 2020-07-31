@@ -18,7 +18,7 @@ services:
     ports:
       - 8080/http
     env:
-      - HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:${TF_VAR_POSTGRES_PASSWORD}@postgres-postgresql.postgres/dish
+      - HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:${TF_VAR_POSTGRES_PASSWORD}@postgres-ha-postgresql-ha-pgpool.postgres-ha/dish
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
       - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
       - HASURA_GRAPHQL_ENABLE_TELEMETRY=false
@@ -41,7 +41,7 @@ services:
     ports:
       - 10000/http
     env:
-      - POSTGRES_HOST=postgres-postgresql.postgres
+      - POSTGRES_HOST=postgres-ha-postgresql-ha-pgpool.postgres-ha
       - POSTGRES_PASSWORD=${TF_VAR_POSTGRES_PASSWORD}
   worker-ui:
     image: tombh/bull-board:latest
@@ -104,7 +104,7 @@ services:
       - DISH_ENV=production
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
       - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
-      - PGHOST=postgres-postgresql.postgres
+      - PGHOST=postgres-ha-postgresql-ha-pgpool.postgres-ha
       - PGPASSWORD=${TF_VAR_POSTGRES_PASSWORD}
       - COMMIT_HASH=${REVISION}
       - REDIS_HOST=redis-master.redis
@@ -153,7 +153,7 @@ services:
       - ADMIN_PASSWORD=${JWT_ADMIN_PASSWORD}
       - JWT_SECRET=${JWT_KEY}
       - COMMIT_HASH=${REVISION}
-      - POSTGRES_HOST=postgres-postgresql.postgres
+      - POSTGRES_HOST=postgres-ha-postgresql-ha-pgpool.postgres-ha
       - POSTGRES_PASSWORD=${TF_VAR_POSTGRES_PASSWORD}
   backups:
     image: docker.k8s.dishapp.com/dish/backups

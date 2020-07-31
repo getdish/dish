@@ -5,7 +5,7 @@ DUMP_FILE_NAME="dish-db-backup-`date +%Y-%m-%d-%H-%M`.dump"
 
 PGPASSWORD=$DB_PASSWORD pg_dump \
   -U postgres \
-  -h postgres-postgresql.postgres \
+  -h postgres-ha-postgresql-ha-pgpool.postgres-ha \
   -p 5432 \
   -d dish \
   -C -w --format=c | \

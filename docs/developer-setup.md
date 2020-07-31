@@ -165,7 +165,7 @@ directory with the following command:
 First make sure you have a port open to the live DB (see our Kubernetes docs for more info)
 
 ```
-kubectl port-forward svc/postgres-postgresql 15432:5432 -n postgres
+kubectl port-forward svc/postgres-ha-postgresql-ha-pgpool.postgres-ha 15432:5432 -n postgres
 ```
 
 Then run the following (the password is in `.env.enc.production`):
