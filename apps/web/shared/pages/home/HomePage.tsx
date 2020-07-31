@@ -19,19 +19,21 @@ export const homePageBorderRadius = 12
 export default memo(function HomePage() {
   const isSmall = useMediaQueryIsSmall()
   return (
-    <VStack
-      // apple maps ocean color
-      backgroundColor="#B8E0F3"
-      width={isSmall ? '100%' : `calc(100% + ${homePageBorderRadius * 2}px)`}
-      height="100%"
-      maxWidth={frameWidthMax}
-      borderRadius={homePageBorderRadius}
-      shadowColor="rgba(0,0,0,0.05)"
-      shadowRadius={50}
-      overflow="hidden"
-      position="relative"
-    >
-      <HomePageContent />
+    <VStack flex={1} backgroundColor="#333">
+      <VStack
+        // apple maps ocean color
+        backgroundColor="#B8E0F3"
+        width={isSmall ? '100%' : `calc(100% + ${homePageBorderRadius * 2}px)`}
+        height="100%"
+        maxWidth={frameWidthMax}
+        borderRadius={homePageBorderRadius}
+        shadowColor="rgba(0,0,0,0.05)"
+        shadowRadius={50}
+        overflow="hidden"
+        position="relative"
+      >
+        <HomePageContent />
+      </VStack>
     </VStack>
   )
 })
