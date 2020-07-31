@@ -26,7 +26,7 @@ export const DraggableDrawer = (props: { children: any }) => {
   }, [])
 
   return (
-    <VStack className={`see-through ${isSmall ? '' : 'untouchable invisible'}`}>
+    <VStack className={`${isSmall ? '' : 'untouchable invisible'}`}>
       <Animated.View
         style={{
           transform: [
@@ -54,11 +54,28 @@ export const DraggableDrawer = (props: { children: any }) => {
           {...panResponder.panHandlers}
         >
           <VStack
-            backgroundColor="rgba(100,100,100,0.5)"
-            width={60}
-            height={8}
-            borderRadius={100}
-          />
+            pointerEvents="auto"
+            paddingHorizontal={20}
+            paddingVertical={10}
+            marginTop={-10}
+            onPress={() => {
+              if (snapIndex === 0) {
+                omStatic.actions.home.setShowAutocomplete(false)
+                animateDrawerToSnapPoint(1)
+              } else if (snapIndex === 1) {
+                animateDrawerToSnapPoint(2)
+              } else if (snapIndex === 2) {
+                animateDrawerToSnapPoint(1)
+              }
+            }}
+          >
+            <VStack
+              backgroundColor="rgba(100,100,100,0.5)"
+              width={60}
+              height={8}
+              borderRadius={100}
+            />
+          </VStack>
         </View>
 
         <VStack
