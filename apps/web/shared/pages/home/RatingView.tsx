@@ -102,7 +102,7 @@ export const RatingView = forwardRef(
           <VStack
             position="absolute"
             top={badgeOffset * size}
-            right={badgeOffset * size + 3}
+            right={badgeOffset * size}
             alignItems="center"
             justifyContent="center"
             zIndex={100}
@@ -113,7 +113,7 @@ export const RatingView = forwardRef(
               textShadowColor="rgba(0,0,0,0.25)"
               textShadowRadius={size * 0.015}
             >
-              {percent >= 0.9 ? '💎' : '⭐️'}
+              {percent >= 0.9 ? '🥇' : '⭐️'}
             </Text>
           </VStack>
         )}
