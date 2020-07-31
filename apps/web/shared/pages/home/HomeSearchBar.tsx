@@ -179,9 +179,16 @@ export const HomeSearchBarFloating = () => {
 }
 
 const HomeSearchBar = memo(() => {
+  const om = useOvermind()
   const [showLocation, setShowLocation] = useState(false)
+  const isSmall = useMediaQueryIsSmall()
   const isReallySmall = useMediaQueryIsReallySmall()
   const { color } = useSearchBarTheme()
+  const focus = om.state.home.searchFocusInput
+    ? 'search'
+    : om.state.home.searchFocusLocationInput
+    ? 'location'
+    : false
 
   return (
     <HStack
@@ -190,14 +197,24 @@ const HomeSearchBar = memo(() => {
       pointerEvents="auto"
       alignItems="center"
       justifyContent="center"
+      userSelect="none"
     >
-      <VStack paddingHorizontal={10}>
+      <VStack paddingHorizontal={8}>
         <DishLogoButton />
       </VStack>
 
       <HomeSearchBarHomeBackButton />
 
-      <HStack flex={100} maxWidth={550} alignItems="center" overflow="hidden">
+      <HStack
+        className="ease-in-out"
+        position="relative"
+        flex={1}
+        maxWidth={
+          !isReallySmall && isSmall && focus === 'location' ? 120 : 'auto'
+        }
+        alignItems="center"
+        overflow="hidden"
+      >
         {/* Search Input Start */}
         {isReallySmall && (
           <>
@@ -216,8 +233,15 @@ const HomeSearchBar = memo(() => {
       {!isReallySmall && (
         <>
           <Spacer size={6} />
-          <HomeSearchLocationInput />
-          <VStack flex={1} />
+          <VStack
+            className="ease-in-out"
+            maxWidth={
+              !isReallySmall && isSmall && focus === 'search' ? 120 : 'auto'
+            }
+            flex={1}
+          >
+            <HomeSearchLocationInput />
+          </VStack>
         </>
       )}
 

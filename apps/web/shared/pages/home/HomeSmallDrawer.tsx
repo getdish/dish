@@ -48,7 +48,7 @@ const animateDrawerToPx = (px?: number) => {
 }
 
 const animateDrawerToSnapPoint = (point: number) => {
-  snapIndex = point
+  setSnapIndex(point)
   animateDrawerToPx()
 }
 

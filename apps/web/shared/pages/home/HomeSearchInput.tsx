@@ -189,7 +189,7 @@ export const HomeSearchInput = memo(() => {
     <HStack flex={1} overflow="hidden">
       <HomeAutocompleteHoverableInput input={input} autocompleteTarget="search">
         <HStack
-          contain="paint"
+          // contain="paint"
           alignItems="center"
           borderRadius={10}
           flex={1}
@@ -202,7 +202,7 @@ export const HomeSearchInput = memo(() => {
           <>
             {om.state.home.isLoading ? (
               <VStack className="rotating" opacity={0.9}>
-                <Loader color={color} size={18} />
+                <Loader color={color} size={18} onClick={focusSearchInput} />
               </VStack>
             ) : (
               <Search
@@ -356,9 +356,8 @@ function searchInputEffect(input: HTMLInputElement) {
         }
         if (om.state.home.showAutocomplete) {
           om.actions.home.setShowAutocomplete(false)
-        } else {
-          focusedInput.blur()
         }
+        focusedInput.blur()
         return
       }
       case 38: {
@@ -392,12 +391,14 @@ function searchInputEffect(input: HTMLInputElement) {
     om.actions.home.setShowAutocomplete(false)
   }
   const handleFocus = () => {
+    om.actions.home.setSearchFocusInput(true)
     if (!isFocused) {
       showAutocomplete()
       isFocused = true
     }
   }
   const handleBlur = () => {
+    om.actions.home.setSearchFocusInput(false)
     hideAutocomplete()
     isFocused = false
   }

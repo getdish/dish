@@ -28,6 +28,8 @@ export type HomeState = {
   showUserMenu: boolean
   hoveredRestaurant: RestaurantOnlyIds | null | false
   isHoveringRestaurant: boolean
+  searchFocusInput: boolean
+  searchFocusLocationInput: boolean
   searchBarY: number
   location: AutocompleteItem | null // for now just autocomplete item
   locationAutocompleteResults: AutocompleteItem[]

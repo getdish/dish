@@ -64,7 +64,7 @@ textarea {
   transition-delay: 250ms;
 }
 .transition-delay-long {
-  transition-delay: 400ms;
+  transition-delay: 300ms;
 }
 
 .ease-in-out-top {
@@ -72,19 +72,29 @@ textarea {
 }
 
 .ease-in-out-faster {
-  transition: all ease-in-out 50ms;
+  transition-property: all;
+  transition-duration: 50ms;
+  transition-timing-function: ease-in-out;
 }
 .ease-in-out-fast {
-  transition: all ease-in-out 100ms;
+  transition-property: all;
+  transition-duration: 100m;
+  transition-timing-function: ease-in-out;
 }
 .ease-in-out {
-  transition: all ease-in-out 180ms;
+  transition-property: all;
+  transition-duration: 180m;
+  transition-timing-function: ease-in-out;
 }
 .ease-in-out-slow {
-  transition: all ease-in-out 300ms;
+  transition-property: all;
+  transition-duration: 300m;
+  transition-timing-function: ease-in-out;
 }
 .ease-in-out-slower {
-  transition: all ease-in-out 400ms;
+  transition-property: all;
+  transition-duration: 400m;
+  transition-timing-function: ease-in-out;
 }
 
 .force-disable,

@@ -5,7 +5,6 @@ import { Tag } from 'react-feather'
 
 import { getTagId } from '../../state/getTagId'
 import { tagLenses } from '../../state/tagLenses'
-import { omStatic } from '../../state/useOvermind'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { HomeLenseBar } from './HomeLenseBar'
 import { useUserTagVotes } from './useUserReview'
@@ -20,7 +19,6 @@ export const RestaurantLenseVote = memo(
         acc[getTagId({ name, type: 'lense' })] = true
         return acc
       }, {})
-    console.log('activeTagIds', activeTagIds)
     return (
       <HoverablePopover
         allowHoverOnContent

@@ -130,7 +130,9 @@ const HomeAutoCompleteContents = memo(
 
     return (
       <AbsoluteVStack
-        className={`ease-in-out ${isSmall ? 'transition-delay-long' : ''}`}
+        className={`ease-in-out-slow ${
+          isSmall && isShowing ? 'transition-delay-long' : ''
+        }`}
         pointerEvents="none"
         position="absolute"
         paddingTop={searchYEnd}

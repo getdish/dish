@@ -1,9 +1,8 @@
-import { graphql, query } from '@dish/graph'
-import { HStack, Spacer, Text, Tooltip, VStack } from '@dish/ui'
-import React, { memo, useState } from 'react'
+import { graphql } from '@dish/graph'
+import { HStack, Spacer, Text, Tooltip } from '@dish/ui'
+import React, { memo } from 'react'
 
-import { bgLight, bgLightHover } from '../../colors'
-import { SmallButton } from '../../views/ui/SmallButton'
+import { bgLight } from '../../colors'
 import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 import { useRestaurantQuery } from './useRestaurantQuery'
 

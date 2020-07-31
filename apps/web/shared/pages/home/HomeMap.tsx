@@ -30,6 +30,7 @@ import { omStatic, useOvermind } from '../../state/useOvermind'
 import { Map, useMap } from '../../views/map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
+import { snapPoints } from './HomeSmallDrawer'
 import { setMapIsLoaded } from './onMapLoadedCallback'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useLastValueWhen } from './useLastValueWhen'
@@ -244,11 +245,16 @@ const HomeMapContent = memo(function HomeMap({
     return null
   }
 
+  const snapPoint = isSmall
+    ? // avoid resizing to top "fully open drawer" snap
+      Math.max(1, om.state.home.drawerSnapPoint)
+    : 0
+
   const padding = isSmall
     ? {
         left: 0,
         top: 0,
-        bottom: window.innerHeight * 0.7 + searchBarHeight,
+        bottom: window.innerHeight - window.innerHeight * snapPoints[snapPoint],
         right: 0,
       }
     : {

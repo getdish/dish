@@ -1,20 +1,29 @@
 // debug
-import { AbsoluteVStack, HStack } from '@dish/ui'
+import { AbsoluteVStack, HStack, useOverlay } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 
 import { searchBarHeight, zIndexMapControls } from '../../constants'
+import { useOvermind } from '../../state/useOvermind'
 import { useMapSize } from './HomeMap'
 import { HomeMapPIP } from './HomeMapPIP'
 import { HomeMapRestaurantPeek } from './HomeMapRestaurantPeek'
+import { snapPoints } from './HomeSmallDrawer'
 import {
   useMediaQueryIsReallySmall,
   useMediaQueryIsSmall,
 } from './useMediaQueryIs'
 
 export const HomeMapControlsOverlay = memo(() => {
+  const om = useOvermind()
   const isReallySmall = useMediaQueryIsReallySmall()
   const isSmall = useMediaQueryIsSmall()
   const { paddingLeft, width } = useMapSize(isSmall)
+
+  let bottom = 0
+  if (om.state.home.drawerSnapPoint === 2) {
+    bottom = window.innerHeight - window.innerHeight * snapPoints[2]
+  }
+
   return (
     <AbsoluteVStack
       zIndex={zIndexMapControls}
@@ -24,6 +33,7 @@ export const HomeMapControlsOverlay = memo(() => {
       pointerEvents="none"
     >
       <AbsoluteVStack
+        className="ease-in-out-slower"
         fullscreen
         padding={20}
         top={searchBarHeight + 10}
@@ -34,6 +44,7 @@ export const HomeMapControlsOverlay = memo(() => {
           left: 0,
           right: 0,
           top: 0,
+          bottom,
         })}
         zIndex={20000000}
         alignItems="center"
@@ -47,7 +58,7 @@ export const HomeMapControlsOverlay = memo(() => {
             overflow="hidden"
             justifyContent="space-between"
             flexWrap="wrap"
-            paddingLeft={30}
+            paddingLeft={isSmall ? 15 : 30}
             paddingRight={15}
             paddingBottom={15}
             paddingTop={20}
