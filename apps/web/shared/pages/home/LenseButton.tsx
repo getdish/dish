@@ -63,7 +63,7 @@ export const LenseButton = memoIsEqualDeep(
           })}
         >
           <Text
-            fontSize={sizePx * (isActive ? 0.95 : 0.8) * scale}
+            fontSize={sizePx * (isActive ? 0.95 : 0.7) * scale}
             lineHeight={sizePx * scale}
             fontWeight="400"
             textAlign="center"
@@ -80,7 +80,7 @@ export const LenseButton = memoIsEqualDeep(
             marginBottom={-8}
             backgroundColor="#fff"
             borderWidth={1}
-            borderColor="#ddd"
+            borderColor="#eee"
             {...(isActive && {
               borderColor: lenseColor,
               backgroundColor: lenseColor,
@@ -97,7 +97,7 @@ export const LenseButton = memoIsEqualDeep(
               <Text
                 fontSize={sizePx * scale * 0.32}
                 fontWeight="400"
-                lineHeight={sizePx * scale * 0.39}
+                lineHeight={sizePx * scale * 0.42}
                 color={isActive ? '#fff' : '#000'}
               >
                 {tagDisplayName(lense)}

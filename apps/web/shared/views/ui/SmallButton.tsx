@@ -18,12 +18,13 @@ export const SmallButton = ({
 }: SmallButtonProps) => {
   return (
     <HStack
+      className={rest.className}
       alignItems="center"
       justifyContent="center"
       {...flatButtonStyle}
       paddingHorizontal={11}
       paddingVertical="0.45rem"
-      backgroundColor={isActive ? 'transparent' : bgLight}
+      backgroundColor={isActive ? 'transparent' : '#fff'}
       borderRadius={20}
       borderWidth={1}
       borderColor={isActive ? `#aaa` : bgLight}
@@ -37,6 +38,7 @@ export const SmallButton = ({
             }
       }
       {...rest}
+      minWidth={43}
     >
       <Text
         color={isActive ? '#000' : bg}

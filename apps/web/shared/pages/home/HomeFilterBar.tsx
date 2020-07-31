@@ -1,17 +1,20 @@
 import { Tag } from '@dish/graph'
-import { HStack, StackProps, VStack } from '@dish/ui'
+import { HStack, StackProps } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
 import { Clock, ShoppingBag } from 'react-feather'
-import { Image } from 'react-native'
 
 import { getTagId } from '../../state/getTagId'
 import { HomeActiveTagIds } from '../../state/home'
-import { tagDisplayIcons, tagDisplayNames } from '../../state/tagDisplayName'
+import { tagDisplayNames } from '../../state/tagDisplayName'
 import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
+import {
+  LinkButtonNamedProps,
+  LinkButtonProps,
+  LinkProps,
+} from '../../views/ui/LinkProps'
 import { SmallButton } from '../../views/ui/SmallButton'
-import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
@@ -42,7 +45,7 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
               const button = (
                 <FilterButton
                   key={`tag-${tag.id}`}
-                  filter={tag}
+                  tag={tag}
                   isActive={isActive}
                   {...(hasPrev && { marginLeft: -1 })}
                   {...(hasNext && { marginRight: 0 })}
@@ -63,17 +66,16 @@ export default memo(({ activeTagIds }: { activeTagIds: HomeActiveTagIds }) => {
 
 export const FilterButton = memo(
   ({
-    filter,
+    tag,
     isActive,
     zIndex,
     position,
     margin,
     flex,
     ...rest
-  }: StackProps & { filter: Tag; isActive: boolean }) => {
+  }: LinkButtonProps & { tag: Tag; isActive: boolean }) => {
     const isSmall = useMediaQueryIsSmall()
-    let content: any =
-      rest.children ?? tagDisplayNames[filter.name] ?? filter.name
+    let content: any = rest.children ?? tagDisplayNames[tag.name] ?? tag.name
 
     if (isSmall) {
       switch (content) {
@@ -87,10 +89,11 @@ export const FilterButton = memo(
     }
 
     return (
-      <LinkButton {...{ zIndex, flex, position, margin }} tag={filter}>
+      <LinkButton {...{ zIndex, flex, position, margin }} tag={tag}>
         <SmallButton
           textStyle={{ fontSize: 13, fontWeight: '500' }}
           isActive={isActive}
+          flex={flex}
           {...rest}
         >
           {content}

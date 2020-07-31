@@ -18,28 +18,24 @@ import React, {
   useState,
 } from 'react'
 import { ArrowUp } from 'react-feather'
-import { Image, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { getTagId } from '../../state/getTagId'
-import {
-  HomeActiveTagIds,
-  HomeStateItemSearch,
-  OmState,
-} from '../../state/home'
+import { HomeStateItemSearch, OmState } from '../../state/home'
 import { isSearchState } from '../../state/home-helpers'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { getTitleForState } from './getTitleForState'
-import HomeFilterBar, { FilterButton } from './HomeFilterBar'
+import { HomeDeliveryFilterButtons } from './HomeDeliveryFilterButtons'
+import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePagePane'
 import { HomeScrollView } from './HomeScrollView'
 import { focusSearchInput } from './HomeSearchInput'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
-import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 import { useLastValue } from './useLastValue'
 import { useLastValueWhen } from './useLastValueWhen'
 import {
@@ -203,72 +199,6 @@ const SearchResultsTitle = memo(({ stateId }: { stateId: string }) => {
     </>
   )
 })
-
-const HomeDeliveryFilterButtons = ({
-  activeTagIds,
-}: {
-  activeTagIds: HomeActiveTagIds
-}) => {
-  if (!activeTagIds['delivery']) {
-    return null
-  }
-
-  return (
-    <HStack
-      marginTop={62}
-      marginBottom={-62}
-      spacing={10}
-      backgroundColor="#fff"
-      borderBottomColor="#eee"
-      borderBottomWidth={1}
-      zIndex={1000}
-      position="relative"
-      padding={5}
-    >
-      {Object.keys(thirdPartyCrawlSources).map((key) => {
-        const item = thirdPartyCrawlSources[key]
-        if (item.delivery === false) {
-          return null
-        }
-        const isActive = activeTagIds[item]
-        return (
-          <FilterButton
-            filter={{
-              name: key,
-            }}
-            isActive={isActive}
-            key={key}
-            flex={1}
-            alignItems="center"
-            justifyContent="center"
-            padding={5}
-            borderRadius={100}
-            spacing={5}
-            cursor="pointer"
-            hoverStyle={{
-              backgroundColor: '#f2f2f2',
-            }}
-          >
-            <HStack>
-              <Image
-                source={item.image}
-                style={{
-                  width: 16,
-                  height: 16,
-                  borderRadius: 100,
-                  margin: -3,
-                }}
-              />
-              <Text fontSize={13} fontWeight="500">
-                {item.name}
-              </Text>
-            </HStack>
-          </FilterButton>
-        )
-      })}
-    </HStack>
-  )
-}
 
 const SearchResultsContent = (props: Props) => {
   const searchState = props.item

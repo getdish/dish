@@ -2,9 +2,13 @@ import React, { memo } from 'react'
 import { Image } from 'react-native'
 
 import { AbsoluteVStack, VStack } from '../../../../../packages/ui/src'
+import { omStatic } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { useSearchBarTheme } from './HomeSearchBar'
-import { useMediaQueryIsReallySmall } from './useMediaQueryIs'
+import {
+  useMediaQueryIsReallySmall,
+  useMediaQueryIsSmall,
+} from './useMediaQueryIs'
 
 const linkButtonProps = {
   className: 'ease-in-out-slow',
@@ -26,11 +30,17 @@ const styles = {
 
 export const DishLogoButton = memo(() => {
   const isReallySmall = useMediaQueryIsReallySmall()
+  const isSmall = useMediaQueryIsSmall()
   return (
     <VStack
       className="ease-in-out"
       width={isReallySmall ? styles.reallySmall.width : styles.default.width}
       height={styles.default.height}
+      onPress={() => {
+        if (omStatic.state.home.currentStateType === 'home') {
+          // already on home
+        }
+      }}
     >
       <LinkButton
         {...linkButtonProps}
