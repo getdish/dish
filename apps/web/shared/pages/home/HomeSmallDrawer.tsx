@@ -122,6 +122,8 @@ export const HomeSmallDrawer = (props: { children: any }) => {
       >
         <View
           style={{
+            // @ts-ignore
+            pointerEvents: 'auto',
             position: 'absolute',
             top: -30,
             padding: 15,

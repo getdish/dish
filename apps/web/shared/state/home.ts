@@ -84,8 +84,6 @@ export const state: HomeState = {
   selectedRestaurant: null,
   showUserMenu: false,
   searchBarTagIndex: 0,
-  searchFocusInput: false,
-  searchFocusLocationInput: false,
   allTags,
   allTagsNameToID: {},
   allUsers: {},
@@ -1314,17 +1312,7 @@ const setDrawerSnapPoint: Action<number> = (om, val) => {
   om.state.home.drawerSnapPoint = val
 }
 
-const setSearchFocusInput: Action<boolean> = (om, val) => {
-  om.state.home.searchFocusInput = val
-}
-
-const setSearchFocusLocationInput: Action<boolean> = (om, val) => {
-  om.state.home.searchFocusLocationInput = val
-}
-
 export const actions = {
-  setSearchFocusInput,
-  setSearchFocusLocationInput,
   getShouldNavigate,
   syncStateToRoute,
   updateCurrentState,

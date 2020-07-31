@@ -127,28 +127,6 @@ export const HomeMapControlsUnderlay = memo(() => {
             </OverlayLinkButton>
           )}
         </HStack>
-
-        <HStack position="absolute" bottom={0} right={0} left={0}>
-          {!isSmall && (
-            <HStack
-              flexDirection="row-reverse"
-              alignItems="flex-end"
-              flex={1}
-              overflow="hidden"
-              justifyContent="space-between"
-              flexWrap="wrap"
-              paddingLeft={30}
-              paddingRight={15}
-              paddingBottom={15}
-              paddingTop={20}
-            >
-              <Suspense fallback={null}>
-                <HomeMapPIP />
-              </Suspense>
-              <HomeMapRestaurantPeek />
-            </HStack>
-          )}
-        </HStack>
       </AbsoluteVStack>
     </AbsoluteVStack>
   )

@@ -134,20 +134,25 @@ const HomeAutoCompleteContents = memo(
         className={`ease-in-out-slow ${
           isSmall && isShowing ? 'transition-delay-long' : ''
         }`}
-        pointerEvents="none"
+        pointerEvents={isSmall && isShowing ? 'auto' : 'none'}
+        backgroundColor={
+          isSmall && isShowing ? 'rgba(0,0,0,0.1)' : 'transparent'
+        }
         position="absolute"
-        paddingTop={searchYEnd}
-        left="2%"
-        right="2%"
+        fullscreen
+        top={searchYEnd - 10}
+        paddingTop={10}
         overflow="hidden"
         alignItems="center"
-        justifyContent="center"
         zIndex={10000}
         paddingBottom={30}
         paddingHorizontal={15}
         opacity={isShowing ? 1 : 0}
         transform={isShowing ? [] : [{ translateY: 15 }]}
         disabled={!isShowing}
+        onPress={() => {
+          om.actions.home.setShowAutocomplete(false)
+        }}
       >
         <VStack
           width="100%"
