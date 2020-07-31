@@ -42,8 +42,8 @@ export class DB {
 }
 
 export const main_db = new DB({
-  host: process.env.TIMESCALEDB_HOST || 'localhost',
-  port: process.env.TIMESCALEDB_PORT || '5432',
+  host: process.env.PGHOST || 'localhost',
+  port: process.env.PGPORT || '5432',
   user: process.env.PGUSER || 'postgres',
   password: process.env.PGPASSWORD || 'postgres',
   database: 'dish',

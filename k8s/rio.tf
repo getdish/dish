@@ -95,7 +95,7 @@ resource "kubernetes_ingress" "rio-ingress" {
     tls {
       hosts = [
         "*.rio.${var.dish_domain}",
-        "${var.dish_domain}"
+        var.dish_domain
       ]
       secret_name = "rio-tls"
     }
@@ -116,7 +116,7 @@ resource "kubernetes_ingress" "rio-ingress" {
       }
     }
     rule {
-      host = "${var.dish_domain}"
+      host = var.dish_domain
       http {
         path {
           path = "/*"

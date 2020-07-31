@@ -69,10 +69,12 @@ services:
       - DISH_ENV=production
       - COMMIT_HASH=${REVISION}
       - REDIS_HOST=redis-master.redis
-      - PGHOST=postgres-postgresql.postgres
+      - PGHOST=timescale-replica.timescale
       - PGPASSWORD=${TF_VAR_POSTGRES_PASSWORD}
       - HASURA_ENDPOINT=https://hasura.rio.dishapp.com
       - HASURA_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}
+      - TIMESCALE_HOST=timescale-replica.timescale
+      - TIMESCALE_PASSWORD=${TF_VAR_TIMESCALE_SU_PASS}
       - UBEREATS_PROXY=${UBEREATS_PROXY}
       - HEREMAPS_API_TOKEN=${HEREMAPS_API_TOKEN}
       - INFATUATED_PROXY=${INFATUATED_PROXY}

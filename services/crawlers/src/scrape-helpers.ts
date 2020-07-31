@@ -3,10 +3,10 @@ import { RestaurantWithId, ensureJSONSyntax } from '@dish/graph'
 import { DB } from './utils'
 
 const db = new DB({
-  host: process.env.TIMESCALEDB_HOST || 'localhost',
-  port: process.env.TIMESCALEDB_PORT || '5433',
-  user: process.env.TIMESCALEDB_USER || 'postgres',
-  password: process.env.TF_VAR_TIMESCALEDB_PASSWORD || 'postgres',
+  host: process.env.TIMESCALE_HOST || 'localhost',
+  port: process.env.TIMESCALE_PORT || '5433',
+  user: process.env.TIMESCALE_USER || 'postgres',
+  password: process.env.TIMESCALE_PASSWORD || 'postgres',
   database: 'scrape_data',
 })
 

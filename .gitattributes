@@ -1,3 +1,4 @@
 env.enc.production.yaml filter=git-crypt diff=git-crypt
 k8s/yaml/sentry.yaml filter=git-crypt diff=git-crypt
 k8s/etc/k8s_admin_creds.enc.config filter=git-crypt diff=git-crypt
+k8s/etc/certs/** filter=git-crypt diff=git-crypt

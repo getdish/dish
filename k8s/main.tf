@@ -8,6 +8,9 @@ variable "GRAFANA_PASSWORD" {}
 variable "CLOUDFLARE_DNS_API_TOKEN" {}
 variable "GMAIL_APP_PASSWORD" {}
 variable "K8S_DSN" {}
+variable "TIMESCALE_SU_PASS" {}
+variable "TIMESCALE_REPLICATION_PASS" {}
+variable "TIMESCALE_ADMIN_PASS" {}
 
 # Keeping the cluster in its own module allows us to build it independently of
 # every other k8s resources that lives on it. This is essential when first

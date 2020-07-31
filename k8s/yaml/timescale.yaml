@@ -1,0 +1,19 @@
+nodeSelector:
+  "doks.digitalocean.com/node-pool": "dish-ancillary-pool"
+
+loadBalancer:
+  enabled: false
+
+persistentVolumes:
+  data:
+    size: '200Gi'
+
+prometheus:
+  enabled: true
+
+replicaCount: 1
+
+timescaledbTune:
+  enabled: true
+
+
