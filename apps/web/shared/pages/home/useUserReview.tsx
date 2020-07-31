@@ -161,10 +161,6 @@ export const useUserTagVotes = (restaurantId: string) => {
   const [userId, reviews, om] = useUserReviews(restaurantId)
   const votes = reviews.filter(isTagReview)
   const upVotes = votes.filter((x) => x.rating)
-  console.log(
-    'now ew have',
-    votes.map((x) => [x.tag_id, x.rating])
-  )
   return [
     upVotes,
     async (tagName: string, userRating: number | 'toggle') => {
@@ -188,7 +184,9 @@ export const useUserTagVotes = (restaurantId: string) => {
         )
         didSave = !!saved.length
         if (didSave) {
-          refetch(reviews)
+          sleep(200).then(() => {
+            refetch(reviews)
+          })
         }
       }
       if (didSave) {

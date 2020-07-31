@@ -1,4 +1,4 @@
-import { useMedia, useMediaLayout } from '@dish/ui'
+import { mediaObjectToString, useMedia, useMediaLayout } from '@dish/ui'
 
 // seems faster probably avoids multiple calls..
 const use = useMediaLayout ?? useMedia
@@ -9,6 +9,10 @@ const mediaQueries = {
   aboveSm: { minWidth: 860 },
   md: { maxWidth: 960 },
   aboveMd: { minWidth: 960 },
+}
+
+export const getMediaQueryMatch = (key: keyof typeof mediaQueries) => {
+  return window.matchMedia(mediaObjectToString(mediaQueries[key])).matches
 }
 
 export const useMediaQueryIsReallySmall = () => use(mediaQueries.xs)

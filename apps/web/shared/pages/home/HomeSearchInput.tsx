@@ -25,7 +25,10 @@ import { HomeAutocompleteHoverableInput } from './HomeAutocomplete'
 import { useSearchBarTheme } from './HomeSearchBar'
 import { isIOS } from './isIOS'
 import { TagButton } from './TagButton'
-import { useMediaQueryIsReallySmall } from './useMediaQueryIs'
+import {
+  getMediaQueryMatch,
+  useMediaQueryIsReallySmall,
+} from './useMediaQueryIs'
 
 const placeholders = [
   'pho',
@@ -95,24 +98,26 @@ export const HomeSearchInput = memo(() => {
 
     setSearch(om.state.home.currentStateSearchQuery)
 
-    series([
+    return series([
       () => fullyIdle({ max: 1000 }),
       () => {
-        focusSearchInput()
+        if (!getMediaQueryMatch('sm')) {
+          focusSearchInput()
+        }
       },
     ])
   })
 
-  useEffect(() => {
-    const onFocus = () => {
-      setAvoidNextAutocompleteShowOnFocus()
-      focusSearchInput()
-    }
-    window.addEventListener('focus', onFocus)
-    return () => {
-      window.removeEventListener('focus', onFocus)
-    }
-  }, [])
+  // useEffect(() => {
+  //   const onFocus = () => {
+  //     setAvoidNextAutocompleteShowOnFocus()
+  //     focusSearchInput()
+  //   }
+  //   window.addEventListener('focus', onFocus)
+  //   return () => {
+  //     window.removeEventListener('focus', onFocus)
+  //   }
+  // }, [])
 
   // one way sync down for more perf
   useEffect(() => {
@@ -387,8 +392,10 @@ function searchInputEffect(input: HTMLInputElement) {
     om.actions.home.setShowAutocomplete(false)
   }
   const handleFocus = () => {
-    showAutocomplete()
-    isFocused = true
+    if (!isFocused) {
+      showAutocomplete()
+      isFocused = true
+    }
   }
   const handleBlur = () => {
     hideAutocomplete()

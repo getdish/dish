@@ -11,7 +11,7 @@ type MediaQueryObject = { [key: string]: string | number | boolean }
 const camelToHyphen = (str: string) =>
   str.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`).toLowerCase()
 
-const objectToString = (query: string | MediaQueryObject) => {
+export const mediaObjectToString = (query: string | MediaQueryObject) => {
   if (typeof query === 'string') return query
   return Object.entries(query)
     .map(([feature, value]) => {
@@ -55,7 +55,7 @@ const createUseMedia = (effect: EitherEffect) =>
 
     // @ts-ignore
     const allQueries = [].concat(rawQueries)
-    const queries = allQueries.map(objectToString)
+    const queries = allQueries.map(mediaObjectToString)
     const [state, setState] = useState(
       normalizeState(
         queries.map((query) => !!window.matchMedia(query).matches),
