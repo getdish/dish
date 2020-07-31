@@ -186,7 +186,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
                   if (state.pressIn) {
                     next.press = true
                   }
-                  if (Object.keys(next)) {
+                  if (Object.keys(next).length) {
                     set({ ...state, ...next })
                   }
                 }
@@ -213,7 +213,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
                   if (state.pressIn) {
                     next.press = false
                   }
-                  if (Object.keys(next)) {
+                  if (Object.keys(next).length) {
                     set({ ...state, ...next })
                   }
                 }
