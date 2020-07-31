@@ -3,6 +3,7 @@ import { AbsoluteVStack, HStack, useOverlay } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 
 import { searchBarHeight, zIndexMapControls } from '../../constants'
+import { getWindowHeight } from '../../helpers/getWindow'
 import { useOvermind } from '../../state/useOvermind'
 import { useMapSize } from './HomeMap'
 import { HomeMapPIP } from './HomeMapPIP'
@@ -21,7 +22,7 @@ export const HomeMapControlsOverlay = memo(() => {
 
   let bottom = 0
   if (om.state.home.drawerSnapPoint === 2) {
-    bottom = window.innerHeight - window.innerHeight * snapPoints[2]
+    bottom = getWindowHeight() - getWindowHeight() * snapPoints[2]
   }
 
   return (
