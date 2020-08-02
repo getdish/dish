@@ -1,11 +1,11 @@
-import { HStack, StackProps, Text } from '@dish/ui'
+import { HStack, StackProps, Text, useForceUpdate } from '@dish/ui'
 import React, { useLayoutEffect, useRef, useState } from 'react'
 
 import { RoutesTable } from '../../state/router'
 import { omStatic, useOvermindStatic } from '../../state/useOvermind'
 import { Link } from './Link'
 import { LinkButtonProps } from './LinkProps'
-import { useNormalizeLinkProps } from './useNormalizedLink'
+import { getNormalizeLinkProps } from './useNormalizedLink'
 
 const getChildren = (props: LinkButtonProps, isActive: boolean) => {
   if (typeof props.children === 'function') {
@@ -22,7 +22,8 @@ export function LinkButton<
   let contents: React.ReactElement
   const containerRef = useRef<any>()
   // this handles the tag/name/params props
-  let props = useNormalizeLinkProps(allProps)
+  const forceUpdate = useForceUpdate()
+  let props = getNormalizeLinkProps(allProps, forceUpdate)
   const [isActive, setIsActive] = useState(false)
   const om = useOvermindStatic()
 

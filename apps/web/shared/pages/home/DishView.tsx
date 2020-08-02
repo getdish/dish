@@ -169,11 +169,14 @@ export const DishView = memo(
                 })}
               >
                 <Text
+                  ellipse
                   className="unskewX"
                   flex={1}
                   overflow="hidden"
-                  fontSize={height > 150 ? 14 : 13}
-                  fontWeight={height > 150 ? '500' : '400'}
+                  fontSize={
+                    (height > 150 ? 14 : 12) * (dishName.length > 12 ? 0.95 : 1)
+                  }
+                  fontWeight="500"
                   color={isHovered ? '#000' : '#fff'}
                   textAlign="center"
                 >

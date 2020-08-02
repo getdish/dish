@@ -29,7 +29,7 @@ const styles = {
 
 export const DishLogoButton = memo(() => {
   const isReallySmall = useMediaQueryIsReallySmall()
-  const isSmall = useMediaQueryIsSmall()
+  // const isSmall = useMediaQueryIsSmall()
   return (
     <VStack
       className="ease-in-out"

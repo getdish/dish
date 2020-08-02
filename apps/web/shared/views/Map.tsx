@@ -168,7 +168,7 @@ export const Map = ({ center, span, padding, features, mapRef }: MapProps) => {
       source: SOURCE_ID,
 
       layout: {
-        // 'icon-image': 'dog-park-11',
+        'icon-image': 'restaurant-pizza-15',
         'text-field': [
           'format',
           ['upcase', ['get', 'title']],

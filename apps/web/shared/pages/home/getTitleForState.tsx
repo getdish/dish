@@ -4,7 +4,6 @@ import React from 'react'
 import { getTagId } from '../../state/getTagId'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { HomeStateItem } from '../../state/home-types'
-import { OmState } from '../../state/home-types'
 import { tagDescriptions } from '../../state/tagDescriptions'
 import { TagButton, getTagButtonProps } from './TagButton'
 
@@ -14,9 +13,9 @@ const getTitleForQuery = (query: string) => {
   return query
 }
 
-export function getTitleForState(omState: OmState, state: HomeStateItem) {
+export function getTitleForState(state: HomeStateItem) {
   const { currentLocationName = 'San Francisco' } = state
-  const tags = getActiveTags(omState.home, state)
+  const tags = getActiveTags(state)
   const lense = tags.find((x) => x.type === 'lense')
   const countryTag = tags.find((x) => x.type === 'country')
   const dishTag = tags.find((x) => x.type === 'dish')

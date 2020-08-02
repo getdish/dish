@@ -368,7 +368,6 @@ const TagEditColumn = memo(() => {
               onPress={async () => {
                 console.log('upserting', tagStore.draft)
                 const reply = await tagUpsert([tagStore.draft])
-                console.log('got', reply)
                 Toast.show('Saved')
                 tagStore.forceRefreshColumnByType = tagStore.draft.type ?? ''
               }}

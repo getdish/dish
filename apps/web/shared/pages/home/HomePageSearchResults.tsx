@@ -1,5 +1,6 @@
 import { createCancellablePromise, idle, series } from '@dish/async'
 import {
+  Box,
   Button,
   HStack,
   LoadingItem,
@@ -22,6 +23,7 @@ import { ScrollView } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { isSearchState } from '../../state/home-helpers'
+import { getActiveTags } from '../../state/home-tag-helpers'
 import { HomeStateItemSearch, OmState } from '../../state/home-types'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
@@ -126,10 +128,7 @@ const SearchResultsTitle = memo(({ stateId }: { stateId: string }) => {
   const isReallySmall = useMediaQueryIsReallySmall()
   const isSmall = useMediaQueryIsSmall()
   const isAboveMedium = useMediaQueryIsAboveMedium()
-  const { title, subTitle, pageTitleElements } = getTitleForState(
-    om.state,
-    state
-  )
+  const { title, subTitle, pageTitleElements } = getTitleForState(state)
 
   if (!isSearchState(state)) {
     return null
@@ -251,6 +250,7 @@ const SearchResultsContent = (props: Props) => {
     return (
       <HomeScrollView ref={scrollRef} onScrollNearBottom={handleScrollToBottom}>
         <VStack height={paddingTop} />
+        <HomeSearchInfoBox state={searchState} />
         <VStack minHeight="30vh">{children}</VStack>
         <SearchFooter
           scrollToTop={() =>
@@ -261,6 +261,18 @@ const SearchResultsContent = (props: Props) => {
       </HomeScrollView>
     )
   }
+
+  const HomeSearchInfoBox = memo(
+    ({ state }: { state: HomeStateItemSearch }) => {
+      const tags = getActiveTags(state)
+
+      return (
+        <Box margin={20} padding={20}>
+          <Text></Text>
+        </Box>
+      )
+    }
+  )
 
   const results = useMemo(() => {
     const cur = allResults.slice(0, currentlyShowing)
