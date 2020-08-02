@@ -3,7 +3,7 @@ import { Button, Divider, Spacer, Text, TextProps, VStack } from '@dish/ui'
 import React from 'react'
 import { ScrollView } from 'react-native'
 
-import { HomeStateItemAbout } from '../../state/home'
+import { HomeStateItemAbout } from '../../state/home-types'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { StackItemProps } from './HomeStackView'
 import { Input } from './Input'

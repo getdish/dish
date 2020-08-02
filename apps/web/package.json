@@ -73,6 +73,7 @@
     "resize-observer-polyfill": "1.5.1"
   },
   "devDependencies": {
+    "circular-dependency-plugin": "^5.2.0",
     "@dish/babel-preset": "*",
     "@dish/use-store": "*",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.3.3",

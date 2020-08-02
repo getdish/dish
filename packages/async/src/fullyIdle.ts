@@ -1,5 +1,5 @@
+import { requestIdle } from './requestIdle'
 import { sleep as sleepFn } from './sleep'
-import { requestIdle } from '.'
 
 // a bit more conservative
 

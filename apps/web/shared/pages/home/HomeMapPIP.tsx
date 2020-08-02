@@ -1,4 +1,4 @@
-import { LngLat, Restaurant, graphql, refetch } from '@dish/graph'
+import { LngLat, Restaurant, graphql } from '@dish/graph'
 import { AbsoluteVStack, VStack } from '@dish/ui'
 import { isEqual } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
@@ -7,7 +7,7 @@ import { useOvermind } from '../../state/useOvermind'
 import { Map } from '../../views/Map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
-import { getZoomLevel, mapZoomToMedium } from './HomeMapControlsUnderlay'
+import { getZoomLevel, mapZoomToMedium } from './mapHelpers'
 import { onMapLoadedCallback } from './onMapLoadedCallback'
 import {
   useMediaQueryIsReallySmall,
@@ -93,9 +93,10 @@ const HomeMapPIPContent = graphql(() => {
 
   const restaurant = restaurants?.[0]
   const curCenter = om.state.home.currentState.center
+
   const coords = restaurant?.location?.coordinates ?? [
-    curCenter.lng,
-    curCenter.lat,
+    curCenter?.lng ?? 0,
+    curCenter?.lat ?? 0,
   ]
   const center: LngLat = {
     lat: coords[1] ?? 0.1,

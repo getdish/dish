@@ -5,7 +5,6 @@ import {
   Box,
   HStack,
   LoadingItems,
-  SmallTitle,
   Spacer,
   Text,
   VStack,
@@ -24,12 +23,11 @@ import {
 import { ChevronRight } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
 
-import { HomeStateItemHome } from '../../state/home'
 import { getActiveTags } from '../../state/home-tag-helpers'
+import { HomeStateItemHome } from '../../state/home-types'
 import { tagDescriptions } from '../../state/tagDescriptions'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { NotFoundPage } from '../../views/NotFoundPage'
-import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { flatButtonStyle } from './baseButtonStyle'
@@ -39,7 +37,6 @@ import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePagePane'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { RestaurantButton } from './RestaurantButton'
-import { Squircle } from './Squircle'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 // top dishes
@@ -274,7 +271,7 @@ const HomeTopDishesContent = memo(() => {
   }, [topDishes])
 })
 
-const dishHeight = 150
+const dishHeight = 140
 
 const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
   return (
@@ -320,7 +317,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
         <HomeScrollViewHorizontal style={{ paddingVertical: 10 }}>
           <HStack
             alignItems="center"
-            spacing={10}
+            spacing={16}
             paddingVertical={18}
             paddingRight={20}
             pointerEvents="auto"

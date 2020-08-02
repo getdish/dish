@@ -1,14 +1,13 @@
+import { AbsoluteVStack, VStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { Image } from 'react-native'
 
-import { AbsoluteVStack, VStack } from '../../../../../packages/ui/src'
 import { omStatic } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { useSearchBarTheme } from './HomeSearchBar'
 import {
   useMediaQueryIsReallySmall,
   useMediaQueryIsSmall,
 } from './useMediaQueryIs'
+import { useSearchBarTheme } from './useSearchBarTheme'
 
 const linkButtonProps = {
   className: 'ease-in-out-slow',

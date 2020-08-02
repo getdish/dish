@@ -1,4 +1,4 @@
-import { LngLat } from '../../state/home'
+import { LngLat } from '../../state/home-types'
 
 export function centerMapToRegion(p: {
   map: mapboxgl.Map

@@ -3,7 +3,7 @@ import { Box, HStack, LoadingItems, SmallTitle, Spacer, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { ScrollView } from 'react-native'
 
-import { HomeStateItemRestaurant } from '../../state/home'
+import { HomeStateItemRestaurant } from '../../state/home-types'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { HomePagePaneProps } from './HomePagePane'
 import { HomeScrollView } from './HomeScrollView'

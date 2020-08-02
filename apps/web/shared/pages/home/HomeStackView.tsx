@@ -1,9 +1,8 @@
-// debug
 import { AbsoluteVStack, VStack, useDebounceValue } from '@dish/ui'
 import React, { Suspense, memo, useMemo } from 'react'
 
 import { searchBarHeight } from '../../constants'
-import { HomeStateItem, HomeStateItemSimple } from '../../state/home'
+import { HomeStateItem, HomeStateItemSimple } from '../../state/home-types'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
 import { getBreadcrumbs } from './getBreadcrumbs'

@@ -3,7 +3,7 @@ import { VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { getTagId } from '../../state/getTagId'
-import { HomeActiveTagsRecord } from '../../state/home'
+import { HomeActiveTagsRecord } from '../../state/home-types'
 import { useOvermind } from '../../state/useOvermind'
 import { LenseButton, LenseButtonSize } from './LenseButton'
 

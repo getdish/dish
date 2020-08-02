@@ -6,7 +6,7 @@ import {
   AddressSize,
   getAddressText,
 } from '../../../shared/pages/home/RestaurantAddressLinksRow'
-import { GeocodePlace } from '../../../shared/state/home'
+import { GeocodePlace } from '../../../shared/state/home-types'
 import { Link } from '../../../shared/views/ui/Link'
 
 export const RestaurantAddress = ({

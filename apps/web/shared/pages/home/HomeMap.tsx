@@ -22,12 +22,13 @@ import React, {
 
 import { frameWidthMax, searchBarHeight, zIndexMap } from '../../constants'
 import { getWindowHeight, getWindowWidth } from '../../helpers/getWindow'
-import { HomeStateItem, LngLat } from '../../state/home'
 import {
   isHomeState,
   isRestaurantState,
   isSearchState,
 } from '../../state/home-helpers'
+import { HomeStateItem, LngLat } from '../../state/home-types'
+import { initialHomeState } from '../../state/initialHomeState'
 import { setMapView } from '../../state/mapView'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { Map } from '../../views/Map'
@@ -114,6 +115,7 @@ const HomeMapDataLoader = memo(
           return {
             id,
             slug,
+            name: r.name,
             location: {
               coordinates: [coords?.[0], coords?.[1]],
             },
@@ -484,7 +486,8 @@ const getRestaurantMarkers = (restaurants: Restaurant[]) => {
       },
       properties: {
         id: restaurant.id,
-        title: restaurant.name,
+        title: restaurant.name ?? 'none',
+        subtitle: 'Pho, Banh Mi',
         color: color,
       },
     })

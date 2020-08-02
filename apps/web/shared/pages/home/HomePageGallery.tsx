@@ -4,7 +4,7 @@ import React, { Suspense, memo } from 'react'
 import { Image, ScrollView } from 'react-native'
 
 import { pageWidthMax, zIndexGallery } from '../../constants'
-import { HomeStateItemGallery } from '../../state/home'
+import { HomeStateItemGallery } from '../../state/home-types'
 import { useOvermind } from '../../state/useOvermind'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'

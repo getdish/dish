@@ -29,12 +29,12 @@ import { AuthLoginRegisterView } from '../../views/auth/AuthLoginRegisterView'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { flatButtonStyle } from './baseButtonStyle'
-import { useSearchBarTheme } from './HomeSearchBar'
 import {
   useMediaQueryIsAboveMedium,
   useMediaQueryIsMedium,
   useMediaQueryIsSmall,
 } from './useMediaQueryIs'
+import { useSearchBarTheme } from './useSearchBarTheme'
 
 export const HomeMenu = memo(() => {
   const om = useOvermind()

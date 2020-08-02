@@ -11,10 +11,9 @@ import {
   useGet,
 } from '@dish/ui'
 import React, { Suspense, memo, useEffect, useState } from 'react'
-import { Platform } from 'react-native'
 
 import { bgLightLight, brandColor } from '../../colors'
-import { GeocodePlace, HomeStateItemSearch } from '../../state/home'
+import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
 import { omStatic, useOvermindStatic } from '../../state/useOvermind'
 import { Link } from '../../views/ui/Link'
 import { DishView } from './DishView'

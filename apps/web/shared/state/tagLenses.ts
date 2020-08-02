@@ -5,14 +5,15 @@ export const tagLenses: Tag[] = [
     id: 'da0e0c85-86b5-4b9e-b372-97e133eccb43',
     name: 'Gems',
     icon: ' 💎',
-    rgb: [80, 40, 175],
+    rgb: [100, 150, 211],
     type: 'lense',
   },
   {
     id: '5da93fbe-5715-43b4-8b15-6521e3897bd9',
     name: 'Vibe',
     icon: '🌃',
-    rgb: [190, 112, 58],
+    // #285D97
+    rgb: [30, 83, 141],
     type: 'lense',
   },
   {

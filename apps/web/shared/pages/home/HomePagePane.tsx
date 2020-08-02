@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react'
 
-import { HomeStateItem } from '../../state/home'
 import {
   isAboutState,
   isHomeState,
@@ -8,6 +7,7 @@ import {
   isSearchState,
   isUserState,
 } from '../../state/home-helpers'
+import { HomeStateItem } from '../../state/home-types'
 import { StackItemProps } from './HomeStackView'
 
 export type HomePagePaneProps<
