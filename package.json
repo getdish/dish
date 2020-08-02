@@ -29,10 +29,11 @@
     "migrate": "(cd services/hasura && hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password)",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",
     "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
-    "postinstall": "yarn build:refs & yarn patch-package & wait"
+    "postinstall": "yarn patch-package; yarn build:refs"
   },
   "resolutions": {
     "resolve": "1.17.0",
+    "react-refresh": "0.8.3",
     "tslib": "1.11.2",
     "react": "0.0.0-experimental-aae83a4b9",
     "react-dom": "0.0.0-experimental-aae83a4b9",
@@ -44,6 +45,7 @@
     "@types/puppeteer": "3.0.1"
   },
   "devDependencies": {
+    "react-refresh": "0.8.3",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "import-sort-style-module": "^6.0.0",
     "prettier-plugin-import-sort": "^0.0.4",

@@ -2,14 +2,17 @@ import './Link.css'
 
 import { idle, series, sleep } from '@dish/async'
 import { NavigateItem } from '@dish/router'
-import { Text } from '@dish/ui'
+import { Text, useForceUpdate } from '@dish/ui'
 import React, { useEffect, useRef } from 'react'
 
 import { brandColor } from '../../colors'
 import { RoutesTable, router } from '../../state/router'
 import { useOvermindStatic } from '../../state/useOvermind'
 import { LinkProps } from './LinkProps'
-import { useNormalizeLinkProps } from './useNormalizedLink'
+import {
+  getNormalizeLinkProps,
+  useNormalizeLinkProps,
+} from './useNormalizedLink'
 
 export function Link<
   Name extends keyof RoutesTable = keyof RoutesTable,
@@ -33,6 +36,7 @@ export function Link<
     navigateAfterPress,
     ...restProps
   } = allProps
+  const forceUpdate = useForceUpdate()
   const {
     onPress,
     name,
@@ -40,7 +44,7 @@ export function Link<
     replace,
     preventNavigate,
     ...linkProps
-  } = useNormalizeLinkProps(restProps as any)
+  } = getNormalizeLinkProps(restProps as any, forceUpdate)
   const cancel = useRef<Function | null>(null)
   const linkRef = useRef<HTMLElement | null>(null)
   const navItem: NavigateItem = {

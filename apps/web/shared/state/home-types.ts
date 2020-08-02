@@ -88,13 +88,13 @@ export type HomeStateItem =
   | HomeStateItemUser
   | HomeStateItemGallery
   | HomeStateItemAbout
-  | HomeStateTagNavigable
 
-export type HomeStateTagNavigable = Pick<
-  HomeStateItemSearch,
-  'id' | 'type' | 'activeTagIds' | 'searchQuery'
-> &
-  Partial<Omit<HomeStateItemSearch, 'type'>>
+export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
+  id: HomeStateItemBase['id']
+  searchQuery: HomeStateItemBase['searchQuery']
+  activeTagIds?: HomeActiveTagsRecord
+  type: HomeStateItem['type']
+}
 
 export type HomeActiveTagsRecord = { [id: string]: boolean }
 

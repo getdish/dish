@@ -31,6 +31,7 @@ import {
 import {
   HomeStateNav,
   allTags,
+  cleanTagName,
   getActiveTags,
   getFullTags,
   getRouteFromTags,
@@ -44,6 +45,7 @@ import {
   HomeActiveTagsRecord,
   HomeState,
   HomeStateItem,
+  HomeStateItemBase,
   HomeStateItemHome,
   HomeStateItemRestaurant,
   HomeStateItemSearch,
@@ -135,7 +137,7 @@ export const state: HomeState = {
       state.states,
       (x) => isHomeState(x) || isSearchState(x)
     ) as HomeStateItemSearch | HomeStateItemHome
-    return getActiveTags(state, lastTaggable)
+    return getActiveTags(lastTaggable)
   }),
   searchbarFocusedTag: derived<HomeState, Tag | null>((state) => {
     const { searchBarTagIndex } = state
@@ -337,7 +339,7 @@ const runSearch: AsyncAction<{
   }
 
   let state = om.state.home.lastSearchState
-  const tags = getActiveTags(om.state.home)
+  const tags = getActiveTags()
 
   const shouldCancel = () => {
     const state = om.state.home.lastSearchState
@@ -411,7 +413,6 @@ const deepAssign = (a: Object, b: Object) => {
 
 const updateHomeState: Action<HomeStateItem> = (om, val) => {
   const state = om.state.home.allStates[val.id]
-  console.log('updateHomeState', !!state, val)
   if (state) {
     deepAssign(state, val)
   } else {
@@ -663,7 +664,6 @@ const pushHomeState: AsyncAction<
         }
       }
       if (!lastHomeOrSearch) {
-        debugger
         throw new Error('unreachable')
       }
 
@@ -954,6 +954,7 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
       id: state.id,
     }
     console.log('updating active tags...', nextState)
+    // @ts-ignore
     om.actions.home.updateHomeState(nextState)
   } catch (err) {
     handleAssertionError(err)
@@ -966,12 +967,7 @@ const addTagsToCache: Action<NavigableTag[] | null> = (om, tags) => {
     if (tag.name) {
       const id = getTagId(tag)
       om.state.home.allTags[id] = { ...tag } as any
-      om.state.home.allTagsNameToID[slugify(tag.name.toLowerCase(), ' ')] = id
-      try {
-        om.state.home.allTagsNameToID[tag.name] = id
-      } catch (err) {
-        // overmind blows up adding names with periods
-      }
+      om.state.home.allTagsNameToID[cleanTagName(tag.name)] = id
     }
   }
 }
@@ -1038,40 +1034,13 @@ const setIsLoading: Action<boolean> = (om, val) => {
   }, 2000)
 }
 
-// for easy use with Link / LinkButton
-export const getNavigateTo: Action<HomeStateNav, LinkButtonProps | null> = (
-  om,
-  props
-) => {
-  if (!props.tags?.length) {
-    console.log('no tags for nav?', props)
-    return null
-  }
-  let nextState = getNextState(om, props)
-  if (nextState) {
-    const navigateItem = om.actions.home.getNavigateItemForState(nextState)
-    return {
-      ...navigateItem,
-      preventNavigate: true,
-      onPress() {
-        om.actions.home.navigate({
-          ...props,
-          // use latest state
-          state: om.state.home.currentState,
-        })
-      },
-    }
-  }
-  return null
-}
-
 // this is useful for search where we mutate the current state while you type,
 // but then later you hit "enter" and we need to navigate to search (or home)
 // we definitely can clean up / name better some of this once things settle
 let lastNav = Date.now()
 const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
   navState.state = navState.state ?? om.state.home.currentState
-  const nextState = getNextState(om, navState)
+  const nextState = getNextState(navState)
   const curState = om.state.home.currentState
 
   const updateTags = () => {
@@ -1088,7 +1057,9 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     })
   }
 
-  if (!getShouldNavigate(om, nextState)) {
+  debugger
+
+  if (!om.actions.home.getShouldNavigate(nextState)) {
     updateTags()
     return false
   }
@@ -1175,16 +1146,16 @@ const promptLogin: Action<undefined, boolean> = (om) => {
   return false
 }
 
-export const getNavigateItemForState: Action<HomeStateItem, NavigateItem> = (
-  om,
-  _state
-): NavigateItem => {
+export const getNavigateItemForState: Action<
+  HomeStateTagNavigable,
+  NavigateItem
+> = (om, _state): NavigateItem => {
   return getNavigateItemForStateInternal(om.state, _state)
 }
 
 const getNavigateItemForStateInternal = (
   omState: OmState,
-  _state: HomeStateItem
+  _state: HomeStateTagNavigable
 ): NavigateItem => {
   const { home, router } = omState
   const state = _state || home.currentState
@@ -1200,7 +1171,7 @@ const getNavigateItemForStateInternal = (
     }
   }
   // if going home, just go there
-  const shouldBeHome = shouldBeOnHome(home, state)
+  const shouldBeHome = shouldBeOnHome(state)
 
   let name = state.type
   if (name === 'home' && !shouldBeHome) {
@@ -1231,7 +1202,7 @@ const getNavigateItemForStateInternal = (
   }
 
   // build params
-  const params = getRouteFromTags(omState, state)
+  const params = getRouteFromTags(state)
   // TODO wtf is this doing here
   if (state.searchQuery) {
     params.search = state.searchQuery
@@ -1248,14 +1219,17 @@ const getNavigateItemForStateInternal = (
   }
 }
 
-const getShouldNavigate: Action<HomeStateItem, boolean> = (om, state) => {
+const getShouldNavigate: Action<HomeStateTagNavigable, boolean> = (
+  om,
+  state
+) => {
   const navItem = om.actions.home.getNavigateItemForState(state)
   return router.getShouldNavigate(navItem)
 }
 
 let recentTries = 0
 let synctm
-const syncStateToRoute: AsyncAction<HomeStateItem, boolean> = async (
+const syncStateToRoute: AsyncAction<HomeStateTagNavigable, boolean> = async (
   om,
   state
 ) => {
@@ -1346,6 +1320,5 @@ export const actions = {
   setSelectedRestaurant,
   setShowUserMenu,
   promptLogin,
-  getNavigateTo,
   setDrawerSnapPoint,
 }

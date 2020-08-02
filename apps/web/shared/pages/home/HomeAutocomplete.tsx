@@ -605,7 +605,6 @@ export function searchLocations(query: string) {
     { name: string; formattedAddress: string; coordinate: any }[]
   >((res, rej) => {
     locationSearch.autocomplete(query, (err, data) => {
-      console.log('got', data)
       if (err) {
         console.log('network failure')
         return res([])

@@ -161,10 +161,7 @@ const HomePageTopDishes = memo((props: Props) => {
 // </Text> */} */}
 
 const HomeLenseTitle = ({ state }) => {
-  const om = useOvermind()
-  const lense = getActiveTags(om.state.home, state).find(
-    (x) => x.type === 'lense'
-  )
+  const lense = getActiveTags(state).find((x) => x.type === 'lense')
   const tagsDescriptions = tagDescriptions[(lense.name ?? '').toLowerCase()]
   const tagsDescription = tagsDescriptions?.plain.replace('Here', ``) ?? ''
   return (

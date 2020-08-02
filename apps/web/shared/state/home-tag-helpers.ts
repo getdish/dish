@@ -7,13 +7,13 @@ import { isHomeState, isSearchState } from './home-helpers'
 import {
   HomeActiveTagsRecord,
   HomeStateItem,
-  OmState,
-  OmStateHome,
+  HomeStateTagNavigable,
 } from './home-types'
 import { NavigableTag } from './NavigableTag'
 import { SearchRouteParams } from './router'
 import { tagFilters } from './tagFilters'
 import { tagLenses } from './tagLenses'
+import { omStatic } from './useOvermind'
 
 const SPLIT_TAG = '_'
 const SPLIT_TAG_TYPE = '~'
@@ -26,9 +26,13 @@ for (const tag of allTagsList) {
 
 export type HomeStateNav = {
   tags?: NavigableTag[]
-  state?: HomeStateItem
+  state?: HomeStateTagNavigable
   disallowDisableWhenActive?: boolean
   replaceSearch?: boolean
+}
+
+export const cleanTagName = (name: string) => {
+  return slugify(name.toLowerCase(), ' ').replace(/\./g, '-')
 }
 
 export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
@@ -47,8 +51,7 @@ export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
   tag?.type != 'lense' && tag.type != 'filter'
 
 export const getActiveTags = (
-  home: OmStateHome,
-  state: HomeStateItem = home.currentState
+  state: Partial<HomeStateItem> = omStatic.state.home.currentState
 ) => {
   if ('activeTagIds' in state) {
     const { activeTagIds } = state
@@ -56,7 +59,12 @@ export const getActiveTags = (
       .filter(isValidTag)
       .filter((x) => !!activeTagIds[x])
     const tags: Tag[] = tagIds.map(
-      (x) => home.allTags[x] ?? { id: slugify(x), name: x, type: 'dish' }
+      (x) =>
+        omStatic.state.home.allTags[x] ?? {
+          id: slugify(x),
+          name: x,
+          type: 'dish',
+        }
     )
     if (!tags.some((tag) => tag.type === 'lense')) {
       tags.push({ type: 'lense', name: 'Gems' })
@@ -70,7 +78,6 @@ export const getActiveTags = (
 const ensureUniqueTagOfType = new Set(['lense', 'country', 'dish'])
 export function ensureUniqueActiveTagIds(
   activeTagIds: HomeActiveTagsRecord,
-  home: OmStateHome,
   nextActiveTag: NavigableTag
 ) {
   if (!nextActiveTag) {
@@ -80,7 +87,7 @@ export function ensureUniqueActiveTagIds(
     if (key === getTagId(nextActiveTag)) {
       continue
     }
-    const type = home.allTags[key]?.type
+    const type = omStatic.state.home.allTags[key]?.type
     if (
       type &&
       ensureUniqueTagOfType.has(type) &&
@@ -118,13 +125,12 @@ const getUrlTagInfo = (part: string, defaultType: any = ''): NavigableTag => {
 }
 
 export const getRouteFromTags = (
-  { home }: OmState,
-  state = home.currentState
+  state: HomeStateTagNavigable = omStatic.state.home.currentState
 ): SearchRouteParams => {
   if (!isHomeState(state) && !isSearchState(state)) {
     throw new Error(`Getting route on bad state`)
   }
-  const allActiveTags = getActiveTags(home, state)
+  const allActiveTags = getActiveTags(state)
   // build our final path segment
   const filterTags = allActiveTags.filter((x) => x.type === 'filter')
   const otherTags = allActiveTags.filter(

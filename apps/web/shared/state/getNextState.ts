@@ -1,14 +1,18 @@
-import { slugify } from '@dish/graph'
-
 import { ensureHasLense } from './ensureHasLense'
 import { getTagId } from './getTagId'
 import { shouldBeOnHome } from './home-helpers'
-import { HomeStateNav, ensureUniqueActiveTagIds } from './home-tag-helpers'
-import { HomeActiveTagsRecord, Om } from './home-types'
+import {
+  HomeStateNav,
+  cleanTagName,
+  ensureUniqueActiveTagIds,
+} from './home-tag-helpers'
+import { HomeActiveTagsRecord } from './home-types'
+import { omStatic } from './useOvermind'
 
-export const getNextState = (om: Om, navState?: HomeStateNav) => {
+export const getNextState = (navState?: HomeStateNav) => {
+  console.log('get for', navState)
   const {
-    state = om.state.home.currentState,
+    state = omStatic.state.home.currentState,
     tags = [],
     disallowDisableWhenActive = false,
     replaceSearch = false,
@@ -24,8 +28,7 @@ export const getNextState = (om: Om, navState?: HomeStateNav) => {
   let words = searchQuery.toLowerCase().split(' ')
   while (words.length) {
     const [word, ...rest] = words
-    const foundTagId =
-      om.state.home.allTagsNameToID[slugify(word, ' ').toLowerCase()]
+    const foundTagId = omStatic.state.home.allTagsNameToID[cleanTagName(word)]
     if (foundTagId) {
       // remove from words
       words = rest
@@ -46,7 +49,7 @@ export const getNextState = (om: Om, navState?: HomeStateNav) => {
     } else {
       activeTagIds[key] = true
       // disable others
-      ensureUniqueActiveTagIds(activeTagIds, om.state.home, tag)
+      ensureUniqueActiveTagIds(activeTagIds, tag)
     }
   }
 
@@ -56,8 +59,8 @@ export const getNextState = (om: Om, navState?: HomeStateNav) => {
     id: state.id,
     searchQuery,
     activeTagIds,
-    type: state.type as any,
+    type: state.type,
   }
-  nextState.type = shouldBeOnHome(om.state.home, nextState) ? 'home' : 'search'
+  nextState.type = shouldBeOnHome(nextState) ? 'home' : 'search'
   return nextState
 }
