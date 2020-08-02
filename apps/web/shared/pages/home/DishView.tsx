@@ -29,8 +29,12 @@ export const DishView = memo(
     selected?: boolean
   } & StackProps) => {
     const [isHovered, setIsHovered] = useState(false)
+    const dishName = (dish.name ?? '')
+      .split(' ')
+      .map((x) => capitalize(x))
+      .join(' ')
 
-    const width = size * 0.82
+    const width = size * 0.9
     const height = size
     const quality = size > 160 ? 100 : 100
     const imageUrl = `${IMAGE_PROXY_DOMAIN}/${width}x${height},q${quality}/${dish.image}`
@@ -165,7 +169,6 @@ export const DishView = memo(
                 })}
               >
                 <Text
-                  ellipse
                   className="unskewX"
                   flex={1}
                   overflow="hidden"
@@ -174,10 +177,7 @@ export const DishView = memo(
                   color={isHovered ? '#000' : '#fff'}
                   textAlign="center"
                 >
-                  {(dish.name ?? '')
-                    .split(' ')
-                    .map((x) => capitalize(x))
-                    .join(' ')}
+                  {dishName}
                 </Text>
               </Box>
             </HStack>

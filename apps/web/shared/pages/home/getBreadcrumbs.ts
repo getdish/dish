@@ -1,6 +1,6 @@
 import { memoize } from '../../helpers/memoizeWeak'
-import { HomeStateItem, HomeStateItemSimple } from '../../state/home'
 import { isSearchState } from '../../state/home-helpers'
+import { HomeStateItem, HomeStateItemSimple } from '../../state/home-types'
 
 export const isBreadcrumbState = (type: HomeStateItem['type']) => {
   return (

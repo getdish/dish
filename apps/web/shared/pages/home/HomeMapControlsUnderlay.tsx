@@ -1,49 +1,13 @@
-import { LngLat } from '@dish/graph/_'
-// debug
-import { AbsoluteVStack, HStack, VStack } from '@dish/ui'
-import React, { Suspense, memo } from 'react'
+import { AbsoluteVStack, HStack } from '@dish/ui'
+import React, { memo } from 'react'
 import { Map, RefreshCcw } from 'react-feather'
 
-import {
-  searchBarHeight,
-  zIndexDrawer,
-  zIndexMapControls,
-  zIndexMapControlsUnderlay,
-  zIndexMapControlsUnderlaySmall,
-} from '../../constants'
-import { initialHomeState } from '../../state/home'
-import { omStatic, useOvermind } from '../../state/useOvermind'
+import { searchBarHeight, zIndexDrawer } from '../../constants'
+import { useOvermind } from '../../state/useOvermind'
 import { OverlayLinkButton } from '../../views/ui/OverlayLinkButton'
 import { useMapSize } from './HomeMap'
-import { HomeMapPIP } from './HomeMapPIP'
-import { HomeMapRestaurantPeek } from './HomeMapRestaurantPeek'
+import { mapZoomToMedium, useZoomLevel } from './mapHelpers'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
-
-export const getZoomLevel = (span: LngLat) => {
-  const curZoom = (span.lat + span.lng) / 2
-  return curZoom < 0.1 ? 'close' : curZoom > 0.2 ? 'far' : 'medium'
-}
-
-export const useZoomLevel = () => {
-  const om = useOvermind()
-  return getZoomLevel(om.state.home.currentState.span)
-}
-
-export const mapZoomToMedium = () => {
-  let span = initialHomeState.span
-  let center = initialHomeState.center
-  for (const state of [...omStatic.state.home.states].reverse()) {
-    if (getZoomLevel(state.span) === 'medium') {
-      span = state.span
-      center = state.center
-      break
-    }
-  }
-  omStatic.actions.home.updateCurrentState({
-    span,
-    center,
-  })
-}
 
 export const HomeMapControlsUnderlay = memo(() => {
   const om = useOvermind()

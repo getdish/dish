@@ -4,7 +4,7 @@ import React, { memo, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
 import { bgLight } from '../../colors'
-import { HomeActiveTagsRecord } from '../../state/home'
+import { HomeActiveTagsRecord } from '../../state/home-types'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useUserUpvoteDownvote } from './useUserReview'
 

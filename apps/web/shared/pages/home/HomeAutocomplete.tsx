@@ -28,7 +28,7 @@ import {
   GeocodePlace,
   LngLat,
   ShowAutocomplete,
-} from '../../state/home'
+} from '../../state/home-types'
 import { mapView } from '../../state/mapView'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'

@@ -3,7 +3,7 @@ import { Circle, Divider, HStack, Spacer, Text, VStack } from '@dish/ui'
 import React from 'react'
 import { Image, ScrollView } from 'react-native'
 
-import { HomeStateItemUser } from '../../state/home'
+import { HomeStateItemUser } from '../../state/home-types'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { Link } from '../../views/ui/Link'
 import { avatar } from './HomePageSearchResults'

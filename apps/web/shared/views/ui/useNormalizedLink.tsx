@@ -3,7 +3,7 @@ import { isEqual, omit } from 'lodash'
 import { useMemo } from 'react'
 
 import { memoize } from '../../helpers/memoizeWeak'
-import { HomeStateItem, getNavigateTo } from '../../state/home'
+import { HomeStateItem } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic } from '../../state/useOvermind'
 import { LinkButtonNamedProps, LinkButtonProps } from './LinkProps'

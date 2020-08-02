@@ -20,6 +20,7 @@ import { getBreadcrumbs, isBreadcrumbState } from '../pages/home/getBreadcrumbs'
 import { useRestaurantQuery } from '../pages/home/useRestaurantQuery'
 import { LinkButtonProps } from '../views/ui/LinkProps'
 import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
+import { getNextState } from './getNextState'
 import { getTagId } from './getTagId'
 import {
   isHomeState,
@@ -32,7 +33,6 @@ import {
   allTags,
   getActiveTags,
   getFullTags,
-  getNextState,
   getRouteFromTags,
   getTagsFromRoute,
   isSearchBarTag,
@@ -52,27 +52,11 @@ import {
   OmState,
   ShowAutocomplete,
 } from './home-types'
+import { initialHomeState } from './initialHomeState'
 import { NavigableTag } from './NavigableTag'
 import { router } from './router'
 import { tagFilters } from './tagFilters'
 import { tagLenses } from './tagLenses'
-
-// backward compat
-export * from './home-types'
-
-export const initialHomeState: HomeStateItemHome = {
-  id: '0',
-  type: 'home',
-  activeTagIds: {
-    [getTagId(tagLenses[0])]: true,
-  },
-  searchQuery: '',
-  center: {
-    lng: -122.421351,
-    lat: 37.759251,
-  },
-  span: { lng: 0.2 / 2, lat: 0.2 },
-}
 
 export const state: HomeState = {
   started: false,

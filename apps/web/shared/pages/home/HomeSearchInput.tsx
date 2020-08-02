@@ -23,13 +23,13 @@ import { router } from '../../state/router'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { CloseButton } from './CloseButton'
 import { HomeAutocompleteHoverableInput } from './HomeAutocomplete'
-import { useSearchBarTheme } from './HomeSearchBar'
 import { isIOS } from './isIOS'
 import { TagButton } from './TagButton'
 import {
   getMediaQueryMatch,
   useMediaQueryIsReallySmall,
 } from './useMediaQueryIs'
+import { useSearchBarTheme } from './useSearchBarTheme'
 
 const placeholders = [
   'pho',

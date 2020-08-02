@@ -3,11 +3,10 @@ import { HistoryItem } from '@dish/router'
 
 import { LIVE_SEARCH_DOMAIN } from '../constants'
 import { getTagId } from './getTagId'
-import { isHomeState, isSearchState, shouldBeOnHome } from './home-helpers'
+import { isHomeState, isSearchState } from './home-helpers'
 import {
   HomeActiveTagsRecord,
   HomeStateItem,
-  Om,
   OmState,
   OmStateHome,
 } from './home-types'
@@ -15,7 +14,6 @@ import { NavigableTag } from './NavigableTag'
 import { SearchRouteParams } from './router'
 import { tagFilters } from './tagFilters'
 import { tagLenses } from './tagLenses'
-import { omStatic } from './useOvermind'
 
 const SPLIT_TAG = '_'
 const SPLIT_TAG_TYPE = '~'
@@ -68,76 +66,9 @@ export const getActiveTags = (
   return []
 }
 
-export const getNextState = (om: Om, navState?: HomeStateNav) => {
-  const {
-    state = om.state.home.currentState,
-    tags = [],
-    disallowDisableWhenActive = false,
-    replaceSearch = false,
-  } = navState ?? {}
-  let searchQuery = state.searchQuery ?? ''
-  let activeTagIds: HomeActiveTagsRecord = replaceSearch
-    ? {}
-    : 'activeTagIds' in state
-    ? { ...state.activeTagIds }
-    : {}
-
-  // if they words match tag exactly, convert to tags
-  let words = searchQuery.toLowerCase().split(' ')
-  while (words.length) {
-    const [word, ...rest] = words
-    const foundTagId =
-      om.state.home.allTagsNameToID[slugify(word, ' ').toLowerCase()]
-    if (foundTagId) {
-      // remove from words
-      words = rest
-      // add to active tags
-      activeTagIds[foundTagId] = true
-    } else {
-      break
-    }
-  }
-
-  // update query
-  searchQuery = words.join(' ')
-
-  for (const tag of tags) {
-    const key = getTagId(tag)
-    if (activeTagIds[key] === true && !disallowDisableWhenActive) {
-      activeTagIds[key] = false
-    } else {
-      activeTagIds[key] = true
-      // disable others
-      ensureUniqueActiveTagIds(activeTagIds, om.state.home, tag)
-    }
-  }
-
-  ensureHasLense(activeTagIds)
-
-  const nextState = {
-    id: state.id,
-    searchQuery,
-    activeTagIds,
-    type: state.type as any,
-  }
-  nextState.type = shouldBeOnHome(om.state.home, nextState) ? 'home' : 'search'
-  return nextState
-}
-
-function ensureHasLense(activeTagIds: HomeActiveTagsRecord) {
-  if (
-    !Object.keys(activeTagIds)
-      .filter((k) => activeTagIds[k])
-      .some((k) => omStatic.state.home.allTags[k]?.type === 'lense')
-  ) {
-    // need to add lense!
-    activeTagIds['gems'] = true
-  }
-}
-
 // mutating
 const ensureUniqueTagOfType = new Set(['lense', 'country', 'dish'])
-function ensureUniqueActiveTagIds(
+export function ensureUniqueActiveTagIds(
   activeTagIds: HomeActiveTagsRecord,
   home: OmStateHome,
   nextActiveTag: NavigableTag

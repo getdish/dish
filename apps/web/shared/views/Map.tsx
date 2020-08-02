@@ -1,7 +1,9 @@
 import { series } from '@dish/async'
 import { LngLat } from '@dish/graph'
-import mapboxgl from 'mapbox-gl'
+import mapboxgl, { EventData, MapLayerEventType } from 'mapbox-gl'
 import React, { memo, useEffect, useRef, useState } from 'react'
+
+import { brandColor } from '../colors'
 
 const marker = require('../assets/map-marker.png').default
 
@@ -21,9 +23,13 @@ export const Map = ({ center, span, padding, features, mapRef }: MapProps) => {
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
 
   useEffect(() => {
+    if (!mapNode.current) return
+
     const mapboxMap = new mapboxgl.Map({
       container: mapNode.current,
-      style: 'mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq',
+      style: 'mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq', // ??
+      // dark
+      //'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja' ??
       center,
       zoom: 11,
     })
@@ -86,27 +92,48 @@ export const Map = ({ center, span, padding, features, mapRef }: MapProps) => {
   useEffect(() => {
     if (!map) return
     if (!features.length) return
-    map.addSource('points', {
+
+    const SOURCE_ID = 'restaurants'
+    const POINT_LAYER_ID = 'restaurants-points'
+    const TEXT_LAYER_ID = 'restaurants-text'
+
+    map.addSource(SOURCE_ID, {
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
         features,
       },
+      generateId: true,
     })
 
     map.addLayer({
-      id: 'points',
-      type: 'symbol',
-      source: 'points',
-      layout: {
-        'icon-image': 'custom-marker',
-        'icon-size': 0.5,
-        // get the title name from the source's "title" property
-        'text-field': ['get', 'title'],
-        'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-        'text-offset': [0, 1.25],
-        'text-anchor': 'top',
+      id: POINT_LAYER_ID,
+      type: 'circle',
+      source: SOURCE_ID,
+
+      paint: {
+        // The feature-state dependent circle-radius expression will render
+        // the radius size according to its magnitude when
+        // a feature's hover state is set to true
+        'circle-radius': [
+          'case',
+          ['boolean', ['feature-state', 'hover'], false],
+          5,
+          3,
+        ],
+        'circle-stroke-color': '#fff',
+        'circle-stroke-width': 1,
+        // The feature-state dependent circle-color expression will render
+        // the color according to its magnitude when
+        // a feature's hover state is set to true
+        'circle-color': [
+          'case',
+          ['boolean', ['feature-state', 'active'], false],
+          '#000',
+          '#888',
+        ],
       },
+
       // paint: {
       //   'icon-translate': [100, 2],
       // },
@@ -135,9 +162,113 @@ export const Map = ({ center, span, padding, features, mapRef }: MapProps) => {
       // }
     })
 
+    map.addLayer({
+      id: TEXT_LAYER_ID,
+      type: 'symbol',
+      source: SOURCE_ID,
+
+      layout: {
+        // 'icon-image': 'dog-park-11',
+        'text-field': [
+          'format',
+          ['upcase', ['get', 'title']],
+          { 'font-scale': 0.8 },
+          '\n',
+          {},
+          ['downcase', ['get', 'subtitle']],
+          { 'font-scale': 0.6 },
+        ],
+        'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+        'text-offset': [0, 0.6],
+        'text-anchor': 'top',
+      },
+
+      // paint: {
+      //   'icon-translate': [100, 2],
+      // },
+      // paint: {
+      //   'circle-opacity': 0.4,
+      //   'circle-color': '#830300',
+      //   'circle-stroke-width': 2,
+      //   'circle-stroke-color': '#fff',
+      // },
+      // "circ"
+      //   "circle-radius": {
+      //         "property": "mag",
+      //         "base": 2.5,
+      //         "stops": [
+      //             [{zoom: 0,  value: 2}, 1],
+      //             [{zoom: 0,  value: 8}, 40],
+      //             [{zoom: 11, value: 2}, 10],
+      //             [{zoom: 11, value: 8}, 2400],
+      //             [{zoom: 20, value: 2}, 20],
+      //             [{zoom: 20, value: 8}, 6000]
+      //           "circle-radius-transition": {
+      //     "duration": 0
+      //   }
+      //         ]
+      //     }
+      // }
+    })
+
+    type Event = mapboxgl.MapMouseEvent & {
+      features?: mapboxgl.MapboxGeoJSONFeature[]
+    } & mapboxgl.EventData
+    type Listener = (ev: Event) => void
+
+    const mapSetFeature = (id: any, obj: any) => {
+      map.setFeatureState(
+        {
+          source: SOURCE_ID,
+          id,
+        },
+        obj
+      )
+    }
+
+    let hoverId = null
+    const setHovered = (e: Event, hover: boolean) => {
+      map.getCanvas().style.cursor = hover ? 'pointer' : ''
+      // only one at a time
+      if (hoverId != null) {
+        mapSetFeature(hoverId, { hover: false })
+        hoverId = null
+      }
+      if (hover) {
+        hoverId = e.features[0].id
+        mapSetFeature(hoverId, { hover: true })
+      }
+    }
+
+    const handleMouseMove: Listener = (e) => {
+      handleMouseLeave(e)
+      setHovered(e, true)
+    }
+
+    const handleMouseLeave: Listener = (e) => {
+      setHovered(e, false)
+    }
+
+    let id = null
+    const handleMouseClick: Listener = (e) => {
+      if (id != null) {
+        mapSetFeature(id, { active: false })
+      }
+      id = e.features[0].id
+      mapSetFeature(id, { active: true })
+    }
+
+    map.on('click', POINT_LAYER_ID, handleMouseClick)
+    map.on('mousemove', POINT_LAYER_ID, handleMouseMove)
+    map.on('mouseleave', POINT_LAYER_ID, handleMouseLeave)
+
     return () => {
-      map.removeLayer('points')
-      map.removeSource('points')
+      map.off('click', POINT_LAYER_ID, handleMouseClick)
+      map.off('mousemove', POINT_LAYER_ID, handleMouseMove)
+      map.off('mouseleave', POINT_LAYER_ID, handleMouseLeave)
+      map.removeLayer(POINT_LAYER_ID)
+      map.removeLayer(TEXT_LAYER_ID)
+      map.removeSource(SOURCE_ID)
     }
   }, [map, features])
 

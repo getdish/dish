@@ -17,8 +17,8 @@ import {
 } from '../../helpers/input'
 import { useOvermind } from '../../state/useOvermind'
 import { HomeAutocompleteHoverableInput } from './HomeAutocomplete'
-import { useSearchBarTheme } from './HomeSearchBar'
 import { inputTextStyles, onFocusAnyInput } from './HomeSearchInput'
+import { useSearchBarTheme } from './useSearchBarTheme'
 
 const paddingHorizontal = 16
 

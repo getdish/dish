@@ -4,9 +4,8 @@ import { Toast, useForceUpdate } from '@dish/ui'
 import { useEffect, useState } from 'react'
 
 import { getTagId } from '../../state/getTagId'
-import { HomeActiveTagsRecord } from '../../state/home'
 import { getFullTags } from '../../state/home-tag-helpers'
-import { NavigableTag } from '../../state/NavigableTag'
+import { HomeActiveTagsRecord } from '../../state/home-types'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 
 export const useUserReviews = (restaurantId: string, refetchKey?: string) => {

@@ -1,10 +1,9 @@
-import { graphql, query } from '@dish/graph'
+import { graphql } from '@dish/graph'
 import { Box, HStack, HoverablePopover, Text } from '@dish/ui'
 import React, { memo } from 'react'
 import { ExternalLink } from 'react-feather'
-import { Image, Linking } from 'react-native'
 
-import { GeocodePlace } from '../../state/home'
+import { GeocodePlace } from '../../state/home-types'
 import { Link } from '../../views/ui/Link'
 import { SmallCircleButton } from './CloseButton'
 import { useRestaurantQuery } from './useRestaurantQuery'

@@ -2,7 +2,7 @@ import { HStack, Text } from '@dish/ui'
 import React from 'react'
 import { Image } from 'react-native'
 
-import { HomeActiveTagIds } from '../../state/home'
+import { HomeActiveTagsRecord } from '../../state/home-types'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { flatButtonStyle } from './baseButtonStyle'
 import { FilterButton } from './HomeFilterBar'
@@ -11,7 +11,7 @@ import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 export const HomeDeliveryFilterButtons = ({
   activeTagIds,
 }: {
-  activeTagIds: HomeActiveTagIds
+  activeTagIds: HomeActiveTagsRecord
 }) => {
   console.log('activeTagIds', activeTagIds)
   if (!activeTagIds['delivery']) {

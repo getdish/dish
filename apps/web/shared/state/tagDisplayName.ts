@@ -10,7 +10,7 @@ export const tagDisplayNames = {
   Vibe: 'Vibe',
   Veg: 'Green',
   Drink: 'Drink',
-  Gems: 'Great',
+  Gems: 'Gem',
 }
 
 export const tagDisplayIcons = {
