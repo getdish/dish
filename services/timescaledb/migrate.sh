@@ -2,8 +2,8 @@
 
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
 
-pushd $PROJECT_ROOT
-node_modules/.bin/postgrator \
+pushd $PROJECT_ROOT/services/timescaledb
+$PROJECT_ROOT/node_modules/.bin/postgrator \
   --host ${PG_HOST:-localhost} \
   --port ${PG_PORT:-5433} \
   --database ${PG_DATABASE:-scrape_data} \
