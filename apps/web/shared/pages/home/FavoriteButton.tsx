@@ -37,7 +37,13 @@ export const FavoriteButton = ({
       }}
     >
       {isFavorite && (
-        <Text color="red" fontSize={sizePx * 0.88} lineHeight={sizePx * 0.88}>
+        <Text
+          cursor="default"
+          color="red"
+          fontSize={sizePx * 0.7}
+          lineHeight={sizePx * 0.7}
+          marginTop={1}
+        >
           ♥️
         </Text>
       )}

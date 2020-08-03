@@ -1,23 +1,29 @@
+## August
+
+- list of cities to crawl
+- revisit ssr and prod
+- Mapbox
+- Mobile site
+- Voting, tagging, commenting improvements
+- React Native app
+- Blog posts
+- A bit of user profile page polish
+  - show favorites on the map!
+- Admin icons, ratings
+- Dish rating breakdown
+
+---
+
 small:
 
 - Fix <Dish /> type remove TopCuisineItem weird type and change to tag, but maybe split into to <DishFromTag />, <DishFromRestaurant /> or similar
+- autocomplete = higher ranking higher
 
 ## July
 
-- writing
-- autocomplete = higher ranking higher
-
-- A bit of user profile page polish
-  - show their favorites on the map!
-- Lots of bugfixing
-- location - improve state when permission is active (current location)
-- tips horizontal carousel on detail page
-- Search vietnamese can show top dishes in search results header
 - Restaurant page
   - each dish should have a summary
   - better rating breakdown! on actual page
-- Basic user profile improvements
-- routing and various bugs moving around site
 - user input features and refine
 - Various user flows (expo auth?)
 
@@ -33,9 +39,6 @@ small:
 
 ## bigger impact changes
 
-- better breakdown of rating
-- profiles being nice
-- emojis for dishes (autocomplete, dishview)
 - add comment + rate being really slick
 - importing instagram and other feed data to have more aliveness
 - top dishes <=> map pins + easily moving around cities
