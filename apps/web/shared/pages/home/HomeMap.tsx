@@ -1,5 +1,5 @@
 import { idle } from '@dish/async'
-import { Restaurant, graphql } from '@dish/graph'
+import { Restaurant, Tag, graphql } from '@dish/graph'
 import {
   AbsoluteVStack,
   VStack,
@@ -35,6 +35,7 @@ import { Map } from '../../views/Map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
 import { snapPoints } from './HomeSmallDrawer'
+import { useCurrentLenseColor } from './useCurrentLenseColor'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useLastValueWhen } from './useLastValueWhen'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
@@ -226,6 +227,8 @@ const HomeMapContent = memo(function HomeMap({
   const om = useOvermind()
   const isSmall = useMediaQueryIsSmall()
   const state = om.state.home.currentState
+  const lense = om.state.home.currentStateLense
+
   const getRestaurants = useGet(restaurants)
   const { drawerWidth, width, paddingLeft } = useMapSize(isSmall)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
@@ -469,6 +472,15 @@ const HomeMapContent = memo(function HomeMap({
     </AbsoluteVStack>
   )
 })
+
+const getMapStyle = (lense: Tag) => {
+  switch (lense.name) {
+    case 'Gems':
+      return 'mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq'
+    case 'Vibe':
+      return 'mapbox://styles/nwienert/ckddrrhfa4dnc1io6yindi3hi'
+  }
+}
 
 const getRestaurantMarkers = (restaurants: Restaurant[]) => {
   const result: GeoJSON.Feature[] = []

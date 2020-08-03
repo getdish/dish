@@ -1,6 +1,5 @@
 import { createCancellablePromise, idle, series } from '@dish/async'
 import {
-  Box,
   Button,
   HStack,
   LoadingItem,
@@ -23,7 +22,6 @@ import { ScrollView } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { isSearchState } from '../../state/home-helpers'
-import { getActiveTags } from '../../state/home-tag-helpers'
 import { HomeStateItemSearch, OmState } from '../../state/home-types'
 import { omStatic, useOvermind } from '../../state/useOvermind'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
@@ -33,6 +31,7 @@ import HomeFilterBar from './HomeFilterBar'
 import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePagePane'
 import { HomeScrollView } from './HomeScrollView'
+import { HomeSearchInfoBox } from './HomeSearchInfoBox'
 import { focusSearchInput } from './HomeSearchInput'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
@@ -126,7 +125,7 @@ const SearchResultsTitle = memo(({ stateId }: { stateId: string }) => {
   const om = useOvermind()
   const state = om.state.home.allStates[stateId]
   const isReallySmall = useMediaQueryIsReallySmall()
-  const isSmall = useMediaQueryIsSmall()
+  // const isSmall = useMediaQueryIsSmall()
   const isAboveMedium = useMediaQueryIsAboveMedium()
   const { title, subTitle, pageTitleElements } = getTitleForState(state)
 
@@ -174,13 +173,18 @@ const SearchResultsTitle = memo(({ stateId }: { stateId: string }) => {
               >
                 <Text
                   ellipse
-                  fontSize={isAboveMedium ? 18 : 16}
-                  fontWeight="400"
+                  fontSize={isAboveMedium ? 16 : 15}
+                  fontWeight={isAboveMedium ? '500' : '400'}
                 >
                   {pageTitleElements}
                 </Text>
-                <Spacer size={3} />
-                <Text ellipse opacity={0.5} fontWeight="300" fontSize={14}>
+                <Spacer size={1} />
+                <Text
+                  ellipse
+                  opacity={0.5}
+                  letterSpacing={-0.5}
+                  fontSize={isAboveMedium ? 14 : 13}
+                >
                   {subTitle}
                 </Text>
               </VStack>
@@ -262,18 +266,6 @@ const SearchResultsContent = (props: Props) => {
     )
   }
 
-  const HomeSearchInfoBox = memo(
-    ({ state }: { state: HomeStateItemSearch }) => {
-      const tags = getActiveTags(state)
-
-      return (
-        <Box margin={20} padding={20}>
-          <Text></Text>
-        </Box>
-      )
-    }
-  )
-
   const results = useMemo(() => {
     const cur = allResults.slice(0, currentlyShowing)
     return (
@@ -310,21 +302,23 @@ const SearchResultsContent = (props: Props) => {
       ? false
       : !isOnLastChunk || state.hasLoaded <= state.chunk)
 
-  console.log(
-    'SearchResults',
-    JSON.stringify(
-      {
-        state,
-        currentlyShowing,
-        firstResult: JSON.stringify(allResults[0]),
-        allLen: allResults.length,
-        isOnLastChunk,
-        isLoading,
-      },
-      null,
-      2
+  if (process.env.NODE_ENV === 'development') {
+    console.log(
+      'SearchResults',
+      JSON.stringify(
+        {
+          state,
+          currentlyShowing,
+          firstResult: JSON.stringify(allResults[0]),
+          allLen: allResults.length,
+          isOnLastChunk,
+          isLoading,
+        },
+        null,
+        2
+      )
     )
-  )
+  }
 
   // in an effect so we can use series and get auto-cancel on unmount
   useEffect(() => {

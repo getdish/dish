@@ -1,9 +1,7 @@
 import { series } from '@dish/async'
 import { LngLat } from '@dish/graph'
-import mapboxgl, { EventData, MapLayerEventType } from 'mapbox-gl'
-import React, { memo, useEffect, useRef, useState } from 'react'
-
-import { brandColor } from '../colors'
+import mapboxgl from 'mapbox-gl'
+import React, { useEffect, useRef, useState } from 'react'
 
 const marker = require('../assets/map-marker.png').default
 
@@ -16,9 +14,17 @@ type MapProps = {
   features?: GeoJSON.Feature[]
   padding?: { top: number; left: number; bottom: number; right: number }
   mapRef?: (map: mapboxgl.Map) => void
+  style?: string
 }
 
-export const Map = ({ center, span, padding, features, mapRef }: MapProps) => {
+export const Map = ({
+  center,
+  span,
+  padding,
+  features,
+  style,
+  mapRef,
+}: MapProps) => {
   const mapNode = useRef<HTMLDivElement>(null)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
 
@@ -27,7 +33,7 @@ export const Map = ({ center, span, padding, features, mapRef }: MapProps) => {
 
     const mapboxMap = new mapboxgl.Map({
       container: mapNode.current,
-      style: 'mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq', // ??
+      style: style ?? 'mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq', // ??
       // dark
       //'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja' ??
       center,
@@ -64,6 +70,11 @@ export const Map = ({ center, span, padding, features, mapRef }: MapProps) => {
       mapNode.current.innerHTML = ''
     }
   }, [])
+
+  useEffect(() => {
+    if (!map || !style) return
+    map.setStyle(style)
+  }, [map, style])
 
   // center
   useEffect(() => {
