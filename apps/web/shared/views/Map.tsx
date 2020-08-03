@@ -21,7 +21,7 @@ type MapProps = {
 
 const SOURCE_ID = 'restaurants'
 const POINT_LAYER_ID = 'restaurants-points'
-const TEXT_LAYER_ID = 'restaurants-text'
+const POINT_HOVER_LAYER_ID = 'restaurants-points-hover'
 
 const mapSetFeature = (map: mapboxgl.Map, id: any, obj: any) => {
   map.setFeatureState(
@@ -31,6 +31,16 @@ const mapSetFeature = (map: mapboxgl.Map, id: any, obj: any) => {
     },
     obj
   )
+}
+
+const mapSetIconSelected = (map: mapboxgl.Map, id: any) => {
+  map.setLayoutProperty(POINT_LAYER_ID, 'icon-image', [
+    'match',
+    ['id'],
+    id,
+    'mountain-15',
+    'bar-15',
+  ])
 }
 
 export const Map = ({
@@ -115,7 +125,7 @@ export const Map = ({
     if (!map) return
     map?.flyTo({
       center,
-      speed: 0.25,
+      speed: 0.5,
     })
   }, [map, center.lng, center.lat])
 
@@ -152,108 +162,30 @@ export const Map = ({
 
     map.addLayer({
       id: POINT_LAYER_ID,
-      type: 'circle',
-      source: SOURCE_ID,
-
-      paint: {
-        // The feature-state dependent circle-radius expression will render
-        // the radius size according to its magnitude when
-        // a feature's hover state is set to true
-        'circle-radius': [
-          'case',
-          ['boolean', ['feature-state', 'hover'], false],
-          5,
-          3,
-        ],
-        'circle-stroke-color': '#fff',
-        'circle-stroke-width': 1,
-        // The feature-state dependent circle-color expression will render
-        // the color according to its magnitude when
-        // a feature's hover state is set to true
-        'circle-color': [
-          'case',
-          ['boolean', ['feature-state', 'active'], false],
-          '#000',
-          '#888',
-        ],
-      },
-
-      // paint: {
-      //   'icon-translate': [100, 2],
-      // },
-      // paint: {
-      //   'circle-opacity': 0.4,
-      //   'circle-color': '#830300',
-      //   'circle-stroke-width': 2,
-      //   'circle-stroke-color': '#fff',
-      // },
-      // "circ"
-      //   "circle-radius": {
-      //         "property": "mag",
-      //         "base": 2.5,
-      //         "stops": [
-      //             [{zoom: 0,  value: 2}, 1],
-      //             [{zoom: 0,  value: 8}, 40],
-      //             [{zoom: 11, value: 2}, 10],
-      //             [{zoom: 11, value: 8}, 2400],
-      //             [{zoom: 20, value: 2}, 20],
-      //             [{zoom: 20, value: 8}, 6000]
-      //           "circle-radius-transition": {
-      //     "duration": 0
-      //   }
-      //         ]
-      //     }
-      // }
-    })
-
-    map.addLayer({
-      id: TEXT_LAYER_ID,
       type: 'symbol',
       source: SOURCE_ID,
-
       layout: {
-        'icon-image': 'fire-station-15',
-        'text-field': [
-          'format',
-          ['get', 'title'],
-          { 'font-scale': 0.8 },
-          '\n',
-          {},
-          ['downcase', ['get', 'subtitle']],
-          { 'font-scale': 0.6 },
-        ],
+        'icon-image': 'bar-15',
+        'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
         'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
         'text-offset': [0, 0.6],
         'text-anchor': 'top',
       },
-
-      // paint: {
-      //   'icon-translate': [100, 2],
-      // },
-      // paint: {
-      //   'circle-opacity': 0.4,
-      //   'circle-color': '#830300',
-      //   'circle-stroke-width': 2,
-      //   'circle-stroke-color': '#fff',
-      // },
-      // "circ"
-      //   "circle-radius": {
-      //         "property": "mag",
-      //         "base": 2.5,
-      //         "stops": [
-      //             [{zoom: 0,  value: 2}, 1],
-      //             [{zoom: 0,  value: 8}, 40],
-      //             [{zoom: 11, value: 2}, 10],
-      //             [{zoom: 11, value: 8}, 2400],
-      //             [{zoom: 20, value: 2}, 20],
-      //             [{zoom: 20, value: 8}, 6000]
-      //           "circle-radius-transition": {
-      //     "duration": 0
-      //   }
-      //         ]
-      //     }
-      // }
     })
+
+    // map.addLayer({
+    //   id: POINT_HOVER_LAYER_ID,
+    //   type: 'symbol',
+    //   source: SOURCE_ID,
+    //   filter: ['==', 'id', ''],
+    //   layout: {
+    //     'icon-image': 'fire-station-15',
+    //     'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
+    //     'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+    //     'text-offset': [0, 0.6],
+    //     'text-anchor': 'top',
+    //   },
+    // })
 
     type Event = mapboxgl.MapMouseEvent & {
       features?: mapboxgl.MapboxGeoJSONFeature[]
@@ -263,12 +195,22 @@ export const Map = ({
     let hoverId = null
     const setHovered = (e: Event, hover: boolean) => {
       map.getCanvas().style.cursor = hover ? 'pointer' : ''
+
+      // map.setFilter(POINT_HOVER_LAYER_ID, [
+      //   '==',
+      //   'id',
+      //   e.features[0].properties.id,
+      // ])
+
       // only one at a time
       if (hoverId != null) {
+        // map.setLayoutProperty(POINT_LAYER_ID, 'icon-image', 'mountain-15')
         mapSetFeature(map, hoverId, { hover: false })
         hoverId = null
       }
       if (hover) {
+        mapSetIconSelected(map, e.features[0].id)
+        // map.setLayoutProperty(POINT_LAYER_ID, 'icon-image', 'bar-15')
         hoverId = e.features[0].id
         mapSetFeature(map, hoverId, { hover: true })
       }
@@ -296,7 +238,6 @@ export const Map = ({
       map.off('mousemove', POINT_LAYER_ID, handleMouseMove)
       map.off('mouseleave', POINT_LAYER_ID, handleMouseLeave)
       map.removeLayer(POINT_LAYER_ID)
-      map.removeLayer(TEXT_LAYER_ID)
       map.removeSource(SOURCE_ID)
     }
   }, [map, features])
@@ -305,7 +246,11 @@ export const Map = ({
     if (!map) return
     if (!selected) return
     setActive(selected)
-  }, [map, selected])
+    mapSetIconSelected(
+      map,
+      features.findIndex((x) => x.id === selected)
+    )
+  }, [map, features, selected])
 
   return (
     <div
@@ -323,3 +268,90 @@ export const Map = ({
 }
 
 ///
+
+// paint: {
+//   'icon-translate': [100, 2],
+// },
+// paint: {
+//   'circle-opacity': 0.4,
+//   'circle-color': '#830300',
+//   'circle-stroke-width': 2,
+//   'circle-stroke-color': '#fff',
+// },
+// "circ"
+//   "circle-radius": {
+//         "property": "mag",
+//         "base": 2.5,
+//         "stops": [
+//             [{zoom: 0,  value: 2}, 1],
+//             [{zoom: 0,  value: 8}, 40],
+//             [{zoom: 11, value: 2}, 10],
+//             [{zoom: 11, value: 8}, 2400],
+//             [{zoom: 20, value: 2}, 20],
+//             [{zoom: 20, value: 8}, 6000]
+//           "circle-radius-transition": {
+//     "duration": 0
+//   }
+//         ]
+//     }
+// }
+// map.addLayer({
+//   id: POINT_LAYER_ID,
+//   type: 'circle',
+//   source: SOURCE_ID,
+
+//   paint: {
+//     // The feature-state dependent circle-radius expression will render
+//     // the radius size according to its magnitude when
+//     // a feature's hover state is set to true
+//     'circle-radius': [
+//       'case',
+//       ['boolean', ['feature-state', 'hover'], false],
+//       5,
+//       3,
+//     ],
+//     'circle-stroke-color': '#fff',
+//     'circle-stroke-width': 1,
+//     // The feature-state dependent circle-color expression will render
+//     // the color according to its magnitude when
+//     // a feature's hover state is set to true
+//     'circle-color': [
+//       'case',
+//       ['boolean', ['feature-state', 'active'], false],
+//       '#000',
+//       '#888',
+//     ],
+//   },
+
+//   // paint: {
+//   //   'icon-translate': [100, 2],
+//   // },
+//   // paint: {
+//   //   'circle-opacity': 0.4,
+//   //   'circle-color': '#830300',
+//   //   'circle-stroke-width': 2,
+//   //   'circle-stroke-color': '#fff',
+//   // },
+//   // "circ"
+//   //   "circle-radius": {
+//   //         "property": "mag",
+//   //         "base": 2.5,
+//   //         "stops": [
+//   //             [{zoom: 0,  value: 2}, 1],
+//   //             [{zoom: 0,  value: 8}, 40],
+//   //             [{zoom: 11, value: 2}, 10],
+//   //             [{zoom: 11, value: 8}, 2400],
+//   //             [{zoom: 20, value: 2}, 20],
+//   //             [{zoom: 20, value: 8}, 6000]
+//   //           "circle-radius-transition": {
+//   //     "duration": 0
+//   //   }
+//   //         ]
+//   //     }
+//   // }
+// })
+
+// '\n',
+// {},
+// ['downcase', ['get', 'subtitle']],
+// { 'font-scale': 0.6 },
