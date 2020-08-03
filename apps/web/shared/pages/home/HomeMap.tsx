@@ -19,8 +19,8 @@ import React, {
   useState,
 } from 'react'
 
-import { frameWidthMax, searchBarHeight, zIndexMap } from '../../constants'
-import { getWindowHeight, getWindowWidth } from '../../helpers/getWindow'
+import { searchBarHeight, zIndexMap } from '../../constants'
+import { getWindowHeight } from '../../helpers/getWindow'
 import {
   isHomeState,
   isRestaurantState,
@@ -33,12 +33,12 @@ import { Map } from '../../views/Map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
 import { snapPoints } from './HomeSmallDrawer'
-import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useLastValueWhen } from './useLastValueWhen'
+import { useMapSize } from './useMapSize'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
-export const HomeMap = memo(function HomeMap() {
+export default memo(function HomeMap() {
   const [restaurants, setRestaurantsFast] = useState<Restaurant[]>([])
   const [
     restaurantDetail,
@@ -198,15 +198,6 @@ function centerMapTo(p: { map: mapboxgl.Map; center: LngLat; span: LngLat }) {
     return
   }
   centerMapToRegion(p)
-}
-
-export const useMapSize = (isSmall: boolean) => {
-  const drawerWidth = useHomeDrawerWidth(Infinity)
-  const width = isSmall
-    ? getWindowWidth()
-    : Math.min(getWindowWidth(), frameWidthMax - 20) - drawerWidth + 300
-  let paddingLeft = isSmall ? 0 : 300 - 20
-  return { width, paddingLeft, drawerWidth }
 }
 
 const getStateLocation = (state: HomeStateItem) => ({

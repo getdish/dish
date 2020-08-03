@@ -5,8 +5,8 @@ import { Map, RefreshCcw } from 'react-feather'
 import { searchBarHeight, zIndexDrawer } from '../../constants'
 import { useOvermind } from '../../state/om'
 import { OverlayLinkButton } from '../../views/ui/OverlayLinkButton'
-import { useMapSize } from './HomeMap'
 import { mapZoomToMedium, useZoomLevel } from './mapHelpers'
+import { useMapSize } from './useMapSize'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export const HomeMapControlsUnderlay = memo(() => {
