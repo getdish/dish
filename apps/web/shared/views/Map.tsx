@@ -1,7 +1,9 @@
 import { series } from '@dish/async'
 import { LngLat } from '@dish/graph'
+import _ from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { useEffect, useRef, useState } from 'react'
+import { Dimensions } from 'react-native'
 
 const marker = require('../assets/map-marker.png').default
 
@@ -85,6 +87,19 @@ export const Map = ({
       }
     }
   }
+
+  // window resize
+  useEffect(() => {
+    if (!map) return
+    const handleResize = _.debounce(() => {
+      map.resize()
+    }, 300)
+    Dimensions.addEventListener('change', handleResize)
+    return () => {
+      handleResize.cancel()
+      Dimensions.removeEventListener('change', handleResize)
+    }
+  }, [map])
 
   useEffect(() => {
     if (!map) return

@@ -1,5 +1,6 @@
 import * as _ from 'lodash'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { Dimensions } from 'react-native'
 
 import { useForceUpdate } from './useForceUpdate'
 
@@ -7,14 +8,24 @@ import { useForceUpdate } from './useForceUpdate'
 type Size = [number, number]
 
 const idFn = (_) => _
-const getWindowSize = (): Size => [window.innerWidth, window.innerHeight]
+const getWindowSize = (): Size => [
+  Dimensions.get('window').width,
+  Dimensions.get('window').height,
+]
+
+// singleton for performance
 
 class WindowSizeStore {
   listeners = new Set<Function>()
   size = getWindowSize()
 
   constructor() {
-    window.addEventListener('resize', this.update)
+    Dimensions.addEventListener('change', this.update)
+  }
+
+  unmount() {
+    Dimensions.removeEventListener('change', this.update)
+    this.update.cancel()
   }
 
   update = _.throttle(() => {
