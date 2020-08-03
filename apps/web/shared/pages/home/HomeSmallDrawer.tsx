@@ -151,6 +151,9 @@ export const HomeSmallDrawer = (props: { children: any }) => {
               width={60}
               height={8}
               borderRadius={100}
+              hoverStyle={{
+                backgroundColor: 'rgba(200,200,200,0.65)',
+              }}
             />
           </VStack>
         </View>

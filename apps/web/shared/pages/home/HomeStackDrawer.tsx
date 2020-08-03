@@ -3,7 +3,6 @@ import React, { Suspense } from 'react'
 
 import {
   drawerBorderRadius,
-  drawerPad,
   drawerWidthMax,
   searchBarHeight,
 } from '../../constants'
@@ -30,7 +29,7 @@ export const HomeStackDrawer = ({
       borderRadius={drawerBorderRadius}
       overflow="visible"
       marginTop={isSmall ? 0 : searchBarHeight}
-      maxWidth={drawerWidthMax}
+      maxWidth={isSmall ? '100%' : drawerWidthMax}
       minWidth="100%"
       justifyContent="flex-end"
     >
@@ -53,7 +52,7 @@ export const HomeStackDrawer = ({
         borderRadius={drawerBorderRadius}
         overflow="hidden"
         shadowRadius={isSmall ? 5 : 10}
-        maxWidth={drawerWidthMax}
+        maxWidth={isSmall ? '100%' : drawerWidthMax}
         shadowColor="rgba(0,0,0,0.1)"
         backgroundColor="#fff"
         {...props}
