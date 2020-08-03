@@ -1,5 +1,8 @@
+import { CITY_LIST } from '../utils'
 import { GrubHub } from './GrubHub'
 ;(async () => {
   const gh = new GrubHub()
-  await gh.runOnWorker('allForCity', ['San Francisco, CA'])
+  for (const city in CITY_LIST) {
+    gh.runOnWorker('allForCity', [city])
+  }
 })()

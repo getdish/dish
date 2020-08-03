@@ -20,6 +20,14 @@ export const sanfran = {
   },
 }
 
+export const CITY_LIST = [
+  //'San Francisco, CA',
+  'Los Angeles, CA',
+  'Chicago, Illinois',
+  'Tuscon, Arizona',
+  'Istanbul, Turkey',
+]
+
 export class DB {
   pool: Pool
   constructor(config: object) {

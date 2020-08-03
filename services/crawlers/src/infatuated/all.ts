@@ -1,5 +1,8 @@
+import { CITY_LIST } from '../utils'
 import { Infatuated } from './Infatuated'
 ;(async () => {
   const i = new Infatuated()
-  i.runOnWorker('allForCity', ['San Francisco, CA'])
+  for (const city in CITY_LIST) {
+    i.runOnWorker('allForCity', [city])
+  }
 })()

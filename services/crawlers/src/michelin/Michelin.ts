@@ -37,8 +37,8 @@ export class Michelin extends WorkerJob {
     console.log('Starting Michelin crawler. Using domain: ' + MICHELIN_DOMAIN)
   }
 
-  async allForRegion(region: string, page: number = 0) {
-    const [uri, data] = this.buildRequest(region, page)
+  async all(page: number = 0) {
+    const [uri, data] = this.buildRequest(page)
     const response = await axios.post(uri as string, data)
     const restaurants = response.data.results[0].hits
     for (const restaurant of restaurants) {
@@ -49,11 +49,11 @@ export class Michelin extends WorkerJob {
       }
     }
     if (restaurants.length > 0) {
-      await this.runOnWorker('allForRegion', [region, page + 1])
+      await this.runOnWorker('all', [page + 1])
     }
   }
 
-  buildRequest(region: string, page: number) {
+  buildRequest(page: number) {
     const algolia =
       '/1/indexes/*/queries?x-algolia-agent=Algolia%20for%20JavaScript%20(3.35.1)' +
       '%3B%20Browser%20(lite)%3B%20instantsearch.js%20(4.1.1)%3B%20JS%20Helper%20' +
@@ -65,7 +65,7 @@ export class Michelin extends WorkerJob {
           indexName: 'prod-restaurants-en',
           params:
             `aroundLatLngViaIP=true&aroundRadius=all&filters=` +
-            `sites%3A${region}%20AND%20status%3APublished&hitsPerPage=40` +
+            `status%3APublished&hitsPerPage=40` +
             `&attributesToRetrieve=%5B%22_geoloc%22%2C%22city_name%22%2C%22country_name` +
             `%22%2C%22cuisine_type%22%2C%22guide_year%22%2C%22image%22%2C%22` +
             `michelin_award%22%2C%22name%22%2C%22offers%22%2C%22offers_size` +
@@ -93,6 +93,7 @@ export class Michelin extends WorkerJob {
       data.name,
       data._highlightResult.street.value
     )
+    console.log('MICHELIN: crawling ' + data.name)
     const id = await scrapeInsert({
       source: 'michelin',
       restaurant_id: canonical.id,

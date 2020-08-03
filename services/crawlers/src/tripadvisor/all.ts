@@ -1,5 +1,8 @@
+import { CITY_LIST } from '../utils'
 import { Tripadvisor } from './Tripadvisor'
 ;(async () => {
   const t = new Tripadvisor()
-  await t.runOnWorker('allForCity', ['San Francisco, CA'])
+  for (const city in CITY_LIST) {
+    t.runOnWorker('allForCity', [city])
+  }
 })()
