@@ -1,8 +1,8 @@
 WITH by_country AS (
   SELECT
-    (SELECT DISTINCT t.name) AS country,
-    (SELECT icon FROM tag WHERE name = (SELECT DISTINCT t.name) LIMIT 1) AS icon,
-    (SELECT id FROM tag WHERE name = (SELECT DISTINCT t.name) LIMIT 1) AS tag_id,
+    (SELECT DISTINCT cuisine_tag.name) AS country,
+    (SELECT icon FROM tag WHERE id = (SELECT DISTINCT cuisine_tag.id) LIMIT 1) AS icon,
+    (SELECT id FROM tag WHERE id = (SELECT DISTINCT cuisine_tag.id) LIMIT 1) AS tag_id,
     COUNT(restaurant.id) AS frequency,
     AVG(restaurant.rating) AS avg_rating,
     (
@@ -12,14 +12,27 @@ WITH by_country AS (
           'image', (
             SELECT hot_tags.default_images->0
           ),
-          'rating', (
-            SELECT AVG(rating) FROM restaurant
-              WHERE tag_names @> to_jsonb(hot_tags.tag_slug)
-              AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
-              AND rating IS NOT NULL
-          ),
+          'slug', tag_slug,
           'count', matching_restaurants_count,
-          'slug', tag_slug
+          'avg_rating', (
+            SELECT AVG(trbda_rt.rating) FROM restaurant trbda
+            JOIN restaurant_tag trbda_rt ON trbda_rt.restaurant_id = trbda.id
+              WHERE ST_DWithin(trbda.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
+              AND trbda_rt.tag_id = hot_tags.id
+              AND trbda_rt.rating IS NOT NULL
+          ),
+          'best_restaurants', (SELECT json_agg(t)
+            FROM (
+              SELECT trbdb.slug, AVG(trbdb_rt.rating) as dish_rating FROM restaurant trbdb
+              JOIN restaurant_tag trbdb_rt ON trbdb_rt.restaurant_id = trbdb.id
+                WHERE ST_DWithin(trbdb.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
+                AND trbdb_rt.tag_id = hot_tags.id
+                AND trbdb_rt.rating IS NOT NULL
+              GROUP BY trbdb.id
+              ORDER BY AVG(trbdb_rt.rating) DESC
+              LIMIT 5
+            ) t
+          )
         )
       ) FROM (
         SELECT *,
@@ -27,7 +40,6 @@ WITH by_country AS (
             SELECT COUNT(restaurant.id) FROM restaurant
               JOIN restaurant_tag ON restaurant_id = restaurant.id
               WHERE tags_by_cuisine.id = restaurant_tag.tag_id
-                AND restaurant.id = restaurant_tag.restaurant_id
                 AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
                 AND restaurant.rating > 4
           ) AS matching_restaurants_count
@@ -37,7 +49,7 @@ WITH by_country AS (
             REPLACE(LOWER(tag.name), ' ', '-') AS tag_slug
             FROM tag
             WHERE "parentId" IN (
-              SELECT id FROM tag WHERE tag.name = (SELECT DISTINCT t.name)
+              SELECT id FROM tag WHERE tag.id = (SELECT DISTINCT cuisine_tag.id)
             )
             AND tag.type != 'category'
             AND tag.frequency < 4
@@ -49,18 +61,21 @@ WITH by_country AS (
     ) as dishes,
     (
       SELECT json_agg(t) FROM (
-        SELECT id, name, slug, rating FROM restaurant
-        WHERE tag_names @> to_jsonb(LOWER((SELECT DISTINCT t.name)))
-        ORDER BY rating DESC NULLS LAST
+        SELECT trbc.id, trbc.name, trbc.slug, trbc.rating FROM restaurant trbc
+        JOIN restaurant_tag trbc_rt ON trbc_rt.restaurant_id = trbc.id
+          WHERE ST_DWithin(trbc.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
+          AND trbc_rt.tag_id = (SELECT DISTINCT cuisine_tag.id)
+        GROUP BY trbc.id
+        ORDER BY AVG(trbc.rating) DESC NULLS LAST
         LIMIT 6
       ) t
     ) as top_restaurants
   FROM restaurant
-  INNER JOIN restaurant_tag rt ON restaurant.id = rt.restaurant_id
-  INNER JOIN tag t ON rt.tag_id = t.id
-  WHERE t.type = 'country'
+  JOIN restaurant_tag rt ON restaurant.id = rt.restaurant_id
+  JOIN tag cuisine_tag ON rt.tag_id = cuisine_tag.id
+  WHERE cuisine_tag.type = 'country'
     AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
-  GROUP BY t.name
+  GROUP BY cuisine_tag.id
 )
 
 SELECT json_agg(t) FROM (
