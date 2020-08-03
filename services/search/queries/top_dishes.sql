@@ -23,7 +23,7 @@ WITH by_country AS (
           ),
           'best_restaurants', (SELECT json_agg(t)
             FROM (
-              SELECT trbdb.slug, AVG(trbdb_rt.rating) as dish_rating FROM restaurant trbdb
+              SELECT trbdb.id, trbdb.name, trbdb.slug, AVG(trbdb_rt.rating) as dish_rating FROM restaurant trbdb
               JOIN restaurant_tag trbdb_rt ON trbdb_rt.restaurant_id = trbdb.id
                 WHERE ST_DWithin(trbdb.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
                 AND trbdb_rt.tag_id = hot_tags.id
