@@ -364,7 +364,7 @@ const RestaurantPeek = memo(
       tag_names,
       max: 5,
     })
-    const dishSize = size === 'lg' ? 150 : 140
+    const dishSize = size === 'lg' ? 140 : 120
     const [isLoaded, setIsLoaded] = useState(false)
     const paddingLeftSmall =
       (0.75 + (1 / (drawerWidth / 950 + 0.0001)) * 0.1) * drawerWidth
@@ -394,7 +394,7 @@ const RestaurantPeek = memo(
           <HStack
             pointerEvents="auto"
             padding={20}
-            paddingTop={40}
+            paddingTop={50}
             paddingBottom={50}
             height={dishSize + 50 + 40}
             spacing={spacing}

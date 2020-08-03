@@ -1,3 +1,7 @@
+small:
+
+- Fix <Dish /> type remove TopCuisineItem weird type and change to tag, but maybe split into to <DishFromTag />, <DishFromRestaurant /> or similar
+
 ## July
 
 - writing

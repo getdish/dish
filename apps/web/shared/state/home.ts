@@ -1057,8 +1057,6 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     })
   }
 
-  debugger
-
   if (!om.actions.home.getShouldNavigate(nextState)) {
     updateTags()
     return false

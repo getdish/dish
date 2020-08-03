@@ -23,11 +23,16 @@ export const HomeDeliveryFilterButtons = ({
   )
   const noneActive = sources.every((x) => !activeTagIds[x])
 
+  if (!sources.length) {
+    return null
+  }
+
   return (
     <HStack
-      marginTop={62}
-      marginBottom={-62}
+      marginTop={63}
+      marginBottom={-63}
       spacing={10}
+      paddingHorizontal={20}
       backgroundColor="#fff"
       borderBottomColor="#eee"
       borderBottomWidth={1}
@@ -49,6 +54,8 @@ export const HomeDeliveryFilterButtons = ({
             flex={1}
             isActive={noneActive ? true : isActive}
             padding={5}
+            paddingBottom={3}
+            minWidth={120}
             borderRadius={100}
             spacing={5}
             cursor="pointer"
@@ -62,7 +69,7 @@ export const HomeDeliveryFilterButtons = ({
                   width: 16,
                   height: 16,
                   borderRadius: 100,
-                  margin: -3,
+                  margin: -4,
                 }}
               />
               <Text fontSize={13} fontWeight="500">
