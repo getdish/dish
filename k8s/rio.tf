@@ -32,6 +32,7 @@ resource "null_resource" "rio-setup" {
 
   provisioner "local-exec" {
     command = <<EOC
+set -e
 echo "Applying Rio YAML (to install Rio) ..."
 
 kubectl apply -f ${data.local_file.rio-yaml.filename}
@@ -50,6 +51,7 @@ resource "null_resource" "rio-custom-domain" {
 
   provisioner "local-exec" {
     command = <<EOC
+set -e
 echo "Applying Rio custom domain YAML..."
 
 kubectl apply -f ${data.local_file.rio-custom-domain.filename}

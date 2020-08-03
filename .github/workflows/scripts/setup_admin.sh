@@ -35,4 +35,4 @@ DO_KEY=$(\
     | tail -n1 | cut -c 21- | tr -d '"'\
 )
 doctl auth init -t $DO_KEY
-doctl kubernetes cluster kubeconfig save dish
+doctl kubernetes cluster kubeconfig save $CURRENT_DISH_CLUSTER

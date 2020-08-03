@@ -31,7 +31,7 @@ export -f build
 ./k8s/etc/docker_registry_gc.sh
 
 echo "Waiting for buildkit connection..."
-kubectl port-forward svc/buildkitd 1234:1234 -n docker-registry &
+kubectl port-forward svc/buildkitd 1234:1234 -n docker &
 while ! nc -z localhost 1234; do
   sleep 0.1
 done

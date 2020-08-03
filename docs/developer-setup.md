@@ -198,7 +198,7 @@ All of these should be installable through your OS's standard package manager (B
 - [`doctl`](https://github.com/digitalocean/doctl): Talking to the Digital Ocean API.
 - [`kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl/): Talking to the Kubernetes API.
 - [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html): Infrastructure As Code. Talking to the k8s API.
-- [Helm](https://helm.sh/docs/intro/install/) (v2.6.1): Kubernetes package manager.
+- [Helm](https://helm.sh/docs/intro/install/): Kubernetes package manager.
 
 #### Authorizing `doctl`
 
@@ -209,17 +209,9 @@ All of these should be installable through your OS's standard package manager (B
 
 - `./etc/terraform_init.sh` Connects to DO Spaces to save state. Downloads modules
 - `terraform apply -target=module.cluster` Just build the bare compute resources
-- `doctl kubernetes cluster kubeconfig save dish` Sets up `kubectl`
-- `./etc/helm_fix.sh` Applies Helm (k8s package manager) fix.
+- `doctl kubernetes cluster kubeconfig save dish[blue/green]` Sets up `kubectl`
 - `terraform apply` Adds all the remaining resources
 - `rio up --answers env.enc.production.yaml` Bring up the main Dish services using Rio
-
-Currently there doesn't seem to be an easy way to commit sub domain mappings, so after
-Rio is up:
-
-- `rio domain register hasura.rio.dishapp.com hasura`
-- `rio domain register lab.dishapp.com lab`
-- `rio domain register worker-ui.rio.dishapp.com worker-ui`
 
 #### Connecting to an existing cluster
 
@@ -235,6 +227,18 @@ A platform-specific load balancer will be created outside the Kubernetes cluster
 
 In order to synchronise shared credentials between Terraform and Rio, Terraform's deploy command must use `bin/yaml_to_env.sh` to provide the necessary ENV vars. So the deployment command, from the `k8s/` path is `eval $(../bin/yaml_to_env.sh) terraform apply`.
 
+#### Notes on creating a new cluster
+When setting up a Blue/Green cluster, I found that:
+  * the Rio domains in `k8s/yaml/rio-app-domains.yaml` and `k8s/yaml/rio-custom-domain.yaml`
+    didn't get applied, I added a `set -e`, so hopefully you notice next time.
+  * `nodeSelector` isn't powerful enough to prevent the CI node getting full of other pods. But
+    DO still haven't developed native support for taints/tolerations. Watch:
+    https://github.com/digitalocean/DOKS/issues/3
+  * `k8s/etc/hot_deploy.sh` for each service needed to be run. This could be done by doing
+    a Github deploy too.
+  * In Hasura's console, I needed to click the "Reload metadata" button to get Hasura consistent
+    with the DB again. I have no idea why.
+
 ### What's on our cluster?
 
 #### Rio
@@ -248,15 +252,11 @@ It is possible to deploy cluster infrastructure like databases in Rio, but in th
 The magic Rio command for deploying everything is:
 `rio up --answers env.enc.production.yaml`. But you will likely never need to run it as deployment is automated based on CI builds passing tests.
 
-#### Current public services exposed by Rio
-
-- https://hasura.rio.dishapp.com GraphQL service
-- https://worker-ui.rio.dishapp.com View current worker jobs, retries, failures, etc
-- https://lab.dishapp.com React app for experimental ideas
-
 #### Databases
 
-Postgres and Redis are installed using Helm charts. Admin UIs for each coming soon...
+The main DB is Postgres (under the `postgres-ha` namespace), it is setup in High Availability
+mode with replication and failover. There is also another Postgres DB that just keeps our
+scrape data. And Redis is installed to keep worker jobs.
 
 #### Nginx Ingress
 
@@ -273,10 +273,13 @@ the cluster itself and the various apps and services running on the cluster. The
 to Prometheus is via its Grafana UI: https://grafana.k8s.dishapp.com The username is `admin`
 and the password is in `env.enc.production.yaml`
 
-#### Private Docker registry
+#### Private Docker registry and Buildkitd
 
 This allows us to publish and pull private Docker images. Available at:
 https://docker.k8s.dishapp.com Username and password available in `env.enc.production.yaml`.
+
+Buildkit builds images remotely on our cluster. It's mostly used by CI. But you can use
+with the `k8s/etc/hot_deploy.sh` script
 
 #### Sentry error tracking and management
 

@@ -1,12 +1,42 @@
+resource "kubernetes_namespace" "sentry" {
+  metadata {
+    name = "sentry"
+  }
+}
+
+data "helm_repository" "sentry" {
+  name = "sentry"
+  url  = "https://sentry-kubernetes.github.io/charts"
+}
+
+resource "helm_release" "sentry-k8s-erros" {
+  name       = "sentry-k8s-errors"
+  namespace  = "sentry"
+  repository = "sentry"
+  chart      = "sentry-kubernetes"
+  version    = "0.3.1"
+
+  set {
+    name ="sentry.dsn"
+    value = var.K8S_DSN
+  }
+}
+
 resource "helm_release" "sentry" {
-  name      = "sentry"
-  namespace = "sentry"
-  chart     = "stable/sentry"
-  version = "4.2.4"
+  name       = "sentry"
+  namespace  = "sentry"
+  repository = "sentry"
+  chart      = "sentry"
+  version    = "4.7.2"
 
   set {
     name ="config.configYml"
     value = file("yaml/sentry.yaml")
+  }
+
+  set {
+    name ="postgresql.postgresqlPassword"
+    value = var.SENTRY_PG_PASS
   }
 
   set {
@@ -20,27 +50,42 @@ resource "helm_release" "sentry" {
   }
 
   set {
-    name  = "email.host"
-    value = "smtp.gmail.com"
-  }
-
-  set {
-    name  = "email.port"
-    value = "587"
-  }
-
-  set {
-    name  = "email.user"
+    name  = "user.email"
     value = "teamdishapp@gmail.com"
   }
 
   set {
-    name  = "email.password"
+    name  = "user.password"
+    value = var.SENTRY_USER_PASS
+  }
+
+  set {
+    name  = "mail.backend"
+    value = "smtp"
+  }
+
+  set {
+    name  = "mail.host"
+    value = "smtp.gmail.com"
+  }
+
+  set {
+    name  = "mail.port"
+    value = "587"
+  }
+
+  set {
+    name  = "mail.username"
+    value = "teamdishapp@gmail.com"
+  }
+
+  set {
+    name  = "mail.password"
     value = var.GMAIL_APP_PASSWORD
   }
 
   set {
-    name  = "email.use_tls"
+    name  = "mail.useTls"
     value = "true"
   }
 }
@@ -63,7 +108,7 @@ resource "kubernetes_ingress" "sentry-ingress" {
       secret_name = "sentry-tls"
     }
     backend {
-      service_name = "sentry"
+      service_name = "sentry-web"
       service_port = 9000
     }
     rule {
@@ -72,7 +117,7 @@ resource "kubernetes_ingress" "sentry-ingress" {
         path {
           path = "/*"
           backend {
-            service_name = "sentry"
+            service_name = "sentry-web"
             service_port = 9000
           }
         }
@@ -81,13 +126,3 @@ resource "kubernetes_ingress" "sentry-ingress" {
   }
 }
 
-resource "helm_release" "k8s-errors" {
-  name      = "sentry-k8s"
-  namespace = "sentry"
-  chart     = "incubator/sentry-kubernetes"
-
-  set {
-    name ="sentry.dsn"
-    value = var.K8S_DSN
-  }
-}

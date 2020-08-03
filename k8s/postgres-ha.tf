@@ -4,11 +4,6 @@ resource "kubernetes_namespace" "postgres-ha" {
   }
 }
 
-data "helm_repository" "bitnami" {
-  name = "bitnami"
-  url  = "https://charts.bitnami.com/bitnami"
-}
-
 resource "helm_release" "postgres-ha" {
   name = "postgres-ha"
   namespace = "postgres-ha"

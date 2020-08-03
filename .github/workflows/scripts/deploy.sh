@@ -7,7 +7,7 @@ PATH=$PATH:$HOME/bin
 
 echo "Deploying production branch to production..."
 
-kubectl port-forward svc/postgres-postgresql 15432:5432 -n postgres &
+kubectl port-forward svc/postgres-ha-postgresql-ha-pgpool 15432:5432 -n postgres &
 sleep 5
 ./services/hasura/etc/migrate.sh
 

@@ -3,7 +3,7 @@
 # ---
 
 variable "cert_manager_version" {
-  default = "0.15"
+  default = "0.16"
 }
 
 data "local_file" "cert_manager_setup" {
@@ -13,6 +13,12 @@ data "local_file" "cert_manager_setup" {
 data "helm_repository" "jetstack" {
   name = "jetstack"
   url  = "https://charts.jetstack.io"
+}
+
+resource "kubernetes_namespace" "cert-manager" {
+  metadata {
+    name = "cert-manager"
+  }
 }
 
 resource "helm_release" "cert-manager" {

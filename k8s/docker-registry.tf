@@ -1,14 +1,14 @@
-resource "kubernetes_namespace" "docker-registry" {
+resource "kubernetes_namespace" "docker" {
   metadata {
-    name = "docker-registry"
+    name = "docker"
   }
 }
 
 resource "helm_release" "docker-registry" {
   name = "docker-registry"
-  namespace = "docker-registry"
+  namespace = "docker"
   chart = "stable/docker-registry"
-  version = "1.9.3"
+  version = "1.9.4"
 
   set {
     name ="config.configYml"
@@ -34,7 +34,7 @@ resource "helm_release" "docker-registry" {
 resource "kubernetes_secret" "docker-registry-auth" {
   metadata {
     name      = "docker-registry-auth"
-    namespace = "docker-registry"
+    namespace = "docker"
   }
 
   data = {
@@ -47,7 +47,7 @@ resource "kubernetes_secret" "docker-registry-auth" {
 resource "kubernetes_ingress" "docker-registry-ingress" {
   metadata {
     name = "docker-registry-ingress"
-    namespace = "docker-registry"
+    namespace = "docker"
     annotations = {
       "kubernetes.io/ingress.class" = "nginx"
       "cert-manager.io/cluster-issuer": "letsencrypt-prod"
@@ -81,44 +81,5 @@ resource "kubernetes_ingress" "docker-registry-ingress" {
         }
       }
     }
-  }
-}
-
-# Role permissions for Docker Registry management
-resource "kubernetes_role" "docker_registry_role" {
-  metadata {
-    name = "docker_registry_role"
-    namespace = "docker-registry"
-  }
-
-  rule {
-    api_groups = [""]
-    resources  = ["pods/exec"]
-    verbs      = ["create"]
-  }
-
-  rule {
-    api_groups = [""]
-    resources  = ["pods"]
-    verbs      = ["get", "list"]
-  }
-}
-
-resource "kubernetes_role_binding" "docker_registry_binding" {
-  metadata {
-    name = "docker_registry_binding"
-    namespace = "docker-registry"
-  }
-
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "Role"
-    name      = "docker_registry_role"
-  }
-
-  subject {
-    api_group = ""
-    kind = "ServiceAccount"
-    name = "ci"
   }
 }

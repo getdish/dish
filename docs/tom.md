@@ -27,9 +27,11 @@
 - Crawlers
   - Postmates / Caviar
 
-- OR prices
+✔️  OR prices
 - Start on text summary
-
+- Add tag.description
+- Find/fix opening_hours bug
+    
 ✔️ : Done
 👷: Currently or will actively work on
 ⚠️ : Not prioritising

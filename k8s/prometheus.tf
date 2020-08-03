@@ -3,11 +3,17 @@
 # and on dashboards.
 # And there's also an alert manager here to generate various kinds of alerts.
 
+resource "kubernetes_namespace" "monitoring" {
+  metadata {
+    name = "monitoring"
+  }
+}
+
 resource "helm_release" "prometheus-operator" {
   name = "prometheus-operator"
   namespace = "monitoring"
   chart = "stable/prometheus-operator"
-  version = "8.13.12"
+  version = "9.3.0"
 
   values = [
     file("yaml/prometheus.yaml")

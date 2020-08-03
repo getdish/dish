@@ -8,6 +8,7 @@ env:
   DOCKER_BUILDKIT: 1
   DISH_ENV: "test"
   DISH_REGISTRY: "docker.k8s.dishapp.com"
+  CURRENT_DISH_CLUSTER: "dish-blue"
   HASURA_ENDPOINT: "http://localhost:8080"
   GITCRYPT_KEY: ${{ secrets.GITCRYPT_KEY }}
 

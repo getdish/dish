@@ -9,9 +9,9 @@ provider "digitalocean" {
 # The main definition of the Kubernetes cluster
 # !! Changing some of these can delete and recreate the entire cluster without warning !!
 resource "digitalocean_kubernetes_cluster" "dish" {
-  name    = "dish"
+  name    = "dish-blue"
   region  = "sfo2"
-  version = "1.16.8-do.0"
+  version = "1.18.6-do.0"
 
   # Node pools are just a way of grouping VMs
   node_pool {

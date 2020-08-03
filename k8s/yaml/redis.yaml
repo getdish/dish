@@ -1,3 +1,4 @@
-master.nodeSelector:
-  "doks.digitalocean.com/node-pool": "dish-ancillary-pool"
+master:
+  nodeSelector:
+    "doks.digitalocean.com/node-pool": "dish-ancillary-pool"
 

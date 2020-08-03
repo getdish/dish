@@ -1,8 +1,15 @@
+resource "kubernetes_namespace" "redis" {
+  metadata {
+    name = "redis"
+  }
+}
+
 resource "helm_release" "redis" {
   name = "redis"
   namespace = "redis"
-  chart = "stable/redis"
-  version = "10.5.7"
+  repository = "redis"
+  chart = "bitnami/redis"
+  version = "10.7.12"
 
   set {
     name ="config.configYml"

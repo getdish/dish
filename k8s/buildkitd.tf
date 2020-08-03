@@ -1,7 +1,7 @@
 resource "kubernetes_deployment" "buildkitd" {
   metadata {
     name = "buildkitd"
-    namespace = "docker-registry"
+    namespace = "docker"
   }
   spec {
     selector {
@@ -90,7 +90,7 @@ resource "kubernetes_deployment" "buildkitd" {
 resource "kubernetes_config_map" "buildkitd-config" {
   metadata {
     name = "buildkitd-config"
-    namespace = "docker-registry"
+    namespace = "docker"
   }
   data = {
     "config.json" = var.DOCKER_CONFIG_JSON
@@ -100,7 +100,7 @@ resource "kubernetes_config_map" "buildkitd-config" {
 resource "kubernetes_service" "buildkitd" {
   metadata {
     name = "buildkitd"
-    namespace = "docker-registry"
+    namespace = "docker"
   }
 
   spec {
