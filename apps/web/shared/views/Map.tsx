@@ -57,20 +57,42 @@ export const Map = ({
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
   const internal = useRef({ active: null })
 
-  const setActive = (id: string | null) => {
+  const setActive = (internalId: number) => {
     const cur = internal.current.active
     if (cur != null) {
-      mapSetFeature(map, id, { active: false })
+      mapSetFeature(map, internalId, { active: false })
     }
-    if (id) {
-      internal.current.active = id
-      mapSetFeature(map, id, { active: true })
-      const feature = features[+id]
+    if (internalId > -1) {
+      internal.current.active = internalId
+      mapSetFeature(map, internalId, { active: true })
+
+      map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', internalId])
+
+      map.setLayoutProperty(POINT_LAYER_ID, 'symbol-sort-key', [
+        'match',
+        ['id'],
+        internalId,
+        -1,
+        ['get', 'id'],
+      ])
+      // internalId, {
+      //   : -100,
+      // })
+
+      const feature = features[+internalId]
       if (feature) {
         onSelect?.(feature.properties.id)
       }
     }
   }
+
+  useEffect(() => {
+    if (!map) return
+    if (!selected) return
+    const index = features.findIndex((x) => x.properties.id === selected)
+    mapSetIconSelected(map, index)
+    setActive(index)
+  }, [map, features, selected])
 
   useEffect(() => {
     if (!mapNode.current) return
@@ -160,32 +182,31 @@ export const Map = ({
       generateId: true,
     })
 
+    const layout: mapboxgl.AnyLayout = {
+      'icon-image': 'bar-15',
+      'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
+      'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+      'text-offset': [0, 0.6],
+      'text-anchor': 'top',
+    }
+
     map.addLayer({
       id: POINT_LAYER_ID,
       type: 'symbol',
       source: SOURCE_ID,
-      layout: {
-        'icon-image': 'bar-15',
-        'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
-        'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-        'text-offset': [0, 0.6],
-        'text-anchor': 'top',
-      },
+      layout,
     })
 
-    // map.addLayer({
-    //   id: POINT_HOVER_LAYER_ID,
-    //   type: 'symbol',
-    //   source: SOURCE_ID,
-    //   filter: ['==', 'id', ''],
-    //   layout: {
-    //     'icon-image': 'fire-station-15',
-    //     'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
-    //     'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-    //     'text-offset': [0, 0.6],
-    //     'text-anchor': 'top',
-    //   },
-    // })
+    map.addLayer({
+      id: POINT_HOVER_LAYER_ID,
+      type: 'symbol',
+      source: SOURCE_ID,
+      filter: ['==', 'id', ''],
+      layout: {
+        ...layout,
+        'icon-image': 'heart-15',
+      },
+    })
 
     type Event = mapboxgl.MapMouseEvent & {
       features?: mapboxgl.MapboxGeoJSONFeature[]
@@ -196,12 +217,6 @@ export const Map = ({
     const setHovered = (e: Event, hover: boolean) => {
       map.getCanvas().style.cursor = hover ? 'pointer' : ''
 
-      // map.setFilter(POINT_HOVER_LAYER_ID, [
-      //   '==',
-      //   'id',
-      //   e.features[0].properties.id,
-      // ])
-
       // only one at a time
       if (hoverId != null) {
         // map.setLayoutProperty(POINT_LAYER_ID, 'icon-image', 'mountain-15')
@@ -209,9 +224,13 @@ export const Map = ({
         hoverId = null
       }
       if (hover) {
-        mapSetIconSelected(map, e.features[0].id)
+        const id = e.features[0].id
+        console.log('filter to show', id)
+        console.log('map', id, map)
+        // map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', id])
+        mapSetIconSelected(map, id)
         // map.setLayoutProperty(POINT_LAYER_ID, 'icon-image', 'bar-15')
-        hoverId = e.features[0].id
+        hoverId = id
         mapSetFeature(map, hoverId, { hover: true })
       }
     }
@@ -226,7 +245,7 @@ export const Map = ({
     }
 
     const handleMouseClick: Listener = (e) => {
-      setActive(`${e.features[0].id}`)
+      setActive(+e.features[0].id)
     }
 
     map.on('click', POINT_LAYER_ID, handleMouseClick)
@@ -238,19 +257,10 @@ export const Map = ({
       map.off('mousemove', POINT_LAYER_ID, handleMouseMove)
       map.off('mouseleave', POINT_LAYER_ID, handleMouseLeave)
       map.removeLayer(POINT_LAYER_ID)
+      map.removeLayer(POINT_HOVER_LAYER_ID)
       map.removeSource(SOURCE_ID)
     }
   }, [map, features])
-
-  useEffect(() => {
-    if (!map) return
-    if (!selected) return
-    setActive(selected)
-    mapSetIconSelected(
-      map,
-      features.findIndex((x) => x.id === selected)
-    )
-  }, [map, features, selected])
 
   return (
     <div
