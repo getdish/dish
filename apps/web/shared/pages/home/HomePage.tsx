@@ -1,3 +1,4 @@
+import { AbsoluteVStack, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 
 import { ErrorBoundary } from '../../views/ErrorBoundary'
@@ -9,11 +10,23 @@ import { HomeMapControlsUnderlay } from './HomeMapControlsUnderlay'
 import { HomePagePane } from './HomePagePane'
 import { HomeSearchBarFloating } from './HomeSearchBar'
 import { HomeStackView } from './HomeStackView'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export const homePageBorderRadius = 12
 
 export default memo(function HomePage() {
-  return <HomePageContent />
+  const isSmall = useMediaQueryIsSmall()
+  return (
+    <AbsoluteVStack
+      fullscreen
+      overflow="hidden"
+      {...(isSmall && {
+        borderRadius: 10,
+      })}
+    >
+      <HomePageContent />
+    </AbsoluteVStack>
+  )
 })
 
 const HomePageContent = memo(() => {

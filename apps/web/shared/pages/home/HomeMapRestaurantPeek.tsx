@@ -16,6 +16,13 @@ export const HomeMapRestaurantPeek = memo(
     const selectedRestaurant = om.state.home.selectedRestaurant
     const state = om.state.home.currentState
 
+    if (
+      state.type === 'restaurant' &&
+      selectedRestaurant.slug === state.restaurantSlug
+    ) {
+      return null
+    }
+
     const containerWrap = (children: any) => {
       return (
         <Box

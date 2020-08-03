@@ -322,20 +322,49 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
             <TopDishesTrendingRestaurants country={country} />
 
             {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
+              console.log(
+                'top_dish.best_restaurants',
+                top_dish.best_restaurants
+              )
               return (
-                <DishView
-                  size={dishHeight}
-                  key={index}
-                  dish={{
-                    ...top_dish,
-                    rating: (top_dish.rating ?? 0) / 5,
-                  }}
-                  cuisine={{
-                    id: country.country,
-                    name: country.country,
-                    type: 'country',
-                  }}
-                />
+                <HStack key={index}>
+                  <DishView
+                    size={dishHeight}
+                    dish={{
+                      ...top_dish,
+                      rating: (top_dish.rating ?? 0) / 5,
+                    }}
+                    cuisine={{
+                      id: country.country,
+                      name: country.country,
+                      type: 'country',
+                    }}
+                  />
+
+                  {/* Shows top restaurants per-dish */}
+                  {/* <VStack>
+                    {top_dish.best_restaurants?.map((restaurant) => {
+                      if (!restaurant.slug) {
+                        return null
+                      }
+                      return (
+                        <VStack key={restaurant.slug}>
+                          <RestaurantButton
+                            restaurantSlug={restaurant.slug}
+                            subtle
+                            onHoverIn={() => {
+                              // lastHoveredId = restaurant.id
+                              // setHoveredRestaurant({
+                              //   id: restaurant.id,
+                              //   slug: restaurant.slug,
+                              // })
+                            }}
+                          />
+                        </VStack>
+                      )
+                    })}
+                  </VStack> */}
+                </HStack>
               )
             })}
             <LinkButton
@@ -361,12 +390,12 @@ const clearHoveredRestaurant = _.debounce(() => {
   }
 }, 200)
 
+const setHoveredRestaurant = _.debounce((val) => {
+  omStatic.actions.home.setHoveredRestaurant(val)
+}, 200)
+
 const TopDishesTrendingRestaurants = memo(
   ({ country }: { country: TopCuisine }) => {
-    const setHoveredRestaurant = useDebounce((val) => {
-      omStatic.actions.home.setHoveredRestaurant(val)
-    }, 200)
-
     return (
       <VStack width={220} padding={10} spacing={4} alignItems="flex-start">
         {_.uniqBy(country.top_restaurants, (x) => x.name)
@@ -383,7 +412,7 @@ const TopDishesTrendingRestaurants = memo(
                 }
                 subtle
                 key={restaurant.name}
-                restaurant={restaurant as any}
+                restaurantSlug={restaurant.slug ?? ''}
                 maxWidth="100%"
                 onHoverIn={() => {
                   lastHoveredId = restaurant.id
