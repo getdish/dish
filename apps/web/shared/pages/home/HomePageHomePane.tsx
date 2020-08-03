@@ -392,9 +392,9 @@ const TopDishesTrendingRestaurants = memo(
                     slug: restaurant.slug,
                   })
                 }}
-                onHoverOut={() => {
-                  clearHoveredRestaurant()
-                }}
+                // onHoverOut={() => {
+                //   clearHoveredRestaurant()
+                // }}
                 // active={
                 //   (hoveredRestaurant &&
                 //     restaurant?.name === hoveredRestaurant?.name) ||

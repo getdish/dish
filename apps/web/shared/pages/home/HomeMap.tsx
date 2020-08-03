@@ -13,7 +13,6 @@ import mapboxgl from 'mapbox-gl'
 import React, {
   Suspense,
   memo,
-  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -28,14 +27,12 @@ import {
   isSearchState,
 } from '../../state/home-helpers'
 import { HomeStateItem, LngLat } from '../../state/home-types'
-import { initialHomeState } from '../../state/initialHomeState'
 import { setMapView } from '../../state/mapView'
 import { omStatic, useOvermind } from '../../state/om'
 import { Map } from '../../views/Map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
 import { snapPoints } from './HomeSmallDrawer'
-import { useCurrentLenseColor } from './useCurrentLenseColor'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useLastValueWhen } from './useLastValueWhen'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
@@ -317,6 +314,7 @@ const HomeMapContent = memo(function HomeMap({
     return om.reaction(
       (state) => state.home.hoveredRestaurant,
       (hoveredRestaurant) => {
+        console.log('hoveredRestaurant', hoveredRestaurant)
         if (hoveredRestaurant === false) {
           // revert to last
           const { center, span } = getStateLocation(om.state.home.currentState)
@@ -506,7 +504,7 @@ const getMapStyle = (lense: Tag) => {
 
 const getRestaurantMarkers = (restaurants: Restaurant[]) => {
   const result: GeoJSON.Feature[] = []
-  for (const restaurant of restaurants) {
+  for (const [index, restaurant] of restaurants.entries()) {
     if (!restaurant.location?.coordinates) {
       continue
     }
@@ -514,6 +512,7 @@ const getRestaurantMarkers = (restaurants: Restaurant[]) => {
     const color = getRankingColor(percent)
     result.push({
       type: 'Feature',
+      id: index,
       geometry: {
         type: 'Point',
         coordinates: restaurant.location.coordinates,
