@@ -1,3 +1,9 @@
+# August
+
+- Bigger crawl
+- Review split
+- GPT
+
 # July
 
 ✔️ Photos table separation
