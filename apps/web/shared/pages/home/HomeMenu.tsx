@@ -24,7 +24,7 @@ import {
   User,
 } from 'react-feather'
 
-import { omStatic, useOvermind } from '../../state/useOvermind'
+import { omStatic, useOvermind } from '../../state/om'
 import { AuthLoginRegisterView } from '../../views/auth/AuthLoginRegisterView'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'

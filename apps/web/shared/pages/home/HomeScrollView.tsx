@@ -3,7 +3,7 @@ import React, { forwardRef, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants'
-import { useOvermind } from '../../state/useOvermind'
+import { useOvermind } from '../../state/om'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export const HomeScrollView = forwardRef(

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { getTagId } from '../../state/getTagId'
 import { getFullTags } from '../../state/home-tag-helpers'
 import { HomeActiveTagsRecord } from '../../state/home-types'
-import { omStatic, useOvermind } from '../../state/useOvermind'
+import { omStatic, useOvermind } from '../../state/om'
 
 export const useUserReviews = (restaurantId: string, refetchKey?: string) => {
   const om = useOvermind()

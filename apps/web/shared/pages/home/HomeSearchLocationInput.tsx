@@ -1,11 +1,4 @@
-import {
-  AbsoluteVStack,
-  Button,
-  HStack,
-  Spacer,
-  VStack,
-  prevent,
-} from '@dish/ui'
+import { Button, HStack, VStack, prevent } from '@dish/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { MapPin, Navigation } from 'react-feather'
 import { TextInput } from 'react-native'
@@ -15,9 +8,9 @@ import {
   inputGetNode,
   inputIsTextSelected,
 } from '../../helpers/input'
-import { useOvermind } from '../../state/useOvermind'
-import { HomeAutocompleteHoverableInput } from './HomeAutocomplete'
-import { inputTextStyles, onFocusAnyInput } from './HomeSearchInput'
+import { useOvermind } from '../../state/om'
+import { HomeAutocompleteHoverableInput } from './HomeAutocompleteHoverableInput'
+import { inputTextStyles } from './HomeSearchInput'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 const paddingHorizontal = 16

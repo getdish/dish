@@ -1,4 +1,3 @@
-import { getActiveTags, isSearchBarTag } from './home-tag-helpers'
 import {
   HomeStateItem,
   HomeStateItemAbout,
@@ -6,9 +5,7 @@ import {
   HomeStateItemRestaurant,
   HomeStateItemSearch,
   HomeStateItemUser,
-  HomeStateTagNavigable,
 } from './home-types'
-import { omStatic } from './useOvermind'
 
 type HSIJustType = Pick<HomeStateItem, 'type'>
 
@@ -23,12 +20,3 @@ export const isHomeState = (x?: HSIJustType): x is HomeStateItemHome =>
 export const isRestaurantState = (
   x?: HSIJustType
 ): x is HomeStateItemRestaurant => x?.type === 'restaurant'
-
-export const shouldBeOnHome = (state: HomeStateTagNavigable) => {
-  const realState =
-    state ?? omStatic.state.home.states[omStatic.state.home.states.length - 1]
-  return (
-    realState.searchQuery === '' &&
-    getActiveTags(realState).every((tag) => !isSearchBarTag(tag))
-  )
-}

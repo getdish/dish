@@ -9,7 +9,7 @@ import React, { Suspense } from 'react'
 import AdminPage from './pages/admin/AdminPage'
 import HomePage from './pages/home/HomePage'
 import { Shortcuts } from './Shortcuts'
-import { useOvermind } from './state/useOvermind'
+import { useOvermind } from './state/om'
 import { NotFoundPage } from './views/NotFoundPage'
 import { PrivateRoute, Route, RouteSwitch } from './views/router/Route'
 

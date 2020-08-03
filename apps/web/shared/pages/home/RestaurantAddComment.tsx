@@ -1,16 +1,16 @@
-import { User as UserModel, graphql, mutation } from '@dish/graph'
-import { Circle, HStack, StackProps, Text, Toast, VStack } from '@dish/ui'
+import { graphql, mutation } from '@dish/graph'
+import { HStack, Toast, VStack } from '@dish/ui'
 import { isUndefined } from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
-import { MessageSquare, User } from 'react-feather'
+import { MessageSquare } from 'react-feather'
 import { TextInput } from 'react-native'
 
 import { bgLight } from '../../colors'
-import { useOvermind } from '../../state/useOvermind'
-import { Link } from '../../views/ui/Link'
+import { useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallButton, SmallButtonProps } from '../../views/ui/SmallButton'
 import { flatButtonStyleSelected } from './baseButtonStyle'
+import { CommentBubble } from './CommentBubble'
 import { RestaurantReview } from './RestaurantReview'
 import { useUserReview } from './useUserReview'
 
@@ -139,46 +139,3 @@ export const RestaurantAddComment = memo(
     )
   })
 )
-
-export const CommentBubble = ({
-  user,
-  children,
-  ...rest
-}: StackProps & {
-  user: Partial<UserModel>
-  children: any
-}) => {
-  return (
-    <VStack
-      flex={1}
-      borderRadius={10}
-      padding={4}
-      alignItems="flex-start"
-      justifyContent="flex-start"
-      {...rest}
-    >
-      <HStack
-        alignItems="center"
-        spacing={6}
-        flexWrap="nowrap"
-        marginBottom={10}
-      >
-        <Circle size={18} marginBottom={-2}>
-          <User color="#000" size={12} />
-        </Circle>
-        <Text selectable color="#999" fontSize={13}>
-          <Link
-            name="user"
-            params={{ username: user.username }}
-            fontWeight="600"
-            color="#666"
-          >
-            {user.username}
-          </Link>
-          &nbsp; says
-        </Text>
-      </HStack>
-      {children}
-    </VStack>
-  )
-}

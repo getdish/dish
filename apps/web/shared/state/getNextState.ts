@@ -1,16 +1,32 @@
-import { ensureHasLense } from './ensureHasLense'
+import { memoize } from '../helpers/memoizeWeak'
 import { getTagId } from './getTagId'
-import { shouldBeOnHome } from './home-helpers'
 import {
   HomeStateNav,
   cleanTagName,
   ensureUniqueActiveTagIds,
 } from './home-tag-helpers'
 import { HomeActiveTagsRecord } from './home-types'
-import { omStatic } from './useOvermind'
+import { omStatic } from './om'
+import { shouldBeOnHome } from './shouldBeOnHome'
 
-export const getNextState = (navState?: HomeStateNav) => {
-  console.log('get for', navState)
+const navStateCache = {}
+
+const nextStateId = (navState: HomeStateNav) => {
+  const tagIds = navState.state.activeTagIds
+  const key = `${navState.replaceSearch ?? '-'}${navState.tags?.map(
+    (x) => x.name
+  )}${navState.disallowDisableWhenActive ?? ''}${navState.state.searchQuery}${
+    tagIds ? Object.entries(tagIds).join(',') : '-'
+  }`
+  return key
+}
+
+export const getNextState = (navState: HomeStateNav) => {
+  const key = nextStateId(navState)
+  if (navStateCache[key]) {
+    return navStateCache[key]
+  }
+
   const {
     state = omStatic.state.home.currentState,
     tags = [],
@@ -62,5 +78,18 @@ export const getNextState = (navState?: HomeStateNav) => {
     type: state.type,
   }
   nextState.type = shouldBeOnHome(nextState) ? 'home' : 'search'
+
+  navStateCache[key] = nextState
   return nextState
+}
+
+function ensureHasLense(activeTagIds: HomeActiveTagsRecord) {
+  if (
+    !Object.keys(activeTagIds)
+      .filter((k) => activeTagIds[k])
+      .some((k) => omStatic.state.home.allTags[k]?.type === 'lense')
+  ) {
+    // need to add lense!
+    activeTagIds['gems'] = true
+  }
 }

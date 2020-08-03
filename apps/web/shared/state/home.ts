@@ -22,12 +22,7 @@ import { LinkButtonProps } from '../views/ui/LinkProps'
 import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
 import { getNextState } from './getNextState'
 import { getTagId } from './getTagId'
-import {
-  isHomeState,
-  isRestaurantState,
-  isSearchState,
-  shouldBeOnHome,
-} from './home-helpers'
+import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
 import {
   HomeStateNav,
   allTags,
@@ -57,6 +52,7 @@ import {
 import { initialHomeState } from './initialHomeState'
 import { NavigableTag } from './NavigableTag'
 import { router } from './router'
+import { shouldBeOnHome } from './shouldBeOnHome'
 import { tagFilters } from './tagFilters'
 import { tagLenses } from './tagLenses'
 

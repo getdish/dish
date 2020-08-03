@@ -10,10 +10,10 @@ import {
   HomeStateTagNavigable,
 } from './home-types'
 import { NavigableTag } from './NavigableTag'
+import { omStatic } from './om'
 import { SearchRouteParams } from './router'
 import { tagFilters } from './tagFilters'
 import { tagLenses } from './tagLenses'
-import { omStatic } from './useOvermind'
 
 const SPLIT_TAG = '_'
 const SPLIT_TAG_TYPE = '~'

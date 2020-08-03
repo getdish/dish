@@ -3,7 +3,7 @@ import { AbsoluteVStack, VStack } from '@dish/ui'
 import { isEqual } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
-import { useOvermind } from '../../state/useOvermind'
+import { useOvermind } from '../../state/om'
 import { Map } from '../../views/Map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'

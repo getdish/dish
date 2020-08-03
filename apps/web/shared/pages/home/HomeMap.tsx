@@ -30,7 +30,7 @@ import {
 import { HomeStateItem, LngLat } from '../../state/home-types'
 import { initialHomeState } from '../../state/initialHomeState'
 import { setMapView } from '../../state/mapView'
-import { omStatic, useOvermind } from '../../state/useOvermind'
+import { omStatic, useOvermind } from '../../state/om'
 import { Map } from '../../views/Map'
 import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'

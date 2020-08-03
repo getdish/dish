@@ -1,8 +1,8 @@
 import { HStack, StackProps, Text, useForceUpdate } from '@dish/ui'
 import React, { useLayoutEffect, useRef, useState } from 'react'
 
+import { omStatic, useOvermindStatic } from '../../state/om'
 import { RoutesTable } from '../../state/router'
-import { omStatic, useOvermindStatic } from '../../state/useOvermind'
 import { Link } from './Link'
 import { LinkButtonProps } from './LinkProps'
 import { getNormalizeLinkProps } from './useNormalizedLink'

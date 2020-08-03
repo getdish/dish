@@ -3,7 +3,7 @@ import React, { Suspense, memo, useMemo } from 'react'
 
 import { searchBarHeight } from '../../constants'
 import { HomeStateItem, HomeStateItemSimple } from '../../state/home-types'
-import { omStatic, useOvermind } from '../../state/useOvermind'
+import { omStatic, useOvermind } from '../../state/om'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
 import { getBreadcrumbs } from './getBreadcrumbs'
 import { useLastValueWhen } from './useLastValueWhen'

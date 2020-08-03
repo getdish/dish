@@ -3,7 +3,7 @@ import React, { Suspense, memo } from 'react'
 
 import { searchBarHeight, zIndexMapControls } from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
-import { useOvermind } from '../../state/useOvermind'
+import { useOvermind } from '../../state/om'
 import { useMapSize } from './HomeMap'
 import { HomeMapPIP } from './HomeMapPIP'
 import { HomeMapRestaurantPeek } from './HomeMapRestaurantPeek'

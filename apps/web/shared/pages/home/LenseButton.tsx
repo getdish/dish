@@ -64,7 +64,7 @@ export const LenseButton = memoIsEqualDeep(
           })}
         >
           <Text
-            fontSize={sizePx * (isActive ? 0.95 : 0.7) * scale}
+            fontSize={sizePx * (isActive ? 0.95 : 0.6) * scale}
             lineHeight={sizePx * scale}
             fontWeight="400"
             textAlign="center"

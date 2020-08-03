@@ -40,7 +40,7 @@ export const RestaurantOverview = memo(
                 borderWidth: 1,
                 borderColor: '#eee',
                 borderRadius: 8,
-                margin: 4,
+                margin: 8,
                 marginBottom: 0,
                 marginRight: 0,
                 padding: 16,
