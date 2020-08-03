@@ -3,7 +3,6 @@ import { query, resolved } from '@dish/graph'
 import {
   AbsoluteVStack,
   HStack,
-  Hoverable,
   Spacer,
   Text,
   VStack,
@@ -30,7 +29,7 @@ import {
   ShowAutocomplete,
 } from '../../state/home-types'
 import { mapView } from '../../state/mapView'
-import { omStatic, useOvermind } from '../../state/useOvermind'
+import { omStatic, useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallCircleButton } from './CloseButton'
 import { snapPoints } from './HomeSmallDrawer'
@@ -329,41 +328,6 @@ const AutocompleteResults = memo(() => {
 
   return <>{resultsElements}</>
 })
-
-export const HomeAutocompleteHoverableInput = ({
-  children,
-  input,
-  autocompleteTarget,
-}: {
-  children: any
-  input?: HTMLInputElement | null
-  autocompleteTarget: 'search' | 'location'
-}) => {
-  const om = useOvermind()
-  const tm = useRef(null)
-  const tm2 = useRef(null)
-
-  return (
-    <Hoverable
-      onHoverOut={() => {
-        clearTimeout(tm.current)
-        clearTimeout(tm2.current)
-      }}
-      onHoverMove={() => {
-        clearTimeout(tm.current)
-        if (om.state.home.currentState.searchQuery) {
-          tm.current = setTimeout(() => {
-            if (document.activeElement == input) {
-              om.actions.home.setShowAutocomplete(autocompleteTarget)
-            }
-          }, 150)
-        }
-      }}
-    >
-      {children}
-    </Hoverable>
-  )
-}
 
 function AutocompleteAddButton() {
   const om = useOvermind()

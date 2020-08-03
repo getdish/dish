@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 import { Map, RefreshCcw } from 'react-feather'
 
 import { searchBarHeight, zIndexDrawer } from '../../constants'
-import { useOvermind } from '../../state/useOvermind'
+import { useOvermind } from '../../state/om'
 import { OverlayLinkButton } from '../../views/ui/OverlayLinkButton'
 import { useMapSize } from './HomeMap'
 import { mapZoomToMedium, useZoomLevel } from './mapHelpers'

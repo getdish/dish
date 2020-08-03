@@ -6,7 +6,7 @@ import { getNextState } from '../../state/getNextState'
 import { HomeStateNav } from '../../state/home-tag-helpers'
 import { HomeStateItem } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
-import { omStatic } from '../../state/useOvermind'
+import { omStatic } from '../../state/om'
 import { LinkButtonProps } from './LinkProps'
 
 export const getNormalizeLinkProps = memoize(

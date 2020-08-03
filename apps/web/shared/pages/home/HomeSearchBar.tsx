@@ -16,7 +16,7 @@ import {
   zIndexSearchBarFloating,
 } from '../../constants'
 import { rgbString } from '../../helpers/rgbString'
-import { useOvermind } from '../../state/useOvermind'
+import { useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { DishLogoButton } from './DishLogoButton'
 import { HomeMenu } from './HomeMenu'
@@ -171,6 +171,7 @@ export const HomeSearchBarFloating = () => {
 
 const HomeSearchBar = memo(() => {
   const om = useOvermind()
+  const focus = om.state.home.showAutocomplete
   const [showLocation, setShowLocation] = useState(false)
   const isSmall = useMediaQueryIsSmall()
   const isReallySmall = useMediaQueryIsReallySmall()
@@ -196,7 +197,7 @@ const HomeSearchBar = memo(() => {
       <HStack
         className="ease-in-out"
         position="relative"
-        flex={100}
+        flex={1}
         maxWidth={
           !isReallySmall &&
           isSmall &&
@@ -211,10 +212,10 @@ const HomeSearchBar = memo(() => {
         {isReallySmall && (
           <>
             {/* keep both in dom so we have access to ref */}
-            <VStack display={showLocation ? 'contents' : 'none'}>
+            <VStack display={showLocation ? 'contents' : ('none' as any)}>
               <HomeSearchLocationInput />
             </VStack>
-            <VStack display={!showLocation ? 'contents' : 'none'}>
+            <VStack display={!showLocation ? 'contents' : ('none' as any)}>
               <HomeSearchInput />
             </VStack>
           </>
@@ -228,7 +229,13 @@ const HomeSearchBar = memo(() => {
           <VStack
             className="ease-in-out"
             maxWidth={
-              !isReallySmall && isSmall && focus === 'search' ? 120 : 'auto'
+              !isReallySmall && isSmall
+                ? focus === 'search'
+                  ? 120
+                  : focus === 'location'
+                  ? '100%'
+                  : '25%'
+                : '50%'
             }
             flex={1}
           >

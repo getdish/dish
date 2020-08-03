@@ -1,7 +1,7 @@
 import { AbsoluteVStack, StackProps } from '@dish/ui'
 import React, { memo } from 'react'
 
-import { omStatic } from '../../state/useOvermind'
+import { omStatic } from '../../state/om'
 import { CloseButton } from './CloseButton'
 
 export const StackViewCloseButton = memo((props: StackProps) => {

@@ -4,7 +4,7 @@ import React, { memo } from 'react'
 
 import { getTagId } from '../../state/getTagId'
 import { HomeActiveTagsRecord } from '../../state/home-types'
-import { useOvermind } from '../../state/useOvermind'
+import { useOvermind } from '../../state/om'
 import { LenseButton, LenseButtonSize } from './LenseButton'
 
 export const HomeLenseBar = memo(

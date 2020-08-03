@@ -3,7 +3,7 @@ import { AbsoluteVStack, Box, HStack, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
 
-import { useOvermind } from '../../state/useOvermind'
+import { useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'

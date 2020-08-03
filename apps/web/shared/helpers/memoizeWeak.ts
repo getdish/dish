@@ -22,17 +22,17 @@ class MemoCache {
 
 export function memoize<A extends Function>(
   fn: A,
-  { ttl = Infinity, debugId = 0 } = {}
+  opts?: { ttl?: number; debugId?: string }
 ): A {
   const cache = new MemoCache()
   return function (this: A, ...args: any[]) {
     // get (or create) a cache item
     const item = cache.get(args)
     if (item.hasOwnProperty('value') && item.expires >= Date.now()) {
-      if (debugId) console.log('cache hit', debugId)
+      if (opts?.debugId) console.log('cache hit', opts?.debugId)
       return item.value
     }
-    item.expires = Date.now() + ttl
+    item.expires = Date.now() + (opts?.ttl ?? Infinity)
     return (item.value = fn.apply(this, args))
   } as any
 }

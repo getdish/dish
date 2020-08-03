@@ -8,8 +8,8 @@ import React, {
   useState,
 } from 'react'
 
+import { useOvermind } from '../../state/om'
 import { routePathToName, router, routes } from '../../state/router'
-import { useOvermind } from '../../state/useOvermind'
 
 type RouteState = 'collect' | 'active' | 'inactive'
 

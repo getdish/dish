@@ -1,16 +1,9 @@
 import { fullyIdle, idle, series } from '@dish/async'
-import {
-  HStack,
-  Toast,
-  VStack,
-  useDebounce,
-  useGet,
-  useOnMount,
-} from '@dish/ui'
+import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { Loader, Search } from 'react-feather'
-import { StyleSheet, TextInput } from 'react-native'
+import { ScrollView, StyleSheet, TextInput } from 'react-native'
 
 import { searchBarHeight } from '../../constants'
 import {
@@ -19,16 +12,13 @@ import {
   inputIsTextSelected,
 } from '../../helpers/input'
 import { getTagId } from '../../state/getTagId'
+import { omStatic, useOvermind } from '../../state/om'
 import { router } from '../../state/router'
-import { omStatic, useOvermind } from '../../state/useOvermind'
 import { CloseButton } from './CloseButton'
-import { HomeAutocompleteHoverableInput } from './HomeAutocomplete'
+import { HomeAutocompleteHoverableInput } from './HomeAutocompleteHoverableInput'
 import { isIOS } from './isIOS'
 import { TagButton } from './TagButton'
-import {
-  getMediaQueryMatch,
-  useMediaQueryIsReallySmall,
-} from './useMediaQueryIs'
+import { getMediaQueryMatch } from './useMediaQueryIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 const placeholders = [
@@ -196,12 +186,12 @@ export const HomeSearchInput = memo(() => {
           borderRadius={10}
           flex={1}
           maxWidth="100%"
-          paddingHorizontal={10}
+          paddingLeft={10}
           overflow="hidden"
           backgroundColor={background}
         >
           {/* Loading / Search Icon */}
-          <>
+          <VStack width={18}>
             {om.state.home.isLoading ? (
               <VStack className="rotating" opacity={0.9}>
                 <Loader color={color} size={18} onClick={focusSearchInput} />
@@ -214,30 +204,48 @@ export const HomeSearchInput = memo(() => {
                 onClick={focusSearchInput}
               />
             )}
-          </>
-          <HomeSearchBarTags input={input} />
-          <TextInput
-            ref={inputRef}
-            // leave uncontrolled for perf?
-            value={search}
-            onFocus={handleFocus}
-            onBlur={() => {
-              avoidNextFocus = false
+          </VStack>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              alignItems: 'center',
             }}
-            onChangeText={(text) => {
-              if (getSearch() == '' && text !== '') {
-                om.actions.home.setShowAutocomplete('search')
-              }
-              setSearch(text)
-              om.actions.home.setSearchQuery(text)
+            style={{
+              paddingRight: 10,
             }}
-            placeholder={isSearchingCuisine ? '...' : `${placeHolder}...`}
-            style={[
-              inputTextStyles.textInput,
-              { color, flex: 1, fontSize: 18, paddingRight: 0 },
-            ]}
-          />
+          >
+            <HomeSearchBarTags input={input} />
+            <TextInput
+              ref={inputRef}
+              // leave uncontrolled for perf?
+              value={search}
+              onFocus={handleFocus}
+              onBlur={() => {
+                avoidNextFocus = false
+              }}
+              onChangeText={(text) => {
+                if (getSearch() == '' && text !== '') {
+                  om.actions.home.setShowAutocomplete('search')
+                }
+                setSearch(text)
+                om.actions.home.setSearchQuery(text)
+              }}
+              placeholder={isSearchingCuisine ? '...' : `${placeHolder}...`}
+              style={[
+                inputTextStyles.textInput,
+                {
+                  color,
+                  flex: 1,
+                  fontSize: 18,
+                  paddingRight: 0,
+                },
+              ]}
+            />
+          </ScrollView>
           <SearchCancelButton />
+          <Spacer direction="horizontal" size={10} />
         </HStack>
       </HomeAutocompleteHoverableInput>
     </HStack>

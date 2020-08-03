@@ -80,33 +80,32 @@ const HomeSearchInfoBoxDish = memo(
     }
 
     return (
-      <HStack marginHorizontal={20} padding={20} spacing={20}>
-        <VStack>
-          <SmallTitle fontWeight="700" letterSpacing={0} marginBottom={10}>
-            {dishTag.name}
-          </SmallTitle>
-          <HStack spacing={20}>
-            <Text fontSize={50}>🍜</Text>
-            <Text fontSize={14}>
-              Rich, creamy, and packed with uncompromising flavor from a slew of
-              aromatics and shrimp paste, this classic Northern Thai soup
-              combines tender braised chicken in a coconut-y curry broth with
-              boiled and fried noodles.
-            </Text>
-            <Image
-              style={{
-                marginTop: -40,
-                width: 120,
-                height: 120,
-                borderRadius: 100,
-              }}
-              source={{
-                uri:
-                  'https://www.seriouseats.com/recipes/images/2014/09/20140707-small-house-thai-cooking-school-khao-soi-10.jpg',
-              }}
-            />
-          </HStack>
-        </VStack>
+      <HStack
+        marginHorizontal={20}
+        padding={20}
+        paddingBottom={10}
+        spacing={20}
+        alignItems="center"
+      >
+        <Text fontSize={50}>🍜</Text>
+        <Text fontSize={14}>
+          <strong>{dishTag.name}</strong> - Rich, creamy, and packed with
+          uncompromising flavor from a slew of aromatics and shrimp paste, this
+          classic Northern Thai soup combines tender braised chicken in a
+          coconut-y curry broth with boiled and fried noodles.
+        </Text>
+        <Image
+          style={{
+            // marginVertical: -25,
+            width: 60,
+            height: 60,
+            borderRadius: 100,
+          }}
+          source={{
+            uri:
+              'https://www.seriouseats.com/recipes/images/2014/09/20140707-small-house-thai-cooking-school-khao-soi-10.jpg',
+          }}
+        />
       </HStack>
     )
   }

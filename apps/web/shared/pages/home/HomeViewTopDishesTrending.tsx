@@ -9,7 +9,7 @@ import {
 } from '@dish/ui'
 import React, { memo } from 'react'
 
-import { useOvermind } from '../../state/useOvermind'
+import { useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { TrendingButton } from './TrendingButton'
 

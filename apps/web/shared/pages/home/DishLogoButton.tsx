@@ -1,7 +1,7 @@
 import { AbsoluteVStack, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
-import { omStatic } from '../../state/useOvermind'
+import { omStatic } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
 import {
   useMediaQueryIsReallySmall,

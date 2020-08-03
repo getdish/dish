@@ -5,7 +5,7 @@ import { Image, ScrollView } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home-types'
-import { useOvermind } from '../../state/useOvermind'
+import { useOvermind } from '../../state/om'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
@@ -49,7 +49,7 @@ const RestaurantHeaderContent = memo(
     }: RestaurantHeaderProps) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
       const om = useOvermind()
-      const [r, g, b] = useCurrentLenseColor()
+      // const [r, g, b] = useCurrentLenseColor()
       const padding = <Spacer size={size === 'sm' ? 10 : 20} />
       return (
         <VStack width="100%">
@@ -60,6 +60,8 @@ const RestaurantHeaderContent = memo(
             maxWidth="100%"
             position="relative"
             overflow="hidden"
+            // a little extra pad at top looks nice
+            paddingTop={10}
           >
             {padding}
             <HStack alignItems="center">
@@ -104,6 +106,7 @@ const RestaurantHeaderContent = memo(
                     {afterAddress}
                   </HStack>
                 </ScrollView>
+                <Spacer size="md" />
               </VStack>
               {!after && !!restaurant.image && (
                 <>

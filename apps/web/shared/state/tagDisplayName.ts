@@ -9,7 +9,7 @@ export const tagDisplayNames = {
   'price-high': '$$$',
   Vibe: 'Vibe',
   Veg: 'Green',
-  Drink: 'Drink',
+  Drink: 'Bar',
   Gems: 'Gem',
 }
 

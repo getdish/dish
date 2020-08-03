@@ -7,12 +7,7 @@ import {
   isSearchState,
   isUserState,
 } from '../../state/home-helpers'
-import { HomeStateItem } from '../../state/home-types'
-import { StackItemProps } from './HomeStackView'
-
-export type HomePagePaneProps<
-  A extends HomeStateItem = HomeStateItem
-> = StackItemProps<A>
+import { HomePagePaneProps } from './HomePagePaneProps'
 
 export const HomePagePane = (props: HomePagePaneProps) => {
   const { item } = props

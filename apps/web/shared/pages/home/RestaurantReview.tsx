@@ -1,6 +1,6 @@
 import { Text } from '@dish/ui'
 
-import { CommentBubble } from './RestaurantAddComment'
+import { CommentBubble } from './CommentBubble'
 
 export const RestaurantReview = ({
   userName,

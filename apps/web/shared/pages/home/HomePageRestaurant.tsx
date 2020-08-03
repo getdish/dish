@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native'
 
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { HomePagePaneProps } from './HomePagePane'
+import { HomePagePaneProps } from './HomePagePaneProps'
 import { HomeScrollView } from './HomeScrollView'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
@@ -53,15 +53,14 @@ const HomePageRestaurant = memo(
           <RestaurantHeader
             restaurantSlug={slug}
             afterAddress={
-              <HStack>
-                <Spacer size="xl" />
+              <HStack paddingLeft={20} marginTop={-2}>
                 <RestaurantTagsRow
                   subtle
                   size="sm"
                   restaurantSlug={slug}
                   restaurantId={restaurant.id}
                 />
-                <Spacer size="xl" />
+                <Spacer direction="horizontal" size={70} />
               </HStack>
             }
           />
@@ -105,7 +104,7 @@ const HomePageRestaurant = memo(
               </ScrollView>
             </Box>
 
-            <HStack padding={10} maxWidth="100%" flexWrap="wrap">
+            <HStack padding={20} maxWidth="100%" flexWrap="wrap">
               <RestaurantOverview restaurantSlug={slug} />
               <RestaurantOverview restaurantSlug={slug} />
               <RestaurantOverview restaurantSlug={slug} />

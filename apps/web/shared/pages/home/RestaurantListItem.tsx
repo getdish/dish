@@ -14,7 +14,7 @@ import React, { Suspense, memo, useEffect, useState } from 'react'
 
 import { bgLightLight, brandColor } from '../../colors'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
-import { omStatic, useOvermindStatic } from '../../state/useOvermind'
+import { omStatic, useOvermindStatic } from '../../state/om'
 import { Link } from '../../views/ui/Link'
 import { DishView } from './DishView'
 import { HomeScrollViewHorizontal } from './HomeScrollView'

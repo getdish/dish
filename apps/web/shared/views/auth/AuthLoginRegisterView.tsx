@@ -2,7 +2,7 @@ import { HStack, Text, VStack } from '@dish/ui'
 import React, { useEffect, useState } from 'react'
 
 import { Input } from '../../pages/home/Input'
-import { useOvermind } from '../../state/useOvermind'
+import { useOvermind } from '../../state/om'
 import { Link } from '../ui/Link'
 import { SmallButton } from '../ui/SmallButton'
 

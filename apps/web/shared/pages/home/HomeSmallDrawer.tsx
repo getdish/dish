@@ -5,7 +5,7 @@ import { Animated, PanResponder, View } from 'react-native'
 
 import { pageWidthMax, zIndexDrawer } from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
-import { omStatic } from '../../state/useOvermind'
+import { omStatic } from '../../state/om'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
 import { blurSearchInput } from './HomeSearchInput'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
@@ -125,7 +125,7 @@ export const HomeSmallDrawer = (props: { children: any }) => {
             // @ts-ignore
             pointerEvents: 'auto',
             position: 'absolute',
-            top: -30,
+            top: -40,
             padding: 15,
           }}
           {...panResponder.panHandlers}
@@ -133,7 +133,7 @@ export const HomeSmallDrawer = (props: { children: any }) => {
           <VStack
             pointerEvents="auto"
             paddingHorizontal={20}
-            paddingVertical={10}
+            paddingVertical={20}
             marginTop={-10}
             onPress={() => {
               if (snapIndex === 0) {

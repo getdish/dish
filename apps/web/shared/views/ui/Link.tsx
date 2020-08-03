@@ -6,8 +6,8 @@ import { Text, useForceUpdate } from '@dish/ui'
 import React, { useEffect, useRef } from 'react'
 
 import { brandColor } from '../../colors'
+import { useOvermindStatic } from '../../state/om'
 import { RoutesTable, router } from '../../state/router'
-import { useOvermindStatic } from '../../state/useOvermind'
 import { LinkProps } from './LinkProps'
 import {
   getNormalizeLinkProps,

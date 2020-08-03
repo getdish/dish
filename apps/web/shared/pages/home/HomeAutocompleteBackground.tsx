@@ -2,7 +2,7 @@ import { AbsoluteVStack, LinearGradient } from '@dish/ui'
 import React, { memo } from 'react'
 import { StyleSheet } from 'react-native'
 
-import { useOvermind } from '../../state/useOvermind'
+import { useOvermind } from '../../state/om'
 import { useShowAutocomplete } from './HomeAutocomplete'
 import { homePageBorderRadius } from './HomePage'
 

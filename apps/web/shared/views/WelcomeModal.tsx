@@ -12,7 +12,7 @@ import React from 'react'
 import { ExternalLink } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
 
-import { useOvermind } from '../state/useOvermind'
+import { useOvermind } from '../state/om'
 import { Link } from '../views/ui/Link'
 import { LinkButton } from '../views/ui/LinkButton'
 import { flatButtonStyle } from './home/baseButtonStyle'

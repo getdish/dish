@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 
 import { brandRgb } from '../../colors'
-import { useOvermind } from '../../state/useOvermind'
+import { useOvermind } from '../../state/om'
 
 export const useCurrentLenseColor = (): [number, number, number] => {
   const om = useOvermind()
