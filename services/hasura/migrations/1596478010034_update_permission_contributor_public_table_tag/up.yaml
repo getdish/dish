@@ -1,0 +1,30 @@
+- args:
+    role: contributor
+    table:
+      name: tag
+      schema: public
+  type: drop_insert_permission
+- args:
+    permission:
+      check: {}
+      columns:
+      - alternates
+      - created_at
+      - default_images
+      - description
+      - displayName
+      - icon
+      - id
+      - misc
+      - name
+      - order
+      - parentId
+      - rgb
+      - type
+      - updated_at
+      set: {}
+    role: contributor
+    table:
+      name: tag
+      schema: public
+  type: create_insert_permission

@@ -469,9 +469,12 @@ tables:
       columns:
       - alternates
       - created_at
+      - default_images
+      - description
       - displayName
       - icon
       - id
+      - misc
       - name
       - order
       - parentId
@@ -485,6 +488,7 @@ tables:
       - alternates
       - created_at
       - default_images
+      - description
       - displayName
       - icon
       - id
@@ -503,7 +507,9 @@ tables:
       - alternates
       - created_at
       - default_images
+      - description
       - displayName
+      - frequency
       - icon
       - id
       - is_ambiguous
@@ -521,6 +527,7 @@ tables:
       - alternates
       - created_at
       - default_images
+      - description
       - displayName
       - icon
       - id
@@ -539,6 +546,8 @@ tables:
       columns:
       - alternates
       - created_at
+      - default_images
+      - description
       - displayName
       - icon
       - id

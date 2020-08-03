@@ -10054,6 +10054,9 @@ export const schema = {
             true
           )
         },
+        get description() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get displayName() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -10382,6 +10385,9 @@ export const schema = {
         get default_images() {
           return new InputNodeField(schema.jsonb_comparison_exp, true)
         },
+        get description() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
         get displayName() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
@@ -10516,6 +10522,9 @@ export const schema = {
         get default_images() {
           return new InputNodeField(schema.jsonb, true)
         },
+        get description() {
+          return new InputNodeField(schema.String, true)
+        },
         get displayName() {
           return new InputNodeField(schema.String, true)
         },
@@ -10571,6 +10580,9 @@ export const schema = {
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
         },
+        get description() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get displayName() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -10611,6 +10623,9 @@ export const schema = {
         get created_at() {
           return new InputNodeField(schema.order_by, true)
         },
+        get description() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get displayName() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -10647,6 +10662,9 @@ export const schema = {
       {
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get description() {
+          return new FieldNode(schema.String, undefined, true)
         },
         get displayName() {
           return new FieldNode(schema.String, undefined, true)
@@ -10686,6 +10704,9 @@ export const schema = {
     return new InputNode(
       {
         get created_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get description() {
           return new InputNodeField(schema.order_by, true)
         },
         get displayName() {
@@ -10786,6 +10807,9 @@ export const schema = {
         get default_images() {
           return new InputNodeField(schema.order_by, true)
         },
+        get description() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get displayName() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -10878,6 +10902,9 @@ export const schema = {
         },
         get default_images() {
           return new InputNodeField(schema.jsonb, true)
+        },
+        get description() {
+          return new InputNodeField(schema.String, true)
         },
         get displayName() {
           return new InputNodeField(schema.String, true)

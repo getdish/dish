@@ -50,6 +50,7 @@ export type t_tag = FieldsType<
     >
     created_at: t_timestamptz
     default_images?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    description?: t_String | null
     displayName?: t_String | null
     frequency?: t_Int | null
     icon?: t_String | null
@@ -197,6 +198,7 @@ export type tag_bool_exp = {
   categories?: tag_tag_bool_exp | null
   created_at?: timestamptz_comparison_exp | null
   default_images?: jsonb_comparison_exp | null
+  description?: String_comparison_exp | null
   displayName?: String_comparison_exp | null
   frequency?: Int_comparison_exp | null
   icon?: String_comparison_exp | null
@@ -269,6 +271,7 @@ export type tag_insert_input = {
   categories?: tag_tag_arr_rel_insert_input | null
   created_at?: any | null
   default_images?: any | null
+  description?: string | null
   displayName?: string | null
   frequency?: number | null
   icon?: string | null
@@ -293,6 +296,7 @@ export type t_tag_max_fields = FieldsType<
   {
     __typename: t_String<'tag_max_fields'>
     created_at?: t_timestamptz | null
+    description?: t_String | null
     displayName?: t_String | null
     frequency?: t_Int | null
     icon?: t_String | null
@@ -312,6 +316,7 @@ export type t_tag_max_fields = FieldsType<
  */
 export type tag_max_order_by = {
   created_at?: order_by | null
+  description?: order_by | null
   displayName?: order_by | null
   frequency?: order_by | null
   icon?: order_by | null
@@ -331,6 +336,7 @@ export type t_tag_min_fields = FieldsType<
   {
     __typename: t_String<'tag_min_fields'>
     created_at?: t_timestamptz | null
+    description?: t_String | null
     displayName?: t_String | null
     frequency?: t_Int | null
     icon?: t_String | null
@@ -350,6 +356,7 @@ export type t_tag_min_fields = FieldsType<
  */
 export type tag_min_order_by = {
   created_at?: order_by | null
+  description?: order_by | null
   displayName?: order_by | null
   frequency?: order_by | null
   icon?: order_by | null
@@ -402,6 +409,7 @@ export type tag_order_by = {
   categories_aggregate?: tag_tag_aggregate_order_by | null
   created_at?: order_by | null
   default_images?: order_by | null
+  description?: order_by | null
   displayName?: order_by | null
   frequency?: order_by | null
   icon?: order_by | null
@@ -443,6 +451,7 @@ export type t_tag_select_column = EnumType<
   | 'alternates'
   | 'created_at'
   | 'default_images'
+  | 'description'
   | 'displayName'
   | 'frequency'
   | 'icon'
@@ -465,6 +474,7 @@ export type tag_set_input = {
   alternates?: any | null
   created_at?: any | null
   default_images?: any | null
+  description?: string | null
   displayName?: string | null
   frequency?: number | null
   icon?: string | null
@@ -784,6 +794,7 @@ export type t_tag_update_column = EnumType<
   | 'alternates'
   | 'created_at'
   | 'default_images'
+  | 'description'
   | 'displayName'
   | 'frequency'
   | 'icon'
@@ -925,6 +936,7 @@ export enum tag_select_column {
   alternates = 'alternates',
   created_at = 'created_at',
   default_images = 'default_images',
+  description = 'description',
   displayName = 'displayName',
   frequency = 'frequency',
   icon = 'icon',
@@ -1033,6 +1045,7 @@ export enum tag_update_column {
   alternates = 'alternates',
   created_at = 'created_at',
   default_images = 'default_images',
+  description = 'description',
   displayName = 'displayName',
   frequency = 'frequency',
   icon = 'icon',
