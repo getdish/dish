@@ -59,7 +59,7 @@ export const HomeScrollView = forwardRef(
           // @ts-ignore
           display="inherit"
           pointerEvents={om.state.home.isScrolling ? 'none' : 'auto'}
-          maxWidth={drawerWidthMax}
+          maxWidth={isSmall ? '100%' : drawerWidthMax}
           alignSelf="flex-end"
           width="100%"
         >

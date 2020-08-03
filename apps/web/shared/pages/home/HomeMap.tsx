@@ -233,6 +233,19 @@ const HomeMapContent = memo(function HomeMap({
   const { drawerWidth, width, paddingLeft } = useMapSize(isSmall)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
   const [getLocation, setLocation] = useStateFn(getStateLocation(state))
+  const [center, setCenter] = useState<LngLat>(state.center)
+  const selectedId = om.state.home.selectedRestaurant?.id
+
+  useEffect(() => {
+    const selectedRestaurant = restaurants.find((x) => x.id === selectedId)
+    const coords = selectedRestaurant?.location.coordinates
+    if (coords) {
+      setCenter({
+        lng: coords[0],
+        lat: coords[1],
+      })
+    }
+  }, [selectedId])
 
   useEffect(() => {
     setLocation(getStateLocation(state))
@@ -269,6 +282,9 @@ const HomeMapContent = memo(function HomeMap({
     () => JSON.stringify(restaurants.map((x) => x.location?.coordinates)),
     isLoading
   )
+
+  // things we need in memo
+  restaurants[0]?.id
   const features = useMemo(() => {
     return getRestaurantMarkers(restaurants)
   }, [key])
@@ -448,12 +464,6 @@ const HomeMapContent = memo(function HomeMap({
   //   }
   // }, [!!map, annotations])
 
-  const setMapRef = useCallback((map: mapboxgl.Map) => {
-    setMap(map)
-    setMapView(map)
-    mapView = map
-  }, [])
-
   return (
     <AbsoluteVStack
       position="absolute"
@@ -467,7 +477,22 @@ const HomeMapContent = memo(function HomeMap({
         {...getLocation()}
         padding={padding}
         features={features}
-        mapRef={setMapRef}
+        center={center}
+        mapRef={(map: mapboxgl.Map) => {
+          setMap(map)
+          setMapView(map)
+          mapView = map
+        }}
+        selected={om.state.home.selectedRestaurant?.id}
+        onSelect={(id) => {
+          if (id !== om.state.home.selectedRestaurant?.id) {
+            const restaurant = restaurants.find((x) => x.id === id)
+            om.actions.home.setSelectedRestaurant({
+              id: restaurant.id,
+              slug: restaurant.slug,
+            })
+          }
+        }}
       />
     </AbsoluteVStack>
   )

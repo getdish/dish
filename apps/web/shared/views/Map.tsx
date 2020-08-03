@@ -15,6 +15,22 @@ type MapProps = {
   padding?: { top: number; left: number; bottom: number; right: number }
   mapRef?: (map: mapboxgl.Map) => void
   style?: string
+  onSelect?: (id: string) => void
+  selected?: string
+}
+
+const SOURCE_ID = 'restaurants'
+const POINT_LAYER_ID = 'restaurants-points'
+const TEXT_LAYER_ID = 'restaurants-text'
+
+const mapSetFeature = (map: mapboxgl.Map, id: any, obj: any) => {
+  map.setFeatureState(
+    {
+      source: SOURCE_ID,
+      id,
+    },
+    obj
+  )
 }
 
 export const Map = ({
@@ -24,9 +40,27 @@ export const Map = ({
   features,
   style,
   mapRef,
+  selected,
+  onSelect,
 }: MapProps) => {
   const mapNode = useRef<HTMLDivElement>(null)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
+  const internal = useRef({ active: null })
+
+  const setActive = (id: string | null) => {
+    const cur = internal.current.active
+    if (cur != null) {
+      mapSetFeature(map, id, { active: false })
+    }
+    if (id) {
+      internal.current.active = id
+      mapSetFeature(map, id, { active: true })
+      const feature = features[+id]
+      if (feature) {
+        onSelect?.(feature.properties.id)
+      }
+    }
+  }
 
   useEffect(() => {
     if (!mapNode.current) return
@@ -79,7 +113,10 @@ export const Map = ({
   // center
   useEffect(() => {
     if (!map) return
-    map?.setCenter(center)
+    map?.flyTo({
+      center,
+      speed: 0.25,
+    })
   }, [map, center.lng, center.lat])
 
   // span
@@ -103,10 +140,6 @@ export const Map = ({
   useEffect(() => {
     if (!map) return
     if (!features.length) return
-
-    const SOURCE_ID = 'restaurants'
-    const POINT_LAYER_ID = 'restaurants-points'
-    const TEXT_LAYER_ID = 'restaurants-text'
 
     map.addSource(SOURCE_ID, {
       type: 'geojson',
@@ -179,10 +212,10 @@ export const Map = ({
       source: SOURCE_ID,
 
       layout: {
-        'icon-image': 'restaurant-pizza-15',
+        'icon-image': 'fire-station-15',
         'text-field': [
           'format',
-          ['upcase', ['get', 'title']],
+          ['get', 'title'],
           { 'font-scale': 0.8 },
           '\n',
           {},
@@ -227,27 +260,17 @@ export const Map = ({
     } & mapboxgl.EventData
     type Listener = (ev: Event) => void
 
-    const mapSetFeature = (id: any, obj: any) => {
-      map.setFeatureState(
-        {
-          source: SOURCE_ID,
-          id,
-        },
-        obj
-      )
-    }
-
     let hoverId = null
     const setHovered = (e: Event, hover: boolean) => {
       map.getCanvas().style.cursor = hover ? 'pointer' : ''
       // only one at a time
       if (hoverId != null) {
-        mapSetFeature(hoverId, { hover: false })
+        mapSetFeature(map, hoverId, { hover: false })
         hoverId = null
       }
       if (hover) {
         hoverId = e.features[0].id
-        mapSetFeature(hoverId, { hover: true })
+        mapSetFeature(map, hoverId, { hover: true })
       }
     }
 
@@ -260,13 +283,8 @@ export const Map = ({
       setHovered(e, false)
     }
 
-    let id = null
     const handleMouseClick: Listener = (e) => {
-      if (id != null) {
-        mapSetFeature(id, { active: false })
-      }
-      id = e.features[0].id
-      mapSetFeature(id, { active: true })
+      setActive(`${e.features[0].id}`)
     }
 
     map.on('click', POINT_LAYER_ID, handleMouseClick)
@@ -282,6 +300,12 @@ export const Map = ({
       map.removeSource(SOURCE_ID)
     }
   }, [map, features])
+
+  useEffect(() => {
+    if (!map) return
+    if (!selected) return
+    setActive(selected)
+  }, [map, selected])
 
   return (
     <div
