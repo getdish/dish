@@ -233,17 +233,21 @@ const HomeMapContent = memo(function HomeMap({
   const { drawerWidth, width, paddingLeft } = useMapSize(isSmall)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
   const [getLocation, setLocation] = useStateFn(getStateLocation(state))
-  const [center, setCenter] = useState<LngLat>(state.center)
-  const selectedId = om.state.home.selectedRestaurant?.id
+  const [selected, setSelected] = useState(om.state.home.selectedRestaurant?.id)
 
+  const selectedId = om.state.home.selectedRestaurant?.id
   useEffect(() => {
+    setSelected(selectedId)
     const selectedRestaurant = restaurants.find((x) => x.id === selectedId)
     const coords = selectedRestaurant?.location.coordinates
     if (coords) {
-      setCenter({
-        lng: coords[0],
-        lat: coords[1],
-      })
+      setLocation((loc) => ({
+        ...loc,
+        center: {
+          lng: coords[0],
+          lat: coords[1],
+        },
+      }))
     }
   }, [selectedId])
 
@@ -307,53 +311,46 @@ const HomeMapContent = memo(function HomeMap({
   }, [map, restaurants])
 
   // Search - hover restaurant
-  // useEffect(
-  //   () => {
-  //     if (!map) return
+  useEffect(() => {
+    if (!map) return
 
-  //     return om.reaction(
-  //       (state) => state.home.hoveredRestaurant,
-  //       (hoveredRestaurant) => {
-  //         if (hoveredRestaurant === false) {
-  //           setCenter(getStateLocation(om.state.home.currentState))
-  //           return
-  //         }
-  //         if (!hoveredRestaurant) {
-  //           return
-  //         }
-  //         if (omStatic.state.home.isScrolling) return
-  //         for (const annotation of map.annotations) {
-  //           if (annotation.data?.id === hoveredRestaurant.id) {
-  //             annotation.selected = true
-  //           }
-  //         }
-  //         const restaurants = getRestaurants()
-  //         const restaurant = restaurants.find(
-  //           (x) =>
-  //             x.id === hoveredRestaurant.id || x.slug === hoveredRestaurant.slug
-  //         )
-  //         const coordinates = restaurant?.location?.coordinates
-  //         if (coordinates) {
-  //           // keep current span
-  //           resumeMap()
-  //           const state = omStatic.state.home.currentState
-  //           centerMapTo({
-  //             map,
-  //             center: {
-  //               lat: coordinates[1],
-  //               lng: coordinates[0],
-  //             },
-  //             span: {
-  //               lat: Math.min(state.span.lat, 0.036),
-  //               lng: Math.min(state.span.lng, 0.036),
-  //             },
-  //           })
-  //         }
-  //       }
-  //     )
-  //   },
-  //   [map]
-  // )
+    return om.reaction(
+      (state) => state.home.hoveredRestaurant,
+      (hoveredRestaurant) => {
+        if (hoveredRestaurant === false) {
+          // revert to last
+          const { center, span } = getStateLocation(om.state.home.currentState)
+          setLocation({ center, span })
+          return
+        }
+        if (!hoveredRestaurant) {
+          return
+        }
+        if (omStatic.state.home.isScrolling) return
+
+        setSelected(hoveredRestaurant.id)
+
+        const restaurants = getRestaurants()
+        const restaurant = restaurants.find(
+          (x) =>
+            x.id === hoveredRestaurant.id || x.slug === hoveredRestaurant.slug
+        )
+        const coordinates = restaurant?.location?.coordinates
+        if (coordinates) {
+          setLocation((loc) => ({
+            center: {
+              lat: coordinates[1],
+              lng: coordinates[0],
+            },
+            span: {
+              lat: Math.min(loc.span.lat, 0.036),
+              lng: Math.min(loc.span.lng, 0.036),
+            },
+          }))
+        }
+      }
+    )
+  }, [map])
 
   // Detail - center to restaurant
   // useDebounceEffect(
@@ -474,16 +471,16 @@ const HomeMapContent = memo(function HomeMap({
       width={width}
     >
       <Map
-        {...getLocation()}
+        center={getLocation().center}
+        span={getLocation().span}
         padding={padding}
         features={features}
-        center={center}
         mapRef={(map: mapboxgl.Map) => {
           setMap(map)
           setMapView(map)
           mapView = map
         }}
-        selected={om.state.home.selectedRestaurant?.id}
+        selected={selected}
         onSelect={(id) => {
           if (id !== om.state.home.selectedRestaurant?.id) {
             const restaurant = restaurants.find((x) => x.id === id)
