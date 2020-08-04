@@ -24,6 +24,7 @@ export * from './hooks/useRefMounted'
 export * from './hooks/useResizeObserver'
 export * from './hooks/useScrollPosition'
 export * from './hooks/useThrottleFn'
+export * from './hooks/useLazyEffect'
 export * from './hooks/useVisibilityObserver'
 export * from './hooks/useWindowSize'
 

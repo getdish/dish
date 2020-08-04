@@ -13,6 +13,7 @@ export const HomeMapControlsUnderlay = memo(() => {
   const om = useOvermind()
   const zoomLevel = useZoomLevel()
   const hasMovedMap = om.state.home.currentState?.['hasMovedMap']
+  console.log({ zoomLevel, hasMovedMap })
   const isSmall = useMediaQueryIsSmall()
   const { paddingLeft, width } = useMapSize(isSmall)
   return (
@@ -79,7 +80,7 @@ export const HomeMapControlsUnderlay = memo(() => {
               </OverlayLinkButton>
             )}
 
-          {zoomLevel !== 'medium' && (
+          {hasMovedMap && zoomLevel !== 'medium' && (
             <OverlayLinkButton
               Icon={Map}
               pointerEvents="auto"
@@ -87,7 +88,7 @@ export const HomeMapControlsUnderlay = memo(() => {
               justifyContent="center"
               onPress={mapZoomToMedium}
             >
-              Zoom out
+              Fit to results
             </OverlayLinkButton>
           )}
         </HStack>

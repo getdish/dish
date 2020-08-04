@@ -3,8 +3,6 @@ import {
   RestaurantOnlyIds,
   RestaurantSearchArgs,
   Tag,
-  getHomeDishes,
-  resolved,
   search,
   slugify,
 } from '@dish/graph'
@@ -15,10 +13,7 @@ import { isEqual } from '@o/fast-compare'
 import _, { clamp, cloneDeep, findLast, isPlainObject, last } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
 
-import { fuzzyFindIndices } from '../helpers/fuzzy'
 import { getBreadcrumbs, isBreadcrumbState } from '../pages/home/getBreadcrumbs'
-import { useRestaurantQuery } from '../pages/home/useRestaurantQuery'
-import { LinkButtonProps } from '../views/ui/LinkProps'
 import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
 import { getNextState } from './getNextState'
 import { getTagId } from './getTagId'
@@ -40,7 +35,6 @@ import {
   HomeActiveTagsRecord,
   HomeState,
   HomeStateItem,
-  HomeStateItemBase,
   HomeStateItemHome,
   HomeStateItemRestaurant,
   HomeStateItemSearch,
@@ -66,6 +60,7 @@ export const state: HomeState = {
   selectedRestaurant: null,
   showUserMenu: false,
   searchBarTagIndex: 0,
+  centerToResults: 0,
   allTags,
   allTagsNameToID: {},
   allUsers: {},
@@ -843,6 +838,7 @@ const setHasMovedMap: Action<boolean | void> = (om, val = true) => {
   const next = !!val
   const { lastSearchState } = om.state.home
   if (lastSearchState && lastSearchState.hasMovedMap !== next) {
+    om.state.home.centerToResults = Date.now()
     lastSearchState.hasMovedMap = next
   }
 }
@@ -870,7 +866,6 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
       ...next,
       id: state.id,
     }
-    console.log('updating active tags...', nextState)
     // @ts-ignore
     om.actions.home.updateHomeState(nextState)
   } catch (err) {
@@ -1189,6 +1184,11 @@ const setTopDishes: Action<any> = (om, val) => {
   om.state.home.topDishes = val
 }
 
+const setCenterToResults: Action<number | void> = (om, val) => {
+  // @ts-ignore
+  om.state.home.centerToResults = val ?? Date.now()
+}
+
 export const actions = {
   getShouldNavigate,
   syncStateToRoute,
@@ -1199,6 +1199,7 @@ export const actions = {
   setIsScrolling,
   setLocationAutocompleteResults,
   setHasMovedMap,
+  setCenterToResults,
   setSearchQuery,
   updateCurrentMapAreaInformation,
   clearSearch,

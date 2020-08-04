@@ -15,6 +15,7 @@ import { ScrollView } from 'react-native'
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { omStatic } from '../../state/om'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
+import { getMinLngLat } from './getLngLat'
 import { HomePagePaneProps } from './HomePagePaneProps'
 import { HomeScrollView } from './HomeScrollView'
 import { HomeStackDrawer } from './HomeStackDrawer'
@@ -55,7 +56,9 @@ const HomePageRestaurant = memo(
         lng: coords?.[0],
         lat: coords?.[1],
       },
+      span: getMinLngLat(item.span, 0.0025),
     }
+    console.log('nextState', nextState)
 
     useEffect(() => {
       if (!nextState.restaurantId) return

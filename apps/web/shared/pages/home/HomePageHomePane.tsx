@@ -9,6 +9,7 @@ import {
   Text,
   VStack,
   useDebounce,
+  useDebounceEffect,
 } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
 import _ from 'lodash'
@@ -76,6 +77,16 @@ export default memo(function HomePageHomePane(props: Props) {
   const state = props.item
   const { activeTagIds, center, span } = state
   const isSmall = useMediaQueryIsSmall()
+
+  useDebounceEffect(
+    () => {
+      if (props.isActive) {
+        om.actions.home.setCenterToResults()
+      }
+    },
+    100,
+    [props.isActive]
+  )
 
   useEffect(() => {
     if (isLoaded && props.isActive) {
