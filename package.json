@@ -24,7 +24,7 @@
     "build:monitor": "ultra --monitor",
     "build:watch:broken": "yarn tsc -b -w",
     "build:refs": "typescript-monorepo-toolkit inject-refs .",
-    "test": "ultra -r --no-pretty test",
+    "test": "ultra -r --no-pretty --serial test",
     "clean": "bin/clean.sh",
     "migrate": "(cd services/hasura && hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password)",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",
