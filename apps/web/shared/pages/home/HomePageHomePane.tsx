@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { TopCuisine } from '@dish/graph'
+import { TopCuisine, TopCuisineDish, getHomeDishes } from '@dish/graph'
 import {
   AbsoluteVStack,
   Box,
@@ -10,6 +10,7 @@ import {
   VStack,
   useDebounce,
 } from '@dish/ui'
+import { isEqual } from '@o/fast-compare'
 import _ from 'lodash'
 import {
   default as React,
@@ -23,8 +24,10 @@ import {
 import { ChevronRight } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
 
+import { getTagId } from '../../state/getTagId'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { HomeStateItemHome } from '../../state/home-types'
+import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic, useOvermind } from '../../state/om'
 import { tagDescriptions } from '../../state/tagDescriptions'
 import { NotFoundPage } from '../../views/NotFoundPage'
@@ -43,31 +46,64 @@ import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 type Props = HomePagePaneProps<HomeStateItemHome>
 
+function updateHomeTagsCache(all: any) {
+  let tags: NavigableTag[] = []
+  // update tags
+  for (const topDishes of all) {
+    tags.push({
+      id: `${topDishes.country}`,
+      name: topDishes.country,
+      type: 'country',
+      icon: topDishes.icon,
+    })
+    tags = [
+      ...tags,
+      ...(topDishes.dishes ?? []).map((dish) => ({
+        id: dish.name ?? '',
+        name: dish.name ?? '',
+        type: 'dish',
+      })),
+    ]
+  }
+  omStatic.actions.home.addTagsToCache(tags)
+}
+
 export default memo(function HomePageHomePane(props: Props) {
   const om = useOvermind()
   const isOnHome = props.isActive
   const [isLoaded, setIsLoaded] = useState(false)
-  const lastTopDishesLoad = useRef('')
-  const loadTopDishesDelayed = useDebounce(om.actions.home.loadHomeDishes, 200)
+  const [topDishes, setTopDishes] = useState([])
+  const state = props.item
+  const { activeTagIds, center, span } = state
+  const isSmall = useMediaQueryIsSmall()
 
   useEffect(() => {
-    if (props.isActive) {
-      const key = JSON.stringify(props.item.center)
-      if (lastTopDishesLoad.current === key) return
-      if (lastTopDishesLoad.current === '') {
-        om.actions.home.loadHomeDishes()
-      } else {
-        loadTopDishesDelayed()
+    if (isLoaded && props.isActive) {
+      let isMounted = true
+      getHomeDishes(
+        center!.lat,
+        center!.lng,
+        // TODO span
+        span!.lat
+      ).then((all) => {
+        if (!isMounted) return
+        if (!isEqual(all, topDishes)) {
+          updateHomeTagsCache(all)
+          setTopDishes(all)
+          om.actions.home.setTopDishes(all)
+        }
+      })
+
+      return () => {
+        isMounted = false
       }
-      lastTopDishesLoad.current = key
     }
-  }, [props.item.center, props.isActive, lastTopDishesLoad])
+  }, [props.isActive, isLoaded, JSON.stringify({ center, span })])
 
   // on load home clear search effect!
   useEffect(() => {
     // not on first load
     if (props.isActive && isLoaded) {
-      console.log('should clear search and tags')
       om.actions.home.clearSearch()
       om.actions.home.clearTags()
     }
@@ -88,65 +124,59 @@ export default memo(function HomePageHomePane(props: Props) {
   }, [isOnHome])
 
   if (isOnHome || isLoaded) {
-    return <HomePageTopDishes {...props} />
+    return (
+      <>
+        <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
+        <VStack
+          position="relative"
+          flex={1}
+          maxHeight="100%"
+          overflow="visible"
+        >
+          <HomeScrollView>
+            <VStack paddingTop={isSmall ? 20 : 28} spacing="xl">
+              {/* LENSES - UNIQUELY GOOD HERE */}
+              <VStack>
+                <VStack alignItems="center">
+                  <HStack
+                    width="100%"
+                    alignItems="center"
+                    justifyContent="center"
+                    paddingHorizontal={20}
+                    position="relative"
+                  >
+                    {!isSmall && <HomeLenseTitle state={state} />}
+
+                    <HStack alignItems="center" justifyContent="center">
+                      <HomeLenseBar
+                        backgroundColor="transparent"
+                        size="xl"
+                        activeTagIds={activeTagIds}
+                      />
+                    </HStack>
+                  </HStack>
+
+                  <Spacer size={isSmall ? 5 : 15} />
+                </VStack>
+
+                <HomeIntroLetter />
+
+                <Spacer size="xl" />
+
+                <Suspense fallback={null}>
+                  <HomeTopDishesContent topDishes={topDishes} />
+                </Suspense>
+              </VStack>
+            </VStack>
+          </HomeScrollView>
+        </VStack>
+      </>
+    )
   }
 
   return null
 })
 
-const HomePageTopDishes = memo((props: Props) => {
-  const isSmall = useMediaQueryIsSmall()
-  const state = props.item as HomeStateItemHome
-  const { currentLocationName, activeTagIds } = state
-
-  if (!state) {
-    return <NotFoundPage title="Home not found" />
-  }
-
-  return (
-    <>
-      <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
-      <VStack position="relative" flex={1} maxHeight="100%" overflow="visible">
-        <HomeScrollView>
-          <VStack paddingTop={isSmall ? 20 : 28} spacing="xl">
-            {/* LENSES - UNIQUELY GOOD HERE */}
-            <VStack>
-              <VStack alignItems="center">
-                <HStack
-                  width="100%"
-                  alignItems="center"
-                  justifyContent="center"
-                  paddingHorizontal={20}
-                  position="relative"
-                >
-                  {!isSmall && <HomeLenseTitle state={state} />}
-
-                  <HStack alignItems="center" justifyContent="center">
-                    <HomeLenseBar
-                      backgroundColor="transparent"
-                      size="xl"
-                      activeTagIds={activeTagIds}
-                    />
-                  </HStack>
-                </HStack>
-
-                <Spacer size={isSmall ? 5 : 15} />
-              </VStack>
-
-              <HomeIntroLetter />
-
-              <Spacer size="xl" />
-
-              <Suspense fallback={null}>
-                <HomeTopDishesContent />
-              </Suspense>
-            </VStack>
-          </VStack>
-        </HomeScrollView>
-      </VStack>
-    </>
-  )
-})
 // {/* <Spacer size={isSmall ? 5 : 15} />
 //<Text
 // marginTop={30}
@@ -241,31 +271,26 @@ const HomeIntroLetter = memo(() => {
   )
 })
 
-const HomeTopDishesContent = memo(() => {
-  const om = useOvermind()
-  const { topDishes } = om.state.home
-
-  return useMemo(() => {
-    if (topDishes.length) {
-      console.warn('rendering contnet more expensive', topDishes)
-    }
-    return (
-      <>
-        {!topDishes.length && (
-          <>
-            <LoadingItems />
-            <LoadingItems />
-          </>
-        )}
-        {topDishes.map((country) => (
-          <React.Fragment key={country.country}>
-            <TopDishesCuisineItem country={country} />
-            {/* <Spacer size="sm" /> */}
-          </React.Fragment>
-        ))}
-      </>
-    )
-  }, [topDishes])
+const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
+  if (topDishes.length) {
+    console.warn('rendering contnet more expensive', topDishes)
+  }
+  return (
+    <>
+      {!topDishes.length && (
+        <>
+          <LoadingItems />
+          <LoadingItems />
+        </>
+      )}
+      {topDishes.map((country) => (
+        <React.Fragment key={country.country}>
+          <TopDishesCuisineItem country={country} />
+          {/* <Spacer size="sm" /> */}
+        </React.Fragment>
+      ))}
+    </>
+  )
 })
 
 const dishHeight = 140
@@ -322,10 +347,10 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
             <TopDishesTrendingRestaurants country={country} />
 
             {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
-              console.log(
-                'top_dish.best_restaurants',
-                top_dish.best_restaurants
-              )
+              // console.log(
+              //   'top_dish.best_restaurants',
+              //   top_dish.best_restaurants
+              // )
               return (
                 <HStack key={index}>
                   <DishView

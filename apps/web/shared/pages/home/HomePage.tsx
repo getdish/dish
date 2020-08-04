@@ -20,6 +20,7 @@ export default memo(function HomePage() {
     <AbsoluteVStack
       fullscreen
       overflow="hidden"
+      backgroundColor="#C9E9F6" // map color
       {...(isSmall && {
         borderRadius: 10,
       })}

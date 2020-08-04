@@ -1,5 +1,6 @@
-import { series } from '@dish/async'
+import { fullyIdle, series, sleep } from '@dish/async'
 import { LngLat } from '@dish/graph'
+import { useGet } from '@dish/ui'
 import _ from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { useEffect, useRef, useState } from 'react'
@@ -45,21 +46,16 @@ const mapSetIconSelected = (map: mapboxgl.Map, id: any) => {
   ])
 }
 
-export const Map = ({
-  center,
-  span,
-  padding,
-  features,
-  style,
-  mapRef,
-  selected,
-  onSelect,
-}: MapProps) => {
+export const Map = (props: MapProps) => {
   const mapNode = useRef<HTMLDivElement>(null)
-  const [map, setMap] = useState<mapboxgl.Map | null>(null)
-  const internal = useRef({ active: null })
+  let [map, setMap] = useState<mapboxgl.Map | null>(null)
+  const internal = useRef({ active: null, hasSetInitialSource: false })
+  const getProps = useGet(props)
 
-  const setActive = (internalId: number) => {
+  // this is inside memo...
+  const setActive = (map: mapboxgl.Map, internalId: number) => {
+    const { onSelect, features } = getProps()
+    if (!features.length) return
     const cur = internal.current.active
     if (cur != null) {
       mapSetFeature(map, internalId, { active: false })
@@ -67,9 +63,7 @@ export const Map = ({
     if (internalId > -1) {
       internal.current.active = internalId
       mapSetFeature(map, internalId, { active: true })
-
       map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', internalId])
-
       map.setLayoutProperty(POINT_LAYER_ID, 'symbol-sort-key', [
         'match',
         ['id'],
@@ -77,10 +71,6 @@ export const Map = ({
         -1,
         ['get', 'id'],
       ])
-      // internalId, {
-      //   : -100,
-      // })
-
       const feature = features[+internalId]
       if (feature) {
         onSelect?.(feature.properties.id)
@@ -102,17 +92,9 @@ export const Map = ({
   }, [map])
 
   useEffect(() => {
-    if (!map) return
-    if (!selected) return
-    const index = features.findIndex((x) => x.properties.id === selected)
-    mapSetIconSelected(map, index)
-    setActive(index)
-  }, [map, features, selected])
-
-  useEffect(() => {
     if (!mapNode.current) return
 
-    const mapboxMap = new mapboxgl.Map({
+    map = new mapboxgl.Map({
       container: mapNode.current,
       style: style ?? 'mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq', // ??
       // dark
@@ -120,37 +102,141 @@ export const Map = ({
       center,
       zoom: 11,
     })
+    window['map'] = map
 
     const loadMarker = () =>
       new Promise((res, rej) => {
-        mapboxMap.loadImage(marker, (err, image) => {
+        map.loadImage(marker, (err, image) => {
           if (err) return rej(err)
-          if (!mapboxMap.hasImage('custom-marker')) {
-            mapboxMap.addImage('custom-marker', image)
+          if (!map.hasImage('custom-marker')) {
+            map.addImage('custom-marker', image)
           }
           res(image)
         })
       })
+
     const loadMap = () =>
       new Promise((res) => {
-        mapboxMap.on('load', res)
+        map.on('load', res)
       })
 
-    const dispose = series([
-      loadMap,
-      loadMarker,
-      () => {
-        mapboxMap.resize()
-        setMap(mapboxMap)
-        mapRef?.(mapboxMap)
-      },
-    ])
+    const cancels = new Set<Function>()
+
+    cancels.add(
+      series([
+        () => Promise.all([loadMap(), loadMarker()]),
+        () => {
+          // layers
+          const layout: mapboxgl.AnyLayout = {
+            'icon-image': 'bar-15',
+            'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
+            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+            'text-offset': [0, 0.6],
+            'text-anchor': 'top',
+          }
+
+          map.addSource(SOURCE_ID, {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: props.features,
+            },
+            generateId: true,
+          })
+
+          map.addLayer({
+            id: POINT_LAYER_ID,
+            type: 'symbol',
+            source: SOURCE_ID,
+            layout,
+          })
+
+          map.addLayer({
+            id: POINT_HOVER_LAYER_ID,
+            type: 'symbol',
+            source: SOURCE_ID,
+            filter: ['==', 'id', ''],
+            layout: {
+              ...layout,
+              'icon-image': 'heart-15',
+            },
+          })
+
+          type Event = mapboxgl.MapMouseEvent & {
+            features?: mapboxgl.MapboxGeoJSONFeature[]
+          } & mapboxgl.EventData
+          type Listener = (ev: Event) => void
+
+          let hoverId = null
+          const setHovered = (e: Event, hover: boolean) => {
+            map.getCanvas().style.cursor = hover ? 'pointer' : ''
+
+            // only one at a time
+            if (hoverId != null) {
+              // map.setLayoutProperty(POINT_LAYER_ID, 'icon-image', 'mountain-15')
+              mapSetFeature(map, hoverId, { hover: false })
+              hoverId = null
+            }
+            const id = e.features?.[0].id
+            if (id > -1 && hoverId != id) {
+              if (hover) {
+                // map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', id])
+                mapSetIconSelected(map, id)
+                // map.setLayoutProperty(POINT_LAYER_ID, 'icon-image', 'bar-15')
+                hoverId = id
+                mapSetFeature(map, hoverId, { hover: true })
+              }
+            }
+          }
+
+          const handleMouseMove: Listener = (e) => {
+            handleMouseLeave(e)
+            setHovered(e, true)
+          }
+
+          const handleMouseLeave: Listener = (e) => {
+            setHovered(e, false)
+          }
+
+          const handleMouseClick: Listener = (e) => {
+            setActive(map, +e.features[0].id)
+          }
+
+          map.on('click', POINT_LAYER_ID, handleMouseClick)
+          map.on('mousemove', POINT_LAYER_ID, handleMouseMove)
+          map.on('mouseleave', POINT_LAYER_ID, handleMouseLeave)
+
+          cancels.add(() => {
+            map.off('click', POINT_LAYER_ID, handleMouseClick)
+            map.off('mousemove', POINT_LAYER_ID, handleMouseMove)
+            map.off('mouseleave', POINT_LAYER_ID, handleMouseLeave)
+            map.removeLayer(POINT_LAYER_ID)
+            map.removeLayer(POINT_HOVER_LAYER_ID)
+          })
+        },
+        () => {
+          map.resize()
+          setMap(map)
+          props.mapRef?.(map)
+        },
+      ])
+    )
 
     return () => {
-      dispose()
+      cancels.forEach((c) => c())
       mapNode.current.innerHTML = ''
     }
   }, [])
+
+  const { center, span, padding, features, style, selected } = props
+
+  useEffect(() => {
+    if (!map) return
+    if (!selected) return
+    const index = features.findIndex((x) => x.properties.id === selected)
+    mapSetIconSelected(map, index)
+    setActive(map, index)
+  }, [map, features, selected])
 
   useEffect(() => {
     if (!map || !style) return
@@ -160,10 +246,15 @@ export const Map = ({
   // center
   useEffect(() => {
     if (!map) return
-    map?.flyTo({
-      center,
-      speed: 0.5,
-    })
+    return series([
+      fullyIdle,
+      () => {
+        map?.flyTo({
+          center,
+          speed: 0.5,
+        })
+      },
+    ])
   }, [map, center.lng, center.lat])
 
   // span
@@ -183,99 +274,16 @@ export const Map = ({
     map?.setPadding(padding)
   }, [map, JSON.stringify(padding)])
 
-  // markers
   useEffect(() => {
     if (!map) return
-    if (!features.length) return
-
-    map.addSource(SOURCE_ID, {
-      type: 'geojson',
-      data: {
+    const source = map.getSource(SOURCE_ID)
+    if (source?.type === 'geojson') {
+      source.setData({
         type: 'FeatureCollection',
         features,
-      },
-      generateId: true,
-    })
-
-    const layout: mapboxgl.AnyLayout = {
-      'icon-image': 'bar-15',
-      'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
-      'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-      'text-offset': [0, 0.6],
-      'text-anchor': 'top',
+      })
     }
-
-    map.addLayer({
-      id: POINT_LAYER_ID,
-      type: 'symbol',
-      source: SOURCE_ID,
-      layout,
-    })
-
-    map.addLayer({
-      id: POINT_HOVER_LAYER_ID,
-      type: 'symbol',
-      source: SOURCE_ID,
-      filter: ['==', 'id', ''],
-      layout: {
-        ...layout,
-        'icon-image': 'heart-15',
-      },
-    })
-
-    type Event = mapboxgl.MapMouseEvent & {
-      features?: mapboxgl.MapboxGeoJSONFeature[]
-    } & mapboxgl.EventData
-    type Listener = (ev: Event) => void
-
-    let hoverId = null
-    const setHovered = (e: Event, hover: boolean) => {
-      map.getCanvas().style.cursor = hover ? 'pointer' : ''
-
-      // only one at a time
-      if (hoverId != null) {
-        // map.setLayoutProperty(POINT_LAYER_ID, 'icon-image', 'mountain-15')
-        mapSetFeature(map, hoverId, { hover: false })
-        hoverId = null
-      }
-      if (hover) {
-        const id = e.features[0].id
-        console.log('filter to show', id)
-        console.log('map', id, map)
-        // map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', id])
-        mapSetIconSelected(map, id)
-        // map.setLayoutProperty(POINT_LAYER_ID, 'icon-image', 'bar-15')
-        hoverId = id
-        mapSetFeature(map, hoverId, { hover: true })
-      }
-    }
-
-    const handleMouseMove: Listener = (e) => {
-      handleMouseLeave(e)
-      setHovered(e, true)
-    }
-
-    const handleMouseLeave: Listener = (e) => {
-      setHovered(e, false)
-    }
-
-    const handleMouseClick: Listener = (e) => {
-      setActive(+e.features[0].id)
-    }
-
-    map.on('click', POINT_LAYER_ID, handleMouseClick)
-    map.on('mousemove', POINT_LAYER_ID, handleMouseMove)
-    map.on('mouseleave', POINT_LAYER_ID, handleMouseLeave)
-
-    return () => {
-      map.off('click', POINT_LAYER_ID, handleMouseClick)
-      map.off('mousemove', POINT_LAYER_ID, handleMouseMove)
-      map.off('mouseleave', POINT_LAYER_ID, handleMouseLeave)
-      map.removeLayer(POINT_LAYER_ID)
-      map.removeLayer(POINT_HOVER_LAYER_ID)
-      map.removeSource(SOURCE_ID)
-    }
-  }, [map, features])
+  }, [features, map])
 
   return (
     <div

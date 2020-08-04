@@ -18,7 +18,7 @@ export const HomeMapRestaurantPeek = memo(
 
     if (
       state.type === 'restaurant' &&
-      selectedRestaurant.slug === state.restaurantSlug
+      selectedRestaurant?.slug === state.restaurantSlug
     ) {
       return null
     }

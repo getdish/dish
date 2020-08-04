@@ -38,7 +38,6 @@ export type HomeState = {
   stateIndex: number
   stateIds: string[]
   topDishes: TopCuisine[]
-  topDishesFilteredIndices: number[]
   skipNextPageFetchData: boolean
   lastHomeState: HomeStateItemHome
   lastSearchState: HomeStateItemSearch | undefined

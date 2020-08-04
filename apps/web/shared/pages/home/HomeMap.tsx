@@ -1,13 +1,5 @@
-import { idle } from '@dish/async'
-import { Restaurant, Tag, graphql } from '@dish/graph'
-import {
-  AbsoluteVStack,
-  VStack,
-  useDebounce,
-  useGet,
-  useOnMount,
-  useStateFn,
-} from '@dish/ui'
+import { LngLat, Restaurant, Tag, graphql } from '@dish/graph'
+import { AbsoluteVStack, useDebounce, useStateFn } from '@dish/ui'
 import { uniqBy } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, {
@@ -26,11 +18,10 @@ import {
   isRestaurantState,
   isSearchState,
 } from '../../state/home-helpers'
-import { HomeStateItem, LngLat } from '../../state/home-types'
+import { HomeStateItem } from '../../state/home-types'
 import { setMapView } from '../../state/mapView'
-import { omStatic, useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/om'
 import { Map } from '../../views/Map'
-import { centerMapToRegion } from './centerMapToRegion'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
 import { snapPoints } from './HomeSmallDrawer'
 import { useLastValueWhen } from './useLastValueWhen'
@@ -55,16 +46,12 @@ export default memo(function HomeMap() {
           onLoadedRestaurantDetail={setRestaurantDetail}
         />
       </Suspense>
-      <VStack
-        className="ease-in-out-fast"
-        flex={1}
-        opacity={status === 'loading' ? 0 : 1}
-      >
+      <Suspense fallback={null}>
         <HomeMapContent
           restaurantDetail={restaurantDetail}
           restaurants={restaurants}
         />
-      </VStack>
+      </Suspense>
     </>
   )
 })
@@ -93,12 +80,15 @@ const HomeMapDataLoader = memo(
         const searchState = om.state.home.lastSearchState
         all = searchState?.results ?? []
       } else if (isHomeState(state)) {
+        // for now, bad abstraction we should generalize in states
         // @ts-ignore
         all = om.state.home.topDishes
           .map((x) => x.top_restaurants)
           .flat()
           .filter((x) => x?.id)
           .map((x) => ({ id: x.id, slug: x.slug }))
+          // slicing for now
+          .slice(0, 50)
       }
 
       const allIds = [...new Set(all.map((x) => x.id))]
@@ -111,7 +101,7 @@ const HomeMapDataLoader = memo(
           const r = useRestaurantQuery(slug)
           const coords = r.location?.coordinates
           return {
-            id,
+            id: id ?? r.id,
             slug,
             name: r.name,
             location: {
@@ -138,72 +128,21 @@ const HomeMapDataLoader = memo(
   )
 )
 
-let mapView: mapboxgl.Map
-
-// pause/unpause, need to define better
-// start paused, first map update we ignore because its slightly off
-let pauseMapUpdates = true
-let pendingUpdates = false
-let version = 0
-const pauseMap = () => {
-  version++
-  pauseMapUpdates = true
-}
-const forceResumeMap = async () => {
-  const id = version
-  await idle(20)
-  if (id === version) {
-    resumeMap(true)
-  }
-}
-const resumeMap = (force: boolean = false) => {
-  version++
-  pauseMapUpdates = false
-  if (force || pendingUpdates) {
-    pendingUpdates = false
-    if (pauseMapUpdates) {
-      pendingUpdates = true
-      console.log('pausing update region change')
-      // dont update while were transitioning to new state!
-      return
-    }
-    omStatic.actions.home.setHasMovedMap()
-    const span = mapView.span
-    pendingUpdates = false
-
-    if (
-      omStatic.state.home.hoveredRestaurant &&
-      omStatic.state.home.currentStateType === 'search'
-    ) {
-      console.log('avoid while hovered')
-      return
-    }
-
-    omStatic.actions.home.setMapArea({
-      center: {
-        lng: mapView.center.longitude,
-        lat: mapView.center.latitude,
-      },
-      span: {
-        lat: span.latitudeDelta,
-        lng: span.longitudeDelta,
-      },
-    })
-  }
-}
-
-function centerMapTo(p: { map: mapboxgl.Map; center: LngLat; span: LngLat }) {
-  if (pauseMapUpdates) {
-    console.debug('paused no centering')
-    return
-  }
-  centerMapToRegion(p)
-}
-
 const getStateLocation = (state: HomeStateItem) => ({
   center: state.center,
   span: state.span,
 })
+
+const getLngLat = (coords: number[]) => {
+  return {
+    lng: coords[0],
+    lat: coords[1],
+  }
+}
+
+const getMinLngLat = (ll: LngLat, max: number) => {
+  return getLngLat([Math.min(max, ll.lng), Math.min(max, ll.lat)])
+}
 
 const HomeMapContent = memo(function HomeMap({
   restaurants,
@@ -215,33 +154,101 @@ const HomeMapContent = memo(function HomeMap({
   const om = useOvermind()
   const isSmall = useMediaQueryIsSmall()
   const state = om.state.home.currentState
-  const lense = om.state.home.currentStateLense
-
-  const getRestaurants = useGet(restaurants)
   const { drawerWidth, width, paddingLeft } = useMapSize(isSmall)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
   const [getLocation, setLocation] = useStateFn(getStateLocation(state))
-  const [selected, setSelected] = useState(om.state.home.selectedRestaurant?.id)
+  const [selected, setSelected] = useState({
+    id: om.state.home.selectedRestaurant?.id,
+    span: state.span,
+    // center: state.center,
+    via: 'select' as 'select' | 'hover' | 'detail',
+  })
 
+  const { center, span } = getLocation()
+
+  // SELECTED
   const selectedId = om.state.home.selectedRestaurant?.id
   useEffect(() => {
-    setSelected(selectedId)
-    const selectedRestaurant = restaurants.find((x) => x.id === selectedId)
-    const coords = selectedRestaurant?.location.coordinates
-    if (coords) {
-      setLocation((loc) => ({
-        ...loc,
-        center: {
-          lng: coords[0],
-          lat: coords[1],
-        },
-      }))
+    if (selectedId) {
+      setSelected({
+        id: selectedId,
+        via: 'select',
+        span: getMinLngLat(state.span, 0.025),
+      })
     }
   }, [selectedId])
 
+  // HOVERED
+  const hoveredId =
+    om.state.home.hoveredRestaurant && om.state.home.hoveredRestaurant.id
   useEffect(() => {
-    setLocation(getStateLocation(state))
-  }, [JSON.stringify(state.center), JSON.stringify(state.span)])
+    if (hoveredId) {
+      setSelected({
+        id: hoveredId,
+        via: 'hover',
+        span: getMinLngLat(state.span, 0.02),
+      })
+    }
+  }, [hoveredId])
+
+  // DETAIL
+  const detailId = restaurantDetail?.id
+  useEffect(() => {
+    if (detailId) {
+      setSelected({
+        id: detailId,
+        via: 'detail',
+        span: getMinLngLat(state.span, 0.0025),
+      })
+    }
+  }, [detailId])
+
+  // gather restaruants
+  const isLoading = restaurants[0]?.location?.coordinates[0] === null
+  const key = useLastValueWhen(
+    () =>
+      `${selected.id}${JSON.stringify(
+        restaurants.map((x) => x.location?.coordinates)
+      )}`,
+    isLoading || (!restaurants.length && !restaurantDetail)
+  )
+
+  // sync down location from above state
+  // gqless hack - touch the prop before memo
+  restaurants[0]?.id
+  const restaurantSelected = useMemo(
+    () => (selected.id ? restaurants.find((x) => x.id === selected.id) : null),
+    [key]
+  )
+
+  console.log({
+    selected,
+    restaurantDetail,
+    restaurantSelected,
+    key,
+    center,
+    span,
+    restaurants,
+  })
+
+  useEffect(() => {
+    if (!restaurantSelected) return
+    const coords = restaurantSelected.location.coordinates
+    console.log('restaurantSelected', restaurantSelected)
+    console.log('SET LOCATION', restaurantSelected, coords)
+    if (coords) {
+      setLocation({
+        center: getLngLat(coords),
+        span: selected.span,
+      })
+    } else {
+      setLocation(getStateLocation(state))
+    }
+  }, [
+    restaurantSelected,
+    JSON.stringify(state.center),
+    JSON.stringify(state.span),
+  ])
 
   const snapPoint = isSmall
     ? // avoid resizing to top "fully open drawer" snap
@@ -261,35 +268,7 @@ const HomeMapContent = memo(function HomeMap({
         right: drawerWidth > 600 ? 6 : 0,
       }
 
-  useOnMount(() => {
-    // fix: dont send initial map location update, wait for ~fully loaded
-    const tm = setTimeout(resumeMap, 100)
-    return () => {
-      clearTimeout(tm)
-    }
-  })
-
-  const isLoading = restaurants[0]?.location?.coordinates[0] === null
-  const key = useLastValueWhen(
-    () => JSON.stringify(restaurants.map((x) => x.location?.coordinates)),
-    isLoading
-  )
-
-  // things we need in memo
-  restaurants[0]?.id
-  const features = useMemo(() => {
-    return getRestaurantMarkers(restaurants)
-  }, [key])
-
-  useEffect(() => {
-    if (!map) return
-    map.on('moveend', forceResumeMap)
-    map.on('region-change-start', pauseMap)
-    return () => {
-      map.off('moveend', forceResumeMap)
-      map.off('movestart', pauseMap)
-    }
-  }, [map])
+  const features = useMemo(() => getRestaurantMarkers(restaurants), [key])
 
   // stop map animation when moving away from page (see if this fixes some animation glitching/tearing)
   useLayoutEffect(() => {
@@ -297,158 +276,6 @@ const HomeMapContent = memo(function HomeMap({
     console.warn('test removing this')
     map.stop()
   }, [map, restaurants])
-
-  // Search - hover restaurant
-  useEffect(() => {
-    if (!map) return
-
-    return om.reaction(
-      (state) => state.home.hoveredRestaurant,
-      (hoveredRestaurant) => {
-        console.log('hoveredRestaurant', hoveredRestaurant)
-        if (hoveredRestaurant === false) {
-          // revert to last
-          const { center, span } = getStateLocation(om.state.home.currentState)
-          setLocation({ center, span })
-          return
-        }
-        if (!hoveredRestaurant) {
-          return
-        }
-        if (omStatic.state.home.isScrolling) return
-
-        setSelected(hoveredRestaurant.id)
-
-        const restaurants = getRestaurants()
-        const restaurant = restaurants.find(
-          (x) =>
-            x.id === hoveredRestaurant.id || x.slug === hoveredRestaurant.slug
-        )
-        const coordinates = restaurant?.location?.coordinates
-        if (coordinates) {
-          setLocation((loc) => ({
-            center: {
-              lat: coordinates[1],
-              lng: coordinates[0],
-            },
-            span: {
-              lat: Math.min(loc.span.lat, 0.036),
-              lng: Math.min(loc.span.lng, 0.036),
-            },
-          }))
-        }
-      }
-    )
-  }, [map])
-
-  // Detail - center to restaurant
-  // useDebounceEffect(
-  //   () => {
-  //     if (!map || !restaurantDetail?.location) return
-  //     const index =
-  //       restaurants?.findIndex((x) => x.id === restaurantDetail.id) ?? -1
-  //     if (index > -1) {
-  //       if (map.annotations[index]) {
-  //         map.annotations[index].selected = true
-  //       } else {
-  //         console.warn('no annotations?', index, map.annotations)
-  //       }
-  //     }
-  //     if (restaurantDetail.location?.coordinates) {
-  //       centerMapTo({
-  //         map,
-  //         center: {
-  //           lat: restaurantDetail.location.coordinates[1],
-  //           lng: restaurantDetail.location.coordinates[0],
-  //         },
-  //         span: state.span,
-  //       })
-  //     }
-  //   },
-  //   350,
-  //   [map, restaurants, restaurantDetail]
-  // )
-
-  // update annotations
-  // useEffect(() => {
-  //   if (!map) return
-  //   if (!restaurants?.length) return
-
-  //   // debounce
-  //   const cancels = new Set<Function>()
-
-  //   const handleSelect = (e) => {
-  //     const id = e.annotation.data.id
-  //     const restaurant = restaurants.find((x) => x.id === id)
-
-  //     if (restaurant) {
-  //       om.actions.home.setSelectedRestaurant({
-  //         id: restaurant.id,
-  //         slug: restaurant.slug,
-  //       })
-  //     }
-
-  //     if (omStatic.state.home.currentStateType === 'search') {
-  //       const index = restaurants.findIndex((x) => x.id === id)
-  //       om.actions.home.setActiveIndex({
-  //         index,
-  //         event: om.state.home.isHoveringRestaurant ? 'hover' : 'pin',
-  //       })
-  //     } else {
-  //       if (omStatic.state.home.currentStateType != 'restaurant') {
-  //         console.warn('show a little popover in large mode?')
-  //         // router.navigate({
-  //         //   name: 'restaurant',
-  //         //   params: {
-  //         //     slug: e.annotation.data.slug ?? '',
-  //         //   },
-  //         // })
-  //       }
-  //     }
-  //   }
-
-  //   const handleDeselect = () => {
-  //     if (om.state.home.selectedRestaurant) {
-  //       om.actions.home.setSelectedRestaurant(null)
-  //     }
-  //   }
-
-  //   map.addEventListener('select', handleSelect)
-  //   map.addEventListener('deselect', handleDeselect)
-  //   cancels.add(() => {
-  //     map.removeEventListener('select', handleSelect)
-  //     map.removeEventListener('deselect', handleDeselect)
-  //   })
-
-  //   // map.showAnnotations(annotations)
-  //   const hasAnnotations = !!annotations.length
-  //   if (hasAnnotations) {
-  //     try {
-  //       handleDeselect()
-  //       map.addAnnotations(annotations)
-  //     } catch (err) {
-  //       console.error(err)
-  //     }
-  //   }
-
-  //   // animate to them
-  //   // map.showItems(annotations, {
-  //   //   animate: false,
-  //   //   minimumSpan: createCoordinateSpan(radius, radius),
-  //   // })
-
-  //   return () => {
-  //     cancels.forEach((x) => x())
-  //     if (hasAnnotations) {
-  //       try {
-  //         console.warn('REMOVING ANNOTATIONS')
-  //         map.removeAnnotations(annotations)
-  //       } catch (err) {
-  //         console.error('Error removing annotations', err)
-  //       }
-  //     }
-  //   }
-  // }, [!!map, annotations])
 
   return (
     <AbsoluteVStack
@@ -460,16 +287,15 @@ const HomeMapContent = memo(function HomeMap({
       width={width}
     >
       <Map
-        center={getLocation().center}
-        span={getLocation().span}
+        center={center}
+        span={span}
         padding={padding}
         features={features}
         mapRef={(map: mapboxgl.Map) => {
           setMap(map)
           setMapView(map)
-          mapView = map
         }}
-        selected={selected}
+        selected={selected.id}
         onSelect={(id) => {
           if (id !== om.state.home.selectedRestaurant?.id) {
             const restaurant = restaurants.find((x) => x.id === id)
@@ -477,6 +303,13 @@ const HomeMapContent = memo(function HomeMap({
               id: restaurant.id,
               slug: restaurant.slug,
             })
+            if (om.state.home.currentStateType === 'search') {
+              const index = restaurants.findIndex((x) => x.id === id)
+              om.actions.home.setActiveIndex({
+                index,
+                event: om.state.home.isHoveringRestaurant ? 'hover' : 'pin',
+              })
+            }
           }
         }}
       />
@@ -493,9 +326,15 @@ const getMapStyle = (lense: Tag) => {
   }
 }
 
+let ids = {}
+const getNumId = (id: string): number => {
+  ids[id] = ids[id] ?? Math.round(Math.random() * 10000000000)
+  return ids[id]
+}
+
 const getRestaurantMarkers = (restaurants: Restaurant[]) => {
   const result: GeoJSON.Feature[] = []
-  for (const [index, restaurant] of restaurants.entries()) {
+  for (const restaurant of restaurants) {
     if (!restaurant.location?.coordinates) {
       continue
     }
@@ -503,7 +342,7 @@ const getRestaurantMarkers = (restaurants: Restaurant[]) => {
     const color = getRankingColor(percent)
     result.push({
       type: 'Feature',
-      id: index,
+      id: getNumId(restaurant.id),
       geometry: {
         type: 'Point',
         coordinates: restaurant.location.coordinates,
