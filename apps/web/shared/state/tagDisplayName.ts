@@ -7,6 +7,7 @@ export const tagDisplayNames = {
   'price-low': '$',
   'price-mid': '$$',
   'price-high': '$$$',
+  'price-higher': '$$$',
   Vibe: 'Vibe',
   Veg: 'Green',
   Drink: 'Bar',

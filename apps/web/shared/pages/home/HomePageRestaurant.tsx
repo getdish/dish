@@ -78,7 +78,12 @@ const HomePageRestaurant = memo(
 
             <Divider />
 
-            <HStack padding={20} flexWrap="wrap">
+            <HStack
+              padding={20}
+              flexWrap="wrap"
+              alignItems="center"
+              justifyContent="center"
+            >
               <RestaurantTagsRow
                 size="sm"
                 restaurantSlug={slug}
@@ -93,10 +98,26 @@ const HomePageRestaurant = memo(
               borderWidth={1}
               borderColor="#eee"
               padding={0}
-              paddingTop={5}
               marginHorizontal={20}
+              position="relative"
+              overflow="visible"
             >
-              <SmallTitle>Rating</SmallTitle>
+              <VStack
+                paddingVertical={5}
+                paddingHorizontal={6}
+                shadowColor={'rgba(0,0,0,0.1)'}
+                shadowRadius={8}
+                shadowOffset={{ height: 2, width: 0 }}
+                backgroundColor="#fff"
+                borderRadius={8}
+                transform={[{ rotate: '-4deg' }]}
+                position="absolute"
+                zIndex={100}
+                top={-10}
+                left={-5}
+              >
+                Ratings
+              </VStack>
               <ScrollView
                 style={{ width: '100%' }}
                 contentContainerStyle={{

@@ -107,9 +107,10 @@ export const DishView = memo(
           height={height}
           isHovered={isHovered}
           backgroundColor="#fff"
+          borderWidth={2}
+          borderColor="transparent"
           // dish.isFallback
           {...(selected && {
-            borderWidth: 2,
             borderColor: 'blue',
           })}
         >
