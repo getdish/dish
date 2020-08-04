@@ -128,11 +128,6 @@ const HomeMapDataLoader = memo(
   )
 )
 
-const getStateLocation = (state: HomeStateItem) => ({
-  center: state.center,
-  span: state.span,
-})
-
 const getLngLat = (coords: number[]) => {
   return {
     lng: coords[0],
@@ -160,7 +155,6 @@ const HomeMapContent = memo(function HomeMap({
     id: om.state.home.selectedRestaurant?.id,
     span: state.span,
     center: state.center,
-    // center: state.center,
     via: 'select' as 'select' | 'hover' | 'detail',
   })
   const setState = (next: Partial<typeof internal>) => {
@@ -210,8 +204,8 @@ const HomeMapContent = memo(function HomeMap({
   const isLoading = restaurants[0]?.location?.coordinates[0] === null
   const key = useLastValueWhen(
     () =>
-      `${internal.id}${JSON.stringify(
-        restaurants.map((x) => x.location?.coordinates)
+      `${internal.id}${restaurantDetail?.location.coordinates}${JSON.stringify(
+        restaurants.map((x) => x.location?.coordinates ?? '-')
       )}`,
     isLoading || (!restaurants.length && !restaurantDetail)
   )

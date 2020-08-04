@@ -8,11 +8,12 @@ import {
   Spacer,
   VStack,
 } from '@dish/ui'
-import React, { Suspense, memo } from 'react'
+import React, { Suspense, memo, useEffect } from 'react'
 import { Divide } from 'react-feather'
 import { ScrollView } from 'react-native'
 
 import { HomeStateItemRestaurant } from '../../state/home-types'
+import { omStatic } from '../../state/om'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { HomePagePaneProps } from './HomePagePaneProps'
 import { HomeScrollView } from './HomeScrollView'
@@ -46,6 +47,20 @@ const HomePageRestaurant = memo(
     }
     const slug = item.restaurantSlug
     const restaurant = useRestaurantQuery(slug)
+    const coords = restaurant?.location?.coordinates
+
+    const nextState = {
+      restaurantId: restaurant.id,
+      center: {
+        lng: coords?.[0],
+        lat: coords?.[1],
+      },
+    }
+
+    useEffect(() => {
+      if (!nextState.restaurantId) return
+      omStatic.actions.home.updateCurrentState(nextState)
+    }, [JSON.stringify(nextState)])
     // const isCanTag =
     //   om.state.user.isLoggedIn &&
     //   (om.state.user.user.role == 'admin' ||

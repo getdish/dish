@@ -19,7 +19,7 @@ export const DishVoteButton = graphql(
     const [vote, setVote] = useUserUpvoteDownvote(restaurantId, {
       [dishTagId]: true,
     })
-    console.log('vote', vote, dishTagId)
+    // console.log('vote', vote, dishTagId)
     const borderRadius = 5
     return (
       <VStack
