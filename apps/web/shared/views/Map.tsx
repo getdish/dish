@@ -1,7 +1,9 @@
+import 'mapbox-gl/dist/mapbox-gl.css'
+
 import { fullyIdle, series } from '@dish/async'
 import { LngLat } from '@dish/graph'
 import { useGet } from '@dish/ui'
-import _ from 'lodash'
+import _, { isEqual } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
@@ -21,6 +23,7 @@ type MapProps = {
   onSelect?: (id: string) => void
   onMoveEnd?: (props: { center: LngLat; span: LngLat }) => void
   selected?: string
+  centerToResults?: number
 }
 
 const SOURCE_ID = 'restaurants'
@@ -207,34 +210,49 @@ export const Map = (props: MapProps) => {
             setActive(map, +e.features[0].id)
           }
 
-          let ignoreFirstMoveEnd = true
-
-          const handleMoveEnd = _.debounce(() => {
-            // fix loading restaurant detail centering
-            if (ignoreFirstMoveEnd) {
-              ignoreFirstMoveEnd = false
-              return
-            }
+          const getCurrentLocation = () => {
             const center = map.getCenter()
             const bounds = map.getBounds()
-            props.onMoveEnd?.({
+            const dist = (a: number, b: number) => {
+              return a > b ? a - b : b - a
+            }
+            const lat = dist(center.lat, bounds.getNorth())
+            const lng = dist(center.lng, bounds.getWest())
+            const span = {
+              lng,
+              lat,
+            }
+            return {
               center: {
                 lng: round(center.lng),
                 lat: round(center.lat),
               },
-              span: {
-                lng: round(center.lng - bounds.getWest()),
-                lat: round(center.lat - bounds.getNorth()),
-              },
-            })
+              span,
+            }
+          }
+
+          let lastLoc = getCurrentLocation()
+          const sendMoveEnd = _.debounce(() => {
+            props.onMoveEnd?.(getCurrentLocation())
           }, 150)
 
+          const handleMoveEnd = () => {
+            // ignore same location
+            const next = getCurrentLocation()
+            if (isEqual(lastLoc, next)) {
+              return
+            }
+            lastLoc = next
+            sendMoveEnd()
+          }
+
           const handleMove: Listener = () => {
-            handleMoveEnd.cancel()
+            sendMoveEnd.cancel()
           }
 
           map.on('moveend', handleMoveEnd)
           map.on('move', handleMove)
+          map.on('movestart', handleMove)
           map.on('click', POINT_LAYER_ID, handleMouseClick)
           map.on('mousemove', POINT_LAYER_ID, handleMouseMove)
           map.on('mouseleave', POINT_LAYER_ID, handleMouseLeave)
@@ -242,6 +260,7 @@ export const Map = (props: MapProps) => {
           cancels.add(() => {
             map.off('moveend', handleMoveEnd)
             map.off('move', handleMove)
+            map.off('movestart', handleMove)
             map.off('click', POINT_LAYER_ID, handleMouseClick)
             map.off('mousemove', POINT_LAYER_ID, handleMouseMove)
             map.off('mouseleave', POINT_LAYER_ID, handleMouseLeave)
@@ -265,6 +284,7 @@ export const Map = (props: MapProps) => {
 
   const { center, span, padding, features, style, selected } = props
 
+  // selected
   useEffect(() => {
     const isMapLoaded = map && map.isStyleLoaded()
     if (!isMapLoaded) return
@@ -274,53 +294,32 @@ export const Map = (props: MapProps) => {
     setActive(map, index)
   }, [map, features, selected])
 
+  // style
   useEffect(() => {
     if (!map || !style) return
     map.setStyle(style)
   }, [map, style])
 
-  // center
+  // center + span
   useEffect(() => {
     if (!map) return
-    return series([
-      () => fullyIdle({ min: 100 }),
-      () => {
-        map.flyTo({
-          center,
-          speed: 0.65,
-        })
-      },
-    ])
-  }, [map, center.lng, center.lat])
-
-  // span
-  useEffect(() => {
-    if (!map) return
-    const clng = center.lng
-    const clat = center.lat
-    const bounds = map.getBounds()
-    const cur = {
-      ne: bounds.getNorthEast(),
-      sw: bounds.getSouthWest(),
-    }
     const next = {
-      ne: { lng: clng + span.lng, lat: clat - span.lat },
-      sw: { lng: clng - span.lng, lat: clat + span.lat },
+      ne: { lng: center.lng + span.lng, lat: center.lat + span.lat },
+      sw: { lng: center.lng - span.lng, lat: center.lat - span.lat },
     }
-
-    const abs = (x: number) => Math.abs(x)
-    const dist = (a: LngLat, b: LngLat) =>
-      round(abs(a.lng) - abs(b.lng)) + round(abs(a.lat) - abs(b.lat))
-
-    // only change them if they change more than a little bit
-    const totalChange = abs(dist(cur.ne, next.ne)) + abs(dist(cur.ne, next.ne))
-    if (totalChange > 0.001) {
-      map.fitBounds([
-        [next.sw.lng, next.sw.lat],
-        [next.ne.lng, next.ne.lat],
+    if (hasMovedAtLeast(map, next, 0.001)) {
+      return series([
+        () => fullyIdle({ min: 100 }),
+        () => {
+          console.log('MOVE TO', next, { ...center }, { ...span })
+          map.fitBounds([
+            [next.sw.lng, next.sw.lat],
+            [next.ne.lng, next.ne.lat],
+          ])
+        },
       ])
     }
-  }, [map, JSON.stringify(span)])
+  }, [map, span.lat, span.lng, center.lat, center.lng])
 
   // padding
   useEffect(() => {
@@ -328,6 +327,7 @@ export const Map = (props: MapProps) => {
     map?.setPadding(padding)
   }, [map, JSON.stringify(padding)])
 
+  // features
   useEffect(() => {
     if (!map) return
     const source = map.getSource(SOURCE_ID)
@@ -338,6 +338,24 @@ export const Map = (props: MapProps) => {
       })
     }
   }, [features, map])
+
+  // centerToResults
+  const lastCenter = useRef(0)
+  useEffect(() => {
+    if (!map) return
+    if (!features.length) return
+    if (props.centerToResults <= 0) return
+    if (props.centerToResults === lastCenter.current) return
+    lastCenter.current = props.centerToResults
+    const bounds = new mapboxgl.LngLatBounds()
+    for (const feature of features) {
+      const geo = feature.geometry
+      if (geo.type === 'Point') {
+        bounds.extend(geo.coordinates as any)
+      }
+    }
+    map.fitBounds(bounds)
+  }, [map, features, props.centerToResults])
 
   return (
     <div
@@ -352,6 +370,24 @@ export const Map = (props: MapProps) => {
       }}
     />
   )
+}
+
+const abs = (x: number) => Math.abs(x)
+const dist = (a: LngLat, b: LngLat) =>
+  round(abs(a.lng) - abs(b.lng)) + round(abs(a.lat) - abs(b.lat))
+
+const hasMovedAtLeast = (
+  map: mapboxgl.Map,
+  next: { ne: LngLat; sw: LngLat },
+  distance: number
+) => {
+  const bounds = map.getBounds()
+  const cur = {
+    ne: bounds.getNorthEast(),
+    sw: bounds.getSouthWest(),
+  }
+  // only change them if they change more than a little bit
+  return abs(dist(cur.ne, next.ne)) + abs(dist(cur.ne, next.ne)) > distance
 }
 
 ///

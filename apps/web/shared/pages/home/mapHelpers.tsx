@@ -6,8 +6,8 @@ import { omStatic, useOvermind } from '../../state/om'
 export const mapHelpers = null
 
 export const getZoomLevel = (span: LngLat) => {
-  const curZoom = (span.lat + span.lng) / 2
-  return curZoom < 0.1 ? 'close' : curZoom > 0.2 ? 'far' : 'medium'
+  const curZoom = (Math.abs(span.lat) + Math.abs(span.lng)) / 2
+  return curZoom < 0.05 ? 'close' : curZoom > 0.3 ? 'far' : 'medium'
 }
 
 export const useZoomLevel = () => {

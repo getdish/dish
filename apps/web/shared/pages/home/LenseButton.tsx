@@ -24,7 +24,6 @@ export const LenseButton = memoIsEqualDeep(
     size?: LenseButtonSize
     onPress?: Function
   }) => {
-    const borderColor = '#f0f0f0'
     const lenseColor = rgbString(lense.rgb)
     // const lenseColorLight = `rgba(${rgbInner}, 0.2)`
     const scale = size == 'md' ? 1 : size === 'lg' ? 1.2 : 1.3
@@ -51,10 +50,13 @@ export const LenseButton = memoIsEqualDeep(
           height={sizePx * scale}
           backgroundColor={backgroundColor ?? '#fff'}
           borderRadius={100}
-          borderColor={borderColor}
+          borderColor="transparent"
           borderWidth={1}
           borderBottomColor="transparent"
           transform={[{ scale: 1 }]}
+          hoverStyle={{
+            borderColor: '#f0f0f0',
+          }}
           {...(isActive && {
             // borderColor: lenseColor,
             transform: [{ scale: 1.12 }],

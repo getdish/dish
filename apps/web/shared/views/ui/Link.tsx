@@ -82,7 +82,6 @@ export function Link<
         }
       }
       function nav() {
-        console.warn('nav', onPress, onClick, preventNavigate)
         if (onPress || onClick) {
           e.navigate = () => router.navigate(navItem)
           onClick?.(e!)

@@ -55,6 +55,7 @@ export type HomeState = {
   searchBarTagIndex: number
   searchBarTags: Tag[]
   userLocation: LngLat | null
+  centerToResults: number
 }
 
 export type GeocodePlace = mapkit.Place & {
