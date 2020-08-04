@@ -88,7 +88,6 @@ export const state: HomeState = {
     '0': initialHomeState,
   },
   topDishes: [],
-  topDishesFilteredIndices: [],
   userLocation: null,
   currentNavItem: derived<HomeState, NavigateItem>((state, om) =>
     getNavigateItemForStateInternal(om, last(state.states)!)
@@ -259,53 +258,6 @@ const popTo: Action<HomeStateItem['type']> = (om, type) => {
     router.navigate({
       name: 'home',
     })
-  }
-}
-
-const loadHomeDishes: AsyncAction = async (om) => {
-  if (om.state.home.topDishes.length) {
-    // load only once
-    return
-  }
-
-  const all = await getHomeDishes(
-    om.state.home.currentState.center!.lat,
-    om.state.home.currentState.center!.lng,
-    // TODO span
-    om.state.home.currentState.span!.lat
-  )
-
-  if (!all) {
-    console.warn('none!!')
-    return
-  }
-
-  let allDishTags: NavigableTag[] = []
-
-  // update tags
-  for (const topDishes of all) {
-    // country tag
-    const tag: NavigableTag = {
-      id: `${topDishes.country}`,
-      name: topDishes.country,
-      type: 'country',
-      icon: topDishes.icon,
-    }
-    om.state.home.allTags[getTagId(tag)] = tag
-
-    // dish tags
-    const dishTags: NavigableTag[] = (topDishes.dishes ?? []).map((dish) => ({
-      id: dish.name ?? '',
-      name: dish.name ?? '',
-      type: 'dish',
-    }))
-    allDishTags = [...allDishTags, ...dishTags]
-  }
-
-  if (!isEqual(all, om.state.home.topDishes)) {
-    om.actions.home.addTagsToCache(allDishTags)
-    console.warn('updating top dishes')
-    om.state.home.topDishes = all
   }
 }
 
@@ -861,13 +813,6 @@ const moveActive: Action<number> = (om, num) => {
   }
 }
 
-const runHomeSearch: AsyncAction<string> = async (om, query) => {
-  const res = await fuzzyFindIndices(query, om.state.home.topDishes, [
-    'country',
-  ])
-  om.state.home.topDishesFilteredIndices = res
-}
-
 const requestLocation: Action = (om) => {}
 
 const setSearchBarFocusedTag: Action<NavigableTag | null> = (om, val) => {
@@ -1264,6 +1209,10 @@ const setDrawerSnapPoint: Action<number> = (om, val) => {
   om.state.home.drawerSnapPoint = val
 }
 
+const setTopDishes: Action<any> = (om, val) => {
+  om.state.home.topDishes = val
+}
+
 export const actions = {
   getShouldNavigate,
   syncStateToRoute,
@@ -1271,11 +1220,9 @@ export const actions = {
   getNavigateItemForState,
   moveAutocompleteIndex,
   setAutocompleteIndex,
-  loadHomeDishes,
   setIsScrolling,
   setLocationAutocompleteResults,
   setHasMovedMap,
-  runHomeSearch,
   setSearchQuery,
   updateCurrentMapAreaInformation,
   clearSearch,
@@ -1315,4 +1262,5 @@ export const actions = {
   setShowUserMenu,
   promptLogin,
   setDrawerSnapPoint,
+  setTopDishes,
 }
