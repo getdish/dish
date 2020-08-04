@@ -8,7 +8,7 @@ let db_config = {
   user: process.env.TIMESCALE_USER || 'postgres',
   password: process.env.TIMESCALE_PASSWORD || 'postgres',
   database: 'scrape_data',
-  ssl: true,
+  ssl: false,
 }
 if (process.env.DISH_ENV == 'production') {
   db_config.ssl = true
