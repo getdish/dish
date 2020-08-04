@@ -295,12 +295,14 @@ const RestaurantListItemContent = memo(
                     <Text opacity={0} lineHeight={0}>
                       wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
                     </Text>
-                    <Suspense fallback={<LoadingItems />}>
-                      <RestaurantOverview
-                        restaurantSlug={restaurantSlug}
-                        inline
-                      />
-                    </Suspense>
+                    <Text>
+                      <Suspense fallback={<LoadingItems />}>
+                        <RestaurantOverview
+                          restaurantSlug={restaurantSlug}
+                          inline
+                        />
+                      </Suspense>
+                    </Text>
                   </VStack>
                 </Text>
               </VStack>

@@ -12,6 +12,22 @@ export const RestaurantOverview = memo(
     inline?: boolean
     limit?: number
   }) => {
+    if (inline) {
+      return (
+        <>
+          {listItems.map((item) => {
+            return (
+              <Text key={item.category}>
+                {/* <Text color="rgba(0,0,0,0.5)">{item.category}</Text>{' '} */}
+                {item.review}
+                .&nbsp;
+              </Text>
+            )
+          })}
+        </>
+      )
+    }
+
     return (
       <>
         {listItems.map((item, index) => (
@@ -64,11 +80,11 @@ export const RestaurantOverview = memo(
 
 const listItems = [
   {
-    category: 'food',
+    category: '🍽',
     review: `Don't miss the lychee tempura ice cream`,
   },
   {
-    category: 'vibe',
+    category: '🌃',
     review: 'Authentic. Big bar area outside with shade',
   },
   // {
