@@ -26,6 +26,7 @@ export type TagButtonTagProps = NonNullObject<
 > & {
   icon?: Exclude<Tag['icon'], null>
   rgb?: Exclude<Tag['rgb'], null>
+  rank?: number
 }
 
 export const getTagButtonProps = (tag: TagButtonTagProps): TagButtonProps => {

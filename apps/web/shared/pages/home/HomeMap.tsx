@@ -1,5 +1,5 @@
 import { LngLat, Restaurant, Tag, graphql } from '@dish/graph'
-import { AbsoluteVStack, useDebounce, useStateFn } from '@dish/ui'
+import { AbsoluteVStack, useDebounce } from '@dish/ui'
 import { uniqBy } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, {
@@ -224,33 +224,28 @@ const HomeMapContent = memo(function HomeMap({
     [key]
   )
 
-  console.log({
-    selected: internal,
-    restaurantDetail,
-    restaurantSelected,
-    key,
-    center,
-    span,
-    restaurants,
-  })
+  useEffect(() => {
+    setState({
+      span: state.span,
+    })
+  }, [JSON.stringify(state.span)])
 
   useEffect(() => {
-    if (!restaurantSelected) return
-    const coords = restaurantSelected.location.coordinates
-    console.log('SET CTATE', coords, state)
-    if (coords) {
-      setState({
-        center: getLngLat(coords),
-        span: internal.span,
-      })
-    } else {
-      setState(getStateLocation(state))
+    setState({
+      center: state.center,
+    })
+  }, [JSON.stringify(state.center)])
+
+  useEffect(() => {
+    if (!restaurantSelected) {
+      return
     }
-  }, [
-    restaurantSelected,
-    JSON.stringify(state.center),
-    JSON.stringify(state.span),
-  ])
+    const coords = restaurantSelected.location.coordinates
+    if (!coords) return
+    setState({
+      center: getLngLat(coords),
+    })
+  }, [restaurantSelected])
 
   const snapPoint = isSmall
     ? // avoid resizing to top "fully open drawer" snap
@@ -270,6 +265,17 @@ const HomeMapContent = memo(function HomeMap({
         right: drawerWidth > 600 ? 6 : 0,
       }
 
+  console.log({
+    internal,
+    restaurantDetail,
+    restaurantSelected,
+    key,
+    center,
+    span,
+    restaurants,
+    padding,
+  })
+
   const features = useMemo(() => getRestaurantMarkers(restaurants), [key])
 
   // stop map animation when moving away from page (see if this fixes some animation glitching/tearing)
@@ -281,6 +287,7 @@ const HomeMapContent = memo(function HomeMap({
 
   return (
     <AbsoluteVStack
+      className="map-container"
       position="absolute"
       top={0}
       right={0}
@@ -298,6 +305,12 @@ const HomeMapContent = memo(function HomeMap({
           setMapView(map)
         }}
         selected={internal.id}
+        onMoveEnd={(bounds) => {
+          om.actions.home.updateCurrentState({
+            center: bounds.center,
+            span: bounds.span,
+          })
+        }}
         onSelect={(id) => {
           if (id !== om.state.home.selectedRestaurant?.id) {
             const restaurant = restaurants.find((x) => x.id === id)

@@ -12,24 +12,6 @@ export const RestaurantOverview = memo(
     inline?: boolean
     limit?: number
   }) => {
-    const isReallySmall = useMediaQueryIsReallySmall()
-
-    if (isReallySmall) {
-      return (
-        <>
-          {listItems.map((item) => {
-            return (
-              <Text key={item.category}>
-                <Text color="rgba(0,0,0,0.5)">{item.category}</Text>{' '}
-                {item.review}
-                .&nbsp;
-              </Text>
-            )
-          })}
-        </>
-      )
-    }
-
     return (
       <>
         {listItems.map((item, index) => (
@@ -37,13 +19,12 @@ export const RestaurantOverview = memo(
             <VStack
               {...(!inline && {
                 minWidth: 150,
-                borderWidth: 1,
-                borderColor: '#eee',
-                borderRadius: 8,
+                backgroundColor: '#f2f2f2',
+                borderRadius: 10,
                 margin: 8,
                 marginBottom: 0,
                 marginRight: 0,
-                padding: 16,
+                padding: 12,
                 flex: 1,
               })}
             >

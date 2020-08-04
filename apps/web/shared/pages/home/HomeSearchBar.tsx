@@ -199,9 +199,9 @@ const HomeSearchBar = memo(() => {
         position="relative"
         flex={1}
         maxWidth={
-          !isReallySmall &&
-          isSmall &&
-          om.state.home.showAutocomplete === 'location'
+          isReallySmall
+            ? 'auto'
+            : isSmall && om.state.home.showAutocomplete === 'location'
             ? 120
             : 'auto'
         }

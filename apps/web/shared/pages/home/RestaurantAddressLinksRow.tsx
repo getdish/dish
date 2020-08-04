@@ -34,16 +34,22 @@ export const RestaurantAddressLinksRow = memo(
           {showMenu && !!restaurant.website && (
             <Text selectable>
               {showAddress ? <>&nbsp; {sep} &nbsp;</> : null}
-              <Link href={restaurant.website ?? ''} target="_blank">
+              <Link
+                fontSize={14}
+                href={restaurant.website ?? ''}
+                target="_blank"
+              >
                 Menu
               </Link>
             </Text>
           )}
           {!!restaurant.telephone && (
-            <Link href={`tel:${restaurant.telephone}`}>Call</Link>
+            <Link fontSize={14} href={`tel:${restaurant.telephone}`}>
+              Call
+            </Link>
           )}
           {!!restaurant.website && (
-            <Link href={restaurant.website ?? ''} target="_blank">
+            <Link fontSize={14} href={restaurant.website ?? ''} target="_blank">
               Website
             </Link>
           )}

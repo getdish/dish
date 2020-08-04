@@ -86,26 +86,24 @@ const RestaurantHeaderContent = memo(
                   {restaurant.name}
                 </Text>
                 <Spacer size="sm" />
-                <RestaurantAddressLinksRow
-                  currentLocationInfo={
-                    state?.currentLocationInfo ??
-                    om.state.home.currentState.currentLocationInfo
-                  }
-                  showMenu
-                  size="lg"
-                  restaurantSlug={restaurantSlug}
-                />
-                <Spacer size="sm" />
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <HStack alignItems="center">
-                    <RestaurantAddress
-                      size="sm"
-                      address={restaurant.address ?? ''}
-                      currentLocationInfo={state?.currentLocationInfo ?? {}}
-                    />
-                    {afterAddress}
-                  </HStack>
-                </ScrollView>
+                <HStack alignItems="center">
+                  <RestaurantAddress
+                    size="sm"
+                    address={restaurant.address ?? ''}
+                    currentLocationInfo={state?.currentLocationInfo ?? {}}
+                  />
+                  <Spacer />
+                  <RestaurantAddressLinksRow
+                    currentLocationInfo={
+                      state?.currentLocationInfo ??
+                      om.state.home.currentState.currentLocationInfo
+                    }
+                    showMenu
+                    size="lg"
+                    restaurantSlug={restaurantSlug}
+                  />
+                  {afterAddress}
+                </HStack>
                 <Spacer size="md" />
               </VStack>
               {!after && !!restaurant.image && (
@@ -116,8 +114,8 @@ const RestaurantHeaderContent = memo(
                     style={{
                       marginVertical: -60,
                       marginRight: -30,
-                      height: 200,
-                      width: 200,
+                      height: 170,
+                      width: 170,
                       borderRadius: 100,
                     }}
                   />

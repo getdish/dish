@@ -8,6 +8,10 @@ import {
   TagButtonTagProps,
   getTagButtonProps,
 } from './TagButton'
+import {
+  useMediaQueryIsReallySmall,
+  useMediaQueryIsSmall,
+} from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 type TagRowProps = {
@@ -39,8 +43,12 @@ export const RestaurantTagsRow = memo(
       const restaurantTags = restaurant.tags({
         limit: 10,
       })
-      // @ts-ignore
-      tags = restaurantTags.map((tag) => tag.tag)
+      tags = restaurantTags.map((tag) => ({
+        rank: tag.rank,
+        rgb: tag.tag.rgb,
+        name: tag.tag.name,
+        type: tag.tag.type,
+      }))
     }
     if (showMore) {
       tags = tags.slice(0, 2)
@@ -54,14 +62,14 @@ export const RestaurantTagsRow = memo(
               <VStack
                 {...(props.grid && {
                   width: '33%',
-                  minWidth: 120,
+                  minWidth: 190,
                   alignItems: 'center',
                 })}
               >
                 <TagButton
                   replaceSearch
                   size={size ?? 'sm'}
-                  rank={index}
+                  rank={tag.rank}
                   {...getTagButtonProps(tag)}
                   subtle={props.subtle}
                   votable={!props.subtle}

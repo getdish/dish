@@ -1,4 +1,4 @@
-import { fullyIdle, series, sleep } from '@dish/async'
+import { fullyIdle, series } from '@dish/async'
 import { LngLat } from '@dish/graph'
 import { useGet } from '@dish/ui'
 import _ from 'lodash'
@@ -19,12 +19,17 @@ type MapProps = {
   mapRef?: (map: mapboxgl.Map) => void
   style?: string
   onSelect?: (id: string) => void
+  onMoveEnd?: (props: { center: LngLat; span: LngLat }) => void
   selected?: string
 }
 
 const SOURCE_ID = 'restaurants'
 const POINT_LAYER_ID = 'restaurants-points'
 const POINT_HOVER_LAYER_ID = 'restaurants-points-hover'
+
+const round = (val: number, dec = 100000) => {
+  return Math.round(val * dec) / dec
+}
 
 const mapSetFeature = (map: mapboxgl.Map, id: any, obj: any) => {
   map.setFeatureState(
@@ -202,11 +207,34 @@ export const Map = (props: MapProps) => {
             setActive(map, +e.features[0].id)
           }
 
+          const handleMoveEnd = _.debounce(() => {
+            const center = map.getCenter()
+            const bounds = map.getBounds()
+            props.onMoveEnd?.({
+              center: {
+                lng: round(center.lng),
+                lat: round(center.lat),
+              },
+              span: {
+                lng: round(center.lng - bounds.getWest()),
+                lat: round(center.lat - bounds.getNorth()),
+              },
+            })
+          }, 150)
+
+          const handleMove: Listener = () => {
+            handleMoveEnd.cancel()
+          }
+
+          map.on('moveend', handleMoveEnd)
+          map.on('move', handleMove)
           map.on('click', POINT_LAYER_ID, handleMouseClick)
           map.on('mousemove', POINT_LAYER_ID, handleMouseMove)
           map.on('mouseleave', POINT_LAYER_ID, handleMouseLeave)
 
           cancels.add(() => {
+            map.off('moveend', handleMoveEnd)
+            map.off('move', handleMove)
             map.off('click', POINT_LAYER_ID, handleMouseClick)
             map.off('mousemove', POINT_LAYER_ID, handleMouseMove)
             map.off('mouseleave', POINT_LAYER_ID, handleMouseLeave)
@@ -231,7 +259,8 @@ export const Map = (props: MapProps) => {
   const { center, span, padding, features, style, selected } = props
 
   useEffect(() => {
-    if (!map) return
+    const isMapLoaded = map && map.isStyleLoaded()
+    if (!isMapLoaded) return
     if (!selected) return
     const index = features.findIndex((x) => x.properties.id === selected)
     mapSetIconSelected(map, index)
@@ -249,9 +278,9 @@ export const Map = (props: MapProps) => {
     return series([
       () => fullyIdle({ min: 100 }),
       () => {
-        map?.flyTo({
+        map.flyTo({
           center,
-          speed: 0.5,
+          speed: 0.65,
         })
       },
     ])
@@ -262,13 +291,33 @@ export const Map = (props: MapProps) => {
     if (!map) return
     const clng = center.lng
     const clat = center.lat
-    map?.fitBounds([
-      [clng + span.lng, clat - span.lat],
-      [clng - span.lng, clat + span.lat],
-    ])
+    const bounds = map.getBounds()
+    const cur = {
+      ne: bounds.getNorthEast(),
+      sw: bounds.getSouthWest(),
+    }
+    const next = {
+      ne: { lng: clng + span.lng, lat: clat - span.lat },
+      sw: { lng: clng - span.lng, lat: clat + span.lat },
+    }
+
+    const abs = (x: number) => Math.abs(x)
+    const dist = (a: LngLat, b: LngLat) =>
+      round(abs(a.lng) - abs(b.lng)) + round(abs(a.lat) - abs(b.lat))
+
+    // only change them if they change more than a little bit
+    const totalChange = abs(dist(cur.ne, next.ne)) + abs(dist(cur.ne, next.ne))
+    if (totalChange > 0.001) {
+      map.fitBounds([
+        [next.sw.lng, next.sw.lat],
+        [next.ne.lng, next.ne.lat],
+      ])
+    }
   }, [map, JSON.stringify(span)])
 
-  // // padding
+  console.log('span is', JSON.stringify(span))
+
+  // padding
   useEffect(() => {
     if (!map) return
     map?.setPadding(padding)
