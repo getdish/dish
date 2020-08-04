@@ -81,31 +81,35 @@ const HomeSearchInfoBoxDish = memo(
 
     return (
       <HStack
-        marginHorizontal={20}
-        padding={20}
+        paddingTop={20}
+        paddingHorizontal={20}
         paddingBottom={10}
         spacing={20}
         alignItems="center"
       >
-        <Text fontSize={50}>🍜</Text>
-        <Text fontSize={14}>
-          <strong>{dishTag.name}</strong> - Rich, creamy, and packed with
-          uncompromising flavor from a slew of aromatics and shrimp paste, this
-          classic Northern Thai soup combines tender braised chicken in a
-          coconut-y curry broth with boiled and fried noodles.
+        <Text fontSize={14} color="rgba(0,0,0,0.8)" lineHeight={18}>
+          <strong>{dishTag.name}</strong> - A rich, creamy soup packed with
+          flavor from aromatics and shrimp paste, a classic Northern Thai dish
+          with braised chicken in a coconut-y curry broth with boiled and fried
+          noodles.
         </Text>
-        <Image
-          style={{
-            // marginVertical: -25,
-            width: 60,
-            height: 60,
-            borderRadius: 100,
-          }}
-          source={{
-            uri:
-              'https://www.seriouseats.com/recipes/images/2014/09/20140707-small-house-thai-cooking-school-khao-soi-10.jpg',
-          }}
-        />
+        <VStack position="relative" width={60} height={60}>
+          <Image
+            style={{
+              marginVertical: -10,
+              width: 80,
+              height: 80,
+              borderRadius: 100,
+            }}
+            source={{
+              uri:
+                'https://www.seriouseats.com/recipes/images/2014/09/20140707-small-house-thai-cooking-school-khao-soi-10.jpg',
+            }}
+          />
+          <Text bottom={-10} left={-10} position="absolute" fontSize={35}>
+            🍜
+          </Text>
+        </VStack>
       </HStack>
     )
   }

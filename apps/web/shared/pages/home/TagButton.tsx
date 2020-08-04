@@ -122,7 +122,7 @@ export const TagButton = memo((props: TagButtonProps) => {
   }
   const tag = { name, type: type as TagType, icon, rgb }
   const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1 : 1
-  const height = scale * (subtle ? 26 : 32)
+  const height = scale * (subtle ? 26 : 30)
   const lineHeight = 22 * scale
 
   let bg = 'transparent'
