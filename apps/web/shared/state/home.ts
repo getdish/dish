@@ -644,7 +644,6 @@ const pushHomeState: AsyncAction<
         restaurantId: null,
         restaurantSlug: item.params.slug,
       }
-      fetchData = om.actions.home.loadPageRestaurant
       break
     }
 
@@ -745,29 +744,6 @@ const pushHomeState: AsyncAction<
   }
 
   return null
-}
-
-const loadPageRestaurant: AsyncAction = async (om) => {
-  const state = om.state.home.currentState
-  if (state.type !== 'restaurant') return
-  const slug = state.restaurantSlug
-  const restaurant = await resolved(() => {
-    const { location, id } = useRestaurantQuery(slug)
-    location?.coordinates
-    return { location, id }
-  })
-  if (state && restaurant) {
-    state.restaurantId = restaurant.id
-    state.center = {
-      lng: restaurant.location.coordinates[0],
-      lat: restaurant.location.coordinates[1],
-    }
-    // zoom in a bit
-    state.span = {
-      lng: 0.008, // Math.max(0.010675285275539181, currentState.span.lng * 0.5),
-      lat: 0.003, // Math.max(0.004697178346440012, currentState.span.lat * 0.5),
-    }
-  }
 }
 
 export let currentStates: HomeStateItem[] = []
@@ -1247,7 +1223,6 @@ export const actions = {
   refresh,
   suggestTags,
   loadPageSearch,
-  loadPageRestaurant,
   updateActiveTags,
   setAutocompleteResults,
   clearTags,

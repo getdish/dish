@@ -207,7 +207,14 @@ export const Map = (props: MapProps) => {
             setActive(map, +e.features[0].id)
           }
 
+          let ignoreFirstMoveEnd = true
+
           const handleMoveEnd = _.debounce(() => {
+            // fix loading restaurant detail centering
+            if (ignoreFirstMoveEnd) {
+              ignoreFirstMoveEnd = false
+              return
+            }
             const center = map.getCenter()
             const bounds = map.getBounds()
             props.onMoveEnd?.({
@@ -314,8 +321,6 @@ export const Map = (props: MapProps) => {
       ])
     }
   }, [map, JSON.stringify(span)])
-
-  console.log('span is', JSON.stringify(span))
 
   // padding
   useEffect(() => {
