@@ -37,8 +37,39 @@ export const getTagButtonProps = (tag: TagButtonTagProps): TagButtonProps => {
   }
 }
 
-export const getTagColor = (rgb?: [number, number, number]): string =>
-  rgb ? `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})` : 'inherit'
+export const getTagColors = ({ rgb, type }: Partial<Tag>) => {
+  if (rgb) {
+    return {
+      backgroundColor: `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`,
+      color: '#fff',
+    }
+  }
+  if (type === 'dish') {
+    return {
+      backgroundColor: '#f2f2f2',
+      color: '#000',
+    }
+  }
+  const backgroundColor =
+    type === 'country'
+      ? // orange
+        '#BD5C16'
+      : type === 'filter'
+      ? // blue
+        '#164ABD'
+      : type === 'lense'
+      ? // purple
+        '#6C16BD'
+      : type === 'dish'
+      ? // red
+        '#BD1616'
+      : // green
+        '#16BD41'
+  return {
+    backgroundColor,
+    color: '#fff',
+  }
+}
 
 export type TagButtonProps = Omit<StackProps & TagButtonTagProps, 'rgb'> & {
   rgb?: [number, number, number]
@@ -75,6 +106,7 @@ export const TagButton = memo((props: TagButtonProps) => {
     fontSize: fontSizeProp,
     fontWeight,
     color,
+    backgroundColor,
     icon,
     rgb,
     subtleIcon,
@@ -91,8 +123,16 @@ export const TagButton = memo((props: TagButtonProps) => {
   const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1 : 1
   const height = scale * (subtle ? 26 : 32)
   const lineHeight = 22 * scale
-  const defaultColor = noColor ? 'inherit' : getTagColor(rgb)
-  const fg = color ?? (subtle ? 'rgba(0,0,0,0.65)' : defaultColor)
+
+  let bg = 'transparent'
+  let fg = '#444'
+
+  if (!subtle) {
+    const colors = getTagColors(tag)
+    bg = backgroundColor ?? colors.backgroundColor
+    fg = color ?? colors.color
+  }
+
   const fontSize = fontSizeProp ?? (subtle ? 'inherit' : 16 * scale)
   // const moveInPx = size === 'sm' ? 0 : 3.5 * (1 / scale)
 
@@ -100,16 +140,15 @@ export const TagButton = memo((props: TagButtonProps) => {
     <>
       <HStack
         height={height}
-        borderColor={subtle ? 'transparent' : 'rgba(0,0,0,0.1)'}
-        borderWidth={1}
         borderRadius={8 * scale}
         overflow="hidden"
         alignItems="center"
         justifyContent="center"
+        backgroundColor={bg}
         position="relative"
         minHeight={lineHeight}
         hoverStyle={{
-          backgroundColor: bgLight,
+          transform: [{ scale: 1.05 }],
         }}
         {...(!subtle && {
           hoverStyle: {
@@ -129,6 +168,7 @@ export const TagButton = memo((props: TagButtonProps) => {
             justifyContent="center"
             alignItems="center"
             display="flex"
+            color={fg}
           >
             <SuperScriptText opacity={0.5}>#</SuperScriptText>
             {rank}
@@ -140,7 +180,7 @@ export const TagButton = memo((props: TagButtonProps) => {
           // @ts-ignore
           fontSize={fontSize}
           // @ts-ignore
-          fontWeight={fontWeight ?? (size == 'lg' ? '500' : 'inherit')}
+          fontWeight={fontWeight ?? subtle ? 'inherit' : '600'}
           // @ts-ignore
           lineHeight="inherit"
           paddingHorizontal={subtle ? 0 : 7 * scale}
@@ -187,7 +227,7 @@ export const TagButton = memo((props: TagButtonProps) => {
         </Text>
         {!!votable && (
           //
-          <TagButtonVote {...props} scale={scale} />
+          <TagButtonVote {...props} color={fg} scale={scale} />
         )}
         {!!closable && (
           <VStack
@@ -284,7 +324,7 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
     >
       <ThumbsUp
         size={12 * scale}
-        color={subtle ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)'}
+        color={props.color ?? (subtle ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)')}
       />
     </VStack>
   )
