@@ -255,12 +255,19 @@ const RestaurantListItemContent = memo(
                       restaurantId={restaurantId}
                     />
                     <Spacer size={6} />
-                    <RestaurantTagsRow
-                      subtle
-                      showMore
-                      restaurantSlug={restaurantSlug}
-                      restaurantId={restaurantId}
-                    />
+                    <HStack
+                      alignItems="center"
+                      justifyContent="center"
+                      flexWrap="wrap"
+                    >
+                      <RestaurantTagsRow
+                        subtle
+                        showMore
+                        restaurantSlug={restaurantSlug}
+                        restaurantId={restaurantId}
+                        spacing={4}
+                      />
+                    </HStack>
                   </HStack>
                 </VStack>
               </Link>

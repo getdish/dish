@@ -1,6 +1,15 @@
 import { graphql } from '@dish/graph'
-import { Box, HStack, LoadingItems, SmallTitle, Spacer, VStack } from '@dish/ui'
+import {
+  Box,
+  Divider,
+  HStack,
+  LoadingItems,
+  SmallTitle,
+  Spacer,
+  VStack,
+} from '@dish/ui'
 import React, { Suspense, memo } from 'react'
+import { Divide } from 'react-feather'
 import { ScrollView } from 'react-native'
 
 import { HomeStateItemRestaurant } from '../../state/home-types'
@@ -50,27 +59,14 @@ const HomePageRestaurant = memo(
 
         <HomeScrollView paddingTop={0}>
           {/* HEADER */}
-          <RestaurantHeader
-            restaurantSlug={slug}
-            afterAddress={
-              <HStack paddingLeft={20} marginTop={-2}>
-                <RestaurantTagsRow
-                  subtle
-                  size="sm"
-                  restaurantSlug={slug}
-                  restaurantId={restaurant.id}
-                />
-                <Spacer direction="horizontal" size={70} />
-              </HStack>
-            }
-          />
+          <RestaurantHeader restaurantSlug={slug} />
 
           <Spacer size="xl" />
           <Spacer size="sm" />
 
           <Suspense fallback={<LoadingItems />}>
             <VStack alignItems="center">
-              <HStack minWidth={380}>
+              <HStack minWidth={380} paddingBottom={20}>
                 <RestaurantDetailRow
                   centered
                   justifyContent="center"
@@ -80,7 +76,18 @@ const HomePageRestaurant = memo(
               </HStack>
             </VStack>
 
-            <Spacer size="lg" />
+            <Divider />
+
+            <HStack padding={20} flexWrap="wrap">
+              <RestaurantTagsRow
+                size="sm"
+                restaurantSlug={slug}
+                restaurantId={restaurant.id}
+                spacing={10}
+                grid
+                max={9}
+              />
+            </HStack>
 
             <Box
               borderWidth={1}
@@ -104,55 +111,53 @@ const HomePageRestaurant = memo(
               </ScrollView>
             </Box>
 
+            <Spacer size="lg" />
+
+            <VStack width="100%">
+              <Suspense fallback={null}>
+                <RestaurantDishPhotos
+                  size={160}
+                  restaurantSlug={slug}
+                  restaurantId={restaurant.id ?? undefined}
+                />
+              </Suspense>
+            </VStack>
+
             <HStack padding={20} maxWidth="100%" flexWrap="wrap">
               <RestaurantOverview restaurantSlug={slug} />
               <RestaurantOverview restaurantSlug={slug} />
               <RestaurantOverview restaurantSlug={slug} />
             </HStack>
 
-            <Spacer size="lg" />
+            <Spacer size="xl" />
 
-            <VStack paddingHorizontal={14}>
-              <VStack alignItems="center">
-                <VStack width="100%">
-                  <Suspense fallback={null}>
-                    <RestaurantDishPhotos
-                      size={160}
-                      restaurantSlug={slug}
-                      restaurantId={restaurant.id ?? undefined}
-                    />
-                  </Suspense>
-                </VStack>
+            <VStack flex={1} marginBottom={20} width="100%">
+              <VStack
+                margin={3}
+                borderWidth={1}
+                borderColor="#eee"
+                borderRadius={10}
+                padding={10}
+              >
+                <SmallTitle divider="off">Menu</SmallTitle>
+                <Spacer />
+                <Suspense fallback={null}>
+                  <RestaurantMenu restaurantSlug={slug} />
+                </Suspense>
+              </VStack>
 
-                <Spacer size="xl" />
+              <Spacer size="xl" />
 
-                <VStack flex={1} marginBottom={20} width="100%">
-                  <VStack
-                    margin={3}
-                    borderWidth={1}
-                    borderColor="#eee"
-                    borderRadius={10}
-                    padding={10}
-                  >
-                    <SmallTitle divider="off">Menu</SmallTitle>
-                    <Spacer />
-                    <Suspense fallback={null}>
-                      <RestaurantMenu restaurantSlug={slug} />
-                    </Suspense>
-                  </VStack>
+              <SmallTitle>Tips</SmallTitle>
+              <Suspense fallback={null}>
+                <RestaurantTopReviews
+                  expandTopComments={2}
+                  restaurantId={restaurant.id}
+                />
+              </Suspense>
+            </VStack>
 
-                  <Spacer size="xl" />
-
-                  <SmallTitle>Tips</SmallTitle>
-                  <Suspense fallback={null}>
-                    <RestaurantTopReviews
-                      expandTopComments={2}
-                      restaurantId={restaurant.id}
-                    />
-                  </Suspense>
-                </VStack>
-
-                {/* <VStack width="100%">
+            {/* <VStack width="100%">
                 <SmallTitle>Images</SmallTitle>
                 <HStack
                   width="100%"
@@ -178,8 +183,6 @@ const HomePageRestaurant = memo(
                     ))}
                 </HStack>
               </VStack> */}
-              </VStack>
-            </VStack>
           </Suspense>
 
           {/* bottom space */}
