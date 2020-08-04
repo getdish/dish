@@ -362,6 +362,9 @@ const deepAssign = (a: Object, b: Object) => {
 const updateHomeState: Action<HomeStateItem> = (om, val) => {
   const state = om.state.home.allStates[val.id]
   if (state) {
+    if (val.center) {
+      console.trace('setting', val)
+    }
     deepAssign(state, val)
   } else {
     om.state.home.allStates[val.id] = { ...val }

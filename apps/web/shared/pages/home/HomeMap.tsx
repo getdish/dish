@@ -156,21 +156,24 @@ const HomeMapContent = memo(function HomeMap({
   const state = om.state.home.currentState
   const { drawerWidth, width, paddingLeft } = useMapSize(isSmall)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
-  const [getLocation, setLocation] = useStateFn(getStateLocation(state))
-  const [selected, setSelected] = useState({
+  const [internal, setInternal] = useState({
     id: om.state.home.selectedRestaurant?.id,
     span: state.span,
+    center: state.center,
     // center: state.center,
     via: 'select' as 'select' | 'hover' | 'detail',
   })
+  const setState = (next: Partial<typeof internal>) => {
+    setInternal((x) => ({ ...x, ...next }))
+  }
 
-  const { center, span } = getLocation()
+  const { center, span } = internal
 
   // SELECTED
   const selectedId = om.state.home.selectedRestaurant?.id
   useEffect(() => {
     if (selectedId) {
-      setSelected({
+      setState({
         id: selectedId,
         via: 'select',
         span: getMinLngLat(state.span, 0.025),
@@ -183,7 +186,7 @@ const HomeMapContent = memo(function HomeMap({
     om.state.home.hoveredRestaurant && om.state.home.hoveredRestaurant.id
   useEffect(() => {
     if (hoveredId) {
-      setSelected({
+      setState({
         id: hoveredId,
         via: 'hover',
         span: getMinLngLat(state.span, 0.02),
@@ -195,7 +198,7 @@ const HomeMapContent = memo(function HomeMap({
   const detailId = restaurantDetail?.id
   useEffect(() => {
     if (detailId) {
-      setSelected({
+      setState({
         id: detailId,
         via: 'detail',
         span: getMinLngLat(state.span, 0.0025),
@@ -207,7 +210,7 @@ const HomeMapContent = memo(function HomeMap({
   const isLoading = restaurants[0]?.location?.coordinates[0] === null
   const key = useLastValueWhen(
     () =>
-      `${selected.id}${JSON.stringify(
+      `${internal.id}${JSON.stringify(
         restaurants.map((x) => x.location?.coordinates)
       )}`,
     isLoading || (!restaurants.length && !restaurantDetail)
@@ -217,12 +220,12 @@ const HomeMapContent = memo(function HomeMap({
   // gqless hack - touch the prop before memo
   restaurants[0]?.id
   const restaurantSelected = useMemo(
-    () => (selected.id ? restaurants.find((x) => x.id === selected.id) : null),
+    () => (internal.id ? restaurants.find((x) => x.id === internal.id) : null),
     [key]
   )
 
   console.log({
-    selected,
+    selected: internal,
     restaurantDetail,
     restaurantSelected,
     key,
@@ -234,15 +237,14 @@ const HomeMapContent = memo(function HomeMap({
   useEffect(() => {
     if (!restaurantSelected) return
     const coords = restaurantSelected.location.coordinates
-    console.log('restaurantSelected', restaurantSelected)
-    console.log('SET LOCATION', restaurantSelected, coords)
+    console.log('SET CTATE', coords, state)
     if (coords) {
-      setLocation({
+      setState({
         center: getLngLat(coords),
-        span: selected.span,
+        span: internal.span,
       })
     } else {
-      setLocation(getStateLocation(state))
+      setState(getStateLocation(state))
     }
   }, [
     restaurantSelected,
@@ -295,7 +297,7 @@ const HomeMapContent = memo(function HomeMap({
           setMap(map)
           setMapView(map)
         }}
-        selected={selected.id}
+        selected={internal.id}
         onSelect={(id) => {
           if (id !== om.state.home.selectedRestaurant?.id) {
             const restaurant = restaurants.find((x) => x.id === id)

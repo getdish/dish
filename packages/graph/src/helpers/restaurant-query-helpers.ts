@@ -1,3 +1,4 @@
+import { RestaurantQuery } from '../types'
 import { TopCuisineDish } from '../types-extra'
 
 /**
@@ -25,7 +26,7 @@ export const restaurantPhotosForCarousel = ({
   let photos = [] as TopCuisineDish[]
   for (const photo of restaurantPhotos) {
     if (photos.length >= max) break
-    photos.push({ name: '', image: photo })
+    photos.push({ name: '', image: photo, best_restaurants: [] })
   }
   if (!gallery || photos.length == 0) {
     photos = [...dishPhotos(restaurant, tag_names), ...photos]
@@ -39,6 +40,7 @@ const dishPhotos = (restaurant: any, tag_names: string[]) => {
     args: {
       tag_names: tag_names,
     },
+    limit: 100,
   })
   for (const t of tags) {
     const tagName = t.tag.name ?? ''
@@ -62,6 +64,7 @@ const dishPhotos = (restaurant: any, tag_names: string[]) => {
         // icon: t.tag.icon,
         image: photo,
         rating: photoRating,
+        best_restaurants: [],
         isFallback,
       }
       if (isSearchedForTag) {

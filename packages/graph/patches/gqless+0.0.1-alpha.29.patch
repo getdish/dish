@@ -61,7 +61,7 @@ index 12268bf..238a4de 100644
  
        return Promise.resolve(_temp && _temp.then ? _temp.then(_temp2) : _temp2(_temp));
 diff --git a/node_modules/gqless/dist/gqless.esm.js b/node_modules/gqless/dist/gqless.esm.js
-index cc6eb3f..714413c 100644
+index cc6eb3f..577643f 100644
 --- a/node_modules/gqless/dist/gqless.esm.js
 +++ b/node_modules/gqless/dist/gqless.esm.js
 @@ -412,6 +412,7 @@ const buildArguments = ({
@@ -122,3 +122,18 @@ index cc6eb3f..714413c 100644
      this.cache.merge(this, data);
    }
  
+@@ -2125,10 +2123,10 @@ const interceptor =
+ new Interceptor();
+ interceptor.onAccessor(accessor => {
+   lastAccessor = accessor;
+-  clearTimeout(timer);
+-  timer = setTimeout(() => {
+-    lastAccessor = null;
+-  });
++  // clearTimeout(timer);
++  // timer = setTimeout(() => {
++  //   lastAccessor = null;
++  // });
+ });
+ interceptor.start();
+ const getAccessor = input => {

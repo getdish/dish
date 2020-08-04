@@ -247,7 +247,7 @@ export const Map = (props: MapProps) => {
   useEffect(() => {
     if (!map) return
     return series([
-      fullyIdle,
+      () => fullyIdle({ min: 100 }),
       () => {
         map?.flyTo({
           center,

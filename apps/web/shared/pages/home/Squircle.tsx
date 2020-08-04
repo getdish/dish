@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native'
 export const Squircle = ({
   width = 100,
   height = 100,
-  borderRadius = 8,
+  borderRadius = 10,
   isHovered,
   children,
   ...rest
@@ -44,6 +44,10 @@ export const Squircle = ({
           })}
         >
           {children}
+          <LinearGradient
+            colors={['rgba(255,255,255,0.1)', 'transparent']}
+            style={[StyleSheet.absoluteFill]}
+          />
         </VStack>
       </VStack>
     </>

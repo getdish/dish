@@ -52,7 +52,7 @@ export function HomeStackView<A extends HomeStateItem>(props: {
           //   value={isActive == true ? null : false}
           // >
           <HomeStackViewItem
-            key={item.id}
+            key={item.type === 'home' ? '0' : item.id}
             item={item}
             index={i}
             isActive={isActive}
