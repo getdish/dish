@@ -103,13 +103,6 @@ tables:
         table:
           schema: public
           name: review
-  - name: scrapes
-    using:
-      foreign_key_constraint_on:
-        column: restaurant_id
-        table:
-          schema: public
-          name: scrape
   - name: tags
     using:
       foreign_key_constraint_on:
@@ -430,13 +423,6 @@ tables:
       filter:
         user_id:
           _eq: X-Hasura-User-Id
-- table:
-    schema: public
-    name: scrape
-  object_relationships:
-  - name: restaurant
-    using:
-      foreign_key_constraint_on: restaurant_id
 - table:
     schema: public
     name: setting

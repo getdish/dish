@@ -9,7 +9,6 @@ import {
   resolvedMutation,
   resolvedWithoutCache,
   restaurantInsert,
-  scrapeFindOne,
   userFindOne,
   userUpdate,
 } from '@dish/graph'
@@ -78,13 +77,6 @@ test('Normal user cannot delete things', async (t) => {
   t.is(
     global['latestUnhandledGQLessRejection'].errors[0].message,
     'field "delete_menu_item" not found in type: \'mutation_root\''
-  )
-
-  await deleteAllBy('scrape', 'id', 'example')
-  await sleep(10)
-  t.is(
-    global['latestUnhandledGQLessRejection'].errors[0].message,
-    'field "delete_scrape" not found in type: \'mutation_root\''
   )
 })
 

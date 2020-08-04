@@ -82,20 +82,6 @@ import {
   t_review_mutation_response,
 } from './review'
 import {
-  scrape_append_input,
-  scrape_bool_exp,
-  scrape_delete_at_path_input,
-  scrape_delete_elem_input,
-  scrape_delete_key_input,
-  scrape_insert_input,
-  scrape_on_conflict,
-  scrape_pk_columns_input,
-  scrape_prepend_input,
-  scrape_set_input,
-  t_scrape,
-  t_scrape_mutation_response,
-} from './scrape'
-import {
   setting_append_input,
   setting_bool_exp,
   setting_delete_at_path_input,
@@ -191,11 +177,6 @@ export type t_mutation_root = FieldsType<
       t_review_mutation_response | null
     >
     delete_review_by_pk?: FieldsTypeArg<{ id: any }, t_review | null>
-    delete_scrape: FieldsTypeArg<
-      { where: scrape_bool_exp },
-      t_scrape_mutation_response | null
-    >
-    delete_scrape_by_pk?: FieldsTypeArg<{ id: any }, t_scrape | null>
     delete_setting: FieldsTypeArg<
       { where: setting_bool_exp },
       t_setting_mutation_response | null
@@ -307,17 +288,6 @@ export type t_mutation_root = FieldsType<
     insert_review_one?: FieldsTypeArg<
       { object: review_insert_input; on_conflict?: review_on_conflict | null },
       t_review | null
-    >
-    insert_scrape: FieldsTypeArg<
-      {
-        objects: scrape_insert_input[]
-        on_conflict?: scrape_on_conflict | null
-      },
-      t_scrape_mutation_response | null
-    >
-    insert_scrape_one?: FieldsTypeArg<
-      { object: scrape_insert_input; on_conflict?: scrape_on_conflict | null },
-      t_scrape | null
     >
     insert_setting: FieldsTypeArg<
       {
@@ -494,30 +464,6 @@ export type t_mutation_root = FieldsType<
         pk_columns: review_pk_columns_input
       },
       t_review | null
-    >
-    update_scrape: FieldsTypeArg<
-      {
-        _append?: scrape_append_input | null
-        _delete_at_path?: scrape_delete_at_path_input | null
-        _delete_elem?: scrape_delete_elem_input | null
-        _delete_key?: scrape_delete_key_input | null
-        _prepend?: scrape_prepend_input | null
-        _set?: scrape_set_input | null
-        where: scrape_bool_exp
-      },
-      t_scrape_mutation_response | null
-    >
-    update_scrape_by_pk?: FieldsTypeArg<
-      {
-        _append?: scrape_append_input | null
-        _delete_at_path?: scrape_delete_at_path_input | null
-        _delete_elem?: scrape_delete_elem_input | null
-        _delete_key?: scrape_delete_key_input | null
-        _prepend?: scrape_prepend_input | null
-        _set?: scrape_set_input | null
-        pk_columns: scrape_pk_columns_input
-      },
-      t_scrape | null
     >
     update_setting: FieldsTypeArg<
       {

@@ -49,13 +49,6 @@ import {
   t_review_aggregate,
 } from './review'
 import {
-  scrape_bool_exp,
-  scrape_order_by,
-  scrape_select_column,
-  t_scrape,
-  t_scrape_aggregate,
-} from './scrape'
-import {
   setting_bool_exp,
   setting_order_by,
   setting_select_column,
@@ -241,27 +234,6 @@ export type t_subscription_root = FieldsType<
       t_review_aggregate
     >
     review_by_pk?: FieldsTypeArg<{ id: any }, t_review | null>
-    scrape: FieldsTypeArg<
-      {
-        distinct_on?: scrape_select_column[] | null
-        limit?: number | null
-        offset?: number | null
-        order_by?: scrape_order_by[] | null
-        where?: scrape_bool_exp | null
-      },
-      t_scrape[]
-    >
-    scrape_aggregate: FieldsTypeArg<
-      {
-        distinct_on?: scrape_select_column[] | null
-        limit?: number | null
-        offset?: number | null
-        order_by?: scrape_order_by[] | null
-        where?: scrape_bool_exp | null
-      },
-      t_scrape_aggregate
-    >
-    scrape_by_pk?: FieldsTypeArg<{ id: any }, t_scrape | null>
     setting: FieldsTypeArg<
       {
         distinct_on?: setting_select_column[] | null

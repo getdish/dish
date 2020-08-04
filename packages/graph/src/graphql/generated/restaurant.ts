@@ -27,15 +27,6 @@ import {
   t_review,
   t_review_aggregate,
 } from './review'
-import {
-  scrape_aggregate_order_by,
-  scrape_arr_rel_insert_input,
-  scrape_bool_exp,
-  scrape_order_by,
-  scrape_select_column,
-  t_scrape,
-  t_scrape_aggregate,
-} from './scrape'
 import { String_comparison_exp, t_String } from './String'
 import {
   t_tag,
@@ -106,26 +97,6 @@ export type t_restaurant = FieldsType<
         where?: review_bool_exp | null
       },
       t_review_aggregate
-    >
-    scrapes: FieldsTypeArg<
-      {
-        distinct_on?: scrape_select_column[] | null
-        limit?: number | null
-        offset?: number | null
-        order_by?: scrape_order_by[] | null
-        where?: scrape_bool_exp | null
-      },
-      t_scrape[]
-    >
-    scrapes_aggregate: FieldsTypeArg<
-      {
-        distinct_on?: scrape_select_column[] | null
-        limit?: number | null
-        offset?: number | null
-        order_by?: scrape_order_by[] | null
-        where?: scrape_bool_exp | null
-      },
-      t_scrape_aggregate
     >
     slug: t_String
     sources?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
@@ -295,7 +266,6 @@ export type restaurant_bool_exp = {
   rating?: numeric_comparison_exp | null
   rating_factors?: jsonb_comparison_exp | null
   reviews?: review_bool_exp | null
-  scrapes?: scrape_bool_exp | null
   slug?: String_comparison_exp | null
   sources?: jsonb_comparison_exp | null
   state?: String_comparison_exp | null
@@ -377,7 +347,6 @@ export type restaurant_insert_input = {
   rating?: any | null
   rating_factors?: any | null
   reviews?: review_arr_rel_insert_input | null
-  scrapes?: scrape_arr_rel_insert_input | null
   slug?: string | null
   sources?: any | null
   state?: string | null
@@ -537,7 +506,6 @@ export type restaurant_order_by = {
   rating?: order_by | null
   rating_factors?: order_by | null
   reviews_aggregate?: review_aggregate_order_by | null
-  scrapes_aggregate?: scrape_aggregate_order_by | null
   slug?: order_by | null
   sources?: order_by | null
   state?: order_by | null

@@ -6,7 +6,6 @@ import {
   restaurant,
   restaurant_tag,
   review,
-  scrape,
   setting,
   tag,
   tag_tag,
@@ -39,7 +38,6 @@ export interface TagTagQuery extends tag_tag {}
 export interface UserQuery extends user {}
 export interface ReviewQuery extends review {}
 export interface MenuItemQuery extends menu_item {}
-export interface ScrapeQuery extends scrape {}
 export interface SettingQuery extends setting {}
 export interface PhotoBaseQuery extends photo {}
 export interface PhotoXrefQuery extends photo_xref {}
@@ -54,7 +52,6 @@ export interface TagTag extends FlatResolvedModel<TagTagQuery> {}
 export interface User extends FlatResolvedModel<UserQuery> {}
 export interface Review extends FlatResolvedModel<ReviewQuery> {}
 export interface MenuItem extends FlatResolvedModel<MenuItemQuery> {}
-export interface Scrape extends FlatResolvedModel<ScrapeQuery> {}
 export interface Setting extends FlatResolvedModel<SettingQuery> {}
 export interface PhotoBase extends FlatResolvedModel<PhotoBaseQuery> {}
 export interface PhotoXref extends FlatResolvedModel<PhotoXrefQuery> {}
@@ -69,7 +66,6 @@ export interface TagTagWithId extends WithID<TagTag> {}
 export interface UserWithId extends WithID<User> {}
 export interface ReviewWithId extends WithID<Review> {}
 export interface MenuItemWithId extends WithID<MenuItem> {}
-export interface ScrapeWithId extends WithID<Scrape> {}
 export interface SettingWithId extends WithID<Setting> {}
 
 // SECTION 4
@@ -85,7 +81,6 @@ export type ModelType =
   | PhotoBase
   | PhotoXref
   | Setting
-  | Scrape
 
 // DONE
 

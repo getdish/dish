@@ -1,13 +1,7 @@
 import _ from 'lodash'
 
 import { order_by, query, restaurant_constraint } from '../graphql'
-import {
-  Restaurant,
-  RestaurantTag,
-  RestaurantWithId,
-  Scrape,
-  Tag,
-} from '../types'
+import { Restaurant, RestaurantTag, RestaurantWithId, Tag } from '../types'
 import { levenshteinDistance } from './levenshteinDistance'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
@@ -74,31 +68,6 @@ export async function restaurantFindNear(
       },
     })
   })
-}
-
-export async function restaurantLatestScrape(
-  restaurant: Restaurant,
-  source: string
-): Promise<Scrape> {
-  const [first] = await resolvedWithFields(() => {
-    return query.scrape({
-      where: {
-        restaurant_id: {
-          _eq: restaurant.id,
-        },
-        source: {
-          _eq: source,
-        },
-      },
-      order_by: [
-        {
-          updated_at: order_by.desc,
-        },
-      ],
-      limit: 1,
-    })
-  })
-  return first
 }
 
 export async function restaurantSaveCanonical(
