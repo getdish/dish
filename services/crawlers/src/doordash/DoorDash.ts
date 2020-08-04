@@ -64,7 +64,7 @@ export class DoorDash extends WorkerJob {
         stores[id] = new_stores[id]
       }
       if (process.env.RUN_WITHOUT_WORKER == 'true') {
-        if (Object.keys(stores).length > 0) break
+        //if (Object.keys(stores).length > 0) break
       }
     }
     console.log(
@@ -106,6 +106,7 @@ export class DoorDash extends WorkerJob {
     console.log(`DoorDash searching at: ${lat}, ${lng}`)
     while (is_more) {
       const response = await this.graphRequest(this._searchGQL(lat, lng, page))
+      console.log(response)
       const results = response.storeSearch.stores
       if (results.length > 0) {
         for (const store of results) {

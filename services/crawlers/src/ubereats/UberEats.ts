@@ -46,8 +46,8 @@ export class UberEats extends WorkerJob {
     const response = await axios.post(CITIES, {})
     const countries = _.shuffle(response.data.data.countryLinks.links)
     for (let country of countries) {
-      const locale =
-        '?localeCode=en-' + country.href.split('/')[1].split('-')[1]
+      const country_name = country.href.split('/')[1]
+      const locale = '?localeCode=' + country_name
       const response = await axios.post(CITIES + locale, {})
       const cities = _.shuffle(response.data.data.cityLinks.links)
       for (let city of cities) {

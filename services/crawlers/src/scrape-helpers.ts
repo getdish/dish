@@ -2,13 +2,18 @@ import { RestaurantWithId, ensureJSONSyntax } from '@dish/graph'
 
 import { DB } from './utils'
 
-const db = new DB({
+let db_config = {
   host: process.env.TIMESCALE_HOST || 'localhost',
   port: process.env.TIMESCALE_PORT || '5433',
   user: process.env.TIMESCALE_USER || 'postgres',
   password: process.env.TIMESCALE_PASSWORD || 'postgres',
   database: 'scrape_data',
-})
+  ssl: true,
+}
+if (process.env.DISH_ENV == 'production') {
+  db_config.ssl = true
+}
+const db = new DB(db_config)
 
 type LatLon = {
   lon: number
