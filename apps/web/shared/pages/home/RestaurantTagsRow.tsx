@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { HStack, Spacer, StackProps, VStack } from '@dish/ui'
+import { StackProps, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import {
@@ -8,10 +8,6 @@ import {
   TagButtonTagProps,
   getTagButtonProps,
 } from './TagButton'
-import {
-  useMediaQueryIsReallySmall,
-  useMediaQueryIsSmall,
-} from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 type TagRowProps = {
@@ -56,30 +52,32 @@ export const RestaurantTagsRow = memo(
     tags = tags.slice(0, props.max ?? Infinity)
     return (
       <>
-        {tags.map((tag, index) => {
-          return (
-            <React.Fragment key={`${index}${tag.name}`}>
-              <VStack
-                {...(props.grid && {
-                  width: '33%',
-                  minWidth: 190,
-                  alignItems: 'center',
-                })}
-              >
-                <TagButton
-                  replaceSearch
-                  size={size ?? 'sm'}
-                  rank={tag.rank}
-                  {...getTagButtonProps(tag)}
-                  subtle={props.subtle}
-                  votable={!props.subtle}
-                  restaurantId={props.restaurantId}
-                  marginBottom={props.spacing}
-                />
-              </VStack>
-            </React.Fragment>
-          )
-        })}
+        {tags
+          .sort((a, b) => a.type?.localeCompare(b.type) ?? -1)
+          .map((tag, index) => {
+            return (
+              <React.Fragment key={`${index}${tag.name}`}>
+                <VStack
+                  {...(props.grid && {
+                    width: '33%',
+                    minWidth: 190,
+                    alignItems: 'center',
+                  })}
+                >
+                  <TagButton
+                    replaceSearch
+                    size={size ?? 'sm'}
+                    rank={tag.rank}
+                    {...getTagButtonProps(tag)}
+                    subtle={props.subtle}
+                    votable={!props.subtle}
+                    restaurantId={props.restaurantId}
+                    marginBottom={props.spacing}
+                  />
+                </VStack>
+              </React.Fragment>
+            )
+          })}
       </>
     )
   })

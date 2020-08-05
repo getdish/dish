@@ -266,11 +266,11 @@ const HomeMapContent = memo(function HomeMap({
   const features = useMemo(() => getRestaurantMarkers(restaurants), [key])
 
   // stop map animation when moving away from page (see if this fixes some animation glitching/tearing)
-  useLayoutEffect(() => {
-    if (!map) return
-    console.warn('test removing this')
-    map.stop()
-  }, [map, restaurants])
+  // useLayoutEffect(() => {
+  //   if (!map) return
+  //   console.warn('test removing this')
+  //   map.stop()
+  // }, [map, restaurants])
 
   return (
     <AbsoluteVStack
@@ -297,13 +297,13 @@ const HomeMapContent = memo(function HomeMap({
           if (om.state.home.centerToResults) {
             // we just re-centered, ignore
             om.actions.home.setCenterToResults(0)
-          } else if (om.state.home.currentStateType === 'search') {
-            om.actions.home.setHasMovedMap(true)
           }
-          console.log('update current state', { center, span })
+          om.actions.home.updateCurrentMapAreaInformation()
           om.actions.home.updateCurrentState({
-            center,
-            span,
+            mapAt: {
+              center,
+              span,
+            },
           })
         }}
         onSelect={(id) => {

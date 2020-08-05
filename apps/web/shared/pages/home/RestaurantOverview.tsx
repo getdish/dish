@@ -81,11 +81,11 @@ export const RestaurantOverview = memo(
 const listItems = [
   {
     category: '🍽',
-    review: `Don't miss the lychee tempura ice cream`,
+    review: `Don't miss the lychee tempura ice cream and Wednesday two-for-one`,
   },
   {
     category: '🌃',
-    review: 'Authentic. Big bar area outside with shade',
+    review: 'Traditional. Big bar area outside with shade',
   },
   // {
   //   category: 'Tips',

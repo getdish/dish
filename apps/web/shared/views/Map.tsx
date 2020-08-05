@@ -13,15 +13,17 @@ const marker = require('../assets/map-marker.png').default
 mapboxgl.accessToken =
   'pk.eyJ1IjoibndpZW5lcnQiLCJhIjoiY2lvbWlhYjRjMDA0NnVpbTIxMHM5ZW95eCJ9.DQyBjCEuPRVt1400yejGhA'
 
+type MapPosition = { center: LngLat; span: LngLat }
+
 type MapProps = {
   center?: LngLat
   span?: LngLat
-  features?: GeoJSON.Feature[]
+  features: GeoJSON.Feature[]
   padding?: { top: number; left: number; bottom: number; right: number }
   mapRef?: (map: mapboxgl.Map) => void
   style?: string
   onSelect?: (id: string) => void
-  onMoveEnd?: (props: { center: LngLat; span: LngLat }) => void
+  onMoveEnd?: (props: MapPosition) => void
   selected?: string
   centerToResults?: number
 }
@@ -210,45 +212,44 @@ export const Map = (props: MapProps) => {
             setActive(map, +e.features[0].id)
           }
 
+          /*
+            Send back current location on move end
+          */
           const getCurrentLocation = () => {
-            const center = map.getCenter()
+            const mapCenter = map.getCenter()
             const bounds = map.getBounds()
             const dist = (a: number, b: number) => {
               return a > b ? a - b : b - a
             }
-            const lat = dist(center.lat, bounds.getNorth())
-            const lng = dist(center.lng, bounds.getWest())
-            const span = {
-              lng,
-              lat,
+            const lat = round(dist(mapCenter.lat, bounds.getNorth()))
+            const lng = round(dist(mapCenter.lng, bounds.getWest()))
+            const center = {
+              lng: round(mapCenter.lng),
+              lat: round(mapCenter.lat),
             }
-            console.log('now at span', span)
             return {
-              center: {
-                lng: round(center.lng),
-                lat: round(center.lat),
+              center,
+              span: {
+                lng,
+                lat,
               },
-              span,
             }
           }
 
           let lastLoc = getCurrentLocation()
-          const sendMoveEnd = _.debounce(() => {
-            props.onMoveEnd?.(getCurrentLocation())
-          }, 150)
-
-          const handleMoveEnd = () => {
+          const handleMoveEnd = _.debounce(() => {
             // ignore same location
             const next = getCurrentLocation()
             if (isEqual(lastLoc, next)) {
               return
             }
             lastLoc = next
-            sendMoveEnd()
-          }
+            console.log(JSON.stringify({ next }, null, 2))
+            props.onMoveEnd?.(next)
+          }, 150)
 
           const handleMove: Listener = () => {
-            sendMoveEnd.cancel()
+            handleMoveEnd.cancel()
           }
 
           map.on('moveend', handleMoveEnd)
@@ -312,11 +313,9 @@ export const Map = (props: MapProps) => {
       return series([
         () => fullyIdle({ min: 100 }),
         () => {
-          console.log('MOVE TO', next, { ...center }, { ...span })
-          map.fitBounds([
-            [next.sw.lng, next.sw.lat],
-            [next.ne.lng, next.ne.lat],
-          ])
+          const northEast = new mapboxgl.LngLat(next.ne.lng, next.ne.lat)
+          const southWest = new mapboxgl.LngLat(next.sw.lng, next.sw.lat)
+          map.fitBounds(new mapboxgl.LngLatBounds(southWest, northEast))
         },
       ])
     }
@@ -375,7 +374,7 @@ export const Map = (props: MapProps) => {
 
 const abs = (x: number) => Math.abs(x)
 const dist = (a: LngLat, b: LngLat) =>
-  round(abs(a.lng) - abs(b.lng)) + round(abs(a.lat) - abs(b.lat))
+  abs(a.lng) - abs(b.lng) + abs(a.lat) - abs(b.lat)
 
 const hasMovedAtLeast = (
   map: mapboxgl.Map,

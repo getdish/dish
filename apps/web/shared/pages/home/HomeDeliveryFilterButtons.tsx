@@ -13,7 +13,6 @@ export const HomeDeliveryFilterButtons = ({
 }: {
   activeTagIds: HomeActiveTagsRecord
 }) => {
-  console.log('activeTagIds', activeTagIds)
   if (!activeTagIds['delivery']) {
     return null
   }

@@ -167,38 +167,8 @@ export const isEditingUserPage = (
 
 type PageAction = () => Promise<void>
 
-let hasLoadedSearchOnce = false
-
-const loadPageSearch: AsyncAction = async (om) => {
-  const state = om.state.home.currentState
-  if (!isSearchState(state)) return
-
-  if (!hasLoadedSearchOnce && router.history.length === 1) {
-    hasLoadedSearchOnce = true
-    const fakeTags = getTagsFromRoute(router.curPage)
-    console.time('getFullTags')
-    const tags = await getFullTags(fakeTags)
-    console.timeEnd('getFullTags')
-    om.actions.home.addTagsToCache(tags)
-    const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>((acc, tag) => {
-      acc[getTagId(tag)] = true
-      return acc
-    }, {})
-    om.actions.home.updateActiveTags({
-      ...state,
-      searchQuery: router.curPage.params.search,
-      activeTagIds,
-    })
-  }
-
-  om.actions.home.runSearch({ force: true })
-}
-
-let currentAction: PageAction
-
 const refresh: AsyncAction = async (om) => {
-  if (!currentAction) return
-  await currentAction()
+  om.state.home.refresh = Date.now()
 }
 
 const up: Action = (om) => {
@@ -302,8 +272,8 @@ const runSearch: AsyncAction<{
 
   const hasSearchBarTag = tags.some(isSearchBarTag)
   const searchArgs: RestaurantSearchArgs = {
-    center: roundLngLat(state.center),
-    span: roundLngLat(padSpan(state.span)),
+    center: roundLngLat(state.mapAt?.center ?? state.center),
+    span: roundLngLat(padSpan(state.mapAt?.span ?? state.span)),
     query: state.searchQuery,
     tags: [
       ...tags.map((tag) => getTagId(tag)),
@@ -334,7 +304,10 @@ const runSearch: AsyncAction<{
   state.results = restaurants.filter(Boolean)
 
   // overmind seems unhappy to just let us mutate
-  om.actions.home.updateHomeState(state)
+  om.actions.home.updateHomeState({
+    ...state,
+    mapAt: null,
+  })
 }
 
 const deepAssign = (a: Object, b: Object) => {
@@ -400,33 +373,19 @@ function reverseGeocode(
   center: LngLat,
   requestLocation = false
 ): Promise<GeocodePlace[]> {
-  const mapGeocoder = new mapkit.Geocoder({
-    language: 'en-GB',
-    getsUserLocation: requestLocation,
-  })
-  return new Promise((res, rej) => {
-    mapGeocoder.reverseLookup(
-      new mapkit.Coordinate(center.lat, center.lng),
-      (err, data) => {
-        if (err) return rej(err)
-        res((data.results as any) as GeocodePlace[])
-      }
-    )
-  })
-}
-
-const setMapArea: AsyncAction<{ center: LngLat; span: LngLat }> = async (
-  om,
-  { center, span }
-) => {
-  const state = om.state.home.currentState
-  if (isSearchState(state)) {
-    state.hasMovedMap = true
-  }
-  om.state.home.currentState.center = center
-  om.state.home.currentState.span = span
-  // reverse geocode location
-  await om.actions.home.updateCurrentMapAreaInformation()
+  // const mapGeocoder = new mapkit.Geocoder({
+  //   language: 'en-GB',
+  //   getsUserLocation: requestLocation,
+  // })
+  // return new Promise((res, rej) => {
+  //   mapGeocoder.reverseLookup(
+  //     new mapkit.Coordinate(center.lat, center.lng),
+  //     (err, data) => {
+  //       if (err) return rej(err)
+  //       res((data.results as any) as GeocodePlace[])
+  //     }
+  //   )
+  // })
 }
 
 const spanToLocationName = (span: LngLat, place: GeocodePlace): string => {
@@ -458,33 +417,31 @@ const moveMapToUserLocation: AsyncAction = async (om) => {
 }
 
 const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
-  const currentState = om.state.home.currentState
-  const center = currentState.center!
-  const span = currentState.span!
-  const hasUserLocation = !!om.state.home.userLocation
-  try {
-    const [firstResult] = (await reverseGeocode(center, hasUserLocation)) ?? []
-    const placeName = firstResult.subLocality ?? firstResult.locality
-    if (placeName) {
-      const name = spanToLocationName(span, firstResult)
-      const info: GeocodePlace = {
-        country: firstResult?.country,
-        coordinate: firstResult?.coordinate,
-        locality: firstResult?.locality,
-        subLocality: firstResult?.subLocality,
-      }
-      // @ts-ignore
-      om.state.home.currentLocationInfo = info
-      currentState.currentLocationName = name
-    }
-  } catch (err) {
-    return
-  }
+  // const currentState = om.state.home.currentState
+  // const center = currentState.center!
+  // const span = currentState.span!
+  // const hasUserLocation = !!om.state.home.userLocation
+  // try {
+  //   const [firstResult] = (await reverseGeocode(center, hasUserLocation)) ?? []
+  //   const placeName = firstResult.subLocality ?? firstResult.locality
+  //   if (placeName) {
+  //     const name = spanToLocationName(span, firstResult)
+  //     const info: GeocodePlace = {
+  //       country: firstResult?.country,
+  //       coordinate: firstResult?.coordinate,
+  //       locality: firstResult?.locality,
+  //       subLocality: firstResult?.subLocality,
+  //     }
+  //     // @ts-ignore
+  //     om.state.home.currentLocationInfo = info
+  //     currentState.currentLocationName = name
+  //   }
+  // } catch (err) {
+  //   return
+  // }
 }
 
 const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
-  console.log('handleRouteChange', item)
-
   // happens on *any* route push or pop
   if (om.state.home.hoveredRestaurant) {
     om.state.home.hoveredRestaurant = null
@@ -562,7 +519,6 @@ const pushHomeState: AsyncAction<
     console.warn('no item?')
     return null
   }
-  console.log('pushHomeState', item.type, item.name)
   // start loading
   om.actions.home.setIsLoading(true)
 
@@ -623,13 +579,11 @@ const pushHomeState: AsyncAction<
           : []
 
       nextState = {
-        hasMovedMap: false,
         status: 'loading',
         results,
         username,
         activeTagIds,
       }
-      fetchData = om.actions.home.loadPageSearch
       break
     }
 
@@ -717,7 +671,6 @@ const pushHomeState: AsyncAction<
 
   let fetchDataPromise: Promise<any> | null = null
   if (!shouldSkip && fetchData) {
-    currentAction = runFetchData
     // start
     let res: any
     let rej: any
@@ -834,15 +787,6 @@ const roundLngLat = (val: LngLat): LngLat => {
   }
 }
 
-const setHasMovedMap: Action<boolean | void> = (om, val = true) => {
-  const next = !!val
-  const { lastSearchState } = om.state.home
-  if (lastSearchState && lastSearchState.hasMovedMap !== next) {
-    om.state.home.centerToResults = Date.now()
-    lastSearchState.hasMovedMap = next
-  }
-}
-
 const setIsScrolling: Action<boolean> = (om, val) => {
   om.state.home.isScrolling = val
 }
@@ -952,6 +896,7 @@ const setIsLoading: Action<boolean> = (om, val) => {
 let lastNav = Date.now()
 const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
   navState.state = navState.state ?? om.state.home.currentState
+  debugger
   const nextState = getNextState(navState)
   const curState = om.state.home.currentState
 
@@ -974,7 +919,6 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     return false
   }
 
-  console.warn('home.navigate', navState)
   lastNav = Date.now()
   let curNav = lastNav
   om.state.home.isOptimisticUpdating = false
@@ -999,6 +943,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     om.state.home.isOptimisticUpdating = false
   }
 
+  console.warn('home.navigate', navState, nextState)
   const didNav = await syncStateToRoute(om, nextState)
   if (curNav !== lastNav) return false
   om.actions.home.updateActiveTags(nextState)
@@ -1198,7 +1143,6 @@ export const actions = {
   setAutocompleteIndex,
   setIsScrolling,
   setLocationAutocompleteResults,
-  setHasMovedMap,
   setCenterToResults,
   setSearchQuery,
   updateCurrentMapAreaInformation,
@@ -1215,7 +1159,6 @@ export const actions = {
   setHoveredRestaurant,
   setLocation,
   setLocationSearchQuery,
-  setMapArea,
   setSearchBarFocusedTag,
   moveSearchBarTagIndex,
   setSearchBarTagIndex,
@@ -1223,7 +1166,6 @@ export const actions = {
   popBack,
   refresh,
   suggestTags,
-  loadPageSearch,
   updateActiveTags,
   setAutocompleteResults,
   clearTags,

@@ -12,8 +12,9 @@ import { useMediaQueryIsSmall } from './useMediaQueryIs'
 export const HomeMapControlsUnderlay = memo(() => {
   const om = useOvermind()
   const zoomLevel = useZoomLevel()
-  const hasMovedMap = om.state.home.currentState?.['hasMovedMap']
-  console.log({ zoomLevel, hasMovedMap })
+  const hasMovedMap =
+    !!om.state.home.currentState.mapAt &&
+    om.state.home.currentStateType === 'search'
   const isSmall = useMediaQueryIsSmall()
   const { paddingLeft, width } = useMapSize(isSmall)
   return (
@@ -56,7 +57,6 @@ export const HomeMapControlsUnderlay = memo(() => {
               alignItems="center"
               justifyContent="center"
               onPress={() => {
-                om.actions.home.setHasMovedMap(false)
                 om.actions.home.refresh()
               }}
             >
@@ -72,7 +72,6 @@ export const HomeMapControlsUnderlay = memo(() => {
                 alignItems="center"
                 justifyContent="center"
                 onPress={() => {
-                  om.actions.home.setHasMovedMap(false)
                   om.actions.home.setHoveredRestaurant(false)
                 }}
               >

@@ -14,7 +14,6 @@ import React, { memo, useEffect, useRef } from 'react'
 import { ThumbsUp, X } from 'react-feather'
 import { Image } from 'react-native'
 
-import { bgLight } from '../../colors'
 import { getTagId } from '../../state/getTagId'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { LinkButton } from '../../views/ui/LinkButton'
@@ -65,7 +64,7 @@ export const getTagColors = ({ rgb, type }: Partial<Tag>) => {
       ? // red
         '#BD1616'
       : // green
-        '#16BD41'
+        '#16AA21'
   return {
     backgroundColor,
     color: '#fff',
@@ -122,7 +121,7 @@ export const TagButton = memo((props: TagButtonProps) => {
   }
   const tag = { name, type: type as TagType, icon, rgb }
   const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1 : 1
-  const height = scale * (subtle ? 26 : 30)
+  const height = scale * (subtle ? 26 : 32)
   const lineHeight = 22 * scale
 
   let bg = 'transparent'
@@ -141,7 +140,7 @@ export const TagButton = memo((props: TagButtonProps) => {
     <>
       <HStack
         height={height}
-        borderRadius={8 * scale}
+        borderRadius={10 * scale}
         overflow="hidden"
         alignItems="center"
         justifyContent="center"
