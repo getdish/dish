@@ -35,13 +35,6 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
 
-  // if (true) {
-  //   console.log(
-  //     'HomeStackView',
-  //     cloneDeep({ isRemoving, states, homeStates, items })
-  //   )
-  // }
-
   return (
     <>
       {items.map((item, i) => {

@@ -7,9 +7,9 @@ import {
   SmallTitle,
   Spacer,
   VStack,
+  useOverlay,
 } from '@dish/ui'
-import React, { Suspense, memo, useEffect } from 'react'
-import { Divide } from 'react-feather'
+import React, { Suspense, memo } from 'react'
 import { ScrollView } from 'react-native'
 
 import { HomeStateItemRestaurant } from '../../state/home-types'
@@ -29,45 +29,36 @@ import { RestaurantOverview } from './RestaurantOverview'
 import { RestaurantRatingBreakdown } from './RestaurantRatingBreakdown'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantTopReviews } from './RestaurantTopReviews'
+import { usePageLoadEffect } from './usePageLoadEffect'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 type Props = HomePagePaneProps<HomeStateItemRestaurant>
 
-export default memo(function HomePageRestaurantContainer(props: Props) {
+export default function HomePageRestaurantContainer(props: Props) {
   return (
     <HomeStackDrawer closable>
       <HomePageRestaurant {...props} />
     </HomeStackDrawer>
   )
-})
+}
 
 const HomePageRestaurant = memo(
-  graphql(({ item }: Props) => {
-    if (!item) {
-      return null
-    }
+  graphql((props: Props) => {
+    const { item } = props
     const slug = item.restaurantSlug
     const restaurant = useRestaurantQuery(slug)
     const coords = restaurant?.location?.coordinates
 
-    const nextState = {
-      restaurantId: restaurant.id,
-      center: {
-        lng: coords?.[0],
-        lat: coords?.[1],
-      },
-      span: getMinLngLat(item.span, 0.0025),
-    }
-    console.log('nextState', nextState)
-
-    useEffect(() => {
-      if (!nextState.restaurantId) return
-      omStatic.actions.home.updateCurrentState(nextState)
-    }, [JSON.stringify(nextState)])
-    // const isCanTag =
-    //   om.state.user.isLoggedIn &&
-    //   (om.state.user.user.role == 'admin' ||
-    //     om.state.user.user.role == 'contributor')
+    usePageLoadEffect(props.isActive && restaurant.id, () => {
+      omStatic.actions.home.updateCurrentState({
+        restaurantId: restaurant.id,
+        center: {
+          lng: coords?.[0],
+          lat: coords?.[1],
+        },
+        span: getMinLngLat(item.span, 0.0025),
+      })
+    })
 
     return (
       <>
@@ -98,6 +89,10 @@ const HomePageRestaurant = memo(
 
             <HStack
               padding={20}
+              paddingHorizontal="5%"
+              maxWidth={610}
+              alignSelf="center"
+              paddingBottom={12}
               flexWrap="wrap"
               alignItems="center"
               justifyContent="center"
@@ -106,7 +101,7 @@ const HomePageRestaurant = memo(
                 size="sm"
                 restaurantSlug={slug}
                 restaurantId={restaurant.id}
-                spacing={10}
+                spacing={8}
                 grid
                 max={9}
               />

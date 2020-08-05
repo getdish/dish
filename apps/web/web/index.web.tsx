@@ -57,7 +57,6 @@ let rootEl = document.getElementById('root')
 const search = window.location.search
 
 async function start() {
-  console.log('starting...')
   const om = createOvermind(config, {
     devtools: process.env.NODE_ENV === 'production' ? false : `localhost:3031`,
     logProxies: true,

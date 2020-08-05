@@ -11,6 +11,7 @@ export type OmStateHome = OmState['home']
 export type ActiveEvent = 'key' | 'pin' | 'hover' | null
 
 export type HomeState = {
+  refresh: number
   drawerSnapPoint: number
   isOptimisticUpdating: boolean
   isScrolling: boolean
@@ -76,6 +77,10 @@ export type HomeStateItemBase = {
   searchQuery: string
   center: LngLat
   span: LngLat
+  mapAt?: {
+    center: LngLat
+    span: LngLat
+  }
   id: string
   currentLocationName?: string
   currentLocationInfo?: GeocodePlace | null
@@ -117,7 +122,6 @@ export type HomeStateItemSearch = HomeStateItemBase & {
   searchedSpan?: LngLat
   userId?: string
   username?: string
-  hasMovedMap: boolean
 }
 
 export type HomeStateItemRestaurant = HomeStateItemBase & {

@@ -123,7 +123,7 @@ const HomeAutoCompleteContents = memo(
       () => om.actions.home.setShowAutocomplete(false),
       200
     )
-    const searchYEnd =
+    const top =
       searchBarTopOffset +
       searchBarHeight +
       (isSmall ? getWindowHeight() * snapPoints[0] + 10 : 0)
@@ -139,7 +139,7 @@ const HomeAutoCompleteContents = memo(
         }
         position="absolute"
         fullscreen
-        top={searchYEnd - 10}
+        top={top}
         paddingTop={10}
         overflow="hidden"
         alignItems="center"
@@ -157,13 +157,13 @@ const HomeAutoCompleteContents = memo(
           width="100%"
           pointerEvents={isShowing ? 'auto' : 'none'}
           maxWidth={pageWidthMax * 0.45}
-          maxHeight={`calc(100vh - ${searchYEnd + 20}px)`}
+          maxHeight={`calc(100vh - ${top + 20}px)`}
           // @ts-ignore
           onMouseLeave={() => {
             if (isSmall) {
               return
             }
-            if (curPagePos.y > searchYEnd) {
+            if (curPagePos.y > top) {
               hideAutocomplete()
             }
           }}

@@ -21,9 +21,16 @@ import { ArrowUp } from 'react-feather'
 import { ScrollView } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
+import { getTagId } from '../../state/getTagId'
 import { isSearchState } from '../../state/home-helpers'
-import { HomeStateItemSearch, OmState } from '../../state/home-types'
+import { getFullTags, getTagsFromRoute } from '../../state/home-tag-helpers'
+import {
+  HomeActiveTagsRecord,
+  HomeStateItemSearch,
+  OmState,
+} from '../../state/home-types'
 import { omStatic, useOvermind } from '../../state/om'
+import { router } from '../../state/router'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { getTitleForState } from './getTitleForState'
 import { HomeDeliveryFilterButtons } from './HomeDeliveryFilterButtons'
@@ -42,6 +49,7 @@ import {
   useMediaQueryIsReallySmall,
   useMediaQueryIsSmall,
 } from './useMediaQueryIs'
+import { usePageLoadEffect } from './usePageLoadEffect'
 
 export const avatar = require('../../assets/peach.jpg').default
 
@@ -62,6 +70,8 @@ const useSpacing = () => {
   }
 }
 
+let hasLoadedSearchOnce = false
+
 export default memo(function HomePageSearchResults(props: Props) {
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const om = useOvermind()
@@ -72,6 +82,33 @@ export default memo(function HomePageSearchResults(props: Props) {
   const changingFilters = wasOptimisticUpdating && state.status === 'loading'
   const shouldAvoidContentUpdates =
     isOptimisticUpdating || !props.isActive || changingFilters
+
+  usePageLoadEffect(props.isActive, (isMounted) => {
+    if (!hasLoadedSearchOnce && router.history.length === 1) {
+      hasLoadedSearchOnce = true
+      const fakeTags = getTagsFromRoute(router.curPage)
+      getFullTags(fakeTags).then((tags) => {
+        if (isMounted.current) {
+          om.actions.home.addTagsToCache(tags)
+          const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>(
+            (acc, tag) => {
+              acc[getTagId(tag)] = true
+              return acc
+            },
+            {}
+          )
+          om.actions.home.updateActiveTags({
+            ...state,
+            searchQuery: router.curPage.params.search,
+            activeTagIds,
+          })
+          om.actions.home.runSearch({ force: true })
+        }
+      })
+    } else {
+      om.actions.home.runSearch({ force: true })
+    }
+  })
 
   const key = useLastValueWhen(
     () =>
@@ -304,23 +341,23 @@ const SearchResultsContent = (props: Props) => {
       ? false
       : !isOnLastChunk || state.hasLoaded <= state.chunk)
 
-  if (process.env.NODE_ENV === 'development') {
-    console.log(
-      'SearchResults',
-      JSON.stringify(
-        {
-          state,
-          currentlyShowing,
-          firstResult: JSON.stringify(allResults[0]),
-          allLen: allResults.length,
-          isOnLastChunk,
-          isLoading,
-        },
-        null,
-        2
-      )
-    )
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   console.log(
+  //     'SearchResults',
+  //     JSON.stringify(
+  //       {
+  //         state,
+  //         currentlyShowing,
+  //         firstResult: JSON.stringify(allResults[0]),
+  //         allLen: allResults.length,
+  //         isOnLastChunk,
+  //         isLoading,
+  //       },
+  //       null,
+  //       2
+  //     )
+  //   )
+  // }
 
   // in an effect so we can use series and get auto-cancel on unmount
   useEffect(() => {
