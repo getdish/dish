@@ -347,13 +347,15 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
         overflow="hidden"
         position="relative"
       >
-        <HomeScrollViewHorizontal style={{ paddingVertical: 10 }}>
+        <HomeScrollViewHorizontal
+          // @ts-ignore fixes ios scroll not working..
+          style={{ paddingVertical: 10, pointerEvents: 'auto' }}
+        >
           <HStack
             alignItems="center"
             spacing={16}
             paddingVertical={18}
             paddingRight={20}
-            pointerEvents="auto"
           >
             <TopDishesTrendingRestaurants country={country} />
 

@@ -126,6 +126,7 @@ const voteForTags = async (
   const insertTags = tagNames.map<Review>((name) => {
     const tagId = fullTags.find((x) => x.name === name)?.id
     if (!tagId) {
+      console.warn({ tagNames, partialTags, fullTags })
       throw new Error('no tag')
     }
     return {
