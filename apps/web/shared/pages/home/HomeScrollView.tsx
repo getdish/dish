@@ -12,6 +12,7 @@ export const HomeScrollView = forwardRef(
       children,
       paddingTop,
       onScrollNearBottom,
+      style,
       ...props
     }: ScrollViewProps & {
       children: any
@@ -52,7 +53,7 @@ export const HomeScrollView = forwardRef(
             // for drawer
             paddingBottom: isSmall ? 500 : 0,
           },
-          props.style,
+          style,
         ]}
       >
         <VStack
@@ -74,6 +75,12 @@ export const HomeScrollViewHorizontal = (
   props: ScrollViewProps & { children: any }
 ) => {
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} {...props} />
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      // @ts-ignore fixes ios not letting drag
+      style={{ pointerEvents: 'auto' }}
+      {...props}
+    />
   )
 }

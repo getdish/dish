@@ -222,6 +222,7 @@ export const Map = (props: MapProps) => {
               lng,
               lat,
             }
+            console.log('now at span', span)
             return {
               center: {
                 lng: round(center.lng),

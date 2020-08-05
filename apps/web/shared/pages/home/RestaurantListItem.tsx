@@ -57,6 +57,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 ) {
   const om = useOvermindStatic()
   const [isHovered, setIsHovered] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
   const setHoveredSlow = useDebounce(om.actions.home.setHoveredRestaurant, 200)
 
   useEffect(() => {
@@ -85,19 +86,29 @@ export const RestaurantListItem = memo(function RestaurantListItem(
         },
       })}
       alignItems="center"
+      overflow="hidden"
+      maxWidth="100%"
       position="relative"
       className="hover-to-reveal-parent"
     >
-      {/* dont remove overflow HIDDEN causes flex issues down */}
-      <VStack overflow="hidden" className="ease-in-out-fast" flex={1}>
+      <HomeScrollViewHorizontal
+        onScroll={
+          isLoaded
+            ? undefined
+            : async (e) => {
+                await fullyIdle()
+                setIsLoaded(true)
+              }
+        }
+        scrollEventThrottle={100}
+      >
         <RestaurantListItemContent {...props} />
-      </VStack>
-      <AbsoluteVStack fullscreen top={-10} zIndex={10} pointerEvents="none">
         <RestaurantPeek
           restaurantSlug={props.restaurantSlug}
           searchState={props.searchState}
+          isLoaded={isLoaded}
         />
-      </AbsoluteVStack>
+      </HomeScrollViewHorizontal>
     </HStack>
   )
 })
@@ -139,10 +150,11 @@ const RestaurantListItemContent = memo(
     }, [props.rank])
 
     return (
-      <HStack
+      <VStack
         alignItems="flex-start"
         justifyContent="flex-start"
-        contain="layout paint"
+        flex={1}
+        overflow="hidden"
         // prevent jitter/layout moving until loaded
         display={restaurant.name === null ? 'none' : 'flex'}
         // borderTopWidth={1}
@@ -152,197 +164,194 @@ const RestaurantListItemContent = memo(
         // borderBottomColor={isActive ? '#eee' : 'transparent'}
         borderLeftWidth={2}
         borderLeftColor={isActive ? brandColor : 'transparent'}
+        paddingHorizontal={pad + 6}
+        width={isSmall ? '60%' : '100%'}
+        minWidth={isSmall ? '52vw' : 320}
+        maxWidth={isSmall ? '60vw' : 450}
+        position="relative"
+        // overflow="hidden"
       >
-        <VStack
-          paddingHorizontal={pad + 6}
-          width={isSmall ? '60%' : '100%'}
-          minWidth={isSmall ? '50%' : 320}
-          maxWidth={isSmall ? '90vw' : '62%'}
-          position="relative"
-          // overflow="hidden"
-        >
-          <VStack flex={1} alignItems="flex-start" maxWidth="100%">
-            {/* ROW: TITLE */}
-            <VStack
-              // backgroundColor={bgLightLight}
-              hoverStyle={{ backgroundColor: bgLightLight }}
-              marginLeft={-adjustRankingLeft}
-              width={950}
-              position="relative"
+        <VStack flex={1} alignItems="flex-start" maxWidth="100%">
+          {/* ROW: TITLE */}
+          <VStack
+            // backgroundColor={bgLightLight}
+            hoverStyle={{ backgroundColor: bgLightLight }}
+            marginLeft={-adjustRankingLeft}
+            width={950}
+            position="relative"
+          >
+            {/* VOTE */}
+            <AbsoluteVStack
+              zIndex={100}
+              left={-2}
+              height={120}
+              bottom={-40}
+              justifyContent="center"
+              pointerEvents="none"
             >
-              {/* VOTE */}
-              <AbsoluteVStack
-                zIndex={100}
-                left={-2}
-                height={120}
-                bottom={-40}
-                justifyContent="center"
-                pointerEvents="none"
-              >
-                <AbsoluteVStack position="absolute" top={20} left={15}>
-                  <RestaurantUpVoteDownVote
-                    restaurantId={restaurantId}
-                    activeTagIds={tagIds ?? {}}
-                  />
-                </AbsoluteVStack>
-
-                <RankingView rank={rank} />
+              <AbsoluteVStack position="absolute" top={20} left={15}>
+                <RestaurantUpVoteDownVote
+                  restaurantId={restaurantId}
+                  activeTagIds={tagIds ?? {}}
+                />
               </AbsoluteVStack>
 
-              {/* LINK */}
-              <Link
-                tagName="div"
-                name="restaurant"
-                params={{ slug: restaurantSlug }}
-              >
-                <VStack paddingTop={paddingTop}>
-                  <HStack paddingLeft={40} alignItems="center" maxWidth="40%">
-                    {/* SECOND LINK WITH actual <a /> */}
-                    <Text
-                      selectable
-                      maxWidth="100%"
-                      fontSize={
-                        (isSmall ? 18 : 20) *
-                        (restaurantName.length > 25 ? 0.85 : 1)
-                      }
-                      fontWeight="600"
-                      lineHeight={26}
-                      marginVertical={-4}
-                      textDecorationColor="transparent"
-                    >
-                      <Link
-                        color="#000"
-                        name="restaurant"
-                        params={{ slug: restaurantSlug }}
-                      >
-                        <Text
-                          marginRight={10}
-                          borderBottomColor="transparent"
-                          borderBottomWidth={2}
-                          fontWeight="500"
-                          // @ts-ignore
-                          hoverStyle={{
-                            borderBottomColor: '#f2f2f2',
-                          }}
-                          pressStyle={{
-                            borderBottomColor: brandColor,
-                          }}
-                        >
-                          {restaurantName}
-                        </Text>
-                      </Link>
-                      {!!restaurant.address && (
-                        <RestaurantAddress
-                          size="xs"
-                          currentLocationInfo={currentLocationInfo}
-                          address={restaurant.address}
-                        />
-                      )}
-                    </Text>
-                  </HStack>
+              <RankingView rank={rank} />
+            </AbsoluteVStack>
 
-                  <Spacer size={8} />
-
-                  {/* TITLE ROW: Ranking + TAGS */}
-                  <HStack paddingLeft={leftPad + 24} alignItems="center">
-                    <RestaurantRatingViewPopover
-                      size="sm"
-                      restaurantSlug={restaurantSlug}
-                    />
-                    <Spacer size={10} />
-                    <RestaurantFavoriteButton
-                      size="md"
-                      restaurantId={restaurantId}
-                    />
-                    <Spacer size={6} />
-                    <HStack
-                      alignItems="center"
-                      justifyContent="center"
-                      flexWrap="wrap"
-                    >
-                      <RestaurantTagsRow
-                        subtle
-                        showMore
-                        restaurantSlug={restaurantSlug}
-                        restaurantId={restaurantId}
-                        spacing={4}
-                      />
-                    </HStack>
-                  </HStack>
-                </VStack>
-              </Link>
-            </VStack>
-
-            <Spacer size="sm" />
-
-            {/* ROW: Overview / Reviews / Comment */}
-            <VStack
-              flex={1}
-              maxWidth="100%"
-              overflow="hidden"
-              paddingBottom={10}
-              marginBottom={-10}
+            {/* LINK */}
+            <Link
+              tagName="div"
+              name="restaurant"
+              params={{ slug: restaurantSlug }}
             >
-              <VStack flex={1} paddingLeft={isSmall ? 10 : 0}>
-                <Text fontSize={16} lineHeight={21}>
-                  <VStack
-                    marginTop={4}
-                    marginBottom={12}
+              <VStack paddingTop={paddingTop}>
+                <HStack paddingLeft={40} alignItems="center" maxWidth="40%">
+                  {/* SECOND LINK WITH actual <a /> */}
+                  <Text
+                    selectable
                     maxWidth="100%"
-                    flex={1}
+                    fontSize={
+                      (isSmall ? 18 : 20) *
+                      (restaurantName.length > 25 ? 0.85 : 1)
+                    }
+                    fontWeight="600"
+                    lineHeight={26}
+                    marginVertical={-4}
+                    textDecorationColor="transparent"
                   >
-                    {/* this ensures the content flexes all the way across, hacky... */}
-                    <Text opacity={0} lineHeight={0}>
-                      wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-                    </Text>
-                    <Text>
-                      <Suspense fallback={<LoadingItems />}>
-                        <RestaurantOverview
-                          restaurantSlug={restaurantSlug}
-                          inline
-                        />
-                      </Suspense>
-                    </Text>
-                  </VStack>
-                </Text>
+                    <Link
+                      color="#000"
+                      name="restaurant"
+                      params={{ slug: restaurantSlug }}
+                    >
+                      <Text
+                        marginRight={10}
+                        borderBottomColor="transparent"
+                        borderBottomWidth={2}
+                        fontWeight="500"
+                        // @ts-ignore
+                        hoverStyle={{
+                          borderBottomColor: '#f2f2f2',
+                        }}
+                        pressStyle={{
+                          borderBottomColor: brandColor,
+                        }}
+                      >
+                        {restaurantName}
+                      </Text>
+                    </Link>
+                    {!!restaurant.address && (
+                      <RestaurantAddress
+                        size="xs"
+                        currentLocationInfo={currentLocationInfo}
+                        address={restaurant.address}
+                      />
+                    )}
+                  </Text>
+                </HStack>
+
+                <Spacer size={8} />
+
+                {/* TITLE ROW: Ranking + TAGS */}
+                <HStack paddingLeft={leftPad + 24} alignItems="center">
+                  <RestaurantRatingViewPopover
+                    size="sm"
+                    restaurantSlug={restaurantSlug}
+                  />
+                  <Spacer size={10} />
+                  <RestaurantFavoriteButton
+                    size="md"
+                    restaurantId={restaurantId}
+                  />
+                  <Spacer size={6} />
+                  <HStack
+                    alignItems="center"
+                    justifyContent="center"
+                    flexWrap="wrap"
+                  >
+                    <RestaurantTagsRow
+                      subtle
+                      showMore
+                      restaurantSlug={restaurantSlug}
+                      restaurantId={restaurantId}
+                      spacing={4}
+                    />
+                  </HStack>
+                </HStack>
               </VStack>
-              <Spacer size="xs" />
-              <Suspense fallback={null}>
-                <RestaurantTopReviews
-                  restaurantId={restaurantId}
-                  afterTopCommentButton={
-                    // comments
-                    <Suspense fallback={null}>
-                      <HStack flex={1} alignItems="center" flexWrap="wrap">
-                        <VStack>
-                          <RestaurantLenseVote restaurantId={restaurantId} />
-                        </VStack>
+            </Link>
+          </VStack>
 
-                        <Spacer />
+          <Spacer size="sm" />
 
-                        <HStack marginTop={-3} marginBottom={-1}>
-                          <RestaurantDeliveryButtons
-                            label="Delivers"
-                            restaurantSlug={restaurantSlug}
-                          />
-                        </HStack>
+          {/* ROW: Overview / Reviews / Comment */}
+          <VStack
+            flex={1}
+            maxWidth="100%"
+            overflow="hidden"
+            paddingBottom={10}
+            marginBottom={-10}
+          >
+            <VStack flex={1} paddingLeft={isSmall ? 10 : 0}>
+              <Text fontSize={16} lineHeight={21}>
+                <VStack
+                  marginTop={4}
+                  marginBottom={12}
+                  maxWidth="100%"
+                  flex={1}
+                >
+                  {/* this ensures the content flexes all the way across, hacky... */}
+                  <Text opacity={0} lineHeight={0}>
+                    wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+                  </Text>
+                  <Text>
+                    <Suspense fallback={<LoadingItems />}>
+                      <RestaurantOverview
+                        restaurantSlug={restaurantSlug}
+                        inline
+                      />
+                    </Suspense>
+                  </Text>
+                </VStack>
+              </Text>
+            </VStack>
+            <Spacer size="xs" />
+            <Suspense fallback={null}>
+              <RestaurantTopReviews
+                restaurantId={restaurantId}
+                afterTopCommentButton={
+                  // comments
+                  <Suspense fallback={null}>
+                    <HStack flex={1} alignItems="center" flexWrap="wrap">
+                      <VStack>
+                        <RestaurantLenseVote restaurantId={restaurantId} />
+                      </VStack>
 
-                        <VStack flex={1} />
-                        <RestaurantDetailRow
-                          size="sm"
+                      <Spacer />
+
+                      <HStack marginTop={-3} marginBottom={-1}>
+                        <RestaurantDeliveryButtons
+                          label="Delivers"
                           restaurantSlug={restaurantSlug}
                         />
                       </HStack>
-                    </Suspense>
-                  }
-                />
-              </Suspense>
-            </VStack>
 
-            <Spacer />
+                      <VStack flex={1} />
+                      <RestaurantDetailRow
+                        size="sm"
+                        restaurantSlug={restaurantSlug}
+                      />
+                    </HStack>
+                  </Suspense>
+                }
+              />
+            </Suspense>
           </VStack>
+
+          <Spacer />
         </VStack>
-      </HStack>
+      </VStack>
     )
   })
 )
@@ -352,9 +361,9 @@ const RestaurantPeek = memo(
     size?: 'lg' | 'md'
     restaurantSlug: string
     searchState: HomeStateItemSearch
+    isLoaded: boolean
   }) {
-    const drawerWidth = useHomeDrawerWidth()
-    const { searchState, size = 'md' } = props
+    const { isLoaded, searchState, size = 'md' } = props
     const tag_names = [
       searchState.searchQuery.toLowerCase(),
       ...Object.keys(searchState?.activeTagIds || {}).filter((x) => {
@@ -374,62 +383,36 @@ const RestaurantPeek = memo(
       max: 5,
     })
     const dishSize = size === 'lg' ? 140 : 120
-    const [isLoaded, setIsLoaded] = useState(false)
-    const paddingLeftSmall =
-      (0.75 + (1 / (drawerWidth / 950 + 0.0001)) * 0.1) * drawerWidth
-    const paddingLeft =
-      drawerWidth < 600 ? paddingLeftSmall : 0.65 * drawerWidth
-
     return (
-      <HomeScrollViewHorizontal
-        onScroll={
-          isLoaded
-            ? null
-            : async (e) => {
-                await fullyIdle()
-                setIsLoaded(true)
-              }
-        }
-        scrollEventThrottle={100}
+      <HStack
+        contain="paint layout"
+        pointerEvents="auto"
+        padding={20}
+        paddingTop={50}
+        paddingBottom={50}
+        height={dishSize + 50 + 40}
+        spacing={spacing}
       >
-        <VStack
-          position="relative"
-          marginRight={-spacing}
-          marginBottom={-spacing}
-          paddingLeft={paddingLeft}
-          // className="ease-in-out"
-          contain="paint layout"
-        >
-          <HStack
-            pointerEvents="auto"
-            padding={20}
-            paddingTop={50}
-            paddingBottom={50}
-            height={dishSize + 50 + 40}
-            spacing={spacing}
-          >
-            {photos.map((photo, i) => {
-              if (!isLoaded) {
-                if (i > 1) {
-                  return (
-                    <Squircle width={dishSize * 0.8} height={dishSize} key={i}>
-                      <Text>...</Text>
-                    </Squircle>
-                  )
-                }
-              }
+        {photos.map((photo, i) => {
+          if (!isLoaded) {
+            if (i > 1) {
               return (
-                <DishView
-                  key={i}
-                  size={dishSize}
-                  restaurantSlug={props.restaurantSlug}
-                  dish={photo}
-                />
+                <Squircle width={dishSize * 0.8} height={dishSize} key={i}>
+                  <Text>...</Text>
+                </Squircle>
               )
-            })}
-          </HStack>
-        </VStack>
-      </HomeScrollViewHorizontal>
+            }
+          }
+          return (
+            <DishView
+              key={i}
+              size={dishSize}
+              restaurantSlug={props.restaurantSlug}
+              dish={photo}
+            />
+          )
+        })}
+      </HStack>
     )
   })
 )

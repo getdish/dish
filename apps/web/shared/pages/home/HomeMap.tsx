@@ -293,31 +293,34 @@ const HomeMapContent = memo(function HomeMap({
           setMapView(map)
         }}
         selected={internal.id}
-        onMoveEnd={(bounds) => {
+        onMoveEnd={({ center, span }) => {
           if (om.state.home.centerToResults) {
             // we just re-centered, ignore
             om.actions.home.setCenterToResults(0)
           } else if (om.state.home.currentStateType === 'search') {
             om.actions.home.setHasMovedMap(true)
           }
+          console.log('update current state', { center, span })
           om.actions.home.updateCurrentState({
-            center: bounds.center,
-            span: bounds.span,
+            center,
+            span,
           })
         }}
         onSelect={(id) => {
           if (id !== om.state.home.selectedRestaurant?.id) {
-            const restaurant = restaurants.find((x) => x.id === id)
-            om.actions.home.setSelectedRestaurant({
-              id: restaurant.id,
-              slug: restaurant.slug,
-            })
-            if (om.state.home.currentStateType === 'search') {
-              const index = restaurants.findIndex((x) => x.id === id)
-              om.actions.home.setActiveIndex({
-                index,
-                event: om.state.home.isHoveringRestaurant ? 'hover' : 'pin',
+            const restaurant = restaurants?.find((x) => x.id === id)
+            if (restaurant) {
+              om.actions.home.setSelectedRestaurant({
+                id: restaurant.id,
+                slug: restaurant.slug,
               })
+              if (om.state.home.currentStateType === 'search') {
+                const index = restaurants.findIndex((x) => x.id === id)
+                om.actions.home.setActiveIndex({
+                  index,
+                  event: om.state.home.isHoveringRestaurant ? 'hover' : 'pin',
+                })
+              }
             }
           }
         }}

@@ -47,7 +47,9 @@ export const avatar = require('../../assets/peach.jpg').default
 
 type Props = HomePagePaneProps<HomeStateItemSearch>
 
+const titleHeight = 61
 const topBarVPad = 12
+
 const useSpacing = () => {
   const isSmall = useMediaQueryIsSmall()
   const paddingTop = isSmall
@@ -55,7 +57,7 @@ const useSpacing = () => {
     : searchBarHeight - searchBarTopOffset + topBarVPad + 4
   return {
     paddingTop,
-    titleHeight: 61,
+    titleHeight,
     isSmall,
   }
 }
@@ -204,7 +206,7 @@ const SearchResultsTitle = memo(({ stateId }: { stateId: string }) => {
 const SearchResultsContent = (props: Props) => {
   const searchState = props.item
   const { isSmall, titleHeight } = useSpacing()
-  const paddingTop = isSmall ? 58 : titleHeight - searchBarHeight + 2
+  const paddingTop = isSmall ? titleHeight : titleHeight - searchBarHeight + 2
   const [state, setState] = useState({
     chunk: 1,
     hasLoaded: 1,
