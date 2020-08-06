@@ -8,10 +8,11 @@ import mapboxgl from 'mapbox-gl'
 import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 
+import { MAPBOX_ACCESS_TOKEN } from '../constants'
+
 const marker = require('../assets/map-marker.png').default
 
-mapboxgl.accessToken =
-  'pk.eyJ1IjoibndpZW5lcnQiLCJhIjoiY2lvbWlhYjRjMDA0NnVpbTIxMHM5ZW95eCJ9.DQyBjCEuPRVt1400yejGhA'
+mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
 type MapPosition = { center: LngLat; span: LngLat }
 

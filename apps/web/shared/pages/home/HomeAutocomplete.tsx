@@ -28,12 +28,12 @@ import {
   LngLat,
   ShowAutocomplete,
 } from '../../state/home-types'
-import { mapView } from '../../state/mapView'
 import { omStatic, useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallCircleButton } from './CloseButton'
 import { snapPoints } from './HomeSmallDrawer'
 import { getAddressText } from './RestaurantAddressLinksRow'
+import { locationToAutocomplete, searchLocations } from './searchLocations'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 const flexSearch = FlexSearch.create<number>({
@@ -371,10 +371,9 @@ function runAutocomplete(
   return series([
     () => fullyIdle({ max: 100, min: 50 }),
     async () => {
-      console.log('runAutocomplete', showAutocomplete, searchQuery)
       if (showAutocomplete === 'location') {
         results = [
-          ...(await searchLocations(searchQuery))
+          ...(await searchLocations(searchQuery, state.center))
             .map(locationToAutocomplete)
             .filter(Boolean),
           ...defaultLocationAutocompleteResults,
@@ -416,7 +415,6 @@ function runAutocomplete(
       }
 
       matched = uniqBy([...matched, ...results], (x) => x.name)
-      console.log('autocomplete', results, matched)
 
       if (showAutocomplete === 'location') {
         om.actions.home.setLocationAutocompleteResults(matched)
@@ -553,46 +551,4 @@ function searchRestaurants(searchQuery: string, center: LngLat, span: LngLat) {
         ) || 'No Address',
     })
   )
-}
-
-export function searchLocations(query: string) {
-  if (!query) {
-    return Promise.resolve([])
-  }
-  const locationSearch = new mapkit.Search({
-    region: mapView?.region,
-
-    // includePointsOfInterest: false,
-    // includeAddresses: false,
-  })
-  return new Promise<
-    { name: string; formattedAddress: string; coordinate: any }[]
-  >((res, rej) => {
-    locationSearch.autocomplete(query, (err, data) => {
-      if (err) {
-        console.log('network failure')
-        return res([])
-      }
-      res(data.results)
-    })
-  })
-}
-
-const locationToAutocomplete = (place: GeocodePlace) => {
-  const name = (place.displayLines?.[0] ?? place.locality).replace(
-    ', United States',
-    ''
-  )
-  if (!name || !place.coordinate || name.includes('Airport')) {
-    return null
-  }
-  return createAutocomplete({
-    name,
-    type: 'country',
-    icon: '📍',
-    center: {
-      lat: place.coordinate.latitude,
-      lng: place.coordinate.longitude,
-    },
-  })
 }
