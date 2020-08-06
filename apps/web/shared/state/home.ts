@@ -369,25 +369,6 @@ const suggestTags: AsyncAction<string> = async (om, tags) => {
   // none
 }
 
-function reverseGeocode(
-  center: LngLat,
-  requestLocation = false
-): Promise<GeocodePlace[]> {
-  // const mapGeocoder = new mapkit.Geocoder({
-  //   language: 'en-GB',
-  //   getsUserLocation: requestLocation,
-  // })
-  // return new Promise((res, rej) => {
-  //   mapGeocoder.reverseLookup(
-  //     new mapkit.Coordinate(center.lat, center.lng),
-  //     (err, data) => {
-  //       if (err) return rej(err)
-  //       res((data.results as any) as GeocodePlace[])
-  //     }
-  //   )
-  // })
-}
-
 const spanToLocationName = (span: LngLat, place: GeocodePlace): string => {
   if (span.lat < 0.07) {
     return place.subLocality // Mission Dolores

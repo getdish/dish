@@ -59,14 +59,14 @@ export type HomeState = {
   centerToResults: number
 }
 
-export type GeocodePlace = mapkit.Place & {
-  locality: string
-  administrativeArea: string
-  countryCode: string
+export type GeocodePlace = {
+  name: string
+  type: 'place' | 'neighborhood' | 'poi'
+  fullName: string
+  state: string
   country: string
-  timezone: string
-  dependentLocalities: string[]
-  subLocality: string
+  center: [number, number]
+  bbox: [number, number, number, number]
 }
 
 export type ShowAutocomplete = 'search' | 'location' | false
