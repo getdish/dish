@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { StackProps, VStack } from '@dish/ui'
+import { Spacer, StackProps, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import {
@@ -57,24 +57,16 @@ export const RestaurantTagsRow = memo(
           .map((tag, index) => {
             return (
               <React.Fragment key={`${index}${tag.name}`}>
-                <VStack
-                  {...(props.grid && {
-                    width: '33%',
-                    minWidth: 190,
-                    alignItems: 'center',
-                  })}
-                >
-                  <TagButton
-                    replaceSearch
-                    size={size ?? 'sm'}
-                    rank={tag.rank}
-                    {...getTagButtonProps(tag)}
-                    subtle={props.subtle}
-                    votable={!props.subtle}
-                    restaurantId={props.restaurantId}
-                    marginBottom={props.spacing}
-                  />
-                </VStack>
+                <TagButton
+                  replaceSearch
+                  size={size ?? 'sm'}
+                  rank={tag.rank}
+                  {...getTagButtonProps(tag)}
+                  subtle={props.subtle}
+                  votable={!props.subtle}
+                  restaurantId={props.restaurantId}
+                />
+                {!!props.spacing && <Spacer size={props.spacing} />}
               </React.Fragment>
             )
           })}

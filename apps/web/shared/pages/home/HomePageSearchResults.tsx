@@ -120,29 +120,9 @@ export default memo(function HomePageSearchResults(props: Props) {
     shouldAvoidContentUpdates
   )
 
-  // console.log(
-  //   'HomePageSearchResults',
-  //   {
-  //     key,
-  //     shouldAvoidContentUpdates,
-  //     isOptimisticUpdating,
-  //     pageTitleElements,
-  //     title,
-  //     subTitle,
-  //     props,
-  //   },
-  //   'resultsLen',
-  //   state.results.length
-  // )
-
-  const contentInner = useMemo(() => {
+  const content = useMemo(() => {
     return <SearchResultsContent {...props} item={state} />
   }, [key])
-
-  const content = useLastValueWhen(
-    () => contentInner,
-    shouldAvoidContentUpdates
-  )
 
   return (
     <HomeStackDrawer closable>
@@ -163,10 +143,6 @@ export default memo(function HomePageSearchResults(props: Props) {
 const SearchResultsTitle = memo(({ stateId }: { stateId: string }) => {
   const om = useOvermind()
   const state = om.state.home.allStates[stateId]
-  const isReallySmall = useMediaQueryIsReallySmall()
-  // const isSmall = useMediaQueryIsSmall()
-  const isAboveMedium = useMediaQueryIsAboveMedium()
-  const { title, subTitle, pageTitleElements } = getTitleForState(state)
 
   if (!isSearchState(state)) {
     return null
@@ -174,7 +150,6 @@ const SearchResultsTitle = memo(({ stateId }: { stateId: string }) => {
 
   return (
     <>
-      <PageTitleTag>{title}</PageTitleTag>
       <>
         <VStack
           position="absolute"
@@ -201,33 +176,6 @@ const SearchResultsTitle = memo(({ stateId }: { stateId: string }) => {
             <HStack marginTop={-12} alignItems="center" justifyContent="center">
               <HomeLenseBar activeTagIds={state.activeTagIds} />
             </HStack>
-            <Spacer flex={1} size={16} />
-
-            {!isReallySmall && (
-              <VStack
-                flex={20}
-                justifyContent="center"
-                alignItems="center"
-                overflow="hidden"
-              >
-                <Text
-                  ellipse
-                  fontSize={isAboveMedium ? 16 : 15}
-                  fontWeight={isAboveMedium ? '500' : '400'}
-                >
-                  {pageTitleElements}
-                </Text>
-                <Spacer size={1} />
-                <Text
-                  ellipse
-                  opacity={0.5}
-                  letterSpacing={-0.5}
-                  fontSize={isAboveMedium ? 14 : 13}
-                >
-                  {subTitle}
-                </Text>
-              </VStack>
-            )}
 
             <Spacer flex={1} size={16} />
             <HomeFilterBar activeTagIds={state.activeTagIds} />
@@ -289,10 +237,27 @@ const SearchResultsContent = (props: Props) => {
     }
   }, [state.scrollToTop])
 
+  const { title, subTitle, pageTitleElements } = getTitleForState(searchState)
+
   const contentWrap = (children: any) => {
     return (
       <HomeScrollView ref={scrollRef} onScrollNearBottom={handleScrollToBottom}>
         <VStack height={paddingTop} />
+        <PageTitleTag>{title}</PageTitleTag>
+        <VStack
+          paddingTop={20}
+          justifyContent="center"
+          alignItems="center"
+          overflow="hidden"
+        >
+          <Text ellipse fontSize={20} fontWeight="800">
+            {pageTitleElements}
+          </Text>
+          <Spacer size={1} />
+          <Text ellipse opacity={0.5} letterSpacing={-0.5} fontSize={14}>
+            {subTitle}
+          </Text>
+        </VStack>
         <HomeSearchInfoBox state={searchState} />
         <VStack minHeight="30vh">{children}</VStack>
         <SearchFooter
@@ -414,7 +379,8 @@ const SearchResultsContent = (props: Props) => {
         justifyContent="center"
         spacing
       >
-        <Text fontSize={22}>No results 😞</Text>
+        <Text fontSize={22}>No results</Text>
+        <Text>😞</Text>
         {/* <LinkButton name="contact">Report problem</LinkButton> */}
       </VStack>
     )

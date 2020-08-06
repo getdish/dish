@@ -38,6 +38,7 @@ export const DishView = memo(
     const height = size
     const quality = size > 160 ? 100 : 100
     const imageUrl = `${IMAGE_PROXY_DOMAIN}/${width}x${height},q${quality}/${dish.image}`
+    const borderRadius = size * 0.1
 
     return (
       <LinkButton
@@ -105,6 +106,7 @@ export const DishView = memo(
         <Squircle
           width={width}
           height={height}
+          borderRadius={borderRadius}
           isHovered={isHovered}
           backgroundColor="#fff"
           borderWidth={2}
@@ -125,30 +127,25 @@ export const DishView = memo(
             />
           )}
           {!dish.image && <Text fontSize={80}>🥗</Text>}
-        </Squircle>
 
-        {!!dish.name && (
-          <HStack
-            position="absolute"
-            bottom={-15}
-            overflow="hidden"
-            width="100%"
-            // marginHorizontal={-15}
-            height={55}
-          >
+          {!!dish.name && (
             <HStack
+              className="ease-in-out"
               position="absolute"
+              top={0}
               bottom={0}
               left={-16}
               right={-16}
-              padding={6}
+              borderRadius={borderRadius}
               alignItems="center"
               justifyContent="center"
+              backgroundColor="rgba(0,0,0,0.18)"
               // backgroundColor="rgba(255,255,255,0.25)"
               {...(isHovered && {
                 borderTopColor: 'transparent',
                 backgroundColor: 'transparent',
                 shadowColor: 'transparent',
+                transform: [{ scale: 1.1 }],
               })}
             >
               <Box
@@ -164,7 +161,7 @@ export const DishView = memo(
                 shadowRadius={2}
                 top={0}
                 {...(isHovered && {
-                  top: -10,
+                  top: -5,
                   backgroundColor: '#fff',
                   shadowColor: 'rgba(0,0,0,0.2)',
                 })}
@@ -177,7 +174,7 @@ export const DishView = memo(
                   fontSize={
                     (height > 150 ? 14 : 12) * (dishName.length > 12 ? 0.95 : 1)
                   }
-                  fontWeight="500"
+                  fontWeight="600"
                   color={isHovered ? '#000' : '#fff'}
                   textAlign="center"
                 >
@@ -185,8 +182,8 @@ export const DishView = memo(
                 </Text>
               </Box>
             </HStack>
-          </HStack>
-        )}
+          )}
+        </Squircle>
       </LinkButton>
     )
   }

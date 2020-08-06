@@ -113,7 +113,7 @@ export const state: HomeState = {
     const curState = state.states[state.stateIndex]
     for (let i = state.stateIndex - 1; i >= 0; i--) {
       const next = state.states[i]
-      if (next?.type !== curState!.type) {
+      if (next?.type !== curState?.type) {
         return next
       }
     }
@@ -621,10 +621,6 @@ const pushHomeState: AsyncAction<
     id: item.id ?? uid(),
   } as HomeStateItem
 
-  if (finalState.id === '0' && type !== 'home') {
-    debugger
-  }
-
   async function runFetchData() {
     if (!fetchData) {
       return
@@ -896,7 +892,6 @@ const setIsLoading: Action<boolean> = (om, val) => {
 let lastNav = Date.now()
 const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
   navState.state = navState.state ?? om.state.home.currentState
-  debugger
   const nextState = getNextState(navState)
   const curState = om.state.home.currentState
 

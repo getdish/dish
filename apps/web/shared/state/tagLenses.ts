@@ -35,3 +35,26 @@ export const tagLenses: Tag[] = [
 function pctTo255(x: number[]) {
   return x.map((x) => x * 255) as typeof x
 }
+
+export const tagDescriptions = {
+  gems: {
+    dish: 'The best 🍔',
+    cuisine: 'The Best 🍔 Restaurants',
+    plain: 'Uniquely Good Here',
+  },
+  vibe: {
+    dish: 'Nice 🍔',
+    cuisine: 'Nice 🍔 to meet',
+    plain: 'Vibes',
+  },
+  drink: {
+    dish: '🍔 & drinks',
+    cuisine: '🍔 with a bar',
+    plain: 'Good Drinks',
+  },
+  veg: {
+    dish: 'Vegetarian 🍔',
+    cuisine: 'Vegetarian 🍔 Restaurants',
+    plain: 'Vegetarian',
+  },
+}

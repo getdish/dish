@@ -4,7 +4,7 @@ import React from 'react'
 import { getTagId } from '../../state/getTagId'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { HomeStateItem } from '../../state/home-types'
-import { tagDescriptions } from '../../state/tagDescriptions'
+import { tagDescriptions } from '../../state/tagLenses'
 import { TagButton, getTagButtonProps } from './TagButton'
 
 const getTitleForQuery = (query: string) => {
