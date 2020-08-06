@@ -30,6 +30,12 @@ import {
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 export const HomeSearchBarDrawer = () => {
+  const isSmall = useMediaQueryIsSmall()
+
+  if (!isSmall) {
+    return null
+  }
+
   return (
     <VStack paddingVertical={2}>
       <HomeSearchBar />

@@ -1,28 +1,16 @@
 import { slugify } from '@dish/graph'
 import {
   Box,
-  Circle,
   Divider,
   HStack,
-  HoverablePopover,
   Popover,
   Text,
   Toast,
   Tooltip,
   VStack,
 } from '@dish/ui'
-import React, { memo, useState } from 'react'
-import {
-  Activity,
-  Bold,
-  ChevronDown,
-  ChevronUp,
-  Coffee,
-  Hexagon,
-  Menu,
-  Settings,
-  User,
-} from 'react-feather'
+import React, { memo } from 'react'
+import { ChevronUp, Coffee, Settings, User } from 'react-feather'
 
 import { omStatic, useOvermind } from '../../state/om'
 import { AuthLoginRegisterView } from '../../views/auth/AuthLoginRegisterView'
@@ -31,7 +19,6 @@ import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { flatButtonStyle } from './baseButtonStyle'
 import {
   useMediaQueryIsAboveMedium,
-  useMediaQueryIsMedium,
   useMediaQueryIsSmall,
 } from './useMediaQueryIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
@@ -49,55 +36,56 @@ export const HomeMenu = memo(() => {
         position="bottom"
         isOpen={showUserMenu}
         onChangeOpen={(val) => val === false && setShowUserMenu(false)}
-        style={{
-          flex: 0,
+        contents={() => {
+          return (
+            <Box padding={20} width="35vw" minWidth={240} maxWidth={300}>
+              {!om.state.user.isLoggedIn && (
+                <AuthLoginRegisterView
+                  setMenuOpen={(x) => setShowUserMenu(x)}
+                />
+              )}
+
+              {om.state.user.isLoggedIn && (
+                <VStack
+                  spacing
+                  onPressOut={(e) => {
+                    close()
+                  }}
+                >
+                  <LinkButton {...flatButtonStyle} name="adminTags">
+                    <Settings
+                      size={16}
+                      opacity={0.25}
+                      style={{ marginRight: 5 }}
+                    />
+                    Admin
+                  </LinkButton>
+
+                  <LinkButton
+                    {...flatButtonStyle}
+                    name="user"
+                    params={{
+                      username: slugify(om.state.user.user?.username ?? ''),
+                    }}
+                  >
+                    Profile
+                  </LinkButton>
+                  <Divider />
+                  <LinkButton
+                    onPress={() => {
+                      Toast.show(`Logging out...`)
+                      setTimeout(() => {
+                        om.actions.user.logout()
+                      }, 1000)
+                    }}
+                  >
+                    Logout
+                  </LinkButton>
+                </VStack>
+              )}
+            </Box>
+          )
         }}
-        contents={
-          <Box padding={20} width="35vw" minWidth={240} maxWidth={300}>
-            {!om.state.user.isLoggedIn && (
-              <AuthLoginRegisterView setMenuOpen={(x) => setShowUserMenu(x)} />
-            )}
-
-            {om.state.user.isLoggedIn && (
-              <VStack
-                spacing
-                onPressOut={(e) => {
-                  close()
-                }}
-              >
-                <LinkButton {...flatButtonStyle} name="adminTags">
-                  <Settings
-                    size={16}
-                    opacity={0.25}
-                    style={{ marginRight: 5 }}
-                  />
-                  Admin
-                </LinkButton>
-
-                <LinkButton
-                  {...flatButtonStyle}
-                  name="user"
-                  params={{
-                    username: slugify(om.state.user.user?.username ?? ''),
-                  }}
-                >
-                  Profile
-                </LinkButton>
-                <Divider />
-                <LinkButton
-                  onPress={() => {
-                    Toast.show(`Logging out...`)
-                    setTimeout(() => {
-                      om.actions.user.logout()
-                    }, 1000)
-                  }}
-                >
-                  Logout
-                </LinkButton>
-              </VStack>
-            )}
-          </Box>
-        }
       >
         <Tooltip contents={om.state.user.isLoggedIn ? 'User' : 'Login'}>
           <MenuButton
