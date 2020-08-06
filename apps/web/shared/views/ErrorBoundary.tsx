@@ -13,6 +13,11 @@ function ErrorFallback({
   componentStack,
   resetErrorBoundary,
 }: FallbackProps) {
+  const tryButton = (
+    <Button backgroundColor="red" onPress={resetErrorBoundary}>
+      <Text color="white">Try Again</Text>
+    </Button>
+  )
   return (
     <AbsoluteVStack
       fullscreen
@@ -24,23 +29,15 @@ function ErrorFallback({
     >
       <VStack maxWidth="100%" flex={1} overflow="hidden">
         <ScrollView>
+          {tryButton}
           <Text color="#fff">
             <pre>{error?.message}</pre>
             <pre>{componentStack}</pre>
             <pre>{error?.stack}</pre>
           </Text>
+          {tryButton}
         </ScrollView>
       </VStack>
-      <Button
-        position="absolute"
-        top={20}
-        right={20}
-        backgroundColor="red"
-        color="white"
-        onPress={resetErrorBoundary}
-      >
-        <Text>Try Again</Text>
-      </Button>
     </AbsoluteVStack>
   )
 }

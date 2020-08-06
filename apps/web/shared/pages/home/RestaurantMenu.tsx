@@ -7,7 +7,7 @@ import { useRestaurantQuery } from './useRestaurantQuery'
 
 export const RestaurantMenu = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
-    const [isExpanded, setIsExpanded] = useState(false)
+    // const [isExpanded, setIsExpanded] = useState(false)
     const restaurant = useRestaurantQuery(restaurantSlug)
     const items = restaurant.menu_items({ limit: 70 })
     return (
@@ -20,12 +20,12 @@ export const RestaurantMenu = memo(
         {!!items?.length && (
           <VStack position="relative">
             <HStack
-              maxHeight={isExpanded ? 'auto' : 520}
+              // maxHeight={isExpanded ? 'auto' : 920}
               overflow="hidden"
               spacing={3}
               flexWrap="wrap"
             >
-              {items.slice(0, isExpanded ? Infinity : 8).map((item, i) => (
+              {items.map((item, i) => (
                 <VStack
                   minWidth={200}
                   paddingBottom={10}
@@ -44,13 +44,22 @@ export const RestaurantMenu = memo(
                 </VStack>
               ))}
             </HStack>
-            {!isExpanded && (
+            {/* {!isExpanded && (
               <LinearGradient
                 colors={['rgba(255,255,255,0)', '#fff']}
-                style={[StyleSheet.absoluteFill]}
+                style={[
+                  {
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: '50%',
+                    maxHeight: 100,
+                  },
+                ]}
               />
-            )}
-            <Button
+            )} */}
+            {/* <Button
               marginTop={-5}
               zIndex={100}
               position="relative"
@@ -60,9 +69,9 @@ export const RestaurantMenu = memo(
               }}
             >
               <Text fontWeight="800" fontSize={13}>
-                {isExpanded ? 'Close' : 'Expand'}
+                {isExpanded ? 'Close' : 'Show all'}
               </Text>
-            </Button>
+            </Button> */}
           </VStack>
         )}
       </>

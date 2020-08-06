@@ -87,25 +87,23 @@ const HomePageRestaurant = memo(
 
             <Divider />
 
-            <HStack
-              padding={20}
-              paddingHorizontal="5%"
-              maxWidth={610}
-              alignSelf="center"
-              paddingBottom={12}
-              flexWrap="wrap"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <RestaurantTagsRow
-                size="sm"
-                restaurantSlug={slug}
-                restaurantId={restaurant.id}
-                spacing={8}
-                grid
-                max={9}
-              />
-            </HStack>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <HStack
+                padding={20}
+                paddingHorizontal="5%"
+                maxWidth={610}
+                paddingBottom={20}
+              >
+                <RestaurantTagsRow
+                  size="sm"
+                  restaurantSlug={slug}
+                  restaurantId={restaurant.id}
+                  spacing={8}
+                  grid
+                  max={9}
+                />
+              </HStack>
+            </ScrollView>
 
             <Box
               borderWidth={1}
@@ -148,6 +146,7 @@ const HomePageRestaurant = memo(
             <Spacer size="lg" />
 
             <VStack width="100%">
+              <SmallTitle>Top dishes</SmallTitle>
               <Suspense fallback={null}>
                 <RestaurantDishPhotos
                   size={160}
@@ -157,6 +156,7 @@ const HomePageRestaurant = memo(
               </Suspense>
             </VStack>
 
+            <SmallTitle>Top tips</SmallTitle>
             <HStack padding={20} maxWidth="100%" flexWrap="wrap">
               <RestaurantOverview restaurantSlug={slug} />
               <RestaurantOverview restaurantSlug={slug} />

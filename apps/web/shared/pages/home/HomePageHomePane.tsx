@@ -5,6 +5,7 @@ import {
   Box,
   HStack,
   LoadingItems,
+  SmallTitle,
   Spacer,
   Text,
   VStack,
@@ -30,7 +31,7 @@ import { getActiveTags } from '../../state/home-tag-helpers'
 import { HomeStateItemHome } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic, useOvermind } from '../../state/om'
-import { tagDescriptions } from '../../state/tagDescriptions'
+import { tagDescriptions } from '../../state/tagLenses'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
@@ -174,6 +175,11 @@ export default memo(function HomePageHomePane(props: Props) {
 
                 <Spacer size="xl" />
 
+                <SmallTitle>Recent Searches</SmallTitle>
+                <HomeTopSearches />
+
+                <Spacer size="xl" />
+
                 <Suspense fallback={null}>
                   <HomeTopDishesContent topDishes={topDishes} />
                 </Suspense>
@@ -188,18 +194,78 @@ export default memo(function HomePageHomePane(props: Props) {
   return null
 })
 
-// {/* <Spacer size={isSmall ? 5 : 15} />
-//<Text
-// marginTop={30}
-// fontWeight="300"
-// fontSize={16}
-// letterSpacing={-0.25}
-// opacity={0.6}
-// >
-// {currentLocationName
-//   ? `What's good in ${currentLocationName}`
-//   : `What's good here`}
-// </Text> */} */}
+const HomeTopSearches = () => {
+  return (
+    <HStack
+      paddingHorizontal={20}
+      paddingVertical={10}
+      spacing={10}
+      flexWrap="wrap"
+      alignItems="center"
+      justifyContent="center"
+    >
+      {recentSearches.map((search, index) => (
+        <VStack
+          key={index}
+          borderColor="#eee"
+          borderWidth={1}
+          padding={3}
+          borderRadius={8}
+          className="ease-in-out-slower"
+          backgroundColor="#f2f2f2"
+          marginBottom={10}
+          hoverStyle={{
+            backgroundColor: '#fff',
+          }}
+        >
+          <LinkButton tags={search.tags} cursor="pointer" alignItems="center">
+            {search.tags.map((tag, index) => (
+              <React.Fragment key={tag.name}>
+                <Text
+                  height={16}
+                  lineHeight={16}
+                  padding={5}
+                  fontSize={14}
+                  borderRadius={5}
+                  backgroundColor="#f2f2f2"
+                >
+                  {tag.name}
+                </Text>
+                {index < search.tags.length - 1 ? (
+                  <Text marginHorizontal={2} fontSize={11} opacity={0.23}>
+                    +
+                  </Text>
+                ) : null}
+              </React.Fragment>
+            ))}
+          </LinkButton>
+        </VStack>
+      ))}
+    </HStack>
+  )
+}
+
+const recentSearches = [
+  {
+    tags: [{ name: 'Cheap' }, { name: '🍜 Pho' }],
+  },
+  {
+    tags: [{ name: 'Fancy' }, { name: '🥩 Steak' }],
+  },
+  {
+    tags: [{ name: 'Great' }, { name: '🚗 Delivery' }, { name: '🍣 Sushi' }],
+  },
+  {
+    tags: [
+      { name: '🥬 Vegetarian' },
+      { name: '🚗 Delivery' },
+      { name: '🥪 Sandwich' },
+    ],
+  },
+  {
+    tags: [{ name: 'Great' }, { name: 'Cheap' }, { name: '🇹🇭 Thai' }],
+  },
+]
 
 const HomeLenseTitle = ({ state }) => {
   const lense = getActiveTags(state).find((x) => x.type === 'lense')
@@ -238,7 +304,7 @@ const HomeLenseTitle = ({ state }) => {
 const HomeIntroLetter = memo(() => {
   const [showInto, setShowIntro] = useStorageState(
     localStorage,
-    'showIntro',
+    'showIntr2o',
     true
   )
 
@@ -249,35 +315,31 @@ const HomeIntroLetter = memo(() => {
   return (
     <VStack marginTop={30} alignItems="center" justifyContent="center">
       <Box
-        maxWidth={400}
-        width="70%"
+        maxWidth={440}
+        width="95%"
         margin="auto"
+        paddingRight={30}
         padding={20}
         position="relative"
       >
         <HStack position="absolute" top={10} right={10}>
           <CloseButton onPress={() => setShowIntro(false)} />
         </HStack>
-        <Spacer size="md" />
         <Text fontSize={16} lineHeight={22} opacity={0.8}>
-          <Text fontSize={18} lineHeight={28}>
-            dish is shows uniquely good restaurants in your neighborhood.{' '}
-            <Text fontWeight="600">searches every delivery service.</Text>
-            vote on what makes places ✨.{' '}
-            <Text fontWeight="600">its a little like a social pokedex.</Text>
+          <Text fontSize={16} lineHeight={26}>
+            dish curates good food by analyzing the details of reviews: yours
+            and around the web.{' '}
+            <Text fontWeight="600">
+              search by craving, across every delivery service.
+            </Text>{' '}
+            vote on what makes places ✨.
+            <LinkButton display="inline-flex" {...flatButtonStyle} name="about">
+              Read more
+            </LinkButton>
           </Text>
         </Text>
-         
-        <Spacer size="sm" />
-        {/* <Text fontSize={14} lineHeight={20} opacity={0.8}>
-          <strong>Beta</strong>. Report using the (?) on the
-          bottom right.
-        </Text> */}
-        <LinkButton {...flatButtonStyle} name="about">
-          Read more
-        </LinkButton>
       </Box>
-      <Spacer size={30} />
+      <Spacer />
     </VStack>
   )
 })
@@ -330,11 +392,11 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
           fontSize={18}
           fontWeight={'400'}
           height={22}
-          lineHeight={24}
+          lineHeight={20}
         >
           {country.country}{' '}
           {country.icon ? (
-            <Text marginLeft={3} fontSize="120%">
+            <Text marginLeft={3} fontSize="130%">
               {country.icon}
             </Text>
           ) : null}
