@@ -6,7 +6,7 @@ import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 
-import { Scrape, ScrapeData, scrapeInsert } from '../scrape-helpers'
+import { ScrapeData, scrapeInsert } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 
 const INFATUATED_DOMAIN =

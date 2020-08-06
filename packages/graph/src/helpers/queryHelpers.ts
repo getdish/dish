@@ -4,6 +4,7 @@ import {
   query,
   restaurant_constraint,
   review_constraint,
+  review_tag_constraint,
   schema,
   setting_constraint,
   tag_constraint,
@@ -39,7 +40,8 @@ export function objectToWhere(hash: { [key: string]: any }): any {
 const defaultConstraints = {
   tag: tag_constraint.tag_parentId_name_key,
   restaurant: restaurant_constraint.restaurant_name_address_key,
-  review: review_constraint.review_user_id_restaurant_id_taxonomy_id_key,
+  review: review_constraint.review_native_data_unique_key_key,
+  review_tag: review_tag_constraint.review_tag_tag_id_review_id_sentence_key,
   setting: setting_constraint.setting_pkey,
   tag_tag: tag_tag_constraint.tag_tag_pkey,
   user: user_constraint.user_username_key,
@@ -192,7 +194,7 @@ export async function deleteByIDs(table: string, ids: uuid[]): Promise<void> {
 
 function prepareData<T>(table: string, objects: T[]): T[] {
   objects = removeReadOnlyProperties<T>(table, objects)
-  objects = formatObjectRelationData<T>(table, objects)
+  objects = formatRelationData<T>(table, objects)
   objects = objects.map((o) => ensureJSONSyntax(o) as T)
   return objects
 }
@@ -209,13 +211,19 @@ function removeReadOnlyProperties<T>(table: string, objects: T[]): T[] {
   })
 }
 
-function formatObjectRelationData<T>(table: string, objects: T[]) {
+function formatRelationData<T>(table: string, objects: T[]) {
   return objects.map((cur) => {
     return Object.keys(cur).reduce((acc, key) => {
-      const field = schema[table].fields[key]
-      if (isMutatableRelation(field)) {
-        const constraint = defaultConstraints[key]
-        const update_columns = updateableColumns(key, cur[key])
+      const field_meta_data = schema[table].fields[key]
+      if (isMutatableRelation(field_meta_data)) {
+        let relation_table: string
+        if (field_meta_data.ofNode.innerNode) {
+          relation_table = field_meta_data.ofNode.innerNode.name
+        } else {
+          relation_table = key
+        }
+        const constraint = defaultConstraints[relation_table]
+        const update_columns = updateableColumns(relation_table, cur[key])
         acc[key] = {
           data: cur[key],
           on_conflict: {
@@ -273,7 +281,13 @@ function deJSONStringify(object: {}, key: string, value: any) {
 function updateableColumns(table: string, object: any) {
   if (!object || object.length == 0) return []
   let columns: string[] = []
-  for (const key of Object.keys(object)) {
+  let candidates: string[] = []
+  if (!Array.isArray(object)) {
+    candidates = Object.keys(object)
+  } else {
+    candidates = Object.keys(object[0])
+  }
+  for (const key of candidates) {
     const field = schema[table].fields[key]
     if (!isMutatableRelation(field)) columns.push(key)
   }

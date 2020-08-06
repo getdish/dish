@@ -1,19 +1,19 @@
 import {
   Restaurant,
   RestaurantWithId,
-  Scrape,
   Tag,
   flushTestData,
   restaurantFindOneWithTags,
   restaurantInsert,
   restaurantUpdate,
   restaurantUpsertOrphanTags,
+  reviewFindAllForRestaurant,
   tagInsert,
 } from '@dish/graph'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
 import { bestPhotosForRestaurant } from '../../src/photo-helpers'
-import { scrapeInsert } from '../../src/scrape-helpers'
+import { Scrape, scrapeInsert } from '../../src/scrape-helpers'
 import { Self } from '../../src/self/Self'
 import { main_db } from '../../src/utils'
 import { yelp_hours } from '../yelp_hours'
@@ -90,6 +90,8 @@ const yelp: Partial<Scrape> = {
         },
         photos: [{ src: '' }],
         rating: 5,
+        localizedDate: '5/16/2020',
+        userId: 'FsLRE98uOHkBNzO1Ta5hIw',
         comment: {
           text:
             'This restaurant had terrible Test tag existing 1 dishes! Vegetarian',
@@ -200,7 +202,24 @@ const tripadvisor: Partial<Scrape> = {
         text: 'Test tag existing 3 was ok. Vegan',
         rating: 5,
         username: 'tauser',
+        date: 'July 23, 2019',
       },
+      {
+        text: 'No tags in here',
+        rating: 5,
+        username: 'tauser2',
+        date: 'July 23, 2019',
+      },
+    ],
+  },
+}
+
+const google: Partial<Scrape> = {
+  source: 'google',
+  id_from_source: 'test-google123',
+  data: {
+    reviews: [
+      '4 stars\nNikhil Mascarenhas\nLocal Guide ・4 reviews\n 2 weeks ago\nA Google review....\n Like  Share',
     ],
   },
 }
@@ -214,6 +233,7 @@ async function reset(t: ExecutionContext<Context>) {
   t.context.restaurant = restaurant
   const zero_coord = { lat: 0, lon: 0 }
   const scrapes = [
+    { restaurant_id: restaurant.id, location: zero_coord, ...google },
     { restaurant_id: restaurant.id, location: zero_coord, ...yelp },
     { restaurant_id: restaurant.id, location: zero_coord, ...ubereats },
     { restaurant_id: restaurant.id, location: zero_coord, ...doordash },
@@ -440,6 +460,34 @@ test('Dish sentiment analysis from reviews', async (t) => {
   t.is(tag1.rating, 0.17200480032002136)
   t.is(tag2.rating, 0.91)
   t.is(tag3.rating, 0.235)
+
+  // REVIEWS - sorry for the piggyback
+  let reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
+  t.is(reviews.length, 4)
+  // Ensure upserting/constraints work
+  await self.scanCorpus()
+  await self.postMerge()
+  reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
+  t.is(reviews.length, 4)
+  // Check for sentiments
+  const rv1 = reviews.find((rv) => rv.username == 'yelp-FsLRE98uOHkBNzO1Ta5hIw')
+  const rv1s1 = rv1.sentiments.find((s) =>
+    s.sentence.includes('Test tag existing 1')
+  )
+  t.is(rv1s1.sentiment, -3)
+  const rv1s2 = rv1.sentiments.find((s) =>
+    s.sentence.includes('Test tag existing 2')
+  )
+  t.is(rv1s2.sentiment, 4)
+  const rv2 = reviews.find((rv) => rv.username == 'tripadvisor-tauser')
+  const rv2s1 = rv2.sentiments.find((s) =>
+    s.sentence.includes('Test tag existing 3')
+  )
+  t.is(rv2s1.sentiment, 0)
+  const rv3 = reviews.find((rv) => rv.username == 'tripadvisor-tauser2')
+  t.is(rv3.sentiments.length, 0)
+  const rv4 = reviews.find((rv) => rv.username == 'google-Nikhil Mascarenhas')
+  t.is(rv4.rating, 4)
 })
 
 test('Finding veg in reviews', async (t) => {

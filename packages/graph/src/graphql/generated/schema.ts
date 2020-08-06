@@ -1499,6 +1499,34 @@ export const schema = {
             true
           )
         },
+        get delete_review_tag() {
+          return new FieldNode(
+            schema.review_tag_mutation_response,
+            new Arguments(
+              {
+                get where() {
+                  return new ArgumentsField(schema.review_tag_bool_exp, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get delete_review_tag_by_pk() {
+          return new FieldNode(
+            schema.review_tag,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
         get delete_setting() {
           return new FieldNode(
             schema.setting_mutation_response,
@@ -1844,6 +1872,37 @@ export const schema = {
               },
               get on_conflict() {
                 return new ArgumentsField(schema.review_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get insert_review_tag() {
+          return new FieldNode(
+            schema.review_tag_mutation_response,
+            new Arguments({
+              get objects() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_insert_input, false),
+                  false
+                )
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.review_tag_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get insert_review_tag_one() {
+          return new FieldNode(
+            schema.review_tag,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(schema.review_tag_insert_input, false)
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.review_tag_on_conflict, true)
               },
             }),
             true
@@ -2353,6 +2412,43 @@ export const schema = {
               },
               get pk_columns() {
                 return new ArgumentsField(schema.review_pk_columns_input, false)
+              },
+            }),
+            true
+          )
+        },
+        get update_review_tag() {
+          return new FieldNode(
+            schema.review_tag_mutation_response,
+            new Arguments({
+              get _inc() {
+                return new ArgumentsField(schema.review_tag_inc_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.review_tag_set_input, true)
+              },
+              get where() {
+                return new ArgumentsField(schema.review_tag_bool_exp, false)
+              },
+            }),
+            true
+          )
+        },
+        get update_review_tag_by_pk() {
+          return new FieldNode(
+            schema.review_tag,
+            new Arguments({
+              get _inc() {
+                return new ArgumentsField(schema.review_tag_inc_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.review_tag_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(
+                  schema.review_tag_pk_columns_input,
+                  false
+                )
               },
             }),
             true
@@ -4480,6 +4576,78 @@ export const schema = {
             true
           )
         },
+        get review_tag() {
+          return new FieldNode(
+            new ArrayNode(schema.review_tag, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.review_tag_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get review_tag_aggregate() {
+          return new FieldNode(
+            schema.review_tag_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.review_tag_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get review_tag_by_pk() {
+          return new FieldNode(
+            schema.review_tag,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
         get setting() {
           return new FieldNode(
             new ArrayNode(schema.setting, false),
@@ -6138,6 +6306,9 @@ export const schema = {
   get restaurant_tag() {
     return new ObjectNode(
       {
+        get id() {
+          return new FieldNode(schema.uuid, undefined, false)
+        },
         get photos() {
           return new FieldNode(
             schema.jsonb,
@@ -6423,6 +6594,9 @@ export const schema = {
             true
           )
         },
+        get id() {
+          return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
         get photos() {
           return new InputNodeField(schema.jsonb_comparison_exp, true)
         },
@@ -6497,6 +6671,9 @@ export const schema = {
   get restaurant_tag_insert_input() {
     return new InputNode(
       {
+        get id() {
+          return new InputNodeField(schema.uuid, true)
+        },
         get photos() {
           return new InputNodeField(schema.jsonb, true)
         },
@@ -6528,6 +6705,9 @@ export const schema = {
   get restaurant_tag_max_fields() {
     return new ObjectNode(
       {
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get rank() {
           return new FieldNode(schema.Int, undefined, true)
         },
@@ -6550,6 +6730,9 @@ export const schema = {
   get restaurant_tag_max_order_by() {
     return new InputNode(
       {
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rank() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6569,6 +6752,9 @@ export const schema = {
   get restaurant_tag_min_fields() {
     return new ObjectNode(
       {
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get rank() {
           return new FieldNode(schema.Int, undefined, true)
         },
@@ -6591,6 +6777,9 @@ export const schema = {
   get restaurant_tag_min_order_by() {
     return new InputNode(
       {
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rank() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6662,6 +6851,9 @@ export const schema = {
   get restaurant_tag_order_by() {
     return new InputNode(
       {
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get photos() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6716,6 +6908,9 @@ export const schema = {
   get restaurant_tag_set_input() {
     return new InputNode(
       {
+        get id() {
+          return new InputNodeField(schema.uuid, true)
+        },
         get photos() {
           return new InputNodeField(schema.jsonb, true)
         },
@@ -7045,6 +7240,9 @@ export const schema = {
   get review() {
     return new ObjectNode(
       {
+        get authored_at() {
+          return new FieldNode(schema.timestamptz, undefined, false)
+        },
         get categories() {
           return new FieldNode(
             schema.jsonb,
@@ -7056,14 +7254,17 @@ export const schema = {
             true
           )
         },
-        get created_at() {
-          return new FieldNode(schema.timestamptz, undefined, false)
-        },
         get favorited() {
           return new FieldNode(schema.Boolean, undefined, true)
         },
         get id() {
           return new FieldNode(schema.uuid, undefined, false)
+        },
+        get location() {
+          return new FieldNode(schema.geometry, undefined, true)
+        },
+        get native_data_unique_key() {
+          return new FieldNode(schema.String, undefined, true)
         },
         get rating() {
           return new FieldNode(schema.numeric, undefined, true)
@@ -7073,6 +7274,67 @@ export const schema = {
         },
         get restaurant_id() {
           return new FieldNode(schema.uuid, undefined, false)
+        },
+        get sentiments() {
+          return new FieldNode(
+            new ArrayNode(schema.review_tag, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.review_tag_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get sentiments_aggregate() {
+          return new FieldNode(
+            schema.review_tag_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.review_tag_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get source() {
+          return new FieldNode(schema.String, undefined, false)
         },
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, true)
@@ -7091,6 +7353,9 @@ export const schema = {
         },
         get user_id() {
           return new FieldNode(schema.uuid, undefined, false)
+        },
+        get username() {
+          return new FieldNode(schema.String, undefined, true)
         },
       },
       { name: 'review', extension: ((extensions as any) || {}).review }
@@ -7284,17 +7549,23 @@ export const schema = {
             true
           )
         },
+        get authored_at() {
+          return new InputNodeField(schema.timestamptz_comparison_exp, true)
+        },
         get categories() {
           return new InputNodeField(schema.jsonb_comparison_exp, true)
-        },
-        get created_at() {
-          return new InputNodeField(schema.timestamptz_comparison_exp, true)
         },
         get favorited() {
           return new InputNodeField(schema.Boolean_comparison_exp, true)
         },
         get id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get location() {
+          return new InputNodeField(schema.geometry_comparison_exp, true)
+        },
+        get native_data_unique_key() {
+          return new InputNodeField(schema.String_comparison_exp, true)
         },
         get rating() {
           return new InputNodeField(schema.numeric_comparison_exp, true)
@@ -7304,6 +7575,12 @@ export const schema = {
         },
         get restaurant_id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get sentiments() {
+          return new InputNodeField(schema.review_tag_bool_exp, true)
+        },
+        get source() {
+          return new InputNodeField(schema.String_comparison_exp, true)
         },
         get tag_id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
@@ -7322,6 +7599,9 @@ export const schema = {
         },
         get user_id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get username() {
+          return new InputNodeField(schema.String_comparison_exp, true)
         },
       },
       { name: 'review_bool_exp' }
@@ -7373,17 +7653,23 @@ export const schema = {
   get review_insert_input() {
     return new InputNode(
       {
+        get authored_at() {
+          return new InputNodeField(schema.timestamptz, true)
+        },
         get categories() {
           return new InputNodeField(schema.jsonb, true)
-        },
-        get created_at() {
-          return new InputNodeField(schema.timestamptz, true)
         },
         get favorited() {
           return new InputNodeField(schema.Boolean, true)
         },
         get id() {
           return new InputNodeField(schema.uuid, true)
+        },
+        get location() {
+          return new InputNodeField(schema.geometry, true)
+        },
+        get native_data_unique_key() {
+          return new InputNodeField(schema.String, true)
         },
         get rating() {
           return new InputNodeField(schema.numeric, true)
@@ -7396,6 +7682,15 @@ export const schema = {
         },
         get restaurant_id() {
           return new InputNodeField(schema.uuid, true)
+        },
+        get sentiments() {
+          return new InputNodeField(
+            schema.review_tag_arr_rel_insert_input,
+            true
+          )
+        },
+        get source() {
+          return new InputNodeField(schema.String, true)
         },
         get tag_id() {
           return new InputNodeField(schema.uuid, true)
@@ -7415,6 +7710,9 @@ export const schema = {
         get user_id() {
           return new InputNodeField(schema.uuid, true)
         },
+        get username() {
+          return new InputNodeField(schema.String, true)
+        },
       },
       { name: 'review_insert_input' }
     )
@@ -7422,17 +7720,23 @@ export const schema = {
   get review_max_fields() {
     return new ObjectNode(
       {
-        get created_at() {
+        get authored_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
         },
         get id() {
           return new FieldNode(schema.uuid, undefined, true)
+        },
+        get native_data_unique_key() {
+          return new FieldNode(schema.String, undefined, true)
         },
         get rating() {
           return new FieldNode(schema.numeric, undefined, true)
         },
         get restaurant_id() {
           return new FieldNode(schema.uuid, undefined, true)
+        },
+        get source() {
+          return new FieldNode(schema.String, undefined, true)
         },
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, true)
@@ -7445,6 +7749,9 @@ export const schema = {
         },
         get user_id() {
           return new FieldNode(schema.uuid, undefined, true)
+        },
+        get username() {
+          return new FieldNode(schema.String, undefined, true)
         },
       },
       {
@@ -7456,16 +7763,22 @@ export const schema = {
   get review_max_order_by() {
     return new InputNode(
       {
-        get created_at() {
+        get authored_at() {
           return new InputNodeField(schema.order_by, true)
         },
         get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get native_data_unique_key() {
           return new InputNodeField(schema.order_by, true)
         },
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
         get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get source() {
           return new InputNodeField(schema.order_by, true)
         },
         get tag_id() {
@@ -7480,6 +7793,9 @@ export const schema = {
         get user_id() {
           return new InputNodeField(schema.order_by, true)
         },
+        get username() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'review_max_order_by' }
     )
@@ -7487,17 +7803,23 @@ export const schema = {
   get review_min_fields() {
     return new ObjectNode(
       {
-        get created_at() {
+        get authored_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
         },
         get id() {
           return new FieldNode(schema.uuid, undefined, true)
+        },
+        get native_data_unique_key() {
+          return new FieldNode(schema.String, undefined, true)
         },
         get rating() {
           return new FieldNode(schema.numeric, undefined, true)
         },
         get restaurant_id() {
           return new FieldNode(schema.uuid, undefined, true)
+        },
+        get source() {
+          return new FieldNode(schema.String, undefined, true)
         },
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, true)
@@ -7511,6 +7833,9 @@ export const schema = {
         get user_id() {
           return new FieldNode(schema.uuid, undefined, true)
         },
+        get username() {
+          return new FieldNode(schema.String, undefined, true)
+        },
       },
       {
         name: 'review_min_fields',
@@ -7521,16 +7846,22 @@ export const schema = {
   get review_min_order_by() {
     return new InputNode(
       {
-        get created_at() {
+        get authored_at() {
           return new InputNodeField(schema.order_by, true)
         },
         get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get native_data_unique_key() {
           return new InputNodeField(schema.order_by, true)
         },
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
         get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get source() {
           return new InputNodeField(schema.order_by, true)
         },
         get tag_id() {
@@ -7543,6 +7874,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get user_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get username() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -7604,16 +7938,22 @@ export const schema = {
   get review_order_by() {
     return new InputNode(
       {
-        get categories() {
+        get authored_at() {
           return new InputNodeField(schema.order_by, true)
         },
-        get created_at() {
+        get categories() {
           return new InputNodeField(schema.order_by, true)
         },
         get favorited() {
           return new InputNodeField(schema.order_by, true)
         },
         get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get location() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get native_data_unique_key() {
           return new InputNodeField(schema.order_by, true)
         },
         get rating() {
@@ -7623,6 +7963,12 @@ export const schema = {
           return new InputNodeField(schema.restaurant_order_by, true)
         },
         get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get sentiments_aggregate() {
+          return new InputNodeField(schema.review_tag_aggregate_order_by, true)
+        },
+        get source() {
           return new InputNodeField(schema.order_by, true)
         },
         get tag_id() {
@@ -7641,6 +7987,9 @@ export const schema = {
           return new InputNodeField(schema.user_order_by, true)
         },
         get user_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get username() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -7673,11 +8022,11 @@ export const schema = {
   get review_set_input() {
     return new InputNode(
       {
+        get authored_at() {
+          return new InputNodeField(schema.timestamptz, true)
+        },
         get categories() {
           return new InputNodeField(schema.jsonb, true)
-        },
-        get created_at() {
-          return new InputNodeField(schema.timestamptz, true)
         },
         get favorited() {
           return new InputNodeField(schema.Boolean, true)
@@ -7685,11 +8034,20 @@ export const schema = {
         get id() {
           return new InputNodeField(schema.uuid, true)
         },
+        get location() {
+          return new InputNodeField(schema.geometry, true)
+        },
+        get native_data_unique_key() {
+          return new InputNodeField(schema.String, true)
+        },
         get rating() {
           return new InputNodeField(schema.numeric, true)
         },
         get restaurant_id() {
           return new InputNodeField(schema.uuid, true)
+        },
+        get source() {
+          return new InputNodeField(schema.String, true)
         },
         get tag_id() {
           return new InputNodeField(schema.uuid, true)
@@ -7702,6 +8060,9 @@ export const schema = {
         },
         get user_id() {
           return new InputNodeField(schema.uuid, true)
+        },
+        get username() {
+          return new InputNodeField(schema.String, true)
         },
       },
       { name: 'review_set_input' }
@@ -7797,6 +8158,674 @@ export const schema = {
         },
       },
       { name: 'review_sum_order_by' }
+    )
+  },
+  get review_tag() {
+    return new ObjectNode(
+      {
+        get id() {
+          return new FieldNode(schema.uuid, undefined, false)
+        },
+        get review() {
+          return new FieldNode(schema.review, undefined, false)
+        },
+        get review_id() {
+          return new FieldNode(schema.uuid, undefined, false)
+        },
+        get sentence() {
+          return new FieldNode(schema.String, undefined, false)
+        },
+        get sentiment() {
+          return new FieldNode(schema.numeric, undefined, false)
+        },
+        get tag() {
+          return new FieldNode(schema.tag, undefined, false)
+        },
+        get tag_id() {
+          return new FieldNode(schema.uuid, undefined, false)
+        },
+      },
+      { name: 'review_tag', extension: ((extensions as any) || {}).review_tag }
+    )
+  },
+  get review_tag_aggregate() {
+    return new ObjectNode(
+      {
+        get aggregate() {
+          return new FieldNode(
+            schema.review_tag_aggregate_fields,
+            undefined,
+            true
+          )
+        },
+        get nodes() {
+          return new FieldNode(
+            new ArrayNode(schema.review_tag, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'review_tag_aggregate',
+        extension: ((extensions as any) || {}).review_tag_aggregate,
+      }
+    )
+  },
+  get review_tag_aggregate_fields() {
+    return new ObjectNode(
+      {
+        get avg() {
+          return new FieldNode(schema.review_tag_avg_fields, undefined, true)
+        },
+        get count() {
+          return new FieldNode(
+            schema.Int,
+            new Arguments({
+              get columns() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_select_column, true),
+                  true
+                )
+              },
+              get distinct() {
+                return new ArgumentsField(schema.Boolean, true)
+              },
+            }),
+            true
+          )
+        },
+        get max() {
+          return new FieldNode(schema.review_tag_max_fields, undefined, true)
+        },
+        get min() {
+          return new FieldNode(schema.review_tag_min_fields, undefined, true)
+        },
+        get stddev() {
+          return new FieldNode(schema.review_tag_stddev_fields, undefined, true)
+        },
+        get stddev_pop() {
+          return new FieldNode(
+            schema.review_tag_stddev_pop_fields,
+            undefined,
+            true
+          )
+        },
+        get stddev_samp() {
+          return new FieldNode(
+            schema.review_tag_stddev_samp_fields,
+            undefined,
+            true
+          )
+        },
+        get sum() {
+          return new FieldNode(schema.review_tag_sum_fields, undefined, true)
+        },
+        get var_pop() {
+          return new FieldNode(
+            schema.review_tag_var_pop_fields,
+            undefined,
+            true
+          )
+        },
+        get var_samp() {
+          return new FieldNode(
+            schema.review_tag_var_samp_fields,
+            undefined,
+            true
+          )
+        },
+        get variance() {
+          return new FieldNode(
+            schema.review_tag_variance_fields,
+            undefined,
+            true
+          )
+        },
+      },
+      {
+        name: 'review_tag_aggregate_fields',
+        extension: ((extensions as any) || {}).review_tag_aggregate_fields,
+      }
+    )
+  },
+  get review_tag_aggregate_order_by() {
+    return new InputNode(
+      {
+        get avg() {
+          return new InputNodeField(schema.review_tag_avg_order_by, true)
+        },
+        get count() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get max() {
+          return new InputNodeField(schema.review_tag_max_order_by, true)
+        },
+        get min() {
+          return new InputNodeField(schema.review_tag_min_order_by, true)
+        },
+        get stddev() {
+          return new InputNodeField(schema.review_tag_stddev_order_by, true)
+        },
+        get stddev_pop() {
+          return new InputNodeField(schema.review_tag_stddev_pop_order_by, true)
+        },
+        get stddev_samp() {
+          return new InputNodeField(
+            schema.review_tag_stddev_samp_order_by,
+            true
+          )
+        },
+        get sum() {
+          return new InputNodeField(schema.review_tag_sum_order_by, true)
+        },
+        get var_pop() {
+          return new InputNodeField(schema.review_tag_var_pop_order_by, true)
+        },
+        get var_samp() {
+          return new InputNodeField(schema.review_tag_var_samp_order_by, true)
+        },
+        get variance() {
+          return new InputNodeField(schema.review_tag_variance_order_by, true)
+        },
+      },
+      { name: 'review_tag_aggregate_order_by' }
+    )
+  },
+  get review_tag_arr_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(
+            new ArrayNode(schema.review_tag_insert_input, false),
+            false
+          )
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.review_tag_on_conflict, true)
+        },
+      },
+      { name: 'review_tag_arr_rel_insert_input' }
+    )
+  },
+  get review_tag_avg_fields() {
+    return new ObjectNode(
+      {
+        get sentiment() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'review_tag_avg_fields',
+        extension: ((extensions as any) || {}).review_tag_avg_fields,
+      }
+    )
+  },
+  get review_tag_avg_order_by() {
+    return new InputNode(
+      {
+        get sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'review_tag_avg_order_by' }
+    )
+  },
+  get review_tag_bool_exp() {
+    return new InputNode(
+      {
+        get _and() {
+          return new InputNodeField(
+            new ArrayNode(schema.review_tag_bool_exp, true),
+            true
+          )
+        },
+        get _not() {
+          return new InputNodeField(schema.review_tag_bool_exp, true)
+        },
+        get _or() {
+          return new InputNodeField(
+            new ArrayNode(schema.review_tag_bool_exp, true),
+            true
+          )
+        },
+        get id() {
+          return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get review() {
+          return new InputNodeField(schema.review_bool_exp, true)
+        },
+        get review_id() {
+          return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get sentence() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get sentiment() {
+          return new InputNodeField(schema.numeric_comparison_exp, true)
+        },
+        get tag() {
+          return new InputNodeField(schema.tag_bool_exp, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+      },
+      { name: 'review_tag_bool_exp' }
+    )
+  },
+  get review_tag_constraint() {
+    return new EnumNode({ name: 'review_tag_constraint' })
+  },
+  get review_tag_inc_input() {
+    return new InputNode(
+      {
+        get sentiment() {
+          return new InputNodeField(schema.numeric, true)
+        },
+      },
+      { name: 'review_tag_inc_input' }
+    )
+  },
+  get review_tag_insert_input() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get review() {
+          return new InputNodeField(schema.review_obj_rel_insert_input, true)
+        },
+        get review_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get sentence() {
+          return new InputNodeField(schema.String, true)
+        },
+        get sentiment() {
+          return new InputNodeField(schema.numeric, true)
+        },
+        get tag() {
+          return new InputNodeField(schema.tag_obj_rel_insert_input, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+      },
+      { name: 'review_tag_insert_input' }
+    )
+  },
+  get review_tag_max_fields() {
+    return new ObjectNode(
+      {
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get review_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get sentence() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get sentiment() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
+        get tag_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+      },
+      {
+        name: 'review_tag_max_fields',
+        extension: ((extensions as any) || {}).review_tag_max_fields,
+      }
+    )
+  },
+  get review_tag_max_order_by() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get review_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get sentence() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'review_tag_max_order_by' }
+    )
+  },
+  get review_tag_min_fields() {
+    return new ObjectNode(
+      {
+        get id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get review_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+        get sentence() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get sentiment() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
+        get tag_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
+      },
+      {
+        name: 'review_tag_min_fields',
+        extension: ((extensions as any) || {}).review_tag_min_fields,
+      }
+    )
+  },
+  get review_tag_min_order_by() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get review_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get sentence() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'review_tag_min_order_by' }
+    )
+  },
+  get review_tag_mutation_response() {
+    return new ObjectNode(
+      {
+        get affected_rows() {
+          return new FieldNode(schema.Int, undefined, false)
+        },
+        get returning() {
+          return new FieldNode(
+            new ArrayNode(schema.review_tag, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'review_tag_mutation_response',
+        extension: ((extensions as any) || {}).review_tag_mutation_response,
+      }
+    )
+  },
+  get review_tag_obj_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(schema.review_tag_insert_input, false)
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.review_tag_on_conflict, true)
+        },
+      },
+      { name: 'review_tag_obj_rel_insert_input' }
+    )
+  },
+  get review_tag_on_conflict() {
+    return new InputNode(
+      {
+        get constraint() {
+          return new InputNodeField(schema.review_tag_constraint, false)
+        },
+        get update_columns() {
+          return new InputNodeField(
+            new ArrayNode(schema.review_tag_update_column, false),
+            false
+          )
+        },
+        get where() {
+          return new InputNodeField(schema.review_tag_bool_exp, true)
+        },
+      },
+      { name: 'review_tag_on_conflict' }
+    )
+  },
+  get review_tag_order_by() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get review() {
+          return new InputNodeField(schema.review_order_by, true)
+        },
+        get review_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get sentence() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get tag() {
+          return new InputNodeField(schema.tag_order_by, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'review_tag_order_by' }
+    )
+  },
+  get review_tag_pk_columns_input() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.uuid, false)
+        },
+      },
+      { name: 'review_tag_pk_columns_input' }
+    )
+  },
+  get review_tag_select_column() {
+    return new EnumNode({ name: 'review_tag_select_column' })
+  },
+  get review_tag_set_input() {
+    return new InputNode(
+      {
+        get id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get review_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+        get sentence() {
+          return new InputNodeField(schema.String, true)
+        },
+        get sentiment() {
+          return new InputNodeField(schema.numeric, true)
+        },
+        get tag_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
+      },
+      { name: 'review_tag_set_input' }
+    )
+  },
+  get review_tag_stddev_fields() {
+    return new ObjectNode(
+      {
+        get sentiment() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'review_tag_stddev_fields',
+        extension: ((extensions as any) || {}).review_tag_stddev_fields,
+      }
+    )
+  },
+  get review_tag_stddev_order_by() {
+    return new InputNode(
+      {
+        get sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'review_tag_stddev_order_by' }
+    )
+  },
+  get review_tag_stddev_pop_fields() {
+    return new ObjectNode(
+      {
+        get sentiment() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'review_tag_stddev_pop_fields',
+        extension: ((extensions as any) || {}).review_tag_stddev_pop_fields,
+      }
+    )
+  },
+  get review_tag_stddev_pop_order_by() {
+    return new InputNode(
+      {
+        get sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'review_tag_stddev_pop_order_by' }
+    )
+  },
+  get review_tag_stddev_samp_fields() {
+    return new ObjectNode(
+      {
+        get sentiment() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'review_tag_stddev_samp_fields',
+        extension: ((extensions as any) || {}).review_tag_stddev_samp_fields,
+      }
+    )
+  },
+  get review_tag_stddev_samp_order_by() {
+    return new InputNode(
+      {
+        get sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'review_tag_stddev_samp_order_by' }
+    )
+  },
+  get review_tag_sum_fields() {
+    return new ObjectNode(
+      {
+        get sentiment() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
+      },
+      {
+        name: 'review_tag_sum_fields',
+        extension: ((extensions as any) || {}).review_tag_sum_fields,
+      }
+    )
+  },
+  get review_tag_sum_order_by() {
+    return new InputNode(
+      {
+        get sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'review_tag_sum_order_by' }
+    )
+  },
+  get review_tag_update_column() {
+    return new EnumNode({ name: 'review_tag_update_column' })
+  },
+  get review_tag_var_pop_fields() {
+    return new ObjectNode(
+      {
+        get sentiment() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'review_tag_var_pop_fields',
+        extension: ((extensions as any) || {}).review_tag_var_pop_fields,
+      }
+    )
+  },
+  get review_tag_var_pop_order_by() {
+    return new InputNode(
+      {
+        get sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'review_tag_var_pop_order_by' }
+    )
+  },
+  get review_tag_var_samp_fields() {
+    return new ObjectNode(
+      {
+        get sentiment() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'review_tag_var_samp_fields',
+        extension: ((extensions as any) || {}).review_tag_var_samp_fields,
+      }
+    )
+  },
+  get review_tag_var_samp_order_by() {
+    return new InputNode(
+      {
+        get sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'review_tag_var_samp_order_by' }
+    )
+  },
+  get review_tag_variance_fields() {
+    return new ObjectNode(
+      {
+        get sentiment() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'review_tag_variance_fields',
+        extension: ((extensions as any) || {}).review_tag_variance_fields,
+      }
+    )
+  },
+  get review_tag_variance_order_by() {
+    return new InputNode(
+      {
+        get sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'review_tag_variance_order_by' }
     )
   },
   get review_update_column() {
@@ -8820,6 +9849,78 @@ export const schema = {
         get review_by_pk() {
           return new FieldNode(
             schema.review,
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get review_tag() {
+          return new FieldNode(
+            new ArrayNode(schema.review_tag, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.review_tag_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get review_tag_aggregate() {
+          return new FieldNode(
+            schema.review_tag_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.review_tag_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get review_tag_by_pk() {
+          return new FieldNode(
+            schema.review_tag,
             new Arguments(
               {
                 get id() {

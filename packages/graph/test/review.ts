@@ -72,11 +72,13 @@ test('Favorite a restaurant', async (t) => {
   t.is(r1.id, f1[0].id)
   t.is(r1.favorited, true)
 
-  await userFavoriteARestaurant(
+  const ru1 = await userFavoriteARestaurant(
     t.context.user.id,
     t.context.restaurant.id,
     false
   )
+  t.is(r1.id, ru1.id)
+
   const f2 = await userFavorites(t.context.user.id)
   t.is(f2.length, 0)
 })

@@ -2,6 +2,7 @@ import '@dish/common'
 
 import axios from 'axios'
 import _ from 'lodash'
+import moment, { Moment } from 'moment'
 import { Pool, Result } from 'pg'
 
 const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN
@@ -147,4 +148,15 @@ export function aroundCoordsGeoJSON(
     type: 'FeatureCollection',
     features: boxes,
   })
+}
+
+export function toDBDate(in_date: Date | string, format: string = '') {
+  let m: Moment
+  if (format == '') {
+    m = moment(in_date)
+  } else {
+    m = moment(in_date, format)
+  }
+  const out_date = m.format('YYYY-MM-DD') + 'T00:00:00.0+00:00'
+  return out_date
 }

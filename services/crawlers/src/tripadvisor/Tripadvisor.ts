@@ -183,6 +183,7 @@ export class Tripadvisor extends WorkerJob {
     for (let i = 0; i < reviews.length; i++) {
       const review = $(reviews[i])
       data.push({
+        // TODO: Get actual internal username
         username: review.find('.memberInfoColumn .info_text').text(),
         rating: this._getRatingFromClasses(review),
         quote: review.find('.quote .noQuotes').text(),

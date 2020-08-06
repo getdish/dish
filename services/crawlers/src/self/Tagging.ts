@@ -1,18 +1,29 @@
+import { sentryMessage } from '@dish/common'
 import {
   PhotoXref,
   RestaurantTag,
+  Review,
   Tag,
   convertSimpleTagsToRestaurantTags,
+  externalUserUUID,
+  globalTagId,
   restaurantGetAllPossibleTags,
+  reviewExternalUpsert,
   tagFindCountries,
   tagSlug,
 } from '@dish/graph'
+import * as chrono from 'chrono-node'
 import { mean, uniq } from 'lodash'
+import moment from 'moment'
 import Sentiment from 'sentiment'
 
 import { scrapeGetData } from '../scrape-helpers'
-import { main_db } from '../utils'
+import { main_db, toDBDate } from '../utils'
 import { Self } from './Self'
+
+type TextSource = Review | string
+const isReview = (variableToCheck: any): variableToCheck is Review =>
+  (variableToCheck as Review).text !== undefined
 
 export class Tagging {
   crawler: Self
@@ -24,6 +35,8 @@ export class Tagging {
   _found_tags: { [key: string]: Partial<RestaurantTag> } = {}
   SPECIAL_FILTER_THRESHOLD = 3
   GEM_UIID = 'da0e0c85-86b5-4b9e-b372-97e133eccb43'
+  sentiment = new Sentiment()
+  reviews: Review[] = []
 
   constructor(crawler: Self) {
     this.crawler = crawler
@@ -125,11 +138,12 @@ export class Tagging {
       ...this._scanYelpReviewsForTags(),
       ...this._scanTripadvisorReviewsForTags(),
       ...this._scanGoogleReviewsForTags(),
-      ...this._scanMenuItemsForTags(),
     ]
-    this.findDishesInText(all_reviews)
-    await this.findVegInText(all_reviews)
+    const all_sources = [...all_reviews, ...this._scanMenuItemsForTags()]
+    const reviews_with_sentiments = this.findDishesInText(all_sources)
+    await this.findVegInText(all_sources)
     await this._averageAndPersistTagRatings()
+    await reviewExternalUpsert(reviews_with_sentiments)
   }
 
   async findPhotosForTags() {
@@ -169,19 +183,63 @@ export class Tagging {
     return all_tag_photos
   }
 
-  findDishesInText(all_reviews: string[]) {
-    for (const text of all_reviews) {
+  findDishesInText(all_sources: TextSource[]) {
+    let text: string
+    let updated_reviews: Review[] = []
+    for (let source of all_sources) {
+      if (!isReview(source)) {
+        text = source
+      } else {
+        text = source.text ?? ''
+      }
       for (const tag of this.all_tags) {
-        if (!this._doesStringContainTag(text, tag.name ?? '')) continue
-        this._found_tags[tag.id] = { tag_id: tag.id } as RestaurantTag
-        this.measureSentiment(text, tag)
+        const is_tags_found = this._doesStringContainTag(text, tag.name ?? '')
+        if (is_tags_found) {
+          source = this.tagFound(tag, source)
+        }
+      }
+      if (isReview(source)) {
+        updated_reviews.push(source)
       }
     }
+    return updated_reviews
   }
 
-  async findVegInText(all_reviews: string[]) {
+  tagFound(tag: Tag, text_source: TextSource) {
+    let text: string
+    if (isReview(text_source)) {
+      text_source.sentiments = text_source.sentiments ?? []
+      text = text_source.text ?? ''
+    } else {
+      text = text_source as string
+    }
+    this._found_tags[tag.id] = { tag_id: tag.id } as RestaurantTag
+    this.restaurant_tag_ratings[tag.id] =
+      this.restaurant_tag_ratings[tag.id] || []
+    const sentences = this.matchingSentences(text, tag)
+    for (const sentence of sentences) {
+      if (!this._doesStringContainTag(sentence, tag.name ?? '')) continue
+      const rating = this.measureSentiment(sentence)
+      this.restaurant_tag_ratings[tag.id].push(rating)
+      if (isReview(text_source)) {
+        const sentiment = {
+          tag_id: tag.id,
+          sentence,
+          sentiment: rating,
+        }
+        text_source.sentiments.push(sentiment)
+      }
+    }
+    return text_source
+  }
+
+  async findVegInText(all_sources: TextSource[]) {
     let matches = 0
-    for (const text of all_reviews) {
+    for (const source of all_sources) {
+      let text = (source as Review).text
+      if (!text) {
+        text = source as string
+      }
       if (this._doesStringContainTag(text, 'vegetarian')) matches += 1
       if (this._doesStringContainTag(text, 'vegan')) matches += 1
     }
@@ -196,16 +254,12 @@ export class Tagging {
     return regex.test(text)
   }
 
-  measureSentiment(text: string, tag: Tag) {
-    const sentiment = new Sentiment()
-    const sentences = text.match(/[^\.!\?]+[\.!\?]+/g) || [text]
-    this.restaurant_tag_ratings[tag.id] =
-      this.restaurant_tag_ratings[tag.id] || []
-    for (const sentence of sentences) {
-      if (!this._doesStringContainTag(sentence, tag.name ?? '')) continue
-      const rating = sentiment.analyze(sentence).score
-      this.restaurant_tag_ratings[tag.id].push(rating)
-    }
+  matchingSentences(text: string, tag: Tag) {
+    return text.match(/[^\.!\?]+[\.!\?]+/g) || [text]
+  }
+
+  measureSentiment(sentence: string) {
+    return this.sentiment.analyze(sentence).score
   }
 
   async _averageAndPersistTagRatings() {
@@ -262,43 +316,90 @@ export class Tagging {
   }
 
   _scanYelpReviewsForTags() {
-    const reviews = this.crawler.getPaginatedData(
+    const yelp_reviews = this.crawler.getPaginatedData(
       // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
       this.crawler.yelp?.data,
       'reviews'
     )
-    let texts: string[] = []
-    for (const review of reviews) {
-      texts.push(
-        [
-          review.comment?.text,
-          review.lightboxMediaItems?.map((i) => i.caption).join(' '),
-        ].join(' ')
-      )
+    let reviews: Review[] = []
+    for (const yelp_review of yelp_reviews) {
+      reviews.push({
+        user_id: externalUserUUID,
+        tag_id: globalTagId,
+        source: 'yelp',
+        username: 'yelp-' + yelp_review.userId,
+        authored_at: toDBDate(yelp_review.localizedDate, 'MM/DD/YYYY'),
+        restaurant_id: this.crawler.restaurant.id,
+        text: [
+          yelp_review.comment?.text,
+          yelp_review.lightboxMediaItems?.map((i) => i.caption).join(' '),
+        ].join(' '),
+        rating: yelp_review.rating,
+      })
     }
-    return texts
+    return reviews
   }
 
   _scanTripadvisorReviewsForTags() {
     const td_data = this.crawler.tripadvisor?.data || {}
-    const reviews = this.crawler.getPaginatedData(td_data, 'reviews')
-    let texts: string[] = []
-    for (const review of reviews) {
-      texts.push([review.text].join(' '))
+    const tripadvisor_reviews = this.crawler.getPaginatedData(
+      td_data,
+      'reviews'
+    )
+    let reviews: Review[] = []
+    for (const tripadvisor_review of tripadvisor_reviews) {
+      if (!tripadvisor_review.username || tripadvisor_review.username == '') {
+        sentryMessage('TRIPADVISOR: Review has no username', tripadvisor_review)
+        continue
+      }
+      reviews.push({
+        user_id: externalUserUUID,
+        tag_id: globalTagId,
+        source: 'tripadvisor',
+        username: 'tripadvisor-' + tripadvisor_review.username,
+        authored_at: toDBDate(tripadvisor_review.date, 'MMMM D, YYYY'),
+        restaurant_id: this.crawler.restaurant.id,
+        text: tripadvisor_review.text,
+        rating: tripadvisor_review.rating,
+      })
     }
-    return texts
+    return reviews
   }
 
   _scanGoogleReviewsForTags() {
     // @ts-ignore
-    const reviews = this.crawler.google?.data?.reviews || []
-    let texts: string[] = []
-    for (const review of reviews) {
-      const text = review.split('\n')[3]
-      if (!text) continue
-      texts.push(text)
+    const google_reviews = this.crawler.google?.data?.reviews || []
+    let reviews: Review[] = []
+    for (const google_review of google_reviews) {
+      const pieces = google_review.split('\n')
+      const rating = parseFloat(pieces[0].match(/(\d)/)[1])
+      const username = pieces[1]
+      const date = this._quantiseGoogleReviewDate(pieces[3])
+      const text = pieces[4]
+      reviews.push({
+        user_id: externalUserUUID,
+        tag_id: globalTagId,
+        source: 'google',
+        username: 'google-' + username,
+        authored_at: date,
+        restaurant_id: this.crawler.restaurant.id,
+        text,
+        rating,
+      })
     }
-    return texts
+    return reviews
+  }
+
+  // We only get dates like "2 weeks ago" or "2 years ago" from Google. In order
+  // to allow multiple reviews from the same reviewer for the same restaurant we need
+  // some way to consistently differentiate reviews, otherwise successive reviews will
+  // just clobber the old ones. This way we can at least support 1 review per year. Not
+  // perfect, but not too bad either.
+  _quantiseGoogleReviewDate(date: string) {
+    const chrono_date = chrono.parseDate(date)
+    let m = moment(chrono_date)
+    const quantised_date = m.year().toString()
+    return toDBDate(quantised_date, 'YYYY')
   }
 
   _scanMenuItemsForTags() {

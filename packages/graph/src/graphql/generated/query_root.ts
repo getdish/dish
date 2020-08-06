@@ -45,8 +45,13 @@ import {
   review_bool_exp,
   review_order_by,
   review_select_column,
+  review_tag_bool_exp,
+  review_tag_order_by,
+  review_tag_select_column,
   t_review,
   t_review_aggregate,
+  t_review_tag,
+  t_review_tag_aggregate,
 } from './review'
 import {
   setting_bool_exp,
@@ -234,6 +239,27 @@ export type t_query_root = FieldsType<
       t_review_aggregate
     >
     review_by_pk?: FieldsTypeArg<{ id: any }, t_review | null>
+    review_tag: FieldsTypeArg<
+      {
+        distinct_on?: review_tag_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: review_tag_order_by[] | null
+        where?: review_tag_bool_exp | null
+      },
+      t_review_tag[]
+    >
+    review_tag_aggregate: FieldsTypeArg<
+      {
+        distinct_on?: review_tag_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: review_tag_order_by[] | null
+        where?: review_tag_bool_exp | null
+      },
+      t_review_tag_aggregate
+    >
+    review_tag_by_pk?: FieldsTypeArg<{ id: any }, t_review_tag | null>
     setting: FieldsTypeArg<
       {
         distinct_on?: setting_select_column[] | null

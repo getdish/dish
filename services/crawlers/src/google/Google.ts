@@ -401,7 +401,11 @@ export class Google extends WorkerJob {
     const reviews = await this.puppeteer.page.evaluate(() => {
       const reviews = Array.from(document.querySelectorAll('.section-review'))
       return reviews.map((el) => {
-        return (<HTMLElement>el).innerText
+        const rating = (<HTMLElement>el)
+          .querySelector('.section-review-stars')
+          ?.getAttribute('aria-label')
+        const inner_text = (<HTMLElement>el).innerText
+        return rating + '\n' + inner_text
       })
     })
     this.scrape_data.reviews = reviews

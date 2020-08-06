@@ -1,14 +1,11 @@
-import { FieldNode, ObjectNode, ScalarNode } from 'gqless'
+import { ArrayNode, FieldNode, ObjectNode, ScalarNode } from 'gqless'
 
 const isSimpleField = (field: FieldNode) => {
   return field.ofNode instanceof ScalarNode && !field.args?.required
 }
 
 const isRelation = (field: FieldNode) => {
-  //if (field.ofNode instanceof ObjectNode) {
-  //console.log(field.ofNode.fields.__typename)
-  //}
-  return field.ofNode instanceof ObjectNode
+  return field.ofNode instanceof ObjectNode || field.ofNode instanceof ArrayNode
 }
 
 const FILTER_FIELDS = {

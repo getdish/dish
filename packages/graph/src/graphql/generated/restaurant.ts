@@ -686,6 +686,7 @@ export type restaurant_sum_order_by = {
 export type t_restaurant_tag = FieldsType<
   {
     __typename: t_String<'restaurant_tag'>
+    id: t_uuid
     photos?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     rank?: t_Int | null
     rating?: t_numeric | null
@@ -801,6 +802,7 @@ export type restaurant_tag_bool_exp = {
   _and?: (restaurant_tag_bool_exp | null)[] | null
   _not?: restaurant_tag_bool_exp | null
   _or?: (restaurant_tag_bool_exp | null)[] | null
+  id?: uuid_comparison_exp | null
   photos?: jsonb_comparison_exp | null
   rank?: Int_comparison_exp | null
   rating?: numeric_comparison_exp | null
@@ -814,7 +816,9 @@ export type restaurant_tag_bool_exp = {
  * @name restaurant_tag_constraint
  * @type ENUM
  */
-export type t_restaurant_tag_constraint = EnumType<'restaurant_tag_pkey'>
+export type t_restaurant_tag_constraint = EnumType<
+  'restaurant_tag_id_key' | 'restaurant_tag_pkey'
+>
 
 /**
  * @name restaurant_tag_delete_at_path_input
@@ -850,6 +854,7 @@ export type restaurant_tag_inc_input = {
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_insert_input = {
+  id?: any | null
   photos?: any | null
   rank?: number | null
   rating?: any | null
@@ -866,6 +871,7 @@ export type restaurant_tag_insert_input = {
 export type t_restaurant_tag_max_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_max_fields'>
+    id?: t_uuid | null
     rank?: t_Int | null
     rating?: t_numeric | null
     restaurant_id?: t_uuid | null
@@ -879,6 +885,7 @@ export type t_restaurant_tag_max_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_max_order_by = {
+  id?: order_by | null
   rank?: order_by | null
   rating?: order_by | null
   restaurant_id?: order_by | null
@@ -892,6 +899,7 @@ export type restaurant_tag_max_order_by = {
 export type t_restaurant_tag_min_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_min_fields'>
+    id?: t_uuid | null
     rank?: t_Int | null
     rating?: t_numeric | null
     restaurant_id?: t_uuid | null
@@ -905,6 +913,7 @@ export type t_restaurant_tag_min_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_min_order_by = {
+  id?: order_by | null
   rank?: order_by | null
   rating?: order_by | null
   restaurant_id?: order_by | null
@@ -948,6 +957,7 @@ export type restaurant_tag_on_conflict = {
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_order_by = {
+  id?: order_by | null
   photos?: order_by | null
   rank?: order_by | null
   rating?: order_by | null
@@ -977,7 +987,7 @@ export type restaurant_tag_prepend_input = { photos?: any | null }
  * @type ENUM
  */
 export type t_restaurant_tag_select_column = EnumType<
-  'photos' | 'rank' | 'rating' | 'restaurant_id' | 'tag_id'
+  'id' | 'photos' | 'rank' | 'rating' | 'restaurant_id' | 'tag_id'
 >
 
 /**
@@ -985,6 +995,7 @@ export type t_restaurant_tag_select_column = EnumType<
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_set_input = {
+  id?: any | null
   photos?: any | null
   rank?: number | null
   rating?: any | null
@@ -1085,7 +1096,7 @@ export type restaurant_tag_sum_order_by = {
  * @type ENUM
  */
 export type t_restaurant_tag_update_column = EnumType<
-  'photos' | 'rank' | 'rating' | 'restaurant_id' | 'tag_id'
+  'id' | 'photos' | 'rank' | 'rating' | 'restaurant_id' | 'tag_id'
 >
 
 /**
@@ -1397,6 +1408,7 @@ export type restaurant_tag_avg_fields = TypeData<t_restaurant_tag_avg_fields>
  * @type ENUM
  */
 export enum restaurant_tag_constraint {
+  restaurant_tag_id_key = 'restaurant_tag_id_key',
   restaurant_tag_pkey = 'restaurant_tag_pkey',
 }
 
@@ -1425,6 +1437,7 @@ export type restaurant_tag_mutation_response = TypeData<
  * @type ENUM
  */
 export enum restaurant_tag_select_column {
+  id = 'id',
   photos = 'photos',
   rank = 'rank',
   rating = 'rating',
@@ -1467,6 +1480,7 @@ export type restaurant_tag_sum_fields = TypeData<t_restaurant_tag_sum_fields>
  * @type ENUM
  */
 export enum restaurant_tag_update_column {
+  id = 'id',
   photos = 'photos',
   rank = 'rank',
   rating = 'rating',

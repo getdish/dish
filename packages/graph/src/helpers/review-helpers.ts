@@ -12,18 +12,21 @@ export const reviewFindOne = QueryHelpers.findOne
 export const reviewRefresh = QueryHelpers.refresh
 
 export async function reviewFindAllForRestaurant(restaurant_id: t_uuid) {
-  return await resolvedWithFields(() => {
-    return query.review({
-      where: {
-        restaurant_id: { _eq: restaurant_id },
-      },
-      order_by: [
-        {
-          updated_at: order_by.asc,
+  return await resolvedWithFields(
+    () => {
+      return query.review({
+        where: {
+          restaurant_id: { _eq: restaurant_id },
         },
-      ],
-    })
-  })
+        order_by: [
+          {
+            updated_at: order_by.asc,
+          },
+        ],
+      })
+    },
+    { relations: ['sentiments'] }
+  )
 }
 
 export async function reviewFindAllForUser(user_id: t_uuid) {
@@ -71,4 +74,11 @@ export async function userFavorites(user_id: string) {
       ],
     })
   })
+}
+
+export async function reviewExternalUpsert(reviews: Review[]) {
+  return await reviewUpsert(
+    reviews,
+    review_constraint.review_username_restaurant_id_tag_id_authored_at_key
+  )
 }

@@ -78,8 +78,16 @@ import {
   review_pk_columns_input,
   review_prepend_input,
   review_set_input,
+  review_tag_bool_exp,
+  review_tag_inc_input,
+  review_tag_insert_input,
+  review_tag_on_conflict,
+  review_tag_pk_columns_input,
+  review_tag_set_input,
   t_review,
   t_review_mutation_response,
+  t_review_tag,
+  t_review_tag_mutation_response,
 } from './review'
 import {
   setting_append_input,
@@ -177,6 +185,11 @@ export type t_mutation_root = FieldsType<
       t_review_mutation_response | null
     >
     delete_review_by_pk?: FieldsTypeArg<{ id: any }, t_review | null>
+    delete_review_tag: FieldsTypeArg<
+      { where: review_tag_bool_exp },
+      t_review_tag_mutation_response | null
+    >
+    delete_review_tag_by_pk?: FieldsTypeArg<{ id: any }, t_review_tag | null>
     delete_setting: FieldsTypeArg<
       { where: setting_bool_exp },
       t_setting_mutation_response | null
@@ -288,6 +301,20 @@ export type t_mutation_root = FieldsType<
     insert_review_one?: FieldsTypeArg<
       { object: review_insert_input; on_conflict?: review_on_conflict | null },
       t_review | null
+    >
+    insert_review_tag: FieldsTypeArg<
+      {
+        objects: review_tag_insert_input[]
+        on_conflict?: review_tag_on_conflict | null
+      },
+      t_review_tag_mutation_response | null
+    >
+    insert_review_tag_one?: FieldsTypeArg<
+      {
+        object: review_tag_insert_input
+        on_conflict?: review_tag_on_conflict | null
+      },
+      t_review_tag | null
     >
     insert_setting: FieldsTypeArg<
       {
@@ -464,6 +491,22 @@ export type t_mutation_root = FieldsType<
         pk_columns: review_pk_columns_input
       },
       t_review | null
+    >
+    update_review_tag: FieldsTypeArg<
+      {
+        _inc?: review_tag_inc_input | null
+        _set?: review_tag_set_input | null
+        where: review_tag_bool_exp
+      },
+      t_review_tag_mutation_response | null
+    >
+    update_review_tag_by_pk?: FieldsTypeArg<
+      {
+        _inc?: review_tag_inc_input | null
+        _set?: review_tag_set_input | null
+        pk_columns: review_tag_pk_columns_input
+      },
+      t_review_tag | null
     >
     update_setting: FieldsTypeArg<
       {

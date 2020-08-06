@@ -304,6 +304,14 @@ tables:
   - name: user
     using:
       foreign_key_constraint_on: user_id
+  array_relationships:
+  - name: sentiments
+    using:
+      foreign_key_constraint_on:
+        column: review_id
+        table:
+          schema: public
+          name: review_tag
   insert_permissions:
   - role: contributor
     permission:
@@ -312,7 +320,7 @@ tables:
           _eq: X-Hasura-User-Id
       columns:
       - categories
-      - created_at
+      - authored_at
       - favorited
       - id
       - rating
@@ -328,7 +336,7 @@ tables:
           _eq: X-Hasura-User-Id
       columns:
       - categories
-      - created_at
+      - authored_at
       - favorited
       - id
       - rating
@@ -342,7 +350,7 @@ tables:
     permission:
       columns:
       - categories
-      - created_at
+      - authored_at
       - id
       - rating
       - restaurant_id
@@ -355,7 +363,7 @@ tables:
     permission:
       columns:
       - categories
-      - created_at
+      - authored_at
       - id
       - rating
       - restaurant_id
@@ -368,7 +376,7 @@ tables:
     permission:
       columns:
       - categories
-      - created_at
+      - authored_at
       - favorited
       - id
       - rating
@@ -383,7 +391,7 @@ tables:
     permission:
       columns:
       - categories
-      - created_at
+      - authored_at
       - id
       - rating
       - restaurant_id
@@ -399,7 +407,7 @@ tables:
     permission:
       columns:
       - categories
-      - created_at
+      - authored_at
       - favorited
       - id
       - rating
@@ -423,6 +431,16 @@ tables:
       filter:
         user_id:
           _eq: X-Hasura-User-Id
+- table:
+    schema: public
+    name: review_tag
+  object_relationships:
+  - name: review
+    using:
+      foreign_key_constraint_on: review_id
+  - name: tag
+    using:
+      foreign_key_constraint_on: tag_id
 - table:
     schema: public
     name: setting
