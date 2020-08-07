@@ -32,8 +32,8 @@ resource "digitalocean_kubernetes_node_pool" "ancillary" {
   name       = "dish-ancillary-pool"
   size       = "s-4vcpu-8gb"
   auto_scale = true
-  min_nodes = 1
-  max_nodes = 3
+  min_nodes = 2
+  max_nodes = 5
 }
 
 resource "digitalocean_kubernetes_node_pool" "workers" {
