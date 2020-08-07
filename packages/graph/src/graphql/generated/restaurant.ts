@@ -692,6 +692,26 @@ export type t_restaurant_tag = FieldsType<
     rating?: t_numeric | null
     restaurant: t_restaurant
     restaurant_id: t_uuid
+    reviews: FieldsTypeArg<
+      {
+        distinct_on?: review_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: review_order_by[] | null
+        where?: review_bool_exp | null
+      },
+      t_review[]
+    >
+    reviews_aggregate: FieldsTypeArg<
+      {
+        distinct_on?: review_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: review_order_by[] | null
+        where?: review_bool_exp | null
+      },
+      t_review_aggregate
+    >
     tag: t_tag
     tag_id: t_uuid
   },
@@ -808,6 +828,7 @@ export type restaurant_tag_bool_exp = {
   rating?: numeric_comparison_exp | null
   restaurant?: restaurant_bool_exp | null
   restaurant_id?: uuid_comparison_exp | null
+  reviews?: review_bool_exp | null
   tag?: tag_bool_exp | null
   tag_id?: uuid_comparison_exp | null
 }
@@ -860,6 +881,7 @@ export type restaurant_tag_insert_input = {
   rating?: any | null
   restaurant?: restaurant_obj_rel_insert_input | null
   restaurant_id?: any | null
+  reviews?: review_arr_rel_insert_input | null
   tag?: tag_obj_rel_insert_input | null
   tag_id?: any | null
 }
@@ -963,6 +985,7 @@ export type restaurant_tag_order_by = {
   rating?: order_by | null
   restaurant?: restaurant_order_by | null
   restaurant_id?: order_by | null
+  reviews_aggregate?: review_aggregate_order_by | null
   tag?: tag_order_by | null
   tag_id?: order_by | null
 }

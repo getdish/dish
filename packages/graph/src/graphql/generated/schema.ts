@@ -6332,6 +6332,64 @@ export const schema = {
         get restaurant_id() {
           return new FieldNode(schema.uuid, undefined, false)
         },
+        get reviews() {
+          return new FieldNode(
+            new ArrayNode(schema.review, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.review_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get reviews_aggregate() {
+          return new FieldNode(
+            schema.review_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.review_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
         get tag() {
           return new FieldNode(schema.tag, undefined, false)
         },
@@ -6612,6 +6670,9 @@ export const schema = {
         get restaurant_id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
         },
+        get reviews() {
+          return new InputNodeField(schema.review_bool_exp, true)
+        },
         get tag() {
           return new InputNodeField(schema.tag_bool_exp, true)
         },
@@ -6691,6 +6752,9 @@ export const schema = {
         },
         get restaurant_id() {
           return new InputNodeField(schema.uuid, true)
+        },
+        get reviews() {
+          return new InputNodeField(schema.review_arr_rel_insert_input, true)
         },
         get tag() {
           return new InputNodeField(schema.tag_obj_rel_insert_input, true)
@@ -6868,6 +6932,9 @@ export const schema = {
         },
         get restaurant_id() {
           return new InputNodeField(schema.order_by, true)
+        },
+        get reviews_aggregate() {
+          return new InputNodeField(schema.review_aggregate_order_by, true)
         },
         get tag() {
           return new InputNodeField(schema.tag_order_by, true)

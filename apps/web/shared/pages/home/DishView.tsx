@@ -1,5 +1,12 @@
 import { TopCuisineDish, slugify } from '@dish/graph'
-import { AbsoluteVStack, Box, HStack, StackProps, Text } from '@dish/ui'
+import {
+  AbsoluteVStack,
+  Box,
+  HStack,
+  SmallTitle,
+  StackProps,
+  Text,
+} from '@dish/ui'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
 import { Image } from 'react-native'
@@ -36,8 +43,7 @@ export const DishView = memo(
 
     const width = size * 0.9
     const height = size
-    const quality = size > 160 ? 100 : 100
-    const imageUrl = `${IMAGE_PROXY_DOMAIN}/${width}x${height},q${quality}/${dish.image}`
+    const imageUrl = getImageUrl(size, width, height, dish.image)
     const borderRadius = size * 0.1
 
     return (
@@ -101,6 +107,33 @@ export const DishView = memo(
                 restaurantId={restaurantId}
               />
             </Suspense>
+          </AbsoluteVStack>
+        )}
+        {isHovered && dish.reviews && (
+          <AbsoluteVStack
+            alignItems="center"
+            justifyContent="center"
+            zIndex={1000}
+          >
+            <Box width={120} height={100}>
+              <SmallTitle>Reviews ({dish.reviews.length})</SmallTitle>
+              {dish.reviews.map((r) => {
+                return (
+                  <>
+                    <Text fontSize={10}>
+                      {r.sentiments.map((s) => {
+                        return (
+                          <Text>
+                            {s.setence} ({s.sentiment})
+                          </Text>
+                        )
+                      })}
+                    </Text>
+                    <Text fontSize={8}>{r.text}</Text>
+                  </>
+                )
+              })}
+            </Box>
           </AbsoluteVStack>
         )}
         <Squircle
@@ -188,3 +221,16 @@ export const DishView = memo(
     )
   }
 )
+
+// I made this its own function just because the backticks were breaking my syntax highlighter
+// @tombh
+const getImageUrl = (
+  size: number,
+  width: number,
+  height: number,
+  dish_image: string
+) => {
+  const quality = size > 160 ? 100 : 100
+  const imageUrl = `${IMAGE_PROXY_DOMAIN}/${width}x${height},q${quality}/${dish_image}`
+  return imageUrl
+}

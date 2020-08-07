@@ -242,6 +242,16 @@ tables:
   - name: tag
     using:
       foreign_key_constraint_on: tag_id
+  array_relationships:
+  - name: reviews
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: review
+        column_mapping:
+          tag_id: tag_id
+          restaurant_id: restaurant_id
   insert_permissions:
   - role: contributor
     permission:
@@ -349,11 +359,12 @@ tables:
   - role: anon
     permission:
       columns:
-      - categories
       - authored_at
+      - categories
       - id
       - rating
       - restaurant_id
+      - source
       - tag_id
       - text
       - updated_at
@@ -375,12 +386,13 @@ tables:
   - role: user
     permission:
       columns:
-      - categories
       - authored_at
+      - categories
       - favorited
       - id
       - rating
       - restaurant_id
+      - source
       - tag_id
       - text
       - updated_at

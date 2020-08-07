@@ -1,4 +1,4 @@
-import { MenuItem, Restaurant, Tag } from './types'
+import { MenuItem, Restaurant, Review, Tag } from './types'
 
 export type RestaurantOnlyIds = {
   id: Restaurant['id']
@@ -26,6 +26,7 @@ export type TopCuisineDish = Partial<MenuItem> & {
   image: string
   best_restaurants?: Restaurant[]
   isFallback?: boolean
+  reviews?: Review[]
 }
 
 export type TopCuisine = {

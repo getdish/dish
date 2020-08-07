@@ -1,4 +1,3 @@
-import { RestaurantQuery } from '../types'
 import { TopCuisineDish } from '../types-extra'
 
 /**
@@ -66,6 +65,7 @@ const dishPhotos = (restaurant: any, tag_names: string[]) => {
         rating: photoRating,
         best_restaurants: [],
         isFallback,
+        reviews: t.reviews,
       }
       if (isSearchedForTag) {
         photos.unshift(photoItem)
