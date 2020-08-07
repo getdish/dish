@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE INDEX review_text_gin_trgm_idx ON review USING gin (text gin_trgm_ops);
+  type: run_sql

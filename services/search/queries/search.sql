@@ -36,8 +36,58 @@ SELECT jsonb_agg(
     (
       (
         ?3 != ''
-        AND
-        name ILIKE '%' || ?3 || '%'
+        AND (
+          -- Search restaurant titles
+          name ILIKE '%' || ?3 || '%'
+
+          -- Search reviews
+          OR restaurant.id IN (
+            SELECT
+              restaurant_id
+            FROM review
+            WHERE
+              (
+                (ST_DWithin(review.location, ST_MakePoint(?0, ?1), ?2) OR ?2 = '0')
+                AND
+                (
+                  ST_Within(
+                    review.location,
+                    ST_MakeEnvelope(?6, ?7, ?8, ?9, 0)
+                  )
+                  OR ?10 = 'IGNORE BB'
+                )
+              )
+              AND review.text ILIKE '%' || ?3 || '%'
+            GROUP BY review.restaurant_id
+            ORDER BY count(review.restaurant_id)
+          )
+
+          -- Search menu items
+          OR restaurant.id IN (
+            SELECT
+              restaurant_id
+            FROM menu_item
+            WHERE
+              (
+                (ST_DWithin(menu_item.location, ST_MakePoint(?0, ?1), ?2) OR ?2 = '0')
+                AND
+                (
+                  ST_Within(
+                    menu_item.location,
+                    ST_MakeEnvelope(?6, ?7, ?8, ?9, 0)
+                  )
+                  OR ?10 = 'IGNORE BB'
+                )
+              )
+              AND (
+                menu_item.description ILIKE '%' || ?3 || '%'
+                OR
+                menu_item.name ILIKE '%' || ?3 || '%'
+              )
+            GROUP BY menu_item.restaurant_id
+            ORDER BY count(menu_item.restaurant_id)
+          )
+        )
       ) OR (
         ?4 != ''
         AND
