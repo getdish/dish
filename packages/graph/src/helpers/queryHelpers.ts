@@ -192,7 +192,7 @@ export async function deleteByIDs(table: string, ids: uuid[]): Promise<void> {
   })
 }
 
-function prepareData<T>(table: string, objects: T[]): T[] {
+export function prepareData<T>(table: string, objects: T[]): T[] {
   objects = removeReadOnlyProperties<T>(table, objects)
   objects = formatRelationData<T>(table, objects)
   objects = objects.map((o) => ensureJSONSyntax(o) as T)
@@ -278,7 +278,7 @@ function deJSONStringify(object: {}, key: string, value: any) {
   } catch {}
 }
 
-function updateableColumns(table: string, object: any) {
+export function updateableColumns(table: string, object: any) {
   if (!object || object.length == 0) return []
   let columns: string[] = []
   let candidates: string[] = []

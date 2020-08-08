@@ -9,7 +9,6 @@ import {
   deleteAllBy,
   globalTagId,
   menuItemsUpsertMerge,
-  restaurantFindBatch,
   restaurantFindOne,
   restaurantFindOneWithTags,
   restaurantUpdate,
@@ -33,7 +32,7 @@ import {
   scrapeGetData,
 } from '../scrape-helpers'
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
-import { main_db, sanfran } from '../utils'
+import { main_db, restaurantFindBatchForCity } from '../utils'
 import { Tagging } from './Tagging'
 
 const PER_PAGE = 50
@@ -60,7 +59,7 @@ export class Self extends WorkerJob {
 
   static queue_config: QueueOptions = {
     limiter: {
-      max: 50,
+      max: 100,
       duration: 1000,
     },
   }
@@ -74,10 +73,14 @@ export class Self extends WorkerJob {
     this.tagging = new Tagging(this)
   }
 
-  async main() {
+  async allForCity(city: string) {
     let previous_id = globalTagId
     while (true) {
-      const results = await restaurantFindBatch(PER_PAGE, previous_id, sanfran)
+      const results = await restaurantFindBatchForCity(
+        PER_PAGE,
+        previous_id,
+        city
+      )
       if (results.length == 0) {
         break
       }

@@ -1,6 +1,11 @@
 #!/bin/bash
 
+PROJECT_ROOT=$(git rev-parse --show-toplevel)
+
+pushd $PROJECT_ROOT
 eval $(bin/yaml_to_env.sh)
+popd
+
 POSTGRES_HOST=postgres-ha-postgresql-ha-pgpool.postgres-ha
 TIMESCALE_HOST=timescale.timescale
 function_to_run=$1
@@ -92,4 +97,18 @@ function redis_flush_all() {
     -- bash -c 'redis-cli -c "FLUSHALL"'
 }
 
+function local_node_with_prod_env() {
+  export LOG_TIMINGS=1
+  export USE_PG_SSL=true
+  export RUN_WITHOUT_WORKER=true
+  export PGPORT=15432
+  export PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD
+  export TIMESCALE_PORT=15433
+  export TIMESCALE_PASSWORD=$TF_VAR_TIMESCALE_SU_PASS
+  export HASURA_ENDPOINT=https://hasura.rio.dishapp.com
+  export HASURA_SECRET="$HASURA_GRAPHQL_ADMIN_SECRET"
+  node $1
+}
+
+shift
 $function_to_run "$@"

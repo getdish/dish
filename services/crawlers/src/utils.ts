@@ -1,5 +1,11 @@
 import '@dish/common'
 
+import {
+  Restaurant,
+  restaurantFindBatch,
+  settingGet,
+  settingSet,
+} from '@dish/graph/_'
 import axios from 'axios'
 import _ from 'lodash'
 import moment, { Moment } from 'moment'
@@ -8,18 +14,6 @@ import { Pool, Result } from 'pg'
 const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN
 
 type Coord = [number, number]
-
-export const sanfran = {
-  location: {
-    _st_d_within: {
-      distance: 0.5,
-      from: {
-        coordinates: [-122.421351, 37.759251],
-        type: 'Point',
-      },
-    },
-  },
-}
 
 export const CITY_LIST = [
   //'San Francisco, CA',
@@ -102,7 +96,23 @@ export function boundingBoxFromcenter(
   return [top_right, bottom_left]
 }
 
-export async function geocode(address: string) {
+export async function geocode(address: string): Promise<Coord> {
+  let coordinates: Coord
+  const key = 'GEOCODER_CACHE'
+  const cache = await settingGet(key)
+  const address_as_key = address.toLowerCase().replace(/[\W_]+/g, '_')
+  if (cache[address_as_key]) {
+    coordinates = cache[address_as_key]
+  } else {
+    coordinates = await _geocode_without_cache(address)
+    cache[address_as_key] = coordinates
+    console.log('Updating geocoder cache for: ' + address)
+    await settingSet(key, cache)
+  }
+  return coordinates
+}
+
+async function _geocode_without_cache(address: string): Promise<Coord> {
   const base = 'https://geocoder.ls.hereapi.com/6.2/geocode.json?apiKey='
   const query = '&searchtext=' + encodeURI(address)
   const url = base + HEREMAPS_API_TOKEN + query
@@ -159,4 +169,25 @@ export function toDBDate(in_date: Date | string, format: string = '') {
   }
   const out_date = m.format('YYYY-MM-DD') + 'T00:00:00.0+00:00'
   return out_date
+}
+
+export async function restaurantFindBatchForCity(
+  size: number,
+  previous_id: string,
+  city: string,
+  radius = 0.5
+): Promise<Restaurant[]> {
+  const coords = await geocode(city)
+  const city_geojson = {
+    location: {
+      _st_d_within: {
+        distance: radius,
+        from: {
+          coordinates: coords.reverse(),
+          type: 'Point',
+        },
+      },
+    },
+  }
+  return await restaurantFindBatch(size, previous_id, city_geojson)
 }

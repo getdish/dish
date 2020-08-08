@@ -14,7 +14,7 @@ async function one() {
 
 async function all() {
   const internal = new Self()
-  await internal.main()
+  await internal.runOnWorker('allForCity', ['San Francisco, CA'])
 }
 
 if (process.env.SLUG) {

@@ -10,7 +10,7 @@ let db_config = {
   database: 'scrape_data',
   ssl: false,
 }
-if (process.env.DISH_ENV == 'production') {
+if (process.env.DISH_ENV == 'production' || process.env.USE_PG_SSL == 'true') {
   db_config.ssl = true
 }
 const db = new DB(db_config)

@@ -15,7 +15,6 @@ import { Tabletojson } from 'tabletojson'
 
 import { Puppeteer } from '../Puppeteer'
 import { scrapeInsert } from '../scrape-helpers'
-import { sanfran } from '../utils'
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 const PLEASE = 'PLEASE'
@@ -75,10 +74,10 @@ export class Google extends WorkerJob {
     this.booted = true
   }
 
-  async main() {
+  async allForCity(city: string) {
     let previous_id = globalTagId
     while (true) {
-      const results = await restaurantFindBatch(PER_PAGE, previous_id, sanfran)
+      const results = await restaurantFindBatch(PER_PAGE, previous_id, city)
       if (results.length == 0) {
         break
       }
