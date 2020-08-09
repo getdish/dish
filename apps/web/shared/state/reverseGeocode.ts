@@ -1,25 +1,11 @@
-import mapbox from 'mapbox-gl'
-
+import { MAPBOX_ACCESS_TOKEN } from '../constants'
 import { GeocodePlace, LngLat } from './home-types'
 
-async function reverseGeocode(
-  center: LngLat,
-  requestLocation = false
-): Promise<GeocodePlace[]> {
-  console.warn('TODO reverseGeocode')
-  return []
-  // return await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/`)
-  // const mapGeocoder = new mapkit.Geocoder({
-  //   language: 'en-GB',
-  //   getsUserLocation: requestLocation,
-  // })
-  // return new Promise((res, rej) => {
-  //   mapGeocoder.reverseLookup(
-  //     new mapkit.Coordinate(center.lat, center.lng),
-  //     (err, data) => {
-  //       if (err) return rej(err)
-  //       res((data.results as any) as GeocodePlace[])
-  //     }
-  //   )
-  // })
+export async function reverseGeocode(center: LngLat): Promise<GeocodePlace[]> {
+  console.warn('TODO verify reverseGeocode')
+  return await fetch(
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+      `${center.lat},${center.lng}`
+    )}.json?access_token=${MAPBOX_ACCESS_TOKEN}`
+  ).then((res) => res.json())
 }

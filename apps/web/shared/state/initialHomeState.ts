@@ -1,5 +1,6 @@
+import { getDefaultLocation } from './getDefaultLocation'
 import { getTagId } from './getTagId'
-import { HomeStateItemHome } from './home-types'
+import { HomeStateItem, HomeStateItemHome } from './home-types'
 import { tagLenses } from './tagLenses'
 
 export const initialHomeState: HomeStateItemHome = {
@@ -9,9 +10,10 @@ export const initialHomeState: HomeStateItemHome = {
     [getTagId(tagLenses[0])]: true,
   },
   searchQuery: '',
-  center: {
-    lng: -122.421351,
-    lat: 37.759251,
-  },
-  span: { lng: 0.2 / 2, lat: 0.2 },
+  ...getDefaultLocation(),
+}
+
+export type HomeStateItemLocation = {
+  center: HomeStateItem['center']
+  span: HomeStateItem['span']
 }
