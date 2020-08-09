@@ -88,10 +88,9 @@ const HomePageRestaurant = memo(
 
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <HStack
-                padding={20}
+                paddingVertical={30}
                 paddingHorizontal="5%"
                 maxWidth={610}
-                paddingBottom={20}
               >
                 <RestaurantTagsRow
                   size="sm"

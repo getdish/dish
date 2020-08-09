@@ -15,6 +15,7 @@ import { Action, AsyncAction, derived } from 'overmind'
 
 import { getBreadcrumbs, isBreadcrumbState } from '../pages/home/getBreadcrumbs'
 import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
+import { setDefaultLocation } from './getDefaultLocation'
 import { getNextState } from './getNextState'
 import { getTagId } from './getTagId'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
@@ -59,6 +60,7 @@ export const state: HomeState = {
   showUserMenu: false,
   searchBarTagIndex: 0,
   centerToResults: 0,
+  refresh: 0,
   allTags,
   allTagsNameToID: {},
   allUsers: {},
@@ -690,9 +692,12 @@ const setLocation: AsyncAction<string> = async (om, val) => {
   ]
   om.actions.home.setLocationSearchQuery(val)
   const exact = current.find((x) => x.name === val)
-  console.log('we found', exact, val)
   if (exact?.center) {
     om.state.home.currentState.center = { ...exact.center }
+    setDefaultLocation({
+      center: exact.center,
+      span: om.state.home.currentState.span,
+    })
   }
 }
 

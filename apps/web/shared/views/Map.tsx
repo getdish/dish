@@ -9,6 +9,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
+import { dist } from '../state/home-location.helpers'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
@@ -174,12 +175,16 @@ export const Map = (props: MapProps) => {
           })
 
           // hover/point layer shared
-          const layout: mapboxgl.AnyLayout = {
+          const layout: mapboxgl.SymbolLayout = {
             // 'icon-image': 'bar-15',
             'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
             'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
             'text-offset': [0, 0.6],
             'text-anchor': 'top',
+            // // @ts-ignore
+            // 'text-halo-color': '#fff',
+            // // @ts-ignore
+            // 'text-halo-width': '1',
           }
 
           map.addLayer({
@@ -247,9 +252,6 @@ export const Map = (props: MapProps) => {
           const getCurrentLocation = () => {
             const mapCenter = map.getCenter()
             const bounds = map.getBounds()
-            const dist = (a: number, b: number) => {
-              return a > b ? a - b : b - a
-            }
             const lat = round(dist(mapCenter.lat, bounds.getNorth()))
             const lng = round(dist(mapCenter.lng, bounds.getWest()))
             const center = {
@@ -421,7 +423,8 @@ export const Map = (props: MapProps) => {
 }
 
 const abs = (x: number) => Math.abs(x)
-const dist = (a: LngLat, b: LngLat) =>
+// TODO this is wrong redo using dist()
+const totalDistance = (a: LngLat, b: LngLat) =>
   abs(a.lng) - abs(b.lng) + abs(a.lat) - abs(b.lat)
 
 const hasMovedAtLeast = (
@@ -435,7 +438,10 @@ const hasMovedAtLeast = (
     sw: bounds.getSouthWest(),
   }
   // only change them if they change more than a little bit
-  return abs(dist(cur.ne, next.ne)) + abs(dist(cur.ne, next.ne)) > distance
+  return (
+    abs(totalDistance(cur.ne, next.ne)) + abs(totalDistance(cur.ne, next.ne)) >
+    distance
+  )
 }
 
 ///

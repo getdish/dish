@@ -38,6 +38,13 @@ export const RestaurantTagsRow = memo(
       const restaurant = useRestaurantQuery(restaurantSlug)
       const restaurantTags = restaurant.tags({
         limit: 10,
+        // where: {
+        //   tag: {
+        //     type: {
+        //       _neq: 'dish',
+        //     },
+        //   },
+        // },
       })
       tags = restaurantTags.map((tag) => ({
         rank: tag.rank,

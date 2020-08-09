@@ -23,6 +23,7 @@ import { ScrollView } from 'react-native'
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { getTagId } from '../../state/getTagId'
 import { isSearchState } from '../../state/home-helpers'
+import { getLocationFromRoute } from '../../state/home-location.helpers'
 import { getFullTags, getTagsFromRoute } from '../../state/home-tag-helpers'
 import {
   HomeActiveTagsRecord,
@@ -84,26 +85,32 @@ export default memo(function HomePageSearchResults(props: Props) {
     isOptimisticUpdating || !props.isActive || changingFilters
 
   usePageLoadEffect(props.isActive, (isMounted) => {
+    // if initial load on a search page, process url => state
     if (!hasLoadedSearchOnce && router.history.length === 1) {
       hasLoadedSearchOnce = true
       const fakeTags = getTagsFromRoute(router.curPage)
+      const location = getLocationFromRoute()
+      // TODO UPDATE HOME TOO...
+      om.actions.home.updateCurrentState({
+        ...state,
+        ...location,
+      })
       getFullTags(fakeTags).then((tags) => {
-        if (isMounted.current) {
-          om.actions.home.addTagsToCache(tags)
-          const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>(
-            (acc, tag) => {
-              acc[getTagId(tag)] = true
-              return acc
-            },
-            {}
-          )
-          om.actions.home.updateActiveTags({
-            ...state,
-            searchQuery: router.curPage.params.search,
-            activeTagIds,
-          })
-          om.actions.home.runSearch({ force: true })
-        }
+        if (!isMounted.current) return
+        om.actions.home.addTagsToCache(tags)
+        const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>(
+          (acc, tag) => {
+            acc[getTagId(tag)] = true
+            return acc
+          },
+          {}
+        )
+        om.actions.home.updateActiveTags({
+          ...state,
+          searchQuery: router.curPage.params.search,
+          activeTagIds,
+        })
+        om.actions.home.runSearch({ force: true })
       })
     } else {
       om.actions.home.runSearch({ force: true })

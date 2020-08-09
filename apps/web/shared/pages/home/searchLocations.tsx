@@ -8,25 +8,21 @@ const baseUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places`
 
 export async function searchLocations(
   query: string,
-  near: LngLat
+  near?: LngLat
 ): Promise<GeocodePlace[]> {
   if (!query) {
     return Promise.resolve([])
   }
-
-  const res = await fetch(
-    `${baseUrl}/${encodeURIComponent(
-      query
-    )}.json?access_token=${MAPBOX_ACCESS_TOKEN}&autocomplete=1true&proximity=${encodeURIComponent(
-      `${near.lng},${near.lat}`
-    )}`
-  ).then((x) => x.json())
-
+  const initialParams = `access_token=${MAPBOX_ACCESS_TOKEN}&autocomplete=1`
+  let url = `${baseUrl}/${encodeURIComponent(query)}.json?${initialParams}`
+  if (near) {
+    url += `&proximity=${encodeURIComponent(`${near.lng},${near.lat}`)}`
+  }
+  const res = await fetch(url).then((x) => x.json())
   if (!res?.features) {
-    console.warn('nothing', res)
+    console.warn('nothing', query, res)
     return []
   }
-
   return res.features.map((feat) => {
     return {
       name: feat.text,
