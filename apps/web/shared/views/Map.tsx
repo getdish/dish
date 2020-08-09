@@ -10,8 +10,6 @@ import { Dimensions } from 'react-native'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 
-const marker = require('../assets/map-marker.png').default
-
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
 type MapPosition = { center: LngLat; span: LngLat }
@@ -24,6 +22,7 @@ type MapProps = {
   mapRef?: (map: mapboxgl.Map) => void
   style?: string
   onSelect?: (id: string) => void
+  onDoubleClick?: (id: string) => void
   onMoveEnd?: (props: MapPosition) => void
   selected?: string
   centerToResults?: number
@@ -31,6 +30,7 @@ type MapProps = {
 
 const SOURCE_ID = 'restaurants'
 const POINT_LAYER_ID = 'restaurants-points'
+const PIN_LAYER_ID = 'restaurants-pins'
 const POINT_HOVER_LAYER_ID = 'restaurants-points-hover'
 
 const round = (val: number, dec = 100000) => {
@@ -48,12 +48,19 @@ const mapSetFeature = (map: mapboxgl.Map, id: any, obj: any) => {
 }
 
 const mapSetIconSelected = (map: mapboxgl.Map, id: any) => {
-  map.setLayoutProperty(POINT_LAYER_ID, 'icon-image', [
+  map.setLayoutProperty(PIN_LAYER_ID, 'icon-image', [
     'match',
     ['id'],
     id,
-    'mountain-15',
-    'bar-15',
+    'map-pin',
+    'icon-sushi',
+  ])
+  map.setLayoutProperty(PIN_LAYER_ID, 'icon-size', [
+    'match',
+    ['id'],
+    id,
+    0.5,
+    0.5,
   ])
 }
 
@@ -74,7 +81,7 @@ export const Map = (props: MapProps) => {
     if (internalId > -1) {
       internal.current.active = internalId
       mapSetFeature(map, internalId, { active: true })
-      map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', internalId])
+      // map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', internalId])
       map.setLayoutProperty(POINT_LAYER_ID, 'symbol-sort-key', [
         'match',
         ['id'],
@@ -115,12 +122,12 @@ export const Map = (props: MapProps) => {
     })
     window['map'] = map
 
-    const loadMarker = () =>
+    const loadMarker = (name: string, asset: string) =>
       new Promise((res, rej) => {
-        map.loadImage(marker, (err, image) => {
+        map.loadImage(asset, (err, image) => {
           if (err) return rej(err)
-          if (!map.hasImage('custom-marker')) {
-            map.addImage('custom-marker', image)
+          if (!map.hasImage(name)) {
+            map.addImage(name, image)
           }
           res(image)
         })
@@ -135,17 +142,16 @@ export const Map = (props: MapProps) => {
 
     cancels.add(
       series([
-        () => Promise.all([loadMap(), loadMarker()]),
+        () =>
+          Promise.all([
+            loadMap(),
+            loadMarker('map-pin', require('../assets/map-pin.png').default),
+            loadMarker(
+              'icon-sushi',
+              require('../assets/icon-sushi.png').default
+            ),
+          ]),
         () => {
-          // layers
-          const layout: mapboxgl.AnyLayout = {
-            'icon-image': 'bar-15',
-            'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
-            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-            'text-offset': [0, 0.6],
-            'text-anchor': 'top',
-          }
-
           map.addSource(SOURCE_ID, {
             type: 'geojson',
             data: {
@@ -156,22 +162,44 @@ export const Map = (props: MapProps) => {
           })
 
           map.addLayer({
+            id: PIN_LAYER_ID,
+            type: 'symbol',
+            source: SOURCE_ID,
+            layout: {
+              'icon-image': 'map-pin',
+              'icon-allow-overlap': true,
+              'icon-size': 0.25,
+              'icon-offset': [0, -10],
+            },
+          })
+
+          // hover/point layer shared
+          const layout: mapboxgl.AnyLayout = {
+            // 'icon-image': 'bar-15',
+            'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
+            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+            'text-offset': [0, 0.6],
+            'text-anchor': 'top',
+          }
+
+          map.addLayer({
             id: POINT_LAYER_ID,
             type: 'symbol',
             source: SOURCE_ID,
             layout,
           })
 
-          map.addLayer({
-            id: POINT_HOVER_LAYER_ID,
-            type: 'symbol',
-            source: SOURCE_ID,
-            filter: ['==', 'id', ''],
-            layout: {
-              ...layout,
-              'icon-image': 'heart-15',
-            },
-          })
+          // map.addLayer({
+          //   id: POINT_HOVER_LAYER_ID,
+          //   type: 'symbol',
+          //   source: SOURCE_ID,
+          //   filter: ['==', 'id', ''],
+          //   layout: {
+          //     ...layout,
+          //     'icon-size': 0.5,
+          //     'icon-offset': [0, -15],
+          //   },
+          // })
 
           type Event = mapboxgl.MapMouseEvent & {
             features?: mapboxgl.MapboxGeoJSONFeature[]
@@ -253,22 +281,33 @@ export const Map = (props: MapProps) => {
             handleMoveEnd.cancel()
           }
 
+          const handleDoubleClick: Listener = (e) => {
+            const id = e.features[0]?.id ?? -1
+            const feature = features[+id]
+            if (feature) {
+              onDoubleClick?.(feature.properties.id)
+            }
+          }
+
           map.on('moveend', handleMoveEnd)
           map.on('move', handleMove)
           map.on('movestart', handleMove)
-          map.on('click', POINT_LAYER_ID, handleMouseClick)
-          map.on('mousemove', POINT_LAYER_ID, handleMouseMove)
-          map.on('mouseleave', POINT_LAYER_ID, handleMouseLeave)
+          map.on('click', PIN_LAYER_ID, handleMouseClick)
+          map.on('dblclick', PIN_LAYER_ID, handleDoubleClick)
+          map.on('mousemove', PIN_LAYER_ID, handleMouseMove)
+          map.on('mouseleave', PIN_LAYER_ID, handleMouseLeave)
 
           cancels.add(() => {
             map.off('moveend', handleMoveEnd)
             map.off('move', handleMove)
             map.off('movestart', handleMove)
-            map.off('click', POINT_LAYER_ID, handleMouseClick)
-            map.off('mousemove', POINT_LAYER_ID, handleMouseMove)
-            map.off('mouseleave', POINT_LAYER_ID, handleMouseLeave)
+            map.off('click', PIN_LAYER_ID, handleMouseClick)
+            map.off('dblclick', PIN_LAYER_ID, handleDoubleClick)
+            map.off('mousemove', PIN_LAYER_ID, handleMouseMove)
+            map.off('mouseleave', PIN_LAYER_ID, handleMouseLeave)
+            map.removeLayer(PIN_LAYER_ID)
             map.removeLayer(POINT_LAYER_ID)
-            map.removeLayer(POINT_HOVER_LAYER_ID)
+            // map.removeLayer(POINT_HOVER_LAYER_ID)
           })
         },
         () => {
@@ -285,7 +324,15 @@ export const Map = (props: MapProps) => {
     }
   }, [])
 
-  const { center, span, padding, features, style, selected } = props
+  const {
+    center,
+    span,
+    padding,
+    features,
+    style,
+    selected,
+    onDoubleClick,
+  } = props
 
   // selected
   useEffect(() => {

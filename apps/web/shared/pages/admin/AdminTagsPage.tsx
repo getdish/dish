@@ -15,7 +15,6 @@ import {
 import {
   HStack,
   LoadingItems,
-  Spacer,
   Text,
   Toast,
   VStack,
@@ -24,7 +23,7 @@ import {
 } from '@dish/ui'
 import { RecoilRoot, Store, useRecoilStore } from '@dish/use-store'
 import { capitalize, uniqBy } from 'lodash'
-import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
 
 import { emojiRegex } from '../../helpers/emojiRegex'

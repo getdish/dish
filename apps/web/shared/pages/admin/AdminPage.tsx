@@ -6,7 +6,7 @@ import { Link } from '../../views/ui/Link'
 
 export default memo(function AdminPage() {
   return (
-    <VStack flex={1} alignItems="center">
+    <VStack flex={1} alignItems="center" backgroundColor="#fff">
       <HStack backgroundColor="#eee" width="100%" spacing={20} padding={5}>
         <Link name="admin">
           <Text fontWeight="700">Admin</Text>

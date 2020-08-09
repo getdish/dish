@@ -107,6 +107,13 @@ export const state: HomeState = {
   isAutocompleteActive: derived<HomeState, boolean>(
     (state) => !!state.showAutocomplete
   ),
+  activeAutocompleteResults: derived<HomeState, AutocompleteItem[]>((state) =>
+    state.showAutocomplete === 'location'
+      ? state.locationAutocompleteResults
+      : state.showAutocomplete === 'search'
+      ? state.autocompleteResults
+      : []
+  ),
   previousState: derived<HomeState, HomeStateItem>((state) => {
     const curState = state.states[state.stateIndex]
     for (let i = state.stateIndex - 1; i >= 0; i--) {
@@ -945,7 +952,7 @@ const setAutocompleteIndex: Action<number> = (om, val) => {
     val,
     0,
     // not -1 because we show a fake "search" entry first
-    om.state.home.autocompleteResults.length
+    om.state.home.activeAutocompleteResults.length
   )
 }
 

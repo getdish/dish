@@ -322,12 +322,11 @@ const HomeIntroLetter = memo(() => {
         </HStack>
         <Text fontSize={16} lineHeight={22} opacity={0.8}>
           <Text fontSize={16} lineHeight={26}>
-            dish curates good food by understanding detail from your reviews
-            (and reviews across the web) so you can{' '}
+            dish is a great food guide that takes reviews from all over and
+            understands sentiment down to the dish.{' '}
             <Text fontWeight="600">
-              search by dish, mood, and across every delivery service.
+              search food across every delivery service.
             </Text>{' '}
-            then vote & debate the results ✨.
             <LinkButton display="inline-flex" {...flatButtonStyle} name="about">
               Read more
             </LinkButton>
