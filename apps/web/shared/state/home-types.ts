@@ -11,52 +11,53 @@ export type OmStateHome = OmState['home']
 export type ActiveEvent = 'key' | 'pin' | 'hover' | null
 
 export type HomeState = {
-  refresh: number
-  drawerSnapPoint: number
-  isOptimisticUpdating: boolean
-  isScrolling: boolean
-  started: boolean
+  activeAutocompleteResults: AutocompleteItem[]
   activeEvent: ActiveEvent
   activeIndex: number // index for vertical (in page), -1 = autocomplete
-  allUsers: { [id: string]: User }
+  allFilterTags: Tag[]
+  allLenseTags: Tag[]
+  allStates: { [key: string]: HomeStateItem }
   allTags: { [keyPath: string]: Tag }
   allTagsNameToID: { [name: string]: string }
-  allLenseTags: Tag[]
-  allFilterTags: Tag[]
+  allUsers: { [id: string]: User }
   autocompleteIndex: number // index for horizontal row (autocomplete)
   autocompleteResults: AutocompleteItem[]
-  selectedRestaurant: RestaurantOnlyIds | null
-  showUserMenu: boolean
+  centerToResults: number
+  currentNavItem: NavigateItem
+  currentState: HomeStateItem
+  currentStateLense: NavigableTag | null
+  currentStateSearchQuery: HomeStateItem['searchQuery']
+  currentStateType: HomeStateItem['type']
+  drawerSnapPoint: number
   hoveredRestaurant: RestaurantOnlyIds | null | false
+  isAutocompleteActive: boolean
   isHoveringRestaurant: boolean
-  searchBarY: number
+  isLoading: boolean
+  isOptimisticUpdating: boolean
+  isScrolling: boolean
+  lastActiveTags: Tag[]
+  lastHomeState: HomeStateItemHome
+  lastRestaurantState: HomeStateItemRestaurant | undefined
+  lastSearchState: HomeStateItemSearch | undefined
   location: AutocompleteItem | null // for now just autocomplete item
   locationAutocompleteResults: AutocompleteItem[]
   locationSearchQuery: string
-  showAutocomplete: ShowAutocomplete
-  states: HomeStateItem[]
-  allStates: { [key: string]: HomeStateItem }
-  stateIndex: number
-  stateIds: string[]
-  topDishes: TopCuisine[]
-  skipNextPageFetchData: boolean
-  lastHomeState: HomeStateItemHome
-  lastSearchState: HomeStateItemSearch | undefined
-  lastRestaurantState: HomeStateItemRestaurant | undefined
-  currentNavItem: NavigateItem
-  currentState: HomeStateItem
-  currentStateType: HomeStateItem['type']
-  currentStateSearchQuery: HomeStateItem['searchQuery']
   previousState: HomeStateItem
-  isAutocompleteActive: boolean
-  isLoading: boolean
-  currentStateLense: NavigableTag | null
-  lastActiveTags: Tag[]
+  refresh: number
   searchbarFocusedTag: Tag | null
   searchBarTagIndex: number
   searchBarTags: Tag[]
+  searchBarY: number
+  selectedRestaurant: RestaurantOnlyIds | null
+  showAutocomplete: ShowAutocomplete
+  showUserMenu: boolean
+  skipNextPageFetchData: boolean
+  started: boolean
+  stateIds: string[]
+  stateIndex: number
+  states: HomeStateItem[]
+  topDishes: TopCuisine[]
   userLocation: LngLat | null
-  centerToResults: number
 }
 
 export type GeocodePlace = {

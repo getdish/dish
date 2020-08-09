@@ -20,6 +20,7 @@ import {
 } from '../../state/home-helpers'
 import { setMapView } from '../../state/mapView'
 import { useOvermind } from '../../state/om'
+import { router } from '../../state/router'
 import { Map } from '../../views/Map'
 import { getLngLat, getMinLngLat } from './getLngLat'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
@@ -305,6 +306,17 @@ const HomeMapContent = memo(function HomeMap({
               span,
             },
           })
+        }}
+        onDoubleClick={(id) => {
+          const restaurant = restaurants?.find((x) => x.id === id)
+          if (restaurant) {
+            router.navigate({
+              name: 'restaurant',
+              params: {
+                slug: restaurant.slug,
+              },
+            })
+          }
         }}
         onSelect={(id) => {
           if (id !== om.state.home.selectedRestaurant?.id) {

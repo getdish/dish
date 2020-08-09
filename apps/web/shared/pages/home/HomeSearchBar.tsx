@@ -203,7 +203,7 @@ const HomeSearchBar = memo(() => {
       <HStack
         className="ease-in-out"
         position="relative"
-        flex={1}
+        flex={1.5}
         maxWidth={
           isReallySmall
             ? 'auto'
