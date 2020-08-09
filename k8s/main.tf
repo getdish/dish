@@ -13,6 +13,7 @@ variable "TIMESCALE_REPLICATION_PASS" {}
 variable "TIMESCALE_ADMIN_PASS" {}
 variable "SENTRY_PG_PASS" {}
 variable "SENTRY_USER_PASS" {}
+variable "POSTGRES_REPMGR_PASSWORD" {}
 
 # Keeping the cluster in its own module allows us to build it independently of
 # every other k8s resources that lives on it. This is essential when first

@@ -29,7 +29,7 @@ global:
 postgresqlImage:
   registry: docker.io
   repository: bitnami/postgresql-repmgr
-  tag: 12.3.0-debian-10-r64
+  tag: 12.3.0-debian-10-r69
   ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
@@ -43,7 +43,7 @@ postgresqlImage:
   ## Set to true if you would like to see extra information on logs
   ## ref:  https://github.com/bitnami/minideb-extras/#turn-on-bash-debugging
   ##
-  debug: false
+  debug: true
 
 ## Bitnami Pgpool image
 ## ref: https://hub.docker.com/r/bitnami/pgpool/tags/
@@ -51,7 +51,7 @@ postgresqlImage:
 pgpoolImage:
   registry: docker.io
   repository: bitnami/pgpool
-  tag: 4.1.2-debian-10-r66
+  #tag: 4.1.2-debian-10-r66
   ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
@@ -65,7 +65,7 @@ pgpoolImage:
   ## Set to true if you would like to see extra information on logs
   ## ref:  https://github.com/bitnami/minideb-extras/#turn-on-bash-debugging
   ##
-  debug: false
+  debug: true
 
 ## Bitnami Minideb image
 ## ref: https://hub.docker.com/r/bitnami/pgpool/tags/
@@ -90,7 +90,7 @@ volumePermissionsImage:
 metricsImage:
   registry: docker.io
   repository: bitnami/postgres-exporter
-  tag: 0.8.0-debian-10-r180
+  #tag: 0.8.0-debian-10-r180
   ## Specify a imagePullPolicy. Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
@@ -152,7 +152,7 @@ postgresql:
   ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
   nodeSelector:
-    "doks.digitalocean.com/node-pool": "dish-pool"
+    "doks.digitalocean.com/node-pool": "dish-critical-pool"
 
   ## Pod priority class
   ## Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
@@ -162,7 +162,11 @@ postgresql:
   ## Tolerations for pod assignment. Evaluated as a template.
   ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
-  tolerations: {}
+  tolerations:
+  - key: "dish-taint"
+    operator: "Equal"
+    value: "critical-only"
+    effect: "NoSchedule"
 
   ## K8s Security Context
   ## https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
@@ -180,12 +184,12 @@ postgresql:
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    limits: {}
-    #   cpu: 250m
-    #   memory: 256Mi
-    requests: {}
-    #   cpu: 250m
-    #   memory: 256Mi
+    limits:
+      cpu: 2
+      memory: 8Gi
+    requests:
+      cpu: 1
+      memory: 4Gi
 
   ## PostgreSQL container's liveness and readiness probes
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
@@ -245,7 +249,7 @@ postgresql:
   ## Repmgr configuration parameters
   ##
   repmgrUsername: repmgr
-  # repmgrPassword:
+  #repmgrPassword: password
   repmgrDatabase: repmgr
   repmgrLogLevel: NOTICE
   repmgrConnectTimeout: 5
@@ -285,10 +289,23 @@ postgresql:
   ## Alternatively, you can put your *.conf under the files/conf.d/ directory
   ## ref: https://github.com/bitnami/bitnami-docker-postgresql-repmgr#allow-settings-to-be-loaded-from-files-other-than-the-default-postgresqlconf
   ##
-  # extendedConf:
-  ## ConfigMap with PostgreSQL extended configuration
-  ## NOTE: This will override extendedConf
-  ##
+  extendedConf:
+    max_connections: 100
+    shared_buffers: "2GB"
+    effective_cache_size: "6GB"
+    maintenance_work_mem: "512MB"
+    checkpoint_completion_target: "0.7"
+    wal_buffers: "16MB"
+    default_statistics_target: "100"
+    random_page_cost: "1.1"
+    effective_io_concurrency: "200"
+    work_mem: "10485kB"
+    min_wal_size: "1GB"
+    max_wal_size: "4GB"
+    max_worker_processes: "4"
+    max_parallel_workers_per_gather: "2"
+    max_parallel_workers: "4"
+    max_parallel_maintenance_workers: "2"
   # extendedConfCM:
   ## initdb scripts
   ## Specify dictionary of scripts to be run at first boot
@@ -338,7 +355,7 @@ pgpool:
 
   ## Number of replicas to deploy
   ##
-  replicaCount: 1
+  replicaCount: 2
 
   ## Additional pod annotations
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
@@ -354,7 +371,7 @@ pgpool:
   ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
   nodeSelector:
-    "doks.digitalocean.com/node-pool": "dish-pool"
+    "doks.digitalocean.com/node-pool": "dish-critical-pool"
 
   ## Pod priority class
   ## Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
@@ -364,7 +381,11 @@ pgpool:
   ## Tolerations for pod assignment. Evaluated as a template.
   ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
-  tolerations: {}
+  tolerations:
+  - key: "dish-taint"
+    operator: "Equal"
+    value: "critical-only"
+    effect: "NoSchedule"
 
   ## K8s Security Context
   ## https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
@@ -493,7 +514,7 @@ ldap:
 ## Init Container paramaters
 ##
 volumePermissions:
-  enabled: false
+  enabled: true
   ## K8s Security Context
   ## https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   ##
@@ -567,7 +588,7 @@ metrics:
   ## Enable this if you're using Prometheus Operator
   ##
   serviceMonitor:
-    enabled: false
+    enabled: true
     ## Specify a namespace if needed
     # namespace: monitoring
     # fallback to the prometheus default unless specified

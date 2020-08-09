@@ -8,23 +8,28 @@ provider "digitalocean" {
 
 # The main definition of the Kubernetes cluster
 # !! Changing some of these can delete and recreate the entire cluster without warning !!
+# !! And by 'cluster' I mean EVERYTHING, PVCs, data, EVERYTHING !!
 resource "digitalocean_kubernetes_cluster" "dish" {
   name    = "dish-blue"
   region  = "sfo2"
   version = "1.18.6-do.0"
 
-  # Node pools are just a way of grouping VMs
   node_pool {
-    name       = "dish-pool"
-    size       = "s-4vcpu-8gb"
+    name       = "dish-k8s-pool"
+    size       = "g-2vcpu-8gb"
     auto_scale = true
-    min_nodes = 2
+    min_nodes = 1
     max_nodes = 5
-
-    labels = {
-      dish_node_type = "main"
-    }
   }
+}
+
+resource "digitalocean_kubernetes_node_pool" "critical" {
+  cluster_id = digitalocean_kubernetes_cluster.dish.id
+  name       = "dish-critical-pool"
+  size       = "g-2vcpu-8gb"
+  auto_scale = true
+  min_nodes = 2
+  max_nodes = 5
 }
 
 resource "digitalocean_kubernetes_node_pool" "ancillary" {
