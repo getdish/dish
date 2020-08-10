@@ -148,27 +148,11 @@ export const DishView = memo(
           {...(selected && {
             borderColor: 'blue',
           })}
-        >
-          {!!dish.image && (
-            <Image
-              source={{ uri: imageUrl }}
-              style={{
-                width: '100%',
-                height: '100%',
-              }}
-              resizeMode="cover"
-            />
-          )}
-          {!dish.image && <Text fontSize={80}>🥗</Text>}
-
-          {!!dish.name && (
+          outside={
             <HStack
               className="ease-in-out"
               position="absolute"
-              top={0}
-              bottom={0}
-              left={-16}
-              right={-16}
+              fullscreen
               borderRadius={borderRadius}
               alignItems="center"
               justifyContent="center"
@@ -179,6 +163,7 @@ export const DishView = memo(
                 backgroundColor: 'transparent',
                 shadowColor: 'transparent',
                 transform: [{ scale: 1.1 }],
+                zIndex: 100000,
               })}
             >
               <Box
@@ -197,6 +182,7 @@ export const DishView = memo(
                   top: -5,
                   backgroundColor: '#fff',
                   shadowColor: 'rgba(0,0,0,0.2)',
+                  transform: [{ scale: 1.2 }, { skewX: '-12deg' }],
                 })}
               >
                 <Text
@@ -215,7 +201,19 @@ export const DishView = memo(
                 </Text>
               </Box>
             </HStack>
+          }
+        >
+          {!!dish.image && (
+            <Image
+              source={{ uri: imageUrl }}
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
+              resizeMode="cover"
+            />
           )}
+          {!dish.image && <Text fontSize={80}>🥗</Text>}
         </Squircle>
       </LinkButton>
     )

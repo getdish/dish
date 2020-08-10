@@ -277,8 +277,6 @@ const HomeSearchBarHomeBackButton = memo(() => {
       alignItems="center"
       pointerEvents="auto"
       width={30}
-      marginLeft={-10}
-      marginRight={5}
       opacity={isDisabled ? 0.1 : 0.7}
       disabled={isDisabled}
       onPress={() => om.actions.home.popBack()}

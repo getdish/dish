@@ -52,7 +52,7 @@ const HomeSearchInfoBoxCountry = memo(
           alignItems="center"
         >
           <Text opacity={0.7} fontSize={14}>
-            Popular {countryTag.name} Dishes:
+            {countryTag.name} dishes:
           </Text>
           {topCountryDishes.map((tag) => {
             return (

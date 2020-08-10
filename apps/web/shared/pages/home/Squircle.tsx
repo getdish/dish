@@ -8,9 +8,11 @@ export const Squircle = ({
   borderRadius = 10,
   isHovered,
   children,
+  outside,
   ...rest
 }: StackProps & {
   isHovered?: boolean
+  outside?: any
 }) => {
   return (
     <>
@@ -49,6 +51,7 @@ export const Squircle = ({
             style={[StyleSheet.absoluteFill]}
           />
         </VStack>
+        {outside}
       </VStack>
     </>
   )

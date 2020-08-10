@@ -18,13 +18,13 @@ export const DishViewButton = memo(
       <LinkButton {...flatButtonStyle} tag={{ type: 'dish', name }} {...rest}>
         {!!icon && (
           <>
-            <Text fontSize={22} marginVertical={-5}>
+            <Text fontSize={16} marginVertical={-5}>
               {icon}
             </Text>
-            <Spacer />
+            <Spacer size="xs" />
           </>
         )}
-        <Text fontSize={14} opacity={0.9}>
+        <Text fontSize={14} opacity={0.8}>
           {name}
         </Text>
       </LinkButton>
