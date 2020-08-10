@@ -26,7 +26,7 @@ export const RESTAURANT_WEIGHTS = {
 
 export let SEARCH_DOMAIN: string
 
-const LIVE_SEARCH_DOMAIN = 'https://search.rio.dishapp.com'
+const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
 const LOCAL_SEARCH_DOMAIN = 'http://localhost:10000'
 
 if (isWorker) {

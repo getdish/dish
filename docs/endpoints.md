@@ -3,7 +3,7 @@
 A collection of working `curl` requests demonstrating the various features of our API.
 
 All GraphQL queries can be interactively generated and explored with the
-Hasura Admin Console: https://hasura.rio.dishapp.com/console/api-explorer Here you will
+Hasura Admin Console: https://hasura.dishapp.com/console/api-explorer Here you will
 also find the latest available field names that can be returned for each query.
 
 These queries are for reference and need not be strictly followed, it is possible
@@ -37,7 +37,7 @@ curl -H "Content-Type: application/json" \
       } \n
     ) { id } \n
   }"}' \
-  https://hasura.rio.dishapp.com/v1/graphql
+  https://hasura.dishapp.com/v1/graphql
 ```
 
 ## Autocomplete (restricted by radius)
@@ -64,7 +64,7 @@ curl -H "Content-Type: application/json" \
       id name location \n
     } \n
   }"}' \
-  https://hasura.rio.dishapp.com/v1/graphql
+  https://hasura.dishapp.com/v1/graphql
 ```
 
 ## Getting a single restaurant with dishes
@@ -84,7 +84,7 @@ curl -H "Content-Type: application/json" \
       } \n
     } \n
   }"}' \
-  https://hasura.rio.dishapp.com/v1/graphql
+  https://hasura.dishapp.com/v1/graphql
 ```
 
 ## Filter by categories (restricted by radius)
@@ -109,7 +109,7 @@ curl -H "Content-Type: application/json" \
       id name location \n
     } \n
   }"}' \
-  https://hasura.rio.dishapp.com/v1/graphql
+  https://hasura.dishapp.com/v1/graphql
 ```
 
 ## Most common dish types in region
@@ -122,5 +122,5 @@ curl -H "Content-Type: application/json" \
     }){ \n
       category frequency \n
     }}" }' \
-  https://hasura.rio.dishapp.com/v1/graphql
+  https://hasura.dishapp.com/v1/graphql
 ```

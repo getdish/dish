@@ -1,11 +1,17 @@
 #!/bin/bash
 
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
+PROXY_PID=
 
 pushd $PROJECT_ROOT
 export all_env="$(bin/yaml_to_env.sh)"
 eval "$all_env"
 popd
+
+function _kill_port_forwarder {
+  echo "Killing \`kubectl proxy-forward ...\`"
+  kill $PROXY_PID
+}
 
 function _ephemeral_pod() {
   random=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 4 | head -n 1)
@@ -38,6 +44,11 @@ function _run_on_cluster() {
   code="echo -e ${script@Q} > /tmp/run.sh && source /tmp/run.sh $ORIGINAL_ARGS"
   _ephemeral_pod $1 "$code"
   exit $?
+}
+
+function _setup_s3() {
+  apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+    s3cmd
 }
 
 function worker() {
@@ -73,11 +84,11 @@ function db_migrate() {
   hasura --skip-update-check \
     migrate apply \
     --endpoint https://hasura.dishapp.com \
-    --admin-secret $HASURA_GRAPHQL_ADMIN_SECRET
+    --admin-secret $TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET
   hasura --skip-update-check \
     metadata apply \
     --endpoint https://hasura.dishapp.com \
-    --admin-secret $HASURA_GRAPHQL_ADMIN_SECRET
+    --admin-secret $TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET
   popd
 }
 
@@ -94,34 +105,62 @@ function timescale_pg_password() {
 function copy_scrape_data_to_timescale() {
   _run_on_cluster postgres:12-alpine
   set -e
+  copy_out="copy (select
+      created_at,
+      source,
+      id_from_source,
+      restaurant_id,
+      location,
+      data
+      from scrape
+    )
+    to stdout with csv"
+  copy_in="copy scrape (
+      time,
+      source,
+      id_from_source,
+      restaurant_id,
+      location,
+      data
+    ) from stdin csv"
+  echo "Migrating scrape table..."
   PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
     -h $TF_VAR_POSTGRES_HOST \
     -U postgres \
     -d dish \
-    -c "copy (select \
-      created_at, \
-      source, \
-      id_from_source, \
-      restaurant_id, \
-      location, \
-      data \
-      from scrape \
-    ) \
-    to stdout with csv" \
+    -c "$copy_out" \
   | \
-  PGPASSWORD=$TIMESCALE_PG_PASS psql \
+  PGPASSWORD=$TF_VAR_TIMESCALE_SU_PASS psql \
     --set=sslmode=require \
     -h $TF_VAR_TIMESCALE_HOST \
     -U postgres \
     -d scrape_data \
-    -c "copy scrape (
-      time, \
-      source, \
-      id_from_source, \
-      restaurant_id, \
-      location, \
-      data \
-    ) from stdin csv"
+    -c "$copy_in"
+  echo "...scrape table migrated."
+}
+
+function dump_scrape_data_to_s3() {
+  _run_on_cluster postgres:12-alpine
+  set -e
+  _setup_s3
+  copy_out="copy (select
+      created_at,
+      source,
+      id_from_source,
+      restaurant_id,
+      location,
+      data
+      from scrape
+    )
+    to stdout with csv"
+  echo "Dumping scrape table to S3..."
+  PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
+    -h $TF_VAR_POSTGRES_HOST \
+    -U postgres \
+    -d dish \
+    -c "$copy_out" \
+  | s3 put - $DISH_BACKUP_BUCKET/scrape.csv
+  echo "...scrape table dumped tpo S3."
 }
 
 function redis_flush_all() {
@@ -148,11 +187,6 @@ function remove_evicted_pods() {
   kubectl get pods -n $namespace \
     | grep Evicted | awk '{print $1}' \
     | xargs kubectl delete pod -n $namespace
-}
-
-function _setup_s3() {
-  apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing \
-    s3cmd
 }
 
 function s3() {
@@ -214,7 +248,7 @@ get_latest_scrape_backup() {
     s3 ls $DISH_BACKUP_BUCKET \
       | tail -1 \
       | awk '{ print $4 }' \
-      | grep "dish-scrape-backup"
+      | grep "dish-db-backup"
     )
 }
 
@@ -259,7 +293,6 @@ function restore_latest_scrape_backup() {
     -h $TF_VAR_TIMESCALE_HOST \
     -U postgres \
     -d dish
-  db_migrate
 }
 
 function delete_unattached_volumes() {
@@ -275,6 +308,40 @@ function delete_unattached_volumes() {
     echo "Deleting $volume_id"
     doctl compute volume delete --force $volume_id
   done
+}
+
+function timescale_console() {
+  PORT=15433
+  echo "Waiting for connection to timescale..."
+  kubectl port-forward pod/timescale-timescaledb-0 $PORT:5432 -n timescale &
+  PROXY_PID=$!
+  trap _kill_port_forwarder EXIT
+  while ! netstat -tna | grep 'LISTEN\>' | grep -q ":$PORT\>"; do
+    sleep 0.1
+  done
+  echo "...connected to timescale."
+  PGPASSWORD=$TF_VAR_TIMESCALE_SU_PASS pgcli \
+    -p $PORT \
+    -h localhost \
+    -U postgres \
+    -d scrape_data
+}
+
+function postgres_console() {
+  PORT=15432
+  echo "Waiting for connection to Postgres..."
+  kubectl port-forward svc/postgres-ha-postgresql-ha-pgpool $PORT:5432 -n postgres-ha &
+  PROXY_PID=$!
+  trap _kill_port_forwarder EXIT
+  while ! netstat -tna | grep 'LISTEN\>' | grep -q ":$PORT\>"; do
+    sleep 0.1
+  done
+  echo "...connected to Postgres."
+  PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD pgcli \
+    -p $PORT \
+    -h localhost \
+    -U postgres \
+    -d dish
 }
 
 function_to_run=$1

@@ -40,8 +40,6 @@ resource "helm_release" "cert-manager" {
 }
 
 resource "null_resource" "cert-manager-setup" {
-  depends_on = [helm_release.cert-manager]
-
   triggers = {
     manifest_sha1 = sha1(data.local_file.cert_manager_setup.content)
   }

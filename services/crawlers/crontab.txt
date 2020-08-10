@@ -19,5 +19,5 @@ CRON_LOG=/var/log/cron.log
 0  0  1  *  4  node /app/services/crawlers/_/ubereats/all.js >> $CRON_LOG 2>&1
 0  0  *  *  5  node /app/services/crawlers/_/yelp/all.js >> $CRON_LOG 2>&1
 0  0  *  *  6  node /app/services/crawlers/_/doordash/all.js >> $CRON_LOG 2>&1
-*  *  *  *  *  curl https://search.rio.dishapp.com/top_dishes?lon=-122.421351&lat=37.759251&distance=0.16 2>> $CRON_LOG
+*  *  *  *  *  curl https://search.dishapp.com/top_dishes?lon=-122.421351&lat=37.759251&distance=0.16 2>> $CRON_LOG
 

@@ -2,7 +2,7 @@ import { isBrowserProd, isNode, isWorker } from '../constants'
 
 export function getGraphEndpointDomain() {
   const LOCAL_HASURA = 'http://localhost:8080'
-  const LIVE_HASURA = 'https://hasura.rio.dishapp.com'
+  const LIVE_HASURA = 'https://hasura.dishapp.com'
 
   if (isWorker) {
     return LIVE_HASURA

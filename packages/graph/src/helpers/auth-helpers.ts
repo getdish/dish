@@ -2,7 +2,7 @@ import { isBrowserProd, isNode } from '../constants'
 
 const BROWSER_STORAGE_KEY = 'auth'
 const LOCAL_AUTH_SERVER = 'http://localhost:3000'
-const PROD_JWT_SERVER = 'https://auth.rio.dishapp.com'
+const PROD_JWT_SERVER = 'https://auth.dishapp.com'
 
 const DOMAIN = (() => {
   if (isNode) {

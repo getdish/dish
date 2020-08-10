@@ -1,6 +1,0 @@
-apiVersion: admin.rio.cattle.io/v1
-kind: ClusterDomain
-metadata:
-  name: rio.dishapp.com
-spec:
-  httpPort: 80

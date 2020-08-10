@@ -16,7 +16,7 @@ popd
 pushd $PROJECT_ROOT/services/hasura
 $(yarn global bin)/hasura migrate apply \
   --skip-update-check \
-  --endpoint https://hasura.rio.dishapp.com \
+  --endpoint https://hasura.dishapp.com \
   --admin-secret $HASURA_ADMIN
 
 cat functions/*.sql | \

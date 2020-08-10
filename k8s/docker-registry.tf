@@ -83,3 +83,15 @@ resource "kubernetes_ingress" "docker-registry-ingress" {
     }
   }
 }
+
+resource "kubernetes_secret" "docker-config-json" {
+  metadata {
+    name = "docker-config-json"
+  }
+
+  data = {
+    ".dockerconfigjson" = var.DOCKER_CONFIG_JSON
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
+}

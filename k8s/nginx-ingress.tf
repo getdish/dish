@@ -28,3 +28,107 @@ resource "helm_release" "nginx-ingress" {
   }
 }
 
+
+resource "kubernetes_ingress" "k8s-services-ingress" {
+  metadata {
+    name = "k8s-services-ingress"
+    annotations = {
+      "kubernetes.io/ingress.class" = "nginx"
+      "cert-manager.io/cluster-issuer": "letsencrypt-prod"
+      "cert-manager.io/acme-challenge-type": "http01"
+    }
+  }
+  spec {
+    tls {
+      hosts = [
+        "*.${var.dish_domain}",
+        var.dish_domain
+      ]
+      secret_name = "k8s-services-tls"
+    }
+    rule {
+      host = var.dish_domain
+      http {
+        path {
+          path = "/"
+          backend {
+            service_name = "web"
+            service_port = "http"
+          }
+        }
+      }
+    }
+    rule {
+      host = "hasura.${var.dish_domain}"
+      http {
+        path {
+          path = "/"
+          backend {
+            service_name = "hasura"
+            service_port = "http"
+          }
+        }
+      }
+    }
+    rule {
+      host = "search.${var.dish_domain}"
+      http {
+        path {
+          path = "/"
+          backend {
+            service_name = "search"
+            service_port = "http"
+          }
+        }
+      }
+    }
+    rule {
+      host = "auth.${var.dish_domain}"
+      http {
+        path {
+          path = "/"
+          backend {
+            service_name = "jwt-server"
+            service_port = "http"
+          }
+        }
+      }
+    }
+    rule {
+      host = "worker-ui.${var.dish_domain}"
+      http {
+        path {
+          path = "/"
+          backend {
+            service_name = "worker-ui"
+            service_port = "http"
+          }
+        }
+      }
+    }
+    rule {
+      host = "images.${var.dish_domain}"
+      http {
+        path {
+          path = "/"
+          backend {
+            service_name = "image-proxy"
+            service_port = "http"
+          }
+        }
+      }
+    }
+    rule {
+      host = "image-quality.${var.dish_domain}"
+      http {
+        path {
+          path = "/"
+          backend {
+            service_name = "image-quality-api"
+            service_port = "http"
+          }
+        }
+      }
+    }
+  }
+}
