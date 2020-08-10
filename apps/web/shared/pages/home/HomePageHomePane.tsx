@@ -26,6 +26,7 @@ import {
 import { ChevronRight } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
 
+import { bgLight } from '../../colors'
 import { getTagId } from '../../state/getTagId'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { HomeStateItemHome } from '../../state/home-types'
@@ -173,7 +174,7 @@ export default memo(function HomePageHomePane(props: Props) {
                 <SmallTitle>Recent Searches</SmallTitle>
                 <HomeTopSearches />
 
-                <Spacer size="xl" />
+                <Spacer size="lg" />
 
                 <Suspense fallback={null}>
                   <HomeTopDishesContent topDishes={topDishes} />
@@ -194,7 +195,7 @@ const HomeTopSearches = () => {
     <HStack
       paddingHorizontal={20}
       paddingVertical={10}
-      spacing={10}
+      spacing={14}
       flexWrap="wrap"
       alignItems="center"
       justifyContent="center"
@@ -205,12 +206,12 @@ const HomeTopSearches = () => {
           borderColor="#eee"
           borderWidth={1}
           padding={3}
-          borderRadius={8}
+          borderRadius={80}
           className="ease-in-out-slower"
-          backgroundColor="#f2f2f2"
+          backgroundColor="#fff"
           marginBottom={10}
           hoverStyle={{
-            backgroundColor: '#fff',
+            backgroundColor: bgLight,
           }}
         >
           <LinkButton tags={search.tags} cursor="pointer" alignItems="center">
@@ -221,8 +222,8 @@ const HomeTopSearches = () => {
                   lineHeight={16}
                   padding={5}
                   fontSize={14}
-                  borderRadius={5}
-                  backgroundColor="#f2f2f2"
+                  borderRadius={50}
+                  backgroundColor="transparent"
                 >
                   {tag.name}
                 </Text>
@@ -248,12 +249,12 @@ const recentSearches = [
     tags: [{ name: 'Fancy' }, { name: '🥩 Steak' }],
   },
   {
-    tags: [{ name: 'Great' }, { name: '🚗 Delivery' }, { name: '🍣 Sushi' }],
+    tags: [{ name: 'Great' }, { name: 'Delivery' }, { name: '🍣 Sushi' }],
   },
   {
     tags: [
       { name: '🥬 Vegetarian' },
-      { name: '🚗 Delivery' },
+      { name: 'Delivery' },
       { name: '🥪 Sandwich' },
     ],
   },
@@ -322,11 +323,11 @@ const HomeIntroLetter = memo(() => {
         </HStack>
         <Text fontSize={16} lineHeight={22} opacity={0.8}>
           <Text fontSize={16} lineHeight={26}>
-            dish is a great food guide that takes reviews from all over and
-            understands sentiment down to the dish.{' '}
+            dish is the food guide that understands whats good down to the dish.{' '}
             <Text fontWeight="600">
               search food across every delivery service.
             </Text>{' '}
+            find & vote on local gems.{' '}
             <LinkButton display="inline-flex" {...flatButtonStyle} name="about">
               Read more
             </LinkButton>

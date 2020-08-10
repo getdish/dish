@@ -56,14 +56,14 @@ export const avatar = require('../../assets/peach.jpg').default
 
 type Props = HomePagePaneProps<HomeStateItemSearch>
 
-const titleHeight = 61
+const titleHeight = 52
 const topBarVPad = 12
 
 const useSpacing = () => {
   const isSmall = useMediaQueryIsSmall()
   const paddingTop = isSmall
     ? topBarVPad
-    : searchBarHeight - searchBarTopOffset + topBarVPad + 4
+    : titleHeight - searchBarTopOffset + topBarVPad + 4
   return {
     paddingTop,
     titleHeight,
@@ -133,7 +133,7 @@ export default memo(function HomePageSearchResults(props: Props) {
 
   return (
     <HomeStackDrawer closable>
-      <SearchResultsTitle stateId={props.item.id} />
+      <SearchResultsTopBar stateId={props.item.id} />
       <Suspense fallback={<HomeLoading />}>
         <VStack
           flex={1}
@@ -147,7 +147,7 @@ export default memo(function HomePageSearchResults(props: Props) {
   )
 })
 
-const SearchResultsTitle = memo(({ stateId }: { stateId: string }) => {
+const SearchResultsTopBar = memo(({ stateId }: { stateId: string }) => {
   const om = useOvermind()
   const state = om.state.home.allStates[stateId]
 
@@ -157,40 +157,39 @@ const SearchResultsTitle = memo(({ stateId }: { stateId: string }) => {
 
   return (
     <>
-      <>
-        <VStack
-          position="absolute"
-          top={0}
-          left={0}
-          right={0}
-          borderBottomColor="#eee"
-          borderBottomWidth={1}
-          zIndex={1000}
+      <VStack
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        borderBottomColor="#eee"
+        borderBottomWidth={1}
+        zIndex={1000}
+        alignItems="center"
+        backgroundColor="#fff"
+        height={titleHeight}
+        overflow="hidden"
+        paddingHorizontal={12}
+      >
+        <HStack
+          paddingVertical={topBarVPad}
+          paddingHorizontal={18}
+          width="100%"
           alignItems="center"
-          backgroundColor="#fff"
-          height={62}
-          paddingHorizontal={12}
+          flex={1}
+          overflow="hidden"
+          justifyContent="space-between"
         >
-          <HStack
-            paddingVertical={topBarVPad}
-            paddingHorizontal={18}
-            width="100%"
-            alignItems="center"
-            flex={1}
-            overflow="hidden"
-            justifyContent="space-between"
-          >
-            <HStack marginTop={-12} alignItems="center" justifyContent="center">
-              <HomeLenseBar activeTagIds={state.activeTagIds} />
-            </HStack>
-
-            <Spacer flex={1} size={16} />
-            <HomeFilterBar activeTagIds={state.activeTagIds} />
+          <HStack marginTop={-12} alignItems="center" justifyContent="center">
+            <HomeLenseBar activeTagIds={state.activeTagIds} />
           </HStack>
-        </VStack>
 
-        <HomeDeliveryFilterButtons activeTagIds={state.activeTagIds} />
-      </>
+          <Spacer flex={1} size={16} />
+          <HomeFilterBar activeTagIds={state.activeTagIds} />
+        </HStack>
+      </VStack>
+
+      <HomeDeliveryFilterButtons activeTagIds={state.activeTagIds} />
     </>
   )
 })
@@ -251,20 +250,14 @@ const SearchResultsContent = (props: Props) => {
       <HomeScrollView ref={scrollRef} onScrollNearBottom={handleScrollToBottom}>
         <VStack height={paddingTop} />
         <PageTitleTag>{title}</PageTitleTag>
-        <VStack
-          paddingTop={20}
-          justifyContent="center"
-          alignItems="center"
-          overflow="hidden"
-        >
-          <Text ellipse fontSize={20} fontWeight="800">
+        <HStack padding={20} paddingBottom={0} overflow="hidden">
+          <Text ellipse fontSize={32} fontWeight="300">
             {pageTitleElements}
+            <Text opacity={0.5} letterSpacing={-0.5}>
+              {subTitle}
+            </Text>
           </Text>
-          <Spacer size={1} />
-          <Text ellipse opacity={0.5} letterSpacing={-0.5} fontSize={14}>
-            {subTitle}
-          </Text>
-        </VStack>
+        </HStack>
         <HomeSearchInfoBox state={searchState} />
         <VStack minHeight="30vh">{children}</VStack>
         <SearchFooter
