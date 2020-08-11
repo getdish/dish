@@ -3,6 +3,8 @@ set -e
 
 bin/yaml_to_env.sh > .env
 
+sed -e 's/TF_VAR_//' .env
+
 echo "Testing crawler-worker interaction..."
 docker run \
   --env-file .env \
