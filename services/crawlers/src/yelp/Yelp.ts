@@ -114,6 +114,9 @@ export class Yelp extends WorkerJob {
         console.log('YELP SANDBOX: Skipping ' + name)
         continue
       }
+      if (name == only) {
+        console.log('YELP SANDBOX: found ' + name)
+      }
       await this.getRestaurant(data)
     }
     const next_page = start + PER_PAGE

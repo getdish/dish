@@ -18,10 +18,19 @@ export class ProxiedRequests {
       },
     })
     let tries = 0
-    let base = this.aws_proxy
 
+    // Yelp seem to be on to us with the AWS Gateway :'(
     // $0.000005/request regardless of bandwidth
-    let method = 'AWS GATEWAY PROXY'
+    //let base = this.aws_proxy
+    //let method = 'AWS GATEWAY PROXY'
+
+    // $0.5/GB or ~$0.00005/request for ~100kb requests
+    let method = 'LUMINATI DATACENTRE PROXY'
+    let base = this.domain
+    config = {
+      ...config,
+      httpsAgent: new HttpsProxyAgent(this.luminatiDatacentreConfig()),
+    }
 
     while (true) {
       try {
@@ -34,15 +43,6 @@ export class ProxiedRequests {
         }
         tries++
         if (tries > 3) {
-          // $0.5/GB or ~$0.00005/request for ~100kb requests
-          method = 'LUMINATI DATACENTRE PROXY'
-          base = this.domain
-          config = {
-            ...config,
-            httpsAgent: new HttpsProxyAgent(this.luminatiDatacentreConfig()),
-          }
-        }
-        if (tries > 6) {
           // $12.5/GB or ~$0.00125/request for ~100kb requests
           method = 'LUMINATI RESIDENTIAL PROXY'
           config = {

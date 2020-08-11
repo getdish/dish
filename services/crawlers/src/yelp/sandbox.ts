@@ -9,15 +9,15 @@ async function main() {
 
 async function one() {
   const range = 0.001
-  const name = 'La Boulangerie de San Francisco'
+  const name = 'Solstice'
   const coords = [37.797519, -122.4314282]
   const t = new Yelp()
-  await t.runOnWorker('getRestaurants', [
+  await t.getRestaurants(
     [coords[0] - range, coords[1] - range],
     [coords[0] + range, coords[1] + range],
     0,
-    name,
-  ])
+    name
+  )
   const restaurant = await restaurantFindOne({ name })
   console.log('restaurant', restaurant)
 }
