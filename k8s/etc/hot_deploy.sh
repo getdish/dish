@@ -5,8 +5,7 @@ set -e
 # This is just for quick deploys. Of course it skips our test suits in CI but if
 # you need to get something deployed quickly then use at your own risk.
 
-# Usage: ./hot_deploy.sh $service
-# Where $service is the name of a service in the ./Riofile
+# Usage: ./hot_deploy.sh path/to/Dockerfile
 
 # You need the `buildctl` binary installed
 # Eg; `brew install buildkitd`

@@ -30,11 +30,9 @@ do
   docker push $DISH_REGISTRY/dish/$image
 done
 
-rio up --answers env.enc.production.yaml
 kubectl rollout \
   restart deployment \
   $(kubectl get deployments | tail -n +2 | cut -d ' ' -f 1)
-rio ps
 
 HOOK=$(\
   grep 'SLACK_MONITORING_HOOK:' env.enc.production.yaml \

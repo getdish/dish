@@ -211,7 +211,6 @@ All of these should be installable through your OS's standard package manager (B
 - `terraform apply -target=module.cluster` Just build the bare compute resources
 - `doctl kubernetes cluster kubeconfig save dish[blue/green]` Sets up `kubectl`
 - `terraform apply` Adds all the remaining resources
-- `rio up --answers env.enc.production.yaml` Bring up the main Dish services using Rio
 
 #### Connecting to an existing cluster
 
@@ -229,8 +228,6 @@ In order to synchronise shared credentials between Terraform and Rio, Terraform'
 
 #### Notes on creating a new cluster
 When setting up a Blue/Green cluster, I found that:
-  * the Rio domains in `k8s/yaml/rio-app-domains.yaml` and `k8s/yaml/rio-custom-domain.yaml`
-    didn't get applied, I added a `set -e`, so hopefully you notice next time.
   * `nodeSelector` isn't powerful enough to prevent the CI node getting full of other pods. But
     DO still haven't developed native support for taints/tolerations. Watch:
     https://github.com/digitalocean/DOKS/issues/3
@@ -240,17 +237,6 @@ When setting up a Blue/Green cluster, I found that:
     with the DB again. I have no idea why.
 
 ### What's on our cluster?
-
-#### Rio
-
-See: https://github.com/rancher/rio
-
-Rio is a set of k8s resources that help building, deploying and managing web apps. It's somewhat analagous to Heroku, but much more powerful. It automatically builds apps from Docker Compose-like config files, deploys those builds in a safe 'rollout' fashion (so that new builds are only permanently exposed if they are healthy) and automatically scales apps depending on load.
-
-It is possible to deploy cluster infrastructure like databases in Rio, but in this case we're using native k8s methods for managing non app-specific resources. In most cases this is just because Rio isn't specialised for such uses, for instance it doesn't have good support for provisioning dedicated volumes to persist DB data.
-
-The magic Rio command for deploying everything is:
-`rio up --answers env.enc.production.yaml`. But you will likely never need to run it as deployment is automated based on CI builds passing tests.
 
 #### Databases
 
