@@ -42,6 +42,7 @@ resource "kubernetes_ingress" "k8s-services-ingress" {
     tls {
       hosts = [
         "*.${var.dish_domain}",
+        "*.k8s.${var.dish_domain}",
         var.dish_domain
       ]
       secret_name = "k8s-services-tls"
