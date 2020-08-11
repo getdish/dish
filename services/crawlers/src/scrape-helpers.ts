@@ -68,6 +68,7 @@ export async function latestScrapeForRestaurant(
     }
     return null
   } else {
+    console.debug(`${source} scrape found for: ` + restaurant.name)
     result.rows[0].location = parseLocation(result.rows[0].location)
     return result.rows[0] as Scrape
   }

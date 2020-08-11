@@ -340,7 +340,7 @@ async function assessPhotoQuality(urls: string[]) {
 }
 
 async function assessPhotoQualityWithoutRetries(urls: string[]) {
-  const IMAGE_QUALITY_API = 'https://image-quality.dishapp.com/prediction'
+  const IMAGE_QUALITY_API = 'https://image-quality.k8s.dishapp.com/prediction'
   if (process.env.LOG_TIMINGS == '1') {
     console.log('Fetching Image Quality API batch...')
   }

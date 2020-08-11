@@ -95,7 +95,7 @@ resource "kubernetes_ingress" "k8s-services-ingress" {
       }
     }
     rule {
-      host = "worker-ui.${var.dish_domain}"
+      host = "worker-ui.k8s.${var.dish_domain}"
       http {
         path {
           path = "/"
@@ -119,7 +119,7 @@ resource "kubernetes_ingress" "k8s-services-ingress" {
       }
     }
     rule {
-      host = "image-quality.${var.dish_domain}"
+      host = "image-quality.k8s.${var.dish_domain}"
       http {
         path {
           path = "/"

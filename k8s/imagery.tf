@@ -8,6 +8,9 @@ resource "kubernetes_deployment" "image-proxy" {
         app = "image-proxy"
       }
     }
+    strategy {
+      type = "Recreate"
+    }
     template {
       metadata {
         labels = {
@@ -30,19 +33,22 @@ resource "kubernetes_deployment" "image-proxy" {
         container {
           name  = "image-proxy"
           image = "willnorris/imageproxy@sha256:9cc15ad4b0f61e371a982c5fa0520cd6f6cebba317bb1a9188ac9169a826fc35"
-          #args = [
-            #"-cache", "/image-cache"
-          #]
-          #volume_mount {
-            #name = "image-proxy-pvc"
-            #mount_path = "/image-cache"
-          #}
+          args = [
+            "-addr", "0.0.0.0:8080",
+            "-cache", "/image-cache"
+          ]
+          volume_mount {
+            name = "image-proxy-pvc"
+            mount_path = "/image-cache"
+          }
         }
 
-        #volume {
-          #name = "image-proxy-pvc"
-          #empty_dir {}
-        #}
+        volume {
+          name = "image-proxy-pvc"
+          persistent_volume_claim {
+            claim_name = "image-proxy-pvc"
+          }
+        }
       }
     }
   }

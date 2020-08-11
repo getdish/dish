@@ -1,7 +1,8 @@
 #!/bin/bash
 
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
-PROXY_PID=
+PG_PROXY_PID=
+TS_PROXY_PID=
 
 pushd $PROJECT_ROOT
 export all_env="$(bin/yaml_to_env.sh)"
@@ -9,8 +10,13 @@ eval "$all_env"
 popd
 
 function _kill_port_forwarder {
-  echo "Killing \`kubectl proxy-forward ...\`"
-  kill $PROXY_PID
+  echo "Killing script pids for \`kubectl proxy-forward ...\`"
+  [ ! -z "$PG_PROXY_PID" ] && kill $PG_PROXY_PID
+  [ ! -z "$TS_PROXY_PID" ] && kill $TS_PROXY_PID
+}
+
+function generate_random_port() {
+  echo "2$((1000 + RANDOM % 9999))"
 }
 
 function _ephemeral_pod() {
@@ -43,7 +49,6 @@ function _run_on_cluster() {
   script="$(_build_script)\n$function_body"
   code="echo -e ${script@Q} > /tmp/run.sh && source /tmp/run.sh $ORIGINAL_ARGS"
   _ephemeral_pod $1 "$code"
-  exit $?
 }
 
 function _setup_s3() {
@@ -103,7 +108,7 @@ function timescale_pg_password() {
 }
 
 function copy_scrape_data_to_timescale() {
-  _run_on_cluster postgres:12-alpine
+  _run_on_cluster postgres:12-alpine && return 0
   set -e
   copy_out="copy (select
       created_at,
@@ -140,7 +145,7 @@ function copy_scrape_data_to_timescale() {
 }
 
 function dump_scrape_data_to_s3() {
-  _run_on_cluster postgres:12-alpine
+  _run_on_cluster postgres:12-alpine && return 0
   set -e
   _setup_s3
   copy_out="copy (select
@@ -170,15 +175,19 @@ function redis_flush_all() {
 }
 
 function local_node_with_prod_env() {
+  _TIMESCALE_PORT=$(generate_random_port)
+  _PG_PORT=$(generate_random_port)
+  postgres_proxy $_PG_PORT
+  timescale_proxy $_TIMESCALE_PORT
   export LOG_TIMINGS=1
   export USE_PG_SSL=true
   export RUN_WITHOUT_WORKER=true
-  export PGPORT=15432
+  export PGPORT=$_PG_PORT
   export PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD
-  export TIMESCALE_PORT=15433
+  export TIMESCALE_PORT=$_TIMESCALE_PORT
   export TIMESCALE_PASSWORD=$TF_VAR_TIMESCALE_SU_PASS
   export HASURA_ENDPOINT=https://hasura.dishapp.com
-  export HASURA_SECRET="$HASURA_GRAPHQL_ADMIN_SECRET"
+  export HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
   node $1
 }
 
@@ -204,7 +213,7 @@ function list_backups() {
 }
 
 function backup_main_db() {
-  _run_on_cluster postgres:12-alpine
+  _run_on_cluster postgres:12-alpine && return 0
   set -e
   _setup_s3
   DUMP_FILE_NAME="dish-db-backup-`date +%Y-%m-%d-%H-%M`.dump"
@@ -219,7 +228,7 @@ function backup_main_db() {
 }
 
 function backup_scrape_db() {
-  _run_on_cluster postgres:12-alpine
+  _run_on_cluster postgres:12-alpine && return 0
   set -e
   _setup_s3
   DUMP_FILE_NAME="dish-scrape-backup-`date +%Y-%m-%d-%H-%M`.dump"
@@ -227,7 +236,7 @@ function backup_scrape_db() {
     -U postgres \
     -h $TF_VAR_TIMESCALE_HOST \
     -p 5432 \
-    -d dish \
+    -d scrape_data \
     -C -w --format=c | \
     s3 put - s3://dish-backups/$DUMP_FILE_NAME
   echo 'Successfully backed up scrape database'
@@ -263,7 +272,7 @@ function _restore_main_backup() {
 }
 
 function __restore_latest_main_backup() {
-  _run_on_cluster postgres:12-alpine
+  _run_on_cluster postgres:12-alpine && return 0
   set -e
   _setup_s3
   echo $(s3 ls $DISH_BACKUP_BUCKET | tail -1 | awk '{ print $4 }')
@@ -271,7 +280,7 @@ function __restore_latest_main_backup() {
 }
 
 function restore_main_backup() {
-  _run_on_cluster postgres:12-alpine
+  _run_on_cluster postgres:12-alpine && return 0
   set -e
   _setup_s3
   _restore_main_backup "$1"
@@ -283,7 +292,7 @@ function restore_latest_main_backup() {
 }
 
 function restore_latest_scrape_backup() {
-  _run_on_cluster postgres:12-alpine
+  _run_on_cluster postgres:12-alpine && return 0
   set -e
   _setup_s3
   latest_backup=$(get_latest_scrape_backup)
@@ -310,16 +319,22 @@ function delete_unattached_volumes() {
   done
 }
 
-function timescale_console() {
-  PORT=15433
+function timescale_proxy() {
+  random_port="$(generate_random_port)"
+  PORT=${1:-$random_port}
   echo "Waiting for connection to timescale..."
   kubectl port-forward pod/timescale-timescaledb-0 $PORT:5432 -n timescale &
-  PROXY_PID=$!
+  TS_PROXY_PID=$!
   trap _kill_port_forwarder EXIT
   while ! netstat -tna | grep 'LISTEN\>' | grep -q ":$PORT\>"; do
     sleep 0.1
   done
   echo "...connected to timescale."
+}
+
+function timescale_console() {
+  PORT=$(generate_random_port)
+  timescale_proxy $PORT
   PGPASSWORD=$TF_VAR_TIMESCALE_SU_PASS pgcli \
     -p $PORT \
     -h localhost \
@@ -327,21 +342,35 @@ function timescale_console() {
     -d scrape_data
 }
 
-function postgres_console() {
-  PORT=15432
+function postgres_proxy() {
+  random_port="$(generate_random_port)"
+  PORT=${1:-$random_port}
   echo "Waiting for connection to Postgres..."
   kubectl port-forward svc/postgres-ha-postgresql-ha-pgpool $PORT:5432 -n postgres-ha &
-  PROXY_PID=$!
+  PG_PROXY_PID=$!
   trap _kill_port_forwarder EXIT
   while ! netstat -tna | grep 'LISTEN\>' | grep -q ":$PORT\>"; do
     sleep 0.1
   done
   echo "...connected to Postgres."
+}
+
+function postgres_console() {
+  PORT=$(generate_random_port)
+  postgres_proxy $PORT
   PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD pgcli \
     -p $PORT \
     -h localhost \
     -U postgres \
     -d dish
+}
+
+function logs() {
+  namespace=${2:-default}
+  kubectl -n $namespace \
+    logs -f \
+    --selector="app=$2" \
+    --max-log-requests=10
 }
 
 function_to_run=$1

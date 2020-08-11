@@ -19,8 +19,17 @@ resource "digitalocean_kubernetes_cluster" "dish" {
     size       = "g-2vcpu-8gb"
     auto_scale = true
     min_nodes = 1
-    max_nodes = 5
+    max_nodes = 3
   }
+}
+
+resource "digitalocean_kubernetes_node_pool" "db" {
+  cluster_id = digitalocean_kubernetes_cluster.dish.id
+  name       = "dish-db-pool"
+  size       = "g-2vcpu-8gb"
+  auto_scale = true
+  min_nodes = 3
+  max_nodes = 5
 }
 
 resource "digitalocean_kubernetes_node_pool" "critical" {
@@ -28,8 +37,8 @@ resource "digitalocean_kubernetes_node_pool" "critical" {
   name       = "dish-critical-pool"
   size       = "g-2vcpu-8gb"
   auto_scale = true
-  min_nodes = 2
-  max_nodes = 5
+  min_nodes = 1
+  max_nodes = 3
 }
 
 resource "digitalocean_kubernetes_node_pool" "ancillary" {
@@ -37,8 +46,8 @@ resource "digitalocean_kubernetes_node_pool" "ancillary" {
   name       = "dish-ancillary-pool"
   size       = "s-4vcpu-8gb"
   auto_scale = true
-  min_nodes = 2
-  max_nodes = 5
+  min_nodes = 1
+  max_nodes = 3
 }
 
 resource "digitalocean_kubernetes_node_pool" "workers" {
@@ -47,7 +56,7 @@ resource "digitalocean_kubernetes_node_pool" "workers" {
   size       = "s-4vcpu-8gb"
   auto_scale = true
   min_nodes = 1
-  max_nodes = 10
+  max_nodes = 5
 }
 
 resource "digitalocean_kubernetes_node_pool" "ci" {
