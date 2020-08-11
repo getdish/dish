@@ -131,6 +131,7 @@ tables:
       - address
       - city
       - description
+      - headlines
       - hours
       - id
       - image
@@ -156,6 +157,7 @@ tables:
       - city
       - created_at
       - description
+      - headlines
       - hours
       - id
       - image
@@ -182,6 +184,7 @@ tables:
       - city
       - created_at
       - description
+      - headlines
       - hours
       - id
       - image

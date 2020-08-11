@@ -4,6 +4,7 @@ import * as extensions from '../extensions'
 import { t_Boolean } from './Boolean'
 import { Extension } from './extensionsTypes'
 import { t_Float } from './Float'
+import { geometry_comparison_exp, t_geometry } from './geometry'
 import { Int_comparison_exp, t_Int } from './Int'
 import { order_by } from './order_by'
 import {
@@ -27,6 +28,7 @@ export type t_menu_item = FieldsType<
     description?: t_String | null
     id: t_uuid
     image?: t_String | null
+    location?: t_geometry | null
     name: t_String
     price?: t_Int | null
     restaurant: t_restaurant
@@ -131,6 +133,7 @@ export type menu_item_bool_exp = {
   description?: String_comparison_exp | null
   id?: uuid_comparison_exp | null
   image?: String_comparison_exp | null
+  location?: geometry_comparison_exp | null
   name?: String_comparison_exp | null
   price?: Int_comparison_exp | null
   restaurant?: restaurant_bool_exp | null
@@ -161,6 +164,7 @@ export type menu_item_insert_input = {
   description?: string | null
   id?: any | null
   image?: string | null
+  location?: any | null
   name?: string | null
   price?: number | null
   restaurant?: restaurant_obj_rel_insert_input | null
@@ -277,6 +281,7 @@ export type menu_item_order_by = {
   description?: order_by | null
   id?: order_by | null
   image?: order_by | null
+  location?: order_by | null
   name?: order_by | null
   price?: order_by | null
   restaurant?: restaurant_order_by | null
@@ -299,6 +304,7 @@ export type t_menu_item_select_column = EnumType<
   | 'description'
   | 'id'
   | 'image'
+  | 'location'
   | 'name'
   | 'price'
   | 'restaurant_id'
@@ -314,6 +320,7 @@ export type menu_item_set_input = {
   description?: string | null
   id?: any | null
   image?: string | null
+  location?: any | null
   name?: string | null
   price?: number | null
   restaurant_id?: any | null
@@ -401,6 +408,7 @@ export type t_menu_item_update_column = EnumType<
   | 'description'
   | 'id'
   | 'image'
+  | 'location'
   | 'name'
   | 'price'
   | 'restaurant_id'
@@ -523,6 +531,7 @@ export enum menu_item_select_column {
   description = 'description',
   id = 'id',
   image = 'image',
+  location = 'location',
   name = 'name',
   price = 'price',
   restaurant_id = 'restaurant_id',
@@ -566,6 +575,7 @@ export enum menu_item_update_column {
   description = 'description',
   id = 'id',
   image = 'image',
+  location = 'location',
   name = 'name',
   price = 'price',
   restaurant_id = 'restaurant_id',

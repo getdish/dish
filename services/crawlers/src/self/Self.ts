@@ -107,6 +107,7 @@ export class Self extends WorkerJob {
         this.getDoorDashDishes,
         this.getGrubHubDishes,
         this.scanCorpus,
+        this.addReviewHeadlines,
       ]
       for (const async_func of async_steps) {
         await this._runFailableFunction(async_func)
@@ -127,6 +128,7 @@ export class Self extends WorkerJob {
 
   async postMerge() {
     this.resetTimer()
+    await this.persist()
     this.tagging.deDepulicateTags()
     await restaurantUpsertManyTags(
       this.restaurant,
@@ -152,7 +154,6 @@ export class Self extends WorkerJob {
     ].forEach((func) => {
       this._runFailableFunction(func)
     })
-    await this.persist()
   }
 
   async _runFailableFunction(func: Function) {
@@ -745,6 +746,20 @@ export class Self extends WorkerJob {
       value: factors.find((i) => i.name == 'Value')?.rating / 10,
       ambience: factors.find((i) => i.name == 'Atmosphere')?.rating / 10,
     }
+  }
+
+  async addReviewHeadlines() {
+    const id = this.restaurant.id
+    const result = await main_db.query(`
+      SELECT DISTINCT(sentence), sentiment
+      FROM restaurant
+      JOIN review ON review.restaurant_id = restaurant.id
+      JOIN review_tag ON review_tag.review_id = review.id
+      WHERE restaurant.id = '${id}'
+      ORDER BY sentiment DESC
+      LIMIT 5
+    `)
+    this.restaurant.headlines = result.rows
   }
 
   private static shortestString(arr: string[]) {

@@ -573,6 +573,9 @@ export const schema = {
         get image() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get location() {
+          return new FieldNode(schema.geometry, undefined, true)
+        },
         get name() {
           return new FieldNode(schema.String, undefined, false)
         },
@@ -798,6 +801,9 @@ export const schema = {
         get image() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
+        get location() {
+          return new InputNodeField(schema.geometry_comparison_exp, true)
+        },
         get name() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
@@ -844,6 +850,9 @@ export const schema = {
         },
         get image() {
           return new InputNodeField(schema.String, true)
+        },
+        get location() {
+          return new InputNodeField(schema.geometry, true)
         },
         get name() {
           return new InputNodeField(schema.String, true)
@@ -1064,6 +1073,9 @@ export const schema = {
         get image() {
           return new InputNodeField(schema.order_by, true)
         },
+        get location() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get name() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -1110,6 +1122,9 @@ export const schema = {
         },
         get image() {
           return new InputNodeField(schema.String, true)
+        },
+        get location() {
+          return new InputNodeField(schema.geometry, true)
         },
         get name() {
           return new InputNodeField(schema.String, true)
@@ -4958,6 +4973,17 @@ export const schema = {
         get description() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get headlines() {
+          return new FieldNode(
+            schema.jsonb,
+            new Arguments({
+              get path() {
+                return new ArgumentsField(schema.String, true)
+              },
+            }),
+            true
+          )
+        },
         get hours() {
           return new FieldNode(
             schema.jsonb,
@@ -5412,6 +5438,9 @@ export const schema = {
   get restaurant_append_input() {
     return new InputNode(
       {
+        get headlines() {
+          return new InputNodeField(schema.jsonb, true)
+        },
         get hours() {
           return new InputNodeField(schema.jsonb, true)
         },
@@ -5506,6 +5535,9 @@ export const schema = {
         get description() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
+        get headlines() {
+          return new InputNodeField(schema.jsonb_comparison_exp, true)
+        },
         get hours() {
           return new InputNodeField(schema.jsonb_comparison_exp, true)
         },
@@ -5576,6 +5608,9 @@ export const schema = {
   get restaurant_delete_at_path_input() {
     return new InputNode(
       {
+        get headlines() {
+          return new InputNodeField(new ArrayNode(schema.String, true), true)
+        },
         get hours() {
           return new InputNodeField(new ArrayNode(schema.String, true), true)
         },
@@ -5598,6 +5633,9 @@ export const schema = {
   get restaurant_delete_elem_input() {
     return new InputNode(
       {
+        get headlines() {
+          return new InputNodeField(schema.Int, true)
+        },
         get hours() {
           return new InputNodeField(schema.Int, true)
         },
@@ -5620,6 +5658,9 @@ export const schema = {
   get restaurant_delete_key_input() {
     return new InputNode(
       {
+        get headlines() {
+          return new InputNodeField(schema.String, true)
+        },
         get hours() {
           return new InputNodeField(schema.String, true)
         },
@@ -5666,6 +5707,9 @@ export const schema = {
         },
         get description() {
           return new InputNodeField(schema.String, true)
+        },
+        get headlines() {
+          return new InputNodeField(schema.jsonb, true)
         },
         get hours() {
           return new InputNodeField(schema.jsonb, true)
@@ -6015,6 +6059,9 @@ export const schema = {
         get description() {
           return new InputNodeField(schema.order_by, true)
         },
+        get headlines() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get hours() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6095,6 +6142,9 @@ export const schema = {
   get restaurant_prepend_input() {
     return new InputNode(
       {
+        get headlines() {
+          return new InputNodeField(schema.jsonb, true)
+        },
         get hours() {
           return new InputNodeField(schema.jsonb, true)
         },
@@ -6131,6 +6181,9 @@ export const schema = {
         },
         get description() {
           return new InputNodeField(schema.String, true)
+        },
+        get headlines() {
+          return new InputNodeField(schema.jsonb, true)
         },
         get hours() {
           return new InputNodeField(schema.jsonb, true)

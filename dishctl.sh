@@ -16,7 +16,7 @@ function _kill_port_forwarder {
 }
 
 function generate_random_port() {
-  echo "2$((1000 + RANDOM % 9999))"
+  echo "2$((1000 + RANDOM % 8999))"
 }
 
 function _ephemeral_pod() {

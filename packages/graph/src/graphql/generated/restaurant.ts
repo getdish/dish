@@ -48,6 +48,7 @@ export type t_restaurant = FieldsType<
     city?: t_String | null
     created_at: t_timestamptz
     description?: t_String | null
+    headlines?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     hours?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     id: t_uuid
     image?: t_String | null
@@ -205,6 +206,7 @@ export type restaurant_aggregate_order_by = {
  * @type INPUT_OBJECT
  */
 export type restaurant_append_input = {
+  headlines?: any | null
   hours?: any | null
   photos?: any | null
   rating_factors?: any | null
@@ -255,6 +257,7 @@ export type restaurant_bool_exp = {
   city?: String_comparison_exp | null
   created_at?: timestamptz_comparison_exp | null
   description?: String_comparison_exp | null
+  headlines?: jsonb_comparison_exp | null
   hours?: jsonb_comparison_exp | null
   id?: uuid_comparison_exp | null
   image?: String_comparison_exp | null
@@ -290,6 +293,7 @@ export type t_restaurant_constraint = EnumType<
  * @type INPUT_OBJECT
  */
 export type restaurant_delete_at_path_input = {
+  headlines?: (string | null)[] | null
   hours?: (string | null)[] | null
   photos?: (string | null)[] | null
   rating_factors?: (string | null)[] | null
@@ -302,6 +306,7 @@ export type restaurant_delete_at_path_input = {
  * @type INPUT_OBJECT
  */
 export type restaurant_delete_elem_input = {
+  headlines?: number | null
   hours?: number | null
   photos?: number | null
   rating_factors?: number | null
@@ -314,6 +319,7 @@ export type restaurant_delete_elem_input = {
  * @type INPUT_OBJECT
  */
 export type restaurant_delete_key_input = {
+  headlines?: string | null
   hours?: string | null
   photos?: string | null
   rating_factors?: string | null
@@ -336,6 +342,7 @@ export type restaurant_insert_input = {
   city?: string | null
   created_at?: any | null
   description?: string | null
+  headlines?: any | null
   hours?: any | null
   id?: any | null
   image?: string | null
@@ -495,6 +502,7 @@ export type restaurant_order_by = {
   city?: order_by | null
   created_at?: order_by | null
   description?: order_by | null
+  headlines?: order_by | null
   hours?: order_by | null
   id?: order_by | null
   image?: order_by | null
@@ -528,6 +536,7 @@ export type restaurant_pk_columns_input = { id: any }
  * @type INPUT_OBJECT
  */
 export type restaurant_prepend_input = {
+  headlines?: any | null
   hours?: any | null
   photos?: any | null
   rating_factors?: any | null
@@ -544,6 +553,7 @@ export type t_restaurant_select_column = EnumType<
   | 'city'
   | 'created_at'
   | 'description'
+  | 'headlines'
   | 'hours'
   | 'id'
   | 'image'
@@ -572,6 +582,7 @@ export type restaurant_set_input = {
   city?: string | null
   created_at?: any | null
   description?: string | null
+  headlines?: any | null
   hours?: any | null
   id?: any | null
   image?: string | null
@@ -1203,6 +1214,7 @@ export type t_restaurant_update_column = EnumType<
   | 'city'
   | 'created_at'
   | 'description'
+  | 'headlines'
   | 'hours'
   | 'id'
   | 'image'
@@ -1353,6 +1365,7 @@ export enum restaurant_select_column {
   city = 'city',
   created_at = 'created_at',
   description = 'description',
+  headlines = 'headlines',
   hours = 'hours',
   id = 'id',
   image = 'image',
@@ -1544,6 +1557,7 @@ export enum restaurant_update_column {
   city = 'city',
   created_at = 'created_at',
   description = 'description',
+  headlines = 'headlines',
   hours = 'hours',
   id = 'id',
   image = 'image',
