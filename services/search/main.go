@@ -143,18 +143,22 @@ func handleSpecialTags(tags string, r *http.Request) (map[string]string, string)
 	return filter_by, tags
 }
 
-func top_dishes(w http.ResponseWriter, r *http.Request) {
+func top_cuisines(w http.ResponseWriter, r *http.Request) {
 	var json string
 	var params = r.URL.Query()
-	if _json, found := c.Get("top_dishes"); found {
+	var lon = params["lon"][0]
+	var lat = params["lat"][0]
+	var distance = params["distance"][0]
+	var cache_key = "top_cuisines-" + lat + "-" + lon + "-" + distance
+	if _json, found := c.Get(cache_key); found {
 		json = _json.(string)
 	} else {
 		_, err := db.Query(
 			pg.Scan(&json),
-			top_dishes_query,
-			params["lon"][0],
-			params["lat"][0],
-			params["distance"][0],
+			top_cuisines_query,
+			lon,
+			lat,
+			distance,
 		)
 		if err != nil {
 			fmt.Println(err)
@@ -163,7 +167,7 @@ func top_dishes(w http.ResponseWriter, r *http.Request) {
 			json = "[]"
 		}
 	}
-	c.Set("top_dishes", json, cache.DefaultExpiration)
+	c.Set(cache_key, json, cache.DefaultExpiration)
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, json)
 }
@@ -237,7 +241,7 @@ func handleRequests() {
 	port := getEnv("PORT", "10000")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/search", search)
-	mux.HandleFunc("/top_dishes", top_dishes)
+	mux.HandleFunc("/top_cuisines", top_cuisines)
 	mux.HandleFunc("/tags", tags)
 	handler := cors.Default().Handler(mux)
 	log.Fatal(http.ListenAndServe(":"+port, handler))

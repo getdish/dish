@@ -1,6 +1,5 @@
 import { LngLat } from '@dish/graph/_'
 
-import { initialHomeState } from '../../state/initialHomeState'
 import { omStatic, useOvermind } from '../../state/om'
 
 export const mapHelpers = null
@@ -16,8 +15,9 @@ export const useZoomLevel = () => {
 }
 
 export const mapZoomToMedium = () => {
-  let span = initialHomeState.span
-  let center = initialHomeState.center
+  const om = useOvermind()
+  let span = om.state.home.currentState.span!
+  let center = om.state.home.currentState.center!
   for (const state of [...omStatic.state.home.states].reverse()) {
     if (getZoomLevel(state.span!) === 'medium') {
       span = state.span!

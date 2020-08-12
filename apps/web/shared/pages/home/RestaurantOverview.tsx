@@ -1,8 +1,6 @@
 import { HStack, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
-import { useMediaQueryIsReallySmall } from './useMediaQueryIs'
-
 export const RestaurantOverview = memo(
   ({
     inline,

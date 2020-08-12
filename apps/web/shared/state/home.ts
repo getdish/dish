@@ -23,9 +23,7 @@ import {
   allTags,
   cleanTagName,
   getActiveTags,
-  getFullTags,
   getRouteFromTags,
-  getTagsFromRoute,
   isSearchBarTag,
 } from './home-tag-helpers'
 import {

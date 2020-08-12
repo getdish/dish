@@ -92,12 +92,7 @@ export default memo(function HomePageHomePane(props: Props) {
   useEffect(() => {
     if (isLoaded && props.isActive) {
       let isMounted = true
-      getHomeDishes(
-        center!.lat,
-        center!.lng,
-        // TODO span
-        span!.lat
-      ).then((all) => {
+      getHomeDishes(center!.lng, center!.lat).then((all) => {
         if (!isMounted) return
         if (!isEqual(all, topDishes)) {
           updateHomeTagsCache(all)

@@ -373,6 +373,18 @@ function logs() {
     --max-log-requests=10
 }
 
+function run_local_search_endpoint() {
+  PROXY_PORT=$(generate_random_port)
+  postgres_proxy $PROXY_PORT
+  export PORT=10001
+  export POSTGRES_PASSWORD=$TF_VAR_POSTGRES_PASSWORD
+  export PGPORT=$PROXY_PORT
+  pushd $PROJECT_ROOT/services/search
+  go generate
+  go run ./main.go ./embedded.go
+  popd
+}
+
 function_to_run=$1
 shift
 ORIGINAL_ARGS="$@"

@@ -7,7 +7,6 @@ import {
   SmallTitle,
   Spacer,
   VStack,
-  useOverlay,
 } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { ScrollView } from 'react-native'
