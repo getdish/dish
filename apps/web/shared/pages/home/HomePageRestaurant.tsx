@@ -158,8 +158,6 @@ const HomePageRestaurant = memo(
             <SmallTitle>Top tips</SmallTitle>
             <HStack padding={20} maxWidth="100%" flexWrap="wrap">
               <RestaurantOverview restaurantSlug={slug} />
-              <RestaurantOverview restaurantSlug={slug} />
-              <RestaurantOverview restaurantSlug={slug} />
             </HStack>
 
             <Spacer size="xl" />
