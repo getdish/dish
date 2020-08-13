@@ -29,6 +29,7 @@ echo "Waiting for connection to buildkitd..."
 kubectl port-forward svc/buildkitd 1234:1234 -n docker &
 pid=$!
 function finish {
+  sleep 1
   kill $pid
 }
 trap finish EXIT
@@ -49,6 +50,7 @@ if [[ $2 = 'with-base' ]]; then
       --output type=image,name=$base_name,push=true \
       --export-cache type=inline \
       --import-cache type=registry,ref=$base_name
+  echo "\`buildctl\` (base) exited with: $?"
 else
   echo "Excluding base image build."
 fi
@@ -66,6 +68,8 @@ buildctl \
     --output type=image,name=$NAME,push=true \
     --export-cache type=inline \
     --import-cache type=registry,ref=$NAME
+
+echo "\`buildctl\` ($NAME) exited with: $?"
 
 kubectl rollout restart deployment/$service_name
 

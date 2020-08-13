@@ -30,8 +30,8 @@ export class GrubHub extends WorkerJob {
 
   static queue_config: QueueOptions = {
     limiter: {
-      max: 3,
-      duration: 5000,
+      max: 10,
+      duration: 1000,
     },
   }
 

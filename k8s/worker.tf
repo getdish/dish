@@ -1,4 +1,9 @@
 resource "kubernetes_deployment" "worker" {
+  lifecycle {
+    ignore_changes = [
+      "spec[0].replicas"
+    ]
+  }
   metadata {
     name = "worker"
   }
@@ -28,8 +33,8 @@ resource "kubernetes_deployment" "worker" {
           image = "docker.k8s.dishapp.com/dish/worker"
           resources {
             limits {
-              cpu    = "1"
-              memory = "2Gi"
+              cpu    = "2"
+              memory = "4Gi"
             }
           }
           env {

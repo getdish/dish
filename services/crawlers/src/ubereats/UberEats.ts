@@ -30,8 +30,8 @@ const axios = axios_base.create({
 export class UberEats extends WorkerJob {
   static queue_config: QueueOptions = {
     limiter: {
-      max: 1,
-      duration: 1500,
+      max: 3,
+      duration: 1000,
     },
   }
 

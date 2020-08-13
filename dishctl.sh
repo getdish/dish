@@ -3,20 +3,22 @@
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
 PG_PROXY_PID=
 TS_PROXY_PID=
+REDIS_PROXY_PID=
 
 pushd $PROJECT_ROOT
 export all_env="$(bin/yaml_to_env.sh)"
 eval "$all_env"
 popd
 
+function generate_random_port() {
+  echo "2$((1000 + RANDOM % 8999))"
+}
+REDIS_PROXY_PORT=$(generate_random_port)
+
 function _kill_port_forwarder {
   echo "Killing script pids for \`kubectl proxy-forward ...\`"
   [ ! -z "$PG_PROXY_PID" ] && kill $PG_PROXY_PID
   [ ! -z "$TS_PROXY_PID" ] && kill $TS_PROXY_PID
-}
-
-function generate_random_port() {
-  echo "2$((1000 + RANDOM % 8999))"
 }
 
 function _ephemeral_pod() {
@@ -71,6 +73,10 @@ function worker_cli() {
 # manual runs.
 function start_crawler() {
   worker "node /app/services/crawlers/_/$1/all.js"
+}
+
+function start_crawler_for_city() {
+  worker "CITY='$2' node /app/services/crawlers/_/$1/all.js"
 }
 
 function start_all_crawlers() {
@@ -168,10 +174,30 @@ function dump_scrape_data_to_s3() {
   echo "...scrape table dumped tpo S3."
 }
 
-function redis_flush_all() {
+function redis_command() {
+  kubectl exec \
+    redis-master-0 -n redis -c redis \
+    -- bash -c "echo ${1@Q} | redis-cli"
+}
+
+function redis_console() {
   kubectl exec -it \
     redis-master-0 -n redis -c redis \
-    -- bash -c 'redis-cli -c "FLUSHALL"'
+    -- bash -c "redis-cli"
+}
+
+function redis_flush_all() {
+  redis_command 'FLUSHALL'
+}
+
+function bull_delete_queue() {
+  redis_command "EVAL \"return redis.call(\
+    'del',\
+    unpack(\
+      redis.call('keys', ARGV[1])\
+    )\
+  )\" \
+  0 bull:$1*"
 }
 
 function local_node_with_prod_env() {
@@ -365,6 +391,17 @@ function postgres_console() {
     -d dish
 }
 
+function redis_proxy() {
+  echo "Waiting for connection to redis..."
+  kubectl port-forward svc/redis-master $REDIS_PROXY_PORT:6379 -n redis &
+  REDIS_PROXY_PID=$!
+  trap _kill_port_forwarder EXIT
+  while ! netstat -tna | grep 'LISTEN\>' | grep -q ":$REDIS_PROXY_PORT\>"; do
+    sleep 0.1
+  done
+  echo "...connected to redis."
+}
+
 function logs() {
   namespace=${2:-default}
   kubectl -n $namespace \
@@ -383,6 +420,15 @@ function run_local_search_endpoint() {
   go generate
   go run ./main.go ./embedded.go
   popd
+}
+
+function bull_console() {
+  redis_proxy
+  $PROJECT_ROOT/services/crawlers/node_modules/.bin/bull-repl \
+    "connect \
+      --host localhost \
+      --port $REDIS_PROXY_PORT \
+      $1"
 }
 
 function_to_run=$1

@@ -37,8 +37,8 @@ export class DoorDash extends WorkerJob {
 
   static queue_config: QueueOptions = {
     limiter: {
-      max: 1,
-      duration: 1500,
+      max: 3,
+      duration: 1000,
     },
   }
 
@@ -64,7 +64,7 @@ export class DoorDash extends WorkerJob {
         stores[id] = new_stores[id]
       }
       if (process.env.RUN_WITHOUT_WORKER == 'true') {
-        //if (Object.keys(stores).length > 0) break
+        if (Object.keys(stores).length > 0) break
       }
     }
     console.log(
@@ -106,8 +106,8 @@ export class DoorDash extends WorkerJob {
     console.log(`DoorDash searching at: ${lat}, ${lng}`)
     while (is_more) {
       const response = await this.graphRequest(this._searchGQL(lat, lng, page))
-      console.log(response)
       const results = response.storeSearch.stores
+      console.log('DOORDASH: search found ' + results.length + ' stores')
       if (results.length > 0) {
         for (const store of results) {
           stores[store.id] = {

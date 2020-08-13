@@ -35,7 +35,7 @@ export class Yelp extends WorkerJob {
 
   static queue_config: QueueOptions = {
     limiter: {
-      max: 1,
+      max: 3,
       duration: 1000,
     },
   }

@@ -11,12 +11,12 @@ import _ from 'lodash'
 import moment, { Moment } from 'moment'
 import { Pool, Result } from 'pg'
 
-const HEREMAPS_API_TOKEN = process.env.TF_VAR_HEREMAPS_API_TOKEN
+const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN
 
 type Coord = [number, number]
 
 export const CITY_LIST = [
-  //'San Francisco, CA',
+  'San Francisco, CA',
   'Los Angeles, CA',
   'Chicago, Illinois',
   'Tuscon, Arizona',

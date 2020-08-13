@@ -1,4 +1,9 @@
 resource "kubernetes_deployment" "web" {
+  lifecycle {
+    ignore_changes = [
+      "spec[0].replicas"
+    ]
+  }
   metadata {
     name = "web"
   }

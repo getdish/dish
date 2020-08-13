@@ -1,4 +1,10 @@
 resource "kubernetes_deployment" "jwt-server" {
+  lifecycle {
+    ignore_changes = [
+      "spec[0].replicas"
+    ]
+  }
+
   metadata {
     name = "jwt-server"
   }

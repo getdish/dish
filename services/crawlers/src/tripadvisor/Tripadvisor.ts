@@ -1,5 +1,6 @@
 import '@dish/common'
 
+import { sentryException } from '@dish/common'
 import { restaurantSaveCanonical } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import * as acorn from 'acorn'
@@ -31,7 +32,7 @@ export class Tripadvisor extends WorkerJob {
 
   static queue_config: QueueOptions = {
     limiter: {
-      max: 2,
+      max: 5,
       duration: 1000,
     },
   }
@@ -97,6 +98,11 @@ export class Tripadvisor extends WorkerJob {
       restaurant_name,
       overview.contact.address
     )
+    if (process.env.RUN_WITHOUT_WORKER == 'true') {
+      console.log(
+        'TRIPADVISOR: found canonical restaurant_name ' + canonical.name
+      )
+    }
     const id = await scrapeInsert({
       source: 'tripadvisor',
       restaurant_id: canonical.id,
@@ -123,7 +129,7 @@ export class Tripadvisor extends WorkerJob {
       const response = await axios.get(TRIPADVISOR_DOMAIN + path)
       html = response.data
     }
-    const more = await this._persisteReviewData(html, scrape_id, page)
+    const more = await this._persistReviewData(html, scrape_id, page)
     if (more) {
       page++
       if (page == 1) {
@@ -156,7 +162,7 @@ export class Tripadvisor extends WorkerJob {
     return restaurant_name_parts.join(', ')
   }
 
-  private async _persisteReviewData(
+  private async _persistReviewData(
     html: string,
     scrape_id: string,
     page: number
@@ -191,8 +197,12 @@ export class Tripadvisor extends WorkerJob {
         date: review.find('.ratingDate').attr('title'),
       })
     }
-    if (!$('.ui_pagination > a.next')!.attr('class')!.includes('disabled')) {
-      more = true
+    try {
+      if (!$('.ui_pagination > a.next')!.attr('class')!.includes('disabled')) {
+        more = true
+      }
+    } catch (error) {
+      sentryException(error)
     }
     return { more: more, data: data }
   }

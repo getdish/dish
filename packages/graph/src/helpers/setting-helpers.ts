@@ -1,5 +1,5 @@
 import { mutation } from '../graphql/mutation'
-import { Setting } from '../types'
+import { Setting, WithID } from '../types'
 import { createQueryHelpersFor, prepareData } from './queryHelpers'
 import { resolvedMutationWithFields } from './queryResolvers'
 
@@ -12,16 +12,17 @@ export async function settingFindOne(
   requested_setting: Setting
 ): Promise<Setting> {
   if (!requested_setting.key) return {}
-  let found_setting: Setting = (await _settingFindOne(requested_setting)) || {}
-  if (!found_setting.key) {
+  let found_setting = await _settingFindOne(requested_setting)
+  if (!found_setting || !found_setting.key) {
     found_setting = await initKey(requested_setting.key)
   }
   return found_setting
 }
 
 async function initKey(key: string) {
+  console.log('SETTING HELPER: inserting new key for ' + key)
   await settingInsert([{ key, value: {} }])
-  return { key, value: {} }
+  return { key, value: {} } as WithID<Setting>
 }
 
 export async function settingGet(key: string) {

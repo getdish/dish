@@ -1,4 +1,9 @@
 resource "kubernetes_deployment" "search" {
+  lifecycle {
+    ignore_changes = [
+      "spec[0].replicas"
+    ]
+  }
   metadata {
     name = "search"
   }
