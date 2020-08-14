@@ -446,6 +446,28 @@ tables:
       filter:
         user_id:
           _eq: X-Hasura-User-Id
+  event_triggers:
+  - name: gorse_sync
+    definition:
+      enable_manual: true
+      insert:
+        columns: '*'
+      delete:
+        columns: '*'
+      update:
+        columns:
+        - rating
+        - username
+        - id
+        - restaurant_id
+        - tag_id
+        - user_id
+        - favorited
+    retry_conf:
+      num_retries: 3
+      interval_sec: 10
+      timeout_sec: 60
+    webhook_from_env: DISH_HOOKS_ENDPOINT
 - table:
     schema: public
     name: review_tag

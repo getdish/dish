@@ -157,6 +157,10 @@ resource "kubernetes_deployment" "worker" {
             name = "NODE_OPTIONS"
             value = "--max_old_space_size=4096"
           }
+          env {
+            name = "GORSE_ENDPOINT"
+            value = "http://gorse:9000"
+          }
         }
       }
     }

@@ -1,0 +1,43 @@
+{
+  "event": {
+    "session_variables": {
+      "x-hasura-role": "admin"
+    },
+    "op": "MANUAL",
+    "data": {
+      "old": null,
+      "new": {
+        "rating": 5,
+        "native_data_unique_key": null,
+        "location": {
+          "coordinates": [0, 0],
+          "type": "Point"
+        },
+        "text": "This restaurant had terrible Test tag existing 1 dishes! Vegetarian An amazing photo of Test tag existing 2!",
+        "favorited": null,
+        "tag_id": "00000000-0000-0000-0000-000000000000",
+        "username": "yelp-FsLRE98uOHkBNzO1Ta5hIw",
+        "categories": null,
+        "authored_at": "2020-05-16T00:00:00+00:00",
+        "restaurant_id": "bba5029a-5b44-4552-b5de-29b6a544d746",
+        "updated_at": "2020-08-13T15:55:19.792819+00:00",
+        "source": "yelp",
+        "id": "fc94136c-b82f-4859-8d92-2caa9ae4109d",
+        "user_id": "00000000-0000-0000-0000-000000000001"
+      }
+    }
+  },
+  "created_at": "2020-08-14T13:56:00.955256Z",
+  "id": "cbc8ea51-cea6-455b-8908-b863d56fa7e6",
+  "delivery_info": {
+    "max_retries": 3,
+    "current_retry": 0
+  },
+  "trigger": {
+    "name": "gorse_sync"
+  },
+  "table": {
+    "schema": "public",
+    "name": "review"
+  }
+}

@@ -171,23 +171,24 @@ export function toDBDate(in_date: Date | string, format: string = '') {
   return out_date
 }
 
-export async function restaurantFindBatchForCity(
+export async function restaurantFindIDBatchForCity(
   size: number,
   previous_id: string,
   city: string,
   radius = 0.5
 ): Promise<Restaurant[]> {
   const coords = await geocode(city)
-  const city_geojson = {
-    location: {
-      _st_d_within: {
-        distance: radius,
-        from: {
-          coordinates: coords.reverse(),
-          type: 'Point',
-        },
-      },
-    },
-  }
-  return await restaurantFindBatch(size, previous_id, city_geojson)
+  const query = `
+    SELECT id FROM restaurant
+      WHERE ST_DWithin(
+        location,
+        ST_Makepoint(${coords[1]}, ${coords[0]}),
+        ${radius}
+      )
+      AND id > '${previous_id}'
+    ORDER BY id
+    LIMIT ${size}
+  `
+  const result = await main_db.query(query)
+  return result.rows
 }

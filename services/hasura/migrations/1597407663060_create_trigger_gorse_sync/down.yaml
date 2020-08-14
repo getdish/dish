@@ -1,0 +1,3 @@
+- args:
+    name: gorse_sync
+  type: delete_event_trigger

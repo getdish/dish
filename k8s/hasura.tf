@@ -59,6 +59,10 @@ resource "kubernetes_deployment" "hasura" {
             name = "HASURA_GRAPHQL_ADMIN_SECRET"
             value = var.HASURA_GRAPHQL_ADMIN_SECRET
           }
+          env {
+            name = "DISH_HOOKS_ENDPOINT"
+            value = "http://dish-hooks:6154"
+          }
 
           command = [
             "graphql-engine", "serve",

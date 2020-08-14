@@ -1,0 +1,11 @@
+{
+  "name": "@dish/gorse",
+  "version": "0.0.1",
+  "scripts": {
+    "test": "ava test/main.ts --verbose"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "ava": "^3.8.2"
+  }
+}

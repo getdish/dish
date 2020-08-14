@@ -21,6 +21,8 @@ declare -a images=(
   "web"
   "worker"
   "crawlers"
+  "dish-hooks"
+  "gorse"
   "jwt-server"
   "search"
   "backups"

@@ -32,10 +32,10 @@ import {
   scrapeGetData,
 } from '../scrape-helpers'
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
-import { main_db, restaurantFindBatchForCity } from '../utils'
+import { main_db, restaurantFindIDBatchForCity } from '../utils'
 import { Tagging } from './Tagging'
 
-const PER_PAGE = 50
+const PER_PAGE = 10000
 
 const UNIQUNESS_VIOLATION =
   'Uniqueness violation. duplicate key value violates ' +
@@ -76,7 +76,7 @@ export class Self extends WorkerJob {
   async allForCity(city: string) {
     let previous_id = globalTagId
     while (true) {
-      const results = await restaurantFindBatchForCity(
+      const results = await restaurantFindIDBatchForCity(
         PER_PAGE,
         previous_id,
         city

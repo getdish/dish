@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig",
+
+  "compilerOptions": {
+    "composite": true,
+    "module": "CommonJS",
+    "strictNullChecks": true,
+    "outDir": "_",
+    "rootDir": "src"
+  },
+
+  "include": ["src"],
+  "references": []
+}

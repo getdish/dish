@@ -191,13 +191,14 @@ function redis_flush_all() {
 }
 
 function bull_delete_queue() {
-  redis_command "EVAL \"return redis.call(\
-    'del',\
-    unpack(\
-      redis.call('keys', ARGV[1])\
-    )\
-  )\" \
-  0 bull:$1*"
+  queue=$1
+  redis_command "EVAL \"\
+    local keys = redis.call('keys', ARGV[1]) \
+    for i=1,#keys,5000 do \
+      redis.call('del', unpack(keys, i, math.min(i+4999, #keys))) \
+    end \
+    return keys \
+  \" 0 bull:$queue*"
 }
 
 function local_node_with_prod_env() {
@@ -429,6 +430,12 @@ function bull_console() {
       --host localhost \
       --port $REDIS_PROXY_PORT \
       $1"
+}
+
+function gorse_status() {
+  _run_on_cluster alpine && return 0
+  apk add --no-cache curl
+  curl http://gorse:9000/status
 }
 
 function_to_run=$1

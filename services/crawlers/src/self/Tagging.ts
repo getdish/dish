@@ -36,7 +36,7 @@ export class Tagging {
   SPECIAL_FILTER_THRESHOLD = 3
   GEM_UIID = 'da0e0c85-86b5-4b9e-b372-97e133eccb43'
   sentiment = new Sentiment()
-  reviews: Review[] = []
+  all_reviews: Review[] = []
 
   constructor(crawler: Self) {
     this.crawler = crawler
@@ -134,12 +134,12 @@ export class Tagging {
     this._found_tags = {}
     this.all_tags = await restaurantGetAllPossibleTags(this.crawler.restaurant)
     this.restaurant_tag_ratings = {}
-    const all_reviews = [
-      ...this._scanYelpReviewsForTags(),
-      ...this._scanTripadvisorReviewsForTags(),
-      ...this._scanGoogleReviewsForTags(),
+    this.all_reviews = [
+      ...this._getYelpReviews(),
+      ...this._getTripadvisorReviews(),
+      ...this._getGoogleReviews(),
     ]
-    const all_sources = [...all_reviews, ...this._scanMenuItemsForTags()]
+    const all_sources = [...this.all_reviews, ...this._scanMenuItemsForTags()]
     const reviews_with_sentiments = this.findDishesInText(all_sources)
     await this.findVegInText(all_sources)
     await this._averageAndPersistTagRatings()
@@ -315,7 +315,7 @@ export class Tagging {
     return [-15, -0.001, 0.001, 0.666, 1.081, 1.5, 2, 2.272, 3, 4, 44]
   }
 
-  _scanYelpReviewsForTags() {
+  _getYelpReviews() {
     const yelp_reviews = this.crawler.getPaginatedData(
       // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
       this.crawler.yelp?.data,
@@ -340,7 +340,7 @@ export class Tagging {
     return reviews
   }
 
-  _scanTripadvisorReviewsForTags() {
+  _getTripadvisorReviews() {
     const td_data = this.crawler.tripadvisor?.data || {}
     const tripadvisor_reviews = this.crawler.getPaginatedData(
       td_data,
@@ -366,7 +366,7 @@ export class Tagging {
     return reviews
   }
 
-  _scanGoogleReviewsForTags() {
+  _getGoogleReviews() {
     // @ts-ignore
     const google_reviews = this.crawler.google?.data?.reviews || []
     let reviews: Review[] = []

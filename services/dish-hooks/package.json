@@ -1,0 +1,20 @@
+{
+  "name": "@dish/dish-hooks",
+  "version": "0.0.1",
+  "description": "",
+  "private": true,
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "ava": "^3.8.2",
+    "typescript": "*"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "start": "node ./_/index.js",
+    "test": "true"
+  }
+}
