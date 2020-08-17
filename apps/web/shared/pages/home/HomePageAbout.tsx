@@ -32,9 +32,8 @@ export default graphql(function HomePageAbout({
 
             <Paragraph>
               What you want is a guide. One that understands what makes each
-              place special, down to the dish (and ambiance, service, etc). The
-              best delivery Pad Thai? Finding it today is a tango with 5
-              delivery apps, each with inconsistent ratings.
+              place special, down to the dish. And with 5 different delivery
+              services, it would be nice if it searched across them all too.
             </Paragraph>
 
             <Paragraph>
