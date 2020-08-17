@@ -1,69 +1,8 @@
-# August
-
-- Bigger crawl
-- Review split
-- GPT
-
-# July
-
-✔️ Photos table separation
-✔️ Duplicate images being selected from home
-  👷 Can we make those come from dishes?
-👷 Crawling more cities
-  👷 Crawl "Mo’orea" for nick
-- Auth - work you need to do for backend for social login?
-  - Apple Login is probably best, Google would be second I think
-👷 Point dishapp.com
-✔️ Dish rating sorting order (is it fixed?)
-- Sentiment introspection
-  - store/show (dish + sentiment + reviewText) somewhere
-⚠️ Instagram crawler (I'll wait to see what affect the Google images have)
-  - Images AND news/events
-  - Really helpful at start for SF / homepage
-✔️ Images
-  ✔️ Split photos into own table so we can limit/sort/save jsonb time
-  ✔️ Dish images improvements
-    ✔️ pick higher res? read metadata?
-    ✔️ ML model or similar to choose quality
-  👷 Google images?
-👷 Dish improvements
-  - matching images => dish could be upgraded a lot (could you clarify?)
-  - how do we resolve menu / dish? (what's an example of the problem?)
-    - In the UI it should show them all as "one thing", but we may need to do some work backend to fix that.
-- Crawlers
-  - Postmates / Caviar
-
-✔️  OR prices
-- Start on text summary
-- Add tag.description
-- Find/fix opening_hours bug
-    
-✔️ : Done
-👷: Currently or will actively work on
-⚠️ : Not prioritising
-
-# Home
-
-my ideal query for homepage:
-
-```
-const cuisines = query.trending_cuisines({ in: { location... } })
-
-cuisines.map(cuisine => {
-  query.trending_restaurants({ in..., dish_id? })
-  query.trending_dishes({ in..., restauarant_id? })
-})
-```
-
-That would let me basically mix and match and build up the query how we want, and i can build a really nice home. I'd say lower priority here than a lot of data stuff but if you want to take a stab its worth it whenever if its not too hard.
-
-But when I search "Vietnamese" I want to then sow the trending dishes still, so it would be useful to then have this on search results page when a country is selected:
-
-```
-query.trending_dishes({ in..., parent_tag: 'Vietnamese' })
-```
-
-The autocomplete would show this same query too! Because you want the searchbar to show (Vietnamese). And then I click it show the trending dishes as autocomplete options.
+- Sentiment threshold / weight based on number of sentiment reviews
+- Sentiment Admin interface
+- Sentiment upgrades
+  - explore pre-existing productionized "aspect based" or just improved sentiment models, especially ones that will give us a "confidence" value as well as the sentiment.
+- GPT-2 Summarization
 
 ## Backend
 
