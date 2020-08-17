@@ -13,8 +13,14 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: '12.16.1'
+    - name: Decrypt credentials
+      run: .github/workflows/scripts/decrypt_creds.sh
     - name: Install dev dependencies
       run: .github/workflows/scripts/install_dev_deps.sh
+    - name: Setup admin
+      run: .github/workflows/scripts/setup_admin.sh
+    - name: Build docker images
+      run: .github/workflows/scripts/build.sh
     - name: Setup services
       run: .github/workflows/scripts/setup_services.sh
     - name: HTTP-dependent crawler tasks
