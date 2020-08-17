@@ -20,12 +20,11 @@ docker login $DISH_REGISTRY -u dish -p $DISH_REGISTRY_PASSWORD
 declare -a images=(
   "web"
   "worker"
-  "crawlers"
   "dish-hooks"
   "gorse"
   "jwt-server"
   "search"
-  "backups"
+  "cron"
 )
 for image in "${images[@]}"
 do

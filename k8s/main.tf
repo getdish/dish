@@ -21,6 +21,7 @@ variable "SENTRY_PG_PASS" {}
 variable "SENTRY_USER_PASS" {}
 variable "POSTGRES_REPMGR_PASSWORD" {}
 variable "HEREMAPS_API_TOKEN" {}
+variable "CURRENT_DISH_CLUSTER" {}
 
 variable "UBEREATS_PROXY" {}
 variable "YELP_AWS_PROXY" {}

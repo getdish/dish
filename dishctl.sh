@@ -1,14 +1,24 @@
 #!/bin/bash
 
-PROJECT_ROOT=$(git rev-parse --show-toplevel)
 PG_PROXY_PID=
 TS_PROXY_PID=
 REDIS_PROXY_PID=
 
-pushd $PROJECT_ROOT
-export all_env="$(bin/yaml_to_env.sh)"
-eval "$all_env"
-popd
+if command -v git &> /dev/null; then
+  PROJECT_ROOT=$(git rev-parse --show-toplevel)
+  pushd $PROJECT_ROOT
+    if [ -f "env.enc.production.yaml" ]; then
+      export all_env="$(bin/yaml_to_env.sh)"
+      eval "$all_env"
+    else
+      echo "Not loading ENV from env.enc.production.yaml as it doesn't exist"
+    fi
+  popd
+else
+  echo "Not loading ENV from env.enc.production.yaml as there's no \`git\` command"
+  export all_env="$(env)"
+fi
+
 
 function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
@@ -236,7 +246,7 @@ function s3() {
 }
 
 function list_backups() {
-  s3 ls $DISH_BACKUP_BUCKET
+  s3 ls $DISH_BACKUP_BUCKET | sort -k1,2
 }
 
 function backup_main_db() {
@@ -284,7 +294,7 @@ get_latest_scrape_backup() {
     s3 ls $DISH_BACKUP_BUCKET \
       | tail -1 \
       | awk '{ print $4 }' \
-      | grep "dish-db-backup"
+      | grep "dish-scrape-backup"
     )
 }
 
@@ -436,6 +446,33 @@ function gorse_status() {
   _run_on_cluster alpine && return 0
   apk add --no-cache curl
   curl http://gorse:9000/status
+}
+
+function install_doctl() {
+  DOCTL_VERSION='1.42.0'
+  DOCTL_BINARY=https://github.com/digitalocean/doctl/releases/download/v$DOCTL_VERSION/doctl-$DOCTL_VERSION-linux-amd64.tar.gz
+  DOCTL_PATH=$HOME/bin/
+  echo "Installing \`doctl\` binary v$DOCTL_VERSION..."
+  curl -sL $DOCTL_BINARY | tar -xzv -C $DOCTL_PATH
+  doctl version
+}
+
+function init_doctl() {
+  doctl auth init -t $TF_VAR_DO_DISH_KEY
+  doctl kubernetes cluster kubeconfig save $TF_VAR_CURRENT_DISH_CLUSTER
+}
+
+function install_kubectl() {
+  VERSION=1.18.0
+  BINARY=https://storage.googleapis.com/kubernetes-release/release/v$VERSION/bin/linux/amd64/kubectl
+  INSTALL_PATH=$HOME/bin
+  echo "Installing \`kubectl\` binary v$VERSION..."
+  curl -sL -o $INSTALL_PATH/kubectl $BINARY
+  chmod a+x $INSTALL_PATH/kubectl
+}
+
+function ping_home_page() {
+  curl 'https://search.dishapp.com/top_cuisines?lon=-122.421351&lat=37.759251&distance=0.16'
 }
 
 function_to_run=$1

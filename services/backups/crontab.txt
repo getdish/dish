@@ -1,1 +1,0 @@
-0 0 * * 6 /root/backup.sh >> /var/log/cron.log

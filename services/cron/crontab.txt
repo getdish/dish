@@ -1,0 +1,23 @@
+# Min  Hour Day  Mon  Weekday
+#
+# *    *    *    *    *  command to be executed
+#
+# ┬    ┬    ┬    ┬    ┬
+# │    │    │    │    └─  Weekday  (0=Sun .. 6=Sat)
+# │    │    │    └──────  Month    (1..12)
+# │    │    └───────────  Day      (1..31)
+# │    └────────────────  Hour     (0..23)
+# └─────────────────────  Minute   (0..59)
+
+0 0 * * 6 /root/dishctl.sh backup_main_db
+0 0 * * 7 /root/dishctl.sh backup_scrape_db
+0  0  *  *  0  /root/dishctl.sh start_crawler google
+0 12  *  *  1  /root/dishctl.sh start_crawler infatuated
+0  0  *  *  2  /root/dishctl.sh start_crawler grubhub
+0  0  *  *  1  /root/dishctl.sh start_crawler michelin
+0  0  *  *  2  /root/dishctl.sh start_crawler self
+0  0  *  *  3  /root/dishctl.sh start_crawler tripadvisor
+0  0  1  *  4  /root/dishctl.sh start_crawler ubereats
+0  0  *  *  5  /root/dishctl.sh start_crawler yelp
+0  0  *  *  6  /root/dishctl.sh start_crawler doordash
+*  *  *  *  *  /root/dishctl.sh ping_home_page

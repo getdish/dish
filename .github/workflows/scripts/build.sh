@@ -56,12 +56,11 @@ buildctl \
 
 parallel --lb build ::: \
   'services/worker' \
-  'services/crawlers' \
   'services/dish-hooks' \
   'services/gorse' \
   'services/search' \
   'services/jwt-server' \
-  'services/backups' \
+  'services/cron' \
   'apps/web'
 
 docker images
