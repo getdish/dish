@@ -53,10 +53,10 @@ resource "digitalocean_kubernetes_node_pool" "ancillary" {
 resource "digitalocean_kubernetes_node_pool" "workers" {
   cluster_id = digitalocean_kubernetes_cluster.dish.id
   name       = "dish-worker-pool"
-  size       = "s-4vcpu-8gb"
+  size       = "s-6vcpu-16gb"
   auto_scale = true
   min_nodes = 1
-  max_nodes = 10
+  max_nodes = 7
 }
 
 resource "digitalocean_kubernetes_node_pool" "ci" {
