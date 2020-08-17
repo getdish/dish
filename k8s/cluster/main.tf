@@ -56,7 +56,7 @@ resource "digitalocean_kubernetes_node_pool" "workers" {
   size       = "s-4vcpu-8gb"
   auto_scale = true
   min_nodes = 1
-  max_nodes = 5
+  max_nodes = 10
 }
 
 resource "digitalocean_kubernetes_node_pool" "ci" {

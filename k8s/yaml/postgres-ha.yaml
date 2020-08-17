@@ -286,7 +286,7 @@ postgresql:
   ## ref: https://github.com/bitnami/bitnami-docker-postgresql-repmgr#allow-settings-to-be-loaded-from-files-other-than-the-default-postgresqlconf
   ##
   extendedConf:
-    max_connections: 100
+    max_connections: 200
     shared_buffers: "2GB"
     effective_cache_size: "6GB"
     maintenance_work_mem: "512MB"
