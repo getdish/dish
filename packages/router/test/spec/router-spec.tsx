@@ -1,4 +1,3 @@
-import { RecoilRoot } from '@dish/use-store'
 import React from 'react'
 
 import { ProvideRouter, Route, useRouter } from '../../_'
@@ -18,11 +17,9 @@ const routes = {
 
 export function RecoilStoreRouterTest1() {
   return (
-    <RecoilRoot initializeState={null}>
-      <ProvideRouter routes={routes}>
-        <Component1 />
-      </ProvideRouter>
-    </RecoilRoot>
+    <ProvideRouter routes={routes}>
+      <Component1 />
+    </ProvideRouter>
   )
 }
 

@@ -1395,11 +1395,6 @@
     "@gqless/utils" "^0.0.1-alpha.26"
     tslib "^1.11.1"
 
-"@o/recoil@0.0.10":
-  version "0.0.10"
-  resolved "https://registry.npmjs.org/@o/recoil/-/recoil-0.0.10.tgz#5aca1e78f939166b532f8b274b0e3bc454db01aa"
-  integrity sha512-u90hW/O6/Namo4mJUJubtta9N420EJkDNZT1VnP4JLiTGq8VmjAlYEy5AZ0jDYT1bIvoJOflnFra4pVFRI9ocQ==
-
 "@pmmmwh/react-refresh-webpack-plugin@^0.4.1":
   version "0.4.1"
   resolved "https://registry.npmjs.org/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.4.1.tgz#a4db0ed8e58c2f8566161c9a8cdf1d095c9a891b"
@@ -18426,3 +18421,8 @@ yn@3.1.1:
   version "3.1.1"
   resolved "https://registry.npmjs.org/yn/-/yn-3.1.1.tgz#1e87401a09d767c1d5eab26a6e4c185182d2eb50"
   integrity sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
+
+zustand@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.npmjs.org/zustand/-/zustand-3.0.1.tgz#250264ace74152463cfb147cd97b5efda7be3665"
+  integrity sha512-HyIEcOStyTh3GRpomgMCFCjHjjTgaTfdItR4ThXjH8y+gA/xIwU+ay2sL0/47vtmETIHm7j739z2rOeiCSZWlQ==

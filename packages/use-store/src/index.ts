@@ -1,15 +1,9 @@
-import {
-  RecoilState,
-  RecoilValueReadOnly,
-  atom,
-  selector,
-  useRecoilInterface,
-} from '@o/recoil'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
+import create, { UseStore } from 'zustand'
+import shallow from 'zustand/shallow'
 
 import { Store } from './Store'
 
-export { RecoilRoot } from '@o/recoil'
 export * from './Store'
 
 export function get<A>(
@@ -19,149 +13,132 @@ export function get<A>(
   return _ as any
 }
 
-type StoreAttribute =
-  | { type: 'value'; key: string; value: RecoilState<any> }
-  | { type: 'action'; key: string; value: Function }
-  | {
-      type: 'selector'
-      key: string
-      value: RecoilValueReadOnly<unknown>
-    }
-
-type StoreAttributes = { [key: string]: StoreAttribute }
-
-const keys = new Set<string>()
-
-export function useRecoilStore<A extends Store<B>, B>(
-  StoreKlass: new (props: B) => A | (new () => A),
-  props?: B
-): A {
-  const [storeInstance, attrs] = useStoreInstance(StoreKlass, props)
-  const { getSetRecoilState, getRecoilValue } = useRecoilInterface()
-  const isMounted = useRef(true)
-
-  useEffect(() => {
-    return () => {
-      isMounted.current = false
-    }
-  }, [])
-
-  return useMemo(() => {
-    return new Proxy(storeInstance as A, {
-      get(target, key) {
-        return getProxyValue(target, key, attrs, getRecoilValue)
-      },
-      set(target, key, value, receiver) {
-        if (isMounted.current === false) {
-          return true
-        }
-        if (typeof key === 'string') {
-          const prev = getRecoilValue(attrs[key].value)
-          if (prev !== value) {
-            const setter = getSetRecoilState(attrs[key].value)
-            setter(value)
-            Reflect.set(target, key, value, receiver)
-          }
-          return true
-        }
-        return Reflect.set(target, key, value, receiver)
-      },
-    })
-  }, [])
+type StoreInfo = {
+  klass: any
+  getters: { [key: string]: Function }
+  useStore: UseStore<any>
+  mount: Function
 }
 
-const cache: {
-  [storeKey: string]: { [key: string]: [any, StoreAttributes] }
-} = {}
+const keys = new Set<string>()
+const cache = new WeakMap<any, { [key: string]: StoreInfo }>()
 const getKey = (props: Object) =>
   Object.keys(props)
     .sort()
     .map((x) => `${x}${props[x]}`)
     .join('')
 
-function useStoreInstance(StoreKlass: any, props: any) {
+export function useStore<A extends Store<B>, B>(
+  StoreKlass: new (props: B) => A | (new () => A),
+  props?: B
+): A {
+  const isMountedRef = useIsMountedRef()
   const propsKey = props ? getKey(props) : ''
-  const cached = cache[StoreKlass]?.[propsKey]
-  if (cached) {
-    return cached
+  if (propsKey) {
+    const cachedStore = cache.get(StoreKlass)
+    const cachedStoreInstance = cachedStore?.[propsKey]
+    if (cachedStoreInstance) {
+      return useStoreInstance(cachedStoreInstance)
+    }
   }
+  // create store on first use
   const storeName = StoreKlass.name
   if (keys.has(storeName)) {
     throw new Error(`Store name already used`)
   }
-  const storeInstance = new StoreKlass(props as any)
-  const descriptors = getStoreDescriptors(storeInstance)
-  const attrs: StoreAttributes = {}
-  const storeProxy = new Proxy(storeInstance as any, {
-    get(target, key) {
-      return getProxyValue(target, key, attrs, curGetter)
+  let storeInstance = new StoreKlass(props!)
+  let storeProxy: any
+  const getters = {}
+  const actions = {}
+
+  const useStore = create<any>((set, get) => {
+    const zustandStore = {}
+
+    storeProxy = new Proxy(storeInstance, {
+      get(target, key) {
+        if (typeof key == 'string') {
+          if (getters[key]) {
+            return getters[key]()
+          }
+          if (actions[key]) {
+            return actions[key]
+          }
+          return get()[key]
+        }
+        return Reflect.get(target, key)
+      },
+      set(target, key, value, receiver) {
+        if (isMountedRef.current === false) return true
+        if (typeof key === 'string') {
+          set({ [key]: value })
+        }
+        return Reflect.set(target, key, value, receiver)
+      },
+    })
+
+    const descriptors = getStoreDescriptors(storeInstance)
+    for (const key in descriptors) {
+      const descriptor = descriptors[key]
+      if (typeof descriptor.value === 'function') {
+        actions[key] = descriptor.value.bind(storeProxy)
+      } else if (typeof descriptor.get === 'function') {
+        getters[key] = descriptor.get.bind(storeProxy)
+      } else {
+        zustandStore[key] = descriptor.value
+      }
+    }
+
+    return zustandStore
+  })
+
+  if (!cache.get(StoreKlass)) {
+    cache.set(StoreKlass, {})
+  }
+  const cacheByProps = cache.get(StoreKlass)!
+  const value: StoreInfo = {
+    klass: storeProxy,
+    useStore,
+    getters,
+    mount: storeProxy.mount,
+  }
+  cacheByProps[propsKey] = value
+  return useStoreInstance(value)
+}
+
+const idFn = (x) => x
+function useStoreInstance(info: StoreInfo): any {
+  const store = info.useStore(idFn, shallow)
+
+  useLayoutEffect(() => {
+    info.klass.mount?.()
+  }, [])
+
+  return new Proxy(info.klass, {
+    get(_, key) {
+      if (typeof store[key] !== 'undefined') {
+        return store[key]
+      }
+      return info.klass[key]
+    },
+    set(a, b, c, d) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(
+          'Not recommended to mutate directly as it can lead to confusing code. Create a function instead.'
+        )
+      }
+      return Reflect.set(a, b, c, d)
     },
   })
-  for (const prop in descriptors) {
-    attrs[prop] = getDescription(
-      storeProxy,
-      `${storeName}/${prop}/${propsKey}`,
-      descriptors[prop]
-    )
-  }
-  cache[StoreKlass] = cache[StoreKlass] ?? {}
-  cache[StoreKlass][propsKey] = [storeInstance, attrs]
-  return [storeInstance, attrs] as const
 }
 
-let curGetter: any = null
-
-function getDescription(
-  target: any,
-  key: string,
-  descriptor: TypedPropertyDescriptor<any>
-): StoreAttribute {
-  if (typeof descriptor.value === 'function') {
-    return {
-      type: 'action',
-      key,
-      value: descriptor.value,
+function useIsMountedRef() {
+  const isMounted = useRef(true)
+  useEffect(() => {
+    return () => {
+      isMounted.current = false
     }
-  } else if (typeof descriptor.get === 'function') {
-    return {
-      type: 'selector',
-      key,
-      value: selector({
-        key,
-        get: ({ get }) => {
-          curGetter = get
-          const res = descriptor.get!.call(target)
-          return res
-        },
-      }),
-    }
-  }
-  return {
-    type: 'value',
-    key,
-    value: atom({
-      key,
-      default: descriptor.value,
-    }),
-  }
-}
-
-function getProxyValue(
-  target: any,
-  key: string | number | symbol,
-  attrs: StoreAttributes,
-  getter: Function
-) {
-  if (typeof key === 'string') {
-    switch (attrs[key].type) {
-      case 'action':
-        return attrs[key].value
-      case 'value':
-      case 'selector':
-        return getter(attrs[key].value)
-    }
-  }
-  return Reflect.get(target, key)
+  }, [])
+  return isMounted
 }
 
 function getStoreDescriptors(storeInstance: any) {

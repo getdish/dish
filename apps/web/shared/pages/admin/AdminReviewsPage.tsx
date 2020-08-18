@@ -1,6 +1,6 @@
 import { graphql, order_by, query } from '@dish/graph'
 import { HStack, Text, VStack, useDebounceValue } from '@dish/ui'
-import { RecoilRoot, Store, useRecoilStore } from '@dish/use-store'
+import { Store, useStore } from '@dish/use-store'
 import React, { memo, useState } from 'react'
 import { ScrollView } from 'react-native'
 
@@ -14,11 +14,7 @@ import { VerticalColumn } from './VerticalColumn'
 //   - "Create" form
 
 export default graphql(function AdminReviewsPage() {
-  return (
-    <RecoilRoot initializeState={null}>
-      <AdminReviewsPageContent />
-    </RecoilRoot>
-  )
+  return <AdminReviewsPageContent />
 })
 
 export class ReviewStore extends Store {
@@ -67,7 +63,7 @@ const RestaurantList = memo(
 
 const RestaurantsListContent = graphql(({ search }: { search: string }) => {
   const selectionStore = useReviewSelectionStore()
-  const reviewStore = useRecoilStore(ReviewStore)
+  const reviewStore = useStore(ReviewStore)
   const limit = 200
   const [page, setPage] = useState(1)
   const results = query.restaurant({
@@ -145,7 +141,7 @@ const ReviewList = memo(
 )
 
 const ReviewListContent = graphql(({ search }: { search: string }) => {
-  const reviewStore = useRecoilStore(ReviewStore)
+  const reviewStore = useStore(ReviewStore)
   const selectionStore = useReviewSelectionStore()
   const limit = 200
   const [page, setPage] = useState(1)

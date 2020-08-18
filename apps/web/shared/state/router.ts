@@ -64,6 +64,8 @@ export const router = new Router({
   routes,
 })
 
+router.mount()
+
 export type OnRouteChangeCb = (item: HistoryItem) => Promise<void>
 
 const start: AsyncAction<{

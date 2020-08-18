@@ -15,7 +15,7 @@ import { popoverCloseCbs } from './PopoverShared'
 
 export default function PopoverMain(props: PopoverProps) {
   // const { id } = useContext(PopoverContext)
-  // const { show } = useRecoilStore(PopoverStore, { id })
+  // const { show } = useStore(PopoverStore, { id })
   // console.log('PopoverMain', { id, show })
   const isOpen = /* show == false ? false :  */ props.isOpen
   const onChangeOpenCb = useCallback(props.onChangeOpen as any, [

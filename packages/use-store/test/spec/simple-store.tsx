@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { RecoilRoot, Store, get, useRecoilStore } from '../../_'
+import { Store, get, useStore } from '../../_'
 
 const sleep = () => new Promise((res) => setTimeout(res, 100))
 
@@ -42,15 +42,11 @@ class TodoList extends Store<{
 }
 
 export function SimpleStoreTest({ id }: { id: number }) {
-  return (
-    <RecoilRoot initializeState={null}>
-      <SimpleStoreTestComponent key={id} id={id} />
-    </RecoilRoot>
-  )
+  return <SimpleStoreTestComponent key={id} id={id} />
 }
 
 function SimpleStoreTestComponent(props: { id: number }) {
-  const store = useRecoilStore(TodoList, props)
+  const store = useStore(TodoList, props)
   return (
     <>
       <div id="x">{store.lastItem.text}</div>
