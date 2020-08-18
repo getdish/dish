@@ -24,7 +24,7 @@ type GetChildren<A> = (props: StackItemProps<A>) => React.ReactNode
 export function HomeStackView<A extends HomeStateItem>(props: {
   children: GetChildren<A>
 }) {
-  // const currentStateStore = useRecoilStore(HomeStateStore)
+  // const currentStateStore = useStore(HomeStateStore)
   const om = useOvermind()
   om.state.home.stateIds
   const stackItems = getBreadcrumbs(omStatic.state.home.states)
@@ -76,7 +76,7 @@ const HomeStackViewItem = memo(
     isRemoving: boolean
     isAdding: boolean
   }) => {
-    // const popoverStore = useRecoilStore(PopoverStore, { id })
+    // const popoverStore = useStore(PopoverStore, { id })
     const isSmall = useMediaQueryIsSmall()
 
     const top = isSmall

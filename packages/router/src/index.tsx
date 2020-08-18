@@ -1,4 +1,4 @@
-import { Store, useRecoilStore } from '@dish/use-store'
+import { Store, useStore } from '@dish/use-store'
 import { createBrowserHistory } from 'history'
 import * as React from 'react'
 import { createContext, useContext } from 'react'
@@ -41,7 +41,6 @@ type RouterProps = { routes: RoutesTable }
 type HistoryCb = (cb: HistoryItem) => void
 
 export class Router extends Store<RouterProps> {
-  started = false
   router = new TinyRouter()
   routes: RoutesTable = {}
   routeNames: string[] = []
@@ -67,12 +66,9 @@ export class Router extends Store<RouterProps> {
     return this.history[this.history.length - 1] ?? defaultPage
   }
 
-  constructor(props: RouterProps) {
-    super(props)
-    if (this.started) {
-      throw new Error(`Already started router`)
-    }
-    const { routes } = props
+  mount() {
+    console.log('is mount being called?')
+    const { routes } = this.props
     this.routes = routes
     this.routeNames = Object.keys(routes)
     this.routePathToName = Object.keys(routes).reduce((acc, key) => {
@@ -87,7 +83,6 @@ export class Router extends Store<RouterProps> {
     nextRouter = nextRouter.all('*', '404')
 
     this.router = nextRouter
-    this.started = true
 
     history.listen((event) => {
       const state = event.location.state as any
@@ -168,6 +163,7 @@ export class Router extends Store<RouterProps> {
         case 'none':
           if (item.type === 'replace') {
             this.stack[this.stackIndex] = next
+            this.stack = [...this.stack]
           } else {
             if (this.stackIndex < this.stack.length - 1) {
               // remove future states on next push
@@ -326,7 +322,7 @@ export function ProvideRouter({
   children: any
 }) {
   // just sets it up
-  useRecoilStore(Router, {
+  useStore(Router, {
     routes,
   })
   return (
@@ -339,7 +335,7 @@ export function useRouter() {
   if (!routes) {
     throw new Error(`no routes`)
   }
-  return useRecoilStore(Router, { routes })
+  return useStore(Router, { routes })
 }
 
 // we could enable functionality like this
@@ -367,7 +363,6 @@ const defaultPage = {
 }
 
 const uid = () => `${Math.random()}`.replace('.', '')
-let curSearch = {}
 
 const isObject = (x: any) => x && `${x}` === `[object Object]`
 const isEqual = (a: any, b: any) => {

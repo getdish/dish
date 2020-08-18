@@ -19,12 +19,14 @@ test('creates a store and routes', async (t) => {
   act(() => {
     navigate.props.onClick()
   })
+  await sleep(10)
   node = findCurPageName()
   t.is(node.children[0], 'login')
   // click twice
   act(() => {
     navigate.props.onClick()
   })
+  await sleep(10)
   node = findCurPageName()
   t.is(node.children[0], 'user')
   t.is(
@@ -35,3 +37,5 @@ test('creates a store and routes', async (t) => {
 
 // TODO: test that it doesn't update/render too much
 // TODO: no good way to test most things (back/forward) without browser...
+
+const sleep = (ms: number = 0) => new Promise((res) => setTimeout(res, ms))

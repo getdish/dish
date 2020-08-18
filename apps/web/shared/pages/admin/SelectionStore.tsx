@@ -1,4 +1,4 @@
-import { Store, useRecoilStore } from '@dish/use-store'
+import { Store, useStore } from '@dish/use-store'
 
 class SelectionStore extends Store<{ id: string }> {
   selectedIndices = [0, 0]
@@ -17,7 +17,7 @@ class SelectionStore extends Store<{ id: string }> {
 }
 
 export const useSelectionStore = (id: string) => {
-  return useRecoilStore(SelectionStore, { id })
+  return useStore(SelectionStore, { id })
 }
 
 export const useTagSelectionStore = () => {

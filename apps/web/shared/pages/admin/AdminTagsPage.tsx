@@ -21,7 +21,7 @@ import {
   useDebounceValue,
   useForceUpdate,
 } from '@dish/ui'
-import { RecoilRoot, Store, useRecoilStore } from '@dish/use-store'
+import { Store, useStore } from '@dish/use-store'
 import { capitalize, uniqBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
@@ -38,11 +38,7 @@ import { VerticalColumn } from './VerticalColumn'
 //   - "Create" form
 
 export default graphql(function AdminTagsPage() {
-  return (
-    <RecoilRoot initializeState={null}>
-      <AdminTagsPageContent />
-    </RecoilRoot>
-  )
+  return <AdminTagsPageContent />
 })
 
 class TagStore extends Store {
@@ -219,7 +215,7 @@ const TagListContent = memo(
       newTag?: Tag
       lastRowSelection: string
     }) => {
-      const tagStore = useRecoilStore(TagStore)
+      const tagStore = useStore(TagStore)
       const selectionStore = useTagSelectionStore()
       const limit = 40
       const [page, setPage] = useState(1)
@@ -348,7 +344,7 @@ const TagListItem = graphql(
 )
 
 const TagEditColumn = memo(() => {
-  const tagStore = useRecoilStore(TagStore)
+  const tagStore = useStore(TagStore)
   const [showCreate, setShowCreate] = useState(false)
   return (
     <VStack spacing="lg">
@@ -398,7 +394,7 @@ const useTag = (id: string) => {
 
 const TagEdit = memo(
   graphql(() => {
-    const tagStore = useRecoilStore(TagStore)
+    const tagStore = useStore(TagStore)
     if (tagStore.selectedId) {
       const tag = useTag(tagStore.selectedId)
       console.log('got now', tag)
