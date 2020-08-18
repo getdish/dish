@@ -192,18 +192,18 @@ postgresql:
   ##
   livenessProbe:
     enabled: true
-    initialDelaySeconds: 30
+    initialDelaySeconds: 900
     periodSeconds: 10
     timeoutSeconds: 5
     successThreshold: 1
     failureThreshold: 6
   readinessProbe:
     enabled: true
-    initialDelaySeconds: 5
-    periodSeconds: 10
+    initialDelaySeconds: 15
+    periodSeconds: 60
     timeoutSeconds: 5
     successThreshold: 1
-    failureThreshold: 6
+    failureThreshold: 15
 
   ## Pod disruption budget configuration
   ##
