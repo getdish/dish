@@ -6,8 +6,12 @@ jobs:
   daily:
     runs-on: ubuntu-latest
     env:
+      DOCKER_BUILDKIT: 1
       DISH_ENV: "test"
+      DISH_REGISTRY: "docker.k8s.dishapp.com"
+      CURRENT_DISH_CLUSTER: "dish-blue"
       HASURA_ENDPOINT: "http://localhost:8080"
+      GITCRYPT_KEY: ${{ secrets.GITCRYPT_KEY }}
     steps:
     - uses: actions/checkout@master
     - uses: actions/setup-node@v1
