@@ -10,6 +10,7 @@ export const ColumnHeader = ({
   return (
     <HStack
       minHeight={30}
+      padding={2}
       maxWidth="100%"
       overflow="hidden"
       borderBottomColor="#ddd"
