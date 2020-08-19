@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native'
 
 import { AdminListItem } from './AdminListItem'
 import { AdminSearchableColumn } from './AdminSearchableColumn'
-import { useReviewSelectionStore } from './SelectionStore'
+import { SelectionStore, useReviewSelectionStore } from './SelectionStore'
 import { VerticalColumn } from './VerticalColumn'
 
 // whats still broken:
@@ -14,14 +14,6 @@ import { VerticalColumn } from './VerticalColumn'
 //   - "Create" form
 
 export default graphql(function AdminReviewsPage() {
-  return <AdminReviewsPageContent />
-})
-
-export class ReviewStore extends Store {
-  selectedRestaurantId = ''
-}
-
-const AdminReviewsPageContent = graphql(() => {
   return (
     <VStack overflow="hidden" maxHeight="100vh" maxWidth="100vw" width="100%">
       <HStack overflow="hidden" width="100%" flex={1}>
@@ -46,34 +38,35 @@ const AdminReviewsPageContent = graphql(() => {
   )
 })
 
-const RestaurantList = memo(
-  graphql(() => {
-    const [searchRaw, setSearch] = useState('')
-    const search = useDebounceValue(searchRaw, 100)
-    return (
-      <AdminSearchableColumn
-        title="Restaurants"
-        onChangeSearch={(x) => setSearch(x)}
-      >
-        <RestaurantsListContent search={search} />
-      </AdminSearchableColumn>
-    )
-  })
-)
+const RestaurantList = () => {
+  const [searchRaw, setSearch] = useState('')
+  const search = useDebounceValue(searchRaw, 100)
+  return (
+    <AdminSearchableColumn
+      title="Restaurants"
+      onChangeSearch={(x) => setSearch(x)}
+    >
+      <RestaurantsListContent search={search} />
+    </AdminSearchableColumn>
+  )
+}
+
+export class ReviewStore extends Store {
+  selectedRestaurantId = ''
+}
 
 const RestaurantsListContent = graphql(({ search }: { search: string }) => {
-  const selectionStore = useReviewSelectionStore()
   const reviewStore = useStore(ReviewStore)
   const limit = 200
   const [page, setPage] = useState(1)
   const results = query.restaurant({
     where: {
-      ...(!!search && {
-        name: {
+      name: {
+        ...(!!search && {
           _ilike: `%${search}%`,
-          _neq: '',
-        },
-      }),
+        }),
+        _neq: '',
+      },
     },
     limit: limit,
     offset: (page - 1) * limit,
@@ -84,25 +77,30 @@ const RestaurantsListContent = graphql(({ search }: { search: string }) => {
     ],
   })
 
+  console.log('what is', results, reviewStore)
+
   return (
     <ScrollView style={{ paddingBottom: 100 }}>
-      {results.map((item, col) => {
+      {results.map((item, index) => {
         return (
           <AdminListItem
             key={item.id}
             text={item.name ?? 'no name'}
-            isFormerlyActive={selectionStore.selectedNames[0] === item.name}
-            isActive={
-              selectionStore.selectedIndices[0] == 0 &&
-              selectionStore.selectedIndices[1] == col
-            }
-            onSelect={() => {
-              reviewStore.selectedRestaurantId = item.id
-              selectionStore.setSelected([0, col])
-              selectionStore.setSelectedName(0, item.name ?? '')
-            }}
-            deletable={col > 0}
-            editable={col > 0}
+            id="reviews"
+            row={index}
+            column={0}
+            // isFormerlyActive={selectionStore.selectedNames[0] === item.name}
+            // isActive={
+            //   selectionStore.selectedIndices[0] == 0 &&
+            //   selectionStore.selectedIndices[1] == col
+            // }
+            // onSelect={() => {
+            //   reviewStore.selectedRestaurantId = item.id
+            //   selectionStore.setSelected([0, col])
+            //   selectionStore.setSelectedName(0, item.name ?? '')
+            // }}
+            deletable={index > 0}
+            editable={index > 0}
           />
         )
       })}
@@ -176,16 +174,10 @@ const ReviewListContent = graphql(({ search }: { search: string }) => {
               0,
               100
             )}`}
-            isFormerlyActive={
-              selectionStore.selectedNames[0] === item.user.username
-            }
-            isActive={
-              selectionStore.selectedIndices[0] == 0 &&
-              selectionStore.selectedIndices[1] == col
-            }
+            row={0}
+            column={col}
             onSelect={() => {
               reviewStore.selectedRestaurantId = item.id
-              selectionStore.setSelected([1, col])
             }}
             deletable={col > 0}
             editable={col > 0}

@@ -27,7 +27,7 @@ export const AdminSearchableColumn = ({
           >
             <TextInput
               placeholder="Search..."
-              style={[styles.textInput, { flex: 1, maxWidth: '50%' }]}
+              style={[styles.textInput, { flex: 1 }]}
               onChangeText={onChangeSearch}
             />
           </HStack>

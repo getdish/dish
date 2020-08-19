@@ -12,9 +12,10 @@ export const VerticalColumn = ({
     <VStack
       minWidth={180}
       maxWidth={250}
+      height="100%"
       flex={1}
-      borderLeftColor="#eee"
-      borderLeftWidth={1}
+      borderRightColor="#ddd"
+      borderRightWidth={1}
       {...props}
     >
       {!!title && <ColumnHeader>{title}</ColumnHeader>}

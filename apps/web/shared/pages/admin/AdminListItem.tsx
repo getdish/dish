@@ -1,17 +1,20 @@
 import { fullyIdle, series } from '@dish/async'
 import { HStack, Text, VStack } from '@dish/ui'
+import { useStore } from '@dish/use-store'
 import { memo, useEffect, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { TextInput } from 'react-native'
 
+import { ColumnSelectionStore, RowSelectionStore } from './SelectionStore'
 import { styles } from './styles'
 
 export type AdminListItemProps = {
+  id: string
+  column: number
+  row: number
   editable?: boolean
   deletable?: boolean
-  isActive?: boolean
   text: string
-  isFormerlyActive?: boolean
   onDelete?: () => void
   onSelect?: () => void
   onEdit?: (name: string) => void
@@ -19,15 +22,29 @@ export type AdminListItemProps = {
 
 export const AdminListItem = memo(
   ({
+    row,
+    column,
+    id,
     text,
-    isFormerlyActive,
-    isActive,
     editable = true,
     deletable = false,
     onSelect,
     onDelete,
     onEdit,
   }: AdminListItemProps) => {
+    const isRowActive = useStore(
+      RowSelectionStore,
+      { id, column },
+      (store) => store.row === row
+    )
+    const isColumnActive = useStore(
+      ColumnSelectionStore,
+      { id },
+      (store) => store.column === column
+    )
+    const isActive = isRowActive && isColumnActive
+    const isFormerlyActive = isRowActive && !isColumnActive
+
     const [isEditing, setIsEditing] = useState(false)
     const [hidden, setHidden] = useState(false)
     const lastTap = useRef(Date.now())

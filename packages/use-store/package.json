@@ -8,14 +8,16 @@
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "ava test/* --verbose"
+    "test": "jest --preset ts-jest/presets/js-with-ts __tests__/*.tsx"
   },
   "dependencies": {
-    "zustand": "^3.0.1",
+    "react-tracked": "2.0.0-alpha.8",
     "use-atom": "^0.5.6"
   },
   "devDependencies": {
-    "@dish/react-test-env": "*"
+    "@dish/react-test-env": "*",
+    "jest": "^26.4.0",
+    "ts-jest": "^26.2.0"
   },
   "peerDependencies": {
     "react": "*"

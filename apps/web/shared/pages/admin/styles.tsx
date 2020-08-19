@@ -2,9 +2,12 @@ import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
   textInput: {
-    fontSize: 16,
-    padding: 6,
+    fontSize: 15,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
     borderWidth: 1,
-    borderColor: '#eee',
+    borderColor: '#ddd',
+    borderRadius: 100,
+    maxWidth: '100%',
   },
 })
