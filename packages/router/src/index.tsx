@@ -67,7 +67,6 @@ export class Router extends Store<RouterProps> {
   }
 
   mount() {
-    console.log('is mount being called?')
     const { routes } = this.props
     this.routes = routes
     this.routeNames = Object.keys(routes)
@@ -101,15 +100,15 @@ export class Router extends Store<RouterProps> {
           : event.action === 'POP'
           ? 'pop'
           : 'push'
-      console.log('router.history', {
-        type,
-        direction,
-        event,
-        state,
-        prevItem,
-        nextItem,
-        stack: this.stack,
-      })
+      // console.log('router.history', {
+      //   type,
+      //   direction,
+      //   event,
+      //   state,
+      //   prevItem,
+      //   nextItem,
+      //   stack: this.stack,
+      // })
       if (type === 'pop' && direction == 'none') {
         // shouldnt happen
         debugger
@@ -171,6 +170,7 @@ export class Router extends Store<RouterProps> {
             }
             this.stack = [...this.stack, next]
             this.stackIndex = this.stack.length - 1
+            console.log('SET IT OFF', this.stackIndex, this.stack.length - 1)
           }
           break
       }

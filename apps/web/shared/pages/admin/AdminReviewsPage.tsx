@@ -174,6 +174,7 @@ const ReviewListContent = graphql(({ search }: { search: string }) => {
               0,
               100
             )}`}
+            id="reviews"
             row={0}
             column={col}
             onSelect={() => {

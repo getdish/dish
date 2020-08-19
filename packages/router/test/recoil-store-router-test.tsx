@@ -10,6 +10,7 @@ interface Context {}
 const test = anyTest as TestInterface<Context>
 
 test('creates a store and routes', async (t) => {
+  console.log('render once')
   const r = TestRenderer.create(<Test.RecoilStoreRouterTest1 />)
   const findCurPageName = () => r.root.findAllByProps({ id: 'curPageName' })[0]
   let node = findCurPageName()
@@ -17,6 +18,7 @@ test('creates a store and routes', async (t) => {
   const [navigate] = r.root.findAllByProps({ id: 'navigate' })
   // click once
   act(() => {
+    console.log('click')
     navigate.props.onClick()
   })
   await sleep(10)
@@ -24,6 +26,7 @@ test('creates a store and routes', async (t) => {
   t.is(node.children[0], 'login')
   // click twice
   act(() => {
+    console.log('click')
     navigate.props.onClick()
   })
   await sleep(10)

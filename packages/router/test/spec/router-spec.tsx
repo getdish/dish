@@ -1,5 +1,5 @@
 import { UseStoreRoot } from '@dish/use-store'
-import React, { StrictMode } from 'react'
+import React, { StrictMode, useLayoutEffect } from 'react'
 
 import { ProvideRouter, Route, useRouter } from '../../_'
 
@@ -30,6 +30,7 @@ export function RecoilStoreRouterTest1() {
 
 function Component1() {
   const router = useRouter()
+  console.log('NOW AT', router.curPage.name, router.stack, router.stackIndex)
   return (
     <>
       <div id="curPageName">{router.curPage.name}</div>
