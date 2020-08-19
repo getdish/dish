@@ -18,46 +18,37 @@ export default graphql(function HomePageAbout({
         style={{ paddingHorizontal: 38, paddingVertical: 38, flex: 1 }}
       >
         <VStack spacing="xl">
-          <Text selectable fontSize={32} fontWeight="300" paddingRight={30}>
-            Find the best 🍜
-          </Text>
+          <Title size="xxl">The best 🍜, definitively</Title>
 
           <VStack spacing="lg">
-            <Paragraph>
-              A quick bowl of pho, or slow-smoked ribs? A quaint place for a
-              date, or Moroccon Medjool dates? A single star rating doesn't
-              capture what you want... but, the comment section does - if you're
-              willing to put in the work.
+            <Paragraph size="xl">
+              When you want a <em>quick</em> bowl of pho, or a <em>nice</em>{' '}
+              place for a date, a bunch of 4.0 star restaurants just isn't
+              helpful... finding &#8220;the one&#8221; shouldn't require reading
+              pages of comments.
             </Paragraph>
 
             <Paragraph>
-              What you want is a guide. One that understands what makes each
-              place special, down to the dish. And with 5 different delivery
-              services, it would be nice if it searched across them all too.
+              We're building a living guide powered by{' '}
+              <em>what people say, not rate</em> to power lists of uniquely good
+              food. It also{' '}
+              <Strong>searches every food delivery app at once</Strong>, which
+              is handy.
             </Paragraph>
 
             <Paragraph>
-              <strong>
-                Dish aggregates from every food review source as well as every
-                delivery app
-              </strong>
-              . It parses comments to extract specific ratings down to the dish.
-              It's a new take on a simple, searchable food guide, built around a
-              small community.
+              Our community helps us curate reviews from every top source - from
+              Yelp to Michelin and beyond - adding tips and tags so that reviews
+              can be summarized into fun descriptions for each place.
             </Paragraph>
 
-            <Paragraph>
-              Explore and debate the uniquely special cuisine in your area.
-              Scratch your itch for a specific delivery craving. Vote and
-              comment on definitive top lists: “the best dish/cuisine in
-              region/city for mood/diet/expense”.
-            </Paragraph>
+            <Divider marginVertical={40} />
 
-            <Paragraph>
-              It’s your Hitchhiker's Guide to Gastronomy: a fun and personal map
-              of food you can curate to your taste and then collect your
-              favorite places. Part guide, part Pokédex for the the food world.
-              It's a smart, fun way to eat in or out.
+            <Paragraph size="xl">
+              We think of it as your Hitchhiker's Guide to Gastronomy - or, your
+              own Pokédex for poke - a curated map, personal, with stats broken
+              down, and simple, effective descriptions. Your pocket guide to the
+              food world.
             </Paragraph>
 
             <Divider marginVertical={40} />
@@ -80,15 +71,70 @@ export default graphql(function HomePageAbout({
   )
 })
 
-const Paragraph = (props: TextProps) => {
+export type SizeName =
+  | 'xxxs'
+  | 'xxs'
+  | 'xs'
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | 'xxl'
+  | 'xxxl'
+
+export type Size = number | SizeName
+type SizableTextProps = TextProps & {
+  size?: Size
+  sizeLineHeight?: number
+}
+
+const Title = (props: SizableTextProps) => {
+  const size = getSize(props.size) * 2.5
+  return (
+    <Paragraph
+      fontWeight={size > 3 ? '200' : '300'}
+      {...props}
+      size={size}
+      sizeLineHeight={0.7}
+    />
+  )
+}
+
+const Strong = (props: SizableTextProps) => {
+  return <Text fontWeight="500" {...props} />
+}
+
+const Paragraph = ({
+  size = 1,
+  sizeLineHeight = 1,
+  ...props
+}: SizableTextProps) => {
+  console.log(size, props.children)
   return (
     <Text
-      fontSize={18}
-      lineHeight={30}
-      opacity={0.85}
+      fontSize={16 * getSize(size)}
+      lineHeight={28 * getSize(size) * sizeLineHeight}
+      color="rgba(0,0,0,0.85)"
       fontWeight="400"
       selectable
       {...props}
     />
   )
+}
+
+const sizes = {
+  xxxs: 0.25,
+  xxs: 0.5,
+  xs: 0.75,
+  sm: 0.9,
+  md: 1,
+  lg: 1.1,
+  xl: 1.25,
+  xxl: 1.5,
+  xxxl: 1.8,
+}
+
+export const getSize = (size: Size): number => {
+  if (typeof size === 'string') return sizes[size]
+  return size ?? 1
 }

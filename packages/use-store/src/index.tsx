@@ -24,14 +24,6 @@ export const UseStoreRoot = (props: { children: any }) => {
   )
 }
 
-type StoreInfo = {
-  storeInstance: any
-  initialState: Object
-  keyMap: { [key: string]: string }
-  getters: { [key: string]: any }
-}
-const cache = new WeakMap<any, { [key: string]: StoreInfo }>()
-
 const reducer = (state: any, action: any) => {
   // console.log('DISPATCH', action)
   switch (action.type) {
@@ -51,7 +43,17 @@ const reducer = (state: any, action: any) => {
   return state
 }
 
+type StoreInfo = {
+  hasMounted: boolean
+  storeInstance: any
+  initialState: Object
+  keyMap: { [key: string]: string }
+  getters: { [key: string]: any }
+  actions: any
+}
+
 const uniqueStoreNames = new Set<string>()
+const cache = new WeakMap<any, { [key: string]: StoreInfo }>()
 
 export function useStore<A extends Store<B>, B, Selector extends Function>(
   StoreKlass: new (props: B) => A | (new () => A),
@@ -71,18 +73,18 @@ export function useStore<A extends Store<B>, B, Selector extends Function>(
     uniqueStoreNames.add(storeName)
   }
 
-  // avoid work next uses
-  const cachedStoreInstance = cached?.[uid]
-  if (cachedStoreInstance) {
-    return useStoreInstance(cachedStoreInstance, selector)
+  // avoid work after init
+  const info = cached?.[uid]
+  if (info) {
+    return useStoreInstance(info, selector)
   }
 
   // create store on first use
-
   const storeInstance = new StoreKlass(props!)
   const initialState = {}
   const keyMap = {}
   const getters = {}
+  const actions = {}
 
   const descriptors = getStoreDescriptors(storeInstance)
   for (const key in descriptors) {
@@ -93,6 +95,7 @@ export function useStore<A extends Store<B>, B, Selector extends Function>(
     const descriptor = descriptors[key]
     if (typeof descriptor.value === 'function') {
       // actions
+      actions[key] = descriptor.value
     } else if (typeof descriptor.get === 'function') {
       getters[key] = descriptor.get
     } else {
@@ -105,14 +108,16 @@ export function useStore<A extends Store<B>, B, Selector extends Function>(
   if (!cache.get(StoreKlass)) {
     cache.set(StoreKlass, {})
   }
-  const subCache = cache.get(StoreKlass)!
+  const propCache = cache.get(StoreKlass)!
   const value: StoreInfo = {
+    hasMounted: false,
     storeInstance,
     initialState,
     getters,
     keyMap,
+    actions,
   }
-  subCache[uid] = value
+  propCache[uid] = value
   return useStoreInstance(value, selector)
 }
 
@@ -125,9 +130,12 @@ function useStoreInstance(info: StoreInfo, selector?: (x: any) => any): any {
   //   stateRef.current = state
   // }, [state])
 
-  // set initial state into reducer
-
+  // mount store
+  // only once per-store globally
   useLayoutEffect(() => {
+    if (info.hasMounted) return
+    info.hasMounted = true
+
     const { initialState } = info
     if (initialState && Object.keys(initialState).length) {
       dispatch({
@@ -146,11 +154,17 @@ function useStoreInstance(info: StoreInfo, selector?: (x: any) => any): any {
           if (info.getters[key]) {
             return info.getters[key].call(proxiedStore)
           }
-          const stateKey = info.keyMap[key]
-          const value = stateRef.current[stateKey]
-          if (typeof value !== 'undefined') {
-            return value
+          if (info.actions[key]) {
+            // TODO@1 we need to basically pass in an immer object at start of action and use that for current state during action????
+            return info.actions[key]
           }
+          const stateKey = info.keyMap[key]
+          // keep this to track
+          const value = stateRef.current[stateKey]
+          // for now no concurrent mode support until above TODO@1 fixed
+          // if (typeof value !== 'undefined') {
+          //   return value
+          // }
         }
         return Reflect.get(info.storeInstance, key)
       },

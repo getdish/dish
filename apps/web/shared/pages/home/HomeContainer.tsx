@@ -1,7 +1,6 @@
 import { AbsoluteVStack, HStack, LinearGradient, VStack } from '@dish/ui'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
-import { Reparentable, sendReparentableChild } from 'react-reparenting'
 
 import { bgAlt, bgLightTranslucent } from '../../colors'
 import { drawerPad, searchBarHeight, zIndexDrawer } from '../../constants'
@@ -10,30 +9,35 @@ import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useLastValueWhen } from './useLastValueWhen'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
+// import { Reparentable, sendReparentableChild } from 'react-reparenting'
+
 const getParent = (isSmall: boolean) => (isSmall ? 'sm' : 'lg')
 
 export function HomeContainer(props: { children: any }) {
   const isSmall = useMediaQueryIsSmall()
-  const [parent, setParent] = useState(getParent(isSmall))
-  const children = [<React.Fragment key="1">{props.children}</React.Fragment>]
+  // const [parent, setParent] = useState()
+  // const children = [<React.Fragment key="1">{props.children}</React.Fragment>]
 
-  useEffect(() => {
-    setParent((last) => {
-      const next = getParent(isSmall)
-      sendReparentableChild(last, next, 0, 0)
-      return next
-    })
-  }, [isSmall])
+  // useEffect(() => {
+  //   setParent((last) => {
+  //     const next = getParent(isSmall)
+  //     sendReparentableChild(last, next, 0, 0)
+  //     return next
+  //   })
+  // }, [isSmall])
 
   return (
     <AbsoluteVStack fullscreen pointerEvents="none" zIndex={zIndexDrawer}>
-      <HomeSmallDrawer>
+      {isSmall && <HomeSmallDrawer>{props.children}</HomeSmallDrawer>}
+      {!isSmall && <HomeContainerLarge>{props.children}</HomeContainerLarge>}
+      {getParent(isSmall)}
+      {/* <HomeSmallDrawer>
         <Reparentable id="sm">{parent === 'sm' ? children : []}</Reparentable>
       </HomeSmallDrawer>
 
       <HomeContainerLarge>
         <Reparentable id="lg">{parent === 'lg' ? children : []}</Reparentable>
-      </HomeContainerLarge>
+      </HomeContainerLarge> */}
     </AbsoluteVStack>
   )
 }
