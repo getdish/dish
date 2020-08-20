@@ -56,5 +56,6 @@ export default async (job: Job) => {
     `Processing job (${job.id}, attempt: ${job.attemptsMade}): ${description}`
   )
   const worker = new klass_map[job.data.className]()
+  worker.job = job
   await worker.run(job.data.fn, job.data.args)
 }

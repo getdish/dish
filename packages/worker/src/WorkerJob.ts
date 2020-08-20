@@ -1,5 +1,6 @@
 import BullQueue, {
   EveryRepeatOptions,
+  Job,
   JobOptions,
   Queue,
   QueueOptions,
@@ -24,6 +25,7 @@ export class WorkerJob {
   static queue_config: QueueOptions = {}
   static job_config: JobOptions = {}
   queue!: Queue
+  job!: Job
 
   async run(fn: string, args: any[] = []) {
     if (this[fn].constructor.name === 'AsyncFunction') {
@@ -91,6 +93,18 @@ export class WorkerJob {
         console.log('Repeating job already exists: ', job, config)
       }
     }
+  }
+
+  async addBigJob(fn: string, args: any[]) {
+    const job_data: JobData = {
+      className: this.constructor.name,
+      fn: fn,
+      args: args,
+    }
+    const queue = await getBullQueue('BigJobs')
+    const job = await queue.add(job_data, { attempts: 1 })
+    await queue.close()
+    return job
   }
 }
 
