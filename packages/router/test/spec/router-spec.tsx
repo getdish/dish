@@ -1,5 +1,4 @@
-import { UseStoreRoot } from '@dish/use-store'
-import React, { StrictMode, useLayoutEffect } from 'react'
+import React, { StrictMode } from 'react'
 
 import { ProvideRouter, Route, useRouter } from '../../_'
 
@@ -19,11 +18,9 @@ const routes = {
 export function RecoilStoreRouterTest1() {
   return (
     <StrictMode>
-      <UseStoreRoot>
-        <ProvideRouter routes={routes}>
-          <Component1 />
-        </ProvideRouter>
-      </UseStoreRoot>
+      <ProvideRouter routes={routes}>
+        <Component1 />
+      </ProvideRouter>
     </StrictMode>
   )
 }

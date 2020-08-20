@@ -1,55 +1,22 @@
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useReducer,
-  useRef,
-} from 'react'
-import { createContainer, getUntrackedObject } from 'react-tracked'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+import * as React from 'react'
 
-import { Store } from './Store'
+import { Store, TRIGGER_UPDATE } from './Store'
+
+// @ts-ignore
+const createMutableSource = React.unstable_createMutableSource
+// @ts-ignore
+const useMutableSource = React.unstable_useMutableSource
 
 export * from './Store'
 
-const useValue = ({ reducer, initialState }) =>
-  useReducer(reducer, initialState)
-const { Provider, useTracked } = createContainer<any, any, any>(useValue)
-
-const initialState = {}
-export const UseStoreRoot = (props: { children: any }) => {
-  return (
-    <Provider reducer={reducer} initialState={initialState}>
-      {props.children}
-    </Provider>
-  )
-}
-
-const reducer = (state: any, action: any) => {
-  // console.log('DISPATCH', action)
-  switch (action.type) {
-    case 'update': {
-      return {
-        ...state,
-        ...action.value,
-      }
-    }
-    case 'updateOne': {
-      return {
-        ...state,
-        [action.key]: action.value,
-      }
-    }
-  }
-  return state
-}
-
 type StoreInfo = {
+  source: any
   hasMounted: boolean
   storeInstance: any
-  initialState: Object
-  keyMap: { [key: string]: string }
   getters: { [key: string]: any }
   actions: any
+  version: number
 }
 
 const uniqueStoreNames = new Set<string>()
@@ -79,19 +46,13 @@ export function useStore<A extends Store<B>, B, Selector extends Function>(
     return useStoreInstance(info, selector)
   }
 
-  // create store on first use
+  // init
   const storeInstance = new StoreKlass(props!)
-  const initialState = {}
-  const keyMap = {}
   const getters = {}
   const actions = {}
 
   const descriptors = getStoreDescriptors(storeInstance)
   for (const key in descriptors) {
-    // our two special keys
-    if (key === 'props' || key === 'mount') {
-      continue
-    }
     const descriptor = descriptors[key]
     if (typeof descriptor.value === 'function') {
       // actions
@@ -99,9 +60,7 @@ export function useStore<A extends Store<B>, B, Selector extends Function>(
     } else if (typeof descriptor.get === 'function') {
       getters[key] = descriptor.get
     } else {
-      const reducerKey = `${uid}${key}`
-      initialState[key] = descriptor.value
-      keyMap[key] = reducerKey
+      // state
     }
   }
 
@@ -111,90 +70,91 @@ export function useStore<A extends Store<B>, B, Selector extends Function>(
   const propCache = cache.get(StoreKlass)!
   const value: StoreInfo = {
     hasMounted: false,
+    version: 0,
     storeInstance,
-    initialState,
     getters,
-    keyMap,
     actions,
+    source: createMutableSource(storeInstance, () => value.version),
   }
   propCache[uid] = value
   return useStoreInstance(value, selector)
 }
 
-function useStoreInstance(info: StoreInfo, selector?: (x: any) => any): any {
-  const [state, dispatch] = useTracked()
-  const stateRef = useRef(state)
-  stateRef.current = state
+const subscribe = (store: Store, callback: Function) =>
+  store.subscribe(callback)
 
-  // useLayoutEffect(() => {
-  //   stateRef.current = state
-  // }, [state])
+const selectKeys = (obj: any, keys: string[] = []) => {
+  const res = {}
+  for (const key of keys) {
+    res[key] = obj[key]
+  }
+  return res
+}
 
-  // mount store
-  // only once per-store globally
+function useStoreInstance(
+  info: StoreInfo,
+  userSelector?: (x: any) => any
+): any {
+  const internal = useRef({
+    isRendering: false,
+    tracked: new Set<string>(),
+  })
+  const selector = userSelector ?? selectKeys
+  const getSnapshot = useCallback(
+    (store) => {
+      // console.log('returning snapshot', store, internal.current.tracked)
+      return selector(store, [...internal.current.tracked])
+    }, // can use selector here
+    [selector]
+  )
+  const state = useMutableSource(info.source, getSnapshot, subscribe)
+  const curState = useRef(state)
+
+  // mount
   useLayoutEffect(() => {
-    if (info.hasMounted) return
-    info.hasMounted = true
-
-    const { initialState } = info
-    if (initialState && Object.keys(initialState).length) {
-      dispatch({
-        type: 'update',
-        value: initialState,
-      })
-    }
-
     storeProxy.mount()
+    return () => {}
   }, [])
 
-  const storeProxy = useMemo(() => {
+  // after render
+  useLayoutEffect(() => {
+    curState.current = state
+    internal.current.isRendering = false
+  })
+
+  const storeProxy = useConstant(() => {
+    let tm
     const proxiedStore = new Proxy(info.storeInstance, {
-      get(_, key) {
+      get(target, key) {
+        // console.log('getting', key, target[key])
         if (typeof key === 'string') {
           if (info.getters[key]) {
             return info.getters[key].call(proxiedStore)
           }
           if (info.actions[key]) {
-            // TODO@1 we need to basically pass in an immer object at start of action and use that for current state during action????
             return info.actions[key]
           }
-          const stateKey = info.keyMap[key]
-          // keep this to track
-          const value = stateRef.current[stateKey]
-          // for now no concurrent mode support until above TODO@1 fixed
-          // if (typeof value !== 'undefined') {
-          //   return value
-          // }
+          if (internal.current.isRendering) {
+            internal.current.tracked.add(key)
+          }
         }
-        return Reflect.get(info.storeInstance, key)
+        return Reflect.get(target, key)
       },
       set(target, key, value, receiver) {
-        if (typeof key === 'string') {
-          dispatch({
-            type: 'updateOne',
-            key: info.keyMap[key],
-            value,
-          })
-        }
-        return Reflect.set(target, key, value, receiver)
+        const res = Reflect.set(target, key, value, receiver)
+        // console.log('setting', target, key, value, target[key])
+        info.version++
+        info.storeInstance[TRIGGER_UPDATE]()
+        return res
       },
     })
     return proxiedStore
-  }, [])
+  })
+
+  internal.current.isRendering = true
 
   return storeProxy
 }
-
-// function useIsMountedRef() {
-//   const isMounted = useRef<'mounting' | 'mounted' | 'unmounted'>('mounting')
-//   useLayoutEffect(() => {
-//     isMounted.current = 'mounted'
-//     return () => {
-//       isMounted.current = 'unmounted'
-//     }
-//   }, [])
-//   return isMounted
-// }
 
 function getStoreDescriptors(storeInstance: any) {
   const proto = Object.getPrototypeOf(storeInstance)
@@ -223,4 +183,13 @@ const getKey = (props: Object) => {
     s += `${key}-${props[key]}_`
   }
   return s
+}
+
+type ResultBox<T> = { v: T }
+export default function useConstant<T>(fn: () => T): T {
+  const ref = useRef<ResultBox<T>>()
+  if (!ref.current) {
+    ref.current = { v: fn() }
+  }
+  return ref.current.v
 }
