@@ -109,10 +109,9 @@ export default graphql(function HomePageAbout({
             </Paragraph>
 
             <Paragraph size="xl">
-              We think of it as your Hitchhiker's Guide to Gastronomy - or, your
-              own Pokédex for poke - a curated map, personal, with stats broken
-              down, and simple, effective descriptions. Your pocket guide to the
-              food world.
+              We think of it as a Hitchhiker's Guide to Gastronomy - or, a
+              Pokédex for poke - a pocket map of food where the stats are broken
+              down and people work together to find gems.
             </Paragraph>
 
             <Divider marginVertical={40} />
