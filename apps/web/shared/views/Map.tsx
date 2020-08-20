@@ -49,20 +49,20 @@ const mapSetFeature = (map: mapboxgl.Map, id: any, obj: any) => {
 }
 
 const mapSetIconSelected = (map: mapboxgl.Map, id: any) => {
-  map.setLayoutProperty(PIN_LAYER_ID, 'icon-image', [
-    'match',
-    ['id'],
-    id,
-    'map-pin',
-    'icon-sushi',
-  ])
-  map.setLayoutProperty(PIN_LAYER_ID, 'icon-size', [
-    'match',
-    ['id'],
-    id,
-    0.5,
-    0.5,
-  ])
+  // map.setLayoutProperty(PIN_LAYER_ID, 'icon-image', [
+  //   'match',
+  //   ['id'],
+  //   id,
+  //   'map-pin',
+  //   'icon-sushi',
+  // ])
+  // map.setLayoutProperty(PIN_LAYER_ID, 'icon-size', [
+  //   'match',
+  //   ['id'],
+  //   id,
+  //   0.5,
+  //   0.5,
+  // ])
 }
 
 export const Map = (props: MapProps) => {
