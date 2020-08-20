@@ -1,39 +1,28 @@
 import { fullyIdle, series } from '@dish/async'
-import { TopCuisine, TopCuisineDish, getHomeDishes } from '@dish/graph'
+import { TopCuisine, getHomeDishes } from '@dish/graph'
 import {
   AbsoluteVStack,
   Box,
   HStack,
   LoadingItems,
-  SmallTitle,
   Spacer,
   Text,
   VStack,
-  useDebounce,
   useDebounceEffect,
 } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
 import _ from 'lodash'
-import {
-  default as React,
-  Suspense,
-  memo,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { default as React, Suspense, memo, useEffect, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
 
 import { bgLight } from '../../colors'
-import { getTagId } from '../../state/getTagId'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { HomeStateItemHome } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic, useOvermind } from '../../state/om'
+import { tagDisplayName } from '../../state/tagDisplayName'
 import { tagDescriptions } from '../../state/tagLenses'
-import { NotFoundPage } from '../../views/NotFoundPage'
 import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
@@ -44,6 +33,7 @@ import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePagePaneProps'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { RestaurantButton } from './RestaurantButton'
+import { SlantedBox, slantedBoxStyle } from './SlantedBox'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 // top dishes
@@ -170,9 +160,14 @@ export default memo(function HomePageHomePane(props: Props) {
 
                 <HomeIntroLetter />
 
-                <Spacer size="xl" />
+                <Spacer size="lg" />
 
-                <SmallTitle>Recent Searches</SmallTitle>
+                <SlantedBox alignSelf="center">
+                  <Text fontSize={13} opacity={0.5}>
+                    Recent Searches
+                  </Text>
+                </SlantedBox>
+                <Spacer />
                 <HomeTopSearches />
 
                 <Spacer size="lg" />
@@ -207,10 +202,11 @@ const HomeTopSearches = () => {
           borderColor="#eee"
           borderWidth={1}
           padding={3}
+          paddingHorizontal={8}
           borderRadius={80}
           className="ease-in-out-slower"
           backgroundColor="#fff"
-          marginBottom={10}
+          marginBottom={8}
           hoverStyle={{
             backgroundColor: bgLight,
           }}
@@ -222,14 +218,15 @@ const HomeTopSearches = () => {
                   height={16}
                   lineHeight={16}
                   padding={5}
-                  fontSize={14}
+                  fontSize={13}
                   borderRadius={50}
                   backgroundColor="transparent"
                 >
-                  {tag.name}
+                  {tag.icon ? `${tag.icon} ` : ''}
+                  {tagDisplayName(tag)}
                 </Text>
                 {index < search.tags.length - 1 ? (
-                  <Text marginHorizontal={2} fontSize={11} opacity={0.23}>
+                  <Text marginHorizontal={2} fontSize={8} opacity={0.23}>
                     +
                   </Text>
                 ) : null}
@@ -244,29 +241,43 @@ const HomeTopSearches = () => {
 
 const recentSearches = [
   {
-    tags: [{ name: 'Cheap' }, { name: '🍜 Pho' }],
-  },
-  {
-    tags: [{ name: 'Fancy' }, { name: '🥩 Steak' }],
-  },
-  {
-    tags: [{ name: 'Great' }, { name: 'Delivery' }, { name: '🍣 Sushi' }],
-  },
-  {
     tags: [
-      { name: '🥬 Vegetarian' },
-      { name: 'Delivery' },
-      { name: '🥪 Sandwich' },
+      { displayName: 'Cheap', name: 'price-low' },
+      { name: 'Pho', icon: '🍜' },
     ],
   },
   {
-    tags: [{ name: 'Great' }, { name: 'Cheap' }, { name: '🇹🇭 Thai' }],
+    tags: [
+      { displayName: 'Fancy', name: 'Vibe' },
+      { name: 'Steak', icon: '🥩' },
+    ],
+  },
+  {
+    tags: [
+      { name: 'Gems', displayName: 'Great' },
+      { name: 'Delivery' },
+      { name: 'Sushi', icon: '🍣' },
+    ],
+  },
+  {
+    tags: [
+      { name: 'Vegetarian', icon: '🥬' },
+      { name: 'Delivery' },
+      { name: 'Sandwich', icon: '🥪' },
+    ],
+  },
+  {
+    tags: [
+      { name: 'Gems', displayName: 'Great' },
+      { name: 'Cheap' },
+      { name: 'Thai', icon: '🇹🇭' },
+    ],
   },
 ]
 
 const HomeLenseTitle = ({ state }) => {
   const lense = getActiveTags(state).find((x) => x.type === 'lense')
-  const tagsDescriptions = tagDescriptions[(lense.name ?? '').toLowerCase()]
+  const tagsDescriptions = tagDescriptions[(lense?.name ?? '').toLowerCase()]
   const tagsDescription = tagsDescriptions?.plain.replace('Here', ``) ?? ''
   return (
     <AbsoluteVStack
@@ -280,18 +291,7 @@ const HomeLenseTitle = ({ state }) => {
       alignItems="center"
       pointerEvents="none"
     >
-      <LinkButton
-        paddingVertical={5}
-        paddingHorizontal={6}
-        fontSize={15}
-        shadowColor={'rgba(0,0,0,0.1)'}
-        shadowRadius={8}
-        shadowOffset={{ height: 2, width: 0 }}
-        backgroundColor="#fff"
-        borderRadius={8}
-        fontWeight="600"
-        transform={[{ rotate: '-4deg' }]}
-      >
+      <LinkButton fontSize={15} fontWeight="600" {...slantedBoxStyle}>
         {tagsDescription}
       </LinkButton>
     </AbsoluteVStack>
@@ -324,11 +324,10 @@ const HomeIntroLetter = memo(() => {
         </HStack>
         <Text fontSize={16} lineHeight={22} opacity={0.8}>
           <Text fontSize={16} lineHeight={26}>
-            dish is the food guide that understands whats good down to the dish.{' '}
-            <Text fontWeight="600">
-              search food across every delivery service.
-            </Text>{' '}
-            find & vote on local gems. <Link name="about">About us &#xbb;</Link>
+            dish is a guide to good food, down to the dish.
+            <br /> <Text fontWeight="600">search every delivery service</Text> &
+            vote on local gems. &nbsp;{' '}
+            <Link name="about">Learn how &#xbb;</Link>
           </Text>
         </Text>
       </Box>
@@ -408,7 +407,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
         >
           <HStack
             alignItems="center"
-            spacing={16}
+            spacing={6}
             paddingVertical={18}
             paddingRight={20}
           >
@@ -432,6 +431,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
                       name: country.country,
                       type: 'country',
                     }}
+                    transform={[{ translateY: index % 2 == 0 ? -5 : 5 }]}
                   />
 
                   {/* Shows top restaurants per-dish */}

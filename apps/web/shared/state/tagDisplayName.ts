@@ -1,7 +1,7 @@
 import { Tag } from '@dish/graph'
 
 export const tagDisplayName = (tag: Tag) =>
-  tagDisplayNames[tag.name ?? ''] ?? tag.displayName ?? tag.name ?? ''
+  tag.displayName ?? tagDisplayNames[tag.name ?? ''] ?? tag.name ?? ''
 
 export const tagDisplayNames = {
   'price-low': '$',
