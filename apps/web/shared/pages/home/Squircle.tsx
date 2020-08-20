@@ -27,9 +27,9 @@ export const Squircle = ({
         {/* frame (inner) */}
         <VStack
           className="ease-in-out-fast"
-          shadowColor="rgba(0,0,0,0.33)"
+          shadowColor="rgba(0,0,0,0.25)"
           shadowRadius={6}
-          shadowOffset={{ width: 0, height: 2 }}
+          shadowOffset={{ width: 0, height: 3 }}
           flex={1}
           borderRadius={borderRadius - 1}
           overflow="hidden"
@@ -40,14 +40,14 @@ export const Squircle = ({
             // borderColor: 'rgba(0,0,0,0.75)',
             backgroundColor: '#fff',
             shadowRadius: 14,
-            shadowColor: 'rgba(0,0,0,0.25)',
+            shadowColor: 'rgba(0,0,0,0.3)',
             shadowOffset: { width: 0, height: 5 },
             zIndex: 10000,
           })}
         >
           {children}
           <LinearGradient
-            colors={['rgba(255,255,255,0.1)', 'transparent']}
+            colors={['transparent', 'rgba(0,0,0,0.3)']}
             style={[StyleSheet.absoluteFill]}
           />
         </VStack>

@@ -25,7 +25,6 @@ const lightGreen = '#D4EFDF'
 const inlineButton = {
   borderRadius: 10,
   paddingHorizontal: 3,
-  zIndex: -1,
   position: 'relative',
 } as const
 

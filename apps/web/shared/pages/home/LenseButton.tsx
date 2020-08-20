@@ -81,8 +81,8 @@ export const LenseButton = memoIsEqualDeep(
             paddingHorizontal={3}
             marginTop={-10}
             marginBottom={-8}
-            backgroundColor="#fff"
             borderWidth={1}
+            backgroundColor="transparent"
             borderColor="transparent"
             {...(isActive && {
               borderColor: lenseColor,

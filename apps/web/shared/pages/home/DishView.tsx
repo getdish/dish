@@ -18,6 +18,34 @@ import { DishRatingView } from './DishRatingView'
 import { DishVoteButton } from './DishVoteButton'
 import { Squircle } from './Squircle'
 
+// {isHovered && dish.reviews && (
+//   <AbsoluteVStack
+//     alignItems="center"
+//     justifyContent="center"
+//     zIndex={1000}
+//   >
+//     <Box width={120} height={100}>
+//       <SmallTitle>Reviews ({dish.reviews.length})</SmallTitle>
+//       {dish.reviews.map((r) => {
+//         return (
+//           <>
+//             <Text fontSize={10}>
+//               {r.sentiments.map((s) => {
+//                 return (
+//                   <Text>
+//                     {s.setence} ({s.sentiment})
+//                   </Text>
+//                 )
+//               })}
+//             </Text>
+//             <Text fontSize={8}>{r.text}</Text>
+//           </>
+//         )
+//       })}
+//     </Box>
+//   </AbsoluteVStack>
+// )}
+
 export const DishView = memo(
   ({
     dish,
@@ -44,7 +72,7 @@ export const DishView = memo(
     const width = size * 0.9
     const height = size
     const imageUrl = getImageUrl(size, width, height, dish.image)
-    const borderRadius = size * 0.1
+    const borderRadius = size * 0.25
 
     return (
       <LinkButton
@@ -109,33 +137,6 @@ export const DishView = memo(
             </Suspense>
           </AbsoluteVStack>
         )}
-        {isHovered && dish.reviews && (
-          <AbsoluteVStack
-            alignItems="center"
-            justifyContent="center"
-            zIndex={1000}
-          >
-            <Box width={120} height={100}>
-              <SmallTitle>Reviews ({dish.reviews.length})</SmallTitle>
-              {dish.reviews.map((r) => {
-                return (
-                  <>
-                    <Text fontSize={10}>
-                      {r.sentiments.map((s) => {
-                        return (
-                          <Text>
-                            {s.setence} ({s.sentiment})
-                          </Text>
-                        )
-                      })}
-                    </Text>
-                    <Text fontSize={8}>{r.text}</Text>
-                  </>
-                )
-              })}
-            </Box>
-          </AbsoluteVStack>
-        )}
         <Squircle
           width={width}
           height={height}
@@ -153,10 +154,10 @@ export const DishView = memo(
               className="ease-in-out"
               position="absolute"
               fullscreen
-              borderRadius={borderRadius}
+              borderRadius={borderRadius - 1}
               alignItems="center"
               justifyContent="center"
-              backgroundColor="rgba(0,0,0,0.18)"
+              backgroundColor="rgba(0,0,0,0.08)"
               // backgroundColor="rgba(255,255,255,0.25)"
               {...(isHovered && {
                 borderTopColor: 'transparent',
@@ -169,7 +170,7 @@ export const DishView = memo(
               <Box
                 position="relative"
                 className="skewX ease-in-out-top"
-                backgroundColor="rgba(0,0,0,0.8)"
+                backgroundColor="rgba(0,0,0,0.65)"
                 borderRadius={8}
                 paddingVertical={3}
                 paddingHorizontal={8}
@@ -186,13 +187,10 @@ export const DishView = memo(
                 })}
               >
                 <Text
-                  ellipse
-                  className="unskewX"
+                  className="unskewX ease-in-out"
                   flex={1}
                   overflow="hidden"
-                  fontSize={
-                    (height > 150 ? 14 : 12) * (dishName.length > 12 ? 0.95 : 1)
-                  }
+                  fontSize={20 * (dishName.length > 16 ? 0.9 : 1)}
                   fontWeight="600"
                   color={isHovered ? '#000' : '#fff'}
                   textAlign="center"
