@@ -34,6 +34,7 @@ import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic, useOvermind } from '../../state/om'
 import { tagDescriptions } from '../../state/tagLenses'
 import { NotFoundPage } from '../../views/NotFoundPage'
+import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { flatButtonStyle } from './baseButtonStyle'
@@ -300,7 +301,7 @@ const HomeLenseTitle = ({ state }) => {
 const HomeIntroLetter = memo(() => {
   const [showInto, setShowIntro] = useStorageState(
     localStorage,
-    'showIntr2o',
+    'showIntro2',
     true
   )
 
@@ -327,10 +328,7 @@ const HomeIntroLetter = memo(() => {
             <Text fontWeight="600">
               search food across every delivery service.
             </Text>{' '}
-            find & vote on local gems.{' '}
-            <LinkButton display="inline-flex" {...flatButtonStyle} name="about">
-              Read more
-            </LinkButton>
+            find & vote on local gems. <Link name="about">About us &#xbb;</Link>
           </Text>
         </Text>
       </Box>

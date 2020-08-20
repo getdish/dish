@@ -1,18 +1,15 @@
-import { cleanup, fireEvent, render } from '@testing-library/react'
+import { act, cleanup, fireEvent, render } from '@testing-library/react'
 import { last } from 'lodash'
-import React, { StrictMode, useLayoutEffect, useReducer } from 'react'
-import { createContainer } from 'react-tracked'
+import React, { StrictMode } from 'react'
 
-import { Store, UseStoreRoot, useStore } from '../_'
+import { Store, useStore } from '../_'
 
 Error.stackTraceLimit = Infinity
 
 async function testSimpleStore(id: number) {
   const { getAllByTitle } = render(
     <StrictMode>
-      <UseStoreRoot>
-        <SimpleStoreTest id={id} />
-      </UseStoreRoot>
+      <SimpleStoreTest id={id} />
     </StrictMode>
   )
 
@@ -21,13 +18,21 @@ async function testSimpleStore(id: number) {
   const findX = () => getCurrentByTitle('x').innerHTML
   expect(findX()).toBe('hi')
   // click
-  fireEvent.click(getCurrentByTitle('add'))
+  // console.log('add')
+  act(() => {
+    fireEvent.click(getCurrentByTitle('add'))
+  })
   expect(findX()).toBe('item-1')
   // click twice
-  fireEvent.click(getCurrentByTitle('add'))
+  // console.log('add2')
+  act(() => {
+    fireEvent.click(getCurrentByTitle('add'))
+  })
   expect(findX()).toBe('item-2')
   // async click
-  fireEvent.click(getCurrentByTitle('addAsync'))
+  act(() => {
+    fireEvent.click(getCurrentByTitle('addAsync'))
+  })
   expect(findX()).toBe('item-2')
   await new Promise((res) => setTimeout(res, 110))
   expect(findX()).toBe('item-3')
@@ -38,53 +43,6 @@ async function testSimpleStore(id: number) {
 describe('basic tests', () => {
   afterEach(cleanup)
 
-  it('verifies react-tracked supports tracking before insert', () => {
-    const useValue = ({ reducer, initialState }) =>
-      useReducer(reducer, initialState)
-    const { Provider, useTracked } = createContainer<any, any, any>(useValue)
-
-    const initialState = {}
-    const App = () => {
-      return (
-        <Provider reducer={reducer} initialState={initialState}>
-          <Component />
-        </Provider>
-      )
-    }
-
-    const reducer = (state: any, action: any) => {
-      return {
-        ...state,
-        ...action.next,
-      }
-    }
-
-    const Component = () => {
-      const [store, dispatch] = useTracked()
-
-      useLayoutEffect(() => {
-        dispatch({ next: { x: 1 } })
-      }, [])
-
-      return (
-        <>
-          <div title="test">{store.x ?? 'none'}</div>
-          <button
-            title="add"
-            onClick={() => {
-              dispatch({ next: { x: 2 } })
-            }}
-          />
-        </>
-      )
-    }
-
-    const t1 = render(<App />)
-    expect(t1.getAllByTitle('test')[0].innerHTML).toBe('1')
-    fireEvent.click(t1.getAllByTitle('add')[0])
-    expect(t1.getAllByTitle('test')[0].innerHTML).toBe('2')
-  })
-
   it('creates a simple store and action works', async () => {
     await testSimpleStore(0)
   })
@@ -94,12 +52,25 @@ describe('basic tests', () => {
     await testSimpleStore(2)
   })
 
+  it('updates a component in a different tree', async () => {
+    const { getAllByTitle } = render(
+      <StrictMode>
+        <SimpleStoreTest id={4} />
+        <SimpleStoreTest2 id={4} />
+      </StrictMode>
+    )
+    const getCurrentByTitle = (name: string) => last(getAllByTitle(name))!
+    act(() => {
+      fireEvent.click(getCurrentByTitle('add'))
+    })
+    expect(getCurrentByTitle('x').innerHTML).toBe('item-1')
+    expect(getCurrentByTitle('x2').innerHTML).toBe('item-1')
+  })
+
   it('properly updates get values', () => {
     const { getAllByTitle } = render(
       <StrictMode>
-        <UseStoreRoot>
-          <SimpleStoreTest id={3} />
-        </UseStoreRoot>
+        <SimpleStoreTest id={3} />
       </StrictMode>
     )
     const findY = () => getAllByTitle('y')[0].innerHTML
@@ -111,7 +82,7 @@ describe('basic tests', () => {
 
 function SimpleStoreTest(props: { id: number }) {
   const store = useStore(TodoList, props)
-  // console.log('store.lastItem', props.id, store.lastItem.text)
+  // console.log('render', props.id, store.lastItem.text)
   return (
     <>
       <div title="x">{store.lastItem.text}</div>
@@ -120,6 +91,11 @@ function SimpleStoreTest(props: { id: number }) {
       <button title="addAsync" onClick={() => store.asyncAdd()}></button>
     </>
   )
+}
+
+function SimpleStoreTest2(props: { id: number }) {
+  const store = useStore(TodoList, props)
+  return <div title="x2">{store.lastItem.text}</div>
 }
 
 const sleep = (x = 100) => new Promise((res) => setTimeout(res, x))

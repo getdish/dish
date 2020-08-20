@@ -9449,7 +9449,7 @@ image-size@^0.6.0:
   resolved "https://registry.npmjs.org/image-size/-/image-size-0.6.3.tgz#e7e5c65bb534bd7cdcedd6cb5166272a85f75fb2"
   integrity sha512-47xSUiQioGaB96nqtp5/q55m0aBQSQdyIloMOc/x+QVTDZLNmXE892IIDrJ0hM1A5vcNUDD5tDffkSP5lCaIIA==
 
-immer@^7.0.5:
+immer@^7.0.5, immer@^7.0.7:
   version "7.0.7"
   resolved "https://registry.npmjs.org/immer/-/immer-7.0.7.tgz#9dfe713d49bf871cc59aedfce59b1992fa37a977"
   integrity sha512-Q8yYwVADJXrNfp1ZUAh4XDHkcoE3wpdpb4mC5abDSajs2EbW8+cGdPyAnglMyLnm7EF6ojD2xBFX7L5i4TIytw==
@@ -14764,11 +14764,6 @@ proxy-chain@^0.4.4:
     portastic "^1.0.1"
     underscore "^1.9.1"
 
-proxy-compare@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/proxy-compare/-/proxy-compare-1.0.2.tgz#2c7babcd5ca1c2b85fb86448a19eb5613d80d62d"
-  integrity sha512-ykdqgpT1yDcDT9tQgrf6SN6m2ZlLXW73xLz2aNg43356fpDikw68OCOR/ydrGsYPWUanijaRe7VBmfoBjVNseg==
-
 proxy-from-env@^1.0.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
@@ -15228,14 +15223,6 @@ react-timer-mixin@^0.13.4:
   version "0.13.4"
   resolved "https://registry.npmjs.org/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz#75a00c3c94c13abe29b43d63b4c65a88fc8264d3"
   integrity sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
-
-react-tracked@2.0.0-alpha.8:
-  version "2.0.0-alpha.8"
-  resolved "https://registry.npmjs.org/react-tracked/-/react-tracked-2.0.0-alpha.8.tgz#b4a866a377ccfe93790d938ec9f61dfd137f44c0"
-  integrity sha512-L9+0TQaDrE+TySghTp8FTGPiKDHPdn4RvZUrbSG84HgvBRDRbBGFYhJXw/GTJdOXIQb1CfJ+B4gqdApUHOVkvw==
-  dependencies:
-    proxy-compare "^1.0.2"
-    use-context-selector "^2.0.0-alpha.5"
 
 react@*, react@0.0.0-experimental-94c0244ba:
   version "0.0.0-experimental-94c0244ba"
@@ -18298,23 +18285,6 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
-
-use-atom@^0.5.6:
-  version "0.5.6"
-  resolved "https://registry.npmjs.org/use-atom/-/use-atom-0.5.6.tgz#ee0e517fd3023cbea8cfe5e8e5b0efacc0e5c4a1"
-  integrity sha512-8FRvqnCUzFYA/jllmTApDRa7DVFLGhB7n7LuMC84OM0v/F+h4UkEhmkbmXmoQkLSBGEHbnK1ANEVVLfhygFFtA==
-  dependencies:
-    use-context-selector "^1.1.1"
-
-use-context-selector@^1.1.1:
-  version "1.1.2"
-  resolved "https://registry.npmjs.org/use-context-selector/-/use-context-selector-1.1.2.tgz#63bf6e3502fd383f1257c49df2495e05564d262e"
-  integrity sha512-uwtrMKEHjZQ8JXMZLUljVDY4CqpAC3MgMcmtpZACG+pJeJ7GNDzBW0thC2RbJX2wKYMvLtYRXgQEqaOnmlF/KQ==
-
-use-context-selector@^2.0.0-alpha.5:
-  version "2.0.0-alpha.6"
-  resolved "https://registry.npmjs.org/use-context-selector/-/use-context-selector-2.0.0-alpha.6.tgz#6ea98cece9b9fc487faca3d482bb443554442d63"
-  integrity sha512-N/sfGhc/IlRTG4wut1eBNkQ1h/N4VVgdEOVT68lEbljL5Tl6GoKD7EYQcitvVQOV1wFNFRr6Bp81IGv8OqQmqA==
 
 use-subscription@^1.0.0:
   version "1.4.1"
