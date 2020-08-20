@@ -6,7 +6,8 @@ export class ProxiedRequests {
   constructor(
     public domain: string,
     public aws_proxy: string,
-    public config: AxiosRequestConfig = {}
+    public config: AxiosRequestConfig = {},
+    public start_with_aws = false
   ) {}
 
   async get(uri: string, config: AxiosRequestConfig = {}) {
@@ -19,17 +20,21 @@ export class ProxiedRequests {
     })
     let tries = 0
 
-    // Yelp seem to be on to us with the AWS Gateway :'(
-    // $0.000005/request regardless of bandwidth
-    //let base = this.aws_proxy
-    //let method = 'AWS GATEWAY PROXY'
+    let base: string
+    let method: string
 
-    // $0.5/GB or ~$0.00005/request for ~100kb requests
-    let method = 'LUMINATI DATACENTRE PROXY'
-    let base = this.domain
-    config = {
-      ...config,
-      httpsAgent: new HttpsProxyAgent(this.luminatiDatacentreConfig()),
+    if (this.start_with_aws) {
+      // $0.000005/request regardless of bandwidth
+      base = this.aws_proxy
+      method = 'AWS GATEWAY PROXY'
+    } else {
+      // $0.5/GB or ~$0.00005/request for ~100kb requests
+      method = 'LUMINATI DATACENTRE PROXY'
+      base = this.domain
+      config = {
+        ...config,
+        httpsAgent: new HttpsProxyAgent(this.luminatiDatacentreConfig()),
+      }
     }
 
     while (true) {
