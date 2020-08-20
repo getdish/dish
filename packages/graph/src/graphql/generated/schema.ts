@@ -4973,6 +4973,9 @@ export const schema = {
         get description() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get geocoder_id() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get headlines() {
           return new FieldNode(
             schema.jsonb,
@@ -5535,6 +5538,9 @@ export const schema = {
         get description() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
+        get geocoder_id() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
         get headlines() {
           return new InputNodeField(schema.jsonb_comparison_exp, true)
         },
@@ -5708,6 +5714,9 @@ export const schema = {
         get description() {
           return new InputNodeField(schema.String, true)
         },
+        get geocoder_id() {
+          return new InputNodeField(schema.String, true)
+        },
         get headlines() {
           return new InputNodeField(schema.jsonb, true)
         },
@@ -5793,6 +5802,9 @@ export const schema = {
         get description() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get geocoder_id() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get id() {
           return new FieldNode(schema.uuid, undefined, true)
         },
@@ -5848,6 +5860,9 @@ export const schema = {
         get description() {
           return new InputNodeField(schema.order_by, true)
         },
+        get geocoder_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get id() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -5898,6 +5913,9 @@ export const schema = {
           return new FieldNode(schema.timestamptz, undefined, true)
         },
         get description() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get geocoder_id() {
           return new FieldNode(schema.String, undefined, true)
         },
         get id() {
@@ -5953,6 +5971,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get description() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get geocoder_id() {
           return new InputNodeField(schema.order_by, true)
         },
         get id() {
@@ -6057,6 +6078,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get description() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get geocoder_id() {
           return new InputNodeField(schema.order_by, true)
         },
         get headlines() {
@@ -6180,6 +6204,9 @@ export const schema = {
           return new InputNodeField(schema.timestamptz, true)
         },
         get description() {
+          return new InputNodeField(schema.String, true)
+        },
+        get geocoder_id() {
           return new InputNodeField(schema.String, true)
         },
         get headlines() {

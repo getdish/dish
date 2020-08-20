@@ -48,6 +48,7 @@ export type t_restaurant = FieldsType<
     city?: t_String | null
     created_at: t_timestamptz
     description?: t_String | null
+    geocoder_id?: t_String | null
     headlines?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     hours?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     id: t_uuid
@@ -257,6 +258,7 @@ export type restaurant_bool_exp = {
   city?: String_comparison_exp | null
   created_at?: timestamptz_comparison_exp | null
   description?: String_comparison_exp | null
+  geocoder_id?: String_comparison_exp | null
   headlines?: jsonb_comparison_exp | null
   hours?: jsonb_comparison_exp | null
   id?: uuid_comparison_exp | null
@@ -285,7 +287,10 @@ export type restaurant_bool_exp = {
  * @type ENUM
  */
 export type t_restaurant_constraint = EnumType<
-  'restaurant_name_address_key' | 'restaurant_pkey' | 'restaurant_slug_key'
+  | 'restaurant_geocoder_id_key'
+  | 'restaurant_name_address_key'
+  | 'restaurant_pkey'
+  | 'restaurant_slug_key'
 >
 
 /**
@@ -342,6 +347,7 @@ export type restaurant_insert_input = {
   city?: string | null
   created_at?: any | null
   description?: string | null
+  geocoder_id?: string | null
   headlines?: any | null
   hours?: any | null
   id?: any | null
@@ -376,6 +382,7 @@ export type t_restaurant_max_fields = FieldsType<
     city?: t_String | null
     created_at?: t_timestamptz | null
     description?: t_String | null
+    geocoder_id?: t_String | null
     id?: t_uuid | null
     image?: t_String | null
     name?: t_String | null
@@ -400,6 +407,7 @@ export type restaurant_max_order_by = {
   city?: order_by | null
   created_at?: order_by | null
   description?: order_by | null
+  geocoder_id?: order_by | null
   id?: order_by | null
   image?: order_by | null
   name?: order_by | null
@@ -424,6 +432,7 @@ export type t_restaurant_min_fields = FieldsType<
     city?: t_String | null
     created_at?: t_timestamptz | null
     description?: t_String | null
+    geocoder_id?: t_String | null
     id?: t_uuid | null
     image?: t_String | null
     name?: t_String | null
@@ -448,6 +457,7 @@ export type restaurant_min_order_by = {
   city?: order_by | null
   created_at?: order_by | null
   description?: order_by | null
+  geocoder_id?: order_by | null
   id?: order_by | null
   image?: order_by | null
   name?: order_by | null
@@ -502,6 +512,7 @@ export type restaurant_order_by = {
   city?: order_by | null
   created_at?: order_by | null
   description?: order_by | null
+  geocoder_id?: order_by | null
   headlines?: order_by | null
   hours?: order_by | null
   id?: order_by | null
@@ -553,6 +564,7 @@ export type t_restaurant_select_column = EnumType<
   | 'city'
   | 'created_at'
   | 'description'
+  | 'geocoder_id'
   | 'headlines'
   | 'hours'
   | 'id'
@@ -582,6 +594,7 @@ export type restaurant_set_input = {
   city?: string | null
   created_at?: any | null
   description?: string | null
+  geocoder_id?: string | null
   headlines?: any | null
   hours?: any | null
   id?: any | null
@@ -1214,6 +1227,7 @@ export type t_restaurant_update_column = EnumType<
   | 'city'
   | 'created_at'
   | 'description'
+  | 'geocoder_id'
   | 'headlines'
   | 'hours'
   | 'id'
@@ -1331,6 +1345,7 @@ export type restaurant_avg_fields = TypeData<t_restaurant_avg_fields>
  * @type ENUM
  */
 export enum restaurant_constraint {
+  restaurant_geocoder_id_key = 'restaurant_geocoder_id_key',
   restaurant_name_address_key = 'restaurant_name_address_key',
   restaurant_pkey = 'restaurant_pkey',
   restaurant_slug_key = 'restaurant_slug_key',
@@ -1365,6 +1380,7 @@ export enum restaurant_select_column {
   city = 'city',
   created_at = 'created_at',
   description = 'description',
+  geocoder_id = 'geocoder_id',
   headlines = 'headlines',
   hours = 'hours',
   id = 'id',
@@ -1557,6 +1573,7 @@ export enum restaurant_update_column {
   city = 'city',
   created_at = 'created_at',
   description = 'description',
+  geocoder_id = 'geocoder_id',
   headlines = 'headlines',
   hours = 'hours',
   id = 'id',

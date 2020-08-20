@@ -19,6 +19,7 @@ import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
 import moment from 'moment'
 
+import { GoogleGecoder } from '../GoogleGeocoder'
 import {
   bestPhotosForRestaurant,
   bestPhotosForRestaurantTags,
@@ -32,7 +33,13 @@ import {
   scrapeGetData,
 } from '../scrape-helpers'
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
-import { main_db, restaurantFindIDBatchForCity } from '../utils'
+import {
+  getTableCount,
+  googlePermalink,
+  main_db,
+  restaurantFindBasicBatchForAll,
+  restaurantFindIDBatchForCity,
+} from '../utils'
 import { Tagging } from './Tagging'
 
 const PER_PAGE = 10000
@@ -579,9 +586,7 @@ export class Self extends WorkerJob {
     const id = this.google.id_from_source
     const lon = this.restaurant.location.coordinates[0]
     const lat = this.restaurant.location.coordinates[1]
-    const source =
-      `https://www.google.com/maps/place/` +
-      `@${lat},${lon},11z/data=!3m1!4b1!4m5!3m4!1s${id}!8m2!3d${lat}!4d${lon}`
+    const source = googlePermalink(id, lat, lon)
     // @ts-ignore
     this.restaurant.sources.google = {
       url: source,
@@ -760,6 +765,70 @@ export class Self extends WorkerJob {
       LIMIT 5
     `)
     this.restaurant.headlines = result.rows
+  }
+
+  async updateAllGeocoderIDs() {
+    let previous_id = globalTagId
+    let arrived = process.env.START_FROM ? false : true
+    let progress = 0
+    let page = 0
+    const count = await getTableCount('restaurant', 'WHERE google_id IS NULL')
+    while (true) {
+      const results = await restaurantFindBasicBatchForAll(
+        PER_PAGE,
+        previous_id,
+        'AND geocoder_id IS NULL'
+      )
+      if (results.length == 0) {
+        await this.job.progress(100)
+        break
+      }
+      for (const result of results) {
+        if (!arrived) {
+          if (result.id != process.env.START_FROM) {
+            console.log('Skipping: ' + result.name)
+            continue
+          } else {
+            arrived = true
+          }
+        }
+        const restaurant_data = {
+          id: result.id,
+          name: result.name,
+          address: result.address,
+          location: JSON.parse(result.location),
+        }
+        await this.runOnWorker('updateGeocoderID', [restaurant_data])
+        previous_id = result.id as string
+        page += 1
+        progress = ((page * PER_PAGE) / count) * 100
+        await this.job.progress(progress)
+      }
+    }
+  }
+
+  async updateGeocoderID(restaurant: RestaurantWithId) {
+    console.log(
+      'UPDATE GEOCODER IDS: ',
+      restaurant.id,
+      `"${restaurant.name}"`,
+      restaurant.address,
+      restaurant.location
+    )
+    if (!restaurant.name || !restaurant.address) {
+      console.log('Bad restaurant: ', restaurant)
+      return false
+    }
+    const geocoder = new GoogleGecoder()
+    const coords = restaurant.location
+    const lon = coords.coordinates[0]
+    const lat = coords.coordinates[1]
+    const query = restaurant.name + ',' + restaurant.address
+    const google_id = await geocoder.searchForID(query, lat, lon)
+    const permalink = googlePermalink(google_id, lat, lon)
+    restaurant.geocoder_id = google_id
+    await restaurantUpdate({ id: restaurant.id, geocoder_id: google_id })
+    console.log('GEOCODER RESULT: ', `"${restaurant.name}"`, permalink)
   }
 
   private static shortestString(arr: string[]) {

@@ -171,6 +171,13 @@ export function toDBDate(in_date: Date | string, format: string = '') {
   return out_date
 }
 
+export function googlePermalink(id: string, lat: number, lon: number) {
+  return (
+    `https://www.google.com/maps/place/` +
+    `@${lat},${lon},11z/data=!3m1!4b1!4m5!3m4!1s${id}!8m2!3d${lat}!4d${lon}`
+  )
+}
+
 export async function restaurantFindIDBatchForCity(
   size: number,
   previous_id: string,
@@ -191,4 +198,29 @@ export async function restaurantFindIDBatchForCity(
   `
   const result = await main_db.query(query)
   return result.rows
+}
+
+export async function restaurantFindBasicBatchForAll(
+  size: number,
+  previous_id: string,
+  extra_where = ''
+): Promise<Restaurant[]> {
+  const query = `
+    SELECT id, name, address, st_asgeojson(location) as location FROM restaurant
+      WHERE id > '${previous_id}'
+      ${extra_where}
+    ORDER BY id
+    LIMIT ${size}
+  `
+  const result = await main_db.query(query)
+  return result.rows
+}
+
+export async function getTableCount(
+  table: string,
+  where = ''
+): Promise<number> {
+  const query = `SELECT count(id) FROM ${table} ${where}`
+  const result = await main_db.query(query)
+  return parseInt(result.rows[0].count)
 }
