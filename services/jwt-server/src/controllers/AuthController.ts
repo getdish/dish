@@ -41,6 +41,7 @@ class AuthController {
       { expiresIn: '1w' }
     )
 
+    //@ts-ignore
     delete user.password
 
     res.send({ user: user, token: token })
