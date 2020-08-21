@@ -12,30 +12,25 @@ async function testSimpleStore(id: number) {
       <SimpleStoreTest id={id} />
     </StrictMode>
   )
-
   const getCurrentByTitle = (name: string) => last(getAllByTitle(name))!
-
   const findX = () => getCurrentByTitle('x').innerHTML
   expect(findX()).toBe('hi')
-  // click
-  // console.log('add')
-  act(() => {
+  await act(async () => {
     fireEvent.click(getCurrentByTitle('add'))
   })
   expect(findX()).toBe('item-1')
-  // click twice
-  // console.log('add2')
-  act(() => {
+  await act(async () => {
     fireEvent.click(getCurrentByTitle('add'))
   })
   expect(findX()).toBe('item-2')
-  // async click
-  act(() => {
+  await act(async () => {
     fireEvent.click(getCurrentByTitle('addAsync'))
   })
-  expect(findX()).toBe('item-2')
-  await new Promise((res) => setTimeout(res, 110))
-  expect(findX()).toBe('item-3')
+  await act(async () => {
+    expect(findX()).toBe('item-2')
+    await new Promise((res) => setTimeout(res, 110))
+    expect(findX()).toBe('item-3')
+  })
 }
 
 // be sure ids are not same across tests...
@@ -75,7 +70,9 @@ describe('basic tests', () => {
     )
     const findY = () => getAllByTitle('y')[0].innerHTML
     expect(findY()).toBe('0')
-    fireEvent.click(getAllByTitle('add')[0])
+    act(() => {
+      fireEvent.click(getAllByTitle('add')[0])
+    })
     expect(findY()).toBe('1')
   })
 
@@ -86,15 +83,12 @@ describe('basic tests', () => {
       renderCount++
       return <button title="add" onClick={() => store.add()}></button>
     }
-    const { getAllByTitle } = render(
-      <StrictMode>
-        <SimpleStoreTestUsedProperties id={5} />
-      </StrictMode>
-    )
+    const { getAllByTitle } = render(<SimpleStoreTestUsedProperties id={5} />)
     const getCurrentByTitle = (name: string) => last(getAllByTitle(name))!
     act(() => {
       fireEvent.click(getCurrentByTitle('add'))
-      fireEvent.click(getCurrentByTitle('add'))
+    })
+    act(() => {
       fireEvent.click(getCurrentByTitle('add'))
     })
     expect(renderCount).toEqual(1)
@@ -108,8 +102,22 @@ function SimpleStoreTest(props: { id: number }) {
     <>
       <div title="x">{store.lastItem.text}</div>
       <div title="y">{store.itemsDiff[store.itemsDiff.length - 1]}</div>
-      <button title="add" onClick={() => store.add()}></button>
-      <button title="addAsync" onClick={() => store.asyncAdd()}></button>
+      <button
+        title="add"
+        onClick={() => {
+          act(() => {
+            store.add()
+          })
+        }}
+      ></button>
+      <button
+        title="addAsync"
+        onClick={() => {
+          act(() => {
+            store.asyncAdd()
+          })
+        }}
+      ></button>
     </>
   )
 }
