@@ -70,7 +70,11 @@ function _setup_s3() {
 
 function worker() {
   kubectl exec -it \
-    $(kubectl get pods | grep worker | grep Running | awk '{print $1}') \
+    $(kubectl get pods \
+      | grep -v worker-ui \
+      | grep worker \
+      | grep Running \
+      | awk '{print $1}') \
     -c worker \
     -- bash -c "$1"
 }

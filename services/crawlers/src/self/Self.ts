@@ -37,6 +37,7 @@ import {
   getTableCount,
   googlePermalink,
   main_db,
+  restaurantDeleteOrUpdateByGeocoderID,
   restaurantFindBasicBatchForAll,
   restaurantFindIDBatchForCity,
 } from '../utils'
@@ -772,7 +773,8 @@ export class Self extends WorkerJob {
     let arrived = process.env.START_FROM ? false : true
     let progress = 0
     let page = 0
-    const count = await getTableCount('restaurant', 'WHERE google_id IS NULL')
+    const count = await getTableCount('restaurant', 'WHERE geocoder_id IS NULL')
+    console.log('Total restaurants without geocoder_ids: ' + count)
     while (true) {
       const results = await restaurantFindBasicBatchForAll(
         PER_PAGE,
@@ -800,9 +802,13 @@ export class Self extends WorkerJob {
         }
         await this.runOnWorker('updateGeocoderID', [restaurant_data])
         previous_id = result.id as string
-        page += 1
-        progress = ((page * PER_PAGE) / count) * 100
+      }
+      page += 1
+      progress = ((page * PER_PAGE) / count) * 100
+      if (process.env.RUN_WITHOUT_WORKER != 'true') {
         await this.job.progress(progress)
+      } else {
+        console.log('Progress: ' + progress)
       }
     }
   }
@@ -815,7 +821,7 @@ export class Self extends WorkerJob {
       restaurant.address,
       restaurant.location
     )
-    if (!restaurant.name || !restaurant.address) {
+    if (!restaurant.name) {
       console.log('Bad restaurant: ', restaurant)
       return false
     }
@@ -825,10 +831,12 @@ export class Self extends WorkerJob {
     const lat = coords.coordinates[1]
     const query = restaurant.name + ',' + restaurant.address
     const google_id = await geocoder.searchForID(query, lat, lon)
-    const permalink = googlePermalink(google_id, lat, lon)
-    restaurant.geocoder_id = google_id
-    await restaurantUpdate({ id: restaurant.id, geocoder_id: google_id })
-    console.log('GEOCODER RESULT: ', `"${restaurant.name}"`, permalink)
+    if (google_id) {
+      const permalink = googlePermalink(google_id, lat, lon)
+      restaurant.geocoder_id = google_id
+      await restaurantDeleteOrUpdateByGeocoderID(restaurant.id, google_id)
+      console.log('GEOCODER RESULT: ', `"${restaurant.name}"`, permalink)
+    }
   }
 
   private static shortestString(arr: string[]) {

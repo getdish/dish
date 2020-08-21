@@ -11,6 +11,8 @@ import _ from 'lodash'
 import moment, { Moment } from 'moment'
 import { Pool, Result } from 'pg'
 
+import { isGoogleGeocoderID } from './GoogleGeocoder'
+
 const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN
 
 type Coord = [number, number]
@@ -223,4 +225,42 @@ export async function getTableCount(
   const query = `SELECT count(id) FROM ${table} ${where}`
   const result = await main_db.query(query)
   return parseInt(result.rows[0].count)
+}
+
+export function isUUID(uuid: string) {
+  const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+  return uuid.match(regex)
+}
+
+// One-off behaviour when moving to using Google's geocoder IDs.
+// `geocoder_id` is unique, so just prefer the existing one and delete
+// the newly geocoded one.
+//
+// ALERT! Depends on a previous query where restaurants are queried
+// for having a geocoder_id of NULL
+export async function restaurantDeleteOrUpdateByGeocoderID(
+  restaurant_id: string,
+  geocoder_id: string
+) {
+  if (!isUUID(restaurant_id) || !isGoogleGeocoderID(geocoder_id)) {
+    throw new Error('GOOGLE GEOCODER BATCH: Bad identifier')
+  }
+  const query = `
+  DO
+  $do$
+  BEGIN
+    IF EXISTS (
+      SELECT FROM restaurant
+        WHERE geocoder_id = '${geocoder_id}'
+        AND id != '${restaurant_id}'
+    ) THEN
+      DELETE FROM restaurant WHERE id = '${restaurant_id}';
+    ELSE
+      UPDATE restaurant SET geocoder_id = '${geocoder_id}'
+        WHERE id = '${restaurant_id}';
+    END IF;
+  END
+  $do$
+  `
+  await main_db.query(query)
 }

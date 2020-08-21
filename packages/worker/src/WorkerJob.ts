@@ -101,6 +101,9 @@ export class WorkerJob {
       fn: fn,
       args: args,
     }
+    if (process.env.RUN_WITHOUT_WORKER == 'true') {
+      return await this.run(fn, args)
+    }
     const queue = await getBullQueue('BigJobs')
     const job = await queue.add(job_data, { attempts: 1 })
     await queue.close()

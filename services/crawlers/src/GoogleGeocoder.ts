@@ -1,6 +1,5 @@
 import '@dish/common'
 
-import { sentryException } from '@dish/common'
 import { settingFindOne } from '@dish/graph'
 import { ProxiedRequests } from '@dish/worker'
 import _ from 'lodash'
@@ -8,6 +7,7 @@ import _ from 'lodash'
 export const GOOGLE_SEARCH_ENDPOINT_KEY = 'GOOGLE_SEARCH_ENDPOINT'
 export const LON_TOKEN = '%LON%'
 export const LAT_TOKEN = '%LAT%'
+export const google_geocoder_id_regex = /(0x[a-f0-9]{13,16}:0x[a-f0-9]{13,16})/
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 const PLEASE = 'PLEASE'
@@ -60,13 +60,11 @@ export class GoogleGecoder {
         }
       }
     }
-    const error = new Error(
-      'GOOGLE GEOCODER: retries failed getting ID for: ' + query
-    )
+    const message = 'GOOGLE GEOCODER: retries failed getting ID for: ' + query
     if (process.env.DISH_ENV == 'production') {
-      sentryException(error, { query })
+      throw new Error(message)
     } else {
-      throw error
+      console.error(message)
     }
   }
 
@@ -97,10 +95,11 @@ export class GoogleGecoder {
       throw new Error(SEARCH_ENDPOINT_EXPIRED)
     }
     // For example: 0x7b300695e1e94c7:0x1706843e5f6d1bd2
-    const matches = response.data.match(/(0x[a-f0-9]{14,16}:0x[a-f0-9]{16})/)
+    const matches = response.data.match(google_geocoder_id_regex)
     if (matches) {
       return matches[0]
     } else {
+      console.error(response.data)
       throw new Error(ID_NOT_FOUND)
     }
   }
@@ -116,6 +115,9 @@ export class GoogleGecoder {
       .replaceAll('%2C', ',')
       .replaceAll('%2F', '\\/')
       .replaceAll('%3A', ':')
+      .replaceAll('%40', '@')
+      .replaceAll('%3B', ';')
+      .replaceAll('%24', '$')
     const has_expired = google_formatted_query != expected_query
     if (has_expired) {
       console.log(
@@ -126,4 +128,8 @@ export class GoogleGecoder {
     }
     return has_expired
   }
+}
+
+export function isGoogleGeocoderID(id: string) {
+  return id.match(google_geocoder_id_regex)
 }
