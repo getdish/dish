@@ -27,9 +27,9 @@ export const HomeMapControlsUnderlay = memo(() => {
     >
       <AbsoluteVStack
         fullscreen
-        padding={20}
+        paddingHorizontal={30}
         top={searchBarHeight + 10}
-        left={paddingLeft}
+        left={paddingLeft + 20}
         right={0}
         {...(isSmall && {
           maxWidth: '100%',
@@ -48,6 +48,8 @@ export const HomeMapControlsUnderlay = memo(() => {
           left={0}
           alignItems="center"
           justifyContent="center"
+          flexWrap="wrap"
+          overflow="hidden"
           spacing={5}
         >
           {hasMovedMap && (

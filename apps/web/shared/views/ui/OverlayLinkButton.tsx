@@ -18,6 +18,7 @@ export function OverlayLinkButton<
       shadowColor="rgba(0,0,0,0.175)"
       shadowRadius={13}
       shadowOffset={{ width: 0, height: 3 }}
+      marginBottom={10}
       overflow="hidden"
       hoverStyle={{
         transform: [{ scale: 1.05 }],

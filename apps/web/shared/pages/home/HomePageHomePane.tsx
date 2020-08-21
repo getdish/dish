@@ -34,6 +34,7 @@ import { HomePagePaneProps } from './HomePagePaneProps'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { RestaurantButton } from './RestaurantButton'
 import { SlantedBox, slantedBoxStyle } from './SlantedBox'
+import { SlantedLinkButton } from './SlantedLinkButton'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 // top dishes
@@ -134,9 +135,9 @@ export default memo(function HomePageHomePane(props: Props) {
         >
           <HomeScrollView>
             <VStack paddingTop={isSmall ? 20 : 28} spacing="xl">
-              {/* LENSES - UNIQUELY GOOD HERE */}
               <VStack>
-                <VStack alignItems="center">
+                {/* LENSES - UNIQUELY GOOD HERE */}
+                {/* <VStack alignItems="center">
                   <HStack
                     width="100%"
                     alignItems="center"
@@ -156,18 +157,14 @@ export default memo(function HomePageHomePane(props: Props) {
                   </HStack>
 
                   <Spacer size={isSmall ? 5 : 15} />
-                </VStack>
+                </VStack> */}
 
                 <HomeIntroLetter />
 
-                <Spacer size="lg" />
-
-                <SlantedBox alignSelf="center">
-                  <Text fontSize={13} opacity={0.5}>
-                    Recent Searches
-                  </Text>
+                {/* <SlantedBox alignSelf="center">
+                  <Text fontSize={13} opacity={0.5}></Text>
                 </SlantedBox>
-                <Spacer />
+                <Spacer /> */}
                 <HomeTopSearches />
 
                 <Spacer size="lg" />
@@ -363,15 +360,11 @@ const dishHeight = 140
 const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
   return (
     <VStack className="home-top-dish" position="relative">
-      <LinkButton
+      <SlantedLinkButton
         {...flatButtonStyle}
-        transform={[{ rotate: '-2.5deg' }]}
-        pressStyle={{
-          transform: [{ rotate: '-2.5deg' }],
-        }}
         marginTop={0}
         marginBottom={0}
-        marginLeft={20}
+        marginHorizontal="auto"
         zIndex={1000}
         position="relative"
         tag={{
@@ -379,21 +372,13 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
           name: country.country,
         }}
       >
-        <Text
-          ellipse
-          fontSize={18}
-          fontWeight={'400'}
-          height={22}
-          lineHeight={20}
-        >
-          {country.country}{' '}
-          {country.icon ? (
-            <Text marginLeft={3} fontSize="130%">
-              {country.icon}
-            </Text>
-          ) : null}
-        </Text>
-      </LinkButton>
+        {country.country}{' '}
+        {country.icon ? (
+          <Text marginLeft={3} fontSize="130%">
+            {country.icon}
+          </Text>
+        ) : null}
+      </SlantedLinkButton>
       <VStack
         marginTop={-25}
         pointerEvents="none"

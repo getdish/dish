@@ -115,9 +115,10 @@ export const Map = (props: MapProps) => {
 
     map = new mapboxgl.Map({
       container: mapNode.current,
-      style: style ?? 'mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq', // ??
-      // dark
-      //'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja' ??
+      style: style ?? 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy',
+      // 'mapbox://styles/nwienert/cke43ku0a0snr19njwnpg2lhi', // frank
+      // 'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja', // dark
+      // 'mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq', // light
       center,
       zoom: 11,
     })
@@ -153,6 +154,36 @@ export const Map = (props: MapProps) => {
             ),
           ]),
         () => {
+          // rough oceans
+          // map.addSource('10m-bathymetry-81bsvj', {
+          //   type: 'vector',
+          //   url: 'mapbox://mapbox.9tm8dx88',
+          // })
+          // map.addLayer(
+          //   {
+          //     id: '10m-bathymetry-81bsvj',
+          //     type: 'fill',
+          //     source: '10m-bathymetry-81bsvj',
+          //     'source-layer': '10m-bathymetry-81bsvj',
+          //     layout: {},
+          //     paint: {
+          //       'fill-outline-color': 'hsla(337, 82%, 62%, 0)',
+          //       // cubic bezier is a four point curve for smooth and precise styling
+          //       // adjust the points to change the rate and intensity of interpolation
+          //       'fill-color': [
+          //         'interpolate',
+          //         ['cubic-bezier', 0, 0.5, 1, 0.5],
+          //         ['get', 'DEPTH'],
+          //         200,
+          //         '#78bced',
+          //         9000,
+          //         '#15659f',
+          //       ],
+          //     },
+          //   },
+          //   'land-structure-polygon'
+          // )
+
           map.addSource(SOURCE_ID, {
             type: 'geojson',
             data: {
