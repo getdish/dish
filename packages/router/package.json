@@ -8,8 +8,7 @@
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "true",
-    "test:tmp": "ava test/* --verbose"
+    "test": "ava test/* --verbose"
   },
   "dependencies": {
     "history": "^5.0.0",

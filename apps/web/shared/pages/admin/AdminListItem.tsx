@@ -5,7 +5,7 @@ import { memo, useEffect, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { TextInput } from 'react-native'
 
-import { ColumnSelectionStore, RowSelectionStore } from './SelectionStore'
+import { useColumnSelection, useRowSelection } from './SelectionStore'
 import { styles } from './styles'
 
 export type AdminListItemProps = {
@@ -32,15 +32,10 @@ export const AdminListItem = memo(
     onDelete,
     onEdit,
   }: AdminListItemProps) => {
-    const isRowActive = useStore(
-      RowSelectionStore,
-      { id, column },
-      (store) => store.row === row
-    )
-    const isColumnActive = useStore(
-      ColumnSelectionStore,
+    const isRowActive = useRowSelection({ id, column }, (s) => s.row === row)
+    const isColumnActive = useColumnSelection(
       { id },
-      (store) => store.column === column
+      (s) => s.column === column
     )
     const isActive = isRowActive && isColumnActive
     const isFormerlyActive = isRowActive && !isColumnActive

@@ -10,6 +10,19 @@ const useMutableSource = React.unstable_useMutableSource
 
 export * from './Store'
 
+// sanity check types here
+// class StoreTest extends Store<{ id: number }> {}
+// const useStoreTest = createUseStore(StoreTest)
+// const useStoreSelectorTest = createUseStoreSelector(
+//   StoreTest,
+//   (s) => s.props.id
+// )
+// const num = useStoreSelectorTest({ id: 0 })
+// const ya = useStoreTest({ id: 1 })
+// const yb = useStoreTest({ id: 1 }, (x) => x.props.id)
+// const z = useStore(StoreTest)
+
+type Selector<A = unknown, B = unknown> = (x: A) => B
 type StoreInfo = {
   source: any
   hasMounted: boolean
@@ -19,14 +32,48 @@ type StoreInfo = {
   version: number
 }
 
+export function createUseStore<Props, Store>(
+  StoreKlass: new (props: Props) => Store | (new () => Store)
+) {
+  return function <Res, C extends Selector<Store, Res>>(
+    props?: Props,
+    selector?: C
+    // super hacky workaround for now, ts is unknown to me tbh
+  ): C extends Selector<any, infer B> ? (B extends Object ? B : Store) : Store {
+    return useStore(StoreKlass as any, props, selector) as any
+  }
+}
+
+export function createUseStoreSelector<A extends Store<Props>, Props, Selected>(
+  StoreKlass: new (props: Props) => A | (new () => A),
+  selector: Selector<A, Selected>
+): (props?: Props) => Selected {
+  return (props?: Props) => {
+    return useStore(StoreKlass, props, selector) as any
+  }
+}
+
+export function useStoreSelector<
+  A extends Store<B>,
+  B,
+  S extends Selector<any, Selected>,
+  Selected
+>(
+  StoreKlass: new (props: B) => A | (new () => A),
+  selector: S,
+  props?: B
+): Selected {
+  return useStore(StoreKlass, props, selector) as any
+}
+
 const uniqueStoreNames = new Set<string>()
 const cache = new WeakMap<any, { [key: string]: StoreInfo }>()
 
-export function useStore<A extends Store<B>, B, Selector extends Function>(
+export function useStore<A extends Store<B>, B>(
   StoreKlass: new (props: B) => A | (new () => A),
   props?: B,
-  selector?: (x: any) => any
-): Selector extends (x: any) => infer B ? B : A {
+  selector?: any
+): A {
   const storeName = StoreKlass.name
   const propsKey = props ? getKey(props) : ''
   const cached = cache.get(StoreKlass)
@@ -91,10 +138,7 @@ const selectKeys = (obj: any, keys: string[] = []) => {
   return res
 }
 
-function useStoreInstance(
-  info: StoreInfo,
-  userSelector?: (x: any) => any
-): any {
+function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
   const internal = useRef({
     isRendering: false,
     tracked: new Set<string>(),
@@ -123,7 +167,6 @@ function useStoreInstance(
   })
 
   const storeProxy = useConstant(() => {
-    let tm
     const proxiedStore = new Proxy(info.storeInstance, {
       get(target, key) {
         // console.log('getting', key, target[key])
