@@ -1,7 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
 import { HStack, Text, VStack } from '@dish/ui'
-import { useStore } from '@dish/use-store'
-import { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { TextInput } from 'react-native'
 

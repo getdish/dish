@@ -1,20 +1,21 @@
 export const TRIGGER_UPDATE = Symbol()
+const LISTENERS = Symbol()
 
 export class Store<A extends Object | null = null> {
-  private listeners = new Set<Function>()
+  private [LISTENERS] = new Set<Function>()
 
   constructor(public props: A) {}
 
   mount() {}
 
   subscribe(onChanged: Function) {
-    this.listeners.add(onChanged)
+    this[LISTENERS].add(onChanged)
     return () => {
-      this.listeners.delete(onChanged)
+      this[LISTENERS].delete(onChanged)
     }
   }
 
   [TRIGGER_UPDATE] = () => {
-    this.listeners.forEach((cb) => cb())
+    this[LISTENERS].forEach((cb) => cb())
   }
 }

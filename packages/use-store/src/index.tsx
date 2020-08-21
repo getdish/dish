@@ -30,6 +30,7 @@ type StoreInfo = {
   getters: { [key: string]: any }
   actions: any
   version: number
+  stateKeys: string[]
 }
 
 export function createUseStore<Props, Store>(
@@ -89,6 +90,7 @@ export function useStore<A extends Store<B>, B>(
   const storeInstance = new StoreKlass(props!)
   const getters = {}
   const actions = {}
+  const stateKeys: string[] = []
 
   const descriptors = getStoreDescriptors(storeInstance)
   for (const key in descriptors) {
@@ -99,7 +101,9 @@ export function useStore<A extends Store<B>, B>(
     } else if (typeof descriptor.get === 'function') {
       getters[key] = descriptor.get
     } else {
-      // state
+      if (key !== 'props') {
+        stateKeys.push(key)
+      }
     }
   }
 
@@ -112,6 +116,7 @@ export function useStore<A extends Store<B>, B>(
     version: 0,
     storeInstance,
     getters,
+    stateKeys,
     actions,
     source: createMutableSource(storeInstance, () => value.version),
   }
@@ -122,7 +127,11 @@ export function useStore<A extends Store<B>, B>(
 const subscribe = (store: Store, callback: Function) =>
   store.subscribe(callback)
 
+const emptyObj = {}
 const selectKeys = (obj: any, keys: string[] = []) => {
+  if (!keys.length) {
+    return emptyObj
+  }
   const res = {}
   for (const key of keys) {
     res[key] = obj[key]
@@ -131,16 +140,10 @@ const selectKeys = (obj: any, keys: string[] = []) => {
 }
 
 function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
-  const internal = useRef<{ tracked: Set<string>; isRendering: boolean }>(
-    0 as any // otherwise ts complains its empty
-  )
-  // set here once to avoid lots of object creation
-  if (!internal.current) {
-    internal.current = {
-      isRendering: false,
-      tracked: new Set<string>(),
-    }
-  }
+  const internal = useRef({
+    isRendering: false,
+    tracked: new Set<string>(),
+  })
   const selector = userSelector ?? selectKeys
   const getSnapshot = useCallback(
     (store) => {
@@ -177,14 +180,13 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
           }
           if (internal.current.isRendering) {
             internal.current.tracked.add(key)
-            return state[key]
+            return state[key] ?? Reflect.get(target, key)
           }
         }
         return Reflect.get(target, key)
       },
       set(target, key, value, receiver) {
         const res = Reflect.set(target, key, value, receiver)
-        // console.log('setting', target, key, value, target[key])
         info.version++
         info.storeInstance[TRIGGER_UPDATE]()
         return res
