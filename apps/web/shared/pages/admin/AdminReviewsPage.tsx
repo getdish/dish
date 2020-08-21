@@ -140,7 +140,6 @@ const ReviewList = memo(
 
 const ReviewListContent = graphql(({ search }: { search: string }) => {
   const reviewStore = useStore(ReviewStore)
-  const selectionStore = useReviewSelectionStore()
   const limit = 200
   const [page, setPage] = useState(1)
   const results = query.review({
