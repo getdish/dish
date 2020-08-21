@@ -37,6 +37,7 @@ export const AdminListItem = memo(
       { id },
       (s) => s.column === column
     )
+    console.log({ id, column, isRowActive, isColumnActive })
     const isActive = isRowActive && isColumnActive
     const isFormerlyActive = isRowActive && !isColumnActive
 

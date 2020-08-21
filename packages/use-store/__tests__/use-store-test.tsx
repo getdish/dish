@@ -78,6 +78,27 @@ describe('basic tests', () => {
     fireEvent.click(getAllByTitle('add')[0])
     expect(findY()).toBe('1')
   })
+
+  it('only re-renders tracked properties', async () => {
+    let renderCount = 0
+    function SimpleStoreTestUsedProperties(props: { id: number }) {
+      const store = useStore(TodoList, props)
+      renderCount++
+      return <button title="add" onClick={() => store.add()}></button>
+    }
+    const { getAllByTitle } = render(
+      <StrictMode>
+        <SimpleStoreTestUsedProperties id={5} />
+      </StrictMode>
+    )
+    const getCurrentByTitle = (name: string) => last(getAllByTitle(name))!
+    act(() => {
+      fireEvent.click(getCurrentByTitle('add'))
+      fireEvent.click(getCurrentByTitle('add'))
+      fireEvent.click(getCurrentByTitle('add'))
+    })
+    expect(renderCount).toEqual(1)
+  })
 })
 
 function SimpleStoreTest(props: { id: number }) {

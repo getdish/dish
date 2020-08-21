@@ -6,16 +6,12 @@ import { ScrollView } from 'react-native'
 
 import { AdminListItem } from './AdminListItem'
 import { AdminSearchableColumn } from './AdminSearchableColumn'
-import { SelectionStore, useReviewSelectionStore } from './SelectionStore'
+import { useColumnSelection, useRowSelection } from './SelectionStore'
 import { VerticalColumn } from './VerticalColumn'
-
-// whats still broken:
-//   - "New" item
-//   - "Create" form
 
 export default graphql(function AdminReviewsPage() {
   return (
-    <VStack overflow="hidden" maxHeight="100vh" maxWidth="100vw" width="100%">
+    <VStack flex={1} overflow="hidden" width="100%">
       <HStack overflow="hidden" width="100%" flex={1}>
         <ScrollView horizontal>
           <HStack>
@@ -53,10 +49,12 @@ const RestaurantList = () => {
 
 export class ReviewStore extends Store {
   selectedRestaurantId = ''
+  selectedReviewId = ''
 }
 
 const RestaurantsListContent = graphql(({ search }: { search: string }) => {
   const reviewStore = useStore(ReviewStore)
+  const rowStore = useRowSelection({ id: 'reviews', column: 0 })
   const limit = 200
   const [page, setPage] = useState(1)
   const results = query.restaurant({
@@ -89,16 +87,10 @@ const RestaurantsListContent = graphql(({ search }: { search: string }) => {
             id="reviews"
             row={index}
             column={0}
-            // isFormerlyActive={selectionStore.selectedNames[0] === item.name}
-            // isActive={
-            //   selectionStore.selectedIndices[0] == 0 &&
-            //   selectionStore.selectedIndices[1] == col
-            // }
-            // onSelect={() => {
-            //   reviewStore.selectedRestaurantId = item.id
-            //   selectionStore.setSelected([0, col])
-            //   selectionStore.setSelectedName(0, item.name ?? '')
-            // }}
+            onSelect={() => {
+              reviewStore.selectedRestaurantId = item.id
+              rowStore.setRow(index)
+            }}
             deletable={index > 0}
             editable={index > 0}
           />
