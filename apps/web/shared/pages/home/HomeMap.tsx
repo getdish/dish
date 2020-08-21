@@ -142,7 +142,6 @@ const HomeMapContent = memo(function HomeMap({
   const stateId = om.state.home.currentState.id
   const state = om.state.home.allStates[stateId]
   const { drawerWidth, width, paddingLeft } = useMapSize(isSmall)
-  const [map, setMap] = useState<mapboxgl.Map | null>(null)
   const [internal, setInternal] = useState({
     id: om.state.home.selectedRestaurant?.id,
     span: state.span,
@@ -168,16 +167,16 @@ const HomeMapContent = memo(function HomeMap({
   }, [selectedId])
 
   // HOVERED
-  const hoveredId =
-    om.state.home.hoveredRestaurant && om.state.home.hoveredRestaurant.id
-  useEffect(() => {
-    if (!hoveredId) return
-    setState({
-      id: hoveredId,
-      via: 'hover',
-      span: getMinLngLat(state.span, 0.02),
-    })
-  }, [hoveredId])
+  // const hoveredId =
+  //   om.state.home.hoveredRestaurant && om.state.home.hoveredRestaurant.id
+  // useEffect(() => {
+  //   if (!hoveredId) return
+  //   setState({
+  //     id: hoveredId,
+  //     via: 'hover',
+  //     span: getMinLngLat(state.span, 0.02),
+  //   })
+  // }, [hoveredId])
 
   // DETAIL
   const detailId = restaurantDetail?.id
@@ -210,7 +209,6 @@ const HomeMapContent = memo(function HomeMap({
 
   // SPAN (state.span)
   useLazyEffect(() => {
-    console.log('set it from', state.span)
     setState({
       span: state.span,
     })
@@ -290,7 +288,6 @@ const HomeMapContent = memo(function HomeMap({
         features={features}
         centerToResults={om.state.home.centerToResults}
         mapRef={(map: mapboxgl.Map) => {
-          setMap(map)
           setMapView(map)
         }}
         selected={internal.id}

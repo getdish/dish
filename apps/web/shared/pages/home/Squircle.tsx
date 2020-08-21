@@ -46,10 +46,10 @@ export const Squircle = ({
           })}
         >
           {children}
-          <LinearGradient
+          {/* <LinearGradient
             colors={['transparent', 'rgba(0,0,0,0.3)']}
             style={[StyleSheet.absoluteFill]}
-          />
+          /> */}
         </VStack>
         {outside}
       </VStack>

@@ -31,7 +31,6 @@ import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantTopReviews } from './RestaurantTopReviews'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 import { Squircle } from './Squircle'
-import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
@@ -382,7 +381,7 @@ const RestaurantPeek = memo(
       tag_names,
       max: 5,
     })
-    const dishSize = size === 'lg' ? 140 : 120
+    const dishSize = 160
     return (
       <HStack
         contain="paint layout"

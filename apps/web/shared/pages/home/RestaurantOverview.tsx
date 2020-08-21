@@ -22,11 +22,11 @@ export const RestaurantOverview = memo(
           <>
             {headlines.slice(0, 4).map((item, i) => {
               return (
-                <Text key={i}>
-                  {/* <Text color="rgba(0,0,0,0.5)">{item.category}</Text>{' '} */}
-                  {item.sentence}
-                  .&nbsp;
-                </Text>
+                <li style={{ display: 'flex' }} key={i}>
+                  <HStack key={i} flex={1} overflow="hidden">
+                    <Text ellipse>{item.sentence}</Text>
+                  </HStack>
+                </li>
               )
             })}
           </>
