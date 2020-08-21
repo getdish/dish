@@ -66,7 +66,6 @@ export function useStoreSelector<
   return useStore(StoreKlass, props, selector) as any
 }
 
-const uniqueStoreNames = new Set<string>()
 const cache = new WeakMap<any, { [key: string]: StoreInfo }>()
 
 export function useStore<A extends Store<B>, B>(
@@ -78,19 +77,12 @@ export function useStore<A extends Store<B>, B>(
   const propsKey = props ? getKey(props) : ''
   const cached = cache.get(StoreKlass)
   const uid = `${storeName}_${propsKey}_`
-
-  // ensure unique name
-  if (!cached) {
-    if (uniqueStoreNames.has(storeName)) {
-      throw new Error(`Store name already used`)
-    }
-    uniqueStoreNames.add(storeName)
-  }
+  const cachedSelector = selector ? useCallback(selector, []) : undefined
 
   // avoid work after init
   const info = cached?.[uid]
   if (info) {
-    return useStoreInstance(info, selector)
+    return useStoreInstance(info, cachedSelector)
   }
 
   // init
@@ -124,7 +116,7 @@ export function useStore<A extends Store<B>, B>(
     source: createMutableSource(storeInstance, () => value.version),
   }
   propCache[uid] = value
-  return useStoreInstance(value, selector)
+  return useStoreInstance(value, cachedSelector)
 }
 
 const subscribe = (store: Store, callback: Function) =>
@@ -139,10 +131,16 @@ const selectKeys = (obj: any, keys: string[] = []) => {
 }
 
 function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
-  const internal = useRef({
-    isRendering: false,
-    tracked: new Set<string>(),
-  })
+  const internal = useRef<{ tracked: Set<string>; isRendering: boolean }>(
+    0 as any // otherwise ts complains its empty
+  )
+  // set here once to avoid lots of object creation
+  if (!internal.current) {
+    internal.current = {
+      isRendering: false,
+      tracked: new Set<string>(),
+    }
+  }
   const selector = userSelector ?? selectKeys
   const getSnapshot = useCallback(
     (store) => {
@@ -152,19 +150,19 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
     [selector]
   )
   const state = useMutableSource(info.source, getSnapshot, subscribe)
-  const curState = useRef(state)
-
-  // mount
-  useLayoutEffect(() => {
-    storeProxy.mount()
-    return () => {}
-  }, [])
 
   // after render
   useLayoutEffect(() => {
-    curState.current = state
     internal.current.isRendering = false
   })
+
+  // mount once
+  useLayoutEffect(() => {
+    if (!info.hasMounted) {
+      info.hasMounted = true
+      return storeProxy.mount()
+    }
+  }, [])
 
   const storeProxy = useConstant(() => {
     const proxiedStore = new Proxy(info.storeInstance, {
@@ -179,6 +177,7 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
           }
           if (internal.current.isRendering) {
             internal.current.tracked.add(key)
+            return state[key]
           }
         }
         return Reflect.get(target, key)
@@ -195,6 +194,10 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
   })
 
   internal.current.isRendering = true
+
+  if (userSelector) {
+    return state
+  }
 
   return storeProxy
 }
