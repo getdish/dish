@@ -61,13 +61,22 @@ export type HomeState = {
 }
 
 export type GeocodePlace = {
+  type:
+    | 'place'
+    | 'neighborhood'
+    | 'poi'
+    | 'reverseGeocode'
+    | 'city'
+    | 'state'
+    | 'country'
+    | 'street'
   name: string
-  type: 'place' | 'neighborhood' | 'poi'
-  fullName: string
+  fullName?: string
+  city: string
   state: string
   country: string
-  center: [number, number]
-  bbox: [number, number, number, number]
+  center?: [number, number]
+  bbox?: [number, number, number, number]
 }
 
 export type ShowAutocomplete = 'search' | 'location' | false

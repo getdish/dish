@@ -26,8 +26,8 @@ export async function searchLocations(
   return res.features.map((feat) => {
     return {
       name: feat.text,
-      type: feat.place_type[0],
       fullName: feat.place_name,
+      type: feat.place_type[0],
       bbox: feat.bbox,
       center: feat.center,
       state: feat.context.find((x) => x.wikidata === 'Q99'),
@@ -40,7 +40,7 @@ export const locationToAutocomplete = (
   place: GeocodePlace
 ): AutocompleteItem => {
   return createAutocomplete({
-    name: place.name,
+    name: place.neighborhood,
     type: 'country',
     icon: '📍',
     center: {

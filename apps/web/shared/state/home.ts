@@ -44,6 +44,7 @@ import {
 } from './home-types'
 import { initialHomeState } from './initialHomeState'
 import { NavigableTag } from './NavigableTag'
+import { reverseGeocode } from './reverseGeocode'
 import { router } from './router'
 import { shouldBeOnHome } from './shouldBeOnHome'
 import { tagFilters } from './tagFilters'
@@ -376,13 +377,6 @@ const suggestTags: AsyncAction<string> = async (om, tags) => {
   // none
 }
 
-const spanToLocationName = (span: LngLat, place: GeocodePlace): string => {
-  if (span.lat < 0.07) {
-    return place.subLocality // Mission Dolores
-  }
-  return place.locality // San Francisco
-}
-
 const getUserPosition = () => {
   return new Promise<Position>((res, rej) => {
     navigator.geolocation.getCurrentPosition(res, rej)
@@ -405,28 +399,15 @@ const moveMapToUserLocation: AsyncAction = async (om) => {
 }
 
 const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
-  // const currentState = om.state.home.currentState
-  // const center = currentState.center!
-  // const span = currentState.span!
-  // const hasUserLocation = !!om.state.home.userLocation
-  // try {
-  //   const [firstResult] = (await reverseGeocode(center, hasUserLocation)) ?? []
-  //   const placeName = firstResult.subLocality ?? firstResult.locality
-  //   if (placeName) {
-  //     const name = spanToLocationName(span, firstResult)
-  //     const info: GeocodePlace = {
-  //       country: firstResult?.country,
-  //       coordinate: firstResult?.coordinate,
-  //       locality: firstResult?.locality,
-  //       subLocality: firstResult?.subLocality,
-  //     }
-  //     // @ts-ignore
-  //     om.state.home.currentLocationInfo = info
-  //     currentState.currentLocationName = name
-  //   }
-  // } catch (err) {
-  //   return
-  // }
+  const { center, span } =
+    om.state.home.currentState.mapAt ?? om.state.home.currentState
+  const res = await reverseGeocode(center, span)
+  console.log('got', res)
+  if (res) {
+    const name = res.fullName ?? res.name ?? res.country
+    om.state.home.currentState.currentLocationInfo = res
+    om.state.home.currentState.currentLocationName = name
+  }
 }
 
 const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {

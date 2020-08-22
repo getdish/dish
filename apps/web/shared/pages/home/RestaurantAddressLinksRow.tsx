@@ -102,6 +102,15 @@ export const RestaurantAddressLinksRow = memo(
   )
 )
 
+const replaceAddressPostfix = (address: string, postfix: string) => {
+  const replaceAfter = `, ${postfix}`
+  const replaceIndex = address.indexOf(replaceAfter)
+  if (replaceIndex > 0) {
+    return address.slice(0, replaceIndex).split(',')[0]
+  }
+  return address
+}
+
 export function getAddressText(
   currentLocation: GeocodePlace | null,
   address: string,
@@ -119,12 +128,14 @@ export function getAddressText(
   if (format === 'md' || !currentLocation) {
     return removeZip(removeLongZip(address))
   }
-  if (currentLocation?.locality) {
-    const replaceAfter = `, ${currentLocation.locality ?? ''}`
-    const replaceIndex = address.indexOf(replaceAfter)
-    if (replaceIndex > 0) {
-      return address.slice(0, replaceIndex).split(',')[0]
-    }
+  if (currentLocation?.state) {
+    address = replaceAddressPostfix(address, currentLocation?.state)
+  }
+  if (currentLocation?.country) {
+    address = replaceAddressPostfix(address, currentLocation?.country)
+  }
+  if (currentLocation?.fullName) {
+    address = replaceAddressPostfix(address, currentLocation?.fullName)
   }
   return removeLongZip(address).split(',')[0]
 }
