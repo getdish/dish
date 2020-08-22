@@ -97,7 +97,7 @@ export const HomeMapRestaurantPeek = memo(
               <RestaurantAddress
                 size="sm"
                 address={restaurant.address ?? ''}
-                currentLocationInfo={state?.currentLocationInfo ?? {}}
+                currentLocationInfo={state?.currentLocationInfo ?? null}
               />
             </HStack>
           </VStack>

@@ -90,7 +90,7 @@ const RestaurantHeaderContent = memo(
                   <RestaurantAddress
                     size="sm"
                     address={restaurant.address ?? ''}
-                    currentLocationInfo={state?.currentLocationInfo ?? {}}
+                    currentLocationInfo={state?.currentLocationInfo ?? null}
                   />
                   <Spacer />
                   <RestaurantAddressLinksRow

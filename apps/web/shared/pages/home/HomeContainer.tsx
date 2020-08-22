@@ -10,8 +10,7 @@ import { useLastValueWhen } from './useLastValueWhen'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 // import { Reparentable, sendReparentableChild } from 'react-reparenting'
-
-const getParent = (isSmall: boolean) => (isSmall ? 'sm' : 'lg')
+// const getParent = (isSmall: boolean) => (isSmall ? 'sm' : 'lg')
 
 export function HomeContainer(props: { children: any }) {
   const isSmall = useMediaQueryIsSmall()
@@ -30,7 +29,7 @@ export function HomeContainer(props: { children: any }) {
     <AbsoluteVStack fullscreen pointerEvents="none" zIndex={zIndexDrawer}>
       {isSmall && <HomeSmallDrawer>{props.children}</HomeSmallDrawer>}
       {!isSmall && <HomeContainerLarge>{props.children}</HomeContainerLarge>}
-      {getParent(isSmall)}
+      {/* {getParent(isSmall)} */}
       {/* <HomeSmallDrawer>
         <Reparentable id="sm">{parent === 'sm' ? children : []}</Reparentable>
       </HomeSmallDrawer>

@@ -3,6 +3,7 @@ import { TopCuisine, getHomeDishes } from '@dish/graph'
 import {
   AbsoluteVStack,
   Box,
+  Divider,
   HStack,
   LoadingItems,
   Spacer,
@@ -360,25 +361,29 @@ const dishHeight = 140
 const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
   return (
     <VStack className="home-top-dish" position="relative">
-      <SlantedLinkButton
-        {...flatButtonStyle}
-        marginTop={0}
-        marginBottom={0}
-        marginHorizontal="auto"
-        zIndex={1000}
-        position="relative"
-        tag={{
-          type: 'country',
-          name: country.country,
-        }}
-      >
-        {country.country}{' '}
-        {country.icon ? (
-          <Text marginLeft={3} fontSize="130%">
-            {country.icon}
-          </Text>
-        ) : null}
-      </SlantedLinkButton>
+      <HStack alignItems="center">
+        <Divider flex />
+        <SlantedLinkButton
+          fontSize={18}
+          marginTop={0}
+          marginBottom={0}
+          marginHorizontal="auto"
+          zIndex={1000}
+          position="relative"
+          tag={{
+            type: 'country',
+            name: country.country,
+          }}
+        >
+          {country.country}{' '}
+          {country.icon ? (
+            <Text marginLeft={3} marginVertical={-12} fontSize={32}>
+              {country.icon}
+            </Text>
+          ) : null}
+        </SlantedLinkButton>
+        <Divider flex />
+      </HStack>
       <VStack
         marginTop={-25}
         pointerEvents="none"

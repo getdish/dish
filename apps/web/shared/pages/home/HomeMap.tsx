@@ -296,13 +296,13 @@ const HomeMapContent = memo(function HomeMap({
             // we just re-centered, ignore
             om.actions.home.setCenterToResults(0)
           }
-          om.actions.home.updateCurrentMapAreaInformation()
           om.actions.home.updateCurrentState({
             mapAt: {
               center,
               span,
             },
           })
+          om.actions.home.updateCurrentMapAreaInformation()
         }}
         onDoubleClick={(id) => {
           const restaurant = restaurants?.find((x) => x.id === id)
