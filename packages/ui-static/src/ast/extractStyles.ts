@@ -6,7 +6,6 @@ import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import * as t from '@babel/types'
 import * as AllExports from '@dish/ui/node'
-// import literalToAst from 'babel-literal-to-ast'
 import invariant from 'invariant'
 import { ViewStyle } from 'react-native'
 

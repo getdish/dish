@@ -1,5 +1,3 @@
-import * as babylon from '@babel/parser'
-import traverse from '@babel/traverse'
 import * as t from '@babel/types'
 
 export function literalToAst(literal: any) {
@@ -8,11 +6,7 @@ export function literalToAst(literal: any) {
   }
   switch (typeof literal) {
     case 'function':
-      const ast = babylon.parse(literal.toString(), {
-        allowReturnOutsideFunction: true,
-        allowSuperOutsideMethod: true,
-      })
-      return traverse.removeProperties(ast)
+      throw new Error('Unsupported')
     case 'number':
       return t.numericLiteral(literal)
     case 'string':
