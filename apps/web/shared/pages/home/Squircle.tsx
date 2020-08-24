@@ -1,6 +1,5 @@
-import { AbsoluteVStack, LinearGradient, StackProps, VStack } from '@dish/ui'
+import { StackProps, VStack } from '@dish/ui'
 import React from 'react'
-import { StyleSheet } from 'react-native'
 
 export const Squircle = ({
   width = 100,
@@ -31,7 +30,7 @@ export const Squircle = ({
           shadowRadius={6}
           shadowOffset={{ width: 0, height: 3 }}
           flex={1}
-          borderRadius={borderRadius - 1}
+          borderRadius={borderRadius - (rest.borderWidth ?? 0)}
           overflow="hidden"
           alignItems="center"
           justifyContent="center"

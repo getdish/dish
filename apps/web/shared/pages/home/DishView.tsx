@@ -73,10 +73,10 @@ export const DishView = memo(
     const height = size
     const imageUrl = getImageUrl(size, width, height, dish.image)
     const borderRadius = size * 0.25
+    const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
 
     return (
       <LinkButton
-        className="ease-in-out-fast"
         alignItems="center"
         position="relative"
         justifyContent="center"
@@ -87,7 +87,8 @@ export const DishView = memo(
           opacity: 1,
         }}
         hoverStyle={{
-          transform: [{ scale: 1.025 }],
+          zIndex: 1000000,
+          transform: [{ scale: 1.05 }],
         }}
         onHoverIn={() => setIsHovered(true)}
         onHoverOut={() => setIsHovered(false)}
@@ -143,7 +144,7 @@ export const DishView = memo(
           borderRadius={borderRadius}
           isHovered={isHovered}
           backgroundColor="#000"
-          borderWidth={2}
+          // borderWidth={2}
           borderColor="transparent"
           // dish.isFallback
           {...(selected && {
@@ -157,7 +158,7 @@ export const DishView = memo(
               borderRadius={borderRadius - 1}
               alignItems="center"
               justifyContent="center"
-              backgroundColor="rgba(0,0,0,0.08)"
+              // backgroundColor="rgba(0,0,0,0.08)"
               // backgroundColor="rgba(255,255,255,0.25)"
               {...(isHovered && {
                 borderTopColor: 'transparent',
@@ -170,7 +171,7 @@ export const DishView = memo(
               <Box
                 position="relative"
                 className="skewX ease-in-out-top"
-                backgroundColor="rgba(0,0,0,0.65)"
+                backgroundColor="rgba(0,0,0,0.75)"
                 borderRadius={8}
                 paddingVertical={3}
                 paddingHorizontal={8}
@@ -190,9 +191,9 @@ export const DishView = memo(
                   className="unskewX ease-in-out"
                   flex={1}
                   overflow="hidden"
-                  fontSize={20 * (dishName.length > 16 ? 0.9 : 1)}
-                  fontWeight="600"
+                  fontWeight="300"
                   color={isHovered ? '#000' : '#fff'}
+                  fontSize={hasLongWord ? 15 : 18}
                   textAlign="center"
                 >
                   {dishName}
@@ -207,7 +208,7 @@ export const DishView = memo(
               style={{
                 width: '100%',
                 height: '100%',
-                opacity: isHovered ? 1 : 0.65,
+                opacity: isHovered ? 1 : 0.75,
               }}
               resizeMode="cover"
             />
