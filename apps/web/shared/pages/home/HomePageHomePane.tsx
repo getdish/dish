@@ -364,7 +364,8 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
       <HStack alignItems="center" marginBottom={10}>
         <Divider flex />
         <SlantedLinkButton
-          fontSize={16}
+          fontSize={18}
+          fontWeight="600"
           marginTop={0}
           marginBottom={0}
           marginHorizontal="auto"
@@ -397,7 +398,7 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
         >
           <HStack
             alignItems="center"
-            spacing={6}
+            spacing={10}
             paddingVertical={18}
             paddingRight={20}
           >
