@@ -207,7 +207,7 @@ export const DishView = memo(
               style={{
                 width: '100%',
                 height: '100%',
-                opacity: 0.65,
+                opacity: isHovered ? 1 : 0.65,
               }}
               resizeMode="cover"
             />

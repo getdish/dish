@@ -71,8 +71,6 @@ const useSpacing = () => {
   }
 }
 
-let hasLoadedSearchOnce = false
-
 export default memo(function HomePageSearchResults(props: Props) {
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const om = useOvermind()
@@ -86,35 +84,30 @@ export default memo(function HomePageSearchResults(props: Props) {
 
   usePageLoadEffect(props.isActive, (isMounted) => {
     // if initial load on a search page, process url => state
-    if (!hasLoadedSearchOnce && router.history.length === 1) {
-      hasLoadedSearchOnce = true
-      const fakeTags = getTagsFromRoute(router.curPage)
-      const location = getLocationFromRoute()
-      // TODO UPDATE HOME TOO...
-      om.actions.home.updateCurrentState({
+    const fakeTags = getTagsFromRoute(router.curPage)
+    const location = getLocationFromRoute()
+    // TODO UPDATE HOME TOO...
+    om.actions.home.updateCurrentState({
+      ...state,
+      ...location,
+    })
+    getFullTags(fakeTags).then((tags) => {
+      if (!isMounted.current) return
+      om.actions.home.addTagsToCache(tags)
+      const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>(
+        (acc, tag) => {
+          acc[getTagId(tag)] = true
+          return acc
+        },
+        {}
+      )
+      om.actions.home.updateActiveTags({
         ...state,
-        ...location,
+        searchQuery: router.curPage.params.search,
+        activeTagIds,
       })
-      getFullTags(fakeTags).then((tags) => {
-        if (!isMounted.current) return
-        om.actions.home.addTagsToCache(tags)
-        const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>(
-          (acc, tag) => {
-            acc[getTagId(tag)] = true
-            return acc
-          },
-          {}
-        )
-        om.actions.home.updateActiveTags({
-          ...state,
-          searchQuery: router.curPage.params.search,
-          activeTagIds,
-        })
-        om.actions.home.runSearch({ force: true })
-      })
-    } else {
       om.actions.home.runSearch({ force: true })
-    }
+    })
   })
 
   const key = useLastValueWhen(
