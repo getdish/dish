@@ -286,7 +286,7 @@ postgresql:
   ## ref: https://github.com/bitnami/bitnami-docker-postgresql-repmgr#allow-settings-to-be-loaded-from-files-other-than-the-default-postgresqlconf
   ##
   extendedConf:
-    max_connections: 200
+    max_connections: 500
     shared_buffers: "2GB"
     effective_cache_size: "6GB"
     maintenance_work_mem: "512MB"
@@ -450,11 +450,11 @@ pgpool:
   ## The number of preforked Pgpool-II server processes.  It is also the concurrent
   ## connections limit to Pgpool-II from clients. Must be a positive integer. (PGPOOL_NUM_INIT_CHILDREN)
   ## ref: https://github.com/bitnami/bitnami-docker-pgpool#configuration
-  # numInitChildren:
+  numInitChildren: 250
 
   ## The maximum number of cached connections in each child process (PGPOOL_MAX_POOL)
   ## ref: https://github.com/bitnami/bitnami-docker-pgpool#configuration
-  # maxPools:
+  maxPools: 1
 
   ## Pgpool configuration
   ## Specify content for pgpool.conf

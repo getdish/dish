@@ -406,6 +406,26 @@ function postgres_console() {
     -d dish
 }
 
+function main_db_command() {
+  PORT=$(generate_random_port)
+  postgres_proxy $PORT
+  echo "$1" | PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
+    -p $PORT \
+    -h localhost \
+    -U postgres \
+    -d dish
+}
+
+function timescale_command() {
+  PORT=$(generate_random_port)
+  timescale_proxy $PORT
+  echo "$1" | PGPASSWORD=$TF_VAR_TIMESCALE_SU_PASS psql \
+    -p $PORT \
+    -h localhost \
+    -U postgres \
+    -d scrape_data
+}
+
 function redis_proxy() {
   echo "Waiting for connection to redis..."
   kubectl port-forward svc/redis-master $REDIS_PROXY_PORT:6379 -n redis &
@@ -477,6 +497,46 @@ function install_kubectl() {
 
 function ping_home_page() {
   curl 'https://search.dishapp.com/top_cuisines?lon=-122.421351&lat=37.759251&distance=0.16'
+}
+
+function hasura_clean_event_logs() {
+  main_db_command '
+    DELETE FROM hdb_catalog.event_invocation_logs;
+    DELETE FROM hdb_catalog.event_log
+      WHERE delivered = true OR error = true;
+  '
+}
+
+function postgres_replica_ssh() {
+  number=${1:-0}
+  kubectl ssh \
+    -n postgres-ha \
+    -c postgresql \
+    -u root \
+    postgres-ha-postgresql-ha-postgresql-$number \
+    -- bash
+}
+
+function pgpool_status() {
+  sql='SHOW pool_processes'
+  command="PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
+    -U postgres \
+    -h localhost \
+    -c '$sql'"
+  pods=$(kubectl get pods -n postgres-ha \
+    | grep ha-pgpool \
+    | cut -d ' ' -f 1 \
+    | tail -n +1)
+  echo "$pods" | while read pod; do
+    result=$(kubectl \
+      exec \
+      -n postgres-ha \
+      $pod -- \
+      bash -c "$command")
+    total=$(echo -e "$result" | wc -l)
+    used=$(echo -e "$result" | grep 'dish' | wc -l)
+    echo "$pod: $used/$(expr $total - 3)"
+  done
 }
 
 function_to_run=$1
