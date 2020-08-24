@@ -21,8 +21,8 @@ export const HomeStackDrawer = ({
   return (
     <HStack
       position="absolute"
-      left={isSmall ? -5 : 0}
-      right={isSmall ? -5 : 0}
+      left={isSmall ? 0 : 0}
+      right={isSmall ? 0 : 0}
       flex={1}
       maxHeight="100%"
       height="100%"

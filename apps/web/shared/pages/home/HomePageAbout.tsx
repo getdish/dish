@@ -14,6 +14,7 @@ import { ScrollView } from 'react-native'
 import { HomeStateItemAbout } from '../../state/home-types'
 import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
+import { HomeScrollView } from './HomeScrollView'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { StackItemProps } from './HomeStackView'
 import { Input } from './Input'
@@ -33,15 +34,20 @@ export default graphql(function HomePageAbout({
 }: StackItemProps<HomeStateItemAbout>) {
   return (
     <HomeStackDrawer closable title="About Dish">
-      <ScrollView
-        style={{ paddingHorizontal: 38, paddingVertical: 38, flex: 1 }}
+      <HomeScrollView
+        style={{
+          paddingTop: 40,
+          paddingHorizontal: '5%',
+          paddingVertical: '5%',
+          flex: 1,
+        }}
       >
         <VStack spacing="xl">
           <Title size="xl">The best 🍜, definitively</Title>
 
           <VStack spacing="lg">
             <Paragraph size="xxl">
-              Eating out is diverse. What you look for when craving some{' '}
+              Food is diverse - what you care about when ordering
               <LinkButton
                 backgroundColor={lightYellow}
                 {...inlineButton}
@@ -52,7 +58,7 @@ export default graphql(function HomePageAbout({
               >
                 quick, delivery pho
               </LinkButton>{' '}
-              compared to when you plan for a{' '}
+              vs when planning a{' '}
               <LinkButton
                 tags={[
                   { name: 'Date', type: 'lense' },
@@ -63,21 +69,44 @@ export default graphql(function HomePageAbout({
               >
                 fancy date
               </LinkButton>{' '}
-              are unique - yet todays food search gives you a hundred ~4 star
-              places, forcing you to scan through a ton of comments to find
+              are completely different. A large list of ~4 star restaurants just
+              isn't helpful. It forces you to read tons of comments to find
               &#8220;the one&#8221;.
             </Paragraph>
 
             <Paragraph size="xl">
-              This is especially frustrating with delivery where there are many
-              apps, often with different restaurants and inconsistent ratings.
+              Delivery search is especially irksome - you can't search across
+              services, while each has different results and ratings, and using
+              Yelp means decor is factored when you just want a burrito.
             </Paragraph>
 
-            <Paragraph size="xl">
-              Dish combines every top review site (Yelp, Michelin, and more)
-              with every delivery service. It then looks at what{' '}
-              <em>what people actually say</em>, rather than rate, to break
-              things down to the factors that matter. That gives you:
+            <Paragraph size="lg">
+              Dish is food search that solves these problems. It combines every
+              top review site and every delivery service into{' '}
+              <Strong>
+                a summarized food guide, with ratings down to the dish
+              </Strong>
+              .
+            </Paragraph>
+
+            <Paragraph size="lg">
+              Each restaurant is broken down by what makes it uniquely good.
+              How? By looking at what{' '}
+              <em>what people actually say, rather than rate</em>, and combining
+              that with their expertise in each cuisine. This is all powered by
+              a community that curates and writes, giving you smart, fun
+              summaries of each restaurant.
+            </Paragraph>
+
+            <Paragraph size="lg">
+              We think of it as a Hitchhiker's Guide to Gastronomy (or, a
+              Pokédex for poke) - a pocket map of food where the stats are
+              broken down and people work together to curate a map of gems
+              unique to each place.
+            </Paragraph>
+
+            <Paragraph size="lg">
+              <Strong>TL;DR</Strong>
             </Paragraph>
 
             <Paragraph size="xl">
@@ -85,7 +114,7 @@ export default graphql(function HomePageAbout({
                 <Text marginHorizontal={10} fontSize={32}>
                   🗺
                 </Text>{' '}
-                A map of what's uniquely good in each city, down to the dish
+                Find uniquely good food with ratings down to the dish
               </HStack>
               <HStack marginVertical={4} alignItems="center">
                 <Text marginHorizontal={10} fontSize={32}>
@@ -97,20 +126,8 @@ export default graphql(function HomePageAbout({
                 <Text marginHorizontal={10} fontSize={32}>
                   ✨
                 </Text>{' '}
-                What makes each restaurant special
+                Community curation of what makes each area & restaurant special
               </HStack>
-            </Paragraph>
-
-            <Paragraph size="xl">
-              Our community helps us curate and write reviews, which is then
-              summarized using new AI-powered algorithms to generate a fun
-              summary of each restaurant.
-            </Paragraph>
-
-            <Paragraph size="xl">
-              We think of it as a Hitchhiker's Guide to Gastronomy - or, a
-              Pokédex for poke - a pocket map of food where the stats are broken
-              down and people work together to find gems.
             </Paragraph>
 
             <Divider marginVertical={40} />
@@ -128,7 +145,7 @@ export default graphql(function HomePageAbout({
             </form>
           </VStack>
         </VStack>
-      </ScrollView>
+      </HomeScrollView>
     </HomeStackDrawer>
   )
 })
@@ -182,7 +199,6 @@ const Paragraph = ({
   sizeLineHeight = 1,
   ...props
 }: SizableTextProps) => {
-  console.log(size, props.children)
   return (
     <Text
       fontSize={16 * getSize(size)}

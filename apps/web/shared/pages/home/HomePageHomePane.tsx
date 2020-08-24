@@ -361,10 +361,10 @@ const dishHeight = 140
 const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
   return (
     <VStack className="home-top-dish" position="relative">
-      <HStack alignItems="center">
+      <HStack alignItems="center" marginBottom={10}>
         <Divider flex />
         <SlantedLinkButton
-          fontSize={18}
+          fontSize={16}
           marginTop={0}
           marginBottom={0}
           marginHorizontal="auto"
@@ -409,7 +409,10 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
               //   top_dish.best_restaurants
               // )
               return (
-                <HStack key={index}>
+                <HStack
+                  transform={[{ translateY: index % 2 == 0 ? -5 : 5 }]}
+                  key={index}
+                >
                   <DishView
                     size={dishHeight}
                     dish={{
@@ -421,7 +424,6 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
                       name: country.country,
                       type: 'country',
                     }}
-                    transform={[{ translateY: index % 2 == 0 ? -5 : 5 }]}
                   />
 
                   {/* Shows top restaurants per-dish */}

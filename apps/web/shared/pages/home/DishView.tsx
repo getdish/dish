@@ -108,10 +108,10 @@ export const DishView = memo(
         {...rest}
       >
         {/* rating */}
-        <AbsoluteVStack pointerEvents="none" zIndex={10} top={-3} left={-8}>
+        <AbsoluteVStack pointerEvents="none" zIndex={10} top={0} left={-8}>
           {!!dish.rating && (
             <DishRatingView
-              size={size > 160 ? 'sm' : 'xs'}
+              size={size > 160 ? 'md' : 'sm'}
               rating={dish.rating}
             />
           )}
@@ -142,7 +142,7 @@ export const DishView = memo(
           height={height}
           borderRadius={borderRadius}
           isHovered={isHovered}
-          backgroundColor="#fff"
+          backgroundColor="#000"
           borderWidth={2}
           borderColor="transparent"
           // dish.isFallback
@@ -207,6 +207,7 @@ export const DishView = memo(
               style={{
                 width: '100%',
                 height: '100%',
+                opacity: 0.65,
               }}
               resizeMode="cover"
             />
