@@ -1,19 +1,21 @@
-import { LngLat, graphql, order_by, query } from '@dish/graph'
+import { graphql, order_by, query } from '@dish/graph'
 import { HStack, Text, VStack, useDebounceValue } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
-import React, { memo, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
 
-import { sanFrancisco } from '../../state/defaultLocationAutocompleteResults'
-import { GeocodePlace } from '../../state/home-types'
-import { searchLocations } from '../home/searchLocations'
+import { defaultLocationAutocompleteResults } from '../../state/defaultLocationAutocompleteResults'
+import { AutocompleteItem } from '../../state/home-types'
+import {
+  locationToAutocomplete,
+  searchLocations,
+} from '../home/searchLocations'
 import { AdminListItem } from './AdminListItem'
 import { AdminSearchableColumn } from './AdminSearchableColumn'
-import { useRowStore } from './SelectionStore'
 import { VerticalColumn } from './VerticalColumn'
 
 export class AdminReviewsStore extends Store {
-  selectedCityCenter: LngLat = sanFrancisco.center
+  selectedCity: AutocompleteItem | null = null
   selectedRestaurantId = ''
   selectedReviewId = ''
 
@@ -25,12 +27,12 @@ export class AdminReviewsStore extends Store {
     this.selectedReviewId = val
   }
 
-  setSelectedCityCenter(val: LngLat) {
-    this.selectedCityCenter = val
+  setSelectedCity(val: AutocompleteItem) {
+    this.selectedCity = val
   }
 }
 
-export default graphql(function AdminReviewsPage() {
+export default graphql(() => {
   return (
     <VStack flex={1} overflow="hidden" width="100%">
       <HStack overflow="hidden" width="100%" flex={1}>
@@ -45,6 +47,9 @@ export default graphql(function AdminReviewsPage() {
             <VerticalColumn>
               <ReviewList />
             </VerticalColumn>
+            <VerticalColumn width={400} maxWidth={400} padding={20}>
+              <ReviewDisplay />
+            </VerticalColumn>
           </HStack>
         </ScrollView>
 
@@ -58,6 +63,35 @@ export default graphql(function AdminReviewsPage() {
   )
 })
 
+const ReviewDisplay = graphql(() => {
+  const adminStore = useStore(AdminReviewsStore)
+  console.log('adminStore.selectedReviewId', adminStore.selectedReviewId)
+  const [review] = adminStore.selectedReviewId
+    ? query.review({
+        where: {
+          id: {
+            _eq: adminStore.selectedReviewId,
+          },
+        },
+      })
+    : []
+
+  return (
+    <>
+      {!review && <Text>No Review Selected</Text>}
+      {!!review && (
+        <VStack>
+          <Text>{review.rating}</Text>
+          <Text>{review.username}</Text>
+          <Text>{review.sentiments}</Text>
+          <Text>{review.text}</Text>
+          <Text>{review.categories}</Text>
+        </VStack>
+      )}
+    </>
+  )
+})
+
 const PlacesList = () => {
   const [searchRaw, setSearch] = useState('')
   const search = useDebounceValue(searchRaw, 100)
@@ -68,16 +102,27 @@ const PlacesList = () => {
   )
 }
 
+const defaultPlaces: AutocompleteItem[] = [
+  {
+    name: 'All',
+    type: 'all',
+  },
+  ...defaultLocationAutocompleteResults,
+]
+
 const PlacesListContent = graphql(
   ({ search, column }: { search: string; column: number }) => {
     const adminStore = useStore(AdminReviewsStore)
-    const [results, setResults] = useState<GeocodePlace[]>([])
+    const [results, setResults] = useState<AutocompleteItem[]>(defaultPlaces)
 
     useEffect(() => {
       let cancelled = false
       searchLocations(search).then((locations) => {
         if (!cancelled) {
-          setResults(locations)
+          setResults([
+            ...defaultPlaces,
+            ...locations.map(locationToAutocomplete),
+          ])
         }
       })
       return () => {
@@ -87,19 +132,20 @@ const PlacesListContent = graphql(
 
     return (
       <ScrollView style={{ paddingBottom: 100 }}>
-        {results.map((item, index) => {
+        {results.map((item, row) => {
           return (
             <AdminListItem
-              key={item.name + index}
+              key={item.name + row}
               text={item.name ?? 'no name'}
               id="reviews"
-              row={index}
-              column={0}
+              row={row}
+              column={column}
               onSelect={() => {
-                adminStore.setSelectedCityCenter({
-                  lng: item.center[0],
-                  lat: item.center[1],
-                })
+                if (item.type === 'all') {
+                  adminStore.setSelectedCity(null)
+                } else {
+                  adminStore.setSelectedCity(item)
+                }
               }}
             />
           )
@@ -125,6 +171,7 @@ const RestaurantList = () => {
 const RestaurantsListContent = graphql(
   ({ search, column }: { search: string; column: number }) => {
     const adminStore = useStore(AdminReviewsStore)
+    const { selectedCity } = adminStore
     const limit = 200
     const [page, setPage] = useState(1)
     const results = query.restaurant({
@@ -135,6 +182,18 @@ const RestaurantsListContent = graphql(
           }),
           _neq: '',
         },
+        ...(selectedCity && {
+          location: {
+            _st_d_within: {
+              // search outside current bounds a bit
+              distance: 1,
+              from: {
+                type: 'Point',
+                coordinates: [selectedCity.center.lng, selectedCity.center.lat],
+              },
+            },
+          },
+        }),
       },
       limit: limit,
       offset: (page - 1) * limit,
@@ -158,8 +217,6 @@ const RestaurantsListContent = graphql(
               onSelect={() => {
                 adminStore.setSelectedRestaurantId(item.id)
               }}
-              deletable={index > 0}
-              editable={index > 0}
             />
           )
         })}
@@ -183,20 +240,15 @@ const RestaurantsListContent = graphql(
   }
 )
 
-const ReviewList = memo(
-  graphql(() => {
-    const [searchRaw, setSearch] = useState('')
-    const search = useDebounceValue(searchRaw, 100)
-    return (
-      <AdminSearchableColumn
-        title="Reviews"
-        onChangeSearch={(x) => setSearch(x)}
-      >
-        <ReviewListContent search={search} column={3} />
-      </AdminSearchableColumn>
-    )
-  })
-)
+const ReviewList = () => {
+  const [searchRaw, setSearch] = useState('')
+  const search = useDebounceValue(searchRaw, 100)
+  return (
+    <AdminSearchableColumn title="Reviews" onChangeSearch={(x) => setSearch(x)}>
+      <ReviewListContent search={search} column={2} />
+    </AdminSearchableColumn>
+  )
+}
 
 const ReviewListContent = graphql(
   ({ search, column }: { search: string; column: number }) => {
@@ -240,10 +292,8 @@ const ReviewListContent = graphql(
               row={row}
               column={column}
               onSelect={() => {
-                adminStore.selectedRestaurantId = item.id
+                adminStore.setSelectedReviewId(item.id)
               }}
-              deletable={row > 0}
-              editable={row > 0}
             />
           )
         })}

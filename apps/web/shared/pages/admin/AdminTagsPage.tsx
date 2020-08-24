@@ -30,7 +30,6 @@ import { emojiRegex } from '../../helpers/emojiRegex'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { AdminListItem, AdminListItemProps } from './AdminListItem'
 import { ColumnHeader } from './ColumnHeader'
-import { useTagSelectionStore } from './SelectionStore'
 import { VerticalColumn } from './VerticalColumn'
 
 // whats still broken:
@@ -41,8 +40,9 @@ export default graphql(function AdminTagsPage() {
   return <AdminTagsPageContent />
 })
 
-class TagStore extends Store {
+class AdminTagStore extends Store {
   selectedId = ''
+  selectedTagNames = []
   forceRefreshColumnByType = ''
 
   draft: TagRecord = {
@@ -51,6 +51,12 @@ class TagStore extends Store {
 
   updateDraft(next: Partial<TagRecord>) {
     this.draft = { ...this.draft, ...next }
+  }
+
+  setSelected({ id, col, name }: { id: string; col: number; name: string }) {
+    this.selectedId = id
+    this.selectedTagNames[col] = name
+    this.selectedTagNames = [...this.selectedTagNames]
   }
 }
 
@@ -93,19 +99,19 @@ const AdminTagsPageContent = graphql(() => {
         <ScrollView horizontal>
           <HStack>
             <VerticalColumn>
-              <TagList row={0} type="continent" />
+              <TagList column={0} type="continent" />
             </VerticalColumn>
 
             <VerticalColumn>
-              <TagList row={1} type="country" />
+              <TagList column={1} type="country" />
             </VerticalColumn>
 
             <VerticalColumn>
-              <TagList row={2} type="dish" />
+              <TagList column={2} type="dish" />
             </VerticalColumn>
 
             <VerticalColumn title="Manage Lenses">
-              <TagList row={3} type="lense" />
+              <TagList column={3} type="lense" />
             </VerticalColumn>
 
             <VerticalColumn>
@@ -128,9 +134,14 @@ const AdminTagsPageContent = graphql(() => {
 })
 
 const TagList = memo(
-  graphql(({ type, row }: { type: TagType; row: number }) => {
-    const selectionStore = useTagSelectionStore()
-    const lastRowSelection = selectionStore.selectedNames[row - 1]
+  graphql(({ type, column }: { type: TagType; column: number }) => {
+    // const lastRowIndex = useRowStore({ id: 'tags', column: column - 1 }, x => x.row)
+    const lastRowSelection = useStore(
+      AdminTagStore,
+      null,
+      (store) => store.selectedTagNames[column - 1] ?? ''
+    ) as any
+
     const [searchRaw, setSearch] = useState('')
     const search = useDebounceValue(searchRaw, 100)
     // const [newTag, setNewTag] = useState(null)
@@ -145,8 +156,6 @@ const TagList = memo(
     const refresh = () => {
       setContentKey(Math.random())
     }
-
-    console.log('contentKey', contentKey)
 
     return (
       <VStack flex={1} maxHeight="100%">
@@ -190,7 +199,7 @@ const TagList = memo(
             key={contentKey}
             search={search}
             // newTag={newTag}
-            row={row}
+            column={column}
             type={type}
             lastRowSelection={lastRowSelection}
           />
@@ -203,20 +212,19 @@ const TagList = memo(
 const TagListContent = memo(
   graphql(
     ({
-      row,
+      column,
       search,
       newTag,
       type,
       lastRowSelection,
     }: {
       search: string
-      row: number
+      column: number
       type: TagType
       newTag?: Tag
       lastRowSelection: string
     }) => {
-      const tagStore = useStore(TagStore)
-      const selectionStore = useTagSelectionStore()
+      const tagStore = useStore(AdminTagStore)
       const limit = 40
       const [page, setPage] = useState(1)
       const forceUpdate = useForceUpdate()
@@ -268,25 +276,20 @@ const TagListContent = memo(
 
       return (
         <ScrollView style={{ paddingBottom: 100 }}>
-          {allResults.map((tag, col) => {
+          {allResults.map((tag, row) => {
             return (
               <TagListItem
+                id="tags"
                 tagId={tag.id}
-                col={col}
                 row={row}
+                column={column}
                 onSelect={() => {
-                  tagStore.selectedId = tag.id
-                  selectionStore.setSelected([row, col])
-                  if (typeof row === 'undefined') debugger
-                  selectionStore.setSelectedName(row, tag.name ?? '')
+                  tagStore.setSelected({
+                    col: column,
+                    id: tag.id,
+                    name: tag.name,
+                  })
                 }}
-                isFormerlyActive={
-                  selectionStore.selectedNames[row] === tag.name
-                }
-                isActive={
-                  selectionStore.selectedIndices[0] == row &&
-                  selectionStore.selectedIndices[1] == col
-                }
               />
             )
           })}
@@ -315,13 +318,13 @@ const TagListItem = graphql(
   ({
     tagId,
     row,
-    col,
+    column,
     ...rest
-  }: { tagId?: string; col: number; row: number } & Partial<
+  }: { tagId?: string; column: number; row: number } & Partial<
     AdminListItemProps
   >) => {
     if (tagId) {
-      const tag = useTag(tagId)
+      const tag = queryTag(tagId)
       const text = `${tag.icon ?? ''} ${tag.name}`.trim()
       return (
         <AdminListItem
@@ -332,19 +335,22 @@ const TagListItem = graphql(
           onEdit={(text) => {
             setTagNameAndIcon(tag, text)
           }}
-          deletable={col > 0}
-          editable={col > 0}
+          column={column}
+          row={row}
+          id="tags"
+          deletable={row > 0}
+          editable={row > 0}
           {...rest}
         />
       )
     }
 
-    return <AdminListItem text="All" />
+    return <AdminListItem id="tags" column={column} row={row} text="All" />
   }
 )
 
 const TagEditColumn = memo(() => {
-  const tagStore = useStore(TagStore)
+  const tagStore = useStore(AdminTagStore)
   const [showCreate, setShowCreate] = useState(false)
   return (
     <VStack spacing="lg">
@@ -383,7 +389,7 @@ const TagEditColumn = memo(() => {
   )
 })
 
-const useTag = (id: string) => {
+const queryTag = (id: string) => {
   return query.tag({
     where: {
       id: { _eq: id },
@@ -394,9 +400,9 @@ const useTag = (id: string) => {
 
 const TagEdit = memo(
   graphql(() => {
-    const tagStore = useStore(TagStore)
+    const tagStore = useStore(AdminTagStore)
     if (tagStore.selectedId) {
-      const tag = useTag(tagStore.selectedId)
+      const tag = queryTag(tagStore.selectedId)
       console.log('got now', tag)
       return (
         <TagCRUD
@@ -576,7 +582,6 @@ const TableRow = ({ label, children }: { label: string; children: any }) => {
 
 const MenuItemsResults = memo(
   graphql(({ search }: { search: string }) => {
-    const store = useTagSelectionStore()
     const dishes = query.tag({
       where: { name: { _ilike: search } },
       limit: 100,
@@ -589,17 +594,15 @@ const MenuItemsResults = memo(
     return (
       <VStack flex={1}>
         {dishes.map((dish, index) => {
-          const isActive =
-            store.selectedIndices[0] === 0 && index === store.selectedIndices[1]
           return (
             <VStack
               key={dish.id}
               onPress={() => {
-                setTimeout(() => {
-                  if (!isActive) {
-                    store.setSelected([4, index])
-                  }
-                })
+                // setTimeout(() => {
+                //   if (!isActive) {
+                //     store.setSelected([4, index])
+                //   }
+                // })
               }}
             >
               <Text>{dish.name}</Text>

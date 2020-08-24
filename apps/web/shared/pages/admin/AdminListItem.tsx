@@ -37,7 +37,6 @@ export const AdminListItem = memo(
     const isColumnActive = useColumnStore({ id }, (s) => s.column === column)
     const isActive = isRowActive && isColumnActive
     const isFormerlyActive = isRowActive && !isColumnActive
-
     const [isEditing, setIsEditing] = useState(false)
     const [hidden, setHidden] = useState(false)
     const lastTap = useRef(Date.now())

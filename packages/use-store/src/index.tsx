@@ -147,7 +147,9 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
   })
   const selector = userSelector ?? selectKeys
   const getSnapshot = useCallback(
-    (store) => selector(store, [...internal.current.tracked]),
+    (store) => {
+      return selector(store, [...internal.current.tracked])
+    },
     [selector]
   )
   const state = useMutableSource(info.source, getSnapshot, subscribe)
@@ -178,15 +180,22 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
           }
           if (internal.current.isRendering) {
             internal.current.tracked.add(key)
-            return state[key] ?? Reflect.get(target, key)
+            const val = state[key]
+            if (typeof val !== 'undefined') {
+              return val
+            }
           }
         }
         return Reflect.get(target, key)
       },
       set(target, key, value, receiver) {
+        const cur = Reflect.get(target, key)
         const res = Reflect.set(target, key, value, receiver)
-        info.version++
-        info.storeInstance[TRIGGER_UPDATE]()
+        // only update if changed, simple compare
+        if (res && cur !== value) {
+          info.version++
+          info.storeInstance[TRIGGER_UPDATE]()
+        }
         return res
       },
     })
