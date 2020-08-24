@@ -30,7 +30,6 @@ import {
 import {
   ActiveEvent,
   AutocompleteItem,
-  GeocodePlace,
   HomeActiveTagsRecord,
   HomeState,
   HomeStateItem,
