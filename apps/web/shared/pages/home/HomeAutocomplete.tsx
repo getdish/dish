@@ -372,12 +372,12 @@ function runAutocomplete(
     () => fullyIdle({ max: 100, min: 50 }),
     async () => {
       if (showAutocomplete === 'location') {
+        const locationResults = await searchLocations(searchQuery, state.center)
         results = [
-          ...(await searchLocations(searchQuery, state.center))
-            .map(locationToAutocomplete)
-            .filter(Boolean),
+          ...locationResults.map(locationToAutocomplete).filter(Boolean),
           ...defaultLocationAutocompleteResults,
         ]
+        console.log('results', locationResults)
       }
       if (showAutocomplete === 'search') {
         results = await searchAutocomplete(

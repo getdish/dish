@@ -64,7 +64,7 @@ export const getTagColors = ({ rgb, type }: Partial<Tag>) => {
       ? // red
         '#BD1616'
       : // green
-        '#16AA21'
+        '#777'
   return {
     backgroundColor,
     color: '#fff',
@@ -147,9 +147,9 @@ export const TagButton = memo((props: TagButtonProps) => {
         backgroundColor={bg}
         position="relative"
         minHeight={lineHeight}
-        hoverStyle={{
-          transform: [{ scale: 1.05 }],
-        }}
+        // hoverStyle={{
+        //   transform: [{ scale: 1.05 }],
+        // }}
         {...(!subtle && {
           hoverStyle: {
             transform: [{ rotate: '-2deg', scale: 1.1 }],
@@ -302,12 +302,13 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
     <VStack
       // @ts-ignore
       ref={buttonRef}
-      paddingHorizontal={5 * scale}
+      paddingHorizontal={3 * scale}
       alignItems="center"
       justifyContent="center"
       borderRadius={100}
       width={24 * scale}
       height={24 * scale}
+      marginRight={5 * scale}
       {...(subtle && {
         marginLeft: 4,
         overflow: 'hidden',

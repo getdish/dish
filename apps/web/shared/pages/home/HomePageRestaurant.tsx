@@ -74,7 +74,7 @@ const HomePageRestaurant = memo(
 
           <Suspense fallback={<LoadingItems />}>
             <VStack alignItems="center">
-              <HStack minWidth={380} paddingBottom={20}>
+              <HStack minWidth={380}>
                 <RestaurantDetailRow
                   centered
                   justifyContent="center"
@@ -84,11 +84,9 @@ const HomePageRestaurant = memo(
               </HStack>
             </VStack>
 
-            <Divider />
-
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <HStack
-                paddingVertical={30}
+                paddingVertical={20}
                 paddingHorizontal="5%"
                 maxWidth={610}
               >
@@ -110,6 +108,7 @@ const HomePageRestaurant = memo(
               marginHorizontal={20}
               position="relative"
               overflow="visible"
+              shadowColor="transparent"
             >
               <VStack
                 paddingVertical={5}
@@ -144,7 +143,7 @@ const HomePageRestaurant = memo(
             <Spacer size="lg" />
 
             <VStack width="100%">
-              <SmallTitle>Top dishes</SmallTitle>
+              <SmallTitle divider="off">Top dishes</SmallTitle>
               <Suspense fallback={null}>
                 <RestaurantDishPhotos
                   size={160}
@@ -154,7 +153,7 @@ const HomePageRestaurant = memo(
               </Suspense>
             </VStack>
 
-            <SmallTitle>Top tips</SmallTitle>
+            <SmallTitle divider="off">Top tips</SmallTitle>
             <HStack padding={20} maxWidth="100%" flexWrap="wrap">
               <RestaurantOverview restaurantSlug={slug} />
             </HStack>

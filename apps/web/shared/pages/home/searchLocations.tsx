@@ -30,8 +30,8 @@ export async function searchLocations(
       type: feat.place_type[0],
       bbox: feat.bbox,
       center: feat.center,
-      state: feat.context.find((x) => x.wikidata === 'Q99'),
-      country: feat.context.find((x) => x.wikidata === 'Q30'),
+      state: feat.context?.find((x) => x.wikidata === 'Q99'),
+      country: feat.context?.find((x) => x.wikidata === 'Q30'),
     }
   })
 }
@@ -40,7 +40,8 @@ export const locationToAutocomplete = (
   place: GeocodePlace
 ): AutocompleteItem => {
   return createAutocomplete({
-    name: place.neighborhood,
+    name: place.name,
+    description: place.fullName,
     type: 'country',
     icon: '📍',
     center: {

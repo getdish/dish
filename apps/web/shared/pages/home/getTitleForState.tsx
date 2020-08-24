@@ -13,7 +13,10 @@ const getTitleForQuery = (query: string) => {
   return query
 }
 
-export function getTitleForState(state: HomeStateItem) {
+export function getTitleForState(
+  state: HomeStateItem,
+  options?: { lowerCase: boolean }
+) {
   const { currentLocationName = 'San Francisco' } = state
   const tags = getActiveTags(state)
   const lense = tags.find((x) => x.type === 'lense')
@@ -55,6 +58,10 @@ export function getTitleForState(state: HomeStateItem) {
   const searchName = getTitleForQuery(state.searchQuery ?? '')
   let titleTagsString = titleParts.filter(Boolean).join(' ')
 
+  if (options?.lowerCase) {
+    titleTagsString = titleTagsString.toLowerCase()
+  }
+
   // lowercase when not at front
   if (!countryTag && lensePlaceholder.indexOf('🍔') > 0) {
     titleTagsString = titleTagsString.toLowerCase()
@@ -88,24 +95,30 @@ export function getTitleForState(state: HomeStateItem) {
   const pageTitleElements = (
     <>
       {userPrefix}
-      {titleSubject.split('🍔').map((x) => {
-        if (x === '🍔') {
-          return (
-            <>
-              {tags.map((tag) => (
-                <TagButton
-                  key={getTagId(tag)}
-                  {...getTagButtonProps(tag as any)}
-                  subtle
-                  noColor
-                  hideIcon
-                />
-              ))}
-            </>
-          )
-        }
-        return x
-      })}
+      {titleSubject
+        .split('🍔')
+        .map((x) => {
+          if (x === '🍔') {
+            return (
+              <>
+                {tags.map((tag) => (
+                  <TagButton
+                    key={getTagId(tag)}
+                    {...getTagButtonProps({
+                      type: tag.type,
+                      name: tag.name.toLowerCase(),
+                    })}
+                    subtle
+                    noColor
+                    hideIcon
+                  />
+                ))}
+              </>
+            )
+          }
+          return x
+        })
+        .join(' ')}
       {titleSpace}
     </>
   )
