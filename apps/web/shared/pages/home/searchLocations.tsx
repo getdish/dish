@@ -24,12 +24,20 @@ export async function searchLocations(
     return []
   }
   return res.features.map((feat) => {
+    const [minLng, minLat, maxLng, maxLat] = feat.bbox
     return {
       name: feat.text,
       fullName: feat.place_name,
       type: feat.place_type[0],
       bbox: feat.bbox,
-      center: feat.center,
+      center: {
+        lng: feat.center[0],
+        lat: feat.center[1],
+      },
+      span: {
+        lng: maxLng - minLng,
+        lat: maxLat - minLat,
+      },
       state: feat.context?.find((x) => x.wikidata === 'Q99'),
       country: feat.context?.find((x) => x.wikidata === 'Q30'),
     }
@@ -44,9 +52,7 @@ export const locationToAutocomplete = (
     description: place.fullName,
     type: 'country',
     icon: '📍',
-    center: {
-      lat: place.center[1],
-      lng: place.center[0],
-    },
+    center: place.center,
+    span: place.span,
   })
 }

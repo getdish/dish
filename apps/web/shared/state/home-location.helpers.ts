@@ -37,10 +37,7 @@ export async function getLocationFromRoute(): Promise<HomeStateItemLocation> {
     if (locations.length) {
       const [nearest] = locations
       return {
-        center: {
-          lat: nearest.center[0],
-          lng: nearest.center[1],
-        },
+        center: nearest.center,
         span: {
           lat: dist(nearest.bbox[0], nearest.bbox[2]) / 2,
           lng: dist(nearest.bbox[1], nearest.bbox[3]) / 2,

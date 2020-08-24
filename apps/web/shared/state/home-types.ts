@@ -75,7 +75,8 @@ export type GeocodePlace = {
   city: string
   state: string
   country: string
-  center?: [number, number]
+  center?: LngLat
+  span?: LngLat
   bbox?: [number, number, number, number]
 }
 
@@ -162,4 +163,5 @@ export type AutocompleteItem = {
   slug?: string
   type: Tag['type'] | 'restaurant'
   center?: LngLat
+  span?: LngLat
 }
