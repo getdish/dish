@@ -52,8 +52,7 @@ export const HomeSearchBarFloating = () => {
   const isSmall = useMediaQueryIsSmall()
   const borderRadius = 10
   const rgb = useCurrentLenseColor()
-  const backgroundColor = rgbString(rgb.map((x) => x + 5))
-  const backgroundColorBottom = rgbString(rgb.map((x) => x - 5) ?? [30, 30, 30])
+  const backgroundColor = rgbString(rgb)
 
   if (isSmall) {
     return null
@@ -112,7 +111,7 @@ export const HomeSearchBarFloating = () => {
                   position="absolute"
                   top={0}
                   width="100%"
-                  shadowColor="rgba(0,0,0,0.2)"
+                  shadowColor="rgba(0,0,0,0.1)"
                   shadowOffset={{ height: 2, width: 0 }}
                   shadowRadius={8}
                 />
@@ -137,6 +136,7 @@ export const HomeSearchBarFloating = () => {
               flex={1}
               paddingHorizontal={8}
               height={searchBarHeight}
+              backgroundColor={backgroundColor}
               borderRadius={borderRadius}
               // shadowColor="#fff"
               // shadowOpacity={0.5}
@@ -145,25 +145,10 @@ export const HomeSearchBarFloating = () => {
               justifyContent="center"
               overflow="hidden"
             >
-              {/* bg */}
-              <VStack
-                position="absolute"
-                top={0}
-                bottom={0}
-                right={-100}
-                left={-100}
-              >
-                <LinearGradient
-                  colors={[backgroundColor, backgroundColorBottom]}
-                  style={[StyleSheet.absoluteFill]}
-                />
-              </VStack>
-
               <HStack
                 className="unskewX"
                 alignItems="center"
                 justifyContent="center"
-                marginTop={-1}
               >
                 <HomeSearchBar />
               </HStack>

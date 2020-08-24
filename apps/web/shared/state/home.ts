@@ -44,6 +44,7 @@ import {
 } from './home-types'
 import { initialHomeState } from './initialHomeState'
 import { NavigableTag } from './NavigableTag'
+import { omStatic } from './om'
 import { reverseGeocode } from './reverseGeocode'
 import { router } from './router'
 import { shouldBeOnHome } from './shouldBeOnHome'
@@ -86,7 +87,8 @@ export const state: HomeState = {
   topDishes: [],
   userLocation: null,
   currentNavItem: derived<HomeState, NavigateItem>((state, om) =>
-    getNavigateItemForStateInternal(om, last(state.states)!)
+    // @ts-ignore
+    getNavigateItemForState(omStatic, last(state.states)!)
   ),
 
   lastHomeState: derived<HomeState, HomeStateItemHome>(
@@ -321,11 +323,15 @@ const runSearch: AsyncAction<{
 const deepAssign = (a: Object, b: Object) => {
   for (const key in b) {
     if (a[key] != b[key]) {
+      if (key === 'type') {
+        console.warn('shouldnt update the type of any home item')
+        break
+      }
       if (isPlainObject(a[key]) && isPlainObject(b[key])) {
         deepAssign(a[key], b[key])
         continue
       }
-      a[key] = b[key]
+      a[key] = isPlainObject(b[key]) ? { ...b[key] } : b[key]
     }
   }
   for (const key in a) {
@@ -776,7 +782,7 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
     const nextState = {
       ...state,
       ...next,
-      id: state.id,
+      id: om.state.home.currentState.id,
     }
     // @ts-ignore
     om.actions.home.updateHomeState(nextState)
@@ -972,14 +978,7 @@ export const getNavigateItemForState: Action<
   HomeStateTagNavigable,
   NavigateItem
 > = (om, _state): NavigateItem => {
-  return getNavigateItemForStateInternal(om.state, _state)
-}
-
-const getNavigateItemForStateInternal = (
-  omState: OmState,
-  _state: HomeStateTagNavigable
-): NavigateItem => {
-  const { home, router } = omState
+  const { home, router } = om.state
   const state = _state || home.currentState
   const isHome = isHomeState(state)
   const isSearch = isSearchState(state)

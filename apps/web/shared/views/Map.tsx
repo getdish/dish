@@ -30,8 +30,10 @@ type MapProps = {
 }
 
 const SOURCE_ID = 'restaurants'
-const POINT_LAYER_ID = 'restaurants-points'
+const UNCLUSTE = 'restaurants-points'
 const PIN_LAYER_ID = 'restaurants-pins'
+const PIN_COUNT_LAYER_ID = 'restuarants-pins-count'
+const CLUSTER_LAYER_ID = 'CLUSTER_LAYER_ID'
 const POINT_HOVER_LAYER_ID = 'restaurants-points-hover'
 
 const round = (val: number, dec = 100000) => {
@@ -83,7 +85,7 @@ export const Map = (props: MapProps) => {
       internal.current.active = internalId
       mapSetFeature(map, internalId, { active: true })
       // map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', internalId])
-      map.setLayoutProperty(POINT_LAYER_ID, 'symbol-sort-key', [
+      map.setLayoutProperty(UNCLUSTE, 'symbol-sort-key', [
         'match',
         ['id'],
         internalId,
@@ -154,36 +156,6 @@ export const Map = (props: MapProps) => {
             ),
           ]),
         () => {
-          // rough oceans
-          // map.addSource('10m-bathymetry-81bsvj', {
-          //   type: 'vector',
-          //   url: 'mapbox://mapbox.9tm8dx88',
-          // })
-          // map.addLayer(
-          //   {
-          //     id: '10m-bathymetry-81bsvj',
-          //     type: 'fill',
-          //     source: '10m-bathymetry-81bsvj',
-          //     'source-layer': '10m-bathymetry-81bsvj',
-          //     layout: {},
-          //     paint: {
-          //       'fill-outline-color': 'hsla(337, 82%, 62%, 0)',
-          //       // cubic bezier is a four point curve for smooth and precise styling
-          //       // adjust the points to change the rate and intensity of interpolation
-          //       'fill-color': [
-          //         'interpolate',
-          //         ['cubic-bezier', 0, 0.5, 1, 0.5],
-          //         ['get', 'DEPTH'],
-          //         200,
-          //         '#78bced',
-          //         9000,
-          //         '#15659f',
-          //       ],
-          //     },
-          //   },
-          //   'land-structure-polygon'
-          // )
-
           map.addSource(SOURCE_ID, {
             type: 'geojson',
             data: {
@@ -191,17 +163,60 @@ export const Map = (props: MapProps) => {
               features: props.features,
             },
             generateId: true,
+
+            // clustering
+            cluster: true,
+            clusterMaxZoom: 14,
+            clusterRadius: 50,
           })
 
           map.addLayer({
             id: PIN_LAYER_ID,
-            type: 'symbol',
+            type: 'circle',
             source: SOURCE_ID,
             layout: {
-              'icon-image': 'map-pin',
-              'icon-allow-overlap': true,
-              'icon-size': 0.25,
-              'icon-offset': [0, -10],
+              // 'icon-image': 'map-pin',
+              // 'icon-allow-overlap': true,
+              // 'icon-size': 0.25,
+              // 'icon-offset': [0, -10],
+            },
+            paint: {
+              // make circles larger as the user zooms from z12 to z22
+              'circle-radius': [
+                'step',
+                ['get', 'point_count'],
+                20,
+                100,
+                30,
+                750,
+                40,
+              ],
+              'circle-color': '#fbb03b',
+              // [
+              //   'match',
+              //   ['get', 'ethnicity'],
+              //   'White',
+              //   '#fbb03b',
+              //   'Black',
+              //   '#223b53',
+              //   'Hispanic',
+              //   '#e55e5e',
+              //   'Asian',
+              //   '#3bb2d0',
+              //   /* other */ '#ccc'
+              //   ]
+            },
+          })
+
+          map.addLayer({
+            id: PIN_COUNT_LAYER_ID,
+            type: 'symbol',
+            source: SOURCE_ID,
+            filter: ['has', 'point_count'],
+            layout: {
+              'text-field': '{point_count_abbreviated}',
+              'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+              'text-size': 12,
             },
           })
 
@@ -218,12 +233,12 @@ export const Map = (props: MapProps) => {
             // 'text-halo-width': '1',
           }
 
-          map.addLayer({
-            id: POINT_LAYER_ID,
-            type: 'symbol',
-            source: SOURCE_ID,
-            layout,
-          })
+          // map.addLayer({
+          //   id: UNCLUSTE,
+          //   type: 'symbol',
+          //   source: SOURCE_ID,
+          //   layout,
+          // })
 
           // map.addLayer({
           //   id: POINT_HOVER_LAYER_ID,
@@ -248,7 +263,7 @@ export const Map = (props: MapProps) => {
 
             // only one at a time
             if (hoverId != null) {
-              // map.setLayoutProperty(POINT_LAYER_ID, 'icon-image', 'mountain-15')
+              // map.setLayoutProperty(UNCLUSTE, 'icon-image', 'mountain-15')
               mapSetFeature(map, hoverId, { hover: false })
               hoverId = null
             }
@@ -257,7 +272,7 @@ export const Map = (props: MapProps) => {
               if (hover) {
                 // map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', id])
                 mapSetIconSelected(map, id)
-                // map.setLayoutProperty(POINT_LAYER_ID, 'icon-image', 'bar-15')
+                // map.setLayoutProperty(UNCLUSTE, 'icon-image', 'bar-15')
                 hoverId = id
                 mapSetFeature(map, hoverId, { hover: true })
               }
@@ -322,6 +337,24 @@ export const Map = (props: MapProps) => {
             }
           }
 
+          const handleClusterClick = (e) => {
+            var features = map.queryRenderedFeatures(e.point, {
+              layers: [CLUSTER_LAYER_ID],
+            })
+            var clusterId = features[0].properties.cluster_id
+            map
+              .getSource('earthquakes')
+              .getClusterExpansionZoom(clusterId, function (err, zoom) {
+                if (err) return
+
+                map.easeTo({
+                  center: features[0].geometry.coordinates,
+                  zoom: zoom,
+                })
+              })
+          }
+
+          map.on('click', CLUSTER_LAYER_ID, handleClusterClick)
           map.on('moveend', handleMoveEnd)
           map.on('move', handleMove)
           map.on('movestart', handleMove)
@@ -331,6 +364,7 @@ export const Map = (props: MapProps) => {
           map.on('mouseleave', PIN_LAYER_ID, handleMouseLeave)
 
           cancels.add(() => {
+            map.off('click', CLUSTER_LAYER_ID, handleClusterClick)
             map.off('moveend', handleMoveEnd)
             map.off('move', handleMove)
             map.off('movestart', handleMove)
@@ -339,7 +373,8 @@ export const Map = (props: MapProps) => {
             map.off('mousemove', PIN_LAYER_ID, handleMouseMove)
             map.off('mouseleave', PIN_LAYER_ID, handleMouseLeave)
             map.removeLayer(PIN_LAYER_ID)
-            map.removeLayer(POINT_LAYER_ID)
+            map.removeLayer(PIN_COUNT_LAYER_ID)
+            map.removeLayer(UNCLUSTE)
             // map.removeLayer(POINT_HOVER_LAYER_ID)
           })
         },
@@ -504,7 +539,7 @@ const hasMovedAtLeast = (
 //     }
 // }
 // map.addLayer({
-//   id: POINT_LAYER_ID,
+//   id: UNCLUSTE,
 //   type: 'circle',
 //   source: SOURCE_ID,
 

@@ -4,13 +4,14 @@ import {
   Divider,
   HStack,
   Popover,
+  Spacer,
   Text,
   Toast,
   Tooltip,
   VStack,
 } from '@dish/ui'
 import React, { memo } from 'react'
-import { ChevronUp, Coffee, Settings, User } from 'react-feather'
+import { ChevronUp, Coffee, Menu, Settings, User } from 'react-feather'
 
 import { omStatic, useOvermind } from '../../state/om'
 import { AuthLoginRegisterView } from '../../views/auth/AuthLoginRegisterView'
@@ -22,6 +23,10 @@ import {
   useMediaQueryIsSmall,
 } from './useMediaQueryIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
+
+const MenuLinkButton = (props: LinkButtonProps) => {
+  return <LinkButton {...flatButtonStyle} fontSize={18} {...props} />
+}
 
 export const HomeMenu = memo(() => {
   const om = useOvermind()
@@ -35,6 +40,7 @@ export const HomeMenu = memo(() => {
       <Popover
         position="bottom"
         isOpen={showUserMenu}
+        noArrow
         onChangeOpen={(val) => val === false && setShowUserMenu(false)}
         contents={() => {
           return (
@@ -45,55 +51,53 @@ export const HomeMenu = memo(() => {
                 />
               )}
 
-              {om.state.user.isLoggedIn && (
-                <VStack
-                  spacing
-                  onPressOut={(e) => {
-                    close()
-                  }}
-                >
-                  <LinkButton {...flatButtonStyle} name="adminTags">
-                    <Settings
-                      size={16}
-                      opacity={0.25}
-                      style={{ marginRight: 5 }}
-                    />
-                    Admin
-                  </LinkButton>
+              <VStack
+                spacing
+                onPressOut={(e) => {
+                  close()
+                }}
+              >
+                <MenuLinkButton name="about">About</MenuLinkButton>
 
-                  <LinkButton
-                    {...flatButtonStyle}
-                    name="user"
-                    params={{
-                      username: slugify(om.state.user.user?.username ?? ''),
-                    }}
-                  >
-                    Profile
-                  </LinkButton>
-                  <Divider />
-                  <LinkButton
-                    onPress={() => {
-                      Toast.show(`Logging out...`)
-                      setTimeout(() => {
-                        om.actions.user.logout()
-                      }, 1000)
-                    }}
-                  >
-                    Logout
-                  </LinkButton>
-                </VStack>
-              )}
+                <Divider />
+
+                {om.state.user.isLoggedIn && (
+                  <VStack spacing>
+                    <MenuLinkButton name="adminTags">Admin</MenuLinkButton>
+
+                    <MenuLinkButton
+                      name="user"
+                      params={{
+                        username: slugify(om.state.user.user?.username ?? ''),
+                      }}
+                    >
+                      Profile
+                    </MenuLinkButton>
+
+                    <Divider />
+
+                    <MenuLinkButton
+                      onPress={() => {
+                        Toast.show(`Logging out...`)
+                        setTimeout(() => {
+                          om.actions.user.logout()
+                        }, 1000)
+                      }}
+                    >
+                      Logout
+                    </MenuLinkButton>
+                  </VStack>
+                )}
+              </VStack>
             </Box>
           )
         }}
       >
-        <Tooltip contents={om.state.user.isLoggedIn ? 'User' : 'Login'}>
-          <MenuButton
-            Icon={User}
-            onPress={() => setShowUserMenu(!showUserMenu)}
-            text={!isSmall && !om.state.user.isLoggedIn ? 'Signup' : ''}
-          />
-        </Tooltip>
+        <MenuButton
+          Icon={Menu}
+          onPress={() => setShowUserMenu(!showUserMenu)}
+          text={!isSmall && !om.state.user.isLoggedIn ? 'Signup' : ''}
+        />
       </Popover>
 
       {isAboveMedium && (

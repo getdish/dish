@@ -167,6 +167,7 @@ const HomeMapContent = memo(function HomeMap({
   }, [selectedId])
 
   // HOVERED
+  // TODO make it zoom just icon
   // const hoveredId =
   //   om.state.home.hoveredRestaurant && om.state.home.hoveredRestaurant.id
   // useEffect(() => {
@@ -182,6 +183,7 @@ const HomeMapContent = memo(function HomeMap({
   const detailId = restaurantDetail?.id
   useEffect(() => {
     if (!detailId) return
+    if (state.type !== 'restaurant') return
     setState({
       id: detailId,
       via: 'detail',
