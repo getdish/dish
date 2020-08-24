@@ -236,7 +236,9 @@ const SearchResultsContent = (props: Props) => {
     }
   }, [state.scrollToTop])
 
-  const { title, subTitle, pageTitleElements } = getTitleForState(searchState)
+  const { title, subTitle, pageTitleElements } = getTitleForState(searchState, {
+    lowerCase: true,
+  })
 
   const contentWrap = (children: any) => {
     return (
@@ -244,7 +246,7 @@ const SearchResultsContent = (props: Props) => {
         <VStack height={paddingTop} />
         <PageTitleTag>{title}</PageTitleTag>
         <HStack padding={20} paddingBottom={0} overflow="hidden">
-          <Text ellipse fontSize={28} fontWeight="300">
+          <Text ellipse fontSize={26} fontWeight="300">
             {pageTitleElements}{' '}
             <Text opacity={0.5} letterSpacing={-0.5}>
               {subTitle}

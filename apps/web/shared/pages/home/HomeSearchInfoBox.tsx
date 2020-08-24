@@ -87,18 +87,17 @@ const HomeSearchInfoBoxDish = memo(
         spacing={20}
         alignItems="center"
       >
-        <Text fontSize={14} color="rgba(0,0,0,0.8)" lineHeight={18}>
-          <strong>{dishTag.name}</strong> - A rich, creamy soup packed with
-          flavor from aromatics and shrimp paste, a classic Northern Thai dish
-          with braised chicken in a coconut-y curry broth with boiled and fried
-          noodles.
+        <Text fontSize={16} color="rgba(0,0,0,0.7)" lineHeight={22}>
+          A rich, creamy soup packed with flavor from aromatics and shrimp
+          paste, a classic Northern Thai dish with braised chicken in a
+          coconut-y curry broth with boiled and fried noodles.
         </Text>
-        <VStack position="relative" width={60} height={60}>
+        <VStack position="relative" width={70} height={70}>
           <Image
             style={{
               marginVertical: -10,
-              width: 80,
-              height: 80,
+              width: 70,
+              height: 70,
               borderRadius: 100,
             }}
             source={{
@@ -106,7 +105,7 @@ const HomeSearchInfoBoxDish = memo(
                 'https://www.seriouseats.com/recipes/images/2014/09/20140707-small-house-thai-cooking-school-khao-soi-10.jpg',
             }}
           />
-          <Text bottom={-10} left={-10} position="absolute" fontSize={35}>
+          <Text bottom={-5} left={-15} position="absolute" fontSize={42}>
             🍜
           </Text>
         </VStack>
