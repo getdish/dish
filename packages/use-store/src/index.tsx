@@ -41,7 +41,8 @@ export function createUseStore<Props, Store>(
     selector?: C
     // super hacky workaround for now, ts is unknown to me tbh
   ): C extends Selector<any, infer B> ? (B extends Object ? B : Store) : Store {
-    return useStore(StoreKlass as any, props, selector) as any
+    // @ts-ignore
+    return useStore(StoreKlass, props, selector)
   }
 }
 
@@ -146,10 +147,7 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
   })
   const selector = userSelector ?? selectKeys
   const getSnapshot = useCallback(
-    (store) => {
-      // console.log('returning snapshot', store, internal.current.tracked)
-      return selector(store, [...internal.current.tracked])
-    }, // can use selector here
+    (store) => selector(store, [...internal.current.tracked]),
     [selector]
   )
   const state = useMutableSource(info.source, getSnapshot, subscribe)

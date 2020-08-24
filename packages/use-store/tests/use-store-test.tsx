@@ -47,6 +47,37 @@ describe('basic tests', () => {
     await testSimpleStore(2)
   })
 
+  it('creates two stores under diff namespace, state is different', async () => {
+    function MultiStoreUseTest() {
+      const store = useStore(Store2, { id: 0 })
+      const store2 = useStore(Store2, { id: 1 })
+      return (
+        <>
+          <div title="x">{store.x}</div>
+          <div title="x2">{store2.x}</div>
+          <button
+            title="add"
+            onClick={() => {
+              store.add()
+            }}
+          ></button>
+        </>
+      )
+    }
+    const { getAllByTitle } = render(
+      <StrictMode>
+        <MultiStoreUseTest />
+      </StrictMode>
+    )
+    const getCurrentByTitle = (name: string) => last(getAllByTitle(name))!
+    expect(getCurrentByTitle('x').innerHTML).toBe('0')
+    await act(async () => {
+      fireEvent.click(getCurrentByTitle('add'))
+    })
+    expect(getCurrentByTitle('x').innerHTML).toBe('1')
+    expect(getCurrentByTitle('x2').innerHTML).toBe('0')
+  })
+
   it('updates a component in a different tree', async () => {
     const { getAllByTitle } = render(
       <StrictMode>
@@ -153,6 +184,13 @@ class TodoList extends Store<{
   async asyncAdd() {
     await sleep()
     this.add()
+  }
+}
+
+class Store2 extends Store<{ id: number }> {
+  x = 0
+  add() {
+    this.x = 1
   }
 }
 

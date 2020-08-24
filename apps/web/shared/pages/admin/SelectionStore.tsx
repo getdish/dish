@@ -14,5 +14,5 @@ class RowSelectionStore extends Store<{ id: string; column: number }> {
   }
 }
 
-export const useColumnSelection = createUseStore(ColumnSelectionStore)
-export const useRowSelection = createUseStore(RowSelectionStore)
+export const useColumnStore = createUseStore(ColumnSelectionStore)
+export const useRowStore = createUseStore(RowSelectionStore)

@@ -1,6 +1,16 @@
 import { createAutocomplete } from './createAutocomplete'
 import { AutocompleteItem } from './home-types'
 
+export const sanFrancisco = {
+  name: 'San Francisco',
+  center: {
+    lng: -122.421351,
+    lat: 37.759251,
+  },
+  icon: '📍',
+  type: 'country',
+}
+
 export const defaultLocationAutocompleteResults: AutocompleteItem[] = [
   createAutocomplete({
     name: 'New York',
@@ -29,6 +39,7 @@ export const defaultLocationAutocompleteResults: AutocompleteItem[] = [
     icon: '📍',
     type: 'country',
   }),
+  createAutocomplete(sanFrancisco),
   createAutocomplete({
     name: 'Miami',
     center: {
