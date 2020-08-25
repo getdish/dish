@@ -1,6 +1,19 @@
-import { RestaurantWithId, ensureJSONSyntax } from '@dish/graph'
+import {
+  RestaurantWithId,
+  ensureJSONSyntax,
+  restaurantFindOne,
+} from '@dish/graph'
 
+import { DoorDash } from './doordash/DoorDash'
+import { Google } from './google/Google'
+import { GoogleGecoder } from './GoogleGeocoder'
+import { GrubHub } from './grubhub/GrubHub'
+import { Infatuated } from './infatuated/Infatuated'
+import { Michelin } from './michelin/Michelin'
+import { Tripadvisor } from './tripadvisor/Tripadvisor'
+import { UberEats } from './ubereats/UberEats'
 import { DB } from './utils'
+import { Yelp } from './yelp/Yelp'
 
 let db_config = {
   host: process.env.TIMESCALE_HOST || 'localhost',
@@ -32,12 +45,26 @@ export type Scrape = {
 
 export type ScrapeData = { [key: string]: any }
 
-export async function scrapeFindOneBySourceID(id: string) {
+export async function scrapeFindOneBySourceID(source: string, id: string) {
   const result = await db.query(`
     SELECT *, st_asgeojson(location) as location
-    FROM scrape WHERE id_from_source = '${id}';
+    FROM scrape
+      WHERE source = '${source}'
+      AND id_from_source = '${id}'
+    ORDER BY time DESC
+    LIMIT 1;
   `)
   if (result.rows.length == 0) throw 'Scrape not found: ' + id
+  result.rows[0].location = parseLocation(result.rows[0].location)
+  return result.rows[0] as Scrape
+}
+
+export async function scrapeFindOneByUUID(id: string) {
+  const result = await db.query(`
+    SELECT *, st_asgeojson(location) as location
+    FROM scrape
+      WHERE id = '${id}'
+  `)
   result.rows[0].location = parseLocation(result.rows[0].location)
   return result.rows[0] as Scrape
 }
@@ -102,7 +129,7 @@ export async function scrapeInsert(scrape: Scrape) {
   return result.rows[0].id as string
 }
 
-export async function scrapeUpdate(scrape: Scrape) {
+export async function scrapeUpdateBasic(scrape: Scrape) {
   const result = await db.query(`
     UPDATE scrape SET
       restaurant_id = '${scrape.restaurant_id}',
@@ -112,6 +139,20 @@ export async function scrapeUpdate(scrape: Scrape) {
     WHERE id = '${scrape.id}';
   `)
   return result.rows[0]
+}
+
+export async function scrapeUpdateAllRestaurantIDs(
+  source: string,
+  id_from_source: string,
+  restaurant_id: string | null
+) {
+  restaurant_id = restaurant_id == null ? `NULL` : `'${restaurant_id}'`
+  await db.query(`
+    UPDATE scrape SET
+      restaurant_id = ${restaurant_id}
+    WHERE source = '${source}'
+      AND id_from_source = '${id_from_source}'
+  `)
 }
 
 export async function scrapeMergeData(id: string, data: ScrapeData) {
@@ -173,4 +214,78 @@ export async function deleteAllScrapesBySourceID(id: string) {
   await db.query(`
     DELETE FROM scrape WHERE id_from_source = '${id}';
   `)
+}
+
+export async function scrapeGetAllDistinct() {
+  const result = await db.query(`SELECT scrape_id FROM distinct_sources`)
+  return result.rows
+}
+
+export async function scrapeUpdateGeocoderID(scrape_id: string) {
+  const result = await db.query(
+    `
+      SELECT *, st_asgeojson(location) as location
+      FROM scrape WHERE id = '${scrape_id}'
+    `
+  )
+  let scrape = result.rows[0]
+  scrape.location = JSON.parse(scrape.location)
+  let deets: any
+  switch (scrape.source) {
+    case 'doordash':
+      deets = DoorDash.getNameAndAddress(scrape)
+      break
+    case 'google':
+      //deets = Google.getNameAndAddress(scrape)
+      break
+    case 'grubhub':
+      deets = GrubHub.getNameAndAddress(scrape)
+      break
+    case 'infatuation':
+      deets = Infatuated.getNameAndAddress(scrape)
+      break
+    case 'michelin':
+      deets = Michelin.getNameAndAddress(scrape)
+      break
+    case 'tripadvisor':
+      deets = Tripadvisor.getNameAndAddress(scrape)
+      break
+    case 'ubereats':
+      deets = UberEats.getNameAndAddress(scrape)
+      break
+    case 'yelp':
+      deets = Yelp.getNameAndAddress(scrape)
+      break
+    default:
+      break
+  }
+  const geocoder = new GoogleGecoder()
+  const lon = scrape.location.coordinates[0]
+  const lat = scrape.location.coordinates[1]
+  const query = deets.name + ',' + deets.address
+  const google_id = await geocoder.searchForID(query, lat, lon)
+  if (google_id) {
+    const restaurant = await restaurantFindOne({ geocoder_id: google_id })
+    if (restaurant) {
+      console.log(
+        'SCRAPE GEOCODES',
+        deets.name,
+        scrape.restaurant_id,
+        restaurant.id
+      )
+      scrape.restaurant_id = restaurant.id
+      await scrapeUpdateAllRestaurantIDs(
+        scrape.source,
+        scrape.id_from_source,
+        restaurant.id
+      )
+    }
+  } else {
+    console.log('SCRAPE GEOCODES', deets.name, scrape.restaurant_id, null)
+    await scrapeUpdateAllRestaurantIDs(
+      scrape.source,
+      scrape.id_from_source,
+      null
+    )
+  }
 }

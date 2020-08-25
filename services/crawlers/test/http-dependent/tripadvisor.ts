@@ -18,7 +18,7 @@ test('Gets and persists a restaurant', async (t) => {
   ta.SEARCH_RADIUS_MULTIPLIER = 1
   ta._TESTS__LIMIT_GEO_SEARCH = true
   await ta.getRestaurants(37.759125, -122.41235)
-  const scrape = await scrapeFindOneBySourceID(ID)
+  const scrape = await scrapeFindOneBySourceID('tripadvisor', ID)
 
   t.is(scrape.data.overview.name, 'Flour + Water, California')
   t.deepEqual(scrape.location, {

@@ -119,6 +119,13 @@ export class Tripadvisor extends WorkerJob {
     return id
   }
 
+  static getNameAndAddress(scrape: ScrapeData) {
+    return {
+      name: Tripadvisor.cleanName(scrape.data.overview.name),
+      address: scrape.data.overview.contact.address,
+    }
+  }
+
   async saveReviews(
     path: string,
     scrape_id: string,

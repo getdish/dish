@@ -10,7 +10,7 @@ import {
   ScrapeData,
   scrapeInsert,
   scrapeMergeData,
-  scrapeUpdate,
+  scrapeUpdateBasic,
 } from '../scrape-helpers'
 import { aroundCoords, boundingBoxFromcenter, geocode } from '../utils'
 
@@ -202,8 +202,15 @@ export class Yelp extends WorkerJob {
       lat: lat,
     }
     scrape.restaurant_id = canonical.id
-    await scrapeUpdate(scrape)
+    await scrapeUpdateBasic(scrape)
     await this.getNextScrapes(id, data)
+  }
+
+  static getNameAndAddress(scrape: ScrapeData) {
+    return {
+      name: scrape.data.data_from_map_search.name,
+      address: scrape.data.data_from_map_search.formattedAddress,
+    }
   }
 
   async getNextScrapes(id: string, data: ScrapeData) {

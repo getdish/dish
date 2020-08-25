@@ -6,7 +6,7 @@ import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 
-import { scrapeInsert } from '../scrape-helpers'
+import { ScrapeData, scrapeInsert } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 
 type BasicStore = {
@@ -151,6 +151,13 @@ export class DoorDash extends WorkerJob {
       },
     })
     return id
+  }
+
+  static getNameAndAddress(scrape: ScrapeData) {
+    return {
+      name: scrape.data.main.name,
+      address: scrape.data.main.address.printableAddress,
+    }
   }
 
   _searchGQL(lat: number, lng: number, page: number = 0) {

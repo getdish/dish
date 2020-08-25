@@ -48,7 +48,7 @@ export class Michelin extends WorkerJob {
         sentryException(e, [restaurant])
       }
     }
-    if (restaurants.length > 0) {
+    if (restaurants.length > 0 && process.env.NODE_ENV != 'test') {
       await this.runOnWorker('all', [page + 1])
     }
   }
@@ -107,5 +107,12 @@ export class Michelin extends WorkerJob {
       },
     })
     return id
+  }
+
+  static getNameAndAddress(scrape: ScrapeData) {
+    return {
+      name: scrape.data.main.name,
+      address: scrape.data.main._highlightResult.street.value,
+    }
   }
 }

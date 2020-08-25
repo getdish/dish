@@ -15,7 +15,7 @@ test.beforeEach(async () => {
 test('gets and persists a restaurant', async (t) => {
   const dd = new GrubHub()
   await dd.getRestaurant(ID)
-  const scrape = await scrapeFindOneBySourceID(ID)
+  const scrape = await scrapeFindOneBySourceID('grubhub', ID)
   t.is(scrape.data.main.name, 'Squat & Gobble West Portal')
   t.deepEqual(scrape.location, { lon: -122.46569062, lat: 37.74062347 })
   t.assert(scrape.data.reviews.length > 10)

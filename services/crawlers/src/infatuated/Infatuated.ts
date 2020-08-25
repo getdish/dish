@@ -100,4 +100,11 @@ export class Infatuated extends WorkerJob {
     })
     return id
   }
+
+  static getNameAndAddress(scrape: ScrapeData) {
+    return {
+      name: scrape.data.data_from_map_search.name,
+      address: scrape.data.data_from_map_search.street,
+    }
+  }
 }

@@ -39,7 +39,7 @@ test('Gets and persists a restaurant', async (t) => {
   const google = new Google()
   await google.boot()
   await google.getRestaurant(restaurant)
-  const scrape = await scrapeFindOneBySourceID(ID)
+  const scrape = await scrapeFindOneBySourceID('google', ID)
   t.assert(scrape)
   if (!scrape) return
   t.assert(

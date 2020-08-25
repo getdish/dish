@@ -6,7 +6,7 @@ import axios_base, { AxiosResponse } from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 
-import { scrapeInsert, scrapeMergeData } from '../scrape-helpers'
+import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 import categories from './categories.json'
 
@@ -159,6 +159,13 @@ export class UberEats extends WorkerJob {
     )
     const scrape = await this.saveScrape(uuid, data, canonical.id)
     return scrape
+  }
+
+  static getNameAndAddress(scrape: ScrapeData) {
+    return {
+      name: scrape.data.main.title,
+      address: scrape.data.main.location.streetAddress,
+    }
   }
 
   private async saveScrape(uuid: string, data: any, canonical_id: string) {

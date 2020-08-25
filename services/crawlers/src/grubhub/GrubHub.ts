@@ -6,7 +6,7 @@ import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import { shuffle } from 'lodash'
 
-import { scrapeInsert } from '../scrape-helpers'
+import { ScrapeData, scrapeInsert } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 
 const GRUBHUB_DOMAIN =
@@ -124,6 +124,13 @@ export class GrubHub extends WorkerJob {
       },
     })
     return data
+  }
+
+  static getNameAndAddress(scrape: ScrapeData) {
+    return {
+      name: scrape.data.main.name,
+      address: scrape.data.main.address.street_address,
+    }
   }
 
   async getReviews(id: string) {

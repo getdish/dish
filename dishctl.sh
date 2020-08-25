@@ -117,6 +117,17 @@ function db_migrate() {
   popd
 }
 
+function timescale_migrate() {
+  _TIMESCALE_PORT=$(generate_random_port)
+  timescale_proxy $_TIMESCALE_PORT
+  pushd $PROJECT_ROOT/services/timescaledb
+  PG_PORT=$_TIMESCALE_PORT \
+  PG_PASS=$TF_VAR_TIMESCALE_SU_PASS \
+  DISH_ENV=production \
+    ./migrate.sh
+  popd
+}
+
 function timescale_pg_password() {
   echo $(
     kubectl get secret \
@@ -537,6 +548,17 @@ function pgpool_status() {
     used=$(echo -e "$result" | grep 'dish' | wc -l)
     echo "$pod: $used/$(expr $total - 3)"
   done
+}
+
+function scrapes_update_distinct_sources() {
+  timescale_command '
+    INSERT INTO distinct_sources(
+      scrape_id, source, id_from_source
+    ) SELECT DISTINCT ON (
+      source, id_from_source
+    ) id, source, id_from_source
+    FROM scrape
+  '
 }
 
 function_to_run=$1

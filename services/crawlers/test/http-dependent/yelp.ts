@@ -19,7 +19,7 @@ test('Gets and persists a restaurant', async (t) => {
     [37.758865, -122.412175],
     0
   )
-  const scrape = await scrapeFindOneBySourceID(ID)
+  const scrape = await scrapeFindOneBySourceID('yelp', ID)
   t.assert(scrape.data.data_from_map_search.name.includes('Flour + Water'))
   t.deepEqual(scrape.location, { lon: -122.412283, lat: 37.758933 })
   t.is(

@@ -30,7 +30,9 @@ import {
   Scrape,
   ScrapeData,
   latestScrapeForRestaurant,
+  scrapeGetAllDistinct,
   scrapeGetData,
+  scrapeUpdateGeocoderID,
 } from '../scrape-helpers'
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
 import {
@@ -811,6 +813,17 @@ export class Self extends WorkerJob {
         console.log('Progress: ' + progress)
       }
     }
+  }
+
+  async updateAllDistinctScrapeGeocoderIDs() {
+    const all = await scrapeGetAllDistinct()
+    for (const scrape of all) {
+      await this.runOnWorker('updateScrapeGeocoderID', [scrape.scrape_id])
+    }
+  }
+
+  async updateScrapeGeocoderID(scrape_id: string) {
+    await scrapeUpdateGeocoderID(scrape_id)
   }
 
   async updateGeocoderID(restaurant: RestaurantWithId) {

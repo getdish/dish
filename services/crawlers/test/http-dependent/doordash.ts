@@ -15,7 +15,7 @@ test.beforeEach(async () => {
 test('gets and persists a restaurant and its dishes', async (t) => {
   const dd = new DoorDash()
   await dd.getStore(store)
-  const scrape = await scrapeFindOneBySourceID(store.id)
+  const scrape = await scrapeFindOneBySourceID('doordash', store.id)
   t.is(scrape.data.main.name, 'FrosTea (Daly City)')
   t.deepEqual(scrape.location, {
     lon: store.lng,
