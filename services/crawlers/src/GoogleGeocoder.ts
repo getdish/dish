@@ -32,7 +32,7 @@ String.prototype.replaceAll = function (search, replacement) {
   return target.replace(new RegExp(search, 'g'), replacement)
 }
 
-export class GoogleGecoder {
+export class GoogleGeocoder {
   query!: string
   lon!: number
   lat!: number

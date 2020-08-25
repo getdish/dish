@@ -6,7 +6,7 @@ import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 import { Tabletojson } from 'tabletojson'
 
-import { GoogleGecoder } from '../GoogleGeocoder'
+import { GoogleGeocoder } from '../GoogleGeocoder'
 import { scrapeInsert } from '../scrape-helpers'
 import { GoogleJob } from './GoogleJob'
 
@@ -63,7 +63,7 @@ export class Google extends GoogleJob {
     }
     this.name = restaurant.name
     this.address = restaurant.address?.split(',')[0] || ''
-    const geocoder = new GoogleGecoder()
+    const geocoder = new GoogleGeocoder()
     const address = restaurant?.address
     if (!address || address.replaceAll(' ', '') == '') {
       throw new Error('GOOGLE CRAWLER: restaurant has no address')

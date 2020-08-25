@@ -1,11 +1,11 @@
 import '@dish/common'
 
 import { sentryException } from '@dish/common'
-import { restaurantSaveCanonical } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 
+import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { ScrapeData, scrapeInsert } from '../scrape-helpers'
 
 const MICHELIN_DOMAIN =
@@ -84,10 +84,13 @@ export class Michelin extends WorkerJob {
     if (process.env.RUN_WITHOUT_WORKER != 'true') {
       console.info('Michelin: saving ' + data.name)
     }
+    const id_from_source = data.objectID
     const lon = data._geoloc.lng
     const lat = data._geoloc.lat
 
-    const canonical = await restaurantSaveCanonical(
+    const restaurant_id = await restaurantSaveCanonical(
+      'michelin',
+      id_from_source,
       lon,
       lat,
       data.name,
@@ -96,8 +99,8 @@ export class Michelin extends WorkerJob {
     console.log('MICHELIN: crawling ' + data.name)
     const id = await scrapeInsert({
       source: 'michelin',
-      restaurant_id: canonical.id,
-      id_from_source: data.objectID,
+      restaurant_id,
+      id_from_source,
       location: {
         lon: lon,
         lat: lat,

@@ -10,10 +10,18 @@ import {
   reviewFindAllForRestaurant,
   tagInsert,
 } from '@dish/graph'
+import { restaurantFindOne } from '@dish/graph/src'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
+import sinon from 'sinon'
 
+import { restaurantSaveCanonical } from '../../src/canonical-restaurant'
+import { GoogleGeocoder } from '../../src/GoogleGeocoder'
 import { bestPhotosForRestaurant } from '../../src/photo-helpers'
-import { Scrape, scrapeInsert } from '../../src/scrape-helpers'
+import {
+  Scrape,
+  deleteAllTestScrapes,
+  scrapeInsert,
+} from '../../src/scrape-helpers'
 import { Self } from '../../src/self/Self'
 import { main_db } from '../../src/utils'
 import { yelp_hours } from '../yelp_hours'
@@ -24,8 +32,11 @@ interface Context {
 
 const test = anyTest as TestInterface<Context>
 
+const GOOGLE_GEOCODER_ID = '0xgoogleid123'
+
 const restaurant_fixture: Partial<Restaurant> = {
   name: 'Test Name Original',
+  geocoder_id: GOOGLE_GEOCODER_ID,
   location: { type: 'Point', coordinates: [0, 0] },
   // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
   tag_names: ['rankable'],
@@ -226,6 +237,7 @@ const google: Partial<Scrape> = {
 
 async function reset(t: ExecutionContext<Context>) {
   await flushTestData()
+  await deleteAllTestScrapes()
   const [restaurant, _] = await restaurantInsert([
     restaurant_fixture,
     restaurant_fixture_nearly_matches,
@@ -239,11 +251,12 @@ async function reset(t: ExecutionContext<Context>) {
     { restaurant_id: restaurant.id, location: zero_coord, ...doordash },
     { restaurant_id: restaurant.id, location: zero_coord, ...tripadvisor },
   ]
-  scrapes.map(async (s) => await scrapeInsert(s))
+  await Promise.all(scrapes.map((s) => scrapeInsert(s)))
 }
 
 test.beforeEach(async (t) => {
   try {
+    sinon.restore()
     await reset(t)
   } catch (e) {
     // Hopefully this was only ever being caused by the tests being run in parallel
@@ -346,11 +359,13 @@ test('Tag rankings', async (t) => {
       ...restaurant_fixture,
       address: '1',
       rating: 4,
+      geocoder_id: '123',
     },
     {
       ...restaurant_fixture,
       address: '2',
       rating: 5,
+      geocoder_id: 'abc',
     },
   ])
   await restaurantUpsertOrphanTags(r1, [tag_name])
@@ -638,4 +653,58 @@ test('Adding opening hours', async (t) => {
       WHERE hours @> f_opening_hours_normalised_time('1996-01-01 10:59');
   `)
   t.is(closers.rows.length, 0)
+})
+
+test('Inserts a new canonical restaurant', async (t) => {
+  sinon.stub(GoogleGeocoder.prototype, 'searchForID').resolves('geocoderid999')
+  const name = 'Test Restaurant 999' + Math.random().toString()
+  const restaurant_id = await restaurantSaveCanonical(
+    'yelp',
+    'test999',
+    1,
+    51,
+    name,
+    '999 The Street'
+  )
+  const restaurant = await restaurantFindOne({
+    id: restaurant_id,
+  })
+  t.is(restaurant?.name, name)
+  t.is(restaurant?.address, '999 The Street')
+})
+
+test('Finds an existing canonical restaurant', async (t) => {
+  sinon
+    .stub(GoogleGeocoder.prototype, 'searchForID')
+    .resolves(GOOGLE_GEOCODER_ID)
+  const restaurant_id = await restaurantSaveCanonical(
+    'yelp',
+    'test123ish',
+    1,
+    51,
+    'Test Name Originalish',
+    '123 The Streetish'
+  )
+  const restaurant = await restaurantFindOne({
+    id: restaurant_id,
+  })
+  t.is(restaurant?.id, restaurant_id)
+  t.is(restaurant?.name, 'Test Name Original')
+})
+
+test('Finds an existing scrape', async (t) => {
+  sinon.stub(GoogleGeocoder.prototype, 'searchForID').resolves('NEVER RETURNED')
+  const restaurant_id = await restaurantSaveCanonical(
+    'yelp',
+    'test123',
+    1,
+    51,
+    'Test Name Originalish',
+    '123 The Streetish'
+  )
+  const restaurant = await restaurantFindOne({
+    id: restaurant_id,
+  })
+  t.is(restaurant?.id, restaurant_id)
+  t.is(restaurant?.name, 'Test Name Original')
 })

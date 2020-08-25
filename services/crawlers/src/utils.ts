@@ -37,7 +37,8 @@ export class DB {
     try {
       result = await client.query(query)
     } catch (e) {
-      console.error(query)
+      console.error('Errored query: ' + query)
+      console.error(e.message)
       throw e
     } finally {
       client.release()

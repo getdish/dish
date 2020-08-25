@@ -11,7 +11,6 @@ import {
   menuItemUpsert,
   restaurantFindNear,
   restaurantFindOne,
-  restaurantSaveCanonical,
   restaurantUpdate,
   restaurantUpsert,
 } from '../src'
@@ -74,45 +73,6 @@ test('Avoiding cache', async (t) => {
 test('Finding a restaurant by location', async (t) => {
   const restaurants = await restaurantFindNear(50, 0, 0.025)
   t.is(restaurants[0].name, 'Test Restaurant')
-})
-
-test('Inserts a new canonical restaurant', async (t) => {
-  const canonical = await restaurantSaveCanonical(
-    1,
-    51,
-    'Test Restaurant',
-    '123 The Street'
-  )
-  const restaurant = await restaurantFindOne({
-    id: canonical.id,
-  })
-  t.is(restaurant?.address, '123 The Street')
-})
-
-test('Identifies a canonical restaurant', async (t) => {
-  const canonical = await restaurantSaveCanonical(
-    0,
-    50,
-    'Test Restaurant',
-    '123 The Street'
-  )
-  const restaurant = await restaurantFindOne({
-    id: canonical.id,
-  })
-  t.deepEqual(restaurant?.id, t.context.restaurant.id)
-})
-
-test('Identifies a similar restaurant', async (t) => {
-  const canonical = await restaurantSaveCanonical(
-    0.00025,
-    50,
-    'Test Restaurant!',
-    '123 The Street'
-  )
-  const restaurant = await restaurantFindOne({
-    id: canonical.id,
-  })
-  t.deepEqual(restaurant?.id, t.context.restaurant.id)
 })
 
 test.skip('Is open now', async (t) => {

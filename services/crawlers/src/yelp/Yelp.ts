@@ -1,11 +1,12 @@
 import url from 'url'
 
 import { sentryMessage } from '@dish/common'
-import { ZeroUUID, restaurantSaveCanonical } from '@dish/graph'
+import { ZeroUUID } from '@dish/graph'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 
+import { restaurantSaveCanonical } from '../canonical-restaurant'
 import {
   ScrapeData,
   scrapeInsert,
@@ -141,7 +142,11 @@ export class Yelp extends WorkerJob {
         biz_page = data.searchResultBusiness.businessUrl
       }
       const biz_page_uri = url.parse(biz_page, true)
-      await this.runOnWorker('getEmbeddedJSONData', [id, biz_page_uri.path])
+      await this.runOnWorker('getEmbeddedJSONData', [
+        id,
+        biz_page_uri.path,
+        data.bizId,
+      ])
     }
   }
 
@@ -161,7 +166,11 @@ export class Yelp extends WorkerJob {
     return id
   }
 
-  async getEmbeddedJSONData(id: string, yelp_path: string) {
+  async getEmbeddedJSONData(
+    id: string,
+    yelp_path: string,
+    id_from_source: string
+  ) {
     let data: { [keys: string]: any } = {}
     const SIG1 = '<script type="application/json" data-hypernova-key'
     const SIG2 = 'mapBoxProps'
@@ -191,7 +200,9 @@ export class Yelp extends WorkerJob {
     const lat = parseFloat(coords[0])
     const lon = parseFloat(coords[1])
     let scrape = (await scrapeMergeData(id, { data_from_html_embed: data }))!
-    const canonical = await restaurantSaveCanonical(
+    const restaurant_id = await restaurantSaveCanonical(
+      'yelp',
+      id_from_source,
       lon,
       lat,
       scrape.data.data_from_map_search.name,
@@ -201,7 +212,7 @@ export class Yelp extends WorkerJob {
       lon: lon,
       lat: lat,
     }
-    scrape.restaurant_id = canonical.id
+    scrape.restaurant_id = restaurant_id
     await scrapeUpdateBasic(scrape)
     await this.getNextScrapes(id, data)
   }

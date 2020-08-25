@@ -19,7 +19,7 @@ import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
 import moment from 'moment'
 
-import { GoogleGecoder } from '../GoogleGeocoder'
+import { GoogleGeocoder } from '../GoogleGeocoder'
 import {
   bestPhotosForRestaurant,
   bestPhotosForRestaurantTags,
@@ -838,7 +838,7 @@ export class Self extends WorkerJob {
       console.log('Bad restaurant: ', restaurant)
       return false
     }
-    const geocoder = new GoogleGecoder()
+    const geocoder = new GoogleGeocoder()
     const coords = restaurant.location
     const lon = coords.coordinates[0]
     const lat = coords.coordinates[1]

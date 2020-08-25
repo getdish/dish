@@ -1,11 +1,11 @@
 import '@dish/common'
 
-import { restaurantSaveCanonical } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 
+import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { ScrapeData, scrapeInsert } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 
@@ -78,9 +78,12 @@ export class Infatuated extends WorkerJob {
 
   async saveDataFromMapSearch(data: ScrapeData) {
     console.info('Infatuated: saving ' + data.name)
+    const id_from_source = data.id.toString()
     const lon = data.geo_point.coordinates[0]
     const lat = data.geo_point.coordinates[1]
-    const canonical = await restaurantSaveCanonical(
+    const restaurant_id = await restaurantSaveCanonical(
+      'infatuated',
+      id_from_source,
       lon,
       lat,
       data.name,
@@ -88,8 +91,8 @@ export class Infatuated extends WorkerJob {
     )
     const id = await scrapeInsert({
       source: 'infatuation',
-      restaurant_id: canonical.id,
-      id_from_source: data.id.toString(),
+      restaurant_id,
+      id_from_source,
       location: {
         lon: lon,
         lat: lat,

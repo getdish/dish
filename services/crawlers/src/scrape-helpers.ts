@@ -6,7 +6,7 @@ import {
 
 import { DoorDash } from './doordash/DoorDash'
 import { Google } from './google/Google'
-import { GoogleGecoder } from './GoogleGeocoder'
+import { GoogleGeocoder } from './GoogleGeocoder'
 import { GrubHub } from './grubhub/GrubHub'
 import { Infatuated } from './infatuated/Infatuated'
 import { Michelin } from './michelin/Michelin'
@@ -45,16 +45,27 @@ export type Scrape = {
 
 export type ScrapeData = { [key: string]: any }
 
-export async function scrapeFindOneBySourceID(source: string, id: string) {
-  const result = await db.query(`
+export async function scrapeFindOneBySourceID(
+  source: string,
+  id: string,
+  allow_not_found = false
+) {
+  const query = `
     SELECT *, st_asgeojson(location) as location
     FROM scrape
       WHERE source = '${source}'
       AND id_from_source = '${id}'
     ORDER BY time DESC
     LIMIT 1;
-  `)
-  if (result.rows.length == 0) throw 'Scrape not found: ' + id
+  `
+  const result = await db.query(query)
+  if (result.rows.length == 0) {
+    if (allow_not_found) {
+      return null
+    } else {
+      throw 'Scrape not found: ' + id
+    }
+  }
   result.rows[0].location = parseLocation(result.rows[0].location)
   return result.rows[0] as Scrape
 }
@@ -216,6 +227,12 @@ export async function deleteAllScrapesBySourceID(id: string) {
   `)
 }
 
+export async function deleteAllTestScrapes() {
+  await db.query(`
+    DELETE FROM scrape WHERE id_from_source LIKE 'test%';
+  `)
+}
+
 export async function scrapeGetAllDistinct() {
   const result = await db.query(`SELECT scrape_id FROM distinct_sources`)
   return result.rows
@@ -259,7 +276,7 @@ export async function scrapeUpdateGeocoderID(scrape_id: string) {
     default:
       break
   }
-  const geocoder = new GoogleGecoder()
+  const geocoder = new GoogleGeocoder()
   const lon = scrape.location.coordinates[0]
   const lat = scrape.location.coordinates[1]
   const query = deets.name + ',' + deets.address

@@ -1,11 +1,11 @@
 import '@dish/common'
 
-import { restaurantSaveCanonical } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import { shuffle } from 'lodash'
 
+import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { ScrapeData, scrapeInsert } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 
@@ -102,9 +102,12 @@ export class GrubHub extends WorkerJob {
     const path = this._getRestaurantPath(id)
     const response = await this.apiRequest(path)
     const data = response.restaurant
+    const id_from_source = data.id
     const lng = parseFloat(data.longitude)
     const lat = parseFloat(data.latitude)
-    const canonical = await restaurantSaveCanonical(
+    const restaurant_id = await restaurantSaveCanonical(
+      'grubhub',
+      id_from_source,
       lng,
       lat,
       data.name,
@@ -112,8 +115,8 @@ export class GrubHub extends WorkerJob {
     )
     await scrapeInsert({
       source: 'grubhub',
-      restaurant_id: canonical.id,
-      id_from_source: data.id,
+      restaurant_id,
+      id_from_source,
       location: {
         lon: lng,
         lat: lat,

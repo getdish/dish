@@ -1,11 +1,11 @@
 import '@dish/common'
 
-import { restaurantSaveCanonical } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 
+import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { ScrapeData, scrapeInsert } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 
@@ -130,7 +130,10 @@ export class DoorDash extends WorkerJob {
     if (process.env.RUN_WITHOUT_WORKER != 'true') {
       console.info('DoorDash: saving "' + main.name + '"')
     }
-    const canonical = await restaurantSaveCanonical(
+    const id_from_source = main.id
+    const restaurant_id = await restaurantSaveCanonical(
+      'doordash',
+      id_from_source,
       store.lng,
       store.lat,
       main.name,
@@ -138,8 +141,8 @@ export class DoorDash extends WorkerJob {
     )
     const id = await scrapeInsert({
       source: 'doordash',
-      restaurant_id: canonical.id,
-      id_from_source: main.id,
+      restaurant_id,
+      id_from_source,
       location: {
         lon: store.lng,
         lat: store.lat,

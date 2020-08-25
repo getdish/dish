@@ -70,63 +70,6 @@ export async function restaurantFindNear(
   })
 }
 
-export async function restaurantSaveCanonical(
-  lon: number,
-  lat: number,
-  name: string,
-  street_address: string
-): Promise<Restaurant> {
-  const found = await findExistingCanonical(lon, lat, name)
-  if (found) {
-    return found
-  }
-  const [restaurant] = await restaurantInsert([
-    {
-      name,
-      address: street_address,
-      location: {
-        type: 'Point',
-        coordinates: [lon, lat],
-      },
-    },
-  ])
-  if (process.env.RUN_WITHOUT_WORKER != 'true') {
-    console.log('Created new canonical restaurant: ' + restaurant.id)
-  }
-  return restaurant
-}
-
-async function findExistingCanonical(
-  lon: number,
-  lat: number,
-  name: string
-): Promise<Restaurant | null> {
-  const nears = await restaurantFindNear(lat, lon, 0.0005)
-  let found: Restaurant | undefined = undefined
-  let shortlist = [] as Restaurant[]
-  let highest_sources_count = 0
-  for (const candidate of nears) {
-    if (candidate.name?.includes(name) || name.includes(candidate.name ?? '')) {
-      shortlist.push(candidate)
-    }
-    if (levenshteinDistance(candidate.name ?? '', name) <= 3) {
-      shortlist.push(candidate)
-    }
-  }
-  if (shortlist.length == 0) {
-    return null
-  }
-  found = shortlist[0]
-  for (const final of shortlist) {
-    const sources_count = Object.keys(final.sources || {}).length
-    if (sources_count > highest_sources_count) {
-      highest_sources_count = sources_count
-      found = final
-    }
-  }
-  return found
-}
-
 export async function restaurantUpsertManyTags(
   restaurant: RestaurantWithId,
   restaurant_tags: RestaurantTag[]

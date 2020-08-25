@@ -1,7 +1,6 @@
 import '@dish/common'
 
 import { sentryException } from '@dish/common'
-import { restaurantSaveCanonical } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
 import * as acorn from 'acorn'
 import axios_base from 'axios'
@@ -9,6 +8,7 @@ import { JobOptions, QueueOptions } from 'bull'
 import cheerio from 'cheerio'
 import _ from 'lodash'
 
+import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 
@@ -89,10 +89,13 @@ export class Tripadvisor extends WorkerJob {
     if (process.env.RUN_WITHOUT_WORKER != 'true') {
       console.info('Tripadvisor: saving ' + overview.name)
     }
+    const id_from_source = overview.detailId.toString()
     const lon = overview.location.longitude
     const lat = overview.location.latitude
     const restaurant_name = Tripadvisor.cleanName(overview.name)
-    const canonical = await restaurantSaveCanonical(
+    const restaurant_id = await restaurantSaveCanonical(
+      'tripadvisor',
+      id_from_source,
       lon,
       lat,
       restaurant_name,
@@ -100,13 +103,13 @@ export class Tripadvisor extends WorkerJob {
     )
     if (process.env.RUN_WITHOUT_WORKER == 'true') {
       console.log(
-        'TRIPADVISOR: found canonical restaurant_name ' + canonical.name
+        'TRIPADVISOR: found canonical restaurant ID: ' + restaurant_id
       )
     }
     const id = await scrapeInsert({
       source: 'tripadvisor',
-      restaurant_id: canonical.id,
-      id_from_source: overview.detailId.toString(),
+      restaurant_id,
+      id_from_source,
       location: {
         lon: lon,
         lat: lat,

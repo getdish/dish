@@ -1,6 +1,6 @@
 import { restaurantFindOne } from '@dish/graph'
 
-import { GoogleGecoder } from '../GoogleGeocoder'
+import { GoogleGeocoder } from '../GoogleGeocoder'
 import { Google } from './Google'
 
 const name = 'Kokkari Estiatorio'
@@ -18,7 +18,7 @@ async function one() {
 async function geocoder() {
   const restaurant = await restaurantFindOne({ name })
   if (!restaurant) throw new Error('Google sandbox: could not find ' + name)
-  const geocoder = new GoogleGecoder()
+  const geocoder = new GoogleGeocoder()
   const query = restaurant.name + ',' + restaurant?.address
   const id = await geocoder.searchForID(
     query,
