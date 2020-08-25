@@ -83,6 +83,7 @@ export default memo(function HomePageSearchResults(props: Props) {
     isOptimisticUpdating || !props.isActive || changingFilters
 
   usePageLoadEffect(props.isActive, (isMounted) => {
+    console.log('what is', isMounted.current)
     // if initial load on a search page, process url => state
     const fakeTags = getTagsFromRoute(router.curPage)
     const location = getLocationFromRoute()
@@ -92,6 +93,7 @@ export default memo(function HomePageSearchResults(props: Props) {
       ...location,
     })
     getFullTags(fakeTags).then((tags) => {
+      console.log('got tags', tags)
       if (!isMounted.current) return
       om.actions.home.addTagsToCache(tags)
       const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>(
@@ -237,7 +239,7 @@ const SearchResultsContent = (props: Props) => {
   }, [state.scrollToTop])
 
   const { title, subTitle, pageTitleElements } = getTitleForState(searchState, {
-    lowerCase: true,
+    lowerCase: false,
   })
 
   const contentWrap = (children: any) => {

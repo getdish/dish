@@ -61,7 +61,7 @@ export const state: HomeState = {
   showUserMenu: false,
   searchBarTagIndex: 0,
   centerToResults: 0,
-  refresh: 0,
+  refreshCurrentPage: 0,
   allTags,
   allTagsNameToID: {},
   allUsers: {},
@@ -177,7 +177,7 @@ export const isEditingUserPage = (
 type PageAction = () => Promise<void>
 
 const refresh: AsyncAction = async (om) => {
-  om.state.home.refresh = Date.now()
+  om.state.home.refreshCurrentPage = Date.now()
 }
 
 const up: Action = (om) => {
@@ -256,6 +256,7 @@ const runSearch: AsyncAction<{
       },
     })
   ) {
+    console.log('did nav from search')
     // nav will trigger search
     return
   }
@@ -269,6 +270,8 @@ const runSearch: AsyncAction<{
     if (answer) console.log('search: cancel')
     return answer
   }
+
+  console.log('lets search')
 
   // dont be so eager if started
   if (!opts.force && om.state.home.started) {
@@ -322,10 +325,6 @@ const runSearch: AsyncAction<{
 const deepAssign = (a: Object, b: Object) => {
   for (const key in b) {
     if (a[key] != b[key]) {
-      if (key === 'type') {
-        console.warn('shouldnt update the type of any home item')
-        break
-      }
       if (isPlainObject(a[key]) && isPlainObject(b[key])) {
         deepAssign(a[key], b[key])
         continue
@@ -343,6 +342,10 @@ const deepAssign = (a: Object, b: Object) => {
 const updateHomeState: Action<HomeStateItem> = (om, val) => {
   const state = om.state.home.allStates[val.id]
   if (state) {
+    if (state.type !== val.type) {
+      console.warn('shouldnt update the type...')
+      return
+    }
     deepAssign(state, val)
   } else {
     om.state.home.allStates[val.id] = { ...val }
@@ -795,7 +798,8 @@ const addTagsToCache: Action<NavigableTag[] | null> = (om, tags) => {
   for (const tag of tags ?? []) {
     if (tag.name) {
       const id = getTagId(tag)
-      om.state.home.allTags[id] = { ...tag } as any
+      const existing = om.state.home.allTags[id]
+      om.state.home.allTags[id] = { ...existing, ...tag }
       om.state.home.allTagsNameToID[cleanTagName(tag.name)] = id
     }
   }
@@ -827,7 +831,7 @@ const clearTags: AsyncAction = async (om, val) => {
   const nextState = {
     ...om.state.home.currentState,
     activeTagIds: {
-      gems: true,
+      [getTagId(tagLenses[0])]: true,
     },
   }
   await om.actions.home.navigate({
@@ -1003,16 +1007,6 @@ export const getNavigateItemForState: Action<
   const curName = router.curPage.name
   const isChangingType = name !== curName
   const replace = !isChangingType
-
-  // console.log('getNavigateItemForState', {
-  //   isHome,
-  //   shouldBeOnHome,
-  //   name,
-  //   curName,
-  //   isChangingType,
-  //   replace,
-  //   curPage: router.curPage,
-  // })
 
   if (shouldBeHome) {
     return {

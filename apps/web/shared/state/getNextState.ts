@@ -8,13 +8,14 @@ import {
 import { HomeActiveTagsRecord } from './home-types'
 import { omStatic } from './om'
 import { shouldBeOnHome } from './shouldBeOnHome'
+import { tagLenses } from './tagLenses'
 
 const navStateCache = {}
 
 const nextStateId = (navState: HomeStateNav) => {
   const tagIds = navState.state.activeTagIds
   const key = `${navState.replaceSearch ?? '-'}${navState.tags?.map(
-    (x) => x.name
+    (x) => x.name + x.type
   )}${navState.disallowDisableWhenActive ?? ''}${navState.state.searchQuery}${
     tagIds ? Object.entries(tagIds).join(',') : '-'
   }`
@@ -58,8 +59,18 @@ export const getNextState = (navState: HomeStateNav) => {
   // update query
   searchQuery = words.join(' ')
 
-  for (const tag of tags) {
+  // ensure has a lense
+  const allTags = [...tags]
+  if (!allTags.some((x) => x.type === 'lense')) {
+    allTags.push(tagLenses[0])
+  }
+
+  for (const tag of allTags) {
     const key = getTagId(tag)
+    if (key === 'no-slug') {
+      console.warn('unusable tag for next state:', tag)
+      continue
+    }
     if (activeTagIds[key] === true && !disallowDisableWhenActive) {
       activeTagIds[key] = false
     } else {
@@ -68,8 +79,6 @@ export const getNextState = (navState: HomeStateNav) => {
       ensureUniqueActiveTagIds(activeTagIds, tag)
     }
   }
-
-  ensureHasLense(activeTagIds)
 
   const nextState = {
     id: state.id,
@@ -81,15 +90,4 @@ export const getNextState = (navState: HomeStateNav) => {
 
   navStateCache[key] = nextState
   return nextState
-}
-
-function ensureHasLense(activeTagIds: HomeActiveTagsRecord) {
-  if (
-    !Object.keys(activeTagIds)
-      .filter((k) => activeTagIds[k])
-      .some((k) => omStatic.state.home.allTags[k]?.type === 'lense')
-  ) {
-    // need to add lense!
-    activeTagIds['gems'] = true
-  }
 }

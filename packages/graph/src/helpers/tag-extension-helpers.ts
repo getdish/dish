@@ -11,6 +11,9 @@ export const tagSlug = (tag: Tag) => {
   if (!tag?.name) {
     throw new Error(`No tag name on tag: ${JSON.stringify(tag)}`)
   }
+  if (tag.type) {
+    return `${slugify(tag.type)}_${slugify(tag.name)}`
+  }
   return slugify(tag.name)
 }
 

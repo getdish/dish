@@ -62,7 +62,7 @@ export default graphql(function HomePageAbout({
               <LinkButton
                 tags={[
                   { name: 'Date', type: 'lense' },
-                  { name: '$$$', type: 'filter' },
+                  { name: 'price-high', type: 'filter' },
                 ]}
                 {...inlineButton}
                 backgroundColor={lightGreen}

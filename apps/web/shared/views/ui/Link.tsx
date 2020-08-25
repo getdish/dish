@@ -1,18 +1,14 @@
 import './Link.css'
 
-import { idle, series, sleep } from '@dish/async'
+import { series, sleep } from '@dish/async'
 import { NavigateItem } from '@dish/router'
 import { Text, useForceUpdate } from '@dish/ui'
 import React, { useEffect, useRef } from 'react'
 
 import { brandColor } from '../../colors'
-import { useOvermindStatic } from '../../state/om'
 import { RoutesTable, router } from '../../state/router'
 import { LinkProps } from './LinkProps'
-import {
-  getNormalizeLinkProps,
-  useNormalizeLinkProps,
-} from './useNormalizedLink'
+import { getNormalizeLinkProps } from './useNormalizedLink'
 
 export function Link<
   Name extends keyof RoutesTable = keyof RoutesTable,

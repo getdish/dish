@@ -38,7 +38,11 @@ export const cleanTagName = (name: string) => {
 export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
   return await Promise.all(
     tags.map(async (tag) => {
-      return allTags[getTagId(tag)] ?? (await getFullTag(tag)) ?? (tag as Tag)
+      return (
+        omStatic.state.home.allTags[getTagId(tag)] ??
+        (await getFullTag(tag)) ??
+        (tag as Tag)
+      )
     })
   )
 }
@@ -56,8 +60,8 @@ export const getActiveTags = (
   if ('activeTagIds' in state) {
     const { activeTagIds } = state
     const tagIds = Object.keys(activeTagIds)
-      .filter(isValidTag)
       .filter((x) => !!activeTagIds[x])
+      .filter(isValidTag)
     const tags: Tag[] = tagIds.map(
       (x) =>
         omStatic.state.home.allTags[x] ?? {
@@ -67,7 +71,7 @@ export const getActiveTags = (
         }
     )
     if (!tags.some((tag) => tag.type === 'lense')) {
-      tags.push({ type: 'lense', name: 'Gems' })
+      return [...tags, tagLenses[0]]
     }
     return tags
   }

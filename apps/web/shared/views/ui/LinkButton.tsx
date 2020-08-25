@@ -1,5 +1,5 @@
 import { HStack, StackProps, Text, useForceUpdate } from '@dish/ui'
-import React, { useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { omStatic, useOvermindStatic } from '../../state/om'
 import { RoutesTable } from '../../state/router'
@@ -27,7 +27,7 @@ export function LinkButton<
   const [isActive, setIsActive] = useState(false)
   const om = useOvermindStatic()
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (props.name) {
       let last = false
       const check = (val: string) => {
