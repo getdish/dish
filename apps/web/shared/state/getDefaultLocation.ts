@@ -1,5 +1,5 @@
 import { getLocalJSON, setLocalJSON } from './getLocalJSON'
-import { HomeStateItemLocation } from './initialHomeState'
+import { HomeStateItemLocation } from './HomeStateItemLocation'
 
 export function getDefaultLocation(): HomeStateItemLocation {
   const location = getLocalJSON('DEFAULT_LOCATION', {

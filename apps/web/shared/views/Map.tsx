@@ -22,6 +22,7 @@ type MapProps = {
   padding?: { top: number; left: number; bottom: number; right: number }
   mapRef?: (map: mapboxgl.Map) => void
   style?: string
+  onHover?: (id: string | null) => void
   onSelect?: (id: string) => void
   onDoubleClick?: (id: string) => void
   onMoveEnd?: (props: MapPosition) => void
@@ -314,6 +315,18 @@ export const Map = (props: MapProps) => {
                 // map.setLayoutProperty(UNCLUSTE, 'icon-image', 'bar-15')
                 hoverId = id
                 mapSetFeature(map, hoverId, { hover: true })
+              }
+            }
+            const { features, onHover } = getProps()
+            if (onHover) {
+              if (id > -1) {
+                const feature = features[+id]
+                const rid = feature?.properties.id
+                if (rid) {
+                  onHover(rid)
+                }
+              } else {
+                onHover(null)
               }
             }
           }

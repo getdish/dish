@@ -1,9 +1,5 @@
-- simple fix map icons
 - location <=> url
-- location bugs
-- admin review ready for tom
 - dish rating breakdown
-- blog post up and pushed for nick (google doc may be better)
 - Voting, tagging, commenting improvements
 - A bit of user profile page polish
   - show favorites on the map!

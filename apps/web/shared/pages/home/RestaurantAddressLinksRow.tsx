@@ -86,6 +86,7 @@ export const RestaurantAddressLinksRow = memo(
               <HoverablePopover
                 position="right"
                 allowHoverOnContent
+                noArrow
                 contents={<Box padding={10}>{linkElements}</Box>}
               >
                 <SmallCircleButton>
