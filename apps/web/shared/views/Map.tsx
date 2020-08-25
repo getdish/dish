@@ -30,10 +30,11 @@ type MapProps = {
 }
 
 const SOURCE_ID = 'restaurants'
-const UNCLUSTE = 'restaurants-points'
+const LAYER_POINTS = 'restaurants-points'
 const PIN_LAYER_ID = 'restaurants-pins'
-const UNCLUSTERED_LAYER_ID = 'restuarants-pins-count'
-const CLUSTER_LAYER_ID = 'CLUSTER_LAYER_ID'
+const UNCLUSTERED_LABEL_LAYER_ID = 'UNCLUSTERED_LABEL_LAYER_ID'
+const CLUSTER_LABEL_LAYER_ID = 'CLUSTER_LABEL_LAYER_ID'
+const POINT_LAYER_ID = 'POINT_LAYER_ID'
 const POINT_HOVER_LAYER_ID = 'restaurants-points-hover'
 
 const round = (val: number, dec = 100000) => {
@@ -85,13 +86,13 @@ export const Map = (props: MapProps) => {
       internal.current.active = internalId
       mapSetFeature(map, internalId, { active: true })
       // map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', internalId])
-      map.setLayoutProperty(UNCLUSTE, 'symbol-sort-key', [
-        'match',
-        ['id'],
-        internalId,
-        -1,
-        ['get', 'id'],
-      ])
+      // map.setLayoutProperty(POINT_LAYER_ID, 'symbol-sort-key', [
+      //   'match',
+      //   ['id'],
+      //   internalId,
+      //   -1,
+      //   ['get', 'id'],
+      // ])
       const feature = features[+internalId]
       if (feature) {
         onSelect?.(feature.properties.id)
@@ -167,11 +168,11 @@ export const Map = (props: MapProps) => {
             // clustering
             cluster: true,
             clusterMaxZoom: 14,
-            clusterRadius: 50,
+            clusterRadius: 18,
           })
 
           map.addLayer({
-            id: CLUSTER_LAYER_ID,
+            id: POINT_LAYER_ID,
             type: 'circle',
             source: SOURCE_ID,
             layout: {
@@ -185,8 +186,8 @@ export const Map = (props: MapProps) => {
               'circle-radius': [
                 'step',
                 ['get', 'point_count'],
-                20,
-                100,
+                15,
+                200,
                 30,
                 750,
                 40,
@@ -207,17 +208,55 @@ export const Map = (props: MapProps) => {
               //   ]
             },
           })
+          cancels.add(() => {
+            map.removeLayer(POINT_LAYER_ID)
+          })
 
           map.addLayer({
-            id: UNCLUSTERED_LAYER_ID,
+            id: UNCLUSTERED_LABEL_LAYER_ID,
+            source: SOURCE_ID,
+            type: 'symbol',
+            filter: ['!', ['has', 'point_count']],
+            layout: {
+              'text-field': ['format', ['get', 'title']],
+              'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+              'text-size': 12,
+              'text-offset': [0, 0.75],
+              'text-anchor': 'top',
+            },
+            paint: {
+              'text-halo-color': '#fff',
+              'text-halo-width': 1,
+            },
+          })
+          cancels.add(() => {
+            map.removeLayer(UNCLUSTERED_LABEL_LAYER_ID)
+          })
+
+          map.addLayer({
+            id: CLUSTER_LABEL_LAYER_ID,
             type: 'symbol',
             source: SOURCE_ID,
             filter: ['has', 'point_count'],
             layout: {
-              'text-field': '{point_count_abbreviated}',
+              'text-field': [
+                'format',
+                ['get', 'point_count_abbreviated'],
+                { 'font-scale': 1.1 },
+                '\n',
+                ['get', 'name'],
+              ],
               'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+              'text-offset': [0, -0.1],
               'text-size': 12,
             },
+            paint: {
+              'text-halo-color': 'rgba(255,255,255,0.5)',
+              'text-halo-width': 1,
+            },
+          })
+          cancels.add(() => {
+            map.removeLayer(CLUSTER_LABEL_LAYER_ID)
           })
 
           // hover/point layer shared
@@ -279,19 +318,19 @@ export const Map = (props: MapProps) => {
             }
           }
 
-          function hoverCluster() {
-            map.getCanvas().style.cursor = 'pointer'
+          const hoverCluster: Listener = (e) => {
+            setHovered(e, true)
           }
-          map.on('mouseenter', CLUSTER_LAYER_ID, hoverCluster)
+          map.on('mouseenter', POINT_LAYER_ID, hoverCluster)
           cancels.add(() => {
-            map.off('mouseenter', CLUSTER_LAYER_ID, hoverCluster)
+            map.off('mouseenter', POINT_LAYER_ID, hoverCluster)
           })
           function unHoverCluster() {
             map.getCanvas().style.cursor = ''
           }
-          map.on('mouseleave', CLUSTER_LAYER_ID, unHoverCluster)
+          map.on('mouseleave', POINT_LAYER_ID, unHoverCluster)
           cancels.add(() => {
-            map.off('mouseleave', CLUSTER_LAYER_ID, unHoverCluster)
+            map.off('mouseleave', POINT_LAYER_ID, unHoverCluster)
           })
 
           // const handleMouseMove: Listener = (e) => {
@@ -310,63 +349,56 @@ export const Map = (props: MapProps) => {
           /*
             Send back current location on move end
           */
-          const getCurrentLocation = () => {
-            const mapCenter = map.getCenter()
-            const bounds = map.getBounds()
-            const lat = round(dist(mapCenter.lat, bounds.getNorth()))
-            const lng = round(dist(mapCenter.lng, bounds.getWest()))
-            const center = {
-              lng: round(mapCenter.lng),
-              lat: round(mapCenter.lat),
-            }
-            return {
-              center,
-              span: {
-                lng,
-                lat,
-              },
-            }
-          }
-
-          let lastLoc = getCurrentLocation()
+          let lastLoc = getCurrentLocation(map)
           const handleMoveEnd = _.debounce(() => {
             // ignore same location
-            const next = getCurrentLocation()
+            const next = getCurrentLocation(map)
             if (isEqual(lastLoc, next)) {
               return
             }
             lastLoc = next
-            console.log(JSON.stringify({ next }, null, 2))
             props.onMoveEnd?.(next)
           }, 150)
 
-          const handleMove: Listener = () => {
-            handleMoveEnd.cancel()
-          }
           map.on('moveend', handleMoveEnd)
           cancels.add(() => {
             map.off('moveend', handleMoveEnd)
           })
 
-          // const handleDoubleClick: Listener = (e) => {
-          //   const id = e.features[0]?.id ?? -1
-          //   const feature = features[+id]
-          //   if (feature) {
-          //     onDoubleClick?.(feature.properties.id)
-          //   }
-          // }
+          const handleMove: Listener = () => {
+            handleMoveEnd.cancel()
+          }
+          map.on('move', handleMove)
+          map.on('movestart', handleMove)
+          cancels.add(() => {
+            map.off('move', handleMove)
+            map.off('movestart', handleMove)
+          })
 
-          const handleClusterClick = (e) => {
-            var features = map.queryRenderedFeatures(e.point, {
-              layers: [CLUSTER_LAYER_ID],
+          const handleDoubleClick: Listener = (e) => {
+            console.log('double clicking', e.features[0]?.id)
+            const id = e.features[0]?.id ?? -1
+            const feature = features[+id]
+            if (feature) {
+              onDoubleClick?.(feature.properties.id)
+            }
+          }
+          map.on('dblclick', CLUSTER_LABEL_LAYER_ID, handleDoubleClick)
+          cancels.add(() => {
+            map.off('dblclick', CLUSTER_LABEL_LAYER_ID, handleDoubleClick)
+          })
+
+          const handleClick = (e) => {
+            const features = map.queryRenderedFeatures(e.point, {
+              layers: [POINT_LAYER_ID],
             })
-            var clusterId = features[0].properties.cluster_id
+            const clusterId = features[0].properties.cluster_id
+            console.log('we are clicking', clusterId, e)
             if (clusterId) {
               const source = map.getSource(SOURCE_ID)
               if (source.type === 'geojson') {
                 source.getClusterExpansionZoom(clusterId, function (err, zoom) {
                   if (err) return
-
                   map.easeTo({
                     // @ts-ignore
                     center: features[0].geometry.coordinates,
@@ -379,26 +411,19 @@ export const Map = (props: MapProps) => {
               handleMouseClick(e)
             }
           }
-          map.on('click', UNCLUSTERED_LAYER_ID, handleClusterClick)
+          map.on('click', CLUSTER_LABEL_LAYER_ID, handleClick)
+          map.on('click', POINT_LAYER_ID, handleClick)
           cancels.add(() => {
-            map.off('click', UNCLUSTERED_LAYER_ID, handleClusterClick)
+            map.off('click', CLUSTER_LABEL_LAYER_ID, handleClick)
+            map.off('click', POINT_LAYER_ID, handleClick)
           })
 
-          map.on('move', handleMove)
-          map.on('movestart', handleMove)
-          // map.on('dblclick', PIN_LAYER_ID, handleDoubleClick)
           // map.on('mousemove', PIN_LAYER_ID, handleMouseMove)
           // map.on('mouseleave', PIN_LAYER_ID, handleMouseLeave)
-
           cancels.add(() => {
-            map.off('move', handleMove)
-            map.off('movestart', handleMove)
-            // map.off('dblclick', PIN_LAYER_ID, handleDoubleClick)
             // map.off('mousemove', PIN_LAYER_ID, handleMouseMove)
             // map.off('mouseleave', PIN_LAYER_ID, handleMouseLeave)
             // map.removeLayer(PIN_LAYER_ID)
-            map.removeLayer(UNCLUSTERED_LAYER_ID)
-            map.removeLayer(CLUSTER_LAYER_ID)
             // map.removeLayer(POINT_HOVER_LAYER_ID)
           })
         },
@@ -510,6 +535,24 @@ export const Map = (props: MapProps) => {
       }}
     />
   )
+}
+
+const getCurrentLocation = (map: mapboxgl.Map) => {
+  const mapCenter = map.getCenter()
+  const bounds = map.getBounds()
+  const lat = round(dist(mapCenter.lat, bounds.getNorth()))
+  const lng = round(dist(mapCenter.lng, bounds.getWest()))
+  const center = {
+    lng: round(mapCenter.lng),
+    lat: round(mapCenter.lat),
+  }
+  return {
+    center,
+    span: {
+      lng,
+      lat,
+    },
+  }
 }
 
 const abs = (x: number) => Math.abs(x)

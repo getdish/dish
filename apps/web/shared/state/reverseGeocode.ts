@@ -22,7 +22,6 @@ export async function reverseGeocode(
       state: features.find((x) => x.place_type?.includes('region'))?.text,
       country: features.find((x) => x.place_type?.includes('country'))?.text,
     }
-    console.log('features', centerArg, res.features, scope, placeNames)
     return {
       type: scope,
       name: placeNames[scope] ?? placeNames.neighborhood ?? placeNames.city,
@@ -38,7 +37,6 @@ function spanToScope(
   span: LngLat
 ): 'street' | 'neighborhood' | 'city' | 'state' | 'country' {
   const est = (span.lat + span.lat) / 2
-  console.log('est', est)
   if (est < 0.025) {
     return 'street'
   }

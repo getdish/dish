@@ -58,7 +58,7 @@ export default graphql(function HomePageAbout({
               >
                 quick, delivery pho
               </LinkButton>{' '}
-              vs planning a{' '}
+              vs when planning a{' '}
               <LinkButton
                 tags={[
                   { name: 'Date', type: 'lense' },
@@ -69,43 +69,45 @@ export default graphql(function HomePageAbout({
               >
                 fancy date
               </LinkButton>{' '}
-              are different.{' '}
+              is... different.{' '}
               <Strong>
-                A huge list of ~4 star restaurants just isn't helpful
+                Seeing a huge list of ~4 star restaurants just isn't helpful
               </Strong>
-              . And with four different food delivery apps, it's at an
-              especially frustrating time to find what you crave.
+              . And with delivery apps that are all diverse, it's at an
+              especially difficult time to just find what you crave.
             </Paragraph>
 
             <Paragraph size="xl">
-              Dish searches food better than ever before - even across every
-              delivery service - with reviews from top sources around the web.
-              It's a{' '}
-              <Strong>
-                smarter food guide that breaks ratings down to the dish
-              </Strong>
-              , with tips on what makes each place special ✨ .
+              Dish searches food better - across every delivery service, with
+              aggregated reviews the top rating sources. It's a smarter food
+              guide that <Strong>breaks ratings down to the dish</Strong> and
+              tells you what makes each place special ✨.
             </Paragraph>
 
             <Paragraph size="lg">
-              We look at <em>what people actually say</em>, rather than just
-              rate, to extract ratings towards dish, ambiance, service and more.
-              So instead of reading a ton of 3-4 star comments to find
-              &#8220;the one&#8221;, our community-led a guide shows top lists
-              that actually reflect your craving.
+              Instead of star ratings, we look at{' '}
+              <em>what people actually say</em> to extract sentiment towards
+              each dish, the ambiance, service and more. So instead of reading a
+              ton of 3-4 star comments to find &#8220;the one&#8221;, Dish is a
+              community-powered guide with definitive top lists that actually
+              capture what you're looking for.
             </Paragraph>
 
-            <Paragraph size="lg">
-              Think of it as a Hitchhiker's Guide to Gastronomy (or, a Pokédex
-              for poke) - a pocket map of the world where stats are broken down
-              and people work together to curate the gems.
-            </Paragraph>
+            <Spacer />
+            <Divider />
+            <Spacer />
 
             <Paragraph size="lg">
               <Strong>TL;DR</Strong>
             </Paragraph>
 
-            <Paragraph size="xl">
+            <Paragraph size="lg">
+              We think of it as a Hitchhiker's Guide to Gastronomy (or, a
+              Pokédex for poke). Your pocket map to the world, where stats are
+              broken down and people work together to curate the gems.
+            </Paragraph>
+
+            <Paragraph size="lg">
               <HStack marginVertical={4} alignItems="center">
                 <Text marginHorizontal={10} fontSize={32}>
                   🗺
