@@ -1,6 +1,7 @@
 import './base.css'
 import './bootstrapEnv'
 
+import { sleep } from '@dish/async'
 import {
   client,
   mutation,
@@ -18,7 +19,6 @@ import { AppRegistry } from 'react-native'
 import { App } from '../shared/App'
 import { OVERMIND_MUTATIONS, isWorker } from '../shared/constants'
 import { config } from '../shared/state/om'
-import { sleep } from '@dish/async'
 
 // non-invasive test for closure compiler + fixed rollup-tscc
 // import { importable } from './xy'
@@ -71,7 +71,7 @@ async function start() {
     om.initialized,
     sleep(500).then(() => {
       console.warn('\n\n\nOM TIMED OUT!!!\n\n\n')
-    })
+    }),
   ])
 
   if (OVERMIND_MUTATIONS) {
