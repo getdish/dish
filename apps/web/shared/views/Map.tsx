@@ -32,7 +32,7 @@ type MapProps = {
 const SOURCE_ID = 'restaurants'
 const UNCLUSTE = 'restaurants-points'
 const PIN_LAYER_ID = 'restaurants-pins'
-const PIN_COUNT_LAYER_ID = 'restuarants-pins-count'
+const UNCLUSTERED_LAYER_ID = 'restuarants-pins-count'
 const CLUSTER_LAYER_ID = 'CLUSTER_LAYER_ID'
 const POINT_HOVER_LAYER_ID = 'restaurants-points-hover'
 
@@ -150,10 +150,10 @@ export const Map = (props: MapProps) => {
           Promise.all([
             loadMap(),
             loadMarker('map-pin', require('../assets/map-pin.png').default),
-            loadMarker(
-              'icon-sushi',
-              require('../assets/icon-sushi.png').default
-            ),
+            // loadMarker(
+            //   'icon-sushi',
+            //   require('../assets/icon-sushi.png').default
+            // ),
           ]),
         () => {
           map.addSource(SOURCE_ID, {
@@ -171,7 +171,7 @@ export const Map = (props: MapProps) => {
           })
 
           map.addLayer({
-            id: PIN_LAYER_ID,
+            id: CLUSTER_LAYER_ID,
             type: 'circle',
             source: SOURCE_ID,
             layout: {
@@ -209,7 +209,7 @@ export const Map = (props: MapProps) => {
           })
 
           map.addLayer({
-            id: PIN_COUNT_LAYER_ID,
+            id: UNCLUSTERED_LAYER_ID,
             type: 'symbol',
             source: SOURCE_ID,
             filter: ['has', 'point_count'],
@@ -221,17 +221,17 @@ export const Map = (props: MapProps) => {
           })
 
           // hover/point layer shared
-          const layout: mapboxgl.SymbolLayout = {
-            // 'icon-image': 'bar-15',
-            'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
-            'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-            'text-offset': [0, 0.6],
-            'text-anchor': 'top',
-            // // @ts-ignore
-            // 'text-halo-color': '#fff',
-            // // @ts-ignore
-            // 'text-halo-width': '1',
-          }
+          // const layout: mapboxgl.SymbolLayout = {
+          //   // 'icon-image': 'bar-15',
+          //   'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
+          //   'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+          //   'text-offset': [0, 0.6],
+          //   'text-anchor': 'top',
+          //   // // @ts-ignore
+          //   // 'text-halo-color': '#fff',
+          //   // // @ts-ignore
+          //   // 'text-halo-width': '1',
+          // }
 
           // map.addLayer({
           //   id: UNCLUSTE,
@@ -279,10 +279,25 @@ export const Map = (props: MapProps) => {
             }
           }
 
-          const handleMouseMove: Listener = (e) => {
-            handleMouseLeave(e)
-            setHovered(e, true)
+          function hoverCluster() {
+            map.getCanvas().style.cursor = 'pointer'
           }
+          map.on('mouseenter', CLUSTER_LAYER_ID, hoverCluster)
+          cancels.add(() => {
+            map.off('mouseenter', CLUSTER_LAYER_ID, hoverCluster)
+          })
+          function unHoverCluster() {
+            map.getCanvas().style.cursor = ''
+          }
+          map.on('mouseleave', CLUSTER_LAYER_ID, unHoverCluster)
+          cancels.add(() => {
+            map.off('mouseleave', CLUSTER_LAYER_ID, unHoverCluster)
+          })
+
+          // const handleMouseMove: Listener = (e) => {
+          //   handleMouseLeave(e)
+          //   setHovered(e, true)
+          // }
 
           const handleMouseLeave: Listener = (e) => {
             setHovered(e, false)
@@ -328,53 +343,62 @@ export const Map = (props: MapProps) => {
           const handleMove: Listener = () => {
             handleMoveEnd.cancel()
           }
+          map.on('moveend', handleMoveEnd)
+          cancels.add(() => {
+            map.off('moveend', handleMoveEnd)
+          })
 
-          const handleDoubleClick: Listener = (e) => {
-            const id = e.features[0]?.id ?? -1
-            const feature = features[+id]
-            if (feature) {
-              onDoubleClick?.(feature.properties.id)
-            }
-          }
+          // const handleDoubleClick: Listener = (e) => {
+          //   const id = e.features[0]?.id ?? -1
+          //   const feature = features[+id]
+          //   if (feature) {
+          //     onDoubleClick?.(feature.properties.id)
+          //   }
+          // }
 
           const handleClusterClick = (e) => {
             var features = map.queryRenderedFeatures(e.point, {
               layers: [CLUSTER_LAYER_ID],
             })
             var clusterId = features[0].properties.cluster_id
-            map
-              .getSource('earthquakes')
-              .getClusterExpansionZoom(clusterId, function (err, zoom) {
-                if (err) return
+            if (clusterId) {
+              const source = map.getSource(SOURCE_ID)
+              if (source.type === 'geojson') {
+                source.getClusterExpansionZoom(clusterId, function (err, zoom) {
+                  if (err) return
 
-                map.easeTo({
-                  center: features[0].geometry.coordinates,
-                  zoom: zoom,
+                  map.easeTo({
+                    // @ts-ignore
+                    center: features[0].geometry.coordinates,
+                    zoom: zoom,
+                  })
                 })
-              })
+              }
+            } else {
+              // click
+              handleMouseClick(e)
+            }
           }
+          map.on('click', UNCLUSTERED_LAYER_ID, handleClusterClick)
+          cancels.add(() => {
+            map.off('click', UNCLUSTERED_LAYER_ID, handleClusterClick)
+          })
 
-          map.on('click', CLUSTER_LAYER_ID, handleClusterClick)
-          map.on('moveend', handleMoveEnd)
           map.on('move', handleMove)
           map.on('movestart', handleMove)
-          map.on('click', PIN_LAYER_ID, handleMouseClick)
-          map.on('dblclick', PIN_LAYER_ID, handleDoubleClick)
-          map.on('mousemove', PIN_LAYER_ID, handleMouseMove)
-          map.on('mouseleave', PIN_LAYER_ID, handleMouseLeave)
+          // map.on('dblclick', PIN_LAYER_ID, handleDoubleClick)
+          // map.on('mousemove', PIN_LAYER_ID, handleMouseMove)
+          // map.on('mouseleave', PIN_LAYER_ID, handleMouseLeave)
 
           cancels.add(() => {
-            map.off('click', CLUSTER_LAYER_ID, handleClusterClick)
-            map.off('moveend', handleMoveEnd)
             map.off('move', handleMove)
             map.off('movestart', handleMove)
-            map.off('click', PIN_LAYER_ID, handleMouseClick)
-            map.off('dblclick', PIN_LAYER_ID, handleDoubleClick)
-            map.off('mousemove', PIN_LAYER_ID, handleMouseMove)
-            map.off('mouseleave', PIN_LAYER_ID, handleMouseLeave)
-            map.removeLayer(PIN_LAYER_ID)
-            map.removeLayer(PIN_COUNT_LAYER_ID)
-            map.removeLayer(UNCLUSTE)
+            // map.off('dblclick', PIN_LAYER_ID, handleDoubleClick)
+            // map.off('mousemove', PIN_LAYER_ID, handleMouseMove)
+            // map.off('mouseleave', PIN_LAYER_ID, handleMouseLeave)
+            // map.removeLayer(PIN_LAYER_ID)
+            map.removeLayer(UNCLUSTERED_LAYER_ID)
+            map.removeLayer(CLUSTER_LAYER_ID)
             // map.removeLayer(POINT_HOVER_LAYER_ID)
           })
         },
