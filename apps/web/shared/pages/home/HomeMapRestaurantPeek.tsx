@@ -1,6 +1,7 @@
+import { Restaurant } from '@dish/graph'
 import { graphql } from '@dish/graph/src'
 import { AbsoluteVStack, Box, HStack, Spacer, Text, VStack } from '@dish/ui'
-import React, { memo } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { Image } from 'react-native'
 
 import { useOvermind } from '../../state/om'
@@ -13,13 +14,26 @@ import { useRestaurantQuery } from './useRestaurantQuery'
 export const HomeMapRestaurantPeek = memo(
   graphql(() => {
     const om = useOvermind()
-    const selectedRestaurant = om.state.home.selectedRestaurant
+    const [slug, setSlug] = useState('')
+    const selectedSlug = om.state.home.selectedRestaurant?.slug
+    const hoveredSlug =
+      (om.state.home.hoveredRestaurant &&
+        om.state.home.hoveredRestaurant.slug) ||
+      ''
+
+    console.log('slug', slug, hoveredSlug)
+
+    useEffect(() => {
+      setSlug(selectedSlug)
+    }, [selectedSlug])
+
+    useEffect(() => {
+      setSlug(hoveredSlug)
+    }, [hoveredSlug])
+
     const state = om.state.home.currentState
 
-    if (
-      state.type === 'restaurant' &&
-      selectedRestaurant?.slug === state.restaurantSlug
-    ) {
+    if (state.type === 'restaurant' && slug === state.restaurantSlug) {
       return null
     }
 
@@ -31,54 +45,47 @@ export const HomeMapRestaurantPeek = memo(
           pointerEvents="auto"
           // flex-wrap spacing
           marginTop={15}
-          borderRadius={20}
           maxWidth="98%"
           paddingHorizontal={0}
           paddingVertical={0}
-          className={`animate-up ${
-            selectedRestaurant ? 'active' : 'untouchable'
-          }`}
+          className={`animate-up ${slug ? 'active' : 'untouchable'}`}
+          backgroundColor="rgba(0,0,0,0.8)"
+          shadowColor="rgba(0,0,0,0.35)"
+          shadowRadius={10}
         >
           {children}
         </Box>
       )
     }
 
-    if (!selectedRestaurant) {
+    if (!slug) {
       return containerWrap(null)
     }
 
-    const restaurantSlug = selectedRestaurant.slug ?? ''
-    const restaurant = useRestaurantQuery(restaurantSlug)
+    const restaurant = useRestaurantQuery(slug)
 
     return containerWrap(
       <>
         <AbsoluteVStack zIndex={100} top={-10} right={-10}>
-          <RestaurantRatingViewPopover
-            size="sm"
-            restaurantSlug={restaurantSlug}
-          />
+          <RestaurantRatingViewPopover size="sm" restaurantSlug={slug} />
         </AbsoluteVStack>
         <HStack
           flex={1}
-          paddingHorizontal={16}
-          paddingVertical={18}
+          paddingHorizontal={12}
+          paddingVertical={12}
           overflow="hidden"
           alignItems="center"
           borderRadius={20}
         >
           <VStack flex={5} overflow="hidden">
-            <LinkButton
-              key={restaurantSlug}
-              name="restaurant"
-              params={{ slug: restaurantSlug }}
-            >
+            <LinkButton key={slug} name="restaurant" params={{ slug }}>
               <Text
                 ellipse
                 selectable
                 fontSize={16}
                 fontWeight="600"
                 paddingRight={30}
+                color="#fff"
               >
                 {restaurant.name} &nbsp;
                 <RestaurantAddressLinksRow
@@ -88,11 +95,11 @@ export const HomeMapRestaurantPeek = memo(
                   }
                   showMenu
                   size="sm"
-                  restaurantSlug={restaurantSlug}
+                  restaurantSlug={slug}
                 />
               </Text>
             </LinkButton>
-            <Spacer size="sm" />
+            <Spacer size="xs" />
             <HStack>
               <RestaurantAddress
                 size="sm"

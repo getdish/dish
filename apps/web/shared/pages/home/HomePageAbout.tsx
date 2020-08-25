@@ -73,24 +73,24 @@ export default graphql(function HomePageAbout({
               <Strong>
                 Seeing a huge list of ~4 star restaurants just isn't helpful
               </Strong>
-              . And with delivery apps that are all diverse, it's at an
-              especially difficult time to just find what you crave.
+              . When ordering delivery - where there are four unique apps, each
+              with poor ratings - it's especially difficult to find good stuff.
             </Paragraph>
 
             <Paragraph size="xl">
-              Dish searches food better - across every delivery service, with
-              aggregated reviews the top rating sources. It's a smarter food
-              guide that <Strong>breaks ratings down to the dish</Strong> and
-              tells you what makes each place special ✨.
+              Dish searches food better - across every delivery services,
+              showing aggregate reviews of every top rating service. It's a
+              smarter food guide that <Strong>shows ratings by dish</Strong> and
+              clues you into what makes a place special ✨.
             </Paragraph>
 
             <Paragraph size="lg">
               Instead of star ratings, we look at{' '}
               <em>what people actually say</em> to extract sentiment towards
-              each dish, the ambiance, service and more. So instead of reading a
-              ton of 3-4 star comments to find &#8220;the one&#8221;, Dish is a
-              community-powered guide with definitive top lists that actually
-              capture what you're looking for.
+              dishes, ambiance, service and more. So instead of sifting through
+              a ton of 3-4 star comments to find &#8220;the one&#8221;, Dish's
+              community-powered guide understands what facets you care about,
+              and describes each place succinctly.
             </Paragraph>
 
             <Spacer />
@@ -102,9 +102,10 @@ export default graphql(function HomePageAbout({
             </Paragraph>
 
             <Paragraph size="lg">
-              We think of it as a Hitchhiker's Guide to Gastronomy (or, a
-              Pokédex for poke). Your pocket map to the world, where stats are
-              broken down and people work together to curate the gems.
+              We want to build a community of curators to create a Hitchhiker's
+              Guide to Gastronomy (or, a Pokédex for poke): your pocket map to
+              the world of food, where the stats matter and we work together to
+              build understand what's unique & good.
             </Paragraph>
 
             <Paragraph size="lg">

@@ -69,7 +69,7 @@ async function start() {
 
   await Promise.race([
     om.initialized,
-    sleep(500).then(() => {
+    sleep(1000).then(() => {
       console.warn('\n\n\nOM TIMED OUT!!!\n\n\n')
     }),
   ])

@@ -211,6 +211,7 @@ export const HomeSearchInput = memo(() => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
               alignItems: 'center',
+              width: '100%', // stretch content to full width
             }}
             style={{
               paddingRight: 10,

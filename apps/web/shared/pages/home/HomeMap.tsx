@@ -317,6 +317,20 @@ const HomeMapContent = memo(function HomeMap({
             })
           }
         }}
+        onHover={(id) => {
+          const { hoveredRestaurant } = om.state.home
+          if (!hoveredRestaurant || id !== hoveredRestaurant?.id) {
+            const restaurant = restaurants?.find((x) => x.id === id)
+            if (restaurant) {
+              om.actions.home.setHoveredRestaurant({
+                id: restaurant.id,
+                slug: restaurant.slug,
+              })
+            } else {
+              console.warn('not found?', restaurants, id)
+            }
+          }
+        }}
         onSelect={(id) => {
           if (id !== om.state.home.selectedRestaurant?.id) {
             const restaurant = restaurants?.find((x) => x.id === id)

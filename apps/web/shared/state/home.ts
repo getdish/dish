@@ -288,7 +288,7 @@ const runSearch: AsyncAction<{
     span: roundLngLat(padSpan(state.mapAt?.span ?? state.span)),
     query: state.searchQuery,
     tags: [
-      ...tags.map((tag) => getTagId(tag)),
+      ...tags.map((tag) => getTagId(tag).replace(/[a-z]+_/g, '')),
       ...(!hasSearchBarTag
         ? [getTagId({ name: state.searchQuery, type: 'dish' })]
         : []),
@@ -827,13 +827,14 @@ const setSearchQuery: Action<string> = (om, val) => {
   last.searchQuery = val
 }
 
-const clearTags: AsyncAction = async (om, val) => {
+const clearTags: AsyncAction = async (om) => {
   const nextState = {
     ...om.state.home.currentState,
     activeTagIds: {
       [getTagId(tagLenses[0])]: true,
     },
   }
+  console.log('clear tags', nextState)
   await om.actions.home.navigate({
     state: nextState,
   })
