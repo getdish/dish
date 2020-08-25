@@ -47,7 +47,7 @@ export default graphql(function HomePageAbout({
 
           <VStack spacing="lg">
             <Paragraph size="xxl">
-              Food is diverse - what you care about when ordering
+              What you care about when ordering{' '}
               <LinkButton
                 backgroundColor={lightYellow}
                 {...inlineButton}
@@ -58,7 +58,7 @@ export default graphql(function HomePageAbout({
               >
                 quick, delivery pho
               </LinkButton>{' '}
-              vs when planning a{' '}
+              vs planning a{' '}
               <LinkButton
                 tags={[
                   { name: 'Date', type: 'lense' },
@@ -69,40 +69,37 @@ export default graphql(function HomePageAbout({
               >
                 fancy date
               </LinkButton>{' '}
-              are completely different. A large list of ~4 star restaurants just
-              isn't helpful. It forces you to read tons of comments to find
-              &#8220;the one&#8221;.
+              are different.{' '}
+              <Strong>
+                A huge list of ~4 star restaurants just isn't helpful
+              </Strong>
+              . And with four different food delivery apps, it's at an
+              especially frustrating time to find what you crave.
             </Paragraph>
 
             <Paragraph size="xl">
-              Delivery search is especially irksome - you can't search across
-              services, while each has different results and ratings, and using
-              Yelp means decor is factored when you just want a burrito.
-            </Paragraph>
-
-            <Paragraph size="lg">
-              Dish is food search that solves these problems. It combines every
-              top review site and every delivery service into{' '}
+              Dish fixes food search by breaking down reviews from top sources
+              around the web, combined with search across every restaurant and
+              delivery services. It's{' '}
               <Strong>
-                a summarized food guide, with ratings down to the dish
+                a smarter food guide, with ratings down to the dish and tips on
+                what makes each place special ✨
               </Strong>
               .
             </Paragraph>
 
             <Paragraph size="lg">
-              Each restaurant is broken down by what makes it uniquely good.
-              How? By looking at what{' '}
-              <em>what people actually say, rather than rate</em>, and combining
-              that with their expertise in each cuisine. This is all powered by
-              a community that curates and writes, giving you smart, fun
-              summaries of each restaurant.
+              We look at <em>what people actually say</em>, rather than just
+              rate, to extract ratings down the to dish, and down to each facet
+              that matters. So instead of reading a ton of 4-star reviews and
+              comments to find &#8220;the one&#8221;, our community has curated
+              a master guide, giving you better results.
             </Paragraph>
 
             <Paragraph size="lg">
-              We think of it as a Hitchhiker's Guide to Gastronomy (or, a
-              Pokédex for poke) - a pocket map of food where the stats are
-              broken down and people work together to curate a map of gems
-              unique to each place.
+              Think of it as a Hitchhiker's Guide to Gastronomy (or, a Pokédex
+              for poke) - a pocket map of the world where stats are broken down
+              and people work together to curate the gems.
             </Paragraph>
 
             <Paragraph size="lg">
