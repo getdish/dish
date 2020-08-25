@@ -78,22 +78,21 @@ export default graphql(function HomePageAbout({
             </Paragraph>
 
             <Paragraph size="xl">
-              Dish fixes food search by breaking down reviews from top sources
-              around the web, combined with search across every restaurant and
-              delivery services. It's{' '}
+              Dish searches food better than ever before - even across every
+              delivery service - with reviews from top sources around the web.
+              It's a{' '}
               <Strong>
-                a smarter food guide, with ratings down to the dish and tips on
-                what makes each place special ✨
+                smarter food guide that breaks ratings down to the dish
               </Strong>
-              .
+              , with tips on what makes each place special ✨ .
             </Paragraph>
 
             <Paragraph size="lg">
               We look at <em>what people actually say</em>, rather than just
-              rate, to extract ratings down the to dish, and down to each facet
-              that matters. So instead of reading a ton of 4-star reviews and
-              comments to find &#8220;the one&#8221;, our community has curated
-              a master guide, giving you better results.
+              rate, to extract ratings towards dish, ambiance, service and more.
+              So instead of reading a ton of 3-4 star comments to find
+              &#8220;the one&#8221;, our community-led a guide shows top lists
+              that actually reflect your craving.
             </Paragraph>
 
             <Paragraph size="lg">
