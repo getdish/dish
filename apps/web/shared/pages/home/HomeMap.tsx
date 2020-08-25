@@ -149,7 +149,7 @@ const HomeMapContent = memo(function HomeMap({
     via: 'select' as 'select' | 'hover' | 'detail',
   })
   const setState = (next: Partial<typeof internal>) => {
-    // console.trace('setting', JSON.stringify(next, null, 2))
+    console.warn('setting', JSON.stringify(next, null, 2))
     setInternal((x) => ({ ...x, ...next }))
   }
 
