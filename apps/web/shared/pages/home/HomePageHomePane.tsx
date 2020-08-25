@@ -17,12 +17,10 @@ import { default as React, Suspense, memo, useEffect, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
 
-import { bgLight } from '../../colors'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { HomeStateItemHome } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic, useOvermind } from '../../state/om'
-import { tagDisplayName } from '../../state/tagDisplayName'
 import { tagDescriptions } from '../../state/tagLenses'
 import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
@@ -33,6 +31,7 @@ import { DishView } from './DishView'
 import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePagePaneProps'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
+import { HomeTopSearches } from './HomeTopSearches'
 import { RestaurantButton } from './RestaurantButton'
 import { SlantedBox, slantedBoxStyle } from './SlantedBox'
 import { SlantedLinkButton } from './SlantedLinkButton'
@@ -183,95 +182,6 @@ export default memo(function HomePageHomePane(props: Props) {
 
   return null
 })
-
-const HomeTopSearches = () => {
-  return (
-    <HStack
-      paddingHorizontal={20}
-      paddingVertical={10}
-      spacing={14}
-      flexWrap="wrap"
-      alignItems="center"
-      justifyContent="center"
-    >
-      {recentSearches.map((search, index) => (
-        <VStack
-          key={index}
-          borderColor="#eee"
-          borderWidth={1}
-          padding={3}
-          paddingHorizontal={8}
-          borderRadius={80}
-          className="ease-in-out-slower"
-          backgroundColor="#fff"
-          marginBottom={8}
-          hoverStyle={{
-            backgroundColor: bgLight,
-          }}
-        >
-          <LinkButton tags={search.tags} cursor="pointer" alignItems="center">
-            {search.tags.map((tag, index) => (
-              <React.Fragment key={tag.name}>
-                <Text
-                  height={16}
-                  lineHeight={16}
-                  padding={5}
-                  fontSize={13}
-                  borderRadius={50}
-                  backgroundColor="transparent"
-                >
-                  {tag.icon ? `${tag.icon} ` : ''}
-                  {tagDisplayName(tag)}
-                </Text>
-                {index < search.tags.length - 1 ? (
-                  <Text marginHorizontal={2} fontSize={8} opacity={0.23}>
-                    +
-                  </Text>
-                ) : null}
-              </React.Fragment>
-            ))}
-          </LinkButton>
-        </VStack>
-      ))}
-    </HStack>
-  )
-}
-
-const recentSearches = [
-  {
-    tags: [
-      { displayName: 'Cheap', name: 'price-low' },
-      { name: 'Pho', icon: '🍜' },
-    ],
-  },
-  {
-    tags: [
-      { displayName: 'Fancy', name: 'Vibe' },
-      { name: 'Steak', icon: '🥩' },
-    ],
-  },
-  {
-    tags: [
-      { name: 'Gems', displayName: 'Great' },
-      { name: 'Delivery' },
-      { name: 'Sushi', icon: '🍣' },
-    ],
-  },
-  {
-    tags: [
-      { name: 'Vegetarian', icon: '🥬' },
-      { name: 'Delivery' },
-      { name: 'Sandwich', icon: '🥪' },
-    ],
-  },
-  {
-    tags: [
-      { name: 'Gems', displayName: 'Great' },
-      { name: 'Cheap' },
-      { name: 'Thai', icon: '🇹🇭' },
-    ],
-  },
-]
 
 const HomeLenseTitle = ({ state }) => {
   const lense = getActiveTags(state).find((x) => x.type === 'lense')

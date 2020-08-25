@@ -33,17 +33,17 @@ export function getTitleForState(
   }
 
   let titleParts: string[] = []
-  const cheap = tags.some((t) => t.name == 'cheap')
-  const midRange = tags.some((t) => t.name == 'midrange')
-  const expensive = tags.some((t) => t.name == 'expensive')
+  const cheap = tags.some((t) => t.name == 'price-low')
+  const midRange = tags.some((t) => t.name == 'price-mid')
+  const expensive = tags.some((t) => t.name == 'price-high')
   if (cheap && !midRange && !expensive) {
-    titleParts.push('cheap')
+    titleParts.push('Cheap')
   }
   if (!cheap && midRange && !expensive) {
-    titleParts.push('nice')
+    titleParts.push('Nice')
   }
   if (!cheap && !midRange && expensive) {
-    titleParts.push('high end')
+    titleParts.push('High End')
   }
   if (countryTag?.name) {
     titleParts.push(countryTag.name)

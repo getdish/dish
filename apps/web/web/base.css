@@ -354,3 +354,7 @@ li::before {
 .invisible {
   opacity: 0;
 }
+
+.box-shadow-inset-large {
+  box-shadow: inset 0 0 15px rgba(255,255,255,0.65);
+}

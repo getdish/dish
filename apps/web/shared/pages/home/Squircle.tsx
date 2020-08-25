@@ -1,4 +1,4 @@
-import { StackProps, VStack } from '@dish/ui'
+import { AbsoluteVStack, StackProps, VStack } from '@dish/ui'
 import React from 'react'
 
 export const Squircle = ({
@@ -45,6 +45,7 @@ export const Squircle = ({
           })}
         >
           {children}
+          <AbsoluteVStack fullscreen className="box-shadow-inset-large" />
           {/* <LinearGradient
             colors={['transparent', 'rgba(0,0,0,0.3)']}
             style={[StyleSheet.absoluteFill]}

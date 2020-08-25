@@ -27,9 +27,9 @@ export function HomeStackView<A extends HomeStateItem>(props: {
   // const currentStateStore = useStore(HomeStateStore)
   const om = useOvermind()
   om.state.home.stateIds
-  const stackItems = getBreadcrumbs(omStatic.state.home.states)
-  const key = JSON.stringify(stackItems.map((x) => x.id))
-  const homeStates = useMemo(() => stackItems, [key])
+  const breadcrumbs = getBreadcrumbs(omStatic.state.home.states)
+  const key = JSON.stringify(breadcrumbs.map((x) => x.id))
+  const homeStates = useMemo(() => breadcrumbs, [key])
   const currentStates = useDebounceValue(homeStates, 80) ?? homeStates
   const isRemoving = currentStates.length > homeStates.length
   const isAdding = currentStates.length < homeStates.length

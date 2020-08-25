@@ -43,7 +43,7 @@ export type HomeState = {
   locationAutocompleteResults: AutocompleteItem[]
   locationSearchQuery: string
   previousState: HomeStateItem
-  refresh: number
+  refreshCurrentPage: number
   searchbarFocusedTag: Tag | null
   searchBarTagIndex: number
   searchBarTags: Tag[]
