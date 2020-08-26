@@ -6,21 +6,21 @@ import {
   SmallTitle,
   Spacer,
   Text,
-  TextProps,
   VStack,
 } from '@dish/ui'
 import React from 'react'
-import { ScrollView } from 'react-native'
 
 import { lightGreen, lightYellow } from '../../colors'
 import { HomeStateItemAbout } from '../../state/home-types'
-import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { HomeScrollView } from './HomeScrollView'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { StackItemProps } from './HomeStackView'
 import { Input } from './Input'
+import { Paragraph } from './Paragraph'
 import TextArea from './TextArea'
+import { TextStrong } from './TextStrong'
+import { Title } from './Title'
 
 const inlineButton = {
   borderRadius: 10,
@@ -28,7 +28,7 @@ const inlineButton = {
   position: 'relative',
 } as const
 
-export default graphql(function HomePageAbout({
+export default function HomePageAbout({
   item,
 }: StackItemProps<HomeStateItemAbout>) {
   return (
@@ -45,7 +45,7 @@ export default graphql(function HomePageAbout({
           <Title size="xl">The best 🍜, definitively</Title>
 
           <VStack spacing="lg">
-            <Paragraph size="xxl">
+            <Paragraph size="xl">
               What you care about when ordering{' '}
               <LinkButton
                 backgroundColor={lightYellow}
@@ -69,23 +69,23 @@ export default graphql(function HomePageAbout({
                 fancy date
               </LinkButton>{' '}
               is... different.{' '}
-              <Strong>
+              <TextStrong>
                 Seeing a huge list of ~4 star restaurants just isn't helpful
-              </Strong>
+              </TextStrong>
               . Finding what you crave when ordering delivery is uniquely
               irksome - four apps, each with inconsistent ratings, and nowhere
               to search them all.
             </Paragraph>
 
             <Paragraph size="xl">
-              <Strong>Dish breaks ratings down to the dish</Strong> - for every
-              restaurant. It searches all delivery services at once, and
-              combines reviews from every top rating source. It's a smarter food
-              guide that{' '}
-              <Strong>
+              <TextStrong>Dish breaks ratings down to the dish</TextStrong> -
+              for every restaurant. It searches all delivery services at once,
+              and combines reviews from every top rating source. It's a smarter
+              food guide that{' '}
+              <TextStrong>
                 understands what people actually say about the factors that
                 matter
-              </Strong>{' '}
+              </TextStrong>{' '}
               so it can clue you into what makes a place special ✨.
             </Paragraph>
 
@@ -156,82 +156,4 @@ export default graphql(function HomePageAbout({
       </HomeScrollView>
     </HomeStackDrawer>
   )
-})
-
-export type SizeName =
-  | 'xxxs'
-  | 'xxs'
-  | 'xs'
-  | 'sm'
-  | 'md'
-  | 'lg'
-  | 'xl'
-  | 'xxl'
-  | 'xxxl'
-
-export type Size = number | SizeName
-type SizableTextProps = TextProps & {
-  size?: Size
-  sizeLineHeight?: number
-}
-
-const Title = (props: SizableTextProps) => {
-  const size = getSize(props.size) * 2.5
-  return (
-    <Paragraph
-      fontWeight={size > 3.5 ? '200' : '300'}
-      {...props}
-      size={size}
-      sizeLineHeight={0.7}
-    />
-  )
-}
-
-const Strong = (props: TextProps) => {
-  return <Text fontWeight="500" {...props} />
-}
-
-const HighlightText = (props: TextProps) => {
-  return (
-    <Text
-      borderRadius={8}
-      paddingHorizontal={2}
-      marginHorizontal={-2}
-      {...props}
-    />
-  )
-}
-
-const Paragraph = ({
-  size = 1,
-  sizeLineHeight = 1,
-  ...props
-}: SizableTextProps) => {
-  return (
-    <Text
-      fontSize={16 * getSize(size)}
-      lineHeight={26 * getSize(size) * sizeLineHeight}
-      color="rgba(0,0,0,0.85)"
-      fontWeight="400"
-      selectable
-      {...props}
-    />
-  )
-}
-
-const sizes = {
-  xxxs: 0.25,
-  xxs: 0.5,
-  xs: 0.75,
-  sm: 0.9,
-  md: 1,
-  lg: 1.1,
-  xl: 1.25,
-  xxl: 1.5,
-  xxxl: 1.8,
-}
-
-export const getSize = (size: Size): number => {
-  if (typeof size === 'string') return sizes[size]
-  return size ?? 1
 }
