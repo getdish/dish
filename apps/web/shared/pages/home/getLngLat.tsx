@@ -6,6 +6,6 @@ export const getLngLat = (coords: number[]) => {
     lat: coords[1],
   }
 }
-export const getMinLngLat = (ll: LngLat, max: number) => {
-  return getLngLat([Math.min(max, ll.lng), Math.min(max, ll.lat)])
+export const getMinLngLat = (ll: LngLat, maxLng: number, maxLat: number) => {
+  return getLngLat([Math.min(maxLng, ll.lng), Math.min(maxLat, ll.lat)])
 }

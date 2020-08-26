@@ -1,4 +1,4 @@
-import { Restaurant, Tag, graphql } from '@dish/graph'
+import { LngLat, Restaurant, Tag, graphql } from '@dish/graph'
 import { AbsoluteVStack, useDebounce, useLazyEffect } from '@dish/ui'
 import { uniqBy } from 'lodash'
 import mapboxgl from 'mapbox-gl'
@@ -8,6 +8,7 @@ import React, {
   useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 
@@ -153,16 +154,29 @@ const HomeMapContent = memo(function HomeMap({
     setInternal((x) => ({ ...x, ...next }))
   }
 
+  const getZoomedSpan = (span: LngLat, max: number) => {
+    const curState = om.state.home.currentState
+    const curSpan = curState.mapAt?.span ?? curState.span
+    const next = getMinLngLat(
+      span,
+      Math.min(max, curSpan.lng),
+      Math.min(max, curSpan.lat)
+    )
+    return next
+  }
+
   const { center, span } = internal
 
   // SELECTED
   const selectedId = om.state.home.selectedRestaurant?.id
   useEffect(() => {
     if (!selectedId) return
+    const span = getZoomedSpan(state.span, 0.025)
+    console.log('span', span)
     setState({
       id: selectedId,
       via: 'select',
-      span: getMinLngLat(state.span, 0.025),
+      span,
     })
   }, [selectedId])
 
@@ -187,7 +201,7 @@ const HomeMapContent = memo(function HomeMap({
     setState({
       id: detailId,
       via: 'detail',
-      span: getMinLngLat(state.span, 0.0025),
+      span: getZoomedSpan(state.span, 0.0025),
     })
   }, [detailId])
 
