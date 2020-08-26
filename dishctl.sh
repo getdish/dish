@@ -411,6 +411,7 @@ function postgres_console() {
   PORT=$(generate_random_port)
   postgres_proxy $PORT
   PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD pgcli \
+    --auto-vertical-output \
     -p $PORT \
     -h localhost \
     -U postgres \

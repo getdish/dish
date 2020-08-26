@@ -4,7 +4,6 @@ import test from 'ava'
 import { clone } from 'lodash'
 
 import {
-  RestaurantWithId,
   flushTestData,
   restaurantUpsert,
   restaurantUpsertOrphanTags,
