@@ -15,7 +15,7 @@ export const useZoomLevel = () => {
 }
 
 export const mapZoomToMedium = () => {
-  const om = useOvermind()
+  const om = omStatic
   let span = om.state.home.currentState.span!
   let center = om.state.home.currentState.center!
   for (const state of [...omStatic.state.home.states].reverse()) {

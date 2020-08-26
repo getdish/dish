@@ -10,6 +10,7 @@ import * as user from './user'
 export const config = merge(
   {
     onInitialize,
+    state: {},
   },
   namespaced({
     home,

@@ -18,7 +18,7 @@ export const tagSlugDisambiguated = (tag: TagWithParent) => {
   if (!tag.parent?.name) {
     throw new Error(`Tag needs parent with name`)
   }
-  return `${slugify(tagSlug(tag.parent))}__${tagSlug(tag)}`
+  return `${tagSlug(tag.parent)}__${tagSlug(tag)}`
 }
 
 export const tagSlugs = (tag: Tag) => {

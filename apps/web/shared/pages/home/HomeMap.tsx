@@ -150,7 +150,6 @@ const HomeMapContent = memo(function HomeMap({
     via: 'select' as 'select' | 'hover' | 'detail',
   })
   const setState = (next: Partial<typeof internal>) => {
-    console.warn('setting', JSON.stringify(next, null, 2))
     setInternal((x) => ({ ...x, ...next }))
   }
 
@@ -194,16 +193,17 @@ const HomeMapContent = memo(function HomeMap({
   // }, [hoveredId])
 
   // DETAIL
-  const detailId = restaurantDetail?.id
-  useEffect(() => {
-    if (!detailId) return
-    if (state.type !== 'restaurant') return
-    setState({
-      id: detailId,
-      via: 'detail',
-      span: getZoomedSpan(state.span, 0.0025),
-    })
-  }, [detailId])
+  // const detailId = restaurantDetail?.id
+  // useEffect(() => {
+  //   if (!detailId) return
+  //   if (state.type !== 'restaurant') return
+  //   console.log('the detail is.....', detailId)
+  //   setState({
+  //     id: detailId,
+  //     via: 'detail',
+  //     span: getZoomedSpan(state.span, 0.0025),
+  //   })
+  // }, [detailId])
 
   // gather restaruants
   const isLoading = restaurants[0]?.location?.coordinates[0] === null
@@ -224,18 +224,20 @@ const HomeMapContent = memo(function HomeMap({
   )
 
   // SPAN (state.span)
+  const stateSpan = state.mapAt?.span ?? state.span
   useLazyEffect(() => {
     setState({
-      span: state.span,
+      span: stateSpan,
     })
-  }, [state.span.lat, state.span.lng])
+  }, [stateSpan.lat, stateSpan.lng])
 
   // CENTER (state.center)
+  const stateCenter = state.mapAt?.center ?? state.center
   useLazyEffect(() => {
     setState({
-      center: state.center,
+      center: stateCenter,
     })
-  }, [state.center.lat, state.center.lng])
+  }, [stateCenter.lat, stateCenter.lng])
 
   // CENTER (restauarantSelected.location)
   useEffect(() => {
@@ -312,6 +314,10 @@ const HomeMapContent = memo(function HomeMap({
             // we just re-centered, ignore
             om.actions.home.setCenterToResults(0)
           }
+          setState({
+            center,
+            span,
+          })
           om.actions.home.updateCurrentState({
             mapAt: {
               center,

@@ -84,10 +84,6 @@ const getNormalizedLink = (
 
 // for easy use with Link / LinkButton
 const getNavigateTo = (props: HomeStateNav): LinkButtonProps | null => {
-  if (!props.tags?.length) {
-    console.log('no tags for nav?', props)
-    return null
-  }
   let nextState = getNextState(props)
   if (nextState) {
     const navigateItem = omStatic.actions.home.getNavigateItemForState(
@@ -107,5 +103,3 @@ const getNavigateTo = (props: HomeStateNav): LinkButtonProps | null => {
   }
   return null
 }
-
-export const linkActionIdle = { min: 30, max: 50 }

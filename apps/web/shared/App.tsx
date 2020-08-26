@@ -1,14 +1,13 @@
 import './start'
 
-import { onGraphError } from '@dish/graph'
-import { LoadingItems, Toast, ToastRoot, useOnMount } from '@dish/ui'
+import { LoadingItems, ToastRoot } from '@dish/ui'
 import { Provider } from 'overmind-react'
 import React, { Suspense } from 'react'
 
+import { ErrorHandler } from './ErrorHandler'
 import AdminPage from './pages/admin/AdminPage'
 import HomePage from './pages/home/HomePage'
 import { Shortcuts } from './Shortcuts'
-import { useOvermind } from './state/om'
 import { NotFoundPage } from './views/NotFoundPage'
 import { PrivateRoute, Route, RouteSwitch } from './views/router/Route'
 
@@ -38,23 +37,4 @@ export function App({ overmind }: { overmind?: any }) {
       </Provider>
     </>
   )
-}
-
-function ErrorHandler() {
-  const om = useOvermind()
-
-  useOnMount(() => {
-    onGraphError((errors) => {
-      console.warn('got errors', errors)
-
-      if (errors.some((err) => err.message.includes('JWTExpired')))
-        for (const err of errors) {
-          console.warn('HANDLING JWT ERR')
-          Toast.show(`Login has expired`)
-          om.actions.user.logout()
-        }
-    })
-  })
-
-  return null
 }

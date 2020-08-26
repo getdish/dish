@@ -7,7 +7,7 @@ export const getTagId = (tag: NavigableTag) => {
     return 'no-slug'
   }
   let slug: string
-  if (tag.parent) {
+  if (tag.parent?.name) {
     slug = tagSlugDisambiguated(tag as TagWithParent)
   } else {
     slug = tagSlug(tag)

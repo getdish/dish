@@ -153,7 +153,9 @@ export const getRouteFromTags = (
   const params: any = {
     location: slugify(state.currentLocationName ?? 'here'),
   }
-  const lenseTag = allActiveTags.find((x) => x.type === 'lense')?.name ?? ''
+  const lenseTag =
+    allActiveTags.find((x) => x.type === 'lense')?.name ??
+    getTagId(tagLenses[0])
   if (lenseTag) {
     params.lense = slugify(lenseTag)
   }
