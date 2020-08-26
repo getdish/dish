@@ -45,7 +45,7 @@ export default function HomePageAbout({
           <Title size="xl">The best 🍜, definitively</Title>
 
           <VStack spacing="lg">
-            <Paragraph size="xl">
+            <Paragraph size="xxl">
               What you care about when ordering{' '}
               <LinkButton
                 backgroundColor={lightYellow}

@@ -1,6 +1,7 @@
 import { TextProps } from '@dish/ui'
 
 export type Size = number | SizeName
+
 export type SizeName =
   | 'xxxs'
   | 'xxs'
@@ -11,10 +12,12 @@ export type SizeName =
   | 'xl'
   | 'xxl'
   | 'xxxl'
+
 export type SizableTextProps = TextProps & {
   size?: Size
   sizeLineHeight?: number
 }
+
 const sizes = {
   xxxs: 0.25,
   xxs: 0.5,
@@ -24,7 +27,7 @@ const sizes = {
   lg: 1.1,
   xl: 1.25,
   xxl: 1.5,
-  xxxl: 1.8,
+  xxxl: 1.75,
 }
 
 export const getSize = (size: Size): number => {
