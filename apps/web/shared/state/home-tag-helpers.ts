@@ -78,8 +78,9 @@ export const getActiveTags = (
   return []
 }
 
-// mutating
 const ensureUniqueTagOfType = new Set(['lense', 'country', 'dish'])
+
+// mutating
 export function ensureUniqueActiveTagIds(
   activeTagIds: HomeActiveTagsRecord,
   nextActiveTag: NavigableTag

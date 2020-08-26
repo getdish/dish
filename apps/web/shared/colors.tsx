@@ -15,3 +15,6 @@ export const brandColorDark = `#4B2EA8`
 export const brandColorDarker = `rgb(145, 55, 55)`
 export const brandColorLight = `#8376ce`
 export const brandColorLighter = `#8376ceee`
+
+export const lightYellow = '#FCF3CF'
+export const lightGreen = '#D4EFDF'

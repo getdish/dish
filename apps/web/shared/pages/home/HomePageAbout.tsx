@@ -11,6 +11,7 @@ import {
 import React from 'react'
 import { ScrollView } from 'react-native'
 
+import { lightGreen, lightYellow } from '../../colors'
 import { HomeStateItemAbout } from '../../state/home-types'
 import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
@@ -19,9 +20,6 @@ import { HomeStackDrawer } from './HomeStackDrawer'
 import { StackItemProps } from './HomeStackView'
 import { Input } from './Input'
 import TextArea from './TextArea'
-
-const lightYellow = '#FCF3CF'
-const lightGreen = '#D4EFDF'
 
 const inlineButton = {
   borderRadius: 10,
