@@ -415,7 +415,7 @@ export const Map = (props: MapProps) => {
                   map.easeTo({
                     // @ts-ignore
                     center: features[0].geometry.coordinates,
-                    zoom: zoom,
+                    zoom: zoom * 1.1,
                   })
                 })
               }

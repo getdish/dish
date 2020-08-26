@@ -78,10 +78,10 @@ export default graphql(function HomePageAbout({
             </Paragraph>
 
             <Paragraph size="xl">
-              Dish searches food better - across every delivery services,
-              showing aggregate reviews of every top rating service. It's a
-              smarter food guide that <Strong>shows ratings by dish</Strong> and
-              clues you into what makes a place special ✨.
+              Dish searches food better - across every delivery service, with
+              reviews from every top rating service. It's a smart food guide
+              that <Strong>shows ratings down to the dish</Strong> and clues you
+              into what makes a place special ✨.
             </Paragraph>
 
             <Paragraph size="lg">

@@ -55,7 +55,7 @@ const HomePageRestaurant = memo(
           lng: coords?.[0],
           lat: coords?.[1],
         },
-        span: getMinLngLat(item.span, 0.0025),
+        span: getMinLngLat(item.span, 0.0025, 0.0025),
       })
     })
 
