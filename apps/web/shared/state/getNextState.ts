@@ -11,18 +11,19 @@ import { tagLenses } from './tagLenses'
 
 const navStateCache = {}
 
-const nextStateId = (navState: HomeStateNav) => {
+const nextStateKey = (navState: HomeStateNav) => {
   const tagIds = navState.state.activeTagIds
-  const key = `${navState.replaceSearch ?? '-'}${navState.tags?.map(
-    (x) => x.name + x.type
-  )}${navState.disallowDisableWhenActive ?? ''}${navState.state.searchQuery}${
-    tagIds ? Object.entries(tagIds).join(',') : '-'
-  }`
+  const tagsKey = tagIds ? Object.entries(tagIds).join(',') : '-'
+  const tagsKey2 = navState.tags?.map((x) => x.name + x.type)
+  const disallowKey = navState.disallowDisableWhenActive ?? ''
+  const replaceKey = navState.replaceSearch ?? '-'
+  const searchKey = navState.state.searchQuery
+  const key = `${replaceKey}${tagsKey}${tagsKey2}${disallowKey}${searchKey}`
   return key
 }
 
 export const getNextState = (navState: HomeStateNav) => {
-  const key = nextStateId(navState)
+  const key = nextStateKey(navState)
   if (navStateCache[key]) {
     return navStateCache[key]
   }
@@ -60,9 +61,6 @@ export const getNextState = (navState: HomeStateNav) => {
 
   // ensure has a lense
   const allTags = [...tags]
-  if (!allTags.some((x) => x.type === 'lense')) {
-    allTags.push(tagLenses[0])
-  }
 
   for (const tag of allTags) {
     const key = getTagId(tag)
@@ -77,6 +75,15 @@ export const getNextState = (navState: HomeStateNav) => {
       // disable others
       ensureUniqueActiveTagIds(activeTagIds, tag)
     }
+  }
+
+  // ensure lense always active
+  if (
+    !Object.keys(activeTagIds).some(
+      (tagId) => omStatic.state.home.allTags[tagId]?.type === 'lense'
+    )
+  ) {
+    activeTagIds[getTagId(tagLenses[0])] = true
   }
 
   const nextState = {

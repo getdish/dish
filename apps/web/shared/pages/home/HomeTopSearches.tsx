@@ -1,11 +1,11 @@
 import { HStack, Text, VStack } from '@dish/ui'
-import { default as React } from 'react'
+import { default as React, memo } from 'react'
 
 import { bgLight } from '../../colors'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { LinkButton } from '../../views/ui/LinkButton'
 
-export const HomeTopSearches = () => {
+export const HomeTopSearches = memo(() => {
   return (
     <HStack
       paddingHorizontal={20}
@@ -60,7 +60,8 @@ export const HomeTopSearches = () => {
       ))}
     </HStack>
   )
-}
+})
+
 const recentSearches = [
   {
     tags: [
