@@ -53,7 +53,6 @@ import { tagLenses } from './tagLenses'
 export const state: HomeState = {
   started: false,
   isLoading: false,
-  isScrolling: false,
   skipNextPageFetchData: false,
   activeEvent: null,
   activeIndex: -1,
@@ -85,40 +84,45 @@ export const state: HomeState = {
   },
   topDishes: [],
   userLocation: null,
-  currentNavItem: derived<HomeState, NavigateItem>((state, om) =>
+  currentNavItem: derived<HomeState, OmState, NavigateItem>((state, om) =>
     // @ts-ignore
     getNavigateItemForState(omStatic, last(state.states)!)
   ),
 
-  lastHomeState: derived<HomeState, HomeStateItemHome>(
+  lastHomeState: derived<HomeState, OmState, HomeStateItemHome>(
     (state) => findLast(state.states, isHomeState)!
   ),
-  lastRestaurantState: derived<HomeState, HomeStateItemRestaurant | undefined>(
-    (state) => findLast(state.states, isRestaurantState)
-  ),
-  lastSearchState: derived<HomeState, HomeStateItemSearch | undefined>(
+  lastRestaurantState: derived<
+    HomeState,
+    any,
+    HomeStateItemRestaurant | undefined
+  >((state) => findLast(state.states, isRestaurantState)),
+  lastSearchState: derived<HomeState, OmState, HomeStateItemSearch | undefined>(
     (state) => findLast(state.states, isSearchState)
   ),
-  currentState: derived<HomeState, HomeStateItem>(
+  currentState: derived<HomeState, OmState, HomeStateItem>(
     (state) => _.last(state.states)!
   ),
-  currentStateSearchQuery: derived<HomeState, HomeStateItem['searchQuery']>(
-    (state) => state.currentState.searchQuery
-  ),
-  currentStateType: derived<HomeState, HomeStateItem['type']>(
+  currentStateSearchQuery: derived<
+    HomeState,
+    any,
+    HomeStateItem['searchQuery']
+  >((state) => state.currentState.searchQuery),
+  currentStateType: derived<HomeState, OmState, HomeStateItem['type']>(
     (state) => state.currentState.type
   ),
-  isAutocompleteActive: derived<HomeState, boolean>(
+  isAutocompleteActive: derived<HomeState, OmState, boolean>(
     (state) => !!state.showAutocomplete
   ),
-  activeAutocompleteResults: derived<HomeState, AutocompleteItem[]>((state) =>
-    state.showAutocomplete === 'location'
-      ? state.locationAutocompleteResults
-      : state.showAutocomplete === 'search'
-      ? state.autocompleteResults
-      : []
+  activeAutocompleteResults: derived<HomeState, OmState, AutocompleteItem[]>(
+    (state) =>
+      state.showAutocomplete === 'location'
+        ? state.locationAutocompleteResults
+        : state.showAutocomplete === 'search'
+        ? state.autocompleteResults
+        : []
   ),
-  previousState: derived<HomeState, HomeStateItem>((state) => {
+  previousState: derived<HomeState, OmState, HomeStateItem>((state) => {
     const curState = state.states[state.stateIndex]
     for (let i = state.stateIndex - 1; i >= 0; i--) {
       const next = state.states[i]
@@ -128,38 +132,40 @@ export const state: HomeState = {
     }
     return state.states[0]
   }),
-  searchBarTags: derived<HomeState, Tag[]>((state) =>
+  searchBarTags: derived<HomeState, OmState, Tag[]>((state) =>
     state.lastActiveTags.filter(isSearchBarTag)
   ),
-  lastActiveTags: derived<HomeState, Tag[]>((state) => {
+  lastActiveTags: derived<HomeState, OmState, Tag[]>((state) => {
     const lastTaggable = _.findLast(
       state.states,
       (x) => isHomeState(x) || isSearchState(x)
     ) as HomeStateItemSearch | HomeStateItemHome
     return getActiveTags(lastTaggable)
   }),
-  searchbarFocusedTag: derived<HomeState, Tag | null>((state) => {
+  searchbarFocusedTag: derived<HomeState, OmState, Tag | null>((state) => {
     const { searchBarTagIndex } = state
     if (searchBarTagIndex > -1) return null
     const index = state.searchBarTags.length + searchBarTagIndex
     return state.searchBarTags[index]
   }),
-  states: derived<HomeState, HomeStateItem[]>((state) => {
+  states: derived<HomeState, OmState, HomeStateItem[]>((state) => {
     return state.stateIds
       .map((x) => state.allStates[x])
       .slice(0, state.stateIndex + 1)
   }),
-  currentStateLense: derived<HomeState, NavigableTag | null>((state) => {
-    if ('activeTagIds' in state.currentState) {
-      for (const id in state.currentState.activeTagIds) {
-        const tag = state.allTags[id]
-        if (tag?.type == 'lense') {
-          return tag
+  currentStateLense: derived<HomeState, OmState, NavigableTag | null>(
+    (state) => {
+      if ('activeTagIds' in state.currentState) {
+        for (const id in state.currentState.activeTagIds) {
+          const tag = state.allTags[id]
+          if (tag?.type == 'lense') {
+            return tag
+          }
         }
       }
+      return null
     }
-    return null
-  }),
+  ),
 }
 
 export const isOnOwnProfile = (state: OmState) => {
@@ -761,10 +767,6 @@ const roundLngLat = (val: LngLat): LngLat => {
   }
 }
 
-const setIsScrolling: Action<boolean> = (om, val) => {
-  om.state.home.isScrolling = val
-}
-
 const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
   const state = _.findLast(
     om.state.home.states,
@@ -1099,7 +1101,6 @@ export const actions = {
   getNavigateItemForState,
   moveAutocompleteIndex,
   setAutocompleteIndex,
-  setIsScrolling,
   setLocationAutocompleteResults,
   setCenterToResults,
   setSearchQuery,

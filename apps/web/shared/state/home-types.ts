@@ -34,7 +34,6 @@ export type HomeState = {
   isHoveringRestaurant: boolean
   isLoading: boolean
   isOptimisticUpdating: boolean
-  isScrolling: boolean
   lastActiveTags: Tag[]
   lastHomeState: HomeStateItemHome
   lastRestaurantState: HomeStateItemRestaurant | undefined

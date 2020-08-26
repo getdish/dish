@@ -1,10 +1,19 @@
 import { VStack } from '@dish/ui'
-import React, { forwardRef, useRef } from 'react'
+import { Store, useStore } from '@dish/use-store'
+import React, { forwardRef, useMemo, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants'
 import { useOvermind } from '../../state/om'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
+
+class ScrollStore extends Store {
+  isScrolling = false
+
+  setIsScrolling(val: boolean) {
+    this.isScrolling = val
+  }
+}
 
 export const HomeScrollView = forwardRef(
   (
@@ -21,7 +30,7 @@ export const HomeScrollView = forwardRef(
     },
     ref
   ) => {
-    const om = useOvermind()
+    const scrollStore = useStore(ScrollStore)
     const isSmall = useMediaQueryIsSmall()
     const tm = useRef<any>(0)
     const setIsScrolling = (e) => {
@@ -31,56 +40,62 @@ export const HomeScrollView = forwardRef(
       ) {
         onScrollNearBottom?.()
       }
-
-      if (!om.state.home.isScrolling) {
-        om.actions.home.setIsScrolling(true)
-      }
+      scrollStore.setIsScrolling(true)
       clearTimeout(tm.current)
       tm.current = setTimeout(() => {
-        om.actions.home.setIsScrolling(false)
-      }, 320)
+        scrollStore.setIsScrolling(false)
+      }, 200)
     }
     return (
-      <ScrollView
-        ref={ref as any}
-        onScroll={setIsScrolling}
-        scrollEventThrottle={150}
-        {...props}
-        style={[
-          {
-            flex: 1,
-            paddingTop: paddingTop ?? (isSmall ? 0 : searchBarHeight),
-            // for drawer
-            paddingBottom: isSmall ? 500 : 0,
-          },
-          style,
-        ]}
-      >
-        <VStack
-          // @ts-ignore
-          display="inherit"
-          pointerEvents={om.state.home.isScrolling ? 'none' : 'auto'}
-          maxWidth={isSmall ? '100%' : drawerWidthMax}
-          alignSelf="flex-end"
-          width="100%"
+      <VStack className="scroll-bounce" flex={1}>
+        <ScrollView
+          ref={ref as any}
+          onScroll={setIsScrolling}
+          bounces
+          scrollEventThrottle={150}
+          {...props}
+          style={[
+            {
+              flex: 1,
+              paddingTop: paddingTop ?? (isSmall ? 0 : searchBarHeight),
+              // for drawer
+              paddingBottom: isSmall ? 500 : 0,
+            },
+            style,
+          ]}
         >
-          {children}
-        </VStack>
-      </ScrollView>
+          <VStack
+            pointerEvents={scrollStore.isScrolling ? 'none' : 'auto'}
+            maxWidth={isSmall ? '100%' : drawerWidthMax}
+            alignSelf="flex-end"
+            width="100%"
+          >
+            {children}
+          </VStack>
+        </ScrollView>
+      </VStack>
     )
   }
 )
 
-export const HomeScrollViewHorizontal = (
-  props: ScrollViewProps & { children: any }
-) => {
+export const HomeScrollViewHorizontal = ({
+  children,
+  ...rest
+}: ScrollViewProps & { children: any }) => {
+  const { isScrolling } = useStore(ScrollStore)
+  const childrenElements = useMemo(() => children, [children])
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      // @ts-ignore fixes ios not letting drag
-      style={{ pointerEvents: 'auto' }}
-      {...props}
-    />
+    // needs both pointer events to prevent/enable scroll on safari
+    <VStack pointerEvents={isScrolling ? 'none' : 'auto'}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        // @ts-ignore 'auto' fixes ios not letting drag
+        style={{ pointerEvents: isScrolling ? 'none' : 'auto' }}
+        {...rest}
+      >
+        {childrenElements}
+      </ScrollView>
+    </VStack>
   )
 }
