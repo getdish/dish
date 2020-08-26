@@ -127,7 +127,12 @@ export const Map = (props: MapProps) => {
       // 'mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq', // light
       center,
       zoom: 11,
-    })
+      attributionControl: false,
+    }).addControl(
+      new mapboxgl.AttributionControl({
+        compact: true,
+      })
+    )
     window['map'] = map
 
     const loadMarker = (name: string, asset: string) =>
