@@ -97,14 +97,14 @@ export const HomeSearchLocationInput = memo(() => {
       // flex={1}
       // minWidth={100}
       backgroundColor={theme === 'dark' ? 'rgba(255,255,255,0.1)' : background}
-      borderRadius={8}
+      borderRadius={100}
       justifyContent="center"
     >
       <HomeAutocompleteHoverableInput
         input={locationInputRef.current}
         autocompleteTarget="location"
       >
-        <HStack alignItems="center">
+        <HStack alignItems="center" paddingHorizontal={3}>
           <MapPin
             color={color}
             size={18}

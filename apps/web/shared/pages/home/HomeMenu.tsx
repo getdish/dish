@@ -145,6 +145,9 @@ const MenuButton = ({
         opacity: 1,
         transform: [{ scale: 1.1 }],
       }}
+      hoverStyle={{
+        opacity: 1,
+      }}
       {...props}
     >
       {(isActive) => {

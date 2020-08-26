@@ -274,9 +274,10 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
       <HStack alignItems="center" marginBottom={10}>
         <Divider flex />
         <SlantedLinkButton
-          fontSize={18}
-          fontWeight="600"
+          fontSize={22}
+          fontWeight="300"
           marginTop={0}
+          paddingHorizontal={10}
           marginBottom={0}
           marginHorizontal="auto"
           zIndex={1000}
@@ -285,13 +286,19 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
             type: 'country',
             name: country.country,
           }}
+          hoverStyle={{
+            transform: [{ scale: 1.1 }],
+          }}
         >
-          {country.country}{' '}
-          {country.icon ? (
-            <Text marginLeft={3} marginVertical={-12} fontSize={32}>
-              {country.icon}
-            </Text>
-          ) : null}
+          <Text lineHeight={22} letterSpacing={0.5}>
+            {country.country}
+            {country.icon ? (
+              <Text marginLeft={1} fontSize={26} lineHeight={0}>
+                {' '}
+                {country.icon}
+              </Text>
+            ) : null}
+          </Text>
         </SlantedLinkButton>
         <Divider flex />
       </HStack>

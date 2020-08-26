@@ -71,8 +71,8 @@ export const RestaurantButton = memo(
             <Text
               ellipse
               fontSize={14}
-              fontWeight={active ? '500' : '400'}
-              color={active ? '#000' : '#666'}
+              fontWeight={active ? '600' : '400'}
+              color={active ? '#000' : '#444'}
               marginRight={5}
             >
               {typeof rank === 'number' ? `${rank}. ` : ''}

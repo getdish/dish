@@ -40,7 +40,8 @@ export const HomeTopSearches = () => {
                   height={16}
                   lineHeight={16}
                   padding={5}
-                  fontSize={13}
+                  fontSize={16}
+                  fontWeight="300"
                   borderRadius={50}
                   backgroundColor="transparent"
                 >

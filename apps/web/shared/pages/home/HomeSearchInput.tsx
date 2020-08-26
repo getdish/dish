@@ -39,7 +39,7 @@ const placeholders = [
   'italian',
 ]
 
-const placeHolder = `${
+const placeHolder = `Find the best ${
   placeholders[Math.floor(placeholders.length * Math.random())]
 }`
 
@@ -200,7 +200,7 @@ export const HomeSearchInput = memo(() => {
               <Search
                 color={color}
                 size={18}
-                opacity={0.6}
+                opacity={0.8}
                 onClick={focusSearchInput}
               />
             )}

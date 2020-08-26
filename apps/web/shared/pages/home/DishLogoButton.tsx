@@ -68,7 +68,7 @@ export const DishLogoButton = memo(() => {
 
 const Logo = () => {
   const { isSmall, color } = useSearchBarTheme()
-  const scale = isSmall ? 0.9 : 1
+  const scale = isSmall ? 0.9 : 1.025
   return (
     <VStack transform={[{ scale }]}>
       <svg {...styles.default} viewBox="0 0 1201 544">

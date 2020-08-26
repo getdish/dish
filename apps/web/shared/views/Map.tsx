@@ -9,7 +9,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
+import { rgbString } from '../helpers/rgbString'
 import { dist } from '../state/home-location.helpers'
+import { tagLenses } from '../state/tagLenses'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
@@ -193,7 +195,7 @@ export const Map = (props: MapProps) => {
                 750,
                 40,
               ],
-              'circle-color': '#fbb03b',
+              'circle-color': rgbString(tagLenses[0].rgb.map((x) => x + 45)),
               // [
               //   'match',
               //   ['get', 'ethnicity'],

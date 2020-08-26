@@ -211,12 +211,11 @@ const RestaurantListItemContent = memo(
                     selectable
                     maxWidth="100%"
                     fontSize={
-                      (isSmall ? 18 : 20) *
+                      (isSmall ? 18 : 24) *
                       (restaurantName.length > 25 ? 0.85 : 1)
                     }
-                    fontWeight="600"
+                    fontWeight="500"
                     lineHeight={26}
-                    marginVertical={-4}
                     textDecorationColor="transparent"
                   >
                     <Link
@@ -228,7 +227,6 @@ const RestaurantListItemContent = memo(
                         marginRight={10}
                         borderBottomColor="transparent"
                         borderBottomWidth={2}
-                        fontWeight="500"
                         // @ts-ignore
                         hoverStyle={{
                           borderBottomColor: '#f2f2f2',
