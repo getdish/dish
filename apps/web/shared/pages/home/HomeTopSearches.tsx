@@ -12,6 +12,8 @@ export const HomeTopSearches = () => {
       paddingVertical={10}
       marginTop={-10}
       spacing={14}
+      maxWidth={700}
+      marginHorizontal="auto"
       flexWrap="wrap"
       alignItems="center"
       justifyContent="center"
