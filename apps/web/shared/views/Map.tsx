@@ -2,7 +2,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 
 import { fullyIdle, series } from '@dish/async'
 import { LngLat } from '@dish/graph'
-import { useGet } from '@dish/ui'
+import { useDebounceEffect, useGet } from '@dish/ui'
 import _, { isEqual } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { useEffect, useRef, useState } from 'react'
@@ -74,7 +74,10 @@ const mapSetIconSelected = (map: mapboxgl.Map, id: any) => {
 export const Map = (props: MapProps) => {
   const mapNode = useRef<HTMLDivElement>(null)
   let [map, setMap] = useState<mapboxgl.Map | null>(null)
-  const internal = useRef({ active: null, hasSetInitialSource: false })
+  const internal = useRef({
+    active: null,
+    hasSetInitialSource: false,
+  })
   const getProps = useGet(props)
 
   // this is inside memo...
@@ -128,11 +131,13 @@ export const Map = (props: MapProps) => {
       center,
       zoom: 11,
       attributionControl: false,
-    }).addControl(
-      new mapboxgl.AttributionControl({
-        compact: true,
-      })
-    )
+    })
+      .setPadding(padding)
+      .addControl(
+        new mapboxgl.AttributionControl({
+          compact: true,
+        })
+      )
     window['map'] = map
 
     const loadMarker = (name: string, asset: string) =>
@@ -376,8 +381,11 @@ export const Map = (props: MapProps) => {
             if (isEqual(lastLoc, next)) {
               return
             }
+            console.log('DIFF', JSON.stringify({ lastLoc, next }, null, 2))
             lastLoc = next
-            props.onMoveEnd?.(next)
+            if (window['allowmove']) {
+              props.onMoveEnd?.(next)
+            }
           }, 150)
 
           map.on('moveend', handleMoveEnd)
@@ -420,8 +428,7 @@ export const Map = (props: MapProps) => {
                 source.getClusterExpansionZoom(clusterId, function (err, zoom) {
                   if (err) return
                   map.easeTo({
-                    // @ts-ignore
-                    center: features[0].geometry.coordinates,
+                    center: features[0].geometry['coordinates'],
                     zoom: zoom * 1.1,
                   })
                 })
@@ -490,17 +497,33 @@ export const Map = (props: MapProps) => {
   // center + span
   useEffect(() => {
     if (!map) return
-    const next = {
-      ne: { lng: center.lng + span.lng, lat: center.lat + span.lat },
-      sw: { lng: center.lng - span.lng, lat: center.lat - span.lat },
-    }
+    // west, south, east, north
+    const next: [number, number, number, number] = [
+      center.lng - span.lng,
+      center.lat - span.lat,
+      center.lng + span.lng,
+      center.lat + span.lat,
+    ]
     if (hasMovedAtLeast(map, next, 0.001)) {
       return series([
-        () => fullyIdle({ min: 50, max: 400 }),
+        () => fullyIdle({ min: 30, max: 300 }),
         () => {
-          const northEast = new mapboxgl.LngLat(next.ne.lng, next.ne.lat)
-          const southWest = new mapboxgl.LngLat(next.sw.lng, next.sw.lat)
-          map.fitBounds(new mapboxgl.LngLatBounds(southWest, northEast))
+          // const propPadding = getProps().padding
+          // const hPad = (propPadding.left + propPadding.right) / 2
+          // const vPad = (propPadding.top + propPadding.bottom) / 2
+          // const padding = {
+          //   top: -vPad,
+          //   left: -hPad,
+          //   right: -hPad,
+          //   bottom: -vPad,
+          // }
+          // console.warn(
+          //   'FITBOUNDS',
+          //   JSON.stringify({ center, span, next, padding }, null, 2)
+          // )
+          map.fitBounds(next, {
+            // padding,
+          })
         },
       ])
     }
@@ -511,6 +534,8 @@ export const Map = (props: MapProps) => {
     if (!map) return
     map?.setPadding(padding)
   }, [map, JSON.stringify(padding)])
+
+  // console.log('padding', padding)
 
   // features
   useEffect(() => {
@@ -560,10 +585,28 @@ export const Map = (props: MapProps) => {
 const getCurrentLocation = (map: mapboxgl.Map) => {
   const mapCenter = map.getCenter()
   const bounds = map.getBounds()
-  const center = {
-    lng: round(mapCenter.lng),
-    lat: round(mapCenter.lat),
+  const padding = map.getPadding()
+  const size = {
+    width: map.getContainer().clientWidth,
+    height: map.getContainer().clientHeight,
   }
+  const lngSpan = bounds.getEast() - bounds.getWest()
+  const latSpan = bounds.getNorth() - bounds.getSouth()
+  const shiftCenterLng = ((padding.left + padding.right) / size.width) * lngSpan
+  const shiftCenterLat =
+    ((padding.top + padding.bottom) / size.height) * latSpan
+  const center = {
+    lng: round(mapCenter.lng) - shiftCenterLng,
+    lat: round(mapCenter.lat) - shiftCenterLat,
+  }
+  // console.log({
+  //   size,
+  //   shiftCenterLat,
+  //   shiftCenterLng,
+  //   lngSpan,
+  //   latSpan,
+  //   center,
+  // })
   const span = {
     lng: round(dist(mapCenter.lng, bounds.getWest())),
     lat: round(dist(mapCenter.lat, bounds.getNorth())),
@@ -573,6 +616,8 @@ const getCurrentLocation = (map: mapboxgl.Map) => {
     span,
   }
 }
+window['mapboxgl'] = mapboxgl
+window['getCurrentLocation'] = getCurrentLocation
 
 const abs = (x: number) => Math.abs(x)
 // TODO this is wrong redo using dist()
@@ -581,7 +626,7 @@ const totalDistance = (a: LngLat, b: LngLat) =>
 
 const hasMovedAtLeast = (
   map: mapboxgl.Map,
-  next: { ne: LngLat; sw: LngLat },
+  [west, south, east, north]: number[],
   distance: number
 ) => {
   const bounds = map.getBounds()
@@ -590,8 +635,10 @@ const hasMovedAtLeast = (
     sw: bounds.getSouthWest(),
   }
   // only change them if they change more than a little bit
-  const neDist = abs(totalDistance(cur.ne, next.ne))
-  const swLngDist = abs(cur.sw.lng - next.sw.lng)
+  const ne = { lng: east, lat: north }
+  // const sw = { lng: west, lat: south }
+  const neDist = abs(totalDistance(cur.ne, ne))
+  const swLngDist = abs(cur.sw.lng - west)
   // for some reason lat is off
   // const swDist = abs(totalDistance(cur.sw, next.sw))
   const finalDist = neDist + swLngDist
