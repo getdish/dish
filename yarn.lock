@@ -2209,10 +2209,10 @@
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.158.tgz#b38ea8b6fe799acd076d7a8d7ab71c26ef77f785"
   integrity sha512-InCEXJNTv/59yO4VSfuvNrZHt7eeNtWQEgnieIA+mIC+MOWM9arOWG2eQ8Vhk6NbOre6/BidiXhkZYeDY9U35w==
 
-"@types/mapbox-gl@^1.11.1":
-  version "1.11.1"
-  resolved "https://registry.npmjs.org/@types/mapbox-gl/-/mapbox-gl-1.11.1.tgz#06cb2f11e4db648ce32d3fd337fef163a2f04b80"
-  integrity sha512-dkcnCkwm3Eb2LioVUTi21LUOyaa97sAQKZ+qn6DCAkP+C2gm514hCLvm3hfHsTWGBaZuFgHoYYZbPQ/LCrwkaw==
+"@types/mapbox-gl@1.11.2":
+  version "1.11.2"
+  resolved "https://registry.npmjs.org/@types/mapbox-gl/-/mapbox-gl-1.11.2.tgz#e989264075ac6be633837c21241f4acd54692ceb"
+  integrity sha512-IXfOnFPAbxnEhSG89MjFxuqIX6bJioPHA55yExM0qAaVdT+kfJX7P4d0wfW0Br3iSdq9ym8C9jCYHpuLT4FE6Q==
   dependencies:
     "@types/geojson" "*"
 
@@ -11849,10 +11849,10 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-mapbox-gl@1.11.1:
-  version "1.11.1"
-  resolved "https://registry.npmjs.org/mapbox-gl/-/mapbox-gl-1.11.1.tgz#063e72b591d506b6b1f483df563e3e48cd0a971b"
-  integrity sha512-UjXpPUTUzHTLfhl5dLefwV3Jgu7DN9phpn8RnnkQVe1sOXfVYMS5Vhjn225krhzRc7xnKIBHxLyu0rHZGyeXuQ==
+mapbox-gl@1.12.0:
+  version "1.12.0"
+  resolved "https://registry.npmjs.org/mapbox-gl/-/mapbox-gl-1.12.0.tgz#7d1c73b1153d7ee219d30d80728d7df079bc7c05"
+  integrity sha512-B3URR4qY9R/Bx+DKqP8qmGCai8IOZYMSZF7ZSvcCZaYTaOYhQQi8ErTEDZtFMOR0ZPj7HFWOkkhl5SqvDfpJpA==
   dependencies:
     "@mapbox/geojson-rewind" "^0.5.0"
     "@mapbox/geojson-types" "^1.0.2"

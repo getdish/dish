@@ -21,8 +21,6 @@ export const HomeMapRestaurantPeek = memo(
         om.state.home.hoveredRestaurant.slug) ||
       ''
 
-    console.log('slug', slug, hoveredSlug)
-
     useEffect(() => {
       setSlug(selectedSlug)
     }, [selectedSlug])

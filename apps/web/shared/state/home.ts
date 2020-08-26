@@ -409,7 +409,6 @@ const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
   const { center, span } =
     om.state.home.currentState.mapAt ?? om.state.home.currentState
   const res = await reverseGeocode(center, span)
-  console.log('got', res)
   if (res) {
     const name = res.fullName ?? res.name ?? res.country
     om.state.home.currentState.currentLocationInfo = res
