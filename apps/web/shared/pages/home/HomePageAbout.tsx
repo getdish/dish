@@ -3,6 +3,7 @@ import {
   Button,
   Divider,
   HStack,
+  SmallTitle,
   Spacer,
   Text,
   TextProps,
@@ -71,40 +72,45 @@ export default graphql(function HomePageAbout({
               <Strong>
                 Seeing a huge list of ~4 star restaurants just isn't helpful
               </Strong>
-              . When ordering delivery - where there are four unique apps, each
-              with poor ratings - it's especially difficult to find good stuff.
+              . Finding what you crave when ordering delivery is uniquely
+              irksome - four apps, each with inconsistent ratings, and nowhere
+              to search them all.
             </Paragraph>
 
             <Paragraph size="xl">
-              Dish searches food better - across every delivery service, with
-              reviews from every top rating service. It's a smart food guide
-              that <Strong>shows ratings down to the dish</Strong> and clues you
-              into what makes a place special ✨.
+              <Strong>Dish breaks ratings down to the dish</Strong> - for every
+              restaurant. It searches all delivery services at once, and
+              combines reviews from every top rating source. It's a smarter food
+              guide that{' '}
+              <Strong>
+                understands what people actually say about the factors that
+                matter
+              </Strong>{' '}
+              so it can clue you into what makes a place special ✨.
             </Paragraph>
 
             <Paragraph size="lg">
-              Instead of star ratings, we look at{' '}
-              <em>what people actually say</em> to extract sentiment towards
-              dishes, ambiance, service and more. So instead of sifting through
-              a ton of 3-4 star comments to find &#8220;the one&#8221;, Dish's
-              community-powered guide understands what facets you care about,
-              and describes each place succinctly.
+              We're a community of food experts collaborating on a Hitchhiker's
+              Guide to Gastronomy (a poke Pokédex) to create a more fun,
+              personal pocket map to the world of food.
             </Paragraph>
 
             <Spacer />
-            <Divider />
+
+            <SmallTitle>How?</SmallTitle>
+
+            <Paragraph size="lg">
+              We take what people write, then extract sentiment towards dishes,
+              ambiance, service and more. Then, as our community votes and
+              comments, we summarize top reviews and tags into a smart, fun
+              summary. The result - instead of sifting through a ton of comments
+              to find &#8220;the one&#8221;, Dish describes facets you care
+              about, so you can spend less time hunting and more time enjoying.
+            </Paragraph>
+
             <Spacer />
 
-            <Paragraph size="lg">
-              <Strong>TL;DR</Strong>
-            </Paragraph>
-
-            <Paragraph size="lg">
-              We want to build a community of curators to create a Hitchhiker's
-              Guide to Gastronomy (or, a Pokédex for poke): your pocket map to
-              the world of food, where the stats matter and we work together to
-              build understand what's unique & good.
-            </Paragraph>
+            <SmallTitle>TL;DR</SmallTitle>
 
             <Paragraph size="lg">
               <HStack marginVertical={4} alignItems="center">
@@ -140,6 +146,11 @@ export default graphql(function HomePageAbout({
                 <Button>Submit</Button>
               </VStack>
             </form>
+
+            <Spacer />
+            <Spacer />
+            <Spacer />
+            <Spacer />
           </VStack>
         </VStack>
       </HomeScrollView>
