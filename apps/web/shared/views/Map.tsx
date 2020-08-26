@@ -496,7 +496,7 @@ export const Map = (props: MapProps) => {
     }
     if (hasMovedAtLeast(map, next, 0.001)) {
       return series([
-        () => fullyIdle({ min: 100 }),
+        () => fullyIdle({ min: 50, max: 400 }),
         () => {
           const northEast = new mapboxgl.LngLat(next.ne.lng, next.ne.lat)
           const southWest = new mapboxgl.LngLat(next.sw.lng, next.sw.lat)
@@ -560,18 +560,17 @@ export const Map = (props: MapProps) => {
 const getCurrentLocation = (map: mapboxgl.Map) => {
   const mapCenter = map.getCenter()
   const bounds = map.getBounds()
-  const lat = round(dist(mapCenter.lat, bounds.getNorth()))
-  const lng = round(dist(mapCenter.lng, bounds.getWest()))
   const center = {
     lng: round(mapCenter.lng),
     lat: round(mapCenter.lat),
   }
+  const span = {
+    lng: round(dist(mapCenter.lng, bounds.getWest())),
+    lat: round(dist(mapCenter.lat, bounds.getNorth())),
+  }
   return {
     center,
-    span: {
-      lng,
-      lat,
-    },
+    span,
   }
 }
 
@@ -591,10 +590,12 @@ const hasMovedAtLeast = (
     sw: bounds.getSouthWest(),
   }
   // only change them if they change more than a little bit
-  return (
-    abs(totalDistance(cur.ne, next.ne)) + abs(totalDistance(cur.ne, next.ne)) >
-    distance
-  )
+  const neDist = abs(totalDistance(cur.ne, next.ne))
+  const swLngDist = abs(cur.sw.lng - next.sw.lng)
+  // for some reason lat is off
+  // const swDist = abs(totalDistance(cur.sw, next.sw))
+  const finalDist = neDist + swLngDist
+  return finalDist > distance
 }
 
 ///

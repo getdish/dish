@@ -323,8 +323,9 @@ const runSearch: AsyncAction<{
 const deepAssign = (a: Object, b: Object) => {
   for (const key in b) {
     if (a[key] != b[key]) {
-      if (isPlainObject(a[key]) && isPlainObject(b[key])) {
-        deepAssign(a[key], b[key])
+      // WARNING, overmind got totally confused when recursing and broke things in subtle ways
+      // do not recurse objects and deep assign, just flat assign for now...
+      if (a[key] && b[key] && isEqual(a[key], b[key])) {
         continue
       }
       a[key] = isPlainObject(b[key]) ? { ...b[key] } : b[key]
@@ -338,7 +339,6 @@ const deepAssign = (a: Object, b: Object) => {
 }
 
 const updateHomeState: Action<HomeStateItem> = (om, val) => {
-  // console.warn('updateHomeState', val)
   const state = om.state.home.allStates[val.id]
   if (state) {
     if (state.type !== val.type) {

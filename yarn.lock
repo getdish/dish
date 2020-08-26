@@ -2246,7 +2246,7 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-13.7.4.tgz#76c3cb3a12909510f52e5dc04a6298cdf9504ffd"
   integrity sha512-oVeL12C6gQS/GAExndigSaLxTrKpQPxewx9bOcwfvJiJge4rr7wNaph4J+ns5hrmIV2as5qxqN8YKthn9qh0jw==
 
-"@types/node@^10.12.19":
+"@types/node@^10.12.19", "@types/node@^10.5.1":
   version "10.17.28"
   resolved "https://registry.npmjs.org/@types/node/-/node-10.17.28.tgz#0e36d718a29355ee51cec83b42d921299200f6d9"
   integrity sha512-dzjES1Egb4c1a89C7lKwQh8pwjYmlOAG9dW1pBgxEk57tMrLnssOfEthz8kdkNaBd7lIqQx7APm5+mZ619IiCQ==
@@ -4452,10 +4452,13 @@ bcryptjs@^2.4.3:
   resolved "https://registry.npmjs.org/bcryptjs/-/bcryptjs-2.4.3.tgz#9ab5627b93e60621ff7cdac5da9733027df1d0cb"
   integrity sha1-mrVie5PmBiH/fNrF2pczAn3x0Ms=
 
-betsy@1.0.2-1589389364682:
-  version "1.0.2-1589389364682"
-  resolved "https://registry.npmjs.org/betsy/-/betsy-1.0.2-1589389364682.tgz#06ca01e16d97692068bd0ce66f236350d3f78f89"
-  integrity sha512-on7PF39eCFqZgF+AplwUVE9Qzrgyp+rU0SgBIWQCpQ1h//J4M7LZPEZhtEPaAMPKVg9YPWI3YMrhuzfCyoUXJQ==
+betsy@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/betsy/-/betsy-1.0.2.tgz#e53abc4750d6a6a112a7835f723db0ca01a3b197"
+  integrity sha512-yt/OUTbSeCRj4uwbDnjTbnWgrLsgBl1nzJLdZH2eOtrf3SDH7svdoTMWOvTFhUdIM86pY6k21o/4SCIT6RYjig==
+  dependencies:
+    "@types/node" "^10.5.1"
+    tslib "^1.9.3"
 
 bfj@^6.1.1:
   version "6.1.2"
@@ -13015,6 +13018,11 @@ nodemon@^2.0.2:
     undefsafe "^2.0.2"
     update-notifier "^4.0.0"
 
+non-blocking-json@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npmjs.org/non-blocking-json/-/non-blocking-json-1.1.1.tgz#2180c25ee0330475bdc5e14b27d0750d7c0d73a4"
+  integrity sha512-iweGQWA3+GZkjJEXhvtRh1fjo8DpnotpL8+13NSwaI28X6HaqlYTxAI/ZXawCmva2GS3NaOl5NdNudg3RyQreQ==
+
 nopt@^4.0.1:
   version "4.0.3"
   resolved "https://registry.npmjs.org/nopt/-/nopt-4.0.3.tgz#a375cad9d02fd921278d954c2254d5aa57e15e48"
@@ -13505,21 +13513,22 @@ osenv@^0.1.4:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
 
-overmind-react@24.1.0-1589389364682:
-  version "24.1.0-1589389364682"
-  resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-24.1.0-1589389364682.tgz#9b143d01301f13aca12ec588f64c72efcf1c1d9d"
-  integrity sha512-4r9fWGUe4GqNYx1VLhg9giBNkKUYta4nvRohrBqWEn52dKsX1wT1Z5w43mpsCPb+yPIByfD8yo/DPKfgl8DZFA==
+overmind-react@^26.0.1:
+  version "26.0.1"
+  resolved "https://registry.npmjs.org/overmind-react/-/overmind-react-26.0.1.tgz#3b9ea1f118a1185ed4564eb6f5226bd4bfa002cd"
+  integrity sha512-Isi3Hvtjrkj6p2jwc75WZCam35Rl6sCLVdtkIn5KGCI00CgGTt5zIHl1WZLKJ6Kzu4U9Ayp8nNdCT/MPx0JhYg==
   dependencies:
-    overmind "23.1.0-1589389364682"
+    overmind "25.0.1"
 
-overmind@23.1.0-1589389364682:
-  version "23.1.0-1589389364682"
-  resolved "https://registry.npmjs.org/overmind/-/overmind-23.1.0-1589389364682.tgz#468c81794e844a51e114bbdc3986b662a9c149c0"
-  integrity sha512-TCFjsBryXkrHqWpI3EmSlGcVcWWrvruBdpTyY07MBS/go6KTvko7uuk2KZG9xcER+/iM9fWA6BD8hyp+B+EbVA==
+overmind@25.0.1:
+  version "25.0.1"
+  resolved "https://registry.npmjs.org/overmind/-/overmind-25.0.1.tgz#a2c46ddfdf050630f16a56bf04f253beb2b30d72"
+  integrity sha512-1NwXuwh6LDKIG6XJ6RmBTMt6MJ+zwQsqrn4Eruo336BcY0ZuQlQjT5ralu/8A+RKtBIkDeUO6JkzIhS7xawwJg==
   dependencies:
-    betsy "1.0.2-1589389364682"
+    betsy "1.0.2"
     is-plain-obj "^1.1.0"
-    proxy-state-tree "5.0.1-1589389364682"
+    non-blocking-json "1.1.1"
+    proxy-state-tree "6.0.1"
     tslib "^1.10.0"
 
 ow@^0.15.0:
@@ -14831,10 +14840,10 @@ proxy-from-env@^1.0.0:
   resolved "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
   integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
 
-proxy-state-tree@5.0.1-1589389364682:
-  version "5.0.1-1589389364682"
-  resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-5.0.1-1589389364682.tgz#00c2e2619372409c422d3e629c522612760c530b"
-  integrity sha512-mPx8rTa3Gm8c1dAdghZzrxqm0EeV8A8N8QoNLLZC4kc4FnJ/Mm9386xUbPVnqb6K4tqvX5+jmn0bdEMo2gfehQ==
+proxy-state-tree@6.0.1:
+  version "6.0.1"
+  resolved "https://registry.npmjs.org/proxy-state-tree/-/proxy-state-tree-6.0.1.tgz#7afeaae26cf3583c0d449de6a64f17b7a6629be6"
+  integrity sha512-fL0+2RT8oOfWI/JG8y/NpQyc1d694bkPikVwp8g9VOEQFMK7kkJJ1HjaHmrEa9QKNxU3T/ftA/y+s6TF/TTkaA==
   dependencies:
     is-plain-obj "^1.1.0"
 

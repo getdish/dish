@@ -49,7 +49,11 @@ const HomePageRestaurant = memo(
     const coords = restaurant?.location?.coordinates
 
     usePageLoadEffect(props.isActive && restaurant.id, () => {
-      omStatic.actions.home.updateCurrentState({
+      omStatic.actions.home.updateHomeState({
+        id: item.id,
+        type: 'restaurant',
+        searchQuery: item.searchQuery,
+        restaurantSlug: item.restaurantSlug,
         restaurantId: restaurant.id,
         center: {
           lng: coords?.[0],
