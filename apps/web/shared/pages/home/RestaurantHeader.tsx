@@ -76,11 +76,12 @@ const RestaurantHeaderContent = memo(
               <VStack flex={10}>
                 <Text
                   selectable
+                  lineHeight={42}
                   fontSize={
-                    (restaurant.name?.length > 25 ? 32 : 34) *
+                    (restaurant.name?.length > 25 ? 32 : 36) *
                     (size === 'sm' ? 0.8 : 1)
                   }
-                  fontWeight="300"
+                  fontWeight="700"
                   paddingRight={30}
                 >
                   {restaurant.name}

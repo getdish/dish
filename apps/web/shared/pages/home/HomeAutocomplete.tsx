@@ -180,7 +180,7 @@ const HomeAutoCompleteContents = memo(
             shadowRadius={18}
             width="100%"
             flex={1}
-            backgroundColor="rgba(0,0,0,0.93)"
+            backgroundColor="rgba(0,0,0,0.9)"
             padding={5}
             borderRadius={10}
           >

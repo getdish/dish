@@ -48,9 +48,9 @@ export const parentIds = {
   large: 'searchbar-large',
 }
 
+const borderRadius = 14
 export const HomeSearchBarFloating = () => {
   const isSmall = useMediaQueryIsSmall()
-  const borderRadius = 10
   const rgb = useCurrentLenseColor()
   const backgroundColor = rgbString(rgb)
 
@@ -110,12 +110,13 @@ export const HomeSearchBarFloating = () => {
                   className="skewX"
                   position="absolute"
                   top={0}
-                  width="100%"
-                  shadowColor="rgba(0,0,0,0.1)"
-                  shadowOffset={{ height: 2, width: 0 }}
-                  shadowRadius={8}
+                  left={1}
+                  width="calc(100% - 1px)"
+                  shadowColor="rgba(0,0,0,0.2)"
+                  shadowOffset={{ height: 3, width: 0 }}
+                  shadowRadius={12}
                 />
-                <VStack
+                {/* <VStack
                   height={searchBarHeight - 1}
                   borderRadius={borderRadius}
                   zIndex={-1}
@@ -126,11 +127,11 @@ export const HomeSearchBarFloating = () => {
                   shadowColor="rgba(0,0,0,0.1)"
                   shadowOffset={{ height: 2, width: 3 }}
                   shadowRadius={3}
-                />
+                /> */}
               </>
             )}
             <VStack
-              className="skewX"
+              className="skewX searchbar-css"
               position="relative"
               zIndex={100}
               flex={1}
@@ -152,6 +153,17 @@ export const HomeSearchBarFloating = () => {
               >
                 <HomeSearchBar />
               </HStack>
+
+              {/* inner borders */}
+              <AbsoluteVStack
+                borderRadius={borderRadius}
+                fullscreen
+                pointerEvents="none"
+                borderTopColor="rgba(255,255,255,0.2)"
+                borderTopWidth={1}
+                borderBottomColor="rgba(0,0,0,0.1)"
+                borderBottomWidth={1}
+              />
             </VStack>
           </VStack>
         </VStack>

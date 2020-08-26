@@ -246,9 +246,9 @@ const SearchResultsContent = (props: Props) => {
         <VStack height={paddingTop} />
         <PageTitleTag>{title}</PageTitleTag>
         <HStack padding={20} paddingBottom={0} overflow="hidden">
-          <Text ellipse fontSize={26} fontWeight="300">
+          <Text ellipse fontSize={26} fontWeight="700">
             {pageTitleElements}{' '}
-            <Text opacity={0.5} letterSpacing={-0.5}>
+            <Text fontWeight="300" opacity={0.5} letterSpacing={-0.5}>
               {subTitle}
             </Text>
           </Text>
