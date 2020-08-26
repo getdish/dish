@@ -271,8 +271,6 @@ const runSearch: AsyncAction<{
     return answer
   }
 
-  console.log('lets search')
-
   // dont be so eager if started
   if (!opts.force && om.state.home.started) {
     await fullyIdle()
@@ -311,7 +309,7 @@ const runSearch: AsyncAction<{
   state = om.state.home.lastSearchState
   if (!state) return
 
-  console.log('search found restaurants', restaurants)
+  // console.log('search found restaurants', restaurants)
   state.status = 'complete'
   state.results = restaurants.filter(Boolean)
 
@@ -340,6 +338,7 @@ const deepAssign = (a: Object, b: Object) => {
 }
 
 const updateHomeState: Action<HomeStateItem> = (om, val) => {
+  // console.warn('updateHomeState', val)
   const state = om.state.home.allStates[val.id]
   if (state) {
     if (state.type !== val.type) {

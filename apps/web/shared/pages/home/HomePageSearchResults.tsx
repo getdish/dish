@@ -381,7 +381,7 @@ const SearchResultsContent = (props: Props) => {
     )
   }
 
-  console.warn('SearchContent', { isLoading })
+  // console.warn('SearchContent', { isLoading })
 
   return contentWrap(
     <VStack paddingBottom={20} spacing={6}>
