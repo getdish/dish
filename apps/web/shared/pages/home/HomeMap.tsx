@@ -1,16 +1,8 @@
-import { LngLat, Restaurant, Tag, graphql } from '@dish/graph'
+import { LngLat, Restaurant, graphql } from '@dish/graph'
 import { AbsoluteVStack, useDebounce, useLazyEffect } from '@dish/ui'
 import { uniqBy } from 'lodash'
 import mapboxgl from 'mapbox-gl'
-import React, {
-  Suspense,
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
 import { searchBarHeight, zIndexMap } from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
@@ -26,7 +18,6 @@ import { Map } from '../../views/Map'
 import { getLngLat, getMinLngLat } from './getLngLat'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
 import { snapPoints } from './HomeSmallDrawer'
-import { useLastValue } from './useLastValue'
 import { useLastValueWhen } from './useLastValueWhen'
 import { useMapSize } from './useMapSize'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
@@ -246,8 +237,10 @@ const HomeMapContent = memo(function HomeMap({
     }
     const coords = restaurantSelected.location.coordinates
     if (!coords) return
+    const center = getLngLat(coords)
+    console.log('selected restaurant center', center)
     setState({
-      center: getLngLat(coords),
+      center,
     })
   }, [restaurantSelected])
 
@@ -270,25 +263,7 @@ const HomeMapContent = memo(function HomeMap({
         right: 10,
       }
 
-  // console.log('HomeMap', {
-  //   internal,
-  //   restaurantDetail,
-  //   restaurantSelected,
-  //   key,
-  //   center,
-  //   span,
-  //   restaurants,
-  //   padding,
-  // })
-
   const features = useMemo(() => getRestaurantMarkers(restaurants), [key])
-
-  // stop map animation when moving away from page (see if this fixes some animation glitching/tearing)
-  // useLayoutEffect(() => {
-  //   if (!map) return
-  //   console.warn('test removing this')
-  //   map.stop()
-  // }, [map, restaurants])
 
   return (
     <AbsoluteVStack
@@ -355,6 +330,7 @@ const HomeMapContent = memo(function HomeMap({
         onSelect={(id) => {
           if (id !== om.state.home.selectedRestaurant?.id) {
             const restaurant = restaurants?.find((x) => x.id === id)
+            console.log('selecting', restaurant)
             if (restaurant) {
               om.actions.home.setSelectedRestaurant({
                 id: restaurant.id,
@@ -374,15 +350,6 @@ const HomeMapContent = memo(function HomeMap({
     </AbsoluteVStack>
   )
 })
-
-const getMapStyle = (lense: Tag) => {
-  switch (lense.name) {
-    case 'Gems':
-      return 'mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq'
-    case 'Vibe':
-      return 'mapbox://styles/nwienert/ckddrrhfa4dnc1io6yindi3hi'
-  }
-}
 
 let ids = {}
 const getNumId = (id: string): number => {
@@ -409,40 +376,9 @@ const getRestaurantMarkers = (restaurants: Restaurant[]) => {
         id: restaurant.id,
         title: restaurant.name ?? 'none',
         subtitle: 'Pho, Banh Mi',
-        color: color,
+        color: '#fbb03b',
       },
     })
-    // result.push(
-    //   new mapboxgl.Marker({
-    //     color,
-    //   }).setLngLat(restaurant.location.coordinates)
-    // )
   }
   return result
 }
-// return restaurants
-//   .filter((_, index) => {
-//     if (!coordinates[index]) {
-//       console.warn('noo coordinate')
-//       return false
-//     }
-//     return true
-//   })
-//   .map((restaurant, index) => {
-//     return new mapkit.MarkerAnnotation(coordinates[index], {
-//       glyphText: index <= 12 ? `${index + 1}` : ``,
-//       color: color,
-//       title: index <= 3 ? restaurant.name : '',
-//       subtitle: index >= 10 ? restaurant.name : '',
-//       collisionMode: mapkit.Annotation.CollisionMode.Circle,
-//       displayPriority:
-//         index <= 10
-//           ? mapkit.Annotation.DisplayPriority.Required // change to High to hide overlaps
-//           : mapkit.Annotation.DisplayPriority.Low,
-//       data: {
-//         id: restaurant.id,
-//         slug: restaurant.slug,
-//       },
-//     })
-//   })
-//   .reverse()

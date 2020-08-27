@@ -278,38 +278,6 @@ export const Map = (props: MapProps) => {
             map.removeLayer(CLUSTER_LABEL_LAYER_ID)
           })
 
-          // hover/point layer shared
-          // const layout: mapboxgl.SymbolLayout = {
-          //   // 'icon-image': 'bar-15',
-          //   'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
-          //   'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-          //   'text-offset': [0, 0.6],
-          //   'text-anchor': 'top',
-          //   // // @ts-ignore
-          //   // 'text-halo-color': '#fff',
-          //   // // @ts-ignore
-          //   // 'text-halo-width': '1',
-          // }
-
-          // map.addLayer({
-          //   id: UNCLUSTE,
-          //   type: 'symbol',
-          //   source: SOURCE_ID,
-          //   layout,
-          // })
-
-          // map.addLayer({
-          //   id: POINT_HOVER_LAYER_ID,
-          //   type: 'symbol',
-          //   source: SOURCE_ID,
-          //   filter: ['==', 'id', ''],
-          //   layout: {
-          //     ...layout,
-          //     'icon-size': 0.5,
-          //     'icon-offset': [0, -15],
-          //   },
-          // })
-
           type Event = mapboxgl.MapMouseEvent & {
             features?: mapboxgl.MapboxGeoJSONFeature[]
           } & mapboxgl.EventData
@@ -373,10 +341,6 @@ export const Map = (props: MapProps) => {
             setHovered(e, false)
           }
 
-          const handleMouseClick: Listener = (e) => {
-            setActive(map, +e.features[0].id)
-          }
-
           /*
             Send back current location on move end
           */
@@ -428,7 +392,6 @@ export const Map = (props: MapProps) => {
               layers: [POINT_LAYER_ID],
             })
             const clusterId = features[0].properties.cluster_id
-            console.log('we are clicking', clusterId, e)
             if (clusterId) {
               const source = map.getSource(SOURCE_ID)
               if (source.type === 'geojson') {
@@ -442,7 +405,7 @@ export const Map = (props: MapProps) => {
               }
             } else {
               // click
-              handleMouseClick(e)
+              setActive(map, +e.features[0].id)
             }
           }
           map.on('click', CLUSTER_LABEL_LAYER_ID, handleClick)
@@ -513,7 +476,7 @@ export const Map = (props: MapProps) => {
     ]
 
     // show center/sw/ne points on map for debugging
-    if (window['debug']) {
+    if (false ?? window['debug']) {
       const source = map.getSource(SOURCE_ID)
       if (source?.type === 'geojson') {
         source.setData({
@@ -650,11 +613,11 @@ const getCurrentLocation = (map: mapboxgl.Map) => {
     }
     const lngSpan = bounds.getEast() - bounds.getWest()
     const latSpan = bounds.getNorth() - bounds.getSouth()
-    const latExtra = ((padding.top - padding.bottom) / size.height) * latSpan
+    const latExtra = (padding.top / size.height) * latSpan
     const lngExtra = ((padding.left + padding.right) / size.width) * lngSpan
     span.lng -= lngExtra
     span.lat -= latExtra
-    center.lng += (padding.right / 2 / size.height) * lngSpan
+    // center.lng += (padding.right / 2 / size.height) * lngSpan
   } else {
     const size = {
       width: map.getContainer().clientWidth,
@@ -666,7 +629,6 @@ const getCurrentLocation = (map: mapboxgl.Map) => {
     const lngExtra = ((padding.left + padding.right) / 2 / size.width) * lngSpan
     span.lng -= lngExtra
     span.lat -= latExtra
-    // center.lng += (padding.right / 2 / size.height) * lngSpan
   }
 
   // console.log(
@@ -787,3 +749,35 @@ const hasMovedAtLeast = (
 // {},
 // ['downcase', ['get', 'subtitle']],
 // { 'font-scale': 0.6 },
+
+// hover/point layer shared
+// const layout: mapboxgl.SymbolLayout = {
+//   // 'icon-image': 'bar-15',
+//   'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
+//   'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+//   'text-offset': [0, 0.6],
+//   'text-anchor': 'top',
+//   // // @ts-ignore
+//   // 'text-halo-color': '#fff',
+//   // // @ts-ignore
+//   // 'text-halo-width': '1',
+// }
+
+// map.addLayer({
+//   id: UNCLUSTE,
+//   type: 'symbol',
+//   source: SOURCE_ID,
+//   layout,
+// })
+
+// map.addLayer({
+//   id: POINT_HOVER_LAYER_ID,
+//   type: 'symbol',
+//   source: SOURCE_ID,
+//   filter: ['==', 'id', ''],
+//   layout: {
+//     ...layout,
+//     'icon-size': 0.5,
+//     'icon-offset': [0, -15],
+//   },
+// })
