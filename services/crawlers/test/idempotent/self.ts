@@ -24,6 +24,7 @@ import {
   scrapeInsert,
 } from '../../src/scrape-helpers'
 import { Self } from '../../src/self/Self'
+import { GEM_UIID } from '../../src/self/Tagging'
 import { main_db } from '../../src/utils'
 import { yelp_hours } from '../yelp_hours'
 
@@ -253,6 +254,12 @@ async function reset(t: ExecutionContext<Context>) {
     { restaurant_id: restaurant.id, location: zero_coord, ...tripadvisor },
   ]
   await Promise.all(scrapes.map((s) => scrapeInsert(s)))
+  await tagUpsert([
+    {
+      name: 'Gem',
+      id: GEM_UIID,
+    },
+  ])
 }
 
 test.beforeEach(async (t) => {

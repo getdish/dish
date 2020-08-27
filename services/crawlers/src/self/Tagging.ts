@@ -25,6 +25,8 @@ type TextSource = Review | string
 const isReview = (variableToCheck: any): variableToCheck is Review =>
   (variableToCheck as Review).text !== undefined
 
+export const GEM_UIID = 'da0e0c85-86b5-4b9e-b372-97e133eccb43'
+
 export class Tagging {
   crawler: Self
   restaurant_tags: RestaurantTag[] = []
@@ -34,7 +36,6 @@ export class Tagging {
   all_tags: Tag[] = []
   _found_tags: { [key: string]: Partial<RestaurantTag> } = {}
   SPECIAL_FILTER_THRESHOLD = 3
-  GEM_UIID = 'da0e0c85-86b5-4b9e-b372-97e133eccb43'
   sentiment = new Sentiment()
   all_reviews: Review[] = []
 
@@ -64,7 +65,7 @@ export class Tagging {
   tagIfGem() {
     if (this.crawler.restaurant.rating > 4) {
       this.restaurant_tags.push({
-        tag_id: this.GEM_UIID,
+        tag_id: GEM_UIID,
       })
     }
   }
@@ -113,10 +114,11 @@ export class Tagging {
         if (existing) {
           existing.rank = rank
         } else {
-          this.restaurant_tags.push({
+          const tag = {
             tag_id: i.tag.id,
             rank,
-          })
+          }
+          this.restaurant_tags.push(tag)
         }
       })
     )
