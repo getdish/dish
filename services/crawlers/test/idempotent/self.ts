@@ -333,7 +333,10 @@ test('Weighted ratings when all sources are present', (t) => {
     b: 0.5,
     c: 1,
   }
-  t.is(self.weightRatings(ratings, weights), 4.470588235294118)
+  t.is(
+    self.restaurant_ratings.weightRatings(ratings, weights),
+    4.470588235294118
+  )
 })
 
 test('Weighted ratings when some sources are missing', (t) => {
@@ -347,7 +350,50 @@ test('Weighted ratings when some sources are missing', (t) => {
     b: 0.5,
     c: 1,
   }
-  t.is(self.weightRatings(ratings, weights), 3.7142857142857144)
+  t.is(
+    self.restaurant_ratings.weightRatings(ratings, weights),
+    3.7142857142857144
+  )
+})
+
+test('Weighted ratings when there is a weight less than 1', (t) => {
+  const self = new Self()
+  const ratings = {
+    a: 3,
+    b: 4,
+  }
+  const weights = {
+    a: 0.2,
+    b: 0.5,
+  }
+  t.is(
+    self.restaurant_ratings.weightRatings(ratings, weights),
+    3.7142857142857144
+  )
+})
+
+test('Weighted ratings when there is only 1 weight', (t) => {
+  const self = new Self()
+  const ratings = {
+    b: 4,
+  }
+  const weights = {
+    b: 0.5,
+  }
+  t.is(self.restaurant_ratings.weightRatings(ratings, weights), 4)
+})
+
+test('Weighted ratings when given a null rating', (t) => {
+  const self = new Self()
+  const ratings = {
+    a: null,
+    b: 4,
+  }
+  const weights = {
+    a: 0.5,
+    b: 0.5,
+  }
+  t.is(self.restaurant_ratings.weightRatings(ratings, weights), 4)
 })
 
 test('Tag rankings', async (t) => {
