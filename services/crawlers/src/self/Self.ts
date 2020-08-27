@@ -5,10 +5,8 @@ import {
   MenuItem,
   PhotoXref,
   RestaurantWithId,
-  deleteAllBy,
   globalTagId,
   menuItemsUpsertMerge,
-  restaurantFindOne,
   restaurantFindOneWithTags,
   restaurantUpdate,
   restaurantUpsertManyTags,
@@ -46,10 +44,6 @@ import { RestaurantRatings } from './RestaurantRatings'
 import { Tagging } from './Tagging'
 
 const PER_PAGE = 10000
-
-const UNIQUNESS_VIOLATION =
-  'Uniqueness violation. duplicate key value violates ' +
-  'unique constraint "restaurant_name_address_key"'
 
 export class Self extends WorkerJob {
   yelp!: Scrape
@@ -140,7 +134,12 @@ export class Self extends WorkerJob {
 
   async postMerge() {
     this.resetTimer()
-    await this.persist()
+    if (!this.restaurant.name || this.restaurant.name == '') {
+      throw new Error(
+        'SELF CRAWLER: restaurant has no name, ID: ' + this.restaurant.id
+      )
+    }
+    await restaurantUpdate(this.restaurant)
     this.tagging.deDepulicateTags()
     await this.tagging.updateTagRankings()
     await restaurantUpsertManyTags(
@@ -184,18 +183,6 @@ export class Self extends WorkerJob {
       )
     }
     this.logTime(func.name)
-  }
-
-  async persist() {
-    try {
-      await restaurantUpdate(this.restaurant)
-    } catch (e) {
-      if (e.message == UNIQUNESS_VIOLATION) {
-        this.handleRestaurantKeyConflict()
-      } else {
-        throw e
-      }
-    }
   }
 
   async doTags() {
@@ -245,36 +232,6 @@ export class Self extends WorkerJob {
     await this.tagging.scanCorpus()
   }
 
-  async handleRestaurantKeyConflict() {
-    const { restaurant } = this
-    if (!restaurant) return
-    if (
-      (restaurant.address?.length ?? 0) < 4 ||
-      (restaurant.name ?? '').length < 2
-    ) {
-      throw new Error('Not enough data to resolve restaurant conflict')
-    }
-    const conflicter = await restaurantFindOne({
-      name: restaurant.name,
-      address: restaurant.address ?? '',
-    })
-    if (!conflicter) {
-      return
-    }
-    const updated_at = moment(conflicter.updated_at)
-    if (updated_at.diff(moment.now(), 'days') < -30) {
-      console.log(
-        'Deleting conflicting restaurant: ' +
-          restaurant.name +
-          ', ' +
-          restaurant.id
-      )
-      await deleteAllBy('restaurant', 'id', conflicter.id)
-    } else {
-      throw new Error('Conflicting restaurant updated too recently')
-    }
-  }
-
   async getScrapeData() {
     const sources = [
       'yelp',
@@ -316,14 +273,15 @@ export class Self extends WorkerJob {
     const tripadvisor_name = Tripadvisor.cleanName(
       scrapeGetData(this.tripadvisor, 'overview.name')
     )
-    this.restaurant.name = this.merge([
+    const names = [
       scrapeGetData(this.yelp, 'data_from_map_search.name'),
       scrapeGetData(this.ubereats, 'main.title'),
       scrapeGetData(this.infatuated, 'data_from_map_search.name'),
       scrapeGetData(this.michelin, 'main.name'),
       scrapeGetData(this.grubhub, 'main.name'),
       tripadvisor_name,
-    ])
+    ]
+    this.restaurant.name = this.merge(names)
   }
 
   mergeTelephone() {
