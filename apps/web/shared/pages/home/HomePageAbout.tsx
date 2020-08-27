@@ -146,17 +146,21 @@ export default function HomePageAbout({
 
             <Divider marginVertical={40} />
 
-            <Paragraph>Let us know how you'd like to see grow:</Paragraph>
+            <Paragraph>
+              <a href="mailto:team@dishapp.com">
+                Let us know how you'd like to see us grow.
+              </a>
+            </Paragraph>
 
             <Spacer size="sm" />
 
-            <form>
+            {/* <form>
               <VStack>
                 <Input name="email" type="email" placeholder="Email..." />
                 <TextArea name="comment" numberOfLines={100} />
                 <Button>Submit</Button>
               </VStack>
-            </form>
+            </form> */}
 
             <Spacer />
             <Spacer />

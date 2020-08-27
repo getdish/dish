@@ -85,24 +85,33 @@ const HomeMapDataLoader = memo(
           .slice(0, 50)
       }
 
+      all = all.filter(Boolean)
+
       const allIds = [...new Set(all.map((x) => x.id))]
       const allResults = allIds
         .map((id) => all.find((x) => x.id === id))
         .filter(Boolean)
 
+      console.log('allResults', allResults)
+
       const restaurants = uniqBy(
-        allResults.map(({ id, slug }) => {
-          const r = useRestaurantQuery(slug)
-          const coords = r.location?.coordinates
-          return {
-            id: id ?? r.id,
-            slug,
-            name: r.name,
-            location: {
-              coordinates: [coords?.[0], coords?.[1]],
-            },
-          }
-        }),
+        allResults
+          .map(({ id, slug }) => {
+            const r = useRestaurantQuery(slug)
+            if (!r) {
+              return null
+            }
+            const coords = r?.location?.coordinates
+            return {
+              id: id ?? r.id,
+              slug,
+              name: r.name,
+              location: {
+                coordinates: [coords?.[0], coords?.[1]],
+              },
+            }
+          })
+          .filter(Boolean),
         (x) => `${x.location.coordinates[0]}${x.location.coordinates[1]}`
       )
         // ensure has location
@@ -360,7 +369,7 @@ const getNumId = (id: string): number => {
 const getRestaurantMarkers = (restaurants: Restaurant[]) => {
   const result: GeoJSON.Feature[] = []
   for (const restaurant of restaurants) {
-    if (!restaurant.location?.coordinates) {
+    if (!restaurant?.location?.coordinates) {
       continue
     }
     const percent = getRestaurantRating(restaurant.rating)
