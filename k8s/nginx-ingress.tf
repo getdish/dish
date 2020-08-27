@@ -60,6 +60,18 @@ resource "kubernetes_ingress" "k8s-services-ingress" {
       }
     }
     rule {
+      host = "staging.${var.dish_domain}"
+      http {
+        path {
+          path = "/"
+          backend {
+            service_name = "web-staging"
+            service_port = "http"
+          }
+        }
+      }
+    }
+    rule {
       host = "hasura.${var.dish_domain}"
       http {
         path {
