@@ -72,6 +72,7 @@ export const RestaurantTagsRow = memo(
                   subtle={props.subtle}
                   votable={!props.subtle}
                   restaurantId={props.restaurantId}
+                  marginBottom={10}
                 />
                 {!!props.spacing && <Spacer size={props.spacing} />}
               </React.Fragment>
