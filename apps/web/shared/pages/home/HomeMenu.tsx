@@ -25,7 +25,18 @@ import {
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 const MenuLinkButton = (props: LinkButtonProps) => {
-  return <LinkButton {...flatButtonStyle} fontSize={18} {...props} />
+  return (
+    <LinkButton
+      {...flatButtonStyle}
+      onPressOut={() => {
+        if (omStatic.state.home.showUserMenu) {
+          omStatic.actions.home.setShowUserMenu(false)
+        }
+      }}
+      fontSize={18}
+      {...props}
+    />
+  )
 }
 
 export const HomeMenu = memo(() => {
@@ -51,12 +62,7 @@ export const HomeMenu = memo(() => {
                 />
               )}
 
-              <VStack
-                spacing
-                onPressOut={(e) => {
-                  close()
-                }}
-              >
+              <VStack spacing onPressOut={(e) => {}}>
                 <MenuLinkButton name="about">About</MenuLinkButton>
 
                 <Divider />

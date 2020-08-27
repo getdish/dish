@@ -47,34 +47,33 @@ export const HomeScrollView = forwardRef(
     }
 
     return (
-      <VStack className="scroll-bounce" flex={1} overflow="hidden">
-        <ScrollView
-          ref={ref as any}
-          onScroll={setIsScrolling}
-          bounces
-          scrollEventThrottle={150}
-          {...props}
-          style={[
-            {
-              flex: 1,
-              paddingTop: paddingTop ?? (isSmall ? 0 : searchBarHeight),
-              // for drawer
-              paddingBottom: isSmall ? 500 : 0,
-            },
-            style,
-          ]}
+      <ScrollView
+        ref={ref as any}
+        onScroll={setIsScrolling}
+        bounces
+        scrollEventThrottle={150}
+        {...props}
+        style={[
+          {
+            flex: 1,
+            paddingTop: paddingTop ?? (isSmall ? 0 : searchBarHeight),
+            // for drawer
+            paddingBottom: isSmall ? 500 : 0,
+          },
+          style,
+        ]}
+      >
+        <VStack
+          pointerEvents={scrollStore.isScrolling ? 'none' : 'auto'}
+          maxWidth={isSmall ? '100%' : drawerWidthMax}
+          alignSelf="flex-end"
+          overflow="hidden"
+          width="100%"
+          flex={1}
         >
-          <VStack
-            pointerEvents={scrollStore.isScrolling ? 'none' : 'auto'}
-            maxWidth={isSmall ? '100%' : drawerWidthMax}
-            alignSelf="flex-end"
-            alignItems="flex-start"
-            width="100%"
-          >
-            {children}
-          </VStack>
-        </ScrollView>
-      </VStack>
+          {children}
+        </VStack>
+      </ScrollView>
     )
   }
 )

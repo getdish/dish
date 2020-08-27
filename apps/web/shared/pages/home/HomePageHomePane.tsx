@@ -25,15 +25,13 @@ import { tagDescriptions } from '../../state/tagLenses'
 import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { flatButtonStyle } from './baseButtonStyle'
 import { CloseButton } from './CloseButton'
 import { DishView } from './DishView'
-import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePagePaneProps'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { HomeTopSearches } from './HomeTopSearches'
 import { RestaurantButton } from './RestaurantButton'
-import { SlantedBox, slantedBoxStyle } from './SlantedBox'
+import { slantedBoxStyle } from './SlantedBox'
 import { SlantedLinkButton } from './SlantedLinkButton'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
@@ -167,9 +165,16 @@ export default memo(function HomePageHomePane(props: Props) {
           flex={1}
           maxHeight="100%"
           overflow="visible"
+          maxWidth="100%"
         >
           <HomeScrollView>
-            <VStack paddingTop={isSmall ? 20 : 28} spacing="xl">
+            <VStack
+              flex={1}
+              overflow="hidden"
+              maxWidth="100%"
+              paddingTop={isSmall ? 20 : 28}
+              spacing="xl"
+            >
               <VStack>
                 {/* LENSES - UNIQUELY GOOD HERE */}
                 {/* <VStack alignItems="center">

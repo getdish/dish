@@ -1,4 +1,3 @@
-import { createCancellablePromise, idle, series } from '@dish/async'
 import {
   Button,
   HStack,
@@ -28,7 +27,6 @@ import { getFullTags, getTagsFromRoute } from '../../state/home-tag-helpers'
 import {
   HomeActiveTagsRecord,
   HomeStateItemSearch,
-  OmState,
 } from '../../state/home-types'
 import { omStatic, useOvermind } from '../../state/om'
 import { router } from '../../state/router'
@@ -45,11 +43,7 @@ import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
 import { useLastValue } from './useLastValue'
 import { useLastValueWhen } from './useLastValueWhen'
-import {
-  useMediaQueryIsAboveMedium,
-  useMediaQueryIsReallySmall,
-  useMediaQueryIsSmall,
-} from './useMediaQueryIs'
+import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { usePageLoadEffect } from './usePageLoadEffect'
 
 export const avatar = require('../../assets/peach.jpg').default
@@ -136,6 +130,7 @@ export default memo(function HomePageSearchResults(props: Props) {
           flex={1}
           overflow="hidden"
           opacity={isOptimisticUpdating ? 0.5 : 1}
+          width="100%"
         >
           {content}
         </VStack>
