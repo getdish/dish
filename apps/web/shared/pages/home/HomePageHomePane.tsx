@@ -12,7 +12,7 @@ import {
   useDebounceEffect,
 } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
-import _ from 'lodash'
+import _, { sortBy, uniqBy } from 'lodash'
 import { default as React, Suspense, memo, useEffect, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useStorageState } from 'react-storage-hooks'
@@ -83,10 +83,45 @@ export default memo(function HomePageHomePane(props: Props) {
   )
 
   useEffect(() => {
-    if (isLoaded && props.isActive) {
+    if (center && span && isLoaded && props.isActive) {
       let isMounted = true
-      getHomeDishes(center!.lng, center!.lat).then((all) => {
+      om.actions.home.updateCurrentMapAreaInformation()
+
+      const mapAreasToSearch = [
+        [center.lng, center.lat],
+        [center.lng - span.lng, center.lat - span.lat],
+        [center.lng - span.lng, center.lat + span.lat],
+        [center.lng + span.lng, center.lat - span.lat],
+        [center.lng + span.lng, center.lat + span.lat],
+      ]
+
+      Promise.all(
+        mapAreasToSearch.map((pt) => {
+          return getHomeDishes(pt[0], pt[1])
+        })
+      ).then((areas) => {
         if (!isMounted) return
+
+        let all: TopCuisine[] = []
+
+        for (const area of areas) {
+          for (const cuisine of area) {
+            const existing = all.find((x) => x.country === cuisine.country)
+            if (existing) {
+              existing.top_restaurants = uniqBy(
+                sortBy(
+                  [...existing.top_restaurants, ...cuisine.top_restaurants],
+                  (x) => -x.rating
+                ),
+                (x) => x.id
+              ).slice(0, 5)
+            } else {
+              all.push(cuisine)
+            }
+          }
+        }
+
+        all = sortBy(all, (x) => -x.avg_rating)
         if (!isEqual(all, topDishes)) {
           updateHomeTagsCache(all)
           setTopDishes(all)

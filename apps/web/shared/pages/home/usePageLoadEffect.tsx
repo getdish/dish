@@ -5,7 +5,8 @@ import { useIsMountedRef } from './useIsMountedRef'
 
 export const usePageLoadEffect = (
   isReady: boolean,
-  cb: (opts: { isRefreshing: boolean }) => (() => any) | void
+  cb: (opts: { isRefreshing: boolean }) => (() => any) | void,
+  mountArgs: any[] = []
 ) => {
   const om = useOvermind()
 
@@ -26,5 +27,5 @@ export const usePageLoadEffect = (
         dispose2()
       }
     }
-  }, [isReady])
+  }, [isReady, ...mountArgs])
 }

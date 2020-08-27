@@ -45,10 +45,15 @@ export default function HomePageAbout({
           <Title size="xl">The best 🍜, definitively</Title>
 
           <VStack spacing="lg">
+            <Paragraph size="xxxl" lineHeight={36} fontWeight="300">
+              We were tired of having to hunt hundreds of comments of 3-star,
+              hole-in-the wall Vietnamese, Chinese, and Mexican restaurants to
+              find the gems.
+            </Paragraph>
+
             <Paragraph size="xxl" lineHeight={36} fontWeight="300">
-              We were tired of having to hunt hundreds of comments of underrated
-              Vietnamese, Chinese, and Mexican hole in the wall restaurants to
-              find gems. We realized - what you care about when ordering{' '}
+              We realized, the problem was bigger - what you care about when
+              ordering{' '}
               <LinkButton
                 backgroundColor={lightYellow}
                 {...inlineButton}
@@ -72,34 +77,34 @@ export default function HomePageAbout({
               </LinkButton>{' '}
               are... different,{' '}
               <TextStrong>
-                and a huge list of 3-4 star restaurants just isn't helpful
+                and huge lists of 3-4 star places wasn't helpful
               </TextStrong>
-              . Especially when ordering delivery, where you care about specific
-              dishes - or the speed - yet have multiple apps, each with sketchy,
-              rounded ratings.
+              . It's especially obvious when ordering delivery, where there are
+              many apps with inconsistent ratings, yet you only care about the
+              specific dish (or speed).
             </Paragraph>
 
             <Paragraph size="xl">
-              Dish crawls every rating source and turns comments and
-              star-ratings into{' '}
+              Dish solves these problems by crawling every rating source and
+              analyzing all the comments. It breaks down{' '}
               <TextStrong>
                 <Text borderBottomWidth={2} borderBottomColor="#eee">
-                  the factors each spot is good or bad at, split out
+                  the factors each spot is good or bad at
                 </Text>
               </TextStrong>
-              , with ratings down to the dish . It even searches all delivery
-              services at once, so you can just find what you crave.
+              , unlocking ratings down to the dish. It also searches every
+              delivery service, making it easy to find what you crave.
             </Paragraph>
 
             <Paragraph size="lg">
-              We look at{' '}
+              By looking at{' '}
               <TextStrong>
-                what people actually say, rather than just rate
+                what people actually say, rather than just rate, and looking at
+                dish-specific sentiment
               </TextStrong>
-              , to help you find food that matches your mood ✨. We want to
-              build a community that powers a fun Hitchhiker's Guide to
-              Gastronomy (or, a Pokédex for poke) with a goal of creating a
-              better pocket map of the world.
+              , we help you find food that matches your mood ✨. We're building
+              a community around a fun, Hitchhiker's Guide to Gastronomy (or, a
+              Pokédex for poke), to create a better pocket map of your world.
             </Paragraph>
 
             <Spacer />
