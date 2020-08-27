@@ -198,7 +198,6 @@ const SearchResultsContent = (props: Props) => {
   const [state, setState] = useState({
     chunk: 1,
     hasLoaded: 1,
-    scrollToEndOf: 1,
     scrollToTop: 0,
   })
   const scrollRef = useRef<ScrollView | null>(null)
@@ -211,13 +210,7 @@ const SearchResultsContent = (props: Props) => {
   )
 
   const handleScrollToBottom = useCallback(() => {
-    setState((x) => {
-      if (x.scrollToEndOf !== x.hasLoaded) {
-        console.warn('scroll to bottom, update state')
-        return { ...x, scrollToEndOf: x.hasLoaded }
-      }
-      return x
-    })
+    setState((x) => ({ ...x, chunk: x.chunk + 1 }))
   }, [])
 
   useEffect(() => {
@@ -309,70 +302,6 @@ const SearchResultsContent = (props: Props) => {
     (searchState.results.length === 0
       ? false
       : !isOnLastChunk || state.hasLoaded <= state.chunk)
-
-  // if (process.env.NODE_ENV === 'development') {
-  //   console.log(
-  //     'SearchResults',
-  //     JSON.stringify(
-  //       {
-  //         state,
-  //         currentlyShowing,
-  //         firstResult: JSON.stringify(allResults[0]),
-  //         allLen: allResults.length,
-  //         isOnLastChunk,
-  //         isLoading,
-  //       },
-  //       null,
-  //       2
-  //     )
-  //   )
-  // }
-
-  // in an effect so we can use series and get auto-cancel on unmount
-  useEffect(() => {
-    if (state.hasLoaded <= 1) {
-      return
-    }
-    if (isOnLastChunk) {
-      return
-    }
-    if (state.scrollToEndOf < state.hasLoaded) {
-      return
-    }
-
-    return series([
-      () => isReadyToLoadMore(),
-      () => idle(30),
-      () => {
-        setState((x) => ({ ...x, chunk: x.chunk + 1 }))
-      },
-    ])
-
-    function isReadyToLoad(s: OmState) {
-      console.log('s.home.isScrolling ', s.home.isScrolling)
-      return (
-        (s.home.currentStateType === 'search' ||
-          s.home.currentStateType === 'userSearch') &&
-        s.home.isScrolling === false
-      )
-    }
-
-    function isReadyToLoadMore() {
-      return createCancellablePromise((res, _, onCancel) => {
-        const reaction = omStatic['reaction']
-        const dispose = reaction(
-          (state) => isReadyToLoad(state),
-          (isReady) => {
-            if (!isReady) return
-            console.log('ready to load more')
-            dispose()
-            res()
-          }
-        )
-        onCancel(dispose)
-      })
-    }
-  }, [isOnLastChunk, state.hasLoaded, state.scrollToEndOf])
 
   if (!isLoading && !allResults.length) {
     return contentWrap(
