@@ -68,6 +68,7 @@ export const HomeScrollView = forwardRef(
             pointerEvents={scrollStore.isScrolling ? 'none' : 'auto'}
             maxWidth={isSmall ? '100%' : drawerWidthMax}
             alignSelf="flex-end"
+            alignItems="flex-start"
             width="100%"
           >
             {children}

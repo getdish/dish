@@ -132,7 +132,9 @@ const HomePageRestaurant = memo(
             <Spacer size="lg" />
 
             <VStack>
-              <SmallTitle>Stats</SmallTitle>
+              <SmallTitle fontWeight="800" divider="off">
+                Stats
+              </SmallTitle>
               <Spacer />
               <HStack
                 paddingHorizontal="5%"
@@ -154,7 +156,6 @@ const HomePageRestaurant = memo(
             <Spacer />
 
             <VStack width="100%">
-              <SmallTitle divider="off">Top dishes</SmallTitle>
               <Suspense fallback={null}>
                 <RestaurantDishPhotos
                   size={160}
@@ -164,10 +165,15 @@ const HomePageRestaurant = memo(
               </Suspense>
             </VStack>
 
-            <SmallTitle divider="off">Top tips</SmallTitle>
-            <HStack padding={20} maxWidth="100%" flexWrap="wrap">
-              <RestaurantOverview restaurantSlug={slug} />
-            </HStack>
+            <Spacer />
+
+            <VStack>
+              <SmallTitle divider="off">Top tips</SmallTitle>
+              <Spacer />
+              <HStack paddingHorizontal={20} maxWidth="100%" flexWrap="wrap">
+                <RestaurantOverview restaurantSlug={slug} />
+              </HStack>
+            </VStack>
 
             <Spacer size="xl" />
 

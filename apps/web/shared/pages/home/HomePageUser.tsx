@@ -7,31 +7,49 @@ import { HomeStateItemUser } from '../../state/home-types'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { Link } from '../../views/ui/Link'
 import { avatar } from './HomePageSearchResults'
+import { HomeScrollView } from './HomeScrollView'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { StackItemProps } from './HomeStackView'
 
-export default graphql(function HomePageUser({
-  item,
-}: StackItemProps<HomeStateItemUser>) {
-  const username = item?.username ?? ''
-  const [user] = query.user({
+const useUserQuery = (username: string) => {
+  return query.user({
     where: {
       username: {
         _eq: username,
       },
     },
-  })
+    limit: 1,
+  })[0]
+}
+
+export default function HomePageUserContainer(
+  props: StackItemProps<HomeStateItemUser>
+) {
+  return (
+    <HomeStackDrawer
+      closable
+      title={`${props.item.username} | Dish food reviews`}
+    >
+      <HomePageUser {...props} />
+    </HomeStackDrawer>
+  )
+}
+
+const HomePageUser = graphql(function HomePageUser({
+  item,
+}: StackItemProps<HomeStateItemUser>) {
+  const user = useUserQuery(item?.username ?? '')
   if (!user) {
     return <NotFoundPage />
   }
   const reviews =
     user.reviews({
-      limit: 100,
+      limit: 20,
     }) ?? []
 
   return (
-    <HomeStackDrawer closable title="Dish - User profile">
-      <VStack padding={18} paddingBottom={0} paddingRight={16}>
+    <HomeScrollView paddingTop={0}>
+      <VStack width="100%" padding={18} paddingRight={16}>
         <HStack position="relative">
           <Circle size={64}>
             <Image source={avatar} />
@@ -53,26 +71,24 @@ export default graphql(function HomePageUser({
         <Divider />
       </VStack>
 
-      <ScrollView style={{ padding: 18, paddingTop: 16, flex: 1 }}>
-        <VStack spacing="xl">
-          <VStack>
-            {!reviews.length && <Text>No reviews yet...</Text>}
-            {!!reviews.length &&
-              reviews.map((review) => (
-                <Text key={review.id}>
-                  <Link
-                    name="restaurant"
-                    params={{ slug: review.restaurant.slug }}
-                  >
-                    {review.restaurant.name}
-                  </Link>
-                  <Text>{review.rating}⭐</Text>
-                  <Text>{review.text}</Text>
-                </Text>
-              ))}
-          </VStack>
+      <VStack spacing="xl" paddingHorizontal="2.5%">
+        <VStack>
+          {!reviews.length && <Text>No reviews yet...</Text>}
+          {!!reviews.length &&
+            reviews.map((review) => (
+              <Text key={review.id}>
+                <Link
+                  name="restaurant"
+                  params={{ slug: review.restaurant.slug }}
+                >
+                  {review.restaurant.name}
+                </Link>
+                <Text>{review.rating}⭐</Text>
+                <Text>{review.text}</Text>
+              </Text>
+            ))}
         </VStack>
-      </ScrollView>
-    </HomeStackDrawer>
+      </VStack>
+    </HomeScrollView>
   )
 })
