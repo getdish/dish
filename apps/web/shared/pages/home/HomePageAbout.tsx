@@ -77,7 +77,7 @@ export default function HomePageAbout({
               </LinkButton>{' '}
               is... different,{' '}
               <TextStrong>
-                and huge lists of 3-4 star places isn't helpful
+                and huge lists of 3-4 star restaurants isn't helpful
               </TextStrong>
               . It's especially obvious when ordering delivery, where there are
               many apps with inconsistent ratings, yet you only care about the
