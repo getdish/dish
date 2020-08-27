@@ -46,9 +46,9 @@ export default function HomePageAbout({
 
           <VStack spacing="lg">
             <Paragraph size="xxl" lineHeight={36} fontWeight="300">
-              We were tired of having to hunt through underrated Vietnamese,
-              Chinese, and Mexican hole in the wall gems, when we realized -
-              what you care about when ordering{' '}
+              We were tired of having to hunt hundreds of comments of underrated
+              Vietnamese, Chinese, and Mexican hole in the wall restaurants to
+              find gems. We realized - what you care about when ordering{' '}
               <LinkButton
                 backgroundColor={lightYellow}
                 {...inlineButton}
@@ -74,9 +74,9 @@ export default function HomePageAbout({
               <TextStrong>
                 and a huge list of 3-4 star restaurants just isn't helpful
               </TextStrong>
-              . Especially when ordering delivery where you care about specific
-              dishes, or the speed, yet have to search multiple apps with
-              sketchy ratings.
+              . Especially when ordering delivery, where you care about specific
+              dishes - or the speed - yet have multiple apps, each with sketchy,
+              rounded ratings.
             </Paragraph>
 
             <Paragraph size="xl">
@@ -84,21 +84,22 @@ export default function HomePageAbout({
               star-ratings into{' '}
               <TextStrong>
                 <Text borderBottomWidth={2} borderBottomColor="#eee">
-                  the factors each spot is good or bad at
+                  the factors each spot is good or bad at, split out
                 </Text>
               </TextStrong>
               , with ratings down to the dish . It even searches all delivery
-              services at once. We look at{' '}
-              <TextStrong>
-                what people actually say, rather than just rate
-              </TextStrong>
-              , to help you find food that matches your mood ✨.
+              services at once, so you can just find what you crave.
             </Paragraph>
 
             <Paragraph size="lg">
-              We're building a community to power a Hitchhiker's Guide to
-              Gastronomy (or, a Pokédex for poke) with the goal to create a more
-              fun, collaborative, personal pocket map of the world.
+              We look at{' '}
+              <TextStrong>
+                what people actually say, rather than just rate
+              </TextStrong>
+              , to help you find food that matches your mood ✨. We want to
+              build a community that powers a fun Hitchhiker's Guide to
+              Gastronomy (or, a Pokédex for poke) with a goal of creating a
+              better pocket map of the world.
             </Paragraph>
 
             <Spacer />
