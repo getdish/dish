@@ -39,10 +39,13 @@ export class DB {
     } catch (e) {
       console.error('Errored query: ' + query)
       console.error(e.message)
+      if (query.includes('BEGIN;') || query.includes('TRANSACTION;')) {
+        await client.query('ROLLBACK')
+      }
+      await client.release()
       throw e
-    } finally {
-      client.release()
     }
+    await client.release()
     return result
   }
 }

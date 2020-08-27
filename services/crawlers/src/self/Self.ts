@@ -376,8 +376,13 @@ export class Self extends WorkerJob {
              ) t(id, f, t), f_opening_hours_hours(f, t) hours;
         END TRANSACTION;
       `
-    const result = await main_db.query(query)
-    return result[2].rowCount
+    let results: any[]
+    try {
+      results = await main_db.query(query)
+    } catch (e) {
+      throw new Error(e)
+    }
+    return results[2].rowCount
   }
 
   _toPostgresTime(day: string, time: string) {
