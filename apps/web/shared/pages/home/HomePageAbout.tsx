@@ -45,8 +45,10 @@ export default function HomePageAbout({
           <Title size="xl">The best 🍜, definitively</Title>
 
           <VStack spacing="lg">
-            <Paragraph size="xxl">
-              What you care about when ordering{' '}
+            <Paragraph size="xxl" lineHeight={36} fontWeight="300">
+              Tired of finding underrated Vietnamese, Chinese, and Mexican
+              places simply because they were holes in the wall, one day we
+              realized - what you care about when ordering{' '}
               <LinkButton
                 backgroundColor={lightYellow}
                 {...inlineButton}
@@ -55,7 +57,7 @@ export default function HomePageAbout({
                   { name: 'delivery', type: 'filter' },
                 ]}
               >
-                quick, delivery pho
+                delivery pho
               </LinkButton>{' '}
               vs when planning a{' '}
               <LinkButton
@@ -66,46 +68,37 @@ export default function HomePageAbout({
                 {...inlineButton}
                 backgroundColor={lightGreen}
               >
-                fancy date
+                date night
               </LinkButton>{' '}
-              is... different.{' '}
+              are... different,{' '}
               <TextStrong>
-                Seeing a huge list of ~4 star restaurants just isn't helpful
+                and a huge list of ~3-4 star restaurants just wasn't helpful
               </TextStrong>
-              . Finding what you crave when ordering delivery is uniquely
-              irksome - four apps, each with inconsistent ratings, and nowhere
-              to search them all.
+              . This is especially true when ordering delivery where you care
+              about specific dishes, or speed, and searching multiple apps is
+              irksome.
             </Paragraph>
 
             <Paragraph size="xl">
-              <TextStrong>Dish breaks ratings down to the dish</TextStrong> -
-              for every restaurant. It searches all delivery services at once,
-              and combines reviews from every top rating source. It's a smarter
-              food guide that{' '}
+              Dish crawls top rating sources and turns generic star-ratings into{' '}
               <TextStrong>
-                understands what people actually say about the factors that
-                matter
-              </TextStrong>{' '}
-              so it can clue you into what makes a place special ✨.
+                <Text borderBottomWidth={2} borderBottomColor="#eee">
+                  the factors each spot is good or bad at
+                </Text>
+                , with ratings down to the dish
+              </TextStrong>
+              . It even searches all delivery services at once. We look at{' '}
+              <TextStrong>
+                what people actually say, rather than just rate
+              </TextStrong>
+              , to help you find food that matches your mood ✨.
             </Paragraph>
 
             <Paragraph size="lg">
-              We're a community of food experts collaborating on a Hitchhiker's
-              Guide to Gastronomy (a poke Pokédex) to create a more fun,
-              personal pocket map to the world of food.
-            </Paragraph>
-
-            <Spacer />
-
-            <SmallTitle>How?</SmallTitle>
-
-            <Paragraph size="lg">
-              We take what people write, then extract sentiment towards dishes,
-              ambiance, service and more. Then, as our community votes and
-              comments, we summarize top reviews and tags into a smart, fun
-              summary. The result - instead of sifting through a ton of comments
-              to find &#8220;the one&#8221;, Dish describes facets you care
-              about, so you can spend less time hunting and more time enjoying.
+              We're building a community to help power it. We think of it as a
+              Hitchhiker's Guide to Gastronomy (or, a Pokédex for poke) with the
+              goal to create a more fun, collaborative, personal pocket map of
+              the world.
             </Paragraph>
 
             <Spacer />
@@ -114,23 +107,35 @@ export default function HomePageAbout({
 
             <Paragraph size="lg">
               <HStack marginVertical={4} alignItems="center">
-                <Text marginHorizontal={10} fontSize={32}>
+                <Text marginHorizontal={10} fontSize={26}>
                   🗺
                 </Text>{' '}
                 Find uniquely good food with ratings down to the dish
               </HStack>
               <HStack marginVertical={4} alignItems="center">
-                <Text marginHorizontal={10} fontSize={32}>
+                <Text marginHorizontal={10} fontSize={26}>
                   🚗
                 </Text>{' '}
                 Search across every delivery app at once
               </HStack>
               <HStack marginVertical={4} alignItems="center">
-                <Text marginHorizontal={10} fontSize={32}>
+                <Text marginHorizontal={10} fontSize={26}>
                   ✨
                 </Text>{' '}
                 Community curation of what makes each area & restaurant special
               </HStack>
+            </Paragraph>
+
+            <Spacer />
+
+            <SmallTitle>How?</SmallTitle>
+
+            <Paragraph size="lg">
+              We take what people write and extract sentiment towards dishes,
+              ambiance, service and more. Then, as our community votes,
+              comments, and tags, we summarize the data into a smart, fun
+              summary. We power sentiment and summary with modern machine
+              learning powered natural langauge technologies.
             </Paragraph>
 
             <Divider marginVertical={40} />
