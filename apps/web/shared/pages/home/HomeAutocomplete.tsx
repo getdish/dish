@@ -279,8 +279,8 @@ const AutocompleteResults = memo(() => {
             className="no-transition"
             {...linkProps}
             lineHeight={20}
-            paddingHorizontal={4}
-            paddingVertical={7}
+            paddingHorizontal={8}
+            paddingVertical={6}
             fontWeight="500"
             borderRadius={5}
             hoverStyle={{

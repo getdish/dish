@@ -5,18 +5,26 @@ import { useIsMountedRef } from './useIsMountedRef'
 
 export const usePageLoadEffect = (
   isReady: boolean,
-  cb: (isMounted: { current: boolean }) => void
+  cb: (opts: { isRefreshing: boolean }) => (() => any) | void
 ) => {
   const om = useOvermind()
-  const isMounted = useIsMountedRef()
 
   useEffect(() => {
-    let dispose = null
     if (isReady) {
-      dispose = cb(isMounted)
+      const dispose = cb({ isRefreshing: false })
+
+      const dispose2 = om.reaction(
+        () => om.state.home.refreshCurrentPage,
+        () => {
+          console.warn('refresh')
+          cb({ isRefreshing: true })
+        }
+      )
+
+      return () => {
+        if (dispose) dispose()
+        dispose2()
+      }
     }
-    return () => {
-      dispose?.()
-    }
-  }, [isReady, om.state.home.refreshCurrentPage])
+  }, [isReady])
 }

@@ -286,6 +286,12 @@ const runSearch: AsyncAction<{
   state = om.state.home.lastSearchState
   if (shouldCancel()) return
 
+  // overmind seems unhappy to just let us mutate
+  om.actions.home.updateHomeState({
+    ...state,
+    mapAt: null,
+  })
+
   const hasSearchBarTag = tags.some(isSearchBarTag)
   const searchArgs: RestaurantSearchArgs = {
     center: roundLngLat(state.mapAt?.center ?? state.center),
@@ -318,12 +324,6 @@ const runSearch: AsyncAction<{
   // console.log('search found restaurants', restaurants)
   state.status = 'complete'
   state.results = restaurants.filter(Boolean)
-
-  // overmind seems unhappy to just let us mutate
-  om.actions.home.updateHomeState({
-    ...state,
-    mapAt: null,
-  })
 }
 
 const deepAssign = (a: Object, b: Object) => {
@@ -614,28 +614,6 @@ const pushHomeState: AsyncAction<
     }
   }
 
-  // is going back
-  // we are going back to a prev state!
-  // hacky for now
-  // if (nextPushIsReallyAPop) {
-  //   console.log('nextPushIsReallyAPop', nextPushIsReallyAPop, item)
-  //   nextPushIsReallyAPop = false
-  //   const prev = _.findLast(om.state.home.states, (x) => x.type === item.name)
-  //   if (prev) {
-  //     om.actions.home.updateHomeState(prev)
-  //     om.actions.home.setIsLoading(false)
-  //     currentAction = runFetchData
-  //     return { fetchDataPromise: Promise.resolve(null) }
-  //   }
-  // }
-
-  // if (true) {
-  //   console.log(
-  //     'pushHomeState',
-  //     JSON.stringify({ shouldReplace, item, finalState, id }, null, 2)
-  //   )
-  // }
-
   console.log('pushState finalState', finalState)
   om.actions.home.updateHomeState(finalState)
 
@@ -655,9 +633,12 @@ const pushHomeState: AsyncAction<
       res = res2
       rej = rej2
     })
-    runFetchData().finally(() => {
-      om.actions.home.setIsLoading(false)
-    })
+    runFetchData()
+      .finally(() => {
+        om.actions.home.setIsLoading(false)
+        res()
+      })
+      .catch(rej)
   }
 
   if (fetchDataPromise) {
@@ -884,10 +865,10 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
       type,
       searchQuery: nextState.searchQuery,
       activeTagIds: nextState.activeTagIds,
-      ...(type === 'search' && {
-        status: 'loading',
-        results: [],
-      }),
+      // ...(type === 'search' && {
+      //   status: 'loading',
+      //   results: [],
+      // }),
     })
   }
 

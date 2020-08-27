@@ -4,7 +4,6 @@ import React, { forwardRef, useMemo, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants'
-import { useOvermind } from '../../state/om'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 class ScrollStore extends Store {

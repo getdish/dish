@@ -162,7 +162,7 @@ export const HomeSearchBarFloating = () => {
                 borderTopColor="rgba(255,255,255,0.2)"
                 borderTopWidth={1}
                 borderBottomColor="rgba(0,0,0,0.1)"
-                borderBottomWidth={1}
+                borderBottomWidth={2}
               />
             </VStack>
           </VStack>

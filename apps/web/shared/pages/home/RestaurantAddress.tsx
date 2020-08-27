@@ -10,7 +10,7 @@ import { GeocodePlace } from '../../../shared/state/home-types'
 import { Link } from '../../../shared/views/ui/Link'
 
 export const RestaurantAddress = ({
-  color = 'rgba(150,150,150,0.75)',
+  color = 'rgba(125,125,125,0.8)',
   address,
   currentLocationInfo,
   size = 'xs',
@@ -42,7 +42,7 @@ export const RestaurantAddress = ({
         ellipse
         lineHeight={16}
         fontSize={14}
-        fontWeight="300"
+        fontWeight="400"
         selectable
       >
         {getAddressText(currentLocationInfo, address, size)}

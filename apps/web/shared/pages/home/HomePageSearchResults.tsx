@@ -82,7 +82,7 @@ export default memo(function HomePageSearchResults(props: Props) {
   const shouldAvoidContentUpdates =
     isOptimisticUpdating || !props.isActive || changingFilters
 
-  usePageLoadEffect(props.isActive, (isMounted) => {
+  usePageLoadEffect(props.isActive, ({ isRefreshing }) => {
     // if initial load on a search page, process url => state
     const fakeTags = getTagsFromRoute(router.curPage)
     const location = getLocationFromRoute()
@@ -91,8 +91,9 @@ export default memo(function HomePageSearchResults(props: Props) {
       ...state,
       ...location,
     })
+    let isCancelled = false
     getFullTags(fakeTags).then((tags) => {
-      if (!isMounted.current) return
+      if (isCancelled) return
       om.actions.home.addTagsToCache(tags)
       const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>(
         (acc, tag) => {
@@ -106,8 +107,11 @@ export default memo(function HomePageSearchResults(props: Props) {
         searchQuery: router.curPage.params.search,
         activeTagIds,
       })
-      om.actions.home.runSearch({ force: true })
+      om.actions.home.runSearch({ force: isRefreshing })
     })
+    return () => {
+      isCancelled = true
+    }
   })
 
   const key = useLastValueWhen(
@@ -245,7 +249,12 @@ const SearchResultsContent = (props: Props) => {
       <HomeScrollView ref={scrollRef} onScrollNearBottom={handleScrollToBottom}>
         <VStack height={paddingTop} />
         <PageTitleTag>{title}</PageTitleTag>
-        <HStack padding={20} paddingBottom={0} overflow="hidden">
+        <HStack
+          justifyContent="center"
+          padding={20}
+          paddingBottom={0}
+          overflow="hidden"
+        >
           <Text ellipse fontSize={26} fontWeight="700">
             {pageTitleElements}{' '}
             <Text fontWeight="300" opacity={0.5} letterSpacing={-0.5}>
