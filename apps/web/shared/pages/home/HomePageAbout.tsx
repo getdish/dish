@@ -46,9 +46,9 @@ export default function HomePageAbout({
 
           <VStack spacing="lg">
             <Paragraph size="xxl" lineHeight={36} fontWeight="300">
-              Tired of finding underrated Vietnamese, Chinese, and Mexican
-              places simply because they were holes in the wall, one day we
-              realized - what you care about when ordering{' '}
+              We were tired of having to hunt through underrated Vietnamese,
+              Chinese, and Mexican hole in the wall gems, when we realized -
+              what you care about when ordering{' '}
               <LinkButton
                 backgroundColor={lightYellow}
                 {...inlineButton}
@@ -72,22 +72,23 @@ export default function HomePageAbout({
               </LinkButton>{' '}
               are... different,{' '}
               <TextStrong>
-                and a huge list of ~3-4 star restaurants just wasn't helpful
+                and a huge list of 3-4 star restaurants just isn't helpful
               </TextStrong>
-              . This is especially true when ordering delivery where you care
-              about specific dishes, or speed, and searching multiple apps is
-              irksome.
+              . Especially when ordering delivery where you care about specific
+              dishes, or the speed, yet have to search multiple apps with
+              sketchy ratings.
             </Paragraph>
 
             <Paragraph size="xl">
-              Dish crawls top rating sources and turns generic star-ratings into{' '}
+              Dish crawls every rating source and turns comments and
+              star-ratings into{' '}
               <TextStrong>
                 <Text borderBottomWidth={2} borderBottomColor="#eee">
                   the factors each spot is good or bad at
                 </Text>
-                , with ratings down to the dish
               </TextStrong>
-              . It even searches all delivery services at once. We look at{' '}
+              , with ratings down to the dish . It even searches all delivery
+              services at once. We look at{' '}
               <TextStrong>
                 what people actually say, rather than just rate
               </TextStrong>
@@ -95,10 +96,9 @@ export default function HomePageAbout({
             </Paragraph>
 
             <Paragraph size="lg">
-              We're building a community to help power it. We think of it as a
-              Hitchhiker's Guide to Gastronomy (or, a Pokédex for poke) with the
-              goal to create a more fun, collaborative, personal pocket map of
-              the world.
+              We're building a community to power a Hitchhiker's Guide to
+              Gastronomy (or, a Pokédex for poke) with the goal to create a more
+              fun, collaborative, personal pocket map of the world.
             </Paragraph>
 
             <Spacer />
