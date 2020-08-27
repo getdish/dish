@@ -23,25 +23,30 @@ export async function searchLocations(
     console.warn('nothing', query, res)
     return []
   }
-  return res.features.map((feat) => {
-    const [minLng, minLat, maxLng, maxLat] = feat.bbox
-    return {
-      name: feat.text,
-      fullName: feat.place_name,
-      type: feat.place_type[0],
-      bbox: feat.bbox,
-      center: {
-        lng: feat.center[0],
-        lat: feat.center[1],
-      },
-      span: {
-        lng: maxLng - minLng,
-        lat: maxLat - minLat,
-      },
-      state: feat.context?.find((x) => x.wikidata === 'Q99'),
-      country: feat.context?.find((x) => x.wikidata === 'Q30'),
-    }
-  })
+  console.log('res', res)
+  return res.features
+    .map((feat) => {
+      if (feat.bbox) {
+        const [minLng, minLat, maxLng, maxLat] = feat.bbox
+        return {
+          name: feat.text,
+          fullName: feat.place_name,
+          type: feat.place_type[0],
+          bbox: feat.bbox,
+          center: {
+            lng: feat.center[0],
+            lat: feat.center[1],
+          },
+          span: {
+            lng: feat.center[0] - (maxLng - minLng) / 2,
+            lat: feat.center[1] - (maxLat - minLat) / 2,
+          },
+          state: feat.context?.find((x) => x.wikidata === 'Q99'),
+          country: feat.context?.find((x) => x.wikidata === 'Q30'),
+        }
+      }
+    })
+    .filter(Boolean)
 }
 
 export const locationToAutocomplete = (
