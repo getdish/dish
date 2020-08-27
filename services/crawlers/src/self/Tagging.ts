@@ -104,12 +104,20 @@ export class Tagging {
   }
 
   async updateTagRankings() {
+    const all_tags = this.crawler.restaurant.tags || []
     await Promise.all(
-      (this.crawler.restaurant.tags || []).map(async (i) => {
-        this.restaurant_tags.push({
-          tag_id: i.tag.id,
-          rank: await this.getRankForTag(i.tag),
-        })
+      all_tags.map(async (i) => {
+        if (!i.tag.name) return
+        const rank = await this.getRankForTag(i.tag)
+        const existing = this.restaurant_tags.find((j) => j.tag_id == i.tag_id)
+        if (existing) {
+          existing.rank = rank
+        } else {
+          this.restaurant_tags.push({
+            tag_id: i.tag.id,
+            rank,
+          })
+        }
       })
     )
   }
@@ -117,8 +125,8 @@ export class Tagging {
   async getRankForTag(tag: Tag) {
     const RADIUS = 0.1
     const tag_name = tagSlug(tag)
-    const result = await main_db.query(
-      `SELECT rank FROM (
+    const query = `
+      SELECT rank FROM (
         SELECT id, DENSE_RANK() OVER(ORDER BY rating DESC NULLS LAST) AS rank
         FROM restaurant WHERE
           ST_DWithin(location, location, ${RADIUS})
@@ -126,8 +134,9 @@ export class Tagging {
           tag_names @> '"${tag_name}"'
       ) league
       WHERE id = '${this.crawler.restaurant.id}'`
-    )
-    return parseInt(result.rows[0].rank)
+    const result = await main_db.query(query)
+    const rank = parseInt(result.rows[0].rank)
+    return rank
   }
 
   async scanCorpus() {

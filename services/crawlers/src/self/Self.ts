@@ -142,11 +142,11 @@ export class Self extends WorkerJob {
     this.resetTimer()
     await this.persist()
     this.tagging.deDepulicateTags()
+    await this.tagging.updateTagRankings()
     await restaurantUpsertManyTags(
       this.restaurant,
       this.tagging.restaurant_tags
     )
-    await this.tagging.updateTagRankings()
     if (this.menu_items.length != 0) {
       await menuItemsUpsertMerge(this.menu_items)
     }

@@ -9,6 +9,7 @@ import {
   restaurantUpsertOrphanTags,
   reviewFindAllForRestaurant,
   tagInsert,
+  tagUpsert,
 } from '@dish/graph'
 import { restaurantFindOne } from '@dish/graph/src'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
@@ -285,12 +286,12 @@ test('Merging', async (t) => {
   if (!updated) return
   t.is(updated.name, 'Test Name Yelp')
   t.is(updated.address, '123 Street, Big City')
-  t.is(updated.tags.length, 3)
+  t.is(updated.tags.length, 4)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Mexican'), true)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Pizza'), true)
   t.is(updated.photos?.[0], 'https://i.imgur.com/N6YtgRI.jpeg')
   t.is(updated.photos?.[1], 'https://i.imgur.com/92a8cNI.jpg')
-  t.is(updated.rating, 3.2800000000000002)
+  t.is(updated.rating, 4.1)
   t.deepEqual(updated.rating_factors as any, {
     food: 5,
     service: 4.5,
@@ -628,7 +629,7 @@ test('Identifying country tags', async (t) => {
   })
   t.assert(updated, 'not found')
   if (!updated) return
-  t.is(updated.tags.length, 3)
+  t.is(updated.tags.length, 4)
   const tag1 =
     updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
   const tag2 =
