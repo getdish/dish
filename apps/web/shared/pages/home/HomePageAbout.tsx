@@ -46,7 +46,7 @@ export default function HomePageAbout({
 
           <VStack spacing="lg">
             <Paragraph size="xxxl" lineHeight={36} fontWeight="300">
-              We were tired of having to hunt hundreds of comments of 3-star,
+              We were tired of having to read tons of comments on 3-star,
               hole-in-the wall Vietnamese, Chinese, and Mexican restaurants to
               find the gems.
             </Paragraph>
