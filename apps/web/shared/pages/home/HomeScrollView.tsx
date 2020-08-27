@@ -46,8 +46,9 @@ export const HomeScrollView = forwardRef(
         scrollStore.setIsScrolling(false)
       }, 200)
     }
+
     return (
-      <VStack className="scroll-bounce" flex={1}>
+      <VStack className="scroll-bounce" flex={1} overflow="hidden">
         <ScrollView
           ref={ref as any}
           onScroll={setIsScrolling}
@@ -86,7 +87,11 @@ export const HomeScrollViewHorizontal = ({
   const childrenElements = useMemo(() => children, [children])
   return (
     // needs both pointer events to prevent/enable scroll on safari
-    <VStack pointerEvents={isScrolling ? 'none' : 'auto'}>
+    <VStack
+      pointerEvents={isScrolling ? 'none' : 'auto'}
+      overflow="hidden"
+      width="100%"
+    >
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
