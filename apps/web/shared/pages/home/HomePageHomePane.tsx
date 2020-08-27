@@ -218,7 +218,7 @@ const HomeIntroLetter = memo(() => {
   }
 
   return (
-    <VStack marginTop={30} alignItems="center" justifyContent="center">
+    <VStack marginBottom={20} alignItems="center" justifyContent="center">
       <Box
         maxWidth={440}
         width="95%"

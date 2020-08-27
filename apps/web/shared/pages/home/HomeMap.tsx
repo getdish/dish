@@ -257,16 +257,17 @@ const HomeMapContent = memo(function HomeMap({
     : 0
   const padding = isSmall
     ? {
-        left: 0,
-        top: 0,
-        bottom: getWindowHeight() - getWindowHeight() * snapPoints[snapPoint],
-        right: 0,
+        left: 10,
+        top: 10,
+        bottom:
+          getWindowHeight() - getWindowHeight() * snapPoints[snapPoint] + 10,
+        right: 10,
       }
     : {
-        left: paddingLeft,
-        top: searchBarHeight + 15 + 15,
-        bottom: 0,
-        right: drawerWidth > 600 ? 6 : 0,
+        left: paddingLeft + 10,
+        top: searchBarHeight + 20,
+        bottom: 10,
+        right: 10,
       }
 
   // console.log('HomeMap', {

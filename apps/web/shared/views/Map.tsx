@@ -205,7 +205,11 @@ export const Map = (props: MapProps) => {
                 750,
                 40,
               ],
-              'circle-color': rgbString(tagLenses[0].rgb.map((x) => x + 45)),
+              'circle-color': [
+                'get',
+                'color',
+                // rgbString(tagLenses[0].rgb.map((x) => x + 45)),
+              ],
               // [
               //   'match',
               //   ['get', 'ethnicity'],
@@ -381,11 +385,9 @@ export const Map = (props: MapProps) => {
             if (isEqual(lastLoc, next)) {
               return
             }
-            console.log('DIFF', JSON.stringify({ lastLoc, next }, null, 2))
+            console.log('DIFF', JSON.stringify(next, null, 2))
             lastLoc = next
-            if (window['allowmove']) {
-              props.onMoveEnd?.(next)
-            }
+            props.onMoveEnd?.(next)
           }, 150)
 
           map.on('moveend', handleMoveEnd)
@@ -504,26 +506,66 @@ export const Map = (props: MapProps) => {
       center.lng + span.lng,
       center.lat + span.lat,
     ]
-    if (hasMovedAtLeast(map, next, 0.001)) {
+
+    // show center/sw/ne points on map for debugging
+    if (window['debug']) {
+      const source = map.getSource(SOURCE_ID)
+      if (source?.type === 'geojson') {
+        source.setData({
+          type: 'FeatureCollection',
+          features: [
+            ...features,
+            // debug: add the sw, ne points
+            {
+              type: 'Feature',
+              id: Math.random(),
+              geometry: {
+                type: 'Point',
+                coordinates: [center.lng, center.lat],
+              },
+              properties: {
+                color: 'orange',
+              },
+            },
+            {
+              type: 'Feature',
+              id: Math.random(),
+              geometry: {
+                type: 'Point',
+                coordinates: [next[0], next[1]],
+              },
+              properties: {
+                color: 'blue',
+              },
+            },
+            {
+              type: 'Feature',
+              id: Math.random(),
+              geometry: {
+                type: 'Point',
+                coordinates: [next[2], next[3]],
+              },
+              properties: {
+                color: 'blue',
+              },
+            },
+          ],
+        })
+      }
+    }
+
+    if (hasMovedAtLeast(map, next, 0.9)) {
       return series([
         () => fullyIdle({ min: 30, max: 300 }),
         () => {
-          // const propPadding = getProps().padding
-          // const hPad = (propPadding.left + propPadding.right) / 2
-          // const vPad = (propPadding.top + propPadding.bottom) / 2
-          // const padding = {
-          //   top: -vPad,
-          //   left: -hPad,
-          //   right: -hPad,
-          //   bottom: -vPad,
-          // }
-          // console.warn(
-          //   'FITBOUNDS',
-          //   JSON.stringify({ center, span, next, padding }, null, 2)
-          // )
-          map.fitBounds(next, {
-            // padding,
-          })
+          console.warn(
+            'FITBOUNDS\n',
+            `map.fitBounds([${next}], { padding: { top: -10, left: -10, right: -10, bottom: -10 } })`,
+            '\n',
+            `map.fitBounds([${next}], { padding: { top: -10, left: -10, right: -10, bottom: -10 } })`
+            // JSON.stringify({ center, span }, null, 2)
+          )
+          map.fitBounds(next)
         },
       ])
     }
@@ -550,22 +592,22 @@ export const Map = (props: MapProps) => {
   }, [features, map])
 
   // centerToResults
-  const lastCenter = useRef(0)
-  useEffect(() => {
-    if (!map) return
-    if (!features.length) return
-    if (props.centerToResults <= 0) return
-    if (props.centerToResults === lastCenter.current) return
-    lastCenter.current = props.centerToResults
-    const bounds = new mapboxgl.LngLatBounds()
-    for (const feature of features) {
-      const geo = feature.geometry
-      if (geo.type === 'Point') {
-        bounds.extend(geo.coordinates as any)
-      }
-    }
-    map.fitBounds(bounds)
-  }, [map, features, props.centerToResults])
+  // const lastCenter = useRef(0)
+  // useEffect(() => {
+  //   if (!map) return
+  //   if (!features.length) return
+  //   if (props.centerToResults <= 0) return
+  //   if (props.centerToResults === lastCenter.current) return
+  //   lastCenter.current = props.centerToResults
+  //   const bounds = new mapboxgl.LngLatBounds()
+  //   for (const feature of features) {
+  //     const geo = feature.geometry
+  //     if (geo.type === 'Point') {
+  //       bounds.extend(geo.coordinates as any)
+  //     }
+  //   }
+  //   map.fitBounds(bounds)
+  // }, [map, features, props.centerToResults])
 
   return (
     <div
@@ -585,32 +627,52 @@ export const Map = (props: MapProps) => {
 const getCurrentLocation = (map: mapboxgl.Map) => {
   const mapCenter = map.getCenter()
   const bounds = map.getBounds()
-  const padding = map.getPadding()
-  const size = {
-    width: map.getContainer().clientWidth,
-    height: map.getContainer().clientHeight,
-  }
-  const lngSpan = bounds.getEast() - bounds.getWest()
-  const latSpan = bounds.getNorth() - bounds.getSouth()
-  const shiftCenterLng = ((padding.left + padding.right) / size.width) * lngSpan
-  const shiftCenterLat =
-    ((padding.top + padding.bottom) / size.height) * latSpan
   const center = {
-    lng: round(mapCenter.lng) - shiftCenterLng,
-    lat: round(mapCenter.lat) - shiftCenterLat,
+    lng: mapCenter.lng,
+    lat: mapCenter.lat,
   }
-  // console.log({
-  //   size,
-  //   shiftCenterLat,
-  //   shiftCenterLng,
-  //   lngSpan,
-  //   latSpan,
-  //   center,
-  // })
   const span = {
-    lng: round(dist(mapCenter.lng, bounds.getWest())),
-    lat: round(dist(mapCenter.lat, bounds.getNorth())),
+    lng: mapCenter.lng - bounds.getWest(),
+    lat: bounds.getNorth() - mapCenter.lat,
   }
+
+  const padding = map.getPadding()
+  // super hacky, because they behave differently we are handling logic differently
+  if (padding.left > padding.bottom) {
+    const size = {
+      width: map.getContainer().clientWidth,
+      height: map.getContainer().clientHeight,
+    }
+    const lngSpan = bounds.getEast() - bounds.getWest()
+    const latSpan = bounds.getNorth() - bounds.getSouth()
+    const latExtra = ((padding.top - padding.bottom) / size.height) * latSpan
+    const lngExtra = ((padding.left + padding.right) / size.width) * lngSpan
+    span.lng -= lngExtra
+    span.lat -= latExtra
+    center.lng += (padding.right / 2 / size.height) * lngSpan
+  } else {
+    const size = {
+      width: map.getContainer().clientWidth,
+      height: map.getContainer().clientHeight,
+    }
+    const lngSpan = bounds.getEast() - bounds.getWest()
+    const latSpan = bounds.getNorth() - bounds.getSouth()
+    const latExtra = (padding.top / size.height) * latSpan
+    const lngExtra = ((padding.left + padding.right) / 2 / size.width) * lngSpan
+    span.lng -= lngExtra
+    span.lat -= latExtra
+    // center.lng += (padding.right / 2 / size.height) * lngSpan
+  }
+
+  // const shiftCenterLat =
+  //   ((padding.top + padding.bottom) / size.height) * latSpan
+
+  console.log(
+    'now span is',
+    map.getBounds().toArray(),
+    JSON.stringify(span, null, 2)
+  )
+
   return {
     center,
     span,
@@ -620,29 +682,22 @@ window['mapboxgl'] = mapboxgl
 window['getCurrentLocation'] = getCurrentLocation
 
 const abs = (x: number) => Math.abs(x)
-// TODO this is wrong redo using dist()
-const totalDistance = (a: LngLat, b: LngLat) =>
-  abs(a.lng) - abs(b.lng) + abs(a.lat) - abs(b.lat)
 
 const hasMovedAtLeast = (
   map: mapboxgl.Map,
-  [west, south, east, north]: number[],
+  bounds: number[],
   distance: number
 ) => {
-  const bounds = map.getBounds()
-  const cur = {
-    ne: bounds.getNorthEast(),
-    sw: bounds.getSouthWest(),
-  }
-  // only change them if they change more than a little bit
-  const ne = { lng: east, lat: north }
-  // const sw = { lng: west, lat: south }
-  const neDist = abs(totalDistance(cur.ne, ne))
-  const swLngDist = abs(cur.sw.lng - west)
-  // for some reason lat is off
-  // const swDist = abs(totalDistance(cur.sw, next.sw))
-  const finalDist = neDist + swLngDist
-  return finalDist > distance
+  const [[s, w], [n, e]] = map.getBounds().toArray()
+  const [s2, w2, n2, e2] = bounds
+  const diff = abs(s - s2 + w - w2) + abs(n - n2 + e - e2)
+  console.log(
+    'diff',
+    round(diff),
+    [s, w, n, e].map((x) => round(x)),
+    bounds.map((x) => round(x))
+  )
+  return diff > distance
 }
 
 ///
