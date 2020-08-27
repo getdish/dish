@@ -75,9 +75,9 @@ export default function HomePageAbout({
               >
                 date night
               </LinkButton>{' '}
-              are... different,{' '}
+              is... different,{' '}
               <TextStrong>
-                and huge lists of 3-4 star places wasn't helpful
+                and huge lists of 3-4 star places isn't helpful
               </TextStrong>
               . It's especially obvious when ordering delivery, where there are
               many apps with inconsistent ratings, yet you only care about the

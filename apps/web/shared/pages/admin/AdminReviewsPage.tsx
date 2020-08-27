@@ -3,6 +3,7 @@ import {
   Divider,
   HStack,
   SmallTitle,
+  Spacer,
   Text,
   VStack,
   useDebounceValue,
@@ -88,19 +89,39 @@ const ReviewDisplay = graphql(() => {
     <>
       {!review && <Text>No Review Selected</Text>}
       {!!review && (
-        <VStack spacing={10}>
-          <Text>rating: {review.rating}</Text>
-          <Text>username: {review.username}</Text>
-          <Text>text: {review.text}</Text>
+        <ScrollView>
+          <VStack spacing={10}>
+            <Text>rating: {review.rating}</Text>
+            <Text>username: {review.username}</Text>
+            <Text>text: {review.text}</Text>
 
-          <Divider />
+            <Divider />
 
-          <ReviewSentiment text={review.text ?? ''} />
-        </VStack>
+            <ReviewSentiment key={review.text} text={review.text ?? ''} />
+          </VStack>
+        </ScrollView>
       )}
     </>
   )
 })
+
+const getSentiment = (sentence: string, aspect: string) => {
+  return fetch(
+    `https://absa.k8s.dishapp.com/?text="${encodeURIComponent(
+      sentence
+    )}"&aspect="${encodeURIComponent(aspect)}"`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+    .then((res) => res.json())
+    .then((x) => ({
+      sentence,
+      sentiment: x.results[0],
+    }))
+}
 
 const ReviewSentiment = (props: { text: string }) => {
   const [aspect, setAspect] = useState('')
@@ -108,30 +129,27 @@ const ReviewSentiment = (props: { text: string }) => {
   const [sentiments, setSentiments] = useState([])
 
   useEffect(() => {
+    if (!aspectSlow) return
     const sentences = props.text.split('. ')
     if (sentences.length) {
-      Promise.all(
-        sentences.map((sentence) => {
-          fetch(
-            `https://absa.k8s.dishapp.com/?text="${encodeURIComponent(
-              sentence
-            )}"&aspect="${encodeURIComponent(aspect)}"`,
-            {
-              mode: 'no-cors',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            }
-          ).then((res) => res.json())
-        })
-      ).then((sentiments) => {
-        console.log('got sentiments', sentiments)
+      Promise.all([
+        getSentiment(props.text, aspect).then(({ sentiment }) => ({
+          sentiment,
+          sentence: `(Entire Text - ${aspect})`,
+        })),
+        ...sentences
+          .filter((x) => x.toLowerCase().includes(aspect))
+          .map((sentence) => {
+            return getSentiment(sentence, aspect)
+          }),
+      ]).then((sentiments) => {
+        setSentiments(sentiments)
       })
     }
   }, [aspectSlow])
 
   return (
-    <VStack>
+    <VStack spacing="lg">
       <SmallTitle>Sentiment</SmallTitle>
 
       <TextInput
@@ -141,13 +159,13 @@ const ReviewSentiment = (props: { text: string }) => {
 
       <Divider />
 
-      {sentiments.map(({ sentiment, text }) => {
+      {sentiments.map(({ sentiment, sentence }) => {
         return (
           <Text
             backgroundColor={sentiment === 'negative' ? lightRed : lightGreen}
-            key={text}
+            key={sentence}
           >
-            {text} <strong>({sentiment})</strong>.
+            {sentence} <strong>({sentiment})</strong>.
           </Text>
         )
       })}
