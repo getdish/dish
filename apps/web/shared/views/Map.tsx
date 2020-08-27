@@ -205,11 +205,12 @@ export const Map = (props: MapProps) => {
                 750,
                 40,
               ],
-              'circle-color': [
-                'get',
-                'color',
-                // rgbString(tagLenses[0].rgb.map((x) => x + 45)),
-              ],
+              'circle-color':  rgbString(tagLenses[0].rgb.map((x) => x + 45)),
+              // [
+              //   'get',
+              //   'color',
+              //   // rgbString(tagLenses[0].rgb.map((x) => x + 45)),
+              // ],
               // [
               //   'match',
               //   ['get', 'ethnicity'],
