@@ -4,6 +4,7 @@ ENV FLASK_APP=server.py
 
 RUN pip install \
       flask \
+      flask_cors \
       aspect-based-sentiment-analysis
 
 COPY services/absa/setup.py /app
