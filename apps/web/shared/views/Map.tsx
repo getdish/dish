@@ -204,7 +204,9 @@ export const Map = (props: MapProps) => {
                 750,
                 40,
               ],
-              'circle-color': rgbString(tagLenses[0].rgb.map((x) => x + 45)),
+              'circle-color': rgbString(tagLenses[0].rgb.map((x) => x + 25)),
+              //['get', 'color'],
+              // rgbString(tagLenses[0].rgb.map((x) => x + 45)),
               // [
               //   'get',
               //   'color',
@@ -385,7 +387,10 @@ export const Map = (props: MapProps) => {
             if (isEqual(lastLoc, next)) {
               return
             }
-            console.log('DIFF', JSON.stringify(next, null, 2))
+            // console.log(
+            //   'handleMoveEnd, currentLocation',
+            //   JSON.stringify(next, null, 2)
+            // )
             lastLoc = next
             props.onMoveEnd?.(next)
           }, 150)
@@ -554,17 +559,17 @@ export const Map = (props: MapProps) => {
       }
     }
 
-    if (hasMovedAtLeast(map, next, 0.9)) {
+    // console.warn(
+    //   'NOW\n',
+    //   JSON.stringify({ center, span }, null, 2),
+    //   '\n',
+    //   `map.fitBounds([${next}])`
+    // )
+
+    if (hasMovedAtLeast(map, { center, span }, 0.01)) {
       return series([
         () => fullyIdle({ min: 30, max: 300 }),
         () => {
-          console.warn(
-            'FITBOUNDS\n',
-            `map.fitBounds([${next}], { padding: { top: -10, left: -10, right: -10, bottom: -10 } })`,
-            '\n',
-            `map.fitBounds([${next}], { padding: { top: -10, left: -10, right: -10, bottom: -10 } })`
-            // JSON.stringify({ center, span }, null, 2)
-          )
           map.fitBounds(next)
         },
       ])
@@ -664,18 +669,15 @@ const getCurrentLocation = (map: mapboxgl.Map) => {
     // center.lng += (padding.right / 2 / size.height) * lngSpan
   }
 
-  // const shiftCenterLat =
-  //   ((padding.top + padding.bottom) / size.height) * latSpan
-
-  console.log(
-    'now span is',
-    map.getBounds().toArray(),
-    JSON.stringify(span, null, 2)
-  )
+  // console.log(
+  //   'now span is',
+  //   map.getBounds().toArray(),
+  //   JSON.stringify(span, null, 2)
+  // )
 
   return {
-    center,
-    span,
+    center: { lng: round(center.lng), lat: round(center.lat) },
+    span: { lng: round(span.lng), lat: round(span.lat) },
   }
 }
 window['mapboxgl'] = mapboxgl
@@ -685,18 +687,15 @@ const abs = (x: number) => Math.abs(x)
 
 const hasMovedAtLeast = (
   map: mapboxgl.Map,
-  bounds: number[],
+  next: { center: LngLat; span: LngLat },
   distance: number
 ) => {
-  const [[s, w], [n, e]] = map.getBounds().toArray()
-  const [s2, w2, n2, e2] = bounds
-  const diff = abs(s - s2 + w - w2) + abs(n - n2 + e - e2)
-  console.log(
-    'diff',
-    round(diff),
-    [s, w, n, e].map((x) => round(x)),
-    bounds.map((x) => round(x))
-  )
+  const current = getCurrentLocation(map)
+  const d1 = abs(next.center.lng - current.center.lng)
+  const d2 = abs(next.center.lat - current.center.lat)
+  const d3 = abs(next.span.lat - current.span.lat)
+  const d4 = abs(next.span.lng - current.span.lng)
+  const diff = d1 + d2 + d3 + d4
   return diff > distance
 }
 

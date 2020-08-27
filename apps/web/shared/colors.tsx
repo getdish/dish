@@ -18,3 +18,7 @@ export const brandColorLighter = `#8376ceee`
 
 export const lightYellow = '#FCF3CF'
 export const lightGreen = '#D4EFDF'
+export const lightRed = '#F6DDCC'
+export const lightBlue = '#D4E6F1'
+export const lightPurple = '#F5EEF8'
+export const lightOrange = '#FADBD8'

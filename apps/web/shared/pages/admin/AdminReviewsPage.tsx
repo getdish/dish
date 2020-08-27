@@ -1,9 +1,18 @@
 import { graphql, order_by, query } from '@dish/graph'
-import { HStack, Text, VStack, useDebounceValue } from '@dish/ui'
+import {
+  Divider,
+  HStack,
+  SmallTitle,
+  Text,
+  VStack,
+  useDebounceValue,
+} from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { useEffect, useState } from 'react'
-import { ScrollView } from 'react-native'
+import { Divide } from 'react-feather'
+import { ScrollView, TextInput } from 'react-native'
 
+import { lightGreen, lightRed } from '../../colors'
 import { defaultLocationAutocompleteResults } from '../../state/defaultLocationAutocompleteResults'
 import { AutocompleteItem } from '../../state/home-types'
 import {
@@ -65,7 +74,6 @@ export default graphql(() => {
 
 const ReviewDisplay = graphql(() => {
   const adminStore = useStore(AdminReviewsStore)
-  console.log('adminStore.selectedReviewId', adminStore.selectedReviewId)
   const [review] = adminStore.selectedReviewId
     ? query.review({
         where: {
@@ -80,17 +88,72 @@ const ReviewDisplay = graphql(() => {
     <>
       {!review && <Text>No Review Selected</Text>}
       {!!review && (
-        <VStack>
-          <Text>{review.rating}</Text>
-          <Text>{review.username}</Text>
-          <Text>{review.sentiments}</Text>
-          <Text>{review.text}</Text>
-          <Text>{review.categories}</Text>
+        <VStack spacing={10}>
+          <Text>rating: {review.rating}</Text>
+          <Text>username: {review.username}</Text>
+          <Text>text: {review.text}</Text>
+
+          <Divider />
+
+          <ReviewSentiment text={review.text ?? ''} />
         </VStack>
       )}
     </>
   )
 })
+
+const ReviewSentiment = (props: { text: string }) => {
+  const [aspect, setAspect] = useState('')
+  const aspectSlow = useDebounceValue(aspect, 500)
+  const [sentiments, setSentiments] = useState([])
+
+  useEffect(() => {
+    const sentences = props.text.split('. ')
+    if (sentences.length) {
+      Promise.all(
+        sentences.map((sentence) => {
+          fetch(
+            `https://absa.k8s.dishapp.com/?text="${encodeURIComponent(
+              sentence
+            )}"&aspect="${encodeURIComponent(aspect)}"`,
+            {
+              mode: 'no-cors',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          ).then((res) => res.json())
+        })
+      ).then((sentiments) => {
+        console.log('got sentiments', sentiments)
+      })
+    }
+  }, [aspectSlow])
+
+  return (
+    <VStack>
+      <SmallTitle>Sentiment</SmallTitle>
+
+      <TextInput
+        style={{ borderWidth: 1, padding: 5 }}
+        onChangeText={(text) => setAspect(text)}
+      />
+
+      <Divider />
+
+      {sentiments.map(({ sentiment, text }) => {
+        return (
+          <Text
+            backgroundColor={sentiment === 'negative' ? lightRed : lightGreen}
+            key={text}
+          >
+            {text} <strong>({sentiment})</strong>.
+          </Text>
+        )
+      })}
+    </VStack>
+  )
+}
 
 const PlacesList = () => {
   const [searchRaw, setSearch] = useState('')
