@@ -99,11 +99,11 @@ export default function HomePageAbout({
             <Paragraph size="lg">
               By looking at{' '}
               <TextStrong>
-                what people actually say, rather than just rate, and looking at
+                what people actually say, rather than just rate to find
                 dish-specific sentiment
               </TextStrong>
-              , we help you find food that matches your mood ✨. We're building
-              a community around a fun, Hitchhiker's Guide to Gastronomy (or, a
+              , we find you food that matches your mood ✨. We're building a
+              community around a fun, Hitchhiker's Guide to Gastronomy (or, a
               Pokédex for poke), to create a better pocket map of your world.
             </Paragraph>
 
