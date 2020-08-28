@@ -279,6 +279,7 @@ export class Self extends WorkerJob {
       scrapeGetData(this.infatuated, 'data_from_map_search.name'),
       scrapeGetData(this.michelin, 'main.name'),
       scrapeGetData(this.grubhub, 'main.name'),
+      scrapeGetData(this.doordash, 'main.name'),
       tripadvisor_name,
     ]
     this.restaurant.name = this.merge(names)

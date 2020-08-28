@@ -570,6 +570,16 @@ function crawler_mem_usage() {
     | grep sandbox
 }
 
+function self_crawl_by_query() {
+  [ -z "$1" ] && exit 1
+  query="SELECT id FROM restaurant $1"
+  echo "Running self crawler with SQL: $query"
+  worker "
+    QUERY=\"$query\" \
+      node /app/services/crawlers/_/self/sandbox.js
+  "
+}
+
 function_to_run=$1
 shift
 ORIGINAL_ARGS="$@"
