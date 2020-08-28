@@ -10,7 +10,7 @@ import {
   HomeStateTagNavigable,
 } from './home-types'
 import { NavigableTag } from './NavigableTag'
-import { omStatic } from './om'
+import { om, omStatic } from './om'
 import { SearchRouteParams } from './router'
 import { tagFilters } from './tagFilters'
 import { tagLenses } from './tagLenses'
@@ -38,11 +38,15 @@ export const cleanTagName = (name: string) => {
 export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
   return await Promise.all(
     tags.map(async (tag) => {
-      return (
-        omStatic.state.home.allTags[getTagId(tag)] ??
-        (await getFullTag(tag)) ??
-        (tag as Tag)
-      )
+      const existing = omStatic.state.home.allTags[getTagId(tag)]
+      if (!existing?.id) {
+        const full = await getFullTag(tag)
+        if (full) {
+          omStatic.actions.home.addTagsToCache([full])
+          return full
+        }
+      }
+      return existing ?? tag
     })
   )
 }

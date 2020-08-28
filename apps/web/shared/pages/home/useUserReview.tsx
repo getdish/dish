@@ -8,24 +8,68 @@ import { getFullTags } from '../../state/home-tag-helpers'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { omStatic, useOvermind } from '../../state/om'
 
-export const useUserReviews = (restaurantId: string, refetchKey?: string) => {
+type ReviewWithTag = Pick<
+  Review,
+  | 'id'
+  | 'rating'
+  | 'tag_id'
+  | 'text'
+  | 'restaurant_id'
+  | 'user_id'
+  | 'favorited'
+> & {
+  tag?: {
+    name: string
+    type: string
+  }
+}
+
+export const useUserReviewsQuery = (
+  restaurantId: string,
+  refetchKey?: string
+) => {
   const om = useOvermind()
   const forceUpdate = useForceUpdate()
   const userId = (om.state.user.user?.id as string) ?? ''
 
   const shouldFetch = userId && restaurantId
   const reviews = shouldFetch
-    ? query.review({
-        where: {
-          restaurant_id: {
-            _eq: restaurantId,
+    ? query
+        .review({
+          where: {
+            restaurant_id: {
+              _eq: restaurantId,
+            },
+            user_id: {
+              _eq: userId,
+            },
           },
-          user_id: {
-            _eq: userId,
-          },
-        },
-      })
+        })
+        .map<ReviewWithTag>((review) => {
+          let tag = null
+          if (review.tag_id) {
+            const tagQuery = query.tag({
+              where: { id: { _eq: review.tag_id } },
+            })[0]
+            tag = {
+              name: tagQuery?.name,
+              type: tagQuery?.type,
+            }
+          }
+          return {
+            id: review.id,
+            rating: review.rating,
+            tag_id: review.tag_id,
+            text: review.text,
+            tag,
+            restaurant_id: review.restaurant_id,
+            user_id: review.user_id,
+            favorited: review.favorited,
+          }
+        })
     : []
+
+  // ensure fetched by gqless
 
   useEffect(() => {
     if (refetchKey && shouldFetch) {
@@ -42,14 +86,13 @@ export const useUserReviews = (restaurantId: string, refetchKey?: string) => {
 const isTagReview = (r: Review) => !!r.tag_id
 
 export const useUserReview = (restaurantId: string) => {
-  return useUserReviews(restaurantId).filter(
-    (x) => !isTagReview(x) && !!x.text
-  )[0]
+  const [_, reviews] = useUserReviewsQuery(restaurantId)
+  return reviews.filter((x) => !isTagReview(x) && !!x.text)[0]
 }
 
 export const useUserFavorite = (restaurantId: string) => {
   const [key, setKey] = useState('')
-  const [_, reviews] = useUserReviews(restaurantId, key)
+  const [_, reviews] = useUserReviewsQuery(restaurantId, key)
   const review = reviews.filter((x) => !isTagReview(x) && x.favorited)[0]
   const [optimistic, setOptimistic] = useState<boolean | null>(null)
   const isStarred = optimistic ?? review?.favorited
@@ -111,6 +154,23 @@ export const useUserUpvoteDownvote = (
   ] as const
 }
 
+const getTagUpvoteDownvote = (
+  votes: ReviewWithTag[],
+  activeTags: HomeActiveTagsRecord
+): number => {
+  const tagIdVotes = votes.filter((x) => activeTags[getTagId(x.tag)])
+  console.log('what is', votes, activeTags, tagIdVotes)
+  if (tagIdVotes.length === 0) {
+    return 0
+  }
+  if ([...new Set(tagIdVotes.map((x) => x.rating))].length !== 1) {
+    // mistmatched votes
+    console.warn('mistmatched votes across tags?')
+    return 0
+  }
+  return +(tagIdVotes[0].rating ?? 0)
+}
+
 const voteForTags = async (
   restaurantId: string,
   userId: string,
@@ -124,9 +184,9 @@ const voteForTags = async (
   }))
   const fullTags = await getFullTags(partialTags)
   const insertTags = tagNames.map<Review>((name) => {
-    const tagId = fullTags.find((x) => x.name === name)?.id
+    const tagId = fullTags.find((x) => x.name.toLowerCase() === name)?.id
     if (!tagId) {
-      console.warn({ tagNames, partialTags, fullTags })
+      console.warn({ name, tagNames, partialTags, fullTags })
       throw new Error('no tag')
     }
     return {
@@ -141,24 +201,8 @@ const voteForTags = async (
   }
 }
 
-const getTagUpvoteDownvote = (
-  votes: Review[],
-  activeTags: HomeActiveTagsRecord
-): number => {
-  const tagIdVotes = votes.filter((x) => activeTags[x.tag_id])
-  if (tagIdVotes.length === 0) {
-    return 0
-  }
-  if ([...new Set(tagIdVotes.map((x) => x.rating))].length !== 1) {
-    // mistmatched votes
-    console.warn('mistmatched votes across tags?')
-    return 0
-  }
-  return +(tagIdVotes[0].rating ?? 0)
-}
-
 export const useUserTagVotes = (restaurantId: string) => {
-  const [userId, reviews, om] = useUserReviews(restaurantId)
+  const [userId, reviews, om] = useUserReviewsQuery(restaurantId)
   const votes = reviews.filter(isTagReview)
   const upVotes = votes.filter((x) => x.rating)
   return [
