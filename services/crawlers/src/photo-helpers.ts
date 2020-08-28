@@ -70,8 +70,8 @@ async function postUpsert(photos: PhotoXref[]) {
 export async function uploadToDO(photos: PhotoXref[]) {
   const not_uploaded = await findNotUploadedPhotos(photos)
   if (!not_uploaded) return
-  await uploadToDOSpaces(not_uploaded)
-  const updated = not_uploaded.map((p) => {
+  const uploaded = await uploadToDOSpaces(not_uploaded)
+  const updated = uploaded.map((p) => {
     if (!p.photo) throw 'uploadToDO() No photo!?'
     return {
       id: p.photo.id,
@@ -423,13 +423,21 @@ async function uploadToDOSpaces(photos: PhotoXref[]) {
   const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
   const failed_ids = await Promise.all(
     photos.map(async (p) => {
-      if (!p.photo || !p.photo.origin) throw 'Photo must have URL'
+      if (!p.photo || !p.photo.origin) {
+        console.error('DO UPLOADER: Photo must have URL: ' + p)
+        return p.id
+      }
       await sleep(DO_API_RATE_LIMIT_DELAY)
-      return sendToDO(p.photo.origin, p.photo.id)
+      const failed_id = sendToDO(p.photo.origin, p.photo.id)
+      return failed_id
     })
   )
   await deleteByIDs('photo', failed_ids)
+  const uploaded = photos.filter((p) => {
+    failed_ids.includes(p.id)
+  })
   console.log('...images uploaded DO Spaces.')
+  return uploaded
 }
 
 export async function sendToDO(url: string, id: string) {
@@ -441,13 +449,18 @@ export async function sendToDO(url: string, id: string) {
     sentryMessage('Failed downloading image', { url })
     return id
   }
-  const image_data = await response.buffer()
+  const image_stream = await response.body
+
+  if (process.env.DISH_DEBUG == '1') {
+    const ram = Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + 'Mb'
+    console.log(`DO photo uploader RAM usage (${id}): ${ram}`)
+  }
 
   while (true) {
     let retries = 1
     try {
-      await doPut(image_data, id, response.headers.get('content-type'))
-      break
+      await doPut(image_stream, id, response.headers.get('content-type'))
+      return
     } catch (e) {
       if (e.code == 408) retries += 1
       if (retries > 10) {
@@ -455,16 +468,16 @@ export async function sendToDO(url: string, id: string) {
           url: url,
           id: id,
         })
-        break
+        return id
       }
     }
   }
 }
 
-async function doPut(image_data: Buffer, id: uuid, content_type: string) {
+async function doPut(image_stream: Buffer, id: uuid, content_type: string) {
   await s3
-    .putObject({
-      Body: image_data,
+    .upload({
+      Body: image_stream,
       Bucket: 'dish-images',
       Key: id,
       ACL: 'public-read',
