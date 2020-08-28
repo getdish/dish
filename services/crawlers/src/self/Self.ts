@@ -129,7 +129,7 @@ export class Self extends WorkerJob {
     console.log('Merging: ' + this.restaurant.name)
     this.resetTimer()
     await this.getScrapeData()
-    this.logTime('scrapes fetched')
+    this.log('scrapes fetched')
   }
 
   async postMerge() {
@@ -149,7 +149,7 @@ export class Self extends WorkerJob {
     if (this.menu_items.length != 0) {
       await menuItemsUpsertMerge(this.menu_items)
     }
-    this.logTime('postMerge()')
+    this.log('postMerge()')
   }
 
   async mergeMainData() {
@@ -182,7 +182,7 @@ export class Self extends WorkerJob {
         { source: 'Self crawler' }
       )
     }
-    this.logTime(func.name)
+    this.log(func.name)
   }
 
   async doTags() {
@@ -780,8 +780,11 @@ export class Self extends WorkerJob {
     this._start_time = process.hrtime()
   }
 
-  logTime(message: string) {
-    if (process.env.LOG_TIMINGS != '1') return
-    console.log(message + ' ' + this.elapsedTime() + 's')
+  log(message: string) {
+    if (process.env.DISH_DEBUG != '1') return
+    const time = this.elapsedTime() + 's'
+    const memory =
+      Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + 'Mb'
+    console.log(`${this.restaurant.slug}: ${message} | ${time} | ${memory}`)
   }
 }

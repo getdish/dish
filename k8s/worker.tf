@@ -161,6 +161,10 @@ resource "kubernetes_deployment" "worker" {
             name = "GORSE_ENDPOINT"
             value = "http://gorse:9000"
           }
+          env {
+            name = "DISH_DEBUG"
+            value = "1"
+          }
         }
       }
     }

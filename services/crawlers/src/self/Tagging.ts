@@ -89,7 +89,7 @@ export class Tagging {
       })
     )
     const orphan_tags = this._extractOrphanTags(tags, country_tags)
-    this.crawler.logTime('upsert country tags')
+    this.crawler.log('upsert country tags')
     return orphan_tags
   }
 

@@ -231,7 +231,7 @@ function local_node_with_prod_env() {
   _PG_PORT=$(generate_random_port)
   postgres_proxy $_PG_PORT
   timescale_proxy $_TIMESCALE_PORT
-  export LOG_TIMINGS=1
+  export DISH_DEBUG=1
   export USE_PG_SSL=true
   export RUN_WITHOUT_WORKER=true
   export PGPORT=$_PG_PORT
@@ -560,6 +560,14 @@ function scrapes_update_distinct_sources() {
     ) id, source, id_from_source
     FROM scrape
   '
+}
+
+function crawler_mem_usage() {
+  ps -eo size,pid,usconcer,command --sort -size \
+    | awk '{ hr=$1/1024 ; printf("%13.2f Mb ",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf("%s ",$x) } print "" }' \
+    | cut -d "" -f2 \
+    | cut -d "-" -f1 \
+    | grep sandbox
 }
 
 function_to_run=$1
