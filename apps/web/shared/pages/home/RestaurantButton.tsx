@@ -27,6 +27,10 @@ export const RestaurantButton = memo(
       subtle?: boolean
     } & LinkButtonProps) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
+      if (!restaurant) {
+        // got an error when resizing between small/regular
+        return null
+      }
       return (
         <LinkButton
           key={restaurant.name}
