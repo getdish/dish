@@ -183,6 +183,7 @@ export const Map = (props: MapProps) => {
             clusterRadius: 18,
           })
 
+          const [r, g, b] = tagLenses[0].rgb
           map.addLayer({
             id: POINT_LAYER_ID,
             type: 'circle',
@@ -204,7 +205,7 @@ export const Map = (props: MapProps) => {
                 750,
                 40,
               ],
-              'circle-color': rgbString(tagLenses[0].rgb.map((x) => x + 25)),
+              'circle-color': `rgba(${r},${g},${b}, 0.5)`,
               //['get', 'color'],
               // rgbString(tagLenses[0].rgb.map((x) => x + 45)),
               // [
@@ -531,7 +532,7 @@ export const Map = (props: MapProps) => {
 
     if (hasMovedAtLeast(map, { center, span }, 0.01)) {
       return series([
-        () => fullyIdle({ min: 30, max: 300 }),
+        () => fullyIdle({ max: 350 }),
         () => {
           map.fitBounds(next)
         },

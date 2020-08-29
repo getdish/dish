@@ -159,7 +159,6 @@ const getTagUpvoteDownvote = (
   activeTags: HomeActiveTagsRecord
 ): number => {
   const tagIdVotes = votes.filter((x) => activeTags[getTagId(x.tag)])
-  console.log('what is', votes, activeTags, tagIdVotes)
   if (tagIdVotes.length === 0) {
     return 0
   }

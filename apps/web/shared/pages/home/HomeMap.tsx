@@ -339,19 +339,11 @@ const HomeMapContent = memo(function HomeMap({
         onSelect={(id) => {
           if (id !== om.state.home.selectedRestaurant?.id) {
             const restaurant = restaurants?.find((x) => x.id === id)
-            console.log('selecting', restaurant)
             if (restaurant) {
               om.actions.home.setSelectedRestaurant({
                 id: restaurant.id,
                 slug: restaurant.slug,
               })
-              if (om.state.home.currentStateType === 'search') {
-                const index = restaurants.findIndex((x) => x.id === id)
-                om.actions.home.setActiveIndex({
-                  index,
-                  event: om.state.home.isHoveringRestaurant ? 'hover' : 'pin',
-                })
-              }
             }
           }
         }}

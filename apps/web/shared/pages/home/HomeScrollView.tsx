@@ -19,13 +19,13 @@ export const HomeScrollView = forwardRef(
     {
       children,
       paddingTop,
-      onScrollNearBottom,
+      onScrollYThrottled,
       style,
       ...props
     }: ScrollViewProps & {
       children: any
       paddingTop?: any
-      onScrollNearBottom?: Function
+      onScrollYThrottled?: Function
     },
     ref
   ) => {
@@ -33,12 +33,7 @@ export const HomeScrollView = forwardRef(
     const isSmall = useMediaQueryIsSmall()
     const tm = useRef<any>(0)
     const setIsScrolling = (e) => {
-      if (
-        e.nativeEvent.contentOffset.y >
-        e.nativeEvent.contentSize.height * 0.4
-      ) {
-        onScrollNearBottom?.()
-      }
+      onScrollYThrottled?.(e.nativeEvent.contentOffset.y)
       scrollStore.setIsScrolling(true)
       clearTimeout(tm.current)
       tm.current = setTimeout(() => {
@@ -51,7 +46,7 @@ export const HomeScrollView = forwardRef(
         ref={ref as any}
         onScroll={setIsScrolling}
         bounces
-        scrollEventThrottle={150}
+        scrollEventThrottle={200}
         {...props}
         style={[
           {

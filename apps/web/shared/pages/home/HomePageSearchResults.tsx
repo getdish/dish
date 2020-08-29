@@ -1,3 +1,4 @@
+import { sleep } from '@dish/async'
 import {
   Button,
   HStack,
@@ -7,6 +8,7 @@ import {
   Text,
   VStack,
 } from '@dish/ui'
+import { debounce } from 'lodash'
 import React, {
   Suspense,
   memo,
@@ -108,6 +110,30 @@ export default memo(function HomePageSearchResults(props: Props) {
     }
   })
 
+  useEffect(() => {
+    let isCancelled = false
+    const dispose = om.reaction(
+      () => om.state.home.selectedRestaurant,
+      async ({ id }) => {
+        const restaurants = props.item.results
+        const index = restaurants.findIndex((x) => x.id === id)
+        if (index > -1) {
+          await sleep(300)
+          if (!isCancelled) {
+            om.actions.home.setActiveIndex({
+              index,
+              event: om.state.home.isHoveringRestaurant ? 'hover' : 'pin',
+            })
+          }
+        }
+      }
+    )
+    return () => {
+      isCancelled = true
+      dispose()
+    }
+  })
+
   const key = useLastValueWhen(
     () =>
       JSON.stringify({
@@ -186,37 +212,65 @@ const SearchResultsTopBar = memo(({ stateId }: { stateId: string }) => {
   )
 })
 
+const getRestaurantListItemHeight = () => {
+  const items = Array.from(document.querySelectorAll('.restaurant-list-item'))
+  if (items.length) {
+    return items.reduce((a, b) => a + b.clientHeight, 0) / items.length
+  }
+  return 280
+}
+
 const SearchResultsContent = (props: Props) => {
   const searchState = props.item
   const { isSmall, titleHeight } = useSpacing()
   const paddingTop = isSmall ? titleHeight : titleHeight - searchBarHeight + 2
+  const perChunk = 4
+  const allResults = searchState.results
+  const total = allResults.length
+  const totalChunks = Math.ceil(total / perChunk)
   const [state, setState] = useState({
     chunk: 1,
     hasLoaded: 1,
+    itemHeightAvg: getRestaurantListItemHeight(),
     scrollToTop: 0,
   })
+  const isOnLastChunk = totalChunks === state.chunk
   const scrollRef = useRef<ScrollView | null>(null)
-  const perChunk = [3, 3, 6, 12, 12]
-  const allResults = searchState.results
-  const currentlyShowing = Math.min(
-    allResults.length,
-    state.chunk *
-      perChunk.slice(0, state.chunk).reduce((a, b) => a + b, perChunk[0])
-  )
+  const totalLoading = Math.min(total, state.chunk * perChunk)
+  const totalLeftToLoad = total - totalLoading
+  const isLoading =
+    searchState.status === 'loading' ||
+    (searchState.results.length === 0
+      ? false
+      : !isOnLastChunk || state.hasLoaded <= state.chunk)
 
-  const handleScrollToBottom = useCallback(() => {
-    setState((x) => ({ ...x, chunk: x.chunk + 1 }))
-  }, [])
+  const handleScrollY = (y: number) => {
+    if (isOnLastChunk) return
+    if (y > state.itemHeightAvg * totalLoading) {
+      setState((x) => ({ ...x, chunk: x.chunk + 1 }))
+    }
+  }
 
   useEffect(() => {
     return omStatic.reaction(
       (state) => state.home.activeIndex,
       (index) => {
+        console.log(
+          'active index',
+          index,
+          omStatic.state.home.activeEvent,
+          scrollRef.current
+        )
         if (
           omStatic.state.home.activeEvent === 'pin' ||
           omStatic.state.home.activeEvent === 'key'
         ) {
-          scrollRef.current?.scrollTo({ x: 0, y: 200 * index, animated: true })
+          const height = getRestaurantListItemHeight()
+          scrollRef.current?.scrollTo({
+            x: 0,
+            y: height * index,
+            animated: true,
+          })
         }
       }
     )
@@ -234,7 +288,10 @@ const SearchResultsContent = (props: Props) => {
 
   const contentWrap = (children: any) => {
     return (
-      <HomeScrollView ref={scrollRef} onScrollNearBottom={handleScrollToBottom}>
+      <HomeScrollView
+        ref={scrollRef}
+        onScrollYThrottled={isOnLastChunk ? null : handleScrollY}
+      >
         <VStack height={paddingTop} />
         <PageTitleTag>{title}</PageTitleTag>
         <HStack
@@ -251,7 +308,7 @@ const SearchResultsContent = (props: Props) => {
           </Text>
         </HStack>
         <HomeSearchInfoBox state={searchState} />
-        <VStack minHeight="30vh">{children}</VStack>
+        <VStack>{children}</VStack>
         <SearchFooter
           scrollToTop={() =>
             setState((x) => ({ ...x, scrollToTop: Math.random() }))
@@ -263,7 +320,7 @@ const SearchResultsContent = (props: Props) => {
   }
 
   const results = useMemo(() => {
-    const cur = allResults.slice(0, currentlyShowing)
+    const cur = allResults.slice(0, totalLoading)
     return (
       <>
         {cur.map((result, index) => {
@@ -271,7 +328,11 @@ const SearchResultsContent = (props: Props) => {
             index == cur.length - 1
               ? // load more
                 () => {
-                  setState((x) => ({ ...x, hasLoaded: x.hasLoaded + 1 }))
+                  setState((x) => ({
+                    ...x,
+                    hasLoaded: x.hasLoaded + 1,
+                    itemHeightAvg: getRestaurantListItemHeight(),
+                  }))
                 }
               : undefined
           return (
@@ -289,16 +350,9 @@ const SearchResultsContent = (props: Props) => {
         })}
       </>
     )
-  }, [allResults, currentlyShowing, state.chunk])
+  }, [allResults, totalLoading, state.chunk])
 
-  const isOnLastChunk = currentlyShowing === allResults.length
-  const isLoading =
-    searchState.status === 'loading' ||
-    (searchState.results.length === 0
-      ? false
-      : !isOnLastChunk || state.hasLoaded <= state.chunk)
-
-  if (!isLoading && !allResults.length) {
+  if (!isLoading && !total) {
     return contentWrap(
       <VStack
         margin="auto"
@@ -314,12 +368,12 @@ const SearchResultsContent = (props: Props) => {
     )
   }
 
-  // console.warn('SearchContent', { isLoading })
-
   return contentWrap(
     <VStack paddingBottom={20} spacing={6}>
       {results}
-      {isLoading && <HomeLoading />}
+      <VStack minHeight={totalLeftToLoad * state.itemHeightAvg}>
+        {isLoading && <HomeLoading />}
+      </VStack>
     </VStack>
   )
 }
@@ -370,43 +424,6 @@ const HomeLoading = (props: StackProps) => {
     </VStack>
   )
 }
-
-// count it as two votes
-
-// const HomePageSearchResultsDishes = memo(
-//   graphql(({ state }: { state: HomeStateItemSearch }) => {
-//     const om = useOvermind()
-//     const activeTags = getActiveTags(om.state.home, state)
-
-//     if (activeTags.some((x) => x.type === 'dish')) {
-//       // TODO use a real
-//       const dishes = query.tag({
-//         limit: 6,
-//         where: {
-//           type: { _eq: 'dish' },
-//         },
-//       })
-
-//       return (
-//         <HStack paddingHorizontal={20} paddingVertical={10}>
-//           {dishes.map((dish) => (
-//             <DishView
-//               key={dish.name}
-//               dish={{
-//                 name: dish.name,
-//                 // TODO @tom how do we get rating/image here?
-//                 image: dish.icon ?? '',
-//                 rating: 5,
-//                 count: 1,
-//               }}
-//             />
-//           ))}
-//         </HStack>
-//       )
-//     }
-//     return null
-//   })
-// )
 
 // function List(props: {
 //   data: any[]

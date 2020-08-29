@@ -381,7 +381,6 @@ const setHoveredRestaurant: Action<RestaurantOnlyIds | null | false> = (
   val
 ) => {
   om.state.home.hoveredRestaurant = val
-  om.state.home.isHoveringRestaurant = true
 }
 
 const suggestTags: AsyncAction<string> = async (om, tags) => {
@@ -553,15 +552,9 @@ const pushHomeState: AsyncAction<
       const username =
         type == 'userSearch' ? om.state.router.curPage.params.username : ''
 
-      // preserve results if staying on search
-      const results =
-        om.state.home.previousState?.type === 'search'
-          ? om.state.home.lastSearchState?.results ?? []
-          : []
-
       nextState = {
         status: 'loading',
-        results,
+        results: [],
         username,
         activeTagIds,
       }

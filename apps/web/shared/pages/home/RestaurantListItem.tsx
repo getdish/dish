@@ -88,7 +88,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       overflow="hidden"
       maxWidth="100%"
       position="relative"
-      className="hover-to-reveal-parent"
+      className="hover-to-reveal-parent restaurant-list-item"
     >
       <HomeScrollViewHorizontal
         onScroll={
