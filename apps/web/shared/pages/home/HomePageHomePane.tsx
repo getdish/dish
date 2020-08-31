@@ -166,6 +166,7 @@ export default memo(function HomePageHomePane(props: Props) {
           maxHeight="100%"
           overflow="visible"
           maxWidth="100%"
+          height="100%"
         >
           <HomeScrollView>
             <VStack

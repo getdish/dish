@@ -52,8 +52,7 @@ export const HomeScrollView = forwardRef(
           {
             flex: 1,
             paddingTop: paddingTop ?? (isSmall ? 0 : searchBarHeight),
-            // for drawer
-            paddingBottom: isSmall ? 500 : 0,
+            height: '100%',
           },
           style,
         ]}
@@ -67,6 +66,9 @@ export const HomeScrollView = forwardRef(
           flex={1}
         >
           {children}
+
+          {/* for drawer, pad bottom */}
+          <VStack height={isSmall ? 500 : 0} />
         </VStack>
       </ScrollView>
     )

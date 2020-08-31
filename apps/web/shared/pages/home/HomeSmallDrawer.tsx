@@ -1,6 +1,7 @@
-import { VStack } from '@dish/ui'
+import { AbsoluteVStack, VStack } from '@dish/ui'
+import { Store, useStore, useStoreDebug } from '@dish/use-store'
 import { debounce } from 'lodash'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Animated, PanResponder, View } from 'react-native'
 
 import { pageWidthMax, zIndexDrawer } from '../../constants'
@@ -10,76 +11,64 @@ import { HomeSearchBarDrawer } from './HomeSearchBar'
 import { blurSearchInput } from './HomeSearchInput'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
-export const snapPoints = [0.02, 0.25, 0.6]
-let snapIndex = 1
+export class BottomDrawerStore extends Store {
+  snapPoints = [0.02, 0.25, 0.6]
+  snapIndex = 1
+  pan = new Animated.Value(this.getSnapPoint())
+  spring: any
 
-const setDrawer = debounce(
-  (val) => omStatic.actions.home.setDrawerSnapPoint(val),
-  100
-)
+  get currentSnapPoint() {
+    return this.snapPoints[this.snapIndex]
+  }
 
-const setSnapIndex = (x: number) => {
-  snapIndex = x
-  setDrawer(x)
-}
+  private setDrawer = debounce(
+    (val) => omStatic.actions.home.setDrawerSnapPoint(val),
+    100
+  )
 
-const getSnapPoint = (px?: number) => {
-  if (typeof px === 'number') {
-    for (const [index, point] of snapPoints.entries()) {
+  setSnapIndex(x: number) {
+    this.snapIndex = x
+    this.setDrawer(x)
+  }
+
+  getSnapPoint(px?: number) {
+    if (typeof px === 'number') {
+      this.updateSnapIndex(px)
+    }
+    return this.snapPoints[this.snapIndex] * getWindowHeight()
+  }
+
+  private updateSnapIndex(px: number) {
+    for (const [index, point] of this.snapPoints.entries()) {
       const cur = point * getWindowHeight()
-      const next = (snapPoints[index + 1] ?? 1) * getWindowHeight()
+      const next = (this.snapPoints[index + 1] ?? 1) * getWindowHeight()
       const midWayToNext = cur + (next - cur) / 2
       if (px < midWayToNext) {
-        setSnapIndex(index)
-        break
+        this.setSnapIndex(index)
+        return
       }
     }
+    this.setSnapIndex(0)
   }
-  return snapPoints[snapIndex] * getWindowHeight()
+
+  animateDrawerToPx(px?: number) {
+    this.spring = Animated.spring(this.pan, {
+      useNativeDriver: true,
+      toValue: this.getSnapPoint(typeof px === 'number' ? px : undefined),
+    })
+    this.spring.start(() => {
+      this.spring = null
+    })
+  }
+
+  animateDrawerToSnapPoint(point: number) {
+    this.setSnapIndex(point)
+    this.animateDrawerToPx()
+  }
 }
-
-const animateDrawerToPx = (px?: number) => {
-  spring = Animated.spring(pan, {
-    useNativeDriver: true,
-    toValue: getSnapPoint(typeof px === 'number' ? px : undefined),
-  })
-  spring.start(() => {
-    spring = null
-  })
-}
-
-const animateDrawerToSnapPoint = (point: number) => {
-  setSnapIndex(point)
-  animateDrawerToPx()
-}
-
-const pan = new Animated.Value(getSnapPoint())
-let spring: any
-
-const panResponder = PanResponder.create({
-  onMoveShouldSetPanResponder: (_, { dy }) => {
-    const threshold = 15
-    return Math.abs(dy) > threshold
-  },
-  onPanResponderGrant: () => {
-    spring?.stop()
-    spring = null
-    pan.setOffset(pan['_value'])
-    document.body.classList.add('all-input-blur')
-    if (omStatic.state.home.showAutocomplete) {
-      omStatic.actions.home.setShowAutocomplete(false)
-    }
-    blurSearchInput()
-  },
-  onPanResponderMove: Animated.event([null, { dy: pan }]),
-  onPanResponderRelease: () => {
-    pan.flattenOffset()
-    animateDrawerToPx(pan['_value'])
-    document.body.classList.remove('all-input-blur')
-  },
-})
 
 export const HomeSmallDrawer = (props: { children: any }) => {
+  const drawerStore = useStoreDebug(BottomDrawerStore)
   const isSmall = useMediaQueryIsSmall()
 
   useEffect(() => {
@@ -89,12 +78,61 @@ export const HomeSmallDrawer = (props: { children: any }) => {
       (show) => {
         if (show) {
           // lastIndex = snapIndex
-          animateDrawerToSnapPoint(0)
+          drawerStore.animateDrawerToSnapPoint(0)
         } else {
-          animateDrawerToSnapPoint(1)
+          drawerStore.animateDrawerToSnapPoint(1)
         }
       }
     )
+  }, [])
+
+  // attaching this as a direct onPress event breaks dragging
+  // instead doing a more hacky useEffect
+  useEffect(() => {
+    const drawerSnapListener = () => {
+      if (drawerStore.snapIndex === 0) {
+        omStatic.actions.home.setShowAutocomplete(false)
+        drawerStore.animateDrawerToSnapPoint(1)
+      } else if (drawerStore.snapIndex === 1) {
+        drawerStore.animateDrawerToSnapPoint(2)
+      } else if (drawerStore.snapIndex === 2) {
+        drawerStore.animateDrawerToSnapPoint(1)
+      }
+    }
+
+    document
+      .querySelector('.home-drawer-snap')
+      .addEventListener('click', drawerSnapListener)
+    return () => {
+      document
+        .querySelector('.home-drawer-snap')
+        .removeEventListener('click', drawerSnapListener)
+    }
+  }, [])
+
+  const panResponder = useMemo(() => {
+    return PanResponder.create({
+      onMoveShouldSetPanResponder: (_, { dy }) => {
+        const threshold = 15
+        return Math.abs(dy) > threshold
+      },
+      onPanResponderGrant: () => {
+        drawerStore.spring?.stop()
+        drawerStore.spring = null
+        drawerStore.pan.setOffset(drawerStore.pan['_value'])
+        document.body.classList.add('all-input-blur')
+        if (omStatic.state.home.showAutocomplete) {
+          omStatic.actions.home.setShowAutocomplete(false)
+        }
+        blurSearchInput()
+      },
+      onPanResponderMove: Animated.event([null, { dy: drawerStore.pan }]),
+      onPanResponderRelease: () => {
+        drawerStore.pan.flattenOffset()
+        drawerStore.animateDrawerToPx(drawerStore.pan['_value'])
+        document.body.classList.remove('all-input-blur')
+      },
+    })
   }, [])
 
   return (
@@ -106,7 +144,7 @@ export const HomeSmallDrawer = (props: { children: any }) => {
         style={{
           transform: [
             {
-              translateY: pan,
+              translateY: drawerStore.pan,
             },
           ],
           maxWidth: pageWidthMax,
@@ -131,20 +169,11 @@ export const HomeSmallDrawer = (props: { children: any }) => {
           {...panResponder.panHandlers}
         >
           <VStack
+            className="home-drawer-snap"
             pointerEvents="auto"
             paddingHorizontal={20}
             paddingVertical={20}
             marginTop={-10}
-            onPress={() => {
-              if (snapIndex === 0) {
-                omStatic.actions.home.setShowAutocomplete(false)
-                animateDrawerToSnapPoint(1)
-              } else if (snapIndex === 1) {
-                animateDrawerToSnapPoint(2)
-              } else if (snapIndex === 2) {
-                animateDrawerToSnapPoint(1)
-              }
-            }}
           >
             <VStack
               backgroundColor="rgba(100,100,100,0.5)"
@@ -167,11 +196,17 @@ export const HomeSmallDrawer = (props: { children: any }) => {
           shadowOffset={{ width: 10, height: 0 }}
           borderTopRightRadius={10}
           borderTopLeftRadius={10}
+          pointerEvents="auto"
         >
-          <View {...panResponder.panHandlers}>
+          <View style={{ flexShrink: 1 }} {...panResponder.panHandlers}>
             <HomeSearchBarDrawer />
           </View>
-          {props.children}
+          <View
+            style={{ height: '100%' }}
+            {...(drawerStore.snapIndex > 0 && panResponder.panHandlers)}
+          >
+            {props.children}
+          </View>
         </VStack>
       </Animated.View>
     </VStack>
