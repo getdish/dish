@@ -145,10 +145,18 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
     isRendering: false,
     tracked: new Set<string>(),
   })
+  const component = useCurrentComponent()
   const selector = userSelector ?? selectKeys
   const getSnapshot = useCallback(
     (store) => {
-      return selector(store, [...internal.current.tracked])
+      const selected = selector(store, [...internal.current.tracked])
+      if (
+        process.env.NODE_ENV === 'development' &&
+        shouldDebug(component, info)
+      ) {
+        console.log('📤 selected', selected)
+      }
+      return selected
     },
     [selector]
   )
@@ -157,25 +165,52 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
   // after render
   useLayoutEffect(() => {
     internal.current.isRendering = false
+
+    if (
+      process.env.NODE_ENV === 'development' &&
+      shouldDebug(component, info)
+    ) {
+      console.log('📤 finish render, tracking', [...internal.current.tracked])
+    }
   })
 
   // mount once
   useLayoutEffect(() => {
     if (!info.hasMounted) {
       info.hasMounted = true
-      return storeProxy.mount()
+
+      try {
+        return storeProxy.mount()
+      } finally {
+        if (
+          process.env.NODE_ENV === 'development' &&
+          shouldDebug(component, info)
+        ) {
+          console.log('📤 mounted, info:', info)
+        }
+      }
     }
   }, [])
 
   const storeProxy = useConstant(() => {
     const proxiedStore = new Proxy(info.storeInstance, {
       get(target, key) {
-        // console.log('getting', key, target[key])
         if (typeof key === 'string') {
           if (info.getters[key]) {
             return info.getters[key].call(proxiedStore)
           }
           if (info.actions[key]) {
+            if (
+              process.env.NODE_ENV === 'development' &&
+              shouldDebug(component, info)
+            ) {
+              return new Proxy(info.actions[key], {
+                apply(a, b, c) {
+                  console.log(`📤 ACTION ${key}`, c)
+                  return Reflect.apply(a, b, c)
+                },
+              })
+            }
             return info.actions[key]
           }
           if (internal.current.isRendering) {
@@ -193,6 +228,12 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
         const res = Reflect.set(target, key, value, receiver)
         // only update if changed, simple compare
         if (res && cur !== value) {
+          if (
+            process.env.NODE_ENV === 'development' &&
+            DebugStores.has(info.storeInstance.constructor)
+          ) {
+            console.log(`📤 SET ${String(key)}`, value)
+          }
           info.version++
           info.storeInstance[TRIGGER_UPDATE]()
         }
@@ -209,6 +250,45 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
   }
 
   return storeProxy
+}
+
+const {
+  ReactCurrentOwner,
+} = (React as any).__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED
+const useCurrentComponent = () => {
+  return ReactCurrentOwner &&
+    ReactCurrentOwner.current &&
+    ReactCurrentOwner.current.elementType
+    ? ReactCurrentOwner.current.elementType
+    : {}
+}
+
+const DebugComponents = new WeakMap<any, Set<any>>()
+export const DebugStores = new Set<any>()
+
+const shouldDebug = (component: any, info: StoreInfo) => {
+  return DebugComponents.get(component)?.has(info.storeInstance.constructor)
+}
+
+export function useStoreDebug<A extends Store<B>, B>(
+  StoreKlass: new (props: B) => A | (new () => A),
+  props?: B,
+  selector?: any
+): A {
+  const cmp = useCurrentComponent()
+  React.useLayoutEffect(() => {
+    DebugStores.add(StoreKlass)
+    if (!DebugComponents.has(cmp)) {
+      DebugComponents.set(cmp, new Set())
+    }
+    const stores = DebugComponents.get(cmp)!
+    stores.add(StoreKlass)
+    return () => {
+      DebugStores.delete(StoreKlass)
+      stores.delete(StoreKlass)
+    }
+  }, [])
+  return useStore(StoreKlass, props, selector)
 }
 
 function getStoreDescriptors(storeInstance: any) {

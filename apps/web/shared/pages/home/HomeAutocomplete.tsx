@@ -8,6 +8,7 @@ import {
   VStack,
   useDebounce,
 } from '@dish/ui'
+import { useStore } from '@dish/use-store'
 import FlexSearch from 'flexsearch'
 import { uniqBy } from 'lodash'
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
@@ -31,7 +32,7 @@ import { omStatic, useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallCircleButton } from './CloseButton'
 import { getFuzzyMatchQuery } from './getFuzzyMatchQuery'
-import { snapPoints } from './HomeSmallDrawer'
+import { BottomDrawerStore } from './HomeSmallDrawer'
 import { locationToAutocomplete, searchLocations } from './searchLocations'
 import { searchRestaurants } from './searchRestaurants'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
@@ -113,6 +114,7 @@ const HomeAutocompleteEffects = memo(
 
 const HomeAutoCompleteContents = memo(
   ({ isLoading }: { isLoading: boolean }) => {
+    const drawerStore = useStore(BottomDrawerStore)
     const om = useOvermind()
     const { showAutocomplete } = om.state.home
     const isSmall = useMediaQueryIsSmall()
@@ -126,7 +128,7 @@ const HomeAutoCompleteContents = memo(
     const top =
       searchBarTopOffset +
       searchBarHeight +
-      (isSmall ? getWindowHeight() * snapPoints[0] + 10 : 0)
+      (isSmall ? getWindowHeight() * drawerStore.snapPoints[0] + 10 : 0)
 
     return (
       <AbsoluteVStack

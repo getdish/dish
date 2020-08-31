@@ -1,5 +1,6 @@
 import { LngLat, Restaurant, graphql } from '@dish/graph'
 import { AbsoluteVStack, useDebounce, useLazyEffect } from '@dish/ui'
+import { useStore } from '@dish/use-store'
 import { uniqBy } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
@@ -17,7 +18,7 @@ import { router } from '../../state/router'
 import { Map } from '../../views/Map'
 import { getLngLat, getMinLngLat } from './getLngLat'
 import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
-import { snapPoints } from './HomeSmallDrawer'
+import { BottomDrawerStore, snapPoints } from './HomeSmallDrawer'
 import { useLastValueWhen } from './useLastValueWhen'
 import { useMapSize } from './useMapSize'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
@@ -253,6 +254,7 @@ const HomeMapContent = memo(function HomeMap({
     })
   }, [restaurantSelected])
 
+  const drawerStore = useStore(BottomDrawerStore)
   const snapPoint = isSmall
     ? // avoid resizing to top "fully open drawer" snap
       Math.max(1, om.state.home.drawerSnapPoint)
@@ -262,7 +264,9 @@ const HomeMapContent = memo(function HomeMap({
         left: 10,
         top: 10,
         bottom:
-          getWindowHeight() - getWindowHeight() * snapPoints[snapPoint] + 10,
+          getWindowHeight() -
+          getWindowHeight() * drawerStore.currentSnapPoint +
+          10,
         right: 10,
       }
     : {

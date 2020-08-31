@@ -1,11 +1,12 @@
 import { AbsoluteVStack, HStack } from '@dish/ui'
+import { useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 
 import { searchBarHeight, zIndexMapControls } from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { useOvermind } from '../../state/om'
 import { HomeMapRestaurantPeek } from './HomeMapRestaurantPeek'
-import { snapPoints } from './HomeSmallDrawer'
+import { BottomDrawerStore } from './HomeSmallDrawer'
 import { useMapSize } from './useMapSize'
 import {
   useMediaQueryIsReallySmall,
@@ -17,10 +18,11 @@ export const HomeMapControlsOverlay = memo(() => {
   const isReallySmall = useMediaQueryIsReallySmall()
   const isSmall = useMediaQueryIsSmall()
   const { paddingLeft, width } = useMapSize(isSmall)
+  const drawerStore = useStore(BottomDrawerStore)
 
   let bottom = 0
   if (om.state.home.drawerSnapPoint === 2) {
-    bottom = getWindowHeight() - getWindowHeight() * snapPoints[2]
+    bottom = getWindowHeight() - getWindowHeight() * drawerStore.snapPoints[2]
   }
 
   return (

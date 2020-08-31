@@ -42,14 +42,6 @@ const HomePageContent = memo(() => {
           </ErrorBoundary>
         )}
 
-        <Suspense fallback={null}>
-          <HomeMapControlsUnderlay />
-          <HomeMapControlsOverlay />
-        </Suspense>
-
-        <HomeSearchBarFloating />
-        <HomeAutocomplete />
-
         <HomeContainer>
           <HomeStackView>
             {(props) => {
@@ -57,6 +49,14 @@ const HomePageContent = memo(() => {
             }}
           </HomeStackView>
         </HomeContainer>
+
+        <Suspense fallback={null}>
+          <HomeMapControlsUnderlay />
+          <HomeMapControlsOverlay />
+        </Suspense>
+
+        <HomeSearchBarFloating />
+        <HomeAutocomplete />
 
         <Suspense fallback={null}>
           <HomePageGallery />

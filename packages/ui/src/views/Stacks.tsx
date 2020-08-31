@@ -1,4 +1,11 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react'
+import { requestIdle, sleep } from '@dish/async'
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { View, ViewProps, ViewStyle } from 'react-native'
 
 import { isIOS } from '../constants'
@@ -107,11 +114,14 @@ const createStack = (defaultStyle?: ViewStyle) => {
     ) => {
       const innerRef = useRef<any>()
       const isMounted = useRef(false)
+
       useEffect(() => {
         return () => {
+          mouseUps.delete(unPress)
           isMounted.current = false
         }
       })
+
       const [state, set] = useState({
         hover: false,
         press: false,
@@ -161,7 +171,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
         </View>
       )
 
-      const attachPress = !!(pressStyle || onPressIn || onPressOut || onPress)
+      const attachPress = !!(pressStyle || onPress)
       const attachHover = !!(
         hoverStyle ||
         onHoverIn ||
@@ -170,7 +180,16 @@ const createStack = (defaultStyle?: ViewStyle) => {
         onMouseLeave
       )
 
-      if (attachHover || attachPress) {
+      const unPress = useCallback(() => {
+        if (!isMounted.current) return
+        set((x) => ({
+          ...x,
+          press: false,
+          pressIn: false,
+        }))
+      }, [])
+
+      if (attachHover || attachPress || onPressOut || onPressIn) {
         content = React.cloneElement(content, {
           onMouseEnter:
             attachHover || attachPress
@@ -195,14 +214,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
             attachHover || attachPress
               ? () => {
                   let next: Partial<typeof state> = {}
-                  mouseUps.add(() => {
-                    if (!isMounted.current) return
-                    set((x) => ({
-                      ...x,
-                      press: false,
-                      pressIn: false,
-                    }))
-                  })
+                  mouseUps.add(unPress)
                   if (attachHover) {
                     if (!isIOS) {
                       next.hover = false
@@ -228,7 +240,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
                   pressIn: true,
                 })
               }
-            : null,
+            : onPressIn,
           onClick: attachPress
             ? (e) => {
                 e.preventDefault()
@@ -241,7 +253,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
                   pressIn: false,
                 })
               }
-            : null,
+            : onPressOut,
         })
       }
 
