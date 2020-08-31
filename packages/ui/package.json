@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@dish/async": "*",
+    "@dish/use-store": "*",
     "@o/fast-compare": "^2.7.6",
     "lodash": "^4.17.15",
     "react-laag": "^1.7.3",
