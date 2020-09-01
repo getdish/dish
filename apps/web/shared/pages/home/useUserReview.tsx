@@ -1,12 +1,13 @@
 import { series, sleep } from '@dish/async'
 import { Review, query, refetch, resolved, reviewUpsert } from '@dish/graph'
-import { Toast, useForceUpdate } from '@dish/ui'
+import { Toast, useForceUpdate, useLazyEffect } from '@dish/ui'
 import { useEffect, useState } from 'react'
 
 import { getTagId } from '../../state/getTagId'
 import { getFullTags } from '../../state/home-tag-helpers'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { omStatic, useOvermind } from '../../state/om'
+import { useIsMountedRef } from './useIsMountedRef'
 
 type ReviewWithTag = Pick<
   Review,
@@ -24,75 +25,78 @@ type ReviewWithTag = Pick<
   }
 }
 
-export const useUserReviewsQuery = (
-  restaurantId: string,
-  refetchKey?: string
-) => {
+export const useUserReviewsQuery = (restaurantId: string) => {
   const om = useOvermind()
   const forceUpdate = useForceUpdate()
   const userId = (om.state.user.user?.id as string) ?? ''
-
+  const [fetchKey, setFetchKey] = useState(0)
   const shouldFetch = userId && restaurantId
-  const reviews = shouldFetch
-    ? query
-        .review({
-          where: {
-            restaurant_id: {
-              _eq: restaurantId,
-            },
-            user_id: {
-              _eq: userId,
-            },
+  const reviewsQuery = shouldFetch
+    ? query.review({
+        where: {
+          restaurant_id: {
+            _eq: restaurantId,
           },
-        })
-        .map<ReviewWithTag>((review) => {
-          let tag = null
-          if (review.tag_id) {
-            const tagQuery = query.tag({
-              where: { id: { _eq: review.tag_id } },
-            })[0]
-            tag = {
-              name: tagQuery?.name,
-              type: tagQuery?.type,
-            }
+          user_id: {
+            _eq: userId,
+          },
+        },
+      })
+    : null
+  const reviews = reviewsQuery
+    ? reviewsQuery.map<ReviewWithTag>((review) => {
+        let tag = null
+        if (review.tag_id) {
+          const tagQuery = query.tag({
+            where: { id: { _eq: review.tag_id } },
+          })[0]
+          tag = {
+            name: tagQuery?.name,
+            type: tagQuery?.type,
           }
-          return {
-            id: review.id,
-            rating: review.rating,
-            tag_id: review.tag_id,
-            text: review.text,
-            tag,
-            restaurant_id: review.restaurant_id,
-            user_id: review.user_id,
-            favorited: review.favorited,
-          }
-        })
+        }
+        return {
+          id: review.id,
+          rating: review.rating,
+          tag_id: review.tag_id,
+          text: review.text,
+          tag,
+          restaurant_id: review.restaurant_id,
+          user_id: review.user_id,
+          favorited: review.favorited,
+        }
+      })
     : []
 
   // ensure fetched by gqless
-
-  useEffect(() => {
-    if (refetchKey && shouldFetch) {
-      const fetcher = refetch(reviews) as any
+  useLazyEffect(() => {
+    if (fetchKey && shouldFetch) {
+      const fetcher = refetch(reviewsQuery) as any
       if (fetcher) {
         return series([() => resolved(fetcher), forceUpdate])
       }
     }
-  }, [reviews, refetchKey])
+  }, [reviews, fetchKey])
 
-  return [userId, reviews, om] as const
+  return {
+    userId,
+    reviews,
+    om,
+    refetch: () => {
+      setFetchKey(Math.random())
+    },
+  }
 }
 
 const isTagReview = (r: Review) => !!r.tag_id
 
 export const useUserReview = (restaurantId: string) => {
-  const [_, reviews] = useUserReviewsQuery(restaurantId)
+  const { reviews } = useUserReviewsQuery(restaurantId)
   return reviews.filter((x) => !isTagReview(x) && !!x.text)[0]
 }
 
-export const useUserFavorite = (restaurantId: string) => {
-  const [key, setKey] = useState('')
-  const [_, reviews] = useUserReviewsQuery(restaurantId, key)
+export const useUserFavoriteQuery = (restaurantId: string) => {
+  const { reviews, refetch } = useUserReviewsQuery(restaurantId)
   const review = reviews.filter((x) => !isTagReview(x) && x.favorited)[0]
   const [optimistic, setOptimistic] = useState<boolean | null>(null)
   const isStarred = optimistic ?? review?.favorited
@@ -110,7 +114,7 @@ export const useUserFavorite = (restaurantId: string) => {
           restaurant_id: restaurantId,
         },
       ]).then((res) => {
-        setKey(`${Math.random()}`)
+        refetch()
         if (!res?.length) {
           Toast.show('Error saving')
           return
@@ -123,7 +127,7 @@ export const useUserFavorite = (restaurantId: string) => {
   ] as const
 }
 
-export const useUserUpvoteDownvote = (
+export const useUserUpvoteDownvoteQuery = (
   restaurantId: string,
   activeTags: HomeActiveTagsRecord
 ) => {
@@ -201,7 +205,8 @@ const voteForTags = async (
 }
 
 export const useUserTagVotes = (restaurantId: string) => {
-  const [userId, reviews, om] = useUserReviewsQuery(restaurantId)
+  const isMounted = useIsMountedRef()
+  const { userId, reviews, om, refetch } = useUserReviewsQuery(restaurantId)
   const votes = reviews.filter(isTagReview)
   const upVotes = votes.filter((x) => x.rating)
   return [
@@ -228,7 +233,9 @@ export const useUserTagVotes = (restaurantId: string) => {
         didSave = !!saved.length
         if (didSave) {
           sleep(200).then(() => {
-            refetch(reviews)
+            if (isMounted.current) {
+              refetch()
+            }
           })
         }
       }

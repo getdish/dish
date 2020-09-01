@@ -286,6 +286,11 @@ const SearchResultsContent = (props: Props) => {
     lowerCase: false,
   })
 
+  const titleLen = (title + subTitle).length
+  const titleScale =
+    titleLen > 70 ? 0.7 : titleLen > 60 ? 0.8 : titleLen > 50 ? 0.9 : 1
+  const titleFontSize = 30 * titleScale
+
   const contentWrap = (children: any) => {
     return (
       <HomeScrollView
@@ -297,10 +302,10 @@ const SearchResultsContent = (props: Props) => {
         <HStack
           justifyContent="center"
           padding={20}
-          paddingBottom={0}
+          paddingBottom={10}
           overflow="hidden"
         >
-          <Text ellipse fontSize={26} fontWeight="700">
+          <Text ellipse fontSize={titleFontSize} fontWeight="700">
             {pageTitleElements}{' '}
             <Text fontWeight="300" opacity={0.5} letterSpacing={-0.5}>
               {subTitle}

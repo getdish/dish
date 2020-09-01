@@ -3,7 +3,10 @@ import React from 'react'
 import { TextStyle } from 'react-native'
 
 import { bg, bgLight, bgLightHover } from '../../colors'
-import { flatButtonStyle } from '../../pages/home/baseButtonStyle'
+import {
+  baseButtonStyle,
+  flatButtonStyle,
+} from '../../pages/home/baseButtonStyle'
 
 export type SmallButtonProps = StackProps & {
   isActive?: boolean
@@ -19,15 +22,11 @@ export const SmallButton = ({
   return (
     <HStack
       className={rest.className}
-      alignItems="center"
-      justifyContent="center"
-      {...flatButtonStyle}
-      paddingHorizontal={11}
-      paddingVertical="0.45rem"
-      backgroundColor={isActive ? 'transparent' : '#fff'}
-      borderRadius={20}
-      borderWidth={1}
-      borderColor={isActive ? `#aaa` : bgLight}
+      {...smallButtonBaseStyle}
+      {...(isActive && {
+        backgroundColor: 'transparent',
+        borderColor: `#aaa`,
+      })}
       hoverStyle={
         isActive
           ? {
@@ -50,4 +49,16 @@ export const SmallButton = ({
       </Text>
     </HStack>
   )
+}
+
+export const smallButtonBaseStyle: StackProps = {
+  alignItems: 'center',
+  justifyContent: 'center',
+  ...baseButtonStyle,
+  paddingHorizontal: 11,
+  paddingVertical: '0.45rem',
+  borderRadius: 20,
+  borderWidth: 1,
+  backgroundColor: '#fff',
+  borderColor: bgLight,
 }

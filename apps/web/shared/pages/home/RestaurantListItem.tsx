@@ -1,21 +1,26 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import {
-  AbsoluteVStack,
   HStack,
   LoadingItems,
+  SmallTitle,
   Spacer,
   Text,
   VStack,
   useDebounce,
   useGet,
 } from '@dish/ui'
+import { sortBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useState } from 'react'
+import { Image } from 'react-native'
 
-import { bgLightLight, brandColor } from '../../colors'
+import { bgLight, bgLightLight, brandColor } from '../../colors'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
 import { omStatic, useOvermindStatic } from '../../state/om'
+import { tagDisplayName } from '../../state/tagDisplayName'
 import { Link } from '../../views/ui/Link'
+import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
+import { flatButtonStyle } from './baseButtonStyle'
 import { DishView } from './DishView'
 import { HomeScrollViewHorizontal } from './HomeScrollView'
 import { isIOS } from './isIOS'
@@ -26,11 +31,14 @@ import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
 import { RestaurantOverview } from './RestaurantOverview'
+import { RestaurantRatingBreakdown } from './RestaurantRatingBreakdown'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
-import { RestaurantTagsRow } from './RestaurantTagsRow'
 import { RestaurantTopReviews } from './RestaurantTopReviews'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
+import { SlantedBox } from './SlantedBox'
 import { Squircle } from './Squircle'
+import { TextStrong } from './TextStrong'
+import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
@@ -119,7 +127,6 @@ const RestaurantListItemContent = memo(
     const isSmall = useMediaQueryIsSmall()
     // note static for now... caused big perf issue
     // const isEditing = isEditingUserPage(props.searchState, omStatic.state)
-    const adjustRankingLeft = 36
     const leftPad = 25
     const restaurant = useRestaurantQuery(restaurantSlug)
 
@@ -134,6 +141,9 @@ const RestaurantListItemContent = memo(
 
     const curState = omStatic.state.home.currentState
     const tagIds = 'activeTagIds' in curState ? curState.activeTagIds : null
+
+    const tags = omStatic.state.home.lastActiveTags
+    console.log('tags', tags)
 
     const [isActive, setIsActive] = useState(false)
     const getIsActive = useGet(isActive)
@@ -153,51 +163,30 @@ const RestaurantListItemContent = memo(
         alignItems="flex-start"
         justifyContent="flex-start"
         flex={1}
+        // turn this off breaks something? but hides the rest of title hover?
         overflow="hidden"
         // prevent jitter/layout moving until loaded
         display={restaurant.name === null ? 'none' : 'flex'}
-        // borderTopWidth={1}
-        // borderBottomWidth={1}
-        // backgroundColor={isActive ? 'transparent' : '#fcfcfc'}
-        // borderTopColor={isActive ? '#eee' : 'transparent'}
-        // borderBottomColor={isActive ? '#eee' : 'transparent'}
         borderLeftWidth={2}
         borderLeftColor={isActive ? brandColor : 'transparent'}
-        paddingHorizontal={pad + 6}
+        paddingHorizontal={pad}
         width={isSmall ? '60%' : '100%'}
         minWidth={isSmall ? '52vw' : 320}
         maxWidth={isSmall ? '60vw' : 450}
         position="relative"
-        // overflow="hidden"
       >
         <VStack flex={1} alignItems="flex-start" maxWidth="100%">
           {/* ROW: TITLE */}
           <VStack
             // backgroundColor={bgLightLight}
             hoverStyle={{ backgroundColor: bgLightLight }}
-            marginLeft={-adjustRankingLeft}
+            marginLeft={-pad}
+            paddingLeft={pad}
+            paddingBottom={20}
+            marginBottom={-20}
             width={950}
             position="relative"
           >
-            {/* VOTE */}
-            <AbsoluteVStack
-              zIndex={100}
-              left={-2}
-              height={120}
-              bottom={-40}
-              justifyContent="center"
-              pointerEvents="none"
-            >
-              <AbsoluteVStack position="absolute" top={20} left={15}>
-                <RestaurantUpVoteDownVote
-                  restaurantId={restaurantId}
-                  activeTagIds={tagIds ?? {}}
-                />
-              </AbsoluteVStack>
-
-              <RankingView rank={rank} />
-            </AbsoluteVStack>
-
             {/* LINK */}
             <Link
               tagName="div"
@@ -205,7 +194,16 @@ const RestaurantListItemContent = memo(
               params={{ slug: restaurantSlug }}
             >
               <VStack paddingTop={paddingTop}>
-                <HStack paddingLeft={40} alignItems="center" maxWidth="40%">
+                <HStack paddingLeft={0} alignItems="center" maxWidth="40%">
+                  {/* <RankingView rank={rank} /> */}
+
+                  <RestaurantRatingViewPopover
+                    size="sm"
+                    restaurantSlug={restaurantSlug}
+                  />
+
+                  <Spacer />
+
                   {/* SECOND LINK WITH actual <a /> */}
                   <Text
                     selectable
@@ -247,38 +245,74 @@ const RestaurantListItemContent = memo(
                     )}
                   </Text>
                 </HStack>
-
-                <Spacer size={8} />
-
-                {/* TITLE ROW: Ranking + TAGS */}
-                <HStack paddingLeft={leftPad + 24} alignItems="center">
-                  <RestaurantRatingViewPopover
-                    size="sm"
-                    restaurantSlug={restaurantSlug}
-                  />
-                  <Spacer size={10} />
-                  <RestaurantFavoriteButton
-                    size="md"
-                    restaurantId={restaurantId}
-                  />
-                  <Spacer size={6} />
-                  <HStack
-                    alignItems="center"
-                    justifyContent="center"
-                    flexWrap="wrap"
-                  >
-                    <RestaurantTagsRow
-                      subtle
-                      showMore
-                      restaurantSlug={restaurantSlug}
-                      restaurantId={restaurantId}
-                      spacing={4}
-                    />
-                  </HStack>
-                </HStack>
               </VStack>
             </Link>
           </VStack>
+
+          <Spacer />
+
+          {/* RANKING ROW */}
+          <HStack marginLeft={-3} alignItems="center">
+            <VStack>
+              <HStack alignItems="center">
+                <VStack marginVertical={-14}>
+                  <RestaurantUpVoteDownVote
+                    restaurantId={restaurantId}
+                    activeTagIds={tagIds ?? {}}
+                  />
+                </VStack>
+                <Spacer />
+
+                <Spacer size="xs" />
+
+                <VStack marginTop={-4}>
+                  <HStack>
+                    {/* <RestaurantScoreBreakdown restaurantSlug={restaurantSlug} /> */}
+
+                    <Text fontSize={12} opacity={0.5}>
+                      <Text fontSize={14}>
+                        <TextStrong>#{rank}</TextStrong> in
+                      </Text>{' '}
+                      <Text fontSize={14}>
+                        {sortBy(
+                          tags.filter((tag) => tag.name !== 'Gems'),
+                          (a) =>
+                            a.type === 'lense' ? 0 : a.type === 'dish' ? 2 : 1
+                        ).map((tag, i) => {
+                          return (
+                            <>
+                              <VStack
+                                padding={2}
+                                margin={-2}
+                                marginRight={6}
+                                borderRadius={5}
+                                backgroundColor="#eee"
+                                display="inline-flex"
+                              >
+                                {tagDisplayName(tag)}
+                              </VStack>
+                            </>
+                          )
+                        })}
+                      </Text>
+                      <Text marginLeft={-8} fontSize={14}>
+                        {' '}
+                        (152 reviews)
+                      </Text>
+                    </Text>
+                  </HStack>
+                  <Spacer size="sm" />
+                  <HStack paddingLeft={20}>
+                    <RestaurantScoreBreakdownSmall
+                      restaurantSlug={restaurantSlug}
+                    />
+                  </HStack>
+                </VStack>
+              </HStack>
+            </VStack>
+          </HStack>
+
+          {/* RANKING BREAKDOWN ROW */}
 
           <Spacer size="sm" />
 
@@ -290,6 +324,8 @@ const RestaurantListItemContent = memo(
             paddingBottom={10}
             marginBottom={-10}
           >
+            {/* <RestaurantScoreBreakdown restaurantSlug={restaurantSlug} /> */}
+
             <VStack flex={1} paddingLeft={isSmall ? 10 : 0}>
               <Text fontSize={16} lineHeight={21}>
                 <VStack
@@ -298,7 +334,6 @@ const RestaurantListItemContent = memo(
                   maxWidth="100%"
                   flex={1}
                 >
-                  {/* this ensures the content flexes all the way across, hacky... */}
                   <Text opacity={0} lineHeight={0}>
                     wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
                   </Text>
@@ -313,7 +348,8 @@ const RestaurantListItemContent = memo(
                 </VStack>
               </Text>
             </VStack>
-            <Spacer size="xs" />
+
+            {/* BOTTOM ROW */}
             <Suspense fallback={null}>
               <RestaurantTopReviews
                 restaurantId={restaurantId}
@@ -325,19 +361,30 @@ const RestaurantListItemContent = memo(
                         <RestaurantLenseVote restaurantId={restaurantId} />
                       </VStack>
 
-                      <Spacer />
+                      <Spacer size="xs" />
 
-                      <HStack marginTop={-3} marginBottom={-1}>
-                        <RestaurantDeliveryButtons
-                          label="Delivers"
-                          restaurantSlug={restaurantSlug}
-                        />
+                      <HStack
+                        alignItems="center"
+                        {...smallButtonBaseStyle}
+                        height={36}
+                        cursor="initial"
+                      >
+                        <VStack marginVertical={-5} marginRight={-7}>
+                          <RestaurantDeliveryButtons
+                            label="Delivers"
+                            restaurantSlug={restaurantSlug}
+                          />
+                        </VStack>
                       </HStack>
 
                       <VStack flex={1} />
                       <RestaurantDetailRow
                         size="sm"
                         restaurantSlug={restaurantSlug}
+                      />
+                      <RestaurantFavoriteButton
+                        size="md"
+                        restaurantId={restaurantId}
                       />
                     </HStack>
                   </Suspense>
@@ -351,6 +398,157 @@ const RestaurantListItemContent = memo(
       </VStack>
     )
   })
+)
+
+export const RestaurantScoreBreakdownSmall = memo(
+  graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
+    const restaurant = useRestaurantQuery(restaurantSlug)
+    const sources = restaurant?.sources?.() ?? {}
+    return (
+      <HStack alignItems="center">
+        <Text fontSize={12} opacity={0.5}>
+          via
+        </Text>
+        <HStack spacing={6}>
+          {Object.keys(sources).map((source, i) => {
+            const item = sources[source]
+            if (!item) {
+              return null
+            }
+            const info = thirdPartyCrawlSources[source]
+            return (
+              <HStack
+                key={source}
+                alignItems="center"
+                padding={4}
+                borderRadius={100}
+                backgroundColor={bgLight}
+                spacing={3}
+              >
+                {info?.image ? (
+                  <Image
+                    source={info.image}
+                    style={{
+                      width: 16,
+                      height: 16,
+                      borderRadius: 100,
+                    }}
+                  />
+                ) : null}
+                <Text fontSize={12} opacity={0.75}>
+                  {info?.name ?? source}
+                </Text>
+                <Text fontSize={13} opacity={0.5}>
+                  {+(item.rating ?? 0) * 10}
+                </Text>
+              </HStack>
+            )
+          })}
+        </HStack>
+      </HStack>
+    )
+  })
+)
+
+export const RestaurantScoreBreakdown = memo(
+  graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
+    const restaurant = useRestaurantQuery(restaurantSlug)
+    const headlines = restaurant.headlines() ?? []
+    const sources = restaurant?.sources?.() ?? {}
+    return (
+      <HStack paddingVertical={12}>
+        <VStack>
+          <VStack spacing={8}>
+            <Text color="rgba(0,0,0,0.5)">
+              <TextStrong color="#000">+421</TextStrong> points from 280
+              reviews:
+            </Text>
+
+            <VStack paddingLeft={10}>
+              {headlines.slice(0, 3).map((item, i) => {
+                return (
+                  <li style={{ display: 'flex' }} key={i}>
+                    <HStack key={i} flex={1} overflow="hidden">
+                      <Text fontSize={14} color="rgba(0,0,0,0.7)" ellipse>
+                        {item.sentence}
+                      </Text>
+                    </HStack>
+                  </li>
+                )
+              })}
+            </VStack>
+          </VStack>
+
+          <Spacer />
+
+          <VStack spacing={10}>
+            <Text color="rgba(0,0,0,0.5)">
+              <TextStrong color="#000">+1893</TextStrong> points from 280
+              reviews:
+            </Text>
+
+            <VStack>
+              {Object.keys(sources).map((source, i) => {
+                const item = sources[source]
+                if (!item) {
+                  return null
+                }
+                const info = thirdPartyCrawlSources[source]
+                return (
+                  <HStack
+                    key={source}
+                    padding={3}
+                    paddingLeft={18}
+                    alignItems="center"
+                    flex={1}
+                    hoverStyle={{
+                      backgroundColor: '#f2f2f2',
+                    }}
+                    spacing={10}
+                  >
+                    {info?.image ? (
+                      <Image
+                        source={info.image}
+                        style={{
+                          width: 16,
+                          height: 16,
+                          borderRadius: 100,
+                        }}
+                      />
+                    ) : null}
+                    <Text fontSize={12} opacity={0.5}>
+                      {info?.name ?? source}
+                    </Text>
+                    <Text fontSize={13}>{+(item.rating ?? 0) * 10}</Text>
+                    <Text>
+                      Falafel Super Wrap, tasted great, the person who took
+                    </Text>
+                  </HStack>
+                )
+              })}
+            </VStack>
+          </VStack>
+        </VStack>
+      </HStack>
+    )
+  })
+)
+
+const TableHead = (props) => (
+  <Text
+    className="el-th"
+    display="flex"
+    alignSelf="flex-end"
+    backgroundColor="#eee"
+    padding={2}
+    paddingHorizontal={8}
+    marginVertical={-2}
+    borderRadius={10}
+    maxWidth={52}
+    ellipse
+    fontSize={12}
+    {...props}
+  />
 )
 
 const RestaurantPeek = memo(

@@ -362,3 +362,11 @@ li::before {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: auto;
 }
+
+.el-th {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 60px !important;
+  display: block !important;
+  overflow: hidden !important;
+}

@@ -18,7 +18,7 @@ import { getTagId } from '../../state/getTagId'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
-import { useUserUpvoteDownvote } from './useUserReview'
+import { useUserUpvoteDownvoteQuery } from './useUserReview'
 
 export type TagButtonTagProps = NonNullObject<
   Required<Pick<Tag, 'name' | 'type'>>
@@ -284,7 +284,7 @@ export const TagButton = memo((props: TagButtonProps) => {
 
 const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   const { scale, subtle } = props
-  const [vote, setVote] = useUserUpvoteDownvote(props.restaurantId, {
+  const [vote, setVote] = useUserUpvoteDownvoteQuery(props.restaurantId, {
     [getTagId(props)]: true,
   })
   const buttonRef = useRef()
