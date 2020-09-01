@@ -13,7 +13,7 @@ export const FavoriteButton = ({
   onChange,
   size = 'md',
 }: FavoriteButtonProps) => {
-  const sizePx = size === 'sm' ? 16 : size == 'lg' ? 26 : 18
+  const sizePx = size === 'sm' ? 18 : size == 'lg' ? 26 : 22
   return (
     <HStack
       pressStyle={{ opacity: 0.4 }}
@@ -40,8 +40,8 @@ export const FavoriteButton = ({
         <Text
           cursor="default"
           color="red"
-          fontSize={sizePx * 0.7}
-          lineHeight={sizePx * 0.7}
+          fontSize={sizePx * 0.8}
+          lineHeight={sizePx * 0.8}
           marginTop={1}
         >
           ♥️

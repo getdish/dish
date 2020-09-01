@@ -45,6 +45,7 @@ Text.staticConfig = {
 }
 
 const textNonStylePropReg = /^(allow.*|on[A-Z].*|.*[Mm]ode)/
+
 const useTextStyle = (allProps: TextProps) => {
   return useMemo(() => {
     const props: ReactTextProps = {}

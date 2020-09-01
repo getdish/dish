@@ -23,10 +23,6 @@ export const SmallButton = ({
     <HStack
       className={rest.className}
       {...smallButtonBaseStyle}
-      {...(isActive && {
-        backgroundColor: 'transparent',
-        borderColor: `#aaa`,
-      })}
       hoverStyle={
         isActive
           ? {
@@ -37,6 +33,13 @@ export const SmallButton = ({
             }
       }
       {...rest}
+      {...(isActive && {
+        backgroundColor: 'transparent',
+        borderColor: `#aaa`,
+        hoverStyle: {
+          backgroundColor: 'transparent',
+        },
+      })}
       minWidth={43}
     >
       <Text

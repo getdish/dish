@@ -1,99 +1,113 @@
 import { graphql, query } from '@dish/graph'
-import { HStack, Spacer, Text, VStack } from '@dish/ui'
-import React, { Suspense, memo, useState } from 'react'
-import { MessageCircle } from 'react-feather'
+import { Divider, HStack, SmallTitle, Spacer, Text, VStack } from '@dish/ui'
+import { Store, useStore } from '@dish/use-store'
+import React, { Suspense, memo } from 'react'
 
-import { SmallButton } from '../../views/ui/SmallButton'
 import {
   RestaurantAddComment,
   RestaurantAddCommentButton,
 } from './RestaurantAddComment'
+import { RestaurantLenseVote } from './RestaurantLenseVote'
 import { RestaurantReview } from './RestaurantReview'
+import { RestaurantScoreBreakdown } from './RestaurantScoreBreakdown'
+import { SlantedTitle } from './SlantedTitle'
+
+export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
+  showComments = false
+  showAddComment = false
+
+  toggleShowAddComments() {
+    this.showAddComment = !this.showAddComment
+  }
+
+  toggleShowComments() {
+    this.showComments = !this.showComments
+  }
+}
+
+// BRING BACK LENSE VOTING
+// ADD IN DISH BREAKDOWN
 
 export const RestaurantTopReviews = memo(
-  graphql(
-    ({
-      restaurantId,
-      expandTopComments,
-      afterTopCommentButton,
-    }: {
-      restaurantId: string
-      expandTopComments?: number
-      afterTopCommentButton?: any
-    }) => {
-      const [state, setState] = useState({
-        showAddComment: false,
-        showMore: false,
-      })
-      const totalToShow = 3
-      const expandCommentButton = (
-        <>
-          <SmallButton
-            onPress={() => {
-              setState((x) => ({ ...x, showMore: !x.showMore }))
-            }}
-          >
-            <MessageCircle size={18} />
-          </SmallButton>
-          {afterTopCommentButton ? (
-            <>
-              <Spacer size="xs" />
-              {afterTopCommentButton}
-            </>
-          ) : null}
-        </>
-      )
-      return (
-        <VStack alignSelf="stretch" paddingRight={20}>
-          {!expandTopComments && <HStack>{expandCommentButton}</HStack>}
+  ({
+    restaurantId,
+    restaurantSlug,
+  }: {
+    restaurantId: string
+    restaurantSlug: string
+  }) => {
+    const store = useStore(RestaurantReviewsDisplayStore, { id: restaurantId })
 
-          {!!(state.showMore || expandTopComments) && (
-            <VStack paddingTop={20} spacing={10}>
-              <HStack>
-                <Spacer flex={1} />
-                <RestaurantAddCommentButton
-                  restaurantId={restaurantId}
-                  onPress={() =>
-                    setState((state) => ({
-                      ...state,
-                      showAddComment: !state.showAddComment,
-                    }))
-                  }
-                />
-              </HStack>
-
-              {state.showAddComment && (
-                <>
-                  <Spacer />
-                  <RestaurantAddComment restaurantId={restaurantId} />
-                </>
-              )}
-
+    return (
+      <VStack flex={1} overflow="hidden" maxWidth="100%" position="relative">
+        <HStack marginBottom={-20} alignItems="center" justifyContent="center">
+          <SlantedTitle fontWeight="600">Review Breakdown</SlantedTitle>
+        </HStack>
+        <HStack
+          flexWrap="wrap"
+          overflow="hidden"
+          flex={1}
+          margin={10}
+          borderWidth={1}
+          borderColor="#ddd"
+          borderRadius={12}
+          paddingHorizontal={18}
+          paddingVertical={18}
+        >
+          <VStack flex={1} overflow="hidden" paddingTop={20} spacing={10}>
+            <HStack alignItems="stretch">
               <Suspense fallback={null}>
-                <Content
-                  numToShow={
-                    state.showMore ? Infinity : expandTopComments ?? Infinity
-                  }
+                <RestaurantAddCommentButton
+                  flex={1}
                   restaurantId={restaurantId}
+                  onPress={store.toggleShowAddComments}
                 />
               </Suspense>
-              {expandTopComments < totalToShow ? expandCommentButton : null}
-            </VStack>
-          )}
-        </VStack>
-      )
-    }
-  )
+            </HStack>
+
+            {store.showAddComment && (
+              <>
+                <Spacer />
+                <RestaurantAddComment restaurantId={restaurantId} />
+              </>
+            )}
+
+            <Suspense fallback={null}>
+              <RestaurantReviewsList restaurantId={restaurantId} />
+            </Suspense>
+          </VStack>
+
+          <Spacer />
+          <Divider vertical />
+          <Spacer />
+
+          <VStack flex={1} overflow="hidden">
+            <SmallTitle>Points</SmallTitle>
+            <RestaurantScoreBreakdown restaurantSlug={restaurantSlug} />
+
+            <Spacer size="xl" />
+
+            <SmallTitle>Lenses</SmallTitle>
+            <RestaurantLenseVote restaurantId={restaurantId} />
+
+            <Spacer size="xl" />
+
+            <SmallTitle>Dishes</SmallTitle>
+          </VStack>
+        </HStack>
+      </VStack>
+    )
+  }
 )
 
-const Content = memo(
+const RestaurantReviewsList = memo(
   graphql(
     ({
       restaurantId,
       numToShow,
     }: {
       restaurantId: string
-      numToShow: number
+      numToShow?: number
     }) => {
       let topReviews = query.review({
         limit: 3,
@@ -105,7 +119,7 @@ const Content = memo(
       })
 
       return (
-        <>
+        <VStack spacing="lg">
           {topReviews.map((review, i) => (
             <RestaurantReview
               key={i}
@@ -120,7 +134,7 @@ const Content = memo(
               </Text>
             </VStack>
           )}
-        </>
+        </VStack>
       )
     }
   )

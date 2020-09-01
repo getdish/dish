@@ -10,11 +10,13 @@ export const RestaurantReview = ({
   reviewText?: string
 }) => {
   return (
-    <CommentBubble user={{ username: userName }}>
-      <Text selectable opacity={0.8} lineHeight={20} fontSize={14}>
-        {reviewText ??
-          `Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet sit amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.`}
-      </Text>
+    <CommentBubble
+      expandable
+      ellipseContentAbove={400}
+      user={{ username: userName }}
+    >
+      {reviewText ??
+        `Lorem ipsu dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit ipsum sit amet. Lorem ipsum dolor sit amet sit amet. Lorem ipsum dolor sit amet.Lorem ipsum dolor sit amet.`}
     </CommentBubble>
   )
 }

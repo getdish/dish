@@ -211,7 +211,7 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
                 },
               })
             }
-            return info.actions[key]
+            return info.actions[key].bind(proxiedStore)
           }
           if (internal.current.isRendering) {
             internal.current.tracked.add(key)
