@@ -660,11 +660,16 @@ const setLocation: AsyncAction<string> = async (om, val) => {
   om.actions.home.setLocationSearchQuery(val)
   const exact = current.find((x) => x.name === val)
   if (exact?.center) {
-    om.state.home.currentState.center = { ...exact.center }
+    om.actions.home.updateCurrentState({
+      center: { ...exact.center },
+      mapAt: null,
+    })
     setDefaultLocation({
       center: exact.center,
       span: om.state.home.currentState.span,
     })
+  } else {
+    console.warn('No center found?')
   }
 }
 
