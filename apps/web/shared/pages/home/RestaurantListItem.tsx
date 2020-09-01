@@ -30,6 +30,7 @@ import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { RestaurantOverview } from './RestaurantOverview'
+import RestaurantRatingView from './RestaurantRatingView'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import {
   RestaurantReviewsDisplayStore,
@@ -198,13 +199,12 @@ const RestaurantListItemContent = memo(
             >
               <VStack paddingTop={paddingTop}>
                 <HStack marginLeft={-5} alignItems="center" maxWidth="40%">
-                  {/* <RankingView rank={rank} /> */}
-
-                  <RestaurantRatingViewPopover
-                    size="sm"
-                    restaurantSlug={restaurantSlug}
-                  />
-
+                  <VStack marginVertical={-14}>
+                    <RestaurantUpVoteDownVote
+                      restaurantId={restaurantId}
+                      activeTagIds={tagIds ?? {}}
+                    />
+                  </VStack>
                   <Spacer />
 
                   {/* SECOND LINK WITH actual <a /> */}
@@ -238,6 +238,7 @@ const RestaurantListItemContent = memo(
                       >
                         {restaurantName}
                       </Text>
+                      <Spacer />
                     </Link>
                     {!!restaurant.address && (
                       <RestaurantAddress
@@ -258,13 +259,7 @@ const RestaurantListItemContent = memo(
           <HStack zIndex={1000} marginLeft={-3} alignItems="center">
             <VStack>
               <HStack alignItems="center">
-                <VStack marginVertical={-14}>
-                  <RestaurantUpVoteDownVote
-                    restaurantId={restaurantId}
-                    activeTagIds={tagIds ?? {}}
-                  />
-                </VStack>
-                <Spacer />
+                <Spacer size="xl" />
 
                 <Spacer size="xs" />
 
@@ -273,12 +268,12 @@ const RestaurantListItemContent = memo(
                   horizontal
                   showsHorizontalScrollIndicator={false}
                 > */}
-                <VStack marginTop={-4}>
+                <VStack marginTop={-6}>
                   <HStack>
                     <Text fontSize={12} color="rgba(0,0,0,0.5)">
                       <Text fontSize={14}>
                         #
-                        <Text fontWeight="800" color="#000">
+                        <Text fontSize={16} fontWeight="400" color="#000">
                           {rank}
                         </Text>{' '}
                         in
@@ -346,7 +341,7 @@ const RestaurantListItemContent = memo(
 
           {/* RANKING BREAKDOWN ROW */}
 
-          <Spacer />
+          <Spacer size="sm" />
 
           {/* ROW: Overview / Reviews / Comment */}
           <VStack
@@ -379,6 +374,8 @@ const RestaurantListItemContent = memo(
               </Text>
             </VStack>
 
+            <Spacer size="xs" />
+
             {/* BOTTOM ROW */}
             <Suspense fallback={null}>
               <HStack flex={1} alignItems="center" flexWrap="wrap">
@@ -388,7 +385,16 @@ const RestaurantListItemContent = memo(
                       isActive={reviewDisplayStore.showComments}
                       onPress={reviewDisplayStore.toggleShowComments}
                     >
-                      <Activity size={18} />
+                      <HStack alignItems="center">
+                        <VStack marginVertical={-10}>
+                          <RestaurantRatingView
+                            size="sm"
+                            restaurantSlug={restaurantSlug}
+                          />
+                        </VStack>
+                        <Spacer />
+                        <Activity size={18} />
+                      </HStack>
                     </SmallButton>
                   </Tooltip>
                 </VStack>

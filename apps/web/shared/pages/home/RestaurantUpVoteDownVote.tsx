@@ -36,6 +36,7 @@ export const RestaurantUpVoteDownVote = memo(
           pointerEvents="auto"
           alignItems="center"
           justifyContent="center"
+          width={30}
         >
           <Tooltip position="right" contents="Upvote" {...isOpenProp}>
             <VoteButton
@@ -51,6 +52,7 @@ export const RestaurantUpVoteDownVote = memo(
             fontSize={score <= 9 ? 26 : score <= 99 ? 22 : 18}
             fontWeight="600"
             marginVertical={-2}
+            color="rgba(0,0,0,0.4)"
           >
             {score}
           </Text>
