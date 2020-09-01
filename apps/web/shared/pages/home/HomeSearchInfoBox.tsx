@@ -47,12 +47,13 @@ const HomeSearchInfoBoxCountry = memo(
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <HStack
           paddingHorizontal={20}
-          paddingVertical={15}
+          paddingVertical={10}
+          marginVertical={-10}
           spacing={10}
           alignItems="center"
         >
           <Text opacity={0.7} fontSize={14}>
-            {countryTag.name} dishes:
+            Filter by dish:
           </Text>
           {topCountryDishes.map((tag) => {
             return (

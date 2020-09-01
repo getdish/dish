@@ -27,6 +27,9 @@ export const RestaurantUpVoteDownVote = memo(
           : {
               isOpen: false,
             }
+
+      const score = 294 + vote
+
       return (
         <VStack
           // className="hover-to-reveal-child"
@@ -44,8 +47,12 @@ export const RestaurantUpVoteDownVote = memo(
               }}
             />
           </Tooltip>
-          <Text fontSize={20} fontWeight="600" marginVertical={-2}>
-            2134
+          <Text
+            fontSize={score <= 9 ? 26 : score <= 99 ? 22 : 18}
+            fontWeight="600"
+            marginVertical={-2}
+          >
+            {score}
           </Text>
           <Tooltip position="right" contents="Downvote" {...isOpenProp}>
             <VoteButton

@@ -5,7 +5,7 @@ export const thirdPartyCrawlSources = {
     delivery: false,
   },
   ubereats: {
-    name: 'Uber Eats',
+    name: 'UberEats',
     image: require('../../assets/ubereats.jpg').default,
     delivery: true,
   },
@@ -35,7 +35,7 @@ export const thirdPartyCrawlSources = {
     delivery: false,
   },
   michelin: {
-    name: 'Michelin Guide',
+    name: 'Michelin',
     image: require('../../assets/michelin.jpg').default,
     delivery: false,
   },

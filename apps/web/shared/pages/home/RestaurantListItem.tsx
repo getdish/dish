@@ -12,7 +12,8 @@ import {
 } from '@dish/ui'
 import { sortBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useState } from 'react'
-import { Image } from 'react-native'
+import { HelpCircle } from 'react-feather'
+import { Image, ScrollView } from 'react-native'
 
 import { bgLight, bgLightLight, brandColor } from '../../colors'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
@@ -127,8 +128,8 @@ const RestaurantListItemContent = memo(
     const isSmall = useMediaQueryIsSmall()
     // note static for now... caused big perf issue
     // const isEditing = isEditingUserPage(props.searchState, omStatic.state)
-    const leftPad = 25
     const restaurant = useRestaurantQuery(restaurantSlug)
+    const [showBreakdown, setShowBreakdown] = useState(false)
 
     useEffect(() => {
       if (!!restaurant.name && props.onFinishRender) {
@@ -143,7 +144,6 @@ const RestaurantListItemContent = memo(
     const tagIds = 'activeTagIds' in curState ? curState.activeTagIds : null
 
     const tags = omStatic.state.home.lastActiveTags
-    console.log('tags', tags)
 
     const [isActive, setIsActive] = useState(false)
     const getIsActive = useGet(isActive)
@@ -164,7 +164,7 @@ const RestaurantListItemContent = memo(
         justifyContent="flex-start"
         flex={1}
         // turn this off breaks something? but hides the rest of title hover?
-        overflow="hidden"
+        // overflow="hidden"
         // prevent jitter/layout moving until loaded
         display={restaurant.name === null ? 'none' : 'flex'}
         borderLeftWidth={2}
@@ -194,7 +194,7 @@ const RestaurantListItemContent = memo(
               params={{ slug: restaurantSlug }}
             >
               <VStack paddingTop={paddingTop}>
-                <HStack paddingLeft={0} alignItems="center" maxWidth="40%">
+                <HStack marginLeft={-5} alignItems="center" maxWidth="40%">
                   {/* <RankingView rank={rank} /> */}
 
                   <RestaurantRatingViewPopover
@@ -265,10 +265,13 @@ const RestaurantListItemContent = memo(
 
                 <Spacer size="xs" />
 
+                {/* <ScrollView
+                  style={{ flex: 1 }}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                > */}
                 <VStack marginTop={-4}>
                   <HStack>
-                    {/* <RestaurantScoreBreakdown restaurantSlug={restaurantSlug} /> */}
-
                     <Text fontSize={12} opacity={0.5}>
                       <Text fontSize={14}>
                         <TextStrong>#{rank}</TextStrong> in
@@ -297,17 +300,24 @@ const RestaurantListItemContent = memo(
                       </Text>
                       <Text marginLeft={-8} fontSize={14}>
                         {' '}
-                        (152 reviews)
+                        (152 reviews){' '}
+                        <HelpCircle
+                          size={14}
+                          color="rgba(0,0,0,0.5)"
+                          style={{ marginBottom: -2 }}
+                          onClick={() => setShowBreakdown((x) => !x)}
+                        />
                       </Text>
                     </Text>
                   </HStack>
                   <Spacer size="sm" />
-                  <HStack paddingLeft={20}>
+                  <HStack paddingLeft={10} paddingRight={20}>
                     <RestaurantScoreBreakdownSmall
                       restaurantSlug={restaurantSlug}
                     />
                   </HStack>
                 </VStack>
+                {/* </ScrollView> */}
               </HStack>
             </VStack>
           </HStack>
@@ -324,29 +334,31 @@ const RestaurantListItemContent = memo(
             paddingBottom={10}
             marginBottom={-10}
           >
-            {/* <RestaurantScoreBreakdown restaurantSlug={restaurantSlug} /> */}
-
             <VStack flex={1} paddingLeft={isSmall ? 10 : 0}>
-              <Text fontSize={16} lineHeight={21}>
-                <VStack
-                  marginTop={4}
-                  marginBottom={12}
-                  maxWidth="100%"
-                  flex={1}
-                >
-                  <Text opacity={0} lineHeight={0}>
-                    wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-                  </Text>
-                  <Text>
-                    <Suspense fallback={<LoadingItems />}>
-                      <RestaurantOverview
-                        restaurantSlug={restaurantSlug}
-                        inline
-                      />
-                    </Suspense>
-                  </Text>
-                </VStack>
-              </Text>
+              {showBreakdown ? (
+                <RestaurantScoreBreakdown restaurantSlug={restaurantSlug} />
+              ) : (
+                <Text fontSize={16} lineHeight={21}>
+                  <VStack
+                    marginTop={4}
+                    marginBottom={12}
+                    maxWidth="100%"
+                    flex={1}
+                  >
+                    <Text opacity={0} lineHeight={0}>
+                      wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+                    </Text>
+                    <Text>
+                      <Suspense fallback={<LoadingItems />}>
+                        <RestaurantOverview
+                          restaurantSlug={restaurantSlug}
+                          inline
+                        />
+                      </Suspense>
+                    </Text>
+                  </VStack>
+                </Text>
+              )}
             </VStack>
 
             {/* BOTTOM ROW */}
@@ -407,7 +419,7 @@ export const RestaurantScoreBreakdownSmall = memo(
     return (
       <HStack alignItems="center">
         <Text fontSize={12} opacity={0.5}>
-          via
+          via&nbsp;
         </Text>
         <HStack spacing={6}>
           {Object.keys(sources).map((source, i) => {
