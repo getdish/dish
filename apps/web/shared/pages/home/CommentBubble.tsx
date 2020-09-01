@@ -1,6 +1,13 @@
 import { User as UserModel } from '@dish/graph'
-import { Circle, HStack, StackProps, Text, VStack } from '@dish/ui'
-import React from 'react'
+import {
+  Circle,
+  HStack,
+  StackProps,
+  Text,
+  VStack,
+  useScrollPosition,
+} from '@dish/ui'
+import React, { useState } from 'react'
 import { User } from 'react-feather'
 
 import { Link } from '../../views/ui/Link'
@@ -8,11 +15,16 @@ import { Link } from '../../views/ui/Link'
 export const CommentBubble = ({
   user,
   children,
+  ellipseContentAbove,
+  expandable,
   ...rest
 }: StackProps & {
   user: Partial<UserModel>
-  children: any
+  children: string
+  ellipseContentAbove?: number
+  expandable?: boolean
 }) => {
+  const [isExpanded, setIsExpanded] = useState(false)
   return (
     <VStack
       flex={1}
@@ -43,7 +55,27 @@ export const CommentBubble = ({
           &nbsp; says
         </Text>
       </HStack>
-      {children}
+
+      <Text selectable opacity={0.8} lineHeight={20} fontSize={14}>
+        {ellipseContentAbove && children.length > ellipseContentAbove ? (
+          <>
+            {isExpanded
+              ? children
+              : children.slice(0, ellipseContentAbove) + '...'}{' '}
+            {!!expandable && (
+              <Link
+                onClick={() => {
+                  setIsExpanded((x) => !x)
+                }}
+              >
+                {isExpanded ? <>&laquo; Less</> : <>Read more &raquo;</>}
+              </Link>
+            )}
+          </>
+        ) : (
+          children
+        )}
+      </Text>
     </VStack>
   )
 }

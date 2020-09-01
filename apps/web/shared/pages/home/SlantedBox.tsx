@@ -1,7 +1,7 @@
-import { Box, StackProps } from '@dish/ui'
+import { Box, BoxProps, StackProps } from '@dish/ui'
 import React from 'react'
 
-export const SlantedBox = (props: StackProps) => {
+export const SlantedBox = (props: BoxProps) => {
   return <Box {...slantedBoxStyle} {...props} />
 }
 

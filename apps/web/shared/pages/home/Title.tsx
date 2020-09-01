@@ -3,7 +3,9 @@ import React from 'react'
 import { Paragraph } from './Paragraph'
 import { SizableTextProps, getSize } from './Size'
 
-export const Title = (props: SizableTextProps) => {
+export type TitleProps = SizableTextProps
+
+export const Title = (props: TitleProps) => {
   const size = getSize(props.size) * 2.5
   return (
     <Paragraph

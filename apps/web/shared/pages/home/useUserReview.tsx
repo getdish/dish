@@ -76,7 +76,7 @@ export const useUserReviewsQuery = (restaurantId: string) => {
         return series([() => resolved(fetcher), forceUpdate])
       }
     }
-  }, [reviews, fetchKey])
+  }, [shouldFetch, fetchKey])
 
   return {
     userId,
@@ -232,7 +232,7 @@ export const useUserTagVotes = (restaurantId: string) => {
         )
         didSave = !!saved.length
         if (didSave) {
-          sleep(200).then(() => {
+          sleep(300).then(() => {
             if (isMounted.current) {
               refetch()
             }

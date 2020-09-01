@@ -13,7 +13,9 @@ const defaultStyle: StackProps = {
   overflow: 'hidden',
 }
 
-export function Box(props: StackProps) {
+export type BoxProps = StackProps
+
+export function Box(props: BoxProps) {
   return <VStack {...defaultStyle} {...props} />
 }
 
