@@ -9,6 +9,7 @@ import {
   VStack,
 } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
+import { Image } from 'react-native'
 import { ScrollView } from 'react-native'
 
 import { HomeStateItemRestaurant } from '../../state/home-types'
@@ -88,48 +89,7 @@ const HomePageRestaurant = memo(
               </HStack>
             </VStack>
 
-            <Spacer size="lg" />
-
-            <Box
-              borderWidth={1}
-              borderColor="#eee"
-              padding={0}
-              marginHorizontal="5%"
-              position="relative"
-              overflow="visible"
-              shadowColor="transparent"
-            >
-              <VStack
-                paddingVertical={5}
-                paddingHorizontal={6}
-                shadowColor={'rgba(0,0,0,0.1)'}
-                shadowRadius={8}
-                shadowOffset={{ height: 2, width: 0 }}
-                backgroundColor="#fff"
-                borderRadius={8}
-                transform={[{ rotate: '-4deg' }]}
-                position="absolute"
-                zIndex={100}
-                top={-10}
-                left={-5}
-              >
-                Ratings
-              </VStack>
-              <ScrollView
-                style={{ width: '100%' }}
-                contentContainerStyle={{
-                  minWidth: '100%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-              >
-                <RestaurantRatingBreakdown restaurantSlug={slug} />
-              </ScrollView>
-            </Box>
-
-            <Spacer size="lg" />
+            <Spacer size="xl" />
 
             <VStack>
               <HStack
@@ -144,12 +104,10 @@ const HomePageRestaurant = memo(
                   restaurantId={restaurant.id}
                   spacing={8}
                   grid
-                  max={8}
+                  max={5}
                 />
               </HStack>
             </VStack>
-
-            <Spacer />
 
             <VStack width="100%">
               <Suspense fallback={null}>
@@ -163,13 +121,12 @@ const HomePageRestaurant = memo(
 
             <Spacer />
 
-            <VStack>
-              <SmallTitle divider="off">Top tips</SmallTitle>
-              <Spacer />
-              <HStack paddingHorizontal={20} maxWidth="100%" flexWrap="wrap">
-                <RestaurantOverview restaurantSlug={slug} />
-              </HStack>
-            </VStack>
+            <Suspense fallback={null}>
+              <RestaurantTopReviews
+                restaurantSlug={slug}
+                restaurantId={restaurant.id}
+              />
+            </Suspense>
 
             <Spacer size="xl" />
 
@@ -189,41 +146,32 @@ const HomePageRestaurant = memo(
               </VStack>
 
               <Spacer size="xl" />
-
-              <Suspense fallback={null}>
-                <RestaurantTopReviews
-                  restaurantSlug={slug}
-                  restaurantId={restaurant.id}
-                />
-              </Suspense>
             </VStack>
 
-            {/* <VStack width="100%">
-                <SmallTitle>Images</SmallTitle>
-                <HStack
-                  width="100%"
-                  flexWrap="wrap"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  {(restaurant.photos() ?? [])
-                    .slice(0, 10)
-                    .map((photo, key) => (
-                      <Image
-                        key={key}
-                        source={{ uri: photo }}
-                        style={{
-                          height: 180,
-                          width: '31%',
-                          marginRight: 10,
-                          marginBottom: 10,
-                          borderRadius: 12,
-                        }}
-                        resizeMode="cover"
-                      />
-                    ))}
-                </HStack>
-              </VStack> */}
+            <VStack width="100%">
+              <SmallTitle>Images</SmallTitle>
+              <HStack
+                width="100%"
+                flexWrap="wrap"
+                alignItems="center"
+                justifyContent="center"
+              >
+                {(restaurant.photos() ?? []).slice(0, 10).map((photo, key) => (
+                  <Image
+                    key={key}
+                    source={{ uri: photo }}
+                    style={{
+                      height: 180,
+                      width: '31%',
+                      marginRight: 10,
+                      marginBottom: 10,
+                      borderRadius: 12,
+                    }}
+                    resizeMode="cover"
+                  />
+                ))}
+              </HStack>
+            </VStack>
           </Suspense>
 
           {/* bottom space */}

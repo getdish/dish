@@ -66,7 +66,8 @@ export const RestaurantTopReviews = memo(
           paddingHorizontal={18}
           paddingVertical={18}
         >
-          <VStack flex={1} overflow="hidden" paddingTop={20} spacing={10}>
+          <VStack flex={1} overflow="hidden" spacing={10}>
+            <SmallTitle>Reviews</SmallTitle>
             <HStack alignItems="stretch">
               <Suspense fallback={null}>
                 <RestaurantAddCommentButton

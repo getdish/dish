@@ -11,7 +11,7 @@ export const Paragraph = ({
   return (
     <Text
       fontSize={16 * getSize(size)}
-      lineHeight={26 * getSize(size) * sizeLineHeight}
+      lineHeight={24 * getSize(size) * sizeLineHeight}
       color="rgba(0,0,0,0.85)"
       fontWeight="400"
       selectable
