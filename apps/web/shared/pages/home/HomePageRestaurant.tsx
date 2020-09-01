@@ -132,10 +132,6 @@ const HomePageRestaurant = memo(
             <Spacer size="lg" />
 
             <VStack>
-              <SmallTitle fontWeight="800" divider="off">
-                Stats
-              </SmallTitle>
-              <Spacer />
               <HStack
                 paddingHorizontal="5%"
                 flexWrap="wrap"
@@ -194,10 +190,9 @@ const HomePageRestaurant = memo(
 
               <Spacer size="xl" />
 
-              <SmallTitle>Tips</SmallTitle>
               <Suspense fallback={null}>
                 <RestaurantTopReviews
-                  expandTopComments={2}
+                  restaurantSlug={slug}
                   restaurantId={restaurant.id}
                 />
               </Suspense>

@@ -1,13 +1,12 @@
 import { graphql } from '@dish/graph'
 import { Button, HStack, LinearGradient, Text, VStack } from '@dish/ui'
 import React, { memo, useState } from 'react'
-import { StyleSheet } from 'react-native'
 
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 export const RestaurantMenu = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
-    // const [isExpanded, setIsExpanded] = useState(false)
+    const [isExpanded, setIsExpanded] = useState(false)
     const restaurant = useRestaurantQuery(restaurantSlug)
     const items = restaurant.menu_items({ limit: 70 })
     return (
@@ -20,7 +19,7 @@ export const RestaurantMenu = memo(
         {!!items?.length && (
           <VStack position="relative">
             <HStack
-              // maxHeight={isExpanded ? 'auto' : 920}
+              maxHeight={isExpanded ? 'auto' : 120}
               overflow="hidden"
               spacing={3}
               flexWrap="wrap"
@@ -44,7 +43,7 @@ export const RestaurantMenu = memo(
                 </VStack>
               ))}
             </HStack>
-            {/* {!isExpanded && (
+            {!isExpanded && (
               <LinearGradient
                 colors={['rgba(255,255,255,0)', '#fff']}
                 style={[
@@ -58,8 +57,8 @@ export const RestaurantMenu = memo(
                   },
                 ]}
               />
-            )} */}
-            {/* <Button
+            )}
+            <Button
               marginTop={-5}
               zIndex={100}
               position="relative"
@@ -71,7 +70,7 @@ export const RestaurantMenu = memo(
               <Text fontWeight="800" fontSize={13}>
                 {isExpanded ? 'Close' : 'Show all'}
               </Text>
-            </Button> */}
+            </Button>
           </VStack>
         )}
       </>

@@ -10,7 +10,7 @@ export type RestaurantRatingViewProps = Omit<
   'percent' | 'color'
 > & {
   restaurantSlug: string
-  rating: number
+  rating?: number
 }
 
 export default memo(
@@ -21,7 +21,7 @@ export default memo(
       const restaurant = useRestaurantQuery(restaurantSlug)
       rating = restaurant.rating
     }
-    const percent = getRestaurantRating(rating)
+    const percent = getRestaurantRating(rating ?? 0)
     const color = getRankingColor(percent)
     return <RatingView percent={percent} color={color} {...rest} />
   })
