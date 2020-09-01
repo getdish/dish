@@ -363,10 +363,6 @@ li::before {
   overscroll-behavior: auto;
 }
 
-.el-th {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 60px !important;
-  display: block !important;
-  overflow: hidden !important;
+.dotted-line {
+  border-bottom: 1px dotted #ddd;
 }

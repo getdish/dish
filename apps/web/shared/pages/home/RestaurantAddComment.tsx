@@ -27,15 +27,15 @@ export const RestaurantAddCommentButton = graphql(
         }}
         {...props}
       >
+        {review?.text ? 'Edit review' : 'Add review'}
         <MessageSquare
           size={16}
-          color="#000"
+          opacity={0.5}
           style={{
             margin: -4,
-            marginRight: 5,
+            marginLeft: 5,
           }}
         />
-        {review?.text ? 'Edit review' : 'Add review'}
       </SmallButton>
     )
   }

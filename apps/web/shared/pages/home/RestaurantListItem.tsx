@@ -148,6 +148,10 @@ const RestaurantListItemContent = memo(
     const tagIds = 'activeTagIds' in curState ? curState.activeTagIds : null
 
     const tags = omStatic.state.home.lastActiveTags
+    const reviewTags = sortBy(
+      tags.filter((tag) => tag.name !== 'Gems'),
+      (a) => (a.type === 'lense' ? 0 : a.type === 'dish' ? 2 : 1)
+    )
 
     const [isActive, setIsActive] = useState(false)
     const getIsActive = useGet(isActive)
@@ -273,39 +277,35 @@ const RestaurantListItemContent = memo(
                     <Text fontSize={12} color="rgba(0,0,0,0.5)">
                       <Text fontSize={14}>
                         #
-                        <Text fontSize={16} fontWeight="400" color="#000">
+                        <Text fontWeight="600" color="#000">
                           {rank}
                         </Text>{' '}
                         in
                       </Text>{' '}
                       <Text fontSize={14}>
-                        {sortBy(
-                          tags.filter((tag) => tag.name !== 'Gems'),
-                          (a) =>
-                            a.type === 'lense' ? 0 : a.type === 'dish' ? 2 : 1
-                        ).map((tag, i) => {
+                        {reviewTags.map((tag, i) => {
                           return (
                             <>
                               <VStack
-                                paddingHorizontal={2}
-                                margin={-2}
-                                marginRight={6}
                                 // borderRadius={5}
                                 // backgroundColor="#eee"
-                                borderBottomColor="#f2f2f2"
-                                borderBottomWidth={1}
+                                // borderBottomColor="#f2f2f2"
+                                // borderBottomWidth={1}
+                                // @ts-ignore
                                 display="inline-flex"
                               >
-                                <Text>{tagDisplayName(tag)}</Text>
+                                <Text>{tagDisplayName(tag).toLowerCase()}</Text>
                               </VStack>
+                              {i < reviewTags.length - 1 && (
+                                <Text marginHorizontal={4} fontSize={11}>
+                                  +
+                                </Text>
+                              )}
                             </>
                           )
                         })}
                       </Text>
-                      <Text marginLeft={-8} fontSize={14}>
-                        {' '}
-                        (152 reviews){' '}
-                      </Text>
+                      <Text fontSize={14}> (152 reviews) </Text>
                     </Text>
                     <VStack
                       padding={3}
@@ -484,23 +484,6 @@ export const RestaurantScoreBreakdownSmall = memo(
       </HStack>
     )
   })
-)
-
-const TableHead = (props) => (
-  <Text
-    className="el-th"
-    display="flex"
-    alignSelf="flex-end"
-    backgroundColor="#eee"
-    padding={2}
-    paddingHorizontal={8}
-    marginVertical={-2}
-    borderRadius={10}
-    maxWidth={52}
-    ellipse
-    fontSize={12}
-    {...props}
-  />
 )
 
 const RestaurantPeek = memo(

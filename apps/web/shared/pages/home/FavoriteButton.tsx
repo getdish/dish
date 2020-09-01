@@ -31,6 +31,7 @@ export const FavoriteButton = ({
       backgroundColor="#fff"
       borderRadius={100}
       borderWidth={1}
+      cursor="pointer"
       borderColor={size === 'md' ? 'transparent' : '#eee'}
       hoverStyle={{
         borderColor: size === 'md' ? 'transparent' : '#aaa',

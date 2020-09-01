@@ -44,7 +44,7 @@ export const SmallButton = ({
     >
       <Text
         color={isActive ? '#000' : bg}
-        fontSize={12}
+        fontSize={14}
         fontWeight="600"
         {...textStyle}
       >
