@@ -11,7 +11,7 @@ export const tagDisplayNames = {
   Vibe: 'Vibe',
   Veg: 'Green',
   Drink: 'Bar',
-  Gems: 'Gem',
+  Gems: 'Top',
 }
 
 export const tagDisplayIcons = {
@@ -21,5 +21,5 @@ export const tagDisplayIcons = {
   Vibe: 'Date',
   Veg: 'Green',
   Drink: 'Drink',
-  Gems: 'Gem',
+  Gems: 'Top',
 }

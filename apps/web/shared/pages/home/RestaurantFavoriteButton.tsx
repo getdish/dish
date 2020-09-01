@@ -2,7 +2,7 @@ import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
 
 import { FavoriteButton, FavoriteButtonProps } from './FavoriteButton'
-import { useUserFavorite } from './useUserReview'
+import { useUserFavoriteQuery } from './useUserReview'
 
 export type RestaurantFavoriteButtonProps = {
   size?: FavoriteButtonProps['size']
@@ -11,7 +11,7 @@ export type RestaurantFavoriteButtonProps = {
 
 export const RestaurantFavoriteButton = memo(
   graphql(({ size, restaurantId }: RestaurantFavoriteButtonProps) => {
-    const [isFavorite, setIsFavorite] = useUserFavorite(restaurantId)
+    const [isFavorite, setIsFavorite] = useUserFavoriteQuery(restaurantId)
     return (
       <FavoriteButton
         isFavorite={!!isFavorite}

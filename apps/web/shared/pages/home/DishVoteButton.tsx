@@ -4,7 +4,7 @@ import React from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
 import { FavoriteButtonProps } from './FavoriteButton'
-import { useUserUpvoteDownvote } from './useUserReview'
+import { useUserUpvoteDownvoteQuery } from './useUserReview'
 
 export const DishVoteButton = graphql(
   ({
@@ -16,7 +16,7 @@ export const DishVoteButton = graphql(
     restaurantId: string
     dishTagId: string
   }) => {
-    const [vote, setVote] = useUserUpvoteDownvote(restaurantId, {
+    const [vote, setVote] = useUserUpvoteDownvoteQuery(restaurantId, {
       [dishTagId]: true,
     })
     // console.log('vote', vote, dishTagId)

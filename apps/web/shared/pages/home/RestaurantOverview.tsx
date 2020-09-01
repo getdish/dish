@@ -20,13 +20,21 @@ export const RestaurantOverview = memo(
       if (inline) {
         return (
           <>
-            {headlines.slice(0, 4).map((item, i) => {
+            {headlines.slice(0, 3).map((item, i) => {
               return (
-                <li style={{ display: 'flex' }} key={i}>
-                  <HStack key={i} flex={1} overflow="hidden">
+                <React.Fragment key={i}>
+                  <HStack paddingVertical={2} flex={1} overflow="hidden">
+                    <Text
+                      fontSize={26}
+                      opacity={0.3}
+                      fontFamily="San Francisco, Times New Roman"
+                      marginRight={6}
+                    >
+                      &ldquo;
+                    </Text>
                     <Text ellipse>{item.sentence}</Text>
                   </HStack>
-                </li>
+                </React.Fragment>
               )
             })}
           </>

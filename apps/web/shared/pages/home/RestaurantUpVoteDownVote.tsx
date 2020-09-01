@@ -1,12 +1,12 @@
 import { graphql } from '@dish/graph'
-import { Spacer, StackProps, Tooltip, VStack } from '@dish/ui'
+import { Spacer, StackProps, Text, Tooltip, VStack } from '@dish/ui'
 import React, { memo, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
 import { bgLight } from '../../colors'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
-import { useUserUpvoteDownvote } from './useUserReview'
+import { useUserUpvoteDownvoteQuery } from './useUserReview'
 
 export const RestaurantUpVoteDownVote = memo(
   graphql(
@@ -17,7 +17,10 @@ export const RestaurantUpVoteDownVote = memo(
       restaurantId: string
       activeTagIds: HomeActiveTagsRecord
     }) => {
-      const [vote, setVote] = useUserUpvoteDownvote(restaurantId, activeTagIds)
+      const [vote, setVote] = useUserUpvoteDownvoteQuery(
+        restaurantId,
+        activeTagIds
+      )
       const isOpenProp =
         vote === 0
           ? null
@@ -26,11 +29,12 @@ export const RestaurantUpVoteDownVote = memo(
             }
       return (
         <VStack
-          className="hover-to-reveal-child"
+          // className="hover-to-reveal-child"
           pointerEvents="auto"
-          width={22}
+          alignItems="center"
+          justifyContent="center"
         >
-          <Tooltip position="right" contents="Underrated" {...isOpenProp}>
+          <Tooltip position="right" contents="Upvote" {...isOpenProp}>
             <VoteButton
               Icon={ChevronUp}
               voted={vote == 1}
@@ -40,8 +44,10 @@ export const RestaurantUpVoteDownVote = memo(
               }}
             />
           </Tooltip>
-          <Spacer size={32} />
-          <Tooltip position="right" contents="Overrated" {...isOpenProp}>
+          <Text fontSize={20} fontWeight="600" marginVertical={-2}>
+            2134
+          </Text>
+          <Tooltip position="right" contents="Downvote" {...isOpenProp}>
             <VoteButton
               Icon={ChevronDown}
               voted={vote == -1}
@@ -67,14 +73,14 @@ const VoteButton = ({
   const [hovered, setHovered] = useState(false)
   return (
     <VStack
-      width={24 * scale}
-      height={24 * scale}
+      width={22 * scale}
+      height={22 * scale}
       borderRadius={100}
       alignItems="center"
       justifyContent="center"
-      borderWidth={1}
-      backgroundColor="#fff"
-      borderColor="white"
+      // borderWidth={1}
+      // backgroundColor="#fff"
+      // borderColor="#eee"
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       pressStyle={{
@@ -86,7 +92,7 @@ const VoteButton = ({
       })}
       {...props}
     >
-      <Icon size={28} color={color ?? (hovered ? '#000' : '#ccc')} />
+      <Icon size={18} color={color ?? (hovered ? '#000' : '#ccc')} />
     </VStack>
   )
 }
