@@ -1,8 +1,17 @@
 import { graphql, query } from '@dish/graph'
-import { Divider, HStack, SmallTitle, Spacer, Text, VStack } from '@dish/ui'
+import {
+  AbsoluteVStack,
+  Divider,
+  HStack,
+  SmallTitle,
+  Spacer,
+  Text,
+  VStack,
+} from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 
+import { CloseButton } from './CloseButton'
 import {
   RestaurantAddComment,
   RestaurantAddCommentButton,
@@ -39,10 +48,13 @@ export const RestaurantTopReviews = memo(
     const store = useStore(RestaurantReviewsDisplayStore, { id: restaurantId })
 
     return (
-      <VStack flex={1} overflow="hidden" maxWidth="100%" position="relative">
+      <VStack maxWidth="100%" position="relative">
         <HStack marginBottom={-20} alignItems="center" justifyContent="center">
           <SlantedTitle fontWeight="600">Review Breakdown</SlantedTitle>
         </HStack>
+        <AbsoluteVStack zIndex={1000} top={18} right={11}>
+          <CloseButton onPress={store.toggleShowComments} />
+        </AbsoluteVStack>
         <HStack
           flexWrap="wrap"
           overflow="hidden"

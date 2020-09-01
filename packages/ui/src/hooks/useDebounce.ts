@@ -1,5 +1,5 @@
 import { debounce } from 'lodash'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 // copied from lodash because otherwise webpack-lodash gets mad
 type DebounceSettings = {
@@ -17,7 +17,7 @@ export function useDebounce<A extends (...args: any) => any>(
   cancel: () => void
 } {
   return useMemo(() => {
-    return debounce(fn, wait, options)
+    return debounce(fn, wait, options) as any
   }, [options, ...mountArgs])
 }
 
