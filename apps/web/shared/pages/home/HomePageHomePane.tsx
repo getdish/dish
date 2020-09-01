@@ -6,6 +6,7 @@ import {
   Divider,
   HStack,
   LoadingItems,
+  SmallTitle,
   Spacer,
   Text,
   VStack,
@@ -286,11 +287,17 @@ const HomeIntroLetter = memo(() => {
 })
 
 const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
+  const om = useOvermind()
   if (topDishes.length) {
     console.warn('rendering contnet more expensive', topDishes)
   }
   return (
     <>
+      <SmallTitle divider="off">
+        Cuisine that's uniquely good in{' '}
+        {om.state.home.currentState.currentLocationName}
+      </SmallTitle>
+      <Spacer size="xl" />
       {!topDishes.length && (
         <>
           <LoadingItems />
