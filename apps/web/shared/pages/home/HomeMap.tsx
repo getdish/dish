@@ -143,7 +143,7 @@ const HomeMapContent = memo(function HomeMap({
   const isSmall = useMediaQueryIsSmall()
   const stateId = om.state.home.currentState.id
   const state = om.state.home.allStates[stateId]
-  const { drawerWidth, width, paddingLeft } = useMapSize(isSmall)
+  const { width, paddingLeft } = useMapSize(isSmall)
   const [internal, setInternal] = useState({
     id: om.state.home.selectedRestaurant?.id,
     span: state.span,
@@ -255,10 +255,6 @@ const HomeMapContent = memo(function HomeMap({
   }, [restaurantSelected])
 
   const drawerStore = useStore(BottomDrawerStore)
-  const snapPoint = isSmall
-    ? // avoid resizing to top "fully open drawer" snap
-      Math.max(1, om.state.home.drawerSnapPoint)
-    : 0
   const padding = isSmall
     ? {
         left: 10,
@@ -369,7 +365,7 @@ const getRestaurantMarkers = (restaurants: Restaurant[]) => {
       continue
     }
     const percent = getRestaurantRating(restaurant.rating)
-    const color = getRankingColor(percent)
+    // const color = getRankingColor(percent)
     result.push({
       type: 'Feature',
       id: getNumId(restaurant.id),

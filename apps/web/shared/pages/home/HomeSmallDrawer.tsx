@@ -1,5 +1,5 @@
 import { VStack } from '@dish/ui'
-import { Store, useStoreDebug } from '@dish/use-store'
+import { Store, useStore } from '@dish/use-store'
 import { debounce } from 'lodash'
 import React, { useEffect, useMemo } from 'react'
 import { Animated, PanResponder, View } from 'react-native'
@@ -9,10 +9,14 @@ import { getWindowHeight } from '../../helpers/getWindow'
 import { omStatic } from '../../state/om'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
 import { blurSearchInput } from './HomeSearchInput'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import {
+  useMediaQueryIsReallySmall,
+  useMediaQueryIsShort,
+  useMediaQueryIsSmall,
+} from './useMediaQueryIs'
 
 export class BottomDrawerStore extends Store {
-  snapPoints = [0.02, 0.25, 0.6]
+  snapPoints = [0.03, 0.25, 0.6]
   snapIndex = 1
   pan = new Animated.Value(this.getSnapPoint())
   spring: any
@@ -68,8 +72,11 @@ export class BottomDrawerStore extends Store {
 }
 
 export const HomeSmallDrawer = (props: { children: any }) => {
-  const drawerStore = useStoreDebug(BottomDrawerStore)
+  const drawerStore = useStore(BottomDrawerStore)
   const isSmall = useMediaQueryIsSmall()
+  const isReallySmall = useMediaQueryIsReallySmall()
+  const isShort = useMediaQueryIsShort()
+  const defaultSnapPoint = isShort && isReallySmall ? 0 : 1
 
   useEffect(() => {
     // let lastIndex: number
@@ -80,10 +87,17 @@ export const HomeSmallDrawer = (props: { children: any }) => {
           // lastIndex = snapIndex
           drawerStore.animateDrawerToSnapPoint(0)
         } else {
-          drawerStore.animateDrawerToSnapPoint(1)
+          drawerStore.animateDrawerToSnapPoint(defaultSnapPoint)
         }
       }
     )
+  }, [])
+
+  // if starting out on a smaller screen, start with hiding map
+  useEffect(() => {
+    if (isShort && isSmall) {
+      drawerStore.animateDrawerToSnapPoint(defaultSnapPoint)
+    }
   }, [])
 
   // attaching this as a direct onPress event breaks dragging
