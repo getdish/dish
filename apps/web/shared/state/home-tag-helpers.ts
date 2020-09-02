@@ -74,9 +74,6 @@ export const getActiveTags = (
           type: 'dish',
         }
     )
-    if (!tags.some((tag) => tag.type === 'lense')) {
-      return [...tags, tagLenses[0]]
-    }
     return tags
   }
   return []

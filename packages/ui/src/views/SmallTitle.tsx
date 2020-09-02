@@ -31,7 +31,7 @@ export const SmallTitle = memo(
           <Text
             paddingHorizontal={30}
             {...{
-              letterSpacing: letterSpacing ?? -1,
+              letterSpacing: letterSpacing ?? -0.25,
               color: color ?? (isActive ? '#000' : '#888'),
               fontSize: fontSize ?? 16,
               fontWeight: fontWeight ?? '400',

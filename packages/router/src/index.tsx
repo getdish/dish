@@ -170,7 +170,6 @@ export class Router extends Store<RouterProps> {
             }
             this.stack = [...this.stack, next]
             this.stackIndex = this.stack.length - 1
-            console.log('SET IT OFF', this.stackIndex, this.stack.length - 1)
           }
           break
       }

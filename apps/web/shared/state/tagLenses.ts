@@ -40,14 +40,14 @@ export const tagDescriptions = {
   gems: {
     dish: 'The best 🍔',
     cuisine: 'The Best 🍔 Restaurants',
-    plain: 'Uniquely Good Here',
+    plain: 'Uniquely Good',
   },
   vibe: {
     dish: 'Nice 🍔',
-    cuisine: 'Nice 🍔 to meet',
+    cuisine: 'Vibey 🍔',
     plain: 'Vibes',
   },
-  drink: {
+  bar: {
     dish: '🍔 & drinks',
     cuisine: '🍔 with a bar',
     plain: 'Good Drinks',

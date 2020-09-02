@@ -46,7 +46,7 @@ import { NavigableTag } from './NavigableTag'
 import { omStatic } from './om'
 import { reverseGeocode } from './reverseGeocode'
 import { router } from './router'
-import { shouldBeOnHome } from './shouldBeOnHome'
+import { shouldBeOnSearch } from './shouldBeOnSearch'
 import { tagFilters } from './tagFilters'
 import { tagLenses } from './tagLenses'
 
@@ -292,17 +292,11 @@ const runSearch: AsyncAction<{
     mapAt: null,
   })
 
-  const hasSearchBarTag = tags.some(isSearchBarTag)
   const searchArgs: RestaurantSearchArgs = {
     center: roundLngLat(state.mapAt?.center ?? state.center),
     span: roundLngLat(padSpan(state.mapAt?.span ?? state.span)),
     query: state.searchQuery,
-    tags: [
-      ...tags.map((tag) => getTagId(tag).replace(/[a-z]+_/g, '')),
-      ...(!hasSearchBarTag
-        ? [getTagId({ name: state.searchQuery, type: 'dish' })]
-        : []),
-    ],
+    tags: [...tags.map((tag) => getTagId(tag).replace(/[a-z]+_/g, ''))],
   }
 
   // prevent duplicate searches
@@ -513,16 +507,9 @@ const pushHomeState: AsyncAction<
   switch (type) {
     // home
     case 'home': {
-      let activeTagIds = {}
-      // be sure to remove all searchbar tags
-      for (const tagId in om.state.home.lastHomeState.activeTagIds) {
-        if (!isSearchBarTag(om.state.home.allTags[tagId])) {
-          activeTagIds[tagId] = true
-        }
-      }
       nextState = {
         searchQuery: '',
-        activeTagIds,
+        activeTagIds: {},
       }
       break
     }
@@ -807,15 +794,11 @@ const setSearchQuery: Action<string> = (om, val) => {
 }
 
 const clearTags: AsyncAction = async (om) => {
-  const nextState = {
-    ...om.state.home.currentState,
-    activeTagIds: {
-      [getTagId(tagLenses[0])]: true,
-    },
-  }
-  console.log('clear tags', nextState)
   await om.actions.home.navigate({
-    state: nextState,
+    state: {
+      ...om.state.home.currentState,
+      activeTagIds: {},
+    },
   })
 }
 
@@ -975,12 +958,12 @@ export const getNavigateItemForState: Action<
     }
   }
   // if going home, just go there
-  const shouldBeHome = shouldBeOnHome(state)
+  const shouldBeSearching = shouldBeOnSearch(state)
 
   let name = state.type
-  if (name === 'home' && !shouldBeHome) {
+  if (name === 'home' && shouldBeSearching) {
     name = 'search'
-  } else if (name === 'search' && shouldBeHome) {
+  } else if (name === 'search' && !shouldBeSearching) {
     name = 'home'
   }
 
@@ -988,7 +971,7 @@ export const getNavigateItemForState: Action<
   const isChangingType = name !== curName
   const replace = !isChangingType
 
-  if (shouldBeHome) {
+  if (name === 'home') {
     return {
       name: 'home',
       replace,

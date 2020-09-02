@@ -3,6 +3,7 @@ import { default as React, memo } from 'react'
 
 import { bgLight } from '../../colors'
 import { tagDisplayName } from '../../state/tagDisplayName'
+import { tagLenses } from '../../state/tagLenses'
 import { LinkButton } from '../../views/ui/LinkButton'
 
 export const HomeTopSearches = memo(() => {
@@ -11,14 +12,14 @@ export const HomeTopSearches = memo(() => {
       paddingHorizontal={20}
       paddingVertical={10}
       marginTop={-10}
-      spacing={14}
+      spacing={8}
       maxWidth={700}
       marginHorizontal="auto"
       flexWrap="wrap"
       alignItems="center"
       justifyContent="center"
     >
-      {recentSearches.map((search, index) => (
+      {recentSearches.slice(0, 8).map((search, index) => (
         <VStack
           key={index}
           borderColor="#eee"
@@ -40,8 +41,7 @@ export const HomeTopSearches = memo(() => {
                   height={16}
                   lineHeight={16}
                   padding={5}
-                  fontSize={16}
-                  fontWeight="300"
+                  fontSize={14}
                   borderRadius={50}
                   backgroundColor="transparent"
                 >
@@ -63,6 +63,18 @@ export const HomeTopSearches = memo(() => {
 })
 
 const recentSearches = [
+  {
+    tags: [tagLenses[0]],
+  },
+  {
+    tags: [tagLenses[1]],
+  },
+  {
+    tags: [tagLenses[2]],
+  },
+  {
+    tags: [tagLenses[3]],
+  },
   {
     tags: [
       { displayName: 'Cheap', name: 'price-low', type: 'filter' },

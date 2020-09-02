@@ -6,18 +6,18 @@ import {
 } from './home-tag-helpers'
 import { HomeActiveTagsRecord } from './home-types'
 import { omStatic } from './om'
-import { shouldBeOnHome } from './shouldBeOnHome'
+import { shouldBeOnSearch } from './shouldBeOnSearch'
 import { tagLenses } from './tagLenses'
 
 const navStateCache = {}
 
 const nextStateKey = (navState: HomeStateNav) => {
-  const tagIds = navState.state.activeTagIds
+  const tagIds = navState.state?.activeTagIds
   const tagsKey = tagIds ? Object.entries(tagIds).join(',') : '-'
-  const tagsKey2 = navState.tags?.map((x) => x.name + x.type)
+  const tagsKey2 = navState.tags?.map((x) => `${x.name}${x.type}`)
   const disallowKey = navState.disallowDisableWhenActive ?? ''
   const replaceKey = navState.replaceSearch ?? '-'
-  const searchKey = navState.state.searchQuery
+  const searchKey = navState.state?.searchQuery ?? ''
   const key = `${replaceKey}${tagsKey}${tagsKey2}${disallowKey}${searchKey}`
   return key
 }
@@ -42,10 +42,13 @@ export const getNextState = (navState: HomeStateNav) => {
     : {}
 
   // if they words match tag exactly, convert to tags
-  let words = searchQuery.toLowerCase().split(' ')
+  let words = searchQuery.toLowerCase().trim().split(' ').filter(Boolean)
   while (words.length) {
     const [word, ...rest] = words
     const foundTagId = omStatic.state.home.allTagsNameToID[cleanTagName(word)]
+    if (foundTagId === 'no-slug') {
+      debugger
+    }
     if (foundTagId) {
       // remove from words
       words = rest
@@ -77,22 +80,13 @@ export const getNextState = (navState: HomeStateNav) => {
     }
   }
 
-  // ensure lense always active
-  if (
-    !Object.keys(activeTagIds).some(
-      (tagId) => omStatic.state.home.allTags[tagId]?.type === 'lense'
-    )
-  ) {
-    activeTagIds[getTagId(tagLenses[0])] = true
-  }
-
   const nextState = {
     id: state.id,
     searchQuery,
     activeTagIds,
     type: state.type,
   }
-  nextState.type = shouldBeOnHome(nextState) ? 'home' : 'search'
+  nextState.type = shouldBeOnSearch(nextState) ? 'search' : 'home'
 
   navStateCache[key] = nextState
   return nextState

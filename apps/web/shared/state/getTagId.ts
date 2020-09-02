@@ -4,6 +4,7 @@ import { NavigableTag } from './NavigableTag'
 
 export const getTagId = (tag: NavigableTag) => {
   if (!tag?.name) {
+    console.warn('no slug tag', tag)
     return 'no-slug'
   }
   let slug: string

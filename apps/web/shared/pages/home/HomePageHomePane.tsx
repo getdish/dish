@@ -28,12 +28,15 @@ import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { CloseButton } from './CloseButton'
 import { DishView } from './DishView'
+import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePagePaneProps'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { HomeTopSearches } from './HomeTopSearches'
 import { RestaurantButton } from './RestaurantButton'
 import { slantedBoxStyle } from './SlantedBox'
 import { SlantedLinkButton } from './SlantedLinkButton'
+import { SlantedTitle } from './SlantedTitle'
+import { TextStrong } from './TextStrong'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 // top dishes
@@ -178,38 +181,11 @@ export default memo(function HomePageHomePane(props: Props) {
               spacing="xl"
             >
               <VStack>
-                {/* LENSES - UNIQUELY GOOD HERE */}
-                {/* <VStack alignItems="center">
-                  <HStack
-                    width="100%"
-                    alignItems="center"
-                    justifyContent="center"
-                    paddingHorizontal={20}
-                    position="relative"
-                  >
-                    {!isSmall && <HomeLenseTitle state={state} />}
-
-                    <HStack alignItems="center" justifyContent="center">
-                      <HomeLenseBar
-                        backgroundColor="transparent"
-                        size="xl"
-                        activeTagIds={activeTagIds}
-                      />
-                    </HStack>
-                  </HStack>
-
-                  <Spacer size={isSmall ? 5 : 15} />
-                </VStack> */}
-
                 <HomeIntroLetter />
 
-                {/* <SlantedBox alignSelf="center">
-                  <Text fontSize={13} opacity={0.5}></Text>
-                </SlantedBox>
-                <Spacer /> */}
                 <HomeTopSearches />
 
-                <Spacer size="lg" />
+                <Spacer size="xs" />
 
                 <Suspense fallback={null}>
                   <HomeTopDishesContent topDishes={topDishes} />
@@ -294,8 +270,10 @@ const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
   return (
     <>
       <SmallTitle divider="off">
-        Cuisine that's uniquely good in{' '}
-        {om.state.home.currentState.currentLocationName}
+        Top cuisine unique to{' '}
+        <TextStrong>
+          {om.state.home.currentState.currentLocationName}
+        </TextStrong>
       </SmallTitle>
       <Spacer size="xl" />
       {!topDishes.length && (
