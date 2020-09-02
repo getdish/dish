@@ -1,13 +1,6 @@
-import {
-  AbsoluteVStack,
-  HStack,
-  LinearGradient,
-  Spacer,
-  VStack,
-} from '@dish/ui'
+import { AbsoluteVStack, HStack, Spacer, VStack } from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
 import { ChevronLeft, MapPin } from 'react-feather'
-import { StyleSheet } from 'react-native'
 
 import {
   pageWidthMax,
@@ -116,18 +109,6 @@ export const HomeSearchBarFloating = () => {
                   shadowOffset={{ height: 3, width: 0 }}
                   shadowRadius={12}
                 />
-                {/* <VStack
-                  height={searchBarHeight - 1}
-                  borderRadius={borderRadius}
-                  zIndex={-1}
-                  className="skewX"
-                  position="absolute"
-                  top={0}
-                  width="100%"
-                  shadowColor="rgba(0,0,0,0.1)"
-                  shadowOffset={{ height: 2, width: 3 }}
-                  shadowRadius={3}
-                /> */}
               </>
             )}
             <VStack
@@ -139,10 +120,6 @@ export const HomeSearchBarFloating = () => {
               height={searchBarHeight}
               backgroundColor={backgroundColor}
               borderRadius={borderRadius}
-              // shadowColor="#fff"
-              // shadowOpacity={0.5}
-              // shadowRadius={0}
-              // shadowOffset={{ height: 4, width: -3 }}
               justifyContent="center"
               overflow="hidden"
             >
@@ -262,7 +239,6 @@ const HomeSearchBarHomeBackButton = memo(() => {
   const { color } = useSearchBarTheme()
   const om = useOvermind()
   const isDisabled = om.state.home.currentStateType === 'home'
-  // const isOneLevelUpFromHome = om.state.home.previousState?.type === 'home'
   const iconProps = {
     color,
     size: 20,

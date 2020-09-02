@@ -3,10 +3,7 @@ import React from 'react'
 import { TextStyle } from 'react-native'
 
 import { bg, bgLight, bgLightHover } from '../../colors'
-import {
-  baseButtonStyle,
-  flatButtonStyle,
-} from '../../pages/home/baseButtonStyle'
+import { baseButtonStyle } from '../../pages/home/baseButtonStyle'
 
 export type SmallButtonProps = StackProps & {
   isActive?: boolean

@@ -1,5 +1,5 @@
-import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import * as React from 'react'
+import { useCallback, useLayoutEffect, useRef } from 'react'
 
 import { Store, TRIGGER_UPDATE } from './Store'
 

@@ -10,9 +10,7 @@
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "jest --preset ts-jest/presets/js-with-ts tests"
   },
-  "dependencies": {
-    "immer": "^7.0.7"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@dish/react-test-env": "*",
     "jest": "^26.4.0",

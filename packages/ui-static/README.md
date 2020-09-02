@@ -1,6 +1,6 @@
+- bug with props after spread not applying, make them deopt:
+  - <VStack {...baseStyle} cursor="default" /> wont be right rn
 - have seen bugs with <Spacer flex /> and <VStack fullscreen />
-- (done) evaluate constants in other files
-  - add test / test
 - make pressStyle override hoverStyle always
 - activeStyle may be desirable...
 - multi level const eval

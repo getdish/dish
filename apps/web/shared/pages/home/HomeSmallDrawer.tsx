@@ -1,5 +1,5 @@
-import { AbsoluteVStack, VStack } from '@dish/ui'
-import { Store, useStore, useStoreDebug } from '@dish/use-store'
+import { VStack } from '@dish/ui'
+import { Store, useStoreDebug } from '@dish/use-store'
 import { debounce } from 'lodash'
 import React, { useEffect, useMemo } from 'react'
 import { Animated, PanResponder, View } from 'react-native'
@@ -198,7 +198,10 @@ export const HomeSmallDrawer = (props: { children: any }) => {
           borderTopLeftRadius={10}
           pointerEvents="auto"
         >
-          <View style={{ flexShrink: 1 }} {...panResponder.panHandlers}>
+          <View
+            style={{ zIndex: 100, position: 'relative', flexShrink: 1 }}
+            {...panResponder.panHandlers}
+          >
             <HomeSearchBarDrawer />
           </View>
           <View

@@ -1,6 +1,6 @@
 import { StackProps } from '@dish/ui'
 
-import { bgLight, bgLightHover } from '../../colors'
+import { bgLightHover } from '../../colors'
 
 export const baseButtonStyle: StackProps = {
   // @ts-ignore
@@ -38,9 +38,6 @@ export const flatButtonStyleActive: StackProps = {
 export const flatButtonStyleSelected: StackProps = {
   ...baseButtonStyle,
   backgroundColor: 'rgba(255,255,255, 1)',
-  // hoverStyle: {
-  //   backgroundColor: 'rgba(240,240,240,1)',
-  // },
 }
 
 export const circularFlatButtonStyle: StackProps = {
