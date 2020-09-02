@@ -1,6 +1,7 @@
 import { OnInitialize, rehydrate } from 'overmind'
 
 import { OVERMIND_MUTATIONS } from '../constants'
+import { tagLenses } from './tagLenses'
 
 const LOG_OVERMIND = window.location.search === '?verbose'
 
@@ -26,6 +27,8 @@ export const onInitialize: OnInitialize = async (
       }
     })
   }
+
+  actions.home.addTagsToCache(tagLenses)
 
   const initAuth = async () => {
     await actions.user.checkForExistingLogin()

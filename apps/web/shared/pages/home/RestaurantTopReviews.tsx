@@ -66,7 +66,7 @@ export const RestaurantTopReviews = memo(
           paddingHorizontal={18}
           paddingVertical={18}
         >
-          <VStack flex={1} overflow="hidden" spacing={10}>
+          <VStack flex={1.15} overflow="hidden" spacing={10}>
             <SmallTitle>Reviews</SmallTitle>
             <HStack alignItems="stretch">
               <Suspense fallback={null}>
@@ -90,9 +90,9 @@ export const RestaurantTopReviews = memo(
             </Suspense>
           </VStack>
 
-          <Spacer />
+          <Spacer size="xl" />
           <Divider vertical />
-          <Spacer />
+          <Spacer size="xl" />
 
           <VStack flex={1} overflow="hidden">
             <SmallTitle>Points</SmallTitle>
@@ -100,7 +100,8 @@ export const RestaurantTopReviews = memo(
 
             <Spacer size="xl" />
 
-            <SmallTitle>Lenses</SmallTitle>
+            <SmallTitle>Lense Votes</SmallTitle>
+            <Spacer />
             <RestaurantLenseVote restaurantId={restaurantId} />
 
             <Spacer size="xl" />
