@@ -88,12 +88,12 @@ const createUseMedia = (effect: EitherEffect) =>
         update()
       }
 
-      mqls.forEach((mql) => mql.addListener(onChange))
+      mqls.forEach((mql) => mql.addEventListener('change', onChange))
       update()
 
       return () => {
         mounted = false
-        mqls.forEach((x) => x.removeListener(onChange))
+        mqls.forEach((x) => x.removeEventListener('change', onChange))
       }
     }, [weakKey(rawQueries)])
 

@@ -4,6 +4,7 @@ import { mediaObjectToString, useMedia, useMediaLayout } from '@dish/ui'
 const use = useMediaLayout ?? useMedia
 
 const mediaQueries = {
+  short: { maxHeight: 820 },
   xs: { maxWidth: 660 },
   sm: { maxWidth: 860 },
   aboveSm: { minWidth: 860 },
@@ -14,6 +15,8 @@ const mediaQueries = {
 export const getMediaQueryMatch = (key: keyof typeof mediaQueries) => {
   return window.matchMedia(mediaObjectToString(mediaQueries[key])).matches
 }
+
+export const useMediaQueryIsShort = () => use(mediaQueries.short)
 
 export const useMediaQueryIsReallySmall = () => use(mediaQueries.xs)
 export const useMediaQueryIsSmall = () => use(mediaQueries.sm)
