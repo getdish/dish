@@ -41,6 +41,6 @@
   "devDependencies": {
     "@dish/react-test-env": "*",
     "@types/node": "*",
-    "ts-node": "^8.10.1"
+    "ts-node": "*"
   }
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-jetify
+# jetify
 yarn patch-package
 
 # fix our commonjs plugin
