@@ -9,10 +9,6 @@ import { getBreadcrumbs } from './getBreadcrumbs'
 import { useLastValueWhen } from './useLastValueWhen'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
-// export class HomeStateStore extends Store {
-//   currentId = ''
-// }
-
 export type StackItemProps<A> = {
   item: A
   index: number
@@ -40,10 +36,6 @@ export function HomeStackView<A extends HomeStateItem>(props: {
       {items.map((item, i) => {
         const isActive = i === items.length - 1
         return (
-          // <PopoverShowContext.Provider
-          //   key={item.id}
-          //   value={isActive == true ? null : false}
-          // >
           <HomeStackViewItem
             key={item.type === 'home' ? '0' : item.id}
             item={item}
@@ -53,7 +45,6 @@ export function HomeStackView<A extends HomeStateItem>(props: {
             isAdding={isAdding && isActive}
             getChildren={props.children as any}
           />
-          // </PopoverShowContext.Provider>
         )
       })}
     </>
@@ -76,7 +67,6 @@ const HomeStackViewItem = memo(
     isRemoving: boolean
     isAdding: boolean
   }) => {
-    // const popoverStore = useStore(PopoverStore, { id })
     const isSmall = useMediaQueryIsSmall()
 
     const top = isSmall
@@ -84,10 +74,6 @@ const HomeStackViewItem = memo(
       : index * 5 //index == 0 ? 0 : isSmall ? 5 : index * 5
 
     const left = 0
-
-    // useEffect(() => {
-    //   popoverStore.show = isActive
-    // }, [isActive])
 
     let children = useMemo(() => {
       return getChildren({
@@ -104,7 +90,6 @@ const HomeStackViewItem = memo(
     }`
 
     return (
-      // <PopoverContext.Provider value={useMemo(() => ({ id }), [id])}>
       <AbsoluteVStack
         zIndex={index}
         className={className}
@@ -124,7 +109,6 @@ const HomeStackViewItem = memo(
           </ErrorBoundary>
         </AbsoluteVStack>
       </AbsoluteVStack>
-      // </PopoverContext.Provider>
     )
   }
 )

@@ -401,8 +401,13 @@ const RestaurantListItemContent = memo(
                 <HStack
                   alignItems="center"
                   {...smallButtonBaseStyle}
-                  height={36}
-                  cursor="initial"
+                  {...{
+                    // for ui-static to behave :(
+                    ...{},
+                    alignSelf: 'center',
+                    height: 36,
+                    cursor: 'initial',
+                  }}
                 >
                   <VStack marginVertical={-5} marginRight={-7}>
                     <RestaurantDeliveryButtons

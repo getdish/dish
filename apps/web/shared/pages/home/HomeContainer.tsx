@@ -1,9 +1,9 @@
 import { AbsoluteVStack, HStack, LinearGradient, VStack } from '@dish/ui'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { StyleSheet } from 'react-native'
 
 import { bgAlt, bgLightTranslucent } from '../../colors'
-import { drawerPad, searchBarHeight, zIndexDrawer } from '../../constants'
+import { searchBarHeight, zIndexDrawer } from '../../constants'
 import { HomeSmallDrawer } from './HomeSmallDrawer'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useLastValueWhen } from './useLastValueWhen'
