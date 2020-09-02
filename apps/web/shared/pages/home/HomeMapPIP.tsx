@@ -1,36 +1,27 @@
 import { LngLat, Restaurant, graphql } from '@dish/graph'
 import { AbsoluteVStack, VStack } from '@dish/ui'
+import { useStore } from '@dish/use-store'
 import { isEqual } from 'lodash'
-import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
+import mapboxgl from 'mapbox-gl'
+import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 
+import { MAPBOX_ACCESS_TOKEN } from '../../constants'
 import { useOvermind } from '../../state/om'
-import { Map } from '../../views/Map'
-import { centerMapToRegion } from './centerMapToRegion'
-import { getRankingColor, getRestaurantRating } from './getRestaurantRating'
+import { BottomDrawerStore } from './HomeSmallDrawer'
 import { getZoomLevel, mapZoomToMedium } from './mapHelpers'
-import { onMapLoadedCallback } from './onMapLoadedCallback'
 import {
   useMediaQueryIsReallySmall,
   useMediaQueryIsSmall,
 } from './useMediaQueryIs'
 import { restaurantQuery } from './useRestaurantQuery'
 
+mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
+
 export const HomeMapPIP = memo(() => {
   const isSmall = useMediaQueryIsSmall()
   const isReallySmall = useMediaQueryIsReallySmall()
-  const [isLoaded, setIsLoaded] = useState(false)
   const om = useOvermind()
   const drawerSnapPoint = om.state.home.drawerSnapPoint
-
-  useEffect(() => {
-    return onMapLoadedCallback(() => {
-      setIsLoaded(true)
-    })
-  }, [])
-
-  if (!isLoaded) {
-    return null
-  }
 
   return (
     <Suspense fallback={null}>
@@ -42,30 +33,22 @@ export const HomeMapPIP = memo(() => {
           { translateY: isSmall ? 15 : 0 },
         ]}
         {...(isReallySmall &&
-          drawerSnapPoint === 2 && {
+          drawerSnapPoint > 0 && {
             opacity: 0,
             pointerEvents: 'none',
           })}
       >
-        <HomeMapPIPContent />
+        <HomeMapPIPContent isSmall={isReallySmall} />
       </VStack>
     </Suspense>
   )
 })
 
-const HomeMapPIPContent = graphql(() => {
+const HomeMapPIPContent = graphql(({ isSmall }: { isSmall: boolean }) => {
   const om = useOvermind()
-  // const isSmall = useMediaQueryIsSmall()
+  const mapNode = useRef<HTMLDivElement>(null)
   const state = om.state.home.currentState
-  // const { map, mapProps } = useMap({
-  //   // @ts-ignore
-  //   showsZoomControl: false,
-  //   showsMapTypeControl: false,
-  //   isZoomEnabled: true,
-  //   isScrollEnabled: true,
-  //   showsCompass: mapkit.FeatureVisibility.Hidden,
-  // })
-
+  const drawerStore = useStore(BottomDrawerStore)
   const focusedRestaurant =
     om.state.home.hoveredRestaurant ?? om.state.home.selectedRestaurant
 
@@ -103,7 +86,13 @@ const HomeMapPIPContent = graphql(() => {
     lng: coords[0] ?? 0.1,
   }
 
-  function getPipAction() {
+  const pipAction = (() => {
+    if (isSmall && drawerStore.snapIndex === 0) {
+      // move drawer down
+      return () => {
+        drawerStore.setSnapPoint(1)
+      }
+    }
     if (coords[0] && !isEqual(center, om.state.home.currentState.center)) {
       return () => {
         om.actions.home.updateCurrentState({
@@ -114,23 +103,22 @@ const HomeMapPIPContent = graphql(() => {
     } else if (getZoomLevel(span) !== 'medium') {
       return mapZoomToMedium
     } else {
+      // none
     }
-  }
+  })()
 
-  const pipAction = getPipAction()
-
-  const coordinate = useMemo(
-    () => coords && new mapkit.Coordinate(coords[1], coords[0]),
-    [JSON.stringify(coords)]
-  )
-  const annotation = useMemo(() => {
-    if (!coordinate || !restaurant) return null
-    const percent = getRestaurantRating(restaurant.rating)
-    const color = getRankingColor(percent)
-    return new mapkit.MarkerAnnotation(coordinate, {
-      color,
-    })
-  }, [coordinate])
+  // const coordinate = useMemo(
+  //   () => coords && new mapkit.Coordinate(coords[1], coords[0]),
+  //   [JSON.stringify(coords)]
+  // )
+  // const annotation = useMemo(() => {
+  //   if (!coordinate || !restaurant) return null
+  //   const percent = getRestaurantRating(restaurant.rating)
+  //   const color = getRankingColor(percent)
+  //   return new mapkit.MarkerAnnotation(coordinate, {
+  //     color,
+  //   })
+  // }, [coordinate])
 
   const pipSpan = (span: LngLat) => {
     return {
@@ -140,30 +128,44 @@ const HomeMapPIPContent = graphql(() => {
   }
 
   useEffect(() => {
-    if (!map) return
-    centerMapToRegion({
-      animated: false,
-      map,
+    new mapboxgl.Map({
+      container: mapNode.current,
+      style: 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy',
       center,
-      span: pipSpan(span),
-    })
-  }, [map, center, span])
+      zoom: 11,
+      attributionControl: false,
+    }).addControl(
+      new mapboxgl.AttributionControl({
+        compact: true,
+      })
+    )
+  }, [])
 
-  useEffect(() => {
-    if (!map || !annotation) return
-    try {
-      map.addAnnotation(annotation)
-    } catch (err) {
-      console.warn(err.message)
-    }
-    return () => {
-      try {
-        map.removeAnnotation(annotation)
-      } catch (err) {
-        console.warn(err.message)
-      }
-    }
-  }, [map, annotation])
+  // useEffect(() => {
+  //   if (!map) return
+  //   centerMapToRegion({
+  //     animated: false,
+  //     map,
+  //     center,
+  //     span: pipSpan(span),
+  //   })
+  // }, [map, center, span])
+
+  // useEffect(() => {
+  //   if (!map || !annotation) return
+  //   try {
+  //     map.addAnnotation(annotation)
+  //   } catch (err) {
+  //     console.warn(err.message)
+  //   }
+  //   return () => {
+  //     try {
+  //       map.removeAnnotation(annotation)
+  //     } catch (err) {
+  //       console.warn(err.message)
+  //     }
+  //   }
+  // }, [map, annotation])
 
   return (
     <VStack
@@ -174,8 +176,8 @@ const HomeMapPIPContent = graphql(() => {
       // keeps spacing when wrapped
       marginTop={10}
       overflow="hidden"
-      shadowColor="rgba(0,0,0,0.1)"
-      shadowRadius={14}
+      shadowColor="rgba(0,0,0,0.2)"
+      shadowRadius={18}
       shadowOffset={{ height: 3, width: 0 }}
       className="ease-in-out-slow"
       transform={[{ scale: 1 }]}
@@ -188,7 +190,17 @@ const HomeMapPIPContent = graphql(() => {
       onPress={pipAction}
     >
       <AbsoluteVStack pointerEvents="none" fullscreen bottom={-30} top={-15}>
-        <Map {...mapProps} />
+        <div
+          ref={mapNode}
+          style={{
+            width: '100%',
+            height: '100%',
+            maxHeight: '100%',
+            maxWidth: '100%',
+            overflow: 'hidden',
+            background: '#eee',
+          }}
+        />
       </AbsoluteVStack>
     </VStack>
   )

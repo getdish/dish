@@ -5,6 +5,7 @@ import React, { Suspense, memo } from 'react'
 import { searchBarHeight, zIndexMapControls } from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { useOvermind } from '../../state/om'
+import { HomeMapPIP } from './HomeMapPIP'
 import { HomeMapRestaurantPeek } from './HomeMapRestaurantPeek'
 import { BottomDrawerStore } from './HomeSmallDrawer'
 import { useMapSize } from './useMapSize'
@@ -64,7 +65,9 @@ export const HomeMapControlsOverlay = memo(() => {
             paddingBottom={15}
             paddingTop={20}
           >
-            <Suspense fallback={null}>{/* <HomeMapPIP /> */}</Suspense>
+            <Suspense fallback={null}>
+              <HomeMapPIP />
+            </Suspense>
             {!isReallySmall && <HomeMapRestaurantPeek />}
           </HStack>
         </HStack>

@@ -9,7 +9,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
-import { rgbString } from '../helpers/rgbString'
 import { tagLenses } from '../state/tagLenses'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN

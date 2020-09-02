@@ -25,34 +25,9 @@ export class BottomDrawerStore extends Store {
     return this.snapPoints[this.snapIndex]
   }
 
-  private setDrawer = debounce(
-    (val) => omStatic.actions.home.setDrawerSnapPoint(val),
-    100
-  )
-
-  setSnapIndex(x: number) {
-    this.snapIndex = x
-    this.setDrawer(x)
-  }
-
-  getSnapPoint(px?: number) {
-    if (typeof px === 'number') {
-      this.updateSnapIndex(px)
-    }
-    return this.snapPoints[this.snapIndex] * getWindowHeight()
-  }
-
-  private updateSnapIndex(px: number) {
-    for (const [index, point] of this.snapPoints.entries()) {
-      const cur = point * getWindowHeight()
-      const next = (this.snapPoints[index + 1] ?? 1) * getWindowHeight()
-      const midWayToNext = cur + (next - cur) / 2
-      if (px < midWayToNext) {
-        this.setSnapIndex(index)
-        return
-      }
-    }
-    this.setSnapIndex(0)
+  setSnapPoint(point: number) {
+    this.updateSnapIndex(point)
+    this.animateDrawerToPx()
   }
 
   animateDrawerToPx(px?: number) {
@@ -65,9 +40,35 @@ export class BottomDrawerStore extends Store {
     })
   }
 
-  animateDrawerToSnapPoint(point: number) {
-    this.setSnapIndex(point)
-    this.animateDrawerToPx()
+  getSnapPoint(px?: number) {
+    if (typeof px === 'number') {
+      // weird here
+      this.checkUpdateSnapIndex(px)
+    }
+    return this.snapPoints[this.snapIndex] * getWindowHeight()
+  }
+
+  private setDrawer = debounce(
+    (val) => omStatic.actions.home.setDrawerSnapPoint(val),
+    100
+  )
+
+  private updateSnapIndex(x: number) {
+    this.snapIndex = x
+    this.setDrawer(x)
+  }
+
+  private checkUpdateSnapIndex(px: number) {
+    for (const [index, point] of this.snapPoints.entries()) {
+      const cur = point * getWindowHeight()
+      const next = (this.snapPoints[index + 1] ?? 1) * getWindowHeight()
+      const midWayToNext = cur + (next - cur) / 2
+      if (px < midWayToNext) {
+        this.updateSnapIndex(index)
+        return
+      }
+    }
+    this.updateSnapIndex(0)
   }
 }
 
@@ -85,9 +86,9 @@ export const HomeSmallDrawer = (props: { children: any }) => {
       (show) => {
         if (show) {
           // lastIndex = snapIndex
-          drawerStore.animateDrawerToSnapPoint(0)
+          drawerStore.setSnapPoint(0)
         } else {
-          drawerStore.animateDrawerToSnapPoint(defaultSnapPoint)
+          drawerStore.setSnapPoint(defaultSnapPoint)
         }
       }
     )
@@ -96,7 +97,7 @@ export const HomeSmallDrawer = (props: { children: any }) => {
   // if starting out on a smaller screen, start with hiding map
   useEffect(() => {
     if (isShort && isSmall) {
-      drawerStore.animateDrawerToSnapPoint(defaultSnapPoint)
+      drawerStore.setSnapPoint(defaultSnapPoint)
     }
   }, [])
 
@@ -106,11 +107,11 @@ export const HomeSmallDrawer = (props: { children: any }) => {
     const drawerSnapListener = () => {
       if (drawerStore.snapIndex === 0) {
         omStatic.actions.home.setShowAutocomplete(false)
-        drawerStore.animateDrawerToSnapPoint(1)
+        drawerStore.setSnapPoint(1)
       } else if (drawerStore.snapIndex === 1) {
-        drawerStore.animateDrawerToSnapPoint(2)
+        drawerStore.setSnapPoint(2)
       } else if (drawerStore.snapIndex === 2) {
-        drawerStore.animateDrawerToSnapPoint(1)
+        drawerStore.setSnapPoint(1)
       }
     }
 
