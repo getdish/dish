@@ -88,7 +88,7 @@ export const DishView = memo(
         }}
         hoverStyle={{
           zIndex: 1000000,
-          transform: [{ scale: 1.05 }],
+          transform: [{ scale: 1.025 }],
         }}
         onHoverIn={() => setIsHovered(true)}
         onHoverOut={() => setIsHovered(false)}

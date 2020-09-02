@@ -364,5 +364,5 @@ li::before {
 }
 
 .dotted-line {
-  border-bottom: 1px dotted #ddd;
+  border-bottom: 2px dotted #ddd;
 }
