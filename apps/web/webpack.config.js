@@ -211,7 +211,10 @@ module.exports = function getWebpackConfig(
 
         ...((isProduction &&
           TARGET != 'ssr' && [
-            new LodashPlugin(),
+            new LodashPlugin({
+              // fixes issue i had https://github.com/lodash/lodash/issues/3101
+              shorthands: true,
+            }),
             new MiniCssExtractPlugin({
               // Options similar to the same options in webpackOptions.output
               // both options are optional

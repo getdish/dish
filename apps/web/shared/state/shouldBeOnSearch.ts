@@ -7,6 +7,5 @@ export const shouldBeOnSearch = (state: HomeStateTagNavigable) => {
   const hasSearchTag = getActiveTags(realState).some(
     (x) => x.type === 'lense' || isSearchBarTag(x)
   )
-  console.log('what is', getActiveTags(realState), realState, hasSearchTag)
   return realState.searchQuery !== '' || hasSearchTag
 }

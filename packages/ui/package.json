@@ -22,7 +22,7 @@
     "@dish/async": "*",
     "@dish/use-store": "*",
     "@o/fast-compare": "^2.7.6",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "react-laag": "^1.7.3",
     "react-storage-hooks": "^4.0.0",
     "react-feather": "2.0.8",

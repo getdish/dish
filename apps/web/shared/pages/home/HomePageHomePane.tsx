@@ -110,11 +110,17 @@ export default memo(function HomePageHomePane(props: Props) {
           for (const cuisine of area) {
             const existing = all.find((x) => x.country === cuisine.country)
             if (existing) {
+              const allTopRestaurants = [
+                ...existing.top_restaurants,
+                ...cuisine.top_restaurants,
+              ]
+              const sortedTopRestaurants = sortBy(
+                allTopRestaurants,
+                (x) => -(x.rating ?? 0)
+              )
+              console.log('allTopRestaurants', allTopRestaurants)
               existing.top_restaurants = uniqBy(
-                sortBy(
-                  [...existing.top_restaurants, ...cuisine.top_restaurants],
-                  (x) => -x.rating
-                ),
+                sortedTopRestaurants,
                 (x) => x.id
               ).slice(0, 5)
             } else {
@@ -270,7 +276,7 @@ const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
   return (
     <>
       <SmallTitle divider="off">
-        Top cuisine unique to{' '}
+        Uniquely good in{' '}
         <TextStrong>
           {om.state.home.currentState.currentLocationName}
         </TextStrong>
@@ -282,12 +288,14 @@ const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
           <LoadingItems />
         </>
       )}
-      {topDishes.map((country) => (
-        <React.Fragment key={country.country}>
-          <TopDishesCuisineItem country={country} />
-          {/* <Spacer size="sm" /> */}
-        </React.Fragment>
-      ))}
+      <Suspense fallback={null}>
+        {topDishes.map((country) => (
+          <React.Fragment key={country.country}>
+            <TopDishesCuisineItem country={country} />
+            {/* <Spacer size="sm" /> */}
+          </React.Fragment>
+        ))}
+      </Suspense>
     </>
   )
 })

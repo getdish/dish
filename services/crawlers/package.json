@@ -25,7 +25,7 @@
     "chrono-node": "^2.1.6",
     "csv-parse": "^4.9.0",
     "js-base64": "^2.5.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "moment": "^2.27.0",
     "pg": "^7.18.2",
     "proxy-chain": "^0.4.4",
