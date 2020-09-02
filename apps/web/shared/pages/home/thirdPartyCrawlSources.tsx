@@ -1,4 +1,9 @@
 export const thirdPartyCrawlSources = {
+  dish: {
+    name: 'Dish',
+    image: require('../../../web/favicon.png').default,
+    delivery: false,
+  },
   google: {
     name: 'Google',
     image: require('../../assets/google.svg').default,

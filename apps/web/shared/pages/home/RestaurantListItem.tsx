@@ -1,6 +1,7 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import {
+  AbsoluteVStack,
   HStack,
   LoadingItems,
   Spacer,
@@ -285,23 +286,19 @@ const RestaurantListItemContent = memo(
                       <Text fontSize={14}>
                         {reviewTags.map((tag, i) => {
                           return (
-                            <>
+                            <React.Fragment key={i}>
                               <VStack
-                                // borderRadius={5}
-                                // backgroundColor="#eee"
-                                // borderBottomColor="#f2f2f2"
-                                // borderBottomWidth={1}
                                 // @ts-ignore
                                 display="inline-flex"
                               >
-                                <Text>{tagDisplayName(tag).toLowerCase()}</Text>
+                                <Text>{tagDisplayName(tag)}</Text>
                               </VStack>
                               {i < reviewTags.length - 1 && (
                                 <Text marginHorizontal={4} fontSize={11}>
                                   +
                                 </Text>
                               )}
-                            </>
+                            </React.Fragment>
                           )
                         })}
                       </Text>
@@ -352,7 +349,7 @@ const RestaurantListItemContent = memo(
             marginBottom={-10}
           >
             <VStack flex={1} paddingLeft={isSmall ? 10 : 0}>
-              <Text fontSize={16} lineHeight={21}>
+              <Text fontSize={16} lineHeight={24}>
                 <VStack
                   marginTop={4}
                   marginBottom={12}
@@ -438,48 +435,72 @@ const RestaurantListItemContent = memo(
 export const RestaurantScoreBreakdownSmall = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
     const restaurant = useRestaurantQuery(restaurantSlug)
-    const sources = restaurant?.sources?.() ?? {}
+    const sources = {
+      dish: {
+        rating: 3,
+      },
+      ...(restaurant?.sources?.() ?? {}),
+    }
     return (
-      <HStack alignItems="center">
+      <HStack position="relative" alignItems="center">
+        <AbsoluteVStack
+          top={-16}
+          left={-40}
+          width={30}
+          height={30}
+          overflow="hidden"
+        >
+          <AbsoluteVStack
+            top={-18}
+            left={3}
+            width={44}
+            height={44}
+            transform={[{ rotate: '45deg' }]}
+            className="dotted-line"
+            borderRadius={100}
+          />
+        </AbsoluteVStack>
+
         <Text fontSize={12} opacity={0.5}>
           via&nbsp;
         </Text>
         <HStack spacing={4}>
-          {Object.keys(sources).map((source, i) => {
-            const item = sources[source]
-            if (!item) {
-              return null
-            }
-            const info = thirdPartyCrawlSources[source]
-            return (
-              <HStack
-                key={source}
-                alignItems="center"
-                paddingHorizontal={5}
-                paddingVertical={3}
-                borderRadius={100}
-                backgroundColor={bgLight}
-                spacing={3}
-              >
-                {info?.image ? (
-                  <Image
-                    source={info.image}
-                    style={{
-                      width: 16,
-                      height: 16,
-                      borderRadius: 100,
-                    }}
-                  />
-                ) : null}
-                <Text fontSize={12} opacity={0.75}>
-                  {info?.name ?? source}
-                </Text>
-                <Text fontSize={13} opacity={0.5}>
-                  {+(item.rating ?? 0) * 10}
-                </Text>
-              </HStack>
+          {Object.keys(sources)
+            .filter(
+              (source) => thirdPartyCrawlSources[source]?.delivery === false
             )
-          })}
+            .map((source, i) => {
+              const item = sources[source]
+              const info = thirdPartyCrawlSources[source]
+              return (
+                <HStack
+                  key={source}
+                  alignItems="center"
+                  paddingHorizontal={5}
+                  paddingVertical={3}
+                  borderRadius={100}
+                  backgroundColor={bgLightLight}
+                  spacing={3}
+                >
+                  {info?.image ? (
+                    <Image
+                      source={info.image}
+                      style={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: 100,
+                      }}
+                    />
+                  ) : null}
+                  <Text fontSize={12} opacity={0.75}>
+                    {info?.name ?? source}
+                  </Text>
+                  <Text fontSize={13} opacity={0.5}>
+                    {+(item.rating ?? 0) * 10}
+                  </Text>
+                </HStack>
+              )
+            })}
         </HStack>
       </HStack>
     )
