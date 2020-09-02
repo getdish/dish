@@ -93,16 +93,14 @@ export const RestaurantScoreBreakdown = memo(
     return (
       <HStack overflow="hidden" maxWidth="100%" paddingVertical={12}>
         <VStack>
-          <Paragraph sizeLineHeight={1.1} color="rgba(0,0,0,0.65)">
-            This restaurant has 152 reviews from 5 sources. It has{' '}
+          <Paragraph size={1.1} sizeLineHeight={1.1} color="rgba(0,0,0,0.65)">
+            This restaurant has 152 reviews from 5 sources.{' '}
             <TextHighlight backgroundColor={lightGreen}>
-              <TextStrong color="#000">+121</TextStrong> points from 23 dish
-              reviewers
+              <TextStrong color="#000">+121</TextStrong> from 23 dish reviewers
             </TextHighlight>{' '}
             and{' '}
             <TextHighlight backgroundColor={lightYellow}>
-              <TextStrong color="#000">+89</TextStrong> points from 3 external
-              sources
+              <TextStrong color="#000">+89</TextStrong> from 3 external sources
             </TextHighlight>{' '}
             - Yelp, DoorDash, and TripAdvisor.
           </Paragraph>

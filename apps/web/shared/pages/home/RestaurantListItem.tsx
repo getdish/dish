@@ -260,7 +260,7 @@ const RestaurantListItemContent = memo(
           <Spacer />
 
           {/* RANKING ROW */}
-          <HStack zIndex={1000} marginLeft={-3} alignItems="center">
+          <HStack zIndex={1000} marginLeft={8} alignItems="center">
             <VStack>
               <HStack alignItems="center">
                 <Spacer size="xl" />
@@ -275,9 +275,9 @@ const RestaurantListItemContent = memo(
                 <VStack marginTop={-6}>
                   <HStack>
                     <Text fontSize={12} color="rgba(0,0,0,0.5)">
-                      <Text fontSize={14}>
+                      <Text fontSize={12}>
                         #
-                        <Text fontWeight="600" color="#000">
+                        <Text fontSize={14} fontWeight="600" color="#000">
                           {rank}
                         </Text>{' '}
                         in

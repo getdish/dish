@@ -48,7 +48,7 @@ export const SmallButton = ({
         fontWeight="600"
         {...textStyle}
       >
-        {children}
+        <HStack alignItems="center">{children}</HStack>
       </Text>
     </HStack>
   )

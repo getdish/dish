@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { getTagId } from '../../state/getTagId'
 import { getFullTags } from '../../state/home-tag-helpers'
 import { HomeActiveTagsRecord } from '../../state/home-types'
+import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic, useOvermind } from '../../state/om'
 import { useIsMountedRef } from './useIsMountedRef'
 
@@ -177,19 +178,18 @@ const getTagUpvoteDownvote = (
 const voteForTags = async (
   restaurantId: string,
   userId: string,
-  tagNames: string[],
+  tags: NavigableTag[],
   rating: number
 ) => {
-  const partialTags = tagNames.map((name) => ({
-    type: 'dish',
-    ...omStatic.state.home.allTags[name],
-    name,
+  const partialTags = tags.map((tag) => ({
+    ...omStatic.state.home.allTags[getTagId(tag)],
+    ...tag,
   }))
   const fullTags = await getFullTags(partialTags)
-  const insertTags = tagNames.map<Review>((name) => {
-    const tagId = fullTags.find((x) => x.name.toLowerCase() === name)?.id
+  const insertTags = tags.map<Review>((tag) => {
+    const tagId = fullTags.find((x) => x.name.toLowerCase() === tag.name)?.id
     if (!tagId) {
-      console.warn({ name, tagNames, partialTags, fullTags })
+      console.warn({ name, tags, partialTags, fullTags })
       throw new Error('no tag')
     }
     return {
@@ -211,11 +211,11 @@ export const useUserTagVotes = (restaurantId: string) => {
   const upVotes = votes.filter((x) => x.rating)
   return [
     upVotes,
-    async (tagName: string, userRating: number | 'toggle') => {
+    async (tag: NavigableTag, userRating: number | 'toggle') => {
       if (omStatic.actions.home.promptLogin()) {
         return
       }
-      const tagId = getTagId({ name: tagName, type: 'lense' })
+      const tagId = getTagId(tag)
       const id = om.state.home.allTags[tagId]?.id
       const existing = votes.find((x) => x.tag_id === id)
       let didSave = !!existing
@@ -227,7 +227,7 @@ export const useUserTagVotes = (restaurantId: string) => {
         const saved = await voteForTags(
           restaurantId,
           userId,
-          [tagName],
+          [tag],
           userRating === 'toggle' ? 1 : userRating
         )
         didSave = !!saved.length
