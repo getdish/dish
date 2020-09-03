@@ -20,7 +20,7 @@ export const CommentBubble = ({
   ...rest
 }: StackProps & {
   user: Partial<UserModel>
-  children: string
+  children: any
   ellipseContentAbove?: number
   expandable?: boolean
 }) => {
@@ -61,7 +61,9 @@ export const CommentBubble = ({
           <>
             {isExpanded
               ? children
-              : children.slice(0, ellipseContentAbove) + '...'}{' '}
+              : typeof children === 'string'
+              ? children.slice(0, ellipseContentAbove) + '...'
+              : children}{' '}
             {!!expandable && (
               <Link
                 onClick={() => {

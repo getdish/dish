@@ -28,8 +28,8 @@ export const HomeDeliveryFilterButtons = ({
 
   return (
     <HStack
-      marginTop={63}
-      marginBottom={-63}
+      marginTop={53}
+      marginBottom={-53}
       spacing={10}
       paddingHorizontal={20}
       backgroundColor="#fff"

@@ -174,14 +174,21 @@ export class Router extends Store<RouterProps> {
           break
       }
 
-      // console.log(
-      //   'now',
-      //   JSON.stringify(
-      //     { item, stack: this.stack, stackIndex: this.stackIndex },
-      //     null,
-      //     2
-      //   )
-      // )
+      if (process.env.NODE_ENV === 'development') {
+        console.log(
+          'router.handlePath',
+          JSON.stringify(
+            {
+              item,
+              stack: this.stack,
+              stackIndex: this.stackIndex,
+              listeners: this.routeChangeListeners.size,
+            },
+            null,
+            2
+          )
+        )
+      }
 
       this.routeChangeListeners.forEach((x) => x(next))
     } else {
@@ -258,7 +265,7 @@ export class Router extends Store<RouterProps> {
         continue
       }
       if (path.indexOf(':') > -1) {
-        path = path.replace(`:${key}`, params[key])
+        path = path.replace(`:${key}`, params[key] ?? '-')
       } else if (path.indexOf('*') > -1) {
         replaceSplatParams.push(key)
       }

@@ -447,6 +447,7 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
       case 'search':
       case 'user':
       case 'gallery':
+      case 'restaurantReview':
       case 'userSearch':
       case 'restaurant': {
         if (item.type === 'push') {
@@ -571,6 +572,13 @@ const pushHomeState: AsyncAction<
       }
       break
     }
+
+    case 'restaurantReview': {
+      nextState = {
+        restaurantSlug: item.params.slug,
+      }
+      break
+    }
   }
 
   const finalState = {
@@ -594,7 +602,7 @@ const pushHomeState: AsyncAction<
     }
   }
 
-  console.log('pushState finalState', finalState)
+  console.log('pushHomeState', finalState)
   om.actions.home.updateHomeState(finalState)
 
   if (!om.state.home.started) {

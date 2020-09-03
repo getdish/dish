@@ -102,6 +102,7 @@ export type HomeStateItem =
   | HomeStateItemRestaurant
   | HomeStateItemUser
   | HomeStateItemGallery
+  | HomeStateItemReview
   | HomeStateItemAbout
 
 export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
@@ -149,6 +150,11 @@ export type HomeStateItemGallery = HomeStateItemBase & {
   type: 'gallery'
   restaurantSlug: string
   dishId?: string
+}
+
+export type HomeStateItemReview = HomeStateItemBase & {
+  type: 'restaurantReview'
+  restaurantSlug: string
 }
 
 export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>

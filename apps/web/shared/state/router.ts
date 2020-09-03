@@ -1,6 +1,8 @@
 import { HistoryItem, Route, Router } from '@dish/router'
 import { Action, AsyncAction, derived } from 'overmind'
 
+import { OmState } from './home-types'
+
 export type SearchRouteParams = {
   username?: string
   location: string
@@ -28,6 +30,7 @@ export const routes = {
   contact: new Route<{ pane: string }>('/contact'),
   privacy: new Route<{ pane: string }>('/privacy'),
   about: new Route<{ pane: string }>('/about'),
+  restaurantReview: new Route<{ slug: string }>('/restaurant/:slug/review'),
   restaurant: new Route<{ slug: string }>('/restaurant/:slug'),
 
   // admin
@@ -64,8 +67,6 @@ export const router = new Router({
   routes,
 })
 
-router.mount()
-
 export type OnRouteChangeCb = (item: HistoryItem) => Promise<void>
 
 const start: AsyncAction<{
@@ -75,6 +76,7 @@ const start: AsyncAction<{
     om.actions.router._update()
     opts.onRouteChange?.(item)
   })
+  router.mount()
 }
 
 type RouterState = {
@@ -85,11 +87,11 @@ type RouterState = {
 
 export const state: RouterState = {
   _update: 0,
-  curPage: derived<RouterState, HistoryItem>((state) => {
+  curPage: derived<RouterState, OmState, HistoryItem>((state) => {
     state._update
     return router.curPage
   }),
-  curPageName: derived<RouterState, string>((state) => {
+  curPageName: derived<RouterState, OmState, string>((state) => {
     state._update
     return state.curPage.name
   }),

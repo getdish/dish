@@ -181,8 +181,12 @@ const HomeMapPIPContent = graphql(({ isSmall }: { isSmall: boolean }) => {
       shadowOffset={{ height: 3, width: 0 }}
       className="ease-in-out-slow"
       transform={[{ scale: 1 }]}
+      cursor="pointer"
       pressStyle={{
         transform: [{ scale: 0.9 }],
+      }}
+      hoverStyle={{
+        transform: [{ scale: 1.1 }],
       }}
       {...(!pipAction && {
         display: 'none',

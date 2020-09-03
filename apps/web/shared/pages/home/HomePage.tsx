@@ -60,6 +60,7 @@ const HomePageContent = memo(() => {
 
         <Suspense fallback={null}>
           <HomePageGallery />
+          <HomePageRestaurantReview />
         </Suspense>
       </Suspense>
     </>
@@ -73,3 +74,8 @@ const HomePageGallery =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageGallery').default
     : React.lazy(() => import('./HomePageGallery'))
+
+const HomePageRestaurantReview =
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+    ? require('./HomePageRestaurantReview').default
+    : React.lazy(() => import('./HomePageRestaurantReview'))
