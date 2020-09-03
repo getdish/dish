@@ -69,9 +69,7 @@ const HomeStackViewItem = memo(
   }) => {
     const isSmall = useMediaQueryIsSmall()
 
-    const top = isSmall
-      ? searchBarHeight + 5 + Math.max(0, index - 1) * 5
-      : index * 5 //index == 0 ? 0 : isSmall ? 5 : index * 5
+    const top = isSmall ? Math.max(0, index - 1) * 5 : index * 5
 
     const left = 0
 

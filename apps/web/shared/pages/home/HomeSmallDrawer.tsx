@@ -4,7 +4,7 @@ import { debounce } from 'lodash'
 import React, { useEffect, useMemo } from 'react'
 import { Animated, PanResponder, View } from 'react-native'
 
-import { pageWidthMax, zIndexDrawer } from '../../constants'
+import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { omStatic } from '../../state/om'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
@@ -214,7 +214,12 @@ export const HomeSmallDrawer = (props: { children: any }) => {
           pointerEvents="auto"
         >
           <View
-            style={{ zIndex: 100, position: 'relative', flexShrink: 1 }}
+            style={{
+              zIndex: 100,
+              position: 'relative',
+              flexShrink: 1,
+              minHeight: searchBarHeight,
+            }}
             {...panResponder.panHandlers}
           >
             <HomeSearchBarDrawer />
