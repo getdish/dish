@@ -46,12 +46,13 @@ export default function HomePageAbout({
 
           <VStack spacing="xl">
             <Paragraph size="xxxl" fontWeight="300">
-              Craving pho? Vietnamese, Chinese, and Mexican joints often get
-              lost behind poor ratings on ambiance and service.
+              Craving pho but can't find the good stuff? Vietnamese, Chinese,
+              and Mexican joints often get lost behind poor ratings on ambiance
+              and service.
             </Paragraph>
 
             <Paragraph size="xxl" fontWeight="300">
-              When ordering{' '}
+              We realized that when ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -81,41 +82,44 @@ export default function HomePageAbout({
               >
                 date night
               </LinkButton>
-              , you care about different things. Yet today you just get the same{' '}
-              <Text fontWeight="400">list of ~4 star restuarants</Text> for
-              either query.
+              , you care about completely different things. Yet todays rating
+              systems give you{' '}
+              <Text fontWeight="400">a single star rating</Text>.
             </Paragraph>
 
             <Paragraph size="xl">
-              Dish collects reviews from all over - a bit like RottenTomatoes,
-              for food - and breaks down{' '}
-              <TextStrong>what people actually say</TextStrong> (about dishes,
-              vibe, service, and more) to show you better results. It even{' '}
+              Dish breaks things down by what matters. First, it collects
+              reviews from all over (like RottenTomatoes, for food), then it
+              parses <TextStrong>what people actually say</TextStrong> about
+              dishes, the vibe, service, and more, to show what makes each place
+              uniquely good. It also{' '}
               <Text borderBottomColor="#eee" borderBottomWidth={2}>
                 searches every delivery service at once
               </Text>
-              .
+              , because when ordering delivery you often know exactly what
+              you're craving.
             </Paragraph>
 
             <Paragraph size="lg">
-              With reddit-style voting and sub-communities, we think we can
-              build a nicer collaborative guide that grows over time. Dish wants
-              to do two things:
+              With reddit-style voting and sub-communities, we think we can grow
+              a guide that gets better over time. Dish wants two things for the
+              world:
               <ul>
                 <li>
-                  <TextStrong>A better model for guides 🎙</TextStrong>. One that
-                  takes ongoing organic discussion and tips and reduces them
-                  into a "current best of" guide.
+                  <TextStrong>A better model for guides 🎙</TextStrong>. One
+                  knows how to allow ongoing organic discussion - and then takes
+                  the sentiment and tips and reduces it into a "current best
+                  of".
                 </li>
                 <li>
-                  <TextStrong>Let restaurants specialize ✨</TextStrong>.
+                  <TextStrong>To let restaurants specialize ✨</TextStrong>.
                   Instead of having to please everyone to try for 5 stars
                   overall, be rewarded for doing one or two exceptionally well.
                 </li>
               </ul>
-              We think of it as a Hitchhiker's Guide to Gastronomy (or, a
-              Pokédex for poke) - a fun pocket map of the world that people can
-              feel confident investing in.
+              We think of Dish as a Hitchhiker's Guide to Gastronomy (or, a
+              Pokédex for poke, if you will): a fun, private pocket map of the
+              world that a community can invest in.
             </Paragraph>
 
             <Spacer />

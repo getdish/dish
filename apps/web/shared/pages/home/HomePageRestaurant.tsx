@@ -78,7 +78,7 @@ const HomePageRestaurant = memo(
 
             <Spacer size="xl" />
 
-            <VStack>
+            {/* <VStack>
               <HStack
                 paddingHorizontal="5%"
                 flexWrap="wrap"
@@ -94,7 +94,7 @@ const HomePageRestaurant = memo(
                   max={5}
                 />
               </HStack>
-            </VStack>
+            </VStack> */}
 
             <VStack width="100%">
               <Suspense fallback={null}>

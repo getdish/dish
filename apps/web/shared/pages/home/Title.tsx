@@ -11,6 +11,7 @@ export const Title = (props: TitleProps) => {
     <Paragraph
       fontWeight={size > 3.5 ? '200' : '300'}
       {...props}
+      marginVertical={0}
       size={size}
       sizeLineHeight={0.7}
     />

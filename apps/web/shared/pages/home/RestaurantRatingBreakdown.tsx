@@ -33,9 +33,11 @@ export const RestaurantRatingBreakdown = memo(
   ({
     restaurantId,
     restaurantSlug,
+    closable,
   }: {
     restaurantId: string
     restaurantSlug: string
+    closable?: boolean
   }) => {
     const store = useStore(RestaurantReviewsDisplayStore, { id: restaurantId })
 
@@ -44,13 +46,17 @@ export const RestaurantRatingBreakdown = memo(
         <HStack marginBottom={-20} alignItems="center" justifyContent="center">
           <SlantedTitle fontWeight="600">Review Breakdown</SlantedTitle>
         </HStack>
-        <AbsoluteVStack zIndex={1000} top={18} right={11}>
-          <CloseButton onPress={store.toggleShowComments} />
-        </AbsoluteVStack>
+        {closable && (
+          <AbsoluteVStack zIndex={1000} top={18} right={11}>
+            <CloseButton onPress={store.toggleShowComments} />
+          </AbsoluteVStack>
+        )}
         <HStack
           flexWrap="wrap"
+          flexDirection="row-reverse"
           overflow="hidden"
           flex={1}
+          maxWidth="100%"
           margin={10}
           borderWidth={1}
           borderColor="#ddd"
@@ -58,7 +64,27 @@ export const RestaurantRatingBreakdown = memo(
           paddingHorizontal={18}
           paddingVertical={18}
         >
-          <VStack flex={1.15} overflow="hidden" spacing={10}>
+          <VStack minWidth={260} marginBottom={20} flex={1} overflow="hidden">
+            <SmallTitle>Points</SmallTitle>
+            <RestaurantScoreBreakdown restaurantSlug={restaurantSlug} />
+
+            <Spacer size="xl" />
+
+            <SmallTitle>Lense Votes</SmallTitle>
+            <Spacer />
+            <RestaurantLenseVote restaurantId={restaurantId} />
+
+            <Spacer size="xl" />
+
+            <SmallTitle>Dishes</SmallTitle>
+          </VStack>
+
+          {/*
+          <Spacer size="xl" />
+          <Divider vertical />
+          <Spacer size="xl" /> */}
+
+          <VStack minWidth={260} flex={1.15} overflow="hidden" spacing={10}>
             <SmallTitle>Reviews</SmallTitle>
             <HStack alignItems="stretch">
               <Suspense fallback={null}>
@@ -73,25 +99,6 @@ export const RestaurantRatingBreakdown = memo(
             <Suspense fallback={null}>
               <RestaurantReviewsList restaurantId={restaurantId} />
             </Suspense>
-          </VStack>
-
-          <Spacer size="xl" />
-          <Divider vertical />
-          <Spacer size="xl" />
-
-          <VStack flex={1} overflow="hidden">
-            <SmallTitle>Points</SmallTitle>
-            <RestaurantScoreBreakdown restaurantSlug={restaurantSlug} />
-
-            <Spacer size="xl" />
-
-            <SmallTitle>Lense Votes</SmallTitle>
-            <Spacer />
-            <RestaurantLenseVote restaurantId={restaurantId} />
-
-            <Spacer size="xl" />
-
-            <SmallTitle>Dishes</SmallTitle>
           </VStack>
         </HStack>
       </VStack>

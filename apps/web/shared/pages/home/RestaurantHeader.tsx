@@ -2,18 +2,16 @@ import { graphql } from '@dish/graph'
 import { HStack, SmallTitle, Spacer, Text, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { MessageSquare } from 'react-feather'
-import { Image, ScrollView } from 'react-native'
+import { Image } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
-import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
-import { useCurrentLenseColor } from './useCurrentLenseColor'
+import RestaurantRatingView from './RestaurantRatingView'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 type RestaurantHeaderProps = {
@@ -71,7 +69,7 @@ const RestaurantHeaderContent = memo(
             <HStack alignItems="center">
               {padding}
               <HStack position="relative">
-                <RestaurantRatingViewPopover
+                <RestaurantRatingView
                   size="lg"
                   restaurantSlug={restaurantSlug}
                 />

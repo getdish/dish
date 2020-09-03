@@ -121,7 +121,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
         />
       </HomeScrollViewHorizontal>
 
-      {store.showComments && <RestaurantRatingBreakdown {...props} />}
+      {store.showComments && <RestaurantRatingBreakdown closable {...props} />}
     </VStack>
   )
 })

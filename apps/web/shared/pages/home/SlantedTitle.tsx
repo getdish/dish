@@ -35,7 +35,7 @@ export const SlantedTitle = ({
     fontWeight,
   }
   return (
-    <SlantedBox alignSelf="flex-start" {...slantedBoxStyle} {...props}>
+    <SlantedBox alignSelf="flex-start" {...props}>
       <Title {...textProps} />
     </SlantedBox>
   )
