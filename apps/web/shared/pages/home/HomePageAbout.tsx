@@ -73,21 +73,21 @@ export default function HomePageAbout({
               >
                 date night
               </LinkButton>{' '}
-              you care about completely different things and{' '}
+              you care about completely different things.{' '}
               <Text fontWeight="400">
-                lists of ~4 star restuarants wasn't helping us find them very
-                quickly
+                A ton of ~4 star restuarants wasn't what we needed
               </Text>
               .
             </Paragraph>
 
             <Paragraph size="xl">
-              Dish collects reviews all over the food world (a bit like
-              RottenTomatoes, for food) and looks at{' '}
-              <TextStrong>what people actually say</TextStrong> - about specific
-              dishes, the vibe, service - so you can find exactly what you want.
-              Finding great dishes is really nice to have when ordering delivery
-              too,{' '}
+              Dish collects reviews from all over the food world - a bit like
+              RottenTomatoes, for food - and looks at{' '}
+              <TextStrong>what people actually say</TextStrong> about specific
+              dishes, the vibe, service, and more. Then it shows top lists you
+              can vote on specifically broken down by the tags that matter, down
+              to individual dishes. Finding great dishes is really nice to have
+              when ordering delivery too,{' '}
               <Text borderBottomColor="#eee" borderBottomWidth={2}>
                 so Dish searches every delivery service
               </Text>{' '}

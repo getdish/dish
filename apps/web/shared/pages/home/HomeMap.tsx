@@ -93,8 +93,6 @@ const HomeMapDataLoader = memo(
         .map((id) => all.find((x) => x.id === id))
         .filter(Boolean)
 
-      console.log('allResults', allResults)
-
       const restaurants = uniqBy(
         allResults
           .map(({ id, slug }) => {

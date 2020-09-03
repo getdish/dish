@@ -3,10 +3,7 @@ import React, { memo } from 'react'
 
 import { omStatic } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
-import {
-  useMediaQueryIsReallySmall,
-  useMediaQueryIsSmall,
-} from './useMediaQueryIs'
+import { useMediaQueryIsReallySmall } from './useMediaQueryIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 const linkButtonProps = {
@@ -29,7 +26,6 @@ const styles = {
 
 export const DishLogoButton = memo(() => {
   const isReallySmall = useMediaQueryIsReallySmall()
-  // const isSmall = useMediaQueryIsSmall()
   return (
     <VStack
       className="ease-in-out"

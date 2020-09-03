@@ -1,8 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
 import { TopCuisine, getHomeDishes } from '@dish/graph'
 import {
-  AbsoluteVStack,
-  Box,
   Divider,
   HStack,
   LoadingItems,
@@ -16,26 +14,18 @@ import { isEqual } from '@o/fast-compare'
 import _, { sortBy, uniqBy } from 'lodash'
 import { default as React, Suspense, memo, useEffect, useState } from 'react'
 import { ChevronRight } from 'react-feather'
-import { useStorageState } from 'react-storage-hooks'
 
-import { getActiveTags } from '../../state/home-tag-helpers'
 import { HomeStateItemHome } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic, useOvermind } from '../../state/om'
-import { tagDescriptions } from '../../state/tagLenses'
-import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { CloseButton } from './CloseButton'
 import { DishView } from './DishView'
-import { HomeLenseBar } from './HomeLenseBar'
 import { HomePagePaneProps } from './HomePagePaneProps'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { HomeTopSearches } from './HomeTopSearches'
 import { RestaurantButton } from './RestaurantButton'
-import { slantedBoxStyle } from './SlantedBox'
 import { SlantedLinkButton } from './SlantedLinkButton'
-import { SlantedTitle } from './SlantedTitle'
 import { TextStrong } from './TextStrong'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
@@ -71,7 +61,7 @@ export default memo(function HomePageHomePane(props: Props) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [topDishes, setTopDishes] = useState([])
   const state = props.item
-  const { activeTagIds, center, span } = state
+  const { center, span } = state
   const isSmall = useMediaQueryIsSmall()
 
   useDebounceEffect(
@@ -85,61 +75,61 @@ export default memo(function HomePageHomePane(props: Props) {
   )
 
   useEffect(() => {
-    if (center && span && isLoaded && props.isActive) {
-      let isMounted = true
-      om.actions.home.updateCurrentMapAreaInformation()
+    if (!isLoaded || !props.isActive) return
+    if (!center || !span) return
+    let isMounted = true
 
-      const mapAreasToSearch = [
-        [center.lng, center.lat],
-        [center.lng - span.lng, center.lat - span.lat],
-        [center.lng - span.lng, center.lat + span.lat],
-        [center.lng + span.lng, center.lat - span.lat],
-        [center.lng + span.lng, center.lat + span.lat],
-      ]
+    om.actions.home.updateCurrentMapAreaInformation()
 
-      Promise.all(
-        mapAreasToSearch.map((pt) => {
-          return getHomeDishes(pt[0], pt[1])
-        })
-      ).then((areas) => {
-        if (!isMounted) return
+    const mapAreasToSearch = [
+      [center.lng, center.lat],
+      [center.lng - span.lng, center.lat - span.lat],
+      [center.lng - span.lng, center.lat + span.lat],
+      [center.lng + span.lng, center.lat - span.lat],
+      [center.lng + span.lng, center.lat + span.lat],
+    ]
 
-        let all: TopCuisine[] = []
+    Promise.all(
+      mapAreasToSearch.map((pt) => {
+        return getHomeDishes(pt[0], pt[1])
+      })
+    ).then((areas) => {
+      if (!isMounted) return
 
-        for (const area of areas) {
-          for (const cuisine of area) {
-            const existing = all.find((x) => x.country === cuisine.country)
-            if (existing) {
-              const allTopRestaurants = [
-                ...existing.top_restaurants,
-                ...cuisine.top_restaurants,
-              ]
-              const sortedTopRestaurants = sortBy(
-                allTopRestaurants,
-                (x) => -(x.rating ?? 0)
-              )
-              console.log('allTopRestaurants', allTopRestaurants)
-              existing.top_restaurants = uniqBy(
-                sortedTopRestaurants,
-                (x) => x.id
-              ).slice(0, 5)
-            } else {
-              all.push(cuisine)
-            }
+      let all: TopCuisine[] = []
+
+      for (const area of areas) {
+        for (const cuisine of area) {
+          const existing = all.find((x) => x.country === cuisine.country)
+          if (existing) {
+            const allTopRestaurants = [
+              ...existing.top_restaurants,
+              ...cuisine.top_restaurants,
+            ]
+            const sortedTopRestaurants = sortBy(
+              allTopRestaurants,
+              (x) => -(x.rating ?? 0)
+            )
+            existing.top_restaurants = uniqBy(
+              sortedTopRestaurants,
+              (x) => x.id
+            ).slice(0, 5)
+          } else {
+            all.push(cuisine)
           }
         }
-
-        all = sortBy(all, (x) => -x.avg_rating)
-        if (!isEqual(all, topDishes)) {
-          updateHomeTagsCache(all)
-          setTopDishes(all)
-          om.actions.home.setTopDishes(all)
-        }
-      })
-
-      return () => {
-        isMounted = false
       }
+
+      all = sortBy(all, (x) => -x.avg_rating)
+      if (!isEqual(all, topDishes)) {
+        updateHomeTagsCache(all)
+        setTopDishes(all)
+        om.actions.home.setTopDishes(all)
+      }
+    })
+
+    return () => {
+      isMounted = false
     }
   }, [props.isActive, isLoaded, JSON.stringify({ center, span })])
 
@@ -187,8 +177,6 @@ export default memo(function HomePageHomePane(props: Props) {
               spacing="xl"
             >
               <VStack>
-                <HomeIntroLetter />
-
                 <HomeTopSearches />
 
                 <Spacer size="xs" />
@@ -205,67 +193,6 @@ export default memo(function HomePageHomePane(props: Props) {
   }
 
   return null
-})
-
-const HomeLenseTitle = ({ state }) => {
-  const lense = getActiveTags(state).find((x) => x.type === 'lense')
-  const tagsDescriptions = tagDescriptions[(lense?.name ?? '').toLowerCase()]
-  const tagsDescription = tagsDescriptions?.plain.replace('Here', ``) ?? ''
-  return (
-    <AbsoluteVStack
-      position="absolute"
-      top="50%"
-      marginTop={-10}
-      left="2%"
-      width="36%"
-      zIndex={1000}
-      justifyContent="center"
-      alignItems="center"
-      pointerEvents="none"
-    >
-      <LinkButton fontSize={15} fontWeight="600" {...slantedBoxStyle}>
-        {tagsDescription}
-      </LinkButton>
-    </AbsoluteVStack>
-  )
-}
-
-const HomeIntroLetter = memo(() => {
-  const [showInto, setShowIntro] = useStorageState(
-    localStorage,
-    'showIntro2',
-    true
-  )
-
-  if (!showInto) {
-    return null
-  }
-
-  return (
-    <VStack marginBottom={20} alignItems="center" justifyContent="center">
-      <Box
-        maxWidth={440}
-        width="95%"
-        margin="auto"
-        paddingRight={30}
-        padding={20}
-        position="relative"
-      >
-        <HStack position="absolute" top={10} right={10}>
-          <CloseButton onPress={() => setShowIntro(false)} />
-        </HStack>
-        <Text fontSize={16} lineHeight={22} opacity={0.8}>
-          <Text fontSize={16} lineHeight={26}>
-            dish is a guide to good food, down to the dish.
-            <br /> <Text fontWeight="600">search every delivery service</Text> &
-            vote on local gems. &nbsp;{' '}
-            <Link name="about">Learn how &#xbb;</Link>
-          </Text>
-        </Text>
-      </Box>
-      <Spacer />
-    </VStack>
-  )
 })
 
 const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {

@@ -5,6 +5,7 @@ import { isSSR } from '../../constants'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
 import HomeAutocomplete from './HomeAutocomplete'
 import { HomeContainer } from './HomeContainer'
+import { HomeIntroLetter } from './HomeIntroLetter'
 import { HomeMapControlsOverlay } from './HomeMapControlsOverlay'
 import { HomeMapControlsUnderlay } from './HomeMapControlsUnderlay'
 import { HomePagePane } from './HomePagePane'
@@ -33,6 +34,8 @@ export default memo(function HomePage() {
 const HomePageContent = memo(() => {
   return (
     <>
+      <HomeIntroLetter />
+
       <Suspense fallback={null}>
         {!isSSR && (
           <ErrorBoundary name="main-map">

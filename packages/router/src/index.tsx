@@ -174,21 +174,21 @@ export class Router extends Store<RouterProps> {
           break
       }
 
-      if (process.env.NODE_ENV === 'development') {
-        console.log(
-          'router.handlePath',
-          JSON.stringify(
-            {
-              item,
-              stack: this.stack,
-              stackIndex: this.stackIndex,
-              listeners: this.routeChangeListeners.size,
-            },
-            null,
-            2
-          )
-        )
-      }
+      // if (process.env.NODE_ENV === 'development') {
+      //   console.log(
+      //     'router.handlePath',
+      //     JSON.stringify(
+      //       {
+      //         item,
+      //         stack: this.stack,
+      //         stackIndex: this.stackIndex,
+      //         listeners: this.routeChangeListeners.size,
+      //       },
+      //       null,
+      //       2
+      //     )
+      //   )
+      // }
 
       this.routeChangeListeners.forEach((x) => x(next))
     } else {

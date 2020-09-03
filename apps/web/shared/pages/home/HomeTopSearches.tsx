@@ -5,8 +5,10 @@ import { bgLight } from '../../colors'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { tagLenses } from '../../state/tagLenses'
 import { LinkButton } from '../../views/ui/LinkButton'
+import { useMediaQueryIsReallySmall } from './useMediaQueryIs'
 
 export const HomeTopSearches = memo(() => {
+  const isReallySmall = useMediaQueryIsReallySmall()
   return (
     <HStack
       paddingHorizontal={20}
@@ -19,7 +21,7 @@ export const HomeTopSearches = memo(() => {
       alignItems="center"
       justifyContent="center"
     >
-      {recentSearches.slice(0, 8).map((search, index) => (
+      {recentSearches.slice(0, isReallySmall ? 6 : 8).map((search, index) => (
         <VStack
           key={index}
           borderColor="#eee"

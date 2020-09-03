@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 
-import { brandRgb } from '../../colors'
 import { useOvermind } from '../../state/om'
+import { tagLenses } from '../../state/tagLenses'
 
 export const useCurrentLenseColor = (): [number, number, number] => {
   const om = useOvermind()
@@ -17,5 +17,5 @@ export const useCurrentLenseColor = (): [number, number, number] => {
     }
   }, [lense?.rgb])
 
-  return lense?.rgb ?? lastLenseRgb.current ?? brandRgb
+  return lense?.rgb ?? lastLenseRgb.current ?? tagLenses[0].rgb
 }

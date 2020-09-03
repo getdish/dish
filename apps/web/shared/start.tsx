@@ -1,4 +1,8 @@
-import { mutation, resolved, update } from '@dish/graph'
+import { mutation, query, resolved } from '@dish/graph'
+
+window['query'] = query
+window['mutation'] = mutation
+window['resolved'] = resolved
 
 // startup stuff (can put in some other file eventually)
 const queue = new Map<
