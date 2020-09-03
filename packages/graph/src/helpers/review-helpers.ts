@@ -12,6 +12,11 @@ export const reviewFindOne = QueryHelpers.findOne
 export const reviewRefresh = QueryHelpers.refresh
 export const reviewDelete = QueryHelpers.delete
 
+String.prototype.replaceAll = function (search, replacement) {
+  var target = this
+  return target.replace(new RegExp(search, 'g'), replacement)
+}
+
 export async function reviewFindAllForRestaurant(restaurant_id: uuid) {
   return await resolvedWithFields(
     () => {
@@ -78,8 +83,19 @@ export async function userFavorites(user_id: string) {
 }
 
 export async function reviewExternalUpsert(reviews: Review[]) {
+  reviews = reviews.map((r) => {
+    r.text = cleanText(r.text)
+    return r
+  })
   return await reviewUpsert(
     reviews,
     review_constraint.review_username_restaurant_id_tag_id_authored_at_key
   )
+}
+
+function cleanText(text: string | null | undefined) {
+  if (!text) return null
+  const br = /<br\s*[\/]?>/gi
+  const apostrophe = '&#39;'
+  return text.replace(br, '\n').replaceAll(apostrophe, "'")
 }
