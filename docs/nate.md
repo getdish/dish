@@ -1,9 +1,16 @@
+biggest impact changes before sending:
+
+- hover restaurant show it on map (but without moving it, maybe marker zoom)
+- mini breakdown items links to opening detail, detail opens in new tab
+- add comment working with sentiment
+- map fixes
+- re-search fixes
 - location <=> url
-- dish rating breakdown
 - Voting, tagging, commenting improvements
+- apple login? (expo auth?)
 - A bit of user profile page polish
   - show favorites on the map!
-- apple login? (expo auth?)
+- dish rating breakdown
 - React Native app
 - revisit ssr
 - Admin icons multiselect
