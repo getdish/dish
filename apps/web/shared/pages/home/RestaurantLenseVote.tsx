@@ -11,6 +11,7 @@ export const RestaurantLenseVote = memo(
   graphql(
     ({ restaurantId, ...props }: StackProps & { restaurantId: string }) => {
       const [votes, vote] = useUserTagVotes(restaurantId)
+      console.log('votes', votes)
       return (
         <HStack spacing="sm" {...props}>
           {tagLenses.map((lense) => {

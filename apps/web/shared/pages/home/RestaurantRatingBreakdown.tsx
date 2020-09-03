@@ -1,11 +1,9 @@
-import { graphql, query } from '@dish/graph'
 import {
   AbsoluteVStack,
   Divider,
   HStack,
   SmallTitle,
   Spacer,
-  Text,
   VStack,
 } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
@@ -14,7 +12,7 @@ import React, { Suspense, memo } from 'react'
 import { CloseButton } from './CloseButton'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
-import { RestaurantReview } from './RestaurantReview'
+import { RestaurantReviewsList } from './RestaurantReviewsList'
 import { RestaurantScoreBreakdown } from './RestaurantScoreBreakdown'
 import { SlantedTitle } from './SlantedTitle'
 
@@ -61,14 +59,22 @@ export const RestaurantRatingBreakdown = memo(
           borderWidth={1}
           borderColor="#ddd"
           borderRadius={12}
-          paddingHorizontal={18}
           paddingVertical={18}
         >
-          <VStack minWidth={260} marginBottom={20} flex={1} overflow="hidden">
+          <VStack
+            borderRadius={10}
+            borderWidth={1}
+            borderColor="#eee"
+            padding={10}
+            minWidth={260}
+            margin={10}
+            flex={1}
+            overflow="hidden"
+          >
             <SmallTitle>Points</SmallTitle>
             <RestaurantScoreBreakdown restaurantSlug={restaurantSlug} />
 
-            <Spacer size="xl" />
+            <Spacer size="sm" />
 
             <SmallTitle>Lense Votes</SmallTitle>
             <Spacer />
@@ -84,8 +90,14 @@ export const RestaurantRatingBreakdown = memo(
           <Divider vertical />
           <Spacer size="xl" /> */}
 
-          <VStack minWidth={260} flex={1.15} overflow="hidden" spacing={10}>
-            <SmallTitle>Reviews</SmallTitle>
+          <VStack
+            minWidth={260}
+            flex={1.15}
+            overflow="hidden"
+            paddingHorizontal={10}
+            spacing={10}
+          >
+            <SmallTitle divider="off">Reviews</SmallTitle>
             <HStack alignItems="stretch">
               <Suspense fallback={null}>
                 <RestaurantAddCommentButton
@@ -104,44 +116,4 @@ export const RestaurantRatingBreakdown = memo(
       </VStack>
     )
   }
-)
-
-const RestaurantReviewsList = memo(
-  graphql(
-    ({
-      restaurantId,
-      numToShow,
-    }: {
-      restaurantId: string
-      numToShow?: number
-    }) => {
-      let topReviews = query.review({
-        limit: 3,
-        where: {
-          restaurant_id: {
-            _eq: restaurantId,
-          },
-        },
-      })
-
-      return (
-        <VStack spacing="lg">
-          {topReviews.map((review, i) => (
-            <RestaurantReview
-              key={i}
-              userName={review.user.username}
-              reviewText={review.text}
-            />
-          ))}
-          {!topReviews.length && (
-            <VStack minHeight={100} alignItems="center" justifyContent="center">
-              <Text opacity={0.5} fontSize={12}>
-                No reviews, yet!
-              </Text>
-            </VStack>
-          )}
-        </VStack>
-      )
-    }
-  )
 )

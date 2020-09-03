@@ -306,13 +306,13 @@ const RestaurantListItemContent = memo(
                                 <Text>{tagDisplayName(tag)}</Text>
                               </VStack>
                               {i < reviewTags.length - 1 && (
-                                <HStack
+                                <Text
                                   marginHorizontal={3}
                                   fontSize={10}
                                   opacity={0.5}
                                 >
                                   +
-                                </HStack>
+                                </Text>
                               )}
                             </React.Fragment>
                           )
@@ -341,7 +341,12 @@ const RestaurantListItemContent = memo(
                     </VStack>
                   </HStack>
                   <Spacer size="sm" />
-                  <HStack paddingLeft={10} paddingRight={20}>
+                  <HStack
+                    paddingLeft={10}
+                    paddingRight={20}
+                    cursor="pointer"
+                    onPress={reviewDisplayStore.toggleShowComments}
+                  >
                     <RestaurantScoreBreakdownSmall
                       restaurantSlug={restaurantSlug}
                     />

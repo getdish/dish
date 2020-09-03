@@ -85,7 +85,7 @@ export const RestaurantScoreBreakdown = memo(
     return (
       <HStack overflow="hidden" maxWidth="100%" paddingVertical={12}>
         <VStack>
-          <Paragraph size={1.1} sizeLineHeight={1.1} color="rgba(0,0,0,0.65)">
+          <Paragraph size={1} color="rgba(0,0,0,0.65)">
             This restaurant has 152 reviews from 5 sources.{' '}
             <TextHighlight backgroundColor={lightGreen}>
               <TextStrong color="#000">+121</TextStrong> from 23 dish reviewers
@@ -99,7 +99,7 @@ export const RestaurantScoreBreakdown = memo(
 
           <Spacer />
 
-          <Table>
+          <Table className="hide-when-small">
             <TableHeadRow>
               <TableCell {...col0Props}></TableCell>
 
@@ -164,14 +164,20 @@ export const RestaurantScoreBreakdown = memo(
                       <TableCell {...col0Props} />
 
                       <TableCell>
-                        <VStack
-                          className="dotted-line"
-                          width={10}
-                          marginRight={5}
-                        />
-                        <Text fontSize={12} opacity={0.5}>
-                          {tagDisplayName(tag)}
-                        </Text>
+                        <HStack
+                          flexWrap="nowrap"
+                          overflow="hidden"
+                          alignItems="center"
+                        >
+                          <VStack
+                            className="dotted-line"
+                            width={10}
+                            marginRight={5}
+                          />
+                          <Text ellipse fontSize={12} opacity={0.5}>
+                            {tagDisplayName(tag)}
+                          </Text>
+                        </HStack>
                       </TableCell>
 
                       <TableCell></TableCell>

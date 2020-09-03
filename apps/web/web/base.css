@@ -374,3 +374,9 @@ input:-webkit-autofill:active  {
   -webkit-text-fill-color: green !important;
   -webkit-box-shadow: 0 0 0 30px #000 inset !important;
 }
+
+@media screen and (max-width: 860px) {
+  .hide-when-small {
+    display: none;
+  }
+}

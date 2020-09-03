@@ -2,7 +2,7 @@ import { HStack, StackProps, Text } from '@dish/ui'
 import React from 'react'
 import { TextStyle } from 'react-native'
 
-import { bg, bgLight, bgLightHover } from '../../colors'
+import { bg, bgLight, bgLightHover, bgLightLight } from '../../colors'
 import { baseButtonStyle } from '../../pages/home/baseButtonStyle'
 
 export type SmallButtonProps = StackProps & {
@@ -22,15 +22,6 @@ export const SmallButton = ({
     <DeoptHStack
       className={rest.className}
       {...smallButtonBaseStyle}
-      hoverStyle={
-        isActive
-          ? {
-              // backgroundColor: bgHover,
-            }
-          : {
-              backgroundColor: bgLightHover,
-            }
-      }
       {...rest}
       {...(isActive && {
         backgroundColor: 'transparent',
@@ -63,4 +54,7 @@ export const smallButtonBaseStyle: StackProps = {
   borderWidth: 1,
   backgroundColor: '#fff',
   borderColor: bgLight,
+  hoverStyle: {
+    backgroundColor: bgLightLight,
+  },
 }

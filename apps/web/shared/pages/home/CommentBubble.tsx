@@ -14,13 +14,17 @@ import { Link } from '../../views/ui/Link'
 
 export const CommentBubble = ({
   user,
-  children,
   ellipseContentAbove,
   expandable,
+  text,
+  before,
+  after,
   ...rest
-}: StackProps & {
+}: Omit<StackProps, 'children'> & {
   user: Partial<UserModel>
-  children: any
+  text: string
+  before?: any
+  after?: any
   ellipseContentAbove?: number
   expandable?: boolean
 }) => {
@@ -32,14 +36,10 @@ export const CommentBubble = ({
       padding={4}
       alignItems="flex-start"
       justifyContent="flex-start"
+      spacing
       {...rest}
     >
-      <HStack
-        alignItems="center"
-        spacing={6}
-        flexWrap="nowrap"
-        marginBottom={10}
-      >
+      <HStack alignItems="center" spacing={6} flexWrap="nowrap">
         <Circle size={18} marginBottom={-2}>
           <User color="#000" size={12} />
         </Circle>
@@ -56,14 +56,16 @@ export const CommentBubble = ({
         </Text>
       </HStack>
 
+      {before}
+
       <Text selectable opacity={0.8} lineHeight={20} fontSize={14}>
-        {ellipseContentAbove && children.length > ellipseContentAbove ? (
+        {ellipseContentAbove && text.length > ellipseContentAbove ? (
           <>
             {isExpanded
-              ? children
-              : typeof children === 'string'
-              ? children.slice(0, ellipseContentAbove) + '...'
-              : children}{' '}
+              ? text
+              : typeof text === 'string'
+              ? text.slice(0, ellipseContentAbove) + '...'
+              : text}{' '}
             {!!expandable && (
               <Link
                 onClick={() => {
@@ -75,9 +77,11 @@ export const CommentBubble = ({
             )}
           </>
         ) : (
-          children
+          text
         )}
       </Text>
+
+      {after}
     </VStack>
   )
 }

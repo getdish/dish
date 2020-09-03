@@ -123,12 +123,6 @@ export const HomeSearchLocationInput = memo(() => {
               inputTextStyles.textInput,
               { color, paddingHorizontal, fontSize: 16 },
             ]}
-            // onFocus={(e) => {
-            //   debugger
-            //   // e.preventDefault()
-            //   // onFocusAnyInput()
-            //   // om.actions.home.setShowAutocomplete('location')
-            // }}
             onChangeText={(text) => {
               setLocationSearch(text)
               om.actions.home.setLocationSearchQuery(text)
