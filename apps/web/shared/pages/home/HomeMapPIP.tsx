@@ -17,7 +17,7 @@ import { restaurantQuery } from './useRestaurantQuery'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
-export const HomeMapPIP = memo(() => {
+export default memo(() => {
   const isSmall = useMediaQueryIsSmall()
   const isReallySmall = useMediaQueryIsReallySmall()
   const om = useOvermind()

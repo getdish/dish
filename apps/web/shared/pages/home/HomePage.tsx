@@ -1,4 +1,5 @@
-import { AbsoluteVStack, VStack } from '@dish/ui'
+import { AbsoluteVStack } from '@dish/ui'
+import loadable from '@loadable/component'
 import React, { Suspense, memo } from 'react'
 
 import { isSSR } from '../../constants'
@@ -71,14 +72,14 @@ const HomePageContent = memo(() => {
 })
 
 const HomeMap =
-  process.env.TARGET === 'ssr' ? null : React.lazy(() => import('./HomeMap'))
+  process.env.TARGET === 'ssr' ? null : loadable(() => import('./HomeMap'))
 
 const HomePageGallery =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageGallery').default
-    : React.lazy(() => import('./HomePageGallery'))
+    : loadable(() => import('./HomePageGallery'))
 
 const HomePageRestaurantReview =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageRestaurantReview').default
-    : React.lazy(() => import('./HomePageRestaurantReview'))
+    : loadable(() => import('./HomePageRestaurantReview'))

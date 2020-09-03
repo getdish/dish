@@ -5,6 +5,7 @@ module.exports = function (api) {
 
   return {
     plugins: [
+      isSSR && '@loadable/babel-plugin',
       api.env('development') && !isWorker && !isSSR && 'react-refresh/babel',
       !api.env('production') && '@babel/plugin-transform-react-display-name',
       ...(api.env('production') && !isWorker && !isSSR

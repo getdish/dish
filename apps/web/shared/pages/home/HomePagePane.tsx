@@ -1,3 +1,4 @@
+import loadable from '@loadable/component'
 import React, { Suspense } from 'react'
 
 import {
@@ -25,24 +26,24 @@ export const HomePagePane = (props: HomePagePaneProps) => {
 const HomePageAbout =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageAbout').default
-    : React.lazy(() => import('./HomePageAbout'))
+    : loadable(() => import('./HomePageAbout'))
 
 const HomePageRestaurant =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageRestaurant').default
-    : React.lazy(() => import('./HomePageRestaurant'))
+    : loadable(() => import('./HomePageRestaurant'))
 
 const HomePageSearchResults =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageSearchResults').default
-    : React.lazy(() => import('./HomePageSearchResults'))
+    : loadable(() => import('./HomePageSearchResults'))
 
 const HomePageHomePane =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageHomePane').default
-    : React.lazy(() => import('./HomePageHomePane'))
+    : loadable(() => import('./HomePageHomePane'))
 
 const HomePageUser =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageUser').default
-    : React.lazy(() => import('./HomePageUser'))
+    : loadable(() => import('./HomePageUser'))

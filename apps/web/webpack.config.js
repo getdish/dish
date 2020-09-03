@@ -1,3 +1,4 @@
+const LoadablePlugin = require('@loadable/webpack-plugin')
 const { DuplicatesPlugin } = require('inspectpack/plugin')
 const ShakePlugin = require('webpack-common-shake').Plugin
 const ReactRefreshWebpack4Plugin = require('@pmmmwh/react-refresh-webpack-plugin')
@@ -40,7 +41,7 @@ while (true) {
 
 const isProduction = process.env.NODE_ENV === 'production'
 // const isClient = TARGET === 'client'
-// const isSSR = TARGET === 'ssr'
+const isSSR = TARGET === 'ssr'
 // const isHot = !isProduction
 const isStaticExtracted = !process.env.NO_EXTRACT
 
@@ -59,6 +60,12 @@ module.exports = function getWebpackConfig(
       mode: env.mode || process.env.NODE_ENV,
       context: __dirname,
       target,
+      externals: isSSR
+        ? {
+            react: 'react',
+            'react-dom': 'react-dom',
+          }
+        : [],
       stats: 'normal',
       devtool:
         env.mode === 'production' ? 'source-map' : 'cheap-module-source-map',
@@ -230,6 +237,8 @@ module.exports = function getWebpackConfig(
         ],
       },
       plugins: [
+        isSSR && new LoadablePlugin(),
+
         // breaks a couple things, possible to ignore
         // isClient && isProduction && new ShakePlugin({}),
 

@@ -1,11 +1,11 @@
 import { AbsoluteVStack, HStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
+import loadable from '@loadable/component'
 import React, { Suspense, memo } from 'react'
 
 import { searchBarHeight, zIndexMapControls } from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { useOvermind } from '../../state/om'
-import { HomeMapPIP } from './HomeMapPIP'
 import { HomeMapRestaurantPeek } from './HomeMapRestaurantPeek'
 import { BottomDrawerStore } from './HomeSmallDrawer'
 import { useMapSize } from './useMapSize'
@@ -75,3 +75,6 @@ export const HomeMapControlsOverlay = memo(() => {
     </AbsoluteVStack>
   )
 })
+
+const HomeMapPIP =
+  process.env.TARGET === 'ssr' ? null : loadable(() => import('./HomeMapPIP'))

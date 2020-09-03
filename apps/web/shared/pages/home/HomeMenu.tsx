@@ -146,7 +146,7 @@ const MenuButton = ({
     <LinkButton
       className="ease-in-out-fast"
       padding={12}
-      opacity={0.65}
+      opacity={0.6}
       activeStyle={{
         opacity: 1,
         transform: [{ scale: 1.1 }],

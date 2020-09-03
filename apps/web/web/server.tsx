@@ -1,8 +1,11 @@
 import 'isomorphic-unfetch'
 
+import './serverEnv'
+
 import { existsSync, readFileSync, renameSync, unlinkSync } from 'fs'
 import Path from 'path'
 
+import { ChunkExtractor } from '@loadable/server'
 import bodyParser from 'body-parser'
 import { matchesUA } from 'browserslist-useragent'
 import express from 'express'
@@ -10,10 +13,10 @@ import { JSDOM } from 'jsdom'
 import { createOvermindSSR } from 'overmind'
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import ssrPrepass from 'react-ssr-prepass'
 
 const rootDir = Path.join(__dirname, '..', '..')
 
-Error.stackTraceLimit = Infinity
 global['React'] = React
 global['__DEV__'] = false
 
@@ -34,6 +37,11 @@ Object.keys(jsdom.window).forEach((key) => {
     global[key] = jsdom.window[key]
   }
 })
+
+const statsFile = Path.resolve(
+  Path.join(rootDir, 'web-build-ssr/loadable-stats.json')
+)
+const extractor = new ChunkExtractor({ statsFile })
 
 // import all app below ^^^
 const app = require(Path.join(rootDir, 'web-build-ssr/static/js/app.ssr.js'))
@@ -83,7 +91,17 @@ server.get('*', async (req, res) => {
   const overmind = createOvermindSSR(config)
   await overmind.initialized
   global['window']['om'] = overmind
-  const appHtml = ReactDOMServer.renderToString(<App overmind={overmind} />)
+
+  const app = <App overmind={overmind} />
+  const jsx = extractor.collectChunks(app)
+
+  console.log('scripts are', extractor.getScriptTags())
+
+  // async suspense rendering
+  await ssrPrepass(app)
+
+  const appHtml = ReactDOMServer.renderToString(jsx)
+
   // need to fool helmet back into thinking were in the node
   // @ts-ignore
   const helmet = Helmet.renderStatic()

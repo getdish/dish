@@ -1,4 +1,5 @@
 import { HStack, SmallTitle, Spacer, Text, VStack } from '@dish/ui'
+import loadable from '@loadable/component'
 import React, { memo } from 'react'
 
 import { Route, RouteSwitch } from '../../views/router/Route'
@@ -33,9 +34,9 @@ export default memo(function AdminPage() {
 const AdminTagsPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./AdminTagsPage').default
-    : React.lazy(() => import('./AdminTagsPage'))
+    : loadable(() => import('./AdminTagsPage'))
 
 const AdminReviewsPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./AdminReviewsPage').default
-    : React.lazy(() => import('./AdminReviewsPage'))
+    : loadable(() => import('./AdminReviewsPage'))
