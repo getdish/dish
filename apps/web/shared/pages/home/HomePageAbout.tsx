@@ -51,9 +51,13 @@ export default function HomePageAbout({
             </Paragraph>
 
             <Paragraph size="xxl" fontWeight="300">
-              We realized when ordering{' '}
+              When ordering{' '}
               <LinkButton
+                fontWeight="400"
                 backgroundColor={lightYellow}
+                hoverStyle={{
+                  backgroundColor: `${lightYellow}44`,
+                }}
                 {...inlineButton}
                 tags={[
                   { name: 'Pho', type: 'dish' },
@@ -62,57 +66,56 @@ export default function HomePageAbout({
               >
                 delivery pho
               </LinkButton>{' '}
-              vs planning a{' '}
+              or planning a{' '}
               <LinkButton
+                fontWeight="400"
                 tags={[
                   { name: 'Date', type: 'lense' },
                   { name: 'price-high', type: 'filter' },
                 ]}
                 {...inlineButton}
                 backgroundColor={lightGreen}
+                hoverStyle={{
+                  backgroundColor: `${lightGreen}44`,
+                }}
               >
                 date night
-              </LinkButton>{' '}
-              you care about completely different things.{' '}
-              <Text fontWeight="400">
-                A ton of ~4 star restuarants wasn't what we needed
+              </LinkButton>
+              , you care about different things. Yet today you just get the same{' '}
+              <Text fontWeight="400">list of ~4 star restuarants</Text> for
+              either query.
+            </Paragraph>
+
+            <Paragraph size="xl">
+              Dish collects reviews from all over - a bit like RottenTomatoes,
+              for food - and breaks down{' '}
+              <TextStrong>what people actually say</TextStrong> (about dishes,
+              vibe, service, and more) to show you better results. It even{' '}
+              <Text borderBottomColor="#eee" borderBottomWidth={2}>
+                searches every delivery service at once
               </Text>
               .
             </Paragraph>
 
-            <Paragraph size="xl">
-              Dish collects reviews from all over the food world - a bit like
-              RottenTomatoes, for food - and looks at{' '}
-              <TextStrong>what people actually say</TextStrong> about specific
-              dishes, the vibe, service, and more. Then it shows top lists you
-              can vote on specifically broken down by the tags that matter, down
-              to individual dishes. Finding great dishes is really nice to have
-              when ordering delivery too,{' '}
-              <Text borderBottomColor="#eee" borderBottomWidth={2}>
-                so Dish searches every delivery service
-              </Text>{' '}
-              at once.
-            </Paragraph>
-
             <Paragraph size="lg">
               With reddit-style voting and sub-communities, we think we can
-              build a better type of guide that grows over time. Dish wants to
-              do two things:
+              build a nicer collaborative guide that grows over time. Dish wants
+              to do two things:
               <ul>
                 <li>
-                  <TextStrong>Build a better discussion platform</TextStrong>.
-                  One that gives users more control by understanding organic
-                  review sentiment to generate a living "best of" guide.
+                  <TextStrong>A better model for guides 🎙</TextStrong>. One that
+                  takes ongoing organic discussion and tips and reduces them
+                  into a "current best of" guide.
                 </li>
                 <li>
-                  <TextStrong>Letting restaurants relax a bit</TextStrong>.
-                  Instead of having to please everyone to try and get 5 stars,
-                  instead specialize on doing one thing well.
+                  <TextStrong>Let restaurants specialize ✨</TextStrong>.
+                  Instead of having to please everyone to try for 5 stars
+                  overall, be rewarded for doing one or two exceptionally well.
                 </li>
               </ul>
               We think of it as a Hitchhiker's Guide to Gastronomy (or, a
-              Pokédex for poke) - a fun pocket map of the world that we can work
-              together to curate.
+              Pokédex for poke) - a fun pocket map of the world that people can
+              feel confident investing in.
             </Paragraph>
 
             <Spacer />
