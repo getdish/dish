@@ -361,3 +361,16 @@ li {
 .inset-shadow-xxxl {
   box-shadow: inset 0 0 10000px rgba(0,0,0,0.15);
 }
+
+#appleid-signin > div {
+  width: 156px !important;
+  height: 36px !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active  {
+  -webkit-text-fill-color: green !important;
+  -webkit-box-shadow: 0 0 0 30px #000 inset !important;
+}

@@ -1,7 +1,6 @@
 .yarn
 .ultra.cache.json
 tmp
-.tscc_temp
 *.tsbuildinfo
 
 *.tmp.js
