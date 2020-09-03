@@ -17,7 +17,6 @@ import {
   resolvedWithFields,
   uuid,
 } from '@dish/graph'
-import AWS from 'aws-sdk'
 import { chunk, clone, uniqBy } from 'lodash'
 import fetch, { Response } from 'node-fetch'
 
@@ -28,12 +27,12 @@ export const photoXrefUpsert = PhotoXrefQueryHelpers.upsert
 
 export const DO_BASE = 'https://dish-images.sfo2.digitaloceanspaces.com/'
 
-const spacesEndpoint = new AWS.Endpoint('sfo2.digitaloceanspaces.com')
-const s3 = new AWS.S3({
-  endpoint: spacesEndpoint.href,
-  accessKeyId: process.env.DO_SPACES_ID,
-  secretAccessKey: process.env.DO_SPACES_SECRET,
-})
+const prod_hooks_endpoint = 'http://dish-hooks:6154'
+const dev_hooks_endpoint = 'http://localhost:6154'
+const DISH_HOOKS_ENDPOINT =
+  process.env.DISH_ENV == 'production'
+    ? prod_hooks_endpoint
+    : dev_hooks_endpoint
 
 export async function photoUpsert(photos: PhotoXref[]) {
   if (photos.length == 0) return
@@ -418,17 +417,23 @@ async function findNotUploadedPhotos(photos: PhotoXref[]) {
 }
 
 async function uploadToDOSpaces(photos: PhotoXref[]) {
+  const DO_SPACES_UPLOAD_BATCH_SIZE = 50
+  let uploaded: PhotoXref[] = []
+  for (const batch of chunk(photos, DO_SPACES_UPLOAD_BATCH_SIZE)) {
+    uploaded.push(...(await uploadToDOSpacesBatch(batch)))
+  }
+  return uploaded
+}
+
+async function uploadToDOSpacesBatch(photos: PhotoXref[]) {
   console.log('Uploading images to DO Spaces...')
-  const DO_API_RATE_LIMIT_DELAY = 50
-  const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
   const failed_ids = await Promise.all(
     photos.map(async (p) => {
       if (!p.photo || !p.photo.origin) {
         console.error('DO UPLOADER: Photo must have URL: ' + p)
         return p.id
       }
-      await sleep(DO_API_RATE_LIMIT_DELAY)
-      const failed_id = sendToDO(p.photo.origin, p.photo.id)
+      const failed_id = sendToDO(p.photo.origin, p.photo.id, p.restaurant_id)
       return failed_id
     })
   )
@@ -440,26 +445,30 @@ async function uploadToDOSpaces(photos: PhotoXref[]) {
   return uploaded
 }
 
-export async function sendToDO(url: string, id: string) {
+export async function sendToDO(url: string, id: string, restaurant_id: string) {
   url = proxyYelpCDN(url)
   let response: Response
   try {
-    response = await fetch(url)
+    response = await fetch(url, { method: 'HEAD' })
   } catch (e) {
-    sentryMessage('Failed downloading image', { url })
+    sentryMessage('Failed downloading image HEAD', { url })
     return id
   }
-  const image_stream = await response.body
+  const mime_type = response.headers.get('content-type')
 
+  const ram_value = Math.round(process.memoryUsage().heapUsed / 1024 / 1024)
+  if (ram_value > 1000) {
+    sentryMessage('Worker RAM over 1Gi for: ' + restaurant_id)
+  }
   if (process.env.DISH_DEBUG == '1') {
-    const ram = Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + 'Mb'
+    const ram = ram_value + 'Mb'
     console.log(`DO photo uploader RAM usage (${id}): ${ram}`)
   }
 
   while (true) {
     let retries = 1
     try {
-      await doPut(image_stream, id, response.headers.get('content-type'))
+      await doPut(url, id, mime_type)
       return
     } catch (e) {
       if (e.code == 408) retries += 1
@@ -470,20 +479,31 @@ export async function sendToDO(url: string, id: string) {
         })
         return id
       }
+      if (e.code != 408) {
+        throw new Error(e)
+      }
     }
   }
 }
 
-async function doPut(image_stream: Buffer, id: uuid, content_type: string) {
-  await s3
-    .upload({
-      Body: image_stream,
-      Bucket: 'dish-images',
-      Key: id,
-      ACL: 'public-read',
-      ContentType: content_type,
-    })
-    .promise()
+async function doPut(url: string, id: uuid, content_type: string) {
+  const result = await fetch(DISH_HOOKS_ENDPOINT + '/do_image_upload', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      photo_id: id,
+      photo_url: url,
+      content_type,
+    }),
+  })
+  console.log(
+    'Dish hook do_image_upload response: ',
+    result.status,
+    await result.text()
+  )
+  return result
 }
 
 export async function findHeroImage(restaurant_id: uuid) {
@@ -504,7 +524,7 @@ export async function uploadHeroImage(url: string, restaurant_id: uuid) {
     if (existing.photo?.origin != url) is_needs_uploading = true
   }
   if (!existing || is_needs_uploading) {
-    await sendToDO(url, restaurant_id)
+    await sendToDO(url, restaurant_id, restaurant_id)
     await photoXrefUpsert([
       {
         restaurant_id: restaurant_id,
