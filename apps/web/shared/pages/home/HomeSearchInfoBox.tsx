@@ -44,29 +44,35 @@ const HomeSearchInfoBoxCountry = memo(
     })
 
     return (
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <HStack
-          paddingHorizontal={20}
-          paddingVertical={10}
-          marginVertical={-10}
-          spacing={10}
-          alignItems="center"
-        >
-          <Text opacity={0.7} fontSize={14}>
-            Filter by dish:
-          </Text>
-          {topCountryDishes.map((tag) => {
-            return (
-              <DishViewButton
-                key={tag.id}
-                size={90}
-                name={tag.name}
-                icon={tag.icon ?? '🍜'}
-              />
-            )
-          })}
-        </HStack>
-      </ScrollView>
+      <HStack
+        borderColor="#eee"
+        borderWidth={1}
+        borderRadius={10}
+        marginHorizontal={10}
+      >
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <HStack
+            paddingHorizontal={20}
+            paddingVertical={5}
+            spacing={10}
+            alignItems="center"
+          >
+            <Text opacity={0.7} fontSize={14}>
+              Filter by dish:
+            </Text>
+            {topCountryDishes.map((tag) => {
+              return (
+                <DishViewButton
+                  key={tag.id}
+                  size={90}
+                  name={tag.name}
+                  icon={tag.icon ?? '🍜'}
+                />
+              )
+            })}
+          </HStack>
+        </ScrollView>
+      </HStack>
     )
   })
 )

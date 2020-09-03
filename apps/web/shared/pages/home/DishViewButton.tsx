@@ -15,7 +15,12 @@ export const DishViewButton = memo(
     size?: number
   } & StackProps) => {
     return (
-      <LinkButton {...flatButtonStyle} tag={{ type: 'dish', name }} {...rest}>
+      <LinkButton
+        {...flatButtonStyle}
+        paddingVertical={8}
+        tag={{ type: 'dish', name }}
+        {...rest}
+      >
         {!!icon && (
           <>
             <Text fontSize={16} marginVertical={-5}>

@@ -79,32 +79,37 @@ export default memo(function HomePageSearchResults(props: Props) {
     isOptimisticUpdating || !props.isActive || changingFilters
 
   usePageLoadEffect(props.isActive, ({ isRefreshing }) => {
+    console.log('load search', isRefreshing)
     // if initial load on a search page, process url => state
-    const fakeTags = getTagsFromRoute(router.curPage)
-    const location = getLocationFromRoute()
-    // TODO UPDATE HOME TOO...
-    om.actions.home.updateCurrentState({
-      ...state,
-      ...location,
-    })
     let isCancelled = false
-    getFullTags(fakeTags).then((tags) => {
-      if (isCancelled) return
-      om.actions.home.addTagsToCache(tags)
-      const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>(
-        (acc, tag) => {
-          acc[getTagId(tag)] = true
-          return acc
-        },
-        {}
-      )
-      om.actions.home.updateActiveTags({
+    if (!isRefreshing) {
+      const fakeTags = getTagsFromRoute(router.curPage)
+      const location = getLocationFromRoute()
+      // TODO UPDATE HOME TOO...
+      om.actions.home.updateCurrentState({
         ...state,
-        searchQuery: router.curPage.params.search,
-        activeTagIds,
+        ...location,
       })
-      om.actions.home.runSearch({ force: isRefreshing })
-    })
+      getFullTags(fakeTags).then((tags) => {
+        if (isCancelled) return
+        om.actions.home.addTagsToCache(tags)
+        const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>(
+          (acc, tag) => {
+            acc[getTagId(tag)] = true
+            return acc
+          },
+          {}
+        )
+        om.actions.home.updateActiveTags({
+          ...state,
+          searchQuery: router.curPage.params.search,
+          activeTagIds,
+        })
+        om.actions.home.runSearch()
+      })
+    } else {
+      om.actions.home.runSearch({ force: true })
+    }
     return () => {
       isCancelled = true
     }

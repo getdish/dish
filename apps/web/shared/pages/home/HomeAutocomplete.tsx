@@ -128,7 +128,7 @@ const HomeAutoCompleteContents = memo(
     const top =
       searchBarTopOffset +
       searchBarHeight +
-      (isSmall ? getWindowHeight() * drawerStore.snapPoints[0] + 10 : 0)
+      (isSmall ? getWindowHeight() * drawerStore.snapPoints[0] : 0)
 
     return (
       <AbsoluteVStack

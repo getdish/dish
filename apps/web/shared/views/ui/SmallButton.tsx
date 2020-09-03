@@ -10,6 +10,8 @@ export type SmallButtonProps = StackProps & {
   textStyle?: TextStyle
 }
 
+const DeoptHStack = HStack
+
 export const SmallButton = ({
   isActive,
   children,
@@ -17,7 +19,7 @@ export const SmallButton = ({
   ...rest
 }: SmallButtonProps) => {
   return (
-    <HStack
+    <DeoptHStack
       className={rest.className}
       {...smallButtonBaseStyle}
       hoverStyle={
@@ -32,7 +34,7 @@ export const SmallButton = ({
       {...rest}
       {...(isActive && {
         backgroundColor: 'transparent',
-        borderColor: `#aaa`,
+        borderColor: `#999`,
         hoverStyle: {
           backgroundColor: 'transparent',
         },
@@ -47,7 +49,7 @@ export const SmallButton = ({
       >
         <HStack alignItems="center">{children}</HStack>
       </Text>
-    </HStack>
+    </DeoptHStack>
   )
 }
 

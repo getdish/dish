@@ -293,7 +293,6 @@ const HomeMapContent = memo(function HomeMap({
         }}
         selected={internal.id}
         onMoveEnd={({ center, span }) => {
-          console.warn('onmoveend')
           if (om.state.home.centerToResults) {
             // we just re-centered, ignore
             om.actions.home.setCenterToResults(0)

@@ -287,14 +287,19 @@ const runSearch: AsyncAction<{
   if (shouldCancel()) return
 
   // overmind seems unhappy to just let us mutate
+  const center = state.mapAt?.center ?? state.center
+  const span = state.mapAt?.span ?? state.span
+
   om.actions.home.updateHomeState({
     ...state,
+    center,
+    span,
     mapAt: null,
   })
 
   const searchArgs: RestaurantSearchArgs = {
-    center: roundLngLat(state.mapAt?.center ?? state.center),
-    span: roundLngLat(padSpan(state.mapAt?.span ?? state.span)),
+    center: roundLngLat(center),
+    span: roundLngLat(padSpan(span)),
     query: state.searchQuery,
     tags: [...tags.map((tag) => getTagId(tag).replace(/[a-z]+_/g, ''))],
   }
@@ -307,6 +312,7 @@ const runSearch: AsyncAction<{
   }
 
   // fetch
+  console.log('searching', searchArgs)
   let restaurants = await search(searchArgs)
   if (shouldCancel()) return
 
@@ -316,8 +322,11 @@ const runSearch: AsyncAction<{
   if (!state) return
 
   // console.log('search found restaurants', restaurants)
-  state.status = 'complete'
-  state.results = restaurants.filter(Boolean)
+  om.actions.home.updateHomeState({
+    ...state,
+    status: 'complete',
+    results: restaurants.filter(Boolean),
+  })
 }
 
 const deepAssign = (a: Object, b: Object) => {
@@ -545,6 +554,9 @@ const pushHomeState: AsyncAction<
         results: [],
         username,
         activeTagIds,
+        center: lastHomeOrSearch.mapAt?.center ?? lastHomeOrSearch.center,
+        span: lastHomeOrSearch.mapAt?.span ?? lastHomeOrSearch.span,
+        mapAt: null,
       }
       break
     }
