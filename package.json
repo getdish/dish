@@ -32,6 +32,7 @@
     "postinstall": "yarn patch-package; yarn build:refs"
   },
   "resolutions": {
+    "terser": "^5.3.0",
     "lodash": "4.17.20",
     "resolve": "1.17.0",
     "jsdom": "^16.4.0",

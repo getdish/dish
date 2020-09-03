@@ -139,7 +139,10 @@ module.exports = function getWebpackConfig(
             ? []
             : [
                 // new ClosurePlugin(),
-                new TerserPlugin(),
+                new TerserPlugin({
+                  parallel: true,
+                  sourceMap: true,
+                }),
                 new OptimizeCSSAssetsPlugin({}),
               ],
       },
@@ -182,13 +185,34 @@ module.exports = function getWebpackConfig(
               },
               {
                 test: /\.(png|svg|jpe?g|gif)$/,
-                use: {
-                  loader: 'url-loader',
-                  options: {
-                    limit: 1000,
-                    name: 'static/media/[name].[hash].[ext]',
+                use: [
+                  {
+                    loader: 'url-loader',
+                    options: {
+                      limit: 1000,
+                      name: 'static/media/[name].[hash].[ext]',
+                    },
                   },
-                },
+                  {
+                    loader: 'image-webpack-loader',
+                    options: {
+                      mozjpeg: {
+                        progressive: true,
+                        quality: 85,
+                      },
+                      optipng: {
+                        enabled: true,
+                      },
+                      pngquant: {
+                        quality: [0.8, 0.9],
+                        speed: 4,
+                      },
+                      gifsicle: {
+                        interlaced: false,
+                      },
+                    },
+                  },
+                ],
               },
               // fallback loader helps webpack-dev-server serve assets
               {
