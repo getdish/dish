@@ -16,34 +16,32 @@ import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
 import moment from 'moment'
 
-import { GoogleGeocoder } from '../GoogleGeocoder'
 import {
   bestPhotosForRestaurant,
   bestPhotosForRestaurantTags,
   photoUpsert,
   uploadHeroImage,
 } from '../photo-helpers'
+import { scrapeGetAllDistinct, scrapeUpdateGeocoderID } from '../scrape-helpers'
 import {
   Scrape,
   ScrapeData,
   latestScrapeForRestaurant,
-  scrapeGetAllDistinct,
   scrapeGetData,
-  scrapeUpdateGeocoderID,
 } from '../scrape-helpers'
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
 import {
-  getTableCount,
   googlePermalink,
   main_db,
-  restaurantDeleteOrUpdateByGeocoderID,
-  restaurantFindBasicBatchForAll,
   restaurantFindIDBatchForCity,
 } from '../utils'
+import { checkMaybeDeletePhoto, remove404Images } from './remove_404_images'
 import { RestaurantRatings } from './RestaurantRatings'
 import { Tagging } from './Tagging'
-
-const PER_PAGE = 10000
+import {
+  updateAllRestaurantGeocoderIDs,
+  updateGeocoderID,
+} from './update_all_geocoder_ids'
 
 export class Self extends WorkerJob {
   yelp!: Scrape
@@ -80,6 +78,7 @@ export class Self extends WorkerJob {
   }
 
   async allForCity(city: string) {
+    const PER_PAGE = 1000
     let previous_id = globalTagId
     while (true) {
       const results = await restaurantFindIDBatchForCity(
@@ -665,48 +664,7 @@ export class Self extends WorkerJob {
   }
 
   async updateAllGeocoderIDs() {
-    let previous_id = globalTagId
-    let arrived = process.env.START_FROM ? false : true
-    let progress = 0
-    let page = 0
-    const count = await getTableCount('restaurant', 'WHERE geocoder_id IS NULL')
-    console.log('Total restaurants without geocoder_ids: ' + count)
-    while (true) {
-      const results = await restaurantFindBasicBatchForAll(
-        PER_PAGE,
-        previous_id,
-        'AND geocoder_id IS NULL'
-      )
-      if (results.length == 0) {
-        await this.job.progress(100)
-        break
-      }
-      for (const result of results) {
-        if (!arrived) {
-          if (result.id != process.env.START_FROM) {
-            console.log('Skipping: ' + result.name)
-            continue
-          } else {
-            arrived = true
-          }
-        }
-        const restaurant_data = {
-          id: result.id,
-          name: result.name,
-          address: result.address,
-          location: JSON.parse(result.location),
-        }
-        await this.runOnWorker('updateGeocoderID', [restaurant_data])
-        previous_id = result.id as string
-      }
-      page += 1
-      progress = ((page * PER_PAGE) / count) * 100
-      if (process.env.RUN_WITHOUT_WORKER != 'true') {
-        await this.job.progress(progress)
-      } else {
-        console.log('Progress: ' + progress)
-      }
-    }
+    await updateAllRestaurantGeocoderIDs(this)
   }
 
   async updateAllDistinctScrapeGeocoderIDs() {
@@ -721,29 +679,15 @@ export class Self extends WorkerJob {
   }
 
   async updateGeocoderID(restaurant: RestaurantWithId) {
-    console.log(
-      'UPDATE GEOCODER IDS: ',
-      restaurant.id,
-      `"${restaurant.name}"`,
-      restaurant.address,
-      restaurant.location
-    )
-    if (!restaurant.name) {
-      console.log('Bad restaurant: ', restaurant)
-      return false
-    }
-    const geocoder = new GoogleGeocoder()
-    const coords = restaurant.location
-    const lon = coords.coordinates[0]
-    const lat = coords.coordinates[1]
-    const query = restaurant.name + ',' + restaurant.address
-    const google_id = await geocoder.searchForID(query, lat, lon)
-    if (google_id) {
-      const permalink = googlePermalink(google_id, lat, lon)
-      restaurant.geocoder_id = google_id
-      await restaurantDeleteOrUpdateByGeocoderID(restaurant.id, google_id)
-      console.log('GEOCODER RESULT: ', `"${restaurant.name}"`, permalink)
-    }
+    await updateGeocoderID(restaurant)
+  }
+
+  async remove404Images() {
+    await remove404Images(this)
+  }
+
+  async checkMaybeDeletePhoto(photo_id: string, url: string) {
+    await checkMaybeDeletePhoto(photo_id, url)
   }
 
   private static shortestString(arr: string[]) {
