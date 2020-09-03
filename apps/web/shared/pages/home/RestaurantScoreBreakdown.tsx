@@ -1,20 +1,12 @@
 import { graphql } from '@dish/graph'
-import {
-  Divider,
-  HStack,
-  Spacer,
-  StackProps,
-  Text,
-  TextProps,
-  VStack,
-} from '@dish/ui'
+import { HStack, Spacer, StackProps, Text, TextProps, VStack } from '@dish/ui'
 import { sortBy } from 'lodash'
 import React, { memo } from 'react'
 import { HelpCircle } from 'react-feather'
 import { Image } from 'react-native'
 
-import { bgLight, lightGreen, lightYellow } from '../../colors'
-import { omStatic, useOvermind } from '../../state/om'
+import { lightGreen, lightYellow } from '../../colors'
+import { omStatic } from '../../state/om'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { Paragraph } from './Paragraph'
 import { TextStrong } from './TextStrong'

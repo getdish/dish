@@ -31,12 +31,12 @@ import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { RestaurantOverview } from './RestaurantOverview'
+import {
+  RestaurantRatingBreakdown,
+  RestaurantReviewsDisplayStore,
+} from './RestaurantRatingBreakdown'
 import RestaurantRatingView from './RestaurantRatingView'
 import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
-import {
-  RestaurantReviewsDisplayStore,
-  RestaurantTopReviews,
-} from './RestaurantTopReviews'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 import { Squircle } from './Squircle'
 import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
@@ -114,14 +114,14 @@ export const RestaurantListItem = memo(function RestaurantListItem(
         scrollEventThrottle={100}
       >
         <RestaurantListItemContent {...props} />
-        <RestaurantPeek
+        <RestaurantPeekDishes
           restaurantSlug={props.restaurantSlug}
           searchState={props.searchState}
           isLoaded={isLoaded}
         />
       </HomeScrollViewHorizontal>
 
-      {store.showComments && <RestaurantTopReviews {...props} />}
+      {store.showComments && <RestaurantRatingBreakdown {...props} />}
     </VStack>
   )
 })
@@ -216,10 +216,6 @@ const RestaurantListItemContent = memo(
                   <Text
                     selectable
                     maxWidth="100%"
-                    fontSize={
-                      (isSmall ? 18 : 24) *
-                      (restaurantName.length > 25 ? 0.85 : 1)
-                    }
                     fontWeight="500"
                     lineHeight={26}
                     textDecorationColor="transparent"
@@ -230,6 +226,10 @@ const RestaurantListItemContent = memo(
                       params={{ slug: restaurantSlug }}
                     >
                       <Text
+                        fontSize={
+                          (isSmall ? 20 : 24) *
+                          (restaurantName.length > 25 ? 0.85 : 1)
+                        }
                         marginRight={10}
                         borderBottomColor="transparent"
                         borderBottomWidth={2}
@@ -275,7 +275,11 @@ const RestaurantListItemContent = memo(
                 > */}
                 <VStack marginTop={-6}>
                   <HStack>
-                    <Text fontSize={12} color="rgba(0,0,0,0.5)">
+                    <Text
+                      className="ellipse"
+                      fontSize={12}
+                      color="rgba(0,0,0,0.5)"
+                    >
                       <Text fontSize={12}>
                         #
                         <Text fontSize={14} fontWeight="600" color="#000">
@@ -283,7 +287,15 @@ const RestaurantListItemContent = memo(
                         </Text>{' '}
                         in
                       </Text>{' '}
-                      <Text fontSize={14}>
+                      <HStack
+                        // @ts-ignore
+                        display="inline-flex"
+                        paddingVertical={2}
+                        paddingHorizontal={4}
+                        borderRadius={100}
+                        borderWidth={1}
+                        borderColor="#f2f2f2"
+                      >
                         {reviewTags.map((tag, i) => {
                           return (
                             <React.Fragment key={i}>
@@ -294,15 +306,19 @@ const RestaurantListItemContent = memo(
                                 <Text>{tagDisplayName(tag)}</Text>
                               </VStack>
                               {i < reviewTags.length - 1 && (
-                                <Text marginHorizontal={4} fontSize={11}>
+                                <HStack
+                                  marginHorizontal={3}
+                                  fontSize={10}
+                                  opacity={0.5}
+                                >
                                   +
-                                </Text>
+                                </HStack>
                               )}
                             </React.Fragment>
                           )
                         })}
-                      </Text>
-                      <Text fontSize={14}> (152 reviews) </Text>
+                      </HStack>
+                      <Text fontSize={12}> (152 reviews) </Text>
                     </Text>
                     <VStack
                       padding={3}
@@ -335,8 +351,6 @@ const RestaurantListItemContent = memo(
               </HStack>
             </VStack>
           </HStack>
-
-          {/* RANKING BREAKDOWN ROW */}
 
           <Spacer size="sm" />
 
@@ -512,7 +526,7 @@ export const RestaurantScoreBreakdownSmall = memo(
   })
 )
 
-const RestaurantPeek = memo(
+const RestaurantPeekDishes = memo(
   graphql(function RestaurantPeek(props: {
     size?: 'lg' | 'md'
     restaurantSlug: string

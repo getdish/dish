@@ -1,16 +1,7 @@
 import { graphql } from '@dish/graph'
-import {
-  Box,
-  Divider,
-  HStack,
-  LoadingItems,
-  SmallTitle,
-  Spacer,
-  VStack,
-} from '@dish/ui'
+import { HStack, LoadingItems, SmallTitle, Spacer, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
-import { ScrollView } from 'react-native'
 
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { omStatic } from '../../state/om'
@@ -21,14 +12,10 @@ import { HomeScrollView } from './HomeScrollView'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
-// deliverybutton
-// favoritestar
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
-import { RestaurantOverview } from './RestaurantOverview'
 import { RestaurantRatingBreakdown } from './RestaurantRatingBreakdown'
 import { RestaurantTagsRow } from './RestaurantTagsRow'
-import { RestaurantTopReviews } from './RestaurantTopReviews'
 import { usePageLoadEffect } from './usePageLoadEffect'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
@@ -122,7 +109,7 @@ const HomePageRestaurant = memo(
             <Spacer />
 
             <Suspense fallback={null}>
-              <RestaurantTopReviews
+              <RestaurantRatingBreakdown
                 restaurantSlug={slug}
                 restaurantId={restaurant.id}
               />

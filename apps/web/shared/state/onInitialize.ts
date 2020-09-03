@@ -35,7 +35,9 @@ export const onInitialize: OnInitialize = async (
   }
   await Promise.all([initAuth()])
   await actions.router.start({
-    onRouteChange: actions.home.handleRouteChange,
+    onRouteChange: (val) => {
+      return actions.home.handleRouteChange(val)
+    },
   })
   await actions.home.updateCurrentMapAreaInformation()
 }

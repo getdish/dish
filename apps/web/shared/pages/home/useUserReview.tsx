@@ -20,6 +20,9 @@ type ReviewWithTag = Pick<
   | 'user_id'
   | 'favorited'
 > & {
+  user?: {
+    username: string
+  }
   tag?: {
     name: string
     type: string
@@ -64,6 +67,9 @@ export const useUserReviewsQuery = (restaurantId: string) => {
           tag,
           restaurant_id: review.restaurant_id,
           user_id: review.user_id,
+          user: {
+            username: review.user.username,
+          },
           favorited: review.favorited,
         }
       })

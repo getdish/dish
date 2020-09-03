@@ -41,19 +41,17 @@ export default function HomePageAbout({
           flex: 1,
         }}
       >
-        <VStack spacing="xl">
+        <VStack spacing="xxl">
           <Title size="xl">The best 🍜, definitively</Title>
 
-          <VStack spacing="lg">
-            <Paragraph size="xxxl" lineHeight={36} fontWeight="300">
-              We were tired of having to read tons of comments on 3-star,
-              hole-in-the wall Vietnamese, Chinese, and Mexican restaurants to
-              find the gems.
+          <VStack spacing="xl">
+            <Paragraph size="xxxl" fontWeight="300">
+              Craving pho? Vietnamese, Chinese, and Mexican joints often get
+              lost behind poor ratings on ambiance and service.
             </Paragraph>
 
-            <Paragraph size="xxl" lineHeight={36} fontWeight="300">
-              We realized, the problem was bigger - what you care about when
-              ordering{' '}
+            <Paragraph size="xxl" fontWeight="300">
+              We realized when ordering{' '}
               <LinkButton
                 backgroundColor={lightYellow}
                 {...inlineButton}
@@ -64,7 +62,7 @@ export default function HomePageAbout({
               >
                 delivery pho
               </LinkButton>{' '}
-              vs when planning a{' '}
+              vs planning a{' '}
               <LinkButton
                 tags={[
                   { name: 'Date', type: 'lense' },
@@ -75,36 +73,46 @@ export default function HomePageAbout({
               >
                 date night
               </LinkButton>{' '}
-              is... different,{' '}
-              <TextStrong>
-                and huge lists of 3-4 star restaurants isn't helpful
-              </TextStrong>
-              . It's especially obvious when ordering delivery, where there are
-              many apps with inconsistent ratings, yet you only care about the
-              specific dish (or speed).
+              you care about completely different things and{' '}
+              <Text fontWeight="400">
+                lists of ~4 star restuarants wasn't helping us find them very
+                quickly
+              </Text>
+              .
             </Paragraph>
 
             <Paragraph size="xl">
-              Dish solves these problems by crawling every rating source and
-              analyzing all the comments. It breaks down{' '}
-              <TextStrong>
-                <Text borderBottomWidth={2} borderBottomColor="#eee">
-                  the factors each spot is good or bad at
-                </Text>
-              </TextStrong>
-              , unlocking ratings down to the dish. It also searches every
-              delivery service, making it easy to find what you crave.
+              Dish collects reviews all over the food world (a bit like
+              RottenTomatoes, for food) and looks at{' '}
+              <TextStrong>what people actually say</TextStrong> - about specific
+              dishes, the vibe, service - so you can find exactly what you want.
+              Finding great dishes is really nice to have when ordering delivery
+              too,{' '}
+              <Text borderBottomColor="#eee" borderBottomWidth={2}>
+                so Dish searches every delivery service
+              </Text>{' '}
+              at once.
             </Paragraph>
 
             <Paragraph size="lg">
-              By looking at{' '}
-              <TextStrong>
-                what people actually say, rather than just rate to find
-                dish-specific sentiment
-              </TextStrong>
-              , we find you food that matches your mood ✨. We're building a
-              community around a fun, Hitchhiker's Guide to Gastronomy (or, a
-              Pokédex for poke), to create a better pocket map of your world.
+              With reddit-style voting and sub-communities, we think we can
+              build a better type of guide that grows over time. Dish wants to
+              do two things:
+              <ul>
+                <li>
+                  <TextStrong>Build a better discussion platform</TextStrong>.
+                  One that gives users more control by understanding organic
+                  review sentiment to generate a living "best of" guide.
+                </li>
+                <li>
+                  <TextStrong>Letting restaurants relax a bit</TextStrong>.
+                  Instead of having to please everyone to try and get 5 stars,
+                  instead specialize on doing one thing well.
+                </li>
+              </ul>
+              We think of it as a Hitchhiker's Guide to Gastronomy (or, a
+              Pokédex for poke) - a fun pocket map of the world that we can work
+              together to curate.
             </Paragraph>
 
             <Spacer />
@@ -133,16 +141,6 @@ export default function HomePageAbout({
             </Paragraph>
 
             <Spacer />
-
-            <SmallTitle>How?</SmallTitle>
-
-            <Paragraph size="lg">
-              We take what people write and extract sentiment towards dishes,
-              ambiance, service and more. Then, as our community votes,
-              comments, and tags, we summarize the data into a smart, fun
-              summary. We power sentiment and summary with modern machine
-              learning powered natural langauge technologies.
-            </Paragraph>
 
             <Divider marginVertical={40} />
 

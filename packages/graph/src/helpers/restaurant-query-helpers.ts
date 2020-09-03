@@ -28,12 +28,15 @@ export const restaurantPhotosForCarousel = ({
     photos.push({ name: '', image: photo, best_restaurants: [] })
   }
   if (!gallery || photos.length == 0) {
-    photos = [...dishPhotos(restaurant, tag_names), ...photos]
+    photos = [...restaurantDishesWithPhotos(restaurant, tag_names), ...photos]
   }
   return photos.slice(0, max).filter(Boolean)
 }
 
-const dishPhotos = (restaurant: any, tag_names: string[]) => {
+export const restaurantDishesWithPhotos = (
+  restaurant: any,
+  tag_names: string[] = []
+) => {
   let photos: TopCuisineDish[] = []
   const tags = restaurant.top_tags({
     args: {
@@ -48,7 +51,6 @@ const dishPhotos = (restaurant: any, tag_names: string[]) => {
       let [photo] = t.photos() || []
       let isFallback = false
       const fallback = t.tag?.default_images()?.[0]
-      const photoName = tagName
       const photoRating = t.rating
       if (!photo && fallback) {
         photo = fallback
@@ -58,7 +60,7 @@ const dishPhotos = (restaurant: any, tag_names: string[]) => {
         continue
       }
       const photoItem = {
-        name: photoName,
+        name: tagName,
         // enablig this causes double queries
         // icon: t.tag.icon,
         image: photo,

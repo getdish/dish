@@ -18,7 +18,7 @@ export type SizableTextProps = TextProps & {
   sizeLineHeight?: number
 }
 
-const sizes = {
+export const sizes = {
   xxxs: 0.25,
   xxs: 0.5,
   xs: 0.75,

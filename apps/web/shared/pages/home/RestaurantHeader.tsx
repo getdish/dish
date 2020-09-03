@@ -1,11 +1,14 @@
 import { graphql } from '@dish/graph'
 import { HStack, SmallTitle, Spacer, Text, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
+import { MessageSquare } from 'react-feather'
 import { Image, ScrollView } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
+import { LinkButton } from '../../views/ui/LinkButton'
+import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
@@ -51,6 +54,7 @@ const RestaurantHeaderContent = memo(
       const om = useOvermind()
       // const [r, g, b] = useCurrentLenseColor()
       const padding = <Spacer size={size === 'sm' ? 10 : 20} />
+      const restaurantId = state?.restaurantId ?? restaurant.id
       return (
         <VStack width="100%">
           <VStack
@@ -132,19 +136,38 @@ const RestaurantHeaderContent = memo(
             {padding}
           </VStack>
           <SmallTitle marginVertical={-18} divider="center">
-            <VStack
-              borderRadius={1000}
-              shadowColor="rgba(0,0,0,0.1)"
-              shadowRadius={8}
-              shadowOffset={{ height: 2, width: 0 }}
-            >
-              <Suspense fallback={null}>
-                <RestaurantFavoriteButton
-                  restaurantId={state?.restaurantId ?? restaurant.id}
-                  size="lg"
-                />
-              </Suspense>
-            </VStack>
+            <HStack spacing="lg">
+              <VStack
+                borderRadius={1000}
+                shadowColor="rgba(0,0,0,0.1)"
+                shadowRadius={8}
+                shadowOffset={{ height: 2, width: 0 }}
+              >
+                <Suspense fallback={null}>
+                  <RestaurantFavoriteButton
+                    restaurantId={restaurantId}
+                    size="lg"
+                  />
+                </Suspense>
+              </VStack>
+
+              <VStack
+                borderRadius={1000}
+                shadowColor="rgba(0,0,0,0.1)"
+                shadowRadius={8}
+                shadowOffset={{ height: 2, width: 0 }}
+              >
+                <Suspense fallback={null}>
+                  <LinkButton
+                    name="restaurantReview"
+                    params={{ slug: restaurantSlug }}
+                    padding={8}
+                  >
+                    <MessageSquare size={20} color="rgba(0,0,0,0.3)" />
+                  </LinkButton>
+                </Suspense>
+              </VStack>
+            </HStack>
           </SmallTitle>
         </VStack>
       )
