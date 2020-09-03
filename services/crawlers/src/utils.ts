@@ -222,6 +222,39 @@ export async function restaurantFindBasicBatchForAll(
   return result.rows
 }
 
+export async function batchIDsForAll(
+  table: string,
+  size: number,
+  previous_id: string,
+  extra_where = ''
+) {
+  const query = `
+    SELECT id FROM ${table}
+      WHERE id > '${previous_id}'
+      ${extra_where}
+    ORDER BY id
+    LIMIT ${size}
+  `
+  const result = await main_db.query(query)
+  return result.rows.map((r) => r.id)
+}
+
+export async function photoBatchForAll(
+  size: number,
+  previous_id: string,
+  extra_where = ''
+) {
+  const query = `
+    SELECT id, url FROM photo
+      WHERE id > '${previous_id}'
+      ${extra_where}
+    ORDER BY id
+    LIMIT ${size}
+  `
+  const result = await main_db.query(query)
+  return result.rows
+}
+
 export async function getTableCount(
   table: string,
   where = ''

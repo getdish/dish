@@ -231,7 +231,7 @@ function local_node_with_prod_env() {
   timescale_proxy $_TIMESCALE_PORT
   export DISH_DEBUG=1
   export USE_PG_SSL=true
-  export RUN_WITHOUT_WORKER=true
+  export RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
   export PGPORT=$_PG_PORT
   export PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD
   export TIMESCALE_PORT=$_TIMESCALE_PORT
@@ -244,7 +244,8 @@ function local_node_with_prod_env() {
 function remove_evicted_pods() {
   namespace=${1:-default}
   kubectl get pods -n $namespace \
-    | grep Evicted | awk '{print $1}' \
+    | grep Evicted \
+    | awk '{print $1}' \
     | xargs kubectl delete pod -n $namespace
 }
 
