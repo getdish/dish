@@ -40,7 +40,10 @@ services:
     ports:
       - 6154:6154
     environment:
+      - DO_SPACES_ID=${TF_VAR_DO_SPACES_ID}
+      - DO_SPACES_SECRET=${TF_VAR_DO_SPACES_SECRET}
       - GORSE_ENDPOINT=http://gorse:9000
+      - DISH_ENV=production
     depends_on:
       - 'gorse'
   hasura:
@@ -55,6 +58,7 @@ services:
       - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anon
       - HASURA_GRAPHQL_JWT_SECRET={"type":"HS256", "key":"12345678901234567890123456789012"}
       - DISH_HOOKS_ENDPOINT=http://dish-hooks:6154
+      - GORSE_SYNC_HOOK=http://dish-hooks:6154/gorse_sync
     depends_on:
       - 'postgres'
       - 'redis'

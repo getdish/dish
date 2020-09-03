@@ -19,7 +19,6 @@ else
   export all_env="$(env)"
 fi
 
-
 function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
 }
@@ -64,8 +63,7 @@ function _run_on_cluster() {
 }
 
 function _setup_s3() {
-  apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing \
-    s3cmd
+  apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing s3cmd
 }
 
 function worker() {

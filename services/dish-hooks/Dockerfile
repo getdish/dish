@@ -6,8 +6,8 @@ COPY services/dish-hooks services/dish-hooks
 RUN yarn install
 RUN yarn build
 
-FROM mhart/alpine-node:slim-12
-COPY --from=0 /app /app
 WORKDIR /app/services/dish-hooks
+RUN echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list
+RUN apt-get update && apt-get -y -t buster-backports install "s3cmd"
 
 CMD ["node", "_/index.js"]

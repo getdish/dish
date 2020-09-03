@@ -60,8 +60,8 @@ resource "kubernetes_deployment" "hasura" {
             value = var.HASURA_GRAPHQL_ADMIN_SECRET
           }
           env {
-            name = "DISH_HOOKS_ENDPOINT"
-            value = "http://dish-hooks:6154"
+            name = "GORSE_SYNC_HOOK"
+            value = "http://dish-hooks:6154/gorse_sync"
           }
 
           command = [

@@ -467,7 +467,7 @@ tables:
       num_retries: 3
       interval_sec: 10
       timeout_sec: 60
-    webhook_from_env: DISH_HOOKS_ENDPOINT
+    webhook_from_env: GORSE_SYNC_HOOK
 - table:
     schema: public
     name: review_tag
