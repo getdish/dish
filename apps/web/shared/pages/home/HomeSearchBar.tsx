@@ -172,7 +172,14 @@ const HomeSearchBar = memo(() => {
         <DishLogoButton />
       </VStack>
 
-      {!isShowingAutocompleteWhenSmall && <HomeSearchBarHomeBackButton />}
+      <VStack
+        {...(isShowingAutocompleteWhenSmall && {
+          opacity: 0,
+          width: 0,
+        })}
+      >
+        <HomeSearchBarHomeBackButton />
+      </VStack>
 
       <HStack
         className="ease-in-out"

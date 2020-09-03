@@ -35,7 +35,16 @@ export default memo(function HomePage() {
 const HomePageContent = memo(() => {
   return (
     <>
-      <HomeIntroLetter />
+      {/* WARNING: DONT PUT ANYTHING ABOVE THIS IN MARKUP ^^ */}
+      <Suspense fallback={null}>
+        <HomeContainer>
+          <HomeStackView>
+            {(props) => {
+              return <HomePagePane {...props} />
+            }}
+          </HomeStackView>
+        </HomeContainer>
+      </Suspense>
 
       <Suspense fallback={null}>
         {!isSSR && (
@@ -46,13 +55,7 @@ const HomePageContent = memo(() => {
           </ErrorBoundary>
         )}
 
-        <HomeContainer>
-          <HomeStackView>
-            {(props) => {
-              return <HomePagePane {...props} />
-            }}
-          </HomeStackView>
-        </HomeContainer>
+        <HomeIntroLetter />
 
         <Suspense fallback={null}>
           <HomeMapControlsUnderlay />

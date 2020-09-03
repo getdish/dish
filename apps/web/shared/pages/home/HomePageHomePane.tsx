@@ -196,18 +196,12 @@ export default memo(function HomePageHomePane(props: Props) {
 })
 
 const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
-  const om = useOvermind()
   if (topDishes.length) {
     console.warn('rendering contnet more expensive', topDishes)
   }
   return (
     <>
-      <SmallTitle divider="off">
-        Uniquely good in{' '}
-        <TextStrong>
-          {om.state.home.currentState.currentLocationName}
-        </TextStrong>
-      </SmallTitle>
+      <HomeTopDishesTitle />
       <Spacer size="xl" />
       {!topDishes.length && (
         <>
@@ -226,6 +220,16 @@ const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
     </>
   )
 })
+
+const HomeTopDishesTitle = () => {
+  const om = useOvermind()
+  return (
+    <SmallTitle divider="off">
+      Uniquely good in{' '}
+      <TextStrong>{om.state.home.currentState.currentLocationName}</TextStrong>
+    </SmallTitle>
+  )
+}
 
 const dishHeight = 140
 
