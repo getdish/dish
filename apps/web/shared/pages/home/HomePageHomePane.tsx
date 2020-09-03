@@ -15,7 +15,7 @@ import _, { sortBy, uniqBy } from 'lodash'
 import { default as React, Suspense, memo, useEffect, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 
-import { HomeStateItemHome } from '../../state/home-types'
+import { HomeStateItemHome, HomeStateItemSearch } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic, useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
@@ -76,59 +76,74 @@ export default memo(function HomePageHomePane(props: Props) {
 
   useEffect(() => {
     if (!isLoaded || !props.isActive) return
-    if (!center || !span) return
+
     let isMounted = true
 
-    om.actions.home.updateCurrentMapAreaInformation()
+    runHomeSearch(props.item)
 
-    const mapAreasToSearch = [
-      [center.lng, center.lat],
-      [center.lng - span.lng, center.lat - span.lat],
-      [center.lng - span.lng, center.lat + span.lat],
-      [center.lng + span.lng, center.lat - span.lat],
-      [center.lng + span.lng, center.lat + span.lat],
-    ]
+    function runHomeSearch({ center, span }: Partial<HomeStateItemHome>) {
+      om.actions.home.setIsLoading(true)
+      om.actions.home.updateCurrentMapAreaInformation()
 
-    Promise.all(
-      mapAreasToSearch.map((pt) => {
-        return getHomeDishes(pt[0], pt[1])
-      })
-    ).then((areas) => {
-      if (!isMounted) return
+      const mapAreasToSearch = [
+        [center.lng, center.lat],
+        [center.lng - span.lng, center.lat - span.lat],
+        [center.lng - span.lng, center.lat + span.lat],
+        [center.lng + span.lng, center.lat - span.lat],
+        [center.lng + span.lng, center.lat + span.lat],
+      ]
 
-      let all: TopCuisine[] = []
+      Promise.all(
+        mapAreasToSearch.map((pt) => {
+          return getHomeDishes(pt[0], pt[1])
+        })
+      ).then((areas) => {
+        console.log('got areas', areas, isMounted)
+        if (!isMounted) return
+        om.actions.home.setIsLoading(false)
 
-      for (const area of areas) {
-        for (const cuisine of area) {
-          const existing = all.find((x) => x.country === cuisine.country)
-          if (existing) {
-            const allTopRestaurants = [
-              ...existing.top_restaurants,
-              ...cuisine.top_restaurants,
-            ]
-            const sortedTopRestaurants = sortBy(
-              allTopRestaurants,
-              (x) => -(x.rating ?? 0)
-            )
-            existing.top_restaurants = uniqBy(
-              sortedTopRestaurants,
-              (x) => x.id
-            ).slice(0, 5)
-          } else {
-            all.push(cuisine)
+        let all: TopCuisine[] = []
+
+        for (const area of areas) {
+          for (const cuisine of area) {
+            const existing = all.find((x) => x.country === cuisine.country)
+            if (existing) {
+              const allTopRestaurants = [
+                ...existing.top_restaurants,
+                ...cuisine.top_restaurants,
+              ]
+              const sortedTopRestaurants = sortBy(
+                allTopRestaurants,
+                (x) => -(x.rating ?? 0)
+              )
+              existing.top_restaurants = uniqBy(
+                sortedTopRestaurants,
+                (x) => x.id
+              ).slice(0, 5)
+            } else {
+              all.push(cuisine)
+            }
           }
         }
-      }
 
-      all = sortBy(all, (x) => -x.avg_rating)
-      if (!isEqual(all, topDishes)) {
+        all = sortBy(all, (x) => -x.avg_rating)
         updateHomeTagsCache(all)
         setTopDishes(all)
         om.actions.home.setTopDishes(all)
+      })
+    }
+
+    const dispose = om.reaction((state) => {
+      const curState = state.home.allStates[props.item.id]
+      return {
+        center: curState.mapAt?.center ?? curState.center,
+        span: curState.mapAt?.span ?? curState.span,
       }
-    })
+    }, runHomeSearch)
 
     return () => {
+      om.actions.home.setIsLoading(false)
+      dispose()
       isMounted = false
     }
   }, [props.isActive, isLoaded, JSON.stringify({ center, span })])

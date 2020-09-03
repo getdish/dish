@@ -23,6 +23,10 @@ export default memo(() => {
   const om = useOvermind()
   const drawerSnapPoint = om.state.home.drawerSnapPoint
 
+  if (!isReallySmall) {
+    return null
+  }
+
   return (
     <Suspense fallback={null}>
       <VStack
