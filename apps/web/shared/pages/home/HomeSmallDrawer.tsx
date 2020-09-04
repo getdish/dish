@@ -115,13 +115,11 @@ export const HomeSmallDrawer = (props: { children: any }) => {
       }
     }
 
-    document
-      .querySelector('.home-drawer-snap')
-      .addEventListener('click', drawerSnapListener)
+    const node = document.querySelector('.home-drawer-snap')
+
+    node.addEventListener('click', drawerSnapListener)
     return () => {
-      document
-        .querySelector('.home-drawer-snap')
-        .removeEventListener('click', drawerSnapListener)
+      node.removeEventListener('click', drawerSnapListener)
     }
   }, [])
 

@@ -1,7 +1,7 @@
 import { LngLat, Restaurant, graphql } from '@dish/graph'
 import { AbsoluteVStack, useDebounce, useLazyEffect } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-import { findLast, uniqBy } from 'lodash'
+import { findLast, isEqual, pick, uniqBy } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
@@ -108,6 +108,7 @@ const HomeMapDataLoader = memo(
         .filter((x) => !!x.location.coordinates[0])
 
       useEffect(() => {
+        console.warn('loaded', restaurants)
         props.onLoadedRestaurants?.(restaurants)
       }, [JSON.stringify(restaurants.map((x) => x.location?.coordinates))])
 
@@ -130,21 +131,26 @@ const HomeMapContent = memo(function HomeMap({
 }) {
   const om = useOvermind()
   const isSmall = useMediaQueryIsSmall()
-  const stateId = om.state.home.currentState.id
-  const state = om.state.home.allStates[stateId]
   const { width, paddingLeft } = useMapSize(isSmall)
-  const [internal, setInternal] = useState({
-    id: om.state.home.selectedRestaurant?.id,
-    span: state.span,
-    center: state.center,
+  const [internal, setInternal] = useState(() => ({
+    id: omStatic.state.home.selectedRestaurant?.id,
+    span: omStatic.state.home.currentState.span,
+    center: omStatic.state.home.currentState.center,
     via: 'select' as 'select' | 'hover' | 'detail',
-  })
+  }))
   const setState = (next: Partial<typeof internal>) => {
-    setInternal((x) => ({ ...x, ...next }))
+    setInternal((prev) => {
+      const fullNext = { ...prev, ...next }
+      if (isEqual(fullNext, prev)) {
+        return prev
+      }
+      console.trace('set state', next)
+      return fullNext
+    })
   }
 
   const getZoomedSpan = (span: LngLat, max: number) => {
-    const curState = om.state.home.currentState
+    const curState = omStatic.state.home.currentState
     const curSpan = curState.mapAt?.span ?? curState.span
     const next = getMinLngLat(
       span,
@@ -157,17 +163,20 @@ const HomeMapContent = memo(function HomeMap({
   const { center, span } = internal
 
   // SELECTED
-  const selectedId = om.state.home.selectedRestaurant?.id
   useEffect(() => {
-    if (!selectedId) return
-    const span = getZoomedSpan(state.span, 0.025)
-    console.log('span', span)
-    setState({
-      id: selectedId,
-      via: 'select',
-      span,
-    })
-  }, [selectedId])
+    return om.reaction(
+      (state) => state.home.selectedRestaurant?.id,
+      (selectedId) => {
+        console.warn('update via selected')
+        const nextSpan = getZoomedSpan(span, 0.025)
+        setState({
+          id: selectedId,
+          via: 'select',
+          span: nextSpan,
+        })
+      }
+    )
+  }, [])
 
   // HOVERED
   // TODO make it zoom just icon
@@ -213,21 +222,28 @@ const HomeMapContent = memo(function HomeMap({
     [key]
   )
 
-  // SPAN (state.span)
-  const stateSpan = state.mapAt?.span ?? state.span
-  useLazyEffect(() => {
-    setState({
-      span: stateSpan,
-    })
-  }, [stateSpan.lat, stateSpan.lng])
+  console.log('SEE', JSON.stringify({ span, center }, null, 2))
 
-  // CENTER (state.center)
-  const stateCenter = state.mapAt?.center ?? state.center
-  useLazyEffect(() => {
-    setState({
-      center: stateCenter,
-    })
-  }, [stateCenter.lat, stateCenter.lng])
+  useEffect(() => {
+    return om.reaction(
+      (omState) => {
+        const stateId = omState.home.currentState.id
+        const state = omState.home.allStates[stateId]
+        const span = state.mapAt?.span ?? state.span
+        const center = state.mapAt?.center ?? state.center
+        // stringify to prevent extra reactions
+        return JSON.stringify({ span, center })
+      },
+      (spanCenter) => {
+        const { span, center } = JSON.parse(spanCenter)
+        console.log('SET', JSON.stringify({ span, center }, null, 2))
+        setState({
+          span,
+          center,
+        })
+      }
+    )
+  }, [])
 
   // CENTER (restauarantSelected.location)
   useEffect(() => {
@@ -284,7 +300,7 @@ const HomeMapContent = memo(function HomeMap({
         }}
         selected={internal.id}
         onMoveEnd={({ center, span }) => {
-          if (om.state.home.centerToResults) {
+          if (omStatic.state.home.centerToResults) {
             // we just re-centered, ignore
             om.actions.home.setCenterToResults(0)
           }
@@ -312,7 +328,7 @@ const HomeMapContent = memo(function HomeMap({
           }
         }}
         onHover={(id) => {
-          const { hoveredRestaurant } = om.state.home
+          const { hoveredRestaurant } = omStatic.state.home
           if (!hoveredRestaurant || id !== hoveredRestaurant?.id) {
             const restaurant = restaurants?.find((x) => x.id === id)
             if (restaurant) {
@@ -331,8 +347,8 @@ const HomeMapContent = memo(function HomeMap({
             console.warn('not found', id)
             return
           }
-          if (om.state.home.currentStateType === 'search') {
-            if (id !== om.state.home.selectedRestaurant?.id) {
+          if (omStatic.state.home.currentStateType === 'search') {
+            if (id !== omStatic.state.home.selectedRestaurant?.id) {
               om.actions.home.setSelectedRestaurant({
                 id: restaurant.id,
                 slug: restaurant.slug,

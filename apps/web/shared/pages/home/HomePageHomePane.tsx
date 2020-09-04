@@ -64,16 +64,6 @@ export default memo(function HomePageHomePane(props: Props) {
   const { center, span } = state
   const isSmall = useMediaQueryIsSmall()
 
-  useDebounceEffect(
-    () => {
-      if (props.isActive) {
-        om.actions.home.setCenterToResults()
-      }
-    },
-    100,
-    [props.isActive]
-  )
-
   useEffect(() => {
     if (!isLoaded || !props.isActive) return
 

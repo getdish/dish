@@ -76,6 +76,8 @@ export const Map = (props: MapProps) => {
   const internal = useRef({
     active: null,
     hasSetInitialSource: false,
+    currentMoveCancel: null as Function | null,
+    isAwaitingNextMove: false,
   })
   const getProps = useGet(props)
 
@@ -108,11 +110,17 @@ export const Map = (props: MapProps) => {
   // window resize
   useEffect(() => {
     if (!map) return
+    let tm
     const handleResize = _.debounce(() => {
       map.resize()
+      // occasionally it wasnt resizing in chrome who knows why...
+      tm = setTimeout(() => {
+        map.resize()
+      }, 200)
     }, 300)
     Dimensions.addEventListener('change', handleResize)
     return () => {
+      clearTimeout(tm)
       handleResize.cancel()
       Dimensions.removeEventListener('change', handleResize)
     }
@@ -345,7 +353,7 @@ export const Map = (props: MapProps) => {
             Send back current location on move end
           */
           let lastLoc = getCurrentLocation(map)
-          const handleMoveEnd = _.debounce(() => {
+          const handleMoveEndDebounced = _.debounce(() => {
             // ignore same location
             const next = getCurrentLocation(map)
             if (isEqual(lastLoc, next)) {
@@ -359,13 +367,28 @@ export const Map = (props: MapProps) => {
             props.onMoveEnd?.(next)
           }, 150)
 
+          const handleMoveEnd = () => {
+            if (internal.current.isAwaitingNextMove) {
+              return
+            }
+            handleMoveEndDebounced()
+          }
+
+          internal.current.currentMoveCancel = handleMoveEndDebounced.cancel
+
+          const cancelMoveEnd = () => {
+            handleMoveEndDebounced.cancel()
+          }
+
+          map.on('movestart', cancelMoveEnd)
           map.on('moveend', handleMoveEnd)
           cancels.add(() => {
+            map.off('movestart', cancelMoveEnd)
             map.off('moveend', handleMoveEnd)
           })
 
           const handleMove: Listener = () => {
-            handleMoveEnd.cancel()
+            handleMoveEndDebounced.cancel()
           }
           map.on('move', handleMove)
           map.on('movestart', handleMove)
@@ -467,6 +490,10 @@ export const Map = (props: MapProps) => {
   // center + span
   useEffect(() => {
     if (!map) return
+
+    // be sure to cancel next move callback
+    internal.current.currentMoveCancel?.()
+
     // west, south, east, north
     const next: [number, number, number, number] = [
       center.lng - span.lng,
@@ -476,66 +503,67 @@ export const Map = (props: MapProps) => {
     ]
 
     // show center/sw/ne points on map for debugging
-    if (false ?? window['debug']) {
-      const source = map.getSource(SOURCE_ID)
-      if (source?.type === 'geojson') {
-        source.setData({
-          type: 'FeatureCollection',
-          features: [
-            ...features,
-            // debug: add the sw, ne points
-            {
-              type: 'Feature',
-              id: Math.random(),
-              geometry: {
-                type: 'Point',
-                coordinates: [center.lng, center.lat],
+    if (process.env.NODE_ENV === 'development') {
+      if (false) {
+        const source = map.getSource(SOURCE_ID)
+        if (source?.type === 'geojson') {
+          source.setData({
+            type: 'FeatureCollection',
+            features: [
+              ...features,
+              // debug: add the sw, ne points
+              {
+                type: 'Feature',
+                id: Math.random(),
+                geometry: {
+                  type: 'Point',
+                  coordinates: [center.lng, center.lat],
+                },
+                properties: {
+                  color: 'orange',
+                },
               },
-              properties: {
-                color: 'orange',
+              {
+                type: 'Feature',
+                id: Math.random(),
+                geometry: {
+                  type: 'Point',
+                  coordinates: [next[0], next[1]],
+                },
+                properties: {
+                  color: 'blue',
+                },
               },
-            },
-            {
-              type: 'Feature',
-              id: Math.random(),
-              geometry: {
-                type: 'Point',
-                coordinates: [next[0], next[1]],
+              {
+                type: 'Feature',
+                id: Math.random(),
+                geometry: {
+                  type: 'Point',
+                  coordinates: [next[2], next[3]],
+                },
+                properties: {
+                  color: 'blue',
+                },
               },
-              properties: {
-                color: 'blue',
-              },
-            },
-            {
-              type: 'Feature',
-              id: Math.random(),
-              geometry: {
-                type: 'Point',
-                coordinates: [next[2], next[3]],
-              },
-              properties: {
-                color: 'blue',
-              },
-            },
-          ],
-        })
+            ],
+          })
+        }
       }
     }
 
-    // console.warn(
-    //   'NOW\n',
-    //   JSON.stringify({ center, span }, null, 2),
-    //   '\n',
-    //   `map.fitBounds([${next}])`
-    // )
-
     if (hasMovedAtLeast(map, { center, span }, 0.01)) {
-      return series([
-        () => fullyIdle({ max: 300 }),
+      internal.current.isAwaitingNextMove = true
+      const cancelSeries = series([
+        () => fullyIdle({ max: 500 }),
         () => {
           map.fitBounds(next)
+          internal.current.isAwaitingNextMove = false
         },
       ])
+      return () => {
+        cancelSeries()
+        internal.current.isAwaitingNextMove = false
+      }
     }
   }, [map, span.lat, span.lng, center.lat, center.lng])
 
@@ -544,8 +572,6 @@ export const Map = (props: MapProps) => {
     if (!map) return
     map?.setPadding(padding)
   }, [map, JSON.stringify(padding)])
-
-  // console.log('padding', padding)
 
   // features
   useEffect(() => {
@@ -603,6 +629,7 @@ const fitMapToResults = (map: mapboxgl.Map, features: GeoJSON.Feature[]) => {
       bounds.extend(geo.coordinates as any)
     }
   }
+  console.warn('fitMapToResults', bounds)
   map.fitBounds(bounds)
 }
 

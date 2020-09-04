@@ -30,15 +30,8 @@ export const onInitialize: OnInitialize = async (
 
   actions.home.addTagsToCache(tagLenses)
 
-  const initAuth = async () => {
-    await actions.user.checkForExistingLogin()
-  }
-  await Promise.all([initAuth()])
-  await actions.router.start({
-    onRouteChange: (val) => {
-      return actions.home.handleRouteChange(val)
-    },
-  })
+  actions.user.checkForExistingLogin()
+  actions.router.start()
   await actions.home.updateCurrentMapAreaInformation()
 }
 

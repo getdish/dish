@@ -529,14 +529,18 @@ const pushHomeState: AsyncAction<
   switch (type) {
     // home
     case 'home': {
-      const prev: HomeStateItemHome = _.findLast(om.state.home.states, (x) =>
-        isHomeState(x)
+      const prev: HomeStateItemHome = _.findLast(
+        om.state.home.states,
+        isHomeState
       ) as any
+      const prevLocation = {
+        center: prev.mapAt?.center ?? prev.center,
+        span: prev.mapAt?.span ?? prev.span,
+      }
       nextState = {
         searchQuery: '',
         activeTagIds: {},
-        center: prev.mapAt?.center ?? prev.center,
-        span: prev.mapAt?.span ?? prev.span,
+        ...prevLocation,
         mapAt: null,
       }
       break

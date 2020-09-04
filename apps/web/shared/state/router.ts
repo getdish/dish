@@ -69,12 +69,10 @@ export const router = new Router({
 
 export type OnRouteChangeCb = (item: HistoryItem) => Promise<void>
 
-const start: AsyncAction<{
-  onRouteChange?: OnRouteChangeCb
-}> = async (om, opts) => {
+const start: Action = (om) => {
   router.onRouteChange((item) => {
     om.actions.router._update()
-    opts.onRouteChange?.(item)
+    om.actions.home.handleRouteChange(item)
   })
   router.mount()
 }
