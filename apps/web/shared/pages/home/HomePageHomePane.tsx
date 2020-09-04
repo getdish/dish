@@ -1,7 +1,7 @@
 import { fullyIdle, series } from '@dish/async'
 import { TopCuisine, getHomeDishes } from '@dish/graph'
 import {
-  Divider,
+  AbsoluteVStack,
   HStack,
   LoadingItems,
   SmallTitle,
@@ -10,12 +10,12 @@ import {
   VStack,
   useDebounceEffect,
 } from '@dish/ui'
-import { isEqual } from '@o/fast-compare'
 import _, { sortBy, uniqBy } from 'lodash'
 import { default as React, Suspense, memo, useEffect, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 
-import { HomeStateItemHome, HomeStateItemSearch } from '../../state/home-types'
+import { bgLight, bgLightTranslucent } from '../../colors'
+import { HomeStateItemHome } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic, useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
@@ -184,6 +184,15 @@ export default memo(function HomePageHomePane(props: Props) {
           height="100%"
         >
           <HomeScrollView>
+            {/* cross line */}
+            <AbsoluteVStack
+              height={400}
+              width={2000}
+              right="-10%"
+              top={-250}
+              backgroundColor={bgLightTranslucent}
+              transform={[{ rotate: '-4deg' }]}
+            />
             <VStack
               flex={1}
               overflow="hidden"
@@ -225,9 +234,9 @@ const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
         </>
       )}
       <Suspense fallback={null}>
-        {topDishes.map((country) => (
+        {topDishes.map((country, index) => (
           <React.Fragment key={country.country}>
-            <TopDishesCuisineItem country={country} />
+            <TopDishesCuisineItem index={index} country={country} />
             {/* <Spacer size="sm" /> */}
           </React.Fragment>
         ))}
@@ -248,81 +257,90 @@ const HomeTopDishesTitle = () => {
 
 const dishHeight = 140
 
-const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
-  return (
-    <VStack className="home-top-dish" position="relative">
-      <HStack alignItems="center" marginBottom={10}>
-        <Divider flex />
-        <SlantedLinkButton
-          fontSize={22}
-          fontWeight="300"
-          marginTop={0}
-          paddingHorizontal={10}
-          marginBottom={0}
-          marginHorizontal="auto"
-          zIndex={1000}
-          position="relative"
-          tag={{
-            type: 'country',
-            name: country.country,
-          }}
-          hoverStyle={{
-            transform: [{ scale: 1.1 }],
-          }}
-        >
-          <Text lineHeight={22} letterSpacing={0.5}>
-            {country.country}
-            {country.icon ? (
-              <Text marginLeft={1} fontSize={26} lineHeight={0}>
-                {' '}
-                {country.icon}
-              </Text>
-            ) : null}
-          </Text>
-        </SlantedLinkButton>
-        <Divider flex />
-      </HStack>
-      <VStack
-        marginTop={-25}
-        pointerEvents="none"
-        flex={1}
-        overflow="hidden"
-        position="relative"
-      >
-        <HomeScrollViewHorizontal style={{ paddingVertical: 10 }}>
-          <HStack
-            alignItems="center"
-            spacing={10}
-            paddingVertical={18}
-            paddingRight={20}
+const TopDishesCuisineItem = memo(
+  ({ country, index }: { index: number; country: TopCuisine }) => {
+    return (
+      <VStack className="home-top-dish" position="relative">
+        <AbsoluteVStack
+          top={-15}
+          left={-100}
+          right={-100}
+          bottom={-15}
+          backgroundColor={index % 2 === 0 ? 'transparent' : bgLightTranslucent}
+          transform={[{ rotate: '-4deg' }]}
+        />
+        <HStack alignItems="center" marginBottom={10}>
+          {/* <Divider flex /> */}
+          <SlantedLinkButton
+            fontSize={22}
+            fontWeight="300"
+            marginTop={0}
+            paddingHorizontal={10}
+            marginBottom={0}
+            marginHorizontal="auto"
+            zIndex={1000}
+            position="relative"
+            tag={{
+              type: 'country',
+              name: country.country,
+            }}
+            hoverStyle={{
+              transform: [{ scale: 1.1 }],
+            }}
           >
-            <TopDishesTrendingRestaurants country={country} />
+            <Text lineHeight={22} letterSpacing={0.5}>
+              {country.country}
+              {country.icon ? (
+                <Text marginLeft={1} fontSize={26} lineHeight={0}>
+                  {' '}
+                  {country.icon}
+                </Text>
+              ) : null}
+            </Text>
+          </SlantedLinkButton>
+          {/* <Divider flex /> */}
+        </HStack>
+        <VStack
+          marginTop={-25}
+          pointerEvents="none"
+          flex={1}
+          overflow="hidden"
+          position="relative"
+        >
+          <HomeScrollViewHorizontal style={{ paddingVertical: 10 }}>
+            <HStack
+              alignItems="center"
+              spacing={10}
+              paddingVertical={18}
+              paddingRight={20}
+            >
+              <TopDishesTrendingRestaurants country={country} />
 
-            {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
-              // console.log(
-              //   'top_dish.best_restaurants',
-              //   top_dish.best_restaurants
-              // )
-              return (
-                <HStack
-                  transform={[{ translateY: index % 2 == 0 ? -5 : 5 }]}
-                  key={index}
-                >
-                  <DishView
-                    size={dishHeight}
-                    dish={{
-                      ...top_dish,
-                      rating: (top_dish.rating ?? 0) / 5,
-                    }}
-                    cuisine={{
-                      id: country.country,
-                      name: country.country,
-                      type: 'country',
-                    }}
-                  />
+              {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
+                // console.log(
+                //   'top_dish.best_restaurants',
+                //   top_dish.best_restaurants
+                // )
+                return (
+                  <HStack
+                    transform={[{ translateY: index % 2 == 0 ? -5 : 5 }]}
+                    key={index}
+                  >
+                    <DishView
+                      size={dishHeight}
+                      dish={{
+                        ...top_dish,
+                        rating: (top_dish.rating ?? 0) / 5,
+                      }}
+                      cuisine={{
+                        id: country.country,
+                        name: country.country,
+                        type: 'country',
+                      }}
+                    />
 
-                  {/* Shows top restaurants per-dish */}
-                  {/* <VStack>
+                    {/* Shows top restaurants per-dish */}
+                    {/* <VStack>
                     {top_dish.best_restaurants?.map((restaurant) => {
                       if (!restaurant.slug) {
                         return null
@@ -344,23 +362,24 @@ const TopDishesCuisineItem = memo(({ country }: { country: TopCuisine }) => {
                       )
                     })}
                   </VStack> */}
-                </HStack>
-              )
-            })}
-            <LinkButton
-              className="see-through"
-              width={dishHeight * 0.8}
-              height={dishHeight}
-              tag={{ type: 'country', name: country.country ?? '' }}
-            >
-              <ChevronRight size={40} color="black" />
-            </LinkButton>
-          </HStack>
-        </HomeScrollViewHorizontal>
+                  </HStack>
+                )
+              })}
+              <LinkButton
+                className="see-through"
+                width={dishHeight * 0.8}
+                height={dishHeight}
+                tag={{ type: 'country', name: country.country ?? '' }}
+              >
+                <ChevronRight size={40} color="black" />
+              </LinkButton>
+            </HStack>
+          </HomeScrollViewHorizontal>
+        </VStack>
       </VStack>
-    </VStack>
-  )
-})
+    )
+  }
+)
 
 let lastHoveredId
 const clearHoveredRestaurant = _.debounce(() => {

@@ -87,18 +87,6 @@ const HomeContainerLarge = (props) => {
           />
         </AbsoluteVStack>
 
-        {/* cross line */}
-        <AbsoluteVStack fullscreen pointerEvents="none" overflow="hidden">
-          <AbsoluteVStack
-            height={400}
-            width={2000}
-            right="-10%"
-            top="-20%"
-            backgroundColor={bgLightTranslucent}
-            transform={[{ rotate: '-4deg' }]}
-          />
-        </AbsoluteVStack>
-
         <VStack
           flex={1}
           maxWidth="100%"
