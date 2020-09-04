@@ -22,7 +22,7 @@ export const CommentBubble = ({
   ...rest
 }: Omit<StackProps, 'children'> & {
   user: Partial<UserModel>
-  text: string
+  text?: string
   before?: any
   after?: any
   ellipseContentAbove?: number
@@ -56,31 +56,33 @@ export const CommentBubble = ({
         </Text>
       </HStack>
 
-      <VStack spacing>
+      <VStack width="100%" spacing>
         {before}
 
-        <Text selectable opacity={0.8} lineHeight={20} fontSize={14}>
-          {ellipseContentAbove && text.length > ellipseContentAbove ? (
-            <>
-              {isExpanded
-                ? text
-                : typeof text === 'string'
-                ? text.slice(0, ellipseContentAbove) + '...'
-                : text}{' '}
-              {!!expandable && (
-                <Link
-                  onClick={() => {
-                    setIsExpanded((x) => !x)
-                  }}
-                >
-                  {isExpanded ? <>&laquo; Less</> : <>Read more &raquo;</>}
-                </Link>
-              )}
-            </>
-          ) : (
-            text
-          )}
-        </Text>
+        {!!text && (
+          <Text selectable opacity={0.8} lineHeight={20} fontSize={14}>
+            {ellipseContentAbove && text.length > ellipseContentAbove ? (
+              <>
+                {isExpanded
+                  ? text
+                  : typeof text === 'string'
+                  ? text.slice(0, ellipseContentAbove) + '...'
+                  : text}{' '}
+                {!!expandable && (
+                  <Link
+                    onClick={() => {
+                      setIsExpanded((x) => !x)
+                    }}
+                  >
+                    {isExpanded ? <>&laquo; Less</> : <>Read more &raquo;</>}
+                  </Link>
+                )}
+              </>
+            ) : (
+              text
+            )}
+          </Text>
+        )}
 
         {after}
       </VStack>

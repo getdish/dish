@@ -1,20 +1,12 @@
-import {
-  graphql,
-  mutation,
-  restaurantDishesWithPhotos,
-  restaurantPhotosForCarousel,
-} from '@dish/graph'
+import { graphql, restaurantDishesWithPhotos, reviewDelete } from '@dish/graph'
 import {
   AbsoluteVStack,
-  Divider,
   HStack,
   LoadingItems,
   SmallTitle,
   Spacer,
-  Toast,
   VStack,
 } from '@dish/ui'
-import { isUndefined } from 'lodash'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image, ScrollView, TextInput } from 'react-native'
 
@@ -24,14 +16,12 @@ import { HomeStateItemReview } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
-import { flatButtonStyleSelected } from './baseButtonStyle'
 import { CommentBubble } from './CommentBubble'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
 import { RestaurantReview } from './RestaurantReview'
 import { StackViewCloseButton } from './StackViewCloseButton'
-import { Title } from './Title'
 import { useRestaurantQuery } from './useRestaurantQuery'
-import { useUserReview } from './useUserReview'
+import { useUserReviewCommentQuery } from './useUserReview'
 
 export default memo(function HomePageRestaurantReview() {
   const om = useOvermind()
@@ -112,7 +102,9 @@ export const RestaurantReviewComment = memo(
     }) => {
       const om = useOvermind()
       const user = om.state.user.user
-      const review = useUserReview(restaurantId)
+      const { review, upsertReview, deleteReview } = useUserReviewCommentQuery(
+        restaurantId
+      )
       const restaurant = useRestaurantQuery(restaurantSlug)
       const [reviewText, setReviewText] = useState('')
       const [isSaved, setIsSaved] = useState(false)
@@ -121,8 +113,8 @@ export const RestaurantReviewComment = memo(
       const dishTags = restaurantDishesWithPhotos(restaurant)
 
       useEffect(() => {
-        if (!isUndefined(review?.text)) {
-          setReviewText(review?.text ?? '')
+        if (review?.text) {
+          setReviewText(review.text)
         }
       }, [review?.text])
 
@@ -133,55 +125,45 @@ export const RestaurantReviewComment = memo(
 
       return (
         <VStack>
-          <CommentBubble backgroundColor={bgLight} user={user as any}>
-            <TextInput
-              value={reviewText}
-              onChange={(e) => {
-                // @ts-ignore
-                const height = e.nativeEvent.srcElement.scrollHeight
-                setHeight(height)
-              }}
-              onChangeText={(text) => {
-                if (isSaved) {
-                  setIsSaved(false)
-                }
-                setReviewText(text)
-              }}
-              multiline
-              placeholder="Be sure to..."
-              style={{
-                minHeight: height,
-                lineHeight: 22,
-                flex: 1,
-                padding: 10,
-              }}
-            />
-          </CommentBubble>
+          <CommentBubble
+            backgroundColor={bgLight}
+            user={user as any}
+            after={
+              <TextInput
+                value={reviewText}
+                onChange={(e) => {
+                  // @ts-ignore
+                  const height = e.nativeEvent.srcElement.scrollHeight
+                  setHeight(height)
+                }}
+                onChangeText={(text) => {
+                  if (isSaved) {
+                    setIsSaved(false)
+                  }
+                  setReviewText(text)
+                }}
+                multiline
+                placeholder="Write a comment. You can just leave a tip or a whole review, up to you."
+                style={{
+                  minHeight: height,
+                  lineHeight: 22,
+                  fontSize: 16,
+                  width: '100%',
+                  padding: 10,
+                }}
+              />
+            }
+          />
 
           {!isSaved && (
             <LinkButton
               {...smallButtonBaseStyle}
               alignSelf="flex-end"
               marginTop={-15}
-              onPress={async () => {
-                Toast.show('Saving...')
-                console.log('inserting', review)
-
-                if (review) {
-                  review.text = reviewText
-                } else {
-                  mutation.insert_review({
-                    objects: [
-                      {
-                        restaurant_id: restaurantId,
-                        rating: 0,
-                        user_id: user.id,
-                        text: reviewText,
-                      },
-                    ],
-                  })
-                }
-                Toast.show('Saved!')
+              onPress={() => {
+                upsertReview({
+                  text: reviewText,
+                })
                 setIsSaved(true)
               }}
             >
@@ -189,14 +171,23 @@ export const RestaurantReviewComment = memo(
             </LinkButton>
           )}
 
-          {!!review && (
+          {review && (
             <>
               <Spacer size="xl" />
-              <SmallTitle divider="center">Current Review</SmallTitle>
-              <RestaurantReview
-                userName={review.user?.username ?? ''}
-                reviewText={review.text ?? ''}
-              />
+              <SmallTitle>My review</SmallTitle>
+              <Spacer />
+              <RestaurantReview key={review.authored_at} reviewId={review.id} />
+              <Spacer />
+              <SmallButton
+                alignSelf="flex-end"
+                onPress={() => {
+                  if (confirm('Are you sure you want to delete the review?')) {
+                    deleteReview()
+                  }
+                }}
+              >
+                Delete
+              </SmallButton>
             </>
           )}
 

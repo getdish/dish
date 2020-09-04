@@ -1,5 +1,12 @@
 import { series, sleep } from '@dish/async'
-import { Review, query, refetch, resolved, reviewUpsert } from '@dish/graph'
+import {
+  Review,
+  query,
+  refetch,
+  resolved,
+  reviewDelete,
+  reviewUpsert,
+} from '@dish/graph'
 import { Toast, useForceUpdate, useLazyEffect } from '@dish/ui'
 import { useEffect, useState } from 'react'
 
@@ -19,6 +26,7 @@ type ReviewWithTag = Pick<
   | 'restaurant_id'
   | 'user_id'
   | 'favorited'
+  | 'authored_at'
 > & {
   user?: {
     username: string
@@ -71,6 +79,7 @@ export const useUserReviewsQuery = (restaurantId: string) => {
             username: review.user.username,
           },
           favorited: review.favorited,
+          authored_at: review.authored_at,
         }
       })
     : []
@@ -85,51 +94,96 @@ export const useUserReviewsQuery = (restaurantId: string) => {
     }
   }, [shouldFetch, fetchKey])
 
+  const doRefetch = () => {
+    setFetchKey(Math.random())
+  }
+
   return {
     userId,
     reviews,
     om,
-    refetch: () => {
-      setFetchKey(Math.random())
+    refetch: doRefetch,
+    async upsert(review: Partial<Review>) {
+      if (omStatic.actions.home.promptLogin()) {
+        return false
+      }
+      Toast.show('Saving...')
+      try {
+        const response = await reviewUpsert([
+          {
+            // defaults
+            rating: 0,
+            ...review,
+            // overrides
+            user_id: omStatic.state.user.user!.id,
+          },
+        ])
+        if (!response.length) {
+          console.error('response', response)
+          Toast.show('Error saving')
+          return false
+        }
+        const result = response[0]
+        // optimistic update
+        if (result.id) {
+          for (const cur of reviews) {
+            if (cur.id === result.id) {
+              for (const key in review) {
+                cur[key] = review[key]
+              }
+            }
+          }
+        }
+        Toast.show(`Saved!`)
+        doRefetch()
+        return response
+      } catch (err) {
+        console.error('error', err)
+        Toast.show('Error saving')
+        return false
+      }
     },
   }
 }
 
-const isTagReview = (r: Review) => !!r.tag_id
+const isTagReview = (r: Review) =>
+  !!r.tag_id && r.tag_id !== '00000000-0000-0000-0000-000000000000'
 
-export const useUserReview = (restaurantId: string) => {
-  const { reviews } = useUserReviewsQuery(restaurantId)
-  return reviews.filter((x) => !isTagReview(x) && !!x.text)[0]
+export const useUserReviewCommentQuery = (restaurantId: string) => {
+  const { reviews, upsert, refetch } = useUserReviewsQuery(restaurantId)
+  const review = reviews.filter((x) => !isTagReview(x) && !!x.text)[0]
+  return {
+    review,
+    upsertReview(review: Partial<Review>) {
+      return upsert({
+        ...review,
+        restaurant_id: restaurantId,
+      })
+    },
+    async deleteReview() {
+      Toast.show(`Deleting...`)
+      await reviewDelete({
+        id: review.id,
+      })
+      Toast.show(`Deleted!`)
+      refetch()
+    },
+  }
 }
 
 export const useUserFavoriteQuery = (restaurantId: string) => {
-  const { reviews, refetch } = useUserReviewsQuery(restaurantId)
+  const { reviews, upsert } = useUserReviewsQuery(restaurantId)
   const review = reviews.filter((x) => !isTagReview(x) && x.favorited)[0]
   const [optimistic, setOptimistic] = useState<boolean | null>(null)
   const isStarred = optimistic ?? review?.favorited
   return [
     isStarred,
     (next: boolean) => {
-      if (omStatic.actions.home.promptLogin()) {
-        return
-      }
-      const user = omStatic.state.user.user!
-      reviewUpsert([
-        {
-          user_id: user.id,
-          favorited: next,
-          restaurant_id: restaurantId,
-        },
-      ]).then((res) => {
-        refetch()
-        if (!res?.length) {
-          Toast.show('Error saving')
-          return
-        }
-        console.log('favorited', res)
-      })
       setOptimistic(next)
-      Toast.show(next ? 'Favorited' : 'Un-favorited')
+      return upsert({
+        favorited: next,
+        restaurant_id: restaurantId,
+      })
     },
   ] as const
 }
@@ -143,9 +197,6 @@ export const useUserUpvoteDownvoteQuery = (
   const [votes] = useUserTagVotes(restaurantId)
   const vote = getTagUpvoteDownvote(votes, activeTags)
   const [userVote, setUserVote] = useState<number | null>(null)
-
-  console.log('votes', votes)
-
   return [
     userVote ?? vote,
     async (rating: number) => {

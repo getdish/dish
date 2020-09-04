@@ -1,12 +1,9 @@
 import { graphql, query } from '@dish/graph'
-import { HStack, Spacer, Text, VStack } from '@dish/ui'
-import React from 'react'
-import { memo } from 'react'
+import { Text } from '@dish/ui'
+import React, { memo } from 'react'
 
 import { lightGreen, lightGrey, lightRed, lightYellow } from '../../colors'
 import { CommentBubble } from './CommentBubble'
-import { RatingView } from './RatingView'
-import { TextStrong } from './TextStrong'
 
 export const RestaurantReview = memo(
   graphql(({ reviewId }: { reviewId: string }) => {
@@ -18,10 +15,6 @@ export const RestaurantReview = memo(
         },
       },
     })[0]
-    // userName={review.user.username}
-    //               reviewText={review.text}
-    //               source={review.source}
-    //               rating={review.rating}
 
     const sentiments = review.sentiments()
 
@@ -44,6 +37,7 @@ export const RestaurantReview = memo(
                 }
                 width={20}
                 height={20}
+                // @ts-ignore
                 display="inline-flex"
                 alignItems="center"
                 justifyContent="center"
