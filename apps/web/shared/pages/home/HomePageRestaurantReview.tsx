@@ -2,6 +2,7 @@ import { graphql, restaurantDishesWithPhotos, reviewDelete } from '@dish/graph'
 import {
   AbsoluteVStack,
   HStack,
+  LoadingItem,
   LoadingItems,
   SmallTitle,
   Spacer,
@@ -105,6 +106,7 @@ export const RestaurantReviewComment = memo(
       const { review, upsertReview, deleteReview } = useUserReviewCommentQuery(
         restaurantId
       )
+      console.log('what is authored at', review)
       const restaurant = useRestaurantQuery(restaurantSlug)
       const [reviewText, setReviewText] = useState('')
       const [isSaved, setIsSaved] = useState(false)
@@ -176,7 +178,12 @@ export const RestaurantReviewComment = memo(
               <Spacer size="xl" />
               <SmallTitle>My review</SmallTitle>
               <Spacer />
-              <RestaurantReview key={review.authored_at} reviewId={review.id} />
+              <Suspense fallback={<LoadingItem />}>
+                <RestaurantReview
+                  refetchKey={review.text}
+                  reviewId={review.id}
+                />
+              </Suspense>
               <Spacer />
               <SmallButton
                 alignSelf="flex-end"

@@ -7,7 +7,7 @@ import {
   SmallButtonProps,
   smallButtonBaseStyle,
 } from '../../views/ui/SmallButton'
-import { useUserReview } from './useUserReview'
+import { useUserReviewCommentQuery } from './useUserReview'
 
 export const RestaurantAddCommentButton = graphql(
   ({
@@ -22,7 +22,7 @@ export const RestaurantAddCommentButton = graphql(
     restaurantId?: string
     restaurantSlug?: string
   }) => {
-    const review = useUserReview(restaurantId)
+    const review = useUserReviewCommentQuery(restaurantId)
     return (
       <LinkButton
         {...smallButtonBaseStyle}
