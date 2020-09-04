@@ -1,5 +1,6 @@
 import { graphql, query } from '@dish/graph'
 import { HStack, Spacer, Text, VStack } from '@dish/ui'
+import React from 'react'
 import { memo } from 'react'
 
 import { lightGreen, lightGrey, lightRed, lightYellow } from '../../colors'
@@ -30,32 +31,41 @@ export const RestaurantReview = memo(
         ellipseContentAbove={400}
         text={review.text ?? ''}
         after={
-          <Text fontSize={14} color="rgba(0,0,0,0.7)">
-            <HStack alignItems="center" spacing>
-              {!!review.rating && (
-                <VStack
-                  borderRadius={100}
-                  backgroundColor={
-                    review.rating >= 4
-                      ? lightGreen
-                      : review.rating >= 3
-                      ? lightYellow
-                      : lightRed
-                  }
-                  width={20}
-                  height={20}
-                  alignItems="center"
-                  justifyContent="center"
-                  margin={-2}
-                >
-                  <TextStrong fontSize={12}>{review.rating}</TextStrong>
-                </VStack>
-              )}
-              {!!sentiments?.length
-                ? sentiments.map((x, i) => {
-                    return (
+          <Text lineHeight={26} fontSize={14} color="rgba(0,0,0,0.7)">
+            {!!review.rating && (
+              <Text
+                borderRadius={100}
+                backgroundColor={
+                  review.rating >= 4
+                    ? lightGreen
+                    : review.rating >= 3
+                    ? lightYellow
+                    : lightRed
+                }
+                width={20}
+                height={20}
+                display="inline-flex"
+                alignItems="center"
+                justifyContent="center"
+                margin={-2}
+                fontSize={12}
+                fontWeight="400"
+              >
+                {review.rating}
+              </Text>
+            )}
+            &nbsp; &nbsp;
+            {!!review.authored_at && (
+              <Text>
+                {new Intl.DateTimeFormat().format(new Date(review.authored_at))}{' '}
+                &nbsp; &nbsp;
+              </Text>
+            )}
+            {!!sentiments?.length
+              ? sentiments.map((x, i) => {
+                  return (
+                    <React.Fragment key={i}>
                       <Text
-                        key={i}
                         backgroundColor={
                           x.sentiment > 0
                             ? lightGreen
@@ -76,16 +86,11 @@ export const RestaurantReview = memo(
                           </Text>
                         )}
                       </Text>
-                    )
-                  })
-                : []}
-
-              {/* {!!review.authored_at && (
-                <Text>
-                  {new Intl.DateTimeFormat().format(review.authored_at)}
-                </Text>
-              )} */}
-            </HStack>
+                      <Text>&nbsp; &nbsp;</Text>
+                    </React.Fragment>
+                  )
+                })
+              : []}
           </Text>
         }
         user={{
