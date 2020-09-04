@@ -1,8 +1,9 @@
 biggest impact changes before sending:
 
+- location <=> url
 - Voting, tagging, commenting improvements
-- map fixes
-  - clicking a single point when not on search page should nav to restaurant itself
+  - threading on comments is the only way you get discussion which leads to clarfiication, which is both what keeps people around and what allows us to get much richer info
+- itself
 - make map more alive
   - colors by category (cuisine?)
   - hovering a single restaurant should drop a pin on the map where it is
@@ -21,7 +22,6 @@ biggest impact changes before sending:
   - home page hovering a section could show all the restaurants within that section
     - is there some generic way we can then make this a feature "highlighted group of restaurants for map"?s
 - sometimes going home doesnt zoom out - but not alaways
-- location <=> url
 - safari feels slow
 - apple login? (expo auth?)
 - A bit of user profile page polish

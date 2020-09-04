@@ -1,19 +1,21 @@
 import { LngLat, Restaurant, graphql } from '@dish/graph'
 import { AbsoluteVStack, useDebounce, useLazyEffect } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-import { uniqBy } from 'lodash'
+import { findLast, uniqBy } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
 import { searchBarHeight, zIndexMap } from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
+import { findLastHomeOrSearch } from '../../state/home'
 import {
   isHomeState,
   isRestaurantState,
   isSearchState,
 } from '../../state/home-helpers'
+import { HomeStateItemHome } from '../../state/home-types'
 import { setMapView } from '../../state/mapView'
-import { useOvermind } from '../../state/om'
+import { omStatic, useOvermind } from '../../state/om'
 import { router } from '../../state/router'
 import { Map } from '../../views/Map'
 import { getLngLat, getMinLngLat } from './getLngLat'
@@ -69,21 +71,10 @@ const HomeMapDataLoader = memo(
           id: state.restaurantId,
           slug: state.restaurantSlug,
         }
-        const searchState = om.state.home.lastSearchState
-        all = [single, ...(searchState?.results ?? [])]
-      } else if (isSearchState(state)) {
-        const searchState = om.state.home.lastSearchState
-        all = searchState?.results ?? []
-      } else if (isHomeState(state)) {
-        // for now, bad abstraction we should generalize in states
-        // @ts-ignore
-        all = om.state.home.topDishes
-          .map((x) => x.top_restaurants)
-          .flat()
-          .filter((x) => x?.id)
-          .map((x) => ({ id: x.id, slug: x.slug }))
-          // slicing for now
-          .slice(0, 50)
+        const last = findLastHomeOrSearch(omStatic.state.home.states)
+        all = [single, ...(last?.results ?? [])]
+      } else if ('results' in state) {
+        all = state?.results ?? []
       }
 
       all = all.filter(Boolean)
@@ -335,14 +326,25 @@ const HomeMapContent = memo(function HomeMap({
           }
         }}
         onSelect={(id) => {
-          if (id !== om.state.home.selectedRestaurant?.id) {
-            const restaurant = restaurants?.find((x) => x.id === id)
-            if (restaurant) {
+          const restaurant = restaurants?.find((x) => x.id === id)
+          if (!restaurant) {
+            console.warn('not found', id)
+            return
+          }
+          if (om.state.home.currentStateType === 'search') {
+            if (id !== om.state.home.selectedRestaurant?.id) {
               om.actions.home.setSelectedRestaurant({
                 id: restaurant.id,
                 slug: restaurant.slug,
               })
             }
+          } else {
+            router.navigate({
+              name: 'restaurant',
+              params: {
+                slug: restaurant.slug,
+              },
+            })
           }
         }}
       />

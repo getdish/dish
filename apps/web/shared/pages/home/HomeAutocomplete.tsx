@@ -227,14 +227,18 @@ const AutocompleteResults = memo(() => {
         ? locationAutocompleteResults
         : [
             {
-              name: 'Search',
+              name: 'Enter to search',
               icon: '🔍',
               tagId: '',
               type: 'orphan' as const,
-              description: '⏎',
+              // description: '⏎',
             },
             ...(autocompleteResults ?? []),
           ].slice(0, 13)
+
+    if (!autocompleteResults.length) {
+      return null
+    }
 
     return autocompleteResultsActive.map((result, index) => {
       const plusButtonEl =
@@ -327,6 +331,68 @@ const AutocompleteResults = memo(() => {
       )
     })
   }, key)
+
+  if (showAutocomplete !== 'location' && !autocompleteResults.length) {
+    return (
+      <>
+        <HStack
+          width="100%"
+          flexWrap="wrap"
+          alignItems="center"
+          justifyContent="center"
+        >
+          {[
+            { name: 'Noodle Soups', icon: '🍜' },
+            { name: 'Tacos', icon: '🌮' },
+            { name: 'BBQ', icon: '🥩' },
+            { name: 'Bowls', icon: '🍲' },
+            { name: 'Dim Sum', icon: '🥟' },
+            { name: 'Spicy', icon: '🌶' },
+            { name: 'Cheap', icon: '🍕' },
+            { name: 'Seafood', icon: '🐟' },
+            { name: 'Sandwiches', icon: '🥪' },
+            { name: 'Salads', icon: '🥗' },
+            { name: 'Breakfast', icon: '🥞' },
+            { name: 'Curry', icon: '🍛' },
+            { name: 'Burgers', icon: '🍔' },
+            { name: 'Drinks', icon: '🥂' },
+            { name: 'Sweets', icon: '🍪' },
+          ].map((tag) => {
+            return (
+              <VStack
+                width={80}
+                height={80}
+                borderRadius={10}
+                paddingHorizontal={5}
+                margin={5}
+                key={tag.name}
+                alignItems="center"
+                justifyContent="center"
+                overflow="hidden"
+                hoverStyle={{
+                  backgroundColor: 'rgba(255,255,255,0.3)',
+                }}
+              >
+                <Text textAlign="center" width="100%" fontSize={40}>
+                  {tag.icon}
+                </Text>
+                <Spacer size="sm" />
+                <Text
+                  ellipse
+                  textAlign="center"
+                  fontSize={12}
+                  width="100%"
+                  color="#fff"
+                >
+                  {tag.name}
+                </Text>
+              </VStack>
+            )
+          })}
+        </HStack>
+      </>
+    )
+  }
 
   return <>{resultsElements}</>
 })

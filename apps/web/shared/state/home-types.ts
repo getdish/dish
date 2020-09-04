@@ -55,7 +55,6 @@ export type HomeState = {
   stateIds: string[]
   stateIndex: number
   states: HomeStateItem[]
-  topDishes: TopCuisine[]
   userLocation: LngLat | null
 }
 
@@ -117,6 +116,7 @@ export type HomeActiveTagsRecord = { [id: string]: boolean }
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
   activeTagIds: HomeActiveTagsRecord
+  results: RestaurantOnlyIds[]
 }
 
 export type HomeStateItemAbout = HomeStateItemBase & {

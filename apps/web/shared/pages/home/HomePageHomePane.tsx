@@ -98,7 +98,6 @@ export default memo(function HomePageHomePane(props: Props) {
           return getHomeDishes(pt[0], pt[1])
         })
       ).then((areas) => {
-        console.log('got areas', areas, isMounted)
         if (!isMounted) return
         om.actions.home.setIsLoading(false)
 
@@ -129,7 +128,13 @@ export default memo(function HomePageHomePane(props: Props) {
         all = sortBy(all, (x) => -x.avg_rating)
         updateHomeTagsCache(all)
         setTopDishes(all)
-        om.actions.home.setTopDishes(all)
+        om.actions.home.updateCurrentState({
+          results: all
+            .map((x) => x.top_restaurants)
+            .flat()
+            .filter((x) => x?.id)
+            .map((x) => ({ id: x.id, slug: x.slug })),
+        })
       })
     }
 
@@ -220,9 +225,6 @@ export default memo(function HomePageHomePane(props: Props) {
 })
 
 const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
-  if (topDishes.length) {
-    console.warn('rendering contnet more expensive', topDishes)
-  }
   return (
     <>
       <HomeTopDishesTitle />

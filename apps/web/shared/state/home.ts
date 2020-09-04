@@ -82,7 +82,6 @@ export const state: HomeState = {
   allStates: {
     '0': initialHomeState,
   },
-  topDishes: [],
   userLocation: null,
   currentNavItem: derived<HomeState, OmState, NavigateItem>((state, om) =>
     // @ts-ignore
@@ -487,11 +486,18 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
     }
   }
 
-  currentStates = om.state.home.states
   await Promise.all([...promises])
 }
 
 const uid = () => `${Math.random()}`.replace('.', '')
+
+export const findLastHomeOrSearch = (states: HomeStateItem[]) => {
+  const prev: HomeStateItemHome | HomeStateItemSearch = _.findLast(
+    states,
+    (x) => isHomeState(x) || isSearchState(x)
+  ) as any
+  return prev
+}
 
 const pushHomeState: AsyncAction<
   HistoryItem,
@@ -503,6 +509,12 @@ const pushHomeState: AsyncAction<
     console.warn('no item?')
     return null
   }
+
+  if (item.name === 'home' && om.state.home.states.length === 1) {
+    // dont push another initial home
+    return
+  }
+
   // start loading
   om.actions.home.setIsLoading(true)
 
@@ -517,9 +529,15 @@ const pushHomeState: AsyncAction<
   switch (type) {
     // home
     case 'home': {
+      const prev: HomeStateItemHome = _.findLast(om.state.home.states, (x) =>
+        isHomeState(x)
+      ) as any
       nextState = {
         searchQuery: '',
         activeTagIds: {},
+        center: prev.mapAt?.center ?? prev.center,
+        span: prev.mapAt?.span ?? prev.span,
+        mapAt: null,
       }
       break
     }
@@ -531,20 +549,13 @@ const pushHomeState: AsyncAction<
     // search or userSearch
     case 'userSearch':
     case 'search': {
-      let lastHomeOrSearch: HomeStateItemHome | HomeStateItemSearch = null
-      for (const id of _.reverse([...om.state.home.stateIds])) {
-        const state = om.state.home.allStates[id]
-        if (isHomeState(state) || isSearchState(state)) {
-          lastHomeOrSearch = state
-          break
-        }
-      }
-      if (!lastHomeOrSearch) {
+      const prev = findLastHomeOrSearch(om.state.home.states)
+      if (!prev) {
         throw new Error('unreachable')
       }
 
       // use last home or search to get most up to date
-      activeTagIds = lastHomeOrSearch.activeTagIds
+      activeTagIds = prev.activeTagIds
 
       const username =
         type == 'userSearch' ? om.state.router.curPage.params.username : ''
@@ -554,8 +565,8 @@ const pushHomeState: AsyncAction<
         results: [],
         username,
         activeTagIds,
-        center: lastHomeOrSearch.mapAt?.center ?? lastHomeOrSearch.center,
-        span: lastHomeOrSearch.mapAt?.span ?? lastHomeOrSearch.span,
+        center: prev.mapAt?.center ?? prev.center,
+        span: prev.mapAt?.span ?? prev.span,
         mapAt: null,
       }
       break
@@ -563,9 +574,13 @@ const pushHomeState: AsyncAction<
 
     // restaurant
     case 'restaurant': {
+      const prev = om.state.home.states[om.state.home.states.length - 1]
       nextState = {
         restaurantId: null,
         restaurantSlug: item.params.slug,
+        center: prev.mapAt?.center ?? prev.center,
+        span: prev.mapAt?.span ?? prev.span,
+        mapAt: null,
       }
       break
     }
@@ -599,7 +614,7 @@ const pushHomeState: AsyncAction<
     searchQuery,
     ...nextState,
     type,
-    id: item.id ?? uid(),
+    id: nextState.id ?? item.id ?? uid(),
   } as HomeStateItem
 
   async function runFetchData() {
@@ -651,8 +666,6 @@ const pushHomeState: AsyncAction<
 
   return null
 }
-
-export let currentStates: HomeStateItem[] = []
 
 const setShowAutocomplete: Action<ShowAutocomplete> = (om, val) => {
   om.state.home.showAutocomplete = val
@@ -1067,10 +1080,6 @@ const setDrawerSnapPoint: Action<number> = (om, val) => {
   om.state.home.drawerSnapPoint = val
 }
 
-const setTopDishes: Action<any> = (om, val) => {
-  om.state.home.topDishes = val
-}
-
 const setCenterToResults: Action<number | void> = (om, val) => {
   // @ts-ignore
   om.state.home.centerToResults = val ?? Date.now()
@@ -1121,5 +1130,4 @@ export const actions = {
   setShowUserMenu,
   promptLogin,
   setDrawerSnapPoint,
-  setTopDishes,
 }

@@ -1,8 +1,10 @@
 import { mutation, query, resolved } from '@dish/graph'
+import * as React from 'react'
 
 window['query'] = query
 window['mutation'] = mutation
 window['resolved'] = resolved
+window['React'] = React
 
 // startup stuff (can put in some other file eventually)
 const queue = new Map<
