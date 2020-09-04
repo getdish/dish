@@ -143,6 +143,9 @@ export const useUserUpvoteDownvoteQuery = (
   const [votes] = useUserTagVotes(restaurantId)
   const vote = getTagUpvoteDownvote(votes, activeTags)
   const [userVote, setUserVote] = useState<number | null>(null)
+
+  console.log('votes', votes)
+
   return [
     userVote ?? vote,
     async (rating: number) => {
@@ -196,7 +199,9 @@ const voteForTags = async (
   }))
   const fullTags = await getFullTags(partialTags)
   const insertTags = tags.map<Review>((tag) => {
-    const tagId = fullTags.find((x) => x.name.toLowerCase() === tag.name)?.id
+    const tagId = fullTags.find(
+      (x) => x.name.toLowerCase() === tag.name.toLowerCase()
+    )?.id
     if (!tagId) {
       console.warn({ name, tags, partialTags, fullTags })
       throw new Error('no tag')

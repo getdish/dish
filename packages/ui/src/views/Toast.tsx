@@ -58,7 +58,7 @@ export const ToastRoot = memo(function ToastRoot() {
     >
       {stateRef.current.show && !!stateRef.current.text && (
         <VStack
-          backgroundColor="rgba(0,100,0,0.95)"
+          backgroundColor="rgba(0,200,0,0.95)"
           shadowColor="rgba(0,0,0,0.9)"
           shadowRadius={50}
           borderRadius={9}
