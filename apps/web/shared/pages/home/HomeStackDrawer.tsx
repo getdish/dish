@@ -51,9 +51,10 @@ export const HomeStackDrawer = ({
         flex={1}
         borderRadius={drawerBorderRadius}
         overflow="hidden"
-        shadowRadius={isSmall ? 5 : 10}
         maxWidth={isSmall ? '100%' : drawerWidthMax}
+        shadowRadius={isSmall ? 5 : 10}
         shadowColor="rgba(0,0,0,0.1)"
+        shadowOffset={{ height: -2, width: 0 }}
         backgroundColor="#fff"
         {...props}
       >

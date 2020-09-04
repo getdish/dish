@@ -310,7 +310,7 @@ const SearchResultsContent = (props: Props) => {
           paddingBottom={10}
           overflow="hidden"
         >
-          <Text ellipse fontSize={titleFontSize} fontWeight="700">
+          <Text ellipse fontSize={titleFontSize}>
             {pageTitleElements}{' '}
             <Text fontWeight="300" opacity={0.5} letterSpacing={-0.5}>
               {subTitle}

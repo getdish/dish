@@ -127,7 +127,7 @@ export const RestaurantDetailRow = memo(
                   )}
                   <Text
                     ellipse
-                    fontSize={sizeSm ? 13 : 14}
+                    fontSize={sizeSm ? 14 : 16}
                     textAlign={centered ? 'center' : 'left'}
                     color={sizeSm ? row.color ?? '' : 'inherit'}
                     margin="auto"

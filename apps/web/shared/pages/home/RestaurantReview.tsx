@@ -2,7 +2,7 @@ import { graphql, query } from '@dish/graph'
 import { HStack, Spacer, Text, VStack } from '@dish/ui'
 import { memo } from 'react'
 
-import { lightGreen, lightRed, lightYellow } from '../../colors'
+import { lightGreen, lightGrey, lightRed, lightYellow } from '../../colors'
 import { CommentBubble } from './CommentBubble'
 import { RatingView } from './RatingView'
 import { TextStrong } from './TextStrong'
@@ -57,14 +57,24 @@ export const RestaurantReview = memo(
                       <Text
                         key={i}
                         backgroundColor={
-                          x.sentiment > 0 ? lightGreen : lightRed
+                          x.sentiment > 0
+                            ? lightGreen
+                            : x.sentiment < 0
+                            ? lightRed
+                            : lightGrey
                         }
                         paddingHorizontal={4}
                         paddingVertical={1}
                         margin={-2}
                         borderRadius={6}
                       >
-                        {x.tag.name}
+                        {x.tag.name}{' '}
+                        {(x.sentiment > 0 || x.sentiment < 0) && (
+                          <Text fontSize={11}>
+                            {x.sentiment > 0 ? '+' : '-'}
+                            {x.sentiment}
+                          </Text>
+                        )}
                       </Text>
                     )
                   })

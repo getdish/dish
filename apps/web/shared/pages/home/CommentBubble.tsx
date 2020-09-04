@@ -36,19 +36,19 @@ export const CommentBubble = ({
       padding={4}
       alignItems="flex-start"
       justifyContent="flex-start"
-      spacing
+      spacing="sm"
       {...rest}
     >
       <HStack alignItems="center" spacing={6} flexWrap="nowrap">
         <Circle size={18} marginBottom={-2}>
-          <User color="#000" size={12} />
+          <User color="#999" size={12} />
         </Circle>
         <Text selectable color="#999" fontSize={13}>
           <Link
             name="user"
             params={{ username: user.username }}
             fontWeight="600"
-            color="#666"
+            color="#222"
           >
             {user.username}
           </Link>
@@ -56,32 +56,34 @@ export const CommentBubble = ({
         </Text>
       </HStack>
 
-      {before}
+      <VStack spacing>
+        {before}
 
-      <Text selectable opacity={0.8} lineHeight={20} fontSize={14}>
-        {ellipseContentAbove && text.length > ellipseContentAbove ? (
-          <>
-            {isExpanded
-              ? text
-              : typeof text === 'string'
-              ? text.slice(0, ellipseContentAbove) + '...'
-              : text}{' '}
-            {!!expandable && (
-              <Link
-                onClick={() => {
-                  setIsExpanded((x) => !x)
-                }}
-              >
-                {isExpanded ? <>&laquo; Less</> : <>Read more &raquo;</>}
-              </Link>
-            )}
-          </>
-        ) : (
-          text
-        )}
-      </Text>
+        <Text selectable opacity={0.8} lineHeight={20} fontSize={14}>
+          {ellipseContentAbove && text.length > ellipseContentAbove ? (
+            <>
+              {isExpanded
+                ? text
+                : typeof text === 'string'
+                ? text.slice(0, ellipseContentAbove) + '...'
+                : text}{' '}
+              {!!expandable && (
+                <Link
+                  onClick={() => {
+                    setIsExpanded((x) => !x)
+                  }}
+                >
+                  {isExpanded ? <>&laquo; Less</> : <>Read more &raquo;</>}
+                </Link>
+              )}
+            </>
+          ) : (
+            text
+          )}
+        </Text>
 
-      {after}
+        {after}
+      </VStack>
     </VStack>
   )
 }

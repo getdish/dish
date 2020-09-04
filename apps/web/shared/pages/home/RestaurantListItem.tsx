@@ -5,6 +5,7 @@ import {
   HStack,
   LoadingItems,
   Spacer,
+  SuperScriptText,
   Text,
   Tooltip,
   VStack,
@@ -121,7 +122,11 @@ export const RestaurantListItem = memo(function RestaurantListItem(
         />
       </HomeScrollViewHorizontal>
 
-      {store.showComments && <RestaurantRatingBreakdown closable {...props} />}
+      {store.showComments && (
+        <VStack marginTop={-15}>
+          <RestaurantRatingBreakdown closable {...props} />
+        </VStack>
+      )}
     </VStack>
   )
 })
@@ -191,8 +196,8 @@ const RestaurantListItemContent = memo(
             hoverStyle={{ backgroundColor: bgLightLight }}
             marginLeft={-pad}
             paddingLeft={pad}
-            paddingBottom={20}
-            marginBottom={-20}
+            paddingBottom={28}
+            marginBottom={-28}
             width={950}
             position="relative"
           >
@@ -204,11 +209,32 @@ const RestaurantListItemContent = memo(
             >
               <VStack paddingTop={paddingTop}>
                 <HStack marginLeft={-5} alignItems="center" maxWidth="40%">
-                  <VStack marginVertical={-14}>
+                  <VStack position="relative" marginVertical={-14}>
                     <RestaurantUpVoteDownVote
                       restaurantId={restaurantId}
                       activeTagIds={tagIds ?? {}}
                     />
+
+                    <AbsoluteVStack
+                      bottom={-4}
+                      right={-12}
+                      borderRadius={100}
+                      width={24}
+                      height={24}
+                      zIndex={1000}
+                      alignItems="center"
+                      justifyContent="center"
+                      backgroundColor="#fff"
+                      borderWidth={1}
+                      borderColor="#eee"
+                    >
+                      <Text color="#999">
+                        <SuperScriptText fontSize={10}>#</SuperScriptText>
+                        <Text fontSize={16} fontWeight="700" color="#444">
+                          {rank}
+                        </Text>
+                      </Text>
+                    </AbsoluteVStack>
                   </VStack>
                   <Spacer />
 
@@ -258,15 +284,13 @@ const RestaurantListItemContent = memo(
             </Link>
           </VStack>
 
-          <Spacer />
+          <Spacer size={12} />
 
           {/* RANKING ROW */}
           <HStack zIndex={1000} marginLeft={8} alignItems="center">
             <VStack>
               <HStack alignItems="center">
-                <Spacer size="xl" />
-
-                <Spacer size="xs" />
+                <Spacer size="xxl" />
 
                 {/* <ScrollView
                   style={{ flex: 1 }}
@@ -280,13 +304,7 @@ const RestaurantListItemContent = memo(
                       fontSize={12}
                       color="rgba(0,0,0,0.5)"
                     >
-                      <Text fontSize={12}>
-                        #
-                        <Text fontSize={14} fontWeight="600" color="#000">
-                          {rank}
-                        </Text>{' '}
-                        in
-                      </Text>{' '}
+                      <Text fontSize={12}>in</Text>{' '}
                       <HStack
                         // @ts-ignore
                         display="inline-flex"
@@ -340,7 +358,7 @@ const RestaurantListItemContent = memo(
                       />
                     </VStack>
                   </HStack>
-                  <Spacer size="sm" />
+                  <Spacer size={6} />
                   <HStack
                     paddingLeft={10}
                     paddingRight={20}
@@ -390,13 +408,14 @@ const RestaurantListItemContent = memo(
               </Text>
             </VStack>
 
-            <Spacer size="xs" />
+            <VStack minHeight={20} />
 
             {/* BOTTOM ROW */}
+
             <Suspense fallback={null}>
               <HStack flex={1} alignItems="center" flexWrap="wrap">
                 <VStack>
-                  <Tooltip contents="Rating Breakdown">
+                  <Tooltip contents={`Rating Breakdown (152 reviews)`}>
                     <SmallButton
                       isActive={reviewDisplayStore.showComments}
                       onPress={reviewDisplayStore.toggleShowComments}
@@ -404,18 +423,22 @@ const RestaurantListItemContent = memo(
                       <HStack alignItems="center">
                         <VStack marginVertical={-10}>
                           <RestaurantRatingView
-                            size="sm"
+                            size="xs"
                             restaurantSlug={restaurantSlug}
                           />
                         </VStack>
-                        <Spacer />
-                        <Activity size={18} />
+                        <Spacer size="sm" />
+                        <Activity size={14} />
+                        <Spacer size="sm" />
+                        <Text fontSize={16} opacity={0.5}>
+                          152
+                        </Text>
                       </HStack>
                     </SmallButton>
                   </Tooltip>
                 </VStack>
 
-                <Spacer />
+                <Spacer size="sm" />
 
                 <HStack
                   alignItems="center"
@@ -503,7 +526,7 @@ export const RestaurantScoreBreakdownSmall = memo(
                   paddingHorizontal={5}
                   paddingVertical={3}
                   borderRadius={100}
-                  backgroundColor={bgLightLight}
+                  // backgroundColor={bgLightLight}
                   spacing={3}
                 >
                   {info?.image ? (

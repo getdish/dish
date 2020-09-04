@@ -153,9 +153,12 @@ export const useUserUpvoteDownvoteQuery = (
         votes.forEach((vote) => {
           vote.rating = rating
         })
+        Toast.show(`Saved`)
       } else {
         setUserVote(rating)
-        const tagsList = Object.keys(activeTags).filter((x) => activeTags[x])
+        const tagsList = Object.keys(activeTags)
+          .filter((x) => activeTags[x])
+          .map((id) => om.state.home.allTags[id])
         const saved = await voteForTags(restaurantId, userId, tagsList, rating)
         if (saved.length) {
           Toast.show(`Saved`)

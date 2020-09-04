@@ -45,7 +45,7 @@ export const RestaurantRatingBreakdown = memo(
           <SlantedTitle fontWeight="600">Review Breakdown</SlantedTitle>
         </HStack>
         {closable && (
-          <AbsoluteVStack zIndex={1000} top={18} right={11}>
+          <AbsoluteVStack zIndex={1000} top={10} right={6}>
             <CloseButton onPress={store.toggleShowComments} />
           </AbsoluteVStack>
         )}
@@ -57,7 +57,7 @@ export const RestaurantRatingBreakdown = memo(
           maxWidth="100%"
           margin={10}
           borderWidth={1}
-          borderColor="#ddd"
+          borderColor="#eee"
           borderRadius={12}
           paddingVertical={18}
         >

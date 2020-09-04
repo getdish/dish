@@ -1,4 +1,4 @@
-export const bgLightLight = '#B8E0F344'
+export const bgLightLight = '#B8E0F333'
 
 export const bgLight = 'rgb(230, 250, 255)'
 export const bgLightTranslucent = 'rgba(220, 234, 255, 0.25)'
@@ -21,3 +21,4 @@ export const lightRed = '#F6DDCC'
 export const lightBlue = '#D4E6F1'
 export const lightPurple = '#F5EEF8'
 export const lightOrange = '#FADBD8'
+export const lightGrey = '#eee'

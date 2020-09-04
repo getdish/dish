@@ -3,6 +3,7 @@ import { HStack, LoadingItems, SmallTitle, Spacer, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
 
+import { bgLight } from '../../colors'
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { omStatic } from '../../state/om'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
@@ -23,7 +24,7 @@ type Props = HomePagePaneProps<HomeStateItemRestaurant>
 
 export default function HomePageRestaurantContainer(props: Props) {
   return (
-    <HomeStackDrawer closable>
+    <HomeStackDrawer closable borderWidth={6} borderColor={bgLight}>
       <HomePageRestaurant {...props} />
     </HomeStackDrawer>
   )
