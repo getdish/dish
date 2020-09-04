@@ -28,6 +28,7 @@ type MapProps = {
   onMoveEnd?: (props: MapPosition) => void
   selected?: string
   centerToResults?: number
+  // avoidFitBounds?: boolean
 }
 
 const SOURCE_ID = 'restaurants'
@@ -123,7 +124,6 @@ export const Map = (props: MapProps) => {
     map = new mapboxgl.Map({
       container: mapNode.current,
       style: style ?? 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy',
-      // 'mapbox://styles/nwienert/cke43ku0a0snr19njwnpg2lhi', // frank
       // 'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja', // dark
       // 'mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq', // light
       center,
@@ -531,7 +531,7 @@ export const Map = (props: MapProps) => {
 
     if (hasMovedAtLeast(map, { center, span }, 0.01)) {
       return series([
-        () => fullyIdle({ max: 350 }),
+        () => fullyIdle({ max: 300 }),
         () => {
           map.fitBounds(next)
         },
@@ -556,26 +556,29 @@ export const Map = (props: MapProps) => {
         type: 'FeatureCollection',
         features,
       })
+
+      // this doesnt really work nicely
+      // if (!props.avoidFitBounds) {
+      //   return series([
+      //     () => fullyIdle({ max: 300 }),
+      //     () => {
+      //       fitMapToResults(map, features)
+      //     },
+      //   ])
+      // }
     }
   }, [features, map])
 
   // centerToResults
-  // const lastCenter = useRef(0)
-  // useEffect(() => {
-  //   if (!map) return
-  //   if (!features.length) return
-  //   if (props.centerToResults <= 0) return
-  //   if (props.centerToResults === lastCenter.current) return
-  //   lastCenter.current = props.centerToResults
-  //   const bounds = new mapboxgl.LngLatBounds()
-  //   for (const feature of features) {
-  //     const geo = feature.geometry
-  //     if (geo.type === 'Point') {
-  //       bounds.extend(geo.coordinates as any)
-  //     }
-  //   }
-  //   map.fitBounds(bounds)
-  // }, [map, features, props.centerToResults])
+  const lastCenter = useRef(0)
+  useEffect(() => {
+    if (!map) return
+    if (!features.length) return
+    if (props.centerToResults <= 0) return
+    if (props.centerToResults === lastCenter.current) return
+    lastCenter.current = props.centerToResults
+    fitMapToResults(map, features)
+  }, [map, features, props.centerToResults])
 
   return (
     <div
@@ -590,6 +593,17 @@ export const Map = (props: MapProps) => {
       }}
     />
   )
+}
+
+const fitMapToResults = (map: mapboxgl.Map, features: GeoJSON.Feature[]) => {
+  const bounds = new mapboxgl.LngLatBounds()
+  for (const feature of features) {
+    const geo = feature.geometry
+    if (geo.type === 'Point') {
+      bounds.extend(geo.coordinates as any)
+    }
+  }
+  map.fitBounds(bounds)
 }
 
 const getCurrentLocation = (map: mapboxgl.Map) => {
