@@ -144,7 +144,6 @@ const HomeMapContent = memo(function HomeMap({
       if (isEqual(fullNext, prev)) {
         return prev
       }
-      console.trace('set state', next)
       return fullNext
     })
   }
@@ -167,7 +166,6 @@ const HomeMapContent = memo(function HomeMap({
     return om.reaction(
       (state) => state.home.selectedRestaurant?.id,
       (selectedId) => {
-        console.warn('update via selected')
         const nextSpan = getZoomedSpan(span, 0.025)
         setState({
           id: selectedId,
@@ -222,8 +220,6 @@ const HomeMapContent = memo(function HomeMap({
     [key]
   )
 
-  console.log('SEE', JSON.stringify({ span, center }, null, 2))
-
   useEffect(() => {
     return om.reaction(
       (omState) => {
@@ -236,7 +232,6 @@ const HomeMapContent = memo(function HomeMap({
       },
       (spanCenter) => {
         const { span, center } = JSON.parse(spanCenter)
-        console.log('SET', JSON.stringify({ span, center }, null, 2))
         setState({
           span,
           center,
@@ -253,7 +248,6 @@ const HomeMapContent = memo(function HomeMap({
     const coords = restaurantSelected.location.coordinates
     if (!coords) return
     const center = getLngLat(coords)
-    console.log('selected restaurant center', center)
     setState({
       center,
     })

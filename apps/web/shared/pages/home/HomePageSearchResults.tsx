@@ -11,6 +11,7 @@ import {
 import { debounce } from 'lodash'
 import React, {
   Suspense,
+  unstable_SuspenseList as SuspenseList,
   memo,
   useCallback,
   useEffect,
@@ -317,14 +318,18 @@ const SearchResultsContent = (props: Props) => {
             </Text>
           </Text>
         </HStack>
-        <HomeSearchInfoBox state={searchState} />
+        <Suspense fallback={null}>
+          <HomeSearchInfoBox state={searchState} />
+        </Suspense>
         <VStack>{children}</VStack>
-        <SearchFooter
-          scrollToTop={() =>
-            setState((x) => ({ ...x, scrollToTop: Math.random() }))
-          }
-          searchState={searchState}
-        />
+        <Suspense fallback={null}>
+          <SearchFooter
+            scrollToTop={() =>
+              setState((x) => ({ ...x, scrollToTop: Math.random() }))
+            }
+            searchState={searchState}
+          />
+        </Suspense>
       </HomeScrollView>
     )
   }
@@ -332,7 +337,7 @@ const SearchResultsContent = (props: Props) => {
   const results = useMemo(() => {
     const cur = allResults.slice(0, totalLoading)
     return (
-      <>
+      <SuspenseList revealOrder="forwards">
         {cur.map((result, index) => {
           const onFinishRender =
             index == cur.length - 1
@@ -358,7 +363,7 @@ const SearchResultsContent = (props: Props) => {
             </Suspense>
           )
         })}
-      </>
+      </SuspenseList>
     )
   }, [allResults, totalLoading, state.chunk])
 

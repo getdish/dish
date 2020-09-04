@@ -855,16 +855,16 @@ const clearTag: AsyncAction<NavigableTag> = async (om, tag) => {
   }
 }
 
-let tm
+let tm = null
 const setIsLoading: Action<boolean> = (om, val) => {
   om.state.home.isLoading = val
   // prevent infinite spinners
   clearTimeout(tm)
   tm = setTimeout(() => {
     if (val) {
-      om.state.home.isLoading = false
+      om.actions.home.setIsLoading(false)
     }
-  }, 2000)
+  }, 3000)
 }
 
 // this is useful for search where we mutate the current state while you type,

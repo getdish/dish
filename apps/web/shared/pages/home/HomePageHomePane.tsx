@@ -1,4 +1,4 @@
-import { fullyIdle, series } from '@dish/async'
+import { fullyIdle, series, sleep } from '@dish/async'
 import { TopCuisine, getHomeDishes } from '@dish/graph'
 import {
   AbsoluteVStack,
@@ -83,49 +83,53 @@ export default memo(function HomePageHomePane(props: Props) {
         [center.lng + span.lng, center.lat + span.lat],
       ]
 
-      Promise.all(
-        mapAreasToSearch.map((pt) => {
-          return getHomeDishes(pt[0], pt[1])
-        })
-      ).then((areas) => {
+      sleep(topDishes.length ? 1000 : 0).then(() => {
         if (!isMounted) return
-        om.actions.home.setIsLoading(false)
+        fetchNewHome()
+      })
 
-        let all: TopCuisine[] = []
-
-        for (const area of areas) {
-          for (const cuisine of area) {
-            const existing = all.find((x) => x.country === cuisine.country)
-            if (existing) {
-              const allTopRestaurants = [
-                ...existing.top_restaurants,
-                ...cuisine.top_restaurants,
-              ]
-              const sortedTopRestaurants = sortBy(
-                allTopRestaurants,
-                (x) => -(x.rating ?? 0)
-              )
-              existing.top_restaurants = uniqBy(
-                sortedTopRestaurants,
-                (x) => x.id
-              ).slice(0, 5)
-            } else {
-              all.push(cuisine)
+      function fetchNewHome() {
+        Promise.all(
+          mapAreasToSearch.map((pt) => {
+            return getHomeDishes(pt[0], pt[1])
+          })
+        ).then((areas) => {
+          if (!isMounted) return
+          om.actions.home.setIsLoading(false)
+          let all: TopCuisine[] = []
+          for (const area of areas) {
+            for (const cuisine of area) {
+              const existing = all.find((x) => x.country === cuisine.country)
+              if (existing) {
+                const allTopRestaurants = [
+                  ...existing.top_restaurants,
+                  ...cuisine.top_restaurants,
+                ]
+                const sortedTopRestaurants = sortBy(
+                  allTopRestaurants,
+                  (x) => -(x.rating ?? 0)
+                )
+                existing.top_restaurants = uniqBy(
+                  sortedTopRestaurants,
+                  (x) => x.id
+                ).slice(0, 5)
+              } else {
+                all.push(cuisine)
+              }
             }
           }
-        }
-
-        all = sortBy(all, (x) => -x.avg_rating)
-        updateHomeTagsCache(all)
-        setTopDishes(all)
-        om.actions.home.updateCurrentState({
-          results: all
-            .map((x) => x.top_restaurants)
-            .flat()
-            .filter((x) => x?.id)
-            .map((x) => ({ id: x.id, slug: x.slug })),
+          all = sortBy(all, (x) => -x.avg_rating)
+          updateHomeTagsCache(all)
+          setTopDishes(all)
+          om.actions.home.updateCurrentState({
+            results: all
+              .map((x) => x.top_restaurants)
+              .flat()
+              .filter((x) => x?.id)
+              .map((x) => ({ id: x.id, slug: x.slug })),
+          })
         })
-      })
+      }
     }
 
     const dispose = om.reaction((state) => {

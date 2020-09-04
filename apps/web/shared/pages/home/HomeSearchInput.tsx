@@ -191,9 +191,12 @@ export const HomeSearchInput = memo(() => {
           backgroundColor={background}
         >
           {/* Loading / Search Icon */}
-          <VStack width={18}>
+          <VStack
+            width={18}
+            transform={[{ scale: om.state.home.isLoading ? 1.2 : 1 }]}
+          >
             {om.state.home.isLoading ? (
-              <VStack className="rotating" opacity={0.9}>
+              <VStack className="rotating" opacity={1}>
                 <Loader color={color} size={18} onClick={focusSearchInput} />
               </VStack>
             ) : (
@@ -221,7 +224,7 @@ export const HomeSearchInput = memo(() => {
             <TextInput
               ref={inputRef}
               // leave uncontrolled for perf?
-              value={search}
+              value={search ?? ''}
               onFocus={handleFocus}
               onBlur={() => {
                 avoidNextFocus = false
