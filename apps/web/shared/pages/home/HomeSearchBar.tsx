@@ -1,6 +1,7 @@
 import { AbsoluteVStack, HStack, Spacer, VStack } from '@dish/ui'
+import { useStore } from '@dish/use-store'
 import React, { Suspense, memo, useState } from 'react'
-import { ChevronLeft, MapPin } from 'react-feather'
+import { ChevronLeft, MapPin, Search } from 'react-feather'
 
 import {
   pageWidthMax,
@@ -15,6 +16,7 @@ import { DishLogoButton } from './DishLogoButton'
 import { HomeMenu } from './HomeMenu'
 import { HomeSearchInput } from './HomeSearchInput'
 import { HomeSearchLocationInput } from './HomeSearchLocationInput'
+import { InputStore } from './InputStore'
 import { useCurrentLenseColor } from './useCurrentLenseColor'
 import {
   useMediaQueryIsReallySmall,
@@ -151,6 +153,8 @@ export const HomeSearchBarFloating = () => {
 
 const HomeSearchBar = memo(() => {
   const om = useOvermind()
+  const locationInputStore = useStore(InputStore, { name: 'location' })
+  const inputStore = useStore(InputStore, { name: 'search' })
   const focus = om.state.home.showAutocomplete
   const [showLocation, setShowLocation] = useState(false)
   const isSmall = useMediaQueryIsSmall()
@@ -232,8 +236,25 @@ const HomeSearchBar = memo(() => {
       )}
 
       {isReallySmall && (
-        <LinkButton onPress={() => setShowLocation((x) => !x)} padding={12}>
-          <MapPin color={color} size={22} opacity={0.65} />
+        <LinkButton
+          onPress={() => {
+            setShowLocation((x) => {
+              const next = !x
+              if (next) {
+                locationInputStore.node?.focus()
+              } else {
+                inputStore.node?.focus()
+              }
+              return next
+            })
+          }}
+          padding={12}
+        >
+          {showLocation ? (
+            <Search color={color} size={22} opacity={0.65} />
+          ) : (
+            <MapPin color={color} size={22} opacity={0.65} />
+          )}
         </LinkButton>
       )}
 

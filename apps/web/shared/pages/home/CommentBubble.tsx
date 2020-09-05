@@ -13,7 +13,7 @@ import { User } from 'react-feather'
 import { Link } from '../../views/ui/Link'
 
 export const CommentBubble = ({
-  user,
+  name,
   ellipseContentAbove,
   expandable,
   text,
@@ -21,7 +21,7 @@ export const CommentBubble = ({
   after,
   ...rest
 }: Omit<StackProps, 'children'> & {
-  user: Partial<UserModel>
+  name?: string
   text?: string
   before?: any
   after?: any
@@ -39,22 +39,24 @@ export const CommentBubble = ({
       spacing="sm"
       {...rest}
     >
-      <HStack alignItems="center" spacing={6} flexWrap="nowrap">
-        <Circle size={18} marginBottom={-2}>
-          <User color="#999" size={12} />
-        </Circle>
-        <Text selectable color="#999" fontSize={13}>
-          <Link
-            name="user"
-            params={{ username: user.username }}
-            fontWeight="600"
-            color="#222"
-          >
-            {user.username}
-          </Link>
-          &nbsp; says
-        </Text>
-      </HStack>
+      {!!name && (
+        <HStack alignItems="center" spacing={6} flexWrap="nowrap">
+          <Circle size={18} marginBottom={-2}>
+            <User color="#999" size={12} />
+          </Circle>
+          <Text selectable color="#999" fontSize={13}>
+            <Link
+              name="user"
+              params={{ username: name }}
+              fontWeight="600"
+              color="#222"
+            >
+              {name}
+            </Link>
+            &nbsp; says
+          </Text>
+        </HStack>
+      )}
 
       <VStack width="100%" spacing>
         {before}

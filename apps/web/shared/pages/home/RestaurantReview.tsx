@@ -7,7 +7,15 @@ import { CommentBubble } from './CommentBubble'
 
 export const RestaurantReview = memo(
   graphql(
-    ({ reviewId, refetchKey }: { reviewId: string; refetchKey: string }) => {
+    ({
+      reviewId,
+      refetchKey,
+      hideUsername,
+    }: {
+      reviewId: string
+      refetchKey: string
+      hideUsername?: boolean
+    }) => {
       const reviews = query.review({
         limit: 1,
         where: {
@@ -29,6 +37,7 @@ export const RestaurantReview = memo(
           expandable
           ellipseContentAbove={400}
           text={review.text ?? ''}
+          name={hideUsername ? null : review.username ?? ''}
           after={
             <Text lineHeight={26} fontSize={14} color="rgba(0,0,0,0.7)">
               {!!review.rating && (
@@ -95,9 +104,6 @@ export const RestaurantReview = memo(
                 : []}
             </Text>
           }
-          user={{
-            username: (review.username ?? '').replace(/^[a-z0-9]\-/gi, ''),
-          }}
         />
       )
     }

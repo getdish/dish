@@ -1,25 +1,23 @@
 import { Button, HStack, VStack, prevent } from '@dish/ui'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import { useStore } from '@dish/use-store'
+import React, { memo, useEffect, useState } from 'react'
 import { MapPin, Navigation } from 'react-feather'
 import { TextInput } from 'react-native'
 
-import {
-  inputClearSelection,
-  inputGetNode,
-  inputIsTextSelected,
-} from '../../helpers/input'
+import { inputClearSelection, inputIsTextSelected } from '../../helpers/input'
 import { useOvermind } from '../../state/om'
 import { HomeAutocompleteHoverableInput } from './HomeAutocompleteHoverableInput'
 import { inputTextStyles } from './HomeSearchInput'
+import { InputStore } from './InputStore'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 const paddingHorizontal = 16
 
 export const HomeSearchLocationInput = memo(() => {
+  const locationInputStore = useStore(InputStore, { name: 'location' })
   const om = useOvermind()
   const { theme, color, background } = useSearchBarTheme()
   const [locationSearch, setLocationSearch] = useState('')
-  const locationInputRef = useRef<any>()
   const { currentLocationName } = om.state.home.currentState
 
   // one way sync down for more perf
@@ -31,8 +29,7 @@ export const HomeSearchLocationInput = memo(() => {
   }, [])
 
   useEffect(() => {
-    if (!locationInputRef.current) return
-    const locationInput = inputGetNode(locationInputRef.current)
+    if (!locationInputStore.node) return
     const handleKeyPress = (e) => {
       // @ts-ignore
       const code = e.keyCode
@@ -53,14 +50,14 @@ export const HomeSearchLocationInput = memo(() => {
         }
         case 27: {
           // esc
-          if (inputIsTextSelected(locationInput)) {
+          if (inputIsTextSelected(locationInputStore.node)) {
             inputClearSelection()
             return
           }
           if (om.state.home.showAutocomplete) {
             om.actions.home.setShowAutocomplete(false)
           }
-          locationInput.blur()
+          locationInputStore.node.blur()
           return
         }
         case 38: {
@@ -80,28 +77,29 @@ export const HomeSearchLocationInput = memo(() => {
     const showLocationAutocomplete = () => {
       om.actions.home.setShowAutocomplete('location')
     }
-    locationInput.addEventListener('keydown', handleKeyPress)
-    // locationInput.addEventListener('focus', showLocationAutocomplete)
-    locationInput.addEventListener('click', showLocationAutocomplete)
+    locationInputStore.node.addEventListener('keydown', handleKeyPress)
+    // locationInputStore.node.addEventListener('focus', showLocationAutocomplete)
+    locationInputStore.node.addEventListener('click', showLocationAutocomplete)
     return () => {
-      locationInput.removeEventListener('keydown', handleKeyPress)
-      // locationInput.addEventListener('focus', showLocationAutocomplete)
-      locationInput.removeEventListener('click', showLocationAutocomplete)
+      locationInputStore.node.removeEventListener('keydown', handleKeyPress)
+      // locationInputStore.node.addEventListener('focus', showLocationAutocomplete)
+      locationInputStore.node.removeEventListener(
+        'click',
+        showLocationAutocomplete
+      )
     }
   }, [])
 
   return (
     <VStack
-      // contain="paint"
       position="relative"
-      // flex={1}
-      // minWidth={100}
+      flex={1}
       backgroundColor={theme === 'dark' ? 'rgba(255,255,255,0.1)' : background}
       borderRadius={100}
       justifyContent="center"
     >
       <HomeAutocompleteHoverableInput
-        input={locationInputRef.current}
+        input={locationInputStore.node}
         autocompleteTarget="location"
       >
         <HStack alignItems="center" paddingHorizontal={3}>
@@ -112,11 +110,11 @@ export const HomeSearchLocationInput = memo(() => {
             style={{ marginLeft: 10, marginRight: -5 }}
             onClick={(e) => {
               prevent(e)
-              locationInputRef.current?.focus()
+              locationInputStore.node?.focus()
             }}
           />
           <TextInput
-            ref={locationInputRef}
+            ref={locationInputStore.setNode}
             value={locationSearch}
             placeholder={currentLocationName ?? 'San Francisco'}
             style={[

@@ -46,8 +46,8 @@ export const HomeIntroLetter = memo(() => {
       zIndex={10000000000}
       alignItems="center"
       justifyContent="center"
-      paddingHorizontal="10vw"
-      paddingVertical="10vh"
+      paddingHorizontal="4vw"
+      paddingVertical="4vh"
       backgroundColor="rgba(0,0,0,0.6)"
       opacity={1}
       transform={[{ translateY: 0 }]}
@@ -113,7 +113,7 @@ export const HomeIntroLetter = memo(() => {
               <VStack
                 borderRadius={9}
                 borderColor="rgba(255,255,255,0.15)"
-                borderWidth={1}
+                borderWidth={2}
                 hoverStyle={{
                   borderColor: 'rgba(255,255,255,0.3)',
                 }}

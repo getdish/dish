@@ -1,21 +1,19 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from '@dish/ui'
+import { useStore } from '@dish/use-store'
 import _ from 'lodash'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { Loader, Search } from 'react-feather'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
 
 import { searchBarHeight } from '../../constants'
-import {
-  inputClearSelection,
-  inputGetNode,
-  inputIsTextSelected,
-} from '../../helpers/input'
+import { inputClearSelection, inputIsTextSelected } from '../../helpers/input'
 import { getTagId } from '../../state/getTagId'
 import { omStatic, useOvermind } from '../../state/om'
 import { router } from '../../state/router'
 import { CloseButton } from './CloseButton'
 import { HomeAutocompleteHoverableInput } from './HomeAutocompleteHoverableInput'
+import { InputStore } from './InputStore'
 import { isIOS } from './isIOS'
 import { TagButton } from './TagButton'
 import { getMediaQueryMatch } from './useMediaQueryIs'
@@ -76,16 +74,16 @@ export const isSearchInputFocused = () => {
 }
 
 export const HomeSearchInput = memo(() => {
+  const inputStore = useStore(InputStore, { name: 'search' })
   const om = useOvermind()
   const { color, background } = useSearchBarTheme()
-  const inputRef = useRef<any>()
   const [search, setSearch] = useState('')
   const getSearch = useGet(search)
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
   // const { showAutocomplete } = om.state.home
 
   useOnMount(() => {
-    searchBar = inputGetNode(inputRef.current)
+    searchBar = inputStore.node
 
     setSearch(om.state.home.currentStateSearchQuery)
 
@@ -128,7 +126,7 @@ export const HomeSearchInput = memo(() => {
       om.actions.home.setShowAutocomplete('search')
     }
 
-    const node = inputGetNode(inputRef.current)
+    const node = inputStore.node
     if (node) {
       node.addEventListener('click', handleClick)
       return () => {
@@ -158,11 +156,10 @@ export const HomeSearchInput = memo(() => {
   // }, [input, inputRef, showAutocomplete])
 
   useEffect(() => {
-    const input = inputGetNode(inputRef.current)
-    if (input) {
-      return searchInputEffect(input)
+    if (inputStore.node) {
+      return searchInputEffect(inputStore.node)
     }
-  }, [inputRef.current])
+  }, [inputStore.node])
 
   const handleFocus = (e) => {
     e.preventDefault()
@@ -175,7 +172,7 @@ export const HomeSearchInput = memo(() => {
     // }
   }
 
-  const input = inputGetNode(inputRef.current)
+  const input = inputStore.node
 
   return (
     <HStack flex={1} overflow="hidden">
@@ -222,7 +219,7 @@ export const HomeSearchInput = memo(() => {
           >
             <HomeSearchBarTags input={input} />
             <TextInput
-              ref={inputRef}
+              ref={inputStore.setNode}
               // leave uncontrolled for perf?
               value={search ?? ''}
               onFocus={handleFocus}

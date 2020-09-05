@@ -7,6 +7,7 @@ import {
   SmallTitle,
   Spacer,
   VStack,
+  useDebounceEffect,
 } from '@dish/ui'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image, ScrollView, TextInput } from 'react-native'
@@ -15,6 +16,7 @@ import { bgLight } from '../../colors'
 import { pageWidthMax, zIndexGallery } from '../../constants'
 import { HomeStateItemReview } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
+import { tagLenses } from '../../state/tagLenses'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
 import { CommentBubble } from './CommentBubble'
@@ -77,7 +79,7 @@ const HomePageReviewContent = memo(
       <VStack flex={1} overflow="hidden">
         <ScrollView style={{ width: '100%' }}>
           <VStack padding={18} spacing="lg">
-            <SmallTitle>Review {restaurant.name}</SmallTitle>
+            <SmallTitle fontWeight="600">Review {restaurant.name}</SmallTitle>
 
             <Suspense fallback={<LoadingItems />}>
               <RestaurantReviewComment
@@ -106,13 +108,40 @@ export const RestaurantReviewComment = memo(
       const { review, upsertReview, deleteReview } = useUserReviewCommentQuery(
         restaurantId
       )
-      console.log('what is authored at', review)
       const restaurant = useRestaurantQuery(restaurantSlug)
       const [reviewText, setReviewText] = useState('')
       const [isSaved, setIsSaved] = useState(false)
       const lineHeight = 22
       const [height, setHeight] = useState(lineHeight)
       const dishTags = restaurantDishesWithPhotos(restaurant)
+      const [sentiments, setSentiments] = useState([])
+
+      useDebounceEffect(
+        () => {
+          let isMounted = true
+
+          const allTagNames = [...dishTags, ...tagLenses].map((x) => x.name)
+
+          Promise.all(
+            allTagNames.map((name) => {
+              return fetch(
+                `https://absa.k8s.dishapp.com/?text=%22${encodeURIComponent(
+                  reviewText
+                )}%22&aspect=%22${encodeURIComponent(name.toLowerCase())}%22`
+              ).then((res) => res.json())
+            })
+          ).then((tagSentiments) => {
+            if (!isMounted) return
+            console.log('got sentiments', tagSentiments)
+          })
+
+          return () => {
+            isMounted = false
+          }
+        },
+        500,
+        [reviewText]
+      )
 
       useEffect(() => {
         if (review?.text) {
@@ -129,7 +158,7 @@ export const RestaurantReviewComment = memo(
         <VStack>
           <CommentBubble
             backgroundColor={bgLight}
-            user={user as any}
+            name={user.username ?? ''}
             after={
               <TextInput
                 value={reviewText}
@@ -161,7 +190,8 @@ export const RestaurantReviewComment = memo(
             <LinkButton
               {...smallButtonBaseStyle}
               alignSelf="flex-end"
-              marginTop={-15}
+              marginTop={-33}
+              marginBottom={15}
               onPress={() => {
                 upsertReview({
                   text: reviewText,
@@ -172,37 +202,6 @@ export const RestaurantReviewComment = memo(
               Save
             </LinkButton>
           )}
-
-          {review && (
-            <VStack
-              borderWidth={1}
-              borderColor="#eee"
-              borderRadius={10}
-              padding={15}
-              flex={1}
-            >
-              <SmallTitle divider="center">My review</SmallTitle>
-              <Spacer />
-              <Suspense fallback={<LoadingItem />}>
-                <RestaurantReview
-                  refetchKey={review.text}
-                  reviewId={review.id}
-                />
-              </Suspense>
-              <SmallButton
-                alignSelf="flex-end"
-                onPress={() => {
-                  if (confirm('Are you sure you want to delete the review?')) {
-                    deleteReview()
-                  }
-                }}
-              >
-                Delete
-              </SmallButton>
-            </VStack>
-          )}
-
-          <Spacer size="xl" />
 
           <SmallTitle divider="center">Votes</SmallTitle>
           <Spacer />
@@ -247,6 +246,40 @@ export const RestaurantReviewComment = memo(
               })}
             </VStack>
           </HStack>
+
+          {review && (
+            <>
+              <Spacer size="xl" />
+              <VStack
+                borderWidth={1}
+                borderColor="#eee"
+                borderRadius={10}
+                padding={15}
+                flex={1}
+              >
+                <SmallTitle divider="off">Saved review</SmallTitle>
+                <Suspense fallback={<LoadingItem />}>
+                  <RestaurantReview
+                    hideUsername
+                    refetchKey={review.text}
+                    reviewId={review.id}
+                  />
+                </Suspense>
+                <SmallButton
+                  alignSelf="flex-end"
+                  onPress={() => {
+                    if (
+                      confirm('Are you sure you want to delete the review?')
+                    ) {
+                      deleteReview()
+                    }
+                  }}
+                >
+                  Delete
+                </SmallButton>
+              </VStack>
+            </>
+          )}
         </VStack>
       )
     }
