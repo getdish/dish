@@ -174,9 +174,14 @@ export const RestaurantReviewComment = memo(
           )}
 
           {review && (
-            <>
-              <Spacer size="xl" />
-              <SmallTitle>My review</SmallTitle>
+            <VStack
+              borderWidth={1}
+              borderColor="#eee"
+              borderRadius={10}
+              padding={15}
+              flex={1}
+            >
+              <SmallTitle divider="center">My review</SmallTitle>
               <Spacer />
               <Suspense fallback={<LoadingItem />}>
                 <RestaurantReview
@@ -184,7 +189,6 @@ export const RestaurantReviewComment = memo(
                   reviewId={review.id}
                 />
               </Suspense>
-              <Spacer />
               <SmallButton
                 alignSelf="flex-end"
                 onPress={() => {
@@ -195,32 +199,48 @@ export const RestaurantReviewComment = memo(
               >
                 Delete
               </SmallButton>
-            </>
+            </VStack>
           )}
 
           <Spacer size="xl" />
 
           <SmallTitle divider="center">Votes</SmallTitle>
-
-          <HStack>
-            <VStack spacing paddingVertical={20} flex={1}>
+          <Spacer />
+          <HStack spacing="xl">
+            <VStack
+              borderWidth={1}
+              borderColor="#eee"
+              borderRadius={10}
+              padding={15}
+              flex={1}
+              spacing
+            >
               <SmallTitle divider="off">Lenses</SmallTitle>
-              <RestaurantLenseVote
-                restaurantId={restaurantId}
-                flexDirection="column"
-              />
+              <RestaurantLenseVote restaurantId={restaurantId} />
             </VStack>
 
-            <VStack spacing paddingVertical={20} flex={1}>
+            <VStack
+              borderWidth={1}
+              borderColor="#eee"
+              borderRadius={10}
+              padding={15}
+              flex={1}
+              spacing
+            >
               <SmallTitle divider="off">Dishes</SmallTitle>
               {dishTags.map((tag) => {
                 return (
                   <SmallButton key={tag.name}>
                     <Image
-                      style={{ width: 22, height: 22, borderRadius: 100 }}
+                      style={{
+                        width: 22,
+                        height: 22,
+                        borderRadius: 100,
+                        marginVertical: -6,
+                      }}
                       source={{ uri: tag.image }}
                     />
-                    <Spacer />
+                    <Spacer size="sm" />
                     {tag.name}
                   </SmallButton>
                 )

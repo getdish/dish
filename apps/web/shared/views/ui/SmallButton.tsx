@@ -21,6 +21,7 @@ export const SmallButton = ({
   return (
     <DeoptHStack
       className={rest.className}
+      minHeight={33}
       {...smallButtonBaseStyle}
       {...rest}
       {...(isActive && {

@@ -60,28 +60,30 @@ export const CommentBubble = ({
         {before}
 
         {!!text && (
-          <Text selectable opacity={0.8} lineHeight={20} fontSize={14}>
-            {ellipseContentAbove && text.length > ellipseContentAbove ? (
-              <>
-                {isExpanded
-                  ? text
-                  : typeof text === 'string'
-                  ? text.slice(0, ellipseContentAbove) + '...'
-                  : text}{' '}
-                {!!expandable && (
-                  <Link
-                    onClick={() => {
-                      setIsExpanded((x) => !x)
-                    }}
-                  >
-                    {isExpanded ? <>&laquo; Less</> : <>Read more &raquo;</>}
-                  </Link>
-                )}
-              </>
-            ) : (
-              text
-            )}
-          </Text>
+          <pre>
+            <Text selectable opacity={0.8} lineHeight={20} fontSize={14}>
+              {ellipseContentAbove && text.length > ellipseContentAbove ? (
+                <>
+                  {isExpanded
+                    ? text
+                    : typeof text === 'string'
+                    ? text.slice(0, ellipseContentAbove) + '...'
+                    : text}{' '}
+                  {!!expandable && (
+                    <Link
+                      onClick={() => {
+                        setIsExpanded((x) => !x)
+                      }}
+                    >
+                      {isExpanded ? <>&laquo; Less</> : <>Read more &raquo;</>}
+                    </Link>
+                  )}
+                </>
+              ) : (
+                text
+              )}
+            </Text>
+          </pre>
         )}
 
         {after}
