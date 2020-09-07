@@ -1,6 +1,6 @@
 import '@dish/common'
 
-import { sentryException } from '@dish/common'
+import { sentryException, sentryMessage } from '@dish/common'
 import {
   MenuItem,
   PhotoXref,
@@ -77,6 +77,20 @@ export class Self extends WorkerJob {
     this.restaurant_ratings = new RestaurantRatings(this)
   }
 
+  _debugRAMUsage(restaurant_id: string) {
+    const fn = () => {
+      const ram_value = Math.round(process.memoryUsage().heapUsed / 1024 / 1024)
+      const ram = ram_value + 'Mb'
+      if (ram_value > 1000) {
+        sentryMessage(`Worker RAM ${ram} over 1Gi for: ${restaurant_id}`)
+      }
+      if (process.env.DISH_DEBUG == '1') {
+        console.log(`Worker RAM usage for ${restaurant_id}: ${ram}`)
+      }
+    }
+    setInterval(fn, 5000)
+  }
+
   async allForCity(city: string) {
     const PER_PAGE = 1000
     let previous_id = globalTagId
@@ -97,6 +111,7 @@ export class Self extends WorkerJob {
   }
 
   async mergeAll(id: string) {
+    this._debugRAMUsage(id)
     const restaurant = await restaurantFindOneWithTags({ id: id })
     if (restaurant) {
       await this.preMerge(restaurant)
@@ -120,7 +135,7 @@ export class Self extends WorkerJob {
       await this.postMerge()
       console.log(`Merged: ${this.restaurant.name}`)
     }
-    return this.restaurant
+    process.exit(0)
   }
 
   async preMerge(restaurant: RestaurantWithId) {
