@@ -427,25 +427,27 @@ async function uploadToDOSpaces(photos: PhotoXref[]) {
 
 async function uploadToDOSpacesBatch(photos: PhotoXref[]) {
   console.log('Uploading images to DO Spaces...')
-  const failed_ids = await Promise.all(
+  let failed_ids = await Promise.all(
     photos.map(async (p) => {
       if (!p.photo || !p.photo.origin) {
         console.error('DO UPLOADER: Photo must have URL: ' + p)
-        return p.id
+        return p.photo?.id
       }
-      const failed_id = sendToDO(p.photo.origin, p.photo.id, p.restaurant_id)
-      return failed_id
+      return sendToDO(p.photo.origin, p.photo.id)
     })
   )
+  failed_ids = failed_ids.filter(Boolean)
   await deleteByIDs('photo', failed_ids)
   const uploaded = photos.filter((p) => {
-    failed_ids.includes(p.id)
+    return !failed_ids.includes(p.id)
   })
-  console.log('...images uploaded DO Spaces.')
+  console.log(
+    `... ${uploaded.length} (${failed_ids.length} failed) images uploaded DO Spaces.`
+  )
   return uploaded
 }
 
-export async function sendToDO(url: string, id: string, restaurant_id: string) {
+export async function sendToDO(url: string, id: string) {
   url = proxyYelpCDN(url)
   let response: Response
   try {
@@ -456,32 +458,23 @@ export async function sendToDO(url: string, id: string, restaurant_id: string) {
   }
   const mime_type = response.headers.get('content-type')
 
-  const ram_value = Math.round(process.memoryUsage().heapUsed / 1024 / 1024)
-  if (ram_value > 1000) {
-    sentryMessage('Worker RAM over 1Gi for: ' + restaurant_id)
-  }
-  if (process.env.DISH_DEBUG == '1') {
-    const ram = ram_value + 'Mb'
-    console.log(`DO photo uploader RAM usage (${id}): ${ram}`)
-  }
-
   while (true) {
     let retries = 1
-    try {
-      await doPut(url, id, mime_type)
+    const result = await doPut(url, id, mime_type)
+    const status = result.status
+    if (status < 300) {
       return
-    } catch (e) {
-      if (e.code == 408) retries += 1
-      if (retries > 10) {
-        sentryException(new Error('DO Spaces PUT Rate Limit'), {
-          url: url,
-          id: id,
-        })
-        return id
-      }
-      if (e.code != 408) {
-        throw new Error(e)
-      }
+    }
+    if (status > 299 && status != 408) {
+      return id
+    }
+    if (status == 408) retries += 1
+    if (retries > 10) {
+      sentryException(new Error('DO Spaces PUT Rate Limit'), {
+        url: url,
+        id: id,
+      })
+      return id
     }
   }
 }
@@ -524,7 +517,8 @@ export async function uploadHeroImage(url: string, restaurant_id: uuid) {
     if (existing.photo?.origin != url) is_needs_uploading = true
   }
   if (!existing || is_needs_uploading) {
-    await sendToDO(url, restaurant_id, restaurant_id)
+    const failed_id = await sendToDO(url, restaurant_id)
+    if (failed_id) return
     await photoXrefUpsert([
       {
         restaurant_id: restaurant_id,
