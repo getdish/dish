@@ -50,6 +50,7 @@
     "@types/puppeteer": "3.0.1"
   },
   "devDependencies": {
+    "esm": "^3.2.25",
     "react-refresh": "0.0.0-experimental-94c0244ba",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "import-sort-style-module": "^6.0.0",
