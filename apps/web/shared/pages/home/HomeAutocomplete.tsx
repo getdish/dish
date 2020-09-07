@@ -32,6 +32,7 @@ import { omStatic, useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallCircleButton } from './CloseButton'
 import { getFuzzyMatchQuery } from './getFuzzyMatchQuery'
+import { SearchBarStore } from './HomeSearchBar'
 import { BottomDrawerStore } from './HomeSmallDrawer'
 import { locationToAutocomplete, searchLocations } from './searchLocations'
 import { searchRestaurants } from './searchRestaurants'
@@ -198,6 +199,8 @@ const HomeAutoCompleteContents = memo(
 
 const AutocompleteResults = memo(() => {
   const om = useOvermind()
+  const drawerStore = useStore(BottomDrawerStore)
+  const searchBarStore = useStore(SearchBarStore)
   const {
     showAutocomplete,
     autocompleteIndex,
@@ -236,7 +239,7 @@ const AutocompleteResults = memo(() => {
             ...(autocompleteResults ?? []),
           ].slice(0, 13)
 
-    if (!autocompleteResults.length) {
+    if (!autocompleteResultsActive.length) {
       return null
     }
 
@@ -253,6 +256,14 @@ const AutocompleteResults = memo(() => {
           hideAutocomplete()
           if (showLocation) {
             om.actions.home.setLocation(result.name)
+
+            // go back to showing search by default
+            searchBarStore.setShowLocation(false)
+
+            // changing location = change drawer to show
+            if (om.state.home.drawerSnapPoint === 0) {
+              drawerStore.setSnapPoint(1)
+            }
           } else {
             // SEE BELOW, tag={tag}
             // clear query

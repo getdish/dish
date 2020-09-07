@@ -81,25 +81,29 @@ export const HomeSmallDrawer = (props: { children: any }) => {
 
   useEffect(() => {
     // let lastIndex: number
+    let lastAutocomplete = omStatic.state.home.showAutocomplete
     return omStatic.reaction(
-      (state) => !!state.home.showAutocomplete,
+      (state) => state.home.showAutocomplete,
       (show) => {
-        if (show) {
+        if (!!show) {
           // lastIndex = snapIndex
           drawerStore.setSnapPoint(0)
         } else {
-          drawerStore.setSnapPoint(defaultSnapPoint)
+          if (lastAutocomplete === 'search') {
+            drawerStore.setSnapPoint(defaultSnapPoint)
+          }
         }
+        lastAutocomplete = show
       }
     )
   }, [])
 
   // if starting out on a smaller screen, start with hiding map
-  useEffect(() => {
-    if (isShort && isSmall) {
-      drawerStore.setSnapPoint(defaultSnapPoint)
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (isShort && isSmall) {
+  //     drawerStore.setSnapPoint(defaultSnapPoint)
+  //   }
+  // }, [])
 
   // attaching this as a direct onPress event breaks dragging
   // instead doing a more hacky useEffect

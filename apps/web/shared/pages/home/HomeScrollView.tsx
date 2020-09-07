@@ -4,7 +4,11 @@ import React, { forwardRef, useMemo, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import { useOvermind } from '../../state/om'
+import {
+  useMediaQueryIsReallySmall,
+  useMediaQueryIsSmall,
+} from './useMediaQueryIs'
 
 class ScrollStore extends Store {
   isScrolling = false
@@ -29,8 +33,10 @@ export const HomeScrollView = forwardRef(
     },
     ref
   ) => {
+    const om = useOvermind()
     const scrollStore = useStore(ScrollStore)
     const isSmall = useMediaQueryIsSmall()
+    const isReallySmall = useMediaQueryIsReallySmall()
     const tm = useRef<any>(0)
     const setIsScrolling = (e) => {
       onScrollYThrottled?.(e.nativeEvent.contentOffset.y)
@@ -41,12 +47,16 @@ export const HomeScrollView = forwardRef(
       }, 200)
     }
 
+    const preventTouching = scrollStore.isScrolling
+    const preventScrolling = isReallySmall && om.state.home.drawerSnapPoint >= 1
+
     return (
       <ScrollView
         ref={ref as any}
         onScroll={setIsScrolling}
         bounces
         scrollEventThrottle={200}
+        scrollEnabled={!preventScrolling}
         {...props}
         style={[
           {
@@ -58,7 +68,7 @@ export const HomeScrollView = forwardRef(
         ]}
       >
         <VStack
-          pointerEvents={scrollStore.isScrolling ? 'none' : 'auto'}
+          pointerEvents={preventTouching ? 'none' : 'auto'}
           maxWidth={isSmall ? '100%' : drawerWidthMax}
           alignSelf="flex-end"
           overflow="hidden"

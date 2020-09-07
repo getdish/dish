@@ -1,5 +1,5 @@
 import { AbsoluteVStack, HStack, Spacer, VStack } from '@dish/ui'
-import { useStore } from '@dish/use-store'
+import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo, useState } from 'react'
 import { ChevronLeft, MapPin, Search } from 'react-feather'
 
@@ -151,12 +151,20 @@ export const HomeSearchBarFloating = () => {
   )
 }
 
+export class SearchBarStore extends Store {
+  showLocation = false
+
+  setShowLocation(val: boolean) {
+    this.showLocation = val
+  }
+}
+
 const HomeSearchBar = memo(() => {
   const om = useOvermind()
   const locationInputStore = useStore(InputStore, { name: 'location' })
   const inputStore = useStore(InputStore, { name: 'search' })
   const focus = om.state.home.showAutocomplete
-  const [showLocation, setShowLocation] = useState(false)
+  const store = useStore(SearchBarStore)
   const isSmall = useMediaQueryIsSmall()
   const isReallySmall = useMediaQueryIsReallySmall()
   const { color } = useSearchBarTheme()
@@ -203,10 +211,12 @@ const HomeSearchBar = memo(() => {
         {isReallySmall && (
           <>
             {/* keep both in dom so we have access to ref */}
-            <VStack display={showLocation ? 'contents' : ('none' as any)}>
+            <VStack display={store.showLocation ? 'contents' : ('none' as any)}>
               <HomeSearchLocationInput />
             </VStack>
-            <VStack display={!showLocation ? 'contents' : ('none' as any)}>
+            <VStack
+              display={!store.showLocation ? 'contents' : ('none' as any)}
+            >
               <HomeSearchInput />
             </VStack>
           </>
@@ -238,19 +248,18 @@ const HomeSearchBar = memo(() => {
       {isReallySmall && (
         <LinkButton
           onPress={() => {
-            setShowLocation((x) => {
-              const next = !x
-              if (next) {
-                locationInputStore.node?.focus()
-              } else {
-                inputStore.node?.focus()
-              }
-              return next
-            })
+            const next = !store.showLocation
+            // todo put this in effect...
+            if (next) {
+              locationInputStore.node?.focus()
+            } else {
+              inputStore.node?.focus()
+            }
+            store.setShowLocation(next)
           }}
           padding={12}
         >
-          {showLocation ? (
+          {store.showLocation ? (
             <Search color={color} size={22} opacity={0.65} />
           ) : (
             <MapPin color={color} size={22} opacity={0.65} />
