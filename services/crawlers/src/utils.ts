@@ -1,5 +1,6 @@
 import '@dish/common'
 
+import { sentryException } from '@dish/common'
 import {
   Restaurant,
   restaurantFindBatch,
@@ -27,13 +28,24 @@ export const CITY_LIST = [
 
 export class DB {
   pool: Pool
-  constructor(config: object) {
-    this.pool = new Pool(config)
+  constructor(public config: object) {
+    this.connect()
+  }
+
+  connect() {
+    this.pool = new Pool(this.config)
+    this.pool.on('error', (e) => {
+      sentryException(e, {
+        more: 'Error likely from long-lived pool connection in node-pg',
+      })
+      this.pool = null
+    })
   }
 
   async query(query: string) {
     let result: Result
-    const client = await this.pool.connect()
+    if (!this.pool) this.connect()
+    let client = await this.pool.connect()
     try {
       result = await client.query(query)
     } catch (e) {
@@ -56,6 +68,8 @@ export const main_db = new DB({
   user: process.env.PGUSER || 'postgres',
   password: process.env.PGPASSWORD || 'postgres',
   database: 'dish',
+  idleTimeoutMillis: 0,
+  connectionTimeoutMillis: 0,
 })
 
 export function shiftLatLonByMetres(
