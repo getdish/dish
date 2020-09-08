@@ -105,45 +105,57 @@ const UserMenuContents = memo(
     }, [])
 
     return (
-      <Box padding={20} width="35vw" minWidth={240} maxWidth={300}>
-        <VStack spacing onPressOut={(e) => {}}>
-          <MenuLinkButton name="about">About</MenuLinkButton>
-
-          <Divider />
+      <Box
+        alignItems="stretch"
+        padding={20}
+        width="35vw"
+        minWidth={240}
+        maxWidth={300}
+      >
+        <VStack spacing="sm">
+          {om.state.user.isLoggedIn &&
+            om.state.user.user.username === 'admin' && (
+              <MenuLinkButton name="adminTags">Admin</MenuLinkButton>
+            )}
 
           {om.state.user.isLoggedIn && (
-            <VStack spacing>
-              <MenuLinkButton name="adminTags">Admin</MenuLinkButton>
-
-              <MenuLinkButton
-                name="user"
-                params={{
-                  username: slugify(om.state.user.user?.username ?? ''),
-                }}
-              >
-                Profile
-              </MenuLinkButton>
-
-              <Divider />
-
-              <MenuLinkButton
-                onPress={() => {
-                  Toast.show(`Logging out...`)
-                  setTimeout(() => {
-                    om.actions.user.logout()
-                  }, 1000)
-                }}
-              >
-                Logout
-              </MenuLinkButton>
-            </VStack>
+            <MenuLinkButton
+              name="user"
+              params={{
+                username: slugify(om.state.user.user?.username ?? ''),
+              }}
+            >
+              Profile
+            </MenuLinkButton>
           )}
+
+          <MenuLinkButton name="about">About</MenuLinkButton>
         </VStack>
 
         {!om.state.user.isLoggedIn && (
           <>
             <Spacer size="lg" />
+            <Divider />
+            <Spacer size="lg" />
             <LoginRegisterForm onDidLogin={hideUserMenu} />
+          </>
+        )}
+
+        {om.state.user.isLoggedIn && (
+          <>
+            <Spacer size="lg" />
+            <Divider />
+            <Spacer size="lg" />
+            <MenuLinkButton
+              onPress={() => {
+                Toast.show(`Logging out...`)
+                setTimeout(() => {
+                  om.actions.user.logout()
+                }, 1000)
+              }}
+            >
+              Logout
+            </MenuLinkButton>
           </>
         )}
       </Box>
@@ -165,11 +177,14 @@ const MenuButton = memo(
     tooltip?: string
   }) => {
     const { color } = useSearchBarTheme()
+
     const linkButtonElement = (
       <LinkButton
         className="ease-in-out-fast"
         padding={12}
         opacity={0.6}
+        alignSelf="stretch"
+        width="100%"
         activeStyle={{
           opacity: 1,
           transform: [{ scale: 1.1 }],
@@ -198,6 +213,7 @@ const MenuButton = memo(
     if (!!tooltip) {
       return <Tooltip contents={tooltip}>{linkButtonElement}</Tooltip>
     }
+
     return linkButtonElement
   }
 )
