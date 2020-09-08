@@ -46,13 +46,14 @@ export default function HomePageAbout({
 
           <VStack spacing="xl">
             <Paragraph size="xxxl" fontWeight="300">
-              Craving pho but can't find the good stuff? Vietnamese, Chinese,
-              and Mexican joints often get lost behind poor ratings on ambiance
-              and service.
+              Craving pho but can't find the good stuff? Oftentimes Vietnamese,
+              Chinese, and Mexican spots are lost behind poor ratings on
+              ambiance and service.
             </Paragraph>
 
             <Paragraph size="xxl" fontWeight="300">
-              We realized that when ordering{' '}
+              We wanted to fix that. In doing so, we realized: when you're
+              ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -67,7 +68,7 @@ export default function HomePageAbout({
               >
                 delivery pho
               </LinkButton>{' '}
-              or planning a{' '}
+              vs planning a{' '}
               <LinkButton
                 fontWeight="400"
                 tags={[
@@ -82,44 +83,60 @@ export default function HomePageAbout({
               >
                 date night
               </LinkButton>
-              , you care about completely different things. Yet todays rating
-              systems give you{' '}
-              <Text fontWeight="400">a single star rating</Text>.
+              you simply care about different things - not just "how many stars"
+              a place has. So, dish splits out the factors that matter, as well
+              as ratings down to each dish. This has a nice effect - it means
+              restaurants won't be forced to please everyone at everything, and
+              instead they can focus on doing a few things really well.
             </Paragraph>
 
             <Paragraph size="xl">
-              Dish breaks things down by what matters. First, it collects
-              reviews from all over (like RottenTomatoes, for food), then it
-              parses <TextStrong>what people actually say</TextStrong> about
-              dishes, the vibe, service, and more, to show what makes each place
-              uniquely good. It also{' '}
+              We're building dish as a food search engine that break things down
+              by what matters. We crawl reviews from all over the web (like
+              RottenTomatoes, for food), then parse{' '}
+              <TextStrong>what people actually say</TextStrong> about all sorts
+              of things - dishes, the vibe, service, and more - to build ratings
+              on each factor, showing makes each place uniquely good.
+            </Paragraph>
+
+            <Paragraph size="xl">
+              Dish also{' '}
               <Text borderBottomColor="#eee" borderBottomWidth={2}>
                 searches every delivery service at once
               </Text>
-              , because when ordering delivery you often know exactly what
-              you're craving.
+              , because we found that when ordering delivery, it was especially
+              nice to be able to find a specific dish you're craving without
+              having to flip between many apps.
             </Paragraph>
 
             <Paragraph size="lg">
-              With reddit-style voting and sub-communities, we think we can grow
-              a guide that gets better over time. Dish wants two things for the
-              world:
+              Finally, we are really trying to make a review system and
+              community that is more fun, interactive and organic. We think
+              granular and reddit-style voting is one factor that helps, and
+              another is letting people specialize in certain cuisines and
+              locales. We'd like to build a community that helps power the
+              algorithms that understand which factors matter, and how to
+              describe a given restaurant. We'd love to build:
               <ul>
                 <li>
-                  <TextStrong>A better model for guides 🎙</TextStrong>. One
-                  knows how to allow ongoing organic discussion - and then takes
-                  the sentiment and tips and reduces it into a "current best
-                  of".
+                  <TextStrong>A better model for guides 🎙</TextStrong> - With
+                  natural langauge models, threaded discussions, voting, and
+                  specialization, we want to prove that you "map-reduce" an
+                  active community into a "current best of" guide.
                 </li>
                 <li>
-                  <TextStrong>To let restaurants specialize ✨</TextStrong>.
-                  Instead of having to please everyone to try for 5 stars
-                  overall, be rewarded for doing one or two exceptionally well.
+                  <TextStrong>
+                    A path for restaurants to specialize ✨
+                  </TextStrong>
+                  - Instead of having to please everyone to try for 5 stars
+                  overall, restaurants should be rewarded for doing one or two
+                  things exceptionally well.
                 </li>
               </ul>
-              We think of Dish as a Hitchhiker's Guide to Gastronomy (or, a
-              Pokédex for poke, if you will): a fun, private pocket map of the
-              world that a community can invest in.
+              Our ultimate goal is to build a sort of community-powered
+              Hitchhiker's Guide to Gastronomy (or, a Pokédex for poke): a fun,
+              pocket map of the world that recognizes uniquely good places all
+              over.
             </Paragraph>
 
             <Spacer />
@@ -131,13 +148,13 @@ export default function HomePageAbout({
                 <Text marginHorizontal={10} fontSize={26}>
                   🗺
                 </Text>{' '}
-                Find uniquely good food with ratings down to the dish
+                Find uniquely good restaurants with ratings down to the dish
               </HStack>
               <HStack marginVertical={4} alignItems="center">
                 <Text marginHorizontal={10} fontSize={26}>
                   🚗
                 </Text>{' '}
-                Search across every delivery app at once
+                Search every delivery app at once
               </HStack>
               <HStack marginVertical={4} alignItems="center">
                 <Text marginHorizontal={10} fontSize={26}>

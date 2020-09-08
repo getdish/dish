@@ -94,7 +94,7 @@ const HomeMapPIPContent = graphql(({ isSmall }: { isSmall: boolean }) => {
     if (isSmall && drawerStore.snapIndex === 0) {
       // move drawer down
       return () => {
-        drawerStore.setSnapPoint(1)
+        drawerStore.setSnapPoint(2)
       }
     }
     if (coords[0] && !isEqual(center, om.state.home.currentState.center)) {

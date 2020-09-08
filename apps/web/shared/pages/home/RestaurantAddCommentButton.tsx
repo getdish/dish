@@ -22,12 +22,13 @@ export const RestaurantAddCommentButton = graphql(
     restaurantId?: string
     restaurantSlug?: string
   }) => {
-    const review = useUserReviewCommentQuery(restaurantId)
+    const { review } = useUserReviewCommentQuery(restaurantId)
     return (
       <LinkButton
         {...smallButtonBaseStyle}
         name="restaurantReview"
         params={{ slug: restaurantSlug }}
+        fontWeight="600"
         pressStyle={{
           opacity: 0.6,
         }}

@@ -81,6 +81,7 @@ export function LinkButton<
         fontWeight={fontWeight}
         ellipse={ellipse}
         textAlign={textAlign}
+        // @ts-ignore
         color={color ?? '#222'}
         preventNavigate={preventNavigate}
         {...(isActive && activeTextStyle)}
@@ -92,6 +93,7 @@ export function LinkButton<
           }),
           width: '100%',
           flex: 1,
+          opacity: props.disabled ? 0.5 : 1,
           alignItems,
           justifyContent,
         }}
@@ -123,6 +125,8 @@ export function LinkButton<
         flexDirection={props.flexDirection ?? 'row'}
         flexWrap={props.flexWrap}
         color={color}
+        cursor={props.disabled ? 'default' : 'pointer'}
+        opacity={props.disabled ? 0.5 : 1}
       >
         {getChildren(props, isActive)}
       </Text>
