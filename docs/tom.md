@@ -1,8 +1,11 @@
-- Sentiment threshold / weight based on number of sentiment reviews
-- Sentiment Admin interface
-- Sentiment upgrades
-  - explore pre-existing productionized "aspect based" or just improved sentiment models, especially ones that will give us a "confidence" value as well as the sentiment.
-- GPT-2 Summarization
+- implement v1 point ratings + voting
+- changes to auth:
+  - login with email or username
+  - register with email + username
+- fix top level lense results
+  - "gems" with no other filters is empty for sf
+- fix http://d1sh_hasura_live.com:19006/restaurant/serafina error on gql review when not logged in
+- ... continue on ratings/points/sentiment/data/infra
 
 ## Backend
 
