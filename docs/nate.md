@@ -1,9 +1,31 @@
-biggest impact changes before sending:
+goals for this week, get us to being able to onboard people (not 100% necessary, but in order of importance):
+
+- fix apple login / login/register flows
+- get reviewing fully working with votes/sentiment on tags
+- fix a lot of issues on mobile
+- fix or remove default autocomplete categories
+- test in prod and in various browsers and fix up
+- fix memory issues (see safari warning)
+- performance runthrough on search results
+- user profile page improvement
+  - show comments / votes separately
+  - show users current favorites on the map
+- hover restaurant shows pin on menu
+
+next week:
+
+- show a list of hot & new restaurants on homepage, simple and easy win, with link to breakdown to comment easily...
+- react native app start
+- blog
+- location <=> url
+- revisit ssr
+
+---
+
+big impact changes
 
 - location <=> url
-- Voting, tagging, commenting improvements
-  - threading on comments is the only way you get discussion which leads to clarfiication, which is both what keeps people around and what allows us to get much richer info
-- itself
+- threading on comments is the only way you get discussion which leads to clarfiication, which is both what keeps people around and what allows us to get much richer info
 - make map more alive
   - colors by category (cuisine?)
   - hovering a single restaurant should drop a pin on the map where it is
@@ -14,32 +36,15 @@ biggest impact changes before sending:
   - so do all other pages
   - basically do a sprint on bringing out discussions
     - for EACH SOURCE pick and show 2 positive, 2 middle, 2 negative
-- write review working + sentiment + tag votes there
-- fix upvote/downvote again
-- mini breakdown items links to opening detail, detail opens in new tab
-- add comment working with sentiment
 - some sort of way to see categories of things on the map quickly
   - home page hovering a section could show all the restaurants within that section
     - is there some generic way we can then make this a feature "highlighted group of restaurants for map"?s
-- sometimes going home doesnt zoom out - but not alaways
-- safari feels slow
-- apple login? (expo auth?)
-- A bit of user profile page polish
-  - show favorites on the map!
-- dish rating breakdown
-- React Native app
-- revisit ssr
 - Admin icons multiselect
 - "explore mode" or "auto re-search" basically just have map research as you move
 
 ---
 
-small:
-
-- Fix <Dish /> type remove TopCuisineItem weird type and change to tag, but maybe split into to <DishFromTag />, <DishFromRestaurant /> or similar
-- autocomplete = higher ranking higher
-
-## Open GPT-3
+## GPT-3
 
 - Dish Sentiment + summary for search results
 - Each lense could get a summary too - Vibe / Drinks / Vegetarian
@@ -51,10 +56,8 @@ small:
 
 ## bigger impact changes
 
-- add comment + rate being really slick
 - importing instagram and other feed data to have more aliveness
-- top dishes <=> map pins + easily moving around cities
-  - mapbox...
+- top dishes <=> map pins + easily moving around cities.
   - then easily filter it down to any cuisine (top right input opposite "Uniquely Good")
 
 # Ratings
