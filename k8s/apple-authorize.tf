@@ -56,8 +56,8 @@ resource "kubernetes_service" "apple-authorize" {
     }
     port {
       name = "http"
-      port = 6154
-      target_port = 6154
+      port = 6155
+      target_port = 6155
     }
   }
 }

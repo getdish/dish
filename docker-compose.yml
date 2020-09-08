@@ -38,7 +38,7 @@ services:
       args:
         - BUILDKIT_INLINE_CACHE=1
     ports:
-      - 6154:6154
+      - 6155:6155
   dish-hooks:
     image: docker.k8s.dishapp.com/dish/dish-hooks
     build:
