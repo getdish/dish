@@ -29,13 +29,22 @@ export default memo(function HomePage() {
 
     // init footer button
     sleep(500).then(() => {
-      document.querySelector('#appleid-signin').removeAttribute('id')
       initAppleSigninButton()
-      sleep(200).then(() => {
-        // then remove its id
-        document.querySelector('#appleid-signin').removeAttribute('id')
-      })
     })
+
+    //Listen for authorization success
+    const handleAppleSuccess = (data) => {
+      console.log('got apple res', data)
+    }
+    const handleAppleFailure = (error) => {
+      console.log('got apple err', error)
+    }
+    document.addEventListener('AppleIDSignInOnSuccess', handleAppleSuccess)
+    document.addEventListener('AppleIDSignInOnFailure', handleAppleFailure)
+    return () => {
+      document.removeEventListener('AppleIDSignInOnSuccess', handleAppleSuccess)
+      document.removeEventListener('AppleIDSignInOnFailure', handleAppleFailure)
+    }
   }, [])
 
   return (

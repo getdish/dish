@@ -1,4 +1,4 @@
-import { graphql, query } from '@dish/graph/_'
+import { graphql, query } from '@dish/graph'
 import { HStack, SmallTitle, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Image, ScrollView } from 'react-native'

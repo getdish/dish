@@ -30,6 +30,15 @@ services:
     image: redis
     ports:
       - 6379:6379
+  apple-authorize:
+    image: docker.k8s.dishapp.com/dish/apple-authorize
+    build:
+      context: ./
+      dockerfile: ./services/apple-authorize/Dockerfile
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+    ports:
+      - 6154:6154
   dish-hooks:
     image: docker.k8s.dishapp.com/dish/dish-hooks
     build:
