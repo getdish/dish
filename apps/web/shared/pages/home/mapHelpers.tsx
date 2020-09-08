@@ -1,4 +1,4 @@
-import { LngLat } from '@dish/graph/_'
+import { LngLat } from '@dish/graph'
 
 import { omStatic, useOvermind } from '../../state/om'
 

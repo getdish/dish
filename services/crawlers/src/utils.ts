@@ -5,7 +5,7 @@ import {
   restaurantFindBatch,
   settingGet,
   settingSet,
-} from '@dish/graph/_'
+} from '@dish/graph'
 import axios from 'axios'
 import _ from 'lodash'
 import moment, { Moment } from 'moment'

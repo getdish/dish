@@ -21,6 +21,7 @@ declare -a images=(
   "web"
   "worker"
   "dish-hooks"
+  "apple-authorize"
   "gorse"
   "jwt-server"
   "search"

@@ -57,6 +57,7 @@ buildctl \
 parallel --lb build ::: \
   'services/worker' \
   'services/dish-hooks' \
+  'services/apple-authorize' \
   'services/gorse' \
   'services/search' \
   'services/jwt-server' \
