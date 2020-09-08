@@ -1,6 +1,6 @@
 goals for this week, get us to being able to onboard people (not 100% necessary, but in order of importance):
 
-- fix apple login / login/register flows
+- fix login/register flows
 - get reviewing fully working with votes/sentiment on tags
 - fix a lot of issues on mobile
 - fix or remove default autocomplete categories
