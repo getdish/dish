@@ -90,12 +90,6 @@ const RestaurantHeaderContent = memo(
                 </Text>
                 <Spacer size="sm" />
                 <HStack alignItems="center">
-                  <RestaurantAddress
-                    size="sm"
-                    address={restaurant.address ?? ''}
-                    currentLocationInfo={state?.currentLocationInfo ?? null}
-                  />
-                  <Spacer />
                   <RestaurantAddressLinksRow
                     currentLocationInfo={
                       state?.currentLocationInfo ??
@@ -104,6 +98,12 @@ const RestaurantHeaderContent = memo(
                     showMenu
                     size="lg"
                     restaurantSlug={restaurantSlug}
+                  />
+                  <Spacer />
+                  <RestaurantAddress
+                    size="sm"
+                    address={restaurant.address ?? ''}
+                    currentLocationInfo={state?.currentLocationInfo ?? null}
                   />
                   {afterAddress}
                 </HStack>
@@ -152,6 +152,7 @@ const RestaurantHeaderContent = memo(
               <VStack
                 borderRadius={1000}
                 shadowColor="rgba(0,0,0,0.1)"
+                backgroundColor="#fff"
                 shadowRadius={8}
                 shadowOffset={{ height: 2, width: 0 }}
               >

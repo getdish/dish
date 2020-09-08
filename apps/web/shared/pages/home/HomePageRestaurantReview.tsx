@@ -139,7 +139,7 @@ export const RestaurantReviewComment = memo(
             isMounted = false
           }
         },
-        500,
+        1000,
         [reviewText]
       )
 
@@ -186,22 +186,21 @@ export const RestaurantReviewComment = memo(
             }
           />
 
-          {!isSaved && (
-            <LinkButton
-              {...smallButtonBaseStyle}
-              alignSelf="flex-end"
-              marginTop={-33}
-              marginBottom={15}
-              onPress={() => {
-                upsertReview({
-                  text: reviewText,
-                })
-                setIsSaved(true)
-              }}
-            >
-              Save
-            </LinkButton>
-          )}
+          <LinkButton
+            {...smallButtonBaseStyle}
+            disabled={isSaved}
+            alignSelf="flex-end"
+            marginTop={-33}
+            marginBottom={15}
+            onPress={() => {
+              upsertReview({
+                text: reviewText,
+              })
+              setIsSaved(true)
+            }}
+          >
+            Save
+          </LinkButton>
 
           <SmallTitle divider="center">Votes</SmallTitle>
           <Spacer />
@@ -215,7 +214,9 @@ export const RestaurantReviewComment = memo(
               spacing
             >
               <SmallTitle divider="off">Lenses</SmallTitle>
-              <RestaurantLenseVote restaurantId={restaurantId} />
+              <Suspense fallback={null}>
+                <RestaurantLenseVote restaurantId={restaurantId} />
+              </Suspense>
             </VStack>
 
             <VStack

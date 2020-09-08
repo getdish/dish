@@ -78,10 +78,13 @@ export const RestaurantDetailRow = memo(
 
       if (size !== 'sm') {
         rows.push({
-          title: 'Delivers',
+          title: 'Order Delivery',
           // @ts-ignore
           content: (
-            <RestaurantDeliveryButtons restaurantSlug={restaurantSlug} />
+            <RestaurantDeliveryButtons
+              showLabels
+              restaurantSlug={restaurantSlug}
+            />
           ),
           color: 'gray',
         })
@@ -131,6 +134,7 @@ export const RestaurantDetailRow = memo(
                     textAlign={centered ? 'center' : 'left'}
                     color={sizeSm ? row.color ?? '' : 'inherit'}
                     margin="auto"
+                    paddingHorizontal={4} // prevents cutoff of image
                   >
                     {row.content !== '' ? row.content : sizeSm ? '' : '~'}
                   </Text>

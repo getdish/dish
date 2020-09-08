@@ -123,7 +123,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       </HomeScrollViewHorizontal>
 
       {store.showComments && (
-        <VStack marginTop={-15}>
+        <VStack>
           <RestaurantRatingBreakdown closable {...props} />
         </VStack>
       )}
@@ -385,14 +385,9 @@ const RestaurantListItemContent = memo(
             paddingBottom={10}
             marginBottom={-10}
           >
-            <VStack flex={1} paddingLeft={isSmall ? 10 : 0}>
+            <VStack width="100%" paddingLeft={isSmall ? 10 : 0}>
               <Text fontSize={16} lineHeight={24}>
-                <VStack
-                  marginTop={4}
-                  marginBottom={12}
-                  maxWidth="100%"
-                  flex={1}
-                >
+                <VStack marginTop={4} maxWidth="100%" flex={1}>
                   <Text opacity={0} lineHeight={0}>
                     wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
                   </Text>
@@ -408,7 +403,7 @@ const RestaurantListItemContent = memo(
               </Text>
             </VStack>
 
-            <VStack minHeight={20} />
+            <Spacer size="lg" />
 
             {/* BOTTOM ROW */}
 

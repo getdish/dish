@@ -30,27 +30,27 @@ export const tagLenses: Tag[] = [
     rgb: pctTo255([0.2, 0.6, 0.2]),
     type: 'lense',
   },
-  {
-    id: '1',
-    name: 'Service',
-    icon: '💁‍♂️',
-    rgb: pctTo255([0.3, 0.4, 0.3]),
-    type: 'lense',
-  },
-  {
-    id: '2',
-    name: 'Speed',
-    icon: '🏃‍♀️',
-    rgb: pctTo255([0.3, 0.4, 0.3]),
-    type: 'lense',
-  },
-  {
-    id: '3',
-    name: 'Authenticity',
-    icon: '🦙',
-    rgb: pctTo255([0.3, 0.4, 0.3]),
-    type: 'lense',
-  },
+  // {
+  //   id: '1',
+  //   name: 'Service',
+  //   icon: '💁‍♂️',
+  //   rgb: pctTo255([0.3, 0.4, 0.3]),
+  //   type: 'lense',
+  // },
+  // {
+  //   id: '2',
+  //   name: 'Speed',
+  //   icon: '🏃‍♀️',
+  //   rgb: pctTo255([0.3, 0.4, 0.3]),
+  //   type: 'lense',
+  // },
+  // {
+  //   id: '3',
+  //   name: 'Authentic',
+  //   icon: '🦙',
+  //   rgb: pctTo255([0.3, 0.4, 0.3]),
+  //   type: 'lense',
+  // },
 ]
 
 function pctTo255(x: number[]) {

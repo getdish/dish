@@ -97,8 +97,8 @@ export const RestaurantRatingBreakdown = memo(
             paddingHorizontal={10}
             spacing={10}
           >
-            <SmallTitle divider="off">Reviews</SmallTitle>
-            <HStack alignItems="stretch">
+            <SmallTitle divider="off">Representative Reviews</SmallTitle>
+            <HStack marginVertical={8} alignItems="stretch">
               <Suspense fallback={null}>
                 <RestaurantAddCommentButton
                   flex={1}

@@ -618,7 +618,7 @@ const pushHomeState: AsyncAction<
     searchQuery,
     ...nextState,
     type,
-    id: nextState.id ?? item.id ?? uid(),
+    id: nextState?.id ?? item.id ?? uid(),
   } as HomeStateItem
 
   async function runFetchData() {

@@ -383,3 +383,8 @@ input:-webkit-autofill:active  {
     display: none;
   }
 }
+
+
+.preserve-whitespace {
+  white-space: pre-wrap;
+}

@@ -66,7 +66,8 @@ const RestaurantDeliveryButton = ({
       }}
     >
       <HStack
-        padding={2}
+        padding={4}
+        paddingHorizontal={6}
         borderRadius={100}
         hoverStyle={{
           backgroundColor: bgLight,
