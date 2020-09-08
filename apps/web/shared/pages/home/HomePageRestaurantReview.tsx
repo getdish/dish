@@ -24,6 +24,7 @@ import { CommentBubble } from './CommentBubble'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
 import { RestaurantReview } from './RestaurantReview'
 import { StackViewCloseButton } from './StackViewCloseButton'
+import { TagSmallButton } from './TagSmallButton'
 import { useRestaurantQuery } from './useRestaurantQuery'
 import { useUserReviewCommentQuery } from './useUserReview'
 
@@ -226,28 +227,40 @@ export const RestaurantReviewComment = memo(
               borderWidth={1}
               borderColor="#eee"
               borderRadius={10}
-              padding={15}
+              paddingTop={15}
               flex={1}
               spacing
             >
               <SmallTitle divider="off">Dishes</SmallTitle>
-              {dishTags.map((tag) => {
-                return (
-                  <SmallButton key={tag.name}>
-                    <Image
-                      style={{
-                        width: 22,
-                        height: 22,
-                        borderRadius: 100,
-                        marginVertical: -6,
-                      }}
-                      source={{ uri: tag.image }}
-                    />
-                    <Spacer size="sm" />
-                    {tag.name}
-                  </SmallButton>
-                )
-              })}
+              <ScrollView style={{ width: '100%' }}>
+                <HStack
+                  flexWrap="wrap"
+                  alignItems="center"
+                  justifyContent="center"
+                  maxHeight={220}
+                  padding={15}
+                >
+                  {dishTags.map((tag) => {
+                    return (
+                      <TagSmallButton
+                        tag={tag as any}
+                        restaurantId={restaurantId}
+                        key={tag.name}
+                        image={
+                          <Image
+                            style={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: 100,
+                            }}
+                            source={{ uri: tag.image }}
+                          />
+                        }
+                      />
+                    )
+                  })}
+                </HStack>
+              </ScrollView>
             </VStack>
           </HStack>
 
