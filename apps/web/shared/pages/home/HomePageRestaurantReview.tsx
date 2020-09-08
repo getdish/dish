@@ -19,6 +19,7 @@ import { useOvermind } from '../../state/om'
 import { tagLenses } from '../../state/tagLenses'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
+import { flatButtonStyle } from './baseButtonStyle'
 import { CommentBubble } from './CommentBubble'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
 import { RestaurantReview } from './RestaurantReview'
@@ -157,7 +158,6 @@ export const RestaurantReviewComment = memo(
       return (
         <VStack>
           <CommentBubble
-            backgroundColor={bgLight}
             name={user.username ?? ''}
             after={
               <TextInput
@@ -176,22 +176,25 @@ export const RestaurantReviewComment = memo(
                 multiline
                 placeholder="Write a comment. You can just leave a tip or a whole review, up to you."
                 style={{
+                  borderWidth: 1,
+                  borderColor: '#ddd',
+                  borderRadius: 10,
                   minHeight: height,
                   lineHeight: 22,
                   fontSize: 16,
                   width: '100%',
-                  padding: 10,
+                  padding: 15,
                 }}
               />
             }
           />
 
           <LinkButton
-            {...smallButtonBaseStyle}
+            {...flatButtonStyle}
             disabled={isSaved}
-            alignSelf="flex-end"
-            marginTop={-33}
-            marginBottom={15}
+            alignSelf="center"
+            fontWeight="700"
+            marginVertical={10}
             onPress={() => {
               upsertReview({
                 text: reviewText,

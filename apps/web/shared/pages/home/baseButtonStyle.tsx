@@ -1,6 +1,6 @@
 import { StackProps } from '@dish/ui'
 
-import { bgLightHover } from '../../colors'
+import { bgLight, bgLightHover } from '../../colors'
 
 export const baseButtonStyle: StackProps = {
   // @ts-ignore
@@ -13,7 +13,7 @@ export const baseButtonStyle: StackProps = {
 
 export const flatButtonStyle: StackProps = {
   ...baseButtonStyle,
-  // backgroundColor: bgLight,
+  backgroundColor: bgLight,
   hoverStyle: {
     backgroundColor: bgLightHover,
   },

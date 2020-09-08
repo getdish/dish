@@ -1,15 +1,8 @@
-import { User as UserModel } from '@dish/graph'
-import {
-  Circle,
-  HStack,
-  StackProps,
-  Text,
-  VStack,
-  useScrollPosition,
-} from '@dish/ui'
+import { Circle, HStack, StackProps, Text, VStack } from '@dish/ui'
 import React, { useState } from 'react'
 import { User } from 'react-feather'
 
+import { bgLight } from '../../colors'
 import { Link } from '../../views/ui/Link'
 
 export const CommentBubble = ({
@@ -40,7 +33,15 @@ export const CommentBubble = ({
       {...rest}
     >
       {!!name && (
-        <HStack alignItems="center" spacing={6} flexWrap="nowrap">
+        <HStack
+          backgroundColor={bgLight}
+          borderRadius={100}
+          paddingHorizontal={8}
+          paddingVertical={6}
+          alignItems="center"
+          spacing={6}
+          flexWrap="nowrap"
+        >
           <Circle size={18} marginBottom={-2}>
             <User color="#999" size={12} />
           </Circle>

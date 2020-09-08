@@ -85,7 +85,7 @@ const VoteButton = ({
   color,
   Icon,
   ...props
-}: StackProps & { voted?: boolean; Icon: any; color?: string }) => {
+}: StackProps & { voted?: boolean; Icon: any; color?: string | null }) => {
   const isSmall = useMediaQueryIsSmall()
   const scale = isSmall ? 1.1 : 1
   const [hovered, setHovered] = useState(false)

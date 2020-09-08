@@ -1,6 +1,10 @@
 import { Tag } from '@dish/graph'
 
-export const tagLenses: Tag[] = [
+export type FullTag = Required<
+  Pick<Tag, 'name' | 'id' | 'icon' | 'type' | 'rgb'>
+>
+
+export const tagLenses: FullTag[] = [
   {
     id: 'da0e0c85-86b5-4b9e-b372-97e133eccb43',
     name: 'Gems',

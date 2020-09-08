@@ -6,20 +6,20 @@ import { ChevronDown, ChevronUp } from 'react-feather'
 import { FavoriteButtonProps } from './FavoriteButton'
 import { useUserUpvoteDownvoteQuery } from './useUserReview'
 
-export const DishVoteButton = graphql(
+export const TagVoteButton = graphql(
   ({
     size,
     restaurantId,
-    dishTagId,
+    tagId,
   }: {
     size?: FavoriteButtonProps['size']
     restaurantId: string
-    dishTagId: string
+    tagId: string
   }) => {
     const [vote, setVote] = useUserUpvoteDownvoteQuery(restaurantId, {
-      [dishTagId]: true,
+      [tagId]: true,
     })
-    // console.log('vote', vote, dishTagId)
+    // console.log('vote', vote, tagId)
     const borderRadius = 5
     return (
       <VStack
