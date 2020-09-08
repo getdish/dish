@@ -46,14 +46,14 @@ export default function HomePageAbout({
 
           <VStack spacing="xl">
             <Paragraph size="xxxl" fontWeight="300">
-              Craving pho but can't find the good stuff? Oftentimes Vietnamese,
-              Chinese, and Mexican spots are lost behind poor ratings on
-              ambiance and service.
+              Craving pho? It sucks that amazing Vietnamese, Chinese, and
+              Mexican spots with amazing food often get lost behind poor
+              ratings. Lets stop smashing food, ambiance and service into one
+              star rating.
             </Paragraph>
 
             <Paragraph size="xxl" fontWeight="300">
-              We wanted to fix that. In doing so, we realized: when you're
-              ordering{' '}
+              When you're ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -82,45 +82,50 @@ export default function HomePageAbout({
                 }}
               >
                 date night
-              </LinkButton>
-              you simply care about different things - not just "how many stars"
-              a place has. So, dish splits out the factors that matter, as well
-              as ratings down to each dish. This has a nice effect - it means
-              restaurants won't be forced to please everyone at everything, and
-              instead they can focus on doing a few things really well.
+              </LinkButton>{' '}
+              you care about different things, so Dish splits out ratings into
+              every factor that matters - importantly, we go down to the dish.
+              So you can find the best pho joint in town.
             </Paragraph>
 
             <Paragraph size="xl">
-              We're building dish as a food search engine that break things down
-              by what matters. We crawl reviews from all over the web (like
-              RottenTomatoes, for food), then parse{' '}
-              <TextStrong>what people actually say</TextStrong> about all sorts
-              of things - dishes, the vibe, service, and more - to build ratings
-              on each factor, showing makes each place uniquely good.
+              We hope it changes the world of eating out and in by letting
+              restaurants specialize. Instead of pleasing everyone they can
+              focus on doing one or two things really well. Let hole in the wall
+              gems thrive!
             </Paragraph>
 
             <Paragraph size="xl">
-              Dish also{' '}
+              To figure out accurate ratings we crawl every top critic source
+              (think RottenTomatoes, for food) and then look at{' '}
+              <TextStrong>
+                what people actually say about all the factors that matter
+              </TextStrong>{' '}
+              - from the vibe, service, or individual dishes, to whether they
+              have a good drinks, are vegetarian friendly, and more. Then, we
+              build a map of food uniquely good to each area. Find uniquely good
+              places, and exactly what you crave ✨.
+            </Paragraph>
+
+            <Paragraph size="xl">
+              Dish{' '}
               <Text borderBottomColor="#eee" borderBottomWidth={2}>
-                searches every delivery service at once
+                searches across every delivery service
               </Text>
-              , because we found that when ordering delivery, it was especially
-              nice to be able to find a specific dish you're craving without
+              . It's nice to be able to find a dish you're craving without
               having to flip between many apps.
             </Paragraph>
 
             <Paragraph size="lg">
-              Finally, we are really trying to make a review system and
-              community that is more fun, interactive and organic. We think
-              granular and reddit-style voting is one factor that helps, and
-              another is letting people specialize in certain cuisines and
-              locales. We'd like to build a community that helps power the
-              algorithms that understand which factors matter, and how to
-              describe a given restaurant. We'd love to build:
+              Finally, we're building a curation community that is more fun,
+              because you can debate the stats that matter and explore a map of
+              gems more intuitively. We think reddit-style voting and
+              specialization in cuisines and locales is key. Our goals are to
+              build:
               <ul>
                 <li>
                   <TextStrong>A better model for guides 🎙</TextStrong> - With
-                  natural langauge models, threaded discussions, voting, and
+                  natural langauge analysis, threaded discussions, voting, and
                   specialization, we want to prove that you "map-reduce" an
                   active community into a "current best of" guide.
                 </li>
@@ -133,10 +138,10 @@ export default function HomePageAbout({
                   things exceptionally well.
                 </li>
               </ul>
-              Our ultimate goal is to build a sort of community-powered
-              Hitchhiker's Guide to Gastronomy (or, a Pokédex for poke): a fun,
-              pocket map of the world that recognizes uniquely good places all
-              over.
+              The ultimate goal is to create a community-powered "Hitchhiker's
+              Guide to Gastronomy" (or, a Pokédex for poke): a fun, pocket map
+              of the world that you can curate, that really shows you uniquely
+              good stuff.
             </Paragraph>
 
             <Spacer />

@@ -1,8 +1,29 @@
-import { HStack } from '@dish/ui'
+import { HStack, StackProps } from '@dish/ui'
 import { default as React } from 'react'
-import { TextInput, TextInputProps } from 'react-native'
+import { StyleSheet, TextInput, TextInputProps } from 'react-native'
 
-export const Input = (props: TextInputProps) => {
+export const Input = (
+  props: TextInputProps & {
+    name?: string
+  }
+) => {
+  return (
+    <InteractiveContainer>
+      <TextInput {...props} style={[sheet.inputStyle, props.style]} />
+    </InteractiveContainer>
+  )
+}
+
+const sheet = StyleSheet.create({
+  inputStyle: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    fontSize: 16,
+    color: 'rgb(100, 100, 100)',
+  },
+})
+
+export const InteractiveContainer = (props: StackProps) => {
   return (
     <HStack
       borderRadius={10}
@@ -12,14 +33,7 @@ export const Input = (props: TextInputProps) => {
         borderColor: 'rgba(150,150,150,0.5)',
       }}
       overflow="hidden"
-    >
-      <TextInput
-        {...props}
-        style={[
-          { paddingHorizontal: 14, paddingVertical: 10, fontSize: 16 },
-          props.style,
-        ]}
-      />
-    </HStack>
+      {...props}
+    />
   )
 }

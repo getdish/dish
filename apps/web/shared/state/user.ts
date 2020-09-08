@@ -29,12 +29,12 @@ const formatErrors = (torm_errors: any) => {
 }
 
 const register: AsyncAction<
-  { username: string; password: string },
+  { username: string; email: string; password: string },
   boolean
-> = async (om, { username, password }) => {
+> = async (om, { username, email, password }) => {
   let result = false
   om.state.user.loading = true
-  const [status, data] = await Auth.register(username, password)
+  const [status, data] = await Auth.register(username, email, password)
   switch (status) {
     case 201:
       om.state.user.messages = ['Registered. You can now login.']
@@ -63,12 +63,12 @@ const checkForExistingLogin: Action = (om) => {
   }
 }
 
-const login: AsyncAction<{ username: string; password: string }> = async (
-  om,
-  { username, password }
-) => {
+const login: AsyncAction<{
+  usernameOrEmail: string
+  password: string
+}> = async (om, { usernameOrEmail, password }) => {
   om.state.user.loading = true
-  const [status, data] = await Auth.login(username, password)
+  const [status, data] = await Auth.login(usernameOrEmail, password)
   if (status >= 400) {
     om.state.user.isLoggedIn = false
     if (status == 400 || status == 401) {
@@ -104,18 +104,10 @@ const ensureLoggedIn: Action<void, boolean> = (om) => {
   return false
 }
 
-const vote: Action<Partial<Review>> = (om, { restaurant, ...val }) => {
-  console.warn('should vote with gqless', mutation)
-  // const review = new Review()
-  // review.restaurant_id = restaurant.id
-  // Object.assign(review, val)
-}
-
 export const actions = {
   register,
   login,
   logout,
   checkForExistingLogin,
   ensureLoggedIn,
-  vote,
 }

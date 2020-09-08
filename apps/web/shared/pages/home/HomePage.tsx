@@ -1,6 +1,7 @@
+import { sleep } from '@dish/async'
 import { AbsoluteVStack } from '@dish/ui'
 import loadable from '@loadable/component'
-import React, { Suspense, memo } from 'react'
+import React, { Suspense, memo, useEffect } from 'react'
 
 import { isSSR } from '../../constants'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
@@ -12,12 +13,31 @@ import { HomeMapControlsUnderlay } from './HomeMapControlsUnderlay'
 import { HomePagePane } from './HomePagePane'
 import { HomeSearchBarFloating } from './HomeSearchBar'
 import { HomeStackView } from './HomeStackView'
+import { initAppleSigninButton } from './initAppleSigninButton'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export const homePageBorderRadius = 12
 
 export default memo(function HomePage() {
   const isSmall = useMediaQueryIsSmall()
+
+  useEffect(() => {
+    // workaround apple id requirement to init 3 buttons
+
+    // init popover button
+    initAppleSigninButton()
+
+    // init footer button
+    sleep(500).then(() => {
+      document.querySelector('#appleid-signin').removeAttribute('id')
+      initAppleSigninButton()
+      sleep(200).then(() => {
+        // then remove its id
+        document.querySelector('#appleid-signin').removeAttribute('id')
+      })
+    })
+  }, [])
+
   return (
     <AbsoluteVStack
       fullscreen

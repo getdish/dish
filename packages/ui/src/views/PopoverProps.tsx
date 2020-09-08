@@ -31,4 +31,5 @@ export type PopoverProps = {
   overlayPointerEvents?: boolean
   onChangeOpen?: (next: boolean) => any
   style?: React.HTMLAttributes<HTMLDivElement>['style']
+  mountImmediately?: boolean
 }

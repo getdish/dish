@@ -14,21 +14,18 @@ import { PopoverProps } from './PopoverProps'
 import { popoverCloseCbs } from './PopoverShared'
 
 export default function PopoverMain(props: PopoverProps) {
-  // const { id } = useContext(PopoverContext)
-  // const { show } = useStore(PopoverStore, { id })
-  // console.log('PopoverMain', { id, show })
-  const isOpen = /* show == false ? false :  */ props.isOpen
+  const isOpen = props.isOpen
   const onChangeOpenCb = useCallback(props.onChangeOpen as any, [
     props.onChangeOpen,
   ])
   const closeCb = useRef<Function | null>(null)
   const isControlled = typeof isOpen !== 'undefined'
-  const [isMounted, setIsMounted] = useState(false)
+  const [isMounted, setIsMounted] = useState(props.mountImmediately ?? false)
 
   // THIS CALLS TO getClientBoundingRect ruining mount performance
   useEffect(() => {
     return series([fullyIdle, () => setIsMounted(true)])
-  })
+  }, [])
 
   useLayoutEffect(() => {
     if (onChangeOpenCb) {

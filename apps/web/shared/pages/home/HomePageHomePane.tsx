@@ -21,7 +21,7 @@ import { omStatic, useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { DishView } from './DishView'
-import { HomeIntroLetterContent } from './HomeIntroLetter'
+import { HomeFooter } from './HomeFooter'
 import { HomePagePaneProps } from './HomePagePaneProps'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { HomeTopSearches } from './HomeTopSearches'
@@ -64,17 +64,6 @@ export default memo(function HomePageHomePane(props: Props) {
   const state = props.item
   const { center, span } = state
   const isSmall = useMediaQueryIsSmall()
-
-  useEffect(() => {
-    // @ts-ignore
-    AppleID.auth.init({
-      clientId: 'com.dishapp',
-      scope: 'name,email',
-      redirectURI: 'https://dishapp.com',
-      state: 'asdh8912hehaudh98qhuiasgd192h9usadas',
-      usePopup: true,
-    })
-  }, [])
 
   useEffect(() => {
     if (!isLoaded || !props.isActive) return
@@ -256,23 +245,7 @@ const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
       {/* pad bottom */}
       <VStack height={100} />
 
-      <VStack position="relative">
-        <AbsoluteVStack
-          zIndex={-1}
-          top={-15}
-          left={-100}
-          right={-100}
-          bottom={-55}
-          backgroundColor="#000"
-          transform={[{ rotate: '-4deg' }]}
-        />
-        <VStack paddingVertical={20} alignItems="center" paddingHorizontal="5%">
-          <VStack maxWidth={450}>
-            <HomeIntroLetterContent />
-            <Spacer size="xxl" />
-          </VStack>
-        </VStack>
-      </VStack>
+      <HomeFooter />
     </>
   )
 })
@@ -333,7 +306,7 @@ const TopDishesCuisineItem = memo(
           {/* <Divider flex /> */}
         </HStack>
         <VStack
-          marginTop={-25}
+          marginTop={-20}
           pointerEvents="none"
           flex={1}
           overflow="hidden"

@@ -107,10 +107,11 @@ class AuthModel {
     return response
   }
 
-  async register(username: string, password: string) {
+  async register(username: string, email: string, password: string) {
     const response = await this.api('post', '/user', {
-      username: username,
-      password: password,
+      username,
+      password,
+      email,
     })
     if (response.status !== 201) {
       console.error(
@@ -122,8 +123,8 @@ class AuthModel {
 
   async login(username: string, password: string) {
     const response = await this.api('post', '/auth/login', {
-      username: username,
-      password: password,
+      username,
+      password,
     })
 
     if (response.status != 201 && response.status != 200) {

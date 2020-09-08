@@ -33,8 +33,8 @@ export const Divider = memo(
           style={{
             [vertical ? 'width' : 'height']: 1,
             flex: flexLine,
-            backgroundColor: backgroundColor ?? '#000',
-            opacity: opacity ?? 0.055,
+            backgroundColor: backgroundColor ?? 'rgba(150,150,150,0.1)',
+            opacity: opacity ?? 1,
           }}
         />
         {!noGap && <VStack flex={1} />}
