@@ -1,5 +1,6 @@
 - implement v1 point ratings + voting
 - changes to auth:
+  - get apple-authorize app running / do basic integration with frontend, see if you can get flow working
   - login with email or username
   - register with email + username
 - fix top level lense results

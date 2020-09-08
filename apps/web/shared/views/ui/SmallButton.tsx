@@ -23,7 +23,6 @@ export const SmallButton = ({
       className={rest.className}
       minHeight={33}
       {...smallButtonBaseStyle}
-      {...rest}
       {...(isActive && {
         backgroundColor: 'transparent',
         borderColor: `#999`,
@@ -31,6 +30,7 @@ export const SmallButton = ({
           backgroundColor: 'transparent',
         },
       })}
+      {...rest}
       minWidth={43}
     >
       <Text
@@ -50,7 +50,7 @@ export const smallButtonBaseStyle: StackProps = {
   justifyContent: 'center',
   ...baseButtonStyle,
   paddingHorizontal: 11,
-  paddingVertical: '0.45rem',
+  paddingVertical: 8,
   borderRadius: 20,
   borderWidth: 1,
   backgroundColor: '#fff',

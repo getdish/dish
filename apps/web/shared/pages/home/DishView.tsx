@@ -15,8 +15,8 @@ import { IMAGE_PROXY_DOMAIN } from '../../constants'
 import { NavigableTag } from '../../state/NavigableTag'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { DishRatingView } from './DishRatingView'
-import { DishVoteButton } from './DishVoteButton'
 import { Squircle } from './Squircle'
+import { TagVoteButton } from './TagVoteButton'
 
 // {isHovered && dish.reviews && (
 //   <AbsoluteVStack
@@ -117,7 +117,9 @@ export const DishView = memo(
             />
           )}
         </AbsoluteVStack>
-        {restaurantId && (
+
+        {/* TODO, voting */}
+        {/* {restaurantId && (
           <AbsoluteVStack
             fullscreen
             alignItems="flex-end"
@@ -130,14 +132,15 @@ export const DishView = memo(
             zIndex={1000}
           >
             <Suspense fallback={null}>
-              <DishVoteButton
+              <TagVoteButton
                 size={size > 130 ? 'md' : 'sm'}
-                dishTagId={dish.name ?? ''}
+                tagId={dish.name ?? ''}
                 restaurantId={restaurantId}
               />
             </Suspense>
           </AbsoluteVStack>
-        )}
+        )} */}
+
         <Squircle
           width={width}
           height={height}
@@ -158,8 +161,6 @@ export const DishView = memo(
               borderRadius={borderRadius - 1}
               alignItems="center"
               justifyContent="center"
-              // backgroundColor="rgba(0,0,0,0.08)"
-              // backgroundColor="rgba(255,255,255,0.25)"
               {...(isHovered && {
                 borderTopColor: 'transparent',
                 backgroundColor: 'transparent',

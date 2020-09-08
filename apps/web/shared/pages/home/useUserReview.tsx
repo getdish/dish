@@ -31,7 +31,7 @@ type ReviewWithTag = Pick<
   user?: {
     username: string
   }
-  tag?: {
+  tag: {
     name: string
     type: string
   }
@@ -57,14 +57,17 @@ export const useUserReviewsQuery = (restaurantId: string) => {
     : null
   const reviews = reviewsQuery
     ? reviewsQuery.map<ReviewWithTag>((review) => {
-        let tag = null
+        let tag = {
+          name: '',
+          type: '',
+        }
         if (review.tag_id) {
           const tagQuery = query.tag({
             where: { id: { _eq: review.tag_id } },
           })[0]
           tag = {
-            name: tagQuery?.name,
-            type: tagQuery?.type,
+            name: tagQuery?.name ?? '',
+            type: tagQuery?.type ?? '',
           }
         }
         return {
@@ -101,6 +104,7 @@ export const useUserReviewsQuery = (restaurantId: string) => {
   return {
     userId,
     reviews,
+    reviewsQuery,
     om,
     refetch: doRefetch,
     async upsert(review: Partial<Review>) {
@@ -109,6 +113,14 @@ export const useUserReviewsQuery = (restaurantId: string) => {
       }
       Toast.show('Saving...')
       try {
+        // optimistic update
+        if (review.id) {
+          const cur = reviewsQuery.find((x) => x.id === review.id)
+          for (const key in review) {
+            cur[key] = review[key]
+          }
+        }
+
         const response = await reviewUpsert([
           {
             // defaults
@@ -118,22 +130,23 @@ export const useUserReviewsQuery = (restaurantId: string) => {
             user_id: omStatic.state.user.user!.id,
           },
         ])
+
         if (!response.length) {
           console.error('response', response)
           Toast.show('Error saving')
           return false
         }
+
         const result = response[0]
-        // optimistic update
+
+        // post-optimistic update
         if (result.id) {
-          for (const cur of reviews) {
-            if (cur.id === result.id) {
-              for (const key in review) {
-                cur[key] = review[key]
-              }
-            }
+          const cur = reviewsQuery.find((x) => x.id === result.id)
+          for (const key in result) {
+            cur[key] = result[key]
           }
         }
+
         Toast.show(`Saved!`)
         doRefetch()
         return response
@@ -214,7 +227,7 @@ export const useUserUpvoteDownvoteQuery = (
           .filter((x) => activeTags[x])
           .map((id) => om.state.home.allTags[id])
         const saved = await voteForTags(restaurantId, userId, tagsList, rating)
-        if (saved.length) {
+        if (saved?.length) {
           Toast.show(`Saved`)
         }
       }
@@ -226,7 +239,9 @@ const getTagUpvoteDownvote = (
   votes: ReviewWithTag[],
   activeTags: HomeActiveTagsRecord
 ): number => {
-  const tagIdVotes = votes.filter((x) => activeTags[getTagId(x.tag)])
+  const tagIdVotes = votes
+    .filter((x) => (x.tag ? activeTags[getTagId(x.tag)] : null))
+    .filter(Boolean)
   if (tagIdVotes.length === 0) {
     return 0
   }
@@ -251,7 +266,7 @@ const voteForTags = async (
   const fullTags = await getFullTags(partialTags)
   const insertTags = tags.map<Review>((tag) => {
     const tagId = fullTags.find(
-      (x) => x.name.toLowerCase() === tag.name.toLowerCase()
+      (x) => x.name?.toLowerCase() === tag.name?.toLowerCase()
     )?.id
     if (!tagId) {
       console.warn({ name, tags, partialTags, fullTags })
@@ -265,47 +280,54 @@ const voteForTags = async (
     }
   })
   if (insertTags.length) {
+    console.log('upsert', insertTags)
     return await reviewUpsert(insertTags)
+  } else {
+    console.warn('no tags?')
   }
 }
 
-export const useUserTagVotes = (restaurantId: string) => {
+const toggleRating = (r: number) => (r == 1 ? -1 : 1)
+
+export const useUserTagVotes = (restaurantId: string, tagId?: string) => {
   const isMounted = useIsMountedRef()
-  const { userId, reviews, om, refetch } = useUserReviewsQuery(restaurantId)
-  const votes = reviews.filter(isTagReview)
-  const upVotes = votes.filter((x) => x.rating)
+  const { userId, reviews, reviewsQuery, om, refetch } = useUserReviewsQuery(
+    restaurantId
+  )
+  const votes = reviews.filter((review) => {
+    if (!isTagReview(review)) return false
+    if (review.rating === 0) return false
+    if (tagId && review.tag_id !== tagId) return false
+    return true
+  })
   return [
-    upVotes,
+    votes,
     async (tag: NavigableTag, userRating: number | 'toggle') => {
       if (omStatic.actions.home.promptLogin()) {
         return
       }
-      const tagId = getTagId(tag)
-      const id = om.state.home.allTags[tagId]?.id
-      const existing = votes.find((x) => x.tag_id === id)
-      let didSave = !!existing
+      const id = tagId ?? om.state.home.allTags[getTagId(tag)]?.id
+      const existing = reviewsQuery.find((x) => x.tag_id === id)
       if (existing) {
         // optimistic
-        existing.rating = userRating == 'toggle' ? !existing.rating : userRating
-      } else {
-        // delayed
-        const saved = await voteForTags(
-          restaurantId,
-          userId,
-          [tag],
-          userRating === 'toggle' ? 1 : userRating
-        )
-        didSave = !!saved.length
-        if (didSave) {
-          sleep(300).then(() => {
-            if (isMounted.current) {
-              refetch()
-            }
-          })
-        }
+        existing.rating =
+          userRating == 'toggle' ? toggleRating(existing.rating) : userRating
       }
+      // delayed
+      const saved = await voteForTags(
+        restaurantId,
+        userId,
+        [tag],
+        userRating === 'toggle' ? 1 : userRating
+      )
+      const didSave = !!saved?.length
       if (didSave) {
         Toast.show(`Saved`)
+        sleep(350).then(() => {
+          if (isMounted.current) {
+            refetch()
+          }
+        })
       }
     },
   ] as const
