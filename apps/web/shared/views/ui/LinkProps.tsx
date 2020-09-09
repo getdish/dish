@@ -38,8 +38,10 @@ export type LinkSharedProps = {
 export type LinkButtonNamedProps<A = any, B = any> = {
   name: A
   params?: B
+  tags?: NavigableTag[]
+  tag?: NavigableTag | null
   replace?: boolean
-  onPress?: any
+  onPress?: Function
 }
 
 export type LinkButtonProps<
@@ -49,17 +51,4 @@ export type LinkButtonProps<
   LinkSharedProps & {
     activeStyle?: ViewStyle
     activeTextStyle?: TextStyle
-  } & (
-    | LinkButtonNamedProps<Name, Params>
-    | {
-        onPress?: any
-      }
-    | {
-        tag: NavigableTag | null
-        onPress?: Function
-      }
-    | {
-        tags: NavigableTag[]
-        onPress?: Function
-      }
-  )
+  } & LinkButtonNamedProps<Name, Params>

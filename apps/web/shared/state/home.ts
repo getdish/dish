@@ -286,8 +286,8 @@ const runSearch: AsyncAction<{
   if (shouldCancel()) return
 
   // overmind seems unhappy to just let us mutate
-  const center = state.mapAt?.center ?? state.center
-  const span = state.mapAt?.span ?? state.span
+  const center = state?.mapAt?.center ?? state!.center
+  const span = state?.mapAt?.span ?? state!.span
 
   om.actions.home.updateHomeState({
     ...state,
@@ -299,7 +299,7 @@ const runSearch: AsyncAction<{
   const searchArgs: RestaurantSearchArgs = {
     center: roundLngLat(center),
     span: roundLngLat(padSpan(span)),
-    query: state.searchQuery,
+    query: state!.searchQuery,
     tags: [...tags.map((tag) => getTagId(tag).replace(/[a-z]+_/g, ''))],
   }
 
@@ -456,6 +456,7 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
       case 'user':
       case 'gallery':
       case 'restaurantReview':
+      case 'restaurantHours':
       case 'userSearch':
       case 'restaurant': {
         if (item.type === 'push') {
@@ -605,6 +606,13 @@ const pushHomeState: AsyncAction<
     }
 
     case 'restaurantReview': {
+      nextState = {
+        restaurantSlug: item.params.slug,
+      }
+      break
+    }
+
+    case 'restaurantHours': {
       nextState = {
         restaurantSlug: item.params.slug,
       }

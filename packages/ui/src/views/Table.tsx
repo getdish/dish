@@ -11,6 +11,8 @@ export const TableRow = (props: StackProps) => {
 
 TableRow.staticConfig = extendStaticConfig(HStack, {})
 
+export type TableCellProps = StackProps & TextStyle
+
 export function TableCell({
   color,
   fontSize,
@@ -21,7 +23,7 @@ export function TableCell({
   fontVariant,
   children,
   ...props
-}: StackProps & TextStyle) {
+}: TableCellProps) {
   return (
     <VStack paddingVertical={10} {...props}>
       <Text

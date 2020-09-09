@@ -66,7 +66,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
   const om = useOvermindStatic()
   const [isHovered, setIsHovered] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
-  const setHoveredSlow = useDebounce(om.actions.home.setHoveredRestaurant, 200)
+  const setHoveredSlow = useDebounce(om.actions.home.setHoveredRestaurant, 50)
   const store = useStore(RestaurantReviewsDisplayStore, {
     id: props.restaurantId,
   })
@@ -193,8 +193,8 @@ const RestaurantListItemContent = memo(
             hoverStyle={{ backgroundColor: bgLightLight }}
             marginLeft={-pad}
             paddingLeft={pad}
-            paddingBottom={8}
-            marginBottom={-8}
+            paddingBottom={4}
+            marginBottom={-4}
             width={950}
             position="relative"
           >
@@ -441,30 +441,34 @@ export const RestaurantScoreBreakdownSmall = memo(
               const item = sources[source]
               const info = thirdPartyCrawlSources[source]
               return (
-                <HStack
+                <Tooltip
                   key={source}
-                  alignItems="center"
-                  paddingHorizontal={5}
-                  paddingVertical={3}
-                  borderRadius={100}
-                  // backgroundColor={bgLightLight}
-                  spacing={3}
+                  contents={`${info.name} +${+(item.rating ?? 0) * 10} points`}
                 >
-                  {info?.image ? (
-                    <Image
-                      source={info.image}
-                      style={{
-                        width: 20,
-                        height: 20,
-                        borderRadius: 100,
-                      }}
-                    />
-                  ) : null}
+                  <HStack
+                    alignItems="center"
+                    paddingHorizontal={5}
+                    paddingVertical={3}
+                    borderRadius={100}
+                    // backgroundColor={bgLightLight}
+                    spacing={3}
+                  >
+                    {info?.image ? (
+                      <Image
+                        source={info.image}
+                        style={{
+                          width: 20,
+                          height: 20,
+                          borderRadius: 100,
+                        }}
+                      />
+                    ) : null}
 
-                  <Text fontSize={13} opacity={0.5}>
-                    {+(item.rating ?? 0) * 10}
-                  </Text>
-                </HStack>
+                    <Text fontSize={13} opacity={0.5}>
+                      {+(item.rating ?? 0) * 10}
+                    </Text>
+                  </HStack>
+                </Tooltip>
               )
             })}
 

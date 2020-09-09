@@ -2,6 +2,7 @@ import { RestaurantQuery, graphql } from '@dish/graph'
 import { Divider, HStack, Spacer, StackProps, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
+import { SmallButton, SmallLinkButton } from '../../views/ui/SmallButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
@@ -72,7 +73,19 @@ export const RestaurantDetailRow = memo(
       const [price_label, price_color, price_range] = priceRange(restaurant)
 
       const rows = [
-        { title: open_text, content: next_time, color: open_color },
+        {
+          title: open_text,
+          content: (
+            <SmallLinkButton
+              name="restaurantHours"
+              params={{ slug: restaurantSlug }}
+              fontWeight="400"
+            >
+              {next_time}
+            </SmallLinkButton>
+          ),
+          color: open_color,
+        },
         { title: price_label, content: price_range, color: price_color },
       ]
 

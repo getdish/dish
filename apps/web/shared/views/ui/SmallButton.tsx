@@ -4,6 +4,9 @@ import { TextStyle } from 'react-native'
 
 import { bg, bgLight, bgLightHover, bgLightLight } from '../../colors'
 import { baseButtonStyle } from '../../pages/home/baseButtonStyle'
+import { RoutesTable } from '../../state/router'
+import { LinkButton } from './LinkButton'
+import { LinkButtonProps } from './LinkProps'
 
 export type SmallButtonProps = StackProps & {
   isActive?: boolean
@@ -58,4 +61,25 @@ export const smallButtonBaseStyle: StackProps = {
   hoverStyle: {
     backgroundColor: bgLightLight,
   },
+}
+
+export function SmallLinkButton<
+  Name extends keyof RoutesTable = keyof RoutesTable,
+  Params = RoutesTable[Name]['params']
+>({
+  name,
+  params,
+  tag,
+  tags,
+  children,
+  fontWeight,
+  ...props
+}: LinkButtonProps<Name, Params>) {
+  return (
+    <SmallButton {...props}>
+      <LinkButton flex={1} {...{ name, params, tag, tags, fontWeight }}>
+        {children}
+      </LinkButton>
+    </SmallButton>
+  )
 }

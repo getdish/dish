@@ -5,6 +5,7 @@ import React, { Suspense, memo, useEffect } from 'react'
 
 import { isSSR } from '../../constants'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
+import { Route } from '../../views/router/Route'
 import HomeAutocomplete from './HomeAutocomplete'
 import { HomeContainer } from './HomeContainer'
 import { HomeIntroLetter } from './HomeIntroLetter'
@@ -97,6 +98,10 @@ const HomePageContent = memo(() => {
         <Suspense fallback={null}>
           <HomePageGallery />
           <HomePageRestaurantReview />
+
+          <Route name="restaurantHours">
+            <HomePageRestaurantHours />
+          </Route>
         </Suspense>
       </Suspense>
     </>
@@ -115,3 +120,8 @@ const HomePageRestaurantReview =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageRestaurantReview').default
     : loadable(() => import('./HomePageRestaurantReview'))
+
+const HomePageRestaurantHours =
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+    ? require('./HomePageRestaurantHours').default
+    : loadable(() => import('./HomePageRestaurantHours'))

@@ -33,6 +33,7 @@ type MapProps = {
 }
 
 const RESTAURANTS_SOURCE_ID = 'RESTAURANTS_SOURCE_ID'
+const RESTAURANTS_UNCLUSTERED_SOURCE_ID = 'RESTAURANTS_UNCLUSTERED_SOURCE_ID'
 const UNCLUSTERED_LABEL_LAYER_ID = 'UNCLUSTERED_LABEL_LAYER_ID'
 const CLUSTER_LABEL_LAYER_ID = 'CLUSTER_LABEL_LAYER_ID'
 const POINT_LAYER_ID = 'POINT_LAYER_ID'
@@ -70,7 +71,6 @@ const mapSetIconSelected = (map: mapboxgl.Map, id: any) => {
 }
 
 const mapSetIconHovered = (map: mapboxgl.Map, id: any) => {
-  console.log('id', id)
   map.setLayoutProperty(POINT_HOVER_LAYER_ID, 'icon-image', [
     'match',
     ['id'],
@@ -79,6 +79,9 @@ const mapSetIconHovered = (map: mapboxgl.Map, id: any) => {
     'map-pin-blank',
   ])
 }
+
+const initialRadius = 8
+const maxRadius = 18
 
 export const Map = (props: MapProps) => {
   const {
@@ -214,6 +217,15 @@ export const Map = (props: MapProps) => {
             clusterRadius: 18,
           })
 
+          map.addSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID, {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: props.features,
+            },
+            generateId: true,
+          })
+
           const [r, g, b] = tagLenses[0].rgb
           map.addLayer({
             id: POINT_LAYER_ID,
@@ -269,6 +281,8 @@ export const Map = (props: MapProps) => {
             type: 'symbol',
             filter: ['!', ['has', 'point_count']],
             layout: {
+              'icon-allow-overlap': true,
+              'icon-ignore-placement': true,
               'text-field': ['format', ['get', 'title']],
               'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
               'text-size': 12,
@@ -290,8 +304,6 @@ export const Map = (props: MapProps) => {
             source: RESTAURANTS_SOURCE_ID,
             filter: ['has', 'point_count'],
             layout: {
-              'icon-allow-overlap': true,
-              'text-allow-overlap': true,
               'text-field': [
                 'format',
                 ['get', 'point_count_abbreviated'],
@@ -314,12 +326,15 @@ export const Map = (props: MapProps) => {
 
           map.addLayer({
             id: POINT_HOVER_LAYER_ID,
-            source: RESTAURANTS_SOURCE_ID,
-            type: 'symbol',
-            layout: {
-              'icon-allow-overlap': true,
-              'text-allow-overlap': true,
-              'icon-size': 0.25,
+            source: RESTAURANTS_UNCLUSTERED_SOURCE_ID,
+            type: 'circle',
+            filter: ['==', 'id', ''],
+            paint: {
+              'circle-radius': initialRadius,
+              'circle-color': 'pink',
+              // 'icon-allow-overlap': true,
+              // 'icon-ignore-placement': true,
+              // 'icon-size': 0.25,
             },
           })
           cancels.add(() => {
@@ -497,7 +512,47 @@ export const Map = (props: MapProps) => {
     if (!isMapLoaded) return
     if (!hovered) return
     const index = features.findIndex((x) => x.properties.id === hovered)
-    mapSetIconHovered(map, index)
+    // mapSetIconHovered(map, index)
+
+    const framesPerSecond = 15
+    let radius = initialRadius
+    const initialOpacity = 1
+    let opacity = initialOpacity
+    let animate = true
+
+    map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', hovered])
+
+    function animateMarker() {
+      setTimeout(() => {
+        if (animate) {
+          requestAnimationFrame(animateMarker)
+        }
+        radius += (maxRadius - radius) / framesPerSecond
+        opacity -= 0.9 / framesPerSecond
+
+        map.setPaintProperty(
+          POINT_HOVER_LAYER_ID,
+          'circle-radius',
+          Math.max(0, radius)
+        )
+        map.setPaintProperty(
+          POINT_HOVER_LAYER_ID,
+          'circle-opacity',
+          Math.max(0, opacity)
+        )
+
+        if (opacity <= 0) {
+          radius = initialRadius
+          opacity = initialOpacity
+        }
+      }, 1000 / framesPerSecond)
+    }
+
+    animateMarker()
+
+    return () => {
+      animate = false
+    }
   }, [map, hovered])
 
   // style
@@ -598,6 +653,14 @@ export const Map = (props: MapProps) => {
     const source = map.getSource(RESTAURANTS_SOURCE_ID)
     if (source?.type === 'geojson') {
       source.setData({
+        type: 'FeatureCollection',
+        features,
+      })
+    }
+
+    const source2 = map.getSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID)
+    if (source2?.type === 'geojson') {
+      source2.setData({
         type: 'FeatureCollection',
         features,
       })

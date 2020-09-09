@@ -18,49 +18,16 @@ import { omStatic } from '../../state/om'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { Paragraph } from './Paragraph'
+import {
+  Table,
+  TableCell,
+  TableHeadRow,
+  TableHeadText,
+  TableRow,
+} from './Table'
 import { TextStrong } from './TextStrong'
 import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 import { useRestaurantQuery } from './useRestaurantQuery'
-
-const Table = (props: StackProps) => <VStack {...props} />
-
-const TableRow = (props: StackProps) => (
-  <HStack alignSelf="stretch" flex={1} {...props} />
-)
-
-const TableCell = (props: StackProps) => (
-  <HStack
-    alignSelf="stretch"
-    flex={1}
-    padding={4}
-    alignItems="center"
-    {...props}
-  />
-)
-
-const TableHeadRow = (props: StackProps) => (
-  <HStack
-    alignSelf="stretch"
-    flex={1}
-    borderBottomColor="#eee"
-    borderBottomWidth={1}
-    {...props}
-  />
-)
-
-const TableHeadText = (props: TextProps) => (
-  <Text
-    backgroundColor="#eee"
-    padding={2}
-    paddingHorizontal={8}
-    marginLeft={-8}
-    borderRadius={10}
-    maxWidth={52}
-    ellipse
-    fontSize={12}
-    {...props}
-  />
-)
 
 const col0Props: StackProps = {
   flex: 0,

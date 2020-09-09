@@ -41,7 +41,7 @@ export function LinkButton<
     }
   }, [props.name])
 
-  if ('name' in props) {
+  if (props.name) {
     const {
       name,
       // @ts-ignore
@@ -74,7 +74,7 @@ export function LinkButton<
         params={params}
         replace={replace}
         replaceSearch={replaceSearch}
-        onClick={onPress}
+        onClick={onPress as any}
         asyncClick={asyncClick ?? true}
         lineHeight={lineHeight}
         fontSize={fontSize}
