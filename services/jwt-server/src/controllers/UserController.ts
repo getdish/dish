@@ -32,10 +32,11 @@ class UserController {
   }
 
   static newUser = async (req: Request, res: Response) => {
-    let { username, password } = req.body
+    let { username, email, password } = req.body
     let user = new User()
     user.username = username
     user.password = password
+    user.email = email
     user.role = 'user'
 
     const errors = await validate(user)

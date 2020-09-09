@@ -31,6 +31,10 @@ export class User {
   username!: string
 
   @Column()
+  @Length(4, 250)
+  email!: string
+
+  @Column()
   @Length(4, 100)
   password!: string
 
