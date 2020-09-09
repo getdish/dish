@@ -329,8 +329,9 @@ const SearchResultsContent = (props: Props) => {
         <PageTitleTag>{title}</PageTitleTag>
         <HStack
           justifyContent="center"
-          padding={20}
-          paddingBottom={10}
+          paddingHorizontal={20}
+          paddingTop={15}
+          paddingBottom={15}
           overflow="hidden"
         >
           <Text ellipse fontSize={titleFontSize}>

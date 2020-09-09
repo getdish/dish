@@ -7,6 +7,7 @@ import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { SmallButton } from '../../views/ui/SmallButton'
+import { initAppleSigninButton } from './initAppleSigninButton'
 import { Input, InteractiveContainer } from './Input.1'
 
 const activeStyle: LinkButtonProps = {
@@ -29,6 +30,8 @@ export const LoginRegisterForm = ({
   const [password, setPassword] = useState('')
 
   useEffect(() => {
+    initAppleSigninButton()
+
     if (isLoggedIn) {
       onDidLogin?.()
     }

@@ -27,7 +27,7 @@ export const LenseButton = memoIsEqualDeep(
     const lenseColor = rgbString(lense.rgb)
     // const lenseColorLight = `rgba(${rgbInner}, 0.2)`
     const scale = size == 'md' ? 1 : size === 'lg' ? 1.2 : 1.3
-    const sizePx = 38
+    const sizePx = 42
 
     return (
       <LinkButton

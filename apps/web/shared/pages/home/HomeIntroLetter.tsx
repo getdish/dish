@@ -6,6 +6,7 @@ import { useStorageState } from 'react-storage-hooks'
 // @ts-ignore
 import dishNeon from '../../assets/dish-neon.jpg'
 import { lightGreen, lightYellow } from '../../colors'
+import { useOvermind } from '../../state/om'
 import { Link } from '../../views/ui/Link'
 import { CloseButton } from './CloseButton'
 import { LoginRegisterForm } from './LoginRegisterForm'
@@ -17,6 +18,11 @@ const useShowIntroLetter = () => {
 
 export const HomeIntroLetter = memo(() => {
   const [showInto, setShowIntro] = useShowIntroLetter()
+  const om = useOvermind()
+
+  if (om.state.user.isLoggedIn) {
+    return null
+  }
 
   return (
     <AbsoluteVStack
@@ -26,7 +32,7 @@ export const HomeIntroLetter = memo(() => {
       alignItems="center"
       justifyContent="center"
       paddingHorizontal="4vw"
-      paddingVertical="4vh"
+      paddingVertical="2vh"
       backgroundColor="rgba(0,0,0,0.6)"
       opacity={1}
       transform={[{ translateY: 0 }]}
@@ -53,11 +59,10 @@ export const HomeIntroLetter = memo(() => {
           style={{ width: '100%' }}
         >
           <VStack padding={20} alignItems="center">
-            <HStack position="absolute" top={10} right={10}>
+            {/* <HStack position="absolute" top={10} right={10}>
               <CloseButton onPress={() => setShowIntro(false)} />
-            </HStack>
-
-            <Spacer />
+            </HStack> */}
+            {/* <Spacer /> */}
 
             <HomeIntroLetterContent />
           </VStack>
@@ -69,6 +74,11 @@ export const HomeIntroLetter = memo(() => {
 
 export const HomeIntroLetterContent = memo(() => {
   const [showInto, setShowIntro] = useShowIntroLetter()
+
+  if (!showInto) {
+    return null
+  }
+
   const divider = (
     <VStack
       marginVertical={8}
@@ -88,38 +98,27 @@ export const HomeIntroLetterContent = memo(() => {
         }}
       />
 
-      <Paragraph textAlign="center" color="#fff" fontWeight="300" size={1.3}>
-        <Text opacity={0.8}>a new take on food discovery</Text>
+      <Paragraph textAlign="center" color="#fff" fontWeight="300" size={1.2}>
+        <Text opacity={0.8}>better food discovery</Text>
         <br />
         <Text color={lightGreen} fontWeight="400">
-          the best, down to the dish
+          ratings down to the dish
         </Text>
         <br />
         <Text color={lightYellow} fontWeight="500">
-          search every delivery service
+          search all delivery services
         </Text>
         <br />
-        <Text fontWeight="700">find hole 🕳 in the wall gems 💎</Text>
+        <Text fontWeight="700">hole in the wall gems 💎</Text>
       </Paragraph>
 
       {divider}
 
+      <Paragraph textAlign="center" color="#fff" fontWeight="300" size={1}>
+        Get early access:
+      </Paragraph>
+
       <LoginRegisterForm />
-
-      {divider}
-
-      <Text
-        marginVertical={15}
-        onPress={() => {
-          setShowIntro(false)
-        }}
-        color="rgba(255,255,255,0.5)"
-        fontWeight="300"
-        fontSize={14}
-      >
-        we're trying to build a new type of community.{' '}
-        <Link name="about">learn more.</Link>
-      </Text>
     </VStack>
   )
 })

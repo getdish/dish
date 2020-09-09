@@ -47,7 +47,8 @@ const HomeSearchInfoBoxCountry = memo(
       <HStack
         borderColor="#eee"
         borderWidth={1}
-        borderRadius={10}
+        borderRadius={100}
+        overflow="hidden"
         marginHorizontal={10}
         marginBottom={10}
       >
@@ -55,10 +56,10 @@ const HomeSearchInfoBoxCountry = memo(
           <HStack
             paddingHorizontal={20}
             paddingVertical={5}
-            spacing={10}
+            spacing="xs"
             alignItems="center"
           >
-            <Text opacity={0.7} fontSize={14}>
+            <Text opacity={0.7} fontSize={14} marginRight={8}>
               Filter by dish:
             </Text>
             {topCountryDishes.map((tag) => {

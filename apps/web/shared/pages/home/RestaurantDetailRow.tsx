@@ -75,7 +75,7 @@ export const RestaurantDetailRow = memo(
       const rows = [
         {
           title: open_text,
-          content: (
+          content: next_time ? (
             <SmallLinkButton
               name="restaurantHours"
               params={{ slug: restaurantSlug }}
@@ -85,6 +85,8 @@ export const RestaurantDetailRow = memo(
             >
               {next_time}
             </SmallLinkButton>
+          ) : (
+            'No hours :('
           ),
           color: open_color,
         },

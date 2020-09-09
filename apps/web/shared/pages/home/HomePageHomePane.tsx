@@ -3,6 +3,7 @@ import { TopCuisine, getHomeDishes } from '@dish/graph'
 import {
   AbsoluteVStack,
   HStack,
+  LinearGradient,
   LoadingItems,
   SmallTitle,
   Spacer,
@@ -13,11 +14,18 @@ import {
 import _, { sortBy, uniqBy } from 'lodash'
 import { default as React, Suspense, memo, useEffect, useState } from 'react'
 import { ChevronRight } from 'react-feather'
+import { StyleSheet } from 'react-native'
 
-import { bgLight, bgLightTranslucent } from '../../colors'
+import {
+  bgLight,
+  bgLightTranslucent,
+  lightBlue,
+  lightGreen,
+} from '../../colors'
 import { HomeStateItemHome } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic, useOvermind } from '../../state/om'
+import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { DishView } from './DishView'
@@ -190,9 +198,13 @@ export default memo(function HomePageHomePane(props: Props) {
               width={2000}
               right="-10%"
               top={-250}
-              backgroundColor={bgLightTranslucent}
               transform={[{ rotate: '-4deg' }]}
-            />
+            >
+              <LinearGradient
+                style={[StyleSheet.absoluteFill]}
+                colors={[bgLight, '#fff']}
+              />
+            </AbsoluteVStack>
             <VStack
               flex={1}
               overflow="hidden"
@@ -252,11 +264,25 @@ const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
 
 const HomeTopDishesTitle = () => {
   const om = useOvermind()
+  const info = om.state.home.currentState.currentLocationInfo
   return (
-    <SmallTitle divider="off">
-      Uniquely good in{' '}
-      <TextStrong>{om.state.home.currentState.currentLocationName}</TextStrong>
-    </SmallTitle>
+    <Text
+      color="rgba(0,0,0,0.8)"
+      marginVertical={5}
+      paddingHorizontal={10}
+      paddingVertical={4}
+      fontWeight="300"
+      borderRadius={100}
+      backgroundColor={bgLight}
+      alignSelf="center"
+      fontSize={18}
+    >
+      Uniquely good cuisine{' '}
+      {!info || info.type === 'city' || info.type === 'country' ? 'in' : 'near'}{' '}
+      <Text color="#000" fontWeight="600">
+        {om.state.home.currentState.currentLocationName}
+      </Text>
+    </Text>
   )
 }
 
@@ -277,11 +303,10 @@ const TopDishesCuisineItem = memo(
         <HStack alignItems="center" marginBottom={10}>
           {/* <Divider flex /> */}
           <SlantedLinkButton
-            fontSize={22}
+            fontSize={18}
             fontWeight="300"
             marginTop={0}
             paddingHorizontal={10}
-            marginBottom={0}
             marginHorizontal="auto"
             zIndex={1000}
             position="relative"
@@ -290,13 +315,21 @@ const TopDishesCuisineItem = memo(
               name: country.country,
             }}
             hoverStyle={{
-              transform: [{ scale: 1.1 }],
+              transform: [{ scale: 1.1 }, { rotate: '-6deg' }],
             }}
           >
-            <Text lineHeight={22} letterSpacing={0.5}>
+            <Text lineHeight={22} paddingRight={country.icon ? 32 : 0}>
               {country.country}
               {country.icon ? (
-                <Text marginLeft={1} fontSize={26} lineHeight={0}>
+                <Text
+                  position="absolute"
+                  top={14}
+                  right={4}
+                  marginLeft={1}
+                  marginTop={2}
+                  fontSize={26}
+                  lineHeight={0}
+                >
                   {' '}
                   {country.icon}
                 </Text>
