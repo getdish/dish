@@ -61,6 +61,6 @@ parallel --lb build ::: \
   'services/search' \
   'services/jwt-server' \
   'services/cron' \
-  'apps/web'
+  'apps/dish-app'
 
 docker images

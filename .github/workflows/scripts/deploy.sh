@@ -18,7 +18,7 @@ DISH_REGISTRY_PASSWORD=$(\
 )
 docker login $DISH_REGISTRY -u dish -p $DISH_REGISTRY_PASSWORD
 declare -a images=(
-  "web"
+  "app"
   "worker"
   "dish-hooks"
   "gorse"

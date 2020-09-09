@@ -2,7 +2,7 @@
   "extends": "./tsconfig.base.json",
   "files": [],
   "references": [
-    { "path": "apps/web" },
+    { "path": "apps/dish-app" },
     { "path": "services/crawlers" },
     { "path": "services/worker" },
     { "path": "services/hasura" }

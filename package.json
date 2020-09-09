@@ -15,10 +15,10 @@
     "start": "",
     "start:docker": "docker-compose up",
     "start:docker:web": "yarn stop:docker:web && yarn start:docker:web:simple & sleep 2 && yarn logs:docker:web",
-    "start:docker:web:simple": "docker run --name dish-web -it -d -p 19006:19006 --rm dish/web",
-    "build:docker:web": "docker build -t dish/web -f apps/web/Dockerfile .",
-    "logs:docker:web": "docker logs -f dish-web",
-    "stop:docker:web": "docker rm -f dish-web || true",
+    "start:docker:web:simple": "docker run --name dish-app -it -d -p 19006:19006 --rm dish/app",
+    "build:docker:web": "docker build -t dish/app -f apps/dish-app/Dockerfile .",
+    "logs:docker:web": "docker logs -f dish-app",
+    "stop:docker:web": "docker rm -f dish-app || true",
     "build": "ultra -r --no-pretty --concurrency 16 build",
     "build:watch": "ultra -r --no-pretty --concurrency 500 watch",
     "build:monitor": "ultra --monitor",
@@ -29,7 +29,8 @@
     "migrate": "(cd services/hasura && hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password)",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",
     "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
-    "postinstall": "yarn patch-package; yarn build:refs"
+    "postinstall": "yarn patch-package; yarn build:refs; yarn expo:check-deps",
+    "expo:check-deps": "expo-yarn-workspaces check-workspace-dependencies"
   },
   "resolutions": {
     "terser": "^5.3.0",
@@ -41,7 +42,7 @@
     "react-dom": "0.0.0-experimental-94c0244ba",
     "react-test-renderer": "0.0.0-experimental-94c0244ba",
     "react-refresh": "0.0.0-experimental-94c0244ba",
-    "react-native": "0.63.2",
+    "react-native": "0.62.2",
     "react-native-web": "0.13.9",
     "ts-node": "9.0.0",
     "@types/react": "16.9.46",
@@ -50,20 +51,23 @@
     "@types/puppeteer": "3.0.1"
   },
   "devDependencies": {
-    "esm": "^3.2.25",
-    "react-refresh": "0.0.0-experimental-94c0244ba",
-    "@zerollup/ts-transform-paths": "^1.7.18",
-    "import-sort-style-module": "^6.0.0",
-    "prettier-plugin-import-sort": "^0.0.4",
+    "expo": "^38.0.10",
+    "expo-yarn-workspaces": "*",
     "@types/node": "13.11.1",
+    "@zerollup/ts-transform-paths": "^1.7.18",
     "ava": "^3.8.2",
+    "esm": "^3.2.25",
+    "import-sort-style-module": "^6.0.0",
+    "metro-config": "0.58.0",
+    "patch-package": "^6.2.2",
     "prettier": "^2.1.1",
+    "prettier-plugin-import-sort": "^0.0.4",
+    "react-refresh": "0.0.0-experimental-94c0244ba",
     "ts-node": "9.0.0",
     "tsconfig-paths": "^3.9.0",
     "typescript": "4.0.2",
-    "ultra-runner": "^3.5.0",
     "typescript-monorepo-toolkit": "^0.0.7",
-    "patch-package": "^6.2.2"
+    "ultra-runner": "^3.5.0"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {
