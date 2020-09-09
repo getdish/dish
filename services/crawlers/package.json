@@ -15,6 +15,7 @@
   "dependencies": {
     "@dish/common": "*",
     "@dish/graph": "*",
+    "@dish/helpers": "*",
     "@dish/worker": "*",
     "@types/puppeteer": "^3.0.0",
     "acorn": "^7.1.1",

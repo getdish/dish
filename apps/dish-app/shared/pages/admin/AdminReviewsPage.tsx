@@ -1,4 +1,5 @@
 import { graphql, order_by, query } from '@dish/graph'
+import { fetchABSASentiment } from '@dish/helpers'
 import {
   Divider,
   HStack,
@@ -103,24 +104,6 @@ const ReviewDisplay = graphql(() => {
   )
 })
 
-const getSentiment = (sentence: string, aspect: string) => {
-  return fetch(
-    `https://absa.k8s.dishapp.com/?text="${encodeURIComponent(
-      sentence
-    )}"&aspect="${encodeURIComponent(aspect)}"`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
-    .then((res) => res.json())
-    .then((x) => ({
-      sentence,
-      sentiment: x.results[0],
-    }))
-}
-
 const ReviewSentiment = (props: { text: string }) => {
   const [aspect, setAspect] = useState('')
   const aspectSlow = useDebounceValue(aspect, 500)
@@ -131,14 +114,14 @@ const ReviewSentiment = (props: { text: string }) => {
     const sentences = props.text.split('. ')
     if (sentences.length) {
       Promise.all([
-        getSentiment(props.text, aspect).then(({ sentiment }) => ({
+        fetchABSASentiment(props.text, aspect).then(({ sentiment }) => ({
           sentiment,
           sentence: `(Entire Text - ${aspect})`,
         })),
         ...sentences
           .filter((x) => x.toLowerCase().includes(aspect))
           .map((sentence) => {
-            return getSentiment(sentence, aspect)
+            return fetchABSASentiment(sentence, aspect)
           }),
       ]).then((sentiments) => {
         setSentiments(sentiments)

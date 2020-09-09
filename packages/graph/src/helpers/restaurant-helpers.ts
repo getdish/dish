@@ -1,8 +1,7 @@
 import _ from 'lodash'
 
-import { order_by, query, restaurant_constraint } from '../graphql'
+import { order_by, query } from '../graphql'
 import { Restaurant, RestaurantTag, RestaurantWithId, Tag } from '../types'
-import { levenshteinDistance } from './levenshteinDistance'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 import { restaurantTagUpsert } from './restaurantTag'

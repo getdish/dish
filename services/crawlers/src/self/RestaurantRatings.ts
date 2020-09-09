@@ -50,21 +50,26 @@ export class RestaurantRatings {
   }
 
   weightRatings(
-    ratings: { [source: string]: number },
+    ratings: { [source: string]: number | null },
     master_weights: { [source: string]: number }
   ) {
     let weights: { [source: string]: number } = {}
     let total_weight = 0
     let final_rating = 0
     Object.entries(ratings).forEach(([source, rating]) => {
-      if (Number.isNaN(rating) || typeof rating !== 'number') {
+      if (
+        Number.isNaN(rating) ||
+        typeof rating !== 'number' ||
+        rating == null
+      ) {
         delete ratings[source]
       } else {
         weights[source] = master_weights[source]
         total_weight += master_weights[source]
       }
     })
-    Object.entries(ratings).forEach(([source, rating]) => {
+    const denulled_ratings = ratings as { [source: string]: number }
+    Object.entries(denulled_ratings).forEach(([source, rating]) => {
       const normalised_weight = weights[source] / total_weight
       final_rating += rating * normalised_weight
     })

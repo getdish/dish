@@ -36,7 +36,9 @@ import {
   restaurantFindIDBatchForCity,
 } from '../utils'
 import { checkMaybeDeletePhoto, remove404Images } from './remove_404_images'
+import { RestaurantBaseScore } from './RestaurantBaseScore'
 import { RestaurantRatings } from './RestaurantRatings'
+import { RestaurantTagScores } from './RestaurantTagScores'
 import { Tagging } from './Tagging'
 import {
   updateAllRestaurantGeocoderIDs,
@@ -58,6 +60,8 @@ export class Self extends WorkerJob {
   _start_time!: [number, number]
   tagging: Tagging
   restaurant_ratings: RestaurantRatings
+  restaurant_base_score: RestaurantBaseScore
+  restaurant_tag_scores: RestaurantTagScores
   menu_items: MenuItem[] = []
 
   static queue_config: QueueOptions = {
@@ -75,6 +79,8 @@ export class Self extends WorkerJob {
     super()
     this.tagging = new Tagging(this)
     this.restaurant_ratings = new RestaurantRatings(this)
+    this.restaurant_base_score = new RestaurantBaseScore(this)
+    this.restaurant_tag_scores = new RestaurantTagScores(this)
   }
 
   _debugRAMUsage(restaurant_id: string) {
@@ -135,7 +141,10 @@ export class Self extends WorkerJob {
       await this.postMerge()
       console.log(`Merged: ${this.restaurant.name}`)
     }
-    process.exit(0)
+    if (process.env.NODE_ENV != 'test') {
+      console.log('Exiting with 0...')
+      process.exit(0)
+    }
   }
 
   async preMerge(restaurant: RestaurantWithId) {
@@ -153,6 +162,12 @@ export class Self extends WorkerJob {
         'SELF CRAWLER: restaurant has no name, ID: ' + this.restaurant.id
       )
     }
+    await this.finishTagsEtc()
+    await this.finalScores()
+    this.log('postMerge()')
+  }
+
+  async finishTagsEtc() {
     await restaurantUpdate(this.restaurant)
     this.tagging.deDepulicateTags()
     await this.tagging.updateTagRankings()
@@ -163,7 +178,12 @@ export class Self extends WorkerJob {
     if (this.menu_items.length != 0) {
       await menuItemsUpsertMerge(this.menu_items)
     }
-    this.log('postMerge()')
+  }
+
+  async finalScores() {
+    await this.restaurant_base_score.calculateScore()
+    await this.restaurant_tag_scores.calculateScores()
+    await restaurantUpdate(this.restaurant)
   }
 
   async mergeMainData() {
@@ -670,7 +690,7 @@ export class Self extends WorkerJob {
       SELECT DISTINCT(sentence), sentiment
       FROM restaurant
       JOIN review ON review.restaurant_id = restaurant.id
-      JOIN review_tag ON review_tag.review_id = review.id
+      JOIN review_tag_sentences rts ON rts.review_id = review.id
       WHERE restaurant.id = '${id}'
       ORDER BY sentiment DESC
       LIMIT 5

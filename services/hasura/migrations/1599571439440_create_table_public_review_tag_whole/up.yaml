@@ -1,0 +1,18 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE EXTENSION IF NOT EXISTS pgcrypto;
+  type: run_sql
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE TABLE "public"."review_tag_whole"("id" uuid NOT NULL DEFAULT gen_random_uuid(),
+      "restaurant_id" uuid NOT NULL, "tag_id" uuid NOT NULL, "sentiment" numeric,
+      PRIMARY KEY ("id") , FOREIGN KEY ("restaurant_id") REFERENCES "public"."restaurant"("id")
+      ON UPDATE cascade ON DELETE cascade, FOREIGN KEY ("tag_id") REFERENCES "public"."tag"("id")
+      ON UPDATE cascade ON DELETE cascade, UNIQUE ("id"));
+  type: run_sql
+- args:
+    name: review_tag_whole
+    schema: public
+  type: add_existing_table_or_view
