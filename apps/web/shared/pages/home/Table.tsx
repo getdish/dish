@@ -22,7 +22,7 @@ export const TableHeadRow = (props: StackProps) => (
     alignSelf="stretch"
     flex={1}
     borderBottomColor="#eee"
-    borderBottomWidth={1}
+    borderBottomWidth={2}
     {...props}
   />
 )

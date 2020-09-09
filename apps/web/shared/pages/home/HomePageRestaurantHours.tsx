@@ -2,14 +2,17 @@ import { graphql } from '@dish/graph'
 import {
   AbsoluteVStack,
   SmallTitle,
+  Spacer,
   TableCell,
   TableCellProps,
   TableRow,
+  Text,
   VStack,
 } from '@dish/ui'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
 
+import { bgLight } from '../../colors'
 import { pageWidthMax, zIndexGallery } from '../../constants'
 import { router } from '../../state/router'
 import { StackViewCloseButton } from './StackViewCloseButton'
@@ -22,6 +25,9 @@ export default memo(
     console.log('params', params)
     const restaurant = useRestaurantQuery(params.slug)
     const hours = restaurant.hours()
+    const dayOfWeek = new Intl.DateTimeFormat(['en'], {
+      weekday: 'short',
+    }).format(new Date())
 
     return (
       <AbsoluteVStack
@@ -65,13 +71,28 @@ export default memo(
                   </TableHeadRow>
 
                   {hours.map((hour, i) => {
+                    const isToday = (hour.hoursInfo.day ?? '').startsWith(
+                      dayOfWeek
+                    )
                     return (
-                      <TableRow key={i}>
-                        <TableCell {...col0Props}>
+                      <TableRow
+                        backgroundColor={isToday ? bgLight : 'transparent'}
+                        key={i}
+                      >
+                        <TableCell fontWeight="600" {...col0Props}>
                           {hour.hoursInfo.day}
                         </TableCell>
                         <TableCell {...col1Props}>
-                          {hour.hoursInfo.hours}
+                          {hour.hoursInfo.hours.map((text, i) => {
+                            return (
+                              <Text key={i}>
+                                {text}
+                                {i < hour.hoursInfo.hours.length - 1 && (
+                                  <Spacer size="sm" />
+                                )}
+                              </Text>
+                            )
+                          })}
                         </TableCell>
                       </TableRow>
                     )
@@ -95,5 +116,5 @@ const col0Props: TableCellProps = {
 }
 
 const col1Props: TableCellProps = {
-  fontSize: 16,
+  fontSize: 14,
 }
