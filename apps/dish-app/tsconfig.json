@@ -1,0 +1,68 @@
+{
+  "extends": "../../tsconfig",
+
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "jsx": "react-native",
+    "lib": ["dom", "esnext"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    "noEmitHelpers": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "esnext",
+    "allowJs": true,
+    "baseUrl": ".",
+
+    // autocomplete paths
+    "paths": {
+      "*": ["src/*", "assets/*"],
+      "assets/*": ["assets/*"]
+    },
+
+    "removeComments": true,
+    "typeRoots": [
+      "node_modules/@types",
+      "./src/@types",
+      "../../node_modules/@types"
+    ],
+    "composite": true
+  },
+
+  "include": [
+    "src",
+    "web",
+    "shared",
+    "node_modules/@types",
+    "../../node_modules/@types"
+  ],
+
+  "exclude": ["**"],
+
+  "references": [
+    {
+      "path": "../../packages/async"
+    },
+    {
+      "path": "../../packages/graph"
+    },
+    {
+      "path": "../../packages/helpers"
+    },
+    {
+      "path": "../../packages/ui"
+    },
+    {
+      "path": "../../packages/use-store"
+    }
+  ]
+}
