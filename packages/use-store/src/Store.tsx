@@ -1,4 +1,4 @@
-import { DebugStores } from '.'
+import { DebugStores } from './shouldDebug'
 
 export const TRIGGER_UPDATE = Symbol()
 const LISTENERS = Symbol()

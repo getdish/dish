@@ -9,7 +9,8 @@ import { User } from '../models/User'
 class AuthController {
   static login = async (req: Request, res: Response) => {
     let { username, password } = req.body
-    if (!(username && password)) {
+
+    if (!username || !password) {
       res.status(400).send()
     }
 
@@ -22,7 +23,8 @@ class AuthController {
         user = await userRepository.findOneOrFail({
           where: { email: username },
         })
-      } catch (error) {
+      } catch (error2) {
+        console.error('failed logging in', error, error2)
         res.status(401).send()
         return
       }

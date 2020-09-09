@@ -74,7 +74,8 @@
     "resize-observer-polyfill": "^1.5.1",
     "react-ssr-prepass": "^1.2.1",
     "@loadable/component": "^5.13.1",
-    "@loadable/server": "^5.13.1"
+    "@loadable/server": "^5.13.1",
+    "@react-native-mapbox-gl/maps": "^8.1.0-rc.4"
   },
   "devDependencies": {
     "@dish/babel-preset": "*",

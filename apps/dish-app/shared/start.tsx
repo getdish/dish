@@ -1,9 +1,17 @@
-import { mutation, query, resolved } from '@dish/graph'
+import { client, mutation, query, resolved, schema } from '@dish/graph'
 import * as React from 'react'
 
 import { searchLocations } from './pages/home/searchLocations'
 import { reverseGeocode } from './state/reverseGeocode'
 
+window['React'] = React
+window['gqless'] = {
+  query,
+  mutation,
+  schema,
+  client,
+  resolved,
+}
 window['query'] = query
 window['mutation'] = mutation
 window['resolved'] = resolved

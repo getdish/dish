@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useCallback, useLayoutEffect, useRef } from 'react'
 
+import { DebugComponents, DebugStores, shouldDebug } from './shouldDebug'
 import { Store, TRIGGER_UPDATE } from './Store'
 
 // @ts-ignore
@@ -23,7 +24,7 @@ export * from './Store'
 // const z = useStore(StoreTest)
 
 type Selector<A = unknown, B = unknown> = (x: A) => B
-type StoreInfo = {
+export type StoreInfo = {
   source: any
   hasMounted: boolean
   storeInstance: any
@@ -261,13 +262,6 @@ const useCurrentComponent = () => {
     ReactCurrentOwner.current.elementType
     ? ReactCurrentOwner.current.elementType
     : {}
-}
-
-const DebugComponents = new WeakMap<any, Set<any>>()
-export const DebugStores = new Set<any>()
-
-const shouldDebug = (component: any, info: StoreInfo) => {
-  return DebugComponents.get(component)?.has(info.storeInstance.constructor)
 }
 
 export function useStoreDebug<A extends Store<B>, B>(

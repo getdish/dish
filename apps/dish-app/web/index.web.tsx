@@ -2,14 +2,7 @@ import './base.css'
 import './bootstrapEnv'
 
 import { sleep } from '@dish/async'
-import {
-  client,
-  mutation,
-  query,
-  resolved,
-  schema,
-  startLogging,
-} from '@dish/graph'
+import { startLogging } from '@dish/graph'
 import { createOvermind } from 'overmind'
 import React from 'react'
 // @ts-ignore
@@ -20,32 +13,12 @@ import { App } from '../shared/App'
 import { OVERMIND_MUTATIONS, isWorker } from '../shared/constants'
 import { config } from '../shared/state/om'
 
-// non-invasive test for closure compiler + fixed rollup-tscc
-// import { importable } from './xy'
-// console.log(importable(1 + 1))
-
-//
-// NOTE: import order is important here DONT USE `import`
-//       add require to the part that says "import here"
-// NOTE: i undid the "no import" thing temporarily for tscc
-// NOTE: nothing should import this file! its the root!
-//
-
 if (process.env.NODE_ENV === 'development' && !window['STARTED']) {
   startLogging()
 }
 
 // register root component
 AppRegistry.registerComponent('dish', () => App)
-
-window['React'] = React
-window['gqless'] = {
-  query,
-  mutation,
-  schema,
-  client,
-  resolved,
-}
 
 // exports
 if (process.env.TARGET === 'ssr') {
