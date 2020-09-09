@@ -61,7 +61,7 @@ export const RestaurantUpVoteDownVote = memo(
             fontSize={+score <= 9 ? 23 : +score <= 99 ? 20 : 16}
             fontWeight="600"
             marginVertical={-2}
-            color="rgba(0,0,0,0.6)"
+            color="rgba(0,0,0,0.85)"
           >
             {score}
           </Text>
