@@ -180,41 +180,48 @@ const SearchResultsTopBar = memo(({ stateId }: { stateId: string }) => {
   }
 
   return (
-    <>
-      <VStack
-        position="absolute"
-        top={0}
-        left={0}
-        right={0}
-        borderBottomColor="#eee"
-        borderBottomWidth={1}
-        zIndex={1000}
-        alignItems="center"
-        backgroundColor="#fff"
-        height={titleHeight}
-        overflow="hidden"
-        paddingHorizontal={12}
+    <VStack
+      position="absolute"
+      top={0}
+      left={0}
+      right={0}
+      borderBottomColor="#eee"
+      backgroundColor="#fff"
+      borderBottomWidth={1}
+      zIndex={1000}
+    >
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{ width: '100%' }}
       >
-        <HStack
-          paddingVertical={topBarVPad}
-          paddingHorizontal={18}
-          width="100%"
+        <VStack
           alignItems="center"
-          flex={1}
+          height={titleHeight}
           overflow="hidden"
-          justifyContent="space-between"
+          paddingHorizontal={12}
         >
-          <HStack marginTop={-12} alignItems="center" justifyContent="center">
-            <HomeLenseBar activeTagIds={state.activeTagIds} />
+          <HStack
+            paddingVertical={topBarVPad}
+            paddingHorizontal={18}
+            width="100%"
+            alignItems="center"
+            flex={1}
+            overflow="hidden"
+            justifyContent="space-between"
+          >
+            <HStack marginTop={-12} alignItems="center" justifyContent="center">
+              <HomeLenseBar activeTagIds={state.activeTagIds} />
+            </HStack>
+
+            <Spacer flex={1} size={16} />
+            <HomeFilterBar activeTagIds={state.activeTagIds} />
           </HStack>
+        </VStack>
 
-          <Spacer flex={1} size={16} />
-          <HomeFilterBar activeTagIds={state.activeTagIds} />
-        </HStack>
-      </VStack>
-
-      <HomeDeliveryFilterButtons activeTagIds={state.activeTagIds} />
-    </>
+        <HomeDeliveryFilterButtons activeTagIds={state.activeTagIds} />
+      </ScrollView>
+    </VStack>
   )
 })
 
@@ -295,7 +302,7 @@ const SearchResultsContent = (props: Props) => {
   const titleLen = (title + subTitle).length
   const titleScale =
     titleLen > 70 ? 0.7 : titleLen > 60 ? 0.8 : titleLen > 50 ? 0.9 : 1
-  const titleFontSize = 30 * titleScale
+  const titleFontSize = 30 * titleScale * (isSmall ? 0.75 : 1)
 
   const contentWrap = (children: any) => {
     return (

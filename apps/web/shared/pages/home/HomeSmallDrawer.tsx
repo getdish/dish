@@ -1,14 +1,20 @@
-import { VStack } from '@dish/ui'
+import { AbsoluteVStack, VStack } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import { debounce } from 'lodash'
 import React, { useEffect, useMemo } from 'react'
-import { Animated, PanResponder, View } from 'react-native'
+import { Animated, PanResponder, Platform, View } from 'react-native'
 
-import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants'
+import {
+  drawerBorderRadius,
+  pageWidthMax,
+  searchBarHeight,
+  zIndexDrawer,
+} from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { omStatic } from '../../state/om'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
 import { blurSearchInput } from './HomeSearchInput'
+import { isIOS } from './isIOS'
 import {
   useMediaQueryIsReallySmall,
   useMediaQueryIsShort,
@@ -207,13 +213,13 @@ export const HomeSmallDrawer = (props: { children: any }) => {
         <VStack
           width="100%"
           height="100%"
-          backgroundColor="#fff"
           shadowColor="rgba(0,0,0,0.13)"
           shadowRadius={44}
           shadowOffset={{ width: 10, height: 0 }}
-          borderTopRightRadius={10}
-          borderTopLeftRadius={10}
+          borderTopRightRadius={drawerBorderRadius}
+          borderTopLeftRadius={drawerBorderRadius}
           pointerEvents="auto"
+          backgroundColor="rgba(255,255,255,0.9)"
         >
           <View
             style={{
@@ -226,12 +232,29 @@ export const HomeSmallDrawer = (props: { children: any }) => {
           >
             <HomeSearchBarDrawer />
           </View>
-          <View
-            style={{ height: '100%' }}
-            {...(drawerStore.snapIndex > 0 && panResponder.panHandlers)}
-          >
+
+          <VStack flex={1} maxHeight="100%" position="relative">
+            {isIOS ||
+              (drawerStore.snapIndex === 2 && (
+                <AbsoluteVStack
+                  pointerEvents="none"
+                  fullscreen
+                  zIndex={1000000}
+                  {...(drawerStore.snapIndex > 0 && {
+                    pointerEvents: 'auto',
+                  })}
+                >
+                  <View
+                    style={{ width: '100%', height: '100%' }}
+                    {...(drawerStore.snapIndex > 0 && panResponder.panHandlers)}
+                  />
+                </AbsoluteVStack>
+              ))}
+
+            {/* children */}
+
             {props.children}
-          </View>
+          </VStack>
         </VStack>
       </Animated.View>
     </VStack>
