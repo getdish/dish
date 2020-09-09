@@ -130,7 +130,7 @@ const getUrlTagInfo = (part: string, defaultType: any = ''): NavigableTag => {
   return { type: defaultType, name: part }
 }
 
-export const getRouteFromTags = (
+export const getRouteFromState = (
   state: HomeStateTagNavigable = omStatic.state.home.currentState
 ): SearchRouteParams => {
   if (!isHomeState(state) && !isSearchState(state)) {

@@ -23,7 +23,6 @@ export async function searchLocations(
     console.warn('nothing', query, res)
     return []
   }
-  console.log('res', res)
   return res.features
     .map((feat) => {
       if (feat.bbox) {

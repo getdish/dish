@@ -1,10 +1,15 @@
 import { mutation, query, resolved } from '@dish/graph'
 import * as React from 'react'
 
+import { searchLocations } from './pages/home/searchLocations'
+import { reverseGeocode } from './state/reverseGeocode'
+
 window['query'] = query
 window['mutation'] = mutation
 window['resolved'] = resolved
 window['React'] = React
+window['searchLocations'] = searchLocations
+window['reverseGeocode'] = reverseGeocode
 
 // startup stuff (can put in some other file eventually)
 const queue = new Map<

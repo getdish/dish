@@ -24,7 +24,7 @@ import {
   allTags,
   cleanTagName,
   getActiveTags,
-  getRouteFromTags,
+  getRouteFromState,
   isSearchBarTag,
 } from './home-tag-helpers'
 import {
@@ -621,6 +621,8 @@ const pushHomeState: AsyncAction<
   }
 
   const finalState = {
+    currentLocationName: currentState?.currentLocationName,
+    currentLocationInfo: currentState?.currentLocationInfo,
     center: currentState?.center ?? initialHomeState.center,
     span: currentState?.span ?? initialHomeState.span,
     searchQuery,
@@ -694,11 +696,17 @@ const setLocation: AsyncAction<string> = async (om, val) => {
   if (exact?.center) {
     om.actions.home.updateCurrentState({
       center: { ...exact.center },
+      currentLocationName: val,
       mapAt: null,
     })
+    const curState = om.state.home.currentState
+    const navItem = om.actions.home.getNavigateItemForState(curState)
+    if (router.getShouldNavigate(navItem)) {
+      router.navigate(navItem)
+    }
     setDefaultLocation({
       center: exact.center,
-      span: om.state.home.currentState.span,
+      span: curState.span,
     })
   } else {
     console.warn('No center found?')
@@ -1024,13 +1032,16 @@ export const getNavigateItemForState: Action<
   }
 
   // build params
-  const params = getRouteFromTags(state)
-  // TODO wtf is this doing here
+  const params = getRouteFromState(state)
+
+  params.location = slugify(
+    state.currentLocationName ?? home.currentState.currentLocationName ?? 'here'
+  )
+
   if (state.searchQuery) {
     params.search = state.searchQuery
   }
   if (state.type === 'userSearch') {
-    // @ts-ignore
     params.username = curParams.username
   }
 

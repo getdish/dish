@@ -3,14 +3,11 @@ goals for this week, get us to being able to onboard people (not 100% necessary,
 - fix login/register flows
 - get reviewing fully working with votes/sentiment on tags
 - fix a lot of issues on mobile
-- fix or remove default autocomplete categories
 - test in prod and in various browsers and fix up
 - fix memory issues (see safari warning)
-- performance runthrough on search results
 - user profile page improvement
   - show comments / votes separately
   - show users current favorites on the map
-- hover restaurant shows pin on menu
 
 next week:
 
