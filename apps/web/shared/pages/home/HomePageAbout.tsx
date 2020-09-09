@@ -48,7 +48,8 @@ export default function HomePageAbout({
             <Paragraph size="xxxl" fontWeight="300">
               Craving pho? Amazing Vietnamese, Chinese, and Mexican spots are
               often hard to find because a single 5-star rating forces food,
-              ambiance and service all into one.
+              ambiance and service all into one. Lets change the world of eating
+              out (and in) by letting restaurants specialize.
             </Paragraph>
 
             <Paragraph size="xxl" fontWeight="300">
@@ -82,40 +83,27 @@ export default function HomePageAbout({
               >
                 date night
               </LinkButton>{' '}
-              you care about different things, so Dish splits out ratings into
-              every factor that matters - down to the dish.
+              what you care about is completely different. Dish understands that
+              - we break ratings down by dish, ambiance, service, and much more.
             </Paragraph>
 
             <Paragraph size="xl">
-              Lets change the world of eating out (and in) by letting
-              restaurants specialize. Instead of pleasing everyone to get 5
-              stars, Dish lets them focus one thing well.
-            </Paragraph>
-
-            <Paragraph size="xl">
-              We crawl every top critic source (think RottenTomatoes, for food)
-              and then look at{' '}
-              <TextStrong>
-                what people actually say about all the factors that matter
-              </TextStrong>
-              . Then, we build a map of food uniquely good to each area.
-            </Paragraph>
-
-            <Paragraph size="xl">
-              Dish{' '}
+              We're a bit like RottenTomatoes for food - we crawl every top food
+              critic source, and then analyze at{' '}
+              <TextStrong>what people actually say</TextStrong> to go beyond a
+              single star rating. We then show you uniquely good cuisine in each
+              area of the world. Dish also{' '}
               <Text borderBottomColor="#eee" borderBottomWidth={2}>
                 searches across every delivery service
-              </Text>
-              . It's nice to be able to find a dish you're craving without
-              having to flip between many apps.
+              </Text>{' '}
+              so you don't have to flip between many apps to find the best fried
+              chicken, or ceasar salad for delivery.
             </Paragraph>
 
             <Paragraph size="lg">
-              Finally, we're building a curation community that is more fun,
-              because you can debate the stats that matter and explore a map of
-              gems more intuitively. We think reddit-style voting and
-              specialization in cuisines and locales is key. Our goals are to
-              build:
+              We're want to bring back a fun curation community, letting people
+              collect and curate local gems and tips on what to order. Our goals
+              are to build:
               <ul>
                 <li>
                   <TextStrong>A better model for guides 🎙</TextStrong> - With
