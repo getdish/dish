@@ -293,6 +293,9 @@ const HomeMapContent = memo(function HomeMap({
           setMapView(map)
         }}
         selected={internal.id}
+        hovered={
+          om.state.home.hoveredRestaurant && om.state.home.hoveredRestaurant.id
+        }
         onMoveEnd={({ center, span }) => {
           if (isSmall && drawerStore.currentSnapPoint === 0) {
             console.log('avoid move stuff when snapped to top')

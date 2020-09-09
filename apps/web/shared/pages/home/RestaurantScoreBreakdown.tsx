@@ -80,10 +80,10 @@ const TextHighlight = (props: TextProps) => (
 )
 
 export const RestaurantScoreBreakdown = memo(
-  graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
-    const restaurant = useRestaurantQuery(restaurantSlug)
+  graphql((props: { restaurantSlug: string; showTable?: boolean }) => {
+    const restaurant = useRestaurantQuery(props.restaurantSlug)
     const sources = restaurant?.sources?.() ?? {}
-    const [showTable, setShowTable] = useState(false)
+    const [showTable, setShowTable] = useState(props.showTable)
 
     // TODO pass this in from above i think
     const tags = omStatic.state.home.lastActiveTags

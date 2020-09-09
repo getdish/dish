@@ -32,10 +32,12 @@ export const RestaurantRatingBreakdown = memo(
     restaurantId,
     restaurantSlug,
     closable,
+    showScoreTable,
   }: {
     restaurantId: string
     restaurantSlug: string
     closable?: boolean
+    showScoreTable?: boolean
   }) => {
     const store = useStore(RestaurantReviewsDisplayStore, { id: restaurantId })
 
@@ -72,7 +74,10 @@ export const RestaurantRatingBreakdown = memo(
             overflow="hidden"
           >
             <SmallTitle>Points</SmallTitle>
-            <RestaurantScoreBreakdown restaurantSlug={restaurantSlug} />
+            <RestaurantScoreBreakdown
+              showTable={showScoreTable}
+              restaurantSlug={restaurantSlug}
+            />
 
             <Spacer size="sm" />
 

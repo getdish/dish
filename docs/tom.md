@@ -1,8 +1,9 @@
 - implement v1 point ratings + voting
 - changes to auth:
-  - get apple-authorize app running / do basic integration with frontend, see if you can get flow working
+  - get apple-authorize app running / do basic integration with frontend
   - login with email or username
   - register with email + username
+- profiles loading really slow http://d1sh_hasura_live.com:19006/u/admin
 - fix top level lense results
   - "gems" with no other filters is empty for sf
 - fix http://d1sh_hasura_live.com:19006/restaurant/serafina error on gql review when not logged in

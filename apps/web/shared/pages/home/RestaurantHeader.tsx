@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { HStack, SmallTitle, Spacer, Text, VStack } from '@dish/ui'
+import { HStack, SmallTitle, Spacer, StackProps, Text, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { MessageSquare } from 'react-feather'
 import { Image } from 'react-native'
@@ -135,37 +135,24 @@ const RestaurantHeaderContent = memo(
           </VStack>
           <SmallTitle marginVertical={-18} divider="center">
             <HStack spacing="lg">
-              <VStack
-                borderRadius={1000}
-                shadowColor="rgba(0,0,0,0.1)"
-                shadowRadius={8}
-                shadowOffset={{ height: 2, width: 0 }}
-              >
+              <CircleButton>
                 <Suspense fallback={null}>
                   <RestaurantFavoriteButton
                     restaurantId={restaurantId}
                     size="lg"
                   />
                 </Suspense>
-              </VStack>
+              </CircleButton>
 
-              <VStack
-                borderRadius={1000}
-                shadowColor="rgba(0,0,0,0.1)"
-                backgroundColor="#fff"
-                shadowRadius={8}
-                shadowOffset={{ height: 2, width: 0 }}
-              >
-                <Suspense fallback={null}>
-                  <LinkButton
-                    name="restaurantReview"
-                    params={{ slug: restaurantSlug }}
-                    padding={8}
-                  >
-                    <MessageSquare size={20} color="rgba(0,0,0,0.3)" />
-                  </LinkButton>
-                </Suspense>
-              </VStack>
+              <CircleButton>
+                <LinkButton
+                  name="restaurantReview"
+                  params={{ slug: restaurantSlug }}
+                  padding={8}
+                >
+                  <MessageSquare size={20} color="rgba(0,0,0,0.3)" />
+                </LinkButton>
+              </CircleButton>
             </HStack>
           </SmallTitle>
         </VStack>
@@ -173,3 +160,21 @@ const RestaurantHeaderContent = memo(
     }
   )
 )
+
+const CircleButton = (props: StackProps) => {
+  return (
+    <VStack
+      borderRadius={1000}
+      shadowColor="rgba(0,0,0,0.1)"
+      backgroundColor="#fff"
+      shadowRadius={8}
+      shadowOffset={{ height: 2, width: 0 }}
+      borderWidth={1}
+      borderColor="transparent"
+      hoverStyle={{
+        borderColor: '#aaa',
+      }}
+      {...props}
+    />
+  )
+}

@@ -27,17 +27,16 @@ type MapProps = {
   onDoubleClick?: (id: string) => void
   onMoveEnd?: (props: MapPosition) => void
   selected?: string
+  hovered?: string
   centerToResults?: number
   // avoidFitBounds?: boolean
 }
 
-const SOURCE_ID = 'restaurants'
-const LAYER_POINTS = 'restaurants-points'
-const PIN_LAYER_ID = 'restaurants-pins'
+const RESTAURANTS_SOURCE_ID = 'RESTAURANTS_SOURCE_ID'
 const UNCLUSTERED_LABEL_LAYER_ID = 'UNCLUSTERED_LABEL_LAYER_ID'
 const CLUSTER_LABEL_LAYER_ID = 'CLUSTER_LABEL_LAYER_ID'
 const POINT_LAYER_ID = 'POINT_LAYER_ID'
-const POINT_HOVER_LAYER_ID = 'restaurants-points-hover'
+const POINT_HOVER_LAYER_ID = 'POINT_HOVER_LAYER_ID'
 
 const round = (val: number, dec = 100000) => {
   return Math.round(val * dec) / dec
@@ -46,7 +45,7 @@ const round = (val: number, dec = 100000) => {
 const mapSetFeature = (map: mapboxgl.Map, id: any, obj: any) => {
   map.setFeatureState(
     {
-      source: SOURCE_ID,
+      source: RESTAURANTS_SOURCE_ID,
       id,
     },
     obj
@@ -54,13 +53,6 @@ const mapSetFeature = (map: mapboxgl.Map, id: any, obj: any) => {
 }
 
 const mapSetIconSelected = (map: mapboxgl.Map, id: any) => {
-  // map.setLayoutProperty(PIN_LAYER_ID, 'icon-image', [
-  //   'match',
-  //   ['id'],
-  //   id,
-  //   'map-pin',
-  //   'icon-sushi',
-  // ])
   // map.setLayoutProperty(PIN_LAYER_ID, 'icon-size', [
   //   'match',
   //   ['id'],
@@ -68,9 +60,37 @@ const mapSetIconSelected = (map: mapboxgl.Map, id: any) => {
   //   0.5,
   //   0.5,
   // ])
+  // map.setLayoutProperty(PIN_LAYER_ID, 'icon-image', [
+  //   'match',
+  //   ['id'],
+  //   id,
+  //   'map-pin',
+  //   'icon-sushi',
+  // ])
+}
+
+const mapSetIconHovered = (map: mapboxgl.Map, id: any) => {
+  console.log('id', id)
+  map.setLayoutProperty(POINT_HOVER_LAYER_ID, 'icon-image', [
+    'match',
+    ['id'],
+    id,
+    'map-pin',
+    'map-pin-blank',
+  ])
 }
 
 export const Map = (props: MapProps) => {
+  const {
+    center,
+    span,
+    padding,
+    features,
+    style,
+    hovered,
+    selected,
+    onDoubleClick,
+  } = props
   const mapNode = useRef<HTMLDivElement>(null)
   let [map, setMap] = useState<mapboxgl.Map | null>(null)
   const internal = useRef({
@@ -170,13 +190,17 @@ export const Map = (props: MapProps) => {
           Promise.all([
             loadMap(),
             loadMarker('map-pin', require('../assets/map-pin.png').default),
-            // loadMarker(
-            //   'icon-sushi',
-            //   require('../assets/icon-sushi.png').default
-            // ),
+            loadMarker(
+              'icon-sushi',
+              require('../assets/icon-sushi.png').default
+            ),
+            loadMarker(
+              'map-pin-blank',
+              require('../assets/map-pin-blank.png').default
+            ),
           ]),
         () => {
-          map.addSource(SOURCE_ID, {
+          map.addSource(RESTAURANTS_SOURCE_ID, {
             type: 'geojson',
             data: {
               type: 'FeatureCollection',
@@ -194,7 +218,7 @@ export const Map = (props: MapProps) => {
           map.addLayer({
             id: POINT_LAYER_ID,
             type: 'circle',
-            source: SOURCE_ID,
+            source: RESTAURANTS_SOURCE_ID,
             layout: {
               // 'icon-image': 'map-pin',
               // 'icon-allow-overlap': true,
@@ -241,7 +265,7 @@ export const Map = (props: MapProps) => {
 
           map.addLayer({
             id: UNCLUSTERED_LABEL_LAYER_ID,
-            source: SOURCE_ID,
+            source: RESTAURANTS_SOURCE_ID,
             type: 'symbol',
             filter: ['!', ['has', 'point_count']],
             layout: {
@@ -263,9 +287,11 @@ export const Map = (props: MapProps) => {
           map.addLayer({
             id: CLUSTER_LABEL_LAYER_ID,
             type: 'symbol',
-            source: SOURCE_ID,
+            source: RESTAURANTS_SOURCE_ID,
             filter: ['has', 'point_count'],
             layout: {
+              'icon-allow-overlap': true,
+              'text-allow-overlap': true,
               'text-field': [
                 'format',
                 ['get', 'point_count_abbreviated'],
@@ -284,6 +310,20 @@ export const Map = (props: MapProps) => {
           })
           cancels.add(() => {
             map.removeLayer(CLUSTER_LABEL_LAYER_ID)
+          })
+
+          map.addLayer({
+            id: POINT_HOVER_LAYER_ID,
+            source: RESTAURANTS_SOURCE_ID,
+            type: 'symbol',
+            layout: {
+              'icon-allow-overlap': true,
+              'text-allow-overlap': true,
+              'icon-size': 0.25,
+            },
+          })
+          cancels.add(() => {
+            map.removeLayer(POINT_HOVER_LAYER_ID)
           })
 
           type Event = mapboxgl.MapMouseEvent & {
@@ -340,15 +380,6 @@ export const Map = (props: MapProps) => {
             map.off('mouseleave', POINT_LAYER_ID, unHoverCluster)
           })
 
-          // const handleMouseMove: Listener = (e) => {
-          //   handleMouseLeave(e)
-          //   setHovered(e, true)
-          // }
-
-          const handleMouseLeave: Listener = (e) => {
-            setHovered(e, false)
-          }
-
           /*
             Send back current location on move end
           */
@@ -359,10 +390,6 @@ export const Map = (props: MapProps) => {
             if (isEqual(lastLoc, next)) {
               return
             }
-            // console.log(
-            //   'handleMoveEnd, currentLocation',
-            //   JSON.stringify(next, null, 2)
-            // )
             lastLoc = next
             props.onMoveEnd?.(next)
           }, 150)
@@ -416,7 +443,7 @@ export const Map = (props: MapProps) => {
             })
             const clusterId = features[0].properties.cluster_id
             if (clusterId) {
-              const source = map.getSource(SOURCE_ID)
+              const source = map.getSource(RESTAURANTS_SOURCE_ID)
               if (source.type === 'geojson') {
                 source.getClusterExpansionZoom(clusterId, function (err, zoom) {
                   if (err) return
@@ -437,15 +464,6 @@ export const Map = (props: MapProps) => {
             map.off('click', CLUSTER_LABEL_LAYER_ID, handleClick)
             map.off('click', POINT_LAYER_ID, handleClick)
           })
-
-          // map.on('mousemove', PIN_LAYER_ID, handleMouseMove)
-          // map.on('mouseleave', PIN_LAYER_ID, handleMouseLeave)
-          cancels.add(() => {
-            // map.off('mousemove', PIN_LAYER_ID, handleMouseMove)
-            // map.off('mouseleave', PIN_LAYER_ID, handleMouseLeave)
-            // map.removeLayer(PIN_LAYER_ID)
-            // map.removeLayer(POINT_HOVER_LAYER_ID)
-          })
         },
         () => {
           map.resize()
@@ -463,25 +481,24 @@ export const Map = (props: MapProps) => {
     }
   }, [])
 
-  const {
-    center,
-    span,
-    padding,
-    features,
-    style,
-    selected,
-    onDoubleClick,
-  } = props
-
   // selected
   useEffect(() => {
-    const isMapLoaded = map && map.isStyleLoaded()
+    const isMapLoaded = map?.isStyleLoaded()
     if (!isMapLoaded) return
     if (!selected) return
     const index = features.findIndex((x) => x.properties.id === selected)
     mapSetIconSelected(map, index)
     setActive(map, index)
   }, [map, features, selected])
+
+  // hovered
+  useEffect(() => {
+    const isMapLoaded = map?.isStyleLoaded()
+    if (!isMapLoaded) return
+    if (!hovered) return
+    const index = features.findIndex((x) => x.properties.id === hovered)
+    mapSetIconHovered(map, index)
+  }, [map, hovered])
 
   // style
   useEffect(() => {
@@ -507,7 +524,7 @@ export const Map = (props: MapProps) => {
     // show center/sw/ne points on map for debugging
     if (process.env.NODE_ENV === 'development') {
       if (false) {
-        const source = map.getSource(SOURCE_ID)
+        const source = map.getSource(RESTAURANTS_SOURCE_ID)
         if (source?.type === 'geojson') {
           source.setData({
             type: 'FeatureCollection',
@@ -578,22 +595,12 @@ export const Map = (props: MapProps) => {
   // features
   useEffect(() => {
     if (!map) return
-    const source = map.getSource(SOURCE_ID)
+    const source = map.getSource(RESTAURANTS_SOURCE_ID)
     if (source?.type === 'geojson') {
       source.setData({
         type: 'FeatureCollection',
         features,
       })
-
-      // this doesnt really work nicely
-      // if (!props.avoidFitBounds) {
-      //   return series([
-      //     () => fullyIdle({ max: 300 }),
-      //     () => {
-      //       fitMapToResults(map, features)
-      //     },
-      //   ])
-      // }
     }
   }, [features, map])
 

@@ -113,6 +113,7 @@ const HomePageRestaurant = memo(
 
             <Suspense fallback={null}>
               <RestaurantRatingBreakdown
+                showScoreTable
                 restaurantSlug={slug}
                 restaurantId={restaurant.id}
               />

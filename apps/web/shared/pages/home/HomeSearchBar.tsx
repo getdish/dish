@@ -1,7 +1,7 @@
 import { AbsoluteVStack, HStack, Spacer, VStack } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo, useState } from 'react'
-import { ChevronLeft, MapPin, Search } from 'react-feather'
+import { ChevronLeft, Home, MapPin, Search } from 'react-feather'
 
 import {
   pageWidthMax,
@@ -286,7 +286,7 @@ const HomeSearchBarHomeBackButton = memo(() => {
       justifyContent="center"
       alignItems="center"
       pointerEvents="auto"
-      width={30}
+      width={32}
       opacity={isDisabled ? 0.1 : 0.7}
       disabled={isDisabled}
       onPress={() => om.actions.home.popBack()}
@@ -299,7 +299,11 @@ const HomeSearchBarHomeBackButton = memo(() => {
         },
       })}
     >
-      <ChevronLeft {...iconProps} />
+      {om.state.home.states.length === 2 ? (
+        <Home {...iconProps} />
+      ) : (
+        <ChevronLeft {...iconProps} />
+      )}
     </LinkButton>
   )
 })

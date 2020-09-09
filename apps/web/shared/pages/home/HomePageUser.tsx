@@ -10,6 +10,7 @@ import { avatar } from './HomePageSearchResults'
 import { HomeScrollView } from './HomeScrollView'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { StackItemProps } from './HomeStackView'
+import { RestaurantReview } from './RestaurantReview'
 
 const useUserQuery = (username: string) => {
   return query.user({
@@ -39,13 +40,10 @@ const HomePageUser = graphql(function HomePageUser({
   item,
 }: StackItemProps<HomeStateItemUser>) {
   const user = useUserQuery(item?.username ?? '')
+
   if (!user) {
     return <NotFoundPage />
   }
-  const reviews =
-    user.reviews({
-      limit: 20,
-    }) ?? []
 
   return (
     <HomeScrollView paddingTop={0}>
@@ -73,22 +71,24 @@ const HomePageUser = graphql(function HomePageUser({
 
       <VStack spacing="xl" paddingHorizontal="2.5%">
         <VStack>
-          {!reviews.length && <Text>No reviews yet...</Text>}
-          {!!reviews.length &&
-            reviews.map((review) => (
-              <Text key={review.id}>
-                <Link
-                  name="restaurant"
-                  params={{ slug: review.restaurant.slug }}
-                >
-                  {review.restaurant.name}
-                </Link>
-                <Text>{review.rating}⭐</Text>
-                <Text>{review.text}</Text>
-              </Text>
-            ))}
+          <UserReviewsList username={item?.username ?? ''} />
         </VStack>
       </VStack>
     </HomeScrollView>
+  )
+})
+
+const UserReviewsList = graphql(({ username }: { username: string }) => {
+  const user = useUserQuery(username)
+  const reviews =
+    user.reviews({
+      limit: 20,
+    }) ?? []
+  return (
+    <>
+      {!reviews.length && <Text>No reviews yet...</Text>}
+      {!!reviews.length &&
+        reviews.map((review) => <RestaurantReview reviewId={review.id} />)}
+    </>
   )
 })

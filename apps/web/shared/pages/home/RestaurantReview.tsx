@@ -13,7 +13,7 @@ export const RestaurantReview = memo(
       hideUsername,
     }: {
       reviewId: string
-      refetchKey: string
+      refetchKey?: string
       hideUsername?: boolean
     }) => {
       const reviews = query.review({
