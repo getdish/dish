@@ -384,12 +384,13 @@ tables:
       - text
       - updated_at
       - user_id
+      - username
       filter: {}
   - role: contributor
     permission:
       columns:
-      - categories
       - authored_at
+      - categories
       - id
       - rating
       - restaurant_id
@@ -397,6 +398,7 @@ tables:
       - text
       - updated_at
       - user_id
+      - username
       filter: {}
   - role: user
     permission:
@@ -412,6 +414,7 @@ tables:
       - text
       - updated_at
       - user_id
+      - username
       filter: {}
   update_permissions:
   - role: contributor
