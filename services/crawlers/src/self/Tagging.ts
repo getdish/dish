@@ -34,7 +34,7 @@ export class Tagging {
     [key: string]: number[]
   } = {}
   all_tags: Tag[] = []
-  _found_tags: { [key: string]: Partial<RestaurantTag> } = {}
+  found_tags: { [key: string]: Partial<Tag> } = {}
   SPECIAL_FILTER_THRESHOLD = 3
   sentiment = new Sentiment()
   all_reviews: Review[] = []
@@ -142,7 +142,7 @@ export class Tagging {
   }
 
   async scanCorpus() {
-    this._found_tags = {}
+    this.found_tags = {}
     this.all_tags = await restaurantGetAllPossibleTags(this.crawler.restaurant)
     this.restaurant_tag_ratings = {}
     this.all_reviews = [
@@ -153,8 +153,16 @@ export class Tagging {
     const all_sources = [...this.all_reviews, ...this._scanMenuItemsForTags()]
     const reviews_with_sentiments = this.findDishesInText(all_sources)
     await this.findVegInText(all_sources)
-    await this._averageAndPersistTagRatings()
+    await this._collectFoundRestaurantTags()
     await reviewExternalUpsert(reviews_with_sentiments)
+  }
+
+  async _collectFoundRestaurantTags() {
+    for (const tag_id of Object.keys(this.restaurant_tag_ratings)) {
+      this.restaurant_tags.push({
+        tag_id: tag_id,
+      })
+    }
   }
 
   async findPhotosForTags() {
@@ -175,7 +183,7 @@ export class Tagging {
         }
         let is_at_least_one_photo = false
         for (const photo of photos) {
-          if (this._doesStringContainTag(photo.media_data?.caption, tag.name)) {
+          if (this.doesStringContainTag(photo.media_data?.caption, tag.name)) {
             is_at_least_one_photo = true
             all_tag_photos.push({
               restaurant_id: this.crawler.restaurant.id,
@@ -204,7 +212,7 @@ export class Tagging {
         text = source.text ?? ''
       }
       for (const tag of this.all_tags) {
-        const is_tags_found = this._doesStringContainTag(text, tag.name ?? '')
+        const is_tags_found = this.doesStringContainTag(text, tag.name ?? '')
         if (is_tags_found) {
           source = this.tagFound(tag, source)
         }
@@ -224,12 +232,12 @@ export class Tagging {
     } else {
       text = text_source as string
     }
-    this._found_tags[tag.id] = { tag_id: tag.id } as RestaurantTag
+    this.found_tags[tag.id] = tag
     this.restaurant_tag_ratings[tag.id] =
       this.restaurant_tag_ratings[tag.id] || []
     const sentences = this.matchingSentences(text, tag)
     for (const sentence of sentences) {
-      if (!this._doesStringContainTag(sentence, tag.name ?? '')) continue
+      if (!this.doesStringContainTag(sentence, tag.name ?? '')) continue
       const rating = this.measureSentiment(sentence)
       this.restaurant_tag_ratings[tag.id].push(rating)
       if (isReview(text_source)) {
@@ -251,15 +259,15 @@ export class Tagging {
       if (!text) {
         text = source as string
       }
-      if (this._doesStringContainTag(text, 'vegetarian')) matches += 1
-      if (this._doesStringContainTag(text, 'vegan')) matches += 1
+      if (this.doesStringContainTag(text, 'vegetarian')) matches += 1
+      if (this.doesStringContainTag(text, 'vegan')) matches += 1
     }
     if (matches > this.SPECIAL_FILTER_THRESHOLD) {
       await this.addSimpleTags(['veg'])
     }
   }
 
-  _doesStringContainTag(text: string, tag_name: string | undefined) {
+  doesStringContainTag(text: string, tag_name: string | undefined) {
     if (typeof tag_name === 'undefined') return false
     const regex = new RegExp(`\\b${tag_name}\\b`, 'i')
     return regex.test(text)
@@ -271,59 +279,6 @@ export class Tagging {
 
   measureSentiment(sentence: string) {
     return this.sentiment.analyze(sentence).score
-  }
-
-  async _averageAndPersistTagRatings() {
-    for (const tag_id of Object.keys(this.restaurant_tag_ratings)) {
-      this.restaurant_tags.push({
-        tag_id: tag_id,
-        rating: this._calculateTagRating(this.restaurant_tag_ratings[tag_id]),
-      })
-    }
-  }
-
-  _calculateTagRating(ratings: number[]) {
-    const averaged = mean(ratings)
-    const normalised = this._normaliseTagRating(averaged)
-    const max_restaurant_rating = 5
-    const neutral = max_restaurant_rating / 2
-    const amplifier = (this.crawler.restaurant.rating - neutral) / neutral
-    let potential = 0
-    if (amplifier > 0) {
-      potential = (1 - normalised) / 2
-    } else {
-      potential = normalised / 2
-    }
-    const weight = potential * amplifier
-    const weighted = normalised + weight
-    return weighted
-  }
-
-  _normaliseTagRating(rating: number) {
-    let normalised: number = 0
-    const percentiles = this._getApproximatedDistribution()
-    let lower: number = 0
-    let upper: number = 0
-    if (rating <= percentiles[0]) return 0
-    if (rating >= percentiles[percentiles.length - 1]) return 1
-    for (let i = 0; i < percentiles.length; i++) {
-      normalised = i
-      lower = percentiles[i]
-      upper = percentiles[i + 1]
-      if (rating >= lower && rating < upper) break
-    }
-    const distance_between = 1 - (upper - rating) / (upper - lower)
-    normalised += distance_between
-    return normalised / (percentiles.length - 1)
-  }
-
-  // All the percentiles for our tag rankings. You can get them with statements like:
-  // ```
-  // select percentile_disc(0.5) within group (order by restaurant_tag.rating)
-  //   from restaurant_tag
-  // ```
-  _getApproximatedDistribution() {
-    return [-15, -0.001, 0.001, 0.666, 1.081, 1.5, 2, 2.272, 3, 4, 44]
   }
 
   _getYelpReviews() {

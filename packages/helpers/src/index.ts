@@ -38,3 +38,21 @@ export function handleAssertionError(err: any) {
   }
   throw err
 }
+
+export async function fetchABSASentiment(sentence: string, aspect: string) {
+  return fetch(
+    `https://absa.k8s.dishapp.com/?text="${encodeURIComponent(
+      sentence
+    )}"&aspect="${encodeURIComponent(aspect)}"`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+    .then((res) => res.json())
+    .then((x) => ({
+      sentence,
+      sentiment: x.results[0],
+    }))
+}

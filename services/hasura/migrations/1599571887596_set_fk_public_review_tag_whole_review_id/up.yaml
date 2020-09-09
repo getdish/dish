@@ -1,0 +1,10 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: |-
+      alter table "public"."review_tag_whole"
+                 add constraint "review_tag_whole_review_id_fkey"
+                 foreign key ("review_id")
+                 references "public"."review"
+                 ("id") on update cascade on delete cascade;
+  type: run_sql

@@ -1,0 +1,18 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."review_tag_whole" ADD COLUMN "restaurant_id" uuid;
+  type: run_sql
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."review_tag_whole" ALTER COLUMN "restaurant_id" DROP
+      NOT NULL;
+  type: run_sql
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."review_tag_whole" ADD CONSTRAINT review_tag_whole_restaurant_id_fkey
+      FOREIGN KEY (restaurant_id) REFERENCES "public"."restaurant" (id) ON DELETE
+      cascade ON UPDATE cascade;
+  type: run_sql

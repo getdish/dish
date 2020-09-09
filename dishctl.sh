@@ -103,6 +103,8 @@ function start_all_crawlers() {
 }
 
 function db_migrate() {
+  _PG_PORT=$(generate_random_port)
+  postgres_proxy $_PG_PORT
   pushd $PROJECT_ROOT/services/hasura
   hasura --skip-update-check \
     migrate apply \
@@ -112,6 +114,13 @@ function db_migrate() {
     metadata apply \
     --endpoint https://hasura.dishapp.com \
     --admin-secret $TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET
+  cat functions/*.sql | \
+    PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
+      -p $_PG_PORT \
+      -h localhost \
+      -U postgres \
+      -d dish \
+      --single-transaction
   popd
 }
 

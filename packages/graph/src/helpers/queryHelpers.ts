@@ -4,7 +4,7 @@ import {
   query,
   restaurant_constraint,
   review_constraint,
-  review_tag_constraint,
+  review_tag_sentences_constraint,
   schema,
   setting_constraint,
   tag_constraint,
@@ -41,7 +41,8 @@ const defaultConstraints = {
   tag: tag_constraint.tag_parentId_name_key,
   restaurant: restaurant_constraint.restaurant_name_address_key,
   review: review_constraint.review_native_data_unique_key_key,
-  review_tag: review_tag_constraint.review_tag_tag_id_review_id_sentence_key,
+  review_tag_sentences:
+    review_tag_sentences_constraint.review_tag_tag_id_review_id_sentence_key,
   setting: setting_constraint.setting_pkey,
   tag_tag: tag_tag_constraint.tag_tag_pkey,
   user: user_constraint.user_username_key,

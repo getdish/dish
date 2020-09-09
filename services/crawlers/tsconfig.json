@@ -11,6 +11,7 @@
   "references": [
     { "path": "../../packages/common" },
     { "path": "../../packages/graph" },
+    { "path": "../../packages/helpers" },
     { "path": "../../packages/worker" }
   ]
 }
