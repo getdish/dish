@@ -61,7 +61,7 @@ class UserController {
   static editUser = async (req: Request, res: Response) => {
     const id = req.params.id
 
-    const { username, role } = req.body
+    const { username, email, role } = req.body
 
     const userRepository = getRepository(User)
     let user
@@ -72,6 +72,7 @@ class UserController {
       return
     }
 
+    user.email = email
     user.username = username
     user.role = role
     const errors = await validate(user)

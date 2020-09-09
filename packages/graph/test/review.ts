@@ -31,7 +31,7 @@ test.beforeEach(async (t) => {
   t.context.restaurant = restaurant
   const [existing_tag] = await tagInsert([{ name: 'Test tag existing' }])
   t.context.existing_tag = existing_tag
-  await Auth.register('test', 'password')
+  await Auth.register('test', 'test@test.com', 'password')
   const [_, user] = await Auth.login('test', 'password')
   t.context.user = user
 })

@@ -1,5 +1,6 @@
 import { Router } from 'express'
 
+import AppleAuthController from '../controllers/AppleAuthController'
 import UserController from '../controllers/UserController'
 import { checkJwt } from '../middlewares/checkJwt'
 import { checkRole } from '../middlewares/checkRole'
@@ -18,6 +19,9 @@ router.get(
 
 //Create a new user
 router.post('/', [UserController.newUser])
+
+// apple auth
+router.post('/apple_authorize', [AppleAuthController.authCallback])
 
 //Edit one user
 router.patch(

@@ -65,6 +65,7 @@ export class User {
       user = new User()
       Object.assign(user, {
         username: 'admin',
+        email: 'team@dishapp.com',
         role: 'admin',
         password: ADMIN_PASSWORD,
       })

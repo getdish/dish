@@ -1,6 +1,5 @@
 - implement v1 point ratings + voting
 - changes to auth:
-  - get apple-authorize app running / do basic integration with frontend
   - login with email or username
   - register with email + username
 - profiles loading really slow http://d1sh_hasura_live.com:19006/u/admin
