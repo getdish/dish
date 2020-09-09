@@ -54,7 +54,7 @@ test.beforeEach(async () => {
 })
 
 test('Normal user cannot delete things', async (t) => {
-  await Auth.register('tester', 'password')
+  await Auth.register('tester', 'test@test.com', 'password')
   await Auth.login('tester', 'password')
   Auth.as('user')
 
@@ -90,7 +90,7 @@ test('Normal user can see restaurants', async (t) => {
       },
     },
   ])
-  await Auth.register('tester', 'password')
+  await Auth.register('tester', 'test@test.com', 'password')
   await Auth.login('tester', 'password')
   Auth.as('user')
   const restaurant = await getRestaurantSimple('test')
@@ -107,7 +107,7 @@ test('Contributor can edit restaurants', async (t) => {
       },
     },
   ])
-  await Auth.register('tester-contributor', 'password')
+  await Auth.register('tester-contributor', 'test@test.com', 'password')
   let user = await userFindOne({ username: 'tester-contributor' })
   user = await userUpdate({
     ...user,
