@@ -24,7 +24,7 @@ export default memo(
     const params = router.curPage.params
     console.log('params', params)
     const restaurant = useRestaurantQuery(params.slug)
-    const hours = restaurant.hours()
+    const hours = restaurant.hours() ?? []
     const dayOfWeek = new Intl.DateTimeFormat(['en'], {
       weekday: 'short',
     }).format(new Date())
@@ -39,10 +39,10 @@ export default memo(
       >
         <VStack
           width="80%"
-          height="80%"
           backgroundColor="#fff"
           borderRadius={15}
-          maxWidth={400}
+          maxWidth={380}
+          maxHeight={480}
           alignItems="center"
           position="relative"
           overflow="hidden"

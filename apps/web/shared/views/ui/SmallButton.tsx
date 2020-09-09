@@ -73,12 +73,16 @@ export function SmallLinkButton<
   tags,
   children,
   fontWeight,
+  ellipse,
   color,
   ...props
 }: LinkButtonProps<Name, Params>) {
   return (
     <SmallButton {...props}>
-      <LinkButton flex={1} {...{ name, params, tag, tags, fontWeight, color }}>
+      <LinkButton
+        flex={1}
+        {...{ name, params, tag, tags, fontWeight, color, ellipse }}
+      >
         {children}
       </LinkButton>
     </SmallButton>

@@ -21,7 +21,6 @@ next week:
 
 big impact changes
 
-- location <=> url
 - threading on comments is the only way you get discussion which leads to clarfiication, which is both what keeps people around and what allows us to get much richer info
 - make map more alive
   - colors by category (cuisine?)
@@ -29,6 +28,10 @@ big impact changes
   - hovering a group can make those bubbles get preference and enlarge
   - hover restaurant show it on map (but without moving it, maybe marker zoom)
   - liking a restuarant could drop a heart
+  - emoji icons once you get to a zoom level
+  - speeding it up in general
+- adding in hot & new / popups / instagram
+  - basically, social features
 - home needs to feel more like a discussion
   - so do all other pages
   - basically do a sprint on bringing out discussions
