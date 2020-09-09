@@ -46,10 +46,9 @@ export default function HomePageAbout({
 
           <VStack spacing="xl">
             <Paragraph size="xxxl" fontWeight="300">
-              Craving pho? It sucks that amazing Vietnamese, Chinese, and
-              Mexican spots with amazing food often get lost behind poor
-              ratings. Lets stop smashing food, ambiance and service into one
-              star rating.
+              Craving pho? Amazing Vietnamese, Chinese, and Mexican spots are
+              often hard to find because a single 5-star rating forces food,
+              ambiance and service all into one.
             </Paragraph>
 
             <Paragraph size="xxl" fontWeight="300">
@@ -84,27 +83,22 @@ export default function HomePageAbout({
                 date night
               </LinkButton>{' '}
               you care about different things, so Dish splits out ratings into
-              every factor that matters - importantly, we go down to the dish.
-              So you can find the best pho joint in town.
+              every factor that matters - down to the dish.
             </Paragraph>
 
             <Paragraph size="xl">
-              We hope it changes the world of eating out and in by letting
-              restaurants specialize. Instead of pleasing everyone they can
-              focus on doing one or two things really well. Let hole in the wall
-              gems thrive!
+              Lets change the world of eating out (and in) by letting
+              restaurants specialize. Instead of pleasing everyone to get 5
+              stars, Dish lets them focus one thing well.
             </Paragraph>
 
             <Paragraph size="xl">
-              To figure out accurate ratings we crawl every top critic source
-              (think RottenTomatoes, for food) and then look at{' '}
+              We crawl every top critic source (think RottenTomatoes, for food)
+              and then look at{' '}
               <TextStrong>
                 what people actually say about all the factors that matter
-              </TextStrong>{' '}
-              - from the vibe, service, or individual dishes, to whether they
-              have a good drinks, are vegetarian friendly, and more. Then, we
-              build a map of food uniquely good to each area. Find uniquely good
-              places, and exactly what you crave ✨.
+              </TextStrong>
+              . Then, we build a map of food uniquely good to each area.
             </Paragraph>
 
             <Paragraph size="xl">
