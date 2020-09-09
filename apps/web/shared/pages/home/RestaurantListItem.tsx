@@ -18,7 +18,7 @@ import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Activity, HelpCircle } from 'react-feather'
 import { Image } from 'react-native'
 
-import { bgLight, bgLightLight, brandColor } from '../../colors'
+import { bgLight, bgLightLight, brandColor, lightBlue } from '../../colors'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
 import { omStatic, useOvermindStatic } from '../../state/om'
 import { tagDisplayName } from '../../state/tagDisplayName'
@@ -212,31 +212,6 @@ const RestaurantListItemContent = memo(
                       restaurantId={restaurantId}
                       activeTagIds={tagIds ?? {}}
                     />
-
-                    <AbsoluteVStack
-                      bottom={-10}
-                      right={-14}
-                      borderRadius={100}
-                      width={24}
-                      height={24}
-                      zIndex={1000}
-                      alignItems="center"
-                      justifyContent="center"
-                      backgroundColor="#fff"
-                      borderWidth={1}
-                      borderColor="#eee"
-                    >
-                      <Text color="#999">
-                        <SuperScriptText fontSize={10}>#</SuperScriptText>
-                        <Text
-                          fontSize={+rank > 9 ? 10 : 14}
-                          fontWeight="700"
-                          color="#777"
-                        >
-                          {rank}
-                        </Text>
-                      </Text>
-                    </AbsoluteVStack>
                   </VStack>
                   <Spacer />
 
@@ -263,7 +238,7 @@ const RestaurantListItemContent = memo(
                         borderBottomWidth={1}
                         // @ts-ignore
                         hoverStyle={{
-                          borderBottomColor: '#aaa',
+                          borderBottomColor: lightBlue,
                         }}
                         pressStyle={{
                           borderBottomColor: brandColor,
@@ -291,11 +266,22 @@ const RestaurantListItemContent = memo(
               zIndex={1000}
               marginLeft={8}
               alignItems="center"
-              paddingLeft={40}
+              paddingLeft={30}
               paddingRight={20}
               cursor="pointer"
               onPress={reviewDisplayStore.toggleShowComments}
             >
+              <Text color="#777">
+                <SuperScriptText fontSize={11}>#</SuperScriptText>
+                <Text
+                  fontSize={+rank > 9 ? 12 : 16}
+                  fontWeight="700"
+                  color="#000"
+                >
+                  {rank}
+                </Text>
+              </Text>
+              <Spacer size="sm" />
               <RestaurantScoreBreakdownSmall
                 restaurantId={restaurantId}
                 restaurantSlug={restaurantSlug}
@@ -303,7 +289,7 @@ const RestaurantListItemContent = memo(
             </HStack>
           </VStack>
 
-          <Spacer size="sm" />
+          <Spacer />
 
           {/* ROW: OVERVIEW / PEEK */}
           <HStack flex={1} maxWidth="100%">
