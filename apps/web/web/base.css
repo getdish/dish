@@ -388,3 +388,20 @@ input:-webkit-autofill:active  {
 .preserve-whitespace {
   white-space: pre-wrap;
 }
+
+@media (hover: hover) {
+  .hover-faded-in-parent:hover .faded-out, .hover-faded-in-parent:hover .greyed-out {
+    filter: grayscale(0%);
+    opacity: 1;
+  }
+
+  .faded-out {
+    transition: all ease-in 300ms;
+    filter: grayscale(100%);
+    opacity: 0.5;
+  }
+
+  .greyed-out {
+    filter: grayscale(100%);
+  }
+}

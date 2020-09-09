@@ -30,9 +30,14 @@ export const RestaurantDeliveryButtons = memo(
     }
 
     return (
-      <HStack flexWrap="wrap" alignItems="center" flex={20}>
+      <HStack flexWrap="wrap" alignItems="center">
         {!!props.label && (
-          <Text fontSize={13} color="rgba(0,0,0,0.7)" marginRight={8}>
+          <Text
+            fontSize={18}
+            color="rgba(0,0,0,0.7)"
+            marginRight={12}
+            transform={[{ translateY: -1 }]}
+          >
             {props.label}
           </Text>
         )}
@@ -67,13 +72,15 @@ const RestaurantDeliveryButton = ({
     >
       <HStack
         padding={4}
-        paddingHorizontal={6}
+        paddingHorizontal={4}
+        marginHorizontal={-4}
         borderRadius={100}
         hoverStyle={{
           backgroundColor: bgLight,
         }}
       >
         <img
+          className="greyed-out"
           alt={source.name}
           src={source.image}
           style={{

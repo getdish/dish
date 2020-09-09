@@ -174,6 +174,7 @@ const RestaurantListItemContent = memo(
 
     return (
       <VStack
+        className="hover-faded-in-parent"
         alignItems="flex-start"
         justifyContent="flex-start"
         flex={1}
@@ -259,10 +260,10 @@ const RestaurantListItemContent = memo(
                         }
                         marginRight={10}
                         borderBottomColor="transparent"
-                        borderBottomWidth={2}
+                        borderBottomWidth={1}
                         // @ts-ignore
                         hoverStyle={{
-                          borderBottomColor: '#999',
+                          borderBottomColor: '#aaa',
                         }}
                         pressStyle={{
                           borderBottomColor: brandColor,
@@ -446,6 +447,7 @@ export const RestaurantScoreBreakdownSmall = memo(
                   contents={`${info.name} +${+(item.rating ?? 0) * 10} points`}
                 >
                   <HStack
+                    className="faded-out"
                     alignItems="center"
                     paddingHorizontal={5}
                     paddingVertical={3}
@@ -457,8 +459,8 @@ export const RestaurantScoreBreakdownSmall = memo(
                       <Image
                         source={info.image}
                         style={{
-                          width: 20,
-                          height: 20,
+                          width: 16,
+                          height: 16,
                           borderRadius: 100,
                         }}
                       />

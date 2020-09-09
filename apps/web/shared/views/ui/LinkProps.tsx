@@ -36,7 +36,7 @@ export type LinkSharedProps = {
 }
 
 export type LinkButtonNamedProps<A = any, B = any> = {
-  name: A
+  name?: A
   params?: B
   tags?: NavigableTag[]
   tag?: NavigableTag | null
