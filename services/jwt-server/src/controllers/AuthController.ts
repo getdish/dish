@@ -18,8 +18,14 @@ class AuthController {
     try {
       user = await userRepository.findOneOrFail({ where: { username } })
     } catch (error) {
-      res.status(401).send()
-      return
+      try {
+        user = await userRepository.findOneOrFail({
+          where: { email: username },
+        })
+      } catch (error) {
+        res.status(401).send()
+        return
+      }
     }
 
     if (!user.checkIfUnencryptedPasswordIsValid(password)) {
