@@ -3,8 +3,8 @@ import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import {
   AbsoluteVStack,
   HStack,
-  LoadingItems,
   Spacer,
+  StackProps,
   SuperScriptText,
   Text,
   Tooltip,
@@ -37,7 +37,6 @@ import {
   RestaurantReviewsDisplayStore,
 } from './RestaurantRatingBreakdown'
 import RestaurantRatingView from './RestaurantRatingView'
-import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 import { Squircle } from './Squircle'
 import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
@@ -115,11 +114,6 @@ export const RestaurantListItem = memo(function RestaurantListItem(
         scrollEventThrottle={100}
       >
         <RestaurantListItemContent {...props} />
-        <RestaurantPeekDishes
-          restaurantSlug={props.restaurantSlug}
-          searchState={props.searchState}
-          isLoaded={isLoaded}
-        />
       </HomeScrollViewHorizontal>
 
       {store.showComments && (
@@ -166,6 +160,12 @@ const RestaurantListItemContent = memo(
       )
     }, [props.rank])
 
+    const contentSideWidthProps: StackProps = {
+      width: isSmall ? '90%' : '60%',
+      minWidth: isSmall ? '52vw' : 320,
+      maxWidth: isSmall ? '80vw' : 450,
+    }
+
     return (
       <VStack
         alignItems="flex-start"
@@ -178,9 +178,6 @@ const RestaurantListItemContent = memo(
         borderLeftWidth={2}
         borderLeftColor={isActive ? brandColor : 'transparent'}
         paddingHorizontal={pad}
-        width={isSmall ? '60%' : '100%'}
-        minWidth={isSmall ? '52vw' : 320}
-        maxWidth={isSmall ? '60vw' : 450}
         position="relative"
       >
         <VStack flex={1} alignItems="flex-start" maxWidth="100%">
@@ -190,8 +187,8 @@ const RestaurantListItemContent = memo(
             hoverStyle={{ backgroundColor: bgLightLight }}
             marginLeft={-pad}
             paddingLeft={pad}
-            paddingBottom={28}
-            marginBottom={-28}
+            paddingBottom={8}
+            marginBottom={-8}
             width={950}
             position="relative"
           >
@@ -227,7 +224,7 @@ const RestaurantListItemContent = memo(
                         <Text
                           fontSize={+rank > 9 ? 10 : 14}
                           fontWeight="700"
-                          color="#444"
+                          color="#777"
                         >
                           {rank}
                         </Text>
@@ -267,12 +264,12 @@ const RestaurantListItemContent = memo(
                       >
                         {restaurantName}
                       </Text>
-                      <Spacer />
+                      <Spacer size="xs" />
                     </Link>
                     {!!restaurant.address && (
                       <RestaurantAddress
                         size="xs"
-                        currentLocationInfo={currentLocationInfo}
+                        currentLocationInfo={currentLocationInfo!}
                         address={restaurant.address}
                       />
                     )}
@@ -280,123 +277,102 @@ const RestaurantListItemContent = memo(
                 </HStack>
               </VStack>
             </Link>
+
+            {/* RANKING ROW */}
+            <HStack
+              {...contentSideWidthProps}
+              zIndex={1000}
+              marginLeft={8}
+              alignItems="center"
+              paddingLeft={40}
+              paddingRight={20}
+              cursor="pointer"
+              onPress={reviewDisplayStore.toggleShowComments}
+            >
+              <RestaurantScoreBreakdownSmall
+                restaurantId={restaurantId}
+                restaurantSlug={restaurantSlug}
+              />
+            </HStack>
           </VStack>
-
-          <Spacer size={12} />
-
-          {/* RANKING ROW */}
-          <HStack zIndex={1000} marginLeft={8} alignItems="center">
-            <VStack>
-              <HStack alignItems="center">
-                <VStack marginLeft={30} marginTop={-6}>
-                  <HStack
-                    paddingLeft={10}
-                    paddingRight={20}
-                    cursor="pointer"
-                    onPress={reviewDisplayStore.toggleShowComments}
-                  >
-                    <RestaurantScoreBreakdownSmall
-                      restaurantId={restaurantId}
-                      restaurantSlug={restaurantSlug}
-                    />
-                  </HStack>
-                </VStack>
-              </HStack>
-            </VStack>
-          </HStack>
 
           <Spacer size="sm" />
 
-          {/* ROW: Overview / Reviews / Comment */}
-          <VStack
-            flex={1}
-            maxWidth="100%"
-            overflow="hidden"
-            paddingBottom={10}
-            marginBottom={-10}
-          >
-            <VStack width="100%" paddingLeft={isSmall ? 10 : 0}>
+          {/* ROW: OVERVIEW / PEEK */}
+          <HStack flex={1} maxWidth="100%">
+            <VStack
+              {...contentSideWidthProps}
+              justifyContent="center"
+              marginRight={20}
+            >
+              <Text opacity={0} lineHeight={0}>
+                wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+              </Text>
               <Text fontSize={16} lineHeight={24}>
-                <VStack marginTop={4} maxWidth="100%" flex={1}>
-                  <Text opacity={0} lineHeight={0}>
-                    wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-                  </Text>
-                  <Text>
-                    <Suspense fallback={<LoadingItems />}>
-                      <RestaurantOverview
-                        restaurantSlug={restaurantSlug}
-                        inline
-                      />
-                    </Suspense>
-                  </Text>
-                </VStack>
+                <Suspense fallback={null}>
+                  <RestaurantOverview restaurantSlug={restaurantSlug} inline />
+                </Suspense>
               </Text>
             </VStack>
 
-            <Spacer size="lg" />
+            <RestaurantPeekDishes
+              restaurantSlug={props.restaurantSlug}
+              searchState={props.searchState}
+              isLoaded={true}
+            />
+          </HStack>
 
-            {/* BOTTOM ROW */}
+          <Spacer size="lg" />
 
-            <Suspense fallback={null}>
-              <HStack flex={1} alignItems="center" flexWrap="wrap">
-                <VStack>
-                  <Tooltip contents={`Rating Breakdown (152 reviews)`}>
-                    <SmallButton
-                      isActive={reviewDisplayStore.showComments}
-                      onPress={reviewDisplayStore.toggleShowComments}
-                    >
-                      <HStack alignItems="center">
-                        <VStack marginVertical={-10}>
-                          <RestaurantRatingView
-                            size="xs"
-                            restaurantSlug={restaurantSlug}
-                          />
-                        </VStack>
-                        <Spacer size="sm" />
+          {/* BOTTOM ROW */}
+
+          <Suspense fallback={null}>
+            <HStack flex={1} alignItems="center" flexWrap="wrap" minWidth={450}>
+              <VStack>
+                <Tooltip contents={`Rating Breakdown (152 reviews)`}>
+                  <SmallButton
+                    isActive={reviewDisplayStore.showComments}
+                    onPress={reviewDisplayStore.toggleShowComments}
+                  >
+                    <HStack alignItems="center">
+                      <HStack className="hide-when-small">
                         <Activity size={14} />
                         <Spacer size="sm" />
-                        <Text fontSize={16} opacity={0.5}>
-                          152
-                        </Text>
                       </HStack>
-                    </SmallButton>
-                  </Tooltip>
+                      <Text color="rgba(0,0,0,0.5)" fontSize={16}>
+                        152
+                      </Text>
+                    </HStack>
+                  </SmallButton>
+                </Tooltip>
+              </VStack>
+
+              <Spacer size="sm" />
+
+              <HStack
+                alignItems="center"
+                {...smallButtonBaseStyle}
+                {...{
+                  // for ui-static to behave :(
+                  ...{},
+                  alignSelf: 'center',
+                  height: 36,
+                  cursor: 'initial',
+                }}
+              >
+                <VStack marginVertical={-7} marginRight={-7}>
+                  <RestaurantDeliveryButtons
+                    label="🚗"
+                    restaurantSlug={restaurantSlug}
+                  />
                 </VStack>
-
-                <Spacer size="sm" />
-
-                <HStack
-                  alignItems="center"
-                  {...smallButtonBaseStyle}
-                  {...{
-                    // for ui-static to behave :(
-                    ...{},
-                    alignSelf: 'center',
-                    height: 36,
-                    cursor: 'initial',
-                  }}
-                >
-                  <VStack marginVertical={-5} marginRight={-7}>
-                    <RestaurantDeliveryButtons
-                      label="Order"
-                      restaurantSlug={restaurantSlug}
-                    />
-                  </VStack>
-                </HStack>
-
-                <VStack flex={1} />
-                <RestaurantDetailRow
-                  size="sm"
-                  restaurantSlug={restaurantSlug}
-                />
-                <RestaurantFavoriteButton
-                  size="md"
-                  restaurantId={restaurantId}
-                />
               </HStack>
-            </Suspense>
-          </VStack>
 
+              <VStack flex={1} />
+              <RestaurantDetailRow size="sm" restaurantSlug={restaurantSlug} />
+              <RestaurantFavoriteButton size="md" restaurantId={restaurantId} />
+            </HStack>
+          </Suspense>
           <Spacer />
         </VStack>
       </VStack>
@@ -429,65 +405,67 @@ export const RestaurantScoreBreakdownSmall = memo(
         (a) => (a.type === 'lense' ? 0 : a.type === 'dish' ? 2 : 1)
       )
       return (
-        <HStack position="relative" alignItems="center">
-          <HStack>
-            <Text className="ellipse" fontSize={12} color="rgba(0,0,0,0.5)">
-              <Text fontSize={12}>
-                in "
-                <Text fontWeight="600">
-                  {reviewTags
-                    .map((tag, i) => {
-                      return tagDisplayName(tag)
-                    })
-                    .join(' ')}
-                </Text>
-                "
-              </Text>{' '}
-            </Text>
-          </HStack>
+        <HStack position="relative" alignItems="center" flexWrap="wrap">
+          <Text
+            className="ellipse"
+            maxWidth="calc(min(100%, 170px))"
+            fontSize={12}
+            color="rgba(0,0,0,0.5)"
+          >
+            <Text fontSize={12}>
+              in "
+              <Text fontWeight="600">
+                {reviewTags
+                  .map((tag, i) => {
+                    return tagDisplayName(tag)
+                  })
+                  .join(' ')}
+              </Text>
+              "
+            </Text>{' '}
+          </Text>
 
           <Spacer size={6} />
 
-          <HStack spacing={4}>
-            {Object.keys(sources)
-              .filter(
-                (source) => thirdPartyCrawlSources[source]?.delivery === false
-              )
-              .map((source, i) => {
-                const item = sources[source]
-                const info = thirdPartyCrawlSources[source]
-                return (
-                  <HStack
-                    key={source}
-                    alignItems="center"
-                    paddingHorizontal={5}
-                    paddingVertical={3}
-                    borderRadius={100}
-                    // backgroundColor={bgLightLight}
-                    spacing={3}
-                  >
-                    {info?.image ? (
-                      <Image
-                        source={info.image}
-                        style={{
-                          width: 20,
-                          height: 20,
-                          borderRadius: 100,
-                        }}
-                      />
-                    ) : null}
+          {Object.keys(sources)
+            .filter(
+              (source) => thirdPartyCrawlSources[source]?.delivery === false
+            )
+            .map((source, i) => {
+              const item = sources[source]
+              const info = thirdPartyCrawlSources[source]
+              return (
+                <HStack
+                  key={source}
+                  alignItems="center"
+                  paddingHorizontal={5}
+                  paddingVertical={3}
+                  borderRadius={100}
+                  // backgroundColor={bgLightLight}
+                  spacing={3}
+                >
+                  {info?.image ? (
+                    <Image
+                      source={info.image}
+                      style={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: 100,
+                      }}
+                    />
+                  ) : null}
 
-                    <Text fontSize={13} opacity={0.5}>
-                      {+(item.rating ?? 0) * 10}
-                    </Text>
-                  </HStack>
-                )
-              })}
-          </HStack>
+                  <Text fontSize={13} opacity={0.5}>
+                    {+(item.rating ?? 0) * 10}
+                  </Text>
+                </HStack>
+              )
+            })}
 
           <Spacer size="sm" />
 
           <VStack
+            className="hide-when-small"
             padding={3}
             marginVertical={-1}
             marginLeft={3}
@@ -536,15 +514,15 @@ const RestaurantPeekDishes = memo(
       tag_names,
       max: 5,
     })
-    const dishSize = 160
+    const dishSize = 130
     return (
       <HStack
         contain="paint layout"
         pointerEvents="auto"
         padding={20}
-        paddingTop={50}
-        paddingBottom={50}
-        height={dishSize + 50 + 40}
+        marginTop={-60}
+        marginBottom={-40}
+        height={dishSize + 40}
         spacing={spacing}
       >
         {photos.map((photo, i) => {

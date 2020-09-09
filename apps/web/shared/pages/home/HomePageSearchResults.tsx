@@ -44,6 +44,7 @@ import { HomeSearchInfoBox } from './HomeSearchInfoBox'
 import { focusSearchInput } from './HomeSearchInput'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
+import { useHomeDrawerWidth } from './useHomeDrawerWidth'
 import { useLastValue } from './useLastValue'
 import { useLastValueWhen } from './useLastValueWhen'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
@@ -174,6 +175,8 @@ export default memo(function HomePageSearchResults(props: Props) {
 const SearchResultsTopBar = memo(({ stateId }: { stateId: string }) => {
   const om = useOvermind()
   const state = om.state.home.allStates[stateId]
+  const drawerWidth = useHomeDrawerWidth()
+  console.log('drawerWidth', drawerWidth)
 
   if (!isSearchState(state)) {
     return null
@@ -193,12 +196,19 @@ const SearchResultsTopBar = memo(({ stateId }: { stateId: string }) => {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={{ width: '100%' }}
+        style={{ width: '100%', minWidth: '100%' }}
+        contentContainerStyle={{
+          minWidth: drawerWidth - 20,
+          maxWidth: drawerWidth - 20,
+        }}
       >
         <VStack
           alignItems="center"
           height={titleHeight}
           overflow="hidden"
+          width="100%"
+          maxWidth="100%"
+          minWidth="100%"
           paddingHorizontal={12}
         >
           <HStack
@@ -206,7 +216,6 @@ const SearchResultsTopBar = memo(({ stateId }: { stateId: string }) => {
             paddingHorizontal={18}
             width="100%"
             alignItems="center"
-            flex={1}
             overflow="hidden"
             justifyContent="space-between"
           >
@@ -214,7 +223,8 @@ const SearchResultsTopBar = memo(({ stateId }: { stateId: string }) => {
               <HomeLenseBar activeTagIds={state.activeTagIds} />
             </HStack>
 
-            <Spacer flex={1} size={16} />
+            <VStack flex={1} width={16} />
+
             <HomeFilterBar activeTagIds={state.activeTagIds} />
           </HStack>
         </VStack>
