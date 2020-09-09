@@ -3,6 +3,7 @@ import { HStack, StackProps } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
 import { Clock, ShoppingBag } from 'react-feather'
+import { ScrollView } from 'react-native'
 
 import { getTagId } from '../../state/getTagId'
 import { HomeActiveTagsRecord } from '../../state/home-types'

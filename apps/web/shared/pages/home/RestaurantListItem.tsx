@@ -153,12 +153,6 @@ const RestaurantListItemContent = memo(
     const curState = omStatic.state.home.currentState
     const tagIds = 'activeTagIds' in curState ? curState.activeTagIds : null
 
-    const tags = omStatic.state.home.lastActiveTags
-    const reviewTags = sortBy(
-      tags.filter((tag) => tag.name !== 'Gems'),
-      (a) => (a.type === 'lense' ? 0 : a.type === 'dish' ? 2 : 1)
-    )
-
     const [isActive, setIsActive] = useState(false)
     const getIsActive = useGet(isActive)
     useEffect(() => {
@@ -216,8 +210,8 @@ const RestaurantListItemContent = memo(
                     />
 
                     <AbsoluteVStack
-                      bottom={-4}
-                      right={-12}
+                      bottom={-10}
+                      right={-14}
                       borderRadius={100}
                       width={24}
                       height={24}
@@ -230,7 +224,11 @@ const RestaurantListItemContent = memo(
                     >
                       <Text color="#999">
                         <SuperScriptText fontSize={10}>#</SuperScriptText>
-                        <Text fontSize={16} fontWeight="700" color="#444">
+                        <Text
+                          fontSize={+rank > 9 ? 10 : 14}
+                          fontWeight="700"
+                          color="#444"
+                        >
                           {rank}
                         </Text>
                       </Text>
@@ -261,7 +259,7 @@ const RestaurantListItemContent = memo(
                         borderBottomWidth={2}
                         // @ts-ignore
                         hoverStyle={{
-                          borderBottomColor: '#f2f2f2',
+                          borderBottomColor: '#999',
                         }}
                         pressStyle={{
                           borderBottomColor: brandColor,
@@ -290,75 +288,7 @@ const RestaurantListItemContent = memo(
           <HStack zIndex={1000} marginLeft={8} alignItems="center">
             <VStack>
               <HStack alignItems="center">
-                <Spacer size="xxl" />
-
-                {/* <ScrollView
-                  style={{ flex: 1 }}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                > */}
-                <VStack marginTop={-6}>
-                  <HStack>
-                    <Text
-                      className="ellipse"
-                      fontSize={12}
-                      color="rgba(0,0,0,0.5)"
-                    >
-                      <Text fontSize={12}>in</Text>{' '}
-                      <HStack
-                        // @ts-ignore
-                        display="inline-flex"
-                        paddingVertical={2}
-                        paddingHorizontal={4}
-                        borderRadius={100}
-                        borderWidth={1}
-                        borderColor="#f2f2f2"
-                      >
-                        {reviewTags.map((tag, i) => {
-                          return (
-                            <React.Fragment key={i}>
-                              <VStack
-                                // @ts-ignore
-                                display="inline-flex"
-                              >
-                                <Text>{tagDisplayName(tag)}</Text>
-                              </VStack>
-                              {i < reviewTags.length - 1 && (
-                                <Text
-                                  marginHorizontal={3}
-                                  fontSize={10}
-                                  opacity={0.5}
-                                >
-                                  +
-                                </Text>
-                              )}
-                            </React.Fragment>
-                          )
-                        })}
-                      </HStack>
-                      <Text fontSize={12}> (152 reviews) </Text>
-                    </Text>
-                    <VStack
-                      padding={3}
-                      marginVertical={-1}
-                      marginLeft={3}
-                      borderRadius={100}
-                      hoverStyle={{
-                        backgroundColor: bgLight,
-                      }}
-                      onPress={reviewDisplayStore.toggleShowComments}
-                    >
-                      <HelpCircle
-                        size={14}
-                        color={
-                          reviewDisplayStore.showComments
-                            ? '#000'
-                            : 'rgba(0,0,0,0.5)'
-                        }
-                      />
-                    </VStack>
-                  </HStack>
-                  <Spacer size={6} />
+                <VStack marginLeft={30} marginTop={-6}>
                   <HStack
                     paddingLeft={10}
                     paddingRight={20}
@@ -366,11 +296,11 @@ const RestaurantListItemContent = memo(
                     onPress={reviewDisplayStore.toggleShowComments}
                   >
                     <RestaurantScoreBreakdownSmall
+                      restaurantId={restaurantId}
                       restaurantSlug={restaurantSlug}
                     />
                   </HStack>
                 </VStack>
-                {/* </ScrollView> */}
               </HStack>
             </VStack>
           </HStack>
@@ -475,78 +405,109 @@ const RestaurantListItemContent = memo(
 )
 
 export const RestaurantScoreBreakdownSmall = memo(
-  graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
-    const restaurant = useRestaurantQuery(restaurantSlug)
-    const sources = {
-      dish: {
-        rating: 3,
-      },
-      ...(restaurant?.sources?.() ?? {}),
-    }
-    return (
-      <HStack position="relative" alignItems="center">
-        <AbsoluteVStack
-          top={-16}
-          left={-40}
-          width={30}
-          height={30}
-          overflow="hidden"
-        >
-          <AbsoluteVStack
-            top={-18}
-            left={3}
-            width={44}
-            height={44}
-            transform={[{ rotate: '45deg' }]}
-            className="dotted-line"
-            borderRadius={100}
-          />
-        </AbsoluteVStack>
+  graphql(
+    ({
+      restaurantSlug,
+      restaurantId,
+    }: {
+      restaurantSlug: string
+      restaurantId: string
+    }) => {
+      const reviewDisplayStore = useStore(RestaurantReviewsDisplayStore, {
+        id: restaurantId,
+      })
+      const restaurant = useRestaurantQuery(restaurantSlug)
+      const sources = {
+        dish: {
+          rating: 3,
+        },
+        ...(restaurant?.sources?.() ?? {}),
+      }
+      const tags = omStatic.state.home.lastActiveTags
+      const reviewTags = sortBy(
+        tags.filter((tag) => tag.name !== 'Gems'),
+        (a) => (a.type === 'lense' ? 0 : a.type === 'dish' ? 2 : 1)
+      )
+      return (
+        <HStack position="relative" alignItems="center">
+          <HStack>
+            <Text className="ellipse" fontSize={12} color="rgba(0,0,0,0.5)">
+              <Text fontSize={12}>
+                in "
+                <Text fontWeight="600">
+                  {reviewTags
+                    .map((tag, i) => {
+                      return tagDisplayName(tag)
+                    })
+                    .join(' ')}
+                </Text>
+                "
+              </Text>{' '}
+            </Text>
+          </HStack>
 
-        <Text fontSize={12} opacity={0.5}>
-          via&nbsp;
-        </Text>
-        <HStack spacing={4}>
-          {Object.keys(sources)
-            .filter(
-              (source) => thirdPartyCrawlSources[source]?.delivery === false
-            )
-            .map((source, i) => {
-              const item = sources[source]
-              const info = thirdPartyCrawlSources[source]
-              return (
-                <HStack
-                  key={source}
-                  alignItems="center"
-                  paddingHorizontal={5}
-                  paddingVertical={3}
-                  borderRadius={100}
-                  // backgroundColor={bgLightLight}
-                  spacing={3}
-                >
-                  {info?.image ? (
-                    <Image
-                      source={info.image}
-                      style={{
-                        width: 16,
-                        height: 16,
-                        borderRadius: 100,
-                      }}
-                    />
-                  ) : null}
-                  <Text fontSize={12} opacity={0.75}>
-                    {info?.name ?? source}
-                  </Text>
-                  <Text fontSize={13} opacity={0.5}>
-                    {+(item.rating ?? 0) * 10}
-                  </Text>
-                </HStack>
+          <Spacer size={6} />
+
+          <HStack spacing={4}>
+            {Object.keys(sources)
+              .filter(
+                (source) => thirdPartyCrawlSources[source]?.delivery === false
               )
-            })}
+              .map((source, i) => {
+                const item = sources[source]
+                const info = thirdPartyCrawlSources[source]
+                return (
+                  <HStack
+                    key={source}
+                    alignItems="center"
+                    paddingHorizontal={5}
+                    paddingVertical={3}
+                    borderRadius={100}
+                    // backgroundColor={bgLightLight}
+                    spacing={3}
+                  >
+                    {info?.image ? (
+                      <Image
+                        source={info.image}
+                        style={{
+                          width: 20,
+                          height: 20,
+                          borderRadius: 100,
+                        }}
+                      />
+                    ) : null}
+
+                    <Text fontSize={13} opacity={0.5}>
+                      {+(item.rating ?? 0) * 10}
+                    </Text>
+                  </HStack>
+                )
+              })}
+          </HStack>
+
+          <Spacer size="sm" />
+
+          <VStack
+            padding={3}
+            marginVertical={-1}
+            marginLeft={3}
+            borderRadius={100}
+            hoverStyle={{
+              backgroundColor: bgLight,
+            }}
+            onPress={reviewDisplayStore.toggleShowComments}
+          >
+            <HelpCircle
+              size={14}
+              color={
+                reviewDisplayStore.showComments ? '#000' : 'rgba(0,0,0,0.5)'
+              }
+            />
+          </VStack>
         </HStack>
-      </HStack>
-    )
-  })
+      )
+    }
+  )
 )
 
 const RestaurantPeekDishes = memo(

@@ -457,7 +457,9 @@ export const Map = (props: MapProps) => {
 
     return () => {
       cancels.forEach((c) => c())
-      mapNode.current.innerHTML = ''
+      if (mapNode.current) {
+        mapNode.current.innerHTML = ''
+      }
     }
   }, [])
 
