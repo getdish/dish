@@ -238,7 +238,10 @@ const SearchResultsTopBar = memo(({ stateId }: { stateId: string }) => {
 const getRestaurantListItemHeight = () => {
   const items = Array.from(document.querySelectorAll('.restaurant-list-item'))
   if (items.length) {
-    return items.reduce((a, b) => a + b.clientHeight, 0) / items.length
+    return (
+      items.reduce((a, b) => a + Math.max(220, b.clientHeight), 0) /
+      items.length
+    )
   }
   return 280
 }
@@ -269,7 +272,9 @@ const SearchResultsContent = (props: Props) => {
 
   const handleScrollY = (y: number) => {
     if (isOnLastChunk) return
-    if (y > state.itemHeightAvg * totalLoading) {
+    const estEndY = state.itemHeightAvg * totalLoading
+    const estLoadY = estEndY - window.innerHeight * 0.5
+    if (y > estLoadY) {
       setState((x) => ({ ...x, chunk: x.chunk + 1 }))
     }
   }

@@ -113,7 +113,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
         }
         scrollEventThrottle={100}
       >
-        <RestaurantListItemContent {...props} />
+        <RestaurantListItemContent isLoaded={isLoaded} {...props} />
       </HomeScrollViewHorizontal>
 
       {store.showComments && (
@@ -126,8 +126,14 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 })
 
 const RestaurantListItemContent = memo(
-  graphql((props: RestaurantListItemProps) => {
-    const { rank, restaurantId, restaurantSlug, currentLocationInfo } = props
+  graphql((props: RestaurantListItemProps & { isLoaded: boolean }) => {
+    const {
+      rank,
+      restaurantId,
+      restaurantSlug,
+      currentLocationInfo,
+      isLoaded,
+    } = props
     const pad = 18
     const isSmall = useMediaQueryIsSmall()
     const reviewDisplayStore = useStore(RestaurantReviewsDisplayStore, {
@@ -318,7 +324,7 @@ const RestaurantListItemContent = memo(
             <RestaurantPeekDishes
               restaurantSlug={props.restaurantSlug}
               searchState={props.searchState}
-              isLoaded={true}
+              isLoaded={isLoaded}
             />
           </HStack>
 
