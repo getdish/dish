@@ -28,7 +28,9 @@ import {
   LngLat,
   ShowAutocomplete,
 } from '../../state/home-types'
+import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic, useOvermind } from '../../state/om'
+import { tagDisplayName } from '../../state/tagDisplayName'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallCircleButton } from './CloseButton'
 import { getFuzzyMatchQuery } from './getFuzzyMatchQuery'
@@ -344,68 +346,78 @@ const AutocompleteResults = memo(() => {
   }, key)
 
   if (showAutocomplete !== 'location' && !autocompleteResults.length) {
-    return (
-      <>
-        <HStack
-          width="100%"
-          flexWrap="wrap"
-          alignItems="center"
-          justifyContent="center"
-        >
-          {[
-            { name: 'Noodle Soups', icon: '🍜' },
-            { name: 'Tacos', icon: '🌮' },
-            { name: 'BBQ', icon: '🥩' },
-            { name: 'Bowls', icon: '🍲' },
-            { name: 'Dim Sum', icon: '🥟' },
-            { name: 'Spicy', icon: '🌶' },
-            { name: 'Cheap', icon: '🍕' },
-            { name: 'Seafood', icon: '🐟' },
-            { name: 'Sandwiches', icon: '🥪' },
-            { name: 'Salads', icon: '🥗' },
-            { name: 'Breakfast', icon: '🥞' },
-            { name: 'Curry', icon: '🍛' },
-            { name: 'Burgers', icon: '🍔' },
-            { name: 'Drinks', icon: '🥂' },
-            { name: 'Sweets', icon: '🍪' },
-          ].map((tag) => {
-            return (
-              <VStack
-                width={80}
-                height={80}
-                borderRadius={10}
-                paddingHorizontal={5}
-                margin={5}
-                key={tag.name}
-                alignItems="center"
-                justifyContent="center"
-                overflow="hidden"
-                hoverStyle={{
-                  backgroundColor: 'rgba(255,255,255,0.3)',
-                }}
-              >
-                <Text textAlign="center" width="100%" fontSize={40}>
-                  {tag.icon}
-                </Text>
-                <Spacer size="sm" />
-                <Text
-                  ellipse
-                  textAlign="center"
-                  fontSize={12}
-                  width="100%"
-                  color="#fff"
-                >
-                  {tag.name}
-                </Text>
-              </VStack>
-            )
-          })}
-        </HStack>
-      </>
-    )
+    return <HomeAutocompleteDefault />
   }
 
   return <>{resultsElements}</>
+})
+
+const defaultAutocompleteTags: NavigableTag[] = [
+  { name: 'Noodle Soup', type: 'dish', icon: '🍜' },
+  { name: 'Taco', type: 'dish', icon: '🌮' },
+  { name: 'BBQ', type: 'dish', icon: '🥩' },
+  { name: 'Bowl', type: 'dish', icon: '🍲' },
+  { name: 'Dim Sum', type: 'dish', icon: '🥟' },
+  { name: 'Spicy', type: 'dish', icon: '🌶' },
+  { name: 'price-low', displayName: 'Cheap', type: 'filter', icon: '🍕' },
+  { name: 'Seafood', type: 'dish', icon: '🐟' },
+  { name: 'Sandwich', type: 'dish', icon: '🥪' },
+  { name: 'Salad', type: 'dish', icon: '🥗' },
+  { name: 'Breakfast', type: 'dish', icon: '🥞' },
+  { name: 'Curry', type: 'dish', icon: '🍛' },
+  { name: 'Burger', type: 'dish', icon: '🍔' },
+  { name: 'Drinks', type: 'dish', icon: '🥂' },
+  { name: 'Sweets', type: 'dish', icon: '🍪' },
+]
+
+const HomeAutocompleteDefault = memo(() => {
+  return (
+    <HStack
+      width="100%"
+      flexWrap="wrap"
+      alignItems="center"
+      justifyContent="center"
+    >
+      {defaultAutocompleteTags.map((tag) => {
+        return (
+          <VStack
+            width={80}
+            height={80}
+            borderRadius={10}
+            paddingHorizontal={5}
+            margin={5}
+            key={tag.name}
+            alignItems="center"
+            justifyContent="center"
+            overflow="hidden"
+            hoverStyle={{
+              backgroundColor: 'rgba(255,255,255,0.3)',
+            }}
+          >
+            <LinkButton
+              flexDirection="column"
+              disallowDisableWhenActive
+              tag={tag}
+            >
+              <Text textAlign="center" width="100%" fontSize={40}>
+                {tag.icon}
+              </Text>
+              <Spacer size="sm" />
+              <Text
+                ellipse
+                textAlign="center"
+                fontSize={12}
+                width="100%"
+                color="#fff"
+              >
+                {tagDisplayName(tag)}
+              </Text>
+            </LinkButton>
+          </VStack>
+        )
+      })}
+    </HStack>
+  )
 })
 
 function AutocompleteAddButton() {

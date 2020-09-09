@@ -3,7 +3,7 @@ import { mediaObjectToString, useMedia, useMediaLayout } from '@dish/ui'
 // seems faster probably avoids multiple calls..
 const use = useMediaLayout ?? useMedia
 
-const mediaQueries = {
+export const mediaQueries = {
   short: { maxHeight: 820 },
   xs: { maxWidth: 660 },
   sm: { maxWidth: 860 },

@@ -202,7 +202,7 @@ const HomeSearchBar = memo(() => {
             ? 'auto'
             : isSmall && om.state.home.showAutocomplete === 'location'
             ? 120
-            : 'auto'
+            : '100%'
         }
         alignItems="center"
         overflow="hidden"
@@ -230,7 +230,7 @@ const HomeSearchBar = memo(() => {
           <VStack
             className="ease-in-out"
             maxWidth={
-              !isReallySmall && isSmall
+              isSmall
                 ? focus === 'search'
                   ? 120
                   : focus === 'location'

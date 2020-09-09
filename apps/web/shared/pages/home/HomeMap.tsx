@@ -294,6 +294,10 @@ const HomeMapContent = memo(function HomeMap({
         }}
         selected={internal.id}
         onMoveEnd={({ center, span }) => {
+          if (isSmall && drawerStore.currentSnapPoint === 0) {
+            console.log('avoid move stuff when snapped to top')
+            return
+          }
           if (omStatic.state.home.centerToResults) {
             // we just re-centered, ignore
             om.actions.home.setCenterToResults(0)
