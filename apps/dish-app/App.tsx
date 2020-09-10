@@ -1,31 +1,52 @@
 import { AbsoluteVStack, VStack } from '@dish/ui'
-import { SplashScreen } from 'expo'
 import { StatusBar } from 'expo-status-bar'
-import React, { useEffect } from 'react'
+import { createOvermind } from 'overmind'
+import { Provider } from 'overmind-react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { Constants } from 'react-native-unimodules'
 
+import { HomeSmallDrawer } from './shared/pages/home/HomeSmallDrawer'
+import { config } from './shared/state/om'
 import { DrawerNative } from './shared/views/DrawerNative'
 import { MapNative } from './shared/views/MapNative'
 
-console.log(Constants.systemFonts)
+async function start() {
+  const om = createOvermind(config, {
+    devtools: false,
+    logProxies: true,
+    hotReloading: process.env.NODE_ENV !== 'production',
+  })
+  window['om'] = om
+  await om.initialized
+  return om
+}
 
 export default function App() {
+  const [overmind, setOvermind] = useState(null)
+
   useEffect(() => {
-    SplashScreen.hideAsync()
+    start().then((om) => {
+      setOvermind(om)
+    })
   }, [])
 
-  return (
-    <View style={styles.container}>
-      <MapNative />
+  if (!overmind) {
+    return null
+  }
 
-      <AbsoluteVStack fullscreen zIndex={1000}>
-        <DrawerNative>
-          <VStack width={100} height={100} />
-        </DrawerNative>
-      </AbsoluteVStack>
-      <StatusBar style="auto" />
-    </View>
+  return (
+    <Provider value={overmind}>
+      <View style={styles.container}>
+        <MapNative />
+
+        <AbsoluteVStack fullscreen zIndex={1000}>
+          <DrawerNative>
+            <VStack width={100} height={100} />
+          </DrawerNative>
+        </AbsoluteVStack>
+        <StatusBar style="auto" />
+      </View>
+    </Provider>
   )
 }
 

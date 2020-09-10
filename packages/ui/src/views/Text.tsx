@@ -1,5 +1,6 @@
 import React, { useMemo, useRef } from 'react'
 import {
+  Platform,
   Text as ReactText,
   TextProps as ReactTextProps,
   TextStyle,
@@ -32,6 +33,7 @@ const ellipseStyle = {
 
 export const Text = (allProps: TextProps) => {
   const [props, style] = useTextStyle(allProps)
+  console.log('what is', style)
   const textRef = useRef(null)
   useAttachClassName(allProps.className, textRef)
   return <ReactText ref={textRef} style={style} {...props} />
@@ -45,12 +47,20 @@ Text.staticConfig = {
 }
 
 const textNonStylePropReg = /^(allow.*|on[A-Z].*|.*[Mm]ode)/
+const isWeb = Platform.OS === 'web'
+const isWebStyleKey = {
+  textOverflow: true,
+  whiteSpace: true,
+}
 
 const useTextStyle = (allProps: TextProps) => {
   return useMemo(() => {
     const props: ReactTextProps = {}
     const style: TextStyle = {}
     for (const key in allProps) {
+      if (!isWeb && isWebStyleKey[key]) {
+        continue
+      }
       const val = allProps[key]
       if (val === undefined) continue
       if (val) {

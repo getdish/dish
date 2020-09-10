@@ -3,7 +3,8 @@ import { OnInitialize, rehydrate } from 'overmind'
 import { OVERMIND_MUTATIONS } from '../constants'
 import { tagLenses } from './tagLenses'
 
-const LOG_OVERMIND = window.location.search === '?verbose'
+const LOG_OVERMIND =
+  typeof document !== 'undefined' && window.location.search === '?verbose'
 
 export const onInitialize: OnInitialize = async (
   { state, actions, effects },

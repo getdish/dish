@@ -4,7 +4,7 @@ import { useStore } from '@dish/use-store'
 import _ from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
 import { Loader, Search } from 'react-feather'
-import { ScrollView, StyleSheet, TextInput } from 'react-native'
+import { Platform, ScrollView, StyleSheet, TextInput } from 'react-native'
 
 import { searchBarHeight } from '../../constants'
 import { inputClearSelection, inputIsTextSelected } from '../../helpers/input'
@@ -489,7 +489,9 @@ export const inputTextStyles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
     overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
+    ...(Platform.OS === 'web' && {
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    }),
   },
 })

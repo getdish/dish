@@ -1,10 +1,13 @@
 import { Store, useStore } from '@dish/use-store'
-import { createBrowserHistory } from 'history'
+import { createBrowserHistory, createMemoryHistory } from 'history'
 import * as React from 'react'
 import { createContext, useContext } from 'react'
 import { Router as TinyRouter } from 'tiny-request-router'
 
-const history = createBrowserHistory()
+const history =
+  typeof document !== 'undefined'
+    ? createBrowserHistory()
+    : createMemoryHistory()
 
 // need them to declare the types here
 export type RoutesTable = { [key: string]: Route }

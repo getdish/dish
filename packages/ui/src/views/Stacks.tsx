@@ -68,6 +68,7 @@ export type StackProps = Omit<
 >
 
 const mouseUps = new Set<Function>()
+
 if (typeof document !== 'undefined') {
   document.addEventListener('mouseup', () => {
     mouseUps.forEach((x) => x())

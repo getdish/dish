@@ -1,5 +1,6 @@
 import React from 'react'
 import { createPortal } from 'react-dom'
+import { Platform } from 'react-native'
 
 import { useOverlay } from '../hooks/useOverlay'
 import { Box } from './Box'
@@ -22,7 +23,7 @@ export const Modal = ({
     return null
   }
 
-  return createPortal(
+  const content = (
     <AbsoluteVStack
       fullscreen
       zIndex={zIndex}
@@ -37,8 +38,13 @@ export const Modal = ({
         maxWidth="50%"
         maxHeight="90%"
         {...rest}
-      ></Box>
-    </AbsoluteVStack>,
-    document.getElementById('modals')!
+      />
+    </AbsoluteVStack>
   )
+
+  if (Platform.OS === 'web') {
+    return createPortal(content, document.getElementById('modals')!)
+  }
+
+  return content
 }
