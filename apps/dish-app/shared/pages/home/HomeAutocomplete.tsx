@@ -1,5 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
 import { query, resolved } from '@dish/graph'
+import { Plus } from '@dish/react-feather'
 import {
   AbsoluteVStack,
   HStack,
@@ -12,7 +13,6 @@ import { useStore } from '@dish/use-store'
 import FlexSearch from 'flexsearch'
 import { uniqBy } from 'lodash'
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
-import { Plus } from 'react-feather'
 import { ScrollView } from 'react-native'
 
 import {

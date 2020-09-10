@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
+import { MessageSquare } from '@dish/react-feather'
 import { HStack, SmallTitle, Spacer, StackProps, Text, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
-import { MessageSquare } from 'react-feather'
 import { Image } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'

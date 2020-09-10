@@ -1,4 +1,5 @@
 import { sleep } from '@dish/async'
+import { ArrowUp } from '@dish/react-feather'
 import {
   Button,
   HStack,
@@ -19,7 +20,6 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { ArrowUp } from 'react-feather'
 import { ScrollView } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'

@@ -1,9 +1,9 @@
 import { fullyIdle, idle, series } from '@dish/async'
+import { Loader, Search } from '@dish/react-feather'
 import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import _ from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
-import { Loader, Search } from 'react-feather'
 import { Platform, ScrollView, StyleSheet, TextInput } from 'react-native'
 
 import { searchBarHeight } from '../../constants'

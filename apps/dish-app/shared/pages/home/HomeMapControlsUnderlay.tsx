@@ -1,6 +1,6 @@
+import { Map, RefreshCcw } from '@dish/react-feather'
 import { AbsoluteVStack, HStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { Map, RefreshCcw } from 'react-feather'
 
 import { searchBarHeight, zIndexDrawer } from '../../constants'
 import { useOvermind } from '../../state/om'

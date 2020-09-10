@@ -1,4 +1,5 @@
 import { slugify } from '@dish/graph'
+import { ChevronUp, Coffee, HelpCircle, Menu } from '@dish/react-feather'
 import {
   Box,
   Divider,
@@ -11,7 +12,6 @@ import {
   VStack,
 } from '@dish/ui'
 import React, { memo, useCallback, useEffect } from 'react'
-import { ChevronUp, Coffee, HelpCircle, Menu } from 'react-feather'
 
 import { omStatic, useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'

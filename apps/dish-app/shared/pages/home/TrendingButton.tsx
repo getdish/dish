@@ -1,6 +1,6 @@
+import { ChevronDown, ChevronUp } from '@dish/react-feather'
 import { HStack, Text } from '@dish/ui'
 import React from 'react'
-import { ChevronDown, ChevronUp } from 'react-feather'
 
 import { RoutesTable } from '../../state/router'
 import { LinkButton } from '../../views/ui/LinkButton'

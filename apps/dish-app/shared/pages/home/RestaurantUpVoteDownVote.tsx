@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
+import { ChevronDown, ChevronUp } from '@dish/react-feather'
 import { Spacer, StackProps, Text, Tooltip, VStack } from '@dish/ui'
 import React, { memo, useState } from 'react'
-import { ChevronDown, ChevronUp } from 'react-feather'
 
 import { bgLight } from '../../colors'
 import { HomeActiveTagsRecord } from '../../state/home-types'

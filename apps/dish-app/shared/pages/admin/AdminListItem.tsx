@@ -1,7 +1,7 @@
 import { fullyIdle, series } from '@dish/async'
+import { X } from '@dish/react-feather'
 import { HStack, Text, VStack } from '@dish/ui'
 import React, { memo, useEffect, useRef, useState } from 'react'
-import { X } from 'react-feather'
 import { TextInput } from 'react-native'
 
 import { useColumnStore, useRowStore } from './SelectionStore'

@@ -99,6 +99,7 @@ module.exports = function getWebpackConfig(
           react: path.join(require.resolve('react'), '..'),
           'react-dom': path.join(require.resolve('react-dom'), '..'),
           'react-native': 'react-native-web',
+          '@dish/react-feather': 'react-feather',
           gqless,
         },
       },

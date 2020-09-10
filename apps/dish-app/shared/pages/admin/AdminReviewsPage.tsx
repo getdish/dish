@@ -1,4 +1,5 @@
 import { graphql, order_by, query } from '@dish/graph'
+import { Divide } from '@dish/react-feather'
 import {
   Divider,
   HStack,
@@ -10,7 +11,6 @@ import {
 } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { useEffect, useState } from 'react'
-import { Divide } from 'react-feather'
 import { ScrollView, TextInput } from 'react-native'
 
 import { lightGreen, lightRed } from '../../colors'

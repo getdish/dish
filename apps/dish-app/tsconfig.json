@@ -46,21 +46,17 @@
 
   "exclude": ["**"],
 
-  "references": [
-    {
-      "path": "../../packages/async"
-    },
-    {
-      "path": "../../packages/graph"
-    },
-    {
-      "path": "../../packages/helpers"
-    },
-    {
-      "path": "../../packages/ui"
-    },
-    {
-      "path": "../../packages/use-store"
-    }
-  ]
+  "references": [{
+    "path": "../../packages/async"
+  }, {
+    "path": "../../packages/graph"
+  }, {
+    "path": "../../packages/helpers"
+  }, {
+    "path": "../../packages/ui"
+  }, {
+    "path": "../../packages/use-store"
+  }, {
+    "path": "../../packages/react-feather"
+  }]
 }
