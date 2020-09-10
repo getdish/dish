@@ -6,7 +6,10 @@ const hoists = {
   'react-native': true,
 }
 
-const noHoists = Object.keys(package.dependencies).filter((x) => !hoists[x])
+const noHoists = Object.keys(package.dependencies)
+  .filter((x) => !hoists[x])
+  .map((k) => [k, `${k}/**`])
+  .flat()
 
 package.workspaces.nohoist = noHoists
 
