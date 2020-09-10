@@ -1,4 +1,9 @@
+import { Platform } from 'react-native'
+
 export const inputGetNode = (instance: any): HTMLInputElement | null => {
+  if (Platform.OS !== 'web') {
+    return instance
+  }
   return (
     (instance instanceof HTMLElement ? instance : instance?.['_node']) ?? null
   )

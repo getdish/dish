@@ -228,6 +228,7 @@ export const HomeSmallDrawer = (props: { children: any }) => {
               zIndex: 100,
               position: 'relative',
               flexShrink: 1,
+              width: '100%',
               minHeight: searchBarHeight,
             }}
             {...panResponder.panHandlers}

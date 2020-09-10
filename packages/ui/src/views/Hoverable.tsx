@@ -1,4 +1,5 @@
 import React from 'react'
+import { Platform } from 'react-native'
 
 export function Hoverable({
   onPressIn,
@@ -15,6 +16,9 @@ export function Hoverable({
   onPressIn?: any
   onPressOut?: any
 }) {
+  if (Platform.OS !== 'web') {
+    return children
+  }
   return (
     <span
       className="see-through"

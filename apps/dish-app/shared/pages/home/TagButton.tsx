@@ -136,6 +136,9 @@ export const TagButton = memo((props: TagButtonProps) => {
   const fontSize = fontSizeProp ?? (subtle ? 'inherit' : 16 * scale)
   // const moveInPx = size === 'sm' ? 0 : 3.5 * (1 / scale)
 
+  const smallerFontSize =
+    typeof fontSize === 'number' ? fontSize * 0.85 : fontSize
+
   const contents = (
     <>
       <HStack
@@ -160,7 +163,7 @@ export const TagButton = memo((props: TagButtonProps) => {
         {!!rank ? (
           <Text
             // @ts-ignore
-            fontSize={typeof fontSize === 'number' ? fontSize * 0.85 : fontSize}
+            fontSize={smallerFontSize}
             margin="auto"
             paddingHorizontal={6 * scale}
             alignSelf="stretch"
@@ -193,17 +196,15 @@ export const TagButton = memo((props: TagButtonProps) => {
           {hideIcon ? (
             <>&nbsp;</>
           ) : !!tag.icon ? (
-            <span
-              style={{
-                marginRight: 5,
-                ...(subtle && { marginLeft: 4 }),
-                ...(subtleIcon && {
-                  fontSize: '90%',
-                  marginTop: '-2px',
-                  marginBottom: '-2px',
-                  marginRight: 8,
-                }),
-              }}
+            <Text
+              marginRight={5}
+              {...(subtle && { marginLeft: 4 })}
+              {...(subtleIcon && {
+                fontSize: smallerFontSize as any,
+                marginTop: '-2px',
+                marginBottom: '-2px',
+                marginRight: 8,
+              })}
             >
               {tag.icon.startsWith('http') ? (
                 <Image
@@ -220,7 +221,7 @@ export const TagButton = memo((props: TagButtonProps) => {
               ) : (
                 `${tag.icon}`
               )}
-            </span>
+            </Text>
           ) : null}
           {/* // tagDisplayNames[tag.name] ?? _.capitalize(tag.name) */}
           {tagDisplayName(tag)}

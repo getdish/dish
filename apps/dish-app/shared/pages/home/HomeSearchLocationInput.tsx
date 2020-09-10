@@ -77,16 +77,22 @@ export const HomeSearchLocationInput = memo(() => {
     const showLocationAutocomplete = () => {
       om.actions.home.setShowAutocomplete('location')
     }
-    locationInputStore.node.addEventListener('keydown', handleKeyPress)
-    // locationInputStore.node.addEventListener('focus', showLocationAutocomplete)
-    locationInputStore.node.addEventListener('click', showLocationAutocomplete)
-    return () => {
-      locationInputStore.node.removeEventListener('keydown', handleKeyPress)
+
+    if ('addEventListener' in locationInputStore.node) {
+      locationInputStore.node.addEventListener('keydown', handleKeyPress)
       // locationInputStore.node.addEventListener('focus', showLocationAutocomplete)
-      locationInputStore.node.removeEventListener(
+      locationInputStore.node.addEventListener(
         'click',
         showLocationAutocomplete
       )
+      return () => {
+        locationInputStore.node.removeEventListener('keydown', handleKeyPress)
+        // locationInputStore.node.addEventListener('focus', showLocationAutocomplete)
+        locationInputStore.node.removeEventListener(
+          'click',
+          showLocationAutocomplete
+        )
+      }
     }
   }, [])
 
