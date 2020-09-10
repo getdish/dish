@@ -1,4 +1,5 @@
 import { RefObject, useLayoutEffect } from 'react'
+import { Platform } from 'react-native'
 
 import { getNode } from '../helpers/getNode'
 
@@ -9,6 +10,10 @@ export function useAttachClassName(
   ref: RefObject<any>,
   mountArgs: any[] = []
 ) {
+  if (Platform.OS !== 'web') {
+    return
+  }
+
   useLayoutEffect(() => {
     if (!cn) return
     if (!ref.current) return

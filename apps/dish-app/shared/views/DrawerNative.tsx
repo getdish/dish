@@ -65,8 +65,9 @@ export class BottomDrawerStore extends Store {
   }
 }
 
+const drawerStore = new BottomDrawerStore(null)
+
 export const DrawerNative = (props: { children: any }) => {
-  const drawerStore = useStore(BottomDrawerStore)
   const defaultSnapPoint = 1
 
   // useEffect(() => {
@@ -111,7 +112,7 @@ export const DrawerNative = (props: { children: any }) => {
   }, [])
 
   return (
-    <VStack>
+    <VStack width="100%" height="100%">
       <Animated.View
         style={{
           transform: [
