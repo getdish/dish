@@ -3,7 +3,6 @@ const package = require('../package.json')
 const hoists = {
   react: true,
   'react-dom': true,
-  'react-native': true,
 }
 
 const noHoists = Object.keys(package.dependencies)

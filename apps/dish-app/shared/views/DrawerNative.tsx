@@ -6,7 +6,8 @@ import { Animated, PanResponder, View } from 'react-native'
 
 import { drawerBorderRadius, pageWidthMax, searchBarHeight } from '../constants'
 import { getWindowHeight } from '../helpers/getWindow'
-import { omStatic } from '../state/om'
+
+// import { omStatic } from '../state/om'
 
 export class BottomDrawerStore extends Store {
   snapPoints = [0.03, 0.25, 0.6]
@@ -41,10 +42,9 @@ export class BottomDrawerStore extends Store {
     return this.snapPoints[this.snapIndex] * getWindowHeight()
   }
 
-  private setDrawer = debounce(
-    (val) => omStatic.actions.home.setDrawerSnapPoint(val),
-    100
-  )
+  private setDrawer = debounce((val) => {
+    // omStatic.actions.home.setDrawerSnapPoint(val)
+  }, 100)
 
   private updateSnapIndex(x: number) {
     this.snapIndex = x
@@ -69,24 +69,24 @@ export const DrawerNative = (props: { children: any }) => {
   const drawerStore = useStore(BottomDrawerStore)
   const defaultSnapPoint = 1
 
-  useEffect(() => {
-    // let lastIndex: number
-    let lastAutocomplete = omStatic.state.home.showAutocomplete
-    return omStatic.reaction(
-      (state) => state.home.showAutocomplete,
-      (show) => {
-        if (!!show) {
-          // lastIndex = snapIndex
-          drawerStore.setSnapPoint(0)
-        } else {
-          if (lastAutocomplete === 'search') {
-            drawerStore.setSnapPoint(defaultSnapPoint)
-          }
-        }
-        lastAutocomplete = show
-      }
-    )
-  }, [])
+  // useEffect(() => {
+  //   // let lastIndex: number
+  //   let lastAutocomplete = omStatic.state.home.showAutocomplete
+  //   return omStatic.reaction(
+  //     (state) => state.home.showAutocomplete,
+  //     (show) => {
+  //       if (!!show) {
+  //         // lastIndex = snapIndex
+  //         drawerStore.setSnapPoint(0)
+  //       } else {
+  //         if (lastAutocomplete === 'search') {
+  //           drawerStore.setSnapPoint(defaultSnapPoint)
+  //         }
+  //       }
+  //       lastAutocomplete = show
+  //     }
+  //   )
+  // }, [])
 
   const panResponder = useMemo(() => {
     return PanResponder.create({
@@ -98,9 +98,9 @@ export const DrawerNative = (props: { children: any }) => {
         drawerStore.spring?.stop()
         drawerStore.spring = null
         drawerStore.pan.setOffset(drawerStore.pan['_value'])
-        if (omStatic.state.home.showAutocomplete) {
-          omStatic.actions.home.setShowAutocomplete(false)
-        }
+        // if (omStatic.state.home.showAutocomplete) {
+        //   omStatic.actions.home.setShowAutocomplete(false)
+        // }
       },
       onPanResponderMove: Animated.event([null, { dy: drawerStore.pan }]),
       onPanResponderRelease: () => {

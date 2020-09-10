@@ -10,10 +10,10 @@
   "include": ["src"],
   "references": [
     {
-      "path": "../react-test-env"
+      "path": "../use-store"
     },
     {
-      "path": "../use-store"
+      "path": "../react-test-env"
     }
   ]
 }

@@ -29,7 +29,7 @@
     "migrate": "(cd services/hasura && hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password)",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",
     "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
-    "postinstall": "yarn patch-package; yarn build:refs; yarn expo:check-deps; (cd node_modules && rm -r react react-dom metro* || true)",
+    "postinstall": "yarn patch-package; yarn build:refs; yarn expo:check-deps; (rm -r ./node_modules/react-native; rm -r node_modules/react node_modules/react-dom || true; ln -s $(realpath ./apps/dish-app/node_modules/react-native ./node_modules)) || true",
     "expo:check-deps": "expo-yarn-workspaces check-workspace-dependencies"
   },
   "resolutions": {
