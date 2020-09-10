@@ -1,12 +1,14 @@
 import { AbsoluteVStack, VStack } from '@dish/ui'
 import React, { memo } from 'react'
+import { Platform } from 'react-native'
 
 import { omStatic } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
+import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { useMediaQueryIsReallySmall } from './useMediaQueryIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
-const linkButtonProps = {
+const linkButtonProps: LinkButtonProps = {
   className: 'ease-in-out-slow',
   opacity: 0,
   name: 'home',
@@ -65,6 +67,11 @@ export const DishLogoButton = memo(() => {
 const Logo = () => {
   const { isSmall, color } = useSearchBarTheme()
   const scale = isSmall ? 0.9 : 1.025
+
+  if (Platform.OS !== 'web') {
+    return null
+  }
+
   return (
     <VStack transform={[{ scale }]}>
       <svg {...styles.default} viewBox="0 0 1201 544">
@@ -88,6 +95,11 @@ const Logo = () => {
 const LogoSmall = () => {
   const { isSmall, color } = useSearchBarTheme()
   const scale = isSmall ? 0.8 : 1
+
+  if (Platform.OS !== 'web') {
+    return null
+  }
+
   return (
     <VStack transform={[{ scale }]}>
       <svg {...styles.reallySmall} viewBox="0 0 723 898">

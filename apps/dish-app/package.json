@@ -94,8 +94,8 @@
   },
   "scripts": {
     "start": "react-native start",
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "android": "react-native run-android --no-packager",
+    "ios": "react-native run-ios --no-packager",
     "web": "TARGET=web VERBOSE=1 webpack-dev-server --port 19006 --progress",
     "preinstall": "../../bin/preinstall.sh; node ./etc/update_package_json_workspace_hoist.js",
     "postinstall": "../../bin/postinstall.sh; yarn patch-package; expo-yarn-workspaces postinstall",

@@ -2,6 +2,7 @@ import { series, sleep } from '@dish/async'
 import { NavigateItem } from '@dish/router'
 import { Text, useForceUpdate } from '@dish/ui'
 import React, { useEffect, useRef } from 'react'
+import { Platform, View } from 'react-native'
 
 import { brandColor } from '../../colors'
 import { RoutesTable, router } from '../../state/router'
@@ -46,7 +47,7 @@ export function Link<
     params,
     replace,
   }
-  const elementName = tagName ?? 'a'
+  const elementName = Platform.OS === 'web' ? tagName ?? 'a' : View
 
   useEffect(() => {
     return () => {
@@ -54,41 +55,49 @@ export function Link<
     }
   }, [])
 
+  const clickEventName = Platform.OS === 'web' ? 'onClick' : 'onPress'
+  const clickEvent = (e: any) => {
+    if (allProps.target) {
+      // let it go
+    } else {
+      e.preventDefault()
+      if (asyncClick) {
+        cancel.current = series([
+          () => sleep(50),
+          () => {
+            cancel.current = null
+            nav()
+          },
+        ])
+      } else {
+        nav()
+      }
+    }
+    function nav() {
+      if (onPress || onClick) {
+        e.navigate = () => router.navigate(navItem)
+        onClick?.(e!)
+        onPress?.(e)
+      } else {
+        if (!preventNavigate && !!navItem.name) {
+          router.navigate(navItem)
+        }
+      }
+    }
+  }
+
   const props = {
     ref: linkRef,
-    href: router.getPathFromParams(navItem),
-    onClick: (e: any) => {
-      if (allProps.target) {
-        // let it go
-      } else {
-        e.preventDefault()
-        event = e
-        if (asyncClick) {
-          cancel.current = series([
-            () => sleep(50),
-            () => {
-              cancel.current = null
-              nav()
-            },
-          ])
-        } else {
-          nav()
+    ...(Platform.OS === 'web'
+      ? {
+          onClick: clickEvent,
+          className: `${className ?? ''} dish-link`,
+          href: router.getPathFromParams(navItem),
         }
-      }
-      function nav() {
-        if (onPress || onClick) {
-          e.navigate = () => router.navigate(navItem)
-          onClick?.(e!)
-          onPress?.(e)
-        } else {
-          if (!preventNavigate && !!navItem.name) {
-            router.navigate(navItem)
-          }
-        }
-      }
-    },
+      : {
+          onPress: clickEvent,
+        }),
     ...linkProps,
-    className: `${className ?? ''} dish-link`,
     style,
   }
 

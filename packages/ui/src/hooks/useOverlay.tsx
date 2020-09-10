@@ -1,4 +1,5 @@
 import { useLayoutEffect } from 'react'
+import { Platform } from 'react-native'
 
 export const useOverlay = ({
   zIndex = 100000 - 1,
@@ -11,6 +12,10 @@ export const useOverlay = ({
   zIndex?: number
   pointerEvents?: boolean
 }) => {
+  if (Platform.OS !== 'web') {
+    return
+  }
+
   useLayoutEffect(() => {
     if (!isOpen) return
     const node = document.querySelector('#root')

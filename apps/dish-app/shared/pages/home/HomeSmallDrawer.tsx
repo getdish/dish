@@ -2,7 +2,7 @@ import { AbsoluteVStack, VStack } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import { debounce } from 'lodash'
 import React, { useEffect, useMemo } from 'react'
-import { Animated, PanResponder, View } from 'react-native'
+import { Animated, PanResponder, Platform, View } from 'react-native'
 
 import {
   drawerBorderRadius,
@@ -106,26 +106,28 @@ export const HomeSmallDrawer = (props: { children: any }) => {
 
   // attaching this as a direct onPress event breaks dragging
   // instead doing a more hacky useEffect
-  useEffect(() => {
-    const drawerSnapListener = () => {
-      if (drawerStore.snapIndex === 0) {
-        omStatic.actions.home.setShowAutocomplete(false)
-        drawerStore.setSnapPoint(1)
-      } else if (drawerStore.snapIndex === 1) {
-        drawerStore.setSnapPoint(2)
-      } else if (drawerStore.snapIndex === 2) {
-        drawerStore.setSnapPoint(1)
+  if (Platform.OS === 'web') {
+    useEffect(() => {
+      const drawerSnapListener = () => {
+        if (drawerStore.snapIndex === 0) {
+          omStatic.actions.home.setShowAutocomplete(false)
+          drawerStore.setSnapPoint(1)
+        } else if (drawerStore.snapIndex === 1) {
+          drawerStore.setSnapPoint(2)
+        } else if (drawerStore.snapIndex === 2) {
+          drawerStore.setSnapPoint(1)
+        }
       }
-    }
 
-    const node = document.querySelector('.home-drawer-snap')
-    if (node) {
-      node.addEventListener('click', drawerSnapListener)
-      return () => {
-        node.removeEventListener('click', drawerSnapListener)
+      const node = document.querySelector('.home-drawer-snap')
+      if (node) {
+        node.addEventListener('click', drawerSnapListener)
+        return () => {
+          node.removeEventListener('click', drawerSnapListener)
+        }
       }
-    }
-  }, [])
+    }, [])
+  }
 
   const panResponder = useMemo(() => {
     return PanResponder.create({
@@ -137,7 +139,9 @@ export const HomeSmallDrawer = (props: { children: any }) => {
         drawerStore.spring?.stop()
         drawerStore.spring = null
         drawerStore.pan.setOffset(drawerStore.pan['_value'])
-        document.body.classList.add('all-input-blur')
+        if (Platform.OS === 'web') {
+          document.body.classList.add('all-input-blur')
+        }
         if (omStatic.state.home.showAutocomplete) {
           omStatic.actions.home.setShowAutocomplete(false)
         }
@@ -147,7 +151,9 @@ export const HomeSmallDrawer = (props: { children: any }) => {
       onPanResponderRelease: () => {
         drawerStore.pan.flattenOffset()
         drawerStore.animateDrawerToPx(drawerStore.pan['_value'])
-        document.body.classList.remove('all-input-blur')
+        if (Platform.OS === 'web') {
+          document.body.classList.remove('all-input-blur')
+        }
       },
     })
   }, [])
@@ -156,6 +162,8 @@ export const HomeSmallDrawer = (props: { children: any }) => {
     <VStack
       className={`${isSmall ? '' : 'untouchable invisible'}`}
       zIndex={isSmall ? zIndexDrawer : -1}
+      width="100%"
+      height="100%"
     >
       <Animated.View
         style={{
