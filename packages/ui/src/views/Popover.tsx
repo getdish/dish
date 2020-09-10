@@ -13,7 +13,7 @@ import { useOverlay } from '../hooks/useOverlay'
 import { PopoverProps } from './PopoverProps'
 import { popoverCloseCbs } from './PopoverShared'
 
-export default function PopoverMain(props: PopoverProps) {
+export function Popover(props: PopoverProps) {
   const isOpen = props.isOpen
   const onChangeOpenCb = useCallback(props.onChangeOpen as any, [
     props.onChangeOpen,

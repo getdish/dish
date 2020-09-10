@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { useDebounce } from '../hooks/useDebounce'
 import { Hoverable } from './Hoverable'
-import { Popover } from './PopoverContainer'
+import { Popover } from './Popover'
 import { PopoverProps } from './PopoverProps'
 
 export const HoverablePopover = ({

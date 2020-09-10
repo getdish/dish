@@ -1,4 +1,3 @@
-import { requestIdle, sleep } from '@dish/async'
 import React, {
   forwardRef,
   useCallback,

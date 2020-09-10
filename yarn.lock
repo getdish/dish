@@ -13721,13 +13721,6 @@ node-localstorage@^1.3.1:
   dependencies:
     write-file-atomic "^1.1.4"
 
-node-localstorage@^2.1.6:
-  version "2.1.6"
-  resolved "https://registry.npmjs.org/node-localstorage/-/node-localstorage-2.1.6.tgz#7c62120beff8abbf960c858da70fddcfc336898a"
-  integrity sha512-yE7AycE5G2hU55d+F7Ona9nx97C+enJzWWx6jrsji7fuPZFJOvuW3X/LKKAcXRBcEIJPDOKt8ZiFWFmShR/irg==
-  dependencies:
-    write-file-atomic "^1.1.4"
-
 node-modules-regexp@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/node-modules-regexp/-/node-modules-regexp-1.0.0.tgz#8d9dbe28964a4ac5712e9131642107c71e90ec40"
@@ -16007,6 +16000,11 @@ react-native-screens@~2.9.0:
   resolved "https://registry.npmjs.org/react-native-screens/-/react-native-screens-2.9.0.tgz#ead2843107ba00fee259aa377582e457c74f1f3b"
   integrity sha512-5MaiUD6HA3nzY3JbVI8l3V7pKedtxQF3d8qktTVI0WmWXTI4QzqOU8r8fPVvfKo3MhOXwhWBjr+kQ7DZaIQQeg==
 
+react-native-sync-localstorage@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.npmjs.org/react-native-sync-localstorage/-/react-native-sync-localstorage-0.0.3.tgz#1f317b41241eeb423daca8631582a475d6f7d53c"
+  integrity sha512-xp9/JahQj9RYL+Bv2FBJXpqH0DGvIjVYD+GNBVjNwavHKvk0mB8FtzWYdZW5leQ9mvHEU5qaefyB+bdJeLVJcw==
+
 react-native-unimodules@^0.10.1:
   version "0.10.1"
   resolved "https://registry.npmjs.org/react-native-unimodules/-/react-native-unimodules-0.10.1.tgz#05a5ef248e88589528e7ef925137a345dde96ca4"
@@ -16137,7 +16135,7 @@ react-timer-mixin@^0.13.4:
   resolved "https://registry.npmjs.org/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz#75a00c3c94c13abe29b43d63b4c65a88fc8264d3"
   integrity sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
 
-react@*, react@0.0.0-experimental-94c0244ba, react@~16.11.0:
+react@*, react@0.0.0-experimental-94c0244ba:
   version "0.0.0-experimental-94c0244ba"
   resolved "https://registry.npmjs.org/react/-/react-0.0.0-experimental-94c0244ba.tgz#eb63ece3eadcf231845b6ec9c4a8c1829ddcc1fe"
   integrity sha512-67fLM+CA1w96JM0Ju5dv9lE3q1qSxVAi1iAOOyhXddhQJfs85bAJNM+gEMPBKbrhbhJGyHL1mLh1xqpOzokQ4w==

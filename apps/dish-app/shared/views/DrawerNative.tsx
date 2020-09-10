@@ -4,22 +4,9 @@ import { debounce } from 'lodash'
 import React, { useEffect, useMemo } from 'react'
 import { Animated, PanResponder, View } from 'react-native'
 
-import {
-  drawerBorderRadius,
-  pageWidthMax,
-  searchBarHeight,
-  zIndexDrawer,
-} from '../../constants'
-import { getWindowHeight } from '../../helpers/getWindow'
-import { omStatic } from '../../state/om'
-import { HomeSearchBarDrawer } from './HomeSearchBar'
-import { blurSearchInput } from './HomeSearchInput'
-import { isIOS } from './isIOS'
-import {
-  useMediaQueryIsReallySmall,
-  useMediaQueryIsShort,
-  useMediaQueryIsSmall,
-} from './useMediaQueryIs'
+import { drawerBorderRadius, pageWidthMax, searchBarHeight } from '../constants'
+import { getWindowHeight } from '../helpers/getWindow'
+import { omStatic } from '../state/om'
 
 export class BottomDrawerStore extends Store {
   snapPoints = [0.03, 0.25, 0.6]
@@ -78,12 +65,9 @@ export class BottomDrawerStore extends Store {
   }
 }
 
-export const HomeSmallDrawer = (props: { children: any }) => {
+export const DrawerNative = (props: { children: any }) => {
   const drawerStore = useStore(BottomDrawerStore)
-  const isSmall = useMediaQueryIsSmall()
-  const isReallySmall = useMediaQueryIsReallySmall()
-  const isShort = useMediaQueryIsShort()
-  const defaultSnapPoint = isShort && isReallySmall ? 0 : 1
+  const defaultSnapPoint = 1
 
   useEffect(() => {
     // let lastIndex: number
@@ -104,29 +88,6 @@ export const HomeSmallDrawer = (props: { children: any }) => {
     )
   }, [])
 
-  // attaching this as a direct onPress event breaks dragging
-  // instead doing a more hacky useEffect
-  useEffect(() => {
-    const drawerSnapListener = () => {
-      if (drawerStore.snapIndex === 0) {
-        omStatic.actions.home.setShowAutocomplete(false)
-        drawerStore.setSnapPoint(1)
-      } else if (drawerStore.snapIndex === 1) {
-        drawerStore.setSnapPoint(2)
-      } else if (drawerStore.snapIndex === 2) {
-        drawerStore.setSnapPoint(1)
-      }
-    }
-
-    const node = document.querySelector('.home-drawer-snap')
-    if (node) {
-      node.addEventListener('click', drawerSnapListener)
-      return () => {
-        node.removeEventListener('click', drawerSnapListener)
-      }
-    }
-  }, [])
-
   const panResponder = useMemo(() => {
     return PanResponder.create({
       onMoveShouldSetPanResponder: (_, { dy }) => {
@@ -137,26 +98,20 @@ export const HomeSmallDrawer = (props: { children: any }) => {
         drawerStore.spring?.stop()
         drawerStore.spring = null
         drawerStore.pan.setOffset(drawerStore.pan['_value'])
-        document.body.classList.add('all-input-blur')
         if (omStatic.state.home.showAutocomplete) {
           omStatic.actions.home.setShowAutocomplete(false)
         }
-        blurSearchInput()
       },
       onPanResponderMove: Animated.event([null, { dy: drawerStore.pan }]),
       onPanResponderRelease: () => {
         drawerStore.pan.flattenOffset()
         drawerStore.animateDrawerToPx(drawerStore.pan['_value'])
-        document.body.classList.remove('all-input-blur')
       },
     })
   }, [])
 
   return (
-    <VStack
-      className={`${isSmall ? '' : 'untouchable invisible'}`}
-      zIndex={isSmall ? zIndexDrawer : -1}
-    >
+    <VStack>
       <Animated.View
         style={{
           transform: [
@@ -224,28 +179,23 @@ export const HomeSmallDrawer = (props: { children: any }) => {
             }}
             {...panResponder.panHandlers}
           >
-            <HomeSearchBarDrawer />
+            {/* <HomeSearchBarDrawer /> */}
           </View>
 
           <VStack flex={1} maxHeight="100%" position="relative">
-            {isIOS ||
-              (drawerStore.snapIndex === 2 && (
-                <AbsoluteVStack
-                  pointerEvents="none"
-                  fullscreen
-                  zIndex={1000000}
-                  {...(drawerStore.snapIndex > 0 && {
-                    pointerEvents: 'auto',
-                  })}
-                >
-                  <View
-                    style={{ width: '100%', height: '100%' }}
-                    {...(drawerStore.snapIndex > 0 && panResponder.panHandlers)}
-                  />
-                </AbsoluteVStack>
-              ))}
-
-            {/* children */}
+            <AbsoluteVStack
+              pointerEvents="none"
+              fullscreen
+              zIndex={1000000}
+              {...(drawerStore.snapIndex > 0 && {
+                pointerEvents: 'auto',
+              })}
+            >
+              <View
+                style={{ width: '100%', height: '100%' }}
+                {...(drawerStore.snapIndex > 0 && panResponder.panHandlers)}
+              />
+            </AbsoluteVStack>
 
             {props.children}
           </VStack>

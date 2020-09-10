@@ -1,4 +1,4 @@
-import { isBrowserProd, isNode, isWorker } from '../constants'
+import { isBrowserProd, isHasuraLive, isNode, isWorker } from '../constants'
 
 export function getGraphEndpointDomain() {
   const LOCAL_HASURA = 'http://localhost:8080'
@@ -18,7 +18,7 @@ export function getGraphEndpointDomain() {
     if (isBrowserProd) {
       domain = LIVE_HASURA
     } else {
-      if (window.location.hostname.includes('hasura_live')) {
+      if (isHasuraLive) {
         domain = LIVE_HASURA
       } else {
         domain = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA

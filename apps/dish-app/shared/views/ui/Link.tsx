@@ -1,5 +1,3 @@
-import './Link.css'
-
 import { series, sleep } from '@dish/async'
 import { NavigateItem } from '@dish/router'
 import { Text, useForceUpdate } from '@dish/ui'

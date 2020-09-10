@@ -28,5 +28,5 @@ const handleKeyDown = (e) => {
 }
 
 if (typeof window !== 'undefined') {
-  window.addEventListener('keydown', handleKeyDown)
+  window.addEventListener?.('keydown', handleKeyDown)
 }
