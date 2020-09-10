@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Constants } from 'react-native-unimodules'
 
-// import { DrawerNative } from './shared/views/DrawerNative'
+import { DrawerNative } from './shared/views/DrawerNative'
 import { MapNative } from './shared/views/MapNative'
 
 console.log(Constants.systemFonts)
@@ -19,10 +19,10 @@ export default function App() {
     <View style={styles.container}>
       <MapNative />
 
-      <AbsoluteVStack>
-        {/* <DrawerNative> */}
-        <VStack width={100} height={100} />
-        {/* </DrawerNative> */}
+      <AbsoluteVStack fullscreen zIndex={1000}>
+        <DrawerNative>
+          <VStack width={100} height={100} />
+        </DrawerNative>
       </AbsoluteVStack>
       <StatusBar style="auto" />
     </View>
