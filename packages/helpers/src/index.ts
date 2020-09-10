@@ -1,3 +1,5 @@
+import './polyfill-localStorage'
+
 export const stringify = (a: any) => JSON.stringify(a)
 
 export function hasProperty<X extends {}, Y extends PropertyKey>(
