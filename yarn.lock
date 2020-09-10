@@ -15185,16 +15185,6 @@ pouchdb-collections@^1.0.1:
   resolved "https://registry.npmjs.org/pouchdb-collections/-/pouchdb-collections-1.0.1.tgz#fe63a17da977611abef7cb8026cb1a9553fd8359"
   integrity sha1-/mOhfal3YRq+98uAJssalVP9g1k=
 
-preact-responder-event-plugin@^1.0.16:
-  version "1.0.16"
-  resolved "https://registry.npmjs.org/preact-responder-event-plugin/-/preact-responder-event-plugin-1.0.16.tgz#4976d578b0c7a0045690fa82969245c738df8656"
-  integrity sha512-Mtoq7VRdIJ/YMONn3Jz2ggU4KCS+KQHrDqFPxjtufiCznXqpsPpReRxVOwcVL6MNZgiyV6LUb9Xy5WZwMStSsw==
-
-preact@^10.3.4:
-  version "10.4.8"
-  resolved "https://registry.npmjs.org/preact/-/preact-10.4.8.tgz#8517b106cc5591eb675237c93da99ac052cf4756"
-  integrity sha512-uVLeEAyRsCkUEFhVHlOu17OxcrwC7+hTGZ08kBoLBiGHiZooUZuibQnphgMKftw/rqYntNMyhVCPqQhcyAGHag==
-
 prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"

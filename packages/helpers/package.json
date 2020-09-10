@@ -11,8 +11,7 @@
   },
   "dependencies": {
     "lodash": "*",
-    "@o/fast-compare": "^2.7.6",
-    "tslib": "1.11.2"
+    "@o/fast-compare": "^2.7.6"
   },
   "peerDependencies": {
     "react": "*"
