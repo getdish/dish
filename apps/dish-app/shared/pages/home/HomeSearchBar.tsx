@@ -2,6 +2,7 @@ import { ChevronLeft, Home, MapPin, Search } from '@dish/react-feather'
 import { AbsoluteVStack, HStack, Spacer, VStack } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
+import { Platform } from 'react-native'
 
 import {
   pageWidthMax,
@@ -24,6 +25,8 @@ import {
 } from './useMediaQueryIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
+const isWeb = Platform.OS === 'web'
+
 export const HomeSearchBarDrawer = () => {
   const isSmall = useMediaQueryIsSmall()
 
@@ -32,7 +35,7 @@ export const HomeSearchBarDrawer = () => {
   }
 
   return (
-    <VStack paddingVertical={2}>
+    <VStack width="100%" paddingVertical={2} minHeight={searchBarHeight}>
       <HomeSearchBar />
     </VStack>
   )
@@ -179,6 +182,7 @@ const HomeSearchBar = memo(() => {
       alignItems="center"
       justifyContent="center"
       userSelect="none"
+      width="100%"
     >
       <VStack paddingHorizontal={8}>
         <DishLogoButton />
@@ -208,7 +212,14 @@ const HomeSearchBar = memo(() => {
         overflow="hidden"
       >
         {/* Search Input Start */}
-        {isReallySmall && (
+        {isReallySmall && !isWeb && (
+          <>
+            <HomeSearchLocationInput />
+            <HomeSearchInput />
+          </>
+        )}
+
+        {isReallySmall && isWeb && (
           <>
             {/* keep both in dom so we have access to ref */}
             <VStack display={store.showLocation ? 'contents' : ('none' as any)}>

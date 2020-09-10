@@ -127,7 +127,7 @@ export const HomeSearchInput = memo(() => {
     }
 
     const node = inputStore.node
-    if (node) {
+    if ('addEventListener' in node) {
       node.addEventListener('click', handleClick)
       return () => {
         node.removeEventListener('click', handleClick)
@@ -392,13 +392,16 @@ function searchInputEffect(input: HTMLInputElement) {
     hideAutocomplete()
     isFocused = false
   }
-  input.addEventListener('keydown', handleKeyPress)
-  input.addEventListener('click', handleClick)
-  input.addEventListener('blur', handleBlur)
-  return () => {
-    input.removeEventListener('keydown', handleKeyPress)
-    input.removeEventListener('click', handleClick)
-    input.removeEventListener('blur', handleBlur)
+
+  if ('addEventListener' in input) {
+    input.addEventListener('keydown', handleKeyPress)
+    input.addEventListener('click', handleClick)
+    input.addEventListener('blur', handleBlur)
+    return () => {
+      input.removeEventListener('keydown', handleKeyPress)
+      input.removeEventListener('click', handleClick)
+      input.removeEventListener('blur', handleBlur)
+    }
   }
 }
 
