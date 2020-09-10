@@ -2,7 +2,7 @@ import 'isomorphic-unfetch'
 
 import './serverEnv'
 
-import { existsSync, readFileSync, renameSync, unlinkSync } from 'fs'
+import { existsSync, readFileSync, renameSync } from 'fs'
 import Path from 'path'
 
 import { ChunkExtractor } from '@loadable/server'

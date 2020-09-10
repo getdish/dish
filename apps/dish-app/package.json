@@ -1,19 +1,22 @@
 {
   "name": "@dish/dish-app",
   "private": true,
-  "main": "__generated__/AppEntry.js",
   "version": "0.0.0",
   "workspaces": {
     "nohoist": [
-      "expo-status-bar"
+      "expo-status-bar",
+      "react-native-unimodules",
+      "@react-native-community",
+      "@react-native-community/**",
+      "@react-native-mapbox-gl",
+      "@react-native-mapbox-gl/**"
     ]
   },
   "scripts": {
-    "start": "yarn start:web",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "start": "react-native start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
     "web": "expo start --web",
-    "eject": "expo eject",
     "postinstall": "yarn patch-package; expo-yarn-workspaces postinstall",
     "start:web": "VERBOSE=1 webpack-dev-server --port 19006 --progress",
     "start:devtools": "npx overmind-devtools@26.0.1",
@@ -44,11 +47,18 @@
   },
   "dependencies": {
     "expo": "^38.0.10",
+    "expo-splash-screen": "^0.5.0",
     "expo-status-bar": "^1.0.2",
-    "react": "*",
+    "expo-updates": "~0.2.10",
+    "react": "~16.11.0",
     "react-dom": "*",
-    "react-native": "0.62.2",
+    "react-native": "~0.62.2",
+    "react-native-gesture-handler": "~1.6.1",
+    "react-native-reanimated": "~1.9.0",
+    "react-native-screens": "~2.9.0",
+    "react-native-unimodules": "~0.10.1",
     "react-native-web": "^0.13.12",
+    "@react-native-community/cli-platform-ios": "^4.13.0",
     "@dish/async": "*",
     "@dish/graph": "*",
     "@dish/helpers": "*",
@@ -68,7 +78,6 @@
     "react-helmet": "^6.1.0",
     "react-laag": "^1.7.3",
     "react-native-dotenv": "^2.4.0",
-    "react-native-unimodules": "^0.10.1",
     "react-reparenting": "^0.4.0",
     "react-storage-hooks": "^4.0.1",
     "resize-observer-polyfill": "^1.5.1",
@@ -78,6 +87,10 @@
     "@react-native-mapbox-gl/maps": "^8.1.0-rc.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.8.6",
+    "babel-jest": "~25.2.6",
+    "jest": "~25.2.6",
+    "react-test-renderer": "~16.11.0",
     "@dish/babel-preset": "*",
     "@types/jsdom": "^16.2.0",
     "@types/lodash": "^4.14.155",
@@ -86,7 +99,6 @@
     "@types/react": "*",
     "@types/react-native": "*",
     "@types/requestidlecallback": "0.3.1",
-    "@babel/core": "^7.8.6",
     "expo-yarn-workspaces": "^1.2.1",
     "metro-config": "*",
     "typescript": "*",
