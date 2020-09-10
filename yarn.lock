@@ -4165,10 +4165,10 @@ babel-plugin-react-native-web@^0.11.7:
   resolved "https://registry.npmjs.org/babel-plugin-react-native-web/-/babel-plugin-react-native-web-0.11.7.tgz#15b578c0731bd7d65d334f9c759d95e8e4a602e2"
   integrity sha512-CxE7uhhqkzAFkwV2X7+Mc/UVPujQQDtja/EGxCXRJvdYRi72QTmaJYKbK1lV9qgTZuB+TDguU89coaA9Z1BNbg==
 
-babel-plugin-react-native-web@^0.12.3:
-  version "0.12.3"
-  resolved "https://registry.npmjs.org/babel-plugin-react-native-web/-/babel-plugin-react-native-web-0.12.3.tgz#e2291c96bcdf8614fa5c0b8cc35a570ead18923e"
-  integrity sha512-vafI23BcpuWr7sd0IkbbY2ZlubC2I0K4bbXShRVKrHfHU6myXV4Sg0AYywBqDIkGiB5M+uJA+d0/DAa6bHCSUw==
+babel-plugin-react-native-web@^0.13.12:
+  version "0.13.12"
+  resolved "https://registry.npmjs.org/babel-plugin-react-native-web/-/babel-plugin-react-native-web-0.13.12.tgz#c528140614b6af38e9a034f4cad765b4b3af1c29"
+  integrity sha512-4IkREOr76aPT3QnwK+j7dn8SvNlH8sx5US8Jyi5Hn2wr4ji5XMUbURbg7yhOeaEOOutIsKLauPoXsWBJA8kB1w==
 
 babel-plugin-syntax-async-functions@^6.8.0:
   version "6.13.0"

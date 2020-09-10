@@ -95,21 +95,12 @@ module.exports = function getWebpackConfig(
       resolve: {
         extensions: ['.ts', '.tsx', '.js'],
         mainFields: ['tsmain', 'browser', 'module', 'main'],
-        alias:
-          TARGET === 'preact'
-            ? {
-                react$: 'preact/compat',
-                'react-dom$': 'preact/compat',
-                'react-dom/unstable-native-dependencies':
-                  'preact-responder-event-plugin',
-                gqless,
-              }
-            : {
-                react: path.join(require.resolve('react'), '..'),
-                'react-dom': path.join(require.resolve('react-dom'), '..'),
-                // '@dish/graph': require.resolve('@dish/graph/index'),
-                gqless,
-              },
+        alias: {
+          react: path.join(require.resolve('react'), '..'),
+          'react-dom': path.join(require.resolve('react-dom'), '..'),
+          'react-native': 'react-native-web',
+          gqless,
+        },
       },
       resolveLoader: {
         modules: ['node_modules'],
