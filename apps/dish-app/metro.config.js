@@ -1,3 +1,15 @@
 const { createMetroConfiguration } = require('expo-yarn-workspaces')
+const block = require('metro-config/src/defaults/exclusionList')
 
-module.exports = createMetroConfiguration(__dirname)
+const config = createMetroConfiguration(__dirname)
+
+module.exports = {
+  ...config,
+  resolver: {
+    ...config.resolver,
+    blockList: block([
+      /.*\/android\/React(Android|Common)\/.*/,
+      /.*\/versioned-react-native\/.*/,
+    ]),
+  },
+}

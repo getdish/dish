@@ -1,14 +1,5 @@
 import { isBrowserProd, isHasuraLive, isNode } from '../constants'
 
-if (process.env.TARGET === 'node') {
-  const { LocalStorage } = require('node-localstorage')
-  global['localStorage'] = new LocalStorage('./scratch')
-} else if (process.env.TARGET !== 'client') {
-  if (typeof localStorage === 'undefined') {
-    global['localStorage'] = require('react-native-sync-localstorage')
-  }
-}
-
 const BROWSER_STORAGE_KEY = 'auth'
 const LOCAL_AUTH_SERVER = 'http://localhost:3000'
 const PROD_JWT_SERVER = 'https://auth.dishapp.com'
