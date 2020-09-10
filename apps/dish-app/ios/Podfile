@@ -48,7 +48,7 @@ end
 target 'dish' do
   # my pods
   # pod 'Mapbox-iOS-SDK', '~> 5.8'
-  pod 'react-native-mapbox-gl', :path => '../node_modules/@react-native-mapbox-gl/maps'
+  # pod 'react-native-mapbox-gl', :path => '../node_modules/@react-native-mapbox-gl/maps'
 
   # Pods for dish
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
@@ -81,6 +81,8 @@ target 'dish' do
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
+
+  # ENV['REACT_NATIVE_MAPBOX_MAPBOX_IOS_VERSION'] = '~> 5.6.0'
 
   use_unimodules!
   use_native_modules!
