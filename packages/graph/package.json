@@ -24,7 +24,7 @@
     "postinstall-verbose": "patch --verbose -t -p1 -i patches/gqless+0.0.1-alpha.29.patch"
   },
   "dependencies": {
-    "node-localstorage": "^2.1.6",
+    "react-native-sync-localstorage": "^0.0.3",
     "@gqless/react": "0.0.1-alpha.28",
     "patch-package": "^6.2.2",
     "isomorphic-unfetch": "^3.0.0",

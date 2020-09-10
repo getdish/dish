@@ -1,4 +1,4 @@
-import { isBrowserProd, isNode } from '../constants'
+import { isBrowserProd, isHasuraLive, isNode } from '../constants'
 
 const BROWSER_STORAGE_KEY = 'auth'
 const LOCAL_AUTH_SERVER = 'http://localhost:3000'
@@ -11,7 +11,7 @@ const DOMAIN = (() => {
     if (isBrowserProd) {
       return PROD_JWT_SERVER
     } else {
-      if (window.location.hostname.includes('hasura_live')) {
+      if (isHasuraLive) {
         return PROD_JWT_SERVER
       } else {
         return process.env.REACT_APP_AUTH_ENDPOINT || LOCAL_AUTH_SERVER
@@ -22,8 +22,7 @@ const DOMAIN = (() => {
 
 if (process.env.TARGET !== 'client') {
   if (typeof localStorage === 'undefined') {
-    const { LocalStorage } = require('node-localstorage')
-    global['localStorage'] = new LocalStorage('./tmp')
+    global['localStorage'] = require('react-native-sync-localstorage')
   }
 }
 

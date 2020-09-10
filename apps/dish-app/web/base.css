@@ -405,3 +405,11 @@ input:-webkit-autofill:active  {
     filter: grayscale(100%);
   }
 }
+
+.block-link {
+  display: flex;
+  flex-direction: inherit;
+  flex-grow: inherit;
+  align-items: inherit;
+  justify-content: inherit;
+}

@@ -1,6 +1,7 @@
+import { VStack } from '@dish/ui'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { Dimensions, StyleSheet, View } from 'react-native'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 
@@ -8,10 +9,11 @@ MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN)
 MapboxGL.setTelemetryEnabled(false)
 
 export function MapNative() {
+  const { width, height } = Dimensions.get('screen')
   return (
-    <View style={styles.container}>
+    <VStack width={width} height={height}>
       <MapboxGL.MapView style={styles.map} />
-    </View>
+    </VStack>
   )
 }
 

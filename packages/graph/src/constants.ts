@@ -1,7 +1,10 @@
 export const constants = 0
 export const isNode = typeof window == 'undefined'
+
+export const isHasuraLive =
+  !isNode && window.location?.hostname.includes('hasura_live')
 export const isBrowserProd =
-  !isNode && window.location.hostname.includes('dish')
+  !isNode && window.location?.hostname.includes('dish')
 
 export const isWorker =
   typeof document !== 'undefined' && !document.getElementById('root')
@@ -34,7 +37,7 @@ if (isWorker) {
 } else if (isNode) {
   SEARCH_DOMAIN = LOCAL_SEARCH_DOMAIN
 } else {
-  if (isBrowserProd || window.location.hostname.includes('hasura_live')) {
+  if (isBrowserProd || isHasuraLive) {
     SEARCH_DOMAIN = LIVE_SEARCH_DOMAIN
   } else {
     SEARCH_DOMAIN = LOCAL_SEARCH_DOMAIN

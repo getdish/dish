@@ -5,11 +5,6 @@
   "tsmain": "src/index",
   "sideEffects": false,
   "private": true,
-  "workspaces": {
-    "nohoist": [
-      "**"
-    ]
-  },
   "scripts": {
     "build": "npm-run-all --parallel build:main build:web",
     "build:main": "tsc -b || true",
