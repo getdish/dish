@@ -247,7 +247,7 @@ function local_node_with_prod_env() {
   export TIMESCALE_PASSWORD=$TF_VAR_TIMESCALE_SU_PASS
   export HASURA_ENDPOINT=https://hasura.dishapp.com
   export HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
-  node $1
+  node --max-old-space-size=4096 $1
 }
 
 function remove_evicted_pods() {

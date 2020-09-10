@@ -745,8 +745,37 @@ test('Scoring for rishes', async (t) => {
   const rish1 = updated?.tags.filter((t) => t.tag.name == 'Test tag')[0]
   const rish2 = updated?.tags.filter((t) => t.tag.name == 'Testpho')[0]
   t.is(rish1.score, -1)
-  t.deepEqual(rish1.score_breakdown, null)
+  t.deepEqual(rish1.score_breakdown.yelp, {
+    score: -1,
+    counts: {
+      neutral: 0,
+      negative: 1,
+      positive: 0,
+    },
+  })
+  t.deepEqual(rish1.score_breakdown.google, {
+    score: null,
+    counts: {
+      neutral: 0,
+      negative: 0,
+      positive: 0,
+    },
+  })
+  t.deepEqual(rish1.score_breakdown.tripadvisor, {
+    score: 0,
+    counts: {
+      neutral: 1,
+      negative: 0,
+      positive: 0,
+    },
+  })
   t.is(rish2.score, 1)
-  t.deepEqual(rish2.score_breakdown, null)
-  //console.log(updated?.tags)
+  t.deepEqual(rish2.score_breakdown.tripadvisor, {
+    score: 1,
+    counts: {
+      neutral: 0,
+      negative: 0,
+      positive: 1,
+    },
+  })
 })

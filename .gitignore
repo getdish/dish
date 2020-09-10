@@ -97,4 +97,8 @@ web-build-legacy
 services/search/m
 services/search/embedded.go
 
+# Rust build files
 target/
+
+# Node crash logs
+report.*.json

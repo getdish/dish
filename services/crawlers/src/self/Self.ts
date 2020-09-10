@@ -46,6 +46,16 @@ import {
 } from './update_all_geocoder_ids'
 
 export class Self extends WorkerJob {
+  ALL_SOURCES = [
+    'yelp',
+    'ubereats',
+    'infatuated',
+    'michelin',
+    'tripadvisor',
+    'doordash',
+    'grubhub',
+    'google',
+  ]
   yelp!: Scrape
   ubereats!: Scrape
   infatuated!: Scrape
@@ -141,7 +151,7 @@ export class Self extends WorkerJob {
       await this.postMerge()
       console.log(`Merged: ${this.restaurant.name}`)
     }
-    if (process.env.NODE_ENV != 'test') {
+    if (process.env.NODE_ENV != 'test' && process.env.NO_EXIT != '1') {
       console.log('Exiting with 0...')
       process.exit(0)
     }
@@ -267,17 +277,7 @@ export class Self extends WorkerJob {
   }
 
   async getScrapeData() {
-    const sources = [
-      'yelp',
-      'ubereats',
-      'infatuated',
-      'michelin',
-      'tripadvisor',
-      'doordash',
-      'grubhub',
-      'google',
-    ]
-    for (const source of sources) {
+    for (const source of this.ALL_SOURCES) {
       this[source] = await latestScrapeForRestaurant(this.restaurant, source)
     }
   }

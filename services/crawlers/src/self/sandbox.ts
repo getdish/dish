@@ -1,15 +1,21 @@
-import { Restaurant, findOne } from '@dish/graph'
+import {
+  RestaurantWithId,
+  findOne,
+  restaurantFindOneWithTags,
+} from '@dish/graph'
 
 import { main_db } from '../utils'
 import { Self } from './Self'
 
 async function one() {
-  const restaurant = await findOne<Restaurant>('restaurant', {
+  let restaurant = await findOne<RestaurantWithId>('restaurant', {
     slug: process.env.SLUG || '',
   })
   if (restaurant) {
     const merger = new Self()
     await merger.mergeAll(restaurant.id)
+    //restaurant = await restaurantFindOneWithTags(restaurant)
+    //console.log(JSON.stringify(restaurant?.tags, null, 4))
   }
 }
 
