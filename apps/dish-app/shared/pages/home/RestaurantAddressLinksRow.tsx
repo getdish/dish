@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
+import { ExternalLink } from '@dish/react-feather'
 import { Box, HStack, HoverablePopover, Text } from '@dish/ui'
 import React, { memo } from 'react'
-import { ExternalLink } from 'react-feather'
 
 import { GeocodePlace } from '../../state/home-types'
 import { Link } from '../../views/ui/Link'

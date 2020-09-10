@@ -40,9 +40,9 @@ export default function App() {
         <MapNative />
 
         <AbsoluteVStack fullscreen zIndex={1000}>
-          <DrawerNative>
+          <HomeSmallDrawer>
             <VStack width={100} height={100} />
-          </DrawerNative>
+          </HomeSmallDrawer>
         </AbsoluteVStack>
         <StatusBar style="auto" />
       </View>

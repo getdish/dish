@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
+import { ChevronDown, ChevronUp } from '@dish/react-feather'
 import { StackProps, Tooltip, VStack, prevent } from '@dish/ui'
 import React from 'react'
-import { ChevronDown, ChevronUp } from 'react-feather'
 
 import { FavoriteButtonProps } from './FavoriteButton'
 import { useUserUpvoteDownvoteQuery } from './useUserReview'

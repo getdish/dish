@@ -1,5 +1,6 @@
 import { fullyIdle, series, sleep } from '@dish/async'
 import { TopCuisine, getHomeDishes } from '@dish/graph'
+import { ChevronRight } from '@dish/react-feather'
 import {
   AbsoluteVStack,
   HStack,
@@ -13,7 +14,6 @@ import {
 } from '@dish/ui'
 import _, { sortBy, uniqBy } from 'lodash'
 import { default as React, Suspense, memo, useEffect, useState } from 'react'
-import { ChevronRight } from 'react-feather'
 import { StyleSheet } from 'react-native'
 
 import {

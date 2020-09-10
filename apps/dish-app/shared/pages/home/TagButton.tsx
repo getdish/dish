@@ -1,4 +1,5 @@
 import { NonNullObject, Tag, TagType } from '@dish/graph'
+import { ThumbsUp, X } from '@dish/react-feather'
 import {
   HStack,
   Spacer,
@@ -11,7 +12,6 @@ import {
   prevent,
 } from '@dish/ui'
 import React, { memo, useEffect, useRef } from 'react'
-import { ThumbsUp, X } from 'react-feather'
 import { Image } from 'react-native'
 
 import { getTagId } from '../../state/getTagId'

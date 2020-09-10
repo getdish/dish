@@ -1,6 +1,6 @@
+import { User } from '@dish/react-feather'
 import { Circle, HStack, StackProps, Text, VStack } from '@dish/ui'
 import React, { useState } from 'react'
-import { User } from 'react-feather'
 
 import { bgLight } from '../../colors'
 import { Link } from '../../views/ui/Link'

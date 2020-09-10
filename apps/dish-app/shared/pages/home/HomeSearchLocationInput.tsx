@@ -1,7 +1,7 @@
+import { MapPin, Navigation } from '@dish/react-feather'
 import { Button, HStack, VStack, prevent } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { memo, useEffect, useState } from 'react'
-import { MapPin, Navigation } from 'react-feather'
 import { TextInput } from 'react-native'
 
 import { inputClearSelection, inputIsTextSelected } from '../../helpers/input'

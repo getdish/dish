@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
+import { MessageSquare } from '@dish/react-feather'
 import React from 'react'
-import { MessageSquare } from 'react-feather'
 
 import { LinkButton } from '../../views/ui/LinkButton'
 import {

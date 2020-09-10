@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
+import { ThumbsDown, ThumbsUp } from '@dish/react-feather'
 import { AbsoluteVStack, HStack, Spacer, Text, VStack } from '@dish/ui'
 import { default as React } from 'react'
-import { ThumbsDown, ThumbsUp } from 'react-feather'
 
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { FullTag } from '../../state/tagLenses'

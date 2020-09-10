@@ -1,7 +1,7 @@
+import { ChevronLeft, Home, MapPin, Search } from '@dish/react-feather'
 import { AbsoluteVStack, HStack, Spacer, VStack } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
-import { ChevronLeft, Home, MapPin, Search } from 'react-feather'
 
 import {
   pageWidthMax,

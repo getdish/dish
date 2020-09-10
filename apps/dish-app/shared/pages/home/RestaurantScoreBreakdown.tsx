@@ -1,4 +1,5 @@
 import { graphql } from '@dish/graph'
+import { HelpCircle } from '@dish/react-feather'
 import {
   Divider,
   HStack,
@@ -10,7 +11,6 @@ import {
 } from '@dish/ui'
 import { sortBy } from 'lodash'
 import React, { memo, useState } from 'react'
-import { HelpCircle } from 'react-feather'
 import { Image } from 'react-native'
 
 import { lightGreen, lightYellow } from '../../colors'

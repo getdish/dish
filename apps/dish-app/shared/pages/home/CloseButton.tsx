@@ -1,6 +1,6 @@
+import { CornerLeftUp, X } from '@dish/react-feather'
 import { HStack, StackProps } from '@dish/ui'
 import React, { memo } from 'react'
-import { CornerLeftUp, X } from 'react-feather'
 
 type CircleButtonProps = StackProps & {
   size?: number

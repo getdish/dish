@@ -1,5 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
+import { Activity, HelpCircle } from '@dish/react-feather'
 import {
   AbsoluteVStack,
   HStack,
@@ -15,7 +16,6 @@ import {
 import { useStore } from '@dish/use-store'
 import { sortBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useState } from 'react'
-import { Activity, HelpCircle } from 'react-feather'
 import { Image } from 'react-native'
 
 import { bgLight, bgLightLight, brandColor, lightBlue } from '../../colors'
