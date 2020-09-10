@@ -1,5 +1,6 @@
-import { Review } from '@dish/graph'
+import { Review, Tag } from '@dish/graph'
 import { fetchABSASentiment } from '@dish/helpers'
+import { chunk } from 'lodash'
 
 import { main_db } from '../utils'
 import { Self } from './Self'
@@ -47,6 +48,7 @@ export class RestaurantTagScores {
   async absaAnalyseReviews(reviews: Review[]) {
     let review_tag_wholes: ReviewTagWhole[] = []
     const tags = this.crawler.tagging.found_tags
+    let reviews_to_analyze: [Review, Tag][] = []
     console.log('Starting ABSA requests...')
     for (const tag_id in tags) {
       const tag = tags[tag_id]
@@ -57,16 +59,42 @@ export class RestaurantTagScores {
           tag.name
         )
         if (!does_review_contain_tag) continue
-        const result = await fetchABSASentiment(review.text, tag.name)
-        review_tag_wholes.push({
-          review_id: review.id,
-          tag_id: tag_id,
-          sentiment: this._absaSentimentToNumber(result.sentiment),
-        })
+        reviews_to_analyze.push([review, tag])
       }
     }
+    review_tag_wholes = await this.analyzeReviews(reviews_to_analyze)
     console.log('...ABSA requests done')
     return review_tag_wholes
+  }
+
+  async analyzeReviews(review_with_tag_array: [Review, Tag][]) {
+    const ABSA_BATCH_SIZE = 10
+    let assessed: ReviewTagWhole[] = []
+    for (const batch of chunk(review_with_tag_array, ABSA_BATCH_SIZE)) {
+      assessed.push(...(await this.absaBatch(batch)))
+    }
+    return assessed
+  }
+
+  async absaBatch(review_with_tag_array: [Review, Tag][]) {
+    const results = await Promise.all(
+      review_with_tag_array.map((i) => {
+        const review = i[0]
+        const tag = i[1]
+        return this.absaRequest(review, tag)
+      })
+    )
+    return results.filter((i) => i != null) as ReviewTagWhole[]
+  }
+
+  async absaRequest(review: Review, tag: Tag) {
+    if (!review.text || !tag.name) return null
+    const result = await fetchABSASentiment(review.text, tag.name)
+    return {
+      review_id: review.id,
+      tag_id: tag.id,
+      sentiment: this._absaSentimentToNumber(result.sentiment),
+    } as ReviewTagWhole
   }
 
   _absaSentimentToNumber(absa_sentiment: string) {
