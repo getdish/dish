@@ -47,6 +47,7 @@ export class RestaurantTagScores {
   async absaAnalyseReviews(reviews: Review[]) {
     let review_tag_wholes: ReviewTagWhole[] = []
     const tags = this.crawler.tagging.found_tags
+    console.log('Starting ABSA requests...')
     for (const tag_id in tags) {
       const tag = tags[tag_id]
       for (const review of reviews) {
@@ -64,6 +65,7 @@ export class RestaurantTagScores {
         })
       }
     }
+    console.log('...ABSA requests done')
     return review_tag_wholes
   }
 
@@ -101,14 +103,61 @@ export class RestaurantTagScores {
           AND review.restaurant_id = '${this.crawler.restaurant.id}'
           AND review_tag_whole.tag_id = '${tag_id}'
       `
+      const breakdown_sql = this.generateBreakdownSQL(tag_id)
       const sql = `
-        UPDATE restaurant_tag SET score = (${score_sql})
-          WHERE restaurant_id = '${this.crawler.restaurant.id}'
-          AND tag_id = '${tag_id}';
+        UPDATE restaurant_tag SET
+          score = (${score_sql}),
+          score_breakdown = (${breakdown_sql})
+        WHERE restaurant_id = '${this.crawler.restaurant.id}'
+        AND tag_id = '${tag_id}';
       `
       all_updates.push(sql)
     }
     const query = all_updates.join('\n')
     await main_db.query(query)
+  }
+
+  generateBreakdownSQL(tag_id: string) {
+    let sources_sql: string[] = []
+    for (const source of this.crawler.ALL_SOURCES) {
+      const source_sql = `
+        '${source}', json_build_object(
+          'score', (${this.sqlForScore(tag_id, source)}),
+          'counts', json_build_object(
+            'positive', ((${this.sqlForSentiment(tag_id, source, 1)})),
+            'neutral', ((${this.sqlForSentiment(tag_id, source, 0)})),
+            'negative', ((${this.sqlForSentiment(tag_id, source, -1)}))
+          )
+        )
+      `
+      sources_sql.push(source_sql)
+    }
+    const all = `
+      SELECT json_build_object(
+          ${sources_sql.join()}
+        )
+    `
+    return all
+  }
+
+  sqlForScore(tag_id: string, source: string) {
+    return `
+      SELECT SUM(sentiment) FROM review_tag_whole
+        JOIN review ON review.id = review_tag_whole.review_id
+          AND review.restaurant_id = '${this.crawler.restaurant.id}'
+          AND review_tag_whole.tag_id = '${tag_id}'
+          AND review.source = '${source}'
+    `
+  }
+
+  sqlForSentiment(tag_id: string, source: string, sentiment: number) {
+    return `
+      SELECT COUNT(*) FROM review_tag_whole
+        JOIN review ON review.id = review_tag_whole.review_id
+          AND review.restaurant_id = '${this.crawler.restaurant.id}'
+          AND review_tag_whole.tag_id = '${tag_id}'
+          AND review.source = '${source}'
+          AND review_tag_whole.sentiment = ${sentiment}
+    `
   }
 }

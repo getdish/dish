@@ -10,6 +10,7 @@ export class RestaurantBaseScore {
   }
 
   async calculateScore() {
+    //@ts-ignore
     this.crawler.restaurant.score_breakdown = {}
     await this.scoreFromPhotos()
     await this.scoreFromReviews()
