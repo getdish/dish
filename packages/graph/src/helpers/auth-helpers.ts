@@ -20,7 +20,7 @@ const DOMAIN = (() => {
   }
 })()
 
-if (process.env.TARGET !== 'client') {
+if (process.env.TARGET !== 'client' && process.env.TARGET !== 'test') {
   if (typeof localStorage === 'undefined') {
     global['localStorage'] = require('react-native-sync-localstorage')
   }

@@ -65,9 +65,8 @@ export class BottomDrawerStore extends Store {
   }
 }
 
-const drawerStore = new BottomDrawerStore(null)
-
 export const DrawerNative = (props: { children: any }) => {
+  const drawerStore = useStore(BottomDrawerStore)
   const defaultSnapPoint = 1
 
   // useEffect(() => {

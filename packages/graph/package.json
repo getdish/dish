@@ -17,9 +17,9 @@
     "generate": "ts-node ./generate.ts",
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "test": "DISH_ENV=test ava test/* --verbose --serial",
-    "test:debug": "DEBUG=1 DISH_ENV=test ava test/* --verbose --serial",
-    "test:watch": "DISH_ENV=test ava test/* --watch --verbose --serial",
+    "test": "TARGET=test DISH_ENV=test ava test/* --verbose --serial",
+    "test:debug": "TARGET=test DEBUG=1 DISH_ENV=test ava test/* --verbose --serial",
+    "test:watch": "TARGET=test DISH_ENV=test ava test/* --watch --verbose --serial",
     "postinstall": "patch-package || yarn postinstall-verbose",
     "postinstall-verbose": "patch --verbose -t -p1 -i patches/gqless+0.0.1-alpha.29.patch"
   },
