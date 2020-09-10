@@ -10,5 +10,6 @@ export const initialHomeState: HomeStateItemHome = {
     [getTagId(tagLenses[0])]: true,
   },
   searchQuery: '',
+  results: [],
   ...getDefaultLocation(),
 }
