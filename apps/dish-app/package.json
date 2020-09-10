@@ -4,12 +4,7 @@
   "version": "0.0.0",
   "workspaces": {
     "nohoist": [
-      "expo-status-bar",
-      "react-native-unimodules",
-      "@react-native-community",
-      "@react-native-community/**",
-      "@react-native-mapbox-gl",
-      "@react-native-mapbox-gl/**"
+      "**"
     ]
   },
   "scripts": {
@@ -49,14 +44,16 @@
     "expo": "^38.0.10",
     "expo-splash-screen": "^0.5.0",
     "expo-status-bar": "^1.0.2",
-    "expo-updates": "~0.2.10",
+    "expo-updates": "^0.2.14",
+    "expo-core": "^3.0.1",
+    "expo-linear-gradient": "^8.2.1",
     "react": "~16.11.0",
     "react-dom": "*",
     "react-native": "~0.62.2",
     "react-native-gesture-handler": "~1.6.1",
     "react-native-reanimated": "~1.9.0",
     "react-native-screens": "~2.9.0",
-    "react-native-unimodules": "~0.10.1",
+    "react-native-unimodules": "^0.10.1",
     "react-native-web": "^0.13.12",
     "@react-native-community/cli-platform-ios": "^4.13.0",
     "@dish/async": "*",
@@ -66,7 +63,6 @@
     "@dish/use-store": "*",
     "@expo/html-elements": "0.0.0",
     "@o/fast-compare": "2.7.6",
-    "expo-linear-gradient": "^8.2.1",
     "flexsearch": "^0.6.32",
     "immer": "^7.0.8",
     "mapbox-gl": "1.12.0",
