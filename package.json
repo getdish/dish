@@ -29,7 +29,7 @@
     "migrate": "(cd services/hasura && hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password)",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",
     "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
-    "postinstall": "yarn patch-package; yarn build:refs; yarn expo:check-deps",
+    "postinstall": "yarn patch-package; yarn build:refs; yarn expo:check-deps; (cd node_modules && rm -r react react-dom metro* || true)",
     "expo:check-deps": "expo-yarn-workspaces check-workspace-dependencies"
   },
   "resolutions": {
@@ -51,6 +51,7 @@
     "@types/puppeteer": "3.0.1"
   },
   "devDependencies": {
+    "@react-native-community/cli-debugger-ui": "4.7.0",
     "expo": "^38.0.10",
     "expo-yarn-workspaces": "*",
     "@types/node": "13.11.1",
@@ -59,6 +60,7 @@
     "esm": "^3.2.25",
     "import-sort-style-module": "^6.0.0",
     "metro-config": "0.58.0",
+    "metro-core": "0.58.0",
     "patch-package": "^6.2.2",
     "prettier": "^2.1.1",
     "prettier-plugin-import-sort": "^0.0.4",
