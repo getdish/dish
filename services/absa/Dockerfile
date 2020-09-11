@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM tiangolo/meinheld-gunicorn:python3.8
 WORKDIR /app
 ENV FLASK_APP=server.py
 
@@ -10,6 +10,5 @@ RUN pip install \
 COPY services/absa/setup.py /app
 RUN python setup.py
 
-COPY services/absa/server.py /app
+COPY services/absa/server.py /app/main.py
 
-CMD ["python", "-m", "flask", "run", "--host=0.0.0.0"]

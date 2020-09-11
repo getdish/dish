@@ -39,11 +39,15 @@ export function handleAssertionError(err: any) {
   throw err
 }
 
-export async function fetchABSASentiment(sentence: string, aspect: string) {
+// WARNING:
+// This function is used by both the front and backend. It is critical to our
+// entire scoring system. Any changes to it could potentially alter the scores
+// for all restaurants and rishes.
+export async function fetchABSASentiment(sentence: string, aspects: string[]) {
   return fetch(
     `https://absa.k8s.dishapp.com/?text="${encodeURIComponent(
       sentence
-    )}"&aspect="${encodeURIComponent(aspect)}"`,
+    )}"&aspects=${encodeURIComponent(aspects.join(','))}`,
     {
       headers: {
         'Content-Type': 'application/json',
@@ -51,8 +55,5 @@ export async function fetchABSASentiment(sentence: string, aspect: string) {
     }
   )
     .then((res) => res.json())
-    .then((x) => ({
-      sentence,
-      sentiment: x.results[0],
-    }))
+    .then((x) => x)
 }

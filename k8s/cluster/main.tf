@@ -23,6 +23,10 @@ resource "digitalocean_kubernetes_cluster" "dish" {
   }
 }
 
+
+// kubectl taint node dish-critical-pool-3wupi dish-taint=critical-only:NoSchedule
+// kubectl taint node dish-db-pool-3wyiq dish-taint=db-only:NoSchedule
+
 resource "digitalocean_kubernetes_node_pool" "db" {
   cluster_id = digitalocean_kubernetes_cluster.dish.id
   name       = "dish-db-pool"
@@ -38,16 +42,16 @@ resource "digitalocean_kubernetes_node_pool" "critical" {
   size       = "g-2vcpu-8gb"
   auto_scale = true
   min_nodes = 1
-  max_nodes = 3
+  max_nodes = 5
 }
 
 resource "digitalocean_kubernetes_node_pool" "ancillary" {
   cluster_id = digitalocean_kubernetes_cluster.dish.id
   name       = "dish-ancillary-pool"
-  size       = "s-4vcpu-8gb"
+  size       = "s-6vcpu-16gb"
   auto_scale = true
   min_nodes = 1
-  max_nodes = 3
+  max_nodes = 10
 }
 
 resource "digitalocean_kubernetes_node_pool" "workers" {
