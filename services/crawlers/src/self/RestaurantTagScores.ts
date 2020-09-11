@@ -1,3 +1,4 @@
+import { sentryMessage } from '@dish/common'
 import { Review, Tag } from '@dish/graph'
 import { fetchABSASentiment } from '@dish/helpers'
 import { chunk } from 'lodash'
@@ -9,6 +10,13 @@ type ReviewTagWhole = {
   review_id: string
   tag_id: string
   sentiment: number
+}
+
+type ReviewsToAnalyze = {
+  [review_id: string]: {
+    review: Review
+    tags: Tag[]
+  }
 }
 
 export class RestaurantTagScores {
@@ -48,53 +56,111 @@ export class RestaurantTagScores {
   async absaAnalyseReviews(reviews: Review[]) {
     let review_tag_wholes: ReviewTagWhole[] = []
     const tags = this.crawler.tagging.found_tags
-    let reviews_to_analyze: [Review, Tag][] = []
-    console.log('Starting ABSA requests...')
-    for (const tag_id in tags) {
-      const tag = tags[tag_id]
-      for (const review of reviews) {
+    let reviews_to_analyze: ReviewsToAnalyze = {}
+    this.crawler.log(`Starting ABSA requests (${reviews.length} to analyze)...`)
+    for (const review of reviews) {
+      reviews_to_analyze[review.id] = { review, tags: [] }
+      for (const tag_id in tags) {
+        const tag = tags[tag_id]
         if (!review.text || !tag.name) continue
         const does_review_contain_tag = this.crawler.tagging.doesStringContainTag(
           review.text,
           tag.name
         )
         if (!does_review_contain_tag) continue
-        reviews_to_analyze.push([review, tag])
+        reviews_to_analyze[review.id].tags.push(tag)
       }
     }
     review_tag_wholes = await this.analyzeReviews(reviews_to_analyze)
-    console.log('...ABSA requests done')
+    this.crawler.log('...ABSA requests done')
     return review_tag_wholes
   }
 
-  async analyzeReviews(review_with_tag_array: [Review, Tag][]) {
+  async analyzeReviews(reviews_to_analyze: ReviewsToAnalyze) {
     const ABSA_BATCH_SIZE = 10
     let assessed: ReviewTagWhole[] = []
-    for (const batch of chunk(review_with_tag_array, ABSA_BATCH_SIZE)) {
-      assessed.push(...(await this.absaBatch(batch)))
+    const review_ids = Object.keys(reviews_to_analyze)
+    for (const ids_batch of chunk(review_ids, ABSA_BATCH_SIZE)) {
+      let reviews_batch: ReviewsToAnalyze = {}
+      for (const id of ids_batch) {
+        reviews_batch[id] = reviews_to_analyze[id]
+      }
+      const batch_results = await this.absaBatch(reviews_batch)
+      assessed.push(...batch_results)
     }
     return assessed
   }
 
-  async absaBatch(review_with_tag_array: [Review, Tag][]) {
+  async absaBatch(reviews_to_analyze: ReviewsToAnalyze) {
+    this.crawler.log('Sending ABSA batch...')
     const results = await Promise.all(
-      review_with_tag_array.map((i) => {
-        const review = i[0]
-        const tag = i[1]
-        return this.absaRequest(review, tag)
+      Object.keys(reviews_to_analyze).map((i) => {
+        const rta = reviews_to_analyze[i]
+        return this.absaRequest(rta.review, rta.tags)
       })
     )
-    return results.filter((i) => i != null) as ReviewTagWhole[]
+    let all_reviews: ReviewTagWhole[] = []
+    for (const reviews of results) {
+      all_reviews.push(...reviews)
+    }
+    this.crawler.log('...ABSA batch sent')
+    return all_reviews
   }
 
-  async absaRequest(review: Review, tag: Tag) {
-    if (!review.text || !tag.name) return null
-    const result = await fetchABSASentiment(review.text, tag.name)
-    return {
-      review_id: review.id,
-      tag_id: tag.id,
-      sentiment: this._absaSentimentToNumber(result.sentiment),
-    } as ReviewTagWhole
+  async absaRequest(review: Review, tags: Tag[]) {
+    if (!review.text) return []
+    const results = await this.fetchABSASentimentWithRetries(
+      review.text,
+      tags.map((t) => t.name ?? '')
+    )
+    if (!results) return []
+    if (results.error) {
+      this.crawler.log('ABSA error: ' + results.error)
+      sentryMessage('', {
+        text: review.text,
+        tag: tags.map((t) => t.name),
+      })
+      return []
+    }
+    const sentiments = results.results
+    let review_tag_wholes: ReviewTagWhole[] = []
+    for (const aspect of Object.keys(sentiments)) {
+      const result = sentiments[aspect]
+      const tag_id = tags.find((t) => t.name == aspect)?.id
+      review_tag_wholes.push({
+        review_id: review.id,
+        tag_id: tag_id,
+        sentiment: this._absaSentimentToNumber(result.sentiment),
+      })
+    }
+    return review_tag_wholes
+  }
+
+  async fetchABSASentimentWithRetries(
+    review_text: string,
+    tag_names: string[]
+  ) {
+    const MAX_RETRIES = 5
+    let retries = 0
+    while (true) {
+      try {
+        return await fetchABSASentiment(review_text, tag_names)
+      } catch (error) {
+        if (!error.message.includes('json')) {
+          throw error
+        }
+        retries += 1
+        if (retries > MAX_RETRIES) {
+          this.crawler.log('Failed ABSA request: ' + error.message)
+          sentryMessage(MAX_RETRIES + ' failed attempts requesting ABSA API', {
+            text: review_text,
+            tag: tag_names,
+          })
+          return
+        }
+        console.log('Retrying ABSA API')
+      }
+    }
   }
 
   _absaSentimentToNumber(absa_sentiment: string) {

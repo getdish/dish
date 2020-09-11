@@ -1,31 +1,43 @@
 import json
+import re
 from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
+import aspect_based_sentiment_analysis as absa
+from pprint import pprint
 
 app = Flask(__name__)
 cors = CORS(app)
-import aspect_based_sentiment_analysis as absa
 
 nlp = absa.load()
 
 @app.route('/')
 @cross_origin()
-def hello_world():
+def analyze():
     text = request.args.get('text')
-    aspect = request.args.get('aspect')
-    app.logger.warning(text)
-    app.logger.warning(aspect)
+    text = re.sub('<[^<]+?>', '', text)
+    aspects = request.args.get('aspects').split(',')
 
-    [result] = nlp((text), aspects=[aspect])
+    try:
+        results = nlp((text), aspects=aspects)
+    except Exception as e:
+        return {
+            "error": str(e)
+        }
 
-    if result.sentiment == 0:
-        sentiment = 'neutral'
-    if result.sentiment == 1:
-        sentiment = 'negative'
-    if result.sentiment == 2:
-        sentiment = 'positive'
+    response = {}
+    for result in results:
+        if result.sentiment == 0:
+            sentiment = 'neutral'
+        if result.sentiment == 1:
+            sentiment = 'negative'
+        if result.sentiment == 2:
+            sentiment = 'positive'
+        response[result.aspect] = {
+            "sentiment": sentiment,
+            "scores": result.scores
+        }
 
-    return json.dumps({
-        "results": [sentiment, result.scores]
-    })
+    return {
+        "results": response
+    }

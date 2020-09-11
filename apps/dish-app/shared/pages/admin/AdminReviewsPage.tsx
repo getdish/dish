@@ -114,16 +114,24 @@ const ReviewSentiment = (props: { text: string }) => {
     const sentences = props.text.split('. ')
     if (sentences.length) {
       Promise.all([
-        fetchABSASentiment(props.text, aspect).then(({ sentiment }) => ({
-          sentiment,
-          sentence: `(Entire Text - ${aspect})`,
-        })),
+        fetchABSASentiment(props.text, [aspect]).then((response) => {
+          return {
+            sentiment: response.results[aspect].sentiment,
+            sentence: `(Entire Text - ${aspect})`,
+          }
+        }),
         ...sentences
           .filter((x) => x.toLowerCase().includes(aspect))
           .map((sentence) => {
-            return fetchABSASentiment(sentence, aspect)
+            return fetchABSASentiment(sentence, [aspect]).then((response) => {
+              return {
+                sentiment: response.results[aspect].sentiment,
+                sentence: sentence,
+              }
+            })
           }),
       ]).then((sentiments) => {
+        console.log(sentiments)
         setSentiments(sentiments)
       })
     }

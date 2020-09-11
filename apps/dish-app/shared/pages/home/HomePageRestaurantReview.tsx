@@ -1,4 +1,5 @@
 import { graphql, restaurantDishesWithPhotos } from '@dish/graph'
+import { fetchABSASentiment } from '@dish/helpers'
 import {
   AbsoluteVStack,
   HStack,
@@ -122,16 +123,9 @@ export const RestaurantReviewComment = memo(
           let isMounted = true
 
           const allTagNames = [...dishTags, ...tagLenses].map((x) => x.name)
+          const aspects = allTagNames.map((name) => name.toLowerCase())
 
-          Promise.all(
-            allTagNames.map((name) => {
-              return fetch(
-                `https://absa.k8s.dishapp.com/?text=%22${encodeURIComponent(
-                  reviewText
-                )}%22&aspect=%22${encodeURIComponent(name.toLowerCase())}%22`
-              ).then((res) => res.json())
-            })
-          ).then((tagSentiments) => {
+          fetchABSASentiment(reviewText, aspects).then((tagSentiments) => {
             if (!isMounted) return
             console.log('got sentiments', tagSentiments)
           })
