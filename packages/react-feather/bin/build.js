@@ -128,8 +128,10 @@ glob(`${featherIconsDir}/**.svg`, (err, icons) => {
     const component = prettier.format(element, {
       singleQuote: true,
       trailingComma: 'es5',
-      bracketSpacing: true,
-      parser: 'flow',
+      arrowParens: 'always',
+      plugins: ['../../node_modules/prettier-plugin-import-sort'],
+      parser: 'typescript',
+      semi: false,
     })
 
     fs.writeFileSync(location, component, 'utf-8')

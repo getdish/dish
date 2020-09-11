@@ -1,27 +1,28 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { IconProps } from '../IconProps';
+import PropTypes from 'prop-types'
+import React from 'react'
 import {
-  Svg,
-  Circle as _Circle,
+  Defs,
   Ellipse,
   G,
-  LinearGradient,
-  RadialGradient,
   Line,
+  LinearGradient,
   Path,
   Polygon,
   Polyline,
+  RadialGradient,
   Rect,
+  Stop,
+  Svg,
   Symbol,
   Text,
   Use,
-  Defs,
-  Stop,
-} from 'react-native-svg';
+  Circle as _Circle,
+} from 'react-native-svg'
+
+import { IconProps } from '../IconProps'
 
 export const MinusCircle = (props: IconProps) => {
-  const { color = 'black', size = 24, ...otherProps } = props;
+  const { color = 'black', size = 24, ...otherProps } = props
   return (
     <Svg
       width={size}
@@ -56,5 +57,5 @@ export const MinusCircle = (props: IconProps) => {
         strokeLinejoin="round"
       />
     </Svg>
-  );
-};
+  )
+}
