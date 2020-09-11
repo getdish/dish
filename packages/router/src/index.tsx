@@ -125,6 +125,13 @@ export class Router extends Store<RouterProps> {
 
     window['router'] = this
 
+    // react native
+    window.location = window.location ?? {
+      pathname: '/',
+      search: '',
+      hash: '',
+    }
+
     // initial entry
     const pathname = window.location.pathname
       // temp bugfix: react native has debugger-ui as window.location

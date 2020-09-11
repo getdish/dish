@@ -1,9 +1,14 @@
 import { AbsoluteVStack, Spacer, VStack } from '@dish/ui'
 import { default as React, memo } from 'react'
+import { Platform } from 'react-native'
 
 import { HomeIntroLetterContent } from './HomeIntroLetter'
 
 export const HomeFooter = memo(() => {
+  if (Platform.OS !== 'web') {
+    return null
+  }
+
   return (
     <VStack position="relative">
       <AbsoluteVStack

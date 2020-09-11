@@ -63,7 +63,6 @@
   },
   "devDependencies": {
     "@react-native-community/cli-debugger-ui": "4.7.0",
-    "expo": "^38.0.10",
     "expo-yarn-workspaces": "*",
     "@types/node": "13.11.1",
     "@zerollup/ts-transform-paths": "^1.7.18",
