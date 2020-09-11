@@ -68,9 +68,7 @@ const HomeStackViewItem = memo(
     isAdding: boolean
   }) => {
     const isSmall = useMediaQueryIsSmall()
-
     const top = isSmall ? Math.max(0, index - 1) * 5 : index * 5
-
     const left = 0
 
     let children = useMemo(() => {

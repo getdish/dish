@@ -26,7 +26,7 @@ import { Link } from '../../views/ui/Link'
 import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
 import { DishView } from './DishView'
 import { HomeScrollViewHorizontal } from './HomeScrollView'
-import { isIOS } from './isIOS'
+import { isWebIOS } from './isIOS'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
@@ -89,7 +89,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 
   return (
     <VStack
-      {...(!isIOS && {
+      {...(!isWebIOS && {
         onHoverIn: () => setIsHovered(true),
         onHoverOut: () => {
           setIsHovered(false)

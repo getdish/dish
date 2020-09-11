@@ -1,6 +1,6 @@
 import { AbsoluteVStack, HStack, Spacer, Text, VStack } from '@dish/ui'
 import { default as React, memo } from 'react'
-import { Image, ScrollView } from 'react-native'
+import { Image, Platform, ScrollView, View } from 'react-native'
 import { useStorageState } from 'react-storage-hooks'
 
 // @ts-ignore
@@ -75,6 +75,10 @@ export const HomeIntroLetter = memo(() => {
 export const HomeIntroLetterContent = memo(() => {
   const [showInto, setShowIntro] = useShowIntroLetter()
 
+  if (Platform.OS !== 'web') {
+    return null
+  }
+
   if (!showInto) {
     return null
   }
@@ -100,15 +104,15 @@ export const HomeIntroLetterContent = memo(() => {
 
       <Paragraph textAlign="center" color="#fff" fontWeight="300" size={1.2}>
         <Text opacity={0.8}>better food discovery</Text>
-        <br />
+        <View />
         <Text color={lightGreen} fontWeight="400">
           ratings down to the dish
         </Text>
-        <br />
+        <View />
         <Text color={lightYellow} fontWeight="500">
           search all delivery services
         </Text>
-        <br />
+        <View />
         <Text fontWeight="700">hole in the wall gems 💎</Text>
       </Paragraph>
 

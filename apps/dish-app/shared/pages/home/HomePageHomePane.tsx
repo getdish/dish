@@ -6,26 +6,18 @@ import {
   HStack,
   LinearGradient,
   LoadingItems,
-  SmallTitle,
   Spacer,
   Text,
   VStack,
-  useDebounceEffect,
 } from '@dish/ui'
 import _, { sortBy, uniqBy } from 'lodash'
 import { default as React, Suspense, memo, useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
 
-import {
-  bgLight,
-  bgLightTranslucent,
-  lightBlue,
-  lightGreen,
-} from '../../colors'
+import { bgLight, bgLightTranslucent } from '../../colors'
 import { HomeStateItemHome } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic, useOvermind } from '../../state/om'
-import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { DishView } from './DishView'
@@ -35,7 +27,6 @@ import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { HomeTopSearches } from './HomeTopSearches'
 import { RestaurantButton } from './RestaurantButton'
 import { SlantedLinkButton } from './SlantedLinkButton'
-import { TextStrong } from './TextStrong'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 // top dishes
@@ -237,7 +228,7 @@ const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
       <HomeTopDishesTitle />
       <Spacer size="xl" />
 
-      <VStack minHeight="90vh">
+      <VStack>
         {!topDishes.length && (
           <>
             <LoadingItems />
@@ -248,7 +239,6 @@ const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
           {topDishes.map((country, index) => (
             <React.Fragment key={country.country}>
               <TopDishesCuisineItem index={index} country={country} />
-              {/* <Spacer size="sm" /> */}
             </React.Fragment>
           ))}
         </Suspense>

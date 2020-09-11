@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import { View, ViewProps, ViewStyle } from 'react-native'
 
-import { isIOS } from '../constants'
+import { isWebIOS } from '../constants'
 import { combineRefs } from '../helpers/combineRefs'
 import { StaticComponent } from '../helpers/extendStaticConfig'
 import { useAttachClassName } from '../hooks/useAttachClassName'
@@ -196,7 +196,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
               ? () => {
                   let next: Partial<typeof state> = {}
                   if (attachHover) {
-                    if (!isIOS) {
+                    if (!isWebIOS) {
                       next.hover = true
                     }
                     onHoverIn?.()
@@ -216,7 +216,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
                   let next: Partial<typeof state> = {}
                   mouseUps.add(unPress)
                   if (attachHover) {
-                    if (!isIOS) {
+                    if (!isWebIOS) {
                       next.hover = false
                     }
                     onHoverOut?.()

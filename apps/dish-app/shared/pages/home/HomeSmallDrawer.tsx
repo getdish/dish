@@ -14,7 +14,7 @@ import { getWindowHeight } from '../../helpers/getWindow'
 import { omStatic } from '../../state/om'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
 import { blurSearchInput } from './HomeSearchInput'
-import { isIOS } from './isIOS'
+import { isWebIOS } from './isIOS'
 import {
   useMediaQueryIsReallySmall,
   useMediaQueryIsShort,
@@ -237,7 +237,7 @@ export const HomeSmallDrawer = (props: { children: any }) => {
           </View>
 
           <VStack flex={1} maxHeight="100%" position="relative">
-            {isIOS ||
+            {isWebIOS ||
               (drawerStore.snapIndex === 2 && (
                 <AbsoluteVStack
                   pointerEvents="none"

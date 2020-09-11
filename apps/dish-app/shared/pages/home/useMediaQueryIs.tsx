@@ -12,48 +12,52 @@ export const mediaQueries = {
   md: { maxWidth: 960 },
   aboveMd: { minWidth: 960 },
 }
+const isWeb = Platform.OS === 'web'
 
 export const getMediaQueryMatch = (key: keyof typeof mediaQueries) => {
-  return window.matchMedia(mediaObjectToString(mediaQueries[key])).matches
+  if (isWeb) {
+    return window.matchMedia(mediaObjectToString(mediaQueries[key])).matches
+  }
+  return key === 'sm' || key === 'xs' || key === 'short'
 }
 
 export const useMediaQueryIsShort = () => {
-  if (Platform.OS === 'web') {
+  if (isWeb) {
     return use(mediaQueries.short)
   }
   return true
 }
 
 export const useMediaQueryIsReallySmall = () => {
-  if (Platform.OS === 'web') {
+  if (isWeb) {
     return use(mediaQueries.xs)
   }
   return true
 }
 
 export const useMediaQueryIsSmall = () => {
-  if (Platform.OS === 'web') {
+  if (isWeb) {
     return use(mediaQueries.sm)
   }
   return true
 }
 
 export const useMediaQueryIsAboveSmall = () => {
-  if (Platform.OS === 'web') {
+  if (isWeb) {
     return use(mediaQueries.aboveSm)
   }
   return false
 }
 
 export const useMediaQueryIsMedium = () => {
-  if (Platform.OS === 'web') {
+  if (isWeb) {
     return use(mediaQueries.md)
   }
   return false
 }
 
 export const useMediaQueryIsAboveMedium = () => {
-  if (Platform.OS === 'web') {
+  if (isWeb) {
     return use(mediaQueries.aboveMd)
   }
   return false
