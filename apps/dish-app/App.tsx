@@ -5,9 +5,11 @@ import { Provider } from 'overmind-react'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 
+import HomePageHomePane from './shared/pages/home/HomePageHomePane'
+import { HomePagePane } from './shared/pages/home/HomePagePane'
 import { HomeSmallDrawer } from './shared/pages/home/HomeSmallDrawer'
+import { HomeStackView } from './shared/pages/home/HomeStackView'
 import { config } from './shared/state/om'
-import { DrawerNative } from './shared/views/DrawerNative'
 import { MapNative } from './shared/views/MapNative'
 
 async function start() {
@@ -41,7 +43,11 @@ export default function App() {
 
         <AbsoluteVStack fullscreen zIndex={1000}>
           <HomeSmallDrawer>
-            <VStack width={100} height={100} />
+            <HomeStackView>
+              {(props) => {
+                return <HomePagePane {...props} />
+              }}
+            </HomeStackView>
           </HomeSmallDrawer>
         </AbsoluteVStack>
         <StatusBar style="auto" />

@@ -126,9 +126,13 @@ export class Router extends Store<RouterProps> {
     window['router'] = this
 
     // initial entry
+    const pathname = window.location.pathname
+      // temp bugfix: react native has debugger-ui as window.location
+      .replace(/\/debugger-ui.*/g, '/')
+
     history.push(
       {
-        pathname: window.location.pathname,
+        pathname,
         search: window.location.search,
         hash: window.location.hash,
       },
@@ -177,21 +181,12 @@ export class Router extends Store<RouterProps> {
           break
       }
 
-      // if (process.env.NODE_ENV === 'development') {
-      //   console.log(
-      //     'router.handlePath',
-      //     JSON.stringify(
-      //       {
-      //         item,
-      //         stack: this.stack,
-      //         stackIndex: this.stackIndex,
-      //         listeners: this.routeChangeListeners.size,
-      //       },
-      //       null,
-      //       2
-      //     )
-      //   )
-      // }
+      if (process.env.NODE_ENV === 'development') {
+        console.log(
+          'router.handlePath',
+          JSON.stringify({ item, next }, null, 2)
+        )
+      }
 
       this.routeChangeListeners.forEach((x) => x(next))
     } else {

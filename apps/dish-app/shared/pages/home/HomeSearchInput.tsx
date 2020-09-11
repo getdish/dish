@@ -14,7 +14,7 @@ import { router } from '../../state/router'
 import { CloseButton } from './CloseButton'
 import { HomeAutocompleteHoverableInput } from './HomeAutocompleteHoverableInput'
 import { InputStore } from './InputStore'
-import { isIOS } from './isIOS'
+import { isWebIOS } from './isIOS'
 import { TagButton } from './TagButton'
 import { getMediaQueryMatch } from './useMediaQueryIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
@@ -56,7 +56,7 @@ export const onFocusAnyInput = () => {
 
 let searchBar: HTMLInputElement | null = null
 export function focusSearchInput() {
-  if (isIOS) return
+  if (isWebIOS) return
   searchBar?.focus()
 }
 

@@ -11,7 +11,7 @@ import {
 } from '@dish/ui'
 import { sortBy } from 'lodash'
 import React, { memo, useState } from 'react'
-import { Image } from 'react-native'
+import { Image, View } from 'react-native'
 
 import { lightGreen, lightYellow } from '../../colors'
 import { omStatic } from '../../state/om'
@@ -79,7 +79,7 @@ export const RestaurantScoreBreakdown = memo(
               <TextStrong color="#000">+121</TextStrong>
             </TextHighlight>{' '}
             from 23 dish reviewers
-            <br />
+            <View />
             <TextHighlight backgroundColor={lightYellow}>
               <TextStrong color="#000">+89</TextStrong>
             </TextHighlight>{' '}
