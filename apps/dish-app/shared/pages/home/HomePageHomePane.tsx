@@ -81,54 +81,64 @@ export default memo(function HomePageHomePane(props: Props) {
         [center.lng - span.lng, center.lat + span.lat],
         [center.lng + span.lng, center.lat - span.lat],
         [center.lng + span.lng, center.lat + span.lat],
-      ]
+      ] as const
 
       sleep(topDishes.length ? 1000 : 0).then(() => {
         if (!isMounted) return
         fetchNewHome()
       })
 
+      setTimeout(() => {
+        getHomeDishes(...mapAreasToSearch[0])
+      }, 1000)
+
       function fetchNewHome() {
+        console.log('fetch home')
         Promise.all(
           mapAreasToSearch.map((pt) => {
             return getHomeDishes(pt[0], pt[1])
           })
-        ).then((areas) => {
-          if (!isMounted) return
-          om.actions.home.setIsLoading(false)
-          let all: TopCuisine[] = []
-          for (const area of areas) {
-            for (const cuisine of area) {
-              const existing = all.find((x) => x.country === cuisine.country)
-              if (existing) {
-                const allTopRestaurants = [
-                  ...existing.top_restaurants,
-                  ...cuisine.top_restaurants,
-                ]
-                const sortedTopRestaurants = sortBy(
-                  allTopRestaurants,
-                  (x) => -(x.rating ?? 0)
-                )
-                existing.top_restaurants = uniqBy(
-                  sortedTopRestaurants,
-                  (x) => x.id
-                ).slice(0, 5)
-              } else {
-                all.push(cuisine)
+        )
+          .then((areas) => {
+            console.log('areas', areas)
+            if (!isMounted) return
+            om.actions.home.setIsLoading(false)
+            let all: TopCuisine[] = []
+            for (const area of areas) {
+              for (const cuisine of area) {
+                const existing = all.find((x) => x.country === cuisine.country)
+                if (existing) {
+                  const allTopRestaurants = [
+                    ...existing.top_restaurants,
+                    ...cuisine.top_restaurants,
+                  ]
+                  const sortedTopRestaurants = sortBy(
+                    allTopRestaurants,
+                    (x) => -(x.rating ?? 0)
+                  )
+                  existing.top_restaurants = uniqBy(
+                    sortedTopRestaurants,
+                    (x) => x.id
+                  ).slice(0, 5)
+                } else {
+                  all.push(cuisine)
+                }
               }
             }
-          }
-          all = sortBy(all, (x) => -x.avg_rating)
-          updateHomeTagsCache(all)
-          setTopDishes(all)
-          om.actions.home.updateCurrentState({
-            results: all
-              .map((x) => x.top_restaurants)
-              .flat()
-              .filter((x) => x?.id)
-              .map((x) => ({ id: x.id, slug: x.slug })),
+            all = sortBy(all, (x) => -x.avg_rating)
+            updateHomeTagsCache(all)
+            setTopDishes(all)
+            om.actions.home.updateCurrentState({
+              results: all
+                .map((x) => x.top_restaurants)
+                .flat()
+                .filter((x) => x?.id)
+                .map((x) => ({ id: x.id, slug: x.slug })),
+            })
           })
-        })
+          .catch((err) => {
+            console.error('error fetching home', err)
+          })
       }
     }
 

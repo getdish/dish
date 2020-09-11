@@ -3,7 +3,7 @@ import { AbsoluteVStack, HStack, LoadingItems, Text, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { Image, ScrollView } from 'react-native'
 
-import { pageWidthMax, zIndexGallery } from '../../constants'
+import { isWeb, pageWidthMax, zIndexGallery } from '../../constants'
 import { HomeStateItemGallery } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
@@ -148,7 +148,7 @@ const HomePageGalleryContent = memo(
                     source={{ uri: photo.image }}
                     resizeMode="cover"
                     style={{
-                      width: 'calc(100% - 4px)',
+                      width: isWeb ? 'calc(100% - 4px)' : '99%',
                       height: isSmall ? 250 : 380,
                       marginTop: 2,
                       marginLeft: 2,

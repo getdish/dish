@@ -10,7 +10,7 @@ const TILE_BASED_CACHE_ZOOM = 11
 const TILE_WIDTH = 0.176
 
 export async function search({
-  center: { lat: lat, lng: lng },
+  center: { lat, lng },
   span,
   query,
   tags = [],
@@ -40,9 +40,9 @@ export async function getHomeDishes(
   lng = snapped[0]
   lat = snapped[1]
   const params = ['lon=' + lng, 'lat=' + lat, 'distance=' + TILE_WIDTH]
-  const response = await fetch(
-    SEARCH_DOMAIN + '/top_cuisines?' + params.join('&')
-  ).then((res) => res.json())
+  const url = SEARCH_DOMAIN + '/top_cuisines?' + params.join('&')
+  console.log('fetching', url)
+  const response = await fetch(url).then((res) => res.json())
   return response
 }
 

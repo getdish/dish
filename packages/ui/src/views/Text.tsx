@@ -48,9 +48,11 @@ Text.staticConfig = {
 const textNonStylePropReg = /^(allow.*|on[A-Z].*|.*[Mm]ode)/
 const isWeb = Platform.OS === 'web'
 const webOnlyStyleKeys = {
+  className: true,
   textOverflow: true,
   whiteSpace: true,
   cursor: true,
+  ellipse: true, // for now, can implement
 }
 
 const useTextStyle = (allProps: TextProps) => {

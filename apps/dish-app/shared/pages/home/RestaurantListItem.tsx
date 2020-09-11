@@ -19,6 +19,7 @@ import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image } from 'react-native'
 
 import { bgLight, bgLightLight, brandColor, lightBlue } from '../../colors'
+import { isWeb } from '../../constants'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
 import { omStatic, useOvermindStatic } from '../../state/om'
 import { tagDisplayName } from '../../state/tagDisplayName'
@@ -401,7 +402,7 @@ export const RestaurantScoreBreakdownSmall = memo(
         <HStack position="relative" alignItems="center" flexWrap="wrap">
           <Text
             className="ellipse"
-            maxWidth="calc(min(100%, 170px))"
+            maxWidth={isWeb ? 'calc(min(100%, 170px))' : '100%'}
             fontSize={12}
             color="rgba(0,0,0,0.5)"
           >

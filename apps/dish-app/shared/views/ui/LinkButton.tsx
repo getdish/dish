@@ -1,5 +1,6 @@
 import { HStack, StackProps, Text, useForceUpdate } from '@dish/ui'
 import React, { useEffect, useRef, useState } from 'react'
+import { Platform } from 'react-native'
 
 import { omStatic, useOvermindStatic } from '../../state/om'
 import { RoutesTable } from '../../state/router'
@@ -161,9 +162,15 @@ const getStylePadding = ({
   paddingHorizontal: any
 }) => {
   if (paddingHorizontal || paddingVertical) {
-    return [paddingVertical ?? padding ?? 0, paddingHorizontal ?? padding ?? 0]
-      .map((x) => (typeof x === 'number' ? `${x}px` : x))
-      .join(' ')
+    if (Platform.OS === 'web') {
+      return [
+        paddingVertical ?? padding ?? 0,
+        paddingHorizontal ?? padding ?? 0,
+      ]
+        .map((x) => (typeof x === 'number' ? `${x}px` : x))
+        .join(' ')
+    }
+    return padding ?? paddingVertical ?? paddingHorizontal // TODO bug for now
   }
   return padding
 }

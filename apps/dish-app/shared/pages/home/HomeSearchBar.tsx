@@ -109,7 +109,7 @@ export const HomeSearchBarFloating = () => {
                   position="absolute"
                   top={0}
                   left={1}
-                  width="calc(100% - 1px)"
+                  width={isWeb ? `calc(100% - 1px)` : '100%'}
                   shadowColor="rgba(0,0,0,0.2)"
                   shadowOffset={{ height: 3, width: 0 }}
                   shadowRadius={12}

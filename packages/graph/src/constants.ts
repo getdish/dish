@@ -27,12 +27,14 @@ export const RESTAURANT_WEIGHTS = {
   google: 0.4,
 }
 
+const isNative = typeof document === 'undefined'
+
 export let SEARCH_DOMAIN: string
 
 const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
 const LOCAL_SEARCH_DOMAIN = 'http://localhost:10000'
 
-if (isWorker) {
+if (isWorker || isNative) {
   SEARCH_DOMAIN = LIVE_SEARCH_DOMAIN
 } else if (isNode) {
   SEARCH_DOMAIN = LOCAL_SEARCH_DOMAIN

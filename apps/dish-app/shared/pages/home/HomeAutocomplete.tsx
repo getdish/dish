@@ -16,6 +16,7 @@ import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView } from 'react-native'
 
 import {
+  isWeb,
   pageWidthMax,
   searchBarHeight,
   searchBarTopOffset,
@@ -162,7 +163,7 @@ const HomeAutoCompleteContents = memo(
           width="100%"
           pointerEvents={isShowing ? 'auto' : 'none'}
           maxWidth={pageWidthMax * 0.45}
-          maxHeight={`calc(100vh - ${top + 20}px)`}
+          maxHeight={isWeb ? `calc(100vh - ${top + 20}px)` : '90%'}
           // @ts-ignore
           onMouseLeave={() => {
             if (isSmall) {

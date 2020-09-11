@@ -3,6 +3,7 @@ import { HStack } from '@dish/ui'
 import React, { memo, useState } from 'react'
 import { ScrollView } from 'react-native'
 
+import { isWeb } from '../../constants'
 import { DishView } from './DishView'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
@@ -41,7 +42,7 @@ export const RestaurantDishPhotos = memo(
           horizontal
           showsHorizontalScrollIndicator={false}
           style={{
-            width: 'calc(100% + 30px)',
+            width: isWeb ? 'calc(100% + 30px)' : '98%',
             marginHorizontal: -15,
           }}
         >

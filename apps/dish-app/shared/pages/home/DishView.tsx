@@ -11,7 +11,7 @@ import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
 import { Image } from 'react-native'
 
-import { IMAGE_PROXY_DOMAIN } from '../../constants'
+import { IMAGE_PROXY_DOMAIN, isWeb } from '../../constants'
 import { NavigableTag } from '../../state/NavigableTag'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { DishRatingView } from './DishRatingView'
@@ -176,7 +176,7 @@ export const DishView = memo(
                 borderRadius={8}
                 paddingVertical={3}
                 paddingHorizontal={8}
-                maxWidth="calc(90% - 30px)"
+                maxWidth={isWeb ? 'calc(90% - 30px)' : '85%'}
                 overflow="hidden"
                 shadowColor="rgba(0,0,0,0.1)"
                 shadowRadius={2}
