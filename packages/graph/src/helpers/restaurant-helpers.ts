@@ -1,5 +1,6 @@
 import _ from 'lodash'
 
+import { globalTagId } from '../constants'
 import { order_by, query } from '../graphql'
 import { Restaurant, RestaurantTag, RestaurantWithId, Tag } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
@@ -150,9 +151,15 @@ function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {
 }
 
 export async function restaurantGetAllPossibleTags(restaurant: Restaurant) {
-  return await tagGetAllChildren(
+  const cuisine_dishes = await tagGetAllChildren(
     (restaurant.tags ?? []).map((i) => {
       return i.tag.id
     })
   )
+  const orphans = restaurant.tags
+    .filter((rt) => {
+      return rt.tag.parentId == globalTagId
+    })
+    .map((rt) => rt.tag)
+  return [...cuisine_dishes, ...orphans]
 }
