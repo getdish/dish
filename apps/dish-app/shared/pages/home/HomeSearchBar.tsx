@@ -214,8 +214,8 @@ const HomeSearchBar = memo(() => {
         {/* Search Input Start */}
         {isReallySmall && !isWeb && (
           <>
-            <HomeSearchLocationInput />
-            <HomeSearchInput />
+            {store.showLocation && <HomeSearchLocationInput />}
+            {!store.showLocation && <HomeSearchInput />}
           </>
         )}
 

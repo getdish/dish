@@ -5,9 +5,9 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { View, ViewProps, ViewStyle } from 'react-native'
+import { TouchableOpacity, View, ViewProps, ViewStyle } from 'react-native'
 
-import { isWebIOS } from '../constants'
+import { isWeb, isWebIOS } from '../constants'
 import { combineRefs } from '../helpers/combineRefs'
 import { StaticComponent } from '../helpers/extendStaticConfig'
 import { useAttachClassName } from '../hooks/useAttachClassName'
@@ -156,7 +156,9 @@ const createStack = (defaultStyle?: ViewStyle) => {
       let content = (
         <View
           ref={combineRefs(innerRef, ref)}
-          pointerEvents={pointerEvents}
+          pointerEvents={
+            !isWeb && pointerEvents === 'none' ? 'box-none' : pointerEvents
+          }
           style={[
             defaultStyle,
             fullscreen ? fullscreenStyle : null,
@@ -190,7 +192,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
       }, [])
 
       if (attachHover || attachPress || onPressOut || onPressIn) {
-        content = React.cloneElement(content, {
+        const events = {
           onMouseEnter:
             attachHover || attachPress
               ? () => {
@@ -254,7 +256,21 @@ const createStack = (defaultStyle?: ViewStyle) => {
                 })
               }
             : onPressOut,
-        })
+        }
+
+        if (isWeb) {
+          content = React.cloneElement(content, events)
+        } else {
+          content = (
+            <TouchableOpacity
+              onPress={events.onClick as any}
+              onPressIn={events.onMouseDown as any}
+              onPressOut={events.onMouseLeave as any}
+            >
+              {content}
+            </TouchableOpacity>
+          )
+        }
       }
 
       return content
