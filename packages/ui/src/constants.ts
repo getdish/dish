@@ -1,7 +1,6 @@
-import { Platform } from 'react-native'
+// dont import react-native
 
-export const isWeb = Platform.OS === 'web'
-export const isBrowser = typeof document !== 'undefined'
+export const isWeb = typeof document !== 'undefined'
 export const isWebIOS =
   typeof window !== 'undefined' &&
   (/iPad|iPhone|iPod/.test(navigator.platform) ||

@@ -1,4 +1,4 @@
-import { Platform } from 'react-native'
+// dont import react-native
 
 export const OVERMIND_MUTATIONS =
   typeof window !== 'undefined' && window['__OVERMIND_MUTATIONS']
@@ -9,9 +9,8 @@ export const rootEl =
 export const isSSR =
   typeof window !== 'undefined' && !!window['IS_SSR_RENDERING']
 export const isWorker = !rootEl && !isSSR
-export const isNative = Platform.OS === 'ios' || Platform.OS === 'android'
-export const isPreact = process.env.TARGET === 'preact'
-export const isWeb = Platform.OS === 'web'
+export const isWeb = typeof document !== 'undefined'
+export const isNative = !isWorker && !isSSR && !isWeb
 
 export const drawerPad = 8
 export const drawerBorderRadius = 16
