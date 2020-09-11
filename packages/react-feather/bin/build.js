@@ -136,9 +136,8 @@ glob(`${featherIconsDir}/**.svg`, (err, icons) => {
 
     fs.writeFileSync(location, component, 'utf-8')
 
-    const exportString = `export { ${uppercamelcase(
-      id
-    )} } from './icons/${id}';\r\n`
+    const cname = uppercamelcase(id)
+    const exportString = `export { ${cname} } from './icons/${id}'\n`
 
     fs.appendFileSync(
       path.join(rootDir, 'src', 'index.ts'),
