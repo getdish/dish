@@ -93,7 +93,7 @@ module.exports = function getWebpackConfig(
         __dirname: false,
       },
       resolve: {
-        extensions: ['.ts', '.tsx', '.js'],
+        extensions: ['.ts', '.tsx', '.web.js', '.js'],
         mainFields: ['tsmain', 'browser', 'module', 'main'],
         alias: {
           react: path.join(require.resolve('react'), '..'),

@@ -1,10 +1,8 @@
 import { graphql, order_by, query } from '@dish/graph'
-import { Divide } from '@dish/react-feather'
 import {
   Divider,
   HStack,
   SmallTitle,
-  Spacer,
   Text,
   VStack,
   useDebounceValue,

@@ -1,13 +1,4 @@
-import { graphql } from '@dish/graph'
-import {
-  Button,
-  Divider,
-  HStack,
-  SmallTitle,
-  Spacer,
-  Text,
-  VStack,
-} from '@dish/ui'
+import { Divider, HStack, SmallTitle, Spacer, Text, VStack } from '@dish/ui'
 import React from 'react'
 
 import { lightGreen, lightYellow } from '../../colors'
@@ -16,9 +7,7 @@ import { LinkButton } from '../../views/ui/LinkButton'
 import { HomeScrollView } from './HomeScrollView'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { StackItemProps } from './HomeStackView'
-import { Input } from './Input'
 import { Paragraph } from './Paragraph'
-import TextArea from './TextArea'
 import { TextStrong } from './TextStrong'
 import { Title } from './Title'
 
