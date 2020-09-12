@@ -50,7 +50,7 @@ export const LoginRegisterForm = ({
       }
     } else {
       if (isRegister) {
-        return 'Signup'
+        return 'Go'
       } else {
         return 'Login'
       }
@@ -77,7 +77,9 @@ export const LoginRegisterForm = ({
       </VStack>
 
       <HStack>
-        <SmallTitle divider="center">or</SmallTitle>
+        <SmallTitle fontSize={14} divider="center">
+          or
+        </SmallTitle>
       </HStack>
 
       <form>

@@ -12,6 +12,7 @@ import {
 } from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { omStatic } from '../../state/om'
+import { BottomSheetContainer } from './BottomSheetContainer'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
 import { blurSearchInput } from './HomeSearchInput'
 import { isWebIOS } from './isIOS'
@@ -212,17 +213,7 @@ export const HomeSmallDrawer = (props: { children: any }) => {
           </VStack>
         </View>
 
-        <VStack
-          width="100%"
-          height="100%"
-          shadowColor="rgba(0,0,0,0.13)"
-          shadowRadius={44}
-          shadowOffset={{ width: 10, height: 0 }}
-          borderTopRightRadius={drawerBorderRadius}
-          borderTopLeftRadius={drawerBorderRadius}
-          pointerEvents="auto"
-          backgroundColor="rgba(255,255,255,0.9)"
-        >
+        <BottomSheetContainer>
           <View
             style={{
               zIndex: 100,
@@ -258,7 +249,7 @@ export const HomeSmallDrawer = (props: { children: any }) => {
 
             {props.children}
           </VStack>
-        </VStack>
+        </BottomSheetContainer>
       </Animated.View>
     </VStack>
   )

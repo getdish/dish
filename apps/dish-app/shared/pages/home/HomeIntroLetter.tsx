@@ -32,7 +32,7 @@ export const HomeIntroLetter = memo(() => {
       alignItems="center"
       justifyContent="center"
       paddingHorizontal="4vw"
-      paddingVertical="2vh"
+      paddingVertical="1vh"
       backgroundColor="rgba(0,0,0,0.6)"
       opacity={1}
       transform={[{ translateY: 0 }]}
@@ -44,9 +44,9 @@ export const HomeIntroLetter = memo(() => {
     >
       <VStack
         maxWidth={450}
-        maxHeight={680}
-        height="100%"
-        width="100%"
+        maxHeight={700}
+        height="98%"
+        width="90%"
         position="relative"
         backgroundColor="#000"
         borderRadius={15}
@@ -89,6 +89,7 @@ export const HomeIntroLetterContent = memo(() => {
       width="80%"
       minHeight={1}
       backgroundColor="#fff"
+      alignSelf="center"
       opacity={0.1}
     />
   )
@@ -103,23 +104,32 @@ export const HomeIntroLetterContent = memo(() => {
       />
 
       <Paragraph textAlign="center" color="#fff" fontWeight="300" size={1.2}>
-        <Text opacity={0.8}>better food discovery</Text>
-        <View />
+        <Text opacity={0.8}>a food discovery community</Text>
+      </Paragraph>
+
+      {divider}
+
+      <Paragraph textAlign="center" color="#fff" fontWeight="300" size={1.1}>
         <Text color={lightGreen} fontWeight="400">
-          ratings down to the dish
+          ratings by dish
         </Text>
         <View />
         <Text color={lightYellow} fontWeight="500">
           search all delivery services
         </Text>
         <View />
-        <Text fontWeight="700">hole in the wall gems 💎</Text>
+        <Text fontWeight="700">find local gems 💎</Text>
       </Paragraph>
 
       {divider}
 
-      <Paragraph textAlign="center" color="#fff" fontWeight="300" size={1}>
-        Get early access:
+      <Paragraph
+        textAlign="center"
+        color="rgba(255,255,255,0.5)"
+        fontWeight="700"
+        size="sm"
+      >
+        Early access
       </Paragraph>
 
       <LoginRegisterForm />

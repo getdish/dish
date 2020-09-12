@@ -129,9 +129,7 @@ export default memo(function HomePageHomePane(props: Props) {
             updateHomeTagsCache(all)
             setTopDishes(all)
             om.actions.home.updateCurrentState({
-              results: all
-                .map((x) => x.top_restaurants)
-                .flat()
+              results: _.flatten(all.map((x) => x.top_restaurants))
                 .filter((x) => x?.id)
                 .map((x) => ({ id: x.id, slug: x.slug })),
             })

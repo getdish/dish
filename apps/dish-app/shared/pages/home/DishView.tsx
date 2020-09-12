@@ -56,6 +56,7 @@ export const DishView = memo(
     selected,
     ...rest
   }: {
+    name?: any
     cuisine?: NavigableTag
     dish: TopCuisineDish
     size?: number
@@ -118,38 +119,13 @@ export const DishView = memo(
           )}
         </AbsoluteVStack>
 
-        {/* TODO, voting */}
-        {/* {restaurantId && (
-          <AbsoluteVStack
-            fullscreen
-            alignItems="flex-end"
-            right={-5}
-            justifyContent="center"
-            opacity={0}
-            hoverStyle={{
-              opacity: 1,
-            }}
-            zIndex={1000}
-          >
-            <Suspense fallback={null}>
-              <TagVoteButton
-                size={size > 130 ? 'md' : 'sm'}
-                tagId={dish.name ?? ''}
-                restaurantId={restaurantId}
-              />
-            </Suspense>
-          </AbsoluteVStack>
-        )} */}
-
         <Squircle
           width={width}
           height={height}
           borderRadius={borderRadius}
           isHovered={isHovered}
           backgroundColor="#000"
-          // borderWidth={2}
           borderColor="transparent"
-          // dish.isFallback
           {...(selected && {
             borderColor: 'blue',
           })}
@@ -164,7 +140,6 @@ export const DishView = memo(
               {...(isHovered && {
                 borderTopColor: 'transparent',
                 backgroundColor: 'transparent',
-                shadowColor: 'transparent',
                 transform: [{ scale: 1.1 }],
                 zIndex: 100000,
               })}
@@ -180,7 +155,7 @@ export const DishView = memo(
                 overflow="hidden"
                 shadowColor="rgba(0,0,0,0.1)"
                 shadowRadius={2}
-                top={0}
+                zIndex={1000}
                 {...(isHovered && {
                   top: -5,
                   backgroundColor: '#fff',
@@ -190,7 +165,7 @@ export const DishView = memo(
               >
                 <Text
                   className="unskewX ease-in-out"
-                  flex={1}
+                  // flex={1} breaks native
                   overflow="hidden"
                   fontWeight="300"
                   color={isHovered ? '#000' : '#fff'}

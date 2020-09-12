@@ -21,14 +21,22 @@ export const Squircle = ({
         height={height}
         borderRadius={borderRadius}
         position="relative"
+        shadowRadius={6}
+        shadowOffset={{ width: 0, height: 3 }}
+        shadowColor="red"
+        backgroundColor="blue"
+        {...(isHovered && {
+          zIndex: 10000,
+          shadowRadius: 14,
+          shadowColor: 'rgba(0,0,0,0.3)',
+          shadowOffset: { width: 0, height: 5 },
+        })}
         {...rest}
       >
         {/* frame (inner) */}
         <VStack
           className="ease-in-out-fast"
           shadowColor="rgba(0,0,0,0.25)"
-          shadowRadius={6}
-          shadowOffset={{ width: 0, height: 3 }}
           flex={1}
           borderRadius={borderRadius - (rest.borderWidth ?? 0)}
           overflow="hidden"
@@ -36,20 +44,11 @@ export const Squircle = ({
           justifyContent="center"
           pointerEvents="none"
           {...(isHovered && {
-            // borderColor: 'rgba(0,0,0,0.75)',
             backgroundColor: '#fff',
-            shadowRadius: 14,
-            shadowColor: 'rgba(0,0,0,0.3)',
-            shadowOffset: { width: 0, height: 5 },
-            zIndex: 10000,
           })}
         >
           {children}
           <AbsoluteVStack fullscreen className="box-shadow-inset-large" />
-          {/* <LinearGradient
-            colors={['transparent', 'rgba(0,0,0,0.3)']}
-            style={[StyleSheet.absoluteFill]}
-          /> */}
         </VStack>
         {outside}
       </VStack>
