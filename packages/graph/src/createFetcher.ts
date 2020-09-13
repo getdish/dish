@@ -1,6 +1,7 @@
 import { QueryResponse } from 'gqless'
 
 import { isBrowserProd } from './constants'
+import { convertSimpleTagsToRestaurantTags } from './helpers'
 import { Auth } from './helpers/auth-helpers'
 import { getGraphEndpoint } from './helpers/getGraphEndpoint'
 
@@ -32,6 +33,7 @@ export const createFetcher = (
       body,
       mode: 'cors',
     }
+    console.log('endpoint', endpoint)
     const response = await fetch(endpoint, request)
     const data = await response.json()
     if (process.env.DEBUG) {

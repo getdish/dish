@@ -22,8 +22,10 @@ export function Popover(props: PopoverProps) {
   const isControlled = typeof isOpen !== 'undefined'
   const [isMounted, setIsMounted] = useState(props.mountImmediately ?? false)
 
-  // THIS CALLS TO getClientBoundingRect ruining mount performance
   useEffect(() => {
+    if (isMounted) {
+      return
+    }
     return series([fullyIdle, () => setIsMounted(true)])
   }, [])
 
@@ -138,7 +140,7 @@ export function Popover(props: PopoverProps) {
   }
 
   // native: todo
-  return null
+  return props.children
 }
 
 function getArrowTranslate(position) {

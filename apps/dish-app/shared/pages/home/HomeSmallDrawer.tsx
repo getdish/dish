@@ -79,8 +79,10 @@ export class BottomDrawerStore extends Store {
   }
 }
 
+const drawerStore = new BottomDrawerStore(null)
+
 export const HomeSmallDrawer = (props: { children: any }) => {
-  const drawerStore = useStore(BottomDrawerStore)
+  // const drawerStore = useStore(BottomDrawerStore)
   const isSmall = useMediaQueryIsSmall()
   const isReallySmall = useMediaQueryIsReallySmall()
   const isShort = useMediaQueryIsShort()

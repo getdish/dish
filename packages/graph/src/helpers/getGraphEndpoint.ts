@@ -1,10 +1,12 @@
+import { isNative } from 'lodash'
+
 import { isBrowserProd, isHasuraLive, isNode, isWorker } from '../constants'
 
 export function getGraphEndpointDomain() {
   const LOCAL_HASURA = 'http://localhost:8080'
   const LIVE_HASURA = 'https://hasura.dishapp.com'
 
-  if (isWorker) {
+  if (isWorker || isNative) {
     return LIVE_HASURA
   }
 
