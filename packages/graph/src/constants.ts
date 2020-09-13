@@ -27,7 +27,7 @@ export const RESTAURANT_WEIGHTS = {
   google: 0.4,
 }
 
-const isNative = typeof document === 'undefined'
+export const isNative = typeof document === 'undefined'
 
 export let SEARCH_DOMAIN: string
 

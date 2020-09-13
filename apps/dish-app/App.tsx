@@ -1,11 +1,11 @@
-import { AbsoluteVStack, VStack } from '@dish/ui'
+import { startLogging } from '@dish/graph'
+import { AbsoluteVStack } from '@dish/ui'
 import { StatusBar } from 'expo-status-bar'
 import { createOvermind } from 'overmind'
 import { Provider } from 'overmind-react'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import HomePageHomePane from './shared/pages/home/HomePageHomePane'
 import { HomePagePane } from './shared/pages/home/HomePagePane'
 import { HomeSmallDrawer } from './shared/pages/home/HomeSmallDrawer'
 import { HomeStackView } from './shared/pages/home/HomeStackView'
@@ -13,6 +13,7 @@ import { config } from './shared/state/om'
 import { MapNative } from './shared/views/MapNative'
 
 async function start() {
+  startLogging()
   const om = createOvermind(config, {
     devtools: false,
     logProxies: true,

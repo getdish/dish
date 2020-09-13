@@ -3,6 +3,9 @@ const package = require('../package.json')
 const hoists = {
   react: true,
   'react-dom': true,
+  '@gqless/react': true,
+  '@gqless/schema': true,
+  gqless: true,
 }
 
 const noHoists = Object.keys(package.dependencies)
@@ -14,3 +17,5 @@ package.workspaces.nohoist = noHoists
 
 const fs = require('fs')
 fs.writeFileSync('./package.json', JSON.stringify(package, null, 2), 'utf8')
+
+console.log('updated hoists')

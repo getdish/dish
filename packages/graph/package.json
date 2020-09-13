@@ -7,10 +7,7 @@
   "private": true,
   "workspaces": {
     "nohoist": [
-      "gqless",
-      "@gqless/logger",
-      "@o/gqless-schema",
-      "@gqless/schema"
+      "@o/gqless-schema"
     ]
   },
   "scripts": {
@@ -19,9 +16,7 @@
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "TARGET=node DISH_ENV=test ava test/* --verbose --serial",
     "test:debug": "TARGET=node DEBUG=1 DISH_ENV=test ava test/* --verbose --serial",
-    "test:watch": "TARGET=node DISH_ENV=test ava test/* --watch --verbose --serial",
-    "postinstall": "patch-package || yarn postinstall-verbose",
-    "postinstall-verbose": "patch --verbose -t -p1 -i patches/gqless+0.0.1-alpha.29.patch"
+    "test:watch": "TARGET=node DISH_ENV=test ava test/* --watch --verbose --serial"
   },
   "dependencies": {
     "@gqless/react": "0.0.1-alpha.28",
