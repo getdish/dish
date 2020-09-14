@@ -6,6 +6,7 @@ export const isHasuraLive =
 export const isBrowserProd =
   !isNode && window.location?.hostname.includes('dish')
 
+export const isNative = typeof document === 'undefined'
 export const isWorker =
   typeof document !== 'undefined' && !document.getElementById('root')
 
@@ -27,21 +28,18 @@ export const RESTAURANT_WEIGHTS = {
   google: 0.4,
 }
 
-export const isNative = typeof document === 'undefined'
-
-export let SEARCH_DOMAIN: string
-
-const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
-const LOCAL_SEARCH_DOMAIN = 'http://localhost:10000'
-
-if (isWorker || isNative) {
-  SEARCH_DOMAIN = LIVE_SEARCH_DOMAIN
-} else if (isNode) {
-  SEARCH_DOMAIN = LOCAL_SEARCH_DOMAIN
-} else {
-  if (isBrowserProd || isHasuraLive) {
-    SEARCH_DOMAIN = LIVE_SEARCH_DOMAIN
+export let SEARCH_DOMAIN = (() => {
+  const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
+  const LOCAL_SEARCH_DOMAIN = 'http://localhost:10000'
+  if (isWorker || isNative) {
+    return LIVE_SEARCH_DOMAIN
+  } else if (isNode) {
+    return LOCAL_SEARCH_DOMAIN
   } else {
-    SEARCH_DOMAIN = LOCAL_SEARCH_DOMAIN
+    if (isBrowserProd || isHasuraLive) {
+      return LIVE_SEARCH_DOMAIN
+    } else {
+      return LOCAL_SEARCH_DOMAIN
+    }
   }
-}
+})()

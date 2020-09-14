@@ -12,7 +12,7 @@ import {
 } from '@dish/ui'
 import _, { sortBy, uniqBy } from 'lodash'
 import { default as React, Suspense, memo, useEffect, useState } from 'react'
-import { StyleSheet } from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native'
 
 import { bgLight, bgLightTranslucent } from '../../colors'
 import { HomeStateItemHome } from '../../state/home-types'
@@ -236,7 +236,7 @@ const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
       <HomeTopDishesTitle />
       <Spacer size="xl" />
 
-      <VStack>
+      <VStack minHeight={Dimensions.get('window').height * 0.95}>
         {!topDishes.length && (
           <>
             <LoadingItems />

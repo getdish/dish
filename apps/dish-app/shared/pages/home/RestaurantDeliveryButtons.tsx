@@ -33,8 +33,8 @@ export const RestaurantDeliveryButtons = memo(
       <HStack flexWrap="wrap" alignItems="center">
         {!!props.label && (
           <Text
-            fontSize={18}
-            color="rgba(0,0,0,0.7)"
+            fontSize={13}
+            color="rgba(0,0,0,0.6)"
             marginRight={12}
             transform={[{ translateY: -1 }]}
           >
@@ -84,9 +84,9 @@ const RestaurantDeliveryButton = ({
           alt={source.name}
           src={source.image}
           style={{
-            width: showLabels ? 20 : 26,
-            height: showLabels ? 20 : 26,
-            margin: -3,
+            width: showLabels ? 16 : 22,
+            height: showLabels ? 16 : 22,
+            margin: showLabels ? 0 : -3,
             marginRight: 0,
             borderRadius: 40,
             borderWidth: 1,

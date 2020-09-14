@@ -5,7 +5,7 @@ import { Image } from 'react-native'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { flatButtonStyle } from './baseButtonStyle'
-import { FilterButton } from './HomeFilterBar'
+import { FilterButton } from './FilterButton'
 import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 
 export const HomeDeliveryFilterButtons = ({

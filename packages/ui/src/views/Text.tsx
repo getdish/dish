@@ -25,6 +25,7 @@ const selectableStyle = {
 }
 
 const ellipseStyle = {
+  display: 'inline-block',
   maxWidth: '100%',
   whiteSpace: 'nowrap',
   overflow: 'hidden',

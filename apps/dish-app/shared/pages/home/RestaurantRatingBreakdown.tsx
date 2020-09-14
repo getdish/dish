@@ -44,7 +44,9 @@ export const RestaurantRatingBreakdown = memo(
     return (
       <VStack maxWidth="100%" position="relative">
         <HStack marginBottom={-20} alignItems="center" justifyContent="center">
-          <SlantedTitle fontWeight="600">Review Breakdown</SlantedTitle>
+          <SlantedTitle fontSize={18} fontWeight="600">
+            Reviews
+          </SlantedTitle>
         </HStack>
         {closable && (
           <AbsoluteVStack zIndex={1000} top={10} right={6}>
@@ -90,11 +92,6 @@ export const RestaurantRatingBreakdown = memo(
             <SmallTitle>Dishes</SmallTitle>
           </VStack>
 
-          {/*
-          <Spacer size="xl" />
-          <Divider vertical />
-          <Spacer size="xl" /> */}
-
           <VStack
             minWidth={260}
             flex={1.15}
@@ -102,7 +99,6 @@ export const RestaurantRatingBreakdown = memo(
             paddingHorizontal={10}
             spacing={10}
           >
-            <SmallTitle divider="off">Representative Reviews</SmallTitle>
             <HStack marginVertical={8} alignItems="stretch">
               <Suspense fallback={null}>
                 <RestaurantAddCommentButton

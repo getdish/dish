@@ -231,22 +231,17 @@ export const Map = (props: MapProps) => {
             id: POINT_LAYER_ID,
             type: 'circle',
             source: RESTAURANTS_SOURCE_ID,
-            layout: {
-              // 'icon-image': 'map-pin',
-              // 'icon-allow-overlap': true,
-              // 'icon-size': 0.25,
-              // 'icon-offset': [0, -10],
-            },
             paint: {
-              // make circles larger as the user zooms from z12 to z22
               'circle-radius': [
                 'step',
                 ['get', 'point_count'],
                 15,
-                200,
+                20,
+                20,
+                50,
+                25,
+                100,
                 30,
-                750,
-                40,
               ],
               'circle-color': `rgba(${r},${g},${b}, 0.5)`,
               //['get', 'color'],
@@ -478,6 +473,12 @@ export const Map = (props: MapProps) => {
           cancels.add(() => {
             map.off('click', CLUSTER_LABEL_LAYER_ID, handleClick)
             map.off('click', POINT_LAYER_ID, handleClick)
+          })
+
+          // remove sources last
+          cancels.add(() => {
+            map.removeSource(RESTAURANTS_SOURCE_ID)
+            map.removeSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID)
           })
         },
         () => {

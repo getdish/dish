@@ -33,20 +33,17 @@ export const CommentBubble = ({
       {...rest}
     >
       {!!name && (
-        <HStack
-          backgroundColor={bgLight}
-          borderRadius={100}
-          paddingHorizontal={8}
-          paddingVertical={6}
-          alignItems="center"
-          spacing={6}
-          flexWrap="nowrap"
-        >
-          <Circle size={18} marginBottom={-2}>
+        <HStack width="100%" maxWidth="100%" alignItems="center">
+          <Circle size={18} marginRight={4} marginTop={2}>
             <User color="#999" size={12} />
           </Circle>
-          <Text selectable color="#999" fontSize={13}>
+          <HStack maxWidth="90%" marginBottom={-3}>
             <Link
+              ellipse
+              backgroundColor={bgLight}
+              borderRadius={100}
+              paddingHorizontal={8}
+              paddingVertical={5}
               name="user"
               params={{ username: name }}
               fontWeight="600"
@@ -54,8 +51,7 @@ export const CommentBubble = ({
             >
               {name}
             </Link>
-            &nbsp; says
-          </Text>
+          </HStack>
         </HStack>
       )}
 

@@ -191,6 +191,8 @@ const SearchResultsTopBar = memo(({ stateId }: { stateId: string }) => {
       borderBottomColor="#eee"
       backgroundColor="#fff"
       borderBottomWidth={1}
+      shadowColor="rgba(0,0,0,0.1)"
+      shadowRadius={10}
       zIndex={1000}
     >
       <ScrollView
@@ -219,7 +221,7 @@ const SearchResultsTopBar = memo(({ stateId }: { stateId: string }) => {
             overflow="hidden"
             justifyContent="space-between"
           >
-            <HStack marginTop={-12} alignItems="center" justifyContent="center">
+            <HStack marginTop={-18} alignItems="center" justifyContent="center">
               <HomeLenseBar activeTagIds={state.activeTagIds} />
             </HStack>
 
@@ -317,7 +319,7 @@ const SearchResultsContent = (props: Props) => {
   const titleLen = (title + subTitle).length
   const titleScale =
     titleLen > 70 ? 0.7 : titleLen > 60 ? 0.8 : titleLen > 50 ? 0.9 : 1
-  const titleFontSize = 30 * titleScale * (isSmall ? 0.75 : 1)
+  const titleFontSize = 32 * titleScale * (isSmall ? 0.75 : 1)
 
   const contentWrap = (children: any) => {
     return (
@@ -330,13 +332,18 @@ const SearchResultsContent = (props: Props) => {
         <HStack
           justifyContent="center"
           paddingHorizontal={20}
-          paddingTop={15}
+          paddingTop={20}
           paddingBottom={15}
           overflow="hidden"
         >
           <Text ellipse fontSize={titleFontSize}>
             {pageTitleElements}{' '}
-            <Text fontWeight="300" opacity={0.5} letterSpacing={-0.5}>
+            <Text
+              fontSize={titleFontSize * 0.9}
+              fontWeight="300"
+              opacity={0.5}
+              letterSpacing={-0.5}
+            >
               {subTitle}
             </Text>
           </Text>

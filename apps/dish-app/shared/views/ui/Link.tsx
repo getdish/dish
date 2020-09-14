@@ -17,6 +17,10 @@ export function Link<
     fontSize,
     fontWeight,
     children,
+    backgroundColor,
+    paddingHorizontal,
+    paddingVertical,
+    borderRadius,
     ellipse,
     lineHeight,
     padding,
@@ -105,11 +109,15 @@ export function Link<
     elementName,
     props,
     <Text
-      ellipse={ellipse}
       fontSize={fontSize}
       lineHeight={lineHeight}
       fontWeight={fontWeight}
       color={color}
+      backgroundColor={backgroundColor}
+      paddingHorizontal={paddingHorizontal}
+      paddingVertical={paddingVertical}
+      borderRadius={borderRadius}
+      padding={padding}
       textAlign={textAlign}
       // @ts-ignore
       display="inline-flex"
@@ -117,7 +125,8 @@ export function Link<
       alignItems={style?.alignItems}
       // @ts-ignore
       justifyContent={style?.justifyContent}
-      maxWidth="100%"
+      // must be after display, etc to override
+      ellipse={ellipse}
       {...(style?.flex && {
         flex: style.flex as any,
         display: 'flex',
