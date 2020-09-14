@@ -316,7 +316,11 @@ const TopDishesCuisineItem = memo(
               transform: [{ scale: 1.1 }, { rotate: '-6deg' }],
             }}
           >
-            <Text lineHeight={22} paddingRight={country.icon ? 32 : 0}>
+            <Text
+              lineHeight={22}
+              fontWeight="600"
+              paddingRight={country.icon ? 32 : 0}
+            >
               {country.country}
               {country.icon ? (
                 <Text
@@ -360,6 +364,9 @@ const TopDishesCuisineItem = memo(
                 return (
                   <HStack
                     transform={[{ translateY: index % 2 == 0 ? -5 : 5 }]}
+                    hoverStyle={{
+                      zIndex: 1000,
+                    }}
                     key={index}
                   >
                     <DishView

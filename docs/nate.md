@@ -2,17 +2,18 @@ goals for this week, get us to being able to onboard people (not 100% necessary,
 
 - fix login/register flows
 - get reviewing fully working with votes/sentiment on tags
+- fix up points breakdown and dish/tag breakdown
 - fix a lot of issues on mobile
 - test in prod and in various browsers and fix up
 - fix memory issues (see safari warning)
 - user profile page improvement
   - show comments / votes separately
   - show users current favorites on the map
+- start on blog post
 
 next week:
 
 - show a list of hot & new restaurants on homepage, simple and easy win, with link to breakdown to comment easily...
-- react native app start
 - blog
 - location <=> url
 - revisit ssr

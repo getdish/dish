@@ -15,7 +15,7 @@ export const HomeTopSearches = memo(() => {
       paddingHorizontal={20}
       paddingVertical={10}
       marginTop={-10}
-      spacing={8}
+      spacing={6}
       maxWidth={700}
       marginHorizontal="auto"
       flexWrap="wrap"
@@ -33,7 +33,7 @@ export const HomeTopSearches = memo(() => {
             borderRadius={80}
             className="ease-in-out-slower"
             backgroundColor="#fff"
-            marginBottom={8}
+            marginBottom={6}
             hoverStyle={{
               backgroundColor: bgLight,
             }}
@@ -48,12 +48,22 @@ export const HomeTopSearches = memo(() => {
                 <React.Fragment key={tag.name}>
                   <Text
                     height={16}
-                    lineHeight={16}
+                    lineHeight={14}
                     padding={5}
                     fontSize={14}
                     borderRadius={50}
                   >
-                    {tag.icon ? `${tag.icon} ` : ''}
+                    {tag.icon ? (
+                      <Text
+                        transform={[{ translateY: 1 }]}
+                        marginRight={1}
+                        fontSize={20}
+                      >
+                        {tag.icon}{' '}
+                      </Text>
+                    ) : (
+                      ''
+                    )}
                     {tagDisplayName(tag)}
                   </Text>
                   {index < search.tags.length - 1 ? (
@@ -86,33 +96,32 @@ const recentSearches: { tags: Tag[] }[] = [
   },
   {
     tags: [
-      { displayName: 'Cheap', name: 'price-low', type: 'filter' },
+      { displayName: '$', name: 'price-low', type: 'filter' },
       { name: 'Pho', icon: '🍜', type: 'dish' },
     ],
   },
   {
     tags: [
-      { displayName: 'Fancy', name: 'Vibe', type: 'lense' },
+      { ...tagLenses[1], displayName: 'Fancy', type: 'lense' },
       { name: 'Steak', icon: '🥩', type: 'dish' },
     ],
   },
   {
     tags: [
-      { name: 'Gems', type: 'lense', displayName: 'Great' },
-      { name: 'Delivery', type: 'filter' },
+      { name: 'Delivery', icon: '🚗', type: 'filter' },
       { name: 'Sushi', icon: '🍣', type: 'dish' },
     ],
   },
   {
     tags: [
-      { name: 'Vegetarian', icon: '🥬', type: 'lense' },
-      { name: 'Delivery', type: 'filter' },
+      { ...tagLenses[3], displayName: 'Green', icon: '🥬', type: 'lense' },
+      { name: 'Delivery', icon: '🚗', type: 'filter' },
       { name: 'Sandwich', icon: '🥪', type: 'dish' },
     ],
   },
   {
     tags: [
-      { name: 'Gems', displayName: 'Great', type: 'lense' },
+      { ...tagLenses[0], displayName: 'Great', type: 'lense' },
       { name: 'price-low', displayName: 'Cheap', type: 'filter' },
       { name: 'Thai', icon: '🇹🇭', type: 'country' },
     ],

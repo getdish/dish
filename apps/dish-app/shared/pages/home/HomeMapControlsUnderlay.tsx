@@ -81,7 +81,7 @@ export const HomeMapControlsUnderlay = memo(() => {
               </OverlayLinkButton>
             )}
 
-          {hasMovedMap && zoomLevel !== 'medium' && (
+          {/* {hasMovedMap && zoomLevel !== 'medium' && (
             <OverlayLinkButton
               Icon={Map}
               pointerEvents="auto"
@@ -91,7 +91,7 @@ export const HomeMapControlsUnderlay = memo(() => {
             >
               Fit to results
             </OverlayLinkButton>
-          )}
+          )} */}
         </HStack>
       </AbsoluteVStack>
     </AbsoluteVStack>

@@ -20,6 +20,11 @@ export type TextProps = Omit<ReactTextProps, 'style'> &
     userSelect?: string
   }
 
+const defaultStyle: TextStyle = {
+  // fixes transforms not working on web
+  display: 'inline-block' as any,
+}
+
 const selectableStyle = {
   userSelect: 'text',
 }
@@ -40,6 +45,7 @@ export const Text = (allProps: TextProps) => {
 }
 
 Text.staticConfig = {
+  defaultStyle,
   styleExpansionProps: {
     selectable: selectableStyle,
     ellipse: ellipseStyle,
@@ -59,7 +65,9 @@ const webOnlyStyleKeys = {
 const useTextStyle = (allProps: TextProps) => {
   return useMemo(() => {
     const props: ReactTextProps = {}
-    const style: TextStyle = {}
+    const style: TextStyle = {
+      ...defaultStyle,
+    }
     for (const key in allProps) {
       if (!isWeb && webOnlyStyleKeys[key]) {
         continue

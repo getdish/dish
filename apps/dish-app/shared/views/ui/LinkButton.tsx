@@ -140,6 +140,7 @@ export function LinkButton<
       // @ts-ignore
       ref={'name' in props ? null : containerRef}
       pressStyle={{
+        ...props.hoverStyle,
         opacity: 0.7,
         transform: [{ scale: 0.98 }],
       }}

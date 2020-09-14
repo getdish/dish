@@ -80,8 +80,9 @@ export const RestaurantDetailRow = memo(
               name="restaurantHours"
               params={{ slug: restaurantSlug }}
               fontWeight="400"
-              color="rgba(0,0,0,0.6)"
+              color={open_color}
               ellipse
+              borderColor="transparent"
             >
               {next_time}
             </SmallLinkButton>
