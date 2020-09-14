@@ -293,9 +293,12 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   // only way i could get it to stop bubbling up wtf
   useEffect(() => {
     const node = getNode(buttonRef?.current)
-    node?.addEventListener('click', prevent)
-    return () => {
-      node?.removeEventListener('click', prevent)
+
+    if (node && 'addEventListener' in node) {
+      node.addEventListener('click', prevent)
+      return () => {
+        node.removeEventListener('click', prevent)
+      }
     }
   }, [])
 

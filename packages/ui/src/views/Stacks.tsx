@@ -28,8 +28,6 @@ const disabledStyle: StackProps = {
 export type StackProps = Omit<
   ViewStyle &
     Omit<ViewProps, 'display'> & {
-      // give it a descriptive name for static extraction (TODO)
-      name?: string
       fullscreen?: boolean
       children?: any
       hoverStyle?: ViewStyle | null

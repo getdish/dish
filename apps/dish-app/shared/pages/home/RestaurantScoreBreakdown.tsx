@@ -189,7 +189,9 @@ export const RestaurantScoreBreakdown = memo(
                 <TableRow borderTopColor="#eee" borderTopWidth={1}>
                   <TableCell {...col0Props}></TableCell>
                   <TableCell></TableCell>
-                  <TableCell {...col3Props}>294</TableCell>
+                  <TableCell {...col3Props}>
+                    <Text>294</Text>
+                  </TableCell>
                 </TableRow>
               </Table>
             </>

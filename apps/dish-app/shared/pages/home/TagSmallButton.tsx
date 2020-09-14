@@ -61,7 +61,7 @@ export const TagSmallButton = graphql(
             </Text>
           </AbsoluteVStack>
           <VStack width={24} />
-          {tagDisplayName(tag)}
+          <Text>{tagDisplayName(tag)}</Text>
           <Spacer size="xs" />
         </HStack>
 

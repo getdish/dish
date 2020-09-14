@@ -1,4 +1,5 @@
 import { BoxProps } from '@dish/ui'
+import React from 'react'
 
 import { SizableTextProps } from './Size'
 import { SlantedBox, slantedBoxStyle } from './SlantedBox'
