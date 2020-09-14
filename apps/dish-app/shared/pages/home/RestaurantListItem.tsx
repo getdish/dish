@@ -102,6 +102,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       maxWidth="100%"
       position="relative"
       className="restaurant-list-item"
+      marginBottom={5}
     >
       <HomeScrollViewHorizontal
         onScroll={
@@ -148,7 +149,6 @@ const RestaurantListItemContent = memo(
       }
     }, [restaurant.name])
 
-    const paddingTop = 25
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
 
     const curState = omStatic.state.home.currentState
@@ -206,7 +206,7 @@ const RestaurantListItemContent = memo(
               name="restaurant"
               params={{ slug: restaurantSlug }}
             >
-              <VStack paddingTop={paddingTop}>
+              <VStack paddingTop={30}>
                 <HStack marginLeft={-5} alignItems="center" maxWidth="40%">
                   <VStack position="relative" marginVertical={-14}>
                     <RestaurantUpVoteDownVote
@@ -231,7 +231,7 @@ const RestaurantListItemContent = memo(
                     >
                       <Text
                         fontSize={
-                          (isSmall ? 20 : 24) *
+                          (isSmall ? 20 : 22) *
                           (restaurantName.length > 25 ? 0.85 : 1)
                         }
                         marginRight={10}
@@ -275,7 +275,7 @@ const RestaurantListItemContent = memo(
               <Text color="#777">
                 <SuperScriptText fontSize={11}>#</SuperScriptText>
                 <Text
-                  fontSize={+rank > 9 ? 12 : 16}
+                  fontSize={+rank > 9 ? 12 : 22}
                   fontWeight="700"
                   color="#000"
                 >
@@ -290,7 +290,7 @@ const RestaurantListItemContent = memo(
             </HStack>
           </VStack>
 
-          <Spacer />
+          <Spacer size="md" />
 
           {/* ROW: OVERVIEW / PEEK */}
           <HStack flex={1} maxWidth="100%">
@@ -329,11 +329,17 @@ const RestaurantListItemContent = memo(
                     onPress={reviewDisplayStore.toggleShowComments}
                   >
                     <HStack alignItems="center">
+                      <VStack marginVertical={-10} marginRight={8}>
+                        <RestaurantRatingView
+                          size="xs"
+                          restaurantSlug={props.restaurantSlug}
+                        />
+                      </VStack>
                       <HStack className="hide-when-small">
-                        <Activity size={14} />
+                        <Activity color="rgba(0,0,0,0.2)" size={14} />
                         <Spacer size="sm" />
                       </HStack>
-                      <Text color="rgba(0,0,0,0.5)" fontSize={16}>
+                      <Text color="rgba(0,0,0,0.5)" fontSize={14}>
                         152
                       </Text>
                     </HStack>
@@ -356,7 +362,7 @@ const RestaurantListItemContent = memo(
               >
                 <VStack marginVertical={-7} marginRight={-7}>
                   <RestaurantDeliveryButtons
-                    label="🚗"
+                    label="Delivery"
                     restaurantSlug={restaurantSlug}
                   />
                 </VStack>
@@ -446,14 +452,14 @@ export const RestaurantScoreBreakdownSmall = memo(
                       <Image
                         source={info.image}
                         style={{
-                          width: 16,
-                          height: 16,
+                          width: 18,
+                          height: 18,
                           borderRadius: 100,
                         }}
                       />
                     ) : null}
 
-                    <Text fontSize={13} opacity={0.5}>
+                    <Text fontWeight="500" fontSize={13} opacity={0.5}>
                       {+(item.rating ?? 0) * 10}
                     </Text>
                   </HStack>

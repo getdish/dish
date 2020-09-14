@@ -40,11 +40,9 @@ export const RestaurantUpVoteDownVote = memo(
           marginLeft={-22}
           backgroundColor="#fff"
           marginRight={-4}
-          shadowColor="rgba(0,0,0,0.05)"
-          shadowRadius={18}
-          shadowOffset={{ height: 2, width: 0 }}
-          borderWidth={1}
-          borderColor="#f2f2f2"
+          shadowColor="rgba(0,0,0,0.1)"
+          shadowRadius={10}
+          shadowOffset={{ height: 3, width: -3 }}
           borderRadius={1000}
         >
           <Tooltip position="right" contents="Upvote" {...isOpenProp}>
@@ -58,10 +56,10 @@ export const RestaurantUpVoteDownVote = memo(
             />
           </Tooltip>
           <Text
-            fontSize={+score <= 9 ? 23 : +score <= 99 ? 20 : 16}
+            fontSize={100 / `${score}`.length / 2}
             fontWeight="600"
             marginVertical={-2}
-            color="rgba(0,0,0,0.85)"
+            color={score > 0 ? '#000' : 'darkred'}
           >
             {score}
           </Text>
@@ -84,8 +82,15 @@ export const RestaurantUpVoteDownVote = memo(
 const VoteButton = ({
   color,
   Icon,
+  size,
+  voted,
   ...props
-}: StackProps & { voted?: boolean; Icon: any; color?: string | null }) => {
+}: StackProps & {
+  voted?: boolean
+  Icon: any
+  color?: string | null
+  size?: number
+}) => {
   const isSmall = useMediaQueryIsSmall()
   const scale = isSmall ? 1.1 : 1
   const [hovered, setHovered] = useState(false)
@@ -105,12 +110,15 @@ const VoteButton = ({
         backgroundColor: bgLight,
         borderColor: '#aaa',
       }}
-      {...(props.voted && {
+      {...(voted && {
         backgroundColor: '#999',
       })}
       {...props}
     >
-      <Icon size={18} color={color ?? (hovered ? '#000' : '#ccc')} />
+      <Icon
+        size={(size ?? 18) * (voted ? 1.2 : 1)}
+        color={color ?? (hovered ? '#000' : '#ccc')}
+      />
     </VStack>
   )
 }

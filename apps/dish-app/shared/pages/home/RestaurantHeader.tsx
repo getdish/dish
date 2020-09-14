@@ -80,7 +80,7 @@ const RestaurantHeaderContent = memo(
                   selectable
                   lineHeight={42}
                   fontSize={
-                    (restaurant.name?.length > 25 ? 32 : 36) *
+                    (restaurant.name?.length > 21 ? 30 : 36) *
                     (size === 'sm' ? 0.8 : 1)
                   }
                   fontWeight="700"

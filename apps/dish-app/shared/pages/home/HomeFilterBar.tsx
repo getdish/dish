@@ -1,5 +1,3 @@
-import { Tag } from '@dish/graph'
-import { Clock, ShoppingBag } from '@dish/react-feather'
 import { HStack, StackProps } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
@@ -8,10 +6,7 @@ import { ScrollView } from 'react-native'
 import { getTagId } from '../../state/getTagId'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
-import { tagDisplayNames } from '../../state/tagDisplayName'
-import { LinkButton } from '../../views/ui/LinkButton'
-import { LinkButtonProps } from '../../views/ui/LinkProps'
-import { SmallButton } from '../../views/ui/SmallButton'
+import { FilterButton } from './FilterButton'
 import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export default memo(
@@ -59,45 +54,6 @@ export default memo(
           )
         })}
       </HStack>
-    )
-  }
-)
-
-export const FilterButton = memo(
-  ({
-    tag,
-    isActive,
-    zIndex,
-    position,
-    margin,
-    flex,
-    ...rest
-  }: LinkButtonProps & { tag: Tag; isActive: boolean }) => {
-    const isSmall = useMediaQueryIsSmall()
-    let content: any = rest.children ?? tagDisplayNames[tag.name] ?? tag.name
-
-    if (isSmall) {
-      switch (content) {
-        case 'Open':
-          content = <Clock size={18} />
-          break
-        case 'Delivery':
-          content = <ShoppingBag size={18} />
-          break
-      }
-    }
-
-    return (
-      <LinkButton {...{ zIndex, flex, position, margin }} tag={tag}>
-        <SmallButton
-          textStyle={{ fontSize: 13, fontWeight: '500' }}
-          isActive={isActive}
-          flex={flex}
-          {...rest}
-        >
-          {content}
-        </SmallButton>
-      </LinkButton>
     )
   }
 )

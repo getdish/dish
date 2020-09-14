@@ -23,7 +23,6 @@ export const HomeTopSearches = memo(() => {
       justifyContent="center"
     >
       {recentSearches.slice(0, isReallySmall ? 6 : 8).map((search, index) => {
-        console.log('search.tags', search.tags)
         return (
           <VStack
             key={index}
@@ -40,7 +39,7 @@ export const HomeTopSearches = memo(() => {
             }}
           >
             <LinkButton
-              minWidth={70} // temp react-native
+              minWidth={50} // temp react-native
               tags={search.tags}
               cursor="pointer"
               alignItems="center"
