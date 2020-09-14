@@ -1,7 +1,8 @@
-import { Spacer, StackProps, Text } from '@dish/ui'
+import { HStack, Spacer, StackProps, Text } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { LinkButton } from '../../views/ui/LinkButton'
+import { LinkButtonNamedProps } from '../../views/ui/LinkProps'
 import { flatButtonStyle } from './baseButtonStyle'
 
 export const DishViewButton = memo(
@@ -10,7 +11,7 @@ export const DishViewButton = memo(
     icon,
     ...rest
   }: {
-    name: string
+    name: LinkButtonNamedProps['name']
     icon: string
     size?: number
   } & StackProps) => {
@@ -21,17 +22,19 @@ export const DishViewButton = memo(
         tag={{ type: 'dish', name }}
         {...rest}
       >
-        {!!icon && (
-          <>
-            <Text fontSize={16} marginVertical={-5}>
-              {icon}
-            </Text>
-            <Spacer size="xs" />
-          </>
-        )}
-        <Text fontSize={14} opacity={0.8}>
-          {name}
-        </Text>
+        <HStack>
+          {!!icon && (
+            <>
+              <Text fontSize={16} marginVertical={-5}>
+                {icon}
+              </Text>
+              <Spacer size="xs" />
+            </>
+          )}
+          <Text fontSize={14} opacity={0.8}>
+            {name}
+          </Text>
+        </HStack>
       </LinkButton>
     )
   }

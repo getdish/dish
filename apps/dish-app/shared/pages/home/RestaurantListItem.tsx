@@ -168,8 +168,8 @@ const RestaurantListItemContent = memo(
 
     const contentSideWidthProps: StackProps = {
       width: isSmall ? '90%' : '60%',
-      minWidth: isSmall ? '52vw' : 320,
-      maxWidth: isSmall ? '80vw' : 450,
+      minWidth: isSmall ? (isWeb ? '52vw' : '52%') : 320,
+      maxWidth: isSmall ? (isWeb ? '80vw' : '80%') : 450,
     }
 
     return (
@@ -219,6 +219,7 @@ const RestaurantListItemContent = memo(
                   <Text
                     selectable
                     maxWidth="100%"
+                    width="100%"
                     fontWeight="500"
                     lineHeight={26}
                     textDecorationColor="transparent"
@@ -451,7 +452,6 @@ export const RestaurantScoreBreakdownSmall = memo(
                     paddingVertical={3}
                     borderRadius={100}
                     // backgroundColor={bgLightLight}
-                    spacing={3}
                   >
                     {info?.image ? (
                       <Image
@@ -463,7 +463,7 @@ export const RestaurantScoreBreakdownSmall = memo(
                         }}
                       />
                     ) : null}
-
+                    <Spacer size={3} />
                     <Text fontWeight="500" fontSize={13} opacity={0.5}>
                       {+(item.rating ?? 0) * 10}
                     </Text>

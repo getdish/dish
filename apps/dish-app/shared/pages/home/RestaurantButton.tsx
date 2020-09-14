@@ -47,6 +47,7 @@ export const RestaurantButton = memo(
             shadowRadius: 5,
             zIndex: 2,
           }}
+          minWidth="80%"
           paddingRight={32}
           {...props}
           name="restaurant"
@@ -60,7 +61,6 @@ export const RestaurantButton = memo(
             flex={1}
             alignItems="center"
             position="relative"
-            justifyContent="center"
           >
             {!!trending && (
               <TrendingIcon

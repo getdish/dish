@@ -1,6 +1,7 @@
 import { Text } from '@dish/ui'
 import React from 'react'
 
+import { isWeb } from '../../constants'
 import { getTagId } from '../../state/getTagId'
 import { getActiveTags } from '../../state/home-tag-helpers'
 import { HomeStateItem } from '../../state/home-types'
@@ -82,7 +83,7 @@ export function getTitleForState(
   const subTitle = subTitleParts.join(' ')
   const subTitleElements = (
     <>
-      <Text fontSize={14} fontWeight="300" color="inherit">
+      <Text fontSize={14} fontWeight="300" {...(isWeb && { color: 'inherit' })}>
         {subTitleParts[0]}
         &nbsp;
         {subTitleParts.slice(1).join(' ')}

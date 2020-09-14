@@ -220,8 +220,14 @@ const SearchResultsTopBar = memo(({ stateId }: { stateId: string }) => {
             alignItems="center"
             overflow="hidden"
             justifyContent="space-between"
+            height="100%"
           >
-            <HStack marginTop={-18} alignItems="center" justifyContent="center">
+            <HStack
+              height="100%"
+              marginTop={-18}
+              alignItems="center"
+              justifyContent="center"
+            >
               <HomeLenseBar activeTagIds={state.activeTagIds} />
             </HStack>
 
@@ -238,12 +244,14 @@ const SearchResultsTopBar = memo(({ stateId }: { stateId: string }) => {
 })
 
 const getRestaurantListItemHeight = () => {
-  const items = Array.from(document.querySelectorAll('.restaurant-list-item'))
-  if (items.length) {
-    return (
-      items.reduce((a, b) => a + Math.max(220, b.clientHeight), 0) /
-      items.length
-    )
+  if (typeof document !== 'undefined') {
+    const items = Array.from(document.querySelectorAll('.restaurant-list-item'))
+    if (items.length) {
+      return (
+        items.reduce((a, b) => a + Math.max(220, b.clientHeight), 0) /
+        items.length
+      )
+    }
   }
   return 280
 }
@@ -405,7 +413,7 @@ const SearchResultsContent = (props: Props) => {
     return contentWrap(
       <VStack
         margin="auto"
-        paddingVertical="10vh"
+        paddingVertical={100}
         alignItems="center"
         justifyContent="center"
         spacing
@@ -473,86 +481,3 @@ const HomeLoading = (props: StackProps) => {
     </VStack>
   )
 }
-
-// function List(props: {
-//   data: any[]
-//   estimatedHeight?: number
-//   renderItem: (arg: { item: any; index: number }) => React.ReactNode
-// }) {
-//   // TODO suspense or flatlist depending for now simple waterfall
-//   return (
-//     <ScrollView
-//       onScroll={() => {
-//         if (popoverCloseCbs.size) {
-//           closeAllPopovers()
-//         }
-//       }}
-//     >
-//       {props.data.map((item, index) => (
-//         <ListItem
-//           estimatedHeight={props.estimatedHeight}
-//           key={item.id ?? index}
-//         >
-//           {props.renderItem({ item, index })}
-//         </ListItem>
-//       ))}
-//     </ScrollView>
-//   )
-// }
-
-// function ListItem(props) {
-//   const [isMounted, setIsMounted] = useState(false)
-//   return isMounted
-//     ? props.children
-//     : props.loading ?? <View style={{ height: props.estimatedHeight }} />
-// }
-
-// const MyListButton = memo(
-//   ({ isEditingUserList }: { isEditingUserList: boolean }) => {
-//     const om = useOvermind()
-//     return (
-//       <HStack alignItems="center" spacing="sm">
-//         <Circle size={26} marginVertical={-26 / 2}>
-//           <Image source={avatar} style={{ width: 26, height: 26 }} />
-//         </Circle>
-//         {isEditingUserList && (
-//           <>
-//             <LinkButton
-//               pointerEvents="auto"
-//               {...flatButtonStyle}
-//               {...{
-//                 name: 'search',
-//                 params: {
-//                   ...om.state.router.curPage.params,
-//                   username: '',
-//                 },
-//               }}
-//               onPress={() => {
-//                 Toast.show('Saved')
-//               }}
-//             >
-//               <Text>Done</Text>
-//             </LinkButton>
-//           </>
-//         )}
-//         {!isEditingUserList && (
-//           <LinkButton
-//             pointerEvents="auto"
-//             onPress={() => {
-//               om.actions.home.forkCurrentList()
-//             }}
-//           >
-//             <Box padding={5} paddingHorizontal={5} backgroundColor="#fff">
-//               <HStack alignItems="center" spacing={6}>
-//                 <Edit2 size={12} color="#777" />
-//                 <Text color="inherit" fontSize={16} fontWeight="700">
-//                   My list
-//                 </Text>
-//               </HStack>
-//             </Box>
-//           </LinkButton>
-//         )}
-//       </HStack>
-//     )
-//   }
-// )

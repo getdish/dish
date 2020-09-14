@@ -265,7 +265,6 @@ const createStack = (defaultStyle?: ViewStyle) => {
             <TouchableOpacity
               onPress={events.onClick as any}
               onPressIn={events.onMouseDown as any}
-              onPressOut={events.onMouseLeave as any}
             >
               {content}
             </TouchableOpacity>

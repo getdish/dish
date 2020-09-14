@@ -3,6 +3,7 @@ import React from 'react'
 import { TextStyle } from 'react-native'
 
 import { bg, bgLight, bgLightHover, bgLightLight } from '../../colors'
+import { isWeb } from '../../constants'
 import { baseButtonStyle } from '../../pages/home/baseButtonStyle'
 import { RoutesTable } from '../../state/router'
 import { LinkButton } from './LinkButton'
@@ -42,7 +43,7 @@ export const SmallButton = ({
         fontWeight="600"
         {...textStyle}
       >
-        <HStack alignItems="center">{children}</HStack>
+        {isWeb ? <HStack alignItems="center">{children}</HStack> : children}
       </Text>
     </DeoptHStack>
   )

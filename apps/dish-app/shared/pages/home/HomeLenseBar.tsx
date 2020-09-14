@@ -19,7 +19,12 @@ export const HomeLenseBar = memo(
     return (
       <>
         {om.state.home.allLenseTags.map((lense, index) => (
-          <VStack marginHorizontal={0} key={lense.id + index}>
+          <VStack
+            minWidth={42}
+            height="100%"
+            marginHorizontal={0}
+            key={lense.id + index}
+          >
             <LenseButton
               lense={lense}
               isActive={props.activeTagIds?.[getTagId(lense)] ?? false}

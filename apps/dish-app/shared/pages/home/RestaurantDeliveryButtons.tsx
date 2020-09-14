@@ -1,8 +1,10 @@
 import { graphql } from '@dish/graph'
 import { HStack, Spacer, Text, Tooltip } from '@dish/ui'
 import React, { memo } from 'react'
+import { Image } from 'react-native'
 
 import { bgLight } from '../../colors'
+import { isWeb } from '../../constants'
 import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
@@ -59,7 +61,43 @@ const RestaurantDeliveryButton = ({
   source,
   showLabels,
 }: Props & { source: any }) => {
-  const children = (
+  const contents = (
+    <HStack
+      className="greyed-out"
+      padding={4}
+      paddingHorizontal={4}
+      marginHorizontal={-4}
+      borderRadius={100}
+      hoverStyle={{
+        backgroundColor: bgLight,
+      }}
+    >
+      <Image
+        accessibilityLabel={source.name}
+        source={{ uri: source.image }}
+        style={{
+          width: showLabels ? 16 : 22,
+          height: showLabels ? 16 : 22,
+          margin: showLabels ? 0 : -3,
+          marginRight: 0,
+          borderRadius: 40,
+          borderWidth: 1,
+          borderColor: '#fff',
+        }}
+      />
+      {showLabels && (
+        <>
+          <Spacer size={6} />
+          <Text opacity={1} ellipse fontSize={12} fontWeight="400">
+            {source.name}
+          </Text>
+        </>
+      )}
+    </HStack>
+  )
+
+  // TODO react-native temp make a better <Link /> and no conditional here
+  const children = isWeb ? (
     <a
       key={source.name + 'button'}
       className="see-through"
@@ -70,39 +108,10 @@ const RestaurantDeliveryButton = ({
         marginTop: 2,
       }}
     >
-      <HStack
-        padding={4}
-        paddingHorizontal={4}
-        marginHorizontal={-4}
-        borderRadius={100}
-        hoverStyle={{
-          backgroundColor: bgLight,
-        }}
-      >
-        <img
-          className="greyed-out"
-          alt={source.name}
-          src={source.image}
-          style={{
-            width: showLabels ? 16 : 22,
-            height: showLabels ? 16 : 22,
-            margin: showLabels ? 0 : -3,
-            marginRight: 0,
-            borderRadius: 40,
-            borderWidth: 1,
-            borderColor: '#fff',
-          }}
-        />
-        {showLabels && (
-          <>
-            <Spacer size={6} />
-            <Text opacity={1} ellipse fontSize={12} fontWeight="400">
-              {source.name}
-            </Text>
-          </>
-        )}
-      </HStack>
+      {contents}
     </a>
+  ) : (
+    contents
   )
 
   if (source.name && !showLabels) {

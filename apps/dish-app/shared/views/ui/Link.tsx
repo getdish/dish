@@ -1,10 +1,11 @@
 import { series, sleep } from '@dish/async'
 import { NavigateItem } from '@dish/router'
-import { Text, useForceUpdate } from '@dish/ui'
+import { Text, VStack, useForceUpdate } from '@dish/ui'
 import React, { useEffect, useRef } from 'react'
-import { Platform, View } from 'react-native'
+import { Platform, TouchableOpacity } from 'react-native'
 
 import { brandColor } from '../../colors'
+import { isWeb } from '../../constants'
 import { RoutesTable, router } from '../../state/router'
 import { LinkProps } from './LinkProps'
 import { getNormalizeLinkProps } from './useNormalizedLink'
@@ -14,65 +15,43 @@ export function Link<
   Params = RoutesTable[Name]['params']
 >(allProps: LinkProps<Name, Params>) {
   const {
-    fontSize,
-    fontWeight,
-    children,
-    ellipse,
-    lineHeight,
-    color = brandColor,
     onClick,
     replaceSearch,
-    tagName,
-    className,
-    asyncClick,
-    textAlign,
+    disallowDisableWhenActive,
+    preventNavigate,
     navigateAfterPress,
-    style,
-
-    // container style props
-    backgroundColor,
-    paddingHorizontal,
-    paddingVertical,
-    padding,
-    maxHeight,
-    width,
-    height,
-    flex,
-    borderRadius,
-
-    // rest
-    ...restProps
-  } = allProps
-
-  const containerStyle = {
-    backgroundColor,
-    paddingHorizontal,
-    paddingVertical,
-    padding,
-    maxHeight,
-    width,
-    height,
-    flex,
-    borderRadius,
-  }
-
-  const forceUpdate = useForceUpdate()
-  const {
-    onPress,
+    onMouseDown,
+    asyncClick,
     name,
     params,
     replace,
-    preventNavigate,
-    ...linkProps
-  } = getNormalizeLinkProps(restProps as any, forceUpdate)
+    target,
+
+    // rest
+    ...textProps
+  } = allProps
+
+  const forceUpdate = useForceUpdate()
+  const linkProps = getNormalizeLinkProps(
+    {
+      name,
+      params,
+      replace,
+      replaceSearch,
+      disallowDisableWhenActive,
+      preventNavigate,
+      navigateAfterPress,
+      onMouseDown,
+    },
+    forceUpdate
+  )
   const cancel = useRef<Function | null>(null)
-  const linkRef = useRef<HTMLElement | null>(null)
+  const linkRef = useRef<HTMLAnchorElement | null>(null)
   const navItem: NavigateItem = {
     name,
     params,
     replace,
   }
-  const elementName = Platform.OS === 'web' ? tagName ?? 'a' : View
 
   useEffect(() => {
     return () => {
@@ -80,9 +59,8 @@ export function Link<
     }
   }, [])
 
-  const clickEventName = Platform.OS === 'web' ? 'onClick' : 'onPress'
   const clickEvent = (e: any) => {
-    if (allProps.target) {
+    if (target) {
       // let it go
     } else {
       e.preventDefault()
@@ -99,10 +77,10 @@ export function Link<
       }
     }
     function nav() {
-      if (onPress || onClick) {
+      if (linkProps.onPress || onClick) {
         e.navigate = () => router.navigate(navItem)
         onClick?.(e!)
-        onPress?.(e)
+        linkProps.onPress?.(e)
       } else {
         if (!preventNavigate && !!navItem.name) {
           router.navigate(navItem)
@@ -111,52 +89,21 @@ export function Link<
     }
   }
 
-  const props = {
-    ref: linkRef,
-    ...(Platform.OS === 'web'
-      ? {
-          onClick: clickEvent,
-          className: `${className ?? ''} dish-link`,
-          href: router.getPathFromParams(navItem),
-        }
-      : {
-          onPress: clickEvent,
-        }),
-    ...linkProps,
-    style: style ? { ...style, containerStyle } : containerStyle,
+  const textContent = <Text color={brandColor} {...textProps} />
+
+  if (Platform.OS === 'web') {
+    return (
+      <a
+        ref={linkRef}
+        onClick={clickEvent}
+        className={`display-contents dish-link`}
+        href={router.getPathFromParams(navItem)}
+        onMouseEnter={linkProps.onMouseEnter}
+      >
+        {textContent}
+      </a>
+    )
   }
 
-  return React.createElement<any>(
-    elementName,
-    props,
-    <Text
-      fontSize={fontSize}
-      lineHeight={lineHeight}
-      fontWeight={fontWeight}
-      color={color}
-      backgroundColor={backgroundColor}
-      paddingHorizontal={paddingHorizontal}
-      paddingVertical={paddingVertical}
-      borderRadius={borderRadius}
-      padding={padding}
-      flex={flex}
-      width={width}
-      height={height}
-      textAlign={textAlign}
-      // @ts-ignore
-      display="inline-flex"
-      // @ts-ignore
-      alignItems={style?.alignItems}
-      // @ts-ignore
-      justifyContent={style?.justifyContent}
-      // must be after display, etc to override
-      ellipse={ellipse}
-      {...(style?.flex && {
-        flex: style.flex as any,
-        display: 'flex',
-      })}
-    >
-      {children}
-    </Text>
-  )
+  return <TouchableOpacity onPress={clickEvent}>{textContent}</TouchableOpacity>
 }

@@ -5,35 +5,37 @@ import { TextStyle, ViewStyle } from 'react-native'
 import { NavigableTag } from '../../state/NavigableTag'
 import { RouteName } from '../../state/router'
 
-export type LinkProps<A, B> = React.DetailedHTMLProps<
+type AProps = React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
   HTMLAnchorElement
+>
+
+export type LinkProps<A, B> = Pick<
+  AProps,
+  'href' | 'target' | 'children' | 'className' | 'onClick'
 > &
   LinkSharedProps & {
     name?: A
     params?: B
     replace?: boolean
-    inline?: boolean
-    padding?: StackProps['padding']
     tag?: NavigableTag
   }
 
 export type LinkSharedProps = {
-  fontWeight?: TextProps['fontWeight']
-  textAlign?: TextProps['textAlign']
-  fontSize?: TextProps['fontSize']
-  lineHeight?: TextProps['lineHeight']
   ellipse?: boolean
   replace?: boolean
   replaceSearch?: boolean
   disallowDisableWhenActive?: boolean
-  tagName?: string
   preventNavigate?: boolean
   navigateAfterPress?: boolean
   onMouseDown?: Function
   asyncClick?: boolean
-  color?: string
-  // container styles
+  // text styles
+  color?: TextProps['color']
+  fontWeight?: TextProps['fontWeight']
+  textAlign?: TextProps['textAlign']
+  fontSize?: TextProps['fontSize']
+  lineHeight?: TextProps['lineHeight']
   maxWidth?: TextProps['maxWidth']
   maxHeight?: TextProps['maxHeight']
   backgroundColor?: TextProps['backgroundColor']

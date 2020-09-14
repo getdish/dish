@@ -13,12 +13,11 @@ export const getNormalizeLinkProps = memoize(
   (
     props: Partial<LinkButtonProps>,
     forceUpdate: Function
-  ): LinkButtonProps & { params?: Object } => {
+  ): LinkButtonProps & { params?: Object; onMouseEnter?: any } => {
     const linkProps = getNormalizedLink(props, getLatestState())
     const next = {
       ...props,
       ...linkProps,
-      // @ts-ignore
       onMouseEnter,
     }
     delete next['tag']

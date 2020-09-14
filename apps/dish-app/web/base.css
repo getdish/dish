@@ -413,3 +413,8 @@ input:-webkit-autofill:active  {
   align-items: inherit;
   justify-content: inherit;
 }
+
+.align-self-flex-end {
+  display: inline-flex !important;
+  align-self: flex-end !important;
+}

@@ -55,6 +55,8 @@ Text.staticConfig = {
 const textNonStylePropReg = /^(allow.*|on[A-Z].*|.*[Mm]ode)/
 const isWeb = Platform.OS === 'web'
 const webOnlyStyleKeys = {
+  hoverStyle: true,
+  pressStyle: true,
   className: true,
   textOverflow: true,
   whiteSpace: true,

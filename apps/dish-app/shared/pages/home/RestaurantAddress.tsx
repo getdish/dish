@@ -22,7 +22,7 @@ export const RestaurantAddress = ({
 }) => {
   return (
     <Link
-      className="hover-underline"
+      className="hover-underline align-self-flex-end"
       color={color}
       target="_blank"
       href={`https://www.google.com/maps/search/?q=${encodeURIComponent(
@@ -33,8 +33,7 @@ export const RestaurantAddress = ({
         <MapPin
           color={color}
           size={14}
-          opacity={0.5}
-          style={{ marginBottom: -7, marginRight: 4 }}
+          style={{ marginBottom: -7, marginRight: 4, opacity: 0.5 }}
         />
       )}
       <Text

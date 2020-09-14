@@ -12,6 +12,7 @@ import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
 import _, { clamp, cloneDeep, findLast, isPlainObject, last } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
+import { VALUE } from 'proxy-state-tree'
 
 import { getBreadcrumbs, isBreadcrumbState } from '../pages/home/getBreadcrumbs'
 import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
@@ -336,7 +337,16 @@ const deepAssign = (a: Object, b: Object) => {
       if (a[key] && b[key] && isEqual(a[key], b[key])) {
         continue
       }
-      a[key] = isPlainObject(b[key]) ? { ...b[key] } : b[key]
+      const val = b[key]
+      if (val) {
+        a[key] = Array.isArray(val)
+          ? [...val]
+          : isPlainObject(val)
+          ? { ...val }
+          : val
+      } else {
+        a[key] = val
+      }
     }
   }
   for (const key in a) {

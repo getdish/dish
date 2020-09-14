@@ -3,6 +3,7 @@ import { Text, useLazyEffect } from '@dish/ui'
 import React, { memo, useEffect } from 'react'
 
 import { lightGreen, lightGrey, lightRed, lightYellow } from '../../colors'
+import { isWeb } from '../../constants'
 import { CommentBubble } from './CommentBubble'
 
 export const RestaurantReview = memo(
@@ -53,7 +54,7 @@ export const RestaurantReview = memo(
                   width={20}
                   height={20}
                   // @ts-ignore
-                  display="inline-flex"
+                  display={isWeb ? 'inline-flex' : 'flex'}
                   alignItems="center"
                   justifyContent="center"
                   margin={-2}

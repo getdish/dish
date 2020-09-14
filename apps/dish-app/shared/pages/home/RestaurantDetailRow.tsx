@@ -2,6 +2,7 @@ import { RestaurantQuery, graphql } from '@dish/graph'
 import { Divider, HStack, Spacer, StackProps, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
+import { isWeb } from '../../constants'
 import { SmallButton, SmallLinkButton } from '../../views/ui/SmallButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { useRestaurantQuery } from './useRestaurantQuery'
@@ -150,7 +151,9 @@ export const RestaurantDetailRow = memo(
                     ellipse
                     fontSize={sizeSm ? 14 : 16}
                     textAlign={centered ? 'center' : 'left'}
-                    color={sizeSm ? row.color ?? '' : 'inherit'}
+                    color={
+                      sizeSm ? row.color ?? '' : isWeb ? 'inherit' : '#999'
+                    }
                     margin="auto"
                     paddingHorizontal={4} // prevents cutoff of image
                   >

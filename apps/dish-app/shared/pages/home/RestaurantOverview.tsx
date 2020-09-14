@@ -2,6 +2,7 @@ import { graphql } from '@dish/graph'
 import { HStack, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
+import { isWeb } from '../../constants'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 export const RestaurantOverview = memo(
@@ -27,8 +28,10 @@ export const RestaurantOverview = memo(
                     <Text
                       fontSize={26}
                       opacity={0.3}
-                      fontFamily="San Francisco, Times New Roman"
                       marginRight={6}
+                      {...(isWeb && {
+                        fontFamily: 'San Francisco, Times New Roman',
+                      })}
                     >
                       &ldquo;
                     </Text>
@@ -60,7 +63,7 @@ export const RestaurantOverview = memo(
                 <Text fontSize={15}>
                   <HStack
                     // @ts-ignore
-                    display="inline-flex"
+                    display={isWeb ? 'inline-flex' : 'flex'}
                     width="10%"
                     minWidth={50}
                     marginRight={2}

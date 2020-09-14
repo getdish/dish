@@ -2,6 +2,7 @@ import { HStack, StackProps, Text, useForceUpdate } from '@dish/ui'
 import React, { useEffect, useRef, useState } from 'react'
 import { Platform } from 'react-native'
 
+import { isWeb } from '../../constants'
 import { omStatic, useOvermindStatic } from '../../state/om'
 import { RoutesTable } from '../../state/router'
 import { Link } from './Link'
@@ -53,9 +54,6 @@ export function LinkButton<
       ellipse,
       lineHeight,
       fontWeight,
-      padding,
-      paddingVertical,
-      paddingHorizontal,
       disallowDisableWhenActive,
       replace,
       replaceSearch,
@@ -64,8 +62,6 @@ export function LinkButton<
       textAlign,
       activeTextStyle,
       color,
-      alignItems,
-      justifyContent,
       ...rest
     } = props
     restProps = rest
@@ -86,18 +82,6 @@ export function LinkButton<
         color={color ?? '#222'}
         preventNavigate={preventNavigate}
         {...(isActive && activeTextStyle)}
-        style={{
-          padding: getStylePadding({
-            padding,
-            paddingVertical,
-            paddingHorizontal,
-          }),
-          width: '100%',
-          flex: 1,
-          opacity: props.disabled ? 0.5 : 1,
-          alignItems,
-          justifyContent,
-        }}
       >
         {getChildren(props, isActive)}
       </Link>
@@ -144,6 +128,9 @@ export function LinkButton<
         opacity: 0.7,
         transform: [{ scale: 0.98 }],
       }}
+      // @ts-ignore
+      display={isWeb ? 'inline-flex' : 'flex'}
+      minHeight={10} // temp react-native
       {...restProps}
       {...(isActive && allProps.activeStyle)}
       className={`cursor-pointer ${props.className ?? 'ease-in-out-faster'}`}
@@ -151,27 +138,4 @@ export function LinkButton<
       {contents}
     </HStack>
   )
-}
-
-const getStylePadding = ({
-  padding,
-  paddingHorizontal,
-  paddingVertical,
-}: {
-  padding: any
-  paddingVertical: any
-  paddingHorizontal: any
-}) => {
-  if (paddingHorizontal || paddingVertical) {
-    if (Platform.OS === 'web') {
-      return [
-        paddingVertical ?? padding ?? 0,
-        paddingHorizontal ?? padding ?? 0,
-      ]
-        .map((x) => (typeof x === 'number' ? `${x}px` : x))
-        .join(' ')
-    }
-    return padding ?? paddingVertical ?? paddingHorizontal // TODO bug for now
-  }
-  return padding
 }

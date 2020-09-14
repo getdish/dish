@@ -14,6 +14,7 @@ import {
 import React, { memo, useEffect, useRef } from 'react'
 import { Image } from 'react-native'
 
+import { isWeb } from '../../constants'
 import { getTagId } from '../../state/getTagId'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { LinkButton } from '../../views/ui/LinkButton'
@@ -133,7 +134,7 @@ export const TagButton = memo((props: TagButtonProps) => {
     fg = color ?? colors.color
   }
 
-  const fontSize = fontSizeProp ?? (subtle ? 'inherit' : 16 * scale)
+  const fontSize = fontSizeProp ?? (subtle && isWeb ? 'inherit' : 16 * scale)
   // const moveInPx = size === 'sm' ? 0 : 3.5 * (1 / scale)
 
   const smallerFontSize =
@@ -183,9 +184,9 @@ export const TagButton = memo((props: TagButtonProps) => {
           // @ts-ignore
           fontSize={fontSize}
           // @ts-ignore
-          fontWeight={fontWeight ?? subtle ? 'inherit' : '600'}
+          fontWeight={fontWeight ?? (subtle && isWeb) ? 'inherit' : '600'}
           // @ts-ignore
-          lineHeight="inherit"
+          lineHeight={isWeb ? 'inherit' : fontSize}
           paddingHorizontal={subtle ? 0 : 7 * scale}
           color={fg}
           marginVertical={-7}
@@ -201,8 +202,7 @@ export const TagButton = memo((props: TagButtonProps) => {
               {...(subtle && { marginLeft: 4 })}
               {...(subtleIcon && {
                 fontSize: smallerFontSize as any,
-                marginTop: '-2px',
-                marginBottom: '-2px',
+                marginVertical: -2,
                 marginRight: 8,
               })}
             >
@@ -213,7 +213,7 @@ export const TagButton = memo((props: TagButtonProps) => {
                     width: fontSize,
                     height: fontSize,
                     borderRadius: 1000,
-                    display: 'inline-flex' as any,
+                    display: isWeb ? ('inline-flex' as any) : 'flex',
                     marginRight: 8,
                     marginVertical: -2,
                   }}

@@ -299,12 +299,8 @@ const TopDishesCuisineItem = memo(
           transform={[{ rotate: '-4deg' }]}
         />
         <HStack alignItems="center" marginBottom={10}>
-          {/* <Divider flex /> */}
           <SlantedLinkButton
-            fontSize={18}
-            fontWeight="300"
-            marginTop={0}
-            paddingHorizontal={10}
+            padding={100}
             marginHorizontal="auto"
             zIndex={1000}
             position="relative"
@@ -317,6 +313,7 @@ const TopDishesCuisineItem = memo(
             }}
           >
             <Text
+              fontSize={18}
               lineHeight={22}
               fontWeight="600"
               paddingRight={country.icon ? 32 : 0}
