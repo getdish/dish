@@ -27,7 +27,7 @@ const queue = new Map<
     tableName?: string
   }
 >()
-let cur = null
+let cur: any = null
 
 window['gqlessSetListener'] = function gqlessSetListener(
   fieldAccessor: any,
@@ -97,5 +97,5 @@ const scheduleSet = () => {
         res.map((x) => JSON.stringify(x))
       )
     })
-  }, 100)
+  }, 800)
 }

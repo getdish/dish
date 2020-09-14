@@ -22,7 +22,7 @@ export const tagLenses: FullTag[] = [
   },
   {
     id: 'b1580bd8-4f60-45e3-a5a9-c31effe8e7a3',
-    name: 'Bar',
+    name: 'Drinks',
     icon: '🍷',
     rgb: pctTo255([0.6, 0.3, 0.3]),
     type: 'lense',

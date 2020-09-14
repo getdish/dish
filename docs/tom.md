@@ -6,6 +6,7 @@
 - fix top level lense results
   - "gems" with no other filters is empty for sf
 - fix http://d1sh_hasura_live.com:19006/restaurant/serafina error on gql review when not logged in
+- searching without tag is slow - try "birria taco" in sf
 - ... continue on ratings/points/sentiment/data/infra
 
 ## Backend

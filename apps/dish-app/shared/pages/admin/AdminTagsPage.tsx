@@ -32,24 +32,20 @@ import { AdminListItem, AdminListItemProps } from './AdminListItem'
 import { ColumnHeader } from './ColumnHeader'
 import { VerticalColumn } from './VerticalColumn'
 
-// whats still broken:
-//   - "New" item
-//   - "Create" form
-
 export default graphql(function AdminTagsPage() {
   return <AdminTagsPageContent />
 })
 
 class AdminTagStore extends Store {
   selectedId = ''
-  selectedTagNames = []
+  selectedTagNames: string[] = []
   forceRefreshColumnByType = ''
 
   draft: TagRecord = {
     type: 'continent',
   }
 
-  updateDraft(next: Partial<TagRecord>) {
+  setDraft(next: Partial<TagRecord>) {
     this.draft = { ...this.draft, ...next }
   }
 
@@ -61,7 +57,7 @@ class AdminTagStore extends Store {
 }
 
 const Search = memo(
-  graphql(() => {
+  graphql<any>(() => {
     const [search, setSearch] = useState('')
     const searchDebounced = useDebounceValue(search, 200)
     return (
@@ -225,7 +221,7 @@ const TagListContent = memo(
       lastRowSelection: string
     }) => {
       const tagStore = useStore(AdminTagStore)
-      const limit = 40
+      const limit = 50
       const [page, setPage] = useState(1)
       const forceUpdate = useForceUpdate()
 
@@ -233,6 +229,7 @@ const TagListContent = memo(
         where: {
           type: { _eq: type },
           ...(type !== 'continent' &&
+            type !== 'lense' &&
             lastRowSelection && {
               parent: { name: { _eq: lastRowSelection } },
             }),
@@ -242,7 +239,7 @@ const TagListContent = memo(
             },
           }),
         },
-        limit: limit,
+        limit,
         offset: (page - 1) * limit,
         order_by: [
           {
@@ -279,6 +276,7 @@ const TagListContent = memo(
           {allResults.map((tag, row) => {
             return (
               <TagListItem
+                key={row}
                 id="tags"
                 tagId={tag.id}
                 row={row}
@@ -287,7 +285,7 @@ const TagListContent = memo(
                   tagStore.setSelected({
                     col: column,
                     id: tag.id,
-                    name: tag.name,
+                    name: tag.name ?? '',
                   })
                 }}
               />
@@ -363,12 +361,13 @@ const TagEditColumn = memo(() => {
           <>
             <TagCRUD
               tag={tagStore.draft}
-              onChange={(x) => tagStore.updateDraft(x)}
+              onChange={(x) => tagStore.setDraft(x)}
             />
             <SmallButton
               onPress={async () => {
                 console.log('upserting', tagStore.draft)
                 const reply = await tagUpsert([tagStore.draft])
+                console.log('reply', reply)
                 Toast.show('Saved')
                 tagStore.forceRefreshColumnByType = tagStore.draft.type ?? ''
               }}
@@ -399,7 +398,7 @@ const queryTag = (id: string) => {
 }
 
 const TagEdit = memo(
-  graphql(() => {
+  graphql<any>(() => {
     const tagStore = useStore(AdminTagStore)
     if (tagStore.selectedId) {
       const tag = queryTag(tagStore.selectedId)
@@ -412,9 +411,11 @@ const TagEdit = memo(
             name: tag.name,
             type: tag.type,
             icon: tag.icon,
+            alternates: parseJSONB(tag.alternates() ?? []),
           }}
           onChange={(x) => {
             for (const key in x) {
+              console.log('setting', key, x[key])
               tag[key] = x[key]
             }
             sleep(500).then(() => {
@@ -429,6 +430,13 @@ const TagEdit = memo(
     return null
   })
 )
+
+const parseJSONB = (x: any) => {
+  if (typeof x === 'string') {
+    return JSON.parse(x)
+  }
+  return x
+}
 
 const setTagNameAndIcon = (tag: Tag, text: string) => {
   if (emojiRegex.test(text)) {
@@ -467,7 +475,7 @@ const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
       const subNames = tag.name.split(' ')
       Promise.all([
         getWikiInfo(tag.name).then((description) => ({
-          name: tag.name,
+          name: tag.name ?? '',
           description,
         })),
         ...(subNames.length > 1
@@ -498,11 +506,7 @@ const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
       spacing={10}
     >
       <TableRow label="ID">
-        <TextInput
-          style={styles.textInput}
-          onChange={(e) => onChange?.({ id: e.target['value'] })}
-          defaultValue={tag.id}
-        />
+        <Text>{tag.id}</Text>
       </TableRow>
 
       <TableRow label="Name">
@@ -510,6 +514,16 @@ const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
           style={styles.textInput}
           onChange={(e) => onChange?.({ name: e.target['value'] })}
           defaultValue={tag.name}
+        />
+      </TableRow>
+
+      <TableRow label="Alternate Names">
+        <TextInput
+          style={styles.textInput}
+          onChange={(e) =>
+            onChange?.({ alternates: e.target['value'].split(', ') })
+          }
+          defaultValue={(tag.alternates ?? []).join(', ')}
         />
       </TableRow>
 
@@ -537,10 +551,10 @@ const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
           <HStack flexWrap="wrap">
             {foodIcons.map((icon, index) => (
               <VStack
+                key={index}
                 cursor="default"
                 onPress={() => onChange?.({ icon })}
                 padding={4}
-                key={index}
                 borderRadius={5}
                 hoverStyle={{
                   backgroundColor: '#eee',
@@ -556,9 +570,9 @@ const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
 
         {info.length && (
           <ScrollView style={{ marginTop: 20, maxHeight: 300 }}>
-            {info.map(({ name, description }) => {
+            {info.map(({ name, description }, index) => {
               return (
-                <VStack marginBottom={10} key={name}>
+                <VStack key={index} marginBottom={10}>
                   <Text fontWeight="600">{name}</Text>
                   <Text>{description ?? 'None found'}</Text>
                 </VStack>
