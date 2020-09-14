@@ -11,10 +11,11 @@ import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
 import { Image } from 'react-native'
 
-import { IMAGE_PROXY_DOMAIN, isWeb } from '../../constants'
+import { isWeb } from '../../constants'
 import { NavigableTag } from '../../state/NavigableTag'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { DishRatingView } from './DishRatingView'
+import { getImageUrl } from './getImageUrl'
 import { Squircle } from './Squircle'
 import { TagVoteButton } from './TagVoteButton'
 
@@ -72,7 +73,7 @@ export const DishView = memo(
 
     const width = size * 0.9
     const height = size
-    const imageUrl = getImageUrl(size, width, height, dish.image)
+    const imageUrl = getImageUrl(dish.image, width, height, 100)
     const borderRadius = size * 0.25
     const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
 
@@ -195,16 +196,3 @@ export const DishView = memo(
     )
   }
 )
-
-// I made this its own function just because the backticks were breaking my syntax highlighter
-// @tombh
-const getImageUrl = (
-  size: number,
-  width: number,
-  height: number,
-  dish_image: string
-) => {
-  const quality = size > 160 ? 100 : 100
-  const imageUrl = `${IMAGE_PROXY_DOMAIN}/${width}x${height},q${quality}/${dish_image}`
-  return imageUrl
-}

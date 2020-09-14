@@ -156,7 +156,7 @@ export class Router extends Store<RouterProps> {
         path: pathname,
         params: {
           ...Object.keys(match.params).reduce((acc, key) => {
-            acc[key] = decodeURIComponent(match.params[key])
+            acc[key] = decodeURIComponent(match.params[key] ?? '')
             return acc
           }, {}),
         },

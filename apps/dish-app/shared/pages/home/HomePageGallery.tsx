@@ -6,6 +6,7 @@ import { Image, ScrollView } from 'react-native'
 import { isWeb, pageWidthMax, zIndexGallery } from '../../constants'
 import { HomeStateItemGallery } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
+import { getImageUrl } from './getImageUrl'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { StackViewCloseButton } from './StackViewCloseButton'
@@ -145,7 +146,7 @@ const HomePageGalleryContent = memo(
               return (
                 <HStack key={i} width={isSmall ? '100%' : '50%'}>
                   <Image
-                    source={{ uri: photo.image }}
+                    source={{ uri: getImageUrl(photo.image, 900, 800, 100) }}
                     resizeMode="cover"
                     style={{
                       width: isWeb ? 'calc(100% - 4px)' : '99%',

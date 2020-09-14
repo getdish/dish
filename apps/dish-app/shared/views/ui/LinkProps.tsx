@@ -33,11 +33,17 @@ export type LinkSharedProps = {
   onMouseDown?: Function
   asyncClick?: boolean
   color?: string
+  // container styles
+  maxWidth?: TextProps['maxWidth']
+  maxHeight?: TextProps['maxHeight']
   backgroundColor?: TextProps['backgroundColor']
   paddingHorizontal?: TextProps['paddingHorizontal']
+  padding?: TextProps['padding']
   paddingVertical?: TextProps['paddingVertical']
   borderRadius?: TextProps['borderRadius']
-  maxWidth?: TextProps['maxWidth']
+  flex?: TextProps['flex']
+  width?: TextProps['width']
+  height?: TextProps['height']
 }
 
 export type LinkButtonNamedProps<A = any, B = any> = {

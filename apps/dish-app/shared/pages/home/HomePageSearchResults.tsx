@@ -104,7 +104,7 @@ export default memo(function HomePageSearchResults(props: Props) {
         )
         om.actions.home.updateActiveTags({
           ...state,
-          searchQuery: decodeURIComponent(router.curPage.params.search),
+          searchQuery: decodeURIComponent(router.curPage.params.search ?? ''),
           activeTagIds,
         })
         om.actions.home.runSearch()

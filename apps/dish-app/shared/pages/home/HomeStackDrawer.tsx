@@ -56,6 +56,7 @@ export const HomeStackDrawer = ({
         shadowColor="rgba(0,0,0,0.1)"
         shadowOffset={{ height: -2, width: 0 }}
         backgroundColor="#fff"
+        contain="strict"
         {...props}
       >
         <Suspense fallback={fallback ?? <LoadingItems />}>{children}</Suspense>

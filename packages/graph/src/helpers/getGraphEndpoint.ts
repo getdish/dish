@@ -1,6 +1,10 @@
-import { isNative } from 'lodash'
-
-import { isBrowserProd, isHasuraLive, isNode, isWorker } from '../constants'
+import {
+  isBrowserProd,
+  isHasuraLive,
+  isNative,
+  isNode,
+  isWorker,
+} from '../constants'
 
 export function getGraphEndpointDomain() {
   const LOCAL_HASURA = 'http://localhost:8080'

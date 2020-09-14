@@ -17,13 +17,8 @@ export function Link<
     fontSize,
     fontWeight,
     children,
-    backgroundColor,
-    paddingHorizontal,
-    paddingVertical,
-    borderRadius,
     ellipse,
     lineHeight,
-    padding,
     color = brandColor,
     onClick,
     replaceSearch,
@@ -31,10 +26,36 @@ export function Link<
     className,
     asyncClick,
     textAlign,
-    style,
     navigateAfterPress,
+    style,
+
+    // container style props
+    backgroundColor,
+    paddingHorizontal,
+    paddingVertical,
+    padding,
+    maxHeight,
+    width,
+    height,
+    flex,
+    borderRadius,
+
+    // rest
     ...restProps
   } = allProps
+
+  const containerStyle = {
+    backgroundColor,
+    paddingHorizontal,
+    paddingVertical,
+    padding,
+    maxHeight,
+    width,
+    height,
+    flex,
+    borderRadius,
+  }
+
   const forceUpdate = useForceUpdate()
   const {
     onPress,
@@ -102,7 +123,7 @@ export function Link<
           onPress: clickEvent,
         }),
     ...linkProps,
-    style,
+    style: style ? { ...style, containerStyle } : containerStyle,
   }
 
   return React.createElement<any>(
@@ -118,6 +139,9 @@ export function Link<
       paddingVertical={paddingVertical}
       borderRadius={borderRadius}
       padding={padding}
+      flex={flex}
+      width={width}
+      height={height}
       textAlign={textAlign}
       // @ts-ignore
       display="inline-flex"
