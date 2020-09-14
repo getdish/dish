@@ -40,7 +40,7 @@ export const restaurantDishesWithPhotos = (
   let photos: TopCuisineDish[] = []
   const tags = restaurant.top_tags({
     args: {
-      tag_names: tag_names,
+      tag_names: tag_names.join(','),
     },
     limit: 100,
   })
