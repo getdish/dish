@@ -72,67 +72,70 @@ export const HomeIntroLetter = memo(() => {
   )
 })
 
-export const HomeIntroLetterContent = memo(() => {
-  const [showInto, setShowIntro] = useShowIntroLetter()
+export const HomeIntroLetterContent = memo(
+  ({ forceVisible }: { forceVisible?: boolean }) => {
+    const [showIntro_, setShowIntro] = useShowIntroLetter()
+    const showIntro = forceVisible ?? showIntro_
 
-  if (Platform.OS !== 'web') {
-    return null
-  }
+    if (Platform.OS !== 'web') {
+      return null
+    }
 
-  if (!showInto) {
-    return null
-  }
+    if (!showIntro) {
+      return null
+    }
 
-  const divider = (
-    <VStack
-      marginVertical={8}
-      width="80%"
-      minHeight={1}
-      backgroundColor="#fff"
-      alignSelf="center"
-      opacity={0.1}
-    />
-  )
-  return (
-    <VStack spacing alignItems="center">
-      <Image
-        source={{ uri: dishNeon }}
-        style={{
-          width: 229 * 0.75,
-          height: 134 * 0.75,
-        }}
+    const divider = (
+      <VStack
+        marginVertical={8}
+        width="80%"
+        minHeight={1}
+        backgroundColor="#fff"
+        alignSelf="center"
+        opacity={0.1}
       />
+    )
+    return (
+      <VStack spacing alignItems="center">
+        <Image
+          source={{ uri: dishNeon }}
+          style={{
+            width: 229 * 0.75,
+            height: 134 * 0.75,
+          }}
+        />
 
-      <Paragraph textAlign="center" color="#fff" fontWeight="300" size={1.2}>
-        <Text opacity={0.8}>a food discovery community</Text>
-      </Paragraph>
+        <Paragraph textAlign="center" color="#fff" fontWeight="300" size={1.2}>
+          <Text opacity={0.8}>a food discovery community</Text>
+        </Paragraph>
 
-      {divider}
+        {divider}
 
-      <Paragraph textAlign="center" color="#fff" fontWeight="300" size={1.1}>
-        <Text color={lightGreen} fontWeight="400">
-          ratings by dish
-        </Text>
-        <View />
-        <Text color={lightYellow} fontWeight="500">
-          search all delivery services
-        </Text>
-        <View />
-        <Text fontWeight="700">find local gems 💎</Text>
-      </Paragraph>
+        <Paragraph textAlign="center" color="#fff" fontWeight="300" size={1.1}>
+          <Text color={lightGreen} fontWeight="400">
+            ratings by dish
+          </Text>
+          <View />
+          <Text color={lightYellow} fontWeight="500">
+            search all delivery services
+          </Text>
+          <View />
+          <Text fontWeight="700">find local gems 💎</Text>
+        </Paragraph>
 
-      {divider}
+        {divider}
 
-      <Paragraph
-        textAlign="center"
-        color="rgba(255,255,255,0.5)"
-        fontWeight="700"
-        size="sm"
-      >
-        Early access
-      </Paragraph>
+        <Paragraph
+          textAlign="center"
+          color="rgba(255,255,255,0.5)"
+          fontWeight="700"
+          size="sm"
+        >
+          Early access
+        </Paragraph>
 
-      <LoginRegisterForm />
-    </VStack>
-  )
-})
+        <LoginRegisterForm />
+      </VStack>
+    )
+  }
+)
