@@ -195,14 +195,18 @@ export const RestaurantScoreBreakdown = memo(
             </>
           )}
 
-          <Spacer size="lg" />
+          {!props.showTable && (
+            <>
+              <Spacer size="lg" />
 
-          <SmallButton
-            alignSelf="center"
-            onPress={() => setShowTable((x) => !x)}
-          >
-            {showTable ? 'Hide breakdown' : 'Points breakdown'}
-          </SmallButton>
+              <SmallButton
+                alignSelf="center"
+                onPress={() => setShowTable((x) => !x)}
+              >
+                {showTable ? 'Hide breakdown' : 'Points breakdown'}
+              </SmallButton>
+            </>
+          )}
         </VStack>
       </HStack>
     )

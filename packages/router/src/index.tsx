@@ -154,7 +154,12 @@ export class Router extends Store<RouterProps> {
         direction: item.direction,
         name: match.handler,
         path: pathname,
-        params: match.params,
+        params: {
+          ...Object.keys(match.params).reduce((acc, key) => {
+            acc[key] = decodeURIComponent(match.params[key])
+            return acc
+          }, {}),
+        },
         search: window.location.search,
       }
       this.history = [...this.history, next]

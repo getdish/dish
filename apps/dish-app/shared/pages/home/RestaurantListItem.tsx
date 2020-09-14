@@ -2,7 +2,6 @@ import { fullyIdle, series } from '@dish/async'
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import { Activity, HelpCircle } from '@dish/react-feather'
 import {
-  AbsoluteVStack,
   HStack,
   Spacer,
   StackProps,
@@ -272,7 +271,7 @@ const RestaurantListItemContent = memo(
               cursor="pointer"
               onPress={reviewDisplayStore.toggleShowComments}
             >
-              <Text color="#777">
+              <Text lineBreakMode="clip" numberOfLines={1} color="#777">
                 <SuperScriptText fontSize={11}>#</SuperScriptText>
                 <Text
                   fontSize={+rank > 9 ? 12 : 22}
@@ -399,6 +398,10 @@ export const RestaurantScoreBreakdownSmall = memo(
         },
         ...(restaurant?.sources?.() ?? {}),
       }
+
+      const searchQuery = omStatic.state.home.currentState.searchQuery
+      const searchQueryText = searchQuery ? ` ${searchQuery}` : ''
+
       const tags = omStatic.state.home.lastActiveTags
       const reviewTags = sortBy(
         tags.filter((tag) => tag.name !== 'Gems'),
@@ -415,11 +418,13 @@ export const RestaurantScoreBreakdownSmall = memo(
             <Text fontSize={12}>
               in "
               <Text fontWeight="600">
-                {reviewTags
-                  .map((tag, i) => {
-                    return tagDisplayName(tag)
-                  })
-                  .join(' ')}
+                {(
+                  reviewTags
+                    .map((tag, i) => {
+                      return tagDisplayName(tag)
+                    })
+                    .join(' ') + searchQueryText
+                ).trim()}
               </Text>
               "
             </Text>{' '}

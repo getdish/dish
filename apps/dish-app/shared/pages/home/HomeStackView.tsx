@@ -99,6 +99,7 @@ const HomeStackViewItem = memo(
           bottom={-(index * 5)}
           width="100%"
           pointerEvents={isActive ? 'auto' : 'none'}
+          contain="layout"
         >
           <ErrorBoundary name={`HomeStackView.${item.type}`}>
             <Suspense fallback={null}>{children}</Suspense>

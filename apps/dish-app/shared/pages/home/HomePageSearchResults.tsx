@@ -104,7 +104,7 @@ export default memo(function HomePageSearchResults(props: Props) {
         )
         om.actions.home.updateActiveTags({
           ...state,
-          searchQuery: router.curPage.params.search,
+          searchQuery: decodeURIComponent(router.curPage.params.search),
           activeTagIds,
         })
         om.actions.home.runSearch()
@@ -319,7 +319,7 @@ const SearchResultsContent = (props: Props) => {
   const titleLen = (title + subTitle).length
   const titleScale =
     titleLen > 70 ? 0.7 : titleLen > 60 ? 0.8 : titleLen > 50 ? 0.9 : 1
-  const titleFontSize = 32 * titleScale * (isSmall ? 0.75 : 1)
+  const titleFontSize = 30 * titleScale * (isSmall ? 0.75 : 1)
 
   const contentWrap = (children: any) => {
     return (
@@ -336,13 +336,17 @@ const SearchResultsContent = (props: Props) => {
           paddingBottom={15}
           overflow="hidden"
         >
-          <Text ellipse fontSize={titleFontSize}>
+          <Text
+            letterSpacing={-0.5}
+            ellipse
+            fontSize={titleFontSize}
+            fontWeight="600"
+          >
             {pageTitleElements}{' '}
             <Text
-              fontSize={titleFontSize * 0.9}
+              // fontSize={titleFontSize * 0.9}
               fontWeight="300"
               opacity={0.5}
-              letterSpacing={-0.5}
             >
               {subTitle}
             </Text>
