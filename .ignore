@@ -1,0 +1,25 @@
+# for rg to search node_modules
+
+.yarn
+.ultra.cache.json
+tmp
+*.tsbuildinfo
+*.tmp.js
+.expo
+xcuserdata/
+DerivedData/
+*.moved-aside
+*.pbxuser
+*.ipa
+*.dSYM.zip
+*.dSYM
+.build/
+Pods/
+*.xcworkspace
+.vim
+.env
+k8s/.terraform/*
+hasura.logs
+web-build
+web-build-ssr
+web-build-legacy

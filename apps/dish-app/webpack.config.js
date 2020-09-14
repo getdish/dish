@@ -27,25 +27,13 @@ const target =
   TARGET === 'ssr' ? 'node' : TARGET === 'worker' ? 'webworker' : 'web'
 const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
 
-let gqless = require.resolve('@dish/graph')
-while (true) {
-  const next = path.join(gqless, 'node_modules', 'gqless')
-  if (fs.existsSync(next)) {
-    gqless = next
-    break
-  } else {
-    gqless = path.join(gqless, '..')
-  }
-  if (gqless == '/') throw new Error('no graph gqlss')
-}
-
 const isProduction = process.env.NODE_ENV === 'production'
 // const isClient = TARGET === 'client'
 const isSSR = TARGET === 'ssr'
 // const isHot = !isProduction
 const isStaticExtracted = !process.env.NO_EXTRACT
 
-console.log('webpack.config', { isProduction, gqless, TARGET })
+console.log('webpack.config', { isProduction, TARGET })
 
 module.exports = function getWebpackConfig(
   env = {
@@ -100,7 +88,7 @@ module.exports = function getWebpackConfig(
           'react-dom': path.join(require.resolve('react-dom'), '..'),
           'react-native': 'react-native-web',
           '@dish/react-feather': 'react-feather',
-          gqless,
+          gqless: path.join(require.resolve('gqless'), '..'),
         },
       },
       resolveLoader: {

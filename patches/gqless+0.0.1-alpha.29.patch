@@ -1,35 +1,32 @@
 diff --git a/node_modules/gqless/dist/Type.d.ts b/node_modules/gqless/dist/Type.d.ts
-index 27c8f79..379ee7f 100644
+index 27c8f79..d7d2975 100644
 --- a/node_modules/gqless/dist/Type.d.ts
 +++ b/node_modules/gqless/dist/Type.d.ts
-@@ -50,5 +50,12 @@ declare type ArrayData<TArray extends ValidType[], TExtensions extends Tuple> =
+@@ -50,5 +50,9 @@ declare type ArrayData<TArray extends ValidType[], TExtensions extends Tuple> =
  } : never);
  declare type ScalarData<TScalar extends ScalarType | EnumType, TExtensions extends Tuple> = LastTupleValue<TExtensions> extends never ? TScalar['data'] : LastTupleValue<TExtensions>;
  declare type UnshiftExtension<TExtensions, TType extends ValidType> = keyof TypeExtension<TType> extends never ? TExtensions : UnshiftTuple<TExtensions, TypeExtension<TType>>;
 -export declare type TypeData<TType extends ValidType, TExtensions extends Tuple = {}> = TType extends Array<any> ? ArrayData<TType, UnshiftExtension<TExtensions, TType>> : TType extends ScalarType | EnumType ? ScalarData<TType, UnshiftExtension<TExtensions, TType>> : TType extends FieldsType ? FieldsData<TType, UnshiftExtension<TExtensions, TType>> : null;
-+
 +export declare type TypeData<TType extends ValidType, TExtensions extends Tuple = {}> =
 +    TType extends Array<any> ? ArrayData<TType, UnshiftExtension<TExtensions, TType>> :
 +        TType extends ScalarType | EnumType ? ScalarData<TType, UnshiftExtension<TExtensions, TType>> :
 +            TType extends FieldsType ? FieldsData<TType, UnshiftExtension<TExtensions, TType>> :
 +                TType extends FieldsTypeArg<any, infer X> ? X extends Type<any, infer Z> ? Z : X : null;
-+
-+
  export {};
 diff --git a/node_modules/gqless/dist/gqless.cjs.development.js b/node_modules/gqless/dist/gqless.cjs.development.js
-index 12268bf..238a4de 100644
+index 12268bf..d0b9986 100644
 --- a/node_modules/gqless/dist/gqless.cjs.development.js
 +++ b/node_modules/gqless/dist/gqless.cjs.development.js
-@@ -135,7 +135,7 @@ const deepReference = rootValue => {
+@@ -135,6 +135,8 @@ const deepReference = rootValue => {
        onUnreference.filter(v => v === value).then(dispose);
      }; // Handle references created, before watchAndEmit called
  
--
 +    if (!parentValue.references) return () => {}
++
+ 
      for (const ref of parentValue.references.keys()) {
        handleReference(ref);
-     }
-@@ -416,6 +416,7 @@ const buildArguments = ({
+@@ -416,6 +418,7 @@ const buildArguments = ({
  
        if (context) {
          const field = context.node.inputs[key];
@@ -37,57 +34,26 @@ index 12268bf..238a4de 100644
          keyContext = {
            node: field.ofNode,
            nullable: field.nullable
-@@ -451,7 +452,12 @@ const buildArguments = ({
+@@ -451,7 +454,8 @@ const buildArguments = ({
      if ((context === null || context === void 0 ? void 0 : context.node) instanceof ScalarNode) {
        // Object / Array passed as scalar
        // serialize as a JSON-string
 -      return JSON.stringify(JSON.stringify(arg));
 +      const json = JSON.stringify(arg)
-+      if (json) {
-+        return json.replace(/"([^"]+)":/g, '$1:');
-+      } else {
-+        return
-+      }
++      return json ? json.replace(/"([^"]+)":/g, '$1:') : ''
      }
  
      if (Array.isArray(arg)) {
-@@ -1540,7 +1546,7 @@ class Commit extends Disposable {
-         }).filter(Boolean);
-         return Promise.resolve(Promise.all(promises)).then(function () {});
-       }, function (e) {
--        console.error(e);
-+        global['latestUnhandledGQLessRejection'] = e;
-       });
- 
-       return Promise.resolve(_temp && _temp.then ? _temp.then(_temp2) : _temp2(_temp));
-diff --git a/node_modules/gqless/dist/gqless.esm.js b/node_modules/gqless/dist/gqless.esm.js
-index cc6eb3f..577643f 100644
---- a/node_modules/gqless/dist/gqless.esm.js
-+++ b/node_modules/gqless/dist/gqless.esm.js
-@@ -412,6 +412,7 @@ const buildArguments = ({
- 
-       if (context) {
-         const field = context.node.inputs[key];
-+        if (!field) return
-         keyContext = {
-           node: field.ofNode,
-           nullable: field.nullable
-@@ -482,6 +483,8 @@ const buildSelections = ({
+@@ -486,6 +490,7 @@ const buildSelections = ({
    const includeTypename = // When no selections or not on ObjectNode
    (!tree.children.length || !(innerNode instanceof ObjectNode)) && // fragments should never need __typename
    !(tree.selection instanceof Fragment);
-+  // super fucking weird patch fixes firefox...
-+  if (innerNode) innerNode.constructor.name;
++  if (innerNode) innerNode.constructor.name; // fixed weird firefox bug
    const selections = [includeTypename && '__typename', ...tree.children.map(tree => buildSelectionTree(formatter, tree, variables))].filter(Boolean);
    if (!selections.length) return '';
    return selections.join(LINE_SEPARATOR);
-@@ -554,22 +557,15 @@ const buildSelectionTree = ({
-   return buildSelections(formatter, tree, variables);
- };
- 
--const memoized =
--/*#__PURE__*/
--createMemo();
+@@ -563,17 +568,13 @@ const memoized =
+ utils.createMemo();
  const getAlias = tree => {
    if (!tree.parent) return;
 -  const fieldAliases = memoized(() => {
@@ -111,7 +77,15 @@ index cc6eb3f..577643f 100644
  };
  
  /**
-@@ -1883,7 +1879,9 @@ class Accessor extends Disposable {
+@@ -1541,6 +1542,7 @@ class Commit extends Disposable {
+         return Promise.resolve(Promise.all(promises)).then(function () {});
+       }, function (e) {
+         console.error(e);
++        global['latestUnhandledGQLessRejection'] = e;
+       });
+ 
+       return Promise.resolve(_temp && _temp.then ? _temp.then(_temp2) : _temp2(_temp));
+@@ -1885,7 +1887,9 @@ class Accessor extends Disposable {
  
    setData(data) {
      // @TODO
@@ -122,7 +96,7 @@ index cc6eb3f..577643f 100644
      this.cache.merge(this, data);
    }
  
-@@ -2125,10 +2123,10 @@ const interceptor =
+@@ -2127,10 +2131,10 @@ const interceptor =
  new Interceptor();
  interceptor.onAccessor(accessor => {
    lastAccessor = accessor;

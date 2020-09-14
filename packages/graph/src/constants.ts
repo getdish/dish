@@ -6,7 +6,7 @@ export const isHasuraLive =
 export const isBrowserProd =
   !isNode && window.location?.hostname.includes('dish')
 
-export const isNative = typeof document === 'undefined'
+export const isNative = process.env.TARGET === 'native'
 export const isWorker =
   typeof document !== 'undefined' && !document.getElementById('root')
 

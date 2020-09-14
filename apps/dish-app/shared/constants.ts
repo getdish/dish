@@ -10,7 +10,7 @@ export const isSSR =
   typeof window !== 'undefined' && !!window['IS_SSR_RENDERING']
 export const isWorker = !rootEl && !isSSR
 export const isWeb = typeof document !== 'undefined'
-export const isNative = !isWorker && !isSSR && !isWeb
+export const isNative = process.env.TARGET === 'native'
 
 export const drawerPad = 8
 export const drawerBorderRadius = 16

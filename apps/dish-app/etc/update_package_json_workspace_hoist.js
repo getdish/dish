@@ -1,15 +1,13 @@
 const package = require('../package.json')
 
 const hoists = {
-  react: true,
-  'react-dom': true,
   '@gqless/react': true,
   '@gqless/schema': true,
   gqless: true,
 }
 
 const noHoists = Object.keys(package.dependencies)
-  .filter((x) => !hoists[x])
+  .filter((x) => !hoists[x] && !x.startsWith('@dish/'))
   .map((k) => [k, `${k}/**`])
   .flat()
 

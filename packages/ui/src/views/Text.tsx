@@ -65,9 +65,11 @@ const webOnlyStyleKeys = {
 const useTextStyle = (allProps: TextProps) => {
   return useMemo(() => {
     const props: ReactTextProps = {}
-    const style: TextStyle = {
-      ...defaultStyle,
-    }
+    const style: TextStyle = isWeb
+      ? {
+          ...defaultStyle,
+        }
+      : {}
     for (const key in allProps) {
       if (!isWeb && webOnlyStyleKeys[key]) {
         continue

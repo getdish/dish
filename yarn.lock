@@ -1989,7 +1989,7 @@
 
 "@o/gqless-schema@0.0.1-alpha.34":
   version "0.0.1-alpha.34"
-  resolved "https://registry.npmjs.org/@o/gqless-schema/-/gqless-schema-0.0.1-alpha.34.tgz#2f3d3881987cf1b4a4cdb1b2d4672d78e5a0aa0f"
+  resolved "https://registry.npmjs.org/@o/gqless-schema/-/@o/gqless-schema-0.0.1-alpha.34.tgz#2f3d3881987cf1b4a4cdb1b2d4672d78e5a0aa0f"
   integrity sha512-IYesnd3cbUnxromIhW06aL9b+fGcNu8qpXt8JdJVY2CTpFgAqyMC3zxVV+ws6YpgE/XmXEdeXcB5FhD/yLdo2w==
   dependencies:
     "@gqless/utils" "^0.0.1-alpha.26"
