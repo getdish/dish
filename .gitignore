@@ -96,3 +96,5 @@ web-build-legacy
 
 services/search/m
 services/search/embedded.go
+
+target/
