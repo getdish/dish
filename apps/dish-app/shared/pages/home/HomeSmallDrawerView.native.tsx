@@ -108,16 +108,15 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
 
           <VStack flex={1} maxHeight="100%" position="relative">
             {/* children */}
-            {props.children}
-            {drawerStore.snapIndex >= 1 && (
-              <View
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-                {...(drawerStore.snapIndex > 0 && panResponder.panHandlers)}
-              />
-            )}
+            <View
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
+              {...(drawerStore.snapIndex > 0 && panResponder.panHandlers)}
+            >
+              {props.children}
+            </View>
           </VStack>
         </BottomSheetContainer>
       </Animated.View>

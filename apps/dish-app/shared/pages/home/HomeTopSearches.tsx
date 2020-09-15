@@ -3,8 +3,10 @@ import { HStack, Text, VStack } from '@dish/ui'
 import { default as React, memo } from 'react'
 
 import { bgLight } from '../../colors'
+import { isWeb } from '../../constants'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { tagLenses } from '../../state/tagLenses'
+import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { useMediaQueryIsReallySmall } from './useMediaQueryIs'
 
@@ -24,26 +26,24 @@ export const HomeTopSearches = memo(() => {
     >
       {recentSearches.slice(0, isReallySmall ? 6 : 8).map((search, index) => {
         return (
-          <VStack
-            key={index}
-            borderColor="#eee"
-            borderWidth={1}
-            padding={3}
-            paddingHorizontal={8}
-            borderRadius={80}
-            backgroundColor="#fff"
-            marginBottom={6}
-            hoverStyle={{
-              backgroundColor: bgLight,
-            }}
-          >
-            <LinkButton tags={search.tags} cursor="pointer" alignItems="center">
+          <Link key={index} tags={search.tags}>
+            <HStack
+              borderColor="#eee"
+              borderWidth={1}
+              paddingVertical={isWeb ? 4 : 8}
+              paddingHorizontal={8}
+              borderRadius={80}
+              backgroundColor="#fff"
+              marginBottom={6}
+              hoverStyle={{
+                backgroundColor: bgLight,
+              }}
+            >
               {search.tags.map((tag, index) => (
                 <React.Fragment key={tag.name}>
                   <Text
-                    height={16}
-                    lineHeight={14}
-                    padding={5}
+                    lineHeight={isWeb ? 14 : 18}
+                    paddingHorizontal={5}
                     fontSize={14}
                     borderRadius={50}
                   >
@@ -67,8 +67,8 @@ export const HomeTopSearches = memo(() => {
                   ) : null}
                 </React.Fragment>
               ))}
-            </LinkButton>
-          </VStack>
+            </HStack>
+          </Link>
         )
       })}
     </HStack>

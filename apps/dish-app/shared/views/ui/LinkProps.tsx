@@ -17,13 +17,13 @@ export type LinkProps<A, B> = Pick<
   LinkSharedProps & {
     name?: A
     params?: B
-    replace?: boolean
-    tag?: NavigableTag
   }
 
 export type LinkSharedProps = {
-  ellipse?: boolean
+  tag?: NavigableTag
+  tags?: NavigableTag[]
   replace?: boolean
+  ellipse?: boolean
   replaceSearch?: boolean
   disallowDisableWhenActive?: boolean
   preventNavigate?: boolean
@@ -51,9 +51,6 @@ export type LinkSharedProps = {
 export type LinkButtonNamedProps<A = any, B = any> = {
   name?: A
   params?: B
-  tags?: NavigableTag[]
-  tag?: NavigableTag | null
-  replace?: boolean
   onPress?: Function
 }
 

@@ -275,7 +275,7 @@ const HomeTopDishesTitle = () => {
       alignSelf="center"
       fontSize={18}
     >
-      Uniquely good cuisine{' '}
+      Uniquely good{' '}
       {!info || info.type === 'city' || info.type === 'country' ? 'in' : 'near'}{' '}
       <Text color="#000" fontWeight="600">
         {om.state.home.currentState.currentLocationName}
