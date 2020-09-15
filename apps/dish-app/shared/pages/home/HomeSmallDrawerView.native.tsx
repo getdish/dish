@@ -4,9 +4,11 @@ import React, { useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants'
+import { getWindowHeight } from '../../helpers/getWindow'
 import { omStatic } from '../../state/omStatic'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { BottomSheetContainer } from './BottomSheetContainer'
+import { isScrollingSubDrawer } from './HomeScrollView'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
 import { blurSearchInput } from './HomeSearchInput'
 
@@ -14,17 +16,25 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
   const drawerStore = useStore(BottomDrawerStore)
 
   const panResponder = useMemo(() => {
+    let start
     return PanResponder.create({
       onMoveShouldSetPanResponder: (_, { dy }) => {
-        if (drawerStore.snapIndex === 0) {
-          return dy > 15
+        if (isScrollingSubDrawer) {
+          return false
         }
-        const threshold = 15
+        if (drawerStore.snapIndex === 2) {
+          return Math.abs(dy) > 6
+        }
+        if (drawerStore.snapIndex === 0) {
+          return dy > 6
+        }
+        const threshold = 6
         return Math.abs(dy) > threshold
       },
-      onPanResponderGrant: () => {
+      onPanResponderGrant: (e, gestureState) => {
         drawerStore.spring?.stop()
         drawerStore.spring = null
+        // drawerStore.pan.flattenOffset()
         drawerStore.pan.setOffset(drawerStore.pan['_value'])
         if (omStatic.state.home.showAutocomplete) {
           omStatic.actions.home.setShowAutocomplete(false)
@@ -32,12 +42,39 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
         blurSearchInput()
       },
       onPanResponderMove: Animated.event([null, { dy: drawerStore.pan }]),
-      onPanResponderRelease: () => {
+      onPanResponderRelease: (e, gestureState) => {
         drawerStore.pan.flattenOffset()
-        drawerStore.animateDrawerToPx(drawerStore.pan['_value'])
+        const velocity = Math.abs(gestureState.vy)
+        drawerStore.animateDrawerToPx(drawerStore.pan['_value'], velocity)
       },
     })
   }, [])
+
+  const content = useMemo(
+    () => (
+      <BottomSheetContainer>
+        <VStack flex={1} maxHeight="100%" position="relative">
+          <View style={styles.container} {...panResponder.panHandlers}>
+            <VStack maxHeight={searchBarHeight}>
+              <HomeSearchBarDrawer />
+            </VStack>
+            <VStack flex={1}>{props.children}</VStack>
+          </View>
+        </VStack>
+      </BottomSheetContainer>
+    ),
+    [props.children]
+  )
+
+  const range = [
+    getWindowHeight() * drawerStore.snapPoints[0],
+    getWindowHeight() * drawerStore.snapPoints[2],
+  ]
+  const boundY = drawerStore.pan.interpolate({
+    inputRange: [range[0], (range[0] + range[1]) / 2, range[1]],
+    outputRange: [range[0], (range[0] + range[1]) / 2, range[1]],
+    extrapolate: 'clamp',
+  })
 
   return (
     <VStack zIndex={zIndexDrawer} width="100%" height="100%">
@@ -45,7 +82,7 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
         style={{
           transform: [
             {
-              translateY: drawerStore.pan,
+              translateY: boundY,
             },
           ],
           maxWidth: pageWidthMax,
@@ -87,16 +124,7 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
           </VStack>
         </View>
 
-        <BottomSheetContainer>
-          <VStack flex={1} maxHeight="100%" position="relative">
-            <View style={styles.container} {...panResponder.panHandlers}>
-              <VStack maxHeight={searchBarHeight}>
-                <HomeSearchBarDrawer />
-              </VStack>
-              <VStack flex={1}>{props.children}</VStack>
-            </View>
-          </VStack>
-        </BottomSheetContainer>
+        {content}
       </Animated.View>
     </VStack>
   )

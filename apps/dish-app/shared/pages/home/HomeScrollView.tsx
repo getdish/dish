@@ -82,6 +82,8 @@ export const HomeScrollView = forwardRef(
   }
 )
 
+export let isScrollingSubDrawer = false
+
 export const HomeScrollViewHorizontal = ({
   children,
   ...rest
@@ -98,6 +100,12 @@ export const HomeScrollViewHorizontal = ({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
+        onScrollBeginDrag={() => {
+          isScrollingSubDrawer = true
+        }}
+        onScrollEndDrag={() => {
+          isScrollingSubDrawer = false
+        }}
         // @ts-ignore 'auto' fixes ios not letting drag
         style={{ pointerEvents: isScrolling ? 'none' : 'auto' }}
         {...rest}
