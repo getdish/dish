@@ -46,6 +46,12 @@ export const HomeScrollView = forwardRef(
 
     const preventTouching = scrollStore.isScrolling
     const preventScrolling = isReallySmall && om.state.home.drawerSnapPoint >= 1
+    console.log(
+      'preventScrolling',
+      isReallySmall,
+      om.state.home.drawerSnapPoint,
+      preventScrolling
+    )
 
     return (
       <ScrollView

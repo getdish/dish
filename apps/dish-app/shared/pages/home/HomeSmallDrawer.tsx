@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { omStatic } from '../../state/omStatic'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { HomeSmallDrawerView } from './HomeSmallDrawerView'
-import { getIs, useIsReallyNarrow, useIsShort } from './useIs'
+import { getIs } from './useIs'
 
 export const HomeSmallDrawer = (props: { children: any }) => {
   const drawerStore = useStore(BottomDrawerStore)
