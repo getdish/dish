@@ -1,33 +1,19 @@
-import { HStack, StackProps, Text, useForceUpdate } from '@dish/ui'
+import { HStack, Text } from '@dish/ui'
 import React, { useEffect, useRef, useState } from 'react'
-import { Platform } from 'react-native'
 
 import { isWeb } from '../../constants'
-import { omStatic, useOvermindStatic } from '../../state/om'
+import { omStatic } from '../../state/om'
 import { RoutesTable } from '../../state/router'
-import { Link } from './Link'
+import { useLink } from './Link'
 import { LinkButtonProps } from './LinkProps'
-import { getNormalizeLinkProps } from './useNormalizedLink'
-
-const getChildren = (props: LinkButtonProps, isActive: boolean) => {
-  if (typeof props.children === 'function') {
-    return props.children(isActive)
-  }
-  return props.children
-}
 
 export function LinkButton<
   Name extends keyof RoutesTable = keyof RoutesTable,
   Params = RoutesTable[Name]['params']
->(allProps: LinkButtonProps<Name, Params>) {
-  let restProps: StackProps
-  let contents: React.ReactElement
+>(props: LinkButtonProps<Name, Params>) {
   const containerRef = useRef<any>()
-  // this handles the tag/name/params props
-  const forceUpdate = useForceUpdate()
-  let props = getNormalizeLinkProps(allProps, forceUpdate)
   const [isActive, setIsActive] = useState(false)
-  const om = useOvermindStatic()
+  const { wrapWithLinkElement } = useLink(props)
 
   useEffect(() => {
     if (props.name) {
@@ -39,86 +25,29 @@ export function LinkButton<
         last = match
       }
       check(omStatic.state.router.curPageName)
-      return om.reaction((state) => state.router.curPageName, check)
+      return omStatic.reaction((state) => state.router.curPageName, check)
     }
   }, [props.name])
 
-  if (props.name) {
-    const {
-      name,
-      // @ts-ignore
-      params,
-      children,
-      onPress,
-      fontSize,
-      ellipse,
-      lineHeight,
-      fontWeight,
-      disallowDisableWhenActive,
-      replace,
-      replaceSearch,
-      preventNavigate,
-      asyncClick,
-      textAlign,
-      activeTextStyle,
-      color,
-      ...rest
-    } = props
-    restProps = rest
-    contents = (
-      <Link
-        name={name}
-        params={params}
-        replace={replace}
-        replaceSearch={replaceSearch}
-        onClick={onPress as any}
-        asyncClick={asyncClick ?? true}
-        lineHeight={lineHeight}
-        fontSize={fontSize}
-        fontWeight={fontWeight}
-        ellipse={ellipse}
-        textAlign={textAlign}
-        // @ts-ignore
-        color={color ?? '#222'}
-        preventNavigate={preventNavigate}
-        {...(isActive && activeTextStyle)}
-      >
-        {getChildren(props, isActive)}
-      </Link>
-    )
-  } else {
-    const {
-      children,
-      fontSize,
-      lineHeight,
-      fontWeight,
-      textAlign,
-      ellipse,
-      replace,
-      color,
-      disallowDisableWhenActive,
-      ...rest
-    } = props
-    restProps = rest
-    contents = (
-      <Text
-        ellipse={ellipse}
-        fontSize={fontSize}
-        lineHeight={lineHeight}
-        fontWeight={fontWeight}
-        textAlign={textAlign}
-        flexDirection={props.flexDirection ?? 'row'}
-        flexWrap={props.flexWrap}
-        color={color}
-        cursor={props.disabled ? 'default' : 'pointer'}
-        opacity={props.disabled ? 0.5 : 1}
-      >
-        {getChildren(props, isActive)}
-      </Text>
-    )
-  }
+  const {
+    children,
+    fontSize,
+    lineHeight,
+    fontWeight,
+    textAlign,
+    ellipse,
+    replace,
+    color,
+    disallowDisableWhenActive,
+    activeTextStyle,
+    tags,
+    tag,
+    name,
+    params,
+    ...restProps
+  } = props
 
-  return (
+  return wrapWithLinkElement(
     <HStack
       // only handle click events on non-a links (we handle them in Link separately)
       // @ts-ignore
@@ -132,10 +61,31 @@ export function LinkButton<
       display={isWeb ? 'inline-flex' : 'flex'}
       minHeight={10} // temp react-native
       {...restProps}
-      {...(isActive && allProps.activeStyle)}
+      {...(isActive && props.activeStyle)}
       className={`cursor-pointer ${props.className ?? 'ease-in-out-faster'}`}
     >
-      {contents}
+      <Text
+        ellipse={ellipse}
+        fontSize={fontSize}
+        lineHeight={lineHeight}
+        fontWeight={fontWeight}
+        textAlign={textAlign}
+        flexDirection={props.flexDirection ?? 'row'}
+        flexWrap={props.flexWrap}
+        color={color}
+        cursor={props.disabled ? 'default' : 'pointer'}
+        opacity={props.disabled ? 0.5 : 1}
+        {...(isActive && activeTextStyle)}
+      >
+        {getChildren(props, isActive)}
+      </Text>
     </HStack>
   )
+}
+
+const getChildren = (props: LinkButtonProps, isActive: boolean) => {
+  if (typeof props.children === 'function') {
+    return props.children(isActive)
+  }
+  return props.children
 }

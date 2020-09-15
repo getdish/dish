@@ -244,7 +244,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
           onClick: attachPress
             ? (e) => {
                 e.preventDefault()
-                e.stopPropagation()
+                // e.stopPropagation()
                 onPressOut?.(e)
                 onPress?.(e)
                 set({

@@ -7,7 +7,7 @@ import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 
 import { MAPBOX_ACCESS_TOKEN } from '../../constants'
 import { useOvermind } from '../../state/om'
-import { BottomDrawerStore } from './HomeSmallDrawer'
+import { BottomDrawerStore } from './BottomDrawerStore'
 import { getZoomLevel, mapZoomToMedium } from './mapHelpers'
 import {
   useMediaQueryIsReallySmall,

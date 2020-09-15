@@ -37,12 +37,7 @@ export const HomeTopSearches = memo(() => {
               backgroundColor: bgLight,
             }}
           >
-            <LinkButton
-              minWidth={50} // temp react-native
-              tags={search.tags}
-              cursor="pointer"
-              alignItems="center"
-            >
+            <LinkButton tags={search.tags} cursor="pointer" alignItems="center">
               {search.tags.map((tag, index) => (
                 <React.Fragment key={tag.name}>
                   <Text

@@ -10,6 +10,73 @@ import { RoutesTable, router } from '../../state/router'
 import { LinkProps } from './LinkProps'
 import { getNormalizeLinkProps } from './useNormalizedLink'
 
+export const useLink = (props: LinkProps<any, any>) => {
+  const forceUpdate = useForceUpdate()
+  const linkProps = getNormalizeLinkProps(props, forceUpdate)
+  const cancel = useRef<Function | null>(null)
+  const navItem: NavigateItem = {
+    name: linkProps.name,
+    params: linkProps.params,
+    replace: linkProps.replace,
+  }
+
+  useEffect(() => {
+    return () => {
+      cancel.current?.()
+    }
+  }, [])
+
+  const onPress = (e: any) => {
+    if (props.target) {
+      // let it go
+    } else {
+      e.preventDefault()
+      if (props.asyncClick) {
+        cancel.current = series([
+          () => sleep(50),
+          () => {
+            cancel.current = null
+            nav()
+          },
+        ])
+      } else {
+        nav()
+      }
+    }
+    function nav() {
+      if (linkProps.onPress || props.onClick) {
+        e.navigate = () => router.navigate(navItem)
+        props.onClick?.(e!)
+        linkProps.onPress?.(e)
+      } else {
+        if (!props.preventNavigate && !!navItem.name) {
+          router.navigate(navItem)
+        }
+      }
+    }
+  }
+
+  return {
+    onPress,
+    navItem,
+    wrapWithLinkElement(children: any) {
+      if (Platform.OS === 'web') {
+        return (
+          <a
+            onClick={onPress}
+            className={`display-contents dish-link`}
+            href={router.getPathFromParams(navItem)}
+            onMouseEnter={linkProps.onMouseEnter}
+          >
+            {children}
+          </a>
+        )
+      }
+      return <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>
+    },
+  }
+}
+
 export function Link<
   Name extends keyof RoutesTable = keyof RoutesTable,
   Params = RoutesTable[Name]['params']
@@ -26,84 +93,9 @@ export function Link<
     params,
     replace,
     target,
-
     // rest
     ...textProps
   } = allProps
-
-  const forceUpdate = useForceUpdate()
-  const linkProps = getNormalizeLinkProps(
-    {
-      name,
-      params,
-      replace,
-      replaceSearch,
-      disallowDisableWhenActive,
-      preventNavigate,
-      navigateAfterPress,
-      onMouseDown,
-    },
-    forceUpdate
-  )
-  const cancel = useRef<Function | null>(null)
-  const linkRef = useRef<HTMLAnchorElement | null>(null)
-  const navItem: NavigateItem = {
-    name,
-    params,
-    replace,
-  }
-
-  useEffect(() => {
-    return () => {
-      cancel.current?.()
-    }
-  }, [])
-
-  const clickEvent = (e: any) => {
-    if (target) {
-      // let it go
-    } else {
-      e.preventDefault()
-      if (asyncClick) {
-        cancel.current = series([
-          () => sleep(50),
-          () => {
-            cancel.current = null
-            nav()
-          },
-        ])
-      } else {
-        nav()
-      }
-    }
-    function nav() {
-      if (linkProps.onPress || onClick) {
-        e.navigate = () => router.navigate(navItem)
-        onClick?.(e!)
-        linkProps.onPress?.(e)
-      } else {
-        if (!preventNavigate && !!navItem.name) {
-          router.navigate(navItem)
-        }
-      }
-    }
-  }
-
-  const textContent = <Text color={brandColor} {...textProps} />
-
-  if (Platform.OS === 'web') {
-    return (
-      <a
-        ref={linkRef}
-        onClick={clickEvent}
-        className={`display-contents dish-link`}
-        href={router.getPathFromParams(navItem)}
-        onMouseEnter={linkProps.onMouseEnter}
-      >
-        {textContent}
-      </a>
-    )
-  }
-
-  return <TouchableOpacity onPress={clickEvent}>{textContent}</TouchableOpacity>
+  const { wrapWithLinkElement } = useLink(allProps)
+  return wrapWithLinkElement(<Text color={brandColor} {...textProps} />)
 }

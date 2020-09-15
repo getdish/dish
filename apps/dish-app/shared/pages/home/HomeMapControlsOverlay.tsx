@@ -6,8 +6,8 @@ import React, { Suspense, memo } from 'react'
 import { searchBarHeight, zIndexMapControls } from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { useOvermind } from '../../state/om'
+import { BottomDrawerStore } from './BottomDrawerStore'
 import { HomeMapRestaurantPeek } from './HomeMapRestaurantPeek'
-import { BottomDrawerStore } from './HomeSmallDrawer'
 import { useMapSize } from './useMapSize'
 import {
   useMediaQueryIsReallySmall,
