@@ -15,6 +15,9 @@ class ScrollStore extends Store {
   }
 }
 
+export let isScrollingSubDrawer = false
+export let isScrollAtTop = true
+
 export const HomeScrollView = forwardRef(
   (
     {
@@ -36,7 +39,9 @@ export const HomeScrollView = forwardRef(
     const isReallySmall = useIsReallyNarrow()
     const tm = useRef<any>(0)
     const setIsScrolling = (e) => {
-      onScrollYThrottled?.(e.nativeEvent.contentOffset.y)
+      const y = e.nativeEvent.contentOffset.y
+      isScrollAtTop = y <= 0
+      onScrollYThrottled?.()
       scrollStore.setIsScrolling(true)
       clearTimeout(tm.current)
       tm.current = setTimeout(() => {
@@ -87,8 +92,6 @@ export const HomeScrollView = forwardRef(
     )
   }
 )
-
-export let isScrollingSubDrawer = false
 
 export const HomeScrollViewHorizontal = ({
   children,
