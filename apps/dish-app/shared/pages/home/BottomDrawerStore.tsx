@@ -23,11 +23,11 @@ export class BottomDrawerStore extends Store {
 
   animateDrawerToPx(px: number = this.getSnapPointOffset(), velocity?: number) {
     this.snapIndex = this.getSnapIndex(px)
-    console.log('animating to', px)
+    const toValue = this.getSnapPointOffset()
     this.spring = Animated.spring(this.pan, {
       useNativeDriver: true,
       velocity: velocity ?? 0,
-      toValue: px,
+      toValue,
     })
     this.spring.start(() => {
       this.spring = null

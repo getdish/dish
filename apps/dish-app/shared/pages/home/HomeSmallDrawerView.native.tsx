@@ -8,7 +8,7 @@ import { getWindowHeight } from '../../helpers/getWindow'
 import { omStatic } from '../../state/omStatic'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { BottomSheetContainer } from './BottomSheetContainer'
-import { isScrollingSubDrawer } from './HomeScrollView'
+import { isScrollAtTop, isScrollingSubDrawer } from './HomeScrollView'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
 import { blurSearchInput } from './HomeSearchInput'
 
@@ -20,6 +20,9 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
     return PanResponder.create({
       onMoveShouldSetPanResponder: (_, { dy }) => {
         if (isScrollingSubDrawer) {
+          return false
+        }
+        if (!isScrollAtTop && dy > 6) {
           return false
         }
         if (drawerStore.snapIndex === 2) {
