@@ -1,12 +1,7 @@
 import '@dish/common'
 
 import { sentryException } from '@dish/common'
-import {
-  Restaurant,
-  restaurantFindBatch,
-  settingGet,
-  settingSet,
-} from '@dish/graph'
+import { Restaurant, settingGet, settingSet } from '@dish/graph'
 import axios from 'axios'
 import _ from 'lodash'
 import moment, { Moment } from 'moment'
