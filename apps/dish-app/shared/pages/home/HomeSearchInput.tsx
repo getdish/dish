@@ -37,7 +37,7 @@ const placeholders = [
   'italian',
 ]
 
-const placeHolder = `Find the best ${
+const placeHolder = `The best ${
   placeholders[Math.floor(placeholders.length * Math.random())]
 }`
 
