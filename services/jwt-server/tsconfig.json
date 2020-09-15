@@ -11,5 +11,7 @@
   },
 
   "include": ["src"],
-  "references": []
+  "references": [{
+    "path": "../../packages/graph"
+  }]
 }

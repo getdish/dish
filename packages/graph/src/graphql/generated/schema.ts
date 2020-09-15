@@ -7481,7 +7481,7 @@ export const schema = {
           )
         },
         get source() {
-          return new FieldNode(schema.String, undefined, false)
+          return new FieldNode(schema.String, undefined, true)
         },
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, true)
@@ -11971,8 +11971,23 @@ export const schema = {
   get user() {
     return new ObjectNode(
       {
+        get apple_email() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get apple_refresh_token() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get apple_secret() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get apple_uid() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, false)
+        },
+        get email() {
+          return new FieldNode(schema.String, undefined, true)
         },
         get id() {
           return new FieldNode(schema.uuid, undefined, false)
@@ -12154,8 +12169,23 @@ export const schema = {
             true
           )
         },
+        get apple_email() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get apple_refresh_token() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get apple_secret() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get apple_uid() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
         get created_at() {
           return new InputNodeField(schema.timestamptz_comparison_exp, true)
+        },
+        get email() {
+          return new InputNodeField(schema.String_comparison_exp, true)
         },
         get id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
@@ -12185,8 +12215,23 @@ export const schema = {
   get user_insert_input() {
     return new InputNode(
       {
+        get apple_email() {
+          return new InputNodeField(schema.String, true)
+        },
+        get apple_refresh_token() {
+          return new InputNodeField(schema.String, true)
+        },
+        get apple_secret() {
+          return new InputNodeField(schema.String, true)
+        },
+        get apple_uid() {
+          return new InputNodeField(schema.String, true)
+        },
         get created_at() {
           return new InputNodeField(schema.timestamptz, true)
+        },
+        get email() {
+          return new InputNodeField(schema.String, true)
         },
         get id() {
           return new InputNodeField(schema.uuid, true)
@@ -12213,8 +12258,23 @@ export const schema = {
   get user_max_fields() {
     return new ObjectNode(
       {
+        get apple_email() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get apple_refresh_token() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get apple_secret() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get apple_uid() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get email() {
+          return new FieldNode(schema.String, undefined, true)
         },
         get id() {
           return new FieldNode(schema.uuid, undefined, true)
@@ -12241,7 +12301,22 @@ export const schema = {
   get user_max_order_by() {
     return new InputNode(
       {
+        get apple_email() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get apple_refresh_token() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get apple_secret() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get apple_uid() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get created_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get email() {
           return new InputNodeField(schema.order_by, true)
         },
         get id() {
@@ -12266,8 +12341,23 @@ export const schema = {
   get user_min_fields() {
     return new ObjectNode(
       {
+        get apple_email() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get apple_refresh_token() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get apple_secret() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get apple_uid() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get email() {
+          return new FieldNode(schema.String, undefined, true)
         },
         get id() {
           return new FieldNode(schema.uuid, undefined, true)
@@ -12294,7 +12384,22 @@ export const schema = {
   get user_min_order_by() {
     return new InputNode(
       {
+        get apple_email() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get apple_refresh_token() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get apple_secret() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get apple_uid() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get created_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get email() {
           return new InputNodeField(schema.order_by, true)
         },
         get id() {
@@ -12371,7 +12476,22 @@ export const schema = {
   get user_order_by() {
     return new InputNode(
       {
+        get apple_email() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get apple_refresh_token() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get apple_secret() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get apple_uid() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get created_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get email() {
           return new InputNodeField(schema.order_by, true)
         },
         get id() {
@@ -12412,8 +12532,23 @@ export const schema = {
   get user_set_input() {
     return new InputNode(
       {
+        get apple_email() {
+          return new InputNodeField(schema.String, true)
+        },
+        get apple_refresh_token() {
+          return new InputNodeField(schema.String, true)
+        },
+        get apple_secret() {
+          return new InputNodeField(schema.String, true)
+        },
+        get apple_uid() {
+          return new InputNodeField(schema.String, true)
+        },
         get created_at() {
           return new InputNodeField(schema.timestamptz, true)
+        },
+        get email() {
+          return new InputNodeField(schema.String, true)
         },
         get id() {
           return new InputNodeField(schema.uuid, true)

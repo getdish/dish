@@ -1,5 +1,5 @@
 import { globalTagId } from '../constants'
-import { order_by, query, review_constraint, t_uuid } from '../graphql'
+import { order_by, query, review_constraint, uuid } from '../graphql'
 import { Review } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
@@ -12,7 +12,7 @@ export const reviewFindOne = QueryHelpers.findOne
 export const reviewRefresh = QueryHelpers.refresh
 export const reviewDelete = QueryHelpers.delete
 
-export async function reviewFindAllForRestaurant(restaurant_id: t_uuid) {
+export async function reviewFindAllForRestaurant(restaurant_id: uuid) {
   return await resolvedWithFields(
     () => {
       return query.review({
@@ -30,7 +30,7 @@ export async function reviewFindAllForRestaurant(restaurant_id: t_uuid) {
   )
 }
 
-export async function reviewFindAllForUser(user_id: t_uuid) {
+export async function reviewFindAllForUser(user_id: uuid) {
   return await resolvedWithFields(() => {
     return query.review({
       where: {
@@ -46,8 +46,8 @@ export async function reviewFindAllForUser(user_id: t_uuid) {
 }
 
 export async function userFavoriteARestaurant(
-  user_id: t_uuid,
-  restaurant_id: t_uuid,
+  user_id: uuid,
+  restaurant_id: uuid,
   favorited = true
 ) {
   const [review] = await reviewUpsert([

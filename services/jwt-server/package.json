@@ -4,6 +4,7 @@
   "description": "",
   "private": true,
   "dependencies": {
+    "@dish/graph": "*",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.1",
     "class-validator": "^0.11.0",
@@ -11,7 +12,7 @@
     "express": "^4.17.1",
     "helmet": "^3.15.0",
     "jsonwebtoken": "^8.4.0",
-    "apple-signin": "^1.0.9",
+    "apple-sign-in-rest": "^1.0.0",
     "pg": "^7.18.2",
     "reflect-metadata": "^0.1.10",
     "typeorm": "^0.2.25"

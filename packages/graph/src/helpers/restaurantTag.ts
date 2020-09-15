@@ -18,9 +18,9 @@ export async function restaurantTagUpsert(
   }))
   const response = await resolvedMutationWithFields(
     () => {
-      return mutation.insert_restaurant_tag({
-        // @ts-ignore
-        objects: objects,
+      const insert = mutation.insert_restaurant_tag as any
+      return insert({
+        objects,
         on_conflict: {
           constraint: restaurant_tag_constraint.restaurant_tag_pkey,
           update_columns: [
@@ -39,5 +39,5 @@ export async function restaurantTagUpsert(
       ],
     }
   )
-  return response[0].restaurant
+  return (response as any)[0].restaurant
 }

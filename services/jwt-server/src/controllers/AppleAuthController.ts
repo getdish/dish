@@ -1,91 +1,123 @@
 import { join } from 'path'
 
-import appleSignin from 'apple-signin'
-import { validate } from 'class-validator'
+import { User, WithID, userFindOne, userUpsert } from '@dish/graph'
+import AppleSignIn, { AppleSignInOptions } from 'apple-sign-in-rest'
 import { Request, Response } from 'express'
-import { getRepository } from 'typeorm'
 
-import { User } from '../models/User'
+// with this library https://github.com/renarsvilnis/apple-sign-in-rest
+// at end of implementation i found this library, slightly more maintained:
+// may want to switch if we get issues:
+// https://github.com/A-Tokyo/apple-signin-auth
 
-// working off this example: https://github.com/Techofficer/express-apple-signin
-
-const config = {
-  client_id: 'com.dishapp',
-  team_id: '399WY8X9HY', // or dish.motion ?
-  key_identifier: 'M5CPALWBA5',
-  redirect_uri: 'https://dishapp.com/apple_authorize',
+const redirectUri = 'https://dishapp.com/apple_authorize'
+const config: AppleSignInOptions = {
+  clientId: 'com.dishapp',
+  teamId: '399WY8X9HY', // or dish.motion ?
+  keyIdentifier: 'M5CPALWBA5',
+  privateKeyPath: join(__dirname, '../../AuthKey_M5CPALWBA5.p8'),
 }
 
+const appleSignIn = new AppleSignIn(config)
+
 class AppleAuthController {
+  // should be called no more than once a day
+  static refreshToken = async (req: Request, res: Response) => {
+    // const { user_id } = req.body
+    // const user = await userFindOne({ id: user_id })
+    // const refreshTokenResponse = await appleSignIn.refreshAuthorizationToken(clientSecret, refreshToken);
+    // const { access_token } = refreshTokenResponse.access_token;
+    // TODO store access_token on user
+  }
+
   static authCallback = async (req: Request, res: Response) => {
-    let { user, id_token, code, error } = req.body
+    let { user: reqUser, id_token, code, state, error } = req.body
 
-    const clientSecret = appleSignin.getClientSecret({
-      clientID: config.client_id,
-      teamId: config.team_id,
-      keyIdentifier: config.key_identifier,
-      privateKeyPath: join(__dirname, '../../AuthKey_M5CPALWBA5.p8'),
-    })
-
-    const tokens = await appleSignin.getAuthorizationToken(code, {
-      clientID: config.client_id,
-      clientSecret,
-      redirectUri: config.redirect_uri,
-    })
-
-    if (!tokens.id_token) {
-      return res.sendStatus(500)
+    if (!reqUser) {
+      return res.status(400).send()
     }
 
-    const data = await appleSignin.verifyIdToken(tokens.id_token)
+    if (!reqUser.email) {
+      console.error('no user email', reqUser.email)
+      return res.status(400).send()
+    }
 
-    console.log('now we have', data)
+    // if (req.session.state && req.session.state !== state) {
+    //   throw new Error("Missing or invalid state");
+    // }
+
+    const clientSecret = appleSignIn.createClientSecret({
+      // expirationDuration: 5 * 60, // 5 minutes
+    })
+
+    const tokenResponse = await appleSignIn.getAuthorizationToken(
+      clientSecret,
+      code,
+      {
+        // Optional, use the same value which you passed to authorisation URL. In case of iOS you skip the value
+        redirectUri,
+      }
+    )
+
+    const claim = await appleSignIn.verifyIdToken(tokenResponse.id_token, {
+      // (Optional) verifies the nonce
+      nonce: 'nonce',
+      // (Optional) If you want to handle expiration on your own, useful in case of iOS as identityId can't be "refreshed"
+      ignoreExpiration: true, // default is false
+    })
+
+    // TODO STORE INFO ON USER
+    const apple_uid = claim.aud
+    const apple_secret = clientSecret
+    const apple_refresh_token = tokenResponse.refresh_token
 
     // user is passed on first signup
-    if (user) {
-      // signing up
-      if (!user.email) {
-        res.status(400).send()
-      }
-
-      const userRepository = getRepository(User)
-      let authUser: User | undefined
-      try {
-        authUser = await userRepository.findOne({
-          where: { email: user.email },
+    let user: WithID<User> | null = null
+    try {
+      if (claim.aud) {
+        user = await userFindOne({
+          apple_uid,
         })
-      } catch (error) {
-        console.error(error)
-        res.status(401).send()
-        return
+      } else {
+        user = await userFindOne({
+          apple_email: reqUser.email,
+        })
       }
+    } catch (error) {
+      console.error('user find error', error)
+      return res.status(401).send()
+    }
 
-      if (!authUser) {
+    if (!user) {
+      try {
         // first time, create user
-        authUser = new User()
-        authUser.username = `${user.name.firstName} ${user.name.lastName}`
-        authUser.password = user.code
-        authUser.email = user.email
-        authUser.role = 'user'
-        const errors = await validate(user)
-        if (errors.length > 0) {
-          res.status(400).send(errors)
-          return
-        }
-        try {
-          await userRepository.save(user)
-        } catch (e) {
-          console.error(e)
-          res.status(409).send('Username already in use')
-          return
-        }
+        user = await userUpsert([
+          {
+            username: `${reqUser.name.firstName} ${reqUser.name.lastName}`,
+            password: reqUser.code,
+            email: reqUser.email,
+            role: 'user',
+          },
+        ])[0]
+      } catch (error) {
+        console.error('user create error', error)
+        return res.status(401).send()
       }
     }
 
+    // add apple info
+    const finalUser = await userUpsert([
+      {
+        ...user,
+        apple_secret,
+        apple_uid,
+        apple_refresh_token,
+      },
+    ])
+
+    console.log('finalUser', finalUser)
+
     return res.json({
-      id: data.sub,
-      accessToken: tokens.access_token,
-      refreshToken: tokens.refresh_token,
+      ok: true,
     })
   }
 }
