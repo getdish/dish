@@ -59,7 +59,7 @@ export const state: HomeState = {
   allLenseTags: tagLenses,
   allFilterTags: tagFilters,
   showAutocomplete: false,
-  drawerSnapPoint: 0,
+  drawerSnapPoint: 1,
   searchBarY: 25,
   autocompleteIndex: 0,
   autocompleteResults: [],

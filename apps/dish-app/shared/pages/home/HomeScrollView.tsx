@@ -65,6 +65,7 @@ export const HomeScrollView = forwardRef(
         bounces
         scrollEventThrottle={200}
         scrollEnabled={!preventScrolling}
+        disableScrollViewPanResponder={preventScrolling}
         {...props}
         style={[
           {
