@@ -45,6 +45,7 @@ export class BottomDrawerStore extends Store {
 
   private setSnapIndex(x: number) {
     this.snapIndex = x
+    console.log('setting it to', x)
     this.setDrawer(x)
   }
 

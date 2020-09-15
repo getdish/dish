@@ -160,7 +160,7 @@ export class Router extends Store<RouterProps> {
             return acc
           }, {}),
         },
-        search: window.location.search,
+        search: window.location?.search ?? '',
       }
       this.history = [...this.history, next]
 
@@ -314,7 +314,7 @@ export class Router extends Store<RouterProps> {
         name: navItem.name,
         params,
       }),
-      search: window.location.search,
+      search: window.location?.search ?? '',
     }
   }
 }

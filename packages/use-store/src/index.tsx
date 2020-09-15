@@ -3,13 +3,7 @@ import { useCallback, useLayoutEffect, useRef } from 'react'
 
 import { DebugComponents, DebugStores, shouldDebug } from './shouldDebug'
 import { Store, TRIGGER_UPDATE } from './Store'
-
-// @ts-ignore
-const createMutableSource = React.unstable_createMutableSource
-// @ts-ignore
-const useMutableSource = React.unstable_useMutableSource
-
-export * from './Store'
+import { StoreInfo } from './types'
 
 // sanity check types here
 // class StoreTest extends Store<{ id: number }> {}
@@ -23,17 +17,14 @@ export * from './Store'
 // const yb = useStoreTest({ id: 1 }, (x) => x.props.id)
 // const z = useStore(StoreTest)
 
-type Selector<A = unknown, B = unknown> = (x: A) => B
-export type StoreInfo = {
-  source: any
-  hasMounted: boolean
-  storeInstance: any
-  getters: { [key: string]: any }
-  actions: any
-  version: number
-  stateKeys: string[]
-}
+// @ts-ignore
+const createMutableSource = React.unstable_createMutableSource
+// @ts-ignore
+const useMutableSource = React.unstable_useMutableSource
 
+export * from './Store'
+
+type Selector<A = unknown, B = unknown> = (x: A) => B
 export function createUseStore<Props, Store>(
   StoreKlass: new (props: Props) => Store | (new () => Store)
 ) {

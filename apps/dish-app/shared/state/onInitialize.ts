@@ -6,7 +6,7 @@ import { tagFilters } from './tagFilters'
 import { tagLenses } from './tagLenses'
 
 const LOG_OVERMIND =
-  typeof document !== 'undefined' && window.location.search === '?verbose'
+  typeof document !== 'undefined' && window.location?.search === '?verbose'
 
 export const onInitialize: OnInitialize = async (
   { state, actions, effects },
