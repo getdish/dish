@@ -9,7 +9,7 @@ import { omStatic } from '../../state/omStatic'
 export class BottomDrawerStore extends Store {
   snapPoints = [isWeb ? 0.02 : 0.05, 0.25, 0.75]
   snapIndex = 1
-  pan = new Animated.Value(this.getSnapPoint())
+  pan = new Animated.Value(this.getSnapPointOffset())
   spring: any
 
   get currentSnapPoint() {
@@ -21,32 +21,26 @@ export class BottomDrawerStore extends Store {
     this.animateDrawerToPx()
   }
 
-  animateDrawerToPx(px?: number, velocity?: number) {
+  animateDrawerToPx(px: number = this.getSnapPointOffset(), velocity?: number) {
     this.snapIndex = this.getSnapIndex(px)
-    const toValue = this.getSnapPoint()
+    console.log('animating to', px)
     this.spring = Animated.spring(this.pan, {
       useNativeDriver: true,
-      velocity: velocity ?? 1,
-      toValue,
+      velocity: velocity ?? 0,
+      toValue: px,
     })
     this.spring.start(() => {
       this.spring = null
     })
   }
 
-  getSnapPoint() {
+  private getSnapPointOffset() {
     return this.snapPoints[this.snapIndex] * getWindowHeight()
   }
 
-  private setDrawer = debounce(
-    (val) => omStatic.actions.home.setDrawerSnapPoint(val),
-    100
-  )
-
   private setSnapIndex(x: number) {
     this.snapIndex = x
-    console.log('setting it to', x)
-    this.setDrawer(x)
+    omStatic.actions.home.setDrawerSnapPoint(x)
   }
 
   private getSnapIndex(px: number) {

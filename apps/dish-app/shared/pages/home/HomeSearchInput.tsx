@@ -4,7 +4,14 @@ import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import _ from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
-import { Platform, ScrollView, StyleSheet, TextInput } from 'react-native'
+import {
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 
 import { searchBarHeight } from '../../constants'
 import { inputClearSelection, inputIsTextSelected } from '../../helpers/input'
@@ -98,17 +105,6 @@ export const HomeSearchInput = memo(() => {
     ])
   })
 
-  // useEffect(() => {
-  //   const onFocus = () => {
-  //     setAvoidNextAutocompleteShowOnFocus()
-  //     focusSearchInput()
-  //   }
-  //   window.addEventListener('focus', onFocus)
-  //   return () => {
-  //     window.removeEventListener('focus', onFocus)
-  //   }
-  // }, [])
-
   // one way sync down for more perf
   useEffect(() => {
     return om.reaction(
@@ -136,43 +132,6 @@ export const HomeSearchInput = memo(() => {
     }
   }, [])
 
-  // disabled because it steals focus from autocomplete rn
-  // focus/blur search on show autocomplete
-  // useEffect(() => {
-  //   if (!input) return
-  //   const isFocused = document.activeElement === input
-  //   // on focus change
-  //   if (isFocused) return
-  //   // when changed
-  //   if (showAutocomplete === isFocused) return
-  //   const targetInput =
-  //     showAutocomplete == 'location' ? inputRef.current : input
-  //   if (!isWorker) {
-  //     if (showAutocomplete) {
-  //       targetInput?.focus()
-  //     } else {
-  //       // targetInput?.blur()
-  //     }
-  //   }
-  // }, [input, inputRef, showAutocomplete])
-
-  useEffect(() => {
-    if (inputStore.node) {
-      return searchInputEffect(inputStore.node)
-    }
-  }, [inputStore.node])
-
-  const handleFocus = (e) => {
-    e.preventDefault()
-    // onFocusAnyInput()
-    // console.log('avoidNextFocus', avoidNextFocus)
-    // if (avoidNextFocus) {
-    //   avoidNextFocus = false
-    // } else {
-    //   om.actions.home.setShowAutocomplete('search')
-    // }
-  }
-
   const input = inputStore.node
 
   return (
@@ -195,14 +154,16 @@ export const HomeSearchInput = memo(() => {
           >
             {om.state.home.isLoading ? (
               <VStack className="rotating" opacity={1}>
-                <Loader color={color} size={18} onClick={focusSearchInput} />
+                <Loader color={color} size={18} onPress={focusSearchInput} />
               </VStack>
             ) : (
               <Search
                 color={color}
                 size={18}
-                opacity={0.8}
-                onClick={focusSearchInput}
+                onPress={focusSearchInput}
+                style={{
+                  opacity: 0.8,
+                }}
               />
             )}
           </VStack>
@@ -223,7 +184,6 @@ export const HomeSearchInput = memo(() => {
               ref={inputStore.setNode}
               // leave uncontrolled for perf?
               value={search ?? ''}
-              onFocus={handleFocus}
               onBlur={() => {
                 avoidNextFocus = false
               }}
@@ -233,6 +193,14 @@ export const HomeSearchInput = memo(() => {
                 }
                 setSearch(text)
                 om.actions.home.setSearchQuery(text)
+              }}
+              onFocus={() => {
+                console.log('hi')
+                if (omStatic.state.home.searchbarFocusedTag) {
+                  omStatic.actions.home.setSearchBarTagIndex(0)
+                } else {
+                  omStatic.actions.home.setShowAutocomplete('search')
+                }
               }}
               placeholder={isSearchingCuisine ? '...' : `${placeHolder}...`}
               style={[
@@ -254,157 +222,30 @@ export const HomeSearchInput = memo(() => {
   )
 })
 
-function searchInputEffect(input: HTMLInputElement) {
-  const om = omStatic
-  const prev = () => {
-    om.actions.home.moveSearchBarTagIndex(-1)
-  }
-  const next = () => {
-    om.actions.home.moveSearchBarTagIndex(1)
-  }
-  const handleKeyPress = async (e) => {
-    // @ts-ignore
-    const code = e.keyCode
-    const focusedInput = document.activeElement
-    if (!(focusedInput instanceof HTMLInputElement)) {
-      return
-    }
-    console.log('key', code)
-    const {
-      isAutocompleteActive,
-      autocompleteIndex,
-      searchBarTagIndex,
-    } = om.state.home
-    const isSelecting =
-      focusedInput.selectionStart !== focusedInput.selectionEnd
-    const isCaretAtEnd =
-      !isSelecting && focusedInput.selectionEnd === focusedInput.value.length
-    const isCaretAtStart = focusedInput.selectionEnd == 0
+// function searchInputEffect(input: HTMLInputElement) {
 
-    switch (code) {
-      case 13: {
-        // enter
-        // just searching normal
-        const item = om.state.home.autocompleteResults[autocompleteIndex - 1]
-        if (isAutocompleteActive && item && autocompleteIndex !== 0) {
-          if (item.type === 'restaurant') {
-            if (!item.slug) {
-              Toast.show(`No slug, err`)
-              return
-            }
-            router.navigate({
-              name: 'restaurant',
-              params: { slug: item.slug },
-            })
-          } else if ('tagId' in item) {
-            om.actions.home.clearSearch()
-            om.actions.home.navigate({
-              tags: [item],
-            })
-          }
-        } else {
-          om.actions.home.runSearch({
-            searchQuery: e.target.value,
-            force: true,
-          })
-          await idle(40)
-        }
-        om.actions.home.setShowAutocomplete(false)
-        focusedInput.blur()
-        return
-      }
-      case 8: {
-        // delete
-        if (om.state.home.searchbarFocusedTag) {
-          // will remove it if active
-          om.actions.home.navigate({
-            tags: [om.state.home.searchbarFocusedTag],
-          })
-          next()
-          return
-        }
-        if (isCaretAtStart) {
-          prev()
-        }
-        return
-      }
-      case 39: {
-        // right
-        if (isCaretAtEnd) {
-          next()
-        }
-        return
-      }
-      case 37: {
-        // left
-        if (isCaretAtStart) {
-          // at start, go into selecting searchbar tags if we have em
-          prev()
-          return
-        }
-        return
-      }
-      case 27: {
-        // esc
-        if (inputIsTextSelected(focusedInput)) {
-          inputClearSelection(focusedInput)
-          return
-        }
-        if (om.state.home.showAutocomplete) {
-          om.actions.home.setShowAutocomplete(false)
-        }
-        focusedInput.blur()
-        return
-      }
-      case 38: {
-        // up
-        e.preventDefault()
-        om.actions.home.moveActive(-1)
-        return
-      }
-      case 40: {
-        // down
-        e.preventDefault()
-        om.actions.home.moveActive(1)
-        return
-      }
-    }
-  }
-  const handleClick = () => {
-    if (om.state.home.searchbarFocusedTag) {
-      om.actions.home.setSearchBarTagIndex(0)
-    } else {
-      showAutocomplete()
-    }
-  }
-  const showAutocomplete = () => {
-    if (input.value === '') return
-    if (!om.state.home.showAutocomplete) {
-      om.actions.home.setShowAutocomplete('search')
-    }
-  }
-  // debounce so it happens after location if location input is next active
-  const hideAutocomplete = _.debounce(() => {
-    if (om.state.home.showAutocomplete === 'search') {
-      om.actions.home.setShowAutocomplete(false)
-    }
-  }, 100)
-  const handleBlur = () => {
-    hideAutocomplete()
-    isFocused = false
-  }
+//   // debounce so it happens after location if location input is next active
+//   const hideAutocomplete = _.debounce(() => {
+//     if (omStatic.state.home.showAutocomplete === 'search') {
+//       omStatic.actions.home.setShowAutocomplete(false)
+//     }
+//   }, 100)
+//   const handleBlur = () => {
+//     hideAutocomplete()
+//     isFocused = false
+//   }
 
-  if ('addEventListener' in input) {
-    input.addEventListener('keydown', handleKeyPress)
-    input.addEventListener('click', handleClick)
-    input.addEventListener('blur', handleBlur)
-    return () => {
-      input.removeEventListener('keydown', handleKeyPress)
-      input.removeEventListener('click', handleClick)
-      input.removeEventListener('blur', handleBlur)
-    }
-  }
-}
+//   if ('addEventListener' in input) {
+//     input.addEventListener('keydown', handleKeyPress)
+//     input.addEventListener('click', handleClick)
+//     input.addEventListener('blur', handleBlur)
+//     return () => {
+//       input.removeEventListener('keydown', handleKeyPress)
+//       input.removeEventListener('click', handleClick)
+//       input.removeEventListener('blur', handleBlur)
+//     }
+//   }
+// }
 
 const SearchCancelButton = memo(() => {
   const om = useOvermind()
@@ -422,7 +263,117 @@ const SearchCancelButton = memo(() => {
   )
 })
 
-//
+const prev = () => {
+  omStatic.actions.home.moveSearchBarTagIndex(-1)
+}
+const next = () => {
+  omStatic.actions.home.moveSearchBarTagIndex(1)
+}
+
+const handleKeyPress = async (e) => {
+  // @ts-ignore
+  const code = e.keyCode
+  const focusedInput = document.activeElement
+  if (!(focusedInput instanceof HTMLInputElement)) {
+    return
+  }
+  console.log('key', code)
+  const { isAutocompleteActive, autocompleteIndex } = omStatic.state.home
+  const isSelecting = focusedInput.selectionStart !== focusedInput.selectionEnd
+  const isCaretAtEnd =
+    !isSelecting && focusedInput.selectionEnd === focusedInput.value.length
+  const isCaretAtStart = focusedInput.selectionEnd == 0
+
+  switch (code) {
+    case 13: {
+      // enter
+      // just searching normal
+      const item =
+        omStatic.state.home.autocompleteResults[autocompleteIndex - 1]
+      if (isAutocompleteActive && item && autocompleteIndex !== 0) {
+        if (item.type === 'restaurant') {
+          if (!item.slug) {
+            Toast.show(`No slug, err`)
+            return
+          }
+          router.navigate({
+            name: 'restaurant',
+            params: { slug: item.slug },
+          })
+        } else if ('tagId' in item) {
+          omStatic.actions.home.clearSearch()
+          omStatic.actions.home.navigate({
+            tags: [item],
+          })
+        }
+      } else {
+        omStatic.actions.home.runSearch({
+          searchQuery: e.target.value,
+          force: true,
+        })
+        await idle(40)
+      }
+      omStatic.actions.home.setShowAutocomplete(false)
+      focusedInput.blur()
+      return
+    }
+    case 8: {
+      // delete
+      if (omStatic.state.home.searchbarFocusedTag) {
+        // will remove it if active
+        omStatic.actions.home.navigate({
+          tags: [omStatic.state.home.searchbarFocusedTag],
+        })
+        next()
+        return
+      }
+      if (isCaretAtStart) {
+        prev()
+      }
+      return
+    }
+    case 39: {
+      // right
+      if (isCaretAtEnd) {
+        next()
+      }
+      return
+    }
+    case 37: {
+      // left
+      if (isCaretAtStart) {
+        // at start, go into selecting searchbar tags if we have em
+        prev()
+        return
+      }
+      return
+    }
+    case 27: {
+      // esc
+      if (inputIsTextSelected(focusedInput)) {
+        inputClearSelection(focusedInput)
+        return
+      }
+      if (omStatic.state.home.showAutocomplete) {
+        omStatic.actions.home.setShowAutocomplete(false)
+      }
+      focusedInput.blur()
+      return
+    }
+    case 38: {
+      // up
+      e.preventDefault()
+      omStatic.actions.home.moveActive(-1)
+      return
+    }
+    case 40: {
+      // down
+      e.preventDefault()
+      omStatic.actions.home.moveActive(1)
+      return
+    }
+  }
+}
 
 const HomeSearchBarTags = memo(
   ({ input }: { input: HTMLInputElement | null }) => {
