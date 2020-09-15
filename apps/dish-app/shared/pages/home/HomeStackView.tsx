@@ -3,11 +3,12 @@ import React, { Suspense, memo, useMemo } from 'react'
 
 import { searchBarHeight } from '../../constants'
 import { HomeStateItem, HomeStateItemSimple } from '../../state/home-types'
-import { omStatic, useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
 import { getBreadcrumbs } from './getBreadcrumbs'
+import { useIsNarrow } from './useIs'
 import { useLastValueWhen } from './useLastValueWhen'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export type StackItemProps<A> = {
   item: A
@@ -67,7 +68,7 @@ const HomeStackViewItem = memo(
     isRemoving: boolean
     isAdding: boolean
   }) => {
-    const isSmall = useMediaQueryIsSmall()
+    const isSmall = useIsNarrow()
     const top = isSmall ? Math.max(0, index - 1) * 5 : index * 5
     const left = 0
 

@@ -1,9 +1,9 @@
-import { getActiveTags, isSearchBarTag } from './home-tag-helpers'
+import { getActiveTags } from './getActiveTags'
 import { HomeStateTagNavigable } from './home-types'
-import { omStatic } from './om'
+import { isSearchBarTag } from './isSearchBarTag'
 
 export const shouldBeOnSearch = (state: HomeStateTagNavigable) => {
-  const realState = state ?? omStatic.state.home.currentState
+  const realState = state ?? window['om']?.state.home.currentState
   const hasSearchTag = getActiveTags(realState).some(
     (x) => x.type === 'lense' || isSearchBarTag(x)
   )

@@ -19,16 +19,13 @@ import { HomeSearchInput } from './HomeSearchInput'
 import { HomeSearchLocationInput } from './HomeSearchLocationInput'
 import { InputStore } from './InputStore'
 import { useCurrentLenseColor } from './useCurrentLenseColor'
-import {
-  useMediaQueryIsReallySmall,
-  useMediaQueryIsSmall,
-} from './useMediaQueryIs'
+import { useIsNarrow, useIsReallyNarrow } from './useIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 const isWeb = Platform.OS === 'web'
 
 export const HomeSearchBarDrawer = () => {
-  const isSmall = useMediaQueryIsSmall()
+  const isSmall = useIsNarrow()
 
   if (!isSmall) {
     return null
@@ -48,7 +45,7 @@ export const parentIds = {
 
 const borderRadius = 14
 export const HomeSearchBarFloating = () => {
-  const isSmall = useMediaQueryIsSmall()
+  const isSmall = useIsNarrow()
   const rgb = useCurrentLenseColor()
   const backgroundColor = rgbString(rgb)
 
@@ -168,8 +165,8 @@ const HomeSearchBar = memo(() => {
   const inputStore = useStore(InputStore, { name: 'search' })
   const focus = om.state.home.showAutocomplete
   const store = useStore(SearchBarStore)
-  const isSmall = useMediaQueryIsSmall()
-  const isReallySmall = useMediaQueryIsReallySmall()
+  const isSmall = useIsNarrow()
+  const isReallySmall = useIsReallyNarrow()
   const { color } = useSearchBarTheme()
   const isShowingAutocompleteWhenSmall =
     !!om.state.home.showAutocomplete && isSmall

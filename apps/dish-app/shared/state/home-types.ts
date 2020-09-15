@@ -17,8 +17,6 @@ export type HomeState = {
   allFilterTags: Tag[]
   allLenseTags: Tag[]
   allStates: { [key: string]: HomeStateItem }
-  allTags: { [keyPath: string]: Tag }
-  allTagsNameToID: { [name: string]: string }
   allUsers: { [id: string]: User }
   autocompleteIndex: number // index for horizontal row (autocomplete)
   autocompleteResults: AutocompleteItem[]
@@ -76,6 +74,13 @@ export type GeocodePlace = {
   center?: LngLat
   span?: LngLat
   bbox?: [number, number, number, number]
+}
+
+export type HomeStateNav = {
+  tags?: NavigableTag[]
+  state?: HomeStateTagNavigable
+  disallowDisableWhenActive?: boolean
+  replaceSearch?: boolean
 }
 
 export type ShowAutocomplete = 'search' | 'location' | false

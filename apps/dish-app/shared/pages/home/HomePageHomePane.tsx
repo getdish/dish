@@ -15,6 +15,7 @@ import { default as React, Suspense, memo, useEffect, useState } from 'react'
 import { Dimensions, StyleSheet } from 'react-native'
 
 import { bgLight, bgLightTranslucent } from '../../colors'
+import { addTagsToCache } from '../../state/allTags'
 import { HomeStateItemHome } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic, useOvermind } from '../../state/om'
@@ -27,7 +28,7 @@ import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { HomeTopSearches } from './HomeTopSearches'
 import { RestaurantButton } from './RestaurantButton'
 import { SlantedLinkButton } from './SlantedLinkButton'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import { useIsNarrow } from './useIs'
 
 // top dishes
 
@@ -52,7 +53,7 @@ function updateHomeTagsCache(all: any) {
       })),
     ]
   }
-  omStatic.actions.home.addTagsToCache(tags)
+  addTagsToCache(tags)
 }
 
 export default memo(function HomePageHomePane(props: Props) {
@@ -62,7 +63,7 @@ export default memo(function HomePageHomePane(props: Props) {
   const [topDishes, setTopDishes] = useState([])
   const state = props.item
   const { center, span } = state
-  const isSmall = useMediaQueryIsSmall()
+  const isSmall = useIsNarrow()
 
   useEffect(() => {
     if (!isLoaded || !props.isActive) return

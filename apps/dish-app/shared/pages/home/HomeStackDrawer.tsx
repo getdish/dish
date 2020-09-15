@@ -8,7 +8,7 @@ import {
 } from '../../constants'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { StackViewCloseButton } from './StackViewCloseButton'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import { useIsNarrow } from './useIs'
 
 export const HomeStackDrawer = ({
   title,
@@ -17,7 +17,7 @@ export const HomeStackDrawer = ({
   fallback,
   ...props
 }: StackProps & { title?: string; closable?: boolean; fallback?: any }) => {
-  const isSmall = useMediaQueryIsSmall()
+  const isSmall = useIsNarrow()
   return (
     <HStack
       position="absolute"

@@ -39,7 +39,7 @@ import { getFuzzyMatchQuery } from './getFuzzyMatchQuery'
 import { SearchBarStore } from './HomeSearchBar'
 import { locationToAutocomplete, searchLocations } from './searchLocations'
 import { searchRestaurants } from './searchRestaurants'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import { useIsNarrow } from './useIs'
 
 const flexSearch = FlexSearch.create<number>({
   profile: 'speed',
@@ -121,7 +121,7 @@ const HomeAutoCompleteContents = memo(
     const drawerStore = useStore(BottomDrawerStore)
     const om = useOvermind()
     const { showAutocomplete } = om.state.home
-    const isSmall = useMediaQueryIsSmall()
+    const isSmall = useIsNarrow()
     const showLocation = showAutocomplete == 'location'
     const showSearch = showAutocomplete == 'search'
     const isShowing = showSearch || showLocation

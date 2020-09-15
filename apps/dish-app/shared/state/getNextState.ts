@@ -1,13 +1,8 @@
+import { allTagsNameToID, tagNameKey } from './allTags'
+import { ensureUniqueActiveTagIds } from './ensureUniqueActiveTagIds'
 import { getTagId } from './getTagId'
-import {
-  HomeStateNav,
-  cleanTagName,
-  ensureUniqueActiveTagIds,
-} from './home-tag-helpers'
-import { HomeActiveTagsRecord } from './home-types'
-import { omStatic } from './om'
+import { HomeActiveTagsRecord, HomeStateNav } from './home-types'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
-import { tagLenses } from './tagLenses'
 
 const navStateCache = {}
 
@@ -29,7 +24,7 @@ export const getNextState = (navState: HomeStateNav) => {
   }
 
   const {
-    state = omStatic.state.home.currentState,
+    state,
     tags = [],
     disallowDisableWhenActive = false,
     replaceSearch = false,
@@ -45,7 +40,7 @@ export const getNextState = (navState: HomeStateNav) => {
   let words = searchQuery.toLowerCase().trim().split(' ').filter(Boolean)
   while (words.length) {
     const [word, ...rest] = words
-    const foundTagId = omStatic.state.home.allTagsNameToID[cleanTagName(word)]
+    const foundTagId = allTagsNameToID[tagNameKey(word)]
     if (foundTagId === 'no-slug') {
       debugger
     }

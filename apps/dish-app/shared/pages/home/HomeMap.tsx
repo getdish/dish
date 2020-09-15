@@ -1,29 +1,23 @@
 import { LngLat, Restaurant, graphql } from '@dish/graph'
-import { AbsoluteVStack, useDebounce, useLazyEffect } from '@dish/ui'
+import { AbsoluteVStack, useDebounce } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-import { findLast, isEqual, pick, uniqBy } from 'lodash'
-import mapboxgl from 'mapbox-gl'
+import { isEqual, uniqBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 
 import { searchBarHeight, zIndexMap } from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { findLastHomeOrSearch } from '../../state/home'
-import {
-  isHomeState,
-  isRestaurantState,
-  isSearchState,
-} from '../../state/home-helpers'
-import { HomeStateItemHome } from '../../state/home-types'
-import { setMapView } from '../../state/mapView'
-import { omStatic, useOvermind } from '../../state/om'
+import { isRestaurantState } from '../../state/home-helpers'
+import { useOvermind } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
 import { Map } from '../../views/Map'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { getLngLat, getMinLngLat } from './getLngLat'
 import { getRestaurantRating } from './getRestaurantRating'
+import { useIsNarrow } from './useIs'
 import { useLastValueWhen } from './useLastValueWhen'
 import { useMapSize } from './useMapSize'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 export default memo(function HomeMap() {
@@ -130,7 +124,7 @@ const HomeMapContent = memo(function HomeMap({
   restaurants: Restaurant[] | null
 }) {
   const om = useOvermind()
-  const isSmall = useMediaQueryIsSmall()
+  const isSmall = useIsNarrow()
   const { width, paddingLeft } = useMapSize(isSmall)
   const [internal, setInternal] = useState(() => ({
     id: omStatic.state.home.selectedRestaurant?.id,
@@ -289,9 +283,6 @@ const HomeMapContent = memo(function HomeMap({
         padding={padding}
         features={features}
         centerToResults={om.state.home.centerToResults}
-        mapRef={(map: mapboxgl.Map) => {
-          setMapView(map)
-        }}
         selected={internal.id}
         hovered={
           om.state.home.hoveredRestaurant && om.state.home.hoveredRestaurant.id

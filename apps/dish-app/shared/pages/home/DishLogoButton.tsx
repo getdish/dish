@@ -2,10 +2,10 @@ import { AbsoluteVStack, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { G, Path, Svg } from 'react-native-svg'
 
-import { omStatic } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
-import { useMediaQueryIsReallySmall } from './useMediaQueryIs'
+import { useIsReallyNarrow } from './useIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 const linkButtonProps: LinkButtonProps = {
@@ -27,7 +27,7 @@ const styles = {
 }
 
 export const DishLogoButton = memo(() => {
-  const isReallySmall = useMediaQueryIsReallySmall()
+  const isReallySmall = useIsReallyNarrow()
   return (
     <VStack
       className="ease-in-out"

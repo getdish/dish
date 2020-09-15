@@ -9,17 +9,14 @@ import { MAPBOX_ACCESS_TOKEN } from '../../constants'
 import { useOvermind } from '../../state/om'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { getZoomLevel, mapZoomToMedium } from './mapHelpers'
-import {
-  useMediaQueryIsReallySmall,
-  useMediaQueryIsSmall,
-} from './useMediaQueryIs'
+import { useIsNarrow, useIsReallyNarrow } from './useIs'
 import { restaurantQuery } from './useRestaurantQuery'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
 export default memo(() => {
-  const isSmall = useMediaQueryIsSmall()
-  const isReallySmall = useMediaQueryIsReallySmall()
+  const isSmall = useIsNarrow()
+  const isReallySmall = useIsReallyNarrow()
   const om = useOvermind()
   const drawerSnapPoint = om.state.home.drawerSnapPoint
 

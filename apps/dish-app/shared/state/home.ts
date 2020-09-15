@@ -12,22 +12,15 @@ import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
 import _, { clamp, cloneDeep, findLast, isPlainObject, last } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
-import { VALUE } from 'proxy-state-tree'
 
-import { getBreadcrumbs, isBreadcrumbState } from '../pages/home/getBreadcrumbs'
+import { addTagsToCache, allTags } from './allTags'
 import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
+import { getActiveTags } from './getActiveTags'
 import { setDefaultLocation } from './getDefaultLocation'
+import { getNavigateItemForState } from './getNavigateItemForState'
 import { getNextState } from './getNextState'
 import { getTagId } from './getTagId'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
-import {
-  HomeStateNav,
-  allTags,
-  cleanTagName,
-  getActiveTags,
-  getRouteFromState,
-  isSearchBarTag,
-} from './home-tag-helpers'
 import {
   ActiveEvent,
   AutocompleteItem,
@@ -37,17 +30,17 @@ import {
   HomeStateItemHome,
   HomeStateItemRestaurant,
   HomeStateItemSearch,
+  HomeStateNav,
   HomeStateTagNavigable,
   LngLat,
   OmState,
   ShowAutocomplete,
 } from './home-types'
 import { initialHomeState } from './initialHomeState'
+import { isSearchBarTag } from './isSearchBarTag'
 import { NavigableTag } from './NavigableTag'
-import { omStatic } from './om'
 import { reverseGeocode } from './reverseGeocode'
 import { router } from './router'
-import { shouldBeOnSearch } from './shouldBeOnSearch'
 import { tagFilters } from './tagFilters'
 import { tagLenses } from './tagLenses'
 
@@ -62,8 +55,6 @@ export const state: HomeState = {
   searchBarTagIndex: 0,
   centerToResults: 0,
   refreshCurrentPage: 0,
-  allTags,
-  allTagsNameToID: {},
   allUsers: {},
   allLenseTags: tagLenses,
   allFilterTags: tagFilters,
@@ -85,8 +76,7 @@ export const state: HomeState = {
   },
   userLocation: null,
   currentNavItem: derived<HomeState, OmState, NavigateItem>((state, om) =>
-    // @ts-ignore
-    getNavigateItemForState(omStatic, last(state.states)!)
+    getNavigateItemForState(om, last(state.states)!)
   ),
 
   lastHomeState: derived<HomeState, OmState, HomeStateItemHome>(
@@ -157,7 +147,7 @@ export const state: HomeState = {
     (state) => {
       if ('activeTagIds' in state.currentState) {
         for (const id in state.currentState.activeTagIds) {
-          const tag = state.allTags[id]
+          const tag = allTags[id]
           if (tag?.type == 'lense') {
             return tag
           }
@@ -704,7 +694,7 @@ const setLocation: AsyncAction<string> = async (om, val) => {
       mapAt: null,
     })
     const curState = om.state.home.currentState
-    const navItem = om.actions.home.getNavigateItemForState(curState)
+    const navItem = getNavigateItemForState(om, curState)
     if (router.getShouldNavigate(navItem)) {
       router.navigate(navItem)
     }
@@ -816,18 +806,6 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
   }
 }
 
-// adds to allTags + allTagsNameToID
-const addTagsToCache: Action<NavigableTag[] | null> = (om, tags) => {
-  for (const tag of tags ?? []) {
-    if (tag.name) {
-      const id = getTagId(tag)
-      const existing = om.state.home.allTags[id]
-      om.state.home.allTags[id] = { ...existing, ...tag }
-      om.state.home.allTagsNameToID[cleanTagName(tag.name)] = id
-    }
-  }
-}
-
 const setAutocompleteResults: Action<AutocompleteItem[] | null> = (
   om,
   results
@@ -919,7 +897,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
   let curNav = lastNav
   om.state.home.isOptimisticUpdating = false
   if (navState.tags) {
-    om.actions.home.addTagsToCache(navState.tags)
+    addTagsToCache(navState.tags)
   }
 
   // do a quick update first
@@ -997,70 +975,11 @@ const promptLogin: Action<undefined, boolean> = (om) => {
   return false
 }
 
-export const getNavigateItemForState: Action<
-  HomeStateTagNavigable,
-  NavigateItem
-> = (om, _state): NavigateItem => {
-  const { home, router } = om.state
-  const state = _state || home.currentState
-  const isHome = isHomeState(state)
-  const isSearch = isSearchState(state)
-  const curParams = router.curPage.params
-
-  // we only handle "special" states here (home/search)
-  if (!isHome && !isSearch) {
-    return {
-      name: state.type,
-      params: curParams,
-    }
-  }
-  // if going home, just go there
-  const shouldBeSearching = shouldBeOnSearch(state)
-
-  let name = state.type
-  if (name === 'home' && shouldBeSearching) {
-    name = 'search'
-  } else if (name === 'search' && !shouldBeSearching) {
-    name = 'home'
-  }
-
-  const curName = router.curPage.name
-  const isChangingType = name !== curName
-  const replace = !isChangingType
-
-  if (name === 'home') {
-    return {
-      name: 'home',
-      replace,
-    }
-  }
-
-  // build params
-  const params = getRouteFromState(state)
-
-  params.location = slugify(
-    state.currentLocationName ?? home.currentState.currentLocationName ?? 'here'
-  )
-
-  if (state.searchQuery) {
-    params.search = state.searchQuery
-  }
-  if (state.type === 'userSearch') {
-    params.username = curParams.username
-  }
-
-  return {
-    name,
-    params,
-    replace,
-  }
-}
-
 const getShouldNavigate: Action<HomeStateTagNavigable, boolean> = (
   om,
   state
 ) => {
-  const navItem = om.actions.home.getNavigateItemForState(state)
+  const navItem = getNavigateItemForState(om, state)
   return router.getShouldNavigate(navItem)
 }
 
@@ -1083,7 +1002,7 @@ const syncStateToRoute: AsyncAction<HomeStateTagNavigable, boolean> = async (
     synctm = setTimeout(() => {
       recentTries = 0
     }, 200)
-    const navItem = om.actions.home.getNavigateItemForState(state)
+    const navItem = getNavigateItemForState(om, state)
     if (process.env.NODE_ENV === 'development') {
       console.log(
         'syncStateToRoute',
@@ -1146,7 +1065,6 @@ export const actions = {
   updateActiveTags,
   setAutocompleteResults,
   clearTags,
-  addTagsToCache,
   setIsLoading,
   updateHomeState,
   navigate,

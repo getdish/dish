@@ -1,4 +1,4 @@
-import { IConfig, Overmind } from 'overmind'
+import { IConfig, Overmind, createOvermind } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 
@@ -19,6 +19,23 @@ export const config = merge(
   })
 )
 
+export const om =
+  window['om'] ??
+  createOvermind(config, {
+    devtools: false,
+    logProxies: true,
+    hotReloading: process.env.NODE_ENV !== 'production',
+  })
+
+if (process.env.NODE_ENV === 'development') {
+  if (window['STARTED']) {
+    console.log('reconfiguring overmind...')
+    om.reconfigure(config)
+  }
+}
+
+window['om'] = om
+
 type OmState = IConfig<typeof config>
 
 declare module 'overmind' {
@@ -28,21 +45,3 @@ declare module 'overmind' {
 // helpers
 
 export const useOvermind = createHook<typeof config>()
-export const useOvermindStatic = () => window['om'] as Overmind<typeof config>
-
-export const omStatic = new Proxy(
-  {},
-  {
-    get(_, key) {
-      return (window['om'] ?? config)[key]
-    },
-  }
-  // this type fixes omStatic.reaction(, not sure waht iContext fixed if any
-) as Overmind<typeof config> //IContext<Config>
-
-if (process.env.NODE_ENV === 'development') {
-  if (window['STARTED']) {
-    console.log('reconfiguring overmind...')
-    window['om'].reconfigure(config)
-  }
-}

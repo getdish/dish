@@ -4,17 +4,17 @@ import React, { useEffect, useMemo } from 'react'
 import { Animated, PanResponder, View } from 'react-native'
 
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants'
-import { omStatic } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { BottomSheetContainer } from './BottomSheetContainer'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
 import { blurSearchInput } from './HomeSearchInput'
 import { isWebIOS } from './isIOS'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import { useIsNarrow } from './useIs'
 
 export const HomeSmallDrawerView = (props: { children: any }) => {
   const drawerStore = useStore(BottomDrawerStore)
-  const isSmall = useMediaQueryIsSmall()
+  const isSmall = useIsNarrow()
 
   // attaching this as a direct onPress event breaks dragging
   // instead doing a more hacky useEffect

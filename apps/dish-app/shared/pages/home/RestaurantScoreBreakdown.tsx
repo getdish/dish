@@ -14,7 +14,7 @@ import React, { memo, useState } from 'react'
 import { Image, View } from 'react-native'
 
 import { lightGreen, lightYellow } from '../../colors'
-import { omStatic } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { Paragraph } from './Paragraph'

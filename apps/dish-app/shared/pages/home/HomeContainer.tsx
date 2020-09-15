@@ -6,14 +6,14 @@ import { bgAlt, bgLightTranslucent } from '../../colors'
 import { searchBarHeight, zIndexDrawer } from '../../constants'
 import { HomeSmallDrawer } from './HomeSmallDrawer'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import { useIsNarrow } from './useIs'
 import { useLastValueWhen } from './useLastValueWhen'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 // import { Reparentable, sendReparentableChild } from 'react-reparenting'
 // const getParent = (isSmall: boolean) => (isSmall ? 'sm' : 'lg')
 
 export function HomeContainer(props: { children: any }) {
-  const isSmall = useMediaQueryIsSmall()
+  const isSmall = useIsNarrow()
   // const [parent, setParent] = useState()
   // const children = [<React.Fragment key="1">{props.children}</React.Fragment>]
 
@@ -42,7 +42,7 @@ export function HomeContainer(props: { children: any }) {
 }
 
 const HomeContainerLarge = (props) => {
-  const isSmall = useMediaQueryIsSmall()
+  const isSmall = useIsNarrow()
   const drawerWidth = useHomeDrawerWidth(Infinity)
   const lastWidth = useLastValueWhen(() => drawerWidth, isSmall)
 

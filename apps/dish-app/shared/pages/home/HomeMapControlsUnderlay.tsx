@@ -6,8 +6,8 @@ import { searchBarHeight, zIndexDrawer } from '../../constants'
 import { useOvermind } from '../../state/om'
 import { OverlayLinkButton } from '../../views/ui/OverlayLinkButton'
 import { mapZoomToMedium, useZoomLevel } from './mapHelpers'
+import { useIsNarrow } from './useIs'
 import { useMapSize } from './useMapSize'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export const HomeMapControlsUnderlay = memo(() => {
   const om = useOvermind()
@@ -15,7 +15,7 @@ export const HomeMapControlsUnderlay = memo(() => {
   const hasMovedMap =
     !!om.state.home.currentState.mapAt &&
     om.state.home.currentStateType === 'search'
-  const isSmall = useMediaQueryIsSmall()
+  const isSmall = useIsNarrow()
   const { paddingLeft, width } = useMapSize(isSmall)
   return (
     <AbsoluteVStack

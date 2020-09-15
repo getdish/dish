@@ -1,6 +1,8 @@
 import { OnInitialize, rehydrate } from 'overmind'
 
 import { OVERMIND_MUTATIONS } from '../constants'
+import { addTagsToCache } from './allTags'
+import { tagFilters } from './tagFilters'
 import { tagLenses } from './tagLenses'
 
 const LOG_OVERMIND =
@@ -29,7 +31,7 @@ export const onInitialize: OnInitialize = async (
     })
   }
 
-  actions.home.addTagsToCache(tagLenses)
+  addTagsToCache([...tagFilters, ...tagLenses])
 
   actions.user.checkForExistingLogin()
   actions.router.start()

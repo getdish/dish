@@ -1,7 +1,7 @@
 import { useWindowSize } from '@dish/ui'
 
 import { drawerWidthMax } from '../../constants'
-import { mediaQueries } from './useMediaQueryIs'
+import { mediaQueries } from './useIs'
 
 export function useHomeDrawerWidth(max = drawerWidthMax): number {
   const [width] = useWindowSize()

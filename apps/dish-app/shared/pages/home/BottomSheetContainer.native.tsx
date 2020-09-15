@@ -14,7 +14,7 @@ export const BottomSheetContainer = ({ children, ...props }: StackProps) => {
       shadowRadius={34}
       borderTopRightRadius={drawerBorderRadius}
       borderTopLeftRadius={drawerBorderRadius}
-      backgroundColor="rgba(255,255,255,0.8)"
+      backgroundColor="rgba(255,255,255,0.9)"
       {...props}
     >
       <BlurView

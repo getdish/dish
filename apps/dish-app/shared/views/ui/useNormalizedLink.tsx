@@ -2,11 +2,11 @@ import { useForceUpdate } from '@dish/ui'
 import { isEqual, omit } from 'lodash'
 
 import { memoize } from '../../helpers/memoizeWeak'
+import { getNavigateItemForState } from '../../state/getNavigateItemForState'
 import { getNextState } from '../../state/getNextState'
-import { HomeStateNav } from '../../state/home-tag-helpers'
-import { HomeStateItem } from '../../state/home-types'
+import { HomeStateItem, HomeStateNav } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
-import { omStatic } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { LinkButtonProps } from './LinkProps'
 
 export const getNormalizeLinkProps = memoize(
@@ -85,9 +85,7 @@ const getNormalizedLink = (
 const getNavigateTo = (props: HomeStateNav): LinkButtonProps | null => {
   let nextState = getNextState(props)
   if (nextState) {
-    const navigateItem = omStatic.actions.home.getNavigateItemForState(
-      nextState
-    )
+    const navigateItem = getNavigateItemForState(om, nextState)
     return {
       ...navigateItem,
       preventNavigate: true,

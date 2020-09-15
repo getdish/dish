@@ -5,10 +5,7 @@ import { ScrollView, ScrollViewProps } from 'react-native'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants'
 import { useOvermind } from '../../state/om'
-import {
-  useMediaQueryIsReallySmall,
-  useMediaQueryIsSmall,
-} from './useMediaQueryIs'
+import { useIsNarrow, useIsReallyNarrow } from './useIs'
 
 class ScrollStore extends Store {
   isScrolling = false
@@ -35,8 +32,8 @@ export const HomeScrollView = forwardRef(
   ) => {
     const om = useOvermind()
     const scrollStore = useStore(ScrollStore)
-    const isSmall = useMediaQueryIsSmall()
-    const isReallySmall = useMediaQueryIsReallySmall()
+    const isSmall = useIsNarrow()
+    const isReallySmall = useIsReallyNarrow()
     const tm = useRef<any>(0)
     const setIsScrolling = (e) => {
       onScrollYThrottled?.(e.nativeEvent.contentOffset.y)

@@ -8,16 +8,13 @@ import { getWindowHeight } from '../../helpers/getWindow'
 import { useOvermind } from '../../state/om'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { HomeMapRestaurantPeek } from './HomeMapRestaurantPeek'
+import { useIsNarrow, useIsReallyNarrow } from './useIs'
 import { useMapSize } from './useMapSize'
-import {
-  useMediaQueryIsReallySmall,
-  useMediaQueryIsSmall,
-} from './useMediaQueryIs'
 
 export const HomeMapControlsOverlay = memo(() => {
   const om = useOvermind()
-  const isReallySmall = useMediaQueryIsReallySmall()
-  const isSmall = useMediaQueryIsSmall()
+  const isReallySmall = useIsReallyNarrow()
+  const isSmall = useIsNarrow()
   const { paddingLeft, width } = useMapSize(isSmall)
   const drawerStore = useStore(BottomDrawerStore)
 

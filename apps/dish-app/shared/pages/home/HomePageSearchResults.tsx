@@ -23,6 +23,7 @@ import React, {
 import { ScrollView } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
+import { addTagsToCache } from '../../state/allTags'
 import { getTagId } from '../../state/getTagId'
 import { isSearchState } from '../../state/home-helpers'
 import { getLocationFromRoute } from '../../state/home-location.helpers'
@@ -31,7 +32,8 @@ import {
   HomeActiveTagsRecord,
   HomeStateItemSearch,
 } from '../../state/home-types'
-import { omStatic, useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { getTitleForState } from './getTitleForState'
@@ -45,9 +47,9 @@ import { focusSearchInput } from './HomeSearchInput'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { RestaurantListItem } from './RestaurantListItem'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
+import { useIsNarrow } from './useIs'
 import { useLastValue } from './useLastValue'
 import { useLastValueWhen } from './useLastValueWhen'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
 import { usePageLoadEffect } from './usePageLoadEffect'
 
 export const avatar = require('../../assets/peach.jpg').default
@@ -58,7 +60,7 @@ const titleHeight = 52
 const topBarVPad = 12
 
 const useSpacing = () => {
-  const isSmall = useMediaQueryIsSmall()
+  const isSmall = useIsNarrow()
   const paddingTop = isSmall
     ? topBarVPad
     : titleHeight - searchBarTopOffset + topBarVPad + 4
@@ -94,7 +96,7 @@ export default memo(function HomePageSearchResults(props: Props) {
       })
       getFullTags(fakeTags).then((tags) => {
         if (isCancelled) return
-        om.actions.home.addTagsToCache(tags)
+        addTagsToCache(tags)
         const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>(
           (acc, tag) => {
             acc[getTagId(tag)] = true
@@ -290,6 +292,7 @@ const SearchResultsContent = (props: Props) => {
   }
 
   useEffect(() => {
+    // @ts-ignore
     return omStatic.reaction(
       (state) => state.home.activeIndex,
       (index) => {

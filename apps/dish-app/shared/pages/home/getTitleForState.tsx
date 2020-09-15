@@ -2,15 +2,13 @@ import { Text } from '@dish/ui'
 import React from 'react'
 
 import { isWeb } from '../../constants'
+import { getActiveTags } from '../../state/getActiveTags'
 import { getTagId } from '../../state/getTagId'
-import { getActiveTags } from '../../state/home-tag-helpers'
 import { HomeStateItem } from '../../state/home-types'
 import { tagDescriptions } from '../../state/tagLenses'
 import { TagButton, getTagButtonProps } from './TagButton'
 
 const getTitleForQuery = (query: string) => {
-  // TODO we could keep a tag object..
-  // omStatic.state.home.allTags[]
   return query
 }
 

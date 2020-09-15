@@ -1,7 +1,7 @@
 import { memo, useEffect } from 'react'
 
 import { focusSearchInput, getSearchInput } from './pages/home/HomeSearchInput'
-import { omStatic } from './state/om'
+import { omStatic } from './state/omStatic'
 
 export const Shortcuts = memo(() => {
   useEffect(() => {

@@ -11,7 +11,7 @@ import { AppRegistry } from 'react-native'
 
 import { App } from '../shared/App'
 import { OVERMIND_MUTATIONS, isWorker } from '../shared/constants'
-import { config } from '../shared/state/om'
+import { config, om } from '../shared/state/om'
 
 if (process.env.NODE_ENV === 'development' && !window['STARTED']) {
   startLogging()
@@ -31,13 +31,6 @@ let rootEl = document.getElementById('root')
 const search = window.location.search
 
 async function start() {
-  const om = createOvermind(config, {
-    devtools: process.env.NODE_ENV === 'production' ? false : `localhost:3031`,
-    logProxies: true,
-    hotReloading: process.env.NODE_ENV !== 'production',
-  })
-  window['om'] = om
-
   // can render splash here
 
   let done = false

@@ -10,13 +10,13 @@ import { getImageUrl } from './getImageUrl'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { StackViewCloseButton } from './StackViewCloseButton'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import { useIsNarrow } from './useIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 export default memo(function HomePageGallery() {
   const om = useOvermind()
   const state = om.state.home.currentState
-  const isSmall = useMediaQueryIsSmall()
+  const isSmall = useIsNarrow()
 
   if (state.type === 'gallery') {
     const dishPhotosElement = (
@@ -109,7 +109,7 @@ const HomePageGalleryContent = memo(
     state: HomeStateItemGallery
     header?: any
   }) {
-    const isSmall = useMediaQueryIsSmall()
+    const isSmall = useIsNarrow()
     // const dish = state.dishId
     //   ? query.tag({
     //       where: {

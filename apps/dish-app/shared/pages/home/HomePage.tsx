@@ -15,12 +15,12 @@ import { HomePagePane } from './HomePagePane'
 import { HomeSearchBarFloating } from './HomeSearchBar'
 import { HomeStackView } from './HomeStackView'
 import { initAppleSigninButton } from './initAppleSigninButton'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import { useIsNarrow } from './useIs'
 
 export const homePageBorderRadius = 12
 
 export default memo(function HomePage() {
-  const isSmall = useMediaQueryIsSmall()
+  const isSmall = useIsNarrow()
 
   useEffect(() => {
     // workaround apple id requirement to init 3 buttons

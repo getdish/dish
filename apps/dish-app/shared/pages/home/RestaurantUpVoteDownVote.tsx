@@ -5,7 +5,7 @@ import React, { memo, useState } from 'react'
 
 import { bgLight } from '../../colors'
 import { HomeActiveTagsRecord } from '../../state/home-types'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import { useIsNarrow } from './useIs'
 import { useUserUpvoteDownvoteQuery } from './useUserReview'
 
 export const RestaurantUpVoteDownVote = memo(
@@ -91,7 +91,7 @@ const VoteButton = ({
   color?: string | null
   size?: number
 }) => {
-  const isSmall = useMediaQueryIsSmall()
+  const isSmall = useIsNarrow()
   const scale = isSmall ? 1.1 : 1
   const [hovered, setHovered] = useState(false)
   return (

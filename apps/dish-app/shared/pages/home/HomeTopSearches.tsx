@@ -8,10 +8,10 @@ import { tagDisplayName } from '../../state/tagDisplayName'
 import { tagLenses } from '../../state/tagLenses'
 import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { useMediaQueryIsReallySmall } from './useMediaQueryIs'
+import { useIsReallyNarrow } from './useIs'
 
 export const HomeTopSearches = memo(() => {
-  const isReallySmall = useMediaQueryIsReallySmall()
+  const isReallySmall = useIsReallyNarrow()
   return (
     <HStack
       paddingHorizontal={20}

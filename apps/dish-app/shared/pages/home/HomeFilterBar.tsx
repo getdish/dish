@@ -7,12 +7,12 @@ import { getTagId } from '../../state/getTagId'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { FilterButton } from './FilterButton'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import { useIsNarrow } from './useIs'
 
 export default memo(
   ({ activeTagIds }: { activeTagIds: HomeActiveTagsRecord }) => {
     const om = useOvermind()
-    const isSmall = useMediaQueryIsSmall()
+    const isSmall = useIsNarrow()
 
     let last = 0
     const grouped = _.groupBy(

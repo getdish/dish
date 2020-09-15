@@ -3,7 +3,7 @@ import { debounce } from 'lodash'
 import { Animated } from 'react-native'
 
 import { getWindowHeight } from '../../helpers/getWindow'
-import { omStatic } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 
 export class BottomDrawerStore extends Store {
   snapPoints = [0.03, 0.25, 0.6]

@@ -2,7 +2,7 @@ import { query } from '@dish/graph'
 
 import { createAutocomplete } from '../../state/createAutocomplete'
 import { LngLat } from '../../state/home-types'
-import { omStatic } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { getFuzzyMatchQuery } from './getFuzzyMatchQuery'
 import { getAddressText } from './RestaurantAddressLinksRow'
 

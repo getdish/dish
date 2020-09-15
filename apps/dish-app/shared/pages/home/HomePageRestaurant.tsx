@@ -5,7 +5,7 @@ import { Image } from 'react-native'
 
 import { bgLight } from '../../colors'
 import { HomeStateItemRestaurant } from '../../state/home-types'
-import { omStatic } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { Link } from '../../views/ui/Link'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { SmallLinkButton } from '../../views/ui/SmallButton'

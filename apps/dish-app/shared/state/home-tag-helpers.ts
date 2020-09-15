@@ -2,106 +2,31 @@ import { Tag, slugify } from '@dish/graph'
 import { HistoryItem } from '@dish/router'
 
 import { LIVE_SEARCH_DOMAIN } from '../constants'
+import { addTagsToCache, allTags } from './allTags'
+import { getActiveTags } from './getActiveTags'
 import { getTagId } from './getTagId'
 import { isHomeState, isSearchState } from './home-helpers'
-import {
-  HomeActiveTagsRecord,
-  HomeStateItem,
-  HomeStateTagNavigable,
-} from './home-types'
+import { HomeStateTagNavigable } from './home-types'
 import { NavigableTag } from './NavigableTag'
-import { om, omStatic } from './om'
+import { omStatic } from './omStatic'
 import { SearchRouteParams } from './router'
-import { tagFilters } from './tagFilters'
+import { SPLIT_TAG, SPLIT_TAG_TYPE } from './SPLIT_TAG'
 import { tagLenses } from './tagLenses'
-
-const SPLIT_TAG = '_'
-const SPLIT_TAG_TYPE = '~'
-
-export const allTagsList = [...tagFilters, ...tagLenses]
-export const allTags: { [key: string]: Tag } = {}
-for (const tag of allTagsList) {
-  allTags[getTagId(tag)] = tag
-}
-
-export type HomeStateNav = {
-  tags?: NavigableTag[]
-  state?: HomeStateTagNavigable
-  disallowDisableWhenActive?: boolean
-  replaceSearch?: boolean
-}
-
-export const cleanTagName = (name: string) => {
-  return slugify(name.toLowerCase(), ' ').replace(/\./g, '-')
-}
 
 export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
   return await Promise.all(
     tags.map(async (tag) => {
-      const existing = omStatic.state.home.allTags[getTagId(tag)]
+      const existing = allTags[getTagId(tag)]
       if (!existing?.id) {
         const full = await getFullTag(tag)
         if (full) {
-          omStatic.actions.home.addTagsToCache([full])
+          addTagsToCache([full])
           return full
         }
       }
       return existing ?? tag
     })
   )
-}
-
-const isValidTag = (name?: string) => {
-  return name !== 'no-slug'
-}
-
-export const isSearchBarTag = (tag: Pick<Tag, 'type'>) =>
-  tag?.type != 'lense' && tag.type != 'filter'
-
-export const getActiveTags = (
-  state: Partial<HomeStateItem> = omStatic.state.home.currentState
-) => {
-  if ('activeTagIds' in state) {
-    const { activeTagIds } = state
-    const tagIds = Object.keys(activeTagIds)
-      .filter((x) => !!activeTagIds[x])
-      .filter(isValidTag)
-    const tags: Tag[] = tagIds.map(
-      (x) =>
-        omStatic.state.home.allTags[x] ?? {
-          id: slugify(x),
-          name: x,
-          type: 'dish',
-        }
-    )
-    return tags
-  }
-  return []
-}
-
-const ensureUniqueTagOfType = new Set(['lense', 'country', 'dish'])
-
-// mutating
-export function ensureUniqueActiveTagIds(
-  activeTagIds: HomeActiveTagsRecord,
-  nextActiveTag: NavigableTag
-) {
-  if (!nextActiveTag) {
-    throw new Error(`Missing tag...`)
-  }
-  for (const key in activeTagIds) {
-    if (key === getTagId(nextActiveTag)) {
-      continue
-    }
-    const type = omStatic.state.home.allTags[key]?.type
-    if (
-      type &&
-      ensureUniqueTagOfType.has(type) &&
-      type === nextActiveTag.type
-    ) {
-      delete activeTagIds[key]
-    }
-  }
 }
 
 export const getTagsFromRoute = (
@@ -128,44 +53,6 @@ const getUrlTagInfo = (part: string, defaultType: any = ''): NavigableTag => {
     return { type: type as any, name }
   }
   return { type: defaultType, name: part }
-}
-
-export const getRouteFromState = (
-  state: HomeStateTagNavigable = omStatic.state.home.currentState
-): SearchRouteParams => {
-  if (!isHomeState(state) && !isSearchState(state)) {
-    throw new Error(`Getting route on bad state`)
-  }
-  const allActiveTags = getActiveTags(state)
-  // build our final path segment
-  const filterTags = allActiveTags.filter((x) => x.type === 'filter')
-  const otherTags = allActiveTags.filter(
-    (x) => x.type !== 'lense' && x.type !== 'filter'
-  )
-  let tags = `${filterTags.map((x) => slugify(x.name ?? '')).join(SPLIT_TAG)}`
-  if (otherTags.length) {
-    if (tags.length) {
-      tags += SPLIT_TAG
-    }
-    tags += `${otherTags
-      .map((t) => `${t.type}${SPLIT_TAG_TYPE}${slugify(t.name ?? '')}`)
-      .join(SPLIT_TAG)}`
-  }
-  const params: any = {
-    location: slugify(state.currentLocationName ?? 'here'),
-  }
-  const lenseTag =
-    allActiveTags.find((x) => x.type === 'lense')?.name ??
-    getTagId(tagLenses[0])
-  if (lenseTag) {
-    params.lense = slugify(lenseTag)
-  }
-  if (tags.length) {
-    params.tags = tags
-  } else {
-    params.tags = '-'
-  }
-  return params
 }
 
 const getFullTag = (tag: NavigableTag): Promise<Tag | null> =>

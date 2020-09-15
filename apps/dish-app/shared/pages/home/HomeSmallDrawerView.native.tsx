@@ -1,23 +1,24 @@
 import { VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { useMemo } from 'react'
-import { Animated, PanResponder, View } from 'react-native'
+import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants'
-import { omStatic } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { BottomSheetContainer } from './BottomSheetContainer'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
 import { blurSearchInput } from './HomeSearchInput'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
 
 export const HomeSmallDrawerView = (props: { children: any }) => {
   const drawerStore = useStore(BottomDrawerStore)
-  const isSmall = useMediaQueryIsSmall()
 
   const panResponder = useMemo(() => {
     return PanResponder.create({
       onMoveShouldSetPanResponder: (_, { dy }) => {
+        if (drawerStore.snapIndex === 0) {
+          return dy > 15
+        }
         const threshold = 15
         return Math.abs(dy) > threshold
       },
@@ -39,12 +40,7 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
   }, [])
 
   return (
-    <VStack
-      className={`${isSmall ? '' : 'untouchable invisible'}`}
-      zIndex={isSmall ? zIndexDrawer : -1}
-      width="100%"
-      height="100%"
-    >
+    <VStack zIndex={zIndexDrawer} width="100%" height="100%">
       <Animated.View
         style={{
           transform: [
@@ -74,7 +70,6 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
           {...panResponder.panHandlers}
         >
           <VStack
-            className="home-drawer-snap"
             pointerEvents="auto"
             paddingHorizontal={20}
             paddingVertical={20}
@@ -93,29 +88,12 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
         </View>
 
         <BottomSheetContainer>
-          <View
-            style={{
-              zIndex: 100,
-              position: 'relative',
-              flexShrink: 1,
-              width: '100%',
-              minHeight: searchBarHeight,
-            }}
-            {...panResponder.panHandlers}
-          >
-            <HomeSearchBarDrawer />
-          </View>
-
           <VStack flex={1} maxHeight="100%" position="relative">
-            {/* children */}
-            <View
-              style={{
-                width: '100%',
-                height: '100%',
-              }}
-              {...(drawerStore.snapIndex > 0 && panResponder.panHandlers)}
-            >
-              {props.children}
+            <View style={styles.container} {...panResponder.panHandlers}>
+              <VStack maxHeight={searchBarHeight}>
+                <HomeSearchBarDrawer />
+              </VStack>
+              <VStack flex={1}>{props.children}</VStack>
             </View>
           </VStack>
         </BottomSheetContainer>
@@ -123,3 +101,10 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
     </VStack>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    height: '100%',
+  },
+})

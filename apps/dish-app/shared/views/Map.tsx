@@ -10,27 +10,9 @@ import { Dimensions } from 'react-native'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 import { tagLenses } from '../state/tagLenses'
+import { MapProps } from './MapProps'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
-
-type MapPosition = { center: LngLat; span: LngLat }
-
-type MapProps = {
-  center?: LngLat
-  span?: LngLat
-  features: GeoJSON.Feature[]
-  padding?: { top: number; left: number; bottom: number; right: number }
-  mapRef?: (map: mapboxgl.Map) => void
-  style?: string
-  onHover?: (id: string | null) => void
-  onSelect?: (id: string) => void
-  onDoubleClick?: (id: string) => void
-  onMoveEnd?: (props: MapPosition) => void
-  selected?: string
-  hovered?: string
-  centerToResults?: number
-  // avoidFitBounds?: boolean
-}
 
 const RESTAURANTS_SOURCE_ID = 'RESTAURANTS_SOURCE_ID'
 const RESTAURANTS_UNCLUSTERED_SOURCE_ID = 'RESTAURANTS_UNCLUSTERED_SOURCE_ID'

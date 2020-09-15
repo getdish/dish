@@ -6,7 +6,7 @@ import { tagDisplayNames } from '../../state/tagDisplayName'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { SmallButton } from '../../views/ui/SmallButton'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import { useIsNarrow } from './useIs'
 
 export const FilterButton = memo(
   ({
@@ -18,7 +18,7 @@ export const FilterButton = memo(
     flex,
     ...rest
   }: LinkButtonProps & { tag: Tag; isActive: boolean }) => {
-    const isSmall = useMediaQueryIsSmall()
+    const isSmall = useIsNarrow()
     let content: any = rest.children ?? tagDisplayNames[tag.name] ?? tag.name
 
     if (isSmall) {

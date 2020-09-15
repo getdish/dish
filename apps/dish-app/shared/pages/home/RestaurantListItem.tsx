@@ -17,8 +17,9 @@ import React, { Suspense, memo, useEffect, useState } from 'react'
 
 import { bgLightLight, brandColor, lightBlue } from '../../colors'
 import { isWeb } from '../../constants'
+import { allTags } from '../../state/allTags'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
-import { omStatic, useOvermindStatic } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { Link } from '../../views/ui/Link'
 import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
 import { DishView } from './DishView'
@@ -37,7 +38,7 @@ import RestaurantRatingView from './RestaurantRatingView'
 import { RestaurantScoreBreakdownSmall } from './RestaurantScoreBreakdownSmall'
 import { RestaurantUpVoteDownVote } from './RestaurantUpVoteDownVote'
 import { Squircle } from './Squircle'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import { useIsNarrow } from './useIs'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 type RestaurantListItemProps = {
@@ -60,10 +61,12 @@ type RestaurantListItemProps = {
 export const RestaurantListItem = memo(function RestaurantListItem(
   props: RestaurantListItemProps
 ) {
-  const om = useOvermindStatic()
   const [isHovered, setIsHovered] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
-  const setHoveredSlow = useDebounce(om.actions.home.setHoveredRestaurant, 50)
+  const setHoveredSlow = useDebounce(
+    omStatic.actions.home.setHoveredRestaurant,
+    50
+  )
   const store = useStore(RestaurantReviewsDisplayStore, {
     id: props.restaurantId,
   })
@@ -76,10 +79,10 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       })
     } else {
       if (
-        om.state.home.hoveredRestaurant &&
-        om.state.home.hoveredRestaurant?.slug === props.restaurantSlug
+        omStatic.state.home.hoveredRestaurant &&
+        omStatic.state.home.hoveredRestaurant?.slug === props.restaurantSlug
       ) {
-        om.actions.home.setIsHoveringRestaurant(false)
+        omStatic.actions.home.setIsHoveringRestaurant(false)
       }
     }
   }, [isHovered])
@@ -133,7 +136,7 @@ const RestaurantListItemContent = memo(
       isLoaded,
     } = props
     const pad = 18
-    const isSmall = useMediaQueryIsSmall()
+    const isSmall = useIsNarrow()
     const reviewDisplayStore = useStore(RestaurantReviewsDisplayStore, {
       id: restaurantId,
     })
@@ -392,7 +395,7 @@ const RestaurantPeekDishes = memo(
         if (!isActive) {
           return false
         }
-        const type = omStatic.state.home.allTags[x].type
+        const type = allTags[x].type
         return type != 'lense' && type != 'filter' && type != 'outlier'
       }),
     ].filter(Boolean)

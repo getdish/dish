@@ -19,10 +19,7 @@ import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { flatButtonStyle } from './baseButtonStyle'
 import { initAppleSigninButton } from './initAppleSigninButton'
 import { LoginRegisterForm } from './LoginRegisterForm'
-import {
-  useMediaQueryIsAboveMedium,
-  useMediaQueryIsSmall,
-} from './useMediaQueryIs'
+import { useIsAboveMedium, useIsNarrow } from './useIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 const MenuLinkButton = (props: LinkButtonProps) => {
@@ -42,8 +39,8 @@ const MenuLinkButton = (props: LinkButtonProps) => {
 
 export const HomeMenu = memo(() => {
   const om = useOvermind()
-  const isSmall = useMediaQueryIsSmall()
-  const isAboveMedium = useMediaQueryIsAboveMedium()
+  const isSmall = useIsNarrow()
+  const isAboveMedium = useIsAboveMedium()
   const showUserMenu = om.state.home.showUserMenu
   const setShowUserMenu = om.actions.home.setShowUserMenu
   const pageName = om.state.router.curPage.name

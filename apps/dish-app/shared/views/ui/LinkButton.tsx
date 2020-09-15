@@ -2,7 +2,7 @@ import { HStack, Text } from '@dish/ui'
 import React, { useEffect, useRef, useState } from 'react'
 
 import { isWeb } from '../../constants'
-import { omStatic } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { RoutesTable } from '../../state/router'
 import { useLink } from './Link'
 import { LinkButtonProps } from './LinkProps'

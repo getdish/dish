@@ -8,7 +8,7 @@ import { Image } from 'react-native'
 
 import { bgLight } from '../../colors'
 import { isWeb } from '../../constants'
-import { omStatic } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { RestaurantReviewsDisplayStore } from './RestaurantRatingBreakdown'
 import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'

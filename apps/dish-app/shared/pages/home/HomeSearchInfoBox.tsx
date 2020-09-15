@@ -3,7 +3,7 @@ import { HStack, SmallTitle, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Image, ScrollView } from 'react-native'
 
-import { getActiveTags } from '../../state/home-tag-helpers'
+import { getActiveTags } from '../../state/getActiveTags'
 import { HomeStateItemSearch } from '../../state/home-types'
 import { DishViewButton } from './DishViewButton'
 

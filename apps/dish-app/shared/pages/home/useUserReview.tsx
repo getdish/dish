@@ -10,6 +10,7 @@ import {
 import { Toast, useForceUpdate, useLazyEffect } from '@dish/ui'
 import { useEffect, useState } from 'react'
 
+import { allTags } from '../../state/allTags'
 import { getTagId } from '../../state/getTagId'
 import { getFullTags } from '../../state/home-tag-helpers'
 import { HomeActiveTagsRecord } from '../../state/home-types'
@@ -219,7 +220,7 @@ export const useUserUpvoteDownvoteQuery = (
       setUserVote(rating)
       const tagsList = Object.keys(activeTags)
         .filter((x) => activeTags[x])
-        .map((id) => om.state.home.allTags[id])
+        .map((id) => allTags[id])
       const saved = await voteForTags(restaurantId, userId, tagsList, rating)
       if (saved?.length) {
         Toast.show(`Saved`)
@@ -253,7 +254,7 @@ const voteForTags = async (
   rating: number
 ) => {
   const partialTags = tags.map((tag) => ({
-    ...omStatic.state.home.allTags[getTagId(tag)],
+    ...allTags[getTagId(tag)],
     ...tag,
   }))
   const fullTags = await getFullTags(partialTags)

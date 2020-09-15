@@ -1,9 +1,9 @@
 import { rgbString } from '../../helpers/rgbString'
 import { useCurrentLenseColor } from './useCurrentLenseColor'
-import { useMediaQueryIsSmall } from './useMediaQueryIs'
+import { useIsNarrow } from './useIs'
 
 export const useSearchBarTheme = () => {
-  const isSmall = useMediaQueryIsSmall()
+  const isSmall = useIsNarrow()
   const rgb = useCurrentLenseColor()
   return {
     theme: isSmall ? 'light' : 'dark',

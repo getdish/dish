@@ -16,7 +16,7 @@ import { HomeAutocompleteHoverableInput } from './HomeAutocompleteHoverableInput
 import { InputStore } from './InputStore'
 import { isWebIOS } from './isIOS'
 import { TagButton } from './TagButton'
-import { getMediaQueryMatch } from './useMediaQueryIs'
+import { getIs } from './useIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 const placeholders = [
@@ -90,7 +90,7 @@ export const HomeSearchInput = memo(() => {
     return series([
       () => fullyIdle({ max: 1000 }),
       () => {
-        if (!getMediaQueryMatch('sm')) {
+        if (!getIs('sm')) {
           focusSearchInput()
         }
       },
