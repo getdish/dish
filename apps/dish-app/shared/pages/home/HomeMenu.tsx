@@ -13,7 +13,8 @@ import {
 } from '@dish/ui'
 import React, { memo, useCallback, useEffect } from 'react'
 
-import { omStatic, useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { flatButtonStyle } from './baseButtonStyle'

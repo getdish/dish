@@ -30,7 +30,8 @@ import {
   ShowAutocomplete,
 } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
-import { omStatic, useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { BottomDrawerStore } from './BottomDrawerStore'

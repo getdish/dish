@@ -15,7 +15,8 @@ import { getTagId } from '../../state/getTagId'
 import { getFullTags } from '../../state/home-tag-helpers'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
-import { omStatic, useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { useIsMountedRef } from './useIsMountedRef'
 
 type ReviewWithTag = Pick<
