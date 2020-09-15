@@ -84,7 +84,7 @@ export async function userFavorites(user_id: string) {
 
 export async function reviewExternalUpsert(reviews: Review[]) {
   reviews = reviews.map((r) => {
-    r.text = cleanText(r.text)
+    r.text = cleanReviewText(r.text)
     return r
   })
   return await reviewUpsert(
@@ -93,9 +93,10 @@ export async function reviewExternalUpsert(reviews: Review[]) {
   )
 }
 
-function cleanText(text: string | null | undefined) {
+export function cleanReviewText(text: string | null | undefined) {
   if (!text) return null
   const br = /<br\s*[\/]?>/gi
   const apostrophe = '&#39;'
-  return text.replace(br, '\n').replaceAll(apostrophe, "'")
+  const cleaned = text.replace(br, '\n').replaceAll(apostrophe, "'")
+  return cleaned
 }
