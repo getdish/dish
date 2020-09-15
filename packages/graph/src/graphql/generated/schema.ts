@@ -7968,7 +7968,7 @@ export const schema = {
           )
         },
         get source() {
-          return new FieldNode(schema.String, undefined, true)
+          return new FieldNode(schema.String, undefined, false)
         },
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, true)
