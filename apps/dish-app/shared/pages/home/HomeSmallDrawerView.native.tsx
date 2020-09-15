@@ -18,7 +18,6 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
   const panResponder = useMemo(() => {
     return PanResponder.create({
       onMoveShouldSetPanResponder: (_, { dy }) => {
-        console.log('HSOULD GRAN?')
         if (isTouchingSearchBar) {
           return false
         }
@@ -71,27 +70,6 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
     ),
     [props.children]
   )
-
-  const range = [
-    getWindowHeight() * drawerStore.snapPoints[0],
-    getWindowHeight() * drawerStore.snapPoints[2],
-  ]
-  // const boundY = .interpolate({
-  //   inputRange: [
-  //     range[0] - 200,
-  //     range[0],
-  //     (range[0] + range[1]) / 2,
-  //     range[1],
-  //     range[1] + 200,
-  //   ],
-  //   outputRange: [
-  //     range[0],
-  //     range[0],
-  //     (range[0] + range[1]) / 2,
-  //     range[1],
-  //     range[1],
-  //   ],
-  // })
 
   return (
     <VStack zIndex={zIndexDrawer} width="100%" height="100%">

@@ -10,10 +10,6 @@ export class BottomDrawerStore extends Store {
   snapPoints = [isWeb ? 0.02 : 0.05, 0.25, 0.75]
   snapIndex = 1
   pan = new Animated.Value(this.getSnapPointOffset())
-  panEnd = new Animated.Value(this.getSnapPointOffset()).interpolate({
-    inputRange: [this.getSnapPointOffset(2), getWindowHeight()],
-    outputRange: [this.getSnapPointOffset(2), this.getSnapPointOffset(2) + 50],
-  })
   spring: any
 
   get currentSnapPoint() {

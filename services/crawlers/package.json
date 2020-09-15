@@ -9,8 +9,8 @@
     "watch": "tsc -b --watch --preserveWatchOutput",
     "worker": "node _/worker.js",
     "worker:watch": "nodemon _/worker.js",
-    "test": "RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/idempotent/* --verbose",
-    "test:scheduled": "RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/http-dependent/* --verbose"
+    "test": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/idempotent/* --verbose",
+    "test:scheduled": "TARGET=node RUN_WITHOUT_WORKER=true DISH_ENV=test ava test/http-dependent/* --verbose"
   },
   "dependencies": {
     "@dish/common": "*",

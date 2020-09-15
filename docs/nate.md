@@ -11,6 +11,14 @@ goals for this week, get us to being able to onboard people (not 100% necessary,
   - show users current favorites on the map
 - start on blog post
 
+native:
+
+- fix press events
+- fix shadows
+- map showing pins / interaction
+- fix search layout
+- fix detail layout
+
 next week:
 
 - show a list of hot & new restaurants on homepage, simple and easy win, with link to breakdown to comment easily...

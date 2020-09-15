@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "true",
-    "test": "DISH_ENV=test ava test/main.ts --verbose",
+    "test": "TARGET=node DISH_ENV=test ava test/main.ts --verbose",
     "watch": "true",
     "start": "docker-compose up"
   }
