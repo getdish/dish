@@ -10,10 +10,18 @@ export class BottomDrawerStore extends Store {
   snapPoints = [isWeb ? 0.02 : 0.05, 0.25, 0.75]
   snapIndex = 1
   pan = new Animated.Value(this.getSnapPointOffset())
+  panEnd = new Animated.Value(this.getSnapPointOffset()).interpolate({
+    inputRange: [this.getSnapPointOffset(2), getWindowHeight()],
+    outputRange: [this.getSnapPointOffset(2), this.getSnapPointOffset(2) + 50],
+  })
   spring: any
 
   get currentSnapPoint() {
     return this.snapPoints[this.snapIndex]
+  }
+
+  get snapIndices() {
+    return this.snapPoints.map((_, i) => this.getSnapPointOffset(i))
   }
 
   setSnapPoint(point: number) {
@@ -21,21 +29,26 @@ export class BottomDrawerStore extends Store {
     this.animateDrawerToPx()
   }
 
-  animateDrawerToPx(px: number = this.getSnapPointOffset(), velocity?: number) {
-    this.snapIndex = this.getSnapIndex(px)
+  animateDrawerToPx(
+    px: number = this.getSnapPointOffset(),
+    velocity: number = 0
+  ) {
+    this.setSnapIndex(this.getSnapIndex(px, velocity))
     const toValue = this.getSnapPointOffset()
     this.spring = Animated.spring(this.pan, {
       useNativeDriver: true,
-      velocity: velocity ?? 0,
+      velocity: velocity,
       toValue,
     })
     this.spring.start(() => {
+      this.pan.flattenOffset()
+      this.pan.setValue(toValue)
       this.spring = null
     })
   }
 
-  private getSnapPointOffset() {
-    return this.snapPoints[this.snapIndex] * getWindowHeight()
+  private getSnapPointOffset(index = this.snapIndex) {
+    return this.snapPoints[index] * getWindowHeight()
   }
 
   private setSnapIndex(x: number) {
@@ -43,12 +56,13 @@ export class BottomDrawerStore extends Store {
     omStatic.actions.home.setDrawerSnapPoint(x)
   }
 
-  private getSnapIndex(px: number) {
+  private getSnapIndex(px: number, velocity: number) {
+    const estFinalPx = px + velocity * 50
     for (const [index, point] of this.snapPoints.entries()) {
       const cur = point * getWindowHeight()
       const next = (this.snapPoints[index + 1] ?? 1) * getWindowHeight()
       const midWayToNext = cur + (next - cur) / 2
-      if (px < midWayToNext) {
+      if (estFinalPx < midWayToNext) {
         return index
       }
     }

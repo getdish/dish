@@ -4,7 +4,8 @@
   "description": "React Native component for Feather icons",
   "main": "_/index.js",
   "scripts": {
-    "build": "node ./bin/build && tsc -b",
+    "generate": "node ./bin/build",
+    "build": "tsc -b",
     "build:watch": "tsc -b --watch --preserveWatchOutput"
   },
   "license": "MIT",

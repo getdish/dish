@@ -10,15 +10,18 @@ import { BottomDrawerStore } from './BottomDrawerStore'
 import { BottomSheetContainer } from './BottomSheetContainer'
 import { isScrollAtTop, isScrollingSubDrawer } from './HomeScrollView'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
-import { blurSearchInput } from './HomeSearchInput'
+import { blurSearchInput, isTouchingSearchBar } from './HomeSearchInput'
 
 export const HomeSmallDrawerView = (props: { children: any }) => {
   const drawerStore = useStore(BottomDrawerStore)
 
   const panResponder = useMemo(() => {
-    let start
     return PanResponder.create({
       onMoveShouldSetPanResponder: (_, { dy }) => {
+        console.log('HSOULD GRAN?')
+        if (isTouchingSearchBar) {
+          return false
+        }
         if (isScrollingSubDrawer) {
           return false
         }
@@ -37,8 +40,8 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
       onPanResponderGrant: (e, gestureState) => {
         drawerStore.spring?.stop()
         drawerStore.spring = null
-        // drawerStore.pan.flattenOffset()
         drawerStore.pan.setOffset(drawerStore.pan['_value'])
+        drawerStore.pan.setValue(0)
         if (omStatic.state.home.showAutocomplete) {
           omStatic.actions.home.setShowAutocomplete(false)
         }
@@ -47,7 +50,7 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
       onPanResponderMove: Animated.event([null, { dy: drawerStore.pan }]),
       onPanResponderRelease: (e, gestureState) => {
         drawerStore.pan.flattenOffset()
-        const velocity = Math.abs(gestureState.vy)
+        const velocity = gestureState.vy
         drawerStore.animateDrawerToPx(drawerStore.pan['_value'], velocity)
       },
     })
@@ -73,11 +76,22 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
     getWindowHeight() * drawerStore.snapPoints[0],
     getWindowHeight() * drawerStore.snapPoints[2],
   ]
-  const boundY = drawerStore.pan.interpolate({
-    inputRange: [range[0], (range[0] + range[1]) / 2, range[1]],
-    outputRange: [range[0], (range[0] + range[1]) / 2, range[1]],
-    extrapolate: 'clamp',
-  })
+  // const boundY = .interpolate({
+  //   inputRange: [
+  //     range[0] - 200,
+  //     range[0],
+  //     (range[0] + range[1]) / 2,
+  //     range[1],
+  //     range[1] + 200,
+  //   ],
+  //   outputRange: [
+  //     range[0],
+  //     range[0],
+  //     (range[0] + range[1]) / 2,
+  //     range[1],
+  //     range[1],
+  //   ],
+  // })
 
   return (
     <VStack zIndex={zIndexDrawer} width="100%" height="100%">
@@ -85,7 +99,7 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
         style={{
           transform: [
             {
-              translateY: boundY,
+              translateY: drawerStore.pan,
             },
           ],
           maxWidth: pageWidthMax,

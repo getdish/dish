@@ -3,8 +3,9 @@ import { Loader, Search } from '@dish/react-feather'
 import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import _ from 'lodash'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import {
+  PanResponder,
   Platform,
   ScrollView,
   StyleSheet,
@@ -81,6 +82,8 @@ export const isSearchInputFocused = () => {
   return isFocused
 }
 
+export let isTouchingSearchBar
+
 export const HomeSearchInput = memo(() => {
   const inputStore = useStore(InputStore, { name: 'search' })
   const om = useOvermind()
@@ -132,6 +135,27 @@ export const HomeSearchInput = memo(() => {
     }
   }, [])
 
+  const panResponder = useMemo(() => {
+    return PanResponder.create({
+      onMoveShouldSetPanResponder: (_, { dy }) => {
+        console.log('waht is')
+        isTouchingSearchBar = true
+        return true
+      },
+      onPanResponderTerminate: () => {
+        console.log(123)
+      },
+      onPanResponderReject: () => {
+        console.log('inputStore.node', inputStore.node.focus())
+        isTouchingSearchBar = false
+      },
+      onPanResponderRelease: (e, gestureState) => {
+        console.log('inputStore.node', inputStore.node.focus())
+        isTouchingSearchBar = false
+      },
+    })
+  }, [])
+
   const input = inputStore.node
 
   return (
@@ -168,6 +192,25 @@ export const HomeSearchInput = memo(() => {
             )}
           </VStack>
 
+          <TouchableWithoutFeedback
+            onPress={() => {
+              inputStore.node.focus()
+            }}
+          >
+            <View
+              style={{
+                // backgroundColor: 'red',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 40,
+                bottom: 0,
+                zIndex: 10000,
+              }}
+              {...panResponder.panHandlers}
+            />
+          </TouchableWithoutFeedback>
+
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -187,20 +230,19 @@ export const HomeSearchInput = memo(() => {
               onBlur={() => {
                 avoidNextFocus = false
               }}
+              onFocus={() => {
+                if (omStatic.state.home.searchbarFocusedTag) {
+                  omStatic.actions.home.setSearchBarTagIndex(0)
+                } else {
+                  omStatic.actions.home.setShowAutocomplete('search')
+                }
+              }}
               onChangeText={(text) => {
                 if (getSearch() == '' && text !== '') {
                   om.actions.home.setShowAutocomplete('search')
                 }
                 setSearch(text)
                 om.actions.home.setSearchQuery(text)
-              }}
-              onFocus={() => {
-                console.log('hi')
-                if (omStatic.state.home.searchbarFocusedTag) {
-                  omStatic.actions.home.setSearchBarTagIndex(0)
-                } else {
-                  omStatic.actions.home.setShowAutocomplete('search')
-                }
               }}
               placeholder={isSearchingCuisine ? '...' : `${placeHolder}...`}
               style={[

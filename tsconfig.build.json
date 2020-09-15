@@ -3,6 +3,7 @@
   "files": [],
   "references": [
     { "path": "apps/dish-app" },
+    { "path": "packages/react-feather" },
     { "path": "services/crawlers" },
     { "path": "services/worker" },
     { "path": "services/hasura" }
