@@ -4,6 +4,7 @@ import {
   RestaurantTag,
   Review,
   Tag,
+  cleanReviewText,
   convertSimpleTagsToRestaurantTags,
   externalUserUUID,
   globalTagId,
@@ -150,11 +151,26 @@ export class Tagging {
       ...this._getTripadvisorReviews(),
       ...this._getGoogleReviews(),
     ]
-    const all_sources = [...this.all_reviews, ...this._scanMenuItemsForTags()]
+    let all_sources = [...this.all_reviews, ...this._scanMenuItemsForTags()]
+    all_sources = this.cleanAllSources(all_sources) as TextSource[]
     const reviews_with_sentiments = this.findDishesInText(all_sources)
     await this.findVegInText(all_sources)
     await this._collectFoundRestaurantTags()
     await reviewExternalUpsert(reviews_with_sentiments)
+  }
+
+  cleanAllSources(sources: TextSource[]) {
+    return sources
+      .map((s) => {
+        if (!s) return
+        if (isReview(s)) {
+          s.text = cleanReviewText(s.text)
+        } else {
+          s = cleanReviewText(s) as string
+        }
+        return s
+      })
+      .filter(Boolean)
   }
 
   async _collectFoundRestaurantTags() {
