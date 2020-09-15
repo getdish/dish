@@ -30,8 +30,8 @@
     "migrate": "(cd services/hasura && hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password)",
     "format": "swift-format --recursive --in-place ./apps/ios/dish",
     "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
-    "preinstall": "bin/preinstall.sh; rm node_modules/react-native || true",
-    "postinstall": "yarn patch-package; bin/postinstall.sh; yarn build:refs; yarn expo:check-deps",
+    "preinstall": "bin/preinstall.sh",
+    "postinstall": "bin/postinstall.sh",
     "expo:check-deps": "expo-yarn-workspaces check-workspace-dependencies"
   },
   "resolutions": {
