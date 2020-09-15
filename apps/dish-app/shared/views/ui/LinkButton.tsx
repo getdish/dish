@@ -44,6 +44,7 @@ export function LinkButton<
     tag,
     name,
     params,
+    onPress,
     ...restProps
   } = props
 

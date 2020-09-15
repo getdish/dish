@@ -14,4 +14,8 @@ export const omStatic = new Proxy(
     },
   }
   // this type fixes omStatic.reaction(, not sure waht iContext fixed if any
-) as IContext<Config> //Overmind<typeof config> //
+) as IContext<Config> & {
+  reaction: any // TODO
+}
+
+//Overmind<typeof config> //
