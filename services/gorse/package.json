@@ -2,7 +2,7 @@
   "name": "@dish/gorse",
   "version": "0.0.1",
   "scripts": {
-    "test": "ava test/main.ts --verbose"
+    "test": "TARGET=node ava test/main.ts --verbose"
   },
   "dependencies": {},
   "devDependencies": {
