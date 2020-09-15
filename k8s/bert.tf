@@ -1,22 +1,22 @@
-resource "kubernetes_deployment" "absa" {
+resource "kubernetes_deployment" "bert" {
   lifecycle {
     ignore_changes = [
       "spec[0].replicas"
     ]
   }
   metadata {
-    name = "absa"
+    name = "bert"
   }
   spec {
     selector {
       match_labels = {
-        app = "absa"
+        app = "bert"
       }
     }
     template {
       metadata {
         labels = {
-          app = "absa"
+          app = "bert"
         }
       }
       spec {
@@ -28,19 +28,15 @@ resource "kubernetes_deployment" "absa" {
         }
         container {
           name  = "app"
-          image = "docker.k8s.dishapp.com/dish/absa"
+          image = "docker.k8s.dishapp.com/dish/bert"
           resources {
             limits {
               cpu    = "2"
-              memory = "6Gi"
+              memory = "5Gi"
             }
           }
-          env {
-            name = "WORKERS_PER_CORE"
-            value = "0.5"
-          }
           port {
-            container_port = 80
+            container_port = 8080
           }
         }
       }
@@ -48,20 +44,20 @@ resource "kubernetes_deployment" "absa" {
   }
 }
 
-resource "kubernetes_service" "absa" {
+resource "kubernetes_service" "bert" {
   metadata {
-    name = "absa"
+    name = "bert"
   }
 
   spec {
     selector = {
-      app = "absa"
+      app = "bert"
     }
 
     port {
       name = "http"
       port = 5000
-      target_port = 80
+      target_port = 8080
     }
   }
 }

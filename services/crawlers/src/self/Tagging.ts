@@ -36,7 +36,7 @@ export class Tagging {
   all_tags: Tag[] = []
   found_tags: { [key: string]: Partial<Tag> } = {}
   SPECIAL_FILTER_THRESHOLD = 3
-  sentiment = new Sentiment()
+  naive_sentiment = new Sentiment()
   all_reviews: Review[] = []
 
   constructor(crawler: Self) {
@@ -235,7 +235,7 @@ export class Tagging {
     this.found_tags[tag.id] = tag
     this.restaurant_tag_ratings[tag.id] =
       this.restaurant_tag_ratings[tag.id] || []
-    const sentences = this.matchingSentences(text, tag)
+    const sentences = this.matchingSentences(text)
     for (const sentence of sentences) {
       if (!this.doesStringContainTag(sentence, tag.name ?? '')) continue
       const rating = this.measureSentiment(sentence)
@@ -244,7 +244,7 @@ export class Tagging {
         const sentiment = {
           tag_id: tag.id,
           sentence,
-          sentiment: rating,
+          naive_sentiment: rating,
         }
         text_source.sentiments.push(sentiment)
       }
@@ -273,12 +273,12 @@ export class Tagging {
     return regex.test(text)
   }
 
-  matchingSentences(text: string, tag: Tag) {
+  matchingSentences(text: string) {
     return text.match(/[^\.!\?]+[\.!\?]+/g) || [text]
   }
 
   measureSentiment(sentence: string) {
-    return this.sentiment.analyze(sentence).score
+    return this.naive_sentiment.analyze(sentence).score
   }
 
   _getYelpReviews() {

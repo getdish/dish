@@ -687,12 +687,11 @@ export class Self extends WorkerJob {
   async addReviewHeadlines() {
     const id = this.restaurant.id
     const result = await main_db.query(`
-      SELECT DISTINCT(sentence), sentiment
-      FROM restaurant
-      JOIN review ON review.restaurant_id = restaurant.id
-      JOIN review_tag_sentences rts ON rts.review_id = review.id
+      SELECT DISTINCT(sentence), naive_sentiment FROM restaurant
+        JOIN review ON review.restaurant_id = restaurant.id
+        JOIN review_tag_sentence rts ON rts.review_id = review.id
       WHERE restaurant.id = '${id}'
-      ORDER BY sentiment DESC
+      ORDER BY naive_sentiment DESC
       LIMIT 5
     `)
     this.restaurant.headlines = result.rows

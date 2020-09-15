@@ -838,21 +838,13 @@ export type t_mutation_root = FieldsType<
       t_review_mutation_response | null
     >
     delete_review_by_pk?: FieldsTypeArg<{ id: any }, t_review | null>
-    delete_review_tag_sentences?: FieldsTypeArg<
-      { where: review_tag_sentences_bool_exp },
-      t_review_tag_sentences_mutation_response | null
+    delete_review_tag_sentence?: FieldsTypeArg<
+      { where: review_tag_sentence_bool_exp },
+      t_review_tag_sentence_mutation_response | null
     >
-    delete_review_tag_sentences_by_pk?: FieldsTypeArg<
+    delete_review_tag_sentence_by_pk?: FieldsTypeArg<
       { id: any },
-      t_review_tag_sentences | null
-    >
-    delete_review_tag_whole?: FieldsTypeArg<
-      { where: review_tag_whole_bool_exp },
-      t_review_tag_whole_mutation_response | null
-    >
-    delete_review_tag_whole_by_pk?: FieldsTypeArg<
-      { id: any },
-      t_review_tag_whole | null
+      t_review_tag_sentence | null
     >
     delete_setting?: FieldsTypeArg<
       { where: setting_bool_exp },
@@ -966,33 +958,19 @@ export type t_mutation_root = FieldsType<
       { object: review_insert_input; on_conflict?: review_on_conflict | null },
       t_review | null
     >
-    insert_review_tag_sentences?: FieldsTypeArg<
+    insert_review_tag_sentence?: FieldsTypeArg<
       {
-        objects: review_tag_sentences_insert_input[]
-        on_conflict?: review_tag_sentences_on_conflict | null
+        objects: review_tag_sentence_insert_input[]
+        on_conflict?: review_tag_sentence_on_conflict | null
       },
-      t_review_tag_sentences_mutation_response | null
+      t_review_tag_sentence_mutation_response | null
     >
-    insert_review_tag_sentences_one?: FieldsTypeArg<
+    insert_review_tag_sentence_one?: FieldsTypeArg<
       {
-        object: review_tag_sentences_insert_input
-        on_conflict?: review_tag_sentences_on_conflict | null
+        object: review_tag_sentence_insert_input
+        on_conflict?: review_tag_sentence_on_conflict | null
       },
-      t_review_tag_sentences | null
-    >
-    insert_review_tag_whole?: FieldsTypeArg<
-      {
-        objects: review_tag_whole_insert_input[]
-        on_conflict?: review_tag_whole_on_conflict | null
-      },
-      t_review_tag_whole_mutation_response | null
-    >
-    insert_review_tag_whole_one?: FieldsTypeArg<
-      {
-        object: review_tag_whole_insert_input
-        on_conflict?: review_tag_whole_on_conflict | null
-      },
-      t_review_tag_whole | null
+      t_review_tag_sentence | null
     >
     insert_setting?: FieldsTypeArg<
       {
@@ -1170,37 +1148,21 @@ export type t_mutation_root = FieldsType<
       },
       t_review | null
     >
-    update_review_tag_sentences?: FieldsTypeArg<
+    update_review_tag_sentence?: FieldsTypeArg<
       {
-        _inc?: review_tag_sentences_inc_input | null
-        _set?: review_tag_sentences_set_input | null
-        where: review_tag_sentences_bool_exp
+        _inc?: review_tag_sentence_inc_input | null
+        _set?: review_tag_sentence_set_input | null
+        where: review_tag_sentence_bool_exp
       },
-      t_review_tag_sentences_mutation_response | null
+      t_review_tag_sentence_mutation_response | null
     >
-    update_review_tag_sentences_by_pk?: FieldsTypeArg<
+    update_review_tag_sentence_by_pk?: FieldsTypeArg<
       {
-        _inc?: review_tag_sentences_inc_input | null
-        _set?: review_tag_sentences_set_input | null
-        pk_columns: review_tag_sentences_pk_columns_input
+        _inc?: review_tag_sentence_inc_input | null
+        _set?: review_tag_sentence_set_input | null
+        pk_columns: review_tag_sentence_pk_columns_input
       },
-      t_review_tag_sentences | null
-    >
-    update_review_tag_whole?: FieldsTypeArg<
-      {
-        _inc?: review_tag_whole_inc_input | null
-        _set?: review_tag_whole_set_input | null
-        where: review_tag_whole_bool_exp
-      },
-      t_review_tag_whole_mutation_response | null
-    >
-    update_review_tag_whole_by_pk?: FieldsTypeArg<
-      {
-        _inc?: review_tag_whole_inc_input | null
-        _set?: review_tag_whole_set_input | null
-        pk_columns: review_tag_whole_pk_columns_input
-      },
-      t_review_tag_whole | null
+      t_review_tag_sentence | null
     >
     update_setting?: FieldsTypeArg<
       {
@@ -2327,53 +2289,29 @@ export type t_query_root = FieldsType<
       t_review_aggregate
     >
     review_by_pk?: FieldsTypeArg<{ id: any }, t_review | null>
-    review_tag_sentences: FieldsTypeArg<
+    review_tag_sentence: FieldsTypeArg<
       {
-        distinct_on?: review_tag_sentences_select_column[] | null
+        distinct_on?: review_tag_sentence_select_column[] | null
         limit?: number | null
         offset?: number | null
-        order_by?: review_tag_sentences_order_by[] | null
-        where?: review_tag_sentences_bool_exp | null
+        order_by?: review_tag_sentence_order_by[] | null
+        where?: review_tag_sentence_bool_exp | null
       },
-      t_review_tag_sentences[]
+      t_review_tag_sentence[]
     >
-    review_tag_sentences_aggregate: FieldsTypeArg<
+    review_tag_sentence_aggregate: FieldsTypeArg<
       {
-        distinct_on?: review_tag_sentences_select_column[] | null
+        distinct_on?: review_tag_sentence_select_column[] | null
         limit?: number | null
         offset?: number | null
-        order_by?: review_tag_sentences_order_by[] | null
-        where?: review_tag_sentences_bool_exp | null
+        order_by?: review_tag_sentence_order_by[] | null
+        where?: review_tag_sentence_bool_exp | null
       },
-      t_review_tag_sentences_aggregate
+      t_review_tag_sentence_aggregate
     >
-    review_tag_sentences_by_pk?: FieldsTypeArg<
+    review_tag_sentence_by_pk?: FieldsTypeArg<
       { id: any },
-      t_review_tag_sentences | null
-    >
-    review_tag_whole: FieldsTypeArg<
-      {
-        distinct_on?: review_tag_whole_select_column[] | null
-        limit?: number | null
-        offset?: number | null
-        order_by?: review_tag_whole_order_by[] | null
-        where?: review_tag_whole_bool_exp | null
-      },
-      t_review_tag_whole[]
-    >
-    review_tag_whole_aggregate: FieldsTypeArg<
-      {
-        distinct_on?: review_tag_whole_select_column[] | null
-        limit?: number | null
-        offset?: number | null
-        order_by?: review_tag_whole_order_by[] | null
-        where?: review_tag_whole_bool_exp | null
-      },
-      t_review_tag_whole_aggregate
-    >
-    review_tag_whole_by_pk?: FieldsTypeArg<
-      { id: any },
-      t_review_tag_whole | null
+      t_review_tag_sentence | null
     >
     setting: FieldsTypeArg<
       {
@@ -3862,23 +3800,23 @@ export type t_review = FieldsType<
     restaurant_id: t_uuid
     sentiments: FieldsTypeArg<
       {
-        distinct_on?: review_tag_sentences_select_column[] | null
+        distinct_on?: review_tag_sentence_select_column[] | null
         limit?: number | null
         offset?: number | null
-        order_by?: review_tag_sentences_order_by[] | null
-        where?: review_tag_sentences_bool_exp | null
+        order_by?: review_tag_sentence_order_by[] | null
+        where?: review_tag_sentence_bool_exp | null
       },
-      t_review_tag_sentences[]
+      t_review_tag_sentence[]
     >
     sentiments_aggregate: FieldsTypeArg<
       {
-        distinct_on?: review_tag_sentences_select_column[] | null
+        distinct_on?: review_tag_sentence_select_column[] | null
         limit?: number | null
         offset?: number | null
-        order_by?: review_tag_sentences_order_by[] | null
-        where?: review_tag_sentences_bool_exp | null
+        order_by?: review_tag_sentence_order_by[] | null
+        where?: review_tag_sentence_bool_exp | null
       },
-      t_review_tag_sentences_aggregate
+      t_review_tag_sentence_aggregate
     >
     source: t_String
     tag_id?: t_uuid | null
@@ -3998,7 +3936,7 @@ export type review_bool_exp = {
   rating?: numeric_comparison_exp | null
   restaurant?: restaurant_bool_exp | null
   restaurant_id?: uuid_comparison_exp | null
-  sentiments?: review_tag_sentences_bool_exp | null
+  sentiments?: review_tag_sentence_bool_exp | null
   source?: String_comparison_exp | null
   tag_id?: uuid_comparison_exp | null
   taxonomy?: tag_bool_exp | null
@@ -4060,7 +3998,7 @@ export type review_insert_input = {
   rating?: any | null
   restaurant?: restaurant_obj_rel_insert_input | null
   restaurant_id?: any | null
-  sentiments?: review_tag_sentences_arr_rel_insert_input | null
+  sentiments?: review_tag_sentence_arr_rel_insert_input | null
   source?: string | null
   tag_id?: any | null
   taxonomy?: tag_obj_rel_insert_input | null
@@ -4197,7 +4135,7 @@ export type review_order_by = {
   rating?: order_by | null
   restaurant?: restaurant_order_by | null
   restaurant_id?: order_by | null
-  sentiments_aggregate?: review_tag_sentences_aggregate_order_by | null
+  sentiments_aggregate?: review_tag_sentence_aggregate_order_by | null
   source?: order_by | null
   tag_id?: order_by | null
   taxonomy?: tag_order_by | null
@@ -4335,823 +4273,469 @@ export type t_review_sum_fields = FieldsType<
 export type review_sum_order_by = { rating?: order_by | null }
 
 /**
- * @name review_tag_sentences
+ * @name review_tag_sentence
  * @type OBJECT
  */
-export type t_review_tag_sentences = FieldsType<
+export type t_review_tag_sentence = FieldsType<
   {
-    __typename: t_String<'review_tag_sentences'>
+    __typename: t_String<'review_tag_sentence'>
     id: t_uuid
+    ml_sentiment?: t_numeric | null
+    naive_sentiment: t_numeric
     review: t_review
     review_id: t_uuid
     sentence: t_String
-    sentiment: t_numeric
     tag: t_tag
     tag_id: t_uuid
   },
-  Extension<'review_tag_sentences'>
+  Extension<'review_tag_sentence'>
 >
 
 /**
- * @name review_tag_sentences_aggregate
+ * @name review_tag_sentence_aggregate
  * @type OBJECT
  */
-export type t_review_tag_sentences_aggregate = FieldsType<
+export type t_review_tag_sentence_aggregate = FieldsType<
   {
-    __typename: t_String<'review_tag_sentences_aggregate'>
-    aggregate?: t_review_tag_sentences_aggregate_fields | null
-    nodes: t_review_tag_sentences[]
+    __typename: t_String<'review_tag_sentence_aggregate'>
+    aggregate?: t_review_tag_sentence_aggregate_fields | null
+    nodes: t_review_tag_sentence[]
   },
-  Extension<'review_tag_sentences_aggregate'>
+  Extension<'review_tag_sentence_aggregate'>
 >
 
 /**
- * @name review_tag_sentences_aggregate_fields
+ * @name review_tag_sentence_aggregate_fields
  * @type OBJECT
  */
-export type t_review_tag_sentences_aggregate_fields = FieldsType<
+export type t_review_tag_sentence_aggregate_fields = FieldsType<
   {
-    __typename: t_String<'review_tag_sentences_aggregate_fields'>
-    avg?: t_review_tag_sentences_avg_fields | null
+    __typename: t_String<'review_tag_sentence_aggregate_fields'>
+    avg?: t_review_tag_sentence_avg_fields | null
     count?: FieldsTypeArg<
       {
-        columns?: review_tag_sentences_select_column[] | null
+        columns?: review_tag_sentence_select_column[] | null
         distinct?: boolean | null
       },
       t_Int | null
     >
-    max?: t_review_tag_sentences_max_fields | null
-    min?: t_review_tag_sentences_min_fields | null
-    stddev?: t_review_tag_sentences_stddev_fields | null
-    stddev_pop?: t_review_tag_sentences_stddev_pop_fields | null
-    stddev_samp?: t_review_tag_sentences_stddev_samp_fields | null
-    sum?: t_review_tag_sentences_sum_fields | null
-    var_pop?: t_review_tag_sentences_var_pop_fields | null
-    var_samp?: t_review_tag_sentences_var_samp_fields | null
-    variance?: t_review_tag_sentences_variance_fields | null
+    max?: t_review_tag_sentence_max_fields | null
+    min?: t_review_tag_sentence_min_fields | null
+    stddev?: t_review_tag_sentence_stddev_fields | null
+    stddev_pop?: t_review_tag_sentence_stddev_pop_fields | null
+    stddev_samp?: t_review_tag_sentence_stddev_samp_fields | null
+    sum?: t_review_tag_sentence_sum_fields | null
+    var_pop?: t_review_tag_sentence_var_pop_fields | null
+    var_samp?: t_review_tag_sentence_var_samp_fields | null
+    variance?: t_review_tag_sentence_variance_fields | null
   },
-  Extension<'review_tag_sentences_aggregate_fields'>
+  Extension<'review_tag_sentence_aggregate_fields'>
 >
 
 /**
- * @name review_tag_sentences_aggregate_order_by
+ * @name review_tag_sentence_aggregate_order_by
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_aggregate_order_by = {
-  avg?: review_tag_sentences_avg_order_by | null
+export type review_tag_sentence_aggregate_order_by = {
+  avg?: review_tag_sentence_avg_order_by | null
   count?: order_by | null
-  max?: review_tag_sentences_max_order_by | null
-  min?: review_tag_sentences_min_order_by | null
-  stddev?: review_tag_sentences_stddev_order_by | null
-  stddev_pop?: review_tag_sentences_stddev_pop_order_by | null
-  stddev_samp?: review_tag_sentences_stddev_samp_order_by | null
-  sum?: review_tag_sentences_sum_order_by | null
-  var_pop?: review_tag_sentences_var_pop_order_by | null
-  var_samp?: review_tag_sentences_var_samp_order_by | null
-  variance?: review_tag_sentences_variance_order_by | null
+  max?: review_tag_sentence_max_order_by | null
+  min?: review_tag_sentence_min_order_by | null
+  stddev?: review_tag_sentence_stddev_order_by | null
+  stddev_pop?: review_tag_sentence_stddev_pop_order_by | null
+  stddev_samp?: review_tag_sentence_stddev_samp_order_by | null
+  sum?: review_tag_sentence_sum_order_by | null
+  var_pop?: review_tag_sentence_var_pop_order_by | null
+  var_samp?: review_tag_sentence_var_samp_order_by | null
+  variance?: review_tag_sentence_variance_order_by | null
 }
 
 /**
- * @name review_tag_sentences_arr_rel_insert_input
+ * @name review_tag_sentence_arr_rel_insert_input
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_arr_rel_insert_input = {
-  data: review_tag_sentences_insert_input[]
-  on_conflict?: review_tag_sentences_on_conflict | null
+export type review_tag_sentence_arr_rel_insert_input = {
+  data: review_tag_sentence_insert_input[]
+  on_conflict?: review_tag_sentence_on_conflict | null
 }
 
 /**
- * @name review_tag_sentences_avg_fields
+ * @name review_tag_sentence_avg_fields
  * @type OBJECT
  */
-export type t_review_tag_sentences_avg_fields = FieldsType<
+export type t_review_tag_sentence_avg_fields = FieldsType<
   {
-    __typename: t_String<'review_tag_sentences_avg_fields'>
-    sentiment?: t_Float | null
+    __typename: t_String<'review_tag_sentence_avg_fields'>
+    ml_sentiment?: t_Float | null
+    naive_sentiment?: t_Float | null
   },
-  Extension<'review_tag_sentences_avg_fields'>
+  Extension<'review_tag_sentence_avg_fields'>
 >
 
 /**
- * @name review_tag_sentences_avg_order_by
+ * @name review_tag_sentence_avg_order_by
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_avg_order_by = { sentiment?: order_by | null }
+export type review_tag_sentence_avg_order_by = {
+  ml_sentiment?: order_by | null
+  naive_sentiment?: order_by | null
+}
 
 /**
- * @name review_tag_sentences_bool_exp
+ * @name review_tag_sentence_bool_exp
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_bool_exp = {
-  _and?: (review_tag_sentences_bool_exp | null)[] | null
-  _not?: review_tag_sentences_bool_exp | null
-  _or?: (review_tag_sentences_bool_exp | null)[] | null
+export type review_tag_sentence_bool_exp = {
+  _and?: (review_tag_sentence_bool_exp | null)[] | null
+  _not?: review_tag_sentence_bool_exp | null
+  _or?: (review_tag_sentence_bool_exp | null)[] | null
   id?: uuid_comparison_exp | null
+  ml_sentiment?: numeric_comparison_exp | null
+  naive_sentiment?: numeric_comparison_exp | null
   review?: review_bool_exp | null
   review_id?: uuid_comparison_exp | null
   sentence?: String_comparison_exp | null
-  sentiment?: numeric_comparison_exp | null
   tag?: tag_bool_exp | null
   tag_id?: uuid_comparison_exp | null
 }
 
 /**
- * @name review_tag_sentences_constraint
+ * @name review_tag_sentence_constraint
  * @type ENUM
  */
-type t_review_tag_sentences_constraint = EnumType<
+type t_review_tag_sentence_constraint = EnumType<
   'review_tag_pkey' | 'review_tag_tag_id_review_id_sentence_key'
 >
 
 /**
- * @name review_tag_sentences_inc_input
+ * @name review_tag_sentence_inc_input
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_inc_input = { sentiment?: any | null }
+export type review_tag_sentence_inc_input = {
+  ml_sentiment?: any | null
+  naive_sentiment?: any | null
+}
 
 /**
- * @name review_tag_sentences_insert_input
+ * @name review_tag_sentence_insert_input
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_insert_input = {
+export type review_tag_sentence_insert_input = {
   id?: any | null
+  ml_sentiment?: any | null
+  naive_sentiment?: any | null
   review?: review_obj_rel_insert_input | null
   review_id?: any | null
   sentence?: string | null
-  sentiment?: any | null
   tag?: tag_obj_rel_insert_input | null
   tag_id?: any | null
 }
 
 /**
- * @name review_tag_sentences_max_fields
+ * @name review_tag_sentence_max_fields
  * @type OBJECT
  */
-export type t_review_tag_sentences_max_fields = FieldsType<
+export type t_review_tag_sentence_max_fields = FieldsType<
   {
-    __typename: t_String<'review_tag_sentences_max_fields'>
+    __typename: t_String<'review_tag_sentence_max_fields'>
     id?: t_uuid | null
+    ml_sentiment?: t_numeric | null
+    naive_sentiment?: t_numeric | null
     review_id?: t_uuid | null
     sentence?: t_String | null
-    sentiment?: t_numeric | null
     tag_id?: t_uuid | null
   },
-  Extension<'review_tag_sentences_max_fields'>
+  Extension<'review_tag_sentence_max_fields'>
 >
 
 /**
- * @name review_tag_sentences_max_order_by
+ * @name review_tag_sentence_max_order_by
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_max_order_by = {
+export type review_tag_sentence_max_order_by = {
   id?: order_by | null
+  ml_sentiment?: order_by | null
+  naive_sentiment?: order_by | null
   review_id?: order_by | null
   sentence?: order_by | null
-  sentiment?: order_by | null
   tag_id?: order_by | null
 }
 
 /**
- * @name review_tag_sentences_min_fields
+ * @name review_tag_sentence_min_fields
  * @type OBJECT
  */
-export type t_review_tag_sentences_min_fields = FieldsType<
+export type t_review_tag_sentence_min_fields = FieldsType<
   {
-    __typename: t_String<'review_tag_sentences_min_fields'>
+    __typename: t_String<'review_tag_sentence_min_fields'>
     id?: t_uuid | null
+    ml_sentiment?: t_numeric | null
+    naive_sentiment?: t_numeric | null
     review_id?: t_uuid | null
     sentence?: t_String | null
-    sentiment?: t_numeric | null
     tag_id?: t_uuid | null
   },
-  Extension<'review_tag_sentences_min_fields'>
+  Extension<'review_tag_sentence_min_fields'>
 >
 
 /**
- * @name review_tag_sentences_min_order_by
+ * @name review_tag_sentence_min_order_by
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_min_order_by = {
+export type review_tag_sentence_min_order_by = {
   id?: order_by | null
+  ml_sentiment?: order_by | null
+  naive_sentiment?: order_by | null
   review_id?: order_by | null
   sentence?: order_by | null
-  sentiment?: order_by | null
   tag_id?: order_by | null
 }
 
 /**
- * @name review_tag_sentences_mutation_response
+ * @name review_tag_sentence_mutation_response
  * @type OBJECT
  */
-export type t_review_tag_sentences_mutation_response = FieldsType<
+export type t_review_tag_sentence_mutation_response = FieldsType<
   {
-    __typename: t_String<'review_tag_sentences_mutation_response'>
+    __typename: t_String<'review_tag_sentence_mutation_response'>
     affected_rows: t_Int
-    returning: t_review_tag_sentences[]
+    returning: t_review_tag_sentence[]
   },
-  Extension<'review_tag_sentences_mutation_response'>
+  Extension<'review_tag_sentence_mutation_response'>
 >
 
 /**
- * @name review_tag_sentences_obj_rel_insert_input
+ * @name review_tag_sentence_obj_rel_insert_input
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_obj_rel_insert_input = {
-  data: review_tag_sentences_insert_input
-  on_conflict?: review_tag_sentences_on_conflict | null
+export type review_tag_sentence_obj_rel_insert_input = {
+  data: review_tag_sentence_insert_input
+  on_conflict?: review_tag_sentence_on_conflict | null
 }
 
 /**
- * @name review_tag_sentences_on_conflict
+ * @name review_tag_sentence_on_conflict
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_on_conflict = {
-  constraint: review_tag_sentences_constraint
-  update_columns: review_tag_sentences_update_column[]
-  where?: review_tag_sentences_bool_exp | null
+export type review_tag_sentence_on_conflict = {
+  constraint: review_tag_sentence_constraint
+  update_columns: review_tag_sentence_update_column[]
+  where?: review_tag_sentence_bool_exp | null
 }
 
 /**
- * @name review_tag_sentences_order_by
+ * @name review_tag_sentence_order_by
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_order_by = {
+export type review_tag_sentence_order_by = {
   id?: order_by | null
+  ml_sentiment?: order_by | null
+  naive_sentiment?: order_by | null
   review?: review_order_by | null
   review_id?: order_by | null
   sentence?: order_by | null
-  sentiment?: order_by | null
   tag?: tag_order_by | null
   tag_id?: order_by | null
 }
 
 /**
- * @name review_tag_sentences_pk_columns_input
+ * @name review_tag_sentence_pk_columns_input
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_pk_columns_input = { id: any }
+export type review_tag_sentence_pk_columns_input = { id: any }
 
 /**
- * @name review_tag_sentences_select_column
+ * @name review_tag_sentence_select_column
  * @type ENUM
  */
-type t_review_tag_sentences_select_column = EnumType<
-  'id' | 'review_id' | 'sentence' | 'sentiment' | 'tag_id'
+type t_review_tag_sentence_select_column = EnumType<
+  | 'id'
+  | 'ml_sentiment'
+  | 'naive_sentiment'
+  | 'review_id'
+  | 'sentence'
+  | 'tag_id'
 >
 
 /**
- * @name review_tag_sentences_set_input
+ * @name review_tag_sentence_set_input
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_set_input = {
+export type review_tag_sentence_set_input = {
   id?: any | null
+  ml_sentiment?: any | null
+  naive_sentiment?: any | null
   review_id?: any | null
   sentence?: string | null
-  sentiment?: any | null
   tag_id?: any | null
 }
 
 /**
- * @name review_tag_sentences_stddev_fields
+ * @name review_tag_sentence_stddev_fields
  * @type OBJECT
  */
-export type t_review_tag_sentences_stddev_fields = FieldsType<
+export type t_review_tag_sentence_stddev_fields = FieldsType<
   {
-    __typename: t_String<'review_tag_sentences_stddev_fields'>
-    sentiment?: t_Float | null
+    __typename: t_String<'review_tag_sentence_stddev_fields'>
+    ml_sentiment?: t_Float | null
+    naive_sentiment?: t_Float | null
   },
-  Extension<'review_tag_sentences_stddev_fields'>
+  Extension<'review_tag_sentence_stddev_fields'>
 >
 
 /**
- * @name review_tag_sentences_stddev_order_by
+ * @name review_tag_sentence_stddev_order_by
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_stddev_order_by = {
-  sentiment?: order_by | null
+export type review_tag_sentence_stddev_order_by = {
+  ml_sentiment?: order_by | null
+  naive_sentiment?: order_by | null
 }
 
 /**
- * @name review_tag_sentences_stddev_pop_fields
+ * @name review_tag_sentence_stddev_pop_fields
  * @type OBJECT
  */
-export type t_review_tag_sentences_stddev_pop_fields = FieldsType<
+export type t_review_tag_sentence_stddev_pop_fields = FieldsType<
   {
-    __typename: t_String<'review_tag_sentences_stddev_pop_fields'>
-    sentiment?: t_Float | null
+    __typename: t_String<'review_tag_sentence_stddev_pop_fields'>
+    ml_sentiment?: t_Float | null
+    naive_sentiment?: t_Float | null
   },
-  Extension<'review_tag_sentences_stddev_pop_fields'>
+  Extension<'review_tag_sentence_stddev_pop_fields'>
 >
 
 /**
- * @name review_tag_sentences_stddev_pop_order_by
+ * @name review_tag_sentence_stddev_pop_order_by
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_stddev_pop_order_by = {
-  sentiment?: order_by | null
+export type review_tag_sentence_stddev_pop_order_by = {
+  ml_sentiment?: order_by | null
+  naive_sentiment?: order_by | null
 }
 
 /**
- * @name review_tag_sentences_stddev_samp_fields
+ * @name review_tag_sentence_stddev_samp_fields
  * @type OBJECT
  */
-export type t_review_tag_sentences_stddev_samp_fields = FieldsType<
+export type t_review_tag_sentence_stddev_samp_fields = FieldsType<
   {
-    __typename: t_String<'review_tag_sentences_stddev_samp_fields'>
-    sentiment?: t_Float | null
+    __typename: t_String<'review_tag_sentence_stddev_samp_fields'>
+    ml_sentiment?: t_Float | null
+    naive_sentiment?: t_Float | null
   },
-  Extension<'review_tag_sentences_stddev_samp_fields'>
+  Extension<'review_tag_sentence_stddev_samp_fields'>
 >
 
 /**
- * @name review_tag_sentences_stddev_samp_order_by
+ * @name review_tag_sentence_stddev_samp_order_by
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_stddev_samp_order_by = {
-  sentiment?: order_by | null
+export type review_tag_sentence_stddev_samp_order_by = {
+  ml_sentiment?: order_by | null
+  naive_sentiment?: order_by | null
 }
 
 /**
- * @name review_tag_sentences_sum_fields
+ * @name review_tag_sentence_sum_fields
  * @type OBJECT
  */
-export type t_review_tag_sentences_sum_fields = FieldsType<
+export type t_review_tag_sentence_sum_fields = FieldsType<
   {
-    __typename: t_String<'review_tag_sentences_sum_fields'>
-    sentiment?: t_numeric | null
+    __typename: t_String<'review_tag_sentence_sum_fields'>
+    ml_sentiment?: t_numeric | null
+    naive_sentiment?: t_numeric | null
   },
-  Extension<'review_tag_sentences_sum_fields'>
+  Extension<'review_tag_sentence_sum_fields'>
 >
 
 /**
- * @name review_tag_sentences_sum_order_by
+ * @name review_tag_sentence_sum_order_by
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_sum_order_by = { sentiment?: order_by | null }
+export type review_tag_sentence_sum_order_by = {
+  ml_sentiment?: order_by | null
+  naive_sentiment?: order_by | null
+}
 
 /**
- * @name review_tag_sentences_update_column
+ * @name review_tag_sentence_update_column
  * @type ENUM
  */
-type t_review_tag_sentences_update_column = EnumType<
-  'id' | 'review_id' | 'sentence' | 'sentiment' | 'tag_id'
+type t_review_tag_sentence_update_column = EnumType<
+  | 'id'
+  | 'ml_sentiment'
+  | 'naive_sentiment'
+  | 'review_id'
+  | 'sentence'
+  | 'tag_id'
 >
 
 /**
- * @name review_tag_sentences_var_pop_fields
+ * @name review_tag_sentence_var_pop_fields
  * @type OBJECT
  */
-export type t_review_tag_sentences_var_pop_fields = FieldsType<
+export type t_review_tag_sentence_var_pop_fields = FieldsType<
   {
-    __typename: t_String<'review_tag_sentences_var_pop_fields'>
-    sentiment?: t_Float | null
+    __typename: t_String<'review_tag_sentence_var_pop_fields'>
+    ml_sentiment?: t_Float | null
+    naive_sentiment?: t_Float | null
   },
-  Extension<'review_tag_sentences_var_pop_fields'>
+  Extension<'review_tag_sentence_var_pop_fields'>
 >
 
 /**
- * @name review_tag_sentences_var_pop_order_by
+ * @name review_tag_sentence_var_pop_order_by
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_var_pop_order_by = {
-  sentiment?: order_by | null
+export type review_tag_sentence_var_pop_order_by = {
+  ml_sentiment?: order_by | null
+  naive_sentiment?: order_by | null
 }
 
 /**
- * @name review_tag_sentences_var_samp_fields
+ * @name review_tag_sentence_var_samp_fields
  * @type OBJECT
  */
-export type t_review_tag_sentences_var_samp_fields = FieldsType<
+export type t_review_tag_sentence_var_samp_fields = FieldsType<
   {
-    __typename: t_String<'review_tag_sentences_var_samp_fields'>
-    sentiment?: t_Float | null
+    __typename: t_String<'review_tag_sentence_var_samp_fields'>
+    ml_sentiment?: t_Float | null
+    naive_sentiment?: t_Float | null
   },
-  Extension<'review_tag_sentences_var_samp_fields'>
+  Extension<'review_tag_sentence_var_samp_fields'>
 >
 
 /**
- * @name review_tag_sentences_var_samp_order_by
+ * @name review_tag_sentence_var_samp_order_by
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_var_samp_order_by = {
-  sentiment?: order_by | null
+export type review_tag_sentence_var_samp_order_by = {
+  ml_sentiment?: order_by | null
+  naive_sentiment?: order_by | null
 }
 
 /**
- * @name review_tag_sentences_variance_fields
+ * @name review_tag_sentence_variance_fields
  * @type OBJECT
  */
-export type t_review_tag_sentences_variance_fields = FieldsType<
+export type t_review_tag_sentence_variance_fields = FieldsType<
   {
-    __typename: t_String<'review_tag_sentences_variance_fields'>
-    sentiment?: t_Float | null
+    __typename: t_String<'review_tag_sentence_variance_fields'>
+    ml_sentiment?: t_Float | null
+    naive_sentiment?: t_Float | null
   },
-  Extension<'review_tag_sentences_variance_fields'>
+  Extension<'review_tag_sentence_variance_fields'>
 >
 
 /**
- * @name review_tag_sentences_variance_order_by
+ * @name review_tag_sentence_variance_order_by
  * @type INPUT_OBJECT
  */
-export type review_tag_sentences_variance_order_by = {
-  sentiment?: order_by | null
+export type review_tag_sentence_variance_order_by = {
+  ml_sentiment?: order_by | null
+  naive_sentiment?: order_by | null
 }
-
-/**
- * @name review_tag_whole
- * @type OBJECT
- */
-export type t_review_tag_whole = FieldsType<
-  {
-    __typename: t_String<'review_tag_whole'>
-    id: t_uuid
-    review_id: t_uuid
-    sentiment?: t_numeric | null
-    tag_id: t_uuid
-  },
-  Extension<'review_tag_whole'>
->
-
-/**
- * @name review_tag_whole_aggregate
- * @type OBJECT
- */
-export type t_review_tag_whole_aggregate = FieldsType<
-  {
-    __typename: t_String<'review_tag_whole_aggregate'>
-    aggregate?: t_review_tag_whole_aggregate_fields | null
-    nodes: t_review_tag_whole[]
-  },
-  Extension<'review_tag_whole_aggregate'>
->
-
-/**
- * @name review_tag_whole_aggregate_fields
- * @type OBJECT
- */
-export type t_review_tag_whole_aggregate_fields = FieldsType<
-  {
-    __typename: t_String<'review_tag_whole_aggregate_fields'>
-    avg?: t_review_tag_whole_avg_fields | null
-    count?: FieldsTypeArg<
-      {
-        columns?: review_tag_whole_select_column[] | null
-        distinct?: boolean | null
-      },
-      t_Int | null
-    >
-    max?: t_review_tag_whole_max_fields | null
-    min?: t_review_tag_whole_min_fields | null
-    stddev?: t_review_tag_whole_stddev_fields | null
-    stddev_pop?: t_review_tag_whole_stddev_pop_fields | null
-    stddev_samp?: t_review_tag_whole_stddev_samp_fields | null
-    sum?: t_review_tag_whole_sum_fields | null
-    var_pop?: t_review_tag_whole_var_pop_fields | null
-    var_samp?: t_review_tag_whole_var_samp_fields | null
-    variance?: t_review_tag_whole_variance_fields | null
-  },
-  Extension<'review_tag_whole_aggregate_fields'>
->
-
-/**
- * @name review_tag_whole_aggregate_order_by
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_aggregate_order_by = {
-  avg?: review_tag_whole_avg_order_by | null
-  count?: order_by | null
-  max?: review_tag_whole_max_order_by | null
-  min?: review_tag_whole_min_order_by | null
-  stddev?: review_tag_whole_stddev_order_by | null
-  stddev_pop?: review_tag_whole_stddev_pop_order_by | null
-  stddev_samp?: review_tag_whole_stddev_samp_order_by | null
-  sum?: review_tag_whole_sum_order_by | null
-  var_pop?: review_tag_whole_var_pop_order_by | null
-  var_samp?: review_tag_whole_var_samp_order_by | null
-  variance?: review_tag_whole_variance_order_by | null
-}
-
-/**
- * @name review_tag_whole_arr_rel_insert_input
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_arr_rel_insert_input = {
-  data: review_tag_whole_insert_input[]
-  on_conflict?: review_tag_whole_on_conflict | null
-}
-
-/**
- * @name review_tag_whole_avg_fields
- * @type OBJECT
- */
-export type t_review_tag_whole_avg_fields = FieldsType<
-  {
-    __typename: t_String<'review_tag_whole_avg_fields'>
-    sentiment?: t_Float | null
-  },
-  Extension<'review_tag_whole_avg_fields'>
->
-
-/**
- * @name review_tag_whole_avg_order_by
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_avg_order_by = { sentiment?: order_by | null }
-
-/**
- * @name review_tag_whole_bool_exp
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_bool_exp = {
-  _and?: (review_tag_whole_bool_exp | null)[] | null
-  _not?: review_tag_whole_bool_exp | null
-  _or?: (review_tag_whole_bool_exp | null)[] | null
-  id?: uuid_comparison_exp | null
-  review_id?: uuid_comparison_exp | null
-  sentiment?: numeric_comparison_exp | null
-  tag_id?: uuid_comparison_exp | null
-}
-
-/**
- * @name review_tag_whole_constraint
- * @type ENUM
- */
-type t_review_tag_whole_constraint = EnumType<'review_tag_whole_pkey'>
-
-/**
- * @name review_tag_whole_inc_input
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_inc_input = { sentiment?: any | null }
-
-/**
- * @name review_tag_whole_insert_input
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_insert_input = {
-  id?: any | null
-  review_id?: any | null
-  sentiment?: any | null
-  tag_id?: any | null
-}
-
-/**
- * @name review_tag_whole_max_fields
- * @type OBJECT
- */
-export type t_review_tag_whole_max_fields = FieldsType<
-  {
-    __typename: t_String<'review_tag_whole_max_fields'>
-    id?: t_uuid | null
-    review_id?: t_uuid | null
-    sentiment?: t_numeric | null
-    tag_id?: t_uuid | null
-  },
-  Extension<'review_tag_whole_max_fields'>
->
-
-/**
- * @name review_tag_whole_max_order_by
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_max_order_by = {
-  id?: order_by | null
-  review_id?: order_by | null
-  sentiment?: order_by | null
-  tag_id?: order_by | null
-}
-
-/**
- * @name review_tag_whole_min_fields
- * @type OBJECT
- */
-export type t_review_tag_whole_min_fields = FieldsType<
-  {
-    __typename: t_String<'review_tag_whole_min_fields'>
-    id?: t_uuid | null
-    review_id?: t_uuid | null
-    sentiment?: t_numeric | null
-    tag_id?: t_uuid | null
-  },
-  Extension<'review_tag_whole_min_fields'>
->
-
-/**
- * @name review_tag_whole_min_order_by
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_min_order_by = {
-  id?: order_by | null
-  review_id?: order_by | null
-  sentiment?: order_by | null
-  tag_id?: order_by | null
-}
-
-/**
- * @name review_tag_whole_mutation_response
- * @type OBJECT
- */
-export type t_review_tag_whole_mutation_response = FieldsType<
-  {
-    __typename: t_String<'review_tag_whole_mutation_response'>
-    affected_rows: t_Int
-    returning: t_review_tag_whole[]
-  },
-  Extension<'review_tag_whole_mutation_response'>
->
-
-/**
- * @name review_tag_whole_obj_rel_insert_input
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_obj_rel_insert_input = {
-  data: review_tag_whole_insert_input
-  on_conflict?: review_tag_whole_on_conflict | null
-}
-
-/**
- * @name review_tag_whole_on_conflict
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_on_conflict = {
-  constraint: review_tag_whole_constraint
-  update_columns: review_tag_whole_update_column[]
-  where?: review_tag_whole_bool_exp | null
-}
-
-/**
- * @name review_tag_whole_order_by
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_order_by = {
-  id?: order_by | null
-  review_id?: order_by | null
-  sentiment?: order_by | null
-  tag_id?: order_by | null
-}
-
-/**
- * @name review_tag_whole_pk_columns_input
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_pk_columns_input = { id: any }
-
-/**
- * @name review_tag_whole_select_column
- * @type ENUM
- */
-type t_review_tag_whole_select_column = EnumType<
-  'id' | 'review_id' | 'sentiment' | 'tag_id'
->
-
-/**
- * @name review_tag_whole_set_input
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_set_input = {
-  id?: any | null
-  review_id?: any | null
-  sentiment?: any | null
-  tag_id?: any | null
-}
-
-/**
- * @name review_tag_whole_stddev_fields
- * @type OBJECT
- */
-export type t_review_tag_whole_stddev_fields = FieldsType<
-  {
-    __typename: t_String<'review_tag_whole_stddev_fields'>
-    sentiment?: t_Float | null
-  },
-  Extension<'review_tag_whole_stddev_fields'>
->
-
-/**
- * @name review_tag_whole_stddev_order_by
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_stddev_order_by = { sentiment?: order_by | null }
-
-/**
- * @name review_tag_whole_stddev_pop_fields
- * @type OBJECT
- */
-export type t_review_tag_whole_stddev_pop_fields = FieldsType<
-  {
-    __typename: t_String<'review_tag_whole_stddev_pop_fields'>
-    sentiment?: t_Float | null
-  },
-  Extension<'review_tag_whole_stddev_pop_fields'>
->
-
-/**
- * @name review_tag_whole_stddev_pop_order_by
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_stddev_pop_order_by = {
-  sentiment?: order_by | null
-}
-
-/**
- * @name review_tag_whole_stddev_samp_fields
- * @type OBJECT
- */
-export type t_review_tag_whole_stddev_samp_fields = FieldsType<
-  {
-    __typename: t_String<'review_tag_whole_stddev_samp_fields'>
-    sentiment?: t_Float | null
-  },
-  Extension<'review_tag_whole_stddev_samp_fields'>
->
-
-/**
- * @name review_tag_whole_stddev_samp_order_by
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_stddev_samp_order_by = {
-  sentiment?: order_by | null
-}
-
-/**
- * @name review_tag_whole_sum_fields
- * @type OBJECT
- */
-export type t_review_tag_whole_sum_fields = FieldsType<
-  {
-    __typename: t_String<'review_tag_whole_sum_fields'>
-    sentiment?: t_numeric | null
-  },
-  Extension<'review_tag_whole_sum_fields'>
->
-
-/**
- * @name review_tag_whole_sum_order_by
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_sum_order_by = { sentiment?: order_by | null }
-
-/**
- * @name review_tag_whole_update_column
- * @type ENUM
- */
-type t_review_tag_whole_update_column = EnumType<
-  'id' | 'review_id' | 'sentiment' | 'tag_id'
->
-
-/**
- * @name review_tag_whole_var_pop_fields
- * @type OBJECT
- */
-export type t_review_tag_whole_var_pop_fields = FieldsType<
-  {
-    __typename: t_String<'review_tag_whole_var_pop_fields'>
-    sentiment?: t_Float | null
-  },
-  Extension<'review_tag_whole_var_pop_fields'>
->
-
-/**
- * @name review_tag_whole_var_pop_order_by
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_var_pop_order_by = { sentiment?: order_by | null }
-
-/**
- * @name review_tag_whole_var_samp_fields
- * @type OBJECT
- */
-export type t_review_tag_whole_var_samp_fields = FieldsType<
-  {
-    __typename: t_String<'review_tag_whole_var_samp_fields'>
-    sentiment?: t_Float | null
-  },
-  Extension<'review_tag_whole_var_samp_fields'>
->
-
-/**
- * @name review_tag_whole_var_samp_order_by
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_var_samp_order_by = { sentiment?: order_by | null }
-
-/**
- * @name review_tag_whole_variance_fields
- * @type OBJECT
- */
-export type t_review_tag_whole_variance_fields = FieldsType<
-  {
-    __typename: t_String<'review_tag_whole_variance_fields'>
-    sentiment?: t_Float | null
-  },
-  Extension<'review_tag_whole_variance_fields'>
->
-
-/**
- * @name review_tag_whole_variance_order_by
- * @type INPUT_OBJECT
- */
-export type review_tag_whole_variance_order_by = { sentiment?: order_by | null }
 
 /**
  * @name review_update_column
@@ -5659,53 +5243,29 @@ export type t_subscription_root = FieldsType<
       t_review_aggregate
     >
     review_by_pk?: FieldsTypeArg<{ id: any }, t_review | null>
-    review_tag_sentences: FieldsTypeArg<
+    review_tag_sentence: FieldsTypeArg<
       {
-        distinct_on?: review_tag_sentences_select_column[] | null
+        distinct_on?: review_tag_sentence_select_column[] | null
         limit?: number | null
         offset?: number | null
-        order_by?: review_tag_sentences_order_by[] | null
-        where?: review_tag_sentences_bool_exp | null
+        order_by?: review_tag_sentence_order_by[] | null
+        where?: review_tag_sentence_bool_exp | null
       },
-      t_review_tag_sentences[]
+      t_review_tag_sentence[]
     >
-    review_tag_sentences_aggregate: FieldsTypeArg<
+    review_tag_sentence_aggregate: FieldsTypeArg<
       {
-        distinct_on?: review_tag_sentences_select_column[] | null
+        distinct_on?: review_tag_sentence_select_column[] | null
         limit?: number | null
         offset?: number | null
-        order_by?: review_tag_sentences_order_by[] | null
-        where?: review_tag_sentences_bool_exp | null
+        order_by?: review_tag_sentence_order_by[] | null
+        where?: review_tag_sentence_bool_exp | null
       },
-      t_review_tag_sentences_aggregate
+      t_review_tag_sentence_aggregate
     >
-    review_tag_sentences_by_pk?: FieldsTypeArg<
+    review_tag_sentence_by_pk?: FieldsTypeArg<
       { id: any },
-      t_review_tag_sentences | null
-    >
-    review_tag_whole: FieldsTypeArg<
-      {
-        distinct_on?: review_tag_whole_select_column[] | null
-        limit?: number | null
-        offset?: number | null
-        order_by?: review_tag_whole_order_by[] | null
-        where?: review_tag_whole_bool_exp | null
-      },
-      t_review_tag_whole[]
-    >
-    review_tag_whole_aggregate: FieldsTypeArg<
-      {
-        distinct_on?: review_tag_whole_select_column[] | null
-        limit?: number | null
-        offset?: number | null
-        order_by?: review_tag_whole_order_by[] | null
-        where?: review_tag_whole_bool_exp | null
-      },
-      t_review_tag_whole_aggregate
-    >
-    review_tag_whole_by_pk?: FieldsTypeArg<
-      { id: any },
-      t_review_tag_whole | null
+      t_review_tag_sentence | null
     >
     setting: FieldsTypeArg<
       {
@@ -8005,284 +7565,148 @@ export type review_stddev_samp_fields = TypeData<t_review_stddev_samp_fields>
 export type review_sum_fields = TypeData<t_review_sum_fields>
 
 /**
- * @name review_tag_sentences
+ * @name review_tag_sentence
  * @type OBJECT
  */
-export type review_tag_sentences = TypeData<t_review_tag_sentences>
+export type review_tag_sentence = TypeData<t_review_tag_sentence>
 
 /**
- * @name review_tag_sentences_aggregate
+ * @name review_tag_sentence_aggregate
  * @type OBJECT
  */
-export type review_tag_sentences_aggregate = TypeData<
-  t_review_tag_sentences_aggregate
+export type review_tag_sentence_aggregate = TypeData<
+  t_review_tag_sentence_aggregate
 >
 
 /**
- * @name review_tag_sentences_aggregate_fields
+ * @name review_tag_sentence_aggregate_fields
  * @type OBJECT
  */
-export type review_tag_sentences_aggregate_fields = TypeData<
-  t_review_tag_sentences_aggregate_fields
+export type review_tag_sentence_aggregate_fields = TypeData<
+  t_review_tag_sentence_aggregate_fields
 >
 
 /**
- * @name review_tag_sentences_avg_fields
+ * @name review_tag_sentence_avg_fields
  * @type OBJECT
  */
-export type review_tag_sentences_avg_fields = TypeData<
-  t_review_tag_sentences_avg_fields
+export type review_tag_sentence_avg_fields = TypeData<
+  t_review_tag_sentence_avg_fields
 >
 
 /**
- * @name review_tag_sentences_constraint
+ * @name review_tag_sentence_constraint
  * @type ENUM
  */
-export enum review_tag_sentences_constraint {
+export enum review_tag_sentence_constraint {
   review_tag_pkey = 'review_tag_pkey',
   review_tag_tag_id_review_id_sentence_key = 'review_tag_tag_id_review_id_sentence_key',
 }
 
 /**
- * @name review_tag_sentences_max_fields
+ * @name review_tag_sentence_max_fields
  * @type OBJECT
  */
-export type review_tag_sentences_max_fields = TypeData<
-  t_review_tag_sentences_max_fields
+export type review_tag_sentence_max_fields = TypeData<
+  t_review_tag_sentence_max_fields
 >
 
 /**
- * @name review_tag_sentences_min_fields
+ * @name review_tag_sentence_min_fields
  * @type OBJECT
  */
-export type review_tag_sentences_min_fields = TypeData<
-  t_review_tag_sentences_min_fields
+export type review_tag_sentence_min_fields = TypeData<
+  t_review_tag_sentence_min_fields
 >
 
 /**
- * @name review_tag_sentences_mutation_response
+ * @name review_tag_sentence_mutation_response
  * @type OBJECT
  */
-export type review_tag_sentences_mutation_response = TypeData<
-  t_review_tag_sentences_mutation_response
+export type review_tag_sentence_mutation_response = TypeData<
+  t_review_tag_sentence_mutation_response
 >
 
 /**
- * @name review_tag_sentences_select_column
+ * @name review_tag_sentence_select_column
  * @type ENUM
  */
-export enum review_tag_sentences_select_column {
+export enum review_tag_sentence_select_column {
   id = 'id',
+  ml_sentiment = 'ml_sentiment',
+  naive_sentiment = 'naive_sentiment',
   review_id = 'review_id',
   sentence = 'sentence',
-  sentiment = 'sentiment',
   tag_id = 'tag_id',
 }
 
 /**
- * @name review_tag_sentences_stddev_fields
+ * @name review_tag_sentence_stddev_fields
  * @type OBJECT
  */
-export type review_tag_sentences_stddev_fields = TypeData<
-  t_review_tag_sentences_stddev_fields
+export type review_tag_sentence_stddev_fields = TypeData<
+  t_review_tag_sentence_stddev_fields
 >
 
 /**
- * @name review_tag_sentences_stddev_pop_fields
+ * @name review_tag_sentence_stddev_pop_fields
  * @type OBJECT
  */
-export type review_tag_sentences_stddev_pop_fields = TypeData<
-  t_review_tag_sentences_stddev_pop_fields
+export type review_tag_sentence_stddev_pop_fields = TypeData<
+  t_review_tag_sentence_stddev_pop_fields
 >
 
 /**
- * @name review_tag_sentences_stddev_samp_fields
+ * @name review_tag_sentence_stddev_samp_fields
  * @type OBJECT
  */
-export type review_tag_sentences_stddev_samp_fields = TypeData<
-  t_review_tag_sentences_stddev_samp_fields
+export type review_tag_sentence_stddev_samp_fields = TypeData<
+  t_review_tag_sentence_stddev_samp_fields
 >
 
 /**
- * @name review_tag_sentences_sum_fields
+ * @name review_tag_sentence_sum_fields
  * @type OBJECT
  */
-export type review_tag_sentences_sum_fields = TypeData<
-  t_review_tag_sentences_sum_fields
+export type review_tag_sentence_sum_fields = TypeData<
+  t_review_tag_sentence_sum_fields
 >
 
 /**
- * @name review_tag_sentences_update_column
+ * @name review_tag_sentence_update_column
  * @type ENUM
  */
-export enum review_tag_sentences_update_column {
+export enum review_tag_sentence_update_column {
   id = 'id',
+  ml_sentiment = 'ml_sentiment',
+  naive_sentiment = 'naive_sentiment',
   review_id = 'review_id',
   sentence = 'sentence',
-  sentiment = 'sentiment',
   tag_id = 'tag_id',
 }
 
 /**
- * @name review_tag_sentences_var_pop_fields
+ * @name review_tag_sentence_var_pop_fields
  * @type OBJECT
  */
-export type review_tag_sentences_var_pop_fields = TypeData<
-  t_review_tag_sentences_var_pop_fields
+export type review_tag_sentence_var_pop_fields = TypeData<
+  t_review_tag_sentence_var_pop_fields
 >
 
 /**
- * @name review_tag_sentences_var_samp_fields
+ * @name review_tag_sentence_var_samp_fields
  * @type OBJECT
  */
-export type review_tag_sentences_var_samp_fields = TypeData<
-  t_review_tag_sentences_var_samp_fields
+export type review_tag_sentence_var_samp_fields = TypeData<
+  t_review_tag_sentence_var_samp_fields
 >
 
 /**
- * @name review_tag_sentences_variance_fields
+ * @name review_tag_sentence_variance_fields
  * @type OBJECT
  */
-export type review_tag_sentences_variance_fields = TypeData<
-  t_review_tag_sentences_variance_fields
->
-
-/**
- * @name review_tag_whole
- * @type OBJECT
- */
-export type review_tag_whole = TypeData<t_review_tag_whole>
-
-/**
- * @name review_tag_whole_aggregate
- * @type OBJECT
- */
-export type review_tag_whole_aggregate = TypeData<t_review_tag_whole_aggregate>
-
-/**
- * @name review_tag_whole_aggregate_fields
- * @type OBJECT
- */
-export type review_tag_whole_aggregate_fields = TypeData<
-  t_review_tag_whole_aggregate_fields
->
-
-/**
- * @name review_tag_whole_avg_fields
- * @type OBJECT
- */
-export type review_tag_whole_avg_fields = TypeData<
-  t_review_tag_whole_avg_fields
->
-
-/**
- * @name review_tag_whole_constraint
- * @type ENUM
- */
-export enum review_tag_whole_constraint {
-  review_tag_whole_pkey = 'review_tag_whole_pkey',
-}
-
-/**
- * @name review_tag_whole_max_fields
- * @type OBJECT
- */
-export type review_tag_whole_max_fields = TypeData<
-  t_review_tag_whole_max_fields
->
-
-/**
- * @name review_tag_whole_min_fields
- * @type OBJECT
- */
-export type review_tag_whole_min_fields = TypeData<
-  t_review_tag_whole_min_fields
->
-
-/**
- * @name review_tag_whole_mutation_response
- * @type OBJECT
- */
-export type review_tag_whole_mutation_response = TypeData<
-  t_review_tag_whole_mutation_response
->
-
-/**
- * @name review_tag_whole_select_column
- * @type ENUM
- */
-export enum review_tag_whole_select_column {
-  id = 'id',
-  review_id = 'review_id',
-  sentiment = 'sentiment',
-  tag_id = 'tag_id',
-}
-
-/**
- * @name review_tag_whole_stddev_fields
- * @type OBJECT
- */
-export type review_tag_whole_stddev_fields = TypeData<
-  t_review_tag_whole_stddev_fields
->
-
-/**
- * @name review_tag_whole_stddev_pop_fields
- * @type OBJECT
- */
-export type review_tag_whole_stddev_pop_fields = TypeData<
-  t_review_tag_whole_stddev_pop_fields
->
-
-/**
- * @name review_tag_whole_stddev_samp_fields
- * @type OBJECT
- */
-export type review_tag_whole_stddev_samp_fields = TypeData<
-  t_review_tag_whole_stddev_samp_fields
->
-
-/**
- * @name review_tag_whole_sum_fields
- * @type OBJECT
- */
-export type review_tag_whole_sum_fields = TypeData<
-  t_review_tag_whole_sum_fields
->
-
-/**
- * @name review_tag_whole_update_column
- * @type ENUM
- */
-export enum review_tag_whole_update_column {
-  id = 'id',
-  review_id = 'review_id',
-  sentiment = 'sentiment',
-  tag_id = 'tag_id',
-}
-
-/**
- * @name review_tag_whole_var_pop_fields
- * @type OBJECT
- */
-export type review_tag_whole_var_pop_fields = TypeData<
-  t_review_tag_whole_var_pop_fields
->
-
-/**
- * @name review_tag_whole_var_samp_fields
- * @type OBJECT
- */
-export type review_tag_whole_var_samp_fields = TypeData<
-  t_review_tag_whole_var_samp_fields
->
-
-/**
- * @name review_tag_whole_variance_fields
- * @type OBJECT
- */
-export type review_tag_whole_variance_fields = TypeData<
-  t_review_tag_whole_variance_fields
+export type review_tag_sentence_variance_fields = TypeData<
+  t_review_tag_sentence_variance_fields
 >
 
 /**

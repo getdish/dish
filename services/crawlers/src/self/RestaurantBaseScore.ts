@@ -34,6 +34,7 @@ export class RestaurantBaseScore {
     }
   }
 
+  // 5 = 2, 4 = 1, 3 = 0, 2 = -1, 1 = -2
   async scoreFromReviews() {
     this.breakdown.reviews = {}
     const result = await main_db.query(`
@@ -41,25 +42,30 @@ export class RestaurantBaseScore {
         (
           SELECT count(*) FROM review
           WHERE restaurant_id = '${this.crawler.restaurant.id}'
-          AND rating >= 4
-        ) as _4_to_5,
+          AND rating >= 4.75
+        ) as _5,
+        (
+          SELECT count(*) FROM review
+          WHERE restaurant_id = '${this.crawler.restaurant.id}'
+          AND rating >= 4 AND rating <= 4.75
+        ) as _4,
         (
           SELECT count(*) FROM review
           WHERE restaurant_id = '${this.crawler.restaurant.id}'
           AND rating >= 3 AND rating <= 4
-        ) as _3_to_4,
+        ) as _3,
         (
           SELECT count(*) FROM review
           WHERE restaurant_id = '${this.crawler.restaurant.id}'
           AND rating >= 2 AND rating <= 3
-        ) as _2_to_3,
+        ) as _2,
         (
           SELECT count(*) FROM review
           WHERE restaurant_id = '${this.crawler.restaurant.id}'
           AND rating >= 0 AND rating <= 2
-        ) as _0_to_2
+        ) as _1
     `)
-    const bands = { _4_to_5: 2, _3_to_4: 1, _2_to_3: -1, _0_to_2: -2 }
+    const bands = { _5: 2, _4: 1, _3: 0, _2: -1, _1: -2 }
     const row = result.rows[0]
     let total = 0
     for (const band in bands) {
