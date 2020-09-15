@@ -136,7 +136,7 @@ const HomeAutoCompleteContents = memo(
 
     return (
       <AbsoluteVStack
-        className={`ease-in-out-slow ${
+        className={`ease-in-out-fast ${
           isSmall && isShowing ? 'transition-delay-long' : ''
         }`}
         pointerEvents={isSmall && isShowing ? 'auto' : 'none'}
@@ -153,7 +153,7 @@ const HomeAutoCompleteContents = memo(
         paddingBottom={30}
         paddingHorizontal={15}
         opacity={isShowing ? 1 : 0}
-        transform={isShowing ? [] : [{ translateY: 15 }]}
+        transform={isShowing ? [] : [{ translateY: 5 }]}
         disabled={!isShowing}
         onPress={() => {
           om.actions.home.setShowAutocomplete(false)

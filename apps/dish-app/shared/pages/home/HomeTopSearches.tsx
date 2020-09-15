@@ -31,7 +31,6 @@ export const HomeTopSearches = memo(() => {
             padding={3}
             paddingHorizontal={8}
             borderRadius={80}
-            className="ease-in-out-slower"
             backgroundColor="#fff"
             marginBottom={6}
             hoverStyle={{

@@ -79,6 +79,7 @@ export const DishView = memo(
 
     return (
       <LinkButton
+        className="ease-in-out"
         alignItems="center"
         position="relative"
         justifyContent="center"

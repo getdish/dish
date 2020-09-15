@@ -187,15 +187,8 @@ const refresh: AsyncAction = async (om) => {
 }
 
 const up: Action = (om) => {
-  const curType = om.state.home.currentStateType
-  if (isBreadcrumbState(curType)) {
-    const crumbs = getBreadcrumbs(om.state.home.states)
-    const prevCrumb = _.findLast(crumbs, (x) => x.type !== curType)
-    om.actions.home.popTo(prevCrumb?.type ?? 'home')
-  } else {
-    const prev = om.state.home.previousState?.type
-    om.actions.home.popTo(prev ?? 'home')
-  }
+  const prev = om.state.home.previousState?.type
+  om.actions.home.popTo(prev ?? 'home')
 }
 
 const popBack: Action = (om) => {
@@ -214,8 +207,6 @@ const popTo: Action<HomeStateItem['type']> = (om, type) => {
   // we can just use router history directly, no? and go back?
   if (
     om.state.home.previousState?.type === type &&
-    (router.prevHistory?.type === 'push' ||
-      router.prevHistory?.type === 'replace') &&
     router.prevHistory?.name === type
   ) {
     router.back()

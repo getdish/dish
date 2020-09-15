@@ -92,7 +92,6 @@ const HomeSearchInfoBoxDish = memo(
       <HStack
         paddingTop={0}
         paddingHorizontal={20}
-        paddingBottom={5}
         spacing={20}
         alignItems="center"
       >
@@ -104,9 +103,9 @@ const HomeSearchInfoBoxDish = memo(
         <VStack position="relative" width={70} height={70}>
           <Image
             style={{
-              marginVertical: -10,
-              width: 70,
-              height: 70,
+              marginVertical: -20,
+              width: 90,
+              height: 90,
               borderRadius: 100,
             }}
             source={{

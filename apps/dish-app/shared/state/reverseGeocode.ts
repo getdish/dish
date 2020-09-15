@@ -13,6 +13,7 @@ export async function reverseGeocode(
 
   if (res.features?.length) {
     const { features } = res
+    console.log('features', features)
     const scope = spanToScope(span)
     const placeNames = {
       street: features.find((x) => x.place_type?.includes('address'))?.text,
@@ -43,10 +44,10 @@ function spanToScope(
   if (est < 0.05) {
     return 'neighborhood'
   }
-  if (est < 0.5) {
+  if (est < 1.5) {
     return 'city'
   }
-  if (est < 2) {
+  if (est < 4) {
     return 'state'
   }
   return 'country'
