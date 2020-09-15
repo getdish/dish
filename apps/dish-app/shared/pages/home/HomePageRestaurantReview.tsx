@@ -1,5 +1,5 @@
 import { graphql, restaurantDishesWithPhotos } from '@dish/graph'
-import { fetchABSASentiment } from '@dish/helpers'
+import { fetchBertSentiment } from '@dish/helpers'
 import {
   AbsoluteVStack,
   HStack,
@@ -122,10 +122,11 @@ export const RestaurantReviewComment = memo(
         () => {
           let isMounted = true
 
-          const allTagNames = [...dishTags, ...tagLenses].map((x) => x.name)
-          const aspects = allTagNames.map((name) => name.toLowerCase())
+          // TODO: Split review into sentences matching each tag
+          //const allTagNames = [...dishTags, ...tagLenses].map((x) => x.name)
+          //const aspects = allTagNames.map((name) => name.toLowerCase())
 
-          fetchABSASentiment(reviewText, aspects).then((tagSentiments) => {
+          fetchBertSentiment(reviewText).then((tagSentiments) => {
             if (!isMounted) return
             console.log('got sentiments', tagSentiments)
           })

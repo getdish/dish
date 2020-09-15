@@ -229,6 +229,12 @@ const tripadvisor: Partial<Scrape> = {
         username: 'tauser3',
         date: 'July 23, 2020',
       },
+      {
+        text: 'Test tag was good. Test tag was amazing. Test tag was delicious',
+        rating: 5,
+        username: 'tauser4',
+        date: 'July 23, 2020',
+      },
     ],
   },
 }
@@ -251,7 +257,9 @@ async function reset(t: ExecutionContext<Context>) {
     restaurant_fixture,
     restaurant_fixture_nearly_matches,
   ])
-  t.context.restaurant = restaurant
+  t.context.restaurant = (await restaurantFindOneWithTags({
+    id: restaurant.id,
+  })) as RestaurantWithId
   const zero_coord = { lat: 0, lon: 0 }
   const scrapes = [
     { restaurant_id: restaurant.id, location: zero_coord, ...google },
@@ -495,7 +503,7 @@ test('Finding dishes in the corpus', async (t) => {
   t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag4.id))
 })
 
-test('Review sentiments', async (t) => {
+test('Review naive sentiments', async (t) => {
   const self = new Self()
   await addTags(t.context.restaurant)
   self.restaurant = (await restaurantFindOneWithTags({
@@ -507,26 +515,26 @@ test('Review sentiments', async (t) => {
 
   // Ensure upserting/constraints work
   let reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
-  t.is(reviews.length, 6)
+  t.is(reviews.length, 7)
   await self.scanCorpus()
   await self.finishTagsEtc()
 
   reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
-  t.is(reviews.length, 6)
+  t.is(reviews.length, 7)
   const rv1 = reviews.find((rv) => rv.username == 'yelp-FsLRE98uOHkBNzO1Ta5hIw')
   const rv1s1 = rv1.sentiments.find((s) =>
     s.sentence.includes('Test tag existing 1')
   )
-  t.is(rv1s1.sentiment, -3)
+  t.is(rv1s1.naive_sentiment, -3)
   const rv1s2 = rv1.sentiments.find((s) =>
     s.sentence.includes('Test tag existing 2')
   )
-  t.is(rv1s2.sentiment, 4)
+  t.is(rv1s2.naive_sentiment, 4)
   const rv2 = reviews.find((rv) => rv.username == 'tripadvisor-tauser')
   const rv2s1 = rv2.sentiments.find((s) =>
     s.sentence.includes('Test tag existing 3')
   )
-  t.is(rv2s1.sentiment, 0)
+  t.is(rv2s1.naive_sentiment, 0)
   const rv3 = reviews.find((rv) => rv.username == 'tripadvisor-tauser2')
   t.is(rv3.sentiments.length, 0)
   const rv4 = reviews.find((rv) => rv.username == 'google-Nikhil Mascarenhas')
@@ -699,7 +707,9 @@ test('Finds an existing scrape', async (t) => {
 
 test('Scoring for restaurants', async (t) => {
   const self = new Self()
-  self.restaurant = t.context.restaurant
+  self.restaurant = (await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })) as RestaurantWithId
   await self.getScrapeData()
   await self.mergePhotos()
   await self.scanCorpus()
@@ -714,10 +724,11 @@ test('Scoring for restaurants', async (t) => {
   })
   t.deepEqual(updated?.score_breakdown.reviews, {
     score: 9,
-    _0_to_2: { count: 1, score: -2 },
-    _2_to_3: { count: 0, score: 0 },
-    _3_to_4: { count: 1, score: 1 },
-    _4_to_5: { count: 5, score: 10 },
+    _1: { count: 1, score: -2 },
+    _2: { count: 0, score: 0 },
+    _3: { count: 1, score: 0 },
+    _4: { count: 1, score: 1 },
+    _5: { count: 5, score: 10 },
   })
   t.is(updated?.score, 11)
 })
@@ -744,36 +755,32 @@ test('Scoring for rishes', async (t) => {
 
   const rish1 = updated?.tags.filter((t) => t.tag.name == 'Test tag')[0]
   const rish2 = updated?.tags.filter((t) => t.tag.name == 'Testpho')[0]
-  t.is(rish1.score, -1)
+  t.is(rish1.score, 2)
   t.deepEqual(rish1.score_breakdown.yelp, {
-    score: -1,
+    score: 0,
     counts: {
-      neutral: 0,
       negative: 1,
-      positive: 0,
+      positive: 1,
     },
   })
   t.deepEqual(rish1.score_breakdown.google, {
     score: null,
     counts: {
-      neutral: 0,
       negative: 0,
       positive: 0,
     },
   })
   t.deepEqual(rish1.score_breakdown.tripadvisor, {
-    score: 0,
+    score: 2,
     counts: {
-      neutral: 1,
       negative: 0,
-      positive: 0,
+      positive: 2,
     },
   })
   t.is(rish2.score, 1)
   t.deepEqual(rish2.score_breakdown.tripadvisor, {
     score: 1,
     counts: {
-      neutral: 0,
       negative: 0,
       positive: 1,
     },

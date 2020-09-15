@@ -102,3 +102,6 @@ target/
 
 # Node crash logs
 report.*.json
+
+# Rust builds
+target/

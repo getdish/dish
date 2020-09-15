@@ -336,7 +336,7 @@ tables:
         column: review_id
         table:
           schema: public
-          name: review_tag_sentences
+          name: review_tag_sentence
   insert_permissions:
   - role: contributor
     permission:
@@ -485,7 +485,7 @@ tables:
     webhook_from_env: GORSE_SYNC_HOOK
 - table:
     schema: public
-    name: review_tag_sentences
+    name: review_tag_sentence
   object_relationships:
   - name: review
     using:
@@ -493,9 +493,6 @@ tables:
   - name: tag
     using:
       foreign_key_constraint_on: tag_id
-- table:
-    schema: public
-    name: review_tag_whole
 - table:
     schema: public
     name: setting

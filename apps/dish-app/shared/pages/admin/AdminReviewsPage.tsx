@@ -1,5 +1,5 @@
 import { graphql, order_by, query } from '@dish/graph'
-import { fetchABSASentiment } from '@dish/helpers'
+import { fetchABSASentiment as fetchBertSentiment } from '@dish/helpers'
 import {
   Divider,
   HStack,
@@ -114,7 +114,7 @@ const ReviewSentiment = (props: { text: string }) => {
     const sentences = props.text.split('. ')
     if (sentences.length) {
       Promise.all([
-        fetchABSASentiment(props.text, [aspect]).then((response) => {
+        fetchBertSentiment(props.text, [aspect]).then((response) => {
           return {
             sentiment: response.results[aspect].sentiment,
             sentence: `(Entire Text - ${aspect})`,
@@ -123,7 +123,7 @@ const ReviewSentiment = (props: { text: string }) => {
         ...sentences
           .filter((x) => x.toLowerCase().includes(aspect))
           .map((sentence) => {
-            return fetchABSASentiment(sentence, [aspect]).then((response) => {
+            return fetchBertSentiment(sentence).then((response) => {
               return {
                 sentiment: response.results[aspect].sentiment,
                 sentence: sentence,
@@ -151,7 +151,7 @@ const ReviewSentiment = (props: { text: string }) => {
       {sentiments.map(({ sentiment, sentence }) => {
         return (
           <Text
-            backgroundColor={sentiment === 'negative' ? lightRed : lightGreen}
+            backgroundColor={sentiment === 'Negative' ? lightRed : lightGreen}
             key={sentence}
           >
             {sentence} <strong>({sentiment})</strong>.

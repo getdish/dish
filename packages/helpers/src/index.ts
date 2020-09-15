@@ -43,11 +43,9 @@ export function handleAssertionError(err: any) {
 // This function is used by both the front and backend. It is critical to our
 // entire scoring system. Any changes to it could potentially alter the scores
 // for all restaurants and rishes.
-export async function fetchABSASentiment(sentence: string, aspects: string[]) {
+export async function fetchBertSentiment(sentence: string) {
   return fetch(
-    `https://absa.k8s.dishapp.com/?text="${encodeURIComponent(
-      sentence
-    )}"&aspects=${encodeURIComponent(aspects.join(','))}`,
+    `https://bert.k8s.dishapp.com/?text="${encodeURIComponent(sentence)}"`,
     {
       headers: {
         'Content-Type': 'application/json',
