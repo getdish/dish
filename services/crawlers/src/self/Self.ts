@@ -74,6 +74,8 @@ export class Self extends WorkerJob {
   restaurant_tag_scores: RestaurantTagScores
   menu_items: MenuItem[] = []
 
+  _debugRamIntervalFunction!: number
+
   static queue_config: QueueOptions = {
     limiter: {
       max: 100,
@@ -100,11 +102,9 @@ export class Self extends WorkerJob {
       if (ram_value > 1000) {
         sentryMessage(`Worker RAM ${ram} over 1Gi for: ${restaurant_id}`)
       }
-      if (process.env.DISH_DEBUG == '1') {
-        console.log(`Worker RAM usage for ${restaurant_id}: ${ram}`)
-      }
+      this.log(`Worker RAM usage for ${restaurant_id}: ${ram}`)
     }
-    setInterval(fn, 5000)
+    this._debugRamIntervalFunction = setInterval(fn, 5000)
   }
 
   async allForCity(city: string) {
@@ -127,7 +127,6 @@ export class Self extends WorkerJob {
   }
 
   async mergeAll(id: string) {
-    this._debugRAMUsage(id)
     const restaurant = await restaurantFindOneWithTags({ id: id })
     if (restaurant) {
       await this.preMerge(restaurant)
@@ -149,15 +148,11 @@ export class Self extends WorkerJob {
         await this._runFailableFunction(async_func)
       }
       await this.postMerge()
-      console.log(`Merged: ${this.restaurant.name}`)
-    }
-    if (process.env.NODE_ENV != 'test' && process.env.NO_EXIT != '1') {
-      console.log('Exiting with 0...')
-      process.exit(0)
     }
   }
 
   async preMerge(restaurant: RestaurantWithId) {
+    this._debugRAMUsage(restaurant.slug || restaurant.id)
     this.restaurant = restaurant
     console.log('Merging: ' + this.restaurant.name)
     this.resetTimer()
@@ -172,9 +167,12 @@ export class Self extends WorkerJob {
         'SELF CRAWLER: restaurant has no name, ID: ' + this.restaurant.id
       )
     }
-    await this.finishTagsEtc()
-    await this.finalScores()
+    await this._runFailableFunction(this.finishTagsEtc)
+    await this._runFailableFunction(this.finalScores)
+    clearInterval(this._debugRamIntervalFunction)
     this.log('postMerge()')
+    console.log(`Merged: ${this.restaurant.name}`)
+    main_db.pool.end()
   }
 
   async finishTagsEtc() {
