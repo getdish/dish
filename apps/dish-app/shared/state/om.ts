@@ -1,4 +1,4 @@
-import { IConfig, Overmind, createOvermind } from 'overmind'
+import { IConfig, createOvermind } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 
