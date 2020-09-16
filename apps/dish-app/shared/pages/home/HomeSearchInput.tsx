@@ -14,7 +14,7 @@ import {
   View,
 } from 'react-native'
 
-import { searchBarHeight } from '../../constants'
+import { isWeb, searchBarHeight } from '../../constants'
 import { inputClearSelection, inputIsTextSelected } from '../../helpers/input'
 import { getTagId } from '../../state/getTagId'
 import { useOvermind } from '../../state/om'
@@ -195,24 +195,27 @@ export const HomeSearchInput = memo(() => {
             )}
           </VStack>
 
-          <TouchableWithoutFeedback
-            onPress={() => {
-              inputStore.node.focus()
-            }}
-          >
-            <View
-              style={{
-                // backgroundColor: 'red',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 40,
-                bottom: 0,
-                zIndex: 10000,
+          {!isWeb && (
+            // this helps native with dragging conflicts
+            <TouchableWithoutFeedback
+              onPress={() => {
+                inputStore.node.focus()
               }}
-              {...panResponder.panHandlers}
-            />
-          </TouchableWithoutFeedback>
+            >
+              <View
+                style={{
+                  // backgroundColor: 'red',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 40,
+                  bottom: 0,
+                  zIndex: 10000,
+                }}
+                {...panResponder.panHandlers}
+              />
+            </TouchableWithoutFeedback>
+          )}
 
           <ScrollView
             horizontal
