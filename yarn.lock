@@ -1979,10 +1979,10 @@
   dependencies:
     tslib "^2.0.1"
 
-"@o/gqless-schema@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.npmjs.org/@o/gqless-schema/-/gqless-schema-0.0.3.tgz#212a1db0441779832095299e456385f8b1f1031f"
-  integrity sha512-Ky0LfQCkYwQ5A5gSTN2U82ZnyemX02MV2hqMFTTJ8svlZMiQWdMib+pm64IAUBPjBTuKvmQF65RG9jhT2R0rNA==
+"@o/gqless-schema@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.npmjs.org/@o/gqless-schema/-/gqless-schema-0.0.6.tgz#5bd9cfc3d50ed83418590ba61d277b1b610f0901"
+  integrity sha512-yDuwSgO/ij8Xs5OeZGnHKIH6TntZOlEn+yT1C9SnYNVg687zb3TROdkV1eVq7fGsZXKye67yt5P4wUQQ4t1SLw==
   dependencies:
     "@o/gqless-utils" "^0.0.3"
     tslib "^2.0.1"
