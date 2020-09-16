@@ -19,7 +19,7 @@ import moment from 'moment'
 import Sentiment from 'sentiment'
 
 import { scrapeGetData } from '../scrape-helpers'
-import { main_db, toDBDate } from '../utils'
+import { toDBDate } from '../utils'
 import { Self } from './Self'
 
 type TextSource = Review | string
@@ -137,7 +137,7 @@ export class Tagging {
           tag_names @> '"${tag_name}"'
       ) league
       WHERE id = '${this.crawler.restaurant.id}'`
-    const result = await main_db.query(query)
+    const result = await this.crawler.main_db.query(query)
     const rank = parseInt(result.rows[0].rank)
     return rank
   }

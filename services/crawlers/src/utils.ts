@@ -27,6 +27,25 @@ export class DB {
     this.connect()
   }
 
+  static main_db() {
+    return new DB({
+      host: process.env.PGHOST || 'localhost',
+      port: process.env.PGPORT || '5432',
+      user: process.env.PGUSER || 'postgres',
+      password: process.env.PGPASSWORD || 'postgres',
+      database: 'dish',
+      idleTimeoutMillis: 0,
+      connectionTimeoutMillis: 0,
+    })
+  }
+
+  static async one_query_on_main(query: string) {
+    const db = DB.main_db()
+    const result = await db.query(query)
+    await db.pool.end()
+    return result
+  }
+
   connect() {
     this.pool = new Pool(this.config)
     this.pool.on('error', (e) => {
@@ -56,16 +75,6 @@ export class DB {
     return result
   }
 }
-
-export const main_db = new DB({
-  host: process.env.PGHOST || 'localhost',
-  port: process.env.PGPORT || '5432',
-  user: process.env.PGUSER || 'postgres',
-  password: process.env.PGPASSWORD || 'postgres',
-  database: 'dish',
-  idleTimeoutMillis: 0,
-  connectionTimeoutMillis: 0,
-})
 
 export function shiftLatLonByMetres(
   lat: number,
@@ -211,7 +220,7 @@ export async function restaurantFindIDBatchForCity(
     ORDER BY id
     LIMIT ${size}
   `
-  const result = await main_db.query(query)
+  const result = await DB.one_query_on_main(query)
   return result.rows
 }
 
@@ -227,7 +236,7 @@ export async function restaurantFindBasicBatchForAll(
     ORDER BY id
     LIMIT ${size}
   `
-  const result = await main_db.query(query)
+  const result = await DB.one_query_on_main(query)
   return result.rows
 }
 
@@ -244,7 +253,7 @@ export async function batchIDsForAll(
     ORDER BY id
     LIMIT ${size}
   `
-  const result = await main_db.query(query)
+  const result = await DB.one_query_on_main(query)
   return result.rows.map((r) => r.id)
 }
 
@@ -260,7 +269,7 @@ export async function photoBatchForAll(
     ORDER BY id
     LIMIT ${size}
   `
-  const result = await main_db.query(query)
+  const result = await DB.one_query_on_main(query)
   return result.rows
 }
 
@@ -269,7 +278,7 @@ export async function getTableCount(
   where = ''
 ): Promise<number> {
   const query = `SELECT count(id) FROM ${table} ${where}`
-  const result = await main_db.query(query)
+  const result = await DB.one_query_on_main(query)
   return parseInt(result.rows[0].count)
 }
 
@@ -308,5 +317,5 @@ export async function restaurantDeleteOrUpdateByGeocoderID(
   END
   $do$
   `
-  await main_db.query(query)
+  await DB.one_query_on_main(query)
 }
