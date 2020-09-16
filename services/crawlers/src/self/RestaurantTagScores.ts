@@ -1,8 +1,7 @@
-import { sentryMessage } from '@dish/common'
+import { sentryException, sentryMessage } from '@dish/common'
 import { fetchBertSentiment } from '@dish/helpers'
 import { chunk } from 'lodash'
 
-import { main_db } from '../utils'
 import { Self } from './Self'
 
 type ReviewTagSentence = {
@@ -29,7 +28,7 @@ export class RestaurantTagScores {
 
   async findAllUnanalyzed() {
     const restaurant_id = this.crawler.restaurant.id
-    const result = await main_db.query(`
+    const result = await this.crawler.main_db.query(`
       SELECT rts.id, sentence FROM review_tag_sentence rts
         JOIN review r ON r.id = rts.review_id
         WHERE r.restaurant_id = '${restaurant_id}'
@@ -79,7 +78,7 @@ export class RestaurantTagScores {
         WHERE id = '${rts.id}';
       `)
     }
-    await main_db.query(sql.join('\n'))
+    await this.crawler.main_db.query(sql.join('\n'))
   }
 
   async fetchBertSentimentWithRetries(text: string) {
@@ -91,7 +90,11 @@ export class RestaurantTagScores {
         return result.result[0]
       } catch (error) {
         if (!error.message.includes('json')) {
-          throw error
+          sentryException(error, {
+            function: 'fetchBertSentimentWithRetries',
+            restaurant: this.crawler.restaurant.id,
+          })
+          return
         }
         retries += 1
         if (retries > MAX_RETRIES) {
@@ -134,7 +137,7 @@ export class RestaurantTagScores {
       all_updates.push(sql)
     }
     const query = all_updates.join('\n')
-    await main_db.query(query)
+    await this.crawler.main_db.query(query)
   }
 
   _scoreSQL(tag_id: string, source: string | undefined = undefined) {

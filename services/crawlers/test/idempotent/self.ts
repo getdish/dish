@@ -25,7 +25,7 @@ import {
 } from '../../src/scrape-helpers'
 import { Self } from '../../src/self/Self'
 import { GEM_UIID } from '../../src/self/Tagging'
-import { main_db } from '../../src/utils'
+import { DB } from '../../src/utils'
 import { yelp_hours } from '../yelp_hours'
 
 interface Context {
@@ -489,8 +489,7 @@ test('Finding dishes in the corpus', async (t) => {
   t.context.restaurant = (await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   }))!
-  self.restaurant = t.context.restaurant
-  await self.getScrapeData()
+  await self.preMerge(t.context.restaurant)
   await self.getUberDishes()
   await self.scanCorpus()
   await self.finishTagsEtc()
@@ -506,10 +505,10 @@ test('Finding dishes in the corpus', async (t) => {
 test('Review naive sentiments', async (t) => {
   const self = new Self()
   await addTags(t.context.restaurant)
-  self.restaurant = (await restaurantFindOneWithTags({
+  const restaurant = (await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   })) as RestaurantWithId
-  await self.getScrapeData()
+  await self.preMerge(restaurant)
   await self.scanCorpus()
   await self.finishTagsEtc()
 
@@ -544,7 +543,7 @@ test('Review naive sentiments', async (t) => {
 test('Finding veg in reviews', async (t) => {
   const self = new Self()
   self.tagging.SPECIAL_FILTER_THRESHOLD = 1
-  self.restaurant = t.context.restaurant
+  await self.preMerge(t.context.restaurant)
   await self.getScrapeData()
   await self.scanCorpus()
   await self.finishTagsEtc()
@@ -577,8 +576,7 @@ test('Find photos of dishes', async (t) => {
   t.assert(!!restaurant, 'not found')
   if (!restaurant) return
   t.context.restaurant = restaurant as RestaurantWithId
-  self.restaurant = t.context.restaurant
-  await self.getScrapeData()
+  await self.preMerge(t.context.restaurant)
   await self.findPhotosForTags()
   await self.finishTagsEtc()
   await restaurantUpdate(self.restaurant)
@@ -633,17 +631,16 @@ test('Identifying country tags', async (t) => {
 
 test('Adding opening hours', async (t) => {
   const dish = new Self()
-  dish.restaurant = t.context.restaurant
-  await dish.getScrapeData()
+  await dish.preMerge(t.context.restaurant)
   const count = await dish.addHours()
   t.is(count, 7)
-  const openers = await main_db.query(`
+  const openers = await DB.one_query_on_main(`
     SELECT restaurant_id
       FROM opening_hours
       WHERE hours @> f_opening_hours_normalised_time('1996-01-01 13:00');
   `)
   t.is(dish.restaurant.id, openers.rows[0].restaurant_id)
-  const closers = await main_db.query(`
+  const closers = await DB.one_query_on_main(`
     SELECT restaurant_id
       FROM opening_hours
       WHERE hours @> f_opening_hours_normalised_time('1996-01-01 10:59');
@@ -707,10 +704,10 @@ test('Finds an existing scrape', async (t) => {
 
 test('Scoring for restaurants', async (t) => {
   const self = new Self()
-  self.restaurant = (await restaurantFindOneWithTags({
+  const restaurant = (await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   })) as RestaurantWithId
-  await self.getScrapeData()
+  await self.preMerge(restaurant)
   await self.mergePhotos()
   await self.scanCorpus()
   await self.postMerge()
@@ -741,10 +738,10 @@ test('Scoring for rishes', async (t) => {
     'Test 3',
     'Test 4',
   ])
-  self.restaurant = (await restaurantFindOneWithTags({
+  const restaurant = (await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   })) as RestaurantWithId
-  await self.getScrapeData()
+  await self.preMerge(restaurant)
   await self.doTags()
   await self.scanCorpus()
   await self.postMerge()

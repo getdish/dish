@@ -4,7 +4,7 @@ import {
   restaurantFindOneWithTags,
 } from '@dish/graph'
 
-import { main_db } from '../utils'
+import { DB } from '../utils'
 import { Self } from './Self'
 
 async function one() {
@@ -27,6 +27,7 @@ async function all() {
 async function query() {
   const internal = new Self()
   if (!process.env.QUERY) return
+  const main_db = DB.main_db()
   const result = await main_db.query(process.env.QUERY)
   for (const row of result.rows) {
     await internal.runOnWorker('mergeAll', [row.id])

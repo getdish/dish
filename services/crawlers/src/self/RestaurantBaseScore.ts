@@ -1,4 +1,3 @@
-import { main_db } from '../utils'
 import { Self } from './Self'
 
 export class RestaurantBaseScore {
@@ -20,7 +19,7 @@ export class RestaurantBaseScore {
   async scoreFromPhotos() {
     const PHOTO_QUALITY_CRITERIA = 5
     const SCORE_FACTOR = 2
-    const result = await main_db.query(`
+    const result = await this.crawler.main_db.query(`
       SELECT count(DISTINCT p.id) FROM photo_xref px
       JOIN photo p ON px.photo_id = p.id
         WHERE px.restaurant_id = '${this.crawler.restaurant.id}'
@@ -37,7 +36,7 @@ export class RestaurantBaseScore {
   // 5 = 2, 4 = 1, 3 = 0, 2 = -1, 1 = -2
   async scoreFromReviews() {
     this.breakdown.reviews = {}
-    const result = await main_db.query(`
+    const result = await this.crawler.main_db.query(`
       SELECT
         (
           SELECT count(*) FROM review

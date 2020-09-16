@@ -30,11 +30,7 @@ import {
   scrapeGetData,
 } from '../scrape-helpers'
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
-import {
-  googlePermalink,
-  main_db,
-  restaurantFindIDBatchForCity,
-} from '../utils'
+import { DB, googlePermalink, restaurantFindIDBatchForCity } from '../utils'
 import { checkMaybeDeletePhoto, remove404Images } from './remove_404_images'
 import { RestaurantBaseScore } from './RestaurantBaseScore'
 import { RestaurantRatings } from './RestaurantRatings'
@@ -65,6 +61,7 @@ export class Self extends WorkerJob {
   grubhub!: Scrape
   google!: Scrape
 
+  main_db!: DB
   restaurant!: RestaurantWithId
   ratings!: { [key: string]: number }
   _start_time!: [number, number]
@@ -149,9 +146,11 @@ export class Self extends WorkerJob {
       }
       await this.postMerge()
     }
+    await this.main_db.pool.end()
   }
 
   async preMerge(restaurant: RestaurantWithId) {
+    this.main_db = DB.main_db()
     this._debugRAMUsage(restaurant.slug || restaurant.id)
     this.restaurant = restaurant
     console.log('Merging: ' + this.restaurant.name)
@@ -163,16 +162,16 @@ export class Self extends WorkerJob {
   async postMerge() {
     this.resetTimer()
     if (!this.restaurant.name || this.restaurant.name == '') {
-      throw new Error(
-        'SELF CRAWLER: restaurant has no name, ID: ' + this.restaurant.id
-      )
+      sentryMessage('SELF CRAWLER: restaurant has no name', {
+        restaurant: this.restaurant.id,
+      })
+      return
     }
     await this._runFailableFunction(this.finishTagsEtc)
     await this._runFailableFunction(this.finalScores)
     clearInterval(this._debugRamIntervalFunction)
     this.log('postMerge()')
     console.log(`Merged: ${this.restaurant.name}`)
-    main_db.pool.end()
   }
 
   async finishTagsEtc() {
@@ -195,7 +194,7 @@ export class Self extends WorkerJob {
   }
 
   async mergeMainData() {
-    ;[
+    const steps = [
       this.mergeName,
       this.mergeTelephone,
       this.mergeAddress,
@@ -204,13 +203,15 @@ export class Self extends WorkerJob {
       this.addSources,
       this.addPriceRange,
       this.getRatingFactors,
-    ].forEach((func) => {
-      this._runFailableFunction(func)
-    })
+    ]
+    for (const step of steps) {
+      await this._runFailableFunction(step)
+    }
   }
 
   async _runFailableFunction(func: Function) {
     this._start_time = process.hrtime()
+    let result = 'success'
     try {
       if (func.constructor.name == 'AsyncFunction') {
         await func.bind(this)()
@@ -218,13 +219,14 @@ export class Self extends WorkerJob {
         func.bind(this)()
       }
     } catch (e) {
+      result = 'failed'
       sentryException(
         e,
         { function: func.name, restaurant: this.restaurant.name },
         { source: 'Self crawler' }
       )
     }
-    this.log(func.name)
+    this.log(`${func.name} | ${result}`)
   }
 
   async doTags() {
@@ -409,13 +411,8 @@ export class Self extends WorkerJob {
              ) t(id, f, t), f_opening_hours_hours(f, t) hours;
         END TRANSACTION;
       `
-    let results: any[]
-    try {
-      results = await main_db.query(query)
-    } catch (e) {
-      throw new Error(e)
-    }
-    return results[2].rowCount
+    const result = await this.main_db.query(query)
+    return result[2].rowCount
   }
 
   _toPostgresTime(day: string, time: string) {
@@ -684,7 +681,7 @@ export class Self extends WorkerJob {
 
   async addReviewHeadlines() {
     const id = this.restaurant.id
-    const result = await main_db.query(`
+    const result = await this.main_db.query(`
       SELECT DISTINCT(sentence), naive_sentiment FROM restaurant
         JOIN review ON review.restaurant_id = restaurant.id
         JOIN review_tag_sentence rts ON rts.review_id = review.id
