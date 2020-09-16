@@ -5,7 +5,13 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { TouchableOpacity, View, ViewProps, ViewStyle } from 'react-native'
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewProps,
+  ViewStyle,
+} from 'react-native'
 
 import { isWeb, isWebIOS } from '../constants'
 import { combineRefs } from '../helpers/combineRefs'
@@ -106,7 +112,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
         spacing,
         className,
         disabled,
-        ...props
+        ...styleProps
       },
       ref
     ) => {
@@ -160,11 +166,12 @@ const createStack = (defaultStyle?: ViewStyle) => {
           style={[
             defaultStyle,
             fullscreen ? fullscreenStyle : null,
-            props,
+            styleProps,
             style,
             state.hover ? hoverStyle : null,
             state.press ? pressStyle : null,
             disabled ? disabledStyle : null,
+            isWeb ? null : fixNativeShadow(styleProps),
           ]}
         >
           {spacedChildren}
@@ -259,14 +266,22 @@ const createStack = (defaultStyle?: ViewStyle) => {
         if (isWeb) {
           content = React.cloneElement(content, events)
         } else {
-          content = (
-            <TouchableOpacity
-              onPress={events.onClick as any}
-              onPressIn={events.onMouseDown as any}
-            >
-              {content}
-            </TouchableOpacity>
-          )
+          if (pointerEvents !== 'none') {
+            content = (
+              <TouchableOpacity
+                onPress={events.onClick as any}
+                onPressIn={events.onMouseDown as any}
+                style={{
+                  zIndex: styleProps.zIndex,
+                  width: styleProps.width,
+                  height: styleProps.height,
+                  position: styleProps.position,
+                }}
+              >
+                {content}
+              </TouchableOpacity>
+            )
+          }
         }
       }
 
@@ -289,9 +304,47 @@ const createStack = (defaultStyle?: ViewStyle) => {
   return (component as any) as StaticComponent<StackProps>
 }
 
+const defaultShadowOffset = {
+  width: 0,
+  height: 0,
+}
+
+function fixNativeShadow(props: any) {
+  let res
+  if ('shadowColor' in props) {
+    if (!('shadowOffset' in props)) {
+      res = {
+        shadowOffset: defaultShadowOffset,
+      }
+    }
+    if (!('shadowOpacity' in props)) {
+      const color = props.shadowColor as string
+      res = res || {}
+      if (color[0] === 'r' && color[4] === 'a') {
+        const alphaIndex = color.lastIndexOf(',') + 1
+        const alpha = +color.slice(alphaIndex).replace(')', '')
+        if (isNaN(alpha)) {
+          console.warn('nan', color)
+        } else {
+          res.shadowOpacity = alpha
+        }
+      } else {
+        res.shadowOpacity = 1
+      }
+    }
+  }
+  return res
+}
+
 export const AbsoluteVStack = createStack({
   position: 'absolute',
   flexDirection: 'column',
 })
-export const HStack = createStack({ flexDirection: 'row' })
-export const VStack = createStack({ flexDirection: 'column' })
+
+export const HStack = createStack({
+  flexDirection: 'row',
+})
+
+export const VStack = createStack({
+  flexDirection: 'column',
+})
