@@ -16,7 +16,7 @@
   "dependencies": {
     "@o/gqless-react": "0.0.4",
     "@o/gqless": "0.0.3",
-    "@o/gqless-schema": "0.0.3",
+    "@o/gqless-schema": "0.0.6",
     "@o/gqless-logger": "0.0.3",
     "patch-package": "^6.2.2",
     "isomorphic-unfetch": "^3.0.0",

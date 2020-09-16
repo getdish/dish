@@ -2,7 +2,7 @@ const package = require('../package.json')
 
 const hoists = {
   '@o/gqless-react': true,
-  '@o/schema': true,
+  '@o/gqless-schema': true,
   '@o/gqless': true,
 }
 
