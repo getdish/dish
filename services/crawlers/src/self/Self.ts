@@ -100,7 +100,7 @@ export class Self extends WorkerJob {
       const ram_value = Math.round(process.memoryUsage().heapUsed / 1024 / 1024)
       const ram = ram_value + 'Mb'
       if (ram_value > 1000) {
-        sentryMessage(`Worker RAM ${ram} over 1Gi for: ${restaurant_id}`)
+        sentryMessage('Worker RAM over 1Gi', { ram, restaurant: restaurant_id })
       }
       this.log(`Worker RAM usage for ${restaurant_id}: ${ram}`)
     }
