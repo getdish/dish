@@ -10,10 +10,11 @@ import {
   useDebounce,
 } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-import FlexSearch from 'flexsearch'
+// react native fix
+import FlexSearch from 'flexsearch/flexsearch.js'
 import { uniqBy } from 'lodash'
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
-import { ScrollView } from 'react-native'
+import { Platform, ScrollView } from 'react-native'
 
 import {
   isWeb,
@@ -51,19 +52,21 @@ let curPagePos = { x: 0, y: 0 }
 export default memo(function HomeAutocomplete() {
   const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    const handleMove = (e) => {
-      curPagePos.x = e.pageX
-      curPagePos.y = e.pageY
-    }
-    document.addEventListener('mousemove', handleMove, {
-      capture: false,
-      passive: true,
+  if (isWeb) {
+    useEffect(() => {
+      const handleMove = (e) => {
+        curPagePos.x = e.pageX
+        curPagePos.y = e.pageY
+      }
+      document.addEventListener('mousemove', handleMove, {
+        capture: false,
+        passive: true,
+      })
+      return () => {
+        document.removeEventListener('mousemove', handleMove)
+      }
     })
-    return () => {
-      document.removeEventListener('mousemove', handleMove)
-    }
-  })
+  }
 
   return (
     <>
@@ -144,9 +147,9 @@ const HomeAutoCompleteContents = memo(
         backgroundColor={
           isSmall && isShowing ? 'rgba(0,0,0,0.1)' : 'transparent'
         }
-        position="absolute"
         fullscreen
         top={top}
+        height="100%"
         paddingTop={10}
         overflow="hidden"
         alignItems="center"
@@ -162,6 +165,7 @@ const HomeAutoCompleteContents = memo(
       >
         <VStack
           width="100%"
+          height="100%"
           pointerEvents={isShowing ? 'auto' : 'none'}
           maxWidth={pageWidthMax * 0.45}
           maxHeight={isWeb ? `calc(100vh - ${top + 20}px)` : '90%'}
@@ -181,17 +185,20 @@ const HomeAutoCompleteContents = memo(
         >
           <VStack
             className="ease-in-out"
+            pointerEvents={isShowing ? 'auto' : 'none'}
             position="relative"
             left={isSmall ? 0 : showLocation ? 150 : -150}
             shadowColor="rgba(0,0,0,0.4)"
             shadowRadius={18}
             width="100%"
-            flex={1}
             backgroundColor="rgba(0,0,0,0.9)"
             padding={5}
             borderRadius={10}
           >
-            <ScrollView style={{ opacity: isLoading ? 0.5 : 1 }}>
+            <ScrollView
+              pointerEvents={isShowing ? 'auto' : 'none'}
+              style={{ opacity: isLoading ? 0.5 : 1 }}
+            >
               <AutocompleteResults />
             </ScrollView>
           </VStack>
