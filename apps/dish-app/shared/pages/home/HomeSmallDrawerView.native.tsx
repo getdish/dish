@@ -72,7 +72,12 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
   )
 
   return (
-    <VStack zIndex={zIndexDrawer} width="100%" height="100%">
+    <VStack
+      pointerEvents="none"
+      zIndex={zIndexDrawer}
+      width="100%"
+      height="100%"
+    >
       <Animated.View
         style={{
           transform: [
@@ -96,8 +101,8 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
             // @ts-ignore
             pointerEvents: 'auto',
             position: 'absolute',
-            top: -40,
-            padding: 15,
+            top: -30,
+            padding: 5,
           }}
           {...panResponder.panHandlers}
         >
@@ -108,13 +113,10 @@ export const HomeSmallDrawerView = (props: { children: any }) => {
             marginTop={-10}
           >
             <VStack
-              backgroundColor="rgba(100,100,100,0.5)"
+              backgroundColor="rgba(100,100,100,0.35)"
               width={60}
               height={8}
               borderRadius={100}
-              hoverStyle={{
-                backgroundColor: 'rgba(200,200,200,0.65)',
-              }}
             />
           </VStack>
         </View>

@@ -271,6 +271,7 @@ const HomeMapContent = memo(function HomeMap({
     <AbsoluteVStack
       className="map-container"
       position="absolute"
+      pointerEvents="auto"
       top={0}
       right={0}
       bottom={0}
