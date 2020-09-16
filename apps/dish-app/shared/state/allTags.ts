@@ -9,7 +9,6 @@ export const allTagsNameToID: { [name: string]: string } = {}
 
 // adds to allTags + allTagsNameToID
 export function addTagsToCache(tags: Tag[]) {
-  console.log('adding', tags, getTagId)
   for (const tag of tags ?? []) {
     if (tag.name) {
       const id = getTagId(tag)
