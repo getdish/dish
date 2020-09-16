@@ -9,7 +9,7 @@ import { useIsReallyNarrow } from './useIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 const linkButtonProps: LinkButtonProps = {
-  className: 'ease-in-out-slow',
+  className: 'ease-in-out-fast',
   opacity: 0,
   name: 'home',
   hoverStyle: {
@@ -30,7 +30,7 @@ export const DishLogoButton = memo(() => {
   const isReallySmall = useIsReallyNarrow()
   return (
     <VStack
-      className="ease-in-out"
+      className="ease-in-out-faster"
       width={isReallySmall ? styles.reallySmall.width : styles.default.width}
       height={styles.default.height}
       onPress={() => {

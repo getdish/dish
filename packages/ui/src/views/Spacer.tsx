@@ -31,6 +31,7 @@ export const Spacer = memo((props: SpacerProps) => {
 
 const getStyle = (props: SpacerProps = defaultProps): ViewStyle => {
   return {
+    flexShrink: 0,
     ...getFlex(props),
     ...getSize(props),
   }

@@ -1,4 +1,4 @@
-import { QueryResponse } from 'gqless'
+import { QueryResponse } from '@o/gqless'
 
 import { isBrowserProd } from './constants'
 import { Auth } from './helpers/auth-helpers'

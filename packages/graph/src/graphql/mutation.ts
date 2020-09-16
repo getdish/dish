@@ -1,4 +1,4 @@
-import { Client } from 'gqless'
+import { Client } from '@o/gqless'
 
 import { createFetcher } from '../createFetcher'
 import { mutation_root, schema } from './generated'

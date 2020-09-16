@@ -296,11 +296,14 @@ const RestaurantListItemContent = memo(
           <HStack flex={1} maxWidth="100%">
             <VStack
               {...contentSideWidthProps}
+              className="fix-safari-shrink-height"
               justifyContent="center"
+              flexShrink={0}
               marginRight={20}
             >
+              {/* ensures it always flexes all the way even if short text */}
               <Text opacity={0} lineHeight={0}>
-                wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+                {wideText}
               </Text>
               <Text fontSize={16} lineHeight={24}>
                 <Suspense fallback={null}>
@@ -379,6 +382,8 @@ const RestaurantListItemContent = memo(
     )
   })
 )
+
+const wideText = `wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww`
 
 const RestaurantPeekDishes = memo(
   graphql(function RestaurantPeek(props: {

@@ -1,4 +1,4 @@
-import { ArrayNode, FieldNode, ObjectNode, ScalarNode } from 'gqless'
+import { ArrayNode, FieldNode, ObjectNode, ScalarNode } from '@o/gqless'
 
 const isSimpleField = (field: FieldNode) => {
   return field.ofNode instanceof ScalarNode && !field.args?.required

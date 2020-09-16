@@ -1,9 +1,9 @@
 const package = require('../package.json')
 
 const hoists = {
-  '@gqless/react': true,
-  '@gqless/schema': true,
-  gqless: true,
+  '@o/gqless-react': true,
+  '@o/schema': true,
+  '@o/gqless': true,
 }
 
 const noHoists = Object.keys(package.dependencies)

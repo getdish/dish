@@ -54,7 +54,6 @@ const placeHolder = `The best ${
 let avoidNextFocus = true
 export function setAvoidNextAutocompleteShowOnFocus() {
   avoidNextFocus = true
-  console.log('avoid next')
 }
 
 export const onFocusAnyInput = () => {
@@ -66,6 +65,10 @@ export const onFocusAnyInput = () => {
 let searchBar: HTMLInputElement | null = null
 export function focusSearchInput() {
   if (isWebIOS) return
+  if (avoidNextFocus) {
+    avoidNextFocus = false
+    return
+  }
   searchBar?.focus()
 }
 

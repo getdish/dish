@@ -407,3 +407,7 @@ input:-webkit-autofill:active  {
   display: inline-flex !important;
   align-self: flex-end !important;
 }
+
+.fix-safari-shrink-height {
+  min-height: -webkit-fit-content;
+}
