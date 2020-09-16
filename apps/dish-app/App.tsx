@@ -28,7 +28,7 @@ export default function App() {
       <View style={styles.container}>
         <HomeMap />
 
-        <AbsoluteVStack fullscreen zIndex={1000}>
+        <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1000}>
           <HomeSmallDrawer>
             <HomeStackView>
               {(props) => {

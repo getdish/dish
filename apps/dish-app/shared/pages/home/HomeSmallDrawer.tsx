@@ -15,7 +15,6 @@ export const HomeSmallDrawer = (props: { children: any }) => {
     return omStatic.reaction(
       (state) => state.home.showAutocomplete,
       (show) => {
-        console.log('what is', show)
         const isReallySmall = getIs('xs')
         const isShort = getIs('sm')
         const defaultSnapPoint = isShort && isReallySmall ? 0 : 1

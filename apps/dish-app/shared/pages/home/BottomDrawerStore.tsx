@@ -1,5 +1,4 @@
 import { Store } from '@dish/use-store'
-import { debounce } from 'lodash'
 import { Animated } from 'react-native'
 
 import { isWeb } from '../../constants'
@@ -7,13 +6,19 @@ import { getWindowHeight } from '../../helpers/getWindow'
 import { omStatic } from '../../state/omStatic'
 
 export class BottomDrawerStore extends Store {
-  snapPoints = [isWeb ? 0.02 : 0.05, 0.25, 0.75]
+  snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.7]
   snapIndex = 1
   pan = new Animated.Value(this.getSnapPointOffset())
   spring: any
 
   get currentSnapPoint() {
     return this.snapPoints[this.snapIndex]
+  }
+
+  get currentHeight() {
+    return (
+      getWindowHeight() - this.snapPoints[this.snapIndex] * getWindowHeight()
+    )
   }
 
   get snapIndices() {
