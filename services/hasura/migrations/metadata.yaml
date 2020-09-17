@@ -493,6 +493,28 @@ tables:
   - name: tag
     using:
       foreign_key_constraint_on: tag_id
+  select_permissions:
+  - role: anon
+    permission:
+      columns:
+      - ml_sentiment
+      - naive_sentiment
+      - sentence
+      filter: {}
+  - role: contributor
+    permission:
+      columns:
+      - ml_sentiment
+      - naive_sentiment
+      - sentence
+      filter: {}
+  - role: user
+    permission:
+      columns:
+      - ml_sentiment
+      - naive_sentiment
+      - sentence
+      filter: {}
 - table:
     schema: public
     name: setting
