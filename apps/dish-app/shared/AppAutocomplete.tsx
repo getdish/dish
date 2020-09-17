@@ -158,6 +158,7 @@ const HomeAutoCompleteContents = memo(
         opacity={isShowing ? 1 : 0}
         transform={isShowing ? [] : [{ translateY: 5 }]}
         disabled={!isShowing}
+        debug
         onPress={() => {
           om.actions.home.setShowAutocomplete(false)
         }}

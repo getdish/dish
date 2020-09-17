@@ -78,7 +78,7 @@ export const AppSearchLocationInput = memo(() => {
       position="relative"
       flex={1}
       backgroundColor={theme === 'dark' ? 'rgba(255,255,255,0.15)' : background}
-      borderRadius={10}
+      borderRadius={100}
       justifyContent="center"
     >
       <AppAutocompleteHoverableInput

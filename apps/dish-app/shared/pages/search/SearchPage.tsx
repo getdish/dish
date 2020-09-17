@@ -325,29 +325,23 @@ const SearchResultsContent = (props: Props) => {
   const titleLen = (title + subTitle).length
   const titleScale =
     titleLen > 70 ? 0.7 : titleLen > 60 ? 0.8 : titleLen > 50 ? 0.9 : 1
-  const titleFontSize = 30 * titleScale * (isSmall ? 0.75 : 1)
+  const titleFontSize = 34 * titleScale * (isSmall ? 0.75 : 1)
 
   const contentWrap = (children: any) => {
     return (
       <ContentScrollView
         ref={scrollRef}
-        onScrollYThrottled={isOnLastChunk ? null : handleScrollY}
+        onScrollYThrottled={isOnLastChunk ? undefined : handleScrollY}
       >
         <VStack height={paddingTop} />
         <PageTitleTag>{title}</PageTitleTag>
         <HStack
-          justifyContent="center"
           paddingHorizontal={20}
           paddingTop={20}
           paddingBottom={15}
           overflow="hidden"
         >
-          <Text
-            letterSpacing={-0.5}
-            ellipse
-            fontSize={titleFontSize}
-            fontWeight="600"
-          >
+          <Text letterSpacing={-0.5} fontSize={titleFontSize} fontWeight="600">
             {pageTitleElements}{' '}
             <Text
               // fontSize={titleFontSize * 0.9}
