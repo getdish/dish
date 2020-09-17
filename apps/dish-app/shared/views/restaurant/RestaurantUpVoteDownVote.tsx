@@ -4,6 +4,7 @@ import {
   Box,
   HStack,
   HoverablePopover,
+  SmallTitle,
   StackProps,
   TableCell,
   TableCellProps,
@@ -12,7 +13,7 @@ import {
   Tooltip,
   VStack,
 } from '@dish/ui'
-import React, { memo, useState } from 'react'
+import React, { Suspense, memo, useState } from 'react'
 
 import { bgLight } from '../../colors'
 import { useIsNarrow } from '../../hooks/useIs'
@@ -52,11 +53,13 @@ export const RestaurantUpVoteDownVote = memo(
           contents={(isOpen) => {
             if (isOpen) {
               return (
-                <RestaurantTagsScore
-                  restaurantSlug={restaurantSlug}
-                  activeTagIds={activeTagIds}
-                  userVote={vote}
-                />
+                <Suspense fallback={null}>
+                  <RestaurantTagsScore
+                    restaurantSlug={restaurantSlug}
+                    activeTagIds={activeTagIds}
+                    userVote={vote}
+                  />
+                </Suspense>
               )
             }
             return null
@@ -114,7 +117,7 @@ export const RestaurantUpVoteDownVote = memo(
 )
 
 const col0Props: TableCellProps = {
-  flex: 1,
+  flex: 2,
 }
 
 const col1Props: TableCellProps = {
@@ -133,10 +136,17 @@ const RestaurantTagsScore = graphql(
   }) => {
     const tagScores = useRestaurantTagScores(restaurantSlug, activeTagIds)
     return (
-      <Box maxWidth={400} minWidth={300}>
+      <Box
+        maxWidth={320}
+        overflow="hidden"
+        minWidth={280}
+        paddingVertical={15}
+        paddingHorizontal={20}
+      >
+        <SmallTitle divider="off">Points Breakdown</SmallTitle>
         {/* {JSON.stringify(restaurant.score_breakdown())} */}
         <HStack flex={1}>
-          <Table padding={10} flex={1}>
+          <Table flex={1}>
             <TableHeadRow>
               <TableCell {...col0Props}>
                 <TableHeadText>Tag</TableHeadText>
@@ -146,13 +156,28 @@ const RestaurantTagsScore = graphql(
               </TableCell>
             </TableHeadRow>
             {tagScores.map((tscore, i) => {
+              const finalScore = +(tscore.score ?? 0) + userVote
               return (
                 <TableRow key={i}>
                   <TableCell {...col0Props}>
-                    {tscore.icon} {tscore.name}
+                    <Text>
+                      {tscore.icon} {tscore.name}
+                    </Text>
                   </TableCell>
                   <TableCell {...col1Props}>
-                    {tscore.score + userVote}
+                    <Text
+                      fontWeight="bold"
+                      color={
+                        finalScore > 0
+                          ? 'green'
+                          : finalScore < 0
+                          ? 'red'
+                          : '#888'
+                      }
+                    >
+                      {finalScore > 0 ? '+' : ''}
+                      {finalScore}
+                    </Text>
                   </TableCell>
                 </TableRow>
               )

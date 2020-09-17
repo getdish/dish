@@ -9,6 +9,7 @@ import { ChunkExtractor } from '@loadable/server'
 import bodyParser from 'body-parser'
 import { matchesUA } from 'browserslist-useragent'
 import express from 'express'
+// @ts-ignore
 import { JSDOM } from 'jsdom'
 import { createOvermindSSR } from 'overmind'
 import React from 'react'
@@ -44,7 +45,10 @@ const statsFile = Path.resolve(
 const extractor = new ChunkExtractor({ statsFile })
 
 // import all app below ^^^
-const app = require(Path.join(rootDir, 'web-build-ssr/static/js/app.ssr.js'))
+const app = require(Path.join(
+  rootDir,
+  `web-build-ssr/static/js/app.ssr.${process.env.NODE_ENV ?? 'production'}.js`
+))
 const { App, config, ReactDOMServer } = app
 
 if (!App || !config || !ReactDOMServer) {
@@ -98,7 +102,7 @@ server.get('*', async (req, res) => {
   console.log('scripts are', extractor.getScriptTags())
 
   // async suspense rendering
-  await ssrPrepass(app)
+  // await ssrPrepass(app)
 
   const appHtml = ReactDOMServer.renderToString(jsx)
 

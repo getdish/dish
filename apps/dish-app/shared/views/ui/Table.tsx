@@ -34,7 +34,7 @@ export const TableHeadText = (props: TextProps) => (
     paddingHorizontal={8}
     marginLeft={-8}
     borderRadius={10}
-    maxWidth={52}
+    maxWidth="100%"
     ellipse
     fontSize={12}
     {...props}
