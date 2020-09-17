@@ -3,13 +3,13 @@ import React, { Suspense } from 'react'
 
 import {
   isAboutState,
-  isBlogState,
   isHomeState,
   isRestaurantState,
   isSearchState,
   isUserState,
 } from '../../state/home-helpers'
 import { HomePagePaneProps } from './HomePagePaneProps'
+import { HomePageWebPanes } from './HomePageWebPanes'
 
 export const HomePagePane = (props: HomePagePaneProps) => {
   const { item } = props
@@ -20,15 +20,10 @@ export const HomePagePane = (props: HomePagePaneProps) => {
       {isSearchState(item) && <HomePageSearchResults {...props} />}
       {isRestaurantState(item) && <RestaurantPage {...props} />}
       {isAboutState(item) && <HomePageAbout {...props} />}
-      {isBlogState(item) && <BlogPage {...props} />}
+      <HomePageWebPanes {...props} />
     </Suspense>
   )
 }
-
-const BlogPage =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('../blog/BlogPage').default
-    : loadable(() => import('../blog/BlogPage'))
 
 const HomePageAbout =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
