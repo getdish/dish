@@ -48,7 +48,9 @@ export function getTitleForState(
     titleParts.push(countryTag.name)
   }
   if (dishTag?.name) {
-    titleParts.push(dishTag.name)
+    titleParts.push(
+      dishTag.icon ? `${dishTag.name} ${dishTag.icon}` : dishTag.name
+    )
   }
   if (hasUser) {
     lensePlaceholder = lensePlaceholder.toLowerCase()
