@@ -16,7 +16,7 @@ export const TagVoteButton = graphql(
     restaurantId: string
     tagId: string
   }) => {
-    const [vote, setVote] = useUserUpvoteDownvoteQuery(restaurantId, {
+    const { vote, setVote } = useUserUpvoteDownvoteQuery(restaurantId, {
       [tagId]: true,
     })
     // console.log('vote', vote, tagId)

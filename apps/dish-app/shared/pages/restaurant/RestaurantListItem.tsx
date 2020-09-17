@@ -167,10 +167,7 @@ const RestaurantListItemContent = memo(
             },
           },
         })
-        .map((x) => ({
-          name: x.tag.name,
-          score: x.score,
-        })),
+        .map((x) => `${x.tag.name} - ${x.score}`),
       Object.keys(tagIds).map((x) => {
         return allTags[x].name
       })
@@ -241,6 +238,7 @@ const RestaurantListItemContent = memo(
                     <RestaurantUpVoteDownVote
                       score={score}
                       restaurantId={restaurantId}
+                      restaurantSlug={restaurantSlug}
                       activeTagIds={tagIds ?? {}}
                     />
                   </VStack>

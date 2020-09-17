@@ -515,8 +515,8 @@ function runAutocomplete(
 function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {
   return resolved(() => {
     return [
-      ...searchRestaurants(searchQuery, center, span),
       ...searchDishTags(searchQuery),
+      ...searchRestaurants(searchQuery, center, span),
       ...query
         .tag({
           where: {

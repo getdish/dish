@@ -5,6 +5,7 @@ import React, { useEffect, useRef } from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
 
 import { brandColor } from '../../colors'
+import { isWeb } from '../../constants'
 import { RoutesTable, router } from '../../state/router'
 import { LinkProps } from './LinkProps'
 import { getNormalizeLinkProps } from './useNormalizedLink'
@@ -26,22 +27,28 @@ export const useLink = (props: LinkProps<any, any>) => {
   }, [])
 
   const onPress = (e: any) => {
-    if (props.target) {
-      // let it go
-    } else {
-      e.preventDefault()
-      if (props.asyncClick) {
-        cancel.current = series([
-          () => sleep(50),
-          () => {
-            cancel.current = null
-            nav()
-          },
-        ])
-      } else {
-        nav()
+    if (isWeb) {
+      // let it naturally go to target="_blank"
+      if (props.target === '_blank') return
+      if (e.metaKey || e.ctrlKey) {
+        window.open(e.currentTarget.href, '_blank')
+        return
       }
     }
+
+    e.preventDefault()
+    if (props.asyncClick) {
+      cancel.current = series([
+        () => sleep(50),
+        () => {
+          cancel.current = null
+          nav()
+        },
+      ])
+    } else {
+      nav()
+    }
+
     function nav() {
       console.log('what is', linkProps.onPress)
       if (linkProps.onPress || props.onClick) {

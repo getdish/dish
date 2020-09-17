@@ -17,6 +17,7 @@ export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
   return await Promise.all(
     tags.map(async (tag) => {
       const existing = allTags[getTagId(tag)]
+      console.log('existing', existing)
       if (!existing?.id) {
         const full = await getFullTag(tag)
         if (full) {
