@@ -17,9 +17,10 @@ const endpoint = getGraphEndpoint()
 export const createFetcher = (
   type: 'query' | 'mutation'
 ): QueryFetcherWithOptions => {
-  return async (query, variables, options) => {
+  return async (queryIn, variables, options) => {
+    const query = type !== 'query' ? type + queryIn : queryIn
     const body = JSON.stringify({
-      query: type !== 'query' ? type + query : query,
+      query,
       variables,
     })
     const request: RequestInit = {
@@ -53,6 +54,15 @@ export const createFetcher = (
         if (graphErrorListeners.size) {
           graphErrorListeners.forEach((cb) => cb(data.errors))
         }
+
+        // helpful for debugging
+        console.error(`Failed query:
+fetch('${endpoint}', ${JSON.stringify(
+          request,
+          null,
+          2
+        )}).then(x => x.json()).then(x => console.log(x))`)
+
         throw new HasuraError(query, data.errors)
       }
     }
