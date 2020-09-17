@@ -6,7 +6,7 @@ export type StaticComponent<A> = ((props: A) => JSX.Element) & {
 
 // duplicate of ui-static, we need shared types..
 export type StaticConfig = {
-  defaultStyle?: ViewStyle | TextStyle
+  defaultStyle?: any
   styleExpansionProps?: {
     [key: string]: ViewStyle | TextStyle
   }
