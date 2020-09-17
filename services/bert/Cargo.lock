@@ -1907,6 +1907,7 @@ dependencies = [
  "actix-cors",
  "actix-web",
  "anyhow",
+ "crossbeam-channel",
  "env_logger",
  "qstring",
  "rust-bert",

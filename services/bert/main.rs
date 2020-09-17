@@ -1,49 +1,70 @@
+use crossbeam_channel::unbounded;
+use std::env;
 use std::io;
+use std::thread;
 
 use actix_cors::Cors;
 use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer};
 use qstring::QString;
 use rust_bert::pipelines::sentiment::SentimentModel;
 
-async fn index(req: HttpRequest) -> HttpResponse {
+async fn index(
+    rx: web::Data<crossbeam_channel::Receiver<String>>,
+    tx: web::Data<crossbeam_channel::Sender<String>>,
+    req: HttpRequest,
+) -> HttpResponse {
     let qs = QString::from(req.query_string());
     let text = qs.get("text").unwrap();
-
-    let sentiments = match analyze_sentiments(text.to_string()) {
-        Ok(s) => s,
-        Err(e) => return HttpResponse::InternalServerError().body(format!("{:?}", e)),
-    };
-
-    let mut results = vec![];
-    for sentiment in sentiments {
-        let result = format!(
-            "[\"{:?}\", {}]",
-            sentiment.polarity,
-            sentiment.score.to_string()
-        );
-        results.push(result);
-    }
-    let body = format!("{{\"result\": [{}]}}", results.join(","),);
+    tx.send(text.to_string()).unwrap();
+    let body = rx.recv().unwrap();
     HttpResponse::Ok().body(body)
 }
 
 async fn server() -> io::Result<()> {
-    HttpServer::new(|| {
+    let port = match env::var("PORT") {
+        Ok(val) => val.to_string(),
+        Err(_e) => "8080".to_string(),
+    };
+
+    let (bert_tx, bert_rx) = unbounded::<String>();
+    let (web_tx, web_rx) = unbounded::<String>();
+
+    thread::spawn(move || {
+        let sentiment_classifier = match SentimentModel::new(Default::default()) {
+            Ok(sc) => sc,
+            Err(_e) => return (),
+        };
+        loop {
+            let text = web_rx.recv().unwrap();
+            let sentiments = sentiment_classifier.predict(&[&text]);
+            let mut results = vec![];
+            for sentiment in sentiments {
+                let result = format!(
+                    "[\"{:?}\", {}]",
+                    sentiment.polarity,
+                    sentiment.score.to_string()
+                );
+                results.push(result);
+            }
+            let body = format!("{{\"result\": [{}]}}", results.join(","),);
+            bert_tx.send(body).unwrap();
+        }
+    });
+
+    let brx = web::Data::new(bert_rx);
+    let wtx = web::Data::new(web_tx);
+    HttpServer::new(move || {
         App::new()
+            .app_data(brx.clone())
+            .app_data(wtx.clone())
             .wrap(Cors::new().finish())
             .wrap(middleware::Logger::default())
             .service(web::resource("/").to(index))
     })
-    .bind("0.0.0.0:8080")?
+    .bind(format!("0.0.0.0:{}", port))?
+    .client_timeout(30000)
     .run()
     .await
-}
-
-fn analyze_sentiments(
-    text: String,
-) -> anyhow::Result<Vec<rust_bert::pipelines::sentiment::Sentiment>> {
-    let sentiment_classifier = SentimentModel::new(Default::default())?;
-    Ok(sentiment_classifier.predict(&[&text]))
 }
 
 #[actix_web::main]
