@@ -6,11 +6,11 @@ import mapboxgl from 'mapbox-gl'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 
 import { MAPBOX_ACCESS_TOKEN } from '../../constants'
+import { useIsNarrow, useIsReallyNarrow } from '../../hooks/useIs'
+import { restaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useOvermind } from '../../state/om'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { getZoomLevel, mapZoomToMedium } from './mapHelpers'
-import { useIsNarrow, useIsReallyNarrow } from './useIs'
-import { restaurantQuery } from './useRestaurantQuery'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 

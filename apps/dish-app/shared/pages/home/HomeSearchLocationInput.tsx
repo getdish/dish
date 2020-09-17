@@ -100,8 +100,8 @@ export const HomeSearchLocationInput = memo(() => {
     <VStack
       position="relative"
       flex={1}
-      backgroundColor={theme === 'dark' ? 'rgba(255,255,255,0.1)' : background}
-      borderRadius={100}
+      backgroundColor={theme === 'dark' ? 'rgba(255,255,255,0.15)' : background}
+      borderRadius={10}
       justifyContent="center"
     >
       <HomeAutocompleteHoverableInput

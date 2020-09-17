@@ -7,10 +7,10 @@ import { useStorageState } from 'react-storage-hooks'
 import dishNeon from '../../assets/dish-neon.jpg'
 import { lightGreen, lightYellow } from '../../colors'
 import { useOvermind } from '../../state/om'
+import { CloseButton } from '../../views/ui/CloseButton'
 import { Link } from '../../views/ui/Link'
-import { CloseButton } from './CloseButton'
+import { Paragraph } from '../../views/ui/Paragraph'
 import { LoginRegisterForm } from './LoginRegisterForm'
-import { Paragraph } from './Paragraph'
 
 const useShowIntroLetter = () => {
   return useStorageState(localStorage, 'show_intro22', true)

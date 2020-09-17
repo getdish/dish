@@ -32,7 +32,7 @@ const disabledStyle: StackProps = {
 }
 
 export type StackProps = Omit<
-  ViewStyle &
+  Omit<ViewStyle, 'display'> &
     Omit<ViewProps, 'display'> & {
       fullscreen?: boolean
       children?: any

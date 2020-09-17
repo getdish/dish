@@ -13,6 +13,7 @@ import {
 } from '@dish/ui'
 import React, { memo, useCallback, useEffect } from 'react'
 
+import { useIsAboveMedium, useIsNarrow } from '../../hooks/useIs'
 import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
 import { LinkButton } from '../../views/ui/LinkButton'
@@ -20,7 +21,6 @@ import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { flatButtonStyle } from './baseButtonStyle'
 import { initAppleSigninButton } from './initAppleSigninButton'
 import { LoginRegisterForm } from './LoginRegisterForm'
-import { useIsAboveMedium, useIsNarrow } from './useIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 const MenuLinkButton = (props: LinkButtonProps) => {
@@ -127,6 +127,7 @@ const UserMenuContents = memo(
             </MenuLinkButton>
           )}
 
+          <MenuLinkButton name="blog">Blog</MenuLinkButton>
           <MenuLinkButton name="about">About</MenuLinkButton>
         </VStack>
 

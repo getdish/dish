@@ -1,4 +1,4 @@
-import { graphql, restaurantDishesWithPhotos, reviewDelete } from '@dish/graph'
+import { graphql, restaurantDishesWithPhotos } from '@dish/graph'
 import {
   AbsoluteVStack,
   HStack,
@@ -12,21 +12,20 @@ import {
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image, ScrollView, TextInput } from 'react-native'
 
-import { bgLight } from '../../colors'
 import { pageWidthMax, zIndexGallery } from '../../constants'
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { HomeStateItemReview } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { tagLenses } from '../../state/tagLenses'
+import { CommentBubble } from '../../views/CommentBubble'
+import { StackViewCloseButton } from '../../views/StackViewCloseButton'
+import { TagSmallButton } from '../../views/TagSmallButton'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
+import { SmallButton } from '../../views/ui/SmallButton'
+import { RestaurantLenseVote } from '../restaurant/RestaurantLenseVote'
+import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { flatButtonStyle } from './baseButtonStyle'
-import { CommentBubble } from './CommentBubble'
-import { RestaurantLenseVote } from './RestaurantLenseVote'
-import { RestaurantReview } from './RestaurantReview'
-import { StackViewCloseButton } from './StackViewCloseButton'
-import { TagSmallButton } from './TagSmallButton'
-import { useRestaurantQuery } from './useRestaurantQuery'
-import { useUserReviewCommentQuery } from './useUserReview'
 
 export default memo(function HomePageRestaurantReview() {
   const om = useOvermind()

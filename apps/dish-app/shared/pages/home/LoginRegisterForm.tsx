@@ -3,12 +3,12 @@ import { default as React, useEffect, useState } from 'react'
 
 import { lightRed } from '../../colors'
 import { useOvermind } from '../../state/om'
+import { Input, InteractiveContainer } from '../../views/ui/Input'
 import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { initAppleSigninButton } from './initAppleSigninButton'
-import { Input, InteractiveContainer } from './Input.1'
 
 const activeStyle: LinkButtonProps = {
   backgroundColor: 'rgba(150,150,150,0.35)',

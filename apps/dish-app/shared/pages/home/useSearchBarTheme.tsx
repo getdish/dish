@@ -1,6 +1,6 @@
 import { rgbString } from '../../helpers/rgbString'
+import { useIsNarrow } from '../../hooks/useIs'
 import { useCurrentLenseColor } from './useCurrentLenseColor'
-import { useIsNarrow } from './useIs'
 
 export const useSearchBarTheme = () => {
   const isSmall = useIsNarrow()

@@ -1,15 +1,14 @@
-import { Restaurant } from '@dish/graph'
 import { graphql } from '@dish/graph/src'
 import { AbsoluteVStack, Box, HStack, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo, useEffect, useState } from 'react'
 import { Image } from 'react-native'
 
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { RestaurantAddress } from './RestaurantAddress'
-import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
-import { RestaurantRatingViewPopover } from './RestaurantRatingViewPopover'
-import { useRestaurantQuery } from './useRestaurantQuery'
+import { RestaurantAddress } from '../restaurant/RestaurantAddress'
+import { RestaurantAddressLinksRow } from '../restaurant/RestaurantAddressLinksRow'
+import { RestaurantRatingViewPopover } from '../restaurant/RestaurantRatingViewPopover'
 
 export const HomeMapRestaurantPeek = memo(
   graphql(() => {

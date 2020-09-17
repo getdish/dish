@@ -1,6 +1,7 @@
 import {
   HomeStateItem,
   HomeStateItemAbout,
+  HomeStateItemBlog,
   HomeStateItemHome,
   HomeStateItemRestaurant,
   HomeStateItemSearch,
@@ -9,6 +10,8 @@ import {
 
 type HSIJustType = Pick<HomeStateItem, 'type'>
 
+export const isBlogState = (x?: HSIJustType): x is HomeStateItemBlog =>
+  x?.type === 'blog'
 export const isUserState = (x?: HSIJustType): x is HomeStateItemUser =>
   x?.type === 'user'
 export const isAboutState = (x?: HSIJustType): x is HomeStateItemAbout =>

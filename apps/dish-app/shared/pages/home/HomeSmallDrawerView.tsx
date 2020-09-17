@@ -4,13 +4,13 @@ import React, { useEffect, useMemo } from 'react'
 import { Animated, PanResponder, View } from 'react-native'
 
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants'
+import { useIsNarrow } from '../../hooks/useIs'
 import { omStatic } from '../../state/omStatic'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { BottomSheetContainer } from './BottomSheetContainer'
 import { HomeSearchBarDrawer } from './HomeSearchBar'
 import { blurSearchInput } from './HomeSearchInput'
 import { isWebIOS } from './isIOS'
-import { useIsNarrow } from './useIs'
 
 export const HomeSmallDrawerView = (props: { children: any }) => {
   const drawerStore = useStore(BottomDrawerStore)

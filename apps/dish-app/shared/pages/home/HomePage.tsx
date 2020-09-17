@@ -4,6 +4,7 @@ import loadable from '@loadable/component'
 import React, { Suspense, memo, useEffect } from 'react'
 
 import { isSSR } from '../../constants'
+import { useIsNarrow } from '../../hooks/useIs'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
 import { Route } from '../../views/router/Route'
 import HomeAutocomplete from './HomeAutocomplete'
@@ -15,7 +16,6 @@ import { HomePagePane } from './HomePagePane'
 import { HomeSearchBarFloating } from './HomeSearchBar'
 import { HomeStackView } from './HomeStackView'
 import { initAppleSigninButton } from './initAppleSigninButton'
-import { useIsNarrow } from './useIs'
 
 export const homePageBorderRadius = 12
 

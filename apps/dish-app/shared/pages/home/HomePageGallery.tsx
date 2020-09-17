@@ -1,17 +1,17 @@
-import { graphql, query, restaurantPhotosForCarousel } from '@dish/graph'
+import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import { AbsoluteVStack, HStack, LoadingItems, Text, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { Image, ScrollView } from 'react-native'
 
 import { isWeb, pageWidthMax, zIndexGallery } from '../../constants'
+import { getImageUrl } from '../../helpers/getImageUrl'
+import { useIsNarrow } from '../../hooks/useIs'
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemGallery } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
-import { getImageUrl } from './getImageUrl'
-import { RestaurantDishPhotos } from './RestaurantDishPhotos'
-import { RestaurantHeader } from './RestaurantHeader'
-import { StackViewCloseButton } from './StackViewCloseButton'
-import { useIsNarrow } from './useIs'
-import { useRestaurantQuery } from './useRestaurantQuery'
+import { StackViewCloseButton } from '../../views/StackViewCloseButton'
+import { RestaurantDishPhotos } from '../restaurant/RestaurantDishPhotos'
+import { RestaurantHeader } from '../restaurant/RestaurantHeader'
 
 export default memo(function HomePageGallery() {
   const om = useOvermind()

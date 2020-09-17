@@ -87,7 +87,9 @@
       "resize-observer-polyfill",
       "resize-observer-polyfill/**",
       "@react-native-community/blur",
-      "@react-native-community/blur/**"
+      "@react-native-community/blur/**",
+      "@mdx-js/react",
+      "@mdx-js/react/**"
     ]
   },
   "scripts": {
@@ -172,7 +174,8 @@
     "react-ssr-prepass": "^1.2.1",
     "react-storage-hooks": "^4.0.1",
     "resize-observer-polyfill": "^1.5.1",
-    "@react-native-community/blur": "^3.6.0"
+    "@react-native-community/blur": "^3.6.0",
+    "@mdx-js/react": "^1.6.17"
   },
   "devDependencies": {
     "@dish/babel-preset": "*",

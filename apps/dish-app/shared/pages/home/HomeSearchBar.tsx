@@ -11,6 +11,7 @@ import {
   zIndexSearchBarFloating,
 } from '../../constants'
 import { rgbString } from '../../helpers/rgbString'
+import { useIsNarrow, useIsReallyNarrow } from '../../hooks/useIs'
 import { useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { DishLogoButton } from './DishLogoButton'
@@ -19,7 +20,6 @@ import { HomeSearchInput } from './HomeSearchInput'
 import { HomeSearchLocationInput } from './HomeSearchLocationInput'
 import { InputStore } from './InputStore'
 import { useCurrentLenseColor } from './useCurrentLenseColor'
-import { useIsNarrow, useIsReallyNarrow } from './useIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 const isWeb = Platform.OS === 'web'
@@ -114,7 +114,7 @@ export const HomeSearchBarFloating = () => {
               </>
             )}
             <VStack
-              className="skewX searchbar-css"
+              className="skewX"
               position="relative"
               zIndex={100}
               flex={1}
@@ -130,7 +130,13 @@ export const HomeSearchBarFloating = () => {
                 alignItems="center"
                 justifyContent="center"
               >
-                <HomeSearchBar />
+                <VStack
+                  maxWidth="100%"
+                  flex={1}
+                  transform={[{ translateY: -1 }]}
+                >
+                  <HomeSearchBar />
+                </VStack>
               </HStack>
 
               {/* inner borders */}

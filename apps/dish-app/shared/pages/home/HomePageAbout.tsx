@@ -4,12 +4,12 @@ import React from 'react'
 import { lightGreen, lightYellow } from '../../colors'
 import { HomeStateItemAbout } from '../../state/home-types'
 import { LinkButton } from '../../views/ui/LinkButton'
+import { Paragraph } from '../../views/ui/Paragraph'
+import { TextStrong } from '../../views/ui/TextStrong'
+import { Title } from '../../views/ui/Title'
 import { HomeScrollView } from './HomeScrollView'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { StackItemProps } from './HomeStackView'
-import { Paragraph } from './Paragraph'
-import { TextStrong } from './TextStrong'
-import { Title } from './Title'
 
 const inlineButton = {
   borderRadius: 10,

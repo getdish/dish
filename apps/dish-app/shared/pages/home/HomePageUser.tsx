@@ -1,16 +1,15 @@
 import { graphql, query } from '@dish/graph'
 import { Circle, Divider, HStack, Spacer, Text, VStack } from '@dish/ui'
 import React from 'react'
-import { Image, ScrollView } from 'react-native'
+import { Image } from 'react-native'
 
 import { HomeStateItemUser } from '../../state/home-types'
 import { NotFoundPage } from '../../views/NotFoundPage'
-import { Link } from '../../views/ui/Link'
+import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { avatar } from './HomePageSearchResults'
 import { HomeScrollView } from './HomeScrollView'
 import { HomeStackDrawer } from './HomeStackDrawer'
 import { StackItemProps } from './HomeStackView'
-import { RestaurantReview } from './RestaurantReview'
 
 const useUserQuery = (username: string) => {
   return query.user({

@@ -2,10 +2,10 @@ import { AbsoluteVStack, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { G, Path, Svg } from 'react-native-svg'
 
+import { useIsReallyNarrow } from '../../hooks/useIs'
 import { omStatic } from '../../state/omStatic'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
-import { useIsReallyNarrow } from './useIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 const linkButtonProps: LinkButtonProps = {

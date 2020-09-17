@@ -15,10 +15,10 @@ import { ScrollView } from 'react-native'
 
 import { bgLight } from '../../colors'
 import { zIndexGallery } from '../../constants'
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { router } from '../../state/router'
-import { StackViewCloseButton } from './StackViewCloseButton'
-import { Table, TableHeadRow, TableHeadText } from './Table'
-import { useRestaurantQuery } from './useRestaurantQuery'
+import { StackViewCloseButton } from '../../views/StackViewCloseButton'
+import { Table, TableHeadRow, TableHeadText } from '../../views/ui/Table'
 
 export default memo(
   graphql(function HomePageRestaurantHours() {

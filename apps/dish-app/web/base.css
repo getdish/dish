@@ -240,7 +240,7 @@ textarea {
 }
 
 .inline-flex {
-  display: inline-flex !important;
+  display: inline-flex;
 }
 
 div,

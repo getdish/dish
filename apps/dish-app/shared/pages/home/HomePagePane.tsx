@@ -3,6 +3,7 @@ import React, { Suspense } from 'react'
 
 import {
   isAboutState,
+  isBlogState,
   isHomeState,
   isRestaurantState,
   isSearchState,
@@ -17,21 +18,27 @@ export const HomePagePane = (props: HomePagePaneProps) => {
       {isHomeState(item) && <HomePageHomePane {...props} />}
       {isUserState(item) && <HomePageUser {...props} />}
       {isSearchState(item) && <HomePageSearchResults {...props} />}
-      {isRestaurantState(item) && <HomePageRestaurant {...props} />}
+      {isRestaurantState(item) && <RestaurantPage {...props} />}
       {isAboutState(item) && <HomePageAbout {...props} />}
+      {isBlogState(item) && <BlogPage {...props} />}
     </Suspense>
   )
 }
+
+const BlogPage =
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+    ? require('../blog/BlogPage').default
+    : loadable(() => import('../blog/BlogPage'))
 
 const HomePageAbout =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./HomePageAbout').default
     : loadable(() => import('./HomePageAbout'))
 
-const HomePageRestaurant =
+const RestaurantPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./HomePageRestaurant').default
-    : loadable(() => import('./HomePageRestaurant'))
+    ? require('../restaurant/RestaurantPage').default
+    : loadable(() => import('../restaurant/RestaurantPage'))
 
 const HomePageSearchResults =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'

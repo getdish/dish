@@ -6,9 +6,9 @@ import {
   drawerWidthMax,
   searchBarHeight,
 } from '../../constants'
+import { useIsNarrow } from '../../hooks/useIs'
+import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { StackViewCloseButton } from './StackViewCloseButton'
-import { useIsNarrow } from './useIs'
 
 export const HomeStackDrawer = ({
   title,

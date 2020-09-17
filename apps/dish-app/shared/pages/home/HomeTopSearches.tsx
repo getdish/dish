@@ -4,11 +4,11 @@ import { default as React, memo } from 'react'
 
 import { bgLight } from '../../colors'
 import { isWeb } from '../../constants'
+import { useIsReallyNarrow } from '../../hooks/useIs'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { tagLenses } from '../../state/tagLenses'
 import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { useIsReallyNarrow } from './useIs'
 
 export const HomeTopSearches = memo(() => {
   const isReallySmall = useIsReallyNarrow()
@@ -30,9 +30,9 @@ export const HomeTopSearches = memo(() => {
             <HStack
               borderColor="#eee"
               borderWidth={1}
-              paddingVertical={isWeb ? 4 : 8}
+              paddingVertical={isWeb ? 0 : 8}
               paddingHorizontal={8}
-              borderRadius={80}
+              borderRadius={8}
               backgroundColor="#fff"
               marginBottom={6}
               hoverStyle={{
@@ -42,16 +42,18 @@ export const HomeTopSearches = memo(() => {
               {search.tags.map((tag, index) => (
                 <React.Fragment key={tag.name}>
                   <Text
-                    lineHeight={isWeb ? 14 : 18}
+                    color="#444"
+                    lineHeight={isWeb ? 12 : 18}
                     paddingHorizontal={5}
                     fontSize={14}
                     borderRadius={50}
                   >
                     {tag.icon ? (
                       <Text
-                        transform={[{ translateY: 1 }]}
+                        transform={[{ translateY: 2 }]}
                         marginRight={1}
                         fontSize={20}
+                        lineHeight={14}
                       >
                         {tag.icon}{' '}
                       </Text>

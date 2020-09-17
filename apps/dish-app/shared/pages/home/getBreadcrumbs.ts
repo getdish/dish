@@ -4,11 +4,12 @@ import { HomeStateItem, HomeStateItemSimple } from '../../state/home-types'
 
 export const isBreadcrumbState = (type: HomeStateItem['type']) => {
   return (
-    type === 'about' ||
     type == 'search' ||
     type === 'userSearch' ||
     type == 'user' ||
-    type == 'restaurant'
+    type == 'restaurant' ||
+    type === 'about' ||
+    type === 'blog'
   )
 }
 

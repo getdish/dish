@@ -4,10 +4,10 @@ import { StyleSheet } from 'react-native'
 
 import { bgAlt, bgLightTranslucent } from '../../colors'
 import { searchBarHeight, zIndexDrawer } from '../../constants'
+import { useIsNarrow } from '../../hooks/useIs'
+import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { HomeSmallDrawer } from './HomeSmallDrawer'
 import { useHomeDrawerWidth } from './useHomeDrawerWidth'
-import { useIsNarrow } from './useIs'
-import { useLastValueWhen } from './useLastValueWhen'
 
 // import { Reparentable, sendReparentableChild } from 'react-reparenting'
 // const getParent = (isSmall: boolean) => (isSmall ? 'sm' : 'lg')

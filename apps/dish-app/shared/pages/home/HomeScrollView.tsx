@@ -4,8 +4,8 @@ import React, { forwardRef, useMemo, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants'
+import { useIsNarrow, useIsReallyNarrow } from '../../hooks/useIs'
 import { useOvermind } from '../../state/om'
-import { useIsNarrow, useIsReallyNarrow } from './useIs'
 
 class ScrollStore extends Store {
   isScrolling = false

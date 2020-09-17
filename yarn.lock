@@ -1885,6 +1885,11 @@
   resolved "https://registry.npmjs.org/@mapbox/whoots-js/-/whoots-js-3.1.0.tgz#497c67a1cef50d1a2459ba60f315e448d2ad87fe"
   integrity sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==
 
+"@mdx-js/react@^1.6.17":
+  version "1.6.17"
+  resolved "https://registry.npmjs.org/@mdx-js/react/-/react-1.6.17.tgz#2c3a0ec3f9f5e03440f9d2f34296a79933d73231"
+  integrity sha512-UdzGY6/eeeJlGOWw0evhQfUxP/+DRt+530lqOkgNrYPyp6q2t1kr0Z0kukPAY9Bwv9lyIGMEm9jeNvBpRnYVgg==
+
 "@moleculer/vorpal@1.11.5":
   version "1.11.5"
   resolved "https://registry.npmjs.org/@moleculer/vorpal/-/vorpal-1.11.5.tgz#542f030e33b64afcf316c35e492fc3b9fca407af"

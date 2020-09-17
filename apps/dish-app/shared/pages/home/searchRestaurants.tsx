@@ -1,10 +1,10 @@
 import { query } from '@dish/graph'
 
+import { getFuzzyMatchQuery } from '../../helpers/getFuzzyMatchQuery'
 import { createAutocomplete } from '../../state/createAutocomplete'
 import { LngLat } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
-import { getFuzzyMatchQuery } from './getFuzzyMatchQuery'
-import { getAddressText } from './RestaurantAddressLinksRow'
+import { getAddressText } from '../restaurant/RestaurantAddressLinksRow'
 
 export function searchRestaurants(
   searchQuery: string,

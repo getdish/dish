@@ -3,10 +3,9 @@ import React from 'react'
 import { Image } from 'react-native'
 
 import { HomeActiveTagsRecord } from '../../state/home-types'
-import { LinkButton } from '../../views/ui/LinkButton'
+import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
 import { flatButtonStyle } from './baseButtonStyle'
 import { FilterButton } from './FilterButton'
-import { thirdPartyCrawlSources } from './thirdPartyCrawlSources'
 
 export const HomeDeliveryFilterButtons = ({
   activeTagIds,

@@ -15,21 +15,21 @@ import { default as React, Suspense, memo, useEffect, useState } from 'react'
 import { Dimensions, StyleSheet } from 'react-native'
 
 import { bgLight, bgLightTranslucent } from '../../colors'
+import { useIsNarrow } from '../../hooks/useIs'
 import { addTagsToCache } from '../../state/allTags'
 import { HomeStateItemHome } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
+import { DishView } from '../../views/dish/DishView'
+import { PageFooter } from '../../views/layout/PageFooter'
+import { SlantedLinkButton } from '../../views/SlantedLinkButton'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { DishView } from './DishView'
-import { HomeFooter } from './HomeFooter'
+import { RestaurantButton } from '../restaurant/RestaurantButton'
 import { HomePagePaneProps } from './HomePagePaneProps'
 import { HomeScrollView, HomeScrollViewHorizontal } from './HomeScrollView'
 import { HomeTopSearches } from './HomeTopSearches'
-import { RestaurantButton } from './RestaurantButton'
-import { SlantedLinkButton } from './SlantedLinkButton'
-import { useIsNarrow } from './useIs'
 
 // top dishes
 
@@ -257,7 +257,7 @@ const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
       {/* pad bottom */}
       <VStack height={100} />
 
-      <HomeFooter />
+      <PageFooter />
     </>
   )
 })
@@ -267,13 +267,13 @@ const HomeTopDishesTitle = () => {
   const info = om.state.home.currentState.currentLocationInfo
   return (
     <Text
-      color="rgba(0,0,0,0.8)"
+      color="rgba(0,0,0,0.5)"
       marginVertical={5}
       paddingHorizontal={10}
       paddingVertical={4}
       fontWeight="300"
       borderRadius={100}
-      backgroundColor={bgLight}
+      // backgroundColor={bgLight}
       alignSelf="center"
       fontSize={18}
     >

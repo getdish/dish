@@ -5,10 +5,10 @@ import React, { Suspense, memo } from 'react'
 
 import { searchBarHeight, zIndexMapControls } from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
+import { useIsNarrow, useIsReallyNarrow } from '../../hooks/useIs'
 import { useOvermind } from '../../state/om'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { HomeMapRestaurantPeek } from './HomeMapRestaurantPeek'
-import { useIsNarrow, useIsReallyNarrow } from './useIs'
 import { useMapSize } from './useMapSize'
 
 export const HomeMapControlsOverlay = memo(() => {

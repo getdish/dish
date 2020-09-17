@@ -11,7 +11,7 @@ import React, { memo } from 'react'
 
 import { useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { TrendingButton } from './TrendingButton'
+import { TrendingButton } from '../../views/ui/TrendingButton'
 
 export const HomeViewTopDishesTrending = memo(() => {
   const om = useOvermind()

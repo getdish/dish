@@ -443,6 +443,7 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
     switch (item.name) {
       case 'home':
       case 'about':
+      case 'blog':
       case 'search':
       case 'user':
       case 'gallery':
@@ -502,6 +503,7 @@ const pushHomeState: AsyncAction<
     return null
   }
 
+  console.log('item', item)
   if (item.name === 'home' && om.state.home.states.length === 1) {
     // dont push another initial home
     return
@@ -535,6 +537,10 @@ const pushHomeState: AsyncAction<
         ...prevLocation,
         mapAt: null,
       }
+      break
+    }
+
+    case 'blog': {
       break
     }
 

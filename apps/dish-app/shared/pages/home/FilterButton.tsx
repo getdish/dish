@@ -2,11 +2,11 @@ import { Tag } from '@dish/graph'
 import { Clock, ShoppingBag } from '@dish/react-feather'
 import React, { memo } from 'react'
 
+import { useIsNarrow } from '../../hooks/useIs'
 import { tagDisplayNames } from '../../state/tagDisplayName'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { SmallButton } from '../../views/ui/SmallButton'
-import { useIsNarrow } from './useIs'
 
 export const FilterButton = memo(
   ({

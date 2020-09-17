@@ -1,3 +1,4 @@
+// debug
 import { HStack, Text } from '@dish/ui'
 import React, { useEffect, useRef, useState } from 'react'
 
@@ -50,6 +51,8 @@ export function LinkButton<
 
   return wrapWithLinkElement(
     <HStack
+      // inline-flex only on web...
+      className={`ease-in-out-faster inline-flex`}
       // only handle click events on non-a links (we handle them in Link separately)
       // @ts-ignore
       ref={'name' in props ? null : containerRef}
@@ -59,11 +62,10 @@ export function LinkButton<
         transform: [{ scale: 0.98 }],
       }}
       // @ts-ignore
-      display={isWeb ? 'inline-flex' : 'flex'}
       minHeight={10} // temp react-native
+      cursor="pointer"
       {...restProps}
       {...(isActive && props.activeStyle)}
-      className={`cursor-pointer ${props.className ?? 'ease-in-out-faster'}`}
     >
       <Text
         ellipse={ellipse}

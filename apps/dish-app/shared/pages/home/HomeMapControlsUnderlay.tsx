@@ -3,10 +3,10 @@ import { AbsoluteVStack, HStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { searchBarHeight, zIndexDrawer } from '../../constants'
+import { useIsNarrow } from '../../hooks/useIs'
 import { useOvermind } from '../../state/om'
 import { OverlayLinkButton } from '../../views/ui/OverlayLinkButton'
 import { mapZoomToMedium, useZoomLevel } from './mapHelpers'
-import { useIsNarrow } from './useIs'
 import { useMapSize } from './useMapSize'
 
 export const HomeMapControlsUnderlay = memo(() => {

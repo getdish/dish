@@ -1,10 +1,10 @@
 import { useStore } from '@dish/use-store'
 import React, { useEffect } from 'react'
 
+import { getIs } from '../../hooks/useIs'
 import { omStatic } from '../../state/omStatic'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { HomeSmallDrawerView } from './HomeSmallDrawerView'
-import { getIs } from './useIs'
 
 export const HomeSmallDrawer = (props: { children: any }) => {
   const drawerStore = useStore(BottomDrawerStore)

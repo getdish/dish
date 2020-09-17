@@ -2,13 +2,13 @@ import { AbsoluteVStack, VStack, useDebounceValue } from '@dish/ui'
 import React, { Suspense, memo, useMemo } from 'react'
 
 import { searchBarHeight } from '../../constants'
+import { useIsNarrow } from '../../hooks/useIs'
+import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { HomeStateItem, HomeStateItemSimple } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
 import { ErrorBoundary } from '../../views/ErrorBoundary'
 import { getBreadcrumbs } from './getBreadcrumbs'
-import { useIsNarrow } from './useIs'
-import { useLastValueWhen } from './useLastValueWhen'
 
 export type StackItemProps<A> = {
   item: A

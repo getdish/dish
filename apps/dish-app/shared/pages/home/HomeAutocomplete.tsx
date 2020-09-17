@@ -22,7 +22,9 @@ import {
   searchBarHeight,
   searchBarTopOffset,
 } from '../../constants'
+import { getFuzzyMatchQuery } from '../../helpers/getFuzzyMatchQuery'
 import { getWindowHeight } from '../../helpers/getWindow'
+import { useIsNarrow } from '../../hooks/useIs'
 import { createAutocomplete } from '../../state/createAutocomplete'
 import { defaultLocationAutocompleteResults } from '../../state/defaultLocationAutocompleteResults'
 import {
@@ -34,14 +36,12 @@ import { NavigableTag } from '../../state/NavigableTag'
 import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
 import { tagDisplayName } from '../../state/tagDisplayName'
+import { SmallCircleButton } from '../../views/ui/CloseButton'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { BottomDrawerStore } from './BottomDrawerStore'
-import { SmallCircleButton } from './CloseButton'
-import { getFuzzyMatchQuery } from './getFuzzyMatchQuery'
 import { SearchBarStore } from './HomeSearchBar'
 import { locationToAutocomplete, searchLocations } from './searchLocations'
 import { searchRestaurants } from './searchRestaurants'
-import { useIsNarrow } from './useIs'
 
 const flexSearch = FlexSearch.create<number>({
   profile: 'speed',

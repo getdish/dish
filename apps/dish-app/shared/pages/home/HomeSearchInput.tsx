@@ -16,16 +16,16 @@ import {
 
 import { isWeb, searchBarHeight } from '../../constants'
 import { inputClearSelection, inputIsTextSelected } from '../../helpers/input'
+import { getIs } from '../../hooks/useIs'
 import { getTagId } from '../../state/getTagId'
 import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
-import { CloseButton } from './CloseButton'
+import { TagButton } from '../../views/TagButton'
+import { CloseButton } from '../../views/ui/CloseButton'
 import { HomeAutocompleteHoverableInput } from './HomeAutocompleteHoverableInput'
 import { InputStore } from './InputStore'
 import { isWebIOS } from './isIOS'
-import { TagButton } from './TagButton'
-import { getIs } from './useIs'
 import { useSearchBarTheme } from './useSearchBarTheme'
 
 const placeholders = [
@@ -199,7 +199,7 @@ export const HomeSearchInput = memo(() => {
             // this helps native with dragging conflicts
             <TouchableWithoutFeedback
               onPress={() => {
-                inputStore.node.focus()
+                inputStore.node?.focus()
               }}
             >
               <View
