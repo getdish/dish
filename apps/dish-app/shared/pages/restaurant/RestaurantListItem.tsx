@@ -2,6 +2,7 @@ import { fullyIdle, series } from '@dish/async'
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import { Activity } from '@dish/react-feather'
 import {
+  AbsoluteVStack,
   HStack,
   Spacer,
   StackProps,
@@ -33,7 +34,11 @@ import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
 import { Squircle } from '../../views/ui/Squircle'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
-import { RestaurantDetailRow } from './RestaurantDetailRow'
+import {
+  RestaurantDetailRow,
+  openingHours,
+  priceRange,
+} from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import {
   RestaurantRatingBreakdown,
@@ -41,6 +46,7 @@ import {
 } from './RestaurantRatingBreakdown'
 import RestaurantRatingView from './RestaurantRatingView'
 import { RestaurantScoreBreakdownSmall } from './RestaurantScoreBreakdownSmall'
+import { RestaurantSourcesBreakdownRow } from './RestaurantSourcesBreakdownRow'
 
 type RestaurantListItemProps = {
   currentLocationInfo: GeocodePlace | null
@@ -196,8 +202,11 @@ const RestaurantListItemContent = memo(
     const contentSideWidthProps: StackProps = {
       width: isSmall ? '90%' : '60%',
       minWidth: isSmall ? (isWeb ? '52vw' : '52%') : 320,
-      maxWidth: isSmall ? (isWeb ? '80vw' : '80%') : 450,
+      maxWidth: isSmall ? (isWeb ? '80vw' : '80%') : 430,
     }
+
+    const [open_text, open_color, opening_hours] = openingHours(restaurant)
+    const [price_label, price_color, price_range] = priceRange(restaurant)
 
     return (
       <VStack
@@ -233,7 +242,7 @@ const RestaurantListItemContent = memo(
               params={{ slug: restaurantSlug }}
             >
               <VStack paddingTop={30}>
-                <HStack marginLeft={-5} alignItems="center" maxWidth="40%">
+                <HStack marginLeft={-8} alignItems="center" maxWidth="40%">
                   <VStack position="relative" marginVertical={-14}>
                     <RestaurantUpVoteDownVote
                       score={score}
@@ -258,65 +267,131 @@ const RestaurantListItemContent = memo(
                       name="restaurant"
                       params={{ slug: restaurantSlug }}
                     >
-                      <Text
-                        fontSize={
-                          (isSmall ? 20 : 22) *
-                          (restaurantName.length > 25 ? 0.85 : 1)
-                        }
-                        marginRight={10}
-                        borderBottomColor="transparent"
-                        borderBottomWidth={1}
-                        // @ts-ignore
-                        hoverStyle={{
-                          borderBottomColor: lightBlue,
-                        }}
-                        pressStyle={{
-                          borderBottomColor: brandColor,
-                        }}
-                      >
-                        {restaurantName}
-                      </Text>
+                      <HStack>
+                        <Text
+                          lineBreakMode="clip"
+                          numberOfLines={1}
+                          color="#777"
+                          width={38}
+                          height={38}
+                          marginLeft={-28}
+                          marginBottom={-22}
+                          transform={[{ translateY: -26 }]}
+                          zIndex={-1}
+                          marginRight={-4}
+                          backgroundColor="#f2f2f2"
+                          borderRadius={1000}
+                          alignItems="center"
+                          justifyContent="center"
+                          textAlign="center"
+                          lineHeight={38}
+                        >
+                          <SuperScriptText
+                            transform={[{ translateY: -4 }]}
+                            fontSize={11}
+                          >
+                            #
+                          </SuperScriptText>
+                          <Text
+                            fontSize={+rank > 9 ? 14 : 20}
+                            fontWeight="300"
+                            color="#000"
+                          >
+                            {rank}
+                          </Text>
+                        </Text>
+                        <Spacer size="sm" />
+                        <Text
+                          fontSize={
+                            1.3 *
+                            (isSmall ? 20 : 22) *
+                            (restaurantName.length > 25 ? 0.85 : 1)
+                          }
+                          fontWeight="600"
+                          marginRight={10}
+                          borderBottomColor="transparent"
+                          borderBottomWidth={1}
+                          // @ts-ignore
+                          hoverStyle={{
+                            borderBottomColor: lightBlue,
+                          }}
+                          pressStyle={{
+                            borderBottomColor: brandColor,
+                          }}
+                        >
+                          {restaurantName}
+                        </Text>
+                      </HStack>
                       <Spacer size="xs" />
                     </Link>
-                    {!!restaurant.address && (
-                      <RestaurantAddress
-                        size="xs"
-                        currentLocationInfo={currentLocationInfo!}
-                        address={restaurant.address}
-                      />
-                    )}
                   </Text>
                 </HStack>
               </VStack>
             </Link>
 
             {/* RANKING ROW */}
-            <HStack
+            <VStack
               {...contentSideWidthProps}
               zIndex={1000}
-              marginLeft={8}
-              alignItems="center"
-              paddingLeft={30}
+              paddingLeft={44}
               paddingRight={20}
-              cursor="pointer"
-              onPress={reviewDisplayStore.toggleShowComments}
             >
-              <Text lineBreakMode="clip" numberOfLines={1} color="#777">
-                <SuperScriptText fontSize={11}>#</SuperScriptText>
-                <Text
-                  fontSize={+rank > 9 ? 12 : 22}
-                  fontWeight="700"
-                  color="#000"
-                >
-                  {rank}
+              <Spacer size={7} />
+
+              <HStack
+                alignItems="center"
+                cursor="pointer"
+                onPress={reviewDisplayStore.toggleShowComments}
+                spacing="lg"
+              >
+                {!!restaurant.address && (
+                  <RestaurantAddress
+                    size="sm"
+                    currentLocationInfo={currentLocationInfo!}
+                    address={restaurant.address}
+                  />
+                )}
+
+                <Text fontSize={14} color={`rgba(0,0,0,0.7)`}>
+                  {price_range}
                 </Text>
-              </Text>
-              <Spacer size="sm" />
-              <RestaurantScoreBreakdownSmall
-                restaurantId={restaurantId}
-                restaurantSlug={restaurantSlug}
-              />
-            </HStack>
+
+                <Link
+                  name="restaurantHours"
+                  params={{ slug: restaurantSlug }}
+                  color={open_color}
+                  ellipse
+                >
+                  {opening_hours}
+                </Link>
+              </HStack>
+
+              <Spacer size={10} />
+
+              <HStack marginLeft={-8} position="relative">
+                <AbsoluteVStack
+                  top={-12}
+                  left={-36}
+                  width={26}
+                  height={26}
+                  overflow="hidden"
+                >
+                  <AbsoluteVStack
+                    top={-18}
+                    left={3}
+                    width={40}
+                    height={40}
+                    transform={[{ rotate: '45deg' }]}
+                    className="dotted-line"
+                    borderRadius={100}
+                  />
+                </AbsoluteVStack>
+                <RestaurantSourcesBreakdownRow
+                  restaurantId={restaurantId}
+                  restaurantSlug={restaurantSlug}
+                />
+              </HStack>
+            </VStack>
           </VStack>
 
           <Spacer size="md" />
@@ -401,7 +476,6 @@ const RestaurantListItemContent = memo(
               </HStack>
 
               <VStack flex={1} />
-              <RestaurantDetailRow size="sm" restaurantSlug={restaurantSlug} />
               <RestaurantFavoriteButton size="md" restaurantId={restaurantId} />
             </HStack>
           </Suspense>

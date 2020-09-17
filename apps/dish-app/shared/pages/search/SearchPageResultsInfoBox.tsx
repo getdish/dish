@@ -36,7 +36,7 @@ const HomeSearchInfoBoxCountry = memo(
         },
         parent: {
           name: {
-            _eq: countryTag.name,
+            _eq: countryTag?.name,
           },
         },
       },

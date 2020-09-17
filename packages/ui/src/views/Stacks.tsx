@@ -1,13 +1,17 @@
+import { networkInterfaces } from 'os'
+
 import React, {
   forwardRef,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 import {
   StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
   ViewProps,
   ViewStyle,
@@ -81,213 +85,214 @@ if (typeof document !== 'undefined') {
 }
 
 const createStack = (defaultStyle?: ViewStyle) => {
-  const component = forwardRef<View, StackProps>(
-    (
-      {
-        children,
-        fullscreen,
-        pointerEvents,
-        style = null,
-        pressStyle = null,
-        onPress,
-        onPressIn,
-        onPressOut,
-        hoverStyle = null,
-        onHoverIn,
-        onHoverOut,
-        // @ts-ignore
-        onMouseDown,
-        // @ts-ignore
-        onMouseUp,
-        // @ts-ignore
-        onMouseEnter,
-        // @ts-ignore
-        onMouseLeave,
-        // @ts-ignore
-        onMouseMove,
-        // @ts-ignore
-        onResponderGrant,
-        // @ts-ignore
-        onResponderRelease,
-        spacing,
-        className,
-        disabled,
-        ...styleProps
-      },
-      ref
-    ) => {
-      const innerRef = useRef<any>()
-      const isMounted = useRef(false)
+  const component = forwardRef<View, StackProps>((props, ref) => {
+    const {
+      children,
+      fullscreen,
+      pointerEvents,
+      style = null,
+      pressStyle = null,
+      onPress,
+      onPressIn,
+      onPressOut,
+      hoverStyle = null,
+      onHoverIn,
+      onHoverOut,
+      // @ts-ignore
+      onMouseDown,
+      // @ts-ignore
+      onMouseUp,
+      // @ts-ignore
+      onMouseEnter,
+      // @ts-ignore
+      onMouseLeave,
+      // @ts-ignore
+      onMouseMove,
+      // @ts-ignore
+      onResponderGrant,
+      // @ts-ignore
+      onResponderRelease,
+      spacing,
+      className,
+      disabled,
+      ...styleProps
+    } = props
+    const innerRef = useRef<any>()
+    const isMounted = useRef(false)
 
-      useEffect(() => {
-        return () => {
-          mouseUps.delete(unPress)
-          isMounted.current = false
+    useEffect(() => {
+      return () => {
+        mouseUps.delete(unPress)
+        isMounted.current = false
+      }
+    }, [])
+
+    const [state, set] = useState({
+      hover: false,
+      press: false,
+      pressIn: false,
+    })
+
+    useAttachClassName(className, innerRef)
+
+    const spacedChildren = useMemo(() => {
+      if (typeof spacing === 'undefined') {
+        return children
+      }
+      const next: any[] = []
+      const childrenList = React.Children.toArray(children)
+      const len = childrenList.length
+      const spacer = (
+        <Spacer
+          size={spacing}
+          direction={
+            defaultStyle?.flexDirection === 'row' ? 'horizontal' : 'vertical'
+          }
+        />
+      )
+      for (const [index, child] of childrenList.entries()) {
+        next.push(child)
+        if (index === len - 1) {
+          break
         }
-      })
+        next.push(<React.Fragment key={index}>{spacer}</React.Fragment>)
+      }
+      return next
+    }, [children])
 
-      const [state, set] = useState({
-        hover: false,
+    let content = (
+      <View
+        ref={combineRefs(innerRef, ref)}
+        pointerEvents={
+          !isWeb && pointerEvents === 'none' ? 'box-none' : pointerEvents
+        }
+        style={[
+          defaultStyle,
+          fullscreen ? fullscreenStyle : null,
+          styleProps,
+          style,
+          state.hover ? hoverStyle : null,
+          state.press ? pressStyle : null,
+          disabled ? disabledStyle : null,
+          isWeb ? null : fixNativeShadow(styleProps),
+        ]}
+      >
+        {spacedChildren}
+      </View>
+    )
+
+    const attachPress = !!(pressStyle || onPress)
+    const attachHover = !!(
+      hoverStyle ||
+      onHoverIn ||
+      onHoverOut ||
+      onMouseEnter ||
+      onMouseLeave
+    )
+
+    const unPress = useCallback(() => {
+      if (!isMounted.current) return
+      set((x) => ({
+        ...x,
         press: false,
         pressIn: false,
-      })
+      }))
+    }, [])
 
-      useAttachClassName(className, innerRef)
+    if (attachHover || attachPress || onPressOut || onPressIn) {
+      const events = {
+        onMouseEnter:
+          attachHover || attachPress
+            ? () => {
+                let next: Partial<typeof state> = {}
+                if (attachHover) {
+                  if (!isWebIOS) {
+                    next.hover = true
+                  }
+                  onHoverIn?.()
+                  onMouseEnter?.()
+                }
+                if (state.pressIn) {
+                  next.press = true
+                }
+                if (Object.keys(next).length) {
+                  set({ ...state, ...next })
+                }
+              }
+            : null,
+        onMouseLeave:
+          attachHover || attachPress
+            ? () => {
+                let next: Partial<typeof state> = {}
+                mouseUps.add(unPress)
+                if (attachHover) {
+                  if (!isWebIOS) {
+                    next.hover = false
+                  }
+                  onHoverOut?.()
+                  onMouseLeave?.()
+                }
+                if (state.pressIn) {
+                  next.press = false
+                }
+                if (Object.keys(next).length) {
+                  set({ ...state, ...next })
+                }
+              }
+            : null,
+        onMouseDown: attachPress
+          ? (e) => {
+              e.preventDefault()
+              onPressIn?.(e)
+              set({
+                ...state,
+                press: true,
+                pressIn: true,
+              })
+            }
+          : onPressIn,
+        onClick: attachPress
+          ? (e) => {
+              e.preventDefault()
+              onPressOut?.(e)
+              onPress?.(e)
+              set({
+                ...state,
+                press: false,
+                pressIn: false,
+              })
+            }
+          : onPressOut,
+      }
 
-      let spacedChildren = children
-      if (typeof spacing !== 'undefined') {
-        const childArr = React.Children.toArray(children)
-        spacedChildren = childArr
-          .filter((x) => !!x)
-          .map((x, i) =>
-            i === childArr.length - 1
-              ? x
-              : [
-                  x,
-                  <Spacer
-                    key={i}
-                    size={spacing}
-                    direction={
-                      defaultStyle?.flexDirection === 'row'
-                        ? 'horizontal'
-                        : 'vertical'
-                    }
-                  />,
-                ]
+      if (isWeb) {
+        content = React.cloneElement(content, events)
+      } else {
+        if (pointerEvents !== 'none' && !!(onPress || onPressOut)) {
+          content = (
+            <TouchableWithoutFeedback
+              onPress={(e) => {
+                console.log('what is it', props)
+                // @ts-ignore
+                events.onClick(e)
+              }}
+              onPressIn={events.onMouseDown as any}
+              style={{
+                zIndex: styleProps.zIndex,
+                width: styleProps.width,
+                height: styleProps.height,
+                position: styleProps.position,
+              }}
+            >
+              {content}
+            </TouchableWithoutFeedback>
           )
-      }
-
-      let content = (
-        <View
-          ref={combineRefs(innerRef, ref)}
-          pointerEvents={
-            !isWeb && pointerEvents === 'none' ? 'box-none' : pointerEvents
-          }
-          style={[
-            defaultStyle,
-            fullscreen ? fullscreenStyle : null,
-            styleProps,
-            style,
-            state.hover ? hoverStyle : null,
-            state.press ? pressStyle : null,
-            disabled ? disabledStyle : null,
-            isWeb ? null : fixNativeShadow(styleProps),
-          ]}
-        >
-          {spacedChildren}
-        </View>
-      )
-
-      const attachPress = !!(pressStyle || onPress)
-      const attachHover = !!(
-        hoverStyle ||
-        onHoverIn ||
-        onHoverOut ||
-        onMouseEnter ||
-        onMouseLeave
-      )
-
-      const unPress = useCallback(() => {
-        if (!isMounted.current) return
-        set((x) => ({
-          ...x,
-          press: false,
-          pressIn: false,
-        }))
-      }, [])
-
-      if (attachHover || attachPress || onPressOut || onPressIn) {
-        const events = {
-          onMouseEnter:
-            attachHover || attachPress
-              ? () => {
-                  let next: Partial<typeof state> = {}
-                  if (attachHover) {
-                    if (!isWebIOS) {
-                      next.hover = true
-                    }
-                    onHoverIn?.()
-                    onMouseEnter?.()
-                  }
-                  if (state.pressIn) {
-                    next.press = true
-                  }
-                  if (Object.keys(next).length) {
-                    set({ ...state, ...next })
-                  }
-                }
-              : null,
-          onMouseLeave:
-            attachHover || attachPress
-              ? () => {
-                  let next: Partial<typeof state> = {}
-                  mouseUps.add(unPress)
-                  if (attachHover) {
-                    if (!isWebIOS) {
-                      next.hover = false
-                    }
-                    onHoverOut?.()
-                    onMouseLeave?.()
-                  }
-                  if (state.pressIn) {
-                    next.press = false
-                  }
-                  if (Object.keys(next).length) {
-                    set({ ...state, ...next })
-                  }
-                }
-              : null,
-          onMouseDown: attachPress
-            ? (e) => {
-                e.preventDefault()
-                onPressIn?.(e)
-                set({
-                  ...state,
-                  press: true,
-                  pressIn: true,
-                })
-              }
-            : onPressIn,
-          onClick: attachPress
-            ? (e) => {
-                e.preventDefault()
-                // e.stopPropagation()
-                onPressOut?.(e)
-                onPress?.(e)
-                set({
-                  ...state,
-                  press: false,
-                  pressIn: false,
-                })
-              }
-            : onPressOut,
-        }
-
-        if (isWeb) {
-          content = React.cloneElement(content, events)
-        } else {
-          if (pointerEvents !== 'none') {
-            content = (
-              <TouchableOpacity
-                onPress={events.onClick as any}
-                onPressIn={events.onMouseDown as any}
-                style={{
-                  zIndex: styleProps.zIndex,
-                  width: styleProps.width,
-                  height: styleProps.height,
-                  position: styleProps.position,
-                }}
-              >
-                {content}
-              </TouchableOpacity>
-            )
-          }
         }
       }
-
-      return content
     }
-  )
+
+    return content
+  })
 
   // @ts-ignore
   component.staticConfig = {
