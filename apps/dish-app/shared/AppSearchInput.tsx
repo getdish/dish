@@ -235,9 +235,10 @@ export const AppSearchInput = memo(() => {
               ref={inputStore.setNode}
               // leave uncontrolled for perf?
               value={search ?? ''}
-              onBlur={() => {
+              onBlur={(e) => {
                 avoidNextFocus = false
               }}
+              onKeyPress={handleKeyPress}
               onFocus={() => {
                 if (omStatic.state.home.searchbarFocusedTag) {
                   omStatic.actions.home.setSearchBarTagIndex(0)
@@ -273,7 +274,6 @@ export const AppSearchInput = memo(() => {
 })
 
 // function searchInputEffect(input: HTMLInputElement) {
-
 //   // debounce so it happens after location if location input is next active
 //   const hideAutocomplete = _.debounce(() => {
 //     if (omStatic.state.home.showAutocomplete === 'search') {

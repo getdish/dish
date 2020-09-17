@@ -57,7 +57,7 @@ function Root({ overmind }: { overmind?: any }) {
 
 // exports
 if (process.env.TARGET === 'ssr') {
-  exports.App = require('../shared/App')
+  exports.App = Root
   exports.config = config
   exports.ReactDOMServer = require('react-dom/server')
 }

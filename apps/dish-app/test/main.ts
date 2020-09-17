@@ -14,9 +14,9 @@ test('Basic rendering check', async (t) => {
     const body = Selector('body')
     console.log(
       'failure notes:',
-      await divs.innerText,
-      await body.childNodeCount,
-      await body.innerText
+      await divs?.innerText,
+      await body?.childNodeCount,
+      await body?.innerText
     )
     const out = await fetch('http://localhost:19006/').then((res) => res.text())
     console.log('failure out', out)

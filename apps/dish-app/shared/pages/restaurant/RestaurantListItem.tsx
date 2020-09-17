@@ -20,8 +20,9 @@ import { isWeb } from '../../constants'
 import { isWebIOS } from '../../helpers/isIOS'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { allTags } from '../../state/allTags'
+import { allTags, allTagsNameToID } from '../../state/allTags'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
+import { om } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollView'
 import { DishView } from '../../views/dish/DishView'
@@ -151,7 +152,33 @@ const RestaurantListItemContent = memo(
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
 
     const curState = omStatic.state.home.currentState
-    const tagIds = 'activeTagIds' in curState ? curState.activeTagIds : null
+    const tagIds = 'activeTagIds' in curState ? curState.activeTagIds : {}
+
+    console.log(
+      tagIds,
+      Object.keys(tagIds),
+      restaurant
+        .tags({
+          where: {
+            tag: {
+              name: {
+                _in: Object.keys(tagIds).map((id) => allTags[id].name),
+              },
+            },
+          },
+        })
+        .map((x) => `${x.tag.name} - ${x.score}`),
+      Object.keys(tagIds).map((x) => {
+        return allTags[x].name
+      })
+    )
+
+    const score = restaurant.score ?? 0
+    // + restaurant.tags({
+    //   where: {
+    //     tag_id
+    //   }
+    // })
 
     const [isActive, setIsActive] = useState(false)
     const getIsActive = useGet(isActive)
@@ -209,7 +236,9 @@ const RestaurantListItemContent = memo(
                 <HStack marginLeft={-5} alignItems="center" maxWidth="40%">
                   <VStack position="relative" marginVertical={-14}>
                     <RestaurantUpVoteDownVote
+                      score={score}
                       restaurantId={restaurantId}
+                      restaurantSlug={restaurantSlug}
                       activeTagIds={tagIds ?? {}}
                     />
                   </VStack>

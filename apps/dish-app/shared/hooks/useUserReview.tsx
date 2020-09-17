@@ -212,9 +212,10 @@ export const useUserUpvoteDownvoteQuery = (
   const [votes] = useUserTagVotes(restaurantId)
   const vote = getTagUpvoteDownvote(votes, activeTags)
   const [userVote, setUserVote] = useState<number | null>(null)
-  return [
-    userVote ?? vote,
-    async (rating: number) => {
+  return {
+    votes,
+    vote: userVote ?? vote,
+    setVote: async (rating: number) => {
       if (omStatic.actions.home.promptLogin()) {
         return
       }
@@ -227,7 +228,7 @@ export const useUserUpvoteDownvoteQuery = (
         Toast.show(`Saved`)
       }
     },
-  ] as const
+  }
 }
 
 const getTagUpvoteDownvote = (

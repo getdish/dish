@@ -21,6 +21,8 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
+const isSSRClient = !!process.env.SSR_CLIENT
+
 // 'ssr' | 'worker' | 'preact' | 'client'
 const TARGET = process.env.TARGET || 'client'
 const target =
@@ -273,6 +275,7 @@ module.exports = function getWebpackConfig(
 
         env.mode === 'development' &&
           TARGET !== 'worker' &&
+          !isSSRClient &&
           new ReactRefreshWebpack4Plugin({
             overlay: false,
           }),
@@ -366,7 +369,7 @@ module.exports = function getWebpackConfig(
     if (TARGET === 'ssr') {
       config.output.path = path.join(__dirname, 'web-build-ssr')
       config.output.libraryTarget = 'commonjs'
-      config.output.filename = `static/js/app.ssr.js`
+      config.output.filename = `static/js/app.ssr.${process.env.NODE_ENV}.js`
     }
 
     return config
@@ -413,7 +416,7 @@ module.exports = function getWebpackConfig(
       return getModernConfig()
     }
 
-    if (isProduction) {
+    if (isProduction || isSSRClient) {
       // lets generate a legacy and modern build
       return [getModernConfig(), getLegacyConfig()]
     } else {

@@ -285,9 +285,12 @@ export const TagButton = memo((props: TagButtonProps) => {
 
 const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   const { scale, subtle } = props
-  const [vote, setVote] = useUserUpvoteDownvoteQuery(props.restaurantId ?? '', {
-    [getTagId(props)]: true,
-  })
+  const { vote, setVote } = useUserUpvoteDownvoteQuery(
+    props.restaurantId ?? '',
+    {
+      [getTagId(props)]: true,
+    }
+  )
   const buttonRef = useRef()
 
   // only way i could get it to stop bubbling up wtf

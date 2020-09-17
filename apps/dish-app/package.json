@@ -109,6 +109,7 @@
     "start:prod": "NO_MINIFY=1 yarn web:prod",
     "start:prod:min": "yarn web:prod",
     "start:ssr": "yarn web:ssr",
+    "start:ssr:development": "NODE_ENV=development yarn web:ssr",
     "start:react-native": "react-native start",
     "test": "true",
     "build": "npm-run-all --parallel build:types build:output",
@@ -120,8 +121,9 @@
     "watch:types": "tsc --watch --preserveWatchOutput",
     "watch:web:ssr": "yarn build:web:ssr --watch",
     "build:web": "./etc/build_web.sh",
-    "build:web:ssr": "TARGET=web VERBOSE=1 NODE_ENV=production TARGET=ssr webpack",
-    "build:web:client": "TARGET=web VERBOSE=1 NODE_ENV=production webpack",
+    "build:web:ssr": "TARGET=ssr VERBOSE=1 NODE_ENV=production webpack",
+    "build:web:ssr:development": "SSR_CLIENT=1 TARGET=ssr VERBOSE=1 NODE_ENV=development webpack",
+    "build:web:client": "SSR_CLIENT=1 TARGET=web VERBOSE=1 NODE_ENV=production webpack",
     "build:web:client:analyze": "ONLY_MODERN=1 ANALYZE_BUNDLE=1 yarn build:web:client",
     "build:web:worker": "TARGET=worker webpack",
     "build:web:watch": "(TARGET=ssr webpack --watch) & (TARGET=client webpack --watch) & wait"
@@ -179,7 +181,7 @@
   },
   "devDependencies": {
     "@dish/babel-preset": "*",
-    "@babel/core": "^7.8.6",
+    "@babel/core": "^7.11.6",
     "metro-react-native-babel-preset": "^0.62.0",
     "@loadable/webpack-plugin": "^5.13.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.1",

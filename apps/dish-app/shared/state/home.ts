@@ -249,7 +249,7 @@ const runSearch: AsyncAction<{
   }
 
   let state = om.state.home.lastSearchState
-  const tags = getActiveTags()
+  const tags = getActiveTags(curState)
 
   const shouldCancel = () => {
     const state = om.state.home.lastSearchState
@@ -886,10 +886,6 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
       type,
       searchQuery: nextState.searchQuery,
       activeTagIds: nextState.activeTagIds,
-      // ...(type === 'search' && {
-      //   status: 'loading',
-      //   results: [],
-      // }),
     })
   }
 

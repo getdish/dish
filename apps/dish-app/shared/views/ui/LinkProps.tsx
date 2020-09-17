@@ -17,6 +17,7 @@ export type LinkProps<A, B> = Pick<
   LinkSharedProps & {
     name?: A
     params?: B
+    tagName?: string
   }
 
 export type LinkSharedProps = {

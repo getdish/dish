@@ -20,7 +20,6 @@ import React, {
 } from 'react'
 import { ScrollView } from 'react-native'
 
-import { focusSearchInput } from '../../AppSearchInput'
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useIsNarrow } from '../../hooks/useIs'
@@ -91,6 +90,7 @@ export default memo(function HomePageSearchResults(props: Props) {
         ...location,
       })
       getFullTags(fakeTags).then((tags) => {
+        console.log('what are the full tags', tags)
         if (isCancelled) return
         addTagsToCache(tags)
         const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>(
@@ -174,7 +174,6 @@ const SearchResultsTopBar = memo(({ stateId }: { stateId: string }) => {
   const om = useOvermind()
   const state = om.state.home.allStates[stateId]
   const drawerWidth = useAppDrawerWidth()
-  console.log('drawerWidth', drawerWidth)
 
   if (!isSearchState(state)) {
     return null
@@ -455,11 +454,7 @@ const SearchFooter = ({
       <Button
         alignSelf="center"
         onPress={() => {
-          if (omStatic.state.home.isAutocompleteActive) {
-            scrollToTop()
-          } else {
-            focusSearchInput()
-          }
+          scrollToTop()
         }}
       >
         <ArrowUp />

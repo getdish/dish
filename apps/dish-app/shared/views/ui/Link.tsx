@@ -27,22 +27,28 @@ export const useLink = (props: LinkProps<any, any>) => {
   }, [])
 
   const onPress = (e: any) => {
-    if (props.target) {
-      // let it go
-    } else {
-      e.preventDefault()
-      if (props.asyncClick) {
-        cancel.current = series([
-          () => sleep(50),
-          () => {
-            cancel.current = null
-            nav()
-          },
-        ])
-      } else {
-        nav()
+    if (isWeb) {
+      // let it naturally go to target="_blank"
+      if (props.target === '_blank') return
+      if (e.metaKey || e.ctrlKey) {
+        window.open(e.currentTarget.href, '_blank')
+        return
       }
     }
+
+    e.preventDefault()
+    if (props.asyncClick) {
+      cancel.current = series([
+        () => sleep(50),
+        () => {
+          cancel.current = null
+          nav()
+        },
+      ])
+    } else {
+      nav()
+    }
+
     function nav() {
       console.log('what is', linkProps.onPress)
       if (linkProps.onPress || props.onClick) {
@@ -62,15 +68,16 @@ export const useLink = (props: LinkProps<any, any>) => {
     navItem,
     wrapWithLinkElement(children: any) {
       if (Platform.OS === 'web') {
-        return (
-          <a
-            onClick={onPress}
-            className={`display-contents dish-link`}
-            href={router.getPathFromParams(navItem)}
-            onMouseEnter={linkProps.onMouseEnter}
-          >
-            {children}
-          </a>
+        const element = props.tagName ?? 'a'
+        return React.createElement(
+          element,
+          {
+            onClick: onPress,
+            className: `display-contents dish-link`,
+            href: router.getPathFromParams(navItem),
+            onMouseEnter: linkProps.onMouseEnter,
+          },
+          children
         )
       }
       return <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>

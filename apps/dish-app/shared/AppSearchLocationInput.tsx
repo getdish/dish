@@ -1,7 +1,7 @@
 import { MapPin, Navigation } from '@dish/react-feather'
 import { Button, HStack, VStack, prevent } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import { TextInput, TouchableOpacity } from 'react-native'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
@@ -28,70 +28,47 @@ export const AppSearchLocationInput = memo(() => {
     )
   }, [])
 
-  useEffect(() => {
-    if (!locationInputStore.node) return
-    const handleKeyPress = (e) => {
-      // @ts-ignore
-      const code = e.keyCode
-      console.log('code', code)
+  const handleKeyPress = useCallback((e) => {
+    // @ts-ignore
+    const code = e.keyCode
+    console.log('code', code)
 
-      switch (code) {
-        case 13: {
-          // enter
-          const result =
-            om.state.home.locationAutocompleteResults[
-              om.state.home.autocompleteIndex
-            ]
-          if (result) {
-            om.actions.home.setLocation(result.name)
-            om.actions.home.setShowAutocomplete(false)
-          }
-          return
+    switch (code) {
+      case 13: {
+        // enter
+        const result =
+          om.state.home.locationAutocompleteResults[
+            om.state.home.autocompleteIndex
+          ]
+        if (result) {
+          om.actions.home.setLocation(result.name)
+          om.actions.home.setShowAutocomplete(false)
         }
-        case 27: {
-          // esc
-          if (inputIsTextSelected(locationInputStore.node)) {
-            inputClearSelection()
-            return
-          }
-          if (om.state.home.showAutocomplete) {
-            om.actions.home.setShowAutocomplete(false)
-          }
-          locationInputStore.node.blur()
-          return
-        }
-        case 38: {
-          // up
-          e.preventDefault()
-          om.actions.home.moveActive(-1)
-          return
-        }
-        case 40: {
-          // down
-          e.preventDefault()
-          om.actions.home.moveActive(1)
-          return
-        }
+        return
       }
-    }
-    const showLocationAutocomplete = () => {
-      om.actions.home.setShowAutocomplete('location')
-    }
-
-    if ('addEventListener' in locationInputStore.node) {
-      locationInputStore.node.addEventListener('keydown', handleKeyPress)
-      // locationInputStore.node.addEventListener('focus', showLocationAutocomplete)
-      locationInputStore.node.addEventListener(
-        'click',
-        showLocationAutocomplete
-      )
-      return () => {
-        locationInputStore.node?.removeEventListener('keydown', handleKeyPress)
-        // locationInputStore.node.addEventListener('focus', showLocationAutocomplete)
-        locationInputStore.node?.removeEventListener(
-          'click',
-          showLocationAutocomplete
-        )
+      case 27: {
+        // esc
+        if (inputIsTextSelected(locationInputStore.node)) {
+          inputClearSelection()
+          return
+        }
+        if (om.state.home.showAutocomplete) {
+          om.actions.home.setShowAutocomplete(false)
+        }
+        locationInputStore.node.blur()
+        return
+      }
+      case 38: {
+        // up
+        e.preventDefault()
+        om.actions.home.moveActive(-1)
+        return
+      }
+      case 40: {
+        // down
+        e.preventDefault()
+        om.actions.home.moveActive(1)
+        return
       }
     }
   }, [])
@@ -122,22 +99,30 @@ export const AppSearchLocationInput = memo(() => {
               style={{ marginLeft: 10, marginRight: -5 }}
             />
           </TouchableOpacity>
-          <TextInput
-            ref={locationInputStore.setNode}
-            value={locationSearch}
-            placeholder={currentLocationName ?? 'San Francisco'}
-            style={[
-              inputTextStyles.textInput,
-              { color, paddingHorizontal, fontSize: 16 },
-            ]}
-            onChangeText={(text) => {
-              setLocationSearch(text)
-              om.actions.home.setLocationSearchQuery(text)
-              if (text && om.state.home.showAutocomplete === false) {
-                om.actions.home.setShowAutocomplete('location')
-              }
+          <HStack
+            flex={1}
+            onPressOut={() => {
+              om.actions.home.setShowAutocomplete('location')
             }}
-          />
+          >
+            <TextInput
+              ref={locationInputStore.setNode}
+              value={locationSearch}
+              placeholder={currentLocationName ?? 'San Francisco'}
+              style={[
+                inputTextStyles.textInput,
+                { color, paddingHorizontal, fontSize: 16 },
+              ]}
+              onKeyPress={handleKeyPress}
+              onChangeText={(text) => {
+                setLocationSearch(text)
+                om.actions.home.setLocationSearchQuery(text)
+                if (text && om.state.home.showAutocomplete === false) {
+                  om.actions.home.setShowAutocomplete('location')
+                }
+              }}
+            />
+          </HStack>
           <Button
             padding={8}
             alignSelf="center"
