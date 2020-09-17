@@ -51,21 +51,21 @@ test('Searching for a restaurant by tag', async (t) => {
   t.is(results?.[0].id, restaurant.id)
 })
 
-test('Orders by restaurant rating if no dish tags queried', async (t) => {
+test('Orders by restaurant score if no dish tags queried', async (t) => {
   let r1 = clone(restaurant_fixture)
   let r2 = clone(restaurant_fixture)
   let r3 = clone(restaurant_fixture)
   r1.name = 'test best'
-  r1.rating = 5
+  r1.score = 5
   r2.name = 'test ok'
-  r2.rating = 3
+  r2.score = 3
   r3.name = 'test worst'
-  r3.rating = 1
+  r3.score = 1
   const [rr1, rr2, rr3] = await restaurantUpsert([r1, r2, r3])
   const [tag] = await tagInsert([{ name: 'Test rated tag', type: 'dish' }])
-  await restaurantUpsertRestaurantTags(rr1, [{ tag_id: tag.id, rating: 3 }])
-  await restaurantUpsertRestaurantTags(rr2, [{ tag_id: tag.id, rating: 1 }])
-  await restaurantUpsertRestaurantTags(rr3, [{ tag_id: tag.id, rating: 5 }])
+  await restaurantUpsertRestaurantTags(rr1, [{ tag_id: tag.id, score: 3 }])
+  await restaurantUpsertRestaurantTags(rr2, [{ tag_id: tag.id, score: 1 }])
+  await restaurantUpsertRestaurantTags(rr3, [{ tag_id: tag.id, score: 5 }])
   const results = await search({
     center: {
       lat: 50.24,
@@ -83,21 +83,21 @@ test('Orders by restaurant rating if no dish tags queried', async (t) => {
   t.is(results?.[2].id, rr3.id)
 })
 
-test('Orders by tag rating if dish tags queried', async (t) => {
+test('Orders by restaurant+tag score if dish tags queried', async (t) => {
   let r1 = clone(restaurant_fixture)
   let r2 = clone(restaurant_fixture)
   let r3 = clone(restaurant_fixture)
   r1.name = 'test best'
-  r1.rating = 5
+  r1.score = 5
   r2.name = 'test ok'
-  r2.rating = 3
+  r2.score = 3
   r3.name = 'test worst'
-  r3.rating = 1
+  r3.score = 1
   const [rr1, rr2, rr3] = await restaurantUpsert([r1, r2, r3])
   const [tag] = await tagInsert([{ name: 'Test rated tag', type: 'dish' }])
-  await restaurantUpsertRestaurantTags(rr1, [{ tag_id: tag.id, rating: 3 }])
-  await restaurantUpsertRestaurantTags(rr2, [{ tag_id: tag.id, rating: 1 }])
-  await restaurantUpsertRestaurantTags(rr3, [{ tag_id: tag.id, rating: 5 }])
+  await restaurantUpsertRestaurantTags(rr1, [{ tag_id: tag.id, score: 3 }])
+  await restaurantUpsertRestaurantTags(rr2, [{ tag_id: tag.id, score: 1 }])
+  await restaurantUpsertRestaurantTags(rr3, [{ tag_id: tag.id, score: 5 }])
   const results = await search({
     center: {
       lat: 50.24,
@@ -111,7 +111,7 @@ test('Orders by tag rating if dish tags queried', async (t) => {
     tags: ['test-rated-tag'],
   })
   t.is(results?.length, 3)
-  t.is(results?.[0].id, rr3.id)
-  t.is(results?.[1].id, rr1.id)
+  t.is(results?.[0].id, rr1.id)
+  t.is(results?.[1].id, rr3.id)
   t.is(results?.[2].id, rr2.id)
 })
