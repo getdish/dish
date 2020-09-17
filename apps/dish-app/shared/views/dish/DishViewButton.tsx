@@ -19,6 +19,7 @@ export const DishViewButton = memo(
       <LinkButton
         {...flatButtonStyle}
         paddingVertical={8}
+        borderRadius={100}
         tag={{ type: 'dish', name }}
         {...rest}
       >

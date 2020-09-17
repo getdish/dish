@@ -7,53 +7,6 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { SmallLinkButton } from '../../views/ui/SmallButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 
-const getDayOfWeek = () => {
-  const day = new Date().getDay() - 1
-  return day == -1 ? 6 : day
-}
-
-function openingHours(restaurant: RestaurantQuery) {
-  if (restaurant.hours() == null) {
-    return ['Unknown Hours', 'grey', '']
-  }
-
-  let text = 'Closed'
-  let color = '#999'
-  let next_time = ''
-
-  if (restaurant.is_open_now != null) {
-    text = restaurant.is_open_now ? 'Open' : 'Closed'
-    color = restaurant.is_open_now ? '#33aa99' : '#999'
-
-    const dayOfWeek = getDayOfWeek()
-    // TODO: Tomorrow isn't always when the next opening time is.
-    // Eg; when it's the morning and the restaurant opens in the evening.
-    const tomorrow = (dayOfWeek + 1) % 7
-    const tomorrowsHours =
-      restaurant.hours()[tomorrow]?.hoursInfo.hours[0] ?? ''
-    const todaysHours = restaurant.hours()[dayOfWeek]?.hoursInfo.hours[0] ?? ''
-
-    const getHours = (hours: string) => {
-      const [opens, closes] = hours.split(' - ')
-      if (opens && closes) {
-        const opens_at = opens.replace(' ', '').replace(':00', '')
-        const closes_at = closes.replace(' ', '').replace(':00', '')
-        return `${opens_at} - ${closes_at}`
-      }
-      return ''
-    }
-
-    if (restaurant.is_open_now) {
-      text = 'Open'
-      color = '#33aa99'
-      next_time = getHours(todaysHours)
-    } else {
-      next_time = getHours(tomorrowsHours)
-    }
-  }
-  return [text, color, next_time]
-}
-
 export const RestaurantDetailRow = memo(
   graphql(
     ({
@@ -175,10 +128,54 @@ export const RestaurantDetailRow = memo(
   )
 )
 
-// @tombh: I seem to have got confused about the type of this field.
-// Is it a numerical price range or just a $$$-style?? I need to go
-// into the crawlers and sort it out. But for now let's support both.
-function priceRange(restaurant: RestaurantQuery) {
+const getDayOfWeek = () => {
+  const day = new Date().getDay() - 1
+  return day == -1 ? 6 : day
+}
+
+export function openingHours(restaurant: RestaurantQuery) {
+  if (restaurant.hours() == null) {
+    return ['Unknown Hours', 'grey', '']
+  }
+
+  let text = 'Closed'
+  let color = '#999'
+  let next_time = ''
+
+  if (restaurant.is_open_now != null) {
+    text = restaurant.is_open_now ? 'Open' : 'Closed'
+    color = restaurant.is_open_now ? '#33aa99' : '#999'
+
+    const dayOfWeek = getDayOfWeek()
+    // TODO: Tomorrow isn't always when the next opening time is.
+    // Eg; when it's the morning and the restaurant opens in the evening.
+    const tomorrow = (dayOfWeek + 1) % 7
+    const tomorrowsHours =
+      restaurant.hours()[tomorrow]?.hoursInfo.hours[0] ?? ''
+    const todaysHours = restaurant.hours()[dayOfWeek]?.hoursInfo.hours[0] ?? ''
+
+    const getHours = (hours: string) => {
+      const [opens, closes] = hours.split(' - ')
+      if (opens && closes) {
+        const opens_at = opens.replace(' ', '').replace(':00', '')
+        const closes_at = closes.replace(' ', '').replace(':00', '')
+        return `${opens_at} - ${closes_at}`
+      }
+      return ''
+    }
+
+    if (restaurant.is_open_now) {
+      text = 'Open'
+      color = '#33aa99'
+      next_time = getHours(todaysHours)
+    } else {
+      next_time = getHours(tomorrowsHours)
+    }
+  }
+  return [text, color, next_time]
+}
+
+export function priceRange(restaurant: RestaurantQuery) {
   if (restaurant.price_range == null) {
     return ['Price', 'grey', '']
   }

@@ -9,9 +9,11 @@ import { Image } from 'react-native'
 import { bgLight } from '../../colors'
 import { isWeb } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
 import { omStatic } from '../../state/omStatic'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
+import { PointsText } from '../../views/PointsText'
 import { RestaurantReviewsDisplayStore } from './RestaurantRatingBreakdown'
 
 export const RestaurantScoreBreakdownSmall = memo(
@@ -23,25 +25,23 @@ export const RestaurantScoreBreakdownSmall = memo(
       restaurantSlug: string
       restaurantId: string
     }) => {
+      const restaurant = useRestaurantQuery(restaurantSlug)
       const reviewDisplayStore = useStore(RestaurantReviewsDisplayStore, {
         id: restaurantId,
       })
-      const restaurant = useRestaurantQuery(restaurantSlug)
-      const sources = {
-        dish: {
-          rating: 3,
-        },
-        ...(restaurant?.sources?.() ?? {}),
-      }
-
+      const tags = omStatic.state.home.lastActiveTags
+      const tagScores = useRestaurantTagScores(
+        restaurantSlug,
+        omStatic.state.home.currentState['activeTagIds']
+      )
       const searchQuery = omStatic.state.home.currentState.searchQuery
       const searchQueryText = searchQuery ? ` ${searchQuery}` : ''
 
-      const tags = omStatic.state.home.lastActiveTags
       const reviewTags = sortBy(
         tags.filter((tag) => tag.name !== 'Gems'),
         (a) => (a.type === 'lense' ? 0 : a.type === 'dish' ? 2 : 1)
       )
+
       return (
         <HStack position="relative" alignItems="center" flexWrap="wrap">
           <Text
@@ -50,60 +50,26 @@ export const RestaurantScoreBreakdownSmall = memo(
             fontSize={12}
             color="rgba(0,0,0,0.5)"
           >
-            <Text fontSize={12}>
-              in "
-              <Text fontWeight="600">
-                {(
-                  reviewTags
-                    .map((tag, i) => {
-                      return tagDisplayName(tag)
-                    })
-                    .join(' ') + searchQueryText
-                ).trim()}
-              </Text>
-              "
-            </Text>{' '}
-          </Text>
-
-          <Spacer size={6} />
-
-          {Object.keys(sources)
-            .filter(
-              (source) => thirdPartyCrawlSources[source]?.delivery === false
-            )
-            .map((source, i) => {
-              const item = sources[source]
-              const info = thirdPartyCrawlSources[source]
-              return (
-                <Tooltip
-                  key={source}
-                  contents={`${info.name} +${+(item.rating ?? 0) * 10} points`}
-                >
-                  <HStack
-                    className="faded-out"
-                    alignItems="center"
-                    paddingHorizontal={5}
-                    paddingVertical={3}
+            <Text fontSize={14}>
+              <PointsText points={restaurant.score} />{' '}
+              {reviewTags.map((tag, i) => {
+                const tagScore = tagScores.find((x) => x.name === tag.name)
+                return (
+                  <Text
+                    paddingHorizontal={6}
+                    paddingVertical={1}
+                    borderWidth={1}
+                    borderColor="#eee"
                     borderRadius={100}
                   >
-                    {info?.image ? (
-                      <Image
-                        source={info.image}
-                        style={{
-                          width: 18,
-                          height: 18,
-                          borderRadius: 100,
-                        }}
-                      />
-                    ) : null}
-                    <Spacer size={3} />
-                    <Text fontWeight="500" fontSize={13} opacity={0.5}>
-                      {+(item.rating ?? 0) * 10}
-                    </Text>
-                  </HStack>
-                </Tooltip>
-              )
-            })}
+                    {tagDisplayName(tag)}
+                    <Text opacity={0.5}>{tagScore?.score ?? '0'}</Text>
+                  </Text>
+                )
+              })}
+              {searchQueryText && <Text>"{searchQuery}"</Text>}
+            </Text>{' '}
+          </Text>
 
           <Spacer size="sm" />
 
@@ -111,7 +77,6 @@ export const RestaurantScoreBreakdownSmall = memo(
             className="hide-when-small"
             padding={3}
             marginVertical={-1}
-            marginLeft={3}
             borderRadius={100}
             hoverStyle={{
               backgroundColor: bgLight,
@@ -119,9 +84,9 @@ export const RestaurantScoreBreakdownSmall = memo(
             onPress={reviewDisplayStore.toggleShowComments}
           >
             <HelpCircle
-              size={14}
+              size={12}
               color={
-                reviewDisplayStore.showComments ? '#000' : 'rgba(0,0,0,0.5)'
+                reviewDisplayStore.showComments ? '#000' : 'rgba(0,0,0,0.2)'
               }
             />
           </VStack>

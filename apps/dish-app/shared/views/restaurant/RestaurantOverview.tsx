@@ -27,7 +27,7 @@ export const RestaurantOverview = memo(
                   <HStack paddingVertical={2} flex={1} overflow="hidden">
                     <Text
                       fontSize={26}
-                      opacity={0.3}
+                      opacity={i == 0 ? 0.2 : 0}
                       marginRight={6}
                       {...(isWeb && {
                         fontFamily: 'San Francisco, Times New Roman',
@@ -35,7 +35,7 @@ export const RestaurantOverview = memo(
                     >
                       &ldquo;
                     </Text>
-                    <Text ellipse>{item.sentence}</Text>
+                    <Text ellipse>{item.sentence.slice(0, 100).trim()}</Text>
                   </HStack>
                 </React.Fragment>
               )

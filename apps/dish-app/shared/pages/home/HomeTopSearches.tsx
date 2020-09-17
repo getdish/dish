@@ -1,5 +1,5 @@
-import { Tag } from '@dish/graph/_'
-import { HStack, Text, VStack } from '@dish/ui'
+import { Tag } from '@dish/graph'
+import { HStack, Text } from '@dish/ui'
 import { default as React, memo } from 'react'
 
 import { bgLight } from '../../colors'
@@ -8,7 +8,6 @@ import { useIsReallyNarrow } from '../../hooks/useIs'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { tagLenses } from '../../state/tagLenses'
 import { Link } from '../../views/ui/Link'
-import { LinkButton } from '../../views/ui/LinkButton'
 
 export const HomeTopSearches = memo(() => {
   const isReallySmall = useIsReallyNarrow()
@@ -32,7 +31,7 @@ export const HomeTopSearches = memo(() => {
               borderWidth={1}
               paddingVertical={isWeb ? 0 : 8}
               paddingHorizontal={8}
-              borderRadius={8}
+              borderRadius={80}
               backgroundColor="#fff"
               marginBottom={6}
               hoverStyle={{

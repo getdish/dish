@@ -69,8 +69,8 @@ export const RestaurantUpVoteDownVote = memo(
             pointerEvents="auto"
             alignItems="center"
             justifyContent="center"
-            width={56}
-            height={56}
+            width={53}
+            height={53}
             marginLeft={-22}
             backgroundColor="#fff"
             marginRight={-4}
@@ -92,8 +92,9 @@ export const RestaurantUpVoteDownVote = memo(
             </Tooltip>
             <Text
               fontSize={100 / `${score}`.length / 2}
-              fontWeight="600"
+              fontWeight="500"
               marginVertical={-2}
+              letterSpacing={-0.5}
               color={score > 0 ? '#000' : 'darkred'}
             >
               {score}
