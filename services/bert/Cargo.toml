@@ -13,6 +13,7 @@ env_logger = "0.7.1"
 qstring = "0.7.2"
 actix-cors = "0.3.0"
 anyhow = "1.0.32"
+crossbeam-channel = "0.4.4"
 
 [[bin]]
 name = "rust-bert-dish"
