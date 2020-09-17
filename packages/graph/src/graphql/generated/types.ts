@@ -4,7 +4,7 @@ import {
   FieldsTypeArg,
   ScalarType,
   TypeData,
-} from 'gqless'
+} from '@o/gqless'
 
 import * as extensions from '../extensions'
 
@@ -210,11 +210,11 @@ export type t___Type = FieldsType<
   {
     __typename: t_String<'__Type'>
     description?: t_String | null
-    enumValues?: FieldsTypeArg<
+    enumValues: FieldsTypeArg<
       { includeDeprecated?: boolean | null },
       t___EnumValue[] | null
     >
-    fields?: FieldsTypeArg<
+    fields: FieldsTypeArg<
       { includeDeprecated?: boolean | null },
       t___Field[] | null
     >
@@ -380,7 +380,7 @@ export type t_menu_item_aggregate_fields = FieldsType<
   {
     __typename: t_String<'menu_item_aggregate_fields'>
     avg?: t_menu_item_avg_fields | null
-    count?: FieldsTypeArg<
+    count: FieldsTypeArg<
       { columns?: menu_item_select_column[] | null; distinct?: boolean | null },
       t_Int | null
     >
@@ -797,226 +797,226 @@ export type menu_item_variance_order_by = { price?: order_by | null }
 export type t_mutation_root = FieldsType<
   {
     __typename: t_String<'mutation_root'>
-    delete_menu_item?: FieldsTypeArg<
+    delete_menu_item: FieldsTypeArg<
       { where: menu_item_bool_exp },
       t_menu_item_mutation_response | null
     >
-    delete_menu_item_by_pk?: FieldsTypeArg<{ id: any }, t_menu_item | null>
-    delete_opening_hours?: FieldsTypeArg<
+    delete_menu_item_by_pk: FieldsTypeArg<{ id: any }, t_menu_item | null>
+    delete_opening_hours: FieldsTypeArg<
       { where: opening_hours_bool_exp },
       t_opening_hours_mutation_response | null
     >
-    delete_opening_hours_by_pk?: FieldsTypeArg<
+    delete_opening_hours_by_pk: FieldsTypeArg<
       { id: any },
       t_opening_hours | null
     >
-    delete_photo?: FieldsTypeArg<
+    delete_photo: FieldsTypeArg<
       { where: photo_bool_exp },
       t_photo_mutation_response | null
     >
-    delete_photo_by_pk?: FieldsTypeArg<{ id: any }, t_photo | null>
-    delete_photo_xref?: FieldsTypeArg<
+    delete_photo_by_pk: FieldsTypeArg<{ id: any }, t_photo | null>
+    delete_photo_xref: FieldsTypeArg<
       { where: photo_xref_bool_exp },
       t_photo_xref_mutation_response | null
     >
-    delete_photo_xref_by_pk?: FieldsTypeArg<{ id: any }, t_photo_xref | null>
-    delete_restaurant?: FieldsTypeArg<
+    delete_photo_xref_by_pk: FieldsTypeArg<{ id: any }, t_photo_xref | null>
+    delete_restaurant: FieldsTypeArg<
       { where: restaurant_bool_exp },
       t_restaurant_mutation_response | null
     >
-    delete_restaurant_by_pk?: FieldsTypeArg<{ id: any }, t_restaurant | null>
-    delete_restaurant_tag?: FieldsTypeArg<
+    delete_restaurant_by_pk: FieldsTypeArg<{ id: any }, t_restaurant | null>
+    delete_restaurant_tag: FieldsTypeArg<
       { where: restaurant_tag_bool_exp },
       t_restaurant_tag_mutation_response | null
     >
-    delete_restaurant_tag_by_pk?: FieldsTypeArg<
+    delete_restaurant_tag_by_pk: FieldsTypeArg<
       { restaurant_id: any; tag_id: any },
       t_restaurant_tag | null
     >
-    delete_review?: FieldsTypeArg<
+    delete_review: FieldsTypeArg<
       { where: review_bool_exp },
       t_review_mutation_response | null
     >
-    delete_review_by_pk?: FieldsTypeArg<{ id: any }, t_review | null>
-    delete_review_tag_sentence?: FieldsTypeArg<
+    delete_review_by_pk: FieldsTypeArg<{ id: any }, t_review | null>
+    delete_review_tag_sentence: FieldsTypeArg<
       { where: review_tag_sentence_bool_exp },
       t_review_tag_sentence_mutation_response | null
     >
-    delete_review_tag_sentence_by_pk?: FieldsTypeArg<
+    delete_review_tag_sentence_by_pk: FieldsTypeArg<
       { id: any },
       t_review_tag_sentence | null
     >
-    delete_setting?: FieldsTypeArg<
+    delete_setting: FieldsTypeArg<
       { where: setting_bool_exp },
       t_setting_mutation_response | null
     >
-    delete_setting_by_pk?: FieldsTypeArg<{ key: string }, t_setting | null>
-    delete_tag?: FieldsTypeArg<
+    delete_setting_by_pk: FieldsTypeArg<{ key: string }, t_setting | null>
+    delete_tag: FieldsTypeArg<
       { where: tag_bool_exp },
       t_tag_mutation_response | null
     >
-    delete_tag_by_pk?: FieldsTypeArg<{ id: any }, t_tag | null>
-    delete_tag_tag?: FieldsTypeArg<
+    delete_tag_by_pk: FieldsTypeArg<{ id: any }, t_tag | null>
+    delete_tag_tag: FieldsTypeArg<
       { where: tag_tag_bool_exp },
       t_tag_tag_mutation_response | null
     >
-    delete_tag_tag_by_pk?: FieldsTypeArg<
+    delete_tag_tag_by_pk: FieldsTypeArg<
       { category_tag_id: any; tag_id: any },
       t_tag_tag | null
     >
-    delete_user?: FieldsTypeArg<
+    delete_user: FieldsTypeArg<
       { where: user_bool_exp },
       t_user_mutation_response | null
     >
-    delete_user_by_pk?: FieldsTypeArg<{ id: any }, t_user | null>
-    insert_menu_item?: FieldsTypeArg<
+    delete_user_by_pk: FieldsTypeArg<{ id: any }, t_user | null>
+    insert_menu_item: FieldsTypeArg<
       {
         objects: menu_item_insert_input[]
         on_conflict?: menu_item_on_conflict | null
       },
       t_menu_item_mutation_response | null
     >
-    insert_menu_item_one?: FieldsTypeArg<
+    insert_menu_item_one: FieldsTypeArg<
       {
         object: menu_item_insert_input
         on_conflict?: menu_item_on_conflict | null
       },
       t_menu_item | null
     >
-    insert_opening_hours?: FieldsTypeArg<
+    insert_opening_hours: FieldsTypeArg<
       {
         objects: opening_hours_insert_input[]
         on_conflict?: opening_hours_on_conflict | null
       },
       t_opening_hours_mutation_response | null
     >
-    insert_opening_hours_one?: FieldsTypeArg<
+    insert_opening_hours_one: FieldsTypeArg<
       {
         object: opening_hours_insert_input
         on_conflict?: opening_hours_on_conflict | null
       },
       t_opening_hours | null
     >
-    insert_photo?: FieldsTypeArg<
+    insert_photo: FieldsTypeArg<
       { objects: photo_insert_input[]; on_conflict?: photo_on_conflict | null },
       t_photo_mutation_response | null
     >
-    insert_photo_one?: FieldsTypeArg<
+    insert_photo_one: FieldsTypeArg<
       { object: photo_insert_input; on_conflict?: photo_on_conflict | null },
       t_photo | null
     >
-    insert_photo_xref?: FieldsTypeArg<
+    insert_photo_xref: FieldsTypeArg<
       {
         objects: photo_xref_insert_input[]
         on_conflict?: photo_xref_on_conflict | null
       },
       t_photo_xref_mutation_response | null
     >
-    insert_photo_xref_one?: FieldsTypeArg<
+    insert_photo_xref_one: FieldsTypeArg<
       {
         object: photo_xref_insert_input
         on_conflict?: photo_xref_on_conflict | null
       },
       t_photo_xref | null
     >
-    insert_restaurant?: FieldsTypeArg<
+    insert_restaurant: FieldsTypeArg<
       {
         objects: restaurant_insert_input[]
         on_conflict?: restaurant_on_conflict | null
       },
       t_restaurant_mutation_response | null
     >
-    insert_restaurant_one?: FieldsTypeArg<
+    insert_restaurant_one: FieldsTypeArg<
       {
         object: restaurant_insert_input
         on_conflict?: restaurant_on_conflict | null
       },
       t_restaurant | null
     >
-    insert_restaurant_tag?: FieldsTypeArg<
+    insert_restaurant_tag: FieldsTypeArg<
       {
         objects: restaurant_tag_insert_input[]
         on_conflict?: restaurant_tag_on_conflict | null
       },
       t_restaurant_tag_mutation_response | null
     >
-    insert_restaurant_tag_one?: FieldsTypeArg<
+    insert_restaurant_tag_one: FieldsTypeArg<
       {
         object: restaurant_tag_insert_input
         on_conflict?: restaurant_tag_on_conflict | null
       },
       t_restaurant_tag | null
     >
-    insert_review?: FieldsTypeArg<
+    insert_review: FieldsTypeArg<
       {
         objects: review_insert_input[]
         on_conflict?: review_on_conflict | null
       },
       t_review_mutation_response | null
     >
-    insert_review_one?: FieldsTypeArg<
+    insert_review_one: FieldsTypeArg<
       { object: review_insert_input; on_conflict?: review_on_conflict | null },
       t_review | null
     >
-    insert_review_tag_sentence?: FieldsTypeArg<
+    insert_review_tag_sentence: FieldsTypeArg<
       {
         objects: review_tag_sentence_insert_input[]
         on_conflict?: review_tag_sentence_on_conflict | null
       },
       t_review_tag_sentence_mutation_response | null
     >
-    insert_review_tag_sentence_one?: FieldsTypeArg<
+    insert_review_tag_sentence_one: FieldsTypeArg<
       {
         object: review_tag_sentence_insert_input
         on_conflict?: review_tag_sentence_on_conflict | null
       },
       t_review_tag_sentence | null
     >
-    insert_setting?: FieldsTypeArg<
+    insert_setting: FieldsTypeArg<
       {
         objects: setting_insert_input[]
         on_conflict?: setting_on_conflict | null
       },
       t_setting_mutation_response | null
     >
-    insert_setting_one?: FieldsTypeArg<
+    insert_setting_one: FieldsTypeArg<
       {
         object: setting_insert_input
         on_conflict?: setting_on_conflict | null
       },
       t_setting | null
     >
-    insert_tag?: FieldsTypeArg<
+    insert_tag: FieldsTypeArg<
       { objects: tag_insert_input[]; on_conflict?: tag_on_conflict | null },
       t_tag_mutation_response | null
     >
-    insert_tag_one?: FieldsTypeArg<
+    insert_tag_one: FieldsTypeArg<
       { object: tag_insert_input; on_conflict?: tag_on_conflict | null },
       t_tag | null
     >
-    insert_tag_tag?: FieldsTypeArg<
+    insert_tag_tag: FieldsTypeArg<
       {
         objects: tag_tag_insert_input[]
         on_conflict?: tag_tag_on_conflict | null
       },
       t_tag_tag_mutation_response | null
     >
-    insert_tag_tag_one?: FieldsTypeArg<
+    insert_tag_tag_one: FieldsTypeArg<
       {
         object: tag_tag_insert_input
         on_conflict?: tag_tag_on_conflict | null
       },
       t_tag_tag | null
     >
-    insert_user?: FieldsTypeArg<
+    insert_user: FieldsTypeArg<
       { objects: user_insert_input[]; on_conflict?: user_on_conflict | null },
       t_user_mutation_response | null
     >
-    insert_user_one?: FieldsTypeArg<
+    insert_user_one: FieldsTypeArg<
       { object: user_insert_input; on_conflict?: user_on_conflict | null },
       t_user | null
     >
-    update_menu_item?: FieldsTypeArg<
+    update_menu_item: FieldsTypeArg<
       {
         _inc?: menu_item_inc_input | null
         _set?: menu_item_set_input | null
@@ -1024,7 +1024,7 @@ export type t_mutation_root = FieldsType<
       },
       t_menu_item_mutation_response | null
     >
-    update_menu_item_by_pk?: FieldsTypeArg<
+    update_menu_item_by_pk: FieldsTypeArg<
       {
         _inc?: menu_item_inc_input | null
         _set?: menu_item_set_input | null
@@ -1032,18 +1032,18 @@ export type t_mutation_root = FieldsType<
       },
       t_menu_item | null
     >
-    update_opening_hours?: FieldsTypeArg<
+    update_opening_hours: FieldsTypeArg<
       { _set?: opening_hours_set_input | null; where: opening_hours_bool_exp },
       t_opening_hours_mutation_response | null
     >
-    update_opening_hours_by_pk?: FieldsTypeArg<
+    update_opening_hours_by_pk: FieldsTypeArg<
       {
         _set?: opening_hours_set_input | null
         pk_columns: opening_hours_pk_columns_input
       },
       t_opening_hours | null
     >
-    update_photo?: FieldsTypeArg<
+    update_photo: FieldsTypeArg<
       {
         _inc?: photo_inc_input | null
         _set?: photo_set_input | null
@@ -1051,7 +1051,7 @@ export type t_mutation_root = FieldsType<
       },
       t_photo_mutation_response | null
     >
-    update_photo_by_pk?: FieldsTypeArg<
+    update_photo_by_pk: FieldsTypeArg<
       {
         _inc?: photo_inc_input | null
         _set?: photo_set_input | null
@@ -1059,18 +1059,18 @@ export type t_mutation_root = FieldsType<
       },
       t_photo | null
     >
-    update_photo_xref?: FieldsTypeArg<
+    update_photo_xref: FieldsTypeArg<
       { _set?: photo_xref_set_input | null; where: photo_xref_bool_exp },
       t_photo_xref_mutation_response | null
     >
-    update_photo_xref_by_pk?: FieldsTypeArg<
+    update_photo_xref_by_pk: FieldsTypeArg<
       {
         _set?: photo_xref_set_input | null
         pk_columns: photo_xref_pk_columns_input
       },
       t_photo_xref | null
     >
-    update_restaurant?: FieldsTypeArg<
+    update_restaurant: FieldsTypeArg<
       {
         _append?: restaurant_append_input | null
         _delete_at_path?: restaurant_delete_at_path_input | null
@@ -1083,7 +1083,7 @@ export type t_mutation_root = FieldsType<
       },
       t_restaurant_mutation_response | null
     >
-    update_restaurant_by_pk?: FieldsTypeArg<
+    update_restaurant_by_pk: FieldsTypeArg<
       {
         _append?: restaurant_append_input | null
         _delete_at_path?: restaurant_delete_at_path_input | null
@@ -1096,7 +1096,7 @@ export type t_mutation_root = FieldsType<
       },
       t_restaurant | null
     >
-    update_restaurant_tag?: FieldsTypeArg<
+    update_restaurant_tag: FieldsTypeArg<
       {
         _append?: restaurant_tag_append_input | null
         _delete_at_path?: restaurant_tag_delete_at_path_input | null
@@ -1109,7 +1109,7 @@ export type t_mutation_root = FieldsType<
       },
       t_restaurant_tag_mutation_response | null
     >
-    update_restaurant_tag_by_pk?: FieldsTypeArg<
+    update_restaurant_tag_by_pk: FieldsTypeArg<
       {
         _append?: restaurant_tag_append_input | null
         _delete_at_path?: restaurant_tag_delete_at_path_input | null
@@ -1122,7 +1122,7 @@ export type t_mutation_root = FieldsType<
       },
       t_restaurant_tag | null
     >
-    update_review?: FieldsTypeArg<
+    update_review: FieldsTypeArg<
       {
         _append?: review_append_input | null
         _delete_at_path?: review_delete_at_path_input | null
@@ -1135,7 +1135,7 @@ export type t_mutation_root = FieldsType<
       },
       t_review_mutation_response | null
     >
-    update_review_by_pk?: FieldsTypeArg<
+    update_review_by_pk: FieldsTypeArg<
       {
         _append?: review_append_input | null
         _delete_at_path?: review_delete_at_path_input | null
@@ -1148,7 +1148,7 @@ export type t_mutation_root = FieldsType<
       },
       t_review | null
     >
-    update_review_tag_sentence?: FieldsTypeArg<
+    update_review_tag_sentence: FieldsTypeArg<
       {
         _inc?: review_tag_sentence_inc_input | null
         _set?: review_tag_sentence_set_input | null
@@ -1156,7 +1156,7 @@ export type t_mutation_root = FieldsType<
       },
       t_review_tag_sentence_mutation_response | null
     >
-    update_review_tag_sentence_by_pk?: FieldsTypeArg<
+    update_review_tag_sentence_by_pk: FieldsTypeArg<
       {
         _inc?: review_tag_sentence_inc_input | null
         _set?: review_tag_sentence_set_input | null
@@ -1164,7 +1164,7 @@ export type t_mutation_root = FieldsType<
       },
       t_review_tag_sentence | null
     >
-    update_setting?: FieldsTypeArg<
+    update_setting: FieldsTypeArg<
       {
         _append?: setting_append_input | null
         _delete_at_path?: setting_delete_at_path_input | null
@@ -1176,7 +1176,7 @@ export type t_mutation_root = FieldsType<
       },
       t_setting_mutation_response | null
     >
-    update_setting_by_pk?: FieldsTypeArg<
+    update_setting_by_pk: FieldsTypeArg<
       {
         _append?: setting_append_input | null
         _delete_at_path?: setting_delete_at_path_input | null
@@ -1188,7 +1188,7 @@ export type t_mutation_root = FieldsType<
       },
       t_setting | null
     >
-    update_tag?: FieldsTypeArg<
+    update_tag: FieldsTypeArg<
       {
         _append?: tag_append_input | null
         _delete_at_path?: tag_delete_at_path_input | null
@@ -1201,7 +1201,7 @@ export type t_mutation_root = FieldsType<
       },
       t_tag_mutation_response | null
     >
-    update_tag_by_pk?: FieldsTypeArg<
+    update_tag_by_pk: FieldsTypeArg<
       {
         _append?: tag_append_input | null
         _delete_at_path?: tag_delete_at_path_input | null
@@ -1214,19 +1214,19 @@ export type t_mutation_root = FieldsType<
       },
       t_tag | null
     >
-    update_tag_tag?: FieldsTypeArg<
+    update_tag_tag: FieldsTypeArg<
       { _set?: tag_tag_set_input | null; where: tag_tag_bool_exp },
       t_tag_tag_mutation_response | null
     >
-    update_tag_tag_by_pk?: FieldsTypeArg<
+    update_tag_tag_by_pk: FieldsTypeArg<
       { _set?: tag_tag_set_input | null; pk_columns: tag_tag_pk_columns_input },
       t_tag_tag | null
     >
-    update_user?: FieldsTypeArg<
+    update_user: FieldsTypeArg<
       { _set?: user_set_input | null; where: user_bool_exp },
       t_user_mutation_response | null
     >
-    update_user_by_pk?: FieldsTypeArg<
+    update_user_by_pk: FieldsTypeArg<
       { _set?: user_set_input | null; pk_columns: user_pk_columns_input },
       t_user | null
     >
@@ -1291,7 +1291,7 @@ export type t_opening_hours_aggregate = FieldsType<
 export type t_opening_hours_aggregate_fields = FieldsType<
   {
     __typename: t_String<'opening_hours_aggregate_fields'>
-    count?: FieldsTypeArg<
+    count: FieldsTypeArg<
       {
         columns?: opening_hours_select_column[] | null
         distinct?: boolean | null
@@ -1520,7 +1520,7 @@ export type t_photo_aggregate_fields = FieldsType<
   {
     __typename: t_String<'photo_aggregate_fields'>
     avg?: t_photo_avg_fields | null
-    count?: FieldsTypeArg<
+    count: FieldsTypeArg<
       { columns?: photo_select_column[] | null; distinct?: boolean | null },
       t_Int | null
     >
@@ -1928,7 +1928,7 @@ export type t_photo_xref_aggregate = FieldsType<
 export type t_photo_xref_aggregate_fields = FieldsType<
   {
     __typename: t_String<'photo_xref_aggregate_fields'>
-    count?: FieldsTypeArg<
+    count: FieldsTypeArg<
       {
         columns?: photo_xref_select_column[] | null
         distinct?: boolean | null
@@ -2159,7 +2159,7 @@ export type t_query_root = FieldsType<
       },
       t_menu_item_aggregate
     >
-    menu_item_by_pk?: FieldsTypeArg<{ id: any }, t_menu_item | null>
+    menu_item_by_pk: FieldsTypeArg<{ id: any }, t_menu_item | null>
     opening_hours: FieldsTypeArg<
       {
         distinct_on?: opening_hours_select_column[] | null
@@ -2180,7 +2180,7 @@ export type t_query_root = FieldsType<
       },
       t_opening_hours_aggregate
     >
-    opening_hours_by_pk?: FieldsTypeArg<{ id: any }, t_opening_hours | null>
+    opening_hours_by_pk: FieldsTypeArg<{ id: any }, t_opening_hours | null>
     photo: FieldsTypeArg<
       {
         distinct_on?: photo_select_column[] | null
@@ -2201,7 +2201,7 @@ export type t_query_root = FieldsType<
       },
       t_photo_aggregate
     >
-    photo_by_pk?: FieldsTypeArg<{ id: any }, t_photo | null>
+    photo_by_pk: FieldsTypeArg<{ id: any }, t_photo | null>
     photo_xref: FieldsTypeArg<
       {
         distinct_on?: photo_xref_select_column[] | null
@@ -2222,7 +2222,7 @@ export type t_query_root = FieldsType<
       },
       t_photo_xref_aggregate
     >
-    photo_xref_by_pk?: FieldsTypeArg<{ id: any }, t_photo_xref | null>
+    photo_xref_by_pk: FieldsTypeArg<{ id: any }, t_photo_xref | null>
     restaurant: FieldsTypeArg<
       {
         distinct_on?: restaurant_select_column[] | null
@@ -2243,7 +2243,7 @@ export type t_query_root = FieldsType<
       },
       t_restaurant_aggregate
     >
-    restaurant_by_pk?: FieldsTypeArg<{ id: any }, t_restaurant | null>
+    restaurant_by_pk: FieldsTypeArg<{ id: any }, t_restaurant | null>
     restaurant_tag: FieldsTypeArg<
       {
         distinct_on?: restaurant_tag_select_column[] | null
@@ -2264,7 +2264,7 @@ export type t_query_root = FieldsType<
       },
       t_restaurant_tag_aggregate
     >
-    restaurant_tag_by_pk?: FieldsTypeArg<
+    restaurant_tag_by_pk: FieldsTypeArg<
       { restaurant_id: any; tag_id: any },
       t_restaurant_tag | null
     >
@@ -2288,7 +2288,7 @@ export type t_query_root = FieldsType<
       },
       t_review_aggregate
     >
-    review_by_pk?: FieldsTypeArg<{ id: any }, t_review | null>
+    review_by_pk: FieldsTypeArg<{ id: any }, t_review | null>
     review_tag_sentence: FieldsTypeArg<
       {
         distinct_on?: review_tag_sentence_select_column[] | null
@@ -2309,7 +2309,7 @@ export type t_query_root = FieldsType<
       },
       t_review_tag_sentence_aggregate
     >
-    review_tag_sentence_by_pk?: FieldsTypeArg<
+    review_tag_sentence_by_pk: FieldsTypeArg<
       { id: any },
       t_review_tag_sentence | null
     >
@@ -2333,7 +2333,7 @@ export type t_query_root = FieldsType<
       },
       t_setting_aggregate
     >
-    setting_by_pk?: FieldsTypeArg<{ key: string }, t_setting | null>
+    setting_by_pk: FieldsTypeArg<{ key: string }, t_setting | null>
     tag: FieldsTypeArg<
       {
         distinct_on?: tag_select_column[] | null
@@ -2354,7 +2354,7 @@ export type t_query_root = FieldsType<
       },
       t_tag_aggregate
     >
-    tag_by_pk?: FieldsTypeArg<{ id: any }, t_tag | null>
+    tag_by_pk: FieldsTypeArg<{ id: any }, t_tag | null>
     tag_tag: FieldsTypeArg<
       {
         distinct_on?: tag_tag_select_column[] | null
@@ -2375,7 +2375,7 @@ export type t_query_root = FieldsType<
       },
       t_tag_tag_aggregate
     >
-    tag_tag_by_pk?: FieldsTypeArg<
+    tag_tag_by_pk: FieldsTypeArg<
       { category_tag_id: any; tag_id: any },
       t_tag_tag | null
     >
@@ -2399,7 +2399,7 @@ export type t_query_root = FieldsType<
       },
       t_user_aggregate
     >
-    user_by_pk?: FieldsTypeArg<{ id: any }, t_user | null>
+    user_by_pk: FieldsTypeArg<{ id: any }, t_user | null>
   },
   Extension<'query_root'>
 >
@@ -2416,8 +2416,8 @@ export type t_restaurant = FieldsType<
     created_at: t_timestamptz
     description?: t_String | null
     geocoder_id?: t_String | null
-    headlines?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
-    hours?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    headlines: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    hours: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     id: t_uuid
     image?: t_String | null
     is_open_now?: t_Boolean | null
@@ -2443,10 +2443,10 @@ export type t_restaurant = FieldsType<
       t_menu_item_aggregate
     >
     name: t_String
-    photos?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    photos: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     price_range?: t_String | null
     rating?: t_numeric | null
-    rating_factors?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    rating_factors: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     reviews: FieldsTypeArg<
       {
         distinct_on?: review_select_column[] | null
@@ -2468,11 +2468,11 @@ export type t_restaurant = FieldsType<
       t_review_aggregate
     >
     score?: t_numeric | null
-    score_breakdown?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    score_breakdown: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     slug: t_String
-    sources?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    sources: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     state?: t_String | null
-    tag_names?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    tag_names: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     tags: FieldsTypeArg<
       {
         distinct_on?: restaurant_tag_select_column[] | null
@@ -2494,7 +2494,7 @@ export type t_restaurant = FieldsType<
       t_restaurant_tag_aggregate
     >
     telephone?: t_String | null
-    top_tags?: FieldsTypeArg<
+    top_tags: FieldsTypeArg<
       {
         args: restaurant_top_tags_args
         distinct_on?: restaurant_tag_select_column[] | null
@@ -2533,7 +2533,7 @@ export type t_restaurant_aggregate_fields = FieldsType<
   {
     __typename: t_String<'restaurant_aggregate_fields'>
     avg?: t_restaurant_avg_fields | null
-    count?: FieldsTypeArg<
+    count: FieldsTypeArg<
       {
         columns?: restaurant_select_column[] | null
         distinct?: boolean | null
@@ -3113,7 +3113,7 @@ export type t_restaurant_tag = FieldsType<
   {
     __typename: t_String<'restaurant_tag'>
     id: t_uuid
-    photos?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    photos: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     rank?: t_Int | null
     rating?: t_numeric | null
     restaurant: t_restaurant
@@ -3139,7 +3139,7 @@ export type t_restaurant_tag = FieldsType<
       t_review_aggregate
     >
     score?: t_numeric | null
-    score_breakdown?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    score_breakdown: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     tag: t_tag
     tag_id: t_uuid
   },
@@ -3167,7 +3167,7 @@ export type t_restaurant_tag_aggregate_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_aggregate_fields'>
     avg?: t_restaurant_tag_avg_fields | null
-    count?: FieldsTypeArg<
+    count: FieldsTypeArg<
       {
         columns?: restaurant_tag_select_column[] | null
         distinct?: boolean | null
@@ -3790,7 +3790,7 @@ export type t_review = FieldsType<
   {
     __typename: t_String<'review'>
     authored_at: t_timestamptz
-    categories?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    categories: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     favorited?: t_Boolean | null
     id: t_uuid
     location?: t_geometry | null
@@ -3851,7 +3851,7 @@ export type t_review_aggregate_fields = FieldsType<
   {
     __typename: t_String<'review_aggregate_fields'>
     avg?: t_review_avg_fields | null
-    count?: FieldsTypeArg<
+    count: FieldsTypeArg<
       { columns?: review_select_column[] | null; distinct?: boolean | null },
       t_Int | null
     >
@@ -4312,7 +4312,7 @@ export type t_review_tag_sentence_aggregate_fields = FieldsType<
   {
     __typename: t_String<'review_tag_sentence_aggregate_fields'>
     avg?: t_review_tag_sentence_avg_fields | null
-    count?: FieldsTypeArg<
+    count: FieldsTypeArg<
       {
         columns?: review_tag_sentence_select_column[] | null
         distinct?: boolean | null
@@ -4848,7 +4848,7 @@ export type t_setting_aggregate = FieldsType<
 export type t_setting_aggregate_fields = FieldsType<
   {
     __typename: t_String<'setting_aggregate_fields'>
-    count?: FieldsTypeArg<
+    count: FieldsTypeArg<
       { columns?: setting_select_column[] | null; distinct?: boolean | null },
       t_Int | null
     >
@@ -5113,7 +5113,7 @@ export type t_subscription_root = FieldsType<
       },
       t_menu_item_aggregate
     >
-    menu_item_by_pk?: FieldsTypeArg<{ id: any }, t_menu_item | null>
+    menu_item_by_pk: FieldsTypeArg<{ id: any }, t_menu_item | null>
     opening_hours: FieldsTypeArg<
       {
         distinct_on?: opening_hours_select_column[] | null
@@ -5134,7 +5134,7 @@ export type t_subscription_root = FieldsType<
       },
       t_opening_hours_aggregate
     >
-    opening_hours_by_pk?: FieldsTypeArg<{ id: any }, t_opening_hours | null>
+    opening_hours_by_pk: FieldsTypeArg<{ id: any }, t_opening_hours | null>
     photo: FieldsTypeArg<
       {
         distinct_on?: photo_select_column[] | null
@@ -5155,7 +5155,7 @@ export type t_subscription_root = FieldsType<
       },
       t_photo_aggregate
     >
-    photo_by_pk?: FieldsTypeArg<{ id: any }, t_photo | null>
+    photo_by_pk: FieldsTypeArg<{ id: any }, t_photo | null>
     photo_xref: FieldsTypeArg<
       {
         distinct_on?: photo_xref_select_column[] | null
@@ -5176,7 +5176,7 @@ export type t_subscription_root = FieldsType<
       },
       t_photo_xref_aggregate
     >
-    photo_xref_by_pk?: FieldsTypeArg<{ id: any }, t_photo_xref | null>
+    photo_xref_by_pk: FieldsTypeArg<{ id: any }, t_photo_xref | null>
     restaurant: FieldsTypeArg<
       {
         distinct_on?: restaurant_select_column[] | null
@@ -5197,7 +5197,7 @@ export type t_subscription_root = FieldsType<
       },
       t_restaurant_aggregate
     >
-    restaurant_by_pk?: FieldsTypeArg<{ id: any }, t_restaurant | null>
+    restaurant_by_pk: FieldsTypeArg<{ id: any }, t_restaurant | null>
     restaurant_tag: FieldsTypeArg<
       {
         distinct_on?: restaurant_tag_select_column[] | null
@@ -5218,7 +5218,7 @@ export type t_subscription_root = FieldsType<
       },
       t_restaurant_tag_aggregate
     >
-    restaurant_tag_by_pk?: FieldsTypeArg<
+    restaurant_tag_by_pk: FieldsTypeArg<
       { restaurant_id: any; tag_id: any },
       t_restaurant_tag | null
     >
@@ -5242,7 +5242,7 @@ export type t_subscription_root = FieldsType<
       },
       t_review_aggregate
     >
-    review_by_pk?: FieldsTypeArg<{ id: any }, t_review | null>
+    review_by_pk: FieldsTypeArg<{ id: any }, t_review | null>
     review_tag_sentence: FieldsTypeArg<
       {
         distinct_on?: review_tag_sentence_select_column[] | null
@@ -5263,7 +5263,7 @@ export type t_subscription_root = FieldsType<
       },
       t_review_tag_sentence_aggregate
     >
-    review_tag_sentence_by_pk?: FieldsTypeArg<
+    review_tag_sentence_by_pk: FieldsTypeArg<
       { id: any },
       t_review_tag_sentence | null
     >
@@ -5287,7 +5287,7 @@ export type t_subscription_root = FieldsType<
       },
       t_setting_aggregate
     >
-    setting_by_pk?: FieldsTypeArg<{ key: string }, t_setting | null>
+    setting_by_pk: FieldsTypeArg<{ key: string }, t_setting | null>
     tag: FieldsTypeArg<
       {
         distinct_on?: tag_select_column[] | null
@@ -5308,7 +5308,7 @@ export type t_subscription_root = FieldsType<
       },
       t_tag_aggregate
     >
-    tag_by_pk?: FieldsTypeArg<{ id: any }, t_tag | null>
+    tag_by_pk: FieldsTypeArg<{ id: any }, t_tag | null>
     tag_tag: FieldsTypeArg<
       {
         distinct_on?: tag_tag_select_column[] | null
@@ -5329,7 +5329,7 @@ export type t_subscription_root = FieldsType<
       },
       t_tag_tag_aggregate
     >
-    tag_tag_by_pk?: FieldsTypeArg<
+    tag_tag_by_pk: FieldsTypeArg<
       { category_tag_id: any; tag_id: any },
       t_tag_tag | null
     >
@@ -5353,7 +5353,7 @@ export type t_subscription_root = FieldsType<
       },
       t_user_aggregate
     >
-    user_by_pk?: FieldsTypeArg<{ id: any }, t_user | null>
+    user_by_pk: FieldsTypeArg<{ id: any }, t_user | null>
   },
   Extension<'subscription_root'>
 >
@@ -5365,7 +5365,7 @@ export type t_subscription_root = FieldsType<
 export type t_tag = FieldsType<
   {
     __typename: t_String<'tag'>
-    alternates?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    alternates: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     categories: FieldsTypeArg<
       {
         distinct_on?: tag_tag_select_column[] | null
@@ -5387,14 +5387,14 @@ export type t_tag = FieldsType<
       t_tag_tag_aggregate
     >
     created_at: t_timestamptz
-    default_images?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    default_images: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     description?: t_String | null
     displayName?: t_String | null
     frequency?: t_Int | null
     icon?: t_String | null
     id: t_uuid
     is_ambiguous: t_Boolean
-    misc?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    misc: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     name: t_String
     order: t_Int
     parent?: t_tag | null
@@ -5419,7 +5419,7 @@ export type t_tag = FieldsType<
       },
       t_restaurant_tag_aggregate
     >
-    rgb?: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    rgb: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     type?: t_String | null
     updated_at: t_timestamptz
   },
@@ -5447,7 +5447,7 @@ export type t_tag_aggregate_fields = FieldsType<
   {
     __typename: t_String<'tag_aggregate_fields'>
     avg?: t_tag_avg_fields | null
-    count?: FieldsTypeArg<
+    count: FieldsTypeArg<
       { columns?: tag_select_column[] | null; distinct?: boolean | null },
       t_Int | null
     >
@@ -5950,7 +5950,7 @@ export type t_tag_tag_aggregate = FieldsType<
 export type t_tag_tag_aggregate_fields = FieldsType<
   {
     __typename: t_String<'tag_tag_aggregate_fields'>
-    count?: FieldsTypeArg<
+    count: FieldsTypeArg<
       { columns?: tag_tag_select_column[] | null; distinct?: boolean | null },
       t_Int | null
     >
@@ -6322,7 +6322,7 @@ export type t_user_aggregate = FieldsType<
 export type t_user_aggregate_fields = FieldsType<
   {
     __typename: t_String<'user_aggregate_fields'>
-    count?: FieldsTypeArg<
+    count: FieldsTypeArg<
       { columns?: user_select_column[] | null; distinct?: boolean | null },
       t_Int | null
     >
