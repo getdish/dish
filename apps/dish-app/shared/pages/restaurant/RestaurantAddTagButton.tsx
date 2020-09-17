@@ -3,8 +3,8 @@ import { Plus } from '@dish/react-feather'
 import { Box, Popover } from '@dish/ui'
 import React, { useState } from 'react'
 
+import { HomeLenseBar } from '../../views/HomeLenseBar'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { HomeLenseBar } from '../home/HomeLenseBar'
 
 export const RestaurantAddTagButton = ({
   restaurant,

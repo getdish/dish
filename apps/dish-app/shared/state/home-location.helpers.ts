@@ -1,4 +1,4 @@
-import { searchLocations } from '../pages/home/searchLocations'
+import { searchLocations } from '../helpers/searchLocations'
 import { HomeStateItemLocation } from './HomeStateItemLocation'
 import { initialHomeState } from './initialHomeState'
 import { SearchRouteParams, router } from './router'

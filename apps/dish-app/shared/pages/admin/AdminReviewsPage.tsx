@@ -12,12 +12,12 @@ import React, { useEffect, useState } from 'react'
 import { ScrollView, TextInput } from 'react-native'
 
 import { lightGreen, lightRed } from '../../colors'
-import { defaultLocationAutocompleteResults } from '../../state/defaultLocationAutocompleteResults'
-import { AutocompleteItem } from '../../state/home-types'
 import {
   locationToAutocomplete,
   searchLocations,
-} from '../home/searchLocations'
+} from '../../helpers/searchLocations'
+import { defaultLocationAutocompleteResults } from '../../state/defaultLocationAutocompleteResults'
+import { AutocompleteItem } from '../../state/home-types'
 import { AdminListItem } from './AdminListItem'
 import { AdminSearchableColumn } from './AdminSearchableColumn'
 import { VerticalColumn } from './VerticalColumn'

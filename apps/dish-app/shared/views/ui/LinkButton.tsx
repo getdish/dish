@@ -1,4 +1,3 @@
-// debug
 import { HStack, Text } from '@dish/ui'
 import React, { useEffect, useRef, useState } from 'react'
 

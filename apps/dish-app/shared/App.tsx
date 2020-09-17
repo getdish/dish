@@ -1,40 +1,125 @@
-import './start'
+import { sleep } from '@dish/async'
+import { AbsoluteVStack } from '@dish/ui'
+import loadable from '@loadable/component'
+import React, { Suspense, memo, useEffect } from 'react'
 
-import { LoadingItems, ToastRoot } from '@dish/ui'
-import { Provider } from 'overmind-react'
-import React, { Suspense } from 'react'
+import HomeAutocomplete from './AppAutocomplete'
+import { HomeContainer } from './AppContainer'
+import { HomeIntroLetter } from './AppIntroLetter'
+import { AppMapControlsOverlay } from './AppMapControlsOverlay'
+import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
+import { HomeSearchBarFloating } from './AppSearchBar'
+import { AppStackView } from './AppStackView'
+import { isSSR } from './constants'
+import { initAppleSigninButton } from './helpers/initAppleSigninButton'
+import { useIsNarrow } from './hooks/useIs'
+import { PagesStackView } from './pages/PagesStackView'
+import { ErrorBoundary } from './views/ErrorBoundary'
+import { Route } from './views/router/Route'
 
-import { ErrorHandler } from './ErrorHandler'
-import AdminPage from './pages/admin/AdminPage'
-import HomePage from './pages/home/HomePage'
-import { Shortcuts } from './Shortcuts'
-import { NotFoundPage } from './views/NotFoundPage'
-import { PrivateRoute, Route, RouteSwitch } from './views/router/Route'
+export default memo(function App() {
+  const isSmall = useIsNarrow()
 
-export function App({ overmind }: { overmind?: any }) {
+  useEffect(() => {
+    // workaround apple id requirement to init 3 buttons
+
+    // init popover button
+    initAppleSigninButton()
+
+    // init footer button
+    sleep(500).then(() => {
+      initAppleSigninButton()
+    })
+
+    //Listen for authorization success
+    const handleAppleSuccess = (data) => {
+      console.log('got apple res', data)
+    }
+    const handleAppleFailure = (error) => {
+      console.log('got apple err', error)
+    }
+    document.addEventListener('AppleIDSignInOnSuccess', handleAppleSuccess)
+    document.addEventListener('AppleIDSignInOnFailure', handleAppleFailure)
+    return () => {
+      document.removeEventListener('AppleIDSignInOnSuccess', handleAppleSuccess)
+      document.removeEventListener('AppleIDSignInOnFailure', handleAppleFailure)
+    }
+  }, [])
+
+  return (
+    <AbsoluteVStack
+      fullscreen
+      overflow="hidden"
+      backgroundColor="#C9E9F6" // map color
+      {...(isSmall && {
+        borderRadius: 10,
+      })}
+    >
+      <AppContent />
+    </AbsoluteVStack>
+  )
+})
+
+const AppContent = memo(() => {
   return (
     <>
-      <ToastRoot />
-      <Shortcuts />
-      <Provider value={overmind}>
-        <ErrorHandler />
-        <Suspense fallback={<LoadingItems />}>
-          <RouteSwitch>
-            <Route name="notFound">
-              <NotFoundPage title="404 Not Found" />
-            </Route>
-            <PrivateRoute name="admin">
-              <AdminPage />
-            </PrivateRoute>
-            {/* home route last because it matches / */}
-            <Route name="home">
-              <HomePage />
-            </Route>
-          </RouteSwitch>
+      {/* WARNING: DONT PUT ANYTHING ABOVE THIS IN MARKUP ^^ */}
+      <Suspense fallback={null}>
+        <HomeContainer>
+          <AppStackView>
+            {(props) => {
+              return <PagesStackView {...props} />
+            }}
+          </AppStackView>
+        </HomeContainer>
+      </Suspense>
 
-          {/* <WelcomeModal /> */}
+      <Suspense fallback={null}>
+        {!isSSR && (
+          <ErrorBoundary name="main-map">
+            <Suspense fallback={null}>
+              <AppMap />
+            </Suspense>
+          </ErrorBoundary>
+        )}
+
+        <HomeIntroLetter />
+
+        <Suspense fallback={null}>
+          <AppMapControlsUnderlay />
+          <AppMapControlsOverlay />
         </Suspense>
-      </Provider>
+
+        <HomeSearchBarFloating />
+        <HomeAutocomplete />
+
+        <Suspense fallback={null}>
+          <GalleryPage />
+          <RestaurantReviewPage />
+
+          <Route name="restaurantHours">
+            <RestaurantHoursPage />
+          </Route>
+        </Suspense>
+      </Suspense>
     </>
   )
-}
+})
+
+const AppMap =
+  process.env.TARGET === 'ssr' ? null : loadable(() => import('./AppMap'))
+
+const GalleryPage =
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+    ? require('./pages/gallery/GalleryPage').default
+    : loadable(() => import('./pages/gallery/GalleryPage'))
+
+const RestaurantReviewPage =
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+    ? require('./pages/restaurantReview/RestaurantReviewPage').default
+    : loadable(() => import('./pages/restaurantReview/RestaurantReviewPage'))
+
+const RestaurantHoursPage =
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+    ? require('./pages/restaurantHours/RestaurantHoursPage').default
+    : loadable(() => import('./pages/restaurantHours/RestaurantHoursPage'))

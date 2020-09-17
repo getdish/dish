@@ -2,7 +2,7 @@ import { AbsoluteVStack, Spacer, VStack } from '@dish/ui'
 import { default as React, memo } from 'react'
 import { Platform } from 'react-native'
 
-import { HomeIntroLetterContent } from '../../pages/home/HomeIntroLetter'
+import { HomeIntroLetterContent } from '../../AppIntroLetter'
 
 export const PageFooter = memo(() => {
   if (Platform.OS !== 'web') {

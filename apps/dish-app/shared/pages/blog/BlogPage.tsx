@@ -1,11 +1,11 @@
 import { Spacer, VStack } from '@dish/ui'
 import React from 'react'
 
+import { ContentScrollView } from '../../views/ContentScrollView'
 import { PageContent } from '../../views/layout/PageContent'
+import { StackDrawer } from '../../views/StackDrawer'
 import { Link } from '../../views/ui/Link'
 import { Title } from '../../views/ui/Title'
-import { HomeScrollView } from '../home/HomeScrollView'
-import { HomeStackDrawer } from '../home/HomeStackDrawer'
 import { BlogLayout } from './BlogLayout'
 import { BlogPostMeta } from './BlogPostMeta'
 import { MDX } from './MDX'
@@ -24,8 +24,8 @@ export default function BlogPage() {
     )
 
   return (
-    <HomeStackDrawer closable title="Blog">
-      <HomeScrollView
+    <StackDrawer closable title="Blog">
+      <ContentScrollView
         style={{
           paddingTop: 40,
           paddingHorizontal: '5%',
@@ -52,8 +52,8 @@ export default function BlogPage() {
             </VStack>
           ))}
         </VStack>
-      </HomeScrollView>
-    </HomeStackDrawer>
+      </ContentScrollView>
+    </StackDrawer>
   )
 
   return (

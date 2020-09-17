@@ -4,11 +4,11 @@ import { Provider } from 'overmind-react'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import HomeAutocomplete from './shared/pages/home/HomeAutocomplete'
-import HomeMap from './shared/pages/home/HomeMap'
-import { HomePagePane } from './shared/pages/home/HomePagePane'
-import { HomeSmallDrawer } from './shared/pages/home/HomeSmallDrawer'
-import { HomeStackView } from './shared/pages/home/HomeStackView'
+import AppAutocomplete from './shared/AppAutocomplete'
+import AppMap from './shared/AppMap'
+import { AppSmallDrawer } from './shared/AppSmallDrawer'
+import { AppStackView } from './shared/AppStackView'
+import { PagesStackView } from './shared/pages/PagesStackView'
 import { om } from './shared/state/om'
 
 export default function App() {
@@ -29,20 +29,20 @@ export default function App() {
       <StatusBar style="auto" />
       <Provider value={window['om']}>
         <View style={styles.container}>
-          <HomeMap />
+          <AppMap />
 
           <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1000}>
-            <HomeSmallDrawer>
-              <HomeStackView>
+            <AppSmallDrawer>
+              <AppStackView>
                 {(props) => {
-                  return <HomePagePane {...props} />
+                  return <PagesStackView {...props} />
                 }}
-              </HomeStackView>
-            </HomeSmallDrawer>
+              </AppStackView>
+            </AppSmallDrawer>
           </AbsoluteVStack>
 
           <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1001}>
-            <HomeAutocomplete />
+            <AppAutocomplete />
           </AbsoluteVStack>
         </View>
       </Provider>

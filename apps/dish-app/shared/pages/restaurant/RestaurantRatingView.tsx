@@ -6,7 +6,7 @@ import {
   getRestaurantRating,
 } from '../../helpers/getRestaurantRating'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { RatingView, RatingViewProps } from '../home/RatingView'
+import { RatingView, RatingViewProps } from '../../views/RatingView'
 
 export type RestaurantRatingViewProps = Omit<
   Pick<RatingViewProps, 'size'>,

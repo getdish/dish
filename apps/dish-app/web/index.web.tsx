@@ -1,28 +1,63 @@
+import './start'
 import './base.css'
 import './bootstrapEnv'
 
 import { sleep } from '@dish/async'
 import { startLogging } from '@dish/graph'
-import { createOvermind } from 'overmind'
-import React from 'react'
+import { LoadingItems, ToastRoot } from '@dish/ui'
+import { Provider } from 'overmind-react'
+import React, { Suspense } from 'react'
 // @ts-ignore
 import { createRoot, hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
-import { App } from '../shared/App'
+import App from '../shared/App'
 import { OVERMIND_MUTATIONS, isWorker } from '../shared/constants'
+import { ErrorHandler } from '../shared/ErrorHandler'
+import AdminPage from '../shared/pages/admin/AdminPage'
+import { Shortcuts } from '../shared/Shortcuts'
 import { config, om } from '../shared/state/om'
+import { NotFoundPage } from '../shared/views/NotFoundPage'
+import { PrivateRoute, Route, RouteSwitch } from '../shared/views/router/Route'
 
 if (process.env.NODE_ENV === 'development' && !window['STARTED']) {
   startLogging()
 }
 
 // register root component
-AppRegistry.registerComponent('dish', () => App)
+AppRegistry.registerComponent('dish', () => Root)
+
+function Root({ overmind }: { overmind?: any }) {
+  return (
+    <>
+      <ToastRoot />
+      <Shortcuts />
+      <Provider value={overmind}>
+        <ErrorHandler />
+        <Suspense fallback={<LoadingItems />}>
+          <RouteSwitch>
+            <Route name="notFound">
+              <NotFoundPage title="404 Not Found" />
+            </Route>
+            <PrivateRoute name="admin">
+              <AdminPage />
+            </PrivateRoute>
+            {/* home route last because it matches / */}
+            <Route name="home">
+              <App />
+            </Route>
+          </RouteSwitch>
+
+          {/* <WelcomeModal /> */}
+        </Suspense>
+      </Provider>
+    </>
+  )
+}
 
 // exports
 if (process.env.TARGET === 'ssr') {
-  exports.App = require('../shared/App').App
+  exports.App = require('../shared/App')
   exports.config = config
   exports.ReactDOMServer = require('react-dom/server')
 }
@@ -45,7 +80,7 @@ async function start() {
   done = true
 
   if (OVERMIND_MUTATIONS) {
-    hydrate(<App overmind={om} />, document.getElementById('root'))
+    hydrate(<Root overmind={om} />, document.getElementById('root'))
   } else {
     // for worker
     if (isWorker) {
@@ -55,9 +90,9 @@ async function start() {
 
     if (search.indexOf(`concurrent`) > -1) {
       console.warn('👟 Concurrent Mode Running')
-      createRoot(rootEl).render(<App overmind={om} />)
+      createRoot(rootEl).render(<Root overmind={om} />)
     } else {
-      render(<App overmind={om} />, rootEl)
+      render(<Root overmind={om} />, rootEl)
     }
   }
 }

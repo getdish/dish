@@ -2,8 +2,8 @@ import { ChevronDown, ChevronUp } from '@dish/react-feather'
 import { HStack, Text } from '@dish/ui'
 import React from 'react'
 
-import { flatButtonStyle } from '../../pages/home/baseButtonStyle'
 import { RoutesTable } from '../../state/router'
+import { flatButtonStyle } from '../baseButtonStyle'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 

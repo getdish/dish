@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react'
 
-import { RatingView, RatingViewProps } from '../../pages/home/RatingView'
+import { RatingView, RatingViewProps } from '../RatingView'
 
 export type DishRatingViewProps = Omit<RatingViewProps, 'percent' | 'color'> & {
   rating: number

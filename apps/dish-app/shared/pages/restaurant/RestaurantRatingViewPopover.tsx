@@ -16,7 +16,7 @@ import { Image, Linking } from 'react-native'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
-import { RatingViewProps } from '../home/RatingView'
+import { RatingViewProps } from '../../views/RatingView'
 import RestaurantRatingView from './RestaurantRatingView'
 
 export const RestaurantRatingViewPopover = memo(

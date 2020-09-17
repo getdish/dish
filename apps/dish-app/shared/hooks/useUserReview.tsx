@@ -10,7 +10,7 @@ import {
 import { Toast, useForceUpdate, useLazyEffect } from '@dish/ui'
 import { useEffect, useState } from 'react'
 
-import { useIsMountedRef } from '../pages/home/useIsMountedRef'
+import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { allTags } from '../state/allTags'
 import { getTagId } from '../state/getTagId'
 import { getFullTags } from '../state/home-tag-helpers'

@@ -3,8 +3,8 @@ import MapboxGL from '@react-native-mapbox-gl/maps'
 import React, { useEffect, useRef } from 'react'
 import { Animated, Dimensions, StyleSheet } from 'react-native'
 
+import { BottomDrawerStore } from '../BottomDrawerStore'
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
-import { BottomDrawerStore } from '../pages/home/BottomDrawerStore'
 import { MapProps } from './MapProps'
 
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN)

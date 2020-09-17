@@ -17,19 +17,19 @@ import React, { Suspense, memo, useEffect, useState } from 'react'
 
 import { bgLightLight, brandColor, lightBlue } from '../../colors'
 import { isWeb } from '../../constants'
+import { isWebIOS } from '../../helpers/isIOS'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { allTags } from '../../state/allTags'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
+import { ContentScrollViewHorizontal } from '../../views/ContentScrollView'
 import { DishView } from '../../views/dish/DishView'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { Link } from '../../views/ui/Link'
 import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
 import { Squircle } from '../../views/ui/Squircle'
-import { HomeScrollViewHorizontal } from '../home/HomeScrollView'
-import { isWebIOS } from '../home/isIOS'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
@@ -103,7 +103,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       className="restaurant-list-item"
       marginBottom={5}
     >
-      <HomeScrollViewHorizontal
+      <ContentScrollViewHorizontal
         onScroll={
           isLoaded
             ? undefined
@@ -115,7 +115,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
         scrollEventThrottle={100}
       >
         <RestaurantListItemContent isLoaded={isLoaded} {...props} />
-      </HomeScrollViewHorizontal>
+      </ContentScrollViewHorizontal>
 
       {store.showComments && (
         <VStack>

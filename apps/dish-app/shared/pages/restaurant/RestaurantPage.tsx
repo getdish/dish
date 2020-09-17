@@ -6,30 +6,30 @@ import { Image } from 'react-native'
 import { bgLight } from '../../colors'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { getMinLngLat } from '../../helpers/getLngLat'
+import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
+import { ContentScrollView } from '../../views/ContentScrollView'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
+import { StackDrawer } from '../../views/StackDrawer'
 import { Link } from '../../views/ui/Link'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { SmallLinkButton } from '../../views/ui/SmallButton'
-import { HomePagePaneProps } from '../home/HomePagePaneProps'
-import { HomeScrollView } from '../home/HomeScrollView'
-import { HomeStackDrawer } from '../home/HomeStackDrawer'
-import { usePageLoadEffect } from '../home/usePageLoadEffect'
+import { StackViewProps } from '../StackViewProps'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
 import { RestaurantRatingBreakdown } from './RestaurantRatingBreakdown'
 
-type Props = HomePagePaneProps<HomeStateItemRestaurant>
+type Props = StackViewProps<HomeStateItemRestaurant>
 
 export default function HomePageRestaurantContainer(props: Props) {
   return (
-    <HomeStackDrawer closable borderWidth={6} borderColor={bgLight}>
+    <StackDrawer closable borderWidth={6} borderColor={bgLight}>
       <HomePageRestaurant {...props} />
-    </HomeStackDrawer>
+    </StackDrawer>
   )
 }
 
@@ -61,7 +61,7 @@ const HomePageRestaurant = memo(
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
 
-        <HomeScrollView paddingTop={0}>
+        <ContentScrollView paddingTop={0}>
           {/* HEADER */}
           <RestaurantHeader restaurantSlug={slug} />
 
@@ -191,7 +191,7 @@ const HomePageRestaurant = memo(
 
           {/* bottom space */}
           <VStack height={200} />
-        </HomeScrollView>
+        </ContentScrollView>
       </>
     )
   })

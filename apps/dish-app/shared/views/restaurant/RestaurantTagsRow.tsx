@@ -26,7 +26,7 @@ type TagRowProps = {
 
 export const RestaurantTagsRow = memo(
   graphql(function RestaurantTagsRow(props: TagRowProps) {
-    // const drawerWidth = useHomeDrawerWidthInner()
+    // const drawerWidth = useAppDrawerWidthInner()
     const { size, restaurantSlug, showMore } = props
     if (!restaurantSlug) {
       return null

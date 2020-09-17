@@ -4,8 +4,8 @@ import { TextStyle } from 'react-native'
 
 import { bg, bgLight, bgLightHover, bgLightLight } from '../../colors'
 import { isWeb } from '../../constants'
-import { baseButtonStyle } from '../../pages/home/baseButtonStyle'
 import { RoutesTable } from '../../state/router'
+import { baseButtonStyle } from '../baseButtonStyle'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 
