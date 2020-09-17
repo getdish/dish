@@ -95,14 +95,12 @@ export default memo(function HomePageHomePane(props: Props) {
       }, 1000)
 
       function fetchNewHome() {
-        console.log('fetch home')
         Promise.all(
           mapAreasToSearch.map((pt) => {
             return getHomeDishes(pt[0], pt[1])
           })
         )
           .then((areas) => {
-            console.log('areas', areas)
             if (!isMounted) return
             om.actions.home.setIsLoading(false)
             let all: TopCuisine[] = []

@@ -41,7 +41,6 @@ export async function getHomeDishes(
   lat = snapped[1]
   const params = ['lon=' + lng, 'lat=' + lat, 'distance=' + TILE_WIDTH]
   const url = SEARCH_DOMAIN + '/top_cuisines?' + params.join('&')
-  console.log('fetching', url)
   const response = await fetch(url).then((res) => res.json())
   return response
 }

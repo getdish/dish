@@ -503,7 +503,6 @@ const pushHomeState: AsyncAction<
     return null
   }
 
-  console.log('item', item)
   if (item.name === 'home' && om.state.home.states.length === 1) {
     // dont push another initial home
     return
