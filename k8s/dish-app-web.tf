@@ -38,7 +38,7 @@ resource "kubernetes_deployment" "dish-app-web" {
 
         container {
           name  = "dish-app-web"
-          image = "docker.k8s.dishapp.com/dish/web"
+          image = "docker.k8s.dishapp.com/dish/dish-app"
           env {
             name = "DISH_ENV"
             value = "production"
