@@ -223,141 +223,127 @@ const AutocompleteResults = memo(() => {
     () => om.actions.home.setShowAutocomplete(false),
     50
   )
-  const lastKey = useRef<any[]>([0, 0, 0, 0])
-  const key = showAutocomplete
-    ? [
-        showAutocomplete,
-        autocompleteResults,
-        locationAutocompleteResults,
-        autocompleteIndex,
-      ]
-    : lastKey.current
 
-  const resultsElements = useMemo(() => {
-    lastKey.current = key
-    const autocompleteResultsActive =
-      showAutocomplete === 'location'
-        ? locationAutocompleteResults
-        : [
-            {
-              name: 'Enter to search',
-              icon: '🔍',
-              tagId: '',
-              type: 'orphan' as const,
-              // description: '⏎',
-            },
-            ...(autocompleteResults ?? []),
-          ].slice(0, 13)
-
-    if (!autocompleteResultsActive.length) {
-      return null
-    }
-
-    return autocompleteResultsActive.map((result, index) => {
-      const plusButtonEl =
-        result.type === 'dish' && index !== 0 && om.state.user.isLoggedIn ? (
-          <AutocompleteAddButton />
-        ) : null
-
-      const isActive = autocompleteIndex === index
-
-      const linkProps = {
-        onPressOut: () => {
-          hideAutocomplete()
-          if (showLocation) {
-            om.actions.home.setLocation(result.name)
-
-            // go back to showing search by default
-            searchBarStore.setShowLocation(false)
-
-            // changing location = change drawer to show
-            if (om.state.home.drawerSnapPoint === 0) {
-              drawerStore.setSnapPoint(1)
-            }
-          } else {
-            // SEE BELOW, tag={tag}
-            // clear query
-            if (result.type === 'ophan') {
-              om.actions.home.clearTags()
-              om.actions.home.setSearchQuery(
-                om.state.home.currentStateSearchQuery
-              )
-            } else if (result.type !== 'restaurant') {
-              om.actions.home.setSearchQuery('')
-            }
-          }
-        },
-        ...(!showLocation &&
-          result?.type !== 'orphan' && {
-            tag: result,
-          }),
-        ...(result.type == 'restaurant' && {
-          tag: null,
-          name: 'restaurant',
-          params: {
-            slug: result.slug,
-          },
-        }),
-      }
-
-      return (
-        <React.Fragment key={`${result.tagId}${index}`}>
-          <LinkButton
-            className="no-transition"
-            {...linkProps}
-            lineHeight={20}
-            paddingHorizontal={8}
-            paddingVertical={6}
-            fontWeight="500"
-            borderRadius={5}
-            hoverStyle={{
-              backgroundColor: 'rgba(255,255,255,0.1)',
-            }}
-            {...(isActive && {
-              backgroundColor: 'rgba(255,255,255,0.2)',
-              hoverStyle: {
-                backgroundColor: 'rgba(255,255,255,0.2)',
-              },
-            })}
-          >
-            <HStack alignItems="center">
-              <VStack height={22} width={22} marginRight={10}>
-                {result.icon?.indexOf('http') === 0 ? (
-                  <img
-                    src={result.icon}
-                    style={{
-                      width: 22,
-                      height: 22,
-                      borderRadius: 100,
-                    }}
-                  />
-                ) : result.icon ? (
-                  <Text fontSize={20}>{result.icon} </Text>
-                ) : null}
-              </VStack>
-              <VStack>
-                <Text ellipse color={'#fff'} fontSize={16}>
-                  {result.name} {plusButtonEl}
-                </Text>
-                {!!result.description && (
-                  <Text ellipse color="rgba(255,255,255,0.5)" fontSize={12}>
-                    {result.description}
-                  </Text>
-                )}
-              </VStack>
-            </HStack>
-          </LinkButton>
-          <Spacer size={1} />
-        </React.Fragment>
-      )
-    })
-  }, key)
-
-  if (showAutocomplete !== 'location' && !autocompleteResults.length) {
+  if (showAutocomplete === 'search' && !autocompleteResults.length) {
     return <HomeAutocompleteDefault />
   }
 
-  return <>{resultsElements}</>
+  const autocompleteResultsActive =
+    showAutocomplete === 'location'
+      ? locationAutocompleteResults
+      : [
+          {
+            name: 'Enter to search',
+            icon: '🔍',
+            tagId: '',
+            type: 'orphan' as const,
+            // description: '⏎',
+          },
+          ...(autocompleteResults ?? []),
+        ].slice(0, 13)
+
+  if (!autocompleteResultsActive.length) {
+    return null
+  }
+
+  return (
+    <>
+      {autocompleteResultsActive.map((result, index) => {
+        const plusButtonEl =
+          result.type === 'dish' && index !== 0 && om.state.user.isLoggedIn ? (
+            <AutocompleteAddButton />
+          ) : null
+
+        const isActive = autocompleteIndex === index
+
+        return (
+          <React.Fragment key={`${result.tagId}${index}`}>
+            <LinkButton
+              className="no-transition"
+              onPressOut={() => {
+                hideAutocomplete()
+                if (showLocation) {
+                  om.actions.home.setLocation(result.name)
+
+                  // go back to showing search by default
+                  searchBarStore.setShowLocation(false)
+
+                  // changing location = change drawer to show
+                  if (om.state.home.drawerSnapPoint === 0) {
+                    drawerStore.setSnapPoint(1)
+                  }
+                } else {
+                  // SEE BELOW, tag={tag}
+                  // clear query
+                  if (result.type === 'ophan') {
+                    om.actions.home.clearTags()
+                    om.actions.home.setSearchQuery(
+                      om.state.home.currentStateSearchQuery
+                    )
+                  } else if (result.type !== 'restaurant') {
+                    om.actions.home.setSearchQuery('')
+                  }
+                }
+              }}
+              {...(!showLocation &&
+                result?.type !== 'orphan' && {
+                  tag: result,
+                })}
+              {...(result.type == 'restaurant' && {
+                tag: null,
+                name: 'restaurant',
+                params: {
+                  slug: result.slug,
+                },
+              })}
+              lineHeight={20}
+              paddingHorizontal={8}
+              paddingVertical={6}
+              fontWeight="500"
+              borderRadius={5}
+              hoverStyle={{
+                backgroundColor: 'rgba(255,255,255,0.1)',
+              }}
+              {...(isActive && {
+                backgroundColor: 'rgba(255,255,255,0.2)',
+                hoverStyle: {
+                  backgroundColor: 'rgba(255,255,255,0.2)',
+                },
+              })}
+            >
+              <HStack alignItems="center">
+                <VStack height={22} width={22} marginRight={10}>
+                  {result.icon?.indexOf('http') === 0 ? (
+                    <img
+                      src={result.icon}
+                      style={{
+                        width: 22,
+                        height: 22,
+                        borderRadius: 100,
+                      }}
+                    />
+                  ) : result.icon ? (
+                    <Text fontSize={20}>{result.icon} </Text>
+                  ) : null}
+                </VStack>
+                <VStack>
+                  <Text ellipse color={'#fff'} fontSize={16}>
+                    {result.name} {plusButtonEl}
+                  </Text>
+                  {!!result.description && (
+                    <Text ellipse color="rgba(255,255,255,0.5)" fontSize={12}>
+                      {result.description}
+                    </Text>
+                  )}
+                </VStack>
+              </HStack>
+            </LinkButton>
+            <Spacer size={1} />
+          </React.Fragment>
+        )
+      })}
+    </>
+  )
 })
 
 const defaultAutocompleteTags: NavigableTag[] = [

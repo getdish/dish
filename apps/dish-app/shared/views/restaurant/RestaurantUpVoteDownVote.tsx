@@ -12,23 +12,24 @@ export const RestaurantUpVoteDownVote = memo(
   graphql(
     ({
       restaurantId,
+      score: baseScore,
       activeTagIds,
     }: {
       restaurantId: string
+      score: number
       activeTagIds: HomeActiveTagsRecord
     }) => {
       const [vote, setVote] = useUserUpvoteDownvoteQuery(
         restaurantId,
         activeTagIds
       )
+      const score = baseScore + vote
       const isOpenProp =
         vote === 0
           ? null
           : {
               isOpen: false,
             }
-
-      const score = 294 + vote
 
       return (
         <VStack

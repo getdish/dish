@@ -20,7 +20,6 @@ import React, {
 } from 'react'
 import { ScrollView } from 'react-native'
 
-import { focusSearchInput } from '../../AppSearchInput'
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useIsNarrow } from '../../hooks/useIs'
@@ -455,11 +454,7 @@ const SearchFooter = ({
       <Button
         alignSelf="center"
         onPress={() => {
-          if (omStatic.state.home.isAutocompleteActive) {
-            scrollToTop()
-          } else {
-            focusSearchInput()
-          }
+          scrollToTop()
         }}
       >
         <ArrowUp />

@@ -5,7 +5,6 @@ import React, { useEffect, useRef } from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
 
 import { brandColor } from '../../colors'
-import { isWeb } from '../../constants'
 import { RoutesTable, router } from '../../state/router'
 import { LinkProps } from './LinkProps'
 import { getNormalizeLinkProps } from './useNormalizedLink'
@@ -62,15 +61,16 @@ export const useLink = (props: LinkProps<any, any>) => {
     navItem,
     wrapWithLinkElement(children: any) {
       if (Platform.OS === 'web') {
-        return (
-          <a
-            onClick={onPress}
-            className={`display-contents dish-link`}
-            href={router.getPathFromParams(navItem)}
-            onMouseEnter={linkProps.onMouseEnter}
-          >
-            {children}
-          </a>
+        const element = props.tagName ?? 'a'
+        return React.createElement(
+          element,
+          {
+            onClick: onPress,
+            className: `display-contents dish-link`,
+            href: router.getPathFromParams(navItem),
+            onMouseEnter: linkProps.onMouseEnter,
+          },
+          children
         )
       }
       return <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>
