@@ -21,4 +21,5 @@
 #0  0  *  *  5  /root/dishctl.sh start_crawler yelp
 #0  0  *  *  6  /root/dishctl.sh start_crawler doordash
 */15  *  *  *  *  /root/dishctl.sh ping_home_page 1>/dev/null
-0  *  *  *  *  /root/dishctl.sh hasura_clean_event_logs
+0  *  *  *  *     /root/dishctl.sh hasura_clean_event_logs
+*/15  *  *  *  *  /root/dishctl.sh update_all_node_taints 1>/dev/null

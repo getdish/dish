@@ -588,6 +588,23 @@ function self_crawl_by_query() {
   "
 }
 
+function update_node_taints_for() {
+  type="$1"
+  nodes="$(kubectl get nodes | grep dish-$type-pool | cut -d ' ' -f 1 | tr '\n' ' ')"
+  kubectl taint --overwrite node $nodes dish-taint=$type-only:NoSchedule
+}
+
+function update_all_node_taints() {
+  update_node_taints_for "db"
+  update_node_taints_for "critical"
+}
+
+function list_node_taints() {
+  kubectl get nodes \
+    -o 'custom-columns=NAME:.metadata.name,TAINTS:.spec.taints' \
+    --no-headers
+}
+
 function_to_run=$1
 shift
 ORIGINAL_ARGS="$@"
