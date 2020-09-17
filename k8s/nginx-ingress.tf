@@ -144,12 +144,12 @@ resource "kubernetes_ingress" "k8s-services-ingress" {
       }
     }
     rule {
-      host = "absa.k8s.${var.dish_domain}"
+      host = "bert.k8s.${var.dish_domain}"
       http {
         path {
           path = "/"
           backend {
-            service_name = "absa"
+            service_name = "bert"
             service_port = "http"
           }
         }

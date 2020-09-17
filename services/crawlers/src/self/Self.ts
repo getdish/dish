@@ -1,6 +1,6 @@
 import '@dish/common'
 
-import { sentryException } from '@dish/common'
+import { sentryException, sentryMessage } from '@dish/common'
 import {
   MenuItem,
   PhotoXref,
@@ -16,36 +16,42 @@ import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
 import moment from 'moment'
 
-import { GoogleGeocoder } from '../GoogleGeocoder'
 import {
   bestPhotosForRestaurant,
   bestPhotosForRestaurantTags,
   photoUpsert,
   uploadHeroImage,
 } from '../photo-helpers'
+import { scrapeGetAllDistinct, scrapeUpdateGeocoderID } from '../scrape-helpers'
 import {
   Scrape,
   ScrapeData,
   latestScrapeForRestaurant,
-  scrapeGetAllDistinct,
   scrapeGetData,
-  scrapeUpdateGeocoderID,
 } from '../scrape-helpers'
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
-import {
-  getTableCount,
-  googlePermalink,
-  main_db,
-  restaurantDeleteOrUpdateByGeocoderID,
-  restaurantFindBasicBatchForAll,
-  restaurantFindIDBatchForCity,
-} from '../utils'
+import { DB, googlePermalink, restaurantFindIDBatchForCity } from '../utils'
+import { checkMaybeDeletePhoto, remove404Images } from './remove_404_images'
+import { RestaurantBaseScore } from './RestaurantBaseScore'
 import { RestaurantRatings } from './RestaurantRatings'
+import { RestaurantTagScores } from './RestaurantTagScores'
 import { Tagging } from './Tagging'
-
-const PER_PAGE = 10000
+import {
+  updateAllRestaurantGeocoderIDs,
+  updateGeocoderID,
+} from './update_all_geocoder_ids'
 
 export class Self extends WorkerJob {
+  ALL_SOURCES = [
+    'yelp',
+    'ubereats',
+    'infatuated',
+    'michelin',
+    'tripadvisor',
+    'doordash',
+    'grubhub',
+    'google',
+  ]
   yelp!: Scrape
   ubereats!: Scrape
   infatuated!: Scrape
@@ -55,12 +61,17 @@ export class Self extends WorkerJob {
   grubhub!: Scrape
   google!: Scrape
 
+  main_db!: DB
   restaurant!: RestaurantWithId
   ratings!: { [key: string]: number }
   _start_time!: [number, number]
   tagging: Tagging
   restaurant_ratings: RestaurantRatings
+  restaurant_base_score: RestaurantBaseScore
+  restaurant_tag_scores: RestaurantTagScores
   menu_items: MenuItem[] = []
+
+  _debugRamIntervalFunction!: number
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -77,9 +88,24 @@ export class Self extends WorkerJob {
     super()
     this.tagging = new Tagging(this)
     this.restaurant_ratings = new RestaurantRatings(this)
+    this.restaurant_base_score = new RestaurantBaseScore(this)
+    this.restaurant_tag_scores = new RestaurantTagScores(this)
+  }
+
+  _debugRAMUsage(restaurant_id: string) {
+    const fn = () => {
+      const ram_value = Math.round(process.memoryUsage().heapUsed / 1024 / 1024)
+      const ram = ram_value + 'Mb'
+      if (ram_value > 1000) {
+        sentryMessage('Worker RAM over 1Gi', { ram, restaurant: restaurant_id })
+      }
+      this.log(`Worker RAM usage for ${restaurant_id}: ${ram}`)
+    }
+    this._debugRamIntervalFunction = setInterval(fn, 5000)
   }
 
   async allForCity(city: string) {
+    const PER_PAGE = 1000
     let previous_id = globalTagId
     while (true) {
       const results = await restaurantFindIDBatchForCity(
@@ -119,12 +145,13 @@ export class Self extends WorkerJob {
         await this._runFailableFunction(async_func)
       }
       await this.postMerge()
-      console.log(`Merged: ${this.restaurant.name}`)
     }
-    return this.restaurant
+    await this.main_db.pool.end()
   }
 
   async preMerge(restaurant: RestaurantWithId) {
+    this.main_db = DB.main_db()
+    this._debugRAMUsage(restaurant.slug || restaurant.id)
     this.restaurant = restaurant
     console.log('Merging: ' + this.restaurant.name)
     this.resetTimer()
@@ -135,10 +162,19 @@ export class Self extends WorkerJob {
   async postMerge() {
     this.resetTimer()
     if (!this.restaurant.name || this.restaurant.name == '') {
-      throw new Error(
-        'SELF CRAWLER: restaurant has no name, ID: ' + this.restaurant.id
-      )
+      sentryMessage('SELF CRAWLER: restaurant has no name', {
+        restaurant: this.restaurant.id,
+      })
+      return
     }
+    await this._runFailableFunction(this.finishTagsEtc)
+    await this._runFailableFunction(this.finalScores)
+    clearInterval(this._debugRamIntervalFunction)
+    this.log('postMerge()')
+    console.log(`Merged: ${this.restaurant.name}`)
+  }
+
+  async finishTagsEtc() {
     await restaurantUpdate(this.restaurant)
     this.tagging.deDepulicateTags()
     await this.tagging.updateTagRankings()
@@ -149,11 +185,16 @@ export class Self extends WorkerJob {
     if (this.menu_items.length != 0) {
       await menuItemsUpsertMerge(this.menu_items)
     }
-    this.log('postMerge()')
+  }
+
+  async finalScores() {
+    await this.restaurant_base_score.calculateScore()
+    await this.restaurant_tag_scores.calculateScores()
+    await restaurantUpdate(this.restaurant)
   }
 
   async mergeMainData() {
-    ;[
+    const steps = [
       this.mergeName,
       this.mergeTelephone,
       this.mergeAddress,
@@ -162,13 +203,15 @@ export class Self extends WorkerJob {
       this.addSources,
       this.addPriceRange,
       this.getRatingFactors,
-    ].forEach((func) => {
-      this._runFailableFunction(func)
-    })
+    ]
+    for (const step of steps) {
+      await this._runFailableFunction(step)
+    }
   }
 
   async _runFailableFunction(func: Function) {
     this._start_time = process.hrtime()
+    let result = 'success'
     try {
       if (func.constructor.name == 'AsyncFunction') {
         await func.bind(this)()
@@ -176,13 +219,14 @@ export class Self extends WorkerJob {
         func.bind(this)()
       }
     } catch (e) {
+      result = 'failed'
       sentryException(
         e,
         { function: func.name, restaurant: this.restaurant.name },
         { source: 'Self crawler' }
       )
     }
-    this.log(func.name)
+    this.log(`${func.name} | ${result}`)
   }
 
   async doTags() {
@@ -233,17 +277,7 @@ export class Self extends WorkerJob {
   }
 
   async getScrapeData() {
-    const sources = [
-      'yelp',
-      'ubereats',
-      'infatuated',
-      'michelin',
-      'tripadvisor',
-      'doordash',
-      'grubhub',
-      'google',
-    ]
-    for (const source of sources) {
+    for (const source of this.ALL_SOURCES) {
       this[source] = await latestScrapeForRestaurant(this.restaurant, source)
     }
   }
@@ -377,13 +411,8 @@ export class Self extends WorkerJob {
              ) t(id, f, t), f_opening_hours_hours(f, t) hours;
         END TRANSACTION;
       `
-    let results: any[]
-    try {
-      results = await main_db.query(query)
-    } catch (e) {
-      throw new Error(e)
-    }
-    return results[2].rowCount
+    const result = await this.main_db.query(query)
+    return result[2].rowCount
   }
 
   _toPostgresTime(day: string, time: string) {
@@ -652,61 +681,19 @@ export class Self extends WorkerJob {
 
   async addReviewHeadlines() {
     const id = this.restaurant.id
-    const result = await main_db.query(`
-      SELECT DISTINCT(sentence), sentiment
-      FROM restaurant
-      JOIN review ON review.restaurant_id = restaurant.id
-      JOIN review_tag ON review_tag.review_id = review.id
+    const result = await this.main_db.query(`
+      SELECT DISTINCT(sentence), naive_sentiment FROM restaurant
+        JOIN review ON review.restaurant_id = restaurant.id
+        JOIN review_tag_sentence rts ON rts.review_id = review.id
       WHERE restaurant.id = '${id}'
-      ORDER BY sentiment DESC
+      ORDER BY naive_sentiment DESC
       LIMIT 5
     `)
     this.restaurant.headlines = result.rows
   }
 
   async updateAllGeocoderIDs() {
-    let previous_id = globalTagId
-    let arrived = process.env.START_FROM ? false : true
-    let progress = 0
-    let page = 0
-    const count = await getTableCount('restaurant', 'WHERE geocoder_id IS NULL')
-    console.log('Total restaurants without geocoder_ids: ' + count)
-    while (true) {
-      const results = await restaurantFindBasicBatchForAll(
-        PER_PAGE,
-        previous_id,
-        'AND geocoder_id IS NULL'
-      )
-      if (results.length == 0) {
-        await this.job.progress(100)
-        break
-      }
-      for (const result of results) {
-        if (!arrived) {
-          if (result.id != process.env.START_FROM) {
-            console.log('Skipping: ' + result.name)
-            continue
-          } else {
-            arrived = true
-          }
-        }
-        const restaurant_data = {
-          id: result.id,
-          name: result.name,
-          address: result.address,
-          location: JSON.parse(result.location),
-        }
-        await this.runOnWorker('updateGeocoderID', [restaurant_data])
-        previous_id = result.id as string
-      }
-      page += 1
-      progress = ((page * PER_PAGE) / count) * 100
-      if (process.env.RUN_WITHOUT_WORKER != 'true') {
-        await this.job.progress(progress)
-      } else {
-        console.log('Progress: ' + progress)
-      }
-    }
+    await updateAllRestaurantGeocoderIDs(this)
   }
 
   async updateAllDistinctScrapeGeocoderIDs() {
@@ -721,29 +708,15 @@ export class Self extends WorkerJob {
   }
 
   async updateGeocoderID(restaurant: RestaurantWithId) {
-    console.log(
-      'UPDATE GEOCODER IDS: ',
-      restaurant.id,
-      `"${restaurant.name}"`,
-      restaurant.address,
-      restaurant.location
-    )
-    if (!restaurant.name) {
-      console.log('Bad restaurant: ', restaurant)
-      return false
-    }
-    const geocoder = new GoogleGeocoder()
-    const coords = restaurant.location
-    const lon = coords.coordinates[0]
-    const lat = coords.coordinates[1]
-    const query = restaurant.name + ',' + restaurant.address
-    const google_id = await geocoder.searchForID(query, lat, lon)
-    if (google_id) {
-      const permalink = googlePermalink(google_id, lat, lon)
-      restaurant.geocoder_id = google_id
-      await restaurantDeleteOrUpdateByGeocoderID(restaurant.id, google_id)
-      console.log('GEOCODER RESULT: ', `"${restaurant.name}"`, permalink)
-    }
+    await updateGeocoderID(restaurant)
+  }
+
+  async remove404Images() {
+    await remove404Images(this)
+  }
+
+  async checkMaybeDeletePhoto(photo_id: string, url: string) {
+    await checkMaybeDeletePhoto(photo_id, url)
   }
 
   private static shortestString(arr: string[]) {

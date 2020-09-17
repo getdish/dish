@@ -47,7 +47,8 @@ export const restaurantDishesWithPhotos = (
   for (const t of tags) {
     const tagName = t.tag.name ?? ''
     if (tagName) {
-      const isSearchedForTag = tag_names?.includes(tagName.toLowerCase())
+      const tagNameMachined = tagName.toLowerCase().replace(' ', '-')
+      const isSearchedForTag = tag_names?.includes(tagNameMachined)
       let [photo] = t.photos() || []
       let isFallback = false
       const fallback = t.tag?.default_images()?.[0]

@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."review_tag_sentence" DROP COLUMN "ml_sentiment";
+  type: run_sql

@@ -19,7 +19,6 @@ else
   export all_env="$(env)"
 fi
 
-
 function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
 }
@@ -64,8 +63,7 @@ function _run_on_cluster() {
 }
 
 function _setup_s3() {
-  apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing \
-    s3cmd
+  apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing s3cmd
 }
 
 function worker() {
@@ -105,6 +103,8 @@ function start_all_crawlers() {
 }
 
 function db_migrate() {
+  _PG_PORT=$(generate_random_port)
+  postgres_proxy $_PG_PORT
   pushd $PROJECT_ROOT/services/hasura
   hasura --skip-update-check \
     migrate apply \
@@ -114,6 +114,13 @@ function db_migrate() {
     metadata apply \
     --endpoint https://hasura.dishapp.com \
     --admin-secret $TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET
+  cat functions/*.sql | \
+    PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
+      -p $_PG_PORT \
+      -h localhost \
+      -U postgres \
+      -d dish \
+      --single-transaction
   popd
 }
 
@@ -233,20 +240,21 @@ function local_node_with_prod_env() {
   timescale_proxy $_TIMESCALE_PORT
   export DISH_DEBUG=1
   export USE_PG_SSL=true
-  export RUN_WITHOUT_WORKER=true
+  export RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
   export PGPORT=$_PG_PORT
   export PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD
   export TIMESCALE_PORT=$_TIMESCALE_PORT
   export TIMESCALE_PASSWORD=$TF_VAR_TIMESCALE_SU_PASS
   export HASURA_ENDPOINT=https://hasura.dishapp.com
   export HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
-  node $1
+  node --max-old-space-size=4096 $1
 }
 
 function remove_evicted_pods() {
   namespace=${1:-default}
   kubectl get pods -n $namespace \
-    | grep Evicted | awk '{print $1}' \
+    | grep Evicted \
+    | awk '{print $1}' \
     | xargs kubectl delete pod -n $namespace
 }
 

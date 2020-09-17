@@ -1,0 +1,20 @@
+[package]
+name = "rust-bert-dish"
+version = "0.1.0"
+authors = ["Thomas Buckley-Houston for Dish <tom@tombh.co.uk>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rust-bert = "0.9.0"
+actix-web = "3.0.1"
+env_logger = "0.7.1"
+qstring = "0.7.2"
+actix-cors = "0.3.0"
+anyhow = "1.0.32"
+crossbeam-channel = "0.4.4"
+
+[[bin]]
+name = "rust-bert-dish"
+path = "main.rs"

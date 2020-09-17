@@ -1,4 +1,5 @@
 import { graphql, order_by, query } from '@dish/graph'
+import { fetchBertSentiment } from '@dish/helpers'
 import {
   Divider,
   HStack,
@@ -103,24 +104,6 @@ const ReviewDisplay = graphql(() => {
   )
 })
 
-const getSentiment = (sentence: string, aspect: string) => {
-  return fetch(
-    `https://absa.k8s.dishapp.com/?text="${encodeURIComponent(
-      sentence
-    )}"&aspect="${encodeURIComponent(aspect)}"`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
-    .then((res) => res.json())
-    .then((x) => ({
-      sentence,
-      sentiment: x.results[0],
-    }))
-}
-
 const ReviewSentiment = (props: { text: string }) => {
   const [aspect, setAspect] = useState('')
   const aspectSlow = useDebounceValue(aspect, 500)
@@ -131,16 +114,24 @@ const ReviewSentiment = (props: { text: string }) => {
     const sentences = props.text.split('. ')
     if (sentences.length) {
       Promise.all([
-        getSentiment(props.text, aspect).then(({ sentiment }) => ({
-          sentiment,
-          sentence: `(Entire Text - ${aspect})`,
-        })),
+        fetchBertSentiment(props.text).then((response) => {
+          return {
+            sentiment: response.result[0][0] + ' ' + response.result[0][1],
+            sentence: `(Entire Text - ${aspect})`,
+          }
+        }),
         ...sentences
           .filter((x) => x.toLowerCase().includes(aspect))
           .map((sentence) => {
-            return getSentiment(sentence, aspect)
+            return fetchBertSentiment(sentence).then((response) => {
+              return {
+                sentiment: response.result[0][0] + ' ' + response.result[0][1],
+                sentence: sentence,
+              }
+            })
           }),
       ]).then((sentiments) => {
+        console.log(sentiments)
         setSentiments(sentiments)
       })
     }
@@ -160,7 +151,7 @@ const ReviewSentiment = (props: { text: string }) => {
       {sentiments.map(({ sentiment, sentence }) => {
         return (
           <Text
-            backgroundColor={sentiment === 'negative' ? lightRed : lightGreen}
+            backgroundColor={sentiment === 'Negative' ? lightRed : lightGreen}
             key={sentence}
           >
             {sentence} <strong>({sentiment})</strong>.

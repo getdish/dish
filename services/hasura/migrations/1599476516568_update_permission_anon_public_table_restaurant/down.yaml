@@ -1,0 +1,37 @@
+- args:
+    role: anon
+    table:
+      name: restaurant
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+      - address
+      - city
+      - description
+      - headlines
+      - hours
+      - id
+      - image
+      - location
+      - name
+      - photos
+      - price_range
+      - rating
+      - rating_factors
+      - slug
+      - sources
+      - state
+      - telephone
+      - website
+      - zip
+      computed_fields:
+      - is_open_now
+      filter: {}
+    role: anon
+    table:
+      name: restaurant
+      schema: public
+  type: create_select_permission

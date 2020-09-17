@@ -38,3 +38,20 @@ export function handleAssertionError(err: any) {
   }
   throw err
 }
+
+// WARNING:
+// This function is used by both the front and backend. It is critical to our
+// entire scoring system. Any changes to it could potentially alter the scores
+// for all restaurants and rishes.
+export async function fetchBertSentiment(sentence: string) {
+  return fetch(
+    `https://bert.k8s.dishapp.com/?text="${encodeURIComponent(sentence)}"`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+    .then((res) => res.json())
+    .then((x) => x)
+}

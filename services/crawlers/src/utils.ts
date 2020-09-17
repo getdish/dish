@@ -1,11 +1,7 @@
 import '@dish/common'
 
-import {
-  Restaurant,
-  restaurantFindBatch,
-  settingGet,
-  settingSet,
-} from '@dish/graph'
+import { sentryException } from '@dish/common'
+import { Restaurant, settingGet, settingSet } from '@dish/graph'
 import axios from 'axios'
 import _ from 'lodash'
 import moment, { Moment } from 'moment'
@@ -27,13 +23,43 @@ export const CITY_LIST = [
 
 export class DB {
   pool: Pool
-  constructor(config: object) {
-    this.pool = new Pool(config)
+  constructor(public config: object) {
+    this.connect()
+  }
+
+  static main_db() {
+    return new DB({
+      host: process.env.PGHOST || 'localhost',
+      port: process.env.PGPORT || '5432',
+      user: process.env.PGUSER || 'postgres',
+      password: process.env.PGPASSWORD || 'postgres',
+      database: 'dish',
+      idleTimeoutMillis: 0,
+      connectionTimeoutMillis: 0,
+    })
+  }
+
+  static async one_query_on_main(query: string) {
+    const db = DB.main_db()
+    const result = await db.query(query)
+    await db.pool.end()
+    return result
+  }
+
+  connect() {
+    this.pool = new Pool(this.config)
+    this.pool.on('error', (e) => {
+      sentryException(e, {
+        more: 'Error likely from long-lived pool connection in node-pg',
+      })
+      this.pool = null
+    })
   }
 
   async query(query: string) {
     let result: Result
-    const client = await this.pool.connect()
+    if (!this.pool) this.connect()
+    let client = await this.pool.connect()
     try {
       result = await client.query(query)
     } catch (e) {
@@ -49,14 +75,6 @@ export class DB {
     return result
   }
 }
-
-export const main_db = new DB({
-  host: process.env.PGHOST || 'localhost',
-  port: process.env.PGPORT || '5432',
-  user: process.env.PGUSER || 'postgres',
-  password: process.env.PGPASSWORD || 'postgres',
-  database: 'dish',
-})
 
 export function shiftLatLonByMetres(
   lat: number,
@@ -202,7 +220,7 @@ export async function restaurantFindIDBatchForCity(
     ORDER BY id
     LIMIT ${size}
   `
-  const result = await main_db.query(query)
+  const result = await DB.one_query_on_main(query)
   return result.rows
 }
 
@@ -218,7 +236,40 @@ export async function restaurantFindBasicBatchForAll(
     ORDER BY id
     LIMIT ${size}
   `
-  const result = await main_db.query(query)
+  const result = await DB.one_query_on_main(query)
+  return result.rows
+}
+
+export async function batchIDsForAll(
+  table: string,
+  size: number,
+  previous_id: string,
+  extra_where = ''
+) {
+  const query = `
+    SELECT id FROM ${table}
+      WHERE id > '${previous_id}'
+      ${extra_where}
+    ORDER BY id
+    LIMIT ${size}
+  `
+  const result = await DB.one_query_on_main(query)
+  return result.rows.map((r) => r.id)
+}
+
+export async function photoBatchForAll(
+  size: number,
+  previous_id: string,
+  extra_where = ''
+) {
+  const query = `
+    SELECT id, url FROM photo
+      WHERE id > '${previous_id}'
+      ${extra_where}
+    ORDER BY id
+    LIMIT ${size}
+  `
+  const result = await DB.one_query_on_main(query)
   return result.rows
 }
 
@@ -227,7 +278,7 @@ export async function getTableCount(
   where = ''
 ): Promise<number> {
   const query = `SELECT count(id) FROM ${table} ${where}`
-  const result = await main_db.query(query)
+  const result = await DB.one_query_on_main(query)
   return parseInt(result.rows[0].count)
 }
 
@@ -266,5 +317,5 @@ export async function restaurantDeleteOrUpdateByGeocoderID(
   END
   $do$
   `
-  await main_db.query(query)
+  await DB.one_query_on_main(query)
 }

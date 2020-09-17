@@ -34,6 +34,8 @@ SELECT jsonb_agg(
   AND (
 
     (
+      (?3 = '' AND ?4 = '')
+      OR
       (
         ?3 != ''
         AND (

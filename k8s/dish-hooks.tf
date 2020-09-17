@@ -41,8 +41,20 @@ resource "kubernetes_deployment" "dish-hooks" {
           name  = "dish-hooks"
           image = "docker.k8s.dishapp.com/dish/dish-hooks"
           env {
+            name = "DISH_ENV"
+            value = "production"
+          }
+          env {
             name = "GORSE_ENDPOINT"
             value = "http://gorse:9000"
+          }
+          env {
+            name = "DO_SPACES_ID"
+            value = var.DO_SPACES_ID
+          }
+          env {
+            name = "DO_SPACES_SECRET"
+            value = var.DO_SPACES_SECRET
           }
         }
       }

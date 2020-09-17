@@ -25,7 +25,7 @@ import {
 } from '../../src/scrape-helpers'
 import { Self } from '../../src/self/Self'
 import { GEM_UIID } from '../../src/self/Tagging'
-import { main_db } from '../../src/utils'
+import { DB } from '../../src/utils'
 import { yelp_hours } from '../yelp_hours'
 
 interface Context {
@@ -223,6 +223,18 @@ const tripadvisor: Partial<Scrape> = {
         username: 'tauser2',
         date: 'July 23, 2019',
       },
+      {
+        text: 'Testpho was delicious',
+        rating: 5,
+        username: 'tauser3',
+        date: 'July 23, 2020',
+      },
+      {
+        text: 'Test tag was good. Test tag was amazing. Test tag was delicious',
+        rating: 5,
+        username: 'tauser4',
+        date: 'July 23, 2020',
+      },
     ],
   },
 }
@@ -233,6 +245,7 @@ const google: Partial<Scrape> = {
   data: {
     reviews: [
       '4 stars\nNikhil Mascarenhas\nLocal Guide ・4 reviews\n 2 weeks ago\nA Google review....\n Like  Share',
+      '1 stars\nName\nLocal Guide ・1 review1\n 1 week ago\nA bad review....\n Like  Share',
     ],
   },
 }
@@ -244,7 +257,9 @@ async function reset(t: ExecutionContext<Context>) {
     restaurant_fixture,
     restaurant_fixture_nearly_matches,
   ])
-  t.context.restaurant = restaurant
+  t.context.restaurant = (await restaurantFindOneWithTags({
+    id: restaurant.id,
+  })) as RestaurantWithId
   const zero_coord = { lat: 0, lon: 0 }
   const scrapes = [
     { restaurant_id: restaurant.id, location: zero_coord, ...google },
@@ -262,17 +277,42 @@ async function reset(t: ExecutionContext<Context>) {
   ])
 }
 
+async function addTags(
+  restaurant: RestaurantWithId,
+  values = [
+    'Test tag existing 1',
+    'Test tag existing 2',
+    'Test tag existing 3',
+    'Test tag existing 4',
+  ]
+) {
+  const tag = { name: 'Test country' }
+  const [tag_parent] = await tagInsert([tag])
+  const tags = await tagInsert([
+    {
+      name: values[0],
+      parentId: tag_parent.id,
+    },
+    {
+      name: values[1],
+      parentId: tag_parent.id,
+    },
+    {
+      name: values[2],
+      parentId: tag_parent.id,
+    },
+    {
+      name: values[3],
+      parentId: tag_parent.id,
+    },
+  ])
+  await restaurantUpsertOrphanTags(restaurant, [tag.name])
+  return tags
+}
+
 test.beforeEach(async (t) => {
-  try {
-    sinon.restore()
-    await reset(t)
-  } catch (e) {
-    // Hopefully this was only ever being caused by the tests being run in parallel
-    if (e.message.includes('violates foreign key constraint')) {
-      console.log('Retrying beforeEach due to scrape foreign key violation')
-      await reset(t)
-    }
-  }
+  sinon.restore()
+  await reset(t)
 })
 
 test('Merging', async (t) => {
@@ -285,10 +325,10 @@ test('Merging', async (t) => {
     ['menu_items']
   )
   const photos = await bestPhotosForRestaurant(t.context.restaurant.id)
-  t.is(photos[0].photo.origin, 'https://i.imgur.com/N6YtgRI.jpeg')
-  t.assert(parseFloat(photos[0].photo.quality).toFixed(3), '5.374')
-  t.is(photos[1].photo.origin, 'https://i.imgur.com/92a8cNI.jpg')
-  t.assert(parseFloat(photos[0].photo.quality).toFixed(3), '4.575')
+  t.is(photos[0].photo?.origin, 'https://i.imgur.com/N6YtgRI.jpeg')
+  t.assert(parseFloat(photos[0].photo?.quality).toFixed(3), '5.374')
+  t.is(photos[1].photo?.origin, 'https://i.imgur.com/92a8cNI.jpg')
+  t.assert(parseFloat(photos[0].photo?.quality).toFixed(3), '4.575')
   t.is(!!updated, true)
   if (!updated) return
   t.is(updated.name, 'Test Name Yelp')
@@ -311,7 +351,7 @@ test('Merging', async (t) => {
 test('Merging dishes', async (t) => {
   const self = new Self()
   await self.mergeAll(t.context.restaurant.id)
-  await self.postMerge()
+  await self.finishTagsEtc()
   const updated = await restaurantFindOneWithTags(
     {
       id: t.context.restaurant.id,
@@ -424,12 +464,12 @@ test('Tag rankings', async (t) => {
   ])
   await restaurantUpsertOrphanTags(r1, [tag_name])
   await restaurantUpsertOrphanTags(r2, [tag_name])
-  self.restaurant = await restaurantUpsertOrphanTags(self.restaurant, [
+  self.restaurant = (await restaurantUpsertOrphanTags(self.restaurant, [
     tag_name,
-  ])
+  ])) as RestaurantWithId
   await self.preMerge(self.restaurant)
   await self.tagging.updateTagRankings()
-  await self.postMerge()
+  await self.finishTagsEtc()
   const restaurant = await restaurantFindOneWithTags(self.restaurant)
   t.is(!!restaurant, true)
   if (!restaurant) return
@@ -439,120 +479,61 @@ test('Tag rankings', async (t) => {
 
 test('Finding dishes in the corpus', async (t) => {
   const self = new Self()
-  const tag = { name: 'Test country' }
-
-  const [tag_parent] = await tagInsert([tag])
   const [
     existing_tag1,
     existing_tag2,
     existing_tag3,
     existing_tag4,
-  ] = await tagInsert([
-    {
-      name: 'Test tag existing 1',
-      parentId: tag_parent.id,
-    },
-    {
-      name: 'Test tag existing 2',
-      parentId: tag_parent.id,
-    },
-    {
-      name: 'Test tag existing 3',
-      parentId: tag_parent.id,
-    },
-    {
-      name: 'Test tag existing 4',
-      parentId: tag_parent.id,
-    },
-  ])
+  ] = await addTags(t.context.restaurant)
 
-  await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
   t.context.restaurant = (await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   }))!
-  self.restaurant = t.context.restaurant
-  await self.getScrapeData()
+  await self.preMerge(t.context.restaurant)
   await self.getUberDishes()
   await self.scanCorpus()
-  await self.postMerge()
+  await self.finishTagsEtc()
   const updated = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   })
-  t.assert(!!updated, 'not found')
-  if (!updated) return
-  t.assert(updated.tags.map((i) => i.tag.id).includes(existing_tag1.id))
-  t.assert(updated.tags.map((i) => i.tag.id).includes(existing_tag2.id))
-  t.assert(updated.tags.map((i) => i.tag.id).includes(existing_tag3.id))
-  t.assert(updated.tags.map((i) => i.tag.id).includes(existing_tag4.id))
+  t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag1.id))
+  t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag2.id))
+  t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag3.id))
+  t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag4.id))
 })
 
-test('Dish sentiment analysis from reviews', async (t) => {
+test('Review naive sentiments', async (t) => {
   const self = new Self()
-  const tag = { name: 'Test country' }
-  const [tag_parent] = await tagInsert([tag])
-  const [existing_tag1, existing_tag2, existing_tag3] = await tagInsert([
-    {
-      name: 'Test tag existing 1',
-      parentId: tag_parent.id,
-    },
-    {
-      name: 'Test tag existing 2',
-      parentId: tag_parent.id,
-    },
-    {
-      name: 'Test tag existing 3',
-      parentId: tag_parent.id,
-    },
-  ])
-  await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
-  const restaurant = await restaurantFindOneWithTags({
+  await addTags(t.context.restaurant)
+  const restaurant = (await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
-  })
-  t.is(!!restaurant, true)
-  if (!restaurant) return
-  t.context.restaurant = restaurant as RestaurantWithId
-  self.restaurant = t.context.restaurant
-  await self.getScrapeData()
+  })) as RestaurantWithId
+  await self.preMerge(restaurant)
   await self.scanCorpus()
-  await self.postMerge()
-  const updated = await restaurantFindOneWithTags({
-    id: t.context.restaurant.id,
-  })
-  t.assert(!!updated, 'not found')
-  if (!updated) return
-  const tag1 =
-    updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
-  const tag2 =
-    updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
-  const tag3 =
-    updated.tags.find((i) => i.tag.id == existing_tag3.id) || ({} as Tag)
-  t.is(tag1.rating, 0.17200480032002136)
-  t.is(tag2.rating, 0.91)
-  t.is(tag3.rating, 0.235)
+  await self.finishTagsEtc()
 
-  // REVIEWS - sorry for the piggyback
-  let reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
-  t.is(reviews.length, 4)
   // Ensure upserting/constraints work
+  let reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
+  t.is(reviews.length, 7)
   await self.scanCorpus()
-  await self.postMerge()
+  await self.finishTagsEtc()
+
   reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
-  t.is(reviews.length, 4)
-  // Check for sentiments
+  t.is(reviews.length, 7)
   const rv1 = reviews.find((rv) => rv.username == 'yelp-FsLRE98uOHkBNzO1Ta5hIw')
   const rv1s1 = rv1.sentiments.find((s) =>
     s.sentence.includes('Test tag existing 1')
   )
-  t.is(rv1s1.sentiment, -3)
+  t.is(rv1s1.naive_sentiment, -3)
   const rv1s2 = rv1.sentiments.find((s) =>
     s.sentence.includes('Test tag existing 2')
   )
-  t.is(rv1s2.sentiment, 4)
+  t.is(rv1s2.naive_sentiment, 4)
   const rv2 = reviews.find((rv) => rv.username == 'tripadvisor-tauser')
   const rv2s1 = rv2.sentiments.find((s) =>
     s.sentence.includes('Test tag existing 3')
   )
-  t.is(rv2s1.sentiment, 0)
+  t.is(rv2s1.naive_sentiment, 0)
   const rv3 = reviews.find((rv) => rv.username == 'tripadvisor-tauser2')
   t.is(rv3.sentiments.length, 0)
   const rv4 = reviews.find((rv) => rv.username == 'google-Nikhil Mascarenhas')
@@ -562,10 +543,10 @@ test('Dish sentiment analysis from reviews', async (t) => {
 test('Finding veg in reviews', async (t) => {
   const self = new Self()
   self.tagging.SPECIAL_FILTER_THRESHOLD = 1
-  self.restaurant = t.context.restaurant
+  await self.preMerge(t.context.restaurant)
   await self.getScrapeData()
   await self.scanCorpus()
-  await self.postMerge()
+  await self.finishTagsEtc()
   const updated = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   })
@@ -595,10 +576,9 @@ test('Find photos of dishes', async (t) => {
   t.assert(!!restaurant, 'not found')
   if (!restaurant) return
   t.context.restaurant = restaurant as RestaurantWithId
-  self.restaurant = t.context.restaurant
-  await self.getScrapeData()
+  await self.preMerge(t.context.restaurant)
   await self.findPhotosForTags()
-  await self.postMerge()
+  await self.finishTagsEtc()
   await restaurantUpdate(self.restaurant)
   const updated = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
@@ -649,59 +629,18 @@ test('Identifying country tags', async (t) => {
   t.assert(tag3.tag.type != 'country')
 })
 
-test('Calculating tag ratings', async (t) => {
-  const dish = new Self()
-  dish.restaurant = t.context.restaurant
-  let rating: number
-  dish.restaurant.rating = 2.5
-  rating = dish.tagging._calculateTagRating([0, 1, 2])
-  t.is(rating, 0.38048192771084337)
-  dish.restaurant.rating = 3
-  rating = dish.tagging._calculateTagRating([0, 1, 2])
-  t.is(rating, 0.44243373493975907)
-  dish.restaurant.rating = 5
-  rating = dish.tagging._calculateTagRating([-15])
-  t.is(rating, 0.5)
-  dish.restaurant.rating = 1.5
-  rating = dish.tagging._calculateTagRating([1])
-  t.is(rating, 0.3043855421686747)
-  dish.restaurant.rating = 0
-  rating = dish.tagging._calculateTagRating([44])
-  t.is(rating, 0.5)
-})
-
-test('Normalising tag ratings', async (t) => {
-  const dish = new Self()
-  let normalised: number
-  normalised = dish.tagging._normaliseTagRating(-16)
-  t.is(normalised, 0)
-  normalised = dish.tagging._normaliseTagRating(-15)
-  t.is(normalised, 0)
-  normalised = dish.tagging._normaliseTagRating(1)
-  t.is(normalised, 0.38048192771084337)
-  normalised = dish.tagging._normaliseTagRating(3)
-  t.is(normalised, 0.8)
-  normalised = dish.tagging._normaliseTagRating(5)
-  t.is(normalised, 0.9025000000000001)
-  normalised = dish.tagging._normaliseTagRating(44)
-  t.is(normalised, 1)
-  normalised = dish.tagging._normaliseTagRating(45)
-  t.is(normalised, 1)
-})
-
 test('Adding opening hours', async (t) => {
   const dish = new Self()
-  dish.restaurant = t.context.restaurant
-  await dish.getScrapeData()
+  await dish.preMerge(t.context.restaurant)
   const count = await dish.addHours()
   t.is(count, 7)
-  const openers = await main_db.query(`
+  const openers = await DB.one_query_on_main(`
     SELECT restaurant_id
       FROM opening_hours
       WHERE hours @> f_opening_hours_normalised_time('1996-01-01 13:00');
   `)
   t.is(dish.restaurant.id, openers.rows[0].restaurant_id)
-  const closers = await main_db.query(`
+  const closers = await DB.one_query_on_main(`
     SELECT restaurant_id
       FROM opening_hours
       WHERE hours @> f_opening_hours_normalised_time('1996-01-01 10:59');
@@ -761,4 +700,86 @@ test('Finds an existing scrape', async (t) => {
   })
   t.is(restaurant?.id, restaurant_id)
   t.is(restaurant?.name, 'Test Name Original')
+})
+
+test('Scoring for restaurants', async (t) => {
+  const self = new Self()
+  const restaurant = (await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })) as RestaurantWithId
+  await self.preMerge(restaurant)
+  await self.mergePhotos()
+  await self.scanCorpus()
+  await self.postMerge()
+  const updated = await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })
+
+  t.deepEqual(updated?.score_breakdown.photos, {
+    meeting_criteria_count: 1,
+    score: 2,
+  })
+  t.deepEqual(updated?.score_breakdown.reviews, {
+    score: 9,
+    _1: { count: 1, score: -2 },
+    _2: { count: 0, score: 0 },
+    _3: { count: 1, score: 0 },
+    _4: { count: 1, score: 1 },
+    _5: { count: 5, score: 10 },
+  })
+  t.is(updated?.score, 11)
+})
+
+test('Scoring for rishes', async (t) => {
+  const self = new Self()
+  await addTags(t.context.restaurant, [
+    'Test tag',
+    'Testpho',
+    'Test 3',
+    'Test 4',
+  ])
+  const restaurant = (await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })) as RestaurantWithId
+  await self.preMerge(restaurant)
+  await self.doTags()
+  await self.scanCorpus()
+  await self.postMerge()
+
+  const updated = await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })
+
+  const rish1 = updated?.tags.filter((t) => t.tag.name == 'Test tag')[0]
+  const rish2 = updated?.tags.filter((t) => t.tag.name == 'Testpho')[0]
+  t.is(rish1.score, 2)
+  t.deepEqual(rish1.score_breakdown.yelp, {
+    score: 0,
+    counts: {
+      negative: 1,
+      positive: 1,
+    },
+  })
+  t.deepEqual(rish1.score_breakdown.google, {
+    score: null,
+    counts: {
+      negative: 0,
+      positive: 0,
+    },
+  })
+  t.deepEqual(rish1.score_breakdown.tripadvisor, {
+    score: 2,
+    counts: {
+      negative: 0,
+      positive: 2,
+    },
+  })
+  t.is(rish2.score, 1)
+  t.deepEqual(rish2.score_breakdown.tripadvisor, {
+    score: 1,
+    counts: {
+      negative: 0,
+      positive: 1,
+    },
+  })
 })
