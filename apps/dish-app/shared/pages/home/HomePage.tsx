@@ -14,7 +14,7 @@ import _, { sortBy, uniqBy } from 'lodash'
 import { default as React, Suspense, memo, useEffect, useState } from 'react'
 import { Dimensions, StyleSheet } from 'react-native'
 
-import { bgLight, bgLightTranslucent } from '../../colors'
+import { bgLight, bgLightTranslucent, lightBlue } from '../../colors'
 import { useIsNarrow } from '../../hooks/useIs'
 import { addTagsToCache } from '../../state/allTags'
 import { HomeStateItemHome } from '../../state/home-types'
@@ -301,12 +301,18 @@ const TopDishesCuisineItem = memo(
           backgroundColor={index % 2 === 0 ? 'transparent' : bgLightTranslucent}
           transform={[{ rotate: '-4deg' }]}
         />
-        <HStack alignItems="center" marginBottom={10}>
+        <HStack
+          // backgroundColor={lightBlue}
+          justifyContent="center"
+          alignItems="center"
+          marginBottom={10}
+        >
           <SlantedLinkButton
             padding={100}
             marginHorizontal="auto"
             zIndex={1000}
             position="relative"
+            alignSelf="center"
             tag={{
               type: 'country',
               name: country.country,

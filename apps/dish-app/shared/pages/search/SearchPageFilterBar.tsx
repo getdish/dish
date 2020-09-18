@@ -1,9 +1,7 @@
 import { HStack, StackProps } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
-import { ScrollView } from 'react-native'
 
-import { useIsNarrow } from '../../hooks/useIs'
 import { getTagId } from '../../state/getTagId'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
@@ -12,7 +10,6 @@ import { FilterButton } from '../../views/FilterButton'
 export const SearchPageFilterBar = memo(
   ({ activeTagIds }: { activeTagIds: HomeActiveTagsRecord }) => {
     const om = useOvermind()
-    const isSmall = useIsNarrow()
 
     let last = 0
     const grouped = _.groupBy(
