@@ -55,7 +55,6 @@ export const SearchPageDeliveryFilterButtons = ({
             paddingBottom={3}
             minWidth={120}
             borderRadius={100}
-            spacing={5}
             cursor="pointer"
             alignItems="center"
             justifyContent="center"
@@ -67,7 +66,6 @@ export const SearchPageDeliveryFilterButtons = ({
                   width: 16,
                   height: 16,
                   borderRadius: 100,
-                  margin: -4,
                 }}
               />
               <Text fontSize={13} fontWeight="500">

@@ -1,7 +1,9 @@
 import { Tag } from '@dish/graph'
 import { Clock, ShoppingBag } from '@dish/react-feather'
+import { VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
+import { isWeb } from '../constants'
 import { useIsNarrow } from '../hooks/useIs'
 import { tagDisplayNames } from '../state/tagDisplayName'
 import { LinkButton } from './ui/LinkButton'
@@ -24,10 +26,18 @@ export const FilterButton = memo(
     if (isSmall) {
       switch (content) {
         case 'Open':
-          content = <Clock size={18} />
+          content = (
+            <VStack marginBottom={isWeb ? 0 : -8}>
+              <Clock size={18} />
+            </VStack>
+          )
           break
         case 'Delivery':
-          content = <ShoppingBag size={18} />
+          content = (
+            <VStack marginBottom={isWeb ? 0 : -8}>
+              <ShoppingBag size={18} />
+            </VStack>
+          )
           break
       }
     }

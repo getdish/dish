@@ -25,9 +25,8 @@ export const LenseButton = memoIsEqualDeep(
     onPress?: Function
   }) => {
     const lenseColor = rgbString(lense.rgb)
-    // const lenseColorLight = `rgba(${rgbInner}, 0.2)`
     const scale = size == 'md' ? 1 : size === 'lg' ? 1.2 : 1.3
-    const sizePx = 42
+    const sizePx = 48
 
     return (
       <LinkButton
@@ -96,12 +95,14 @@ export const LenseButton = memoIsEqualDeep(
               hoverStyle={{
                 opacity: 1,
               }}
+              marginHorizontal={-3}
             >
               <Text
-                fontSize={sizePx * scale * 0.32}
+                fontSize={sizePx * scale * 0.3}
                 fontWeight="400"
                 lineHeight={sizePx * scale * 0.42}
                 color={isActive ? '#fff' : '#000'}
+                paddingHorizontal={2}
               >
                 {tagDisplayName(lense)}
               </Text>
