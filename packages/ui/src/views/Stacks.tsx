@@ -269,6 +269,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
         content = React.cloneElement(content, events)
       } else {
         if (pointerEvents !== 'none' && !!(onPress || onPressOut)) {
+          console.log('attaching', onPress)
           content = (
             <TouchableWithoutFeedback
               onPress={(e) => {

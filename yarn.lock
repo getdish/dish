@@ -15931,6 +15931,13 @@ react-laag@^1.7.3:
   resolved "https://registry.npmjs.org/react-laag/-/react-laag-1.7.3.tgz#7e29d59b8a9460ab7283db72332363f083f028d9"
   integrity sha512-gNuo4oQwcWyyZM5FwTPaZarjcaQnAzbeD1QnCqFQK2+RKiuWth/SGDt0hNFKyqs3cezC4weZHYfX4h1uz5MnVQ==
 
+react-native-animatable@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.npmjs.org/react-native-animatable/-/react-native-animatable-1.3.3.tgz#a13a4af8258e3bb14d0a9d839917e9bb9274ec8a"
+  integrity sha512-2ckIxZQAsvWn25Ho+DK3d1mXIgj7tITkrS4pYDvx96WyOttSvzzFeQnM2od0+FUMzILbdHDsDEqZvnz1DYNQ1w==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-appearance@~0.3.3:
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/react-native-appearance/-/react-native-appearance-0.3.4.tgz#2cbcbc5142cdc1898c116684f519b16c879cbec2"
