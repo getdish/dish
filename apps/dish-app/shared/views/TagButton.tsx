@@ -255,7 +255,7 @@ export const TagButton = memo((props: TagButtonProps) => {
             <X
               size={subtle ? 11 : 13}
               style={{
-                color: subtle ? 'inherit' : color,
+                color: subtle && isWeb ? 'inherit' : color,
               }}
             />
           </VStack>

@@ -25,7 +25,16 @@ export const SmallButton = ({
   return (
     <DeoptHStack
       className={rest.className}
-      minHeight={33}
+      {...(isWeb && {
+        minHeight: 33,
+        minWidth: 43,
+      })}
+      {...(!isWeb && {
+        height: 44,
+        minWidth: 44,
+        alignItems: 'center',
+        justifyContent: 'center',
+      })}
       {...smallButtonBaseStyle}
       {...(isActive && {
         backgroundColor: 'transparent',
@@ -35,7 +44,6 @@ export const SmallButton = ({
         },
       })}
       {...rest}
-      minWidth={43}
     >
       <Text
         color={isActive ? '#000' : bg}

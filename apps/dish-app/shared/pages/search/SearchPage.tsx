@@ -21,14 +21,12 @@ import React, {
 import { ScrollView } from 'react-native'
 
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
-import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { addTagsToCache } from '../../state/allTags'
 import { getTagId } from '../../state/getTagId'
-import { isSearchState } from '../../state/home-helpers'
 import { getLocationFromRoute } from '../../state/home-location.helpers'
 import { getFullTags, getTagsFromRoute } from '../../state/home-tag-helpers'
 import {
@@ -45,14 +43,13 @@ import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { StackViewProps } from '../StackViewProps'
 import { getTitleForState } from './getTitleForState'
-import { SearchPageDeliveryFilterButtons } from './SearchPageDeliveryFilterButtons'
-import { SearchPageFilterBar } from './SearchPageFilterBar'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
+import { SearchPageTopBar } from './SearchPageTopBar'
 
 type Props = StackViewProps<HomeStateItemSearch>
 
-const titleHeight = 52
-const topBarVPad = 12
+export const titleHeight = 52
+export const topBarVPad = 12
 
 const useSpacing = () => {
   const isSmall = useIsNarrow()
@@ -155,7 +152,7 @@ export default memo(function HomePageSearchResults(props: Props) {
 
   return (
     <StackDrawer closable>
-      <SearchResultsTopBar stateId={props.item.id} />
+      <SearchPageTopBar stateId={props.item.id} />
       <Suspense fallback={<HomeLoading />}>
         <VStack
           flex={1}
@@ -167,76 +164,6 @@ export default memo(function HomePageSearchResults(props: Props) {
         </VStack>
       </Suspense>
     </StackDrawer>
-  )
-})
-
-const SearchResultsTopBar = memo(({ stateId }: { stateId: string }) => {
-  const om = useOvermind()
-  const state = om.state.home.allStates[stateId]
-  const drawerWidth = useAppDrawerWidth()
-
-  if (!isSearchState(state)) {
-    return null
-  }
-
-  return (
-    <VStack
-      position="absolute"
-      top={0}
-      left={0}
-      right={0}
-      borderBottomColor="#eee"
-      backgroundColor="#fff"
-      borderBottomWidth={1}
-      shadowColor="rgba(0,0,0,0.1)"
-      shadowRadius={10}
-      zIndex={1000}
-    >
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{ width: '100%', minWidth: '100%' }}
-        contentContainerStyle={{
-          minWidth: drawerWidth - 20,
-          maxWidth: drawerWidth - 20,
-        }}
-      >
-        <VStack
-          alignItems="center"
-          height={titleHeight}
-          overflow="hidden"
-          width="100%"
-          maxWidth="100%"
-          minWidth="100%"
-          paddingHorizontal={12}
-        >
-          <HStack
-            paddingVertical={topBarVPad}
-            paddingHorizontal={18}
-            width="100%"
-            alignItems="center"
-            overflow="hidden"
-            justifyContent="space-between"
-            height="100%"
-          >
-            <HStack
-              height="100%"
-              marginTop={-18}
-              alignItems="center"
-              justifyContent="center"
-            >
-              <HomeLenseBar activeTagIds={state.activeTagIds} />
-            </HStack>
-
-            <VStack flex={1} width={16} />
-
-            <SearchPageFilterBar activeTagIds={state.activeTagIds} />
-          </HStack>
-        </VStack>
-
-        <SearchPageDeliveryFilterButtons activeTagIds={state.activeTagIds} />
-      </ScrollView>
-    </VStack>
   )
 })
 

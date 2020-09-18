@@ -27,13 +27,10 @@ export const HomeTopSearches = memo(() => {
         return (
           <Link key={index} tags={search.tags}>
             <HStack
-              borderColor="#eee"
-              borderWidth={1}
-              paddingVertical={isWeb ? 0 : 8}
-              paddingHorizontal={8}
-              borderRadius={80}
-              backgroundColor="#fff"
+              padding={8}
+              alignItems="center"
               marginBottom={6}
+              borderRadius={100}
               hoverStyle={{
                 backgroundColor: bgLight,
               }}
@@ -42,7 +39,6 @@ export const HomeTopSearches = memo(() => {
                 <React.Fragment key={tag.name}>
                   <Text
                     color="#444"
-                    lineHeight={isWeb ? 12 : 18}
                     paddingHorizontal={5}
                     fontSize={14}
                     borderRadius={50}
@@ -52,7 +48,7 @@ export const HomeTopSearches = memo(() => {
                         transform={[{ translateY: 2 }]}
                         marginRight={1}
                         fontSize={20}
-                        lineHeight={14}
+                        lineHeight={isWeb ? 16 : 22}
                       >
                         {tag.icon}{' '}
                       </Text>
