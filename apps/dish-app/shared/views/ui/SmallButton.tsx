@@ -26,8 +26,8 @@ export const SmallButton = ({
     <DeoptHStack
       className={rest.className}
       {...(isWeb && {
-        minHeight: 33,
-        minWidth: 43,
+        minHeight: 40,
+        minWidth: 44,
       })}
       {...(!isWeb && {
         height: 44,

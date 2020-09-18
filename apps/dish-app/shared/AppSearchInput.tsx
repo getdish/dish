@@ -125,19 +125,18 @@ export const AppSearchInput = memo(() => {
   }, [])
 
   // shortcuts
-  useEffect(() => {
-    const handleClick = () => {
-      om.actions.home.setShowAutocomplete('search')
-    }
-
-    const node = inputStore.node
-    if ('addEventListener' in node) {
+  if (Platform.OS === 'web') {
+    useEffect(() => {
+      const handleClick = () => {
+        om.actions.home.setShowAutocomplete('search')
+      }
+      const node = inputStore.node
       node.addEventListener('click', handleClick)
       return () => {
         node.removeEventListener('click', handleClick)
       }
-    }
-  }, [])
+    }, [])
+  }
 
   const panResponder = useMemo(() => {
     return PanResponder.create({

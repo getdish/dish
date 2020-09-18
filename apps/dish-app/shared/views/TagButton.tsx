@@ -12,7 +12,7 @@ import {
   prevent,
 } from '@dish/ui'
 import React, { memo, useEffect, useRef } from 'react'
-import { Image } from 'react-native'
+import { Image, Platform } from 'react-native'
 
 import { isWeb } from '../constants'
 import { useUserUpvoteDownvoteQuery } from '../hooks/useUserReview'
@@ -294,16 +294,15 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   const buttonRef = useRef()
 
   // only way i could get it to stop bubbling up wtf
-  useEffect(() => {
-    const node = getNode(buttonRef?.current)
-
-    if (node && 'addEventListener' in node) {
+  if (Platform.OS === 'web') {
+    useEffect(() => {
+      const node = getNode(buttonRef?.current)
       node.addEventListener('click', prevent)
       return () => {
         node.removeEventListener('click', prevent)
       }
-    }
-  }, [])
+    }, [])
+  }
 
   return (
     <VStack

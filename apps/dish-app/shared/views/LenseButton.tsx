@@ -26,7 +26,7 @@ export const LenseButton = memoIsEqualDeep(
   }) => {
     const lenseColor = rgbString(lense.rgb)
     const scale = size == 'md' ? 1 : size === 'lg' ? 1.2 : 1.3
-    const sizePx = 48
+    const sizePx = 40
 
     return (
       <LinkButton
@@ -49,9 +49,6 @@ export const LenseButton = memoIsEqualDeep(
           height={sizePx * scale}
           backgroundColor={backgroundColor ?? '#fff'}
           borderRadius={100}
-          borderColor="transparent"
-          borderWidth={1}
-          borderBottomColor="transparent"
           transform={[{ scale: 1 }]}
           hoverStyle={{
             borderColor: '#f0f0f0',
@@ -65,7 +62,7 @@ export const LenseButton = memoIsEqualDeep(
           })}
         >
           <Text
-            fontSize={sizePx * (isActive ? 0.85 : 0.6) * scale}
+            fontSize={sizePx * (isActive ? 0.8 : 0.65) * scale}
             lineHeight={sizePx * scale}
             fontWeight="400"
             textAlign="center"
@@ -78,10 +75,10 @@ export const LenseButton = memoIsEqualDeep(
             alignItems="center"
             borderRadius={4}
             paddingHorizontal={3}
-            marginTop={-10}
+            marginTop={-8}
             marginBottom={-8}
             borderWidth={1}
-            backgroundColor="transparent"
+            backgroundColor="#f2f2f2"
             borderColor="transparent"
             {...(isActive && {
               borderColor: lenseColor,
@@ -100,9 +97,11 @@ export const LenseButton = memoIsEqualDeep(
               <Text
                 fontSize={sizePx * scale * 0.3}
                 fontWeight="400"
-                lineHeight={sizePx * scale * 0.42}
+                lineHeight={sizePx * scale * 0.35}
                 color={isActive ? '#fff' : '#000'}
                 paddingHorizontal={2}
+                textAlign="center"
+                height={15}
               >
                 {tagDisplayName(lense)}
               </Text>
