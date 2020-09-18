@@ -196,28 +196,6 @@ export const AppSearchInput = memo(() => {
             </TouchableOpacity>
           </VStack>
 
-          {!isWeb && (
-            // this helps native with dragging conflicts
-            <TouchableWithoutFeedback
-              onPress={() => {
-                inputStore.node?.focus()
-              }}
-            >
-              <View
-                style={{
-                  // backgroundColor: 'red',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 40,
-                  bottom: 0,
-                  zIndex: 10000,
-                }}
-                {...panResponder.panHandlers}
-              />
-            </TouchableWithoutFeedback>
-          )}
-
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -230,39 +208,62 @@ export const AppSearchInput = memo(() => {
             }}
           >
             <HomeSearchBarTags input={input} />
-            <TextInput
-              ref={inputStore.setNode}
-              // leave uncontrolled for perf?
-              value={search ?? ''}
-              onBlur={(e) => {
-                avoidNextFocus = false
-              }}
-              onKeyPress={handleKeyPress}
-              onFocus={() => {
-                if (omStatic.state.home.searchbarFocusedTag) {
-                  omStatic.actions.home.setSearchBarTagIndex(0)
-                } else {
-                  omStatic.actions.home.setShowAutocomplete('search')
-                }
-              }}
-              onChangeText={(text) => {
-                if (getSearch() == '' && text !== '') {
-                  om.actions.home.setShowAutocomplete('search')
-                }
-                setSearch(text)
-                om.actions.home.setSearchQuery(text)
-              }}
-              placeholder={isSearchingCuisine ? '...' : `${placeHolder}...`}
-              style={[
-                inputTextStyles.textInput,
-                {
-                  color,
-                  flex: 1,
-                  fontSize: 18,
-                  paddingRight: 0,
-                },
-              ]}
-            />
+            <HStack position="relative" flex={1}>
+              {!isWeb && (
+                // this helps native with dragging conflicts
+                <TouchableWithoutFeedback
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 40,
+                    bottom: 0,
+                    zIndex: 10000,
+                  }}
+                  onPress={() => {
+                    inputStore.node?.focus()
+                  }}
+                >
+                  <View
+                    style={StyleSheet.absoluteFill}
+                    {...panResponder.panHandlers}
+                  />
+                </TouchableWithoutFeedback>
+              )}
+              <TextInput
+                ref={inputStore.setNode}
+                // leave uncontrolled for perf?
+                value={search ?? ''}
+                onBlur={(e) => {
+                  avoidNextFocus = false
+                }}
+                onKeyPress={handleKeyPress}
+                onFocus={() => {
+                  if (omStatic.state.home.searchbarFocusedTag) {
+                    omStatic.actions.home.setSearchBarTagIndex(0)
+                  } else {
+                    omStatic.actions.home.setShowAutocomplete('search')
+                  }
+                }}
+                onChangeText={(text) => {
+                  if (getSearch() == '' && text !== '') {
+                    om.actions.home.setShowAutocomplete('search')
+                  }
+                  setSearch(text)
+                  om.actions.home.setSearchQuery(text)
+                }}
+                placeholder={isSearchingCuisine ? '...' : `${placeHolder}...`}
+                style={[
+                  inputTextStyles.textInput,
+                  {
+                    color,
+                    flex: 1,
+                    fontSize: 18,
+                    paddingRight: 0,
+                  },
+                ]}
+              />
+            </HStack>
           </ScrollView>
           <SearchCancelButton />
           <Spacer direction="horizontal" size={10} />
@@ -306,7 +307,11 @@ const SearchCancelButton = memo(() => {
       opacity={isActive ? 1 : 0}
       disabled={!isActive}
       onPress={() => {
-        om.actions.home.clearSearch()
+        if (om.state.home.showAutocomplete) {
+          om.actions.home.setShowAutocomplete(false)
+        } else {
+          om.actions.home.clearSearch()
+        }
       }}
     />
   )

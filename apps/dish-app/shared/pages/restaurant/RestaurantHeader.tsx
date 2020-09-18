@@ -5,6 +5,7 @@ import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
+import { useIsReallyNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
@@ -48,6 +49,7 @@ const RestaurantHeaderContent = memo(
       afterAddress,
       size,
     }: RestaurantHeaderProps) => {
+      const isReallySmall = useIsReallyNarrow()
       const restaurant = useRestaurantQuery(restaurantSlug)
       const om = useOvermind()
       // const [r, g, b] = useCurrentLenseColor()
@@ -109,25 +111,30 @@ const RestaurantHeaderContent = memo(
                 </HStack>
                 <Spacer size="md" />
               </VStack>
-              {!after && !!restaurant.image && (
+
+              {!isReallySmall && (
                 <>
-                  <Image
-                    resizeMode="cover"
-                    source={{ uri: restaurant.image }}
-                    style={{
-                      marginVertical: -60,
-                      marginRight: -30,
-                      height: 170,
-                      width: 170,
-                      borderRadius: 100,
-                    }}
-                  />
-                </>
-              )}
-              {after && (
-                <>
-                  <VStack maxWidth="50%">{after}</VStack>
-                  {padding}
+                  {!after && !!restaurant.image && (
+                    <>
+                      <Image
+                        resizeMode="cover"
+                        source={{ uri: restaurant.image }}
+                        style={{
+                          marginVertical: -60,
+                          marginRight: -30,
+                          height: 170,
+                          width: 170,
+                          borderRadius: 100,
+                        }}
+                      />
+                    </>
+                  )}
+                  {after && (
+                    <>
+                      <VStack maxWidth="50%">{after}</VStack>
+                      {padding}
+                    </>
+                  )}
                 </>
               )}
             </HStack>

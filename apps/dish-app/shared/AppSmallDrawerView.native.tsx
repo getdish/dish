@@ -45,7 +45,9 @@ export const AppSmallDrawerView = (props: { children: any }) => {
         }
         blurSearchInput()
       },
-      onPanResponderMove: Animated.event([null, { dy: drawerStore.pan }]),
+      onPanResponderMove: Animated.event([null, { dy: drawerStore.pan }], {
+        useNativeDriver: false,
+      }),
       onPanResponderRelease: (e, gestureState) => {
         drawerStore.pan.flattenOffset()
         const velocity = gestureState.vy

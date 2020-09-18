@@ -12,7 +12,7 @@ import { useLastValueWhen } from './hooks/useLastValueWhen'
 // import { Reparentable, sendReparentableChild } from 'react-reparenting'
 // const getParent = (isSmall: boolean) => (isSmall ? 'sm' : 'lg')
 
-export function HomeContainer(props: { children: any }) {
+export function AppContainer(props: { children: any }) {
   const isSmall = useIsNarrow()
   // const [parent, setParent] = useState()
   // const children = [<React.Fragment key="1">{props.children}</React.Fragment>]

@@ -227,7 +227,7 @@ export class Router extends Store<RouterProps> {
     const params = {
       id: item?.id ?? uid(),
     }
-    console.warn('router.navigate', navItem, item)
+    console.log('router.navigate', navItem, item)
     if (item.type === 'replace') {
       history.replace(item.path, params)
     } else {
