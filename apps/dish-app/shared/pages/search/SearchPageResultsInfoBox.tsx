@@ -1,4 +1,4 @@
-import { graphql, query } from '@dish/graph'
+import { graphql, order_by, query } from '@dish/graph'
 import { HStack, SmallTitle, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Image, ScrollView } from 'react-native'
@@ -30,6 +30,11 @@ const HomeSearchInfoBoxCountry = memo(
     const tags = getActiveTags(state)
     const countryTag = tags.find((x) => x.type === 'country')
     const topCountryDishes = query.tag({
+      order_by: [
+        {
+          name: order_by.asc,
+        },
+      ],
       where: {
         type: {
           _eq: 'dish',
