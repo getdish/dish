@@ -1,6 +1,6 @@
 import { useStore } from '@dish/use-store'
 import MapboxGL from '@react-native-mapbox-gl/maps'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Animated, Dimensions, StyleSheet } from 'react-native'
 
 import { BottomDrawerStore } from '../BottomDrawerStore'
@@ -14,7 +14,8 @@ export const Map = ({ center, span, features }: MapProps) => {
   const { width, height } = Dimensions.get('screen')
   const drawerStore = useStore(BottomDrawerStore)
   const drawerHeight = drawerStore.currentHeight
-  const paddingVertical = drawerHeight / 2
+  const [isLoaded, setIsLoaded] = useState(false)
+  const paddingVertical = isLoaded ? drawerHeight / 2 : 0
   const ty = -paddingVertical
   const tyRef = useRef(new Animated.Value(ty))
 
@@ -37,6 +38,9 @@ export const Map = ({ center, span, features }: MapProps) => {
       <MapboxGL.MapView
         style={styles.map}
         styleURL="mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy"
+        onDidFinishLoadingMap={() => {
+          setIsLoaded(true)
+        }}
       >
         <MapboxGL.Camera
           // centerCoordinate={[]}

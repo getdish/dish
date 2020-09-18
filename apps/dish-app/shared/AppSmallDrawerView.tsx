@@ -55,7 +55,9 @@ export const AppSmallDrawerView = (props: { children: any }) => {
         }
         blurSearchInput()
       },
-      onPanResponderMove: Animated.event([null, { dy: drawerStore.pan }]),
+      onPanResponderMove: Animated.event([null, { dy: drawerStore.pan }], {
+        useNativeDriver: false,
+      }),
       onPanResponderRelease: () => {
         drawerStore.pan.flattenOffset()
         drawerStore.animateDrawerToPx(drawerStore.pan['_value'])

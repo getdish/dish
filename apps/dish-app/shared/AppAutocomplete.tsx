@@ -14,11 +14,13 @@ import { useStore } from '@dish/use-store'
 import FlexSearch from 'flexsearch/flexsearch.js'
 import { uniqBy } from 'lodash'
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
-import { ScrollView } from 'react-native'
+import { Keyboard, ScrollView } from 'react-native'
+import * as Animatable from 'react-native-animatable'
 
 import { SearchBarStore } from './AppSearchBar'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import {
+  isNative,
   isWeb,
   pageWidthMax,
   searchBarHeight,
@@ -48,8 +50,9 @@ const flexSearch = FlexSearch.create<number>({
 
 let curPagePos = { x: 0, y: 0 }
 
-export default memo(function HomeAutocomplete() {
+export default memo(function AppAutocomplete() {
   const [isLoading, setIsLoading] = useState(false)
+  const drawerStore = useStore(BottomDrawerStore)
 
   if (isWeb) {
     useEffect(() => {
@@ -65,6 +68,23 @@ export default memo(function HomeAutocomplete() {
         document.removeEventListener('mousemove', handleMove)
       }
     })
+  }
+
+  if (isNative) {
+    useEffect(() => {
+      const handleHide = () => {
+        if (omStatic.state.home.showAutocomplete) {
+          omStatic.actions.home.setShowAutocomplete(false)
+        }
+        if (drawerStore.snapIndex === 0) {
+          drawerStore.setSnapPoint(0)
+        }
+      }
+      Keyboard.addListener('keyboardDidHide', handleHide)
+      return () => {
+        Keyboard.removeListener('keyboardDidHide', handleHide)
+      }
+    }, [])
   }
 
   return (
@@ -121,13 +141,26 @@ const HomeAutocompleteEffects = memo(
 
 const HomeAutoCompleteContents = memo(
   ({ isLoading }: { isLoading: boolean }) => {
+    const om = useOvermind()
+    const { showAutocomplete } = om.state.home
+    const showLocation = showAutocomplete == 'location'
+    const showSearch = showAutocomplete == 'search'
+    const isShowing = showSearch || showLocation
+
+    if (!isShowing) {
+      return null
+    }
+    return <AutocompleteContentsInner isLoading={isLoading} />
+  }
+)
+
+const AutocompleteContentsInner = memo(
+  ({ isLoading }: { isLoading: boolean }) => {
     const drawerStore = useStore(BottomDrawerStore)
     const om = useOvermind()
     const { showAutocomplete } = om.state.home
     const isSmall = useIsNarrow()
     const showLocation = showAutocomplete == 'location'
-    const showSearch = showAutocomplete == 'search'
-    const isShowing = showSearch || showLocation
     const hideAutocomplete = useDebounce(
       () => om.actions.home.setShowAutocomplete(false),
       200
@@ -138,72 +171,72 @@ const HomeAutoCompleteContents = memo(
       (isSmall ? getWindowHeight() * drawerStore.snapPoints[0] : 0)
 
     return (
-      <AbsoluteVStack
-        className={`ease-in-out-fast ${
-          isSmall && isShowing ? 'transition-delay-long' : ''
-        }`}
-        pointerEvents={isSmall && isShowing ? 'auto' : 'none'}
-        backgroundColor={
-          isSmall && isShowing ? 'rgba(0,0,0,0.1)' : 'transparent'
-        }
-        fullscreen
-        top={top}
-        height="100%"
-        paddingTop={10}
-        overflow="hidden"
-        alignItems="center"
-        zIndex={10000}
-        paddingBottom={30}
-        paddingHorizontal={15}
-        opacity={isShowing ? 1 : 0}
-        transform={isShowing ? [] : [{ translateY: 5 }]}
-        disabled={!isShowing}
-        debug
-        onPress={() => {
-          om.actions.home.setShowAutocomplete(false)
-        }}
+      <Animatable.View
+        pointerEvents="none"
+        animation="fadeInUp"
+        style={{ flex: 1 }}
       >
-        <VStack
-          width="100%"
+        <AbsoluteVStack
+          pointerEvents={isSmall ? 'auto' : 'none'}
+          backgroundColor={isSmall ? 'rgba(0,0,0,0.1)' : 'transparent'}
+          fullscreen
           height="100%"
-          pointerEvents={isShowing ? 'auto' : 'none'}
-          maxWidth={pageWidthMax * 0.45}
-          maxHeight={isWeb ? `calc(100vh - ${top + 20}px)` : '90%'}
-          // @ts-ignore
-          onMouseLeave={() => {
-            if (isSmall) {
-              return
-            }
-            if (curPagePos.y > top) {
-              hideAutocomplete()
-            }
-          }}
-          // @ts-ignore
-          onMouseEnter={() => {
-            hideAutocomplete.cancel()
+          overflow="hidden"
+          alignItems="center"
+          zIndex={10000}
+          paddingBottom={30}
+          top={top}
+          paddingTop={isSmall ? 0 : 10}
+          paddingHorizontal={isSmall ? 0 : 15}
+          onPress={() => {
+            om.actions.home.setShowAutocomplete(false)
           }}
         >
           <VStack
-            className="ease-in-out"
-            pointerEvents={isShowing ? 'auto' : 'none'}
-            position="relative"
-            left={isSmall ? 0 : showLocation ? 150 : -150}
-            shadowColor="rgba(0,0,0,0.4)"
-            shadowRadius={18}
             width="100%"
-            backgroundColor="rgba(0,0,0,0.9)"
-            padding={5}
-            borderRadius={10}
+            height="100%"
+            maxHeight="90%"
+            {...(!isSmall && {
+              maxWidth: pageWidthMax * 0.45,
+              maxHeight: `calc(100vh - ${top + 20}px)`,
+            })}
+            {...(isSmall && {
+              // @ts-ignore
+              onMouseLeave: () => {
+                if (curPagePos.y > top) {
+                  hideAutocomplete()
+                }
+              },
+              // @ts-ignore
+              onMouseEnter: () => {
+                hideAutocomplete.cancel()
+              },
+            })}
           >
-            <ScrollView
-              pointerEvents={isShowing ? 'auto' : 'none'}
-              style={{ opacity: isLoading ? 0.5 : 1 }}
+            <VStack
+              className="ease-in-out"
+              position="relative"
+              left={isSmall ? 0 : showLocation ? 150 : -150}
+              shadowColor="rgba(0,0,0,0.4)"
+              shadowRadius={18}
+              width="100%"
+              backgroundColor="rgba(0,0,0,0.9)"
+              padding={5}
+              borderRadius={isSmall ? 0 : 10}
+              flex={isSmall ? 1 : 0}
+              pointerEvents="auto"
+              onPress={() => {
+                console.log(123)
+                om.actions.home.setShowAutocomplete(false)
+              }}
             >
-              <AutocompleteResults />
-            </ScrollView>
+              <ScrollView style={{ opacity: isLoading ? 0.5 : 1 }}>
+                <AutocompleteResults />
+              </ScrollView>
+            </VStack>
           </VStack>
-        </VStack>
-      </AbsoluteVStack>
+        </AbsoluteVStack>
+      </Animatable.View>
     )
   }
 )
@@ -372,6 +405,7 @@ const HomeAutocompleteDefault = memo(() => {
       flexWrap="wrap"
       alignItems="center"
       justifyContent="center"
+      pointerEvents="none"
     >
       {defaultAutocompleteTags.map((tag) => {
         return (

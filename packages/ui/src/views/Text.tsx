@@ -74,10 +74,17 @@ const useTextStyle = (allProps: TextProps) => {
       : {}
     for (const key in allProps) {
       if (!isWeb && webOnlyStyleKeys[key]) {
+        if (key === 'ellipse') {
+          props['numberOfLines'] = 1
+          props['lineBreakMode'] = 'clip'
+        }
         continue
       }
       const val = allProps[key]
       if (val === undefined) continue
+      if (!isWeb && val === 'inherit') {
+        continue
+      }
       if (val) {
         if (key === 'selectable') {
           Object.assign(style, selectableStyle as any)

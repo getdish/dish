@@ -22,9 +22,8 @@ import { isWeb } from '../../constants'
 import { isWebIOS } from '../../helpers/isIOS'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { allTags, allTagsNameToID } from '../../state/allTags'
+import { allTags } from '../../state/allTags'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
-import { om } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollView'
 import { DishView } from '../../views/dish/DishView'
@@ -35,18 +34,13 @@ import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
 import { Squircle } from '../../views/ui/Squircle'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
-import {
-  RestaurantDetailRow,
-  openingHours,
-  priceRange,
-} from './RestaurantDetailRow'
+import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import {
   RestaurantRatingBreakdown,
   RestaurantReviewsDisplayStore,
 } from './RestaurantRatingBreakdown'
 import RestaurantRatingView from './RestaurantRatingView'
-import { RestaurantScoreBreakdownSmall } from './RestaurantScoreBreakdownSmall'
 import { RestaurantSourcesBreakdownRow } from './RestaurantSourcesBreakdownRow'
 
 type RestaurantListItemProps = {
@@ -424,14 +418,12 @@ const RestaurantListItemContent = memo(
               marginRight={20}
             >
               {/* ensures it always flexes all the way even if short text */}
-              <Text opacity={0} lineHeight={0}>
+              <Text opacity={0} lineHeight={0} height={0}>
                 {wideText}
               </Text>
-              <Text fontSize={16} lineHeight={24}>
-                <Suspense fallback={null}>
-                  <RestaurantOverview restaurantSlug={restaurantSlug} inline />
-                </Suspense>
-              </Text>
+              <Suspense fallback={null}>
+                <RestaurantOverview restaurantSlug={restaurantSlug} inline />
+              </Suspense>
             </VStack>
 
             <RestaurantPeekDishes

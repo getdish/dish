@@ -13,6 +13,8 @@ import { AppStackView } from './shared/AppStackView'
 import { PagesStackView } from './shared/pages/PagesStackView'
 import { om } from './shared/state/om'
 
+console.disableYellowBox = true
+
 export default function App() {
   const [loaded, setLoaded] = useState(false)
 
