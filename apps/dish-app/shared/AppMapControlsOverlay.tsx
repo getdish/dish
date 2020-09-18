@@ -58,8 +58,8 @@ export const AppMapControlsOverlay = memo(() => {
             justifyContent="space-between"
             flexWrap="wrap"
             paddingLeft={isSmall ? 15 : 30}
-            paddingRight={15}
-            paddingBottom={15}
+            paddingRight={isReallySmall ? 20 : 15}
+            paddingBottom={isReallySmall ? 60 : 15}
             paddingTop={20}
           >
             <Suspense fallback={null}>

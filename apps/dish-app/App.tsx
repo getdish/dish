@@ -3,9 +3,11 @@ import { StatusBar } from 'expo-status-bar'
 import { Provider } from 'overmind-react'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import AppAutocomplete from './shared/AppAutocomplete'
 import AppMap from './shared/AppMap'
+import { AppRoot } from './shared/AppRoot'
 import { AppSmallDrawer } from './shared/AppSmallDrawer'
 import { AppStackView } from './shared/AppStackView'
 import { PagesStackView } from './shared/pages/PagesStackView'
@@ -27,25 +29,29 @@ export default function App() {
   return (
     <>
       <StatusBar style="auto" />
-      <Provider value={window['om']}>
-        <View style={styles.container}>
-          <AppMap />
+      <SafeAreaProvider>
+        <Provider value={window['om']}>
+          <AppRoot>
+            <View style={styles.container}>
+              <AppMap />
 
-          <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1000}>
-            <AppSmallDrawer>
-              <AppStackView>
-                {(props) => {
-                  return <PagesStackView {...props} />
-                }}
-              </AppStackView>
-            </AppSmallDrawer>
-          </AbsoluteVStack>
+              <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1000}>
+                <AppSmallDrawer>
+                  <AppStackView>
+                    {(props) => {
+                      return <PagesStackView {...props} />
+                    }}
+                  </AppStackView>
+                </AppSmallDrawer>
+              </AbsoluteVStack>
 
-          <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1001}>
-            <AppAutocomplete />
-          </AbsoluteVStack>
-        </View>
-      </Provider>
+              <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1001}>
+                <AppAutocomplete />
+              </AbsoluteVStack>
+            </View>
+          </AppRoot>
+        </Provider>
+      </SafeAreaProvider>
     </>
   )
 }

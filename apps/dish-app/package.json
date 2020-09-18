@@ -88,6 +88,8 @@
       "resize-observer-polyfill/**",
       "@react-native-community/blur",
       "@react-native-community/blur/**",
+      "react-native-safe-area-context",
+      "react-native-safe-area-context/**",
       "@mdx-js/react",
       "@mdx-js/react/**"
     ]
@@ -95,7 +97,7 @@
   "scripts": {
     "start": "TARGET=native react-native start",
     "android": "TARGET=native DISH_ENV=development react-native run-android --no-packager",
-    "ios": "TARGET=native DISH_ENV=development react-native run-ios --no-packager",
+    "ios": "TARGET=native DISH_ENV=development react-native run-ios --no-packager --simulator=\"iPhone 11 Pro\"",
     "web": "DISH_ENV=development TARGET=web VERBOSE=1 webpack-dev-server --port 19006 --progress",
     "web:no-extract": "NO_EXTRACT=1 yarn web",
     "web:webpack5": "VERBOSE=1 webpack serve --port 19006 --progress",
@@ -177,6 +179,7 @@
     "react-storage-hooks": "^4.0.1",
     "resize-observer-polyfill": "^1.5.1",
     "@react-native-community/blur": "^3.6.0",
+    "react-native-safe-area-context": "^3.1.8",
     "@mdx-js/react": "^1.6.17"
   },
   "devDependencies": {

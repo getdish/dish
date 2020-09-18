@@ -1,6 +1,7 @@
 import { graphql } from '@dish/graph'
 import { HStack, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
+import { Dimensions } from 'react-native'
 
 import { isWeb } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -20,7 +21,7 @@ export const RestaurantOverview = memo(
       const headlines = restaurant.headlines() ?? defaultListItems
       if (inline) {
         return (
-          <>
+          <VStack>
             {headlines.slice(0, 3).map((item, i) => {
               return (
                 <React.Fragment key={i}>
@@ -40,7 +41,7 @@ export const RestaurantOverview = memo(
                 </React.Fragment>
               )
             })}
-          </>
+          </VStack>
         )
       }
 

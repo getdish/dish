@@ -8,6 +8,7 @@ import { HomeContainer } from './AppContainer'
 import { HomeIntroLetter } from './AppIntroLetter'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
+import { AppRoot } from './AppRoot'
 import { HomeSearchBarFloating } from './AppSearchBar'
 import { AppStackView } from './AppStackView'
 import { isSSR } from './constants'
@@ -62,7 +63,7 @@ export default memo(function App() {
 
 const AppContent = memo(() => {
   return (
-    <>
+    <AppRoot>
       {/* WARNING: DONT PUT ANYTHING ABOVE THIS IN MARKUP ^^ */}
       <Suspense fallback={null}>
         <HomeContainer>
@@ -102,7 +103,7 @@ const AppContent = memo(() => {
           </Route>
         </Suspense>
       </Suspense>
-    </>
+    </AppRoot>
   )
 })
 

@@ -15,7 +15,6 @@ import { useOvermind } from './state/om'
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
 export default memo(() => {
-  const isSmall = useIsNarrow()
   const isReallySmall = useIsReallyNarrow()
   const om = useOvermind()
   const drawerSnapPoint = om.state.home.drawerSnapPoint
@@ -28,11 +27,7 @@ export default memo(() => {
     <Suspense fallback={null}>
       <VStack
         className="ease-in-out"
-        transform={[
-          { scale: isSmall ? 0.8 : 1 },
-          { translateX: isSmall ? 15 : 0 },
-          { translateY: isSmall ? 15 : 0 },
-        ]}
+        transform={[{ scale: 0.8 }, { translateX: 15 }, { translateY: -15 }]}
         {...(isReallySmall &&
           drawerSnapPoint > 0 && {
             opacity: 0,
@@ -66,7 +61,7 @@ const HomeMapPIPContent = graphql(({ isSmall }: { isSmall: boolean }) => {
       lng: span.lng * 2.5,
     }
   } else if (focusedRestaurant) {
-    slug = focusedRestaurant.slug
+    slug = focusedRestaurant.slug ?? ''
     restaurants = restaurantQuery(slug)
     // zoom in on pip for search
     span = {
@@ -171,9 +166,9 @@ const HomeMapPIPContent = graphql(({ isSmall }: { isSmall: boolean }) => {
   return (
     <VStack
       pointerEvents="auto"
-      width={120}
-      height={100}
-      borderRadius={20}
+      width={70}
+      height={70}
+      borderRadius={200}
       // keeps spacing when wrapped
       marginTop={10}
       overflow="hidden"
