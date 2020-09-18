@@ -26,18 +26,10 @@ export const FilterButton = memo(
     if (isSmall) {
       switch (content) {
         case 'Open':
-          content = (
-            <VStack marginBottom={isWeb ? 0 : -8}>
-              <Clock size={18} />
-            </VStack>
-          )
+          content = <Clock size={18} />
           break
         case 'Delivery':
-          content = (
-            <VStack marginBottom={isWeb ? 0 : -8}>
-              <ShoppingBag size={18} />
-            </VStack>
-          )
+          content = <ShoppingBag size={18} />
           break
       }
     }

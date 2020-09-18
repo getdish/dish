@@ -60,7 +60,7 @@ export const SearchPageTopBar = memo(({ stateId }: { stateId: string }) => {
           >
             <HStack
               height="100%"
-              marginTop={-10}
+              marginTop={10}
               alignItems="center"
               justifyContent="center"
             >

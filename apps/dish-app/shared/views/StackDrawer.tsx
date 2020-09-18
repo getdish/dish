@@ -4,6 +4,7 @@ import React, { Suspense } from 'react'
 import {
   drawerBorderRadius,
   drawerWidthMax,
+  isWeb,
   searchBarHeight,
 } from '../constants'
 import { useIsNarrow } from '../hooks/useIs'
@@ -33,7 +34,7 @@ export const StackDrawer = ({
       minWidth="100%"
       justifyContent="flex-end"
     >
-      {closable && !isSmall && (
+      {closable && (!isSmall || !isWeb) && (
         <StackViewCloseButton
           right={isSmall ? 10 : -14}
           top={isSmall ? 10 : -5}
