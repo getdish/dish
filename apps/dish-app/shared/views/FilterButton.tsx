@@ -1,5 +1,5 @@
 import { Tag } from '@dish/graph'
-import { Clock, ShoppingBag } from '@dish/react-feather'
+import { Clock, DollarSign, ShoppingBag } from '@dish/react-feather'
 import { VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
@@ -31,18 +31,26 @@ export const FilterButton = memo(
         case 'Delivery':
           content = <ShoppingBag size={18} />
           break
+        case '$':
+          content = <DollarSign size={18} />
+          break
       }
     }
 
     return (
       <LinkButton {...{ zIndex, flex, position, margin }} tag={tag}>
         <SmallButton
+          backgroundColor="transparent"
           textStyle={{ fontSize: 13, fontWeight: '700' }}
           isActive={isActive}
           flex={flex}
           {...rest}
         >
-          {content}
+          {isWeb ? (
+            content
+          ) : (
+            <VStack transform={[{ translateY: 7 }]}>{content}</VStack>
+          )}
         </SmallButton>
       </LinkButton>
     )

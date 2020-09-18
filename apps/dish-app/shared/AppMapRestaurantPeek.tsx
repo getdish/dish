@@ -11,10 +11,10 @@ import { useOvermind } from './state/om'
 import { LinkButton } from './views/ui/LinkButton'
 
 export const AppMapRestaurantPeek = memo(
-  graphql(() => {
+  graphql<any>(() => {
     const om = useOvermind()
     const [slug, setSlug] = useState('')
-    const selectedSlug = om.state.home.selectedRestaurant?.slug
+    const selectedSlug = om.state.home.selectedRestaurant?.slug ?? ''
     const hoveredSlug =
       (om.state.home.hoveredRestaurant &&
         om.state.home.hoveredRestaurant.slug) ||

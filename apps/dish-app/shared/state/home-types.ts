@@ -14,8 +14,6 @@ export type HomeState = {
   activeAutocompleteResults: AutocompleteItem[]
   activeEvent: ActiveEvent
   activeIndex: number // index for vertical (in page), -1 = autocomplete
-  allFilterTags: Tag[]
-  allLenseTags: Tag[]
   allStates: { [key: string]: HomeStateItem }
   allUsers: { [id: string]: User }
   autocompleteIndex: number // index for horizontal row (autocomplete)
