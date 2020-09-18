@@ -56,8 +56,6 @@ export const state: HomeState = {
   centerToResults: 0,
   refreshCurrentPage: 0,
   allUsers: {},
-  allLenseTags: tagLenses,
-  allFilterTags: tagFilters,
   showAutocomplete: false,
   drawerSnapPoint: 1,
   searchBarY: 25,

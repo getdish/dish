@@ -34,7 +34,7 @@ export const StackDrawer = ({
       minWidth="100%"
       justifyContent="flex-end"
     >
-      {closable && (!isSmall || !isWeb) && (
+      {closable && (
         <StackViewCloseButton
           right={isSmall ? 10 : -14}
           top={isSmall ? 10 : -5}

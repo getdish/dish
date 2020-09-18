@@ -15,6 +15,7 @@ import {
 } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
+import { Dimensions } from 'react-native'
 
 import { bgLightLight, brandColor, lightBlue } from '../../colors'
 import { isWeb } from '../../constants'
@@ -201,8 +202,16 @@ const RestaurantListItemContent = memo(
 
     const contentSideWidthProps: StackProps = {
       width: isSmall ? '90%' : '60%',
-      minWidth: isSmall ? (isWeb ? '52vw' : '52%') : 320,
-      maxWidth: isSmall ? (isWeb ? '80vw' : '80%') : 430,
+      minWidth: isSmall
+        ? isWeb
+          ? '52vw'
+          : Dimensions.get('screen').width * 0.5
+        : 320,
+      maxWidth: isSmall
+        ? isWeb
+          ? '80vw'
+          : Dimensions.get('screen').width * 0.8
+        : 430,
     }
 
     const [open_text, open_color, opening_hours] = openingHours(restaurant)

@@ -20,6 +20,7 @@ import React, {
 } from 'react'
 import { ScrollView } from 'react-native'
 
+import { AppPortalItem } from '../../AppPortal'
 import { searchBarHeight, searchBarTopOffset } from '../../constants'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useLastValue } from '../../hooks/useLastValue'
@@ -43,8 +44,8 @@ import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { StackViewProps } from '../StackViewProps'
 import { getTitleForState } from './getTitleForState'
+import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
-import { SearchPageTopBar } from './SearchPageTopBar'
 
 type Props = StackViewProps<HomeStateItemSearch>
 
@@ -63,7 +64,7 @@ const useSpacing = () => {
   }
 }
 
-export default memo(function HomePageSearchResults(props: Props) {
+export default memo(function SearchPage(props: Props) {
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const om = useOvermind()
   const state = om.state.home.allStates[props.item.id] as HomeStateItemSearch
@@ -151,19 +152,23 @@ export default memo(function HomePageSearchResults(props: Props) {
   }, [key])
 
   return (
-    <StackDrawer closable>
-      <SearchPageTopBar stateId={props.item.id} />
-      <Suspense fallback={<HomeLoading />}>
-        <VStack
-          flex={1}
-          overflow="hidden"
-          opacity={isOptimisticUpdating ? 0.5 : 1}
-          width="100%"
-        >
-          {content}
-        </VStack>
-      </Suspense>
-    </StackDrawer>
+    <>
+      <AppPortalItem key={props.isActive ? '1' : '0'}>
+        {props.isActive ? <SearchPageNavBar id={props.item.id} /> : null}
+      </AppPortalItem>
+      <StackDrawer closable>
+        <Suspense fallback={<HomeLoading />}>
+          <VStack
+            flex={1}
+            overflow="hidden"
+            opacity={isOptimisticUpdating ? 0.5 : 1}
+            width="100%"
+          >
+            {content}
+          </VStack>
+        </Suspense>
+      </StackDrawer>
+    </>
   )
 })
 
@@ -183,7 +188,7 @@ const getRestaurantListItemHeight = () => {
 const SearchResultsContent = (props: Props) => {
   const searchState = props.item
   const { isSmall, titleHeight } = useSpacing()
-  const paddingTop = isSmall ? titleHeight : titleHeight - searchBarHeight + 2
+  const paddingTop = isSmall ? 0 : titleHeight - searchBarHeight + 2
   const perChunk = 4
   const allResults = searchState.results
   const total = allResults.length
@@ -270,11 +275,7 @@ const SearchResultsContent = (props: Props) => {
         >
           <Text letterSpacing={-0.5} fontSize={titleFontSize} fontWeight="600">
             {pageTitleElements}{' '}
-            <Text
-              // fontSize={titleFontSize * 0.9}
-              fontWeight="300"
-              opacity={0.5}
-            >
+            <Text fontWeight="300" opacity={0.5}>
               {subTitle}
             </Text>
           </Text>

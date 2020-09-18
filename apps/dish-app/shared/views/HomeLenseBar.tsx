@@ -5,6 +5,7 @@ import React, { memo } from 'react'
 import { getTagId } from '../state/getTagId'
 import { HomeActiveTagsRecord } from '../state/home-types'
 import { useOvermind } from '../state/om'
+import { tagLenses } from '../state/tagLenses'
 import { LenseButton, LenseButtonSize } from './LenseButton'
 
 export const HomeLenseBar = memo(
@@ -18,7 +19,7 @@ export const HomeLenseBar = memo(
     const om = useOvermind()
     return (
       <>
-        {om.state.home.allLenseTags.map((lense, index) => (
+        {tagLenses.map((lense, index) => (
           <VStack height="100%" key={lense.id + index}>
             <LenseButton
               lense={lense}
