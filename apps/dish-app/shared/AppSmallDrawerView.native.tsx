@@ -1,13 +1,20 @@
 import { VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { useMemo } from 'react'
-import { Animated, PanResponder, StyleSheet, View } from 'react-native'
+import {
+  Animated,
+  Dimensions,
+  PanResponder,
+  StyleSheet,
+  View,
+} from 'react-native'
 
 import { AppSearchBarDrawer } from './AppSearchBar'
 import { blurSearchInput, isTouchingSearchBar } from './AppSearchInput'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { BottomSheetContainer } from './BottomSheetContainer'
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from './constants'
+import { getWindowHeight } from './helpers/getWindow'
 import { omStatic } from './state/omStatic'
 import { isScrollAtTop, isScrollingSubDrawer } from './views/ContentScrollView'
 
@@ -15,6 +22,11 @@ export const AppSmallDrawerView = (props: { children: any }) => {
   const drawerStore = useStore(BottomDrawerStore)
 
   const panResponder = useMemo(() => {
+    const move = Animated.event([null, { dy: drawerStore.pan }], {
+      useNativeDriver: false,
+    })
+
+    let curSnapY = 0
     return PanResponder.create({
       onMoveShouldSetPanResponder: (_, { dy }) => {
         if (isTouchingSearchBar) {
@@ -38,16 +50,26 @@ export const AppSmallDrawerView = (props: { children: any }) => {
       onPanResponderGrant: (e, gestureState) => {
         drawerStore.spring?.stop()
         drawerStore.spring = null
-        drawerStore.pan.setOffset(drawerStore.pan['_value'])
+        curSnapY = drawerStore.pan['_value']
+        drawerStore.pan.setOffset(curSnapY)
         drawerStore.pan.setValue(0)
         if (omStatic.state.home.showAutocomplete) {
           omStatic.actions.home.setShowAutocomplete(false)
         }
         blurSearchInput()
       },
-      onPanResponderMove: Animated.event([null, { dy: drawerStore.pan }], {
-        useNativeDriver: false,
-      }),
+      onPanResponderMove: (e, gestureState) => {
+        const y = curSnapY + gestureState.dy
+        const minY = getWindowHeight() * drawerStore.snapPoints[0] - 10
+        const maxY = getWindowHeight() * drawerStore.snapPoints[2] + 10
+        console.log(y, minY, maxY)
+        if (y < minY) {
+          return
+        } else if (y > maxY) {
+          return
+        }
+        move(e, gestureState)
+      },
       onPanResponderRelease: (e, gestureState) => {
         drawerStore.pan.flattenOffset()
         const velocity = gestureState.vy
@@ -78,12 +100,17 @@ export const AppSmallDrawerView = (props: { children: any }) => {
       zIndex={zIndexDrawer}
       width="100%"
       height="100%"
+      maxHeight="100%"
     >
       <Animated.View
         style={{
           transform: [
             {
-              translateY: drawerStore.pan,
+              translateY: drawerStore.pan.interpolate({
+                inputRange: [0, getWindowHeight() - searchBarHeight],
+                outputRange: [0, getWindowHeight() - searchBarHeight],
+                extrapolate: 'clamp',
+              }),
             },
           ],
           maxWidth: pageWidthMax,
