@@ -77,7 +77,7 @@ export const RestaurantButton = memo(
               fontSize={14}
               fontWeight={active ? '600' : '400'}
               color={active ? '#000' : '#444'}
-              marginRight={5}
+              marginRight={25}
             >
               {typeof rank === 'number' ? `${rank}. ` : ''}
               {restaurant.name}
