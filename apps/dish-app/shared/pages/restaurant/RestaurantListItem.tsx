@@ -243,7 +243,7 @@ const RestaurantListItemContent = memo(
             >
               <VStack paddingTop={30}>
                 <HStack marginLeft={-8} alignItems="center" maxWidth="40%">
-                  <VStack position="relative" marginVertical={-14}>
+                  <VStack position="relative" marginVertical={-14} zIndex={10}>
                     <RestaurantUpVoteDownVote
                       score={score}
                       restaurantId={restaurantId}
@@ -268,38 +268,47 @@ const RestaurantListItemContent = memo(
                       params={{ slug: restaurantSlug }}
                     >
                       <HStack>
-                        <Text
-                          lineBreakMode="clip"
-                          numberOfLines={1}
-                          color="#777"
+                        <VStack
                           width={38}
                           height={38}
-                          marginLeft={-28}
+                          {...(isWeb && {
+                            marginLeft: -18,
+                            marginTop: -10,
+                            marginRight: -4,
+                          })}
+                          {...(!isWeb && {
+                            marginLeft: -6,
+                            marginTop: -10,
+                            marginRight: 0,
+                          })}
                           marginBottom={-22}
-                          transform={[{ translateY: -26 }]}
-                          zIndex={-1}
-                          marginRight={-4}
+                          position="relative"
                           backgroundColor="#f2f2f2"
                           borderRadius={1000}
                           alignItems="center"
                           justifyContent="center"
-                          textAlign="center"
-                          lineHeight={38}
                         >
-                          <SuperScriptText
-                            transform={[{ translateY: -4 }]}
-                            fontSize={11}
-                          >
-                            #
-                          </SuperScriptText>
                           <Text
-                            fontSize={+rank > 9 ? 14 : 20}
-                            fontWeight="300"
-                            color="#000"
+                            color="#777"
+                            transform={[{ translateY: -0 }]}
+                            textAlign="center"
+                            lineHeight={38}
                           >
-                            {rank}
+                            <SuperScriptText
+                              transform={[{ translateY: -4 }]}
+                              fontSize={11}
+                            >
+                              #
+                            </SuperScriptText>
+                            <Text
+                              fontSize={+rank > 9 ? 14 : 20}
+                              fontWeight="300"
+                              color="#000"
+                            >
+                              {rank}
+                            </Text>
                           </Text>
-                        </Text>
+                        </VStack>
                         <Spacer size="sm" />
                         <Text
                           fontSize={
