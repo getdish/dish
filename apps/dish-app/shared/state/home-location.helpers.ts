@@ -7,7 +7,7 @@ export const dist = (a: number, b: number) => {
   return a > b ? a - b : b - a
 }
 
-export async function getLocationFromRoute(): Promise<HomeStateItemLocation> {
+export async function getLocationFromRoute(): Promise<HomeStateItemLocation | null> {
   const page = router.curPage
 
   if (page.name === 'search') {

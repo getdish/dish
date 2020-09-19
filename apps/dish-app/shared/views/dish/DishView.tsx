@@ -52,7 +52,7 @@ export const DishView = memo(
         alignItems="center"
         position="relative"
         justifyContent="center"
-        width={width}
+        // width={width}
         height={height}
         pressStyle={{
           transform: [{ scale: 0.98 }],
@@ -81,7 +81,7 @@ export const DishView = memo(
         {...rest}
       >
         {/* rating */}
-        <AbsoluteVStack pointerEvents="none" zIndex={10} top={0} left={-8}>
+        <AbsoluteVStack pointerEvents="none" zIndex={10} top={-8} left={-8}>
           {!!dish.rating && (
             <DishRatingView
               size={size > 160 ? 'md' : 'sm'}

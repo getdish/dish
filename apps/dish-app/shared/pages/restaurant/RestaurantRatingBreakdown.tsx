@@ -5,9 +5,9 @@ import React, { Suspense, memo } from 'react'
 import { CloseButton } from '../../views/ui/CloseButton'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
+import { RestaurantBreakdown } from './RestaurantBreakdown'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
-import { RestaurantScoreBreakdown } from './RestaurantScoreBreakdown'
 
 export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
   showComments = false
@@ -69,7 +69,7 @@ export const RestaurantRatingBreakdown = memo(
             overflow="hidden"
           >
             <SmallTitle>Points</SmallTitle>
-            <RestaurantScoreBreakdown
+            <RestaurantBreakdown
               showTable={showScoreTable}
               restaurantSlug={restaurantSlug}
             />

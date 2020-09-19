@@ -4,6 +4,7 @@ import React, { memo } from 'react'
 
 import { isWeb } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { Link } from '../../views/ui/Link'
 import { SmallLinkButton } from '../../views/ui/SmallButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 
@@ -30,16 +31,15 @@ export const RestaurantDetailRow = memo(
         {
           title: open_text,
           content: next_time ? (
-            <SmallLinkButton
+            <Link
               name="restaurantHours"
               params={{ slug: restaurantSlug }}
               fontWeight="400"
               color={open_color}
               ellipse
-              borderColor="transparent"
             >
               {next_time}
-            </SmallLinkButton>
+            </Link>
           ) : (
             'No hours :('
           ),
@@ -194,15 +194,15 @@ function priceRangeDollar(restaurant: RestaurantQuery) {
   switch (true) {
     case restaurant.price_range == '$':
       label = 'Cheap'
-      color = '#000'
+      color = '#aaa'
       break
     case restaurant.price_range == '$$':
       label = 'Price'
-      color = '#888'
+      color = '#aaa'
       break
     case restaurant.price_range == '$$$':
       label = 'Expensive'
-      color = '#ccc'
+      color = '#aaa'
       break
   }
   return [label, color, restaurant.price_range]

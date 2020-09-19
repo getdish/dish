@@ -6,7 +6,7 @@ import { getWindowHeight } from './helpers/getWindow'
 import { omStatic } from './state/omStatic'
 
 export class BottomDrawerStore extends Store {
-  snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.7]
+  snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.8]
   snapIndex = 1
   pan = new Animated.Value(this.getSnapPointOffset())
   spring: any
