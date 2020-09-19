@@ -4,7 +4,7 @@ import loadable from '@loadable/component'
 import React, { Suspense, memo, useEffect } from 'react'
 
 import HomeAutocomplete from './AppAutocomplete'
-import { HomeContainer } from './AppContainer'
+import { AppContainer } from './AppContainer'
 import { HomeIntroLetter } from './AppIntroLetter'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
@@ -66,13 +66,13 @@ const AppContent = memo(() => {
     <AppRoot>
       {/* WARNING: DONT PUT ANYTHING ABOVE THIS IN MARKUP ^^ */}
       <Suspense fallback={null}>
-        <HomeContainer>
+        <AppContainer>
           <AppStackView>
             {(props) => {
               return <PagesStackView {...props} />
             }}
           </AppStackView>
-        </HomeContainer>
+        </AppContainer>
       </Suspense>
 
       <Suspense fallback={null}>

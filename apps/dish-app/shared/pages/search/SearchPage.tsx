@@ -152,9 +152,7 @@ export default memo(function SearchPage(props: Props) {
 
   return (
     <>
-      <AppPortalItem key={props.isActive ? '1' : '0'}>
-        {props.isActive ? <SearchPageNavBar id={props.item.id} /> : null}
-      </AppPortalItem>
+      <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
       <StackDrawer closable>
         <Suspense fallback={<HomeLoading />}>
           <VStack
@@ -170,6 +168,29 @@ export default memo(function SearchPage(props: Props) {
     </>
   )
 })
+
+const SearchNavBarContainer = ({
+  isActive,
+  id,
+}: {
+  isActive: boolean
+  id: string
+}) => {
+  const isSmall = useIsNarrow()
+  if (!isSmall) {
+    return (
+      <VStack marginTop={10}>
+        <SearchPageNavBar id={id} />
+      </VStack>
+    )
+  }
+
+  return (
+    <AppPortalItem key={isActive ? '1' : '0'}>
+      {isActive ? <SearchPageNavBar id={id} /> : null}
+    </AppPortalItem>
+  )
+}
 
 const getRestaurantListItemHeight = () => {
   if (typeof document !== 'undefined') {

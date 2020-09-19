@@ -57,7 +57,7 @@ export const RestaurantButton = memo(
           }}
         >
           <HStack
-            maxWidth="100%"
+            maxWidth={170}
             flex={1}
             alignItems="center"
             position="relative"
@@ -89,7 +89,7 @@ export const RestaurantButton = memo(
               // @ts-ignore
               position="absolute"
               top={-5}
-              right={-30}
+              right={-15}
               subtle={subtle}
             />
           </HStack>

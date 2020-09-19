@@ -28,11 +28,12 @@ export const StackDrawer = ({
       maxHeight="100%"
       height="100%"
       borderRadius={drawerBorderRadius}
-      overflow="visible"
-      marginTop={isSmall ? 0 : searchBarHeight}
       maxWidth={isSmall ? '100%' : drawerWidthMax}
       minWidth="100%"
       justifyContent="flex-end"
+      shadowRadius={isSmall ? 5 : 10}
+      shadowColor="rgba(0,0,0,0.1)"
+      shadowOffset={{ height: -2, width: 0 }}
     >
       {closable && (
         <StackViewCloseButton
@@ -53,9 +54,6 @@ export const StackDrawer = ({
         borderRadius={drawerBorderRadius}
         overflow="hidden"
         maxWidth={isSmall ? '100%' : drawerWidthMax}
-        shadowRadius={isSmall ? 5 : 10}
-        shadowColor="rgba(0,0,0,0.1)"
-        shadowOffset={{ height: -2, width: 0 }}
         backgroundColor="#fff"
         contain="strict"
         {...props}
