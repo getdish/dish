@@ -472,10 +472,13 @@ pgpool:
   ## Specify dictionary of scripts to be run everytime Pgpool container is initialized
   ## Alternatively, you can put your scripts under the files/pgpool-entrypoint-initdb.d directory
   ##
-  # initdbScripts:
-  #   my_init_script.sh: |
-  #      #!/bin/sh
-  #      echo "Do something."
+  initdbScripts:
+    init_script.sh: "
+      conf=/opt/bitnami/pgpool/conf/pgpool.conf \n
+      off=\"statement_level_load_balance = 'off'\" \n
+      on=\"statement_level_load_balance = 'on'\" \n
+      sed -i \"s/$off/$on/\" $conf
+    "
 
   ## ConfigMap with scripts to be run everytime Pgpool container is initialized
   ## NOTE: This will override pgpool.initdbScripts
