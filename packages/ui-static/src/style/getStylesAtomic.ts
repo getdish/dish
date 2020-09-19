@@ -6,6 +6,7 @@ import createReactDOMStyle from 'react-native-web/dist/cjs/exports/StyleSheet/cr
 import i18Style from 'react-native-web/dist/cjs/exports/StyleSheet/i18nStyle'
 
 import { StyleObject } from '../types'
+import { stylePropsText } from './styleProps'
 
 export const pseudos = {
   activeStyle: {
@@ -33,7 +34,7 @@ const borderDefaults = {
 export function getStylesAtomic(
   style: any,
   classList?: string[] | null,
-  debug?: boolean
+  shouldPrintDebug?: boolean
 ) {
   const styles: { [key: string]: ViewStyle } = {
     base: {},
@@ -85,7 +86,13 @@ export function getStylesAtomic(
             .replace('{', `:${pseudoConfig.name}{`)
         )
       }
+      if (styleObj.rules[0].indexOf('!important') > 0) {
+        styleObj.rules[0] = styleObj.rules[0].replace('!important', '')
+      }
       styleObj.className = `.${styleObj.identifier}`
+    }
+    if (shouldPrintDebug) {
+      console.log(`getStylesAtomic`, all)
     }
     return Object.keys(all).map((key) => all[key]) as StyleObject[]
   }

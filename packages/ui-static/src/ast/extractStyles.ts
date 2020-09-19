@@ -245,8 +245,6 @@ export function extractStyles(
 
         // STORE *EVERY* { [CLASSNAME]: STYLES } on this (used to generate css later)
         const stylesByClassName: ClassNameToStyleObj = {}
-        // stores className objects we build up later into a single className
-        const classNameObjects: ClassNameObject[] = []
         // ternaries we can extract, of course
         const staticTernaries: Ternary[] = []
 
@@ -701,6 +699,7 @@ export function extractStyles(
           traversePath.node.closingElement.name.name = node.name.name
         }
 
+        const classNameObjects: ClassNameObject[] = []
         if (classNamePropValue) {
           try {
             const evaluatedValue = attemptEval(classNamePropValue)
@@ -721,6 +720,9 @@ export function extractStyles(
           const styles = addStylesAtomic(viewStyles)
           for (const style of styles) {
             classNames.push(style.identifier)
+          }
+          if (shouldPrintDebug) {
+            console.log({ classNames, viewStyles })
           }
         }
 
