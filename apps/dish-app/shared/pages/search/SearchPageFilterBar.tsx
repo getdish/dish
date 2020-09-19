@@ -1,11 +1,10 @@
 import { HStack, StackProps } from '@dish/ui'
-import _, { uniqBy } from 'lodash'
+import _ from 'lodash'
 import React, { memo } from 'react'
 
 import { useIsNarrow } from '../../hooks/useIs'
 import { getTagId } from '../../state/getTagId'
 import { HomeActiveTagsRecord } from '../../state/home-types'
-import { useOvermind } from '../../state/om'
 import { tagFilters } from '../../state/tagFilters'
 import { FilterButton } from '../../views/FilterButton'
 

@@ -89,8 +89,6 @@ const SearchPageNavBarContent = memo(({ stateId }: { stateId: string }) => {
           <SearchPageFilterBar activeTagIds={state.activeTagIds} />
         </HStack>
       </VStack>
-
-      <SearchPageDeliveryFilterButtons activeTagIds={state.activeTagIds} />
     </>
   )
 })

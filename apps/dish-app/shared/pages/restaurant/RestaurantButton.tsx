@@ -40,7 +40,7 @@ export const RestaurantButton = memo(
             backgroundColor: 'transparent',
           })}
           zIndex={1}
-          padding={5}
+          padding={7}
           borderRadius={6}
           hoverStyle={{
             borderColor: '#eee',
@@ -75,7 +75,7 @@ export const RestaurantButton = memo(
             )}
             <Text
               ellipse
-              fontSize={14}
+              fontSize={16}
               fontWeight={active ? '600' : '400'}
               color={active ? '#000' : '#444'}
               marginRight={25}
@@ -89,8 +89,8 @@ export const RestaurantButton = memo(
               rating={restaurant.rating}
               // @ts-ignore
               position="absolute"
-              top={-5}
-              right={isWeb ? -15 : -30}
+              top={-7}
+              right={isWeb ? -12 : -30}
               subtle={subtle}
             />
           </HStack>

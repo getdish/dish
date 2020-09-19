@@ -21,9 +21,9 @@ export const Squircle = ({
         height={height}
         borderRadius={borderRadius}
         position="relative"
-        shadowRadius={6}
+        shadowRadius={10}
         shadowOffset={{ width: 0, height: 3 }}
-        shadowColor="rgba(0,0,0,0.225)"
+        shadowColor="rgba(0,0,0,0.15)"
         backgroundColor="#111"
         {...(isHovered && {
           zIndex: 10000,
@@ -42,9 +42,6 @@ export const Squircle = ({
           alignItems="center"
           justifyContent="center"
           pointerEvents="none"
-          {...(isHovered && {
-            backgroundColor: '#fff',
-          })}
         >
           {children}
           <AbsoluteVStack fullscreen className="box-shadow-inset-large" />

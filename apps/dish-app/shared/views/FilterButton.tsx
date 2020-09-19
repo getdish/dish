@@ -1,10 +1,11 @@
 import { Tag } from '@dish/graph'
 import { Clock, DollarSign, ShoppingBag } from '@dish/react-feather'
-import { VStack } from '@dish/ui'
+import { HoverablePopover, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { isWeb } from '../constants'
 import { useIsNarrow } from '../hooks/useIs'
+import { SearchPageDeliveryFilterButtons } from '../pages/search/SearchPageDeliveryFilterButtons'
 import { tagDisplayNames } from '../state/tagDisplayName'
 import { LinkButton } from './ui/LinkButton'
 import { LinkButtonProps } from './ui/LinkProps'
@@ -24,20 +25,20 @@ export const FilterButton = memo(
     let content: any = rest.children ?? tagDisplayNames[tag.name] ?? tag.name
 
     if (isSmall) {
-      switch (content) {
+      switch (tag.name) {
         case 'Open':
           content = <Clock size={18} />
           break
         case 'Delivery':
           content = <ShoppingBag size={18} />
           break
-        case '$':
+        case 'price-low':
           content = <DollarSign size={18} />
           break
       }
     }
 
-    return (
+    content = (
       <LinkButton {...{ zIndex, flex, position, margin }} tag={tag}>
         <SmallButton
           backgroundColor="transparent"
@@ -54,5 +55,19 @@ export const FilterButton = memo(
         </SmallButton>
       </LinkButton>
     )
+
+    if (tag.name === 'Delivery') {
+      return (
+        <HoverablePopover
+          noArrow
+          allowHoverOnContent
+          contents={<SearchPageDeliveryFilterButtons />}
+        >
+          {content}
+        </HoverablePopover>
+      )
+    }
+
+    return content
   }
 )

@@ -2,7 +2,7 @@ import { HStack, StackProps, Text } from '@dish/ui'
 import React from 'react'
 import { TextStyle } from 'react-native'
 
-import { bg, bgLight, bgLightHover, bgLightLight } from '../../colors'
+import { bg, bgLight, bgLightLight, lightBlue } from '../../colors'
 import { isWeb } from '../../constants'
 import { RoutesTable } from '../../state/router'
 import { baseButtonStyle } from '../baseButtonStyle'
@@ -26,7 +26,7 @@ export const SmallButton = ({
     <DeoptHStack
       className={rest.className}
       {...(isWeb && {
-        minHeight: 40,
+        minHeight: 30,
         minWidth: 44,
       })}
       {...(!isWeb && {
@@ -36,14 +36,14 @@ export const SmallButton = ({
         justifyContent: 'center',
       })}
       {...smallButtonBaseStyle}
+      {...rest}
       {...(isActive && {
-        backgroundColor: 'transparent',
-        borderColor: `#999`,
+        backgroundColor: bgLight,
+        borderColor: lightBlue,
         hoverStyle: {
-          backgroundColor: 'transparent',
+          backgroundColor: bgLight,
         },
       })}
-      {...rest}
     >
       <Text
         color={isActive ? '#000' : bg}

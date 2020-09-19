@@ -217,7 +217,7 @@ const RestaurantListItemContent = memo(
               name="restaurant"
               params={{ slug: restaurantSlug }}
             >
-              <VStack paddingTop={30}>
+              <VStack paddingTop={20}>
                 <HStack marginLeft={-8} alignItems="center" maxWidth="40%">
                   <VStack position="relative" marginVertical={-14} zIndex={10}>
                     <RestaurantUpVoteDownVote
@@ -318,10 +318,10 @@ const RestaurantListItemContent = memo(
             <VStack
               {...contentSideWidthProps}
               zIndex={1000}
-              paddingLeft={44}
+              paddingLeft={30}
               paddingRight={20}
             >
-              <Spacer size={7} />
+              <Spacer size={10} />
 
               <HStack
                 alignItems="center"
@@ -356,7 +356,7 @@ const RestaurantListItemContent = memo(
               <HStack marginLeft={-8} position="relative">
                 <AbsoluteVStack
                   top={-12}
-                  left={-36}
+                  left={-28}
                   width={26}
                   height={26}
                   overflow="hidden"
@@ -379,7 +379,7 @@ const RestaurantListItemContent = memo(
             </VStack>
           </VStack>
 
-          <Spacer size="md" />
+          <Spacer size="lg" />
 
           {/* ROW: OVERVIEW / PEEK */}
           <HStack flex={1} maxWidth="100%">
@@ -406,7 +406,7 @@ const RestaurantListItemContent = memo(
             />
           </HStack>
 
-          <Spacer size="lg" />
+          <Spacer size="xl" />
 
           {/* BOTTOM ROW */}
 
@@ -497,13 +497,13 @@ const RestaurantPeekDishes = memo(
       tag_names,
       max: 5,
     })
-    const dishSize = 130
+    const dishSize = 155
     return (
       <HStack
         contain="paint layout"
         pointerEvents="auto"
         padding={20}
-        marginTop={-60}
+        marginTop={-80}
         marginBottom={-40}
         height={dishSize + 40}
         spacing={spacing}

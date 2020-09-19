@@ -144,7 +144,8 @@ export const TagButton = memo((props: TagButtonProps) => {
     <>
       <HStack
         height={height}
-        borderRadius={10 * scale}
+        borderRadius={30 * scale}
+        paddingHorizontal={4}
         overflow="hidden"
         alignItems="center"
         justifyContent="center"

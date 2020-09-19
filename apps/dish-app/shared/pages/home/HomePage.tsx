@@ -175,11 +175,11 @@ export default memo(function HomePage(props: Props) {
           <ContentScrollView>
             {/* cross line */}
             <AbsoluteVStack
-              height={400}
+              height={320}
               width={2000}
               right="-10%"
-              top={-100}
-              transform={[{ rotate: '-4deg' }]}
+              top={-120}
+              transform={[{ rotate: '-2deg' }]}
             >
               <LinearGradient
                 style={[StyleSheet.absoluteFill]}
@@ -195,8 +195,6 @@ export default memo(function HomePage(props: Props) {
             >
               <VStack>
                 <HomeTopSearches />
-
-                <Spacer size="xs" />
 
                 <Suspense fallback={null}>
                   <HomeTopDishesContent topDishes={topDishes} />
@@ -216,7 +214,7 @@ const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
   return (
     <>
       <HomeTopDishesTitle />
-      <Spacer size="xl" />
+      <Spacer size="lg" />
 
       <VStack minHeight={Dimensions.get('window').height * 0.95}>
         {!topDishes.length && (
@@ -266,7 +264,7 @@ const HomeTopDishesTitle = () => {
   )
 }
 
-const dishHeight = 140
+const dishHeight = 125
 
 const TopDishesCuisineItem = memo(
   ({ country, index }: { index: number; country: TopCuisine }) => {
@@ -279,7 +277,7 @@ const TopDishesCuisineItem = memo(
             right={-100}
             bottom={-15}
             backgroundColor={bgLightTranslucent}
-            transform={[{ rotate: '-4deg' }]}
+            transform={[{ rotate: '-2deg' }]}
           >
             <LinearGradient
               colors={[bgLightTranslucent, '#fff']}
@@ -332,10 +330,9 @@ const TopDishesCuisineItem = memo(
               ) : null}
             </Text>
           </SlantedLinkButton>
-          {/* <Divider flex /> */}
         </HStack>
         <VStack
-          marginTop={-20}
+          marginTop={-28}
           pointerEvents="none"
           flex={1}
           overflow="hidden"
@@ -344,7 +341,7 @@ const TopDishesCuisineItem = memo(
           <ContentScrollViewHorizontal style={{ paddingVertical: 10 }}>
             <HStack
               alignItems="center"
-              spacing={10}
+              spacing={18}
               paddingVertical={18}
               paddingRight={20}
             >
@@ -365,6 +362,7 @@ const TopDishesCuisineItem = memo(
                   >
                     <DishView
                       size={dishHeight}
+                      isFallback
                       dish={{
                         ...top_dish,
                         rating: (top_dish.rating ?? 0) / 5,
@@ -435,7 +433,7 @@ const TopDishesTrendingRestaurants = memo(
     return (
       <VStack width={200} padding={10} spacing={4} alignItems="flex-start">
         {_.uniqBy(country.top_restaurants, (x) => x.name)
-          .slice(0, 5)
+          .slice(0, 4)
           .map((restaurant, index) => {
             return (
               <HStack key={restaurant.name} maxWidth="100%">

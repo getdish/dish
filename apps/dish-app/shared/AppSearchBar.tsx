@@ -1,5 +1,6 @@
 import {
   ArrowDown,
+  ArrowUp,
   ChevronLeft,
   Home,
   MapPin,
@@ -284,16 +285,23 @@ const HomeSearchBar = memo(() => {
 })
 
 const SearchBarActionButton = memo(() => {
+  const isSmall = useIsNarrow()
   const { color } = useSearchBarTheme()
   const om = useOvermind()
   const { showAutocomplete } = om.state.home
   const isDisabled =
     !showAutocomplete && om.state.home.currentStateType === 'home'
-  const iconProps = {
-    color,
-    size: 20,
-    style: { marginTop: 3 },
-  }
+
+  const Icon = (() => {
+    if (showAutocomplete) {
+      if (isSmall) return ArrowDown
+      return ArrowUp
+    }
+    if (om.state.home.states.length === 2) {
+      return Home
+    }
+    return ChevronLeft
+  })()
 
   return (
     <LinkButton
@@ -319,13 +327,7 @@ const SearchBarActionButton = memo(() => {
         },
       })}
     >
-      {showAutocomplete ? (
-        <ArrowDown {...iconProps} />
-      ) : om.state.home.states.length === 2 ? (
-        <Home {...iconProps} />
-      ) : (
-        <ChevronLeft {...iconProps} />
-      )}
+      <Icon color={color} size={20} style={{ marginTop: 3 }} />
     </LinkButton>
   )
 })
