@@ -93,7 +93,7 @@ export function getStaticBindingsForScope(
           }
         }
         if (shouldPrintDebug) {
-          console.log('>> module on whitelist', moduleName, src, ret)
+          console.log('>> module on whitelist', moduleName)
         }
       }
       continue

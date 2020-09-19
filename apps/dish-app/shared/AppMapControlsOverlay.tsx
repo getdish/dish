@@ -1,3 +1,4 @@
+// debug
 import { AbsoluteVStack, HStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import loadable from '@loadable/component'
@@ -37,6 +38,7 @@ export const AppMapControlsOverlay = memo(() => {
         padding={20}
         top={searchBarHeight + 10}
         left={paddingLeft}
+        pointerEvents="none"
         right={0}
         {...(isSmall && {
           maxWidth: '100%',

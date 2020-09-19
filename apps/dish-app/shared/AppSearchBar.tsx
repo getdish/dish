@@ -1,4 +1,10 @@
-import { ChevronLeft, Home, MapPin, Search } from '@dish/react-feather'
+import {
+  ArrowDown,
+  ChevronLeft,
+  Home,
+  MapPin,
+  Search,
+} from '@dish/react-feather'
 import { AbsoluteVStack, HStack, Spacer, VStack } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
@@ -174,8 +180,6 @@ const HomeSearchBar = memo(() => {
   const isSmall = useIsNarrow()
   const isReallySmall = useIsReallyNarrow()
   const { color } = useSearchBarTheme()
-  const isShowingAutocompleteWhenSmall =
-    !!om.state.home.showAutocomplete && isSmall
 
   return (
     <HStack
@@ -191,16 +195,7 @@ const HomeSearchBar = memo(() => {
         <DishLogoButton />
       </VStack>
 
-      {Platform.OS === 'web' && (
-        <VStack
-          {...(isShowingAutocompleteWhenSmall && {
-            opacity: 0,
-            width: 0,
-          })}
-        >
-          <HomeSearchBarHomeBackButton />
-        </VStack>
-      )}
+      {!isReallySmall && <SearchBarActionButton />}
 
       <HStack
         className="ease-in-out"
@@ -288,15 +283,18 @@ const HomeSearchBar = memo(() => {
   )
 })
 
-const HomeSearchBarHomeBackButton = memo(() => {
+const SearchBarActionButton = memo(() => {
   const { color } = useSearchBarTheme()
   const om = useOvermind()
-  const isDisabled = om.state.home.currentStateType === 'home'
+  const { showAutocomplete } = om.state.home
+  const isDisabled =
+    !showAutocomplete && om.state.home.currentStateType === 'home'
   const iconProps = {
     color,
     size: 20,
     style: { marginTop: 3 },
   }
+
   return (
     <LinkButton
       justifyContent="center"
@@ -305,7 +303,13 @@ const HomeSearchBarHomeBackButton = memo(() => {
       width={32}
       opacity={isDisabled ? 0.1 : 0.7}
       disabled={isDisabled}
-      onPress={() => om.actions.home.popBack()}
+      onPress={() => {
+        if (showAutocomplete) {
+          om.actions.home.setShowAutocomplete(false)
+        } else {
+          om.actions.home.popBack()
+        }
+      }}
       {...(!isDisabled && {
         hoverStyle: {
           opacity: 1,
@@ -315,7 +319,9 @@ const HomeSearchBarHomeBackButton = memo(() => {
         },
       })}
     >
-      {om.state.home.states.length === 2 ? (
+      {showAutocomplete ? (
+        <ArrowDown {...iconProps} />
+      ) : om.state.home.states.length === 2 ? (
         <Home {...iconProps} />
       ) : (
         <ChevronLeft {...iconProps} />
