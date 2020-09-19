@@ -99,8 +99,11 @@
   "scripts": {
     "start": "TARGET=native react-native start",
     "android": "TARGET=native DISH_ENV=development react-native run-android --no-packager",
-    "ios": "TARGET=native DISH_ENV=development react-native run-ios --no-packager --simulator=\"iPhone 11 Pro\"",
-    "ios:prod": "yarn ios --configuration Release",
+    "ios:run": "TARGET=native react-native run-ios --no-packager",
+    "ios": "DISH_ENV=development yarn ios:run --simulator=\"iPhone 11 Pro\"",
+    "ios:prod": "yarn ios:run --configuration Release",
+    "ios:device": "yarn ios:run --device",
+    "ios:device:prod": "yarn ios:run --device --configuration Release",
     "web": "DISH_ENV=development TARGET=web VERBOSE=1 webpack-dev-server --port 19006 --progress",
     "web:no-extract": "NO_EXTRACT=1 yarn web",
     "web:webpack5": "VERBOSE=1 webpack serve --port 19006 --progress",

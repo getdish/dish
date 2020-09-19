@@ -26,7 +26,9 @@ import { LinkButtonProps } from './views/ui/LinkProps'
 const MenuLinkButton = (props: LinkButtonProps) => {
   return (
     <LinkButton
+      width="100%"
       {...flatButtonStyle}
+      paddingVertical={8}
       onPressOut={() => {
         if (omStatic.state.home.showUserMenu) {
           omStatic.actions.home.setShowUserMenu(false)
@@ -38,7 +40,7 @@ const MenuLinkButton = (props: LinkButtonProps) => {
   )
 }
 
-export const HomeMenu = memo(() => {
+export const AppMenu = memo(() => {
   const om = useOvermind()
   const isSmall = useIsNarrow()
   const isAboveMedium = useIsAboveMedium()
