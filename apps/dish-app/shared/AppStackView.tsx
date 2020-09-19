@@ -1,13 +1,14 @@
 import { AbsoluteVStack, VStack, useDebounceValue } from '@dish/ui'
 import React, { Suspense, memo, useMemo } from 'react'
 
-import { searchBarHeight } from './constants'
+import { isWeb, searchBarHeight } from './constants'
 import { getBreadcrumbs } from './helpers/getBreadcrumbs'
 import { useIsNarrow } from './hooks/useIs'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { HomeStateItem, HomeStateItemSimple } from './state/home-types'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
+import { AnimatedVStack } from './views/AnimatedVStack'
 import { ErrorBoundary } from './views/ErrorBoundary'
 
 export type StackItemProps<A> = {
@@ -88,7 +89,7 @@ const AppStackViewItem = memo(
       !isRemoving && !isAdding ? 'active' : 'untouchable'
     }`
 
-    return (
+    const contents = (
       <AbsoluteVStack
         zIndex={index}
         className={className}
@@ -110,5 +111,15 @@ const AppStackViewItem = memo(
         </AbsoluteVStack>
       </AbsoluteVStack>
     )
+
+    if (!isWeb) {
+      return (
+        <AnimatedVStack position="absolute" fullscreen>
+          {contents}
+        </AnimatedVStack>
+      )
+    }
+
+    return contents
   }
 )

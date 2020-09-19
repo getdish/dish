@@ -37,7 +37,7 @@ export const Map = ({ center, span, features }: MapProps) => {
 
   useEffect(() => {
     const { ne, sw, paddingTop, paddingBottom } = bounds
-    cameraRef.current?.fitBounds(ne, sw, [paddingTop, 0, paddingBottom, 0])
+    cameraRef.current?.fitBounds(ne, sw, [paddingTop, 0, paddingBottom, 0], 500)
   }, [JSON.stringify(bounds)])
 
   return (

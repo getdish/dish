@@ -2,6 +2,7 @@ import { graphql } from '@dish/graph'
 import { HStack, Text } from '@dish/ui'
 import { default as React, memo } from 'react'
 
+import { isWeb } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { LinkButtonProps } from '../../views/ui/LinkProps'
@@ -57,7 +58,7 @@ export const RestaurantButton = memo(
           }}
         >
           <HStack
-            maxWidth={170}
+            maxWidth={isWeb ? 170 : 150}
             flex={1}
             alignItems="center"
             position="relative"
@@ -89,7 +90,7 @@ export const RestaurantButton = memo(
               // @ts-ignore
               position="absolute"
               top={-5}
-              right={-15}
+              right={isWeb ? -15 : -30}
               subtle={subtle}
             />
           </HStack>
