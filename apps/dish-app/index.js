@@ -1,7 +1,8 @@
 import { registerRootComponent } from 'expo'
 import { activateKeepAwake } from 'expo-keep-awake'
 
-import App from './App'
+// @ts-ignore
+import App from './shared/App'
 
 if (__DEV__) {
   activateKeepAwake()

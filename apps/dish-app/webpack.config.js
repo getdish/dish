@@ -113,18 +113,9 @@ module.exports = function getWebpackConfig(
                 },
               }
             : false,
-        // isProduction && TARGET !== 'ssr'
-        //   ? {
-        //       // http2
-        //       chunks: 'all',
-        //       maxInitialRequests: 6,
-        //       maxAsyncRequests: 6,
-        //       maxSize: 100000,
-        //     }
-        //   : false,
         runtimeChunk: false,
         minimizer:
-          TARGET === 'ssr'
+          TARGET === 'ssr' || !isProduction
             ? []
             : [
                 // new ClosurePlugin(),
