@@ -71,15 +71,13 @@ export const LenseButton = memoIsEqualDeep(
             zIndex={100}
             alignItems="center"
             borderRadius={4}
-            paddingHorizontal={3}
+            paddingHorizontal={4}
+            paddingVertical={1}
             marginTop={-8}
             marginBottom={-8}
-            borderWidth={1}
             backgroundColor="#f2f2f2"
-            borderColor="transparent"
             {...(isActive && {
-              borderColor: '#000',
-              backgroundColor: '#000',
+              backgroundColor: rgbString(lense.rgb.map((x) => x * 0.7)),
             })}
           >
             <VStack

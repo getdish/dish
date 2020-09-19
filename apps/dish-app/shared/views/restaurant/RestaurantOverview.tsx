@@ -25,7 +25,7 @@ export const RestaurantOverview = memo(
             {headlines.slice(0, 3).map((item, i) => {
               return (
                 <React.Fragment key={i}>
-                  <HStack paddingVertical={2} flex={1} overflow="hidden">
+                  <HStack flex={1} overflow="hidden">
                     <Text
                       fontSize={26}
                       opacity={i == 0 ? 0.2 : 0}
