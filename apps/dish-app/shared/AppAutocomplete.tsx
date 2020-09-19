@@ -173,20 +173,24 @@ const AutocompleteContentsInner = memo(
       (isSmall ? getWindowHeight() * drawerStore.snapPoints[0] : 0)
 
     return (
-      <AnimatedVStack flex={1}>
+      <AnimatedVStack
+        pointerEvents="none"
+        fullscreen
+        height="100%"
+        zIndex={10000}
+        flex={1}
+      >
         <AbsoluteVStack
           backgroundColor={isSmall ? 'rgba(0,0,0,0.1)' : 'transparent'}
-          fullscreen
+          width="100%"
           height="100%"
           overflow="hidden"
           alignItems="center"
-          zIndex={10000}
           paddingBottom={30}
           top={top}
           paddingTop={isSmall ? 0 : 10}
           paddingHorizontal={isSmall ? 0 : 15}
           onPress={() => {
-            console.log('clsoe from here')
             om.actions.home.setShowAutocomplete(false)
           }}
         >
@@ -215,11 +219,12 @@ const AutocompleteContentsInner = memo(
               <VStack
                 className="ease-in-out"
                 position="relative"
-                left={isSmall ? 0 : showLocation ? 150 : -150}
+                left={isSmall ? 0 : showLocation ? 100 : -100}
                 shadowColor="rgba(0,0,0,0.4)"
                 shadowRadius={18}
                 width="100%"
                 backgroundColor={isWeb ? 'rgba(0,0,0,0.9)' : 'rgba(0,0,0,0.5)'}
+                minHeight={100}
                 padding={5}
                 borderRadius={isSmall ? 0 : 10}
                 flex={isSmall ? 1 : 0}

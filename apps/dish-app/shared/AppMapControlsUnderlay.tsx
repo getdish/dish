@@ -19,6 +19,7 @@ export const AppMapControlsUnderlay = memo(() => {
   const { paddingLeft, width } = useMapSize(isSmall)
   return (
     <AbsoluteVStack
+      className="untouchable" // safari
       zIndex={isSmall ? zIndexDrawer - 1 : zIndexDrawer + 1}
       marginLeft="auto"
       fullscreen
@@ -39,6 +40,7 @@ export const AppMapControlsUnderlay = memo(() => {
         })}
         zIndex={20000000}
         alignItems="center"
+        pointerEvents="none"
         justifyContent="center"
       >
         <HStack

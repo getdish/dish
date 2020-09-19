@@ -293,9 +293,21 @@ const SearchResultsContent = (props: Props) => {
           paddingBottom={15}
           overflow="hidden"
         >
-          <Text letterSpacing={-0.5} fontSize={titleFontSize} fontWeight="600">
+          <Text
+            marginVertical="auto"
+            letterSpacing={-0.5}
+            fontSize={titleFontSize}
+            fontWeight="600"
+            // @ts-ignore
+            display="inline" // safari fix
+          >
             {pageTitleElements}{' '}
-            <Text fontWeight="300" opacity={0.5}>
+            <Text
+              // @ts-ignore
+              display="inline" // safari fix
+              fontWeight="300"
+              opacity={0.5}
+            >
               {subTitle}
             </Text>
           </Text>

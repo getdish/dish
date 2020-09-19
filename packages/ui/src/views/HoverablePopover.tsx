@@ -32,7 +32,7 @@ export const HoverablePopover = ({
     setIsHoveringSlow()
   }
 
-  const popoverContent = !isHovering ? null : allowHoverOnContent ? (
+  const popoverContent = allowHoverOnContent ? (
     typeof contents === 'function' ? (
       (isOpen) => (
         <Hoverable onHoverIn={setIsHovering} onHoverOut={setIsntHovering}>

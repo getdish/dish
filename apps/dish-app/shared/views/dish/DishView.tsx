@@ -10,34 +10,7 @@ import { NavigableTag } from '../../state/NavigableTag'
 import { LinkButton } from '../ui/LinkButton'
 import { Squircle } from '../ui/Squircle'
 import { DishRatingView } from './DishRatingView'
-
-// {isHovered && dish.reviews && (
-//   <AbsoluteVStack
-//     alignItems="center"
-//     justifyContent="center"
-//     zIndex={1000}
-//   >
-//     <Box width={120} height={100}>
-//       <SmallTitle>Reviews ({dish.reviews.length})</SmallTitle>
-//       {dish.reviews.map((r) => {
-//         return (
-//           <>
-//             <Text fontSize={10}>
-//               {r.sentiments.map((s) => {
-//                 return (
-//                   <Text>
-//                     {s.setence} ({s.sentiment})
-//                   </Text>
-//                 )
-//               })}
-//             </Text>
-//             <Text fontSize={8}>{r.text}</Text>
-//           </>
-//         )
-//       })}
-//     </Box>
-//   </AbsoluteVStack>
-// )}
+import { getDishBackgroundColor } from './getDishBackgroundColor'
 
 export const DishView = memo(
   ({
@@ -47,6 +20,7 @@ export const DishView = memo(
     restaurantSlug,
     restaurantId,
     selected,
+    isFallback: _isFallback,
     ...rest
   }: {
     name?: any
@@ -54,6 +28,7 @@ export const DishView = memo(
     dish: TopCuisineDish
     size?: number
     restaurantSlug?: string
+    isFallback?: boolean
     restaurantId?: string
     selected?: boolean
   } & StackProps) => {
@@ -66,8 +41,10 @@ export const DishView = memo(
     const width = size * 0.9
     const height = size
     const imageUrl = getImageUrl(dish.image, width, height, 100)
-    const borderRadius = size * 0.25
+    const borderRadius = size * 0.1
     const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
+    const isFallback = _isFallback ?? dish.isFallback
+    const backgroundColor = getDishBackgroundColor(dish.name)
 
     return (
       <LinkButton
@@ -83,7 +60,7 @@ export const DishView = memo(
         }}
         hoverStyle={{
           zIndex: 1000000,
-          transform: [{ scale: 1.025 }],
+          transform: [{ scale: 1.02 }],
         }}
         onHoverIn={() => setIsHovered(true)}
         onHoverOut={() => setIsHovered(false)}
@@ -118,7 +95,7 @@ export const DishView = memo(
           height={height}
           borderRadius={borderRadius}
           isHovered={isHovered}
-          backgroundColor="#000"
+          backgroundColor={backgroundColor}
           borderColor="transparent"
           {...(selected && {
             borderColor: 'blue',
@@ -129,19 +106,17 @@ export const DishView = memo(
               position="absolute"
               fullscreen
               borderRadius={borderRadius - 1}
-              alignItems="center"
+              alignItems="flex-end"
               justifyContent="center"
               {...(isHovered && {
-                borderTopColor: 'transparent',
-                backgroundColor: 'transparent',
                 transform: [{ scale: 1.1 }],
                 zIndex: 100000,
               })}
             >
               <Box
                 position="relative"
-                className="skewX ease-in-out-top"
-                backgroundColor="rgba(0,0,0,0.75)"
+                className="skewX ease-in-out"
+                backgroundColor="#fff"
                 borderRadius={8}
                 paddingVertical={3}
                 paddingHorizontal={8}
@@ -150,11 +125,12 @@ export const DishView = memo(
                 shadowColor="rgba(0,0,0,0.1)"
                 shadowRadius={2}
                 zIndex={1000}
+                bottom={-8}
                 {...(isHovered && {
-                  top: -5,
-                  backgroundColor: '#fff',
+                  bottom: 0,
+                  backgroundColor: '#000',
                   shadowColor: 'rgba(0,0,0,0.2)',
-                  transform: [{ scale: 1.2 }, { skewX: '-12deg' }],
+                  transform: [{ scale: 1.1 }, { skewX: '-12deg' }],
                 })}
               >
                 <Text
@@ -162,8 +138,8 @@ export const DishView = memo(
                   // flex={1} breaks native
                   overflow="hidden"
                   fontWeight="400"
-                  color={isHovered ? '#000' : '#fff'}
-                  fontSize={hasLongWord ? 15 : 18}
+                  color={isHovered ? '#fff' : '#000'}
+                  fontSize={hasLongWord ? 14 : 16}
                   textAlign="center"
                 >
                   {dishName}
@@ -178,7 +154,12 @@ export const DishView = memo(
               style={{
                 width: '100%',
                 height: '100%',
-                opacity: isHovered ? 1 : 0.75,
+                opacity: 1,
+                ...(isFallback && {
+                  borderRadius: 100,
+                  width: size * 0.75,
+                  height: size * 0.75,
+                }),
               }}
               resizeMode="cover"
             />

@@ -15,5 +15,5 @@ export const slantedBoxStyle: StackProps = {
   shadowOffset: { height: 2, width: 0 },
   backgroundColor: '#fff',
   borderRadius: 8,
-  transform: [{ rotate: '-4deg' }],
+  transform: [{ rotate: '-2deg' }],
 }

@@ -144,13 +144,11 @@ export const Map = (props: MapProps) => {
       center,
       zoom: 11,
       attributionControl: false,
-    })
-      .setPadding(padding)
-      .addControl(
-        new mapboxgl.AttributionControl({
-          compact: true,
-        })
-      )
+    }).addControl(
+      new mapboxgl.AttributionControl({
+        compact: true,
+      })
+    )
     window['map'] = map
 
     const loadMarker = (name: string, asset: string) =>
@@ -630,7 +628,8 @@ export const Map = (props: MapProps) => {
   // padding
   useEffect(() => {
     if (!map) return
-    map?.setPadding(padding)
+    // @ts-ignore no types for this yet
+    map?.easeTo({ padding })
   }, [map, JSON.stringify(padding)])
 
   // features
