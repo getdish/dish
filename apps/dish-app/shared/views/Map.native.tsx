@@ -27,6 +27,19 @@ export const Map = ({ center, span, features }: MapProps) => {
     spring.start()
   }, [ty])
 
+  const bounds = {
+    ne: [center.lng - span.lng, center.lat - span.lat],
+    sw: [center.lng + span.lng, center.lat + span.lat],
+    paddingTop: paddingVertical,
+    paddingBottom: paddingVertical,
+  }
+  const cameraRef = useRef<MapboxGL.Camera>()
+
+  useEffect(() => {
+    const { ne, sw, paddingTop, paddingBottom } = bounds
+    cameraRef.current?.fitBounds(ne, sw, [paddingTop, 0, paddingBottom, 0])
+  }, [JSON.stringify(bounds)])
+
   return (
     <Animated.View
       style={{
@@ -43,15 +56,12 @@ export const Map = ({ center, span, features }: MapProps) => {
         }}
       >
         <MapboxGL.Camera
-          // centerCoordinate={[]}
-          zoomLevel={span.lng * 100}
-          minZoomLevel={0}
+          ref={cameraRef}
+          minZoomLevel={2}
           maxZoomLevel={14}
-          bounds={{
-            ne: [center.lng - span.lng, center.lat - span.lat],
-            sw: [center.lng + span.lng, center.lat + span.lat],
-            paddingTop: paddingVertical,
-            paddingBottom: paddingVertical,
+          defaultSettings={{
+            zoomLevel: span.lng * 200,
+            bounds,
           }}
         />
         <MapboxGL.ShapeSource

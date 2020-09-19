@@ -9,6 +9,7 @@ import React, {
   useState,
 } from 'react'
 import {
+  Animated,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -38,6 +39,7 @@ const disabledStyle: StackProps = {
 export type StackProps = Omit<
   Omit<ViewStyle, 'display'> &
     Omit<ViewProps, 'display'> & {
+      animated?: boolean
       fullscreen?: boolean
       children?: any
       hoverStyle?: ViewStyle | null
@@ -88,6 +90,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
   const component = forwardRef<View, StackProps>((props, ref) => {
     const {
       children,
+      animated,
       fullscreen,
       pointerEvents,
       style = null,
@@ -160,11 +163,14 @@ const createStack = (defaultStyle?: ViewStyle) => {
       return next
     }, [children])
 
+    const ViewComponent = animated ? Animated.View : View
     let content = (
-      <View
+      <ViewComponent
         ref={combineRefs(innerRef, ref)}
         pointerEvents={
-          !isWeb && pointerEvents === 'none' ? 'box-none' : pointerEvents
+          !isWeb && pointerEvents === 'none'
+            ? 'box-none'
+            : pointerEvents ?? 'auto'
         }
         style={[
           defaultStyle,
@@ -178,7 +184,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
         ]}
       >
         {spacedChildren}
-      </View>
+      </ViewComponent>
     )
 
     const attachPress = !!(pressStyle || onPress)
@@ -269,11 +275,9 @@ const createStack = (defaultStyle?: ViewStyle) => {
         content = React.cloneElement(content, events)
       } else {
         if (pointerEvents !== 'none' && !!(onPress || onPressOut)) {
-          console.log('attaching', onPress)
           content = (
             <TouchableWithoutFeedback
               onPress={(e) => {
-                console.log('what is it', props)
                 // @ts-ignore
                 events.onClick(e)
               }}

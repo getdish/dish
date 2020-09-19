@@ -38,7 +38,7 @@ export class BottomDrawerStore extends Store {
     const toValue = this.getSnapPointOffset()
     this.spring = Animated.spring(this.pan, {
       useNativeDriver: true,
-      velocity: velocity,
+      velocity,
       toValue,
     })
     this.spring.start(() => {

@@ -12,10 +12,9 @@ import {
 import { useStore } from '@dish/use-store'
 // react native fix
 import FlexSearch from 'flexsearch/flexsearch.js'
-import { uniqBy } from 'lodash'
-import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
-import { Keyboard, ScrollView } from 'react-native'
-import * as Animatable from 'react-native-animatable'
+import { debounce, uniqBy } from 'lodash'
+import React, { memo, useEffect, useState } from 'react'
+import { Image, Keyboard, ScrollView } from 'react-native'
 
 import { SearchBarStore } from './AppSearchBar'
 import { BottomDrawerStore } from './BottomDrawerStore'
@@ -41,6 +40,8 @@ import { NavigableTag } from './state/NavigableTag'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { tagDisplayName } from './state/tagDisplayName'
+import { AnimatedVStack } from './views/AnimatedVStack'
+import { BlurView } from './views/BlurView'
 import { SmallCircleButton } from './views/ui/CloseButton'
 import { LinkButton } from './views/ui/LinkButton'
 
@@ -72,17 +73,18 @@ export default memo(function AppAutocomplete() {
 
   if (isNative) {
     useEffect(() => {
+      // debounce to go after press event
       const handleHide = () => {
         if (omStatic.state.home.showAutocomplete) {
           omStatic.actions.home.setShowAutocomplete(false)
         }
         if (drawerStore.snapIndex === 0) {
-          drawerStore.setSnapPoint(0)
+          drawerStore.setSnapPoint(1)
         }
       }
-      Keyboard.addListener('keyboardDidHide', handleHide)
+      Keyboard.addListener('keyboardWillHide', handleHide)
       return () => {
-        Keyboard.removeListener('keyboardDidHide', handleHide)
+        Keyboard.removeListener('keyboardWillHide', handleHide)
       }
     }, [])
   }
@@ -171,13 +173,8 @@ const AutocompleteContentsInner = memo(
       (isSmall ? getWindowHeight() * drawerStore.snapPoints[0] : 0)
 
     return (
-      <Animatable.View
-        pointerEvents="none"
-        animation="fadeInUp"
-        style={{ flex: 1 }}
-      >
+      <AnimatedVStack flex={1}>
         <AbsoluteVStack
-          pointerEvents={isSmall ? 'auto' : 'none'}
           backgroundColor={isSmall ? 'rgba(0,0,0,0.1)' : 'transparent'}
           fullscreen
           height="100%"
@@ -189,54 +186,58 @@ const AutocompleteContentsInner = memo(
           paddingTop={isSmall ? 0 : 10}
           paddingHorizontal={isSmall ? 0 : 15}
           onPress={() => {
+            console.log('clsoe from here')
             om.actions.home.setShowAutocomplete(false)
           }}
         >
-          <VStack
-            width="100%"
-            height="100%"
-            maxHeight="90%"
-            {...(!isSmall && {
-              maxWidth: pageWidthMax * 0.45,
-              maxHeight: `calc(100vh - ${top + 20}px)`,
-            })}
-            {...(isSmall && {
-              // @ts-ignore
-              onMouseLeave: () => {
-                if (curPagePos.y > top) {
-                  hideAutocomplete()
-                }
-              },
-              // @ts-ignore
-              onMouseEnter: () => {
-                hideAutocomplete.cancel()
-              },
-            })}
-          >
+          <BlurView>
             <VStack
-              className="ease-in-out"
-              position="relative"
-              left={isSmall ? 0 : showLocation ? 150 : -150}
-              shadowColor="rgba(0,0,0,0.4)"
-              shadowRadius={18}
               width="100%"
-              backgroundColor="rgba(0,0,0,0.9)"
-              padding={5}
-              borderRadius={isSmall ? 0 : 10}
-              flex={isSmall ? 1 : 0}
-              pointerEvents="auto"
-              onPress={() => {
-                console.log(123)
-                om.actions.home.setShowAutocomplete(false)
-              }}
+              height="100%"
+              maxHeight="90%"
+              {...(!isSmall && {
+                maxWidth: pageWidthMax * 0.45,
+                maxHeight: `calc(100vh - ${top + 20}px)`,
+              })}
+              {...(isSmall && {
+                // @ts-ignore
+                onMouseLeave: () => {
+                  if (curPagePos.y > top) {
+                    hideAutocomplete()
+                  }
+                },
+                // @ts-ignore
+                onMouseEnter: () => {
+                  hideAutocomplete.cancel()
+                },
+              })}
             >
-              <ScrollView style={{ opacity: isLoading ? 0.5 : 1 }}>
-                <AutocompleteResults />
-              </ScrollView>
+              <VStack
+                className="ease-in-out"
+                position="relative"
+                left={isSmall ? 0 : showLocation ? 150 : -150}
+                shadowColor="rgba(0,0,0,0.4)"
+                shadowRadius={18}
+                width="100%"
+                backgroundColor={isWeb ? 'rgba(0,0,0,0.9)' : 'rgba(0,0,0,0.5)'}
+                padding={5}
+                borderRadius={isSmall ? 0 : 10}
+                flex={isSmall ? 1 : 0}
+                onPress={() => {
+                  om.actions.home.setShowAutocomplete(false)
+                }}
+              >
+                <ScrollView
+                  keyboardShouldPersistTaps="always"
+                  style={{ opacity: isLoading ? 0.5 : 1 }}
+                >
+                  <AutocompleteResults />
+                </ScrollView>
+              </VStack>
             </VStack>
-          </VStack>
+          </BlurView>
         </AbsoluteVStack>
-      </Animatable.View>
+      </AnimatedVStack>
     )
   }
 )
@@ -348,8 +349,8 @@ const AutocompleteResults = memo(() => {
               <HStack alignItems="center">
                 <VStack height={22} width={22} marginRight={10}>
                   {result.icon?.indexOf('http') === 0 ? (
-                    <img
-                      src={result.icon}
+                    <Image
+                      source={{ uri: result.icon }}
                       style={{
                         width: 22,
                         height: 22,
@@ -386,7 +387,7 @@ const defaultAutocompleteTags: NavigableTag[] = [
   { name: 'BBQ', type: 'dish', icon: '🥩' },
   { name: 'Bowl', type: 'dish', icon: '🍲' },
   { name: 'Dim Sum', type: 'dish', icon: '🥟' },
-  { name: 'Spicy', type: 'dish', icon: '🌶' },
+  { name: 'Banh Mi', type: 'dish', icon: '🥪' },
   { name: 'price-low', displayName: 'Cheap', type: 'filter', icon: '🍕' },
   { name: 'Seafood', type: 'dish', icon: '🐟' },
   { name: 'Sandwich', type: 'dish', icon: '🥪' },
@@ -405,7 +406,6 @@ const HomeAutocompleteDefault = memo(() => {
       flexWrap="wrap"
       alignItems="center"
       justifyContent="center"
-      pointerEvents="none"
     >
       {defaultAutocompleteTags.map((tag) => {
         return (
@@ -427,20 +427,23 @@ const HomeAutocompleteDefault = memo(() => {
               flexDirection="column"
               disallowDisableWhenActive
               tag={tag}
+              pointerEvents="auto"
             >
-              <Text textAlign="center" width="100%" fontSize={40}>
-                {tag.icon}
-              </Text>
-              <Spacer size="sm" />
-              <Text
-                ellipse
-                textAlign="center"
-                fontSize={12}
-                width="100%"
-                color="#fff"
-              >
-                {tagDisplayName(tag)}
-              </Text>
+              <VStack>
+                <Text textAlign="center" width="100%" fontSize={40}>
+                  {tag.icon}
+                </Text>
+                <Spacer size="sm" />
+                <Text
+                  ellipse
+                  textAlign="center"
+                  fontSize={12}
+                  width="100%"
+                  color="#fff"
+                >
+                  {tagDisplayName(tag)}
+                </Text>
+              </VStack>
             </LinkButton>
           </VStack>
         )

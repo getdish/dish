@@ -1,6 +1,14 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { Loader, Search } from '@dish/react-feather'
-import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from '@dish/ui'
+import {
+  AbsoluteVStack,
+  HStack,
+  Spacer,
+  Toast,
+  VStack,
+  useGet,
+  useOnMount,
+} from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import _ from 'lodash'
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
@@ -196,77 +204,89 @@ export const AppSearchInput = memo(() => {
             </TouchableOpacity>
           </VStack>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              alignItems: 'center',
-              width: '100%', // stretch content to full width
-            }}
-            style={{
-              paddingRight: 10,
-            }}
-          >
-            <HomeSearchBarTags input={input} />
-            <HStack position="relative" flex={1}>
-              {!isWeb && (
-                // this helps native with dragging conflicts
-                <TouchableWithoutFeedback
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 40,
-                    bottom: 0,
-                    zIndex: 10000,
-                  }}
-                  onPress={() => {
-                    inputStore.node?.focus()
-                  }}
-                >
-                  <View
-                    style={StyleSheet.absoluteFill}
-                    {...panResponder.panHandlers}
+          <VStack flex={1} height={searchBarHeight - 8}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{
+                alignItems: 'center',
+              }}
+              style={{
+                paddingRight: 10,
+                flex: 1,
+              }}
+            >
+              <HStack
+                alignSelf="center"
+                alignItems="center"
+                height={searchBarHeight - 23}
+              >
+                <HomeSearchBarTags input={input} />
+                <HStack position="relative" flex={1}>
+                  {!isWeb && (
+                    // this helps native with dragging conflicts
+                    <TouchableWithoutFeedback
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 40,
+                        bottom: 0,
+                        zIndex: 10000,
+                      }}
+                      onPress={() => {
+                        inputStore.node?.focus()
+                      }}
+                    >
+                      <View
+                        style={StyleSheet.absoluteFill}
+                        {...panResponder.panHandlers}
+                      />
+                    </TouchableWithoutFeedback>
+                  )}
+                  <TextInput
+                    ref={inputStore.setNode}
+                    // leave uncontrolled for perf?
+                    value={search ?? ''}
+                    onBlur={(e) => {
+                      avoidNextFocus = false
+                    }}
+                    onKeyPress={handleKeyPress}
+                    onFocus={() => {
+                      if (omStatic.state.home.searchbarFocusedTag) {
+                        omStatic.actions.home.setSearchBarTagIndex(0)
+                      } else {
+                        omStatic.actions.home.setShowAutocomplete('search')
+                      }
+                    }}
+                    onChangeText={(text) => {
+                      if (getSearch() == '' && text !== '') {
+                        om.actions.home.setShowAutocomplete('search')
+                      }
+                      setSearch(text)
+                      om.actions.home.setSearchQuery(text)
+                    }}
+                    placeholder={
+                      isSearchingCuisine ? '...' : `${placeHolder}...`
+                    }
+                    style={[
+                      inputTextStyles.textInput,
+                      {
+                        color,
+                        flex: 1,
+                        fontSize: 18,
+                        paddingHorizontal: 20,
+                      },
+                    ]}
                   />
-                </TouchableWithoutFeedback>
-              )}
-              <TextInput
-                ref={inputStore.setNode}
-                // leave uncontrolled for perf?
-                value={search ?? ''}
-                onBlur={(e) => {
-                  avoidNextFocus = false
-                }}
-                onKeyPress={handleKeyPress}
-                onFocus={() => {
-                  if (omStatic.state.home.searchbarFocusedTag) {
-                    omStatic.actions.home.setSearchBarTagIndex(0)
-                  } else {
-                    omStatic.actions.home.setShowAutocomplete('search')
-                  }
-                }}
-                onChangeText={(text) => {
-                  if (getSearch() == '' && text !== '') {
-                    om.actions.home.setShowAutocomplete('search')
-                  }
-                  setSearch(text)
-                  om.actions.home.setSearchQuery(text)
-                }}
-                placeholder={isSearchingCuisine ? '...' : `${placeHolder}...`}
-                style={[
-                  inputTextStyles.textInput,
-                  {
-                    color,
-                    flex: 1,
-                    fontSize: 18,
-                    paddingRight: 0,
-                  },
-                ]}
-              />
-            </HStack>
-          </ScrollView>
+                </HStack>
+              </HStack>
+            </ScrollView>
+          </VStack>
+
           <SearchCancelButton />
-          <Spacer direction="horizontal" size={10} />
+
+          <Spacer direction="horizontal" size={8} />
         </HStack>
       </AppAutocompleteHoverableInput>
     </HStack>
@@ -327,16 +347,23 @@ const next = () => {
 const handleKeyPress = async (e) => {
   // @ts-ignore
   const code = e.keyCode
-  const focusedInput = document.activeElement
-  if (!(focusedInput instanceof HTMLInputElement)) {
-    return
-  }
   console.log('key', code)
   const { isAutocompleteActive, autocompleteIndex } = omStatic.state.home
-  const isSelecting = focusedInput.selectionStart !== focusedInput.selectionEnd
-  const isCaretAtEnd =
-    !isSelecting && focusedInput.selectionEnd === focusedInput.value.length
-  const isCaretAtStart = focusedInput.selectionEnd == 0
+
+  let focusedInput: HTMLInputElement | null = null
+  let isSelecting = false
+  let isCaretAtEnd = false
+  let isCaretAtStart = false
+
+  if (isWeb) {
+    if (document.activeElement instanceof HTMLInputElement) {
+      focusedInput = document.activeElement
+    }
+    isSelecting = focusedInput.selectionStart !== focusedInput.selectionEnd
+    isCaretAtEnd =
+      !isSelecting && focusedInput.selectionEnd === focusedInput.value.length
+    isCaretAtStart = focusedInput.selectionEnd == 0
+  }
 
   switch (code) {
     case 13: {
@@ -368,7 +395,7 @@ const handleKeyPress = async (e) => {
         await idle(40)
       }
       omStatic.actions.home.setShowAutocomplete(false)
-      focusedInput.blur()
+      focusedInput?.blur()
       return
     }
     case 8: {
@@ -404,14 +431,16 @@ const handleKeyPress = async (e) => {
     }
     case 27: {
       // esc
-      if (inputIsTextSelected(focusedInput)) {
-        inputClearSelection(focusedInput)
-        return
+      if (focusedInput) {
+        focusedInput.blur()
+        if (inputIsTextSelected(focusedInput)) {
+          inputClearSelection(focusedInput)
+          return
+        }
       }
       if (omStatic.state.home.showAutocomplete) {
         omStatic.actions.home.setShowAutocomplete(false)
       }
-      focusedInput.blur()
       return
     }
     case 38: {

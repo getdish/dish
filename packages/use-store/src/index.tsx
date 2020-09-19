@@ -154,10 +154,9 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
   )
   const state = useMutableSource(info.source, getSnapshot, subscribe)
 
-  // after render
+  // after each render
   useLayoutEffect(() => {
     internal.current.isRendering = false
-
     if (
       process.env.NODE_ENV === 'development' &&
       shouldDebug(component, info)

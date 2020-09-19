@@ -4,7 +4,6 @@ import React, { memo } from 'react'
 
 import { getTagId } from '../state/getTagId'
 import { HomeActiveTagsRecord } from '../state/home-types'
-import { useOvermind } from '../state/om'
 import { tagLenses } from '../state/tagLenses'
 import { LenseButton, LenseButtonSize } from './LenseButton'
 
@@ -16,26 +15,32 @@ export const HomeLenseBar = memo(
     backgroundColor?: string
     onPressLense?: (lense: Tag) => void
   }) => {
-    const om = useOvermind()
     return (
       <>
-        {tagLenses.map((lense, index) => (
-          <VStack height="100%" key={lense.id + index}>
-            <LenseButton
-              lense={lense}
-              isActive={props.activeTagIds?.[getTagId(lense)] ?? false}
-              minimal={props.minimal}
-              size={props.size}
-              backgroundColor={props.backgroundColor}
-              {...(props.onPressLense && {
-                onPress: (e) => {
-                  e.stopPropagation()
-                  props.onPressLense?.(lense)
-                },
-              })}
-            />
-          </VStack>
-        ))}
+        {tagLenses.map((lense, index) => {
+          const isActive = props.activeTagIds?.[getTagId(lense)] ?? false
+          return (
+            <VStack
+              zIndex={isActive ? 1 : 0}
+              height="100%"
+              key={lense.id + index}
+            >
+              <LenseButton
+                lense={lense}
+                isActive={isActive}
+                minimal={props.minimal}
+                size={props.size}
+                backgroundColor={props.backgroundColor}
+                {...(props.onPressLense && {
+                  onPress: (e) => {
+                    e.stopPropagation()
+                    props.onPressLense?.(lense)
+                  },
+                })}
+              />
+            </VStack>
+          )
+        })}
       </>
     )
   }

@@ -62,10 +62,11 @@ export const AppSmallDrawerView = (props: { children: any }) => {
         const y = curSnapY + gestureState.dy
         const minY = getWindowHeight() * drawerStore.snapPoints[0] - 10
         const maxY = getWindowHeight() * drawerStore.snapPoints[2] + 10
-        console.log(y, minY, maxY)
+        // limit movement (TODO make it "resist" at edge)
         if (y < minY) {
           return
-        } else if (y > maxY) {
+        }
+        if (y > maxY) {
           return
         }
         move(e, gestureState)
@@ -106,11 +107,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
         style={{
           transform: [
             {
-              translateY: drawerStore.pan.interpolate({
-                inputRange: [0, getWindowHeight() - searchBarHeight],
-                outputRange: [0, getWindowHeight() - searchBarHeight],
-                extrapolate: 'clamp',
-              }),
+              translateY: drawerStore.pan,
             },
           ],
           maxWidth: pageWidthMax,
