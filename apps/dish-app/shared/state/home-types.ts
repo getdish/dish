@@ -92,7 +92,7 @@ export type HomeStateItemBase = {
   mapAt?: {
     center: LngLat
     span: LngLat
-  }
+  } | null
   id: string
   currentLocationName?: string
   currentLocationInfo?: GeocodePlace | null
@@ -125,6 +125,7 @@ export type HomeStateItemHome = HomeStateItemBase & {
 
 export type HomeStateItemBlog = HomeStateItemBase & {
   type: 'blog'
+  slug?: string
 }
 
 export type HomeStateItemAbout = HomeStateItemBase & {

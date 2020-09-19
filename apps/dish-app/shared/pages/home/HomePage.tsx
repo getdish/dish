@@ -14,13 +14,7 @@ import _, { sortBy, uniqBy } from 'lodash'
 import { default as React, Suspense, memo, useEffect, useState } from 'react'
 import { Dimensions, StyleSheet } from 'react-native'
 
-import {
-  bgLight,
-  bgLightHover,
-  bgLightLight,
-  bgLightTranslucent,
-  lightBlue,
-} from '../../colors'
+import { bgLightHover, bgLightTranslucent } from '../../colors'
 import { useIsNarrow } from '../../hooks/useIs'
 import { addTagsToCache } from '../../state/allTags'
 import { HomeStateItemHome } from '../../state/home-types'
@@ -44,28 +38,6 @@ import { HomeTopSearches } from './HomeTopSearches'
 
 type Props = StackViewProps<HomeStateItemHome>
 
-function updateHomeTagsCache(all: any) {
-  let tags: NavigableTag[] = []
-  // update tags
-  for (const topDishes of all) {
-    tags.push({
-      id: `${topDishes.country}`,
-      name: topDishes.country,
-      type: 'country',
-      icon: topDishes.icon,
-    })
-    tags = [
-      ...tags,
-      ...(topDishes.dishes ?? []).map((dish) => ({
-        id: dish.name ?? '',
-        name: dish.name ?? '',
-        type: 'dish',
-      })),
-    ]
-  }
-  addTagsToCache(tags)
-}
-
 export default memo(function HomePage(props: Props) {
   const om = useOvermind()
   const isOnHome = props.isActive
@@ -83,6 +55,7 @@ export default memo(function HomePage(props: Props) {
     runHomeSearch(props.item)
 
     function runHomeSearch({ center, span }: Partial<HomeStateItemHome>) {
+      if (!center || !span) return
       om.actions.home.setIsLoading(true)
       om.actions.home.updateCurrentMapAreaInformation()
 
@@ -501,4 +474,24 @@ const TopDishesTrendingRestaurants = memo(
   }
 )
 
-// these two do optimized updates
+function updateHomeTagsCache(all: any) {
+  let tags: NavigableTag[] = []
+  // update tags
+  for (const topDishes of all) {
+    tags.push({
+      id: `${topDishes.country}`,
+      name: topDishes.country,
+      type: 'country',
+      icon: topDishes.icon,
+    })
+    tags = [
+      ...tags,
+      ...(topDishes.dishes ?? []).map((dish) => ({
+        id: dish.name ?? '',
+        name: dish.name ?? '',
+        type: 'dish',
+      })),
+    ]
+  }
+  addTagsToCache(tags)
+}

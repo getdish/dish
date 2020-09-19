@@ -10,6 +10,7 @@ import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { Platform } from 'react-native'
 
+import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchLocationInput } from './AppSearchLocationInput'
 import {
@@ -19,7 +20,6 @@ import {
   zIndexSearchBarFloating,
 } from './constants'
 import { rgbString } from './helpers/rgbString'
-import { HomeMenu } from './HomeMenu'
 import { useCurrentLenseColor } from './hooks/useCurrentLenseColor'
 import { useIsNarrow, useIsReallyNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
@@ -278,7 +278,7 @@ const HomeSearchBar = memo(() => {
         </LinkButton>
       )}
 
-      <HomeMenu />
+      <AppMenu />
     </HStack>
   )
 })

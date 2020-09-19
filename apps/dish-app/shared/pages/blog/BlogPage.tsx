@@ -1,18 +1,37 @@
 import { Spacer, VStack } from '@dish/ui'
 import React from 'react'
 
+import { HomeStateItemBlog } from '../../state/home-types'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { PageContent } from '../../views/layout/PageContent'
 import { StackDrawer } from '../../views/StackDrawer'
 import { Link } from '../../views/ui/Link'
 import { Title } from '../../views/ui/Title'
-import { BlogLayout } from './BlogLayout'
+import { StackViewProps } from '../StackViewProps'
+import { BlogPageDetail } from './BlogPageDetail'
 import { BlogPostMeta } from './BlogPostMeta'
-import { MDX } from './MDX'
 import { posts } from './posts'
 
-export default function BlogPage() {
-  const all = Object.keys(posts)
+export default function BlogPage(props: StackViewProps<HomeStateItemBlog>) {
+  const slug = props.item.slug
+  return (
+    <StackDrawer closable title="Blog">
+      <ContentScrollView
+        style={{
+          paddingTop: 40,
+          paddingHorizontal: '5%',
+          paddingVertical: '5%',
+          flex: 1,
+        }}
+      >
+        {!slug && <BlogPageIndex />}
+        {!!slug && <BlogPageDetail slug={slug} />}
+      </ContentScrollView>
+    </StackDrawer>
+  )
+}
+
+function BlogPageIndex() {
+  const allPosts = Object.keys(posts)
     .slice(0, 10)
     .map((id) => ({
       ...posts[id],
@@ -24,69 +43,24 @@ export default function BlogPage() {
     )
 
   return (
-    <StackDrawer closable title="Blog">
-      <ContentScrollView
-        style={{
-          paddingTop: 40,
-          paddingHorizontal: '5%',
-          paddingVertical: '5%',
-          flex: 1,
-        }}
-      >
-        <VStack spacing="xxl">
-          <Title size="xl">Blog 🍛</Title>
-          {all.map((post, index) => (
-            <VStack
-              key={index}
-              hoverStyle={{
-                backgroundColor: `rgba(0,0,0,0.1)`,
-              }}
-            >
-              <Link>
-                <Title selectable={false} textAlign="left" size="sm">
-                  {post.title}
-                </Title>
-              </Link>
-              <Spacer size="sm" />
-              <BlogPostMeta post={post} />
-            </VStack>
-          ))}
+    <VStack spacing="xxl">
+      <Title size="xl">Blog 🍛</Title>
+      {allPosts.map((post, index) => (
+        <VStack
+          key={index}
+          hoverStyle={{
+            backgroundColor: `rgba(0,0,0,0.1)`,
+          }}
+        >
+          <Link name="blog" params={{ slug: post.id }}>
+            <Title selectable={false} textAlign="left" size="sm">
+              {post.title}
+            </Title>
+          </Link>
+          <Spacer size="sm" />
+          <BlogPostMeta post={post} />
         </VStack>
-      </ContentScrollView>
-    </StackDrawer>
-  )
-
-  return (
-    <BlogLayout>
-      <MDX>
-        <VStack position="relative">
-          <PageContent zIndex={2}>
-            <Link href="/blog">
-              <VStack padding={30} position="relative" cursor="pointer">
-                <Title size="lg" cursor="pointer" fontWeight="100">
-                  The Blog
-                </Title>
-              </VStack>
-            </Link>
-          </PageContent>
-        </VStack>
-        {all.map((post, index) => (
-          <VStack
-            key={index}
-            hoverStyle={{
-              backgroundColor: `rgba(0,0,0,0.1)`,
-            }}
-          >
-            <Link>
-              <Title selectable={false} textAlign="left" size="sm">
-                {post.title}
-              </Title>
-            </Link>
-            <Spacer size="sm" />
-            <BlogPostMeta post={post} />
-          </VStack>
-        ))}
-      </MDX>
-    </BlogLayout>
+      ))}
+    </VStack>
   )
 }
