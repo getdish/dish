@@ -25,14 +25,15 @@ export const DishViewButton = memo(
           backgroundColor: `${backgroundColor}55`,
         }}
         paddingVertical={8}
+        paddingHorizontal={12}
         borderRadius={100}
         tag={{ type: 'dish', name }}
         {...rest}
       >
-        <HStack>
+        <HStack alignSelf="center" marginVertical="auto">
           {!!icon && (
             <>
-              <Text fontSize={16} marginVertical={-5}>
+              <Text fontSize={16} marginVertical={-2}>
                 {icon}
               </Text>
               <Spacer size="xs" />

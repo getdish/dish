@@ -71,7 +71,6 @@ const HomeSearchInfoBoxCountry = memo(
               return (
                 <DishViewButton
                   key={tag.id}
-                  size={90}
                   name={tag.name}
                   icon={tag.icon ?? '🍜'}
                 />

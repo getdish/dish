@@ -26,9 +26,9 @@ export const SearchPageNavBar = (props: { id: string }) => {
       borderBottomColor="#eee"
       backgroundColor={isWeb ? '#fff' : 'rgba(255,255,255,0.5)'}
       borderBottomWidth={1}
-      shadowColor="rgba(0,0,0,0.1)"
+      shadowColor="rgba(0,0,0,0.08)"
       shadowRadius={10}
-      shadowOffset={{ height: 5, width: 0 }}
+      shadowOffset={{ height: 3, width: 0 }}
       zIndex={1000}
       {...(isSmall && {
         top: 'auto',

@@ -5,6 +5,7 @@ import { Dimensions } from 'react-native'
 
 import { isWeb } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { Paragraph } from '../ui/Paragraph'
 
 export const RestaurantOverview = memo(
   graphql(
@@ -22,9 +23,9 @@ export const RestaurantOverview = memo(
       if (inline) {
         return (
           <VStack position="relative">
-            <AbsoluteVStack top={-8} left={-20}>
+            <AbsoluteVStack top={-20} left={-35}>
               <Text
-                fontSize={40}
+                fontSize={60}
                 opacity={0.2}
                 {...(isWeb && {
                   fontFamily: 'San Francisco, Times New Roman',
@@ -36,8 +37,14 @@ export const RestaurantOverview = memo(
             {headlines.slice(0, 3).map((item, i) => {
               return (
                 <React.Fragment key={i}>
-                  <HStack paddingVertical={3} flex={1} overflow="hidden">
-                    <Text ellipse>{item.sentence.slice(0, 100).trim()}</Text>
+                  <HStack marginBottom={10} flex={1} overflow="hidden">
+                    <Paragraph
+                      size={i == 0 ? 1.1 : 1}
+                      opacity={i === 0 ? 1 : 0.7}
+                      ellipse={i !== 0}
+                    >
+                      {item.sentence.slice(0, 150).replace(/\n/g, ' ').trim()}
+                    </Paragraph>
                   </HStack>
                 </React.Fragment>
               )

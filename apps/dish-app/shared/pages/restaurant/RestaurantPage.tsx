@@ -1,5 +1,12 @@
 import { graphql } from '@dish/graph'
-import { HStack, LoadingItems, SmallTitle, Spacer, VStack } from '@dish/ui'
+import {
+  HStack,
+  LoadingItem,
+  LoadingItems,
+  SmallTitle,
+  Spacer,
+  VStack,
+} from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
 
@@ -83,7 +90,13 @@ const HomePageRestaurant = memo(
             <Spacer size="xl" />
 
             <VStack width="100%">
-              <Suspense fallback={null}>
+              <Suspense
+                fallback={
+                  <VStack height={160}>
+                    <LoadingItem />
+                  </VStack>
+                }
+              >
                 <RestaurantDishPhotos
                   size={160}
                   restaurantSlug={slug}
