@@ -1,109 +1,21 @@
-I'm excited to start talking about Orbit. It's been an intense development period, so it's great to
-get it out into the world. We're sending alpha builds to
-[mailing list subscribers](https://tryorbit.com) now, please do sign up!
+<IntroText>
+  Orbit includes everything in the application, from development environment to
+  app store to sync system.
+</IntroText>
 
----
+Lorem ipsum dolor sit amet
 
-Orbit is a private personal work assistant. It has two basic assumptions:
+## Using the CLI
 
-- You want to easily get answers and quickly find things from across your work information.
-- You don't want to give up any privacy in order to do that.
+The Orbit CLI is used to develop and eventually deploy apps with Orbit. The apps can run in a couple
+ways:
 
-The rest of this post basically goes heavily into our vision and history. If you'd just like to try
-Orbit, just sign up or skip to the end to learn how to follow more.
+1. Individually on their own, in their own window.
+2. Together in a workspace.
 
-## Why Orbit
+There are also a few props to enforce certain types of selection. You can force on selection with
+`alwaysSelected`, and have a default selection with `defaultSelected`. Callback from selections are
+`onSelect`.
 
-You read, write, email, chat, document, ticket... from Slack to Jira, GDocs to Github. Your
-knowledge is distributed across many services and a wiki or portal doesn't keep up -- they add
-another source of truth, a cumbersome point of interaction, and infrastructure.
-
-There's a trend in the world thats preventing us collaborating effectively. I think it's actually
-best explained by the gap between the sci-fi interfaces we dream of in film and TV, and the reality
-of how we work today.
-
-> We wanted [sci-fi interfaces](https://www.youtube.com/watch?v=PJqbivkm0Ms), instead we got 100
-> browser tabs.
-
-<LargeImage
-  src="http://gradschoolguru.com/wp-content/uploads/2017/01/Iron-Man-Movie-Prologue-Hologram.jpg"
-  alt="Ergonomically though, we can do better."
-/>
-
-The visual effects of Iron Man and Minority Report may be frivolous, but these interfaces do grasp
-at a real and unmet desire: for unification, fluidity, and control over our information. Instead,
-the web today has become a world of silos. Browsers are silo-explorers, and the cloud is divided by
-tabs. To fix this, we'll have break out of the tab. Orbit's mission is to solve this:
-
-> To create an [aggregation platform](https://stratechery.com/2017/defining-aggregators/) for
-> knowledge to give end-users control and understanding over their data.
-
-## Regaining Control
-
-Orbit is ultimately a play to give us much more control over our data. To do so it's designed as
-decentralized platform: think of it as an operating system rather than a service. This distinction
-is important. Instead of storing data or adding a source of truth, Orbit just manages existing
-information (a lot like browsers and OS's do).
-
-Operating systems gave us a lot of control, via _files_.
-[In some forms](https://www.salon.com/2017/09/03/remember-palms-webos-maybe-not-but-apple-and-google-definitely-do/)
-they even had beautiful cross-cloud unified contacts, calendars and messages. Browsers gave us the
-ability to explore widely, but lost a lot of the control we had in files.
-
-Orbit wants to tilt us back to being able to manage, understand, and organize information. It aims
-to let you:
-
-- Find answers and things in your knowledge far more effectively.
-- Augment yourself as your normally work.
-- Extend/build on that knowledge in flexible ways.
-- Do all of this without giving up privacy or security.
-
-<LargeImage src={require('./demo.jpg')} alt="Orbit Home with experimental Topic Explorer app." />
-
-### Why Privacy Matters for Some Ideas
-
-Orbit will need to crawl a lot of your sensitive information. But there's unique tension for any
-knowledge tool: _no one wants anyone to have 100% of their data_. It's a misaligned incentive we ran
-into early and often in user research. We wanted to focus on building a better knowledge tool, but
-it was clear having Orbit in the cloud or on-prem would force us to build a good sales team rather
-than focus on an already-difficult-enough product.
-
-But today's computers are powerful and is improving nearly weekly to above human-levels in many
-cases. We want to be the company that delivers that NLP effectively to your daily life, answering
-questions you have across your cloud knowledge.
-
-<LargeImage alt="On-Device = Data stays on your computer" src={require('./illustration.svg')} />
-
-Today, Orbit runs, syncs, searches -- does everything -- privately on your computer. We still need
-to improve it's accuracy, but we have the guarantee in place: we'll never handle your data. You can
-even firewall Orbit just to be safe.
-
-### The Features
-
-For now Orbit is a lot like Spotlight, with a Home. The Home shows recent activity, people, and apps
-you've installed. Over time Orbit will grow to become more akin to a knowledge assistant. It will
-get better at understanding english queries, sorting staleness, augmenting as you work, and
-summarizing noisy data. It will also become more contextually aware, which I explain a bit more in
-the Context section.
-
-We have some interesting pieces in place. You can intuitively search using natural language by time,
-people, date ranges, integrations and more. We build profiles of people from across your cloud, and
-we allow you to explore your data intuitively. But we have a long way to go, and we'll update with
-interesting information here as we go.
-
-### Get into Orbit
-
-Keep in mind the builds today are early and the interesting pieces are still in development. I think
-the next few months will see it grow into something much more usable. I'd love your feedback along
-the way to keep us on the right path.
-
-Our [roadmap](/roadmap) and [mailing list](https://tryorbit.com).
-
-<p>
-  <a href="mailto:nate@tryorbit.com">My email</a>, send any inquiries, requests, issues.
-</p>
-
-[Join our Slack room](http://slack.tryorbit.com) if you'd like to discuss more or give detailed
-feedback.
-
-<br />
+- Hold your mouse down after clicking an item, to move your selection down.
+- Move your mouse to the edge as you select to automatically scroll the list.

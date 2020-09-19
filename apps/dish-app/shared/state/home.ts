@@ -539,6 +539,9 @@ const pushHomeState: AsyncAction<
     }
 
     case 'blog': {
+      nextState = {
+        slug: item.params.slug,
+      }
       break
     }
 
