@@ -95,21 +95,20 @@ const HomeSearchInfoBoxDish = memo(
 
     return (
       <HStack
-        paddingTop={0}
         paddingHorizontal={20}
+        marginBottom={10}
         spacing={20}
         alignItems="center"
       >
         <VStack flex={1}>
-          <Text fontSize={14} color="rgba(0,0,0,0.65)" lineHeight={20}>
+          <Text fontSize={16} color="rgba(0,0,0,0.65)" lineHeight={24}>
             A rich, creamy soup with aromatics and shrimp paste, a classic
             Northern Thai dish with braised chicken in a coconut curry broth.
           </Text>
         </VStack>
-        <VStack position="relative" width={70} height={70}>
+        <VStack marginVertical={-20} position="relative" width={70} height={70}>
           <Image
             style={{
-              marginVertical: -20,
               width: 90,
               height: 90,
               borderRadius: 100,

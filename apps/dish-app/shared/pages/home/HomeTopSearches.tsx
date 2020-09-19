@@ -2,7 +2,7 @@ import { Tag } from '@dish/graph'
 import { HStack, Text } from '@dish/ui'
 import { default as React, memo } from 'react'
 
-import { bgLight } from '../../colors'
+import { bgLight, lightBlue } from '../../colors'
 import { isWeb } from '../../constants'
 import { useIsReallyNarrow } from '../../hooks/useIs'
 import { tagDisplayName } from '../../state/tagDisplayName'
@@ -29,12 +29,15 @@ export const HomeTopSearches = memo(() => {
           <LinkButton
             key={index}
             tags={search.tags}
-            padding={8}
+            padding={7}
             alignItems="center"
-            marginBottom={6}
+            marginBottom={7}
             borderRadius={100}
+            backgroundColor="#fff"
+            borderWidth={1}
+            borderColor="transparent"
             hoverStyle={{
-              backgroundColor: bgLight,
+              borderColor: lightBlue,
             }}
           >
             {search.tags.map((tag, index) => (
@@ -42,7 +45,7 @@ export const HomeTopSearches = memo(() => {
                 <Text
                   color="#444"
                   paddingHorizontal={5}
-                  fontSize={14}
+                  fontSize={15}
                   borderRadius={50}
                 >
                   {tag.icon ? (

@@ -100,6 +100,9 @@ const useTextStyle = (allProps: TextProps) => {
         props[key] = val
       } else {
         if (!isWeb) {
+          if (key === 'display' && val === 'inline') {
+            continue
+          }
           if (val === 'inherit') {
             continue
           }

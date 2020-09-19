@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { HStack, Spacer, Text, VStack } from '@dish/ui'
+import { AbsoluteVStack, HStack, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Dimensions } from 'react-native'
 
@@ -21,21 +21,22 @@ export const RestaurantOverview = memo(
       const headlines = restaurant.headlines() ?? defaultListItems
       if (inline) {
         return (
-          <VStack>
+          <VStack position="relative">
+            <AbsoluteVStack top={-8} left={-20}>
+              <Text
+                fontSize={40}
+                opacity={0.2}
+                {...(isWeb && {
+                  fontFamily: 'San Francisco, Times New Roman',
+                })}
+              >
+                &ldquo;
+              </Text>
+            </AbsoluteVStack>
             {headlines.slice(0, 3).map((item, i) => {
               return (
                 <React.Fragment key={i}>
-                  <HStack flex={1} overflow="hidden">
-                    <Text
-                      fontSize={26}
-                      opacity={i == 0 ? 0.2 : 0}
-                      marginRight={6}
-                      {...(isWeb && {
-                        fontFamily: 'San Francisco, Times New Roman',
-                      })}
-                    >
-                      &ldquo;
-                    </Text>
+                  <HStack paddingVertical={3} flex={1} overflow="hidden">
                     <Text ellipse>{item.sentence.slice(0, 100).trim()}</Text>
                   </HStack>
                 </React.Fragment>

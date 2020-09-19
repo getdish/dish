@@ -43,6 +43,7 @@ export const DishLogoButton = memo(() => {
         {...linkButtonProps}
         {...styles.default}
         opacity={isReallySmall ? 0 : 1}
+        pointerEvents={isReallySmall ? 'none' : 'auto'}
       >
         <Logo />
       </LinkButton>
@@ -51,6 +52,7 @@ export const DishLogoButton = memo(() => {
         fullscreen
         alignItems="center"
         justifyContent="center"
+        zIndex={-1}
       >
         <LinkButton
           {...linkButtonProps}

@@ -78,8 +78,6 @@ export const RatingView = forwardRef(
       return (
         <HStack
           borderRadius={100}
-          borderWidth={1}
-          borderColor="rgba(0,0,0,0.05)"
           width={size}
           height={size}
           alignItems="center"

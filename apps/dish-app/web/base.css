@@ -18,6 +18,10 @@ body,
   flex: 1;
 }
 
+* {
+  flex-basis: initial !important;
+}
+
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
@@ -338,7 +342,7 @@ li {
 }
 
 .box-shadow-inset-large {
-  box-shadow: inset 0 0 15px rgba(255,255,255,0.65);
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.15);
 }
 
 .scroll-bounce > div {
