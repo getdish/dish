@@ -14,7 +14,13 @@ import _, { sortBy, uniqBy } from 'lodash'
 import { default as React, Suspense, memo, useEffect, useState } from 'react'
 import { Dimensions, StyleSheet } from 'react-native'
 
-import { bgLight, bgLightTranslucent, lightBlue } from '../../colors'
+import {
+  bgLight,
+  bgLightHover,
+  bgLightLight,
+  bgLightTranslucent,
+  lightBlue,
+} from '../../colors'
 import { useIsNarrow } from '../../hooks/useIs'
 import { addTagsToCache } from '../../state/allTags'
 import { HomeStateItemHome } from '../../state/home-types'
@@ -199,12 +205,12 @@ export default memo(function HomePage(props: Props) {
               height={400}
               width={2000}
               right="-10%"
-              top={-250}
+              top={-100}
               transform={[{ rotate: '-4deg' }]}
             >
               <LinearGradient
                 style={[StyleSheet.absoluteFill]}
-                colors={[bgLight, '#fff']}
+                colors={[bgLightHover, '#fff']}
               />
             </AbsoluteVStack>
             <VStack
@@ -293,14 +299,23 @@ const TopDishesCuisineItem = memo(
   ({ country, index }: { index: number; country: TopCuisine }) => {
     return (
       <VStack className="home-top-dish" position="relative">
-        <AbsoluteVStack
-          top={-15}
-          left={-100}
-          right={-100}
-          bottom={-15}
-          backgroundColor={index % 2 === 0 ? 'transparent' : bgLightTranslucent}
-          transform={[{ rotate: '-4deg' }]}
-        />
+        {index % 2 !== 0 && (
+          <AbsoluteVStack
+            top={-15}
+            left={-100}
+            right={-100}
+            bottom={-15}
+            backgroundColor={bgLightTranslucent}
+            transform={[{ rotate: '-4deg' }]}
+          >
+            <LinearGradient
+              colors={[bgLightTranslucent, '#fff']}
+              startPoint={[1, 0]}
+              endPoint={[0, 0]}
+              style={StyleSheet.absoluteFill}
+            />
+          </AbsoluteVStack>
+        )}
         <HStack
           // backgroundColor={lightBlue}
           justifyContent="center"
@@ -450,34 +465,35 @@ const TopDishesTrendingRestaurants = memo(
           .slice(0, 5)
           .map((restaurant, index) => {
             return (
-              <RestaurantButton
-                trending={
-                  (index % 5) - 1 == 0
-                    ? 'neutral'
-                    : index % 2 == 0
-                    ? 'up'
-                    : 'down'
-                }
-                subtle
-                key={restaurant.name}
-                restaurantSlug={restaurant.slug ?? ''}
-                maxWidth="100%"
-                onHoverIn={() => {
-                  lastHoveredId = restaurant.id
-                  setHoveredRestaurant({
-                    id: restaurant.id,
-                    slug: restaurant.slug,
-                  })
-                }}
-                // onHoverOut={() => {
-                //   clearHoveredRestaurant()
-                // }}
-                // active={
-                //   (hoveredRestaurant &&
-                //     restaurant?.name === hoveredRestaurant?.name) ||
-                //   false
-                // }
-              />
+              <HStack key={restaurant.name} maxWidth="100%">
+                <RestaurantButton
+                  trending={
+                    (index % 5) - 1 == 0
+                      ? 'neutral'
+                      : index % 2 == 0
+                      ? 'up'
+                      : 'down'
+                  }
+                  subtle
+                  restaurantSlug={restaurant.slug ?? ''}
+                  maxWidth={100}
+                  onHoverIn={() => {
+                    lastHoveredId = restaurant.id
+                    setHoveredRestaurant({
+                      id: restaurant.id,
+                      slug: restaurant.slug,
+                    })
+                  }}
+                  // onHoverOut={() => {
+                  //   clearHoveredRestaurant()
+                  // }}
+                  // active={
+                  //   (hoveredRestaurant &&
+                  //     restaurant?.name === hoveredRestaurant?.name) ||
+                  //   false
+                  // }
+                />
+              </HStack>
             )
           })}
       </VStack>
