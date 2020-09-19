@@ -445,7 +445,7 @@ const setHoveredRestaurant = _.debounce((val) => {
 const TopDishesTrendingRestaurants = memo(
   ({ country }: { country: TopCuisine }) => {
     return (
-      <VStack width={220} padding={10} spacing={4} alignItems="flex-start">
+      <VStack width={200} padding={10} spacing={4} alignItems="flex-start">
         {_.uniqBy(country.top_restaurants, (x) => x.name)
           .slice(0, 5)
           .map((restaurant, index) => {

@@ -190,6 +190,7 @@ export const TagButton = memo((props: TagButtonProps) => {
           paddingHorizontal={subtle ? 0 : 7 * scale}
           color={fg}
           marginVertical={-7}
+          marginBottom={-8}
           overflow="hidden"
           textOverflow="ellipsis"
           whiteSpace="nowrap"
@@ -198,7 +199,6 @@ export const TagButton = memo((props: TagButtonProps) => {
             <>&nbsp;</>
           ) : !!tag.icon ? (
             <Text
-              marginRight={5}
               {...(subtle && { marginLeft: 4 })}
               {...(subtleIcon && {
                 fontSize: smallerFontSize as any,
@@ -220,7 +220,7 @@ export const TagButton = memo((props: TagButtonProps) => {
                 />
               ) : (
                 `${tag.icon}`
-              )}
+              )}{' '}
             </Text>
           ) : null}
           {/* // tagDisplayNames[tag.name] ?? _.capitalize(tag.name) */}

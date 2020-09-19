@@ -100,11 +100,13 @@ const HomeSearchInfoBoxDish = memo(
         spacing={20}
         alignItems="center"
       >
-        <Text fontSize={14} color="rgba(0,0,0,0.65)" lineHeight={20}>
-          A rich, creamy soup packed with flavor from aromatics and shrimp
-          paste, a classic Northern Thai dish with braised chicken in a
-          coconut-y curry broth with boiled and fried noodles.
-        </Text>
+        <VStack flex={1}>
+          <Text fontSize={14} color="rgba(0,0,0,0.65)" lineHeight={20}>
+            A rich, creamy soup packed with flavor from aromatics and shrimp
+            paste, a classic Northern Thai dish with braised chicken in a
+            coconut-y curry broth with boiled and fried noodles.
+          </Text>
+        </VStack>
         <VStack position="relative" width={70} height={70}>
           <Image
             style={{

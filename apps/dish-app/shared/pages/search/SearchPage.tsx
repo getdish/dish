@@ -18,10 +18,11 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { ScrollView } from 'react-native'
+import { Platform, ScrollView } from 'react-native'
 
 import { AppPortalItem } from '../../AppPortal'
-import { searchBarHeight, searchBarTopOffset } from '../../constants'
+import { isWeb, searchBarHeight, searchBarTopOffset } from '../../constants'
+import { getWindowHeight } from '../../helpers/getWindow'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
@@ -46,11 +47,9 @@ import { StackViewProps } from '../StackViewProps'
 import { getTitleForState } from './getTitleForState'
 import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
+import { titleHeight, topBarVPad } from './titleHeight'
 
 type Props = StackViewProps<HomeStateItemSearch>
-
-export const titleHeight = 52
-export const topBarVPad = 12
 
 const useSpacing = () => {
   const isSmall = useIsNarrow()
@@ -348,7 +347,12 @@ const SearchResultsContent = (props: Props) => {
   return contentWrap(
     <VStack paddingBottom={20} spacing={6}>
       {results}
-      <VStack minHeight={totalLeftToLoad * state.itemHeightAvg}>
+      <VStack
+        minHeight={Math.max(
+          totalLeftToLoad * state.itemHeightAvg,
+          getWindowHeight() * 0.6
+        )}
+      >
         {isLoading && <HomeLoading />}
       </VStack>
     </VStack>
@@ -369,10 +373,14 @@ const SearchFooter = ({
       minHeight={300}
       width="100%"
     >
-      <HStack alignItems="center" justifyContent="center">
-        <HomeLenseBar size="lg" activeTagIds={searchState.activeTagIds} />
-      </HStack>
-      <Spacer size={40} />
+      {isWeb && (
+        <>
+          <HStack alignItems="center" justifyContent="center">
+            <HomeLenseBar size="lg" activeTagIds={searchState.activeTagIds} />
+          </HStack>
+          <Spacer size={40} />
+        </>
+      )}
       <Button
         alignSelf="center"
         onPress={() => {

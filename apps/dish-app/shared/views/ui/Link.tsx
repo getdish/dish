@@ -50,7 +50,6 @@ export const useLink = (props: LinkProps<any, any>) => {
     }
 
     function nav() {
-      console.log('what is', linkProps.onPress)
       if (linkProps.onPress || props.onClick) {
         e.navigate = () => router.navigate(navItem)
         props.onClick?.(e!)

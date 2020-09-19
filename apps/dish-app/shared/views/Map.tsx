@@ -9,6 +9,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
+import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { tagLenses } from '../state/tagLenses'
 import { MapProps } from './MapProps'
 
@@ -76,6 +77,7 @@ export const Map = (props: MapProps) => {
     selected,
     onDoubleClick,
   } = props
+  const isMounted = useIsMountedRef()
   const mapNode = useRef<HTMLDivElement>(null)
   let [map, setMap] = useState<mapboxgl.Map | null>(null)
   const internal = useRef({
@@ -377,6 +379,7 @@ export const Map = (props: MapProps) => {
           */
           let lastLoc = getCurrentLocation(map)
           const handleMoveEndDebounced = _.debounce(() => {
+            if (!isMounted.current) return
             // ignore same location
             const next = getCurrentLocation(map)
             if (isEqual(lastLoc, next)) {
