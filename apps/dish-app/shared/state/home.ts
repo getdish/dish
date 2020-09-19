@@ -12,6 +12,7 @@ import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
 import _, { clamp, cloneDeep, findLast, isPlainObject, last } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
+import { Keyboard } from 'react-native'
 
 import { addTagsToCache, allTags } from './allTags'
 import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
@@ -891,6 +892,8 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     updateTags()
     return false
   }
+
+  Keyboard.dismiss()
 
   lastNav = Date.now()
   let curNav = lastNav

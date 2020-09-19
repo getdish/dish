@@ -33,8 +33,6 @@ export const LenseButton = memoIsEqualDeep(
         {...(onPress ? { onPress } : { tag: lense })}
         className="unselectable"
         disallowDisableWhenActive
-        position="relative"
-        zIndex={isActive ? 1 : 0}
         pressStyle={{
           opacity: 0.8,
           transform: [{ scale: 0.9 }],
@@ -47,14 +45,13 @@ export const LenseButton = memoIsEqualDeep(
           marginVertical={-5 * scale}
           width={sizePx * scale}
           height={sizePx * scale}
-          backgroundColor={backgroundColor ?? '#fff'}
+          backgroundColor={backgroundColor ?? (isActive ? lenseColor : '#fff')}
           borderRadius={100}
           transform={[{ scale: 1 }]}
           hoverStyle={{
             borderColor: '#f0f0f0',
           }}
           {...(isActive && {
-            // borderColor: lenseColor,
             transform: [{ scale: 1.12 }],
             hoverStyle: {
               transform: [{ scale: 1.12 }],
@@ -81,8 +78,8 @@ export const LenseButton = memoIsEqualDeep(
             backgroundColor="#f2f2f2"
             borderColor="transparent"
             {...(isActive && {
-              borderColor: lenseColor,
-              backgroundColor: lenseColor,
+              borderColor: '#000',
+              backgroundColor: '#000',
             })}
           >
             <VStack

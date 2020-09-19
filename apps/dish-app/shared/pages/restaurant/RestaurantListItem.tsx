@@ -151,36 +151,9 @@ const RestaurantListItemContent = memo(
     }, [restaurant.name])
 
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
-
     const curState = omStatic.state.home.currentState
     const tagIds = 'activeTagIds' in curState ? curState.activeTagIds : {}
-
-    console.log(
-      tagIds,
-      Object.keys(tagIds),
-      restaurant
-        .tags({
-          where: {
-            tag: {
-              name: {
-                _in: Object.keys(tagIds).map((id) => allTags[id].name),
-              },
-            },
-          },
-        })
-        .map((x) => `${x.tag.name} - ${x.score}`),
-      Object.keys(tagIds).map((x) => {
-        return allTags[x].name
-      })
-    )
-
     const score = restaurant.score ?? 0
-    // + restaurant.tags({
-    //   where: {
-    //     tag_id
-    //   }
-    // })
-
     const [isActive, setIsActive] = useState(false)
     const getIsActive = useGet(isActive)
     useEffect(() => {

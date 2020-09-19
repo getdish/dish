@@ -1,3 +1,5 @@
+- fix hmr for useStore in react native
+
 goals for this week, get us to being able to onboard people (not 100% necessary, but in order of importance):
 
 - fix login/register flows

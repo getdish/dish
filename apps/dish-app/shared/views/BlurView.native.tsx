@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native'
 
 export function BlurView({ children, borderRadius, ...props }: StackProps) {
   return (
-    <VStack borderRadius={borderRadius} {...props}>
+    <VStack borderRadius={borderRadius} width="100%" height="100%" {...props}>
       <NativeBlurView
         style={[StyleSheet.absoluteFill, { borderRadius, zIndex: -1 }]}
         blurType="light"

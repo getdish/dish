@@ -31,7 +31,7 @@ export const SmallButton = ({
       })}
       {...(!isWeb && {
         height: 44,
-        minWidth: 44,
+        minWidth: 48,
         alignItems: 'center',
         justifyContent: 'center',
       })}

@@ -8,6 +8,7 @@ import { useIsReallyNarrow } from '../../hooks/useIs'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { tagLenses } from '../../state/tagLenses'
 import { Link } from '../../views/ui/Link'
+import { LinkButton } from '../../views/ui/LinkButton'
 
 export const HomeTopSearches = memo(() => {
   const isReallySmall = useIsReallyNarrow()
@@ -25,47 +26,47 @@ export const HomeTopSearches = memo(() => {
     >
       {recentSearches.slice(0, isReallySmall ? 6 : 8).map((search, index) => {
         return (
-          <Link key={index} tags={search.tags}>
-            <HStack
-              padding={8}
-              alignItems="center"
-              marginBottom={6}
-              borderRadius={100}
-              hoverStyle={{
-                backgroundColor: bgLight,
-              }}
-            >
-              {search.tags.map((tag, index) => (
-                <React.Fragment key={tag.name}>
-                  <Text
-                    color="#444"
-                    paddingHorizontal={5}
-                    fontSize={14}
-                    borderRadius={50}
-                  >
-                    {tag.icon ? (
-                      <Text
-                        transform={[{ translateY: 2 }]}
-                        marginRight={1}
-                        fontSize={20}
-                        lineHeight={isWeb ? 16 : 22}
-                      >
-                        {tag.icon}{' '}
-                      </Text>
-                    ) : (
-                      ''
-                    )}
-                    {tagDisplayName(tag)}
-                  </Text>
-                  {index < search.tags.length - 1 ? (
-                    <Text marginHorizontal={2} fontSize={8} opacity={0.23}>
-                      +
+          <LinkButton
+            key={index}
+            tags={search.tags}
+            padding={8}
+            alignItems="center"
+            marginBottom={6}
+            borderRadius={100}
+            hoverStyle={{
+              backgroundColor: bgLight,
+            }}
+          >
+            {search.tags.map((tag, index) => (
+              <React.Fragment key={tag.name}>
+                <Text
+                  color="#444"
+                  paddingHorizontal={5}
+                  fontSize={14}
+                  borderRadius={50}
+                >
+                  {tag.icon ? (
+                    <Text
+                      marginRight={1}
+                      fontSize={18}
+                      lineHeight={isWeb ? 16 : 22}
+                    >
+                      {tag.icon}{' '}
                     </Text>
-                  ) : null}
-                </React.Fragment>
-              ))}
-            </HStack>
-          </Link>
+                  ) : (
+                    ''
+                  )}
+                  {tagDisplayName(tag)}
+                </Text>
+                {index < search.tags.length - 1 ? (
+                  <Text marginHorizontal={2} fontSize={8} opacity={0.23}>
+                    {' '}
+                    +{' '}
+                  </Text>
+                ) : null}
+              </React.Fragment>
+            ))}
+          </LinkButton>
         )
       })}
     </HStack>
