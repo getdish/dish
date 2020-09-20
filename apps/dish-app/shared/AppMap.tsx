@@ -264,6 +264,8 @@ const AppMapContent = memo(function AppMap({
         right: 10,
       }
 
+  console.log('padding', drawerStore.currentSnapPoint, padding)
+
   const features = useMemo(() => getRestaurantMarkers(restaurants), [key])
 
   return (
@@ -288,7 +290,10 @@ const AppMapContent = memo(function AppMap({
           om.state.home.hoveredRestaurant && om.state.home.hoveredRestaurant.id
         }
         onMoveEnd={({ center, span }) => {
-          if (isSmall && drawerStore.currentSnapPoint === 0) {
+          if (
+            isSmall &&
+            (drawerStore.isDragging || drawerStore.snapIndex === 0)
+          ) {
             console.log('avoid move stuff when snapped to top')
             return
           }

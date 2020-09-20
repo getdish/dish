@@ -53,6 +53,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
         curSnapY = drawerStore.pan['_value']
         drawerStore.pan.setOffset(curSnapY)
         drawerStore.pan.setValue(0)
+        drawerStore.setIsDragging(true)
         if (omStatic.state.home.showAutocomplete) {
           omStatic.actions.home.setShowAutocomplete(false)
         }
@@ -72,6 +73,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
         move(e, gestureState)
       },
       onPanResponderRelease: (e, gestureState) => {
+        drawerStore.setIsDragging(false)
         drawerStore.pan.flattenOffset()
         const velocity = gestureState.vy
         drawerStore.animateDrawerToPx(drawerStore.pan['_value'], velocity)

@@ -8,8 +8,9 @@ import { omStatic } from './state/omStatic'
 export class BottomDrawerStore extends Store {
   snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.8]
   snapIndex = 1
+  isDragging = false
   pan = new Animated.Value(this.getSnapPointOffset())
-  spring: any
+  spring: Animated.CompositeAnimation
 
   get currentSnapPoint() {
     return this.snapPoints[this.snapIndex]
@@ -25,6 +26,11 @@ export class BottomDrawerStore extends Store {
     return this.snapPoints.map((_, i) => this.getSnapPointOffset(i))
   }
 
+  setIsDragging(val: boolean) {
+    this.isDragging = val
+    this.spring?.stop()
+  }
+
   setSnapPoint(point: number) {
     this.setSnapIndex(point)
     this.animateDrawerToPx()
@@ -34,6 +40,7 @@ export class BottomDrawerStore extends Store {
     px: number = this.getSnapPointOffset(),
     velocity: number = 0
   ) {
+    this.isDragging = true
     this.setSnapIndex(this.getSnapIndex(px, velocity))
     const toValue = this.getSnapPointOffset()
     this.spring = Animated.spring(this.pan, {
@@ -42,6 +49,7 @@ export class BottomDrawerStore extends Store {
       toValue,
     })
     this.spring.start(() => {
+      this.isDragging = false
       this.pan.flattenOffset()
       this.pan.setValue(toValue)
       this.spring = null

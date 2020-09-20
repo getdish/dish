@@ -2,6 +2,7 @@ import { HStack, Text } from '@dish/ui'
 import React from 'react'
 
 import { RoutesTable } from '../../state/router'
+import { BlurView } from '../BlurView'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 
@@ -11,30 +12,35 @@ export function OverlayLinkButton<
 >({ Icon, children, ...props }: LinkButtonProps<Name, Params> & { Icon: any }) {
   return (
     <LinkButton
-      backgroundColor="rgba(0,0,0,0.65)"
-      paddingVertical={7}
-      paddingHorizontal={11}
       borderRadius={90}
       shadowColor="rgba(0,0,0,0.175)"
       shadowRadius={13}
       shadowOffset={{ width: 0, height: 3 }}
       marginBottom={10}
       overflow="hidden"
+      noText
       hoverStyle={{
         transform: [{ scale: 1.05 }],
       }}
       {...props}
     >
-      <HStack alignItems="center">
-        <Icon
-          size={12}
-          color="rgba(255,255,255,0.5)"
-          style={{ marginRight: 6 }}
-        />
-        <Text color="#fff" fontSize={12} fontWeight="500" opacity={0.85}>
-          {children}
-        </Text>
-      </HStack>
+      <BlurView borderRadius={20}>
+        <HStack
+          alignItems="center"
+          backgroundColor="rgba(0,0,0,0.65)"
+          paddingVertical={7}
+          paddingHorizontal={11}
+        >
+          <Icon
+            size={12}
+            color="rgba(255,255,255,0.5)"
+            style={{ marginRight: 6 }}
+          />
+          <Text color="#fff" fontSize={12} fontWeight="400" opacity={0.85}>
+            {children}
+          </Text>
+        </HStack>
+      </BlurView>
     </LinkButton>
   )
 }

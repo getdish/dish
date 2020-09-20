@@ -1,3 +1,4 @@
+import { useDebounce } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 import React, { useEffect, useRef, useState } from 'react'
@@ -15,7 +16,7 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
   const { width, height } = Dimensions.get('screen')
   const drawerStore = useStore(BottomDrawerStore)
   const drawerHeight = drawerStore.currentHeight
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(0)
   const paddingVertical = isLoaded ? drawerHeight / 2 : 0
   const ty = -paddingVertical
   const tyRef = useRef(new Animated.Value(ty))
@@ -36,9 +37,11 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
   }
   const cameraRef = useRef<MapboxGL.Camera>()
   const mapRef = useRef<MapboxGL.MapView>()
+  const onMoveEndDelayed = useDebounce(onMoveEnd, 250)
 
   useEffect(() => {
     const { ne, sw, paddingTop, paddingBottom } = bounds
+    console.log('fit bounds')
     cameraRef.current?.fitBounds(ne, sw, [paddingTop, 0, paddingBottom, 0], 500)
   }, [JSON.stringify(bounds)])
 
@@ -55,9 +58,15 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
         ref={mapRef}
         styleURL="mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy"
         onDidFinishLoadingMap={() => {
-          setIsLoaded(true)
+          setIsLoaded(1)
         }}
         onRegionDidChange={async (event) => {
+          // ignore initial load
+          if (isLoaded === 1) {
+            setIsLoaded(2)
+            return
+          }
+          if (isLoaded < 2) return
           const map = mapRef.current
           if (!map) return
           const [clng, clat] = await map.getCenter()
@@ -77,7 +86,7 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
             },
           }
           if (hasMovedAtLeast(next, { center, span })) {
-            onMoveEnd?.(next)
+            onMoveEndDelayed?.(next)
           }
         }}
       >
