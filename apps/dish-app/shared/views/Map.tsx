@@ -1,7 +1,6 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 import { fullyIdle, series } from '@dish/async'
-import { LngLat } from '@dish/graph'
 import { useGet } from '@dish/ui'
 import _, { isEqual } from 'lodash'
 import mapboxgl from 'mapbox-gl'
@@ -11,6 +10,7 @@ import { Dimensions } from 'react-native'
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { tagLenses } from '../state/tagLenses'
+import { hasMovedAtLeast } from './hasMovedAtLeast'
 import { MapProps } from './MapProps'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
@@ -609,7 +609,7 @@ export const Map = (props: MapProps) => {
       }
     }
 
-    if (hasMovedAtLeast(map, { center, span }, 0.01)) {
+    if (hasMovedAtLeast(getCurrentLocation(map), { center, span })) {
       internal.current.isAwaitingNextMove = true
       const cancelSeries = series([
         () => fullyIdle({ max: 500 }),
@@ -742,140 +742,3 @@ const getCurrentLocation = (map: mapboxgl.Map) => {
 }
 window['mapboxgl'] = mapboxgl
 window['getCurrentLocation'] = getCurrentLocation
-
-const abs = (x: number) => Math.abs(x)
-
-const hasMovedAtLeast = (
-  map: mapboxgl.Map,
-  next: { center: LngLat; span: LngLat },
-  distance: number
-) => {
-  const current = getCurrentLocation(map)
-  const d1 = abs(next.center.lng - current.center.lng)
-  const d2 = abs(next.center.lat - current.center.lat)
-  const d3 = abs(next.span.lat - current.span.lat)
-  const d4 = abs(next.span.lng - current.span.lng)
-  const diff = d1 + d2 + d3 + d4
-  return diff > distance
-}
-
-///
-
-// paint: {
-//   'icon-translate': [100, 2],
-// },
-// paint: {
-//   'circle-opacity': 0.4,
-//   'circle-color': '#830300',
-//   'circle-stroke-width': 2,
-//   'circle-stroke-color': '#fff',
-// },
-// "circ"
-//   "circle-radius": {
-//         "property": "mag",
-//         "base": 2.5,
-//         "stops": [
-//             [{zoom: 0,  value: 2}, 1],
-//             [{zoom: 0,  value: 8}, 40],
-//             [{zoom: 11, value: 2}, 10],
-//             [{zoom: 11, value: 8}, 2400],
-//             [{zoom: 20, value: 2}, 20],
-//             [{zoom: 20, value: 8}, 6000]
-//           "circle-radius-transition": {
-//     "duration": 0
-//   }
-//         ]
-//     }
-// }
-// map.addLayer({
-//   id: UNCLUSTE,
-//   type: 'circle',
-//   source: SOURCE_ID,
-
-//   paint: {
-//     // The feature-state dependent circle-radius expression will render
-//     // the radius size according to its magnitude when
-//     // a feature's hover state is set to true
-//     'circle-radius': [
-//       'case',
-//       ['boolean', ['feature-state', 'hover'], false],
-//       5,
-//       3,
-//     ],
-//     'circle-stroke-color': '#fff',
-//     'circle-stroke-width': 1,
-//     // The feature-state dependent circle-color expression will render
-//     // the color according to its magnitude when
-//     // a feature's hover state is set to true
-//     'circle-color': [
-//       'case',
-//       ['boolean', ['feature-state', 'active'], false],
-//       '#000',
-//       '#888',
-//     ],
-//   },
-
-//   // paint: {
-//   //   'icon-translate': [100, 2],
-//   // },
-//   // paint: {
-//   //   'circle-opacity': 0.4,
-//   //   'circle-color': '#830300',
-//   //   'circle-stroke-width': 2,
-//   //   'circle-stroke-color': '#fff',
-//   // },
-//   // "circ"
-//   //   "circle-radius": {
-//   //         "property": "mag",
-//   //         "base": 2.5,
-//   //         "stops": [
-//   //             [{zoom: 0,  value: 2}, 1],
-//   //             [{zoom: 0,  value: 8}, 40],
-//   //             [{zoom: 11, value: 2}, 10],
-//   //             [{zoom: 11, value: 8}, 2400],
-//   //             [{zoom: 20, value: 2}, 20],
-//   //             [{zoom: 20, value: 8}, 6000]
-//   //           "circle-radius-transition": {
-//   //     "duration": 0
-//   //   }
-//   //         ]
-//   //     }
-//   // }
-// })
-
-// '\n',
-// {},
-// ['downcase', ['get', 'subtitle']],
-// { 'font-scale': 0.6 },
-
-// hover/point layer shared
-// const layout: mapboxgl.SymbolLayout = {
-//   // 'icon-image': 'bar-15',
-//   'text-field': ['format', ['get', 'title'], { 'font-scale': 0.8 }],
-//   'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-//   'text-offset': [0, 0.6],
-//   'text-anchor': 'top',
-//   // // @ts-ignore
-//   // 'text-halo-color': '#fff',
-//   // // @ts-ignore
-//   // 'text-halo-width': '1',
-// }
-
-// map.addLayer({
-//   id: UNCLUSTE,
-//   type: 'symbol',
-//   source: SOURCE_ID,
-//   layout,
-// })
-
-// map.addLayer({
-//   id: POINT_HOVER_LAYER_ID,
-//   type: 'symbol',
-//   source: SOURCE_ID,
-//   filter: ['==', 'id', ''],
-//   layout: {
-//     ...layout,
-//     'icon-size': 0.5,
-//     'icon-offset': [0, -15],
-//   },
-// })

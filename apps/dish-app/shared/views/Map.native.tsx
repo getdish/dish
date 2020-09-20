@@ -5,12 +5,13 @@ import { Animated, Dimensions, StyleSheet } from 'react-native'
 
 import { BottomDrawerStore } from '../BottomDrawerStore'
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
+import { hasMovedAtLeast } from './hasMovedAtLeast'
 import { MapProps } from './MapProps'
 
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN)
 MapboxGL.setTelemetryEnabled(false)
 
-export const Map = ({ center, span, features }: MapProps) => {
+export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
   const { width, height } = Dimensions.get('screen')
   const drawerStore = useStore(BottomDrawerStore)
   const drawerHeight = drawerStore.currentHeight
@@ -34,6 +35,7 @@ export const Map = ({ center, span, features }: MapProps) => {
     paddingBottom: paddingVertical,
   }
   const cameraRef = useRef<MapboxGL.Camera>()
+  const mapRef = useRef<MapboxGL.MapView>()
 
   useEffect(() => {
     const { ne, sw, paddingTop, paddingBottom } = bounds
@@ -50,9 +52,33 @@ export const Map = ({ center, span, features }: MapProps) => {
     >
       <MapboxGL.MapView
         style={styles.map}
+        ref={mapRef}
         styleURL="mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy"
         onDidFinishLoadingMap={() => {
           setIsLoaded(true)
+        }}
+        onRegionDidChange={async (event) => {
+          const map = mapRef.current
+          if (!map) return
+          const [clng, clat] = await map.getCenter()
+          const [ne, sw] = await map.getVisibleBounds()
+          const padPct = paddingVertical / (height / 2)
+          const spanLatUnpadded = ne[1] - clat
+          const spanPct = spanLatUnpadded * padPct
+          const spanLat = spanLatUnpadded - spanPct
+          const next = {
+            center: {
+              lng: clng,
+              lat: clat,
+            },
+            span: {
+              lng: clng - sw[0],
+              lat: spanLat,
+            },
+          }
+          if (hasMovedAtLeast(next, { center, span })) {
+            onMoveEnd?.(next)
+          }
         }}
       >
         <MapboxGL.Camera

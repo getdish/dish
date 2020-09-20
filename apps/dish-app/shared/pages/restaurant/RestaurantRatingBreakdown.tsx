@@ -5,8 +5,8 @@ import React, { Suspense, memo } from 'react'
 import { CloseButton } from '../../views/ui/CloseButton'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
-import { RestaurantBreakdown } from './RestaurantBreakdown'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
+import { RestaurantPointsBreakdown } from './RestaurantPointsBreakdown'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
 
 export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
@@ -64,12 +64,13 @@ export const RestaurantRatingBreakdown = memo(
             borderColor="#eee"
             padding={10}
             minWidth={260}
+            maxWidth={200}
             margin={10}
             flex={1}
             overflow="hidden"
           >
             <SmallTitle>Points</SmallTitle>
-            <RestaurantBreakdown
+            <RestaurantPointsBreakdown
               showTable={showScoreTable}
               restaurantSlug={restaurantSlug}
             />
@@ -87,6 +88,7 @@ export const RestaurantRatingBreakdown = memo(
 
           <VStack
             minWidth={260}
+            maxWidth={410}
             flex={1.15}
             overflow="hidden"
             paddingHorizontal={10}

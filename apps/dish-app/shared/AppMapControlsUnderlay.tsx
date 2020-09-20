@@ -3,7 +3,7 @@ import { AbsoluteVStack, HStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { searchBarHeight, zIndexDrawer } from './constants'
-import { mapZoomToMedium, useZoomLevel } from './helpers/mapHelpers'
+import { useZoomLevel } from './helpers/mapHelpers'
 import { useIsNarrow } from './hooks/useIs'
 import { useMapSize } from './hooks/useMapSize'
 import { useOvermind } from './state/om'
@@ -11,7 +11,6 @@ import { OverlayLinkButton } from './views/ui/OverlayLinkButton'
 
 export const AppMapControlsUnderlay = memo(() => {
   const om = useOvermind()
-  const zoomLevel = useZoomLevel()
   const hasMovedMap =
     !!om.state.home.currentState.mapAt &&
     om.state.home.currentStateType === 'search'
