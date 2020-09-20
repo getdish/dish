@@ -10669,11 +10669,6 @@ ioredis@^4.14.1:
     redis-parser "^3.0.0"
     standard-as-callback "^2.0.1"
 
-ios-deploy@^1.11.2:
-  version "1.11.2"
-  resolved "https://registry.npmjs.org/ios-deploy/-/ios-deploy-1.11.2.tgz#bbffe6011e6bc2ba1e25935951a8d34fa2b0b7cb"
-  integrity sha512-t0rpKDGrnSnm2MnT++DA5FtssfyeKdJ3iIbk8SoOLZuqSCGkYlfQu4OruJ7nBwoonMSoicc4XacXolAxv4UBZQ==
-
 ip-regex@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/ip-regex/-/ip-regex-2.1.0.tgz#fa78bf5d2e6913c911ce9f819ee5146bb6d844e9"

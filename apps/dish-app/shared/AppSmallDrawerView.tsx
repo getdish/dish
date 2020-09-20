@@ -46,6 +46,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
         return Math.abs(dy) > threshold
       },
       onPanResponderGrant: () => {
+        drawerStore.setIsDragging(true)
         drawerStore.spring?.stop()
         drawerStore.spring = null
         drawerStore.pan.setOffset(drawerStore.pan['_value'])
@@ -59,6 +60,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
         useNativeDriver: false,
       }),
       onPanResponderRelease: () => {
+        drawerStore.setIsDragging(false)
         drawerStore.pan.flattenOffset()
         drawerStore.animateDrawerToPx(drawerStore.pan['_value'])
         document.body.classList.remove('all-input-blur')

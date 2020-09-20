@@ -17,7 +17,7 @@ export function BlurView({
   ...props
 }: StackProps & BlurViewProperties) {
   return (
-    <VStack borderRadius={borderRadius} width="100%" height="100%" {...props}>
+    <VStack borderRadius={borderRadius} {...props}>
       <NativeBlurView
         style={[StyleSheet.absoluteFill, { borderRadius, zIndex: -1 }]}
         {...{

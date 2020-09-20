@@ -75,6 +75,7 @@ export default memo(function AppAutocomplete() {
     useEffect(() => {
       // debounce to go after press event
       const handleHide = () => {
+        console.log('handleHideKeyboard')
         if (omStatic.state.home.showAutocomplete) {
           omStatic.actions.home.setShowAutocomplete(false)
         }

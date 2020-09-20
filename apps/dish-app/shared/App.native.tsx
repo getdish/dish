@@ -2,7 +2,7 @@ import { AbsoluteVStack, VStack } from '@dish/ui'
 import { StatusBar } from 'expo-status-bar'
 import { Provider } from 'overmind-react'
 import React, { Suspense, useEffect, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { LogBox, StyleSheet, View } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import AppAutocomplete from './AppAutocomplete'
@@ -15,7 +15,7 @@ import { AppStackView } from './AppStackView'
 import { PagesStackView } from './pages/PagesStackView'
 import { om } from './state/om'
 
-console.disableYellowBox = true
+LogBox.ignoreAllLogs(true)
 
 export default function App() {
   const [loaded, setLoaded] = useState(false)
