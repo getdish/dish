@@ -174,12 +174,12 @@ const RestaurantListItemContent = memo(
       minWidth: isSmall
         ? isWeb
           ? '52vw'
-          : Dimensions.get('screen').width * 0.5
+          : Dimensions.get('screen').width * 0.75
         : 320,
       maxWidth: isSmall
         ? isWeb
           ? '80vw'
-          : Dimensions.get('screen').width * 0.65
+          : Dimensions.get('screen').width * 0.75
         : 430,
     }
 
@@ -240,6 +240,9 @@ const RestaurantListItemContent = memo(
                     fontWeight="500"
                     lineHeight={26}
                     textDecorationColor="transparent"
+                    {...(!isWeb && {
+                      minWidth: contentSideWidthProps.minWidth,
+                    })}
                   >
                     <Link
                       color="#000"
@@ -415,7 +418,12 @@ const RestaurantListItemContent = memo(
           {/* BOTTOM ROW */}
 
           <Suspense fallback={null}>
-            <HStack flex={1} alignItems="center" flexWrap="wrap" minWidth={450}>
+            <HStack
+              flex={1}
+              alignItems="center"
+              flexWrap="wrap"
+              minWidth={contentSideWidthProps.minWidth}
+            >
               <VStack>
                 <Tooltip
                   contents={`Rating Breakdown (${totalReviews} reviews)`}

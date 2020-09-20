@@ -301,6 +301,7 @@ const SearchResultsContent = (props: Props) => {
             fontWeight="600"
             // @ts-ignore
             display="inline" // safari fix
+            marginRight={isSmall ? 20 : 0}
           >
             {pageTitleElements}{' '}
             <Text
