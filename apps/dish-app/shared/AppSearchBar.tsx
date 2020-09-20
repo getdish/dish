@@ -114,7 +114,7 @@ export const HomeSearchBarFloating = () => {
                   top={0}
                   left={1}
                   width={isWeb ? `calc(100% - 1px)` : '100%'}
-                  shadowColor="rgba(0,0,0,0.2)"
+                  shadowColor="rgba(0,0,0,0.25)"
                   shadowOffset={{ height: 3, width: 0 }}
                   shadowRadius={12}
                 />
@@ -279,7 +279,7 @@ const HomeSearchBar = memo(() => {
         </LinkButton>
       )}
 
-      <AppMenu />
+      {!isReallySmall && <AppMenu />}
     </HStack>
   )
 })

@@ -6,8 +6,8 @@ import { CloseButton } from '../../views/ui/CloseButton'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
+import { RestaurantPointsBreakdown } from './RestaurantPointsBreakdown'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
-import { RestaurantScoreBreakdown } from './RestaurantScoreBreakdown'
 
 export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
   showComments = false
@@ -64,12 +64,13 @@ export const RestaurantRatingBreakdown = memo(
             borderColor="#eee"
             padding={10}
             minWidth={260}
+            maxWidth={200}
             margin={10}
             flex={1}
             overflow="hidden"
           >
             <SmallTitle>Points</SmallTitle>
-            <RestaurantScoreBreakdown
+            <RestaurantPointsBreakdown
               showTable={showScoreTable}
               restaurantSlug={restaurantSlug}
             />
@@ -87,6 +88,7 @@ export const RestaurantRatingBreakdown = memo(
 
           <VStack
             minWidth={260}
+            maxWidth={410}
             flex={1.15}
             overflow="hidden"
             paddingHorizontal={10}

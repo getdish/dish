@@ -102,7 +102,7 @@ export function ProgressCircle({
               height: radius * 2,
               borderTopRightRadius: 0,
               borderBottomRightRadius: 0,
-              backgroundColor: color,
+              // backgroundColor: color,
               transform: [
                 { translateX: radius / 2 },
                 { rotate: state.rightTransformerDegree },
@@ -136,7 +136,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#e3e3e3',
   },
   leftWrap: {
     overflow: 'hidden',
@@ -146,14 +145,12 @@ const styles = StyleSheet.create({
   rightWrap: {
     position: 'absolute',
   },
-
   loader: {
     position: 'absolute',
     left: 0,
     top: 0,
     borderRadius: 1000,
   },
-
   innerCircle: {
     overflow: 'hidden',
     position: 'relative',

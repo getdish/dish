@@ -1,7 +1,11 @@
 import { StackProps, VStack } from '@dish/ui'
 import React from 'react'
 
-export function BlurView({ children, borderRadius, ...props }: StackProps) {
+export function BlurView({
+  children,
+  borderRadius,
+  ...props
+}: StackProps & any) {
   return children
   return (
     <VStack borderRadius={borderRadius} {...props}>

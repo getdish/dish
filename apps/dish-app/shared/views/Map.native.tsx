@@ -1,3 +1,4 @@
+import { useDebounce } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 import React, { useEffect, useRef, useState } from 'react'
@@ -5,16 +6,17 @@ import { Animated, Dimensions, StyleSheet } from 'react-native'
 
 import { BottomDrawerStore } from '../BottomDrawerStore'
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
+import { hasMovedAtLeast } from './hasMovedAtLeast'
 import { MapProps } from './MapProps'
 
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN)
 MapboxGL.setTelemetryEnabled(false)
 
-export const Map = ({ center, span, features }: MapProps) => {
+export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
   const { width, height } = Dimensions.get('screen')
   const drawerStore = useStore(BottomDrawerStore)
   const drawerHeight = drawerStore.currentHeight
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(0)
   const paddingVertical = isLoaded ? drawerHeight / 2 : 0
   const ty = -paddingVertical
   const tyRef = useRef(new Animated.Value(ty))
@@ -34,9 +36,12 @@ export const Map = ({ center, span, features }: MapProps) => {
     paddingBottom: paddingVertical,
   }
   const cameraRef = useRef<MapboxGL.Camera>()
+  const mapRef = useRef<MapboxGL.MapView>()
+  const onMoveEndDelayed = useDebounce(onMoveEnd, 250)
 
   useEffect(() => {
     const { ne, sw, paddingTop, paddingBottom } = bounds
+    console.log('fit bounds')
     cameraRef.current?.fitBounds(ne, sw, [paddingTop, 0, paddingBottom, 0], 500)
   }, [JSON.stringify(bounds)])
 
@@ -50,9 +55,39 @@ export const Map = ({ center, span, features }: MapProps) => {
     >
       <MapboxGL.MapView
         style={styles.map}
+        ref={mapRef}
         styleURL="mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy"
         onDidFinishLoadingMap={() => {
-          setIsLoaded(true)
+          setIsLoaded(1)
+        }}
+        onRegionDidChange={async (event) => {
+          // ignore initial load
+          if (isLoaded === 1) {
+            setIsLoaded(2)
+            return
+          }
+          if (isLoaded < 2) return
+          const map = mapRef.current
+          if (!map) return
+          const [clng, clat] = await map.getCenter()
+          const [ne, sw] = await map.getVisibleBounds()
+          const padPct = paddingVertical / (height / 2)
+          const spanLatUnpadded = ne[1] - clat
+          const spanPct = spanLatUnpadded * padPct
+          const spanLat = spanLatUnpadded - spanPct
+          const next = {
+            center: {
+              lng: clng,
+              lat: clat,
+            },
+            span: {
+              lng: clng - sw[0],
+              lat: spanLat,
+            },
+          }
+          if (hasMovedAtLeast(next, { center, span })) {
+            onMoveEndDelayed?.(next)
+          }
         }}
       >
         <MapboxGL.Camera

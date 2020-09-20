@@ -2,21 +2,21 @@ import { Map, RefreshCcw } from '@dish/react-feather'
 import { AbsoluteVStack, HStack } from '@dish/ui'
 import React, { memo } from 'react'
 
-import { searchBarHeight, zIndexDrawer } from './constants'
-import { mapZoomToMedium, useZoomLevel } from './helpers/mapHelpers'
+import { isWeb, searchBarHeight, zIndexDrawer } from './constants'
 import { useIsNarrow } from './hooks/useIs'
 import { useMapSize } from './hooks/useMapSize'
+import { useSafeArea } from './hooks/useSafeArea'
 import { useOvermind } from './state/om'
 import { OverlayLinkButton } from './views/ui/OverlayLinkButton'
 
 export const AppMapControlsUnderlay = memo(() => {
   const om = useOvermind()
-  const zoomLevel = useZoomLevel()
   const hasMovedMap =
     !!om.state.home.currentState.mapAt &&
     om.state.home.currentStateType === 'search'
   const isSmall = useIsNarrow()
   const { paddingLeft, width } = useMapSize(isSmall)
+  const safeArea = useSafeArea()
   return (
     <AbsoluteVStack
       className="untouchable" // safari
@@ -36,7 +36,7 @@ export const AppMapControlsUnderlay = memo(() => {
           maxWidth: '100%',
           left: 0,
           right: 0,
-          top: 0,
+          top: isWeb ? 0 : safeArea.top - 10,
         })}
         zIndex={20000000}
         alignItems="center"

@@ -69,8 +69,8 @@ export function getStaticBindingsForScope(
       if (isOnWhitelist) {
         let src: any
         const filenames = [
-          moduleName.replace('.js', '.ts'),
           moduleName.replace('.js', '.tsx'),
+          moduleName.replace('.js', '.ts'),
           moduleName,
         ]
         for (const file of filenames) {

@@ -33,8 +33,6 @@ export const RestaurantReview = memo(
 
       const sentiments = review.sentiments()
 
-      console.log('what is', review.username, review.text)
-
       return (
         <CommentBubble
           expandable

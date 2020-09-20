@@ -123,7 +123,7 @@ const HomePageGalleryContent = memo(
     const tag_names = state.dishId ? [state.dishId] : []
     const photos = restaurantPhotosForCarousel({
       restaurant,
-      max: 100,
+      max: 20,
       tag_names,
       gallery: true,
     })

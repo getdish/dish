@@ -52,12 +52,13 @@ export const DishView = memo(
         alignItems="center"
         position="relative"
         justifyContent="center"
-        width={width}
+        // width={width}
         height={height}
         pressStyle={{
           transform: [{ scale: 0.98 }],
           opacity: 1,
         }}
+        noText
         hoverStyle={{
           zIndex: 1000000,
           transform: [{ scale: 1.02 }],
@@ -81,14 +82,21 @@ export const DishView = memo(
         {...rest}
       >
         {/* rating */}
-        <AbsoluteVStack pointerEvents="none" zIndex={10} top={0} left={-8}>
-          {!!dish.rating && (
+        {!!dish.rating && (
+          <AbsoluteVStack
+            width={20}
+            height={20}
+            pointerEvents="none"
+            zIndex={10}
+            top={-8}
+            left={-8}
+          >
             <DishRatingView
               size={size > 160 ? 'md' : 'sm'}
               rating={dish.rating}
             />
-          )}
-        </AbsoluteVStack>
+          </AbsoluteVStack>
+        )}
 
         <Squircle
           width={width}

@@ -119,8 +119,8 @@ export const RatingView = forwardRef(
         )}
         <VStack
           borderRadius={100}
-          shadowColor={`rgba(0,0,0,${sizeIn == 'lg' ? 0.1 : 0.25})`}
-          shadowRadius={size / 5}
+          shadowColor={`rgba(0,0,0,${sizeIn == 'lg' ? 0.1 : 0.2})`}
+          shadowRadius={size / 7}
           shadowOffset={{ height: 5, width: 0 }}
           width={size}
           height={size}
@@ -144,14 +144,6 @@ export const RatingView = forwardRef(
               {number}
             </VStack>
           </ProgressCircle>
-          <VStack
-            borderRadius={100}
-            // borderColor={borderColor}
-            borderWidth={1 + (sizeIn == 'lg' ? 1 : 0)}
-            width="100%"
-            height="100%"
-            position="absolute"
-          />
         </VStack>
       </VStack>
     )

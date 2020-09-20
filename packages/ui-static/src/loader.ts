@@ -14,7 +14,7 @@ export default function GlossWebpackLoader(this: any, content) {
     this.cacheable()
   }
 
-  const pluginContext: PluginContext = this[Symbol.for('@dish/ui-static')]
+  const pluginContext: PluginContext = this['@dish/ui-static']
   invariant(
     pluginContext,
     '@dish/ui-static must be added to the plugins array in your webpack config'

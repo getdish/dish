@@ -25,23 +25,23 @@ export const DishViewButton = memo(
           backgroundColor: `${backgroundColor}55`,
         }}
         paddingVertical={8}
+        paddingHorizontal={12}
+        noText
         borderRadius={100}
         tag={{ type: 'dish', name }}
         {...rest}
       >
-        <HStack>
-          {!!icon && (
-            <>
-              <Text fontSize={16} marginVertical={-5}>
-                {icon}
-              </Text>
-              <Spacer size="xs" />
-            </>
-          )}
-          <Text fontSize={14} opacity={0.8}>
-            {name}
-          </Text>
-        </HStack>
+        {!!icon && (
+          <>
+            <Text fontSize={16} marginVertical={-2}>
+              {icon}
+            </Text>
+            <Spacer size="xs" />
+          </>
+        )}
+        <Text fontSize={14} opacity={0.8}>
+          {name}
+        </Text>
       </LinkButton>
     )
   }

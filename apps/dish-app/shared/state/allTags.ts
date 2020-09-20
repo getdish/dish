@@ -7,6 +7,9 @@ import { getTagId } from './getTagId'
 export const allTags: { [keyPath: string]: Tag } = {}
 export const allTagsNameToID: { [name: string]: string } = {}
 
+window['allTags'] = allTags
+window['allTagsNameToID'] = allTagsNameToID
+
 // adds to allTags + allTagsNameToID
 export function addTagsToCache(tags: Tag[]) {
   for (const tag of tags ?? []) {

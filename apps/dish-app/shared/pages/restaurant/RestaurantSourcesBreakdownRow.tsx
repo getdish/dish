@@ -1,47 +1,79 @@
 import { graphql } from '@dish/graph'
-import { HStack, Spacer, Text, Tooltip, VStack } from '@dish/ui'
+import {
+  Box,
+  HStack,
+  HoverablePopover,
+  Spacer,
+  Text,
+  Tooltip,
+  VStack,
+} from '@dish/ui'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
 
+import { bgLight } from '../../colors'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
 import { PointsText } from '../../views/PointsText'
+import { LinkButton } from '../../views/ui/LinkButton'
+import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
 
 export const RestaurantSourcesBreakdownRow = memo(
   graphql(
     ({
       restaurantSlug,
       restaurantId,
+      size = 'md',
     }: {
       restaurantSlug: string
       restaurantId: string
+      size?: 'sm' | 'md'
     }) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
       const sources = {
-        dish: {
-          rating: 3,
-        },
         ...(restaurant?.sources?.() ?? {}),
       }
       return (
-        <HStack position="relative" alignItems="center" flexWrap="wrap">
-          {Object.keys(sources)
-            .filter(
-              (source) => thirdPartyCrawlSources[source]?.delivery === false
+        <HoverablePopover
+          allowHoverOnContent
+          position="right"
+          contents={(isOpen) => {
+            return (
+              <Box width={280} minHeight={200}>
+                {isOpen ? (
+                  <RestaurantSourcesBreakdown restaurantSlug={restaurantSlug} />
+                ) : null}
+              </Box>
             )
-            .map((source, i) => {
-              const item = sources[source]
-              const info = thirdPartyCrawlSources[source]
-              return (
-                <HStack
-                  key={source}
-                  alignItems="center"
-                  paddingHorizontal={5}
-                  paddingVertical={3}
-                  borderRadius={100}
-                >
-                  {i !== 0 && (
-                    <>
+          }}
+        >
+          <HStack
+            padding={6}
+            marginVertical={-6}
+            borderRadius={100}
+            hoverStyle={{
+              backgroundColor: bgLight,
+            }}
+            position="relative"
+            alignItems="center"
+            flexWrap="wrap"
+          >
+            {Object.keys(sources)
+              .filter(
+                (source) => thirdPartyCrawlSources[source]?.delivery === false
+              )
+              .map((source, i) => {
+                const item = sources[source]
+                const info = thirdPartyCrawlSources[source]
+                return (
+                  <LinkButton
+                    key={source}
+                    alignItems="center"
+                    paddingHorizontal={5}
+                    paddingVertical={3}
+                    borderRadius={100}
+                  >
+                    <HStack>
                       {info?.image ? (
                         <VStack className="faded-out">
                           <Image
@@ -58,17 +90,19 @@ export const RestaurantSourcesBreakdownRow = memo(
                       <Text fontSize={14} color="rgba(0,0,0,0.7)">
                         {info?.name}
                       </Text>
-                    </>
-                  )}
-                  <PointsText
-                    marginLeft={4}
-                    points={+(item.rating ?? 0) * 10}
-                    color="#999"
-                  />
-                </HStack>
-              )
-            })}
-        </HStack>
+                      {size !== 'sm' && (
+                        <PointsText
+                          marginLeft={4}
+                          points={+(item.rating ?? 0) * 10}
+                          color="#999"
+                        />
+                      )}
+                    </HStack>
+                  </LinkButton>
+                )
+              })}
+          </HStack>
+        </HoverablePopover>
       )
     }
   )

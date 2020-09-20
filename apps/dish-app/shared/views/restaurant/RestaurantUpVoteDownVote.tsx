@@ -136,6 +136,7 @@ const RestaurantTagsScore = graphql(
     userVote: number
   }) => {
     const tagScores = useRestaurantTagScores(restaurantSlug, activeTagIds)
+    console.log('tagScores', tagScores)
     return (
       <Box
         maxWidth={320}

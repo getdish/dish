@@ -28,9 +28,10 @@ import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { addTagsToCache } from '../../state/allTags'
+import { getFullTags } from '../../state/getFullTags'
 import { getTagId } from '../../state/getTagId'
+import { getTagsFromRoute } from '../../state/getTagsFromRoute'
 import { getLocationFromRoute } from '../../state/home-location.helpers'
-import { getFullTags, getTagsFromRoute } from '../../state/home-tag-helpers'
 import {
   HomeActiveTagsRecord,
   HomeStateItemSearch,
@@ -300,6 +301,7 @@ const SearchResultsContent = (props: Props) => {
             fontWeight="600"
             // @ts-ignore
             display="inline" // safari fix
+            marginRight={isSmall ? 20 : 0}
           >
             {pageTitleElements}{' '}
             <Text

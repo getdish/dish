@@ -17,7 +17,7 @@ import { useStore } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
 
-import { bgLightLight, brandColor, lightBlue } from '../../colors'
+import { bgLight, bgLightLight, brandColor, lightBlue } from '../../colors'
 import { isWeb } from '../../constants'
 import { isWebIOS } from '../../helpers/isIOS'
 import { useIsNarrow } from '../../hooks/useIs'
@@ -41,7 +41,9 @@ import {
   RestaurantReviewsDisplayStore,
 } from './RestaurantRatingBreakdown'
 import RestaurantRatingView from './RestaurantRatingView'
+import { RestaurantScoreBreakdownSmall } from './RestaurantScoreBreakdownSmall'
 import { RestaurantSourcesBreakdownRow } from './RestaurantSourcesBreakdownRow'
+import { useTotalReviews } from './useTotalReviews'
 
 type RestaurantListItemProps = {
   currentLocationInfo: GeocodePlace | null
@@ -172,17 +174,18 @@ const RestaurantListItemContent = memo(
       minWidth: isSmall
         ? isWeb
           ? '52vw'
-          : Dimensions.get('screen').width * 0.5
+          : Dimensions.get('screen').width * 0.75
         : 320,
       maxWidth: isSmall
         ? isWeb
           ? '80vw'
-          : Dimensions.get('screen').width * 0.8
+          : Dimensions.get('screen').width * 0.75
         : 430,
     }
 
     const [open_text, open_color, opening_hours] = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
+    const totalReviews = useTotalReviews(restaurant)
 
     return (
       <VStack
@@ -237,6 +240,9 @@ const RestaurantListItemContent = memo(
                     fontWeight="500"
                     lineHeight={26}
                     textDecorationColor="transparent"
+                    {...(!isWeb && {
+                      minWidth: contentSideWidthProps.minWidth,
+                    })}
                   >
                     <Link
                       color="#000"
@@ -259,7 +265,7 @@ const RestaurantListItemContent = memo(
                           })}
                           marginBottom={-22}
                           position="relative"
-                          backgroundColor="#f2f2f2"
+                          backgroundColor={bgLight}
                           borderRadius={1000}
                           alignItems="center"
                           justifyContent="center"
@@ -277,7 +283,7 @@ const RestaurantListItemContent = memo(
                               #
                             </SuperScriptText>
                             <Text
-                              fontSize={+rank > 9 ? 14 : 20}
+                              fontSize={+rank > 9 ? 14 : 24}
                               fontWeight="300"
                               color="#000"
                             >
@@ -285,7 +291,7 @@ const RestaurantListItemContent = memo(
                             </Text>
                           </Text>
                         </VStack>
-                        <Spacer size="sm" />
+                        <Spacer size="md" />
                         <Text
                           fontSize={
                             1.3 *
@@ -337,7 +343,7 @@ const RestaurantListItemContent = memo(
                   />
                 )}
 
-                <Text fontSize={14} color={`rgba(0,0,0,0.7)`}>
+                <Text fontSize={14} color={`rgba(0,0,0,0.6)`}>
                   {price_range}
                 </Text>
 
@@ -371,7 +377,8 @@ const RestaurantListItemContent = memo(
                     borderRadius={100}
                   />
                 </AbsoluteVStack>
-                <RestaurantSourcesBreakdownRow
+
+                <RestaurantScoreBreakdownSmall
                   restaurantId={restaurantId}
                   restaurantSlug={restaurantSlug}
                 />
@@ -406,14 +413,21 @@ const RestaurantListItemContent = memo(
             />
           </HStack>
 
-          <Spacer size="xl" />
+          <Spacer size="sm" />
 
           {/* BOTTOM ROW */}
 
           <Suspense fallback={null}>
-            <HStack flex={1} alignItems="center" flexWrap="wrap" minWidth={450}>
+            <HStack
+              flex={1}
+              alignItems="center"
+              flexWrap="wrap"
+              minWidth={contentSideWidthProps.minWidth}
+            >
               <VStack>
-                <Tooltip contents={`Rating Breakdown (152 reviews)`}>
+                <Tooltip
+                  contents={`Rating Breakdown (${totalReviews} reviews)`}
+                >
                   <SmallButton
                     isActive={reviewDisplayStore.showComments}
                     onPress={reviewDisplayStore.toggleShowComments}
@@ -425,12 +439,8 @@ const RestaurantListItemContent = memo(
                           restaurantSlug={props.restaurantSlug}
                         />
                       </VStack>
-                      <HStack className="hide-when-small">
-                        <Activity color="rgba(0,0,0,0.2)" size={14} />
-                        <Spacer size="sm" />
-                      </HStack>
                       <Text color="rgba(0,0,0,0.5)" fontSize={14}>
-                        152
+                        {totalReviews}
                       </Text>
                     </HStack>
                   </SmallButton>
@@ -439,6 +449,13 @@ const RestaurantListItemContent = memo(
 
               <Spacer size="sm" />
 
+              <RestaurantSourcesBreakdownRow
+                size="sm"
+                restaurantId={restaurantId}
+                restaurantSlug={restaurantSlug}
+              />
+
+              <VStack flex={1} />
               <HStack
                 alignItems="center"
                 {...smallButtonBaseStyle}
@@ -458,7 +475,8 @@ const RestaurantListItemContent = memo(
                 </VStack>
               </HStack>
 
-              <VStack flex={1} />
+              <Spacer />
+
               <RestaurantFavoriteButton size="md" restaurantId={restaurantId} />
             </HStack>
           </Suspense>
@@ -497,7 +515,7 @@ const RestaurantPeekDishes = memo(
       tag_names,
       max: 5,
     })
-    const dishSize = 155
+    const dishSize = 165
     return (
       <HStack
         contain="paint layout"
@@ -507,6 +525,7 @@ const RestaurantPeekDishes = memo(
         marginBottom={-40}
         height={dishSize + 40}
         spacing={spacing}
+        width={dishSize * 5}
       >
         {photos.map((photo, i) => {
           if (!isLoaded) {

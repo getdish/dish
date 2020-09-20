@@ -1,6 +1,8 @@
 import { HStack, Text } from '@dish/ui'
+import { isWeakMap } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 
+import { isWeb } from '../../../../../packages/ui/src/constants'
 import { omStatic } from '../../state/omStatic'
 import { RoutesTable } from '../../state/router'
 import { useLink } from './Link'
@@ -44,6 +46,7 @@ export function LinkButton<
     name,
     params,
     onPress,
+    noText, // hacky for now
     ...restProps
   } = props
 
@@ -65,21 +68,25 @@ export function LinkButton<
       {...restProps}
       {...(isActive && props.activeStyle)}
     >
-      <Text
-        ellipse={ellipse}
-        fontSize={fontSize}
-        lineHeight={lineHeight}
-        fontWeight={fontWeight}
-        textAlign={textAlign}
-        flexDirection={props.flexDirection ?? 'row'}
-        flexWrap={props.flexWrap}
-        color={color}
-        cursor={props.disabled ? 'default' : 'pointer'}
-        opacity={props.disabled ? 0.5 : 1}
-        {...(isActive && activeTextStyle)}
-      >
-        {getChildren(props, isActive)}
-      </Text>
+      {noText ? (
+        getChildren(props, isActive)
+      ) : (
+        <Text
+          ellipse={ellipse}
+          fontSize={fontSize}
+          lineHeight={lineHeight}
+          fontWeight={fontWeight}
+          textAlign={textAlign}
+          flexDirection={props.flexDirection ?? 'row'}
+          flexWrap={props.flexWrap}
+          color={color}
+          cursor={props.disabled ? 'default' : 'pointer'}
+          opacity={props.disabled ? 0.5 : 1}
+          {...(isActive && activeTextStyle)}
+        >
+          {getChildren(props, isActive)}
+        </Text>
+      )}
     </HStack>
   )
 }

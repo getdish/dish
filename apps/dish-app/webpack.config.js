@@ -154,18 +154,18 @@ module.exports = function getWebpackConfig(
                 test: /\.css$/i,
                 use:
                   isProduction && TARGET !== 'ssr'
-                    ? [
-                        MiniCssExtractPlugin.loader,
-                        // 'file-loader',
-                        // ExtractCssChunks.loader,
-                        // 'style-loader',
+                    ? [MiniCssExtractPlugin.loader, 'css-loader']
+                    : [
+                        'cache-loader',
+                        'thread-loader',
+                        'style-loader',
                         'css-loader',
-                      ]
-                    : ['style-loader', 'css-loader'],
+                      ],
               },
               {
                 test: /\.(png|svg|jpe?g|gif)$/,
                 use: [
+                  'cache-loader',
                   {
                     loader: 'url-loader',
                     options: {

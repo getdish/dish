@@ -247,8 +247,8 @@ export const TagButton = memo((props: TagButtonProps) => {
               top: -9,
               right: -2,
             })}
-            width={26}
-            height={26}
+            width={isWeb ? 26 : 36}
+            height={isWeb ? 26 : 36}
             alignItems="center"
             justifyContent="center"
             alignSelf="center"

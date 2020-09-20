@@ -1,5 +1,11 @@
 import { fullyIdle, series, sleep } from '@dish/async'
-import { TopCuisine, getHomeDishes } from '@dish/graph'
+import {
+  TopCuisine,
+  getHomeDishes,
+  graphql,
+  order_by,
+  query,
+} from '@dish/graph'
 import { ChevronRight } from '@dish/react-feather'
 import {
   AbsoluteVStack,
@@ -12,9 +18,9 @@ import {
 } from '@dish/ui'
 import _, { sortBy, uniqBy } from 'lodash'
 import { default as React, Suspense, memo, useEffect, useState } from 'react'
-import { Dimensions, StyleSheet } from 'react-native'
+import { Dimensions, ScrollView, StyleSheet } from 'react-native'
 
-import { bgLightHover, bgLightTranslucent } from '../../colors'
+import { bgLight, bgLightHover, bgLightTranslucent } from '../../colors'
 import { useIsNarrow } from '../../hooks/useIs'
 import { addTagsToCache } from '../../state/allTags'
 import { HomeStateItemHome } from '../../state/home-types'
@@ -31,6 +37,7 @@ import { SlantedLinkButton } from '../../views/SlantedLinkButton'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { RestaurantButton } from '../restaurant/RestaurantButton'
+import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { StackViewProps } from '../StackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
 
@@ -196,6 +203,13 @@ export default memo(function HomePage(props: Props) {
               <VStack>
                 <HomeTopSearches />
 
+                {/* <Suspense fallback={null}>
+                  <>
+                    <HomeRecentReviews />
+                    <Spacer size="lg" />
+                  </>
+                </Suspense> */}
+
                 <Suspense fallback={null}>
                   <HomeTopDishesContent topDishes={topDishes} />
                 </Suspense>
@@ -209,6 +223,49 @@ export default memo(function HomePage(props: Props) {
 
   return null
 })
+
+const HomeRecentReviews = memo(
+  graphql<any>(() => {
+    const reviews = query.review({
+      where: {
+        source: {
+          _eq: 'dish',
+        },
+        text: {
+          _neq: '',
+        },
+      },
+      order_by: [
+        {
+          updated_at: order_by.asc,
+        },
+      ],
+      limit: 10,
+    })
+
+    return (
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <HStack paddingHorizontal={20}>
+          {reviews.map((review, i) => {
+            return (
+              <VStack
+                key={i}
+                width={200}
+                maxHeight={110}
+                backgroundColor={bgLight}
+                borderRadius={20}
+                marginRight={10}
+                padding={5}
+              >
+                <RestaurantReview reviewId={review.id} />
+              </VStack>
+            )
+          })}
+        </HStack>
+      </ScrollView>
+    )
+  })
+)
 
 const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
   return (
@@ -294,9 +351,9 @@ const TopDishesCuisineItem = memo(
           marginBottom={10}
         >
           <SlantedLinkButton
-            padding={100}
             marginHorizontal="auto"
             zIndex={1000}
+            paddingHorizontal={10}
             position="relative"
             alignSelf="center"
             tag={{
@@ -309,7 +366,7 @@ const TopDishesCuisineItem = memo(
           >
             <Text
               fontSize={18}
-              lineHeight={22}
+              lineHeight={28}
               fontWeight="600"
               paddingRight={country.icon ? 32 : 0}
             >
@@ -332,19 +389,14 @@ const TopDishesCuisineItem = memo(
           </SlantedLinkButton>
         </HStack>
         <VStack
-          marginTop={-28}
+          marginTop={-10}
           pointerEvents="none"
           flex={1}
           overflow="hidden"
           position="relative"
         >
-          <ContentScrollViewHorizontal style={{ paddingVertical: 10 }}>
-            <HStack
-              alignItems="center"
-              spacing={18}
-              paddingVertical={18}
-              paddingRight={20}
-            >
+          <ContentScrollViewHorizontal style={{ paddingVertical: 15 }}>
+            <HStack alignItems="center" spacing={18} paddingRight={20}>
               <TopDishesTrendingRestaurants country={country} />
 
               {(country.dishes || []).slice(0, 12).map((top_dish, index) => {

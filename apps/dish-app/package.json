@@ -228,6 +228,8 @@
     "patch-package": "^6.2.2",
     "postinstall-postinstall": "^2.0.0",
     "react-test-renderer": "~16.11.0",
+    "thread-loader": "^3.0.0",
+    "cache-loader": "^4.1.0",
     "style-loader": "^1.2.1",
     "terser-webpack-plugin": "^4.1.0",
     "testcafe": "^1.8.4",

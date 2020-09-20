@@ -64,9 +64,9 @@ const HomePageFilterBarSmall = ({ activeTagIds }: FilterBarProps) => {
     <HStack
       alignItems="center"
       justifyContent="center"
-      borderWidth={1}
-      borderColor="#eee"
-      borderRadius={100}
+      // borderWidth={1}
+      // borderColor="#eee"
+      // borderRadius={100}
     >
       {filters.map((tag, index) => {
         const isActive = activeTagIds[getTagId(tag)]
