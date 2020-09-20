@@ -58,6 +58,7 @@ export const DishView = memo(
           transform: [{ scale: 0.98 }],
           opacity: 1,
         }}
+        noText
         hoverStyle={{
           zIndex: 1000000,
           transform: [{ scale: 1.02 }],
@@ -81,7 +82,14 @@ export const DishView = memo(
         {...rest}
       >
         {/* rating */}
-        <AbsoluteVStack pointerEvents="none" zIndex={10} top={-8} left={-8}>
+        <AbsoluteVStack
+          width={20}
+          height={20}
+          pointerEvents="none"
+          zIndex={10}
+          top={-8}
+          left={-8}
+        >
           {!!dish.rating && (
             <DishRatingView
               size={size > 160 ? 'md' : 'sm'}

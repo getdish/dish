@@ -3,19 +3,21 @@ import React, { memo } from 'react'
 
 import { lightRed } from '../../colors'
 import { isWeb } from '../../constants'
+import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useSafeArea } from '../../hooks/useSafeArea'
 import { isSearchState } from '../../state/home-helpers'
 import { useOvermind } from '../../state/om'
 import { BlurView } from '../../views/BlurView'
 import { HomeLenseBar } from '../../views/HomeLenseBar'
-import { SearchPageDeliveryFilterButtons } from './SearchPageDeliveryFilterButtons'
 import { SearchPageFilterBar } from './SearchPageFilterBar'
 import { titleHeight } from './titleHeight'
 
 export const SearchPageNavBar = (props: { id: string }) => {
   const isSmall = useIsNarrow()
   const insets = useSafeArea()
+  const lensergb = useCurrentLenseColor()
+  const borderRadius = isSmall ? 28 : 0
 
   return (
     <VStack
@@ -23,11 +25,10 @@ export const SearchPageNavBar = (props: { id: string }) => {
       top={0}
       left={0}
       right={0}
-      borderBottomColor="#eee"
-      backgroundColor={isWeb ? '#fff' : 'rgba(255,255,255,0.5)'}
-      borderBottomWidth={1}
+      backgroundColor={isWeb ? '#fff' : `rgba(${lensergb.join(',')},0.5)`}
       shadowColor="rgba(0,0,0,0.08)"
       shadowRadius={10}
+      borderRadius={borderRadius}
       shadowOffset={{ height: 3, width: 0 }}
       zIndex={1000}
       {...(isSmall && {
@@ -36,14 +37,17 @@ export const SearchPageNavBar = (props: { id: string }) => {
         left: 6,
         right: 'auto',
         maxWidth: '98.5%',
-        borderRadius: 10,
         borderWidth: 2,
-        borderColor: lightRed,
+        borderColor: '#fff',
         shadowRadius: 15,
         shadowColor: 'rgba(0,0,0,0.25)',
       })}
     >
-      <BlurView borderRadius={10} flex={1}>
+      <BlurView
+        blurType="ultraThinMaterial"
+        borderRadius={borderRadius - 2}
+        flex={1}
+      >
         <SearchPageNavBarContent stateId={props.id} />
       </BlurView>
     </VStack>

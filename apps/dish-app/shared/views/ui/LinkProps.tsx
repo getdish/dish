@@ -62,4 +62,5 @@ export type LinkButtonProps<
   LinkSharedProps & {
     activeStyle?: ViewStyle
     activeTextStyle?: TextStyle
+    noText?: boolean
   } & LinkButtonNamedProps<Name, Params>
