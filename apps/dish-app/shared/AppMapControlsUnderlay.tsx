@@ -1,12 +1,11 @@
 import { Map, RefreshCcw } from '@dish/react-feather'
 import { AbsoluteVStack, HStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { isWeb, searchBarHeight, zIndexDrawer } from './constants'
-import { useZoomLevel } from './helpers/mapHelpers'
 import { useIsNarrow } from './hooks/useIs'
 import { useMapSize } from './hooks/useMapSize'
+import { useSafeArea } from './hooks/useSafeArea'
 import { useOvermind } from './state/om'
 import { OverlayLinkButton } from './views/ui/OverlayLinkButton'
 
@@ -17,7 +16,7 @@ export const AppMapControlsUnderlay = memo(() => {
     om.state.home.currentStateType === 'search'
   const isSmall = useIsNarrow()
   const { paddingLeft, width } = useMapSize(isSmall)
-  const safeArea = useSafeAreaInsets()
+  const safeArea = useSafeArea()
   return (
     <AbsoluteVStack
       className="untouchable" // safari
