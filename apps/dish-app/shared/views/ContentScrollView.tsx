@@ -41,7 +41,7 @@ export const ContentScrollView = forwardRef(
     const setIsScrolling = (e) => {
       const y = e.nativeEvent.contentOffset.y
       isScrollAtTop = y <= 0
-      onScrollYThrottled?.()
+      onScrollYThrottled?.(y)
       scrollStore.setIsScrolling(true)
       clearTimeout(tm.current)
       tm.current = setTimeout(() => {

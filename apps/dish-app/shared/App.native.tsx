@@ -1,12 +1,14 @@
 import { AbsoluteVStack, VStack } from '@dish/ui'
 import { StatusBar } from 'expo-status-bar'
 import { Provider } from 'overmind-react'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import AppAutocomplete from './AppAutocomplete'
 import AppMap from './AppMap'
+import { AppMapControlsOverlay } from './AppMapControlsOverlay'
+import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
 import { AppRoot } from './AppRoot'
 import { AppSmallDrawer } from './AppSmallDrawer'
 import { AppStackView } from './AppStackView'
@@ -35,7 +37,9 @@ export default function App() {
         <Provider value={window['om']}>
           <AppRoot>
             <View style={styles.container}>
-              <AppMap />
+              <Suspense fallback={null}>
+                <AppMap />
+              </Suspense>
 
               <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1000}>
                 <AppSmallDrawer>
@@ -46,6 +50,11 @@ export default function App() {
                   </AppStackView>
                 </AppSmallDrawer>
               </AbsoluteVStack>
+
+              <Suspense fallback={null}>
+                <AppMapControlsUnderlay />
+                {/* <AppMapControlsOverlay /> */}
+              </Suspense>
 
               <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1001}>
                 <AppAutocomplete />

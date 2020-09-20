@@ -279,7 +279,7 @@ const HomeSearchBar = memo(() => {
         </LinkButton>
       )}
 
-      <AppMenu />
+      {!isReallySmall && <AppMenu />}
     </HStack>
   )
 })

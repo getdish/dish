@@ -7,7 +7,7 @@ import {
 } from '../constants'
 
 export function getGraphEndpointDomain() {
-  const LOCAL_HASURA = 'http://localhost:8080'
+  const LOCAL_HASURA = 'https://hasura.dishapp.com' // for demo
   const LIVE_HASURA = 'https://hasura.dishapp.com'
 
   if (isWorker || isNative) {
