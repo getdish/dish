@@ -44,7 +44,7 @@ export class UIStaticWebpackPlugin implements Plugin {
   private ctx: PluginContext
 
   private nmlPlugin = (loaderContext: any): void => {
-    loaderContext[Symbol.for('@dish/ui-static')] = this.ctx
+    loaderContext['@dish/ui-static'] = this.ctx
   }
 
   private compilationPlugin = (compilation: Compilation): void => {

@@ -65,6 +65,7 @@
     "react-dom": "0.0.0-experimental-94c0244ba"
   },
   "devDependencies": {
+    "@types/fs-extra": "^9.0.1",
     "@babel/runtime": "^7.11.2",
     "@react-native-community/cli-debugger-ui": "4.7.0",
     "expo-yarn-workspaces": "*",

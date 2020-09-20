@@ -1,4 +1,3 @@
-// debug
 import { graphql } from '@dish/graph'
 import { HelpCircle } from '@dish/react-feather'
 import { HStack, Spacer, Text, VStack } from '@dish/ui'
