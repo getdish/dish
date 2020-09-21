@@ -21,8 +21,12 @@ export class RestaurantTagScores {
 
   async calculateScores() {
     const unanalysed = await this.findAllUnanalyzed()
+    this.crawler.log(
+      `Starting Bert sentiment requests (${unanalysed.length} to analyze)...`
+    )
     const analyzed = await this.analyzeSentences(unanalysed)
     await this.updateAnalyzed(analyzed)
+    this.crawler.log(`... ${analyzed.length} Bert sentiment requests done`)
     await this.updateRestaurantTagScores()
   }
 
@@ -39,15 +43,11 @@ export class RestaurantTagScores {
 
   async analyzeSentences(review_tag_sentences: ReviewTagSentence[]) {
     const BERT_BATCH_SIZE = 20
-    this.crawler.log(
-      `Starting Bert sentiment requests (${review_tag_sentences.length} to analyze)...`
-    )
     let assessed: ReviewTagSentence[] = []
     for (const batch of chunk(review_tag_sentences, BERT_BATCH_SIZE)) {
-      assessed = await this.fetchBertBatch(batch)
-      assessed.push(...assessed)
+      const assessed_batch = await this.fetchBertBatch(batch)
+      assessed.push(...assessed_batch)
     }
-    this.crawler.log('...Bert sentiment requests done')
     return assessed
   }
 
@@ -63,6 +63,7 @@ export class RestaurantTagScores {
     const result = await this.fetchBertSentimentWithRetries(
       review_tag_sentence.sentence
     )
+    if (!result) return
     return {
       id: review_tag_sentence.id,
       ml_sentiment: this._bertResultToNumber(result),
@@ -78,7 +79,8 @@ export class RestaurantTagScores {
         WHERE id = '${rts.id}';
       `)
     }
-    await this.crawler.main_db.query(sql.join('\n'))
+    const all = sql.join('\n')
+    await this.crawler.main_db.query(all)
   }
 
   async fetchBertSentimentWithRetries(text: string) {
