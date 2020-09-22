@@ -13,7 +13,7 @@ import { Title } from '../../views/ui/Title'
 
 const inlineButton = {
   borderRadius: 10,
-  paddingHorizontal: 3,
+  paddingHorizontal: 6,
   position: 'relative',
 } as const
 
@@ -36,9 +36,9 @@ export default function AboutPage({
           <VStack spacing="xl">
             <Paragraph size="xxxl" fontWeight="300">
               Too often amazing Vietnamese, Chinese, and Mexican
-              hole-in-the-wall spots are lost to bad ratings. We think todays
-              star rating systems are failing us by forcing everything you care
-              about into "5 stars".
+              hole-in-the-wall spots are lost to bad ratings. Yet they have
+              amazing food. Todays rating systems fail us by forcing everything
+              you care about into "5 stars".
             </Paragraph>
 
             <Paragraph size="xxl" fontWeight="300">
@@ -55,7 +55,7 @@ export default function AboutPage({
                   { name: 'delivery', type: 'filter' },
                 ]}
               >
-                delivery pho
+                delivery pho 🍜
               </LinkButton>{' '}
               versus when planning a{' '}
               <LinkButton
@@ -70,48 +70,54 @@ export default function AboutPage({
                   backgroundColor: `${lightGreen}44`,
                 }}
               >
-                date night
+                date night 🌃
               </LinkButton>{' '}
-              are unique: maybe it's a specific dish, the delivery speed, the
-              vibe, or if they have good vegetarian.
+              are <em>unique</em>: a specific dish, the delivery speed, the
+              vibe, if they have good vegetarian, a bar, or patio.
             </Paragraph>
 
             <Paragraph size="xxl" fontWeight="300">
-              Dish ranks things down to the dish - and other factors that
-              matter. When you write a review, we pull out your sentiment
-              towards every dish and factor automatically! Like RottenTomatoes,
-              Dish also crawls every top food critic - including{' '}
+              <Text display="inline" fontWeight="600">
+                Dish splits ratings down to the dish - and the other factors
+                that matter
+              </Text>
+              . We just call them all "tags". When you write a review, we pull
+              out your sentiment towards every possible tag automatically. Then,
+              much like RottenTomatoes, Dish also crawls every top food review
+              source - including{' '}
               <Text borderBottomColor="#eee" borderBottomWidth={2}>
-                every delivery service
+                every delivery app
               </Text>{' '}
-              - so you don't have to flip between many apps to find what you
-              want, delivery or not.
+              - so you don't have to flip between apps to find what you want,
+              delivery or not.
             </Paragraph>
 
             <Paragraph size="lg">
-              We think that by looking at{' '}
-              <TextStrong>what people actually say</TextStrong> we can get
-              better rankings, and also provide a more fun experience for
-              reviewers. It should also let restaurants stop sweating pleasing
-              everyone, and instead specialize.
+              By looking at <TextStrong>what people actually say</TextStrong> we
+              think we can build a better guide to the world, and make it more
+              fun for reviewers. It should be nicer for restaurants, too;
+              instead of having to please every type of person to try and always
+              keep 5 stars, they can instead specialize on what they want to be
+              good good at.
             </Paragraph>
 
             <Paragraph size="lg">
               We want to build a fun community of people who curate what they
-              love, letting you collect and save local gems, see tips on where
+              love to build a beautiful map of the world - what makes each place
+              unique. We let you collect and save local gems, see tips on where
               to go and what to order based on your mood, and explore chefs and
               other people who share your tastes maps of the world. Our goals
-              are to build:
+              are to:
               <ul>
                 <li>
-                  <TextStrong>A better model for guides 🎙</TextStrong> - With
-                  natural langauge analysis, threaded discussions, voting, and
+                  <TextStrong>Make a better guide 🎙</TextStrong> - With natural
+                  langauge analysis, threaded discussions, voting, and
                   specialization, we want to prove that you "map-reduce" an
                   active community into a "current best of" guide.
                 </li>
                 <li>
                   <TextStrong>
-                    A path for restaurants to specialize ✨
+                    Enable unique, high quality restaurants ✨
                   </TextStrong>
                   - Instead of having to please everyone to try for 5 stars
                   overall, restaurants should be rewarded for doing one or two
@@ -119,9 +125,9 @@ export default function AboutPage({
                 </li>
               </ul>
               The ultimate goal is to create a community-powered "Hitchhiker's
-              Guide to Gastronomy" (or, a Pokédex for poke): a fun, pocket map
-              of the world that you can curate, that really shows you uniquely
-              good stuff.
+              Guide to Gastronomy", or, a Pokédex for poke: a guide that feels
+              alive and personalized, that really understands you and the world
+              around you (while keeping your information private).
             </Paragraph>
 
             <Spacer />
