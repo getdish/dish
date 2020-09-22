@@ -615,6 +615,7 @@ const pushHomeState: AsyncAction<
     case 'user': {
       nextState = {
         username: item.params.username,
+        results: [],
       }
       break
     }

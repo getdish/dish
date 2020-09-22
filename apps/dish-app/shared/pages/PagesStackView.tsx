@@ -16,7 +16,7 @@ export const PagesStackView = (props: StackViewProps) => {
   return (
     <Suspense fallback={null}>
       {isHomeState(item) && <HomePage {...props} />}
-      {isUserState(item) && <HomePageUser {...props} />}
+      {isUserState(item) && <UserPage {...props} />}
       {isSearchState(item) && <SearchPage {...props} />}
       {isRestaurantState(item) && <RestaurantPage {...props} />}
       {isAboutState(item) && <AboutPage {...props} />}
@@ -40,10 +40,10 @@ const HomePage =
     ? require('./home/HomePage').default
     : loadable(() => import('./home/HomePage'))
 
-const HomePageUser =
+const UserPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./user/HomePageUser').default
-    : loadable(() => import('./user/HomePageUser'))
+    ? require('./user/UserPage').default
+    : loadable(() => import('./user/UserPage'))
 
 const AboutPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'

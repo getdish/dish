@@ -21,7 +21,7 @@ router.get(
 router.post('/', [UserController.newUser])
 
 // apple auth
-router.post('/apple_authorize', [AppleAuthController.authCallback])
+router.post('/apple_authorize', AppleAuthController.authCallback)
 
 //Edit one user
 router.patch(

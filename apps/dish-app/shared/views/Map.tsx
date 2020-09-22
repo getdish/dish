@@ -191,7 +191,6 @@ export const Map = (props: MapProps) => {
             ),
           ]),
         () => {
-          console.log('adding', props.features)
           map.addSource(RESTAURANTS_SOURCE_ID, {
             type: 'geojson',
             data: {

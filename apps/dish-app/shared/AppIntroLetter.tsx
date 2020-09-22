@@ -5,7 +5,7 @@ import { useStorageState } from 'react-storage-hooks'
 
 // @ts-ignore
 import dishNeon from './assets/dish-neon.jpg'
-import { lightGreen, lightYellow } from './colors'
+import { brandColor, lightGreen, lightYellow } from './colors'
 import { useOvermind } from './state/om'
 import { LoginRegisterForm } from './views/LoginRegisterForm'
 import { Paragraph } from './views/ui/Paragraph'
@@ -45,6 +45,8 @@ export const HomeIntroLetter = memo(() => {
         maxHeight={700}
         height="98%"
         width="90%"
+        borderWidth={2}
+        borderColor={brandColor}
         position="relative"
         backgroundColor="#000"
         borderRadius={15}
@@ -99,39 +101,38 @@ export const HomeIntroLetterContent = memo(
         <Image
           source={{ uri: dishNeon }}
           style={{
-            width: 229 * 0.75,
-            height: 134 * 0.75,
+            marginTop: -20,
+            marginBottom: -30,
+            width: 261,
+            height: 161,
           }}
         />
 
-        <Paragraph textAlign="center" color="#fff" fontWeight="300" size={1.2}>
-          <Text opacity={0.8}>a food discovery community</Text>
-        </Paragraph>
-
-        {divider}
-
-        <Paragraph textAlign="center" color="#fff" fontWeight="300" size={1.1}>
-          <Text color={lightGreen} fontWeight="400">
-            ratings by dish
-          </Text>
-          <View />
-          <Text color={lightYellow} fontWeight="500">
-            search all delivery services
-          </Text>
-          <View />
-          <Text fontWeight="700">find local gems 💎</Text>
-        </Paragraph>
-
-        {divider}
-
         <Paragraph
+          zIndex={10}
           textAlign="center"
-          color="rgba(255,255,255,0.5)"
-          fontWeight="700"
-          size="sm"
+          color="#fff"
+          fontWeight="300"
+          size={1.2}
         >
-          Early access
+          <Text fontSize={24} fontWeight="300" color="#fff">
+            a fun food discovery community
+          </Text>
         </Paragraph>
+
+        {divider}
+
+        <Paragraph textAlign="center" color="#fff" size={1.1}>
+          <Text color={lightGreen} fontWeight="500">
+            ratings by dish 🌮
+          </Text>
+          <View />
+          <Text color={lightYellow}>search every delivery app 🚗 </Text>
+          <View />
+          <Text fontWeight="500">local gems 💎</Text>
+        </Paragraph>
+
+        {divider}
 
         <LoginRegisterForm />
       </VStack>
