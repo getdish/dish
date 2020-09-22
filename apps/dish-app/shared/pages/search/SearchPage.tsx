@@ -26,6 +26,8 @@ import { ScrollView } from 'react-native'
 import { AppPortalItem } from '../../AppPortal'
 import { isWeb, searchBarHeight, searchBarTopOffset } from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
+import { rgbString } from '../../helpers/rgbString'
+import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
@@ -240,6 +242,7 @@ const SearchResultsContent = (props: Props) => {
   const allResults = searchState.results
   const total = allResults.length
   const totalChunks = Math.ceil(total / perChunk)
+  const lenseColor = useCurrentLenseColor()
   const [state, setState] = useState({
     chunk: 1,
     hasLoaded: 1,
@@ -324,7 +327,8 @@ const SearchResultsContent = (props: Props) => {
             marginVertical="auto"
             letterSpacing={-0.5}
             fontSize={titleFontSize}
-            fontWeight="600"
+            fontWeight="500"
+            color={rgbString(lenseColor.map((x) => x * 0.95))}
             // @ts-ignore
             display="inline" // safari fix
             marginRight={isSmall ? 20 : 0}

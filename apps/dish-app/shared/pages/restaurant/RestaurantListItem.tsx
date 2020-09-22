@@ -187,6 +187,10 @@ const RestaurantListItemContent = memo(
     const [open_text, open_color, opening_hours] = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const totalReviews = useTotalReviews(restaurant)
+    const titleFontSize =
+      1.3 *
+      (isSmall ? 18 : 22) *
+      (restaurantName.length > 20 ? 0.9 : restaurantName.length > 25 ? 0.85 : 1)
 
     return (
       <VStack
@@ -284,8 +288,8 @@ const RestaurantListItemContent = memo(
                               #
                             </SuperScriptText>
                             <Text
-                              fontSize={+rank > 9 ? 14 : 24}
-                              fontWeight="300"
+                              fontSize={+rank > 9 ? 14 : 20}
+                              fontWeight="400"
                               color="#000"
                             >
                               {rank}
@@ -294,11 +298,8 @@ const RestaurantListItemContent = memo(
                         </VStack>
                         <Spacer size="md" />
                         <Text
-                          fontSize={
-                            1.3 *
-                            (isSmall ? 20 : 22) *
-                            (restaurantName.length > 25 ? 0.85 : 1)
-                          }
+                          fontSize={titleFontSize}
+                          lineHeight={titleFontSize * 1.2}
                           fontWeight="600"
                           marginRight={10}
                           borderBottomColor="transparent"

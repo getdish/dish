@@ -170,9 +170,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
       <ViewComponent
         ref={combineRefs(innerRef, ref)}
         pointerEvents={
-          !isWeb && pointerEvents === 'none'
-            ? 'box-none'
-            : pointerEvents ?? 'auto'
+          !isWeb && pointerEvents === 'none' ? 'box-none' : pointerEvents
         }
         style={[
           defaultStyle,
