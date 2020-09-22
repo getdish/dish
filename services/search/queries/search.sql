@@ -168,12 +168,20 @@ SELECT jsonb_agg(
   ORDER BY
 
     CASE
-      -- Default sort order is by the _restaurant's_ rating
+      -- Default sort order is by the _restaurant's_ score
       WHEN NOT EXISTS (SELECT 1 FROM dish_ids) THEN score
       -- However, if a known dish(es) is being searched for, then order the restaurants
-      -- based on the average rating of those dishes for that restaurant.
+      -- based on the summed scores of those dishes and the restaurant.
       ELSE (
-        SELECT SUM(rt.score) + restaurant.score
+        SELECT
+          -- COALESCE() allows restaurant.score to supercede rt.score when there is an
+          -- rt.score of NULL in the SUM. Note that dish_ids is *all* possible tag IDs
+          -- matching the tag strings in the search URL.
+          -- I'm not sure why just a 'AND rt.score IS NOT NULL' doesn't suffice.
+          COALESCE(
+            (SUM(rt.score) + restaurant.score),
+            restaurant.score
+          )
           FROM restaurant_tag rt
           WHERE rt.restaurant_id = restaurant.id
             AND rt.tag_id IN (SELECT id FROM dish_ids)
