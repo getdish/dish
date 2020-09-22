@@ -38,7 +38,7 @@ export const RestaurantRatingBreakdown = memo(
     const store = useStore(RestaurantReviewsDisplayStore, { id: restaurantId })
 
     return (
-      <VStack maxWidth="100%" position="relative">
+      <VStack overflow="hidden" maxWidth="100%" position="relative">
         <HStack marginBottom={-20} alignItems="center" justifyContent="center">
           <SlantedTitle fontSize={18} fontWeight="600">
             Reviews
@@ -63,6 +63,7 @@ export const RestaurantRatingBreakdown = memo(
         >
           <VStack
             borderRadius={10}
+            maxWidth={drawerWidthMax / 2.5 - 40}
             borderWidth={1}
             borderColor="#eee"
             padding={10}
@@ -90,7 +91,7 @@ export const RestaurantRatingBreakdown = memo(
 
           <VStack
             minWidth={260}
-            // maxWidth={drawerWidthMax / 2 - 40}
+            maxWidth={drawerWidthMax / 2 - 40}
             flex={2}
             overflow="hidden"
             paddingHorizontal={10}

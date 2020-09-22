@@ -170,9 +170,11 @@ export const AppSearchInput = memo(() => {
   const input = inputStore.node
   const searchInputContainer = useRef<View>()
 
-  useEffect(() => {
-    console.log('searchInputContainer', searchInputContainer)
-  }, [])
+  // this was going to measure and ensure scrollview width
+  // but i had to restart webpack and for some reason it works fine now with just css
+  // useEffect(() => {
+  //   console.log('searchInputContainer', searchInputContainer)
+  // }, [])
 
   return (
     <HStack flex={1} overflow="hidden">
@@ -228,7 +230,6 @@ export const AppSearchInput = memo(() => {
             >
               <HStack
                 alignSelf="center"
-                backgroundColor="red"
                 alignItems="center"
                 height={searchBarHeight - 23}
               >

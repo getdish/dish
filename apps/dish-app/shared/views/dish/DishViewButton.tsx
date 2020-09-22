@@ -22,7 +22,7 @@ export const DishViewButton = memo(
         {...flatButtonStyle}
         backgroundColor={backgroundColor}
         hoverStyle={{
-          backgroundColor: `${backgroundColor}55`,
+          backgroundColor: `${backgroundColor}cc`,
         }}
         paddingVertical={8}
         paddingHorizontal={12}

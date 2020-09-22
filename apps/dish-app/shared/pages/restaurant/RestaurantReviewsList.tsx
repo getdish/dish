@@ -19,7 +19,7 @@ export const RestaurantReviewsList = memo(
     })
 
     return (
-      <VStack spacing="xl" maxWidth="100%">
+      <VStack spacing="xl" maxWidth="100%" overflow="hidden">
         {topReviews.map((review, i) => {
           return <RestaurantReview key={i} reviewId={review.id} />
         })}

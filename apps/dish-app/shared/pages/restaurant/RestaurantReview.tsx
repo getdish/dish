@@ -1,5 +1,6 @@
 import { graphql, query, refetch } from '@dish/graph'
 import { Divider, HStack, Text, TextProps, useLazyEffect } from '@dish/ui'
+import { uniqBy } from 'lodash'
 import React, { memo } from 'react'
 
 import { lightGreen, lightGrey, lightRed, lightYellow } from '../../colors'
@@ -46,7 +47,12 @@ export const RestaurantReview = memo(
           text={review.text ?? ''}
           name={hideUsername ? null : review.username ?? ''}
           after={
-            <HStack width="100%" alignItems="center">
+            <HStack
+              width="100%"
+              alignItems="center"
+              flexWrap="wrap"
+              maxWidth="100%"
+            >
               {!!review.rating && (
                 <Text
                   {...bottomMetaTextProps}
@@ -82,7 +88,7 @@ export const RestaurantReview = memo(
                 </Text>
               )}
               {!!sentiments?.length
-                ? sentiments.map((x, i) => {
+                ? uniqBy(sentiments, (x) => x.tag.name).map((x, i) => {
                     const snt = x.ml_sentiment
                     return (
                       <React.Fragment key={i}>
@@ -96,15 +102,15 @@ export const RestaurantReview = memo(
                               : lightGrey
                           }
                           paddingHorizontal={4}
-                          paddingVertical={1}
                           margin={-2}
                           borderRadius={6}
+                          ellipse
                         >
                           {x.tag.name}{' '}
                           {(snt > 0 || snt < 0) && (
                             <Text fontSize={11}>
-                              {snt > 0 ? '+' : '-'}
-                              {snt}
+                              {snt > 0 ? '+' : ''}
+                              {Math.round(snt)}
                             </Text>
                           )}
                         </Text>
