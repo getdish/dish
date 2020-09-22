@@ -273,6 +273,7 @@ const AppMapContent = memo(function AppMap({
       className="map-container"
       position="absolute"
       pointerEvents="auto"
+      contain="strict"
       top={0}
       right={0}
       bottom={0}

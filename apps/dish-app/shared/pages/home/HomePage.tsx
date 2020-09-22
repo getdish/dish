@@ -188,10 +188,10 @@ export default memo(function HomePage(props: Props) {
               top={-120}
               transform={[{ rotate: '-2deg' }]}
             >
-              {/* <LinearGradient
+              <LinearGradient
                 style={[StyleSheet.absoluteFill]}
                 colors={[bgLightHover, '#fff']}
-              /> */}
+              />
             </AbsoluteVStack>
             <VStack
               flex={1}
