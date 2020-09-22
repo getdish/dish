@@ -14,7 +14,7 @@ import { getDishBackgroundColor } from './getDishBackgroundColor'
 
 // avoid too many different image sizes
 const getRoundedDishViewSize = (size: number) => {
-  if (size < 160) {
+  if (size < 180) {
     return [160 * 0.9, 160] as const
   }
   return [size * 0.9, size] as const
