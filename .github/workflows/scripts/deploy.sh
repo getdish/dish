@@ -7,9 +7,7 @@ PATH=$PATH:$HOME/bin
 
 echo "Deploying production branch to production..."
 
-kubectl port-forward svc/postgres-ha-postgresql-ha-pgpool 15432:5432 -n postgres &
-sleep 5
-./services/hasura/etc/migrate.sh
+./dishctl.sh db_migrate
 
 echo "Pushing new docker images to production registry..."
 DISH_REGISTRY_PASSWORD=$(\

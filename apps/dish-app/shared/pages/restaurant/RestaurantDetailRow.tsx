@@ -32,6 +32,7 @@ export const RestaurantDetailRow = memo(
           title: open_text,
           content: next_time ? (
             <Link
+              className="underline-link"
               name="restaurantHours"
               params={{ slug: restaurantSlug }}
               fontWeight="400"
@@ -100,18 +101,26 @@ export const RestaurantDetailRow = memo(
                       {row.title}
                     </Text>
                   )}
-                  <Text
-                    ellipse
-                    fontSize={sizeSm ? 14 : 16}
-                    textAlign={centered ? 'center' : 'left'}
-                    color={
-                      sizeSm ? row.color ?? '' : isWeb ? 'inherit' : '#999'
-                    }
-                    margin="auto"
-                    paddingHorizontal={4} // prevents cutoff of image
+                  <VStack
+                    {...(!sizeSm && {
+                      minHeight: 34,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    })}
                   >
-                    {row.content !== '' ? row.content : sizeSm ? '' : '~'}
-                  </Text>
+                    <Text
+                      ellipse
+                      fontSize={sizeSm ? 14 : 16}
+                      textAlign={centered ? 'center' : 'left'}
+                      color={
+                        sizeSm ? row.color ?? '' : isWeb ? 'inherit' : '#999'
+                      }
+                      margin="auto"
+                      paddingHorizontal={4} // prevents cutoff of image
+                    >
+                      {row.content !== '' ? row.content : sizeSm ? '' : '~'}
+                    </Text>
+                  </VStack>
                 </VStack>
                 {after}
                 {!sizeSm && index !== rows.length - 1 && (
@@ -166,7 +175,7 @@ export function openingHours(restaurant: RestaurantQuery) {
 
     if (restaurant.is_open_now) {
       text = 'Open'
-      color = '#33aa99'
+      color = '#337777'
       next_time = getHours(todaysHours)
     } else {
       next_time = getHours(tomorrowsHours)

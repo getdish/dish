@@ -28,6 +28,7 @@ export * from './hooks/useLazyEffect'
 export * from './hooks/useVisibilityObserver'
 export * from './hooks/useWindowSize'
 
+export * from './views/AnimatedStack'
 export * from './views/BlurView'
 export * from './views/Box'
 export * from './views/Button'

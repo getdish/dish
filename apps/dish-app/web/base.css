@@ -415,3 +415,7 @@ input:-webkit-autofill:active  {
 .fix-safari-shrink-height {
   min-height: -webkit-fit-content;
 }
+
+.underline-link:hover {
+  text-decoration: underline;
+}

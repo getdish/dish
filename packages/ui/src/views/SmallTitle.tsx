@@ -24,24 +24,29 @@ export const SmallTitle = memo(
       isActive?: boolean
       divider?: 'center' | 'bottom' | 'off'
     }) => {
+    const dividerElement = color ? (
+      <Divider backgroundColor={color} opacity={0.1} />
+    ) : (
+      <Divider flex />
+    )
     return (
       <VStack alignItems="center" {...rest}>
         <HStack width="100%" alignItems="center" justifyContent="center">
-          {divider === 'center' && <Divider flex />}
+          {divider === 'center' && dividerElement}
           <Text
             paddingHorizontal={30}
             {...{
               letterSpacing: letterSpacing ?? -0.25,
               color: color ?? (isActive ? '#000' : '#888'),
               fontSize: fontSize ?? 16,
-              fontWeight: fontWeight ?? '400',
+              fontWeight: fontWeight ?? '500',
               lineHeight,
               textAlign,
             }}
           >
             {children}
           </Text>
-          {divider === 'center' && <Divider flex />}
+          {divider === 'center' && dividerElement}
           {after && (
             <>
               <Spacer size="xs" />
@@ -52,7 +57,7 @@ export const SmallTitle = memo(
         {divider === 'bottom' && (
           <>
             <Spacer size="sm" />
-            <Divider />
+            {dividerElement}
           </>
         )}
       </VStack>

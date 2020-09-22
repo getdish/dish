@@ -1,7 +1,8 @@
 import { HStack, VStack } from '@dish/ui'
+import { useStore } from '@dish/use-store'
 import React, { memo } from 'react'
 
-import { lightRed } from '../../colors'
+import { BottomDrawerStore } from '../../BottomDrawerStore'
 import { isWeb } from '../../constants'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useIsNarrow } from '../../hooks/useIs'
@@ -18,6 +19,7 @@ export const SearchPageNavBar = (props: { id: string }) => {
   const insets = useSafeArea()
   const lensergb = useCurrentLenseColor()
   const borderRadius = isSmall ? 28 : 0
+  const drawerStore = useStore(BottomDrawerStore)
 
   return (
     <VStack
@@ -25,7 +27,7 @@ export const SearchPageNavBar = (props: { id: string }) => {
       top={0}
       left={0}
       right={0}
-      backgroundColor={isWeb ? '#fff' : `rgba(${lensergb.join(',')},0.5)`}
+      backgroundColor={isWeb ? '#fff' : `rgba(${lensergb.join(',')},0.25)`}
       shadowColor="rgba(0,0,0,0.08)"
       shadowRadius={10}
       borderRadius={borderRadius}
@@ -33,21 +35,17 @@ export const SearchPageNavBar = (props: { id: string }) => {
       zIndex={1000}
       {...(isSmall && {
         top: 'auto',
-        bottom: insets.bottom + 12,
+        bottom: insets.bottom + 12 + (drawerStore.snapIndex === 2 ? -10 : 0),
         left: 6,
         right: 'auto',
         maxWidth: '98.5%',
-        borderWidth: 2,
-        borderColor: '#fff',
-        shadowRadius: 15,
+        // borderWidth: 2,
+        // borderColor: '#fff',
+        shadowRadius: 7,
         shadowColor: 'rgba(0,0,0,0.25)',
       })}
     >
-      <BlurView
-        blurType="ultraThinMaterial"
-        borderRadius={borderRadius - 2}
-        flex={1}
-      >
+      <BlurView blurType="xlight" borderRadius={borderRadius - 2} flex={1}>
         <SearchPageNavBarContent stateId={props.id} />
       </BlurView>
     </VStack>

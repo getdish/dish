@@ -11,6 +11,7 @@ import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
 import { AppRoot } from './AppRoot'
 import { HomeSearchBarFloating } from './AppSearchBar'
 import { AppStackView } from './AppStackView'
+import { bgLight } from './colors'
 import { isSSR } from './constants'
 import { initAppleSigninButton } from './helpers/initAppleSigninButton'
 import { useIsNarrow } from './hooks/useIs'
@@ -51,7 +52,7 @@ export default memo(function App() {
     <AbsoluteVStack
       fullscreen
       overflow="hidden"
-      backgroundColor="#C9E9F6" // map color
+      backgroundColor={bgLight} // map color
       {...(isSmall && {
         borderRadius: 10,
       })}

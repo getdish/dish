@@ -2,6 +2,9 @@ import { AbsoluteVStack, HStack, SmallTitle, Spacer, VStack } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 
+import { bgLight, brandColor } from '../../colors'
+import { drawerWidthMax } from '../../constants'
+import { useIsNarrow } from '../../hooks/useIs'
 import { CloseButton } from '../../views/ui/CloseButton'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
@@ -32,10 +35,16 @@ export const RestaurantRatingBreakdown = memo(
     closable?: boolean
     showScoreTable?: boolean
   }) => {
+    const isSmall = useIsNarrow()
     const store = useStore(RestaurantReviewsDisplayStore, { id: restaurantId })
 
     return (
-      <VStack maxWidth="100%" position="relative">
+      <VStack
+        overflow="hidden"
+        width="100%"
+        maxWidth="100%"
+        position="relative"
+      >
         <HStack marginBottom={-20} alignItems="center" justifyContent="center">
           <SlantedTitle fontSize={18} fontWeight="600">
             Reviews
@@ -47,7 +56,7 @@ export const RestaurantRatingBreakdown = memo(
           </AbsoluteVStack>
         )}
         <HStack
-          flexWrap="wrap"
+          flexWrap={isSmall ? 'wrap' : 'nowrap'}
           flexDirection="row-reverse"
           overflow="hidden"
           flex={1}
@@ -60,16 +69,17 @@ export const RestaurantRatingBreakdown = memo(
         >
           <VStack
             borderRadius={10}
+            maxWidth={drawerWidthMax / 2.5 - 40}
             borderWidth={1}
             borderColor="#eee"
             padding={10}
             minWidth={260}
-            maxWidth={200}
             margin={10}
             flex={1}
+            backgroundColor={bgLight}
             overflow="hidden"
           >
-            <SmallTitle>Points</SmallTitle>
+            <SmallTitle color={brandColor}>Points</SmallTitle>
             <RestaurantPointsBreakdown
               showTable={showScoreTable}
               restaurantSlug={restaurantSlug}
@@ -77,19 +87,19 @@ export const RestaurantRatingBreakdown = memo(
 
             <Spacer size="sm" />
 
-            <SmallTitle>Lense Votes</SmallTitle>
+            <SmallTitle color={brandColor}>Lense Votes</SmallTitle>
             <Spacer />
             <RestaurantLenseVote restaurantId={restaurantId} />
 
             <Spacer size="xl" />
 
-            <SmallTitle>Dishes</SmallTitle>
+            <SmallTitle color={brandColor}>Dishes</SmallTitle>
           </VStack>
 
           <VStack
             minWidth={260}
-            maxWidth={410}
-            flex={1.15}
+            maxWidth={drawerWidthMax / 2 - 40}
+            flex={2}
             overflow="hidden"
             paddingHorizontal={10}
             spacing={10}

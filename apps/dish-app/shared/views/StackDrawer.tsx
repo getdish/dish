@@ -22,14 +22,16 @@ export const StackDrawer = ({
   return (
     <HStack
       position="absolute"
-      left={isSmall ? 0 : 0}
+      left={isSmall ? 0 : 'auto'}
       right={isSmall ? 0 : 0}
       flex={1}
       maxHeight="100%"
       height="100%"
+      width="100%"
       borderRadius={drawerBorderRadius}
       maxWidth={isSmall ? '100%' : drawerWidthMax}
-      minWidth="100%"
+      minWidth={isSmall ? '100%' : 200}
+      backgroundColor="blue"
       justifyContent="flex-end"
       shadowRadius={isSmall ? 5 : 10}
       shadowColor="rgba(0,0,0,0.1)"

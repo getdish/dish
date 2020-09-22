@@ -1,6 +1,6 @@
-import { VStack } from '@dish/ui'
+import { VStack, combineRefs } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
-import React, { forwardRef, useMemo, useRef } from 'react'
+import React, { forwardRef, useEffect, useMemo, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 
 import { drawerWidthMax, isWeb, searchBarHeight } from '../constants'
@@ -42,12 +42,15 @@ export const ContentScrollView = forwardRef(
       const y = e.nativeEvent.contentOffset.y
       isScrollAtTop = y <= 0
       onScrollYThrottled?.(y)
-      scrollStore.setIsScrolling(true)
+      if (!scrollStore.isScrolling) {
+        scrollStore.setIsScrolling(true)
+      }
       clearTimeout(tm.current)
       tm.current = setTimeout(() => {
         scrollStore.setIsScrolling(false)
       }, 200)
     }
+    const scrollRef = useRef()
 
     const preventTouching = scrollStore.isScrolling
     const preventScrolling =
@@ -55,9 +58,8 @@ export const ContentScrollView = forwardRef(
 
     return (
       <ScrollView
-        ref={ref as any}
+        ref={combineRefs(ref as any, scrollRef)}
         onScroll={setIsScrolling}
-        bounces
         scrollEventThrottle={200}
         scrollEnabled={!preventScrolling}
         disableScrollViewPanResponder={preventScrolling}

@@ -46,7 +46,7 @@ export default memo(function HomePageRestaurantReview() {
           height="80%"
           backgroundColor="#fff"
           borderRadius={15}
-          maxWidth={pageWidthMax * 0.9}
+          maxWidth={pageWidthMax * 0.55}
           alignItems="center"
           position="relative"
           overflow="hidden"
@@ -79,8 +79,17 @@ const HomePageReviewContent = memo(
 
     return (
       <VStack flex={1} overflow="hidden">
-        <ScrollView style={{ width: '100%' }}>
-          <VStack padding={18} spacing="lg">
+        <ScrollView
+          style={{
+            width: '100%',
+            flex: 1,
+            height: '100%',
+          }}
+          contentContainerStyle={{
+            minHeight: '100%',
+          }}
+        >
+          <VStack padding={18} spacing="lg" flex={1}>
             <SmallTitle fontWeight="600">Review {restaurant.name}</SmallTitle>
 
             <Suspense fallback={<LoadingItems />}>
@@ -151,7 +160,7 @@ export const RestaurantReviewComment = memo(
       }
 
       return (
-        <VStack>
+        <VStack minHeight="100%">
           <CommentBubble
             name={user.username ?? ''}
             after={
@@ -207,7 +216,8 @@ export const RestaurantReviewComment = memo(
               borderWidth={1}
               borderColor="#eee"
               borderRadius={10}
-              padding={15}
+              paddingHorizontal={45}
+              paddingVertical={15}
               flex={1}
               spacing
             >
@@ -231,7 +241,6 @@ export const RestaurantReviewComment = memo(
                   flexWrap="wrap"
                   alignItems="center"
                   justifyContent="center"
-                  maxHeight={220}
                   padding={15}
                 >
                   {dishTags.map((tag) => {

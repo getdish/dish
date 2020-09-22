@@ -118,8 +118,10 @@ export const useUserReviewsQuery = (restaurantId: string) => {
         // optimistic update
         if (review.id) {
           const cur = reviewsQuery.find((x) => x.id === review.id)
-          for (const key in review) {
-            cur[key] = review[key]
+          if (cur) {
+            for (const key in review) {
+              cur[key] = review[key]
+            }
           }
         }
 
@@ -144,8 +146,10 @@ export const useUserReviewsQuery = (restaurantId: string) => {
         // post-optimistic update
         if (result.id) {
           const cur = reviewsQuery.find((x) => x.id === result.id)
-          for (const key in result) {
-            cur[key] = result[key]
+          if (cur) {
+            for (const key in result) {
+              cur[key] = result[key]
+            }
           }
         }
 

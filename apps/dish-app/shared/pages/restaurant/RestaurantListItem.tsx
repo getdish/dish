@@ -32,6 +32,7 @@ import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVot
 import { Link } from '../../views/ui/Link'
 import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
 import { Squircle } from '../../views/ui/Squircle'
+import { ensureFlexText } from './ensureFlexText'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours, priceRange } from './RestaurantDetailRow'
@@ -357,12 +358,10 @@ const RestaurantListItemContent = memo(
                 </Link>
               </HStack>
 
-              <Spacer size={10} />
-
-              <HStack marginLeft={-8} position="relative">
+              {/* <HStack position="relative">
                 <AbsoluteVStack
                   top={-12}
-                  left={-28}
+                  left={-34}
                   width={26}
                   height={26}
                   overflow="hidden"
@@ -378,11 +377,14 @@ const RestaurantListItemContent = memo(
                   />
                 </AbsoluteVStack>
 
-                <RestaurantScoreBreakdownSmall
-                  restaurantId={restaurantId}
-                  restaurantSlug={restaurantSlug}
-                />
-              </HStack>
+                <HStack flex={1} alignItems="center">
+                  <VStack flex={1} />
+                  <RestaurantScoreBreakdownSmall
+                    restaurantId={restaurantId}
+                    restaurantSlug={restaurantSlug}
+                  />
+                </HStack>
+              </HStack> */}
             </VStack>
           </VStack>
 
@@ -396,14 +398,11 @@ const RestaurantListItemContent = memo(
               justifyContent="center"
               flexShrink={0}
               marginRight={20}
+              paddingLeft={10}
             >
               {/* ensures it always flexes all the way even if short text */}
-              <Text opacity={0} lineHeight={0} height={0}>
-                {wideText}
-              </Text>
-              <Suspense fallback={null}>
-                <RestaurantOverview restaurantSlug={restaurantSlug} inline />
-              </Suspense>
+              {ensureFlexText}
+              <RestaurantOverview restaurantSlug={restaurantSlug} inline />
             </VStack>
 
             <RestaurantPeekDishes
@@ -447,37 +446,26 @@ const RestaurantListItemContent = memo(
                 </Tooltip>
               </VStack>
 
-              <Spacer size="sm" />
+              <Spacer />
+
+              <RestaurantFavoriteButton size="md" restaurantId={restaurantId} />
+
+              <Spacer />
+
+              <RestaurantDeliveryButtons
+                {...smallButtonBaseStyle}
+                label="Delivery"
+                restaurantSlug={restaurantSlug}
+              />
+
+              <Spacer />
+              <VStack flex={1} />
 
               <RestaurantSourcesBreakdownRow
                 size="sm"
                 restaurantId={restaurantId}
                 restaurantSlug={restaurantSlug}
               />
-
-              <VStack flex={1} />
-              <HStack
-                alignItems="center"
-                {...smallButtonBaseStyle}
-                {...{
-                  // for ui-static to behave :(
-                  ...{},
-                  alignSelf: 'center',
-                  height: 36,
-                  cursor: 'initial',
-                }}
-              >
-                <VStack marginVertical={-7} marginRight={-7}>
-                  <RestaurantDeliveryButtons
-                    label="Delivery"
-                    restaurantSlug={restaurantSlug}
-                  />
-                </VStack>
-              </HStack>
-
-              <Spacer />
-
-              <RestaurantFavoriteButton size="md" restaurantId={restaurantId} />
             </HStack>
           </Suspense>
           <Spacer />
@@ -486,8 +474,6 @@ const RestaurantListItemContent = memo(
     )
   })
 )
-
-const wideText = `wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww`
 
 const RestaurantPeekDishes = memo(
   graphql(function RestaurantPeek(props: {
@@ -515,7 +501,7 @@ const RestaurantPeekDishes = memo(
       tag_names,
       max: 5,
     })
-    const dishSize = 165
+    const dishSize = 150
     return (
       <HStack
         contain="paint layout"
