@@ -487,6 +487,8 @@ const RestaurantListItemContent = memo(
                 borderBottomWidth={1}
                 transform={[{ translateY: -0.5 }]}
               />
+
+              <Divider flex />
             </HStack>
           </Suspense>
           <Spacer />
