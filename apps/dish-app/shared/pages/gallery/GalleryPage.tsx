@@ -1,6 +1,6 @@
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import { AbsoluteVStack, HStack, LoadingItems, Text, VStack } from '@dish/ui'
-import React, { Suspense, memo } from 'react'
+import React, { Suspense, memo, useState } from 'react'
 import { Image, ScrollView } from 'react-native'
 
 import { isWeb, pageWidthMax, zIndexGallery } from '../../constants'
@@ -19,19 +19,20 @@ export default memo(function GalleryPage() {
   const isSmall = useIsNarrow()
 
   if (state.type === 'gallery') {
-    const dishPhotosElement = (
-      <Suspense fallback={null}>
-        <RestaurantDishPhotos
-          size={100}
-          restaurantSlug={state.restaurantSlug}
-          selectable
-          defaultSelectedId={state.dishId}
-          onSelect={(selected) => {
-            console.log('got em', selected)
-          }}
-        />
-      </Suspense>
-    )
+    const dishPhotosElement = null
+    // (
+    //   <Suspense fallback={null}>
+    //     <RestaurantDishPhotos
+    //       size={100}
+    //       restaurantSlug={state.restaurantSlug}
+    //       selectable
+    //       defaultSelectedId={state.dishId}
+    //       onSelect={(selected) => {
+    //         console.log('got em', selected)
+    //       }}
+    //     />
+    //   </Suspense>
+    // )
 
     return (
       <AbsoluteVStack
@@ -109,6 +110,7 @@ const HomePageGalleryContent = memo(
     state: HomeStateItemGallery
     header?: any
   }) {
+    const [hasScrolled, setHasScrolled] = useState(false)
     const isSmall = useIsNarrow()
     // const dish = state.dishId
     //   ? query.tag({
@@ -123,17 +125,24 @@ const HomePageGalleryContent = memo(
     const tag_names = state.dishId ? [state.dishId] : []
     const photos = restaurantPhotosForCarousel({
       restaurant,
-      max: 20,
+      max: hasScrolled ? 50 : 20,
       tag_names,
       gallery: true,
     })
 
     return (
       <VStack flex={1} overflow="hidden">
-        <ScrollView style={{ width: '100%' }}>
+        <ScrollView
+          {...(!hasScrolled && {
+            onScroll: () => setHasScrolled(true),
+            scrollEventThrottle: 100,
+          })}
+          style={{ width: '100%' }}
+        >
           {header}
           <HStack
             flex={10}
+            marginTop={-12}
             flexWrap="wrap"
             maxWidth="100%"
             // add for carousel bottom

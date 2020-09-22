@@ -14,6 +14,7 @@ import _, { clamp, cloneDeep, findLast, isPlainObject, last } from 'lodash'
 import { Action, AsyncAction, derived } from 'overmind'
 import { Keyboard } from 'react-native'
 
+import { getBreadcrumbs } from '../helpers/getBreadcrumbs'
 import { addTagsToCache, allTags } from './allTags'
 import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
 import { getActiveTags } from './getActiveTags'
@@ -177,6 +178,7 @@ const refresh: AsyncAction = async (om) => {
 
 const up: Action = (om) => {
   const prev = om.state.home.previousState?.type
+  console.log('up to', prev)
   om.actions.home.popTo(prev ?? 'home')
 }
 
@@ -196,7 +198,8 @@ const popTo: Action<HomeStateItem['type']> = (om, type) => {
   // we can just use router history directly, no? and go back?
   if (
     om.state.home.previousState?.type === type &&
-    router.prevHistory?.name === type
+    router.prevHistory?.name === type &&
+    router.prevHistory?.type !== 'pop'
   ) {
     router.back()
     return
@@ -287,8 +290,7 @@ const runSearch: AsyncAction<{
   // prevent duplicate searches
   const searchKey = stringify(searchArgs)
   if (!opts.force && searchKey === lastSearchKey) {
-    console.log('same searchkey as last, ignore')
-    return
+    console.warn('same saerch again?')
   }
 
   // fetch
@@ -566,6 +568,14 @@ const pushHomeState: AsyncAction<
       nextState = {
         status: 'loading',
         results: [],
+        // if we have a previous existing one thats valid, use it
+        ...(prev.type === 'search' &&
+          getBreadcrumbs(om.state.home.states).some(
+            (x) => x.id === prev.id
+          ) && {
+            status: prev.status,
+            results: prev.results,
+          }),
         username,
         activeTagIds,
         center: prev.mapAt?.center ?? prev.center,

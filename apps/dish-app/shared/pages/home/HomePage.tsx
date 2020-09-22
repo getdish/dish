@@ -496,7 +496,7 @@ const TopDishesTrendingRestaurants = memo(
                   //     ? 'up'
                   //     : 'down'
                   // }
-                  // subtle
+                  subtle
                   restaurantSlug={restaurant.slug ?? ''}
                   onHoverIn={() => {
                     lastHoveredId = restaurant.id

@@ -261,7 +261,7 @@ const RestaurantListItemContent = memo(
                           height={38}
                           {...(isWeb && {
                             marginLeft: -18,
-                            marginTop: -10,
+                            marginTop: -14,
                             marginRight: -4,
                           })}
                           {...(!isWeb && {
@@ -290,7 +290,7 @@ const RestaurantListItemContent = memo(
                             </SuperScriptText>
                             <Text
                               fontSize={+rank > 9 ? 14 : 20}
-                              fontWeight="400"
+                              fontWeight="500"
                               color="#000"
                             >
                               {rank}
@@ -327,17 +327,12 @@ const RestaurantListItemContent = memo(
             <VStack
               {...contentSideWidthProps}
               zIndex={1000}
-              paddingLeft={30}
+              paddingLeft={40}
               paddingRight={20}
             >
               <Spacer size={10} />
 
-              <HStack
-                alignItems="center"
-                cursor="pointer"
-                onPress={reviewDisplayStore.toggleShowComments}
-                spacing="lg"
-              >
+              <HStack alignItems="center" cursor="pointer" spacing="lg">
                 {!!price_range && (
                   <Text
                     fontSize={14}

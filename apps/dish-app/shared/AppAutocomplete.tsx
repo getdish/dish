@@ -11,8 +11,6 @@ import {
   useDebounce,
 } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-// react native fix
-import FlexSearch from 'flexsearch/flexsearch.js'
 import { uniqBy } from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
 import { Image, Keyboard, ScrollView } from 'react-native'
@@ -26,6 +24,7 @@ import {
   searchBarHeight,
   searchBarTopOffset,
 } from './constants'
+import { fuzzySearch } from './helpers/fuzzySearch'
 import { getFuzzyMatchQuery } from './helpers/getFuzzyMatchQuery'
 import { getWindowHeight } from './helpers/getWindow'
 import {
@@ -44,10 +43,6 @@ import { tagDisplayName } from './state/tagDisplayName'
 import { BlurView } from './views/BlurView'
 import { SmallCircleButton } from './views/ui/CloseButton'
 import { LinkButton } from './views/ui/LinkButton'
-
-const flexSearch = FlexSearch.create<number>({
-  profile: 'speed',
-})
 
 let curPagePos = { x: 0, y: 0 }
 
@@ -309,6 +304,7 @@ const AutocompleteResults = memo(() => {
           <React.Fragment key={`${result.tagId}${index}`}>
             <LinkButton
               className="no-transition"
+              pointerEvents="auto"
               onPressOut={() => {
                 hideAutocomplete()
                 if (showLocation) {
@@ -529,31 +525,14 @@ function runAutocomplete(
     },
     async () => {
       let matched: AutocompleteItem[] = []
-
       if (results.length) {
-        flexSearch.clear()
-        let foundIndices: number[] = []
-        for (const [index, res] of results.entries()) {
-          if (!res.name) {
-            continue
-          }
-          // for some reason flexsearch not pulling exact matches to front?
-          if (res.name.toLowerCase() === searchQuery) {
-            foundIndices.unshift(index)
-            continue
-          }
-          const searchable = `${res.name} ${res.description ?? ''}`.trim()
-          flexSearch.add(index, searchable)
-        }
-        foundIndices = [
-          ...foundIndices,
-          ...(await flexSearch.search(searchQuery, 10)),
-        ]
-        matched = foundIndices.map((index) => results[index])
+        matched = await fuzzySearch({
+          items: results,
+          query: searchQuery,
+          keys: ['name', 'description'],
+        })
       }
-
       matched = uniqBy([...matched, ...results], (x) => x.name)
-
       if (showAutocomplete === 'location') {
         om.actions.home.setLocationAutocompleteResults(matched)
       } else if (showAutocomplete === 'search') {
@@ -593,37 +572,28 @@ function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {
           limit: 3,
         })
         .map((r) =>
-          createAutocomplete({
-            id: r.id,
-            name: r.name,
-            type: 'country',
-            icon: r.icon ?? '🌎',
-            description: 'Cuisine',
-          })
+          'autocomplete' in r
+            ? r
+            : createAutocomplete({
+                id: r.id,
+                name: r.name,
+                type: 'country',
+                icon: r.icon ?? '🌎',
+                description: 'Cuisine',
+              })
         ),
     ]
   })
 }
 
 function searchDishTags(searchQuery: string) {
-  const search = (whereCondition: any, limit = 5) => {
-    return query.tag({
-      where: {
-        ...whereCondition,
-        type: {
-          _eq: 'dish',
-        },
-      },
-      limit,
-    })
-  }
   return [
-    ...search({
+    ...searchDishes({
       name: {
-        _ilike: searchQuery,
+        _ilike: `${searchQuery}%`,
       },
     }),
-    ...search({
+    ...searchDishes({
       name: {
         _ilike: getFuzzyMatchQuery(searchQuery),
       },
@@ -637,4 +607,16 @@ function searchDishTags(searchQuery: string) {
       description: r.parent?.name ?? '',
     })
   )
+}
+
+const searchDishes = (whereCondition: any, limit = 5) => {
+  return query.tag({
+    where: {
+      ...whereCondition,
+      type: {
+        _eq: 'dish',
+      },
+    },
+    limit,
+  })
 }

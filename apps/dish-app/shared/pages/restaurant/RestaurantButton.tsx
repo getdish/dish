@@ -41,7 +41,8 @@ export const RestaurantButton = memo(
             backgroundColor: 'transparent',
           })}
           zIndex={1}
-          padding={7}
+          paddingHorizontal={7}
+          paddingVertical={2}
           borderRadius={6}
           noText
           hoverStyle={{
@@ -84,7 +85,7 @@ export const RestaurantButton = memo(
               {restaurant.name}
             </Text>
             <Spacer size="sm" />
-            <VStack marginVertical={subtle ? 0 : -6}>
+            <VStack marginVertical={subtle ? -2 : -6}>
               <RestaurantRatingView
                 size="xs"
                 restaurantSlug={restaurant.slug ?? ''}
