@@ -215,8 +215,7 @@ const RestaurantListItemContent = memo(
             hoverStyle={{ backgroundColor: bgLightLight }}
             marginLeft={-pad}
             paddingLeft={pad}
-            paddingBottom={4}
-            marginBottom={-4}
+            paddingBottom={12}
             width={950}
             position="relative"
           >
@@ -316,7 +315,6 @@ const RestaurantListItemContent = memo(
                           {restaurantName}
                         </Text>
                       </HStack>
-                      <Spacer size="xs" />
                     </Link>
                   </Text>
                 </HStack>
@@ -330,7 +328,7 @@ const RestaurantListItemContent = memo(
               paddingLeft={40}
               paddingRight={20}
             >
-              <Spacer size={10} />
+              <Spacer size={2} />
 
               <HStack alignItems="center" cursor="pointer" spacing="lg">
                 {!!price_range && (

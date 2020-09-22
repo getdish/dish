@@ -370,11 +370,10 @@ const TopDishesCuisineItem = memo(
                 <Text
                   position="absolute"
                   top={14}
-                  right={4}
-                  marginLeft={1}
+                  marginLeft={2}
                   marginTop={2}
                   fontSize={26}
-                  lineHeight={0}
+                  lineHeight={5}
                 >
                   {' '}
                   {country.icon}
