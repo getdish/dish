@@ -12,7 +12,7 @@ export const Paragraph = ({
 }: SizableTextProps) => {
   const sizeAmt = getSize(size)
   // get a little less spaced as we go higher
-  const lineHeightScaleWithSize = -(2 - sizeAmt) * 0.1
+  const lineHeightScaleWithSize = -(2 - sizeAmt) * 0.6
   const lineHeight = (26.5 + lineHeightScaleWithSize) * sizeAmt * sizeLineHeight
   console.log('lineHeightScaleWithSize', lineHeightScaleWithSize, lineHeight)
   return (

@@ -175,7 +175,7 @@ export function openingHours(restaurant: RestaurantQuery) {
 
     if (restaurant.is_open_now) {
       text = 'Open'
-      color = '#33aa99'
+      color = '#337777'
       next_time = getHours(todaysHours)
     } else {
       next_time = getHours(tomorrowsHours)

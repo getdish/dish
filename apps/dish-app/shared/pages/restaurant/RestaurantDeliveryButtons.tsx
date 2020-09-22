@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { HStack, Spacer, Text, Tooltip } from '@dish/ui'
+import { HStack, Spacer, StackProps, Text, Tooltip } from '@dish/ui'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
 
@@ -8,15 +8,14 @@ import { isWeb } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
 
-type Props = {
+type Props = StackProps & {
   restaurantSlug: string
   showLabels?: boolean
   label?: string
 }
 
 export const RestaurantDeliveryButtons = memo(
-  graphql((props: Props) => {
-    const { restaurantSlug, showLabels } = props
+  graphql(({ restaurantSlug, showLabels, label, ...props }: Props) => {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const restaurantSources = restaurant.sources()
     const sources = Object.keys(restaurantSources ?? {})
@@ -32,23 +31,24 @@ export const RestaurantDeliveryButtons = memo(
     }
 
     return (
-      <HStack flexWrap="wrap" alignItems="center">
-        {!!props.label && (
+      <HStack flexWrap="wrap" alignItems="center" {...props}>
+        {!!label && (
           <Text
             fontSize={13}
             color="rgba(0,0,0,0.6)"
             marginRight={12}
             transform={[{ translateY: -1 }]}
           >
-            {props.label}
+            {label}
           </Text>
         )}
         {sources.map((source) => {
           return (
             <RestaurantDeliveryButton
               key={source.id}
-              {...props}
               source={source}
+              restaurantSlug={restaurantSlug}
+              showLabels={showLabels}
             />
           )
         })}
@@ -78,8 +78,8 @@ const RestaurantDeliveryButton = ({
         style={{
           width: showLabels ? 16 : 22,
           height: showLabels ? 16 : 22,
-          margin: showLabels ? 0 : -3,
-          marginRight: 0,
+          marginHorizontal: showLabels ? 0 : -3,
+          marginVertical: -6,
           borderRadius: 40,
           borderWidth: 1,
           borderColor: '#fff',

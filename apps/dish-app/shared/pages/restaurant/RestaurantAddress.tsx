@@ -7,7 +7,7 @@ import { Link } from '../../../shared/views/ui/Link'
 import { AddressSize, getAddressText } from './RestaurantAddressLinksRow'
 
 export const RestaurantAddress = ({
-  color = 'rgba(125,125,125,0.8)',
+  color = 'rgba(125,125,125,1)',
   address,
   currentLocationInfo,
   size = 'xs',

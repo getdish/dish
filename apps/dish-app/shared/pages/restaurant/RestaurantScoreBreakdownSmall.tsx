@@ -14,11 +14,6 @@ import { tagDisplayName } from '../../state/tagDisplayName'
 import { PointsText } from '../../views/PointsText'
 import { RestaurantReviewsDisplayStore } from './RestaurantRatingBreakdown'
 
-const textProps = {
-  fontSize: 16,
-  color: 'rgba(0,0,0,0.7)',
-}
-
 export const RestaurantScoreBreakdownSmall = memo(
   graphql(
     ({
@@ -28,6 +23,11 @@ export const RestaurantScoreBreakdownSmall = memo(
       restaurantSlug: string
       restaurantId: string
     }) => {
+      const textProps = {
+        fontSize: 15,
+        color: 'rgba(0,0,0,0.6)',
+      }
+
       const restaurant = useRestaurantQuery(restaurantSlug)
       const reviewDisplayStore = useStore(RestaurantReviewsDisplayStore, {
         id: restaurantId,
@@ -49,7 +49,7 @@ export const RestaurantScoreBreakdownSmall = memo(
         <HStack position="relative" alignItems="center" flexWrap="wrap">
           <HStack alignItems="center">
             <Text {...textProps}>
-              Base <PointsText points={restaurant.score} /> plus
+              <PointsText {...textProps} points={restaurant.score} /> plus
             </Text>
             <Spacer size="xs" />
             {reviewTags.map((tag, i) => {
@@ -58,7 +58,7 @@ export const RestaurantScoreBreakdownSmall = memo(
                 <HStack
                   key={i}
                   paddingHorizontal={6}
-                  paddingVertical={1}
+                  paddingVertical={2}
                   borderWidth={1}
                   marginRight={8}
                   borderColor="#eee"

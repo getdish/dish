@@ -19,6 +19,7 @@ import { bgLight } from '../../colors'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
 import { useUserUpvoteDownvoteQuery } from '../../hooks/useUserReview'
+import { ensureFlexText } from '../../pages/restaurant/ensureFlexText'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { Table, TableHeadRow, TableHeadText } from '../ui/Table'
 
@@ -69,8 +70,8 @@ export const RestaurantUpVoteDownVote = memo(
             pointerEvents="auto"
             alignItems="center"
             justifyContent="center"
-            width={53}
-            height={53}
+            width={56}
+            height={56}
             marginLeft={-22}
             backgroundColor="#fff"
             marginRight={-4}
@@ -119,6 +120,7 @@ export const RestaurantUpVoteDownVote = memo(
 
 const col0Props: TableCellProps = {
   flex: 2,
+  maxWidth: '70%',
 }
 
 const col1Props: TableCellProps = {
@@ -139,7 +141,7 @@ const RestaurantTagsScore = graphql(
     console.log('tagScores', tagScores)
     return (
       <Box
-        maxWidth={320}
+        maxWidth={300}
         overflow="hidden"
         minWidth={280}
         paddingVertical={15}
@@ -162,9 +164,12 @@ const RestaurantTagsScore = graphql(
               return (
                 <TableRow key={i}>
                   <TableCell {...col0Props}>
-                    <Text>
-                      {tscore.icon} {tscore.name}
-                    </Text>
+                    <HStack>
+                      <Text>
+                        {tscore.icon} {tscore.name}
+                      </Text>
+                      {ensureFlexText}
+                    </HStack>
                   </TableCell>
                   <TableCell {...col1Props}>
                     <Text
