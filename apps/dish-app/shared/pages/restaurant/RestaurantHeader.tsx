@@ -140,7 +140,7 @@ const RestaurantHeaderContent = memo(
             </HStack>
             {padding}
           </VStack>
-          <SmallTitle marginVertical={-18} divider="center">
+          <SmallTitle marginVertical={-10} divider="center">
             <HStack spacing="lg">
               <CircleButton>
                 <Suspense fallback={null}>
@@ -175,6 +175,10 @@ const CircleButton = (props: StackProps) => {
       shadowColor="rgba(0,0,0,0.1)"
       backgroundColor="#fff"
       shadowRadius={8}
+      width={44}
+      height={44}
+      alignItems="center"
+      justifyContent="center"
       shadowOffset={{ height: 2, width: 0 }}
       borderWidth={1}
       borderColor="transparent"

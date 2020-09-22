@@ -32,6 +32,7 @@ import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVot
 import { Link } from '../../views/ui/Link'
 import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
 import { Squircle } from '../../views/ui/Squircle'
+import { ensureFlexText } from './ensureFlexText'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours, priceRange } from './RestaurantDetailRow'
@@ -396,11 +397,10 @@ const RestaurantListItemContent = memo(
               justifyContent="center"
               flexShrink={0}
               marginRight={20}
+              paddingLeft={10}
             >
               {/* ensures it always flexes all the way even if short text */}
-              <Text opacity={0} lineHeight={0} height={0}>
-                {wideText}
-              </Text>
+              {ensureFlexText}
               <Suspense fallback={null}>
                 <RestaurantOverview restaurantSlug={restaurantSlug} inline />
               </Suspense>
@@ -486,8 +486,6 @@ const RestaurantListItemContent = memo(
     )
   })
 )
-
-const wideText = `wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww`
 
 const RestaurantPeekDishes = memo(
   graphql(function RestaurantPeek(props: {

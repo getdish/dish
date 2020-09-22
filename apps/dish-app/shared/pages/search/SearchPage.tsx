@@ -1,8 +1,11 @@
 import { sleep } from '@dish/async'
 import { ArrowUp } from '@dish/react-feather'
 import {
+  AbsoluteVStack,
+  AnimatedVStack,
   Button,
   HStack,
+  LinearGradient,
   LoadingItem,
   Spacer,
   StackProps,
@@ -18,7 +21,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Platform, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 
 import { AppPortalItem } from '../../AppPortal'
 import { isWeb, searchBarHeight, searchBarTopOffset } from '../../constants'
@@ -153,8 +156,8 @@ export default memo(function SearchPage(props: Props) {
 
   return (
     <>
-      <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
       <StackDrawer closable>
+        <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
         <Suspense fallback={<HomeLoading />}>
           <VStack
             flex={1}
@@ -178,6 +181,7 @@ const SearchNavBarContainer = ({
   id: string
 }) => {
   const isSmall = useIsNarrow()
+
   if (!isSmall) {
     return (
       <VStack marginTop={10}>
@@ -186,9 +190,31 @@ const SearchNavBarContainer = ({
     )
   }
 
+  let contents = <SearchPageNavBar id={id} />
+
+  if (!isWeb) {
+    contents = (
+      <AnimatedVStack>
+        <AbsoluteVStack bottom={0} height={150} width="100%">
+          <LinearGradient
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+            }}
+            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.25)']}
+          />
+          {contents}
+        </AbsoluteVStack>
+      </AnimatedVStack>
+    )
+  }
+
   return (
     <AppPortalItem key={isActive ? '1' : '0'}>
-      {isActive ? <SearchPageNavBar id={id} /> : null}
+      {isActive ? contents : null}
     </AppPortalItem>
   )
 }

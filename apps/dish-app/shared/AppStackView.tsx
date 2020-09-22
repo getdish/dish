@@ -1,4 +1,4 @@
-import { AbsoluteVStack, VStack, useDebounceValue } from '@dish/ui'
+import { AbsoluteVStack, AnimatedVStack, useDebounceValue } from '@dish/ui'
 import React, { Suspense, memo, useMemo } from 'react'
 
 import { isWeb, searchBarHeight } from './constants'
@@ -8,7 +8,6 @@ import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { HomeStateItem, HomeStateItemSimple } from './state/home-types'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
-import { AnimatedVStack } from './views/AnimatedVStack'
 import { ErrorBoundary } from './views/ErrorBoundary'
 
 export type StackItemProps<A> = {

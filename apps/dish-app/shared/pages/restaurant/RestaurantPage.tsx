@@ -87,7 +87,7 @@ const HomePageRestaurant = memo(
               </HStack>
             </VStack>
 
-            <Spacer size="xl" />
+            <Spacer />
 
             <VStack width="100%">
               <Suspense
@@ -105,7 +105,7 @@ const HomePageRestaurant = memo(
               </Suspense>
             </VStack>
 
-            <Spacer />
+            <Spacer size="xl" />
 
             <VStack>
               <HStack
@@ -125,7 +125,7 @@ const HomePageRestaurant = memo(
               </HStack>
             </VStack>
 
-            <Spacer size="xl" />
+            <Spacer size="md" />
 
             <Suspense fallback={null}>
               <RestaurantRatingBreakdown

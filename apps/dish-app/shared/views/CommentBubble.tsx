@@ -3,6 +3,7 @@ import { Circle, HStack, StackProps, Text, VStack } from '@dish/ui'
 import React, { useState } from 'react'
 
 import { bgLight } from '../colors'
+import { ensureFlexText } from '../pages/restaurant/ensureFlexText'
 import { Link } from './ui/Link'
 
 export const CommentBubble = ({
@@ -24,12 +25,12 @@ export const CommentBubble = ({
   const [isExpanded, setIsExpanded] = useState(false)
   return (
     <VStack
-      flex={1}
       borderRadius={10}
       padding={4}
       alignItems="flex-start"
       justifyContent="flex-start"
       spacing="sm"
+      maxWidth="100%"
       {...rest}
     >
       {!!name && (
@@ -55,7 +56,9 @@ export const CommentBubble = ({
         </HStack>
       )}
 
-      <VStack width="100%" spacing>
+      {ensureFlexText}
+
+      <VStack maxWidth="100%" width="100%" spacing>
         {before}
 
         {!!text && (

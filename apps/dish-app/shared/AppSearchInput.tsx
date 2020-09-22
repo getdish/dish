@@ -168,19 +168,23 @@ export const AppSearchInput = memo(() => {
   }, [])
 
   const input = inputStore.node
+  const searchInputContainer = useRef<View>()
+
+  useEffect(() => {
+    console.log('searchInputContainer', searchInputContainer)
+  }, [])
 
   return (
     <HStack flex={1} overflow="hidden">
       <AppAutocompleteHoverableInput input={input} autocompleteTarget="search">
         <HStack
-          // contain="paint"
+          contain="paint"
           alignItems="center"
           borderRadius={10}
           flex={1}
           maxWidth="100%"
           paddingLeft={10}
           overflow="hidden"
-          backgroundColor={background}
         >
           {/* Loading / Search Icon */}
           <VStack
@@ -204,7 +208,12 @@ export const AppSearchInput = memo(() => {
             </TouchableOpacity>
           </VStack>
 
-          <VStack flex={1} height={searchBarHeight - 8}>
+          <VStack
+            // @ts-ignore
+            ref={searchInputContainer}
+            flex={1}
+            height={searchBarHeight - 8}
+          >
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -212,12 +221,14 @@ export const AppSearchInput = memo(() => {
                 alignItems: 'center',
               }}
               style={{
+                minWidth: '100%',
                 paddingRight: 10,
                 flex: 1,
               }}
             >
               <HStack
                 alignSelf="center"
+                backgroundColor="red"
                 alignItems="center"
                 height={searchBarHeight - 23}
               >

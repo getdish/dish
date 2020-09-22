@@ -11,13 +11,15 @@ export const Paragraph = ({
   ...props
 }: SizableTextProps) => {
   const sizeAmt = getSize(size)
-  const lineHeightScaleWithSize = 1
-  const lineHeight = 26.5 * sizeAmt * sizeLineHeight * lineHeightScaleWithSize
+  // get a little less spaced as we go higher
+  const lineHeightScaleWithSize = -(2 - sizeAmt) * 0.1
+  const lineHeight = (26.5 + lineHeightScaleWithSize) * sizeAmt * sizeLineHeight
+  console.log('lineHeightScaleWithSize', lineHeightScaleWithSize, lineHeight)
   return (
     <Text
       fontSize={16 * sizeAmt}
       lineHeight={lineHeight}
-      marginVertical={-lineHeight * 0.1}
+      marginVertical={-lineHeight * 0.08}
       color="rgba(0,0,0,0.85)"
       fontWeight="400"
       selectable

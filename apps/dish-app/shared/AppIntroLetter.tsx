@@ -70,6 +70,17 @@ export const HomeIntroLetter = memo(() => {
   )
 })
 
+const divider = (
+  <VStack
+    marginVertical={8}
+    width="80%"
+    minHeight={1}
+    backgroundColor="#fff"
+    alignSelf="center"
+    opacity={0.1}
+  />
+)
+
 export const HomeIntroLetterContent = memo(
   ({ forceVisible }: { forceVisible?: boolean }) => {
     const [showIntro_, setShowIntro] = useShowIntroLetter()
@@ -83,16 +94,6 @@ export const HomeIntroLetterContent = memo(
       return null
     }
 
-    const divider = (
-      <VStack
-        marginVertical={8}
-        width="80%"
-        minHeight={1}
-        backgroundColor="#fff"
-        alignSelf="center"
-        opacity={0.1}
-      />
-    )
     return (
       <VStack spacing alignItems="center">
         <Image

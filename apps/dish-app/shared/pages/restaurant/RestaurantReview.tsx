@@ -1,10 +1,16 @@
 import { graphql, query, refetch } from '@dish/graph'
-import { Text, useLazyEffect } from '@dish/ui'
+import { Divider, HStack, Text, TextProps, useLazyEffect } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { lightGreen, lightGrey, lightRed, lightYellow } from '../../colors'
 import { isWeb } from '../../constants'
 import { CommentBubble } from '../../views/CommentBubble'
+
+const bottomMetaTextProps: TextProps = {
+  lineHeight: 26,
+  fontSize: 14,
+  color: 'rgba(0,0,0,0.7)',
+}
 
 export const RestaurantReview = memo(
   graphql(
@@ -40,9 +46,10 @@ export const RestaurantReview = memo(
           text={review.text ?? ''}
           name={hideUsername ? null : review.username ?? ''}
           after={
-            <Text lineHeight={26} fontSize={14} color="rgba(0,0,0,0.7)">
+            <HStack width="100%" alignItems="center">
               {!!review.rating && (
                 <Text
+                  {...bottomMetaTextProps}
                   borderRadius={100}
                   backgroundColor={
                     review.rating >= 4
@@ -53,6 +60,7 @@ export const RestaurantReview = memo(
                   }
                   width={20}
                   height={20}
+                  lineHeight={20}
                   // @ts-ignore
                   display={isWeb ? 'inline-flex' : 'flex'}
                   alignItems="center"
@@ -66,7 +74,7 @@ export const RestaurantReview = memo(
               )}
               &nbsp; &nbsp;
               {!!review.authored_at && (
-                <Text>
+                <Text {...bottomMetaTextProps}>
                   {new Intl.DateTimeFormat().format(
                     new Date(review.authored_at)
                   )}{' '}
@@ -79,6 +87,7 @@ export const RestaurantReview = memo(
                     return (
                       <React.Fragment key={i}>
                         <Text
+                          {...bottomMetaTextProps}
                           backgroundColor={
                             snt > 0
                               ? lightGreen
@@ -104,7 +113,8 @@ export const RestaurantReview = memo(
                     )
                   })
                 : []}
-            </Text>
+              <Divider flex />
+            </HStack>
           }
         />
       )

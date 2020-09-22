@@ -1,6 +1,7 @@
 import { networkInterfaces } from 'os'
 
 import React, {
+  RefObject,
   forwardRef,
   useCallback,
   useEffect,
@@ -39,6 +40,7 @@ const disabledStyle: StackProps = {
 export type StackProps = Omit<
   Omit<ViewStyle, 'display'> &
     Omit<ViewProps, 'display'> & {
+      ref?: RefObject<View>
       animated?: boolean
       fullscreen?: boolean
       children?: any

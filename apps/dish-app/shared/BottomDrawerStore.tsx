@@ -6,7 +6,7 @@ import { getWindowHeight } from './helpers/getWindow'
 import { omStatic } from './state/omStatic'
 
 export class BottomDrawerStore extends Store {
-  snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.8]
+  snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.75]
   snapIndex = 1
   isDragging = false
   pan = new Animated.Value(this.getSnapPointOffset())

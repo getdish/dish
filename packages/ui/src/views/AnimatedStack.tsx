@@ -1,4 +1,3 @@
-import { StackProps, VStack } from '@dish/ui'
 import React, { useEffect, useMemo, useState } from 'react'
 import {
   Animated,
@@ -15,6 +14,8 @@ import {
   TranslateXTransform,
   TranslateYTransform,
 } from 'react-native'
+
+import { StackProps, VStack } from './Stacks'
 
 const defaultAnimation = {
   from: {
@@ -60,7 +61,10 @@ export const AnimatedVStack = ({
     to: AnimatableProps
   }
 }) => {
-  const [state, setState] = useState({
+  const [state, setState] = useState<{
+    props: StackProps | null
+    start: Function | null
+  }>({
     props: null,
     start: null,
   })

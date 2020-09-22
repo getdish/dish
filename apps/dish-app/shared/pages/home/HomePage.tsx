@@ -188,10 +188,10 @@ export default memo(function HomePage(props: Props) {
               top={-120}
               transform={[{ rotate: '-2deg' }]}
             >
-              <LinearGradient
+              {/* <LinearGradient
                 style={[StyleSheet.absoluteFill]}
                 colors={[bgLightHover, '#fff']}
-              />
+              /> */}
             </AbsoluteVStack>
             <VStack
               flex={1}
@@ -344,12 +344,7 @@ const TopDishesCuisineItem = memo(
             />
           </AbsoluteVStack>
         )}
-        <HStack
-          // backgroundColor={lightBlue}
-          justifyContent="center"
-          alignItems="center"
-          marginBottom={10}
-        >
+        <HStack justifyContent="center" alignItems="center">
           <SlantedLinkButton
             marginHorizontal="auto"
             zIndex={1000}
@@ -390,6 +385,7 @@ const TopDishesCuisineItem = memo(
         </HStack>
         <VStack
           marginTop={-10}
+          paddingBottom={30}
           pointerEvents="none"
           flex={1}
           overflow="hidden"
@@ -456,6 +452,8 @@ const TopDishesCuisineItem = memo(
                 className="see-through"
                 width={dishHeight * 0.8}
                 height={dishHeight}
+                alignItems="center"
+                justifyContent="center"
                 tag={{ type: 'country', name: country.country ?? '' }}
               >
                 <ChevronRight size={40} color="black" />

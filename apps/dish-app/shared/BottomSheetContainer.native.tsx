@@ -1,9 +1,9 @@
 import { StackProps, VStack } from '@dish/ui'
-import { BlurView } from '@react-native-community/blur'
 import React from 'react'
 
 import { drawerBorderRadius } from './constants'
 import { styles } from './styles'
+import { BlurView } from './views/BlurView'
 
 export const BottomSheetContainer = ({ children, ...props }: StackProps) => {
   return (
@@ -14,17 +14,22 @@ export const BottomSheetContainer = ({ children, ...props }: StackProps) => {
       shadowRadius={20}
       borderTopRightRadius={drawerBorderRadius}
       borderTopLeftRadius={drawerBorderRadius}
-      backgroundColor="rgba(255,255,255,1)"
+      backgroundColor="rgba(255,255,255,0.64)"
       {...props}
     >
-      {/* <BlurView
-        style={[styles.fullscreen, { borderRadius: drawerBorderRadius }]}
+      <BlurView
+        borderRadius={drawerBorderRadius}
+        position="absolute"
+        bottom={0}
+        top={0}
+        left={0}
+        right={0}
         blurType="light"
         blurAmount={10}
         reducedTransparencyFallbackColor="white"
-      > */}
-      {children}
-      {/* </BlurView> */}
+      >
+        {children}
+      </BlurView>
     </VStack>
   )
 }

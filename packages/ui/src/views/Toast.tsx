@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useRef } from 'react'
 
 import { useForceUpdate } from '../hooks/useForceUpdate'
+import { AnimatedVStack } from './AnimatedStack'
 import { AbsoluteVStack, VStack } from './Stacks'
 import { Text } from './Text'
 
@@ -57,17 +58,20 @@ export const ToastRoot = memo(function ToastRoot() {
       padding="5%"
     >
       {stateRef.current.show && !!stateRef.current.text && (
-        <VStack
-          backgroundColor="rgba(0,200,0,0.95)"
-          shadowColor="rgba(0,0,0,0.9)"
-          shadowRadius={50}
-          borderRadius={9}
-          padding={10}
-        >
-          <Text color="white" fontSize={18} fontWeight="600">
-            {stateRef.current.text}
-          </Text>
-        </VStack>
+        <AnimatedVStack>
+          <VStack
+            backgroundColor="rgba(20,180,120,0.95)"
+            shadowColor="rgba(0,0,0,0.25)"
+            shadowOffset={{ height: 10, width: 0 }}
+            shadowRadius={40}
+            borderRadius={10}
+            padding={12}
+          >
+            <Text color="white" fontSize={16} fontWeight="600">
+              {stateRef.current.text}
+            </Text>
+          </VStack>
+        </AnimatedVStack>
       )}
     </AbsoluteVStack>
   )

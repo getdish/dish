@@ -1,4 +1,4 @@
-import { HStack, Spacer, StackProps, Text } from '@dish/ui'
+import { Spacer, StackProps, Text } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { flatButtonStyle } from '../baseButtonStyle'
@@ -27,6 +27,7 @@ export const DishViewButton = memo(
         paddingVertical={8}
         paddingHorizontal={12}
         noText
+        alignItems="center"
         borderRadius={100}
         tag={{ type: 'dish', name }}
         {...rest}
@@ -39,7 +40,7 @@ export const DishViewButton = memo(
             <Spacer size="xs" />
           </>
         )}
-        <Text fontSize={14} opacity={0.8}>
+        <Text color="rgba(0,0,0,0.75)" fontSize={14} opacity={0.8}>
           {name}
         </Text>
       </LinkButton>

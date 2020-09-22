@@ -165,7 +165,6 @@ module.exports = function getWebpackConfig(
               {
                 test: /\.(png|svg|jpe?g|gif)$/,
                 use: [
-                  'cache-loader',
                   {
                     loader: 'url-loader',
                     options: {

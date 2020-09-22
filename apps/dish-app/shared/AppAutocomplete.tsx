@@ -3,6 +3,7 @@ import { query, resolved } from '@dish/graph'
 import { Plus } from '@dish/react-feather'
 import {
   AbsoluteVStack,
+  AnimatedVStack,
   HStack,
   Spacer,
   Text,
@@ -12,7 +13,7 @@ import {
 import { useStore } from '@dish/use-store'
 // react native fix
 import FlexSearch from 'flexsearch/flexsearch.js'
-import { debounce, uniqBy } from 'lodash'
+import { uniqBy } from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
 import { Image, Keyboard, ScrollView } from 'react-native'
 
@@ -40,7 +41,6 @@ import { NavigableTag } from './state/NavigableTag'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { tagDisplayName } from './state/tagDisplayName'
-import { AnimatedVStack } from './views/AnimatedVStack'
 import { BlurView } from './views/BlurView'
 import { SmallCircleButton } from './views/ui/CloseButton'
 import { LinkButton } from './views/ui/LinkButton'
