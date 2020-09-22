@@ -150,6 +150,11 @@ export const LoginRegisterForm = ({
 
           <SmallButton
             alignSelf="flex-end"
+            backgroundColor="#222"
+            borderColor="#444"
+            textStyle={{
+              color: '#fff',
+            }}
             onPress={async () => {
               if (isRegister) {
                 const result = await om.actions.user.register({

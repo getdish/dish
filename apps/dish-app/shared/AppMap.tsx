@@ -264,8 +264,6 @@ const AppMapContent = memo(function AppMap({
         right: 10,
       }
 
-  console.log('padding', drawerStore.currentSnapPoint, padding)
-
   const features = useMemo(() => getRestaurantMarkers(restaurants), [key])
 
   return (

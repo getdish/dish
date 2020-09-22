@@ -30,6 +30,7 @@ class AppleAuthController {
   }
 
   static authCallback = async (req: Request, res: Response) => {
+    console.log('sign in response', req.body)
     let { user: reqUser, id_token, code, state, error } = req.body
 
     if (!reqUser) {

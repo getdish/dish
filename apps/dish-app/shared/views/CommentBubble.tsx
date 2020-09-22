@@ -13,6 +13,7 @@ export const CommentBubble = ({
   text,
   before,
   after,
+  afterName,
   ...rest
 }: Omit<StackProps, 'children'> & {
   name?: string
@@ -20,6 +21,7 @@ export const CommentBubble = ({
   before?: any
   after?: any
   ellipseContentAbove?: number
+  afterName?: any
   expandable?: boolean
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -38,7 +40,7 @@ export const CommentBubble = ({
           <Circle size={18} marginRight={4} marginTop={2}>
             <User color="#999" size={12} />
           </Circle>
-          <HStack maxWidth="90%" marginBottom={-3}>
+          <HStack alignItems="center" maxWidth="90%" marginBottom={-3}>
             <Link
               ellipse
               backgroundColor={bgLight}
@@ -52,6 +54,7 @@ export const CommentBubble = ({
             >
               {name}
             </Link>
+            {afterName}
           </HStack>
         </HStack>
       )}

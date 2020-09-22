@@ -153,6 +153,7 @@ export type HomeStateItemRestaurant = HomeStateItemBase & {
 export type HomeStateItemUser = HomeStateItemBase & {
   type: 'user'
   username: string
+  results: RestaurantOnlyIds[]
 }
 
 export type HomeStateItemGallery = HomeStateItemBase & {

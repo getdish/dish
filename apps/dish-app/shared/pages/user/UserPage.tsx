@@ -1,15 +1,29 @@
 import { graphql, query } from '@dish/graph'
-import { Circle, Divider, HStack, Spacer, Text, VStack } from '@dish/ui'
-import React from 'react'
+import {
+  Circle,
+  Divider,
+  HStack,
+  LoadingItem,
+  LoadingItems,
+  Spacer,
+  Text,
+  VStack,
+} from '@dish/ui'
+import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image } from 'react-native'
 
 import { StackItemProps } from '../../AppStackView'
+import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { HomeStateItemUser } from '../../state/home-types'
+import { useOvermind } from '../../state/om'
+import { ContentScrollView } from '../../views/ContentScrollView'
 import { NotFoundPage } from '../../views/NotFoundPage'
+import { StackDrawer } from '../../views/StackDrawer'
+import { SmallButton } from '../../views/ui/SmallButton'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { avatar } from '../search/avatar'
-import { ContentScrollView } from './ContentScrollView'
-import { StackDrawer } from './StackDrawer'
+
+type UserTab = 'vote' | 'review'
 
 const useUserQuery = (username: string) => {
   return query.user({
@@ -22,69 +36,146 @@ const useUserQuery = (username: string) => {
   })[0]
 }
 
-export default function HomePageUserContainer(
+export default function UserPageContainer(
   props: StackItemProps<HomeStateItemUser>
 ) {
+  const [tab, setTab] = useState<UserTab>('review')
   return (
     <StackDrawer closable title={`${props.item.username} | Dish food reviews`}>
-      <HomePageUser {...props} />
+      <Suspense
+        fallback={
+          <VStack height={95}>
+            <LoadingItem />
+          </VStack>
+        }
+      >
+        <UserHeader {...props} setTab={setTab} tab={tab} />
+      </Suspense>
+      <UserPageContent {...props} tab={tab} />
     </StackDrawer>
   )
 }
 
-const HomePageUser = graphql(function HomePageUser({
-  item,
-}: StackItemProps<HomeStateItemUser>) {
-  const user = useUserQuery(item?.username ?? '')
+const UserPageContent = graphql(
+  ({
+    item,
+    tab,
+    isActive,
+  }: StackItemProps<HomeStateItemUser> & {
+    tab: UserTab
+  }) => {
+    const om = useOvermind()
+    const user = useUserQuery(item?.username ?? '')
+    const reviews = user
+      .reviews({
+        limit: 50,
+      })
+      .map((x) => ({
+        id: x.id,
+        restaurantId: x.restaurant.id,
+        restaurantSlug: x.restaurant.slug,
+        type: !!x.text ? 'review' : 'vote',
+      }))
 
-  if (!user) {
-    return <NotFoundPage />
-  }
+    useEffect(() => {
+      if (!reviews.length || reviews[0] === null) return
+      const userState = om.state.home.allStates[item.id] as HomeStateItemUser
+      console.log('we here', item.id, userState)
+      if (userState) {
+        om.actions.home.updateHomeState({
+          ...userState,
+          results: reviews.map(({ restaurantId, restaurantSlug }) => {
+            return {
+              id: restaurantId,
+              slug: restaurantSlug,
+            }
+          }),
+        })
+      }
+    }, [reviews])
 
-  return (
-    <ContentScrollView paddingTop={0}>
-      <VStack width="100%" padding={18} paddingRight={16}>
-        <HStack position="relative">
-          <Circle size={64}>
-            <Image source={avatar} />
-          </Circle>
-          <Spacer size={20} />
-          <VStack flex={1}>
-            <Text fontSize={28} fontWeight="bold" paddingRight={30}>
-              {user.username ?? ''}
-            </Text>
-            <Spacer size={4} />
-            <div />
-            <Spacer size={8} />
-            <Text color="#777" fontSize={13}>
-              {user.username}
-            </Text>
-            <Spacer size={12} />
+    if (!user) {
+      return <NotFoundPage />
+    }
+
+    const hasReviews = !!reviews.length && reviews[0].id !== null
+
+    return (
+      <ContentScrollView paddingTop={0}>
+        <VStack spacing="xl" paddingHorizontal="2.5%" paddingVertical={20}>
+          <VStack>
+            <Suspense fallback={<LoadingItems />}>
+              {!hasReviews && <Text>No reviews yet...</Text>}
+              {hasReviews &&
+                reviews
+                  .filter((x) => x.type === tab)
+                  .map(({ id }) => (
+                    <RestaurantReview showRestaurant key={id} reviewId={id} />
+                  ))}
+            </Suspense>
           </VStack>
-        </HStack>
-        <Divider />
-      </VStack>
-
-      <VStack spacing="xl" paddingHorizontal="2.5%">
-        <VStack>
-          <UserReviewsList username={item?.username ?? ''} />
         </VStack>
-      </VStack>
-    </ContentScrollView>
-  )
-})
+      </ContentScrollView>
+    )
+  }
+)
 
-const UserReviewsList = graphql(({ username }: { username: string }) => {
-  const user = useUserQuery(username)
-  const reviews =
-    user.reviews({
-      limit: 20,
-    }) ?? []
-  return (
-    <>
-      {!reviews.length && <Text>No reviews yet...</Text>}
-      {!!reviews.length &&
-        reviews.map((review) => <RestaurantReview reviewId={review.id} />)}
-    </>
+const UserHeader = memo(
+  graphql(
+    ({
+      item,
+      tab,
+      setTab,
+    }: StackItemProps<HomeStateItemUser> & {
+      setTab: Function
+      tab: UserTab
+    }) => {
+      const user = useUserQuery(item?.username ?? '')
+      return (
+        <VStack maxWidth="100%" overflow="hidden" width="100%">
+          <VStack padding={18}>
+            <HStack alignItems="center" flex={1} position="relative">
+              <Circle size={94} backgroundColor="red" marginVertical={-10}>
+                <Image
+                  source={{ uri: avatar }}
+                  style={{ backgroundColor: 'red', width: 94, height: 94 }}
+                />
+              </Circle>
+              <Spacer size={20} />
+              <VStack flex={1}>
+                <Text fontSize={28} fontWeight="bold" paddingRight={30}>
+                  {user.username ?? ''}
+                </Text>
+                <Spacer size={4} />
+                <Text color="#777" fontSize={13}>
+                  {user.username}
+                </Text>
+                <Spacer size={12} />
+              </VStack>
+
+              <HStack spacing>
+                <SmallButton
+                  isActive={tab === 'review'}
+                  onPress={() => {
+                    setTab('review')
+                  }}
+                >
+                  Reviews
+                </SmallButton>
+                <SmallButton
+                  isActive={tab === 'vote'}
+                  onPress={() => {
+                    setTab('vote')
+                  }}
+                >
+                  Votes
+                </SmallButton>
+              </HStack>
+            </HStack>
+            <Divider />
+          </VStack>
+        </VStack>
+      )
+    }
   )
-})
+)
