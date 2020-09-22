@@ -10,6 +10,7 @@ export function createAutocomplete(
     ...item,
   }
   return {
+    is: 'autocomplete',
     ...next,
     tagId: getTagId(next),
   }

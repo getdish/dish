@@ -89,7 +89,11 @@ export const Map = (props: MapProps) => {
   const getProps = useGet(props)
 
   // this is inside memo...
-  const setActive = (map: mapboxgl.Map, internalId: number) => {
+  const setActive = (
+    map: mapboxgl.Map,
+    internalId: number,
+    shouldCallback = true
+  ) => {
     const { onSelect, features } = getProps()
     if (!features.length) return
     const cur = internal.current.active
@@ -109,7 +113,9 @@ export const Map = (props: MapProps) => {
       // ])
       const feature = features[+internalId]
       if (feature) {
-        onSelect?.(feature.properties.id)
+        if (shouldCallback) {
+          onSelect?.(feature.properties.id)
+        }
       }
     }
   }
@@ -488,7 +494,7 @@ export const Map = (props: MapProps) => {
     if (!selected) return
     const index = features.findIndex((x) => x.properties.id === selected)
     mapSetIconSelected(map, index)
-    setActive(map, index)
+    setActive(map, index, false)
   }, [map, features, selected])
 
   // hovered

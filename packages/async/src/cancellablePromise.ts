@@ -10,7 +10,7 @@ export class CancellablePromise<T> extends Promise<T> {
       reject: (reason?: any) => void
     ) => void
   ) {
-    super(executor)
+    super(executor as any)
   }
 }
 

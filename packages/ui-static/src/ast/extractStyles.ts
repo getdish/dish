@@ -610,6 +610,9 @@ export function extractStyles(
           for (const { name, value } of styleExpansions) {
             const expandedStyle = getStyleExpansion(name, value)
             if (expandedStyle) {
+              if (shouldPrintDebug) {
+                console.log('expandedStyle', expandedStyle)
+              }
               Object.assign(viewStyles, expandedStyle)
             }
           }
@@ -740,7 +743,8 @@ export function extractStyles(
             ...viewStyles,
             ...record.alternateStyles,
           })
-          if (shouldPrintDebug) console.log('record', record, viewStyles)
+          if (shouldPrintDebug)
+            console.log('record', record, viewStyles, defaultStyle)
           const cCN = consInfo.map((x) => x.identifier).join(' ')
           const aCN = altInfo.map((x) => x.identifier).join(' ')
           if (consInfo.length && altInfo.length) {

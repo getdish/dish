@@ -19,7 +19,6 @@ export const AppMapControlsUnderlay = memo(() => {
   const safeArea = useSafeArea()
   return (
     <AbsoluteVStack
-      className="untouchable" // safari
       zIndex={isSmall ? zIndexDrawer - 1 : zIndexDrawer + 1}
       marginLeft="auto"
       fullscreen
@@ -40,7 +39,6 @@ export const AppMapControlsUnderlay = memo(() => {
         })}
         zIndex={20000000}
         alignItems="center"
-        pointerEvents="none"
         justifyContent="center"
       >
         <HStack
@@ -51,13 +49,13 @@ export const AppMapControlsUnderlay = memo(() => {
           alignItems="center"
           justifyContent="center"
           flexWrap="wrap"
-          overflow="hidden"
+          pointerEvents="none"
+          // overflow="hidden"
           spacing={5}
         >
           {hasMovedMap && (
             <OverlayLinkButton
               Icon={RefreshCcw}
-              pointerEvents="auto"
               alignItems="center"
               justifyContent="center"
               onPress={() => {
@@ -72,7 +70,6 @@ export const AppMapControlsUnderlay = memo(() => {
             om.state.home.currentStateType === 'search' && (
               <OverlayLinkButton
                 Icon={Map}
-                pointerEvents="auto"
                 alignItems="center"
                 justifyContent="center"
                 onPress={() => {

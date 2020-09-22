@@ -213,7 +213,8 @@ export const AppSearchInput = memo(() => {
           <VStack
             // @ts-ignore
             ref={searchInputContainer}
-            flex={1}
+            minWidth="50%"
+            flex={2}
             height={searchBarHeight - 8}
           >
             <ScrollView
@@ -221,6 +222,7 @@ export const AppSearchInput = memo(() => {
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{
                 alignItems: 'center',
+                minWidth: '100%',
               }}
               style={{
                 minWidth: '100%',
@@ -231,6 +233,7 @@ export const AppSearchInput = memo(() => {
               <HStack
                 alignSelf="center"
                 alignItems="center"
+                minWidth="100%"
                 height={searchBarHeight - 23}
               >
                 <HomeSearchBarTags input={input} />

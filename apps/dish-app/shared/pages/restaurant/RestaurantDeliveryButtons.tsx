@@ -68,6 +68,7 @@ const RestaurantDeliveryButton = ({
       paddingHorizontal={4}
       marginHorizontal={-4}
       borderRadius={100}
+      alignItems="center"
       hoverStyle={{
         backgroundColor: bgLight,
       }}

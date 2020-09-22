@@ -45,3 +45,5 @@ export const getBreadcrumbs = memoize((states: HomeStateItem[]) => {
   }
   return crumbs
 })
+
+window['getBreadcrumbs'] = getBreadcrumbs

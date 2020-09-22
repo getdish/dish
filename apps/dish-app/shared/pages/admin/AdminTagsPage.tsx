@@ -323,6 +323,8 @@ const TagListItem = graphql(
   >) => {
     if (tagId) {
       const tag = queryTag(tagId)
+      // be sure to get id
+      tag.id
       const text = `${tag.icon ?? ''} ${tag.name}`.trim()
       return (
         <AdminListItem

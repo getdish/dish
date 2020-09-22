@@ -14,6 +14,7 @@ export type RestaurantRatingViewProps = Omit<
 > & {
   restaurantSlug: string
   rating?: number
+  subtle?: boolean
 }
 
 export default memo(

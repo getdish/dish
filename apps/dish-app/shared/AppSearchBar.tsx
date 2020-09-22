@@ -241,6 +241,9 @@ const HomeSearchBar = memo(() => {
           <Spacer size={6} />
           <VStack
             className="ease-in-out"
+            overflow="hidden"
+            minWidth={310}
+            width="19%"
             maxWidth={
               isSmall
                 ? focus === 'search'

@@ -9,6 +9,7 @@ import {
   TableRow,
   Text,
   VStack,
+  prevent,
 } from '@dish/ui'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
@@ -16,6 +17,7 @@ import { ScrollView } from 'react-native'
 import { bgLight } from '../../colors'
 import { zIndexGallery } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { Table, TableHeadRow, TableHeadText } from '../../views/ui/Table'
@@ -40,18 +42,22 @@ export default memo(
           alignItems="center"
           justifyContent="center"
           zIndex={zIndexGallery}
+          onPress={() => {
+            omStatic.actions.home.up()
+          }}
         >
           <VStack
-            width="80%"
+            width="90%"
             backgroundColor="#fff"
             borderRadius={15}
-            maxWidth={380}
+            maxWidth={390}
             maxHeight={480}
             alignItems="center"
             position="relative"
             overflow="hidden"
             shadowColor="rgba(0,0,0,0.5)"
             shadowRadius={40}
+            onPress={prevent}
           >
             <VStack width="100%" height="100%" flex={1}>
               <AbsoluteVStack top={5} right={26}>

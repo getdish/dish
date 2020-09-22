@@ -11,9 +11,17 @@ import { HistoryItem, NavigateItem } from '@dish/router'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
 import _, { clamp, cloneDeep, findLast, isPlainObject, last } from 'lodash'
-import { Action, AsyncAction, derived } from 'overmind'
+import {
+  Action,
+  AsyncAction,
+  Config,
+  IConfig,
+  IContext,
+  derived,
+} from 'overmind'
 import { Keyboard } from 'react-native'
 
+import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
 import { addTagsToCache, allTags } from './allTags'
 import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
 import { getActiveTags } from './getActiveTags'
@@ -175,9 +183,17 @@ const refresh: AsyncAction = async (om) => {
   om.state.home.refreshCurrentPage = Date.now()
 }
 
+const getUpType = (om: IContext<Config>) => {
+  const curType = om.state.home.currentState.type
+  const crumbs = getBreadcrumbs(om.state.home.states)
+  if (!isBreadcrumbState(curType)) {
+    return _.last(crumbs)?.type
+  }
+  return findLast(crumbs, (x) => x.type !== curType)?.type ?? 'home'
+}
+
 const up: Action = (om) => {
-  const prev = om.state.home.previousState?.type
-  om.actions.home.popTo(prev ?? 'home')
+  om.actions.home.popTo(getUpType(om))
 }
 
 const popBack: Action = (om) => {
@@ -196,7 +212,8 @@ const popTo: Action<HomeStateItem['type']> = (om, type) => {
   // we can just use router history directly, no? and go back?
   if (
     om.state.home.previousState?.type === type &&
-    router.prevHistory?.name === type
+    router.prevHistory?.name === type &&
+    router.curPage?.type !== 'pop'
   ) {
     router.back()
     return
@@ -287,8 +304,7 @@ const runSearch: AsyncAction<{
   // prevent duplicate searches
   const searchKey = stringify(searchArgs)
   if (!opts.force && searchKey === lastSearchKey) {
-    console.log('same searchkey as last, ignore')
-    return
+    console.warn('same saerch again?')
   }
 
   // fetch
@@ -566,6 +582,14 @@ const pushHomeState: AsyncAction<
       nextState = {
         status: 'loading',
         results: [],
+        // if we have a previous existing one thats valid, use it
+        ...(prev.type === 'search' &&
+          getBreadcrumbs(om.state.home.states).some(
+            (x) => x.id === prev.id
+          ) && {
+            status: prev.status,
+            results: prev.results,
+          }),
         username,
         activeTagIds,
         center: prev.mapAt?.center ?? prev.center,

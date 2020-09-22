@@ -169,6 +169,7 @@ export type HomeStateItemReview = HomeStateItemBase & {
 export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>
 
 export type AutocompleteItem = {
+  is: 'autocomplete'
   id?: string
   icon?: string
   name: string

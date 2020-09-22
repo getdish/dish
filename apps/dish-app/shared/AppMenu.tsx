@@ -28,6 +28,9 @@ const MenuLinkButton = (props: LinkButtonProps) => {
     <LinkButton
       width="100%"
       {...flatButtonStyle}
+      hoverStyle={{
+        transform: [{ scale: 1.03 }],
+      }}
       paddingVertical={8}
       onPressOut={() => {
         if (omStatic.state.home.showUserMenu) {

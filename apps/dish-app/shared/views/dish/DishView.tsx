@@ -12,6 +12,14 @@ import { Squircle } from '../ui/Squircle'
 import { DishRatingView } from './DishRatingView'
 import { getDishBackgroundColor } from './getDishBackgroundColor'
 
+// avoid too many different image sizes
+const getRoundedDishViewSize = (size: number) => {
+  if (size < 180) {
+    return [160 * 0.9, 160] as const
+  }
+  return [size * 0.9, size] as const
+}
+
 export const DishView = memo(
   ({
     dish,
@@ -40,7 +48,11 @@ export const DishView = memo(
 
     const width = size * 0.9
     const height = size
-    const imageUrl = getImageUrl(dish.image, width, height, 100)
+    const imageUrl = getImageUrl(
+      dish.image,
+      ...getRoundedDishViewSize(size),
+      100
+    )
     const borderRadius = size * 0.1
     const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
     const isFallback = _isFallback ?? dish.isFallback
@@ -61,7 +73,7 @@ export const DishView = memo(
         noText
         hoverStyle={{
           zIndex: 1000000,
-          transform: [{ scale: 1.02 }],
+          transform: [{ scale: 1.03 }],
         }}
         onHoverIn={() => setIsHovered(true)}
         onHoverOut={() => setIsHovered(false)}
@@ -117,7 +129,7 @@ export const DishView = memo(
               alignItems="flex-end"
               justifyContent="center"
               {...(isHovered && {
-                transform: [{ scale: 1.1 }],
+                transform: [{ scale: 1.05 }],
                 zIndex: 100000,
               })}
             >
@@ -135,10 +147,13 @@ export const DishView = memo(
                 zIndex={1000}
                 bottom={-8}
                 {...(isHovered && {
-                  bottom: 0,
                   backgroundColor: '#000',
                   shadowColor: 'rgba(0,0,0,0.2)',
-                  transform: [{ scale: 1.1 }, { skewX: '-12deg' }],
+                  transform: [
+                    { scale: 1.05 },
+                    { skewX: '-12deg' },
+                    { translateY: -10 },
+                  ],
                 })}
               >
                 <Text

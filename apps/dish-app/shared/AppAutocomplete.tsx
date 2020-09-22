@@ -11,8 +11,6 @@ import {
   useDebounce,
 } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-// react native fix
-import FlexSearch from 'flexsearch/flexsearch.js'
 import { uniqBy } from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
 import { Image, Keyboard, ScrollView } from 'react-native'
@@ -26,6 +24,7 @@ import {
   searchBarHeight,
   searchBarTopOffset,
 } from './constants'
+import { fuzzySearch } from './helpers/fuzzySearch'
 import { getFuzzyMatchQuery } from './helpers/getFuzzyMatchQuery'
 import { getWindowHeight } from './helpers/getWindow'
 import {
@@ -44,10 +43,6 @@ import { tagDisplayName } from './state/tagDisplayName'
 import { BlurView } from './views/BlurView'
 import { SmallCircleButton } from './views/ui/CloseButton'
 import { LinkButton } from './views/ui/LinkButton'
-
-const flexSearch = FlexSearch.create<number>({
-  profile: 'speed',
-})
 
 let curPagePos = { x: 0, y: 0 }
 
@@ -115,28 +110,36 @@ const HomeAutocompleteEffects = memo(
       om.actions.home.setShowAutocomplete(false)
     }, [curPage])
 
-    const {
-      showAutocomplete,
-      locationSearchQuery,
-      currentStateSearchQuery,
-    } = om.state.home
-    const query =
-      showAutocomplete === 'location'
-        ? locationSearchQuery
-        : currentStateSearchQuery
-
     useEffect(() => {
-      if (showAutocomplete) {
-        onChangeStatus(true)
-        const cancel = runAutocomplete(showAutocomplete, query, () => {
-          onChangeStatus(false)
-        })
-        return () => {
+      let cancel: Function | null = null
+
+      const dispose = om.reaction(
+        (state) => {
+          return state.home.showAutocomplete === 'location'
+            ? state.home.locationSearchQuery
+            : state.home.currentStateSearchQuery
+        },
+        (query) => {
           cancel?.()
-          onChangeStatus(false)
+          if (om.state.home.showAutocomplete) {
+            onChangeStatus(true)
+            cancel = runAutocomplete(
+              om.state.home.showAutocomplete,
+              query,
+              () => {
+                onChangeStatus(false)
+              }
+            )
+          }
         }
+      )
+
+      return () => {
+        dispose()
+        cancel?.()
+        onChangeStatus(false)
       }
-    }, [query])
+    }, [])
 
     return null
   }
@@ -301,6 +304,7 @@ const AutocompleteResults = memo(() => {
           <React.Fragment key={`${result.tagId}${index}`}>
             <LinkButton
               className="no-transition"
+              pointerEvents="auto"
               onPressOut={() => {
                 hideAutocomplete()
                 if (showLocation) {
@@ -483,7 +487,6 @@ function runAutocomplete(
   const om = omStatic
 
   if (searchQuery === '') {
-    console.log('clear')
     if (showAutocomplete === 'location') {
       om.actions.home.setLocationAutocompleteResults(null)
     } else if (showAutocomplete === 'search') {
@@ -498,7 +501,7 @@ function runAutocomplete(
   let results: AutocompleteItem[] = []
 
   return series([
-    () => fullyIdle({ max: 100, min: 50 }),
+    () => fullyIdle({ max: 350, min: 200 }),
     async () => {
       if (showAutocomplete === 'location') {
         const locationResults = await searchLocations(searchQuery, state.center)
@@ -514,36 +517,22 @@ function runAutocomplete(
           state.span!
         )
       }
-      console.log('runAutocomplete.results', results)
+      console.log('runAutocomplete.results', searchQuery, results)
     },
-    () => fullyIdle({ max: 30 }),
+    () => {
+      // allows cancel
+      return fullyIdle({ max: 30 })
+    },
     async () => {
       let matched: AutocompleteItem[] = []
-
       if (results.length) {
-        flexSearch.clear()
-        let foundIndices: number[] = []
-        for (const [index, res] of results.entries()) {
-          if (!res.name) {
-            continue
-          }
-          // for some reason flexsearch not pulling exact matches to front?
-          if (res.name.toLowerCase() === searchQuery) {
-            foundIndices.unshift(index)
-            continue
-          }
-          const searchable = `${res.name} ${res.description ?? ''}`.trim()
-          flexSearch.add(index, searchable)
-        }
-        foundIndices = [
-          ...foundIndices,
-          ...(await flexSearch.search(searchQuery, 10)),
-        ]
-        matched = foundIndices.map((index) => results[index])
+        matched = await fuzzySearch({
+          items: results,
+          query: searchQuery,
+          keys: ['name', 'description'],
+        })
       }
-
       matched = uniqBy([...matched, ...results], (x) => x.name)
-
       if (showAutocomplete === 'location') {
         om.actions.home.setLocationAutocompleteResults(matched)
       } else if (showAutocomplete === 'search') {
@@ -583,37 +572,28 @@ function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {
           limit: 3,
         })
         .map((r) =>
-          createAutocomplete({
-            id: r.id,
-            name: r.name,
-            type: 'country',
-            icon: r.icon ?? '🌎',
-            description: 'Cuisine',
-          })
+          'autocomplete' in r
+            ? r
+            : createAutocomplete({
+                id: r.id,
+                name: r.name,
+                type: 'country',
+                icon: r.icon ?? '🌎',
+                description: 'Cuisine',
+              })
         ),
     ]
   })
 }
 
 function searchDishTags(searchQuery: string) {
-  const search = (whereCondition: any) => {
-    return query.tag({
-      where: {
-        ...whereCondition,
-        type: {
-          _eq: 'dish',
-        },
-      },
-      limit: 5,
-    })
-  }
   return [
-    ...search({
+    ...searchDishes({
       name: {
-        _ilike: searchQuery,
+        _ilike: `${searchQuery}%`,
       },
     }),
-    ...search({
+    ...searchDishes({
       name: {
         _ilike: getFuzzyMatchQuery(searchQuery),
       },
@@ -627,4 +607,16 @@ function searchDishTags(searchQuery: string) {
       description: r.parent?.name ?? '',
     })
   )
+}
+
+const searchDishes = (whereCondition: any, limit = 5) => {
+  return query.tag({
+    where: {
+      ...whereCondition,
+      type: {
+        _eq: 'dish',
+      },
+    },
+    limit,
+  })
 }

@@ -35,6 +35,7 @@
     "expo:check-deps": "expo-yarn-workspaces check-workspace-dependencies"
   },
   "resolutions": {
+    "typescript": "4.1.0-beta",
     "terser": "^5.3.0",
     "lodash": "4.17.20",
     "resolve": "1.17.0",
@@ -85,7 +86,7 @@
     "react-refresh": "0.0.0-experimental-94c0244ba",
     "ts-node": "9.0.0",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "4.0.3",
+    "typescript": "4.1.0-beta",
     "typescript-monorepo-toolkit": "^0.1.1",
     "ultra-runner": "^3.5.0"
   },

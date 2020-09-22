@@ -188,10 +188,10 @@ export default memo(function HomePage(props: Props) {
               top={-120}
               transform={[{ rotate: '-2deg' }]}
             >
-              {/* <LinearGradient
+              <LinearGradient
                 style={[StyleSheet.absoluteFill]}
                 colors={[bgLightHover, '#fff']}
-              /> */}
+              />
             </AbsoluteVStack>
             <VStack
               flex={1}
@@ -370,11 +370,10 @@ const TopDishesCuisineItem = memo(
                 <Text
                   position="absolute"
                   top={14}
-                  right={4}
-                  marginLeft={1}
+                  marginLeft={2}
                   marginTop={2}
                   fontSize={26}
-                  lineHeight={0}
+                  lineHeight={5}
                 >
                   {' '}
                   {country.icon}
@@ -486,18 +485,18 @@ const TopDishesTrendingRestaurants = memo(
           .slice(0, 4)
           .map((restaurant, index) => {
             return (
-              <HStack key={restaurant.name} maxWidth="100%">
+              <HStack key={restaurant.name} maxWidth="100%" minWidth={200}>
                 <RestaurantButton
-                  trending={
-                    (index % 5) - 1 == 0
-                      ? 'neutral'
-                      : index % 2 == 0
-                      ? 'up'
-                      : 'down'
-                  }
+                  color={`rgba(0,0,0,${Math.max(0.5, 1 - (index + 1) / 5)})`}
+                  // trending={
+                  //   (index % 5) - 1 == 0
+                  //     ? 'neutral'
+                  //     : index % 2 == 0
+                  //     ? 'up'
+                  //     : 'down'
+                  // }
                   subtle
                   restaurantSlug={restaurant.slug ?? ''}
-                  maxWidth={100}
                   onHoverIn={() => {
                     lastHoveredId = restaurant.id
                     setHoveredRestaurant({

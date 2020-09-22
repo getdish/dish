@@ -27,6 +27,7 @@ export const RestaurantDishPhotos = memo(
       const restaurant = useRestaurantQuery(restaurantSlug)
       const photos = restaurantPhotosForCarousel({ restaurant, max: 30 })
       const spacing = 12
+      const [hasScrolled, setHasScrolled] = useState(false)
       const [selected, setSelected] = useState(
         selectable
           ? defaultSelectedId
@@ -37,10 +38,20 @@ export const RestaurantDishPhotos = memo(
           : 1
       )
 
+      const allPhotos = hasScrolled ? photos : photos.slice(0, 6)
+
       return (
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
+          onScroll={
+            hasScrolled
+              ? () => {
+                  setHasScrolled(true)
+                }
+              : null
+          }
+          scrollEventThrottle={200}
           style={{
             width: isWeb ? 'calc(100% + 30px)' : '98%',
             marginHorizontal: -15,
@@ -53,7 +64,7 @@ export const RestaurantDishPhotos = memo(
               alignItems="center"
               justifyContent="center"
             >
-              {photos.map((photo, index) => {
+              {allPhotos.map((photo, index) => {
                 return (
                   <DishView
                     key={index}
