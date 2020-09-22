@@ -16,6 +16,7 @@ type Coord = [number, number]
 export const CITY_LIST = [
   'San Francisco, CA',
   'Los Angeles, CA',
+  'San Jose, CA',
   'Chicago, Illinois',
   'Tuscon, Arizona',
   'Istanbul, Turkey',
