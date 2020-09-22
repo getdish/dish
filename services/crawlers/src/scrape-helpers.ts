@@ -93,7 +93,7 @@ export async function latestScrapeForRestaurant(
   source: string
 ) {
   const result = await db.query(`
-    SELECT *, st_asgeojson(location) as location
+    SELECT *
     FROM scrape
       WHERE restaurant_id = '${restaurant.id}'
       AND source = '${source}'
@@ -109,7 +109,6 @@ export async function latestScrapeForRestaurant(
     if (process.env.NODE_ENV != 'test') {
       console.debug(`${source} scrape found for: ` + restaurant.name)
     }
-    result.rows[0].location = parseLocation(result.rows[0].location)
     return result.rows[0] as Scrape
   }
 }
