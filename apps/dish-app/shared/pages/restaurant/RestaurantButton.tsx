@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { HStack, Text } from '@dish/ui'
+import { HStack, Spacer, Text, VStack } from '@dish/ui'
 import { default as React, memo } from 'react'
 
 import { isWeb } from '../../constants'
@@ -18,6 +18,7 @@ export const RestaurantButton = memo(
       rank,
       trending,
       subtle,
+      color,
       onHoverIn,
       ...props
     }: {
@@ -42,14 +43,13 @@ export const RestaurantButton = memo(
           zIndex={1}
           padding={7}
           borderRadius={6}
+          noText
           hoverStyle={{
             borderColor: '#eee',
             shadowColor: 'rgba(0,0,0,0.1)',
             shadowRadius: 5,
             zIndex: 2,
           }}
-          minWidth="80%"
-          paddingRight={32}
           {...props}
           name="restaurant"
           params={{ slug: restaurant.slug }}
@@ -77,22 +77,21 @@ export const RestaurantButton = memo(
               ellipse
               fontSize={16}
               fontWeight={active ? '600' : '400'}
-              color={active ? '#000' : '#444'}
-              marginRight={25}
+              color={color ?? (active ? '#000' : '#444')}
+              // marginRight={25}
             >
               {typeof rank === 'number' ? `${rank}. ` : ''}
               {restaurant.name}
             </Text>
-            <RestaurantRatingView
-              size="xs"
-              restaurantSlug={restaurant.slug ?? ''}
-              rating={restaurant.rating}
-              // @ts-ignore
-              position="absolute"
-              top={-7}
-              right={isWeb ? -12 : -30}
-              subtle={subtle}
-            />
+            <Spacer size="sm" />
+            <VStack marginVertical={subtle ? 0 : -6}>
+              <RestaurantRatingView
+                size="xs"
+                restaurantSlug={restaurant.slug ?? ''}
+                rating={restaurant.rating}
+                subtle={subtle}
+              />
+            </VStack>
           </HStack>
         </LinkButton>
       )

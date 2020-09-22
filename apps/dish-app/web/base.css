@@ -419,3 +419,7 @@ input:-webkit-autofill:active  {
 .underline-link:hover {
   text-decoration: underline;
 }
+
+.nobreak {
+  white-space: nowrap;
+}

@@ -42,7 +42,13 @@ export const RestaurantOverview = memo(
                       opacity={i === 0 ? 1 : 0.7}
                       ellipse={i !== 0}
                     >
-                      {item.sentence.slice(0, 150).replace(/\n/g, ' ').trim()}
+                      {item.sentence
+                        .replace(/\n/g, ' ')
+                        .replace(/[^\\/$a-z0-9 \,\.]+/gi, '')
+                        .replace(/\s{2,}/g, ' ')
+                        .toLowerCase()
+                        .trim()
+                        .slice(0, 150)}
                     </Paragraph>
                   </HStack>
                 </React.Fragment>
