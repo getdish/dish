@@ -3,6 +3,7 @@ import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import { Activity } from '@dish/react-feather'
 import {
   AbsoluteVStack,
+  Divider,
   HStack,
   Spacer,
   StackProps,
@@ -226,7 +227,7 @@ const RestaurantListItemContent = memo(
               params={{ slug: restaurantSlug }}
             >
               <VStack paddingTop={20}>
-                <HStack marginLeft={-8} alignItems="center" maxWidth="40%">
+                <HStack marginLeft={-4} alignItems="center" maxWidth="40%">
                   <VStack position="relative" marginVertical={-14} zIndex={10}>
                     <RestaurantUpVoteDownVote
                       score={score}
@@ -235,7 +236,7 @@ const RestaurantListItemContent = memo(
                       activeTagIds={tagIds ?? {}}
                     />
                   </VStack>
-                  <Spacer />
+                  <Spacer size="sm" />
 
                   {/* SECOND LINK WITH actual <a /> */}
                   <Text
@@ -337,6 +338,27 @@ const RestaurantListItemContent = memo(
                 onPress={reviewDisplayStore.toggleShowComments}
                 spacing="lg"
               >
+                {!!price_range && (
+                  <Text
+                    fontSize={14}
+                    fontWeight="500"
+                    color={`rgba(0,0,0,0.6)`}
+                  >
+                    {price_range}
+                  </Text>
+                )}
+
+                {!!opening_hours && (
+                  <Link
+                    name="restaurantHours"
+                    params={{ slug: restaurantSlug }}
+                    color="rgba(0,0,0,0.6)"
+                    ellipse
+                  >
+                    {opening_hours}
+                  </Link>
+                )}
+
                 {!!restaurant.address && (
                   <RestaurantAddress
                     size="sm"
@@ -344,19 +366,6 @@ const RestaurantListItemContent = memo(
                     address={restaurant.address}
                   />
                 )}
-
-                <Text fontSize={14} color={`rgba(0,0,0,0.6)`}>
-                  {price_range}
-                </Text>
-
-                <Link
-                  name="restaurantHours"
-                  params={{ slug: restaurantSlug }}
-                  color={open_color}
-                  ellipse
-                >
-                  {opening_hours}
-                </Link>
               </HStack>
 
               {/* <HStack position="relative">
@@ -419,6 +428,7 @@ const RestaurantListItemContent = memo(
 
           <Suspense fallback={null}>
             <HStack
+              width="100%"
               flex={1}
               alignItems="center"
               flexWrap="wrap"
@@ -460,12 +470,22 @@ const RestaurantListItemContent = memo(
               />
 
               <Spacer />
-              <VStack flex={1} />
 
-              <RestaurantSourcesBreakdownRow
-                size="sm"
-                restaurantId={restaurantId}
-                restaurantSlug={restaurantSlug}
+              <VStack>
+                <RestaurantSourcesBreakdownRow
+                  size="sm"
+                  restaurantId={restaurantId}
+                  restaurantSlug={restaurantSlug}
+                />
+              </VStack>
+
+              <Spacer size="xl" />
+
+              <VStack
+                flex={1}
+                borderBottomColor="#eee"
+                borderBottomWidth={1}
+                transform={[{ translateY: -0.5 }]}
               />
             </HStack>
           </Suspense>

@@ -115,28 +115,36 @@ const HomeAutocompleteEffects = memo(
       om.actions.home.setShowAutocomplete(false)
     }, [curPage])
 
-    const {
-      showAutocomplete,
-      locationSearchQuery,
-      currentStateSearchQuery,
-    } = om.state.home
-    const query =
-      showAutocomplete === 'location'
-        ? locationSearchQuery
-        : currentStateSearchQuery
-
     useEffect(() => {
-      if (showAutocomplete) {
-        onChangeStatus(true)
-        const cancel = runAutocomplete(showAutocomplete, query, () => {
-          onChangeStatus(false)
-        })
-        return () => {
+      let cancel: Function | null = null
+
+      const dispose = om.reaction(
+        (state) => {
+          return state.home.showAutocomplete === 'location'
+            ? state.home.locationSearchQuery
+            : state.home.currentStateSearchQuery
+        },
+        (query) => {
           cancel?.()
-          onChangeStatus(false)
+          if (om.state.home.showAutocomplete) {
+            onChangeStatus(true)
+            cancel = runAutocomplete(
+              om.state.home.showAutocomplete,
+              query,
+              () => {
+                onChangeStatus(false)
+              }
+            )
+          }
         }
+      )
+
+      return () => {
+        dispose()
+        cancel?.()
+        onChangeStatus(false)
       }
-    }, [query])
+    }, [])
 
     return null
   }
@@ -483,7 +491,6 @@ function runAutocomplete(
   const om = omStatic
 
   if (searchQuery === '') {
-    console.log('clear')
     if (showAutocomplete === 'location') {
       om.actions.home.setLocationAutocompleteResults(null)
     } else if (showAutocomplete === 'search') {
@@ -498,7 +505,7 @@ function runAutocomplete(
   let results: AutocompleteItem[] = []
 
   return series([
-    () => fullyIdle({ max: 100, min: 50 }),
+    () => fullyIdle({ max: 350, min: 200 }),
     async () => {
       if (showAutocomplete === 'location') {
         const locationResults = await searchLocations(searchQuery, state.center)
@@ -514,9 +521,12 @@ function runAutocomplete(
           state.span!
         )
       }
-      console.log('runAutocomplete.results', results)
+      console.log('runAutocomplete.results', searchQuery, results)
     },
-    () => fullyIdle({ max: 30 }),
+    () => {
+      // allows cancel
+      return fullyIdle({ max: 30 })
+    },
     async () => {
       let matched: AutocompleteItem[] = []
 
@@ -596,7 +606,7 @@ function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {
 }
 
 function searchDishTags(searchQuery: string) {
-  const search = (whereCondition: any) => {
+  const search = (whereCondition: any, limit = 5) => {
     return query.tag({
       where: {
         ...whereCondition,
@@ -604,7 +614,7 @@ function searchDishTags(searchQuery: string) {
           _eq: 'dish',
         },
       },
-      limit: 5,
+      limit,
     })
   }
   return [

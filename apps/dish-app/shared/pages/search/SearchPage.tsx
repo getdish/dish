@@ -306,8 +306,8 @@ const SearchResultsContent = (props: Props) => {
 
   const titleLen = (title + subTitle).length
   const titleScale =
-    titleLen > 70 ? 0.7 : titleLen > 60 ? 0.8 : titleLen > 50 ? 0.9 : 1
-  const titleFontSize = 34 * titleScale * (isSmall ? 0.75 : 1)
+    titleLen > 70 ? 0.75 : titleLen > 60 ? 0.85 : titleLen > 50 ? 0.95 : 1
+  const titleFontSize = 38 * titleScale * (isSmall ? 0.75 : 1)
 
   const contentWrap = (children: any) => {
     return (
@@ -319,7 +319,7 @@ const SearchResultsContent = (props: Props) => {
         <PageTitleTag>{title}</PageTitleTag>
         <HStack
           paddingHorizontal={20}
-          paddingTop={20}
+          paddingTop={15}
           paddingBottom={15}
           overflow="hidden"
         >
@@ -328,7 +328,7 @@ const SearchResultsContent = (props: Props) => {
             letterSpacing={-0.5}
             fontSize={titleFontSize}
             fontWeight="500"
-            color={rgbString(lenseColor.map((x) => x * 0.95))}
+            color={rgbString(lenseColor.map((x) => x * 0.8))}
             // @ts-ignore
             display="inline" // safari fix
             marginRight={isSmall ? 20 : 0}
@@ -339,6 +339,7 @@ const SearchResultsContent = (props: Props) => {
               display="inline" // safari fix
               fontWeight="300"
               opacity={0.5}
+              className="nobreak"
             >
               {subTitle}
             </Text>

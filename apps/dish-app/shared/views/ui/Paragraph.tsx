@@ -14,7 +14,6 @@ export const Paragraph = ({
   // get a little less spaced as we go higher
   const lineHeightScaleWithSize = -(2 - sizeAmt) * 0.6
   const lineHeight = (26.5 + lineHeightScaleWithSize) * sizeAmt * sizeLineHeight
-  console.log('lineHeightScaleWithSize', lineHeightScaleWithSize, lineHeight)
   return (
     <Text
       fontSize={16 * sizeAmt}
