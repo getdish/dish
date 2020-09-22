@@ -60,7 +60,7 @@ export function LinkButton<
       pressStyle={{
         ...props.hoverStyle,
         opacity: 0.7,
-        transform: [{ scale: 0.98 }],
+        transform: [{ scale: 0.96 }],
       }}
       // @ts-ignore
       minHeight={10} // temp react-native

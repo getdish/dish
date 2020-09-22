@@ -35,14 +35,14 @@ export default function AboutPage({
 
           <VStack spacing="xl">
             <Paragraph size="xxxl" fontWeight="300">
-              Craving pho? Amazing Vietnamese, Chinese, and Mexican spots are
-              often hard to find because a single 5-star rating forces food,
-              ambiance and service all into one. Lets change the world of eating
-              out (and in) by letting restaurants specialize.
+              Too often amazing Vietnamese, Chinese, and Mexican
+              hole-in-the-wall spots are lost to bad ratings. We think todays
+              star rating systems are failing us by forcing everything you care
+              about into "5 stars".
             </Paragraph>
 
             <Paragraph size="xxl" fontWeight="300">
-              When you're ordering{' '}
+              What you care about when ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -57,7 +57,7 @@ export default function AboutPage({
               >
                 delivery pho
               </LinkButton>{' '}
-              vs planning a{' '}
+              versus when planning a{' '}
               <LinkButton
                 fontWeight="400"
                 tags={[
@@ -72,26 +72,35 @@ export default function AboutPage({
               >
                 date night
               </LinkButton>{' '}
-              what you care about is completely different. Dish understands that
-              - we break ratings down by dish, ambiance, service, and much more.
+              are unique: maybe it's a specific dish, the delivery speed, the
+              vibe, or if they have good vegetarian.
             </Paragraph>
 
-            <Paragraph size="xl">
-              We're a bit like RottenTomatoes for food - we crawl every top food
-              critic source, and then analyze at{' '}
-              <TextStrong>what people actually say</TextStrong> to go beyond a
-              single star rating. We then show you uniquely good cuisine in each
-              area of the world. Dish also{' '}
+            <Paragraph size="xxl" fontWeight="300">
+              Dish ranks things down to the dish - and other factors that
+              matter. When you write a review, we pull out your sentiment
+              towards every dish and factor automatically! Like RottenTomatoes,
+              Dish also crawls every top food critic - including{' '}
               <Text borderBottomColor="#eee" borderBottomWidth={2}>
-                searches across every delivery service
+                every delivery service
               </Text>{' '}
-              so you don't have to flip between many apps to find the best fried
-              chicken, or ceasar salad for delivery.
+              - so you don't have to flip between many apps to find what you
+              want, delivery or not.
             </Paragraph>
 
             <Paragraph size="lg">
-              We're want to bring back a fun curation community, letting people
-              collect and curate local gems and tips on what to order. Our goals
+              We think that by looking at{' '}
+              <TextStrong>what people actually say</TextStrong> we can get
+              better rankings, and also provide a more fun experience for
+              reviewers. It should also let restaurants stop sweating pleasing
+              everyone, and instead specialize.
+            </Paragraph>
+
+            <Paragraph size="lg">
+              We want to build a fun community of people who curate what they
+              love, letting you collect and save local gems, see tips on where
+              to go and what to order based on your mood, and explore chefs and
+              other people who share your tastes maps of the world. Our goals
               are to build:
               <ul>
                 <li>
