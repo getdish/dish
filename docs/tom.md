@@ -1,39 +1,26 @@
-- implement v1 point ratings + voting
+✔️ implement v1 point ratings + voting
 - changes to auth:
   - login with email or username
   - register with email + username
 - profiles loading really slow http://d1sh_hasura_live.com:19006/u/admin
 - fix top level lense results
-  - "gems" with no other filters is empty for sf
-- fix http://d1sh_hasura_live.com:19006/restaurant/serafina error on gql review when not logged in
+  ✔️  "gems" with no other filters is empty for sf
+✔️  fix http://d1sh_hasura_live.com:19006/restaurant/serafina error on gql review when not logged in
 - searching without tag is slow - try "birria taco" in sf
+  - this is because of the full-text search across reviews and menu_items tables. there's a
+    a bit of research i could to improve the index. but maybe we need to look at a dedicated
+    full-text engine. but remember that searching for tags is still as fast as ever
 - ... continue on ratings/points/sentiment/data/infra
-
-## Backend
-
-- Password protect Redis server
-- Endpoint for more advanced searching
-- be able to pass in Taxonomy as filters
-- returns Restaurant, Dish, Taxonomy.searchable, we can just do multiple requests/grouped to start
 
 ## Indexing
 
 - Use Dish account for AWS proxies
 - Use Dish account for HereMaps/Geolocator API
 - Fix all the minor Sentry exceptions
-- Bull memory leak? Manually delete completed jobs?
-- Explore better overview UI, Bullboard isn't cutting it
 
 ## Users
 
 - User camera image upload endpoint that ties to a review of a single dish
-
-## Architecture
--
-
-## CI
-
-- Find a way to truncate the DB between indivudual tests
 
 ## Monitoring
 
