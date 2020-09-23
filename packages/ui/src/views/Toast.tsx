@@ -1,16 +1,18 @@
-import React, { memo, useCallback, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useRef } from 'react'
 
 import { useForceUpdate } from '../hooks/useForceUpdate'
 import { AnimatedVStack } from './AnimatedStack'
 import { AbsoluteVStack, VStack } from './Stacks'
 import { Text } from './Text'
 
-let show: (text: string, duration: number) => void = (text) => {
+export type ToastOptions = { duration?: number; type?: 'success' | 'error' }
+
+let show: (text: string, options?: ToastOptions) => void = (text) => {
   console.warn('NO SHOW', text)
 }
 
 export const Toast = {
-  show: (text: string, duration = 2500) => show(text, duration),
+  show: (text: string, options?: ToastOptions) => show(text, options),
 }
 
 if (typeof window !== 'undefined') {
@@ -22,6 +24,7 @@ export const ToastRoot = memo(function ToastRoot() {
   const stateRef = useRef({
     show: false,
     text: '',
+    type: 'success',
     timeout: null,
   })
   const setState = (x: any) => {
@@ -29,24 +32,37 @@ export const ToastRoot = memo(function ToastRoot() {
     forceUpdate()
   }
 
+  useEffect(() => {
+    return () => {
+      clearTimeout(stateRef.current.timeout ?? 0)
+    }
+  }, [])
+
   show = useCallback(
-    (text: string, duration = 2500) => {
+    (
+      text: string,
+      { duration = 3000, type = 'success' }: ToastOptions = {}
+    ) => {
       clearTimeout(stateRef.current.timeout ?? 0)
       const timeout = setTimeout(() => {
         setState({
           show: false,
           text: '',
+          type,
           timeout: null,
         })
       }, duration)
       setState({
         show: true,
         text,
+        type,
         timeout,
       })
     },
     [stateRef]
   )
+
+  const state = stateRef.current
 
   return (
     <AbsoluteVStack
@@ -57,10 +73,14 @@ export const ToastRoot = memo(function ToastRoot() {
       zIndex={10000000000}
       padding="5%"
     >
-      {stateRef.current.show && !!stateRef.current.text && (
+      {state.show && !!state.text && (
         <AnimatedVStack>
           <VStack
-            backgroundColor="rgba(20,180,120,0.95)"
+            backgroundColor={
+              state.type === 'success'
+                ? 'rgba(20,180,120,0.95)'
+                : 'rgba(190,60,60)'
+            }
             shadowColor="rgba(0,0,0,0.25)"
             shadowOffset={{ height: 10, width: 0 }}
             shadowRadius={40}
@@ -68,7 +88,7 @@ export const ToastRoot = memo(function ToastRoot() {
             padding={12}
           >
             <Text color="white" fontSize={16} fontWeight="600">
-              {stateRef.current.text}
+              {state.text}
             </Text>
           </VStack>
         </AnimatedVStack>

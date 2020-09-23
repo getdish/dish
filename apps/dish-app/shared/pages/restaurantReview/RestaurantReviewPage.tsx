@@ -18,19 +18,19 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { HomeStateItemReview } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
-import { tagLenses } from '../../state/tagLenses'
 import { flatButtonStyle } from '../../views/baseButtonStyle'
 import { CommentBubble } from '../../views/CommentBubble'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { TagSmallButton } from '../../views/TagSmallButton'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { SmallButton } from '../../views/ui/SmallButton'
+import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
 import { RestaurantLenseVote } from '../restaurant/RestaurantLenseVote'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 
 export default memo(function HomePageRestaurantReview() {
   const om = useOvermind()
   const state = om.state.home.currentState
+  console.log('state', state)
 
   if (state.type === 'restaurantReview') {
     return (
@@ -163,6 +163,28 @@ export const RestaurantReviewComment = memo(
         <VStack minHeight="100%">
           <CommentBubble
             name={user.username ?? ''}
+            afterName={
+              <HStack marginVertical={-10} flex={1}>
+                <Spacer flex={1} />
+                <LinkButton
+                  accessible
+                  accessibilityRole="button"
+                  {...smallButtonBaseStyle}
+                  disabled={isSaved}
+                  alignSelf="center"
+                  fontWeight="700"
+                  marginVertical={10}
+                  onPress={() => {
+                    upsertReview({
+                      text: reviewText,
+                    })
+                    setIsSaved(true)
+                  }}
+                >
+                  Save
+                </LinkButton>
+              </HStack>
+            }
             after={
               <TextInput
                 value={reviewText}
@@ -193,22 +215,6 @@ export const RestaurantReviewComment = memo(
             }
           />
 
-          <LinkButton
-            {...flatButtonStyle}
-            disabled={isSaved}
-            alignSelf="center"
-            fontWeight="700"
-            marginVertical={10}
-            onPress={() => {
-              upsertReview({
-                text: reviewText,
-              })
-              setIsSaved(true)
-            }}
-          >
-            Save
-          </LinkButton>
-
           <SmallTitle divider="center">Votes</SmallTitle>
           <Spacer />
           <HStack spacing="xl">
@@ -236,7 +242,7 @@ export const RestaurantReviewComment = memo(
               spacing
             >
               <SmallTitle divider="off">Dishes</SmallTitle>
-              <ScrollView style={{ width: '100%' }}>
+              <ScrollView style={{ width: '100%', maxHeight: 300 }}>
                 <HStack
                   flexWrap="wrap"
                   alignItems="center"

@@ -40,7 +40,12 @@ export const CommentBubble = ({
           <Circle size={18} marginRight={4} marginTop={2}>
             <User color="#999" size={12} />
           </Circle>
-          <HStack alignItems="center" maxWidth="90%" marginBottom={-3}>
+          <HStack
+            flex={1}
+            alignItems="center"
+            maxWidth="100%"
+            marginBottom={-3}
+          >
             <Link
               ellipse
               backgroundColor={bgLight}
