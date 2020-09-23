@@ -45,6 +45,7 @@ export const SmallButton = ({
         },
       })}
     >
+      {/* TODO only do text if string, otherwise no text, remove isWeb conditional */}
       <Text
         color={isActive ? '#000' : bg}
         fontSize={14}

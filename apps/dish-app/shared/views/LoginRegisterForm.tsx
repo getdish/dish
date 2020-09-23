@@ -149,6 +149,9 @@ export const LoginRegisterForm = ({
           />
 
           <SmallButton
+            accessibilityComponentType="button"
+            accessible
+            accessibilityRole="button"
             alignSelf="flex-end"
             backgroundColor="#222"
             borderColor="#444"
@@ -167,7 +170,7 @@ export const LoginRegisterForm = ({
                   setPassword('')
                 }
               } else {
-                om.actions.user.login({
+                await om.actions.user.login({
                   usernameOrEmail: login,
                   password: password,
                 })
