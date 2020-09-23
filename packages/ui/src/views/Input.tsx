@@ -1,6 +1,7 @@
-import { HStack, StackProps } from '@dish/ui'
 import { default as React } from 'react'
 import { StyleSheet, TextInput, TextInputProps } from 'react-native'
+
+import { HStack, StackProps } from './Stacks'
 
 export const Input = (
   props: TextInputProps & {

@@ -1,9 +1,7 @@
-import { BoxProps } from '@dish/ui'
+import { BoxProps, SizableTextProps, Title } from '@dish/ui'
 import React from 'react'
 
-import { SizableTextProps } from './Size'
 import { SlantedBox, slantedBoxStyle } from './SlantedBox'
-import { Title } from './Title'
 
 export const SlantedTitle = ({
   children,

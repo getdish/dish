@@ -1,4 +1,4 @@
-import { TextProps } from '@dish/ui'
+import { TextProps } from './Text'
 
 export type Size = number | SizeName
 

@@ -1,7 +1,7 @@
-import { Text } from '@dish/ui'
 import React from 'react'
 
 import { SizableTextProps, getSize } from './Size'
+import { Text } from './Text'
 
 export type ParagraphProps = SizableTextProps
 

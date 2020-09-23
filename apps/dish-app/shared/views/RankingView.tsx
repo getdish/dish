@@ -1,4 +1,4 @@
-import { StackProps, SuperScriptText, Text, VStack } from '@dish/ui'
+import { StackProps, Text, TextSuperScript, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 export const RankingView = memo(
@@ -24,9 +24,9 @@ export const RankingView = memo(
           fontWeight="300"
           color="rgba(0,0,0,1)"
         >
-          <SuperScriptText opacity={0.35} letterSpacing={0}>
+          <TextSuperScript opacity={0.35} letterSpacing={0}>
             #
-          </SuperScriptText>
+          </TextSuperScript>
           {rank}
         </Text>
       </VStack>

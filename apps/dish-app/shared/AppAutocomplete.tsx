@@ -4,6 +4,7 @@ import { Plus } from '@dish/react-feather'
 import {
   AbsoluteVStack,
   AnimatedVStack,
+  BlurView,
   HStack,
   Spacer,
   Text,
@@ -40,7 +41,6 @@ import { NavigableTag } from './state/NavigableTag'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { tagDisplayName } from './state/tagDisplayName'
-import { BlurView } from './views/BlurView'
 import { SmallCircleButton } from './views/ui/CloseButton'
 import { LinkButton } from './views/ui/LinkButton'
 

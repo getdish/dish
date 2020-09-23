@@ -1,10 +1,11 @@
-import { StackProps, VStack } from '@dish/ui'
 import {
   BlurViewProperties,
   BlurView as NativeBlurView,
 } from '@react-native-community/blur'
 import React from 'react'
 import { StyleSheet } from 'react-native'
+
+import { StackProps, VStack } from './Stacks'
 
 export function BlurView({
   blurType = 'light',

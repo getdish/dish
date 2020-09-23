@@ -1,4 +1,4 @@
-import { HStack, VStack } from '@dish/ui'
+import { BlurView, HStack, VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { memo } from 'react'
 
@@ -9,7 +9,6 @@ import { useIsNarrow } from '../../hooks/useIs'
 import { useSafeArea } from '../../hooks/useSafeArea'
 import { isSearchState } from '../../state/home-helpers'
 import { useOvermind } from '../../state/om'
-import { BlurView } from '../../views/BlurView'
 import { HomeLenseBar } from '../../views/HomeLenseBar'
 import { SearchPageFilterBar } from './SearchPageFilterBar'
 import { titleHeight } from './titleHeight'

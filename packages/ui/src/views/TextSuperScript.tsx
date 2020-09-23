@@ -10,10 +10,10 @@ const defaultStyle: TextStyle = {
   opacity: 0.5,
 }
 
-export function SuperScriptText(props: TextProps) {
+export function TextSuperScript(props: TextProps) {
   return <Text {...defaultStyle} {...props} />
 }
 
-SuperScriptText.staticConfig = extendStaticConfig(Text, {
+TextSuperScript.staticConfig = extendStaticConfig(Text, {
   defaultStyle,
 })

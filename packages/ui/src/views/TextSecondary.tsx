@@ -5,14 +5,13 @@ import { extendStaticConfig } from '../helpers/extendStaticConfig'
 import { Text, TextProps } from './Text'
 
 const defaultStyle: TextStyle = {
-  color: '#777',
-  fontSize: 13,
+  color: 'rgba(150,150,150,0.5)',
 }
 
-export const SecondaryText = (props: TextProps) => {
+export const TextSecondary = (props: TextProps) => {
   return <Text {...defaultStyle} {...props} />
 }
 
-SecondaryText.staticConfig = extendStaticConfig(Text, {
+TextSecondary.staticConfig = extendStaticConfig(Text, {
   defaultStyle,
 })

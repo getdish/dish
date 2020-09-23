@@ -4,9 +4,9 @@ import {
   HStack,
   Spacer,
   StackProps,
-  SuperScriptText,
   Text,
   TextProps,
+  TextSuperScript,
   VStack,
   getNode,
   prevent,
@@ -175,7 +175,7 @@ export const TagButton = memo((props: TagButtonProps) => {
             display="flex"
             color={fg}
           >
-            <SuperScriptText opacity={0.5}>#</SuperScriptText>
+            <TextSuperScript opacity={0.5}>#</TextSuperScript>
             {rank}
           </Text>
         ) : null}

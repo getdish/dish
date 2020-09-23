@@ -1,10 +1,16 @@
 import { graphql } from '@dish/graph'
-import { AbsoluteVStack, HStack, Spacer, Text, VStack } from '@dish/ui'
+import {
+  AbsoluteVStack,
+  HStack,
+  Paragraph,
+  Spacer,
+  Text,
+  VStack,
+} from '@dish/ui'
 import React, { memo } from 'react'
 
 import { isWeb } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { Paragraph } from '../ui/Paragraph'
 
 export const RestaurantOverview = memo(
   graphql(
@@ -43,6 +49,9 @@ export const RestaurantOverview = memo(
                       // react native doesnt like using this as a prop...
                       {...(i !== 0 && {
                         ellipse: true,
+                      })}
+                      {...(i === 0 && {
+                        numberOfLines: 3,
                       })}
                     >
                       {item.sentence

@@ -1,6 +1,6 @@
+import { Title } from '@dish/ui'
 import React from 'react'
 
-import { Title } from '../../views/ui/Title'
 import { MDX } from './MDX'
 import { posts } from './posts'
 

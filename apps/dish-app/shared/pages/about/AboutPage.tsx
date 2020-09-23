@@ -1,4 +1,13 @@
-import { Divider, HStack, SmallTitle, Spacer, Text, VStack } from '@dish/ui'
+import {
+  Divider,
+  HStack,
+  Paragraph,
+  SmallTitle,
+  Spacer,
+  Text,
+  Title,
+  VStack,
+} from '@dish/ui'
 import React from 'react'
 
 import { StackItemProps } from '../../AppStackView'
@@ -7,9 +16,7 @@ import { HomeStateItemAbout } from '../../state/home-types'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { StackDrawer } from '../../views/StackDrawer'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { Paragraph } from '../../views/ui/Paragraph'
 import { TextStrong } from '../../views/ui/TextStrong'
-import { Title } from '../../views/ui/Title'
 
 const inlineButton = {
   borderRadius: 10,

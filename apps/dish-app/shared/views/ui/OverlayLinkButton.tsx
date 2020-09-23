@@ -1,8 +1,7 @@
-import { HStack, Text } from '@dish/ui'
+import { BlurView, HStack, Text } from '@dish/ui'
 import React from 'react'
 
 import { RoutesTable } from '../../state/router'
-import { BlurView } from '../BlurView'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 

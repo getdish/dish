@@ -7,8 +7,8 @@ import {
   HStack,
   Spacer,
   StackProps,
-  SuperScriptText,
   Text,
+  TextSuperScript,
   Tooltip,
   VStack,
   useDebounce,
@@ -281,12 +281,12 @@ const RestaurantListItemContent = memo(
                             textAlign="center"
                             lineHeight={38}
                           >
-                            <SuperScriptText
+                            <TextSuperScript
                               transform={[{ translateY: -4 }]}
                               fontSize={11}
                             >
                               #
-                            </SuperScriptText>
+                            </TextSuperScript>
                             <Text
                               fontSize={+rank > 9 ? 14 : 20}
                               fontWeight="500"
