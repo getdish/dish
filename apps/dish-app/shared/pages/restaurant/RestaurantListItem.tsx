@@ -321,6 +321,8 @@ const RestaurantListItemContent = memo(
               </VStack>
             </Link>
 
+            <Spacer size="sm" />
+
             {/* RANKING ROW */}
             <VStack
               {...contentSideWidthProps}
@@ -391,10 +393,10 @@ const RestaurantListItemContent = memo(
             </VStack>
           </VStack>
 
-          <Spacer size="lg" />
+          <Spacer size="md" />
 
           {/* ROW: OVERVIEW / PEEK */}
-          <HStack flex={1} maxWidth="100%">
+          <HStack flex={1} maxWidth="100%" minHeight={120}>
             <VStack
               {...contentSideWidthProps}
               className="fix-safari-shrink-height"
@@ -452,7 +454,12 @@ const RestaurantListItemContent = memo(
 
               <Spacer />
 
-              <RestaurantFavoriteButton size="md" restaurantId={restaurantId} />
+              <Suspense fallback={<Spacer size={44} />}>
+                <RestaurantFavoriteButton
+                  size="md"
+                  restaurantId={restaurantId}
+                />
+              </Suspense>
 
               <Spacer />
 

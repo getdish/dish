@@ -138,12 +138,11 @@ const RestaurantTagsScore = graphql(
     userVote: number
   }) => {
     const tagScores = useRestaurantTagScores(restaurantSlug, activeTagIds)
-    console.log('tagScores', tagScores)
     return (
       <Box
-        maxWidth={300}
+        maxWidth={240}
         overflow="hidden"
-        minWidth={280}
+        minWidth={200}
         paddingVertical={15}
         paddingHorizontal={20}
       >

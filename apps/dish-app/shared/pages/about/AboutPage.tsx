@@ -35,14 +35,14 @@ export default function AboutPage({
 
           <VStack spacing="xl">
             <Paragraph size="xxxl" fontWeight="300">
-              Too often amazing Vietnamese, Chinese, and Mexican
-              hole-in-the-wall spots are lost to bad ratings. Yet they have
-              amazing food. Todays rating systems fail us by forcing everything
-              you care about into "5 stars".
+              Too often, amazing Vietnamese, Chinese, and Mexican
+              hole-in-the-wall spots are lost to bad ratings, despite making
+              some of the best food. Todays rating systems fail us by forcing
+              everything you care about into "5 stars".
             </Paragraph>
 
             <Paragraph size="xxl" fontWeight="300">
-              What you care about when ordering{' '}
+              We think we can fix that. What you care about when ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -72,8 +72,8 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              are <em>unique</em>: a specific dish, the delivery speed, the
-              vibe, if they have good vegetarian, a bar, or patio.
+              are <em>unique</em>: whether it's a specific dish or the delivery
+              speed, the vibe or if they have good vegetarian.
             </Paragraph>
 
             <Paragraph size="xxl" fontWeight="300">
@@ -81,24 +81,23 @@ export default function AboutPage({
                 Dish splits ratings down to the dish - and the other factors
                 that matter
               </Text>
-              . We just call them all "tags". When you write a review, we pull
-              out your sentiment towards every possible tag automatically. Then,
-              much like RottenTomatoes, Dish also crawls every top food review
-              source - including{' '}
+              . When you write a review, we pull out your sentiment towards
+              every possible tag automatically. Much like RottenTomatoes, Dish
+              also crawls every top food review source - including{' '}
               <Text borderBottomColor="#eee" borderBottomWidth={2}>
                 every delivery app
               </Text>{' '}
-              - so you don't have to flip between apps to find what you want,
-              delivery or not.
+              - so finally, you don't need to flip between apps to find what you
+              want.
             </Paragraph>
 
             <Paragraph size="lg">
               By looking at <TextStrong>what people actually say</TextStrong> we
-              think we can build a better guide to the world, and make it more
-              fun for reviewers. It should be nicer for restaurants, too;
-              instead of having to please every type of person to try and always
-              keep 5 stars, they can instead specialize on what they want to be
-              good good at.
+              think we can build a better guide to the world, on that
+              understands how you review. It should also be nicer for
+              restaurants: instead of having to please every type of person to
+              try and always keep 5 stars, they can instead specialize on what
+              they want to be good good at.
             </Paragraph>
 
             <Paragraph size="lg">

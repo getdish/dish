@@ -63,7 +63,7 @@ export default memo(function AppAutocomplete() {
       return () => {
         document.removeEventListener('mousemove', handleMove)
       }
-    })
+    }, [])
   }
 
   if (isNative) {
@@ -190,7 +190,6 @@ const AutocompleteContentsInner = memo(
           height="100%"
           overflow="hidden"
           alignItems="center"
-          paddingBottom={30}
           top={top}
           paddingTop={isSmall ? 0 : 10}
           paddingHorizontal={isSmall ? 0 : 15}
@@ -203,13 +202,15 @@ const AutocompleteContentsInner = memo(
               width="100%"
               height="100%"
               maxHeight="90%"
+              pointerEvents="auto"
               {...(!isSmall && {
                 maxWidth: pageWidthMax * 0.45,
                 maxHeight: `calc(100vh - ${top + 20}px)`,
               })}
-              {...(isSmall && {
+              {...(!isSmall && {
                 // @ts-ignore
                 onMouseLeave: () => {
+                  console.log('what is', curPagePos, top)
                   if (curPagePos.y > top) {
                     hideAutocomplete()
                   }
