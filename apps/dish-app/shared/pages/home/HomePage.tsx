@@ -12,13 +12,14 @@ import {
   HStack,
   LinearGradient,
   LoadingItems,
+  Modal,
   Spacer,
   Text,
   VStack,
 } from '@dish/ui'
 import _, { sortBy, uniqBy } from 'lodash'
 import { default as React, Suspense, memo, useEffect, useState } from 'react'
-import { Dimensions, Modal, ScrollView, StyleSheet } from 'react-native'
+import { Dimensions, ScrollView, StyleSheet } from 'react-native'
 
 import { bgLight, bgLightHover, bgLightTranslucent } from '../../colors'
 import { useIsNarrow } from '../../hooks/useIs'
@@ -182,11 +183,13 @@ export default memo(function HomePage(props: Props) {
           <ContentScrollView>
             {/* cross line */}
             <AbsoluteVStack
+              contain="strict"
               height={320}
               width={2000}
               right="-10%"
               top={-120}
               transform={[{ rotate: '-2deg' }]}
+              overflow="hidden" // fixes chrome rendering line at bottom glitch
             >
               <LinearGradient
                 style={[StyleSheet.absoluteFill]}
@@ -272,10 +275,6 @@ const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
     <>
       <HomeTopDishesTitle />
       <Spacer size="lg" />
-
-      {/* <Modal visible transparent presentationStyle="formSheet">
-        <VStack height={100} width={100} backgroundColor="red" />
-      </Modal> */}
 
       <VStack minHeight={Dimensions.get('window').height * 0.95}>
         {!topDishes.length && (

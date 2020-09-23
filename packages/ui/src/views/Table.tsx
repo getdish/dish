@@ -25,22 +25,51 @@ TableRow.staticConfig = extendStaticConfig(HStack, {
   defaultStyle: tableRowDefaultProps,
 })
 
-const tableCellDefaultProps: StackProps = {
-  alignSelf: 'stretch',
-  flex: 1,
-  padding: 4,
-  alignItems: 'center',
+export type TableCellProps = StackProps & TextProps
+
+export function TableCell({
+  color,
+  fontSize,
+  fontWeight,
+  fontStyle,
+  fontFamily,
+  textAlign,
+  fontVariant,
+  selectable,
+  ellipse,
+  children,
+  lineHeight,
+  ...props
+}: TableCellProps) {
+  return (
+    <HStack
+      padding={4}
+      flex={1}
+      alignSelf="stretch"
+      alignItems="center"
+      {...props}
+    >
+      {typeof children === 'string' ? (
+        <Text
+          color={color}
+          fontSize={fontSize}
+          fontWeight={fontWeight}
+          fontStyle={fontStyle}
+          fontFamily={fontFamily}
+          fontVariant={fontVariant}
+          textAlign={textAlign}
+          selectable={selectable}
+          ellipse={ellipse}
+          lineHeight={lineHeight}
+        >
+          {children}
+        </Text>
+      ) : (
+        children
+      )}
+    </HStack>
+  )
 }
-
-export type TableCellProps = StackProps
-
-export const TableCell = (props: TableCellProps) => (
-  <HStack {...tableCellDefaultProps} {...props} />
-)
-
-TableCell.staticConfig = extendStaticConfig(HStack, {
-  defaultStyle: tableCellDefaultProps,
-})
 
 const tableHeadRowDefaultProps: StackProps = {
   alignSelf: 'stretch',

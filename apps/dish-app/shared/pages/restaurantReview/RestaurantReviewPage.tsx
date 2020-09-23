@@ -5,6 +5,7 @@ import {
   HStack,
   LoadingItem,
   LoadingItems,
+  Modal,
   SmallTitle,
   Spacer,
   VStack,
@@ -13,12 +14,11 @@ import {
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image, ScrollView, TextInput } from 'react-native'
 
-import { pageWidthMax, zIndexGallery } from '../../constants'
+import { pageWidthMax } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { HomeStateItemReview } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
-import { flatButtonStyle } from '../../views/baseButtonStyle'
 import { CommentBubble } from '../../views/CommentBubble'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { TagSmallButton } from '../../views/TagSmallButton'
@@ -34,35 +34,16 @@ export default memo(function HomePageRestaurantReview() {
 
   if (state.type === 'restaurantReview') {
     return (
-      <AbsoluteVStack
-        fullscreen
-        backgroundColor="rgba(0,0,0,0.5)"
-        alignItems="center"
-        justifyContent="center"
-        zIndex={zIndexGallery}
-      >
-        <VStack
-          width="80%"
-          height="80%"
-          backgroundColor="#fff"
-          borderRadius={15}
-          maxWidth={pageWidthMax * 0.55}
-          alignItems="center"
-          position="relative"
-          overflow="hidden"
-          shadowColor="rgba(0,0,0,0.5)"
-          shadowRadius={40}
-        >
-          <VStack width="100%" height="100%" flex={1}>
-            <AbsoluteVStack top={5} right={26}>
-              <StackViewCloseButton />
-            </AbsoluteVStack>
-            <Suspense fallback={<LoadingItems />}>
-              <HomePageReviewContent state={state} />
-            </Suspense>
-          </VStack>
+      <Modal maxWidth={pageWidthMax * 0.55}>
+        <VStack width="100%" height="100%" flex={1}>
+          <AbsoluteVStack top={5} right={26}>
+            <StackViewCloseButton />
+          </AbsoluteVStack>
+          <Suspense fallback={<LoadingItems />}>
+            <HomePageReviewContent state={state} />
+          </Suspense>
         </VStack>
-      </AbsoluteVStack>
+      </Modal>
     )
   }
 
