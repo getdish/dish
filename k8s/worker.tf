@@ -119,7 +119,7 @@ resource "kubernetes_deployment" "worker" {
           }
           env {
             name = "YELP_CDN_AWS_PROXY"
-            value = var.MICHELIN_PROXY
+            value = var.YELP_CDN_AWS_PROXY
           }
           env {
             name = "LUMINATI_PROXY_HOST"
