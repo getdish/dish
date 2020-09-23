@@ -37,7 +37,7 @@ const register: AsyncAction<
   const [status, data] = await Auth.register(username, email, password)
   switch (status) {
     case 201:
-      om.state.user.messages = ['Registered. You can now login.']
+      await om.actions.user.login({ usernameOrEmail: email, password })
       result = true
       break
     case 409:
