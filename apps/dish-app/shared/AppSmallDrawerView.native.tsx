@@ -29,6 +29,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
     let curSnapY = 0
     return PanResponder.create({
       onMoveShouldSetPanResponder: (_, { dy }) => {
+        console.log('check drag here')
         if (isTouchingSearchBar) {
           return false
         }

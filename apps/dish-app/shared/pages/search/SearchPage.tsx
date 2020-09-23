@@ -325,7 +325,7 @@ const SearchResultsContent = (props: Props) => {
         <PageTitleTag>{title}</PageTitleTag>
         <HStack
           paddingHorizontal={20}
-          paddingTop={15}
+          paddingTop={10}
           paddingBottom={15}
           overflow="hidden"
         >

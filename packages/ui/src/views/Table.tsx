@@ -8,7 +8,7 @@ export type TableProps = StackProps
 
 export const Table = (props: StackProps) => <VStack {...props} />
 
-Table.staticConfig = extendStaticConfig(HStack, {})
+Table.staticConfig = extendStaticConfig(VStack, {})
 
 const tableRowDefaultProps: StackProps = {
   alignSelf: 'stretch',

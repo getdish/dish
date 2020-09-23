@@ -1,4 +1,4 @@
-import { Title } from '@dish/ui'
+import { Spacer, Title } from '@dish/ui'
 import React from 'react'
 
 import { MDX } from './MDX'
@@ -9,6 +9,7 @@ export function BlogPageDetail({ slug }: { slug: string }) {
   return (
     <MDX>
       <Title>{title}</Title>
+      <Spacer />
       <View />
     </MDX>
   )
