@@ -621,7 +621,7 @@ export const Map = (props: MapProps) => {
         () => fullyIdle({ max: 500 }),
         () => {
           map.fitBounds(next, {
-            duration: 350
+            duration: 350,
           })
           internal.current.isAwaitingNextMove = false
         },
