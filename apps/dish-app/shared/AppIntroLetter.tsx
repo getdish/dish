@@ -31,7 +31,7 @@ export const HomeIntroLetter = memo(() => {
       justifyContent="center"
       paddingHorizontal="4vw"
       paddingVertical="1vh"
-      backgroundColor="rgba(0,0,0,0.6)"
+      backgroundColor="rgba(0,0,0,0.7)"
       opacity={1}
       transform={[{ translateY: 0 }]}
       {...(!showInto && {
@@ -45,13 +45,13 @@ export const HomeIntroLetter = memo(() => {
         maxHeight={700}
         height="98%"
         width="90%"
-        borderWidth={2}
-        borderColor={brandColor}
+        borderWidth={1}
+        borderColor={`${brandColor}99`}
         position="relative"
         backgroundColor="#000"
-        borderRadius={15}
-        shadowColor="rgba(0,0,0,0.6)"
-        shadowRadius={50}
+        borderRadius={25}
+        shadowColor="rgba(0,0,0,1)"
+        shadowRadius={150}
         shadowOffset={{ height: 10, width: 0 }}
       >
         <ScrollView

@@ -1,4 +1,4 @@
-import { graphql, query } from '@dish/graph'
+import { graphql } from '@dish/graph'
 import {
   Circle,
   Divider,
@@ -13,7 +13,6 @@ import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image } from 'react-native'
 
 import { StackItemProps } from '../../AppStackView'
-import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { HomeStateItemUser } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { ContentScrollView } from '../../views/ContentScrollView'
@@ -22,19 +21,9 @@ import { StackDrawer } from '../../views/StackDrawer'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { avatar } from '../search/avatar'
+import { useUserQuery } from './useUserQuery'
 
 type UserTab = 'vote' | 'review'
-
-const useUserQuery = (username: string) => {
-  return query.user({
-    where: {
-      username: {
-        _eq: username,
-      },
-    },
-    limit: 1,
-  })[0]
-}
 
 export default function UserPageContainer(
   props: StackItemProps<HomeStateItemUser>
