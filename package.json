@@ -46,7 +46,7 @@
     "react-test-renderer": "0.0.0-experimental-94c0244ba",
     "react-refresh": "0.0.0-experimental-94c0244ba",
     "react-native": "0.63.2",
-    "react-native-web": "0.13.12",
+    "react-native-web": "0.0.0-466063b7e",
     "react-native-svg": "12.1.0",
     "metro": "0.62.0",
     "metro-babel-register": "0.62.0",
@@ -62,6 +62,7 @@
     "@types/puppeteer": "3.0.1"
   },
   "dependencies": {
+    "react-native-web": "0.0.0-466063b7e",
     "react": "0.0.0-experimental-94c0244ba",
     "react-dom": "0.0.0-experimental-94c0244ba"
   },

@@ -1,5 +1,5 @@
 import { TopCuisineDish, slugify } from '@dish/graph'
-import { AbsoluteVStack, Box, HStack, StackProps, Text } from '@dish/ui'
+import { AbsoluteVStack, Box, HStack, StackProps, Text, VStack } from '@dish/ui'
 import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'
 import { Image } from 'react-native'
@@ -172,20 +172,29 @@ export const DishView = memo(
           }
         >
           {!!dish.image && (
-            <Image
-              source={{ uri: imageUrl }}
-              style={{
-                width: '100%',
-                height: '100%',
-                opacity: 1,
-                ...(isFallback && {
-                  borderRadius: 100,
-                  width: size * 0.75,
-                  height: size * 0.75,
-                }),
-              }}
-              resizeMode="cover"
-            />
+            <>
+              <VStack
+                position="absolute"
+                backgroundColor="rgba(0,0,0,0.1)"
+                borderRadius={100}
+                width={size * 0.75}
+                height={size * 0.75}
+              />
+              <Image
+                source={{ uri: imageUrl }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  opacity: 1,
+                  ...(isFallback && {
+                    borderRadius: 100,
+                    width: size * 0.75,
+                    height: size * 0.75,
+                  }),
+                }}
+                resizeMode="cover"
+              />
+            </>
           )}
           {!dish.image && <Text fontSize={80}>🥗</Text>}
         </Squircle>
