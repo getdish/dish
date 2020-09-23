@@ -7,6 +7,6 @@ import { Self } from './Self'
   }
   const internal = new Self()
   for (const city of cities) {
-    internal.runOnWorker('allForCity', [city])
+    internal.addBigJob('allForCity', [city])
   }
 })()

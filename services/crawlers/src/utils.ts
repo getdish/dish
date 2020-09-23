@@ -225,6 +225,20 @@ export async function restaurantFindIDBatchForCity(
   return result.rows
 }
 
+export async function restaurantCountForCity(city: string, radius = 0.5) {
+  const coords = await geocode(city)
+  const query = `
+    SELECT count(*) FROM restaurant
+      WHERE ST_DWithin(
+        location,
+        ST_Makepoint(${coords[1]}, ${coords[0]}),
+        ${radius}
+      )
+  `
+  const result = await DB.one_query_on_main(query)
+  return result.rows[0].count
+}
+
 export async function restaurantFindBasicBatchForAll(
   size: number,
   previous_id: string,

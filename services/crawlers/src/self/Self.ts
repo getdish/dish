@@ -30,7 +30,12 @@ import {
   scrapeGetData,
 } from '../scrape-helpers'
 import { Tripadvisor } from '../tripadvisor/Tripadvisor'
-import { DB, googlePermalink, restaurantFindIDBatchForCity } from '../utils'
+import {
+  DB,
+  googlePermalink,
+  restaurantCountForCity,
+  restaurantFindIDBatchForCity,
+} from '../utils'
 import { checkMaybeDeletePhoto, remove404Images } from './remove_404_images'
 import { RestaurantBaseScore } from './RestaurantBaseScore'
 import { RestaurantRatings } from './RestaurantRatings'
@@ -107,6 +112,8 @@ export class Self extends WorkerJob {
   async allForCity(city: string) {
     const PER_PAGE = 1000
     let previous_id = globalTagId
+    const total = await restaurantCountForCity(city)
+    let count = 0
     while (true) {
       const results = await restaurantFindIDBatchForCity(
         PER_PAGE,
@@ -118,6 +125,9 @@ export class Self extends WorkerJob {
       }
       for (const result of results) {
         await this.runOnWorker('mergeAll', [result.id])
+        count += 1
+        const progress = (count / total) * 100
+        await this.job.progress(progress)
         previous_id = result.id as string
       }
     }
