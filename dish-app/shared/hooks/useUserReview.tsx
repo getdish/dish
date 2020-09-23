@@ -1,6 +1,7 @@
 import { series, sleep } from '@dish/async'
 import {
   Review,
+  globalTagId,
   query,
   refetch,
   resolved,
@@ -166,8 +167,7 @@ export const useUserReviewsQuery = (restaurantId: string) => {
   }
 }
 
-const isTagReview = (r: Review) =>
-  !!r.tag_id && r.tag_id !== '00000000-0000-0000-0000-000000000000'
+const isTagReview = (r: Review) => !!r.tag_id && r.tag_id !== globalTagId
 
 export const useUserReviewCommentQuery = (restaurantId: string) => {
   const { reviews, upsert, refetch } = useUserReviewsQuery(restaurantId)
