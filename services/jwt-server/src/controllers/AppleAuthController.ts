@@ -9,7 +9,7 @@ import { Request, Response } from 'express'
 // may want to switch if we get issues:
 // https://github.com/A-Tokyo/apple-signin-auth
 
-const redirectUri = 'https://dishapp.com/apple_authorize'
+const redirectUri = 'https://auth.dishapp.com/apple_authorize'
 const config: AppleSignInOptions = {
   clientId: 'com.dishapp',
   teamId: '399WY8X9HY', // or dish.motion ?
