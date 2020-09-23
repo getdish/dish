@@ -1,6 +1,7 @@
 import { graphql } from '@dish/graph'
 import {
   AbsoluteVStack,
+  Modal,
   PageTitle,
   SmallTitle,
   Spacer,
@@ -38,95 +39,79 @@ export default memo(
     return (
       <>
         <PageTitle>{title}</PageTitle>
-        <AbsoluteVStack
-          fullscreen
-          backgroundColor="rgba(0,0,0,0.5)"
-          alignItems="center"
-          justifyContent="center"
-          zIndex={zIndexGallery}
-          onPress={() => {
+        <Modal
+          onDismiss={() => {
             omStatic.actions.home.up()
           }}
+          width={380}
+          maxHeight={480}
         >
-          <VStack
-            width="90%"
-            backgroundColor="#fff"
-            borderRadius={15}
-            maxWidth={390}
-            maxHeight={480}
-            alignItems="center"
-            position="relative"
-            overflow="hidden"
-            shadowColor="rgba(0,0,0,0.5)"
-            shadowRadius={40}
-            onPress={prevent}
-          >
-            <VStack width="100%" height="100%" flex={1}>
-              <AbsoluteVStack top={5} right={26}>
-                <StackViewCloseButton />
-              </AbsoluteVStack>
-              <ScrollView style={{ width: '100%' }}>
-                <VStack padding={18} spacing="lg">
-                  <SmallTitle fontWeight="600">{title}</SmallTitle>
+          <VStack width="100%" height="100%" flex={1}>
+            <AbsoluteVStack top={5} right={26}>
+              <StackViewCloseButton />
+            </AbsoluteVStack>
+            <ScrollView style={{ width: '100%' }}>
+              <VStack padding={18} spacing="lg">
+                <SmallTitle fontWeight="600">{title}</SmallTitle>
 
-                  <Table className="hide-when-small">
-                    <TableHeadRow>
-                      <TableCell {...col0Props}>
-                        <TableHeadText>Day</TableHeadText>
-                      </TableCell>
+                <Table className="hide-when-small">
+                  <TableHeadRow>
+                    <TableCell {...col0Props}>
+                      <TableHeadText>Day</TableHeadText>
+                    </TableCell>
 
-                      <TableCell {...col1Props}>
-                        <TableHeadText>Hours</TableHeadText>
-                      </TableCell>
-                    </TableHeadRow>
+                    <TableCell {...col1Props}>
+                      <TableHeadText>Hours</TableHeadText>
+                    </TableCell>
+                  </TableHeadRow>
 
-                    {hours.map((hour, i) => {
-                      const isToday = (hour.hoursInfo.day ?? '').startsWith(
-                        dayOfWeek
-                      )
-                      return (
-                        <TableRow
-                          backgroundColor={isToday ? bgLight : 'transparent'}
-                          key={i}
-                        >
-                          <TableCell fontWeight="600" {...col0Props}>
-                            {hour.hoursInfo.day}
-                          </TableCell>
-                          <TableCell {...col1Props}>
-                            <VStack>
-                              {hour.hoursInfo.hours.map((text, i) => {
-                                return (
-                                  <Text
-                                    {...(text === 'Closed' && {
-                                      color: 'red',
-                                      fontWeight: '700',
-                                    })}
-                                    key={i}
-                                  >
-                                    {text}
-                                    {i < hour.hoursInfo.hours.length - 1 && (
-                                      <Spacer size="sm" />
-                                    )}
-                                  </Text>
-                                )
-                              })}
-                            </VStack>
-                          </TableCell>
-                        </TableRow>
-                      )
-                    })}
-                  </Table>
-                </VStack>
-              </ScrollView>
-            </VStack>
+                  {hours.map((hour, i) => {
+                    const isToday = (hour.hoursInfo.day ?? '').startsWith(
+                      dayOfWeek
+                    )
+                    return (
+                      <TableRow
+                        backgroundColor={isToday ? bgLight : 'transparent'}
+                        key={i}
+                      >
+                        <TableCell fontWeight="600" {...col0Props}>
+                          {hour.hoursInfo.day}
+                        </TableCell>
+                        <TableCell {...col1Props}>
+                          <VStack>
+                            {hour.hoursInfo.hours.map((text, i) => {
+                              return (
+                                <Text
+                                  {...(text === 'Closed' && {
+                                    color: 'red',
+                                    fontWeight: '700',
+                                  })}
+                                  key={i}
+                                >
+                                  {text}
+                                  {i < hour.hoursInfo.hours.length - 1 && (
+                                    <Spacer size="sm" />
+                                  )}
+                                </Text>
+                              )
+                            })}
+                          </VStack>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </Table>
+              </VStack>
+            </ScrollView>
           </VStack>
-        </AbsoluteVStack>
+        </Modal>
       </>
     )
   })
 )
 
 const col0Props: TableCellProps = {
+  selectable: true,
   fontSize: 16,
   width: '25%',
   minWidth: 110,
@@ -135,6 +120,7 @@ const col0Props: TableCellProps = {
 }
 
 const col1Props: TableCellProps = {
+  selectable: true,
   fontSize: 14,
   flex: 1,
 }
