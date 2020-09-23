@@ -1,16 +1,7 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { Loader, Search } from '@dish/react-feather'
-import {
-  AbsoluteVStack,
-  HStack,
-  Spacer,
-  Toast,
-  VStack,
-  useGet,
-  useOnMount,
-} from '@dish/ui'
+import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-import _ from 'lodash'
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import {
   PanResponder,
@@ -149,7 +140,6 @@ export const AppSearchInput = memo(() => {
   const panResponder = useMemo(() => {
     return PanResponder.create({
       onMoveShouldSetPanResponder: (_, { dy }) => {
-        console.log('waht is')
         isTouchingSearchBar = true
         return true
       },
@@ -234,30 +224,40 @@ export const AppSearchInput = memo(() => {
                 alignSelf="center"
                 alignItems="center"
                 minWidth="100%"
-                height={searchBarHeight - 23}
+                height={searchBarHeight - 18}
               >
                 <HomeSearchBarTags input={input} />
-                <HStack position="relative" flex={1}>
+                <HStack
+                  height={searchBarHeight - 18}
+                  maxWidth="100%"
+                  position="relative"
+                  flex={1}
+                  alignItems="center"
+                >
+                  {/* fix for search input interferring with native touch conflicts */}
                   {!isWeb && (
-                    // this helps native with dragging conflicts
-                    <TouchableWithoutFeedback
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 40,
-                        bottom: 0,
-                        zIndex: 10000,
-                      }}
-                      onPress={() => {
-                        inputStore.node?.focus()
-                      }}
+                    <VStack
+                      position="absolute"
+                      top={0}
+                      left={0}
+                      right={30}
+                      bottom={0}
+                      zIndex={1000000}
                     >
-                      <View
+                      <TouchableWithoutFeedback
                         style={StyleSheet.absoluteFill}
-                        {...panResponder.panHandlers}
-                      />
-                    </TouchableWithoutFeedback>
+                        onPress={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          inputStore.node?.focus()
+                        }}
+                      >
+                        <View
+                          style={StyleSheet.absoluteFill}
+                          {...panResponder.panHandlers}
+                        />
+                      </TouchableWithoutFeedback>
+                    </VStack>
                   )}
                   <TextInput
                     ref={inputStore.setNode}

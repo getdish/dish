@@ -1,5 +1,3 @@
-import { networkInterfaces } from 'os'
-
 import React, {
   RefObject,
   forwardRef,
@@ -11,8 +9,6 @@ import React, {
 } from 'react'
 import {
   Animated,
-  StyleSheet,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
   ViewProps,
@@ -349,12 +345,15 @@ function fixNativeShadow(props: any) {
 export const AbsoluteVStack = createStack({
   position: 'absolute',
   flexDirection: 'column',
+  flexBasis: 'auto',
 })
 
 export const HStack = createStack({
   flexDirection: 'row',
+  flexBasis: 'auto',
 })
 
 export const VStack = createStack({
   flexDirection: 'column',
+  flexBasis: 'auto',
 })

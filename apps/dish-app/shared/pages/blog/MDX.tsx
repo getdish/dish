@@ -71,13 +71,11 @@ const components = {
   li: (props) => (
     <>
       <li style={{ marginLeft: 26 }} {...props} />
-      <Spacer size="sm" />
     </>
   ),
   ul: (props) => (
     <>
-      <ul className="body-text" {...props} />
-      {contentSpace}
+      <ul style={{ margin: 0 }} {...props} />
     </>
   ),
 
@@ -87,25 +85,16 @@ const components = {
 
   ol: (props) => (
     <>
-      <ol className="body-text" {...props} />
-      {contentSpace}
+      <ol style={{ margin: 0 }} {...props} />
     </>
   ),
 
   p: (props) => {
-    return (
-      <>
-        <Paragraph
-          className="body-text"
-          margin={0}
-          fontSize="inherit"
-          lineHeight="inherit"
-          alpha={0.9}
-          {...props}
-        />
-        {contentSpace}
-      </>
-    )
+    return <Paragraph {...props} />
+  },
+
+  Paragraph: (props) => {
+    return <Paragraph {...props} />
   },
 
   description: (props) => (

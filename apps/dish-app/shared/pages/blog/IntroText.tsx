@@ -6,7 +6,7 @@ import markSolid from './mark-solid.svg'
 
 export const IntroText = (props: ParagraphProps) => {
   return (
-    <Paragraph size={1.45} sizeLineHeight={1.35} width="100%">
+    <Paragraph size="xxl" width="100%">
       {wordsWithBrandMark(props.children)}
     </Paragraph>
   )
@@ -31,6 +31,7 @@ export const BrandMarkInline = () => (
   <Image
     source={{ uri: markSolid }}
     style={{
+      display: 'inline-block',
       width: 16,
       height: 16,
       transform: [
