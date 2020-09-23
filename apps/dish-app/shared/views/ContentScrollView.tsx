@@ -48,7 +48,7 @@ export const ContentScrollView = forwardRef(
       clearTimeout(tm.current)
       tm.current = setTimeout(() => {
         scrollStore.setIsScrolling(false)
-      }, 200)
+      }, 300)
     }
     const scrollRef = useRef()
 

@@ -93,7 +93,7 @@ export const RestaurantUpVoteDownVote = memo(
             </Tooltip>
             <Text
               fontSize={Math.min(16, 120 / `${score}`.length / 2)}
-              fontWeight="500"
+              fontWeight="700"
               marginVertical={-2}
               letterSpacing={-0.5}
               color={score > 0 ? '#000' : 'darkred'}
