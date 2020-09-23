@@ -40,7 +40,10 @@ export const RestaurantOverview = memo(
                     <Paragraph
                       size={i == 0 ? 1.1 : 1}
                       opacity={i === 0 ? 1 : 0.7}
-                      ellipse={i !== 0}
+                      // react native doesnt like using this as a prop...
+                      {...(i !== 0 && {
+                        ellipse: true,
+                      })}
                     >
                       {item.sentence
                         .replace(/\n/g, ' ')

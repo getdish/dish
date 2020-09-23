@@ -18,6 +18,7 @@ export default memo(function GalleryPage() {
   const state = om.state.home.currentState
   const isSmall = useIsNarrow()
 
+  console.log('state', state)
   if (state.type === 'gallery') {
     const dishPhotosElement = null
     // (

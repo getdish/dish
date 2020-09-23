@@ -197,8 +197,14 @@ const SearchNavBarContainer = ({
   if (!isWeb) {
     contents = (
       <AnimatedVStack>
-        <AbsoluteVStack bottom={0} height={150} width="100%">
+        <AbsoluteVStack
+          pointerEvents="none"
+          bottom={0}
+          height={150}
+          width="100%"
+        >
           <LinearGradient
+            pointerEvents="none"
             style={{
               position: 'absolute',
               top: 0,
@@ -262,7 +268,7 @@ const SearchResultsContent = (props: Props) => {
   const handleScrollY = (y: number) => {
     if (isOnLastChunk) return
     const estEndY = state.itemHeightAvg * totalLoading
-    const estLoadY = estEndY - window.innerHeight * 0.5
+    const estLoadY = estEndY - getWindowHeight() * 0.5
     if (y > estLoadY) {
       setState((x) => ({ ...x, chunk: x.chunk + 1 }))
     }

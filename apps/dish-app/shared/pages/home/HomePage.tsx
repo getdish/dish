@@ -383,7 +383,6 @@ const TopDishesCuisineItem = memo(
           </SlantedLinkButton>
         </HStack>
         <VStack
-          marginTop={-10}
           paddingBottom={30}
           pointerEvents="none"
           flex={1}
@@ -495,6 +494,7 @@ const TopDishesTrendingRestaurants = memo(
                   //     ? 'up'
                   //     : 'down'
                   // }
+                  minWidth={180} // react native
                   subtle
                   restaurantSlug={restaurant.slug ?? ''}
                   onHoverIn={() => {

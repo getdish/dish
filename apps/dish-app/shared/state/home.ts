@@ -97,9 +97,10 @@ export const state: HomeState = {
   lastSearchState: derived<HomeState, OmState, HomeStateItemSearch | undefined>(
     (state) => findLast(state.states, isSearchState)
   ),
-  currentState: derived<HomeState, OmState, HomeStateItem>(
-    (state) => _.last(state.states)!
-  ),
+  currentState: derived<HomeState, OmState, HomeStateItem>((state) => {
+    state.stateIndex
+    return _.last(state.states)!
+  }),
   currentStateSearchQuery: derived<
     HomeState,
     any,
