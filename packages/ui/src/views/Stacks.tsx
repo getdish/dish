@@ -9,6 +9,7 @@ import React, {
 } from 'react'
 import {
   Animated,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
   ViewProps,
@@ -272,7 +273,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
       } else {
         if (pointerEvents !== 'none' && !!(onPress || onPressOut)) {
           content = (
-            <TouchableWithoutFeedback
+            <TouchableOpacity
               onPress={(e) => {
                 // @ts-ignore
                 events.onClick(e)
@@ -286,7 +287,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
               }}
             >
               {content}
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           )
         }
       }

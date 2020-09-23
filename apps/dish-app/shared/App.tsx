@@ -8,6 +8,7 @@ import { AppContainer } from './AppContainer'
 import { HomeIntroLetter } from './AppIntroLetter'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
+import { AppMenuFloating } from './AppMenuFloating'
 import { AppRoot } from './AppRoot'
 import { HomeSearchBarFloating } from './AppSearchBar'
 import { AppStackView } from './AppStackView'
@@ -91,6 +92,8 @@ const AppContent = memo(() => {
           <AppMapControlsUnderlay />
           <AppMapControlsOverlay />
         </Suspense>
+
+        <AppMenuFloating />
 
         <HomeSearchBarFloating />
         <HomeAutocomplete />
