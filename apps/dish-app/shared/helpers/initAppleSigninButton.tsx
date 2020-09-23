@@ -1,4 +1,10 @@
+import { isWeb } from '../constants'
+
 export const initAppleSigninButton = () => {
+  if (!isWeb) {
+    return
+  }
+
   // supports multiple sign in buttons
   const existingInited = document.querySelector('#appleid-signin > div')
   if (existingInited) {

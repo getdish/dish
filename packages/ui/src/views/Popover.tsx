@@ -10,6 +10,7 @@ import { ToggleLayer, Transition, anchor } from 'react-laag'
 import { Platform } from 'react-native'
 
 import { useOverlay } from '../hooks/useOverlay'
+import { Modal } from './Modal'
 import { PopoverProps } from './PopoverProps'
 import { popoverCloseCbs } from './PopoverShared'
 
@@ -136,6 +137,17 @@ export function Popover(props: PopoverProps) {
           </div>
         )}
       </ToggleLayer>
+    )
+  }
+
+  if (props.isOpen) {
+    return (
+      <>
+        {props.children}
+        <Modal transparent={false} presentationStyle="formSheet" visible>
+          {props.contents}
+        </Modal>
+      </>
     )
   }
 

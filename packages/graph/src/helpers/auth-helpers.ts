@@ -1,4 +1,4 @@
-import { isBrowserProd, isHasuraLive, isNode } from '../constants'
+import { isDevProd, isHasuraLive, isNode } from '../constants'
 
 const BROWSER_STORAGE_KEY = 'auth'
 const LOCAL_AUTH_SERVER = 'http://localhost:3000'
@@ -8,7 +8,7 @@ const DOMAIN = (() => {
   if (isNode) {
     return process.env.AUTH_ENDPOINT || LOCAL_AUTH_SERVER
   } else {
-    if (isBrowserProd) {
+    if (isDevProd) {
       return PROD_JWT_SERVER
     } else {
       if (isHasuraLive) {
@@ -19,6 +19,8 @@ const DOMAIN = (() => {
     }
   }
 })()
+
+console.log('DOMAIN', DOMAIN)
 
 class AuthModel {
   public jwt = ''
@@ -87,8 +89,8 @@ class AuthModel {
         const error = {
           method: method,
           domain: DOMAIN,
-          path: path,
-          data: data,
+          path,
+          data,
           status: response.status,
           statusText: response.statusText,
         }

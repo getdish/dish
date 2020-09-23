@@ -1,4 +1,5 @@
 import {
+  Form,
   HStack,
   Input,
   InteractiveContainer,
@@ -10,6 +11,7 @@ import {
 import { default as React, useEffect, useState } from 'react'
 
 import { lightRed } from '../colors'
+import { isWeb } from '../constants'
 import { initAppleSigninButton } from '../helpers/initAppleSigninButton'
 import { useOvermind } from '../state/om'
 import { Link } from './ui/Link'
@@ -19,6 +21,16 @@ import { SmallButton } from './ui/SmallButton'
 
 const activeStyle: LinkButtonProps = {
   backgroundColor: 'rgba(150,150,150,0.35)',
+}
+
+const navButtonProps: LinkButtonProps = {
+  flex: 1,
+  justifyContent: 'center',
+  paddingVertical: 6,
+  paddingHorizontal: 12,
+  height: 44,
+  alignItems: 'center',
+  color: 'rgb(120, 120, 120)',
 }
 
 export const LoginRegisterForm = ({
@@ -65,38 +77,39 @@ export const LoginRegisterForm = ({
   }
 
   return (
-    <VStack alignItems="center" spacing>
-      <VStack
-        borderRadius={9}
-        borderColor="rgba(255,255,255,0.15)"
-        borderWidth={2}
-        hoverStyle={{
-          borderColor: 'rgba(255,255,255,0.3)',
-        }}
-      >
-        <div
-          id="appleid-signin"
-          className="signin-button"
-          data-color="black"
-          data-border="true"
-          data-type="sign in"
-        ></div>
-      </VStack>
+    <VStack alignItems="center">
+      {isWeb && (
+        <>
+          <VStack
+            borderRadius={9}
+            borderColor="rgba(255,255,255,0.15)"
+            borderWidth={2}
+            hoverStyle={{
+              borderColor: 'rgba(255,255,255,0.3)',
+            }}
+          >
+            <div
+              id="appleid-signin"
+              className="signin-button"
+              data-color="black"
+              data-border="true"
+              data-type="sign in"
+            ></div>
+          </VStack>
+          <Spacer />
+          <HStack>
+            <SmallTitle fontSize={14} divider="center">
+              or
+            </SmallTitle>
+          </HStack>
+        </>
+      )}
 
-      <HStack>
-        <SmallTitle fontSize={14} divider="center">
-          or
-        </SmallTitle>
-      </HStack>
-
-      <form>
-        <VStack spacing height={240}>
-          <InteractiveContainer>
+      <Form>
+        <VStack spacing height={240} minWidth={260}>
+          <InteractiveContainer height={43} alignSelf="center">
             <LinkButton
-              flex={1}
-              justifyContent="center"
-              padding={6}
-              color="rgb(150, 150, 150)"
+              {...navButtonProps}
               {...(!isRegister && activeStyle)}
               onPress={() => {
                 setIsRegister(false)
@@ -105,10 +118,7 @@ export const LoginRegisterForm = ({
               Login
             </LinkButton>
             <LinkButton
-              flex={1}
-              justifyContent="center"
-              padding={6}
-              color="rgb(150, 150, 150)"
+              {...navButtonProps}
               {...(isRegister && activeStyle)}
               onPress={() => {
                 setIsRegister(true)
@@ -124,14 +134,16 @@ export const LoginRegisterForm = ({
                 name="email"
                 value={email}
                 placeholder="Email"
-                onChange={(event) => setEmail(event.target['value'])}
+                autoCapitalize="none"
+                onChangeText={(val) => setEmail(val)}
               />
               <Spacer />
               <Input
                 name="username"
+                autoCapitalize="none"
                 value={username}
                 placeholder="Username"
-                onChange={(event) => setUsername(event.target['value'])}
+                onChangeText={(val) => setUsername(val)}
               />
             </>
           )}
@@ -140,9 +152,10 @@ export const LoginRegisterForm = ({
             <>
               <Input
                 name="email"
+                autoCapitalize="none"
                 value={login}
                 placeholder="Email or username"
-                onChange={(event) => setLogin(event.target['value'])}
+                onChangeText={(value) => setLogin(value)}
               />
             </>
           )}
@@ -150,7 +163,7 @@ export const LoginRegisterForm = ({
           <Input
             name="password"
             secureTextEntry
-            onChange={(event) => setPassword(event.target['value'])}
+            onChangeText={(val) => setPassword(val)}
             placeholder="Password"
             value={password}
           />
@@ -199,7 +212,7 @@ export const LoginRegisterForm = ({
             </HStack>
           )}
         </VStack>
-      </form>
+      </Form>
     </VStack>
   )
 }

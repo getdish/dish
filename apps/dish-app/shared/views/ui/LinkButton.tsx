@@ -1,8 +1,6 @@
 import { HStack, Text } from '@dish/ui'
-import { isWeakMap } from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { isWeb } from '../../../../../packages/ui/src/constants'
 import { omStatic } from '../../state/omStatic'
 import { RoutesTable } from '../../state/router'
 import { useLink } from './Link'

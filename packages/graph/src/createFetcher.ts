@@ -1,6 +1,6 @@
 import { QueryResponse } from '@o/gqless'
 
-import { isBrowserProd } from './constants'
+import { isDevProd } from './constants'
 import { Auth } from './helpers/auth-helpers'
 import { getGraphEndpoint } from './helpers/getGraphEndpoint'
 
@@ -90,7 +90,7 @@ class HasuraError extends Error {
     this.errors = errors
     this.message =
       errors?.[0]?.extensions?.internal?.error?.message || errors?.[0]?.message
-    if (isBrowserProd) {
+    if (isDevProd) {
       this.name = 'Dish API Error'
     } else {
       console.error('fetch errors', errors, 'for query', query)

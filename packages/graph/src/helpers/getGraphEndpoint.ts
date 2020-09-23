@@ -1,5 +1,5 @@
 import {
-  isBrowserProd,
+  isDevProd,
   isHasuraLive,
   isNative,
   isNode,
@@ -21,7 +21,7 @@ export function getGraphEndpointDomain() {
       process.env.REACT_APP_HASURA_ENDPOINT ||
       LOCAL_HASURA
   } else {
-    if (isBrowserProd) {
+    if (isDevProd) {
       domain = LIVE_HASURA
     } else {
       if (isHasuraLive) {

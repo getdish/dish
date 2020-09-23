@@ -1,47 +1,14 @@
-import { slugify } from '@dish/graph'
 import { ChevronUp, HelpCircle, Menu } from '@dish/react-feather'
-import {
-  Box,
-  Divider,
-  HStack,
-  Popover,
-  Spacer,
-  Text,
-  Toast,
-  Tooltip,
-  VStack,
-} from '@dish/ui'
+import { HStack, Popover, Text, Tooltip } from '@dish/ui'
 import React, { memo, useCallback, useEffect } from 'react'
 
-import { initAppleSigninButton } from './helpers/initAppleSigninButton'
 import { useIsAboveMedium, useIsNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
-import { flatButtonStyle } from './views/baseButtonStyle'
-import { LoginRegisterForm } from './views/LoginRegisterForm'
+import { UserMenuContents } from './UserMenuContents'
 import { LinkButton } from './views/ui/LinkButton'
 import { LinkButtonProps } from './views/ui/LinkProps'
-
-const MenuLinkButton = (props: LinkButtonProps) => {
-  return (
-    <LinkButton
-      width="100%"
-      {...flatButtonStyle}
-      hoverStyle={{
-        transform: [{ scale: 1.03 }],
-      }}
-      paddingVertical={8}
-      onPressOut={() => {
-        if (omStatic.state.home.showUserMenu) {
-          omStatic.actions.home.setShowUserMenu(false)
-        }
-      }}
-      fontSize={18}
-      {...props}
-    />
-  )
-}
 
 export const AppMenu = memo(() => {
   const om = useOvermind()
@@ -98,74 +65,6 @@ export const AppMenu = memo(() => {
     </HStack>
   )
 })
-
-const UserMenuContents = memo(
-  ({ hideUserMenu }: { hideUserMenu: Function }) => {
-    const om = useOvermind()
-
-    useEffect(() => {
-      initAppleSigninButton()
-    }, [])
-
-    return (
-      <Box
-        alignItems="stretch"
-        padding={20}
-        width="35vw"
-        minWidth={240}
-        maxWidth={300}
-      >
-        <VStack spacing="sm">
-          {om.state.user.isLoggedIn &&
-            om.state.user.user.username === 'admin' && (
-              <MenuLinkButton name="adminTags">Admin</MenuLinkButton>
-            )}
-
-          {om.state.user.isLoggedIn && (
-            <MenuLinkButton
-              name="user"
-              params={{
-                username: slugify(om.state.user.user?.username ?? ''),
-              }}
-            >
-              Profile
-            </MenuLinkButton>
-          )}
-
-          <MenuLinkButton name="blog">Blog</MenuLinkButton>
-          <MenuLinkButton name="about">About</MenuLinkButton>
-        </VStack>
-
-        {!om.state.user.isLoggedIn && (
-          <>
-            <Spacer size="lg" />
-            <Divider />
-            <Spacer size="lg" />
-            <LoginRegisterForm onDidLogin={hideUserMenu} />
-          </>
-        )}
-
-        {om.state.user.isLoggedIn && (
-          <>
-            <Spacer size="lg" />
-            <Divider />
-            <Spacer size="lg" />
-            <MenuLinkButton
-              onPress={() => {
-                Toast.show(`Logging out...`)
-                setTimeout(() => {
-                  om.actions.user.logout()
-                }, 1000)
-              }}
-            >
-              Logout
-            </MenuLinkButton>
-          </>
-        )}
-      </Box>
-    )
-  }
-)
 
 const MenuButton = memo(
   ({

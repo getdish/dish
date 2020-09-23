@@ -3,8 +3,9 @@ export const isNode = typeof window == 'undefined'
 
 export const isHasuraLive =
   !isNode && window.location?.hostname.includes('hasura_live')
-export const isBrowserProd =
-  !isNode && window.location?.hostname.includes('dish')
+export const isDevProd =
+  process.env.TARGET === 'native' ||
+  (!isNode && window.location?.hostname.includes('dish'))
 
 export const isNative = process.env.TARGET === 'native'
 export const isWorker =
@@ -36,7 +37,7 @@ export let SEARCH_DOMAIN = (() => {
   } else if (isNode) {
     return LOCAL_SEARCH_DOMAIN
   } else {
-    if (isBrowserProd || isHasuraLive) {
+    if (isDevProd || isHasuraLive) {
       return LIVE_SEARCH_DOMAIN
     } else {
       return LOCAL_SEARCH_DOMAIN
