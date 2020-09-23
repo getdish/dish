@@ -16,6 +16,7 @@ body,
   flex-grow: 1;
   display: flex;
   flex: 1;
+  z-index: 0;
 }
 
 * {

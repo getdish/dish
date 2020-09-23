@@ -47,8 +47,6 @@ function Root({ overmind }: { overmind?: any }) {
               <App />
             </Route>
           </RouteSwitch>
-
-          {/* <WelcomeModal /> */}
         </Suspense>
       </Provider>
     </>

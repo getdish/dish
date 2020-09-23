@@ -18,7 +18,7 @@ import {
 } from '@dish/ui'
 import _, { sortBy, uniqBy } from 'lodash'
 import { default as React, Suspense, memo, useEffect, useState } from 'react'
-import { Dimensions, ScrollView, StyleSheet } from 'react-native'
+import { Dimensions, Modal, ScrollView, StyleSheet } from 'react-native'
 
 import { bgLight, bgLightHover, bgLightTranslucent } from '../../colors'
 import { useIsNarrow } from '../../hooks/useIs'
@@ -272,6 +272,10 @@ const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
     <>
       <HomeTopDishesTitle />
       <Spacer size="lg" />
+
+      {/* <Modal visible transparent presentationStyle="formSheet">
+        <VStack height={100} width={100} backgroundColor="red" />
+      </Modal> */}
 
       <VStack minHeight={Dimensions.get('window').height * 0.95}>
         {!topDishes.length && (
