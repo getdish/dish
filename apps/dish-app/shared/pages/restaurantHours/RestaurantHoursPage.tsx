@@ -4,8 +4,11 @@ import {
   PageTitle,
   SmallTitle,
   Spacer,
+  Table,
   TableCell,
   TableCellProps,
+  TableHeadRow,
+  TableHeadText,
   TableRow,
   Text,
   VStack,
@@ -20,7 +23,6 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
-import { Table, TableHeadRow, TableHeadText } from '../../views/ui/Table'
 
 export default memo(
   graphql(function HomePageRestaurantHours() {

@@ -1,10 +1,17 @@
-import { HStack, SmallTitle, Spacer, Text, VStack } from '@dish/ui'
+import {
+  HStack,
+  Input,
+  InteractiveContainer,
+  SmallTitle,
+  Spacer,
+  Text,
+  VStack,
+} from '@dish/ui'
 import { default as React, useEffect, useState } from 'react'
 
 import { lightRed } from '../colors'
 import { initAppleSigninButton } from '../helpers/initAppleSigninButton'
 import { useOvermind } from '../state/om'
-import { Input, InteractiveContainer } from './ui/Input'
 import { Link } from './ui/Link'
 import { LinkButton } from './ui/LinkButton'
 import { LinkButtonProps } from './ui/LinkProps'

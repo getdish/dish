@@ -1,7 +1,7 @@
+import { Paragraph, ParagraphProps } from '@dish/ui'
 import React from 'react'
 import { Image } from 'react-native'
 
-import { Paragraph, ParagraphProps } from '../../views/ui/Paragraph'
 import markSolid from './mark-solid.svg'
 
 export const IntroText = (props: ParagraphProps) => {

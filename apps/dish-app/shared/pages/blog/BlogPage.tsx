@@ -1,11 +1,10 @@
-import { Spacer, VStack } from '@dish/ui'
+import { Spacer, Title, VStack } from '@dish/ui'
 import React from 'react'
 
 import { HomeStateItemBlog } from '../../state/home-types'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { StackDrawer } from '../../views/StackDrawer'
 import { Link } from '../../views/ui/Link'
-import { Title } from '../../views/ui/Title'
 import { StackViewProps } from '../StackViewProps'
 import { BlogPageDetail } from './BlogPageDetail'
 import { BlogPostMeta } from './BlogPostMeta'

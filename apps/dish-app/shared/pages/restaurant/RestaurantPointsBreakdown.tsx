@@ -1,12 +1,19 @@
 import { graphql } from '@dish/graph'
-import { Divider, HStack, Spacer, Text, TextProps, VStack } from '@dish/ui'
+import {
+  Divider,
+  HStack,
+  Paragraph,
+  Spacer,
+  Text,
+  TextProps,
+  VStack,
+} from '@dish/ui'
 import React, { memo, useState } from 'react'
 import { View } from 'react-native'
 
 import { lightGreen, lightYellow } from '../../colors'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { omStatic } from '../../state/omStatic'
-import { Paragraph } from '../../views/ui/Paragraph'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { TextStrong } from '../../views/ui/TextStrong'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'

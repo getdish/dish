@@ -1,4 +1,4 @@
-import { AbsoluteVStack, Text, VStack } from '@dish/ui'
+import { AbsoluteVStack, Paragraph, Text, VStack } from '@dish/ui'
 import { default as React, memo } from 'react'
 import { Image, Platform, ScrollView, View } from 'react-native'
 import { useStorageState } from 'react-storage-hooks'
@@ -8,7 +8,6 @@ import dishNeon from './assets/dish-neon.jpg'
 import { brandColor, lightGreen, lightYellow } from './colors'
 import { useOvermind } from './state/om'
 import { LoginRegisterForm } from './views/LoginRegisterForm'
-import { Paragraph } from './views/ui/Paragraph'
 
 const useShowIntroLetter = () => {
   return useStorageState(localStorage, 'show_intro22', true)

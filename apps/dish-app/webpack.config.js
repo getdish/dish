@@ -193,6 +193,17 @@ module.exports = function getWebpackConfig(
                   },
                 ],
               },
+              {
+                test: /\.mdx?$/,
+                use: [
+                  {
+                    loader: 'babel-loader',
+                  },
+                  {
+                    loader: '@mdx-js/loader',
+                  },
+                ],
+              },
               // fallback loader helps webpack-dev-server serve assets
               {
                 loader: 'file-loader',
