@@ -1,5 +1,10 @@
 import React from 'react'
-import { Modal as ModalNative, ModalProps } from 'react-native'
+import {
+  Modal as ModalNative,
+  ModalProps,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native'
 
 import { isWeb } from '../constants'
 import { prevent } from '../helpers/prevent'
@@ -11,7 +16,7 @@ import { AbsoluteVStack, StackProps, VStack } from './Stacks'
 export const Modal = ({
   // modal specific props
   animated,
-  animationType,
+  animationType = 'slide',
   transparent = true,
   visible = true,
   onRequestClose,
@@ -81,9 +86,26 @@ export const Modal = ({
 
   return (
     <ModalNative {...modalProps}>
-      <VStack flex={1} {...rest}>
-        {children}
-      </VStack>
+      {/* fix for native: https://github.com/facebook/react-native/issues/26892 */}
+      <TouchableOpacity
+        activeOpacity={1}
+        style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          left: 0,
+          bottom: 0,
+        }}
+        onPressOut={(e) => {
+          if (e.nativeEvent?.locationY) {
+            onRequestClose?.()
+          }
+        }}
+      >
+        <VStack flex={1} {...rest} backgroundColor="green">
+          {children}
+        </VStack>
+      </TouchableOpacity>
     </ModalNative>
   )
 }

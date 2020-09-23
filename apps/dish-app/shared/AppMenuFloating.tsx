@@ -37,8 +37,10 @@ export const AppMenuFloating = () => {
         visible={userMenu.show}
         presentationStyle="formSheet"
         overlayDismisses
+        onDismiss={() => {
+          userMenu.setShow(false)
+        }}
         onRequestClose={() => {
-          console.log('requesting close')
           userMenu.setShow(false)
         }}
       >
