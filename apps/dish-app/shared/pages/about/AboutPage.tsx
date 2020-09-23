@@ -35,10 +35,10 @@ export default function AboutPage({
 
           <VStack spacing="xl">
             <Paragraph size="xxxl" fontWeight="300">
-              Too often, amazing Vietnamese, Chinese, and Mexican
+              Too often amazing Vietnamese, Chinese, and Mexican
               hole-in-the-wall spots are lost to bad ratings, despite making
               some of the best food. Todays rating systems fail us by forcing
-              everything you care about into "5 stars".
+              everything you care about into "5&nbsp;stars".
             </Paragraph>
 
             <Paragraph size="xxl" fontWeight="300">
@@ -73,18 +73,21 @@ export default function AboutPage({
                 date night 🌃
               </LinkButton>{' '}
               are <em>unique</em>: whether it's a specific dish or the delivery
-              speed, the vibe or if they have good vegetarian.
+              speed, the vibe, vegetarian options, or if they have a patio.
             </Paragraph>
 
             <Paragraph size="xxl" fontWeight="300">
               <Text display="inline" fontWeight="600">
-                Dish splits ratings down to the dish - and the other factors
-                that matter
+                Dish rates down to the dish - and all the factors that matter
               </Text>
               . When you write a review, we pull out your sentiment towards
               every possible tag automatically. Much like RottenTomatoes, Dish
               also crawls every top food review source - including{' '}
-              <Text borderBottomColor="#eee" borderBottomWidth={2}>
+              <Text
+                lineHeight={24}
+                borderBottomColor="#eee"
+                borderBottomWidth={2}
+              >
                 every delivery app
               </Text>{' '}
               - so finally, you don't need to flip between apps to find what you
