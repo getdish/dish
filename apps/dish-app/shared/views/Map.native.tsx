@@ -12,6 +12,8 @@ import { MapProps } from './MapProps'
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN)
 MapboxGL.setTelemetryEnabled(false)
 
+const idFn = (_) => _
+
 export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
   const { width, height } = Dimensions.get('screen')
   const drawerStore = useStore(BottomDrawerStore)
@@ -35,13 +37,12 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
     paddingTop: paddingVertical,
     paddingBottom: paddingVertical,
   }
-  const cameraRef = useRef<MapboxGL.Camera>()
-  const mapRef = useRef<MapboxGL.MapView>()
-  const onMoveEndDelayed = useDebounce(onMoveEnd, 250)
+  const cameraRef = useRef<MapboxGL.Camera>(null)
+  const mapRef = useRef<MapboxGL.MapView>(null)
+  const onMoveEndDelayed = useDebounce(onMoveEnd ?? idFn, 250)
 
   useEffect(() => {
     const { ne, sw, paddingTop, paddingBottom } = bounds
-    console.log('fit bounds')
     cameraRef.current?.fitBounds(ne, sw, [paddingTop, 0, paddingBottom, 0], 500)
   }, [JSON.stringify(bounds)])
 
@@ -111,7 +112,11 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
           <MapboxGL.SymbolLayer
             id="pointCount"
             style={{
+              textField: '{point_count}',
+              textSize: 12,
               textColor: '#000',
+              textAllowOverlap: true,
+              iconAllowOverlap: true,
             }}
           />
           <MapboxGL.CircleLayer
@@ -119,7 +124,17 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
             belowLayerID="pointCount"
             filter={['has', 'point_count']}
             style={{
-              circleColor: 'red',
+              circleColor: 'rgba(200,150,0,0.5)',
+              circleRadius: 15,
+            }}
+          />
+          <MapboxGL.CircleLayer
+            id="circlePointsLayer"
+            layerIndex={200}
+            filter={['!', ['has', 'point_count']]}
+            style={{
+              circleColor: 'rgba(15,150,0,0.5)',
+              circleRadius: 4,
             }}
           />
         </MapboxGL.ShapeSource>

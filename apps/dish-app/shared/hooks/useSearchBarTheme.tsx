@@ -8,7 +8,7 @@ export const useSearchBarTheme = () => {
   return {
     theme: isSmall ? 'light' : 'dark',
     color: isSmall ? rgbString(rgb) ?? '#444' : '#fff',
-    background: isSmall ? '#eee' : 'transparent',
+    background: isSmall ? '#fff' : rgbString(rgb),
     isSmall,
   }
 }

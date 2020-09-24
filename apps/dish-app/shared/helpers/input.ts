@@ -32,7 +32,7 @@ export const inputClearSelection = (input?: HTMLInputElement) => {
   }
 }
 
-export const inputIsTextSelected = (input?: HTMLInputElement) => {
+export const inputIsTextSelected = (input?: HTMLInputElement | null) => {
   const selection = window.getSelection()
   if (input && selection?.anchorNode?.firstChild !== input) return
   return !selection?.empty

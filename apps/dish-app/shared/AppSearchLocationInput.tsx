@@ -6,9 +6,11 @@ import { TextInput, TouchableOpacity } from 'react-native'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { inputTextStyles } from './AppSearchInput'
+import { isWeb } from './constants'
 import { inputClearSelection, inputIsTextSelected } from './helpers/input'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
+import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { useOvermind } from './state/om'
 
 const paddingHorizontal = 16
@@ -55,7 +57,7 @@ export const AppSearchLocationInput = memo(() => {
         if (om.state.home.showAutocomplete) {
           om.actions.home.setShowAutocomplete(false)
         }
-        locationInputStore.node.blur()
+        locationInputStore.node?.blur()
         return
       }
       case 38: {
@@ -94,17 +96,20 @@ export const AppSearchLocationInput = memo(() => {
           >
             <MapPin
               color={color}
-              size={18}
+              size={20}
               opacity={0.5}
               style={{ marginLeft: 10, marginRight: -5 }}
             />
           </TouchableOpacity>
           <HStack
+            position="relative"
+            minWidth="78.7%" // this is the hackiest ever fix for react native width issue for now
             flex={1}
             onPressOut={() => {
               om.actions.home.setShowAutocomplete('location')
             }}
           >
+            {!isWeb && <SearchInputNativeDragFix name="location" />}
             <TextInput
               ref={locationInputStore.setNode}
               value={locationSearch}

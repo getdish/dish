@@ -31,6 +31,7 @@ export const AppMapControlsUnderlay = memo(() => {
         top={searchBarHeight + 10}
         left={paddingLeft + 20}
         right={0}
+        pointerEvents="none"
         {...(isSmall && {
           maxWidth: '100%',
           left: 0,

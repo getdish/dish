@@ -620,7 +620,7 @@ export const Map = (props: MapProps) => {
       const cancelSeries = series([
         () => fullyIdle({ max: 500 }),
         () => {
-          map.fitBounds(next, {
+          map?.fitBounds(next, {
             duration: 450,
           })
           internal.current.isAwaitingNextMove = false

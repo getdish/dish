@@ -197,7 +197,7 @@ const AutocompleteContentsInner = memo(
             om.actions.home.setShowAutocomplete(false)
           }}
         >
-          <BlurView>
+          <BlurView width="100%">
             <VStack
               width="100%"
               height="100%"
@@ -229,6 +229,7 @@ const AutocompleteContentsInner = memo(
                 shadowRadius={18}
                 width="100%"
                 backgroundColor={isWeb ? 'rgba(0,0,0,0.9)' : 'rgba(0,0,0,0.5)'}
+                height={isWeb ? 'auto' : '100%'}
                 minHeight={100}
                 padding={5}
                 borderRadius={isSmall ? 0 : 10}
