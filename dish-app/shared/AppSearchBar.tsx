@@ -20,8 +20,6 @@ import {
   searchBarTopOffset,
   zIndexSearchBarFloating,
 } from './constants'
-import { rgbString } from './helpers/rgbString'
-import { useCurrentLenseColor } from './hooks/useCurrentLenseColor'
 import { useIsNarrow, useIsReallyNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'

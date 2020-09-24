@@ -9,15 +9,15 @@ export const StackViewCloseButton = memo((props: StackProps) => {
     <AbsoluteVStack
       className="cursor-pointer"
       pointerEvents="auto"
-      zIndex={100000}
+      zIndex={100000000000}
       {...props}
     >
       <CloseButton
         padding={5}
         borderRadius={20}
-        shadowColor="rgba(0,0,0,0.1)"
-        shadowRadius={5}
-        shadowOffset={{ width: 2, height: 0 }}
+        shadowColor="rgba(0,0,0,0.25)"
+        shadowRadius={10}
+        shadowOffset={{ width: 0, height: 2 }}
         onPressOut={() => omStatic.actions.home.up()}
         size={16}
       />

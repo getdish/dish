@@ -1,6 +1,7 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
+import { MessageSquare } from '@dish/react-feather'
 import {
   HStack,
   Spacer,
@@ -24,6 +25,7 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { allTags } from '../../state/allTags'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
+import { CommentBubble } from '../../views/CommentBubble'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollView'
 import { DishView } from '../../views/dish/DishView'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
@@ -435,15 +437,13 @@ const RestaurantListItemContent = memo(
                     onPress={reviewDisplayStore.toggleShowComments}
                   >
                     <HStack alignItems="center">
-                      <VStack marginVertical={-10} marginRight={8}>
+                      <VStack marginVertical={-12} marginRight={10}>
                         <RestaurantRatingView
                           size="xs"
                           restaurantSlug={props.restaurantSlug}
                         />
                       </VStack>
-                      <Text color="rgba(0,0,0,0.5)" fontSize={14}>
-                        {totalReviews}
-                      </Text>
+                      <MessageSquare size={18} color="rgba(0,0,0,0.3)" />
                     </HStack>
                   </SmallButton>
                 </Tooltip>

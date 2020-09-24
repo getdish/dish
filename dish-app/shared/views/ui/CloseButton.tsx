@@ -26,18 +26,18 @@ export const SmallCircleButton = (props: StackProps) => {
   return (
     <HStack
       borderRadius={1000}
-      backgroundColor="rgba(0,0,0,0.3)"
+      backgroundColor="#999"
       padding={3}
       alignItems="center"
       justifyContent="center"
       spacing="xs"
       {...props}
       hoverStyle={{
-        backgroundColor: 'rgba(0,0,0,0.2)',
+        backgroundColor: '#888',
         ...props.hoverStyle,
       }}
       pressStyle={{
-        opacity: 0.6,
+        backgroundColor: '#222',
         ...props.pressStyle,
       }}
     />

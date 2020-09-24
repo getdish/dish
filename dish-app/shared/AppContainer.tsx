@@ -77,7 +77,7 @@ const HomeContainerLarge = (props) => {
           opacity={isSmall ? 0 : 1}
           pointerEvents="none"
           fullscreen
-          zIndex={1000000}
+          zIndex={1}
           bottom="auto"
           height={searchBarHeight + 20}
         >

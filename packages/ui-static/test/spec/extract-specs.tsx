@@ -1,3 +1,4 @@
+// debug
 import { AbsoluteVStack, Box, Spacer, Text, VStack } from '@dish/ui'
 import React from 'react'
 
@@ -215,7 +216,12 @@ export function Test14() {
 
 // spacer
 export function Test15() {
-  return <Spacer flex={1} size={10} />
+  return (
+    <>
+      <Spacer />
+      <Spacer flex={1} size={10} />
+    </>
+  )
 }
 
 // override props when spread is used

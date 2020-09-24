@@ -372,10 +372,13 @@ export function extractStyles(
 
         const styleExpansions: { name: string; value: any }[] = []
 
+        const foundLastSpreadIndex = flattenedAttributes.findIndex((x) =>
+          t.isJSXSpreadAttribute(x)
+        )
         const hasOneEndingSpread =
           staticTernaries.length === 0 &&
-          flattenedAttributes.findIndex((x) => t.isJSXSpreadAttribute(x)) ===
-            lastSpreadIndex
+          lastSpreadIndex > -1 &&
+          foundLastSpreadIndex === lastSpreadIndex
         let simpleSpreadIdentifier: t.Identifier | null = null
         const isSingleSimpleSpread =
           hasOneEndingSpread &&
@@ -390,7 +393,12 @@ export function extractStyles(
         let inlinePropCount = 0
 
         if (shouldPrintDebug) {
-          console.log('spreads:', { hasOneEndingSpread, isSingleSimpleSpread })
+          console.log('spreads:', {
+            hasOneEndingSpread,
+            isSingleSimpleSpread,
+            lastSpreadIndex,
+            foundLastSpreadIndex,
+          })
           console.log('attrs:', node.attributes.map(attrGetName).join(', '))
         }
 
@@ -615,10 +623,42 @@ export function extractStyles(
           }
         }
 
+        // if all style props have been extracted, gloss component can be
+        // converted to a div or the specified component
+        if (inlinePropCount === 0) {
+          if (
+            process.env.NODE_ENV === 'development' ||
+            process.env.DEBUG ||
+            process.env.IDENTIFY_TAGS
+          ) {
+            // add name so we can debug it more easily
+            node.attributes.push(
+              t.jsxAttribute(
+                t.jsxIdentifier('data-is'),
+                t.stringLiteral(
+                  componentName
+                    ? `${componentName}-${node.name.name}`
+                    : node.name.name
+                )
+              )
+            )
+          }
+          // since were removing down to div, we need to push the default styles onto this classname
+          if (shouldPrintDebug) {
+            console.log({ component, originalNodeName, defaultStyle })
+          }
+          viewStyles = {
+            ...defaultStyle,
+            ...viewStyles,
+          }
+          // change to div
+          node.name.name = domNode
+        }
+
         // second pass, style expansions
         let styleExpansionError = false
         if (shouldPrintDebug) {
-          console.log('styleExpansions', styleExpansions)
+          console.log('styleExpansions', { defaultProps, styleExpansions })
         }
         if (styleExpansions.length) {
           if (shouldPrintDebug) {
@@ -652,16 +692,20 @@ export function extractStyles(
           }
           for (const { name, value } of styleExpansions) {
             const expandedStyle = getStyleExpansion(name, value)
+            if (shouldPrintDebug) {
+              console.log('expanded', { styleExpansionError, expandedStyle })
+            }
             if (styleExpansionError) {
               break
             }
             if (expandedStyle) {
-              if (shouldPrintDebug) {
-                console.log('expandedStyle', expandedStyle)
-              }
               Object.assign(viewStyles, expandedStyle)
             }
           }
+        }
+
+        if (shouldPrintDebug) {
+          console.log('viewStyles', inlinePropCount, viewStyles)
         }
 
         if (styleExpansionError) {
@@ -691,38 +735,6 @@ export function extractStyles(
             node.attributes
           )
           node.attributes.splice(classNamePropIndex, 1)
-        }
-
-        // if all style props have been extracted, gloss component can be
-        // converted to a div or the specified component
-        if (inlinePropCount === 0) {
-          if (
-            process.env.NODE_ENV === 'development' ||
-            process.env.DEBUG ||
-            process.env.IDENTIFY_TAGS
-          ) {
-            // add name so we can debug it more easily
-            node.attributes.push(
-              t.jsxAttribute(
-                t.jsxIdentifier('data-is'),
-                t.stringLiteral(
-                  componentName
-                    ? `${componentName}-${node.name.name}`
-                    : node.name.name
-                )
-              )
-            )
-          }
-          // since were removing down to div, we need to push the default styles onto this classname
-          if (shouldPrintDebug) {
-            console.log({ component, originalNodeName, defaultStyle })
-          }
-          viewStyles = {
-            ...defaultStyle,
-            ...viewStyles,
-          }
-          // change to div
-          node.name.name = domNode
         }
 
         // if inlining + spreading + ternary, deopt fully

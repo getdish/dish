@@ -15,8 +15,7 @@ import { AbsoluteVStack, StackProps, VStack } from './Stacks'
 
 export const Modal = ({
   // modal specific props
-  animated,
-  animationType = 'slide',
+  animationType = 'slide', // keep this only for native for now
   transparent = true,
   visible = true,
   onRequestClose,
@@ -40,9 +39,8 @@ export const Modal = ({
     overlayBackground?: string
     overlayDismisses?: boolean
   }) => {
+  // only shared between both
   const modalProps = {
-    animated,
-    animationType,
     transparent,
     visible,
     onRequestClose,
@@ -85,7 +83,7 @@ export const Modal = ({
   }
 
   return (
-    <ModalNative {...modalProps}>
+    <ModalNative animationType={animationType} {...modalProps}>
       {/* fix for native: https://github.com/facebook/react-native/issues/26892 */}
       <TouchableOpacity
         activeOpacity={1}
