@@ -1,3 +1,5 @@
+import { isPresent } from '@dish/helpers'
+
 import { allTagsNameToID, tagNameKey } from './allTags'
 import { ensureUniqueActiveTagIds } from './ensureUniqueActiveTagIds'
 import { getTagId } from './getTagId'
@@ -37,7 +39,7 @@ export const getNextState = (navState: HomeStateNav) => {
     : {}
 
   // if they words match tag exactly, convert to tags
-  let words = searchQuery.toLowerCase().trim().split(' ').filter(Boolean)
+  let words = searchQuery.toLowerCase().trim().split(' ').filter(isPresent)
   while (words.length) {
     const [word, ...rest] = words
     const foundTagId = allTagsNameToID[tagNameKey(word)]

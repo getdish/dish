@@ -72,7 +72,7 @@ When you need to rebuild the containers to update their code run:
 First build the docker container, this can take up to 30 minutes:
 
     * At the very root of the entire git repo:
-      `docker build -t dish/app -f apps/dish-app/Dockerfile .`
+      `docker build -t dish/app -f dish-app/Dockerfile .`
 
     * Run the production build of the web site (it exposes on port 19006):
       `docker run -it --rm --net host dish/app`
@@ -93,7 +93,7 @@ If you want to run end to end tests:
     * To connect to these local services, visit:
       'http://localhost:19006'
 
-    * Run the tests. from the `apps/dish-app` path:
+    * Run the tests. from the `dish-app` path:
       `./test/testcafe.sh`
 
 ## Hot Deploys

@@ -2,7 +2,7 @@
   "extends": "./tsconfig.base.json",
   "files": [],
   "references": [
-    { "path": "apps/dish-app" },
+    { "path": "dish-app" },
     { "path": "packages/react-feather" },
     { "path": "services/crawlers" },
     { "path": "services/worker" },

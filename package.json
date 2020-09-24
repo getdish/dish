@@ -6,18 +6,19 @@
   },
   "workspaces": {
     "packages": [
+      "dish-app",
       "packages/*",
-      "apps/*",
       "services/*"
     ]
   },
   "scripts": {
-    "web": "(cd apps/dish-app && yarn web)",
-    "ios": "(cd apps/dish-app && yarn ios)",
+    "start": "(cd dish-app && yarn start)",
+    "web": "(cd dish-app && yarn web)",
+    "ios": "(cd dish-app && yarn ios)",
     "start:docker": "docker-compose up",
     "start:docker:web": "yarn stop:docker:web && yarn start:docker:web:simple & sleep 2 && yarn logs:docker:web",
     "start:docker:web:simple": "docker run --name dish-app -it -d -p 19006:19006 --rm dish/app",
-    "build:docker:web": "docker build -t dish/app -f apps/dish-app/Dockerfile .",
+    "build:docker:web": "docker build -t dish/app -f dish-app/Dockerfile .",
     "logs:docker:web": "docker logs -f dish-app",
     "stop:docker:web": "docker rm -f dish-app || true",
     "build": "ultra -r --no-pretty --concurrency 16 build",
@@ -28,7 +29,6 @@
     "test": "ultra -r --no-pretty --serial test",
     "clean": "bin/clean.sh",
     "migrate": "(cd services/hasura && hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password)",
-    "format": "swift-format --recursive --in-place ./apps/ios/dish",
     "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
     "preinstall": "bin/preinstall.sh",
     "postinstall": "bin/postinstall.sh",
