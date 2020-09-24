@@ -12,6 +12,12 @@ export function hasProperty<X extends {}, Y extends PropertyKey>(
 export class AssertionError extends Error {}
 export class NullError extends AssertionError {}
 
+export function isPresent<T extends Object>(
+  input: null | undefined | T
+): input is T {
+  return input != null
+}
+
 export function assertNonNull<T>(value: T): NonNullable<T> {
   if (value == null) {
     throw new NullError()

@@ -1,4 +1,5 @@
-import { LngLat, Restaurant, graphql } from '@dish/graph'
+import { LngLat, Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
 import { AbsoluteVStack, useDebounce } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import { isEqual, uniqBy } from 'lodash'
@@ -47,8 +48,6 @@ export default memo(function AppMap() {
   )
 })
 
-type RestaurantIdentified = Required<Pick<Restaurant, 'slug' | 'id'>>
-
 const AppMapDataLoader = memo(
   graphql(
     (props: {
@@ -57,13 +56,13 @@ const AppMapDataLoader = memo(
     }) => {
       const om = useOvermind()
       const state = om.state.home.currentState
-      let all: RestaurantIdentified[] = []
-      let single: RestaurantIdentified | null = null
+      let all: RestaurantOnlyIds[] = []
+      let single: RestaurantOnlyIds | null = null
 
       if (isRestaurantState(state)) {
         single = {
-          id: state.restaurantId,
-          slug: state.restaurantSlug,
+          id: state.restaurantId ?? '',
+          slug: state.restaurantSlug ?? '',
         }
         const last = findLastHomeOrSearch(omStatic.state.home.states)
         all = [single, ...(last?.results ?? [])]
@@ -71,12 +70,12 @@ const AppMapDataLoader = memo(
         all = state?.results ?? []
       }
 
-      all = all.filter(Boolean)
+      all = all.filter(isPresent)
 
       const allIds = [...new Set(all.map((x) => x.id))]
       const allResults = allIds
         .map((id) => all.find((x) => x.id === id))
-        .filter(Boolean)
+        .filter(isPresent)
 
       const restaurants = uniqBy(
         allResults
@@ -95,7 +94,7 @@ const AppMapDataLoader = memo(
               },
             }
           })
-          .filter(Boolean),
+          .filter(isPresent),
         (x) => `${x.location.coordinates[0]}${x.location.coordinates[1]}`
       )
         // ensure has location
@@ -106,7 +105,7 @@ const AppMapDataLoader = memo(
       }, [JSON.stringify(restaurants.map((x) => x.location?.coordinates))])
 
       const restaurantDetail = single
-        ? restaurants.find((x) => x.id === single.id)
+        ? restaurants.find((x) => x.id === single!.id)
         : null
       useEffect(() => {
         props.onLoadedRestaurantDetail?.(restaurantDetail)
@@ -347,7 +346,7 @@ const AppMapContent = memo(function AppMap({
             if (id !== omStatic.state.home.selectedRestaurant?.id) {
               om.actions.home.setSelectedRestaurant({
                 id: restaurant.id,
-                slug: restaurant.slug,
+                slug: restaurant.slug ?? '',
               })
             }
           } else {

@@ -1,9 +1,7 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
-import { Activity } from '@dish/react-feather'
+import { isPresent } from '@dish/helpers'
 import {
-  AbsoluteVStack,
-  Divider,
   HStack,
   Spacer,
   StackProps,
@@ -43,7 +41,6 @@ import {
   RestaurantReviewsDisplayStore,
 } from './RestaurantRatingBreakdown'
 import RestaurantRatingView from './RestaurantRatingView'
-import { RestaurantScoreBreakdownSmall } from './RestaurantScoreBreakdownSmall'
 import { RestaurantSourcesBreakdownRow } from './RestaurantSourcesBreakdownRow'
 import { useTotalReviews } from './useTotalReviews'
 
@@ -514,7 +511,7 @@ const RestaurantPeekDishes = memo(
         const type = allTags[x].type
         return type != 'lense' && type != 'filter' && type != 'outlier'
       }),
-    ].filter(Boolean)
+    ].filter(isPresent)
     const spacing = size == 'lg' ? 16 : 12
     const restaurant = useRestaurantQuery(props.restaurantSlug)
     const photos = restaurantPhotosForCarousel({

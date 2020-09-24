@@ -6,7 +6,12 @@ import {
   search,
   slugify,
 } from '@dish/graph'
-import { assert, handleAssertionError, stringify } from '@dish/helpers'
+import {
+  assert,
+  handleAssertionError,
+  isPresent,
+  stringify,
+} from '@dish/helpers'
 import { HistoryItem, NavigateItem } from '@dish/router'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
@@ -322,7 +327,7 @@ const runSearch: AsyncAction<{
   om.actions.home.updateHomeState({
     ...state,
     status: 'complete',
-    results: restaurants.filter(Boolean),
+    results: restaurants.filter(isPresent),
   })
 }
 

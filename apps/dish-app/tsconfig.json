@@ -14,18 +14,10 @@
     "outDir": "_",
     "noEmitHelpers": true,
     "noImplicitReturns": true,
-    "strictNullChecks": true,
     "skipLibCheck": true,
-    "strict": true,
     "target": "esnext",
     "allowJs": true,
     "baseUrl": ".",
-
-    // autocomplete paths
-    "paths": {
-      "*": ["src/*", "assets/*"],
-      "assets/*": ["assets/*"]
-    },
 
     "removeComments": true,
     "typeRoots": [
@@ -44,7 +36,7 @@
     "../../node_modules/@types"
   ],
 
-  "exclude": ["**"],
+  "exclude": ["**", "**/_"],
 
   "references": [
     {

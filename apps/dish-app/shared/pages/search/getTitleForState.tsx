@@ -1,3 +1,4 @@
+import { isPresent } from '@dish/helpers'
 import { Text } from '@dish/ui'
 import React from 'react'
 
@@ -57,7 +58,7 @@ export function getTitleForState(
   }
   const titleSpace = titleParts.length ? ' ' : ''
   const searchName = getTitleForQuery(state.searchQuery ?? '')
-  let titleTagsString = titleParts.filter(Boolean).join(' ')
+  let titleTagsString = titleParts.filter(isPresent).join(' ')
 
   if (options?.lowerCase) {
     titleTagsString = titleTagsString.toLowerCase()

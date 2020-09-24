@@ -1,4 +1,4 @@
-import { useForceUpdate } from '@dish/ui'
+import { isPresent } from '@dish/helpers'
 import { isEqual, omit } from 'lodash'
 
 import { memoize } from '../../helpers/memoizeWeak'
@@ -53,7 +53,7 @@ const getNormalizedLink = (
     }
   }
 
-  tags = tags.filter(Boolean)
+  tags = tags.filter(isPresent)
 
   if (tags.length) {
     const tagProps = getNavigateTo({

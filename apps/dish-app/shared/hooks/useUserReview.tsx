@@ -7,6 +7,7 @@ import {
   reviewDelete,
   reviewUpsert,
 } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
 import { Toast, useForceUpdate, useLazyEffect } from '@dish/ui'
 import { useEffect, useState } from 'react'
 
@@ -241,7 +242,7 @@ const getTagUpvoteDownvote = (
 ): number => {
   const tagIdVotes = votes
     .filter((x) => (x.tag ? activeTags[getTagId(x.tag)] : null))
-    .filter(Boolean)
+    .filter(isPresent)
   if (tagIdVotes.length === 0) {
     return 0
   }

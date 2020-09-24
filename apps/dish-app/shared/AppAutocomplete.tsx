@@ -1,5 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
 import { query, resolved } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import {
   AbsoluteVStack,
@@ -508,7 +509,7 @@ function runAutocomplete(
       if (showAutocomplete === 'location') {
         const locationResults = await searchLocations(searchQuery, state.center)
         results = [
-          ...locationResults.map(locationToAutocomplete).filter(Boolean),
+          ...locationResults.map(locationToAutocomplete).filter(isPresent),
           ...defaultLocationAutocompleteResults,
         ]
       }

@@ -1,4 +1,5 @@
 import { LngLat } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 import { createAutocomplete } from '../state/createAutocomplete'
@@ -45,7 +46,7 @@ export async function searchLocations(
         }
       }
     })
-    .filter(Boolean)
+    .filter(isPresent)
 }
 
 export const locationToAutocomplete = (

@@ -8,6 +8,7 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src"],
+  "include": ["./src"],
+  "exclude": ["_"],
   "references": []
 }

@@ -1,8 +1,8 @@
 import { MenuItem, Restaurant, Review, Tag } from './types'
 
 export type RestaurantOnlyIds = {
-  id: Restaurant['id']
-  slug: Restaurant['slug']
+  id: string
+  slug: string
 }
 
 export type TagType =
