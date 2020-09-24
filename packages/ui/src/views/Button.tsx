@@ -9,10 +9,10 @@ export type ButtonProps = StackProps
 // TODO sizing, static + sizing
 
 export const Button = (props: ButtonProps) => {
-  return <HStack {...defaultStyle} {...props} />
+  return <HStack {...defaultProps} {...props} />
 }
 
-const defaultStyle: ButtonProps = {
+const defaultProps: ButtonProps = {
   alignSelf: 'flex-start',
   pointerEvents: 'auto',
   // @ts-ignore
@@ -28,6 +28,8 @@ const defaultStyle: ButtonProps = {
   },
 }
 
-Button.staticConfig = extendStaticConfig(HStack, {
-  defaultStyle,
-})
+if (process.env.IS_STATIC) {
+  Button.staticConfig = extendStaticConfig(HStack, {
+    defaultProps,
+  })
+}

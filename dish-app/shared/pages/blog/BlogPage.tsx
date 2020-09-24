@@ -8,24 +8,27 @@ import { Link } from '../../views/ui/Link'
 import { StackViewProps } from '../StackViewProps'
 import { BlogPageDetail } from './BlogPageDetail'
 import { BlogPostMeta } from './BlogPostMeta'
+import { MDX } from './MDX'
 import { posts } from './posts'
 
 export default function BlogPage(props: StackViewProps<HomeStateItemBlog>) {
   const slug = props.item.slug
   return (
-    <StackDrawer closable title="Blog">
-      <ContentScrollView
-        style={{
-          paddingTop: 40,
-          paddingHorizontal: '5%',
-          paddingVertical: '5%',
-          flex: 1,
-        }}
-      >
-        {!slug && <BlogPageIndex />}
-        {!!slug && <BlogPageDetail slug={slug} />}
-      </ContentScrollView>
-    </StackDrawer>
+    <MDX>
+      <StackDrawer closable title="Blog">
+        <ContentScrollView
+          style={{
+            paddingTop: 40,
+            paddingHorizontal: '5%',
+            paddingVertical: '5%',
+            flex: 1,
+          }}
+        >
+          {!slug && <BlogPageIndex />}
+          {!!slug && <BlogPageDetail slug={slug} />}
+        </ContentScrollView>
+      </StackDrawer>
+    </MDX>
   )
 }
 

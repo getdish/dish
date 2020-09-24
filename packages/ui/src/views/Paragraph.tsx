@@ -1,6 +1,7 @@
 import React from 'react'
 import { TextStyle } from 'react-native'
 
+import { extendStaticConfig } from '../helpers/extendStaticConfig'
 import { SizableTextProps, getSize } from './Size'
 import { Text } from './Text'
 
@@ -31,10 +32,12 @@ const getParagraphProps = ({
   }
 }
 
-// TODO should we rework this a bit because size + sizeLineHeight may be a weird use case
-// Paragraph.staticConfig = extendStaticConfig(Text, {
-//   defaultStyle: defaultProps,
-//   styleExpansionProps: {
-//     size: getParagraphProps,
-//   }
-// })
+if (process.env.IS_STATIC) {
+  Paragraph.staticConfig = extendStaticConfig(Text, {
+    defaultProps,
+    expansionProps: {
+      size: getParagraphProps,
+      sizeLineHeight: getParagraphProps,
+    },
+  })
+}

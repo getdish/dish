@@ -6,9 +6,13 @@ export type StaticComponent<A> = ((props: A) => JSX.Element) & {
 
 // duplicate of ui-static, we need shared types..
 export type StaticConfig = {
-  defaultStyle?: any
-  styleExpansionProps?: {
-    [key: string]: ViewStyle | TextStyle
+  validStyles?: { [key: string]: boolean }
+  defaultProps?: any
+  expansionProps?: {
+    [key: string]:
+      | ViewStyle
+      | TextStyle
+      | ((props: any) => ViewStyle | TextStyle)
   }
 }
 
@@ -20,13 +24,17 @@ export function extendStaticConfig(a: any, config: StaticConfig) {
     throw new Error(`No static config: ${a} ${JSON.stringify(config)}`)
   }
   return {
-    defaultStyle: {
-      ...a.staticConfig.defaultStyle,
-      ...config.defaultStyle,
+    validStyles: {
+      ...a.staticConfig.validStyles,
+      ...config.validStyles,
     },
-    styleExpansionProps: {
-      ...a.staticConfig.styleExpansionProps,
-      ...config.styleExpansionProps,
+    defaultProps: {
+      ...a.staticConfig.defaultProps,
+      ...config.defaultProps,
+    },
+    expansionProps: {
+      ...a.staticConfig.expansionProps,
+      ...config.expansionProps,
     },
   }
 }

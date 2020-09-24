@@ -182,20 +182,22 @@ export default memo(function HomePage(props: Props) {
         >
           <ContentScrollView>
             {/* cross line */}
-            <AbsoluteVStack
-              contain="strict"
-              height={320}
-              width={2000}
-              right="-10%"
-              top={-120}
-              transform={[{ rotate: '-2deg' }]}
-              overflow="hidden" // fixes chrome rendering line at bottom glitch
-            >
-              <LinearGradient
-                style={[StyleSheet.absoluteFill]}
-                colors={[bgLightHover, '#fff']}
-              />
-            </AbsoluteVStack>
+            {!isSmall && (
+              <AbsoluteVStack
+                contain="strict"
+                height={320}
+                width={2000}
+                right="-10%"
+                top={-120}
+                transform={[{ rotate: '-2deg' }]}
+                overflow="hidden" // fixes chrome rendering line at bottom glitch
+              >
+                <LinearGradient
+                  style={[StyleSheet.absoluteFill]}
+                  colors={[bgLightHover, '#fff']}
+                />
+              </AbsoluteVStack>
+            )}
             <VStack
               flex={1}
               overflow="hidden"

@@ -5,6 +5,9 @@ import { Image } from 'react-native'
 import markSolid from './mark-solid.svg'
 
 export const IntroText = (props: ParagraphProps) => {
+  if (props.children.startsWith('When you first hear of Dish')) {
+    debugger
+  }
   return (
     <Paragraph size="xxl" width="100%">
       {wordsWithBrandMark(props.children)}
@@ -31,7 +34,7 @@ export const BrandMarkInline = () => (
   <Image
     source={{ uri: markSolid }}
     style={{
-      display: 'inline-block',
+      display: 'inline-block' as any,
       width: 16,
       height: 16,
       transform: [

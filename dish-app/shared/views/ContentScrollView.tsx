@@ -42,13 +42,14 @@ export const ContentScrollView = forwardRef(
       const y = e.nativeEvent.contentOffset.y
       isScrollAtTop = y <= 0
       onScrollYThrottled?.(y)
-      if (!scrollStore.isScrolling) {
-        scrollStore.setIsScrolling(true)
-      }
-      clearTimeout(tm.current)
-      tm.current = setTimeout(() => {
-        scrollStore.setIsScrolling(false)
-      }, 300)
+      // perf issue i believe
+      // if (!scrollStore.isScrolling) {
+      //   scrollStore.setIsScrolling(true)
+      // }
+      // clearTimeout(tm.current)
+      // tm.current = setTimeout(() => {
+      //   scrollStore.setIsScrolling(false)
+      // }, 300)
     }
     const scrollRef = useRef()
 

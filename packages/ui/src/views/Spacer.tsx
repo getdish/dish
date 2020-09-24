@@ -56,13 +56,15 @@ const getSize = ({
   }
 }
 
-// @ts-ignore
-Spacer.staticConfig = {
-  defaultStyle: getStyle(),
-  styleExpansionProps: {
-    flex: getFlex,
-    size: getSize,
-  },
+if (process.env.IS_STATIC) {
+  Spacer['staticConfig'] = {
+    validStyles: {},
+    defaultProps: getStyle(),
+    expansionProps: {
+      flex: getFlex,
+      size: getSize,
+    },
+  }
 }
 
 function spaceToPx(space: Spacing) {

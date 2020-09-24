@@ -11,6 +11,8 @@ export const TextStrong = (props: TextProps) => {
   return <Text {...defaultProps} {...props} />
 }
 
-TextStrong.staticConfig = extendStaticConfig(Text, {
-  defaultStyle: defaultProps,
-})
+if (process.env.IS_STATIC) {
+  TextStrong.staticConfig = extendStaticConfig(Text, {
+    defaultProps,
+  })
+}

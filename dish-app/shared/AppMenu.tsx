@@ -2,11 +2,11 @@ import { ChevronUp, HelpCircle, Menu } from '@dish/react-feather'
 import { HStack, Popover, Text, Tooltip } from '@dish/ui'
 import React, { memo, useCallback, useEffect } from 'react'
 
+import { AppMenuContents } from './AppMenuContents'
 import { useIsAboveMedium, useIsNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
-import { UserMenuContents } from './UserMenuContents'
 import { LinkButton } from './views/ui/LinkButton'
 import { LinkButtonProps } from './views/ui/LinkProps'
 
@@ -33,7 +33,7 @@ export const AppMenu = memo(() => {
         isOpen={showUserMenu}
         noArrow
         onChangeOpen={(val) => val === false && setShowUserMenu(false)}
-        contents={<UserMenuContents hideUserMenu={hideUserMenu} />}
+        contents={<AppMenuContents hideUserMenu={hideUserMenu} />}
         mountImmediately
       >
         <MenuButton

@@ -8,7 +8,9 @@ export type TableProps = StackProps
 
 export const Table = (props: StackProps) => <VStack {...props} />
 
-Table.staticConfig = extendStaticConfig(VStack, {})
+if (process.env.IS_STATIC) {
+  Table.staticConfig = extendStaticConfig(VStack, {})
+}
 
 const tableRowDefaultProps: StackProps = {
   alignSelf: 'stretch',
@@ -21,9 +23,11 @@ export const TableRow = (props: TableRowProps) => (
   <HStack {...tableRowDefaultProps} {...props} />
 )
 
-TableRow.staticConfig = extendStaticConfig(HStack, {
-  defaultStyle: tableRowDefaultProps,
-})
+if (process.env.IS_STATIC) {
+  TableRow.staticConfig = extendStaticConfig(HStack, {
+    defaultProps: tableRowDefaultProps,
+  })
+}
 
 export type TableCellProps = StackProps & TextProps
 
@@ -84,9 +88,11 @@ export const TableHeadRow = (props: TableHeadRowProps) => (
   <HStack {...tableHeadRowDefaultProps} {...props} />
 )
 
-TableHeadRow.staticConfig = extendStaticConfig(HStack, {
-  defaultStyle: tableHeadRowDefaultProps,
-})
+if (process.env.IS_STATIC) {
+  TableHeadRow.staticConfig = extendStaticConfig(HStack, {
+    defaultProps: tableHeadRowDefaultProps,
+  })
+}
 
 const tableHeadTextDefaultProps: TextProps = {
   backgroundColor: '#eee',
@@ -105,6 +111,8 @@ export const TableHeadText = (props: TableHeadTextProps) => (
   <Text {...tableHeadTextDefaultProps} {...props} />
 )
 
-TableHeadText.staticConfig = extendStaticConfig(Text, {
-  defaultStyle: tableHeadTextDefaultProps,
-})
+if (process.env.IS_STATIC) {
+  TableHeadText.staticConfig = extendStaticConfig(Text, {
+    defaultProps: tableHeadTextDefaultProps,
+  })
+}

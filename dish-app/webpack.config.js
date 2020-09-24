@@ -100,6 +100,8 @@ module.exports = function getWebpackConfig(
         minimize: !process.env.NO_MINIFY && isProduction && TARGET !== 'ssr',
         concatenateModules: isProduction && !process.env.ANALYZE_BUNDLE,
         usedExports: isProduction,
+        removeEmptyChunks: true,
+        mergeDuplicateChunks: true,
         splitChunks:
           isProduction && TARGET != 'ssr'
             ? {
@@ -177,7 +179,7 @@ module.exports = function getWebpackConfig(
                     options: {
                       mozjpeg: {
                         progressive: true,
-                        quality: 85,
+                        quality: 92,
                       },
                       optipng: {
                         enabled: true,
@@ -232,10 +234,9 @@ module.exports = function getWebpackConfig(
               shorthands: true,
             }),
             new MiniCssExtractPlugin({
-              // Options similar to the same options in webpackOptions.output
-              // both options are optional
               filename: '[name].css',
               chunkFilename: '[id].css',
+              ignoreOrder: true,
             }),
             // new ExtractCssChunks(),
             // new DedupeParentCssFromChunksWebpackPlugin({
@@ -249,14 +250,9 @@ module.exports = function getWebpackConfig(
         isStaticExtracted && new UIStaticWebpackPlugin(),
 
         new Webpack.DefinePlugin({
-          // ...(target === 'web' || target === 'webworker'
-          //   ? {
-          //       process: JSON.stringify({}),
-          //     }
-          //   : {}),
+          'process.env.IS_STATIC': false,
           'process.env.TARGET': JSON.stringify(TARGET || null),
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-          'process.env.EXPERIMENTAL_USE_CLENAUP_FOR_CM': JSON.stringify(false),
           'process.env.DEBUG': JSON.stringify(process.env.DEBUG || false),
           'process.env.DEBUG_ASSERT': JSON.stringify(
             process.env.DEBUG_ASSERT || false

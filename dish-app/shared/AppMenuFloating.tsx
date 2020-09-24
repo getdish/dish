@@ -3,11 +3,11 @@ import { AbsoluteVStack, BlurView, HStack, Modal, VStack } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React from 'react'
 
+import { AppMenuContents } from './AppMenuContents'
 import { zIndexMapControls } from './constants'
-import { useIsNarrow, useIsReallyNarrow } from './hooks/useIs'
+import { useIsReallyNarrow } from './hooks/useIs'
 import { useSafeArea } from './hooks/useSafeArea'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
-import { UserMenuContents } from './UserMenuContents'
 
 class UserMenuStore extends Store {
   show = false
@@ -44,7 +44,7 @@ export const AppMenuFloating = () => {
           userMenu.setShow(false)
         }}
       >
-        <UserMenuContents
+        <AppMenuContents
           flex={1}
           hideUserMenu={() => userMenu.setShow(false)}
         />
