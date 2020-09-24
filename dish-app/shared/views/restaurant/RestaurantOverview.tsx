@@ -1,4 +1,5 @@
 import { graphql } from '@dish/graph'
+import { ellipseText } from '@dish/helpers'
 import {
   AbsoluteVStack,
   HStack,
@@ -46,6 +47,8 @@ export const RestaurantOverview = memo(
                     <Paragraph
                       size={i == 0 ? 1.1 : 1}
                       opacity={i === 0 ? 1 : 0.7}
+                      height={i == 0 ? 90 : 'auto'}
+                      overflow="hidden"
                       // react native doesnt like using this as a prop...
                       {...(i !== 0 && {
                         ellipse: true,
@@ -54,13 +57,17 @@ export const RestaurantOverview = memo(
                         numberOfLines: 3,
                       })}
                     >
-                      {item.sentence
-                        .replace(/\n/g, ' ')
-                        .replace(/[^\\/$a-z0-9 \,\.]+/gi, '')
-                        .replace(/\s{2,}/g, ' ')
-                        .toLowerCase()
-                        .trim()
-                        .slice(0, 150)}
+                      {ellipseText(
+                        item.sentence
+                          .replace(/\n/g, ' ')
+                          .replace(/[^\\/$a-z0-9 \,\.]+/gi, '')
+                          .replace(/\s{2,}/g, ' ')
+                          .toLowerCase()
+                          .trim(),
+                        {
+                          maxLength: 150,
+                        }
+                      )}
                     </Paragraph>
                   </HStack>
                 </React.Fragment>
