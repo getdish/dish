@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE INDEX review_user_id_idx ON review (user_id);
+  type: run_sql
