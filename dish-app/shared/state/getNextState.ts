@@ -39,7 +39,7 @@ export const getNextState = (navState: HomeStateNav) => {
     : {}
 
   // if they words match tag exactly, convert to tags
-  let words = searchQuery.toLowerCase().trim().split(' ').filter(isPresent)
+  let words = searchQuery.toLowerCase().trim().split(' ').filter(Boolean)
   while (words.length) {
     const [word, ...rest] = words
     const foundTagId = allTagsNameToID[tagNameKey(word)]

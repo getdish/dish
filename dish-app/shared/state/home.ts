@@ -103,8 +103,7 @@ export const state: HomeState = {
     (state) => findLast(state.states, isSearchState)
   ),
   currentState: derived<HomeState, OmState, HomeStateItem>((state) => {
-    state.stateIndex
-    return _.last(state.states)!
+    return state.states[state.stateIndex]
   }),
   currentStateSearchQuery: derived<
     HomeState,
@@ -135,9 +134,10 @@ export const state: HomeState = {
     }
     return state.states[0]
   }),
-  searchBarTags: derived<HomeState, OmState, Tag[]>((state) =>
-    state.lastActiveTags.filter(isSearchBarTag)
-  ),
+  searchBarTags: derived<HomeState, OmState, Tag[]>((state) => {
+    const curState = state.states[state.stateIndex]
+    return getActiveTags(curState).filter(isSearchBarTag)
+  }),
   lastActiveTags: derived<HomeState, OmState, Tag[]>((state) => {
     const lastTaggable = _.findLast(
       state.states,
@@ -341,6 +341,7 @@ const deepAssign = (a: Object, b: Object) => {
       }
       const val = b[key]
       if (val) {
+        console.log('pdate now', key, val)
         a[key] = Array.isArray(val)
           ? [...val]
           : isPlainObject(val)

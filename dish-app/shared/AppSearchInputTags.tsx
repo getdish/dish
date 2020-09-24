@@ -14,13 +14,15 @@ import { TagButton } from './views/TagButton'
 export const AppSearchInputTags = memo(
   ({ input }: { input: HTMLInputElement | null }) => {
     const om = useOvermind()
+    const tags = om.state.home.searchBarTags
+    const focusedTag = om.state.home.searchbarFocusedTag
 
     return (
       <>
-        {!!om.state.home.searchBarTags.length && (
+        {!!tags.length && (
           <HStack marginLeft={10} marginTop={-1} spacing={4}>
-            {om.state.home.searchBarTags.map((tag) => {
-              const isActive = om.state.home.searchbarFocusedTag === tag
+            {tags.map((tag) => {
+              const isActive = focusedTag === tag
               return (
                 <TagButton
                   className="no-transition"
