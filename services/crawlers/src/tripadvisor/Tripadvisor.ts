@@ -217,7 +217,8 @@ export class Tripadvisor extends WorkerJob {
     return { more: more, data: data }
   }
 
-  private _getRatingFromClasses(review: Cheerio) {
+  // @tom i changed : Cheerio to any to fix an error in types compiling
+  private _getRatingFromClasses(review: any) {
     let rating: number | null = null
     const classes = review.find('.ui_bubble_rating').attr('class')!.split(' ')
 

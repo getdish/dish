@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useLayoutEffect, useMemo, useState } from 'react'
 import {
   Animated,
   PerpectiveTransform,
@@ -69,7 +69,7 @@ export const AnimatedVStack = ({
     start: null,
   })
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (state.start) {
       state.start()
       return

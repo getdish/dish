@@ -30,7 +30,7 @@ export const HomeIntroLetter = memo(() => {
       justifyContent="center"
       paddingHorizontal="4vw"
       paddingVertical="1vh"
-      backgroundColor="rgba(0,0,0,0.7)"
+      backgroundColor="rgba(40,20,40,0.7)"
       opacity={1}
       transform={[{ translateY: 0 }]}
       {...(!showInto && {
@@ -45,7 +45,7 @@ export const HomeIntroLetter = memo(() => {
         height="98%"
         width="90%"
         borderWidth={1}
-        borderColor={`${brandColor}99`}
+        borderColor={`${brandColor}55`}
         position="relative"
         backgroundColor="#000"
         borderRadius={25}
@@ -122,12 +122,14 @@ export const HomeIntroLetterContent = memo(
         {divider}
 
         <Paragraph textAlign="center" color="#fff" size={1.1}>
-          <Text color={lightGreen} fontWeight="500">
-            ratings by dish 🌮
-          </Text>
-          <View />
-          <Text color={lightYellow}>search every delivery app 🚗 </Text>
-          <View />
+          <VStack>
+            <Text color={lightGreen} fontWeight="500">
+              ratings by dish 🌮
+            </Text>
+          </VStack>
+          <VStack>
+            <Text color={lightYellow}>search every delivery app 🚗 </Text>
+          </VStack>
           <Text fontWeight="500">local gems 💎</Text>
         </Paragraph>
 
