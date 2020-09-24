@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
 
+pushd "$(dirname "$0")/.."
 yarn patch-package
-(cd dish-app && yarn patch-package)
 
 if [ "$DISH_LINK_RN_MODULES" != "false" ]; then
-  cd "$(dirname "$0")/.."
+  (cd dish-app && yarn patch-package)
   rm -r ./node_modules/react-native || true
   rm -r ./node_modules/react || true
   rm -r ./node_modules/react-dom || true
@@ -17,3 +17,5 @@ if [ "$DISH_LINK_RN_MODULES" != "false" ]; then
   yarn build:refs
   yarn expo:check-deps
 fi
+
+popd
