@@ -2,15 +2,13 @@ import { fullyIdle, idle, series } from '@dish/async'
 import { Loader, Search } from '@dish/react-feather'
 import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import {
-  PanResponder,
   Platform,
   ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native'
 
@@ -21,6 +19,7 @@ import { isWebIOS } from './helpers/isIOS'
 import { getIs } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
+import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { getTagId } from './state/getTagId'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
@@ -85,8 +84,6 @@ export const isSearchInputFocused = () => {
   return isFocused
 }
 
-export let isTouchingSearchBar
-
 export const AppSearchInput = memo(() => {
   const inputStore = useStore(InputStore, { name: 'search' })
   const om = useOvermind()
@@ -130,32 +127,12 @@ export const AppSearchInput = memo(() => {
         om.actions.home.setShowAutocomplete('search')
       }
       const node = inputStore.node
-      node.addEventListener('click', handleClick)
+      node?.addEventListener('click', handleClick)
       return () => {
-        node.removeEventListener('click', handleClick)
+        node?.removeEventListener('click', handleClick)
       }
     }, [])
   }
-
-  const panResponder = useMemo(() => {
-    return PanResponder.create({
-      onMoveShouldSetPanResponder: (_, { dy }) => {
-        isTouchingSearchBar = true
-        return true
-      },
-      onPanResponderTerminate: () => {
-        console.log(123)
-      },
-      onPanResponderReject: () => {
-        console.log('inputStore.node', inputStore.node.focus())
-        isTouchingSearchBar = false
-      },
-      onPanResponderRelease: (e, gestureState) => {
-        console.log('inputStore.node', inputStore.node.focus())
-        isTouchingSearchBar = false
-      },
-    })
-  }, [])
 
   const input = inputStore.node
   const searchInputContainer = useRef<View>()
@@ -234,31 +211,7 @@ export const AppSearchInput = memo(() => {
                   flex={1}
                   alignItems="center"
                 >
-                  {/* fix for search input interferring with native touch conflicts */}
-                  {!isWeb && (
-                    <VStack
-                      position="absolute"
-                      top={0}
-                      left={0}
-                      right={30}
-                      bottom={0}
-                      zIndex={1000000}
-                    >
-                      <TouchableWithoutFeedback
-                        style={StyleSheet.absoluteFill}
-                        onPress={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                          inputStore.node?.focus()
-                        }}
-                      >
-                        <View
-                          style={StyleSheet.absoluteFill}
-                          {...panResponder.panHandlers}
-                        />
-                      </TouchableWithoutFeedback>
-                    </VStack>
-                  )}
+                  {!isWeb && <SearchInputNativeDragFix name="search" />}
                   <TextInput
                     ref={inputStore.setNode}
                     // leave uncontrolled for perf?
@@ -290,6 +243,7 @@ export const AppSearchInput = memo(() => {
                         color,
                         flex: 1,
                         fontSize: 18,
+                        lineHeight: 22,
                         paddingHorizontal: 20,
                       },
                     ]}
@@ -374,10 +328,10 @@ const handleKeyPress = async (e) => {
     if (document.activeElement instanceof HTMLInputElement) {
       focusedInput = document.activeElement
     }
-    isSelecting = focusedInput.selectionStart !== focusedInput.selectionEnd
+    isSelecting = focusedInput?.selectionStart !== focusedInput?.selectionEnd
     isCaretAtEnd =
-      !isSelecting && focusedInput.selectionEnd === focusedInput.value.length
-    isCaretAtStart = focusedInput.selectionEnd == 0
+      !isSelecting && focusedInput?.selectionEnd === focusedInput?.value.length
+    isCaretAtStart = focusedInput?.selectionEnd == 0
   }
 
   switch (code) {

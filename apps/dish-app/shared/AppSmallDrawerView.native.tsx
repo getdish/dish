@@ -10,11 +10,12 @@ import {
 } from 'react-native'
 
 import { AppSearchBarDrawer } from './AppSearchBar'
-import { blurSearchInput, isTouchingSearchBar } from './AppSearchInput'
+import { blurSearchInput } from './AppSearchInput'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { BottomSheetContainer } from './BottomSheetContainer'
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from './constants'
 import { getWindowHeight } from './helpers/getWindow'
+import { isTouchingSearchBar } from './SearchInputNativeDragFix'
 import { omStatic } from './state/omStatic'
 import { isScrollAtTop, isScrollingSubDrawer } from './views/ContentScrollView'
 

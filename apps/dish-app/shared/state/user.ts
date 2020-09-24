@@ -1,4 +1,4 @@
-import { Auth, Review, User, mutation } from '@dish/graph'
+import { Auth, Review, User } from '@dish/graph'
 import { Toast } from '@dish/ui'
 import { Action, AsyncAction } from 'overmind'
 

@@ -3,7 +3,7 @@ import {
   ArrowUp,
   ChevronLeft,
   Home,
-  MapPin,
+  Map,
   Search,
 } from '@dish/react-feather'
 import { AbsoluteVStack, HStack, Spacer, VStack } from '@dish/ui'
@@ -53,8 +53,7 @@ export const parentIds = {
 const borderRadius = 14
 export const HomeSearchBarFloating = () => {
   const isSmall = useIsNarrow()
-  const rgb = useCurrentLenseColor()
-  const backgroundColor = rgbString(rgb)
+  const { background } = useSearchBarTheme()
 
   if (isSmall) {
     return null
@@ -127,7 +126,7 @@ export const HomeSearchBarFloating = () => {
               flex={1}
               paddingHorizontal={8}
               height={searchBarHeight}
-              backgroundColor={backgroundColor}
+              backgroundColor={background}
               borderRadius={borderRadius}
               justifyContent="center"
               overflow="hidden"
@@ -180,7 +179,7 @@ const HomeSearchBar = memo(() => {
   const store = useStore(SearchBarStore)
   const isSmall = useIsNarrow()
   const isReallySmall = useIsReallyNarrow()
-  const { color } = useSearchBarTheme()
+  const { color, background } = useSearchBarTheme()
 
   return (
     <HStack
@@ -191,6 +190,7 @@ const HomeSearchBar = memo(() => {
       justifyContent="center"
       userSelect="none"
       width="100%"
+      minHeight={searchBarHeight}
     >
       <VStack paddingHorizontal={8}>
         <DishLogoButton />
@@ -277,7 +277,22 @@ const HomeSearchBar = memo(() => {
           {store.showLocation ? (
             <Search color={color} size={22} opacity={0.65} />
           ) : (
-            <MapPin color={color} size={22} opacity={0.65} />
+            <VStack width={22} height={22} position="relative">
+              {/* <AbsoluteVStack
+                bottom={-10}
+                left={-10}
+                backgroundColor={background}
+                width={22}
+                height={22}
+                zIndex={-2}
+                alignItems="center"
+                justifyContent="center"
+                borderRadius={20}
+              >
+                <Search color={color} size={20} opacity={0.65} />
+              </AbsoluteVStack> */}
+              <Map color={color} size={22} opacity={0.65} />
+            </VStack>
           )}
         </LinkButton>
       )}

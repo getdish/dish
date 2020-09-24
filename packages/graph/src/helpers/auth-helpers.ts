@@ -20,8 +20,6 @@ const DOMAIN = (() => {
   }
 })()
 
-console.log('DOMAIN', DOMAIN)
-
 class AuthModel {
   public jwt = ''
   public isLoggedIn = false

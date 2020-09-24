@@ -2,8 +2,8 @@ import { LngLat } from '@dish/graph'
 import mapboxgl from 'mapbox-gl'
 
 export type MapProps = {
-  center?: LngLat
-  span?: LngLat
+  center: LngLat
+  span: LngLat
   features: GeoJSON.Feature[]
   padding?: { top: number; left: number; bottom: number; right: number }
   mapRef?: (map: mapboxgl.Map) => void

@@ -53,12 +53,14 @@ export const AppMenuFloating = () => {
         top={safeArea.top ? safeArea.top : 15}
         right={15}
         zIndex={zIndexMapControls + 1}
+        pointerEvents="none"
       >
         <VStack
           shadowColor="rgba(0,0,0,0.095)"
           shadowRadius={4}
           shadowOffset={{ height: 3, width: 0 }}
           pointerEvents="auto"
+          borderRadius={100}
           onPress={() => {
             userMenu.toggle()
           }}
