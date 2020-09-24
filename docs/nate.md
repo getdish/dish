@@ -1,41 +1,30 @@
+
+- slow scrolling because of mapbox?
+- list item
+  - show restaurant cuisine tags in overview
+  - hide comments number and just put a comment bubble
+  - if michelin quote is availble, show that with michelin logo
 - fix hmr for useStore in react native
-
-goals for this week, get us to being able to onboard people (not 100% necessary, but in order of importance):
-
 - fix login/register flows
 - get reviewing fully working with votes/sentiment on tags
 - fix up points breakdown and dish/tag breakdown
-- fix a lot of issues on mobile
-- test in prod and in various browsers and fix up
-- fix memory issues (see safari warning)
-- user profile page improvement
-  - show comments / votes separately
-  - show users current favorites on the map
-- start on blog post
-
-native:
-
-- fix press events
-- fix shadows
-- map showing pins / interaction
-- fix search layout
-- fix detail layout
-
-next week:
-
-- show a list of hot & new restaurants on homepage, simple and easy win, with link to breakdown to comment easily...
-- blog
 - location <=> url
+
+after alpha:
+
 - revisit ssr
+- show a list of hot & new restaurants on homepage, simple and easy win, with link to breakdown to comment easily...
+- mobile web needs some sort of slight redesign
 
 ---
 
 big impact changes
 
+- social - having chef profiles
+- showing the icons for top/vibe/bar/green on list items with one click vote
 - threading on comments is the only way you get discussion which leads to clarfiication, which is both what keeps people around and what allows us to get much richer info
 - make map more alive
   - colors by category (cuisine?)
-  - hovering a single restaurant should drop a pin on the map where it is
   - hovering a group can make those bubbles get preference and enlarge
   - hover restaurant show it on map (but without moving it, maybe marker zoom)
   - liking a restuarant could drop a heart
@@ -56,6 +45,16 @@ big impact changes
 ---
 
 ## GPT-3
+
+- build a summarizer:
+  - for 10 restaurants of diverse cuisine:
+    - collect 10 diverse reviews:
+      - put them all concatted together above
+      - then put """, then write a fun, funny, short summary calling out a few unique things from the reviews
+  - then collect 5 more restaurants of different cuisines, 10 reviews each:
+    - see if it summarizes them nicely
+  - plug into actual app for top X restaurants
+    - maybe do it based on homepage results so they are likely to see
 
 - Dish Sentiment + summary for search results
 - Each lense could get a summary too - Vibe / Drinks / Vegetarian

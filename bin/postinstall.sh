@@ -2,6 +2,7 @@
 set -e
 
 yarn patch-package
+(cd dish-app && yarn patch-package)
 
 if [ "$DISH_LINK_RN_MODULES" != "false" ]; then
   cd "$(dirname "$0")/.."
