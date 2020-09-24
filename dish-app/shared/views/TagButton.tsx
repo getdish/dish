@@ -122,8 +122,8 @@ export const TagButton = memo((props: TagButtonProps) => {
   }
   const tag = { name, type: type as TagType, icon, rgb }
   const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1 : 1
-  const height = scale * (subtle ? 26 : 32)
-  const lineHeight = 22 * scale
+  const height = scale * (subtle ? 26 : 36)
+  const lineHeight = 26 * scale
 
   let bg = 'transparent'
   let fg = '#444'
@@ -187,7 +187,7 @@ export const TagButton = memo((props: TagButtonProps) => {
           // @ts-ignore
           fontWeight={fontWeight ?? (subtle && isWeb) ? 'inherit' : '600'}
           // @ts-ignore
-          lineHeight={isWeb ? 'inherit' : fontSize}
+          lineHeight={isWeb ? 'inherit' : lineHeight}
           paddingHorizontal={subtle ? 0 : 7 * scale}
           color={fg}
           marginVertical={-7}
@@ -247,8 +247,8 @@ export const TagButton = memo((props: TagButtonProps) => {
               top: -9,
               right: -2,
             })}
-            width={isWeb ? 26 : 36}
-            height={isWeb ? 26 : 36}
+            width={isWeb ? 26 : 40}
+            height={isWeb ? 26 : 40}
             alignItems="center"
             justifyContent="center"
             alignSelf="center"

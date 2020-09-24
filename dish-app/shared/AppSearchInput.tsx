@@ -1,5 +1,5 @@
 import { fullyIdle, idle, series } from '@dish/async'
-import { Loader, Search } from '@dish/react-feather'
+import { Loader, Search, X } from '@dish/react-feather'
 import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { memo, useEffect, useRef, useState } from 'react'
@@ -13,6 +13,7 @@ import {
 } from 'react-native'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
+import { AppSearchInputTags } from './AppSearchInputTags'
 import { isWeb, searchBarHeight } from './constants'
 import { inputClearSelection, inputIsTextSelected } from './helpers/input'
 import { isWebIOS } from './helpers/isIOS'
@@ -20,12 +21,9 @@ import { getIs } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
-import { getTagId } from './state/getTagId'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { router } from './state/router'
-import { TagButton } from './views/TagButton'
-import { CloseButton } from './views/ui/CloseButton'
 
 const placeholders = [
   'pho',
@@ -161,18 +159,18 @@ export const AppSearchInput = memo(() => {
         >
           {/* Loading / Search Icon */}
           <VStack
-            width={18}
+            width={16}
             transform={[{ scale: om.state.home.isLoading ? 1.2 : 1 }]}
           >
             <TouchableOpacity onPress={focusSearchInput}>
               {om.state.home.isLoading ? (
                 <VStack className="rotating" opacity={1}>
-                  <Loader color={color} size={18} />
+                  <Loader color={color} size={16} />
                 </VStack>
               ) : (
                 <Search
                   color={color}
-                  size={18}
+                  size={16}
                   style={{
                     opacity: 0.8,
                   }}
@@ -207,7 +205,7 @@ export const AppSearchInput = memo(() => {
                 minWidth="100%"
                 height={innerHeight}
               >
-                <HomeSearchBarTags input={input} />
+                <AppSearchInputTags input={input} />
                 <HStack
                   height={innerHeight}
                   maxWidth="100%"
@@ -297,8 +295,8 @@ const SearchCancelButton = memo(() => {
   const hasSearchTags = !!om.state.home.searchBarTags.length
   const isActive = hasSearch || hasSearchTags
   return (
-    <CloseButton
-      opacity={isActive ? 1 : 0}
+    <VStack
+      opacity={isActive ? 0.6 : 0}
       disabled={!isActive}
       onPress={() => {
         if (om.state.home.showAutocomplete) {
@@ -307,7 +305,9 @@ const SearchCancelButton = memo(() => {
           om.actions.home.clearSearch()
         }
       }}
-    />
+    >
+      <X size={16} color="#888" style={{ marginTop: 1 }} />
+    </VStack>
   )
 })
 
@@ -431,66 +431,6 @@ const handleKeyPress = async (e) => {
     }
   }
 }
-
-const HomeSearchBarTags = memo(
-  ({ input }: { input: HTMLInputElement | null }) => {
-    const om = useOvermind()
-
-    return (
-      <>
-        {!!om.state.home.searchBarTags.length && (
-          <HStack marginLeft={10} marginTop={-1} spacing={4}>
-            {om.state.home.searchBarTags.map((tag) => {
-              const isActive = om.state.home.searchbarFocusedTag === tag
-              return (
-                <TagButton
-                  className="no-transition"
-                  key={getTagId(tag)}
-                  subtleIcon
-                  backgroundColor="rgba(0,0,0,0.3)"
-                  color={'#fff'}
-                  shadowColor="#00000022"
-                  fontWeight="500"
-                  shadowRadius={10}
-                  shadowOffset={{ height: 2, width: 0 }}
-                  borderColor={'transparent'}
-                  hoverStyle={{
-                    backgroundColor: 'rgba(0,0,0,0.4)',
-                  }}
-                  {...(isActive && {
-                    backgroundColor: 'rgba(255,255,255,0.1)',
-                    color: '#fff',
-                    hoverStyle: {
-                      backgroundColor: 'rgba(255,255,255,0.1)',
-                    },
-                    // transform: [{ rotate: '-1.5deg' }],
-                  })}
-                  size="lg"
-                  // @ts-ignore
-                  name={tag.name}
-                  // @ts-ignore
-                  type={tag.type}
-                  icon={tag.icon ?? ''}
-                  rgb={tag.rgb}
-                  onPress={() => {
-                    om.actions.home.setSearchBarFocusedTag(tag)
-                  }}
-                  closable
-                  onClose={async () => {
-                    om.actions.home.navigate({ tags: [tag] })
-                    await fullyIdle()
-                    setAvoidNextAutocompleteShowOnFocus()
-                    focusSearchInput()
-                  }}
-                />
-              )
-            })}
-          </HStack>
-        )}
-      </>
-    )
-  }
-)
 
 export const inputTextStyles = StyleSheet.create({
   textInput: {

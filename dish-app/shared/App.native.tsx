@@ -12,8 +12,12 @@ import { AppMenuFloating } from './AppMenuFloating'
 import { AppRoot } from './AppRoot'
 import { AppSmallDrawer } from './AppSmallDrawer'
 import { AppStackView } from './AppStackView'
+import GalleryPage from './pages/gallery/GalleryPage'
 import { PagesStackView } from './pages/PagesStackView'
+import RestaurantHoursPage from './pages/restaurantHours/RestaurantHoursPage'
+import RestaurantReviewPage from './pages/restaurantReview/RestaurantReviewPage'
 import { om } from './state/om'
+import { Route } from './views/router/Route'
 
 LogBox.ignoreAllLogs(true)
 
@@ -61,6 +65,14 @@ export default function App() {
               <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1001}>
                 <AppAutocomplete />
               </AbsoluteVStack>
+
+              <Suspense fallback={null}>
+                <GalleryPage />
+                <RestaurantReviewPage />
+                <Route name="restaurantHours">
+                  <RestaurantHoursPage />
+                </Route>
+              </Suspense>
             </View>
           </AppRoot>
         </Provider>

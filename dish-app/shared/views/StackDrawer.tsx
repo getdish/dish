@@ -41,12 +41,6 @@ export const StackDrawer = ({
         <StackViewCloseButton
           right={isSmall ? 10 : -14}
           top={isSmall ? 10 : -5}
-          backgroundColor="#fff"
-          padding={5}
-          borderRadius={20}
-          shadowColor="rgba(0,0,0,0.1)"
-          shadowRadius={5}
-          shadowOffset={{ width: 2, height: 0 }}
         />
       )}
       {!!title && <PageTitleTag>{title}</PageTitleTag>}
