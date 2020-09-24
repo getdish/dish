@@ -2,12 +2,9 @@ import { Paragraph, ParagraphProps } from '@dish/ui'
 import React from 'react'
 import { Image } from 'react-native'
 
-import markSolid from './mark-solid.svg'
+import markSolid from '../../../shared/assets/d.svg'
 
 export const IntroText = (props: ParagraphProps) => {
-  if (props.children.startsWith('When you first hear of Dish')) {
-    debugger
-  }
   return (
     <Paragraph size="xxl" width="100%">
       {wordsWithBrandMark(props.children)}
@@ -35,14 +32,14 @@ export const BrandMarkInline = () => (
     source={{ uri: markSolid }}
     style={{
       display: 'inline-block' as any,
-      width: 16,
-      height: 16,
+      width: 22,
+      height: 22,
       transform: [
         {
           translateY: -2,
         },
       ],
-      marginVertical: -2,
+      marginVertical: -4,
       marginHorizontal: 8,
     }}
   />

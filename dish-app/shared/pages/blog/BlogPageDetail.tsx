@@ -10,7 +10,7 @@ export function BlogPageDetail({ slug }: { slug: string }) {
       <Title size="xl">{title}</Title>
       <Spacer size="xl" />
       <Divider />
-      <Spacer size="xl" />
+      <Spacer size="lg" />
       <View />
     </>
   )

@@ -25,6 +25,10 @@ const Alt = spaceVertical((props) => (
   />
 ))
 
+const ParagraphSpaced = spaceVertical((props) => (
+  <Paragraph sizeLineHeight={1.1} {...props} />
+))
+
 const components = {
   IntroText: spaceVertical(IntroText),
 
@@ -79,8 +83,8 @@ const components = {
 
   ol: spaceVertical((props) => <ol style={{ margin: 0 }} {...props} />),
 
-  p: spaceVertical(Paragraph),
-  Paragraph: spaceVertical(Paragraph),
+  p: ParagraphSpaced,
+  Paragraph: ParagraphSpaced,
 
   description: spaceVertical((props) => (
     <Paragraph

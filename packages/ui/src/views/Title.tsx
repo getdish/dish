@@ -25,17 +25,33 @@ export const H1 = (props: TitleProps) => (
 )
 
 export const H2 = (props: TitleProps) => (
-  <Title accessibilityRole="header" size="lg" {...props} />
-)
-
-export const H3 = (props: TitleProps) => (
   <Title accessibilityRole="header" size="md" {...props} />
 )
 
+export const H3 = (props: TitleProps) => (
+  <Title
+    accessibilityRole="header"
+    size="xs"
+    color="rgba(0,0,0,0.7)"
+    {...props}
+  />
+)
+
 export const H4 = (props: TitleProps) => (
-  <Title accessibilityRole="header" size="sm" {...props} />
+  <Title
+    textTransform="uppercase"
+    accessibilityRole="header"
+    size="xxs"
+    color="rgba(0,0,0,0.7)"
+    {...props}
+  />
 )
 
 export const H5 = (props: TitleProps) => (
-  <Title accessibilityRole="header" size="xs" {...props} />
+  <Title
+    accessibilityRole="header"
+    size="xxs"
+    color="rgba(0,0,0,0.7)"
+    {...props}
+  />
 )
