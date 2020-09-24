@@ -31,7 +31,6 @@ export const StackDrawer = ({
       borderRadius={drawerBorderRadius}
       maxWidth={isSmall ? '100%' : drawerWidthMax}
       minWidth={isSmall ? '100%' : 200}
-      backgroundColor="blue"
       justifyContent="flex-end"
       shadowRadius={isSmall ? 5 : 10}
       shadowColor="rgba(0,0,0,0.1)"
@@ -40,7 +39,7 @@ export const StackDrawer = ({
       {closable && (
         <StackViewCloseButton
           right={isSmall ? 10 : -14}
-          top={isSmall ? 10 : -5}
+          top={isSmall ? 10 : -3}
         />
       )}
       {!!title && <PageTitleTag>{title}</PageTitleTag>}

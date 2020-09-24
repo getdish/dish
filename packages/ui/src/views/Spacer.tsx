@@ -58,7 +58,7 @@ const getSize = ({
 
 if (process.env.IS_STATIC) {
   Spacer['staticConfig'] = {
-    validStyles: {},
+    validStyles: require('../styleProps').stylePropsView,
     defaultProps: getStyle(),
     expansionProps: {
       flex: getFlex,

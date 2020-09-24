@@ -45,7 +45,7 @@ export default memo(
           maxHeight={480}
         >
           <VStack width="100%" height="100%" flex={1}>
-            <AbsoluteVStack top={5} right={26}>
+            <AbsoluteVStack top={5} right={30}>
               <StackViewCloseButton />
             </AbsoluteVStack>
             <ScrollView style={{ width: '100%' }}>
