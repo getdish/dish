@@ -2,11 +2,13 @@ import '@dish/common'
 
 import { sentryException, sentryMessage } from '@dish/common'
 import {
+  GraphError,
   MenuItem,
   PhotoXref,
   RestaurantWithId,
   globalTagId,
   menuItemsUpsertMerge,
+  onGraphError,
   restaurantFindOneWithTags,
   restaurantUpdate,
   restaurantUpsertManyTags,
@@ -75,6 +77,7 @@ export class Self extends WorkerJob {
   restaurant_base_score: RestaurantBaseScore
   restaurant_tag_scores: RestaurantTagScores
   menu_items: MenuItem[] = []
+  _job_identifier_restaurant_id!: string
 
   _debugRamIntervalFunction!: number
 
@@ -91,22 +94,11 @@ export class Self extends WorkerJob {
 
   constructor() {
     super()
+    this._listenForGraphErrors()
     this.tagging = new Tagging(this)
     this.restaurant_ratings = new RestaurantRatings(this)
     this.restaurant_base_score = new RestaurantBaseScore(this)
     this.restaurant_tag_scores = new RestaurantTagScores(this)
-  }
-
-  _debugRAMUsage(restaurant_id: string) {
-    const fn = () => {
-      const ram_value = Math.round(process.memoryUsage().heapUsed / 1024 / 1024)
-      const ram = ram_value + 'Mb'
-      if (ram_value > 1000) {
-        sentryMessage('Worker RAM over 1Gi', { ram, restaurant: restaurant_id })
-      }
-      this.log(`Worker RAM usage for ${restaurant_id}: ${ram}`)
-    }
-    this._debugRamIntervalFunction = setInterval(fn, 5000)
   }
 
   async allForCity(city: string) {
@@ -134,7 +126,15 @@ export class Self extends WorkerJob {
   }
 
   async mergeAll(id: string) {
+    this._job_identifier_restaurant_id = id
     const restaurant = await restaurantFindOneWithTags({ id: id })
+    if (!restaurant) {
+      sentryMessage('SELF CRAWLERL restaurantFindOneWithTags() null', {
+        hasura: global['latestUnhandledGQLessRejection']?.errors[0]?.message,
+        mergeAllID: id,
+      })
+      process.exit(1)
+    }
     if (restaurant) {
       await this.preMerge(restaurant)
       const async_steps = [
@@ -161,7 +161,7 @@ export class Self extends WorkerJob {
 
   async preMerge(restaurant: RestaurantWithId) {
     this.main_db = DB.main_db()
-    this._debugRAMUsage(restaurant.slug || restaurant.id)
+    this._debugDaemon()
     this.restaurant = restaurant
     console.log('Merging: ' + this.restaurant.name)
     this.resetTimer()
@@ -770,5 +770,44 @@ export class Self extends WorkerJob {
     const memory =
       Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + 'Mb'
     console.log(`${this.restaurant.slug}: ${message} | ${time} | ${memory}`)
+  }
+
+  _debugDaemon() {
+    const fn = () => {
+      this._checkRAM()
+      this._checkNulls()
+    }
+    this._debugRamIntervalFunction = setInterval(fn, 5000)
+  }
+
+  _checkRAM() {
+    const ram_value = Math.round(process.memoryUsage().heapUsed / 1024 / 1024)
+    const ram = ram_value + 'Mb'
+    if (ram_value > 1000) {
+      sentryMessage('Worker RAM over 1Gi', {
+        ram,
+        restaurant: this.restaurant,
+      })
+    }
+    this.log(`Worker RAM usage: ${ram}`)
+  }
+
+  _checkNulls() {
+    if (!this.restaurant || !this.restaurant.slug || !this.restaurant.name) {
+      sentryMessage('Self crawl null data', {
+        restaurant_id: this._job_identifier_restaurant_id,
+      })
+      process.exit(1)
+    }
+  }
+
+  _listenForGraphErrors() {
+    onGraphError((errors: GraphError[]) => {
+      for (const error of errors) {
+        sentryMessage('SELF CRAWL Graph Error', {
+          message: error.message,
+        })
+      }
+    })
   }
 }

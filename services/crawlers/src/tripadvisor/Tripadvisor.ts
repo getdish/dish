@@ -5,7 +5,7 @@ import { WorkerJob } from '@dish/worker'
 import * as acorn from 'acorn'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
-import cheerio from 'cheerio'
+import * as cheerio from 'cheerio'
 import _ from 'lodash'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'

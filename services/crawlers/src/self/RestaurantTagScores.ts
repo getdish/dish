@@ -14,6 +14,8 @@ type ReviewTagSentence = {
 export class RestaurantTagScores {
   crawler: Self
   breakdown: any = {}
+  total_sentences = 0
+  current_sentence = 0
 
   constructor(crawler: Self) {
     this.crawler = crawler
@@ -21,8 +23,9 @@ export class RestaurantTagScores {
 
   async calculateScores() {
     const unanalysed = await this.findAllUnanalyzed()
+    this.total_sentences = unanalysed.length
     this.crawler.log(
-      `Starting Bert sentiment requests (${unanalysed.length} to analyze)...`
+      `Starting Bert sentiment requests (${this.total_sentences} to analyze)...`
     )
     const analyzed = await this.analyzeSentences(unanalysed)
     await this.updateAnalyzed(analyzed)
@@ -60,6 +63,7 @@ export class RestaurantTagScores {
 
   async bertAssessSentence(review_tag_sentence: ReviewTagSentence) {
     if (!review_tag_sentence.sentence) return
+    this.current_sentence = this.current_sentence + 1
     const result = await this.fetchBertSentimentWithRetries(
       review_tag_sentence.sentence
     )
@@ -106,7 +110,10 @@ export class RestaurantTagScores {
           })
           return
         }
-        console.log('Retrying Bert sentiment API')
+        console.log(
+          `Retrying Bert sentiment API: ${retries}/${MAX_RETRIES}. ` +
+            `Sentence ${this.current_sentence}/${this.total_sentences}`
+        )
       }
     }
   }
