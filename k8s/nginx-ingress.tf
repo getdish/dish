@@ -36,6 +36,9 @@ resource "kubernetes_ingress" "k8s-services-ingress" {
       "kubernetes.io/ingress.class" = "nginx"
       "cert-manager.io/cluster-issuer": "letsencrypt-prod"
       "cert-manager.io/acme-challenge-type": "http01"
+      "nginx.ingress.kubernetes.io/proxy-body-size": "10m"
+      "nginx.ingress.kubernetes.io/configuration-snippet": <<EOF
+      EOF
     }
   }
   spec {
