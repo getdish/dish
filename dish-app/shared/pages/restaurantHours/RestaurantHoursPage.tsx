@@ -13,20 +13,18 @@ import {
   TableRow,
   Text,
   VStack,
-  prevent,
 } from '@dish/ui'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
 
 import { bgLight } from '../../colors'
-import { zIndexGallery } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 
 export default memo(
-  graphql(function HomePageRestaurantHours() {
+  graphql<any>(function HomePageRestaurantHours() {
     const params = router.curPage.params
     const restaurant = useRestaurantQuery(params.slug)
     const hours = restaurant.hours() ?? []
