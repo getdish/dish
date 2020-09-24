@@ -3,7 +3,7 @@ import React from 'react'
 import { extendStaticConfig } from '../helpers/extendStaticConfig'
 import { StackProps, VStack } from './Stacks'
 
-const defaultStyle: StackProps = {
+const defaultProps: StackProps = {
   backgroundColor: '#fff',
   padding: 5,
   borderRadius: 12,
@@ -16,9 +16,11 @@ const defaultStyle: StackProps = {
 export type BoxProps = StackProps
 
 export function Box(props: BoxProps) {
-  return <VStack {...defaultStyle} {...props} />
+  return <VStack {...defaultProps} {...props} />
 }
 
-Box.staticConfig = extendStaticConfig(VStack, {
-  defaultStyle,
-})
+if (process.env.IS_STATIC) {
+  Box.staticConfig = extendStaticConfig(VStack, {
+    defaultProps,
+  })
+}

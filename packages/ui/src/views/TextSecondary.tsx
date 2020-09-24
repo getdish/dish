@@ -4,14 +4,16 @@ import { TextStyle } from 'react-native'
 import { extendStaticConfig } from '../helpers/extendStaticConfig'
 import { Text, TextProps } from './Text'
 
-const defaultStyle: TextStyle = {
+const defaultProps: TextStyle = {
   color: 'rgba(150,150,150,0.5)',
 }
 
 export const TextSecondary = (props: TextProps) => {
-  return <Text {...defaultStyle} {...props} />
+  return <Text {...defaultProps} {...props} />
 }
 
-TextSecondary.staticConfig = extendStaticConfig(Text, {
-  defaultStyle,
-})
+if (process.env.IS_STATIC) {
+  TextSecondary.staticConfig = extendStaticConfig(Text, {
+    defaultProps,
+  })
+}

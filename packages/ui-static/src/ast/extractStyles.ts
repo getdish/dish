@@ -7,11 +7,10 @@ import traverse from '@babel/traverse'
 import * as t from '@babel/types'
 import * as AllExports from '@dish/ui/node'
 import invariant from 'invariant'
-import { ViewStyle } from 'react-native'
+import { TextStyle, ViewStyle } from 'react-native'
 
 import { GLOSS_CSS_FILE } from '../constants'
 import { getStylesAtomic, pseudos } from '../style/getStylesAtomic'
-import { stylePropsText, stylePropsView } from '../style/styleProps'
 import {
   CacheObject,
   ClassNameToStyleObj,
@@ -30,15 +29,19 @@ import { parse } from './parse'
 
 type OptimizableComponent = Function & {
   staticConfig: {
-    defaultStyle: any
-    styleExpansionProps?: {
+    validStyles: { [key: string]: boolean }
+    defaultProps: any
+    expansionProps?: {
       // eg: <ZStack fullscreen />, { fullscreen: { position: 'absolute', ... } }
-      [key: string]: ViewStyle | ((props: any) => ViewStyle)
+      [key: string]:
+        | ViewStyle
+        | TextStyle
+        | ((props: any) => ViewStyle | TextStyle)
     }
   }
 }
 
-const UNUSED = Symbol()
+const FAILED_EVAL = Symbol('failed_style_eval')
 
 const validComponents: { [key: string]: OptimizableComponent } = Object.keys(
   AllExports
@@ -181,9 +184,15 @@ export function extractStyles(
 
         const component = validComponents[node.name.name]!
         const { staticConfig } = component
+
+        if (!staticConfig) {
+          console.log('skipping', node.name.name)
+          return
+        }
+
         const originalNodeName = node.name.name
         const isTextView = originalNodeName.endsWith('Text')
-        const styleProps = isTextView ? stylePropsText : stylePropsView
+        const validStyles = staticConfig?.validStyles ?? {}
         const domNode = isTextView ? 'span' : 'div'
 
         if (shouldPrintDebug) {
@@ -192,8 +201,8 @@ export function extractStyles(
 
         const isStaticAttributeName = (name: string) => {
           return (
-            !!styleProps[name] ||
-            !!staticConfig?.styleExpansionProps?.[name] ||
+            !!validStyles[name] ||
+            !!staticConfig?.expansionProps?.[name] ||
             !!pseudos[name]
           )
         }
@@ -239,7 +248,7 @@ export function extractStyles(
             if (shouldPrintDebug) {
               console.log('attemptEvalSafe failed', err.message)
             }
-            return null
+            return FAILED_EVAL
           }
         }
 
@@ -290,12 +299,12 @@ export function extractStyles(
             const { alternate, consequent, test } = attr.argument
             const aStyle = isStyleObject(alternate)
               ? attemptEvalSafe(alternate)
-              : null
+              : FAILED_EVAL
             const cStyle = isStyleObject(consequent)
               ? attemptEvalSafe(consequent)
-              : null
+              : FAILED_EVAL
 
-            if (aStyle || cStyle) {
+            if (aStyle !== FAILED_EVAL && cStyle !== FAILED_EVAL) {
               staticTernaries.push({
                 test,
                 alternate: aStyle,
@@ -309,7 +318,7 @@ export function extractStyles(
           if (t.isLogicalExpression(attr.argument)) {
             if (isStyleObject(attr.argument.right)) {
               const spreadStyle = attemptEvalSafe(attr.argument.right)
-              if (spreadStyle) {
+              if (spreadStyle !== FAILED_EVAL) {
                 const test = (attr.argument as t.LogicalExpression).left
                 staticTernaries.push({
                   test,
@@ -410,19 +419,32 @@ export function extractStyles(
             ? attribute.value.expression
             : attribute.value
 
-          // value == null means boolean (true)
-          const isBoolean = value == null
-          const isBooleanTruthy =
-            isBoolean || (t.isBooleanLiteral(value) && value.value === true)
-
-          // handle expanded attributes if boolean=true
-          if (isBooleanTruthy) {
-            const expandedAttr = staticConfig?.styleExpansionProps?.[name]
-            if (expandedAttr) {
-              Object.assign(viewStyles, expandedAttr)
+          // handle expansions, we parse these after all props parsed
+          const expansion = staticConfig?.expansionProps?.[name]
+          if (
+            expansion &&
+            !t.isBinaryExpression(value) &&
+            !t.isConditionalExpression(value)
+          ) {
+            const styleValue =
+              t.isIdentifier(value) && name === value.name
+                ? // handle boolean jsx props
+                  true
+                : attemptEvalSafe(value)
+            if (styleValue === FAILED_EVAL) {
+              if (shouldPrintDebug) {
+                console.warn('Failed style expansion!', name, attribute?.value)
+              }
+              inlinePropCount++
+              return true
+            } else {
+              styleExpansions.push({ name, value: styleValue })
               return false
             }
           }
+
+          // value == null means boolean (true)
+          const isBoolean = value == null
 
           if (isBoolean) {
             inlinePropCount++
@@ -456,9 +478,12 @@ export function extractStyles(
           }
 
           // if value can be evaluated, extract it and filter it out
-          let styleValue: any = UNUSED
-          try {
-            styleValue = attemptEval(value)
+
+          const styleValue = attemptEvalSafe(value)
+
+          if (styleValue === FAILED_EVAL) {
+            // dynamic
+          } else {
             if (shouldPrintDebug) {
               console.log('attr', {
                 name,
@@ -468,19 +493,7 @@ export function extractStyles(
                 attribute: attribute?.value?.['expression'],
               })
             }
-          } catch (err) {
-            if (shouldPrintDebug) {
-              console.log('err evaluating, could be dynamic:', err.message)
-            }
-          }
-
-          // apply style to view, expand if possible
-          if (styleValue !== UNUSED) {
-            if (staticConfig?.styleExpansionProps?.[name]) {
-              styleExpansions.push({ name, value: styleValue })
-            } else {
-              viewStyles[name] = styleValue
-            }
+            viewStyles[name] = styleValue
             return false
           }
 
@@ -494,12 +507,12 @@ export function extractStyles(
             // if one side is a ternary, and the other side is evaluatable, we can maybe extract
             const lVal = attemptEvalSafe(left)
             const rVal = attemptEvalSafe(right)
-            if (lVal != null && t.isConditionalExpression(right)) {
+            if (lVal !== FAILED_EVAL && t.isConditionalExpression(right)) {
               if (addBinaryConditional(operator, left, right)) {
                 return false
               }
             }
-            if (rVal != null && t.isConditionalExpression(left)) {
+            if (rVal !== FAILED_EVAL && t.isConditionalExpression(left)) {
               if (addBinaryConditional(operator, right, left)) {
                 return false
               }
@@ -588,20 +601,50 @@ export function extractStyles(
           return true
         })
 
+        const defaultProps = component.staticConfig?.defaultProps ?? {}
+        const defaultStyle = {}
+        const defaultStaticProps = {}
+
+        // get our expansion props vs our style props
+        for (const key in defaultProps) {
+          if (validStyles[key]) {
+            defaultStyle[key] = defaultProps[key]
+          } else {
+            defaultStaticProps[key] = defaultProps[key]
+            styleExpansions.push({ name: key, value: defaultProps[key] })
+          }
+        }
+
         // second pass, style expansions
+        let styleExpansionError = false
+        if (shouldPrintDebug) {
+          console.log('styleExpansions', styleExpansions)
+        }
         if (styleExpansions.length) {
           if (shouldPrintDebug) {
             console.log('styleExpansions', styleExpansions)
           }
           // first build fullStyles to pass in
-          const fullStyles = { ...viewStyles }
+          const fullProps = {
+            ...defaultStaticProps,
+            ...viewStyles,
+          }
           for (const { name, value } of styleExpansions) {
-            fullStyles[name] = value
+            fullProps[name] = value
           }
           function getStyleExpansion(name: string, value?: any) {
-            const expansion = staticConfig?.styleExpansionProps?.[name]
+            const expansion = staticConfig?.expansionProps?.[name]
             if (typeof expansion === 'function') {
-              return expansion({ ...fullStyles, [name]: value })
+              if (shouldPrintDebug) {
+                console.log('expanding', name, value, fullProps)
+              }
+              try {
+                return expansion({ ...fullProps, [name]: value })
+              } catch (err) {
+                console.error('Error running expansion', err)
+                styleExpansionError = true
+                return {}
+              }
             }
             if (expansion) {
               return expansion
@@ -609,6 +652,9 @@ export function extractStyles(
           }
           for (const { name, value } of styleExpansions) {
             const expandedStyle = getStyleExpansion(name, value)
+            if (styleExpansionError) {
+              break
+            }
             if (expandedStyle) {
               if (shouldPrintDebug) {
                 console.log('expandedStyle', expandedStyle)
@@ -616,6 +662,14 @@ export function extractStyles(
               Object.assign(viewStyles, expandedStyle)
             }
           }
+        }
+
+        if (styleExpansionError) {
+          if (shouldPrintDebug) {
+            console.log('bailing optimization due to failed style expansion')
+          }
+          node.attributes = ogAttributes
+          return
         }
 
         if (shouldPrintDebug) {
@@ -638,8 +692,6 @@ export function extractStyles(
           )
           node.attributes.splice(classNamePropIndex, 1)
         }
-
-        const defaultStyle = component.staticConfig?.defaultStyle ?? {}
 
         // if all style props have been extracted, gloss component can be
         // converted to a div or the specified component
@@ -675,6 +727,13 @@ export function extractStyles(
 
         // if inlining + spreading + ternary, deopt fully
         if (inlinePropCount && staticTernaries.length && lastSpreadIndex > -1) {
+          if (shouldPrintDebug) {
+            console.log(
+              'deopt due to inline + spread',
+              inlinePropCount,
+              staticTernaries
+            )
+          }
           node.attributes = ogAttributes
           return
         }
@@ -901,7 +960,7 @@ export function extractStyles(
   // we didnt find anything
   if (css === '') {
     if (shouldPrintDebug) {
-      console.log('END - nothing extracted!', sourceFileName)
+      console.log('END - nothing extracted!', sourceFileName, '\n', src)
     }
     return {
       ast,

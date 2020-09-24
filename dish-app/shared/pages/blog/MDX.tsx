@@ -111,12 +111,7 @@ const components = {
 
 export function MDX({ children, ...props }: any) {
   return (
-    <MDXProvider
-      {...props}
-      components={
-        props.components ? { ...components, ...props.components } : components
-      }
-    >
+    <MDXProvider {...props} components={components}>
       {children}
     </MDXProvider>
   )

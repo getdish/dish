@@ -10,9 +10,10 @@ export const StackViewCloseButton = memo((props: StackProps) => {
       className="cursor-pointer"
       pointerEvents="auto"
       zIndex={100000}
+      onPressOut={() => omStatic.actions.home.up()}
       {...props}
     >
-      <CloseButton size={16} onPressOut={() => omStatic.actions.home.up()} />
+      <CloseButton size={16} />
     </AbsoluteVStack>
   )
 })

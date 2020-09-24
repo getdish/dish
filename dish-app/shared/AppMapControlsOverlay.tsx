@@ -14,8 +14,6 @@ import { useIsNarrow, useIsReallyNarrow } from './hooks/useIs'
 import { useMapSize } from './hooks/useMapSize'
 import { useOvermind } from './state/om'
 
-console.log('DownloadAppIcon', DownloadAppIcon)
-
 export const AppMapControlsOverlay = memo(() => {
   const om = useOvermind()
   const isReallySmall = useIsReallyNarrow()

@@ -4,6 +4,11 @@ export function evaluateAstNode(
   exprNode: t.Node,
   evalFn?: (node: t.Node) => any
 ): any {
+  // null === boolean true (at least in our use cases for jsx eval)
+  if (exprNode === null) {
+    return true
+  }
+
   // loop through ObjectExpression keys
   if (t.isObjectExpression(exprNode)) {
     const ret: Record<string, any> = {}
@@ -117,6 +122,7 @@ export function evaluateAstNode(
   }
 
   // TODO: member expression?
+  // console.log('what failed', exprNode)
 
   // if we've made it this far, the value has to be evaluated
   if (typeof evalFn !== 'function') {

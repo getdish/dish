@@ -11,7 +11,7 @@ import { LoginRegisterForm } from './views/LoginRegisterForm'
 import { LinkButton } from './views/ui/LinkButton'
 import { LinkButtonProps } from './views/ui/LinkProps'
 
-export const UserMenuContents = memo(
+export const AppMenuContents = memo(
   ({ hideUserMenu, ...props }: { hideUserMenu: Function } & BoxProps) => {
     const om = useOvermind()
 

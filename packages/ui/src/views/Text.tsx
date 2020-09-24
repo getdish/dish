@@ -20,7 +20,7 @@ export type TextProps = Omit<ReactTextProps, 'style'> &
     userSelect?: string
   }
 
-const defaultStyle: TextStyle = {
+const defaultProps: TextStyle = {
   // fixes transforms not working on web
   display: 'inline-block' as any,
 }
@@ -44,12 +44,15 @@ export const Text = (allProps: TextProps) => {
   return <ReactText ref={textRef} style={style} {...props} />
 }
 
-Text.staticConfig = {
-  defaultStyle,
-  styleExpansionProps: {
-    selectable: selectableStyle,
-    ellipse: ellipseStyle,
-  },
+if (process.env.IS_STATIC) {
+  Text.staticConfig = {
+    validStyles: require('../styleProps').stylePropsText,
+    defaultProps,
+    expansionProps: {
+      selectable: selectableStyle,
+      ellipse: ellipseStyle,
+    },
+  }
 }
 
 const textNonStylePropReg = /^(allow.*|on[A-Z].*|.*[Mm]ode)/
@@ -69,7 +72,7 @@ const useTextStyle = (allProps: TextProps) => {
     const props: ReactTextProps = {}
     const style: TextStyle = isWeb
       ? {
-          ...defaultStyle,
+          ...defaultProps,
         }
       : {}
     for (const key in allProps) {

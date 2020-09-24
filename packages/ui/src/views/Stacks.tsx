@@ -85,7 +85,7 @@ if (typeof document !== 'undefined') {
   })
 }
 
-const createStack = (defaultStyle?: ViewStyle) => {
+const createStack = (defaultProps?: ViewStyle) => {
   const component = forwardRef<View, StackProps>((props, ref) => {
     const {
       children,
@@ -148,7 +148,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
         <Spacer
           size={spacing}
           direction={
-            defaultStyle?.flexDirection === 'row' ? 'horizontal' : 'vertical'
+            defaultProps?.flexDirection === 'row' ? 'horizontal' : 'vertical'
           }
         />
       )
@@ -170,7 +170,7 @@ const createStack = (defaultStyle?: ViewStyle) => {
           !isWeb && pointerEvents === 'none' ? 'box-none' : pointerEvents
         }
         style={[
-          defaultStyle,
+          defaultProps,
           fullscreen ? fullscreenStyle : null,
           styleProps,
           style,
@@ -296,16 +296,19 @@ const createStack = (defaultStyle?: ViewStyle) => {
     return content
   })
 
-  // @ts-ignore
-  component.staticConfig = {
-    defaultStyle,
-    styleExpansionProps: {
-      fullscreen: fullscreenStyle,
-      disabled: disabledStyle,
-      contain: ({ contain }) => ({
-        contain,
-      }),
-    },
+  if (process.env.IS_STATIC) {
+    // @ts-ignore
+    component.staticConfig = {
+      validStyles: require('../styleProps').stylePropsView,
+      defaultProps,
+      expansionProps: {
+        fullscreen: fullscreenStyle,
+        disabled: disabledStyle,
+        contain: ({ contain }) => ({
+          contain,
+        }),
+      },
+    }
   }
 
   return (component as any) as StaticComponent<StackProps>

@@ -6,7 +6,6 @@ import createReactDOMStyle from 'react-native-web/dist/cjs/exports/StyleSheet/cr
 import i18Style from 'react-native-web/dist/cjs/exports/StyleSheet/i18nStyle'
 
 import { StyleObject } from '../types'
-import { stylePropsText } from './styleProps'
 
 export const pseudos = {
   activeStyle: {
