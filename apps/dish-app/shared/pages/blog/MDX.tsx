@@ -1,4 +1,4 @@
-import { Paragraph, Spacer, Text, VStack } from '@dish/ui'
+import { H1, H2, H3, H4, H5, Paragraph, Text, VStack } from '@dish/ui'
 import { MDXProvider } from '@mdx-js/react'
 import React from 'react'
 import { Image, ImageProps } from 'react-native'
@@ -7,7 +7,15 @@ import { Link } from '../../views/ui/Link'
 import { contentSpace, contentSpaceLg } from './contentSpace'
 import { IntroText } from './IntroText'
 
-const Alt = (props) => (
+const spaceVertical = (Component: any, space?: any) => (props: any) => (
+  <>
+    {space ?? contentSpace}
+    <Component {...props} />
+    {space ?? contentSpace}
+  </>
+)
+
+const Alt = spaceVertical((props) => (
   <Text
     marginTop={-16}
     marginBottom={16}
@@ -15,15 +23,10 @@ const Alt = (props) => (
     opacity={0.5}
     {...props}
   />
-)
+))
 
 const components = {
-  IntroText: (props) => (
-    <>
-      <IntroText {...props} />
-      {contentSpaceLg}
-    </>
-  ),
+  IntroText: spaceVertical(IntroText),
 
   Alt,
 
@@ -60,55 +63,34 @@ const components = {
     </>
   ),
 
-  // h1: H1,
-  // h2: H2,
-  // h3: H3,
-  // h4: H4,
-  // h5: H5,
+  h1: spaceVertical(H1),
+  h2: spaceVertical(H2),
+  h3: spaceVertical(H3),
+  h4: spaceVertical(H4),
+  h5: spaceVertical(H5),
+  pre: spaceVertical(Text),
 
-  pre: (props) => <div {...props} />,
+  li: spaceVertical((props) => <li style={{ marginLeft: 26 }} {...props} />),
+  ul: spaceVertical((props) => <ul style={{ margin: 0 }} {...props} />),
 
-  li: (props) => (
-    <>
-      <li style={{ marginLeft: 26 }} {...props} />
-    </>
-  ),
-  ul: (props) => (
-    <>
-      <ul style={{ margin: 0 }} {...props} />
-    </>
-  ),
-
-  a: (props: any) => {
+  a: spaceVertical((props: any) => {
     return <Link {...props} />
-  },
+  }),
 
-  ol: (props) => (
-    <>
-      <ol style={{ margin: 0 }} {...props} />
-    </>
-  ),
+  ol: spaceVertical((props) => <ol style={{ margin: 0 }} {...props} />),
 
-  p: (props) => {
-    return <Paragraph {...props} />
-  },
+  p: spaceVertical(Paragraph),
+  Paragraph: spaceVertical(Paragraph),
 
-  Paragraph: (props) => {
-    return <Paragraph {...props} />
-  },
-
-  description: (props) => (
-    <>
-      <Paragraph
-        className="body-text"
-        margin={0}
-        {...props}
-        fontSize="inherit"
-        lineHeight="inherit"
-      />
-      {contentSpace}
-    </>
-  ),
+  description: spaceVertical((props) => (
+    <Paragraph
+      className="body-text"
+      margin={0}
+      {...props}
+      fontSize="inherit"
+      lineHeight="inherit"
+    />
+  )),
 
   blockquote: (props) => (
     <VStack>
