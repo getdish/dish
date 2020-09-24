@@ -235,6 +235,7 @@ export const TagButton = memo((props: TagButtonProps) => {
           <VStack
             backgroundColor={subtle ? 'transparent' : 'transparent'}
             borderRadius={10}
+            onPress={prevent}
             onPressIn={prevent}
             onPressOut={onClose}
             opacity={0.35}

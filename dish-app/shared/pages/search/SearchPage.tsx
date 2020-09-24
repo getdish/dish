@@ -81,7 +81,6 @@ export default memo(function SearchPage(props: Props) {
     isOptimisticUpdating || !props.isActive || changingFilters
 
   usePageLoadEffect(props.isActive, ({ isRefreshing }) => {
-    console.log('load search', isRefreshing)
     // if initial load on a search page, process url => state
     let isCancelled = false
     if (!isRefreshing) {
@@ -93,7 +92,6 @@ export default memo(function SearchPage(props: Props) {
         ...location,
       })
       getFullTags(fakeTags).then((tags) => {
-        console.log('what are the full tags', tags)
         if (isCancelled) return
         addTagsToCache(tags)
         const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>(

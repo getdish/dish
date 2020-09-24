@@ -15,7 +15,9 @@ export const getTagsFromRoute = (
   }
   if (item.params.tags) {
     for (const tag of item.params.tags.split(SPLIT_TAG)) {
-      tags.push(getUrlTagInfo(tag, 'filter'))
+      if (tag !== '-') {
+        tags.push(getUrlTagInfo(tag, 'filter'))
+      }
     }
   }
   return tags

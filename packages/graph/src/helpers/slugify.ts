@@ -56,6 +56,7 @@ export function slugify(text: string, separator = '-') {
 
   if (next == '') {
     next = `no-slug`
+    console.warn('no slug')
   }
 
   cache.set(text, next)

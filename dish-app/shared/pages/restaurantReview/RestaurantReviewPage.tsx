@@ -30,7 +30,6 @@ import { RestaurantReview } from '../restaurant/RestaurantReview'
 export default memo(function HomePageRestaurantReview() {
   const om = useOvermind()
   const state = om.state.home.currentState
-  console.log('state', state)
 
   if (state.type === 'restaurantReview') {
     return (
