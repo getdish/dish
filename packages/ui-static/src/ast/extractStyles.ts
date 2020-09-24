@@ -169,6 +169,7 @@ export function extractStyles(
     JSXElement: {
       enter(traversePath: TraversePath<t.JSXElement>) {
         const node = traversePath.node.openingElement
+        const ogAttributes = node.attributes
         const componentName = findComponentName(traversePath.scope)
 
         if (
@@ -402,8 +403,6 @@ export function extractStyles(
           console.log('attrs:', node.attributes.map(attrGetName).join(', '))
         }
 
-        const ogAttributes = node.attributes
-
         node.attributes = node.attributes.filter((attribute, idx) => {
           const notToLastSpread = idx < lastSpreadIndex && !isSingleSimpleSpread
           if (
@@ -609,6 +608,19 @@ export function extractStyles(
           return true
         })
 
+        // if inlining + spreading + ternary, deopt fully
+        if (inlinePropCount && staticTernaries.length && lastSpreadIndex > -1) {
+          if (shouldPrintDebug) {
+            console.log(
+              'deopt due to inline + spread',
+              inlinePropCount,
+              staticTernaries
+            )
+          }
+          node.attributes = ogAttributes
+          return
+        }
+
         const defaultProps = component.staticConfig?.defaultProps ?? {}
         const defaultStyle = {}
         const defaultStaticProps = {}
@@ -735,19 +747,6 @@ export function extractStyles(
             node.attributes
           )
           node.attributes.splice(classNamePropIndex, 1)
-        }
-
-        // if inlining + spreading + ternary, deopt fully
-        if (inlinePropCount && staticTernaries.length && lastSpreadIndex > -1) {
-          if (shouldPrintDebug) {
-            console.log(
-              'deopt due to inline + spread',
-              inlinePropCount,
-              staticTernaries
-            )
-          }
-          node.attributes = ogAttributes
-          return
         }
 
         if (inlinePropCount) {
