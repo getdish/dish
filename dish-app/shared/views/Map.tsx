@@ -209,7 +209,8 @@ export const Map = (props: MapProps) => {
             // clustering
             cluster: true,
             clusterMaxZoom: 14,
-            clusterRadius: 18,
+            clusterRadius: 10,
+            clusterMinPoints: 10,
           })
 
           map.addSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID, {
