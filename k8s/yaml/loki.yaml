@@ -1,0 +1,19 @@
+loki:
+  persistence.enabled : true
+  persistence.size: 25Gi
+  config.table_manager.retention_deletes_enabled: true
+  config.table_manager.retention_period: "720h"
+
+promtail:
+  #extraScrapeConfigs:
+  #- job_name: hasura-response-time
+    #kubernetes_sd_configs:
+    #- role: pod
+    #pipeline_stages:
+      #- match:
+          #selector: '{app="hasura"}'
+          #stages:
+          #- regex:
+              #expression: 'query_execution_time\":(?P<query_execution_time>[0-9]*.[0-9]*)'
+          #- labels:
+              #query_execution_time:
