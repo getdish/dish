@@ -72,8 +72,9 @@ export const useLink = (props: LinkProps<any, any>) => {
           element,
           {
             onClick: onPress,
-            className: `display-contents dish-link`,
-            href: router.getPathFromParams(navItem),
+            className: `display-contents dish-link ${props.className ?? ''}`,
+            href: props.href ?? router.getPathFromParams(navItem),
+            target: props.target,
             onMouseEnter: linkProps.onMouseEnter,
           },
           children

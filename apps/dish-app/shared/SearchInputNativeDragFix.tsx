@@ -41,10 +41,10 @@ export const SearchInputNativeDragFix = ({
   return (
     <VStack
       position="absolute"
-      top={0}
+      top={-2}
       left={0}
-      right={30}
-      bottom={0}
+      right={0}
+      bottom={-2}
       zIndex={1000000}
     >
       <TouchableWithoutFeedback

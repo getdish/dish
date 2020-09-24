@@ -22,6 +22,9 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
   const paddingVertical = isLoaded ? drawerHeight / 2 : 0
   const ty = -paddingVertical
   const tyRef = useRef(new Animated.Value(ty))
+  const cameraRef = useRef<MapboxGL.Camera>(null)
+  const mapRef = useRef<MapboxGL.MapView>(null)
+  const onMoveEndDelayed = useDebounce(onMoveEnd ?? idFn, 250)
 
   useEffect(() => {
     const spring = Animated.spring(tyRef.current, {
@@ -37,9 +40,6 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
     paddingTop: paddingVertical,
     paddingBottom: paddingVertical,
   }
-  const cameraRef = useRef<MapboxGL.Camera>(null)
-  const mapRef = useRef<MapboxGL.MapView>(null)
-  const onMoveEndDelayed = useDebounce(onMoveEnd ?? idFn, 250)
 
   useEffect(() => {
     const { ne, sw, paddingTop, paddingBottom } = bounds
@@ -60,6 +60,22 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
         styleURL="mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy"
         onDidFinishLoadingMap={() => {
           setIsLoaded(1)
+        }}
+        onPress={async (e) => {
+          console.log('pressing', e)
+          const map = mapRef.current
+          if (!map) return
+          if (!('coordinates' in e.geometry)) return
+          const point = await map?.getPointInView(e.geometry.coordinates as any)
+          if (!point) return
+          const features = await map.queryRenderedFeaturesAtPoint(point)
+          if (!features || !features.features?.length) return
+          console.log('features', point, features)
+          if (features.features.length === 1) {
+            // single point
+          } else {
+            // multi-point
+          }
         }}
         onRegionDidChange={async (event) => {
           // ignore initial load

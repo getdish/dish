@@ -93,6 +93,10 @@ export const AppSearchInput = memo(() => {
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
   // const { showAutocomplete } = om.state.home
 
+  const height = searchBarHeight
+  const outerHeight = height
+  const innerHeight = height
+
   useOnMount(() => {
     searchBar = inputStore.node
 
@@ -182,7 +186,7 @@ export const AppSearchInput = memo(() => {
             ref={searchInputContainer}
             minWidth="50%"
             flex={2}
-            height={searchBarHeight - 8}
+            height={outerHeight}
           >
             <ScrollView
               horizontal
@@ -201,11 +205,11 @@ export const AppSearchInput = memo(() => {
                 alignSelf="center"
                 alignItems="center"
                 minWidth="100%"
-                height={searchBarHeight - 18}
+                height={innerHeight}
               >
                 <HomeSearchBarTags input={input} />
                 <HStack
-                  height={searchBarHeight - 18}
+                  height={innerHeight}
                   maxWidth="100%"
                   position="relative"
                   flex={1}
@@ -243,7 +247,8 @@ export const AppSearchInput = memo(() => {
                         color,
                         flex: 1,
                         fontSize: 18,
-                        lineHeight: 22,
+                        height,
+                        lineHeight: height * 0.45,
                         paddingHorizontal: 20,
                       },
                     ]}

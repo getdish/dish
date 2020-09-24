@@ -81,7 +81,7 @@ export const Map = (props: MapProps) => {
   const mapNode = useRef<HTMLDivElement>(null)
   let [map, setMap] = useState<mapboxgl.Map | null>(null)
   const internal = useRef({
-    active: null,
+    active: null as null | number,
     hasSetInitialSource: false,
     currentMoveCancel: null as Function | null,
     isAwaitingNextMove: false,
@@ -114,7 +114,7 @@ export const Map = (props: MapProps) => {
       const feature = features[+internalId]
       if (feature) {
         if (shouldCallback) {
-          onSelect?.(feature.properties.id)
+          onSelect?.(feature.properties?.id)
         }
       }
     }
@@ -125,10 +125,11 @@ export const Map = (props: MapProps) => {
     if (!map) return
     let tm
     const handleResize = _.debounce(() => {
+      if (!map) return
       map.resize()
       // occasionally it wasnt resizing in chrome who knows why...
       tm = setTimeout(() => {
-        map.resize()
+        map?.resize()
       }, 200)
     }, 300)
     Dimensions.addEventListener('change', handleResize)
@@ -157,20 +158,24 @@ export const Map = (props: MapProps) => {
     )
     window['map'] = map
 
-    const loadMarker = (name: string, asset: string) =>
-      new Promise((res, rej) => {
+    const loadMarker = (name: string, asset: string) => {
+      return new Promise((res, rej) => {
+        if (!map) return rej()
         map.loadImage(asset, (err, image) => {
           if (err) return rej(err)
-          if (!map.hasImage(name)) {
-            map.addImage(name, image)
+          if (map) {
+            if (!map.hasImage(name)) {
+              map.addImage(name, image)
+            }
           }
           res(image)
         })
       })
+    }
 
     const loadMap = () =>
       new Promise((res) => {
-        map.on('load', res)
+        map?.on('load', res)
       })
 
     const cancels = new Set<Function>()
@@ -191,6 +196,8 @@ export const Map = (props: MapProps) => {
             ),
           ]),
         () => {
+          if (!map) return
+
           map.addSource(RESTAURANTS_SOURCE_ID, {
             type: 'geojson',
             data: {
@@ -255,7 +262,7 @@ export const Map = (props: MapProps) => {
             },
           })
           cancels.add(() => {
-            map.removeLayer(POINT_LAYER_ID)
+            map?.removeLayer(POINT_LAYER_ID)
           })
 
           map.addLayer({
@@ -278,7 +285,7 @@ export const Map = (props: MapProps) => {
             },
           })
           cancels.add(() => {
-            map.removeLayer(UNCLUSTERED_LABEL_LAYER_ID)
+            map?.removeLayer(UNCLUSTERED_LABEL_LAYER_ID)
           })
 
           map.addLayer({
@@ -304,7 +311,7 @@ export const Map = (props: MapProps) => {
             },
           })
           cancels.add(() => {
-            map.removeLayer(CLUSTER_LABEL_LAYER_ID)
+            map?.removeLayer(CLUSTER_LABEL_LAYER_ID)
           })
 
           map.addLayer({
@@ -321,7 +328,7 @@ export const Map = (props: MapProps) => {
             },
           })
           cancels.add(() => {
-            map.removeLayer(POINT_HOVER_LAYER_ID)
+            map?.removeLayer(POINT_HOVER_LAYER_ID)
           })
 
           type Event = mapboxgl.MapMouseEvent & {
@@ -329,8 +336,9 @@ export const Map = (props: MapProps) => {
           } & mapboxgl.EventData
           type Listener = (ev: Event) => void
 
-          let hoverId = null
+          let hoverId = null as null | number
           const setHovered = (e: Event, hover: boolean) => {
+            if (!map) return
             map.getCanvas().style.cursor = hover ? 'pointer' : ''
 
             // only one at a time
@@ -339,13 +347,13 @@ export const Map = (props: MapProps) => {
               mapSetFeature(map, hoverId, { hover: false })
               hoverId = null
             }
-            const id = e.features?.[0].id
+            const id = e.features?.[0].id ?? -1
             if (id > -1 && hoverId != id) {
               if (hover) {
                 // map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', id])
                 mapSetIconSelected(map, id)
                 // map.setLayoutProperty(UNCLUSTE, 'icon-image', 'bar-15')
-                hoverId = id
+                hoverId = +id
                 mapSetFeature(map, hoverId, { hover: true })
               }
             }
@@ -353,7 +361,7 @@ export const Map = (props: MapProps) => {
             if (onHover) {
               if (id > -1) {
                 const feature = features[+id]
-                const rid = feature?.properties.id
+                const rid = feature?.properties?.id
                 if (rid) {
                   onHover(rid)
                 }
@@ -368,14 +376,18 @@ export const Map = (props: MapProps) => {
           }
           map.on('mouseenter', POINT_LAYER_ID, hoverCluster)
           cancels.add(() => {
-            map.off('mouseenter', POINT_LAYER_ID, hoverCluster)
+            map?.off('mouseenter', POINT_LAYER_ID, hoverCluster)
           })
           function unHoverCluster() {
-            map.getCanvas().style.cursor = ''
+            if (map) {
+              map.getCanvas().style.cursor = ''
+            }
           }
           map.on('mouseleave', POINT_LAYER_ID, unHoverCluster)
           cancels.add(() => {
-            map.off('mouseleave', POINT_LAYER_ID, unHoverCluster)
+            if (map) {
+              map.off('mouseleave', POINT_LAYER_ID, unHoverCluster)
+            }
           })
 
           /*
@@ -384,6 +396,7 @@ export const Map = (props: MapProps) => {
           let lastLoc = getCurrentLocation(map)
           const handleMoveEndDebounced = _.debounce(() => {
             if (!isMounted.current) return
+            if (!map) return
             // ignore same location
             const next = getCurrentLocation(map)
             if (isEqual(lastLoc, next)) {
@@ -409,8 +422,8 @@ export const Map = (props: MapProps) => {
           map.on('movestart', cancelMoveEnd)
           map.on('moveend', handleMoveEnd)
           cancels.add(() => {
-            map.off('movestart', cancelMoveEnd)
-            map.off('moveend', handleMoveEnd)
+            map?.off('movestart', cancelMoveEnd)
+            map?.off('moveend', handleMoveEnd)
           })
 
           const handleMove: Listener = () => {
@@ -419,34 +432,35 @@ export const Map = (props: MapProps) => {
           map.on('move', handleMove)
           map.on('movestart', handleMove)
           cancels.add(() => {
-            map.off('move', handleMove)
-            map.off('movestart', handleMove)
+            map?.off('move', handleMove)
+            map?.off('movestart', handleMove)
           })
 
           const handleDoubleClick: Listener = (e) => {
-            console.log('double clicking', e.features[0]?.id)
-            const id = e.features[0]?.id ?? -1
+            console.log('double clicking', e.features?.[0]?.id)
+            const id = e.features?.[0]?.id ?? -1
             const feature = features[+id]
             if (feature) {
-              onDoubleClick?.(feature.properties.id)
+              onDoubleClick?.(feature.properties?.id)
             }
           }
           map.on('dblclick', CLUSTER_LABEL_LAYER_ID, handleDoubleClick)
           cancels.add(() => {
-            map.off('dblclick', CLUSTER_LABEL_LAYER_ID, handleDoubleClick)
+            map?.off('dblclick', CLUSTER_LABEL_LAYER_ID, handleDoubleClick)
           })
 
           const handleClick = (e) => {
+            if (!map) return
             const features = map.queryRenderedFeatures(e.point, {
               layers: [POINT_LAYER_ID],
             })
-            const clusterId = features[0].properties.cluster_id
+            const clusterId = features[0].properties?.cluster_id
             if (clusterId) {
               const source = map.getSource(RESTAURANTS_SOURCE_ID)
               if (source.type === 'geojson') {
                 source.getClusterExpansionZoom(clusterId, function (err, zoom) {
                   if (err) return
-                  map.easeTo({
+                  map?.easeTo({
                     center: features[0].geometry['coordinates'],
                     zoom: zoom * 1.1,
                   })
@@ -460,20 +474,20 @@ export const Map = (props: MapProps) => {
           map.on('click', CLUSTER_LABEL_LAYER_ID, handleClick)
           map.on('click', POINT_LAYER_ID, handleClick)
           cancels.add(() => {
-            map.off('click', CLUSTER_LABEL_LAYER_ID, handleClick)
-            map.off('click', POINT_LAYER_ID, handleClick)
+            map?.off('click', CLUSTER_LABEL_LAYER_ID, handleClick)
+            map?.off('click', POINT_LAYER_ID, handleClick)
           })
 
           // remove sources last
           cancels.add(() => {
-            map.removeSource(RESTAURANTS_SOURCE_ID)
-            map.removeSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID)
+            map?.removeSource(RESTAURANTS_SOURCE_ID)
+            map?.removeSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID)
           })
         },
         () => {
-          map.resize()
+          map?.resize()
           setMap(map)
-          props.mapRef?.(map)
+          if (map) props.mapRef?.(map)
         },
       ])
     )
@@ -491,17 +505,19 @@ export const Map = (props: MapProps) => {
     const isMapLoaded = map?.isStyleLoaded()
     if (!isMapLoaded) return
     if (!selected) return
-    const index = features.findIndex((x) => x.properties.id === selected)
+    if (!map) return
+    const index = features.findIndex((x) => x.properties?.id === selected)
     mapSetIconSelected(map, index)
     setActive(map, index, false)
   }, [map, features, selected])
 
   // hovered
   useEffect(() => {
-    const isMapLoaded = map?.isStyleLoaded()
+    if (!map) return
+    const isMapLoaded = map.isStyleLoaded()
     if (!isMapLoaded) return
     if (!hovered) return
-    const index = features.findIndex((x) => x.properties.id === hovered)
+    const index = features.findIndex((x) => x.properties?.id === hovered)
     // mapSetIconHovered(map, index)
 
     const framesPerSecond = 15
@@ -514,6 +530,7 @@ export const Map = (props: MapProps) => {
 
     function animateMarker() {
       setTimeout(() => {
+        if (!map) return
         if (animate) {
           requestAnimationFrame(animateMarker)
         }
@@ -665,7 +682,7 @@ export const Map = (props: MapProps) => {
   useEffect(() => {
     if (!map) return
     if (!features.length) return
-    if (props.centerToResults <= 0) return
+    if (!props.centerToResults) return
     if (props.centerToResults === lastCenter.current) return
     lastCenter.current = props.centerToResults
     fitMapToResults(map, features)
