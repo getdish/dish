@@ -1,24 +1,36 @@
 WITH
-  dish_ids AS (
-    SELECT id
-      FROM tag
-      WHERE name ILIKE ANY (
-        SELECT UNNEST(
-          -- TODO use our formal slugify() format
-          -- Speed optimisation isn't so important here because the tag
-          -- table should always be relatively small
-          string_to_array(LOWER(REPLACE(?4, '-', ' ')), ',')
-        )
-      )
-        AND type != 'country'
-  )
 
-SELECT jsonb_agg(
-  json_build_object(
-    'id', data.restaurant_id,
-    'slug', data.slug
-  )) FROM (
-  SELECT restaurant.id as restaurant_id, slug FROM restaurant
+dish_ids AS (
+  SELECT id
+    FROM tag
+    WHERE name ILIKE ANY (
+      SELECT UNNEST(
+        -- TODO use our formal slugify() format
+        -- Speed optimisation isn't so important here because the tag
+        -- table should always be relatively small
+        string_to_array(LOWER(REPLACE(?4, '-', ' ')), ',')
+      )
+    )
+    AND type != 'country'
+),
+
+main AS (
+  SELECT
+    restaurant.id as restaurant_id,
+    slug,
+    DENSE_RANK() OVER(
+      ORDER BY restaurant.score DESC NULLS LAST
+    ) AS restaurant_rank,
+    DENSE_RANK() OVER(
+      ORDER BY (
+        SELECT SUM(COALESCE(rt.score, 0))
+          FROM restaurant_tag rt
+          WHERE rt.restaurant_id = restaurant.id
+            AND rt.tag_id IN (SELECT id FROM dish_ids)
+            AND rt.score IS NOT NULL
+      ) DESC NULLS LAST
+    ) AS rishes_rank
+  FROM restaurant
   LEFT JOIN opening_hours ON opening_hours.restaurant_id = restaurant.id
   WHERE (
     (ST_DWithin(location, ST_MakePoint(?0, ?1), ?2) OR ?2 = '0')
@@ -171,22 +183,55 @@ SELECT jsonb_agg(
       -- Default sort order is by the _restaurant's_ score
       WHEN NOT EXISTS (SELECT 1 FROM dish_ids) THEN score
       -- However, if a known dish(es) is being searched for, then order the restaurants
-      -- based on the summed scores of those dishes and the restaurant.
+      -- based on the number of mentions of those dishes
       ELSE (
-        SELECT
-          -- COALESCE() allows restaurant.score to supercede rt.score when there is an
-          -- rt.score of NULL in the SUM. Note that dish_ids is *all* possible tag IDs
-          -- matching the tag strings in the search URL.
-          -- I'm not sure why just a 'AND rt.score IS NOT NULL' doesn't suffice.
-          COALESCE(
-            (SUM(rt.score) + restaurant.score),
-            restaurant.score
-          )
+        SELECT COUNT(*)
           FROM restaurant_tag rt
+          JOIN review ON review.restaurant_id = restaurant.id
           WHERE rt.restaurant_id = restaurant.id
             AND rt.tag_id IN (SELECT id FROM dish_ids)
+            AND review.tag_id IN (SELECT id FROM dish_ids)
       )
     END DESC NULLS LAST
+),
 
-  LIMIT ?5
-) data
+-- Convert a rank like 1/10 into a unit that can be later multiplied consistently
+-- by a rank number
+rank_units AS (
+  SELECT
+    (1.0 / MAX(restaurant_rank)) AS restaurant_rank_unit,
+    (1.0 / MAX(rishes_rank)) AS rishes_rank_unit
+  FROM main
+),
+
+-- Order by the sum of the restaurant rank score and the rish rank score
+final AS (
+  SELECT * FROM (
+    SELECT
+      *,
+      (
+        SELECT (
+          1.0 - ((main.restaurant_rank - 1.0) * restaurant_rank_unit)
+        ) FROM rank_units
+      ) as restaurant_rank_score,
+      (
+        SELECT (
+          1.0 - ((main.rishes_rank - 1.0) * rishes_rank_unit)
+        ) FROM rank_units
+      ) as rishes_rank_score
+    FROM main
+  ) s
+  ORDER BY (restaurant_rank_score + rishes_rank_score) DESC
+)
+
+SELECT jsonb_agg(
+  json_build_object(
+    'id', final.restaurant_id,
+    'slug', final.slug,
+    'restaurant_rank', final.restaurant_rank,
+    'restaurant_rank_score', final.restaurant_rank_score,
+    'rish_rank', final.rishes_rank,
+    'rish_rank_score', final.rishes_rank_score
+  )
+) FROM final
+LIMIT ?5

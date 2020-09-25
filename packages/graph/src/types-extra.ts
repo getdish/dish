@@ -3,6 +3,8 @@ import { MenuItem, Restaurant, Review, Tag } from './types'
 export type RestaurantOnlyIds = {
   id: string
   slug: string
+  rish_rank: number
+  restaurant_rank: number
 }
 
 export type TagType =
