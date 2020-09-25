@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp } from '@dish/react-feather'
 import { StackProps, Tooltip, VStack, prevent } from '@dish/ui'
 import React from 'react'
 
-import { useUserUpvoteDownvoteQuery } from '../hooks/useUserReview'
+import { useUserUpvoteDownvoteQuery } from '../hooks/useUserUpvoteDownvoteQuery'
 import { FavoriteButtonProps } from './FavoriteButton'
 
 export const TagVoteButton = graphql(

@@ -9,7 +9,6 @@ import { getImageUrl } from '../../helpers/getImageUrl'
 import { NavigableTag } from '../../state/NavigableTag'
 import { LinkButton } from '../ui/LinkButton'
 import { Squircle } from '../ui/Squircle'
-import { DishRatingView } from './DishRatingView'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
 import { getDishBackgroundColor } from './getDishBackgroundColor'
 
@@ -32,13 +31,13 @@ export const DishView = memo(
     isFallback: _isFallback,
     ...rest
   }: {
+    restaurantId: string
     name?: any
     cuisine?: NavigableTag
     dish: TopCuisineDish
     size?: number
     restaurantSlug?: string
     isFallback?: boolean
-    restaurantId?: string
     selected?: boolean
   } & StackProps) => {
     const [isHovered, setIsHovered] = useState(false)
@@ -105,8 +104,10 @@ export const DishView = memo(
             left={-8}
           >
             <DishUpvoteDownvote
-              size={size > 160 ? 'md' : 'sm'}
+              size="sm"
               name={dish.name}
+              subtle
+              restaurantId={restaurantId}
             />
           </AbsoluteVStack>
         )}

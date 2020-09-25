@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from '@dish/react-feather'
-import { StackProps, Text, Tooltip, VStack } from '@dish/ui'
+import { StackProps, Text, Tooltip, VStack, prevent } from '@dish/ui'
 import React, { memo, useState } from 'react'
 
 import { bgLight } from '../colors'
@@ -9,13 +9,20 @@ export const UpvoteDownvoteScore = memo(
   ({
     score,
     vote,
+    subtle,
     setVote,
+    size,
     ...props
   }: {
+    size?: 'sm' | 'md'
     score: number
     vote: -1 | 0 | 1
     setVote: (vote: number) => void
+    subtle?: boolean
   } & StackProps) => {
+    const voteButtonColor = subtle ? '#f2f2f2' : null
+    const scale = size === 'sm' ? 0.9 : 1
+    const sizePx = 56 * scale
     const isOpenProp =
       vote === 0
         ? null
@@ -27,8 +34,8 @@ export const UpvoteDownvoteScore = memo(
         pointerEvents="auto"
         alignItems="center"
         justifyContent="center"
-        width={56}
-        height={56}
+        width={sizePx}
+        height={sizePx}
         backgroundColor="#fff"
         shadowColor="rgba(0,0,0,0.1)"
         shadowRadius={10}
@@ -38,9 +45,10 @@ export const UpvoteDownvoteScore = memo(
       >
         <Tooltip position="right" contents="Upvote" {...isOpenProp}>
           <VoteButton
+            size={18 * scale}
             Icon={ChevronUp}
             voted={vote == 1}
-            color={vote === 1 ? 'green' : null}
+            color={vote === 1 ? 'green' : voteButtonColor}
             onPress={(e) => {
               e.stopPropagation()
               setVote(vote === 1 ? 0 : 1)
@@ -48,9 +56,9 @@ export const UpvoteDownvoteScore = memo(
           />
         </Tooltip>
         <Text
-          fontSize={Math.min(16, 120 / `${score}`.length / 2)}
+          fontSize={Math.min(16, 120 / `${score}`.length / 2) * scale}
           fontWeight="700"
-          marginVertical={-2}
+          marginVertical={-2 * scale}
           letterSpacing={-0.5}
           color={score > 0 ? '#000' : 'darkred'}
         >
@@ -58,9 +66,10 @@ export const UpvoteDownvoteScore = memo(
         </Text>
         <Tooltip position="right" contents="Downvote" {...isOpenProp}>
           <VoteButton
+            size={18 * scale}
             Icon={ChevronDown}
             voted={vote == -1}
-            color={vote === -1 ? 'red' : null}
+            color={vote === -1 ? 'red' : voteButtonColor}
             onPress={(e) => {
               e.stopPropagation()
               setVote(vote == -1 ? 0 : -1)
@@ -75,10 +84,12 @@ export const UpvoteDownvoteScore = memo(
 export const VoteButton = ({
   color,
   Icon,
-  size,
+  size = 18,
   voted,
+  hoverColor,
   ...props
 }: StackProps & {
+  hoverColor?: string
   voted?: boolean
   Icon: any
   color?: string | null
@@ -94,11 +105,9 @@ export const VoteButton = ({
       borderRadius={100}
       alignItems="center"
       justifyContent="center"
-      // borderWidth={1}
-      // backgroundColor="#fff"
-      // borderColor="#eee"
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
+      onPressIn={prevent}
       pressStyle={{
         backgroundColor: bgLight,
         borderColor: '#aaa',
@@ -106,8 +115,8 @@ export const VoteButton = ({
       {...props}
     >
       <Icon
-        size={(size ?? 18) * (voted ? 1.2 : 1)}
-        color={color ?? (hovered ? '#000' : '#ccc')}
+        size={size * (voted ? 1.2 : 1)}
+        color={hovered ? hoverColor ?? '#000' : color ?? '#ccc'}
       />
     </VStack>
   )

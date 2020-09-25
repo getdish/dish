@@ -185,7 +185,7 @@ const RestaurantListItemContent = memo(
         : 320,
       maxWidth: isSmall
         ? isWeb
-          ? '80vw'
+          ? 450
           : Dimensions.get('screen').width * 0.75
         : 430,
     }
@@ -418,6 +418,7 @@ const RestaurantListItemContent = memo(
 
             <RestaurantPeekDishes
               restaurantSlug={props.restaurantSlug}
+              restaurantId={props.restaurantId}
               searchState={props.searchState}
               isLoaded={isLoaded}
             />
@@ -504,6 +505,7 @@ const RestaurantPeekDishes = memo(
   graphql(function RestaurantPeek(props: {
     size?: 'lg' | 'md'
     restaurantSlug: string
+    restaurantId: string
     searchState: HomeStateItemSearch
     isLoaded: boolean
   }) {
@@ -553,6 +555,7 @@ const RestaurantPeekDishes = memo(
               key={i}
               size={dishSize}
               restaurantSlug={props.restaurantSlug}
+              restaurantId={props.restaurantId}
               dish={photo}
             />
           )

@@ -289,8 +289,6 @@ function animateMarker(map: mapboxgl.Map) {
   let opacity = initialOpacity
   let animate = true
 
-  console.log('animate marker')
-
   function run() {
     setTimeout(() => {
       if (!map) return

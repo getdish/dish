@@ -341,7 +341,6 @@ const deepAssign = (a: Object, b: Object) => {
       }
       const val = b[key]
       if (val) {
-        console.log('pdate now', key, val)
         a[key] = Array.isArray(val)
           ? [...val]
           : isPlainObject(val)

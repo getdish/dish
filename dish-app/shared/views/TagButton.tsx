@@ -15,7 +15,7 @@ import React, { memo, useEffect, useRef } from 'react'
 import { Image, Platform } from 'react-native'
 
 import { isWeb } from '../constants'
-import { useUserUpvoteDownvoteQuery } from '../hooks/useUserReview'
+import { useUserUpvoteDownvoteQuery } from '../hooks/useUserUpvoteDownvoteQuery'
 import { getTagId } from '../state/getTagId'
 import { tagDisplayName } from '../state/tagDisplayName'
 import { LinkButton } from './ui/LinkButton'
