@@ -226,9 +226,6 @@ const VoteButton = ({
         backgroundColor: bgLight,
         borderColor: '#aaa',
       }}
-      {...(voted && {
-        backgroundColor: '#999',
-      })}
       {...props}
     >
       <Icon

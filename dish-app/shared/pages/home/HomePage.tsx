@@ -28,10 +28,8 @@ import { HomeStateItemHome } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
-import {
-  ContentScrollView,
-  ContentScrollViewHorizontal,
-} from '../../views/ContentScrollView'
+import { ContentScrollView } from '../../views/ContentScrollView'
+import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
 import { PageFooter } from '../../views/layout/PageFooter'
 import { SlantedLinkButton } from '../../views/SlantedLinkButton'

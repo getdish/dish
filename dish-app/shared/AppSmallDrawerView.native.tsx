@@ -1,13 +1,7 @@
 import { VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { useMemo } from 'react'
-import {
-  Animated,
-  Dimensions,
-  PanResponder,
-  StyleSheet,
-  View,
-} from 'react-native'
+import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 
 import { AppSearchBarDrawer } from './AppSearchBar'
 import { blurSearchInput } from './AppSearchInput'
@@ -17,7 +11,8 @@ import { pageWidthMax, searchBarHeight, zIndexDrawer } from './constants'
 import { getWindowHeight } from './helpers/getWindow'
 import { isTouchingSearchBar } from './SearchInputNativeDragFix'
 import { omStatic } from './state/omStatic'
-import { isScrollAtTop, isScrollingSubDrawer } from './views/ContentScrollView'
+import { isScrollAtTop } from './views/ContentScrollView'
+import { isScrollingSubDrawer } from './views/ContentScrollViewHorizontal'
 
 export const AppSmallDrawerView = (props: { children: any }) => {
   const drawerStore = useStore(BottomDrawerStore)

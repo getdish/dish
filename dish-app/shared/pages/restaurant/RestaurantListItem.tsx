@@ -17,7 +17,13 @@ import { useStore } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
 
-import { bgLight, bgLightLight, brandColor, lightBlue } from '../../colors'
+import {
+  bgHover,
+  bgLight,
+  bgLightLight,
+  brandColor,
+  lightBlue,
+} from '../../colors'
 import { isWeb } from '../../constants'
 import { isWebIOS } from '../../helpers/isIOS'
 import { useIsNarrow } from '../../hooks/useIs'
@@ -26,7 +32,7 @@ import { allTags } from '../../state/allTags'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
 import { CommentBubble } from '../../views/CommentBubble'
-import { ContentScrollViewHorizontal } from '../../views/ContentScrollView'
+import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
@@ -212,6 +218,7 @@ const RestaurantListItemContent = memo(
           <VStack
             // backgroundColor={bgLightLight}
             hoverStyle={{ backgroundColor: bgLightLight }}
+            // pressStyle={{ backgroundColor: bgHover }}
             marginLeft={-pad}
             paddingLeft={pad}
             paddingBottom={12}
