@@ -77,6 +77,8 @@ const AppContent = memo(() => {
         </AppContainer>
       </Suspense>
 
+      <AppMenuFloating />
+
       <Suspense fallback={null}>
         {!isSSR && (
           <ErrorBoundary name="main-map">
@@ -92,8 +94,6 @@ const AppContent = memo(() => {
           <AppMapControlsUnderlay />
           <AppMapControlsOverlay />
         </Suspense>
-
-        <AppMenuFloating />
 
         <HomeSearchBarFloating />
         <HomeAutocomplete />

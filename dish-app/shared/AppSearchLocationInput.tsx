@@ -76,18 +76,12 @@ export const AppSearchLocationInput = memo(() => {
   }, [])
 
   return (
-    <VStack
-      position="relative"
-      flex={1}
-      backgroundColor={theme === 'dark' ? 'rgba(255,255,255,0.15)' : background}
-      borderRadius={100}
-      justifyContent="center"
-    >
+    <VStack position="relative" flex={1}>
       <AppAutocompleteHoverableInput
         input={locationInputStore.node}
         autocompleteTarget="location"
       >
-        <HStack alignItems="center" paddingHorizontal={3}>
+        <HStack width="100%" alignItems="center" paddingHorizontal={3}>
           <TouchableOpacity
             onPress={(e) => {
               prevent(e)

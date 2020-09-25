@@ -209,7 +209,6 @@ const createStack = (defaultProps?: ViewStyle) => {
             ? () => {
                 let next: Partial<typeof state> = {}
                 if (attachHover) {
-                  setSlow.cancel()
                   if (!isWebIOS) {
                     next.hover = true
                   }
@@ -220,7 +219,7 @@ const createStack = (defaultProps?: ViewStyle) => {
                   next.press = true
                 }
                 if (Object.keys(next).length) {
-                  setSlow({ ...state, ...next })
+                  set({ ...state, ...next })
                 }
               }
             : null,
@@ -230,7 +229,6 @@ const createStack = (defaultProps?: ViewStyle) => {
                 let next: Partial<typeof state> = {}
                 mouseUps.add(unPress)
                 if (attachHover) {
-                  setSlow.cancel()
                   if (!isWebIOS) {
                     next.hover = false
                   }
@@ -241,7 +239,7 @@ const createStack = (defaultProps?: ViewStyle) => {
                   next.press = false
                 }
                 if (Object.keys(next).length) {
-                  setSlow({ ...state, ...next })
+                  set({ ...state, ...next })
                 }
               }
             : null,
