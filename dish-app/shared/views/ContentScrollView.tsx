@@ -1,4 +1,3 @@
-// debug
 import { VStack, combineRefs } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { forwardRef, useEffect, useRef } from 'react'
@@ -85,7 +84,7 @@ export const ContentScrollView = forwardRef(
           {children}
 
           {/* for drawer, pad bottom */}
-          <VStack height={isSmall ? 500 : 0} />
+          <VStack height={isSmall ? 300 : 0} />
         </VStack>
       </ScrollView>
     )

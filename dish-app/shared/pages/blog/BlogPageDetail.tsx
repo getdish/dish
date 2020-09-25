@@ -1,17 +1,22 @@
-import { Divider, Spacer, Title } from '@dish/ui'
+import { Divider, Spacer, Title, VStack } from '@dish/ui'
 import React from 'react'
 
-import { posts } from './posts'
+import { SmallLinkButton } from '../../views/ui/SmallButton'
+import { BlogPostMeta } from './BlogPostMeta'
+import { PostEntry } from './posts'
 
-export function BlogPageDetail({ slug }: { slug: string }) {
-  const { View, title } = posts[slug]
+export function BlogPageDetail({ post }: { post: PostEntry }) {
+  const { View, title } = post
   return (
-    <>
+    <VStack spacing paddingHorizontal={25} paddingVertical={40}>
+      <SmallLinkButton marginTop={-15} marginBottom={10} name="blog">
+        Back to blog
+      </SmallLinkButton>
       <Title size="xl">{title}</Title>
-      <Spacer size="xl" />
+      <BlogPostMeta post={post} />
+      <Spacer size="sm" />
       <Divider />
-      <Spacer size="lg" />
       <View />
-    </>
+    </VStack>
   )
 }

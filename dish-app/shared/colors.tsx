@@ -28,3 +28,5 @@ export const allLightColors = [
   lightPurple,
   lightOrange,
 ]
+
+export const yellow = '#E8DCAD'
