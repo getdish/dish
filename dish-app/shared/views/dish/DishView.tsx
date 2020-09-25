@@ -10,6 +10,7 @@ import { NavigableTag } from '../../state/NavigableTag'
 import { LinkButton } from '../ui/LinkButton'
 import { Squircle } from '../ui/Squircle'
 import { DishRatingView } from './DishRatingView'
+import { DishUpvoteDownvote } from './DishUpvoteDownvote'
 import { getDishBackgroundColor } from './getDishBackgroundColor'
 
 // avoid too many different image sizes
@@ -103,9 +104,9 @@ export const DishView = memo(
             top={-8}
             left={-8}
           >
-            <DishRatingView
+            <DishUpvoteDownvote
               size={size > 160 ? 'md' : 'sm'}
-              rating={dish.rating}
+              name={dish.name}
             />
           </AbsoluteVStack>
         )}

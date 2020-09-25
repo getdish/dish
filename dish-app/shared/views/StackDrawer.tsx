@@ -23,6 +23,7 @@ export const StackDrawer = ({
     <HStack
       position="absolute"
       left={isSmall ? 0 : 'auto'}
+      ox
       right={isSmall ? 0 : 0}
       flex={1}
       maxHeight="100%"
@@ -32,8 +33,8 @@ export const StackDrawer = ({
       maxWidth={isSmall ? '100%' : drawerWidthMax}
       minWidth={isSmall ? '100%' : 200}
       justifyContent="flex-end"
-      shadowRadius={isSmall ? 5 : 10}
-      shadowColor="rgba(0,0,0,0.1)"
+      shadowRadius={isSmall ? 5 : 8}
+      shadowColor="rgba(0,0,0,0.08)"
       shadowOffset={{ height: -2, width: 0 }}
     >
       {closable && (

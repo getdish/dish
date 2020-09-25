@@ -92,8 +92,8 @@ export const AppSearchInput = memo(() => {
   // const { showAutocomplete } = om.state.home
 
   const height = searchBarHeight
-  const outerHeight = height
-  const innerHeight = height
+  const outerHeight = height - 5
+  const innerHeight = height - 5
 
   useOnMount(() => {
     searchBar = inputStore.node
@@ -149,7 +149,6 @@ export const AppSearchInput = memo(() => {
     <HStack flex={1} overflow="hidden">
       <AppAutocompleteHoverableInput input={input} autocompleteTarget="search">
         <HStack
-          contain="paint"
           alignItems="center"
           borderRadius={10}
           flex={1}

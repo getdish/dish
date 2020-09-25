@@ -1,6 +1,7 @@
-import { Hoverable } from '@dish/ui'
+import { HStack, Hoverable } from '@dish/ui'
 import React, { useRef } from 'react'
 
+import { useIsNarrow } from './hooks/useIs'
 import { useOvermind } from './state/om'
 
 export const AppAutocompleteHoverableInput = ({
@@ -15,6 +16,7 @@ export const AppAutocompleteHoverableInput = ({
   const om = useOvermind()
   const tm = useRef<any>(null)
   const tm2 = useRef<any>(null)
+  const isSmall = useIsNarrow()
 
   return (
     <Hoverable
@@ -33,7 +35,13 @@ export const AppAutocompleteHoverableInput = ({
         }
       }}
     >
-      {children}
+      <HStack
+        backgroundColor={isSmall ? '#f2f2f2' : 'transparent'}
+        borderRadius={10}
+        width="100%"
+      >
+        {children}
+      </HStack>
     </Hoverable>
   )
 }

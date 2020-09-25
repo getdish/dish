@@ -1,6 +1,6 @@
 import { LngLat, Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { AbsoluteVStack, useDebounce } from '@dish/ui'
+import { AbsoluteVStack, useDebounce, useDebounceValue } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import { isEqual, uniqBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
@@ -119,7 +119,7 @@ const AppMapContent = memo(function AppMap({
   restaurantDetail,
 }: {
   restaurantDetail: Restaurant | null
-  restaurants: Restaurant[] | null
+  restaurants: Restaurant[]
 }) {
   const om = useOvermind()
   const isSmall = useIsNarrow()
@@ -246,14 +246,12 @@ const AppMapContent = memo(function AppMap({
   }, [restaurantSelected])
 
   const drawerStore = useStore(BottomDrawerStore)
+  const currentSnapPoint = useDebounceValue(drawerStore.currentSnapPoint, 250)
   const padding = isSmall
     ? {
         left: 10,
         top: 10,
-        bottom:
-          getWindowHeight() -
-          getWindowHeight() * drawerStore.currentSnapPoint +
-          10,
+        bottom: getWindowHeight() - getWindowHeight() * currentSnapPoint + 10,
         right: 10,
       }
     : {
@@ -369,8 +367,11 @@ const getNumId = (id: string): number => {
   return ids[id]
 }
 
-const getRestaurantMarkers = (restaurants: Restaurant[]) => {
+const getRestaurantMarkers = (restaurants: Restaurant[] | null) => {
   const result: GeoJSON.Feature[] = []
+  if (!restaurants) {
+    return result
+  }
   for (const restaurant of restaurants) {
     if (!restaurant?.location?.coordinates) {
       continue

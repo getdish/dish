@@ -11,6 +11,7 @@ export const ContentScrollViewHorizontal = (
   props: ScrollViewProps & { children: any }
 ) => {
   const { isScrolling } = useStore(ScrollStore)
+  console.log('isScrolling', isScrolling)
 
   const children = useMemo(() => {
     return (
@@ -25,12 +26,11 @@ export const ContentScrollViewHorizontal = (
             isScrollingSubDrawer = false
           },
           style: {
-            pointerEvents: isScrolling ? 'none' : 'auto',
+            pointerEvents: 'inherit',
           } as any,
         }}
-      >
-        {props.children}
-      </ScrollView>
+        {...props}
+      />
     )
   }, [props])
 

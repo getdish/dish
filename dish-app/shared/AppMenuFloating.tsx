@@ -4,7 +4,7 @@ import { Store, useStore } from '@dish/use-store'
 import React from 'react'
 
 import { AppMenuContents } from './AppMenuContents'
-import { zIndexMapControls } from './constants'
+import { zIndexDrawer, zIndexMapControls } from './constants'
 import { useIsReallyNarrow } from './hooks/useIs'
 import { useSafeArea } from './hooks/useSafeArea'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
@@ -52,7 +52,7 @@ export const AppMenuFloating = () => {
       <AbsoluteVStack
         top={safeArea.top ? safeArea.top : 15}
         right={15}
-        zIndex={zIndexMapControls + 1}
+        zIndex={zIndexDrawer - 1}
         pointerEvents="none"
       >
         <VStack

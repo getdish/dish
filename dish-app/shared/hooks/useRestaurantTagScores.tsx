@@ -1,21 +1,17 @@
 import { isPresent } from '@dish/helpers'
 
-import { allTags } from '../state/allTags'
-import { HomeActiveTagsRecord } from '../state/home-types'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
-export function useRestaurantTagScores(
-  restaurantSlug: string,
-  activeTagIds: HomeActiveTagsRecord
-) {
+export function useRestaurantTagScores({
+  restaurantSlug,
+  tagNames,
+}: {
+  restaurantSlug: string
+  tagNames: string[]
+}) {
   const restaurant = useRestaurantQuery(restaurantSlug)
-  return Object.keys(activeTagIds ?? {})
-    .map((tagId) => {
-      const tagName = allTags[tagId].name
-      if (!tagName) {
-        console.warn('no tag name', tagName)
-        return null
-      }
+  return tagNames
+    .map((tagName) => {
       const rtag = restaurant.tags({
         limit: 1,
         where: {

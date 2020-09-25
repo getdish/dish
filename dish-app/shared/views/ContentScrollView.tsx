@@ -43,12 +43,14 @@ export const ContentScrollView = forwardRef(
       onScrollYThrottled?.(y)
       // perf issue i believe
       if (!scrollStore.isScrolling) {
+        console.log('set it true')
         scrollStore.setIsScrolling(true)
       }
       clearTimeout(tm.current)
       tm.current = setTimeout(() => {
+        console.log('set it false')
         scrollStore.setIsScrolling(false)
-      }, 150)
+      }, 200)
     }
     const scrollRef = useRef()
 
