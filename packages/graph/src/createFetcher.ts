@@ -14,6 +14,10 @@ type QueryFetcherOptions = {
   silenceNotFound?: boolean
 }
 
+export type GraphError = {
+  message: string
+}
+
 const endpoint = getGraphEndpoint()
 
 export const createFetcher = (
@@ -127,8 +131,6 @@ fetch('${endpoint}', ${JSON.stringify(
     }
   }
 }
-
-export type GraphError = { message: string }
 
 type ErrorListener = (errors: GraphError[]) => void
 

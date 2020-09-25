@@ -72,7 +72,7 @@ export const DishView = memo(
         }}
         noText
         hoverStyle={{
-          zIndex: 1000000,
+          zIndex: 2,
           transform: [{ scale: 1.03 }],
         }}
         onHoverIn={() => setIsHovered(true)}
@@ -99,7 +99,7 @@ export const DishView = memo(
             width={20}
             height={20}
             pointerEvents="none"
-            zIndex={10}
+            zIndex={1000000}
             top={-8}
             left={-8}
           >
@@ -130,7 +130,7 @@ export const DishView = memo(
               justifyContent="center"
               {...(isHovered && {
                 transform: [{ scale: 1.05 }],
-                zIndex: 100000,
+                zIndex: 3,
               })}
             >
               <Box
