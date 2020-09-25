@@ -23,6 +23,7 @@ import { Dimensions, ScrollView, StyleSheet } from 'react-native'
 
 import { bgLight, bgLightHover, bgLightTranslucent } from '../../colors'
 import { useIsNarrow } from '../../hooks/useIs'
+import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { addTagsToCache } from '../../state/allTags'
 import { HomeStateItemHome } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
@@ -270,7 +271,7 @@ const HomeRecentReviews = memo(
   })
 )
 
-const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any }) => {
+const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any[] }) => {
   return (
     <>
       <HomeTopDishesTitle />
@@ -482,43 +483,51 @@ const setHoveredRestaurant = _.debounce((val) => {
 const TopDishesTrendingRestaurants = memo(
   ({ country }: { country: TopCuisine }) => {
     return (
-      <VStack width={200} padding={10} spacing={4} alignItems="flex-start">
-        {_.uniqBy(country.top_restaurants, (x) => x.name)
-          .slice(0, 4)
-          .map((restaurant, index) => {
-            return (
-              <HStack key={restaurant.name} maxWidth="100%" minWidth={200}>
-                <RestaurantButton
-                  color={`rgba(0,0,0,${Math.max(0.5, 1 - (index + 1) / 5)})`}
-                  // trending={
-                  //   (index % 5) - 1 == 0
-                  //     ? 'neutral'
-                  //     : index % 2 == 0
-                  //     ? 'up'
-                  //     : 'down'
-                  // }
-                  minWidth={180} // react native
-                  subtle
-                  restaurantSlug={restaurant.slug ?? ''}
-                  onHoverIn={() => {
-                    lastHoveredId = restaurant.id
-                    setHoveredRestaurant({
-                      id: restaurant.id,
-                      slug: restaurant.slug,
-                    })
-                  }}
-                  // onHoverOut={() => {
-                  //   clearHoveredRestaurant()
-                  // }}
-                  // active={
-                  //   (hoveredRestaurant &&
-                  //     restaurant?.name === hoveredRestaurant?.name) ||
-                  //   false
-                  // }
-                />
-              </HStack>
-            )
-          })}
+      <VStack
+        width={200}
+        paddingHorizontal={10}
+        height={135}
+        spacing={4}
+        alignItems="flex-start"
+      >
+        <Suspense fallback={null}>
+          {_.uniqBy(country.top_restaurants, (x) => x.name)
+            .slice(0, 4)
+            .map((restaurant, index) => {
+              return (
+                <HStack key={restaurant.name} maxWidth="100%" minWidth={200}>
+                  <RestaurantButton
+                    color={`rgba(0,0,0,${Math.max(0.5, 1 - (index + 1) / 5)})`}
+                    // trending={
+                    //   (index % 5) - 1 == 0
+                    //     ? 'neutral'
+                    //     : index % 2 == 0
+                    //     ? 'up'
+                    //     : 'down'
+                    // }
+                    minWidth={180} // react native
+                    subtle
+                    restaurantSlug={restaurant.slug ?? ''}
+                    onHoverIn={() => {
+                      lastHoveredId = restaurant.id
+                      setHoveredRestaurant({
+                        id: restaurant.id,
+                        slug: restaurant.slug,
+                      })
+                    }}
+                    // onHoverOut={() => {
+                    //   clearHoveredRestaurant()
+                    // }}
+                    // active={
+                    //   (hoveredRestaurant &&
+                    //     restaurant?.name === hoveredRestaurant?.name) ||
+                    //   false
+                    // }
+                  />
+                </HStack>
+              )
+            })}
+        </Suspense>
       </VStack>
     )
   }
