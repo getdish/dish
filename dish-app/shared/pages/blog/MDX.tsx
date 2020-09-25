@@ -3,6 +3,7 @@ import { MDXProvider } from '@mdx-js/react'
 import React from 'react'
 import { Image, ImageProps } from 'react-native'
 
+import { lightYellow, yellow } from '../../colors'
 import { Link } from '../../views/ui/Link'
 import { contentSpace, contentSpaceLg } from './contentSpace'
 import { IntroText } from './IntroText'
@@ -53,6 +54,18 @@ const components = {
       {contentSpaceLg}
     </>
   ),
+
+  HighlightedText: spaceVertical((props) => (
+    <Paragraph
+      marginHorizontal={20}
+      backgroundColor={lightYellow}
+      borderColor={yellow}
+      borderWidth={1}
+      borderRadius={10}
+      padding={20}
+      {...props}
+    />
+  )),
 
   Image: ({ alt, ...rest }: ImageProps & { alt?: string }) => (
     <>

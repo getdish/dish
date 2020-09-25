@@ -103,7 +103,7 @@ module.exports = function getWebpackConfig(
         removeEmptyChunks: true,
         mergeDuplicateChunks: true,
         splitChunks:
-          isProduction && TARGET != 'ssr'
+          isProduction && TARGET != 'ssr' && !process.env.NO_MINIFY
             ? {
                 cacheGroups: {
                   styles: {

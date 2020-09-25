@@ -1,13 +1,14 @@
-import { HStack, Text } from '@dish/ui'
+import { HStack, Paragraph } from '@dish/ui'
 import React from 'react'
 
-export const BlogPostMeta = ({ post }) => {
+import { PostEntry } from './posts'
+
+export const BlogPostMeta = ({ post }: { post: PostEntry }) => {
   return (
     <HStack alignItems="center">
       {/* <Avatar size={28} src={post.authorImage} /> */}
-      <Text opacity={0.5}>
-        &nbsp; &nbsp;
-        {post.author}
+      <Paragraph opacity={0.7}>
+        {post.author.trim()}
         &nbsp;&nbsp;&middot;&nbsp;&nbsp;
         {new Date(post.date)
           .toLocaleDateString('en-US', {
@@ -16,8 +17,9 @@ export const BlogPostMeta = ({ post }) => {
             day: 'numeric',
           })
           .replace(/,.*,/, ',')
-          .replace(/\//g, '·')}{' '}
-      </Text>
+          .replace(/\//g, '·')
+          .trim()}
+      </Paragraph>
     </HStack>
   )
 }

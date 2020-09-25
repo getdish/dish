@@ -1,6 +1,7 @@
-import { Spacer, Title, VStack } from '@dish/ui'
+import { Divider, Spacer, Title, VStack } from '@dish/ui'
 import React from 'react'
 
+import { bgLightLight } from '../../colors'
 import { HomeStateItemBlog } from '../../state/home-types'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { StackDrawer } from '../../views/StackDrawer'
@@ -16,16 +17,9 @@ export default function BlogPage(props: StackViewProps<HomeStateItemBlog>) {
   return (
     <MDX>
       <StackDrawer closable title="Blog">
-        <ContentScrollView
-          style={{
-            paddingTop: 40,
-            paddingHorizontal: '5%',
-            paddingVertical: '5%',
-            flex: 1,
-          }}
-        >
+        <ContentScrollView paddingTop={0}>
           {!slug && <BlogPageIndex />}
-          {!!slug && <BlogPageDetail slug={slug} />}
+          {!!slug && <BlogPageDetail post={posts[slug]} />}
         </ContentScrollView>
       </StackDrawer>
     </MDX>
@@ -45,24 +39,37 @@ function BlogPageIndex() {
     )
 
   return (
-    <VStack spacing="xxl">
-      <Title size="xl">Blog 🍛</Title>
-      {allPosts.map((post, index) => (
+    <>
+      <VStack>
         <VStack
-          key={index}
-          hoverStyle={{
-            backgroundColor: `rgba(0,0,0,0.1)`,
-          }}
+          paddingHorizontal={25}
+          paddingVertical={40}
+          backgroundColor={bgLightLight}
         >
-          <Link name="blog" params={{ slug: post.id }}>
-            <Title selectable={false} textAlign="left" size="sm">
-              {post.title}
-            </Title>
-          </Link>
-          <Spacer size="sm" />
-          <BlogPostMeta post={post} />
+          <Title size="xl">Dish Blog</Title>
         </VStack>
-      ))}
-    </VStack>
+        <Divider />
+        <VStack spacing="lg" paddingHorizontal={25} paddingVertical={40}>
+          {allPosts.map((post, index) => (
+            <VStack
+              key={index}
+              borderRadius={10}
+              padding={10}
+              hoverStyle={{
+                backgroundColor: bgLightLight,
+              }}
+            >
+              <Link name="blog" params={{ slug: post.id }}>
+                <Title selectable={false} textAlign="left" size="xs">
+                  {post.title}
+                </Title>
+              </Link>
+              <Spacer size="sm" />
+              <BlogPostMeta post={post} />
+            </VStack>
+          ))}
+        </VStack>
+      </VStack>
+    </>
   )
 }
