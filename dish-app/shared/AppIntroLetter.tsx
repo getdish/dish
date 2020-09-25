@@ -30,7 +30,7 @@ export const HomeIntroLetter = memo(() => {
       justifyContent="center"
       paddingHorizontal="4vw"
       paddingVertical="1vh"
-      backgroundColor="rgba(40,20,40,0.7)"
+      backgroundColor="rgba(50,20,40,0.8)"
       opacity={1}
       transform={[{ translateY: 0 }]}
       {...(!showInto && {
@@ -41,9 +41,9 @@ export const HomeIntroLetter = memo(() => {
     >
       <VStack
         maxWidth={450}
-        maxHeight={700}
-        height="98%"
+        maxHeight={680}
         width="90%"
+        height="90%"
         borderWidth={1}
         borderColor={`${brandColor}55`}
         position="relative"
@@ -55,9 +55,17 @@ export const HomeIntroLetter = memo(() => {
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          style={{ width: '100%' }}
+          contentContainerStyle={{
+            maxWidth: '100%',
+          }}
         >
-          <VStack padding={20} alignItems="center">
+          <VStack
+            overflow="hidden"
+            maxWidth={450}
+            maxHeight={660}
+            padding={20}
+            alignItems="center"
+          >
             {/* <HStack position="absolute" top={10} right={10}>
               <CloseButton onPress={() => setShowIntro(false)} />
             </HStack> */}
@@ -96,47 +104,63 @@ export const HomeIntroLetterContent = memo(
     }
 
     return (
-      <VStack spacing alignItems="center">
-        <Image
-          source={{ uri: dishNeon }}
-          style={{
-            marginTop: -20,
-            marginBottom: -30,
-            width: 261,
-            height: 161,
-          }}
-        />
-
-        <Paragraph
-          zIndex={10}
-          textAlign="center"
-          color="#fff"
-          fontWeight="300"
-          size={1.2}
+      <>
+        <AbsoluteVStack
+          bottom={-40}
+          right={-10}
+          transform={[{ rotate: '-10deg' }]}
         >
-          <Text fontSize={24} fontWeight="300" color="#fff">
-            a fun food discovery community
-          </Text>
-        </Paragraph>
+          <Text fontSize={100}>🌮</Text>
+        </AbsoluteVStack>
+        <AbsoluteVStack
+          bottom={-40}
+          left={-10}
+          transform={[{ rotate: '10deg' }]}
+        >
+          <Text fontSize={100}>🍜</Text>
+        </AbsoluteVStack>
+        <VStack spacing alignItems="center">
+          <Image
+            source={{ uri: dishNeon }}
+            style={{
+              marginTop: -20,
+              marginBottom: -30,
+              width: 261,
+              height: 161,
+            }}
+          />
 
-        {divider}
-
-        <Paragraph textAlign="center" color="#fff" size={1.1}>
-          <VStack>
-            <Text color={lightGreen} fontWeight="500">
-              ratings by dish 🌮
+          <Paragraph
+            zIndex={10}
+            textAlign="center"
+            color="#fff"
+            fontWeight="300"
+            size={1.2}
+          >
+            <Text fontSize={24} fontWeight="300" color="#fff">
+              a fun food discovery community
             </Text>
-          </VStack>
-          <VStack>
-            <Text color={lightYellow}>search every delivery app 🚗 </Text>
-          </VStack>
-          <Text fontWeight="500">local gems 💎</Text>
-        </Paragraph>
+          </Paragraph>
 
-        {divider}
+          {divider}
 
-        <LoginRegisterForm />
-      </VStack>
+          <Paragraph textAlign="center" color="#fff" size={1.1}>
+            <VStack>
+              <Text color={lightGreen} fontWeight="500">
+                ratings by dish 🌮
+              </Text>
+            </VStack>
+            <VStack>
+              <Text color={lightYellow}>search every delivery app 🚗 </Text>
+            </VStack>
+            {/* <Text fontWeight="500">local gems 💎</Text> */}
+          </Paragraph>
+
+          {divider}
+
+          <LoginRegisterForm />
+        </VStack>
+      </>
     )
   }
 )

@@ -40,7 +40,6 @@ const ellipseStyle = {
 export const Text = (allProps: TextProps) => {
   const [props, style] = useTextStyle(allProps)
   const textRef = useRef(null)
-  useAttachClassName(allProps.className, textRef)
   return <ReactText ref={textRef} style={style} {...props} />
 }
 
@@ -122,6 +121,7 @@ const useTextStyle = (allProps: TextProps) => {
 }
 
 const textNonStyleProps = {
+  className: true,
   allowFontScaling: true,
   ellipsizeMode: true,
   lineBreakMode: true,

@@ -10,7 +10,6 @@ import React, {
 import {
   Animated,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
   ViewProps,
   ViewStyle,
@@ -19,7 +18,7 @@ import {
 import { isWeb, isWebIOS } from '../constants'
 import { combineRefs } from '../helpers/combineRefs'
 import { StaticComponent } from '../helpers/extendStaticConfig'
-import { useAttachClassName } from '../hooks/useAttachClassName'
+import { useDebounce } from '../hooks/useDebounce'
 import { Spacer, Spacing } from './Spacer'
 
 const fullscreenStyle: StackProps = {
@@ -134,8 +133,7 @@ const createStack = (defaultProps?: ViewStyle) => {
       press: false,
       pressIn: false,
     })
-
-    useAttachClassName(className, innerRef)
+    const setSlow = useDebounce(set, 100)
 
     const spacedChildren = useMemo(() => {
       if (typeof spacing === 'undefined') {
@@ -166,6 +164,8 @@ const createStack = (defaultProps?: ViewStyle) => {
     let content = (
       <ViewComponent
         ref={combineRefs(innerRef, ref)}
+        // @ts-ignore
+        className={className}
         pointerEvents={
           !isWeb && pointerEvents === 'none' ? 'box-none' : pointerEvents
         }
@@ -209,6 +209,7 @@ const createStack = (defaultProps?: ViewStyle) => {
             ? () => {
                 let next: Partial<typeof state> = {}
                 if (attachHover) {
+                  setSlow.cancel()
                   if (!isWebIOS) {
                     next.hover = true
                   }
@@ -219,7 +220,7 @@ const createStack = (defaultProps?: ViewStyle) => {
                   next.press = true
                 }
                 if (Object.keys(next).length) {
-                  set({ ...state, ...next })
+                  setSlow({ ...state, ...next })
                 }
               }
             : null,
@@ -229,6 +230,7 @@ const createStack = (defaultProps?: ViewStyle) => {
                 let next: Partial<typeof state> = {}
                 mouseUps.add(unPress)
                 if (attachHover) {
+                  setSlow.cancel()
                   if (!isWebIOS) {
                     next.hover = false
                   }
@@ -239,7 +241,7 @@ const createStack = (defaultProps?: ViewStyle) => {
                   next.press = false
                 }
                 if (Object.keys(next).length) {
-                  set({ ...state, ...next })
+                  setSlow({ ...state, ...next })
                 }
               }
             : null,

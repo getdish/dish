@@ -16,7 +16,7 @@ export const HoverablePopover = ({
   allowHoverOnContent?: boolean
 }) => {
   const [isHovering, set] = useState(false)
-  delay = delay ?? (allowHoverOnContent ? 200 : 0)
+  delay = delay ?? (allowHoverOnContent ? 250 : 0)
   const setIsntHoveringSlow = useDebounce(() => set(false), delay / 2)
   const setIsHoveringSlow = useDebounce(() => set(true), delay)
   const cancelAll = () => {
