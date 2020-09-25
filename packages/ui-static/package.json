@@ -29,7 +29,7 @@
     "invariant": "^2.2.4",
     "loader-utils": "^2.0.0",
     "memory-fs": "*",
-    "react-native-web": "^0.13.3",
+    "react-native-web": "*",
     "webpack": "^4.44.2"
   },
   "devDependencies": {

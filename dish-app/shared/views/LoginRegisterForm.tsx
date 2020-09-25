@@ -1,4 +1,5 @@
 import {
+  Divider,
   Form,
   HStack,
   Input,
@@ -28,7 +29,7 @@ const navButtonProps: LinkButtonProps = {
   justifyContent: 'center',
   paddingVertical: 6,
   paddingHorizontal: 12,
-  height: 44,
+  height: 41,
   alignItems: 'center',
   color: 'rgb(120, 120, 120)',
 }
@@ -97,16 +98,27 @@ export const LoginRegisterForm = ({
             ></div>
           </VStack>
           <Spacer />
-          <HStack>
+          <HStack width="100%" alignItems="center">
+            <VStack
+              height={1}
+              flex={1}
+              backgroundColor="rgba(255,255,255,0.1)"
+            />
             <SmallTitle fontSize={14} divider="center">
               or
             </SmallTitle>
+            <VStack
+              height={1}
+              flex={1}
+              backgroundColor="rgba(255,255,255,0.1)"
+            />
           </HStack>
+          <Spacer />
         </>
       )}
 
       <Form>
-        <VStack spacing height={240} minWidth={260}>
+        <VStack spacing height={250} minWidth={260}>
           <InteractiveContainer height={43} alignSelf="center">
             <LinkButton
               {...navButtonProps}

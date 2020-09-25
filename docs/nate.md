@@ -1,8 +1,8 @@
 
+- voting on dish tags / voting in general
 - slow scrolling because of mapbox?
 - list item
   - show restaurant cuisine tags in overview
-  - hide comments number and just put a comment bubble
   - if michelin quote is availble, show that with michelin logo
 - fix hmr for useStore in react native
 - fix login/register flows

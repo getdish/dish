@@ -54,7 +54,7 @@ export const RatingView = forwardRef(
       <HStack>
         <Text
           fontSize={Math.max(12, size * 0.65)}
-          fontWeight={subtle ? '300' : '700'}
+          fontWeight={subtle ? '300' : '400'}
           color={color}
           textAlign="center"
         >

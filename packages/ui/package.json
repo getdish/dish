@@ -21,7 +21,7 @@
     "react-laag": "^1.7.3",
     "react-storage-hooks": "^4.0.0",
     "react-feather": "2.0.8",
-    "react-native-web": "^0.13.3",
+    "react-native-web": "*",
     "expo-linear-gradient": "^8.2.1",
     "@react-native-community/blur": "^3.6.0"
   },
