@@ -283,11 +283,13 @@ const mapSetIconHovered = (map: mapboxgl.Map, id: any) => {
 }
 
 function animateMarker(map: mapboxgl.Map) {
-  const fps = 10
+  const fps = 4
   let radius = initialRadius
   const initialOpacity = 1
   let opacity = initialOpacity
   let animate = true
+
+  console.log('animate marker')
 
   function run() {
     setTimeout(() => {
@@ -317,6 +319,8 @@ function animateMarker(map: mapboxgl.Map) {
   run()
 
   return () => {
+    map.setPaintProperty(POINT_HOVER_LAYER_ID, 'circle-radius', 0)
+    map.setPaintProperty(POINT_HOVER_LAYER_ID, 'circle-opacity', 0)
     animate = false
   }
 }
@@ -568,6 +572,7 @@ function setupMapEffect({
           map?.off('mouseenter', POINT_LAYER_ID, hoverCluster)
         })
         function unHoverCluster() {
+          getProps().onHover(null)
           if (map) {
             map.getCanvas().style.cursor = ''
           }

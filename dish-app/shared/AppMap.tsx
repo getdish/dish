@@ -321,6 +321,10 @@ const AppMapContent = memo(function AppMap({
           }
         }}
         onHover={(id) => {
+          if (id == null) {
+            om.actions.home.setHoveredRestaurant(null)
+            return
+          }
           const { hoveredRestaurant } = omStatic.state.home
           if (!hoveredRestaurant || id !== hoveredRestaurant?.id) {
             const restaurant = restaurants?.find((x) => x.id === id)
