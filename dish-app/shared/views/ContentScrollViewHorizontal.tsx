@@ -11,7 +11,6 @@ export const ContentScrollViewHorizontal = (
   props: ScrollViewProps & { children: any }
 ) => {
   const { isScrolling } = useStore(ScrollStore)
-  console.log('isScrolling', isScrolling)
 
   const children = useMemo(() => {
     return (

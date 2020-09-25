@@ -3,7 +3,7 @@ import { ThumbsDown, ThumbsUp } from '@dish/react-feather'
 import { AbsoluteVStack, HStack, Spacer, Text, VStack } from '@dish/ui'
 import { default as React } from 'react'
 
-import { useUserTagVotes } from '../hooks/useUserReview'
+import { useUserTagVotes } from '../hooks/useUserUpvoteDownvoteQuery'
 import { tagDisplayName } from '../state/tagDisplayName'
 import { FullTag } from '../state/tagLenses'
 import { SmallButton } from './ui/SmallButton'
