@@ -34,6 +34,7 @@ import { setDefaultLocation } from './getDefaultLocation'
 import { getNavigateItemForState } from './getNavigateItemForState'
 import { getNextState } from './getNextState'
 import { getTagId } from './getTagId'
+import { getTagsFromRoute } from './getTagsFromRoute'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
 import {
   ActiveEvent,
@@ -581,7 +582,17 @@ const pushHomeState: AsyncAction<
       }
 
       // use last home or search to get most up to date
-      activeTagIds = prev.activeTagIds
+      if (prev.type === 'home') {
+        const tags = getTagsFromRoute(router.curPage)
+        console.log('tags', tags)
+        addTagsToCache(tags)
+        activeTagIds = tags.reduce((acc, tag) => {
+          acc[getTagId(tag)] = true
+          return acc
+        }, {})
+      } else {
+        activeTagIds = prev.activeTagIds
+      }
 
       const username =
         type == 'userSearch' ? om.state.router.curPage.params.username : ''

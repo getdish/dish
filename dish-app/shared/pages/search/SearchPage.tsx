@@ -295,8 +295,6 @@ const SearchResultsContent = (props: Props) => {
   //   }
   // }, [state.scrollToTop])
 
-  console.log('drawerWidth', drawerWidth)
-
   const dataProvider = useMemo(() => {
     return new DataProvider((r1, r2) => {
       return r1.id !== r2.id
@@ -309,12 +307,11 @@ const SearchResultsContent = (props: Props) => {
         return 'listitem'
       },
       (type, dim) => {
-        console.log('get em', dim)
         dim.width = drawerWidth
-        dim.height = 290
+        dim.height = 300
       }
     )
-  }, [])
+  }, [drawerWidth])
 
   const rowRenderer = useCallback((
     type: string | number,
@@ -323,7 +320,7 @@ const SearchResultsContent = (props: Props) => {
     // extendedState?: object
   ) => {
     return (
-      <Suspense fallback={<LoadingItem />}>
+      <Suspense fallback={<LoadingItem size="lg" />}>
         <RestaurantListItem
           currentLocationInfo={searchState.currentLocationInfo ?? null}
           restaurantId={data.id}

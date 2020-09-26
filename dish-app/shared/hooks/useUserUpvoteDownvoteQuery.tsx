@@ -107,7 +107,6 @@ export const useUserTagVotes = (restaurantId: string, tagId?: string) => {
   const { userId, reviews, reviewsQuery, om, refetch } = useUserReviewsQuery(
     restaurantId
   )
-  console.log('reviews', reviews)
   const votes = reviews.filter((review) => {
     if (!isTagReview(review)) return false
     if (review.rating === 0) return false

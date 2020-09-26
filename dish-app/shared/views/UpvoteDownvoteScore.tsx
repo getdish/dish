@@ -29,6 +29,33 @@ export const UpvoteDownvoteScore = memo(
         : {
             isOpen: false,
           }
+
+    const upvote = (
+      <VoteButton
+        size={18 * scale}
+        Icon={ChevronUp}
+        voted={vote == 1}
+        color={vote === 1 ? 'green' : voteButtonColor}
+        onPress={(e) => {
+          e.stopPropagation()
+          setVote(vote === 1 ? 0 : 1)
+        }}
+      />
+    )
+
+    const downvote = (
+      <VoteButton
+        size={18 * scale}
+        Icon={ChevronDown}
+        voted={vote == -1}
+        color={vote === -1 ? 'red' : voteButtonColor}
+        onPress={(e) => {
+          e.stopPropagation()
+          setVote(vote == -1 ? 0 : -1)
+        }}
+      />
+    )
+
     return (
       <VStack
         pointerEvents="auto"
@@ -43,18 +70,13 @@ export const UpvoteDownvoteScore = memo(
         borderRadius={1000}
         {...props}
       >
-        <Tooltip position="right" contents="Upvote" {...isOpenProp}>
-          <VoteButton
-            size={18 * scale}
-            Icon={ChevronUp}
-            voted={vote == 1}
-            color={vote === 1 ? 'green' : voteButtonColor}
-            onPress={(e) => {
-              e.stopPropagation()
-              setVote(vote === 1 ? 0 : 1)
-            }}
-          />
-        </Tooltip>
+        {subtle ? (
+          upvote
+        ) : (
+          <Tooltip position="right" contents="Upvote" {...isOpenProp}>
+            {upvote}
+          </Tooltip>
+        )}
         <Text
           fontSize={Math.min(16, 120 / `${score}`.length / 2) * scale}
           fontWeight="700"
@@ -64,18 +86,13 @@ export const UpvoteDownvoteScore = memo(
         >
           {score}
         </Text>
-        <Tooltip position="right" contents="Downvote" {...isOpenProp}>
-          <VoteButton
-            size={18 * scale}
-            Icon={ChevronDown}
-            voted={vote == -1}
-            color={vote === -1 ? 'red' : voteButtonColor}
-            onPress={(e) => {
-              e.stopPropagation()
-              setVote(vote == -1 ? 0 : -1)
-            }}
-          />
-        </Tooltip>
+        {subtle ? (
+          downvote
+        ) : (
+          <Tooltip position="right" contents="Downvote" {...isOpenProp}>
+            {downvote}
+          </Tooltip>
+        )}
       </VStack>
     )
   }
