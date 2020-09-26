@@ -17,7 +17,7 @@ import { AppSearchInputTags } from './AppSearchInputTags'
 import { isWeb, searchBarHeight } from './constants'
 import { inputClearSelection, inputIsTextSelected } from './helpers/input'
 import { isWebIOS } from './helpers/isIOS'
-import { getIs } from './hooks/useIs'
+import { getIs, useIsNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
@@ -293,10 +293,14 @@ const SearchCancelButton = memo(() => {
   const hasSearch = om.state.home.currentStateSearchQuery !== ''
   const hasSearchTags = !!om.state.home.searchBarTags.length
   const isActive = hasSearch || hasSearchTags
+  const isSmall = useIsNarrow()
   return (
     <VStack
       opacity={isActive ? 0.6 : 0}
       disabled={!isActive}
+      width={44}
+      height={44}
+      backgroundColor="rgba(220,220,220,0.1)"
       onPress={() => {
         if (om.state.home.showAutocomplete) {
           om.actions.home.setShowAutocomplete(false)
@@ -305,7 +309,7 @@ const SearchCancelButton = memo(() => {
         }
       }}
     >
-      <X size={16} color="#888" style={{ marginTop: 1 }} />
+      <X size={16} color={isSmall ? '#888' : '#fff'} style={{ marginTop: 1 }} />
     </VStack>
   )
 })
