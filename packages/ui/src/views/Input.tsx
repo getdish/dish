@@ -17,6 +17,7 @@ export const Input = (
 
 const sheet = StyleSheet.create({
   inputStyle: {
+    width: '100%',
     paddingHorizontal: 14,
     paddingVertical: 10,
     fontSize: 16,

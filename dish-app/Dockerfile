@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y parallel build-essential \
 COPY dish-app dish-app
 
 RUN yarn install
+RUN yarn postinstall
 RUN yarn build
 
 WORKDIR /app/dish-app
