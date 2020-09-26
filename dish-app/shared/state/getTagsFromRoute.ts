@@ -1,4 +1,5 @@
 import { HistoryItem } from '@dish/router'
+import { capitalize } from 'lodash'
 
 import { NavigableTag } from './NavigableTag'
 import { SPLIT_TAG, SPLIT_TAG_TYPE } from './SPLIT_TAG'
@@ -25,7 +26,11 @@ export const getTagsFromRoute = (
 
 const getUrlTagInfo = (part: string, defaultType: any = ''): NavigableTag => {
   if (part.indexOf(SPLIT_TAG_TYPE) > -1) {
-    const [type, name] = part.split(SPLIT_TAG_TYPE)
+    const [type, nameLower] = part.split(SPLIT_TAG_TYPE)
+    const name = nameLower
+      .split('-')
+      .map((x) => capitalize(x))
+      .join(' ')
     return { type: type as any, name }
   }
   return { type: defaultType, name: part }

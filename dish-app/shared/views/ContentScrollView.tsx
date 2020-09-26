@@ -52,15 +52,12 @@ export const ContentScrollView = forwardRef(
         scrollStore.setIsScrolling(false)
       }, 200)
     }
-    const scrollRef = useRef()
-
-    const preventTouching = scrollStore.isScrolling
     const preventScrolling =
       !isWeb && isReallySmall && om.state.home.drawerSnapPoint >= 1
 
     return (
       <ScrollView
-        ref={combineRefs(ref as any, scrollRef)}
+        ref={ref as any}
         onScroll={setIsScrolling}
         scrollEventThrottle={100}
         scrollEnabled={!preventScrolling}
@@ -76,7 +73,6 @@ export const ContentScrollView = forwardRef(
         ]}
       >
         <VStack
-          pointerEvents={preventTouching ? 'none' : 'auto'}
           maxWidth={isSmall ? '100%' : drawerWidthMax}
           alignSelf="flex-end"
           overflow="hidden"

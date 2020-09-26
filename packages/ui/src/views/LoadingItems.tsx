@@ -21,8 +21,8 @@ export const LoadingItemsSmall = () => (
 // same across all instances, less flickers
 const seed = Math.max(3, Math.min(6, Math.round(Math.random() * 10)))
 
-export const LoadingItem = ({ size = 'md' }: { size?: 'sm' | 'md' }) => {
-  const scale = size === 'sm' ? 0.5 : 1
+export const LoadingItem = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
+  const scale = size === 'sm' ? 0.5 : size === 'lg' ? 1.5 : 1
   return (
     <VStack
       overflow="hidden"
