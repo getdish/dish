@@ -209,17 +209,17 @@ const createStack = (defaultProps?: ViewStyle) => {
             ? () => {
                 let next: Partial<typeof state> = {}
                 if (attachHover) {
-                  if (!isWebIOS) {
-                    next.hover = true
-                  }
-                  onHoverIn?.()
-                  onMouseEnter?.()
+                  next.hover = true
                 }
                 if (state.pressIn) {
                   next.press = true
                 }
                 if (Object.keys(next).length) {
                   set({ ...state, ...next })
+                }
+                if (attachHover) {
+                  onHoverIn?.()
+                  onMouseEnter?.()
                 }
               }
             : null,
@@ -229,41 +229,42 @@ const createStack = (defaultProps?: ViewStyle) => {
                 let next: Partial<typeof state> = {}
                 mouseUps.add(unPress)
                 if (attachHover) {
-                  if (!isWebIOS) {
-                    next.hover = false
-                  }
-                  onHoverOut?.()
-                  onMouseLeave?.()
+                  next.hover = false
                 }
                 if (state.pressIn) {
                   next.press = false
+                  next.pressIn = false
                 }
                 if (Object.keys(next).length) {
                   set({ ...state, ...next })
+                }
+                if (attachHover) {
+                  onHoverOut?.()
+                  onMouseLeave?.()
                 }
               }
             : null,
         onMouseDown: attachPress
           ? (e) => {
               e.preventDefault()
-              onPressIn?.(e)
               set({
                 ...state,
                 press: true,
                 pressIn: true,
               })
+              onPressIn?.(e)
             }
           : onPressIn,
         onClick: attachPress
           ? (e) => {
               e.preventDefault()
-              onPressOut?.(e)
-              onPress?.(e)
               set({
                 ...state,
                 press: false,
                 pressIn: false,
               })
+              onPressOut?.(e)
+              onPress?.(e)
             }
           : onPressOut,
       }
