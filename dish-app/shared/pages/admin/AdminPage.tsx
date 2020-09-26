@@ -1,7 +1,8 @@
 import { getGraphEndpointDomain } from '@dish/graph'
-import { HStack, SmallTitle, Spacer, Text, VStack } from '@dish/ui'
+import { HStack, SmallTitle, Spacer, Text, Title, VStack } from '@dish/ui'
 import loadable from '@loadable/component'
 import React, { memo } from 'react'
+import { ScrollView } from 'react-native'
 
 import { Route, RouteSwitch } from '../../views/router/Route'
 import { Link } from '../../views/ui/Link'
@@ -27,30 +28,56 @@ export default memo(function AdminPage() {
         <Route name="adminTags">{() => <AdminTagsPage />}</Route>
         <Route name="adminReviews">{() => <AdminReviewsPage />}</Route>
         <Route name="admin">
-          <VStack paddingVertical={20} spacing="lg">
-            <SmallTitle>Welcome to dish</SmallTitle>
+          <ScrollView style={{ width: '100%', height: '100%' }}>
+            <VStack alignItems="center" paddingVertical={20} spacing="xxl">
+              <Title>Welcome to dish</Title>
 
-            <HStack flexWrap="wrap" spacing="lg">
-              <AdminLinkButton icon="🏷" name="adminTags">
-                Tags
-              </AdminLinkButton>
-              <AdminLinkButton icon="🗣" name="adminReviews">
-                Reviews
-              </AdminLinkButton>
-              <AdminLinkButton icon="💽" href={getGraphEndpointDomain()}>
-                Hasura
-              </AdminLinkButton>
-              <AdminLinkButton
-                icon="💪"
-                href="https://worker-ui.k8s.dishapp.com/ui"
-              >
-                Workers
-              </AdminLinkButton>
-              <AdminLinkButton icon="📈" href="https://grafana.k8s.dishapp.com">
-                Graphs
-              </AdminLinkButton>
-            </HStack>
-          </VStack>
+              <SmallTitle>Manage</SmallTitle>
+              <HStack justifyContent="center" flexWrap="wrap" spacing="lg">
+                <AdminLinkButton icon="🏷" name="adminTags">
+                  Tags
+                </AdminLinkButton>
+                <AdminLinkButton icon="🗣" name="adminReviews">
+                  Reviews
+                </AdminLinkButton>
+              </HStack>
+
+              <SmallTitle>Services</SmallTitle>
+              <HStack justifyContent="center" flexWrap="wrap" spacing="lg">
+                <AdminLinkButton icon="💽" href={getGraphEndpointDomain()}>
+                  Hasura
+                </AdminLinkButton>
+                <AdminLinkButton
+                  icon="💪"
+                  href="https://worker-ui.k8s.dishapp.com/ui"
+                >
+                  Workers
+                </AdminLinkButton>
+                <AdminLinkButton
+                  icon="📈"
+                  href="https://grafana.k8s.dishapp.com"
+                >
+                  Graphs
+                </AdminLinkButton>
+              </HStack>
+
+              <SmallTitle>Intranet</SmallTitle>
+              <HStack justifyContent="center" flexWrap="wrap" spacing="lg">
+                <AdminLinkButton
+                  icon="💬"
+                  href="http://dish-headquarters.slack.com/"
+                >
+                  Slack
+                </AdminLinkButton>
+                <AdminLinkButton
+                  icon="👨‍💻"
+                  href="https://github.com/getdish/dish"
+                >
+                  Github
+                </AdminLinkButton>
+              </HStack>
+            </VStack>
+          </ScrollView>
         </Route>
       </RouteSwitch>
     </VStack>
@@ -64,7 +91,7 @@ const AdminLinkButton = ({
 }: LinkButtonProps & { icon: string }) => {
   return (
     <LinkButton
-      fontSize={100}
+      fontSize={80}
       noText
       borderRadius={10}
       padding={10}
@@ -75,7 +102,7 @@ const AdminLinkButton = ({
       {...props}
     >
       <VStack spacing alignItems="center">
-        <Text height={120} fontSize={100}>
+        <Text height={80 + 20} fontSize={80}>
           {icon}
         </Text>
         <Text color="rgba(0,0,0,0.4)">{children}</Text>
