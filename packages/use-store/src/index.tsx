@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useCallback, useLayoutEffect, useRef } from 'react'
+import { useCallback, useLayoutEffect, useMemo, useRef } from 'react'
 
 import { DebugComponents, DebugStores, shouldDebug } from './shouldDebug'
 import { Store, TRIGGER_UPDATE } from './Store'
@@ -57,21 +57,43 @@ export function useStoreSelector<
   selector: S,
   props?: B
 ): Selected {
-  return useStore(StoreKlass, props, selector) as any
+  return useStore(StoreKlass, props, { selector }) as any
 }
 
 const cache = new WeakMap<any, { [key: string]: StoreInfo }>()
+const defaultOptions = {
+  once: false,
+  selector: undefined,
+}
 
-export function useStore<A extends Store<B>, B>(
+export function useStoreOnce<A extends Store<B>, B>(
   StoreKlass: new (props: B) => A | (new () => A),
   props?: B,
   selector?: any
 ): A {
+  return useStore(StoreKlass, props, { selector, once: true })
+}
+
+export function useStore<A extends Store<B>, B>(
+  StoreKlass: new (props: B) => A | (new () => A),
+  props?: B,
+  options: { selector?: any; once?: boolean } = defaultOptions
+): A {
+  const cachedSelector = options.selector
+    ? useCallback(options.selector, [])
+    : undefined
+
+  if (options.once) {
+    const info = useMemo(() => createStoreInstance(StoreKlass, props), [
+      JSON.stringify(props),
+    ])
+    return useStoreInstance(info, cachedSelector)
+  }
+
   const storeName = StoreKlass.name
   const propsKey = props ? getKey(props) : ''
   const cached = cache.get(StoreKlass)
   const uid = `${storeName}_${propsKey}_`
-  const cachedSelector = selector ? useCallback(selector, []) : undefined
 
   // avoid work after init
   const info = cached?.[uid]
@@ -79,12 +101,22 @@ export function useStore<A extends Store<B>, B>(
     return useStoreInstance(info, cachedSelector)
   }
 
+  const value = createStoreInstance(StoreKlass, props)
+  if (!cache.get(StoreKlass)) {
+    cache.set(StoreKlass, {})
+  }
+  const propCache = cache.get(StoreKlass)!
+  propCache[uid] = value
+
+  return useStoreInstance(value, cachedSelector)
+}
+
+function createStoreInstance(StoreKlass: any, props: any) {
   // init
   const storeInstance = new StoreKlass(props!)
   const getters = {}
   const actions = {}
   const stateKeys: string[] = []
-
   const descriptors = getStoreDescriptors(storeInstance)
   for (const key in descriptors) {
     const descriptor = descriptors[key]
@@ -99,11 +131,6 @@ export function useStore<A extends Store<B>, B>(
       }
     }
   }
-
-  if (!cache.get(StoreKlass)) {
-    cache.set(StoreKlass, {})
-  }
-  const propCache = cache.get(StoreKlass)!
   const value: StoreInfo = {
     hasMounted: false,
     version: 0,
@@ -113,8 +140,7 @@ export function useStore<A extends Store<B>, B>(
     actions,
     source: createMutableSource(storeInstance, () => value.version),
   }
-  propCache[uid] = value
-  return useStoreInstance(value, cachedSelector)
+  return value
 }
 
 const subscribe = (store: Store, callback: Function) =>
