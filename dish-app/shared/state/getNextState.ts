@@ -6,7 +6,8 @@ import { getTagId } from './getTagId'
 import { HomeActiveTagsRecord, HomeStateNav } from './home-types'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 
-const navStateCache = {}
+let navStateCache = {}
+let inserts = 0
 
 const nextStateKey = (navState: HomeStateNav) => {
   const tagIds = navState.state?.activeTagIds
@@ -86,5 +87,10 @@ export const getNextState = (navState: HomeStateNav) => {
   nextState.type = shouldBeOnSearch(nextState) ? 'search' : 'home'
 
   navStateCache[key] = nextState
+  inserts++
+  if (inserts > 300) {
+    navStateCache = {}
+    inserts = 0
+  }
   return nextState
 }

@@ -31,7 +31,7 @@ export const DishView = memo(
     isFallback: _isFallback,
     ...rest
   }: {
-    restaurantId: string
+    restaurantId?: string
     name?: any
     cuisine?: NavigableTag
     dish: TopCuisineDish

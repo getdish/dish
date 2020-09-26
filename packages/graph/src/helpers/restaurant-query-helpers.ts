@@ -46,35 +46,33 @@ export const restaurantDishesWithPhotos = (
   })
   for (const t of tags) {
     const tagName = t.tag.name ?? ''
-    if (tagName) {
-      const tagNameMachined = tagName.toLowerCase().replace(' ', '-')
-      const isSearchedForTag = tag_names?.includes(tagNameMachined)
-      let [photo] = t.photos() || []
-      let isFallback = false
-      const fallback = t.tag?.default_images()?.[0]
-      const photoRating = t.rating
-      if (!photo && fallback) {
-        photo = fallback
-        isFallback = true
-      }
-      if (!photo && !isSearchedForTag) {
-        continue
-      }
-      const photoItem = {
-        name: tagName,
-        // enablig this causes double queries
-        // icon: t.tag.icon,
-        image: photo,
-        rating: photoRating,
-        best_restaurants: [],
-        isFallback,
-        reviews: t.reviews,
-      }
-      if (isSearchedForTag) {
-        photos.unshift(photoItem)
-      } else {
-        photos.push(photoItem)
-      }
+    const tagNameMachined = tagName.toLowerCase().replace(' ', '-')
+    const isSearchedForTag = tag_names?.includes(tagNameMachined)
+    let [photo] = t.photos() || []
+    let isFallback = false
+    const fallback = t.tag?.default_images()?.[0]
+    const photoRating = t.rating
+    if (!photo && fallback) {
+      photo = fallback
+      isFallback = true
+    }
+    if (!photo && !isSearchedForTag) {
+      continue
+    }
+    const photoItem = {
+      name: tagName,
+      // enablig this causes double queries
+      // icon: t.tag.icon,
+      image: photo,
+      rating: photoRating,
+      best_restaurants: [],
+      isFallback,
+      reviews: t.reviews,
+    }
+    if (isSearchedForTag) {
+      photos.unshift(photoItem)
+    } else {
+      photos.push(photoItem)
     }
   }
   return photos

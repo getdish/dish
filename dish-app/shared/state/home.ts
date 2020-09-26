@@ -406,7 +406,7 @@ const suggestTags: AsyncAction<string> = async (om, tags) => {
 }
 
 const getUserPosition = () => {
-  return new Promise<Position>((res, rej) => {
+  return new Promise<any>((res, rej) => {
     navigator.geolocation.getCurrentPosition(res, rej)
   })
 }
@@ -471,6 +471,7 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
       case 'user':
       case 'gallery':
       case 'restaurantReview':
+      case 'restaurantReviews':
       case 'restaurantHours':
       case 'userSearch':
       case 'restaurant': {
@@ -649,6 +650,14 @@ const pushHomeState: AsyncAction<
     case 'restaurantReview': {
       nextState = {
         restaurantSlug: item.params.slug,
+      }
+      break
+    }
+
+    case 'restaurantReviews': {
+      nextState = {
+        restaurantSlug: item.params.slug,
+        restaurantId: item.params.id,
       }
       break
     }

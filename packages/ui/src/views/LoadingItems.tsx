@@ -22,16 +22,16 @@ export const LoadingItemsSmall = () => (
 const seed = Math.max(3, Math.min(6, Math.round(Math.random() * 10)))
 
 export const LoadingItem = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
-  const scale = size === 'sm' ? 0.5 : size === 'lg' ? 1.5 : 1
+  const scale = size === 'sm' ? 0.5 : size === 'lg' ? 1.75 : 1
   return (
     <VStack
       overflow="hidden"
       className="shine"
-      padding={20 * scale}
+      padding={20}
       spacing={10 * scale}
     >
       <HStack
-        width={`${seed * 12 * scale}%`}
+        width={`${seed * 12}%`}
         height={28 * scale}
         backgroundColor="rgba(0,0,0,0.05)"
         borderRadius={7}
@@ -40,9 +40,7 @@ export const LoadingItem = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
         {[1, 2, 3].map((index) => (
           <HStack
             key={index}
-            width={`${
-              scale * seed * (15 - (2 - index > -1 ? index : -index) * 4)
-            }%`}
+            width={`${seed * (15 - (2 - index > -1 ? index : -index) * 4)}%`}
             height={20 * scale}
             maxWidth="100%"
             backgroundColor="rgba(0,0,0,0.025)"

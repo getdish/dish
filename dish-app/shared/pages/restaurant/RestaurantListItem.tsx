@@ -37,7 +37,11 @@ import { DishView } from '../../views/dish/DishView'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { Link } from '../../views/ui/Link'
-import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
+import {
+  SmallButton,
+  SmallLinkButton,
+  smallButtonBaseStyle,
+} from '../../views/ui/SmallButton'
 import { Squircle } from '../../views/ui/Squircle'
 import { ensureFlexText } from './ensureFlexText'
 import { RestaurantAddress } from './RestaurantAddress'
@@ -78,9 +82,6 @@ export const RestaurantListItem = memo(function RestaurantListItem(
     omStatic.actions.home.setHoveredRestaurant,
     50
   )
-  const store = useStoreOnce(RestaurantReviewsDisplayStore, {
-    id: props.restaurantId,
-  })
 
   useEffect(() => {
     if (isHovered) {
@@ -127,12 +128,6 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       >
         <RestaurantListItemContent isLoaded={isLoaded} {...props} />
       </ContentScrollViewHorizontal>
-
-      {store.showComments && (
-        <VStack>
-          <RestaurantRatingBreakdown closable {...props} />
-        </VStack>
-      )}
     </VStack>
   )
 })
@@ -148,9 +143,6 @@ const RestaurantListItemContent = memo(
     } = props
     const pad = 18
     const isSmall = useIsNarrow()
-    const reviewDisplayStore = useStore(RestaurantReviewsDisplayStore, {
-      id: restaurantId,
-    })
     const restaurant = useRestaurantQuery(restaurantSlug)
 
     useEffect(() => {
@@ -164,6 +156,7 @@ const RestaurantListItemContent = memo(
     const tagIds = 'activeTagIds' in curState ? curState.activeTagIds : {}
     const score = restaurant.score ?? 0
     const [isActive, setIsActive] = useState(false)
+
     const getIsActive = useGet(isActive)
     useEffect(() => {
       return omStatic.reaction(
@@ -190,7 +183,8 @@ const RestaurantListItemContent = memo(
         : 430,
     }
 
-    const [open_text, open_color, opening_hours] = openingHours(restaurant)
+    const opening_hours = ''
+    // const [open_text, open_color, opening_hours] = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const totalReviews = useTotalReviews(restaurant)
     const titleFontSize =
@@ -441,9 +435,12 @@ const RestaurantListItemContent = memo(
                 <Tooltip
                   contents={`Rating Breakdown (${totalReviews} reviews)`}
                 >
-                  <SmallButton
-                    isActive={reviewDisplayStore.showComments}
-                    onPress={reviewDisplayStore.toggleShowComments}
+                  <SmallLinkButton
+                    name="restaurantReviews"
+                    params={{
+                      id: props.restaurantId,
+                      slug: props.restaurantSlug,
+                    }}
                   >
                     <HStack alignItems="center">
                       <VStack marginVertical={-12} marginRight={10}>
@@ -454,7 +451,7 @@ const RestaurantListItemContent = memo(
                       </VStack>
                       <MessageSquare size={18} color="rgba(0,0,0,0.3)" />
                     </HStack>
-                  </SmallButton>
+                  </SmallLinkButton>
                 </Tooltip>
               </VStack>
 

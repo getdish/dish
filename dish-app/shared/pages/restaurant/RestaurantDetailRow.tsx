@@ -147,41 +147,35 @@ export function openingHours(restaurant: RestaurantQuery) {
     return ['Unknown Hours', 'grey', '']
   }
 
-  let text = 'Closed'
-  let color = '#999'
+  const is_open_now = restaurant.is_open_now ?? false
+  let text = is_open_now ? 'Open' : 'Closed'
+  let color = is_open_now ? '#337777' : '#999'
   let next_time = ''
+  const dayOfWeek = getDayOfWeek()
 
-  if (restaurant.is_open_now != null) {
-    text = restaurant.is_open_now ? 'Open' : 'Closed'
-    color = restaurant.is_open_now ? '#33aa99' : '#999'
-
-    const dayOfWeek = getDayOfWeek()
+  if (is_open_now) {
+    const todaysHours = restaurant.hours()[dayOfWeek]?.hoursInfo.hours[0] ?? ''
+    next_time = getHours(todaysHours)
+  } else {
     // TODO: Tomorrow isn't always when the next opening time is.
     // Eg; when it's the morning and the restaurant opens in the evening.
     const tomorrow = (dayOfWeek + 1) % 7
     const tomorrowsHours =
       restaurant.hours()[tomorrow]?.hoursInfo.hours[0] ?? ''
-    const todaysHours = restaurant.hours()[dayOfWeek]?.hoursInfo.hours[0] ?? ''
-
-    const getHours = (hours: string) => {
-      const [opens, closes] = hours.split(' - ')
-      if (opens && closes) {
-        const opens_at = opens.replace(' ', '').replace(':00', '')
-        const closes_at = closes.replace(' ', '').replace(':00', '')
-        return `${opens_at} - ${closes_at}`
-      }
-      return ''
-    }
-
-    if (restaurant.is_open_now) {
-      text = 'Open'
-      color = '#337777'
-      next_time = getHours(todaysHours)
-    } else {
-      next_time = getHours(tomorrowsHours)
-    }
+    next_time = getHours(tomorrowsHours)
   }
+
   return [text, color, next_time]
+}
+
+const getHours = (hours: string) => {
+  const [opens, closes] = hours.split(' - ')
+  if (opens && closes) {
+    const opens_at = opens.replace(' ', '').replace(':00', '')
+    const closes_at = closes.replace(' ', '').replace(':00', '')
+    return `${opens_at} - ${closes_at}`
+  }
+  return ''
 }
 
 export function priceRange(restaurant: RestaurantQuery) {
