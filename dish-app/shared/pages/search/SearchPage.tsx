@@ -11,22 +11,33 @@ import {
   StackProps,
   Text,
   VStack,
+  combineRefs,
 } from '@dish/ui'
 import React, {
   Suspense,
   unstable_SuspenseList as SuspenseList,
+  createContext,
+  forwardRef,
   memo,
+  useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import { ScrollView } from 'react-native'
+import {
+  DataProvider,
+  LayoutProvider,
+  RecyclerListView,
+} from 'recyclerlistview'
 
 import { AppPortalItem } from '../../AppPortal'
 import { isWeb, searchBarHeight, searchBarTopOffset } from '../../constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { rgbString } from '../../helpers/rgbString'
+import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useLastValue } from '../../hooks/useLastValue'
@@ -68,6 +79,8 @@ const useSpacing = () => {
     isSmall,
   }
 }
+
+const SearchPagePropsContext = createContext<Props | null>(null)
 
 export default memo(function SearchPage(props: Props) {
   // const isEditingUserList = !!isEditingUserPage(om.state)
@@ -151,7 +164,11 @@ export default memo(function SearchPage(props: Props) {
   )
 
   const content = useMemo(() => {
-    return <SearchResultsContent {...props} item={state} />
+    return (
+      <SearchPagePropsContext.Provider value={props}>
+        <SearchResultsContent {...props} item={state} />
+      </SearchPagePropsContext.Provider>
+    )
   }, [key])
 
   return (
@@ -238,39 +255,17 @@ const getRestaurantListItemHeight = () => {
   return 280
 }
 
+// prevent warning
+delete RecyclerListView.propTypes['externalScrollView']
+
 const SearchResultsContent = (props: Props) => {
   const searchState = props.item
-  const { isSmall, titleHeight } = useSpacing()
-  const paddingTop = isSmall ? 0 : titleHeight - searchBarHeight + 2
-  const perChunk = 4
+  const drawerWidth = useAppDrawerWidth()
   const allResults = searchState.results
-  const total = allResults.length
-  const totalChunks = Math.ceil(total / perChunk)
-  const lenseColor = useCurrentLenseColor()
-  const [state, setState] = useState({
-    chunk: 1,
-    hasLoaded: 1,
-    itemHeightAvg: getRestaurantListItemHeight(),
-    scrollToTop: 0,
-  })
-  const isOnLastChunk = totalChunks === state.chunk
   const scrollRef = useRef<ScrollView | null>(null)
-  const totalLoading = Math.min(total, state.chunk * perChunk)
-  const totalLeftToLoad = total - totalLoading
-  const isLoading =
-    searchState.status === 'loading' ||
-    (searchState.results.length === 0
-      ? false
-      : !isOnLastChunk || state.hasLoaded <= state.chunk)
-
-  const handleScrollY = (y: number) => {
-    if (isOnLastChunk) return
-    const estEndY = state.itemHeightAvg * totalLoading
-    const estLoadY = estEndY - getWindowHeight() * 0.5
-    if (y > estLoadY) {
-      setState((x) => ({ ...x, chunk: x.chunk + 1 }))
-    }
-  }
+  const { title } = getTitleForState(searchState, {
+    lowerCase: false,
+  })
 
   useEffect(() => {
     // @ts-ignore
@@ -298,136 +293,154 @@ const SearchResultsContent = (props: Props) => {
     )
   }, [])
 
-  useEffect(() => {
-    if (state.scrollToTop > 0) {
-      scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
+  // useEffect(() => {
+  //   if (state.scrollToTop > 0) {
+  //     scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
+  //   }
+  // }, [state.scrollToTop])
+
+  const dataProvider = useMemo(() => {
+    return new DataProvider((r1, r2) => {
+      return r1.id !== r2.id
+    }).cloneWithRows(allResults)
+  }, [allResults])
+
+  const layoutProvider = useMemo(() => {
+    return new LayoutProvider(
+      (index) => {
+        return 'listitem'
+      },
+      (type, dim) => {
+        console.log('get em', dim)
+        dim.width = drawerWidth
+        dim.height = 290
+      }
+    )
+  }, [])
+
+  const rowRenderer = useCallback((
+    type: string | number,
+    data: any,
+    index: number
+    // extendedState?: object
+  ) => {
+    return (
+      <Suspense fallback={<LoadingItem />}>
+        <RestaurantListItem
+          currentLocationInfo={searchState.currentLocationInfo ?? null}
+          restaurantId={data.id}
+          restaurantSlug={data.slug}
+          rank={index + 1}
+          searchState={searchState}
+        />
+      </Suspense>
+    )
+  }, [])
+
+  if (searchState.status !== 'loading' && searchState.results.length === 0) {
+    return (
+      <>
+        <PageTitleTag>{title}</PageTitleTag>
+        <VStack
+          margin="auto"
+          paddingVertical={100}
+          alignItems="center"
+          justifyContent="center"
+          spacing
+        >
+          <Text fontSize={22}>No results</Text>
+          <Text>😞</Text>
+        </VStack>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <PageTitleTag>{title}</PageTitleTag>
+      <RecyclerListView
+        canChangeSize
+        externalScrollView={SearchPageScrollView as any}
+        // renderAheadOffset={2000}
+        rowRenderer={rowRenderer}
+        dataProvider={dataProvider}
+        layoutProvider={layoutProvider}
+      />
+    </>
+  )
+}
+
+const SearchPageScrollView = forwardRef<any>(({ children, ...props }, ref) => {
+  const curProps = useContext(SearchPagePropsContext)
+  const isSmall = useIsNarrow()
+  const { title, subTitle, pageTitleElements } = getTitleForState(
+    curProps.item,
+    {
+      lowerCase: false,
     }
-  }, [state.scrollToTop])
-
-  const { title, subTitle, pageTitleElements } = getTitleForState(searchState, {
-    lowerCase: false,
-  })
-
+  )
+  const paddingTop = isSmall ? 0 : 50
   const titleLen = (title + subTitle).length
   const titleScale =
     titleLen > 70 ? 0.75 : titleLen > 60 ? 0.85 : titleLen > 50 ? 0.95 : 1
   const titleFontSize = 38 * titleScale * (isSmall ? 0.75 : 1)
+  const lenseColor = useCurrentLenseColor()
+  const divRef = useRef<any>()
 
-  const contentWrap = (children: any) => {
-    return (
-      <ContentScrollView
-        ref={scrollRef}
-        onScrollYThrottled={isOnLastChunk ? undefined : handleScrollY}
+  useEffect(() => {
+    const node = divRef.current._scrollNodeRef
+    const height = node.clientHeight
+    const width = node.clientWidth
+    console.log(node, { width, height })
+    props['onSizeChanged']({ width, height })
+  }, [])
+
+  return (
+    <ScrollView ref={combineRefs(ref, divRef)} {...props}>
+      <VStack width="100%" height={paddingTop} />
+      <HStack
+        paddingHorizontal={20}
+        paddingTop={10}
+        paddingBottom={15}
+        overflow="hidden"
       >
-        <VStack height={paddingTop} />
-        <PageTitleTag>{title}</PageTitleTag>
-        <HStack
-          paddingHorizontal={20}
-          paddingTop={10}
-          paddingBottom={15}
-          overflow="hidden"
+        <Text
+          marginVertical="auto"
+          letterSpacing={-0.5}
+          fontSize={titleFontSize}
+          fontWeight="500"
+          color={rgbString(lenseColor.map((x) => x * 0.8))}
+          // @ts-ignore
+          display="inline" // safari fix
+          marginRight={isSmall ? 20 : 0}
         >
+          {pageTitleElements}{' '}
           <Text
-            marginVertical="auto"
-            letterSpacing={-0.5}
-            fontSize={titleFontSize}
-            fontWeight="500"
-            color={rgbString(lenseColor.map((x) => x * 0.8))}
             // @ts-ignore
             display="inline" // safari fix
-            marginRight={isSmall ? 20 : 0}
+            fontWeight="300"
+            opacity={0.5}
+            className="nobreak"
           >
-            {pageTitleElements}{' '}
-            <Text
-              // @ts-ignore
-              display="inline" // safari fix
-              fontWeight="300"
-              opacity={0.5}
-              className="nobreak"
-            >
-              {subTitle}
-            </Text>
+            {subTitle}
           </Text>
-        </HStack>
-        <Suspense fallback={null}>
-          <SearchPageResultsInfoBox state={searchState} />
-        </Suspense>
-        <VStack>{children}</VStack>
-        <Suspense fallback={null}>
-          <SearchFooter
-            scrollToTop={() =>
-              setState((x) => ({ ...x, scrollToTop: Math.random() }))
-            }
-            searchState={searchState}
-          />
-        </Suspense>
-      </ContentScrollView>
-    )
-  }
-
-  const results = useMemo(() => {
-    const cur = allResults.slice(0, totalLoading)
-    return (
-      <SuspenseList revealOrder="forwards">
-        {cur.map((result, index) => {
-          const onFinishRender =
-            index == cur.length - 1
-              ? // load more
-                () => {
-                  setState((x) => ({
-                    ...x,
-                    hasLoaded: x.hasLoaded + 1,
-                    itemHeightAvg: getRestaurantListItemHeight(),
-                  }))
-                }
-              : undefined
-          return (
-            <Suspense key={result.id} fallback={<LoadingItem />}>
-              <RestaurantListItem
-                currentLocationInfo={searchState.currentLocationInfo ?? null}
-                restaurantId={result.id}
-                restaurantSlug={result.slug}
-                rank={index + 1}
-                searchState={searchState}
-                onFinishRender={onFinishRender}
-              />
-            </Suspense>
-          )
-        })}
-      </SuspenseList>
-    )
-  }, [allResults, totalLoading, state.chunk])
-
-  if (!isLoading && !total) {
-    return contentWrap(
-      <VStack
-        margin="auto"
-        paddingVertical={100}
-        alignItems="center"
-        justifyContent="center"
-        spacing
-      >
-        <Text fontSize={22}>No results</Text>
-        <Text>😞</Text>
-        {/* <LinkButton name="contact">Report problem</LinkButton> */}
-      </VStack>
-    )
-  }
-
-  return contentWrap(
-    <VStack paddingBottom={20} spacing={6}>
-      {results}
-      <VStack
-        minHeight={Math.max(
-          totalLeftToLoad * state.itemHeightAvg,
-          getWindowHeight() * 0.6
-        )}
-      >
-        {isLoading && <HomeLoading />}
-      </VStack>
-    </VStack>
+        </Text>
+      </HStack>
+      <Suspense fallback={null}>
+        <SearchPageResultsInfoBox state={curProps.item} />
+      </Suspense>
+      <VStack position="relative">{children}</VStack>
+      <Suspense fallback={null}>
+        <SearchFooter
+          searchState={curProps.item}
+          scrollToTop={() => {
+            // setState((x) => ({ ...x, scrollToTop: Math.random() }))
+          }}
+        />
+      </Suspense>
+    </ScrollView>
   )
-}
+})
 
 const SearchFooter = ({
   searchState,

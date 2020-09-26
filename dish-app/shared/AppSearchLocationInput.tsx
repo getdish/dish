@@ -80,6 +80,7 @@ export const AppSearchLocationInput = memo(() => {
       <AppAutocompleteHoverableInput
         input={locationInputStore.node}
         autocompleteTarget="location"
+        backgroundColor="rgba(255,255,255,0.15)"
       >
         <HStack width="100%" alignItems="center" paddingHorizontal={3}>
           <TouchableOpacity

@@ -304,6 +304,7 @@ const RestaurantListItemContent = memo(
                         </VStack>
                         <Spacer size="md" />
                         <Text
+                          ellipse
                           fontSize={titleFontSize}
                           lineHeight={titleFontSize * 1.2}
                           fontWeight="600"

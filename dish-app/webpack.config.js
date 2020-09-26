@@ -91,6 +91,7 @@ module.exports = function getWebpackConfig(
           'react-native': 'react-native-web',
           '@dish/react-feather': 'react-feather',
           '@o/gqless': path.join(require.resolve('@o/gqless'), '..'),
+          recyclerlistview: 'recyclerlistview/web',
         },
       },
       resolveLoader: {
