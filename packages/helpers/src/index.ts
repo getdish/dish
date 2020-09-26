@@ -1,5 +1,7 @@
 import './polyfill-localStorage'
 
+export * from './constants'
+
 export const stringify = (a: any) => JSON.stringify(a)
 
 export function ellipseText(

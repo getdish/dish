@@ -1,3 +1,5 @@
+import { isSafari } from '@dish/helpers'
+
 import { isWeb } from '../constants'
 
 export const initAppleSigninButton = () => {
@@ -10,7 +12,6 @@ export const initAppleSigninButton = () => {
     clientId: 'com.dishapp',
     scope: 'name email',
     redirectURI: 'https://auth.dishapp.com/auth/apple_authorize',
-    // usePopup: true,
-    // nonce: `${Math.random()}`,
+    usePopup: isSafari,
   })
 }

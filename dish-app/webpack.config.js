@@ -1,10 +1,7 @@
 const LoadablePlugin = require('@loadable/webpack-plugin')
 const { DuplicatesPlugin } = require('inspectpack/plugin')
-const ShakePlugin = require('webpack-common-shake').Plugin
 const ReactRefreshWebpack4Plugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const path = require('path')
-const _ = require('lodash')
-const fs = require('fs')
 const Webpack = require('webpack')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const LodashPlugin = require('lodash-webpack-plugin')
@@ -14,8 +11,6 @@ const TerserPlugin = require('terser-webpack-plugin')
 const { UIStaticWebpackPlugin } = require('@dish/ui-static')
 const CircularDependencyPlugin = require('circular-dependency-plugin')
 
-const ExtractCssChunks = require('extract-css-chunks-webpack-plugin')
-const DedupeParentCssFromChunksWebpackPlugin = require('dedupe-parent-css-from-chunks-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 

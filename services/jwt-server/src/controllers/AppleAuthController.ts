@@ -42,21 +42,8 @@ class AppleAuthController {
   }
 
   static authCallback = async (req: Request, res: Response) => {
-    console.log('sign in response', req.body)
     let { user: reqUser, id_token, code, state, error } = req.body
-
-    if (!reqUser) {
-      return res.status(400).send()
-    }
-
-    if (!reqUser.email) {
-      console.error('no user email', reqUser.email)
-      return res.status(400).send()
-    }
-
-    // if (req.session.state && req.session.state !== state) {
-    //   throw new Error("Missing or invalid state");
-    // }
+    console.log('sign in response', JSON.stringify(req.body, null, 2))
 
     const clientSecret = appleSignIn.createClientSecret({
       // expirationDuration: 5 * 60, // 5 minutes
@@ -72,9 +59,6 @@ class AppleAuthController {
     )
 
     const claim = await appleSignIn.verifyIdToken(tokenResponse.id_token, {
-      // (Optional) verifies the nonce
-      nonce: 'nonce',
-      // (Optional) If you want to handle expiration on your own, useful in case of iOS as identityId can't be "refreshed"
       ignoreExpiration: true, // default is false
     })
 
@@ -82,6 +66,12 @@ class AppleAuthController {
     const apple_uid = claim.aud
     const apple_secret = clientSecret
     const apple_refresh_token = tokenResponse.refresh_token
+
+    console.log('got', {
+      apple_uid,
+      apple_secret,
+      apple_refresh_token,
+    })
 
     // user is passed on first signup
     let user: WithID<User> | null = null

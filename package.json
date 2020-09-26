@@ -37,7 +37,7 @@
   },
   "resolutions": {
     "typescript": "4.1.0-beta",
-    "terser": "^5.3.0",
+    "terser": "5.3.2",
     "lodash": "4.17.20",
     "resolve": "1.17.0",
     "jsdom": "^16.4.0",

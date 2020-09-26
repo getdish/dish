@@ -247,9 +247,10 @@ export class Router extends Store<RouterProps> {
     name,
     params,
   }: {
-    name: string
+    name?: string
     params?: Object | void
   }) {
+    if (!name) return ``
     // object to path
     let route = this.routes[name]
     if (!route) {
