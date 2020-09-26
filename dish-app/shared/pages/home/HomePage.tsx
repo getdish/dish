@@ -12,6 +12,7 @@ import {
   HStack,
   LinearGradient,
   LoadingItems,
+  LoadingItemsSmall,
   Modal,
   Spacer,
   Text,
@@ -490,7 +491,7 @@ const TopDishesTrendingRestaurants = memo(
         spacing={4}
         alignItems="flex-start"
       >
-        <Suspense fallback={null}>
+        <Suspense fallback={<LoadingItemsSmall />}>
           {_.uniqBy(country.top_restaurants, (x) => x.name)
             .slice(0, 4)
             .map((restaurant, index) => {

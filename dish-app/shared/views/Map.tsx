@@ -183,7 +183,7 @@ export const Map = (props: MapProps) => {
         () => fullyIdle({ max: 500 }),
         () => {
           map?.fitBounds(next, {
-            duration: 450,
+            duration: 650,
           })
           internal.current.isAwaitingNextMove = false
         },
@@ -288,11 +288,14 @@ function animateMarker(map: mapboxgl.Map) {
   const initialOpacity = 1
   let opacity = initialOpacity
   let animate = true
+  let stopAfterFrames = 12 // its cpu intensive..
 
   function run() {
     setTimeout(() => {
       if (!map) return
       if (animate) {
+        stopAfterFrames--
+        if (stopAfterFrames === 0) return
         requestAnimationFrame(run)
       }
       radius += (maxRadius - radius) / fps
@@ -700,7 +703,6 @@ const fitMapToResults = (map: mapboxgl.Map, features: GeoJSON.Feature[]) => {
       bounds.extend(geo.coordinates as any)
     }
   }
-  console.warn('fitMapToResults', bounds)
   map.fitBounds(bounds)
 }
 
