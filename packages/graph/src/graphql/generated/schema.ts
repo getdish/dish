@@ -1514,16 +1514,13 @@ export const schema = {
             true
           )
         },
-        get delete_review_tag_sentence() {
+        get delete_review_tag() {
           return new FieldNode(
-            schema.review_tag_sentence_mutation_response,
+            schema.review_tag_mutation_response,
             new Arguments(
               {
                 get where() {
-                  return new ArgumentsField(
-                    schema.review_tag_sentence_bool_exp,
-                    false
-                  )
+                  return new ArgumentsField(schema.review_tag_bool_exp, false)
                 },
               },
               true
@@ -1531,9 +1528,9 @@ export const schema = {
             true
           )
         },
-        get delete_review_tag_sentence_by_pk() {
+        get delete_review_tag_by_pk() {
           return new FieldNode(
-            schema.review_tag_sentence,
+            schema.review_tag,
             new Arguments(
               {
                 get id() {
@@ -1895,41 +1892,32 @@ export const schema = {
             true
           )
         },
-        get insert_review_tag_sentence() {
+        get insert_review_tag() {
           return new FieldNode(
-            schema.review_tag_sentence_mutation_response,
+            schema.review_tag_mutation_response,
             new Arguments({
               get objects() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.review_tag_sentence_insert_input, false),
+                  new ArrayNode(schema.review_tag_insert_input, false),
                   false
                 )
               },
               get on_conflict() {
-                return new ArgumentsField(
-                  schema.review_tag_sentence_on_conflict,
-                  true
-                )
+                return new ArgumentsField(schema.review_tag_on_conflict, true)
               },
             }),
             true
           )
         },
-        get insert_review_tag_sentence_one() {
+        get insert_review_tag_one() {
           return new FieldNode(
-            schema.review_tag_sentence,
+            schema.review_tag,
             new Arguments({
               get object() {
-                return new ArgumentsField(
-                  schema.review_tag_sentence_insert_input,
-                  false
-                )
+                return new ArgumentsField(schema.review_tag_insert_input, false)
               },
               get on_conflict() {
-                return new ArgumentsField(
-                  schema.review_tag_sentence_on_conflict,
-                  true
-                )
+                return new ArgumentsField(schema.review_tag_on_conflict, true)
               },
             }),
             true
@@ -2444,51 +2432,36 @@ export const schema = {
             true
           )
         },
-        get update_review_tag_sentence() {
+        get update_review_tag() {
           return new FieldNode(
-            schema.review_tag_sentence_mutation_response,
+            schema.review_tag_mutation_response,
             new Arguments({
               get _inc() {
-                return new ArgumentsField(
-                  schema.review_tag_sentence_inc_input,
-                  true
-                )
+                return new ArgumentsField(schema.review_tag_inc_input, true)
               },
               get _set() {
-                return new ArgumentsField(
-                  schema.review_tag_sentence_set_input,
-                  true
-                )
+                return new ArgumentsField(schema.review_tag_set_input, true)
               },
               get where() {
-                return new ArgumentsField(
-                  schema.review_tag_sentence_bool_exp,
-                  false
-                )
+                return new ArgumentsField(schema.review_tag_bool_exp, false)
               },
             }),
             true
           )
         },
-        get update_review_tag_sentence_by_pk() {
+        get update_review_tag_by_pk() {
           return new FieldNode(
-            schema.review_tag_sentence,
+            schema.review_tag,
             new Arguments({
               get _inc() {
-                return new ArgumentsField(
-                  schema.review_tag_sentence_inc_input,
-                  true
-                )
+                return new ArgumentsField(schema.review_tag_inc_input, true)
               },
               get _set() {
-                return new ArgumentsField(
-                  schema.review_tag_sentence_set_input,
-                  true
-                )
+                return new ArgumentsField(schema.review_tag_set_input, true)
               },
               get pk_columns() {
                 return new ArgumentsField(
-                  schema.review_tag_sentence_pk_columns_input,
+                  schema.review_tag_pk_columns_input,
                   false
                 )
               },
@@ -4618,13 +4591,13 @@ export const schema = {
             true
           )
         },
-        get review_tag_sentence() {
+        get review_tag() {
           return new FieldNode(
-            new ArrayNode(schema.review_tag_sentence, false),
+            new ArrayNode(schema.review_tag, false),
             new Arguments({
               get distinct_on() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.review_tag_sentence_select_column, true),
+                  new ArrayNode(schema.review_tag_select_column, true),
                   true
                 )
               },
@@ -4636,27 +4609,24 @@ export const schema = {
               },
               get order_by() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.review_tag_sentence_order_by, true),
+                  new ArrayNode(schema.review_tag_order_by, true),
                   true
                 )
               },
               get where() {
-                return new ArgumentsField(
-                  schema.review_tag_sentence_bool_exp,
-                  true
-                )
+                return new ArgumentsField(schema.review_tag_bool_exp, true)
               },
             }),
             false
           )
         },
-        get review_tag_sentence_aggregate() {
+        get review_tag_aggregate() {
           return new FieldNode(
-            schema.review_tag_sentence_aggregate,
+            schema.review_tag_aggregate,
             new Arguments({
               get distinct_on() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.review_tag_sentence_select_column, true),
+                  new ArrayNode(schema.review_tag_select_column, true),
                   true
                 )
               },
@@ -4668,23 +4638,20 @@ export const schema = {
               },
               get order_by() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.review_tag_sentence_order_by, true),
+                  new ArrayNode(schema.review_tag_order_by, true),
                   true
                 )
               },
               get where() {
-                return new ArgumentsField(
-                  schema.review_tag_sentence_bool_exp,
-                  true
-                )
+                return new ArgumentsField(schema.review_tag_bool_exp, true)
               },
             }),
             false
           )
         },
-        get review_tag_sentence_by_pk() {
+        get review_tag_by_pk() {
           return new FieldNode(
-            schema.review_tag_sentence,
+            schema.review_tag,
             new Arguments(
               {
                 get id() {
@@ -5190,20 +5157,6 @@ export const schema = {
             false
           )
         },
-        get score() {
-          return new FieldNode(schema.numeric, undefined, true)
-        },
-        get score_breakdown() {
-          return new FieldNode(
-            schema.jsonb,
-            new Arguments({
-              get path() {
-                return new ArgumentsField(schema.String, true)
-              },
-            }),
-            true
-          )
-        },
         get slug() {
           return new FieldNode(schema.String, undefined, false)
         },
@@ -5500,9 +5453,6 @@ export const schema = {
         get rating_factors() {
           return new InputNodeField(schema.jsonb, true)
         },
-        get score_breakdown() {
-          return new InputNodeField(schema.jsonb, true)
-        },
         get sources() {
           return new InputNodeField(schema.jsonb, true)
         },
@@ -5535,9 +5485,6 @@ export const schema = {
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
-        get score() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
         get zip() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -5552,9 +5499,6 @@ export const schema = {
     return new InputNode(
       {
         get rating() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get score() {
           return new InputNodeField(schema.order_by, true)
         },
         get zip() {
@@ -5633,12 +5577,6 @@ export const schema = {
         get reviews() {
           return new InputNodeField(schema.review_bool_exp, true)
         },
-        get score() {
-          return new InputNodeField(schema.numeric_comparison_exp, true)
-        },
-        get score_breakdown() {
-          return new InputNodeField(schema.jsonb_comparison_exp, true)
-        },
         get slug() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
@@ -5688,9 +5626,6 @@ export const schema = {
         get rating_factors() {
           return new InputNodeField(new ArrayNode(schema.String, true), true)
         },
-        get score_breakdown() {
-          return new InputNodeField(new ArrayNode(schema.String, true), true)
-        },
         get sources() {
           return new InputNodeField(new ArrayNode(schema.String, true), true)
         },
@@ -5714,9 +5649,6 @@ export const schema = {
           return new InputNodeField(schema.Int, true)
         },
         get rating_factors() {
-          return new InputNodeField(schema.Int, true)
-        },
-        get score_breakdown() {
           return new InputNodeField(schema.Int, true)
         },
         get sources() {
@@ -5744,9 +5676,6 @@ export const schema = {
         get rating_factors() {
           return new InputNodeField(schema.String, true)
         },
-        get score_breakdown() {
-          return new InputNodeField(schema.String, true)
-        },
         get sources() {
           return new InputNodeField(schema.String, true)
         },
@@ -5761,9 +5690,6 @@ export const schema = {
     return new InputNode(
       {
         get rating() {
-          return new InputNodeField(schema.numeric, true)
-        },
-        get score() {
           return new InputNodeField(schema.numeric, true)
         },
         get zip() {
@@ -5826,12 +5752,6 @@ export const schema = {
         },
         get reviews() {
           return new InputNodeField(schema.review_arr_rel_insert_input, true)
-        },
-        get score() {
-          return new InputNodeField(schema.numeric, true)
-        },
-        get score_breakdown() {
-          return new InputNodeField(schema.jsonb, true)
         },
         get slug() {
           return new InputNodeField(schema.String, true)
@@ -5900,9 +5820,6 @@ export const schema = {
         get rating() {
           return new FieldNode(schema.numeric, undefined, true)
         },
-        get score() {
-          return new FieldNode(schema.numeric, undefined, true)
-        },
         get slug() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -5961,9 +5878,6 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
         get slug() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6017,9 +5931,6 @@ export const schema = {
           return new FieldNode(schema.String, undefined, true)
         },
         get rating() {
-          return new FieldNode(schema.numeric, undefined, true)
-        },
-        get score() {
           return new FieldNode(schema.numeric, undefined, true)
         },
         get slug() {
@@ -6078,9 +5989,6 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get rating() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get score() {
           return new InputNodeField(schema.order_by, true)
         },
         get slug() {
@@ -6211,12 +6119,6 @@ export const schema = {
         get reviews_aggregate() {
           return new InputNodeField(schema.review_aggregate_order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get score_breakdown() {
-          return new InputNodeField(schema.order_by, true)
-        },
         get slug() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6274,9 +6176,6 @@ export const schema = {
           return new InputNodeField(schema.jsonb, true)
         },
         get rating_factors() {
-          return new InputNodeField(schema.jsonb, true)
-        },
-        get score_breakdown() {
           return new InputNodeField(schema.jsonb, true)
         },
         get sources() {
@@ -6340,12 +6239,6 @@ export const schema = {
         get rating_factors() {
           return new InputNodeField(schema.jsonb, true)
         },
-        get score() {
-          return new InputNodeField(schema.numeric, true)
-        },
-        get score_breakdown() {
-          return new InputNodeField(schema.jsonb, true)
-        },
         get slug() {
           return new InputNodeField(schema.String, true)
         },
@@ -6380,9 +6273,6 @@ export const schema = {
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
-        get score() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
         get zip() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -6399,9 +6289,6 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
         get zip() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6413,9 +6300,6 @@ export const schema = {
     return new ObjectNode(
       {
         get rating() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get score() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get zip() {
@@ -6434,9 +6318,6 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
         get zip() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6448,9 +6329,6 @@ export const schema = {
     return new ObjectNode(
       {
         get rating() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get score() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get zip() {
@@ -6469,9 +6347,6 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
         get zip() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6483,9 +6358,6 @@ export const schema = {
     return new ObjectNode(
       {
         get rating() {
-          return new FieldNode(schema.numeric, undefined, true)
-        },
-        get score() {
           return new FieldNode(schema.numeric, undefined, true)
         },
         get zip() {
@@ -6502,9 +6374,6 @@ export const schema = {
     return new InputNode(
       {
         get rating() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get score() {
           return new InputNodeField(schema.order_by, true)
         },
         get zip() {
@@ -6599,20 +6468,6 @@ export const schema = {
               },
             }),
             false
-          )
-        },
-        get score() {
-          return new FieldNode(schema.numeric, undefined, true)
-        },
-        get score_breakdown() {
-          return new FieldNode(
-            schema.jsonb,
-            new Arguments({
-              get path() {
-                return new ArgumentsField(schema.String, true)
-              },
-            }),
-            true
           )
         },
         get tag() {
@@ -6810,9 +6665,6 @@ export const schema = {
         get photos() {
           return new InputNodeField(schema.jsonb, true)
         },
-        get score_breakdown() {
-          return new InputNodeField(schema.jsonb, true)
-        },
       },
       { name: 'restaurant_tag_append_input' }
     )
@@ -6842,9 +6694,6 @@ export const schema = {
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
-        get score() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
       },
       {
         name: 'restaurant_tag_avg_fields',
@@ -6859,9 +6708,6 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get rating() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get score() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -6907,12 +6753,6 @@ export const schema = {
         get reviews() {
           return new InputNodeField(schema.review_bool_exp, true)
         },
-        get score() {
-          return new InputNodeField(schema.numeric_comparison_exp, true)
-        },
-        get score_breakdown() {
-          return new InputNodeField(schema.jsonb_comparison_exp, true)
-        },
         get tag() {
           return new InputNodeField(schema.tag_bool_exp, true)
         },
@@ -6932,9 +6772,6 @@ export const schema = {
         get photos() {
           return new InputNodeField(new ArrayNode(schema.String, true), true)
         },
-        get score_breakdown() {
-          return new InputNodeField(new ArrayNode(schema.String, true), true)
-        },
       },
       { name: 'restaurant_tag_delete_at_path_input' }
     )
@@ -6945,9 +6782,6 @@ export const schema = {
         get photos() {
           return new InputNodeField(schema.Int, true)
         },
-        get score_breakdown() {
-          return new InputNodeField(schema.Int, true)
-        },
       },
       { name: 'restaurant_tag_delete_elem_input' }
     )
@@ -6956,9 +6790,6 @@ export const schema = {
     return new InputNode(
       {
         get photos() {
-          return new InputNodeField(schema.String, true)
-        },
-        get score_breakdown() {
           return new InputNodeField(schema.String, true)
         },
       },
@@ -6972,9 +6803,6 @@ export const schema = {
           return new InputNodeField(schema.Int, true)
         },
         get rating() {
-          return new InputNodeField(schema.numeric, true)
-        },
-        get score() {
           return new InputNodeField(schema.numeric, true)
         },
       },
@@ -7008,12 +6836,6 @@ export const schema = {
         get reviews() {
           return new InputNodeField(schema.review_arr_rel_insert_input, true)
         },
-        get score() {
-          return new InputNodeField(schema.numeric, true)
-        },
-        get score_breakdown() {
-          return new InputNodeField(schema.jsonb, true)
-        },
         get tag() {
           return new InputNodeField(schema.tag_obj_rel_insert_input, true)
         },
@@ -7038,9 +6860,6 @@ export const schema = {
         },
         get restaurant_id() {
           return new FieldNode(schema.uuid, undefined, true)
-        },
-        get score() {
-          return new FieldNode(schema.numeric, undefined, true)
         },
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, true)
@@ -7067,9 +6886,6 @@ export const schema = {
         get restaurant_id() {
           return new InputNodeField(schema.order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
         get tag_id() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7091,9 +6907,6 @@ export const schema = {
         },
         get restaurant_id() {
           return new FieldNode(schema.uuid, undefined, true)
-        },
-        get score() {
-          return new FieldNode(schema.numeric, undefined, true)
         },
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, true)
@@ -7118,9 +6931,6 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get restaurant_id() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get score() {
           return new InputNodeField(schema.order_by, true)
         },
         get tag_id() {
@@ -7206,12 +7016,6 @@ export const schema = {
         get reviews_aggregate() {
           return new InputNodeField(schema.review_aggregate_order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get score_breakdown() {
-          return new InputNodeField(schema.order_by, true)
-        },
         get tag() {
           return new InputNodeField(schema.tag_order_by, true)
         },
@@ -7241,9 +7045,6 @@ export const schema = {
         get photos() {
           return new InputNodeField(schema.jsonb, true)
         },
-        get score_breakdown() {
-          return new InputNodeField(schema.jsonb, true)
-        },
       },
       { name: 'restaurant_tag_prepend_input' }
     )
@@ -7269,12 +7070,6 @@ export const schema = {
         get restaurant_id() {
           return new InputNodeField(schema.uuid, true)
         },
-        get score() {
-          return new InputNodeField(schema.numeric, true)
-        },
-        get score_breakdown() {
-          return new InputNodeField(schema.jsonb, true)
-        },
         get tag_id() {
           return new InputNodeField(schema.uuid, true)
         },
@@ -7289,9 +7084,6 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get rating() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get score() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -7310,9 +7102,6 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
       },
       { name: 'restaurant_tag_stddev_order_by' }
     )
@@ -7324,9 +7113,6 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get rating() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get score() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -7345,9 +7131,6 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
       },
       { name: 'restaurant_tag_stddev_pop_order_by' }
     )
@@ -7359,9 +7142,6 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get rating() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get score() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -7381,9 +7161,6 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
       },
       { name: 'restaurant_tag_stddev_samp_order_by' }
     )
@@ -7395,9 +7172,6 @@ export const schema = {
           return new FieldNode(schema.Int, undefined, true)
         },
         get rating() {
-          return new FieldNode(schema.numeric, undefined, true)
-        },
-        get score() {
           return new FieldNode(schema.numeric, undefined, true)
         },
       },
@@ -7416,9 +7190,6 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
       },
       { name: 'restaurant_tag_sum_order_by' }
     )
@@ -7433,9 +7204,6 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get rating() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get score() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -7454,9 +7222,6 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
       },
       { name: 'restaurant_tag_var_pop_order_by' }
     )
@@ -7468,9 +7233,6 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get rating() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get score() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -7489,9 +7251,6 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
       },
       { name: 'restaurant_tag_var_samp_order_by' }
     )
@@ -7503,9 +7262,6 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get rating() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get score() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -7522,9 +7278,6 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get rating() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get score() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -7550,9 +7303,6 @@ export const schema = {
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
-        get score() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
         get zip() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -7569,9 +7319,6 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
         get zip() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7583,9 +7330,6 @@ export const schema = {
     return new ObjectNode(
       {
         get rating() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get score() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get zip() {
@@ -7604,9 +7348,6 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
-        get score() {
-          return new InputNodeField(schema.order_by, true)
-        },
         get zip() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7618,9 +7359,6 @@ export const schema = {
     return new ObjectNode(
       {
         get rating() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get score() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get zip() {
@@ -7637,9 +7375,6 @@ export const schema = {
     return new InputNode(
       {
         get rating() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get score() {
           return new InputNodeField(schema.order_by, true)
         },
         get zip() {
@@ -7689,11 +7424,11 @@ export const schema = {
         },
         get sentiments() {
           return new FieldNode(
-            new ArrayNode(schema.review_tag_sentence, false),
+            new ArrayNode(schema.review_tag, false),
             new Arguments({
               get distinct_on() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.review_tag_sentence_select_column, true),
+                  new ArrayNode(schema.review_tag_select_column, true),
                   true
                 )
               },
@@ -7705,15 +7440,12 @@ export const schema = {
               },
               get order_by() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.review_tag_sentence_order_by, true),
+                  new ArrayNode(schema.review_tag_order_by, true),
                   true
                 )
               },
               get where() {
-                return new ArgumentsField(
-                  schema.review_tag_sentence_bool_exp,
-                  true
-                )
+                return new ArgumentsField(schema.review_tag_bool_exp, true)
               },
             }),
             false
@@ -7721,11 +7453,11 @@ export const schema = {
         },
         get sentiments_aggregate() {
           return new FieldNode(
-            schema.review_tag_sentence_aggregate,
+            schema.review_tag_aggregate,
             new Arguments({
               get distinct_on() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.review_tag_sentence_select_column, true),
+                  new ArrayNode(schema.review_tag_select_column, true),
                   true
                 )
               },
@@ -7737,28 +7469,25 @@ export const schema = {
               },
               get order_by() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.review_tag_sentence_order_by, true),
+                  new ArrayNode(schema.review_tag_order_by, true),
                   true
                 )
               },
               get where() {
-                return new ArgumentsField(
-                  schema.review_tag_sentence_bool_exp,
-                  true
-                )
+                return new ArgumentsField(schema.review_tag_bool_exp, true)
               },
             }),
             false
           )
         },
         get source() {
-          return new FieldNode(schema.String, undefined, false)
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get tag() {
+          return new FieldNode(schema.tag, undefined, true)
         },
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, true)
-        },
-        get taxonomy() {
-          return new FieldNode(schema.tag, undefined, true)
         },
         get text() {
           return new FieldNode(schema.String, undefined, true)
@@ -7995,16 +7724,16 @@ export const schema = {
           return new InputNodeField(schema.uuid_comparison_exp, true)
         },
         get sentiments() {
-          return new InputNodeField(schema.review_tag_sentence_bool_exp, true)
+          return new InputNodeField(schema.review_tag_bool_exp, true)
         },
         get source() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
+        get tag() {
+          return new InputNodeField(schema.tag_bool_exp, true)
+        },
         get tag_id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
-        },
-        get taxonomy() {
-          return new InputNodeField(schema.tag_bool_exp, true)
         },
         get text() {
           return new InputNodeField(schema.String_comparison_exp, true)
@@ -8103,18 +7832,18 @@ export const schema = {
         },
         get sentiments() {
           return new InputNodeField(
-            schema.review_tag_sentence_arr_rel_insert_input,
+            schema.review_tag_arr_rel_insert_input,
             true
           )
         },
         get source() {
           return new InputNodeField(schema.String, true)
         },
+        get tag() {
+          return new InputNodeField(schema.tag_obj_rel_insert_input, true)
+        },
         get tag_id() {
           return new InputNodeField(schema.uuid, true)
-        },
-        get taxonomy() {
-          return new InputNodeField(schema.tag_obj_rel_insert_input, true)
         },
         get text() {
           return new InputNodeField(schema.String, true)
@@ -8384,19 +8113,16 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get sentiments_aggregate() {
-          return new InputNodeField(
-            schema.review_tag_sentence_aggregate_order_by,
-            true
-          )
+          return new InputNodeField(schema.review_tag_aggregate_order_by, true)
         },
         get source() {
           return new InputNodeField(schema.order_by, true)
         },
+        get tag() {
+          return new InputNodeField(schema.tag_order_by, true)
+        },
         get tag_id() {
           return new InputNodeField(schema.order_by, true)
-        },
-        get taxonomy() {
-          return new InputNodeField(schema.tag_order_by, true)
         },
         get text() {
           return new InputNodeField(schema.order_by, true)
@@ -8581,17 +8307,11 @@ export const schema = {
       { name: 'review_sum_order_by' }
     )
   },
-  get review_tag_sentence() {
+  get review_tag() {
     return new ObjectNode(
       {
         get id() {
           return new FieldNode(schema.uuid, undefined, false)
-        },
-        get ml_sentiment() {
-          return new FieldNode(schema.numeric, undefined, true)
-        },
-        get naive_sentiment() {
-          return new FieldNode(schema.numeric, undefined, false)
         },
         get review() {
           return new FieldNode(schema.review, undefined, false)
@@ -8602,6 +8322,9 @@ export const schema = {
         get sentence() {
           return new FieldNode(schema.String, undefined, false)
         },
+        get sentiment() {
+          return new FieldNode(schema.numeric, undefined, false)
+        },
         get tag() {
           return new FieldNode(schema.tag, undefined, false)
         },
@@ -8609,45 +8332,38 @@ export const schema = {
           return new FieldNode(schema.uuid, undefined, false)
         },
       },
-      {
-        name: 'review_tag_sentence',
-        extension: ((extensions as any) || {}).review_tag_sentence,
-      }
+      { name: 'review_tag', extension: ((extensions as any) || {}).review_tag }
     )
   },
-  get review_tag_sentence_aggregate() {
+  get review_tag_aggregate() {
     return new ObjectNode(
       {
         get aggregate() {
           return new FieldNode(
-            schema.review_tag_sentence_aggregate_fields,
+            schema.review_tag_aggregate_fields,
             undefined,
             true
           )
         },
         get nodes() {
           return new FieldNode(
-            new ArrayNode(schema.review_tag_sentence, false),
+            new ArrayNode(schema.review_tag, false),
             undefined,
             false
           )
         },
       },
       {
-        name: 'review_tag_sentence_aggregate',
-        extension: ((extensions as any) || {}).review_tag_sentence_aggregate,
+        name: 'review_tag_aggregate',
+        extension: ((extensions as any) || {}).review_tag_aggregate,
       }
     )
   },
-  get review_tag_sentence_aggregate_fields() {
+  get review_tag_aggregate_fields() {
     return new ObjectNode(
       {
         get avg() {
-          return new FieldNode(
-            schema.review_tag_sentence_avg_fields,
-            undefined,
-            true
-          )
+          return new FieldNode(schema.review_tag_avg_fields, undefined, true)
         },
         get count() {
           return new FieldNode(
@@ -8655,7 +8371,7 @@ export const schema = {
             new Arguments({
               get columns() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.review_tag_sentence_select_column, true),
+                  new ArrayNode(schema.review_tag_select_column, true),
                   true
                 )
               },
@@ -8667,220 +8383,161 @@ export const schema = {
           )
         },
         get max() {
-          return new FieldNode(
-            schema.review_tag_sentence_max_fields,
-            undefined,
-            true
-          )
+          return new FieldNode(schema.review_tag_max_fields, undefined, true)
         },
         get min() {
-          return new FieldNode(
-            schema.review_tag_sentence_min_fields,
-            undefined,
-            true
-          )
+          return new FieldNode(schema.review_tag_min_fields, undefined, true)
         },
         get stddev() {
-          return new FieldNode(
-            schema.review_tag_sentence_stddev_fields,
-            undefined,
-            true
-          )
+          return new FieldNode(schema.review_tag_stddev_fields, undefined, true)
         },
         get stddev_pop() {
           return new FieldNode(
-            schema.review_tag_sentence_stddev_pop_fields,
+            schema.review_tag_stddev_pop_fields,
             undefined,
             true
           )
         },
         get stddev_samp() {
           return new FieldNode(
-            schema.review_tag_sentence_stddev_samp_fields,
+            schema.review_tag_stddev_samp_fields,
             undefined,
             true
           )
         },
         get sum() {
-          return new FieldNode(
-            schema.review_tag_sentence_sum_fields,
-            undefined,
-            true
-          )
+          return new FieldNode(schema.review_tag_sum_fields, undefined, true)
         },
         get var_pop() {
           return new FieldNode(
-            schema.review_tag_sentence_var_pop_fields,
+            schema.review_tag_var_pop_fields,
             undefined,
             true
           )
         },
         get var_samp() {
           return new FieldNode(
-            schema.review_tag_sentence_var_samp_fields,
+            schema.review_tag_var_samp_fields,
             undefined,
             true
           )
         },
         get variance() {
           return new FieldNode(
-            schema.review_tag_sentence_variance_fields,
+            schema.review_tag_variance_fields,
             undefined,
             true
           )
         },
       },
       {
-        name: 'review_tag_sentence_aggregate_fields',
-        extension: ((extensions as any) || {})
-          .review_tag_sentence_aggregate_fields,
+        name: 'review_tag_aggregate_fields',
+        extension: ((extensions as any) || {}).review_tag_aggregate_fields,
       }
     )
   },
-  get review_tag_sentence_aggregate_order_by() {
+  get review_tag_aggregate_order_by() {
     return new InputNode(
       {
         get avg() {
-          return new InputNodeField(
-            schema.review_tag_sentence_avg_order_by,
-            true
-          )
+          return new InputNodeField(schema.review_tag_avg_order_by, true)
         },
         get count() {
           return new InputNodeField(schema.order_by, true)
         },
         get max() {
-          return new InputNodeField(
-            schema.review_tag_sentence_max_order_by,
-            true
-          )
+          return new InputNodeField(schema.review_tag_max_order_by, true)
         },
         get min() {
-          return new InputNodeField(
-            schema.review_tag_sentence_min_order_by,
-            true
-          )
+          return new InputNodeField(schema.review_tag_min_order_by, true)
         },
         get stddev() {
-          return new InputNodeField(
-            schema.review_tag_sentence_stddev_order_by,
-            true
-          )
+          return new InputNodeField(schema.review_tag_stddev_order_by, true)
         },
         get stddev_pop() {
-          return new InputNodeField(
-            schema.review_tag_sentence_stddev_pop_order_by,
-            true
-          )
+          return new InputNodeField(schema.review_tag_stddev_pop_order_by, true)
         },
         get stddev_samp() {
           return new InputNodeField(
-            schema.review_tag_sentence_stddev_samp_order_by,
+            schema.review_tag_stddev_samp_order_by,
             true
           )
         },
         get sum() {
-          return new InputNodeField(
-            schema.review_tag_sentence_sum_order_by,
-            true
-          )
+          return new InputNodeField(schema.review_tag_sum_order_by, true)
         },
         get var_pop() {
-          return new InputNodeField(
-            schema.review_tag_sentence_var_pop_order_by,
-            true
-          )
+          return new InputNodeField(schema.review_tag_var_pop_order_by, true)
         },
         get var_samp() {
-          return new InputNodeField(
-            schema.review_tag_sentence_var_samp_order_by,
-            true
-          )
+          return new InputNodeField(schema.review_tag_var_samp_order_by, true)
         },
         get variance() {
-          return new InputNodeField(
-            schema.review_tag_sentence_variance_order_by,
-            true
-          )
+          return new InputNodeField(schema.review_tag_variance_order_by, true)
         },
       },
-      { name: 'review_tag_sentence_aggregate_order_by' }
+      { name: 'review_tag_aggregate_order_by' }
     )
   },
-  get review_tag_sentence_arr_rel_insert_input() {
+  get review_tag_arr_rel_insert_input() {
     return new InputNode(
       {
         get data() {
           return new InputNodeField(
-            new ArrayNode(schema.review_tag_sentence_insert_input, false),
+            new ArrayNode(schema.review_tag_insert_input, false),
             false
           )
         },
         get on_conflict() {
-          return new InputNodeField(
-            schema.review_tag_sentence_on_conflict,
-            true
-          )
+          return new InputNodeField(schema.review_tag_on_conflict, true)
         },
       },
-      { name: 'review_tag_sentence_arr_rel_insert_input' }
+      { name: 'review_tag_arr_rel_insert_input' }
     )
   },
-  get review_tag_sentence_avg_fields() {
+  get review_tag_avg_fields() {
     return new ObjectNode(
       {
-        get ml_sentiment() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
       {
-        name: 'review_tag_sentence_avg_fields',
-        extension: ((extensions as any) || {}).review_tag_sentence_avg_fields,
+        name: 'review_tag_avg_fields',
+        extension: ((extensions as any) || {}).review_tag_avg_fields,
       }
     )
   },
-  get review_tag_sentence_avg_order_by() {
+  get review_tag_avg_order_by() {
     return new InputNode(
       {
-        get ml_sentiment() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'review_tag_sentence_avg_order_by' }
+      { name: 'review_tag_avg_order_by' }
     )
   },
-  get review_tag_sentence_bool_exp() {
+  get review_tag_bool_exp() {
     return new InputNode(
       {
         get _and() {
           return new InputNodeField(
-            new ArrayNode(schema.review_tag_sentence_bool_exp, true),
+            new ArrayNode(schema.review_tag_bool_exp, true),
             true
           )
         },
         get _not() {
-          return new InputNodeField(schema.review_tag_sentence_bool_exp, true)
+          return new InputNodeField(schema.review_tag_bool_exp, true)
         },
         get _or() {
           return new InputNodeField(
-            new ArrayNode(schema.review_tag_sentence_bool_exp, true),
+            new ArrayNode(schema.review_tag_bool_exp, true),
             true
           )
         },
         get id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
-        },
-        get ml_sentiment() {
-          return new InputNodeField(schema.numeric_comparison_exp, true)
-        },
-        get naive_sentiment() {
-          return new InputNodeField(schema.numeric_comparison_exp, true)
         },
         get review() {
           return new InputNodeField(schema.review_bool_exp, true)
@@ -8891,6 +8548,9 @@ export const schema = {
         get sentence() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
+        get sentiment() {
+          return new InputNodeField(schema.numeric_comparison_exp, true)
+        },
         get tag() {
           return new InputNodeField(schema.tag_bool_exp, true)
         },
@@ -8898,36 +8558,27 @@ export const schema = {
           return new InputNodeField(schema.uuid_comparison_exp, true)
         },
       },
-      { name: 'review_tag_sentence_bool_exp' }
+      { name: 'review_tag_bool_exp' }
     )
   },
-  get review_tag_sentence_constraint() {
-    return new EnumNode({ name: 'review_tag_sentence_constraint' })
+  get review_tag_constraint() {
+    return new EnumNode({ name: 'review_tag_constraint' })
   },
-  get review_tag_sentence_inc_input() {
+  get review_tag_inc_input() {
     return new InputNode(
       {
-        get ml_sentiment() {
-          return new InputNodeField(schema.numeric, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new InputNodeField(schema.numeric, true)
         },
       },
-      { name: 'review_tag_sentence_inc_input' }
+      { name: 'review_tag_inc_input' }
     )
   },
-  get review_tag_sentence_insert_input() {
+  get review_tag_insert_input() {
     return new InputNode(
       {
         get id() {
           return new InputNodeField(schema.uuid, true)
-        },
-        get ml_sentiment() {
-          return new InputNodeField(schema.numeric, true)
-        },
-        get naive_sentiment() {
-          return new InputNodeField(schema.numeric, true)
         },
         get review() {
           return new InputNodeField(schema.review_obj_rel_insert_input, true)
@@ -8938,6 +8589,9 @@ export const schema = {
         get sentence() {
           return new InputNodeField(schema.String, true)
         },
+        get sentiment() {
+          return new InputNodeField(schema.numeric, true)
+        },
         get tag() {
           return new InputNodeField(schema.tag_obj_rel_insert_input, true)
         },
@@ -8945,20 +8599,14 @@ export const schema = {
           return new InputNodeField(schema.uuid, true)
         },
       },
-      { name: 'review_tag_sentence_insert_input' }
+      { name: 'review_tag_insert_input' }
     )
   },
-  get review_tag_sentence_max_fields() {
+  get review_tag_max_fields() {
     return new ObjectNode(
       {
         get id() {
           return new FieldNode(schema.uuid, undefined, true)
-        },
-        get ml_sentiment() {
-          return new FieldNode(schema.numeric, undefined, true)
-        },
-        get naive_sentiment() {
-          return new FieldNode(schema.numeric, undefined, true)
         },
         get review_id() {
           return new FieldNode(schema.uuid, undefined, true)
@@ -8966,26 +8614,23 @@ export const schema = {
         get sentence() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get sentiment() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, true)
         },
       },
       {
-        name: 'review_tag_sentence_max_fields',
-        extension: ((extensions as any) || {}).review_tag_sentence_max_fields,
+        name: 'review_tag_max_fields',
+        extension: ((extensions as any) || {}).review_tag_max_fields,
       }
     )
   },
-  get review_tag_sentence_max_order_by() {
+  get review_tag_max_order_by() {
     return new InputNode(
       {
         get id() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get ml_sentiment() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get naive_sentiment() {
           return new InputNodeField(schema.order_by, true)
         },
         get review_id() {
@@ -8994,24 +8639,21 @@ export const schema = {
         get sentence() {
           return new InputNodeField(schema.order_by, true)
         },
+        get sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get tag_id() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'review_tag_sentence_max_order_by' }
+      { name: 'review_tag_max_order_by' }
     )
   },
-  get review_tag_sentence_min_fields() {
+  get review_tag_min_fields() {
     return new ObjectNode(
       {
         get id() {
           return new FieldNode(schema.uuid, undefined, true)
-        },
-        get ml_sentiment() {
-          return new FieldNode(schema.numeric, undefined, true)
-        },
-        get naive_sentiment() {
-          return new FieldNode(schema.numeric, undefined, true)
         },
         get review_id() {
           return new FieldNode(schema.uuid, undefined, true)
@@ -9019,26 +8661,23 @@ export const schema = {
         get sentence() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get sentiment() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, true)
         },
       },
       {
-        name: 'review_tag_sentence_min_fields',
-        extension: ((extensions as any) || {}).review_tag_sentence_min_fields,
+        name: 'review_tag_min_fields',
+        extension: ((extensions as any) || {}).review_tag_min_fields,
       }
     )
   },
-  get review_tag_sentence_min_order_by() {
+  get review_tag_min_order_by() {
     return new InputNode(
       {
         get id() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get ml_sentiment() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get naive_sentiment() {
           return new InputNodeField(schema.order_by, true)
         },
         get review_id() {
@@ -9047,14 +8686,17 @@ export const schema = {
         get sentence() {
           return new InputNodeField(schema.order_by, true)
         },
+        get sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get tag_id() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'review_tag_sentence_min_order_by' }
+      { name: 'review_tag_min_order_by' }
     )
   },
-  get review_tag_sentence_mutation_response() {
+  get review_tag_mutation_response() {
     return new ObjectNode(
       {
         get affected_rows() {
@@ -9062,70 +8704,54 @@ export const schema = {
         },
         get returning() {
           return new FieldNode(
-            new ArrayNode(schema.review_tag_sentence, false),
+            new ArrayNode(schema.review_tag, false),
             undefined,
             false
           )
         },
       },
       {
-        name: 'review_tag_sentence_mutation_response',
-        extension: ((extensions as any) || {})
-          .review_tag_sentence_mutation_response,
+        name: 'review_tag_mutation_response',
+        extension: ((extensions as any) || {}).review_tag_mutation_response,
       }
     )
   },
-  get review_tag_sentence_obj_rel_insert_input() {
+  get review_tag_obj_rel_insert_input() {
     return new InputNode(
       {
         get data() {
-          return new InputNodeField(
-            schema.review_tag_sentence_insert_input,
-            false
-          )
+          return new InputNodeField(schema.review_tag_insert_input, false)
         },
         get on_conflict() {
-          return new InputNodeField(
-            schema.review_tag_sentence_on_conflict,
-            true
-          )
+          return new InputNodeField(schema.review_tag_on_conflict, true)
         },
       },
-      { name: 'review_tag_sentence_obj_rel_insert_input' }
+      { name: 'review_tag_obj_rel_insert_input' }
     )
   },
-  get review_tag_sentence_on_conflict() {
+  get review_tag_on_conflict() {
     return new InputNode(
       {
         get constraint() {
-          return new InputNodeField(
-            schema.review_tag_sentence_constraint,
-            false
-          )
+          return new InputNodeField(schema.review_tag_constraint, false)
         },
         get update_columns() {
           return new InputNodeField(
-            new ArrayNode(schema.review_tag_sentence_update_column, false),
+            new ArrayNode(schema.review_tag_update_column, false),
             false
           )
         },
         get where() {
-          return new InputNodeField(schema.review_tag_sentence_bool_exp, true)
+          return new InputNodeField(schema.review_tag_bool_exp, true)
         },
       },
-      { name: 'review_tag_sentence_on_conflict' }
+      { name: 'review_tag_on_conflict' }
     )
   },
-  get review_tag_sentence_order_by() {
+  get review_tag_order_by() {
     return new InputNode(
       {
         get id() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get ml_sentiment() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get naive_sentiment() {
           return new InputNodeField(schema.order_by, true)
         },
         get review() {
@@ -9137,6 +8763,9 @@ export const schema = {
         get sentence() {
           return new InputNodeField(schema.order_by, true)
         },
+        get sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get tag() {
           return new InputNodeField(schema.tag_order_by, true)
         },
@@ -9144,33 +8773,27 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'review_tag_sentence_order_by' }
+      { name: 'review_tag_order_by' }
     )
   },
-  get review_tag_sentence_pk_columns_input() {
+  get review_tag_pk_columns_input() {
     return new InputNode(
       {
         get id() {
           return new InputNodeField(schema.uuid, false)
         },
       },
-      { name: 'review_tag_sentence_pk_columns_input' }
+      { name: 'review_tag_pk_columns_input' }
     )
   },
-  get review_tag_sentence_select_column() {
-    return new EnumNode({ name: 'review_tag_sentence_select_column' })
+  get review_tag_select_column() {
+    return new EnumNode({ name: 'review_tag_select_column' })
   },
-  get review_tag_sentence_set_input() {
+  get review_tag_set_input() {
     return new InputNode(
       {
         get id() {
           return new InputNodeField(schema.uuid, true)
-        },
-        get ml_sentiment() {
-          return new InputNodeField(schema.numeric, true)
-        },
-        get naive_sentiment() {
-          return new InputNodeField(schema.numeric, true)
         },
         get review_id() {
           return new InputNodeField(schema.uuid, true)
@@ -9178,223 +8801,178 @@ export const schema = {
         get sentence() {
           return new InputNodeField(schema.String, true)
         },
+        get sentiment() {
+          return new InputNodeField(schema.numeric, true)
+        },
         get tag_id() {
           return new InputNodeField(schema.uuid, true)
         },
       },
-      { name: 'review_tag_sentence_set_input' }
+      { name: 'review_tag_set_input' }
     )
   },
-  get review_tag_sentence_stddev_fields() {
+  get review_tag_stddev_fields() {
     return new ObjectNode(
       {
-        get ml_sentiment() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
       {
-        name: 'review_tag_sentence_stddev_fields',
-        extension: ((extensions as any) || {})
-          .review_tag_sentence_stddev_fields,
+        name: 'review_tag_stddev_fields',
+        extension: ((extensions as any) || {}).review_tag_stddev_fields,
       }
     )
   },
-  get review_tag_sentence_stddev_order_by() {
+  get review_tag_stddev_order_by() {
     return new InputNode(
       {
-        get ml_sentiment() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'review_tag_sentence_stddev_order_by' }
+      { name: 'review_tag_stddev_order_by' }
     )
   },
-  get review_tag_sentence_stddev_pop_fields() {
+  get review_tag_stddev_pop_fields() {
     return new ObjectNode(
       {
-        get ml_sentiment() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
       {
-        name: 'review_tag_sentence_stddev_pop_fields',
-        extension: ((extensions as any) || {})
-          .review_tag_sentence_stddev_pop_fields,
+        name: 'review_tag_stddev_pop_fields',
+        extension: ((extensions as any) || {}).review_tag_stddev_pop_fields,
       }
     )
   },
-  get review_tag_sentence_stddev_pop_order_by() {
+  get review_tag_stddev_pop_order_by() {
     return new InputNode(
       {
-        get ml_sentiment() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'review_tag_sentence_stddev_pop_order_by' }
+      { name: 'review_tag_stddev_pop_order_by' }
     )
   },
-  get review_tag_sentence_stddev_samp_fields() {
+  get review_tag_stddev_samp_fields() {
     return new ObjectNode(
       {
-        get ml_sentiment() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
       {
-        name: 'review_tag_sentence_stddev_samp_fields',
-        extension: ((extensions as any) || {})
-          .review_tag_sentence_stddev_samp_fields,
+        name: 'review_tag_stddev_samp_fields',
+        extension: ((extensions as any) || {}).review_tag_stddev_samp_fields,
       }
     )
   },
-  get review_tag_sentence_stddev_samp_order_by() {
+  get review_tag_stddev_samp_order_by() {
     return new InputNode(
       {
-        get ml_sentiment() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'review_tag_sentence_stddev_samp_order_by' }
+      { name: 'review_tag_stddev_samp_order_by' }
     )
   },
-  get review_tag_sentence_sum_fields() {
+  get review_tag_sum_fields() {
     return new ObjectNode(
       {
-        get ml_sentiment() {
-          return new FieldNode(schema.numeric, undefined, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new FieldNode(schema.numeric, undefined, true)
         },
       },
       {
-        name: 'review_tag_sentence_sum_fields',
-        extension: ((extensions as any) || {}).review_tag_sentence_sum_fields,
+        name: 'review_tag_sum_fields',
+        extension: ((extensions as any) || {}).review_tag_sum_fields,
       }
     )
   },
-  get review_tag_sentence_sum_order_by() {
+  get review_tag_sum_order_by() {
     return new InputNode(
       {
-        get ml_sentiment() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'review_tag_sentence_sum_order_by' }
+      { name: 'review_tag_sum_order_by' }
     )
   },
-  get review_tag_sentence_update_column() {
-    return new EnumNode({ name: 'review_tag_sentence_update_column' })
+  get review_tag_update_column() {
+    return new EnumNode({ name: 'review_tag_update_column' })
   },
-  get review_tag_sentence_var_pop_fields() {
+  get review_tag_var_pop_fields() {
     return new ObjectNode(
       {
-        get ml_sentiment() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
       {
-        name: 'review_tag_sentence_var_pop_fields',
-        extension: ((extensions as any) || {})
-          .review_tag_sentence_var_pop_fields,
+        name: 'review_tag_var_pop_fields',
+        extension: ((extensions as any) || {}).review_tag_var_pop_fields,
       }
     )
   },
-  get review_tag_sentence_var_pop_order_by() {
+  get review_tag_var_pop_order_by() {
     return new InputNode(
       {
-        get ml_sentiment() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'review_tag_sentence_var_pop_order_by' }
+      { name: 'review_tag_var_pop_order_by' }
     )
   },
-  get review_tag_sentence_var_samp_fields() {
+  get review_tag_var_samp_fields() {
     return new ObjectNode(
       {
-        get ml_sentiment() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
       {
-        name: 'review_tag_sentence_var_samp_fields',
-        extension: ((extensions as any) || {})
-          .review_tag_sentence_var_samp_fields,
+        name: 'review_tag_var_samp_fields',
+        extension: ((extensions as any) || {}).review_tag_var_samp_fields,
       }
     )
   },
-  get review_tag_sentence_var_samp_order_by() {
+  get review_tag_var_samp_order_by() {
     return new InputNode(
       {
-        get ml_sentiment() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'review_tag_sentence_var_samp_order_by' }
+      { name: 'review_tag_var_samp_order_by' }
     )
   },
-  get review_tag_sentence_variance_fields() {
+  get review_tag_variance_fields() {
     return new ObjectNode(
       {
-        get ml_sentiment() {
-          return new FieldNode(schema.Float, undefined, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
       {
-        name: 'review_tag_sentence_variance_fields',
-        extension: ((extensions as any) || {})
-          .review_tag_sentence_variance_fields,
+        name: 'review_tag_variance_fields',
+        extension: ((extensions as any) || {}).review_tag_variance_fields,
       }
     )
   },
-  get review_tag_sentence_variance_order_by() {
+  get review_tag_variance_order_by() {
     return new InputNode(
       {
-        get ml_sentiment() {
-          return new InputNodeField(schema.order_by, true)
-        },
-        get naive_sentiment() {
+        get sentiment() {
           return new InputNodeField(schema.order_by, true)
         },
       },
-      { name: 'review_tag_sentence_variance_order_by' }
+      { name: 'review_tag_variance_order_by' }
     )
   },
   get review_update_column() {
@@ -10429,13 +10007,13 @@ export const schema = {
             true
           )
         },
-        get review_tag_sentence() {
+        get review_tag() {
           return new FieldNode(
-            new ArrayNode(schema.review_tag_sentence, false),
+            new ArrayNode(schema.review_tag, false),
             new Arguments({
               get distinct_on() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.review_tag_sentence_select_column, true),
+                  new ArrayNode(schema.review_tag_select_column, true),
                   true
                 )
               },
@@ -10447,27 +10025,24 @@ export const schema = {
               },
               get order_by() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.review_tag_sentence_order_by, true),
+                  new ArrayNode(schema.review_tag_order_by, true),
                   true
                 )
               },
               get where() {
-                return new ArgumentsField(
-                  schema.review_tag_sentence_bool_exp,
-                  true
-                )
+                return new ArgumentsField(schema.review_tag_bool_exp, true)
               },
             }),
             false
           )
         },
-        get review_tag_sentence_aggregate() {
+        get review_tag_aggregate() {
           return new FieldNode(
-            schema.review_tag_sentence_aggregate,
+            schema.review_tag_aggregate,
             new Arguments({
               get distinct_on() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.review_tag_sentence_select_column, true),
+                  new ArrayNode(schema.review_tag_select_column, true),
                   true
                 )
               },
@@ -10479,23 +10054,20 @@ export const schema = {
               },
               get order_by() {
                 return new ArgumentsField(
-                  new ArrayNode(schema.review_tag_sentence_order_by, true),
+                  new ArrayNode(schema.review_tag_order_by, true),
                   true
                 )
               },
               get where() {
-                return new ArgumentsField(
-                  schema.review_tag_sentence_bool_exp,
-                  true
-                )
+                return new ArgumentsField(schema.review_tag_bool_exp, true)
               },
             }),
             false
           )
         },
-        get review_tag_sentence_by_pk() {
+        get review_tag_by_pk() {
           return new FieldNode(
-            schema.review_tag_sentence,
+            schema.review_tag,
             new Arguments(
               {
                 get id() {

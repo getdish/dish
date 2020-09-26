@@ -17,6 +17,10 @@ export class ScrollStore extends Store {
 
 export let isScrollAtTop = true
 
+export function setIsScrollAtTop(val: boolean) {
+  isScrollAtTop = val
+}
+
 export const ContentScrollView = forwardRef(
   (
     {

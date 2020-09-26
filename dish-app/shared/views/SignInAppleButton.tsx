@@ -1,4 +1,3 @@
-// debug
 import { HStack, Text, VStack } from '@dish/ui'
 import React from 'react'
 

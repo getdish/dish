@@ -1,5 +1,11 @@
 import { RestaurantQuery } from '@dish/graph'
 
+import { isNative } from '../../constants'
+
 export const useTotalReviews = (restaurant: RestaurantQuery) => {
-  return restaurant.reviews_aggregate.aggregate.count() ?? 0
+  if (isNative) {
+    return 0
+  }
+  const agg = restaurant.reviews_aggregate
+  return agg().aggregate.count() ?? 0
 }

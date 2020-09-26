@@ -52,6 +52,7 @@ import {
 import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
+import { setIsScrollAtTop } from '../../views/ContentScrollView'
 import { HomeLenseBar } from '../../views/HomeLenseBar'
 import { StackDrawer } from '../../views/StackDrawer'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
@@ -412,15 +413,21 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
 
     return (
       <ScrollView
-        scrollEventThrottle={80}
+        scrollEventThrottle={100}
         ref={combineRefs(ref, divRef)}
         {...(!isWeb && {
-          onLayout: (event) => {
-            const { width, height } = event.nativeEvent.layout
+          onContentSizeChange: (width, height) => {
+            console.log('setting', width, height)
             onSizeChanged({ width, height })
           },
         })}
         {...props}
+        onScroll={(e) => {
+          const y = e.nativeEvent.contentOffset.y
+          console.log('setting', y)
+          setIsScrollAtTop(y <= 0)
+          props.onScroll?.(e)
+        }}
       >
         <VStack width="100%" height={paddingTop} />
         <HStack

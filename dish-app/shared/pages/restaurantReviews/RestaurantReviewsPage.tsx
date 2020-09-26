@@ -1,4 +1,4 @@
-import { graphql } from '@dish/graph/_'
+import { graphql } from '@dish/graph'
 import {
   AbsoluteVStack,
   LoadingItems,

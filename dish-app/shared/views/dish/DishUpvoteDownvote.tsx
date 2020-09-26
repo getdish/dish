@@ -1,4 +1,5 @@
-import { slugify } from '@dish/graph/_'
+import { slugify } from '@dish/graph'
+import React from 'react'
 
 import { useUserUpvoteDownvoteQuery } from '../../hooks/useUserUpvoteDownvoteQuery'
 import { UpvoteDownvoteScore } from '../UpvoteDownvoteScore'

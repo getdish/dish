@@ -55,8 +55,8 @@ export const useUserReviewsQuery = (restaurantId: string) => {
   const reviews = reviewsQuery
     ? reviewsQuery.map<ReviewWithTag>((review) => {
         const tag = {
-          name: review.taxonomy.name, // TODO rename to tag once migration runs
-          type: review.taxonomy.type,
+          name: review.tag.name,
+          type: review.tag.type,
         }
         return {
           id: review.id,

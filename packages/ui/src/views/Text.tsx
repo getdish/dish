@@ -57,6 +57,7 @@ if (process.env.IS_STATIC) {
 const textNonStylePropReg = /^(allow.*|on[A-Z].*|.*[Mm]ode)/
 const isWeb = Platform.OS === 'web'
 const webOnlyStyleKeys = {
+  userSelect: true,
   hoverStyle: true,
   pressStyle: true,
   className: true,
@@ -121,6 +122,7 @@ const useTextStyle = (allProps: TextProps) => {
 }
 
 const textNonStyleProps = {
+  href: true,
   className: true,
   allowFontScaling: true,
   ellipsizeMode: true,
