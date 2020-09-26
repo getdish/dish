@@ -15,6 +15,7 @@ import { lightRed } from '../colors'
 import { isWeb } from '../constants'
 import { initAppleSigninButton } from '../helpers/initAppleSigninButton'
 import { useOvermind } from '../state/om'
+import { SignInAppleButton } from './SignInAppleButton'
 import { Link } from './ui/Link'
 import { LinkButton } from './ui/LinkButton'
 import { LinkButtonProps } from './ui/LinkProps'
@@ -81,22 +82,7 @@ export const LoginRegisterForm = ({
     <VStack alignItems="center">
       {isWeb && (
         <>
-          <VStack
-            borderRadius={9}
-            borderColor="rgba(255,255,255,0.15)"
-            borderWidth={2}
-            hoverStyle={{
-              borderColor: 'rgba(255,255,255,0.3)',
-            }}
-          >
-            <div
-              id="appleid-signin"
-              className="signin-button"
-              data-color="black"
-              data-border="true"
-              data-type="sign in"
-            ></div>
-          </VStack>
+          <SignInAppleButton />
           <Spacer />
           <HStack width="100%" alignItems="center">
             <VStack
