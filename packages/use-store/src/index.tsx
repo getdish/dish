@@ -34,7 +34,7 @@ export function createUseStore<Props, Store>(
     // super hacky workaround for now, ts is unknown to me tbh
   ): C extends Selector<any, infer B> ? (B extends Object ? B : Store) : Store {
     // @ts-ignore
-    return useStore(StoreKlass, props, selector)
+    return useStore(StoreKlass, props, { selector })
   }
 }
 
@@ -105,8 +105,7 @@ export function useStore<A extends Store<B>, B>(
   if (!cache.get(StoreKlass)) {
     cache.set(StoreKlass, {})
   }
-  const propCache = cache.get(StoreKlass)!
-  propCache[uid] = value
+  cache.get(StoreKlass)![uid] = value
 
   return useStoreInstance(value, cachedSelector)
 }

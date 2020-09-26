@@ -21,7 +21,7 @@ import {
   useDebounceValue,
   useForceUpdate,
 } from '@dish/ui'
-import { Store, useStore } from '@dish/use-store'
+import { Store, useStore, useStoreSelector } from '@dish/use-store'
 import { capitalize, uniqBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
@@ -132,11 +132,13 @@ const AdminTagsPageContent = graphql(() => {
 const TagList = memo(
   graphql(({ type, column }: { type: TagType; column: number }) => {
     // const lastRowIndex = useRowStore({ id: 'tags', column: column - 1 }, x => x.row)
-    const lastRowSelection = useStore(
-      AdminTagStore,
-      null,
-      (store) => store.selectedTagNames[column - 1] ?? ''
-    ) as any
+    const lastRowSelection =
+      (useStoreSelector(
+        AdminTagStore,
+        (store) => store.selectedTagNames[column - 1] ?? ''
+      ) as any) ?? ''
+
+    console.log('lastRowSelection', lastRowSelection)
 
     const [searchRaw, setSearch] = useState('')
     const search = useDebounceValue(searchRaw, 100)
