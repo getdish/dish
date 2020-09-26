@@ -24,8 +24,8 @@ export const Divider = memo(
       <HStack
         flexDirection={vertical ? 'column' : 'row'}
         flex={flex === true ? 1 : 0}
-        width={width ?? (vertical ? 1 : flex == true ? 'auto' : '100%')}
-        height={height ?? (!vertical ? 1 : flex == true ? 'auto' : '100%')}
+        width={width ?? (vertical ? 1 : flex ? 'auto' : '100%')}
+        height={height ?? (!vertical ? 1 : flex ? 'auto' : '100%')}
         {...rest}
       >
         {!noGap && <VStack flex={1} />}

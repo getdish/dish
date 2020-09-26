@@ -28,10 +28,8 @@ export const useLink = (props: LinkProps<any, any>) => {
 
   const onPress = (e: any) => {
     if (isWeb) {
-      // let it naturally go to target="_blank"
-      if (props.target === '_blank') return
-      if (e.metaKey || e.ctrlKey) {
-        window.open(e.currentTarget.href, '_blank')
+      if (props.href || e.metaKey || e.ctrlKey) {
+        window.open(props.href ?? e.currentTarget.href, '_blank')
         return
       }
     }

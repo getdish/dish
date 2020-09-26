@@ -27,7 +27,7 @@ export const SmallTitle = memo(
     const dividerElement = color ? (
       <Divider backgroundColor={color} opacity={0.1} />
     ) : (
-      <Divider flex />
+      <Divider />
     )
     return (
       <VStack alignItems="center" {...rest}>

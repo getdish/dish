@@ -10,17 +10,16 @@ type AProps = React.DetailedHTMLProps<
   HTMLAnchorElement
 >
 
-export type LinkProps<A, B> = Pick<
+export type LinkProps<A, B> = LinkSharedProps & {
+  name?: A
+  params?: B
+  tagName?: string
+}
+
+export type LinkSharedProps = Pick<
   AProps,
   'href' | 'target' | 'children' | 'className' | 'onClick'
-> &
-  LinkSharedProps & {
-    name?: A
-    params?: B
-    tagName?: string
-  }
-
-export type LinkSharedProps = {
+> & {
   tag?: NavigableTag
   tags?: NavigableTag[]
   replace?: boolean
