@@ -389,13 +389,11 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     const lenseColor = useCurrentLenseColor()
     const divRef = useRef<any>()
 
-    useEffect(() => {
-      const node = divRef.current._scrollNodeRef
-      let height = node.clientHeight
-      let width = node.clientWidth
-      onSizeChanged({ width, height })
-
-      if (isWeb) {
+    if (isWeb) {
+      useEffect(() => {
+        const node = divRef.current._scrollNodeRef
+        let height = node.clientHeight
+        let width = node.clientWidth
         const observer = new ResizeObserver((entries) => {
           const entry = entries[0]
           const size = entry.contentRect
@@ -409,13 +407,19 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         return () => {
           observer.disconnect()
         }
-      }
-    }, [])
+      }, [])
+    }
 
     return (
       <ScrollView
         scrollEventThrottle={80}
         ref={combineRefs(ref, divRef)}
+        {...(!isWeb && {
+          onLayout: (event) => {
+            const { width, height } = event.nativeEvent.layout
+            onSizeChanged({ width, height })
+          },
+        })}
         {...props}
       >
         <VStack width="100%" height={paddingTop} />
