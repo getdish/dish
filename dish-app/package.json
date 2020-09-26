@@ -93,7 +93,9 @@
       "@mdx-js/react",
       "@mdx-js/react/**",
       "react-native-animatable",
-      "react-native-animatable/**"
+      "react-native-animatable/**",
+      "recyclerlistview",
+      "recyclerlistview/**"
     ]
   },
   "scripts": {
@@ -184,7 +186,8 @@
     "@react-native-community/blur": "^3.6.0",
     "react-native-safe-area-context": "^3.1.8",
     "@mdx-js/react": "^1.6.17",
-    "react-native-animatable": "^1.3.3"
+    "react-native-animatable": "^1.3.3",
+    "recyclerlistview": "^3.0.0"
   },
   "devDependencies": {
     "@dish/babel-preset": "*",

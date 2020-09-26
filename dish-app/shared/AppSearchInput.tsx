@@ -298,8 +298,11 @@ const SearchCancelButton = memo(() => {
     <VStack
       opacity={isActive ? 0.6 : 0}
       disabled={!isActive}
-      width={44}
-      height={44}
+      width={34}
+      height={34}
+      borderRadius={100}
+      alignItems="center"
+      justifyContent="center"
       backgroundColor="rgba(220,220,220,0.1)"
       onPress={() => {
         if (om.state.home.showAutocomplete) {

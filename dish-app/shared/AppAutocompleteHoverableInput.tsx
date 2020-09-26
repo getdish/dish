@@ -8,10 +8,12 @@ export const AppAutocompleteHoverableInput = ({
   children,
   input,
   autocompleteTarget,
+  backgroundColor,
 }: {
   children: any
   input?: HTMLInputElement | null
   autocompleteTarget: 'search' | 'location'
+  backgroundColor?: string
 }) => {
   const om = useOvermind()
   const tm = useRef<any>(null)
@@ -36,7 +38,9 @@ export const AppAutocompleteHoverableInput = ({
       }}
     >
       <HStack
-        backgroundColor={isSmall ? '#f2f2f2' : 'transparent'}
+        backgroundColor={
+          isSmall ? 'rgba(0,0,0,0.05)' : backgroundColor ?? 'transparent'
+        }
         borderRadius={10}
         width="100%"
       >
