@@ -354,9 +354,10 @@ const SearchResultsContent = (props: Props) => {
     <>
       <PageTitleTag>{title}</PageTitleTag>
       <RecyclerListView
+        style={{ flex: 1 }}
         canChangeSize
         externalScrollView={SearchPageScrollView as any}
-        renderAheadOffset={1000}
+        renderAheadOffset={600}
         rowRenderer={rowRenderer}
         dataProvider={dataProvider}
         layoutProvider={layoutProvider}
@@ -412,7 +413,11 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     }, [])
 
     return (
-      <ScrollView ref={combineRefs(ref, divRef)} {...props}>
+      <ScrollView
+        scrollEventThrottle={80}
+        ref={combineRefs(ref, divRef)}
+        {...props}
+      >
         <VStack width="100%" height={paddingTop} />
         <HStack
           paddingHorizontal={20}
@@ -445,7 +450,9 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         <Suspense fallback={null}>
           <SearchPageResultsInfoBox state={curProps.item} />
         </Suspense>
-        <VStack position="relative">{children}</VStack>
+        <VStack position="relative" flex={1} minHeight={600}>
+          {children}
+        </VStack>
         <Suspense fallback={null}>
           <SearchFooter
             searchState={curProps.item}

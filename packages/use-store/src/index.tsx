@@ -43,7 +43,7 @@ export function createUseStoreSelector<A extends Store<Props>, Props, Selected>(
   selector: Selector<A, Selected>
 ): (props?: Props) => Selected {
   return (props?: Props) => {
-    return useStore(StoreKlass, props, selector) as any
+    return useStore(StoreKlass, props, { selector }) as any
   }
 }
 

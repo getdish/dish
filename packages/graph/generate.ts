@@ -38,7 +38,7 @@ async function run() {
   await Promise.all(
     files.map(
       (file) =>
-        new Promise((res, rej) => {
+        new Promise<void>((res, rej) => {
           let contents = ''
           for (let line of file.contents.split(`\n`)) {
             // export! them

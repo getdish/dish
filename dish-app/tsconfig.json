@@ -22,7 +22,7 @@
     "removeComments": true,
     "typeRoots": [
       "node_modules/@types",
-      "./src/@types",
+      "./types",
       "../../node_modules/@types"
     ],
     "composite": true

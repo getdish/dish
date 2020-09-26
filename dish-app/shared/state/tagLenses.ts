@@ -78,7 +78,7 @@ export const tagDescriptions = {
     plain: 'Good Drinks',
   },
   veg: {
-    dish: 'Vegetarian 🍔',
+    dish: 'The best Vegetarian 🍔',
     cuisine: 'Vegetarian 🍔 Restaurants',
     plain: 'Vegetarian',
   },

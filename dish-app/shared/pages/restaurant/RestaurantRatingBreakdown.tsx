@@ -62,6 +62,7 @@ export const RestaurantRatingBreakdown = memo(
           flex={1}
           maxWidth="100%"
           margin={10}
+          minWidth={300}
           borderWidth={1}
           borderColor="#eee"
           borderRadius={12}

@@ -62,7 +62,12 @@ export const Modal = ({
           justifyContent="center"
           onPress={overlayDismisses ? onRequestClose : undefined}
         >
-          <AnimatedVStack>
+          <AnimatedVStack
+            height={rest.height}
+            width={rest.width}
+            minHeight={rest.minHeight}
+            minWidth={rest.minWidth}
+          >
             <VStack
               backgroundColor="#fff"
               borderRadius={15}
