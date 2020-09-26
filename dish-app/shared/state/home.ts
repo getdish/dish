@@ -327,7 +327,8 @@ const runSearch: AsyncAction<{
   om.actions.home.updateHomeState({
     ...state,
     status: 'complete',
-    results: restaurants.filter(isPresent),
+    // limit to 80 for now
+    results: restaurants.filter(isPresent).slice(0, 80),
   })
 }
 
