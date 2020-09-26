@@ -1,5 +1,6 @@
 import { fullyIdle, series, sleep } from '@dish/async'
 import {
+  SEARCH_DOMAIN,
   TopCuisine,
   getHomeDishes,
   graphql,
@@ -125,6 +126,7 @@ export default memo(function HomePage(props: Props) {
             })
           })
           .catch((err) => {
+            console.log('SEARCH_DOMAIN', SEARCH_DOMAIN)
             console.error('error fetching home', err)
           })
       }
