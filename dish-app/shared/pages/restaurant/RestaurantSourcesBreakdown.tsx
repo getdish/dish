@@ -93,12 +93,14 @@ export const RestaurantSourcesBreakdown = memo(
 
                   <TableCell {...col2Props}>
                     <Text fontSize={14} opacity={0.65}>
-                      {i / 4}
+                      {Math.round(i / 4)}
                     </Text>
                   </TableCell>
 
                   <TableCell {...col3Props}>
-                    <Text fontSize={13}>{+(item.rating ?? 0) * 10}</Text>
+                    <Text fontSize={13}>
+                      {Math.round(+(item.rating ?? 0) * 10)}
+                    </Text>
                   </TableCell>
                 </TableRow>
 
@@ -127,7 +129,9 @@ export const RestaurantSourcesBreakdown = memo(
 
                     <TableCell {...col3Props}>
                       <Text opacity={0.5} fontSize={12}>
-                        {(+(item.rating ?? 0) * 10) / reviewTags.length}
+                        {Math.round(
+                          (+(item.rating ?? 0) * 10) / reviewTags.length
+                        )}
                       </Text>
                     </TableCell>
                   </TableRow>

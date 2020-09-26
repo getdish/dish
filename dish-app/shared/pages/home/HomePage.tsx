@@ -470,13 +470,6 @@ const TopDishesCuisineItem = memo(
 )
 
 let lastHoveredId
-const clearHoveredRestaurant = _.debounce(() => {
-  const hovered = omStatic.state.home.hoveredRestaurant
-  if (hovered && hovered.id == lastHoveredId) {
-    omStatic.actions.home.setHoveredRestaurant(false)
-  }
-}, 200)
-
 const setHoveredRestaurant = _.debounce((val) => {
   omStatic.actions.home.setHoveredRestaurant(val)
 }, 200)
@@ -511,13 +504,17 @@ const TopDishesTrendingRestaurants = memo(
                     restaurantSlug={restaurant.slug ?? ''}
                     onHoverIn={() => {
                       lastHoveredId = restaurant.id
+                      setHoveredRestaurant.cancel()
                       setHoveredRestaurant({
                         id: restaurant.id,
                         slug: restaurant.slug,
                       })
                     }}
                     onHoverOut={() => {
-                      clearHoveredRestaurant()
+                      if (lastHoveredId === restaurant.id) {
+                        setHoveredRestaurant.cancel()
+                        omStatic.actions.home.setHoveredRestaurant(false)
+                      }
                     }}
                   />
                 </HStack>

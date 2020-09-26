@@ -13,7 +13,7 @@ import {
   useDebounce,
   useGet,
 } from '@dish/ui'
-import { useStore } from '@dish/use-store'
+import { useStore, useStoreOnce } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
 
@@ -78,7 +78,7 @@ export const RestaurantListItem = memo(function RestaurantListItem(
     omStatic.actions.home.setHoveredRestaurant,
     50
   )
-  const store = useStore(RestaurantReviewsDisplayStore, {
+  const store = useStoreOnce(RestaurantReviewsDisplayStore, {
     id: props.restaurantId,
   })
 
