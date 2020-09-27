@@ -22,6 +22,7 @@ import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { StackDrawer } from '../../views/StackDrawer'
 import { Link } from '../../views/ui/Link'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
+import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { SmallLinkButton } from '../../views/ui/SmallButton'
 import { StackViewProps } from '../StackViewProps'
 import { RestaurantDetailRow } from './RestaurantDetailRow'
@@ -34,7 +35,7 @@ type Props = StackViewProps<HomeStateItemRestaurant>
 
 export default function HomePageRestaurantContainer(props: Props) {
   return (
-    <StackDrawer closable borderWidth={6} borderColor={bgLight}>
+    <StackDrawer closable>
       <HomePageRestaurant {...props} />
     </StackDrawer>
   )
@@ -87,23 +88,27 @@ const HomePageRestaurant = memo(
               </HStack>
             </VStack>
 
+            <Spacer size="xl" />
+
+            <HStack justifyContent="center">
+              <SlantedTitle fontWeight="700">What it's good at</SlantedTitle>
+            </HStack>
+
             <Spacer />
 
-            <VStack width="100%">
-              <Suspense
-                fallback={
-                  <VStack height={160}>
-                    <LoadingItem />
-                  </VStack>
-                }
-              >
-                <RestaurantDishPhotos
-                  size={160}
-                  restaurantSlug={slug}
-                  restaurantId={restaurant.id ?? undefined}
-                />
-              </Suspense>
-            </VStack>
+            <Suspense
+              fallback={
+                <VStack height={160}>
+                  <LoadingItem />
+                </VStack>
+              }
+            >
+              <RestaurantDishPhotos
+                size={160}
+                restaurantSlug={slug}
+                restaurantId={restaurant.id ?? undefined}
+              />
+            </Suspense>
 
             <Spacer size="xl" />
 
@@ -125,10 +130,11 @@ const HomePageRestaurant = memo(
               </HStack>
             </VStack>
 
-            <Spacer size="md" />
+            <Spacer size="xl" />
 
             <Suspense fallback={null}>
               <RestaurantRatingBreakdown
+                borderless
                 showScoreTable
                 restaurantSlug={slug}
                 restaurantId={restaurant.id}
@@ -138,14 +144,10 @@ const HomePageRestaurant = memo(
             <Spacer size="xl" />
 
             <VStack flex={1} marginBottom={20} width="100%">
-              <VStack
-                margin={3}
-                borderWidth={1}
-                borderColor="#eee"
-                borderRadius={10}
-                padding={10}
-              >
-                <SmallTitle divider="off">Menu</SmallTitle>
+              <VStack margin={3} borderRadius={10} padding={10}>
+                <SlantedTitle fontWeight="700" alignSelf="center">
+                  Menu
+                </SlantedTitle>
                 <Spacer />
                 <Suspense fallback={null}>
                   <RestaurantMenu restaurantSlug={slug} />
@@ -157,7 +159,10 @@ const HomePageRestaurant = memo(
 
             <VStack maxWidth="100%">
               <VStack paddingHorizontal={10}>
-                <SmallTitle>Images</SmallTitle>
+                <SlantedTitle fontWeight="700" alignSelf="center">
+                  Images
+                </SlantedTitle>
+                <Spacer />
                 <HStack
                   width="100%"
                   flexWrap="wrap"

@@ -28,12 +28,14 @@ export const RestaurantRatingBreakdown = memo(
     restaurantId,
     restaurantSlug,
     closable,
+    borderless,
     showScoreTable,
   }: {
     restaurantId: string
     restaurantSlug: string
     closable?: boolean
     showScoreTable?: boolean
+    borderless?: boolean
   }) => {
     const isSmall = useIsNarrow()
     const store = useStore(RestaurantReviewsDisplayStore, { id: restaurantId })
@@ -46,9 +48,7 @@ export const RestaurantRatingBreakdown = memo(
         position="relative"
       >
         <HStack marginBottom={-20} alignItems="center" justifyContent="center">
-          <SlantedTitle fontSize={18} fontWeight="600">
-            Reviews
-          </SlantedTitle>
+          <SlantedTitle fontWeight="700">Reviews</SlantedTitle>
         </HStack>
         {closable && (
           <AbsoluteVStack zIndex={1000} top={10} right={6}>
@@ -63,7 +63,7 @@ export const RestaurantRatingBreakdown = memo(
           maxWidth="100%"
           margin={10}
           minWidth={300}
-          borderWidth={1}
+          borderWidth={borderless ? 0 : 1}
           borderColor="#eee"
           borderRadius={12}
           paddingVertical={18}
@@ -99,7 +99,7 @@ export const RestaurantRatingBreakdown = memo(
 
           <VStack
             minWidth={260}
-            maxWidth={drawerWidthMax / 2 - 40}
+            // maxWidth={drawerWidthMax / 2 - 40}
             flex={2}
             overflow="hidden"
             paddingHorizontal={10}
