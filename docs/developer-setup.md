@@ -29,7 +29,7 @@ All Dish's credentials are stored in `.env.enc.production.yaml`. Even third-part
 You can avoid copy-pasting environment variables using this:
 
 ```
-eval $(./bin/yaml_to_env.sh) some_command_that_needs_dish_ENV
+eval $(./dishctl.sh yaml_to_env) some_command_that_needs_dish_ENV
 ```
 
 ## Core Stack
@@ -224,7 +224,7 @@ A platform-specific load balancer will be created outside the Kubernetes cluster
 
 #### Deploying
 
-In order to synchronise shared credentials between Terraform and Rio, Terraform's deploy command must use `bin/yaml_to_env.sh` to provide the necessary ENV vars. So the deployment command, from the `k8s/` path is `eval $(../bin/yaml_to_env.sh) terraform apply`.
+In order to synchronise shared credentials between Terraform and Rio, Terraform's deploy command must use `./dishctl.sh yaml_to_env` to provide the necessary ENV vars. So the deployment command, from the `k8s/` path is `eval $(./dishctl.sh yaml_to_env) terraform apply`.
 
 #### Notes on creating a new cluster
 When setting up a Blue/Green cluster, I found that:

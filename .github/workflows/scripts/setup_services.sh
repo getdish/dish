@@ -49,7 +49,7 @@ docker-compose down
 
 # Exclude the base service, as that's just a dev convienience to build the base image
 services=$(docker-compose config --services | grep -v base | tr '\r\n' ' ')
-eval $(bin/yaml_to_env.sh) docker-compose up -d $services
+eval $(./dishctl yaml_to_env) docker-compose up -d $services
 
 if ! timeout --preserve-status 20 bash -c wait_until_hasura_ready; then
   echo "Timed out waiting for Hasura container to start"

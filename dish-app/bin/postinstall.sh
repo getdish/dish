@@ -1,11 +1,13 @@
 #!/bin/bash
 set -e
 
-pushd "$(dirname "$0")/.."
-yarn patch-package
+PROJECT_ROOT="$(dirname "$0")/../.."
 
 if [ "$DISH_LINK_RN_MODULES" != "false" ]; then
-  (cd dish-app && yarn patch-package)
+  pushd $PROJECT_ROOT/dish-app
+  yarn patch-package
+  popd
+  pushd $PROJECT_ROOT
   rm -r ./node_modules/react-native || true
   rm -r ./node_modules/react || true
   rm -r ./node_modules/react-dom || true
@@ -18,6 +20,6 @@ if [ "$DISH_LINK_RN_MODULES" != "false" ]; then
   ln -s $(realpath ./dish-app/node_modules/react-native-web) ./node_modules
   yarn build:refs
   yarn expo:check-deps
+  popd
 fi
 
-popd

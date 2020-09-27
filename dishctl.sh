@@ -4,21 +4,6 @@ PG_PROXY_PID=
 TS_PROXY_PID=
 REDIS_PROXY_PID=
 
-if command -v git &> /dev/null; then
-  PROJECT_ROOT=$(git rev-parse --show-toplevel)
-  pushd $PROJECT_ROOT
-    if [ -f "env.enc.production.yaml" ]; then
-      export all_env="$(bin/yaml_to_env.sh)"
-      eval "$all_env"
-    else
-      echo "Not loading ENV from env.enc.production.yaml as it doesn't exist"
-    fi
-  popd
-else
-  echo "Not loading ENV from env.enc.production.yaml as there's no \`git\` command"
-  export all_env="$(env)"
-fi
-
 function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
 }
@@ -611,6 +596,44 @@ function list_node_taints() {
     -o 'custom-columns=NAME:.metadata.name,TAINTS:.spec.taints' \
     --no-headers
 }
+
+# Many thanks to Stefan Farestam
+# https://stackoverflow.com/a/21189044/575773
+function parse_yaml {
+   local prefix=$2
+   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
+   sed -ne "s|^\($s\):|\1|" \
+        -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
+        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
+   awk -F$fs '{
+      indent = length($1)/2;
+      vname[indent] = $2;
+      for (i in vname) {if (i > indent) {delete vname[i]}}
+      if (length($3) > 0) {
+         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
+      }
+   }'
+}
+
+function yaml_to_env() {
+  parse_yaml $PROJECT_ROOT/env.enc.production.yaml | sed 's/\$/\\$/g' | xargs -0
+}
+
+if command -v git &> /dev/null; then
+  PROJECT_ROOT=$(git rev-parse --show-toplevel)
+  pushd $PROJECT_ROOT >/dev/null
+    if [ -f "env.enc.production.yaml" ]; then
+      export all_env="$(yaml_to_env)"
+      eval "$all_env"
+    else
+      echo "Not loading ENV from env.enc.production.yaml as it doesn't exist"
+    fi
+  popd >/dev/null
+else
+  echo "Not loading ENV from env.enc.production.yaml as there's no \`git\` command"
+  export all_env="$(env)"
+fi
 
 function_to_run=$1
 shift

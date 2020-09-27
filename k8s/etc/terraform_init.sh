@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-eval $(../bin/yaml_to_env.sh)
+eval $(../dishctl.sh yaml_to_env)
 
 echo "Listing DO Dish bucket to see if we can access our stored Terraform state..."
 s3cmd \
