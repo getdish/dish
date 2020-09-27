@@ -49,6 +49,14 @@ resource "kubernetes_deployment" "jwt-server" {
             value = var.JWT_ADMIN_PASSWORD
           }
           env {
+            name = "HASURA_ENDPOINT"
+            value = var.HASURA_ENDPOINT
+          }
+          env {
+            name = "HASURA_SECRET"
+            value = var.HASURA_GRAPHQL_ADMIN_SECRET
+          }
+          env {
             name = "JWT_SECRET"
             value = var.JWT_KEY
           }

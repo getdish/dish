@@ -3,6 +3,9 @@ import { join } from 'path'
 import { User, WithID, userFindOne, userUpsert } from '@dish/graph'
 import AppleSignIn, { AppleSignInOptions } from 'apple-sign-in-rest'
 import { Request, Response } from 'express'
+import jwt from 'jsonwebtoken'
+
+import config from '../config/config'
 
 // with this library https://github.com/renarsvilnis/apple-sign-in-rest
 // at end of implementation i found this library, slightly more maintained:
@@ -10,14 +13,14 @@ import { Request, Response } from 'express'
 // https://github.com/A-Tokyo/apple-signin-auth
 
 const redirectUri = 'https://auth.dishapp.com/auth/apple_authorize'
-const config: AppleSignInOptions = {
+const appleConfig: AppleSignInOptions = {
   clientId: 'com.dishapp',
   teamId: '399WY8X9HY', // or dish.motion ?
   keyIdentifier: 'M5CPALWBA5',
   privateKeyPath: join(__dirname, '../../AuthKey_M5CPALWBA5.p8'),
 }
 
-const appleSignIn = new AppleSignIn(config)
+const appleSignIn = new AppleSignIn(appleConfig)
 
 class AppleAuthController {
   static getAuthUrl = async (req: Request, res: Response) => {
@@ -71,12 +74,13 @@ class AppleAuthController {
       apple_uid,
       apple_secret,
       apple_refresh_token,
+      tokenResponse: tokenResponse.id_token,
     })
 
     // user is passed on first signup
     let user: WithID<User> | null = null
     try {
-      if (claim.aud) {
+      if (apple_uid) {
         user = await userFindOne({
           apple_uid,
         })
@@ -108,20 +112,49 @@ class AppleAuthController {
     }
 
     // add apple info
-    const finalUser = await userUpsert([
+    try {
+      const finalUser = await userUpsert([
+        {
+          ...user,
+          apple_secret,
+          apple_uid,
+          apple_refresh_token,
+        },
+      ])
+      if (finalUser[0]) {
+        user = finalUser[0]
+      }
+    } catch (err) {
+      console.error('final user update error', error)
+      return res.status(401).send()
+    }
+
+    if (!user) {
+      console.error('no user?')
+      return res.status(401).send()
+    }
+
+    const token = jwt.sign(
       {
-        ...user,
-        apple_secret,
-        apple_uid,
-        apple_refresh_token,
+        username: user.username,
+        userId: user.id,
+        'https://hasura.io/jwt/claims': {
+          'x-hasura-user-id': user.id,
+          'x-hasura-allowed-roles': [user.role],
+          'x-hasura-default-role': user.role,
+        },
       },
-    ])
+      config.jwtSecret,
+      { expiresIn: '1w' }
+    )
 
-    console.log('finalUser', finalUser)
+    console.log('token', token)
 
-    return res.json({
-      ok: true,
-    })
+    return res.redirect(
+      `https://dishapp.com/onboard?user=${encodeURIComponent(
+        user.username!
+      )}&token=${encodeURIComponent(token)}`
+    )
   }
 }
 
