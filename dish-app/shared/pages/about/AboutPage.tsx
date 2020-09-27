@@ -62,7 +62,7 @@ export default function AboutPage({
               color="rgba(0,0,0,0.7)"
             >
               An app for exploring the hidden gems of the world should feel like
-              a quirky Pokedex that just gets you.
+              a fun, quirky Pokedex that just gets you.
               <Text fontSize={22}>
                 A&nbsp;"Hitchhikers&nbsp;guide to gastronomy", if you will.
               </Text>
