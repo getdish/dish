@@ -14,7 +14,12 @@ import {
 import React from 'react'
 
 import { StackItemProps } from '../../AppStackView'
-import { brandColor, lightGreen, lightYellow } from '../../colors'
+import {
+  brandColor,
+  brandColorDark,
+  lightGreen,
+  lightYellow,
+} from '../../colors'
 import { HomeStateItemAbout } from '../../state/home-types'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Logo } from '../../views/Logo'
@@ -45,13 +50,13 @@ export default function AboutPage({
           <HStack maxWidth="100%" alignItems="center">
             <Divider flex />
             <Spacer />
-            <Logo scale={2} color={brandColor} />
+            <Logo scale={2} color={brandColorDark} />
             <Spacer />
             <Divider flex />
           </HStack>
 
           <VStack spacing="xl">
-            <Paragraph size={1.5} fontWeight="600">
+            <Paragraph textAlign="center" size={1.5} fontWeight="600">
               Our goal: bring fun to exploring the real world.
             </Paragraph>
 
@@ -59,20 +64,20 @@ export default function AboutPage({
               fontStyle="italic"
               size="xxxl"
               fontWeight="300"
-              color="rgba(0,0,0,0.7)"
+              color={brandColorDark}
             >
-              An app for exploring the hidden gems of the world should feel like
-              a fun, quirky Pokedex that just gets you.
+              An app for exploring the great food spots of the world should feel
+              like a fun, quirky Pokedex that really gets you.
               <Text fontSize={22}>
                 A&nbsp;"Hitchhikers&nbsp;guide to gastronomy", if you will.
               </Text>
             </Paragraph>
 
-            <Paragraph size="xxl">
-              Dish started from two frustrations:
+            <Paragraph size="xl">
+              Dish was born from two frustrations:
             </Paragraph>
 
-            <UnorderedList>
+            <UnorderedList spacing>
               <UnorderedListItem size="xl">
                 Amazing hole-in-the-wall international cuisine lost to 3.5 star
                 ratings.
@@ -83,7 +88,7 @@ export default function AboutPage({
               </UnorderedListItem>
             </UnorderedList>
 
-            <Paragraph size="xxl">
+            <Paragraph size="xl">
               We figured building an app to search across delivery was doable.
               But how do you fix the hole-in-the-wall ratings problem?
             </Paragraph>
@@ -92,7 +97,7 @@ export default function AboutPage({
               Our answer is that{' '}
               <TextStrong>5 star ratings may not be what we need</TextStrong>.
               They collapse everything you care about into one dimension. What
-              you care about when ordering{' '}
+              you want when ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -107,7 +112,7 @@ export default function AboutPage({
               >
                 delivery pho 🍜
               </LinkButton>{' '}
-              versus when planning a{' '}
+              versus planning a{' '}
               <LinkButton
                 fontWeight="400"
                 tags={[
@@ -122,58 +127,68 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              are <em>unique</em>: maybe it's a specific dish, or maybe it's
-              just the delivery speed. Maybe it's the loudness, the speed, or
-              maybe it's just if they have some decent vegetarian options.
+              are <em>unique</em>: a specific dish, delivery speed, the vibe.
+              Maybe you are if it's quiet, or quick, or if know how to do
+              vegetarian.
             </Paragraph>
 
             <Paragraph size="xl">
-              So, Dish throws away 5 stars altogether. Instead, when you write a
-              review - we look at exactly what you say about each aspect, from
-              the vibe or service, all the way down to individual, well, dishes.
+              So, we took a big step. We're throwing away 5 stars altogether.
+              Instead, Dish sorts it's results by points based on all the
+              factors you're searching for. When you search "quick cheap pizza",
+              we look at opinions across all reviews towards quick + cheap +
+              pizza, and it shows as a point total.
             </Paragraph>
 
             <Paragraph size="xl">
-              To source quality reviews, Dish crawls every top food review
-              source, much like RottenTomatoes (except for fresh ones) -
-              including crawling{' '}
+              Of course, you can upvote and downvote on every factor. In fact,
+              when you write a review, we take what you say and show the votes
+              we think it reflects which you can then confirm or change before
+              submitting. By letting people speak their minds naturally and then
+              counting <TextStrong>what they say into votes</TextStrong>, we
+              think we can build a better guide to the world.
+            </Paragraph>
+
+            <Paragraph size="xl">
+              Dish sources reviews from many of the top food review sites. Much
+              like RottenTomatoes does for movies, we do for food. We also crawl{' '}
               <Text
                 lineHeight={24}
                 borderBottomColor="#eee"
                 borderBottomWidth={2}
               >
-                every delivery app
+                every delivery service
               </Text>{' '}
               - so finally, you don't need to flip between apps to find what you
               want.
             </Paragraph>
+
             <Paragraph size="lg">
-              By looking at <TextStrong>what people actually say</TextStrong> we
-              think we can build a better guide to the world, on that
-              understands how you review.
+              But more than just putting together cool technology, we want to
+              build something fun and personal. A private guide that caters to
+              you, where you can collect and curate local gems, explore with
+              friends or see chef picks, get tips on where to go and what to
+              order, and filter by mood and desire. Our goals are to:
             </Paragraph>
+
+            <UnorderedList spacing>
+              <UnorderedListItem>
+                <TextStrong>Make a better guide 🎙</TextStrong> - With natural
+                langauge analysis, threaded discussions, voting, and
+                specialization, we want to prove that you "map-reduce" an active
+                community into a "current best of" guide.
+              </UnorderedListItem>
+              <UnorderedListItem>
+                <TextStrong>
+                  Enable unique, high quality restaurants ✨
+                </TextStrong>
+                - Instead of having to please everyone to try for 5 stars
+                overall, restaurants should be rewarded for doing one or two
+                things exceptionally well.
+              </UnorderedListItem>
+            </UnorderedList>
+
             <Paragraph size="lg">
-              But more than that, we want to bring some fun and personality to
-              how we explore. We let you collect and save local gems, see tips
-              on where to go and what to order based on your mood, and explore
-              chefs and other people who share your tastes maps of the world.
-              Our goals are to:
-              <ul>
-                <li>
-                  <TextStrong>Make a better guide 🎙</TextStrong> - With natural
-                  langauge analysis, threaded discussions, voting, and
-                  specialization, we want to prove that you "map-reduce" an
-                  active community into a "current best of" guide.
-                </li>
-                <li>
-                  <TextStrong>
-                    Enable unique, high quality restaurants ✨
-                  </TextStrong>
-                  - Instead of having to please everyone to try for 5 stars
-                  overall, restaurants should be rewarded for doing one or two
-                  things exceptionally well.
-                </li>
-              </ul>
               The ultimate goal is to create a community-powered "Hitchhiker's
               Guide to Gastronomy", or, a Pokédex for poke: a guide that feels
               alive and personalized, that really understands you and the world
