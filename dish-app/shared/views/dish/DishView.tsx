@@ -1,7 +1,7 @@
 import { TopCuisineDish, slugify } from '@dish/graph'
 import { AbsoluteVStack, Box, HStack, StackProps, Text, VStack } from '@dish/ui'
 import { capitalize } from 'lodash'
-import React, { memo, useState } from 'react'
+import React, { Suspense, memo, useState } from 'react'
 import { Image } from 'react-native'
 
 import { isWeb } from '../../constants'
@@ -103,12 +103,14 @@ export const DishView = memo(
             top={-8}
             left={-8}
           >
-            <DishUpvoteDownvote
-              size="sm"
-              name={dish.name}
-              subtle
-              restaurantId={restaurantId}
-            />
+            <Suspense fallback={null}>
+              <DishUpvoteDownvote
+                size="sm"
+                name={dish.name}
+                subtle
+                restaurantId={restaurantId}
+              />
+            </Suspense>
           </AbsoluteVStack>
         )}
 
