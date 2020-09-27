@@ -1,4 +1,11 @@
-import { AbsoluteVStack, Paragraph, Text, VStack } from '@dish/ui'
+import { useRouter } from '@dish/router'
+import {
+  AbsoluteVStack,
+  AnimatedVStack,
+  Paragraph,
+  Text,
+  VStack,
+} from '@dish/ui'
 import { default as React, memo } from 'react'
 import { Image, Platform, ScrollView, View } from 'react-native'
 import { useStorageState } from 'react-storage-hooks'
@@ -8,18 +15,12 @@ import dishNeon from './assets/dish-neon.jpg'
 import { brandColor, lightGreen, lightYellow } from './colors'
 import { useOvermind } from './state/om'
 import { LoginRegisterForm } from './views/LoginRegisterForm'
-
-const useShowIntroLetter = () => {
-  return useStorageState(localStorage, 'show_intro22', true)
-}
+import { Link } from './views/ui/Link'
 
 export const HomeIntroLetter = memo(() => {
-  const [showInto, setShowIntro] = useShowIntroLetter()
   const om = useOvermind()
-
-  if (om.state.user.isLoggedIn) {
-    return null
-  }
+  const curPage = om.state.router.curPage
+  const hide = om.state.user.isLoggedIn || curPage.name === 'about'
 
   return (
     <AbsoluteVStack
@@ -31,50 +32,61 @@ export const HomeIntroLetter = memo(() => {
       paddingHorizontal="4vw"
       paddingVertical="1vh"
       backgroundColor="rgba(50,20,40,0.8)"
-      opacity={1}
+      opacity={hide ? 0 : 1}
+      pointerEvents={hide ? 'none' : 'auto'}
       transform={[{ translateY: 0 }]}
-      {...(!showInto && {
-        opacity: 0,
-        transform: [{ translateY: 15 }],
-        pointerEvents: 'none',
-      })}
     >
-      <VStack
+      <AnimatedVStack
         maxWidth={450}
         maxHeight={680}
         width="90%"
         height="90%"
-        borderWidth={1}
-        borderColor={`${brandColor}55`}
-        position="relative"
-        backgroundColor="#000"
-        borderRadius={25}
-        shadowColor="rgba(0,0,0,1)"
-        shadowRadius={150}
-        shadowOffset={{ height: 10, width: 0 }}
+        animateState={hide ? 'out' : 'in'}
       >
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            maxWidth: '100%',
-          }}
+        <VStack
+          width="100%"
+          height="100%"
+          borderWidth={1}
+          borderColor={`${brandColor}55`}
+          position="relative"
+          backgroundColor="#000"
+          borderRadius={25}
+          shadowColor="rgba(0,0,0,1)"
+          shadowRadius={150}
+          shadowOffset={{ height: 10, width: 0 }}
         >
-          <VStack
-            overflow="hidden"
-            maxWidth={450}
-            maxHeight={660}
-            padding={20}
-            alignItems="center"
+          <AbsoluteVStack
+            bottom={-40}
+            right={-20}
+            transform={[{ rotate: '-10deg' }]}
           >
-            {/* <HStack position="absolute" top={10} right={10}>
+            <Text fontSize={80}>🌮</Text>
+          </AbsoluteVStack>
+          <AbsoluteVStack
+            bottom={-40}
+            left={-20}
+            transform={[{ rotate: '10deg' }]}
+          >
+            <Text fontSize={80}>🍜</Text>
+          </AbsoluteVStack>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              maxWidth: '100%',
+              maxHeight: 630,
+            }}
+          >
+            <VStack flex={1} paddingTop={20} alignItems="center">
+              {/* <HStack position="absolute" top={10} right={10}>
               <CloseButton onPress={() => setShowIntro(false)} />
             </HStack> */}
-            {/* <Spacer /> */}
+              {/* <Spacer /> */}
 
-            <HomeIntroLetterContent />
-          </VStack>
-        </ScrollView>
-      </VStack>
+              <HomeIntroLetterContent />
+            </VStack>
+          </ScrollView>
+        </VStack>
+      </AnimatedVStack>
     </AbsoluteVStack>
   )
 })
@@ -90,77 +102,59 @@ const divider = (
   />
 )
 
-export const HomeIntroLetterContent = memo(
-  ({ forceVisible }: { forceVisible?: boolean }) => {
-    const [showIntro_, setShowIntro] = useShowIntroLetter()
-    const showIntro = forceVisible ?? showIntro_
+export const HomeIntroLetterContent = memo(() => {
+  return (
+    <>
+      <VStack spacing alignItems="center">
+        <Image
+          source={{ uri: dishNeon }}
+          style={{
+            marginTop: -20,
+            marginBottom: -30,
+            width: 261,
+            height: 161,
+          }}
+        />
 
-    if (Platform.OS !== 'web') {
-      return null
-    }
-
-    if (!showIntro) {
-      return null
-    }
-
-    return (
-      <>
-        <AbsoluteVStack
-          bottom={-40}
-          right={-10}
-          transform={[{ rotate: '-10deg' }]}
+        <Paragraph
+          zIndex={10}
+          textAlign="center"
+          color="#fff"
+          fontWeight="300"
+          size={1.2}
         >
-          <Text fontSize={100}>🌮</Text>
-        </AbsoluteVStack>
-        <AbsoluteVStack
-          bottom={-40}
-          left={-10}
-          transform={[{ rotate: '10deg' }]}
-        >
-          <Text fontSize={100}>🍜</Text>
-        </AbsoluteVStack>
-        <VStack spacing alignItems="center">
-          <Image
-            source={{ uri: dishNeon }}
-            style={{
-              marginTop: -20,
-              marginBottom: -30,
-              width: 261,
-              height: 161,
-            }}
-          />
+          <Text fontSize={24} fontWeight="300" color="#fff">
+            your personal guide to food
+          </Text>
+        </Paragraph>
 
-          <Paragraph
-            zIndex={10}
-            textAlign="center"
-            color="#fff"
-            fontWeight="300"
-            size={1.2}
-          >
-            <Text fontSize={24} fontWeight="300" color="#fff">
-              a fun food discovery community
+        {divider}
+
+        <Paragraph textAlign="center" color="#fff" size={1.1}>
+          <VStack>
+            <Text color={lightGreen} fontWeight="500">
+              ratings split by factors,{' '}
+              <Link
+                backgroundColor={`${lightYellow}22`}
+                paddingHorizontal={4}
+                borderRadius={6}
+                marginHorizontal={-4}
+                name="about"
+              >
+                down to the dish
+              </Link>
             </Text>
-          </Paragraph>
+          </VStack>
+          <VStack>
+            <Text color={lightYellow}>searches every delivery app 🚗 </Text>
+          </VStack>
+          {/* <Text fontWeight="500">local gems 💎</Text> */}
+        </Paragraph>
 
-          {divider}
+        {divider}
 
-          <Paragraph textAlign="center" color="#fff" size={1.1}>
-            <VStack>
-              <Text color={lightGreen} fontWeight="500">
-                ratings by dish 🌮
-              </Text>
-            </VStack>
-            <VStack>
-              <Text color={lightYellow}>search every delivery app 🚗 </Text>
-            </VStack>
-            {/* <Text fontWeight="500">local gems 💎</Text> */}
-          </Paragraph>
-
-          {divider}
-
-          <LoginRegisterForm />
-        </VStack>
-      </>
-    )
-  }
-)
+        <LoginRegisterForm />
+      </VStack>
+    </>
+  )
+})

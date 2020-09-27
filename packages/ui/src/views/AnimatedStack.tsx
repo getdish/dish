@@ -1,3 +1,4 @@
+import useConstant from '@dish/use-store'
 import React, { useLayoutEffect, useMemo, useState } from 'react'
 import {
   Animated,
@@ -50,34 +51,26 @@ const styleKeys = {
 }
 
 export const AnimatedVStack = ({
+  animateState = 'in',
   animation = defaultAnimation,
   velocity,
   children,
   ...props
 }: StackProps & {
+  animateState?: 'in' | 'out'
   velocity?: number
   animation?: {
     from: AnimatableProps
     to: AnimatableProps
   }
 }) => {
-  const [state, setState] = useState<{
-    props: StackProps | null
-    start: Function | null
-  }>({
-    props: null,
-    start: null,
+  const driver = useConstant(() => {
+    return new Animated.Value(0)
   })
 
-  useLayoutEffect(() => {
-    if (state.start) {
-      state.start()
-      return
-    }
-
+  const animatedProps = useMemo(() => {
     const styleProps = {}
     const transform: any[] = []
-    const driver = new Animated.Value(0)
 
     for (const key in animation.from) {
       const fromVal = animation.from[key]
@@ -94,23 +87,21 @@ export const AnimatedVStack = ({
         })
       }
     }
+    return { transform, ...styleProps }
+  }, [animateState])
 
-    setState({
-      props: { transform, ...styleProps },
-      start: () => {
-        Animated.spring(driver, {
-          useNativeDriver: true,
-          velocity,
-          toValue: 1,
-        }).start()
-      },
-    })
-  }, [state])
+  useLayoutEffect(() => {
+    Animated.spring(driver, {
+      useNativeDriver: true,
+      velocity,
+      toValue: animateState === 'in' ? 1 : 0,
+    }).start()
+  }, [animateState])
 
   const childrenMemo = useMemo(() => children, [children])
 
   return (
-    <VStack animated {...props} {...state.props}>
+    <VStack animated {...props} {...animatedProps}>
       {childrenMemo}
     </VStack>
   )

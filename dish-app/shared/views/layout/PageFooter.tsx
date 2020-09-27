@@ -22,7 +22,7 @@ export const PageFooter = memo(() => {
       />
       <VStack paddingVertical={20} alignItems="center" paddingHorizontal="5%">
         <VStack maxWidth={450}>
-          <HomeIntroLetterContent forceVisible />
+          <HomeIntroLetterContent />
           <Spacer size="xxl" />
         </VStack>
       </VStack>

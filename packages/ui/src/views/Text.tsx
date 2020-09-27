@@ -1,3 +1,4 @@
+// debug
 import React, { useMemo, useRef } from 'react'
 import {
   Platform,
@@ -6,10 +7,8 @@ import {
   TextStyle,
 } from 'react-native'
 
-import { useAttachClassName } from '../hooks/useAttachClassName'
-
 export type TextProps = Omit<ReactTextProps, 'style'> &
-  Omit<TextStyle, 'display'> & {
+  Omit<TextStyle, 'display' | 'backfaceVisibility'> & {
     display?: TextStyle['display'] | 'inherit'
     ellipse?: boolean
     selectable?: boolean

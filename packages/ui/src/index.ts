@@ -61,6 +61,7 @@ export * from './views/Text'
 export * from './views/TextStrong'
 export * from './views/Title'
 export * from './views/Toast'
+export * from './views/UnorderedList'
 
 export * from './helpers/getNode'
 export * from './helpers/weakKey'

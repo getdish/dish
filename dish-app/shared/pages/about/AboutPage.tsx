@@ -2,19 +2,24 @@ import {
   Divider,
   HStack,
   Paragraph,
+  SizableTextProps,
   SmallTitle,
   Spacer,
   Text,
   Title,
+  UnorderedList,
+  UnorderedListItem,
   VStack,
 } from '@dish/ui'
 import React from 'react'
 
 import { StackItemProps } from '../../AppStackView'
-import { lightGreen, lightYellow } from '../../colors'
+import { brandColor, lightGreen, lightYellow } from '../../colors'
 import { HomeStateItemAbout } from '../../state/home-types'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import { Logo } from '../../views/Logo'
 import { StackDrawer } from '../../views/StackDrawer'
+import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { TextStrong } from '../../views/ui/TextStrong'
 
@@ -31,25 +36,63 @@ export default function AboutPage({
     <StackDrawer closable title="About Dish">
       <ContentScrollView
         style={{
-          paddingTop: 40,
+          paddingTop: 25,
           paddingHorizontal: '5%',
-          paddingVertical: '5%',
           flex: 1,
         }}
       >
         <VStack spacing="xxl">
-          <Title size="xl">The best 🍜, definitively</Title>
+          <HStack maxWidth="100%" alignItems="center">
+            <Divider flex />
+            <Spacer />
+            <Logo scale={2} color={brandColor} />
+            <Spacer />
+            <Divider flex />
+          </HStack>
 
           <VStack spacing="xl">
-            <Paragraph size="xxxl" fontWeight="300">
-              Too often amazing Vietnamese, Chinese, and Mexican
-              hole-in-the-wall spots are lost to bad ratings, despite making
-              some of the best food. Todays rating systems fail us by forcing
-              everything you care about into "5&nbsp;stars".
+            <Paragraph size={1.5} fontWeight="600">
+              Our goal: bring fun to exploring the real world.
             </Paragraph>
 
-            <Paragraph size="xxl" fontWeight="300">
-              We think we can fix that. What you care about when ordering{' '}
+            <Paragraph
+              fontStyle="italic"
+              size="xxxl"
+              fontWeight="300"
+              color="rgba(0,0,0,0.7)"
+            >
+              An app for exploring the hidden gems of the world should feel like
+              a quirky Pokedex that just gets you.
+              <Text fontSize={22}>
+                A&nbsp;"Hitchhikers&nbsp;guide to gastronomy", if you will.
+              </Text>
+            </Paragraph>
+
+            <Paragraph size="xxl">
+              Dish started from two frustrations:
+            </Paragraph>
+
+            <UnorderedList>
+              <UnorderedListItem size="xl">
+                Amazing hole-in-the-wall international cuisine lost to 3.5 star
+                ratings.
+              </UnorderedListItem>
+              <UnorderedListItem size="xl">
+                Needing one app to find what's good & three others to see if it
+                delivers.
+              </UnorderedListItem>
+            </UnorderedList>
+
+            <Paragraph size="xxl">
+              We figured building an app to search across delivery was doable.
+              But how do you fix the hole-in-the-wall ratings problem?
+            </Paragraph>
+
+            <Paragraph size="xxl">
+              Our answer is that{' '}
+              <TextStrong>5 star ratings may not be what we need</TextStrong>.
+              They collapse everything you care about into one dimension. What
+              you care about when ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -79,17 +122,21 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              are <em>unique</em>: whether it's a specific dish or the delivery
-              speed, the vibe, vegetarian options, or if they have a patio.
+              are <em>unique</em>: maybe it's a specific dish, or maybe it's
+              just the delivery speed. Maybe it's the loudness, the speed, or
+              maybe it's just if they have some decent vegetarian options.
             </Paragraph>
 
-            <Paragraph size="xxl" fontWeight="300">
-              <Text display="inline" fontWeight="600">
-                Dish rates down to the dish - and all the factors that matter
-              </Text>
-              . When you write a review, we pull out your sentiment towards
-              every possible tag automatically. Much like RottenTomatoes, Dish
-              also crawls every top food review source - including{' '}
+            <Paragraph size="xl">
+              So, Dish throws away 5 stars altogether. Instead, when you write a
+              review - we look at exactly what you say about each aspect, from
+              the vibe or service, all the way down to individual, well, dishes.
+            </Paragraph>
+
+            <Paragraph size="xl">
+              To source quality reviews, Dish crawls every top food review
+              source, much like RottenTomatoes (except for fresh ones) -
+              including crawling{' '}
               <Text
                 lineHeight={24}
                 borderBottomColor="#eee"
@@ -100,23 +147,17 @@ export default function AboutPage({
               - so finally, you don't need to flip between apps to find what you
               want.
             </Paragraph>
-
             <Paragraph size="lg">
               By looking at <TextStrong>what people actually say</TextStrong> we
               think we can build a better guide to the world, on that
-              understands how you review. It should also be nicer for
-              restaurants: instead of having to please every type of person to
-              try and always keep 5 stars, they can instead specialize on what
-              they want to be good good at.
+              understands how you review.
             </Paragraph>
-
             <Paragraph size="lg">
-              We want to build a fun community of people who curate what they
-              love to build a beautiful map of the world - what makes each place
-              unique. We let you collect and save local gems, see tips on where
-              to go and what to order based on your mood, and explore chefs and
-              other people who share your tastes maps of the world. Our goals
-              are to:
+              But more than that, we want to bring some fun and personality to
+              how we explore. We let you collect and save local gems, see tips
+              on where to go and what to order based on your mood, and explore
+              chefs and other people who share your tastes maps of the world.
+              Our goals are to:
               <ul>
                 <li>
                   <TextStrong>Make a better guide 🎙</TextStrong> - With natural
@@ -136,46 +177,18 @@ export default function AboutPage({
               The ultimate goal is to create a community-powered "Hitchhiker's
               Guide to Gastronomy", or, a Pokédex for poke: a guide that feels
               alive and personalized, that really understands you and the world
-              around you (while keeping your information private).
+              around you.
             </Paragraph>
 
             <Spacer />
-
-            <SmallTitle>TL;DR</SmallTitle>
-
-            <Paragraph size="lg">
-              <HStack marginVertical={4} alignItems="center">
-                <Text marginHorizontal={10} fontSize={26}>
-                  🗺
-                </Text>{' '}
-                Find uniquely good restaurants with ratings down to the dish
-              </HStack>
-              <HStack marginVertical={4} alignItems="center">
-                <Text marginHorizontal={10} fontSize={26}>
-                  🚗
-                </Text>{' '}
-                Search every delivery app at once
-              </HStack>
-              <HStack marginVertical={4} alignItems="center">
-                <Text marginHorizontal={10} fontSize={26}>
-                  ✨
-                </Text>{' '}
-                Community curation of what makes each area & restaurant special
-              </HStack>
-            </Paragraph>
-
-            <Spacer />
-
-            <Divider marginVertical={40} />
+            <Divider />
 
             <Paragraph>
-              <a href="mailto:team@dishapp.com">
+              <Link href="mailto:team@dishapp.com">
                 Let us know how you'd like to see us grow.
-              </a>
+              </Link>
             </Paragraph>
-
             <Spacer size="sm" />
-
             {/* <form>
               <VStack>
                 <Input name="email" type="email" placeholder="Email..." />
@@ -183,7 +196,6 @@ export default function AboutPage({
                 <Button>Submit</Button>
               </VStack>
             </form> */}
-
             <Spacer />
             <Spacer />
             <Spacer />
