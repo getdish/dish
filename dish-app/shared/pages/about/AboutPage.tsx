@@ -127,26 +127,25 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              are <em>unique</em>: a specific dish, delivery speed, the vibe.
-              Maybe you are if it's quiet, or quick, or if know how to do
-              vegetarian.
+              are <em>unique</em>: a specific dish, delivery speed, vibe,
+              ambiance - it totally depends on your current desires.
             </Paragraph>
 
             <Paragraph size="xl">
-              So, we took a big step. We're throwing away 5 stars altogether.
-              Instead, Dish sorts it's results by points based on all the
-              factors you're searching for. When you search "quick cheap pizza",
-              we look at opinions across all reviews towards quick + cheap +
-              pizza, and it shows as a point total.
+              So, we're taking a chance and throwing away 5 stars altogether.
+              Instead, Dish sorts it's results by points. Points are based on
+              all the factors you're searching for, so when you search "quick
+              cheap pizza", we take opinions across all reviews as votes for
+              quick, cheap, and pizza, and sum them up.
             </Paragraph>
 
             <Paragraph size="xl">
-              Of course, you can upvote and downvote on every factor. In fact,
-              when you write a review, we take what you say and show the votes
-              we think it reflects which you can then confirm or change before
-              submitting. By letting people speak their minds naturally and then
-              counting <TextStrong>what they say into votes</TextStrong>, we
-              think we can build a better guide to the world.
+              Then you can upvote and downvote on every factor. In fact, when
+              you write a review, we take yout text and turn it into votes (that
+              you can confirm or change before submitting). By letting people
+              speak their minds naturally and then counting{' '}
+              <TextStrong>what they say into votes</TextStrong>, we think we can
+              build a more inuitive guide.
             </Paragraph>
 
             <Paragraph size="xl">
@@ -172,13 +171,13 @@ export default function AboutPage({
             </Paragraph>
 
             <UnorderedList spacing>
-              <UnorderedListItem>
+              <UnorderedListItem size="lg">
                 <TextStrong>Make a better guide 🎙</TextStrong> - With natural
                 langauge analysis, threaded discussions, voting, and
                 specialization, we want to prove that you "map-reduce" an active
                 community into a "current best of" guide.
               </UnorderedListItem>
-              <UnorderedListItem>
+              <UnorderedListItem size="lg">
                 <TextStrong>
                   Enable unique, high quality restaurants ✨
                 </TextStrong>
