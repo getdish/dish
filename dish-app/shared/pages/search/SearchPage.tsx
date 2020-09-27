@@ -56,7 +56,10 @@ import { setIsScrollAtTop } from '../../views/ContentScrollView'
 import { HomeLenseBar } from '../../views/HomeLenseBar'
 import { StackDrawer } from '../../views/StackDrawer'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { RestaurantListItem } from '../restaurant/RestaurantListItem'
+import {
+  ITEM_HEIGHT,
+  RestaurantListItem,
+} from '../restaurant/RestaurantListItem'
 import { StackViewProps } from '../StackViewProps'
 import { getTitleForState } from './getTitleForState'
 import { SearchPageNavBar } from './SearchPageNavBar'
@@ -239,19 +242,6 @@ const SearchNavBarContainer = ({
   )
 }
 
-const getRestaurantListItemHeight = () => {
-  if (typeof document !== 'undefined') {
-    const items = Array.from(document.querySelectorAll('.restaurant-list-item'))
-    if (items.length) {
-      return (
-        items.reduce((a, b) => a + Math.max(220, b.clientHeight), 0) /
-        items.length
-      )
-    }
-  }
-  return 280
-}
-
 // prevent warning
 delete RecyclerListView.propTypes['externalScrollView']
 
@@ -279,10 +269,9 @@ const SearchResultsContent = (props: Props) => {
           omStatic.state.home.activeEvent === 'pin' ||
           omStatic.state.home.activeEvent === 'key'
         ) {
-          const height = getRestaurantListItemHeight()
           scrollRef.current?.scrollTo({
             x: 0,
-            y: height * index,
+            y: ITEM_HEIGHT * index,
             animated: true,
           })
         }
@@ -309,7 +298,7 @@ const SearchResultsContent = (props: Props) => {
       },
       (type, dim) => {
         dim.width = drawerWidth
-        dim.height = 300
+        dim.height = ITEM_HEIGHT
       }
     )
   }, [drawerWidth])
@@ -417,7 +406,6 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         ref={combineRefs(ref, divRef)}
         {...(!isWeb && {
           onContentSizeChange: (width, height) => {
-            console.log('setting', width, height)
             onSizeChanged({ width, height })
           },
         })}

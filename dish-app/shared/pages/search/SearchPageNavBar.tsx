@@ -17,7 +17,7 @@ export const SearchPageNavBar = (props: { id: string }) => {
   const isSmall = useIsNarrow()
   const insets = useSafeArea()
   const lensergb = useCurrentLenseColor()
-  const borderRadius = isSmall ? 28 : 0
+  const borderRadius = isSmall ? 20 : 0
   const drawerStore = useStore(BottomDrawerStore)
 
   return (
@@ -26,7 +26,7 @@ export const SearchPageNavBar = (props: { id: string }) => {
       top={0}
       left={0}
       right={0}
-      backgroundColor={isWeb ? '#fff' : `rgba(${lensergb.join(',')},0.25)`}
+      backgroundColor={isWeb ? '#fff' : `rgba(255,255,255,0.25)`}
       shadowColor="rgba(0,0,0,0.08)"
       shadowRadius={10}
       borderRadius={borderRadius}
@@ -44,7 +44,7 @@ export const SearchPageNavBar = (props: { id: string }) => {
         shadowColor: 'rgba(0,0,0,0.25)',
       })}
     >
-      <BlurView blurType="xlight" borderRadius={borderRadius - 2} flex={1}>
+      <BlurView blurType="light" borderRadius={borderRadius - 2} flex={1}>
         <SearchPageNavBarContent stateId={props.id} />
       </BlurView>
     </VStack>

@@ -64,7 +64,8 @@ const webOnlyStyleKeys = {
   textOverflow: true,
   whiteSpace: true,
   cursor: true,
-  ellipse: true, // for now, can implement
+  selectable: true,
+  size: true,
 }
 
 const useTextStyle = (allProps: TextProps) => {
