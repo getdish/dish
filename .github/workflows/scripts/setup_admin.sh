@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
+echo "::add-path::$HOME/bin"
 PATH=$PATH:$HOME/bin
 mkdir -p $HOME/bin
 

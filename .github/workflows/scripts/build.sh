@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-PATH=$PATH:$HOME/bin
 export DISH_REGISTRY=docker.k8s.dishapp.com
 
 branch=$(git rev-parse --abbrev-ref HEAD)
@@ -27,7 +26,6 @@ build() {
 }
 export -f build
 
-./.github/workflows/scripts/setup_admin.sh
 ./k8s/etc/docker_registry_gc.sh
 
 echo "Waiting for buildkit connection..."

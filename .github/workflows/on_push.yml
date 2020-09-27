@@ -20,20 +20,16 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.16.1'
-      - name: Decrypt credentials
-        run: .github/workflows/scripts/decrypt_creds.sh
-      - name: Install dev dependencies
-        run: .github/workflows/scripts/install_dev_deps.sh
+      - name: Setup dependencies
+        run: .github/workflows/scripts/setup_deps.sh
       - name: Prettier linting
-        run: .github/workflows/scripts/prettier.sh
-      - name: Setup admin
-        run: .github/workflows/scripts/setup_admin.sh
+        run: node_modules/.bin/prettier --check "**/*.{ts,tsx}"
       - name: Build docker images
         run: .github/workflows/scripts/build.sh
       - name: Setup services
         run: .github/workflows/scripts/setup_services.sh
       - name: Run unit tests, specs, etc
-        run: .github/workflows/scripts/tests.sh
+        run: yarn ultra -r --no-pretty --serial test
       - name: Run integration tests
         run: .github/workflows/scripts/integration_tests.sh
       - name: Deploy

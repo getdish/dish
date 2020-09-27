@@ -122,8 +122,7 @@ function timescale_migrate() {
   pushd $PROJECT_ROOT/services/timescaledb
   PG_PORT=$_TIMESCALE_PORT \
   PG_PASS=$TF_VAR_TIMESCALE_SU_PASS \
-  DISH_ENV=production \
-    ./migrate.sh
+  DISH_ENV=production ./migrate.sh
   popd
 }
 

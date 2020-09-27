@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-PATH=$PATH:$HOME/bin
-
-./.github/workflows/scripts/setup_admin.sh
-
 echo "Deploying production branch to production..."
 
 ./dishctl.sh db_migrate
