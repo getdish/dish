@@ -85,7 +85,9 @@ export class RestaurantBaseScore {
     for (const key in this.breakdown) {
       score = score + this.breakdown[key].score
     }
+    // @ts-ignore
     this.crawler.restaurant.score = score
+    // @ts-ignore
     this.crawler.restaurant.score_breakdown = this.breakdown
   }
 }

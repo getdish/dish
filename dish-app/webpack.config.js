@@ -11,7 +11,9 @@ const TerserPlugin = require('terser-webpack-plugin')
 const { UIStaticWebpackPlugin } = require('@dish/ui-static')
 const CircularDependencyPlugin = require('circular-dependency-plugin')
 
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const ExtractCssChunks = require('extract-css-chunks-webpack-plugin')
+const DedupeParentCssFromChunksWebpackPlugin = require('dedupe-parent-css-from-chunks-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
@@ -97,7 +99,7 @@ module.exports = function getWebpackConfig(
         concatenateModules: isProduction && !process.env.ANALYZE_BUNDLE,
         usedExports: isProduction,
         removeEmptyChunks: true,
-        mergeDuplicateChunks: true,
+        // mergeDuplicateChunks: true,
         splitChunks:
           isProduction && TARGET != 'ssr' && !process.env.NO_MINIFY
             ? {
@@ -152,13 +154,8 @@ module.exports = function getWebpackConfig(
                 test: /\.css$/i,
                 use:
                   isProduction && TARGET !== 'ssr'
-                    ? [MiniCssExtractPlugin.loader, 'css-loader']
-                    : [
-                        'cache-loader',
-                        'thread-loader',
-                        'style-loader',
-                        'css-loader',
-                      ],
+                    ? [ExtractCssChunks.loader, 'css-loader']
+                    : ['style-loader', 'css-loader'],
               },
               {
                 test: /\.(png|svg|jpe?g|gif)$/,
@@ -229,16 +226,11 @@ module.exports = function getWebpackConfig(
               // fixes issue i had https://github.com/lodash/lodash/issues/3101
               shorthands: true,
             }),
-            new MiniCssExtractPlugin({
-              filename: '[name].css',
-              chunkFilename: '[id].css',
-              ignoreOrder: true,
+            new ExtractCssChunks(),
+            new DedupeParentCssFromChunksWebpackPlugin({
+              assetNameRegExp: /\.optimize\.css$/g, // the default is /\.css$/g
+              canPrint: true, // the default is true
             }),
-            // new ExtractCssChunks(),
-            // new DedupeParentCssFromChunksWebpackPlugin({
-            //   assetNameRegExp: /\.optimize\.css$/g, // the default is /\.css$/g
-            //   canPrint: true, // the default is true
-            // }),
           ]) ||
           []),
 

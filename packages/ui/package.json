@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "main": "_/index.js",
   "tsmain": "src/index",
-  "sideEffects": false,
+  "sideEffects": [
+    "*.css"
+  ],
   "private": true,
   "scripts": {
     "build": "npm-run-all --parallel build:main build:web",
