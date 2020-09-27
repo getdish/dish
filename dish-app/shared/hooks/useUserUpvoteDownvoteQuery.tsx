@@ -2,7 +2,6 @@ import { sleep } from '@dish/async'
 import { Review, reviewUpsert } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Toast } from '@dish/ui'
-import { query } from 'express'
 import { useState } from 'react'
 
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
