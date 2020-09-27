@@ -13,17 +13,10 @@ import {
   useDebounce,
   useGet,
 } from '@dish/ui'
-import { useStore, useStoreOnce } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
 
-import {
-  bgHover,
-  bgLight,
-  bgLightLight,
-  brandColor,
-  lightBlue,
-} from '../../colors'
+import { bgLight, bgLightLight, brandColor, lightBlue } from '../../colors'
 import { isWeb } from '../../constants'
 import { isWebIOS } from '../../helpers/isIOS'
 import { useIsNarrow } from '../../hooks/useIs'
@@ -31,14 +24,12 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { allTags } from '../../state/allTags'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
-import { CommentBubble } from '../../views/CommentBubble'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { Link } from '../../views/ui/Link'
 import {
-  SmallButton,
   SmallLinkButton,
   smallButtonBaseStyle,
 } from '../../views/ui/SmallButton'
@@ -46,15 +37,13 @@ import { Squircle } from '../../views/ui/Squircle'
 import { ensureFlexText } from './ensureFlexText'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
-import { openingHours, priceRange } from './RestaurantDetailRow'
+import { priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
-import {
-  RestaurantRatingBreakdown,
-  RestaurantReviewsDisplayStore,
-} from './RestaurantRatingBreakdown'
 import RestaurantRatingView from './RestaurantRatingView'
 import { RestaurantSourcesBreakdownRow } from './RestaurantSourcesBreakdownRow'
 import { useTotalReviews } from './useTotalReviews'
+
+export const ITEM_HEIGHT = 300
 
 type RestaurantListItemProps = {
   currentLocationInfo: GeocodePlace | null
@@ -197,6 +186,7 @@ const RestaurantListItemContent = memo(
         className="hover-faded-in-parent"
         alignItems="flex-start"
         justifyContent="flex-start"
+        height={ITEM_HEIGHT}
         flex={1}
         // turn this off breaks something? but hides the rest of title hover?
         // overflow="hidden"
