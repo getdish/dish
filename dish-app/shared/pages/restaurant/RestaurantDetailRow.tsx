@@ -51,7 +51,7 @@ export const RestaurantDetailRow = memo(
 
       if (size !== 'sm') {
         rows.push({
-          title: 'Order Delivery',
+          title: 'Delivery',
           // @ts-ignore
           content: (
             <RestaurantDeliveryButtons

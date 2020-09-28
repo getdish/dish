@@ -9,12 +9,10 @@ import { baseButtonStyle } from '../baseButtonStyle'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 
-export type SmallButtonProps = StackProps & {
+export type SmallButtonProps = LinkButtonProps & {
   isActive?: boolean
   textStyle?: TextStyle
 }
-
-const DeoptHStack = HStack
 
 export const SmallButton = ({
   isActive,
@@ -23,7 +21,7 @@ export const SmallButton = ({
   ...rest
 }: SmallButtonProps) => {
   return (
-    <DeoptHStack
+    <LinkButton
       className={rest.className}
       {...(isWeb && {
         minHeight: 30,
@@ -54,7 +52,7 @@ export const SmallButton = ({
       >
         {isWeb ? <HStack alignItems="center">{children}</HStack> : children}
       </Text>
-    </DeoptHStack>
+    </LinkButton>
   )
 }
 

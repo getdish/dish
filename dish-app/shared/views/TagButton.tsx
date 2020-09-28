@@ -166,9 +166,7 @@ export const TagButton = memo((props: TagButtonProps) => {
           <Text
             // @ts-ignore
             fontSize={smallerFontSize}
-            margin="auto"
             paddingHorizontal={6 * scale}
-            alignSelf="stretch"
             alignContent="center"
             justifyContent="center"
             alignItems="center"

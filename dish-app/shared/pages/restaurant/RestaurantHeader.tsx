@@ -89,7 +89,7 @@ const RestaurantHeaderContent = memo(
                   {restaurant.name}
                 </Text>
                 <Spacer size="sm" />
-                <HStack alignItems="center">
+                <HStack alignItems="center" flexWrap="wrap">
                   <RestaurantAddressLinksRow
                     currentLocationInfo={
                       state?.currentLocationInfo ??

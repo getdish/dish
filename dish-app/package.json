@@ -95,7 +95,9 @@
       "react-native-animatable",
       "react-native-animatable/**",
       "recyclerlistview",
-      "recyclerlistview/**"
+      "recyclerlistview/**",
+      "babel-plugin-transform-inline-environment-variables",
+      "babel-plugin-transform-inline-environment-variables/**"
     ]
   },
   "scripts": {
@@ -190,6 +192,7 @@
     "recyclerlistview": "^3.0.0"
   },
   "devDependencies": {
+    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "@dish/babel-preset": "*",
     "@babel/core": "^7.11.6",
     "react-native-svg-app-icon": "^0.2.0",
@@ -205,7 +208,6 @@
     "@types/requestidlecallback": "0.3.1",
     "@webpack-cli/serve": "1.0.1-alpha.5",
     "array-flat-polyfill": "^1.0.1",
-    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "babel-loader": "^8.1.0",
     "browserslist-useragent": "3.0.3",
     "circular-dependency-plugin": "^5.2.0",

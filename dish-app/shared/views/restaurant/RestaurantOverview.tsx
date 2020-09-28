@@ -28,7 +28,7 @@ export const RestaurantOverview = memo(
       const headlines = restaurant.headlines() ?? defaultListItems
       if (inline) {
         return (
-          <VStack position="relative">
+          <VStack minHeight={130} position="relative">
             <AbsoluteVStack top={-20} left={-35}>
               <Text
                 fontSize={60}

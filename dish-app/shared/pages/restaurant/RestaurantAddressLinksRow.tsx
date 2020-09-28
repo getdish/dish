@@ -7,6 +7,7 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { GeocodePlace } from '../../state/home-types'
 import { SmallCircleButton } from '../../views/ui/CloseButton'
 import { Link } from '../../views/ui/Link'
+import { SmallButton } from '../../views/ui/SmallButton'
 
 export type AddressSize = 'lg' | 'md' | 'sm' | 'xs'
 
@@ -26,46 +27,24 @@ export const RestaurantAddressLinksRow = memo(
       showMenu?: boolean
     }) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
-      const fontSize = size == 'lg' ? 16 : 13
+      const fontSize = size == 'lg' ? 16 : 14
       const sep = ' '
 
       const linkElements = (
-        <HStack alignItems="center" spacing={size}>
+        <HStack alignItems="center" spacing="sm">
           {showMenu && !!restaurant.website && (
-            <Text selectable>
-              {showAddress ? <>&nbsp; {sep} &nbsp;</> : null}
-              <Link
-                fontSize={14}
-                href={restaurant.website ?? ''}
-                target="_blank"
-              >
-                Menu
-              </Link>
-            </Text>
+            <SmallButton href={restaurant.website ?? ''} target="_blank">
+              Menu
+            </SmallButton>
           )}
           {!!restaurant.telephone && (
-            <Link fontSize={14} href={`tel:${restaurant.telephone}`}>
-              Call
-            </Link>
+            <SmallButton href={`tel:${restaurant.telephone}`}>Call</SmallButton>
           )}
           {!!restaurant.website && (
-            <Link fontSize={14} href={restaurant.website ?? ''} target="_blank">
+            <SmallButton href={restaurant.website ?? ''} target="_blank">
               Website
-            </Link>
+            </SmallButton>
           )}
-          {/* {!!restaurant.website && (
-            <Text onPress={() => Linking.openURL(restaurant.website ?? '')}>
-              <Image
-                source={require('../../assets/instagram.png')}
-                style={{
-                  width: fontSize * 1.25,
-                  height: fontSize * 1.25,
-                  marginVertical: -fontSize * 0.26,
-                  marginLeft: 4,
-                }}
-              />
-            </Text>
-          )} */}
         </HStack>
       )
 

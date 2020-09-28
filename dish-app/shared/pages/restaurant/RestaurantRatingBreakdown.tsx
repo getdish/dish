@@ -70,7 +70,7 @@ export const RestaurantRatingBreakdown = memo(
         >
           <VStack
             borderRadius={10}
-            maxWidth={drawerWidthMax / 2.5 - 40}
+            maxWidth={isSmall ? 400 : drawerWidthMax / 2.5 - 40}
             borderWidth={1}
             borderColor="#eee"
             padding={10}

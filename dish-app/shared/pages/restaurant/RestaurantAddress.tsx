@@ -1,9 +1,13 @@
 import { MapPin } from '@dish/react-feather'
-import { Text } from '@dish/ui'
+import { HStack, Text } from '@dish/ui'
 import React from 'react'
 
 import { GeocodePlace } from '../../../shared/state/home-types'
 import { Link } from '../../../shared/views/ui/Link'
+import { isWeb } from '../../constants'
+import { useIsNarrow } from '../../hooks/useIs'
+import { LinkProps, LinkSharedProps } from '../../views/ui/LinkProps'
+import { SmallButton } from '../../views/ui/SmallButton'
 import { AddressSize, getAddressText } from './RestaurantAddressLinksRow'
 
 export const RestaurantAddress = ({
@@ -17,32 +21,38 @@ export const RestaurantAddress = ({
   currentLocationInfo: GeocodePlace
   color?: string
 }) => {
-  return (
-    <Link
-      className="hover-underline align-self-flex-end"
-      color={color}
-      target="_blank"
-      href={`https://www.google.com/maps/search/?q=${encodeURIComponent(
-        address
-      )}`}
-    >
-      {size !== 'xs' && (
-        <MapPin
+  const isSmall = useIsNarrow()
+  const linkProps: LinkSharedProps = {
+    target: '_blank',
+    href: `https://www.google.com/maps/search/?q=${encodeURIComponent(
+      address
+    )}`,
+    children: (
+      <HStack alignItems="center">
+        {size !== 'xs' && (
+          <MapPin
+            color={color}
+            size={14}
+            style={{ marginBottom: -7, marginRight: 4, opacity: 0.5 }}
+          />
+        )}
+        <Text
           color={color}
-          size={14}
-          style={{ marginBottom: -7, marginRight: 4, opacity: 0.5 }}
-        />
-      )}
-      <Text
-        color={color}
-        ellipse
-        lineHeight={16}
-        fontSize={14}
-        fontWeight="400"
-        selectable
-      >
-        {getAddressText(currentLocationInfo, address, size)}
-      </Text>
-    </Link>
-  )
+          ellipse
+          lineHeight={32}
+          fontSize={14}
+          fontWeight="400"
+          selectable
+        >
+          {getAddressText(currentLocationInfo, address, size)}
+        </Text>
+      </HStack>
+    ),
+  }
+
+  if (isSmall) {
+    return <SmallButton {...linkProps} />
+  } else {
+    return <Link {...linkProps} />
+  }
 }

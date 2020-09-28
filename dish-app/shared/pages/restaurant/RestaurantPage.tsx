@@ -78,7 +78,7 @@ const HomePageRestaurant = memo(
 
           <Suspense fallback={<LoadingItems />}>
             <VStack alignItems="center">
-              <HStack minWidth={380} width="80%">
+              <HStack minWidth={330} width="80%">
                 <RestaurantDetailRow
                   centered
                   justifyContent="center"

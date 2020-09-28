@@ -6,9 +6,15 @@ const hoists = {
   '@o/gqless': true,
 }
 
-const noHoists = Object.keys(package.dependencies)
-  .filter((x) => !hoists[x] && !x.startsWith('@dish/'))
+const noHoists = [
+  // dev deps that no hoist
+  'babel-plugin-transform-inline-environment-variables',
+  ...Object.keys(package.dependencies).filter(
+    (x) => !hoists[x] && !x.startsWith('@dish/')
+  ),
+]
   .map((k) => [k, `${k}/**`])
+  // @ts-ignore
   .flat()
 
 package.workspaces.nohoist = noHoists
