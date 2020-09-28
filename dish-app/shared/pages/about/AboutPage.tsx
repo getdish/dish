@@ -1,18 +1,18 @@
 import {
+  AbsoluteVStack,
   Divider,
   HStack,
   Paragraph,
-  SizableTextProps,
-  SmallTitle,
   Spacer,
   Text,
-  Title,
   UnorderedList,
   UnorderedListItem,
   VStack,
 } from '@dish/ui'
 import React from 'react'
+import { Image } from 'react-native'
 
+import dontPanic from '../../../shared/assets/dont-panic.svg'
 import { StackItemProps } from '../../AppStackView'
 import {
   brandColor,
@@ -46,6 +46,19 @@ export default function AboutPage({
           flex: 1,
         }}
       >
+        <AbsoluteVStack
+          zIndex={-1}
+          top={-30}
+          right={-50}
+          width={150}
+          height={150}
+        >
+          <Image
+            style={{ width: '100%', height: '100%' }}
+            source={{ uri: dontPanic }}
+            resizeMode="contain"
+          />
+        </AbsoluteVStack>
         <VStack spacing="xxl">
           <HStack maxWidth="100%" alignItems="center">
             <Divider flex />
@@ -62,11 +75,12 @@ export default function AboutPage({
 
             <Paragraph
               fontStyle="italic"
-              size="xxxl"
+              size="xxl"
               fontWeight="300"
               color={brandColorDark}
             >
-              A modern guide to the food gems of the world should feel like a{' '}
+              A modern guide to the 💎's of the food world should feel more like
+              a{' '}
               <Text display="inline" fontWeight="600">
                 fun Pokédex
               </Text>{' '}
@@ -75,33 +89,36 @@ export default function AboutPage({
 
             <Paragraph size="xl">
               We're building a modern "Hitchhikers guide to gastronomy", if you
-              will. A collaborative guide that makes it fun to find great food
-              around the world. Dish was born from two frustrations:
+              will. A smart guide for great food around the world. Dish was born
+              from two frustrations:
             </Paragraph>
 
-            <UnorderedList spacing>
-              <UnorderedListItem size="xl">
+            <UnorderedList spacing="xs">
+              <UnorderedListItem size="lg">
                 Amazing hole-in-the-wall international spots lost to 3.5 star
                 ratings.
               </UnorderedListItem>
-              <UnorderedListItem size="xl">
+              <UnorderedListItem size="lg">
                 Needing one app to <em>find</em> what's good & three others to
                 see if it delivers.
               </UnorderedListItem>
             </UnorderedList>
 
-            <Paragraph size="xl">
-              Search across delivery was doable. But how do you fix
-              hole-in-the-wall ratings?
+            <Paragraph size="lg">
+              Search across delivery? Not too hard. ✅
             </Paragraph>
 
-            <Paragraph size="xl">
+            <Paragraph size="lg">
+              But how do you fix hole-in-the-wall ratings?
+            </Paragraph>
+
+            <Paragraph size="lg">
               Our answer:{' '}
               <TextStrong display="inline">
-                5 star ratings is not what we need
+                5 star ratings may not be what we need
               </TextStrong>
-              . It collapses everything you care about into one dimension. What
-              you want when ordering{' '}
+              . They collapse everything you care about into, well, 5 stars. But
+              what you want when ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -135,24 +152,29 @@ export default function AboutPage({
               vibe, ambiance - it totally depends on your current desire.
             </Paragraph>
 
-            <Paragraph size="xl">
+            <Paragraph size="lg">
               So, we're taking a chance and throwing away 5 stars altogether.
-              Instead, Dish sorts it's results by points. Points are based on
-              all the factors you're searching for, so when you search "quick
-              cheap pizza", we take opinions across all reviews as votes for
-              quick, cheap, and pizza, and sum them up.
             </Paragraph>
 
-            <Paragraph size="xl">
-              Then you can upvote and downvote on every factor. In fact, when
-              you write a review, we take yout text and turn it into votes (that
-              you can confirm or change before submitting). By letting people
-              speak their minds naturally and then counting{' '}
-              <TextStrong display="inline">what they say into votes</TextStrong>
-              , we think we can build a more inuitive guide.
+            <Paragraph size="lg">
+              Instead, Dish sorts it's results by points, based on the factors
+              you're searching. So when you search "quick cheap pizza", we take
+              positive and negative opinions across all reviews on "quick",
+              "cheap" and "pizza", and add them together.
             </Paragraph>
 
-            <Paragraph size="xl">
+            <Paragraph size="lg">
+              Of course, you can upvote and downvote on every factor. In fact,
+              when you write a review, we take the text and turn it into votes
+              (that you can change before submitting). By letting people speak
+              their minds naturally and then counting{' '}
+              <TextStrong display="inline">
+                what they actually say into votes
+              </TextStrong>
+              , we think we can build a better guide.
+            </Paragraph>
+
+            <Paragraph size="lg">
               Dish sources reviews from many of the top food review sites. Much
               like RottenTomatoes does for movies, we do for food. We also crawl{' '}
               <Text
@@ -168,16 +190,18 @@ export default function AboutPage({
             </Paragraph>
 
             <Paragraph size="lg">
-              But more than just putting together cool technology, we want to
-              build something fun and personal. A private guide that caters to
-              you, where you can collect and curate local gems, explore with
-              friends or see chef picks, get tips on where to go and what to
-              order, and filter by mood and desire. Our goals are to:
+              But more than just putting together a nice app, we want to build
+              something fun and personal. A private guide that caters to you,
+              where you can collect, discover and curate local gems, see
+              friends' and chef's picks, get tips on where to go and what to
+              order, and filter by your mood or desire. Our goals are to:
             </Paragraph>
 
             <UnorderedList spacing>
               <UnorderedListItem size="lg">
-                <TextStrong display="inline">Make a better guide 🎙</TextStrong>{' '}
+                <TextStrong display="inline">
+                  Design a better guide 🎙
+                </TextStrong>{' '}
                 - With natural langauge analysis, threaded discussions, voting,
                 and specialization, we want to prove that you "map-reduce" an
                 active community into a "current best of" guide.
@@ -198,6 +222,8 @@ export default function AboutPage({
               alive and personalized, that really understands you and the world
               around you.
             </Paragraph>
+
+            <Paragraph size="xxl">Enjoy! 🌮🍜</Paragraph>
 
             <Spacer />
             <Divider />

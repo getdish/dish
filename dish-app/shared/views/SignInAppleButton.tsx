@@ -1,4 +1,5 @@
-import { HStack, Text, VStack } from '@dish/ui'
+import { Auth } from '@dish/graph'
+import { HStack, Text, Toast, VStack } from '@dish/ui'
 import React from 'react'
 
 import { AppleLogoWhite } from './AppleLogoWhite'
@@ -14,13 +15,17 @@ export const SignInAppleButton = () => {
       hoverStyle={{
         borderColor: 'rgba(255,255,255,0.3)',
       }}
-      onPress={() => {
+      onPress={async () => {
         // @ts-ignore
-        const x = AppleID.auth.signIn()
-        console.log('x', x)
-        x?.then((data) => {
-          console.log('got', data)
-        })
+        const res = AppleID.auth.signIn()
+        if (!res) return // in-browser
+        const { authorization } = await res
+        const [status] = await Auth.appleAuth(authorization)
+        if (status == 200) {
+          Toast.show('Logged in!')
+        } else {
+          Toast.show('Error loggin in 😭', { type: 'error' })
+        }
       }}
     >
       <HStack paddingRight={20} backgroundColor="#000" alignItems="center">

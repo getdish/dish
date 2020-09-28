@@ -4,9 +4,8 @@ import React from 'react'
 
 import { GeocodePlace } from '../../../shared/state/home-types'
 import { Link } from '../../../shared/views/ui/Link'
-import { isWeb } from '../../constants'
 import { useIsNarrow } from '../../hooks/useIs'
-import { LinkProps, LinkSharedProps } from '../../views/ui/LinkProps'
+import { LinkSharedProps } from '../../views/ui/LinkProps'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { AddressSize, getAddressText } from './RestaurantAddressLinksRow'
 

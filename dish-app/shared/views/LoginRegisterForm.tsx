@@ -1,5 +1,4 @@
 import {
-  Divider,
   Form,
   HStack,
   Input,
@@ -13,7 +12,6 @@ import { default as React, useEffect, useState } from 'react'
 
 import { lightRed } from '../colors'
 import { isWeb } from '../constants'
-import { initAppleSigninButton } from '../helpers/initAppleSigninButton'
 import { useOvermind } from '../state/om'
 import { SignInAppleButton } from './SignInAppleButton'
 import { Link } from './ui/Link'
@@ -51,8 +49,6 @@ export const LoginRegisterForm = ({
   const [password, setPassword] = useState('')
 
   useEffect(() => {
-    initAppleSigninButton()
-
     if (isLoggedIn) {
       onDidLogin?.()
     }

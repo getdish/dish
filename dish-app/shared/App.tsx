@@ -1,4 +1,4 @@
-import { sleep } from '@dish/async'
+import { isSafari } from '@dish/helpers'
 import { AbsoluteVStack } from '@dish/ui'
 import loadable from '@loadable/component'
 import React, { Suspense, memo, useEffect } from 'react'
@@ -14,7 +14,6 @@ import { HomeSearchBarFloating } from './AppSearchBar'
 import { AppStackView } from './AppStackView'
 import { bgLight } from './colors'
 import { isSSR } from './constants'
-import { initAppleSigninButton } from './helpers/initAppleSigninButton'
 import { useIsNarrow } from './hooks/useIs'
 import { PagesStackView } from './pages/PagesStackView'
 import { ErrorBoundary } from './views/ErrorBoundary'
@@ -26,12 +25,12 @@ export default memo(function App() {
   useEffect(() => {
     // workaround apple id requirement to init 3 buttons
 
-    // init popover button
-    initAppleSigninButton()
-
-    // init footer button
-    sleep(500).then(() => {
-      initAppleSigninButton()
+    // @ts-ignore
+    AppleID.auth.init({
+      clientId: 'com.dishapp',
+      scope: 'name email',
+      redirectURI: 'https://dishapp.com/auth/apple_authorize',
+      usePopup: isSafari,
     })
 
     //Listen for authorization success

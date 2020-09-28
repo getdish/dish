@@ -3,7 +3,6 @@ import { Box, BoxProps, Divider, Spacer, Toast, VStack } from '@dish/ui'
 import React, { memo, useEffect } from 'react'
 
 import { isWeb } from './constants'
-import { initAppleSigninButton } from './helpers/initAppleSigninButton'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { flatButtonStyle } from './views/baseButtonStyle'
@@ -14,12 +13,6 @@ import { LinkButtonProps } from './views/ui/LinkProps'
 export const AppMenuContents = memo(
   ({ hideUserMenu, ...props }: { hideUserMenu: Function } & BoxProps) => {
     const om = useOvermind()
-
-    if (isWeb) {
-      useEffect(() => {
-        initAppleSigninButton()
-      }, [])
-    }
 
     return (
       <Box alignItems="stretch" padding={20} minWidth={240} {...props}>

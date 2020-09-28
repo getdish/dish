@@ -126,6 +126,35 @@ class AuthModel {
       )
       return [response.status, response.statusText] as const
     }
+
+    const data = await response.json()
+    this.isLoggedIn = true
+    this.jwt = data.token
+    this.user = data.user
+    localStorage.setItem(
+      BROWSER_STORAGE_KEY,
+      JSON.stringify({
+        token: this.jwt,
+        user: this.user,
+      })
+    )
+    this.has_been_logged_out = false
+    return [response.status, data.user] as const
+  }
+
+  // mostly same as login
+  async appleAuth(authorization: { id_token: string; code: string }) {
+    const response = await this.api(
+      'post',
+      '/auth/apple_authorize',
+      authorization
+    )
+
+    if (response.status != 201 && response.status != 200) {
+      console.error(`Couldn't login apple auth`)
+      return [response.status, response.statusText] as const
+    }
+
     const data = await response.json()
     this.isLoggedIn = true
     this.jwt = data.token

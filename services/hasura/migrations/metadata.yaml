@@ -141,6 +141,8 @@ tables:
       - price_range
       - rating
       - rating_factors
+      - score
+      - score_breakdown
       - slug
       - sources
       - state
@@ -167,6 +169,8 @@ tables:
       - price_range
       - rating
       - rating_factors
+      - score
+      - score_breakdown
       - slug
       - sources
       - state
@@ -194,6 +198,8 @@ tables:
       - price_range
       - rating
       - rating_factors
+      - score
+      - score_breakdown
       - slug
       - sources
       - state
@@ -271,6 +277,8 @@ tables:
       - rank
       - rating
       - restaurant_id
+      - score
+      - score_breakdown
       - tag_id
       filter: {}
   - role: contributor
@@ -280,6 +288,8 @@ tables:
       - rank
       - rating
       - restaurant_id
+      - score
+      - score_breakdown
       - tag_id
       filter: {}
   - role: user
@@ -289,6 +299,8 @@ tables:
       - rank
       - rating
       - restaurant_id
+      - score
+      - score_breakdown
       - tag_id
       filter: {}
   update_permissions:
@@ -324,7 +336,7 @@ tables:
         column: review_id
         table:
           schema: public
-          name: review_tag
+          name: review_tag_sentence
   insert_permissions:
   - role: contributor
     permission:
@@ -372,12 +384,13 @@ tables:
       - text
       - updated_at
       - user_id
+      - username
       filter: {}
   - role: contributor
     permission:
       columns:
-      - categories
       - authored_at
+      - categories
       - id
       - rating
       - restaurant_id
@@ -385,6 +398,7 @@ tables:
       - text
       - updated_at
       - user_id
+      - username
       filter: {}
   - role: user
     permission:
@@ -400,6 +414,7 @@ tables:
       - text
       - updated_at
       - user_id
+      - username
       filter: {}
   update_permissions:
   - role: contributor
@@ -467,10 +482,10 @@ tables:
       num_retries: 3
       interval_sec: 10
       timeout_sec: 60
-    webhook_from_env: DISH_HOOKS_ENDPOINT
+    webhook_from_env: GORSE_SYNC_HOOK
 - table:
     schema: public
-    name: review_tag
+    name: review_tag_sentence
   object_relationships:
   - name: review
     using:
@@ -478,6 +493,28 @@ tables:
   - name: tag
     using:
       foreign_key_constraint_on: tag_id
+  select_permissions:
+  - role: anon
+    permission:
+      columns:
+      - ml_sentiment
+      - naive_sentiment
+      - sentence
+      filter: {}
+  - role: contributor
+    permission:
+      columns:
+      - ml_sentiment
+      - naive_sentiment
+      - sentence
+      filter: {}
+  - role: user
+    permission:
+      columns:
+      - ml_sentiment
+      - naive_sentiment
+      - sentence
+      filter: {}
 - table:
     schema: public
     name: setting
