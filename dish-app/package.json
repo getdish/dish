@@ -116,7 +116,7 @@
     "web:prod:webpack5": "TARGET=web VERBOSE=1 NO_MINIFY=1 NODE_ENV=production webpack serve --port 19006 --progress",
     "web:ssr": "node _/web/server.js",
     "web:ssr:development": "NODE_ENV=development yarn web:ssr",
-    "preinstall": "./bin/preinstall.sh; node ./etc/update_package_json_workspace_hoist.js",
+    "preinstall": "node ./etc/update_package_json_workspace_hoist.js",
     "postinstall": "patch-package; expo-yarn-workspaces postinstall",
     "devtools": "npx overmind-devtools@26.0.1",
     "test": "true",

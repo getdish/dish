@@ -6,9 +6,6 @@ RUN apt-get update && apt-get install -y parallel build-essential \
       libcairo2-dev libpixman-1-dev libpango1.0-dev \
       libjpeg62-turbo-dev libgif-dev patch
 
-COPY dish-app .
-
-RUN yarn install
 RUN yarn build:web
 
 ## Slim it

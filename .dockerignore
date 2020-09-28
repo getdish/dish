@@ -10,3 +10,8 @@ Dockerfile
 **/web-build
 **/.expo
 **/target/*
+dish-app/assets
+dish-app/ios
+dish-app/android
+.expo/*
+.expo-shared/*

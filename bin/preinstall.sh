@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-PROJECT_ROOT="$(dirname "$0")/../.."
+PROJECT_ROOT="$(dirname "$0")/.."
 
 pushd $PROJECT_ROOT
 # we will use dish-app react-native instead, see postinstall.sh
