@@ -1,3 +1,12 @@
+- blog post: A new world (of AI): personality in our online apps.
+  - make the point that todays apps are very generic: designed to please everyone
+  - Hitchhikers guide to the galaxy was prescient: AI can bring us *personality*
+  - the biggest breakthrough (gpt3) is great at sarcasm, wit, humor
+  - apps of the future will feel much more fun, personal, and human-like because of this
+  - the biggest effect will be we'll look back and think the old internet was much more boring - wheres the fun?
+
+- admin panel fixes + fiverr cleanups
+
 
 - voting on dish tags / voting in general
 - slow scrolling because of mapbox?
