@@ -21,7 +21,13 @@ export const LoadingItemsSmall = () => (
 // same across all instances, less flickers
 const seed = Math.max(3, Math.min(6, Math.round(Math.random() * 10)))
 
-export const LoadingItem = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
+export const LoadingItem = ({
+  size = 'md',
+  lines = 3,
+}: {
+  size?: 'sm' | 'md' | 'lg'
+  lines?: number
+}) => {
   const scale = size === 'sm' ? 0.5 : size === 'lg' ? 1.75 : 1
   return (
     <VStack
@@ -37,7 +43,7 @@ export const LoadingItem = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => {
         borderRadius={7}
       />
       <VStack spacing={6 * scale}>
-        {[1, 2, 3].map((index) => (
+        {new Array(lines).fill(0).map((index) => (
           <HStack
             key={index}
             width={`${seed * (15 - (2 - index > -1 ? index : -index) * 4)}%`}

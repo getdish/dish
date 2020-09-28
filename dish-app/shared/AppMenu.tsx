@@ -1,4 +1,5 @@
-import { ChevronUp, HelpCircle, Menu } from '@dish/react-feather'
+import { slugify } from '@dish/graph/_'
+import { ChevronUp, HelpCircle, Menu, User } from '@dish/react-feather'
 import { HStack, Popover, Text, Tooltip } from '@dish/ui'
 import React, { memo, useCallback, useEffect } from 'react'
 
@@ -45,6 +46,26 @@ export const AppMenu = memo(() => {
 
       {isAboveMedium && (
         <>
+          {om.state.user.isLoggedIn && (
+            <Tooltip contents="Profle">
+              <MenuButton
+                name="user"
+                params={{
+                  username: slugify(om.state.user.user?.username ?? ''),
+                }}
+                Icon={User}
+                onPress={(e) => {
+                  if (omStatic.state.router.curPageName === 'profile') {
+                    e.preventDefault()
+                    omStatic.actions.home.up()
+                  } else {
+                    e.navigate()
+                  }
+                }}
+              />
+            </Tooltip>
+          )}
+
           <Tooltip contents="About">
             <MenuButton
               name="about"
@@ -99,7 +120,7 @@ const MenuButton = memo(
         {...props}
       >
         {(isActive) => {
-          const IconElement = isActive ? ActiveIcon : Icon
+          const IconElement = isActive ? ActiveIcon ?? Icon : Icon
           return (
             <HStack spacing alignItems="center" justifyContent="center">
               <IconElement color={color} size={22} />
