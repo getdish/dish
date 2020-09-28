@@ -3,7 +3,12 @@ import { Store, useStore } from '@dish/use-store'
 import React, { forwardRef, useEffect, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 
-import { drawerWidthMax, isWeb, searchBarHeight } from '../constants'
+import {
+  drawerWidthMax,
+  isWeb,
+  searchBarHeight,
+  supportsTouchWeb,
+} from '../constants'
 import { useIsNarrow, useIsReallyNarrow } from '../hooks/useIs'
 import { useOvermind } from '../state/om'
 
@@ -57,7 +62,9 @@ export const ContentScrollView = forwardRef(
       }, 200)
     }
     const preventScrolling =
-      !isWeb && isReallySmall && om.state.home.drawerSnapPoint >= 1
+      (!isWeb || supportsTouchWeb) &&
+      isReallySmall &&
+      om.state.home.drawerSnapPoint >= 1
 
     return (
       <ScrollView
