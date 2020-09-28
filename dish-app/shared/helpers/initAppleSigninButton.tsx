@@ -11,7 +11,7 @@ export const initAppleSigninButton = () => {
   AppleID.auth.init({
     clientId: 'com.dishapp',
     scope: 'name email',
-    redirectURI: 'https://auth.dishapp.com/auth/apple_authorize',
+    redirectURI: 'https://dishapp.com/auth/apple_authorize',
     usePopup: isSafari,
   })
 }
