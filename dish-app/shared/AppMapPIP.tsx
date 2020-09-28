@@ -27,7 +27,7 @@ export default memo(() => {
     <Suspense fallback={null}>
       <VStack
         className="ease-in-out"
-        transform={[{ scale: 0.8 }, { translateX: 15 }, { translateY: -15 }]}
+        transform={[{ scale: 0.8 }, { translateX: 15 }, { translateY: 15 }]}
         {...(isReallySmall &&
           drawerSnapPoint > 0 && {
             opacity: 0,

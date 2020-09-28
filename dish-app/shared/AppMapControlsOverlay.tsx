@@ -12,6 +12,7 @@ import { searchBarHeight, zIndexMapControls } from './constants'
 import { getWindowHeight } from './helpers/getWindow'
 import { useIsNarrow, useIsReallyNarrow } from './hooks/useIs'
 import { useMapSize } from './hooks/useMapSize'
+import { useSafeArea } from './hooks/useSafeArea'
 import { useOvermind } from './state/om'
 
 export const AppMapControlsOverlay = memo(() => {
@@ -20,6 +21,7 @@ export const AppMapControlsOverlay = memo(() => {
   const isSmall = useIsNarrow()
   const { paddingLeft, width } = useMapSize(isSmall)
   const drawerStore = useStore(BottomDrawerStore)
+  const edgeInsets = useSafeArea()
 
   let bottom = 0
   if (om.state.home.drawerSnapPoint === 2) {
@@ -60,13 +62,13 @@ export const AppMapControlsOverlay = memo(() => {
             overflow="hidden"
             justifyContent="space-between"
             flexWrap="wrap"
-            paddingLeft={isSmall ? 15 : 30}
-            paddingRight={isReallySmall ? 20 : 15}
-            paddingBottom={isReallySmall ? 60 : 15}
+            paddingLeft={isSmall ? 10 : 30}
+            paddingRight={15}
+            paddingBottom={isReallySmall ? edgeInsets.bottom + 15 : 15}
             paddingTop={20}
           >
             <Suspense fallback={null}>
-              <HomeMapPIP />
+              <AppMapPIP />
             </Suspense>
             {!isReallySmall && <AppMapRestaurantPeek />}
 
@@ -104,5 +106,5 @@ export const AppMapControlsOverlay = memo(() => {
   )
 })
 
-const HomeMapPIP =
+const AppMapPIP =
   process.env.TARGET === 'ssr' ? null : loadable(() => import('./AppMapPIP'))

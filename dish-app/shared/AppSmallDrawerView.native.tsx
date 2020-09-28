@@ -85,7 +85,9 @@ export const AppSmallDrawerView = (props: { children: any }) => {
             <VStack maxHeight={searchBarHeight}>
               <AppSearchBarDrawer />
             </VStack>
-            <VStack flex={1}>{props.children}</VStack>
+            <VStack position="relative" flex={1}>
+              {props.children}
+            </VStack>
           </View>
         </VStack>
       </BottomSheetContainer>

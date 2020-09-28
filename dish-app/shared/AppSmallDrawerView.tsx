@@ -1,3 +1,4 @@
+import { supportsTouchWeb } from '@dish/helpers'
 import { AbsoluteVStack, VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { useEffect, useMemo } from 'react'
@@ -5,6 +6,7 @@ import { Animated, PanResponder, View } from 'react-native'
 
 import { AppSearchBarDrawer } from './AppSearchBar'
 import { blurSearchInput } from './AppSearchInput'
+import { AppSmallDrawerView as AppSmallDrawerViewNative } from './AppSmallDrawerView.native'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { BottomSheetContainer } from './BottomSheetContainer'
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from './constants'
@@ -13,6 +15,10 @@ import { useIsNarrow } from './hooks/useIs'
 import { omStatic } from './state/omStatic'
 
 export const AppSmallDrawerView = (props: { children: any }) => {
+  if (supportsTouchWeb) {
+    return <AppSmallDrawerViewNative {...props} />
+  }
+
   const drawerStore = useStore(BottomDrawerStore)
   const isSmall = useIsNarrow()
 

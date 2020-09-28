@@ -2,7 +2,6 @@ import { BlurView, StackProps, VStack } from '@dish/ui'
 import React from 'react'
 
 import { drawerBorderRadius } from './constants'
-import { styles } from './styles'
 
 export const BottomSheetContainer = ({ children, ...props }: StackProps) => {
   return (

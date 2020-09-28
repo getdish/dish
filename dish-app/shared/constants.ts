@@ -13,6 +13,9 @@ export const isWeb =
   typeof document !== 'undefined' || process.env.TARGET === 'web'
 export const isNative = process.env.TARGET === 'native'
 
+export const supportsTouchWeb =
+  typeof window !== 'undefined' && 'ontouchstart' in window
+
 export const drawerPad = 8
 export const drawerBorderRadius = 16
 export const drawerWidthMax = 820

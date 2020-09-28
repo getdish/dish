@@ -67,14 +67,16 @@ export default function AboutPage({
               color={brandColorDark}
             >
               A modern guide to the food gems of the world should feel like a{' '}
-              <TextStrong>fun Pokédex</TextStrong> that really gets you.
+              <Text display="inline" fontWeight="600">
+                fun Pokédex
+              </Text>{' '}
+              that really gets you.
             </Paragraph>
 
             <Paragraph size="xl">
               We're building a modern "Hitchhikers guide to gastronomy", if you
-              will. A guide that gets you, is collaborative, and makes it fun to
-              find great things around the world. Dish was born from two
-              frustrations:
+              will. A collaborative guide that makes it fun to find great food
+              around the world. Dish was born from two frustrations:
             </Paragraph>
 
             <UnorderedList spacing>
@@ -89,15 +91,17 @@ export default function AboutPage({
             </UnorderedList>
 
             <Paragraph size="xl">
-              Search across delivery: doable. But how do you fix
+              Search across delivery was doable. But how do you fix
               hole-in-the-wall ratings?
             </Paragraph>
 
             <Paragraph size="xl">
               Our answer:{' '}
-              <TextStrong>5 star ratings is not what we need</TextStrong>. It
-              collapses everything you care about into one dimension. What you
-              want when ordering{' '}
+              <TextStrong display="inline">
+                5 star ratings is not what we need
+              </TextStrong>
+              . It collapses everything you care about into one dimension. What
+              you want when ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -144,8 +148,8 @@ export default function AboutPage({
               you write a review, we take yout text and turn it into votes (that
               you can confirm or change before submitting). By letting people
               speak their minds naturally and then counting{' '}
-              <TextStrong>what they say into votes</TextStrong>, we think we can
-              build a more inuitive guide.
+              <TextStrong display="inline">what they say into votes</TextStrong>
+              , we think we can build a more inuitive guide.
             </Paragraph>
 
             <Paragraph size="xl">
@@ -155,6 +159,7 @@ export default function AboutPage({
                 lineHeight={24}
                 borderBottomColor="#eee"
                 borderBottomWidth={2}
+                display="inline"
               >
                 every delivery service
               </Text>{' '}
@@ -172,13 +177,13 @@ export default function AboutPage({
 
             <UnorderedList spacing>
               <UnorderedListItem size="lg">
-                <TextStrong>Make a better guide 🎙</TextStrong> - With natural
-                langauge analysis, threaded discussions, voting, and
-                specialization, we want to prove that you "map-reduce" an active
-                community into a "current best of" guide.
+                <TextStrong display="inline">Make a better guide 🎙</TextStrong>{' '}
+                - With natural langauge analysis, threaded discussions, voting,
+                and specialization, we want to prove that you "map-reduce" an
+                active community into a "current best of" guide.
               </UnorderedListItem>
               <UnorderedListItem size="lg">
-                <TextStrong>
+                <TextStrong display="inline">
                   Enable unique, high quality restaurants ✨
                 </TextStrong>
                 - Instead of having to please everyone to try for 5 stars

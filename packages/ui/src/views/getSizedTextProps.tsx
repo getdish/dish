@@ -1,7 +1,12 @@
+// import { defaultSmall, isNative, supportsTouchWeb } from '@dish/helpers'
 import { TextStyle } from 'react-native'
 
 import { ParagraphProps } from './Paragraph'
 import { getSize } from './Size'
+
+// experiment doing smaller for touch, but fails with static extration..
+// const isSmallDevice = isNative || (supportsTouchWeb && defaultSmall)
+// const scale = isSmallDevice ? 0.9 : 1
 
 export const getSizedTextProps = ({
   size = 1,
