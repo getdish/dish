@@ -12,7 +12,7 @@ import config from '../config/config'
 // may want to switch if we get issues:
 // https://github.com/A-Tokyo/apple-signin-auth
 
-const redirectUri = 'https://auth.dishapp.com/auth/apple_authorize'
+const redirectUri = 'https://dishapp.com/auth/apple_authorize'
 const appleConfig: AppleSignInOptions = {
   clientId: 'com.dishapp',
   teamId: '399WY8X9HY', // or dish.motion ?
