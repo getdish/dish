@@ -14,7 +14,6 @@ import {
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image, ScrollView, TextInput } from 'react-native'
 
-import { pageWidthMax } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { HomeStateItemReview } from '../../state/home-types'
@@ -33,8 +32,8 @@ export default memo(function HomePageRestaurantReview() {
 
   if (state.type === 'restaurantReview') {
     return (
-      <Modal maxWidth={pageWidthMax * 0.55}>
-        <VStack width="100%" height="100%" flex={1}>
+      <Modal>
+        <VStack width="95%" maxWidth={880} height="100%" flex={1}>
           <AbsoluteVStack top={5} right={26}>
             <StackViewCloseButton />
           </AbsoluteVStack>

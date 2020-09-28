@@ -1,6 +1,9 @@
 import { query } from '@dish/graph'
 
 export const restaurantQuery = (slug: string) => {
+  if (!slug) {
+    debugger
+  }
   return query.restaurant({
     where: {
       slug: {

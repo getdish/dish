@@ -419,7 +419,6 @@ const TagEdit = memo(
           }}
           onChange={(x) => {
             for (const key in x) {
-              console.log('setting', key, x[key])
               tag[key] = x[key]
             }
             sleep(500).then(() => {

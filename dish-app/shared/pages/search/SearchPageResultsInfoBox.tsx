@@ -57,7 +57,13 @@ const HomeSearchInfoBoxCountry = memo(
         marginHorizontal={10}
         marginBottom={10}
       >
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView
+          style={{
+            borderRadius: 100,
+          }}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
           <HStack
             paddingHorizontal={20}
             paddingVertical={5}

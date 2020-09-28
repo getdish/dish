@@ -1,6 +1,7 @@
 import { AbsoluteVStack, HStack, SmallTitle, Spacer, VStack } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
+import { ScrollView } from 'react-native'
 
 import { bgLight, brandColor } from '../../colors'
 import { drawerWidthMax } from '../../constants'
@@ -51,7 +52,7 @@ export const RestaurantRatingBreakdown = memo(
           <SlantedTitle fontWeight="700">Reviews</SlantedTitle>
         </HStack>
         {closable && (
-          <AbsoluteVStack zIndex={1000} top={10} right={6}>
+          <AbsoluteVStack zIndex={1000} top={10} right={10}>
             <CloseButton onPress={store.toggleShowComments} />
           </AbsoluteVStack>
         )}
@@ -116,7 +117,9 @@ export const RestaurantRatingBreakdown = memo(
             </HStack>
 
             <Suspense fallback={null}>
-              <RestaurantReviewsList restaurantId={restaurantId} />
+              <ScrollView>
+                <RestaurantReviewsList restaurantId={restaurantId} />
+              </ScrollView>
             </Suspense>
           </VStack>
         </HStack>

@@ -13,7 +13,13 @@ import {
   useDebounce,
   useGet,
 } from '@dish/ui'
-import React, { Suspense, memo, useEffect, useState } from 'react'
+import React, {
+  Suspense,
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react'
 import { Dimensions } from 'react-native'
 
 import { bgLight, bgLightLight, brandColor, lightBlue } from '../../colors'
@@ -147,15 +153,19 @@ const RestaurantListItemContent = memo(
     const [isActive, setIsActive] = useState(false)
 
     const getIsActive = useGet(isActive)
-    useEffect(() => {
-      return omStatic.reaction(
-        (state) => props.rank == state.home.activeIndex + 1,
-        (isActive) => {
-          if (getIsActive() !== isActive) {
-            setIsActive(isActive)
-          }
+    useLayoutEffect(() => {
+      const getIsActiveNow = (state) => props.rank == state.home.activeIndex + 1
+
+      if (getIsActiveNow(omStatic.state)) {
+        setIsActive(true)
+      }
+
+      return omStatic.reaction(getIsActiveNow, (isActive) => {
+        console.log('setting active', isActive)
+        if (getIsActive() !== isActive) {
+          setIsActive(isActive)
         }
-      )
+      })
     }, [props.rank])
 
     const contentSideWidthProps: StackProps = {
@@ -192,7 +202,7 @@ const RestaurantListItemContent = memo(
         // overflow="hidden"
         // prevent jitter/layout moving until loaded
         display={restaurant.name === null ? 'none' : 'flex'}
-        borderLeftWidth={2}
+        borderLeftWidth={8}
         borderLeftColor={isActive ? brandColor : 'transparent'}
         paddingHorizontal={pad}
         position="relative"

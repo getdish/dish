@@ -4,11 +4,11 @@ import {
   LoadingItems,
   Modal,
   SmallTitle,
+  Spacer,
   VStack,
 } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 
-import { pageWidthMax } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useOvermind } from '../../state/om'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
@@ -38,15 +38,16 @@ const RestaurantReviewsPageContent = memo(
     return (
       <>
         <PageTitleTag>{title}</PageTitleTag>
-        <Modal maxWidth={pageWidthMax} height="98%">
+        <Modal width="98%" height="98%" maxWidth={880}>
           <VStack width="100%" height="100%" flex={1}>
-            <AbsoluteVStack top={5} right={26}>
+            <AbsoluteVStack top={5} right={30}>
               <StackViewCloseButton />
             </AbsoluteVStack>
             <VStack paddingTop={10}>
               <SmallTitle>{restaurant.name}</SmallTitle>
+              <Spacer />
               <Suspense fallback={<LoadingItems />}>
-                <RestaurantRatingBreakdown {...props} />
+                <RestaurantRatingBreakdown showScoreTable {...props} />
               </Suspense>
             </VStack>
           </VStack>

@@ -33,6 +33,12 @@ export const Modal = ({
   overlayDismisses,
   // children
   children,
+  height,
+  width,
+  minHeight,
+  minWidth,
+  maxWidth,
+  maxHeight,
   ...rest
 }: ModalProps &
   StackProps & {
@@ -63,10 +69,12 @@ export const Modal = ({
           onPress={overlayDismisses ? onRequestClose : undefined}
         >
           <AnimatedVStack
-            height={rest.height}
-            width={rest.width}
-            minHeight={rest.minHeight}
-            minWidth={rest.minWidth}
+            height={height}
+            width={width}
+            minHeight={minHeight}
+            minWidth={minWidth}
+            maxWidth={maxWidth}
+            maxHeight={maxHeight}
           >
             <VStack
               backgroundColor="#fff"
@@ -77,6 +85,7 @@ export const Modal = ({
               shadowColor="rgba(0,0,0,0.5)"
               shadowRadius={40}
               onPress={prevent}
+              flex={1}
               {...rest}
             >
               {children}

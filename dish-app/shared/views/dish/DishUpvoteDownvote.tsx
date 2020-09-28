@@ -16,29 +16,30 @@ export const DishUpvoteDownvote = graphql(
     subtle?: boolean
     restaurantId: string
   }) => {
-    const score =
-      query
-        .restaurant({
-          where: {
-            id: {
-              _eq: restaurantId,
-            },
-          },
-          limit: 1,
-        })[0]
-        .tags({
-          limit: 1,
-          where: {
-            tag: {
-              name: {
-                _eq: name,
-              },
-              type: {
-                _eq: 'dish',
+    const score = restaurantId
+      ? query
+          .restaurant({
+            where: {
+              id: {
+                _eq: restaurantId,
               },
             },
-          },
-        })[0]?.['score'] ?? 0
+            limit: 1,
+          })[0]
+          .tags({
+            limit: 1,
+            where: {
+              tag: {
+                name: {
+                  _eq: name,
+                },
+                type: {
+                  _eq: 'dish',
+                },
+              },
+            },
+          })[0]?.['score'] ?? 0
+      : 0
     const { vote, setVote } = useUserUpvoteDownvoteQuery(restaurantId, {
       [slugify(name)]: true,
     })

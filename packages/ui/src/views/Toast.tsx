@@ -79,7 +79,7 @@ export const ToastRoot = memo(function ToastRoot() {
             backgroundColor={
               state.type === 'success'
                 ? 'rgba(20,180,120,0.95)'
-                : 'rgba(190,60,60)'
+                : 'rgba(190,60,60, 0.95)'
             }
             shadowColor="rgba(0,0,0,0.25)"
             shadowOffset={{ height: 10, width: 0 }}

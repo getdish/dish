@@ -13,6 +13,7 @@ import {
   VStack,
   combineRefs,
 } from '@dish/ui'
+import { Store } from '@dish/use-store'
 import React, {
   Suspense,
   createContext,
@@ -23,6 +24,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 import {
@@ -254,37 +256,6 @@ const SearchResultsContent = (props: Props) => {
     lowerCase: false,
   })
 
-  useEffect(() => {
-    // @ts-ignore
-    return omStatic.reaction(
-      (state) => state.home.activeIndex,
-      (index) => {
-        console.log(
-          'active index',
-          index,
-          omStatic.state.home.activeEvent,
-          scrollRef.current
-        )
-        if (
-          omStatic.state.home.activeEvent === 'pin' ||
-          omStatic.state.home.activeEvent === 'key'
-        ) {
-          scrollRef.current?.scrollTo({
-            x: 0,
-            y: ITEM_HEIGHT * index,
-            animated: true,
-          })
-        }
-      }
-    )
-  }, [])
-
-  // useEffect(() => {
-  //   if (state.scrollToTop > 0) {
-  //     scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
-  //   }
-  // }, [state.scrollToTop])
-
   const dataProvider = useMemo(() => {
     return new DataProvider((r1, r2) => {
       return r1.id !== r2.id
@@ -377,11 +348,11 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       titleLen > 70 ? 0.75 : titleLen > 60 ? 0.85 : titleLen > 50 ? 0.95 : 1
     const titleFontSize = 38 * titleScale * (isSmall ? 0.75 : 1)
     const lenseColor = useCurrentLenseColor()
-    const divRef = useRef<any>()
+    const scrollRef = useRef<ScrollView>()
 
     if (isWeb) {
       useEffect(() => {
-        const node = divRef.current._scrollNodeRef
+        const node = scrollRef.current['_scrollNodeRef']
         let height = node.clientHeight
         let width = node.clientWidth
         const observer = new ResizeObserver((entries) => {
@@ -400,10 +371,32 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       }, [])
     }
 
+    useEffect(() => {
+      return omStatic.reaction(
+        (state) => state.home.activeIndex,
+        (index) => {
+          if (
+            omStatic.state.home.activeEvent === 'pin' ||
+            omStatic.state.home.activeEvent === 'key'
+          ) {
+            scrollRef.current?.scrollTo({
+              x: 0,
+              y: ITEM_HEIGHT * index,
+              animated: true,
+            })
+          }
+        }
+      )
+    }, [])
+
+    const scrollToTopHandler = useCallback(() => {
+      scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
+    }, [])
+
     return (
       <ScrollView
         scrollEventThrottle={100}
-        ref={combineRefs(ref, divRef)}
+        ref={combineRefs(ref, scrollRef)}
         {...(!isWeb && {
           onContentSizeChange: (width, height) => {
             onSizeChanged({ width, height })
@@ -412,7 +405,6 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         {...props}
         onScroll={(e) => {
           const y = e.nativeEvent.contentOffset.y
-          console.log('setting', y)
           setIsScrollAtTop(y <= 0)
           props.onScroll?.(e)
         }}
@@ -455,9 +447,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         <Suspense fallback={null}>
           <SearchFooter
             searchState={curProps.item}
-            scrollToTop={() => {
-              // setState((x) => ({ ...x, scrollToTop: Math.random() }))
-            }}
+            scrollToTop={scrollToTopHandler}
           />
         </Suspense>
       </ScrollView>

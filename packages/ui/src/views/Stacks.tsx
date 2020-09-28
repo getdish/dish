@@ -161,6 +161,11 @@ const createStack = (defaultProps?: ViewStyle) => {
     }, [children])
 
     const ViewComponent = animated ? Animated.View : View
+
+    if (animated) {
+      console.log('styleProps', styleProps)
+    }
+
     let content = (
       <ViewComponent
         ref={combineRefs(innerRef, ref)}
