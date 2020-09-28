@@ -60,6 +60,13 @@ resource "kubernetes_ingress" "k8s-services-ingress" {
             service_port = "http"
           }
         }
+        path {
+          path = "/auth"
+          backend {
+            service_name = "jwt-server"
+            service_port = "http"
+          }
+        }
       }
     }
     rule {
