@@ -7,11 +7,11 @@ export const bgLightTranslucent = 'rgba(220, 234, 255, 0.25)'
 export const bgLightHover = `rgba(220, 235, 245, 1)`
 export const bgHover = `#7154ADee`
 
-export const brandColor = `#DF95CF`
-export const brandColorDark = `darkred`
-export const brandColorDarker = `rgb(145, 55, 55)`
-export const brandColorLight = `#8376ce`
-export const brandColorLighter = `#8376ceee`
+export const brandColor = `#CA3366`
+export const brandColorDark = `#A61C4A`
+export const brandColorDarker = `#800A32`
+export const brandColorLight = `#DE487B`
+export const brandColorLighter = `#EC6996`
 
 export const lightYellow = '#FCF3CF'
 export const lightGreen = '#DCF1E5'

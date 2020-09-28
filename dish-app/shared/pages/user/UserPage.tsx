@@ -33,14 +33,16 @@ export default function UserPageContainer(
     <StackDrawer closable title={`${props.item.username} | Dish food reviews`}>
       <Suspense
         fallback={
-          <VStack height={95}>
-            <LoadingItem />
+          <VStack height={125} borderColor="#eee" borderBottomWidth={1}>
+            <LoadingItem lines={2} />
           </VStack>
         }
       >
         <UserHeader {...props} setTab={setTab} tab={tab} />
       </Suspense>
-      <UserPageContent {...props} tab={tab} />
+      <Suspense fallback={<LoadingItems />}>
+        <UserPageContent {...props} tab={tab} />
+      </Suspense>
     </StackDrawer>
   )
 }

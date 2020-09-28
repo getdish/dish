@@ -50,14 +50,14 @@ export default function AboutPage({
           <HStack maxWidth="100%" alignItems="center">
             <Divider flex />
             <Spacer />
-            <Logo scale={2} color={brandColorDark} />
+            <Logo scale={2} color={brandColor} />
             <Spacer />
             <Divider flex />
           </HStack>
 
           <VStack spacing="xl">
             <Paragraph textAlign="center" size={1.5} fontWeight="600">
-              Our goal: bring fun to exploring the real world.
+              Bring fun to exploring the real world.
             </Paragraph>
 
             <Paragraph
@@ -66,38 +66,38 @@ export default function AboutPage({
               fontWeight="300"
               color={brandColorDark}
             >
-              An app for exploring the great food spots of the world should feel
-              like a fun, quirky Pokedex that really gets you.
-              <Text fontSize={22}>
-                A&nbsp;"Hitchhikers&nbsp;guide to gastronomy", if you will.
-              </Text>
+              A modern guide to the food gems of the world should feel like a{' '}
+              <TextStrong>fun Pokédex</TextStrong> that really gets you.
             </Paragraph>
 
             <Paragraph size="xl">
-              Dish was born from two frustrations:
+              We're building a modern "Hitchhikers guide to gastronomy", if you
+              will. A guide that gets you, is collaborative, and makes it fun to
+              find great things around the world. Dish was born from two
+              frustrations:
             </Paragraph>
 
             <UnorderedList spacing>
               <UnorderedListItem size="xl">
-                Amazing hole-in-the-wall international cuisine lost to 3.5 star
+                Amazing hole-in-the-wall international spots lost to 3.5 star
                 ratings.
               </UnorderedListItem>
               <UnorderedListItem size="xl">
-                Needing one app to find what's good & three others to see if it
-                delivers.
+                Needing one app to <em>find</em> what's good & three others to
+                see if it delivers.
               </UnorderedListItem>
             </UnorderedList>
 
             <Paragraph size="xl">
-              We figured building an app to search across delivery was doable.
-              But how do you fix the hole-in-the-wall ratings problem?
+              Search across delivery: doable. But how do you fix
+              hole-in-the-wall ratings?
             </Paragraph>
 
-            <Paragraph size="xxl">
-              Our answer is that{' '}
-              <TextStrong>5 star ratings may not be what we need</TextStrong>.
-              They collapse everything you care about into one dimension. What
-              you want when ordering{' '}
+            <Paragraph size="xl">
+              Our answer:{' '}
+              <TextStrong>5 star ratings is not what we need</TextStrong>. It
+              collapses everything you care about into one dimension. What you
+              want when ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -127,8 +127,8 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              are <em>unique</em>: a specific dish, delivery speed, vibe,
-              ambiance - it totally depends on your current desires.
+              are <em>unique</em>: whether it's a specific dish, delivery speed,
+              vibe, ambiance - it totally depends on your current desire.
             </Paragraph>
 
             <Paragraph size="xl">

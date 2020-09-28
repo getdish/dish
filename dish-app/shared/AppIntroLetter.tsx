@@ -3,6 +3,7 @@ import {
   AbsoluteVStack,
   AnimatedVStack,
   Paragraph,
+  Spacer,
   Text,
   VStack,
 } from '@dish/ui'
@@ -12,10 +13,17 @@ import { useStorageState } from 'react-storage-hooks'
 
 // @ts-ignore
 import dishNeon from './assets/dish-neon.jpg'
-import { brandColor, lightGreen, lightYellow } from './colors'
+import {
+  brandColor,
+  brandColorLight,
+  brandColorLighter,
+  lightGreen,
+  lightYellow,
+} from './colors'
 import { useOvermind } from './state/om'
 import { LoginRegisterForm } from './views/LoginRegisterForm'
 import { Link } from './views/ui/Link'
+import { LinkButton } from './views/ui/LinkButton'
 
 export const HomeIntroLetter = memo(() => {
   const om = useOvermind()
@@ -130,28 +138,36 @@ export const HomeIntroLetterContent = memo(() => {
 
         {divider}
 
-        <Paragraph textAlign="center" color="#fff" size={1.1}>
+        <>
           <VStack>
             <Text color={lightGreen} fontWeight="500">
-              ratings split by factors,{' '}
-              <Link
-                backgroundColor={`${lightYellow}22`}
-                paddingHorizontal={4}
-                borderRadius={6}
-                marginHorizontal={-4}
+              <LinkButton
+                fontSize={16}
+                lineHeight={28}
+                borderRadius={8}
+                paddingHorizontal={8}
+                marginHorizontal={-8}
+                color={brandColorLighter}
+                backgroundColor={`${lightYellow}33`}
+                hoverStyle={{
+                  backgroundColor: `${lightYellow}44`,
+                }}
                 name="about"
               >
-                down to the dish
-              </Link>
+                the best spots ✨ & dishes 🍽
+              </LinkButton>
             </Text>
           </VStack>
+          <Spacer size="xs" />
           <VStack>
-            <Text color={lightYellow}>searches every delivery app 🚗 </Text>
+            <Text fontSize={16} lineHeight={28} color={lightYellow}>
+              search every delivery app 🚗{' '}
+            </Text>
           </VStack>
           {/* <Text fontWeight="500">local gems 💎</Text> */}
-        </Paragraph>
+        </>
 
-        {divider}
+        <Spacer size="xs" />
 
         <LoginRegisterForm />
       </VStack>

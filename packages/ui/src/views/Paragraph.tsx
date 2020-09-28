@@ -12,7 +12,7 @@ export const Paragraph = (props: SizableTextProps) => {
 }
 
 const defaultProps: ParagraphProps = {
-  color: 'rgba(0,0,0,0.85)',
+  color: 'rgba(0,0,0,0.88)',
   fontWeight: '400',
   selectable: true,
 }
