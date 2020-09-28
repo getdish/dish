@@ -1,22 +1,19 @@
-import {
-  BlurViewProperties,
-  BlurView as NativeBlurView,
-} from '@react-native-community/blur'
+import { BlurView as NativeBlurView } from '@react-native-community/blur'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 
-import { StackProps, VStack } from './Stacks'
+import { BlurViewProps } from './BlurView'
+import { VStack } from './Stacks'
 
 export function BlurView({
   blurType = 'light',
   blurAmount = 10,
-  reducedTransparencyFallbackColor,
+  fallbackBackgroundColor,
   downsampleFactor,
-  overlayColor,
   children,
   borderRadius,
   ...props
-}: StackProps & BlurViewProperties) {
+}: BlurViewProps) {
   return (
     <VStack borderRadius={borderRadius} {...props}>
       <NativeBlurView
@@ -24,9 +21,8 @@ export function BlurView({
         {...{
           blurType,
           blurAmount,
-          reducedTransparencyFallbackColor,
+          reducedTransparencyFallbackColor: fallbackBackgroundColor,
           downsampleFactor,
-          overlayColor,
         }}
       />
       {children}

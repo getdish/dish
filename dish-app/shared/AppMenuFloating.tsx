@@ -50,8 +50,8 @@ export const AppMenuFloating = () => {
         />
       </Modal>
       <AbsoluteVStack
-        top={safeArea.top ? safeArea.top : 15}
-        right={15}
+        top={safeArea.top ? safeArea.top : 10}
+        right={10}
         zIndex={zIndexDrawer - 1}
         pointerEvents="none"
       >
@@ -65,7 +65,10 @@ export const AppMenuFloating = () => {
             userMenu.toggle()
           }}
         >
-          <BlurView borderRadius={24}>
+          <BlurView
+            borderRadius={24}
+            fallbackBackgroundColor="rgba(255,255,255,0.7)"
+          >
             <HStack
               width={44}
               height={44}

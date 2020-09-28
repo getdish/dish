@@ -3,6 +3,7 @@ import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { MessageSquare } from '@dish/react-feather'
 import {
+  AbsoluteVStack,
   HStack,
   Spacer,
   StackProps,
@@ -169,15 +170,15 @@ const RestaurantListItemContent = memo(
     }, [props.rank])
 
     const contentSideWidthProps: StackProps = {
-      width: isSmall ? '90%' : '60%',
+      width: isSmall ? '80%' : '60%',
       minWidth: isSmall
         ? isWeb
-          ? '52vw'
+          ? 230
           : Dimensions.get('screen').width * 0.75
         : 320,
       maxWidth: isSmall
         ? isWeb
-          ? 450
+          ? 270
           : Dimensions.get('screen').width * 0.75
         : 430,
     }
@@ -202,11 +203,18 @@ const RestaurantListItemContent = memo(
         // overflow="hidden"
         // prevent jitter/layout moving until loaded
         display={restaurant.name === null ? 'none' : 'flex'}
-        borderLeftWidth={8}
-        borderLeftColor={isActive ? brandColor : 'transparent'}
         paddingHorizontal={pad}
         position="relative"
       >
+        {/* border left */}
+        <AbsoluteVStack
+          top={0}
+          bottom={0}
+          zIndex={-1}
+          width={8}
+          backgroundColor={isActive ? brandColor : 'transparent'}
+        />
+
         <VStack flex={1} alignItems="flex-start" maxWidth="100%">
           {/* ROW: TITLE */}
           <VStack
@@ -330,6 +338,8 @@ const RestaurantListItemContent = memo(
               zIndex={1000}
               paddingLeft={40}
               paddingRight={20}
+              marginTop={isSmall ? -6 : 0}
+              marginBottom={isSmall ? -12 : 0}
             >
               <Spacer size={2} />
 
@@ -363,34 +373,6 @@ const RestaurantListItemContent = memo(
                   />
                 )}
               </HStack>
-
-              {/* <HStack position="relative">
-                <AbsoluteVStack
-                  top={-12}
-                  left={-34}
-                  width={26}
-                  height={26}
-                  overflow="hidden"
-                >
-                  <AbsoluteVStack
-                    top={-18}
-                    left={3}
-                    width={40}
-                    height={40}
-                    transform={[{ rotate: '45deg' }]}
-                    className="dotted-line"
-                    borderRadius={100}
-                  />
-                </AbsoluteVStack>
-
-                <HStack flex={1} alignItems="center">
-                  <VStack flex={1} />
-                  <RestaurantScoreBreakdownSmall
-                    restaurantId={restaurantId}
-                    restaurantSlug={restaurantSlug}
-                  />
-                </HStack>
-              </HStack> */}
             </VStack>
           </VStack>
 

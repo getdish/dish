@@ -317,7 +317,9 @@ const HomeTopDishesTitle = () => {
       borderRadius={100}
       // backgroundColor={bgLight}
       alignSelf="center"
+      textAlign="center"
       fontSize={18}
+      lineHeight={26}
     >
       Uniquely good{' '}
       {!info || info.type === 'city' || info.type === 'country' ? 'in' : 'near'}{' '}

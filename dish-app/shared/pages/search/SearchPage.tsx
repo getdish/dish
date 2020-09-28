@@ -54,7 +54,10 @@ import {
 import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
-import { setIsScrollAtTop } from '../../views/ContentScrollView'
+import {
+  setIsScrollAtTop,
+  usePreventContentScroll,
+} from '../../views/ContentScrollView'
 import { HomeLenseBar } from '../../views/HomeLenseBar'
 import { StackDrawer } from '../../views/StackDrawer'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
@@ -349,27 +352,28 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     const titleFontSize = 38 * titleScale * (isSmall ? 0.75 : 1)
     const lenseColor = useCurrentLenseColor()
     const scrollRef = useRef<ScrollView>()
+    const preventScrolling = usePreventContentScroll()
 
-    if (isWeb) {
-      useEffect(() => {
-        const node = scrollRef.current['_scrollNodeRef']
-        let height = node.clientHeight
-        let width = node.clientWidth
-        const observer = new ResizeObserver((entries) => {
-          const entry = entries[0]
-          const size = entry.contentRect
-          if (size.width !== width || size.height !== height) {
-            height = size.height
-            width = size.width
-            onSizeChanged({ width, height })
-          }
-        })
-        observer.observe(node)
-        return () => {
-          observer.disconnect()
-        }
-      }, [])
-    }
+    // if (isWeb) {
+    //   useEffect(() => {
+    //     const node = scrollRef.current['_scrollNodeRef']
+    //     let height = node.clientHeight
+    //     let width = node.clientWidth
+    //     const observer = new ResizeObserver((entries) => {
+    //       const entry = entries[0]
+    //       const size = entry.contentRect
+    //       if (size.width !== width || size.height !== height) {
+    //         height = size.height
+    //         width = size.width
+    //         onSizeChanged({ width, height })
+    //       }
+    //     })
+    //     observer.observe(node)
+    //     return () => {
+    //       observer.disconnect()
+    //     }
+    //   }, [])
+    // }
 
     useEffect(() => {
       return omStatic.reaction(
@@ -397,12 +401,14 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       <ScrollView
         scrollEventThrottle={100}
         ref={combineRefs(ref, scrollRef)}
-        {...(!isWeb && {
-          onContentSizeChange: (width, height) => {
-            onSizeChanged({ width, height })
-          },
-        })}
         {...props}
+        onContentSizeChange={(width, height) => {
+          onSizeChanged({ width, height })
+        }}
+        scrollEnabled={preventScrolling ? false : props.scrollEnabled ?? true}
+        disableScrollViewPanResponder={
+          preventScrolling ? true : props.disableScrollViewPanResponder ?? false
+        }
         onScroll={(e) => {
           const y = e.nativeEvent.contentOffset.y
           setIsScrollAtTop(y <= 0)

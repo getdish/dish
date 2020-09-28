@@ -26,6 +26,7 @@ export const RestaurantOverview = memo(
     }) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
       const headlines = restaurant.headlines() ?? defaultListItems
+      const shownHeadlines = headlines.slice(0, 2)
       if (inline) {
         return (
           <VStack minHeight={130} position="relative">
@@ -40,14 +41,14 @@ export const RestaurantOverview = memo(
                 &ldquo;
               </Text>
             </AbsoluteVStack>
-            {headlines.slice(0, 2).map((item, i) => {
+            {shownHeadlines.map((item, i) => {
               return (
                 <React.Fragment key={i}>
-                  <HStack marginBottom={10} flex={1} overflow="hidden">
+                  <HStack flex={1} overflow="hidden">
                     <Paragraph
                       size={i == 0 ? 1.1 : 1}
                       opacity={i === 0 ? 1 : 0.7}
-                      height={i == 0 ? 90 : 'auto'}
+                      height={i == 0 ? 86 : 'auto'}
                       overflow="hidden"
                       // react native doesnt like using this as a prop...
                       {...(i !== 0 && {

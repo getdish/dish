@@ -7,7 +7,6 @@ import { isWeb } from '../../constants'
 import { useIsReallyNarrow } from '../../hooks/useIs'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { tagLenses } from '../../state/tagLenses'
-import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
 
 export const HomeTopSearches = memo(() => {
@@ -33,9 +32,8 @@ export const HomeTopSearches = memo(() => {
             alignItems="center"
             marginBottom={7}
             borderRadius={100}
-            backgroundColor="#fff"
             borderWidth={1}
-            borderColor="transparent"
+            borderColor={bgLight}
             hoverStyle={{
               borderColor: lightBlue,
             }}

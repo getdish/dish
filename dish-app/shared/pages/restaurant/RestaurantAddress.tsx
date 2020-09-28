@@ -39,7 +39,7 @@ export const RestaurantAddress = ({
         <Text
           color={color}
           ellipse
-          lineHeight={32}
+          lineHeight={24}
           fontSize={14}
           fontWeight="400"
           selectable

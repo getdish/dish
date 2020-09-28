@@ -26,6 +26,16 @@ export function setIsScrollAtTop(val: boolean) {
   isScrollAtTop = val
 }
 
+export const usePreventContentScroll = () => {
+  const isReallySmall = useIsReallyNarrow()
+  const om = useOvermind()
+  return (
+    (!isWeb || supportsTouchWeb) &&
+    isReallySmall &&
+    om.state.home.drawerSnapPoint >= 1
+  )
+}
+
 export const ContentScrollView = forwardRef(
   (
     {
@@ -41,10 +51,9 @@ export const ContentScrollView = forwardRef(
     },
     ref
   ) => {
-    const om = useOvermind()
+    const preventScrolling = usePreventContentScroll()
     const scrollStore = useStore(ScrollStore)
     const isSmall = useIsNarrow()
-    const isReallySmall = useIsReallyNarrow()
     const tm = useRef<any>(0)
     const setIsScrolling = (e) => {
       const y = e.nativeEvent.contentOffset.y
@@ -61,10 +70,6 @@ export const ContentScrollView = forwardRef(
         scrollStore.setIsScrolling(false)
       }, 200)
     }
-    const preventScrolling =
-      (!isWeb || supportsTouchWeb) &&
-      isReallySmall &&
-      om.state.home.drawerSnapPoint >= 1
 
     return (
       <ScrollView
