@@ -22,7 +22,7 @@ resource "kubernetes_deployment" "buildkitd" {
 
         container {
           name  = "buildkitd"
-          image = "moby/buildkit:master"
+          image = "moby/buildkit:v0.7.2"
 
           env {
             name = "DOCKER_CONFIG"
