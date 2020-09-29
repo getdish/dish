@@ -6,6 +6,8 @@ import {
   Tag,
   cleanReviewText,
   convertSimpleTagsToRestaurantTags,
+  dedupeReviews,
+  dedupeSentiments,
   externalUserUUID,
   globalTagId,
   restaurantGetAllPossibleTags,
@@ -237,7 +239,7 @@ export class Tagging {
         updated_reviews.push(source)
       }
     }
-    return updated_reviews
+    return dedupeReviews(updated_reviews)
   }
 
   tagFound(tag: Tag, text_source: TextSource) {
@@ -264,6 +266,9 @@ export class Tagging {
         }
         text_source.sentiments.push(sentiment)
       }
+    }
+    if (isReview(text_source)) {
+      text_source.sentiments = dedupeSentiments(text_source.sentiments)
     }
     return text_source
   }

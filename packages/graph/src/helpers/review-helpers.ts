@@ -1,3 +1,5 @@
+import { uniqBy } from 'lodash'
+
 import { globalTagId } from '../constants'
 import { order_by, query, review_constraint, uuid } from '../graphql'
 import { Review } from '../types'
@@ -11,6 +13,15 @@ export const reviewUpdate = QueryHelpers.update
 export const reviewFindOne = QueryHelpers.findOne
 export const reviewRefresh = QueryHelpers.refresh
 export const reviewDelete = QueryHelpers.delete
+
+export type ReviewTagSentence = {
+  id: string
+  review_id: string
+  tag_id: string
+  sentence?: string
+  ml_sentiment?: number
+  ml_score?: number
+}
 
 String.prototype.replaceAll = function (search, replacement) {
   var target = this
@@ -99,4 +110,23 @@ export function cleanReviewText(text: string | null | undefined) {
   const apostrophe = '&#39;'
   const cleaned = text.replace(br, '\n').replaceAll(apostrophe, "'")
   return cleaned
+}
+
+export function dedupeReviews(reviews: Review[]) {
+  const deduped = uniqBy(reviews, (review: Review) => {
+    return (
+      review.username +
+      review.restaurant_id +
+      review.tag_id +
+      review.authored_at
+    )
+  })
+  return deduped
+}
+
+export function dedupeSentiments(sentiments: ReviewTagSentence[]) {
+  const deduped = uniqBy(sentiments, (sentiment: ReviewTagSentence) => {
+    return sentiment.tag_id + sentiment.sentence
+  })
+  return deduped
 }
