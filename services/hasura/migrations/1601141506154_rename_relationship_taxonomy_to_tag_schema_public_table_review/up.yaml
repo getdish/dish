@@ -1,7 +1,0 @@
-- args:
-    name: taxonomy
-    new_name: tag
-    table:
-      name: review
-      schema: public
-  type: rename_relationship

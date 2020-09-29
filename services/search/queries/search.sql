@@ -185,12 +185,10 @@ main AS (
       -- However, if a known dish(es) is being searched for, then order the restaurants
       -- based on the number of mentions of those dishes
       ELSE (
-        SELECT COUNT(*)
+        SELECT SUM(review_mentions_count)
           FROM restaurant_tag rt
-          JOIN review ON review.restaurant_id = restaurant.id
           WHERE rt.restaurant_id = restaurant.id
             AND rt.tag_id IN (SELECT id FROM dish_ids)
-            AND review.tag_id IN (SELECT id FROM dish_ids)
       )
     END DESC NULLS LAST
 ),

@@ -6543,6 +6543,9 @@ export const schema = {
         get restaurant_id() {
           return new FieldNode(schema.uuid, undefined, false)
         },
+        get review_mentions_count() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
         get reviews() {
           return new FieldNode(
             new ArrayNode(schema.review, false),
@@ -6842,6 +6845,9 @@ export const schema = {
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
+        get review_mentions_count() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get score() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -6859,6 +6865,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get rating() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get review_mentions_count() {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
@@ -6903,6 +6912,9 @@ export const schema = {
         },
         get restaurant_id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get review_mentions_count() {
+          return new InputNodeField(schema.numeric_comparison_exp, true)
         },
         get reviews() {
           return new InputNodeField(schema.review_bool_exp, true)
@@ -6974,6 +6986,9 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.numeric, true)
         },
+        get review_mentions_count() {
+          return new InputNodeField(schema.numeric, true)
+        },
         get score() {
           return new InputNodeField(schema.numeric, true)
         },
@@ -7004,6 +7019,9 @@ export const schema = {
         },
         get restaurant_id() {
           return new InputNodeField(schema.uuid, true)
+        },
+        get review_mentions_count() {
+          return new InputNodeField(schema.numeric, true)
         },
         get reviews() {
           return new InputNodeField(schema.review_arr_rel_insert_input, true)
@@ -7039,6 +7057,9 @@ export const schema = {
         get restaurant_id() {
           return new FieldNode(schema.uuid, undefined, true)
         },
+        get review_mentions_count() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
         get score() {
           return new FieldNode(schema.numeric, undefined, true)
         },
@@ -7067,6 +7088,9 @@ export const schema = {
         get restaurant_id() {
           return new InputNodeField(schema.order_by, true)
         },
+        get review_mentions_count() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get score() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7091,6 +7115,9 @@ export const schema = {
         },
         get restaurant_id() {
           return new FieldNode(schema.uuid, undefined, true)
+        },
+        get review_mentions_count() {
+          return new FieldNode(schema.numeric, undefined, true)
         },
         get score() {
           return new FieldNode(schema.numeric, undefined, true)
@@ -7118,6 +7145,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get review_mentions_count() {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
@@ -7203,6 +7233,9 @@ export const schema = {
         get restaurant_id() {
           return new InputNodeField(schema.order_by, true)
         },
+        get review_mentions_count() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get reviews_aggregate() {
           return new InputNodeField(schema.review_aggregate_order_by, true)
         },
@@ -7269,6 +7302,9 @@ export const schema = {
         get restaurant_id() {
           return new InputNodeField(schema.uuid, true)
         },
+        get review_mentions_count() {
+          return new InputNodeField(schema.numeric, true)
+        },
         get score() {
           return new InputNodeField(schema.numeric, true)
         },
@@ -7291,6 +7327,9 @@ export const schema = {
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
+        get review_mentions_count() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get score() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -7310,6 +7349,9 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
+        get review_mentions_count() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get score() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7324,6 +7366,9 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get rating() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get review_mentions_count() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
@@ -7345,6 +7390,9 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
+        get review_mentions_count() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get score() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7359,6 +7407,9 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get rating() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get review_mentions_count() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
@@ -7381,6 +7432,9 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
+        get review_mentions_count() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get score() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7395,6 +7449,9 @@ export const schema = {
           return new FieldNode(schema.Int, undefined, true)
         },
         get rating() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
+        get review_mentions_count() {
           return new FieldNode(schema.numeric, undefined, true)
         },
         get score() {
@@ -7416,6 +7473,9 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
+        get review_mentions_count() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get score() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7433,6 +7493,9 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get rating() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get review_mentions_count() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
@@ -7454,6 +7517,9 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
+        get review_mentions_count() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get score() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7468,6 +7534,9 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get rating() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get review_mentions_count() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
@@ -7489,6 +7558,9 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
+        get review_mentions_count() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get score() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7503,6 +7575,9 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get rating() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get review_mentions_count() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
@@ -7522,6 +7597,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get rating() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get review_mentions_count() {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {

@@ -753,6 +753,8 @@ test('Scoring for rishes', async (t) => {
   const rish1 = updated?.tags.filter((t) => t.tag.name == 'Test tag')[0]
   const rish2 = updated?.tags.filter((t) => t.tag.name == 'Testpho')[0]
   t.is(rish1.score, 2)
+  t.is(rish1.review_mentions_count, 5)
+  t.is(rish2.review_mentions_count, 1)
   t.deepEqual(rish1.score_breakdown.yelp, {
     score: 0,
     counts: {

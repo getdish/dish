@@ -1,15 +1,9 @@
 import { sentryException, sentryMessage } from '@dish/common'
+import { ReviewTagSentence } from '@dish/graph'
 import { fetchBertSentiment } from '@dish/helpers'
 import { chunk } from 'lodash'
 
 import { Self } from './Self'
-
-type ReviewTagSentence = {
-  id: string
-  sentence?: string
-  ml_sentiment?: number
-  ml_score?: number
-}
 
 export class RestaurantTagScores {
   crawler: Self
@@ -136,10 +130,12 @@ export class RestaurantTagScores {
     for (const tag_id in tags) {
       const all_sources_score_sql = this._scoreSQL(tag_id)
       const breakdown_sql = this.generateBreakdownSQL(tag_id)
+      const mention_count_sql = this.generateMentionsCountSQL(tag_id)
       const sql = `
         UPDATE restaurant_tag SET
           score = (${all_sources_score_sql}),
-          score_breakdown = (${breakdown_sql})
+          score_breakdown = (${breakdown_sql}),
+          review_mentions_count = (${mention_count_sql})
         WHERE restaurant_id = '${this.crawler.restaurant.id}'
         AND tag_id = '${tag_id}';
       `
@@ -195,6 +191,15 @@ export class RestaurantTagScores {
         )
     `
     return all
+  }
+
+  generateMentionsCountSQL(tag_id: string) {
+    return `
+      SELECT count(*) FROM review_tag_sentence rts
+        JOIN review ON rts.review_id = review.id
+        WHERE review.restaurant_id = '${this.crawler.restaurant.id}'
+        AND rts.tag_id = '${tag_id}'
+    `
   }
 
   sqlForPerSourceScore(tag_id: string, source: string) {

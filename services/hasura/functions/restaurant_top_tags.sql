@@ -36,7 +36,16 @@ CREATE OR REPLACE FUNCTION restaurant_top_tags(
   -- TODO: How to programmtically choose just the restaurant_tag fields?
   --       Selecting * conflicts with the strict return type of restaurant_tag
   --       because of the JOIN.
-  SELECT tag_id, restaurant_id, rating, rank, photos, rt_id as id, score, score_breakdown
+  SELECT
+    tag_id,
+    restaurant_id,
+    rating,
+    rank,
+    photos,
+    rt_id as id,
+    score,
+    score_breakdown,
+    review_mentions_count
   FROM (
     SELECT *
       FROM restaurant_tags

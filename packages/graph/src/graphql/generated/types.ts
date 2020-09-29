@@ -3118,6 +3118,7 @@ export type t_restaurant_tag = FieldsType<
     rating?: t_numeric | null
     restaurant: t_restaurant
     restaurant_id: t_uuid
+    review_mentions_count?: t_numeric | null
     reviews: FieldsTypeArg<
       {
         distinct_on?: review_select_column[] | null
@@ -3232,6 +3233,7 @@ export type t_restaurant_tag_avg_fields = FieldsType<
     __typename: t_String<'restaurant_tag_avg_fields'>
     rank?: t_Float | null
     rating?: t_Float | null
+    review_mentions_count?: t_Float | null
     score?: t_Float | null
   },
   Extension<'restaurant_tag_avg_fields'>
@@ -3244,6 +3246,7 @@ export type t_restaurant_tag_avg_fields = FieldsType<
 export type restaurant_tag_avg_order_by = {
   rank?: order_by | null
   rating?: order_by | null
+  review_mentions_count?: order_by | null
   score?: order_by | null
 }
 
@@ -3261,6 +3264,7 @@ export type restaurant_tag_bool_exp = {
   rating?: numeric_comparison_exp | null
   restaurant?: restaurant_bool_exp | null
   restaurant_id?: uuid_comparison_exp | null
+  review_mentions_count?: numeric_comparison_exp | null
   reviews?: review_bool_exp | null
   score?: numeric_comparison_exp | null
   score_breakdown?: jsonb_comparison_exp | null
@@ -3310,6 +3314,7 @@ export type restaurant_tag_delete_key_input = {
 export type restaurant_tag_inc_input = {
   rank?: number | null
   rating?: any | null
+  review_mentions_count?: any | null
   score?: any | null
 }
 
@@ -3324,6 +3329,7 @@ export type restaurant_tag_insert_input = {
   rating?: any | null
   restaurant?: restaurant_obj_rel_insert_input | null
   restaurant_id?: any | null
+  review_mentions_count?: any | null
   reviews?: review_arr_rel_insert_input | null
   score?: any | null
   score_breakdown?: any | null
@@ -3342,6 +3348,7 @@ export type t_restaurant_tag_max_fields = FieldsType<
     rank?: t_Int | null
     rating?: t_numeric | null
     restaurant_id?: t_uuid | null
+    review_mentions_count?: t_numeric | null
     score?: t_numeric | null
     tag_id?: t_uuid | null
   },
@@ -3357,6 +3364,7 @@ export type restaurant_tag_max_order_by = {
   rank?: order_by | null
   rating?: order_by | null
   restaurant_id?: order_by | null
+  review_mentions_count?: order_by | null
   score?: order_by | null
   tag_id?: order_by | null
 }
@@ -3372,6 +3380,7 @@ export type t_restaurant_tag_min_fields = FieldsType<
     rank?: t_Int | null
     rating?: t_numeric | null
     restaurant_id?: t_uuid | null
+    review_mentions_count?: t_numeric | null
     score?: t_numeric | null
     tag_id?: t_uuid | null
   },
@@ -3387,6 +3396,7 @@ export type restaurant_tag_min_order_by = {
   rank?: order_by | null
   rating?: order_by | null
   restaurant_id?: order_by | null
+  review_mentions_count?: order_by | null
   score?: order_by | null
   tag_id?: order_by | null
 }
@@ -3434,6 +3444,7 @@ export type restaurant_tag_order_by = {
   rating?: order_by | null
   restaurant?: restaurant_order_by | null
   restaurant_id?: order_by | null
+  review_mentions_count?: order_by | null
   reviews_aggregate?: review_aggregate_order_by | null
   score?: order_by | null
   score_breakdown?: order_by | null
@@ -3469,6 +3480,7 @@ type t_restaurant_tag_select_column = EnumType<
   | 'rank'
   | 'rating'
   | 'restaurant_id'
+  | 'review_mentions_count'
   | 'score'
   | 'score_breakdown'
   | 'tag_id'
@@ -3484,6 +3496,7 @@ export type restaurant_tag_set_input = {
   rank?: number | null
   rating?: any | null
   restaurant_id?: any | null
+  review_mentions_count?: any | null
   score?: any | null
   score_breakdown?: any | null
   tag_id?: any | null
@@ -3498,6 +3511,7 @@ export type t_restaurant_tag_stddev_fields = FieldsType<
     __typename: t_String<'restaurant_tag_stddev_fields'>
     rank?: t_Float | null
     rating?: t_Float | null
+    review_mentions_count?: t_Float | null
     score?: t_Float | null
   },
   Extension<'restaurant_tag_stddev_fields'>
@@ -3510,6 +3524,7 @@ export type t_restaurant_tag_stddev_fields = FieldsType<
 export type restaurant_tag_stddev_order_by = {
   rank?: order_by | null
   rating?: order_by | null
+  review_mentions_count?: order_by | null
   score?: order_by | null
 }
 
@@ -3522,6 +3537,7 @@ export type t_restaurant_tag_stddev_pop_fields = FieldsType<
     __typename: t_String<'restaurant_tag_stddev_pop_fields'>
     rank?: t_Float | null
     rating?: t_Float | null
+    review_mentions_count?: t_Float | null
     score?: t_Float | null
   },
   Extension<'restaurant_tag_stddev_pop_fields'>
@@ -3534,6 +3550,7 @@ export type t_restaurant_tag_stddev_pop_fields = FieldsType<
 export type restaurant_tag_stddev_pop_order_by = {
   rank?: order_by | null
   rating?: order_by | null
+  review_mentions_count?: order_by | null
   score?: order_by | null
 }
 
@@ -3546,6 +3563,7 @@ export type t_restaurant_tag_stddev_samp_fields = FieldsType<
     __typename: t_String<'restaurant_tag_stddev_samp_fields'>
     rank?: t_Float | null
     rating?: t_Float | null
+    review_mentions_count?: t_Float | null
     score?: t_Float | null
   },
   Extension<'restaurant_tag_stddev_samp_fields'>
@@ -3558,6 +3576,7 @@ export type t_restaurant_tag_stddev_samp_fields = FieldsType<
 export type restaurant_tag_stddev_samp_order_by = {
   rank?: order_by | null
   rating?: order_by | null
+  review_mentions_count?: order_by | null
   score?: order_by | null
 }
 
@@ -3570,6 +3589,7 @@ export type t_restaurant_tag_sum_fields = FieldsType<
     __typename: t_String<'restaurant_tag_sum_fields'>
     rank?: t_Int | null
     rating?: t_numeric | null
+    review_mentions_count?: t_numeric | null
     score?: t_numeric | null
   },
   Extension<'restaurant_tag_sum_fields'>
@@ -3582,6 +3602,7 @@ export type t_restaurant_tag_sum_fields = FieldsType<
 export type restaurant_tag_sum_order_by = {
   rank?: order_by | null
   rating?: order_by | null
+  review_mentions_count?: order_by | null
   score?: order_by | null
 }
 
@@ -3595,6 +3616,7 @@ type t_restaurant_tag_update_column = EnumType<
   | 'rank'
   | 'rating'
   | 'restaurant_id'
+  | 'review_mentions_count'
   | 'score'
   | 'score_breakdown'
   | 'tag_id'
@@ -3609,6 +3631,7 @@ export type t_restaurant_tag_var_pop_fields = FieldsType<
     __typename: t_String<'restaurant_tag_var_pop_fields'>
     rank?: t_Float | null
     rating?: t_Float | null
+    review_mentions_count?: t_Float | null
     score?: t_Float | null
   },
   Extension<'restaurant_tag_var_pop_fields'>
@@ -3621,6 +3644,7 @@ export type t_restaurant_tag_var_pop_fields = FieldsType<
 export type restaurant_tag_var_pop_order_by = {
   rank?: order_by | null
   rating?: order_by | null
+  review_mentions_count?: order_by | null
   score?: order_by | null
 }
 
@@ -3633,6 +3657,7 @@ export type t_restaurant_tag_var_samp_fields = FieldsType<
     __typename: t_String<'restaurant_tag_var_samp_fields'>
     rank?: t_Float | null
     rating?: t_Float | null
+    review_mentions_count?: t_Float | null
     score?: t_Float | null
   },
   Extension<'restaurant_tag_var_samp_fields'>
@@ -3645,6 +3670,7 @@ export type t_restaurant_tag_var_samp_fields = FieldsType<
 export type restaurant_tag_var_samp_order_by = {
   rank?: order_by | null
   rating?: order_by | null
+  review_mentions_count?: order_by | null
   score?: order_by | null
 }
 
@@ -3657,6 +3683,7 @@ export type t_restaurant_tag_variance_fields = FieldsType<
     __typename: t_String<'restaurant_tag_variance_fields'>
     rank?: t_Float | null
     rating?: t_Float | null
+    review_mentions_count?: t_Float | null
     score?: t_Float | null
   },
   Extension<'restaurant_tag_variance_fields'>
@@ -3669,6 +3696,7 @@ export type t_restaurant_tag_variance_fields = FieldsType<
 export type restaurant_tag_variance_order_by = {
   rank?: order_by | null
   rating?: order_by | null
+  review_mentions_count?: order_by | null
   score?: order_by | null
 }
 
@@ -7403,6 +7431,7 @@ export enum restaurant_tag_select_column {
   rank = 'rank',
   rating = 'rating',
   restaurant_id = 'restaurant_id',
+  review_mentions_count = 'review_mentions_count',
   score = 'score',
   score_breakdown = 'score_breakdown',
   tag_id = 'tag_id',
@@ -7448,6 +7477,7 @@ export enum restaurant_tag_update_column {
   rank = 'rank',
   rating = 'rating',
   restaurant_id = 'restaurant_id',
+  review_mentions_count = 'review_mentions_count',
   score = 'score',
   score_breakdown = 'score_breakdown',
   tag_id = 'tag_id',
