@@ -101,26 +101,48 @@ function start_all_crawlers() {
   start_crawler "yelp"
 }
 
-function db_migrate() {
-  _PG_PORT=$(generate_random_port)
-  postgres_proxy $_PG_PORT
+function _db_migrate() {
+  hasura_endpoint=$1
+  admin_secret=$2
+  postgres_password=$3
+  postgres_port=$4
   pushd $PROJECT_ROOT/services/hasura
   hasura --skip-update-check \
     migrate apply \
-    --endpoint https://hasura.dishapp.com \
-    --admin-secret $TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET
+    --endpoint $hasura_endpoint \
+    --admin-secret $admin_secret
   hasura --skip-update-check \
     metadata apply \
-    --endpoint https://hasura.dishapp.com \
-    --admin-secret $TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET
+    --endpoint $hasura_endpoint \
+    --admin-secret $admin_secret
   cat functions/*.sql | \
-    PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
-      -p $_PG_PORT \
+    PGPASSWORD=$postgres_password psql \
+      -p $postgres_port \
       -h localhost \
       -U postgres \
       -d dish \
       --single-transaction
   popd
+}
+
+function db_migrate() {
+  _PG_PORT=$(generate_random_port)
+  postgres_proxy $_PG_PORT
+  pushd $PROJECT_ROOT/services/hasura
+  _db_migrate \
+    https://hasura.dishapp.com \
+    "$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET" \
+    "$TF_VAR_POSTGRES_PASSWORD" \
+    "$_PG_PORT"
+  popd
+}
+
+function db_migrate_local() {
+  _db_migrate \
+    http://localhost:8080 \
+    password \
+    postgres \
+    5432
 }
 
 function timescale_migrate() {
@@ -130,6 +152,12 @@ function timescale_migrate() {
   PG_PORT=$_TIMESCALE_PORT \
   PG_PASS=$TF_VAR_TIMESCALE_SU_PASS \
   DISH_ENV=production ./migrate.sh
+  popd
+}
+
+function timescale_migrate_local() {
+  pushd $PROJECT_ROOT/services/timescaledb
+  ./migrate.sh
   popd
 }
 
