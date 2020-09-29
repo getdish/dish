@@ -3,6 +3,7 @@
 PG_PROXY_PID=
 TS_PROXY_PID=
 REDIS_PROXY_PID=
+DISH_REGISTRY=docker.k8s.dishapp.com
 
 function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
@@ -623,6 +624,7 @@ function buildkit_build() {
   dockerfile_path=$1
   name=$2
   dish_base_version=${3:-''}
+  context=${4:-.}
   buildctl \
     --addr tcp://buildkit.k8s.dishapp.com:1234 \
     --tlscacert k8s/etc/certs/buildkit/client/ca.pem \
@@ -631,13 +633,30 @@ function buildkit_build() {
     --tlsservername buildkit.k8s.dishapp.com \
     build \
       --frontend=dockerfile.v0 \
-      --local context=. \
+      --local context=$context \
       --local dockerfile=$dockerfile_path \
       --opt build-arg:DISH_BASE_VERSION=$dish_base_version \
       --output type=image,name=$name,push=true \
       --export-cache type=inline \
       --import-cache type=registry,ref=$name
   echo "\`buildctl\` ($NAME) exited with: $?"
+}
+
+# Usage dishctl.sh push_repo_image $repo $image_name
+function push_repo_image() {
+  repo=$1
+  default_name=${repo%.*}
+  name=$(basename ${2:-$default_name})
+  image=$DISH_REGISTRY/$name
+  tmp_dir=$(mktemp -d -t dish-XXXXXXXXXX)
+  git clone --depth 1 $repo $tmp_dir
+  echo "Building image: '$image'"
+  buildkit_build $tmp_dir $image '' $tmp_dir
+  rm -rf $tmp_dir
+}
+
+function push_external_images() {
+  push_repo_image 'git@github.com:getdish/image-quality-api.git' dish/image-quality-server
 }
 
 if command -v git &> /dev/null; then
