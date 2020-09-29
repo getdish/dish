@@ -24,8 +24,6 @@ build() {
       --local dockerfile=$path \
       --opt build-arg:DISH_BASE_VERSION=$DISH_BASE_VERSION \
       --output type=docker,name=$NAME \
-      --export-cache type=inline \
-      --import-cache type=registry,ref=$NAME \
   | docker load
 }
 export -f build

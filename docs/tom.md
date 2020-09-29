@@ -12,6 +12,13 @@
     full-text engine. but remember that searching for tags is still as fast as ever
 - ... continue on ratings/points/sentiment/data/infra
 
+- search speed, add pre-computation for restaurant_tag.mention_count
+✔️ review_agg perms for anon users
+- results page hasura query performance investigation
+- vote table, we still need to think about the UI, what happens when someone votes up on main and down on all contributing tags?
+- rtag.sentences relation for easy access to all mentions of a rish in reviews
+- self crawler has production-only bug where null tags are appearing in tag score SQL (and failing the crawl for that restaurant)
+
 ## Indexing
 
 - Use Dish account for AWS proxies

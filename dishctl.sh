@@ -671,9 +671,7 @@ function buildkit_build() {
       --local context=$context \
       --local dockerfile=$dockerfile_path \
       --opt build-arg:DISH_BASE_VERSION=$dish_base_version \
-      --output type=image,name=$name,push=true \
-      --export-cache type=inline \
-      --import-cache type=registry,ref=$name
+      --output type=image,name=$name,push=true
   echo "\`buildctl\` ($NAME) exited with: $?"
 }
 
