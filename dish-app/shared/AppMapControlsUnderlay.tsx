@@ -44,7 +44,7 @@ export const AppMapControlsUnderlay = memo(() => {
       >
         <HStack
           position="absolute"
-          top={10}
+          top={isSmall ? 10 : searchBarHeight + 15}
           right={0}
           left={0}
           alignItems="center"
