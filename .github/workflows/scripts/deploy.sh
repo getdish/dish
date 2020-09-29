@@ -16,7 +16,7 @@ declare -a images=(
   "worker"
   "dish-hooks"
   "gorse"
-  "jwt-server"
+  "user-server"
   "search"
   "cron"
 )

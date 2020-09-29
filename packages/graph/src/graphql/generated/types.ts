@@ -6267,13 +6267,17 @@ export type tsrange_comparison_exp = {
 export type t_user = FieldsType<
   {
     __typename: t_String<'user'>
+    about?: t_String | null
     apple_email?: t_String | null
     apple_refresh_token?: t_String | null
     apple_secret?: t_String | null
     apple_uid?: t_String | null
+    character?: t_String | null
     created_at: t_timestamptz
     email?: t_String | null
+    has_onboarded: t_Boolean
     id: t_uuid
+    location?: t_String | null
     password: t_String
     reviews: FieldsTypeArg<
       {
@@ -6359,13 +6363,17 @@ export type user_bool_exp = {
   _and?: (user_bool_exp | null)[] | null
   _not?: user_bool_exp | null
   _or?: (user_bool_exp | null)[] | null
+  about?: String_comparison_exp | null
   apple_email?: String_comparison_exp | null
   apple_refresh_token?: String_comparison_exp | null
   apple_secret?: String_comparison_exp | null
   apple_uid?: String_comparison_exp | null
+  character?: String_comparison_exp | null
   created_at?: timestamptz_comparison_exp | null
   email?: String_comparison_exp | null
+  has_onboarded?: Boolean_comparison_exp | null
   id?: uuid_comparison_exp | null
+  location?: String_comparison_exp | null
   password?: String_comparison_exp | null
   reviews?: review_bool_exp | null
   role?: String_comparison_exp | null
@@ -6386,13 +6394,17 @@ type t_user_constraint = EnumType<
  * @type INPUT_OBJECT
  */
 export type user_insert_input = {
+  about?: string | null
   apple_email?: string | null
   apple_refresh_token?: string | null
   apple_secret?: string | null
   apple_uid?: string | null
+  character?: string | null
   created_at?: any | null
   email?: string | null
+  has_onboarded?: boolean | null
   id?: any | null
+  location?: string | null
   password?: string | null
   reviews?: review_arr_rel_insert_input | null
   role?: string | null
@@ -6407,13 +6419,16 @@ export type user_insert_input = {
 export type t_user_max_fields = FieldsType<
   {
     __typename: t_String<'user_max_fields'>
+    about?: t_String | null
     apple_email?: t_String | null
     apple_refresh_token?: t_String | null
     apple_secret?: t_String | null
     apple_uid?: t_String | null
+    character?: t_String | null
     created_at?: t_timestamptz | null
     email?: t_String | null
     id?: t_uuid | null
+    location?: t_String | null
     password?: t_String | null
     role?: t_String | null
     updated_at?: t_timestamptz | null
@@ -6427,13 +6442,16 @@ export type t_user_max_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type user_max_order_by = {
+  about?: order_by | null
   apple_email?: order_by | null
   apple_refresh_token?: order_by | null
   apple_secret?: order_by | null
   apple_uid?: order_by | null
+  character?: order_by | null
   created_at?: order_by | null
   email?: order_by | null
   id?: order_by | null
+  location?: order_by | null
   password?: order_by | null
   role?: order_by | null
   updated_at?: order_by | null
@@ -6447,13 +6465,16 @@ export type user_max_order_by = {
 export type t_user_min_fields = FieldsType<
   {
     __typename: t_String<'user_min_fields'>
+    about?: t_String | null
     apple_email?: t_String | null
     apple_refresh_token?: t_String | null
     apple_secret?: t_String | null
     apple_uid?: t_String | null
+    character?: t_String | null
     created_at?: t_timestamptz | null
     email?: t_String | null
     id?: t_uuid | null
+    location?: t_String | null
     password?: t_String | null
     role?: t_String | null
     updated_at?: t_timestamptz | null
@@ -6467,13 +6488,16 @@ export type t_user_min_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type user_min_order_by = {
+  about?: order_by | null
   apple_email?: order_by | null
   apple_refresh_token?: order_by | null
   apple_secret?: order_by | null
   apple_uid?: order_by | null
+  character?: order_by | null
   created_at?: order_by | null
   email?: order_by | null
   id?: order_by | null
+  location?: order_by | null
   password?: order_by | null
   role?: order_by | null
   updated_at?: order_by | null
@@ -6517,13 +6541,17 @@ export type user_on_conflict = {
  * @type INPUT_OBJECT
  */
 export type user_order_by = {
+  about?: order_by | null
   apple_email?: order_by | null
   apple_refresh_token?: order_by | null
   apple_secret?: order_by | null
   apple_uid?: order_by | null
+  character?: order_by | null
   created_at?: order_by | null
   email?: order_by | null
+  has_onboarded?: order_by | null
   id?: order_by | null
+  location?: order_by | null
   password?: order_by | null
   reviews_aggregate?: review_aggregate_order_by | null
   role?: order_by | null
@@ -6542,13 +6570,17 @@ export type user_pk_columns_input = { id: any }
  * @type ENUM
  */
 type t_user_select_column = EnumType<
+  | 'about'
   | 'apple_email'
   | 'apple_refresh_token'
   | 'apple_secret'
   | 'apple_uid'
+  | 'character'
   | 'created_at'
   | 'email'
+  | 'has_onboarded'
   | 'id'
+  | 'location'
   | 'password'
   | 'role'
   | 'updated_at'
@@ -6560,13 +6592,17 @@ type t_user_select_column = EnumType<
  * @type INPUT_OBJECT
  */
 export type user_set_input = {
+  about?: string | null
   apple_email?: string | null
   apple_refresh_token?: string | null
   apple_secret?: string | null
   apple_uid?: string | null
+  character?: string | null
   created_at?: any | null
   email?: string | null
+  has_onboarded?: boolean | null
   id?: any | null
+  location?: string | null
   password?: string | null
   role?: string | null
   updated_at?: any | null
@@ -6578,13 +6614,17 @@ export type user_set_input = {
  * @type ENUM
  */
 type t_user_update_column = EnumType<
+  | 'about'
   | 'apple_email'
   | 'apple_refresh_token'
   | 'apple_secret'
   | 'apple_uid'
+  | 'character'
   | 'created_at'
   | 'email'
+  | 'has_onboarded'
   | 'id'
+  | 'location'
   | 'password'
   | 'role'
   | 'updated_at'
@@ -8089,13 +8129,17 @@ export type user_mutation_response = TypeData<t_user_mutation_response>
  * @type ENUM
  */
 export enum user_select_column {
+  about = 'about',
   apple_email = 'apple_email',
   apple_refresh_token = 'apple_refresh_token',
   apple_secret = 'apple_secret',
   apple_uid = 'apple_uid',
+  character = 'character',
   created_at = 'created_at',
   email = 'email',
+  has_onboarded = 'has_onboarded',
   id = 'id',
+  location = 'location',
   password = 'password',
   role = 'role',
   updated_at = 'updated_at',
@@ -8107,13 +8151,17 @@ export enum user_select_column {
  * @type ENUM
  */
 export enum user_update_column {
+  about = 'about',
   apple_email = 'apple_email',
   apple_refresh_token = 'apple_refresh_token',
   apple_secret = 'apple_secret',
   apple_uid = 'apple_uid',
+  character = 'character',
   created_at = 'created_at',
   email = 'email',
+  has_onboarded = 'has_onboarded',
   id = 'id',
+  location = 'location',
   password = 'password',
   role = 'role',
   updated_at = 'updated_at',

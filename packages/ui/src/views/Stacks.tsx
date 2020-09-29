@@ -15,10 +15,9 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import { isWeb, isWebIOS } from '../constants'
+import { isWeb } from '../constants'
 import { combineRefs } from '../helpers/combineRefs'
 import { StaticComponent } from '../helpers/extendStaticConfig'
-import { useDebounce } from '../hooks/useDebounce'
 import { stylePropsView } from '../styleProps'
 import { Spacer, Spacing } from './Spacer'
 
@@ -32,6 +31,21 @@ const fullscreenStyle: StackProps = {
 const disabledStyle: StackProps = {
   pointerEvents: 'none',
   userSelect: 'none',
+}
+
+const useViewStylePropsSplit = (props: { [key: string]: any }) => {
+  return useMemo(() => {
+    const styleProps: ViewStyle = {}
+    const viewProps: ViewProps = {}
+    for (const key in props) {
+      if (stylePropsView[key]) {
+        styleProps[key] = props[key]
+      } else {
+        viewProps[key] = props[key]
+      }
+    }
+    return { styleProps, viewProps }
+  }, [props])
 }
 
 export type StackProps = Omit<
@@ -110,18 +124,7 @@ const createStack = (defaultProps?: ViewStyle) => {
       ...restProps
     } = props
 
-    const { styleProps, viewProps } = useMemo(() => {
-      const styleProps: ViewStyle = {}
-      const viewProps: ViewProps = {}
-      for (const key in restProps) {
-        if (stylePropsView[key]) {
-          styleProps[key] = restProps[key]
-        } else {
-          viewProps[key] = restProps[key]
-        }
-      }
-      return { styleProps, viewProps }
-    }, [props])
+    const { styleProps, viewProps } = useViewStylePropsSplit(props)
 
     const innerRef = useRef<any>()
     const isMounted = useRef(false)

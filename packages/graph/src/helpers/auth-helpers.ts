@@ -1,24 +1,6 @@
-import { isDevProd, isHasuraLive, isNode } from '../constants'
+import { AUTH_DOMAIN, isNode } from '../constants'
 
 const BROWSER_STORAGE_KEY = 'auth'
-const LOCAL_AUTH_SERVER = 'http://localhost:3000'
-const PROD_JWT_SERVER = 'https://auth.dishapp.com'
-
-const DOMAIN = (() => {
-  if (isNode) {
-    return process.env.AUTH_ENDPOINT || LOCAL_AUTH_SERVER
-  } else {
-    if (isDevProd) {
-      return PROD_JWT_SERVER
-    } else {
-      if (isHasuraLive) {
-        return PROD_JWT_SERVER
-      } else {
-        return process.env.REACT_APP_AUTH_ENDPOINT || LOCAL_AUTH_SERVER
-      }
-    }
-  }
-})()
 
 class AuthModel {
   public jwt = ''
@@ -74,7 +56,7 @@ class AuthModel {
   }
 
   async api(method: string, path: string, data: any = {}) {
-    const response = await fetch(DOMAIN + path, {
+    const response = await fetch(AUTH_DOMAIN + path, {
       method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -86,7 +68,7 @@ class AuthModel {
       } else {
         const error = {
           method: method,
-          domain: DOMAIN,
+          domain: AUTH_DOMAIN,
           path,
           data,
           status: response.status,

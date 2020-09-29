@@ -1,16 +1,30 @@
 import { default as React } from 'react'
-import { StyleSheet, TextInput, TextInputProps } from 'react-native'
+import { StyleSheet, TextInput, TextInputProps, TextStyle } from 'react-native'
 
-import { HStack, StackProps } from './Stacks'
+import { useTextStylePropsSplit } from '../hooks/useTextStylePropsSplit'
+import { InteractiveContainer } from './InteractiveContainer'
 
 export const Input = (
-  props: TextInputProps & {
-    name?: string
-  }
+  props: Omit<TextInputProps, 'style'> &
+    TextStyle & {
+      name?: string
+    }
 ) => {
+  const { textProps, styleProps } = useTextStylePropsSplit(props)
   return (
-    <InteractiveContainer>
-      <TextInput {...props} style={[sheet.inputStyle, props.style]} />
+    <InteractiveContainer {...styleProps}>
+      <TextInput
+        {...textProps}
+        style={[
+          sheet.inputStyle,
+          {
+            fontSize: styleProps.fontSize,
+            lineHeight: styleProps.lineHeight,
+            fontWeight: styleProps.fontWeight,
+            textAlign: styleProps.textAlign,
+          },
+        ]}
+      />
     </InteractiveContainer>
   )
 }
@@ -18,24 +32,10 @@ export const Input = (
 const sheet = StyleSheet.create({
   inputStyle: {
     width: '100%',
+    height: '100%',
     paddingHorizontal: 14,
     paddingVertical: 10,
     fontSize: 16,
     color: 'rgb(100, 100, 100)',
   },
 })
-
-export const InteractiveContainer = (props: StackProps) => {
-  return (
-    <HStack
-      borderRadius={10}
-      borderWidth={1}
-      borderColor="rgba(150,150,150,0.5)"
-      hoverStyle={{
-        borderColor: 'rgba(150,150,150,0.8)',
-      }}
-      overflow="hidden"
-      {...props}
-    />
-  )
-}
