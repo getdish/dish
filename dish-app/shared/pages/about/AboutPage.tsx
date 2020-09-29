@@ -15,6 +15,7 @@ import { Image } from 'react-native'
 import dontPanic from '../../../shared/assets/dont-panic.svg'
 import { StackItemProps } from '../../AppStackView'
 import {
+  bg,
   brandColor,
   brandColorDark,
   lightGreen,
@@ -47,11 +48,12 @@ export default function AboutPage({
         }}
       >
         <AbsoluteVStack
-          zIndex={-1}
+          zIndex={1}
           top={-30}
-          right={-50}
-          width={150}
-          height={150}
+          right={-70}
+          width={160}
+          height={160}
+          transform={[{ rotate: '12deg' }]}
         >
           <Image
             style={{ width: '100%', height: '100%' }}
@@ -63,14 +65,14 @@ export default function AboutPage({
           <HStack maxWidth="100%" alignItems="center">
             <Divider flex />
             <Spacer />
-            <Logo scale={2} color={brandColor} />
+            <Logo scale={2} color={bg} />
             <Spacer />
             <Divider flex />
           </HStack>
 
           <VStack spacing="xl">
             <Paragraph textAlign="center" size={1.5} fontWeight="600">
-              Bring fun to exploring the real world.
+              More fun exploring the real world.
             </Paragraph>
 
             <Paragraph
@@ -157,10 +159,10 @@ export default function AboutPage({
             </Paragraph>
 
             <Paragraph size="lg">
-              Instead, Dish sorts it's results by points, based on the factors
-              you're searching. So when you search "quick cheap pizza", we take
-              positive and negative opinions across all reviews on "quick",
-              "cheap" and "pizza", and add them together.
+              Instead, Dish sorts it's results by points, based on what you
+              search. When you search "quick cheap pizza", we take positive and
+              negative opinions across all reviews on "quick", "cheap" and
+              "pizza", and add them together.
             </Paragraph>
 
             <Paragraph size="lg">

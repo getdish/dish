@@ -50,20 +50,22 @@ const styleKeys = {
   borderColor: true,
 }
 
-export const AnimatedVStack = ({
-  animateState = 'in',
-  animation = defaultAnimation,
-  velocity,
-  children,
-  ...props
-}: StackProps & {
+export type AnimatedStackProps = StackProps & {
   animateState?: 'in' | 'out'
   velocity?: number
   animation?: {
     from: AnimatableProps
     to: AnimatableProps
   }
-}) => {
+}
+
+export const AnimatedVStack = ({
+  animateState = 'in',
+  animation = defaultAnimation,
+  velocity,
+  children,
+  ...props
+}: AnimatedStackProps) => {
   const driver = useConstant(() => {
     return new Animated.Value(0)
   })

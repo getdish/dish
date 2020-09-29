@@ -34,7 +34,7 @@ export default memo(function HomePageRestaurantReview() {
     return (
       <Modal>
         <VStack width="95%" maxWidth={880} height="100%" flex={1}>
-          <AbsoluteVStack top={5} right={26}>
+          <AbsoluteVStack top={5} right={30}>
             <StackViewCloseButton />
           </AbsoluteVStack>
           <Suspense fallback={<LoadingItems />}>

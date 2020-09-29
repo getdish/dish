@@ -81,13 +81,13 @@ export const ToastRoot = memo(function ToastRoot() {
                 ? 'rgba(20,180,120,0.95)'
                 : 'rgba(190,60,60, 0.95)'
             }
-            shadowColor="rgba(0,0,0,0.25)"
+            shadowColor="rgba(0,0,0,0.35)"
             shadowOffset={{ height: 10, width: 0 }}
             shadowRadius={40}
-            borderRadius={10}
-            padding={12}
+            borderRadius={12}
+            padding={18}
           >
-            <Text color="white" fontSize={16} fontWeight="600">
+            <Text color="white" fontSize={18} fontWeight="600">
               {state.text}
             </Text>
           </VStack>

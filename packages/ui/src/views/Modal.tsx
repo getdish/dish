@@ -1,50 +1,56 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Modal as ModalNative,
-  ModalProps,
+  ModalProps as ModalPropsReact,
   TouchableOpacity,
-  TouchableWithoutFeedback,
 } from 'react-native'
 
 import { isWeb } from '../constants'
 import { prevent } from '../helpers/prevent'
-import { AnimatedVStack } from './AnimatedStack'
-import { AbsoluteVStack, StackProps, VStack } from './Stacks'
+import { useDebounceValue } from '../hooks/useDebounce'
+import { AnimatedStackProps, AnimatedVStack } from './AnimatedStack'
+import { AbsoluteVStack, VStack } from './Stacks'
 
 // TODO if we add `closableButton` prop we can control exit animation nicely
 
-export const Modal = ({
-  // modal specific props
-  animationType = 'slide', // keep this only for native for now
-  transparent = true,
-  visible = true,
-  onRequestClose,
-  onShow,
-  // ios specific
-  presentationStyle,
-  supportedOrientations,
-  onDismiss,
-  onOrientationChange,
-  // android specific
-  hardwareAccelerated,
-  statusBarTranslucent,
-  // overlay
-  overlayBackground = 'rgba(0,0,0,0.5)',
-  overlayDismisses,
-  // children
-  children,
-  height,
-  width,
-  minHeight,
-  minWidth,
-  maxWidth,
-  maxHeight,
-  ...rest
-}: ModalProps &
-  StackProps & {
+export type ModalProps = ModalPropsReact &
+  Omit<AnimatedStackProps, 'animateState'> & {
+    visible?: boolean
     overlayBackground?: string
     overlayDismisses?: boolean
-  }) => {
+  }
+
+export const Modal = (props: ModalProps) => {
+  const {
+    // modal specific props
+    visible = true,
+    animationType = 'slide', // keep this only for native for now
+    transparent = true,
+    onRequestClose,
+    onShow,
+    // ios specific
+    presentationStyle,
+    supportedOrientations,
+    onDismiss,
+    onOrientationChange,
+    // android specific
+    hardwareAccelerated,
+    statusBarTranslucent,
+    // overlay
+    overlayBackground = 'rgba(0,0,0,0.5)',
+    overlayDismisses,
+    // children
+    children,
+    height,
+    width,
+    minHeight,
+    minWidth,
+    maxWidth,
+    maxHeight,
+    velocity,
+    animation,
+    ...rest
+  } = props
   // only shared between both
   const modalProps = {
     transparent,
@@ -58,23 +64,37 @@ export const Modal = ({
     hardwareAccelerated,
     statusBarTranslucent,
   }
+
+  useEffect(() => {
+    console.log('mount me', props)
+  }, [])
+
   if (isWeb) {
+    const pointerEvents = visible ? 'auto' : 'none'
+    const modalVisible = useDebounceValue(visible, visible ? 300 : 0)
     return (
-      <ModalNative {...modalProps}>
+      <ModalNative {...modalProps} visible={modalVisible}>
         <AbsoluteVStack
           fullscreen
-          backgroundColor={overlayBackground}
+          pointerEvents={pointerEvents}
+          backgroundColor={visible ? overlayBackground : 'transparent'}
           alignItems="center"
           justifyContent="center"
           onPress={overlayDismisses ? onRequestClose : undefined}
         >
           <AnimatedVStack
-            height={height}
-            width={width}
-            minHeight={minHeight}
-            minWidth={minWidth}
-            maxWidth={maxWidth}
-            maxHeight={maxHeight}
+            {...{
+              height,
+              width,
+              minHeight,
+              minWidth,
+              maxWidth,
+              maxHeight,
+              velocity,
+              pointerEvents,
+              animateState: visible ? 'in' : 'out',
+              animation,
+            }}
           >
             <VStack
               backgroundColor="#fff"
@@ -86,6 +106,7 @@ export const Modal = ({
               shadowRadius={40}
               onPress={prevent}
               flex={1}
+              pointerEvents={pointerEvents}
               {...rest}
             >
               {children}

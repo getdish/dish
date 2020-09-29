@@ -43,7 +43,7 @@ export const LoadingItem = ({
         borderRadius={7}
       />
       <VStack spacing={6 * scale}>
-        {new Array(lines).fill(0).map((index) => (
+        {new Array(lines).fill(0).map((_, index) => (
           <HStack
             key={index}
             width={`${seed * (15 - (2 - index > -1 ? index : -index) * 4)}%`}

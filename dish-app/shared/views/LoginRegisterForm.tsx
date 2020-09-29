@@ -36,9 +36,11 @@ const navButtonProps: LinkButtonProps = {
 export const LoginRegisterForm = ({
   showForm,
   onDidLogin,
+  autofocus,
 }: {
   showForm?: 'login' | 'register'
   onDidLogin?: Function
+  autofocus?: boolean
 }) => {
   const om = useOvermind()
   const isLoggedIn = om.state.user.isLoggedIn
@@ -130,10 +132,12 @@ export const LoginRegisterForm = ({
                 placeholder="Email"
                 autoCapitalize="none"
                 onChangeText={(val) => setEmail(val)}
+                autoFocus={autofocus}
               />
               <Spacer />
               <Input
                 name="username"
+                spellCheck={false}
                 autoCapitalize="none"
                 value={username}
                 placeholder="Username"
@@ -146,6 +150,7 @@ export const LoginRegisterForm = ({
             <>
               <Input
                 name="email"
+                spellCheck={false}
                 autoCapitalize="none"
                 value={login}
                 placeholder="Email or username"

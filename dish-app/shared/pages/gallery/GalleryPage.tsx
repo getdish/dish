@@ -1,16 +1,22 @@
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
-import { AbsoluteVStack, HStack, LoadingItems, Text, VStack } from '@dish/ui'
+import {
+  AbsoluteVStack,
+  HStack,
+  LoadingItems,
+  Modal,
+  Text,
+  VStack,
+} from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
 import { Image, ScrollView } from 'react-native'
 
-import { isWeb, pageWidthMax, zIndexGallery } from '../../constants'
+import { isWeb, pageWidthMax } from '../../constants'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemGallery } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
-import { RestaurantDishPhotos } from '../restaurant/RestaurantDishPhotos'
 import { RestaurantHeader } from '../restaurant/RestaurantHeader'
 
 export default memo(function GalleryPage() {
@@ -35,67 +41,47 @@ export default memo(function GalleryPage() {
     // )
 
     return (
-      <AbsoluteVStack
-        fullscreen
-        backgroundColor="rgba(0,0,0,0.75)"
-        alignItems="center"
-        justifyContent="center"
-        zIndex={zIndexGallery}
-      >
-        <VStack
-          width="95%"
-          height="98%"
-          maxHeight="95vh"
-          backgroundColor="#fff"
-          borderRadius={15}
-          maxWidth={pageWidthMax}
-          alignItems="center"
-          position="relative"
-          overflow="hidden"
-          shadowColor="rgba(0,0,0,0.75)"
-          shadowRadius={40}
-        >
-          <VStack width="100%" height="100%" flex={1}>
-            <AbsoluteVStack top={5} right={26}>
-              <StackViewCloseButton />
-            </AbsoluteVStack>
-            <Suspense fallback={<LoadingItems />}>
-              <HomePageGalleryContent
-                state={state}
-                header={
-                  <HStack
-                    alignItems="center"
-                    justifyContent="space-between"
-                    position="relative"
-                    zIndex={100}
-                  >
-                    <RestaurantHeader
-                      size="sm"
-                      restaurantSlug={state.restaurantSlug}
-                      after={
-                        <VStack marginVertical={-15}>
-                          {isSmall ? null : dishPhotosElement}
-                        </VStack>
-                      }
-                    />
-                  </HStack>
-                }
-              />
-              {isSmall ? (
-                <AbsoluteVStack
-                  backgroundColor="#fff"
-                  padding={0}
-                  bottom={0}
-                  left={0}
-                  right={0}
+      <Modal maxWidth={pageWidthMax} width="98%" height="98%" maxHeight="98%">
+        <VStack width="100%" flex={1} alignItems="center" position="relative">
+          <AbsoluteVStack top={5} right={26}>
+            <StackViewCloseButton />
+          </AbsoluteVStack>
+          <Suspense fallback={<LoadingItems />}>
+            <HomePageGalleryContent
+              state={state}
+              header={
+                <HStack
+                  alignItems="center"
+                  justifyContent="space-between"
+                  position="relative"
+                  zIndex={100}
                 >
-                  {dishPhotosElement}
-                </AbsoluteVStack>
-              ) : null}
-            </Suspense>
-          </VStack>
+                  <RestaurantHeader
+                    size="sm"
+                    restaurantSlug={state.restaurantSlug}
+                    after={
+                      <VStack marginVertical={-15}>
+                        {isSmall ? null : dishPhotosElement}
+                      </VStack>
+                    }
+                  />
+                </HStack>
+              }
+            />
+            {isSmall ? (
+              <AbsoluteVStack
+                backgroundColor="#fff"
+                padding={0}
+                bottom={0}
+                left={0}
+                right={0}
+              >
+                {dishPhotosElement}
+              </AbsoluteVStack>
+            ) : null}
+          </Suspense>
         </VStack>
-      </AbsoluteVStack>
+      </Modal>
     )
   }
 
@@ -131,13 +117,13 @@ const HomePageGalleryContent = memo(
     })
 
     return (
-      <VStack flex={1} overflow="hidden">
+      <>
         <ScrollView
           {...(!hasScrolled && {
             onScroll: () => setHasScrolled(true),
             scrollEventThrottle: 100,
           })}
-          style={{ width: '100%' }}
+          style={{ width: '100%', height: '100%' }}
         >
           {header}
           <HStack
@@ -171,7 +157,7 @@ const HomePageGalleryContent = memo(
             {!photos.length && <Text>No photos found!</Text>}
           </HStack>
         </ScrollView>
-      </VStack>
+      </>
     )
   })
 )

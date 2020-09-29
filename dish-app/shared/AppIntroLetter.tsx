@@ -47,8 +47,8 @@ export const HomeIntroLetter = memo(() => {
       <AnimatedVStack
         maxWidth={450}
         maxHeight={680}
-        width="90%"
-        height="90%"
+        width="99%"
+        height="99%"
         animateState={hide ? 'out' : 'in'}
       >
         <VStack

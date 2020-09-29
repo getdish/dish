@@ -424,3 +424,7 @@ input:-webkit-autofill:active  {
 .nobreak {
   white-space: nowrap;
 }
+
+body > div {
+  pointer-events: none;
+}
