@@ -1,4 +1,9 @@
-import { AbsoluteVStack, AnimatedVStack, useDebounceValue } from '@dish/ui'
+import {
+  AbsoluteVStack,
+  AnimatedVStack,
+  VStack,
+  useDebounceValue,
+} from '@dish/ui'
 import React, { Suspense, memo, useMemo } from 'react'
 
 import { isWeb, searchBarHeight } from './constants'
@@ -89,13 +94,18 @@ const AppStackViewItem = memo(
     }`
 
     const contents = (
-      <AbsoluteVStack
+      <VStack
+        position="absolute"
         zIndex={index}
         className={className}
-        fullscreen
+        top={0}
+        right={0}
+        bottom={0}
+        left={0}
         pointerEvents="none"
       >
-        <AbsoluteVStack
+        <VStack
+          position="absolute"
           flex={1}
           top={top}
           left={left}
@@ -107,8 +117,8 @@ const AppStackViewItem = memo(
           <ErrorBoundary name={`AppStackView.${item.type}`}>
             <Suspense fallback={null}>{children}</Suspense>
           </ErrorBoundary>
-        </AbsoluteVStack>
-      </AbsoluteVStack>
+        </VStack>
+      </VStack>
     )
 
     if (!isWeb) {

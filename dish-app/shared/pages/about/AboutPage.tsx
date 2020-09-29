@@ -72,17 +72,16 @@ export default function AboutPage({
 
           <VStack spacing="xl">
             <Paragraph textAlign="center" size={1.5} fontWeight="600">
-              More fun exploring the real world.
+              More fun exploring the real world
             </Paragraph>
 
             <Paragraph
               fontStyle="italic"
-              size="xxl"
+              size="xxxl"
               fontWeight="300"
               color={brandColorDark}
             >
-              A modern guide to the 💎's of the food world should feel more like
-              a{' '}
+              A food guide to the 💎s of the world should feel more like a{' '}
               <Text display="inline" fontWeight="600">
                 fun Pokédex
               </Text>{' '}
@@ -90,9 +89,9 @@ export default function AboutPage({
             </Paragraph>
 
             <Paragraph size="xl">
-              We're building a modern "Hitchhikers guide to gastronomy", if you
-              will. A smart guide for great food around the world. Dish was born
-              from two frustrations:
+              We're building a modern &ldquo;Hitchhikers guide to
+              gastronomy&rdquo;, if you will. A smart guide for great food
+              around the world. Dish was born from two frustrations:
             </Paragraph>
 
             <UnorderedList spacing="xs">

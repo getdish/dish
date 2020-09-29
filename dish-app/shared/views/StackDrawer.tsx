@@ -1,12 +1,7 @@
 import { HStack, LoadingItems, StackProps, VStack } from '@dish/ui'
 import React, { Suspense } from 'react'
 
-import {
-  drawerBorderRadius,
-  drawerWidthMax,
-  isWeb,
-  searchBarHeight,
-} from '../constants'
+import { drawerBorderRadius, drawerWidthMax } from '../constants'
 import { useIsNarrow } from '../hooks/useIs'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { PageTitleTag } from './ui/PageTitleTag'
@@ -23,19 +18,18 @@ export const StackDrawer = ({
     <HStack
       position="absolute"
       left={isSmall ? 0 : 'auto'}
-      ox
       right={isSmall ? 0 : 0}
       flex={1}
       maxHeight="100%"
       height="100%"
+      minHeight="100%"
       width="100%"
       borderRadius={drawerBorderRadius}
       maxWidth={isSmall ? '100%' : drawerWidthMax}
       minWidth={isSmall ? '100%' : 200}
       justifyContent="flex-end"
-      shadowRadius={isSmall ? 5 : 8}
+      shadowRadius={isSmall ? 6 : 10}
       shadowColor="rgba(0,0,0,0.08)"
-      shadowOffset={{ height: -2, width: 0 }}
     >
       {closable && (
         <StackViewCloseButton

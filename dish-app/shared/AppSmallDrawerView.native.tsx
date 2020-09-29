@@ -80,16 +80,14 @@ export const AppSmallDrawerView = (props: { children: any }) => {
   const content = useMemo(
     () => (
       <BottomSheetContainer>
-        <VStack flex={1} maxHeight="100%" position="relative">
-          <View style={styles.container} {...panResponder.panHandlers}>
-            <VStack maxHeight={searchBarHeight}>
-              <AppSearchBarDrawer />
-            </VStack>
-            <VStack position="relative" flex={1}>
-              {props.children}
-            </VStack>
-          </View>
-        </VStack>
+        <View style={styles.container} {...panResponder.panHandlers}>
+          <VStack maxHeight={searchBarHeight}>
+            <AppSearchBarDrawer />
+          </VStack>
+          <VStack position="relative" flex={1}>
+            {props.children}
+          </VStack>
+        </View>
       </BottomSheetContainer>
     ),
     [props.children]

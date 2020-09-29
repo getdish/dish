@@ -126,7 +126,7 @@ const UserHeader = memo(
         <VStack maxWidth="100%" overflow="hidden" width="100%">
           <VStack padding={18}>
             <HStack alignItems="center" flex={1} position="relative">
-              <Circle size={94} backgroundColor="red" marginVertical={-10}>
+              <Circle size={94} marginVertical={-10}>
                 <Image
                   source={{ uri: avatar }}
                   style={{ backgroundColor: 'red', width: 94, height: 94 }}
