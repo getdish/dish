@@ -4,6 +4,8 @@
   "version": "0.0.0",
   "workspaces": {
     "nohoist": [
+      "babel-plugin-transform-inline-environment-variables",
+      "babel-plugin-transform-inline-environment-variables/**",
       "@expo/html-elements",
       "@expo/html-elements/**",
       "@loadable/component",
@@ -95,9 +97,7 @@
       "react-native-animatable",
       "react-native-animatable/**",
       "recyclerlistview",
-      "recyclerlistview/**",
-      "babel-plugin-transform-inline-environment-variables",
-      "babel-plugin-transform-inline-environment-variables/**"
+      "recyclerlistview/**"
     ]
   },
   "scripts": {

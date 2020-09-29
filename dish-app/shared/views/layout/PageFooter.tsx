@@ -2,7 +2,7 @@ import { AbsoluteVStack, Spacer, VStack } from '@dish/ui'
 import { default as React, memo } from 'react'
 import { Platform } from 'react-native'
 
-import { HomeIntroLetterContent } from '../../AppIntroLetter'
+import { AppIntroLogin } from '../../AppIntroLetter'
 
 export const PageFooter = memo(() => {
   if (Platform.OS !== 'web') {
@@ -22,7 +22,7 @@ export const PageFooter = memo(() => {
       />
       <VStack paddingVertical={20} alignItems="center" paddingHorizontal="5%">
         <VStack maxWidth={450}>
-          <HomeIntroLetterContent />
+          <AppIntroLogin />
           <Spacer size="xxl" />
         </VStack>
       </VStack>

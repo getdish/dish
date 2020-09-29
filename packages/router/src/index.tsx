@@ -97,7 +97,7 @@ export class Router extends Store<RouterProps> {
           : nextItem?.id === id
           ? 'forward'
           : 'none'
-      const type: HistoryType =
+      let type: HistoryType =
         event.action === 'REPLACE'
           ? 'replace'
           : event.action === 'POP'
@@ -113,8 +113,8 @@ export class Router extends Store<RouterProps> {
       //   stack: this.stack,
       // })
       if (type === 'pop' && direction == 'none') {
-        // shouldnt happen
-        debugger
+        // happens when they go back after a hard refresh, change to push
+        type = 'push'
       }
       this.handlePath(event.location.pathname, {
         id,

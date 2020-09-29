@@ -44,7 +44,7 @@ parallel --lb build ::: \
   'services/dish-hooks' \
   'services/gorse' \
   'services/search' \
-  'services/jwt-server' \
+  'services/user-server' \
   'services/cron' \
   'dish-app'
 

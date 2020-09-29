@@ -112,7 +112,7 @@ resource "kubernetes_ingress" "k8s-services-ingress" {
         path {
           path = "/"
           backend {
-            service_name = "jwt-server"
+            service_name = "user-server"
             service_port = "http"
           }
         }

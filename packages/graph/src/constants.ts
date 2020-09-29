@@ -44,3 +44,23 @@ export let SEARCH_DOMAIN = (() => {
     }
   }
 })()
+
+export const AUTH_DOMAIN = (() => {
+  const LOCAL_AUTH_SERVER = 'http://localhost:3000'
+  const PROD_JWT_SERVER = 'https://auth.dishapp.com'
+  if (isNode) {
+    return process.env.AUTH_ENDPOINT || LOCAL_AUTH_SERVER
+  } else {
+    if (isDevProd) {
+      return PROD_JWT_SERVER
+    } else {
+      if (isHasuraLive) {
+        return PROD_JWT_SERVER
+      } else {
+        return process.env.REACT_APP_AUTH_ENDPOINT || LOCAL_AUTH_SERVER
+      }
+    }
+  }
+})()
+
+export const AUTH_IMAGE_UPLOAD_ENDPOINT = `${AUTH_DOMAIN}/user/image_upload`

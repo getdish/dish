@@ -63,16 +63,18 @@ services:
       - 'postgres'
       - 'redis'
       - 'dish-hooks'
-  jwt-server:
-    image: docker.k8s.dishapp.com/dish/jwt-server
+  user-server:
+    image: docker.k8s.dishapp.com/dish/user-server
     build:
       context: ./
-      dockerfile: ./services/jwt-server/Dockerfile
+      dockerfile: ./services/user-server/Dockerfile
       args:
         - BUILDKIT_INLINE_CACHE=1
     ports:
       - 3000:3000
     environment:
+      - DO_SPACES_ID=${TF_VAR_DO_SPACES_ID}
+      - DO_SPACES_SECRET=${TF_VAR_DO_SPACES_SECRET}
       - POSTGRES_HOST=postgres
     depends_on:
       - 'postgres'

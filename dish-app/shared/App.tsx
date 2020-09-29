@@ -5,7 +5,7 @@ import React, { Suspense, memo, useEffect } from 'react'
 
 import HomeAutocomplete from './AppAutocomplete'
 import { AppContainer } from './AppContainer'
-import { HomeIntroLetter } from './AppIntroLetter'
+import { AppIntroLetter } from './AppIntroLetter'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
 import { AppMenuFloating } from './AppMenuFloating'
@@ -87,7 +87,7 @@ const AppContent = memo(() => {
           </ErrorBoundary>
         )}
 
-        <HomeIntroLetter />
+        <AppIntroLetter />
 
         <Suspense fallback={null}>
           <AppMapControlsUnderlay />

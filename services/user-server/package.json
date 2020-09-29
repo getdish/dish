@@ -1,0 +1,44 @@
+{
+  "name": "@dish/user-server",
+  "version": "0.0.1",
+  "description": "",
+  "private": true,
+  "dependencies": {
+    "@dish/graph": "*",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.1",
+    "class-validator": "^0.11.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^3.15.0",
+    "jsonwebtoken": "^8.4.0",
+    "apple-sign-in-rest": "^1.0.0",
+    "pg": "^7.18.2",
+    "reflect-metadata": "^0.1.10",
+    "typeorm": "^0.2.25",
+    "aws-sdk": "^2.762.0",
+    "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
+    "uuid": "^8.3.0"
+  },
+  "devDependencies": {
+    "ava": "^3.8.2",
+    "typescript": "*",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/body-parser": "^1.17.0",
+    "@types/cors": "^2.8.4",
+    "@types/helmet": "0.0.45",
+    "@types/jsonwebtoken": "^8.3.0",
+    "@types/multer": "^1.4.4",
+    "@types/multer-s3": "^2.7.8",
+    "isomorphic-unfetch": "^3.0.0",
+    "ts-node": "*"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b --watch --preserveWatchOutput",
+    "start": "set debug=* && ts-node --respawn --transpileOnly --no-notify ./src/index.ts",
+    "run": "node ./_/app.js",
+    "test": "DISH_ENV=test ava test/main.ts --verbose"
+  }
+}

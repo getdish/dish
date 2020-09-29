@@ -1,34 +1,42 @@
-import { useRouter } from '@dish/router'
+import { AUTH_IMAGE_UPLOAD_ENDPOINT } from '@dish/graph'
 import {
   AbsoluteVStack,
   AnimatedVStack,
+  HStack,
+  Input,
   Paragraph,
   Spacer,
   Text,
+  TextArea,
+  Toast,
   VStack,
 } from '@dish/ui'
-import { default as React, memo } from 'react'
-import { Image, Platform, ScrollView, View } from 'react-native'
-import { useStorageState } from 'react-storage-hooks'
+import { default as React, memo, useRef, useState } from 'react'
+import { Image, ScrollView } from 'react-native'
 
 // @ts-ignore
 import dishNeon from './assets/dish-neon.jpg'
 import {
   brandColor,
-  brandColorLight,
   brandColorLighter,
   lightGreen,
   lightYellow,
 } from './colors'
 import { useOvermind } from './state/om'
+import { omStatic } from './state/omStatic'
 import { LoginRegisterForm } from './views/LoginRegisterForm'
-import { Link } from './views/ui/Link'
 import { LinkButton } from './views/ui/LinkButton'
+import { SmallButton } from './views/ui/SmallButton'
 
-export const HomeIntroLetter = memo(() => {
+export const AppIntroLetter = memo(() => {
   const om = useOvermind()
   const curPage = om.state.router.curPage
-  const hide = om.state.user.isLoggedIn || curPage.name === 'about'
+  const hasOnboarded = om.state.user.user?.has_onboarded
+  const isLoggedIn = om.state.user.isLoggedIn
+  const hide =
+    (isLoggedIn && hasOnboarded) ||
+    curPage.name === 'about' ||
+    curPage.name === 'blog'
 
   return (
     <AbsoluteVStack
@@ -85,12 +93,8 @@ export const HomeIntroLetter = memo(() => {
             }}
           >
             <VStack flex={1} paddingTop={20} alignItems="center">
-              {/* <HStack position="absolute" top={10} right={10}>
-              <CloseButton onPress={() => setShowIntro(false)} />
-            </HStack> */}
-              {/* <Spacer /> */}
-
-              <HomeIntroLetterContent />
+              {!isLoggedIn && <AppIntroLogin />}
+              {isLoggedIn && !hasOnboarded && <AppIntroOnboard />}
             </VStack>
           </ScrollView>
         </VStack>
@@ -110,7 +114,196 @@ const divider = (
   />
 )
 
-export const HomeIntroLetterContent = memo(() => {
+const characters = [
+  '👻',
+  '🧑‍🍳',
+  '👩‍🍳',
+  '👽',
+  '🧙',
+  '🧑‍🚀',
+  '🧜',
+  '🧚',
+  '👸',
+  '🤴',
+  '👾',
+  '🤠',
+  '😺',
+  '😈',
+  '👦',
+  '🤓',
+  '🦸',
+  '💃',
+  '🕺',
+  '🐱',
+  '🐷',
+  '🐻',
+  '🐼',
+  '🐭',
+  '🐶',
+  '🐨',
+  '🐙',
+  '🦊',
+]
+
+const AppIntroOnboard = () => {
+  const imageFormRef = useRef(null)
+  const formState = useRef({
+    about: '',
+    location: '',
+  })
+  const [charIndex, setChar] = useState(0)
+  const char = characters[charIndex]
+
+  return (
+    <>
+      <VStack
+        spacing
+        alignItems="center"
+        paddingBottom={60}
+        paddingHorizontal={20}
+      >
+        <Image
+          source={{ uri: dishNeon }}
+          style={{
+            marginTop: -20,
+            width: 261,
+            height: 161,
+          }}
+        />
+
+        <Paragraph color="#fff">
+          Welcome to the beta! Lets get you onboarded.
+        </Paragraph>
+
+        {divider}
+
+        <HStack>
+          <VStack position="relative">
+            <Image
+              source={{ uri: require('./assets/user-default.jpg').default }}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+              }}
+            />
+            <Text position="absolute" bottom={-15} left={-15} fontSize={50}>
+              {char}
+            </Text>
+          </VStack>
+          <form
+            id="userform"
+            ref={imageFormRef}
+            style={{
+              maxWidth: 100,
+            }}
+          >
+            <label htmlFor="file">Upload a file</label>
+            <input
+              type="file"
+              name="upload"
+              style={{
+                fontSize: 30,
+                padding: 10,
+              }}
+              onChange={async () => {
+                const form = imageFormRef.current
+                const formData = new FormData(form)
+                await fetch(AUTH_IMAGE_UPLOAD_ENDPOINT, {
+                  method: 'POST',
+                  body: formData,
+                })
+                Toast.show('Saved image!')
+              }}
+            />
+          </form>
+        </HStack>
+
+        {divider}
+
+        <Text color="#fff" fontWeight="600">
+          Character
+        </Text>
+        <HStack alignItems="center" justifyContent="center" flexWrap="wrap">
+          {characters.map((icon, i) => {
+            return (
+              <HStack
+                cursor="pointer"
+                borderRadius={100}
+                padding={10}
+                backgroundColor={i === charIndex ? '#fff' : 'transparent'}
+                hoverStyle={{
+                  backgroundColor: i === charIndex ? '#fff' : '#444',
+                }}
+                onPress={() => {
+                  setChar(i)
+                }}
+              >
+                <Text fontSize={30} key={i}>
+                  {icon}
+                </Text>
+              </HStack>
+            )
+          })}
+        </HStack>
+
+        {divider}
+
+        <Text color="#fff" fontWeight="600">
+          About you
+        </Text>
+        <TextArea
+          placeholder="Optional description for your profile..."
+          fontSize={16}
+          width="100%"
+          onChangeText={(text) => {
+            formState.current.about = text
+          }}
+        />
+        <Input
+          placeholder="Location..."
+          fontSize={16}
+          width="100%"
+          onChangeText={(text) => {
+            formState.current.location = text
+          }}
+        />
+
+        {divider}
+
+        <Spacer />
+
+        <SmallButton
+          accessibilityComponentType="button"
+          accessible
+          accessibilityRole="button"
+          alignSelf="center"
+          backgroundColor="#222"
+          borderColor="#444"
+          textStyle={{
+            color: '#fff',
+          }}
+          onPress={async () => {
+            Toast.show('Saving...')
+            if (
+              await omStatic.actions.user.finishOnboard({
+                character: characters[charIndex],
+                about: formState.current.about,
+                location: formState.current.location,
+              })
+            ) {
+              Toast.show(`All set! Welcome!`)
+            }
+          }}
+        >
+          Done!
+        </SmallButton>
+      </VStack>
+    </>
+  )
+}
+
+export const AppIntroLogin = memo(() => {
   return (
     <>
       <VStack spacing alignItems="center">
