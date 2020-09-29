@@ -3818,14 +3818,16 @@ export type t_review = FieldsType<
       },
       t_review_tag_sentence_aggregate
     >
-    source?: t_String | null
+    source: t_String
     tag?: t_tag | null
     tag_id?: t_uuid | null
     text?: t_String | null
+    type?: t_String | null
     updated_at: t_timestamptz
     user: t_user
     user_id: t_uuid
     username?: t_String | null
+    vote?: t_numeric | null
   },
   Extension<'review'>
 >
@@ -3909,6 +3911,7 @@ export type t_review_avg_fields = FieldsType<
   {
     __typename: t_String<'review_avg_fields'>
     rating?: t_Float | null
+    vote?: t_Float | null
   },
   Extension<'review_avg_fields'>
 >
@@ -3917,7 +3920,10 @@ export type t_review_avg_fields = FieldsType<
  * @name review_avg_order_by
  * @type INPUT_OBJECT
  */
-export type review_avg_order_by = { rating?: order_by | null }
+export type review_avg_order_by = {
+  rating?: order_by | null
+  vote?: order_by | null
+}
 
 /**
  * @name review_bool_exp
@@ -3941,10 +3947,12 @@ export type review_bool_exp = {
   tag?: tag_bool_exp | null
   tag_id?: uuid_comparison_exp | null
   text?: String_comparison_exp | null
+  type?: String_comparison_exp | null
   updated_at?: timestamptz_comparison_exp | null
   user?: user_bool_exp | null
   user_id?: uuid_comparison_exp | null
   username?: String_comparison_exp | null
+  vote?: numeric_comparison_exp | null
 }
 
 /**
@@ -3982,7 +3990,7 @@ export type review_delete_key_input = { categories?: string | null }
  * @name review_inc_input
  * @type INPUT_OBJECT
  */
-export type review_inc_input = { rating?: any | null }
+export type review_inc_input = { rating?: any | null; vote?: any | null }
 
 /**
  * @name review_insert_input
@@ -4003,10 +4011,12 @@ export type review_insert_input = {
   tag?: tag_obj_rel_insert_input | null
   tag_id?: any | null
   text?: string | null
+  type?: string | null
   updated_at?: any | null
   user?: user_obj_rel_insert_input | null
   user_id?: any | null
   username?: string | null
+  vote?: any | null
 }
 
 /**
@@ -4024,9 +4034,11 @@ export type t_review_max_fields = FieldsType<
     source?: t_String | null
     tag_id?: t_uuid | null
     text?: t_String | null
+    type?: t_String | null
     updated_at?: t_timestamptz | null
     user_id?: t_uuid | null
     username?: t_String | null
+    vote?: t_numeric | null
   },
   Extension<'review_max_fields'>
 >
@@ -4044,9 +4056,11 @@ export type review_max_order_by = {
   source?: order_by | null
   tag_id?: order_by | null
   text?: order_by | null
+  type?: order_by | null
   updated_at?: order_by | null
   user_id?: order_by | null
   username?: order_by | null
+  vote?: order_by | null
 }
 
 /**
@@ -4064,9 +4078,11 @@ export type t_review_min_fields = FieldsType<
     source?: t_String | null
     tag_id?: t_uuid | null
     text?: t_String | null
+    type?: t_String | null
     updated_at?: t_timestamptz | null
     user_id?: t_uuid | null
     username?: t_String | null
+    vote?: t_numeric | null
   },
   Extension<'review_min_fields'>
 >
@@ -4084,9 +4100,11 @@ export type review_min_order_by = {
   source?: order_by | null
   tag_id?: order_by | null
   text?: order_by | null
+  type?: order_by | null
   updated_at?: order_by | null
   user_id?: order_by | null
   username?: order_by | null
+  vote?: order_by | null
 }
 
 /**
@@ -4140,10 +4158,12 @@ export type review_order_by = {
   tag?: tag_order_by | null
   tag_id?: order_by | null
   text?: order_by | null
+  type?: order_by | null
   updated_at?: order_by | null
   user?: user_order_by | null
   user_id?: order_by | null
   username?: order_by | null
+  vote?: order_by | null
 }
 
 /**
@@ -4174,9 +4194,11 @@ type t_review_select_column = EnumType<
   | 'source'
   | 'tag_id'
   | 'text'
+  | 'type'
   | 'updated_at'
   | 'user_id'
   | 'username'
+  | 'vote'
 >
 
 /**
@@ -4195,9 +4217,11 @@ export type review_set_input = {
   source?: string | null
   tag_id?: any | null
   text?: string | null
+  type?: string | null
   updated_at?: any | null
   user_id?: any | null
   username?: string | null
+  vote?: any | null
 }
 
 /**
@@ -4208,6 +4232,7 @@ export type t_review_stddev_fields = FieldsType<
   {
     __typename: t_String<'review_stddev_fields'>
     rating?: t_Float | null
+    vote?: t_Float | null
   },
   Extension<'review_stddev_fields'>
 >
@@ -4216,7 +4241,10 @@ export type t_review_stddev_fields = FieldsType<
  * @name review_stddev_order_by
  * @type INPUT_OBJECT
  */
-export type review_stddev_order_by = { rating?: order_by | null }
+export type review_stddev_order_by = {
+  rating?: order_by | null
+  vote?: order_by | null
+}
 
 /**
  * @name review_stddev_pop_fields
@@ -4226,6 +4254,7 @@ export type t_review_stddev_pop_fields = FieldsType<
   {
     __typename: t_String<'review_stddev_pop_fields'>
     rating?: t_Float | null
+    vote?: t_Float | null
   },
   Extension<'review_stddev_pop_fields'>
 >
@@ -4234,7 +4263,10 @@ export type t_review_stddev_pop_fields = FieldsType<
  * @name review_stddev_pop_order_by
  * @type INPUT_OBJECT
  */
-export type review_stddev_pop_order_by = { rating?: order_by | null }
+export type review_stddev_pop_order_by = {
+  rating?: order_by | null
+  vote?: order_by | null
+}
 
 /**
  * @name review_stddev_samp_fields
@@ -4244,6 +4276,7 @@ export type t_review_stddev_samp_fields = FieldsType<
   {
     __typename: t_String<'review_stddev_samp_fields'>
     rating?: t_Float | null
+    vote?: t_Float | null
   },
   Extension<'review_stddev_samp_fields'>
 >
@@ -4252,7 +4285,10 @@ export type t_review_stddev_samp_fields = FieldsType<
  * @name review_stddev_samp_order_by
  * @type INPUT_OBJECT
  */
-export type review_stddev_samp_order_by = { rating?: order_by | null }
+export type review_stddev_samp_order_by = {
+  rating?: order_by | null
+  vote?: order_by | null
+}
 
 /**
  * @name review_sum_fields
@@ -4262,6 +4298,7 @@ export type t_review_sum_fields = FieldsType<
   {
     __typename: t_String<'review_sum_fields'>
     rating?: t_numeric | null
+    vote?: t_numeric | null
   },
   Extension<'review_sum_fields'>
 >
@@ -4270,7 +4307,10 @@ export type t_review_sum_fields = FieldsType<
  * @name review_sum_order_by
  * @type INPUT_OBJECT
  */
-export type review_sum_order_by = { rating?: order_by | null }
+export type review_sum_order_by = {
+  rating?: order_by | null
+  vote?: order_by | null
+}
 
 /**
  * @name review_tag_sentence
@@ -4753,9 +4793,11 @@ type t_review_update_column = EnumType<
   | 'source'
   | 'tag_id'
   | 'text'
+  | 'type'
   | 'updated_at'
   | 'user_id'
   | 'username'
+  | 'vote'
 >
 
 /**
@@ -4766,6 +4808,7 @@ export type t_review_var_pop_fields = FieldsType<
   {
     __typename: t_String<'review_var_pop_fields'>
     rating?: t_Float | null
+    vote?: t_Float | null
   },
   Extension<'review_var_pop_fields'>
 >
@@ -4774,7 +4817,10 @@ export type t_review_var_pop_fields = FieldsType<
  * @name review_var_pop_order_by
  * @type INPUT_OBJECT
  */
-export type review_var_pop_order_by = { rating?: order_by | null }
+export type review_var_pop_order_by = {
+  rating?: order_by | null
+  vote?: order_by | null
+}
 
 /**
  * @name review_var_samp_fields
@@ -4784,6 +4830,7 @@ export type t_review_var_samp_fields = FieldsType<
   {
     __typename: t_String<'review_var_samp_fields'>
     rating?: t_Float | null
+    vote?: t_Float | null
   },
   Extension<'review_var_samp_fields'>
 >
@@ -4792,7 +4839,10 @@ export type t_review_var_samp_fields = FieldsType<
  * @name review_var_samp_order_by
  * @type INPUT_OBJECT
  */
-export type review_var_samp_order_by = { rating?: order_by | null }
+export type review_var_samp_order_by = {
+  rating?: order_by | null
+  vote?: order_by | null
+}
 
 /**
  * @name review_variance_fields
@@ -4802,6 +4852,7 @@ export type t_review_variance_fields = FieldsType<
   {
     __typename: t_String<'review_variance_fields'>
     rating?: t_Float | null
+    vote?: t_Float | null
   },
   Extension<'review_variance_fields'>
 >
@@ -4810,7 +4861,10 @@ export type t_review_variance_fields = FieldsType<
  * @name review_variance_order_by
  * @type INPUT_OBJECT
  */
-export type review_variance_order_by = { rating?: order_by | null }
+export type review_variance_order_by = {
+  rating?: order_by | null
+  vote?: order_by | null
+}
 
 /**
  * @name setting
@@ -6273,6 +6327,7 @@ export type t_user = FieldsType<
     apple_uid?: t_String | null
     created_at: t_timestamptz
     email?: t_String | null
+    has_onboarded: t_Boolean
     id: t_uuid
     password: t_String
     reviews: FieldsTypeArg<
@@ -6365,6 +6420,7 @@ export type user_bool_exp = {
   apple_uid?: String_comparison_exp | null
   created_at?: timestamptz_comparison_exp | null
   email?: String_comparison_exp | null
+  has_onboarded?: Boolean_comparison_exp | null
   id?: uuid_comparison_exp | null
   password?: String_comparison_exp | null
   reviews?: review_bool_exp | null
@@ -6392,6 +6448,7 @@ export type user_insert_input = {
   apple_uid?: string | null
   created_at?: any | null
   email?: string | null
+  has_onboarded?: boolean | null
   id?: any | null
   password?: string | null
   reviews?: review_arr_rel_insert_input | null
@@ -6523,6 +6580,7 @@ export type user_order_by = {
   apple_uid?: order_by | null
   created_at?: order_by | null
   email?: order_by | null
+  has_onboarded?: order_by | null
   id?: order_by | null
   password?: order_by | null
   reviews_aggregate?: review_aggregate_order_by | null
@@ -6548,6 +6606,7 @@ type t_user_select_column = EnumType<
   | 'apple_uid'
   | 'created_at'
   | 'email'
+  | 'has_onboarded'
   | 'id'
   | 'password'
   | 'role'
@@ -6566,6 +6625,7 @@ export type user_set_input = {
   apple_uid?: string | null
   created_at?: any | null
   email?: string | null
+  has_onboarded?: boolean | null
   id?: any | null
   password?: string | null
   role?: string | null
@@ -6584,6 +6644,7 @@ type t_user_update_column = EnumType<
   | 'apple_uid'
   | 'created_at'
   | 'email'
+  | 'has_onboarded'
   | 'id'
   | 'password'
   | 'role'
@@ -7535,9 +7596,11 @@ export enum review_select_column {
   source = 'source',
   tag_id = 'tag_id',
   text = 'text',
+  type = 'type',
   updated_at = 'updated_at',
   user_id = 'user_id',
   username = 'username',
+  vote = 'vote',
 }
 
 /**
@@ -7725,9 +7788,11 @@ export enum review_update_column {
   source = 'source',
   tag_id = 'tag_id',
   text = 'text',
+  type = 'type',
   updated_at = 'updated_at',
   user_id = 'user_id',
   username = 'username',
+  vote = 'vote',
 }
 
 /**
@@ -8095,6 +8160,7 @@ export enum user_select_column {
   apple_uid = 'apple_uid',
   created_at = 'created_at',
   email = 'email',
+  has_onboarded = 'has_onboarded',
   id = 'id',
   password = 'password',
   role = 'role',
@@ -8113,6 +8179,7 @@ export enum user_update_column {
   apple_uid = 'apple_uid',
   created_at = 'created_at',
   email = 'email',
+  has_onboarded = 'has_onboarded',
   id = 'id',
   password = 'password',
   role = 'role',

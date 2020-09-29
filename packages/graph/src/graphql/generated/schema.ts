@@ -7752,7 +7752,7 @@ export const schema = {
           )
         },
         get source() {
-          return new FieldNode(schema.String, undefined, true)
+          return new FieldNode(schema.String, undefined, false)
         },
         get tag() {
           return new FieldNode(schema.tag, undefined, true)
@@ -7761,6 +7761,9 @@ export const schema = {
           return new FieldNode(schema.uuid, undefined, true)
         },
         get text() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get type() {
           return new FieldNode(schema.String, undefined, true)
         },
         get updated_at() {
@@ -7774,6 +7777,9 @@ export const schema = {
         },
         get username() {
           return new FieldNode(schema.String, undefined, true)
+        },
+        get vote() {
+          return new FieldNode(schema.numeric, undefined, true)
         },
       },
       { name: 'review', extension: ((extensions as any) || {}).review }
@@ -7932,6 +7938,9 @@ export const schema = {
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
+        get vote() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
       },
       {
         name: 'review_avg_fields',
@@ -7943,6 +7952,9 @@ export const schema = {
     return new InputNode(
       {
         get rating() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get vote() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -8009,6 +8021,9 @@ export const schema = {
         get text() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
+        get type() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
         get updated_at() {
           return new InputNodeField(schema.timestamptz_comparison_exp, true)
         },
@@ -8020,6 +8035,9 @@ export const schema = {
         },
         get username() {
           return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get vote() {
+          return new InputNodeField(schema.numeric_comparison_exp, true)
         },
       },
       { name: 'review_bool_exp' }
@@ -8062,6 +8080,9 @@ export const schema = {
     return new InputNode(
       {
         get rating() {
+          return new InputNodeField(schema.numeric, true)
+        },
+        get vote() {
           return new InputNodeField(schema.numeric, true)
         },
       },
@@ -8119,6 +8140,9 @@ export const schema = {
         get text() {
           return new InputNodeField(schema.String, true)
         },
+        get type() {
+          return new InputNodeField(schema.String, true)
+        },
         get updated_at() {
           return new InputNodeField(schema.timestamptz, true)
         },
@@ -8130,6 +8154,9 @@ export const schema = {
         },
         get username() {
           return new InputNodeField(schema.String, true)
+        },
+        get vote() {
+          return new InputNodeField(schema.numeric, true)
         },
       },
       { name: 'review_insert_input' }
@@ -8162,6 +8189,9 @@ export const schema = {
         get text() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get type() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get updated_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
         },
@@ -8170,6 +8200,9 @@ export const schema = {
         },
         get username() {
           return new FieldNode(schema.String, undefined, true)
+        },
+        get vote() {
+          return new FieldNode(schema.numeric, undefined, true)
         },
       },
       {
@@ -8205,6 +8238,9 @@ export const schema = {
         get text() {
           return new InputNodeField(schema.order_by, true)
         },
+        get type() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get updated_at() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -8212,6 +8248,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get username() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get vote() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -8245,6 +8284,9 @@ export const schema = {
         get text() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get type() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get updated_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
         },
@@ -8253,6 +8295,9 @@ export const schema = {
         },
         get username() {
           return new FieldNode(schema.String, undefined, true)
+        },
+        get vote() {
+          return new FieldNode(schema.numeric, undefined, true)
         },
       },
       {
@@ -8288,6 +8333,9 @@ export const schema = {
         get text() {
           return new InputNodeField(schema.order_by, true)
         },
+        get type() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get updated_at() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -8295,6 +8343,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get username() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get vote() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -8401,6 +8452,9 @@ export const schema = {
         get text() {
           return new InputNodeField(schema.order_by, true)
         },
+        get type() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get updated_at() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -8411,6 +8465,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get username() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get vote() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -8476,6 +8533,9 @@ export const schema = {
         get text() {
           return new InputNodeField(schema.String, true)
         },
+        get type() {
+          return new InputNodeField(schema.String, true)
+        },
         get updated_at() {
           return new InputNodeField(schema.timestamptz, true)
         },
@@ -8485,6 +8545,9 @@ export const schema = {
         get username() {
           return new InputNodeField(schema.String, true)
         },
+        get vote() {
+          return new InputNodeField(schema.numeric, true)
+        },
       },
       { name: 'review_set_input' }
     )
@@ -8493,6 +8556,9 @@ export const schema = {
     return new ObjectNode(
       {
         get rating() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get vote() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -8508,6 +8574,9 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
+        get vote() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'review_stddev_order_by' }
     )
@@ -8516,6 +8585,9 @@ export const schema = {
     return new ObjectNode(
       {
         get rating() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get vote() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -8531,6 +8603,9 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
+        get vote() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'review_stddev_pop_order_by' }
     )
@@ -8539,6 +8614,9 @@ export const schema = {
     return new ObjectNode(
       {
         get rating() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get vote() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -8554,6 +8632,9 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
+        get vote() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'review_stddev_samp_order_by' }
     )
@@ -8562,6 +8643,9 @@ export const schema = {
     return new ObjectNode(
       {
         get rating() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
+        get vote() {
           return new FieldNode(schema.numeric, undefined, true)
         },
       },
@@ -8575,6 +8659,9 @@ export const schema = {
     return new InputNode(
       {
         get rating() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get vote() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -9406,6 +9493,9 @@ export const schema = {
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
+        get vote() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
       },
       {
         name: 'review_var_pop_fields',
@@ -9419,6 +9509,9 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
+        get vote() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'review_var_pop_order_by' }
     )
@@ -9427,6 +9520,9 @@ export const schema = {
     return new ObjectNode(
       {
         get rating() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get vote() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -9442,6 +9538,9 @@ export const schema = {
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
+        get vote() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'review_var_samp_order_by' }
     )
@@ -9450,6 +9549,9 @@ export const schema = {
     return new ObjectNode(
       {
         get rating() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get vote() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -9463,6 +9565,9 @@ export const schema = {
     return new InputNode(
       {
         get rating() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get vote() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -12417,6 +12522,9 @@ export const schema = {
         get email() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get has_onboarded() {
+          return new FieldNode(schema.Boolean, undefined, false)
+        },
         get id() {
           return new FieldNode(schema.uuid, undefined, false)
         },
@@ -12615,6 +12723,9 @@ export const schema = {
         get email() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
+        get has_onboarded() {
+          return new InputNodeField(schema.Boolean_comparison_exp, true)
+        },
         get id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
         },
@@ -12660,6 +12771,9 @@ export const schema = {
         },
         get email() {
           return new InputNodeField(schema.String, true)
+        },
+        get has_onboarded() {
+          return new InputNodeField(schema.Boolean, true)
         },
         get id() {
           return new InputNodeField(schema.uuid, true)
@@ -12922,6 +13036,9 @@ export const schema = {
         get email() {
           return new InputNodeField(schema.order_by, true)
         },
+        get has_onboarded() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get id() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -12977,6 +13094,9 @@ export const schema = {
         },
         get email() {
           return new InputNodeField(schema.String, true)
+        },
+        get has_onboarded() {
+          return new InputNodeField(schema.Boolean, true)
         },
         get id() {
           return new InputNodeField(schema.uuid, true)
