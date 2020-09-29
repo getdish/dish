@@ -65,10 +65,6 @@ export const Modal = (props: ModalProps) => {
     statusBarTranslucent,
   }
 
-  useEffect(() => {
-    console.log('mount me', props)
-  }, [])
-
   if (isWeb) {
     const pointerEvents = visible ? 'auto' : 'none'
     const modalVisible = useDebounceValue(visible, visible ? 300 : 0)

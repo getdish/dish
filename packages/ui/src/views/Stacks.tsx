@@ -19,6 +19,7 @@ import { isWeb, isWebIOS } from '../constants'
 import { combineRefs } from '../helpers/combineRefs'
 import { StaticComponent } from '../helpers/extendStaticConfig'
 import { useDebounce } from '../hooks/useDebounce'
+import { stylePropsView } from '../styleProps'
 import { Spacer, Spacing } from './Spacer'
 
 const fullscreenStyle: StackProps = {
@@ -99,25 +100,29 @@ const createStack = (defaultProps?: ViewStyle) => {
       hoverStyle = null,
       onHoverIn,
       onHoverOut,
-      // @ts-ignore
-      onMouseDown,
-      // @ts-ignore
-      onMouseUp,
+      spacing,
+      className,
+      disabled,
       // @ts-ignore
       onMouseEnter,
       // @ts-ignore
       onMouseLeave,
-      // @ts-ignore
-      onMouseMove,
-      // @ts-ignore
-      onResponderGrant,
-      // @ts-ignore
-      onResponderRelease,
-      spacing,
-      className,
-      disabled,
-      ...styleProps
+      ...restProps
     } = props
+
+    const { styleProps, viewProps } = useMemo(() => {
+      const styleProps: ViewStyle = {}
+      const viewProps: ViewProps = {}
+      for (const key in restProps) {
+        if (stylePropsView[key]) {
+          styleProps[key] = restProps[key]
+        } else {
+          viewProps[key] = restProps[key]
+        }
+      }
+      return { styleProps, viewProps }
+    }, [props])
+
     const innerRef = useRef<any>()
     const isMounted = useRef(false)
 
@@ -133,7 +138,6 @@ const createStack = (defaultProps?: ViewStyle) => {
       press: false,
       pressIn: false,
     })
-    const setSlow = useDebounce(set, 100)
 
     const spacedChildren = useMemo(() => {
       if (typeof spacing === 'undefined') {
@@ -162,13 +166,10 @@ const createStack = (defaultProps?: ViewStyle) => {
 
     const ViewComponent = animated ? Animated.View : View
 
-    if (animated) {
-      console.log('styleProps', styleProps)
-    }
-
     let content = (
       <ViewComponent
         ref={combineRefs(innerRef, ref)}
+        {...viewProps}
         // @ts-ignore
         className={className}
         pointerEvents={

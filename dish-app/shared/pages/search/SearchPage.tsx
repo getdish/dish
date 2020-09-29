@@ -13,7 +13,6 @@ import {
   VStack,
   combineRefs,
 } from '@dish/ui'
-import { Store } from '@dish/use-store'
 import React, {
   Suspense,
   createContext,
@@ -24,7 +23,6 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 import {
@@ -318,7 +316,7 @@ const SearchResultsContent = (props: Props) => {
     <>
       <PageTitleTag>{title}</PageTitleTag>
       <RecyclerListView
-        style={{ flex: 1 }}
+        style={{ flex: 1, height: '100%' }}
         canChangeSize
         externalScrollView={SearchPageScrollView as any}
         renderAheadOffset={600}
@@ -354,27 +352,6 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     const scrollRef = useRef<ScrollView>()
     const preventScrolling = usePreventContentScroll()
 
-    // if (isWeb) {
-    //   useEffect(() => {
-    //     const node = scrollRef.current['_scrollNodeRef']
-    //     let height = node.clientHeight
-    //     let width = node.clientWidth
-    //     const observer = new ResizeObserver((entries) => {
-    //       const entry = entries[0]
-    //       const size = entry.contentRect
-    //       if (size.width !== width || size.height !== height) {
-    //         height = size.height
-    //         width = size.width
-    //         onSizeChanged({ width, height })
-    //       }
-    //     })
-    //     observer.observe(node)
-    //     return () => {
-    //       observer.disconnect()
-    //     }
-    //   }, [])
-    // }
-
     useEffect(() => {
       return omStatic.reaction(
         (state) => state.home.activeIndex,
@@ -397,66 +374,72 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
     }, [])
 
+    const handleLayout = useCallback((e) => {
+      const { width, height } = e.nativeEvent.layout
+      onSizeChanged({ width, height })
+    }, [])
+
     return (
-      <ScrollView
-        scrollEventThrottle={100}
-        ref={combineRefs(ref, scrollRef)}
-        {...props}
-        onContentSizeChange={(width, height) => {
-          onSizeChanged({ width, height })
-        }}
-        scrollEnabled={preventScrolling ? false : props.scrollEnabled ?? true}
-        disableScrollViewPanResponder={
-          preventScrolling ? true : props.disableScrollViewPanResponder ?? false
-        }
-        onScroll={(e) => {
-          const y = e.nativeEvent.contentOffset.y
-          setIsScrollAtTop(y <= 0)
-          props.onScroll?.(e)
-        }}
-      >
-        <VStack width="100%" height={paddingTop} />
-        <HStack
-          paddingHorizontal={20}
-          paddingTop={10}
-          paddingBottom={15}
-          overflow="hidden"
+      <VStack onLayout={handleLayout} flex={1}>
+        <ScrollView
+          scrollEventThrottle={100}
+          ref={combineRefs(ref, scrollRef)}
+          {...props}
+          scrollEnabled={preventScrolling ? false : props.scrollEnabled ?? true}
+          disableScrollViewPanResponder={
+            preventScrolling
+              ? true
+              : props.disableScrollViewPanResponder ?? false
+          }
+          onScroll={(e) => {
+            const y = e.nativeEvent.contentOffset.y
+            setIsScrollAtTop(y <= 0)
+            props.onScroll?.(e)
+          }}
         >
-          <Text
-            marginVertical="auto"
-            letterSpacing={-0.5}
-            fontSize={titleFontSize}
-            fontWeight="500"
-            color={rgbString(lenseColor.map((x) => x * 0.8))}
-            // @ts-ignore
-            display="inline" // safari fix
-            marginRight={isSmall ? 20 : 0}
+          <VStack width="100%" height={paddingTop} />
+          <HStack
+            paddingHorizontal={20}
+            paddingTop={10}
+            paddingBottom={15}
+            overflow="hidden"
           >
-            {pageTitleElements}{' '}
             <Text
+              marginVertical="auto"
+              letterSpacing={-0.5}
+              fontSize={titleFontSize}
+              fontWeight="500"
+              color={rgbString(lenseColor.map((x) => x * 0.8))}
               // @ts-ignore
               display="inline" // safari fix
-              fontWeight="300"
-              opacity={0.5}
-              className="nobreak"
+              marginRight={isSmall ? 20 : 0}
             >
-              {subTitle}
+              {pageTitleElements}{' '}
+              <Text
+                // @ts-ignore
+                display="inline" // safari fix
+                fontWeight="300"
+                opacity={0.5}
+                className="nobreak"
+              >
+                {subTitle}
+              </Text>
             </Text>
-          </Text>
-        </HStack>
-        <Suspense fallback={null}>
-          <SearchPageResultsInfoBox state={curProps.item} />
-        </Suspense>
-        <VStack position="relative" flex={1} minHeight={600}>
-          {children}
-        </VStack>
-        <Suspense fallback={null}>
-          <SearchFooter
-            searchState={curProps.item}
-            scrollToTop={scrollToTopHandler}
-          />
-        </Suspense>
-      </ScrollView>
+          </HStack>
+          <Suspense fallback={null}>
+            <SearchPageResultsInfoBox state={curProps.item} />
+          </Suspense>
+          <VStack position="relative" flex={1} minHeight={600}>
+            {children}
+          </VStack>
+          <Suspense fallback={null}>
+            <SearchFooter
+              searchState={curProps.item}
+              scrollToTop={scrollToTopHandler}
+            />
+          </Suspense>
+        </ScrollView>
+      </VStack>
     )
   }
 )
