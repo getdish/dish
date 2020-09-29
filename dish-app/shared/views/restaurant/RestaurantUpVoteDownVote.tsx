@@ -4,18 +4,22 @@ import {
   HStack,
   HoverablePopover,
   SmallTitle,
+  Spacer,
   TableCell,
   TableCellProps,
   TableRow,
   Text,
+  VStack,
 } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 
 import { getCurrentTagNames } from '../../helpers/getCurrentTagNames'
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
 import { useUserUpvoteDownvoteQuery } from '../../hooks/useUserUpvoteDownvoteQuery'
 import { ensureFlexText } from '../../pages/restaurant/ensureFlexText'
 import { HomeActiveTagsRecord } from '../../state/home-types'
+import { PointsText } from '../PointsText'
 import { Table, TableHeadRow, TableHeadText } from '../ui/Table'
 import { UpvoteDownvoteScore } from '../UpvoteDownvoteScore'
 
@@ -75,6 +79,8 @@ const col0Props: TableCellProps = {
 
 const col1Props: TableCellProps = {
   flex: 1,
+  minWidth: '20%',
+  justifyContent: 'flex-end',
 }
 
 const RestaurantTagsScore = graphql(
@@ -87,31 +93,46 @@ const RestaurantTagsScore = graphql(
     activeTagIds: HomeActiveTagsRecord
     userVote: number
   }) => {
+    const restaurant = useRestaurantQuery(restaurantSlug)
+    const breakdown = restaurant.score_breakdown()
     const tagScores = useRestaurantTagScores({
       restaurantSlug,
       tagNames: getCurrentTagNames(activeTagIds),
     })
     return (
       <Box
-        maxWidth={240}
+        maxWidth={340}
         overflow="hidden"
         minWidth={200}
         paddingVertical={15}
         paddingHorizontal={20}
       >
         <SmallTitle divider="off">Points Breakdown</SmallTitle>
-        {/* {JSON.stringify(restaurant.score_breakdown())} */}
+        <Spacer />
         <HStack flex={1}>
-          <Table flex={1}>
+          <Table flex={1} maxWidth="100%">
             <TableHeadRow>
               <TableCell {...col0Props}>
-                <TableHeadText>Tag</TableHeadText>
+                {/* <TableHeadText>Tag</TableHeadText> */}
               </TableCell>
               <TableCell {...col1Props}>
-                <TableHeadText>Points</TableHeadText>
+                <TableHeadText>Down</TableHeadText>
+              </TableCell>
+              <TableCell {...col1Props}>
+                <TableHeadText>Up</TableHeadText>
+              </TableCell>
+              <TableCell {...col1Props}>
+                <TableHeadText>Total</TableHeadText>
               </TableCell>
             </TableHeadRow>
-            {tagScores.map((tscore, i) => {
+            {[
+              {
+                name: restaurant.name,
+                score: restaurant.score,
+                icon: '',
+              },
+              ...tagScores,
+            ].map((tscore, i) => {
               const finalScore = +(tscore.score ?? 0) + userVote
               return (
                 <TableRow key={i}>
@@ -124,19 +145,17 @@ const RestaurantTagsScore = graphql(
                     </HStack>
                   </TableCell>
                   <TableCell {...col1Props}>
-                    <Text
-                      fontWeight="bold"
-                      color={
-                        finalScore > 0
-                          ? 'green'
-                          : finalScore < 0
-                          ? 'red'
-                          : '#888'
-                      }
-                    >
-                      {finalScore > 0 ? '+' : ''}
-                      {finalScore}
-                    </Text>
+                    {i === 0 && (
+                      <PointsText points={breakdownScoreDown(breakdown)} />
+                    )}
+                  </TableCell>
+                  <TableCell {...col1Props}>
+                    {i === 0 && (
+                      <PointsText points={breakdownScoreUp(breakdown)} />
+                    )}
+                  </TableCell>
+                  <TableCell {...col1Props}>
+                    <PointsText points={finalScore} />
                   </TableCell>
                 </TableRow>
               )
@@ -147,3 +166,15 @@ const RestaurantTagsScore = graphql(
     )
   }
 )
+
+function breakdownScoreDown(breakdown: any) {
+  return breakdown.reviews['_1'].score + breakdown.reviews['_2'].score
+}
+
+function breakdownScoreUp(breakdown: any) {
+  return (
+    breakdown.photos.score +
+    breakdown.reviews['_4'].score +
+    breakdown.reviews['_5'].score
+  )
+}

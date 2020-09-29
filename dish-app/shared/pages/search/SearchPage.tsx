@@ -13,6 +13,7 @@ import {
   VStack,
   combineRefs,
 } from '@dish/ui'
+import { useStore } from '@dish/use-store'
 import React, {
   Suspense,
   createContext,
@@ -53,6 +54,7 @@ import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
 import {
+  ScrollStore,
   setIsScrollAtTop,
   usePreventContentScroll,
 } from '../../views/ContentScrollView'
@@ -351,6 +353,8 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     const lenseColor = useCurrentLenseColor()
     const scrollRef = useRef<ScrollView>()
     const preventScrolling = usePreventContentScroll()
+    const scrollStore = useStore(ScrollStore)
+    const tm = useRef<any>(0)
 
     useEffect(() => {
       return omStatic.reaction(
@@ -395,6 +399,14 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             const y = e.nativeEvent.contentOffset.y
             setIsScrollAtTop(y <= 0)
             props.onScroll?.(e)
+            // perf issue i believe
+            if (!scrollStore.isScrolling) {
+              scrollStore.setIsScrolling(true)
+            }
+            clearTimeout(tm.current)
+            tm.current = setTimeout(() => {
+              scrollStore.setIsScrolling(false)
+            }, 200)
           }}
         >
           <VStack width="100%" height={paddingTop} />

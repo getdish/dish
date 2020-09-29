@@ -47,7 +47,7 @@ export const DishUpvoteDownvote = graphql(
       <UpvoteDownvoteScore
         subtle={subtle}
         size={size}
-        score={score}
+        score={score * 10}
         vote={vote}
         setVote={setVote}
       />

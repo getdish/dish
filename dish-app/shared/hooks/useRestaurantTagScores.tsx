@@ -19,6 +19,9 @@ export function useRestaurantTagScores({
             name: {
               _eq: tagName,
             },
+            type: {
+              _neq: 'country',
+            },
           },
         },
       })[0]
