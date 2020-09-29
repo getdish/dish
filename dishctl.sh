@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 PG_PROXY_PID=
 TS_PROXY_PID=
@@ -26,6 +27,11 @@ function _ephemeral_pod() {
     --restart=Never \
     -- sh -c "$cmd"
   kubectl delete pod $name
+}
+
+function patch_service_account() {
+  kubectl patch serviceaccount default \
+    -p '{"imagePullSecrets": [{"name": "docker-config-json"}]}'
 }
 
 function _get_function_body() {
@@ -625,6 +631,7 @@ function buildkit_build() {
   name=$2
   dish_base_version=${3:-''}
   context=${4:-.}
+  dish_docker_login
   buildctl \
     --addr tcp://buildkit.k8s.dishapp.com:1234 \
     --tlscacert k8s/etc/certs/buildkit/client/ca.pem \
@@ -645,8 +652,8 @@ function buildkit_build() {
 # Usage dishctl.sh push_repo_image $repo $image_name
 function push_repo_image() {
   repo=$1
-  default_name=${repo%.*}
-  name=$(basename ${2:-$default_name})
+  default_name=$(basename ${repo%.*})
+  name=${2:-$default_name}
   image=$DISH_REGISTRY/$name
   tmp_dir=$(mktemp -d -t dish-XXXXXXXXXX)
   git clone --depth 1 $repo $tmp_dir
@@ -657,6 +664,23 @@ function push_repo_image() {
 
 function push_external_images() {
   push_repo_image 'git@github.com:getdish/image-quality-api.git' dish/image-quality-server
+  push_repo_image 'git@github.com:getdish/grafana-backup-tool.git' dish/grafana-backup-tool
+}
+
+function dish_docker_login() {
+  echo "$DOCKER_REGISTRY_PASSWORD" | docker login $DISH_REGISTRY -u dish --password-stdin
+}
+
+function grafana_backup() {
+  _run_on_cluster $DISH_REGISTRY/dish/grafana-backup-tool && return 0
+  set -e
+  export GRAFANA_TOKEN="$GRAFANA_API_KEY"
+  export GRAFANA_URL=https://grafana.k8s.dishapp.com
+  grafana-backup save
+  backup=$(ls _OUTPUT_/)
+  destination=$DISH_BACKUP_BUCKET/grafan-backups
+  s3 put _OUTPUT_/$backup $destination/$backup
+  s3 ls $destination/ | sort -k1,2
 }
 
 if command -v git &> /dev/null; then

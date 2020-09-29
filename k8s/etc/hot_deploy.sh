@@ -10,10 +10,6 @@ set -e
 # You need the `buildctl` binary installed
 # Eg; `brew install buildkitd`
 
-# You also need to be logged in to our Docker registry:
-#   docker login docker.k8s.dishapp.com -u dish -p $password
-# The password is in `env.enc.production.yaml`
-
 service_path=$1
 service_name="${service_path##*/}"
 

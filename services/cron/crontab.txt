@@ -23,3 +23,4 @@
 */15  *  *  *  *  /root/dishctl.sh ping_home_page 1>/dev/null
 0  *  *  *  *     /root/dishctl.sh hasura_clean_event_logs
 */15  *  *  *  *  /root/dishctl.sh update_all_node_taints 1>/dev/null
+0  0  *  *  1 /root/dishctl.sh grafana_backup
