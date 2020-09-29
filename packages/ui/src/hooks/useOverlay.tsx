@@ -22,6 +22,7 @@ export const useOverlay = ({
     if (node) {
       const overlayDiv = document.createElement('div')
       overlayDiv.style.background = 'rgba(0,0,0,0.1)'
+      overlayDiv.style.pointerEvents = 'auto'
       overlayDiv.style.position = 'absolute'
       overlayDiv.style.top = '0px'
       overlayDiv.style.right = '0px'

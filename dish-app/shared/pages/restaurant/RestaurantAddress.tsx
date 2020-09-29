@@ -50,7 +50,7 @@ export const RestaurantAddress = ({
   }
 
   if (isSmall) {
-    return <SmallButton {...linkProps} />
+    return <SmallButton maxWidth={160} ellipse {...linkProps} />
   } else {
     return <Link {...linkProps} />
   }

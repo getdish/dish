@@ -9,18 +9,14 @@ import {
   UnorderedListItem,
   VStack,
 } from '@dish/ui'
-import React from 'react'
+import { useStore } from '@dish/use-store'
+import React, { useEffect } from 'react'
 import { Image } from 'react-native'
 
 import dontPanic from '../../../shared/assets/dont-panic.svg'
 import { StackItemProps } from '../../AppStackView'
-import {
-  bg,
-  brandColor,
-  brandColorDark,
-  lightGreen,
-  lightYellow,
-} from '../../colors'
+import { BottomDrawerStore } from '../../BottomDrawerStore'
+import { bg, brandColorDark, lightGreen, lightYellow } from '../../colors'
 import { HomeStateItemAbout } from '../../state/home-types'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Logo } from '../../views/Logo'
@@ -37,7 +33,22 @@ const inlineButton = {
 
 export default function AboutPage({
   item,
+  isActive,
 }: StackItemProps<HomeStateItemAbout>) {
+  const drawerStore = useStore(BottomDrawerStore)
+
+  useEffect(() => {
+    if (!isActive) return
+    const tm = setTimeout(() => {
+      if (drawerStore.snapIndex > 0) {
+        drawerStore.setSnapPoint(0)
+      }
+    }, 350)
+    return () => {
+      clearTimeout(tm)
+    }
+  }, [isActive])
+
   return (
     <StackDrawer closable title="About Dish">
       <ContentScrollView
@@ -51,8 +62,8 @@ export default function AboutPage({
           zIndex={1}
           top={-30}
           right={-70}
-          width={160}
-          height={160}
+          width={150}
+          height={150}
           transform={[{ rotate: '12deg' }]}
         >
           <Image
@@ -72,7 +83,7 @@ export default function AboutPage({
 
           <VStack spacing="xl">
             <Paragraph textAlign="center" size={1.5} fontWeight="600">
-              More fun exploring the real world
+              More fun exploring the world
             </Paragraph>
 
             <Paragraph
@@ -150,7 +161,7 @@ export default function AboutPage({
                 date night 🌃
               </LinkButton>{' '}
               are <em>unique</em>: whether it's a specific dish, delivery speed,
-              vibe, ambiance - it totally depends on your current desire.
+              vibe, ambiance - it totally depends on your mood.
             </Paragraph>
 
             <Paragraph size="lg">
@@ -166,13 +177,13 @@ export default function AboutPage({
 
             <Paragraph size="lg">
               Of course, you can upvote and downvote on every factor. In fact,
-              when you write a review, we take the text and turn it into votes
-              (that you can change before submitting). By letting people speak
-              their minds naturally and then counting{' '}
+              when you write a review, we turn your words into votes (that you
+              can change before submitting). We let people speak their minds
+              naturally and then count{' '}
               <TextStrong display="inline">
                 what they actually say into votes
               </TextStrong>
-              , we think we can build a better guide.
+              .
             </Paragraph>
 
             <Paragraph size="lg">

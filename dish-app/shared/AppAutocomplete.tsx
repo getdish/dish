@@ -187,6 +187,7 @@ const AutocompleteContentsInner = memo(
       >
         <AbsoluteVStack
           backgroundColor={isSmall ? 'rgba(0,0,0,0.1)' : 'transparent'}
+          pointerEvents="auto"
           width="100%"
           height="100%"
           overflow="hidden"
@@ -198,29 +199,35 @@ const AutocompleteContentsInner = memo(
             om.actions.home.setShowAutocomplete(false)
           }}
         >
-          <BlurView width="100%">
+          <BlurView
+            maxWidth="100%"
+            width="100%"
+            height="100%"
+            position="relative"
+            {...(!isSmall && {
+              maxWidth: pageWidthMax * 0.45,
+              maxHeight: `calc(100vh - ${top + 20}px)`,
+            })}
+            {...(!isSmall && {
+              // @ts-ignore
+              onMouseLeave: () => {
+                console.log('what is', curPagePos, top)
+                if (curPagePos.y > top) {
+                  hideAutocomplete()
+                }
+              },
+              // @ts-ignore
+              onMouseEnter: () => {
+                hideAutocomplete.cancel()
+              },
+            })}
+          >
             <VStack
               width="100%"
               height="100%"
               maxHeight="90%"
+              maxWidth="100%"
               pointerEvents="auto"
-              {...(!isSmall && {
-                maxWidth: pageWidthMax * 0.45,
-                maxHeight: `calc(100vh - ${top + 20}px)`,
-              })}
-              {...(!isSmall && {
-                // @ts-ignore
-                onMouseLeave: () => {
-                  console.log('what is', curPagePos, top)
-                  if (curPagePos.y > top) {
-                    hideAutocomplete()
-                  }
-                },
-                // @ts-ignore
-                onMouseEnter: () => {
-                  hideAutocomplete.cancel()
-                },
-              })}
             >
               <VStack
                 className="ease-in-out"
@@ -231,7 +238,7 @@ const AutocompleteContentsInner = memo(
                 width="100%"
                 backgroundColor={isWeb ? 'rgba(0,0,0,0.9)' : 'rgba(0,0,0,0.5)'}
                 height={isWeb ? 'auto' : '100%'}
-                minHeight={100}
+                minHeight={200}
                 padding={5}
                 borderRadius={isSmall ? 0 : 10}
                 flex={isSmall ? 1 : 0}
