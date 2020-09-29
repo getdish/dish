@@ -1,9 +1,11 @@
 import { User } from '@dish/react-feather'
-import { Circle, HStack, StackProps, Text, VStack } from '@dish/ui'
+import { Circle, HStack, Paragraph, StackProps, Text, VStack } from '@dish/ui'
 import React, { useState } from 'react'
+import { Image } from 'react-native'
 
 import { bgLight } from '../colors'
 import { ensureFlexText } from '../pages/restaurant/ensureFlexText'
+import { thirdPartyCrawlSources } from '../thirdPartyCrawlSources'
 import { Link } from './ui/Link'
 
 export const CommentBubble = ({
@@ -25,6 +27,16 @@ export const CommentBubble = ({
   expandable?: boolean
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
+  const isTripAdvisor = name.startsWith('tripadvisor-')
+  const isYelp = name.startsWith('yelp-')
+
+  if (isTripAdvisor) {
+    name = name.replace('tripadvisor-', '')
+  }
+  if (isYelp) {
+    name = name.replace('yelp-', '')
+  }
+
   return (
     <VStack
       borderRadius={10}
@@ -37,8 +49,33 @@ export const CommentBubble = ({
     >
       {!!name && (
         <HStack width="100%" maxWidth="100%" alignItems="center">
-          <Circle size={18} marginRight={4} marginTop={2}>
-            <User color="#999" size={12} />
+          <Circle
+            size={26}
+            marginRight={4}
+            marginVertical={-4}
+            marginBottom={-6}
+          >
+            {isTripAdvisor ? (
+              <Image
+                source={{ uri: thirdPartyCrawlSources.tripadvisor.image }}
+                style={{
+                  width: 26,
+                  height: 26,
+                  borderRadius: 100,
+                }}
+              />
+            ) : isYelp ? (
+              <Image
+                source={{ uri: thirdPartyCrawlSources.yelp.image }}
+                style={{
+                  width: 26,
+                  height: 26,
+                  borderRadius: 100,
+                }}
+              />
+            ) : (
+              <User color="#999" size={16} />
+            )}
           </Circle>
           <HStack
             flex={1}
@@ -70,12 +107,11 @@ export const CommentBubble = ({
         {before}
 
         {!!text && (
-          <Text
+          <Paragraph
             className="preserve-whitespace"
             selectable
             opacity={0.8}
-            lineHeight={20}
-            fontSize={14}
+            size={1.1}
           >
             {ellipseContentAbove && text.length > ellipseContentAbove ? (
               <>
@@ -97,7 +133,7 @@ export const CommentBubble = ({
             ) : (
               text
             )}
-          </Text>
+          </Paragraph>
         )}
 
         {after}

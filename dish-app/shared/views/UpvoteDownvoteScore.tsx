@@ -21,7 +21,7 @@ export const UpvoteDownvoteScore = memo(
     subtle?: boolean
   } & StackProps) => {
     const voteButtonColor = subtle ? '#f2f2f2' : null
-    const scale = size === 'sm' ? 0.9 : 1
+    const scale = size === 'sm' ? 0.85 : 1
     const sizePx = 56 * scale
     const isOpenProp =
       vote === 0
