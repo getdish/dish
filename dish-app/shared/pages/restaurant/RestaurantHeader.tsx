@@ -2,7 +2,7 @@ import { graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
 import { HStack, SmallTitle, Spacer, StackProps, Text, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
-import { Image } from 'react-native'
+import { Image, ScrollView } from 'react-native'
 
 import { drawerBorderRadius } from '../../constants'
 import { useIsReallyNarrow } from '../../hooks/useIs'
@@ -89,25 +89,26 @@ const RestaurantHeaderContent = memo(
                   {restaurant.name}
                 </Text>
                 <Spacer size="sm" />
-                <HStack alignItems="center" flexWrap="wrap">
-                  <RestaurantAddressLinksRow
-                    currentLocationInfo={
-                      state?.currentLocationInfo ??
-                      om.state.home.currentState.currentLocationInfo
-                    }
-                    showMenu
-                    size="lg"
-                    restaurantSlug={restaurantSlug}
-                  />
-                  <Spacer />
-                  <RestaurantAddress
-                    size="sm"
-                    address={restaurant.address ?? ''}
-                    currentLocationInfo={state?.currentLocationInfo ?? null}
-                  />
-                  {afterAddress}
-                </HStack>
-                <Spacer size="md" />
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  <HStack alignItems="center" flexWrap="wrap" paddingRight={20}>
+                    <RestaurantAddressLinksRow
+                      currentLocationInfo={
+                        state?.currentLocationInfo ??
+                        om.state.home.currentState.currentLocationInfo
+                      }
+                      showMenu
+                      size="lg"
+                      restaurantSlug={restaurantSlug}
+                    />
+                    <Spacer size="xs" />
+                    <RestaurantAddress
+                      size="sm"
+                      address={restaurant.address ?? ''}
+                      currentLocationInfo={state?.currentLocationInfo ?? null}
+                    />
+                    {afterAddress}
+                  </HStack>
+                </ScrollView>
               </VStack>
 
               {!isReallySmall && (

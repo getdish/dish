@@ -42,45 +42,43 @@ export default memo(function GalleryPage() {
 
     return (
       <Modal maxWidth={pageWidthMax} width="98%" height="98%" maxHeight="98%">
-        <VStack width="100%" flex={1} alignItems="center" position="relative">
-          <AbsoluteVStack top={5} right={26}>
-            <StackViewCloseButton />
-          </AbsoluteVStack>
-          <Suspense fallback={<LoadingItems />}>
-            <HomePageGalleryContent
-              state={state}
-              header={
-                <HStack
-                  alignItems="center"
-                  justifyContent="space-between"
-                  position="relative"
-                  zIndex={100}
-                >
-                  <RestaurantHeader
-                    size="sm"
-                    restaurantSlug={state.restaurantSlug}
-                    after={
-                      <VStack marginVertical={-15}>
-                        {isSmall ? null : dishPhotosElement}
-                      </VStack>
-                    }
-                  />
-                </HStack>
-              }
-            />
-            {isSmall ? (
-              <AbsoluteVStack
-                backgroundColor="#fff"
-                padding={0}
-                bottom={0}
-                left={0}
-                right={0}
+        <AbsoluteVStack top={5} right={30}>
+          <StackViewCloseButton />
+        </AbsoluteVStack>
+        <Suspense fallback={<LoadingItems />}>
+          <HomePageGalleryContent
+            state={state}
+            header={
+              <HStack
+                alignItems="center"
+                justifyContent="space-between"
+                position="relative"
+                zIndex={100}
               >
-                {dishPhotosElement}
-              </AbsoluteVStack>
-            ) : null}
-          </Suspense>
-        </VStack>
+                <RestaurantHeader
+                  size="sm"
+                  restaurantSlug={state.restaurantSlug}
+                  after={
+                    <VStack marginVertical={-15}>
+                      {isSmall ? null : dishPhotosElement}
+                    </VStack>
+                  }
+                />
+              </HStack>
+            }
+          />
+          {isSmall ? (
+            <AbsoluteVStack
+              backgroundColor="#fff"
+              padding={0}
+              bottom={0}
+              left={0}
+              right={0}
+            >
+              {dishPhotosElement}
+            </AbsoluteVStack>
+          ) : null}
+        </Suspense>
       </Modal>
     )
   }

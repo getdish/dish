@@ -27,22 +27,15 @@ export const RestaurantAddress = ({
       address
     )}`,
     children: (
-      <HStack alignItems="center">
+      <HStack alignItems="center" maxWidth="100%">
         {size !== 'xs' && (
           <MapPin
             color={color}
-            size={14}
-            style={{ marginBottom: -7, marginRight: 4, opacity: 0.5 }}
+            size={16}
+            style={{ marginRight: 4, opacity: 0.5 }}
           />
         )}
-        <Text
-          color={color}
-          ellipse
-          lineHeight={24}
-          fontSize={14}
-          fontWeight="400"
-          selectable
-        >
+        <Text color={color} ellipse fontSize={14} fontWeight="400" selectable>
           {getAddressText(currentLocationInfo, address, size)}
         </Text>
       </HStack>

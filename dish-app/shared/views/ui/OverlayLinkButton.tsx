@@ -18,7 +18,6 @@ export function OverlayLinkButton<
       marginBottom={10}
       overflow="hidden"
       pointerEvents="auto"
-      noText
       hoverStyle={{
         transform: [{ scale: 1.05 }],
       }}

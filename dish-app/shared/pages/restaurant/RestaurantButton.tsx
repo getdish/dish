@@ -44,7 +44,6 @@ export const RestaurantButton = memo(
           paddingHorizontal={7}
           paddingVertical={2}
           borderRadius={6}
-          noText
           hoverStyle={{
             borderColor: '#eee',
             shadowColor: 'rgba(0,0,0,0.1)',

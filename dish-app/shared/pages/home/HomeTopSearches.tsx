@@ -48,9 +48,10 @@ export const HomeTopSearches = memo(() => {
                 >
                   {tag.icon ? (
                     <Text
-                      marginRight={1}
+                      marginRight={6}
                       fontSize={18}
-                      lineHeight={isWeb ? 16 : 22}
+                      lineHeight={22}
+                      transform={[{ translateY: 1 }]}
                     >
                       {tag.icon}{' '}
                     </Text>

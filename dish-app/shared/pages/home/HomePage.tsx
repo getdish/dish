@@ -14,7 +14,6 @@ import {
   LinearGradient,
   LoadingItems,
   LoadingItemsSmall,
-  Modal,
   Spacer,
   Text,
   VStack,
@@ -25,7 +24,6 @@ import { Dimensions, ScrollView, StyleSheet } from 'react-native'
 
 import { bgLight, bgLightHover, bgLightTranslucent } from '../../colors'
 import { useIsNarrow } from '../../hooks/useIs'
-import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { addTagsToCache } from '../../state/allTags'
 import { HomeStateItemHome } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'

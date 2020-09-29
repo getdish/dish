@@ -113,7 +113,6 @@ const MenuButton = memo(
           opacity: 1,
           transform: [{ scale: 1.1 }],
         }}
-        noText
         hoverStyle={{
           opacity: 1,
         }}

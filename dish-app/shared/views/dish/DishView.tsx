@@ -70,7 +70,6 @@ export const DishView = memo(
           transform: [{ scale: 0.98 }],
           opacity: 1,
         }}
-        noText
         hoverStyle={{
           zIndex: 2,
           transform: [{ scale: 1.03 }],

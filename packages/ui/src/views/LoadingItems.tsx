@@ -3,7 +3,7 @@ import React, { useRef } from 'react'
 import { HStack, VStack } from './Stacks'
 
 export const LoadingItems = () => (
-  <VStack spacing="sm">
+  <VStack spacing="sm" width="100%">
     <LoadingItem />
     <LoadingItem />
     <LoadingItem />
@@ -11,7 +11,7 @@ export const LoadingItems = () => (
 )
 
 export const LoadingItemsSmall = () => (
-  <VStack spacing="xs">
+  <VStack spacing="xs" width="100%">
     <LoadingItem size="sm" />
     <LoadingItem size="sm" />
     <LoadingItem size="sm" />

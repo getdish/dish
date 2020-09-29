@@ -92,7 +92,6 @@ const AdminLinkButton = ({
   return (
     <LinkButton
       fontSize={80}
-      noText
       borderRadius={10}
       padding={10}
       paddingHorizontal={20}

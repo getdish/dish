@@ -17,9 +17,44 @@ export type SmallButtonProps = LinkButtonProps & {
 export const SmallButton = ({
   isActive,
   children,
+  // TODO remove textStyle in favor of direct
   textStyle,
+  color,
+  fontSize,
+  fontWeight,
+  lineHeight,
+  textAlign,
+  ellipse,
   ...rest
 }: SmallButtonProps) => {
+  const contents =
+    typeof children === 'string' ? (
+      <Text
+        color={isActive ? '#000' : bg}
+        fontSize={14}
+        fontWeight="600"
+        {...{
+          color,
+          fontSize,
+          fontWeight,
+          lineHeight,
+          textAlign,
+          ellipse,
+        }}
+        {...textStyle}
+      >
+        {isWeb ? (
+          <HStack maxWidth="100%" alignItems="center">
+            {children}
+          </HStack>
+        ) : (
+          children
+        )}
+      </Text>
+    ) : (
+      children
+    )
+
   return (
     <LinkButton
       className={rest.className}
@@ -43,15 +78,7 @@ export const SmallButton = ({
         },
       })}
     >
-      {/* TODO only do text if string, otherwise no text, remove isWeb conditional */}
-      <Text
-        color={isActive ? '#000' : bg}
-        fontSize={14}
-        fontWeight="600"
-        {...textStyle}
-      >
-        {isWeb ? <HStack alignItems="center">{children}</HStack> : children}
-      </Text>
+      {contents}
     </LinkButton>
   )
 }

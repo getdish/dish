@@ -44,7 +44,6 @@ export function LinkButton<
     name,
     params,
     onPress,
-    noText, // hacky for now
     ...restProps
   } = props
 
@@ -66,7 +65,7 @@ export function LinkButton<
       {...restProps}
       {...(isActive && props.activeStyle)}
     >
-      {noText ? (
+      {typeof children !== 'string' ? (
         getChildren(props, isActive)
       ) : (
         <Text

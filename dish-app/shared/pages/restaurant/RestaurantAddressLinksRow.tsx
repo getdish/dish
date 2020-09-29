@@ -31,7 +31,7 @@ export const RestaurantAddressLinksRow = memo(
       const sep = ' '
 
       const linkElements = (
-        <HStack alignItems="center" spacing="sm">
+        <HStack alignItems="center" spacing="xs">
           {showMenu && !!restaurant.website && (
             <SmallButton href={restaurant.website ?? ''} target="_blank">
               Menu
