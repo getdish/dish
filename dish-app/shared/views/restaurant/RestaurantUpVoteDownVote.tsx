@@ -168,13 +168,16 @@ const RestaurantTagsScore = graphql(
 )
 
 function breakdownScoreDown(breakdown: any) {
-  return breakdown.reviews['_1'].score + breakdown.reviews['_2'].score
+  return (
+    breakdown?.reviews['_1'].score ?? 0 + breakdown?.reviews['_2'].score ?? 0
+  )
 }
 
 function breakdownScoreUp(breakdown: any) {
   return (
-    breakdown.photos.score +
-    breakdown.reviews['_4'].score +
-    breakdown.reviews['_5'].score
+    breakdown?.photos.score ??
+    0 + breakdown?.reviews['_4'].score ??
+    0 + breakdown?.reviews['_5'].score ??
+    0
   )
 }
