@@ -386,6 +386,7 @@ tables:
       - user_id
       - username
       filter: {}
+      allow_aggregations: true
   - role: contributor
     permission:
       columns:
@@ -400,6 +401,7 @@ tables:
       - user_id
       - username
       filter: {}
+      allow_aggregations: true
   - role: user
     permission:
       columns:
@@ -416,6 +418,7 @@ tables:
       - user_id
       - username
       filter: {}
+      allow_aggregations: true
   update_permissions:
   - role: contributor
     permission:
