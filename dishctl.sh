@@ -709,6 +709,12 @@ function grafana_backup() {
   s3 ls $destination/ | sort -k1,2
 }
 
+function terraform_apply() {
+  pushd $PROJECT_ROOT/k8s
+  eval $(yaml_to_env) terraform apply
+  popd
+}
+
 if command -v git &> /dev/null; then
   PROJECT_ROOT=$(git rev-parse --show-toplevel)
   pushd $PROJECT_ROOT >/dev/null
