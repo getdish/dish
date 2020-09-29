@@ -717,7 +717,7 @@ test('Scoring for restaurants', async (t) => {
 
   t.deepEqual(updated?.score_breakdown.photos, {
     meeting_criteria_count: 1,
-    score: 2,
+    score: 0.1,
   })
   t.deepEqual(updated?.score_breakdown.reviews, {
     score: 9,
@@ -727,7 +727,7 @@ test('Scoring for restaurants', async (t) => {
     _4: { count: 1, score: 1 },
     _5: { count: 5, score: 10 },
   })
-  t.is(updated?.score, 11)
+  t.is(updated?.score, 9.1)
 })
 
 test('Scoring for rishes', async (t) => {
