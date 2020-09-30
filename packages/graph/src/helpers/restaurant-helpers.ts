@@ -26,7 +26,11 @@ export async function restaurantFindOneWithTags(
 ) {
   const options = {
     ...tagDataRelations,
-    relations: [...tagDataRelations.relations, ...extra_relations],
+    relations: [
+      ...tagDataRelations.relations,
+      ...['tags.sentences'],
+      ...extra_relations,
+    ],
   }
   return await restaurantFindOne(restaurant, options)
 }

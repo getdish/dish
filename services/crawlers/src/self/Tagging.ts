@@ -261,6 +261,7 @@ export class Tagging {
       if (isReview(text_source)) {
         const sentiment = {
           tag_id: tag.id,
+          restaurant_id: this.crawler.restaurant.id,
           sentence,
           naive_sentiment: rating,
         }

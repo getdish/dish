@@ -784,4 +784,12 @@ test('Scoring for rishes', async (t) => {
       positive: 1,
     },
   })
+  t.is(rish1.sentences.length, 5)
+  t.assert(
+    rish1.sentences.find(
+      (s) =>
+        s.sentence == 'This restaurant had terrible Test tag existing 1 dishes!'
+    )
+  )
+  t.assert(rish1.sentences.find((s) => s.sentence == 'Test tag was good.'))
 })

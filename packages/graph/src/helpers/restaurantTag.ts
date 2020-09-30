@@ -12,10 +12,15 @@ export async function restaurantTagUpsert(
   extra_relations: string[] = []
 ): Promise<RestaurantWithId> {
   if (!tags.length) throw new Error('No tags given to restaurantTagUpsert')
-  const objects: RestaurantTag[] = tags.map((tag) => ({
-    ...tag,
-    restaurant_id,
-  }))
+  const objects: RestaurantTag[] = tags.map((tag) => {
+    if (!tag.sentences || tag.sentences.length == 0) {
+      delete tag.sentences
+    }
+    return {
+      ...tag,
+      restaurant_id,
+    }
+  })
   const response = await resolvedMutationWithFields(
     () => {
       const insert = mutation.insert_restaurant_tag as any

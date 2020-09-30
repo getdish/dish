@@ -3149,6 +3149,26 @@ export type t_restaurant_tag = FieldsType<
     >
     score?: t_numeric | null
     score_breakdown: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    sentences: FieldsTypeArg<
+      {
+        distinct_on?: review_tag_sentence_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: review_tag_sentence_order_by[] | null
+        where?: review_tag_sentence_bool_exp | null
+      },
+      t_review_tag_sentence[]
+    >
+    sentences_aggregate: FieldsTypeArg<
+      {
+        distinct_on?: review_tag_sentence_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: review_tag_sentence_order_by[] | null
+        where?: review_tag_sentence_bool_exp | null
+      },
+      t_review_tag_sentence_aggregate
+    >
     tag: t_tag
     tag_id: t_uuid
   },
@@ -3276,6 +3296,7 @@ export type restaurant_tag_bool_exp = {
   reviews?: review_bool_exp | null
   score?: numeric_comparison_exp | null
   score_breakdown?: jsonb_comparison_exp | null
+  sentences?: review_tag_sentence_bool_exp | null
   tag?: tag_bool_exp | null
   tag_id?: uuid_comparison_exp | null
 }
@@ -3341,6 +3362,7 @@ export type restaurant_tag_insert_input = {
   reviews?: review_arr_rel_insert_input | null
   score?: any | null
   score_breakdown?: any | null
+  sentences?: review_tag_sentence_arr_rel_insert_input | null
   tag?: tag_obj_rel_insert_input | null
   tag_id?: any | null
 }
@@ -3456,6 +3478,7 @@ export type restaurant_tag_order_by = {
   reviews_aggregate?: review_aggregate_order_by | null
   score?: order_by | null
   score_breakdown?: order_by | null
+  sentences_aggregate?: review_tag_sentence_aggregate_order_by | null
   tag?: tag_order_by | null
   tag_id?: order_by | null
 }
@@ -4358,6 +4381,7 @@ export type t_review_tag_sentence = FieldsType<
     id: t_uuid
     ml_sentiment?: t_numeric | null
     naive_sentiment: t_numeric
+    restaurant_id?: t_uuid | null
     review: t_review
     review_id: t_uuid
     sentence: t_String
@@ -4468,6 +4492,7 @@ export type review_tag_sentence_bool_exp = {
   id?: uuid_comparison_exp | null
   ml_sentiment?: numeric_comparison_exp | null
   naive_sentiment?: numeric_comparison_exp | null
+  restaurant_id?: uuid_comparison_exp | null
   review?: review_bool_exp | null
   review_id?: uuid_comparison_exp | null
   sentence?: String_comparison_exp | null
@@ -4500,6 +4525,7 @@ export type review_tag_sentence_insert_input = {
   id?: any | null
   ml_sentiment?: any | null
   naive_sentiment?: any | null
+  restaurant_id?: any | null
   review?: review_obj_rel_insert_input | null
   review_id?: any | null
   sentence?: string | null
@@ -4517,6 +4543,7 @@ export type t_review_tag_sentence_max_fields = FieldsType<
     id?: t_uuid | null
     ml_sentiment?: t_numeric | null
     naive_sentiment?: t_numeric | null
+    restaurant_id?: t_uuid | null
     review_id?: t_uuid | null
     sentence?: t_String | null
     tag_id?: t_uuid | null
@@ -4532,6 +4559,7 @@ export type review_tag_sentence_max_order_by = {
   id?: order_by | null
   ml_sentiment?: order_by | null
   naive_sentiment?: order_by | null
+  restaurant_id?: order_by | null
   review_id?: order_by | null
   sentence?: order_by | null
   tag_id?: order_by | null
@@ -4547,6 +4575,7 @@ export type t_review_tag_sentence_min_fields = FieldsType<
     id?: t_uuid | null
     ml_sentiment?: t_numeric | null
     naive_sentiment?: t_numeric | null
+    restaurant_id?: t_uuid | null
     review_id?: t_uuid | null
     sentence?: t_String | null
     tag_id?: t_uuid | null
@@ -4562,6 +4591,7 @@ export type review_tag_sentence_min_order_by = {
   id?: order_by | null
   ml_sentiment?: order_by | null
   naive_sentiment?: order_by | null
+  restaurant_id?: order_by | null
   review_id?: order_by | null
   sentence?: order_by | null
   tag_id?: order_by | null
@@ -4607,6 +4637,7 @@ export type review_tag_sentence_order_by = {
   id?: order_by | null
   ml_sentiment?: order_by | null
   naive_sentiment?: order_by | null
+  restaurant_id?: order_by | null
   review?: review_order_by | null
   review_id?: order_by | null
   sentence?: order_by | null
@@ -4628,6 +4659,7 @@ type t_review_tag_sentence_select_column = EnumType<
   | 'id'
   | 'ml_sentiment'
   | 'naive_sentiment'
+  | 'restaurant_id'
   | 'review_id'
   | 'sentence'
   | 'tag_id'
@@ -4641,6 +4673,7 @@ export type review_tag_sentence_set_input = {
   id?: any | null
   ml_sentiment?: any | null
   naive_sentiment?: any | null
+  restaurant_id?: any | null
   review_id?: any | null
   sentence?: string | null
   tag_id?: any | null
@@ -4742,6 +4775,7 @@ type t_review_tag_sentence_update_column = EnumType<
   | 'id'
   | 'ml_sentiment'
   | 'naive_sentiment'
+  | 'restaurant_id'
   | 'review_id'
   | 'sentence'
   | 'tag_id'
@@ -7946,6 +7980,7 @@ export enum review_tag_sentence_select_column {
   id = 'id',
   ml_sentiment = 'ml_sentiment',
   naive_sentiment = 'naive_sentiment',
+  restaurant_id = 'restaurant_id',
   review_id = 'review_id',
   sentence = 'sentence',
   tag_id = 'tag_id',
@@ -7991,6 +8026,7 @@ export enum review_tag_sentence_update_column {
   id = 'id',
   ml_sentiment = 'ml_sentiment',
   naive_sentiment = 'naive_sentiment',
+  restaurant_id = 'restaurant_id',
   review_id = 'review_id',
   sentence = 'sentence',
   tag_id = 'tag_id',

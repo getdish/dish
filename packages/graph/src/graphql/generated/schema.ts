@@ -6624,6 +6624,70 @@ export const schema = {
             true
           )
         },
+        get sentences() {
+          return new FieldNode(
+            new ArrayNode(schema.review_tag_sentence, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_sentence_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_sentence_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(
+                  schema.review_tag_sentence_bool_exp,
+                  true
+                )
+              },
+            }),
+            false
+          )
+        },
+        get sentences_aggregate() {
+          return new FieldNode(
+            schema.review_tag_sentence_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_sentence_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.review_tag_sentence_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(
+                  schema.review_tag_sentence_bool_exp,
+                  true
+                )
+              },
+            }),
+            false
+          )
+        },
         get tag() {
           return new FieldNode(schema.tag, undefined, false)
         },
@@ -6931,6 +6995,9 @@ export const schema = {
         get score_breakdown() {
           return new InputNodeField(schema.jsonb_comparison_exp, true)
         },
+        get sentences() {
+          return new InputNodeField(schema.review_tag_sentence_bool_exp, true)
+        },
         get tag() {
           return new InputNodeField(schema.tag_bool_exp, true)
         },
@@ -7037,6 +7104,12 @@ export const schema = {
         },
         get score_breakdown() {
           return new InputNodeField(schema.jsonb, true)
+        },
+        get sentences() {
+          return new InputNodeField(
+            schema.review_tag_sentence_arr_rel_insert_input,
+            true
+          )
         },
         get tag() {
           return new InputNodeField(schema.tag_obj_rel_insert_input, true)
@@ -7250,6 +7323,12 @@ export const schema = {
         },
         get score_breakdown() {
           return new InputNodeField(schema.order_by, true)
+        },
+        get sentences_aggregate() {
+          return new InputNodeField(
+            schema.review_tag_sentence_aggregate_order_by,
+            true
+          )
         },
         get tag() {
           return new InputNodeField(schema.tag_order_by, true)
@@ -8764,6 +8843,9 @@ export const schema = {
         get naive_sentiment() {
           return new FieldNode(schema.numeric, undefined, false)
         },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get review() {
           return new FieldNode(schema.review, undefined, false)
         },
@@ -9053,6 +9135,9 @@ export const schema = {
         get naive_sentiment() {
           return new InputNodeField(schema.numeric_comparison_exp, true)
         },
+        get restaurant_id() {
+          return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
         get review() {
           return new InputNodeField(schema.review_bool_exp, true)
         },
@@ -9100,6 +9185,9 @@ export const schema = {
         get naive_sentiment() {
           return new InputNodeField(schema.numeric, true)
         },
+        get restaurant_id() {
+          return new InputNodeField(schema.uuid, true)
+        },
         get review() {
           return new InputNodeField(schema.review_obj_rel_insert_input, true)
         },
@@ -9131,6 +9219,9 @@ export const schema = {
         get naive_sentiment() {
           return new FieldNode(schema.numeric, undefined, true)
         },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
+        },
         get review_id() {
           return new FieldNode(schema.uuid, undefined, true)
         },
@@ -9159,6 +9250,9 @@ export const schema = {
         get naive_sentiment() {
           return new InputNodeField(schema.order_by, true)
         },
+        get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get review_id() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -9183,6 +9277,9 @@ export const schema = {
         },
         get naive_sentiment() {
           return new FieldNode(schema.numeric, undefined, true)
+        },
+        get restaurant_id() {
+          return new FieldNode(schema.uuid, undefined, true)
         },
         get review_id() {
           return new FieldNode(schema.uuid, undefined, true)
@@ -9210,6 +9307,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get naive_sentiment() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get restaurant_id() {
           return new InputNodeField(schema.order_by, true)
         },
         get review_id() {
@@ -9299,6 +9399,9 @@ export const schema = {
         get naive_sentiment() {
           return new InputNodeField(schema.order_by, true)
         },
+        get restaurant_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get review() {
           return new InputNodeField(schema.review_order_by, true)
         },
@@ -9342,6 +9445,9 @@ export const schema = {
         },
         get naive_sentiment() {
           return new InputNodeField(schema.numeric, true)
+        },
+        get restaurant_id() {
+          return new InputNodeField(schema.uuid, true)
         },
         get review_id() {
           return new InputNodeField(schema.uuid, true)

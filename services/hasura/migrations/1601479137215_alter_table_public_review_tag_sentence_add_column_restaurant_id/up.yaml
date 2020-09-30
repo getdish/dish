@@ -1,0 +1,6 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."review_tag_sentence" ADD COLUMN "restaurant_id" uuid
+      NULL;
+  type: run_sql

@@ -1,0 +1,14 @@
+- args:
+    name: sentences
+    table:
+      name: restaurant_tag
+      schema: public
+    using:
+      manual_configuration:
+        column_mapping:
+          restaurant_id: restaurant_id
+          tag_id: tag_id
+        remote_table:
+          name: review_tag_sentence
+          schema: public
+  type: create_array_relationship
