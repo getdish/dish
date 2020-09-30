@@ -24,32 +24,14 @@ sleep 10 # Postgres needs 2 starts to get everything set up
 docker-compose down
 docker-compose up -d hasura postgres timescaledb
 
-pushd services/hasura
-yarn global add hasura-cli@v1.2.2
-$(yarn global bin)/hasura migrate apply \
-  --skip-update-check \
-  --endpoint $HASURA_ENDPOINT \
-  --admin-secret password
-
-cat functions/*.sql | \
-  PGPASSWORD=postgres psql \
-    -p 5432 \
-    -h localhost \
-    -U postgres \
-    -d dish \
-    --single-transaction
-popd
-
-pushd services/timescaledb
-./migrate.sh
-popd
-
+./dishctl.sh db_migrate_local
+./dishctl.sh timescale_migrate_local
 # JWT server won't start until migrations have been applied
 docker-compose down
 
 # Exclude the base service, as that's just a dev convienience to build the base image
 services=$(docker-compose config --services | grep -v base | tr '\r\n' ' ')
-eval $(./dishctl yaml_to_env) docker-compose up -d $services
+eval $(./dishctl.sh yaml_to_env) docker-compose up -d $services
 
 if ! timeout --preserve-status 20 bash -c wait_until_hasura_ready; then
   echo "Timed out waiting for Hasura container to start"

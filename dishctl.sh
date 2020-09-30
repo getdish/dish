@@ -157,7 +157,7 @@ function timescale_migrate() {
 
 function timescale_migrate_local() {
   pushd $PROJECT_ROOT/services/timescaledb
-  ./migrate.sh
+  DISH_ENV=not-production ./migrate.sh
   popd
 }
 

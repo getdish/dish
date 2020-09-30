@@ -2,6 +2,9 @@
 set -e
 
 echo "::add-path::$HOME/bin"
+echo "::add-path::$(yarn global bin)/"
+
+# The above add-paths don't take effect until the next Github Workflow step
 PATH=$PATH:$HOME/bin
 mkdir -p $HOME/bin
 
