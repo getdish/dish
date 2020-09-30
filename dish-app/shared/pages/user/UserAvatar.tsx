@@ -6,19 +6,32 @@ import { defaultUserImage } from '../../defaultUserImage'
 import { characters } from './characters'
 
 export const UserAvatar = memo(
-  ({ avatar, charIndex }: { avatar: string; charIndex: number }) => {
+  ({
+    size = 100,
+    avatar,
+    charIndex,
+  }: {
+    size?: number
+    avatar: string
+    charIndex: number
+  }) => {
     const char = characters[charIndex]
     return (
       <VStack position="relative">
         <Image
           source={{ uri: avatar || defaultUserImage }}
           style={{
-            width: 100,
-            height: 100,
-            borderRadius: 100,
+            width: size,
+            height: size,
+            borderRadius: size,
           }}
         />
-        <Text position="absolute" bottom={-15} left={-15} fontSize={50}>
+        <Text
+          position="absolute"
+          bottom={-size * 0.15}
+          left={-size * 0.15}
+          fontSize={size * 0.5}
+        >
           {char ?? '👻'}
         </Text>
       </VStack>

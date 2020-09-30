@@ -1,4 +1,4 @@
-import { slugify } from '@dish/graph/_'
+import { graphql, slugify } from '@dish/graph/_'
 import { ChevronUp, HelpCircle, Menu, User } from '@dish/react-feather'
 import { HStack, Popover, Text, Tooltip } from '@dish/ui'
 import React, { memo, useCallback, useEffect } from 'react'
@@ -6,6 +6,8 @@ import React, { memo, useCallback, useEffect } from 'react'
 import { AppMenuContents } from './AppMenuContents'
 import { useIsAboveMedium, useIsNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
+import { UserAvatar } from './pages/user/UserAvatar'
+import { useUserQuery } from './pages/user/useUserQuery'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { LinkButton } from './views/ui/LinkButton'
@@ -28,7 +30,7 @@ export const AppMenu = memo(() => {
   }, [pageName])
 
   return (
-    <HStack>
+    <HStack alignItems="center">
       <Popover
         position="bottom"
         isOpen={showUserMenu}
@@ -46,16 +48,16 @@ export const AppMenu = memo(() => {
 
       {isAboveMedium && (
         <>
-          {om.state.user.isLoggedIn && (
-            <Tooltip contents="Profle">
+          {om.state.user.isLoggedIn && <UserMenuButton />}
+
+          {!om.state.user.isLoggedIn && (
+            <Tooltip contents="About">
               <MenuButton
-                name="user"
-                params={{
-                  username: slugify(om.state.user.user?.username ?? ''),
-                }}
-                Icon={User}
+                name="about"
+                Icon={HelpCircle}
+                ActiveIcon={ChevronUp}
                 onPress={(e) => {
-                  if (omStatic.state.router.curPageName === 'profile') {
+                  if (omStatic.state.router.curPageName === 'about') {
                     e.preventDefault()
                     omStatic.actions.home.up()
                   } else {
@@ -65,25 +67,33 @@ export const AppMenu = memo(() => {
               />
             </Tooltip>
           )}
-
-          <Tooltip contents="About">
-            <MenuButton
-              name="about"
-              Icon={HelpCircle}
-              ActiveIcon={ChevronUp}
-              onPress={(e) => {
-                if (omStatic.state.router.curPageName === 'about') {
-                  e.preventDefault()
-                  omStatic.actions.home.up()
-                } else {
-                  e.navigate()
-                }
-              }}
-            />
-          </Tooltip>
         </>
       )}
     </HStack>
+  )
+})
+
+const UserMenuButton = graphql(() => {
+  const om = useOvermind()
+  const username = om.state.user.user?.username ?? ''
+  const user = useUserQuery(username)
+  return (
+    <Tooltip contents="Profile">
+      <LinkButton
+        marginRight={10}
+        marginLeft={6}
+        name="user"
+        params={{
+          username: slugify(username),
+        }}
+      >
+        <UserAvatar
+          size={32}
+          avatar={user.avatar ?? ''}
+          charIndex={user.charIndex ?? 0}
+        />
+      </LinkButton>
+    </Tooltip>
   )
 })
 
