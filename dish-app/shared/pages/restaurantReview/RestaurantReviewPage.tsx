@@ -26,7 +26,7 @@ import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
 import { RestaurantLenseVote } from '../restaurant/RestaurantLenseVote'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 
-export default memo(function HomePageRestaurantReview() {
+export default memo(function RestaurantReviewPage() {
   const om = useOvermind()
   const state = om.state.home.currentState
 

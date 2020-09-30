@@ -108,6 +108,7 @@ export type HomeStateItem =
   | HomeStateItemReviews
   | HomeStateItemAbout
   | HomeStateItemBlog
+  | HomeStateItemUserEdit
 
 export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
   id: HomeStateItemBase['id']
@@ -166,6 +167,10 @@ export type HomeStateItemGallery = HomeStateItemBase & {
 export type HomeStateItemReview = HomeStateItemBase & {
   type: 'restaurantReview'
   restaurantSlug: string
+}
+
+export type HomeStateItemUserEdit = HomeStateItemBase & {
+  type: 'userEdit'
 }
 
 export type HomeStateItemReviews = HomeStateItemBase & {

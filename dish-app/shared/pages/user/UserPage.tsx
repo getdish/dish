@@ -1,6 +1,5 @@
 import { graphql } from '@dish/graph'
 import {
-  Circle,
   Divider,
   HStack,
   LoadingItem,
@@ -12,15 +11,15 @@ import {
   VStack,
 } from '@dish/ui'
 import React, { Suspense, memo, useEffect, useState } from 'react'
-import { Image, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 
 import { StackItemProps } from '../../AppStackView'
-import { defaultUserImage } from '../../defaultUserImage'
 import { HomeStateItemUser } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { StackDrawer } from '../../views/StackDrawer'
+import { Link } from '../../views/ui/Link'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { UserAvatar } from './UserAvatar'
@@ -135,20 +134,29 @@ const UserHeader = memo(
       setTab: Function
       tab: UserTab
     }) => {
+      const om = useOvermind()
       const user = useUserQuery(item?.username ?? '')
+      const isOwnProfile = om.state.user.user?.username === user.username
+      console.log(om.state.user.user?.username, user.username)
+
       return (
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           style={{ width: '100%' }}
+          contentContainerStyle={{
+            minWidth: '100%',
+          }}
         >
-          <VStack maxWidth="100%" overflow="hidden" width="100%">
-            <VStack padding={18}>
+          <VStack maxWidth="100%" width="100%">
+            <VStack flex={1} padding={18}>
               <HStack alignItems="center" flex={1} position="relative">
-                <UserAvatar
-                  avatar={user.avatar ?? ''}
-                  charIndex={user.charIndex ?? 0}
-                />
+                <VStack marginTop={-10} marginBottom={5}>
+                  <UserAvatar
+                    avatar={user.avatar ?? ''}
+                    charIndex={user.charIndex ?? 0}
+                  />
+                </VStack>
                 <Spacer size={20} />
                 <VStack flex={1}>
                   <Text fontSize={28} fontWeight="bold" paddingRight={30}>
@@ -158,10 +166,16 @@ const UserHeader = memo(
                   <Text color="#777" fontSize={14}>
                     {user.location ?? 'Earth, Universe'}
                   </Text>
+                  {isOwnProfile && (
+                    <>
+                      <Spacer />
+                      <Link name="userEdit">Edit profile</Link>
+                    </>
+                  )}
                   <Spacer size={12} />
                 </VStack>
 
-                <Spacer size="lg" />
+                <VStack flex={1} minWidth={20} />
 
                 <HStack spacing>
                   <SmallButton
