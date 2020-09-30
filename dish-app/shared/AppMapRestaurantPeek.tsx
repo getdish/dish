@@ -1,4 +1,4 @@
-import { graphql } from '@dish/graph/src'
+import { graphql } from '@dish/graph'
 import { AbsoluteVStack, Box, HStack, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo, useEffect, useState } from 'react'
 import { Image } from 'react-native'

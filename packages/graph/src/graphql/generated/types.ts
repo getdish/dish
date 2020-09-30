@@ -1223,11 +1223,19 @@ export type t_mutation_root = FieldsType<
       t_tag_tag | null
     >
     update_user: FieldsTypeArg<
-      { _set?: user_set_input | null; where: user_bool_exp },
+      {
+        _inc?: user_inc_input | null
+        _set?: user_set_input | null
+        where: user_bool_exp
+      },
       t_user_mutation_response | null
     >
     update_user_by_pk: FieldsTypeArg<
-      { _set?: user_set_input | null; pk_columns: user_pk_columns_input },
+      {
+        _inc?: user_inc_input | null
+        _set?: user_set_input | null
+        pk_columns: user_pk_columns_input
+      },
       t_user | null
     >
   },
@@ -6354,7 +6362,8 @@ export type t_user = FieldsType<
     apple_refresh_token?: t_String | null
     apple_secret?: t_String | null
     apple_uid?: t_String | null
-    character?: t_String | null
+    avatar?: t_String | null
+    charIndex: t_Int
     created_at: t_timestamptz
     email?: t_String | null
     has_onboarded: t_Boolean
@@ -6408,12 +6417,20 @@ export type t_user_aggregate = FieldsType<
 export type t_user_aggregate_fields = FieldsType<
   {
     __typename: t_String<'user_aggregate_fields'>
+    avg?: t_user_avg_fields | null
     count: FieldsTypeArg<
       { columns?: user_select_column[] | null; distinct?: boolean | null },
       t_Int | null
     >
     max?: t_user_max_fields | null
     min?: t_user_min_fields | null
+    stddev?: t_user_stddev_fields | null
+    stddev_pop?: t_user_stddev_pop_fields | null
+    stddev_samp?: t_user_stddev_samp_fields | null
+    sum?: t_user_sum_fields | null
+    var_pop?: t_user_var_pop_fields | null
+    var_samp?: t_user_var_samp_fields | null
+    variance?: t_user_variance_fields | null
   },
   Extension<'user_aggregate_fields'>
 >
@@ -6423,9 +6440,17 @@ export type t_user_aggregate_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type user_aggregate_order_by = {
+  avg?: user_avg_order_by | null
   count?: order_by | null
   max?: user_max_order_by | null
   min?: user_min_order_by | null
+  stddev?: user_stddev_order_by | null
+  stddev_pop?: user_stddev_pop_order_by | null
+  stddev_samp?: user_stddev_samp_order_by | null
+  sum?: user_sum_order_by | null
+  var_pop?: user_var_pop_order_by | null
+  var_samp?: user_var_samp_order_by | null
+  variance?: user_variance_order_by | null
 }
 
 /**
@@ -6436,6 +6461,24 @@ export type user_arr_rel_insert_input = {
   data: user_insert_input[]
   on_conflict?: user_on_conflict | null
 }
+
+/**
+ * @name user_avg_fields
+ * @type OBJECT
+ */
+export type t_user_avg_fields = FieldsType<
+  {
+    __typename: t_String<'user_avg_fields'>
+    charIndex?: t_Float | null
+  },
+  Extension<'user_avg_fields'>
+>
+
+/**
+ * @name user_avg_order_by
+ * @type INPUT_OBJECT
+ */
+export type user_avg_order_by = { charIndex?: order_by | null }
 
 /**
  * @name user_bool_exp
@@ -6450,7 +6493,8 @@ export type user_bool_exp = {
   apple_refresh_token?: String_comparison_exp | null
   apple_secret?: String_comparison_exp | null
   apple_uid?: String_comparison_exp | null
-  character?: String_comparison_exp | null
+  avatar?: String_comparison_exp | null
+  charIndex?: Int_comparison_exp | null
   created_at?: timestamptz_comparison_exp | null
   email?: String_comparison_exp | null
   has_onboarded?: Boolean_comparison_exp | null
@@ -6472,6 +6516,12 @@ type t_user_constraint = EnumType<
 >
 
 /**
+ * @name user_inc_input
+ * @type INPUT_OBJECT
+ */
+export type user_inc_input = { charIndex?: number | null }
+
+/**
  * @name user_insert_input
  * @type INPUT_OBJECT
  */
@@ -6481,7 +6531,8 @@ export type user_insert_input = {
   apple_refresh_token?: string | null
   apple_secret?: string | null
   apple_uid?: string | null
-  character?: string | null
+  avatar?: string | null
+  charIndex?: number | null
   created_at?: any | null
   email?: string | null
   has_onboarded?: boolean | null
@@ -6506,7 +6557,8 @@ export type t_user_max_fields = FieldsType<
     apple_refresh_token?: t_String | null
     apple_secret?: t_String | null
     apple_uid?: t_String | null
-    character?: t_String | null
+    avatar?: t_String | null
+    charIndex?: t_Int | null
     created_at?: t_timestamptz | null
     email?: t_String | null
     id?: t_uuid | null
@@ -6529,7 +6581,8 @@ export type user_max_order_by = {
   apple_refresh_token?: order_by | null
   apple_secret?: order_by | null
   apple_uid?: order_by | null
-  character?: order_by | null
+  avatar?: order_by | null
+  charIndex?: order_by | null
   created_at?: order_by | null
   email?: order_by | null
   id?: order_by | null
@@ -6552,7 +6605,8 @@ export type t_user_min_fields = FieldsType<
     apple_refresh_token?: t_String | null
     apple_secret?: t_String | null
     apple_uid?: t_String | null
-    character?: t_String | null
+    avatar?: t_String | null
+    charIndex?: t_Int | null
     created_at?: t_timestamptz | null
     email?: t_String | null
     id?: t_uuid | null
@@ -6575,7 +6629,8 @@ export type user_min_order_by = {
   apple_refresh_token?: order_by | null
   apple_secret?: order_by | null
   apple_uid?: order_by | null
-  character?: order_by | null
+  avatar?: order_by | null
+  charIndex?: order_by | null
   created_at?: order_by | null
   email?: order_by | null
   id?: order_by | null
@@ -6628,7 +6683,8 @@ export type user_order_by = {
   apple_refresh_token?: order_by | null
   apple_secret?: order_by | null
   apple_uid?: order_by | null
-  character?: order_by | null
+  avatar?: order_by | null
+  charIndex?: order_by | null
   created_at?: order_by | null
   email?: order_by | null
   has_onboarded?: order_by | null
@@ -6657,7 +6713,8 @@ type t_user_select_column = EnumType<
   | 'apple_refresh_token'
   | 'apple_secret'
   | 'apple_uid'
-  | 'character'
+  | 'avatar'
+  | 'charIndex'
   | 'created_at'
   | 'email'
   | 'has_onboarded'
@@ -6679,7 +6736,8 @@ export type user_set_input = {
   apple_refresh_token?: string | null
   apple_secret?: string | null
   apple_uid?: string | null
-  character?: string | null
+  avatar?: string | null
+  charIndex?: number | null
   created_at?: any | null
   email?: string | null
   has_onboarded?: boolean | null
@@ -6692,6 +6750,78 @@ export type user_set_input = {
 }
 
 /**
+ * @name user_stddev_fields
+ * @type OBJECT
+ */
+export type t_user_stddev_fields = FieldsType<
+  {
+    __typename: t_String<'user_stddev_fields'>
+    charIndex?: t_Float | null
+  },
+  Extension<'user_stddev_fields'>
+>
+
+/**
+ * @name user_stddev_order_by
+ * @type INPUT_OBJECT
+ */
+export type user_stddev_order_by = { charIndex?: order_by | null }
+
+/**
+ * @name user_stddev_pop_fields
+ * @type OBJECT
+ */
+export type t_user_stddev_pop_fields = FieldsType<
+  {
+    __typename: t_String<'user_stddev_pop_fields'>
+    charIndex?: t_Float | null
+  },
+  Extension<'user_stddev_pop_fields'>
+>
+
+/**
+ * @name user_stddev_pop_order_by
+ * @type INPUT_OBJECT
+ */
+export type user_stddev_pop_order_by = { charIndex?: order_by | null }
+
+/**
+ * @name user_stddev_samp_fields
+ * @type OBJECT
+ */
+export type t_user_stddev_samp_fields = FieldsType<
+  {
+    __typename: t_String<'user_stddev_samp_fields'>
+    charIndex?: t_Float | null
+  },
+  Extension<'user_stddev_samp_fields'>
+>
+
+/**
+ * @name user_stddev_samp_order_by
+ * @type INPUT_OBJECT
+ */
+export type user_stddev_samp_order_by = { charIndex?: order_by | null }
+
+/**
+ * @name user_sum_fields
+ * @type OBJECT
+ */
+export type t_user_sum_fields = FieldsType<
+  {
+    __typename: t_String<'user_sum_fields'>
+    charIndex?: t_Int | null
+  },
+  Extension<'user_sum_fields'>
+>
+
+/**
+ * @name user_sum_order_by
+ * @type INPUT_OBJECT
+ */
+export type user_sum_order_by = { charIndex?: order_by | null }
+
+/**
  * @name user_update_column
  * @type ENUM
  */
@@ -6701,7 +6831,8 @@ type t_user_update_column = EnumType<
   | 'apple_refresh_token'
   | 'apple_secret'
   | 'apple_uid'
-  | 'character'
+  | 'avatar'
+  | 'charIndex'
   | 'created_at'
   | 'email'
   | 'has_onboarded'
@@ -6712,6 +6843,60 @@ type t_user_update_column = EnumType<
   | 'updated_at'
   | 'username'
 >
+
+/**
+ * @name user_var_pop_fields
+ * @type OBJECT
+ */
+export type t_user_var_pop_fields = FieldsType<
+  {
+    __typename: t_String<'user_var_pop_fields'>
+    charIndex?: t_Float | null
+  },
+  Extension<'user_var_pop_fields'>
+>
+
+/**
+ * @name user_var_pop_order_by
+ * @type INPUT_OBJECT
+ */
+export type user_var_pop_order_by = { charIndex?: order_by | null }
+
+/**
+ * @name user_var_samp_fields
+ * @type OBJECT
+ */
+export type t_user_var_samp_fields = FieldsType<
+  {
+    __typename: t_String<'user_var_samp_fields'>
+    charIndex?: t_Float | null
+  },
+  Extension<'user_var_samp_fields'>
+>
+
+/**
+ * @name user_var_samp_order_by
+ * @type INPUT_OBJECT
+ */
+export type user_var_samp_order_by = { charIndex?: order_by | null }
+
+/**
+ * @name user_variance_fields
+ * @type OBJECT
+ */
+export type t_user_variance_fields = FieldsType<
+  {
+    __typename: t_String<'user_variance_fields'>
+    charIndex?: t_Float | null
+  },
+  Extension<'user_variance_fields'>
+>
+
+/**
+ * @name user_variance_order_by
+ * @type INPUT_OBJECT
+ */
+export type user_variance_order_by = { charIndex?: order_by | null }
 
 /**
  * @name uuid
@@ -8185,6 +8370,12 @@ export type user_aggregate = TypeData<t_user_aggregate>
 export type user_aggregate_fields = TypeData<t_user_aggregate_fields>
 
 /**
+ * @name user_avg_fields
+ * @type OBJECT
+ */
+export type user_avg_fields = TypeData<t_user_avg_fields>
+
+/**
  * @name user_constraint
  * @type ENUM
  */
@@ -8222,7 +8413,8 @@ export enum user_select_column {
   apple_refresh_token = 'apple_refresh_token',
   apple_secret = 'apple_secret',
   apple_uid = 'apple_uid',
-  character = 'character',
+  avatar = 'avatar',
+  charIndex = 'charIndex',
   created_at = 'created_at',
   email = 'email',
   has_onboarded = 'has_onboarded',
@@ -8235,6 +8427,30 @@ export enum user_select_column {
 }
 
 /**
+ * @name user_stddev_fields
+ * @type OBJECT
+ */
+export type user_stddev_fields = TypeData<t_user_stddev_fields>
+
+/**
+ * @name user_stddev_pop_fields
+ * @type OBJECT
+ */
+export type user_stddev_pop_fields = TypeData<t_user_stddev_pop_fields>
+
+/**
+ * @name user_stddev_samp_fields
+ * @type OBJECT
+ */
+export type user_stddev_samp_fields = TypeData<t_user_stddev_samp_fields>
+
+/**
+ * @name user_sum_fields
+ * @type OBJECT
+ */
+export type user_sum_fields = TypeData<t_user_sum_fields>
+
+/**
  * @name user_update_column
  * @type ENUM
  */
@@ -8244,7 +8460,8 @@ export enum user_update_column {
   apple_refresh_token = 'apple_refresh_token',
   apple_secret = 'apple_secret',
   apple_uid = 'apple_uid',
-  character = 'character',
+  avatar = 'avatar',
+  charIndex = 'charIndex',
   created_at = 'created_at',
   email = 'email',
   has_onboarded = 'has_onboarded',
@@ -8255,6 +8472,24 @@ export enum user_update_column {
   updated_at = 'updated_at',
   username = 'username',
 }
+
+/**
+ * @name user_var_pop_fields
+ * @type OBJECT
+ */
+export type user_var_pop_fields = TypeData<t_user_var_pop_fields>
+
+/**
+ * @name user_var_samp_fields
+ * @type OBJECT
+ */
+export type user_var_samp_fields = TypeData<t_user_var_samp_fields>
+
+/**
+ * @name user_variance_fields
+ * @type OBJECT
+ */
+export type user_variance_fields = TypeData<t_user_variance_fields>
 
 /**
  * @name uuid

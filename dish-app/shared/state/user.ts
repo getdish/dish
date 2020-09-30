@@ -1,4 +1,4 @@
-import { Auth, Review, User, userUpsert } from '@dish/graph'
+import { Auth, Review, UpdateUserProps, User } from '@dish/graph'
 import { Toast } from '@dish/ui'
 import { Action, AsyncAction } from 'overmind'
 
@@ -104,20 +104,14 @@ const ensureLoggedIn: Action<void, boolean> = (om) => {
   return false
 }
 
-const finishOnboard: AsyncAction<
-  { character: string; about: string; location: string },
-  boolean
-> = async (om, { character, about, location }) => {
-  const res = await userUpsert([
-    {
+const updateUser: AsyncAction<UpdateUserProps, boolean> = async (om, props) => {
+  const [status] = await Auth.updateUser(props)
+  if (status === 200) {
+    om.state.user.user = {
       ...om.state.user.user,
-      character,
-      location,
-      about,
       has_onboarded: true,
-    },
-  ])
-  if (res.length) {
+      ...props,
+    }
     return true
   }
   return false
@@ -129,5 +123,5 @@ export const actions = {
   logout,
   checkForExistingLogin,
   ensureLoggedIn,
-  finishOnboard,
+  updateUser,
 }

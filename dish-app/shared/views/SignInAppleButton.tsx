@@ -30,7 +30,7 @@ export const SignInAppleButton = () => {
     >
       <HStack paddingRight={20} backgroundColor="#000" alignItems="center">
         <AppleLogoWhite />
-        <Text color="#fff" fontSize={18}>
+        <Text color="#fff" fontSize={18} fontWeight="500">
           Sign in with Apple
         </Text>
       </HStack>

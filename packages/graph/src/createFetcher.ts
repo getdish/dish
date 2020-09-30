@@ -1,7 +1,7 @@
 import { QueryResponse } from '@o/gqless'
 
+import { Auth } from './Auth'
 import { isDevProd } from './constants'
-import { Auth } from './helpers/auth-helpers'
 import { getGraphEndpoint } from './helpers/getGraphEndpoint'
 
 type QueryFetcherWithOptions = (

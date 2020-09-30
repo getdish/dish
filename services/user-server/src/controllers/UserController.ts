@@ -58,6 +58,41 @@ class UserController {
     res.status(201).send('User created')
   }
 
+  static updateUser = async (req: Request, res: Response) => {
+    const { username, about, location, charIndex } = req.body
+    const userRepository = getRepository(User)
+    let user
+    try {
+      user = await userRepository.findOne({
+        where: {
+          username,
+        },
+      })
+    } catch (error) {
+      res.status(404).send('User not found')
+      return
+    }
+
+    user.has_onboarded = true
+    if (about !== null) user.about = about
+    if (location !== null) user.location = location
+    if (charIndex !== null) user.charIndex = charIndex
+
+    const errors = await validate(user)
+    if (errors.length > 0) {
+      res.status(400).send(errors)
+      return
+    }
+
+    try {
+      await userRepository.save(user)
+    } catch (e) {
+      res.status(409).send('failed')
+      return
+    }
+    res.status(204).send()
+  }
+
   static editUser = async (req: Request, res: Response) => {
     const id = req.params.id
 

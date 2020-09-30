@@ -47,6 +47,12 @@ When you need to rebuild the containers to update their code run:
 
 `docker-compose build`
 
+To build an individual container:
+
+`docker-compose build [container-name]`
+
+So, for example `docker-compose build user-server`
+
 ## The Web App
 
 ### Install dependencies

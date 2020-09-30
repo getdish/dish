@@ -1,4 +1,4 @@
-import { AUTH_IMAGE_UPLOAD_ENDPOINT } from '@dish/graph'
+import { AUTH_IMAGE_UPLOAD_ENDPOINT, graphql } from '@dish/graph'
 import {
   AbsoluteVStack,
   AnimatedVStack,
@@ -22,6 +22,10 @@ import {
   lightGreen,
   lightYellow,
 } from './colors'
+import { defaultUserImage } from './defaultUserImage'
+import { characters } from './pages/user/characters'
+import { UserAvatar } from './pages/user/UserAvatar'
+import { useUserQuery } from './pages/user/useUserQuery'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { LoginRegisterForm } from './views/LoginRegisterForm'
@@ -72,18 +76,18 @@ export const AppIntroLetter = memo(() => {
           shadowOffset={{ height: 10, width: 0 }}
         >
           <AbsoluteVStack
-            bottom={-40}
+            bottom={-20}
             right={-20}
             transform={[{ rotate: '-10deg' }]}
           >
-            <Text fontSize={80}>🌮</Text>
+            <Text fontSize={60}>🌮</Text>
           </AbsoluteVStack>
           <AbsoluteVStack
-            bottom={-40}
+            bottom={-20}
             left={-20}
             transform={[{ rotate: '10deg' }]}
           >
-            <Text fontSize={80}>🍜</Text>
+            <Text fontSize={60}>🍜</Text>
           </AbsoluteVStack>
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -114,45 +118,16 @@ const divider = (
   />
 )
 
-const characters = [
-  '👻',
-  '🧑‍🍳',
-  '👩‍🍳',
-  '👽',
-  '🧙',
-  '🧑‍🚀',
-  '🧜',
-  '🧚',
-  '👸',
-  '🤴',
-  '👾',
-  '🤠',
-  '😺',
-  '😈',
-  '👦',
-  '🤓',
-  '🦸',
-  '💃',
-  '🕺',
-  '🐱',
-  '🐷',
-  '🐻',
-  '🐼',
-  '🐭',
-  '🐶',
-  '🐨',
-  '🐙',
-  '🦊',
-]
-
-const AppIntroOnboard = () => {
+const AppIntroOnboard = graphql(() => {
+  const om = useOvermind()
   const imageFormRef = useRef(null)
   const formState = useRef({
     about: '',
     location: '',
   })
-  const [charIndex, setChar] = useState(0)
-  const char = characters[charIndex]
+  const [charIndex, setCharIndex] = useState(0)
+  const username = om.state.user.user?.username ?? ''
+  const user = useUserQuery(username)
 
   return (
     <>
@@ -177,20 +152,15 @@ const AppIntroOnboard = () => {
 
         {divider}
 
-        <HStack>
-          <VStack position="relative">
-            <Image
-              source={{ uri: require('./assets/user-default.jpg').default }}
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: 100,
-              }}
-            />
-            <Text position="absolute" bottom={-15} left={-15} fontSize={50}>
-              {char}
-            </Text>
-          </VStack>
+        <Text color="#fff" fontWeight="600">
+          {username}
+        </Text>
+
+        <HStack alignItems="center" justifyContent="center">
+          <UserAvatar
+            avatar={user.avatar ?? ''}
+            charIndex={user.charIndex ?? 0}
+          />
           <form
             id="userform"
             ref={imageFormRef}
@@ -198,48 +168,60 @@ const AppIntroOnboard = () => {
               maxWidth: 100,
             }}
           >
+            <input type="hidden" name="username" value={username} />
             <label htmlFor="file">Upload a file</label>
             <input
               type="file"
-              name="upload"
+              name="avatar"
               style={{
-                fontSize: 30,
+                fontSize: 18,
                 padding: 10,
               }}
               onChange={async () => {
-                const form = imageFormRef.current
+                const form = imageFormRef.current!
                 const formData = new FormData(form)
-                await fetch(AUTH_IMAGE_UPLOAD_ENDPOINT, {
-                  method: 'POST',
-                  body: formData,
-                })
-                Toast.show('Saved image!')
+                try {
+                  const { avatar } = await fetch(
+                    `${AUTH_IMAGE_UPLOAD_ENDPOINT}?userId=${om.state.user.user?.id}`,
+                    {
+                      method: 'POST',
+                      body: formData,
+                    }
+                  ).then((x) => x.json())
+                  user.avatar = avatar
+                  Toast.show('Saved image!')
+                } catch (err) {
+                  Toast.show('Error saving image')
+                }
               }}
             />
           </form>
         </HStack>
 
-        {divider}
+        <Spacer />
 
-        <Text color="#fff" fontWeight="600">
-          Character
-        </Text>
         <HStack alignItems="center" justifyContent="center" flexWrap="wrap">
           {characters.map((icon, i) => {
             return (
               <HStack
+                key={i}
                 cursor="pointer"
                 borderRadius={100}
                 padding={10}
+                height={50}
+                width={50}
+                alignItems="center"
+                justifyContent="center"
                 backgroundColor={i === charIndex ? '#fff' : 'transparent'}
                 hoverStyle={{
                   backgroundColor: i === charIndex ? '#fff' : '#444',
                 }}
                 onPress={() => {
-                  setChar(i)
+                  console.log('setting', i)
+                  setCharIndex(i) // TODO can remove if gqless works
                 }}
               >
-                <Text fontSize={30} key={i}>
+                <Text fontSize={30} lineHeight={25} key={i}>
                   {icon}
                 </Text>
               </HStack>
@@ -247,11 +229,7 @@ const AppIntroOnboard = () => {
           })}
         </HStack>
 
-        {divider}
-
-        <Text color="#fff" fontWeight="600">
-          About you
-        </Text>
+        <Spacer />
         <TextArea
           placeholder="Optional description for your profile..."
           fontSize={16}
@@ -269,8 +247,6 @@ const AppIntroOnboard = () => {
           }}
         />
 
-        {divider}
-
         <Spacer />
 
         <SmallButton
@@ -286,8 +262,9 @@ const AppIntroOnboard = () => {
           onPress={async () => {
             Toast.show('Saving...')
             if (
-              await omStatic.actions.user.finishOnboard({
-                character: characters[charIndex],
+              await omStatic.actions.user.updateUser({
+                username,
+                charIndex,
                 about: formState.current.about,
                 location: formState.current.location,
               })
@@ -301,7 +278,7 @@ const AppIntroOnboard = () => {
       </VStack>
     </>
   )
-}
+})
 
 export const AppIntroLogin = memo(() => {
   return (

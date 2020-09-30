@@ -1,6 +1,13 @@
-import { AUTH_DOMAIN, isNode } from '../constants'
+import { AUTH_DOMAIN, isNode } from './constants'
 
 const BROWSER_STORAGE_KEY = 'auth'
+
+export type UpdateUserProps = {
+  username: string
+  about?: string
+  location?: string
+  charIndex?: number
+}
 
 class AuthModel {
   public jwt = ''
@@ -80,6 +87,14 @@ class AuthModel {
       }
     }
     return response
+  }
+
+  async updateUser(user: UpdateUserProps) {
+    const response = await this.api('post', '/updateUser', user)
+    if (response.status !== 201) {
+      console.error(`Error updating: ${response.status} ${response.statusText}`)
+    }
+    return [response.status, response.statusText] as const
   }
 
   async register(username: string, email: string, password: string) {

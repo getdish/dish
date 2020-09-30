@@ -712,7 +712,13 @@ tables:
   - role: user
     permission:
       columns:
+      - about
+      - avatar
+      - charIndex
+      - created_at
+      - has_onboarded
       - id
+      - location
       - role
       - username
       filter: {}

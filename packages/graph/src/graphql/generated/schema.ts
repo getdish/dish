@@ -2668,6 +2668,9 @@ export const schema = {
           return new FieldNode(
             schema.user_mutation_response,
             new Arguments({
+              get _inc() {
+                return new ArgumentsField(schema.user_inc_input, true)
+              },
               get _set() {
                 return new ArgumentsField(schema.user_set_input, true)
               },
@@ -2682,6 +2685,9 @@ export const schema = {
           return new FieldNode(
             schema.user,
             new Arguments({
+              get _inc() {
+                return new ArgumentsField(schema.user_inc_input, true)
+              },
               get _set() {
                 return new ArgumentsField(schema.user_set_input, true)
               },
@@ -12597,8 +12603,11 @@ export const schema = {
         get apple_uid() {
           return new FieldNode(schema.String, undefined, true)
         },
-        get character() {
+        get avatar() {
           return new FieldNode(schema.String, undefined, true)
+        },
+        get charIndex() {
+          return new FieldNode(schema.Int, undefined, false)
         },
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, false)
@@ -12712,6 +12721,9 @@ export const schema = {
   get user_aggregate_fields() {
     return new ObjectNode(
       {
+        get avg() {
+          return new FieldNode(schema.user_avg_fields, undefined, true)
+        },
         get count() {
           return new FieldNode(
             schema.Int,
@@ -12735,6 +12747,27 @@ export const schema = {
         get min() {
           return new FieldNode(schema.user_min_fields, undefined, true)
         },
+        get stddev() {
+          return new FieldNode(schema.user_stddev_fields, undefined, true)
+        },
+        get stddev_pop() {
+          return new FieldNode(schema.user_stddev_pop_fields, undefined, true)
+        },
+        get stddev_samp() {
+          return new FieldNode(schema.user_stddev_samp_fields, undefined, true)
+        },
+        get sum() {
+          return new FieldNode(schema.user_sum_fields, undefined, true)
+        },
+        get var_pop() {
+          return new FieldNode(schema.user_var_pop_fields, undefined, true)
+        },
+        get var_samp() {
+          return new FieldNode(schema.user_var_samp_fields, undefined, true)
+        },
+        get variance() {
+          return new FieldNode(schema.user_variance_fields, undefined, true)
+        },
       },
       {
         name: 'user_aggregate_fields',
@@ -12745,6 +12778,9 @@ export const schema = {
   get user_aggregate_order_by() {
     return new InputNode(
       {
+        get avg() {
+          return new InputNodeField(schema.user_avg_order_by, true)
+        },
         get count() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -12753,6 +12789,27 @@ export const schema = {
         },
         get min() {
           return new InputNodeField(schema.user_min_order_by, true)
+        },
+        get stddev() {
+          return new InputNodeField(schema.user_stddev_order_by, true)
+        },
+        get stddev_pop() {
+          return new InputNodeField(schema.user_stddev_pop_order_by, true)
+        },
+        get stddev_samp() {
+          return new InputNodeField(schema.user_stddev_samp_order_by, true)
+        },
+        get sum() {
+          return new InputNodeField(schema.user_sum_order_by, true)
+        },
+        get var_pop() {
+          return new InputNodeField(schema.user_var_pop_order_by, true)
+        },
+        get var_samp() {
+          return new InputNodeField(schema.user_var_samp_order_by, true)
+        },
+        get variance() {
+          return new InputNodeField(schema.user_variance_order_by, true)
         },
       },
       { name: 'user_aggregate_order_by' }
@@ -12772,6 +12829,29 @@ export const schema = {
         },
       },
       { name: 'user_arr_rel_insert_input' }
+    )
+  },
+  get user_avg_fields() {
+    return new ObjectNode(
+      {
+        get charIndex() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'user_avg_fields',
+        extension: ((extensions as any) || {}).user_avg_fields,
+      }
+    )
+  },
+  get user_avg_order_by() {
+    return new InputNode(
+      {
+        get charIndex() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'user_avg_order_by' }
     )
   },
   get user_bool_exp() {
@@ -12807,8 +12887,11 @@ export const schema = {
         get apple_uid() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
-        get character() {
+        get avatar() {
           return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get charIndex() {
+          return new InputNodeField(schema.Int_comparison_exp, true)
         },
         get created_at() {
           return new InputNodeField(schema.timestamptz_comparison_exp, true)
@@ -12847,6 +12930,16 @@ export const schema = {
   get user_constraint() {
     return new EnumNode({ name: 'user_constraint' })
   },
+  get user_inc_input() {
+    return new InputNode(
+      {
+        get charIndex() {
+          return new InputNodeField(schema.Int, true)
+        },
+      },
+      { name: 'user_inc_input' }
+    )
+  },
   get user_insert_input() {
     return new InputNode(
       {
@@ -12865,8 +12958,11 @@ export const schema = {
         get apple_uid() {
           return new InputNodeField(schema.String, true)
         },
-        get character() {
+        get avatar() {
           return new InputNodeField(schema.String, true)
+        },
+        get charIndex() {
+          return new InputNodeField(schema.Int, true)
         },
         get created_at() {
           return new InputNodeField(schema.timestamptz, true)
@@ -12920,8 +13016,11 @@ export const schema = {
         get apple_uid() {
           return new FieldNode(schema.String, undefined, true)
         },
-        get character() {
+        get avatar() {
           return new FieldNode(schema.String, undefined, true)
+        },
+        get charIndex() {
+          return new FieldNode(schema.Int, undefined, true)
         },
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
@@ -12972,7 +13071,10 @@ export const schema = {
         get apple_uid() {
           return new InputNodeField(schema.order_by, true)
         },
-        get character() {
+        get avatar() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get charIndex() {
           return new InputNodeField(schema.order_by, true)
         },
         get created_at() {
@@ -13021,8 +13123,11 @@ export const schema = {
         get apple_uid() {
           return new FieldNode(schema.String, undefined, true)
         },
-        get character() {
+        get avatar() {
           return new FieldNode(schema.String, undefined, true)
+        },
+        get charIndex() {
+          return new FieldNode(schema.Int, undefined, true)
         },
         get created_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
@@ -13073,7 +13178,10 @@ export const schema = {
         get apple_uid() {
           return new InputNodeField(schema.order_by, true)
         },
-        get character() {
+        get avatar() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get charIndex() {
           return new InputNodeField(schema.order_by, true)
         },
         get created_at() {
@@ -13174,7 +13282,10 @@ export const schema = {
         get apple_uid() {
           return new InputNodeField(schema.order_by, true)
         },
-        get character() {
+        get avatar() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get charIndex() {
           return new InputNodeField(schema.order_by, true)
         },
         get created_at() {
@@ -13242,8 +13353,11 @@ export const schema = {
         get apple_uid() {
           return new InputNodeField(schema.String, true)
         },
-        get character() {
+        get avatar() {
           return new InputNodeField(schema.String, true)
+        },
+        get charIndex() {
+          return new InputNodeField(schema.Int, true)
         },
         get created_at() {
           return new InputNodeField(schema.timestamptz, true)
@@ -13276,8 +13390,169 @@ export const schema = {
       { name: 'user_set_input' }
     )
   },
+  get user_stddev_fields() {
+    return new ObjectNode(
+      {
+        get charIndex() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'user_stddev_fields',
+        extension: ((extensions as any) || {}).user_stddev_fields,
+      }
+    )
+  },
+  get user_stddev_order_by() {
+    return new InputNode(
+      {
+        get charIndex() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'user_stddev_order_by' }
+    )
+  },
+  get user_stddev_pop_fields() {
+    return new ObjectNode(
+      {
+        get charIndex() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'user_stddev_pop_fields',
+        extension: ((extensions as any) || {}).user_stddev_pop_fields,
+      }
+    )
+  },
+  get user_stddev_pop_order_by() {
+    return new InputNode(
+      {
+        get charIndex() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'user_stddev_pop_order_by' }
+    )
+  },
+  get user_stddev_samp_fields() {
+    return new ObjectNode(
+      {
+        get charIndex() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'user_stddev_samp_fields',
+        extension: ((extensions as any) || {}).user_stddev_samp_fields,
+      }
+    )
+  },
+  get user_stddev_samp_order_by() {
+    return new InputNode(
+      {
+        get charIndex() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'user_stddev_samp_order_by' }
+    )
+  },
+  get user_sum_fields() {
+    return new ObjectNode(
+      {
+        get charIndex() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+      },
+      {
+        name: 'user_sum_fields',
+        extension: ((extensions as any) || {}).user_sum_fields,
+      }
+    )
+  },
+  get user_sum_order_by() {
+    return new InputNode(
+      {
+        get charIndex() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'user_sum_order_by' }
+    )
+  },
   get user_update_column() {
     return new EnumNode({ name: 'user_update_column' })
+  },
+  get user_var_pop_fields() {
+    return new ObjectNode(
+      {
+        get charIndex() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'user_var_pop_fields',
+        extension: ((extensions as any) || {}).user_var_pop_fields,
+      }
+    )
+  },
+  get user_var_pop_order_by() {
+    return new InputNode(
+      {
+        get charIndex() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'user_var_pop_order_by' }
+    )
+  },
+  get user_var_samp_fields() {
+    return new ObjectNode(
+      {
+        get charIndex() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'user_var_samp_fields',
+        extension: ((extensions as any) || {}).user_var_samp_fields,
+      }
+    )
+  },
+  get user_var_samp_order_by() {
+    return new InputNode(
+      {
+        get charIndex() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'user_var_samp_order_by' }
+    )
+  },
+  get user_variance_fields() {
+    return new ObjectNode(
+      {
+        get charIndex() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'user_variance_fields',
+        extension: ((extensions as any) || {}).user_variance_fields,
+      }
+    )
+  },
+  get user_variance_order_by() {
+    return new InputNode(
+      {
+        get charIndex() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'user_variance_order_by' }
+    )
   },
   get uuid() {
     return new ScalarNode({
