@@ -67,7 +67,10 @@ const checkForExistingLogin: AsyncAction = async (om) => {
     Toast.show('Session expired: logged out')
   }
   if (Auth.isLoggedIn) {
-    postLogin(om, Auth.user)
+    postLogin(om, {
+      ...Auth.user,
+      has_onboarded: true,
+    })
     om.actions.user.refreshUser()
   }
 }

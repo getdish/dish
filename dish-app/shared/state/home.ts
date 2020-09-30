@@ -469,6 +469,7 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
       case 'blog':
       case 'search':
       case 'user':
+      case 'userEdit':
       case 'gallery':
       case 'restaurantReview':
       case 'restaurantReviews':
@@ -570,6 +571,7 @@ const pushHomeState: AsyncAction<
       break
     }
 
+    case 'userEdit':
     case 'about': {
       break
     }
