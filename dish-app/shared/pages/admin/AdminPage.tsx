@@ -11,7 +11,12 @@ import { LinkButtonProps } from '../../views/ui/LinkProps'
 
 export default memo(function AdminPage() {
   return (
-    <VStack flex={1} alignItems="center" backgroundColor="#fff">
+    <VStack
+      pointerEvents="auto"
+      flex={1}
+      alignItems="center"
+      backgroundColor="#fff"
+    >
       <HStack backgroundColor="#eee" width="100%" spacing={20} padding={5}>
         <Link name="admin">
           <Text fontWeight="700">Admin</Text>

@@ -3,7 +3,6 @@ import { HStack, Text } from '@dish/ui'
 import { default as React, memo } from 'react'
 
 import { bgLight, lightBlue } from '../../colors'
-import { isWeb } from '../../constants'
 import { useIsReallyNarrow } from '../../hooks/useIs'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { tagLenses } from '../../state/tagLenses'

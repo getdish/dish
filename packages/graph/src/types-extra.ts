@@ -25,6 +25,7 @@ export type TopCuisineDish = Partial<MenuItem> & {
   rating?: number
   icon?: string
   count?: number
+  score?: number
   image: string
   best_restaurants?: Restaurant[]
   isFallback?: boolean

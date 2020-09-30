@@ -1,3 +1,5 @@
+import { query } from '../graphql'
+import { Tag } from '../types'
 import { TopCuisineDish } from '../types-extra'
 
 /**
@@ -9,16 +11,22 @@ import { TopCuisineDish } from '../types-extra'
  *
  */
 
+type DishFilledTag = Pick<Tag, 'name' | 'icon' | 'default_images'> & {
+  score?: number
+}
+
 export const restaurantPhotosForCarousel = ({
   restaurant,
   tag_names = [],
   max = 6,
   gallery = false,
+  fullTags,
 }: {
   restaurant: any
   tag_names?: string[]
   max?: number
   gallery?: boolean
+  fullTags?: DishFilledTag[]
 }) => {
   // @ts-ignore
   const restaurantPhotos = (restaurant.photos() || []).filter(Boolean)
@@ -28,29 +36,36 @@ export const restaurantPhotosForCarousel = ({
     photos.push({ name: '', image: photo, best_restaurants: [] })
   }
   if (!gallery || photos.length == 0) {
-    photos = [...restaurantDishesWithPhotos(restaurant, tag_names), ...photos]
+    photos = [
+      ...restaurantDishesWithPhotos(restaurant, tag_names, fullTags),
+      ...photos,
+    ]
   }
   return photos.slice(0, max).filter(Boolean)
 }
 
 export const restaurantDishesWithPhotos = (
   restaurant: any,
-  tag_names: string[] = []
+  tag_names: string[] = [],
+  fullTags?: DishFilledTag[]
 ) => {
   let photos: TopCuisineDish[] = []
-  const tags = restaurant.top_tags({
+  const topTags = restaurant.top_tags({
     args: {
-      tag_names: tag_names.join(','),
+      tag_names: tag_names.filter(Boolean).join(','),
     },
-    limit: 100,
+    limit: 20,
   })
-  for (const t of tags) {
-    const tagName = t.tag.name ?? ''
+  for (const t of topTags) {
+    const fullTag = fullTags?.find((x) => x.name === t.tag.name)
+    const tag = fullTag ?? t.tag
+    const tagName = tag?.name ?? ''
     const tagNameMachined = tagName.toLowerCase().replace(' ', '-')
     const isSearchedForTag = tag_names?.includes(tagNameMachined)
     let [photo] = t.photos() || []
     let isFallback = false
-    const fallback = t.tag?.default_images()?.[0]
+    const defaults = t.tag?.default_images()
+    const fallback = defaults?.[0]
     const photoRating = t.rating
     if (!photo && fallback) {
       photo = fallback
@@ -61,9 +76,11 @@ export const restaurantDishesWithPhotos = (
     }
     const photoItem = {
       name: tagName,
-      // enablig this causes double queries
-      // icon: t.tag.icon,
+      // enablig this causes double queries if not on fullTags
+      icon: fullTag ? tag?.icon : null,
       image: photo,
+      // fallback to 0 prevents score fetching below in DishUpvoteDownvote
+      score: fullTags ? tag?.score ?? 0 : tag?.score,
       rating: photoRating,
       best_restaurants: [],
       isFallback,
