@@ -157,10 +157,7 @@ const AppIntroOnboard = graphql(() => {
         </Text>
 
         <HStack alignItems="center" justifyContent="center">
-          <UserAvatar
-            avatar={user.avatar ?? ''}
-            charIndex={user.charIndex ?? 0}
-          />
+          <UserAvatar avatar={user.avatar ?? ''} charIndex={charIndex} />
           <form
             id="userform"
             ref={imageFormRef}

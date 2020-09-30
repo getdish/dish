@@ -1,4 +1,12 @@
-import { Auth, Review, UpdateUserProps, User } from '@dish/graph'
+import {
+  Auth,
+  Review,
+  UpdateUserProps,
+  User,
+  query,
+  resolved,
+  userFindOne,
+} from '@dish/graph'
 import { Toast } from '@dish/ui'
 import { Action, AsyncAction } from 'overmind'
 
@@ -54,12 +62,13 @@ const register: AsyncAction<
   return result
 }
 
-const checkForExistingLogin: Action = (om) => {
+const checkForExistingLogin: AsyncAction = async (om) => {
   if (Auth.has_been_logged_out) {
     Toast.show('Session expired: logged out')
   }
   if (Auth.isLoggedIn) {
     postLogin(om, Auth.user)
+    om.actions.user.refreshUser()
   }
 }
 
@@ -117,7 +126,37 @@ const updateUser: AsyncAction<UpdateUserProps, boolean> = async (om, props) => {
   return false
 }
 
+const refreshUser: AsyncAction = async (om) => {
+  if (!Auth.user.id) return
+  const user = await resolved(
+    () =>
+      query
+        .user({
+          where: {
+            id: {
+              _eq: Auth.user.id,
+            },
+          },
+        })
+        .map((u) => ({
+          id: u.id,
+          username: u.username,
+          avatar: u.avatar,
+          about: u.about,
+          location: u.location,
+          has_onboarded: u.has_onboarded,
+        }))[0]
+  )
+  if (user) {
+    om.state.user.user = {
+      ...om.state.user.user,
+      ...user,
+    }
+  }
+}
+
 export const actions = {
+  refreshUser,
   register,
   login,
   logout,
