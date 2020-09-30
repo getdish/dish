@@ -1,4 +1,4 @@
-import { TagWithId } from '@dish/graph/src'
+import { TagWithId } from '@dish/graph'
 
 import { GoogleImages } from './GoogleImages'
 

@@ -34,6 +34,15 @@ router.delete(
   UserController.deleteUser
 )
 
+// user level permissions
+
+//update user
+router.patch(
+  '/updateUser',
+  [checkJwt, checkRole(['user'])],
+  UserController.updateUser
+)
+
 // upload image
 router.post('/image_upload', UserImageController.uploadImage)
 

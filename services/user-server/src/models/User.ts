@@ -43,6 +43,15 @@ export class User {
   role!: string
 
   @Column()
+  about!: string
+
+  @Column()
+  location!: string
+
+  @Column()
+  charIndex!: number
+
+  @Column()
   @CreateDateColumn()
   created_at!: Date
 

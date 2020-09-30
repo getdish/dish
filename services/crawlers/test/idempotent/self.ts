@@ -11,7 +11,7 @@ import {
   tagInsert,
   tagUpsert,
 } from '@dish/graph'
-import { restaurantFindOne } from '@dish/graph/src'
+import { restaurantFindOne } from '@dish/graph'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 import sinon from 'sinon'
 

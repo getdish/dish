@@ -80,6 +80,9 @@ const AppMapDataLoader = memo(
       const restaurants = uniqBy(
         allResults
           .map(({ id, slug }) => {
+            if (!slug) {
+              return null
+            }
             const r = useRestaurantQuery(slug)
             if (!r) {
               return null

@@ -29,9 +29,12 @@ export const RESTAURANT_WEIGHTS = {
   google: 0.4,
 }
 
+const LOCAL_HOSTNAME =
+  typeof window !== 'undefined' ? window.location.hostname : 'localhost'
+
 export let SEARCH_DOMAIN = (() => {
   const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
-  const LOCAL_SEARCH_DOMAIN = 'http://localhost:10000'
+  const LOCAL_SEARCH_DOMAIN = `http://${LOCAL_HOSTNAME}:10000`
   if (isWorker || isNative) {
     return LIVE_SEARCH_DOMAIN
   } else if (isNode) {
@@ -46,7 +49,7 @@ export let SEARCH_DOMAIN = (() => {
 })()
 
 export const AUTH_DOMAIN = (() => {
-  const LOCAL_AUTH_SERVER = 'http://localhost:3000'
+  const LOCAL_AUTH_SERVER = `http://${LOCAL_HOSTNAME}:3000`
   const PROD_JWT_SERVER = 'https://auth.dishapp.com'
   if (isNode) {
     return process.env.AUTH_ENDPOINT || LOCAL_AUTH_SERVER

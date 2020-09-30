@@ -5,14 +5,17 @@ import {
   HStack,
   LoadingItem,
   LoadingItems,
+  Paragraph,
+  SmallTitle,
   Spacer,
   Text,
   VStack,
 } from '@dish/ui'
 import React, { Suspense, memo, useEffect, useState } from 'react'
-import { Image } from 'react-native'
+import { Image, ScrollView } from 'react-native'
 
 import { StackItemProps } from '../../AppStackView'
+import { defaultUserImage } from '../../defaultUserImage'
 import { HomeStateItemUser } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { ContentScrollView } from '../../views/ContentScrollView'
@@ -20,7 +23,7 @@ import { NotFoundPage } from '../../views/NotFoundPage'
 import { StackDrawer } from '../../views/StackDrawer'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
-import { avatar } from '../search/avatar'
+import { UserAvatar } from './UserAvatar'
 import { useUserQuery } from './useUserQuery'
 
 type UserTab = 'vote' | 'review'
@@ -33,7 +36,7 @@ export default function UserPageContainer(
     <StackDrawer closable title={`${props.item.username} | Dish food reviews`}>
       <Suspense
         fallback={
-          <VStack height={125} borderColor="#eee" borderBottomWidth={1}>
+          <VStack height={160} borderColor="#eee" borderBottomWidth={1}>
             <LoadingItem lines={2} />
           </VStack>
         }
@@ -95,6 +98,17 @@ const UserPageContent = graphql(
       <ContentScrollView paddingTop={0}>
         <VStack spacing="xl" paddingHorizontal="2.5%" paddingVertical={20}>
           <VStack>
+            {tab === 'review' && (
+              <VStack>
+                {user.about && (
+                  <VStack>
+                    <SmallTitle>About</SmallTitle>
+                    <Paragraph size="lg">{user.about}</Paragraph>
+                  </VStack>
+                )}
+              </VStack>
+            )}
+
             <Suspense fallback={<LoadingItems />}>
               {!hasReviews && <Text>No reviews yet...</Text>}
               {hasReviews &&
@@ -123,49 +137,55 @@ const UserHeader = memo(
     }) => {
       const user = useUserQuery(item?.username ?? '')
       return (
-        <VStack maxWidth="100%" overflow="hidden" width="100%">
-          <VStack padding={18}>
-            <HStack alignItems="center" flex={1} position="relative">
-              <Circle size={94} marginVertical={-10}>
-                <Image
-                  source={{ uri: avatar }}
-                  style={{ backgroundColor: 'red', width: 94, height: 94 }}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ width: '100%' }}
+        >
+          <VStack maxWidth="100%" overflow="hidden" width="100%">
+            <VStack padding={18}>
+              <HStack alignItems="center" flex={1} position="relative">
+                <UserAvatar
+                  avatar={user.avatar ?? ''}
+                  charIndex={user.charIndex ?? 0}
                 />
-              </Circle>
-              <Spacer size={20} />
-              <VStack flex={1}>
-                <Text fontSize={28} fontWeight="bold" paddingRight={30}>
-                  {user.username ?? ''}
-                </Text>
-                <Spacer size={4} />
-                <Text color="#777" fontSize={13}>
-                  {user.username}
-                </Text>
-                <Spacer size={12} />
-              </VStack>
+                <Spacer size={20} />
+                <VStack flex={1}>
+                  <Text fontSize={28} fontWeight="bold" paddingRight={30}>
+                    {user.username ?? 'no-name'}
+                  </Text>
+                  <Spacer size={4} />
+                  <Text color="#777" fontSize={14}>
+                    {user.location ?? 'Earth, Universe'}
+                  </Text>
+                  <Spacer size={12} />
+                </VStack>
 
-              <HStack spacing>
-                <SmallButton
-                  isActive={tab === 'review'}
-                  onPress={() => {
-                    setTab('review')
-                  }}
-                >
-                  Reviews
-                </SmallButton>
-                <SmallButton
-                  isActive={tab === 'vote'}
-                  onPress={() => {
-                    setTab('vote')
-                  }}
-                >
-                  Votes
-                </SmallButton>
+                <Spacer size="lg" />
+
+                <HStack spacing>
+                  <SmallButton
+                    isActive={tab === 'review'}
+                    onPress={() => {
+                      setTab('review')
+                    }}
+                  >
+                    Reviews
+                  </SmallButton>
+                  <SmallButton
+                    isActive={tab === 'vote'}
+                    onPress={() => {
+                      setTab('vote')
+                    }}
+                  >
+                    Votes
+                  </SmallButton>
+                </HStack>
               </HStack>
-            </HStack>
-            <Divider />
+              <Divider />
+            </VStack>
           </VStack>
-        </VStack>
+        </ScrollView>
       )
     }
   )
