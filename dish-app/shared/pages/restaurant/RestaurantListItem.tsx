@@ -129,7 +129,9 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 })
 
 const RestaurantListItemContent = memo(
-  graphql((props: RestaurantListItemProps & { isLoaded: boolean }) => {
+  graphql(function RestaurantListItemContent(
+    props: RestaurantListItemProps & { isLoaded: boolean }
+  ) {
     const {
       rank,
       restaurantId,
@@ -140,6 +142,7 @@ const RestaurantListItemContent = memo(
     const pad = 18
     const isSmall = useIsNarrow()
     const restaurant = useRestaurantQuery(restaurantSlug)
+    restaurant.location
 
     useEffect(() => {
       if (!!restaurant.name && props.onFinishRender) {
@@ -490,7 +493,7 @@ const RestaurantPeekDishes = memo(
     isLoaded: boolean
   }) {
     const { isLoaded, searchState, size = 'md' } = props
-    const tag_names = [
+    const tagSlugs = [
       searchState.searchQuery.toLowerCase(),
       ...Object.keys(searchState?.activeTagIds || {}).filter((x) => {
         const isActive = searchState?.activeTagIds[x]
@@ -500,12 +503,32 @@ const RestaurantPeekDishes = memo(
         const type = allTags[x].type
         return type != 'lense' && type != 'filter' && type != 'outlier'
       }),
-    ].filter(isPresent)
+    ].filter((x) => !!x)
     const spacing = size == 'lg' ? 16 : 12
     const restaurant = useRestaurantQuery(props.restaurantSlug)
+    // get them all as once to avoid double query limit on gqless
+    const fullTags = tagSlugs.length
+      ? restaurant
+          .tags({
+            limit: tagSlugs.length,
+            where: {
+              tag: {
+                name: {
+                  _in: tagSlugs.map((n) => allTags[n].name).filter(Boolean),
+                },
+              },
+            },
+          })
+          .map((tag) => ({
+            name: tag.tag.name,
+            score: tag.score ?? 0,
+            icon: tag.tag.icon,
+          }))
+      : null
     const photos = restaurantPhotosForCarousel({
       restaurant,
-      tag_names,
+      tag_names: tagSlugs,
+      fullTags,
       max: 5,
     })
     const dishSize = 150

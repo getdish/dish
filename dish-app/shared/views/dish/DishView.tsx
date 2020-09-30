@@ -93,7 +93,7 @@ export const DishView = memo(
         {...rest}
       >
         {/* rating */}
-        {!!dish.rating && (
+        {!!dish.rating && isFallback && (
           <AbsoluteVStack
             width={20}
             height={20}
@@ -107,7 +107,9 @@ export const DishView = memo(
                 size="sm"
                 name={dish.name}
                 subtle
+                score={dish.score}
                 restaurantId={restaurantId}
+                restaurantSlug={restaurantSlug}
               />
             </Suspense>
           </AbsoluteVStack>
@@ -136,6 +138,20 @@ export const DishView = memo(
                 zIndex: 3,
               })}
             >
+              {/* icon? */}
+              {dish.icon && (
+                <Text
+                  className="ease-in-out"
+                  zIndex={10}
+                  position="absolute"
+                  top="2%"
+                  right="2%"
+                  fontSize={40}
+                  transform={[{ scale: 1 }]}
+                >
+                  {dish.icon}
+                </Text>
+              )}
               <Box
                 position="relative"
                 className="skewX ease-in-out"
