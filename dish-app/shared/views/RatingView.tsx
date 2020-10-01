@@ -36,7 +36,7 @@ export const RatingView = forwardRef(
 
     // size!
     let size =
-      sizeIn == 'xs' ? 32 : sizeIn === 'sm' ? 38 : sizeIn == 'md' ? 48 : 64
+      sizeIn == 'xs' ? 32 : sizeIn === 'sm' ? 38 : sizeIn == 'md' ? 48 : 72
 
     const badgeOffset =
       sizeIn === 'xs' || sizeIn === 'sm' ? Math.max(-size * 0.0025, -3) : 0

@@ -26,13 +26,14 @@ export const LenseButton = memoIsEqualDeep(
   }) => {
     const lenseColor = rgbString(lense.rgb)
     const scale = size == 'md' ? 1 : size === 'lg' ? 1.2 : 1.3
-    const sizePx = 40
+    const sizePx = 42
 
     return (
       <LinkButton
         {...(onPress ? { onPress } : { tag: lense })}
         className="unselectable"
         disallowDisableWhenActive
+        marginRight={6}
         pressStyle={{
           opacity: 0.8,
           transform: [{ scale: 0.9 }],
@@ -42,7 +43,7 @@ export const LenseButton = memoIsEqualDeep(
           className="ease-in-out-fast"
           alignItems="center"
           justifyContent="center"
-          marginVertical={-5 * scale}
+          marginVertical={-4 * scale}
           width={sizePx * scale}
           height={sizePx * scale}
           backgroundColor={
@@ -92,9 +93,8 @@ export const LenseButton = memoIsEqualDeep(
               marginHorizontal={-3}
             >
               <Text
-                // fontSize={sizePx * scale * 0.2}
-                fontWeight={isActive ? '500' : '400'}
-                lineHeight={sizePx * scale * 0.43}
+                fontWeight={isActive ? '600' : '400'}
+                lineHeight={sizePx * scale * 0.39}
                 color={isActive ? '#fff' : '#000'}
                 paddingHorizontal={2}
                 textAlign="center"

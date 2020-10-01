@@ -27,8 +27,8 @@ export const SearchPageNavBar = (props: { id: string }) => {
       left={0}
       right={0}
       backgroundColor={isWeb ? '#fff' : `rgba(255,255,255,0.25)`}
-      shadowColor="rgba(0,0,0,0.08)"
-      shadowRadius={10}
+      shadowColor="rgba(0,0,0,0.07)"
+      shadowRadius={8}
       borderRadius={borderRadius}
       shadowOffset={{ height: 3, width: 0 }}
       zIndex={1000}
@@ -67,11 +67,10 @@ const SearchPageNavBarContent = memo(({ stateId }: { stateId: string }) => {
         width="100%"
         maxWidth="100%"
         minWidth="100%"
-        paddingHorizontal={12}
+        paddingHorizontal={16}
       >
         <HStack
           width="100%"
-          // minWidth={drawerWidth}
           alignItems="center"
           justifyContent="space-between"
           height="100%"

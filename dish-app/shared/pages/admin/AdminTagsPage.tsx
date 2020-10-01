@@ -250,10 +250,7 @@ const TagListContent = memo(
         ],
       })
 
-      const allResults = uniqBy(
-        [{ id: 0, name: '' } as WithID<Tag>, ...results],
-        (x) => x.name
-      )
+      const allResults = [{ id: 0, name: '' } as WithID<Tag>, ...results]
 
       useEffect(() => {
         if (tagStore.forceRefreshColumnByType === type) {
@@ -278,7 +275,7 @@ const TagListContent = memo(
           {allResults.map((tag, row) => {
             return (
               <TagListItem
-                key={row}
+                key={tag.id ?? row}
                 id="tags"
                 tagId={tag.id}
                 row={row}

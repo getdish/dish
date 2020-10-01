@@ -480,7 +480,7 @@ const TopDishesTrendingRestaurants = memo(
   ({ country }: { country: TopCuisine }) => {
     return (
       <VStack
-        width={200}
+        width={210}
         paddingHorizontal={10}
         height={135}
         spacing={4}
