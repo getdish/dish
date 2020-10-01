@@ -78,6 +78,7 @@ export class Self extends WorkerJob {
   restaurant_tag_scores: RestaurantTagScores
   menu_items: MenuItem[] = []
   _job_identifier_restaurant_id!: string
+  _high_ram_message_sent = false
 
   _debugRamIntervalFunction!: number
 
@@ -783,11 +784,12 @@ export class Self extends WorkerJob {
   _checkRAM() {
     const ram_value = Math.round(process.memoryUsage().heapUsed / 1024 / 1024)
     const ram = ram_value + 'Mb'
-    if (ram_value > 1000) {
+    if (ram_value > 1000 && !this._high_ram_message_sent) {
       sentryMessage('Worker RAM over 1Gi', {
         ram,
         restaurant: this.restaurant,
       })
+      this._high_ram_message_sent = true
     }
     this.log(`Worker RAM usage: ${ram}`)
   }
