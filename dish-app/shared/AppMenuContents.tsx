@@ -15,8 +15,8 @@ export const AppMenuContents = memo(
     const om = useOvermind()
 
     return (
-      <Box alignItems="stretch" padding={20} minWidth={240} {...props}>
-        <VStack spacing="sm">
+      <Box alignItems="stretch" minWidth={240} {...props}>
+        <VStack spacing="sm" padding={10}>
           {om.state.user.isLoggedIn &&
             om.state.user.user?.username === 'admin' && (
               <MenuLinkButton name="adminTags">Admin</MenuLinkButton>
@@ -35,34 +35,33 @@ export const AppMenuContents = memo(
 
           {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>}
           <MenuLinkButton name="about">About</MenuLinkButton>
+          {!om.state.user.isLoggedIn && (
+            <>
+              <Spacer size="lg" />
+              <Divider />
+              <Spacer size="lg" />
+              <LoginRegisterForm onDidLogin={hideUserMenu} />
+            </>
+          )}
+
+          {om.state.user.isLoggedIn && (
+            <>
+              <Spacer size="lg" />
+              <Divider />
+              <Spacer size="lg" />
+              <MenuLinkButton
+                onPress={() => {
+                  Toast.show(`Logging out...`)
+                  setTimeout(() => {
+                    om.actions.user.logout()
+                  }, 1000)
+                }}
+              >
+                Logout
+              </MenuLinkButton>
+            </>
+          )}
         </VStack>
-
-        {!om.state.user.isLoggedIn && (
-          <>
-            <Spacer size="lg" />
-            <Divider />
-            <Spacer size="lg" />
-            <LoginRegisterForm onDidLogin={hideUserMenu} />
-          </>
-        )}
-
-        {om.state.user.isLoggedIn && (
-          <>
-            <Spacer size="lg" />
-            <Divider />
-            <Spacer size="lg" />
-            <MenuLinkButton
-              onPress={() => {
-                Toast.show(`Logging out...`)
-                setTimeout(() => {
-                  om.actions.user.logout()
-                }, 1000)
-              }}
-            >
-              Logout
-            </MenuLinkButton>
-          </>
-        )}
       </Box>
     )
   }

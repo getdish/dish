@@ -1,3 +1,4 @@
+import { Auth } from '@dish/graph'
 import { isSafari } from '@dish/helpers'
 import { AbsoluteVStack } from '@dish/ui'
 import loadable from '@loadable/component'
@@ -29,7 +30,7 @@ export default memo(function App() {
     AppleID.auth.init({
       clientId: 'com.dishapp',
       scope: 'name email',
-      redirectURI: 'https://dishapp.com/auth/apple_authorize',
+      redirectURI: Auth.getRedirectUri(),
       usePopup: isSafari,
     })
 

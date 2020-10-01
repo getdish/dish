@@ -108,7 +108,7 @@
     "ios:prod": "yarn ios:run --configuration Release",
     "ios:device": "yarn ios:run --device",
     "ios:device:prod": "yarn ios:run --device --configuration Release",
-    "web": "DISH_ENV=development TARGET=web VERBOSE=1 webpack-dev-server --port 19006 --progress",
+    "web": "DISH_ENV=development TARGET=web VERBOSE=1 webpack-dev-server --port 80 --progress",
     "web:no-extract": "NO_EXTRACT=1 yarn web",
     "web:webpack5": "VERBOSE=1 webpack serve --port 19006 --progress",
     "web:prod": "TARGET=web LEGACY=1 NODE_ENV=production VERBOSE=1 webpack-dev-server --port 19006 --progress",

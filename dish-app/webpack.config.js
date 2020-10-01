@@ -172,7 +172,7 @@ module.exports = function getWebpackConfig(
                     options: {
                       mozjpeg: {
                         progressive: true,
-                        quality: 92,
+                        quality: 98,
                       },
                       optipng: {
                         enabled: true,

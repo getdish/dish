@@ -1,3 +1,4 @@
+- onPress extraction + media query extraction have most speed up
 - bug with props after spread not applying, make them deopt:
   - <VStack {...baseStyle} cursor="default" /> wont be right rn
 - have seen bugs with <Spacer flex /> and <VStack fullscreen />
@@ -5,7 +6,7 @@
 - activeStyle may be desirable...
 - multi level const eval
   - const x = 1, const y = x + 10, paddingTop={y} (current in RestaurantListItem)
-- <Image />
+- <Image /> // harder than seems RN does some werid stuff with cover/etc
 - spacing
   - SmallButton good example case of constant
 - hoverStyle/pressStyle (spread + constant too - TagButton, DishView)
