@@ -60,7 +60,7 @@ export const DishView = memo(
 
     return (
       <LinkButton
-        className="ease-in-out-fast"
+        className="ease-in-out-faster"
         alignItems="center"
         position="relative"
         justifyContent="center"
@@ -72,7 +72,7 @@ export const DishView = memo(
         }}
         hoverStyle={{
           zIndex: 2,
-          transform: [{ scale: 1.03 }],
+          transform: [{ scale: 1.02 }],
         }}
         onHoverIn={() => setIsHovered(true)}
         onHoverOut={() => setIsHovered(false)}
@@ -154,7 +154,7 @@ export const DishView = memo(
               )}
               <Box
                 position="relative"
-                className="skewX ease-in-out"
+                className="skewX ease-in-out-fast"
                 backgroundColor="#fff"
                 borderRadius={8}
                 paddingVertical={3}
@@ -176,7 +176,7 @@ export const DishView = memo(
                 })}
               >
                 <Text
-                  className="unskewX ease-in-out"
+                  className="unskewX ease-in-out-fast"
                   // flex={1} breaks native
                   overflow="hidden"
                   fontWeight="400"

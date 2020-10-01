@@ -60,7 +60,7 @@ export const RestaurantDishPhotos = memo(
           {!!photos?.length && (
             <HStack
               paddingHorizontal={60}
-              marginTop={10}
+              paddingVertical={20}
               alignItems="center"
               justifyContent="center"
             >
@@ -72,7 +72,6 @@ export const RestaurantDishPhotos = memo(
                     restaurantSlug={restaurantSlug}
                     restaurantId={restaurantId}
                     margin={spacing / 2}
-                    marginBottom={16}
                     dish={photo}
                     selected={selected === index}
                     {...(!!selectable && {

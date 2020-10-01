@@ -1,10 +1,8 @@
 import { graphql } from '@dish/graph'
-import { HStack, Text } from '@dish/ui'
+import { HStack, LinearGradient } from '@dish/ui'
 import { memo } from 'react'
-import { ScrollView } from 'react-native'
-import { Image } from 'react-native'
+import { Image, ScrollView, StyleSheet } from 'react-native'
 
-import { bgLight } from '../../colors'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { LinkButton } from '../../views/ui/LinkButton'
@@ -20,11 +18,11 @@ export const RestaurantPhotosRow = memo(
         horizontal
         showsVerticalScrollIndicator={false}
       >
-        <HStack alignItems="center">
+        <HStack paddingVertical={5} alignItems="center">
           {!photos.length && (
             <HStack
-              height={200}
-              minWidth={200}
+              height={185}
+              minWidth={185}
               // backgroundColor={bgLight}
               borderRadius={20}
             >
@@ -33,17 +31,29 @@ export const RestaurantPhotosRow = memo(
           )}
           {!!photos.length && (
             <HStack alignItems="center">
+              {/* <LinearGradient
+                colors={['rgba(0,0,0,0.6)', 'rgba(0,0,0,0.1)', 'transparent']}
+                startPoint={[0, 1]}
+                endPoint={[0, 0]}
+                pointerEvents="none"
+                style={[StyleSheet.absoluteFill, { zIndex: 10 }]}
+              /> */}
               {photos.slice(0, 9).map((photo, key) => (
                 <LinkButton
                   key={key}
                   name="gallery"
                   params={{ restaurantSlug }}
+                  className="scale-hover"
+                  {...(key == 0 && {
+                    borderTopLeftRadius: 15,
+                    borderBottomLeftRadius: 15,
+                  })}
                 >
                   <Image
                     source={{ uri: getImageUrl(photo, 280, 180, 100) }}
                     style={{
-                      height: 200,
-                      width: 130,
+                      height: 185,
+                      width: 135,
                       // borderRadius: 20,
                     }}
                     resizeMode="cover"

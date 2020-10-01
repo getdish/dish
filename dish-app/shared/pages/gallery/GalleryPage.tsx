@@ -12,7 +12,7 @@ import { Image, ScrollView } from 'react-native'
 
 import { isWeb, pageWidthMax } from '../../constants'
 import { getImageUrl } from '../../helpers/getImageUrl'
-import { useIsNarrow } from '../../hooks/useIs'
+import { useIsNarrow, useIsShort } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemGallery } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
@@ -96,6 +96,7 @@ const HomePageGalleryContent = memo(
   }) {
     const [hasScrolled, setHasScrolled] = useState(false)
     const isSmall = useIsNarrow()
+    const isShort = useIsShort()
     // const dish = state.dishId
     //   ? query.tag({
     //       where: {
@@ -143,7 +144,7 @@ const HomePageGalleryContent = memo(
                     resizeMode="cover"
                     style={{
                       width: isWeb ? 'calc(100% - 4px)' : '99%',
-                      height: isSmall ? 250 : 380,
+                      height: isShort ? 250 : 400,
                       marginTop: 2,
                       marginLeft: 2,
                     }}

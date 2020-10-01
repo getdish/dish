@@ -428,3 +428,33 @@ input:-webkit-autofill:active  {
 body > div {
   pointer-events: none;
 }
+
+.scale-hover {
+  position: relative;
+  overflow: hidden;
+  transition: all ease-out 40ms;
+}
+
+.scale-hover:hover {
+  transform: scale(1.025);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  z-index: 10;
+}
+
+.scale-hover > div::before {
+  display: flex;
+  content: ' ';
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0), rgba(255,255,255,0.5));
+  opacity: 1;
+  transition: all ease-out 40ms;
+}
+
+.scale-hover:hover > div::before {
+  opacity: 0;
+}

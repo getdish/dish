@@ -336,7 +336,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     const paddingTop = isSmall ? 2 : titleHeight
     const titleLen = (title + subTitle).length
     const titleScale =
-      titleLen > 70 ? 0.75 : titleLen > 60 ? 0.85 : titleLen > 50 ? 0.95 : 1
+      titleLen > 70 ? 0.8 : titleLen > 60 ? 0.9 : titleLen > 50 ? 0.95 : 1
     const titleFontSize = 38 * titleScale * (isSmall ? 0.75 : 1)
     const lenseColor = useCurrentLenseColor()
     const scrollRef = useRef<ScrollView>()
@@ -400,15 +400,15 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
           <VStack width="100%" height={paddingTop} />
           <HStack
             paddingHorizontal={20}
-            paddingTop={10}
-            paddingBottom={15}
+            paddingTop={20}
+            paddingBottom={12}
             overflow="hidden"
           >
             <Text
               marginVertical="auto"
               letterSpacing={-0.5}
               fontSize={titleFontSize}
-              fontWeight="500"
+              fontWeight="700"
               color={rgbString(lenseColor.map((x) => x * 0.8))}
               // @ts-ignore
               display="inline" // safari fix

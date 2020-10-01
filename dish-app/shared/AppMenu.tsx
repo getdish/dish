@@ -1,7 +1,7 @@
 import { graphql, slugify } from '@dish/graph/_'
 import { ChevronUp, HelpCircle, Menu, User } from '@dish/react-feather'
-import { HStack, Popover, Text, Tooltip } from '@dish/ui'
-import React, { memo, useCallback, useEffect } from 'react'
+import { HStack, Popover, Spacer, Text, Tooltip } from '@dish/ui'
+import React, { Suspense, memo, useCallback, useEffect } from 'react'
 
 import { AppMenuContents } from './AppMenuContents'
 import { useIsAboveMedium, useIsNarrow } from './hooks/useIs'
@@ -48,7 +48,15 @@ export const AppMenu = memo(() => {
 
       {isAboveMedium && (
         <>
-          {om.state.user.isLoggedIn && <UserMenuButton />}
+          {om.state.user.isLoggedIn && (
+            <>
+              <Spacer size={6} />
+              <Suspense fallback={<Spacer size={32} />}>
+                <UserMenuButton />
+              </Suspense>
+              <Spacer size={10} />
+            </>
+          )}
 
           {!om.state.user.isLoggedIn && (
             <Tooltip contents="About">
@@ -80,8 +88,6 @@ const UserMenuButton = graphql(() => {
   return (
     <Tooltip contents="Profile">
       <LinkButton
-        marginRight={10}
-        marginLeft={6}
         name="user"
         params={{
           username: slugify(username),

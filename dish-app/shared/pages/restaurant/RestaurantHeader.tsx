@@ -1,11 +1,19 @@
 import { graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
-import { HStack, SmallTitle, Spacer, StackProps, Text, VStack } from '@dish/ui'
-import React, { Suspense, memo } from 'react'
+import {
+  HStack,
+  SmallTitle,
+  Spacer,
+  StackProps,
+  Text,
+  VStack,
+  useDebounce,
+} from '@dish/ui'
+import React, { Suspense, memo, useState } from 'react'
 import { Image, ScrollView } from 'react-native'
 
-import { drawerBorderRadius } from '../../constants'
-import { useIsReallyNarrow } from '../../hooks/useIs'
+import { drawerBorderRadius, drawerWidthMax } from '../../constants'
+import { useIsNarrow, useIsReallyNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
@@ -59,8 +67,22 @@ const RestaurantHeaderContent = memo(
       const spacer = <Spacer size={paddingPx} />
       const restaurantId = state?.restaurantId ?? restaurant.id
       const nameLen = restaurant.name?.length
+      const [width, setWidth] = useState(
+        Math.min(window.innerWidth, drawerWidthMax)
+      )
+      const scale = width < 400 ? 0.75 : width < 600 ? 0.8 : 1
+      const setWidthSlow = useDebounce(setWidth, 100)
+      const fontSize =
+        scale *
+        ((nameLen > 24 ? 26 : nameLen > 18 ? 30 : 36) *
+          (size === 'sm' ? 0.8 : 1))
       return (
-        <VStack width="100%">
+        <VStack
+          width="100%"
+          onLayout={(e) => {
+            setWidthSlow(e.nativeEvent.layout.width)
+          }}
+        >
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -76,18 +98,18 @@ const RestaurantHeaderContent = memo(
               borderTopLeftRadius={drawerBorderRadius - 1}
               maxWidth="100%"
               position="relative"
-              // paddingVertical={15}
             >
               <HStack alignItems="flex-end">
                 <HStack
                   maxWidth={480}
+                  minWidth={width / 2}
                   paddingTop={paddingPx * 1.5}
-                  alignItems="center"
+                  alignItems="flex-start"
                 >
                   {spacer}
-                  <HStack position="relative">
+                  <HStack marginTop={12} position="relative">
                     <RestaurantRatingView
-                      size="lg"
+                      size={width < 400 ? 'md' : 'lg'}
                       restaurantSlug={restaurantSlug}
                     />
                   </HStack>
@@ -96,10 +118,7 @@ const RestaurantHeaderContent = memo(
                     <Text
                       selectable
                       lineHeight={42}
-                      fontSize={
-                        (nameLen > 24 ? 26 : nameLen > 18 ? 30 : 36) *
-                        (size === 'sm' ? 0.8 : 1)
-                      }
+                      fontSize={fontSize}
                       fontWeight="700"
                     >
                       {restaurant.name}
@@ -133,8 +152,8 @@ const RestaurantHeaderContent = memo(
 
                 {showImages && (
                   <>
-                    <Spacer size={40} />
-                    <VStack borderBottomLeftRadius={30} overflow="hidden">
+                    <Spacer size={60} />
+                    <VStack overflow="hidden" alignSelf="center">
                       <RestaurantPhotosRow restaurantSlug={restaurantSlug} />
                     </VStack>
                   </>
