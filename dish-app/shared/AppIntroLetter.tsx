@@ -43,10 +43,8 @@ export const AppIntroLetter = memo(() => {
         </>
       }
     >
-      <VStack flex={1} paddingTop={20} alignItems="center">
-        {!isLoggedIn && <AppIntroLogin />}
-        {isLoggedIn && !hasOnboarded && <UserOnboard />}
-      </VStack>
+      {!isLoggedIn && <AppIntroLogin />}
+      {isLoggedIn && !hasOnboarded && <UserOnboard />}
     </DarkModal>
   )
 })

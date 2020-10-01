@@ -1,4 +1,4 @@
-import { Heart } from '@dish/react-feather'
+import { Heart, Star } from '@dish/react-feather'
 import { HStack, Text, prevent } from '@dish/ui'
 import React from 'react'
 
@@ -38,10 +38,10 @@ export const FavoriteButton = ({
           lineHeight={sizePx * 0.8}
           marginTop={1}
         >
-          ♥️
+          ⭐️
         </Text>
       )}
-      {!isFavorite && <Heart size={sizePx * 0.7} color={'#aaa'} />}
+      {!isFavorite && <Star size={sizePx * 0.7} color={'#aaa'} />}
     </HStack>
   )
 }

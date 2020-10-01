@@ -134,7 +134,9 @@ const RestaurantHeaderContent = memo(
                 {showImages && (
                   <>
                     <Spacer size={40} />
-                    <RestaurantPhotosRow restaurantSlug={restaurantSlug} />
+                    <VStack borderBottomLeftRadius={30} overflow="hidden">
+                      <RestaurantPhotosRow restaurantSlug={restaurantSlug} />
+                    </VStack>
                   </>
                 )}
               </HStack>

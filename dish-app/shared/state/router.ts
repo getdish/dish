@@ -16,7 +16,7 @@ export const routes = {
 
   // all pages go here
   user: new Route<{ username: string; pane?: string }>('/u/:username/:pane?'),
-  userEdit: new Route<{ username: string; pane?: string }>('/u/edit'),
+  userEdit: new Route<{ username: string; pane?: string }>('/edit-profile'),
   gallery: new Route<{ restaurantSlug: string; dishId?: string }>(
     '/gallery/:restaurantSlug/:dishId?'
   ),

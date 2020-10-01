@@ -22,7 +22,11 @@ export const RestaurantDeliveryButtons = memo(
     const sources = getRestaurantDeliverySources(restaurantSources)
 
     if (!sources.length) {
-      return <Text>No delivery</Text>
+      return (
+        <Text fontSize={14} opacity={0.6}>
+          No delivery
+        </Text>
+      )
     }
 
     return (

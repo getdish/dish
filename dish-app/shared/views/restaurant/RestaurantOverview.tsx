@@ -16,61 +16,59 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 export const RestaurantOverview = memo(
   graphql(function RestaurantOverview({
     restaurantSlug,
+    maxChars = 150,
+    limit = 2,
     inline,
-    number,
   }: {
     restaurantSlug: string
     inline?: boolean
     limit?: number
+    maxChars?: number
   }) {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const headlines = restaurant.headlines() ?? defaultListItems
-    const shownHeadlines = headlines.slice(0, 2)
+    const shownHeadlines = headlines.slice(0, limit)
     if (inline) {
       return (
-        <VStack minHeight={130} position="relative">
+        <VStack
+          maxWidth="100%"
+          minHeight={90 + (limit - 1) * 40}
+          position="relative"
+        >
           <AbsoluteVStack top={-20} left={-35}>
-            <Text
-              fontSize={60}
-              opacity={0.2}
-              {...(isWeb && {
-                fontFamily: 'San Francisco, Times New Roman',
-              })}
-            >
+            <Text fontSize={60} opacity={0.2}>
               &ldquo;
             </Text>
           </AbsoluteVStack>
           {shownHeadlines.map((item, i) => {
             return (
-              <React.Fragment key={i}>
-                <HStack flex={1} overflow="hidden">
-                  <Paragraph
-                    size={i == 0 ? 1.1 : 1}
-                    opacity={i === 0 ? 1 : 0.7}
-                    height={i == 0 ? 86 : 'auto'}
-                    overflow="hidden"
-                    // react native doesnt like using this as a prop...
-                    {...(i !== 0 && {
-                      ellipse: true,
-                    })}
-                    {...(i === 0 && {
-                      numberOfLines: 3,
-                    })}
-                  >
-                    {ellipseText(
-                      item.sentence
-                        .replace(/\n/g, ' ')
-                        .replace(/[^\\/$a-z0-9 \,\.]+/gi, '')
-                        .replace(/\s{2,}/g, ' ')
-                        .toLowerCase()
-                        .trim(),
-                      {
-                        maxLength: 150,
-                      }
-                    )}
-                  </Paragraph>
-                </HStack>
-              </React.Fragment>
+              <HStack key={i} flex={1} overflow="hidden">
+                <Paragraph
+                  size={i == 0 ? 1.1 : 1}
+                  opacity={i === 0 ? 1 : 0.7}
+                  height={i == 0 ? 86 : 'auto'}
+                  overflow="hidden"
+                  // react native doesnt like using this as a prop...
+                  {...(i !== 0 && {
+                    ellipse: true,
+                  })}
+                  {...(i === 0 && {
+                    numberOfLines: 3,
+                  })}
+                >
+                  {ellipseText(
+                    item.sentence
+                      .replace(/\n/g, ' ')
+                      .replace(/[^\\/$a-z0-9 \,\.]+/gi, '')
+                      .replace(/\s{2,}/g, ' ')
+                      .toLowerCase()
+                      .trim(),
+                    {
+                      maxLength: maxChars,
+                    }
+                  )}
+                </Paragraph>
+              </HStack>
             )
           })}
         </VStack>
