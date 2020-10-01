@@ -5,7 +5,10 @@ import { AnimatedVStack } from './AnimatedStack'
 import { AbsoluteVStack, VStack } from './Stacks'
 import { Text } from './Text'
 
-export type ToastOptions = { duration?: number; type?: 'success' | 'error' }
+export type ToastOptions = {
+  duration?: number
+  type?: 'info' | 'success' | 'error'
+}
 
 let show: (text: string, options?: ToastOptions) => void = (text) => {
   console.warn('NO SHOW', text)
@@ -24,7 +27,7 @@ export const ToastRoot = memo(function ToastRoot() {
   const stateRef = useRef({
     show: false,
     text: '',
-    type: 'success',
+    type: 'info',
     timeout: null,
   })
   const setState = (x: any) => {
@@ -39,10 +42,7 @@ export const ToastRoot = memo(function ToastRoot() {
   }, [])
 
   show = useCallback(
-    (
-      text: string,
-      { duration = 3000, type = 'success' }: ToastOptions = {}
-    ) => {
+    (text: string, { duration = 3000, type = 'info' }: ToastOptions = {}) => {
       clearTimeout(stateRef.current.timeout ?? 0)
       const timeout = setTimeout(() => {
         setState({
@@ -77,7 +77,9 @@ export const ToastRoot = memo(function ToastRoot() {
         <AnimatedVStack>
           <VStack
             backgroundColor={
-              state.type === 'success'
+              state.type === 'info'
+                ? 'rgba(0,0,0,0.95)'
+                : state.type === 'success'
                 ? 'rgba(20,180,120,0.95)'
                 : 'rgba(190,60,60, 0.95)'
             }

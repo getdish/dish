@@ -452,7 +452,6 @@ const RestaurantListItemContent = memo(
               <Spacer />
 
               <RestaurantDeliveryButtons
-                {...smallButtonBaseStyle}
                 label="Delivery"
                 restaurantSlug={restaurantSlug}
               />

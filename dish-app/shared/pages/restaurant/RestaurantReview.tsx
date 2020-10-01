@@ -13,6 +13,7 @@ import React, { memo } from 'react'
 import { lightGreen, lightGrey, lightRed, lightYellow } from '../../colors'
 import { isWeb } from '../../constants'
 import { CommentBubble } from '../../views/CommentBubble'
+import { Link } from '../../views/ui/Link'
 
 const bottomMetaTextProps: TextProps = {
   lineHeight: 26,
@@ -94,7 +95,15 @@ export const RestaurantReview = memo(
           afterName={
             showRestaurant ? (
               <HStack alignItems="center">
-                <Text fontSize={14}>&nbsp; on {review.restaurant.name}</Text>
+                <Text fontSize={14}>
+                  &nbsp; on{' '}
+                  <Link
+                    name="restaurant"
+                    params={{ slug: review.restaurant.slug }}
+                  >
+                    {review.restaurant.name}
+                  </Link>
+                </Text>
                 <Spacer />
                 {meta}
               </HStack>

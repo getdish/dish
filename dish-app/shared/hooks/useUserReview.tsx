@@ -99,7 +99,6 @@ export const useUserReviewsQuery = (restaurantId: string) => {
       if (omStatic.actions.home.promptLogin()) {
         return false
       }
-      Toast.show('Saving...')
       try {
         // optimistic update
         if (review.id) {
@@ -139,7 +138,7 @@ export const useUserReviewsQuery = (restaurantId: string) => {
           }
         }
 
-        Toast.show(`Saved!`)
+        Toast.show(`Saved`)
         doRefetch()
         return response
       } catch (err) {

@@ -9,6 +9,7 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { StackDrawer } from '../../views/StackDrawer'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
@@ -32,8 +33,8 @@ export default function HomePageRestaurantContainer(props: Props) {
 const HomePageRestaurant = memo(
   graphql((props: Props) => {
     const { item } = props
-    const slug = item.restaurantSlug
-    const restaurant = useRestaurantQuery(slug)
+    const { restaurantSlug } = item
+    const restaurant = useRestaurantQuery(restaurantSlug)
     const coords = restaurant?.location?.coordinates
 
     usePageLoadEffect(props.isActive && restaurant.id, () => {
@@ -59,7 +60,7 @@ const HomePageRestaurant = memo(
 
         <ContentScrollView paddingTop={0}>
           {/* HEADER */}
-          <RestaurantHeader showImages restaurantSlug={slug} />
+          <RestaurantHeader showImages restaurantSlug={restaurantSlug} />
 
           <Spacer size="xl" />
 
@@ -68,7 +69,7 @@ const HomePageRestaurant = memo(
               <RestaurantDetailRow
                 centered
                 justifyContent="center"
-                restaurantSlug={slug}
+                restaurantSlug={restaurantSlug}
                 flex={1}
               />
             </VStack>
@@ -90,10 +91,28 @@ const HomePageRestaurant = memo(
             >
               <RestaurantDishPhotos
                 size={160}
-                restaurantSlug={slug}
+                restaurantSlug={restaurantSlug}
                 restaurantId={restaurant.id ?? undefined}
               />
             </Suspense>
+
+            <Spacer size="xl" />
+
+            <HStack maxWidth="100%" overflow="hidden">
+              <HStack
+                flex={1}
+                overflow="hidden"
+                paddingHorizontal={30}
+                paddingLeft={50}
+              >
+                <RestaurantOverview
+                  maxChars={250}
+                  inline
+                  restaurantSlug={restaurantSlug}
+                  limit={1}
+                />
+              </HStack>
+            </HStack>
 
             <Spacer size="xl" />
 
@@ -101,7 +120,7 @@ const HomePageRestaurant = memo(
               <RestaurantRatingBreakdown
                 borderless
                 // showScoreTable
-                restaurantSlug={slug}
+                restaurantSlug={restaurantSlug}
                 restaurantId={restaurant.id}
               />
             </Suspense>
@@ -115,7 +134,7 @@ const HomePageRestaurant = memo(
                 </SlantedTitle>
                 <Spacer />
                 <Suspense fallback={null}>
-                  <RestaurantMenu restaurantSlug={slug} />
+                  <RestaurantMenu restaurantSlug={restaurantSlug} />
                 </Suspense>
               </VStack>
 

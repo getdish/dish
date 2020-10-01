@@ -54,7 +54,9 @@ export const DarkModal = ({
               maxHeight: 630,
             }}
           >
-            {children}
+            <VStack flex={1} paddingTop={20} alignItems="center">
+              {children}
+            </VStack>
           </ScrollView>
         </VStack>
       </AnimatedVStack>

@@ -20,7 +20,7 @@ export const RestaurantPhotosRow = memo(
         horizontal
         showsVerticalScrollIndicator={false}
       >
-        <HStack paddingHorizontal={20} alignItems="center">
+        <HStack alignItems="center">
           {!photos.length && (
             <HStack
               height={200}
