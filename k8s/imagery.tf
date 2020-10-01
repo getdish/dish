@@ -27,6 +27,10 @@ resource "kubernetes_deployment" "image-proxy" {
           "doks.digitalocean.com/node-pool" = "dish-critical-pool"
         }
 
+        image_pull_secrets {
+          name = "docker-config-json"
+        }
+
         toleration {
           key = "dish-taint"
           operator = "Equal"
@@ -37,7 +41,8 @@ resource "kubernetes_deployment" "image-proxy" {
 
         container {
           name  = "image-proxy"
-          image = "willnorris/imageproxy@sha256:9cc15ad4b0f61e371a982c5fa0520cd6f6cebba317bb1a9188ac9169a826fc35"
+          image = "docker.k8s.dishapp.com/dish/imageproxy"
+          image_pull_policy = "Always"
           args = [
             "-addr", "0.0.0.0:8080",
             "-cache", "/image-cache"

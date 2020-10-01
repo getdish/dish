@@ -456,6 +456,8 @@ function main_db_command() {
   PORT=$(generate_random_port)
   postgres_proxy $PORT
   echo "$1" | PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
+    -P pager=off \
+    -P format=unaligned \
     -p $PORT \
     -h localhost \
     -U postgres \
@@ -691,6 +693,7 @@ function push_repo_image() {
 function push_external_images() {
   push_repo_image 'git@github.com:getdish/image-quality-api.git' dish/image-quality-server
   push_repo_image 'git@github.com:getdish/grafana-backup-tool.git' dish/grafana-backup-tool
+  push_repo_image 'git@github.com:getdish/imageproxy.git' dish/imageproxy
 }
 
 function dish_docker_login() {
