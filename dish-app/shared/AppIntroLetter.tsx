@@ -69,8 +69,8 @@ export const AppIntroLogin = memo(() => {
           style={{
             marginTop: -20,
             marginBottom: -30,
-            width: 261,
-            height: 161,
+            width: 261 * 1.2,
+            height: 161 * 1.2,
           }}
         />
 
@@ -81,32 +81,29 @@ export const AppIntroLogin = memo(() => {
           fontWeight="300"
           size={1.2}
         >
-          <Text fontSize={24} fontWeight="300" color="#fff">
-            your personal guide to food
+          <Text fontSize={22} fontWeight="300" color="#fff">
+            a better food guide
           </Text>
         </Paragraph>
 
-        {divider}
-
         <>
           <VStack>
-            <Text color={lightGreen} fontWeight="500">
-              <LinkButton
-                fontSize={16}
-                lineHeight={28}
-                borderRadius={8}
-                paddingHorizontal={8}
-                marginHorizontal={-8}
-                color={brandColorLighter}
-                backgroundColor={`${lightYellow}33`}
-                hoverStyle={{
-                  backgroundColor: `${lightYellow}44`,
-                }}
-                name="about"
-              >
-                the best spots ✨ & dishes 🍽
-              </LinkButton>
-            </Text>
+            <LinkButton
+              fontSize={18}
+              lineHeight={30}
+              borderRadius={8}
+              fontWeight="500"
+              paddingHorizontal={8}
+              marginHorizontal={-8}
+              color={brandColorLighter}
+              backgroundColor={`${lightYellow}33`}
+              hoverStyle={{
+                backgroundColor: `${lightYellow}44`,
+              }}
+              name="about"
+            >
+              the best spots ✨ & dishes 🍽
+            </LinkButton>
           </VStack>
           <Spacer size="xs" />
           <VStack>

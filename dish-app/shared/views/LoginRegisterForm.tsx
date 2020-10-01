@@ -1,3 +1,4 @@
+import { Auth } from '@dish/graph'
 import {
   Form,
   HStack,
@@ -8,7 +9,7 @@ import {
   Text,
   VStack,
 } from '@dish/ui'
-import { default as React, useEffect, useState } from 'react'
+import { default as React, useCallback, useEffect, useState } from 'react'
 
 import { lightRed } from '../colors'
 import { isWeb } from '../constants'
@@ -44,7 +45,9 @@ export const LoginRegisterForm = ({
 }) => {
   const om = useOvermind()
   const isLoggedIn = om.state.user.isLoggedIn
-  const [isRegister, setIsRegister] = useState(showForm !== 'login')
+  const [isRegister, setIsRegister] = useState(
+    showForm ? showForm !== 'login' : Auth.hasEverLoggedIn ? false : true
+  )
   const [login, setLogin] = useState('')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
@@ -55,6 +58,29 @@ export const LoginRegisterForm = ({
       onDidLogin?.()
     }
   }, [isLoggedIn])
+
+  const handleLoginRegister = useCallback(
+    async (e) => {
+      e.preventDefault()
+      if (isRegister) {
+        const result = await om.actions.user.register({
+          username,
+          email,
+          password,
+        })
+        if (result) {
+          setUsername('')
+          setPassword('')
+        }
+      } else {
+        await om.actions.user.login({
+          usernameOrEmail: login,
+          password: password,
+        })
+      }
+    },
+    [isRegister]
+  )
 
   if (isLoggedIn) {
     return null
@@ -101,7 +127,7 @@ export const LoginRegisterForm = ({
         </>
       )}
 
-      <Form>
+      <Form onSubmit={handleLoginRegister}>
         <VStack spacing height={250} minWidth={260}>
           <InteractiveContainer height={43} alignSelf="center">
             <LinkButton
@@ -177,24 +203,10 @@ export const LoginRegisterForm = ({
             textStyle={{
               color: '#fff',
             }}
-            onPress={async () => {
-              if (isRegister) {
-                const result = await om.actions.user.register({
-                  username,
-                  email,
-                  password,
-                })
-                if (result) {
-                  setUsername('')
-                  setPassword('')
-                }
-              } else {
-                await om.actions.user.login({
-                  usernameOrEmail: login,
-                  password: password,
-                })
-              }
+            hoverStyle={{
+              backgroundColor: '#333',
             }}
+            onPress={handleLoginRegister}
           >
             {button_text()}
           </SmallButton>

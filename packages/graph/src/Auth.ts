@@ -1,6 +1,9 @@
+import { isSafari } from '@dish/helpers'
+
 import { AUTH_DOMAIN, isNode } from './constants'
 
-const BROWSER_STORAGE_KEY = 'auth'
+const LOGIN_KEY = 'auth'
+const HAS_LOGGED_IN_BEFORE = 'HAS_LOGGED_IN_BEFORE'
 
 export type UpdateUserProps = {
   username: string
@@ -16,6 +19,17 @@ class AuthModel {
   public user: any = {}
   public has_been_logged_out = false
 
+  getRedirectUri() {
+    const DOMAIN = `${window.location.origin}`
+    return isSafari
+      ? `${DOMAIN}/auth/apple_authorize`
+      : `${DOMAIN}/auth/apple_authorize_chrome`
+  }
+
+  hasEverLoggedIn =
+    typeof window !== 'undefined' &&
+    !!localStorage.getItem(HAS_LOGGED_IN_BEFORE)
+
   constructor() {
     if (isNode) {
       this.isLoggedIn = true
@@ -26,7 +40,7 @@ class AuthModel {
   }
 
   checkForExistingLogin() {
-    const json = localStorage.getItem(BROWSER_STORAGE_KEY)
+    const json = localStorage.getItem(LOGIN_KEY)
     if (json != null) {
       const auth = JSON.parse(json)
       this.jwt = auth.token
@@ -108,6 +122,7 @@ class AuthModel {
         `Error registering: ${response.status} ${response.statusText}`
       )
     }
+    localStorage.setItem(HAS_LOGGED_IN_BEFORE, 'true')
     return [response.status, response.statusText] as const
   }
 
@@ -128,8 +143,9 @@ class AuthModel {
     this.isLoggedIn = true
     this.jwt = data.token
     this.user = data.user
+    localStorage.setItem(HAS_LOGGED_IN_BEFORE, 'true')
     localStorage.setItem(
-      BROWSER_STORAGE_KEY,
+      LOGIN_KEY,
       JSON.stringify({
         token: this.jwt,
         user: this.user,
@@ -141,12 +157,10 @@ class AuthModel {
 
   // mostly same as login
   async appleAuth(authorization: { id_token: string; code: string }) {
-    const response = await this.api(
-      'post',
-      '/auth/apple_authorize',
-      authorization
-    )
-
+    const response = await this.api('post', '/auth/apple_verify', {
+      ...authorization,
+      redirectUri: Auth.getRedirectUri(),
+    })
     if (response.status != 201 && response.status != 200) {
       console.error(`Couldn't login apple auth`)
       return [response.status, response.statusText] as const
@@ -157,7 +171,7 @@ class AuthModel {
     this.jwt = data.token
     this.user = data.user
     localStorage.setItem(
-      BROWSER_STORAGE_KEY,
+      LOGIN_KEY,
       JSON.stringify({
         token: this.jwt,
         user: this.user,
@@ -171,7 +185,7 @@ class AuthModel {
     this.isLoggedIn = false
     this.jwt = ''
     this.user = null
-    localStorage.removeItem(BROWSER_STORAGE_KEY)
+    localStorage.removeItem(LOGIN_KEY)
   }
 }
 

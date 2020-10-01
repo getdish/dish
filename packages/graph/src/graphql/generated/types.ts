@@ -3877,7 +3877,7 @@ export type t_review = FieldsType<
       },
       t_review_tag_sentence_aggregate
     >
-    source: t_String
+    source?: t_String | null
     tag?: t_tag | null
     tag_id?: t_uuid | null
     text?: t_String | null
@@ -6394,7 +6394,7 @@ export type t_user = FieldsType<
     about?: t_String | null
     apple_email?: t_String | null
     apple_refresh_token?: t_String | null
-    apple_secret?: t_String | null
+    apple_token?: t_String | null
     apple_uid?: t_String | null
     avatar?: t_String | null
     charIndex: t_Int
@@ -6525,7 +6525,7 @@ export type user_bool_exp = {
   about?: String_comparison_exp | null
   apple_email?: String_comparison_exp | null
   apple_refresh_token?: String_comparison_exp | null
-  apple_secret?: String_comparison_exp | null
+  apple_token?: String_comparison_exp | null
   apple_uid?: String_comparison_exp | null
   avatar?: String_comparison_exp | null
   charIndex?: Int_comparison_exp | null
@@ -6563,7 +6563,7 @@ export type user_insert_input = {
   about?: string | null
   apple_email?: string | null
   apple_refresh_token?: string | null
-  apple_secret?: string | null
+  apple_token?: string | null
   apple_uid?: string | null
   avatar?: string | null
   charIndex?: number | null
@@ -6589,7 +6589,7 @@ export type t_user_max_fields = FieldsType<
     about?: t_String | null
     apple_email?: t_String | null
     apple_refresh_token?: t_String | null
-    apple_secret?: t_String | null
+    apple_token?: t_String | null
     apple_uid?: t_String | null
     avatar?: t_String | null
     charIndex?: t_Int | null
@@ -6613,7 +6613,7 @@ export type user_max_order_by = {
   about?: order_by | null
   apple_email?: order_by | null
   apple_refresh_token?: order_by | null
-  apple_secret?: order_by | null
+  apple_token?: order_by | null
   apple_uid?: order_by | null
   avatar?: order_by | null
   charIndex?: order_by | null
@@ -6637,7 +6637,7 @@ export type t_user_min_fields = FieldsType<
     about?: t_String | null
     apple_email?: t_String | null
     apple_refresh_token?: t_String | null
-    apple_secret?: t_String | null
+    apple_token?: t_String | null
     apple_uid?: t_String | null
     avatar?: t_String | null
     charIndex?: t_Int | null
@@ -6661,7 +6661,7 @@ export type user_min_order_by = {
   about?: order_by | null
   apple_email?: order_by | null
   apple_refresh_token?: order_by | null
-  apple_secret?: order_by | null
+  apple_token?: order_by | null
   apple_uid?: order_by | null
   avatar?: order_by | null
   charIndex?: order_by | null
@@ -6715,7 +6715,7 @@ export type user_order_by = {
   about?: order_by | null
   apple_email?: order_by | null
   apple_refresh_token?: order_by | null
-  apple_secret?: order_by | null
+  apple_token?: order_by | null
   apple_uid?: order_by | null
   avatar?: order_by | null
   charIndex?: order_by | null
@@ -6745,7 +6745,7 @@ type t_user_select_column = EnumType<
   | 'about'
   | 'apple_email'
   | 'apple_refresh_token'
-  | 'apple_secret'
+  | 'apple_token'
   | 'apple_uid'
   | 'avatar'
   | 'charIndex'
@@ -6768,7 +6768,7 @@ export type user_set_input = {
   about?: string | null
   apple_email?: string | null
   apple_refresh_token?: string | null
-  apple_secret?: string | null
+  apple_token?: string | null
   apple_uid?: string | null
   avatar?: string | null
   charIndex?: number | null
@@ -6863,7 +6863,7 @@ type t_user_update_column = EnumType<
   | 'about'
   | 'apple_email'
   | 'apple_refresh_token'
-  | 'apple_secret'
+  | 'apple_token'
   | 'apple_uid'
   | 'avatar'
   | 'charIndex'
@@ -8447,7 +8447,7 @@ export enum user_select_column {
   about = 'about',
   apple_email = 'apple_email',
   apple_refresh_token = 'apple_refresh_token',
-  apple_secret = 'apple_secret',
+  apple_token = 'apple_token',
   apple_uid = 'apple_uid',
   avatar = 'avatar',
   charIndex = 'charIndex',
@@ -8494,7 +8494,7 @@ export enum user_update_column {
   about = 'about',
   apple_email = 'apple_email',
   apple_refresh_token = 'apple_refresh_token',
-  apple_secret = 'apple_secret',
+  apple_token = 'apple_token',
   apple_uid = 'apple_uid',
   avatar = 'avatar',
   charIndex = 'charIndex',

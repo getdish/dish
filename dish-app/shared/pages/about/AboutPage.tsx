@@ -1,7 +1,6 @@
 import {
   AbsoluteVStack,
   Divider,
-  HStack,
   Paragraph,
   Spacer,
   Text,
@@ -13,13 +12,13 @@ import { useStore } from '@dish/use-store'
 import React, { useEffect } from 'react'
 import { Image } from 'react-native'
 
-import dontPanic from '../../../shared/assets/dont-panic.svg'
 import { StackItemProps } from '../../AppStackView'
+import dishNeon from '../../assets/dish-neon.jpg'
+import dontPanic from '../../assets/dont-panic.svg'
 import { BottomDrawerStore } from '../../BottomDrawerStore'
-import { bg, brandColorDark, lightGreen, lightYellow } from '../../colors'
+import { bgLight, brandColorDark, lightGreen, lightYellow } from '../../colors'
 import { HomeStateItemAbout } from '../../state/home-types'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { Logo } from '../../views/Logo'
 import { StackDrawer } from '../../views/StackDrawer'
 import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
@@ -52,57 +51,82 @@ export default function AboutPage({
   return (
     <StackDrawer closable title="About Dish">
       <ContentScrollView
+        paddingTop={20}
         style={{
-          paddingTop: 25,
-          paddingHorizontal: '5%',
           flex: 1,
         }}
       >
-        <AbsoluteVStack
-          zIndex={1}
-          top={-30}
-          right={-70}
-          width={150}
-          height={150}
-          transform={[{ rotate: '12deg' }]}
-        >
-          <Image
-            style={{ width: '100%', height: '100%' }}
-            source={{ uri: dontPanic }}
-            resizeMode="contain"
-          />
-        </AbsoluteVStack>
-        <VStack spacing="xxl">
-          <HStack maxWidth="100%" alignItems="center">
-            <Divider flex />
-            <Spacer />
-            <Logo scale={2} color={bg} />
-            <Spacer />
-            <Divider flex />
-          </HStack>
-
-          <VStack spacing="xl">
-            <Paragraph textAlign="center" size={1.5} fontWeight="600">
+        <VStack spacing="xl">
+          <VStack
+            marginHorizontal={15}
+            borderRadius={20}
+            paddingBottom={20}
+            backgroundColor="#000"
+            shadowColor="#000"
+            shadowOpacity={0.1}
+            shadowRadius={10}
+            shadowOffset={{ height: 10, width: 0 }}
+            maxWidth="100%"
+            alignItems="center"
+            position="relative"
+          >
+            <AbsoluteVStack
+              zIndex={1}
+              bottom={-34}
+              right={-35}
+              width={150}
+              height={150}
+              transform={[{ rotate: '12deg' }]}
+            >
+              <Image
+                style={{ width: '100%', height: '100%' }}
+                source={{ uri: dontPanic }}
+                resizeMode="contain"
+              />
+            </AbsoluteVStack>
+            <Image
+              source={{ uri: dishNeon }}
+              style={{
+                width: 261 * 1.5,
+                height: 161 * 1.5,
+                marginTop: -26,
+                marginBottom: -44,
+              }}
+            />
+            <Paragraph
+              zIndex={10}
+              color="#fff"
+              textAlign="center"
+              size={1.25}
+              fontWeight="300"
+            >
               More fun exploring the world
             </Paragraph>
+          </VStack>
 
+          <VStack paddingHorizontal={15} spacing="xl">
             <Paragraph
+              backgroundColor={bgLight}
+              borderRadius={20}
+              paddingVertical={10}
               fontStyle="italic"
-              size="xxxl"
+              size="xxl"
               fontWeight="300"
+              textAlign="center"
               color={brandColorDark}
             >
-              A food guide to the 💎s of the world should feel more like a{' '}
+              A food app like a{' '}
               <Text display="inline" fontWeight="600">
-                fun Pokédex
-              </Text>{' '}
-              that really gets you.
+                Pokédex
+              </Text>
+              :<br /> fun, personal, stats that matter.
             </Paragraph>
 
             <Paragraph size="xl">
-              We're building a modern &ldquo;Hitchhikers guide to
-              gastronomy&rdquo;, if you will. A smart guide for great food
-              around the world. Dish was born from two frustrations:
+              We're building a modern{' '}
+              <TextStrong>Hitchhikers guide to gastronomy</TextStrong>, if you
+              will. A guide and community for great food around the world. Dish
+              was born from two frustrations:
             </Paragraph>
 
             <UnorderedList spacing="xs">
@@ -111,8 +135,8 @@ export default function AboutPage({
                 ratings.
               </UnorderedListItem>
               <UnorderedListItem size="lg">
-                Needing one app to <em>find</em> what's good & three others to
-                see if it delivers.
+                Needing one app to <em>find</em> what's good & others to see if
+                it delivers.
               </UnorderedListItem>
             </UnorderedList>
 
@@ -126,11 +150,11 @@ export default function AboutPage({
 
             <Paragraph size="lg">
               Our answer:{' '}
-              <TextStrong display="inline">
-                5 star ratings may not be what we need
+              <TextStrong>
+                a single 5 star rating is not what we need
               </TextStrong>
-              . They collapse everything you care about into, well, 5 stars. But
-              what you want when ordering{' '}
+              . It reduces everything you care about too much. What you want
+              when ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -160,35 +184,31 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              are <em>unique</em>: whether it's a specific dish, delivery speed,
-              vibe, ambiance - it totally depends on your mood.
+              are <em>unique</em>: a specific dish, delivery speed, vibe,
+              ambiance - it totally depends on your mood.
+            </Paragraph>
+
+            <Paragraph size="lg">So, we're throwing away the stars.</Paragraph>
+
+            <Paragraph size="lg">
+              Dish sorts it's results by points. When you search "quick cheap
+              pizza", we take positive and negative sentiment from all reviews
+              on "quick", "cheap" and "pizza", and add them together.
             </Paragraph>
 
             <Paragraph size="lg">
-              So, we're taking a chance and throwing away 5 stars altogether.
-            </Paragraph>
-
-            <Paragraph size="lg">
-              Instead, Dish sorts it's results by points, based on what you
-              search. When you search "quick cheap pizza", we take positive and
-              negative opinions across all reviews on "quick", "cheap" and
-              "pizza", and add them together.
-            </Paragraph>
-
-            <Paragraph size="lg">
-              Of course, you can upvote and downvote on every factor. In fact,
-              when you write a review, we turn your words into votes (that you
-              can change before submitting). We let people speak their minds
-              naturally and then count{' '}
-              <TextStrong display="inline">
-                what they actually say into votes
+              Then, you can upvote and downvote on each. When you write a
+              review, we turn your words into votes (that you can fix before
+              submitting).{' '}
+              <TextStrong>
+                Just speak your mind - we turn what you say into votes
               </TextStrong>
               .
             </Paragraph>
 
             <Paragraph size="lg">
-              Dish sources reviews from many of the top food review sites. Much
-              like RottenTomatoes does for movies, we do for food. We also crawl{' '}
+              Dish also sources reviews from top food review sites. It's like
+              RottenTomatoes, but for food. We also crawl{' '}
               <Text
                 lineHeight={24}
                 borderBottomColor="#eee"
@@ -196,44 +216,31 @@ export default function AboutPage({
                 display="inline"
               >
                 every delivery service
-              </Text>{' '}
-              - so finally, you don't need to flip between apps to find what you
-              want.
+              </Text>
+              .
             </Paragraph>
 
             <Paragraph size="lg">
-              But more than just putting together a nice app, we want to build
-              something fun and personal. A private guide that caters to you,
-              where you can collect, discover and curate local gems, see
-              friends' and chef's picks, get tips on where to go and what to
-              order, and filter by your mood or desire. Our goals are to:
+              We want to build something fun and personal. A guide that caters
+              to you. Collect, discover and curate local gems, see friend and
+              chef picks, get tips on where to go and what to order, and filter
+              by mood and desire. Our goal:
             </Paragraph>
 
             <UnorderedList spacing>
               <UnorderedListItem size="lg">
-                <TextStrong display="inline">
-                  Design a better guide 🎙
-                </TextStrong>{' '}
-                - With natural langauge analysis, threaded discussions, voting,
-                and specialization, we want to prove that you "map-reduce" an
-                active community into a "current best of" guide.
+                <TextStrong>Design a better guide 🎙</TextStrong> - With natural
+                langauge analysis, threaded discussions, voting, and
+                specialization, we want to prove that you "map-reduce" an active
+                community into a "current best of" guide.
               </UnorderedListItem>
               <UnorderedListItem size="lg">
-                <TextStrong display="inline">
-                  Enable unique, high quality restaurants ✨
-                </TextStrong>
-                - Instead of having to please everyone to try for 5 stars
-                overall, restaurants should be rewarded for doing one or two
-                things exceptionally well.
+                <TextStrong>Enable specialized restaurants ✨</TextStrong>-
+                Instead of having to please everyone to try for 5 stars overall,
+                restaurants should be rewarded for doing one or two things
+                exceptionally well.
               </UnorderedListItem>
             </UnorderedList>
-
-            <Paragraph size="lg">
-              The ultimate goal is to create a community-powered "Hitchhiker's
-              Guide to Gastronomy", or, a Pokédex for poke: a guide that feels
-              alive and personalized, that really understands you and the world
-              around you.
-            </Paragraph>
 
             <Paragraph size="xxl">Enjoy! 🌮🍜</Paragraph>
 

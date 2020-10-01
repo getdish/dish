@@ -5,6 +5,8 @@ import { Text, TextProps } from './Text'
 
 const defaultProps: TextProps = {
   fontWeight: '600',
+  // @ts-ignore
+  display: 'inline',
 }
 
 export const TextStrong = (props: TextProps) => {

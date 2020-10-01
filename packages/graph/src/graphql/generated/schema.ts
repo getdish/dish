@@ -7915,7 +7915,7 @@ export const schema = {
           )
         },
         get source() {
-          return new FieldNode(schema.String, undefined, false)
+          return new FieldNode(schema.String, undefined, true)
         },
         get tag() {
           return new FieldNode(schema.tag, undefined, true)
@@ -12703,7 +12703,7 @@ export const schema = {
         get apple_refresh_token() {
           return new FieldNode(schema.String, undefined, true)
         },
-        get apple_secret() {
+        get apple_token() {
           return new FieldNode(schema.String, undefined, true)
         },
         get apple_uid() {
@@ -12987,7 +12987,7 @@ export const schema = {
         get apple_refresh_token() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
-        get apple_secret() {
+        get apple_token() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
         get apple_uid() {
@@ -13058,7 +13058,7 @@ export const schema = {
         get apple_refresh_token() {
           return new InputNodeField(schema.String, true)
         },
-        get apple_secret() {
+        get apple_token() {
           return new InputNodeField(schema.String, true)
         },
         get apple_uid() {
@@ -13116,7 +13116,7 @@ export const schema = {
         get apple_refresh_token() {
           return new FieldNode(schema.String, undefined, true)
         },
-        get apple_secret() {
+        get apple_token() {
           return new FieldNode(schema.String, undefined, true)
         },
         get apple_uid() {
@@ -13171,7 +13171,7 @@ export const schema = {
         get apple_refresh_token() {
           return new InputNodeField(schema.order_by, true)
         },
-        get apple_secret() {
+        get apple_token() {
           return new InputNodeField(schema.order_by, true)
         },
         get apple_uid() {
@@ -13223,7 +13223,7 @@ export const schema = {
         get apple_refresh_token() {
           return new FieldNode(schema.String, undefined, true)
         },
-        get apple_secret() {
+        get apple_token() {
           return new FieldNode(schema.String, undefined, true)
         },
         get apple_uid() {
@@ -13278,7 +13278,7 @@ export const schema = {
         get apple_refresh_token() {
           return new InputNodeField(schema.order_by, true)
         },
-        get apple_secret() {
+        get apple_token() {
           return new InputNodeField(schema.order_by, true)
         },
         get apple_uid() {
@@ -13382,7 +13382,7 @@ export const schema = {
         get apple_refresh_token() {
           return new InputNodeField(schema.order_by, true)
         },
-        get apple_secret() {
+        get apple_token() {
           return new InputNodeField(schema.order_by, true)
         },
         get apple_uid() {
@@ -13453,7 +13453,7 @@ export const schema = {
         get apple_refresh_token() {
           return new InputNodeField(schema.String, true)
         },
-        get apple_secret() {
+        get apple_token() {
           return new InputNodeField(schema.String, true)
         },
         get apple_uid() {

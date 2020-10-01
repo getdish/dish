@@ -261,15 +261,6 @@ tables:
         column_mapping:
           tag_id: tag_id
           restaurant_id: restaurant_id
-  - name: sentences
-    using:
-      manual_configuration:
-        remote_table:
-          schema: public
-          name: review_tag_sentence
-        column_mapping:
-          tag_id: tag_id
-          restaurant_id: restaurant_id
   insert_permissions:
   - role: contributor
     permission:
@@ -395,7 +386,6 @@ tables:
       - user_id
       - username
       filter: {}
-      allow_aggregations: true
   - role: contributor
     permission:
       columns:
@@ -410,7 +400,6 @@ tables:
       - user_id
       - username
       filter: {}
-      allow_aggregations: true
   - role: user
     permission:
       columns:
@@ -427,7 +416,6 @@ tables:
       - user_id
       - username
       filter: {}
-      allow_aggregations: true
   update_permissions:
   - role: contributor
     permission:

@@ -20,9 +20,9 @@ export const DarkModal = ({
       zIndex={10000000000}
       alignItems="center"
       justifyContent="center"
-      paddingHorizontal="4vw"
-      paddingVertical="1vh"
-      backgroundColor="rgba(50,20,40,0.8)"
+      paddingHorizontal="2%"
+      paddingVertical="2%"
+      backgroundColor="rgba(60,30,50,0.9)"
       opacity={hide ? 0 : 1}
       pointerEvents={hide ? 'none' : 'auto'}
       transform={[{ translateY: 0 }]}
@@ -30,15 +30,15 @@ export const DarkModal = ({
       <AnimatedVStack
         maxWidth={450}
         maxHeight={680}
-        width="99%"
-        height="99%"
+        width="100%"
+        height="100%"
         animateState={hide ? 'out' : 'in'}
       >
         <VStack
           width="100%"
           height="100%"
           borderWidth={1}
-          borderColor={`${brandColor}55`}
+          borderColor={`${brandColor}88`}
           position="relative"
           backgroundColor="#000"
           borderRadius={25}

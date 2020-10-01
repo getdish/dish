@@ -105,18 +105,18 @@ const recentSearches: { tags: Tag[] }[] = [
       { name: 'Sushi', icon: '🍣', type: 'dish' },
     ],
   },
-  {
-    tags: [
-      { ...tagLenses[3], displayName: 'Green', icon: '🥬', type: 'lense' },
-      { name: 'Delivery', icon: '🚗', type: 'filter' },
-      { name: 'Sandwich', icon: '🥪', type: 'dish' },
-    ],
-  },
-  {
-    tags: [
-      { ...tagLenses[0], displayName: 'Great', type: 'lense' },
-      { name: 'price-low', displayName: 'Cheap', type: 'filter' },
-      { name: 'Thai', icon: '🇹🇭', type: 'country' },
-    ],
-  },
+  // {
+  //   tags: [
+  //     { ...tagLenses[3], displayName: 'Green', icon: '🥬', type: 'lense' },
+  //     { name: 'Delivery', icon: '🚗', type: 'filter' },
+  //     { name: 'Sandwich', icon: '🥪', type: 'dish' },
+  //   ],
+  // },
+  // {
+  //   tags: [
+  //     { ...tagLenses[0], displayName: 'Great', type: 'lense' },
+  //     { name: 'price-low', displayName: 'Cheap', type: 'filter' },
+  //     { name: 'Thai', icon: '🇹🇭', type: 'country' },
+  //   ],
+  // },
 ]
