@@ -130,7 +130,7 @@ export class Self extends WorkerJob {
     this._job_identifier_restaurant_id = id
     const restaurant = await restaurantFindOneWithTags({ id: id })
     if (!restaurant) {
-      sentryMessage('SELF CRAWLERL restaurantFindOneWithTags() null', {
+      sentryMessage('SELF CRAWLER restaurantFindOneWithTags() null', {
         hasura: global['latestUnhandledGQLessRejection']?.errors[0]?.message,
         mergeAllID: id,
       })
@@ -402,6 +402,7 @@ export class Self extends WorkerJob {
     for (const hours of this.restaurant.hours ?? ([] as any)) {
       for (const session of hours.hoursInfo.hours) {
         const times = session.split(' - ')
+        if (!times || times.length == 0) continue
         const _open = times[0].replace(' ', '')
         const _close = times[1].replace(' ', '')
         const open = this._toPostgresTime(hours.hoursInfo.day, _open)

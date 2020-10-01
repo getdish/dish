@@ -50,7 +50,6 @@ export async function photoUpsert(photos: PhotoXref[]) {
     p.photo.origin = clone(p.photo?.url)
     delete p.photo.url
   })
-
   await photoXrefUpsert(photos)
   await postUpsert(photos)
 }
@@ -392,8 +391,9 @@ async function findUnassessedPhotos(photos: PhotoXref[]): Promise<string[]> {
     unassessed_photos = await unassessedPhotosForTag(photos[0].tag_id)
   }
   return unassessed_photos.map((p) => {
-    if (!p.photo || !p.photo.url)
+    if (!p.photo || !p.photo.url) {
       throw 'findUnassessedPhotos(): Photo.url NOT NULL violation'
+    }
     return p.photo.url
   })
 }

@@ -140,6 +140,12 @@ export class Tagging {
       ) league
       WHERE id = '${this.crawler.restaurant.id}'`
     const result = await this.crawler.main_db.query(query)
+    if (result.rows.length == 0) {
+      sentryMessage('No rank for tag', {
+        restaurant_id: this.crawler.restaurant.id,
+        tag: tag_name,
+      })
+    }
     const rank = parseInt(result.rows[0].rank)
     return rank
   }
