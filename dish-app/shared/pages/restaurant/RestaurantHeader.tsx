@@ -13,6 +13,7 @@ import { LinkButton } from '../../views/ui/LinkButton'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
+import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 import RestaurantRatingView from './RestaurantRatingView'
 
 type RestaurantHeaderProps = {
@@ -21,6 +22,7 @@ type RestaurantHeaderProps = {
   after?: any
   afterAddress?: any
   size?: 'sm' | 'md'
+  showImages?: boolean
 }
 
 export const RestaurantHeader = (props: RestaurantHeaderProps) => {
@@ -47,99 +49,98 @@ const RestaurantHeaderContent = memo(
       restaurantSlug,
       after,
       afterAddress,
+      showImages,
       size,
     }: RestaurantHeaderProps) => {
-      const isReallySmall = useIsReallyNarrow()
       const restaurant = useRestaurantQuery(restaurantSlug)
       const om = useOvermind()
       // const [r, g, b] = useCurrentLenseColor()
-      const padding = <Spacer size={size === 'sm' ? 10 : 20} />
+      const paddingPx = size === 'sm' ? 10 : 30
+      const spacer = <Spacer size={paddingPx} />
       const restaurantId = state?.restaurantId ?? restaurant.id
+      const nameLen = restaurant.name?.length
       return (
         <VStack width="100%">
-          <VStack
-            borderTopRightRadius={drawerBorderRadius - 1}
-            borderTopLeftRadius={drawerBorderRadius - 1}
-            maxWidth="100%"
-            position="relative"
-            // a little extra pad at top looks nice
-            paddingTop={15}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{
+              width: '100%',
+            }}
+            contentContainerStyle={{
+              minWidth: '100%',
+            }}
           >
-            {padding}
-            <HStack alignItems="center">
-              {padding}
-              <HStack position="relative">
-                <RestaurantRatingView
-                  size="lg"
-                  restaurantSlug={restaurantSlug}
-                />
-              </HStack>
-              <Spacer size={20} />
-              <VStack flex={10}>
-                <Text
-                  selectable
-                  lineHeight={42}
-                  fontSize={
-                    (restaurant.name?.length > 21 ? 30 : 36) *
-                    (size === 'sm' ? 0.8 : 1)
-                  }
-                  fontWeight="700"
-                  paddingRight={30}
+            <VStack
+              borderTopRightRadius={drawerBorderRadius - 1}
+              borderTopLeftRadius={drawerBorderRadius - 1}
+              maxWidth="100%"
+              position="relative"
+              // paddingVertical={15}
+            >
+              <HStack alignItems="flex-end">
+                <HStack
+                  maxWidth={480}
+                  paddingTop={paddingPx * 1.5}
+                  alignItems="center"
                 >
-                  {restaurant.name}
-                </Text>
-                <Spacer size="sm" />
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <HStack alignItems="center" flexWrap="wrap" paddingRight={20}>
-                    <RestaurantAddressLinksRow
-                      currentLocationInfo={
-                        state?.currentLocationInfo ??
-                        om.state.home.currentState.currentLocationInfo
-                      }
-                      showMenu
+                  {spacer}
+                  <HStack position="relative">
+                    <RestaurantRatingView
                       size="lg"
                       restaurantSlug={restaurantSlug}
                     />
-                    <Spacer size="xs" />
-                    <RestaurantAddress
-                      size="sm"
-                      address={restaurant.address ?? ''}
-                      currentLocationInfo={state?.currentLocationInfo ?? null}
-                    />
-                    {afterAddress}
                   </HStack>
-                </ScrollView>
-              </VStack>
+                  <Spacer size={20} />
+                  <VStack flex={10}>
+                    <Text
+                      selectable
+                      lineHeight={42}
+                      fontSize={
+                        (nameLen > 24 ? 26 : nameLen > 18 ? 30 : 36) *
+                        (size === 'sm' ? 0.8 : 1)
+                      }
+                      fontWeight="700"
+                    >
+                      {restaurant.name}
+                    </Text>
+                    <Spacer size="sm" />
+                    <HStack alignItems="center" paddingRight={20}>
+                      <VStack>
+                        <RestaurantAddressLinksRow
+                          currentLocationInfo={
+                            state?.currentLocationInfo ??
+                            om.state.home.currentState.currentLocationInfo
+                          }
+                          showMenu
+                          size="lg"
+                          restaurantSlug={restaurantSlug}
+                        />
+                        <Spacer size="md" />
+                        <RestaurantAddress
+                          size="sm"
+                          address={restaurant.address ?? ''}
+                          currentLocationInfo={
+                            state?.currentLocationInfo ?? null
+                          }
+                        />
+                        {afterAddress}
+                        {spacer}
+                      </VStack>
+                    </HStack>
+                  </VStack>
+                </HStack>
 
-              {!isReallySmall && (
-                <>
-                  {!after && !!restaurant.image && (
-                    <>
-                      <Image
-                        resizeMode="cover"
-                        source={{ uri: restaurant.image }}
-                        style={{
-                          marginVertical: -40,
-                          marginRight: -30,
-                          height: 170,
-                          width: 170,
-                          borderRadius: 100,
-                        }}
-                      />
-                    </>
-                  )}
-                  {after && (
-                    <>
-                      <VStack maxWidth="50%">{after}</VStack>
-                      {padding}
-                    </>
-                  )}
-                </>
-              )}
-            </HStack>
-            {padding}
-          </VStack>
-          <SmallTitle marginVertical={-10} divider="center">
+                {showImages && (
+                  <>
+                    <Spacer size={40} />
+                    <RestaurantPhotosRow restaurantSlug={restaurantSlug} />
+                  </>
+                )}
+              </HStack>
+            </VStack>
+          </ScrollView>
+          <SmallTitle marginTop={-23} marginBottom={0} divider="center">
             <HStack spacing="lg">
               <CircleButton>
                 <Suspense fallback={null}>

@@ -3,9 +3,10 @@ import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { ScrollView } from 'react-native'
 
-import { bgLight, brandColor } from '../../colors'
+import { bg, bgLight, brandColor } from '../../colors'
 import { drawerWidthMax } from '../../constants'
 import { useIsNarrow } from '../../hooks/useIs'
+import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { CloseButton } from '../../views/ui/CloseButton'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
@@ -81,7 +82,7 @@ export const RestaurantRatingBreakdown = memo(
             backgroundColor={bgLight}
             overflow="hidden"
           >
-            <SmallTitle color={brandColor}>Points</SmallTitle>
+            <SmallTitle color={bg}>Points</SmallTitle>
             <RestaurantPointsBreakdown
               showTable={showScoreTable}
               restaurantSlug={restaurantSlug}
@@ -89,13 +90,26 @@ export const RestaurantRatingBreakdown = memo(
 
             <Spacer size="sm" />
 
-            <SmallTitle color={brandColor}>Lense Votes</SmallTitle>
+            <SmallTitle color={bg}>Lense Votes</SmallTitle>
             <Spacer />
             <RestaurantLenseVote restaurantId={restaurantId} />
 
             <Spacer size="xl" />
 
-            <SmallTitle color={brandColor}>Dishes</SmallTitle>
+            <SmallTitle color={bg}>Top Tags</SmallTitle>
+            <Spacer />
+            <RestaurantTagsRow
+              size="sm"
+              restaurantSlug={restaurantSlug}
+              restaurantId={restaurantId}
+              spacing={0}
+              grid
+              max={5}
+            />
+
+            <Spacer size="xl" />
+
+            <SmallTitle color={bg}>Dishes</SmallTitle>
           </VStack>
 
           <VStack

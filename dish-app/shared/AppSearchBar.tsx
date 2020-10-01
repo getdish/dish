@@ -17,6 +17,7 @@ import { AppSearchLocationInput } from './AppSearchLocationInput'
 import {
   pageWidthMax,
   searchBarHeight,
+  searchBarMaxWidth,
   searchBarTopOffset,
   zIndexSearchBarFloating,
 } from './constants'
@@ -96,7 +97,7 @@ export const HomeSearchBarFloating = () => {
             flex={1}
             pointerEvents="auto"
             width="100%"
-            maxWidth={pageWidthMax - 200}
+            maxWidth={searchBarMaxWidth}
             position="relative"
           >
             {/* shadow */}

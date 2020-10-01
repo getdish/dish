@@ -69,21 +69,9 @@ import { StackViewProps } from '../StackViewProps'
 import { getTitleForState } from './getTitleForState'
 import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
-import { titleHeight, topBarVPad } from './titleHeight'
+import { titleHeight } from './titleHeight'
 
 type Props = StackViewProps<HomeStateItemSearch>
-
-const useSpacing = () => {
-  const isSmall = useIsNarrow()
-  const paddingTop = isSmall
-    ? topBarVPad
-    : titleHeight - searchBarTopOffset + topBarVPad + 4
-  return {
-    paddingTop,
-    titleHeight,
-    isSmall,
-  }
-}
 
 const SearchPagePropsContext = createContext<Props | null>(null)
 
@@ -345,7 +333,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         lowerCase: false,
       }
     )
-    const paddingTop = isSmall ? 0 : 50
+    const paddingTop = isSmall ? 2 : titleHeight
     const titleLen = (title + subTitle).length
     const titleScale =
       titleLen > 70 ? 0.75 : titleLen > 60 ? 0.85 : titleLen > 50 ? 0.95 : 1

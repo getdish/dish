@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
-import { ExternalLink } from '@dish/react-feather'
-import { Box, HStack, HoverablePopover, Text } from '@dish/ui'
+import { ExternalLink, Link2, PhoneCall } from '@dish/react-feather'
+import { Box, HStack, HoverablePopover, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -8,6 +8,7 @@ import { GeocodePlace } from '../../state/home-types'
 import { SmallCircleButton } from '../../views/ui/CloseButton'
 import { Link } from '../../views/ui/Link'
 import { SmallButton } from '../../views/ui/SmallButton'
+import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 
 export type AddressSize = 'lg' | 'md' | 'sm' | 'xs'
 
@@ -28,7 +29,6 @@ export const RestaurantAddressLinksRow = memo(
     }) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
       const fontSize = size == 'lg' ? 16 : 14
-      const sep = ' '
 
       const linkElements = (
         <HStack alignItems="center" spacing="xs">
@@ -38,19 +38,25 @@ export const RestaurantAddressLinksRow = memo(
             </SmallButton>
           )}
           {!!restaurant.telephone && (
-            <SmallButton href={`tel:${restaurant.telephone}`}>Call</SmallButton>
+            <SmallButton href={`tel:${restaurant.telephone}`}>
+              <PhoneCall size={16} />
+            </SmallButton>
           )}
           {!!restaurant.website && (
             <SmallButton href={restaurant.website ?? ''} target="_blank">
-              Website
+              <Link2 size={16} />
             </SmallButton>
           )}
+          {/* <RestaurantDeliveryButtons
+            showLabels
+            restaurantSlug={restaurantSlug}
+          /> */}
         </HStack>
       )
 
       return (
         <Text color="#999" fontSize={fontSize}>
-          <HStack alignItems="center" spacing>
+          <VStack>
             {!!(currentLocationInfo && showAddress) && (
               <Text selectable ellipse fontSize={14} maxWidth={190}>
                 {getAddressText(
@@ -75,7 +81,7 @@ export const RestaurantAddressLinksRow = memo(
             )}
 
             {size !== 'sm' && linkElements}
-          </HStack>
+          </VStack>
         </Text>
       )
     }

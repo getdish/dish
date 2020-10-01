@@ -471,7 +471,7 @@ const RestaurantListItemContent = memo(
 
               <VStack
                 flex={1}
-                borderBottomColor="#eee"
+                borderBottomColor="#fafafa"
                 borderBottomWidth={1}
                 transform={[{ translateY: -0.5 }]}
               />
@@ -545,11 +545,9 @@ const RestaurantPeekDishes = memo(
       >
         {photos.map((photo, i) => {
           if (!isLoaded) {
-            if (i > 1) {
+            if (i > 2) {
               return (
-                <Squircle width={dishSize * 0.8} height={dishSize} key={i}>
-                  <Text>...</Text>
-                </Squircle>
+                <Squircle width={dishSize * 0.8} height={dishSize} key={i} />
               )
             }
           }

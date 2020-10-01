@@ -6,7 +6,8 @@ import { Image } from 'react-native'
 import { bgLight } from '../../colors'
 import { isWeb } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
+import { SmallButton } from '../../views/ui/SmallButton'
+import { getRestaurantDeliverySources } from './getRestaurantDeliverySources'
 
 type Props = StackProps & {
   restaurantSlug: string
@@ -18,23 +19,17 @@ export const RestaurantDeliveryButtons = memo(
   graphql(({ restaurantSlug, showLabels, label, ...props }: Props) => {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const restaurantSources = restaurant.sources()
-    const sources = Object.keys(restaurantSources ?? {})
-      .map((id) => ({
-        ...thirdPartyCrawlSources[id],
-        ...restaurantSources[id],
-        id,
-      }))
-      .filter((x) => x?.delivery)
+    const sources = getRestaurantDeliverySources(restaurantSources)
 
     if (!sources.length) {
-      return null
+      return <Text>No delivery</Text>
     }
 
     return (
       <HStack flexWrap="wrap" alignItems="center" {...props}>
         {!!label && (
           <Text
-            fontSize={13}
+            fontSize={14}
             color="rgba(0,0,0,0.6)"
             marginRight={12}
             transform={[{ translateY: -1 }]}
@@ -62,24 +57,14 @@ const RestaurantDeliveryButton = ({
   showLabels,
 }: Props & { source: any }) => {
   const contents = (
-    <HStack
-      className="greyed-out"
-      padding={4}
-      paddingHorizontal={4}
-      marginHorizontal={-4}
-      borderRadius={100}
-      alignItems="center"
-      hoverStyle={{
-        backgroundColor: bgLight,
-      }}
-    >
+    <SmallButton href={source.url}>
       <Image
         accessibilityLabel={source.name}
         source={{ uri: source.image }}
         style={{
-          width: showLabels ? 16 : 22,
-          height: showLabels ? 16 : 22,
-          marginHorizontal: showLabels ? 0 : -3,
+          width: showLabels ? 20 : 24,
+          height: showLabels ? 20 : 24,
+          marginHorizontal: showLabels ? -2 : -6,
           marginVertical: -6,
           borderRadius: 40,
           borderWidth: 1,
@@ -89,35 +74,17 @@ const RestaurantDeliveryButton = ({
       {showLabels && (
         <>
           <Spacer size={6} />
-          <Text opacity={1} ellipse fontSize={12} fontWeight="400">
+          <Text opacity={1} ellipse fontSize={16} fontWeight="400">
             {source.name}
           </Text>
         </>
       )}
-    </HStack>
-  )
-
-  // TODO react-native temp make a better <Link /> and no conditional here
-  const children = isWeb ? (
-    <a
-      key={source.name + 'button'}
-      className="see-through"
-      href={source.url}
-      target="_blank"
-      style={{
-        marginBottom: 2,
-        marginTop: 2,
-      }}
-    >
-      {contents}
-    </a>
-  ) : (
-    contents
+    </SmallButton>
   )
 
   if (source.name && !showLabels) {
-    return <Tooltip contents={source.name}>{children}</Tooltip>
+    return <Tooltip contents={source.name}>{contents}</Tooltip>
   }
 
-  return children
+  return contents
 }

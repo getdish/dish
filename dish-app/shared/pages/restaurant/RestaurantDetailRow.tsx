@@ -6,6 +6,7 @@ import { isWeb } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { Link } from '../../views/ui/Link'
 import { SmallLinkButton } from '../../views/ui/SmallButton'
+import { getRestaurantDeliverySources } from './getRestaurantDeliverySources'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 
 export const RestaurantDetailRow = memo(
@@ -24,6 +25,9 @@ export const RestaurantDetailRow = memo(
     }) => {
       const sizeSm = size === 'sm'
       const restaurant = useRestaurantQuery(restaurantSlug)
+      const restaurantSources = getRestaurantDeliverySources(
+        restaurant.sources()
+      )
       const [open_text, open_color, next_time] = openingHours(restaurant)
       const [price_label, price_color, price_range] = priceRange(restaurant)
 
@@ -77,6 +81,7 @@ export const RestaurantDetailRow = memo(
             .map((row, index) => (
               <HStack
                 flex={1}
+                width="33%"
                 {...(sizeSm && {
                   paddingHorizontal: 10,
                 })}
