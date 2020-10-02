@@ -155,11 +155,13 @@ export class HasuraError extends Error {
 
   logErrors(request: RequestInit) {
     const request_string = JSON.stringify(request, null, 2)
-    console.error(this.errors)
-    console.error(
-      `fetch('${endpoint}', '${request_string}')
+    if (process.env.NODE_ENV == 'test') return
+    if (process.env.DISH_ENV != 'production') {
+      console.error(
+        `fetch('${endpoint}', ${request_string})
         .then(x => x.json())
         .then(x => console.log(x))`
-    )
+      )
+    }
   }
 }

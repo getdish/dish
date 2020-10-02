@@ -54,29 +54,30 @@ test.beforeEach(async () => {
 })
 
 test('Normal user cannot delete things', async (t) => {
+  let error: Error
   await Auth.register('tester', 'test@test.com', 'password')
   await Auth.login('tester', 'password')
   Auth.as('user')
 
-  await deleteAllBy('restaurant', 'id', 'example')
-  await sleep(10)
-  t.is(
-    global['latestUnhandledGQLessRejection'].errors[0].message,
-    'field "delete_restaurant" not found in type: \'mutation_root\''
+  error = await t.throwsAsync(() => deleteAllBy('restaurant', 'id', 'example'))
+  t.assert(
+    error.message.includes(
+      'field "delete_restaurant" not found in type: \'mutation_root\''
+    )
   )
 
-  await deleteAllBy('user', 'id', 'example')
-  await sleep(10)
-  t.is(
-    global['latestUnhandledGQLessRejection'].errors[0].message,
-    'field "delete_user" not found in type: \'mutation_root\''
+  error = await t.throwsAsync(() => deleteAllBy('user', 'id', 'example'))
+  t.assert(
+    error.message.includes(
+      'field "delete_user" not found in type: \'mutation_root\''
+    )
   )
 
-  await deleteAllBy('menu_item', 'id', 'example')
-  await sleep(10)
-  t.is(
-    global['latestUnhandledGQLessRejection'].errors[0].message,
-    'field "delete_menu_item" not found in type: \'mutation_root\''
+  error = await t.throwsAsync(() => deleteAllBy('menu_item', 'id', 'example'))
+  t.assert(
+    error.message.includes(
+      'field "delete_menu_item" not found in type: \'mutation_root\''
+    )
   )
 })
 

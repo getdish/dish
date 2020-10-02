@@ -2142,26 +2142,26 @@
   resolved "https://registry.npmjs.org/@o/fast-compare/-/fast-compare-2.7.6.tgz#1d0fedcb27b44e212aafd9e7f94499930499bfb9"
   integrity sha512-YACb8iZqClwjxUBQyjQuXT5L0T/iYOGdkD58q31P04iXyq27BZjdE0k3MiszQ7XezeAdO+WsdmTqaotBbjkbLw==
 
-"@o/gqless-logger@0.0.7":
-  version "0.0.7"
-  resolved "https://registry.npmjs.org/@o/gqless-logger/-/gqless-logger-0.0.7.tgz#179eb94005e5ac9f5071c903c1c1bd29a6e19d70"
-  integrity sha512-putP/OYxwKLbaEm6fTBQdVSZyRxPYKa/i5UZBRVrYdA58DbQDTtxgGQHsp4i+OjDSpeDbYGpeEF8ZbVfpaPH5g==
+"@o/gqless-logger@0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@o/gqless-logger/-/gqless-logger-0.0.9.tgz#78e6701a64dc78d8bc98a4ceb1109a3f182952d0"
+  integrity sha512-bTYYRqU5f0Ew5gyBfidApfrEUTfMiArinY1x9uPxr3P/KAY+C+YCgw+N+t3smS6lMEhK0rN2LPb2SSbLdmmZjA==
   dependencies:
     flatted "^2.0.1"
     to-style "^1.3.3"
     tslib "^1.11.1"
 
-"@o/gqless-react@0.0.7":
-  version "0.0.7"
-  resolved "https://registry.npmjs.org/@o/gqless-react/-/gqless-react-0.0.7.tgz#e50ac05e88450a00f9ab48736eb9d68a8c40ef1c"
-  integrity sha512-2Hks6Z/Lfp+4qOwU3h6DbqqMyEFOCN6PHRdRI40TEeDha/SpAGSSftro1Dm0gSgenuASaeqd6YecvABYYLPpyg==
+"@o/gqless-react@0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@o/gqless-react/-/gqless-react-0.0.9.tgz#c3867f5a54a04f0306d5d72b712098352e2b10d5"
+  integrity sha512-PIIISf9fJX7RezUvEKECp1isoa41TK9WbzN5MfnTcnSkYLYVZP6193nb/crLNr7XxjDPqMft+yFtoQ4uThSTJA==
   dependencies:
     tslib "^2.0.1"
 
-"@o/gqless-schema@0.0.7":
-  version "0.0.7"
-  resolved "https://registry.npmjs.org/@o/gqless-schema/-/gqless-schema-0.0.7.tgz#9bd9c46148444152fa1e8a5ab6e43726a5be623c"
-  integrity sha512-gBpUzkExryanawwnB0a0yo8fZe5U5Po6MG/Q131xPstCByyeA+fbvyOAjLQN4XxzS6TmxaMS1XDrAHOHB2ZvnQ==
+"@o/gqless-schema@0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@o/gqless-schema/-/gqless-schema-0.0.9.tgz#5a325542ab63ebe03eb2ad8811ad08f8f7e7bf1a"
+  integrity sha512-dn9MPg9+Ru9R6JwwdJeRamh1Zjehr0uKqgpavJ+wB54aZ9Hg4Nni6WO0SAsv68MnA6T4lWyBrGJjXUS2QLvvqQ==
   dependencies:
     "@o/gqless-utils" "^0.0.3"
     tslib "^2.0.1"
@@ -2173,10 +2173,10 @@
   dependencies:
     tslib "^2.0.1"
 
-"@o/gqless@0.0.7":
-  version "0.0.7"
-  resolved "https://registry.npmjs.org/@o/gqless/-/gqless-0.0.7.tgz#002a4431e41434ca758636c712fa5ecc586de509"
-  integrity sha512-WYlTgq7m4O2nuGE7tRsXWQqjZ4U36c0qMnNoul8MSyNTV29bZHrFIgy5yuKR91rxQIJzw4CXu6TLkBUDQDn0Sw==
+"@o/gqless@0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@o/gqless/-/gqless-0.0.9.tgz#59f69a821d0f6c3de9d3dd899fbd61483c45cca4"
+  integrity sha512-l6vdQ5sWfD/yTqf1mGFjCs8jhGseQXRRcyL94gZONf7PAINhoNY4QCfobCTIRC5rQuDzMqceJ9D2i8Qnzq5Lvg==
   dependencies:
     "@gqless/utils" "^0.0.1-alpha.26"
     json-stable-stringify "^1.0.1"
