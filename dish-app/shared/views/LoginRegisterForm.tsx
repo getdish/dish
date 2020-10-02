@@ -9,6 +9,7 @@ import {
   Text,
   VStack,
 } from '@dish/ui'
+import { Store, useStore } from '@dish/use-store'
 import { default as React, useCallback, useEffect, useState } from 'react'
 
 import { lightRed } from '../colors'
@@ -34,6 +35,25 @@ const navButtonProps: LinkButtonProps = {
   color: 'rgb(120, 120, 120)',
 }
 
+class AuthFormStore extends Store {
+  static defaultState = {
+    login: '',
+    username: '',
+    email: '',
+    password: '',
+  }
+
+  state = AuthFormStore.defaultState
+
+  setState(state: Partial<AuthFormStore['state']>) {
+    this.state = { ...this.state, ...state }
+  }
+
+  resetState() {
+    this.state = AuthFormStore.defaultState
+  }
+}
+
 export const LoginRegisterForm = ({
   showForm,
   onDidLogin,
@@ -45,13 +65,10 @@ export const LoginRegisterForm = ({
 }) => {
   const om = useOvermind()
   const isLoggedIn = om.state.user.isLoggedIn
+  const store = useStore(AuthFormStore)
   const [isRegister, setIsRegister] = useState(
     showForm ? showForm !== 'login' : Auth.hasEverLoggedIn ? false : true
   )
-  const [login, setLogin] = useState('')
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -63,19 +80,14 @@ export const LoginRegisterForm = ({
     async (e) => {
       e.preventDefault()
       if (isRegister) {
-        const result = await om.actions.user.register({
-          username,
-          email,
-          password,
-        })
+        const result = await om.actions.user.register(store.state)
         if (result) {
-          setUsername('')
-          setPassword('')
+          store.resetState()
         }
       } else {
         await om.actions.user.login({
-          usernameOrEmail: login,
-          password: password,
+          usernameOrEmail: store.state.login,
+          password: store.state.password,
         })
       }
     },
@@ -154,10 +166,9 @@ export const LoginRegisterForm = ({
             <>
               <Input
                 name="email"
-                value={email}
                 placeholder="Email"
                 autoCapitalize="none"
-                onChangeText={(val) => setEmail(val)}
+                onChangeText={(val) => store.setState({ email: val })}
                 autoFocus={autofocus}
               />
               <Spacer />
@@ -165,9 +176,8 @@ export const LoginRegisterForm = ({
                 name="username"
                 spellCheck={false}
                 autoCapitalize="none"
-                value={username}
                 placeholder="Username"
-                onChangeText={(val) => setUsername(val)}
+                onChangeText={(val) => store.setState({ username: val })}
               />
             </>
           )}
@@ -178,9 +188,8 @@ export const LoginRegisterForm = ({
                 name="email"
                 spellCheck={false}
                 autoCapitalize="none"
-                value={login}
                 placeholder="Email or username"
-                onChangeText={(value) => setLogin(value)}
+                onChangeText={(value) => store.setState({ login: value })}
               />
             </>
           )}
@@ -188,9 +197,8 @@ export const LoginRegisterForm = ({
           <Input
             name="password"
             secureTextEntry
-            onChangeText={(val) => setPassword(val)}
+            onChangeText={(val) => store.setState({ password: val })}
             placeholder="Password"
-            value={password}
           />
 
           <SmallButton

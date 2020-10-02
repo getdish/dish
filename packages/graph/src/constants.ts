@@ -50,7 +50,7 @@ export let SEARCH_DOMAIN = (() => {
 
 export const AUTH_DOMAIN = (() => {
   const LOCAL_AUTH_SERVER = `http://${LOCAL_HOSTNAME}:3000`
-  const PROD_JWT_SERVER = 'https://auth.dishapp.com'
+  const PROD_JWT_SERVER = 'https://dishapp.com'
   if (isNode) {
     return process.env.AUTH_ENDPOINT || LOCAL_AUTH_SERVER
   } else {
