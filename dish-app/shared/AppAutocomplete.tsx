@@ -211,7 +211,6 @@ const AutocompleteContentsInner = memo(
             {...(!isSmall && {
               // @ts-ignore
               onMouseLeave: () => {
-                console.log('what is', curPagePos, top)
                 if (curPagePos.y > top) {
                   hideAutocomplete()
                 }

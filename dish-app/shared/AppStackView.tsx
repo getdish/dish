@@ -93,8 +93,6 @@ const AppStackViewItem = memo(
       !isRemoving && !isAdding ? 'active' : 'untouchable'
     }`
 
-    console.log('what is', index, isRemoving, isAdding)
-
     const contents = (
       <VStack
         position="absolute"

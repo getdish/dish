@@ -9,5 +9,9 @@
     "rootDir": "src"
   },
   "include": ["src"],
-  "references": [{ "path": "../react-test-env" }]
+  "references": [{
+    "path": "../helpers"
+  }, {
+    "path": "../react-test-env"
+  }]
 }
