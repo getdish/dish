@@ -1,15 +1,6 @@
 ARG DISH_BASE_VERSION=latest
 FROM docker.k8s.dishapp.com/dish/base:$DISH_BASE_VERSION
 
-COPY services/crawlers services/crawlers
-COPY services/worker services/worker
-
-RUN yarn install
-RUN yarn build
-
-## Stage 2: run
-FROM node:12.16.1-buster-slim
-COPY --from=0 /app /app
 RUN apt-get update && apt-get install -y \
       gconf-service libasound2 libatk1.0-0 libatk-bridge2.0-0 \
       libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libgbm-dev \

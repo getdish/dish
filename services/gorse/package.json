@@ -4,7 +4,9 @@
   "scripts": {
     "test": "TARGET=node ava test/main.ts --verbose"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@dish/async": "*"
+  },
   "devDependencies": {
     "ava": "^3.8.2"
   }

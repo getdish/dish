@@ -1,3 +1,14 @@
+First week October:
+
+- run through site and document anything you see that may need improvements
+- make tag.default_images() return just 2 image (really we only need one...)
+- onboard fiverr to cleanup admin
+- gpt get top 1k restaurants or so working
+- run new crawl
+- google crawler
+- extras: infra improvements, build cache
+
+
 ✔️ implement v1 point ratings + voting
 - changes to auth:
   - login with email or username

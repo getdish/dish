@@ -10,20 +10,14 @@ COPY yarn.lock .
 COPY tsconfig.json .
 COPY tsconfig.build.json .
 COPY tsconfig.base.json .
+COPY ava.config.js .
+COPY patches patches
 COPY bin bin
-COPY packages packages
-
-# TODO:
-# If there is an unavoidable dependency on react* packages in the base image
-# then we have a choice here, to either save time or save space.
-#   * Saving space is relevant because the other service images have no need
-#     for most of the deps in dish-app.
-#   * But saving time is relevant because if we remove the deps here then we'd
-#     only need to go and reinstall them again in the web image.
 COPY dish-app dish-app
-RUN cd dish-app && yarn install
+COPY packages packages
+COPY services services
 
-RUN yarn install
+RUN yarn install --frozen-lockfile && yarn cache clean
 RUN yarn build
 
 CMD ["true"]

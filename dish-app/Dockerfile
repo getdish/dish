@@ -8,11 +8,4 @@ RUN apt-get update && apt-get install -y parallel build-essential \
 
 RUN yarn build:web
 
-## Slim it
-FROM node:12.16.1-buster-slim
-COPY --from=0 /app /app
-WORKDIR /app/dish-app
-RUN apt-get update && apt-get install -y \
-      libpixman-1.0 libcairo2 libpango1.0-0 libjpeg62-turbo libgif7
-
 CMD ["node", "_/web/server.js"]
