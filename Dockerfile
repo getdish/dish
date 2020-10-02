@@ -6,6 +6,7 @@ ENV DOCKER_BUILD=true
 
 COPY package.json .
 COPY .yarnrc .
+COPY yarn.lock .
 COPY tsconfig.json .
 COPY tsconfig.build.json .
 COPY tsconfig.base.json .

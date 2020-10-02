@@ -37,21 +37,23 @@ export const UserOnboard = graphql(({ hideLogo }: { hideLogo?: boolean }) => {
       <VStack
         spacing
         alignItems="center"
+        justifyContent="center"
         paddingBottom={60}
         paddingHorizontal={20}
       >
         {!hideLogo && (
-          <VStack spacing>
+          <VStack spacing alignItems="center">
             <Image
               source={{ uri: dishNeon }}
               style={{
                 marginTop: -20,
+                marginBottom: -20,
                 width: 261,
                 height: 161,
               }}
             />
 
-            <Paragraph color="#fff">
+            <Paragraph zIndex={10} color="#fff">
               Welcome to the beta! Lets get you onboarded.
             </Paragraph>
 
