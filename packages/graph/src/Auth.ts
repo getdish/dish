@@ -127,6 +127,9 @@ class AuthModel {
   }
 
   async login(username: string, password: string) {
+    if (!username || !password) {
+      throw new Error(`no username/password`)
+    }
     const response = await this.api('post', '/auth/login', {
       username,
       password,

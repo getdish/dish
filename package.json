@@ -13,6 +13,7 @@
   },
   "scripts": {
     "start": "yarn workspace @dish/dish-app start",
+    "services:start": "ultra -r --filter 'services/*' start",
     "web": "yarn workspace @dish/dish-app web",
     "web:prod": "yarn workspace @dish/dish-app web:prod",
     "ios": "yarn workspace @dish/dish-app ios",

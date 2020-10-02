@@ -37,7 +37,7 @@
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
-    "start": "set debug=* && ts-node --transpile-only ./src/index.ts",
+    "start": "ts-node --transpile-only ./src/index.ts",
     "run": "node ./_/app.js",
     "test": "DISH_ENV=test ava test/main.ts --verbose"
   }
