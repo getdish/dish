@@ -2,7 +2,7 @@ import '@dish/common'
 
 import { sentryException, sentryMessage } from '@dish/common'
 import {
-  GraphError,
+  HasuraError,
   MenuItem,
   PhotoXref,
   RestaurantWithId,
@@ -805,8 +805,9 @@ export class Self extends WorkerJob {
   }
 
   _listenForGraphErrors() {
-    onGraphError((errors: GraphError[]) => {
-      for (const error of errors) {
+    onGraphError((e: HasuraError) => {
+      if (!e.errors) return
+      for (const error of e.errors) {
         sentryMessage('SELF CRAWL Graph Error', {
           message: error.message,
         })

@@ -14,10 +14,6 @@ type QueryFetcherOptions = {
   silenceNotFound?: boolean
 }
 
-export type GraphError = {
-  message: string
-}
-
 const endpoint = getGraphEndpoint()
 
 export const createFetcher = (
@@ -27,9 +23,10 @@ export const createFetcher = (
     const query = type !== 'query' ? type + queryIn : queryIn
     const request = buildRequest(query, variables)
     const response = await fetchResponse(request)
-    const data = await parseResponse(response)
+    if (!response) return
+    const data = await parseResponse(response, request)
     debug(query, request, data)
-    checkForHasuraError(data, response, query, request, options)
+    checkForHasuraResponseError(data, response, request, options)
     return data
   }
 }
@@ -56,38 +53,36 @@ const buildRequest = (
 }
 
 const fetchResponse = async (request: RequestInit) => {
-  let response: Response
   try {
-    response = await fetch(endpoint, request)
+    return await fetch(endpoint, request)
   } catch (e) {
-    const error = {
-      message: 'Failed HTTP request to Hasura: ' + JSON.stringify(request),
-    }
-    console.error(error)
-    if (graphErrorListeners.size) {
-      graphErrorListeners.forEach((cb) => cb([error]))
-    }
-    throw e
+    const error = new HasuraError(
+      [
+        {
+          message: 'Failed HTTP request to Hasura: ' + e.message,
+        },
+      ],
+      request
+    )
+    handleError(error)
   }
-  return response
 }
 
-const parseResponse = async (response: Response) => {
-  let data: QueryResponse
+const parseResponse = async (response: Response, request: RequestInit) => {
   const response_text = await response.text()
   try {
-    data = JSON.parse(response_text)
+    return JSON.parse(response_text)
   } catch (e) {
-    const error = {
-      message: 'Failed parsing Hasura response: ' + response_text,
-    }
-    console.error(error)
-    if (graphErrorListeners.size) {
-      graphErrorListeners.forEach((cb) => cb([error]))
-    }
-    throw e
+    const error = new HasuraError(
+      [
+        {
+          message: 'Failed parsing Hasura response: ' + response_text,
+        },
+      ],
+      request
+    )
+    handleError(error)
   }
-  return data
 }
 
 const debug = (query: string, request: RequestInit, data: QueryResponse) => {
@@ -104,35 +99,21 @@ const debug = (query: string, request: RequestInit, data: QueryResponse) => {
   console.log('createFetcher', print)
 }
 
-const checkForHasuraError = (
+const checkForHasuraResponseError = (
   data: QueryResponse,
   response: Response,
-  query: string,
   request: RequestInit,
   options?: QueryFetcherOptions
 ) => {
-  if (data.errors || !response.ok) {
-    if (options?.silenceNotFound && response.status == 404) {
-      return data
-    } else {
-      if (graphErrorListeners.size) {
-        graphErrorListeners.forEach((cb) => cb(data.errors))
-      }
-
-      // helpful for debugging
-      console.error(`Failed query:
-fetch('${endpoint}', ${JSON.stringify(
-        request,
-        null,
-        2
-      )}).then(x => x.json()).then(x => console.log(x))`)
-
-      throw new HasuraError(query, data.errors)
-    }
-  }
+  const is_error = data.errors || !response.ok
+  if (!is_error) return data
+  if (options?.silenceNotFound && response.status == 404) return data
+  const error = new HasuraError(data.errors, request)
+  handleError(error)
 }
 
-type ErrorListener = (errors: GraphError[]) => void
+type ErrorListener = (error: HasuraError) => void
+type SuccessListener = () => void
 
 const graphErrorListeners = new Set<ErrorListener>()
 
@@ -140,10 +121,22 @@ export function onGraphError(cb: ErrorListener) {
   graphErrorListeners.add(cb)
 }
 
-class HasuraError extends Error {
+const graphSucessListeners = new Set<ErrorListener>()
+
+export function requestListener(cb: SuccessListener) {
+  graphSucessListeners.add(cb)
+  return Math.random().toString(36).substr(2, 9)
+}
+
+const handleError = (error: HasuraError) => {
+  if (!graphErrorListeners.size) throw error
+  graphErrorListeners.forEach((cb) => cb(error))
+}
+
+export class HasuraError extends Error {
   errors: Error[] | null = null
 
-  constructor(query: string, errors: any[] | null = null) {
+  constructor(errors: any[] | null = null, request: RequestInit) {
     super()
     // Maintains proper stack trace for where our error was thrown (only available on V8)
     if (Error.captureStackTrace) {
@@ -155,8 +148,18 @@ class HasuraError extends Error {
     if (isDevProd) {
       this.name = 'Dish API Error'
     } else {
-      console.error('fetch errors', errors, 'for query', query)
+      this.logErrors(request)
       this.name = 'HasuraError'
     }
+  }
+
+  logErrors(request: RequestInit) {
+    const request_string = JSON.stringify(request, null, 2)
+    console.error(this.errors)
+    console.error(
+      `fetch('${endpoint}', '${request_string}')
+        .then(x => x.json())
+        .then(x => console.log(x))`
+    )
   }
 }
