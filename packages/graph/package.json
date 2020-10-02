@@ -14,6 +14,7 @@
     "test:watch": "TARGET=node DISH_ENV=test ava test/* --watch --verbose --serial"
   },
   "dependencies": {
+    "@dish/helpers": "*",
     "@o/gqless-react": "0.0.9",
     "@o/gqless": "0.0.9",
     "@o/gqless-schema": "0.0.9",
