@@ -104,7 +104,7 @@ class AuthModel {
   }
 
   async updateUser(user: UpdateUserProps) {
-    const response = await this.api('post', '/updateUser', user)
+    const response = await this.api('post', '/user/updateUser', user)
     if (response.status !== 201) {
       console.error(`Error updating: ${response.status} ${response.statusText}`)
     }
