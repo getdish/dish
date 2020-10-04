@@ -1,3 +1,21 @@
+- the long run, a wiki of our world:
+  - there exists no community map of the world
+    - what happened to the atlas?
+    - aggregation theory - theres no great aggregator of real world things - netflix for shows (originally), airbnb (places), craigslist (market), but for restaurants its just lots of individual sources like yelp, etc.
+  - foursquare left us with no more fun community of curators
+  - pokedex strikes the right balance: polished, personal, fun
+    - trading cards - stats on each thing broken down, data driven, create "stacks" of favorite coffee shops
+  - hitchhikers guide to the galaxy - whats unique, a place to store real opinion
+  - ultimately the concerns wouldnt just be commercial like yelp or google, but also exploration, activity, outdoors, culture, history - wikipedia for a map
+  - but the community aspect should drive it - "map reduce" from discussions into a "current best of page"
+  - no great way to plan trips, to explore cities by what makes them great, long term goal is this
+  - want to be on user side and not data mine, because we want people to trust they can really invest in curating their own adventure book.
+    - able to post things privately, and have a "friends" scope
+    - we are exploring paid-for models for upgraded features to avoid advertising pressures
+    - want to invest in communities and have local champions, invest in local popups
+  - by breaking down things by the factors that matter, not just a single 5 star ratings, we want to foster the japanese style in a sense - do "one thing well" - or the portland style of embracing quirkyness - let restaurants and shops avoid tyranny of the majority and specialize without negative effects
+
+
 - blog post: A new world (of AI): personality in our online apps.
   - make the point that todays apps are very generic: designed to please everyone
   - Hitchhikers guide to the galaxy was prescient: AI can bring us *personality*
@@ -5,9 +23,9 @@
   - apps of the future will feel much more fun, personal, and human-like because of this
   - the biggest effect will be we'll look back and think the old internet was much more boring - wheres the fun?
 
+---
+
 - admin panel fixes + fiverr cleanups
-
-
 - voting on dish tags / voting in general
 - slow scrolling because of mapbox?
 - list item

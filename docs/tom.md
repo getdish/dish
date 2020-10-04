@@ -4,7 +4,7 @@ First week October:
   - when i run locally i get a number of issues from the app not using the right token for hasura to postgres giving me this[0] error.
     - make changes so it connects to local services on local
     - have `d1sh.com` point to local services only
-    - have `d1sh-live.com` to point to live services
+    - have `dl1ve.com` to point to live services
     - validate going from initial sign up to login to search, etc works on local
 - run through site and document anything you see that may need improvements on backend
 - onboard fiverr worker with instructions on admin
