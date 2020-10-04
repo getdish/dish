@@ -10,10 +10,9 @@ import {
   useDebounce,
 } from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
-import { Image, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 
 import { drawerBorderRadius, drawerWidthMax } from '../../constants'
-import { useIsNarrow, useIsReallyNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { useOvermind } from '../../state/om'

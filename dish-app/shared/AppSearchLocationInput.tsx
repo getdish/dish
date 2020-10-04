@@ -7,7 +7,11 @@ import { TextInput, TouchableOpacity } from 'react-native'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { inputTextStyles } from './AppSearchInput'
 import { isWeb } from './constants'
-import { inputClearSelection, inputIsTextSelected } from './helpers/input'
+import {
+  inputClearSelection,
+  inputIsTextSelected,
+  inputSelectAll,
+} from './helpers/input'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
@@ -16,7 +20,7 @@ import { useOvermind } from './state/om'
 const paddingHorizontal = 16
 
 export const AppSearchLocationInput = memo(() => {
-  const locationInputStore = useStore(InputStore, { name: 'location' })
+  const inputStore = useStore(InputStore, { name: 'location' })
   const om = useOvermind()
   const { theme, color, background } = useSearchBarTheme()
   const [locationSearch, setLocationSearch] = useState('')
@@ -50,14 +54,7 @@ export const AppSearchLocationInput = memo(() => {
       }
       case 27: {
         // esc
-        if (inputIsTextSelected(locationInputStore.node)) {
-          inputClearSelection()
-          return
-        }
-        if (om.state.home.showAutocomplete) {
-          om.actions.home.setShowAutocomplete(false)
-        }
-        locationInputStore.node?.blur()
+        inputStore.handleEsc()
         return
       }
       case 38: {
@@ -78,7 +75,7 @@ export const AppSearchLocationInput = memo(() => {
   return (
     <VStack position="relative" flex={1}>
       <AppAutocompleteHoverableInput
-        input={locationInputStore.node}
+        input={inputStore.node}
         autocompleteTarget="location"
         backgroundColor="rgba(255,255,255,0.15)"
       >
@@ -86,7 +83,7 @@ export const AppSearchLocationInput = memo(() => {
           <TouchableOpacity
             onPress={(e) => {
               prevent(e)
-              locationInputStore.node?.focus()
+              inputStore.node?.focus()
             }}
           >
             <MapPin
@@ -106,7 +103,7 @@ export const AppSearchLocationInput = memo(() => {
           >
             {!isWeb && <SearchInputNativeDragFix name="location" />}
             <TextInput
-              ref={locationInputStore.setNode}
+              ref={inputStore.setNode}
               value={locationSearch}
               placeholder={currentLocationName ?? 'San Francisco'}
               style={[

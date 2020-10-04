@@ -400,7 +400,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
           <VStack width="100%" height={paddingTop} />
           <HStack
             paddingHorizontal={20}
-            paddingTop={20}
+            paddingTop={10}
             paddingBottom={12}
             overflow="hidden"
           >

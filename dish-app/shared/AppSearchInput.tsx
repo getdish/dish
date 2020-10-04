@@ -2,12 +2,14 @@ import { fullyIdle, idle, series } from '@dish/async'
 import { Loader, Search, X } from '@dish/react-feather'
 import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import {
+  NativeSyntheticEvent,
   Platform,
   ScrollView,
   StyleSheet,
   TextInput,
+  TextInputKeyPressEventData,
   TouchableOpacity,
   View,
 } from 'react-native'
@@ -139,6 +141,10 @@ export const AppSearchInput = memo(() => {
   const input = inputStore.node
   const searchInputContainer = useRef<View>()
 
+  const handleKeyPressInner = useCallback((e) => {
+    handleKeyPress(e, inputStore)
+  }, [])
+
   // this was going to measure and ensure scrollview width
   // but i had to restart webpack and for some reason it works fine now with just css
   // useEffect(() => {
@@ -220,7 +226,7 @@ export const AppSearchInput = memo(() => {
                     onBlur={(e) => {
                       avoidNextFocus = false
                     }}
-                    onKeyPress={handleKeyPress}
+                    onKeyPress={handleKeyPressInner}
                     onFocus={() => {
                       if (omStatic.state.home.searchbarFocusedTag) {
                         omStatic.actions.home.setSearchBarTagIndex(0)
@@ -324,7 +330,7 @@ const next = () => {
   omStatic.actions.home.moveSearchBarTagIndex(1)
 }
 
-const handleKeyPress = async (e) => {
+const handleKeyPress = async (e: any, inputStore: InputStore) => {
   // @ts-ignore
   const code = e.keyCode
   console.log('key', code)
@@ -410,17 +416,7 @@ const handleKeyPress = async (e) => {
       return
     }
     case 27: {
-      // esc
-      if (focusedInput) {
-        focusedInput.blur()
-        if (inputIsTextSelected(focusedInput)) {
-          inputClearSelection(focusedInput)
-          return
-        }
-      }
-      if (omStatic.state.home.showAutocomplete) {
-        omStatic.actions.home.setShowAutocomplete(false)
-      }
+      inputStore.handleEsc()
       return
     }
     case 38: {

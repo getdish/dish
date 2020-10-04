@@ -181,7 +181,7 @@ const RestaurantListItemContent = memo(
         : 320,
       maxWidth: isSmall
         ? isWeb
-          ? '50vw'
+          ? '65vw'
           : Dimensions.get('screen').width * 0.75
         : 430,
     }
