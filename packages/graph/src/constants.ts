@@ -30,7 +30,9 @@ export const RESTAURANT_WEIGHTS = {
 }
 
 const LOCAL_HOSTNAME =
-  typeof window !== 'undefined' ? window.location.hostname : 'localhost'
+  typeof window !== 'undefined'
+    ? window.location?.hostname ?? 'localhost'
+    : 'localhost'
 
 export let SEARCH_DOMAIN = (() => {
   const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'

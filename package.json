@@ -15,6 +15,7 @@
     "start": "echo 'run:\n yarn backend:db\n yarn backend:dev\n yarn web'",
     "backend:db": "yarn docker:start hasura",
     "backend:start": "ultra -r --filter 'services/user-server' start",
+    "app": "yarn workspace @dish/dish-app start",
     "web": "yarn workspace @dish/dish-app web",
     "web:prod": "yarn workspace @dish/dish-app web:prod",
     "ios": "yarn workspace @dish/dish-app ios",
