@@ -15,12 +15,15 @@ export const HomeTopSearches = memo(() => {
       paddingHorizontal={20}
       paddingVertical={10}
       marginTop={-10}
+      marginBottom={10}
       spacing={6}
       maxWidth={700}
       marginHorizontal="auto"
       flexWrap="wrap"
       alignItems="center"
       justifyContent="center"
+      maxHeight={100}
+      overflow="hidden"
     >
       {recentSearches.slice(0, isReallySmall ? 6 : 8).map((search, index) => {
         return (
@@ -105,18 +108,16 @@ const recentSearches: { tags: Tag[] }[] = [
       { name: 'Sushi', icon: '🍣', type: 'dish' },
     ],
   },
-  // {
-  //   tags: [
-  //     { ...tagLenses[3], displayName: 'Green', icon: '🥬', type: 'lense' },
-  //     { name: 'Delivery', icon: '🚗', type: 'filter' },
-  //     { name: 'Sandwich', icon: '🥪', type: 'dish' },
-  //   ],
-  // },
-  // {
-  //   tags: [
-  //     { ...tagLenses[0], displayName: 'Great', type: 'lense' },
-  //     { name: 'price-low', displayName: 'Cheap', type: 'filter' },
-  //     { name: 'Thai', icon: '🇹🇭', type: 'country' },
-  //   ],
-  // },
+  {
+    tags: [
+      { ...tagLenses[0], displayName: 'Top', type: 'lense' },
+      { name: 'Thai', icon: '🇹🇭', type: 'country' },
+    ],
+  },
+  {
+    tags: [
+      { name: 'Delivery', icon: '🚗', type: 'filter' },
+      { ...tagLenses[3], displayName: 'Vegetarian', icon: '🥬', type: 'lense' },
+    ],
+  },
 ]

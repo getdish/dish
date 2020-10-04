@@ -50,8 +50,8 @@ const HomeSearchInfoBoxCountry = memo(
 
     return (
       <HStack
-        borderColor="#eee"
-        borderWidth={1}
+        // borderColor="#eee"
+        // borderWidth={1}
         borderRadius={100}
         overflow="hidden"
         marginHorizontal={10}

@@ -1,7 +1,12 @@
 import { Store } from '@dish/use-store'
 import { debounce } from 'lodash'
 
-import { inputGetNode } from './helpers/input'
+import {
+  inputClearSelection,
+  inputGetNode,
+  inputIsTextSelected,
+} from './helpers/input'
+import { omStatic } from './state/omStatic'
 
 export class InputStore extends Store<{ name: 'location' | 'search' }> {
   node: HTMLInputElement | null = null
@@ -19,6 +24,20 @@ export class InputStore extends Store<{ name: 'location' | 'search' }> {
       } else {
         this.node = next
       }
+    }
+  }
+
+  handleEsc() {
+    if (!this.node) return
+    // esc
+    if (document.activeElement === this.node) {
+      this.node.blur()
+      if (inputIsTextSelected(this.node)) {
+        inputClearSelection(this.node)
+      }
+    }
+    if (omStatic.state.home.showAutocomplete) {
+      omStatic.actions.home.setShowAutocomplete(false)
     }
   }
 }
