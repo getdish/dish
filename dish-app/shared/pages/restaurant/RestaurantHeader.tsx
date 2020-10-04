@@ -10,7 +10,7 @@ import {
   useDebounce,
 } from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
-import { ScrollView } from 'react-native'
+import { Dimensions, ScrollView } from 'react-native'
 
 import { drawerBorderRadius, drawerWidthMax } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -67,7 +67,7 @@ const RestaurantHeaderContent = memo(
       const restaurantId = state?.restaurantId ?? restaurant.id
       const nameLen = restaurant.name?.length
       const [width, setWidth] = useState(
-        Math.min(window.innerWidth, drawerWidthMax)
+        Math.min(Dimensions.get('window').width, drawerWidthMax)
       )
       const scale = width < 400 ? 0.75 : width < 600 ? 0.8 : 1
       const setWidthSlow = useDebounce(setWidth, 100)

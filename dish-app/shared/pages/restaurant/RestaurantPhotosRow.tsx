@@ -1,5 +1,6 @@
 import { graphql } from '@dish/graph'
 import { HStack, LinearGradient } from '@dish/ui'
+import React from 'react'
 import { memo } from 'react'
 import { Image, ScrollView, StyleSheet } from 'react-native'
 

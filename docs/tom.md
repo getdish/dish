@@ -18,6 +18,9 @@ First week October:
   - use my template on the beta website to run it
   - be cautious w/ limits/cost
 - run new crawl
+- help update some frontend stuff
+  - your updates to disambiguate on review.type would be nice to integrate on frontend in places you see reviews used
+  - moving to vote for persistence
 - google crawler
 
 [0] error:

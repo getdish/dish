@@ -31,9 +31,9 @@ function ErrorFallback({
         <ScrollView>
           {tryButton}
           <Text color="#fff">
-            <pre>{error?.message}</pre>
-            <pre>{componentStack}</pre>
-            <pre>{error?.stack}</pre>
+            {error?.message}
+            {componentStack}
+            {error?.stack}
           </Text>
           {tryButton}
         </ScrollView>
