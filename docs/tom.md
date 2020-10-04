@@ -1,13 +1,31 @@
 First week October:
 
-- run through site and document anything you see that may need improvements
-- make tag.default_images() return just 2 image (really we only need one...)
-- onboard fiverr to cleanup admin
-- gpt get top 1k restaurants or so working
+- get local development working better
+  - when i run locally i get a number of issues from the app not using the right token for hasura to postgres giving me this[0] error.
+    - make changes so it connects to local services on local
+    - have `d1sh.com` point to local services only
+    - have `d1sh-live.com` to point to live services
+    - validate going from initial sign up to login to search, etc works on local
+- run through site and document anything you see that may need improvements on backend
+- onboard fiverr worker with instructions on admin
+  - set up permissions and an account for them
+  - add a way to set the wiki description
+  - try and fix any bugs with saving/editing
+  - instruct them to clean up names and icons basically
+- GPT
+  - get top ~100 restaurants from homepage working
+  - change overview to show gpt
+  - use my template on the beta website to run it
+  - be cautious w/ limits/cost
 - run new crawl
 - google crawler
-- extras: infra improvements, build cache
 
+[0] error:
+
+postgres_1     | 2020-10-04 05:23:57.957 GMT [184] HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+postgres_1     | 2020-10-04 05:23:57.957 GMT [184] STATEMENT:  WITH
+
+---
 
 ✔️ implement v1 point ratings + voting
 - changes to auth:
