@@ -76,8 +76,8 @@ export default function AboutPage({
               zIndex={1}
               bottom={-34}
               right={-35}
-              width={150}
-              height={150}
+              width={125}
+              height={125}
               transform={[{ rotate: '12deg' }]}
             >
               <Image
@@ -92,14 +92,14 @@ export default function AboutPage({
                 width: 261 * 1.5,
                 height: 161 * 1.5,
                 marginTop: -26,
-                marginBottom: -44,
+                marginBottom: -42,
               }}
             />
             <Paragraph
               zIndex={10}
               color="#fff"
               textAlign="center"
-              size={1.25}
+              size={1.1}
               fontWeight="600"
             >
               the better restaurant recommender
@@ -115,22 +115,22 @@ export default function AboutPage({
 
             <UnorderedList spacing="xs">
               <UnorderedListItem size="xl">
-                Recommendations aren't catered to your personal tastes.
+                Recommendations aren't catered to your personal taste.
               </UnorderedListItem>
               <UnorderedListItem size="xl">
                 Hole-in-the-wall restaurants are lost to 3.5 star ratings.
               </UnorderedListItem>
               <UnorderedListItem size="xl">
-                5 delivery apps, each with sketchy ratings.
+                There are 5 delivery apps, each with sketchy ratings.
               </UnorderedListItem>
             </UnorderedList>
 
             <Paragraph size="xl">
               But also — <TextStrong>where's all the fun</TextStrong>? When
-              FourSquare shut down, the closest thing we had to a fun map of our
-              world was lost. What we want to build is a modern Hitchhiker's
-              Guide to Gastronomy: a community that thinks different and
-              explores and collects the unique gems of the world.
+              FourSquare shut down, the closest thing we had to a fun map of the
+              world was lost. We want to build a modern Hitchhiker's Guide to
+              Gastronomy: a community that thinks different and explores and
+              curates a guide to the unique gems in every part of the world.
             </Paragraph>
 
             <Spacer size={0} />
@@ -148,13 +148,13 @@ export default function AboutPage({
               textAlign="center"
               color={brandColorDark}
             >
-              dish your food{' '}
+              Dish, your food{' '}
               <Text display="inline" fontWeight="600">
                 pokédex
               </Text>
-              :<br />{' '}
+              <br />
               <Text fontWeight="400" display="inline" fontSize={20}>
-                a personal pocket guide to the world.
+                a pocket guide to the world
               </Text>
             </Paragraph>
 
@@ -166,7 +166,7 @@ export default function AboutPage({
             </Paragraph>
 
             <Paragraph size="xl" fontWeight="500">
-              Search across delivery? Not too hard. ✅
+              Searching delivery? Not too hard ✅
             </Paragraph>
 
             <Paragraph size="lg">
@@ -175,28 +175,28 @@ export default function AboutPage({
             </Paragraph>
 
             <Paragraph size="xl" fontWeight="500">
-              Tuned to your taste? We have ideas 💡
+              To your taste? We have ideas 💡
             </Paragraph>
 
             <Paragraph size="lg">
               We want to highlight chefs and people in each local community and
-              let you follow the ones you think have great picks. We don't think
-              data mining works well enough to be justified, plus where's the
-              fun in that? Instead, you curate your own map of the world.
+              let you follow the ones you agree with. We don't think data mining
+              works well enough, and where's the fun in that? Instead, you
+              curate your own map of the world through votes and follows.
             </Paragraph>
 
             <Paragraph size="xl" fontWeight="500">
-              But how do you fix hole-in-the-wall ratings?
+              But how to fix hole-in-the-wall ratings?
             </Paragraph>
 
             <Paragraph size="lg">
               Our answer:{' '}
               <TextStrong>
-                a single 5 star rating is not what we need
+                a single 5 star rating may not be what we need
               </TextStrong>
-              . The reason hole in the wall restaurants get lost is because
-              often they don't cater to service or ambiance. We realize what you
-              care about when ordering{' '}
+              . The reason hole-in-the-wall restaurants get lost is because
+              often they don't cater to service or ambiance. We realized, what
+              you care about when ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -226,9 +226,10 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              is <em>unique</em>: maybe it's just a specific dish and delivery
-              speed on night, maybe it's the vibe and service another - maybe
-              you do care about it all - but it totally depends on your mood.
+              is <em>unique</em>: maybe one night it's a specific dish and the
+              delivery speed, and another night it's the vibe and service. Maybe
+              you do care about it all sometimes. It totally depends on your
+              mood.
             </Paragraph>
 
             <Paragraph size="lg" fontStyle="italic">
@@ -238,34 +239,30 @@ export default function AboutPage({
             <Paragraph size="lg">
               When you search "quick cheap pizza", we take positive and negative
               sentiment from all reviews specifically towards "quickness",
-              "cheapness" and "pizza(ness)". We then turn those into points, and
-              add them together. Every search is highly tuned to what you look
-              for - all the way down to individual dishes.
+              "cheapness" and "pizza(ness)". We turn those into points and add
+              them up. Every search is ranked by points, and highly tuned to
+              what you look for - all the way down to individual dishes. More
+              than that, the points are visible to you, and you can vote on
+              them.
             </Paragraph>
 
             <Paragraph size="lg">
-              But more than that - the points are visible to you, and you can
-              vote on them.
-            </Paragraph>
-
-            <Paragraph size="lg">
-              So if you just love a places tacos - vote up the tacos. In fact,
-              when you write a review we automatically turn your words into
-              votes automatically that you can see and change before submitting.
-              So,{' '}
+              If you love the tacos at a restaurant - vote up their tacos. In
+              fact, when you write a review on Dish{' '}
               <TextStrong>
-                just speak your mind - we turn what you say into votes
-              </TextStrong>
-              .
+                we automatically turn what you say into votes
+              </TextStrong>{' '}
+              (that you can see and change before submitting). Just speak your
+              mind, we do the rest.
             </Paragraph>
 
             <Paragraph size="lg">
               Finally, Dish sources reviews from every top food review site.
-              Think of it like RottenTomatoes, for food. We want to build
-              something fun and personal and fast. A guide that caters to you.
-              Collect, discover and curate local gems, see friend and chef
-              picks, get tips on where to go and what to order, and filter by
-              mood and desire.
+              Think of it like RottenTomatoes, for, well, real tomatoes. We want
+              to build something fun, personal and fast. A guide that caters to
+              you. Collect, discover and curate local gems, see friends and
+              chefs picks, get tips on where to go and what to order there, and
+              filter by mood and desire.
             </Paragraph>
 
             <Paragraph size="lg">Our goals:</Paragraph>
