@@ -81,40 +81,37 @@ export const AppIntroLogin = memo(() => {
           fontWeight="300"
           size={1.2}
         >
-          <Text fontSize={22} fontWeight="300" color="#fff">
-            a better food guide
+          <Text fontSize={20} fontWeight="500" color="#fff">
+            the better restaurant recommender
           </Text>
         </Paragraph>
 
         <>
           <VStack>
             <LinkButton
-              fontSize={18}
+              fontSize={16}
               lineHeight={30}
               borderRadius={8}
-              fontWeight="500"
+              fontWeight="300"
               paddingHorizontal={8}
               marginHorizontal={-8}
-              color={brandColorLighter}
-              backgroundColor={`${lightYellow}33`}
+              color="#fff"
+              backgroundColor={`${lightYellow}22`}
               hoverStyle={{
-                backgroundColor: `${lightYellow}44`,
+                backgroundColor: `${lightYellow}33`,
               }}
               name="about"
             >
-              the best spots ✨ & dishes 🍽
+              learn how dish fixes food search
             </LinkButton>
           </VStack>
-          <Spacer size="xs" />
-          <VStack>
-            <Text fontSize={16} lineHeight={28} color={lightYellow}>
-              search every delivery app 🚗{' '}
-            </Text>
-          </VStack>
-          {/* <Text fontWeight="500">local gems 💎</Text> */}
         </>
 
         <Spacer size="xs" />
+
+        <Text color="rgba(255,255,255,0.4)" fontSize={16} fontWeight="600">
+          early access
+        </Text>
 
         <LoginRegisterForm />
       </VStack>

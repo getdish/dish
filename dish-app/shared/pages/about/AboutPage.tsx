@@ -58,8 +58,10 @@ export default function AboutPage({
       >
         <VStack spacing="xl">
           <VStack
-            marginHorizontal={15}
-            borderRadius={20}
+            marginLeft={-15}
+            marginRight={20}
+            paddingLeft={25}
+            borderRadius={6}
             paddingBottom={20}
             backgroundColor="#000"
             shadowColor="#000"
@@ -98,53 +100,92 @@ export default function AboutPage({
               color="#fff"
               textAlign="center"
               size={1.25}
-              fontWeight="300"
+              fontWeight="600"
             >
-              More fun exploring the world
+              the better restaurant recommender
             </Paragraph>
           </VStack>
 
-          <VStack paddingHorizontal={15} spacing="xl">
-            <Paragraph
-              backgroundColor={bgLight}
-              borderRadius={20}
-              paddingVertical={10}
-              fontStyle="italic"
-              size="xxl"
-              fontWeight="300"
-              textAlign="center"
-              color={brandColorDark}
-            >
-              A food app like a{' '}
-              <Text display="inline" fontWeight="600">
-                Pokédex
-              </Text>
-              :<br /> fun, personal, stats that matter.
-            </Paragraph>
+          <Spacer size="sm" />
 
-            <Paragraph size="xl">
-              We're building a modern{' '}
-              <TextStrong>Hitchhikers guide to gastronomy</TextStrong>, if you
-              will. A guide and community for great food around the world. Dish
-              was born from two frustrations:
+          <VStack paddingHorizontal="5%" spacing="xl">
+            <Paragraph size="xxl">
+              Restaurant search is broken in three ways:
             </Paragraph>
 
             <UnorderedList spacing="xs">
-              <UnorderedListItem size="lg">
-                Amazing hole-in-the-wall international spots lost to 3.5 star
-                ratings.
+              <UnorderedListItem size="xl">
+                Recommendations aren't catered to your personal tastes.
               </UnorderedListItem>
-              <UnorderedListItem size="lg">
-                Needing one app to <em>find</em> what's good & others to see if
-                it delivers.
+              <UnorderedListItem size="xl">
+                Hole-in-the-wall restaurants are lost to 3.5 star ratings.
+              </UnorderedListItem>
+              <UnorderedListItem size="xl">
+                5 delivery apps, each with sketchy ratings.
               </UnorderedListItem>
             </UnorderedList>
 
+            <Paragraph size="xl">
+              But also — <TextStrong>where's all the fun</TextStrong>? When
+              FourSquare shut down, the closest thing we had to a fun map of our
+              world was lost. What we want to build is a modern Hitchhiker's
+              Guide to Gastronomy: a community that thinks different and
+              explores and collects the unique gems of the world.
+            </Paragraph>
+
+            <Spacer size={0} />
+
+            <Paragraph
+              backgroundColor={`${lightYellow}99`}
+              borderWidth={2}
+              borderColor={lightYellow}
+              borderRadius={20}
+              paddingVertical={10}
+              sizeLineHeight={0.8}
+              fontStyle="italic"
+              size="xxl"
+              fontWeight="500"
+              textAlign="center"
+              color={brandColorDark}
+            >
+              dish your food{' '}
+              <Text display="inline" fontWeight="600">
+                pokédex
+              </Text>
+              :<br />{' '}
+              <Text fontWeight="400" display="inline" fontSize={20}>
+                a personal pocket guide to the world.
+              </Text>
+            </Paragraph>
+
+            <Spacer size={0} />
+
             <Paragraph size="lg">
+              So, we're building something that solves our frustrations. Here's
+              how we're thinking about it.
+            </Paragraph>
+
+            <Paragraph size="xl" fontWeight="500">
               Search across delivery? Not too hard. ✅
             </Paragraph>
 
             <Paragraph size="lg">
+              We crawled every delivery app and made them all searchable in one
+              simple interface.
+            </Paragraph>
+
+            <Paragraph size="xl" fontWeight="500">
+              Tuned to your taste? We have ideas 💡
+            </Paragraph>
+
+            <Paragraph size="lg">
+              We want to highlight chefs and people in each local community and
+              let you follow the ones you think have great picks. We don't think
+              data mining works well enough to be justified, plus where's the
+              fun in that? Instead, you curate your own map of the world.
+            </Paragraph>
+
+            <Paragraph size="xl" fontWeight="500">
               But how do you fix hole-in-the-wall ratings?
             </Paragraph>
 
@@ -153,8 +194,9 @@ export default function AboutPage({
               <TextStrong>
                 a single 5 star rating is not what we need
               </TextStrong>
-              . It reduces everything you care about too much. What you want
-              when ordering{' '}
+              . The reason hole in the wall restaurants get lost is because
+              often they don't cater to service or ambiance. We realize what you
+              care about when ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -184,55 +226,58 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              are <em>unique</em>: a specific dish, delivery speed, vibe,
-              ambiance - it totally depends on your mood.
+              is <em>unique</em>: maybe it's just a specific dish and delivery
+              speed on night, maybe it's the vibe and service another - maybe
+              you do care about it all - but it totally depends on your mood.
             </Paragraph>
 
-            <Paragraph size="lg">So, we're throwing away the stars.</Paragraph>
-
-            <Paragraph size="lg">
-              Dish sorts it's results by points. When you search "quick cheap
-              pizza", we take positive and negative sentiment from all reviews
-              on "quick", "cheap" and "pizza", and add them together.
+            <Paragraph size="lg" fontStyle="italic">
+              So, we're throwing away the stars (sort of).
             </Paragraph>
 
             <Paragraph size="lg">
-              Then, you can upvote and downvote on each. When you write a
-              review, we turn your words into votes (that you can fix before
-              submitting).{' '}
+              When you search "quick cheap pizza", we take positive and negative
+              sentiment from all reviews specifically towards "quickness",
+              "cheapness" and "pizza(ness)". We then turn those into points, and
+              add them together. Every search is highly tuned to what you look
+              for - all the way down to individual dishes.
+            </Paragraph>
+
+            <Paragraph size="lg">
+              But more than that - the points are visible to you, and you can
+              vote on them.
+            </Paragraph>
+
+            <Paragraph size="lg">
+              So if you just love a places tacos - vote up the tacos. In fact,
+              when you write a review we automatically turn your words into
+              votes automatically that you can see and change before submitting.
+              So,{' '}
               <TextStrong>
-                Just speak your mind - we turn what you say into votes
+                just speak your mind - we turn what you say into votes
               </TextStrong>
               .
             </Paragraph>
 
             <Paragraph size="lg">
-              Dish also sources reviews from top food review sites. It's like
-              RottenTomatoes, but for food. We also crawl{' '}
-              <Text
-                lineHeight={24}
-                borderBottomColor="#eee"
-                borderBottomWidth={2}
-                display="inline"
-              >
-                every delivery service
-              </Text>
-              .
+              Finally, Dish sources reviews from every top food review site.
+              Think of it like RottenTomatoes, for food. We want to build
+              something fun and personal and fast. A guide that caters to you.
+              Collect, discover and curate local gems, see friend and chef
+              picks, get tips on where to go and what to order, and filter by
+              mood and desire.
             </Paragraph>
 
-            <Paragraph size="lg">
-              We want to build something fun and personal. A guide that caters
-              to you. Collect, discover and curate local gems, see friend and
-              chef picks, get tips on where to go and what to order, and filter
-              by mood and desire. Our goal:
-            </Paragraph>
+            <Paragraph size="lg">Our goals:</Paragraph>
 
             <UnorderedList spacing>
               <UnorderedListItem size="lg">
-                <TextStrong>Design a better guide 🎙</TextStrong> - With natural
-                langauge analysis, threaded discussions, voting, and
-                specialization, we want to prove that you "map-reduce" an active
-                community into a "current best of" guide.
+                <TextStrong>
+                  Make a better guide and map of the world 🎙
+                </TextStrong>{' '}
+                - With natural langauge analysis, a taste profile you control,
+                discussions, voting, and specialization, we want to prove that
+                you turn an active community into a current best of guide.
               </UnorderedListItem>
               <UnorderedListItem size="lg">
                 <TextStrong>Enable specialized restaurants ✨</TextStrong>-
@@ -246,12 +291,17 @@ export default function AboutPage({
 
             <Spacer />
             <Divider />
+            <Spacer />
 
-            <Paragraph>
-              <Link href="mailto:team@dishapp.com">
-                Let us know how you'd like to see us grow.
+            <Paragraph size="xl">
+              If this all sounds interesting and you actually read this far,{' '}
+              <Link display="inline" href="mailto:team@dishapp.com">
+                send us an email to join our team
               </Link>
+              . We're looking for people who want to build the real world
+              Hitchhiker's Guide to the <TextStrong>Galaxy</TextStrong>.
             </Paragraph>
+
             <Spacer size="sm" />
             {/* <form>
               <VStack>
