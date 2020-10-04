@@ -62,6 +62,7 @@ const webOnlyStyleKeys = {
   className: true,
   textOverflow: true,
   whiteSpace: true,
+  wordWrap: true,
   cursor: true,
   selectable: true,
   size: true,

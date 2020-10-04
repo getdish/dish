@@ -225,10 +225,7 @@ export const TagButton = memo((props: TagButtonProps) => {
           {/* // tagDisplayNames[tag.name] ?? _.capitalize(tag.name) */}
           {tagDisplayName(tag)}
         </Text>
-        {!!votable && (
-          //
-          <TagButtonVote {...props} color={fg} scale={scale} />
-        )}
+        {!!votable && <TagButtonVote {...props} color={fg} scale={scale} />}
         {!!closable && (
           <VStack
             backgroundColor={subtle ? 'transparent' : 'transparent'}
@@ -254,9 +251,7 @@ export const TagButton = memo((props: TagButtonProps) => {
           >
             <X
               size={subtle ? 11 : 13}
-              style={{
-                color: subtle && isWeb ? 'inherit' : color,
-              }}
+              color={subtle && isWeb ? 'inherit' : color}
             />
           </VStack>
         )}
