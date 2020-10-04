@@ -42,7 +42,7 @@ import { NavigableTag } from './state/NavigableTag'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { tagDisplayName } from './state/tagDisplayName'
-import { SmallCircleButton } from './views/ui/CloseButton'
+import { CloseButton, SmallCircleButton } from './views/ui/CloseButton'
 import { LinkButton } from './views/ui/LinkButton'
 
 let curPagePos = { x: 0, y: 0 }
@@ -205,7 +205,7 @@ const AutocompleteContentsInner = memo(
             height="100%"
             position="relative"
             {...(!isSmall && {
-              maxWidth: pageWidthMax * 0.45,
+              maxWidth: 540,
               maxHeight: `calc(100vh - ${top + 20}px)`,
             })}
             {...(!isSmall && {
@@ -249,6 +249,18 @@ const AutocompleteContentsInner = memo(
                   keyboardShouldPersistTaps="always"
                   style={{ opacity: isLoading ? 0.5 : 1 }}
                 >
+                  <CloseButton
+                    position="absolute"
+                    top={5}
+                    right={5}
+                    onPress={(e) => {
+                      e.stopPropagation()
+                      omStatic.actions.home.setShowAutocomplete(false)
+                      if (drawerStore.snapIndex === 0) {
+                        drawerStore.setSnapPoint(1)
+                      }
+                    }}
+                  />
                   <AutocompleteResults />
                 </ScrollView>
               </VStack>
