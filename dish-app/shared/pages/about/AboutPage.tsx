@@ -58,10 +58,10 @@ export default function AboutPage({
       >
         <VStack spacing="xl">
           <VStack
-            marginLeft={-15}
+            marginLeft={-60}
             marginRight={20}
-            paddingLeft={25}
-            borderRadius={6}
+            paddingLeft={60}
+            borderRadius={60}
             paddingBottom={20}
             backgroundColor="#000"
             shadowColor="#000"
