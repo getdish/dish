@@ -1,3 +1,26 @@
+# Looping back around to the plan
+
+1. I like it overall, slimmed it down
+2. We haven't shipped yet, but you can't really gain any traction doing food search without solving it pretty well, its a consumer product it has to shine, and really we have done amazing work.
+
+Want to write some notes on where I see long-term.
+
+Ultimately, I'd like it to be a "guide to whats unique in this area", done collaboratively. And with a big focus on being quirky and fun, but not cheesy or sloppy. Thats why I like Pokedex, Nintendo tends to really nail the perfect balance between polish and character/fun. We want to do that for an app.
+
+Ultimately, the pitch to VC's goes beyond food. It's a "world guide", a modern Atlas. Poke-Dex is Pokemon (Pocket Monsters) InDex. Atlas was a Greek Giant (pre-god), he was defeated by gods and had to hold the sky on his shoulders.
+
+So perhaps we could find some names in there.
+
+But basically - if I took Dish and looked at San Francisco, what I'd see is a map of unique locations with icons that I can explore easily. But on the left (content side) I would see almost a Wikipedia type page, something that introduced me to the city, gave me all the major categories. Of course, like Yelp we'd have many commercial things, but also we'd have experiences, classes, outdoor activities and nature trails, pop-ups, and events. Basically, anything you wanted to know about the city is there.
+
+But also - importantly - it would feel a bit more like Reddit. In that, this content would be sorted somewhat by recent things, would have discussions on everything that is happening, and would generally tend to curate really interesting things that you wouldn't normally find. Local breweries and their events, craft kombucha, chefs that live their and their restaurants and background. I could even see lenses that give you really interesting looks into the world - historical, for example - see Turkey and all the great historical events where they happened, through time. Data lenses like lenses to see data on how areas have changed politically, demographically, etc. In a sense, its Wikipedia with a map, which hasn't really been done before, but it just happens to be grander in vision in that it goes all the way up to current events and supports intense specific breakdowns for every vertical within (like food).
+
+Also - it would serve as a really nice guide. If you wanted to plan a trip, you could do it all start to finish. Give it a time amount you're there, some preferences, and have it actually give you really interesting things to do. Not just some generic stuff for the "normie", but the sort of insider fun things you'd expect a friend who lived there to give you. In fact, you could see Dish as in the long run encouraging more of these types of unique experiences to happen. Very millenial.
+
+If anything, Dishs model would move towards taking a cut of events that list there in some way and avoiding advertising. I wouldn't want a membership for any sort of content limiting, perhaps we could charge for premium features, and charge for maintaing your listing more proactively.
+
+---
+
 # Dish notes
 
 TL;DR
@@ -9,10 +32,6 @@ TL;DR
 
 ---
 
-So, this is a long shot. It's overwhelmingly likely we fail.
-
-That said, there's something to be said for getting a few properly motivated, skilled and creative people together who are willing to put a real effort in.
-
 The absolute most likely reason we fail is:
 
 1. We don't deliver a lean app, early, and iterate many times
@@ -23,50 +42,7 @@ In other words, more than anything we need to:
 1. Get the app working on iOS ASAP and released to app store
 2. In parallel, have a strategy + implement content marketing
 
-We need to raise money if we want to have a shot against Yelp. To do that, we gotta build a tiny but sexy rocket, and launch it successfully, showing were pretty damn good tiny-sexy-rocket-launchers and hopefully really good bigger rocket launchers.
-
-We _don't_ need to:
-
-1. Launch on many platforms
-2. Launch in many cities or places
-3. Have the newest technology (but do want some)
-4. Have clean code or solve hard technical problems
-
-Why do we need to raise? Because we're aiming at Yelp! And really at a lot of companies (Eater, Google), and there's simply no way we get anwhere close to that on \$200k.
-
-The goal is always to preserve as much equity as possible for the us, and I always advocate for doing things lean, so we have to treat the raise as being not-for-sure. I don't think we can get "ramen profitable" until much later, but open to ideas. But that puts even more pressure on us needing to get some good numbers. Hockey sticks!
-
 ---
-
-Zooming out
-
-Since I'm writing a whole thing, a section on perspective.
-
-I don't want much.
-
-What I do want is to be able to tackle things at the intersection of interesting work and real world problems and _enjoy the ride_ - in a free way, with creativity, in a nice environment.
-
-We can still be just about as ruthless, frugal, passionate, efficient, etc as many, but let work smarter and use happiness and low cortisol levels as a productivity secret.
-
-- Keep the team small by being flexible and persistent
-- Surprise each other by quietly getting things done in the "next hardest area"
-- Keep things quiet generally so we can all focus
-
----
-
-One note on how we can position ourselves in the market that is fun
-
-Ok so, first, understanding some of my influences are good. I'd say you can get a good model of my business sense through a few sources:
-
-1. Thiel's "Zero to One" is probably the best high level book.
-2. Stratechery's writings are super valuable, especially "Aggregation Theory" [0]
-3. I don't agree with all of it, but a lot of pg's writings and YC's startup school is good practical/strategical advice. Choice ones would be "How to raise money" [1], "Do things that don't scale" [2], "Ramen profitable" [3], "Fashionable problems" (especially relevant) [4]
-
-Basically, I want us to be the "Snapchat to Yelp's Facebook".
-
-In other words branding and apps should feel more fun and quirky. They can still be polished, but lets be so extremely user friendly and light feeling that people are delighted.
-
-Yelp has this feeling of a bloated, product-managered, brain-drained app that's lost its glasses. They have all these ads now, and I think the advertising model makes them afraid of doing too much with the interface.
 
 ### Aggregation Theory
 
