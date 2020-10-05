@@ -76,10 +76,13 @@ class AuthModel {
     return auth_headers
   }
 
-  async api(method: string, path: string, data: any = {}) {
+  async api(method: 'POST' | 'GET', path: string, data: any = {}) {
     const response = await fetch(AUTH_DOMAIN + path, {
       method,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
       body: JSON.stringify(data),
     })
     if (response.status >= 300) {
@@ -104,7 +107,7 @@ class AuthModel {
   }
 
   async updateUser(user: UpdateUserProps) {
-    const response = await this.api('post', '/user/updateUser', user)
+    const response = await this.api('POST', '/user/updateUser', user)
     if (response.status !== 201) {
       console.error(`Error updating: ${response.status} ${response.statusText}`)
     }
@@ -112,7 +115,7 @@ class AuthModel {
   }
 
   async register(username: string, email: string, password: string) {
-    const response = await this.api('post', '/user', {
+    const response = await this.api('POST', '/user', {
       username,
       password,
       email,
@@ -130,7 +133,7 @@ class AuthModel {
     if (!username || !password) {
       throw new Error(`no username/password`)
     }
-    const response = await this.api('post', '/auth/login', {
+    const response = await this.api('POST', '/auth/login', {
       username,
       password,
     })
@@ -160,7 +163,7 @@ class AuthModel {
 
   // mostly same as login
   async appleAuth(authorization: { id_token: string; code: string }) {
-    const response = await this.api('post', '/auth/apple_verify', {
+    const response = await this.api('POST', '/auth/apple_verify', {
       ...authorization,
       redirectUri: Auth.getRedirectUri(),
     })
@@ -193,3 +196,7 @@ class AuthModel {
 }
 
 export const Auth = new AuthModel()
+
+if (typeof window !== 'undefined') {
+  window['Auth'] = Auth
+}

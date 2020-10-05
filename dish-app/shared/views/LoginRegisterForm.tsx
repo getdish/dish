@@ -76,8 +76,9 @@ export const LoginRegisterForm = ({
     }
   }, [isLoggedIn])
 
-  const handleLoginRegister = useCallback(
+  const handleSubmit = useCallback(
     async (e) => {
+      console.log('got login')
       e.preventDefault()
       if (isRegister) {
         const result = await om.actions.user.register(store.state)
@@ -139,7 +140,7 @@ export const LoginRegisterForm = ({
         </>
       )}
 
-      <Form onSubmit={handleLoginRegister}>
+      <Form onSubmit={handleSubmit}>
         <VStack spacing height={250} minWidth={260}>
           <InteractiveContainer height={43} alignSelf="center">
             <LinkButton
@@ -166,6 +167,7 @@ export const LoginRegisterForm = ({
             <>
               <Input
                 name="email"
+                spellCheck={false}
                 placeholder="Email"
                 autoCapitalize="none"
                 onChangeText={(val) => store.setState({ email: val })}
@@ -201,6 +203,8 @@ export const LoginRegisterForm = ({
             placeholder="Password"
           />
 
+          {isWeb && <input type="submit" style={{ display: 'none' }} />}
+
           <SmallButton
             accessibilityComponentType="button"
             accessible
@@ -214,7 +218,7 @@ export const LoginRegisterForm = ({
             hoverStyle={{
               backgroundColor: '#333',
             }}
-            onPress={handleLoginRegister}
+            onPress={handleSubmit}
           >
             {button_text()}
           </SmallButton>

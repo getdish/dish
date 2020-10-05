@@ -88,7 +88,7 @@ export default function AboutPage({
 
           <VStack paddingHorizontal="5%" spacing="xl">
             <Paragraph size="xxl">
-              Craving pho? Amazing Vietnamese and other hole in the wall spots
+              Craving pho? Amazing Vietnamese and other hole-in-the-wall spots
               are often lost to 3.5-star reviews. We think we can fix this by{' '}
               <TextStrong>doing ratings down to the dish</TextStrong> and the
               other factors that matter.
