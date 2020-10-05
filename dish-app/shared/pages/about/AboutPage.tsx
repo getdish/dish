@@ -90,20 +90,14 @@ export default function AboutPage({
 
           <VStack paddingHorizontal="5%" spacing="xl">
             <Paragraph size="xxl">
-              Craving pho? Amazing Vietnamese, Chinese, and Mexican spots are
-              often hard to find because a single 5-star rating forces food,
-              ambiance and service into one dimension. Lets change the world of
-              eating out (and in) by fixing food ratings.
+              Craving pho? Amazing Vietnamese and other hole in the wall spots
+              are often lost to 3.5-star reviews. We think we can fix this by{' '}
+              <TextStrong>doing ratings down to the dish</TextStrong>, and other
+              factors that matter.
             </Paragraph>
 
             <Paragraph size="lg">
-              We think{' '}
-              <TextStrong>
-                ratings can be improved by throwing away 5 stars
-              </TextStrong>
-              . The reason hole-in-the-wall restaurants get lost is because
-              often they don't cater to service or ambiance. It turns out what
-              you care about when ordering{' '}
+              It turns out what you care about ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -133,29 +127,23 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              is <em>unique</em>: one night it's a specific dish and delivery
-              speed, the other it's vibe and service. It depends on your mood.
+              is <em>unique</em>: a specific dish and delivery, or the vibe and
+              service.
             </Paragraph>
 
-            <Paragraph size="xl" fontStyle="italic">
-              Dish gives points to every facet of a restaurant: each dish, the
-              ambiance, service, and a lot more.
-            </Paragraph>
-
-            <Paragraph size="lg">
-              When you search "quick cheap pizza", we take positive and negative
-              sentiment from reviews towards "quickness", "cheapness" and
-              "pizzaness" as points and add them up. That's how they sort!
+            <Paragraph size="xxl" fontStyle="italic">
+              Dish ranks by points, instead.
             </Paragraph>
 
             <Paragraph size="lg">
-              Then, we let you vote on any aspect. In fact, when you write a
-              review on Dish{' '}
+              When you search "delivery cheap pho", we take positive and
+              negative sentiment from reviews towards <em>delivery</em>,{' '}
+              <em>cheapness</em> and <em>pho</em> as points and add them up. In
+              fact, when you write a review on Dish{' '}
               <TextStrong>
                 we automatically turn what you say into votes
-              </TextStrong>{' '}
-              (that you can see and change before submitting). Just speak your
-              mind, we do the rest.
+              </TextStrong>
+              . Speak your mind, we do the rest.
             </Paragraph>
 
             <Paragraph size="xl" fontStyle="italic">
@@ -166,19 +154,18 @@ export default function AboutPage({
               <TextStrong>
                 Food search apps today aren't catered to your personal taste
               </TextStrong>
-              . We're working on a way to give you control over your taste
-              profile, but it will take time. We think we can do it in a way
-              that is transparent and under your control, but still easy to do
-              and fun.
+              . We want to expose users with similar tastes and what they
+              recommend.
             </Paragraph>
 
             <Paragraph size="xl" fontStyle="italic">
-              Does it do anything else?
+              What's all this about delivery?
             </Paragraph>
 
             <Paragraph size="lg">
-              Dish searches across every delivery app. We found it tiring to
-              have to flip between delivery apps with low quality ratings and
+              Dish searches across every delivery app, so you can start from
+              finding something good, and then go order it. We found it tiring
+              to have to flip between delivery apps with low quality ratings and
               food search apps constantly.
             </Paragraph>
 
@@ -188,23 +175,21 @@ export default function AboutPage({
 
             <Paragraph size="lg">
               We want to build a some mix of a real world Hitchhiker's Guide to
-              the Galaxy and a Pokédex. A fun, personal app that describes the
-              world. With smart descriptions that highlight what's unique based
-              on what people say and vote on. With a map of your favorites and
-              adventures that you can build over time.
+              the Galaxy and a Pokédex. A fun, personal app and community for
+              exploring the world.
             </Paragraph>
 
             <Paragraph size="lg">Our goals:</Paragraph>
 
             <UnorderedList spacing>
               <UnorderedListItem size="lg">
-                <TextStrong>Design a better model for search apps 🎙</TextStrong>{' '}
-                - With natural langauge analysis, a taste profile you control,
+                <TextStrong>Design a new type of guide 🎙</TextStrong> - With
+                natural langauge analysis, a taste profile you control,
                 discussions, voting, and specialization, we want to prove that
                 you turn an active community into a current best of guide.
               </UnorderedListItem>
               <UnorderedListItem size="lg">
-                <TextStrong>Enable positive specialization ✨</TextStrong>-
+                <TextStrong>Enable restaurant specialization ✨</TextStrong>-
                 Instead of having to please everyone to try for 5 stars overall,
                 restaurants should be rewarded for doing one or two things
                 exceptionally well.
