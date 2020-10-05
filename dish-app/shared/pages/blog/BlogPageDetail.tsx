@@ -12,7 +12,7 @@ export function BlogPageDetail({ post }: { post: PostEntry }) {
       <SmallLinkButton marginTop={-15} marginBottom={10} name="blog">
         Back to blog
       </SmallLinkButton>
-      <Title size="xl">{title}</Title>
+      <Title size="lg">{title}</Title>
       <BlogPostMeta post={post} />
       <Spacer size="sm" />
       <Divider />

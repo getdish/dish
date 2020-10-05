@@ -96,8 +96,8 @@ export default function AboutPage({
               factors that matter.
             </Paragraph>
 
-            <Paragraph size="lg">
-              It turns out what you care about ordering{' '}
+            <Paragraph size="xl">
+              It turns out what you care about when ordering{' '}
               <LinkButton
                 fontWeight="400"
                 backgroundColor={lightYellow}
@@ -127,19 +127,45 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              is <em>unique</em>: a specific dish and delivery, or the vibe and
-              service.
+              is <em>unique</em>: one night it's an authentic dish and delivery
+              speed, the next it's the atmosphere and service.
             </Paragraph>
 
             <Paragraph size="xxl" fontStyle="italic">
-              Dish ranks by points, instead.
+              Dish lets you find specific things - like a dish you crave.
             </Paragraph>
 
             <Paragraph size="lg">
-              When you search "delivery cheap pho", we take positive and
-              negative sentiment from reviews towards <em>delivery</em>,{' '}
-              <em>cheapness</em> and <em>pho</em> as points and add them up. In
-              fact, when you write a review on Dish{' '}
+              When you search "pho delivery cheap", we look at positive and
+              negative sentiment from reviews towards <em>pho</em>,{' '}
+              <em>delivery</em> and <em>cheapness</em>, add it up as points, and
+              show you truly the best within that narrow selection. We support
+              all sorts of interesting tags, here are a few:
+            </Paragraph>
+
+            <UnorderedList>
+              <UnorderedListItem size="lg">
+                💎 Authenticity, Uniqueness
+              </UnorderedListItem>
+              <UnorderedListItem size="lg">
+                🥬 Vegetarian, Vegan
+              </UnorderedListItem>
+              <UnorderedListItem size="lg">
+                🍷 Open Bar, Unique Drinks
+              </UnorderedListItem>
+              <UnorderedListItem size="lg">
+                🌃 Nice to meet, Ambiance
+              </UnorderedListItem>
+              <UnorderedListItem size="lg">
+                🇮🇹 🇹🇭 🇪🇹 Authenticity within every cuisine.
+              </UnorderedListItem>
+              <UnorderedListItem size="lg">
+                🥟 Dim Sum and thousands of other dish categories.
+              </UnorderedListItem>
+            </UnorderedList>
+
+            <Paragraph size="lg">
+              In fact, when you write a review on Dish{' '}
               <TextStrong>
                 we automatically turn what you say into votes
               </TextStrong>
@@ -147,39 +173,41 @@ export default function AboutPage({
             </Paragraph>
 
             <Paragraph size="xl" fontStyle="italic">
-              But what about different tastes?
+              What about different tastes?
             </Paragraph>
 
             <Paragraph size="lg">
               <TextStrong>
-                Food search apps today aren't catered to your personal taste
-              </TextStrong>
-              . We want to expose users with similar tastes and what they
-              recommend.
+                Food search apps today aren't tuned to taste.
+              </TextStrong>{' '}
+              We're building a way to match you to chefs and experts in every
+              cuisine in each city who share your taste so no matter where you
+              visit, you have reliable picks from someone who you can see if you
+              agree with. No opaque algorithms!
             </Paragraph>
 
             <Paragraph size="xl" fontStyle="italic">
-              What's all this about delivery?
+              You mentioned delivery?
             </Paragraph>
 
             <Paragraph size="lg">
-              Dish searches across every delivery app, so you can start from
-              finding something good, and then go order it. We found it tiring
-              to have to flip between delivery apps with low quality ratings and
-              food search apps constantly.
+              We found it tiring to have to flip between 3 delivery apps with
+              low quality ratings and a separate app for higher quality ratings.
+              Dish search shows{' '}
+              <TextStrong>every delivery service in your results,</TextStrong>{' '}
+              so you can start from finding something good and then go order it.
             </Paragraph>
 
             <Paragraph size="xl" fontStyle="italic">
-              In the long term
+              Our goals
             </Paragraph>
 
             <Paragraph size="lg">
-              We want to build a some mix of a real world Hitchhiker's Guide to
-              the Galaxy and a Pokédex. A fun, personal app and community for
-              exploring the world.
+              We want to build a some mix of a Hitchhiker's Guide to the Galaxy
+              (a smarter world guide with personality) and a Pokédex (a pocket
+              map curating your favorite things) that encourages our world to
+              have more uniquely good and focused things to do.
             </Paragraph>
-
-            <Paragraph size="lg">Our goals:</Paragraph>
 
             <UnorderedList spacing>
               <UnorderedListItem size="lg">
@@ -204,33 +232,6 @@ export default function AboutPage({
             <Divider />
             <Spacer />
 
-            <Paragraph
-              backgroundColor={`${lightYellow}99`}
-              borderWidth={2}
-              borderColor={lightYellow}
-              borderRadius={20}
-              paddingVertical={10}
-              sizeLineHeight={0.8}
-              fontStyle="italic"
-              size="xxl"
-              fontWeight="500"
-              textAlign="center"
-              color={brandColorDark}
-            >
-              Dish, your food{' '}
-              <Text display="inline" fontWeight="600">
-                pokédex
-              </Text>
-              <br />
-              <Text fontWeight="400" display="inline" fontSize={20}>
-                a pocket guide to the world
-              </Text>
-            </Paragraph>
-
-            <Spacer />
-            <Divider />
-            <Spacer />
-
             <Paragraph size="xl">
               <AbsoluteVStack
                 zIndex={1}
@@ -246,9 +247,10 @@ export default function AboutPage({
                   resizeMode="contain"
                 />
               </AbsoluteVStack>
-              If this all sounds interesting and you actually read this far,{' '}
+              If this all sounds interesting and you actually read this far,
+              consider{' '}
               <Link display="inline" href="mailto:team@dishapp.com">
-                send us an email to join our team
+                sending us an email to join our team
               </Link>
               . We're looking for people who want to build the real world
               Hitchhiker's Guide to the Galaxy.

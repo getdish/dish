@@ -12,7 +12,7 @@ export const UnorderedList = (props: StackProps) => {
 export const UnorderedListItem = ({ children, ...props }: SizableTextProps) => {
   const { fontSize = 14, lineHeight } = getSizedTextProps(props)
   return (
-    <HStack>
+    <HStack marginVertical={4}>
       <Text
         {...props}
         fontSize={fontSize * 2}
