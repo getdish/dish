@@ -169,7 +169,7 @@ export default function AboutPage({
               . We're working on a way to give you control over your taste
               profile, but it will take time. We think we can do it in a way
               that is transparent and under your control, but still easy to do
-              and fun. rate.
+              and fun.
             </Paragraph>
 
             <Paragraph size="xl" fontStyle="italic">
@@ -187,25 +187,24 @@ export default function AboutPage({
             </Paragraph>
 
             <Paragraph size="lg">
-              We want to build the Hitchhiker's Guide to Gastronomy. Something
-              more fun. With smart descriptions that highlight what's unique
-              based on what people say and vote on for each spot. And a map of
-              your favorites and food adventures that you can build over time.
+              We want to build a some mix of a real world Hitchhiker's Guide to
+              the Galaxy and a Pokédex. A fun, personal app that describes the
+              world. With smart descriptions that highlight what's unique based
+              on what people say and vote on. With a map of your favorites and
+              adventures that you can build over time.
             </Paragraph>
 
             <Paragraph size="lg">Our goals:</Paragraph>
 
             <UnorderedList spacing>
               <UnorderedListItem size="lg">
-                <TextStrong>
-                  Make a better guide and map of the world 🎙
-                </TextStrong>{' '}
+                <TextStrong>Design a better model for search apps 🎙</TextStrong>{' '}
                 - With natural langauge analysis, a taste profile you control,
                 discussions, voting, and specialization, we want to prove that
                 you turn an active community into a current best of guide.
               </UnorderedListItem>
               <UnorderedListItem size="lg">
-                <TextStrong>Enable specialized restaurants ✨</TextStrong>-
+                <TextStrong>Enable positive specialization ✨</TextStrong>-
                 Instead of having to please everyone to try for 5 stars overall,
                 restaurants should be rewarded for doing one or two things
                 exceptionally well.
