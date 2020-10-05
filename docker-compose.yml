@@ -35,8 +35,6 @@ services:
     build:
       context: ./
       dockerfile: ./services/dish-hooks/Dockerfile
-      args:
-        - BUILDKIT_INLINE_CACHE=1
     ports:
       - 6154:6154
     environment:
@@ -68,8 +66,6 @@ services:
     build:
       context: ./
       dockerfile: ./services/user-server/Dockerfile
-      args:
-        - BUILDKIT_INLINE_CACHE=1
     ports:
       - 3000:3000
     environment:
@@ -83,8 +79,6 @@ services:
     build:
       context: ./
       dockerfile: ./services/search/Dockerfile
-      args:
-        - BUILDKIT_INLINE_CACHE=1
     ports:
       - 10000:10000
     environment:
@@ -95,7 +89,6 @@ services:
     volumes:
       - ${HOME}/.dish/gorse:/data
       - ./services/gorse/config.local.toml:/app/config.toml
-    build:
-      context: ./services/gorse
+    image: docker.k8s.dishapp.com/dish/gorse
     ports:
       - 9000:9000

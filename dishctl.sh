@@ -655,11 +655,17 @@ function yaml_to_env() {
   parse_yaml $PROJECT_ROOT/env.enc.production.yaml | sed 's/\$/\\$/g' | xargs -0
 }
 
-function buildkit_build() {
-  dockerfile_path=$1
-  name=$2
-  dish_base_version=${3:-''}
-  context=${4:-.}
+function _buildkit_build() {
+  dockerfile_path=$2
+  name=$3
+  dish_base_version=${4:-$DOCKER_TAG_NAMESPACE}
+  context=${5:-.}
+  if [[ "$1" == "pull" ]]; then
+    output="docker load"
+  else
+    output="true"
+    push=",push=true"
+  fi
   dish_docker_login
   buildctl \
     --addr tcp://buildkit.k8s.dishapp.com:1234 \
@@ -672,8 +678,86 @@ function buildkit_build() {
       --local context=$context \
       --local dockerfile=$dockerfile_path \
       --opt build-arg:DISH_BASE_VERSION=$dish_base_version \
-      --output type=image,name=$name,push=true
-  echo "\`buildctl\` ($NAME) exited with: $?"
+      --export-cache type=registry,ref=$name-buildcache \
+      --import-cache type=registry,ref=$name-buildcache \
+      --output type=docker,name=$name$push | $output
+  echo "\`buildctl\` ($name) exited with: $?"
+}
+
+function buildkit_build() {
+  _buildkit_build push "$@"
+}
+
+function buildkit_build_output_local() {
+  _buildkit_build pull "$@"
+}
+
+function build_dish_service() {
+  path=$1
+  name=$(echo $path | cut -d / -f 2)
+  image=$DISH_REGISTRY/dish/$name:$DOCKER_TAG_NAMESPACE
+  buildkit_build_output_local $path $image
+}
+
+function _build_dish_service() {
+  $PROJECT_ROOT/dishctl.sh build_dish_service "$@"
+}
+export -f _build_dish_service
+
+function build_dish_base() {
+  image=$DISH_REGISTRY/dish/base:$DOCKER_TAG_NAMESPACE
+  echo "Using Dish base: $image"
+  buildkit_build_output_local . $image
+}
+
+function build_all_dish_services() {
+  ./k8s/etc/docker_registry_gc.sh
+
+  echo "Building all Dish services..."
+  build_dish_base
+
+  parallel --lb _build_dish_service ::: \
+    'services/worker' \
+    'services/dish-hooks' \
+    'services/search' \
+    'services/user-server' \
+    'dish-app'
+
+  echo "...all Dish services built."
+  docker images
+}
+
+function ci_prettier() {
+  docker run \
+    docker.k8s.dishapp.com/dish/base:$DOCKER_TAG_NAMESPACE \
+    prettier --check "**/*.{ts,tsx}"
+}
+
+function ci_rename_tagged_images_to_latest() {
+  dish_docker_login
+  for image in "${ALL_IMAGES[@]}"
+  do
+    current=$DISH_REGISTRY/dish/$image:$DOCKER_TAG_NAMESPACE
+    new=$DISH_REGISTRY/dish/$image
+    docker tag $current $new:latest
+  done
+  docker images
+}
+
+function ci_push_images_to_latest() {
+  echo "Pushing new docker images to production registry..."
+  dish_docker_login
+  for image in "${ALL_IMAGES[@]}"
+  do
+    new=$DISH_REGISTRY/dish/$image:latest
+    docker push $new
+  done
+}
+
+function rollout_all_services() {
+  kubectl rollout \
+    restart deployment \
+    $(kubectl get deployments | tail -n +2 | cut -d ' ' -f 1)
 }
 
 # Usage dishctl.sh push_repo_image $repo $image_name
@@ -689,10 +773,12 @@ function push_repo_image() {
   rm -rf $tmp_dir
 }
 
-function push_external_images() {
+function push_auxillary_images() {
   push_repo_image 'git@github.com:getdish/image-quality-api.git' dish/image-quality-server
   push_repo_image 'git@github.com:getdish/grafana-backup-tool.git' dish/grafana-backup-tool
   push_repo_image 'git@github.com:getdish/imageproxy.git' dish/imageproxy
+  buildkit_build $PROJECT_ROOT/services/gorse $DISH_REGISTRY/dish/gorse
+  buildkit_build $PROJECT_ROOT/services/cron $DISH_REGISTRY/dish/cron
 }
 
 function dish_docker_login() {
@@ -718,7 +804,9 @@ function terraform_apply() {
 }
 
 if command -v git &> /dev/null; then
-  PROJECT_ROOT=$(git rev-parse --show-toplevel)
+  export PROJECT_ROOT=$(git rev-parse --show-toplevel)
+  branch=$(git rev-parse --abbrev-ref HEAD)
+  export DOCKER_TAG_NAMESPACE=${branch//\//-}
   pushd $PROJECT_ROOT >/dev/null
     if [ -f "env.enc.production.yaml" ]; then
       export all_env="$(yaml_to_env)"
@@ -731,6 +819,15 @@ else
   echo "Not loading ENV from env.enc.production.yaml as there's no \`git\` command"
   export all_env="$(env)"
 fi
+
+declare -a ALL_IMAGES=(
+  "base"
+  "dish-app"
+  "worker"
+  "dish-hooks"
+  "user-server"
+  "search"
+)
 
 function_to_run=$1
 shift

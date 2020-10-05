@@ -2,6 +2,7 @@
 set -e
 
 echo "Running Test Cafe end-to-end browser-based tests..."
+yarn global add testcafe #TODO use version from package.json
 
 pushd dish-app
 docker run -d --net=host $DISH_REGISTRY/dish/dish-app

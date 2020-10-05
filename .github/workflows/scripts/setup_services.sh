@@ -17,6 +17,7 @@ wait_until_hasura_ready() {
 export -f wait_until_hasura_ready
 
 docker-compose --version
+./dishctl.sh ci_rename_tagged_images_to_latest
 
 mkdir -p $HOME/.dish/postgres/data
 docker-compose up -d postgres
@@ -25,12 +26,14 @@ docker-compose down
 docker-compose up -d hasura postgres timescaledb
 
 ./dishctl.sh db_migrate_local
-./dishctl.sh timescale_migrate_local
+docker run --net host docker.k8s.dishapp.com/dish/base \
+  bash -c 'cd services/timescaledb && DISH_ENV=not-production ./migrate.sh'
 # JWT server won't start until migrations have been applied
 docker-compose down
 
 # Exclude the base service, as that's just a dev convienience to build the base image
 services=$(docker-compose config --services | grep -v base | tr '\r\n' ' ')
+echo "Starting the following services: $services"
 eval $(./dishctl.sh yaml_to_env) docker-compose up -d $services
 
 if ! timeout --preserve-status 20 bash -c wait_until_hasura_ready; then

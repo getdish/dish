@@ -4,30 +4,8 @@ set -e
 echo "Deploying production branch to production..."
 
 ./dishctl.sh db_migrate
-
-echo "Pushing new docker images to production registry..."
-DISH_REGISTRY_PASSWORD=$(\
-  grep 'DOCKER_REGISTRY_PASSWORD:' env.enc.production.yaml \
-  | tail -n1 | cut -c 27- | tr -d '"'\
-)
-docker login $DISH_REGISTRY -u dish -p $DISH_REGISTRY_PASSWORD
-declare -a images=(
-  "dish-app"
-  "worker"
-  "dish-hooks"
-  "gorse"
-  "user-server"
-  "search"
-  "cron"
-)
-for image in "${images[@]}"
-do
-  docker push $DISH_REGISTRY/dish/$image
-done
-
-kubectl rollout \
-  restart deployment \
-  $(kubectl get deployments | tail -n +2 | cut -d ' ' -f 1)
+./dishctl.sh ci_push_images_to_latest
+./dishctl.sh rollout_all_services
 
 HOOK=$(\
   grep 'SLACK_MONITORING_HOOK:' env.enc.production.yaml \

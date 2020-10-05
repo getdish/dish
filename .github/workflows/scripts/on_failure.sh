@@ -6,6 +6,5 @@ pushd services/hasura
 docker-compose logs
 popd
 
-cat *.logs
-
+cat *.logs || true
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT_ROOT=$(git rev-parse --show-toplevel)
+path="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 if [[ $DISH_ENV == 'production' ]]; then
   USE_SSL=true
@@ -8,8 +8,8 @@ else
   USE_SSL=false
 fi
 
-pushd $PROJECT_ROOT/services/timescaledb
-USE_SSL=$USE_SSL $PROJECT_ROOT/node_modules/.bin/postgrator \
+pushd $path
+USE_SSL=$USE_SSL postgrator \
   --host ${PG_HOST:-localhost} \
   --port ${PG_PORT:-5433} \
   --database ${PG_DATABASE:-scrape_data} \
