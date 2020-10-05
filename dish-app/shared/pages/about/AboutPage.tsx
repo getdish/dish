@@ -13,7 +13,7 @@ import React, { useEffect } from 'react'
 import { Image } from 'react-native'
 
 import { StackItemProps } from '../../AppStackView'
-import dishNeon from '../../assets/dish-neon.jpg'
+import dishWhite from '../../assets/dish-white.jpg'
 import dontPanic from '../../assets/dont-panic.svg'
 import { BottomDrawerStore } from '../../BottomDrawerStore'
 import { bgLight, brandColorDark, lightGreen, lightYellow } from '../../colors'
@@ -62,42 +62,22 @@ export default function AboutPage({
             marginRight={20}
             paddingLeft={60}
             borderRadius={60}
-            paddingBottom={20}
-            backgroundColor="#000"
-            shadowColor="#000"
-            shadowOpacity={0.1}
-            shadowRadius={10}
-            shadowOffset={{ height: 10, width: 0 }}
             maxWidth="100%"
             alignItems="center"
             position="relative"
           >
-            <AbsoluteVStack
-              zIndex={1}
-              bottom={-34}
-              right={-35}
-              width={125}
-              height={125}
-              transform={[{ rotate: '12deg' }]}
-            >
-              <Image
-                style={{ width: '100%', height: '100%' }}
-                source={{ uri: dontPanic }}
-                resizeMode="contain"
-              />
-            </AbsoluteVStack>
             <Image
-              source={{ uri: dishNeon }}
+              source={{ uri: dishWhite }}
               style={{
-                width: 261 * 1.5,
-                height: 161 * 1.5,
-                marginTop: -26,
-                marginBottom: -42,
+                width: 261 * 1.25,
+                height: 161 * 1.25,
+                marginTop: -20,
+                marginBottom: -40,
               }}
             />
             <Paragraph
               zIndex={10}
-              color="#fff"
+              color="#999"
               textAlign="center"
               size={1.1}
               fontWeight="500"
@@ -268,12 +248,26 @@ export default function AboutPage({
             <Spacer />
 
             <Paragraph size="xl">
+              <AbsoluteVStack
+                zIndex={1}
+                bottom={34}
+                right={15}
+                width={125}
+                height={125}
+                transform={[{ rotate: '12deg' }]}
+              >
+                <Image
+                  style={{ width: '100%', height: '100%' }}
+                  source={{ uri: dontPanic }}
+                  resizeMode="contain"
+                />
+              </AbsoluteVStack>
               If this all sounds interesting and you actually read this far,{' '}
               <Link display="inline" href="mailto:team@dishapp.com">
                 send us an email to join our team
               </Link>
               . We're looking for people who want to build the real world
-              Hitchhiker's Guide to the <TextStrong>Galaxy</TextStrong>.
+              Hitchhiker's Guide to the Galaxy.
             </Paragraph>
             <Spacer size="sm" />
             {/* <form>
