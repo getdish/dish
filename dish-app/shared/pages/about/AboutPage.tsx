@@ -71,7 +71,7 @@ export default function AboutPage({
               style={{
                 width: 261 * 1.25,
                 height: 161 * 1.25,
-                marginTop: -20,
+                marginTop: -30,
                 marginBottom: -40,
               }}
             />
@@ -86,14 +86,12 @@ export default function AboutPage({
             </Paragraph>
           </VStack>
 
-          <Spacer size="sm" />
-
           <VStack paddingHorizontal="5%" spacing="xl">
             <Paragraph size="xxl">
               Craving pho? Amazing Vietnamese and other hole in the wall spots
               are often lost to 3.5-star reviews. We think we can fix this by{' '}
-              <TextStrong>doing ratings down to the dish</TextStrong>, and other
-              factors that matter.
+              <TextStrong>doing ratings down to the dish</TextStrong> and the
+              other factors that matter.
             </Paragraph>
 
             <Paragraph size="xl">
@@ -132,15 +130,15 @@ export default function AboutPage({
             </Paragraph>
 
             <Paragraph size="xxl" fontStyle="italic">
-              Dish lets you find specific things - like a dish you crave.
+              Dish rates specific things, like the dish you're craving.
             </Paragraph>
 
             <Paragraph size="lg">
               When you search "pho delivery cheap", we look at positive and
               negative sentiment from reviews towards <em>pho</em>,{' '}
-              <em>delivery</em> and <em>cheapness</em>, add it up as points, and
-              show you truly the best within that narrow selection. We support
-              all sorts of interesting tags, here are a few:
+              <em>delivery</em> and <em>cheap</em>, then add it up as points and
+              show you the best within that narrow selection. We support all
+              sorts of interesting tags, here's a few:
             </Paragraph>
 
             <UnorderedList>
@@ -168,8 +166,9 @@ export default function AboutPage({
               In fact, when you write a review on Dish{' '}
               <TextStrong>
                 we automatically turn what you say into votes
-              </TextStrong>
-              . Speak your mind, we do the rest.
+              </TextStrong>{' '}
+              that you can manually change as you please. Speak your mind, we do
+              the rest.
             </Paragraph>
 
             <Paragraph size="xl" fontStyle="italic">
@@ -203,10 +202,10 @@ export default function AboutPage({
             </Paragraph>
 
             <Paragraph size="lg">
-              We want to build a some mix of a Hitchhiker's Guide to the Galaxy
-              (a smarter world guide with personality) and a Pokédex (a pocket
-              map curating your favorite things) that encourages our world to
-              have more uniquely good and focused things to do.
+              We want to build a mix of a Hitchhiker's Guide to the Galaxy (a
+              smarter world guide with personality) and a Pokédex (a pocket map
+              curating your favorite things) that encourages our world to have
+              more uniquely good and focused things to do.
             </Paragraph>
 
             <UnorderedList spacing>
