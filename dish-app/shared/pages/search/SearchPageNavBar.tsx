@@ -77,7 +77,7 @@ const SearchPageNavBarContent = memo(({ stateId }: { stateId: string }) => {
         >
           <HStack
             height="100%"
-            marginTop={6}
+            marginTop={10}
             alignItems="center"
             justifyContent="center"
           >

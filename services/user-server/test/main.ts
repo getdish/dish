@@ -36,7 +36,7 @@ test('Admin login', async (t) => {
 
 test('Authed request failure', async (t) => {
   const response = await fetch(BASE + '/user', {
-    headers: { 'Content-Type': 'application/json', Auth: 'bad' },
+    headers: { 'Content-Type': 'application/json', Authorization: 'bad' },
   })
   t.deepEqual(response.status, 401)
   t.deepEqual(response.statusText, 'Unauthorized')
@@ -48,7 +48,7 @@ test('Authed request success', async (t) => {
   const user = await fetch(BASE + '/user/admin', {
     headers: {
       'Content-Type': 'application/json',
-      Auth: jwt,
+      Authorization: jwt,
     },
   }).then((res) => res.json())
   t.deepEqual(user.username, 'admin')

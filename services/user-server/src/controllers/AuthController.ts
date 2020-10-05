@@ -49,6 +49,8 @@ class AuthController {
       { expiresIn: '1w' }
     )
 
+    console.log('logging in', user)
+
     //@ts-ignore
     delete user.password
 

@@ -36,8 +36,8 @@ const LOCAL_ORIGIN =
   typeof window !== 'undefined'
     ? IS_LIVE
       ? PROD_ORIGIN
-      : window.location?.origin ?? 'localhost'
-    : 'localhost'
+      : window.location?.origin ?? 'http://localhost'
+    : 'http://localhost'
 
 export let SEARCH_DOMAIN = (() => {
   const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'

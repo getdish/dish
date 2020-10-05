@@ -4,7 +4,10 @@ import * as jwt from 'jsonwebtoken'
 import config from '../config/config'
 
 export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
-  const token = <string>req.headers['auth']
+  const token = (<string>req.headers['authorization'] ?? '').replace(
+    'Bearer ',
+    ''
+  )
   let jwtPayload
 
   try {
@@ -15,13 +18,12 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
     return
   }
 
-  //The token is valid for 1 hour
+  //The token is valid for 1 day
   //We want to send a new token on every request
   const { userId, username } = jwtPayload
   const newToken = jwt.sign({ userId, username }, config.jwtSecret, {
-    expiresIn: '1h',
+    expiresIn: '1d',
   })
-  res.setHeader('token', newToken)
 
   //Call the next middleware or controller
   next()
