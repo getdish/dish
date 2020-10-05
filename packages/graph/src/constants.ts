@@ -29,15 +29,20 @@ export const RESTAURANT_WEIGHTS = {
   google: 0.4,
 }
 
-const LOCAL_HOSTNAME =
+const IS_LIVE =
+  typeof window !== 'undefined' && window.location?.origin.includes('live')
+const PROD_ORIGIN = 'https://dishapp.com'
+const LOCAL_ORIGIN =
   typeof window !== 'undefined'
-    ? window.location?.hostname ?? 'localhost'
+    ? IS_LIVE
+      ? PROD_ORIGIN
+      : window.location?.origin ?? 'localhost'
     : 'localhost'
 
 export let SEARCH_DOMAIN = (() => {
   const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
-  const LOCAL_SEARCH_DOMAIN = `http://${LOCAL_HOSTNAME}:10000`
-  if (isWorker || isNative) {
+  const LOCAL_SEARCH_DOMAIN = `${LOCAL_ORIGIN}:10000`
+  if (isWorker || isNative || IS_LIVE) {
     return LIVE_SEARCH_DOMAIN
   } else if (isNode) {
     return LOCAL_SEARCH_DOMAIN
@@ -51,16 +56,17 @@ export let SEARCH_DOMAIN = (() => {
 })()
 
 export const AUTH_DOMAIN = (() => {
-  const LOCAL_AUTH_SERVER = `http://${LOCAL_HOSTNAME}:3000`
-  const PROD_JWT_SERVER = 'https://dishapp.com'
+  const LOCAL_AUTH_SERVER = `${
+    LOCAL_ORIGIN === PROD_ORIGIN ? PROD_ORIGIN : LOCAL_ORIGIN + ':3000'
+  }`
   if (isNode) {
     return process.env.AUTH_ENDPOINT || LOCAL_AUTH_SERVER
   } else {
     if (isDevProd) {
-      return PROD_JWT_SERVER
+      return PROD_ORIGIN
     } else {
       if (isHasuraLive) {
-        return PROD_JWT_SERVER
+        return PROD_ORIGIN
       } else {
         return process.env.REACT_APP_AUTH_ENDPOINT || LOCAL_AUTH_SERVER
       }

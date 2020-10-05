@@ -96,6 +96,7 @@ export const AppIntroLogin = memo(() => {
           <LinkButton
             fontSize={16}
             marginLeft={5}
+            marginVertical={-2}
             lineHeight={30}
             borderRadius={8}
             paddingHorizontal={8}

@@ -80,19 +80,23 @@ const login: AsyncAction<{
   password: string
 }> = async (om, { usernameOrEmail, password }) => {
   om.state.user.loading = true
-  const [status, data] = await Auth.login(usernameOrEmail, password)
-  if (status >= 400) {
-    om.state.user.isLoggedIn = false
-    if (status == 400 || status == 401) {
-      om.state.user.messages = ['Username or password not recognised']
+  try {
+    const [status, data] = await Auth.login(usernameOrEmail, password)
+    if (status >= 400) {
+      Toast.show('Error logging in', { type: 'error' })
+      om.state.user.isLoggedIn = false
+      if (status == 400 || status == 401) {
+        om.state.user.messages = ['Username or password not recognised']
+      } else {
+        om.state.user.messages = formatErrors(data)
+      }
     } else {
-      om.state.user.messages = formatErrors(data)
+      postLogin(om, data)
+      Toast.show('Logged in as ' + om.state.user.user?.username)
     }
-  } else {
-    postLogin(om, data)
-    Toast.show('Logged in as ' + om.state.user.user?.username)
+  } finally {
+    om.state.user.loading = false
   }
-  om.state.user.loading = false
 }
 
 const postLogin: Action<Partial<User>> = (om, user: Partial<User>) => {
