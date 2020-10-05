@@ -63,14 +63,12 @@ const register: AsyncAction<
 }
 
 const checkForExistingLogin: AsyncAction = async (om) => {
+  Auth.checkForExistingLogin()
   if (Auth.has_been_logged_out) {
     Toast.show('Session expired: logged out')
   }
   if (Auth.isLoggedIn) {
-    postLogin(om, {
-      ...Auth.user,
-      has_onboarded: true,
-    })
+    postLogin(om, Auth.user)
     om.actions.user.refreshUser()
   }
 }
@@ -121,10 +119,11 @@ const ensureLoggedIn: Action<void, boolean> = (om) => {
 }
 
 const updateUser: AsyncAction<UpdateUserProps, boolean> = async (om, props) => {
-  const [status] = await Auth.updateUser(props)
-  if (status === 200) {
+  const user = await Auth.updateUser(props)
+  if (user) {
     om.state.user.user = {
       ...om.state.user.user,
+      ...user,
       has_onboarded: true,
       ...props,
     }

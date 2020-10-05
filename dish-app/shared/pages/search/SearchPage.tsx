@@ -33,7 +33,7 @@ import {
 } from 'recyclerlistview'
 
 import { AppPortalItem } from '../../AppPortal'
-import { isWeb, searchBarTopOffset } from '../../constants'
+import { isWeb } from '../../constants'
 import { rgbString } from '../../helpers/rgbString'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'

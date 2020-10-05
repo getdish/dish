@@ -1,4 +1,4 @@
-import { graphql, slugify } from '@dish/graph/_'
+import { graphql, slugify } from '@dish/graph'
 import { ChevronUp, HelpCircle, Menu, User } from '@dish/react-feather'
 import { HStack, Popover, Spacer, Text, Tooltip } from '@dish/ui'
 import React, { Suspense, memo, useCallback, useEffect } from 'react'
@@ -81,16 +81,20 @@ export const AppMenu = memo(() => {
   )
 })
 
-const UserMenuButton = graphql(() => {
+const UserMenuButton = () => {
   const om = useOvermind()
-  const username = om.state.user.user?.username ?? ''
-  const user = useUserQuery(username)
+  const user = om.state.user.user
+
+  if (!user) {
+    return null
+  }
+
   return (
     <Tooltip contents="Profile">
       <LinkButton
         name="user"
         params={{
-          username: slugify(username),
+          username: slugify(user.username ?? ''),
         }}
       >
         <UserAvatar
@@ -101,7 +105,7 @@ const UserMenuButton = graphql(() => {
       </LinkButton>
     </Tooltip>
   )
-})
+}
 
 const MenuButton = memo(
   ({

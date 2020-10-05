@@ -49,6 +49,9 @@ export class User {
   location!: string
 
   @Column()
+  has_onboarded!: boolean
+
+  @Column()
   charIndex!: number
 
   @Column()

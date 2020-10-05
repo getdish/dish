@@ -1,6 +1,7 @@
 import { isSafari } from '@dish/helpers'
 
 import { AUTH_DOMAIN, isNode } from './constants'
+import { User } from './types'
 
 const LOGIN_KEY = 'auth'
 const HAS_LOGGED_IN_BEFORE = 'HAS_LOGGED_IN_BEFORE'
@@ -20,10 +21,9 @@ class AuthModel {
   public has_been_logged_out = false
 
   getRedirectUri() {
-    const DOMAIN = `${window.location.origin}`
     return isSafari
-      ? `${DOMAIN}/auth/apple_authorize`
-      : `${DOMAIN}/auth/apple_authorize_chrome`
+      ? `${AUTH_DOMAIN}/auth/apple_authorize`
+      : `${AUTH_DOMAIN}/auth/apple_authorize_chrome`
   }
 
   hasEverLoggedIn =
@@ -34,8 +34,6 @@ class AuthModel {
     if (isNode) {
       this.isLoggedIn = true
       this.is_admin = true
-    } else {
-      this.checkForExistingLogin()
     }
   }
 
@@ -60,17 +58,14 @@ class AuthModel {
   getHeaders() {
     let auth_headers = {}
     if (this.isLoggedIn) {
-      if (this.is_admin) {
-        auth_headers = {
+      auth_headers = {
+        ...(this.is_admin && {
           'X-Hasura-Admin-Secret':
             process.env.HASURA_SECRET ||
             process.env.REACT_APP_HASURA_SECRET ||
             'password',
-        }
-      } else {
-        auth_headers = {
-          Authorization: 'Bearer ' + this.jwt,
-        }
+        }),
+        Authorization: 'Bearer ' + this.jwt,
       }
     }
     return auth_headers
@@ -80,6 +75,7 @@ class AuthModel {
     const response = await fetch(AUTH_DOMAIN + path, {
       method,
       headers: {
+        ...Auth.getHeaders(),
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
@@ -106,12 +102,13 @@ class AuthModel {
     return response
   }
 
-  async updateUser(user: UpdateUserProps) {
+  async updateUser(user: UpdateUserProps): Promise<User | null> {
     const response = await this.api('POST', '/user/updateUser', user)
-    if (response.status !== 201) {
+    if (response.status !== 200) {
       console.error(`Error updating: ${response.status} ${response.statusText}`)
+      return null
     }
-    return [response.status, response.statusText] as const
+    return await response.json()
   }
 
   async register(username: string, email: string, password: string) {
@@ -188,6 +185,7 @@ class AuthModel {
   }
 
   async logout() {
+    console.warn('logout')
     this.isLoggedIn = false
     this.jwt = ''
     this.user = null

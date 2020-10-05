@@ -1,5 +1,5 @@
 import { AbsoluteVStack, Paragraph, Spacer, Text, VStack } from '@dish/ui'
-import { default as React, memo } from 'react'
+import { default as React, memo, useState } from 'react'
 import { Image } from 'react-native'
 
 // @ts-ignore
@@ -9,6 +9,7 @@ import { DarkModal } from './DarkModal'
 import { useOvermind } from './state/om'
 import { UserOnboard } from './UserOnboard'
 import { LoginRegisterForm } from './views/LoginRegisterForm'
+import { CloseButton } from './views/ui/CloseButton'
 import { LinkButton } from './views/ui/LinkButton'
 
 export const AppIntroLetter = memo(() => {
@@ -16,10 +17,15 @@ export const AppIntroLetter = memo(() => {
   const curPage = om.state.router.curPage
   const hasOnboarded = om.state.user.user?.has_onboarded
   const isLoggedIn = om.state.user.isLoggedIn
-  const hide =
-    (isLoggedIn && hasOnboarded) ||
-    curPage.name === 'about' ||
-    curPage.name === 'blog'
+  const [closed, setClosed] = useState(false)
+  const isPublicPage = curPage.name === 'about' || curPage.name === 'blog'
+  const hide = isPublicPage
+    ? true
+    : isLoggedIn
+    ? closed
+      ? true
+      : hasOnboarded
+    : false
 
   return (
     <DarkModal
@@ -44,7 +50,20 @@ export const AppIntroLetter = memo(() => {
       }
     >
       {!isLoggedIn && <AppIntroLogin />}
-      {isLoggedIn && !hasOnboarded && <UserOnboard />}
+      {isLoggedIn && !hasOnboarded && (
+        <>
+          <CloseButton
+            position="absolute"
+            zIndex={1000}
+            top={10}
+            right={10}
+            onPress={() => {
+              setClosed(true)
+            }}
+          />
+          <UserOnboard />
+        </>
+      )}
     </DarkModal>
   )
 })

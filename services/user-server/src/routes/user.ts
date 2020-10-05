@@ -37,9 +37,9 @@ router.delete(
 // user level permissions
 
 //update user
-router.patch(
+router.post(
   '/updateUser',
-  [checkJwt, checkRole(['user'])],
+  [checkJwt, checkRole(['user', 'admin'])],
   UserController.updateUser
 )
 

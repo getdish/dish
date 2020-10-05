@@ -2,6 +2,7 @@ import { validate } from 'class-validator'
 import { Request, Response } from 'express'
 import { getRepository } from 'typeorm'
 
+import { getUserFromResponse } from '../middlewares/checkRole'
 import { User } from '../models/User'
 
 class UserController {
@@ -60,20 +61,14 @@ class UserController {
 
   static updateUser = async (req: Request, res: Response) => {
     const { username, about, location, charIndex } = req.body
-    const userRepository = getRepository(User)
-    let user
-    try {
-      user = await userRepository.findOne({
-        where: {
-          username,
-        },
-      })
-    } catch (error) {
-      res.status(404).send('User not found')
-      return
+    const { user, error } = await getUserFromResponse(res)
+
+    if (error || !user) {
+      return res.status(401).send(error)
     }
 
     user.has_onboarded = true
+    user.email = user.email ?? 'default@dishapp.com'
     if (about !== null) user.about = about
     if (location !== null) user.location = location
     if (charIndex !== null) user.charIndex = charIndex
@@ -85,12 +80,21 @@ class UserController {
     }
 
     try {
+      const userRepository = getRepository(User)
       await userRepository.save(user)
     } catch (e) {
       res.status(409).send('failed')
       return
     }
-    res.status(204).send()
+
+    res.json({
+      email: user.email,
+      has_onboarded: user.has_onboarded,
+      about: user.about,
+      location: user.location,
+      charIndex: user.charIndex,
+      username: user.username,
+    })
   }
 
   static editUser = async (req: Request, res: Response) => {
