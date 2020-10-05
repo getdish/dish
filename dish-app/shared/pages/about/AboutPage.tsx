@@ -100,7 +100,7 @@ export default function AboutPage({
               color="#fff"
               textAlign="center"
               size={1.1}
-              fontWeight="600"
+              fontWeight="500"
             >
               the better restaurant recommender
             </Paragraph>
@@ -110,92 +110,19 @@ export default function AboutPage({
 
           <VStack paddingHorizontal="5%" spacing="xl">
             <Paragraph size="xxl">
-              Restaurant search is broken in three ways:
-            </Paragraph>
-
-            <UnorderedList spacing="xs">
-              <UnorderedListItem size="xl">
-                Recommendations aren't catered to your personal taste.
-              </UnorderedListItem>
-              <UnorderedListItem size="xl">
-                Hole-in-the-wall restaurants are lost to 3.5 star ratings.
-              </UnorderedListItem>
-              <UnorderedListItem size="xl">
-                There are 5 delivery apps, each with sketchy ratings.
-              </UnorderedListItem>
-            </UnorderedList>
-
-            <Paragraph size="xl">
-              But also — <TextStrong>where's all the fun</TextStrong>? When
-              FourSquare shut down, the closest thing we had to a fun map of the
-              world was lost. We want to build a modern Hitchhiker's Guide to
-              Gastronomy: a community that thinks different and explores and
-              curates a guide to the unique gems in every part of the world.
-            </Paragraph>
-
-            <Spacer size={0} />
-
-            <Paragraph
-              backgroundColor={`${lightYellow}99`}
-              borderWidth={2}
-              borderColor={lightYellow}
-              borderRadius={20}
-              paddingVertical={10}
-              sizeLineHeight={0.8}
-              fontStyle="italic"
-              size="xxl"
-              fontWeight="500"
-              textAlign="center"
-              color={brandColorDark}
-            >
-              Dish, your food{' '}
-              <Text display="inline" fontWeight="600">
-                pokédex
-              </Text>
-              <br />
-              <Text fontWeight="400" display="inline" fontSize={20}>
-                a pocket guide to the world
-              </Text>
-            </Paragraph>
-
-            <Spacer size={0} />
-
-            <Paragraph size="lg">
-              So, we're building something that solves our frustrations. Here's
-              how we're thinking about it.
-            </Paragraph>
-
-            <Paragraph size="xl" fontWeight="500">
-              Searching delivery? Not too hard ✅
+              Craving pho? Amazing Vietnamese, Chinese, and Mexican spots are
+              often hard to find because a single 5-star rating forces food,
+              ambiance and service into one dimension. Lets change the world of
+              eating out (and in) by fixing food ratings.
             </Paragraph>
 
             <Paragraph size="lg">
-              We crawled every delivery app and made them all searchable in one
-              simple interface.
-            </Paragraph>
-
-            <Paragraph size="xl" fontWeight="500">
-              To your taste? We have ideas 💡
-            </Paragraph>
-
-            <Paragraph size="lg">
-              We want to highlight chefs and people in each local community and
-              let you follow the ones you agree with. We don't think data mining
-              works well enough, and where's the fun in that? Instead, you
-              curate your own map of the world through votes and follows.
-            </Paragraph>
-
-            <Paragraph size="xl" fontWeight="500">
-              But how to fix hole-in-the-wall ratings?
-            </Paragraph>
-
-            <Paragraph size="lg">
-              Our answer:{' '}
+              We think{' '}
               <TextStrong>
-                a single 5 star rating may not be what we need
+                ratings can be improved by throwing away 5 stars
               </TextStrong>
               . The reason hole-in-the-wall restaurants get lost is because
-              often they don't cater to service or ambiance. We realized, what
+              often they don't cater to service or ambiance. It turns out what
               you care about when ordering{' '}
               <LinkButton
                 fontWeight="400"
@@ -226,29 +153,24 @@ export default function AboutPage({
               >
                 date night 🌃
               </LinkButton>{' '}
-              is <em>unique</em>: maybe one night it's a specific dish and the
-              delivery speed, and another night it's the vibe and service. Maybe
-              you do care about it all sometimes. It totally depends on your
-              mood.
+              is <em>unique</em>: one night it's a specific dish and delivery
+              speed, the other it's vibe and service. It depends on your mood.
             </Paragraph>
 
-            <Paragraph size="lg" fontStyle="italic">
-              So, we're throwing away the stars (sort of).
+            <Paragraph size="xl" fontStyle="italic">
+              Dish gives points to every facet of a restaurant: each dish, the
+              ambiance, service, and a lot more.
             </Paragraph>
 
             <Paragraph size="lg">
               When you search "quick cheap pizza", we take positive and negative
-              sentiment from all reviews specifically towards "quickness",
-              "cheapness" and "pizza(ness)". We turn those into points and add
-              them up. Every search is ranked by points, and highly tuned to
-              what you look for - all the way down to individual dishes. More
-              than that, the points are visible to you, and you can vote on
-              them.
+              sentiment from reviews towards "quickness", "cheapness" and
+              "pizzaness" as points and add them up. That's how they sort!
             </Paragraph>
 
             <Paragraph size="lg">
-              If you love the tacos at a restaurant - vote up their tacos. In
-              fact, when you write a review on Dish{' '}
+              Then, we let you vote on any aspect. In fact, when you write a
+              review on Dish{' '}
               <TextStrong>
                 we automatically turn what you say into votes
               </TextStrong>{' '}
@@ -256,13 +178,39 @@ export default function AboutPage({
               mind, we do the rest.
             </Paragraph>
 
+            <Paragraph size="xl" fontStyle="italic">
+              But what about different tastes?
+            </Paragraph>
+
             <Paragraph size="lg">
-              Finally, Dish sources reviews from every top food review site.
-              Think of it like RottenTomatoes, for, well, real tomatoes. We want
-              to build something fun, personal and fast. A guide that caters to
-              you. Collect, discover and curate local gems, see friends and
-              chefs picks, get tips on where to go and what to order there, and
-              filter by mood and desire.
+              <TextStrong>
+                Food search apps today aren't catered to your personal taste
+              </TextStrong>
+              . We're working on a way to give you control over your taste
+              profile, but it will take time. We think we can do it in a way
+              that is transparent and under your control, but still easy to do
+              and fun. rate.
+            </Paragraph>
+
+            <Paragraph size="xl" fontStyle="italic">
+              Does it do anything else?
+            </Paragraph>
+
+            <Paragraph size="lg">
+              Dish searches across every delivery app. We found it tiring to
+              have to flip between delivery apps with low quality ratings and
+              food search apps constantly.
+            </Paragraph>
+
+            <Paragraph size="xl" fontStyle="italic">
+              In the long term
+            </Paragraph>
+
+            <Paragraph size="lg">
+              We want to build the Hitchhiker's Guide to Gastronomy. Something
+              more fun. With smart descriptions that highlight what's unique
+              based on what people say and vote on for each spot. And a map of
+              your favorites and food adventures that you can build over time.
             </Paragraph>
 
             <Paragraph size="lg">Our goals:</Paragraph>
@@ -284,7 +232,36 @@ export default function AboutPage({
               </UnorderedListItem>
             </UnorderedList>
 
+            <Spacer />
+
             <Paragraph size="xxl">Enjoy! 🌮🍜</Paragraph>
+
+            <Spacer />
+            <Divider />
+            <Spacer />
+
+            <Paragraph
+              backgroundColor={`${lightYellow}99`}
+              borderWidth={2}
+              borderColor={lightYellow}
+              borderRadius={20}
+              paddingVertical={10}
+              sizeLineHeight={0.8}
+              fontStyle="italic"
+              size="xxl"
+              fontWeight="500"
+              textAlign="center"
+              color={brandColorDark}
+            >
+              Dish, your food{' '}
+              <Text display="inline" fontWeight="600">
+                pokédex
+              </Text>
+              <br />
+              <Text fontWeight="400" display="inline" fontSize={20}>
+                a pocket guide to the world
+              </Text>
+            </Paragraph>
 
             <Spacer />
             <Divider />
@@ -298,7 +275,6 @@ export default function AboutPage({
               . We're looking for people who want to build the real world
               Hitchhiker's Guide to the <TextStrong>Galaxy</TextStrong>.
             </Paragraph>
-
             <Spacer size="sm" />
             {/* <form>
               <VStack>
