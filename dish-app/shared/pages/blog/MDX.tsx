@@ -1,11 +1,22 @@
-import { H1, H2, H3, H4, H5, Paragraph, Text, VStack } from '@dish/ui'
+import {
+  H1,
+  H2,
+  H3,
+  H4,
+  H5,
+  Paragraph,
+  Text,
+  UnorderedList,
+  UnorderedListItem,
+  VStack,
+} from '@dish/ui'
 import { MDXProvider } from '@mdx-js/react'
 import React from 'react'
 import { Image, ImageProps } from 'react-native'
 
 import { lightYellow, yellow } from '../../colors'
 import { Link } from '../../views/ui/Link'
-import { contentSpace, contentSpaceLg } from './contentSpace'
+import { contentSpace, contentSpaceLg, contentSpaceSm } from './contentSpace'
 import { IntroText } from './IntroText'
 
 const spaceVertical = (Component: any, space?: any) => (props: any) => (
@@ -57,12 +68,12 @@ const components = {
 
   HighlightedText: spaceVertical((props) => (
     <Paragraph
-      marginHorizontal={20}
       backgroundColor={lightYellow}
       borderColor={yellow}
       borderWidth={1}
       borderRadius={10}
-      padding={20}
+      paddingVertical="1%"
+      paddingHorizontal="3%"
       {...props}
     />
   )),
@@ -87,12 +98,15 @@ const components = {
   h5: spaceVertical(H5),
   pre: spaceVertical(Text),
 
-  li: spaceVertical((props) => <li style={{ marginLeft: 26 }} {...props} />),
-  ul: spaceVertical((props) => <ul style={{ margin: 0 }} {...props} />),
+  li: spaceVertical(
+    (props) => <UnorderedListItem {...props} />,
+    contentSpaceSm
+  ),
+  ul: spaceVertical((props) => <UnorderedList {...props} />),
 
-  a: spaceVertical((props: any) => {
-    return <Link {...props} />
-  }),
+  a: (props: any) => {
+    return <Link display="inline" {...props} />
+  },
 
   ol: spaceVertical((props) => <ol style={{ margin: 0 }} {...props} />),
 

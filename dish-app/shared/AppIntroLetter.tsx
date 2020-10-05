@@ -4,7 +4,7 @@ import { Image } from 'react-native'
 
 // @ts-ignore
 import dishNeon from './assets/dish-neon.jpg'
-import { brandColorLighter, lightGreen, lightYellow } from './colors'
+import { brandColorLighter, lightGreen, lightYellow, yellow } from './colors'
 import { DarkModal } from './DarkModal'
 import { useOvermind } from './state/om'
 import { UserOnboard } from './UserOnboard'
@@ -63,55 +63,58 @@ export const divider = (
 export const AppIntroLogin = memo(() => {
   return (
     <>
-      <VStack spacing alignItems="center">
+      <VStack spacing="lg" alignItems="center">
         <Image
           source={{ uri: dishNeon }}
           style={{
             marginTop: -20,
-            marginBottom: -30,
+            marginBottom: -40,
             width: 261 * 1.2,
             height: 161 * 1.2,
           }}
         />
 
         <Paragraph
+          color="rgba(255,255,255,0.6)"
           zIndex={10}
           textAlign="center"
-          color="#fff"
           fontWeight="300"
           size={1.2}
         >
-          <Text fontSize={20} fontWeight="500" color="#fff">
-            the better restaurant recommender
-          </Text>
+          the better restaurant recommender
         </Paragraph>
 
-        <>
-          <VStack>
-            <LinkButton
-              fontSize={16}
-              lineHeight={30}
-              borderRadius={8}
-              fontWeight="300"
-              paddingHorizontal={8}
-              marginHorizontal={-8}
-              color="#fff"
-              backgroundColor={`${lightYellow}22`}
-              hoverStyle={{
-                backgroundColor: `${lightYellow}33`,
-              }}
-              name="about"
-            >
-              learn how dish fixes food search
-            </LinkButton>
-          </VStack>
-        </>
+        <Paragraph
+          color="rgba(255,255,255,0.8)"
+          fontWeight="500"
+          paddingHorizontal="10%"
+          sizeLineHeight={1.02}
+          textAlign="center"
+        >
+          Let's bring the fun back to exploring the world with a community that
+          breaks down hidden gems and locals tips.
+          <LinkButton
+            fontSize={16}
+            marginLeft={5}
+            lineHeight={30}
+            borderRadius={8}
+            paddingHorizontal={8}
+            color={yellow}
+            backgroundColor={`${lightYellow}22`}
+            hoverStyle={{
+              backgroundColor: `${lightYellow}33`,
+            }}
+            name="about"
+          >
+            learn how &raquo;
+          </LinkButton>
+        </Paragraph>
 
         <Spacer size="xs" />
 
-        <Text color="rgba(255,255,255,0.4)" fontSize={16} fontWeight="600">
+        {/* <Text color="rgba(255,255,255,0.4)" fontSize={16} fontWeight="600">
           early access
-        </Text>
+        </Text> */}
 
         <LoginRegisterForm />
       </VStack>
