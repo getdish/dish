@@ -4,7 +4,6 @@ import { AbsoluteVStack } from '@dish/ui'
 import loadable from '@loadable/component'
 import React, { Suspense, memo, useEffect } from 'react'
 
-import { auth } from '../web/apple-sign-in'
 import HomeAutocomplete from './AppAutocomplete'
 import { AppContainer } from './AppContainer'
 import { AppIntroLetter } from './AppIntroLetter'
@@ -15,7 +14,7 @@ import { AppRoot } from './AppRoot'
 import { HomeSearchBarFloating } from './AppSearchBar'
 import { AppStackView } from './AppStackView'
 import { bgLight } from './colors'
-import { isSSR } from './constants'
+import { isSSR, isWeb } from './constants'
 import { useIsNarrow } from './hooks/useIs'
 import { PagesStackView } from './pages/PagesStackView'
 import { ErrorBoundary } from './views/ErrorBoundary'
@@ -24,30 +23,17 @@ import { Route } from './views/router/Route'
 export default memo(function App() {
   const isSmall = useIsNarrow()
 
-  useEffect(() => {
-    // workaround apple id requirement to init 3 buttons
-
-    auth.init({
-      clientId: 'com.dishapp',
-      scope: 'name email',
-      redirectURI: Auth.getRedirectUri(),
-      usePopup: isSafari,
-    })
-
-    //Listen for authorization success
-    const handleAppleSuccess = (data) => {
-      console.log('got apple res', data)
-    }
-    const handleAppleFailure = (error) => {
-      console.log('got apple err', error)
-    }
-    document.addEventListener('AppleIDSignInOnSuccess', handleAppleSuccess)
-    document.addEventListener('AppleIDSignInOnFailure', handleAppleFailure)
-    return () => {
-      document.removeEventListener('AppleIDSignInOnSuccess', handleAppleSuccess)
-      document.removeEventListener('AppleIDSignInOnFailure', handleAppleFailure)
-    }
-  }, [])
+  if (isWeb) {
+    const { auth } = require('../web/apple-sign-in')
+    useEffect(() => {
+      auth.init({
+        clientId: 'com.dishapp',
+        scope: 'name email',
+        redirectURI: Auth.getRedirectUri(),
+        usePopup: isSafari,
+      })
+    }, [])
+  }
 
   return (
     <AbsoluteVStack

@@ -3,7 +3,6 @@ import { Auth } from '@dish/graph'
 import { HStack, Text, Toast, VStack } from '@dish/ui'
 import React, { useState } from 'react'
 
-import { auth } from '../../web/apple-sign-in'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { AppleLogoWhite } from './AppleLogoWhite'
 
@@ -20,7 +19,7 @@ export const SignInAppleButton = () => {
           }
         }, 3000)
         await sleep(40)
-        // @ts-ignore
+        const { auth } = require('../../web/apple-sign-in')
         const res = auth.signIn()
         if (!res) return // in-browser
         try {
