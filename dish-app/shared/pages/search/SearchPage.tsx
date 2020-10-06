@@ -242,7 +242,6 @@ const SearchResultsContent = (props: Props) => {
   const searchState = props.item
   const drawerWidth = useAppDrawerWidth()
   const allResults = searchState.results
-  const scrollRef = useRef<ScrollView | null>(null)
   const { title } = getTitleForState(searchState, {
     lowerCase: false,
   })
@@ -445,6 +444,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
               searchState={curProps.item}
               scrollToTop={scrollToTopHandler}
             />
+            <VStack height={400} />
           </Suspense>
         </ScrollView>
       </VStack>

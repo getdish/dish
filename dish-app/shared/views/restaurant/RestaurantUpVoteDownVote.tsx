@@ -5,11 +5,13 @@ import {
   HoverablePopover,
   SmallTitle,
   Spacer,
+  Table,
   TableCell,
   TableCellProps,
+  TableHeadRow,
+  TableHeadText,
   TableRow,
   Text,
-  VStack,
 } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 
@@ -20,7 +22,6 @@ import { useUserUpvoteDownvoteQuery } from '../../hooks/useUserUpvoteDownvoteQue
 import { ensureFlexText } from '../../pages/restaurant/ensureFlexText'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { PointsText } from '../PointsText'
-import { Table, TableHeadRow, TableHeadText } from '../ui/Table'
 import { UpvoteDownvoteScore } from '../UpvoteDownvoteScore'
 
 export const RestaurantUpVoteDownVote = memo(

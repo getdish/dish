@@ -1,12 +1,12 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
-import { isPresent } from '@dish/helpers'
 import { MessageSquare } from '@dish/react-feather'
 import {
   AbsoluteVStack,
   HStack,
   Spacer,
   StackProps,
+  TableHeadText,
   Text,
   TextSuperScript,
   Tooltip,
@@ -36,10 +36,7 @@ import { DishView } from '../../views/dish/DishView'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { Link } from '../../views/ui/Link'
-import {
-  SmallLinkButton,
-  smallButtonBaseStyle,
-} from '../../views/ui/SmallButton'
+import { SmallLinkButton } from '../../views/ui/SmallButton'
 import { Squircle } from '../../views/ui/Squircle'
 import { ensureFlexText } from './ensureFlexText'
 import { RestaurantAddress } from './RestaurantAddress'
@@ -215,15 +212,15 @@ const RestaurantListItemContent = memo(
           bottom={0}
           zIndex={-1}
           width={8}
-          backgroundColor={isActive ? brandColor : 'transparent'}
+          left={-2}
+          backgroundColor={isActive ? brandColor : '#f2f2f2'}
         />
 
         <VStack flex={1} alignItems="flex-start" maxWidth="100%">
           {/* ROW: TITLE */}
           <VStack
-            // backgroundColor={bgLightLight}
             hoverStyle={{ backgroundColor: bgLightLight }}
-            // pressStyle={{ backgroundColor: bgHover }}
+            paddingTop={10}
             marginLeft={-pad}
             paddingLeft={pad}
             paddingBottom={12}
@@ -266,47 +263,7 @@ const RestaurantListItemContent = memo(
                       params={{ slug: restaurantSlug }}
                     >
                       <HStack>
-                        <VStack
-                          width={38}
-                          height={38}
-                          {...(isWeb && {
-                            marginLeft: -18,
-                            marginTop: -14,
-                            marginRight: -4,
-                          })}
-                          {...(!isWeb && {
-                            marginLeft: -6,
-                            marginTop: -10,
-                            marginRight: 0,
-                          })}
-                          marginBottom={-22}
-                          position="relative"
-                          backgroundColor={bgLight}
-                          borderRadius={1000}
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Text
-                            color="#777"
-                            transform={[{ translateY: -0 }]}
-                            textAlign="center"
-                            lineHeight={38}
-                          >
-                            <TextSuperScript
-                              transform={[{ translateY: -4 }]}
-                              fontSize={11}
-                            >
-                              #
-                            </TextSuperScript>
-                            <Text
-                              fontSize={+rank > 9 ? 14 : 20}
-                              fontWeight="500"
-                              color="#000"
-                            >
-                              {rank}
-                            </Text>
-                          </Text>
-                        </VStack>
+                        <RankView rank={rank} />
                         <Spacer size="md" />
                         <Text
                           ellipse
@@ -483,6 +440,46 @@ const RestaurantListItemContent = memo(
   })
 )
 
+const RankView = memo(({ rank }: { rank: number }) => {
+  return (
+    <VStack
+      width={40}
+      height={40}
+      {...(isWeb && {
+        marginLeft: -16,
+        marginBottom: -10,
+        transform: [{ translateY: -15 }],
+        marginRight: -4,
+      })}
+      {...(!isWeb && {
+        marginLeft: -6,
+        marginTop: -10,
+        marginRight: 0,
+      })}
+      // marginBottom={-22}
+      position="relative"
+      backgroundColor={bgLight}
+      borderRadius={1000}
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Text
+        color="#777"
+        transform={[{ translateY: -0 }]}
+        textAlign="center"
+        lineHeight={38}
+      >
+        <TextSuperScript transform={[{ translateY: -4 }]} fontSize={11}>
+          #
+        </TextSuperScript>
+        <Text fontSize={+rank > 9 ? 14 : 20} fontWeight="700" color="#000">
+          {rank}
+        </Text>
+      </Text>
+    </VStack>
+  )
+})
+
 const RestaurantPeekDishes = memo(
   graphql(function RestaurantPeek(props: {
     size?: 'lg' | 'md'
@@ -491,6 +488,10 @@ const RestaurantPeekDishes = memo(
     searchState: HomeStateItemSearch
     isLoaded: boolean
   }) {
+    const activeTags = omStatic.state.home.lastSearchState.activeTagIds
+    const dishSearchedTag = Object.keys(activeTags).find(
+      (k) => allTags[k].type === 'dish'
+    )
     const { isLoaded, searchState, size = 'md' } = props
     const tagSlugs = [
       searchState.searchQuery.toLowerCase(),
@@ -536,12 +537,20 @@ const RestaurantPeekDishes = memo(
         contain="paint layout"
         pointerEvents="auto"
         padding={20}
-        marginTop={-60}
+        paddingVertical={40}
+        marginTop={-80}
         marginBottom={-40}
-        height={dishSize + 40}
+        height={dishSize + 80}
         spacing={spacing}
         width={dishSize * 5}
+        position="relative"
       >
+        <AbsoluteVStack top={1} left={20}>
+          <TableHeadText color="#555">
+            {dishSearchedTag ? 'Dishes' : 'Best Dishes'}
+          </TableHeadText>
+        </AbsoluteVStack>
+
         {photos.map((photo, i) => {
           if (!isLoaded) {
             if (i > 2) {

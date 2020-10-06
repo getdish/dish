@@ -1,3 +1,18 @@
+- tag voting fixes everywhere
+- points breakdown real fixes
+- admin panel fixes + fiverr cleanups
+- slow scrolling because of mapbox?
+- list item
+  - show restaurant cuisine tags in overview
+  - if michelin quote is availble, show that with michelin logo
+- fix hmr for useStore in react native
+- fix login/register flows
+- get reviewing fully working with votes/sentiment on tags
+- fix up points breakdown and dish/tag breakdown
+- location <=> url
+
+---
+
 - the long run, a wiki of our world:
   - there exists no community map of the world
     - what happened to the atlas?
@@ -24,18 +39,6 @@
   - the biggest effect will be we'll look back and think the old internet was much more boring - wheres the fun?
 
 ---
-
-- admin panel fixes + fiverr cleanups
-- voting on dish tags / voting in general
-- slow scrolling because of mapbox?
-- list item
-  - show restaurant cuisine tags in overview
-  - if michelin quote is availble, show that with michelin logo
-- fix hmr for useStore in react native
-- fix login/register flows
-- get reviewing fully working with votes/sentiment on tags
-- fix up points breakdown and dish/tag breakdown
-- location <=> url
 
 after alpha:
 

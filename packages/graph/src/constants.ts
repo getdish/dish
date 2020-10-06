@@ -2,7 +2,7 @@ export const constants = 0
 export const isNode = typeof window == 'undefined'
 
 export const isHasuraLive =
-  !isNode && window.location?.hostname.includes('hasura_live')
+  !isNode && window.location?.hostname.includes('live')
 export const isDevProd =
   process.env.TARGET === 'native' ||
   (!isNode && window.location?.hostname.includes('dish'))

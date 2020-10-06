@@ -432,7 +432,7 @@ body > div {
 .scale-hover {
   position: relative;
   overflow: hidden;
-  transition: all ease-out 40ms;
+  transition: all ease-out 240ms;
 }
 
 .scale-hover:hover {
@@ -440,7 +440,7 @@ body > div {
   box-shadow: 0 2px 6px rgba(0,0,0,0.25);
   z-index: 10;
 }
-
+/*
 .scale-hover > div::before {
   display: flex;
   content: ' ';
@@ -457,4 +457,12 @@ body > div {
 
 .scale-hover:hover > div::before {
   opacity: 0;
+} */
+
+.scroll-snap-photos > div {
+  scroll-snap-type: x mandatory;
+}
+
+.scroll-snap-photo {
+  scroll-snap-align: center;
 }

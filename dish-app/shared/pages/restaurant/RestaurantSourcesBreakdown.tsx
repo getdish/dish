@@ -1,6 +1,17 @@
 import { graphql } from '@dish/graph'
 import { HelpCircle } from '@dish/react-feather'
-import { HStack, Spacer, StackProps, Text, VStack } from '@dish/ui'
+import {
+  HStack,
+  Spacer,
+  StackProps,
+  Table,
+  TableCell,
+  TableHeadRow,
+  TableHeadText,
+  TableRow,
+  Text,
+  VStack,
+} from '@dish/ui'
 import { sortBy } from 'lodash'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
@@ -9,13 +20,6 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { omStatic } from '../../state/omStatic'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
-import {
-  Table,
-  TableCell,
-  TableHeadRow,
-  TableHeadText,
-  TableRow,
-} from '../../views/ui/Table'
 
 export const col0Props: StackProps = {
   flex: 0,

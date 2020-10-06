@@ -4,6 +4,7 @@ import { AbsoluteVStack } from '@dish/ui'
 import loadable from '@loadable/component'
 import React, { Suspense, memo, useEffect } from 'react'
 
+import { auth } from '../web/apple-sign-in'
 import HomeAutocomplete from './AppAutocomplete'
 import { AppContainer } from './AppContainer'
 import { AppIntroLetter } from './AppIntroLetter'
@@ -26,8 +27,7 @@ export default memo(function App() {
   useEffect(() => {
     // workaround apple id requirement to init 3 buttons
 
-    // @ts-ignore
-    AppleID.auth.init({
+    auth.init({
       clientId: 'com.dishapp',
       scope: 'name email',
       redirectURI: Auth.getRedirectUri(),

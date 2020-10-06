@@ -25,9 +25,9 @@ export const RestaurantDetailRow = memo(
     }) => {
       const sizeSm = size === 'sm'
       const restaurant = useRestaurantQuery(restaurantSlug)
-      const restaurantSources = getRestaurantDeliverySources(
-        restaurant.sources()
-      )
+      // const restaurantSources = getRestaurantDeliverySources(
+      //   restaurant.sources()
+      // )
       const [open_text, open_color, next_time] = openingHours(restaurant)
       const [price_label, price_color, price_range] = priceRange(restaurant)
 
