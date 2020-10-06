@@ -803,6 +803,12 @@ function terraform_apply() {
   popd
 }
 
+function scale_min() {
+  kubectl scale --replicas=1 deployment worker
+  kubectl scale --replicas=1 deployment bert
+  kubectl scale --replicas=1 deployment image-quality-api
+}
+
 if command -v git &> /dev/null; then
   export PROJECT_ROOT=$(git rev-parse --show-toplevel)
   branch=$(git rev-parse --abbrev-ref HEAD)
