@@ -361,7 +361,6 @@ function __restore_latest_main_backup() {
   _run_on_cluster postgres:12-alpine && return 0
   set -e
   _setup_s3
-  echo $(s3 ls $DISH_BACKUP_BUCKET | tail -1 | awk '{ print $4 }')
   _restore_main_backup "$(get_latest_main_backup)"
 }
 

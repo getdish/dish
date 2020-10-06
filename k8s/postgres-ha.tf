@@ -8,7 +8,7 @@ resource "helm_release" "postgres-ha" {
   name = "postgres-ha"
   namespace = "postgres-ha"
   chart = "bitnami/postgresql-ha"
-  version = "3.5.3"
+  version = "3.9.0"
 
   values = [
     file("yaml/postgres-ha.yaml")

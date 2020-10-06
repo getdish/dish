@@ -32,7 +32,7 @@ resource "digitalocean_kubernetes_node_pool" "db" {
   name       = "dish-db-pool"
   size       = "g-2vcpu-8gb"
   auto_scale = true
-  min_nodes = 3
+  min_nodes = 2
   max_nodes = 5
 }
 
