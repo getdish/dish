@@ -65,8 +65,8 @@ resource "kubernetes_service" "dish-app-web" {
 
     port {
       name = "http"
-      port = 19006
-      target_port = 19006
+      port = 80
+      target_port = 80
     }
   }
 }
@@ -142,8 +142,8 @@ resource "kubernetes_service" "dish-app-web" {
 
     #port {
       #name = "http"
-      #port = 19006
-      #target_port = 19006
+      #port = 80
+      #target_port = 80
     #}
   #}
 #}

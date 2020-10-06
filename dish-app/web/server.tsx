@@ -24,8 +24,8 @@ global['__DEV__'] = false
 // fake a browser!
 const jsdom = new JSDOM(``, {
   pretendToBeVisual: true,
-  url: 'http://d1sh_hasura_live.com:19006/',
-  referrer: 'http://d1sh_hasura_live.com:19006/',
+  url: 'http://dishapp.com/',
+  referrer: 'http://dishapp.com/',
   contentType: 'text/html',
 })
 // @ts-ignore
@@ -161,11 +161,11 @@ server.get('*', async (req, res) => {
   res.send(out)
 })
 
-const port = 19006
+const port = 80
 const host = '0.0.0.0'
 // server.listen(port)
 server.listen(port, host)
-console.log(`Listening on ${host}:${19006}`)
+console.log(`Listening on ${host}:${80}`)
 
 function cors() {
   const HEADER_ALLOWED =

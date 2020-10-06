@@ -80,11 +80,12 @@ First build the docker container, this can take up to 30 minutes:
     * At the very root of the entire git repo:
       `docker build -t dish/app -f dish-app/Dockerfile .`
 
-    * Run the production build of the web site (it exposes on port 19006):
+    * Run the production build of the web site (it exposes on port 80):
       `docker run -it --rm --net host dish/app`
 
-    * To connect to our production backing services, visit:
-      'http://d1sh_hasura_live:19006'
+    * To connect to our production backing services:
+      * add 127.0.0.1 d1live.com to /etc/hosts
+      * visit http://d1live.com
 
 If you want to run end to end tests:
 
@@ -97,7 +98,7 @@ If you want to run end to end tests:
       ```
 
     * To connect to these local services, visit:
-      'http://localhost:19006'
+      'http://localhost:80'
 
     * Run the tests. from the `dish-app` path:
       `./test/testcafe.sh`

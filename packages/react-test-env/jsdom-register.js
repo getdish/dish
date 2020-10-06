@@ -2,7 +2,7 @@ const KEYS = require('jsdom-global/keys')
 require('./_/index')
 
 const { JSDOM } = require('jsdom')
-const url = 'http://d1sh_hasura_live.com:19006/'
+const url = 'http://d1live.com/'
 // fake a browser!
 const document = new JSDOM(``, {
   pretendToBeVisual: true,
