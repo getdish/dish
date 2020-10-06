@@ -1,4 +1,4 @@
-import 'isomorphic-unfetch'
+import { spawn } from 'child_process'
 
 import { Selector } from 'testcafe'
 
@@ -18,8 +18,11 @@ test('Basic rendering check', async (t) => {
       await body?.childNodeCount,
       await body?.innerText
     )
-    const out = await fetch('http://localhost:4444/').then((res) => res.text())
-    console.log('failure out', out)
+    const ls = spawn('curl', ['http://localhost:4444/'])
+
+    ls.stdout.on('data', (data) => {
+      console.log(`failure out: ${data}`)
+    })
   }
 })
 

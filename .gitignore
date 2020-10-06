@@ -105,3 +105,6 @@ report.*.json
 
 # Rust builds
 target/
+
+# testcafe screenshots
+dish-app/test/screenshots
