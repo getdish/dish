@@ -1,4 +1,4 @@
-import { HStack, StackProps, Text } from '@dish/ui'
+import { HStack, StackProps, Text, Tooltip } from '@dish/ui'
 import React from 'react'
 import { TextStyle } from 'react-native'
 
@@ -12,6 +12,7 @@ import { LinkButtonProps } from './LinkProps'
 export type SmallButtonProps = LinkButtonProps & {
   isActive?: boolean
   textStyle?: TextStyle
+  tooltip?: string
 }
 
 export const SmallButton = ({
@@ -24,10 +25,11 @@ export const SmallButton = ({
   fontWeight,
   lineHeight,
   textAlign,
+  tooltip,
   ellipse,
   ...rest
 }: SmallButtonProps) => {
-  const contents =
+  let contents =
     typeof children === 'string' ? (
       <Text
         color={isActive ? '#000' : bg}
@@ -55,7 +57,7 @@ export const SmallButton = ({
       children
     )
 
-  return (
+  contents = (
     <LinkButton
       className={rest.className}
       {...(isWeb && {
@@ -81,6 +83,12 @@ export const SmallButton = ({
       {contents}
     </LinkButton>
   )
+
+  if (tooltip) {
+    return <Tooltip contents={tooltip}>{contents}</Tooltip>
+  }
+
+  return contents
 }
 
 export const smallButtonBaseStyle: StackProps = {

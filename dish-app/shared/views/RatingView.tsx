@@ -36,7 +36,7 @@ export const RatingView = forwardRef(
 
     // size!
     let size =
-      sizeIn == 'xs' ? 32 : sizeIn === 'sm' ? 38 : sizeIn == 'md' ? 48 : 72
+      sizeIn == 'xs' ? 28 : sizeIn === 'sm' ? 32 : sizeIn == 'md' ? 44 : 52
 
     const badgeOffset =
       sizeIn === 'xs' || sizeIn === 'sm' ? Math.max(-size * 0.0025, -3) : 0
@@ -113,7 +113,7 @@ export const RatingView = forwardRef(
               textShadowColor="rgba(0,0,0,0.25)"
               textShadowRadius={size * 0.015}
             >
-              {percent >= 0.9 ? '🥇' : '⭐️'}
+              {percent >= 0.9 ? '💎' : '⭐️'}
             </Text>
           </VStack>
         )}

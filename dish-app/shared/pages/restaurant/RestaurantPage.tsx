@@ -1,8 +1,9 @@
 import { graphql } from '@dish/graph'
-import { HStack, LoadingItem, LoadingItems, Spacer, VStack } from '@dish/ui'
+import { HStack, LinearGradient, LoadingItem, Spacer, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
+import { StyleSheet } from 'react-native'
 
-import { bg, bgLight } from '../../colors'
+import { bgLight } from '../../colors'
 import { getMinLngLat } from '../../helpers/getLngLat'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -10,11 +11,12 @@ import { HomeStateItemRestaurant } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
+import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { StackDrawer } from '../../views/StackDrawer'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { StackViewProps } from '../StackViewProps'
-import { RestaurantDetailRow } from './RestaurantDetailRow'
+import { RestaurantCard } from './RestaurantCard'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
@@ -59,27 +61,79 @@ const HomePageRestaurant = memo(
         </PageTitleTag>
 
         <ContentScrollView paddingTop={0}>
+          <LinearGradient
+            colors={[bgLight, 'rgba(255,255,255,0)']}
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                maxHeight: 400,
+                left: -100,
+                right: -100,
+                transform: [{ rotate: '-12.5deg' }, { translateY: -100 }],
+              },
+            ]}
+          />
+
           {/* HEADER */}
-          <RestaurantHeader showImages restaurantSlug={restaurantSlug} />
+          <Suspense
+            fallback={
+              <VStack height={497} width="100%">
+                <LoadingItem size="lg" />
+              </VStack>
+            }
+          >
+            <RestaurantHeader
+              showImages
+              restaurantSlug={restaurantSlug}
+              after={
+                <VStack
+                  className="ease-in-out"
+                  hoverStyle={{
+                    transform: [{ scale: 1.05 }],
+                  }}
+                  marginBottom={-100}
+                  marginTop={-40}
+                  marginRight={20}
+                >
+                  <RestaurantCard
+                    restaurantSlug={restaurantSlug}
+                    restaurantId={restaurant.id}
+                  />
+                </VStack>
+              }
+              below={
+                <VStack>
+                  <RestaurantOverview
+                    maxChars={250}
+                    inline
+                    restaurantSlug={restaurantSlug}
+                    limit={3}
+                  />
+                  <Spacer size="sm" />
+                  <HStack
+                    flexWrap="wrap"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <RestaurantTagsRow
+                      size="sm"
+                      restaurantSlug={restaurantSlug}
+                      restaurantId={restaurant.id}
+                      spacing={10}
+                      grid
+                      max={5}
+                    />
+                  </HStack>
+                </VStack>
+              }
+            />
+          </Suspense>
 
           <Spacer size="xl" />
 
-          <VStack justifyContent="center" alignItems="center">
-            <VStack minWidth={300} width="90%" maxWidth={600}>
-              <RestaurantDetailRow
-                centered
-                justifyContent="center"
-                restaurantSlug={restaurantSlug}
-                flex={1}
-              />
-            </VStack>
-          </VStack>
-
-          <Spacer size="lg" />
-
-          <Suspense fallback={<LoadingItems />}>
+          <Suspense fallback={<LoadingItem />}>
             <HStack justifyContent="center">
-              <SlantedTitle fontWeight="700">What it's good at</SlantedTitle>
+              <SlantedTitle fontWeight="700">Best dishes</SlantedTitle>
             </HStack>
             <Spacer size="xs" />
             <Suspense
@@ -104,14 +158,7 @@ const HomePageRestaurant = memo(
                 overflow="hidden"
                 paddingHorizontal={30}
                 paddingLeft={50}
-              >
-                <RestaurantOverview
-                  maxChars={250}
-                  inline
-                  restaurantSlug={restaurantSlug}
-                  limit={1}
-                />
-              </HStack>
+              ></HStack>
             </HStack>
 
             <Spacer size="xl" />
@@ -119,7 +166,7 @@ const HomePageRestaurant = memo(
             <Suspense fallback={null}>
               <RestaurantRatingBreakdown
                 borderless
-                // showScoreTable
+                showScoreTable
                 restaurantSlug={restaurantSlug}
                 restaurantId={restaurant.id}
               />

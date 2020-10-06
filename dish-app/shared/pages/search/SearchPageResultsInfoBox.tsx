@@ -101,9 +101,16 @@ const HomeSearchInfoBoxDish = memo(
     return (
       <HStack
         paddingHorizontal={20}
-        marginBottom={10}
+        paddingRight={0}
+        marginVertical={10}
         spacing={20}
+        borderRadius={20}
+        borderWidth={1}
+        borderColor="#f2f2f2"
+        paddingVertical={10}
         alignItems="center"
+        maxWidth={620}
+        alignSelf="center"
       >
         <VStack flex={1}>
           <Text fontSize={16} color="rgba(0,0,0,0.65)" lineHeight={24}>
@@ -111,11 +118,18 @@ const HomeSearchInfoBoxDish = memo(
             Northern Thai dish with braised chicken in a coconut curry broth.
           </Text>
         </VStack>
-        <VStack marginVertical={-20} position="relative" width={70} height={70}>
+        <VStack
+          marginLeft={10}
+          marginVertical={-20}
+          marginRight={-10}
+          position="relative"
+          width={80}
+          height={80}
+        >
           <Image
             style={{
-              width: 90,
-              height: 90,
+              width: 80,
+              height: 80,
               borderRadius: 100,
             }}
             source={{

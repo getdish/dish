@@ -1,14 +1,18 @@
 import { graphql } from '@dish/graph'
-import { ExternalLink, Link2, PhoneCall } from '@dish/react-feather'
+import {
+  AlignCenter,
+  ExternalLink,
+  Link2,
+  PhoneCall,
+} from '@dish/react-feather'
 import { Box, HStack, HoverablePopover, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
+import { ScrollView } from 'react-native'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { GeocodePlace } from '../../state/home-types'
 import { SmallCircleButton } from '../../views/ui/CloseButton'
-import { Link } from '../../views/ui/Link'
 import { SmallButton } from '../../views/ui/SmallButton'
-import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 
 export type AddressSize = 'lg' | 'md' | 'sm' | 'xs'
 
@@ -31,27 +35,33 @@ export const RestaurantAddressLinksRow = memo(
       const fontSize = size == 'lg' ? 16 : 14
 
       const linkElements = (
-        <HStack alignItems="center" spacing="xs">
-          {showMenu && !!restaurant.website && (
-            <SmallButton href={restaurant.website ?? ''} target="_blank">
-              Menu
-            </SmallButton>
-          )}
-          {!!restaurant.telephone && (
-            <SmallButton href={`tel:${restaurant.telephone}`}>
-              <PhoneCall size={16} />
-            </SmallButton>
-          )}
-          {!!restaurant.website && (
-            <SmallButton href={restaurant.website ?? ''} target="_blank">
-              <Link2 size={16} />
-            </SmallButton>
-          )}
-          {/* <RestaurantDeliveryButtons
-            showLabels
-            restaurantSlug={restaurantSlug}
-          /> */}
-        </HStack>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ maxWidth: '100%' }}
+        >
+          <HStack alignItems="center" spacing="xs">
+            {showMenu && !!restaurant.website && (
+              <SmallButton tooltip="Menu" href={restaurant.website ?? ''}>
+                <AlignCenter size={16} />
+              </SmallButton>
+            )}
+            {!!restaurant.telephone && (
+              <SmallButton tooltip="Call" href={`tel:${restaurant.telephone}`}>
+                <PhoneCall size={16} />
+              </SmallButton>
+            )}
+            {!!restaurant.website && (
+              <SmallButton tooltip="Website" href={restaurant.website ?? ''}>
+                <Link2 size={16} />
+              </SmallButton>
+            )}
+            {/* <RestaurantDeliveryButtons
+              showLabels
+              restaurantSlug={restaurantSlug}
+            /> */}
+          </HStack>
+        </ScrollView>
       )
 
       return (

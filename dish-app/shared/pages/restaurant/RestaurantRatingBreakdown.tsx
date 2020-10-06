@@ -96,19 +96,6 @@ export const RestaurantRatingBreakdown = memo(
 
             <Spacer size="xl" />
 
-            <SmallTitle color={bg}>Top Tags</SmallTitle>
-            <Spacer />
-            <RestaurantTagsRow
-              size="sm"
-              restaurantSlug={restaurantSlug}
-              restaurantId={restaurantId}
-              spacing={0}
-              grid
-              max={5}
-            />
-
-            <Spacer size="xl" />
-
             <SmallTitle color={bg}>Dishes</SmallTitle>
           </VStack>
 

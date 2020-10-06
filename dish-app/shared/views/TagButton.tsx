@@ -65,7 +65,7 @@ export const getTagColors = ({ rgb, type }: Partial<Tag>) => {
       ? // red
         '#BD1616'
       : // green
-        '#777'
+        '#53C4A4'
   return {
     backgroundColor,
     color: '#fff',
@@ -143,6 +143,7 @@ export const TagButton = memo((props: TagButtonProps) => {
   const contents = (
     <>
       <HStack
+        className="ease-in-out"
         height={height}
         borderRadius={30 * scale}
         paddingHorizontal={4}
@@ -152,12 +153,9 @@ export const TagButton = memo((props: TagButtonProps) => {
         backgroundColor={bg}
         position="relative"
         minHeight={lineHeight}
-        // hoverStyle={{
-        //   transform: [{ scale: 1.05 }],
-        // }}
         {...(!subtle && {
           hoverStyle: {
-            transform: [{ rotate: '-2deg', scale: 1.1 }],
+            transform: [{ scale: 1.05 }],
           },
         })}
         {...rest}

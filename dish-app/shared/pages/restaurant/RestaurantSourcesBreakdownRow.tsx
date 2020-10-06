@@ -36,6 +36,7 @@ export const RestaurantSourcesBreakdownRow = memo(
       return (
         <HoverablePopover
           allowHoverOnContent
+          delay={500}
           position="right"
           contents={(isOpen) => {
             return (

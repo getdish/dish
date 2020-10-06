@@ -34,6 +34,8 @@ export const RestaurantOverview = memo(
           maxWidth="100%"
           minHeight={90 + (limit - 1) * 40}
           position="relative"
+          flex={1}
+          overflow="hidden"
         >
           <AbsoluteVStack top={-20} left={-35}>
             <Text fontSize={60} opacity={0.2}>
