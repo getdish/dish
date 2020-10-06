@@ -161,11 +161,10 @@ server.get('*', async (req, res) => {
   res.send(out)
 })
 
-const port = 80
+const port = 4444
 const host = '0.0.0.0'
-// server.listen(port)
 server.listen(port, host)
-console.log(`Listening on ${host}:${80}`)
+console.log(`Listening on ${host}:${4444}`)
 
 function cors() {
   const HEADER_ALLOWED =

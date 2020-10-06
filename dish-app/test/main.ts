@@ -2,7 +2,7 @@ import 'isomorphic-unfetch'
 
 import { Selector } from 'testcafe'
 
-fixture('Home page').page('http://localhost/')
+fixture('Home page').page('http://localhost:4444/')
 
 test('Basic rendering check', async (t) => {
   const divs = Selector('div')
@@ -18,7 +18,7 @@ test('Basic rendering check', async (t) => {
       await body?.childNodeCount,
       await body?.innerText
     )
-    const out = await fetch('http://localhost/').then((res) => res.text())
+    const out = await fetch('http://localhost:4444/').then((res) => res.text())
     console.log('failure out', out)
   }
 })

@@ -80,12 +80,12 @@ First build the docker container, this can take up to 30 minutes:
     * At the very root of the entire git repo:
       `docker build -t dish/app -f dish-app/Dockerfile .`
 
-    * Run the production build of the web site (it exposes on port 80):
+    * Run the production build of the web site (it exposes on port 4444):
       `docker run -it --rm --net host dish/app`
 
     * To connect to our production backing services:
       * add 127.0.0.1 d1live.com to /etc/hosts
-      * visit http://d1live.com
+      * visit http://d1live.com:4444
 
 If you want to run end to end tests:
 
