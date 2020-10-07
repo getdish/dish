@@ -1,5 +1,6 @@
-import { Tag, TopCuisineDish } from '@dish/graph'
-import { sortBy } from 'lodash'
+import { Tag } from '@dish/graph'
+
+import { useRestaurantQuery } from '../hooks/useRestaurantQuery'
 
 /**
  * Careful with query helpers, they need to be DETERMINISTIC
@@ -10,85 +11,99 @@ import { sortBy } from 'lodash'
  *
  */
 
-type DishFilledTag = Pick<Tag, 'name' | 'icon' | 'default_images'> & {
+// type DishFilledTag = Pick<Tag, 'name' | 'icon' | 'default_images'> & {
+//   score?: number
+// }
+
+export type DishTagItem = {
+  name: string
+  icon?: string
   score?: number
+  image: string
+  isFallback?: boolean
+}
+
+type Props = {
+  restaurantSlug: string
+  tag_names?: string[]
+  max?: number
 }
 
 export const getRestuarantDishes = ({
-  restaurant,
+  restaurantSlug,
   tag_names = [],
   max = 6,
-  gallery = false,
-  fullTags,
-}: {
-  restaurant: any
-  tag_names?: string[]
-  max?: number
-  gallery?: boolean
-  fullTags?: DishFilledTag[]
-}) => {
-  // @ts-ignore
-  const restaurantPhotos = (restaurant.photos() || []).filter(Boolean)
-  let photos = [] as TopCuisineDish[]
-  for (const photo of restaurantPhotos) {
-    if (photos.length >= max) break
-    photos.push({ name: '', image: photo, best_restaurants: [] })
-  }
-  if (!gallery || photos.length == 0) {
-    // @ts-ignore
-    photos = [
-      ...getRestuarantDishesWithPhotos(restaurant, tag_names, fullTags),
-      ...photos,
-    ]
-  }
-  return photos.slice(0, max).filter(Boolean)
-}
-
-const getRestuarantDishesWithPhotos = (
-  restaurant: any,
-  tag_names: string[] = [],
-  fullTags?: DishFilledTag[]
-) => {
-  let photos: TopCuisineDish[] = []
+}: Props): DishTagItem[] => {
+  const restaurant = useRestaurantQuery(restaurantSlug)
+  const tagNames = tag_names.filter(Boolean).join(',')
+  console.log('tag_names', tag_names)
   const topTags = restaurant.top_tags({
     args: {
-      tag_names: tag_names.filter(Boolean).join(','),
+      tag_names: tagNames,
     },
-    limit: 20,
+    limit: max,
   })
-  const searchedFor: DishFilledTag[] = []
-  for (const topTag of topTags) {
-    const fullTag = fullTags?.find((x) => x.name === topTag.tag.name)
-    const tag = fullTag ?? topTag.tag
-    const tagName = tag?.name ?? ''
-    const tagNameMachined = tagName.toLowerCase().replace(' ', '-')
-    const isSearchedForTag = tag_names?.includes(tagNameMachined)
-    let [photo] = topTag.photos() || []
-    let isFallback = false
-    const defaults = topTag.tag?.default_images()
-    const fallback = defaults?.[0]
-    if (!photo && fallback) {
-      photo = fallback
-      isFallback = true
+  return topTags.map((tag) => {
+    const tagImage = tag.photos()?.[0]
+    const tagFallbackImage = tagImage ? null : tag.tag?.default_images()?.[0]
+    return {
+      name: tag.tag.name,
+      icon: tag.tag.icon,
+      score: tag.score ?? 0,
+      image: tagImage ?? tagFallbackImage,
+      isFallback: !tagImage,
     }
-    if (!photo && !isSearchedForTag) {
-      continue
-    }
-    const photoItem = {
-      name: tagName,
-      // enablig this causes double queries if not on fullTags
-      icon: fullTag ? tag?.icon : null,
-      image: photo,
-      score: topTag.score,
-      best_restaurants: [],
-      isFallback,
-      reviews: topTag.reviews,
-    }
-    if (isSearchedForTag) {
-      searchedFor.push(photoItem)
-    } else {
-      photos.push(photoItem)
-    }
-  }
-  return [...searchedFor, ...sortBy(photos, (x) => x.score).reverse()]
+  })
 }
+
+// const getRestuarantDishesWithPhotos = (
+//   restaurant: any,
+//   tag_names: string[] = [],
+//   fullTags?: DishFilledTag[]
+// ) => {
+//   let photos: TopCuisineDish[] = []
+//   const topTags = restaurant.top_tags({
+//     args: {
+//       tag_names: tag_names.filter(Boolean).join(','),
+//     },
+//     limit: 20,
+//   })
+//   const searchedFor: DishFilledTag[] = []
+//   for (const topTag of topTags) {
+//     const fullTag = fullTags?.find((x) => x.name === topTag.tag.name)
+//     const tag = fullTag ?? topTag.tag
+//     const tagName = tag?.name ?? ''
+//     const tagNameMachined = tagName.toLowerCase().replace(' ', '-')
+//     const isSearchedForTag = tag_names?.includes(tagNameMachined)
+//     let [photo] = topTag.photos() || []
+//     let isFallback = false
+//     const defaults = topTag.tag?.default_images()
+//     const fallback = defaults?.[0]
+//     const photoRating = topTag.rating
+//     if (!photo && fallback) {
+//       photo = fallback
+//       isFallback = true
+//     }
+//     if (!photo && !isSearchedForTag) {
+//       continue
+//     }
+//     const photoItem = {
+//       name: tagName,
+//       // enablig this causes double queries if not on fullTags
+//       icon: fullTag ? tag?.icon : null,
+//       image: photo,
+//       // fallback to 0 prevents score fetching below in DishUpvoteDownvote
+//       score: fullTags ? tag?.score ?? 0 : tag?.score,
+//       rating: photoRating,
+//       best_restaurants: [],
+//       isFallback,
+//       reviews: topTag.reviews,
+//     }
+//     if (isSearchedForTag) {
+//       searchedFor.push(photoItem)
+//     } else {
+//       photos.push(photoItem)
+//     }
+//   }
+//   return [...searchedFor, ...sortBy(photos, (x) => x.score)]
+// }

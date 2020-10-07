@@ -25,21 +25,20 @@ export const RestaurantDishPhotos = memo(
       defaultSelectedId?: string
       size?: number
     }) => {
-      const restaurant = useRestaurantQuery(restaurantSlug)
-      const photos = getRestuarantDishes({ restaurant, max: 30 })
+      const dishes = getRestuarantDishes({ restaurantSlug, max: 30 })
       const spacing = 12
       const [hasScrolled, setHasScrolled] = useState(false)
       const [selected, setSelected] = useState(
         selectable
           ? defaultSelectedId
-            ? photos.findIndex(
+            ? dishes.findIndex(
                 (x) => slugify(x.name ?? '') === defaultSelectedId
               )
             : 0
           : 1
       )
 
-      const allPhotos = hasScrolled ? photos : photos.slice(0, 6)
+      const allPhotos = hasScrolled ? dishes : dishes.slice(0, 6)
 
       return (
         <ScrollView
@@ -58,7 +57,7 @@ export const RestaurantDishPhotos = memo(
             marginHorizontal: -15,
           }}
         >
-          {!!photos?.length && (
+          {!!dishes?.length && (
             <HStack
               paddingHorizontal={60}
               paddingVertical={20}
