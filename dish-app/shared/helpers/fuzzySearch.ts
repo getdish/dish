@@ -3,7 +3,7 @@ import FlexSearch from 'flexsearch/flexsearch.js'
 
 export async function fuzzySearch<A extends { [key: string]: any }>({
   items,
-  limit = 10,
+  limit = 20,
   query,
   keys = ['name'],
 }: {
@@ -27,20 +27,24 @@ export async function fuzzySearch<A extends { [key: string]: any }>({
     }
   }
   const foundIndices = await flexSearch.search(query, limit)
-  console.log('we got', foundIndices, items)
   const foundSorted = []
   const foundAlternates = []
+  const foundExact = []
   for (const index of foundIndices) {
     const isAlternate = index % 0 > 0
     if (isAlternate) {
       foundAlternates.push(Math.floor(index / padIndex))
     } else {
-      const realIndex = index / padIndex
+      const realIndex = Math.round(index / padIndex)
       // exact match flexsearch fails on...
-      foundSorted.push(realIndex)
+      if (items[realIndex][keys[0]].toLowerCase() === query) {
+        foundExact.push(realIndex)
+      } else {
+        foundSorted.push(realIndex)
+      }
     }
   }
-  return [...new Set([...foundSorted, ...foundAlternates])]
+  return [...new Set([...foundExact, ...foundSorted, ...foundAlternates])]
     .slice(0, limit)
     .map((index) => items[index])
 }

@@ -181,7 +181,7 @@ export const TagButton = memo((props: TagButtonProps) => {
           // @ts-ignore
           fontSize={fontSize}
           // @ts-ignore
-          fontWeight={fontWeight ?? (subtle && isWeb) ? 'inherit' : '600'}
+          fontWeight={fontWeight ?? (subtle && isWeb ? 'inherit' : '600')}
           // @ts-ignore
           lineHeight={isWeb ? 'inherit' : lineHeight}
           paddingHorizontal={subtle ? 0 : 7 * scale}

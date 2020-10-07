@@ -4,12 +4,10 @@ import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import {
-  NativeSyntheticEvent,
   Platform,
   ScrollView,
   StyleSheet,
   TextInput,
-  TextInputKeyPressEventData,
   TouchableOpacity,
   View,
 } from 'react-native'
@@ -17,7 +15,6 @@ import {
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { AppSearchInputTags } from './AppSearchInputTags'
 import { isWeb, searchBarHeight } from './constants'
-import { inputClearSelection, inputIsTextSelected } from './helpers/input'
 import { isWebIOS } from './helpers/isIOS'
 import { getIs, useIsNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
@@ -250,6 +247,7 @@ export const AppSearchInput = memo(() => {
                         color,
                         flex: 1,
                         fontSize: 18,
+                        fontWeight: '700',
                         height,
                         lineHeight: height * 0.45,
                         paddingHorizontal: 20,
