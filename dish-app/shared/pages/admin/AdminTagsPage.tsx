@@ -151,8 +151,6 @@ const TagList = memo(
         (store) => store.selectedTagNames[column - 1] ?? ''
       ) as any) ?? ''
 
-    console.log('lastRowSelection', lastRowSelection)
-
     const [searchRaw, setSearch] = useState('')
     const search = useDebounceValue(searchRaw, 100)
     // const [newTag, setNewTag] = useState(null)
@@ -181,12 +179,12 @@ const TagList = memo(
             >
               <TextInput
                 placeholder="Search..."
-                style={[styles.textInput, { flex: 1, maxWidth: '50%' }]}
+                style={[styles.textInput, { flex: 1, maxWidth: '90%' }]}
                 onChangeText={(text) => {
                   setSearch(text)
                 }}
               />
-              <SmallButton
+              {/* <SmallButton
                 onPress={async () => {
                   const name = search ?? `0 new ${Math.random()}`
                   await tagInsert([
@@ -202,7 +200,7 @@ const TagList = memo(
                 }}
               >
                 +
-              </SmallButton>
+              </SmallButton> */}
             </HStack>
           }
         >
@@ -243,20 +241,27 @@ const TagListContent = memo(
       const [page, setPage] = useState(1)
       const forceUpdate = useForceUpdate()
 
-      const results = query.tag({
-        where: {
-          type: { _eq: type },
-          ...(type !== 'continent' &&
-            type !== 'lense' &&
-            lastRowSelection && {
-              parent: { name: { _eq: lastRowSelection } },
-            }),
-          ...(!!search && {
-            name: {
-              _ilike: `%${search}%`,
-            },
+      const where = {
+        type: { _eq: type },
+        ...(type !== 'continent' &&
+          type !== 'lense' &&
+          lastRowSelection && {
+            parent: { name: { _eq: lastRowSelection } },
           }),
-        },
+        ...(!!search && {
+          name: {
+            _ilike: `%${search}%`,
+          },
+        }),
+      }
+      const resultsTotal =
+        query
+          .tag_aggregate({
+            where,
+          })
+          .aggregate.count() ?? 0
+      const results = query.tag({
+        where,
         limit,
         offset: (page - 1) * limit,
         order_by: [
@@ -286,41 +291,51 @@ const TagListContent = memo(
       //   }
       // }, [JSON.stringify(newTag ?? null)])
 
+      const totalPages = Math.ceil(resultsTotal / limit)
+      const pageItems = new Array(totalPages).fill(totalPages)
+      console.log(resultsTotal, totalPages, pageItems)
       return (
         <ScrollView style={{ paddingBottom: 100 }}>
-          {allResults.map((tag, row) => {
-            return (
-              <TagListItem
-                key={tag.id ?? row}
-                id="tags"
-                tagId={tag.id}
-                row={row}
-                column={column}
-                onSelect={() => {
-                  tagStore.setSelected({
-                    col: column,
-                    id: tag.id,
-                    name: tag.name ?? '',
-                  })
-                }}
-              />
-            )
-          })}
-
-          {results.length === limit && (
-            <HStack
-              height={32}
-              padding={6}
-              hoverStyle={{
-                backgroundColor: '#f2f2f2',
-              }}
-              onPress={() => {
-                setPage((x) => x + 1)
-              }}
-            >
-              <Text>Next page</Text>
-            </HStack>
+          {resultsTotal > limit && (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <HStack>
+                {pageItems.map((_, index) => {
+                  return (
+                    <SmallButton
+                      key={index}
+                      isActive={index + 1 === page}
+                      onPress={() => setPage(index + 1)}
+                    >
+                      {index + 1}
+                    </SmallButton>
+                  )
+                })}
+              </HStack>
+            </ScrollView>
           )}
+          <Suspense fallback={<LoadingItems />}>
+            {allResults.map((tag, row) => {
+              return (
+                <TagListItem
+                  key={tag.id ?? row}
+                  id="tags"
+                  tagId={tag.id}
+                  row={row}
+                  column={column}
+                  onSelect={() => {
+                    tagStore.setDraft({
+                      parentId: tag.id,
+                    })
+                    tagStore.setSelected({
+                      col: column,
+                      id: tag.id,
+                      name: tag.name ?? '',
+                    })
+                  }}
+                />
+              )
+            })}
+          </Suspense>
         </ScrollView>
       )
     }
@@ -427,6 +442,7 @@ const TagEdit = memo(
             id: tagStore.selectedId,
             name: tag.name,
             type: tag.type,
+            parentId: tag.parentId,
             icon: tag.icon,
             alternates: parseJSONB(tag.alternates() ?? []),
           }}
@@ -481,7 +497,27 @@ const getWikiInfo = (term: string) => {
     })
 }
 
-const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
+type TagCRUDProps = { tag: Tag; onChange?: Function }
+
+const TagCRUD = (props: TagCRUDProps) => {
+  return (
+    <Suspense fallback={null}>
+      <TagCRUDContent {...props} />
+    </Suspense>
+  )
+}
+
+const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
+  const parentTag = tag.parentId
+    ? query.tag({
+        where: {
+          id: {
+            _eq: tag.parentId,
+          },
+        },
+      })[0]
+    : null
+
   const [info, setInfo] = useState<{ name: string; description: string }[]>([])
 
   // get wiki info
@@ -511,7 +547,6 @@ const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
     }
   }, [tag.name])
 
-  console.log('edit tag', tag)
   return (
     <VStack
       margin={5}
@@ -521,8 +556,17 @@ const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
       borderRadius={10}
       spacing={10}
     >
-      <TableRow label="ID">
-        <Text>{tag.id}</Text>
+      <TableRow label="Parent">
+        <Text>Parent: {parentTag?.name}</Text>
+        <SmallButton
+          onPress={() => {
+            onChange({
+              parentId: null,
+            })
+          }}
+        >
+          Clear parent
+        </SmallButton>
       </TableRow>
 
       <TableRow label="Name">
@@ -599,7 +643,7 @@ const TagCRUD = ({ tag, onChange }: { tag: Tag; onChange?: Function }) => {
       </TableRow>
     </VStack>
   )
-}
+})
 
 const TableRow = ({ label, children }: { label: string; children: any }) => {
   return (
