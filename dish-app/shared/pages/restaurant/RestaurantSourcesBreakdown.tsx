@@ -20,6 +20,7 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { omStatic } from '../../state/omStatic'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
+import { useBreakdownsBySources } from './useBreakdownsBySources.tsx'
 
 export const col0Props: StackProps = {
   flex: 0,
@@ -43,6 +44,7 @@ export const RestaurantSourcesBreakdown = memo(
       tags.filter((tag) => tag.name !== 'Gems'),
       (a) => (a.type === 'lense' ? 0 : a.type === 'dish' ? 2 : 1)
     )
+    const breakdowns = useBreakdownsBySources(restaurantSlug, reviewTags)
     return (
       <>
         <Spacer size="lg" />
@@ -70,7 +72,7 @@ export const RestaurantSourcesBreakdown = memo(
           </TableHeadRow>
 
           {Object.keys(sources).map((source, i) => {
-            const item = sources[source]
+            const item = breakdowns[source]
             if (!item) return null
             const info = thirdPartyCrawlSources[source]
             return (
@@ -102,9 +104,7 @@ export const RestaurantSourcesBreakdown = memo(
                   </TableCell>
 
                   <TableCell {...col3Props}>
-                    <Text fontSize={13}>
-                      {Math.round(+(item.rating ?? 0) * 10)}
-                    </Text>
+                    <Text fontSize={13}>{item['total']}</Text>
                   </TableCell>
                 </TableRow>
 
@@ -133,9 +133,7 @@ export const RestaurantSourcesBreakdown = memo(
 
                     <TableCell {...col3Props}>
                       <Text opacity={0.5} fontSize={12}>
-                        {Math.round(
-                          (+(item.rating ?? 0) * 10) / reviewTags.length
-                        )}
+                        {item[tag.name]}
                       </Text>
                     </TableCell>
                   </TableRow>
@@ -150,7 +148,7 @@ export const RestaurantSourcesBreakdown = memo(
             <TableCell {...col0Props}></TableCell>
             <TableCell></TableCell>
             <TableCell {...col3Props}>
-              <Text>294</Text>
+              <Text>{breakdowns['total_score']}</Text>
             </TableCell>
           </TableRow>
         </Table>

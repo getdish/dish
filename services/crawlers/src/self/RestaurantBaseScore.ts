@@ -77,6 +77,7 @@ export class RestaurantBaseScore {
         score,
       }
     }
+    this.breakdown.reviews.factor = REVIEW_FACTOR
     this.breakdown.reviews.score = total
   }
 
