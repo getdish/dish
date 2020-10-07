@@ -42,7 +42,8 @@ export const FilterButton = memo(
       <LinkButton {...{ zIndex, flex, position, margin }} tag={tag}>
         <SmallButton
           backgroundColor="transparent"
-          textStyle={{ fontSize: 13, fontWeight: '700' }}
+          fontSize={14}
+          fontWeight="700"
           isActive={isActive}
           flex={flex}
           {...rest}

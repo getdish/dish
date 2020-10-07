@@ -36,19 +36,18 @@ export const getRestuarantDishes = ({
 }: Props): DishTagItem[] => {
   const restaurant = useRestaurantQuery(restaurantSlug)
   const tagNames = tag_names.filter(Boolean).join(',')
-  console.log('tag_names', tag_names)
   const topTags = restaurant.top_tags({
     args: {
       tag_names: tagNames,
     },
     limit: max,
   })
-  return topTags.map((tag) => {
+  return (topTags ?? []).map((tag) => {
     const tagImage = tag.photos()?.[0]
     const tagFallbackImage = tagImage ? null : tag.tag?.default_images()?.[0]
     return {
-      name: tag.tag.name,
-      icon: tag.tag.icon,
+      name: tag.tag.name ?? '',
+      icon: tag.tag.icon ?? '',
       score: tag.score ?? 0,
       image: tagImage ?? tagFallbackImage,
       isFallback: !tagImage,

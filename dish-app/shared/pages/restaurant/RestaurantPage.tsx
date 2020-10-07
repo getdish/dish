@@ -107,7 +107,7 @@ const HomePageRestaurant = memo(
                     maxChars={250}
                     inline
                     restaurantSlug={restaurantSlug}
-                    limit={3}
+                    limit={2}
                   />
                   <Spacer size="sm" />
                   <HStack
@@ -121,7 +121,7 @@ const HomePageRestaurant = memo(
                       restaurantId={restaurant.id}
                       spacing={10}
                       grid
-                      max={5}
+                      max={4}
                     />
                   </HStack>
                 </VStack>

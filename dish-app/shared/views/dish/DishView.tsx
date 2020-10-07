@@ -49,7 +49,6 @@ export const DishView = memo(
 
     const width = size * 0.9
     const height = size
-    console.log('dish', dish)
     const imageUrl = getImageUrl(
       dish.image,
       ...getRoundedDishViewSize(size),
@@ -94,8 +93,7 @@ export const DishView = memo(
             })}
         {...rest}
       >
-        {/* rating */}
-        {!!dish.score && (
+        {typeof dish.score === 'number' && (
           <AbsoluteVStack
             width={20}
             height={20}
@@ -105,14 +103,16 @@ export const DishView = memo(
             left={-8}
           >
             <Suspense fallback={null}>
-              <DishUpvoteDownvote
-                size="sm"
-                name={dish.name}
-                subtle
-                score={dish.score}
-                restaurantId={restaurantId}
-                restaurantSlug={restaurantSlug}
-              />
+              {!!dish.name && (
+                <DishUpvoteDownvote
+                  size="sm"
+                  name={dish.name}
+                  subtle
+                  score={dish.score}
+                  restaurantId={restaurantId}
+                  restaurantSlug={restaurantSlug}
+                />
+              )}
             </Suspense>
           </AbsoluteVStack>
         )}
@@ -140,8 +140,7 @@ export const DishView = memo(
                 zIndex: 3,
               })}
             >
-              {/* icon? */}
-              {dish.icon && (
+              {!!dish.icon && (
                 <Text
                   className="ease-in-out"
                   zIndex={10}

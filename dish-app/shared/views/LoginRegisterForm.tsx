@@ -212,9 +212,7 @@ export const LoginRegisterForm = ({
             alignSelf="flex-end"
             backgroundColor="#222"
             borderColor="#444"
-            textStyle={{
-              color: '#fff',
-            }}
+            color="#fff"
             hoverStyle={{
               backgroundColor: '#333',
             }}

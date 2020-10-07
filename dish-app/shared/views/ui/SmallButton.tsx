@@ -6,56 +6,48 @@ import { bg, bgLight, bgLightLight, lightBlue } from '../../colors'
 import { isWeb } from '../../constants'
 import { RoutesTable } from '../../state/router'
 import { baseButtonStyle } from '../baseButtonStyle'
+import { isStringChild } from './isStringChild'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 
 export type SmallButtonProps = LinkButtonProps & {
   isActive?: boolean
-  textStyle?: TextStyle
   tooltip?: string
 }
 
 export const SmallButton = ({
   isActive,
   children,
-  // TODO remove textStyle in favor of direct
-  textStyle,
   color,
   fontSize,
   fontWeight,
   lineHeight,
+  activeTextStyle,
   textAlign,
   tooltip,
   ellipse,
   ...rest
 }: SmallButtonProps) => {
-  let contents =
-    typeof children === 'string' ? (
-      <Text
-        color={isActive ? '#000' : bg}
-        fontSize={14}
-        fontWeight="600"
-        {...{
-          color,
-          fontSize,
-          fontWeight,
-          lineHeight,
-          textAlign,
-          ellipse,
-        }}
-        {...textStyle}
-      >
-        {isWeb ? (
-          <HStack maxWidth="100%" alignItems="center">
-            {children}
-          </HStack>
-        ) : (
-          children
-        )}
-      </Text>
-    ) : (
-      children
-    )
+  let contents = isStringChild(children) ? (
+    <Text
+      color={isActive ? '#000' : bg}
+      fontSize={14}
+      fontWeight="600"
+      {...{
+        color,
+        fontSize,
+        fontWeight,
+        lineHeight,
+        textAlign,
+        ellipse,
+        activeTextStyle,
+      }}
+    >
+      {children}
+    </Text>
+  ) : (
+    children
+  )
 
   contents = (
     <LinkButton
@@ -115,7 +107,9 @@ export function SmallLinkButton<
   tag,
   tags,
   children,
+  lineHeight,
   fontWeight,
+  fontSize,
   ellipse,
   color,
   ...props
@@ -124,7 +118,17 @@ export function SmallLinkButton<
     <SmallButton {...props}>
       <LinkButton
         flex={1}
-        {...{ name, params, tag, tags, fontWeight, color, ellipse }}
+        {...{
+          name,
+          params,
+          tag,
+          tags,
+          fontWeight,
+          fontSize,
+          lineHeight,
+          color,
+          ellipse,
+        }}
       >
         {children}
       </LinkButton>

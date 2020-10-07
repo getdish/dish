@@ -1,6 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { graphql, order_by } from '@dish/graph'
-import { isPresent } from '@dish/helpers/_'
+import { graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
 import {
   AbsoluteVStack,
@@ -509,9 +508,9 @@ const RestaurantPeekDishes = memo(
     const spacing = size == 'lg' ? 16 : 12
     // const restaurant = useRestaurantQuery(props.restaurantSlug)
     // // get them all as once to avoid double query limit on gqless
-    // const tagNames = tagSlugs
-    //   .map((n) => allTags[n]?.name ?? null)
-    //   .filter(isPresent)
+    const tagNames = tagSlugs
+      .map((n) => allTags[n]?.name ?? null)
+      .filter(Boolean)
     // const fullTags = tagSlugs.length
     //   ? restaurant
     //       .tags({
@@ -541,6 +540,10 @@ const RestaurantPeekDishes = memo(
       tag_names: tagSlugs,
       max: 5,
     })
+    const firstDishName = dishes[0]?.name
+    const foundMatchingSearchedDish = firstDishName
+      ? tagNames.includes(firstDishName)
+      : false
     const dishSize = 150
     return (
       <HStack
@@ -561,24 +564,32 @@ const RestaurantPeekDishes = memo(
           </TableHeadText>
         </AbsoluteVStack>
 
-        {dishes.map((dish, i) => {
-          if (!isLoaded) {
-            if (i > 2) {
-              return (
-                <Squircle width={dishSize * 0.8} height={dishSize} key={i} />
-              )
+        {!!dishes[0].name &&
+          dishes.map((dish, i) => {
+            if (!isLoaded) {
+              if (i > 2) {
+                return (
+                  <Squircle width={dishSize * 0.8} height={dishSize} key={i} />
+                )
+              }
             }
-          }
-          return (
-            <DishView
-              key={i}
-              size={dishSize}
-              restaurantSlug={props.restaurantSlug}
-              restaurantId={props.restaurantId}
-              dish={dish}
-            />
-          )
-        })}
+            return (
+              <DishView
+                key={i}
+                size={
+                  foundMatchingSearchedDish
+                    ? i == 0
+                      ? dishSize
+                      : dishSize * 0.9
+                    : dishSize
+                }
+                marginTop={foundMatchingSearchedDish && i > 0 ? 10 : 0}
+                restaurantSlug={props.restaurantSlug}
+                restaurantId={props.restaurantId}
+                dish={dish}
+              />
+            )
+          })}
       </HStack>
     )
   })

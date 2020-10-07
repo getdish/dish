@@ -35,9 +35,7 @@ export const TagSmallButton = graphql(
         hoverStyle={{
           backgroundColor: bgHover,
         }}
-        textStyle={{
-          color: hasVoted ? '#fff' : '#fff',
-        }}
+        color={hasVoted ? '#fff' : '#fff'}
       >
         <HStack
           // match to smallbutton, hacky for now
