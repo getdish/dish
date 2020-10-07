@@ -2,7 +2,8 @@ import { sleep } from '@dish/async'
 import { Review, reviewUpsert } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Toast } from '@dish/ui'
-import { useState } from 'react'
+import { Store, useStore, useStoreSelector } from '@dish/use-store'
+import { useEffect, useState } from 'react'
 
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { allTags } from '../state/allTags'
@@ -20,6 +21,23 @@ import {
 
 export type VoteNumber = -1 | 0 | 1
 
+class UserVotes extends Store<{ key: string }> {
+  vote: VoteNumber = 0
+
+  setVote(next: VoteNumber) {
+    this.vote = next
+  }
+}
+
+const setStoreVotes = (
+  voteStores: { [key: string]: UserVotes },
+  vote: VoteNumber
+) => {
+  for (const key in voteStores) {
+    voteStores[key].setVote(vote)
+  }
+}
+
 export const useUserUpvoteDownvoteQuery = (
   restaurantId: string,
   activeTags: HomeActiveTagsRecord
@@ -28,19 +46,27 @@ export const useUserUpvoteDownvoteQuery = (
   const userId = om.state.user.user?.id
   const [votes] = useUserTagVotes(restaurantId)
   const vote = getTagUpvoteDownvote(votes, activeTags)
-  const [userVote, setUserVote] = useState<VoteNumber | null>(null)
+  const tagKeyList = Object.keys(activeTags).filter((x) => activeTags[x])
+  const voteStores = {}
+  for (const key of tagKeyList) {
+    voteStores[key] = useStore(UserVotes, { key: `${key}${restaurantId}` })
+  }
+  const userVote = voteStores[tagKeyList[0]].vote
+
+  useEffect(() => {
+    setStoreVotes(voteStores, vote)
+  }, [vote])
+
   return {
     votes,
     vote: userVote ?? vote,
-    setVote: async (rating: VoteNumber) => {
+    setVote: async (vote: VoteNumber) => {
       if (omStatic.actions.home.promptLogin()) {
         return
       }
-      setUserVote(rating)
-      const tagsList = Object.keys(activeTags)
-        .filter((x) => activeTags[x])
-        .map((id) => allTags[id])
-      const saved = await voteForTags(restaurantId, userId, tagsList, rating)
+      setStoreVotes(voteStores, vote)
+      const tagsList = tagKeyList.map((id) => allTags[id])
+      const saved = await voteForTags(restaurantId, userId, tagsList, vote)
       if (saved?.length) {
         Toast.show(`Saved`)
       }

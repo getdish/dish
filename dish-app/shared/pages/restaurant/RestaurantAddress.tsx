@@ -17,7 +17,7 @@ export const RestaurantAddress = ({
 }: {
   size: AddressSize
   address: string
-  currentLocationInfo: GeocodePlace
+  currentLocationInfo: GeocodePlace | null
   color?: string
 }) => {
   const isSmall = useIsNarrow()

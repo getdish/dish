@@ -31,6 +31,9 @@ const sets = [
 const cache = new Map()
 
 export function slugify(text: string, separator = '-') {
+  if (!text) {
+    return ''
+  }
   if (cache.has(text)) {
     return cache.get(text)
   }

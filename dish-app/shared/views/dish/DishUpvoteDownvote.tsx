@@ -1,4 +1,4 @@
-import { graphql, query, slugify } from '@dish/graph'
+import { graphql, slugify } from '@dish/graph'
 import React from 'react'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -37,6 +37,7 @@ export const DishUpvoteDownvote = graphql(function DishUpvoteDownvote({
           },
         })[0]?.score ?? 0
       : 0)
+
   const { vote, setVote } = useUserUpvoteDownvoteQuery(restaurantId, {
     [slugify(name)]: true,
   })
@@ -44,7 +45,7 @@ export const DishUpvoteDownvote = graphql(function DishUpvoteDownvote({
     <UpvoteDownvoteScore
       subtle={subtle}
       size={size}
-      score={intScore * 10}
+      score={intScore + vote}
       vote={vote}
       setVote={setVote}
     />

@@ -85,7 +85,7 @@ export const UpvoteDownvoteScore = memo(
           letterSpacing={-0.5}
           color={score > 0 ? '#000' : 'darkred'}
         >
-          {score}
+          {score ?? ''}
         </Text>
         {subtle ? (
           downvote

@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { omStatic } from '../../state/omStatic'
 import { RoutesTable } from '../../state/router'
+import { isStringChild } from './isStringChild'
 import { useLink } from './Link'
 import { LinkButtonProps } from './LinkProps'
 
@@ -65,7 +66,7 @@ export function LinkButton<
       {...restProps}
       {...(isActive && props.activeStyle)}
     >
-      {typeof children !== 'string' ? (
+      {!isStringChild(props.children) ? (
         getChildren(props, isActive)
       ) : (
         <Text
