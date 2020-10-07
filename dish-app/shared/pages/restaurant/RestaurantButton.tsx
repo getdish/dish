@@ -42,7 +42,7 @@ export const RestaurantButton = memo(
           })}
           zIndex={1}
           paddingHorizontal={7}
-          paddingVertical={2}
+          paddingVertical={8}
           borderRadius={6}
           hoverStyle={{
             borderColor: '#eee',

@@ -1,7 +1,6 @@
 Home page
 - generally home page query and layout, but that's a whole other kettle of fish
 - is the plan for the site to be login only? i think it's better to allow anonymous use of the site
-- until we have root category dishes like "wine", maybe it's better that "spanish wine" appears as a single tag in the search bar, so you can't click the "x" on "spanish" and be thrown into an empty "wine" results list
 Results page
 - description and image for dish hardcoded
 - restaurant's dish list isn't ordered by tag score

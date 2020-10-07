@@ -73,6 +73,7 @@ export const RestaurantSourcesBreakdownRow = memo(
                     paddingHorizontal={5}
                     paddingVertical={3}
                     borderRadius={100}
+                    href={item.url}
                   >
                     <HStack>
                       {info?.image ? (

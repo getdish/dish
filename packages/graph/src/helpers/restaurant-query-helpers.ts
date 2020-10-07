@@ -1,3 +1,5 @@
+import { sortBy } from 'lodash'
+
 import { query } from '../graphql'
 import { Tag } from '../types'
 import { TopCuisineDish } from '../types-extra'
@@ -56,17 +58,18 @@ export const restaurantDishesWithPhotos = (
     },
     limit: 20,
   })
-  for (const t of topTags) {
-    const fullTag = fullTags?.find((x) => x.name === t.tag.name)
-    const tag = fullTag ?? t.tag
+  const searchedFor: DishFilledTag[] = []
+  for (const topTag of topTags) {
+    const fullTag = fullTags?.find((x) => x.name === topTag.tag.name)
+    const tag = fullTag ?? topTag.tag
     const tagName = tag?.name ?? ''
     const tagNameMachined = tagName.toLowerCase().replace(' ', '-')
     const isSearchedForTag = tag_names?.includes(tagNameMachined)
-    let [photo] = t.photos() || []
+    let [photo] = topTag.photos() || []
     let isFallback = false
-    const defaults = t.tag?.default_images()
+    const defaults = topTag.tag?.default_images()
     const fallback = defaults?.[0]
-    const photoRating = t.rating
+    const photoRating = topTag.rating
     if (!photo && fallback) {
       photo = fallback
       isFallback = true
@@ -74,6 +77,7 @@ export const restaurantDishesWithPhotos = (
     if (!photo && !isSearchedForTag) {
       continue
     }
+    console.log('what is', fullTag, topTag, tag, tag?.score)
     const photoItem = {
       name: tagName,
       // enablig this causes double queries if not on fullTags
@@ -84,13 +88,13 @@ export const restaurantDishesWithPhotos = (
       rating: photoRating,
       best_restaurants: [],
       isFallback,
-      reviews: t.reviews,
+      reviews: topTag.reviews,
     }
     if (isSearchedForTag) {
-      photos.unshift(photoItem)
+      searchedFor.push(photoItem)
     } else {
       photos.push(photoItem)
     }
   }
-  return photos
+  return [...searchedFor, ...sortBy(photos, (x) => x.score)]
 }
