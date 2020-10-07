@@ -23,6 +23,7 @@ import { Route } from './views/router/Route'
 export default memo(function App() {
   const isSmall = useIsNarrow()
 
+  // dont run if in ssr mode
   if (isWeb) {
     const { auth } = require('../web/apple-sign-in')
     useEffect(() => {

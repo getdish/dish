@@ -9,7 +9,6 @@ import {
   query,
   refetch,
   tagDelete,
-  tagInsert,
   tagUpsert,
 } from '@dish/graph'
 import {
@@ -22,7 +21,7 @@ import {
   useForceUpdate,
 } from '@dish/ui'
 import { Store, useStore, useStoreSelector } from '@dish/use-store'
-import { capitalize, uniqBy } from 'lodash'
+import { capitalize } from 'lodash'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
 
@@ -281,15 +280,6 @@ const TagListContent = memo(
           }, 1000)
         }
       }, [tagStore.forceRefreshColumnByType])
-
-      // didnt work with gqless
-      // useEffect(() => {
-      //   if (newTag) {
-      //     console.warn('inserting new tag', newTag)
-      //     // @ts-ignore
-      //     results.push(newTag)
-      //   }
-      // }, [JSON.stringify(newTag ?? null)])
 
       const totalPages = Math.ceil(resultsTotal / limit)
       const pageItems = new Array(totalPages).fill(totalPages)

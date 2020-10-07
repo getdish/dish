@@ -507,39 +507,38 @@ const RestaurantPeekDishes = memo(
       }),
     ].filter((x) => !!x)
     const spacing = size == 'lg' ? 16 : 12
-    const restaurant = useRestaurantQuery(props.restaurantSlug)
-    // get them all as once to avoid double query limit on gqless
-    const tagNames = tagSlugs
-      .map((n) => allTags[n]?.name ?? null)
-      .filter(isPresent)
-    const fullTags = tagSlugs.length
-      ? restaurant
-          .tags({
-            limit: tagNames.length,
-            where: {
-              tag: {
-                name: {
-                  _in: tagNames,
-                },
-              },
-            },
-            order_by: [
-              {
-                score: order_by.desc,
-              },
-            ],
-          })
-          .map((tag) => ({
-            name: tag.tag.name,
-            score: tag.score ?? 0,
-            icon: tag.tag.icon,
-            image: tag.tag.default_images()?.[0],
-          }))
-      : null
-    const photos = getRestuarantDishes({
-      restaurant,
+    // const restaurant = useRestaurantQuery(props.restaurantSlug)
+    // // get them all as once to avoid double query limit on gqless
+    // const tagNames = tagSlugs
+    //   .map((n) => allTags[n]?.name ?? null)
+    //   .filter(isPresent)
+    // const fullTags = tagSlugs.length
+    //   ? restaurant
+    //       .tags({
+    //         limit: tagNames.length,
+    //         where: {
+    //           tag: {
+    //             name: {
+    //               _in: tagNames,
+    //             },
+    //           },
+    //         },
+    //         order_by: [
+    //           {
+    //             score: order_by.desc,
+    //           },
+    //         ],
+    //       })
+    //       .map((tag) => ({
+    //         name: tag.tag.name,
+    //         score: tag.score ?? 0,
+    //         icon: tag.tag.icon,
+    //         image: tag.tag.default_images()?.[0],
+    //       }))
+    //   : null
+    const dishes = getRestuarantDishes({
+      restaurantSlug: props.restaurantSlug,
       tag_names: tagSlugs,
-      fullTags,
       max: 5,
     })
     const dishSize = 150
@@ -562,7 +561,7 @@ const RestaurantPeekDishes = memo(
           </TableHeadText>
         </AbsoluteVStack>
 
-        {photos.map((photo, i) => {
+        {dishes.map((dish, i) => {
           if (!isLoaded) {
             if (i > 2) {
               return (
@@ -576,7 +575,7 @@ const RestaurantPeekDishes = memo(
               size={dishSize}
               restaurantSlug={props.restaurantSlug}
               restaurantId={props.restaurantId}
-              dish={photo}
+              dish={dish}
             />
           )
         })}

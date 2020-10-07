@@ -1,4 +1,4 @@
-import { TopCuisineDish, slugify } from '@dish/graph'
+import { slugify } from '@dish/graph'
 import { AbsoluteVStack, Box, HStack, StackProps, Text, VStack } from '@dish/ui'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
@@ -6,6 +6,7 @@ import { Image } from 'react-native'
 
 import { isWeb } from '../../constants'
 import { getImageUrl } from '../../helpers/getImageUrl'
+import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { NavigableTag } from '../../state/NavigableTag'
 import { LinkButton } from '../ui/LinkButton'
 import { Squircle } from '../ui/Squircle'
@@ -34,7 +35,7 @@ export const DishView = memo(
     restaurantId?: string
     name?: any
     cuisine?: NavigableTag
-    dish: TopCuisineDish
+    dish: DishTagItem
     size?: number
     restaurantSlug?: string
     isFallback?: boolean
@@ -48,6 +49,7 @@ export const DishView = memo(
 
     const width = size * 0.9
     const height = size
+    console.log('dish', dish)
     const imageUrl = getImageUrl(
       dish.image,
       ...getRoundedDishViewSize(size),
@@ -92,7 +94,7 @@ export const DishView = memo(
             })}
         {...rest}
       >
-        {/* score */}
+        {/* rating */}
         {!!dish.score && (
           <AbsoluteVStack
             width={20}
