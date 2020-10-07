@@ -45,8 +45,8 @@ export const RestaurantRatingBreakdown = memo(
     return (
       <VStack
         overflow="hidden"
-        width="100%"
         maxWidth="100%"
+        width="100%"
         position="relative"
       >
         <HStack marginBottom={-20} alignItems="center" justifyContent="center">
@@ -69,6 +69,7 @@ export const RestaurantRatingBreakdown = memo(
           borderColor="#eee"
           borderRadius={12}
           paddingVertical={18}
+          justifyContent="center"
         >
           <VStack
             borderRadius={10}
@@ -107,7 +108,12 @@ export const RestaurantRatingBreakdown = memo(
             paddingHorizontal={10}
             spacing={10}
           >
-            <HStack marginVertical={8} alignItems="stretch">
+            <HStack
+              overflow="hidden"
+              maxWidth="100%"
+              marginVertical={8}
+              alignItems="stretch"
+            >
               <Suspense fallback={null}>
                 <RestaurantAddCommentButton
                   flex={1}
@@ -118,7 +124,14 @@ export const RestaurantRatingBreakdown = memo(
             </HStack>
 
             <Suspense fallback={null}>
-              <ScrollView>
+              <ScrollView
+                style={{
+                  maxWidth: '100%',
+                }}
+                contentContainerStyle={{
+                  maxWidth: '100%',
+                }}
+              >
                 <RestaurantReviewsList restaurantId={restaurantId} />
               </ScrollView>
             </Suspense>

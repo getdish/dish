@@ -1,9 +1,10 @@
-import { graphql, restaurantPhotosForCarousel, slugify } from '@dish/graph'
+import { graphql, slugify } from '@dish/graph'
 import { HStack } from '@dish/ui'
 import React, { memo, useState } from 'react'
 import { ScrollView } from 'react-native'
 
 import { isWeb } from '../../constants'
+import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { DishView } from '../../views/dish/DishView'
 
@@ -25,7 +26,7 @@ export const RestaurantDishPhotos = memo(
       size?: number
     }) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
-      const photos = restaurantPhotosForCarousel({ restaurant, max: 30 })
+      const photos = getRestuarantDishes({ restaurant, max: 30 })
       const spacing = 12
       const [hasScrolled, setHasScrolled] = useState(false)
       const [selected, setSelected] = useState(

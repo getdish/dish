@@ -5,7 +5,6 @@ Results page
 - description and image for dish hardcoded
 - restaurant's dish list isn't ordered by tag score
 - score breakdowns in popup are hardcoded values
-- clicking on sources (eg tripadvisor icon) doesn't link to source's external permalink
 Restaurant page
 - again dishes not ordered by their scores
 - clicking a dish takes you to the gallery but there are no photos of that dish

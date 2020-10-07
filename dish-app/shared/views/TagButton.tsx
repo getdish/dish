@@ -182,12 +182,10 @@ export const TagButton = memo((props: TagButtonProps) => {
           fontSize={fontSize}
           // @ts-ignore
           fontWeight={fontWeight ?? (subtle && isWeb ? 'inherit' : '600')}
-          // @ts-ignore
-          lineHeight={isWeb ? 'inherit' : lineHeight}
+          lineHeight={lineHeight}
           paddingHorizontal={subtle ? 0 : 7 * scale}
           color={fg}
-          marginVertical={-7}
-          marginBottom={-8}
+          // marginBottom={-8} // bad on web
           overflow="hidden"
           textOverflow="ellipsis"
           whiteSpace="nowrap"
@@ -198,7 +196,7 @@ export const TagButton = memo((props: TagButtonProps) => {
             <Text
               {...(subtle && { marginLeft: 4 })}
               {...(subtleIcon && {
-                fontSize: smallerFontSize as any,
+                fontSize: fontSize as any,
                 marginVertical: -2,
                 marginRight: 8,
               })}

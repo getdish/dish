@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { graphql, order_by, restaurantPhotosForCarousel } from '@dish/graph'
+import { graphql, order_by } from '@dish/graph'
 import { isPresent } from '@dish/helpers/_'
 import { MessageSquare } from '@dish/react-feather'
 import {
@@ -26,6 +26,7 @@ import { Dimensions } from 'react-native'
 
 import { bgLight, bgLightLight, brandColor, lightBlue } from '../../colors'
 import { isWeb } from '../../constants'
+import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../helpers/isIOS'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -535,7 +536,7 @@ const RestaurantPeekDishes = memo(
             image: tag.tag.default_images()?.[0],
           }))
       : null
-    const photos = restaurantPhotosForCarousel({
+    const photos = getRestuarantDishes({
       restaurant,
       tag_names: tagSlugs,
       fullTags,

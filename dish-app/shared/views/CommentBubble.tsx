@@ -44,11 +44,17 @@ export const CommentBubble = ({
       alignItems="flex-start"
       justifyContent="flex-start"
       spacing="sm"
+      overflow="hidden"
       maxWidth="100%"
       {...rest}
     >
       {!!name && (
-        <HStack width="100%" maxWidth="100%" alignItems="center">
+        <HStack
+          width="100%"
+          maxWidth="100%"
+          overflow="hidden"
+          alignItems="center"
+        >
           <Circle
             size={26}
             marginRight={4}
@@ -81,6 +87,7 @@ export const CommentBubble = ({
             flex={1}
             alignItems="center"
             maxWidth="100%"
+            overflow="hidden"
             marginBottom={-3}
           >
             <Link
@@ -103,13 +110,15 @@ export const CommentBubble = ({
 
       {ensureFlexText}
 
-      <VStack maxWidth="100%" width="100%" spacing>
+      <VStack maxWidth="100%" overflow="hidden" width="100%" spacing>
         {before}
 
         {!!text && (
           <Paragraph
             className="preserve-whitespace"
             selectable
+            maxWidth="100%"
+            overflow="hidden"
             opacity={0.8}
             size={1.1}
           >

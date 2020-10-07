@@ -1,4 +1,4 @@
-import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
+import { graphql } from '@dish/graph'
 import {
   AbsoluteVStack,
   HStack,
@@ -12,6 +12,7 @@ import { Image, ScrollView } from 'react-native'
 
 import { isWeb, pageWidthMax } from '../../constants'
 import { getImageUrl } from '../../helpers/getImageUrl'
+import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { useIsNarrow, useIsShort } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemGallery } from '../../state/home-types'
@@ -108,7 +109,7 @@ const HomePageGalleryContent = memo(
     //   : null
     const restaurant = useRestaurantQuery(state.restaurantSlug)
     const tag_names = state.dishId ? [state.dishId] : []
-    const photos = restaurantPhotosForCarousel({
+    const photos = getRestuarantDishes({
       restaurant,
       max: hasScrolled ? 50 : 20,
       tag_names,
