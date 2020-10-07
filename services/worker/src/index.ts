@@ -6,7 +6,7 @@ import { QueueOptions } from 'bull'
 
 import { klass_map } from './job_processor'
 
-const CONCURRENCY = os.cpus().length
+const CONCURRENCY = 1
 
 async function main() {
   for (const queue_name in klass_map) {
