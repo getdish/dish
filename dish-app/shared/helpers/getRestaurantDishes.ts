@@ -67,7 +67,6 @@ const getRestuarantDishesWithPhotos = (
     let isFallback = false
     const defaults = topTag.tag?.default_images()
     const fallback = defaults?.[0]
-    const photoRating = topTag.rating
     if (!photo && fallback) {
       photo = fallback
       isFallback = true
@@ -80,9 +79,7 @@ const getRestuarantDishesWithPhotos = (
       // enablig this causes double queries if not on fullTags
       icon: fullTag ? tag?.icon : null,
       image: photo,
-      // fallback to 0 prevents score fetching below in DishUpvoteDownvote
-      score: fullTags ? tag?.score ?? 0 : tag?.score,
-      rating: photoRating,
+      score: t.score,
       best_restaurants: [],
       isFallback,
       reviews: topTag.reviews,

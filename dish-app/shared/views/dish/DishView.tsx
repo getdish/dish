@@ -92,8 +92,8 @@ export const DishView = memo(
             })}
         {...rest}
       >
-        {/* rating */}
-        {!!dish.rating && isFallback && (
+        {/* score */}
+        {!!dish.score && (
           <AbsoluteVStack
             width={20}
             height={20}

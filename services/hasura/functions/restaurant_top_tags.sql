@@ -28,9 +28,8 @@ CREATE OR REPLACE FUNCTION restaurant_top_tags(
         JOIN tag ON restaurant_tag.tag_id = tag.id
         WHERE restaurant_tag.restaurant_id = _restaurant.id
           AND tag.type != 'country'
-          AND tag.frequency < 4
     ) s
-      ORDER BY rating DESC NULLS LAST
+      ORDER BY score DESC NULLS LAST
   )
 
   -- TODO: How to programmtically choose just the restaurant_tag fields?
