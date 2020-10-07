@@ -91,7 +91,7 @@ const AdminTagsPageContent = graphql(() => {
 
   return (
     <VStack overflow="hidden" maxHeight="100vh" maxWidth="100vw" width="100%">
-      <HStack overflow="hidden" width="100%" flex={1}>
+      <HStack overflow="hidden" width="100%" height="100%" flex={1}>
         <ScrollView horizontal>
           <HStack>
             <VerticalColumn>
@@ -119,10 +119,23 @@ const AdminTagsPageContent = graphql(() => {
           </HStack>
         </ScrollView>
 
-        <VerticalColumn flex={3} minWidth={340}>
-          <Suspense fallback={<LoadingItems />}>
-            <TagEditColumn />
-          </Suspense>
+        <VerticalColumn
+          height="100%"
+          backgroundColor="#fafafa"
+          shadowColor="#000"
+          shadowRadius={4}
+          shadowOpacity={0.2}
+          minHeight="100vh"
+          maxHeight="100vh"
+          flex={2}
+          minWidth={280}
+          padding={5}
+        >
+          <ScrollView style={{ height: '100%', maxHeight: '100%' }}>
+            <Suspense fallback={<LoadingItems />}>
+              <TagEditColumn />
+            </Suspense>
+          </ScrollView>
         </VerticalColumn>
       </HStack>
     </VStack>
@@ -149,6 +162,7 @@ const TagList = memo(
       },
       limit: 1,
     })
+    const parentName = parent?.name
     const parentId = parent?.id
     const [contentKey, setContentKey] = useState(0)
     const refresh = () => {
@@ -173,15 +187,17 @@ const TagList = memo(
                 }}
               />
               <SmallButton
-                onPress={() => {
-                  tagInsert([
+                onPress={async () => {
+                  const name = search ?? `0 new ${Math.random()}`
+                  await tagInsert([
                     {
                       type,
-                      name: `⭐️ new ${Math.random()}`,
+                      name,
                       icon: '',
                       parentId,
                     },
                   ])
+                  Toast.show(`Added ${name} under ${parentName}`)
                   refresh()
                 }}
               >

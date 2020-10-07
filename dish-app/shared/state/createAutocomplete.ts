@@ -10,6 +10,7 @@ export function createAutocomplete(
     ...item,
   }
   return {
+    id: `${Math.random()}`,
     is: 'autocomplete',
     ...next,
     tagId: getTagId(next),

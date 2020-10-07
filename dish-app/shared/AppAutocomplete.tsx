@@ -13,7 +13,7 @@ import {
   useDebounce,
 } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-import { uniqBy } from 'lodash'
+import { groupBy, uniqBy } from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
 import { Image, Keyboard, ScrollView } from 'react-native'
 
@@ -302,7 +302,7 @@ const AutocompleteResults = memo(() => {
             icon: '🔍',
             tagId: '',
             type: 'orphan' as const,
-            // description: '⏎',
+            description: '',
           },
           ...(autocompleteResults ?? []),
         ].slice(0, 13)
@@ -538,7 +538,6 @@ function runAutocomplete(
           state.span!
         )
       }
-      console.log('runAutocomplete.results', searchQuery, results)
     },
     () => {
       // allows cancel
@@ -553,10 +552,33 @@ function runAutocomplete(
           keys: ['name', 'description'],
         })
       }
-      matched = uniqBy([...matched, ...results], (x) => x.name)
+      matched = uniqBy([...matched, ...results].filter(isPresent), (x) => x.id)
       if (showAutocomplete === 'location') {
+        console.log('setting results', matched)
         om.actions.home.setLocationAutocompleteResults(matched)
       } else if (showAutocomplete === 'search') {
+        // add in a deduped entry
+        // if multiple countries have "steak" we show a single "generic steak" entry at top
+        const dishes = matched.filter((x) => x.type === 'dish')
+        const groupedDishes = groupBy(dishes, (x) => x.name)
+        for (const [name, group] of Object.keys(groupedDishes).map(
+          (x) => [x, groupedDishes[x]] as const
+        )) {
+          // more than one cuisine with same dish name, lets make a generic entry
+          if (group.length > 1) {
+            const firstIndexOfGroup = matched.findIndex((x) => x.name === name)
+            matched.splice(
+              firstIndexOfGroup,
+              0,
+              createAutocomplete({
+                name,
+                type: 'dish',
+                icon: group.find((x) => x.icon)?.icon ?? '',
+              })
+            )
+          }
+        }
+
         om.actions.home.setAutocompleteResults(matched)
       }
     },

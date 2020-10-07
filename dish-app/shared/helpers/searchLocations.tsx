@@ -53,6 +53,7 @@ export const locationToAutocomplete = (
   place: GeocodePlace
 ): AutocompleteItem => {
   return createAutocomplete({
+    id: JSON.stringify(place.center),
     name: place.name,
     description: place.fullName,
     type: 'country',

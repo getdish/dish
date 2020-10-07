@@ -27,6 +27,7 @@ export async function fuzzySearch<A extends { [key: string]: any }>({
     }
   }
   const foundIndices = await flexSearch.search(query, limit)
+  console.log('we got', foundIndices, items)
   const foundSorted = []
   const foundAlternates = []
   for (const index of foundIndices) {
@@ -36,11 +37,7 @@ export async function fuzzySearch<A extends { [key: string]: any }>({
     } else {
       const realIndex = index / padIndex
       // exact match flexsearch fails on...
-      if (items[realIndex][keys[0]].toLowerCase() === query) {
-        foundSorted.unshift(realIndex)
-      } else {
-        foundSorted.push(realIndex)
-      }
+      foundSorted.push(realIndex)
     }
   }
   return [...new Set([...foundSorted, ...foundAlternates])]
