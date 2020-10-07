@@ -79,7 +79,7 @@ const getRestuarantDishesWithPhotos = (
       // enablig this causes double queries if not on fullTags
       icon: fullTag ? tag?.icon : null,
       image: photo,
-      score: t.score,
+      score: topTag.score,
       best_restaurants: [],
       isFallback,
       reviews: topTag.reviews,
@@ -90,5 +90,5 @@ const getRestuarantDishesWithPhotos = (
       photos.push(photoItem)
     }
   }
-  return [...searchedFor, ...sortBy(photos, (x) => x.score)]
+  return [...searchedFor, ...sortBy(photos, (x) => x.score).reverse()]
 }
