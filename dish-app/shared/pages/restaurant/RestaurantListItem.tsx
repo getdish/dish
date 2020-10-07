@@ -481,7 +481,7 @@ const RankView = memo(({ rank }: { rank: number }) => {
 })
 
 const RestaurantPeekDishes = memo(
-  graphql(function RestaurantPeek(props: {
+  graphql(function RestaurantPeekDishes(props: {
     size?: 'lg' | 'md'
     restaurantSlug: string
     restaurantId: string
@@ -490,7 +490,7 @@ const RestaurantPeekDishes = memo(
   }) {
     const activeTags = omStatic.state.home.lastSearchState.activeTagIds
     const dishSearchedTag = Object.keys(activeTags).find(
-      (k) => allTags[k].type === 'dish'
+      (k) => allTags[k]?.type === 'dish'
     )
     const { isLoaded, searchState, size = 'md' } = props
     const tagSlugs = [
@@ -500,7 +500,7 @@ const RestaurantPeekDishes = memo(
         if (!isActive) {
           return false
         }
-        const type = allTags[x].type
+        const type = allTags[x]?.type ?? 'outlier'
         return type != 'lense' && type != 'filter' && type != 'outlier'
       }),
     ].filter((x) => !!x)
@@ -514,7 +514,9 @@ const RestaurantPeekDishes = memo(
             where: {
               tag: {
                 name: {
-                  _in: tagSlugs.map((n) => allTags[n].name).filter(Boolean),
+                  _in: tagSlugs
+                    .map((n) => allTags[n]?.name ?? n)
+                    .filter(Boolean),
                 },
               },
             },
