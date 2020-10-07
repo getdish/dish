@@ -1,8 +1,5 @@
+import { Tag, TopCuisineDish } from '@dish/graph'
 import { sortBy } from 'lodash'
-
-import { query } from '../graphql'
-import { Tag } from '../types'
-import { TopCuisineDish } from '../types-extra'
 
 /**
  * Careful with query helpers, they need to be DETERMINISTIC
@@ -17,7 +14,7 @@ type DishFilledTag = Pick<Tag, 'name' | 'icon' | 'default_images'> & {
   score?: number
 }
 
-export const restaurantPhotosForCarousel = ({
+export const getRestuarantDishes = ({
   restaurant,
   tag_names = [],
   max = 6,
@@ -38,15 +35,16 @@ export const restaurantPhotosForCarousel = ({
     photos.push({ name: '', image: photo, best_restaurants: [] })
   }
   if (!gallery || photos.length == 0) {
+    // @ts-ignore
     photos = [
-      ...restaurantDishesWithPhotos(restaurant, tag_names, fullTags),
+      ...getRestuarantDishesWithPhotos(restaurant, tag_names, fullTags),
       ...photos,
     ]
   }
   return photos.slice(0, max).filter(Boolean)
 }
 
-export const restaurantDishesWithPhotos = (
+const getRestuarantDishesWithPhotos = (
   restaurant: any,
   tag_names: string[] = [],
   fullTags?: DishFilledTag[]
@@ -77,7 +75,6 @@ export const restaurantDishesWithPhotos = (
     if (!photo && !isSearchedForTag) {
       continue
     }
-    console.log('what is', fullTag, topTag, tag, tag?.score)
     const photoItem = {
       name: tagName,
       // enablig this causes double queries if not on fullTags

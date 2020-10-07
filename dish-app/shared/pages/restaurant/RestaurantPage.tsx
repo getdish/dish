@@ -152,17 +152,6 @@ const HomePageRestaurant = memo(
 
             <Spacer size="xl" />
 
-            <HStack maxWidth="100%" overflow="hidden">
-              <HStack
-                flex={1}
-                overflow="hidden"
-                paddingHorizontal={30}
-                paddingLeft={50}
-              ></HStack>
-            </HStack>
-
-            <Spacer size="xl" />
-
             <Suspense fallback={null}>
               <RestaurantRatingBreakdown
                 borderless
@@ -175,17 +164,9 @@ const HomePageRestaurant = memo(
             <Spacer size="xl" />
 
             <VStack flex={1} marginBottom={20} width="100%">
-              <VStack margin={3} borderRadius={10} padding={10}>
-                <SlantedTitle fontWeight="700" alignSelf="center">
-                  Menu
-                </SlantedTitle>
-                <Spacer />
-                <Suspense fallback={null}>
-                  <RestaurantMenu restaurantSlug={restaurantSlug} />
-                </Suspense>
-              </VStack>
-
-              <Spacer size="xl" />
+              <Suspense fallback={null}>
+                <RestaurantMenu restaurantSlug={restaurantSlug} />
+              </Suspense>
             </VStack>
           </Suspense>
         </ContentScrollView>

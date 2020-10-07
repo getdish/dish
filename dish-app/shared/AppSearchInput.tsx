@@ -247,7 +247,7 @@ export const AppSearchInput = memo(() => {
                         color,
                         flex: 1,
                         fontSize: 18,
-                        fontWeight: '700',
+                        fontWeight: '600',
                         height,
                         lineHeight: height * 0.45,
                         paddingHorizontal: 20,
