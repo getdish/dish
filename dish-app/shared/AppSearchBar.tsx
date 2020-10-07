@@ -69,96 +69,92 @@ export const HomeSearchBarFloating = () => {
   // }, [isSmall])
 
   return (
-    <Suspense fallback={null}>
-      <AbsoluteVStack
-        className="searchbar-container ease-in-out"
-        zIndex={zIndexSearchBarFloating}
-        position="absolute"
-        fullscreen
-        marginTop={searchBarTopOffset}
-        left={16}
-        right={16}
+    <AbsoluteVStack
+      className="searchbar-container ease-in-out"
+      zIndex={zIndexSearchBarFloating}
+      position="absolute"
+      fullscreen
+      marginTop={searchBarTopOffset}
+      left={16}
+      right={16}
+      alignItems="center"
+      pointerEvents="none"
+      {...(isSmall && {
+        left: -6,
+        right: -6,
+        top: '20%',
+      })}
+    >
+      <VStack
+        zIndex={12}
+        position="relative"
         alignItems="center"
-        pointerEvents="none"
-        {...(isSmall && {
-          left: -6,
-          right: -6,
-          top: '20%',
-        })}
+        width="100%"
+        height={searchBarHeight}
       >
         <VStack
-          zIndex={12}
-          position="relative"
-          alignItems="center"
+          flex={1}
+          pointerEvents="auto"
           width="100%"
-          height={searchBarHeight}
+          maxWidth={searchBarMaxWidth}
+          position="relative"
         >
-          <VStack
-            flex={1}
-            pointerEvents="auto"
-            width="100%"
-            maxWidth={searchBarMaxWidth}
-            position="relative"
-          >
-            {/* shadow */}
-            {!isSmall && (
-              <>
-                <VStack
-                  height={searchBarHeight - 1}
-                  borderRadius={borderRadius}
-                  zIndex={0}
-                  className="skewX"
-                  position="absolute"
-                  top={0}
-                  left={1}
-                  width={isWeb ? `calc(100% - 1px)` : '100%'}
-                  shadowColor="rgba(0,0,0,0.25)"
-                  shadowOffset={{ height: 3, width: 0 }}
-                  shadowRadius={12}
-                />
-              </>
-            )}
-            <VStack
-              className="skewX"
-              position="relative"
-              zIndex={100}
-              flex={1}
-              paddingHorizontal={8}
-              height={searchBarHeight}
-              backgroundColor={background}
-              borderRadius={borderRadius}
-              justifyContent="center"
-              overflow="hidden"
-            >
-              <HStack
-                className="unskewX"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <VStack
-                  maxWidth="100%"
-                  flex={1}
-                  transform={[{ translateY: -1 }]}
-                >
-                  <HomeSearchBar />
-                </VStack>
-              </HStack>
-
-              {/* inner borders */}
-              <AbsoluteVStack
+          {/* shadow */}
+          {!isSmall && (
+            <>
+              <VStack
+                height={searchBarHeight - 1}
                 borderRadius={borderRadius}
-                fullscreen
-                pointerEvents="none"
-                borderTopColor="rgba(255,255,255,0.2)"
-                borderTopWidth={1}
-                borderBottomColor="rgba(0,0,0,0.1)"
-                borderBottomWidth={2}
+                zIndex={0}
+                className="skewX"
+                position="absolute"
+                top={0}
+                left={1}
+                width={isWeb ? `calc(100% - 1px)` : '100%'}
+                shadowColor="rgba(0,0,0,0.25)"
+                shadowOffset={{ height: 3, width: 0 }}
+                shadowRadius={12}
               />
-            </VStack>
+            </>
+          )}
+          <VStack
+            className="skewX"
+            position="relative"
+            zIndex={100}
+            flex={1}
+            paddingHorizontal={8}
+            height={searchBarHeight}
+            backgroundColor={background}
+            borderRadius={borderRadius}
+            justifyContent="center"
+            overflow="hidden"
+          >
+            <HStack
+              className="unskewX"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <VStack maxWidth="100%" flex={1} transform={[{ translateY: -1 }]}>
+                <Suspense fallback={null}>
+                  <HomeSearchBar />
+                </Suspense>
+              </VStack>
+            </HStack>
+
+            {/* inner borders */}
+            <AbsoluteVStack
+              borderRadius={borderRadius}
+              fullscreen
+              pointerEvents="none"
+              borderTopColor="rgba(255,255,255,0.2)"
+              borderTopWidth={1}
+              borderBottomColor="rgba(0,0,0,0.1)"
+              borderBottomWidth={2}
+            />
           </VStack>
         </VStack>
-      </AbsoluteVStack>
-    </Suspense>
+      </VStack>
+    </AbsoluteVStack>
   )
 }
 
@@ -296,7 +292,11 @@ const HomeSearchBar = memo(() => {
         </LinkButton>
       )}
 
-      {!isReallySmall && <AppMenu />}
+      {!isReallySmall && (
+        <Suspense fallback={null}>
+          <AppMenu />
+        </Suspense>
+      )}
     </HStack>
   )
 })

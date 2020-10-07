@@ -1,3 +1,5 @@
+- some restaurants have good scores, good dishes, but no headline review, must be a bug
+
 First week October:
 
 - get local development working better
@@ -22,6 +24,8 @@ First week October:
   - your updates to disambiguate on review.type would be nice to integrate on frontend in places you see reviews used
   - moving to vote for persistence
 - google crawler
+
+- also tags neede a popularity metric, useful for the "filter by dish: ..." list (currently ordered alphabetically)
 
 [0] error:
 
