@@ -1,3 +1,30 @@
+Home page
+- generally home page query and layout, but that's a whole other kettle of fish
+- is the plan for the site to be login only? i think it's better to allow anonymous use of the site
+- geo search not working
+- normal user-typed searches trigger error
+- tag-autocomplete doesn't return obvious results, eg "sushi"
+- search autocomplete can't find some cuisines, eg "spanish", "japanese", but it can find "french" and "vietnamese"
+- until we have root category dishes like "wine", maybe it's better that "spanish wine" appears as a single tag in the search bar, so you can't click the "x" on "spanish" and be thrown into an empty "wine" results list
+Results page
+- description and image for dish hardcoded
+- generally tags needed tidying up by fiverr etc, removing noise, adding alternates, spelling etc
+- also tags neede a popularity metric, useful for the "filter by dish: ..." list (currently ordered alphabetically)
+- restaurant's dish list isn't ordered by tag score
+- score breakdowns in popup are hardcoded values
+- clicking on sources (eg tripadvisor icon) doesn't link to source's external permalink
+- some restaurants have good scores, good dishes, but no headline review, must be a bug
+Restaurant page
+- again dishes not ordered by their scores
+- clicking a dish takes you to the gallery but there are no photos of that dish
+- and the hardcoded breakdowns again too
+- menu title show even when there's no menu
+- menu doesn't contain prices or images
+General notes
+the thing that strikes me most is search. all the pieces are in place, but of course the bugs make it hard to use. and those improvements to autocomplete suggestions. personally search is the gateway for me, so having that smooth would make a big difference
+
+---
+
 - tag voting fixes everywhere
 - points breakdown real fixes
 - admin panel fixes + fiverr cleanups
