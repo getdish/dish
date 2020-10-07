@@ -154,6 +154,10 @@ resource "kubernetes_deployment" "worker" {
             value = var.DO_SPACES_SECRET
           }
           env {
+            name = "GPT3_KEY"
+            value = var.GPT3_KEY
+          }
+          env {
             name = "NODE_OPTIONS"
             value = "--max_old_space_size=4096"
           }

@@ -5227,6 +5227,9 @@ export const schema = {
         get state() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get summary() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get tag_names() {
           return new FieldNode(
             schema.jsonb,
@@ -5654,6 +5657,9 @@ export const schema = {
         get state() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
+        get summary() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
         get tag_names() {
           return new InputNodeField(schema.jsonb_comparison_exp, true)
         },
@@ -5848,6 +5854,9 @@ export const schema = {
         get state() {
           return new InputNodeField(schema.String, true)
         },
+        get summary() {
+          return new InputNodeField(schema.String, true)
+        },
         get tag_names() {
           return new InputNodeField(schema.jsonb, true)
         },
@@ -5915,6 +5924,9 @@ export const schema = {
         get state() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get summary() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get telephone() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -5976,6 +5988,9 @@ export const schema = {
         get state() {
           return new InputNodeField(schema.order_by, true)
         },
+        get summary() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get telephone() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6032,6 +6047,9 @@ export const schema = {
           return new FieldNode(schema.String, undefined, true)
         },
         get state() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get summary() {
           return new FieldNode(schema.String, undefined, true)
         },
         get telephone() {
@@ -6093,6 +6111,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get state() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get summary() {
           return new InputNodeField(schema.order_by, true)
         },
         get telephone() {
@@ -6232,6 +6253,9 @@ export const schema = {
         get state() {
           return new InputNodeField(schema.order_by, true)
         },
+        get summary() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get tag_names() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6359,6 +6383,9 @@ export const schema = {
           return new InputNodeField(schema.jsonb, true)
         },
         get state() {
+          return new InputNodeField(schema.String, true)
+        },
+        get summary() {
           return new InputNodeField(schema.String, true)
         },
         get tag_names() {
@@ -7915,7 +7942,7 @@ export const schema = {
           )
         },
         get source() {
-          return new FieldNode(schema.String, undefined, true)
+          return new FieldNode(schema.String, undefined, false)
         },
         get tag() {
           return new FieldNode(schema.tag, undefined, true)

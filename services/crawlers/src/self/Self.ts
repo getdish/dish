@@ -38,6 +38,7 @@ import {
   restaurantCountForCity,
   restaurantFindIDBatchForCity,
 } from '../utils'
+import { GPT3 } from './GPT3'
 import { checkMaybeDeletePhoto, remove404Images } from './remove_404_images'
 import { RestaurantBaseScore } from './RestaurantBaseScore'
 import { RestaurantRatings } from './RestaurantRatings'
@@ -76,6 +77,7 @@ export class Self extends WorkerJob {
   restaurant_ratings: RestaurantRatings
   restaurant_base_score: RestaurantBaseScore
   restaurant_tag_scores: RestaurantTagScores
+  gpt3: GPT3
   menu_items: MenuItem[] = []
   _job_identifier_restaurant_id!: string
   _high_ram_message_sent = false
@@ -100,6 +102,7 @@ export class Self extends WorkerJob {
     this.restaurant_ratings = new RestaurantRatings(this)
     this.restaurant_base_score = new RestaurantBaseScore(this)
     this.restaurant_tag_scores = new RestaurantTagScores(this)
+    this.gpt3 = new GPT3(this)
   }
 
   async allForCity(city: string) {
@@ -151,6 +154,7 @@ export class Self extends WorkerJob {
         this.getGrubHubDishes,
         this.scanCorpus,
         this.addReviewHeadlines,
+        this.generateGPT3Summary,
       ]
       for (const async_func of async_steps) {
         await this._runFailableFunction(async_func)
@@ -729,6 +733,10 @@ export class Self extends WorkerJob {
 
   async checkMaybeDeletePhoto(photo_id: string, url: string) {
     await checkMaybeDeletePhoto(photo_id, url)
+  }
+
+  async generateGPT3Summary() {
+    await this.gpt3.generateGPT3Summary()
   }
 
   private static shortestString(arr: string[]) {

@@ -1,10 +1,7 @@
-import {
-  RestaurantWithId,
-  findOne,
-  restaurantFindOneWithTags,
-} from '@dish/graph'
+import { RestaurantWithId, findOne, restaurantFindOne } from '@dish/graph'
 
 import { DB } from '../utils'
+import { GPT3 } from './GPT3'
 import { Self } from './Self'
 
 async function one() {
@@ -34,6 +31,21 @@ async function query() {
   }
 }
 
+async function gpt3() {
+  let internal = new Self()
+  const gpt3 = new GPT3(internal)
+  let restaurant = await restaurantFindOne({ slug: process.env.GPT3 || '' })
+  if (restaurant) {
+    console.log('Using GPT3 ENV as restaurant slug...')
+    internal.restaurant = restaurant
+    internal.main_db = DB.main_db()
+    await internal.generateGPT3Summary()
+  } else {
+    console.log('Restaurant not found, using GPT3 ENV as text to complete...')
+    await gpt3.complete(process.env.GPT3 || '')
+  }
+}
+
 if (process.env.SLUG) {
   one()
 }
@@ -43,5 +55,19 @@ if (process.env.ALL == '1') {
 }
 
 if (process.env.QUERY) {
+  query()
+}
+
+if (process.env.GPT3) {
+  gpt3()
+}
+
+if (process.env.GPT3_TOP_100) {
+  process.env.QUERY = `
+    SELECT id FROM restaurant
+      AND address LIKE '%Francisco%'
+    ORDER BY score DESC
+    LIMIT 100
+  `
   query()
 }

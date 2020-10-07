@@ -16,7 +16,7 @@ import {
   tagSlug,
 } from '@dish/graph'
 import * as chrono from 'chrono-node'
-import { mean, uniq } from 'lodash'
+import { uniq } from 'lodash'
 import moment from 'moment'
 import Sentiment from 'sentiment'
 

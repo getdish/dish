@@ -2480,6 +2480,7 @@ export type t_restaurant = FieldsType<
     slug: t_String
     sources: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     state?: t_String | null
+    summary?: t_String | null
     tag_names: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     tags: FieldsTypeArg<
       {
@@ -2656,6 +2657,7 @@ export type restaurant_bool_exp = {
   slug?: String_comparison_exp | null
   sources?: jsonb_comparison_exp | null
   state?: String_comparison_exp | null
+  summary?: String_comparison_exp | null
   tag_names?: jsonb_comparison_exp | null
   tags?: restaurant_tag_bool_exp | null
   telephone?: String_comparison_exp | null
@@ -2754,6 +2756,7 @@ export type restaurant_insert_input = {
   slug?: string | null
   sources?: any | null
   state?: string | null
+  summary?: string | null
   tag_names?: any | null
   tags?: restaurant_tag_arr_rel_insert_input | null
   telephone?: string | null
@@ -2782,6 +2785,7 @@ export type t_restaurant_max_fields = FieldsType<
     score?: t_numeric | null
     slug?: t_String | null
     state?: t_String | null
+    summary?: t_String | null
     telephone?: t_String | null
     updated_at?: t_timestamptz | null
     website?: t_String | null
@@ -2808,6 +2812,7 @@ export type restaurant_max_order_by = {
   score?: order_by | null
   slug?: order_by | null
   state?: order_by | null
+  summary?: order_by | null
   telephone?: order_by | null
   updated_at?: order_by | null
   website?: order_by | null
@@ -2834,6 +2839,7 @@ export type t_restaurant_min_fields = FieldsType<
     score?: t_numeric | null
     slug?: t_String | null
     state?: t_String | null
+    summary?: t_String | null
     telephone?: t_String | null
     updated_at?: t_timestamptz | null
     website?: t_String | null
@@ -2860,6 +2866,7 @@ export type restaurant_min_order_by = {
   score?: order_by | null
   slug?: order_by | null
   state?: order_by | null
+  summary?: order_by | null
   telephone?: order_by | null
   updated_at?: order_by | null
   website?: order_by | null
@@ -2925,6 +2932,7 @@ export type restaurant_order_by = {
   slug?: order_by | null
   sources?: order_by | null
   state?: order_by | null
+  summary?: order_by | null
   tag_names?: order_by | null
   tags_aggregate?: restaurant_tag_aggregate_order_by | null
   telephone?: order_by | null
@@ -2978,6 +2986,7 @@ type t_restaurant_select_column = EnumType<
   | 'slug'
   | 'sources'
   | 'state'
+  | 'summary'
   | 'tag_names'
   | 'telephone'
   | 'updated_at'
@@ -3010,6 +3019,7 @@ export type restaurant_set_input = {
   slug?: string | null
   sources?: any | null
   state?: string | null
+  summary?: string | null
   tag_names?: any | null
   telephone?: string | null
   updated_at?: any | null
@@ -3762,6 +3772,7 @@ type t_restaurant_update_column = EnumType<
   | 'slug'
   | 'sources'
   | 'state'
+  | 'summary'
   | 'tag_names'
   | 'telephone'
   | 'updated_at'
@@ -3877,7 +3888,7 @@ export type t_review = FieldsType<
       },
       t_review_tag_sentence_aggregate
     >
-    source?: t_String | null
+    source: t_String
     tag?: t_tag | null
     tag_id?: t_uuid | null
     text?: t_String | null
@@ -7583,6 +7594,7 @@ export enum restaurant_select_column {
   slug = 'slug',
   sources = 'sources',
   state = 'state',
+  summary = 'summary',
   tag_names = 'tag_names',
   telephone = 'telephone',
   updated_at = 'updated_at',
@@ -7784,6 +7796,7 @@ export enum restaurant_update_column {
   slug = 'slug',
   sources = 'sources',
   state = 'state',
+  summary = 'summary',
   tag_names = 'tag_names',
   telephone = 'telephone',
   updated_at = 'updated_at',

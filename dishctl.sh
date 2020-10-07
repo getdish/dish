@@ -662,11 +662,14 @@ function _buildkit_build() {
   context=${5:-.}
   if [[ "$1" == "pull" ]]; then
     output="docker load"
+    type="docker"
   else
     output="true"
     push=",push=true"
+    type="image"
   fi
   dish_docker_login
+  echo "Building image: $name |$dish_base_version|$push|"
   buildctl \
     --addr tcp://buildkit.k8s.dishapp.com:1234 \
     --tlscacert k8s/etc/certs/buildkit/client/ca.pem \
@@ -680,7 +683,7 @@ function _buildkit_build() {
       --opt build-arg:DISH_BASE_VERSION=$dish_base_version \
       --export-cache type=registry,ref=$name-buildcache \
       --import-cache type=registry,ref=$name-buildcache \
-      --output type=docker,name=$name$push | $output
+      --output type=$type,name=$name$push | $output
   echo "\`buildctl\` ($name) exited with: $?"
 }
 
@@ -706,8 +709,12 @@ export -f _build_dish_service
 
 function build_dish_base() {
   image=$DISH_REGISTRY/dish/base:$DOCKER_TAG_NAMESPACE
-  echo "Using Dish base: $image"
   buildkit_build_output_local . $image
+}
+
+function build_dish_base_hot() {
+  image=$DISH_REGISTRY/dish/base:$DOCKER_TAG_NAMESPACE
+  buildkit_build . $image
 }
 
 function build_all_dish_services() {
@@ -807,6 +814,30 @@ function scale_min() {
   kubectl scale --replicas=1 deployment worker
   kubectl scale --replicas=1 deployment bert
   kubectl scale --replicas=1 deployment image-quality-api
+}
+
+# This is just for quick deploys. Of course it skips our test suits in CI but if
+# you need to get something deployed quickly then use at your own risk.
+# Usage: ./dishctl.sh hot_deploy path/to/Dockerfile
+# You need the `buildctl` binary installed
+# Eg; `brew install buildkitd`
+function hot_deploy() {
+  service_path=$1
+  service_name="${service_path##*/}"
+
+  echo "Hot deploying $1 service..."
+
+  if [[ $2 = 'with-base' ]]; then
+    build_dish_base_hot
+  else
+    echo "Excluding base image build"
+  fi
+
+  NAME=$DISH_REGISTRY/dish/$service_name
+
+  ./dishctl.sh buildkit_build $service_path $NAME
+
+  kubectl rollout restart deployment/$service_name
 }
 
 if command -v git &> /dev/null; then

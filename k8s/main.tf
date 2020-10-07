@@ -40,6 +40,7 @@ variable "LUMINATI_PROXY_DATACENTRE_USER" {}
 variable "LUMINATI_PROXY_DATACENTRE_PASSWORD" {}
 variable "LUMINATI_PROXY_RESIDENTIAL_USER" {}
 variable "LUMINATI_PROXY_RESIDENTIAL_PASSWORD" {}
+variable "GPT3_KEY" {}
 
 # Keeping the cluster in its own module allows us to build it independently of
 # every other k8s resources that lives on it. This is essential when first

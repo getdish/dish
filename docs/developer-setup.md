@@ -116,11 +116,7 @@ You'll need a few things set up first:
         `docker login docker.k8s.dishapp.com -u dish -p $password`
         Password is in `env.enc.production.yaml`
 
-Then you can use the `./k8s/etc/hot_deploy.sh` script (see comments in the script for more detailed instructions):
-
-```
-./k8s/etc/hot_deploy.sh $service [with-base]
-```
+Then you can use the `./dishctl.sh hot_deploy path/to/Dockerfile`
 
 Where `$service` is the name of a service in your `Riofile`. And optionally specify 'with-base'
 if you've changed anything relevant in our packages.
@@ -238,7 +234,7 @@ When setting up a Blue/Green cluster, I found that:
   * `nodeSelector` isn't powerful enough to prevent the CI node getting full of other pods. But
     DO still haven't developed native support for taints/tolerations. Watch:
     https://github.com/digitalocean/DOKS/issues/3
-  * `k8s/etc/hot_deploy.sh` for each service needed to be run. This could be done by doing
+  * `./dishctl.sh hot_deploy path/to/Dockerfile` for each service needed to be run. This could be done by doing
     a Github deploy too.
   * In Hasura's console, I needed to click the "Reload metadata" button to get Hasura consistent
     with the DB again. I have no idea why.
@@ -272,7 +268,7 @@ This allows us to publish and pull private Docker images. Available at:
 https://docker.k8s.dishapp.com Username and password available in `env.enc.production.yaml`.
 
 Buildkit builds images remotely on our cluster. It's mostly used by CI. But you can use
-with the `k8s/etc/hot_deploy.sh` script
+with the `./dishctl.sh hot_deploy path/to/Dockerfile` script
 
 #### Sentry error tracking and management
 
