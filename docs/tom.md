@@ -1,3 +1,6 @@
+- until we have root category dishes like "wine", maybe it's better that "spanish wine" appears as a single tag in the search bar, so you can't click the "x" on "spanish" and be thrown into an empty "wine" results list
+  - i think for this one if we can make it so a tag will search across all instances of that tag, that would be ideal. so if there are 20 "wine" across different categories, we just join them all into one
+
 - some restaurants have good scores, good dishes, but no headline review, must be a bug
 
 First week October:

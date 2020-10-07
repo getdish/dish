@@ -61,7 +61,7 @@ export const SmallButton = ({
     <LinkButton
       className={rest.className}
       {...(isWeb && {
-        minHeight: 30,
+        minHeight: 36,
         minWidth: 44,
       })}
       {...(!isWeb && {

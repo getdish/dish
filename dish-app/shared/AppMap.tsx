@@ -258,7 +258,7 @@ const AppMapContent = memo(function AppMap({
         right: 10,
       }
     : {
-        left: paddingLeft + 10,
+        left: paddingLeft,
         top: searchBarHeight + 20,
         bottom: 10,
         right: 10,

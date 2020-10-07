@@ -1,5 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
-import { graphql, restaurantPhotosForCarousel } from '@dish/graph'
+import { graphql, order_by, restaurantPhotosForCarousel } from '@dish/graph'
+import { isPresent } from '@dish/helpers/_'
 import { MessageSquare } from '@dish/react-feather'
 import {
   AbsoluteVStack,
@@ -507,24 +508,31 @@ const RestaurantPeekDishes = memo(
     const spacing = size == 'lg' ? 16 : 12
     const restaurant = useRestaurantQuery(props.restaurantSlug)
     // get them all as once to avoid double query limit on gqless
+    const tagNames = tagSlugs
+      .map((n) => allTags[n]?.name ?? null)
+      .filter(isPresent)
     const fullTags = tagSlugs.length
       ? restaurant
           .tags({
-            limit: tagSlugs.length,
+            limit: tagNames.length,
             where: {
               tag: {
                 name: {
-                  _in: tagSlugs
-                    .map((n) => allTags[n]?.name ?? n)
-                    .filter(Boolean),
+                  _in: tagNames,
                 },
               },
             },
+            order_by: [
+              {
+                score: order_by.desc,
+              },
+            ],
           })
           .map((tag) => ({
             name: tag.tag.name,
             score: tag.score ?? 0,
             icon: tag.tag.icon,
+            image: tag.tag.default_images()?.[0],
           }))
       : null
     const photos = restaurantPhotosForCarousel({

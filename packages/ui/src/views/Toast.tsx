@@ -87,7 +87,8 @@ export const ToastRoot = memo(function ToastRoot() {
             shadowOffset={{ height: 10, width: 0 }}
             shadowRadius={40}
             borderRadius={12}
-            padding={18}
+            paddingHorizontal={18}
+            paddingVertical={12}
           >
             <Text color="white" fontSize={18} fontWeight="600">
               {state.text}

@@ -2,7 +2,7 @@ import { frameWidthMax } from '../constants'
 import { getWindowWidth } from '../helpers/getWindow'
 import { useAppDrawerWidth } from './useAppDrawerWidth'
 
-const overlapAmt = 100
+const overlapAmt = 0
 
 export const useMapSize = (isSmall: boolean) => {
   const drawerWidth = useAppDrawerWidth(Infinity)
