@@ -22,7 +22,6 @@ import { BottomDrawerStore } from './BottomDrawerStore'
 import {
   isNative,
   isWeb,
-  pageWidthMax,
   searchBarHeight,
   searchBarTopOffset,
 } from './constants'
@@ -365,7 +364,7 @@ const AutocompleteResults = memo(() => {
               lineHeight={20}
               paddingHorizontal={8}
               paddingVertical={6}
-              fontWeight="500"
+              fontWeight="600"
               borderRadius={5}
               hoverStyle={{
                 backgroundColor: 'rgba(255,255,255,0.1)',
@@ -393,9 +392,10 @@ const AutocompleteResults = memo(() => {
                   ) : null}
                 </VStack>
                 <VStack>
-                  <Text ellipse color={'#fff'} fontSize={16}>
+                  <Text fontWeight="600" ellipse color={'#fff'} fontSize={16}>
                     {result.name} {plusButtonEl}
                   </Text>
+                  <Spacer size="xs" />
                   {!!result.description && (
                     <Text ellipse color="rgba(255,255,255,0.5)" fontSize={12}>
                       {result.description}
@@ -554,7 +554,6 @@ function runAutocomplete(
       }
       matched = uniqBy([...matched, ...results].filter(isPresent), (x) => x.id)
       if (showAutocomplete === 'location') {
-        console.log('setting results', matched)
         om.actions.home.setLocationAutocompleteResults(matched)
       } else if (showAutocomplete === 'search') {
         // add in a deduped entry
@@ -579,6 +578,23 @@ function runAutocomplete(
           }
         }
 
+        // countries that match name startsWith go to top
+        const sqlower = searchQuery.toLowerCase()
+        const foundCountryIndex = matched.findIndex(
+          (x) =>
+            x.type === 'country' && x.name.toLowerCase().startsWith(sqlower)
+        )
+        if (foundCountryIndex > 0) {
+          const insertIndex = matched.findIndex(
+            (x) => x.name.toLowerCase() !== sqlower
+          )
+          if (insertIndex >= 0 && insertIndex < foundCountryIndex) {
+            const countryTag = matched[foundCountryIndex]
+            matched.splice(foundCountryIndex, 1) // remove from cur pos
+            matched.splice(insertIndex, 0, countryTag) // insert into higher place
+          }
+        }
+
         om.actions.home.setAutocompleteResults(matched)
       }
     },
@@ -589,6 +605,7 @@ function runAutocomplete(
 }
 
 function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {
+  searchQuery = searchQuery.trim()
   return resolved(() => {
     return [
       ...searchDishTags(searchQuery),

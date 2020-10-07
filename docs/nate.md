@@ -1,9 +1,6 @@
 Home page
 - generally home page query and layout, but that's a whole other kettle of fish
 - is the plan for the site to be login only? i think it's better to allow anonymous use of the site
-- geo search not working
-- normal user-typed searches trigger error
-- tag-autocomplete doesn't return obvious results, eg "sushi"
 - search autocomplete can't find some cuisines, eg "spanish", "japanese", but it can find "french" and "vietnamese"
 - until we have root category dishes like "wine", maybe it's better that "spanish wine" appears as a single tag in the search bar, so you can't click the "x" on "spanish" and be thrown into an empty "wine" results list
 Results page
