@@ -564,7 +564,7 @@ const RestaurantPeekDishes = memo(
           </TableHeadText>
         </AbsoluteVStack>
 
-        {!!dishes[0].name &&
+        {!!dishes[0]?.name &&
           dishes.map((dish, i) => {
             if (!isLoaded) {
               if (i > 2) {

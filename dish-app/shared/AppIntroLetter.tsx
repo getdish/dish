@@ -37,6 +37,10 @@ export const AppIntroLetter = memo(() => {
   //     : hasOnboarded
   //   : false
 
+  if (isLoggedIn && hasOnboarded) {
+    return null
+  }
+
   return (
     <DarkModal
       hide={store.hidden}

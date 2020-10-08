@@ -84,7 +84,7 @@ export const RestaurantButton = memo(
               {restaurant.name}
             </Text>
             <Spacer size="sm" />
-            <VStack marginVertical={subtle ? -2 : -6}>
+            <VStack marginVertical={subtle ? -8 : -10}>
               <RestaurantRatingView
                 size="xs"
                 restaurantSlug={restaurant.slug ?? ''}
