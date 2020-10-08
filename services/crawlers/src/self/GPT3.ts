@@ -1,12 +1,15 @@
+import { sentryMessage } from '@dish/common'
+
 import { post_prompt, pre_prompt } from './gpt3_prompts_text'
 import { Self } from './Self'
 
 const presets = {
   witty_guidebook: {
-    max_tokens: 301,
+    max_tokens: 188,
+    stop: ['\n'],
     temperature: 0,
-    top_p: 0.91,
-    frequency_penalty: 0.2,
+    top_p: 0.5,
+    frequency_penalty: 0.58,
     presence_penalty: 0.09,
   },
 }
@@ -20,7 +23,7 @@ export class GPT3 {
 
   async generateGPT3Summary() {
     const is_in_sanfran = this.crawler.restaurant.address?.includes('Francisco')
-    const is_high_scoring = this.crawler.restaurant.score >= 400
+    const is_high_scoring = this.crawler.restaurant.score >= 700
     if (is_in_sanfran && is_high_scoring) {
       this.crawler.log('Running GPT3 summariser for restaurant...')
     } else {
@@ -51,7 +54,7 @@ export class GPT3 {
       SELECT SUM(naive_sentiment), text FROM review
       JOIN review_tag_sentence rts ON rts.review_id = review.id
         WHERE review.restaurant_id = '${this.crawler.restaurant.id}'
-        AND LENGTH(text) < 2000
+        AND LENGTH(text) < 1000
       GROUP BY review.id
       ORDER BY SUM(naive_sentiment) DESC LIMIT 4
     `
@@ -62,7 +65,7 @@ export class GPT3 {
       SELECT COUNT(rts.id), text FROM review
       JOIN review_tag_sentence rts ON rts.review_id = review.id
         WHERE review.restaurant_id = '${this.crawler.restaurant.id}'
-        AND LENGTH(text) < 1800
+        AND LENGTH(text) < 1000
       GROUP BY review.id
       ORDER BY COUNT(rts.id) DESC LIMIT 4
     `
@@ -91,6 +94,10 @@ export class GPT3 {
     let answer = ''
     if (!response.choices || response.choices.length == 0) {
       console.error('GPT3 API error:', response)
+      sentryMessage('GPT3 API error', {
+        restaurant: this.crawler.restaurant.slug,
+        response,
+      })
     } else {
       answer = response.choices[0].text
     }

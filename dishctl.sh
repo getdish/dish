@@ -764,7 +764,7 @@ function ci_push_images_to_latest() {
 function rollout_all_services() {
   kubectl rollout \
     restart deployment \
-    $(kubectl get deployments | tail -n +2 | cut -d ' ' -f 1)
+    $(kubectl get deployments | grep -v worker | tail -n +2 | cut -d ' ' -f 1)
 }
 
 # Usage dishctl.sh push_repo_image $repo $image_name

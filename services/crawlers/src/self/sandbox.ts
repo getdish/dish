@@ -65,8 +65,8 @@ if (process.env.GPT3) {
 if (process.env.GPT3_TOP_100) {
   process.env.QUERY = `
     SELECT id FROM restaurant
-      AND address LIKE '%Francisco%'
-    ORDER BY score DESC
+      WHERE address LIKE '%Francisco%'
+    ORDER BY score DESC NULLS LAST
     LIMIT 100
   `
   query()
