@@ -1,8 +1,9 @@
 import { Tag } from '@dish/graph'
-import { HStack, Text } from '@dish/ui'
+import { HStack, LinearGradient, Text } from '@dish/ui'
 import { default as React, memo } from 'react'
+import { StyleSheet } from 'react-native'
 
-import { bgLight, lightBlue } from '../../colors'
+import { bgLight, bgLightHover, lightBlue } from '../../colors'
 import { useIsReallyNarrow } from '../../hooks/useIs'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { tagLenses } from '../../state/tagLenses'
@@ -26,44 +27,68 @@ export const HomeTopSearches = memo(() => {
       overflow="hidden"
     >
       {recentSearches.slice(0, isReallySmall ? 6 : 8).map((search, index) => {
+        const lenseTag = search.tags.find((x) => x.type === 'lense')
+        const hasLenseColor = !!lenseTag?.rgb
+        const rgbString = hasLenseColor ? lenseTag.rgb.join(',') : ''
         return (
           <LinkButton
             key={index}
             tags={search.tags}
-            padding={7}
+            paddingVertical={7}
+            paddingHorizontal={15}
             alignItems="center"
             marginBottom={7}
             borderRadius={100}
             borderWidth={1}
+            position="relative"
+            overflow="hidden"
             borderColor={bgLight}
             hoverStyle={{
-              borderColor: lightBlue,
+              borderColor: rgbString ? `rgba(${rgbString}, 0.3)` : bgLightHover,
             }}
           >
+            {hasLenseColor && (
+              <LinearGradient
+                colors={[`rgba(${rgbString}, 0.1)`, `rgba(${rgbString},0)`]}
+                startPoint={[0, 1]}
+                endPoint={[1, 0]}
+                style={StyleSheet.absoluteFill}
+              />
+            )}
             {search.tags.map((tag, index) => (
               <React.Fragment key={tag.name}>
                 <Text
                   color="#444"
-                  paddingHorizontal={5}
                   fontSize={15}
                   borderRadius={50}
+                  fontWeight="500"
+                  {...(hasLenseColor && {
+                    color: `rgb(${rgbString})`,
+                  })}
                 >
                   {tag.icon ? (
                     <Text
-                      marginRight={6}
-                      fontSize={18}
+                      marginRight={3}
+                      fontSize={22}
                       lineHeight={22}
                       transform={[{ translateY: 1 }]}
                     >
-                      {tag.icon}{' '}
+                      {tag.icon.trim()}{' '}
                     </Text>
                   ) : (
                     ''
                   )}
-                  {tagDisplayName(tag)}
+                  <Text transform={[{ translateY: -2 }]}>
+                    {tagDisplayName(tag)}
+                  </Text>
                 </Text>
                 {index < search.tags.length - 1 ? (
-                  <Text marginHorizontal={2} fontSize={8} opacity={0.23}>
+                  <Text
+                    paddingHorizontal={8}
+                    fontWeight="700"
+                    fontSize={12}
+                    opacity={0.23}
+                  >
                     {' '}
                     +{' '}
                   </Text>

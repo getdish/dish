@@ -129,16 +129,17 @@ export function getStaticBindingsForScope(
 
     const cacheKey = `${dec.id.name}_${dec.id.start}-${dec.id.end}`
 
-    // retrieve value from cache
-    if (bindingCache.hasOwnProperty(cacheKey)) {
-      ret[k] = bindingCache[cacheKey]
-      continue
-    }
-
-    // retrieve value from cache
-    if (bindingCache.hasOwnProperty(cacheKey)) {
-      ret[k] = bindingCache[cacheKey]
-      continue
+    if (process.env.NODE_ENV === 'production') {
+      // retrieve value from cache
+      if (bindingCache.hasOwnProperty(cacheKey)) {
+        ret[k] = bindingCache[cacheKey]
+        continue
+      }
+      // retrieve value from cache
+      if (bindingCache.hasOwnProperty(cacheKey)) {
+        ret[k] = bindingCache[cacheKey]
+        continue
+      }
     }
 
     // skip ObjectExpressions not defined in the root

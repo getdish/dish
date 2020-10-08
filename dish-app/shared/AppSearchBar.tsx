@@ -49,7 +49,8 @@ export const parentIds = {
   large: 'searchbar-large',
 }
 
-const borderRadius = 14
+const borderRadius = 10
+
 export const HomeSearchBarFloating = () => {
   const isSmall = useIsNarrow()
   const { background } = useSearchBarTheme()
