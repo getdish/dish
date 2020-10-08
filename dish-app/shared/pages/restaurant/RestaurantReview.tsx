@@ -10,10 +10,11 @@ import {
 import { uniqBy } from 'lodash'
 import React, { memo } from 'react'
 
-import { lightGreen, lightGrey, lightRed, lightYellow } from '../../colors'
+import { lightGreen, lightRed, lightYellow } from '../../colors'
 import { isWeb } from '../../constants'
 import { CommentBubble } from '../../views/CommentBubble'
 import { Link } from '../../views/ui/Link'
+import { SentimentText } from './SentimentText'
 
 const bottomMetaTextProps: TextProps = {
   lineHeight: 26,
@@ -122,28 +123,9 @@ export const RestaurantReview = memo(
                       const snt = x.ml_sentiment
                       return (
                         <React.Fragment key={i}>
-                          <Text
-                            {...bottomMetaTextProps}
-                            backgroundColor={
-                              snt > 0
-                                ? lightGreen
-                                : snt < 0
-                                ? lightRed
-                                : lightGrey
-                            }
-                            paddingHorizontal={4}
-                            margin={-2}
-                            borderRadius={6}
-                            ellipse
-                          >
-                            {x.tag.name}{' '}
-                            {(snt > 0 || snt < 0) && (
-                              <Text fontSize={11}>
-                                {snt > 0 ? '+' : ''}
-                                {Math.round(snt)}
-                              </Text>
-                            )}
-                          </Text>
+                          <SentimentText sentiment={snt}>
+                            {x.tag.name}
+                          </SentimentText>
                           <Text>&nbsp; &nbsp;</Text>
                         </React.Fragment>
                       )

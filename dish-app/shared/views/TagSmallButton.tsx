@@ -30,7 +30,7 @@ export const TagSmallButton = graphql(
   }) => {
     const [votes, setVote] = useUserTagVotes(restaurantId, tag.id)
     const review = votes[0]
-    const vote = review?.rating ?? 0
+    const vote = review?.vote ?? 0
     const hasVoted = vote === 1 || vote === -1
 
     const VoteIcon = vote == 1 || vote === 0 ? ThumbsUp : ThumbsDown
