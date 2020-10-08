@@ -10,7 +10,7 @@ export const PointsText = ({
       <Text fontSize={10} transform={[{ translateY: -2 }]}>
         {points > 0 ? '+' : ''}
       </Text>
-      {points}
+      {Math.round(points)}
     </Text>
   )
 }

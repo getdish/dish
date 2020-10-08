@@ -6,6 +6,7 @@ import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import * as t from '@babel/types'
 import * as AllExports from '@dish/ui/node'
+import { writeFileSync } from 'fs-extra'
 import invariant from 'invariant'
 import { TextStyle, ViewStyle } from 'react-native'
 
@@ -26,6 +27,9 @@ import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
 import { literalToAst } from './literalToAst'
 import { parse } from './parse'
+
+const UI_PATH = require.resolve('@dish/ui')
+const UI_STYLE_PATH = path.join(UI_PATH, '..', '..', 'style.css')
 
 type OptimizableComponent = Function & {
   staticConfig: {
@@ -79,6 +83,8 @@ const UNTOUCHED_PROPS = {
 
 // per-file cache of evaluated bindings
 const bindingCache: Record<string, string | null> = {}
+
+const globalCSSMap = new Map<string, string>()
 
 export function extractStyles(
   src: string | Buffer,
@@ -952,6 +958,12 @@ export function extractStyles(
                 throw new Error(`huh?`)
               }
               if (rules.length) {
+                if (process.env.NODE_ENV !== 'production') {
+                  if (globalCSSMap.has(className)) {
+                    continue
+                  }
+                  globalCSSMap.set(className, rules[0])
+                }
                 cssMap.set(className, {
                   css: rules[0],
                   commentTexts: [comment],
@@ -984,12 +996,28 @@ export function extractStyles(
 
   const extName = path.extname(sourceFileName)
   const baseName = path.basename(sourceFileName, extName)
-  const cssRelativeFileName = `./${baseName}${GLOSS_CSS_FILE}`
-  const cssFileName = path.join(sourceDir, cssRelativeFileName)
+
+  let cssFileName: string
+  let cssImportFileName: string
+
+  if (process.env.NODE_ENV === 'production') {
+    cssImportFileName = `./${baseName}${GLOSS_CSS_FILE}`
+    cssFileName = path.join(sourceDir, cssImportFileName)
+  } else {
+    // in dev mode dedupe into one big global sheet
+    cssImportFileName = '@dish/ui/style.css'
+    cssFileName = UI_STYLE_PATH
+
+    // only writes if new values found since last write
+    if (cssMap.size) {
+      const cssOut = Array.from(globalCSSMap.values()).join('\n')
+      writeFileSync(UI_STYLE_PATH, cssOut)
+    }
+  }
 
   if (css !== '') {
     ast.program.body.unshift(
-      t.importDeclaration([], t.stringLiteral(cssRelativeFileName))
+      t.importDeclaration([], t.stringLiteral(cssImportFileName))
     )
   }
 

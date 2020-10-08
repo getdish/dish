@@ -46,5 +46,6 @@ export default function GlossWebpackLoader(this: any, content) {
 
   memoryFS.mkdirpSync(path.dirname(rv.cssFileName))
   memoryFS.writeFileSync(rv.cssFileName, rv.css)
+
   this.callback(null, rv.js, rv.map)
 }
