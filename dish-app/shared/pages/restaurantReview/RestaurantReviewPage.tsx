@@ -1,4 +1,4 @@
-import { graphql, restaurantDishesWithPhotos } from '@dish/graph'
+import { graphql } from '@dish/graph'
 import { fetchBertSentiment } from '@dish/helpers'
 import {
   AbsoluteVStack,
@@ -14,6 +14,7 @@ import {
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image, ScrollView, TextInput } from 'react-native'
 
+import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { HomeStateItemReview } from '../../state/home-types'
@@ -32,16 +33,54 @@ export default memo(function RestaurantReviewPage() {
 
   if (state.type === 'restaurantReview') {
     return (
-      <Modal>
-        <VStack width="95%" maxWidth={880} height="100%" flex={1}>
-          <AbsoluteVStack top={5} right={30}>
-            <StackViewCloseButton />
-          </AbsoluteVStack>
-          <Suspense fallback={<LoadingItems />}>
-            <HomePageReviewContent state={state} />
-          </Suspense>
+      <AbsoluteVStack
+        className="inset-shadow-xxxl ease-in-out-slow"
+        fullscreen
+        zIndex={10000000000}
+        alignItems="center"
+        justifyContent="center"
+        paddingHorizontal="2%"
+        paddingVertical="2%"
+        backgroundColor="rgba(60,30,50,0.9)"
+        transform={[{ translateY: 0 }]}
+      >
+        <VStack
+          width="100%"
+          height="100%"
+          borderWidth={1}
+          position="relative"
+          backgroundColor="#fff"
+          borderRadius={25}
+          shadowColor="rgba(0,0,0,1)"
+          shadowRadius={150}
+          shadowOffset={{ height: 10, width: 0 }}
+          pointerEvents="auto"
+        >
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{
+              maxWidth: '100%',
+            }}
+            contentContainerStyle={{
+              maxWidth: '100%',
+            }}
+          >
+            <VStack
+              flex={1}
+              maxWidth="100%"
+              overflow="hidden"
+              alignItems="center"
+            >
+              <AbsoluteVStack top={5} right={30}>
+                <StackViewCloseButton />
+              </AbsoluteVStack>
+              <Suspense fallback={<LoadingItems />}>
+                <HomePageReviewContent state={state} />
+              </Suspense>
+            </VStack>
+          </ScrollView>
         </VStack>
-      </Modal>
+      </AbsoluteVStack>
     )
   }
 
@@ -57,28 +96,15 @@ const HomePageReviewContent = memo(
     const restaurant = useRestaurantQuery(state.restaurantSlug)
 
     return (
-      <VStack flex={1} overflow="hidden">
-        <ScrollView
-          style={{
-            width: '100%',
-            flex: 1,
-            height: '100%',
-          }}
-          contentContainerStyle={{
-            minHeight: '100%',
-          }}
-        >
-          <VStack padding={18} spacing="lg" flex={1}>
-            <SmallTitle fontWeight="600">Review {restaurant.name}</SmallTitle>
+      <VStack maxWidth="100%" padding={18} spacing="lg" flex={1}>
+        <SmallTitle fontWeight="600">Review {restaurant.name}</SmallTitle>
 
-            <Suspense fallback={<LoadingItems />}>
-              <RestaurantReviewComment
-                restaurantSlug={state.restaurantSlug}
-                restaurantId={restaurant.id}
-              />
-            </Suspense>
-          </VStack>
-        </ScrollView>
+        <Suspense fallback={<LoadingItems />}>
+          <RestaurantReviewComment
+            restaurantSlug={state.restaurantSlug}
+            restaurantId={restaurant.id}
+          />
+        </Suspense>
       </VStack>
     )
   })
@@ -98,12 +124,11 @@ export const RestaurantReviewComment = memo(
       const { review, upsertReview, deleteReview } = useUserReviewCommentQuery(
         restaurantId
       )
-      const restaurant = useRestaurantQuery(restaurantSlug)
       const [reviewText, setReviewText] = useState('')
       const [isSaved, setIsSaved] = useState(false)
       const lineHeight = 22
       const [height, setHeight] = useState(lineHeight)
-      const dishTags = restaurantDishesWithPhotos(restaurant)
+      const dishTags = getRestuarantDishes({ restaurantSlug })
       const [sentiments, setSentiments] = useState([])
 
       useDebounceEffect(
