@@ -1,6 +1,12 @@
 import { AbsoluteVStack, Paragraph, Spacer, Text, VStack } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
-import { default as React, memo, useState } from 'react'
+import {
+  default as React,
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react'
 import { Image } from 'react-native'
 
 // @ts-ignore
@@ -14,9 +20,11 @@ import { CloseButton } from './views/ui/CloseButton'
 import { LinkButton } from './views/ui/LinkButton'
 
 class IntroModal extends Store {
-  hidden = false
+  hidden = true
+  started = false
 
   setHidden(val: boolean) {
+    this.started = true
     this.hidden = val
   }
 }
@@ -36,6 +44,13 @@ export const AppIntroLetter = memo(() => {
   //     ? true
   //     : hasOnboarded
   //   : false
+
+  useLayoutEffect(() => {
+    if (store.started) return
+    if (!isLoggedIn || (isLoggedIn && !hasOnboarded)) {
+      store.setHidden(false)
+    }
+  }, [store.hidden, isLoggedIn, hasOnboarded])
 
   if (isLoggedIn && hasOnboarded) {
     return null

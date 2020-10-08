@@ -8,6 +8,7 @@ import {
   Modal,
   SmallTitle,
   Spacer,
+  Text,
   VStack,
   useDebounceEffect,
 } from '@dish/ui'
@@ -27,6 +28,7 @@ import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
 import { RestaurantLenseVote } from '../restaurant/RestaurantLenseVote'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
+import { SentimentText } from '../restaurant/SentimentText'
 
 export default memo(function RestaurantReviewPage() {
   const om = useOvermind()
@@ -52,7 +54,7 @@ export default memo(function RestaurantReviewPage() {
           position="relative"
           backgroundColor="#fff"
           borderRadius={25}
-          shadowColor="rgba(0,0,0,1)"
+          shadowColor="#000"
           shadowRadius={150}
           shadowOffset={{ height: 10, width: 0 }}
           pointerEvents="auto"
@@ -137,9 +139,6 @@ export const RestaurantReviewComment = memo(
           },
         },
       })
-      console.log(
-        allVotes.map((x) => ({ type: x.type, vote: x.vote, tag_id: x.tag_id }))
-      )
       const [reviewText, setReviewText] = useState('')
       const [isSaved, setIsSaved] = useState(false)
       const lineHeight = 22
@@ -239,6 +238,24 @@ export const RestaurantReviewComment = memo(
               />
             }
           />
+
+          <HStack padding={10} alignItems="center" flexWrap="wrap">
+            <Text color="#999">Saved votes:</Text>
+            <Spacer />
+            {allVotes.map((vote) => {
+              return (
+                <SentimentText
+                  marginRight={4}
+                  key={vote.id}
+                  sentiment={vote.vote ?? 0}
+                >
+                  {vote.tag.name}
+                </SentimentText>
+              )
+            })}
+          </HStack>
+
+          <Spacer />
 
           <SmallTitle divider="center">Votes</SmallTitle>
           <Spacer />

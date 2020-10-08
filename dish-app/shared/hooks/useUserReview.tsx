@@ -20,6 +20,8 @@ export type ReviewWithTag = Pick<
   | 'rating'
   | 'tag_id'
   | 'text'
+  | 'type'
+  | 'vote'
   | 'restaurant_id'
   | 'user_id'
   | 'favorited'
