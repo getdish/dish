@@ -68,7 +68,9 @@ const AppContent = memo(() => {
         </AppContainer>
       </Suspense>
 
-      <AppMenuFloating />
+      <Suspense fallback={null}>
+        <AppMenuFloating />
+      </Suspense>
 
       <Suspense fallback={null}>
         {!isSSR && (
@@ -79,7 +81,9 @@ const AppContent = memo(() => {
           </ErrorBoundary>
         )}
 
-        <AppIntroLetter />
+        <Suspense fallback={null}>
+          <AppIntroLetter />
+        </Suspense>
 
         <Suspense fallback={null}>
           <AppMapControlsUnderlay />

@@ -19,6 +19,11 @@ export const query: query_root = new Proxy(client.query, {
   },
 })
 
-export function resetQueryCache() {
+export function resetQueryCache(options?: { ifAbove?: number }) {
+  if (options?.ifAbove && client.cache.entries.size < options.ifAbove) {
+    return
+  }
+  console.debug('reset gqless cache')
+  client.cache.entries.clear()
   client = createQueryClient()
 }

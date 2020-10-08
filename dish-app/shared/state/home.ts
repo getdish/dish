@@ -3,6 +3,8 @@ import {
   RestaurantOnlyIds,
   RestaurantSearchArgs,
   Tag,
+  client,
+  resetQueryCache,
   search,
   slugify,
 } from '@dish/graph'
@@ -15,6 +17,7 @@ import {
 import { HistoryItem, NavigateItem } from '@dish/router'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
+import { Cache } from '@o/gqless'
 import _, { clamp, cloneDeep, findLast, isPlainObject, last } from 'lodash'
 import {
   Action,
@@ -437,6 +440,8 @@ const updateCurrentMapAreaInformation: AsyncAction = async (om) => {
   }
 }
 
+let isClearingCache = false
+
 const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
   // happens on *any* route push or pop
   if (om.state.home.hoveredRestaurant) {
@@ -463,6 +468,14 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
 
   // actions per-route
   if (item.type === 'push' || item.type === 'replace') {
+    if (!isClearingCache) {
+      isClearingCache = true
+      requestIdleCallback(() => {
+        isClearingCache = false
+        resetQueryCache({ ifAbove: 15 })
+      })
+    }
+
     switch (item.name) {
       case 'home':
       case 'about':

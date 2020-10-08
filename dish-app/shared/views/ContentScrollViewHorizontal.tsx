@@ -1,16 +1,17 @@
 import { VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-import React, { useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 
-import { ScrollStore } from './ContentScrollView'
+import { ContentScrollContext, ScrollStore } from './ContentScrollView'
 
 export let isScrollingSubDrawer = false
 
 export const ContentScrollViewHorizontal = (
   props: ScrollViewProps & { children: any }
 ) => {
-  const { isScrolling } = useStore(ScrollStore)
+  const id = useContext(ContentScrollContext)
+  const { isScrolling } = useStore(ScrollStore, { id })
 
   const children = useMemo(() => {
     return (

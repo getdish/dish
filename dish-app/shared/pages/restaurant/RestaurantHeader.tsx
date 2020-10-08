@@ -65,7 +65,7 @@ const RestaurantHeaderContent = memo(
           }}
         >
           <ScrollView
-            style={{ width: '100%', maxWidth: '100vw' }}
+            style={{ width: '100%', maxWidth: '100vw', minHeight: 460 }}
             contentContainerStyle={{
               width,
             }}
@@ -114,7 +114,7 @@ const RestaurantHeaderContent = memo(
                           />
                         </HStack>
                         <Spacer size="md" />
-                        <HStack flexWrap="wrap">
+                        <HStack flexWrap="wrap" alignItems="center">
                           <VStack marginRight={10} marginBottom={10}>
                             <RestaurantAddress
                               size="xs"
@@ -134,7 +134,7 @@ const RestaurantHeaderContent = memo(
                           />
                         </HStack>
                         {afterAddress}
-                        {spacer}
+                        <Spacer />
                       </VStack>
                     </HStack>
 
