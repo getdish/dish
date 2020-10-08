@@ -96,7 +96,7 @@ const voteForTags = async (
   restaurantId: string,
   userId: string,
   tags: NavigableTag[],
-  rating: number
+  vote: VoteNumber
 ) => {
   const partialTags = tags.map((tag) => ({
     ...allTags[getTagId(tag)],
@@ -108,18 +108,19 @@ const voteForTags = async (
       (x) => x.name?.toLowerCase() === tag.name?.toLowerCase()
     )?.id
     if (!tagId) {
-      console.warn({ name, tags, partialTags, fullTags })
+      console.warn({ tags, partialTags, fullTags })
       throw new Error('no tag')
     }
     return {
       tag_id: tagId,
       user_id: userId,
       restaurant_id: restaurantId,
-      rating,
+      vote,
+      type: 'vote',
     }
   })
   if (insertTags.length) {
-    console.log('upsert', insertTags)
+    console.log('inserting', insertTags)
     return await reviewUpsert(insertTags)
   } else {
     console.warn('no tags?')
@@ -130,8 +131,9 @@ const toggleRating = (r: number) => (r == 1 ? -1 : 1)
 
 export const useUserTagVotes = (restaurantId: string, tagId?: string) => {
   const isMounted = useIsMountedRef()
-  const { userId, reviews, reviewsQuery, om, refetch } = useUserReviewsQuery(
-    restaurantId
+  const { userId, reviews, reviewsQuery, refetch } = useUserReviewsQuery(
+    restaurantId,
+    'vote'
   )
   const votes = reviews.filter((review) => {
     if (!isTagReview(review)) return false
@@ -141,7 +143,7 @@ export const useUserTagVotes = (restaurantId: string, tagId?: string) => {
   })
   return [
     votes,
-    async (tag: NavigableTag, userRating: number | 'toggle') => {
+    async (tag: NavigableTag, userVote: VoteNumber | 'toggle') => {
       if (omStatic.actions.home.promptLogin()) {
         return
       }
@@ -150,14 +152,14 @@ export const useUserTagVotes = (restaurantId: string, tagId?: string) => {
       if (existing) {
         // optimistic
         existing.rating =
-          userRating == 'toggle' ? toggleRating(existing.rating) : userRating
+          userVote == 'toggle' ? toggleRating(existing.rating) : userVote
       }
       // delayed
       const saved = await voteForTags(
         restaurantId,
         userId,
         [tag],
-        userRating === 'toggle' ? 1 : userRating
+        userVote === 'toggle' ? 1 : userVote
       )
       const didSave = !!saved?.length
       if (didSave) {
