@@ -34,7 +34,12 @@ export type ReviewWithTag = Pick<
   }
 }
 
-export const useUserReviewsQuery = (restaurantId: string) => {
+type ReviewTypes = 'vote' | 'favorite' | 'comment'
+
+export const useUserReviewsQuery = (
+  restaurantId: string,
+  type?: ReviewTypes
+) => {
   const om = useOvermind()
   const forceUpdate = useForceUpdate()
   const userId = (om.state.user.user?.id as string) ?? ''
@@ -49,6 +54,11 @@ export const useUserReviewsQuery = (restaurantId: string) => {
           user_id: {
             _eq: userId,
           },
+          ...(!!type && {
+            type: {
+              _eq: type,
+            },
+          }),
         },
       })
     : null
@@ -64,6 +74,7 @@ export const useUserReviewsQuery = (restaurantId: string) => {
           tag_id: review.tag_id,
           text: review.text,
           tag,
+          vote: review.vote,
           restaurant_id: review.restaurant_id,
           user_id: review.user_id,
           user: {
@@ -95,7 +106,12 @@ export const useUserReviewsQuery = (restaurantId: string) => {
     reviewsQuery,
     om,
     refetch: doRefetch,
-    async upsert(review: Partial<Review>) {
+    async upsert(
+      review: Partial<Review> & {
+        // require type
+        type: Review['type']
+      }
+    ) {
       if (omStatic.actions.home.promptLogin()) {
         return false
       }
@@ -153,12 +169,16 @@ export const useUserReviewsQuery = (restaurantId: string) => {
 export const isTagReview = (r: Review) => !!r.tag_id && r.tag_id !== globalTagId
 
 export const useUserReviewCommentQuery = (restaurantId: string) => {
-  const { reviews, upsert, refetch } = useUserReviewsQuery(restaurantId)
+  const { reviews, upsert, refetch } = useUserReviewsQuery(
+    restaurantId,
+    'comment'
+  )
   const review = reviews.filter((x) => !isTagReview(x) && !!x.text)[0]
   return {
     review,
     upsertReview(review: Partial<Review>) {
       return upsert({
+        type: 'comment',
         ...review,
         restaurant_id: restaurantId,
       })
@@ -175,7 +195,7 @@ export const useUserReviewCommentQuery = (restaurantId: string) => {
 }
 
 export const useUserFavoriteQuery = (restaurantId: string) => {
-  const { reviews, upsert } = useUserReviewsQuery(restaurantId)
+  const { reviews, upsert } = useUserReviewsQuery(restaurantId, 'favorite')
   const review = reviews.filter((x) => !isTagReview(x) && x.favorited)[0]
   const [optimistic, setOptimistic] = useState<boolean | null>(null)
   const isStarred = optimistic ?? review?.favorited
@@ -184,6 +204,7 @@ export const useUserFavoriteQuery = (restaurantId: string) => {
     (next: boolean) => {
       setOptimistic(next)
       return upsert({
+        type: 'favorite',
         favorited: next,
         restaurant_id: restaurantId,
       })

@@ -46,6 +46,7 @@ export const getRestuarantDishes = ({
     const tagImage = tag.photos()?.[0]
     const tagFallbackImage = tagImage ? null : tag.tag?.default_images()?.[0]
     return {
+      id: tag.tag.id,
       name: tag.tag.name ?? '',
       icon: tag.tag.icon ?? '',
       score: tag.score ?? 0,

@@ -1,4 +1,4 @@
-import { graphql } from '@dish/graph'
+import { graphql, query } from '@dish/graph'
 import { fetchBertSentiment } from '@dish/helpers'
 import {
   AbsoluteVStack,
@@ -19,6 +19,7 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { HomeStateItemReview } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
+import { tagLenses } from '../../state/tagLenses'
 import { CommentBubble } from '../../views/CommentBubble'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { TagSmallButton } from '../../views/TagSmallButton'
@@ -55,6 +56,8 @@ export default memo(function RestaurantReviewPage() {
           shadowRadius={150}
           shadowOffset={{ height: 10, width: 0 }}
           pointerEvents="auto"
+          maxWidth={900}
+          maxHeight={720}
         >
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -71,7 +74,7 @@ export default memo(function RestaurantReviewPage() {
               overflow="hidden"
               alignItems="center"
             >
-              <AbsoluteVStack top={5} right={30}>
+              <AbsoluteVStack zIndex={10} top={5} right={30}>
                 <StackViewCloseButton />
               </AbsoluteVStack>
               <Suspense fallback={<LoadingItems />}>
@@ -96,7 +99,7 @@ const HomePageReviewContent = memo(
     const restaurant = useRestaurantQuery(state.restaurantSlug)
 
     return (
-      <VStack maxWidth="100%" padding={18} spacing="lg" flex={1}>
+      <VStack width="100%" maxWidth="100%" padding={18} spacing="lg" flex={1}>
         <SmallTitle fontWeight="600">Review {restaurant.name}</SmallTitle>
 
         <Suspense fallback={<LoadingItems />}>
@@ -124,20 +127,38 @@ export const RestaurantReviewComment = memo(
       const { review, upsertReview, deleteReview } = useUserReviewCommentQuery(
         restaurantId
       )
+      const allVotes = query.review({
+        where: {
+          restaurant_id: {
+            _eq: restaurantId,
+          },
+          type: {
+            _eq: 'vote',
+          },
+        },
+      })
+      console.log(
+        allVotes.map((x) => ({ type: x.type, vote: x.vote, tag_id: x.tag_id }))
+      )
       const [reviewText, setReviewText] = useState('')
       const [isSaved, setIsSaved] = useState(false)
       const lineHeight = 22
       const [height, setHeight] = useState(lineHeight)
       const dishTags = getRestuarantDishes({ restaurantSlug })
-      const [sentiments, setSentiments] = useState([])
+      const [sentiments, setSentiments] = useState<
+        {
+          name: string
+          vote: -1 | 1
+        }[]
+      >([])
 
       useDebounceEffect(
         () => {
           let isMounted = true
 
           // TODO: Split review into sentences matching each tag
-          //const allTagNames = [...dishTags, ...tagLenses].map((x) => x.name)
-          //const aspects = allTagNames.map((name) => name.toLowerCase())
+          // const allTagNames = [...dishTags, ...tagLenses].map((x) => x.name)
+          // const aspects = allTagNames.map((name) => name.toLowerCase())
 
           fetchBertSentiment(reviewText).then((tagSentiments) => {
             if (!isMounted) return
@@ -148,7 +169,7 @@ export const RestaurantReviewComment = memo(
             isMounted = false
           }
         },
-        1000,
+        2000,
         [reviewText]
       )
 

@@ -3,7 +3,16 @@ import { ThumbsDown, ThumbsUp } from '@dish/react-feather'
 import { AbsoluteVStack, HStack, Spacer, Text, VStack } from '@dish/ui'
 import { default as React } from 'react'
 
-import { bg, bgHover } from '../colors'
+import {
+  bg,
+  bgHover,
+  darkGreen,
+  darkGrey,
+  darkRed,
+  green,
+  grey,
+  red,
+} from '../colors'
 import { useUserTagVotes } from '../hooks/useUserUpvoteDownvoteQuery'
 import { tagDisplayName } from '../state/tagDisplayName'
 import { FullTag } from '../state/tagLenses'
@@ -25,7 +34,9 @@ export const TagSmallButton = graphql(
     const hasVoted = vote === 1 || vote === -1
 
     const VoteIcon = vote == 1 || vote === 0 ? ThumbsUp : ThumbsDown
-    const backgroundColor = vote === 1 ? 'green' : vote === -1 ? 'red' : bg
+    const backgroundColor = vote === 1 ? green : vote === -1 ? red : grey
+    const backgroundColorHover =
+      vote === 1 ? darkGreen : vote === -1 ? darkRed : darkGrey
 
     return (
       <SmallButton
@@ -33,7 +44,7 @@ export const TagSmallButton = graphql(
         marginBottom={8}
         backgroundColor={backgroundColor}
         hoverStyle={{
-          backgroundColor: bgHover,
+          backgroundColor: backgroundColorHover,
         }}
         color={hasVoted ? '#fff' : '#fff'}
       >
