@@ -60,7 +60,7 @@ const HomePageRestaurant = memo(
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
 
-        <ContentScrollView paddingTop={0}>
+        <ContentScrollView id="restaurantPage" paddingTop={0}>
           <LinearGradient
             colors={[bgLight, 'rgba(255,255,255,0)']}
             style={[

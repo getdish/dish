@@ -3,10 +3,9 @@ import { HStack, Text } from '@dish/ui'
 import React from 'react'
 
 import { GeocodePlace } from '../../../shared/state/home-types'
-import { Link } from '../../../shared/views/ui/Link'
 import { useIsNarrow } from '../../hooks/useIs'
 import { LinkSharedProps } from '../../views/ui/LinkProps'
-import { SmallButton } from '../../views/ui/SmallButton'
+import { SmallLinkButton } from '../../views/ui/SmallButton'
 import { AddressSize, getAddressText } from './RestaurantAddressLinksRow'
 
 export const RestaurantAddress = ({
@@ -40,16 +39,12 @@ export const RestaurantAddress = ({
     ),
   }
 
-  if (isSmall) {
-    return (
-      <SmallButton
-        maxWidth={160}
-        ellipse
-        backgroundColor="transparent"
-        {...linkProps}
-      />
-    )
-  } else {
-    return <Link {...linkProps} />
-  }
+  return (
+    <SmallLinkButton
+      maxWidth={160}
+      ellipse
+      backgroundColor="transparent"
+      {...linkProps}
+    />
+  )
 }

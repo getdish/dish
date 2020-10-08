@@ -1,6 +1,6 @@
 import { VStack, combineRefs } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
-import React, { forwardRef, useEffect, useRef } from 'react'
+import React, { createContext, forwardRef, useEffect, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 
 import {
@@ -12,7 +12,7 @@ import {
 import { useIsNarrow, useIsReallyNarrow } from '../hooks/useIs'
 import { useOvermind } from '../state/om'
 
-export class ScrollStore extends Store {
+export class ScrollStore extends Store<{ id: string }> {
   isScrolling = false
 
   setIsScrolling(val: boolean) {
@@ -36,6 +36,8 @@ export const usePreventContentScroll = () => {
   )
 }
 
+export const ContentScrollContext = createContext('id')
+
 export const ContentScrollView = forwardRef(
   (
     {
@@ -43,8 +45,10 @@ export const ContentScrollView = forwardRef(
       paddingTop,
       onScrollYThrottled,
       style,
+      id,
       ...props
     }: ScrollViewProps & {
+      id: string
       children: any
       paddingTop?: any
       onScrollYThrottled?: Function
@@ -52,7 +56,7 @@ export const ContentScrollView = forwardRef(
     ref
   ) => {
     const preventScrolling = usePreventContentScroll()
-    const scrollStore = useStore(ScrollStore)
+    const scrollStore = useStore(ScrollStore, { id })
     const isSmall = useIsNarrow()
     const tm = useRef<any>(0)
     const setIsScrolling = (e) => {
@@ -70,35 +74,37 @@ export const ContentScrollView = forwardRef(
     }
 
     return (
-      <ScrollView
-        ref={ref as any}
-        onScroll={setIsScrolling}
-        scrollEventThrottle={150}
-        scrollEnabled={!preventScrolling}
-        disableScrollViewPanResponder={preventScrolling}
-        {...props}
-        style={[
-          {
-            flex: 1,
-            paddingTop: paddingTop ?? (isSmall ? 0 : searchBarHeight),
-            height: '100%',
-          },
-          style,
-        ]}
-      >
-        <VStack
-          maxWidth={isSmall ? '100%' : drawerWidthMax}
-          alignSelf="flex-end"
-          overflow="hidden"
-          width="100%"
-          flex={1}
+      <ContentScrollContext.Provider value={id}>
+        <ScrollView
+          ref={ref as any}
+          onScroll={setIsScrolling}
+          scrollEventThrottle={150}
+          scrollEnabled={!preventScrolling}
+          disableScrollViewPanResponder={preventScrolling}
+          {...props}
+          style={[
+            {
+              flex: 1,
+              paddingTop: paddingTop ?? (isSmall ? 0 : searchBarHeight),
+              height: '100%',
+            },
+            style,
+          ]}
         >
-          {children}
+          <VStack
+            maxWidth={isSmall ? '100%' : drawerWidthMax}
+            alignSelf="flex-end"
+            overflow="hidden"
+            width="100%"
+            flex={1}
+          >
+            {children}
 
-          {/* for drawer, pad bottom */}
-          <VStack height={isSmall ? 300 : 0} />
-        </VStack>
-      </ScrollView>
+            {/* for drawer, pad bottom */}
+            <VStack height={isSmall ? 300 : 0} />
+          </VStack>
+        </ScrollView>
+      </ContentScrollContext.Provider>
     )
   }
 )

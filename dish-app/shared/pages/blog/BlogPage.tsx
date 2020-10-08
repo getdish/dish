@@ -17,7 +17,7 @@ export default function BlogPage(props: StackViewProps<HomeStateItemBlog>) {
   return (
     <MDX>
       <StackDrawer closable title="Blog">
-        <ContentScrollView paddingTop={0}>
+        <ContentScrollView id="blogPage" paddingTop={0}>
           {!slug && <BlogPageIndex />}
           {!!slug && <BlogPageDetail post={posts[slug]} />}
         </ContentScrollView>

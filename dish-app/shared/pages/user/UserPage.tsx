@@ -94,7 +94,7 @@ const UserPageContent = graphql(
     const hasReviews = !!reviews.length && reviews[0].id !== null
 
     return (
-      <ContentScrollView paddingTop={0}>
+      <ContentScrollView id="userPage" paddingTop={0}>
         <VStack spacing="xl" paddingHorizontal="2.5%" paddingVertical={20}>
           <VStack>
             {tab === 'review' && (
