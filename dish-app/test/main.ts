@@ -2,7 +2,7 @@ import { spawn } from 'child_process'
 
 import { Selector } from 'testcafe'
 
-fixture('Home page').page('http://localhost:19006/')
+fixture('Home page').page('http://localhost:4444/')
 
 test('Basic rendering check', async (t) => {
   const divs = Selector('div')
