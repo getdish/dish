@@ -1,4 +1,5 @@
 import { AbsoluteVStack, Paragraph, Spacer, Text, VStack } from '@dish/ui'
+import { Store, useStore } from '@dish/use-store'
 import { default as React, memo, useState } from 'react'
 import { Image } from 'react-native'
 
@@ -12,24 +13,33 @@ import { LoginRegisterForm } from './views/LoginRegisterForm'
 import { CloseButton } from './views/ui/CloseButton'
 import { LinkButton } from './views/ui/LinkButton'
 
+class IntroModal extends Store {
+  hidden = false
+
+  setHidden(val: boolean) {
+    this.hidden = val
+  }
+}
+
 export const AppIntroLetter = memo(() => {
   const om = useOvermind()
-  const curPage = om.state.router.curPage
   const hasOnboarded = om.state.user.user?.has_onboarded
   const isLoggedIn = om.state.user.isLoggedIn
-  const [closed, setClosed] = useState(false)
-  const isPublicPage = curPage.name === 'about' || curPage.name === 'blog'
-  const hide = isPublicPage
-    ? true
-    : isLoggedIn
-    ? closed
-      ? true
-      : hasOnboarded
-    : false
+  const store = useStore(IntroModal)
+  // const curPage = om.state.router.curPage
+  // const isPublicPage = curPage.name === 'about' || curPage.name === 'blog'
+  // make it private only
+  // isPublicPage
+  //   ? true
+  //   : isLoggedIn
+  //   ? closed
+  //     ? true
+  //     : hasOnboarded
+  //   : false
 
   return (
     <DarkModal
-      hide={hide}
+      hide={store.hidden}
       outside={
         <>
           <AbsoluteVStack
@@ -49,18 +59,22 @@ export const AppIntroLetter = memo(() => {
         </>
       }
     >
-      {!isLoggedIn && <AppIntroLogin />}
+      <CloseButton
+        position="absolute"
+        zIndex={1000}
+        top={10}
+        right={10}
+        onPress={() => {
+          store.setHidden(true)
+        }}
+      />
+      {!isLoggedIn && (
+        <>
+          <AppIntroLogin />
+        </>
+      )}
       {isLoggedIn && !hasOnboarded && (
         <>
-          <CloseButton
-            position="absolute"
-            zIndex={1000}
-            top={10}
-            right={10}
-            onPress={() => {
-              setClosed(true)
-            }}
-          />
           <UserOnboard />
         </>
       )}
@@ -80,6 +94,7 @@ export const divider = (
 )
 
 export const AppIntroLogin = memo(() => {
+  const store = useStore(IntroModal)
   return (
     <>
       <VStack spacing="lg" alignItems="center">
@@ -125,6 +140,9 @@ export const AppIntroLogin = memo(() => {
               backgroundColor: `${lightYellow}33`,
             }}
             name="about"
+            onPressOut={() => {
+              store.setHidden(true)
+            }}
           >
             learn how &raquo;
           </LinkButton>
