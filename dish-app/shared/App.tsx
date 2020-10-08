@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV === 'development') {
+  require('@dish/ui/style.css')
+}
+
 import { Auth, query, resolved } from '@dish/graph'
 import { isSafari } from '@dish/helpers'
 import { AbsoluteVStack } from '@dish/ui'

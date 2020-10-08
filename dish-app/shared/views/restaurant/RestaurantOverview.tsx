@@ -27,6 +27,7 @@ export const RestaurantOverview = memo(
   }) {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const headlines = restaurant.headlines() ?? defaultListItems
+    // const summary = restaurant.summary()
     const shownHeadlines = headlines.slice(0, limit)
     if (inline) {
       return (

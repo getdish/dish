@@ -73,7 +73,7 @@ export const ContentScrollView = forwardRef(
       <ScrollView
         ref={ref as any}
         onScroll={setIsScrolling}
-        scrollEventThrottle={100}
+        scrollEventThrottle={150}
         scrollEnabled={!preventScrolling}
         disableScrollViewPanResponder={preventScrolling}
         {...props}

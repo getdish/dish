@@ -45,6 +45,8 @@ export const RestaurantUpVoteDownVote = memo(
       return (
         <HoverablePopover
           position="right"
+          delay={500}
+          allowHoverOnContent
           contents={(isOpen) => {
             if (isOpen) {
               return (
@@ -74,7 +76,7 @@ export const RestaurantUpVoteDownVote = memo(
 )
 
 const col0Props: TableCellProps = {
-  flex: 2,
+  flex: 4,
   maxWidth: '70%',
 }
 
@@ -102,13 +104,13 @@ const RestaurantTagsScore = graphql(
     })
     return (
       <Box
-        maxWidth={340}
+        maxWidth={320}
         overflow="hidden"
         minWidth={200}
-        paddingVertical={15}
+        paddingVertical={20}
         paddingHorizontal={20}
       >
-        <SmallTitle divider="off">Points Breakdown</SmallTitle>
+        <SmallTitle>Points Breakdown</SmallTitle>
         <Spacer />
         <HStack flex={1}>
           <Table flex={1} maxWidth="100%">
@@ -138,8 +140,8 @@ const RestaurantTagsScore = graphql(
               return (
                 <TableRow key={i}>
                   <TableCell {...col0Props}>
-                    <HStack>
-                      <Text>
+                    <HStack paddingTop={10}>
+                      <Text ellipse fontWeight="500">
                         {tscore.icon} {tscore.name}
                       </Text>
                       {ensureFlexText}
@@ -156,7 +158,7 @@ const RestaurantTagsScore = graphql(
                     )}
                   </TableCell>
                   <TableCell {...col1Props}>
-                    <PointsText points={finalScore} />
+                    <PointsText fontWeight="600" points={finalScore} />
                   </TableCell>
                 </TableRow>
               )
