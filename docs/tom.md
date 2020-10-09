@@ -1,5 +1,5 @@
-- until we have root category dishes like "wine", maybe it's better that "spanish wine" appears as a single tag in the search bar, so you can't click the "x" on "spanish" and be thrown into an empty "wine" results list
-  - i think for this one if we can make it so a tag will search across all instances of that tag, that would be ideal. so if there are 20 "wine" across different categories, we just join them all into one
+✔️ until we have root category dishes like "wine", maybe it's better that "spanish wine" appears as a single tag in the search bar, so you can't click the "x" on "spanish" and be thrown into an empty "wine" results list
+  ✔️ i think for this one if we can make it so a tag will search across all instances of that tag, that would be ideal. so if there are 20 "wine" across different categories, we just join them all into one
 - when i search for nopalito to try and find the restaurant with that name that has gpt3 - i think we can safely say "near exact match names" can rank highly for plain (non-tag) search http://d1live.com/gems/san-francisco/-/nopalito
 
 - some restaurants have good scores, good dishes, but no headline review, must be a bug
@@ -12,13 +12,13 @@ First week October:
     - have `d1sh.com` point to local services only
     - have `dl1ve.com` to point to live services
     - validate going from initial sign up to login to search, etc works on local
-- run through site and document anything you see that may need improvements on backend
+✔️ run through site and document anything you see that may need improvements on backend
 - onboard fiverr worker with instructions on admin
   - set up permissions and an account for them
   - add a way to set the wiki description
   - try and fix any bugs with saving/editing
   - instruct them to clean up names and icons basically
-- GPT
+✔️ GPT
   - get top ~100 restaurants from homepage working
   - change overview to show gpt
   - use my template on the beta website to run it
@@ -42,7 +42,7 @@ postgres_1     | 2020-10-04 05:23:57.957 GMT [184] STATEMENT:  WITH
 - changes to auth:
   - login with email or username
   - register with email + username
-- profiles loading really slow http://d1sh_hasura_live.com:19006/u/admin
+✔️ profiles loading really slow http://d1sh_hasura_live.com:19006/u/admin
 - fix top level lense results
   ✔️  "gems" with no other filters is empty for sf
 ✔️  fix http://d1sh_hasura_live.com:19006/restaurant/serafina error on gql review when not logged in
@@ -56,8 +56,8 @@ postgres_1     | 2020-10-04 05:23:57.957 GMT [184] STATEMENT:  WITH
 ✔️ review_agg perms for anon users
 - results page hasura query performance investigation
 ✔️ vote table, we still need to think about the UI, what happens when someone votes up on main and down on all contributing tags?
-- rtag.sentences relation for easy access to all mentions of a rish in reviews
-- self crawler has production-only bug where null tags are appearing in tag score SQL (and failing the crawl for that restaurant)
+✔️ rtag.sentences relation for easy access to all mentions of a rish in reviews
+✔️ self crawler has production-only bug where null tags are appearing in tag score SQL (and failing the crawl for that restaurant)
 
 ## Indexing
 
