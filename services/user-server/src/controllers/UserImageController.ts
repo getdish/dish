@@ -7,6 +7,8 @@ import multer from 'multer'
 import multerS3 from 'multer-s3'
 import { v4 } from 'uuid'
 
+import { getUserFromResponse } from '../middlewares/checkRole'
+
 // if (!process.env.DO_SPACES_ID) {
 //   throw new Error(`NO Docker Spaces ID provided`)
 // }
@@ -50,16 +52,18 @@ const upload = multer({
 
 class UserImageController {
   static uploadImage = [
-    async (req: Request, res: Response, next) => {
-      console.log(
-        'starting',
-        JSON.stringify(req.params),
-        JSON.stringify(req.body)
-      )
-      next()
-    },
     upload,
     async (req: Request, res: Response) => {
+      const { user, error } = await getUserFromResponse(res)
+
+      console.log('user', user, error)
+
+      if (!user) {
+        return res.json({
+          error: 'no user',
+        })
+      }
+
       if (!Array.isArray(req.files) || !req.files.length) {
         return res.json({
           error: 'no files',
@@ -68,14 +72,7 @@ class UserImageController {
 
       try {
         const [file] = req.files
-        const { username } = req.body
         const avatar = file['location']
-
-        console.log('now we have', username, avatar)
-
-        const user = await userFindOne({
-          username,
-        })
 
         await userUpsert([
           {

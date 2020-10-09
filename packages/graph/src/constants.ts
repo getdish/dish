@@ -73,5 +73,3 @@ export const AUTH_DOMAIN = (() => {
     }
   }
 })()
-
-export const AUTH_IMAGE_UPLOAD_ENDPOINT = `${AUTH_DOMAIN}/user/image_upload`

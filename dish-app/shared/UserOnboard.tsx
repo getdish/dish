@@ -1,4 +1,4 @@
-import { AUTH_IMAGE_UPLOAD_ENDPOINT, graphql } from '@dish/graph'
+import { AUTH_IMAGE_UPLOAD_ENDPOINT, Auth, graphql } from '@dish/graph'
 import {
   HStack,
   Input,
@@ -87,15 +87,13 @@ export const UserOnboard = graphql(({ hideLogo }: { hideLogo?: boolean }) => {
                 const form = imageFormRef.current!
                 const formData = new FormData(form)
                 try {
-                  const { avatar } = await fetch(
-                    `${AUTH_IMAGE_UPLOAD_ENDPOINT}?userId=${om.state.user.user?.id}`,
-                    {
-                      method: 'POST',
-                      body: formData,
-                    }
-                  ).then((x) => x.json())
-                  user.avatar = avatar
-                  Toast.show('Saved image!')
+                  const avatar = await Auth.uploadAvatar(formData)
+                  if (avatar) {
+                    user.avatar = avatar
+                    Toast.show('Saved image!')
+                  } else {
+                    Toast.show('Error saving  image!', { type: 'error' })
+                  }
                 } catch (err) {
                   Toast.show('Error saving image')
                 }
