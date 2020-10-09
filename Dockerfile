@@ -22,7 +22,7 @@ COPY .yarnrc .
 COPY patches patches
 COPY bin bin
 COPY dish-app/etc dish-app/etc
-RUN yarn install --frozen-lockfile && yarn cache clean
+RUN yarn install --frozen-lockfile && yarn cache clean && yarn postinstall
 
 COPY .prettierignore .
 COPY .prettierrc .
