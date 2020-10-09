@@ -1,5 +1,7 @@
 import { Self } from './Self'
 
+const SCORE_FACTOR = 0.1
+
 export class RestaurantBaseScore {
   crawler: Self
   breakdown: any = {}
@@ -18,7 +20,6 @@ export class RestaurantBaseScore {
 
   async scoreFromPhotos() {
     const PHOTO_QUALITY_CRITERIA = 5
-    const SCORE_FACTOR = 0.1
     const result = await this.crawler.main_db.query(`
       SELECT count(DISTINCT p.id) FROM photo_xref px
       JOIN photo p ON px.photo_id = p.id
@@ -77,7 +78,7 @@ export class RestaurantBaseScore {
         score,
       }
     }
-    this.breakdown.reviews.factor = REVIEW_FACTOR
+    this.breakdown.reviews.factor = SCORE_FACTOR
     this.breakdown.reviews.score = total
   }
 

@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+ #Does this put our `set -e` into all the functions?
+export SHELLOPTS
+
 PG_PROXY_PID=
 TS_PROXY_PID=
 REDIS_PROXY_PID=
@@ -656,6 +659,7 @@ function yaml_to_env() {
 }
 
 function _buildkit_build() {
+  set -e
   dockerfile_path=$2
   name=$3
   dish_base_version=${4:-$DOCKER_TAG_NAMESPACE}
