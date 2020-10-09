@@ -708,13 +708,7 @@ function _build_dish_service() {
 export -f _build_dish_service
 
 function build_dish_base() {
-  image=$DISH_REGISTRY/dish/base:$DOCKER_TAG_NAMESPACE
-  buildkit_build_output_local . $image
-}
-
-function build_dish_base_hot() {
-  image=$DISH_REGISTRY/dish/base:$DOCKER_TAG_NAMESPACE
-  buildkit_build . $image
+  buildkit_build . $BASE_IMAGE
 }
 
 function build_all_dish_services() {
@@ -722,6 +716,7 @@ function build_all_dish_services() {
 
   echo "Building all Dish services..."
   build_dish_base
+  docker pull $BASE_IMAGE
 
   parallel --lb _build_dish_service ::: \
     'services/worker' \
@@ -828,7 +823,7 @@ function hot_deploy() {
   echo "Hot deploying $1 service..."
 
   if [[ $2 = 'with-base' ]]; then
-    build_dish_base_hot
+    build_dish_base
   else
     echo "Excluding base image build"
   fi
@@ -844,6 +839,7 @@ if command -v git &> /dev/null; then
   export PROJECT_ROOT=$(git rev-parse --show-toplevel)
   branch=$(git rev-parse --abbrev-ref HEAD)
   export DOCKER_TAG_NAMESPACE=${branch//\//-}
+  export BASE_IMAGE=$DISH_REGISTRY/dish/base:$DOCKER_TAG_NAMESPACE
   pushd $PROJECT_ROOT >/dev/null
     if [ -f "env.enc.production.yaml" ]; then
       export all_env="$(yaml_to_env)"
