@@ -21,6 +21,7 @@ COPY yarn.lock .
 COPY .yarnrc .
 COPY patches patches
 COPY bin bin
+COPY dish-app/patches dish-app/patches
 COPY dish-app/etc dish-app/etc
 RUN yarn install --frozen-lockfile && yarn cache clean && yarn postinstall
 
