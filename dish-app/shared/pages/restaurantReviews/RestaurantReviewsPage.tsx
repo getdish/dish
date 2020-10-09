@@ -39,7 +39,7 @@ const RestaurantReviewsPageContent = memo(
       <>
         <PageTitleTag>{title}</PageTitleTag>
         <Modal width="98%" height="98%" maxWidth={880}>
-          <VStack width="100%" height="100%" flex={1}>
+          <VStack pointerEvents="auto" width="100%" height="100%" flex={1}>
             <AbsoluteVStack top={5} right={30}>
               <StackViewCloseButton />
             </AbsoluteVStack>
