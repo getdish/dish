@@ -721,6 +721,7 @@ test('Scoring for restaurants', async (t) => {
   })
   t.deepEqual(updated?.score_breakdown.reviews, {
     score: 9,
+    factor: 0.1,
     _1: { count: 1, score: -2 },
     _2: { count: 0, score: 0 },
     _3: { count: 1, score: 0 },
