@@ -154,7 +154,6 @@ export class Self extends WorkerJob {
         this.getGrubHubDishes,
         this.scanCorpus,
         this.addReviewHeadlines,
-        this.generateGPT3Summary,
       ]
       for (const async_func of async_steps) {
         await this._runFailableFunction(async_func)
@@ -184,6 +183,7 @@ export class Self extends WorkerJob {
     }
     await this._runFailableFunction(this.finishTagsEtc)
     await this._runFailableFunction(this.finalScores)
+    await restaurantUpdate(this.restaurant)
     clearInterval(this._debugRamIntervalFunction)
     this.log('postMerge()')
     console.log(`Merged: ${this.restaurant.name}`)
@@ -205,7 +205,6 @@ export class Self extends WorkerJob {
   async finalScores() {
     await this.restaurant_base_score.calculateScore()
     await this.restaurant_tag_scores.calculateScores()
-    await restaurantUpdate(this.restaurant)
   }
 
   async mergeMainData() {
@@ -735,8 +734,16 @@ export class Self extends WorkerJob {
     await checkMaybeDeletePhoto(photo_id, url)
   }
 
-  async generateGPT3Summary() {
-    await this.gpt3.generateGPT3Summary()
+  async generateGPT3Summary(id: string) {
+    this._job_identifier_restaurant_id = id
+    const restaurant = await restaurantFindOneWithTags({ id: id })
+    if (restaurant) {
+      this.main_db = DB.main_db()
+      this.restaurant = restaurant
+      await this.gpt3.generateGPT3Summary()
+      await restaurantUpdate(this.restaurant)
+      await this.main_db.pool.end()
+    }
   }
 
   private static shortestString(arr: string[]) {
