@@ -64,7 +64,7 @@ module.exports = function getWebpackConfig(
       ].filter(Boolean),
       output: {
         path: path.resolve(__dirname),
-        filename: `static/js/app.[hash].js`,
+        filename: `static/js/app.[contenthash].js`,
         publicPath: '/',
         // globalObject: 'this',
       },
@@ -164,7 +164,7 @@ module.exports = function getWebpackConfig(
                     loader: 'url-loader',
                     options: {
                       limit: 1000,
-                      name: 'static/media/[name].[hash].[ext]',
+                      name: 'static/media/[name].[contenthash].[ext]',
                     },
                   },
                   {
@@ -207,7 +207,7 @@ module.exports = function getWebpackConfig(
                 // Also exclude `html` and `json` extensions so they get processed by webpacks internal loaders.
                 exclude: [/\.(mjs|[jt]sx?)$/, /\.html$/, /\.json$/],
                 options: {
-                  name: 'static/media/[name].[hash].[ext]',
+                  name: 'static/media/[name].[contenthash].[ext]',
                 },
               },
             ],
@@ -375,7 +375,7 @@ module.exports = function getWebpackConfig(
         ...config,
         output: {
           ...config.output,
-          filename: 'static/js/app.legacy.[hash].js',
+          filename: 'static/js/app.legacy.[contenthash].js',
           path: path.join(__dirname, 'web-build-legacy'),
         },
         entry: [
