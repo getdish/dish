@@ -26,9 +26,11 @@ import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
 
 import { emojiRegex } from '../../helpers/emojiRegex'
+import { useQueryPaginated } from '../../hooks/useQueryPaginated'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { AdminListItem, AdminListItemProps } from './AdminListItem'
 import { ColumnHeader } from './ColumnHeader'
+import { PaginationNav } from './PaginationNav'
 import { VerticalColumn } from './VerticalColumn'
 
 export default graphql(function AdminTagsPage() {
@@ -235,40 +237,34 @@ const TagListContent = memo(
       newTag?: Tag
       lastRowSelection: string
     }) => {
-      const tagStore = useStore(AdminTagStore)
-      const limit = 50
-      const [page, setPage] = useState(1)
-      const forceUpdate = useForceUpdate()
-
-      const where = {
-        type: { _eq: type },
-        ...(type !== 'continent' &&
-          type !== 'lense' &&
-          lastRowSelection && {
-            parent: { name: { _eq: lastRowSelection } },
-          }),
-        ...(!!search && {
-          name: {
-            _ilike: `%${search}%`,
+      const perPage = 50
+      const { results, total, totalPages, page, setPage } = useQueryPaginated({
+        perPage,
+        query: query.tag,
+        queryAggregate: query.tag_aggregate,
+        params: {
+          where: {
+            type: { _eq: type },
+            ...(type !== 'continent' &&
+              type !== 'lense' &&
+              lastRowSelection && {
+                parent: { name: { _eq: lastRowSelection } },
+              }),
+            ...(!!search && {
+              name: {
+                _ilike: `%${search}%`,
+              },
+            }),
           },
-        }),
-      }
-      const resultsTotal =
-        query
-          .tag_aggregate({
-            where,
-          })
-          .aggregate.count() ?? 0
-      const results = query.tag({
-        where,
-        limit,
-        offset: (page - 1) * limit,
-        order_by: [
-          {
-            name: order_by.asc,
-          },
-        ],
+          order_by: [
+            {
+              name: order_by.asc,
+            },
+          ],
+        },
       })
+      const tagStore = useStore(AdminTagStore)
+      const forceUpdate = useForceUpdate()
 
       const allResults = [{ id: 0, name: '' } as WithID<Tag>, ...results]
 
@@ -281,28 +277,23 @@ const TagListContent = memo(
         }
       }, [tagStore.forceRefreshColumnByType])
 
-      const totalPages = Math.ceil(resultsTotal / limit)
       const pageItems = new Array(totalPages).fill(totalPages)
-      console.log(resultsTotal, totalPages, pageItems)
       return (
         <ScrollView style={{ paddingBottom: 100 }}>
-          {resultsTotal > limit && (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <HStack>
-                {pageItems.map((_, index) => {
-                  return (
-                    <SmallButton
-                      key={index}
-                      isActive={index + 1 === page}
-                      onPress={() => setPage(index + 1)}
-                    >
-                      {index + 1}
-                    </SmallButton>
-                  )
-                })}
-              </HStack>
-            </ScrollView>
-          )}
+          <PaginationNav
+            totalPages={totalPages}
+            setPage={setPage}
+            page={page}
+          />
+          <HStack
+            paddingVertical={2}
+            alignItems="center"
+            justifyContent="center"
+            borderBottomColor="#ddd"
+            borderBottomWidth={1}
+          >
+            <Text opacity={0.5}>{total} total</Text>
+          </HStack>
           <Suspense fallback={<LoadingItems />}>
             {allResults.map((tag, row) => {
               return (

@@ -24,6 +24,7 @@ export default memo(function AdminPage() {
 
         <Link name="adminTags">Tags</Link>
         <Link name="adminReviews">Reviews</Link>
+        <Link name="adminUsers">Users</Link>
 
         <Spacer flex={1} />
 
@@ -32,6 +33,7 @@ export default memo(function AdminPage() {
       <RouteSwitch>
         <Route name="adminTags">{() => <AdminTagsPage />}</Route>
         <Route name="adminReviews">{() => <AdminReviewsPage />}</Route>
+        <Route name="adminUsers">{() => <AdminUsersPage />}</Route>
         <Route name="admin">
           <ScrollView style={{ width: '100%', height: '100%' }}>
             <VStack alignItems="center" paddingVertical={20} spacing="xxl">
@@ -44,6 +46,9 @@ export default memo(function AdminPage() {
                 </AdminLinkButton>
                 <AdminLinkButton icon="🗣" name="adminReviews">
                   Reviews
+                </AdminLinkButton>
+                <AdminLinkButton icon="👥" name="adminUsers">
+                  Users
                 </AdminLinkButton>
               </HStack>
 
@@ -124,3 +129,8 @@ const AdminReviewsPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./AdminReviewsPage').default
     : loadable(() => import('./AdminReviewsPage'))
+
+const AdminUsersPage =
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+    ? require('./AdminUsersPage').default
+    : loadable(() => import('./AdminUsersPage'))
