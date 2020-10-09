@@ -145,7 +145,7 @@ export const AppIntroLogin = memo(() => {
           textAlign="center"
         >
           Let's bring the fun back to exploring the world with a community that
-          breaks down hidden gems and locals tips.
+          breaks down hidden gems and tips.
           <LinkButton
             fontSize={16}
             marginLeft={5}
@@ -163,7 +163,7 @@ export const AppIntroLogin = memo(() => {
               store.setHidden(true)
             }}
           >
-            learn how &raquo;
+            how? &raquo;
           </LinkButton>
         </Paragraph>
 

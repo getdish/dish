@@ -68,6 +68,13 @@ resource "kubernetes_ingress" "k8s-services-ingress" {
             service_port = "http"
           }
         }
+        path {
+          path = "/user"
+          backend {
+            service_name = "user-server"
+            service_port = "http"
+          }
+        }
       }
     }
     rule {
