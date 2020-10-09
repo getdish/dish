@@ -32,6 +32,8 @@ const isSSR = TARGET === 'ssr'
 // const isHot = !isProduction
 const isStaticExtracted = !process.env.NO_EXTRACT
 
+const hashFileNamePart = isProduction ? '[contenthash]' : '[hash]'
+
 console.log('webpack.config', { isProduction, TARGET })
 
 module.exports = function getWebpackConfig(
@@ -64,7 +66,7 @@ module.exports = function getWebpackConfig(
       ].filter(Boolean),
       output: {
         path: path.resolve(__dirname),
-        filename: `static/js/app.[contenthash].js`,
+        filename: `static/js/app.${hashFileNamePart}.js`,
         publicPath: '/',
         // globalObject: 'this',
       },
@@ -164,7 +166,7 @@ module.exports = function getWebpackConfig(
                     loader: 'url-loader',
                     options: {
                       limit: 1000,
-                      name: 'static/media/[name].[contenthash].[ext]',
+                      name: 'static/media/[name].${hashFileNamePart}.[ext]',
                     },
                   },
                   {
@@ -207,7 +209,7 @@ module.exports = function getWebpackConfig(
                 // Also exclude `html` and `json` extensions so they get processed by webpacks internal loaders.
                 exclude: [/\.(mjs|[jt]sx?)$/, /\.html$/, /\.json$/],
                 options: {
-                  name: 'static/media/[name].[contenthash].[ext]',
+                  name: 'static/media/[name].${hashFileNamePart}.[ext]',
                 },
               },
             ],
@@ -375,7 +377,7 @@ module.exports = function getWebpackConfig(
         ...config,
         output: {
           ...config.output,
-          filename: 'static/js/app.legacy.[contenthash].js',
+          filename: 'static/js/app.legacy.${hashFileNamePart}.js',
           path: path.join(__dirname, 'web-build-legacy'),
         },
         entry: [
