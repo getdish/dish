@@ -92,3 +92,10 @@ services:
     image: docker.k8s.dishapp.com/dish/gorse
     ports:
       - 9000:9000
+  dish-app-web:
+    image: docker.k8s.dishapp.com/dish/dish-app
+    build:
+      context: ./
+      dockerfile: ./dish-app/Dockerfile
+    ports:
+      - 4444:4444
