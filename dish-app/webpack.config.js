@@ -58,12 +58,11 @@ module.exports = function getWebpackConfig(
       stats: 'normal',
       devtool:
         env.mode === 'production' ? 'source-map' : 'cheap-module-source-map',
-      // @ts-ignore
-      entry: [
-        // webpack5
-        // isHot && '@webhotelier/webpack-fast-refresh/runtime.js',
-        appEntry,
-      ].filter(Boolean),
+      entry: {
+        main: appEntry,
+      },
+      // webpack5
+      // isHot && '@webhotelier/webpack-fast-refresh/runtime.js',
       output: {
         path: path.resolve(__dirname),
         filename: `static/js/app.${hashFileNamePart}.js`,
@@ -166,7 +165,7 @@ module.exports = function getWebpackConfig(
                     loader: 'url-loader',
                     options: {
                       limit: 1000,
-                      name: 'static/media/[name].${hashFileNamePart}.[ext]',
+                      name: `static/media/[name].${hashFileNamePart}.[ext]`,
                     },
                   },
                   {
@@ -209,7 +208,7 @@ module.exports = function getWebpackConfig(
                 // Also exclude `html` and `json` extensions so they get processed by webpacks internal loaders.
                 exclude: [/\.(mjs|[jt]sx?)$/, /\.html$/, /\.json$/],
                 options: {
-                  name: 'static/media/[name].${hashFileNamePart}.[ext]',
+                  name: `static/media/[name].${hashFileNamePart}.[ext]`,
                 },
               },
             ],
@@ -377,14 +376,16 @@ module.exports = function getWebpackConfig(
         ...config,
         output: {
           ...config.output,
-          filename: 'static/js/app.legacy.${hashFileNamePart}.js',
+          filename: `static/js/app.legacy.${hashFileNamePart}.js`,
           path: path.join(__dirname, 'web-build-legacy'),
         },
-        entry: [
-          // @ts-ignore
-          ...config.entry,
-          path.join(__dirname, 'web', 'polyfill.legacy.js'),
-        ],
+        entry: [path.join(__dirname, 'web', 'polyfill.legacy.js'), appEntry],
+
+        // {
+        //   // before main
+        //   ,
+        //   main: appEntry,
+        // },
       }
     }
 

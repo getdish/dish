@@ -295,7 +295,7 @@ const runSearch: AsyncAction<{
 
   const searchArgs: RestaurantSearchArgs = {
     center: roundLngLat(center),
-    span: roundLngLat(padSpan(span)),
+    span: roundLngLat(span),
     query: state!.searchQuery,
     tags: [...tags.map((tag) => getTagId(tag).replace(/[a-z]+_/g, ''))],
   }

@@ -61,7 +61,6 @@ export const RestaurantSourcesBreakdownRow = memo(
             }}
             position="relative"
             alignItems="center"
-            flexWrap="wrap"
           >
             {Object.keys(sources)
               .filter(

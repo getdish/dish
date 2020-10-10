@@ -21,9 +21,9 @@ export const Squircle = ({
         height={height}
         borderRadius={borderRadius}
         position="relative"
-        shadowRadius={8}
-        shadowOffset={{ width: 0, height: 2 }}
-        shadowColor="rgba(0,0,0,0.05)"
+        shadowRadius={3}
+        shadowOffset={{ width: 0, height: 1 }}
+        shadowColor="rgba(0,0,0,0.3)"
         backgroundColor="#111"
         {...(isHovered && {
           zIndex: 10000,

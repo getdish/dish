@@ -1,14 +1,14 @@
 import { graphql } from '@dish/graph'
 import { Clock } from '@dish/react-feather'
-import { HStack, Spacer, StackProps, Text, VStack, useDebounce } from '@dish/ui'
-import React, { Suspense, memo, useState } from 'react'
-import { Dimensions, ScrollView } from 'react-native'
+import { HStack, Spacer, StackProps, Text, VStack } from '@dish/ui'
+import React, { memo } from 'react'
+import { ScrollView } from 'react-native'
 
-import { drawerBorderRadius, drawerWidthMax } from '../../constants'
+import { drawerBorderRadius } from '../../constants'
+import { useAppDrawerWidthInner } from '../../hooks/useAppDrawerWidth'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
-import { Link } from '../../views/ui/Link'
 import { SmallLinkButton } from '../../views/ui/SmallButton'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
@@ -46,29 +46,19 @@ const RestaurantHeaderContent = memo(
       const paddingPx = size === 'sm' ? 10 : 30
       const spacer = <Spacer size={paddingPx} />
       const nameLen = restaurant.name?.length
-      const [width, setWidth] = useState(
-        Math.min(Dimensions.get('window').width, drawerWidthMax)
-      )
-      const scale = width < 400 ? 0.75 : width < 600 ? 0.8 : 1
+      const drawerWidth = useAppDrawerWidthInner()
+      const scale = drawerWidth < 400 ? 0.75 : drawerWidth < 600 ? 0.8 : 1
       const fontSize =
         scale *
         ((nameLen > 24 ? 26 : nameLen > 18 ? 30 : 46) *
           (size === 'sm' ? 0.8 : 1))
 
       return (
-        <VStack
-          width="100%"
-          position="relative"
-          zIndex={100}
-          minWidth={540}
-          onLayout={(e) => {
-            setWidth(e.nativeEvent.layout.width)
-          }}
-        >
+        <VStack width="100%" position="relative" zIndex={100} minWidth={540}>
           <ScrollView
-            style={{ width: '100%', maxWidth: '100vw', minHeight: 460 }}
+            style={{ width: '100%', maxWidth: '100vw', minHeight: 450 }}
             contentContainerStyle={{
-              width,
+              width: drawerWidth,
             }}
             horizontal
             showsHorizontalScrollIndicator={false}

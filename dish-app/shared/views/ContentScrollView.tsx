@@ -59,6 +59,7 @@ export const ContentScrollView = forwardRef(
     const scrollStore = useStore(ScrollStore, { id })
     const isSmall = useIsNarrow()
     const tm = useRef<any>(0)
+
     const setIsScrolling = (e) => {
       const y = e.nativeEvent.contentOffset.y
       isScrollAtTop = y <= 0
@@ -85,7 +86,6 @@ export const ContentScrollView = forwardRef(
           style={[
             {
               flex: 1,
-              paddingTop: paddingTop ?? (isSmall ? 0 : searchBarHeight),
               height: '100%',
             },
             style,
@@ -93,6 +93,7 @@ export const ContentScrollView = forwardRef(
         >
           <VStack
             maxWidth={isSmall ? '100%' : drawerWidthMax}
+            paddingTop={paddingTop ?? (isSmall ? 0 : searchBarHeight)}
             alignSelf="flex-end"
             overflow="hidden"
             width="100%"

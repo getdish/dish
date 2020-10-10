@@ -22,7 +22,7 @@ export const UpvoteDownvoteScore = memo(
   } & StackProps) => {
     score = Math.round(score)
     const voteButtonColor = subtle ? '#f2f2f2' : null
-    const scale = size === 'sm' ? 0.8 : 1
+    const scale = size === 'sm' ? 0.7 : 1
     const sizePx = 62 * scale
     const isOpenProp =
       vote === 0
@@ -80,7 +80,7 @@ export const UpvoteDownvoteScore = memo(
         )}
         <Text
           fontSize={Math.min(16, sizePx / `${score}`.length) * scale}
-          fontWeight="700"
+          fontWeight="600"
           marginVertical={-2 * scale}
           letterSpacing={-0.5}
           color={score > 0 ? '#000' : 'darkred'}

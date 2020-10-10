@@ -13,15 +13,17 @@ export const RestaurantPhotosRow = memo(
     ({
       restaurantSlug,
       onIsAtStart,
+      width,
+      height,
     }: {
       restaurantSlug: string
       onIsAtStart?: (x: boolean) => void
+      width: number
+      height: number
     }) => {
       const isAtStart = useRef(true)
       const restaurant = useRestaurantQuery(restaurantSlug)
       const photos = restaurant.photos() ?? []
-      const width = 240
-      const height = 360
       return (
         <VStack className="scroll-snap-photos">
           <ScrollView

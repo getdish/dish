@@ -32,7 +32,6 @@ export const TagSmallButton = graphql(
     const review = votes[0]
     const vote = review?.vote ?? 0
     const hasVoted = vote === 1 || vote === -1
-
     const VoteIcon = vote == 1 || vote === 0 ? ThumbsUp : ThumbsDown
     const backgroundColor = vote === 1 ? green : vote === -1 ? red : grey
     const backgroundColorHover =

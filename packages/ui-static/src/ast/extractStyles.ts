@@ -128,6 +128,7 @@ export function extractStyles(
   const cssMap = new Map<string, { css: string; commentTexts: string[] }>()
   const ast = parse(src)
 
+  let didExtract = false
   let doesImport = false
   let doesUseValidImport = false
 
@@ -958,6 +959,7 @@ export function extractStyles(
                 throw new Error(`huh?`)
               }
               if (rules.length) {
+                didExtract = true
                 if (process.env.NODE_ENV !== 'production') {
                   if (globalCSSMap.has(className)) {
                     continue
@@ -976,12 +978,8 @@ export function extractStyles(
     },
   })
 
-  const css = Array.from(cssMap.values())
-    .map((v) => v.commentTexts.map((txt) => `${txt}\n`).join('') + v.css)
-    .join(' ')
-
   // we didnt find anything
-  if (css === '') {
+  if (!didExtract) {
     if (shouldPrintDebug) {
       console.log('END - nothing extracted!', sourceFileName, '\n', src)
     }
@@ -994,6 +992,9 @@ export function extractStyles(
     }
   }
 
+  const css = Array.from(cssMap.values())
+    .map((v) => v.commentTexts.map((txt) => `${txt}\n`).join('') + v.css)
+    .join(' ')
   const extName = path.extname(sourceFileName)
   const baseName = path.basename(sourceFileName, extName)
 

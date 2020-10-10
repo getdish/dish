@@ -53,6 +53,7 @@ export const RestaurantTagsRow = memo(
         rgb: tag.tag.rgb,
         name: tag.tag.name,
         type: tag.tag.type,
+        score: tag.score,
       }))
     }
     if (showMore) {
@@ -62,7 +63,7 @@ export const RestaurantTagsRow = memo(
     return (
       <>
         {tags
-          .sort((a, b) => a.type?.localeCompare(b.type) ?? -1)
+          .sort((a, b) => (a.type === 'cuisine' ? -1 : a.score))
           .map((tag, index) => {
             return (
               <React.Fragment key={`${index}${tag.name}`}>

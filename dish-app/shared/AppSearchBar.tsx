@@ -78,6 +78,8 @@ export const HomeSearchBarFloating = () => {
       marginTop={searchBarTopOffset}
       alignItems="center"
       pointerEvents="none"
+      left={6}
+      right={6}
     >
       <VStack
         zIndex={12}
@@ -97,9 +99,9 @@ export const HomeSearchBarFloating = () => {
           height={searchBarHeight}
           justifyContent="center"
           alignItems="center"
-          shadowColor="rgba(0,0,0,0.175)"
+          shadowColor="rgba(0,0,0,0.2)"
           shadowOffset={{ height: 3, width: 0 }}
-          shadowRadius={18}
+          shadowRadius={14}
         >
           <AbsoluteVStack
             // opacity={0.76}
@@ -111,7 +113,7 @@ export const HomeSearchBarFloating = () => {
           position="relative"
           zIndex={104}
           flex={1}
-          paddingHorizontal={8}
+          paddingHorizontal={12}
           height={searchBarHeight}
           justifyContent="center"
           overflow="hidden"

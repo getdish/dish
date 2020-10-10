@@ -8,6 +8,7 @@ import {
   Text,
   VStack,
 } from '@dish/ui'
+import { capitalize } from 'lodash'
 import React, { memo } from 'react'
 
 import { isWeb } from '../../constants'
@@ -30,6 +31,22 @@ export const RestaurantOverview = memo(
       (x) => x.sentence
     )
     const summary = restaurant.summary ?? ''
+
+    if (summary) {
+      return (
+        <HStack flex={1} overflow="hidden">
+          <Paragraph size={1.1} opacity={1} height={122} overflow="hidden">
+            {summary
+              .split('. ')
+              .map((sentence) => capitalize(sentence.trim()))
+              .join('. ')}
+          </Paragraph>
+        </HStack>
+      )
+    }
+
+    // TODO deprecate this
+
     const shownHeadlines = (summary
       ? [summary, ...headlines]
       : headlines

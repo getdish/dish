@@ -24,15 +24,15 @@ import { RestaurantRatingBreakdown } from './RestaurantRatingBreakdown'
 
 type Props = StackViewProps<HomeStateItemRestaurant>
 
-export default function HomePageRestaurantContainer(props: Props) {
+export default function RestaurantPageContainer(props: Props) {
   return (
     <StackDrawer closable>
-      <HomePageRestaurant {...props} />
+      <RestaurantPage {...props} />
     </StackDrawer>
   )
 }
 
-const HomePageRestaurant = memo(
+const RestaurantPage = memo(
   graphql((props: Props) => {
     const { item } = props
     const { restaurantSlug } = item
@@ -89,7 +89,7 @@ const HomePageRestaurant = memo(
                 <VStack
                   className="ease-in-out"
                   hoverStyle={{
-                    transform: [{ scale: 1.05 }],
+                    transform: [{ scale: 1.0125 }],
                   }}
                   marginBottom={-100}
                   marginTop={-40}
@@ -102,29 +102,25 @@ const HomePageRestaurant = memo(
                 </VStack>
               }
               below={
-                <VStack>
+                <>
                   <RestaurantOverview
                     maxChars={250}
                     inline
                     restaurantSlug={restaurantSlug}
                     limit={2}
                   />
-                  <Spacer size="sm" />
-                  <HStack
-                    flexWrap="wrap"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
+                  <Spacer size="lg" />
+                  <HStack flexWrap="wrap">
                     <RestaurantTagsRow
                       size="sm"
                       restaurantSlug={restaurantSlug}
                       restaurantId={restaurant.id}
                       spacing={10}
                       grid
-                      max={4}
+                      max={5}
                     />
                   </HStack>
-                </VStack>
+                </>
               }
             />
           </Suspense>

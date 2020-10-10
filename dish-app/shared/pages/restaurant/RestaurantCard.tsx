@@ -1,14 +1,11 @@
 import { graphql } from '@dish/graph'
 import { AbsoluteVStack, LinearGradient, Paragraph, VStack } from '@dish/ui'
-import { rest } from 'lodash'
 import React, { Suspense, memo, useCallback, useState } from 'react'
 import { StyleSheet } from 'react-native'
 
 import { lightYellow, yellow } from '../../colors'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { Link } from '../../views/ui/Link'
-import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
-import { openingHours, priceRange } from './RestaurantDetailRow'
+import { priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { CircleButton } from './RestaurantHeader'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
@@ -87,6 +84,8 @@ export const RestaurantCardContent = graphql(
             <RestaurantPhotosRow
               onIsAtStart={handleOnIsAtStart}
               restaurantSlug={restaurantSlug}
+              width={width}
+              height={height}
             />
           </VStack>
           <AbsoluteVStack

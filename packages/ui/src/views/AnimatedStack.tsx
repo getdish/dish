@@ -1,5 +1,5 @@
 import useConstant from '@dish/use-store'
-import React, { useLayoutEffect, useMemo, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import {
   Animated,
   PerpectiveTransform,
@@ -16,12 +16,13 @@ import {
   TranslateYTransform,
 } from 'react-native'
 
+import { isWeb } from '../constants'
 import { StackProps, VStack } from './Stacks'
 
 const defaultAnimation = {
   from: {
     opacity: 0,
-    translateY: 100,
+    translateY: 30,
   },
   to: {
     opacity: 1,
@@ -66,6 +67,24 @@ export const AnimatedVStack = ({
   children,
   ...props
 }: AnimatedStackProps) => {
+  // weird, simple, hacky fast animation for default case
+  if (isWeb && !animation) {
+    const [isMounted, setIsMounted] = useState(false)
+
+    useEffect(() => {
+      setIsMounted(true)
+    }, [])
+
+    return (
+      <VStack
+        {...props}
+        className={`${props.className ?? ''} animate-in ${
+          isMounted ? 'animated-in-mounted' : ''
+        }`}
+      />
+    )
+  }
+
   const driver = useConstant(() => {
     return new Animated.Value(0)
   })

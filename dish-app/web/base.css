@@ -363,6 +363,20 @@ li {
   box-shadow: inset 0 0 10000px rgba(0,0,0,0.15);
 }
 
+.dish-inset-shadow::after {
+  display: flex;
+  content: ' ';
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  box-shadow: inset 0 0 10px 5px rgba(255,255,255,0.25);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
 .signin-button > div {
   width: 156px !important;
   height: 36px !important;
@@ -469,4 +483,16 @@ body > div {
 
 .scroll-snap-photo {
   scroll-snap-align: center;
+}
+
+.animate-in {
+  transition: all ease-in 300ms;
+  opacity: 0;
+  transform: translateY(30);
+}
+
+.animate-in {
+  transition: all ease-in 300ms;
+  opacity: 1;
+  transform: translateY(0);
 }

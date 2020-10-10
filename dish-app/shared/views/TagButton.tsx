@@ -1,5 +1,5 @@
 import { NonNullObject, Tag, TagType } from '@dish/graph'
-import { ThumbsUp, X } from '@dish/react-feather'
+import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import {
   HStack,
   Spacer,
@@ -38,6 +38,7 @@ export type TagButtonTagProps = NonNullObject<
 > & {
   icon?: Exclude<Tag['icon'], null>
   rgb?: Exclude<Tag['rgb'], null>
+  score?: number
   rank?: number
 }
 
@@ -161,7 +162,7 @@ export const TagButton = memo((props: TagButtonProps) => {
         minHeight={lineHeight}
         {...(!subtle && {
           hoverStyle: {
-            transform: [{ scale: 1.05 }],
+            backgroundColor: `${bg}99`,
           },
         })}
         {...rest}
@@ -288,23 +289,10 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
       [getTagId(props)]: true,
     }
   )
-  const buttonRef = useRef()
-
-  // only way i could get it to stop bubbling up wtf
-  if (Platform.OS === 'web') {
-    useEffect(() => {
-      const node = getNode(buttonRef?.current)
-      node.addEventListener('click', prevent)
-      return () => {
-        node.removeEventListener('click', prevent)
-      }
-    }, [])
-  }
+  const Icon = vote ? ThumbsDown : ThumbsUp
 
   return (
     <VStack
-      // @ts-ignore
-      ref={buttonRef}
       paddingHorizontal={3 * scale}
       alignItems="center"
       justifyContent="center"
@@ -326,7 +314,7 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
         setVote(vote == 1 ? 0 : 1)
       }}
     >
-      <ThumbsUp
+      <Icon
         size={12 * scale}
         color={props.color ?? (subtle ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)')}
       />

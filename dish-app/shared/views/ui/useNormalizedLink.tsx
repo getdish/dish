@@ -62,9 +62,6 @@ const getNormalizedLink = (
       disallowDisableWhenActive: props.disallowDisableWhenActive,
       replaceSearch: props.replaceSearch,
     })
-    if (tags[0].name === 'Gems') {
-      console.log('what is it', tagProps)
-    }
     return {
       onPress: props.onPress,
       ...tagProps,

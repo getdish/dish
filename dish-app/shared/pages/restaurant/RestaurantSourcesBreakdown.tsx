@@ -6,6 +6,7 @@ import {
   StackProps,
   Table,
   TableCell,
+  TableCellProps,
   TableHeadRow,
   TableHeadText,
   TableRow,
@@ -20,18 +21,18 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { omStatic } from '../../state/omStatic'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
-import { useBreakdownsBySources } from './useBreakdownsBySources.tsx'
+import { useBreakdownsBySources } from './useBreakdownsBySources'
 
-export const col0Props: StackProps = {
+export const col0Props: TableCellProps = {
   flex: 0,
   minWidth: 30,
 }
 
-export const col2Props: StackProps = {
+export const col2Props: TableCellProps = {
   justifyContent: 'flex-end',
 }
 
-export const col3Props: StackProps = {
+export const col3Props: TableCellProps = {
   justifyContent: 'flex-end',
 }
 

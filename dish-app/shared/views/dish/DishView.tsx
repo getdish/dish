@@ -118,15 +118,17 @@ export const DishView = memo(
         )}
 
         <Squircle
+          className={!isFallback ? 'dish-inset-shadow' : ''}
           width={width}
           height={height}
           borderRadius={borderRadius}
           isHovered={isHovered}
           backgroundColor={backgroundColor}
-          borderColor="transparent"
-          {...(selected && {
-            borderColor: 'blue',
-          })}
+          borderColor={backgroundColor}
+          borderWidth={3}
+          // {...(selected && {
+          //   borderColor: 'blue',
+          // })}
           outside={
             <HStack
               className="ease-in-out"
@@ -135,6 +137,7 @@ export const DishView = memo(
               borderRadius={borderRadius - 1}
               alignItems="flex-end"
               justifyContent="center"
+              zIndex={4}
               {...(isHovered && {
                 transform: [{ scale: 1.05 }],
                 zIndex: 3,
@@ -162,7 +165,7 @@ export const DishView = memo(
                 paddingHorizontal={8}
                 maxWidth={isWeb ? 'calc(90% - 30px)' : '85%'}
                 overflow="hidden"
-                shadowColor="rgba(0,0,0,0.05)"
+                shadowColor="rgba(0,0,0,0.1)"
                 shadowRadius={2}
                 zIndex={1000}
                 bottom={-8}
@@ -172,7 +175,7 @@ export const DishView = memo(
                   transform: [
                     { scale: 1.05 },
                     { skewX: '-12deg' },
-                    { translateY: -10 },
+                    { translateY: -5 },
                   ],
                 })}
               >
@@ -193,29 +196,29 @@ export const DishView = memo(
         >
           {!!dish.image && (
             <>
-              <VStack
-                position="absolute"
+              <AbsoluteVStack
                 backgroundColor="rgba(0,0,0,0.1)"
                 borderRadius={100}
-                width={size * 0.6}
-                height={size * 0.6}
+                width={size * 0.8}
+                height={size * 0.8}
               />
-              <Image
+              <ImageAlt
                 source={{ uri: imageUrl }}
                 style={{
                   width: '100%',
                   height: '100%',
                   opacity: 1,
-                  borderRadius: 100,
                   ...(isFallback && {
-                    width: size * 0.6,
-                    height: size * 0.6,
+                    borderRadius: 100,
+                    width: size * 0.8,
+                    height: size * 0.8,
                   }),
-                  ...(!isFallback && {
-                    width: size * 1,
-                    height: size * 1,
-                    transform: [{ translateX: 20 }, { translateY: 20 }],
-                  }),
+                  ...(!isFallback &&
+                    {
+                      // width: size * 0.8,
+                      // height: size * 0.8,
+                      // transform: [{ translateX: 20 }, { translateY: 20 }],
+                    }),
                 }}
                 resizeMode="cover"
               />
@@ -227,3 +230,10 @@ export const DishView = memo(
     )
   }
 )
+
+const ImageAlt = (props: any) => {
+  if (isWeb) {
+    return <img src={props.source.uri} style={props.style} loading="lazy" />
+  }
+  return <Image {...props} />
+}

@@ -344,7 +344,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         : titleLen > 50
         ? 0.9
         : 1
-    const titleFontSize = 24 * titleScale * (isSmall ? 0.7 : 1)
+    const titleFontSize = 32 * titleScale * (isSmall ? 0.7 : 1)
     const lenseColor = useCurrentLenseColor()
     const scrollRef = useRef<ScrollView>()
     const preventScrolling = usePreventContentScroll()

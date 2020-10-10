@@ -6,7 +6,6 @@ import {
   HStack,
   Spacer,
   StackProps,
-  TableHeadText,
   Text,
   TextSuperScript,
   Tooltip,
@@ -23,13 +22,7 @@ import React, {
 } from 'react'
 import { Dimensions } from 'react-native'
 
-import {
-  bgLight,
-  bgLightHover,
-  bgLightLight,
-  brandColor,
-  lightBlue,
-} from '../../colors'
+import { bgLight, bgLightHover, brandColor } from '../../colors'
 import { isWeb } from '../../constants'
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../helpers/isIOS'
@@ -51,7 +44,6 @@ import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
-import RestaurantRatingView from './RestaurantRatingView'
 import { RestaurantSourcesBreakdownRow } from './RestaurantSourcesBreakdownRow'
 import { useTotalReviews } from './useTotalReviews'
 
@@ -444,7 +436,7 @@ const RestaurantListItemContent = memo(
 
               <Spacer size="xl" />
 
-              <HStack marginTop={10} marginLeft={25}>
+              <HStack marginTop={10} marginLeft={6}>
                 <HStack>
                   <RestaurantTagsRow
                     size="sm"
