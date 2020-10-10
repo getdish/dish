@@ -51,10 +51,9 @@ export const DarkModal = ({
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
               maxWidth: '100%',
-              maxHeight: 630,
             }}
           >
-            <VStack flex={1} paddingTop={20} alignItems="center">
+            <VStack flex={1} paddingVertical={20} alignItems="center">
               {children}
             </VStack>
           </ScrollView>

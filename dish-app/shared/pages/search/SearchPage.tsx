@@ -411,16 +411,16 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             paddingBottom={10}
             overflow="hidden"
             justifyContent="center"
+            alignItems="center"
+            spacing="xl"
           >
+            <VStack backgroundColor="#f2f2f2" height={1} flex={1} />
             <Text
               marginVertical="auto"
               letterSpacing={-0.5}
               fontSize={titleFontSize}
               fontWeight="700"
               color={rgbString(lenseColor.map((x) => x * 0.8))}
-              // @ts-ignore
-              display="inline" // safari fix
-              marginRight={isSmall ? 20 : 0}
             >
               {pageTitleElements}{' '}
               <Text
@@ -433,6 +433,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
                 {subTitle}
               </Text>
             </Text>
+            <VStack backgroundColor="#f2f2f2" height={1} flex={1} />
           </HStack>
           <Suspense fallback={null}>
             <SearchPageResultsInfoBox state={curProps.item} />

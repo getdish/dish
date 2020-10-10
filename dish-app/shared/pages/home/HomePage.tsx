@@ -363,14 +363,15 @@ const TopDishesCuisineItem = memo(
               name: country.country,
             }}
             hoverStyle={{
-              transform: [{ scale: 1.1 }, { rotate: '-6deg' }],
+              transform: [{ scale: 1.05 }, { rotate: '-3.5deg' }],
             }}
           >
             <Text
-              fontSize={18}
+              fontSize={22}
               lineHeight={28}
-              fontWeight="600"
+              fontWeight="300"
               paddingRight={country.icon ? 32 : 0}
+              color="#666"
             >
               {country.country}
               {country.icon ? (

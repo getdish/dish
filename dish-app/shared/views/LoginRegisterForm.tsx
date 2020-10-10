@@ -141,7 +141,7 @@ export const LoginRegisterForm = ({
       )}
 
       <Form onSubmit={handleSubmit}>
-        <VStack spacing height={250} minWidth={260}>
+        <VStack spacing="sm" height={260} minWidth={260}>
           <InteractiveContainer height={43} alignSelf="center">
             <LinkButton
               {...navButtonProps}
@@ -173,7 +173,7 @@ export const LoginRegisterForm = ({
                 onChangeText={(val) => store.setState({ email: val })}
                 autoFocus={autofocus}
               />
-              <Spacer />
+              <Spacer size="sm" />
               <Input
                 name="username"
                 spellCheck={false}

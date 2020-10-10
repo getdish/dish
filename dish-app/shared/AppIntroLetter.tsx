@@ -61,6 +61,16 @@ export const AppIntroLetter = memo(() => {
       hide={store.hidden}
       outside={
         <>
+          <CloseButton
+            position="absolute"
+            zIndex={1000}
+            top={10}
+            right={10}
+            backgroundColor="transparent"
+            onPress={() => {
+              store.setHidden(true)
+            }}
+          />
           <AbsoluteVStack
             bottom={-20}
             right={-20}
@@ -78,15 +88,6 @@ export const AppIntroLetter = memo(() => {
         </>
       }
     >
-      <CloseButton
-        position="absolute"
-        zIndex={1000}
-        top={10}
-        right={10}
-        onPress={() => {
-          store.setHidden(true)
-        }}
-      />
       {!isLoggedIn && (
         <>
           <AppIntroLogin />
@@ -122,8 +123,8 @@ export const AppIntroLogin = memo(() => {
           style={{
             marginTop: -20,
             marginBottom: -40,
-            width: 261 * 1.2,
-            height: 161 * 1.2,
+            width: 261 * 1,
+            height: 161 * 1,
           }}
         />
 
@@ -140,17 +141,19 @@ export const AppIntroLogin = memo(() => {
         <Paragraph
           color="rgba(255,255,255,0.8)"
           fontWeight="500"
-          paddingHorizontal="10%"
+          paddingHorizontal="5%"
           sizeLineHeight={1.02}
           textAlign="center"
         >
-          Let's bring the fun back to exploring the world with a community that
-          breaks down hidden gems and tips.
+          More fun exploring the world.
+          <br />
+          A&nbsp;community for discovering
           <LinkButton
+            display="inline"
             fontSize={16}
             marginLeft={5}
-            marginVertical={-2}
-            lineHeight={30}
+            lineHeight={26}
+            paddingVertical={2}
             borderRadius={8}
             paddingHorizontal={8}
             color={yellow}
@@ -163,7 +166,7 @@ export const AppIntroLogin = memo(() => {
               store.setHidden(true)
             }}
           >
-            how? &raquo;
+            hidden gems
           </LinkButton>
         </Paragraph>
 
