@@ -1,6 +1,6 @@
 import { Tag } from '@dish/graph'
 import { Clock, DollarSign, ShoppingBag } from '@dish/react-feather'
-import { HoverablePopover, VStack } from '@dish/ui'
+import { HStack, HoverablePopover, Spacer, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { isWeb } from '../constants'
@@ -24,17 +24,30 @@ export const FilterButton = memo(
     const isSmall = useIsNarrow()
     let content: any = rest.children ?? tagDisplayNames[tag.name] ?? tag.name
 
-    if (isSmall) {
+    const iconElement = (() => {
       switch (tag.name) {
         case 'Open':
-          content = <Clock size={18} />
-          break
+          return <Clock size={18} />
         case 'Delivery':
-          content = <ShoppingBag size={18} />
-          break
+          return <ShoppingBag size={18} />
         case 'price-low':
-          content = <DollarSign size={18} />
-          break
+          return <DollarSign size={18} />
+      }
+    })()
+
+    if (isSmall) {
+      content = iconElement
+    } else {
+      if (tag.name !== 'price-low') {
+        content = (
+          <HStack>
+            {iconElement}
+            <Spacer size="xs" />
+            {content}
+          </HStack>
+        )
+      } else {
+        content = <>{content}</>
       }
     }
 

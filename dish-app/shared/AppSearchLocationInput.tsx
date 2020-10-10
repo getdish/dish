@@ -7,11 +7,6 @@ import { TextInput, TouchableOpacity } from 'react-native'
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { inputTextStyles } from './AppSearchInput'
 import { isWeb } from './constants'
-import {
-  inputClearSelection,
-  inputIsTextSelected,
-  inputSelectAll,
-} from './helpers/input'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
@@ -78,8 +73,14 @@ export const AppSearchLocationInput = memo(() => {
         input={inputStore.node}
         autocompleteTarget="location"
         backgroundColor="rgba(255,255,255,0.15)"
+        borderRadius={100}
       >
-        <HStack width="100%" alignItems="center" paddingHorizontal={3}>
+        <HStack
+          width="100%"
+          alignItems="center"
+          justifyContent="center"
+          paddingHorizontal={3}
+        >
           <TouchableOpacity
             onPress={(e) => {
               prevent(e)

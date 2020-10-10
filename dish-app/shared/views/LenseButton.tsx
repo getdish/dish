@@ -52,9 +52,6 @@ export const LenseButton = memoIsEqualDeep(
           }
           borderRadius={100}
           transform={[{ scale: 1 }]}
-          hoverStyle={{
-            borderColor: '#f0f0f0',
-          }}
           {...(isActive && {
             transform: [{ scale: 1.12 }],
             hoverStyle: {
@@ -63,7 +60,7 @@ export const LenseButton = memoIsEqualDeep(
           })}
         >
           <Text
-            fontSize={sizePx * (isActive ? 0.8 : 0.65) * scale}
+            fontSize={sizePx * (isActive ? 0.7 : 0.6) * scale}
             lineHeight={sizePx * scale}
             fontWeight="400"
             textAlign="center"

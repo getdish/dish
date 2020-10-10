@@ -34,11 +34,11 @@ export const HomeTopSearches = memo(() => {
           <LinkButton
             key={index}
             tags={search.tags}
-            paddingVertical={7}
+            paddingVertical={9}
             paddingHorizontal={15}
             alignItems="center"
             marginBottom={7}
-            borderRadius={100}
+            borderRadius={12}
             borderWidth={1}
             position="relative"
             overflow="hidden"
@@ -49,9 +49,9 @@ export const HomeTopSearches = memo(() => {
           >
             {hasLenseColor && (
               <LinearGradient
-                colors={[`rgba(${rgbString}, 0.1)`, `rgba(${rgbString},0)`]}
-                startPoint={[0, 1]}
-                endPoint={[1, 0]}
+                colors={[`rgba(${rgbString}, 0.1)`, `rgba(${rgbString},0.07)`]}
+                startPoint={[1, 1]}
+                endPoint={[-1, 1]}
                 style={StyleSheet.absoluteFill}
               />
             )}
@@ -59,7 +59,7 @@ export const HomeTopSearches = memo(() => {
               <React.Fragment key={tag.name}>
                 <Text
                   color="#444"
-                  fontSize={15}
+                  fontSize={14}
                   borderRadius={50}
                   fontWeight="500"
                   {...(hasLenseColor && {
@@ -68,9 +68,9 @@ export const HomeTopSearches = memo(() => {
                 >
                   {tag.icon ? (
                     <Text
-                      marginRight={3}
-                      fontSize={22}
-                      lineHeight={22}
+                      marginRight={1}
+                      fontSize={18}
+                      lineHeight={18}
                       transform={[{ translateY: 1 }]}
                     >
                       {tag.icon.trim()}{' '}
@@ -78,7 +78,7 @@ export const HomeTopSearches = memo(() => {
                   ) : (
                     ''
                   )}
-                  <Text transform={[{ translateY: -2 }]}>
+                  <Text transform={[{ translateY: -1 }]}>
                     {tagDisplayName(tag)}
                   </Text>
                 </Text>

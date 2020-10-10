@@ -145,6 +145,7 @@ const HomePageRestaurant = memo(
             >
               <RestaurantDishPhotos
                 size={160}
+                max={40}
                 restaurantSlug={restaurantSlug}
                 restaurantId={restaurant.id ?? undefined}
               />
@@ -163,7 +164,13 @@ const HomePageRestaurant = memo(
 
             <Spacer size="xl" />
 
-            <VStack flex={1} marginBottom={20} width="100%">
+            <VStack
+              flex={1}
+              marginBottom={20}
+              width="100%"
+              maxWidth={500}
+              alignSelf="center"
+            >
               <Suspense fallback={null}>
                 <RestaurantMenu restaurantSlug={restaurantSlug} />
               </Suspense>

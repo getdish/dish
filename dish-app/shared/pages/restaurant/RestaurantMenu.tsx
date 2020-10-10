@@ -1,6 +1,7 @@
 import { graphql } from '@dish/graph'
-import { HStack, Spacer, Text, VStack } from '@dish/ui'
+import { HStack, Paragraph, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
+import { Image } from 'react-native'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
@@ -9,7 +10,6 @@ export const RestaurantMenu = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const items = restaurant.menu_items({ limit: 120 })
-    console.log('items', items)
     return (
       <>
         {!items.length && (
@@ -40,16 +40,41 @@ export const RestaurantMenu = memo(
                   key={i}
                 >
                   <HStack>
-                    <VStack flex={1}>
-                      <Text fontSize={18} fontWeight="600">
+                    {!!item.image && (
+                      <>
+                        <Image
+                          source={{
+                            uri: item.image,
+                          }}
+                          style={{
+                            width: 50,
+                            height: 50,
+                            borderRadius: 100,
+                          }}
+                        />
+                      </>
+                    )}
+                    {!item.image && (
+                      <VStack
+                        width={50}
+                        height={50}
+                        borderRadius={100}
+                        backgroundColor="#eee"
+                      />
+                    )}
+                    <Spacer />
+                    <VStack flex={1} paddingVertical={2}>
+                      <Paragraph size="lg" fontWeight="600">
                         {item.name}
-                      </Text>
+                      </Paragraph>
                       <Spacer size="xs" />
-                      <Text fontSize={16} opacity={0.5}>
-                        {item.description}
-                      </Text>
+                      <Paragraph opacity={0.5}>{item.description}</Paragraph>
                     </VStack>
-                    <Text>{item.price}</Text>
+                    <Spacer />
+
+                    <Paragraph fontWeight="600">
+                      {toPrice(item.price ?? 0)}
+                    </Paragraph>
                   </HStack>
                 </VStack>
               ))}
@@ -60,3 +85,10 @@ export const RestaurantMenu = memo(
     )
   })
 )
+
+const toPrice = (priceNum: number) => {
+  if (priceNum % 100 === 0) {
+    return `$${priceNum / 100}`
+  }
+  return `$${Math.floor(priceNum / 100)}.${priceNum % 100}`
+}

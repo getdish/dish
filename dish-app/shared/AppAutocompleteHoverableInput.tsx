@@ -9,11 +9,13 @@ export const AppAutocompleteHoverableInput = ({
   input,
   autocompleteTarget,
   backgroundColor,
+  borderRadius = 10,
 }: {
   children: any
   input?: HTMLInputElement | null
   autocompleteTarget: 'search' | 'location'
   backgroundColor?: string
+  borderRadius?: number
 }) => {
   const om = useOvermind()
   const tm = useRef<any>(null)
@@ -41,7 +43,7 @@ export const AppAutocompleteHoverableInput = ({
         backgroundColor={
           isSmall ? 'rgba(0,0,0,0.05)' : backgroundColor ?? 'transparent'
         }
-        borderRadius={10}
+        borderRadius={borderRadius}
         width="100%"
       >
         {children}

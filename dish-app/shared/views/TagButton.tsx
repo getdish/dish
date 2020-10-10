@@ -145,7 +145,7 @@ export const TagButton = memo((props: TagButtonProps) => {
       <HStack
         className="ease-in-out"
         height={height}
-        borderRadius={30 * scale}
+        borderRadius={3 * scale}
         paddingHorizontal={4}
         overflow="hidden"
         alignItems="center"

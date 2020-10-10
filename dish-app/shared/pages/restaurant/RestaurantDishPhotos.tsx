@@ -17,6 +17,7 @@ export const RestaurantDishPhotos = memo(
       onSelect,
       defaultSelectedId,
       size = 180,
+      max = 30,
     }: {
       restaurantSlug: string
       restaurantId?: string
@@ -24,8 +25,9 @@ export const RestaurantDishPhotos = memo(
       onSelect?: (dish: string) => any
       defaultSelectedId?: string
       size?: number
+      max?: number
     }) => {
-      const dishes = getRestuarantDishes({ restaurantSlug, max: 30 })
+      const dishes = getRestuarantDishes({ restaurantSlug, max })
       const spacing = 12
       const [hasScrolled, setHasScrolled] = useState(false)
       const [selected, setSelected] = useState(
@@ -45,7 +47,7 @@ export const RestaurantDishPhotos = memo(
           horizontal
           showsHorizontalScrollIndicator={false}
           onScroll={
-            hasScrolled
+            !hasScrolled
               ? () => {
                   setHasScrolled(true)
                 }
