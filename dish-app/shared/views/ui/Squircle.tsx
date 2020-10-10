@@ -27,8 +27,8 @@ export const Squircle = ({
         backgroundColor="#111"
         {...(isHovered && {
           zIndex: 10000,
-          shadowRadius: 12,
-          shadowOffset: { width: 0, height: 2 },
+          shadowRadius: 6,
+          shadowOffset: { width: 0, height: 1 },
           shadowColor: 'rgba(0,0,0,0.15)',
         })}
         {...rest}

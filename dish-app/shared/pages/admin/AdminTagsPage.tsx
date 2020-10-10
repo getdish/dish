@@ -17,12 +17,13 @@ import {
   Text,
   Toast,
   VStack,
+  useDebounce,
   useDebounceValue,
   useForceUpdate,
 } from '@dish/ui'
 import { Store, useStore, useStoreSelector } from '@dish/use-store'
 import { capitalize } from 'lodash'
-import React, { Suspense, memo, useEffect, useState } from 'react'
+import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
 
 import { emojiRegex } from '../../helpers/emojiRegex'
@@ -269,17 +270,24 @@ const TagListContent = memo(
       const allResults = [{ id: 0, name: '' } as WithID<Tag>, ...results]
 
       useEffect(() => {
+        console.log(
+          'tagStore.forceRefreshColumnByType',
+          tagStore.forceRefreshColumnByType
+        )
         if (tagStore.forceRefreshColumnByType === type) {
-          refetch(results)
+          const res = refetch(results)
+          console.log('res', res)
           setTimeout(() => {
             forceUpdate()
           }, 1000)
         }
       }, [tagStore.forceRefreshColumnByType])
 
-      const pageItems = new Array(totalPages).fill(totalPages)
       return (
-        <ScrollView style={{ paddingBottom: 100 }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ paddingBottom: 50 }}
+        >
           <PaginationNav
             totalPages={totalPages}
             setPage={setPage}
@@ -306,6 +314,7 @@ const TagListContent = memo(
                   onSelect={() => {
                     tagStore.setDraft({
                       parentId: tag.id,
+                      type: 'dish',
                     })
                     tagStore.setSelected({
                       col: column,
@@ -317,6 +326,11 @@ const TagListContent = memo(
               )
             })}
           </Suspense>
+          <PaginationNav
+            totalPages={totalPages}
+            setPage={setPage}
+            page={page}
+          />
         </ScrollView>
       )
     }
@@ -363,6 +377,9 @@ const TagListItem = graphql(
 const TagEditColumn = memo(() => {
   const tagStore = useStore(AdminTagStore)
   const [showCreate, setShowCreate] = useState(false)
+  const setDraftDebounced = useDebounce((x) => tagStore.setDraft(x), 200)
+  console.log('tagStore', tagStore.draft)
+
   return (
     <VStack spacing="lg">
       <>
@@ -372,10 +389,7 @@ const TagEditColumn = memo(() => {
         </SmallButton>
         {showCreate && (
           <>
-            <TagCRUD
-              tag={tagStore.draft}
-              onChange={(x) => tagStore.setDraft(x)}
-            />
+            <TagCRUD tag={tagStore.draft} onChange={setDraftDebounced} />
             <SmallButton
               onPress={async () => {
                 console.log('upserting', tagStore.draft)
@@ -413,6 +427,7 @@ const queryTag = (id: string) => {
 const TagEdit = memo(
   graphql<any>(() => {
     const tagStore = useStore(AdminTagStore)
+    const refetchTm = useRef(null)
     if (tagStore.selectedId) {
       const tag = queryTag(tagStore.selectedId)
       console.log('got now', tag)
@@ -431,9 +446,10 @@ const TagEdit = memo(
             for (const key in x) {
               tag[key] = x[key]
             }
-            sleep(500).then(() => {
+            clearTimeout(refetchTm.current)
+            refetchTm.current = setTimeout(() => {
               refetch(tag)
-            })
+            }, 2000)
             Toast.show('Saved')
           }}
         />
@@ -535,6 +551,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
       borderColor="#eee"
       borderWidth={1}
       borderRadius={10}
+      backgroundColor="#fff"
       spacing={10}
     >
       <TableRow label="Parent">
@@ -546,7 +563,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
             })
           }}
         >
-          Clear parent
+          Clear
         </SmallButton>
       </TableRow>
 
@@ -570,15 +587,17 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
 
       <TableRow label="Type">
         <select
+          key={tag.type}
+          defaultValue={tag.type}
           onChange={(e) => {
-            const id = e.target.options[e.target.selectedIndex].id
-            onChange?.({ type: id })
+            const value = e.target.options[e.target.selectedIndex].value
+            onChange?.({ type: value })
           }}
         >
-          <option id="continent">Continent</option>
-          <option id="country">Country</option>
-          <option id="dish">Dish</option>
-          <option id="lense">Lense</option>
+          <option value="continent">Continent</option>
+          <option value="country">Country</option>
+          <option value="dish">Dish</option>
+          <option value="lense">Lense</option>
         </select>
       </TableRow>
 
@@ -588,8 +607,8 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
           onChange={(e) => onChange?.({ icon: e.target['value'] })}
           defaultValue={tag.icon ?? ''}
         />
-        <ScrollView style={{ maxHeight: 330 }}>
-          <HStack flexWrap="wrap">
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <VStack flexWrap="wrap" maxHeight={140}>
             {foodIcons.map((icon, index) => (
               <VStack
                 key={index}
@@ -606,14 +625,28 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
                 </Text>
               </VStack>
             ))}
-          </HStack>
+          </VStack>
         </ScrollView>
+
+        <TableRow label="Description">
+          <TextInput
+            style={styles.textInput}
+            onChange={(e) => onChange?.({ description: e.target['value'] })}
+            defaultValue={tag.description ?? ''}
+          />
+        </TableRow>
 
         {info.length && (
           <ScrollView style={{ marginTop: 20, maxHeight: 300 }}>
             {info.map(({ name, description }, index) => {
               return (
-                <VStack key={index} marginBottom={10}>
+                <VStack
+                  key={index}
+                  marginBottom={10}
+                  hoverStyle={{
+                    backgroundColor: '#eee',
+                  }}
+                >
                   <Text fontWeight="600">{name}</Text>
                   <Text>{description ?? 'None found'}</Text>
                 </VStack>

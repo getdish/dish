@@ -328,7 +328,7 @@ const HomeTopDishesTitle = () => {
   )
 }
 
-const dishHeight = 125
+const dishHeight = 130
 
 const TopDishesCuisineItem = memo(
   ({ country, index }: { index: number; country: TopCuisine }) => {
@@ -351,6 +351,7 @@ const TopDishesCuisineItem = memo(
             /> */}
           </AbsoluteVStack>
         )}
+
         <HStack justifyContent="center" alignItems="center">
           <SlantedLinkButton
             marginHorizontal="auto"
@@ -390,6 +391,9 @@ const TopDishesCuisineItem = memo(
             </Text>
           </SlantedLinkButton>
         </HStack>
+
+        <Spacer size="sm" />
+
         <VStack
           paddingBottom={30}
           pointerEvents="none"
@@ -398,7 +402,7 @@ const TopDishesCuisineItem = memo(
           position="relative"
         >
           <ContentScrollViewHorizontal style={{ paddingVertical: 15 }}>
-            <HStack alignItems="center" spacing={18} paddingRight={20}>
+            <HStack alignItems="center" spacing={22} paddingRight={20}>
               <TopDishesTrendingRestaurants country={country} />
 
               {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
@@ -408,7 +412,7 @@ const TopDishesCuisineItem = memo(
                 // )
                 return (
                   <HStack
-                    transform={[{ translateY: index % 2 == 0 ? -5 : 5 }]}
+                    transform={[{ translateY: index % 2 == 0 ? -3 : 3 }]}
                     hoverStyle={{
                       zIndex: 1000,
                     }}
@@ -417,10 +421,7 @@ const TopDishesCuisineItem = memo(
                     <DishView
                       size={dishHeight}
                       isFallback
-                      dish={{
-                        ...top_dish,
-                        rating: (top_dish.rating ?? 0) / 5,
-                      }}
+                      dish={top_dish}
                       cuisine={{
                         id: country.country,
                         name: country.country,
@@ -483,6 +484,7 @@ const TopDishesTrendingRestaurants = memo(
       <VStack
         width={210}
         paddingHorizontal={10}
+        marginRight={5}
         height={135}
         spacing={4}
         alignItems="flex-start"

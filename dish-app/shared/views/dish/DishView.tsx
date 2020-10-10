@@ -54,7 +54,7 @@ export const DishView = memo(
       ...getRoundedDishViewSize(size),
       100
     )
-    const borderRadius = size * 0.1
+    const borderRadius = size * 0.15
     const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
     const isFallback = _isFallback ?? dish.isFallback
     const backgroundColor = getDishBackgroundColor(dish.name)
@@ -125,7 +125,7 @@ export const DishView = memo(
           isHovered={isHovered}
           backgroundColor={backgroundColor}
           borderColor={backgroundColor}
-          borderWidth={3}
+          borderWidth={2}
           // {...(selected && {
           //   borderColor: 'blue',
           // })}
@@ -163,7 +163,7 @@ export const DishView = memo(
                 borderRadius={8}
                 paddingVertical={3}
                 paddingHorizontal={8}
-                maxWidth={isWeb ? 'calc(90% - 30px)' : '85%'}
+                maxWidth="100%"
                 overflow="hidden"
                 shadowColor="rgba(0,0,0,0.1)"
                 shadowRadius={2}
