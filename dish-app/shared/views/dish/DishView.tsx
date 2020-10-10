@@ -32,12 +32,12 @@ export const DishView = memo(
     isFallback: _isFallback,
     ...rest
   }: {
-    restaurantId?: string
+    restaurantId: string
+    restaurantSlug: string
     name?: any
     cuisine?: NavigableTag
     dish: DishTagItem
     size?: number
-    restaurantSlug?: string
     isFallback?: boolean
     selected?: boolean
   } & StackProps) => {
@@ -162,7 +162,7 @@ export const DishView = memo(
                 paddingHorizontal={8}
                 maxWidth={isWeb ? 'calc(90% - 30px)' : '85%'}
                 overflow="hidden"
-                shadowColor="rgba(0,0,0,0.1)"
+                shadowColor="rgba(0,0,0,0.05)"
                 shadowRadius={2}
                 zIndex={1000}
                 bottom={-8}
@@ -197,8 +197,8 @@ export const DishView = memo(
                 position="absolute"
                 backgroundColor="rgba(0,0,0,0.1)"
                 borderRadius={100}
-                width={size * 0.75}
-                height={size * 0.75}
+                width={size * 0.6}
+                height={size * 0.6}
               />
               <Image
                 source={{ uri: imageUrl }}
@@ -206,10 +206,15 @@ export const DishView = memo(
                   width: '100%',
                   height: '100%',
                   opacity: 1,
+                  borderRadius: 100,
                   ...(isFallback && {
-                    borderRadius: 100,
-                    width: size * 0.75,
-                    height: size * 0.75,
+                    width: size * 0.6,
+                    height: size * 0.6,
+                  }),
+                  ...(!isFallback && {
+                    width: size * 1,
+                    height: size * 1,
+                    transform: [{ translateX: 20 }, { translateY: 20 }],
                   }),
                 }}
                 resizeMode="cover"

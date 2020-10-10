@@ -343,12 +343,12 @@ const TopDishesCuisineItem = memo(
             backgroundColor={bgLightTranslucent}
             transform={[{ rotate: '-2deg' }]}
           >
-            <LinearGradient
+            {/* <LinearGradient
               colors={[bgLightTranslucent, '#fff']}
               startPoint={[1, 0]}
               endPoint={[0, 0]}
               style={StyleSheet.absoluteFill}
-            />
+            /> */}
           </AbsoluteVStack>
         )}
         <HStack justifyContent="center" alignItems="center">
@@ -491,7 +491,12 @@ const TopDishesTrendingRestaurants = memo(
             .slice(0, 4)
             .map((restaurant, index) => {
               return (
-                <HStack key={restaurant.name} maxWidth="100%" minWidth={200}>
+                <HStack
+                  justifyContent="flex-end"
+                  key={restaurant.name}
+                  maxWidth="100%"
+                  minWidth={210}
+                >
                   <RestaurantButton
                     color={`rgba(0,0,0,${Math.max(0.5, 1 - (index + 1) / 5)})`}
                     // trending={
@@ -501,7 +506,6 @@ const TopDishesTrendingRestaurants = memo(
                     //     ? 'up'
                     //     : 'down'
                     // }
-                    minWidth={180} // react native
                     subtle
                     restaurantSlug={restaurant.slug ?? ''}
                     onHoverIn={() => {

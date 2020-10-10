@@ -70,7 +70,14 @@ export const AppMapControlsOverlay = memo(() => {
             <Suspense fallback={null}>
               <AppMapPIP />
             </Suspense>
-            {!isSmall && <AppMapRestaurantPeek />}
+
+            {!isSmall && (
+              <>
+                <Suspense fallback={null}>
+                  <AppMapRestaurantPeek />
+                </Suspense>
+              </>
+            )}
 
             {isWeb && (
               <VStack>

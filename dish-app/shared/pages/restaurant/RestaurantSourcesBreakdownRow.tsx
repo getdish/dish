@@ -8,7 +8,7 @@ import {
   Tooltip,
   VStack,
 } from '@dish/ui'
-import React, { memo } from 'react'
+import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
 
 import { bgLight } from '../../colors'
@@ -41,9 +41,13 @@ export const RestaurantSourcesBreakdownRow = memo(
           contents={(isOpen) => {
             return (
               <Box width={280} minHeight={200}>
-                {isOpen ? (
-                  <RestaurantSourcesBreakdown restaurantSlug={restaurantSlug} />
-                ) : null}
+                <Suspense fallback={null}>
+                  {isOpen ? (
+                    <RestaurantSourcesBreakdown
+                      restaurantSlug={restaurantSlug}
+                    />
+                  ) : null}
+                </Suspense>
               </Box>
             )
           }}

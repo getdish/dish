@@ -14,6 +14,18 @@ import {
 import React, { memo, useEffect, useRef } from 'react'
 import { Image, Platform } from 'react-native'
 
+import {
+  blue,
+  green,
+  lightBlue,
+  lightGreen,
+  lightOrange,
+  lightPurple,
+  lightRed,
+  orange,
+  purple,
+  red,
+} from '../colors'
 import { isWeb } from '../constants'
 import { useUserUpvoteDownvoteQuery } from '../hooks/useUserUpvoteDownvoteQuery'
 import { getTagId } from '../state/getTagId'
@@ -38,6 +50,14 @@ export const getTagButtonProps = (tag: TagButtonTagProps): TagButtonProps => {
   }
 }
 
+const tagColors = {
+  country: [lightOrange, orange],
+  filter: [lightBlue, blue],
+  lense: [lightPurple, purple],
+  dish: [lightRed, red],
+  other: [lightGreen, green],
+}
+
 export const getTagColors = ({ rgb, type }: Partial<Tag>) => {
   if (rgb) {
     return {
@@ -51,24 +71,10 @@ export const getTagColors = ({ rgb, type }: Partial<Tag>) => {
       color: '#000',
     }
   }
-  const backgroundColor =
-    type === 'country'
-      ? // orange
-        '#BD5C16'
-      : type === 'filter'
-      ? // blue
-        '#164ABD'
-      : type === 'lense'
-      ? // purple
-        '#6C16BD'
-      : type === 'dish'
-      ? // red
-        '#BD1616'
-      : // green
-        '#53C4A4'
+  const [backgroundColor, color] = tagColors[type] ?? tagColors.other
   return {
     backgroundColor,
-    color: '#fff',
+    color,
   }
 }
 
@@ -122,7 +128,7 @@ export const TagButton = memo((props: TagButtonProps) => {
   }
   const tag = { name, type: type as TagType, icon, rgb }
   const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1 : 1
-  const height = scale * (subtle ? 26 : 36)
+  const height = scale * (subtle ? 26 : 34)
   const lineHeight = 26 * scale
 
   let bg = 'transparent'
@@ -145,7 +151,7 @@ export const TagButton = memo((props: TagButtonProps) => {
       <HStack
         className="ease-in-out"
         height={height}
-        borderRadius={3 * scale}
+        borderRadius={10 * scale}
         paddingHorizontal={4}
         overflow="hidden"
         alignItems="center"

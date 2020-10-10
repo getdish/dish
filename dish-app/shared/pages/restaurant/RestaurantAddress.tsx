@@ -41,7 +41,7 @@ export const RestaurantAddress = ({
 
   return (
     <SmallLinkButton
-      maxWidth={160}
+      maxWidth={isSmall ? 160 : 200}
       ellipse
       backgroundColor="transparent"
       {...linkProps}

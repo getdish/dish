@@ -46,7 +46,7 @@ export const AppMapRestaurantPeek = memo(
           paddingHorizontal={0}
           paddingVertical={0}
           className={`animate-up ${slug ? 'active' : 'untouchable'}`}
-          backgroundColor="rgba(0,0,0,0.8)"
+          backgroundColor="#fff"
           shadowColor="rgba(0,0,0,0.35)"
           shadowRadius={10}
         >
@@ -87,7 +87,6 @@ export const AppMapRestaurantPeek = memo(
                 fontSize={16}
                 fontWeight="600"
                 paddingRight={30}
-                color="#fff"
               >
                 {restaurant.name} &nbsp;
                 <RestaurantAddressLinksRow

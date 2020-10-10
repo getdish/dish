@@ -28,7 +28,7 @@ export const RestaurantCard = memo((props: RestaurantCardProps) => {
   )
 })
 
-const width = 240
+const width = 260
 const height = 360
 const borderRadius = 12
 

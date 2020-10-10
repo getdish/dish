@@ -122,6 +122,7 @@ export const AppSearchLocationInput = memo(() => {
             />
           </HStack>
           <Button
+            backgroundColor="transparent"
             padding={8}
             alignSelf="center"
             marginRight={5}

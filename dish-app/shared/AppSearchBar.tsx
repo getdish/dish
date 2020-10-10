@@ -76,8 +76,6 @@ export const HomeSearchBarFloating = () => {
       position="absolute"
       fullscreen
       marginTop={searchBarTopOffset}
-      left={6}
-      right={6}
       alignItems="center"
       pointerEvents="none"
     >
@@ -85,61 +83,48 @@ export const HomeSearchBarFloating = () => {
         zIndex={12}
         position="relative"
         alignItems="center"
+        justifyContent="center"
         width="100%"
         height={searchBarHeight}
+        maxWidth={searchBarMaxWidth + 20}
       >
-        <VStack
-          flex={1}
-          pointerEvents="auto"
-          width="100%"
-          maxWidth={searchBarMaxWidth}
-          position="relative"
+        <AbsoluteVStack
+          className="blur skewX"
+          borderRadius={12}
+          overflow="hidden"
+          zIndex={102}
+          fullscreen
+          height={searchBarHeight}
+          justifyContent="center"
+          alignItems="center"
+          shadowColor="rgba(0,0,0,0.175)"
+          shadowOffset={{ height: 3, width: 0 }}
+          shadowRadius={18}
         >
           <AbsoluteVStack
-            className="skewX"
-            zIndex={102}
-            fullscreen
-            height={searchBarHeight}
+            // opacity={0.76}
             backgroundColor={background}
-            borderRadius={borderRadius}
-            justifyContent="center"
-          >
-            <AbsoluteVStack
-              height={searchBarHeight - 1}
-              borderRadius={borderRadius}
-              zIndex={0}
-              top={0}
-              left={1}
-              width={isWeb ? `calc(100% - 1px)` : '100%'}
-              shadowColor="rgba(0,0,0,0.25)"
-              shadowOffset={{ height: 3, width: 0 }}
-              shadowRadius={12}
-            />
-            <AbsoluteVStack
-              borderRadius={borderRadius}
-              fullscreen
-              pointerEvents="none"
-              // borderBottomColor="rgba(0,0,0,0.05)"
-              // borderBottomWidth={2}
-            />
-          </AbsoluteVStack>
-          <VStack
-            position="relative"
-            zIndex={104}
-            flex={1}
-            paddingHorizontal={8}
-            height={searchBarHeight}
-            justifyContent="center"
-            overflow="hidden"
-          >
-            <HStack alignItems="center" justifyContent="center">
-              <VStack maxWidth="100%" flex={1} transform={[{ translateY: -1 }]}>
-                <Suspense fallback={null}>
-                  <HomeSearchBar />
-                </Suspense>
-              </VStack>
-            </HStack>
-          </VStack>
+            fullscreen
+          />
+        </AbsoluteVStack>
+        <VStack
+          position="relative"
+          zIndex={104}
+          flex={1}
+          paddingHorizontal={8}
+          height={searchBarHeight}
+          justifyContent="center"
+          overflow="hidden"
+          width="100%"
+          maxWidth={searchBarMaxWidth}
+        >
+          <HStack alignItems="center" justifyContent="center">
+            <VStack maxWidth="100%" flex={1} transform={[{ translateY: -1 }]}>
+              <Suspense fallback={null}>
+                <HomeSearchBar />
+              </Suspense>
+            </VStack>
+          </HStack>
         </VStack>
       </VStack>
     </AbsoluteVStack>

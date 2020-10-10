@@ -13,6 +13,7 @@ import { LinkButtonProps } from './LinkProps'
 export type SmallButtonProps = LinkButtonProps & {
   isActive?: boolean
   tooltip?: string
+  before?: any
 }
 
 export const SmallButton = ({
@@ -26,6 +27,7 @@ export const SmallButton = ({
   textAlign,
   tooltip,
   ellipse,
+  before,
   ...rest
 }: SmallButtonProps) => {
   let contents = isStringChild(children) ? (
@@ -72,6 +74,7 @@ export const SmallButton = ({
         },
       })}
     >
+      {before}
       {contents}
     </LinkButton>
   )
@@ -113,7 +116,7 @@ export function SmallLinkButton<
   ellipse,
   color,
   ...props
-}: LinkButtonProps<Name, Params>) {
+}: SmallButtonProps & LinkButtonProps<Name, Params>) {
   return (
     <SmallButton {...props}>
       <LinkButton

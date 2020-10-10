@@ -28,7 +28,7 @@ export const AppSearchInputTags = memo(
                   className="no-transition"
                   key={getTagId(tag)}
                   subtleIcon
-                  backgroundColor="rgba(0,0,0,0.3)"
+                  backgroundColor="rgba(0,0,0,0.2)"
                   color={'#fff'}
                   shadowColor="#00000022"
                   fontWeight="600"
@@ -36,7 +36,7 @@ export const AppSearchInputTags = memo(
                   shadowOffset={{ height: 2, width: 0 }}
                   borderColor={'transparent'}
                   hoverStyle={{
-                    backgroundColor: 'rgba(0,0,0,0.4)',
+                    backgroundColor: 'rgba(0,0,0,0.3)',
                   }}
                   {...(isActive && {
                     backgroundColor: 'rgba(255,255,255,0.1)',

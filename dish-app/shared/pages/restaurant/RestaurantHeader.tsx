@@ -1,4 +1,5 @@
 import { graphql } from '@dish/graph'
+import { Clock } from '@dish/react-feather'
 import { HStack, Spacer, StackProps, Text, VStack, useDebounce } from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
@@ -115,7 +116,7 @@ const RestaurantHeaderContent = memo(
                         </HStack>
                         <Spacer size="md" />
                         <HStack flexWrap="wrap" alignItems="center">
-                          <VStack marginRight={10} marginBottom={10}>
+                          <VStack marginRight={6} marginBottom={10}>
                             <RestaurantAddress
                               size="xs"
                               address={restaurant.address ?? ''}
@@ -130,6 +131,13 @@ const RestaurantHeaderContent = memo(
                             fontSize={14}
                             color={open_color}
                             ellipse
+                            before={
+                              <Clock
+                                size={14}
+                                color="#999"
+                                style={{ marginRight: 5 }}
+                              />
+                            }
                             children={`${open_text} (${next_time})`}
                           />
                         </HStack>

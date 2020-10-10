@@ -1,3 +1,18 @@
+* The breakdowns popup on the results page flashes 3 times before
+  showing the required values
+* There's currently a discrepancy between the points we initially gave
+  to a single review and the points we now give. Because we haven't done
+  a full recrawl since this change, there's a mix of point factors in
+  the DB. I've opted to use the current factor, which means a lot of
+  restaurants won't seem to add up their points correctly. First thing
+  is to do the recrawl. But secondly, this commit also includes an
+  addition to the breakdown JSON that specifies the factor give to a
+  single review at the time of aggreation, so this problem won't happen
+  again.
+* @natew I don't suppose the weights are relevant anymore?
+
+---
+
 Home page
 - generally home page query and layout, but that's a whole other kettle of fish
 - is the plan for the site to be login only? i think it's better to allow anonymous use of the site

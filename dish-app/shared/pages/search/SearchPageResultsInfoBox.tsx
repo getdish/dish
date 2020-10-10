@@ -94,6 +94,7 @@ const HomeSearchInfoBoxDish = memo(
     const tags = getActiveTags(state)
     const dishTag = tags.find((x) => x.type === 'dish')
 
+    return null
     if (!dishTag) {
       return null
     }

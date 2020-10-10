@@ -23,7 +23,13 @@ import React, {
 } from 'react'
 import { Dimensions } from 'react-native'
 
-import { bgLight, bgLightLight, brandColor, lightBlue } from '../../colors'
+import {
+  bgLight,
+  bgLightHover,
+  bgLightLight,
+  brandColor,
+  lightBlue,
+} from '../../colors'
 import { isWeb } from '../../constants'
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../helpers/isIOS'
@@ -35,6 +41,7 @@ import { omStatic } from '../../state/omStatic'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
+import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { Link } from '../../views/ui/Link'
 import { SmallLinkButton } from '../../views/ui/SmallButton'
@@ -189,7 +196,7 @@ const RestaurantListItemContent = memo(
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const totalReviews = useTotalReviews(restaurant)
     const titleFontSize =
-      1.3 *
+      1.2 *
       (isSmall ? 18 : 22) *
       (restaurantName.length > 20 ? 0.9 : restaurantName.length > 25 ? 0.85 : 1)
 
@@ -214,13 +221,13 @@ const RestaurantListItemContent = memo(
           zIndex={-1}
           width={8}
           left={-2}
-          backgroundColor={isActive ? brandColor : '#f2f2f2'}
+          backgroundColor={isActive ? brandColor : 'transparent'}
         />
 
         <VStack flex={1} alignItems="flex-start" maxWidth="100%">
           {/* ROW: TITLE */}
           <VStack
-            hoverStyle={{ backgroundColor: bgLightLight }}
+            hoverStyle={{ backgroundColor: '#B8E0F311' }}
             paddingTop={10}
             marginLeft={-pad}
             paddingLeft={pad}
@@ -266,24 +273,28 @@ const RestaurantListItemContent = memo(
                       <HStack>
                         <RankView rank={rank} />
                         <Spacer size="md" />
-                        <Text
-                          ellipse
-                          fontSize={titleFontSize}
-                          lineHeight={titleFontSize * 1.2}
-                          fontWeight="600"
-                          marginRight={10}
-                          borderBottomColor="transparent"
-                          borderBottomWidth={1}
+                        <HStack
+                          padding={8}
+                          margin={-8}
+                          borderRadius={8}
                           // @ts-ignore
                           hoverStyle={{
-                            borderBottomColor: lightBlue,
+                            backgroundColor: bgLight,
                           }}
                           pressStyle={{
-                            borderBottomColor: brandColor,
+                            backgroundColor: bgLightHover,
                           }}
+                          marginRight={10}
                         >
-                          {restaurantName}
-                        </Text>
+                          <Text
+                            ellipse
+                            fontSize={titleFontSize}
+                            lineHeight={titleFontSize * 1.2}
+                            fontWeight="600"
+                          >
+                            {restaurantName}
+                          </Text>
+                        </HStack>
                       </HStack>
                     </Link>
                   </Text>
@@ -291,7 +302,7 @@ const RestaurantListItemContent = memo(
               </VStack>
             </Link>
 
-            <Spacer size="sm" />
+            <Spacer size="xs" />
 
             {/* RANKING ROW */}
             <VStack
@@ -305,6 +316,13 @@ const RestaurantListItemContent = memo(
               <Spacer size={2} />
 
               <HStack alignItems="center" cursor="pointer" spacing="lg">
+                <Suspense fallback={<Spacer size={44} />}>
+                  <RestaurantFavoriteButton
+                    size="md"
+                    restaurantId={restaurantId}
+                  />
+                </Suspense>
+
                 {!!price_range && (
                   <Text
                     fontSize={14}
@@ -337,10 +355,10 @@ const RestaurantListItemContent = memo(
             </VStack>
           </VStack>
 
-          <Spacer size="md" />
+          <Spacer size="sm" />
 
           {/* ROW: OVERVIEW / PEEK */}
-          <HStack flex={1} maxWidth="100%" minHeight={120}>
+          <HStack flex={1} maxWidth="100%" minHeight={100}>
             <VStack
               {...contentSideWidthProps}
               className="fix-safari-shrink-height"
@@ -351,7 +369,11 @@ const RestaurantListItemContent = memo(
             >
               {/* ensures it always flexes all the way even if short text */}
               {ensureFlexText}
-              <RestaurantOverview restaurantSlug={restaurantSlug} inline />
+              <RestaurantOverview
+                limit={1}
+                restaurantSlug={restaurantSlug}
+                inline
+              />
             </VStack>
 
             <RestaurantPeekDishes
@@ -371,60 +393,67 @@ const RestaurantListItemContent = memo(
               width="100%"
               flex={1}
               alignItems="center"
-              flexWrap="wrap"
               minWidth={contentSideWidthProps.minWidth}
             >
-              <VStack>
-                <Tooltip
-                  contents={`Rating Breakdown (${totalReviews} reviews)`}
-                >
-                  <SmallLinkButton
-                    name="restaurantReviews"
-                    params={{
-                      id: props.restaurantId,
-                      slug: props.restaurantSlug,
-                    }}
+              <HStack alignItems="center" {...contentSideWidthProps}>
+                <VStack>
+                  <Tooltip
+                    contents={`Rating Breakdown (${totalReviews} reviews)`}
                   >
-                    <HStack alignItems="center">
-                      <VStack marginVertical={-12} marginRight={10}>
-                        <RestaurantRatingView
-                          size="xs"
-                          restaurantSlug={props.restaurantSlug}
+                    <SmallLinkButton
+                      name="restaurantReviews"
+                      params={{
+                        id: props.restaurantId,
+                        slug: props.restaurantSlug,
+                      }}
+                      before={
+                        <MessageSquare
+                          size={18}
+                          color="rgba(0,0,0,0.3)"
+                          style={{ marginRight: 5 }}
                         />
-                      </VStack>
-                      <MessageSquare size={18} color="rgba(0,0,0,0.3)" />
-                    </HStack>
-                  </SmallLinkButton>
-                </Tooltip>
-              </VStack>
+                      }
+                      color="#999"
+                    >
+                      {restaurant.reviews_aggregate().aggregate.count() ?? 0}
+                    </SmallLinkButton>
+                  </Tooltip>
+                </VStack>
 
-              <Spacer />
+                <Spacer />
 
-              <Suspense fallback={<Spacer size={44} />}>
-                <RestaurantFavoriteButton
-                  size="md"
-                  restaurantId={restaurantId}
-                />
-              </Suspense>
-
-              <Spacer />
-
-              <RestaurantDeliveryButtons
-                label="Delivery"
-                restaurantSlug={restaurantSlug}
-              />
-
-              <Spacer />
-
-              <VStack>
-                <RestaurantSourcesBreakdownRow
-                  size="sm"
-                  restaurantId={restaurantId}
+                <RestaurantDeliveryButtons
+                  label="Delivery"
                   restaurantSlug={restaurantSlug}
                 />
-              </VStack>
+
+                <Spacer />
+
+                <VStack>
+                  <Suspense fallback={null}>
+                    <RestaurantSourcesBreakdownRow
+                      size="sm"
+                      restaurantId={restaurantId}
+                      restaurantSlug={restaurantSlug}
+                    />
+                  </Suspense>
+                </VStack>
+              </HStack>
+
+              <Spacer />
 
               <Spacer size="xl" />
+
+              <HStack marginTop={10} marginLeft={25}>
+                <RestaurantTagsRow
+                  size="sm"
+                  restaurantSlug={restaurantSlug}
+                  restaurantId={restaurant.id}
+                  spacing={10}
+                  grid
+                  max={4}
+                />
+              </HStack>
 
               <VStack
                 flex={1}
@@ -489,7 +518,7 @@ const RestaurantPeekDishes = memo(
     searchState: HomeStateItemSearch
     isLoaded: boolean
   }) {
-    const activeTags = omStatic.state.home.lastSearchState.activeTagIds
+    const activeTags = omStatic.state.home.lastSearchState?.activeTagIds ?? {}
     const dishSearchedTag = Object.keys(activeTags).find(
       (k) => allTags[k]?.type === 'dish'
     )
@@ -505,7 +534,7 @@ const RestaurantPeekDishes = memo(
         return type != 'lense' && type != 'filter' && type != 'outlier'
       }),
     ].filter((x) => !!x)
-    const spacing = size == 'lg' ? 16 : 12
+    const spacing = size == 'lg' ? 22 : 18
     // const restaurant = useRestaurantQuery(props.restaurantSlug)
     // // get them all as once to avoid double query limit on gqless
     const tagNames = tagSlugs
@@ -551,18 +580,18 @@ const RestaurantPeekDishes = memo(
         pointerEvents="auto"
         padding={20}
         paddingVertical={40}
-        marginTop={-80}
+        marginTop={-112}
         marginBottom={-40}
         height={dishSize + 80}
         spacing={spacing}
         width={dishSize * 5}
         position="relative"
       >
-        <AbsoluteVStack top={1} left={20}>
+        {/* <AbsoluteVStack top={1} left={20}>
           <TableHeadText color="#555">
             {dishSearchedTag ? 'Dishes' : 'Best Dishes'}
           </TableHeadText>
-        </AbsoluteVStack>
+        </AbsoluteVStack> */}
 
         {!!dishes[0]?.name &&
           dishes.map((dish, i) => {

@@ -129,7 +129,7 @@ const HomePageRestaurant = memo(
             />
           </Suspense>
 
-          <Spacer size="xl" />
+          <Spacer size="md" />
 
           <Suspense fallback={<LoadingItem />}>
             <HStack justifyContent="center">
