@@ -3,7 +3,6 @@ import {
   RestaurantOnlyIds,
   RestaurantSearchArgs,
   Tag,
-  client,
   resetQueryCache,
   search,
   slugify,
@@ -17,16 +16,8 @@ import {
 import { HistoryItem, NavigateItem } from '@dish/router'
 import { Toast } from '@dish/ui'
 import { isEqual } from '@o/fast-compare'
-import { Cache } from '@o/gqless'
 import _, { clamp, cloneDeep, findLast, isPlainObject, last } from 'lodash'
-import {
-  Action,
-  AsyncAction,
-  Config,
-  IConfig,
-  IContext,
-  derived,
-} from 'overmind'
+import { Action, AsyncAction, Config, IContext, derived } from 'overmind'
 import { Keyboard } from 'react-native'
 
 import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
@@ -59,8 +50,6 @@ import { isSearchBarTag } from './isSearchBarTag'
 import { NavigableTag } from './NavigableTag'
 import { reverseGeocode } from './reverseGeocode'
 import { router } from './router'
-import { tagFilters } from './tagFilters'
-import { tagLenses } from './tagLenses'
 
 export const state: HomeState = {
   started: false,

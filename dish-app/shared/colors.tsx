@@ -30,10 +30,10 @@ export const allLightColors = [
 ]
 
 export const yellow = '#E8DCAD'
-export const green = `#53C4A4`
+export const green = `#52A558`
 export const red = `#C05D5D`
 export const grey = `#aaa`
-export const orange = '#BD5C16'
+export const orange = '#A74F10'
 export const blue = '#164ABD'
 export const purple = '#6C16BD'
 

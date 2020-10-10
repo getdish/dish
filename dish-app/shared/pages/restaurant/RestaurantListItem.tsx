@@ -445,14 +445,16 @@ const RestaurantListItemContent = memo(
               <Spacer size="xl" />
 
               <HStack marginTop={10} marginLeft={25}>
-                <RestaurantTagsRow
-                  size="sm"
-                  restaurantSlug={restaurantSlug}
-                  restaurantId={restaurant.id}
-                  spacing={10}
-                  grid
-                  max={4}
-                />
+                <HStack>
+                  <RestaurantTagsRow
+                    size="sm"
+                    restaurantSlug={restaurantSlug}
+                    restaurantId={restaurant.id}
+                    spacing={10}
+                    grid
+                    max={4}
+                  />
+                </HStack>
               </HStack>
 
               <VStack

@@ -6,9 +6,7 @@ import { tagLenses } from './tagLenses'
 export const initialHomeState: HomeStateItemHome = {
   id: '0',
   type: 'home',
-  activeTagIds: {
-    [getTagId(tagLenses[0])]: true,
-  },
+  activeTagIds: {},
   searchQuery: '',
   results: [],
   ...getDefaultLocation(),

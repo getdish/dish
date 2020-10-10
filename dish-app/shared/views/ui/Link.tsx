@@ -10,6 +10,18 @@ import { RoutesTable, router } from '../../state/router'
 import { LinkProps } from './LinkProps'
 import { getNormalizeLinkProps } from './useNormalizedLink'
 
+function nav(navItem: any, linkProps: any, props: any, e: any) {
+  if (linkProps.onPress || props.onClick) {
+    e.navigate = () => router.navigate(navItem)
+    props.onClick?.(e!)
+    linkProps.onPress?.(e)
+  } else {
+    if (!props.preventNavigate && !!navItem.name) {
+      router.navigate(navItem)
+    }
+  }
+}
+
 export const useLink = (props: LinkProps<any, any>) => {
   const forceUpdate = useForceUpdate()
   const linkProps = getNormalizeLinkProps(props, forceUpdate)
@@ -40,23 +52,11 @@ export const useLink = (props: LinkProps<any, any>) => {
         () => sleep(50),
         () => {
           cancel.current = null
-          nav()
+          nav(navItem, linkProps, props, e)
         },
       ])
     } else {
-      nav()
-    }
-
-    function nav() {
-      if (linkProps.onPress || props.onClick) {
-        e.navigate = () => router.navigate(navItem)
-        props.onClick?.(e!)
-        linkProps.onPress?.(e)
-      } else {
-        if (!props.preventNavigate && !!navItem.name) {
-          router.navigate(navItem)
-        }
-      }
+      nav(navItem, linkProps, props, e)
     }
   }
 

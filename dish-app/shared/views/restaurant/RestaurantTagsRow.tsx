@@ -1,5 +1,6 @@
-import { graphql } from '@dish/graph'
+import { graphql, order_by } from '@dish/graph'
 import { Spacer, StackProps, VStack } from '@dish/ui'
+import { sortBy } from 'lodash'
 import React, { memo } from 'react'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -37,7 +38,7 @@ export const RestaurantTagsRow = memo(
     } else {
       const restaurant = useRestaurantQuery(restaurantSlug)
       const restaurantTags = restaurant.tags({
-        limit: 10,
+        limit: props.max,
         where: {
           tag: {
             type: {
@@ -45,6 +46,7 @@ export const RestaurantTagsRow = memo(
             },
           },
         },
+        order_by: [{ score: order_by.desc }],
       })
       tags = restaurantTags.map((tag) => ({
         rank: tag.rank,

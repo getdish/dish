@@ -65,7 +65,7 @@ export const getNextState = (navState: HomeStateNav) => {
 
   for (const tag of allTags) {
     const key = getTagId(tag)
-    if (key.includes('no-slug')) {
+    if (key === 'no-slug') {
       console.warn('unusable tag for next state:', tag)
       continue
     }

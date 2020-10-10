@@ -16,7 +16,7 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 export const RestaurantOverview = memo(
   graphql(function RestaurantOverview({
     restaurantSlug,
-    maxChars = 150,
+    maxChars = 250,
     limit = 2,
     inline,
   }: {
@@ -26,19 +26,25 @@ export const RestaurantOverview = memo(
     maxChars?: number
   }) {
     const restaurant = useRestaurantQuery(restaurantSlug)
-    const headlines = restaurant.headlines() ?? defaultListItems
-    // const summary = restaurant.summary()
-    const shownHeadlines = headlines.slice(0, limit)
+    const headlines = (restaurant.headlines() ?? defaultListItems).map(
+      (x) => x.sentence
+    )
+    const summary = restaurant.summary ?? ''
+    const shownHeadlines = (summary
+      ? [summary, ...headlines]
+      : headlines
+    ).slice(0, limit)
+
     if (inline) {
       return (
         <VStack
           maxWidth="100%"
-          minHeight={90 + (limit - 1) * 40}
+          minHeight={120 + (limit - 1) * 40}
           position="relative"
           flex={1}
         >
-          <AbsoluteVStack top={-20} left={-28}>
-            <Text fontSize={60} opacity={0.2}>
+          <AbsoluteVStack top={-20} left={-30}>
+            <Text fontSize={60} opacity={0.08}>
               &ldquo;
             </Text>
           </AbsoluteVStack>
@@ -48,18 +54,18 @@ export const RestaurantOverview = memo(
                 <Paragraph
                   size={i == 0 ? 1.1 : 1}
                   opacity={i === 0 ? 1 : 0.7}
-                  height={i == 0 ? 86 : 'auto'}
+                  height={i == 0 ? 118 : 'auto'}
                   overflow="hidden"
                   // react native doesnt like using this as a prop...
                   {...(i !== 0 && {
                     ellipse: true,
                   })}
                   {...(i === 0 && {
-                    numberOfLines: 3,
+                    numberOfLines: 4,
                   })}
                 >
                   {ellipseText(
-                    item.sentence
+                    item
                       .replace(/\n/g, ' ')
                       .replace(/[^\\/$a-z0-9 \,\.]+/gi, '')
                       .replace(/\s{2,}/g, ' ')

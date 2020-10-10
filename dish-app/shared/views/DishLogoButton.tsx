@@ -25,7 +25,7 @@ export const DishLogoButton = memo(() => {
   const isReallySmall = useIsReallyNarrow()
   return (
     <VStack
-      className="ease-in-out-faster"
+      className="ease-in-out-fast"
       width={
         isReallySmall ? logoStyles.reallySmall.width : logoStyles.default.width
       }
