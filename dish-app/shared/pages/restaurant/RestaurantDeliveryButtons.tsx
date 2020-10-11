@@ -3,7 +3,7 @@ import { HStack, Spacer, StackProps, Text, Tooltip } from '@dish/ui'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
 
-import { bgLight } from '../../colors'
+import { bgLight, blue } from '../../colors'
 import { isWeb } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { SmallButton } from '../../views/ui/SmallButton'
@@ -62,7 +62,7 @@ const RestaurantDeliveryButton = ({
   showLabels,
 }: Props & { source: any }) => {
   const contents = (
-    <SmallButton href={source.url}>
+    <SmallButton backgroundColor="transparent" href={source.url}>
       <Image
         accessibilityLabel={source.name}
         source={{ uri: source.image }}
@@ -78,8 +78,8 @@ const RestaurantDeliveryButton = ({
       />
       {showLabels && (
         <>
-          <Spacer size={6} />
-          <Text opacity={1} ellipse fontSize={16} fontWeight="400">
+          <Spacer size={8} />
+          <Text opacity={1} ellipse fontSize={14} fontWeight="400" color={blue}>
             {source.name}
           </Text>
         </>

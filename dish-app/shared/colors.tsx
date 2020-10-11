@@ -34,7 +34,7 @@ export const green = `#52A558`
 export const red = `#C05D5D`
 export const grey = `#aaa`
 export const orange = '#A74F10'
-export const blue = '#164ABD'
+export const blue = '#214EB1'
 export const purple = '#6C16BD'
 
 export const darkGreen = `#52A558`

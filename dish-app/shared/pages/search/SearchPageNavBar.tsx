@@ -16,7 +16,7 @@ import { titleHeight } from './titleHeight'
 export const SearchPageNavBar = (props: { id: string }) => {
   const isSmall = useIsNarrow()
   const insets = useSafeArea()
-  const lensergb = useCurrentLenseColor()
+  // const lensergb = useCurrentLenseColor()
   const borderRadius = isSmall ? 20 : 0
   const drawerStore = useStore(BottomDrawerStore)
 

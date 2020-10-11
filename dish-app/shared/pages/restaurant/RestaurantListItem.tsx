@@ -223,7 +223,6 @@ const RestaurantListItemContent = memo(
             paddingTop={10}
             marginLeft={-pad}
             paddingLeft={pad}
-            paddingBottom={12}
             width={950}
             position="relative"
           >
@@ -243,6 +242,7 @@ const RestaurantListItemContent = memo(
                       activeTagIds={tagIds ?? {}}
                     />
                   </VStack>
+
                   <Spacer size="sm" />
 
                   {/* SECOND LINK WITH actual <a /> */}
@@ -266,6 +266,7 @@ const RestaurantListItemContent = memo(
                         <RankView rank={rank} />
                         <Spacer size="md" />
                         <HStack
+                          transform={[{ translateY: -10 }]}
                           padding={8}
                           margin={-8}
                           borderRadius={8}
@@ -304,9 +305,8 @@ const RestaurantListItemContent = memo(
               paddingRight={20}
               marginTop={isSmall ? -6 : 0}
               marginBottom={isSmall ? -12 : 0}
+              transform={[{ translateY: -10 }]}
             >
-              <Spacer size={2} />
-
               <HStack alignItems="center" cursor="pointer" spacing="lg">
                 <Suspense fallback={<Spacer size={44} />}>
                   <RestaurantFavoriteButton
@@ -574,7 +574,7 @@ const RestaurantPeekDishes = memo(
         pointerEvents="auto"
         padding={20}
         paddingVertical={40}
-        marginTop={-112}
+        marginTop={-90}
         marginBottom={-40}
         height={dishSize + 80}
         spacing={spacing}
@@ -606,7 +606,7 @@ const RestaurantPeekDishes = memo(
                       : dishSize * 0.9
                     : dishSize
                 }
-                marginTop={foundMatchingSearchedDish && i > 0 ? 10 : 0}
+                marginTop={foundMatchingSearchedDish ? (i > 0 ? 0 : -10) : 0}
                 restaurantSlug={props.restaurantSlug}
                 restaurantId={props.restaurantId}
                 dish={dish}

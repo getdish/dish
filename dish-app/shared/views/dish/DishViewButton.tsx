@@ -27,7 +27,7 @@ export const DishViewButton = memo(
         paddingVertical={8}
         paddingHorizontal={12}
         alignItems="center"
-        borderRadius={100}
+        borderRadius={10}
         tag={{ type: 'dish', name }}
         {...rest}
       >

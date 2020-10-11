@@ -23,6 +23,7 @@ type RestaurantHeaderProps = {
   size?: 'sm' | 'md'
   below?: any
   showImages?: boolean
+  color?: string
 }
 
 export const RestaurantHeader = (props: RestaurantHeaderProps) => {
@@ -37,6 +38,7 @@ const RestaurantHeaderContent = memo(
       after,
       below,
       afterAddress,
+      color,
       showImages,
       size,
     }: RestaurantHeaderProps) => {
@@ -82,6 +84,7 @@ const RestaurantHeaderContent = memo(
                       lineHeight={42}
                       fontSize={fontSize}
                       fontWeight="700"
+                      color={color ?? '#000'}
                     >
                       {restaurant.name}
                     </Text>
@@ -104,7 +107,7 @@ const RestaurantHeaderContent = memo(
                             restaurantSlug={restaurantSlug}
                           />
                         </HStack>
-                        <Spacer size="md" />
+                        <Spacer size="xs" />
                         <HStack flexWrap="wrap" alignItems="center">
                           <VStack marginRight={6} marginBottom={10}>
                             <RestaurantAddress
@@ -116,6 +119,7 @@ const RestaurantHeaderContent = memo(
                             />
                           </VStack>
                           <SmallLinkButton
+                            backgroundColor="transparent"
                             name="restaurantHours"
                             params={{ slug: restaurantSlug }}
                             fontSize={14}

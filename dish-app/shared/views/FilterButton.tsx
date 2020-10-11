@@ -1,43 +1,46 @@
 import { Tag } from '@dish/graph'
 import { Clock, DollarSign, ShoppingBag } from '@dish/react-feather'
-import { HStack, HoverablePopover, Spacer, VStack } from '@dish/ui'
+import { HStack, HoverablePopover, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 import { isWeb } from '../constants'
 import { useIsNarrow } from '../hooks/useIs'
 import { SearchPageDeliveryFilterButtons } from '../pages/search/SearchPageDeliveryFilterButtons'
 import { tagDisplayNames } from '../state/tagDisplayName'
-import { LinkButton } from './ui/LinkButton'
 import { LinkButtonProps } from './ui/LinkProps'
-import { SmallButton } from './ui/SmallButton'
+import { SmallLinkButton } from './ui/SmallButton'
 
 export const FilterButton = memo(
   ({
     tag,
     isActive,
-    zIndex,
-    position,
-    margin,
-    flex,
+    color,
+    fontSize,
+    fontWeight,
+    lineHeight,
     ...rest
-  }: LinkButtonProps & { tag: Tag; isActive: boolean }) => {
+  }: LinkButtonProps & { tag: Tag; isActive: boolean; color?: string }) => {
     const isSmall = useIsNarrow()
     let content: any = rest.children ?? tagDisplayNames[tag.name] ?? tag.name
 
     const iconElement = (() => {
       switch (tag.name) {
         case 'Open':
-          return <Clock size={18} />
+          return <Clock size={18} color={color} />
         case 'Delivery':
-          return <ShoppingBag size={18} />
+          return <ShoppingBag size={18} color={color} />
         case 'price-low':
-          return <DollarSign size={18} />
+          return <DollarSign size={18} color={color} />
       }
     })()
 
     if (isSmall) {
       content = iconElement
     } else {
+      content = (
+        <Text {...{ color, fontSize, fontWeight, lineHeight }}>{content}</Text>
+      )
+
       if (tag.name !== 'price-low') {
         content = (
           <HStack>
@@ -46,28 +49,26 @@ export const FilterButton = memo(
             {content}
           </HStack>
         )
-      } else {
-        content = <>{content}</>
       }
     }
 
     content = (
-      <LinkButton {...{ zIndex, flex, position, margin }} tag={tag}>
-        <SmallButton
-          backgroundColor="transparent"
-          fontSize={14}
-          fontWeight="700"
-          isActive={isActive}
-          flex={flex}
-          {...rest}
-        >
-          {isWeb ? (
-            content
-          ) : (
-            <VStack transform={[{ translateY: 7 }]}>{content}</VStack>
-          )}
-        </SmallButton>
-      </LinkButton>
+      <SmallLinkButton
+        backgroundColor="transparent"
+        fontSize={14}
+        fontWeight="700"
+        alignItems="center"
+        justifyContent="center"
+        isActive={isActive}
+        tag={tag}
+        {...rest}
+      >
+        {isWeb ? (
+          content
+        ) : (
+          <VStack transform={[{ translateY: 7 }]}>{content}</VStack>
+        )}
+      </SmallLinkButton>
     )
 
     if (tag.name === 'Delivery') {
@@ -75,7 +76,7 @@ export const FilterButton = memo(
         <HoverablePopover
           noArrow
           allowHoverOnContent
-          contents={<SearchPageDeliveryFilterButtons />}
+          contents={<SearchPageDeliveryFilterButtons {...rest} />}
         >
           {content}
         </HoverablePopover>

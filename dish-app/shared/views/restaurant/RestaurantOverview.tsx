@@ -35,7 +35,7 @@ export const RestaurantOverview = memo(
     if (summary) {
       return (
         <HStack flex={1} overflow="hidden">
-          <Paragraph size={1.1} opacity={1} height={122} overflow="hidden">
+          <Paragraph size={1.1} opacity={1} height={116} overflow="hidden">
             {summary
               .split('. ')
               .map((sentence) => capitalize(sentence.trim()))
@@ -56,7 +56,7 @@ export const RestaurantOverview = memo(
       return (
         <VStack
           maxWidth="100%"
-          minHeight={120 + (limit - 1) * 40}
+          minHeight={118 + (limit - 1) * 40}
           position="relative"
           flex={1}
         >
@@ -71,7 +71,7 @@ export const RestaurantOverview = memo(
                 <Paragraph
                   size={i == 0 ? 1.1 : 1}
                   opacity={i === 0 ? 1 : 0.7}
-                  height={i == 0 ? 118 : 'auto'}
+                  height={i == 0 ? 114 : 'auto'}
                   overflow="hidden"
                   // react native doesnt like using this as a prop...
                   {...(i !== 0 && {

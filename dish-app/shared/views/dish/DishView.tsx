@@ -125,7 +125,7 @@ export const DishView = memo(
           isHovered={isHovered}
           backgroundColor={backgroundColor}
           borderColor={backgroundColor}
-          borderWidth={2}
+          // borderWidth={4}
           // {...(selected && {
           //   borderColor: 'blue',
           // })}

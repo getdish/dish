@@ -14,40 +14,37 @@ export const Squircle = ({
   outside?: any
 }) => {
   return (
-    <>
-      {/* frame (shadow) */}
+    <VStack
+      width={width}
+      height={height}
+      borderRadius={borderRadius}
+      position="relative"
+      // shadowRadius={3}
+      // shadowOffset={{ width: 0, height: 1 }}
+      // shadowColor="rgba(0,0,0,0.3)"
+      backgroundColor="#111"
+      {...(isHovered && {
+        zIndex: 10000,
+        shadowRadius: 30,
+        shadowOffset: { width: 0, height: 1 },
+        shadowColor: 'rgba(0,0,0,0.15)',
+      })}
+      {...rest}
+    >
+      {/* frame (inner) */}
       <VStack
-        width={width}
-        height={height}
-        borderRadius={borderRadius}
-        position="relative"
-        shadowRadius={3}
-        shadowOffset={{ width: 0, height: 1 }}
-        shadowColor="rgba(0,0,0,0.3)"
-        backgroundColor="#111"
-        {...(isHovered && {
-          zIndex: 10000,
-          shadowRadius: 6,
-          shadowOffset: { width: 0, height: 1 },
-          shadowColor: 'rgba(0,0,0,0.15)',
-        })}
-        {...rest}
+        shadowColor="rgba(0,0,0,0.25)"
+        flex={1}
+        borderRadius={borderRadius - (rest.borderWidth ?? 0)}
+        overflow="hidden"
+        alignItems="center"
+        justifyContent="center"
+        pointerEvents="none"
       >
-        {/* frame (inner) */}
-        <VStack
-          shadowColor="rgba(0,0,0,0.25)"
-          flex={1}
-          borderRadius={borderRadius - (rest.borderWidth ?? 0)}
-          overflow="hidden"
-          alignItems="center"
-          justifyContent="center"
-          pointerEvents="none"
-        >
-          {children}
-          <AbsoluteVStack fullscreen className="box-shadow-inset-large" />
-        </VStack>
-        {outside}
+        {children}
+        <AbsoluteVStack fullscreen className="box-shadow-inset-large" />
       </VStack>
-    </>
+      {outside}
+    </VStack>
   )
 }

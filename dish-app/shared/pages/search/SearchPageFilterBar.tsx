@@ -2,6 +2,8 @@ import { HStack, StackProps } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
 
+import { rgbString } from '../../helpers/rgbString'
+import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useIsNarrow } from '../../hooks/useIs'
 import { getTagId } from '../../state/getTagId'
 import { HomeActiveTagsRecord } from '../../state/home-types'
@@ -12,6 +14,7 @@ type FilterBarProps = { activeTagIds: HomeActiveTagsRecord }
 
 export const SearchPageFilterBar = memo(({ activeTagIds }: FilterBarProps) => {
   const isSmall = useIsNarrow()
+  const color = useCurrentLenseColor()
 
   if (isSmall) {
     return <HomePageFilterBarSmall activeTagIds={activeTagIds} />
@@ -44,6 +47,7 @@ export const SearchPageFilterBar = memo(({ activeTagIds }: FilterBarProps) => {
                   {...(hasNext && { marginRight: 0 })}
                   {...extraProps}
                   position="relative"
+                  color={rgbString(color)}
                   zIndex={100 - index - groupIndex + (isActive ? 1 : 0)}
                 />
               )

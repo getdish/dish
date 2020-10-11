@@ -35,13 +35,13 @@ const CardFrame = (props: any) => {
       borderRadius={borderRadius}
       width={width}
       height={height}
-      backgroundColor={lightYellow}
+      backgroundColor="#fff"
       shadowColor="#000"
       shadowOpacity={0.1}
       shadowRadius={5}
       shadowOffset={{ height: 2, width: 0 }}
       borderWidth={4}
-      borderColor={yellow}
+      borderColor="rgba(0,0,0,0.1)"
       position="relative"
       {...props}
     />
