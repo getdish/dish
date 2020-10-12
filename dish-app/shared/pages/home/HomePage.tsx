@@ -402,14 +402,12 @@ const TopDishesCuisineItem = memo(
           position="relative"
         >
           <ContentScrollViewHorizontal style={{ paddingVertical: 15 }}>
-            <HStack alignItems="center" spacing={22} paddingRight={20}>
-              <TopDishesTrendingRestaurants country={country} />
+            <HStack alignItems="center" spacing={14} paddingRight={20}>
+              <VStack marginRight={6}>
+                <TopDishesTrendingRestaurants country={country} />
+              </VStack>
 
               {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
-                // console.log(
-                //   'top_dish.best_restaurants',
-                //   top_dish.best_restaurants
-                // )
                 return (
                   <HStack
                     transform={[{ translateY: index % 2 == 0 ? -3 : 3 }]}

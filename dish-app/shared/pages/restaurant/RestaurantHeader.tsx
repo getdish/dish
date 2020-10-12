@@ -4,7 +4,7 @@ import { HStack, Spacer, StackProps, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
 
-import { drawerBorderRadius } from '../../constants'
+import { drawerBorderRadius, isWeb } from '../../constants'
 import { useAppDrawerWidthInner } from '../../hooks/useAppDrawerWidth'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemRestaurant } from '../../state/home-types'
@@ -66,7 +66,11 @@ const RestaurantHeaderContent = memo(
           minWidth={minWidth}
         >
           <ContentScrollViewHorizontal
-            style={{ width: '100%', maxWidth: '100vw', minHeight: 450 }}
+            style={{
+              width: '100%',
+              maxWidth: isWeb ? '100vw' : '100%',
+              minHeight: 450,
+            }}
             contentContainerStyle={{
               width,
             }}

@@ -44,6 +44,7 @@ export const RestaurantButton = memo(
           paddingHorizontal={7}
           paddingVertical={8}
           borderRadius={6}
+          minWidth={150}
           hoverStyle={{
             borderColor: '#eee',
             shadowColor: 'rgba(0,0,0,0.1)',
@@ -61,6 +62,7 @@ export const RestaurantButton = memo(
             maxWidth={isWeb ? 200 : 180}
             flex={1}
             alignItems="center"
+            justifyContent="flex-end"
             position="relative"
           >
             {!!trending && (

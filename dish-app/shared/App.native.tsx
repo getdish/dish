@@ -17,6 +17,7 @@ import { PagesStackView } from './pages/PagesStackView'
 import RestaurantHoursPage from './pages/restaurantHours/RestaurantHoursPage'
 import RestaurantReviewPage from './pages/restaurantReview/RestaurantReviewPage'
 import { om } from './state/om'
+import { setOmStatic } from './state/omStatic'
 import { Route } from './views/router/Route'
 
 LogBox.ignoreAllLogs(true)
@@ -27,6 +28,7 @@ export default function App() {
   useEffect(() => {
     om.initialized.then(() => {
       setLoaded(true)
+      setOmStatic(om)
     })
   }, [])
 
@@ -38,7 +40,7 @@ export default function App() {
     <>
       <StatusBar style="dark" />
       <SafeAreaProvider>
-        <Provider value={window['om']}>
+        <Provider value={om}>
           <AppRoot>
             <View style={styles.container}>
               <Suspense fallback={null}>
