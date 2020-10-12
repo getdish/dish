@@ -12,12 +12,12 @@ import React, { memo, useState } from 'react'
 import { View } from 'react-native'
 
 import { lightGreen, lightYellow } from '../../colors'
+import { numberFormat } from '../../helpers/numberFormat'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { omStatic } from '../../state/omStatic'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { TextStrong } from '../../views/ui/TextStrong'
-import { numberFormat } from './numberFormat'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
 import {
   useTotalExternalReviews,
