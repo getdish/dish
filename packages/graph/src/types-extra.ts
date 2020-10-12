@@ -8,6 +8,7 @@ export type RestaurantOnlyIds = {
 }
 
 export type TagType =
+  | 'root'
   | 'lense'
   | 'filter'
   | 'continent'

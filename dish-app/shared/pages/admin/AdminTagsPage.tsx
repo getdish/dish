@@ -1,4 +1,3 @@
-import { sleep } from '@dish/async'
 import {
   Tag,
   TagRecord,
@@ -39,43 +38,40 @@ export default graphql(function AdminTagsPage() {
 })
 
 class AdminTagStore extends Store {
+  showCreate = false
   selectedId = ''
-  selectedTagNames: string[] = []
+  selectedByColumn: { name: string; type: TagType }[] = []
   forceRefreshColumnByType = ''
 
   draft: TagRecord = {
     type: 'continent',
   }
 
+  setShowCreate(next: boolean) {
+    this.showCreate = next
+  }
+
   setDraft(next: Partial<TagRecord>) {
     this.draft = { ...this.draft, ...next }
   }
 
-  setSelected({ id, col, name }: { id: string; col: number; name: string }) {
+  setSelected({
+    id,
+    col,
+    name,
+    type,
+  }: {
+    id: string
+    col: number
+    name: string
+    type: TagType
+  }) {
+    console.log('setting selected', name, type, id)
     this.selectedId = id
-    this.selectedTagNames[col] = name
-    this.selectedTagNames = [...this.selectedTagNames]
+    this.selectedByColumn[col] = { name, type }
+    this.selectedByColumn = [...this.selectedByColumn]
   }
 }
-
-const Search = memo(
-  graphql<any>(() => {
-    const [search, setSearch] = useState('')
-    const searchDebounced = useDebounceValue(search, 200)
-    return (
-      <>
-        <TextInput
-          style={styles.textInput}
-          onChange={(e) => setSearch(e.target['value'])}
-          placeholder="Search all MenuItems"
-        />
-        <Suspense fallback={<LoadingItems />}>
-          <MenuItemsResults search={searchDebounced} />
-        </Suspense>
-      </>
-    )
-  })
-)
 
 const AdminTagsPageContent = graphql(() => {
   // useEffect(() => {
@@ -97,27 +93,34 @@ const AdminTagsPageContent = graphql(() => {
         <ScrollView horizontal>
           <HStack>
             <VerticalColumn>
-              <TagList column={0} type="continent" />
+              <TagList column={0} />
             </VerticalColumn>
 
             <VerticalColumn>
-              <TagList column={1} type="country" />
+              <TagList column={1} />
             </VerticalColumn>
 
             <VerticalColumn>
-              <TagList column={2} type="dish" />
+              <TagList column={2} />
             </VerticalColumn>
 
-            <VerticalColumn title="Manage Lenses">
+            <VerticalColumn>
+              <TagList column={3} />
+            </VerticalColumn>
+
+            {/* <VerticalColumn title="Manage Lenses">
               <TagList column={3} type="lense" />
-            </VerticalColumn>
+              <VerticalColumn title="Manage Filters">
+              <TagList column={3} type="filter" />
+              </VerticalColumn>
+            </VerticalColumn> */}
 
-            <VerticalColumn>
+            {/* <VerticalColumn>
               <Text>Search Menus</Text>
               <Suspense fallback={<LoadingItems />}>
                 <Search />
               </Suspense>
-            </VerticalColumn>
+            </VerticalColumn> */}
           </HStack>
         </ScrollView>
 
@@ -145,29 +148,18 @@ const AdminTagsPageContent = graphql(() => {
 })
 
 const TagList = memo(
-  graphql(({ type, column }: { type: TagType; column: number }) => {
-    // const lastRowIndex = useRowStore({ id: 'tags', column: column - 1 }, x => x.row)
+  graphql(({ column }: { column: number }) => {
     const lastRowSelection =
       (useStoreSelector(
         AdminTagStore,
-        (store) => store.selectedTagNames[column - 1] ?? ''
+        (store) => store.selectedByColumn[column - 1] ?? ''
       ) as any) ?? ''
 
+    const type = lastRowSelection.type ?? 'root'
     const [searchRaw, setSearch] = useState('')
+    const store = useStore(AdminTagStore)
+    console.log('lastRowSelection', lastRowSelection, store.selectedByColumn)
     const search = useDebounceValue(searchRaw, 100)
-    // const [newTag, setNewTag] = useState(null)
-    const [parent] = query.tag({
-      where: {
-        name: { _eq: lastRowSelection },
-      },
-      limit: 1,
-    })
-    const parentName = parent?.name
-    const parentId = parent?.id
-    const [contentKey, setContentKey] = useState(0)
-    const refresh = () => {
-      setContentKey(Math.random())
-    }
 
     return (
       <VStack flex={1} maxHeight="100%">
@@ -181,36 +173,27 @@ const TagList = memo(
             >
               <TextInput
                 placeholder="Search..."
-                style={[styles.textInput, { flex: 1, maxWidth: '90%' }]}
+                style={[styles.textInput, { flex: 1, maxWidth: '70%' }]}
                 onChangeText={(text) => {
                   setSearch(text)
                 }}
               />
-              {/* <SmallButton
+              <SmallButton
                 onPress={async () => {
-                  const name = search ?? `0 new ${Math.random()}`
-                  await tagInsert([
-                    {
-                      type,
-                      name,
-                      icon: '',
-                      parentId,
-                    },
-                  ])
-                  Toast.show(`Added ${name} under ${parentName}`)
-                  refresh()
+                  store.setDraft({ type })
+                  store.setShowCreate(true)
                 }}
               >
                 +
-              </SmallButton> */}
+              </SmallButton>
             </HStack>
           }
         >
-          {capitalize(type)} {lastRowSelection ? `(${lastRowSelection})` : ''}
+          {capitalize(type)}{' '}
+          {lastRowSelection ? `(${lastRowSelection.name})` : ''}
         </ColumnHeader>
         <Suspense fallback={<LoadingItems />}>
           <TagListContent
-            key={contentKey}
             search={search}
             // newTag={newTag}
             column={column}
@@ -236,7 +219,7 @@ const TagListContent = memo(
       column: number
       type: TagType
       newTag?: Tag
-      lastRowSelection: string
+      lastRowSelection: { name: string; type: TagType }
     }) => {
       const perPage = 50
       const { results, total, totalPages, page, setPage } = useQueryPaginated({
@@ -245,11 +228,22 @@ const TagListContent = memo(
         queryAggregate: query.tag_aggregate,
         params: {
           where: {
-            type: { _eq: type },
-            ...(type !== 'continent' &&
-              type !== 'lense' &&
-              lastRowSelection && {
-                parent: { name: { _eq: lastRowSelection } },
+            ...(lastRowSelection && {
+              parent: {
+                name: { _eq: lastRowSelection.name },
+                type: { _eq: type },
+              },
+            }),
+            ...(!lastRowSelection && {
+              type: {
+                _eq: 'null',
+              },
+            }),
+            ...(!lastRowSelection &&
+              column === 0 && {
+                type: {
+                  _eq: 'root',
+                },
               }),
             ...(!!search && {
               name: {
@@ -269,11 +263,13 @@ const TagListContent = memo(
 
       const allResults = [{ id: 0, name: '' } as WithID<Tag>, ...results]
 
+      // refetch on every re-render so we dont have stale reads from gqless
       useEffect(() => {
-        console.log(
-          'tagStore.forceRefreshColumnByType',
-          tagStore.forceRefreshColumnByType
-        )
+        console.log('refertching')
+        refetch(results)
+      }, [lastRowSelection])
+
+      useEffect(() => {
         if (tagStore.forceRefreshColumnByType === type) {
           const res = refetch(results)
           console.log('res', res)
@@ -288,11 +284,6 @@ const TagListContent = memo(
           showsVerticalScrollIndicator={false}
           style={{ paddingBottom: 50 }}
         >
-          <PaginationNav
-            totalPages={totalPages}
-            setPage={setPage}
-            page={page}
-          />
           <HStack
             paddingVertical={2}
             alignItems="center"
@@ -302,8 +293,19 @@ const TagListContent = memo(
           >
             <Text opacity={0.5}>{total} total</Text>
           </HStack>
+          <PaginationNav
+            totalPages={totalPages}
+            setPage={setPage}
+            page={page}
+          />
           <Suspense fallback={<LoadingItems />}>
             {allResults.map((tag, row) => {
+              const selection = {
+                col: column,
+                id: tag.id,
+                type: tag.type as TagType,
+                name: tag.name ?? '',
+              }
               return (
                 <TagListItem
                   key={tag.id ?? row}
@@ -316,11 +318,7 @@ const TagListContent = memo(
                       parentId: tag.id,
                       type: 'dish',
                     })
-                    tagStore.setSelected({
-                      col: column,
-                      id: tag.id,
-                      name: tag.name ?? '',
-                    })
+                    tagStore.setSelected(selection)
                   }}
                 />
               )
@@ -376,18 +374,18 @@ const TagListItem = graphql(
 
 const TagEditColumn = memo(() => {
   const tagStore = useStore(AdminTagStore)
-  const [showCreate, setShowCreate] = useState(false)
   const setDraftDebounced = useDebounce((x) => tagStore.setDraft(x), 200)
-  console.log('tagStore', tagStore.draft)
 
   return (
     <VStack spacing="lg">
       <>
         <Text>Create</Text>
-        <SmallButton onPress={() => setShowCreate((x) => !x)}>
-          {showCreate ? 'Hide' : 'Create'}
+        <SmallButton
+          onPress={() => tagStore.setShowCreate(!tagStore.showCreate)}
+        >
+          {tagStore.showCreate ? 'Hide' : 'Create'}
         </SmallButton>
-        {showCreate && (
+        {tagStore.showCreate && (
           <>
             <TagCRUD tag={tagStore.draft} onChange={setDraftDebounced} />
             <SmallButton
@@ -554,6 +552,10 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
       backgroundColor="#fff"
       spacing={10}
     >
+      <TableRow label="ID">
+        <Text>{tag.id}</Text>
+      </TableRow>
+
       <TableRow label="Parent">
         <Text>Parent: {parentTag?.name}</Text>
         <SmallButton
@@ -594,9 +596,11 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
             onChange?.({ type: value })
           }}
         >
+          <option value="root">Root</option>
           <option value="continent">Continent</option>
           <option value="country">Country</option>
           <option value="dish">Dish</option>
+          <option value="filter">Filter</option>
           <option value="lense">Lense</option>
         </select>
       </TableRow>
@@ -628,6 +632,14 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
           </VStack>
         </ScrollView>
 
+        <TableRow label="ParentID">
+          <TextInput
+            style={styles.textInput}
+            onChange={(e) => onChange?.({ parentId: e.target['value'] })}
+            defaultValue={tag.parentId}
+          />
+        </TableRow>
+
         <TableRow label="Description">
           <TextInput
             style={styles.textInput}
@@ -636,7 +648,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
           />
         </TableRow>
 
-        {info.length && (
+        {!!info.length && (
           <ScrollView style={{ marginTop: 20, maxHeight: 300 }}>
             {info.map(({ name, description }, index) => {
               return (

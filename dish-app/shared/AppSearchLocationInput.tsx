@@ -146,7 +146,11 @@ export const AppSearchLocationInput = memo(() => {
               om.actions.home.moveMapToUserLocation()
             }}
           >
-            <Navigation size={20} opacity={0.5} color={blue} />
+            <Navigation
+              size={20}
+              opacity={0.5}
+              color={color === '#fff' ? '#fff' : blue}
+            />
           </Button>
         </HStack>
       </AppAutocompleteHoverableInput>
