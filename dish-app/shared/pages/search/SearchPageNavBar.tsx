@@ -68,6 +68,7 @@ const SearchPageNavBarContent = memo(({ stateId }: { stateId: string }) => {
         maxWidth="100%"
         minWidth="100%"
         paddingHorizontal={16}
+        pointerEvents="auto"
       >
         <HStack
           width="100%"

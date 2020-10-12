@@ -27,9 +27,7 @@ export const RestaurantOverview = memo(
     maxChars?: number
   }) {
     const restaurant = useRestaurantQuery(restaurantSlug)
-    const headlines = (restaurant.headlines() ?? defaultListItems).map(
-      (x) => x.sentence
-    )
+    const headlines = (restaurant.headlines() ?? []).map((x) => x.sentence)
     const summary = restaurant.summary ?? ''
 
     if (summary) {
@@ -43,6 +41,10 @@ export const RestaurantOverview = memo(
           </Paragraph>
         </HStack>
       )
+    }
+
+    if (headlines.length === 0) {
+      return null
     }
 
     // TODO deprecate this

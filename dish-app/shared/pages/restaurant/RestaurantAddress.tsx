@@ -4,7 +4,6 @@ import React from 'react'
 
 import { GeocodePlace } from '../../../shared/state/home-types'
 import { useIsNarrow } from '../../hooks/useIs'
-import { LinkSharedProps } from '../../views/ui/LinkProps'
 import { SmallLinkButton } from '../../views/ui/SmallButton'
 import { AddressSize, getAddressText } from './RestaurantAddressLinksRow'
 
@@ -20,12 +19,15 @@ export const RestaurantAddress = ({
   color?: string
 }) => {
   const isSmall = useIsNarrow()
-  const linkProps: LinkSharedProps = {
-    target: '_blank',
-    href: `https://www.google.com/maps/search/?q=${encodeURIComponent(
-      address
-    )}`,
-    children: (
+  return (
+    <SmallLinkButton
+      maxWidth={isSmall ? 160 : 200}
+      ellipse
+      backgroundColor="transparent"
+      href={`https://www.google.com/maps/search/?q=${encodeURIComponent(
+        address
+      )}`}
+    >
       <HStack alignItems="center" maxWidth="100%">
         <MapPin
           color={color}
@@ -36,15 +38,6 @@ export const RestaurantAddress = ({
           {getAddressText(currentLocationInfo, address, size)}
         </Text>
       </HStack>
-    ),
-  }
-
-  return (
-    <SmallLinkButton
-      maxWidth={isSmall ? 160 : 200}
-      ellipse
-      backgroundColor="transparent"
-      {...linkProps}
-    />
+    </SmallLinkButton>
   )
 }

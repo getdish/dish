@@ -2,7 +2,7 @@ import { query } from '@dish/graph'
 
 export const restaurantQuery = (slug: string) => {
   if (!slug) {
-    debugger
+    throw new Error(`No slug`)
   }
   return query.restaurant({
     where: {

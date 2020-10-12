@@ -16,7 +16,12 @@ type Props = StackProps & {
 }
 
 export const RestaurantDeliveryButtons = memo(
-  graphql(({ restaurantSlug, showLabels, label, ...props }: Props) => {
+  graphql(function RestaurantDeliveryButtons({
+    restaurantSlug,
+    showLabels,
+    label,
+    ...props
+  }: Props) {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const restaurantSources = restaurant.sources()
     const sources = getRestaurantDeliverySources(restaurantSources)
