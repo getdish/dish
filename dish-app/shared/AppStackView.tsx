@@ -1,9 +1,4 @@
-import {
-  AbsoluteVStack,
-  AnimatedVStack,
-  VStack,
-  useDebounceValue,
-} from '@dish/ui'
+import { AnimatedVStack, VStack, useDebounceValue } from '@dish/ui'
 import React, { Suspense, memo, useMemo } from 'react'
 
 import { isWeb, searchBarHeight } from './constants'
@@ -12,7 +7,6 @@ import { useIsNarrow } from './hooks/useIs'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { HomeStateItem, HomeStateItemSimple } from './state/home-types'
 import { useOvermind } from './state/om'
-import { omStatic } from './state/omStatic'
 import { ErrorBoundary } from './views/ErrorBoundary'
 
 export type StackItemProps<A> = {
@@ -28,8 +22,7 @@ export function AppStackView<A extends HomeStateItem>(props: {
 }) {
   // const currentStateStore = useStore(HomeStateStore)
   const om = useOvermind()
-  om.state.home.stateIds
-  const breadcrumbs = getBreadcrumbs(omStatic.state.home.states)
+  const breadcrumbs = getBreadcrumbs(om.state.home.states)
   const key = JSON.stringify(breadcrumbs.map((x) => x.id))
   const homeStates = useMemo(() => breadcrumbs, [key])
   const currentStates = useDebounceValue(homeStates, 80) ?? homeStates

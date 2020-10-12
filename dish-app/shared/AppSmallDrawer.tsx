@@ -15,15 +15,12 @@ export const AppSmallDrawer = (props: { children: any }) => {
     return omStatic.reaction(
       (state) => state.home.showAutocomplete,
       (show) => {
-        const isReallySmall = getIs('xs')
-        const isShort = getIs('sm')
-        const defaultSnapPoint = isShort && isReallySmall ? 0 : 1
         if (!!show) {
           // lastIndex = snapIndex
           drawerStore.setSnapPoint(0)
         } else {
           if (lastAutocomplete === 'search') {
-            drawerStore.setSnapPoint(defaultSnapPoint)
+            drawerStore.setSnapPoint(1)
           }
         }
         lastAutocomplete = show

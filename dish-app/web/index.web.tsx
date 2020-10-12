@@ -4,21 +4,14 @@ import './bootstrapEnv'
 
 import { sleep } from '@dish/async'
 import { startLogging } from '@dish/graph'
-import { LoadingItems, ToastRoot } from '@dish/ui'
-import { Provider } from 'overmind-react'
-import React, { Suspense } from 'react'
+import React from 'react'
 // @ts-ignore
 import { createRoot, hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
-import App from '../shared/App'
 import { OVERMIND_MUTATIONS, isWorker } from '../shared/constants'
-import { ErrorHandler } from '../shared/ErrorHandler'
-import AdminPage from '../shared/pages/admin/AdminPage'
-import { Shortcuts } from '../shared/Shortcuts'
 import { config, om } from '../shared/state/om'
-import { NotFoundPage } from '../shared/views/NotFoundPage'
-import { PrivateRoute, Route, RouteSwitch } from '../shared/views/router/Route'
+import { Root } from './Root'
 
 if (process.env.NODE_ENV === 'development' && !window['STARTED']) {
   startLogging()
@@ -26,32 +19,6 @@ if (process.env.NODE_ENV === 'development' && !window['STARTED']) {
 
 // register root component
 AppRegistry.registerComponent('dish', () => Root)
-
-function Root({ overmind }: { overmind?: any }) {
-  return (
-    <>
-      <ToastRoot />
-      <Shortcuts />
-      <Provider value={overmind}>
-        <ErrorHandler />
-        <Suspense fallback={<LoadingItems />}>
-          <RouteSwitch>
-            <Route name="notFound">
-              <NotFoundPage title="404 Not Found" />
-            </Route>
-            <PrivateRoute name="admin">
-              <AdminPage />
-            </PrivateRoute>
-            {/* home route last because it matches / */}
-            <Route name="home">
-              <App />
-            </Route>
-          </RouteSwitch>
-        </Suspense>
-      </Provider>
-    </>
-  )
-}
 
 // exports
 if (process.env.TARGET === 'ssr') {

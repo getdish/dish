@@ -17,7 +17,6 @@ import { groupBy, uniqBy } from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
 import { Image, Keyboard, ScrollView } from 'react-native'
 
-import { SearchBarStore } from './AppSearchBar'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import {
   isNative,
@@ -185,7 +184,7 @@ const AutocompleteContentsInner = memo(
         flex={1}
       >
         <AbsoluteVStack
-          backgroundColor={isSmall ? 'rgba(0,0,0,0.1)' : 'transparent'}
+          backgroundColor={'transparent'}
           pointerEvents="auto"
           width="100%"
           height="100%"
@@ -206,8 +205,6 @@ const AutocompleteContentsInner = memo(
             {...(!isSmall && {
               maxWidth: 540,
               maxHeight: `calc(100vh - ${top + 20}px)`,
-            })}
-            {...(!isSmall && {
               // @ts-ignore
               onMouseLeave: () => {
                 if (curPagePos.y > top) {
@@ -223,7 +220,6 @@ const AutocompleteContentsInner = memo(
             <VStack
               width="100%"
               height="100%"
-              maxHeight="90%"
               maxWidth="100%"
               pointerEvents="auto"
             >
@@ -234,7 +230,7 @@ const AutocompleteContentsInner = memo(
                 shadowColor="rgba(0,0,0,0.4)"
                 shadowRadius={18}
                 width="100%"
-                backgroundColor={isWeb ? 'rgba(0,0,0,0.9)' : 'rgba(0,0,0,0.5)'}
+                backgroundColor={isWeb ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.5)'}
                 height={isWeb ? 'auto' : '100%'}
                 minHeight={200}
                 padding={5}
@@ -255,9 +251,6 @@ const AutocompleteContentsInner = memo(
                     onPress={(e) => {
                       e.stopPropagation()
                       omStatic.actions.home.setShowAutocomplete(false)
-                      if (drawerStore.snapIndex === 0) {
-                        drawerStore.setSnapPoint(1)
-                      }
                     }}
                   />
                   <AutocompleteResults />
@@ -274,7 +267,6 @@ const AutocompleteContentsInner = memo(
 const AutocompleteResults = memo(() => {
   const om = useOvermind()
   const drawerStore = useStore(BottomDrawerStore)
-  const searchBarStore = useStore(SearchBarStore)
   const {
     showAutocomplete,
     autocompleteIndex,
@@ -329,9 +321,7 @@ const AutocompleteResults = memo(() => {
                 hideAutocomplete()
                 if (showLocation) {
                   om.actions.home.setLocation(result.name)
-
-                  // go back to showing search by default
-                  searchBarStore.setShowLocation(false)
+                  om.actions.home.setShowAutocomplete(false)
 
                   // changing location = change drawer to show
                   if (om.state.home.drawerSnapPoint === 0) {

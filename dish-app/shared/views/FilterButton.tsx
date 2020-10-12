@@ -16,7 +16,7 @@ export const FilterButton = memo(
     isActive,
     color,
     fontSize,
-    fontWeight,
+    fontWeight = '500',
     lineHeight,
     ...rest
   }: LinkButtonProps & { tag: Tag; isActive: boolean; color?: string }) => {

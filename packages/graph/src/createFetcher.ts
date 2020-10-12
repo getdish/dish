@@ -16,6 +16,10 @@ type QueryFetcherOptions = {
 
 const endpoint = getGraphEndpoint()
 
+if (process.env.NODE_ENV === 'development') {
+  console.log('graph endpoint', endpoint)
+}
+
 export const createFetcher = (
   type: 'query' | 'mutation'
 ): QueryFetcherWithOptions => {

@@ -8,9 +8,10 @@ export function ErrorHandler() {
 
   useOnMount(() => {
     onGraphError((error: HasuraError) => {
-      console.warn('got errors', error.errors)
+      const errors = error.errors
+      console.warn('got errors', errors)
 
-      if (error.errors.some((err) => err.message.includes('JWTExpired')))
+      if (errors.some((err) => err.message.includes('JWTExpired')))
         for (const err of errors) {
           console.warn('HANDLING JWT ERR')
           Toast.show(`Login has expired`)

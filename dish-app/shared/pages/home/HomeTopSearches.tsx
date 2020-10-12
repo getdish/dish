@@ -42,7 +42,7 @@ export const HomeTopSearches = memo(() => {
             borderWidth={1}
             position="relative"
             overflow="hidden"
-            borderColor={bgLight}
+            borderColor="transparent"
             hoverStyle={{
               borderColor: rgbString ? `rgba(${rgbString}, 0.3)` : bgLightHover,
             }}

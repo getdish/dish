@@ -15,7 +15,6 @@ import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchLocationInput } from './AppSearchLocationInput'
 import {
-  pageWidthMax,
   searchBarHeight,
   searchBarMaxWidth,
   searchBarTopOffset,
@@ -25,6 +24,7 @@ import { useIsNarrow, useIsReallyNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
 import { useOvermind } from './state/om'
+import { omStatic } from './state/omStatic'
 import { DishLogoButton } from './views/DishLogoButton'
 import { LinkButton } from './views/ui/LinkButton'
 
@@ -48,8 +48,6 @@ export const parentIds = {
   small: 'searchbar-small',
   large: 'searchbar-large',
 }
-
-const borderRadius = 14
 
 export const HomeSearchBarFloating = () => {
   const isSmall = useIsNarrow()
@@ -133,23 +131,13 @@ export const HomeSearchBarFloating = () => {
   )
 }
 
-export class SearchBarStore extends Store {
-  showLocation = false
-
-  setShowLocation(val: boolean) {
-    this.showLocation = val
-  }
-}
-
 const HomeSearchBar = memo(() => {
   const om = useOvermind()
-  const locationInputStore = useStore(InputStore, { name: 'location' })
-  const inputStore = useStore(InputStore, { name: 'search' })
   const focus = om.state.home.showAutocomplete
-  const store = useStore(SearchBarStore)
   const isSmall = useIsNarrow()
   const isReallySmall = useIsReallyNarrow()
   const { color, background } = useSearchBarTheme()
+  const showLocation = om.state.home.showAutocomplete === 'location'
 
   return (
     <HStack
@@ -185,20 +173,18 @@ const HomeSearchBar = memo(() => {
         {/* Search Input Start */}
         {isReallySmall && !isWeb && (
           <>
-            {store.showLocation && <AppSearchLocationInput />}
-            {!store.showLocation && <AppSearchInput />}
+            {showLocation && <AppSearchLocationInput />}
+            {!showLocation && <AppSearchInput />}
           </>
         )}
 
         {isReallySmall && isWeb && (
           <>
             {/* keep both in dom so we have access to ref */}
-            <VStack display={store.showLocation ? 'contents' : ('none' as any)}>
+            <VStack display={showLocation ? 'contents' : ('none' as any)}>
               <AppSearchLocationInput />
             </VStack>
-            <VStack
-              display={!store.showLocation ? 'contents' : ('none' as any)}
-            >
+            <VStack display={!showLocation ? 'contents' : ('none' as any)}>
               <AppSearchInput />
             </VStack>
           </>
@@ -233,36 +219,16 @@ const HomeSearchBar = memo(() => {
       {isReallySmall && (
         <LinkButton
           onPress={() => {
-            const next = !store.showLocation
-            // todo put this in effect...
-            if (next) {
-              locationInputStore.node?.focus()
-            } else {
-              inputStore.node?.focus()
-            }
-            store.setShowLocation(next)
+            omStatic.actions.home.setShowAutocomplete(
+              showLocation ? 'search' : 'location'
+            )
           }}
           padding={12}
         >
-          {store.showLocation ? (
+          {showLocation ? (
             <Search color={color} size={22} opacity={0.65} />
           ) : (
-            <VStack width={22} height={22} position="relative">
-              {/* <AbsoluteVStack
-                bottom={-10}
-                left={-10}
-                backgroundColor={background}
-                width={22}
-                height={22}
-                zIndex={-2}
-                alignItems="center"
-                justifyContent="center"
-                borderRadius={20}
-              >
-                <Search color={color} size={20} opacity={0.65} />
-              </AbsoluteVStack> */}
-              <Map color={color} size={22} opacity={0.65} />
-            </VStack>
+            <Map color={color} size={22} opacity={0.65} />
           )}
         </LinkButton>
       )}

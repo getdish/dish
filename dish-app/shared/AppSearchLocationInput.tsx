@@ -6,6 +6,7 @@ import { TextInput, TouchableOpacity } from 'react-native'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { inputTextStyles } from './AppSearchInput'
+import { blue } from './colors'
 import { isWeb } from './constants'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
@@ -20,6 +21,20 @@ export const AppSearchLocationInput = memo(() => {
   const { theme, color, background } = useSearchBarTheme()
   const [locationSearch, setLocationSearch] = useState('')
   const { currentLocationName } = om.state.home.currentState
+
+  const showAutocomplete = om.state.home.showAutocomplete === 'location'
+  console.log('show location', showAutocomplete, om.state.home.showAutocomplete)
+  useEffect(() => {
+    if (showAutocomplete) {
+      const tm = setTimeout(() => {
+        console.log('focusing')
+        inputStore.node?.focus()
+      }, 100)
+      return () => {
+        clearTimeout(tm)
+      }
+    }
+  }, [showAutocomplete])
 
   // one way sync down for more perf
   useEffect(() => {
@@ -89,8 +104,8 @@ export const AppSearchLocationInput = memo(() => {
           >
             <MapPin
               color={color}
-              size={20}
-              opacity={0.5}
+              size={18}
+              opacity={0.35}
               style={{ marginLeft: 10, marginRight: -5 }}
             />
           </TouchableOpacity>
@@ -109,7 +124,7 @@ export const AppSearchLocationInput = memo(() => {
               placeholder={currentLocationName ?? 'San Francisco'}
               style={[
                 inputTextStyles.textInput,
-                { color, paddingHorizontal, fontSize: 16 },
+                { flex: 1, color, paddingHorizontal, fontSize: 16 },
               ]}
               onKeyPress={handleKeyPress}
               onChangeText={(text) => {
@@ -131,7 +146,7 @@ export const AppSearchLocationInput = memo(() => {
               om.actions.home.moveMapToUserLocation()
             }}
           >
-            <Navigation size={20} opacity={0.7} color={color} />
+            <Navigation size={20} opacity={0.5} color={blue} />
           </Button>
         </HStack>
       </AppAutocompleteHoverableInput>

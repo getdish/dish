@@ -739,6 +739,7 @@ const pushHomeState: AsyncAction<
 }
 
 const setShowAutocomplete: Action<ShowAutocomplete> = (om, val) => {
+  console.trace('bieng set from', val)
   om.state.home.showAutocomplete = val
 }
 

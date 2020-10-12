@@ -84,7 +84,7 @@ export const isSearchInputFocused = () => {
 export const AppSearchInput = memo(() => {
   const inputStore = useStore(InputStore, { name: 'search' })
   const om = useOvermind()
-  const { color, background } = useSearchBarTheme()
+  const { color, background, isSmall } = useSearchBarTheme()
   const [search, setSearch] = useState('')
   const getSearch = useGet(search)
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
@@ -108,6 +108,19 @@ export const AppSearchInput = memo(() => {
       },
     ])
   })
+
+  const showAutocomplete = om.state.home.showAutocomplete === 'search'
+  console.log('showAutocomplete', showAutocomplete)
+  useEffect(() => {
+    if (showAutocomplete) {
+      const tm = setTimeout(() => {
+        inputStore.node?.focus()
+      }, 100)
+      return () => {
+        clearTimeout(tm)
+      }
+    }
+  }, [showAutocomplete])
 
   // one way sync down for more perf
   useEffect(() => {
@@ -246,7 +259,7 @@ export const AppSearchInput = memo(() => {
                       {
                         color,
                         flex: 1,
-                        fontSize: 20,
+                        fontSize: isSmall ? 18 : 20,
                         fontWeight: '500',
                         height,
                         lineHeight: height * 0.45,

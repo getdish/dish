@@ -9,7 +9,9 @@ export function AppRoot(props: { children: any }) {
   // TODO report to us as well (sentry..)
   useEffect(() => {
     onGraphError((e) => {
-      Toast.show(`${e.errors}`, { type: 'error' })
+      Toast.show(`${e.errors.map((x) => x.message).join(',')}`, {
+        type: 'error',
+      })
     })
   }, [])
 
