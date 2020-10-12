@@ -64,8 +64,9 @@ export const AppIntroLetter = memo(() => {
           <CloseButton
             position="absolute"
             zIndex={1000}
-            top={10}
-            right={10}
+            top={15}
+            right={15}
+            opacity={0.9}
             backgroundColor="transparent"
             onPress={() => {
               store.setHidden(true)
@@ -117,7 +118,7 @@ export const AppIntroLogin = memo(() => {
   const store = useStore(IntroModal)
   return (
     <>
-      <VStack spacing="lg" alignItems="center">
+      <VStack spacing="lg" alignItems="center" width="100%">
         <Image
           source={{ uri: dishNeon }}
           style={{
@@ -141,13 +142,13 @@ export const AppIntroLogin = memo(() => {
         <Paragraph
           color="rgba(255,255,255,0.8)"
           fontWeight="500"
-          paddingHorizontal="5%"
+          paddingHorizontal="2%"
           sizeLineHeight={1.02}
           textAlign="center"
         >
-          More fun exploring the world.
+          Bring fun to exploring the world.
           <br />
-          A&nbsp;community for discovering
+          A&nbsp;community finding
           <LinkButton
             display="inline"
             fontSize={16}
@@ -158,6 +159,7 @@ export const AppIntroLogin = memo(() => {
             paddingHorizontal={8}
             color={yellow}
             backgroundColor={`${lightYellow}22`}
+            fontWeight="400"
             hoverStyle={{
               backgroundColor: `${lightYellow}33`,
             }}
@@ -166,7 +168,7 @@ export const AppIntroLogin = memo(() => {
               store.setHidden(true)
             }}
           >
-            hidden gems
+            hidden gems 💎
           </LinkButton>
         </Paragraph>
 

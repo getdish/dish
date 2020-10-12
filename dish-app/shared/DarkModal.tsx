@@ -3,6 +3,7 @@ import { default as React } from 'react'
 import { ScrollView } from 'react-native'
 
 import { brandColor } from './colors'
+import { useIsNarrow } from './hooks/useIs'
 
 export const DarkModal = ({
   hide,
@@ -13,6 +14,7 @@ export const DarkModal = ({
   children: any
   outside?: any
 }) => {
+  const isSmall = useIsNarrow()
   return (
     <AbsoluteVStack
       className="inset-shadow-xxxl ease-in-out-slow"
@@ -20,8 +22,8 @@ export const DarkModal = ({
       zIndex={10000000000}
       alignItems="center"
       justifyContent="center"
-      paddingHorizontal="2%"
-      paddingVertical="2%"
+      paddingHorizontal={isSmall ? 0 : '2%'}
+      paddingVertical={isSmall ? 0 : '2%'}
       backgroundColor="rgba(60,30,50,0.9)"
       opacity={hide ? 0 : 1}
       pointerEvents={hide ? 'none' : 'auto'}
@@ -35,13 +37,13 @@ export const DarkModal = ({
         animateState={hide ? 'out' : 'in'}
       >
         <VStack
-          width="100%"
-          height="100%"
+          flex={1}
+          margin={-8}
           borderWidth={1}
           borderColor={`${brandColor}88`}
           position="relative"
           backgroundColor="#000"
-          borderRadius={25}
+          borderRadius={12}
           shadowColor="rgba(0,0,0,1)"
           shadowRadius={150}
           shadowOffset={{ height: 10, width: 0 }}
@@ -51,9 +53,17 @@ export const DarkModal = ({
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
               maxWidth: '100%',
+              minHeight: '100%',
             }}
           >
-            <VStack flex={1} paddingVertical={20} alignItems="center">
+            <VStack
+              flex={1}
+              paddingVertical={20}
+              paddingHorizontal={5}
+              justifyContent="center"
+              minHeight="100%"
+              alignItems="center"
+            >
               {children}
             </VStack>
           </ScrollView>

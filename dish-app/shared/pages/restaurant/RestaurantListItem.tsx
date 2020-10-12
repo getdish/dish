@@ -234,7 +234,11 @@ const RestaurantListItemContent = memo(
             >
               <VStack paddingTop={20}>
                 <HStack marginLeft={-4} alignItems="center" maxWidth="40%">
-                  <VStack position="relative" marginVertical={-14} zIndex={10}>
+                  <VStack
+                    position="relative"
+                    marginVertical={-14}
+                    zIndex={1000}
+                  >
                     <RestaurantUpVoteDownVote
                       score={score}
                       restaurantId={restaurantId}
