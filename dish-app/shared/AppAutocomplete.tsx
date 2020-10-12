@@ -535,6 +535,7 @@ function runAutocomplete(
     },
     async () => {
       let matched: AutocompleteItem[] = []
+      console.log('starts with', results)
       if (results.length) {
         matched = await fuzzySearch({
           items: results,
@@ -543,6 +544,7 @@ function runAutocomplete(
         })
       }
       matched = uniqBy([...matched, ...results].filter(isPresent), (x) => x.id)
+      console.log('matched', matched)
       if (showAutocomplete === 'location') {
         om.actions.home.setLocationAutocompleteResults(matched)
       } else if (showAutocomplete === 'search') {
@@ -570,19 +572,18 @@ function runAutocomplete(
 
         // countries that match name startsWith go to top
         const sqlower = searchQuery.toLowerCase()
-        const foundCountryIndex = matched.findIndex(
-          (x) =>
-            x.type === 'country' && x.name.toLowerCase().startsWith(sqlower)
-        )
-        if (foundCountryIndex > 0) {
-          const insertIndex = matched.findIndex(
-            (x) => x.name.toLowerCase() !== sqlower
-          )
-          if (insertIndex >= 0 && insertIndex < foundCountryIndex) {
-            const countryTag = matched[foundCountryIndex]
-            matched.splice(foundCountryIndex, 1) // remove from cur pos
-            matched.splice(insertIndex, 0, countryTag) // insert into higher place
-          }
+        const partialCountryMatches = matched
+          .map((item, index) => {
+            return item.type === 'country' &&
+              item.name.toLowerCase().startsWith(sqlower)
+              ? index
+              : -1
+          })
+          .filter((x) => x > 0)
+        for (const index of partialCountryMatches) {
+          const countryTag = matched[index]
+          matched.splice(index, 1) // remove from cur pos
+          matched.splice(0, 0, countryTag) // insert into higher place
         }
 
         om.actions.home.setAutocompleteResults(matched)
@@ -600,40 +601,44 @@ function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {
     return [
       ...searchDishTags(searchQuery),
       ...searchRestaurants(searchQuery, center, span),
-      ...query
-        .tag({
-          where: {
-            _or: [
-              {
-                name: {
-                  _ilike: searchQuery,
-                },
-              },
-              {
-                name: {
-                  _ilike: getFuzzyMatchQuery(searchQuery),
-                },
-              },
-            ],
-            type: {
-              _eq: 'country',
-            },
-          },
-          limit: 3,
-        })
-        .map((r) =>
-          'autocomplete' in r
-            ? r
-            : createAutocomplete({
-                id: r.id,
-                name: r.name,
-                type: 'country',
-                icon: r.icon ?? '🌎',
-                description: 'Cuisine',
-              })
-        ),
+      ...searchCuisines(searchQuery),
     ]
   })
+}
+
+function searchCuisines(searchQuery: string) {
+  return query
+    .tag({
+      where: {
+        _or: [
+          {
+            name: {
+              _ilike: searchQuery,
+            },
+          },
+          {
+            name: {
+              _ilike: getFuzzyMatchQuery(searchQuery),
+            },
+          },
+        ],
+        type: {
+          _eq: 'country',
+        },
+      },
+      limit: 3,
+    })
+    .map((r) => {
+      return 'autocomplete' in r
+        ? r
+        : createAutocomplete({
+            id: r.id,
+            name: r.name,
+            type: 'country',
+            icon: r.icon ?? '🌎',
+            description: 'Cuisine',
+          })
+    })
 }
 
 function searchDishTags(searchQuery: string) {
