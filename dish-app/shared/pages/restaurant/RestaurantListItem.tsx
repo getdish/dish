@@ -512,10 +512,10 @@ const RestaurantPeekDishes = memo(
     searchState: HomeStateItemSearch
     isLoaded: boolean
   }) {
-    const activeTags = omStatic.state.home.lastSearchState?.activeTagIds ?? {}
-    const dishSearchedTag = Object.keys(activeTags).find(
-      (k) => allTags[k]?.type === 'dish'
-    )
+    // const activeTags = omStatic.state.home.lastSearchState?.activeTagIds ?? {}
+    // const dishSearchedTag = Object.keys(activeTags).find(
+    //   (k) => allTags[k]?.type === 'dish'
+    // )
     const { isLoaded, searchState, size = 'md' } = props
     const tagSlugs = [
       searchState.searchQuery.toLowerCase(),

@@ -17,6 +17,7 @@ import { omStatic } from '../../state/omStatic'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { TextStrong } from '../../views/ui/TextStrong'
+import { numberFormat } from './numberFormat'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
 import {
   useTotalExternalReviews,
@@ -65,11 +66,15 @@ export const RestaurantPointsBreakdown = memo(
         <VStack alignItems="stretch" flex={1}>
           <Paragraph size={1} color="rgba(0,0,0,0.7)">
             <TextStrong>{restaurant.name}</TextStrong> has{' '}
-            <TextStrong>{restaurant.score}</TextStrong> points.{' '}
+            <TextStrong>
+              {numberFormat(Math.round(restaurant.score))}
+            </TextStrong>{' '}
+            points.{' '}
           </Paragraph>
           <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
-            {reviewsBreakdown['score']} points from {totalReviews} reviews and{' '}
-            {photosBreakdown['score']} points from{' '}
+            {numberFormat(Math.round(reviewsBreakdown['score']))} points from{' '}
+            {numberFormat(totalReviews)} reviews and{' '}
+            {numberFormat(Math.round(photosBreakdown['score']))} points from{' '}
             {photosBreakdown['meeting_criteria_count']} high quality photos.
           </Paragraph>
 
@@ -79,13 +84,19 @@ export const RestaurantPointsBreakdown = memo(
 
           <Paragraph textAlign="center" size={0.9} color="rgba(0,0,0,0.6)">
             <TextHighlight backgroundColor={lightGreen}>
-              <TextStrong color="#000">{nativeReviewPoints}</TextStrong>
+              <TextStrong color="#000">
+                {numberFormat(Math.round(nativeReviewPoints))}
+              </TextStrong>
             </TextHighlight>{' '}
-            from {totalNativeReviews} Dish reviews and <View />
+            points from {numberFormat(totalNativeReviews)} Dish reviews and{' '}
+            <View />
             <TextHighlight backgroundColor={lightYellow}>
-              <TextStrong color="#000">{externalReviewPoints}</TextStrong>
+              <TextStrong color="#000">
+                {numberFormat(Math.round(externalReviewPoints))}
+              </TextStrong>
             </TextHighlight>{' '}
-            from {totalExternalReviews} {sourceNames(sources)} reviews.
+            from {numberFormat(totalExternalReviews)} {sourceNames(sources)}{' '}
+            reviews.
           </Paragraph>
 
           {showTable && (

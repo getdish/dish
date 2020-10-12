@@ -49,18 +49,25 @@ const RestaurantHeaderContent = memo(
       const spacer = <Spacer size={paddingPx} />
       const nameLen = restaurant.name?.length
       const drawerWidth = useAppDrawerWidthInner()
-      const scale = drawerWidth < 400 ? 0.75 : drawerWidth < 600 ? 0.8 : 1
+      const minWidth = 600
+      const width = Math.max(minWidth, drawerWidth)
+      const scale = width < 601 ? 0.75 : drawerWidth < 700 ? 0.85 : 1
       const fontSize =
         scale *
         ((nameLen > 24 ? 26 : nameLen > 18 ? 30 : 46) *
           (size === 'sm' ? 0.8 : 1))
 
       return (
-        <VStack width="100%" position="relative" zIndex={100} minWidth={540}>
+        <VStack
+          width="100%"
+          position="relative"
+          zIndex={100}
+          minWidth={minWidth}
+        >
           <ScrollView
             style={{ width: '100%', maxWidth: '100vw', minHeight: 450 }}
             contentContainerStyle={{
-              width: drawerWidth,
+              width,
             }}
             horizontal
             showsHorizontalScrollIndicator={false}

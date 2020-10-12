@@ -127,7 +127,7 @@ const RestaurantPage = memo(
               />
             </Suspense>
 
-            <HStack marginTop={-15} justifyContent="center">
+            <HStack justifyContent="center">
               <SlantedTitle fontWeight="700">Best dishes</SlantedTitle>
             </HStack>
             <Spacer size="xs" />
