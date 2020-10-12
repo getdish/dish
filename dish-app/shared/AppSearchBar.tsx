@@ -76,8 +76,8 @@ export const HomeSearchBarFloating = () => {
       marginTop={searchBarTopOffset}
       alignItems="center"
       pointerEvents="none"
-      left={6}
-      right={6}
+      left={16}
+      right={16}
     >
       <VStack
         zIndex={12}

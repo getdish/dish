@@ -1,5 +1,6 @@
 import { VStack, combineRefs } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
+import { last } from 'lodash'
 import React, { createContext, forwardRef, useEffect, useRef } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 
@@ -58,28 +59,43 @@ export const ContentScrollView = forwardRef(
     const preventScrolling = usePreventContentScroll()
     const scrollStore = useStore(ScrollStore, { id })
     const isSmall = useIsNarrow()
-    const tm = useRef<any>(0)
+    const lastUpdate = useRef<any>(0)
+    const finish = useRef<any>(0)
+
+    const doUpdate = (y: number) => {
+      lastUpdate.current = Date.now()
+      const isAtTop = y <= 0
+      setIsScrollAtTop(isAtTop)
+      onScrollYThrottled?.(y)
+
+      if (isAtTop) {
+        scrollStore.setIsScrolling(false)
+      } else {
+        if (!scrollStore.isScrolling) {
+          scrollStore.setIsScrolling(true)
+        }
+        clearTimeout(finish.current)
+        finish.current = setTimeout(() => {
+          scrollStore.setIsScrolling(false)
+        }, 220)
+      }
+    }
 
     const setIsScrolling = (e) => {
       const y = e.nativeEvent.contentOffset.y
-      isScrollAtTop = y <= 0
-      onScrollYThrottled?.(y)
-      // perf issue i believe
-      if (!scrollStore.isScrolling) {
-        scrollStore.setIsScrolling(true)
+      const nextScrollAtTop = y <= 0
+      const hasBeenAWhile = Date.now() - lastUpdate.current > 200
+      if (nextScrollAtTop !== isScrollAtTop || hasBeenAWhile) {
+        doUpdate(y)
       }
-      clearTimeout(tm.current)
-      tm.current = setTimeout(() => {
-        scrollStore.setIsScrolling(false)
-      }, 200)
     }
 
     return (
       <ContentScrollContext.Provider value={id}>
         <ScrollView
           ref={ref as any}
-          // onScroll={setIsScrolling}
-          // scrollEventThrottle={150}
+          onScroll={setIsScrolling}
+          scrollEventThrottle={16}
           scrollEnabled={!preventScrolling}
           disableScrollViewPanResponder={preventScrolling}
           {...props}

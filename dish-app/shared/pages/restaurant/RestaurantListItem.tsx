@@ -362,9 +362,8 @@ const RestaurantListItemContent = memo(
               {/* ensures it always flexes all the way even if short text */}
               {ensureFlexText}
               <RestaurantOverview
-                limit={1}
+                height={116}
                 restaurantSlug={restaurantSlug}
-                inline
               />
             </VStack>
 

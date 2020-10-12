@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native'
 import { isWeb } from '../../constants'
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
 
 export const RestaurantDishPhotos = memo(
@@ -43,9 +44,7 @@ export const RestaurantDishPhotos = memo(
       const allPhotos = hasScrolled ? dishes : dishes.slice(0, 6)
 
       return (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
+        <ContentScrollViewHorizontal
           onScroll={
             !hasScrolled
               ? () => {
@@ -53,7 +52,6 @@ export const RestaurantDishPhotos = memo(
                 }
               : null
           }
-          scrollEventThrottle={200}
           style={{
             width: isWeb ? 'calc(100% + 30px)' : '98%',
             marginHorizontal: -15,
@@ -88,7 +86,7 @@ export const RestaurantDishPhotos = memo(
               })}
             </HStack>
           )}
-        </ScrollView>
+        </ContentScrollViewHorizontal>
       )
     }
   )

@@ -105,19 +105,14 @@ const RestaurantPage = memo(
                 }
                 below={
                   <>
-                    <RestaurantOverview
-                      maxChars={250}
-                      inline
-                      restaurantSlug={restaurantSlug}
-                      limit={2}
-                    />
-                    <Spacer size="lg" />
+                    <RestaurantOverview restaurantSlug={restaurantSlug} />
+                    <Spacer size="xl" />
                     <HStack flexWrap="wrap">
                       <RestaurantTagsRow
                         size="sm"
                         restaurantSlug={restaurantSlug}
                         restaurantId={restaurant.id}
-                        spacing={10}
+                        spacing={6}
                         grid
                         max={5}
                       />

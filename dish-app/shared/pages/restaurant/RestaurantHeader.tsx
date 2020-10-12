@@ -9,6 +9,7 @@ import { useAppDrawerWidthInner } from '../../hooks/useAppDrawerWidth'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
+import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { SmallLinkButton } from '../../views/ui/SmallButton'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
@@ -64,13 +65,11 @@ const RestaurantHeaderContent = memo(
           zIndex={100}
           minWidth={minWidth}
         >
-          <ScrollView
+          <ContentScrollViewHorizontal
             style={{ width: '100%', maxWidth: '100vw', minHeight: 450 }}
             contentContainerStyle={{
               width,
             }}
-            horizontal
-            showsHorizontalScrollIndicator={false}
           >
             <VStack
               borderTopRightRadius={drawerBorderRadius - 1}
@@ -113,9 +112,7 @@ const RestaurantHeaderContent = memo(
                             showLabels
                             restaurantSlug={restaurantSlug}
                           />
-                        </HStack>
-                        <Spacer size="xs" />
-                        <HStack flexWrap="wrap" alignItems="center">
+                          <Spacer size="xs" />
                           <VStack marginRight={6} marginBottom={10}>
                             <RestaurantAddress
                               size="xs"
@@ -156,7 +153,7 @@ const RestaurantHeaderContent = memo(
                 {after}
               </HStack>
             </VStack>
-          </ScrollView>
+          </ContentScrollViewHorizontal>
         </VStack>
       )
     }
