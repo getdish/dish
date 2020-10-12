@@ -6,6 +6,7 @@ import { useSearchBarTheme } from '../hooks/useSearchBarTheme'
 import { logoStyles } from './logoStyles'
 
 export const Logo = (props: { scale?: number; color?: string }) => {
+  const { color } = useSearchBarTheme()
   const scale = props.scale ?? 1
   const width = logoStyles.default.width
   const height = logoStyles.default.height
@@ -15,7 +16,7 @@ export const Logo = (props: { scale?: number; color?: string }) => {
         <G stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
           <G
             transform="translate(-167.000000, -474.000000)"
-            fill={props.color ?? '#fff'}
+            fill={props.color ?? color ?? '#fff'}
           >
             <G transform="translate(167.000000, 474.000000)">
               <G>
