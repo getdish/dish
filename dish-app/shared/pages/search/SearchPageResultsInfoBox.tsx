@@ -32,6 +32,9 @@ const HomeSearchInfoBoxCountry = memo(
     const topCountryDishes = query.tag({
       order_by: [
         {
+          popularity: order_by.desc,
+        },
+        {
           name: order_by.asc,
         },
       ],

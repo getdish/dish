@@ -16,8 +16,6 @@
 Home page
 - generally home page query and layout, but that's a whole other kettle of fish
 - is the plan for the site to be login only? i think it's better to allow anonymous use of the site
-Results page
-- description and image for dish hardcoded
 Restaurant page
 - again dishes not ordered by their scores
 - clicking a dish takes you to the gallery but there are no photos of that dish
