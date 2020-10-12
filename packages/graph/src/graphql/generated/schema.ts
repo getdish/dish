@@ -11254,6 +11254,9 @@ export const schema = {
         get parentId() {
           return new FieldNode(schema.uuid, undefined, true)
         },
+        get popularity() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
         get restaurant_taxonomies() {
           return new FieldNode(
             new ArrayNode(schema.restaurant_tag, false),
@@ -11494,6 +11497,9 @@ export const schema = {
         get order() {
           return new FieldNode(schema.Float, undefined, true)
         },
+        get popularity() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
       },
       {
         name: 'tag_avg_fields',
@@ -11508,6 +11514,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get order() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get popularity() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -11576,6 +11585,9 @@ export const schema = {
         },
         get parentId() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get popularity() {
+          return new InputNodeField(schema.Int_comparison_exp, true)
         },
         get restaurant_taxonomies() {
           return new InputNodeField(schema.restaurant_tag_bool_exp, true)
@@ -11662,6 +11674,9 @@ export const schema = {
         get order() {
           return new InputNodeField(schema.Int, true)
         },
+        get popularity() {
+          return new InputNodeField(schema.Int, true)
+        },
       },
       { name: 'tag_inc_input' }
     )
@@ -11714,6 +11729,9 @@ export const schema = {
         get parentId() {
           return new InputNodeField(schema.uuid, true)
         },
+        get popularity() {
+          return new InputNodeField(schema.Int, true)
+        },
         get restaurant_taxonomies() {
           return new InputNodeField(
             schema.restaurant_tag_arr_rel_insert_input,
@@ -11763,6 +11781,9 @@ export const schema = {
         get parentId() {
           return new FieldNode(schema.uuid, undefined, true)
         },
+        get popularity() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
         get type() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -11806,6 +11827,9 @@ export const schema = {
         get parentId() {
           return new InputNodeField(schema.order_by, true)
         },
+        get popularity() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get type() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -11845,6 +11869,9 @@ export const schema = {
         },
         get parentId() {
           return new FieldNode(schema.uuid, undefined, true)
+        },
+        get popularity() {
+          return new FieldNode(schema.Int, undefined, true)
         },
         get type() {
           return new FieldNode(schema.String, undefined, true)
@@ -11887,6 +11914,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get parentId() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get popularity() {
           return new InputNodeField(schema.order_by, true)
         },
         get type() {
@@ -11999,6 +12029,9 @@ export const schema = {
         get parentId() {
           return new InputNodeField(schema.order_by, true)
         },
+        get popularity() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get restaurant_taxonomies_aggregate() {
           return new InputNodeField(
             schema.restaurant_tag_aggregate_order_by,
@@ -12092,6 +12125,9 @@ export const schema = {
         get parentId() {
           return new InputNodeField(schema.uuid, true)
         },
+        get popularity() {
+          return new InputNodeField(schema.Int, true)
+        },
         get rgb() {
           return new InputNodeField(schema.jsonb, true)
         },
@@ -12114,6 +12150,9 @@ export const schema = {
         get order() {
           return new FieldNode(schema.Float, undefined, true)
         },
+        get popularity() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
       },
       {
         name: 'tag_stddev_fields',
@@ -12130,6 +12169,9 @@ export const schema = {
         get order() {
           return new InputNodeField(schema.order_by, true)
         },
+        get popularity() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'tag_stddev_order_by' }
     )
@@ -12141,6 +12183,9 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get order() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get popularity() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -12159,6 +12204,9 @@ export const schema = {
         get order() {
           return new InputNodeField(schema.order_by, true)
         },
+        get popularity() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'tag_stddev_pop_order_by' }
     )
@@ -12170,6 +12218,9 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get order() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get popularity() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -12188,6 +12239,9 @@ export const schema = {
         get order() {
           return new InputNodeField(schema.order_by, true)
         },
+        get popularity() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'tag_stddev_samp_order_by' }
     )
@@ -12199,6 +12253,9 @@ export const schema = {
           return new FieldNode(schema.Int, undefined, true)
         },
         get order() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+        get popularity() {
           return new FieldNode(schema.Int, undefined, true)
         },
       },
@@ -12215,6 +12272,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get order() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get popularity() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -12554,6 +12614,9 @@ export const schema = {
         get order() {
           return new FieldNode(schema.Float, undefined, true)
         },
+        get popularity() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
       },
       {
         name: 'tag_var_pop_fields',
@@ -12570,6 +12633,9 @@ export const schema = {
         get order() {
           return new InputNodeField(schema.order_by, true)
         },
+        get popularity() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'tag_var_pop_order_by' }
     )
@@ -12581,6 +12647,9 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get order() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get popularity() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -12599,6 +12668,9 @@ export const schema = {
         get order() {
           return new InputNodeField(schema.order_by, true)
         },
+        get popularity() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'tag_var_samp_order_by' }
     )
@@ -12610,6 +12682,9 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get order() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get popularity() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -12626,6 +12701,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get order() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get popularity() {
           return new InputNodeField(schema.order_by, true)
         },
       },

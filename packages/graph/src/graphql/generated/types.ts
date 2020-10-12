@@ -5534,6 +5534,7 @@ export type t_tag = FieldsType<
     order: t_Int
     parent?: t_tag | null
     parentId?: t_uuid | null
+    popularity?: t_Int | null
     restaurant_taxonomies: FieldsTypeArg<
       {
         distinct_on?: restaurant_tag_select_column[] | null
@@ -5646,6 +5647,7 @@ export type t_tag_avg_fields = FieldsType<
     __typename: t_String<'tag_avg_fields'>
     frequency?: t_Float | null
     order?: t_Float | null
+    popularity?: t_Float | null
   },
   Extension<'tag_avg_fields'>
 >
@@ -5657,6 +5659,7 @@ export type t_tag_avg_fields = FieldsType<
 export type tag_avg_order_by = {
   frequency?: order_by | null
   order?: order_by | null
+  popularity?: order_by | null
 }
 
 /**
@@ -5682,6 +5685,7 @@ export type tag_bool_exp = {
   order?: Int_comparison_exp | null
   parent?: tag_bool_exp | null
   parentId?: uuid_comparison_exp | null
+  popularity?: Int_comparison_exp | null
   restaurant_taxonomies?: restaurant_tag_bool_exp | null
   rgb?: jsonb_comparison_exp | null
   type?: String_comparison_exp | null
@@ -5733,7 +5737,11 @@ export type tag_delete_key_input = {
  * @name tag_inc_input
  * @type INPUT_OBJECT
  */
-export type tag_inc_input = { frequency?: number | null; order?: number | null }
+export type tag_inc_input = {
+  frequency?: number | null
+  order?: number | null
+  popularity?: number | null
+}
 
 /**
  * @name tag_insert_input
@@ -5755,6 +5763,7 @@ export type tag_insert_input = {
   order?: number | null
   parent?: tag_obj_rel_insert_input | null
   parentId?: any | null
+  popularity?: number | null
   restaurant_taxonomies?: restaurant_tag_arr_rel_insert_input | null
   rgb?: any | null
   type?: string | null
@@ -5777,6 +5786,7 @@ export type t_tag_max_fields = FieldsType<
     name?: t_String | null
     order?: t_Int | null
     parentId?: t_uuid | null
+    popularity?: t_Int | null
     type?: t_String | null
     updated_at?: t_timestamptz | null
   },
@@ -5797,6 +5807,7 @@ export type tag_max_order_by = {
   name?: order_by | null
   order?: order_by | null
   parentId?: order_by | null
+  popularity?: order_by | null
   type?: order_by | null
   updated_at?: order_by | null
 }
@@ -5817,6 +5828,7 @@ export type t_tag_min_fields = FieldsType<
     name?: t_String | null
     order?: t_Int | null
     parentId?: t_uuid | null
+    popularity?: t_Int | null
     type?: t_String | null
     updated_at?: t_timestamptz | null
   },
@@ -5837,6 +5849,7 @@ export type tag_min_order_by = {
   name?: order_by | null
   order?: order_by | null
   parentId?: order_by | null
+  popularity?: order_by | null
   type?: order_by | null
   updated_at?: order_by | null
 }
@@ -5893,6 +5906,7 @@ export type tag_order_by = {
   order?: order_by | null
   parent?: tag_order_by | null
   parentId?: order_by | null
+  popularity?: order_by | null
   restaurant_taxonomies_aggregate?: restaurant_tag_aggregate_order_by | null
   rgb?: order_by | null
   type?: order_by | null
@@ -5934,6 +5948,7 @@ type t_tag_select_column = EnumType<
   | 'name'
   | 'order'
   | 'parentId'
+  | 'popularity'
   | 'rgb'
   | 'type'
   | 'updated_at'
@@ -5957,6 +5972,7 @@ export type tag_set_input = {
   name?: string | null
   order?: number | null
   parentId?: any | null
+  popularity?: number | null
   rgb?: any | null
   type?: string | null
   updated_at?: any | null
@@ -5971,6 +5987,7 @@ export type t_tag_stddev_fields = FieldsType<
     __typename: t_String<'tag_stddev_fields'>
     frequency?: t_Float | null
     order?: t_Float | null
+    popularity?: t_Float | null
   },
   Extension<'tag_stddev_fields'>
 >
@@ -5982,6 +5999,7 @@ export type t_tag_stddev_fields = FieldsType<
 export type tag_stddev_order_by = {
   frequency?: order_by | null
   order?: order_by | null
+  popularity?: order_by | null
 }
 
 /**
@@ -5993,6 +6011,7 @@ export type t_tag_stddev_pop_fields = FieldsType<
     __typename: t_String<'tag_stddev_pop_fields'>
     frequency?: t_Float | null
     order?: t_Float | null
+    popularity?: t_Float | null
   },
   Extension<'tag_stddev_pop_fields'>
 >
@@ -6004,6 +6023,7 @@ export type t_tag_stddev_pop_fields = FieldsType<
 export type tag_stddev_pop_order_by = {
   frequency?: order_by | null
   order?: order_by | null
+  popularity?: order_by | null
 }
 
 /**
@@ -6015,6 +6035,7 @@ export type t_tag_stddev_samp_fields = FieldsType<
     __typename: t_String<'tag_stddev_samp_fields'>
     frequency?: t_Float | null
     order?: t_Float | null
+    popularity?: t_Float | null
   },
   Extension<'tag_stddev_samp_fields'>
 >
@@ -6026,6 +6047,7 @@ export type t_tag_stddev_samp_fields = FieldsType<
 export type tag_stddev_samp_order_by = {
   frequency?: order_by | null
   order?: order_by | null
+  popularity?: order_by | null
 }
 
 /**
@@ -6037,6 +6059,7 @@ export type t_tag_sum_fields = FieldsType<
     __typename: t_String<'tag_sum_fields'>
     frequency?: t_Int | null
     order?: t_Int | null
+    popularity?: t_Int | null
   },
   Extension<'tag_sum_fields'>
 >
@@ -6048,6 +6071,7 @@ export type t_tag_sum_fields = FieldsType<
 export type tag_sum_order_by = {
   frequency?: order_by | null
   order?: order_by | null
+  popularity?: order_by | null
 }
 
 /**
@@ -6277,6 +6301,7 @@ type t_tag_update_column = EnumType<
   | 'name'
   | 'order'
   | 'parentId'
+  | 'popularity'
   | 'rgb'
   | 'type'
   | 'updated_at'
@@ -6291,6 +6316,7 @@ export type t_tag_var_pop_fields = FieldsType<
     __typename: t_String<'tag_var_pop_fields'>
     frequency?: t_Float | null
     order?: t_Float | null
+    popularity?: t_Float | null
   },
   Extension<'tag_var_pop_fields'>
 >
@@ -6302,6 +6328,7 @@ export type t_tag_var_pop_fields = FieldsType<
 export type tag_var_pop_order_by = {
   frequency?: order_by | null
   order?: order_by | null
+  popularity?: order_by | null
 }
 
 /**
@@ -6313,6 +6340,7 @@ export type t_tag_var_samp_fields = FieldsType<
     __typename: t_String<'tag_var_samp_fields'>
     frequency?: t_Float | null
     order?: t_Float | null
+    popularity?: t_Float | null
   },
   Extension<'tag_var_samp_fields'>
 >
@@ -6324,6 +6352,7 @@ export type t_tag_var_samp_fields = FieldsType<
 export type tag_var_samp_order_by = {
   frequency?: order_by | null
   order?: order_by | null
+  popularity?: order_by | null
 }
 
 /**
@@ -6335,6 +6364,7 @@ export type t_tag_variance_fields = FieldsType<
     __typename: t_String<'tag_variance_fields'>
     frequency?: t_Float | null
     order?: t_Float | null
+    popularity?: t_Float | null
   },
   Extension<'tag_variance_fields'>
 >
@@ -6346,6 +6376,7 @@ export type t_tag_variance_fields = FieldsType<
 export type tag_variance_order_by = {
   frequency?: order_by | null
   order?: order_by | null
+  popularity?: order_by | null
 }
 
 /**
@@ -8256,6 +8287,7 @@ export enum tag_select_column {
   name = 'name',
   order = 'order',
   parentId = 'parentId',
+  popularity = 'popularity',
   rgb = 'rgb',
   type = 'type',
   updated_at = 'updated_at',
@@ -8365,6 +8397,7 @@ export enum tag_update_column {
   name = 'name',
   order = 'order',
   parentId = 'parentId',
+  popularity = 'popularity',
   rgb = 'rgb',
   type = 'type',
   updated_at = 'updated_at',
