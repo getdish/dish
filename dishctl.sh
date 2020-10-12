@@ -839,6 +839,46 @@ function hot_deploy() {
   kubectl rollout restart deployment/$service_name
 }
 
+function volume_debugger() {
+  pvc=$1
+  command=$2
+  namespace=${3:-default}
+  name="volume-debugger"
+  yaml="
+    kind: Pod
+    apiVersion: v1
+    metadata:
+      name: $name
+    spec:
+      volumes:
+      - name: volume-to-debug
+        persistentVolumeClaim:
+          claimName: $pvc
+      containers:
+      - name: debugger
+        image: busybox
+        command: ['sleep', '3600']
+        volumeMounts:
+        - mountPath: '/data'
+          name: volume-to-debug
+  "
+  echo "$yaml" | kubectl -n $namespace create -f -
+  trap "kubectl -n $namespace delete pod $name --grace-period=0 --force" EXIT
+  while [ "$(kubectl -n $namespace get pods | grep 'volume-debugger' | grep 'Running')" = "" ]; do
+    sleep 1
+    echo "Waiting for volume-debugger pod to start..."
+  done
+  kubectl -n $namespace exec -it volume-debugger -- sh -c "$command"
+}
+
+function redis_pvc_wipe() {
+  file="/data/appendonly.aof"
+  command="rm $file && ls -alh $file"
+  volume_debugger 'redis-data-redis-master-0' "$command" 'redis'
+  redis_flush_all
+  kubectl rollout restart deployment/worker
+}
+
 if command -v git &> /dev/null; then
   export PROJECT_ROOT=$(git rev-parse --show-toplevel)
   branch=$(git rev-parse --abbrev-ref HEAD)

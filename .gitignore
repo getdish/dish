@@ -108,3 +108,6 @@ target/
 
 # testcafe screenshots
 dish-app/test/screenshots
+
+# asdf local node version
+.tool-versions
