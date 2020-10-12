@@ -130,6 +130,7 @@ tables:
       columns:
       - address
       - city
+      - created_at
       - description
       - headlines
       - hours
@@ -146,7 +147,10 @@ tables:
       - slug
       - sources
       - state
+      - summary
+      - tag_names
       - telephone
+      - updated_at
       - website
       - zip
       computed_fields:
@@ -174,6 +178,8 @@ tables:
       - slug
       - sources
       - state
+      - summary
+      - tag_names
       - telephone
       - updated_at
       - website
@@ -203,6 +209,8 @@ tables:
       - slug
       - sources
       - state
+      - summary
+      - tag_names
       - telephone
       - updated_at
       - website
@@ -587,6 +595,7 @@ tables:
       - name
       - order
       - parentId
+      - popularity
       - rgb
       - type
       - updated_at
@@ -607,6 +616,7 @@ tables:
       - name
       - order
       - parentId
+      - popularity
       - rgb
       - type
       - updated_at
@@ -626,6 +636,7 @@ tables:
       - name
       - order
       - parentId
+      - popularity
       - rgb
       - type
       - updated_at
@@ -705,8 +716,12 @@ tables:
   - role: anon
     permission:
       columns:
+      - about
+      - avatar
+      - charIndex
       - created_at
       - id
+      - location
       - role
       - updated_at
       - username
