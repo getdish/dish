@@ -2,6 +2,7 @@ import { NonNullObject, Tag, TagType } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import {
   HStack,
+  Hoverable,
   Spacer,
   StackProps,
   Text,
@@ -11,7 +12,7 @@ import {
   getNode,
   prevent,
 } from '@dish/ui'
-import React, { memo, useEffect, useRef } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { Image, Platform } from 'react-native'
 
 import {
@@ -150,7 +151,7 @@ export const TagButton = memo((props: TagButtonProps) => {
   const contents = (
     <>
       <HStack
-        className="ease-in-out"
+        className="ease-in-out-faster"
         height={height}
         borderRadius={10 * scale}
         paddingHorizontal={4}
@@ -283,6 +284,7 @@ export const TagButton = memo((props: TagButtonProps) => {
 
 const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   const { scale, subtle } = props
+  const [hovered, setHovered] = useState(false)
   const { vote, setVote } = useUserUpvoteDownvoteQuery(
     props.restaurantId ?? '',
     {
@@ -290,34 +292,53 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
     }
   )
   const Icon = vote ? ThumbsDown : ThumbsUp
+  const color = props.color ?? (subtle ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)')
+  const iconProps = {
+    size: 12 * scale,
+    color,
+  }
 
   return (
-    <VStack
-      paddingHorizontal={3 * scale}
-      alignItems="center"
-      justifyContent="center"
-      borderRadius={100}
-      width={24 * scale}
-      height={24 * scale}
-      marginRight={5 * scale}
-      {...(subtle && {
-        marginLeft: 4,
-        overflow: 'hidden',
-      })}
-      opacity={subtle ? 0.1 : 0.6}
-      hoverStyle={{
-        opacity: 1,
-      }}
-      onPressIn={prevent}
-      onPress={(e) => {
-        prevent(e)
-        setVote(vote == 1 ? 0 : 1)
-      }}
+    <Hoverable
+      onHoverIn={() => setHovered(true)}
+      onHoverOut={() => setHovered(false)}
     >
-      <Icon
-        size={12 * scale}
-        color={props.color ?? (subtle ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)')}
-      />
-    </VStack>
+      <VStack
+        paddingHorizontal={3 * scale}
+        alignItems="center"
+        justifyContent="center"
+        borderRadius={100}
+        width={24 * scale}
+        height={24 * scale}
+        marginRight={5 * scale}
+        marginLeft={4}
+        opacity={subtle ? 0.3 : 0.6}
+        hoverStyle={{
+          opacity: 1,
+          transform: [{ scale: 1.2 }],
+        }}
+        onPressIn={prevent}
+        onPress={(e) => {
+          prevent(e)
+          setVote(vote == 0 ? 1 : vote === -1 ? 0 : -1)
+        }}
+      >
+        {vote === 0 && <Icon {...iconProps} />}
+        {vote !== 0 && (
+          <VStack
+            width={24 * scale}
+            height={24 * scale}
+            backgroundColor={color}
+            borderRadius={100}
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Text color="#fff" fontSize={13 * scale} fontWeight="700">
+              {vote < 0 ? vote : `+${vote}`}
+            </Text>
+          </VStack>
+        )}
+      </VStack>
+    </Hoverable>
   )
 }

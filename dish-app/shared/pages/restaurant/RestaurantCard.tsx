@@ -63,6 +63,7 @@ export const RestaurantCardContent = graphql(
       <CardFrame>
         <VStack borderRadius={borderRadius - 3} overflow="hidden">
           <VStack
+            className="safari-overflow-fix"
             width="100%"
             overflow="hidden"
             alignSelf="center"

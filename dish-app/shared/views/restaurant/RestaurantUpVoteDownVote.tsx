@@ -45,7 +45,7 @@ export const RestaurantUpVoteDownVote = memo(
       <HoverablePopover
         position="right"
         delay={500}
-        allowHoverOnContent
+        // allowHoverOnContent
         contents={(isOpen) => {
           if (isOpen) {
             return (

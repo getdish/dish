@@ -56,8 +56,10 @@ export const RestaurantMenu = memo(
                     )}
                     {!item.image && (
                       <VStack
-                        width={50}
-                        height={50}
+                        minWidth={50}
+                        minHeight={50}
+                        maxWidth={50}
+                        maxHeight={50}
                         borderRadius={100}
                         backgroundColor="#eee"
                       />

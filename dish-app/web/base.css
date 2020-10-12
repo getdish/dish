@@ -496,3 +496,7 @@ body > div {
   opacity: 1;
   transform: translateY(0);
 }
+
+.safari-overflow-fix {
+  transform: translateZ(0px);
+}
