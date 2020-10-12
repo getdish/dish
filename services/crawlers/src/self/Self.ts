@@ -823,9 +823,13 @@ export class Self extends WorkerJob {
     onGraphError((e: HasuraError) => {
       if (!e.errors) return
       for (const error of e.errors) {
-        sentryMessage('SELF CRAWL Graph Error', {
-          message: error.message,
-        })
+        if (process.env.DISH_ENV == 'production') {
+          sentryMessage('SELF CRAWL Graph Error', {
+            error: error,
+          })
+        } else {
+          console.error(error)
+        }
       }
     })
   }

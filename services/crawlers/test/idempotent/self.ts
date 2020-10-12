@@ -5,6 +5,7 @@ import {
   flushTestData,
   restaurantFindOneWithTags,
   restaurantInsert,
+  restaurantTagUpsert,
   restaurantUpdate,
   restaurantUpsertOrphanTags,
   reviewFindAllForRestaurant,
@@ -40,8 +41,6 @@ const restaurant_fixture: Partial<Restaurant> = {
   name: 'Test Name Original',
   geocoder_id: GOOGLE_GEOCODER_ID,
   location: { type: 'Point', coordinates: [0, 0] },
-  // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
-  tag_names: ['rankable'],
   rating: 3,
   // @ts-ignore weird bug the type is right in graph but comes in null | undefined here
   sources: {
@@ -448,33 +447,62 @@ test('Tag rankings', async (t) => {
   const tag_name = 'Test Rankable'
   const self = new Self()
   self.restaurant = t.context.restaurant
+  const [tag] = await tagInsert([
+    {
+      name: tag_name,
+    },
+  ])
   const [r1, r2] = await restaurantInsert([
     {
       ...restaurant_fixture,
       address: '1',
-      rating: 4,
       geocoder_id: '123',
+      location: { type: 'Point', coordinates: [0, 0] },
     },
     {
       ...restaurant_fixture,
       address: '2',
-      rating: 5,
       geocoder_id: 'abc',
+      location: { type: 'Point', coordinates: [0, 0] },
     },
   ])
-  await restaurantUpsertOrphanTags(r1, [tag_name])
-  await restaurantUpsertOrphanTags(r2, [tag_name])
-  self.restaurant = (await restaurantUpsertOrphanTags(self.restaurant, [
-    tag_name,
-  ])) as RestaurantWithId
+  await restaurantTagUpsert(self.restaurant.id, [
+    {
+      tag_id: tag.id,
+      score: 10,
+    },
+  ])
+  await restaurantTagUpsert(r1.id, [
+    {
+      tag_id: tag.id,
+      score: 20,
+    },
+  ])
+  await restaurantTagUpsert(r2.id, [
+    {
+      tag_id: tag.id,
+      score: 30,
+    },
+  ])
+  self.restaurant = await restaurantFindOneWithTags(self.restaurant)
   await self.preMerge(self.restaurant)
-  await self.tagging.updateTagRankings()
   await self.finishTagsEtc()
-  const restaurant = await restaurantFindOneWithTags(self.restaurant)
-  t.is(!!restaurant, true)
-  if (!restaurant) return
-  t.is(restaurant.tags[0].tag.name, tag_name)
-  t.is(restaurant.tags[0].rank, 3)
+  self.restaurant = await restaurantFindOneWithTags(self.restaurant)
+  t.is(!!self.restaurant, true)
+  if (!self.restaurant) return
+  t.is(self.restaurant.tags[0].tag.name, tag_name)
+  t.is(self.restaurant.tags[0].rank, 3)
+  await restaurantTagUpsert(self.restaurant.id, [
+    {
+      tag_id: tag.id,
+      score: 50,
+    },
+  ])
+  self.restaurant = await restaurantFindOneWithTags(self.restaurant)
+  await self.preMerge(self.restaurant)
+  await self.finishTagsEtc()
+  self.restaurant = await restaurantFindOneWithTags(self.restaurant)
+  t.is(self.restaurant.tags[0].rank, 1)
 })
 
 test('Finding dishes in the corpus', async (t) => {

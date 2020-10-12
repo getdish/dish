@@ -32,6 +32,7 @@ export async function restaurantTagUpsert(
             restaurant_tag_update_column.rank,
             restaurant_tag_update_column.photos,
             restaurant_tag_update_column.rating,
+            restaurant_tag_update_column.score,
           ],
         },
       })
