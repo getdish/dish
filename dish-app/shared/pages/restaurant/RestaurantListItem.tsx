@@ -193,10 +193,15 @@ const RestaurantListItemContent = memo(
     // const [open_text, open_color, opening_hours] = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const totalReviews = useTotalReviews(restaurant)
-    const titleFontSize =
-      1.2 *
-      (isSmall ? 18 : 22) *
-      (restaurantName.length > 20 ? 0.9 : restaurantName.length > 25 ? 0.85 : 1)
+    const titleFontScale =
+      restaurantName.length > 20
+        ? 0.9
+        : restaurantName.length > 25
+        ? 0.85
+        : restaurantName.length > 10
+        ? 0.95
+        : 1.15
+    const titleFontSize = 1.2 * (isSmall ? 18 : 22) * titleFontScale
 
     return (
       <VStack
@@ -292,6 +297,7 @@ const RestaurantListItemContent = memo(
                             ellipse
                             fontSize={titleFontSize}
                             lineHeight={titleFontSize * 1.2}
+                            marginVertical={-(2 - titleFontScale) * 3}
                             fontWeight="600"
                           >
                             {restaurantName}

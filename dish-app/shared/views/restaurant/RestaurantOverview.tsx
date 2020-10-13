@@ -29,7 +29,14 @@ export const RestaurantOverview = memo(
     if (summary) {
       return (
         <HStack flex={1} overflow="hidden">
-          <Paragraph size={1.1} opacity={1} height={height} overflow="hidden">
+          <Paragraph
+            size={1}
+            sizeLineHeight={0.8}
+            lineHeight={22}
+            opacity={1}
+            height={height}
+            overflow="hidden"
+          >
             {summary
               .split('. ')
               .map((sentence) => capitalize(sentence.trim()))
