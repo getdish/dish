@@ -49,6 +49,8 @@ export const getTagButtonProps = (tag: TagButtonTagProps): TagButtonProps => {
     type: tag.type as TagType,
     icon: tag.icon ?? '',
     rgb: Array.isArray(tag.rgb) ? tag.rgb : tag.rgb?.(),
+    rank: tag.rank,
+    score: tag.score,
   }
 }
 
@@ -118,6 +120,7 @@ export const TagButton = memo((props: TagButtonProps) => {
     backgroundColor,
     icon,
     rgb,
+    score,
     subtleIcon,
     hideIcon,
     replace,
@@ -145,7 +148,7 @@ export const TagButton = memo((props: TagButtonProps) => {
   const fontSize = fontSizeProp ?? (subtle && isWeb ? 'inherit' : 16 * scale)
   // const moveInPx = size === 'sm' ? 0 : 3.5 * (1 / scale)
 
-  const smallerFontSize =
+  const smallerFontSize: any =
     typeof fontSize === 'number' ? fontSize * 0.85 : fontSize
 
   const contents = (
@@ -170,8 +173,8 @@ export const TagButton = memo((props: TagButtonProps) => {
       >
         {!!rank ? (
           <Text
-            // @ts-ignore
             fontSize={smallerFontSize}
+            fontWeight="500"
             paddingHorizontal={6 * scale}
             alignContent="center"
             justifyContent="center"
@@ -179,11 +182,30 @@ export const TagButton = memo((props: TagButtonProps) => {
             display="flex"
             color={fg}
           >
-            <TextSuperScript opacity={0.5}>#</TextSuperScript>
+            <TextSuperScript fontWeight="300" opacity={0.5}>
+              #
+            </TextSuperScript>
             {rank}
           </Text>
         ) : null}
-        {/* tag name */}
+        {hideIcon ? (
+          <>&nbsp;</>
+        ) : !!tag.icon ? (
+          tag.icon.startsWith('http') ? (
+            <Image
+              source={{ uri: tag.icon }}
+              style={{
+                width: fontSize,
+                height: fontSize,
+                borderRadius: 1000,
+                display: isWeb ? ('inline-flex' as any) : 'flex',
+                marginVertical: -2,
+              }}
+            />
+          ) : (
+            <Text>{tag.icon}</Text>
+          )
+        ) : null}
         <Text
           ellipse
           // @ts-ignore
@@ -198,36 +220,12 @@ export const TagButton = memo((props: TagButtonProps) => {
           textOverflow="ellipsis"
           whiteSpace="nowrap"
         >
-          {hideIcon ? (
-            <>&nbsp;</>
-          ) : !!tag.icon ? (
-            <Text
-              {...(subtle && { marginLeft: 4 })}
-              {...(subtleIcon && {
-                fontSize: fontSize as any,
-                marginVertical: -2,
-                marginRight: 8,
-              })}
-            >
-              {tag.icon.startsWith('http') ? (
-                <Image
-                  source={{ uri: tag.icon }}
-                  style={{
-                    width: fontSize,
-                    height: fontSize,
-                    borderRadius: 1000,
-                    display: isWeb ? ('inline-flex' as any) : 'flex',
-                    marginRight: 8,
-                    marginVertical: -2,
-                  }}
-                />
-              ) : (
-                `${tag.icon}`
-              )}{' '}
-            </Text>
-          ) : null}
-          {/* // tagDisplayNames[tag.name] ?? _.capitalize(tag.name) */}
           {tagDisplayName(tag)}
+          {typeof score === 'number' && (
+            <Text marginLeft={4} fontWeight="300" fontSize={smallerFontSize}>
+              {score > 0 ? `+${score}` : score}
+            </Text>
+          )}
         </Text>
         {!!votable && <TagButtonVote {...props} color={fg} scale={scale} />}
         {!!closable && (
@@ -311,7 +309,6 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
         width={24 * scale}
         height={24 * scale}
         marginRight={5 * scale}
-        marginLeft={4}
         opacity={subtle ? 0.3 : 0.6}
         hoverStyle={{
           opacity: 1,

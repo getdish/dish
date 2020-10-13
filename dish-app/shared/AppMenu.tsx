@@ -134,6 +134,7 @@ const MenuButton = memo(
         }}
         hoverStyle={{
           opacity: 1,
+          transform: [{ scale: 1.05 }],
         }}
         {...props}
       >

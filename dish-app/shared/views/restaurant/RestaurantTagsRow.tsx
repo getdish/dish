@@ -51,6 +51,7 @@ export const RestaurantTagsRow = memo(
         rank: tag.rank,
         rgb: tag.tag.rgb,
         name: tag.tag.name,
+        icon: tag.tag.icon,
         type: tag.tag.type,
         score: tag.score,
       }))
@@ -62,14 +63,15 @@ export const RestaurantTagsRow = memo(
     return (
       <>
         {tags
-          .sort((a, b) => (a.type === 'cuisine' ? -1 : a.score))
+          .sort((a, b) =>
+            a.type === 'lense' ? -2 : a.type === 'cuisine' ? -1 : a.score
+          )
           .map((tag, index) => {
             return (
               <React.Fragment key={`${index}${tag.name}`}>
                 <TagButton
                   replaceSearch
                   size={size ?? 'sm'}
-                  rank={tag.rank}
                   {...getTagButtonProps(tag)}
                   subtle={props.subtle}
                   votable={!props.subtle}
