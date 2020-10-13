@@ -23,7 +23,6 @@ export const AppSearchLocationInput = memo(() => {
   const { currentLocationName } = om.state.home.currentState
 
   const showAutocomplete = om.state.home.showAutocomplete === 'location'
-  console.log('show location', showAutocomplete, om.state.home.showAutocomplete)
   useEffect(() => {
     if (showAutocomplete) {
       const tm = setTimeout(() => {

@@ -29,7 +29,7 @@ export const StackDrawer = ({
       minWidth={isSmall ? '100%' : 200}
       justifyContent="flex-end"
       shadowRadius={isSmall ? 6 : 10}
-      shadowColor="rgba(0,0,0,0.08)"
+      shadowColor="rgba(0,0,0,0.22)"
     >
       {closable && (
         <StackViewCloseButton

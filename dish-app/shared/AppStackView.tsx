@@ -1,5 +1,6 @@
 import { AnimatedVStack, VStack, useDebounceValue } from '@dish/ui'
-import React, { Suspense, memo, useMemo } from 'react'
+import { useStore } from '@dish/use-store'
+import React, { Suspense, memo, useLayoutEffect, useMemo } from 'react'
 
 import { isWeb, searchBarHeight } from './constants'
 import { getBreadcrumbs } from './helpers/getBreadcrumbs'
@@ -7,6 +8,7 @@ import { useIsNarrow } from './hooks/useIs'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { HomeStateItem, HomeStateItemSimple } from './state/home-types'
 import { useOvermind } from './state/om'
+import { ContentParentStore } from './views/ContentScrollView'
 import { ErrorBoundary } from './views/ErrorBoundary'
 
 export type StackItemProps<A> = {
@@ -20,7 +22,6 @@ type GetChildren<A> = (props: StackItemProps<A>) => React.ReactNode
 export function AppStackView<A extends HomeStateItem>(props: {
   children: GetChildren<A>
 }) {
-  // const currentStateStore = useStore(HomeStateStore)
   const om = useOvermind()
   const breadcrumbs = getBreadcrumbs(om.state.home.states)
   const key = JSON.stringify(breadcrumbs.map((x) => x.id))
@@ -66,6 +67,7 @@ const AppStackViewItem = memo(
     isRemoving: boolean
     isAdding: boolean
   }) => {
+    const contentParentStore = useStore(ContentParentStore)
     const isSmall = useIsNarrow()
     const top = isSmall
       ? Math.max(0, index - 1) * 5 + 2
@@ -85,6 +87,13 @@ const AppStackViewItem = memo(
     const className = `animate-up ${
       !isRemoving && !isAdding ? 'active' : 'untouchable'
     }`
+
+    useLayoutEffect(() => {
+      if (isActive) {
+        console.log('setActiveId', item.type)
+        contentParentStore.setActiveId(item.type)
+      }
+    }, [isActive])
 
     const contents = (
       <VStack

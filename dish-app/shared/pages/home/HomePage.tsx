@@ -180,7 +180,7 @@ export default memo(function HomePage(props: Props) {
           maxWidth="100%"
           height="100%"
         >
-          <ContentScrollView id="homePage">
+          <ContentScrollView id="home">
             {/* cross line */}
             {!isSmall && (
               <AbsoluteVStack

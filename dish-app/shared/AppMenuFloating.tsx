@@ -67,7 +67,7 @@ export const AppMenuFloating = () => {
         >
           <BlurView
             borderRadius={24}
-            fallbackBackgroundColor="rgba(255,255,255,0.7)"
+            fallbackBackgroundColor="rgba(255,255,255,0.9)"
           >
             <HStack
               width={44}

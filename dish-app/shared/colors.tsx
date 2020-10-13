@@ -40,3 +40,4 @@ export const purple = '#6C16BD'
 export const darkGreen = `#52A558`
 export const darkRed = `#A43C3C`
 export const darkGrey = `#888`
+export const darkBlue = `#204493`

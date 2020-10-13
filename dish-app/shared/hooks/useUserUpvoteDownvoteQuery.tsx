@@ -51,7 +51,7 @@ export const useUserUpvoteDownvoteQuery = (
   for (const key of tagKeyList) {
     voteStores[key] = useStore(UserVotes, { key: `${key}${restaurantId}` })
   }
-  const userVote = voteStores[tagKeyList[0]].vote
+  const userVote = voteStores[tagKeyList[0]]?.vote ?? 0
 
   useEffect(() => {
     setStoreVotes(voteStores, vote)

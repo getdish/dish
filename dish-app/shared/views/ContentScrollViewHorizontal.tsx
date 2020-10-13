@@ -1,47 +1,52 @@
-import { VStack } from '@dish/ui'
+import { AbsoluteVStack, VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-import React, { useContext, useMemo } from 'react'
+import React, { memo, useContext, useMemo } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
 
 import { ContentScrollContext, ScrollStore } from './ContentScrollView'
 
 export let isScrollingSubDrawer = false
 
-export const ContentScrollViewHorizontal = (
-  props: ScrollViewProps & { children: any }
-) => {
-  const id = useContext(ContentScrollContext)
-  const { isScrolling } = useStore(ScrollStore, { id })
+// takes children but we memo so we can optimize if wanted
+export const ContentScrollViewHorizontal = memo(
+  (props: ScrollViewProps & { children: any }) => {
+    const id = useContext(ContentScrollContext)
+    const { isScrolling } = useStore(ScrollStore, { id })
 
-  const children = useMemo(() => {
+    const children = useMemo(() => {
+      return (
+        <ScrollView
+          {...{
+            horizontal: true,
+            showsHorizontalScrollIndicator: false,
+            onScrollBeginDrag: () => {
+              isScrollingSubDrawer = true
+            },
+            onScrollEndDrag: () => {
+              isScrollingSubDrawer = false
+            },
+            style: {
+              pointerEvents: 'inherit',
+            } as any,
+          }}
+          {...props}
+        />
+      )
+    }, [props])
+
     return (
-      <ScrollView
-        {...{
-          horizontal: true,
-          showsHorizontalScrollIndicator: false,
-          onScrollBeginDrag: () => {
-            isScrollingSubDrawer = true
-          },
-          onScrollEndDrag: () => {
-            isScrollingSubDrawer = false
-          },
-          style: {
-            pointerEvents: 'inherit',
-          } as any,
-        }}
-        {...props}
-      />
+      // needs both pointer events to prevent/enable scroll on safari
+      <VStack
+        pointerEvents={isScrolling ? 'none' : 'auto'}
+        overflow="hidden"
+        width="100%"
+      >
+        {/* DEBUG VIEW */}
+        {/* {isScrolling && (
+          <AbsoluteVStack fullscreen backgroundColor="rgba(255,255,0,0.1)" />
+        )} */}
+        {children}
+      </VStack>
     )
-  }, [props])
-
-  return (
-    // needs both pointer events to prevent/enable scroll on safari
-    <VStack
-      pointerEvents={isScrolling ? 'none' : 'auto'}
-      overflow="hidden"
-      width="100%"
-    >
-      {children}
-    </VStack>
-  )
-}
+  }
+)
