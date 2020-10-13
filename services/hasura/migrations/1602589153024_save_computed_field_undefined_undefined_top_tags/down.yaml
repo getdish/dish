@@ -1,0 +1,6 @@
+- args:
+    name: top_tags
+    table:
+      name: restaurant
+      schema: public
+  type: drop_computed_field

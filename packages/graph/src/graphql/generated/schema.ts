@@ -7724,6 +7724,9 @@ export const schema = {
   get restaurant_top_tags_args() {
     return new InputNode(
       {
+        get _tag_types() {
+          return new InputNodeField(schema.String, true)
+        },
         get tag_names() {
           return new InputNodeField(schema.String, true)
         },
@@ -7942,7 +7945,7 @@ export const schema = {
           )
         },
         get source() {
-          return new FieldNode(schema.String, undefined, false)
+          return new FieldNode(schema.String, undefined, true)
         },
         get tag() {
           return new FieldNode(schema.tag, undefined, true)

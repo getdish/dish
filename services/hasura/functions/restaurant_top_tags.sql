@@ -8,9 +8,16 @@ DROP FUNCTION IF EXISTS restaurant_top_tags(
   tag_names TEXT
 );
 
+DROP FUNCTION IF EXISTS restaurant_top_tags(
+  _restaurant restaurant,
+  tag_names TEXT,
+  tag_types TEXT
+);
+
 CREATE OR REPLACE FUNCTION restaurant_top_tags(
   _restaurant restaurant,
-  tag_names TEXT
+  tag_names TEXT,
+  _tag_types TEXT DEFAULT 'dish'
 ) RETURNS SETOF restaurant_tag AS $$
   WITH
   -- TODO use our formal slugify() format.
@@ -21,13 +28,18 @@ CREATE OR REPLACE FUNCTION restaurant_top_tags(
       string_to_array(LOWER(REPLACE(tag_names, '-', ' ')), ',')
     )
   ),
+  tag_types AS (
+    SELECT UNNEST(
+      string_to_array(LOWER(REPLACE(_tag_types, '-', ' ')),',')
+    )
+  ),
   restaurant_tags AS (
     SELECT * FROM (
       SELECT DISTINCT ON (tag.name) restaurant_tag.id as rt_id, *
         FROM restaurant_tag
         JOIN tag ON restaurant_tag.tag_id = tag.id
         WHERE restaurant_tag.restaurant_id = _restaurant.id
-          AND tag.type != 'country'
+          AND tag.type IN (SELECT * FROM tag_types)
     ) s
       ORDER BY score DESC NULLS LAST
   )

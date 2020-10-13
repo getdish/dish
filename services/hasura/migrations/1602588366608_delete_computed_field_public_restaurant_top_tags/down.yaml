@@ -1,0 +1,8 @@
+- args:
+    comment: ""
+    definition: {}
+    name: top_tags
+    table:
+      name: restaurant
+      schema: public
+  type: add_computed_field

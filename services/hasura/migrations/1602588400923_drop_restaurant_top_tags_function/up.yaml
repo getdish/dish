@@ -1,0 +1,9 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: |-
+      DROP FUNCTION IF EXISTS restaurant_top_tags(
+        _restaurant restaurant,
+        tag_names TEXT
+      );
+  type: run_sql

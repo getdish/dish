@@ -3745,7 +3745,10 @@ export type restaurant_tag_variance_order_by = {
  * @name restaurant_top_tags_args
  * @type INPUT_OBJECT
  */
-export type restaurant_top_tags_args = { tag_names?: string | null }
+export type restaurant_top_tags_args = {
+  _tag_types?: string | null
+  tag_names?: string | null
+}
 
 /**
  * @name restaurant_update_column
@@ -3888,7 +3891,7 @@ export type t_review = FieldsType<
       },
       t_review_tag_sentence_aggregate
     >
-    source: t_String
+    source?: t_String | null
     tag?: t_tag | null
     tag_id?: t_uuid | null
     text?: t_String | null
