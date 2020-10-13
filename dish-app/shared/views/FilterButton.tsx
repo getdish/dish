@@ -8,7 +8,7 @@ import { useIsNarrow } from '../hooks/useIs'
 import { SearchPageDeliveryFilterButtons } from '../pages/search/SearchPageDeliveryFilterButtons'
 import { tagDisplayNames } from '../state/tagDisplayName'
 import { LinkButtonProps } from './ui/LinkProps'
-import { SmallLinkButton } from './ui/SmallButton'
+import { SmallButton } from './ui/SmallButton'
 
 export const FilterButton = memo(
   ({
@@ -53,12 +53,13 @@ export const FilterButton = memo(
     }
 
     content = (
-      <SmallLinkButton
+      <SmallButton
         backgroundColor="transparent"
         fontSize={14}
         fontWeight="700"
         alignItems="center"
         justifyContent="center"
+        textAlign="center"
         isActive={isActive}
         tag={tag}
         {...rest}
@@ -68,7 +69,7 @@ export const FilterButton = memo(
         ) : (
           <VStack transform={[{ translateY: 7 }]}>{content}</VStack>
         )}
-      </SmallLinkButton>
+      </SmallButton>
     )
 
     if (tag.name === 'Delivery') {

@@ -41,7 +41,7 @@ import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { Link } from '../../views/ui/Link'
-import { SmallLinkButton } from '../../views/ui/SmallButton'
+import { SmallButton } from '../../views/ui/SmallButton'
 import { Squircle } from '../../views/ui/Squircle'
 import { ensureFlexText } from './ensureFlexText'
 import { RestaurantAddress } from './RestaurantAddress'
@@ -407,7 +407,7 @@ const RestaurantListItemContent = memo(
                   <Tooltip
                     contents={`Rating Breakdown (${totalReviews} reviews)`}
                   >
-                    <SmallLinkButton
+                    <SmallButton
                       name="restaurantReviews"
                       params={{
                         id: props.restaurantId,
@@ -426,7 +426,7 @@ const RestaurantListItemContent = memo(
                       {numberFormat(
                         restaurant.reviews_aggregate().aggregate.count() ?? 0
                       )}
-                    </SmallLinkButton>
+                    </SmallButton>
                   </Tooltip>
                 </VStack>
 

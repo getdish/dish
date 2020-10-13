@@ -10,7 +10,7 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
-import { SmallLinkButton } from '../../views/ui/SmallButton'
+import { SmallButton } from '../../views/ui/SmallButton'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
@@ -126,7 +126,7 @@ const RestaurantHeaderContent = memo(
                               }
                             />
                           </VStack>
-                          <SmallLinkButton
+                          <SmallButton
                             backgroundColor="transparent"
                             name="restaurantHours"
                             params={{ slug: restaurantSlug }}

@@ -80,7 +80,6 @@ export const HomeSearchBarFloating = () => {
       right={16}
     >
       <VStack
-        zIndex={12}
         position="relative"
         alignItems="center"
         justifyContent="center"
@@ -97,9 +96,9 @@ export const HomeSearchBarFloating = () => {
           height={searchBarHeight}
           justifyContent="center"
           alignItems="center"
-          shadowColor="rgba(0,0,0,0.2)"
+          shadowColor="rgba(0,0,0,0.24)"
           shadowOffset={{ height: 3, width: 0 }}
-          shadowRadius={14}
+          shadowRadius={12}
         >
           <AbsoluteVStack
             // opacity={0.76}
@@ -118,13 +117,9 @@ export const HomeSearchBarFloating = () => {
           width="100%"
           maxWidth={searchBarMaxWidth}
         >
-          <HStack alignItems="center" justifyContent="center">
-            <VStack maxWidth="100%" flex={1} transform={[{ translateY: -1 }]}>
-              <Suspense fallback={null}>
-                <HomeSearchBar />
-              </Suspense>
-            </VStack>
-          </HStack>
+          <Suspense fallback={null}>
+            <HomeSearchBar />
+          </Suspense>
         </VStack>
       </VStack>
     </AbsoluteVStack>
@@ -168,7 +163,6 @@ const HomeSearchBar = memo(() => {
             : '100%'
         }
         alignItems="center"
-        overflow="hidden"
       >
         {/* Search Input Start */}
         {isReallySmall && !isWeb && (

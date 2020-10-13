@@ -1,17 +1,9 @@
 import { graphql } from '@dish/graph'
 import { ellipseText } from '@dish/helpers'
-import {
-  AbsoluteVStack,
-  HStack,
-  Paragraph,
-  Spacer,
-  Text,
-  VStack,
-} from '@dish/ui'
+import { AbsoluteVStack, HStack, Paragraph, Text, VStack } from '@dish/ui'
 import { capitalize } from 'lodash'
 import React, { memo } from 'react'
 
-import { isWeb } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 
 export const RestaurantOverview = memo(
@@ -31,8 +23,7 @@ export const RestaurantOverview = memo(
         <HStack flex={1} overflow="hidden">
           <Paragraph
             size={1}
-            sizeLineHeight={0.8}
-            lineHeight={22}
+            lineHeight={summary.length > 200 ? 22 : 24}
             opacity={1}
             height={height}
             overflow="hidden"

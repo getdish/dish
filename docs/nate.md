@@ -9,7 +9,8 @@
   - clicking a dish takes you to the gallery but there are no photos of that dish
 - performance runthrough in prod mode
 - fix small delivery/price filters
-
+- autocomplete
+  - filter dishes within cuisine, sorted by popularity
 - fix hmr for useStore in react native
 - get reviewing fully working with votes/sentiment on tags
 - fix up points breakdown and dish/tag breakdown
@@ -29,6 +30,10 @@ Home page
 - generally home page query and layout, but that's a whole other kettle of fish
 - is the plan for the site to be login only? i think it's better to allow anonymous use of the site
 Restaurant page
+
+- would be cool to show other dishes related to your current dish
+  - so on "taco"
+    - "fish taco", "birria taco", "crispy taco", etc
 
 ---
 

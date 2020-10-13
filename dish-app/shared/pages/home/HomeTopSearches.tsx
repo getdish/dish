@@ -38,7 +38,7 @@ export const HomeTopSearches = memo(() => {
             paddingHorizontal={15}
             alignItems="center"
             marginBottom={7}
-            borderRadius={12}
+            borderRadius={20}
             borderWidth={1}
             position="relative"
             overflow="hidden"

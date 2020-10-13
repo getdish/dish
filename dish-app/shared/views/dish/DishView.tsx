@@ -11,7 +11,7 @@ import { NavigableTag } from '../../state/NavigableTag'
 import { LinkButton } from '../ui/LinkButton'
 import { Squircle } from '../ui/Squircle'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
-import { getDishBackgroundColor } from './getDishBackgroundColor'
+import { getDishColors } from './getDishBackgroundColor'
 
 // avoid too many different image sizes
 const getRoundedDishViewSize = (size: number) => {
@@ -57,7 +57,7 @@ export const DishView = memo(
     const borderRadius = size * 0.15
     const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
     const isFallback = _isFallback ?? dish.isFallback
-    const backgroundColor = getDishBackgroundColor(dish.name)
+    const backgroundColor = getDishColors(dish.name).lightColor
 
     return (
       <LinkButton

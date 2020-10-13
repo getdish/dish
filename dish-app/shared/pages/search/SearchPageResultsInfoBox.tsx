@@ -74,7 +74,7 @@ const HomeSearchInfoBoxCountry = memo(
             alignItems="center"
           >
             <Text opacity={0.7} fontSize={14} marginRight={8}>
-              Filter by dish:
+              Popular dishes:
             </Text>
             {topCountryDishes.map((tag) => {
               return (

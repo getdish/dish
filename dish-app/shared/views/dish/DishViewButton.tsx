@@ -4,7 +4,7 @@ import React, { memo } from 'react'
 import { flatButtonStyle } from '../baseButtonStyle'
 import { LinkButton } from '../ui/LinkButton'
 import { LinkButtonNamedProps } from '../ui/LinkProps'
-import { getDishBackgroundColor } from './getDishBackgroundColor'
+import { getDishColors } from './getDishBackgroundColor'
 
 export const DishViewButton = memo(
   ({
@@ -16,14 +16,16 @@ export const DishViewButton = memo(
     icon: string
     size?: number
   } & StackProps) => {
-    const backgroundColor = getDishBackgroundColor(name)
+    const { lightColor, color } = getDishColors(name)
     return (
       <LinkButton
         {...flatButtonStyle}
-        backgroundColor={backgroundColor}
+        backgroundColor={lightColor}
         hoverStyle={{
-          backgroundColor: `${backgroundColor}cc`,
+          backgroundColor: `${lightColor}cc`,
         }}
+        borderWidth={1}
+        borderColor={`${color}33`}
         paddingVertical={8}
         paddingHorizontal={12}
         alignItems="center"

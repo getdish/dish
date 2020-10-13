@@ -4,7 +4,7 @@ import React from 'react'
 
 import { GeocodePlace } from '../../../shared/state/home-types'
 import { useIsNarrow } from '../../hooks/useIs'
-import { SmallLinkButton } from '../../views/ui/SmallButton'
+import { SmallButton } from '../../views/ui/SmallButton'
 import { AddressSize, getAddressText } from './RestaurantAddressLinksRow'
 
 export const RestaurantAddress = ({
@@ -20,7 +20,7 @@ export const RestaurantAddress = ({
 }) => {
   const isSmall = useIsNarrow()
   return (
-    <SmallLinkButton
+    <SmallButton
       maxWidth={isSmall ? 160 : 200}
       ellipse
       backgroundColor="transparent"
@@ -43,6 +43,6 @@ export const RestaurantAddress = ({
           </Text>
         )}
       </HStack>
-    </SmallLinkButton>
+    </SmallButton>
   )
 }

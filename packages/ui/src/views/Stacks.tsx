@@ -57,6 +57,7 @@ export type StackProps = Omit<
       children?: any
       hoverStyle?: ViewStyle | null
       pressStyle?: ViewStyle | null
+      focusStyle?: ViewStyle | null
       onHoverIn?: Function
       onHoverOut?: Function
       onPress?: Function
@@ -112,6 +113,7 @@ const createStack = (defaultProps?: ViewStyle) => {
       onPressIn,
       onPressOut,
       hoverStyle = null,
+      focusStyle,
       onHoverIn,
       onHoverOut,
       spacing,

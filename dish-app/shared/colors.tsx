@@ -29,13 +29,14 @@ export const allLightColors = [
   lightOrange,
 ]
 
-export const yellow = '#E8DCAD'
+export const yellow = '#D9CEA2'
 export const green = `#52A558`
-export const red = `#C05D5D`
+export const red = `#D06868`
 export const grey = `#aaa`
-export const orange = '#A74F10'
-export const blue = '#214EB1'
+export const orange = '#D16A20'
+export const blue = '#3360C3'
 export const purple = '#6C16BD'
+export const allColors = [yellow, green, red, blue, purple, orange]
 
 export const darkGreen = `#52A558`
 export const darkRed = `#A43C3C`

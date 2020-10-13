@@ -5,8 +5,6 @@ import React, { memo } from 'react'
 import { isWeb } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { Link } from '../../views/ui/Link'
-import { SmallLinkButton } from '../../views/ui/SmallButton'
-import { getRestaurantDeliverySources } from './getRestaurantDeliverySources'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 
 export const RestaurantDetailRow = memo(

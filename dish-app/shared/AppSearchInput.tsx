@@ -16,6 +16,7 @@ import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { AppSearchInputTags } from './AppSearchInputTags'
 import { isWeb, searchBarHeight } from './constants'
 import { isWebIOS } from './helpers/isIOS'
+import { rgbString } from './helpers/rgbString'
 import { getIs, useIsNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
@@ -84,13 +85,13 @@ export const isSearchInputFocused = () => {
 export const AppSearchInput = memo(() => {
   const inputStore = useStore(InputStore, { name: 'search' })
   const om = useOvermind()
-  const { color, background, isSmall } = useSearchBarTheme()
+  const { color, backgroundRgb, isSmall } = useSearchBarTheme()
   const [search, setSearch] = useState('')
   const getSearch = useGet(search)
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
   // const { showAutocomplete } = om.state.home
 
-  const height = searchBarHeight
+  const height = searchBarHeight - 2
   const outerHeight = height - 5
   const innerHeight = height - 5
 
@@ -110,7 +111,6 @@ export const AppSearchInput = memo(() => {
   })
 
   const showAutocomplete = om.state.home.showAutocomplete === 'search'
-  console.log('showAutocomplete', showAutocomplete)
   useEffect(() => {
     if (showAutocomplete) {
       const tm = setTimeout(() => {
@@ -162,122 +162,131 @@ export const AppSearchInput = memo(() => {
   // }, [])
 
   return (
-    <HStack flex={1} overflow="hidden">
-      <AppAutocompleteHoverableInput input={input} autocompleteTarget="search">
-        <HStack
-          alignItems="center"
-          borderRadius={10}
-          flex={1}
-          maxWidth="100%"
-          paddingLeft={10}
-          overflow="hidden"
+    <AppAutocompleteHoverableInput input={input} autocompleteTarget="search">
+      <HStack
+        alignItems="center"
+        borderRadius={100}
+        borderWidth={0.5}
+        borderColor="transparent"
+        flex={1}
+        maxWidth="100%"
+        paddingLeft={10}
+        overflow="hidden"
+        hoverStyle={{
+          borderColor: 'rgba(255,255,255,0.2)',
+        }}
+        focusStyle={{
+          borderColor: 'rgba(255,255,255,0.3)',
+          shadowColor: '#000',
+          shadowRadius: 4,
+          shadowOpacity: 0.2,
+        }}
+      >
+        {/* Loading / Search Icon */}
+        <VStack
+          width={16}
+          marginRight={-2}
+          marginLeft={3}
+          transform={[{ scale: om.state.home.isLoading ? 1.2 : 1 }]}
         >
-          {/* Loading / Search Icon */}
-          <VStack
-            width={16}
-            transform={[{ scale: om.state.home.isLoading ? 1.2 : 1 }]}
-          >
-            <TouchableOpacity onPress={focusSearchInput}>
-              {om.state.home.isLoading ? (
-                <VStack className="rotating" opacity={1}>
-                  <Loader color={color} size={16} />
-                </VStack>
-              ) : (
-                <Search
-                  color={color}
-                  size={16}
-                  style={{
-                    opacity: 0.8,
-                  }}
-                />
-              )}
-            </TouchableOpacity>
-          </VStack>
+          <TouchableOpacity onPress={focusSearchInput}>
+            {om.state.home.isLoading ? (
+              <VStack className="rotating" opacity={1}>
+                <Loader color={color} size={16} />
+              </VStack>
+            ) : (
+              <Search
+                color={color}
+                size={16}
+                style={{
+                  opacity: 0.8,
+                }}
+              />
+            )}
+          </TouchableOpacity>
+        </VStack>
 
-          <VStack
-            // @ts-ignore
-            ref={searchInputContainer}
-            minWidth="50%"
-            flex={2}
-            height={outerHeight}
+        <VStack
+          // @ts-ignore
+          ref={searchInputContainer}
+          minWidth="50%"
+          flex={2}
+          height={outerHeight}
+        >
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              alignItems: 'center',
+              minWidth: '100%',
+            }}
+            style={{
+              minWidth: '100%',
+              paddingRight: 10,
+              flex: 1,
+            }}
           >
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{
-                alignItems: 'center',
-                minWidth: '100%',
-              }}
-              style={{
-                minWidth: '100%',
-                paddingRight: 10,
-                flex: 1,
-              }}
+            <HStack
+              alignSelf="center"
+              alignItems="center"
+              minWidth="100%"
+              height={innerHeight}
             >
+              <AppSearchInputTags input={input} />
               <HStack
-                alignSelf="center"
-                alignItems="center"
-                minWidth="100%"
                 height={innerHeight}
+                maxWidth="100%"
+                position="relative"
+                flex={1}
+                alignItems="center"
               >
-                <AppSearchInputTags input={input} />
-                <HStack
-                  height={innerHeight}
-                  maxWidth="100%"
-                  position="relative"
-                  flex={1}
-                  alignItems="center"
-                >
-                  {!isWeb && <SearchInputNativeDragFix name="search" />}
-                  <TextInput
-                    ref={inputStore.setNode}
-                    // leave uncontrolled for perf?
-                    value={search ?? ''}
-                    onBlur={(e) => {
-                      avoidNextFocus = false
-                    }}
-                    onKeyPress={handleKeyPressInner}
-                    onFocus={() => {
-                      if (omStatic.state.home.searchbarFocusedTag) {
-                        omStatic.actions.home.setSearchBarTagIndex(0)
-                      } else {
-                        omStatic.actions.home.setShowAutocomplete('search')
-                      }
-                    }}
-                    onChangeText={(text) => {
-                      if (getSearch() == '' && text !== '') {
-                        om.actions.home.setShowAutocomplete('search')
-                      }
-                      setSearch(text)
-                      om.actions.home.setSearchQuery(text)
-                    }}
-                    placeholder={
-                      isSearchingCuisine ? '...' : `${placeHolder}...`
+                {!isWeb && <SearchInputNativeDragFix name="search" />}
+                <TextInput
+                  ref={inputStore.setNode}
+                  // leave uncontrolled for perf?
+                  value={search ?? ''}
+                  onBlur={(e) => {
+                    avoidNextFocus = false
+                  }}
+                  onKeyPress={handleKeyPressInner}
+                  onFocus={() => {
+                    if (omStatic.state.home.searchbarFocusedTag) {
+                      omStatic.actions.home.setSearchBarTagIndex(0)
+                    } else {
+                      omStatic.actions.home.setShowAutocomplete('search')
                     }
-                    style={[
-                      inputTextStyles.textInput,
-                      {
-                        color,
-                        flex: 1,
-                        fontSize: isSmall ? 18 : 20,
-                        fontWeight: '500',
-                        height,
-                        lineHeight: height * 0.45,
-                        paddingHorizontal: 20,
-                      },
-                    ]}
-                  />
-                </HStack>
+                  }}
+                  onChangeText={(text) => {
+                    if (getSearch() == '' && text !== '') {
+                      om.actions.home.setShowAutocomplete('search')
+                    }
+                    setSearch(text)
+                    om.actions.home.setSearchQuery(text)
+                  }}
+                  placeholder={isSearchingCuisine ? '...' : `${placeHolder}...`}
+                  style={[
+                    inputTextStyles.textInput,
+                    {
+                      color,
+                      flex: 1,
+                      fontSize: isSmall ? 18 : 20,
+                      fontWeight: '500',
+                      height,
+                      lineHeight: height * 0.45,
+                      paddingHorizontal: 15,
+                    },
+                  ]}
+                />
               </HStack>
-            </ScrollView>
-          </VStack>
+            </HStack>
+          </ScrollView>
+        </VStack>
 
-          <SearchCancelButton />
+        <SearchCancelButton />
 
-          <Spacer direction="horizontal" size={8} />
-        </HStack>
-      </AppAutocompleteHoverableInput>
-    </HStack>
+        <Spacer direction="horizontal" size={8} />
+      </HStack>
+    </AppAutocompleteHoverableInput>
   )
 })
 
