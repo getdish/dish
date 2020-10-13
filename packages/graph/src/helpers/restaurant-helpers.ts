@@ -7,7 +7,7 @@ import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 import { restaurantTagUpsert } from './restaurantTag'
 import { tagSlugs } from './tag-extension-helpers'
-import { tagGetAllChildren, tagUpsert } from './tag-helpers'
+import { tagGetAllChildren, tagGetAllGenerics, tagUpsert } from './tag-helpers'
 
 const QueryHelpers = createQueryHelpersFor<Restaurant>('restaurant')
 export const restaurantInsert = QueryHelpers.insert
@@ -18,6 +18,13 @@ export const restaurantRefresh = QueryHelpers.refresh
 
 const tagDataRelations = {
   relations: ['tags.tag.categories.category', 'tags.tag.parent'],
+}
+
+export const restaurant_fixture = {
+  name: 'Test Restaurant',
+  address: 'On The Street',
+  geocoder_id: '123',
+  location: { type: 'Point', coordinates: [0, 0] },
 }
 
 export async function restaurantFindOneWithTags(
@@ -165,5 +172,6 @@ export async function restaurantGetAllPossibleTags(restaurant: Restaurant) {
       return rt.tag.parentId == globalTagId
     })
     .map((rt) => rt.tag)
-  return [...cuisine_dishes, ...orphans]
+  const generics = await tagGetAllGenerics()
+  return [...cuisine_dishes, ...orphans, ...generics]
 }

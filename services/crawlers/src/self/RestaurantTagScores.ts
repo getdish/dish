@@ -1,6 +1,6 @@
 import { sentryException, sentryMessage } from '@dish/common'
 import { ReviewTagSentence } from '@dish/graph'
-import { fetchBertSentiment } from '@dish/helpers'
+import { bertResultToNumber, fetchBertSentiment } from '@dish/helpers'
 import { chunk } from 'lodash'
 
 import { Self } from './Self'
@@ -64,7 +64,7 @@ export class RestaurantTagScores {
     if (!result) return
     return {
       id: review_tag_sentence.id,
-      ml_sentiment: this._bertResultToNumber(result),
+      ml_sentiment: bertResultToNumber(result),
     }
   }
 
@@ -109,18 +109,6 @@ export class RestaurantTagScores {
             `Sentence ${this.current_sentence}/${this.total_sentences}`
         )
       }
-    }
-  }
-
-  _bertResultToNumber(bert_sentiment: [string, number]) {
-    const score = bert_sentiment[1]
-    switch (bert_sentiment[0]) {
-      case 'Positive':
-        return 1 * score
-      case 'Negative':
-        return -1 * score
-      default:
-        return 0
     }
   }
 

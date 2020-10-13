@@ -46,6 +46,16 @@ export async function tagFindCountries(countries: string[]): Promise<Tag[]> {
   })
 }
 
+export async function tagGetAllGenerics(): Promise<Tag[]> {
+  return await resolvedWithFields(() => {
+    return query.tag({
+      where: {
+        _or: [{ type: { _eq: 'filter' } }, { type: { _eq: 'lense' } }],
+      },
+    })
+  })
+}
+
 export async function tagGetAllCuisinesWithDishes(
   batch_size: number,
   page: number

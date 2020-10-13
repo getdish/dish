@@ -49,7 +49,9 @@ class AuthController {
       { expiresIn: '1w' }
     )
 
-    console.log('logging in', user)
+    if (process.env.NODE_ENV != 'test') {
+      console.log('logging in', user)
+    }
 
     //@ts-ignore
     delete user.password

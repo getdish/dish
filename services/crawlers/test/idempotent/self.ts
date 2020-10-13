@@ -457,13 +457,11 @@ test('Tag rankings', async (t) => {
       ...restaurant_fixture,
       address: '1',
       geocoder_id: '123',
-      location: { type: 'Point', coordinates: [0, 0] },
     },
     {
       ...restaurant_fixture,
       address: '2',
       geocoder_id: 'abc',
-      location: { type: 'Point', coordinates: [0, 0] },
     },
   ])
   await restaurantTagUpsert(self.restaurant.id, [
@@ -568,9 +566,15 @@ test('Review naive sentiments', async (t) => {
   t.is(rv4.rating, 4)
 })
 
-test('Finding veg in reviews', async (t) => {
+test('Finding filters and alternates in reviews', async (t) => {
+  const tags = await tagInsert([
+    {
+      name: 'Test Veg',
+      type: 'filter',
+      alternates: ['veg', 'vegetarian', 'vegan'],
+    },
+  ])
   const self = new Self()
-  self.tagging.SPECIAL_FILTER_THRESHOLD = 1
   await self.preMerge(t.context.restaurant)
   await self.getScrapeData()
   await self.scanCorpus()
@@ -580,7 +584,7 @@ test('Finding veg in reviews', async (t) => {
   })
   t.assert(!!updated, 'not found')
   if (!updated) return
-  t.assert(updated.tag_names.includes('veg'))
+  t.assert(updated.tag_names.includes('test-veg'))
 })
 
 test('Find photos of dishes', async (t) => {

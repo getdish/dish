@@ -1,5 +1,12 @@
 import 'isomorphic-unfetch'
 
+import {
+  flushTestData,
+  restaurantInsert,
+  restaurantTagUpsert,
+  restaurant_fixture,
+  tagInsert,
+} from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
 
 import app from '../src/app'
@@ -25,6 +32,7 @@ const login = async () => {
 }
 
 test.before(async () => {
+  await flushTestData()
   const server = await app()
   server.listen(PORT)
 })
@@ -52,4 +60,33 @@ test('Authed request success', async (t) => {
     },
   }).then((res) => res.json())
   t.deepEqual(user.username, 'admin')
+})
+
+test('Review analyzer', async (t) => {
+  const [restaurant] = await restaurantInsert([restaurant_fixture])
+  const [tag] = await tagInsert([{ name: 'Test tag' }])
+  await restaurantTagUpsert(restaurant.id, [{ tag_id: tag.id }])
+  const [_response, data] = await login()
+  const jwt = data.token
+  const response = await fetch(BASE + '/review/analyze', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: jwt,
+    },
+    body: JSON.stringify({
+      restaurant_id: restaurant.id,
+      text: 'Test tag is amazing',
+    }),
+  })
+  const text = await response.text()
+  const analysis = JSON.parse(text)
+  t.deepEqual(analysis.sentences, [
+    {
+      score: 0.9998691082000732,
+      sentence: 'Test tag is amazing',
+      tags: ['Test tag'],
+    },
+  ])
+  t.is(analysis.tags[0].id, tag.id)
 })

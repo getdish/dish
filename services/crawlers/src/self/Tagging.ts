@@ -15,6 +15,7 @@ import {
   tagFindCountries,
   tagSlug,
 } from '@dish/graph'
+import { breakIntoSentences, doesStringContainTag } from '@dish/helpers'
 import * as chrono from 'chrono-node'
 import { uniq } from 'lodash'
 import moment from 'moment'
@@ -167,7 +168,6 @@ export class Tagging {
     let all_sources = [...this.all_reviews, ...this._scanMenuItemsForTags()]
     all_sources = this.cleanAllSources(all_sources) as TextSource[]
     const reviews_with_sentiments = this.findDishesInText(all_sources)
-    await this.findVegInText(all_sources)
     await this._collectFoundRestaurantTags()
     await reviewExternalUpsert(reviews_with_sentiments)
   }
@@ -212,7 +212,7 @@ export class Tagging {
         }
         let is_at_least_one_photo = false
         for (const photo of photos) {
-          if (this.doesStringContainTag(photo.media_data?.caption, tag.name)) {
+          if (doesStringContainTag(photo.media_data?.caption, tag)) {
             is_at_least_one_photo = true
             all_tag_photos.push({
               restaurant_id: this.crawler.restaurant.id,
@@ -241,7 +241,7 @@ export class Tagging {
         text = source.text ?? ''
       }
       for (const tag of this.all_tags) {
-        const is_tags_found = this.doesStringContainTag(text, tag.name ?? '')
+        const is_tags_found = doesStringContainTag(text, tag)
         if (is_tags_found) {
           source = this.tagFound(tag, source)
         }
@@ -264,9 +264,9 @@ export class Tagging {
     this.found_tags[tag.id] = tag
     this.restaurant_tag_ratings[tag.id] =
       this.restaurant_tag_ratings[tag.id] || []
-    const sentences = this.matchingSentences(text)
+    const sentences = breakIntoSentences(text)
     for (const sentence of sentences) {
-      if (!this.doesStringContainTag(sentence, tag.name ?? '')) continue
+      if (!doesStringContainTag(sentence, tag)) continue
       const rating = this.measureSentiment(sentence)
       this.restaurant_tag_ratings[tag.id].push(rating)
       if (isReview(text_source)) {
@@ -283,31 +283,6 @@ export class Tagging {
       text_source.sentiments = dedupeSentiments(text_source.sentiments)
     }
     return text_source
-  }
-
-  async findVegInText(all_sources: TextSource[]) {
-    let matches = 0
-    for (const source of all_sources) {
-      let text = (source as Review).text
-      if (!text) {
-        text = source as string
-      }
-      if (this.doesStringContainTag(text, 'vegetarian')) matches += 1
-      if (this.doesStringContainTag(text, 'vegan')) matches += 1
-    }
-    if (matches > this.SPECIAL_FILTER_THRESHOLD) {
-      await this.addSimpleTags(['veg'])
-    }
-  }
-
-  doesStringContainTag(text: string, tag_name: string | undefined) {
-    if (typeof tag_name === 'undefined') return false
-    const regex = new RegExp(`\\b${tag_name}\\b`, 'i')
-    return regex.test(text)
-  }
-
-  matchingSentences(text: string) {
-    return text.match(/[^\.!\?]+[\.!\?]+/g) || [text]
   }
 
   measureSentiment(sentence: string) {

@@ -1,5 +1,7 @@
 import './polyfill-localStorage'
 
+import { Tag } from '@dish/graph'
+
 export * from './constants'
 export * from './assertHelpers'
 
@@ -43,4 +45,36 @@ export async function fetchBertSentiment(sentence: string) {
   )
     .then((res) => res.json())
     .then((x) => x)
+}
+
+export function bertResultToNumber(bert_sentiment: [string, number]) {
+  const score = bert_sentiment[1]
+  switch (bert_sentiment[0]) {
+    case 'Positive':
+      return 1 * score
+    case 'Negative':
+      return -1 * score
+    default:
+      return 0
+  }
+}
+
+export async function fetchBertSentimentNumber(text: string) {
+  const result = await fetchBertSentiment(text)
+  const number = bertResultToNumber(result.result[0])
+  return number
+}
+
+export function doesStringContainTag(text: string, tag: Tag) {
+  const tag_names = [tag.name, ...(tag.alternates || [])]
+  for (const tag_name of tag_names) {
+    const regex = new RegExp(`\\b${tag_name}\\b`, 'i')
+    const is_found = regex.test(text)
+    if (is_found) return true
+  }
+  return false
+}
+
+export function breakIntoSentences(text: string) {
+  return text.match(/[^\.!\?]+[\.!\?]+/g) || [text]
 }
