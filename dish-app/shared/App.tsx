@@ -90,15 +90,26 @@ const AppContent = memo(() => {
           <AppMapControlsOverlay />
         </Suspense>
 
-        <HomeSearchBarFloating />
-        <HomeAutocomplete />
+        <Suspense fallback={null}>
+          <HomeSearchBarFloating />
+        </Suspense>
+        <Suspense fallback={null}>
+          <HomeAutocomplete />
+        </Suspense>
 
         <Suspense fallback={null}>
           <GalleryPage />
+        </Suspense>
+        <Suspense fallback={null}>
           <RestaurantReviewPage />
+        </Suspense>
+        <Suspense fallback={null}>
           <RestaurantReviewsPage />
+        </Suspense>
+        <Suspense fallback={null}>
           <UserEditPage />
-
+        </Suspense>
+        <Suspense fallback={null}>
           <Route name="restaurantHours">
             <RestaurantHoursPage />
           </Route>

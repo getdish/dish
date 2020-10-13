@@ -29,14 +29,19 @@ export const RestaurantAddress = ({
       )}`}
     >
       <HStack alignItems="center" maxWidth="100%">
-        <MapPin
-          color={color}
-          size={16}
-          style={{ marginRight: 4, opacity: 0.5 }}
-        />
-        <Text color={color} ellipse fontSize={14} fontWeight="400" selectable>
-          {getAddressText(currentLocationInfo, address, size)}
-        </Text>
+        <MapPin color={color} size={16} style={{ opacity: 0.5 }} />
+        {!isSmall && (
+          <Text
+            marginLeft={4}
+            color={color}
+            ellipse
+            fontSize={14}
+            fontWeight="400"
+            selectable
+          >
+            {getAddressText(currentLocationInfo, address, size)}
+          </Text>
+        )}
       </HStack>
     </SmallLinkButton>
   )

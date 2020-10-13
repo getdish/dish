@@ -1,5 +1,20 @@
-* The breakdowns popup on the results page flashes 3 times before
-  showing the required values
+- thorough runthrough of scrolling/map/mobile fixes
+  - overall just runthrough everything a few times and fix a lot
+  - scrolling horizontal should disable vertical drag
+- show the current selected lense (just icon, votable) at front of tagrow in listitem
+- small listitem improvements
+- runthrough/fix login/register flows again
+- gallery v2
+  - resolve dish images
+  - clicking a dish takes you to the gallery but there are no photos of that dish
+- performance runthrough in prod mode
+- fix small delivery/price filters
+
+- fix hmr for useStore in react native
+- get reviewing fully working with votes/sentiment on tags
+- fix up points breakdown and dish/tag breakdown
+- location <=> url
+
 * There's currently a discrepancy between the points we initially gave
   to a single review and the points we now give. Because we haven't done
   a full recrawl since this change, there's a mix of point factors in
@@ -10,33 +25,10 @@
   single review at the time of aggreation, so this problem won't happen
   again.
 * @natew I don't suppose the weights are relevant anymore?
-
----
-
 Home page
 - generally home page query and layout, but that's a whole other kettle of fish
 - is the plan for the site to be login only? i think it's better to allow anonymous use of the site
 Restaurant page
-- again dishes not ordered by their scores
-- clicking a dish takes you to the gallery but there are no photos of that dish
-- and the hardcoded breakdowns again too
-- menu title show even when there's no menu
-- menu doesn't contain prices or images
-
----
-
-- tag voting fixes everywhere
-- points breakdown real fixes
-- admin panel fixes + fiverr cleanups
-- slow scrolling because of mapbox?
-- list item
-  - show restaurant cuisine tags in overview
-  - if michelin quote is availble, show that with michelin logo
-- fix hmr for useStore in react native
-- fix login/register flows
-- get reviewing fully working with votes/sentiment on tags
-- fix up points breakdown and dish/tag breakdown
-- location <=> url
 
 ---
 
@@ -100,26 +92,6 @@ big impact changes
 - "explore mode" or "auto re-search" basically just have map research as you move
 
 ---
-
-## GPT-3
-
-- build a summarizer:
-  - for 10 restaurants of diverse cuisine:
-    - collect 10 diverse reviews:
-      - put them all concatted together above
-      - then put """, then write a fun, funny, short summary calling out a few unique things from the reviews
-  - then collect 5 more restaurants of different cuisines, 10 reviews each:
-    - see if it summarizes them nicely
-  - plug into actual app for top X restaurants
-    - maybe do it based on homepage results so they are likely to see
-
-- Dish Sentiment + summary for search results
-- Each lense could get a summary too - Vibe / Drinks / Vegetarian
-- Tips
-  - when to go to beat the rush?
-  - can you sit at the bar?
-  - where to park?
-  - pull out anything that mentions "tip"
 
 ## bigger impact changes
 

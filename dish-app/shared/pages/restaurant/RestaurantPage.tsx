@@ -3,7 +3,7 @@ import { HStack, LinearGradient, LoadingItem, Spacer, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { StyleSheet } from 'react-native'
 
-import { bgLight, blue, lightBlue } from '../../colors'
+import { bgLight, blue, darkBlue, lightBlue } from '../../colors'
 import { getMinLngLat } from '../../helpers/getLngLat'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -60,7 +60,7 @@ const RestaurantPage = memo(
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
 
-        <ContentScrollView id="restaurantPage" paddingTop={0}>
+        <ContentScrollView id="restaurant" paddingTop={0}>
           {/* <LinearGradient
             colors={[bgLight, 'rgba(255,255,255,0)']}
             style={[
@@ -84,7 +84,7 @@ const RestaurantPage = memo(
               }
             >
               <RestaurantHeader
-                color={blue}
+                color={darkBlue}
                 showImages
                 restaurantSlug={restaurantSlug}
                 after={
@@ -104,7 +104,7 @@ const RestaurantPage = memo(
                   </VStack>
                 }
                 below={
-                  <>
+                  <Suspense fallback={null}>
                     <RestaurantOverview restaurantSlug={restaurantSlug} />
                     <Spacer size="xl" />
                     <HStack flexWrap="wrap">
@@ -117,7 +117,7 @@ const RestaurantPage = memo(
                         max={5}
                       />
                     </HStack>
-                  </>
+                  </Suspense>
                 }
               />
             </Suspense>

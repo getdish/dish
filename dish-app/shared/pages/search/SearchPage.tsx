@@ -54,6 +54,7 @@ import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
 import {
+  ContentScrollView,
   ScrollStore,
   setIsScrollAtTop,
   usePreventContentScroll,
@@ -332,7 +333,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         lowerCase: false,
       }
     )
-    const paddingTop = isSmall ? 2 : titleHeight
+    const paddingTop = isSmall ? 5 : titleHeight
     const titleLen = (title + subTitle).length
     const titleScale =
       titleLen > 80
@@ -344,12 +345,9 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         : titleLen > 50
         ? 0.9
         : 1
-    const titleFontSize = 32 * titleScale * (isSmall ? 0.7 : 1)
+    const titleFontSize = 30 * titleScale * (isSmall ? 0.65 : 1)
     const lenseColor = useCurrentLenseColor()
     const scrollRef = useRef<ScrollView>()
-    const preventScrolling = usePreventContentScroll()
-    const scrollStore = useStore(ScrollStore)
-    const tm = useRef<any>(0)
 
     useEffect(() => {
       return omStatic.reaction(
@@ -380,33 +378,14 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
 
     return (
       <VStack onLayout={handleLayout} flex={1}>
-        <ScrollView
-          scrollEventThrottle={100}
+        <ContentScrollView
+          id="search"
           ref={combineRefs(ref, scrollRef)}
           {...props}
-          scrollEnabled={preventScrolling ? false : props.scrollEnabled ?? true}
-          disableScrollViewPanResponder={
-            preventScrolling
-              ? true
-              : props.disableScrollViewPanResponder ?? false
-          }
-          onScroll={(e) => {
-            const y = e.nativeEvent.contentOffset.y
-            setIsScrollAtTop(y <= 0)
-            props.onScroll?.(e)
-            // perf issue i believe
-            if (!scrollStore.isScrolling) {
-              scrollStore.setIsScrolling(true)
-            }
-            clearTimeout(tm.current)
-            tm.current = setTimeout(() => {
-              scrollStore.setIsScrolling(false)
-            }, 200)
-          }}
         >
           <VStack width="100%" height={paddingTop} />
           <HStack
-            paddingHorizontal={20}
+            paddingHorizontal={15}
             paddingTop={10}
             paddingBottom={10}
             overflow="hidden"
@@ -417,7 +396,8 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             <VStack backgroundColor="#f2f2f2" height={1} flex={1} />
             <Text
               marginVertical="auto"
-              letterSpacing={-0.5}
+              textAlign="center"
+              letterSpacing={-0.25}
               fontSize={titleFontSize}
               fontWeight="700"
               color={rgbString(lenseColor.map((x) => x * 0.8))}
@@ -448,7 +428,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             />
             <VStack height={400} />
           </Suspense>
-        </ScrollView>
+        </ContentScrollView>
       </VStack>
     )
   }

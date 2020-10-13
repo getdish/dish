@@ -1,8 +1,7 @@
-import { VStack, combineRefs } from '@dish/ui'
-import { Store, useStore } from '@dish/use-store'
-import { last } from 'lodash'
-import React, { createContext, forwardRef, useEffect, useRef } from 'react'
-import { ScrollView, ScrollViewProps } from 'react-native'
+import { VStack } from '@dish/ui'
+import { Store, useStore, useStoreSelector } from '@dish/use-store'
+import React, { createContext, forwardRef, useRef } from 'react'
+import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 
 import {
   drawerWidthMax,
@@ -17,7 +16,16 @@ export class ScrollStore extends Store<{ id: string }> {
   isScrolling = false
 
   setIsScrolling(val: boolean) {
+    console.log('setIsScrolling', val)
     this.isScrolling = val
+  }
+}
+
+export class ContentParentStore extends Store {
+  activeId = ''
+
+  setActiveId(id: string) {
+    this.activeId = id
   }
 }
 
@@ -27,9 +35,16 @@ export function setIsScrollAtTop(val: boolean) {
   isScrollAtTop = val
 }
 
-export const usePreventContentScroll = () => {
+export const usePreventContentScroll = (id: string) => {
+  const isActive = useStoreSelector(
+    ContentParentStore,
+    (store) => store.activeId === id
+  )
   const isReallySmall = useIsReallyNarrow()
   const om = useOvermind()
+  if (!isActive) {
+    return true
+  }
   return (
     (!isWeb || supportsTouchWeb) &&
     isReallySmall &&
@@ -56,13 +71,14 @@ export const ContentScrollView = forwardRef(
     },
     ref
   ) => {
-    const preventScrolling = usePreventContentScroll()
+    const preventScrolling = usePreventContentScroll(id)
     const scrollStore = useStore(ScrollStore, { id })
     const isSmall = useIsNarrow()
     const lastUpdate = useRef<any>(0)
     const finish = useRef<any>(0)
 
     const doUpdate = (y: number) => {
+      clearTimeout(finish.current)
       lastUpdate.current = Date.now()
       const isAtTop = y <= 0
       setIsScrollAtTop(isAtTop)
@@ -74,7 +90,6 @@ export const ContentScrollView = forwardRef(
         if (!scrollStore.isScrolling) {
           scrollStore.setIsScrolling(true)
         }
-        clearTimeout(finish.current)
         finish.current = setTimeout(() => {
           scrollStore.setIsScrolling(false)
         }, 220)
@@ -99,13 +114,7 @@ export const ContentScrollView = forwardRef(
           scrollEnabled={!preventScrolling}
           disableScrollViewPanResponder={preventScrolling}
           {...props}
-          style={[
-            {
-              flex: 1,
-              height: '100%',
-            },
-            style,
-          ]}
+          style={[styles.scroll, style]}
         >
           <VStack
             maxWidth={isSmall ? '100%' : drawerWidthMax}
@@ -125,3 +134,10 @@ export const ContentScrollView = forwardRef(
     )
   }
 )
+
+const styles = StyleSheet.create({
+  scroll: {
+    flex: 1,
+    height: '100%',
+  },
+})

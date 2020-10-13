@@ -12,12 +12,15 @@ import {
   VStack,
   useDebounce,
   useGet,
+  useMedia,
 } from '@dish/ui'
 import React, {
   Suspense,
   memo,
+  useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useState,
 } from 'react'
 import { Dimensions } from 'react-native'
@@ -26,6 +29,7 @@ import { bgLight, bgLightHover, brandColor } from '../../colors'
 import { isWeb } from '../../constants'
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../helpers/isIOS'
+import { numberFormat } from '../../helpers/numberFormat'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { allTags } from '../../state/allTags'
@@ -92,6 +96,16 @@ export const RestaurantListItem = memo(function RestaurantListItem(
     }
   }, [isHovered])
 
+  const content = useMemo(() => {
+    return <RestaurantListItemContent isLoaded={isLoaded} {...props} />
+  }, [props])
+
+  const handleScrollMemo = useCallback(async (e) => {
+    await fullyIdle()
+    setIsLoaded(true)
+  }, [])
+  const handleScroll = isLoaded ? undefined : handleScrollMemo
+
   return (
     <VStack
       {...(!isWebIOS && {
@@ -109,17 +123,10 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       marginBottom={5}
     >
       <ContentScrollViewHorizontal
-        onScroll={
-          isLoaded
-            ? undefined
-            : async (e) => {
-                await fullyIdle()
-                setIsLoaded(true)
-              }
-        }
+        onScroll={handleScroll}
         scrollEventThrottle={100}
       >
-        <RestaurantListItemContent isLoaded={isLoaded} {...props} />
+        {content}
       </ContentScrollViewHorizontal>
     </VStack>
   )
@@ -162,7 +169,6 @@ const RestaurantListItemContent = memo(
       }
 
       return omStatic.reaction(getIsActiveNow, (isActive) => {
-        console.log('setting active', isActive)
         if (getIsActive() !== isActive) {
           setIsActive(isActive)
         }
@@ -272,7 +278,6 @@ const RestaurantListItemContent = memo(
                         <HStack
                           transform={[{ translateY: -10 }]}
                           padding={8}
-                          margin={-8}
                           borderRadius={8}
                           // @ts-ignore
                           hoverStyle={{
@@ -304,6 +309,7 @@ const RestaurantListItemContent = memo(
             {/* RANKING ROW */}
             <VStack
               {...contentSideWidthProps}
+              overflow="hidden"
               zIndex={1000}
               paddingLeft={40}
               paddingRight={20}
@@ -409,8 +415,11 @@ const RestaurantListItemContent = memo(
                         />
                       }
                       color="#999"
+                      fontSize={14}
                     >
-                      {restaurant.reviews_aggregate().aggregate.count() ?? 0}
+                      {numberFormat(
+                        restaurant.reviews_aggregate().aggregate.count() ?? 0
+                      )}
                     </SmallLinkButton>
                   </Tooltip>
                 </VStack>
@@ -418,7 +427,7 @@ const RestaurantListItemContent = memo(
                 <Spacer />
 
                 <RestaurantDeliveryButtons
-                  label="Delivery"
+                  label={isSmall ? '' : 'Delivery'}
                   restaurantSlug={restaurantSlug}
                 />
 
