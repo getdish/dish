@@ -50,7 +50,7 @@ export const RestaurantSourcesBreakdown = memo(
       <>
         <Spacer size="lg" />
 
-        <Table className="hide-when-small">
+        <Table>
           <TableHeadRow>
             <TableCell {...col0Props}></TableCell>
 

@@ -188,6 +188,7 @@ export default memo(function HomePage(props: Props) {
               height={320}
               width={2000}
               right="-10%"
+              zIndex={-1}
               top={-120}
               transform={[{ rotate: '-2deg' }]}
               overflow="hidden" // fixes chrome rendering line at bottom glitch

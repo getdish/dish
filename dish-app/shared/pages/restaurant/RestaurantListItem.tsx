@@ -179,14 +179,14 @@ const RestaurantListItemContent = memo(
       })
     }, [props.rank])
 
-    const contentSideWidthProps: StackProps = {
+    const contentSideProps: StackProps = {
       width: isSmall ? '85%' : '60%',
       minWidth: isSmall
         ? isWeb
           ? '42vw'
           : Dimensions.get('screen').width * 0.75
         : 320,
-      maxWidth: 430,
+      maxWidth: 400,
     }
 
     const opening_hours = ''
@@ -202,6 +202,7 @@ const RestaurantListItemContent = memo(
         ? 0.975
         : 1.15
     const titleFontSize = 1.2 * (isSmall ? 18 : 22) * titleFontScale
+    const titleHeight = titleFontSize + 8 * 2 + 2
 
     return (
       <VStack
@@ -269,7 +270,7 @@ const RestaurantListItemContent = memo(
                     lineHeight={26}
                     textDecorationColor="transparent"
                     {...(!isWeb && {
-                      minWidth: contentSideWidthProps.minWidth,
+                      minWidth: contentSideProps.minWidth,
                     })}
                   >
                     <Link
@@ -284,7 +285,7 @@ const RestaurantListItemContent = memo(
                           transform={[{ translateY: -10 }]}
                           paddingHorizontal={8}
                           borderRadius={8}
-                          height={titleFontSize + 8 * 2 + 2}
+                          height={titleHeight}
                           alignItems="center"
                           marginVertical={-5}
                           // @ts-ignore
@@ -299,7 +300,7 @@ const RestaurantListItemContent = memo(
                           <Text
                             ellipse
                             fontSize={titleFontSize}
-                            lineHeight={titleFontSize}
+                            lineHeight={titleHeight}
                             fontWeight="600"
                           >
                             {restaurantName}
@@ -316,7 +317,7 @@ const RestaurantListItemContent = memo(
 
             {/* RANKING ROW */}
             <VStack
-              {...contentSideWidthProps}
+              {...contentSideProps}
               overflow="hidden"
               zIndex={1000}
               paddingLeft={50}
@@ -367,7 +368,7 @@ const RestaurantListItemContent = memo(
 
           <HStack flex={1}>
             <VStack
-              {...contentSideWidthProps}
+              {...contentSideProps}
               className="fix-safari-shrink-height"
               justifyContent="center"
               flex={1}

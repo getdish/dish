@@ -35,7 +35,8 @@ export const RestaurantSourcesBreakdownRow = memo(
     return (
       <HoverablePopover
         allowHoverOnContent
-        delay={500}
+        // isOpen={restaurantSlug === 'molinari-delicatessen'}
+        delay={800}
         position="right"
         contents={(isOpen) => {
           return (

@@ -71,7 +71,6 @@ export function Popover(props: PopoverProps) {
                 return (
                   <div
                     ref={layerProps.ref}
-                    className="popover-content see-through"
                     onTransitionEnd={onTransitionEnd}
                     style={{
                       ...layerProps.style,
@@ -85,7 +84,7 @@ export function Popover(props: PopoverProps) {
                     {typeof props.contents === 'function'
                       ? props.contents(isOpen)
                       : props.contents}
-                    {!props.noArrow && (
+                    {/* {!props.noArrow && (
                       <Arrow
                         style={{
                           position: 'absolute',
@@ -94,7 +93,7 @@ export function Popover(props: PopoverProps) {
                           ...arrowStyle,
                         }}
                       />
-                    )}
+                    )} */}
                   </div>
                 )
               }}
@@ -130,7 +129,9 @@ export function Popover(props: PopoverProps) {
         {({ isOpen, triggerRef, toggle }) => (
           <div
             ref={triggerRef}
-            className={`see-through ${props.inline ? 'inline-flex' : ''}`}
+            className={`see-through-measurable ${
+              props.inline ? 'inline-flex' : ''
+            }`}
             style={props.style}
           >
             {props.children}

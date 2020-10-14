@@ -384,7 +384,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         >
           <HStack
             paddingHorizontal={15}
-            paddingTop={62}
+            paddingTop={isSmall ? 10 : 62}
             paddingBottom={10}
             overflow="hidden"
             justifyContent="center"
