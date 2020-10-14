@@ -28,7 +28,7 @@ export const AppSearchInputTags = memo(
                   className="no-transition"
                   key={getTagId(tag)}
                   subtleIcon
-                  backgroundColor="rgba(0,0,0,0.2)"
+                  backgroundColor="rgba(0,0,0,0.25)"
                   color={'#fff'}
                   shadowColor="#00000022"
                   fontWeight="600"

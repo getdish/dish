@@ -34,8 +34,8 @@ export const FavoriteButton = ({
         <Text
           cursor="default"
           color="red"
-          fontSize={sizePx * 0.8}
-          lineHeight={sizePx * 0.8}
+          fontSize={sizePx * 0.7}
+          lineHeight={sizePx * 0.7}
           marginTop={1}
         >
           ⭐️

@@ -24,7 +24,7 @@ export const RestaurantOverview = memo(
   }) {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const headlines = (restaurant.headlines() ?? []).map((x) => x.sentence)
-    const summary = restaurant.summary ?? ''
+    const summary = restaurant.summary ?? headlines[0] ?? ''
     const scale = 2.1 - Math.max(1.0, Math.min(1.1, summary.length / 250))
     const lineHeight = 24 * scale
 
@@ -49,6 +49,7 @@ export const RestaurantOverview = memo(
             opacity={1}
           >
             {summary
+              .replace(/\s{2,}/g, ' ')
               .split('. ')
               .map((sentence) => capitalize(sentence.trim()))
               .join('. ')}
@@ -57,57 +58,7 @@ export const RestaurantOverview = memo(
       )
     }
 
-    if (headlines.length === 0) {
-      return null
-    }
-
-    // TODO deprecate this
-
-    const shownHeadlines = (summary
-      ? [summary, ...headlines]
-      : headlines
-    ).slice(0, 1)
-
-    return (
-      <VStack maxWidth="100%" minHeight={118} position="relative" flex={1}>
-        <AbsoluteVStack top={-20} left={-30}>
-          <Text fontSize={60} opacity={0.08}>
-            &ldquo;
-          </Text>
-        </AbsoluteVStack>
-        {shownHeadlines.map((item, i) => {
-          return (
-            <HStack key={i} flex={1} overflow="hidden">
-              <Paragraph
-                size={i == 0 ? 1.1 : 1}
-                opacity={i === 0 ? 1 : 0.7}
-                height={i == 0 ? 114 : 'auto'}
-                overflow="hidden"
-                // react native doesnt like using this as a prop...
-                {...(i !== 0 && {
-                  ellipse: true,
-                })}
-                {...(i === 0 && {
-                  numberOfLines: 4,
-                })}
-              >
-                {ellipseText(
-                  item
-                    .replace(/\n/g, ' ')
-                    .replace(/[^\\/$a-z0-9 \,\.]+/gi, '')
-                    .replace(/\s{2,}/g, ' ')
-                    .toLowerCase()
-                    .trim(),
-                  {
-                    maxLength: 250,
-                  }
-                )}
-              </Paragraph>
-            </HStack>
-          )
-        })}
-      </VStack>
-    )
+    return null
   })
 )
 

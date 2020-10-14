@@ -26,22 +26,22 @@ export const DishViewButton = memo(
         }}
         borderWidth={1}
         borderColor={`${color}33`}
-        paddingVertical={8}
+        paddingVertical={9}
         paddingHorizontal={12}
         alignItems="center"
-        borderRadius={10}
+        borderRadius={12}
         tag={{ type: 'dish', name }}
         {...rest}
       >
         {!!icon && (
           <>
-            <Text fontSize={16} marginVertical={-2}>
+            <Text fontSize={16} marginVertical={-6}>
               {icon}
             </Text>
-            <Spacer size="xs" />
+            <Spacer size="sm" />
           </>
         )}
-        <Text color="rgba(0,0,0,0.75)" fontSize={14} opacity={0.8}>
+        <Text color="rgba(0,0,0,0.75)" fontSize={15} opacity={0.8}>
           {name}
         </Text>
       </LinkButton>

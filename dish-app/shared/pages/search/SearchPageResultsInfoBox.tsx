@@ -78,11 +78,7 @@ const HomeSearchInfoBoxCountry = memo(
             </Text>
             {topCountryDishes.map((tag) => {
               return (
-                <DishViewButton
-                  key={tag.id}
-                  name={tag.name}
-                  icon={tag.icon ?? '🍜'}
-                />
+                <DishViewButton key={tag.id} name={tag.name} icon={tag.icon} />
               )
             })}
           </HStack>

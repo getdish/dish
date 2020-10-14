@@ -99,10 +99,10 @@ export const RestaurantListItem = memo(function RestaurantListItem(
 
   const content = useMemo(() => {
     return <RestaurantListItemContent isLoaded={isLoaded} {...props} />
-  }, [props])
+  }, [props, isLoaded])
 
-  const handleScrollMemo = useCallback(async (e) => {
-    await fullyIdle()
+  const handleScrollMemo = useCallback(() => {
+    console.log('what')
     setIsLoaded(true)
   }, [])
   const handleScroll = isLoaded ? undefined : handleScrollMemo
@@ -132,6 +132,9 @@ export const RestaurantListItem = memo(function RestaurantListItem(
     </VStack>
   )
 })
+
+const fadeOutWidth = 40
+const fadeOutWidthHalf = 20
 
 const RestaurantListItemContent = memo(
   graphql(function RestaurantListItemContent(
@@ -183,11 +186,7 @@ const RestaurantListItemContent = memo(
           ? '42vw'
           : Dimensions.get('screen').width * 0.75
         : 320,
-      maxWidth: isSmall
-        ? isWeb
-          ? '74vw'
-          : Dimensions.get('screen').width * 0.75
-        : 430,
+      maxWidth: 430,
     }
 
     const opening_hours = ''
@@ -195,12 +194,12 @@ const RestaurantListItemContent = memo(
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const totalReviews = useTotalReviews(restaurant)
     const titleFontScale =
-      restaurantName.length > 20
+      restaurantName.length > 30
         ? 0.9
         : restaurantName.length > 25
-        ? 0.85
+        ? 0.925
         : restaurantName.length > 15
-        ? 0.95
+        ? 0.975
         : 1.15
     const titleFontSize = 1.2 * (isSmall ? 18 : 22) * titleFontScale
 
@@ -245,7 +244,7 @@ const RestaurantListItemContent = memo(
               params={{ slug: restaurantSlug }}
             >
               <VStack paddingTop={20}>
-                <HStack marginLeft={-4} alignItems="center" maxWidth="40%">
+                <HStack marginLeft={-4} alignItems="center">
                   <VStack
                     position="relative"
                     marginVertical={-14}
@@ -364,139 +363,134 @@ const RestaurantListItemContent = memo(
             </VStack>
           </VStack>
 
-          {/* ROW: OVERVIEW / PEEK */}
-          <HStack flex={1} maxWidth="100%">
+          <HStack flex={1}>
             <VStack
               {...contentSideWidthProps}
               className="fix-safari-shrink-height"
               justifyContent="center"
-              flexShrink={0}
-              marginRight={20}
-              paddingLeft={10}
+              flex={1}
             >
+              {/* ROW: OVERVIEW */}
               {/* ensures it always flexes all the way even if short text */}
               {ensureFlexText}
-              <RestaurantOverview
-                height={100}
-                restaurantSlug={restaurantSlug}
-              />
-            </VStack>
 
-            <RestaurantPeekDishes
-              restaurantSlug={props.restaurantSlug}
-              restaurantId={props.restaurantId}
-              searchState={props.searchState}
-              isLoaded={isLoaded}
-            />
-          </HStack>
-
-          <Spacer size="sm" />
-
-          {/* BOTTOM ROW */}
-
-          <Suspense fallback={null}>
-            <HStack
-              width="100%"
-              flex={1}
-              height={0}
-              alignItems="center"
-              minWidth={contentSideWidthProps.minWidth}
-            >
-              <HStack
-                position="relative"
-                alignItems="center"
-                overflow="hidden"
-                {...contentSideWidthProps}
-              >
-                <VStack>
-                  <Tooltip
-                    contents={`Rating Breakdown (${totalReviews} reviews)`}
-                  >
-                    <SmallButton
-                      name="restaurantReviews"
-                      params={{
-                        id: props.restaurantId,
-                        slug: props.restaurantSlug,
-                      }}
-                      before={
-                        <MessageSquare
-                          size={18}
-                          color="rgba(0,0,0,0.3)"
-                          style={{ marginRight: 5 }}
-                        />
-                      }
-                      color="#999"
-                      fontSize={14}
-                    >
-                      {numberFormat(
-                        restaurant.reviews_aggregate().aggregate.count() ?? 0
-                      )}
-                    </SmallButton>
-                  </Tooltip>
-                </VStack>
-
-                <Spacer />
-
-                <RestaurantDeliveryButtons
-                  label={isSmall ? '' : 'Delivery'}
+              <VStack justifyContent="center" flex={1} paddingLeft={10}>
+                <RestaurantOverview
+                  height={100}
                   restaurantSlug={restaurantSlug}
                 />
+              </VStack>
 
-                <Spacer />
+              {/* BOTTOM ROW */}
 
-                <VStack>
-                  <Suspense fallback={null}>
-                    <RestaurantSourcesBreakdownRow
-                      size="sm"
-                      restaurantId={restaurantId}
-                      restaurantSlug={restaurantSlug}
-                    />
-                  </Suspense>
-                </VStack>
-
-                <VStack
-                  width={40}
-                  position="absolute"
-                  top={0}
-                  right={0}
-                  bottom={0}
-                  pointerEvents="none"
+              <Suspense fallback={null}>
+                <HStack
+                  position="relative"
+                  alignItems="center"
+                  overflow="hidden"
                 >
-                  <LinearGradient
-                    style={StyleSheet.absoluteFill}
-                    colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
-                    startPoint={[0, 0]}
-                    endPoint={[1, 0]}
-                  />
-                </VStack>
-              </HStack>
+                  <VStack>
+                    <Tooltip
+                      contents={`Rating Breakdown (${totalReviews} reviews)`}
+                    >
+                      <SmallButton
+                        name="restaurantReviews"
+                        params={{
+                          id: props.restaurantId,
+                          slug: props.restaurantSlug,
+                        }}
+                        before={
+                          <MessageSquare
+                            size={18}
+                            color="rgba(0,0,0,0.3)"
+                            style={{ marginRight: 5 }}
+                          />
+                        }
+                        color="#999"
+                        fontSize={14}
+                      >
+                        {numberFormat(
+                          restaurant.reviews_aggregate().aggregate.count() ?? 0
+                        )}
+                      </SmallButton>
+                    </Tooltip>
+                  </VStack>
 
-              <Spacer size="md" />
+                  <Spacer />
+
+                  <RestaurantDeliveryButtons
+                    label={isSmall ? '' : 'Delivery'}
+                    restaurantSlug={restaurantSlug}
+                  />
+
+                  <VStack flex={1} minWidth={12} />
+
+                  <VStack marginRight={fadeOutWidthHalf}>
+                    <Suspense fallback={null}>
+                      <RestaurantSourcesBreakdownRow
+                        size="sm"
+                        restaurantId={restaurantId}
+                        restaurantSlug={restaurantSlug}
+                      />
+                    </Suspense>
+                  </VStack>
+
+                  <VStack
+                    width={fadeOutWidth}
+                    position="absolute"
+                    top={0}
+                    right={0}
+                    bottom={0}
+                    pointerEvents="none"
+                  >
+                    <LinearGradient
+                      style={StyleSheet.absoluteFill}
+                      colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
+                      startPoint={[0, 0]}
+                      endPoint={[1, 0]}
+                    />
+                  </VStack>
+                </HStack>
+              </Suspense>
+            </VStack>
+
+            {/* PEEK / TAGS (RIGHT SIDE) */}
+            {/* margin top: negative the titles second row height */}
+            <VStack position="relative" marginTop={-35}>
+              <RestaurantPeekDishes
+                restaurantSlug={props.restaurantSlug}
+                restaurantId={props.restaurantId}
+                searchState={props.searchState}
+                isLoaded={isLoaded}
+              />
+
+              <VStack flex={1} />
 
               <HStack
                 height={34}
-                marginBottom={-8}
-                paddingLeft={35}
+                paddingLeft={15}
                 overflow="hidden"
+                alignItems="center"
               >
-                <RestaurantTagsRow
-                  size="sm"
-                  restaurantSlug={restaurantSlug}
-                  restaurantId={restaurant.id}
-                  spacing={10}
-                  grid
-                  max={4}
+                <HStack marginBottom={-8}>
+                  <RestaurantTagsRow
+                    size="sm"
+                    restaurantSlug={restaurantSlug}
+                    restaurantId={restaurant.id}
+                    spacing={8}
+                    grid
+                    max={4}
+                  />
+                </HStack>
+                <VStack
+                  flex={1}
+                  backgroundColor="#fafafa"
+                  height={1}
+                  transform={[{ translateY: -0.5 }]}
                 />
               </HStack>
-
-              <VStack
-                flex={1}
-                borderBottomColor="#fafafa"
-                borderBottomWidth={1}
-                transform={[{ translateY: -0.5 }]}
-              />
-            </HStack>
-          </Suspense>
+            </VStack>
+          </HStack>
         </VStack>
         <Spacer size="lg" />
       </VStack>
@@ -614,12 +608,10 @@ const RestaurantPeekDishes = memo(
         pointerEvents="auto"
         padding={20}
         paddingVertical={40}
-        marginTop={-55}
-        marginBottom={-40}
+        marginVertical={-40}
         height={dishSize + 80}
         spacing={spacing}
         width={dishSize * 5}
-        position="relative"
       >
         {/* <AbsoluteVStack top={1} left={20}>
           <TableHeadText color="#555">
