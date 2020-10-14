@@ -79,7 +79,6 @@ export const RestaurantRatingBreakdown = memo(
         )}
         <HStack
           flexWrap={isSmall ? 'wrap' : 'nowrap'}
-          flexDirection="row-reverse"
           overflow="hidden"
           flex={1}
           maxWidth="100%"
@@ -92,40 +91,13 @@ export const RestaurantRatingBreakdown = memo(
           justifyContent="center"
         >
           <VStack
-            borderRadius={10}
-            maxWidth={isSmall ? 400 : drawerWidthMax / 2.5 - 40}
-            borderWidth={1}
-            borderColor="#eee"
-            padding={10}
-            minWidth={260}
-            margin={10}
-            flex={1}
-            backgroundColor={bgLight}
-            overflow="hidden"
-          >
-            <SmallTitle color={bg}>Points</SmallTitle>
-            <RestaurantPointsBreakdown
-              showTable={showScoreTable}
-              restaurantSlug={restaurantSlug}
-            />
-
-            <Spacer size="sm" />
-
-            <SmallTitle color={bg}>Lense Votes</SmallTitle>
-            <Spacer />
-            <RestaurantLenseVote restaurantId={restaurantId} />
-
-            <Spacer size="xl" />
-
-            <SmallTitle color={bg}>Dishes</SmallTitle>
-          </VStack>
-
-          <VStack
             minWidth={260}
             // maxWidth={drawerWidthMax / 2 - 40}
             flex={2}
             overflow="hidden"
             paddingHorizontal={10}
+            paddingVertical={20}
+            alignItems="center"
             spacing={10}
           >
             <Suspense fallback={null}>
@@ -141,6 +113,35 @@ export const RestaurantRatingBreakdown = memo(
                 <RestaurantReviewsList restaurantId={restaurantId} />
               </ScrollView> */}
             </Suspense>
+          </VStack>
+
+          <VStack
+            borderRadius={10}
+            maxWidth={isSmall ? 400 : drawerWidthMax / 2.5 - 40}
+            borderWidth={1}
+            borderColor="#eee"
+            padding={10}
+            minWidth={260}
+            margin={10}
+            flex={1}
+            backgroundColor={bgLight}
+            overflow="hidden"
+          >
+            <SmallTitle color={bg}>Overall</SmallTitle>
+            <RestaurantPointsBreakdown
+              showTable={showScoreTable}
+              restaurantSlug={restaurantSlug}
+            />
+
+            <Spacer size="sm" />
+
+            <SmallTitle color={bg}>Lense Votes</SmallTitle>
+            <Spacer />
+            <RestaurantLenseVote restaurantId={restaurantId} />
+
+            <Spacer size="xl" />
+
+            <SmallTitle color={bg}>Dishes</SmallTitle>
           </VStack>
         </HStack>
       </VStack>

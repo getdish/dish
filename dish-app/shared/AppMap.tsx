@@ -249,7 +249,10 @@ const AppMapContent = memo(function AppMap({
   }, [restaurantSelected])
 
   const drawerStore = useStore(BottomDrawerStore)
-  const currentSnapPoint = useDebounceValue(drawerStore.currentSnapPoint, 250)
+  // ensure never goes to 0
+  const delayedIndex = useDebounceValue(drawerStore.snapIndex, 250)
+  const currentSnapIndex = Math.max(1, delayedIndex)
+  const currentSnapPoint = drawerStore.snapPoints[currentSnapIndex]
   const padding = isSmall
     ? {
         left: 10,
