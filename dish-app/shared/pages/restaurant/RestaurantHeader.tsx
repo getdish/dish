@@ -25,11 +25,12 @@ type RestaurantHeaderProps = {
   below?: any
   showImages?: boolean
   color?: string
+  minHeight?: number
 }
 
 export const RestaurantHeader = (props: RestaurantHeaderProps) => {
   return (
-    <Suspense fallback={<VStack minHeight={450} />}>
+    <Suspense fallback={<VStack minHeight={props.minHeight} />}>
       <RestaurantHeaderContent {...props} />
     </Suspense>
   )
@@ -45,6 +46,7 @@ const RestaurantHeaderContent = memo(
       afterAddress,
       color,
       showImages,
+      minHeight,
       size,
     }: RestaurantHeaderProps) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
@@ -72,7 +74,7 @@ const RestaurantHeaderContent = memo(
             style={{
               width: '100%',
               maxWidth: isWeb ? '100vw' : '100%',
-              minHeight: 450,
+              minHeight,
             }}
             contentContainerStyle={{
               width,

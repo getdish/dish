@@ -23,8 +23,11 @@ export const RestaurantOverview = memo(
     height?: number
   }) {
     const restaurant = useRestaurantQuery(restaurantSlug)
-    const headlines = (restaurant.headlines() ?? []).map((x) => x.sentence)
-    const summary = restaurant.summary ?? headlines[0] ?? ''
+    const headlines = (restaurant.headlines() ?? [])
+      .slice(0, 2)
+      .map((x) => x.sentence)
+      .join(' ')
+    const summary = restaurant.summary || headlines
     const scale = 2.1 - Math.max(1.0, Math.min(1.1, summary.length / 250))
     const lineHeight = 24 * scale
 

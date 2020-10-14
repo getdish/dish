@@ -1,15 +1,11 @@
-import { graphql } from '@dish/graph'
 import { AbsoluteVStack, HStack, SmallTitle, Spacer, VStack } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
-import { Image } from 'react-native'
 import { ScrollView } from 'react-native'
 
 import { bg, bgLight, brandColor } from '../../colors'
 import { drawerWidthMax } from '../../constants'
 import { useIsNarrow } from '../../hooks/useIs'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { CloseButton } from '../../views/ui/CloseButton'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
@@ -17,6 +13,7 @@ import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
 import { RestaurantLenseVote } from './RestaurantLenseVote'
 import { RestaurantPointsBreakdown } from './RestaurantPointsBreakdown'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
+import { RestaurantSourcesOverview } from './RestaurantSourcesOverview'
 
 export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
   showComments = false
@@ -102,16 +99,8 @@ export const RestaurantRatingBreakdown = memo(
           >
             <Suspense fallback={null}>
               <RestaurantSourcesOverview restaurantSlug={restaurantSlug} />
-              <ScrollView
-                style={{
-                  maxWidth: '100%',
-                }}
-                contentContainerStyle={{
-                  maxWidth: '100%',
-                }}
-              >
-                <RestaurantReviewsList restaurantId={restaurantId} />
-              </ScrollView>
+              <Spacer size="lg" />
+              <RestaurantReviewsList restaurantId={restaurantId} />
             </Suspense>
           </VStack>
 
@@ -145,46 +134,6 @@ export const RestaurantRatingBreakdown = memo(
           </VStack>
         </HStack>
       </VStack>
-    )
-  }
-)
-
-const RestaurantSourcesOverview = graphql(
-  ({ restaurantSlug }: { restaurantSlug: string }) => {
-    const restaurant = useRestaurantQuery(restaurantSlug)
-    const sources = restaurant.sources() ?? {}
-    const sourceNames = Object.keys(sources)
-    console.log('sources', sources)
-
-    return (
-      <HStack flexWrap="wrap" margin={-10}>
-        {sourceNames.map((sourceName) => {
-          const sourceInfo = thirdPartyCrawlSources[sourceName]
-          if (!sourceInfo) {
-            return null
-          }
-          const { name, image } = sourceInfo
-          return (
-            <VStack
-              key={sourceName}
-              shadowColor="#000"
-              shadowOpacity={0.1}
-              shadowRadius={10}
-              shadowOffset={{ height: 3, width: 0 }}
-              padding={15}
-              margin={10}
-              width={170}
-              height={170}
-            >
-              <SmallTitle>{name}</SmallTitle>
-              <Image
-                source={{ uri: image }}
-                style={{ width: 32, height: 32, margin: 10, borderRadius: 100 }}
-              />
-            </VStack>
-          )
-        })}
-      </HStack>
     )
   }
 )

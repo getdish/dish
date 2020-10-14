@@ -89,6 +89,7 @@ const RestaurantPage = memo(
             >
               <RestaurantHeader
                 color={darkBlue}
+                minHeight={450}
                 showImages
                 restaurantSlug={restaurantSlug}
                 after={

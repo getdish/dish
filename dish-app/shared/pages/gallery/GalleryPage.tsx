@@ -43,7 +43,7 @@ export default memo(function GalleryPage() {
 
     return (
       <Modal maxWidth={pageWidthMax} width="98%" height="98%" maxHeight="98%">
-        <AbsoluteVStack top={5} right={30}>
+        <AbsoluteVStack top={5} right={30} zIndex={100000}>
           <StackViewCloseButton />
         </AbsoluteVStack>
         <Suspense fallback={<LoadingItems />}>
@@ -55,15 +55,12 @@ export default memo(function GalleryPage() {
                 justifyContent="space-between"
                 position="relative"
                 zIndex={100}
+                paddingHorizontal={20}
+                paddingBottom={10}
               >
                 <RestaurantHeader
                   size="sm"
                   restaurantSlug={state.restaurantSlug}
-                  after={
-                    <VStack marginVertical={-15}>
-                      {isSmall ? null : dishPhotosElement}
-                    </VStack>
-                  }
                 />
               </HStack>
             }
