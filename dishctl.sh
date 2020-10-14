@@ -104,6 +104,18 @@ function start_all_crawlers() {
   start_crawler "yelp"
 }
 
+function all_crawlers_for_cities() {
+  #start_all_crawlers_for_city 'San Francisco, CA'
+  #start_all_crawlers_for_city 'Los Angeles, CA'
+  #start_all_crawlers_for_city 'San Jose, CA'
+  start_all_crawlers_for_city 'Redwood City, CA'
+  start_all_crawlers_for_city 'Fremont, CA'
+  start_all_crawlers_for_city 'San Rafael, CA'
+  #start_all_crawlers_for_city 'Chicago, Illinois'
+  #start_all_crawlers_for_city 'Tuscon, Arizona'
+  #start_all_crawlers_for_city 'Istanbul, Turkey'
+}
+
 function _db_migrate() {
   hasura_endpoint=$1
   admin_secret=$2
