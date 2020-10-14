@@ -3,7 +3,7 @@ import { HStack, LinearGradient, LoadingItem, Spacer, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { StyleSheet } from 'react-native'
 
-import { bgLight, blue, darkBlue, lightBlue } from '../../colors'
+import { bgLight, bgLightHover, blue, darkBlue, lightBlue } from '../../colors'
 import { getMinLngLat } from '../../helpers/getLngLat'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -75,7 +75,11 @@ const RestaurantPage = memo(
           /> */}
 
           {/* HEADER */}
-          <VStack backgroundColor={bgLight}>
+          <VStack
+            backgroundColor={bgLight}
+            borderBottomColor={bgLightHover}
+            borderBottomWidth={1}
+          >
             <Suspense
               fallback={
                 <VStack height={497} width="100%">
@@ -93,7 +97,7 @@ const RestaurantPage = memo(
                     hoverStyle={{
                       transform: [{ scale: 1.0125 }],
                     }}
-                    marginBottom={-100}
+                    marginBottom={-50}
                     marginTop={0}
                     marginRight={20}
                   >
@@ -107,7 +111,7 @@ const RestaurantPage = memo(
                   <Suspense fallback={null}>
                     <RestaurantOverview restaurantSlug={restaurantSlug} />
                     <Spacer size="xl" />
-                    <HStack maxHeight={120} overflow="hidden" flexWrap="wrap">
+                    <HStack maxHeight={134} overflow="hidden" flexWrap="wrap">
                       <RestaurantTagsRow
                         size="sm"
                         restaurantSlug={restaurantSlug}

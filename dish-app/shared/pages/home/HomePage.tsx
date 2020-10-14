@@ -23,6 +23,7 @@ import { default as React, Suspense, memo, useEffect, useState } from 'react'
 import { Dimensions, ScrollView, StyleSheet } from 'react-native'
 
 import { bgLight, bgLightHover, bgLightTranslucent } from '../../colors'
+import { searchBarHeight } from '../../constants'
 import { useIsNarrow } from '../../hooks/useIs'
 import { addTagsToCache } from '../../state/allTags'
 import { HomeStateItemHome } from '../../state/home-types'
@@ -168,7 +169,7 @@ export default memo(function HomePage(props: Props) {
     }
   }, [isOnHome])
 
-  if (isOnHome || isLoaded) {
+  if (isLoaded) {
     return (
       <>
         <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
@@ -182,30 +183,28 @@ export default memo(function HomePage(props: Props) {
         >
           <ContentScrollView id="home">
             {/* cross line */}
-            {!isSmall && (
-              <AbsoluteVStack
-                contain="strict"
-                height={320}
-                width={2000}
-                right="-10%"
-                top={-120}
-                transform={[{ rotate: '-2deg' }]}
-                overflow="hidden" // fixes chrome rendering line at bottom glitch
-              >
-                <LinearGradient
-                  style={[StyleSheet.absoluteFill]}
-                  colors={[bgLightHover, '#fff']}
-                />
-              </AbsoluteVStack>
-            )}
+            <AbsoluteVStack
+              contain="strict"
+              height={320}
+              width={2000}
+              right="-10%"
+              top={-120}
+              transform={[{ rotate: '-2deg' }]}
+              overflow="hidden" // fixes chrome rendering line at bottom glitch
+            >
+              <LinearGradient
+                style={[StyleSheet.absoluteFill]}
+                colors={[bgLightHover, '#fff']}
+              />
+            </AbsoluteVStack>
             <VStack
               flex={1}
               overflow="hidden"
               maxWidth="100%"
               paddingTop={isSmall ? 20 : 28}
-              spacing="xl"
             >
               <VStack>
+                {!isSmall && <VStack height={searchBarHeight} />}
                 <HomeTopSearches />
 
                 {/* <Suspense fallback={null}>

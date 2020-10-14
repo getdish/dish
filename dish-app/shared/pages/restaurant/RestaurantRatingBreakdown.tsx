@@ -102,7 +102,7 @@ export const RestaurantRatingBreakdown = memo(
           >
             <Suspense fallback={null}>
               <RestaurantSourcesOverview restaurantSlug={restaurantSlug} />
-              {/* <ScrollView
+              <ScrollView
                 style={{
                   maxWidth: '100%',
                 }}
@@ -111,7 +111,7 @@ export const RestaurantRatingBreakdown = memo(
                 }}
               >
                 <RestaurantReviewsList restaurantId={restaurantId} />
-              </ScrollView> */}
+              </ScrollView>
             </Suspense>
           </VStack>
 

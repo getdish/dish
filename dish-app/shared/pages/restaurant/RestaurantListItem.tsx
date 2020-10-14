@@ -292,12 +292,12 @@ const RestaurantListItemContent = memo(
                             backgroundColor: bgLightHover,
                           }}
                           marginRight={10}
+                          marginVertical={-(2 - titleFontScale) * 10}
                         >
                           <Text
                             ellipse
                             fontSize={titleFontSize}
                             lineHeight={titleFontSize * 1.2}
-                            marginVertical={-(2 - titleFontScale) * 3}
                             fontWeight="600"
                           >
                             {restaurantName}
@@ -383,6 +383,8 @@ const RestaurantListItemContent = memo(
 
               {/* BOTTOM ROW */}
 
+              <Spacer />
+
               <Suspense fallback={null}>
                 <HStack
                   position="relative"
@@ -401,13 +403,14 @@ const RestaurantListItemContent = memo(
                         }}
                         before={
                           <MessageSquare
-                            size={18}
+                            size={16}
                             color="rgba(0,0,0,0.3)"
-                            style={{ marginRight: 5 }}
+                            style={{ marginRight: 6 }}
                           />
                         }
                         color="#999"
                         fontSize={14}
+                        fontWeight="600"
                       >
                         {numberFormat(
                           restaurant.reviews_aggregate().aggregate.count() ?? 0
@@ -419,7 +422,7 @@ const RestaurantListItemContent = memo(
                   <Spacer />
 
                   <RestaurantDeliveryButtons
-                    label={isSmall ? '' : 'Delivery'}
+                    label={isSmall ? '' : 'Order:'}
                     restaurantSlug={restaurantSlug}
                   />
 
@@ -456,7 +459,7 @@ const RestaurantListItemContent = memo(
 
             {/* PEEK / TAGS (RIGHT SIDE) */}
             {/* margin top: negative the titles second row height */}
-            <VStack position="relative" marginTop={-35}>
+            <VStack position="relative" marginTop={-40}>
               <Suspense fallback={null}>
                 <RestaurantPeekDishes
                   restaurantSlug={props.restaurantSlug}
@@ -470,7 +473,7 @@ const RestaurantListItemContent = memo(
 
               <HStack
                 height={34}
-                paddingLeft={15}
+                paddingLeft={25}
                 overflow="hidden"
                 alignItems="center"
               >

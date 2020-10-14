@@ -31,7 +31,7 @@ export const RestaurantOverview = memo(
     if (summary) {
       return (
         <HStack
-          maxHeight={lineHeight * 5 - 2}
+          maxHeight={lineHeight * 4 - 2}
           overflow="hidden"
           paddingHorizontal={30}
           marginHorizontal={-30}
@@ -49,7 +49,7 @@ export const RestaurantOverview = memo(
             opacity={1}
           >
             {summary
-              .replace(/\s{2,}/g, ' ')
+              .replace(/(\s{2,}|\n)/g, ' ')
               .split('. ')
               .map((sentence) => capitalize(sentence.trim()))
               .join('. ')}

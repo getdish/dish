@@ -40,8 +40,8 @@ export const RestaurantDeliveryButtons = memo(
         {!!label && (
           <Text
             fontSize={14}
-            color="rgba(0,0,0,0.6)"
-            marginRight={12}
+            color="rgba(0,0,0,0.5)"
+            marginRight={8}
             transform={[{ translateY: -1 }]}
           >
             {label}
