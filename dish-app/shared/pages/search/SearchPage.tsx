@@ -333,7 +333,6 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         lowerCase: false,
       }
     )
-    const paddingTop = isSmall ? 5 : titleHeight
     const titleLen = (title + subTitle).length
     const titleScale =
       titleLen > 80

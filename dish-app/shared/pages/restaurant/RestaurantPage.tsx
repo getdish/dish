@@ -128,13 +128,13 @@ const RestaurantPage = memo(
             <Spacer size="xs" />
             <Suspense
               fallback={
-                <VStack height={160}>
+                <VStack height={150}>
                   <LoadingItem />
                 </VStack>
               }
             >
               <RestaurantDishPhotos
-                size={160}
+                size={150}
                 max={40}
                 restaurantSlug={restaurantSlug}
                 restaurantId={restaurant.id ?? undefined}

@@ -1,4 +1,4 @@
-import { AbsoluteVStack, VStack } from '@dish/ui'
+import { VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { memo, useContext, useMemo } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'

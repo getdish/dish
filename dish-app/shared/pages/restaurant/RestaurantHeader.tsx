@@ -99,54 +99,56 @@ const RestaurantHeaderContent = memo(
                       {restaurant.name}
                     </Text>
                     <Spacer />
-                    <HStack alignItems="center" paddingRight={20}>
-                      <VStack>
-                        <HStack flexWrap="wrap">
-                          <RestaurantAddressLinksRow
+                    <VStack
+                      overflow="hidden"
+                      alignItems="center"
+                      paddingRight={20}
+                    >
+                      <HStack flexWrap="wrap" maxWidth="100%">
+                        <RestaurantAddressLinksRow
+                          currentLocationInfo={
+                            state?.currentLocationInfo ??
+                            om.state.home.currentState.currentLocationInfo
+                          }
+                          showMenu
+                          size="lg"
+                          restaurantSlug={restaurantSlug}
+                        />
+                        <Spacer size="sm" />
+                        <RestaurantDeliveryButtons
+                          showLabels
+                          restaurantSlug={restaurantSlug}
+                        />
+                        <Spacer size="xs" />
+                        <VStack marginRight={6} marginBottom={6}>
+                          <RestaurantAddress
+                            size="xs"
+                            address={restaurant.address ?? ''}
                             currentLocationInfo={
-                              state?.currentLocationInfo ??
-                              om.state.home.currentState.currentLocationInfo
+                              state?.currentLocationInfo ?? null
                             }
-                            showMenu
-                            size="lg"
-                            restaurantSlug={restaurantSlug}
                           />
-                          <Spacer size="sm" />
-                          <RestaurantDeliveryButtons
-                            showLabels
-                            restaurantSlug={restaurantSlug}
-                          />
-                          <Spacer size="xs" />
-                          <VStack marginRight={6} marginBottom={10}>
-                            <RestaurantAddress
-                              size="xs"
-                              address={restaurant.address ?? ''}
-                              currentLocationInfo={
-                                state?.currentLocationInfo ?? null
-                              }
+                        </VStack>
+                        <SmallButton
+                          backgroundColor="transparent"
+                          name="restaurantHours"
+                          params={{ slug: restaurantSlug }}
+                          fontSize={14}
+                          color={open_color}
+                          ellipse
+                          before={
+                            <Clock
+                              size={14}
+                              color="#999"
+                              style={{ marginRight: 5 }}
                             />
-                          </VStack>
-                          <SmallButton
-                            backgroundColor="transparent"
-                            name="restaurantHours"
-                            params={{ slug: restaurantSlug }}
-                            fontSize={14}
-                            color={open_color}
-                            ellipse
-                            before={
-                              <Clock
-                                size={14}
-                                color="#999"
-                                style={{ marginRight: 5 }}
-                              />
-                            }
-                            children={`${open_text} (${next_time})`}
-                          />
-                        </HStack>
-                        {afterAddress}
-                        <Spacer />
-                      </VStack>
-                    </HStack>
+                          }
+                          children={`${open_text} (${next_time})`}
+                        />
+                      </HStack>
+                      {afterAddress}
+                      <Spacer />
+                    </VStack>
 
                     {below}
                   </VStack>

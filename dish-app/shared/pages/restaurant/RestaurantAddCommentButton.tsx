@@ -35,7 +35,7 @@ export const RestaurantAddCommentButton = graphql(
         }}
         {...props}
       >
-        <Text>
+        <Text fontSize={14}>
           {hideLabel ? '' : !!review?.text ? 'Edit review' : 'Add review'}
         </Text>
         <MessageSquare

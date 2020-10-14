@@ -1,11 +1,15 @@
+import { graphql } from '@dish/graph'
 import { AbsoluteVStack, HStack, SmallTitle, Spacer, VStack } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
+import { Image } from 'react-native'
 import { ScrollView } from 'react-native'
 
 import { bg, bgLight, brandColor } from '../../colors'
 import { drawerWidthMax } from '../../constants'
 import { useIsNarrow } from '../../hooks/useIs'
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { CloseButton } from '../../views/ui/CloseButton'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
@@ -49,8 +53,24 @@ export const RestaurantRatingBreakdown = memo(
         width="100%"
         position="relative"
       >
-        <HStack marginBottom={-20} alignItems="center" justifyContent="center">
+        <HStack
+          position="relative"
+          marginHorizontal={10}
+          marginBottom={-10}
+          alignItems="center"
+          justifyContent="center"
+        >
           <SlantedTitle fontWeight="700">Reviews</SlantedTitle>
+
+          <AbsoluteVStack top={0} right={0}>
+            <Suspense fallback={null}>
+              <RestaurantAddCommentButton
+                flex={1}
+                restaurantId={restaurantId}
+                restaurantSlug={restaurantSlug}
+              />
+            </Suspense>
+          </AbsoluteVStack>
         </HStack>
         {closable && (
           <AbsoluteVStack zIndex={1000} top={10} right={10}>
@@ -108,23 +128,9 @@ export const RestaurantRatingBreakdown = memo(
             paddingHorizontal={10}
             spacing={10}
           >
-            <HStack
-              overflow="hidden"
-              maxWidth="100%"
-              marginVertical={8}
-              alignItems="stretch"
-            >
-              <Suspense fallback={null}>
-                <RestaurantAddCommentButton
-                  flex={1}
-                  restaurantId={restaurantId}
-                  restaurantSlug={restaurantSlug}
-                />
-              </Suspense>
-            </HStack>
-
             <Suspense fallback={null}>
-              <ScrollView
+              <RestaurantSourcesOverview restaurantSlug={restaurantSlug} />
+              {/* <ScrollView
                 style={{
                   maxWidth: '100%',
                 }}
@@ -133,11 +139,51 @@ export const RestaurantRatingBreakdown = memo(
                 }}
               >
                 <RestaurantReviewsList restaurantId={restaurantId} />
-              </ScrollView>
+              </ScrollView> */}
             </Suspense>
           </VStack>
         </HStack>
       </VStack>
+    )
+  }
+)
+
+const RestaurantSourcesOverview = graphql(
+  ({ restaurantSlug }: { restaurantSlug: string }) => {
+    const restaurant = useRestaurantQuery(restaurantSlug)
+    const sources = restaurant.sources() ?? {}
+    const sourceNames = Object.keys(sources)
+    console.log('sources', sources)
+
+    return (
+      <HStack flexWrap="wrap" margin={-10}>
+        {sourceNames.map((sourceName) => {
+          const sourceInfo = thirdPartyCrawlSources[sourceName]
+          if (!sourceInfo) {
+            return null
+          }
+          const { name, image } = sourceInfo
+          return (
+            <VStack
+              key={sourceName}
+              shadowColor="#000"
+              shadowOpacity={0.1}
+              shadowRadius={10}
+              shadowOffset={{ height: 3, width: 0 }}
+              padding={15}
+              margin={10}
+              width={170}
+              height={170}
+            >
+              <SmallTitle>{name}</SmallTitle>
+              <Image
+                source={{ uri: image }}
+                style={{ width: 32, height: 32, margin: 10, borderRadius: 100 }}
+              />
+            </VStack>
+          )
+        })}
+      </HStack>
     )
   }
 )

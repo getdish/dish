@@ -16,7 +16,6 @@ export class ScrollStore extends Store<{ id: string }> {
   isScrolling = false
 
   setIsScrolling(val: boolean) {
-    console.log('setIsScrolling', val)
     this.isScrolling = val
   }
 }
@@ -77,12 +76,17 @@ export const ContentScrollView = forwardRef(
     const lastUpdate = useRef<any>(0)
     const finish = useRef<any>(0)
 
-    const doUpdate = (y: number) => {
+    const doUpdate = (y: number, e: any) => {
       clearTimeout(finish.current)
       lastUpdate.current = Date.now()
       const isAtTop = y <= 0
       setIsScrollAtTop(isAtTop)
       onScrollYThrottled?.(y)
+
+      // calls the recyclerview scroll, we may want to not throttle this...
+      if (props.onScroll) {
+        props.onScroll(e)
+      }
 
       if (isAtTop) {
         scrollStore.setIsScrolling(false)
@@ -101,7 +105,7 @@ export const ContentScrollView = forwardRef(
       const nextScrollAtTop = y <= 0
       const hasBeenAWhile = Date.now() - lastUpdate.current > 200
       if (nextScrollAtTop !== isScrollAtTop || hasBeenAWhile) {
-        doUpdate(y)
+        doUpdate(y, e)
       }
     }
 
@@ -109,11 +113,11 @@ export const ContentScrollView = forwardRef(
       <ContentScrollContext.Provider value={id}>
         <ScrollView
           ref={ref as any}
+          {...props}
           onScroll={setIsScrolling}
           scrollEventThrottle={16}
           scrollEnabled={!preventScrolling}
           disableScrollViewPanResponder={preventScrolling}
-          {...props}
           style={[styles.scroll, style]}
         >
           <VStack

@@ -6,6 +6,14 @@ import React, { memo } from 'react'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 
+const quote = (
+  <AbsoluteVStack top={-10} left={-0}>
+    <Text fontSize={60} opacity={0.08}>
+      &ldquo;
+    </Text>
+  </AbsoluteVStack>
+)
+
 export const RestaurantOverview = memo(
   graphql(function RestaurantOverview({
     restaurantSlug,
@@ -17,22 +25,34 @@ export const RestaurantOverview = memo(
     const restaurant = useRestaurantQuery(restaurantSlug)
     const headlines = (restaurant.headlines() ?? []).map((x) => x.sentence)
     const summary = restaurant.summary ?? ''
+    const scale = 2.1 - Math.max(1.0, Math.min(1.1, summary.length / 250))
+    const lineHeight = 24 * scale
 
     if (summary) {
       return (
-        <HStack flex={1} overflow="hidden">
-          <Paragraph
-            size={1}
-            lineHeight={summary.length > 200 ? 22 : 24}
+        <HStack
+          maxHeight={lineHeight * 5 - 2}
+          overflow="hidden"
+          paddingHorizontal={30}
+          marginHorizontal={-30}
+          flex={1}
+          alignSelf="center"
+          position="relative"
+        >
+          {quote}
+          <Text
+            display="flex"
+            marginTop="auto"
+            marginBottom="auto"
+            fontSize={16 * scale}
+            lineHeight={lineHeight}
             opacity={1}
-            height={height}
-            overflow="hidden"
           >
             {summary
               .split('. ')
               .map((sentence) => capitalize(sentence.trim()))
               .join('. ')}
-          </Paragraph>
+          </Text>
         </HStack>
       )
     }

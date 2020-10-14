@@ -44,4 +44,4 @@ export const thirdPartyCrawlSources = {
     image: require('./assets/michelin.jpg').default,
     delivery: false,
   },
-}
+} as const
