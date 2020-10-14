@@ -24,18 +24,37 @@ import { HomeActiveTagsRecord } from '../../state/home-types'
 import { PointsText } from '../PointsText'
 import { UpvoteDownvoteScore } from '../UpvoteDownvoteScore'
 
-export const RestaurantUpVoteDownVote = memo(
+type UpvoteDownvoteProps = {
+  restaurantId: string
+  restaurantSlug: string
+  score: number
+  activeTagIds: HomeActiveTagsRecord
+}
+
+export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
+  return (
+    <Suspense
+      fallback={
+        <UpvoteDownvoteScore
+          marginLeft={-22}
+          marginRight={-4}
+          score={0}
+          vote={0}
+        />
+      }
+    >
+      <RestaurantUpVoteDownVoteContents {...props} />
+    </Suspense>
+  )
+}
+
+const RestaurantUpVoteDownVoteContents = memo(
   graphql(function RestaurantUpVoteDownVote({
     restaurantId,
     restaurantSlug,
     score: baseScore,
     activeTagIds,
-  }: {
-    restaurantId: string
-    restaurantSlug: string
-    score: number
-    activeTagIds: HomeActiveTagsRecord
-  }) {
+  }: UpvoteDownvoteProps) {
     const { vote, setVote } = useUserUpvoteDownvoteQuery(
       restaurantId,
       activeTagIds

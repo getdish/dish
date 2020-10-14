@@ -251,12 +251,15 @@ const RestaurantListItemContent = memo(
                     marginVertical={-14}
                     zIndex={1000}
                   >
-                    <RestaurantUpVoteDownVote
-                      score={score}
-                      restaurantId={restaurantId}
-                      restaurantSlug={restaurantSlug}
-                      activeTagIds={tagIds ?? {}}
-                    />
+                    {tagIds && (
+                      <RestaurantUpVoteDownVote
+                        key={JSON.stringify(tagIds)}
+                        score={score}
+                        restaurantId={restaurantId}
+                        restaurantSlug={restaurantSlug}
+                        activeTagIds={tagIds}
+                      />
+                    )}
                   </VStack>
 
                   <Spacer size="sm" />

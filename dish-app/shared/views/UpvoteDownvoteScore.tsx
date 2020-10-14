@@ -17,7 +17,7 @@ export const UpvoteDownvoteScore = memo(
     size?: 'sm' | 'md'
     score: number
     vote: -1 | 0 | 1
-    setVote: (vote: number) => void
+    setVote?: (vote: number) => void
     subtle?: boolean
   } & StackProps) => {
     score = Math.round(score)
@@ -39,7 +39,7 @@ export const UpvoteDownvoteScore = memo(
         color={vote === 1 ? 'green' : voteButtonColor}
         onPress={(e) => {
           e.stopPropagation()
-          setVote(vote === 1 ? 0 : 1)
+          setVote?.(vote === 1 ? 0 : 1)
         }}
       />
     )
@@ -52,7 +52,7 @@ export const UpvoteDownvoteScore = memo(
         color={vote === -1 ? 'red' : voteButtonColor}
         onPress={(e) => {
           e.stopPropagation()
-          setVote(vote == -1 ? 0 : -1)
+          setVote?.(vote == -1 ? 0 : -1)
         }}
       />
     )
