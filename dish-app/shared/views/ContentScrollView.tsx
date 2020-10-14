@@ -57,7 +57,6 @@ export const ContentScrollView = forwardRef(
   (
     {
       children,
-      paddingTop,
       onScrollYThrottled,
       style,
       id,
@@ -65,7 +64,6 @@ export const ContentScrollView = forwardRef(
     }: ScrollViewProps & {
       id: string
       children: any
-      paddingTop?: any
       onScrollYThrottled?: Function
     },
     ref
@@ -122,7 +120,6 @@ export const ContentScrollView = forwardRef(
         >
           <VStack
             maxWidth={isSmall ? '100%' : drawerWidthMax}
-            paddingTop={paddingTop ?? (isSmall ? 0 : searchBarHeight)}
             alignSelf="flex-end"
             overflow="hidden"
             width="100%"

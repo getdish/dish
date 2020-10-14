@@ -60,7 +60,7 @@ const RestaurantPage = memo(
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
 
-        <ContentScrollView id="restaurant" paddingTop={0}>
+        <ContentScrollView id="restaurant">
           {/* <LinearGradient
             colors={[bgLight, 'rgba(255,255,255,0)']}
             style={[
@@ -94,7 +94,7 @@ const RestaurantPage = memo(
                       transform: [{ scale: 1.0125 }],
                     }}
                     marginBottom={-100}
-                    marginTop={-40}
+                    marginTop={0}
                     marginRight={20}
                   >
                     <RestaurantCard
@@ -107,14 +107,14 @@ const RestaurantPage = memo(
                   <Suspense fallback={null}>
                     <RestaurantOverview restaurantSlug={restaurantSlug} />
                     <Spacer size="xl" />
-                    <HStack flexWrap="wrap">
+                    <HStack maxHeight={120} overflow="hidden" flexWrap="wrap">
                       <RestaurantTagsRow
                         size="sm"
                         restaurantSlug={restaurantSlug}
                         restaurantId={restaurant.id}
                         spacing={6}
                         grid
-                        max={5}
+                        max={10}
                       />
                     </HStack>
                   </Suspense>

@@ -457,12 +457,14 @@ const RestaurantListItemContent = memo(
             {/* PEEK / TAGS (RIGHT SIDE) */}
             {/* margin top: negative the titles second row height */}
             <VStack position="relative" marginTop={-35}>
-              <RestaurantPeekDishes
-                restaurantSlug={props.restaurantSlug}
-                restaurantId={props.restaurantId}
-                searchState={props.searchState}
-                isLoaded={isLoaded}
-              />
+              <Suspense fallback={null}>
+                <RestaurantPeekDishes
+                  restaurantSlug={props.restaurantSlug}
+                  restaurantId={props.restaurantId}
+                  searchState={props.searchState}
+                  isLoaded={isLoaded}
+                />
+              </Suspense>
 
               <VStack flex={1} />
 

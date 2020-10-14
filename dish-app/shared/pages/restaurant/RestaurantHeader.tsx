@@ -98,12 +98,8 @@ const RestaurantHeaderContent = memo(
                     >
                       {restaurant.name}
                     </Text>
-                    <Spacer />
-                    <VStack
-                      overflow="hidden"
-                      alignItems="center"
-                      paddingRight={20}
-                    >
+                    <Spacer size="lg" />
+                    <VStack overflow="hidden" paddingRight={20}>
                       <HStack flexWrap="wrap" maxWidth="100%">
                         <RestaurantAddressLinksRow
                           currentLocationInfo={

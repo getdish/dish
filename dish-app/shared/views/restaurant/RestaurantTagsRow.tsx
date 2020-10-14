@@ -64,7 +64,13 @@ export const RestaurantTagsRow = memo(
       <>
         {tags
           .sort((a, b) =>
-            a.type === 'lense' ? -2 : a.type === 'cuisine' ? -1 : a.score
+            a.type === 'lense'
+              ? -2
+              : a.type === 'cuisine'
+              ? -1
+              : a.score > b.score
+              ? 1
+              : 2
           )
           .map((tag, index) => {
             return (
