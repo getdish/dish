@@ -44,8 +44,13 @@ export const FilterButton = memo(
       if (tag.name !== 'price-low') {
         content = (
           <HStack>
-            {iconElement}
-            <Spacer size="xs" />
+            {isSmall ? (
+              iconElement
+            ) : iconElement ? (
+              <VStack opacity={0.45} marginRight={6}>
+                {iconElement}
+              </VStack>
+            ) : null}
             {content}
           </HStack>
         )

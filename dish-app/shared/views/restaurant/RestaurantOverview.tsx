@@ -8,7 +8,7 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 
 const quote = (
   <AbsoluteVStack top={-10} left={-0}>
-    <Text fontSize={60} opacity={0.08}>
+    <Text fontSize={60} opacity={0.058}>
       &ldquo;
     </Text>
   </AbsoluteVStack>

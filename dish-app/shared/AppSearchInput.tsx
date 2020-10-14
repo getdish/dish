@@ -176,7 +176,7 @@ export const AppSearchInput = memo(() => {
           borderColor: 'rgba(255,255,255,0.2)',
         }}
         focusStyle={{
-          borderColor: 'rgba(255,255,255,0.3)',
+          borderColor: 'rgba(255,255,255,0.5)',
           shadowColor: '#000',
           shadowRadius: 4,
           shadowOpacity: 0.2,

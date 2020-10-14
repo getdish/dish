@@ -230,7 +230,7 @@ const RestaurantListItemContent = memo(
         <VStack flex={1} alignItems="flex-start" maxWidth="100%">
           {/* ROW: TITLE */}
           <VStack
-            hoverStyle={{ backgroundColor: '#B8E0F311' }}
+            hoverStyle={{ backgroundColor: '#fafafa' }}
             paddingTop={10}
             marginLeft={-pad}
             paddingLeft={pad}
@@ -282,22 +282,24 @@ const RestaurantListItemContent = memo(
                         <Spacer size="md" />
                         <HStack
                           transform={[{ translateY: -10 }]}
-                          padding={8}
+                          paddingHorizontal={8}
                           borderRadius={8}
+                          height={titleFontSize + 8 * 2 + 2}
+                          alignItems="center"
+                          marginVertical={-5}
                           // @ts-ignore
                           hoverStyle={{
-                            backgroundColor: bgLight,
+                            backgroundColor: bgLightHover,
                           }}
                           pressStyle={{
                             backgroundColor: bgLightHover,
                           }}
                           marginRight={10}
-                          marginVertical={-(2 - titleFontScale) * 10}
                         >
                           <Text
                             ellipse
                             fontSize={titleFontSize}
-                            lineHeight={titleFontSize * 1.2}
+                            lineHeight={titleFontSize}
                             fontWeight="600"
                           >
                             {restaurantName}
@@ -374,7 +376,12 @@ const RestaurantListItemContent = memo(
               {/* ensures it always flexes all the way even if short text */}
               {ensureFlexText}
 
-              <VStack justifyContent="center" flex={1} paddingLeft={10}>
+              <VStack
+                justifyContent="center"
+                flex={1}
+                paddingLeft={20}
+                paddingRight={10}
+              >
                 <RestaurantOverview
                   height={100}
                   restaurantSlug={restaurantSlug}
@@ -506,8 +513,8 @@ const RestaurantListItemContent = memo(
 const RankView = memo(({ rank }: { rank: number }) => {
   return (
     <VStack
-      width={40}
-      height={40}
+      width={42}
+      height={42}
       {...(isWeb && {
         marginLeft: -16,
         marginBottom: -10,
@@ -535,7 +542,12 @@ const RankView = memo(({ rank }: { rank: number }) => {
         <TextSuperScript transform={[{ translateY: -4 }]} fontSize={11}>
           #
         </TextSuperScript>
-        <Text fontSize={+rank > 9 ? 14 : 20} fontWeight="700" color="#000">
+        <Text
+          letterSpacing={-1}
+          fontSize={+rank > 9 ? 18 : 26}
+          fontWeight="300"
+          color="#000"
+        >
           {rank}
         </Text>
       </Text>

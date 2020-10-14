@@ -142,7 +142,7 @@ const HomeSearchBar = memo(() => {
       alignItems="center"
       justifyContent="center"
       userSelect="none"
-      width="100%"
+      paddingHorizontal={10}
       minHeight={searchBarHeight}
     >
       <VStack paddingHorizontal={8}>

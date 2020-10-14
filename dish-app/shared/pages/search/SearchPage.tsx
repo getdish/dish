@@ -33,7 +33,7 @@ import {
 } from 'recyclerlistview'
 
 import { AppPortalItem } from '../../AppPortal'
-import { isWeb } from '../../constants'
+import { isWeb, searchBarHeight } from '../../constants'
 import { rgbString } from '../../helpers/rgbString'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
@@ -384,7 +384,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         >
           <HStack
             paddingHorizontal={15}
-            paddingTop={14}
+            paddingTop={62}
             paddingBottom={10}
             overflow="hidden"
             justifyContent="center"
