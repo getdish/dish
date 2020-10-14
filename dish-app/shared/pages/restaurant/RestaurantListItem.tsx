@@ -47,7 +47,7 @@ import { Squircle } from '../../views/ui/Squircle'
 import { ensureFlexText } from './ensureFlexText'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
-import { priceRange } from './RestaurantDetailRow'
+import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { RestaurantSourcesBreakdownRow } from './RestaurantSourcesBreakdownRow'
 import { useTotalReviews } from './useTotalReviews'
@@ -189,8 +189,7 @@ const RestaurantListItemContent = memo(
       maxWidth: 400,
     }
 
-    const opening_hours = ''
-    // const [open_text, open_color, opening_hours] = openingHours(restaurant)
+    const [open_text, open_color, opening_hours] = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const totalReviews = useTotalReviews(restaurant)
     const titleFontScale =
@@ -330,13 +329,6 @@ const RestaurantListItemContent = memo(
               transform={[{ translateY: -10 }]}
             >
               <HStack alignItems="center" cursor="pointer" spacing="lg">
-                <Suspense fallback={<Spacer size={44} />}>
-                  <RestaurantFavoriteButton
-                    size="md"
-                    restaurantId={restaurantId}
-                  />
-                </Suspense>
-
                 {!!price_range && (
                   <Text
                     fontSize={14}
@@ -350,6 +342,7 @@ const RestaurantListItemContent = memo(
                 {!!opening_hours && (
                   <Link
                     name="restaurantHours"
+                    fontSize={14}
                     params={{ slug: restaurantSlug }}
                     color="rgba(0,0,0,0.6)"
                     ellipse
@@ -429,6 +422,15 @@ const RestaurantListItemContent = memo(
                       </SmallButton>
                     </Tooltip>
                   </VStack>
+
+                  <Spacer />
+
+                  <Suspense fallback={<Spacer size={44} />}>
+                    <RestaurantFavoriteButton
+                      size="md"
+                      restaurantId={restaurantId}
+                    />
+                  </Suspense>
 
                   <Spacer />
 
