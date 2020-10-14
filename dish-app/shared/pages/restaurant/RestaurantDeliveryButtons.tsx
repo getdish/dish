@@ -28,11 +28,6 @@ export const RestaurantDeliveryButtons = memo(
 
     if (!sources.length) {
       return null
-      // (
-      //   <Text lineHeight={33} fontSize={14} opacity={0.6}>
-      //     No delivery
-      //   </Text>
-      // )
     }
 
     return (

@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
 import { Clock } from '@dish/react-feather'
 import { HStack, Spacer, StackProps, Text, VStack } from '@dish/ui'
-import React, { memo } from 'react'
+import React, { Suspense, memo } from 'react'
 import { ScrollView } from 'react-native'
 
 import { drawerBorderRadius, isWeb } from '../../constants'
@@ -28,7 +28,11 @@ type RestaurantHeaderProps = {
 }
 
 export const RestaurantHeader = (props: RestaurantHeaderProps) => {
-  return <RestaurantHeaderContent {...props} />
+  return (
+    <Suspense fallback={<VStack minHeight={450} />}>
+      <RestaurantHeaderContent {...props} />
+    </Suspense>
+  )
 }
 
 const RestaurantHeaderContent = memo(
@@ -45,7 +49,6 @@ const RestaurantHeaderContent = memo(
     }: RestaurantHeaderProps) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
       const [open_text, open_color, next_time] = openingHours(restaurant)
-      const om = useOvermind()
       const paddingPx = size === 'sm' ? 10 : 30
       const spacer = <Spacer size={paddingPx} />
       const nameLen = restaurant.name?.length
@@ -101,30 +104,31 @@ const RestaurantHeaderContent = memo(
                     <Spacer size="lg" />
                     <VStack overflow="hidden" paddingRight={20}>
                       <HStack flexWrap="wrap" maxWidth="100%">
-                        <RestaurantAddressLinksRow
-                          currentLocationInfo={
-                            state?.currentLocationInfo ??
-                            om.state.home.currentState.currentLocationInfo
-                          }
-                          showMenu
-                          size="lg"
-                          restaurantSlug={restaurantSlug}
-                        />
-                        <Spacer size="sm" />
-                        <RestaurantDeliveryButtons
-                          showLabels
-                          restaurantSlug={restaurantSlug}
-                        />
-                        <Spacer size="xs" />
-                        <VStack marginRight={6} marginBottom={6}>
-                          <RestaurantAddress
-                            size="xs"
-                            address={restaurant.address ?? ''}
+                        <Suspense fallback={null}>
+                          <RestaurantAddressLinksRow
                             currentLocationInfo={
                               state?.currentLocationInfo ?? null
                             }
+                            showMenu
+                            size="lg"
+                            restaurantSlug={restaurantSlug}
                           />
-                        </VStack>
+                          <Spacer size="sm" />
+                          <RestaurantDeliveryButtons
+                            showLabels
+                            restaurantSlug={restaurantSlug}
+                          />
+                          <Spacer size="xs" />
+                          <VStack marginRight={6} marginBottom={6}>
+                            <RestaurantAddress
+                              size="xs"
+                              address={restaurant.address ?? ''}
+                              currentLocationInfo={
+                                state?.currentLocationInfo ?? null
+                              }
+                            />
+                          </VStack>
+                        </Suspense>
                         <SmallButton
                           backgroundColor="transparent"
                           name="restaurantHours"
