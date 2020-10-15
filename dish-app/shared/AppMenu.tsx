@@ -123,6 +123,7 @@ const MenuButton = memo(
 
     const linkButtonElement = (
       <LinkButton
+        enableActiveStyle
         className="ease-in-out-fast"
         padding={12}
         opacity={0.6}
