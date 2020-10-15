@@ -268,18 +268,11 @@ const RestaurantListItemContent = memo(
                     selectable
                     maxWidth="100%"
                     width="100%"
-                    fontWeight="500"
                     lineHeight={26}
                     textDecorationColor="transparent"
-                    {...(!isWeb && {
-                      minWidth: contentSideProps.minWidth,
-                    })}
+                    fontWeight="600"
                   >
-                    <Link
-                      color="#000"
-                      name="restaurant"
-                      params={{ slug: restaurantSlug }}
-                    >
+                    <Link name="restaurant" params={{ slug: restaurantSlug }}>
                       <HStack>
                         <RankView rank={rank} />
                         <Spacer size="sm" />
@@ -287,7 +280,6 @@ const RestaurantListItemContent = memo(
                           transform={[{ translateY: -10 }]}
                           paddingHorizontal={8}
                           borderRadius={8}
-                          height={titleHeight}
                           alignItems="center"
                           marginVertical={-5}
                           // @ts-ignore
@@ -297,13 +289,12 @@ const RestaurantListItemContent = memo(
                           pressStyle={{
                             backgroundColor: bgLightHover,
                           }}
-                          marginRight={10}
                         >
                           <Text
-                            ellipse
                             fontSize={titleFontSize}
                             lineHeight={titleHeight}
-                            fontWeight="600"
+                            height={titleHeight}
+                            color="#000"
                           >
                             {restaurantName}
                           </Text>
@@ -314,8 +305,6 @@ const RestaurantListItemContent = memo(
                 </HStack>
               </VStack>
             </Link>
-
-            <Spacer size="sm" />
 
             {/* RANKING ROW */}
             <VStack
@@ -417,7 +406,8 @@ const RestaurantListItemContent = memo(
                         fontWeight="600"
                       >
                         {numberFormat(
-                          restaurant.reviews_aggregate().aggregate.count() ?? 0
+                          restaurant.reviews_aggregate().aggregate.count() ?? 0,
+                          'sm'
                         )}
                       </SmallButton>
                     </Tooltip>
@@ -458,7 +448,7 @@ const RestaurantListItemContent = memo(
 
             {/* PEEK / TAGS (RIGHT SIDE) */}
             {/* margin top: negative the titles second row height */}
-            <VStack paddingLeft={10} position="relative" marginTop={-25}>
+            <VStack paddingLeft={10} position="relative" marginTop={-30}>
               <Suspense fallback={null}>
                 <RestaurantPeekDishes
                   restaurantSlug={props.restaurantSlug}

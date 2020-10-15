@@ -1,4 +1,4 @@
-import { fullyIdle, series } from '@dish/async'
+import { fullyIdle, series, sleep } from '@dish/async'
 import { query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
@@ -115,17 +115,20 @@ const HomeAutocompleteEffects = memo(
 
       const dispose = om.reaction(
         (state) => {
-          return state.home.showAutocomplete === 'location'
-            ? state.home.locationSearchQuery
-            : state.home.currentStateSearchQuery
+          const query =
+            state.home.showAutocomplete === 'location'
+              ? state.home.locationSearchQuery
+              : state.home.currentStateSearchQuery
+          return [query, state.home.lastActiveTags] as const
         },
-        (query) => {
+        ([query, tags]) => {
           cancel?.()
           if (om.state.home.showAutocomplete) {
             onChangeStatus(true)
             cancel = runAutocomplete(
               om.state.home.showAutocomplete,
-              query,
+              query.trim(),
+              tags,
               () => {
                 onChangeStatus(false)
               }
@@ -497,9 +500,52 @@ function AutocompleteAddButton() {
 function runAutocomplete(
   showAutocomplete: ShowAutocomplete,
   searchQuery: string,
+  tags?: NavigableTag[],
   onFinish?: Function
 ) {
   const om = omStatic
+  let results: AutocompleteItem[] = []
+  const state = om.state.home.currentState
+
+  // cuisine tag autocomplete
+  if (showAutocomplete === 'search') {
+    if (tags.length === 2) {
+      const countryTag = tags.find((x) => x.type === 'country')
+      if (countryTag) {
+        const cuisineName = countryTag.name
+        if (cuisineName) {
+          return series([
+            () => fullyIdle({ max: 350, min: 200 }),
+            async () => {
+              results = await resolved(() => {
+                return [
+                  ...searchDishTags(searchQuery, cuisineName),
+                  ...searchRestaurants(
+                    searchQuery,
+                    state.center,
+                    state.span,
+                    cuisineName
+                  ),
+                ]
+              })
+            },
+            // allow cancel
+            () => sleep(30),
+            async () => {
+              await setAutocompleteResults(
+                showAutocomplete,
+                searchQuery,
+                results
+              )
+            },
+            () => {
+              onFinish?.()
+            },
+          ])
+        }
+      }
+    }
+  }
 
   if (searchQuery === '') {
     if (showAutocomplete === 'location') {
@@ -511,9 +557,6 @@ function runAutocomplete(
     onFinish?.()
     return
   }
-
-  const state = om.state.home.currentState
-  let results: AutocompleteItem[] = []
 
   return series([
     () => fullyIdle({ max: 350, min: 200 }),
@@ -533,65 +576,10 @@ function runAutocomplete(
         )
       }
     },
-    () => {
-      // allows cancel
-      return fullyIdle({ max: 30 })
-    },
+    // allow cancel
+    () => sleep(30),
     async () => {
-      let matched: AutocompleteItem[] = []
-      console.log('starts with', results)
-      if (results.length) {
-        matched = await fuzzySearch({
-          items: results,
-          query: searchQuery,
-          keys: ['name', 'description'],
-        })
-      }
-      matched = uniqBy([...matched, ...results].filter(isPresent), (x) => x.id)
-      console.log('matched', matched)
-      if (showAutocomplete === 'location') {
-        om.actions.home.setLocationAutocompleteResults(matched)
-      } else if (showAutocomplete === 'search') {
-        // add in a deduped entry
-        // if multiple countries have "steak" we show a single "generic steak" entry at top
-        const dishes = matched.filter((x) => x.type === 'dish')
-        const groupedDishes = groupBy(dishes, (x) => x.name)
-        for (const [name, group] of Object.keys(groupedDishes).map(
-          (x) => [x, groupedDishes[x]] as const
-        )) {
-          // more than one cuisine with same dish name, lets make a generic entry
-          if (group.length > 1) {
-            const firstIndexOfGroup = matched.findIndex((x) => x.name === name)
-            matched.splice(
-              firstIndexOfGroup,
-              0,
-              createAutocomplete({
-                name,
-                type: 'dish',
-                icon: group.find((x) => x.icon)?.icon ?? '',
-              })
-            )
-          }
-        }
-
-        // countries that match name startsWith go to top
-        const sqlower = searchQuery.toLowerCase()
-        const partialCountryMatches = matched
-          .map((item, index) => {
-            return item.type === 'country' &&
-              item.name.toLowerCase().startsWith(sqlower)
-              ? index
-              : -1
-          })
-          .filter((x) => x > 0)
-        for (const index of partialCountryMatches) {
-          const countryTag = matched[index]
-          matched.splice(index, 1) // remove from cur pos
-          matched.splice(0, 0, countryTag) // insert into higher place
-        }
-
-        om.actions.home.setAutocompleteResults(matched)
-      }
+      await setAutocompleteResults(showAutocomplete, searchQuery, results)
     },
     () => {
       onFinish?.()
@@ -599,8 +587,67 @@ function runAutocomplete(
   ])
 }
 
+async function setAutocompleteResults(
+  showAutocomplete: ShowAutocomplete,
+  searchQuery: string,
+  results: AutocompleteItem[]
+) {
+  let matched: AutocompleteItem[] = []
+  console.log('starts with', results)
+  if (results.length) {
+    matched = await fuzzySearch({
+      items: results,
+      query: searchQuery,
+      keys: ['name', 'description'],
+    })
+  }
+  matched = uniqBy([...matched, ...results].filter(isPresent), (x) => x.id)
+  if (showAutocomplete === 'location') {
+    om.actions.home.setLocationAutocompleteResults(matched)
+  } else if (showAutocomplete === 'search') {
+    // add in a deduped entry
+    // if multiple countries have "steak" we show a single "generic steak" entry at top
+    const dishes = matched.filter((x) => x.type === 'dish')
+    const groupedDishes = groupBy(dishes, (x) => x.name)
+    for (const [name, group] of Object.keys(groupedDishes).map(
+      (x) => [x, groupedDishes[x]] as const
+    )) {
+      // more than one cuisine with same dish name, lets make a generic entry
+      if (group.length > 1) {
+        const firstIndexOfGroup = matched.findIndex((x) => x.name === name)
+        matched.splice(
+          firstIndexOfGroup,
+          0,
+          createAutocomplete({
+            name,
+            type: 'dish',
+            icon: group.find((x) => x.icon)?.icon ?? '',
+          })
+        )
+      }
+    }
+
+    // countries that match name startsWith go to top
+    const sqlower = searchQuery.toLowerCase()
+    const partialCountryMatches = matched
+      .map((item, index) => {
+        return item.type === 'country' &&
+          item.name.toLowerCase().startsWith(sqlower)
+          ? index
+          : -1
+      })
+      .filter((x) => x > 0)
+    for (const index of partialCountryMatches) {
+      const countryTag = matched[index]
+      matched.splice(index, 1) // remove from cur pos
+      matched.splice(0, 0, countryTag) // insert into higher place
+    }
+
+    om.actions.home.setAutocompleteResults(matched)
+  }
+}
+
 function searchAutocomplete(searchQuery: string, center: LngLat, span: LngLat) {
-  searchQuery = searchQuery.trim()
   return resolved(() => {
     return [
       ...searchDishTags(searchQuery),
@@ -645,17 +692,31 @@ function searchCuisines(searchQuery: string) {
     })
 }
 
-function searchDishTags(searchQuery: string) {
+function searchDishTags(searchQuery: string, cuisine?: string) {
   return [
     ...searchDishes({
       name: {
         _ilike: `${searchQuery}%`,
       },
+      ...(cuisine && {
+        parent: {
+          name: {
+            _eq: cuisine,
+          },
+        },
+      }),
     }),
     ...searchDishes({
       name: {
         _ilike: getFuzzyMatchQuery(searchQuery),
       },
+      ...(cuisine && {
+        parent: {
+          name: {
+            _eq: cuisine,
+          },
+        },
+      }),
     }),
   ].map((r) =>
     createAutocomplete({

@@ -9,7 +9,8 @@ import { getFuzzyMatchQuery } from './getFuzzyMatchQuery'
 export function searchRestaurants(
   searchQuery: string,
   center: LngLat,
-  span: LngLat
+  span: LngLat,
+  cuisine?: string
 ) {
   const search = (whereCondition: any) => {
     return query.restaurant({
@@ -35,11 +36,29 @@ export function searchRestaurants(
       name: {
         _ilike: searchQuery,
       },
+      ...(cuisine && {
+        tags: {
+          tag: {
+            name: {
+              _eq: cuisine,
+            },
+          },
+        },
+      }),
     }),
     ...search({
       name: {
         _ilike: getFuzzyMatchQuery(searchQuery),
       },
+      ...(cuisine && {
+        tags: {
+          tag: {
+            name: {
+              _eq: cuisine,
+            },
+          },
+        },
+      }),
     }),
   ].map((r) =>
     createAutocomplete({
