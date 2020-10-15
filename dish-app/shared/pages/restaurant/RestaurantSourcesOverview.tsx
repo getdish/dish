@@ -6,7 +6,6 @@ import {
   Paragraph,
   SmallTitle,
   Spacer,
-  Text,
   VStack,
 } from '@dish/ui'
 import React from 'react'

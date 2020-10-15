@@ -116,7 +116,7 @@ export const RestaurantRatingBreakdown = memo(
             backgroundColor={bgLight}
             overflow="hidden"
           >
-            <SmallTitle color={bg}>Overall</SmallTitle>
+            <SmallTitle>Overall</SmallTitle>
             <RestaurantPointsBreakdown
               showTable={showScoreTable}
               restaurantSlug={restaurantSlug}
@@ -124,13 +124,13 @@ export const RestaurantRatingBreakdown = memo(
 
             <Spacer size="sm" />
 
-            <SmallTitle color={bg}>Lense Votes</SmallTitle>
+            <SmallTitle>Lense Votes</SmallTitle>
             <Spacer />
             <RestaurantLenseVote restaurantId={restaurantId} />
 
             <Spacer size="xl" />
 
-            <SmallTitle color={bg}>Dishes</SmallTitle>
+            <SmallTitle>Dishes</SmallTitle>
           </VStack>
         </HStack>
       </VStack>

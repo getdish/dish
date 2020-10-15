@@ -25,7 +25,7 @@ import { CommentBubble } from '../../views/CommentBubble'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { TagSmallButton } from '../../views/TagSmallButton'
 import { LinkButton } from '../../views/ui/LinkButton'
-import { SmallButton, smallButtonBaseStyle } from '../../views/ui/SmallButton'
+import { SmallButton } from '../../views/ui/SmallButton'
 import { RestaurantLenseVote } from '../restaurant/RestaurantLenseVote'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { SentimentText } from '../restaurant/SentimentText'
@@ -190,10 +190,9 @@ export const RestaurantReviewComment = memo(
             afterName={
               <HStack marginVertical={-10} flex={1}>
                 <Spacer flex={1} />
-                <LinkButton
+                <SmallButton
                   accessible
                   accessibilityRole="button"
-                  {...smallButtonBaseStyle}
                   disabled={isSaved}
                   alignSelf="center"
                   fontWeight="700"
@@ -206,7 +205,7 @@ export const RestaurantReviewComment = memo(
                   }}
                 >
                   Save
-                </LinkButton>
+                </SmallButton>
               </HStack>
             }
             after={

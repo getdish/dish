@@ -83,7 +83,7 @@ export const smallButtonStyles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
     borderColor: bgLight,
   },
   isWeb: {

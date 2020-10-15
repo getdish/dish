@@ -112,7 +112,7 @@ const RestaurantPage = memo(
                   <Suspense fallback={null}>
                     <RestaurantOverview restaurantSlug={restaurantSlug} />
                     <Spacer size="xl" />
-                    <HStack maxHeight={134} overflow="hidden" flexWrap="wrap">
+                    <HStack maxHeight={100} overflow="hidden" flexWrap="wrap">
                       <RestaurantTagsRow
                         size="sm"
                         restaurantSlug={restaurantSlug}
@@ -126,6 +126,8 @@ const RestaurantPage = memo(
                 }
               />
             </Suspense>
+
+            <Spacer size="lg" />
 
             <HStack justifyContent="center">
               <SlantedTitle fontWeight="700">Best dishes</SlantedTitle>

@@ -115,21 +115,19 @@ const RestaurantHeaderContent = memo(
                             size="lg"
                             restaurantSlug={restaurantSlug}
                           />
-                          <Spacer size="sm" />
+                          <Spacer size="xs" />
                           <RestaurantDeliveryButtons
                             showLabels
                             restaurantSlug={restaurantSlug}
                           />
                           <Spacer size="xs" />
-                          <VStack marginRight={6} marginBottom={6}>
-                            <RestaurantAddress
-                              size="xs"
-                              address={restaurant.address ?? ''}
-                              currentLocationInfo={
-                                state?.currentLocationInfo ?? null
-                              }
-                            />
-                          </VStack>
+                          <RestaurantAddress
+                            size="xs"
+                            address={restaurant.address ?? ''}
+                            currentLocationInfo={
+                              state?.currentLocationInfo ?? null
+                            }
+                          />
                         </Suspense>
                         <SmallButton
                           backgroundColor="transparent"

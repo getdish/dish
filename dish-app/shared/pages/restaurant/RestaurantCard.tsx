@@ -3,7 +3,7 @@ import { AbsoluteVStack, LinearGradient, Paragraph, VStack } from '@dish/ui'
 import React, { Suspense, memo, useCallback, useState } from 'react'
 import { StyleSheet } from 'react-native'
 
-import { lightYellow, yellow } from '../../colors'
+import { bgLight, lightYellow, yellow } from '../../colors'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
@@ -40,8 +40,8 @@ const CardFrame = (props: any) => {
       shadowOpacity={0.1}
       shadowRadius={5}
       shadowOffset={{ height: 2, width: 0 }}
-      borderWidth={4}
-      borderColor="rgba(0,0,0,0.1)"
+      borderWidth={3}
+      borderColor="#fff"
       position="relative"
       {...props}
     />
@@ -62,14 +62,14 @@ export const RestaurantCardContent = memo(
 
       return (
         <CardFrame>
-          <VStack borderRadius={borderRadius - 3} overflow="hidden">
+          <VStack borderRadius={borderRadius - 2} overflow="hidden">
             <VStack
               className="safari-overflow-fix"
               width="100%"
               overflow="hidden"
               alignSelf="center"
               position="relative"
-              borderRadius={borderRadius - 3}
+              borderRadius={borderRadius - 2}
             >
               <AbsoluteVStack
                 className="ease-in-out"

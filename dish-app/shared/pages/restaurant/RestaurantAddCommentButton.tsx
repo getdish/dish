@@ -4,11 +4,7 @@ import { Text } from '@dish/ui'
 import React from 'react'
 
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
-import { LinkButton } from '../../views/ui/LinkButton'
-import {
-  SmallButtonProps,
-  smallButtonBaseStyle,
-} from '../../views/ui/SmallButton'
+import { SmallButton, SmallButtonProps } from '../../views/ui/SmallButton'
 
 export const RestaurantAddCommentButton = graphql(
   ({
@@ -25,8 +21,7 @@ export const RestaurantAddCommentButton = graphql(
   }) => {
     const { review } = useUserReviewCommentQuery(restaurantId)
     return (
-      <LinkButton
-        {...smallButtonBaseStyle}
+      <SmallButton
         name="restaurantReview"
         params={{ slug: restaurantSlug }}
         fontWeight="600"
@@ -46,7 +41,7 @@ export const RestaurantAddCommentButton = graphql(
             marginLeft: 5,
           }}
         />
-      </LinkButton>
+      </SmallButton>
     )
   }
 )

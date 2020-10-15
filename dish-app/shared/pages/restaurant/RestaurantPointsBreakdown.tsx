@@ -71,6 +71,7 @@ export const RestaurantPointsBreakdown = memo(
             </TextStrong>{' '}
             points.{' '}
           </Paragraph>
+          <Spacer />
           <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
             {numberFormat(Math.round(reviewsBreakdown['score']))} points from{' '}
             {numberFormat(totalReviews)} reviews and{' '}
@@ -98,6 +99,10 @@ export const RestaurantPointsBreakdown = memo(
             from {numberFormat(totalExternalReviews)} {sourceNames(sources)}{' '}
             reviews.
           </Paragraph>
+
+          <Spacer size="lg" />
+          <Divider />
+          <Spacer size="lg" />
 
           {showTable && (
             <RestaurantSourcesBreakdown restaurantSlug={props.restaurantSlug} />
