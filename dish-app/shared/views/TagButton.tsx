@@ -11,11 +11,10 @@ import {
   TextProps,
   TextSuperScript,
   VStack,
-  getNode,
   prevent,
 } from '@dish/ui'
-import React, { memo, useEffect, useRef, useState } from 'react'
-import { Image, Platform } from 'react-native'
+import React, { memo, useState } from 'react'
+import { Image } from 'react-native'
 
 import {
   blue,
@@ -149,7 +148,7 @@ export const TagButton = memo((props: TagButtonProps) => {
         className="ease-in-out-faster"
         height={size === 'sm' ? 28 : 34}
         borderRadius={size === 'sm' ? 8 : 10}
-        paddingHorizontal={4}
+        paddingHorizontal={size === 'sm' ? 4 : 10}
         overflow="hidden"
         alignItems="center"
         justifyContent="center"

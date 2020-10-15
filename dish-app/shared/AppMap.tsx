@@ -1,9 +1,16 @@
 import { LngLat, Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { AbsoluteVStack, useDebounce, useDebounceValue } from '@dish/ui'
+import { AbsoluteVStack, useDebounce, useDebounceValue, useGet } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import { isEqual, uniqBy } from 'lodash'
-import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
+import React, {
+  Suspense,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { searchBarHeight, zIndexMap } from './constants'
@@ -253,23 +260,111 @@ const AppMapContent = memo(function AppMap({
   const delayedIndex = useDebounceValue(drawerStore.snapIndex, 250)
   const currentSnapIndex = Math.max(1, delayedIndex)
   const currentSnapPoint = drawerStore.snapPoints[currentSnapIndex]
-  const padding = isSmall
-    ? {
-        left: 10,
-        top: 10,
-        bottom: getWindowHeight() - getWindowHeight() * currentSnapPoint + 10,
-        right: 10,
-      }
-    : {
-        left: paddingLeft,
-        top: searchBarHeight + 20,
-        bottom: 10,
-        right: 10,
-      }
-
-  console.log('padding', padding)
+  const padding = useMemo(() => {
+    return isSmall
+      ? {
+          left: 10,
+          top: 10,
+          bottom: getWindowHeight() - getWindowHeight() * currentSnapPoint + 10,
+          right: 10,
+        }
+      : {
+          left: paddingLeft,
+          top: searchBarHeight + 20,
+          bottom: 10,
+          right: 10,
+        }
+  }, [isSmall, paddingLeft, currentSnapPoint])
 
   const features = useMemo(() => getRestaurantMarkers(restaurants), [key])
+
+  const handleMoveEnd = useCallback(
+    ({ center, span }) => {
+      if (isSmall && (drawerStore.isDragging || drawerStore.snapIndex === 0)) {
+        console.log('avoid move stuff when snapped to top')
+        return
+      }
+      if (omStatic.state.home.centerToResults) {
+        // we just re-centered, ignore
+        om.actions.home.setCenterToResults(0)
+      }
+      setState({
+        center,
+        span,
+      })
+      om.actions.home.updateCurrentState({
+        mapAt: {
+          center,
+          span,
+        },
+      })
+      om.actions.home.updateCurrentMapAreaInformation()
+    },
+    [isSmall]
+  )
+
+  const handleDoubleClick = useCallback(
+    (id) => {
+      const restaurant = restaurants?.find((x) => x.id === id)
+      if (restaurant) {
+        router.navigate({
+          name: 'restaurant',
+          params: {
+            slug: restaurant.slug,
+          },
+        })
+      }
+    },
+    [restaurants]
+  )
+
+  const handleHover = useCallback(
+    (id) => {
+      if (id == null) {
+        om.actions.home.setHoveredRestaurant(null)
+        return
+      }
+      const { hoveredRestaurant } = omStatic.state.home
+      if (!hoveredRestaurant || id !== hoveredRestaurant?.id) {
+        const restaurant = restaurants?.find((x) => x.id === id)
+        if (restaurant) {
+          om.actions.home.setHoveredRestaurant({
+            id: restaurant.id,
+            slug: restaurant.slug,
+          })
+        } else {
+          console.warn('not found?', restaurants, id)
+        }
+      }
+    },
+    [restaurants]
+  )
+
+  const handleSelect = useCallback(
+    (id) => {
+      const restaurant = restaurants?.find((x) => x.id === id)
+      if (!restaurant) {
+        console.warn('not found', id)
+        return
+      }
+      if (omStatic.state.home.currentStateType === 'search') {
+        if (id !== omStatic.state.home.selectedRestaurant?.id) {
+          om.actions.home.setSelectedRestaurant({
+            id: restaurant.id,
+            slug: restaurant.slug ?? '',
+          })
+        }
+      } else {
+        router.navigate({
+          name: 'restaurant',
+          params: {
+            slug: restaurant.slug,
+          },
+        })
+      }
+    },
+    [restaurants]
+  )
 
   return (
     <AbsoluteVStack
@@ -293,81 +388,10 @@ const AppMapContent = memo(function AppMap({
         hovered={
           om.state.home.hoveredRestaurant && om.state.home.hoveredRestaurant.id
         }
-        onMoveEnd={({ center, span }) => {
-          if (
-            isSmall &&
-            (drawerStore.isDragging || drawerStore.snapIndex === 0)
-          ) {
-            console.log('avoid move stuff when snapped to top')
-            return
-          }
-          if (omStatic.state.home.centerToResults) {
-            // we just re-centered, ignore
-            om.actions.home.setCenterToResults(0)
-          }
-          setState({
-            center,
-            span,
-          })
-          om.actions.home.updateCurrentState({
-            mapAt: {
-              center,
-              span,
-            },
-          })
-          om.actions.home.updateCurrentMapAreaInformation()
-        }}
-        onDoubleClick={(id) => {
-          const restaurant = restaurants?.find((x) => x.id === id)
-          if (restaurant) {
-            router.navigate({
-              name: 'restaurant',
-              params: {
-                slug: restaurant.slug,
-              },
-            })
-          }
-        }}
-        onHover={(id) => {
-          if (id == null) {
-            om.actions.home.setHoveredRestaurant(null)
-            return
-          }
-          const { hoveredRestaurant } = omStatic.state.home
-          if (!hoveredRestaurant || id !== hoveredRestaurant?.id) {
-            const restaurant = restaurants?.find((x) => x.id === id)
-            if (restaurant) {
-              om.actions.home.setHoveredRestaurant({
-                id: restaurant.id,
-                slug: restaurant.slug,
-              })
-            } else {
-              console.warn('not found?', restaurants, id)
-            }
-          }
-        }}
-        onSelect={(id) => {
-          const restaurant = restaurants?.find((x) => x.id === id)
-          if (!restaurant) {
-            console.warn('not found', id)
-            return
-          }
-          if (omStatic.state.home.currentStateType === 'search') {
-            if (id !== omStatic.state.home.selectedRestaurant?.id) {
-              om.actions.home.setSelectedRestaurant({
-                id: restaurant.id,
-                slug: restaurant.slug ?? '',
-              })
-            }
-          } else {
-            router.navigate({
-              name: 'restaurant',
-              params: {
-                slug: restaurant.slug,
-              },
-            })
-          }
-        }}
+        onMoveEnd={handleMoveEnd}
+        onDoubleClick={handleDoubleClick}
+        onHover={handleHover}
+        onSelect={handleSelect}
       />
     </AbsoluteVStack>
   )

@@ -451,21 +451,7 @@ const RestaurantListItemContent = memo(
                     </Suspense>
                   </VStack>
 
-                  <VStack
-                    width={fadeOutWidth}
-                    position="absolute"
-                    top={0}
-                    right={0}
-                    bottom={0}
-                    pointerEvents="none"
-                  >
-                    <LinearGradient
-                      style={StyleSheet.absoluteFill}
-                      colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
-                      startPoint={[0, 0]}
-                      endPoint={[1, 0]}
-                    />
-                  </VStack>
+                  {fadeOutRightElement}
                 </HStack>
               </Suspense>
             </VStack>
@@ -514,6 +500,24 @@ const RestaurantListItemContent = memo(
       </VStack>
     )
   })
+)
+
+const fadeOutRightElement = (
+  <VStack
+    width={fadeOutWidth}
+    position="absolute"
+    top={0}
+    right={0}
+    bottom={0}
+    pointerEvents="none"
+  >
+    <LinearGradient
+      style={StyleSheet.absoluteFill}
+      colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
+      startPoint={[0, 0]}
+      endPoint={[1, 0]}
+    />
+  </VStack>
 )
 
 const RankView = memo(({ rank }: { rank: number }) => {

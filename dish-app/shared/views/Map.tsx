@@ -4,7 +4,7 @@ import { fullyIdle, series } from '@dish/async'
 import { useGet } from '@dish/ui'
 import _, { isEqual } from 'lodash'
 import mapboxgl from 'mapbox-gl'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
@@ -36,7 +36,7 @@ type MapInternalState = {
   isAwaitingNextMove: boolean
 }
 
-export const Map = (props: MapProps) => {
+export const Map = memo((props: MapProps) => {
   const { center, span, padding, features, style, hovered, selected } = props
   const isMounted = useIsMountedRef()
   const mapNode = useRef<HTMLDivElement>(null)
@@ -236,7 +236,7 @@ export const Map = (props: MapProps) => {
   }, [map, features, props.centerToResults])
 
   return <div ref={mapNode} style={mapStyle} />
-}
+})
 
 const mapStyle = {
   width: '100%',
