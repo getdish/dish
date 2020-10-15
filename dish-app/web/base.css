@@ -492,10 +492,14 @@ body > div {
   transform: translateY(30);
 }
 
-.animate-in {
+.animate-in-mounted {
   transition: all ease-in 300ms;
   opacity: 1;
   transform: translateY(0);
+}
+
+.animate-delay-some {
+  transition-delay: 300ms;
 }
 
 .safari-overflow-fix {

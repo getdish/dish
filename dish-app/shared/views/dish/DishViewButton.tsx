@@ -45,9 +45,11 @@ export const DishViewButton = memo(
   }
 )
 
+const { backgroundColor, ...rest } = flatButtonStyle
+
 const dishButtonStyles = StyleSheet.create({
   base: {
-    ...flatButtonStyle,
+    ...rest,
     borderWidth: 1,
     paddingVertical: 9,
     paddingHorizontal: 12,

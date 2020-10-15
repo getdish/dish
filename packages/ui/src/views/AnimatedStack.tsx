@@ -68,7 +68,7 @@ export const AnimatedVStack = ({
   ...props
 }: AnimatedStackProps) => {
   // weird, simple, hacky fast animation for default case
-  if (isWeb && !animation) {
+  if (isWeb && animation === defaultAnimation) {
     const [isMounted, setIsMounted] = useState(false)
 
     useEffect(() => {
@@ -79,9 +79,11 @@ export const AnimatedVStack = ({
       <VStack
         {...props}
         className={`${props.className ?? ''} animate-in ${
-          isMounted ? 'animated-in-mounted' : ''
+          isMounted ? 'animate-in-mounted' : ''
         }`}
-      />
+      >
+        {children}
+      </VStack>
     )
   }
 

@@ -177,6 +177,7 @@ const AutocompleteContentsInner = memo(
 
     return (
       <AnimatedVStack
+        className="animate-delay-some"
         pointerEvents="none"
         fullscreen
         height="100%"
