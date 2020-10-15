@@ -3,7 +3,6 @@ import React, { useEffect } from 'react'
 
 import { AppSmallDrawerView } from './AppSmallDrawerView'
 import { BottomDrawerStore } from './BottomDrawerStore'
-import { getIs } from './hooks/useIs'
 import { omStatic } from './state/omStatic'
 
 export const AppSmallDrawer = (props: { children: any }) => {
@@ -16,12 +15,9 @@ export const AppSmallDrawer = (props: { children: any }) => {
       (state) => state.home.showAutocomplete,
       (show) => {
         if (!!show) {
-          // lastIndex = snapIndex
           drawerStore.setSnapPoint(0)
         } else {
-          if (lastAutocomplete === 'search') {
-            drawerStore.setSnapPoint(1)
-          }
+          drawerStore.setSnapPoint(1)
         }
         lastAutocomplete = show
       }

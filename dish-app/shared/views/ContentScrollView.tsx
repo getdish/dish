@@ -73,6 +73,7 @@ export const ContentScrollView = forwardRef(
     const isSmall = useIsNarrow()
     const lastUpdate = useRef<any>(0)
     const finish = useRef<any>(0)
+    const om = useOvermind()
 
     const doUpdate = (y: number, e: any) => {
       clearTimeout(finish.current)
@@ -128,7 +129,9 @@ export const ContentScrollView = forwardRef(
             {children}
 
             {/* for drawer, pad bottom */}
-            <VStack height={isSmall ? 300 : 0} />
+            <VStack
+              height={isSmall && om.state.home.drawerSnapPoint > 0 ? 300 : 0}
+            />
           </VStack>
         </ScrollView>
       </ContentScrollContext.Provider>

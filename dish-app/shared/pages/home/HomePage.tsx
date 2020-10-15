@@ -173,55 +173,46 @@ export default memo(function HomePage(props: Props) {
     return (
       <>
         <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
-        <VStack
-          position="relative"
-          flex={1}
-          maxHeight="100%"
-          overflow="visible"
-          maxWidth="100%"
-          height="100%"
-        >
-          <ContentScrollView id="home">
-            {/* cross line */}
-            <AbsoluteVStack
-              contain="strict"
-              height={320}
-              width={2000}
-              right="-10%"
-              zIndex={-1}
-              top={-120}
-              transform={[{ rotate: '-2deg' }]}
-              overflow="hidden" // fixes chrome rendering line at bottom glitch
-            >
-              <LinearGradient
-                style={[StyleSheet.absoluteFill]}
-                colors={[bgLightHover, '#fff']}
-              />
-            </AbsoluteVStack>
-            <VStack
-              flex={1}
-              overflow="hidden"
-              maxWidth="100%"
-              paddingTop={isSmall ? 20 : 28}
-            >
-              <VStack>
-                {!isSmall && <VStack height={searchBarHeight} />}
-                <HomeTopSearches />
+        <ContentScrollView id="home">
+          {/* cross line */}
+          <AbsoluteVStack
+            contain="strict"
+            height={320}
+            width={2000}
+            right="-10%"
+            zIndex={-1}
+            top={-120}
+            transform={[{ rotate: '-2deg' }]}
+            overflow="hidden" // fixes chrome rendering line at bottom glitch
+          >
+            <LinearGradient
+              style={[StyleSheet.absoluteFill]}
+              colors={[bgLightHover, '#fff']}
+            />
+          </AbsoluteVStack>
+          <VStack
+            flex={1}
+            overflow="hidden"
+            maxWidth="100%"
+            paddingTop={isSmall ? 20 : 28}
+          >
+            <VStack>
+              {!isSmall && <VStack height={searchBarHeight} />}
+              <HomeTopSearches />
 
-                {/* <Suspense fallback={null}>
+              {/* <Suspense fallback={null}>
                   <>
                     <HomeRecentReviews />
                     <Spacer size="lg" />
                   </>
                 </Suspense> */}
 
-                <Suspense fallback={null}>
-                  <HomeTopDishesContent topDishes={topDishes} />
-                </Suspense>
-              </VStack>
+              <Suspense fallback={null}>
+                <HomeTopDishesContent topDishes={topDishes} />
+              </Suspense>
             </VStack>
-          </ContentScrollView>
-        </VStack>
+          </VStack>
+        </ContentScrollView>
       </>
     )
   }

@@ -52,10 +52,10 @@ export function ErrorBoundary({
   return (
     <ReactErrorBoundary
       FallbackComponent={ErrorFallback}
-      onReset={() => {
-        console.log('reset', name)
-        // can reset some app state here
-      }}
+      // onReset={() => {
+      //   console.log('reset', name)
+      //   // can reset some app state here
+      // }}
     >
       {children}
     </ReactErrorBoundary>

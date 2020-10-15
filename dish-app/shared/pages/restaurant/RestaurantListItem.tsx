@@ -180,13 +180,13 @@ const RestaurantListItemContent = memo(
     }, [props.rank])
 
     const contentSideProps: StackProps = {
-      width: isSmall ? '85%' : '60%',
+      width: isSmall ? '82%' : '60%',
       minWidth: isSmall
         ? isWeb
-          ? '42vw'
-          : Dimensions.get('screen').width * 0.75
+          ? '40vw'
+          : Dimensions.get('window').width * 0.75
         : 320,
-      maxWidth: 400,
+      maxWidth: Math.min(Dimensions.get('window').width * 0.75, 420),
     }
 
     const [open_text, open_color, opening_hours] = openingHours(restaurant)
@@ -261,7 +261,7 @@ const RestaurantListItemContent = memo(
                     )}
                   </VStack>
 
-                  <Spacer size="sm" />
+                  <Spacer size="xs" />
 
                   {/* SECOND LINK WITH actual <a /> */}
                   <Text
@@ -282,7 +282,7 @@ const RestaurantListItemContent = memo(
                     >
                       <HStack>
                         <RankView rank={rank} />
-                        <Spacer size="md" />
+                        <Spacer size="sm" />
                         <HStack
                           transform={[{ translateY: -10 }]}
                           paddingHorizontal={8}

@@ -4,7 +4,7 @@ import { useStore } from '@dish/use-store'
 import React, { useEffect, useMemo } from 'react'
 import { Animated, PanResponder, View } from 'react-native'
 
-import { AppSearchBarDrawer } from './AppSearchBar'
+import { AppSearchBar } from './AppSearchBar'
 import { blurSearchInput } from './AppSearchInput'
 import { AppSmallDrawerView as AppSmallDrawerViewNative } from './AppSmallDrawerView.native'
 import { BottomDrawerStore } from './BottomDrawerStore'
@@ -139,7 +139,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
             }}
             {...panResponder.panHandlers}
           >
-            <AppSearchBarDrawer />
+            <AppSearchBar />
           </View>
 
           <VStack flex={1} maxHeight="100%" position="relative">

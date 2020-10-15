@@ -3,7 +3,7 @@ import { useStore } from '@dish/use-store'
 import React, { useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 
-import { AppSearchBarDrawer } from './AppSearchBar'
+import { AppSearchBar } from './AppSearchBar'
 import { blurSearchInput } from './AppSearchInput'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { BottomSheetContainer } from './BottomSheetContainer'
@@ -82,7 +82,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
       <BottomSheetContainer>
         <View style={styles.container} {...panResponder.panHandlers}>
           <VStack maxHeight={searchBarHeight}>
-            <AppSearchBarDrawer />
+            <AppSearchBar />
           </VStack>
           <VStack position="relative" flex={1}>
             {props.children}

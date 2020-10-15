@@ -13,8 +13,6 @@ export const StackViewCloseButton = memo((props: StackProps) => {
       {...props}
     >
       <CloseButton
-        padding={5}
-        borderRadius={20}
         shadowColor="rgba(0,0,0,0.25)"
         shadowRadius={10}
         shadowOffset={{ width: 0, height: 2 }}

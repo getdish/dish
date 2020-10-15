@@ -15,7 +15,7 @@ import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
 import { AppMenuFloating } from './AppMenuFloating'
 import { AppRoot } from './AppRoot'
-import { HomeSearchBarFloating } from './AppSearchBar'
+import { AppSearchBarFloating } from './AppSearchBar'
 import { AppStackView } from './AppStackView'
 import { bgLight } from './colors'
 import { isSSR, isWeb } from './constants'
@@ -91,7 +91,7 @@ const AppContent = memo(() => {
         </Suspense>
 
         <Suspense fallback={null}>
-          <HomeSearchBarFloating />
+          <AppSearchBarFloating />
         </Suspense>
         <Suspense fallback={null}>
           <HomeAutocomplete />

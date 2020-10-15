@@ -70,7 +70,7 @@ const AppStackViewItem = memo(
     const contentParentStore = useStore(ContentParentStore)
     const isSmall = useIsNarrow()
     const top = isSmall
-      ? Math.max(0, index - 1) * 5 + 2
+      ? Math.max(0, index - 1) * 5 + 6
       : index * 5 + (index > 0 ? searchBarHeight : 0)
     const left = 0
 
@@ -84,10 +84,6 @@ const AppStackViewItem = memo(
 
     children = useLastValueWhen(() => children, isRemoving)
 
-    const className = `animate-up ${
-      !isRemoving && !isAdding ? 'active' : 'untouchable'
-    }`
-
     useLayoutEffect(() => {
       if (isActive) {
         console.log('setActiveId', item.type)
@@ -99,7 +95,9 @@ const AppStackViewItem = memo(
       <VStack
         position="absolute"
         zIndex={index}
-        className={className}
+        className={`animate-up ${
+          !isRemoving && !isAdding ? 'active' : 'untouchable'
+        }`}
         top={0}
         right={0}
         bottom={0}
@@ -114,7 +112,6 @@ const AppStackViewItem = memo(
           bottom={-(index * 5)}
           width="100%"
           pointerEvents={isActive ? 'auto' : 'none'}
-          contain="layout"
         >
           <ErrorBoundary name={`AppStackView.${item.type}`}>
             <Suspense fallback={null}>{children}</Suspense>

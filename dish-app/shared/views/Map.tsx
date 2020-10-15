@@ -182,6 +182,7 @@ export const Map = (props: MapProps) => {
       const cancelSeries = series([
         () => fullyIdle({ max: 500 }),
         () => {
+          console.log('fitbounds')
           map?.fitBounds(next, {
             duration: 650,
           })
@@ -200,6 +201,7 @@ export const Map = (props: MapProps) => {
     if (!map) return
     // @ts-ignore no types for this yet
     map?.easeTo({ padding })
+    console.log('easing to', padding)
   }, [map, JSON.stringify(padding)])
 
   // features
@@ -367,11 +369,13 @@ function setupMapEffect({
     center: props.center,
     zoom: 11,
     attributionControl: false,
-  }).addControl(
-    new mapboxgl.AttributionControl({
-      compact: true,
-    })
-  )
+  })
+    .addControl(
+      new mapboxgl.AttributionControl({
+        compact: true,
+      })
+    )
+    .setPadding(getProps().padding)
   window['map'] = map
 
   const loadMarker = (name: string, asset: string) => {

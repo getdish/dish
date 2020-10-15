@@ -267,6 +267,8 @@ const AppMapContent = memo(function AppMap({
         right: 10,
       }
 
+  console.log('padding', padding)
+
   const features = useMemo(() => getRestaurantMarkers(restaurants), [key])
 
   return (

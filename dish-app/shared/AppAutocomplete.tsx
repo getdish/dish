@@ -10,6 +10,7 @@ import {
   Spacer,
   Text,
   VStack,
+  prevent,
   useDebounce,
 } from '@dish/ui'
 import { useStore } from '@dish/use-store'
@@ -247,8 +248,10 @@ const AutocompleteContentsInner = memo(
                 >
                   <CloseButton
                     position="absolute"
-                    top={5}
-                    right={5}
+                    top={4}
+                    right={4}
+                    onPressOut={prevent}
+                    zIndex={1000}
                     onPress={(e) => {
                       e.stopPropagation()
                       omStatic.actions.home.setShowAutocomplete(false)

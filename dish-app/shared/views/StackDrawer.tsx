@@ -42,10 +42,8 @@ export const StackDrawer = ({
         position="relative"
         flex={1}
         borderRadius={drawerBorderRadius}
-        overflow="hidden"
         maxWidth={isSmall ? '100%' : drawerWidthMax}
         backgroundColor="#fff"
-        contain="strict"
         {...props}
       >
         <Suspense fallback={fallback ?? <LoadingItems />}>{children}</Suspense>

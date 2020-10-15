@@ -28,7 +28,7 @@ import { LinkButton } from './views/ui/LinkButton'
 
 const isWeb = Platform.OS === 'web'
 
-export const AppSearchBarDrawer = () => {
+export const AppSearchBar = () => {
   const isSmall = useIsNarrow()
 
   if (!isSmall) {
@@ -37,7 +37,7 @@ export const AppSearchBarDrawer = () => {
 
   return (
     <VStack width="100%" paddingVertical={2} minHeight={searchBarHeight}>
-      <HomeSearchBar />
+      <AppSearchBarContents />
     </VStack>
   )
 }
@@ -47,7 +47,7 @@ export const parentIds = {
   large: 'searchbar-large',
 }
 
-export const HomeSearchBarFloating = () => {
+export const AppSearchBarFloating = () => {
   const isSmall = useIsNarrow()
   const { background } = useSearchBarTheme()
 
@@ -116,7 +116,7 @@ export const HomeSearchBarFloating = () => {
           maxWidth={searchBarMaxWidth}
         >
           <Suspense fallback={null}>
-            <HomeSearchBar />
+            <AppSearchBarContents />
           </Suspense>
         </VStack>
       </VStack>
@@ -124,7 +124,7 @@ export const HomeSearchBarFloating = () => {
   )
 }
 
-const HomeSearchBar = memo(() => {
+const AppSearchBarContents = memo(() => {
   const om = useOvermind()
   const focus = om.state.home.showAutocomplete
   const isSmall = useIsNarrow()
@@ -173,10 +173,10 @@ const HomeSearchBar = memo(() => {
         {isReallySmall && isWeb && (
           <>
             {/* keep both in dom so we have access to ref */}
-            <VStack display={showLocation ? 'contents' : ('none' as any)}>
+            <VStack display={showLocation ? 'contents' : 'none'}>
               <AppSearchLocationInput />
             </VStack>
-            <VStack display={!showLocation ? 'contents' : ('none' as any)}>
+            <VStack display={!showLocation ? 'contents' : 'none'}>
               <AppSearchInput />
             </VStack>
           </>
