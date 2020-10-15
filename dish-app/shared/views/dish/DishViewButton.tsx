@@ -1,5 +1,6 @@
 import { Spacer, StackProps, Text } from '@dish/ui'
 import React, { memo } from 'react'
+import { StyleSheet } from 'react-native'
 
 import { flatButtonStyle } from '../baseButtonStyle'
 import { LinkButton } from '../ui/LinkButton'
@@ -19,17 +20,12 @@ export const DishViewButton = memo(
     const { lightColor, color } = getDishColors(name)
     return (
       <LinkButton
-        {...flatButtonStyle}
+        style={dishButtonStyles.base}
+        borderColor={`${color}33`}
         backgroundColor={lightColor}
         hoverStyle={{
           backgroundColor: `${lightColor}cc`,
         }}
-        borderWidth={1}
-        borderColor={`${color}33`}
-        paddingVertical={9}
-        paddingHorizontal={12}
-        alignItems="center"
-        borderRadius={12}
         tag={{ type: 'dish', name }}
         {...rest}
       >
@@ -48,3 +44,14 @@ export const DishViewButton = memo(
     )
   }
 )
+
+const dishButtonStyles = StyleSheet.create({
+  base: {
+    ...flatButtonStyle,
+    borderWidth: 1,
+    paddingVertical: 9,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    borderRadius: 12,
+  },
+})

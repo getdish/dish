@@ -7,7 +7,6 @@ import {
   Search,
 } from '@dish/react-feather'
 import { AbsoluteVStack, HStack, Spacer, VStack } from '@dish/ui'
-import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { Platform } from 'react-native'
 
@@ -22,7 +21,6 @@ import {
 } from './constants'
 import { useIsNarrow, useIsReallyNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
-import { InputStore } from './InputStore'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { DishLogoButton } from './views/DishLogoButton'

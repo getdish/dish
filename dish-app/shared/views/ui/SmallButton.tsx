@@ -1,6 +1,6 @@
 import { HStack, StackProps, Text, Tooltip } from '@dish/ui'
 import React from 'react'
-import { TextStyle } from 'react-native'
+import { StyleSheet, TextStyle } from 'react-native'
 
 import { bg, bgLight, bgLightLight, lightBlue } from '../../colors'
 import { isWeb } from '../../constants'
@@ -23,7 +23,6 @@ export const SmallButton = ({
   fontSize,
   fontWeight,
   lineHeight,
-  activeTextStyle,
   textAlign,
   tooltip,
   ellipse,
@@ -42,7 +41,6 @@ export const SmallButton = ({
         lineHeight,
         textAlign,
         ellipse,
-        activeTextStyle,
       }}
     >
       {children}
@@ -54,25 +52,15 @@ export const SmallButton = ({
   contents = (
     <LinkButton
       className={rest.className}
-      {...(isWeb && {
-        minHeight: 36,
-        minWidth: 44,
-      })}
-      {...(!isWeb && {
-        height: 44,
-        minWidth: 48,
-        alignItems: 'center',
-        justifyContent: 'center',
-      })}
-      {...smallButtonBaseStyle}
+      style={[
+        smallButtonStyles.base,
+        isWeb ? smallButtonStyles.isWeb : smallButtonStyles.isTouch,
+        isActive ? smallButtonStyles.isActive : null,
+      ]}
+      hoverStyle={{
+        backgroundColor: isActive ? bgLight : bgLightLight,
+      }}
       {...rest}
-      {...(isActive && {
-        backgroundColor: bgLight,
-        borderColor: lightBlue,
-        hoverStyle: {
-          backgroundColor: bgLight,
-        },
-      })}
     >
       {before}
       {contents}
@@ -86,17 +74,30 @@ export const SmallButton = ({
   return contents
 }
 
-export const smallButtonBaseStyle: StackProps = {
-  alignItems: 'center',
-  justifyContent: 'center',
-  ...baseButtonStyle,
-  paddingHorizontal: 11,
-  paddingVertical: 8,
-  borderRadius: 20,
-  borderWidth: 1,
-  backgroundColor: '#fff',
-  borderColor: bgLight,
-  hoverStyle: {
-    backgroundColor: bgLightLight,
+export const smallButtonStyles = StyleSheet.create({
+  base: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...baseButtonStyle,
+    paddingHorizontal: 11,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    backgroundColor: '#fff',
+    borderColor: bgLight,
   },
-}
+  isWeb: {
+    minHeight: 36,
+    minWidth: 44,
+  },
+  isTouch: {
+    height: 44,
+    minWidth: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  isActive: {
+    backgroundColor: bgLight,
+    borderColor: lightBlue,
+  },
+})

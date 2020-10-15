@@ -1,8 +1,9 @@
 import { StackProps } from '@dish/ui'
+import { ViewStyle } from 'react-native'
 
 import { bgLight, bgLightHover } from '../colors'
 
-export const baseButtonStyle: StackProps = {
+export const baseButtonStyle: ViewStyle = {
   // @ts-ignore
   cursor: 'pointer',
   paddingVertical: 5,
@@ -11,12 +12,9 @@ export const baseButtonStyle: StackProps = {
   alignSelf: 'flex-start',
 }
 
-export const flatButtonStyle: StackProps = {
+export const flatButtonStyle: ViewStyle = {
   ...baseButtonStyle,
   backgroundColor: bgLight,
-  hoverStyle: {
-    backgroundColor: bgLightHover,
-  },
 }
 
 export const flatButtonStyleInactive: StackProps = {

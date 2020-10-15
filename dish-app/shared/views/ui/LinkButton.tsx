@@ -15,7 +15,27 @@ export function LinkButton<
   const [isActive, setIsActive] = useState(false)
   const { wrapWithLinkElement } = useLink(props)
 
+  const {
+    children,
+    fontSize,
+    lineHeight,
+    fontWeight,
+    textAlign,
+    ellipse,
+    replace,
+    color,
+    disallowDisableWhenActive,
+    tags,
+    tag,
+    name,
+    params,
+    onPress,
+    enableActiveStyle,
+    ...restProps
+  } = props
+
   useEffect(() => {
+    if (!props.enableActiveStyle) return
     if (props.name) {
       let last = false
       const check = (val: string) => {
@@ -28,25 +48,6 @@ export function LinkButton<
       return omStatic.reaction((state) => state.router.curPageName, check)
     }
   }, [props.name])
-
-  const {
-    children,
-    fontSize,
-    lineHeight,
-    fontWeight,
-    textAlign,
-    ellipse,
-    replace,
-    color,
-    disallowDisableWhenActive,
-    activeTextStyle,
-    tags,
-    tag,
-    name,
-    params,
-    onPress,
-    ...restProps
-  } = props
 
   return wrapWithLinkElement(
     <HStack
@@ -80,7 +81,6 @@ export function LinkButton<
           color={color}
           cursor={props.disabled ? 'default' : 'pointer'}
           opacity={props.disabled ? 0.5 : 1}
-          {...(isActive && activeTextStyle)}
         >
           {getChildren(props, isActive)}
         </Text>

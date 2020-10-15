@@ -16,7 +16,6 @@ type TagRowProps = {
   size?: TagButtonProps['size']
   divider?: any
   tags?: TagButtonTagProps[]
-  subtle?: boolean
   containerProps?: StackProps
   restaurantId?: string
   spacing?: number
@@ -79,8 +78,7 @@ export const RestaurantTagsRow = memo(
                   replaceSearch
                   size={size ?? 'sm'}
                   {...getTagButtonProps(tag)}
-                  subtle={props.subtle}
-                  votable={!props.subtle}
+                  votable
                   restaurantId={props.restaurantId}
                   marginBottom={props.spacing ?? 5}
                 />

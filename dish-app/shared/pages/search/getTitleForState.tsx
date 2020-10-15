@@ -6,6 +6,7 @@ import { isWeb } from '../../constants'
 import { getActiveTags } from '../../state/getActiveTags'
 import { getTagId } from '../../state/getTagId'
 import { HomeStateItem } from '../../state/home-types'
+import { tagDisplayName } from '../../state/tagDisplayName'
 import { tagDescriptions } from '../../state/tagLenses'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 
@@ -101,22 +102,7 @@ export function getTitleForState(
         .split('🍔')
         .map((x) => {
           if (x === '🍔') {
-            return (
-              <>
-                {tags.map((tag) => (
-                  <TagButton
-                    key={getTagId(tag)}
-                    {...getTagButtonProps({
-                      type: tag.type,
-                      name: tag.name.toLowerCase(),
-                    })}
-                    subtle
-                    noColor
-                    hideIcon
-                  />
-                ))}
-              </>
-            )
+            return <>{tags.map((tag) => tagDisplayName(tag))}</>
           }
           return x
         })

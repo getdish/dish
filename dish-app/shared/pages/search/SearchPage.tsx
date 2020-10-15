@@ -344,7 +344,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         : titleLen > 50
         ? 0.9
         : 1
-    const titleFontSize = 30 * titleScale * (isSmall ? 0.65 : 1)
+    const titleFontSize = 28 * titleScale * (isSmall ? 0.75 : 1)
     const lenseColor = useCurrentLenseColor()
     const scrollRef = useRef<ScrollView>()
 
@@ -384,8 +384,8 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         >
           <HStack
             paddingHorizontal={15}
-            paddingTop={isSmall ? 10 : 62}
-            paddingBottom={10}
+            paddingTop={isSmall ? 12 : 12 + 52}
+            paddingBottom={12}
             overflow="hidden"
             justifyContent="center"
             alignItems="center"
@@ -393,7 +393,6 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
           >
             <VStack backgroundColor="#f2f2f2" height={1} flex={1} />
             <Text
-              marginVertical="auto"
               textAlign="center"
               letterSpacing={-0.25}
               fontSize={titleFontSize}

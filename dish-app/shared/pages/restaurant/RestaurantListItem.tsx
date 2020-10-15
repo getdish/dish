@@ -472,7 +472,7 @@ const RestaurantListItemContent = memo(
 
             {/* PEEK / TAGS (RIGHT SIDE) */}
             {/* margin top: negative the titles second row height */}
-            <VStack position="relative" marginTop={-40}>
+            <VStack paddingLeft={10} position="relative" marginTop={-25}>
               <Suspense fallback={null}>
                 <RestaurantPeekDishes
                   restaurantSlug={props.restaurantSlug}
@@ -624,7 +624,7 @@ const RestaurantPeekDishes = memo(
     const foundMatchingSearchedDish = firstDishName
       ? tagNames.includes(firstDishName)
       : false
-    const dishSize = 150
+    const dishSize = 140
     return (
       <HStack
         contain="paint layout"

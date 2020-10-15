@@ -29,7 +29,7 @@ export const RestaurantOverview = memo(
       .join(' ')
     const summary = restaurant.summary || headlines
     const scale = 2.1 - Math.max(1.0, Math.min(1.1, summary.length / 250))
-    const lineHeight = 24 * scale
+    const lineHeight = 26 * scale
 
     if (summary) {
       return (

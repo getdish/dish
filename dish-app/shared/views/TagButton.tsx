@@ -1,3 +1,5 @@
+// debug
+// TODO if we can have compiler pick up a few more things speeds will go up a lot
 import { NonNullObject, Tag, TagType } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import {
@@ -86,7 +88,6 @@ export type TagButtonProps = Omit<StackProps & TagButtonTagProps, 'rgb'> & {
   rgb?: [number, number, number]
   rank?: number
   size?: 'lg' | 'md' | 'sm'
-  subtle?: boolean
   votable?: boolean
   closable?: boolean
   onClose?: Function
@@ -108,7 +109,6 @@ export const TagButton = memo((props: TagButtonProps) => {
     name,
     type,
     size,
-    subtle,
     noColor,
     closable,
     onClose,
@@ -133,20 +133,12 @@ export const TagButton = memo((props: TagButtonProps) => {
   }
   const tag = { name, type: type as TagType, icon, rgb }
   const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1 : 1
-  const height = scale * (subtle ? 26 : 34)
-  const lineHeight = 26 * scale
 
-  let bg = 'transparent'
-  let fg = '#444'
+  const colors = getTagColors(tag)
+  const bg = backgroundColor ?? colors.backgroundColor
+  const fg = color ?? colors.color
 
-  if (!subtle) {
-    const colors = getTagColors(tag)
-    bg = backgroundColor ?? colors.backgroundColor
-    fg = color ?? colors.color
-  }
-
-  const fontSize = fontSizeProp ?? (subtle && isWeb ? 'inherit' : 16 * scale)
-  // const moveInPx = size === 'sm' ? 0 : 3.5 * (1 / scale)
+  const fontSize = fontSizeProp ? fontSizeProp : 16 * scale
 
   const smallerFontSize: any =
     typeof fontSize === 'number' ? fontSize * 0.85 : fontSize
@@ -155,20 +147,19 @@ export const TagButton = memo((props: TagButtonProps) => {
     <>
       <HStack
         className="ease-in-out-faster"
-        height={height}
-        borderRadius={10 * scale}
+        height={size === 'sm' ? 28 : 34}
+        borderRadius={size === 'sm' ? 8 : 10}
         paddingHorizontal={4}
         overflow="hidden"
         alignItems="center"
         justifyContent="center"
         backgroundColor={bg}
         position="relative"
-        minHeight={lineHeight}
-        {...(!subtle && {
-          hoverStyle: {
-            backgroundColor: `${bg}99`,
-          },
-        })}
+        // used again down below
+        minHeight={size == 'sm' ? 22 : 26}
+        hoverStyle={{
+          backgroundColor: `${bg}99`,
+        }}
         {...rest}
       >
         {!!rank ? (
@@ -211,14 +202,10 @@ export const TagButton = memo((props: TagButtonProps) => {
           // @ts-ignore
           fontSize={fontSize}
           // @ts-ignore
-          fontWeight={fontWeight ?? (subtle && isWeb ? 'inherit' : '600')}
-          lineHeight={lineHeight}
-          paddingHorizontal={subtle ? 0 : 7 * scale}
+          fontWeight={fontWeight ?? '600'}
+          lineHeight={size == 'sm' ? 22 : 26}
+          paddingHorizontal={7 * scale}
           color={fg}
-          // marginBottom={-8} // bad on web
-          overflow="hidden"
-          textOverflow="ellipsis"
-          whiteSpace="nowrap"
         >
           {tagDisplayName(tag)}
           {typeof score === 'number' && (
@@ -229,32 +216,21 @@ export const TagButton = memo((props: TagButtonProps) => {
         </Text>
         {!!votable && <TagButtonVote {...props} color={fg} scale={scale} />}
         {!!closable && (
-          <VStack
-            backgroundColor={subtle ? 'transparent' : 'transparent'}
-            borderRadius={10}
-            onPress={prevent}
-            onPressIn={prevent}
-            onPressOut={onClose}
-            opacity={0.35}
-            {...(!subtle && {
-              marginLeft: -10,
-            })}
-            position="relative"
-            {...(subtle && {
-              position: 'absolute',
-              top: -9,
-              right: -2,
-            })}
-            width={isWeb ? 26 : 40}
-            height={isWeb ? 26 : 40}
-            alignItems="center"
-            justifyContent="center"
-            alignSelf="center"
-          >
-            <X
-              size={subtle ? 11 : 13}
-              color={subtle && isWeb ? 'inherit' : color}
-            />
+          <VStack onPress={prevent} onPressIn={prevent} onPressOut={onClose}>
+            <VStack
+              backgroundColor="transparent"
+              borderRadius={10}
+              opacity={0.35}
+              marginLeft={-10}
+              position="relative"
+              width={isWeb ? 26 : 40}
+              height={isWeb ? 26 : 40}
+              alignItems="center"
+              justifyContent="center"
+              alignSelf="center"
+            >
+              <X size={13} color={color} />
+            </VStack>
           </VStack>
         )}
         {!closable && !votable && <Spacer size={6} />}
@@ -281,7 +257,7 @@ export const TagButton = memo((props: TagButtonProps) => {
 })
 
 const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
-  const { scale, subtle } = props
+  const { scale } = props
   const [hovered, setHovered] = useState(false)
   const { vote, setVote } = useUserUpvoteDownvoteQuery(
     props.restaurantId ?? '',
@@ -290,7 +266,7 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
     }
   )
   const Icon = vote ? ThumbsDown : ThumbsUp
-  const color = props.color ?? (subtle ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)')
+  const color = props.color ?? 'rgba(0,0,0,0.7)'
   const iconProps = {
     size: 12 * scale,
     color,
@@ -309,7 +285,7 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
         width={24 * scale}
         height={24 * scale}
         marginRight={5 * scale}
-        opacity={subtle ? 0.3 : 0.6}
+        opacity={0.6}
         hoverStyle={{
           opacity: 1,
           transform: [{ scale: 1.2 }],
