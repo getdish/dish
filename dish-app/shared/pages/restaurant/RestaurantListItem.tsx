@@ -11,10 +11,9 @@ import {
   TextSuperScript,
   Tooltip,
   VStack,
-  useDebounce,
   useGet,
-  useMedia,
 } from '@dish/ui'
+import { debounce } from 'lodash'
 import React, {
   Suspense,
   memo,
@@ -71,31 +70,12 @@ type RestaurantListItemProps = {
  * for logged in calls, we often need to user restaurant_id
  */
 
+const setHoveredSlow = debounce(omStatic.actions.home.setHoveredRestaurant, 250)
+
 export const RestaurantListItem = memo(function RestaurantListItem(
   props: RestaurantListItemProps
 ) {
-  const [isHovered, setIsHovered] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
-  const setHoveredSlow = useDebounce(
-    omStatic.actions.home.setHoveredRestaurant,
-    50
-  )
-
-  useEffect(() => {
-    if (isHovered) {
-      setHoveredSlow({
-        id: props.restaurantId,
-        slug: props.restaurantSlug,
-      })
-    } else {
-      if (
-        omStatic.state.home.hoveredRestaurant &&
-        omStatic.state.home.hoveredRestaurant?.slug === props.restaurantSlug
-      ) {
-        omStatic.actions.home.setIsHoveringRestaurant(false)
-      }
-    }
-  }, [isHovered])
 
   const content = useMemo(() => {
     return <RestaurantListItemContent isLoaded={isLoaded} {...props} />
@@ -107,15 +87,8 @@ export const RestaurantListItem = memo(function RestaurantListItem(
   }, [])
   const handleScroll = isLoaded ? undefined : handleScrollMemo
 
-  return (
+  const contentInner = (
     <VStack
-      {...(!isWebIOS && {
-        onHoverIn: () => setIsHovered(true),
-        onHoverOut: () => {
-          setIsHovered(false)
-          setHoveredSlow.cancel()
-        },
-      })}
       alignItems="center"
       overflow="hidden"
       maxWidth="100%"
@@ -131,6 +104,33 @@ export const RestaurantListItem = memo(function RestaurantListItem(
       </ContentScrollViewHorizontal>
     </VStack>
   )
+
+  if (isWeb && !isWebIOS) {
+    return (
+      <div
+        className="see-through"
+        onMouseEnter={() => {
+          setHoveredSlow({
+            id: props.restaurantId,
+            slug: props.restaurantSlug,
+          })
+        }}
+        onMouseLeave={() => {
+          setHoveredSlow.cancel()
+          if (
+            omStatic.state.home.hoveredRestaurant &&
+            omStatic.state.home.hoveredRestaurant?.slug === props.restaurantSlug
+          ) {
+            omStatic.actions.home.setIsHoveringRestaurant(false)
+          }
+        }}
+      >
+        {contentInner}
+      </div>
+    )
+  }
+
+  return contentInner
 })
 
 const fadeOutWidth = 40

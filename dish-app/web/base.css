@@ -119,7 +119,7 @@ textarea {
   position: relative;
 }
 
-.shine:after {
+/* .shine:after {
   animation: shine 1.5s linear infinite;
   animation-fill-mode: forwards;
   content: ' ';
@@ -136,7 +136,7 @@ textarea {
     rgba(255, 255, 255, 0.4) 92%,
     rgba(255, 255, 255, 0) 100%
   );
-}
+} */
 
 @keyframes shine {
   0%, 10% {
