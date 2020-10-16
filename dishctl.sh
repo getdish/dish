@@ -132,11 +132,11 @@ function _db_migrate() {
     --admin-secret $admin_secret
   cat functions/*.sql | \
     PGPASSWORD=$postgres_password psql \
-      -p $postgres_port \
-      -h localhost \
-      -U postgres \
-      -d dish \
-      --single-transaction
+    -p $postgres_port \
+    -h localhost \
+    -U postgres \
+    -d dish \
+    --single-transaction
   popd
 }
 

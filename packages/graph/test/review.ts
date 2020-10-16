@@ -8,6 +8,9 @@ import {
   Tag,
   User,
   flushTestData,
+  restaurantFindOne,
+  restaurantFindOneWithTags,
+  restaurantTagUpsert,
   restaurantUpsert,
   reviewFindAllForRestaurant,
   reviewInsert,
@@ -61,6 +64,40 @@ test('Add a review for restaurant by tag', async (t) => {
   ])
   const results = await reviewFindAllForRestaurant(t.context.restaurant.id)
   t.deepEqual(review.id, results[0].id)
+})
+
+test('Voting triggers restaurant score change', async (t) => {
+  const [review] = await reviewInsert([
+    {
+      restaurant_id: t.context.restaurant.id,
+      user_id: t.context.user.id,
+      vote: 1,
+    },
+  ])
+  const restaurant = await restaurantFindOne({ id: t.context.restaurant.id })
+  t.deepEqual(restaurant.score, 1)
+})
+
+test('Voting triggers restaurant_tag score change', async (t) => {
+  await restaurantTagUpsert(t.context.restaurant.id, [
+    {
+      tag_id: t.context.existing_tag.id,
+      score: 10,
+    },
+  ])
+  const [review] = await reviewInsert([
+    {
+      restaurant_id: t.context.restaurant.id,
+      user_id: t.context.user.id,
+      tag_id: t.context.existing_tag.id,
+      vote: 1,
+    },
+  ])
+  const restaurant = await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })
+  const rtag = restaurant.tags[0]
+  t.deepEqual(rtag.score, 11)
 })
 
 test('Favorite a restaurant', async (t) => {
