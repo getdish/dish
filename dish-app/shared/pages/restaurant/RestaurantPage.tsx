@@ -1,5 +1,12 @@
 import { graphql } from '@dish/graph'
-import { HStack, LinearGradient, LoadingItem, Spacer, VStack } from '@dish/ui'
+import {
+  AbsoluteVStack,
+  HStack,
+  LinearGradient,
+  LoadingItem,
+  Spacer,
+  VStack,
+} from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { StyleSheet } from 'react-native'
 
@@ -16,11 +23,13 @@ import { StackDrawer } from '../../views/StackDrawer'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { StackViewProps } from '../StackViewProps'
+import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
 import { RestaurantCard } from './RestaurantCard'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
 import { RestaurantRatingBreakdown } from './RestaurantRatingBreakdown'
+import { RestaurantReviewsList } from './RestaurantReviewsList'
 
 type Props = StackViewProps<HomeStateItemRestaurant>
 
@@ -164,13 +173,32 @@ const RestaurantPage = memo(
 
           <Spacer size="xl" />
 
-          <VStack
-            flex={1}
-            marginBottom={20}
-            width="100%"
-            maxWidth={500}
-            alignSelf="center"
-          >
+          <VStack paddingHorizontal={15}>
+            <HStack
+              position="relative"
+              marginHorizontal={10}
+              marginBottom={-10}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <SlantedTitle fontWeight="700">Reviews</SlantedTitle>
+
+              <AbsoluteVStack top={0} right={0}>
+                <Suspense fallback={null}>
+                  <RestaurantAddCommentButton
+                    restaurantId={restaurant.id}
+                    restaurantSlug={restaurantSlug}
+                  />
+                </Suspense>
+              </AbsoluteVStack>
+            </HStack>
+            <Spacer />
+            <RestaurantReviewsList restaurantId={restaurant.id} />
+          </VStack>
+
+          <Spacer size="xl" />
+
+          <VStack flex={1} marginBottom={20} width="100%" alignSelf="center">
             <Suspense fallback={null}>
               <RestaurantMenu restaurantSlug={restaurantSlug} />
             </Suspense>

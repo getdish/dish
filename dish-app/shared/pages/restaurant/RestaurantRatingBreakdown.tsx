@@ -57,12 +57,11 @@ export const RestaurantRatingBreakdown = memo(
           alignItems="center"
           justifyContent="center"
         >
-          <SlantedTitle fontWeight="700">Reviews</SlantedTitle>
+          <SlantedTitle fontWeight="700">Overview</SlantedTitle>
 
           <AbsoluteVStack top={0} right={0}>
             <Suspense fallback={null}>
               <RestaurantAddCommentButton
-                flex={1}
                 restaurantId={restaurantId}
                 restaurantSlug={restaurantSlug}
               />
@@ -99,8 +98,6 @@ export const RestaurantRatingBreakdown = memo(
           >
             <Suspense fallback={null}>
               <RestaurantSourcesOverview restaurantSlug={restaurantSlug} />
-              <Spacer size="lg" />
-              <RestaurantReviewsList restaurantId={restaurantId} />
             </Suspense>
           </VStack>
 
@@ -121,16 +118,12 @@ export const RestaurantRatingBreakdown = memo(
               showTable={showScoreTable}
               restaurantSlug={restaurantSlug}
             />
-
+            {/*
             <Spacer size="sm" />
 
             <SmallTitle>Lense Votes</SmallTitle>
             <Spacer />
-            <RestaurantLenseVote restaurantId={restaurantId} />
-
-            <Spacer size="xl" />
-
-            <SmallTitle>Dishes</SmallTitle>
+            <RestaurantLenseVote restaurantId={restaurantId} /> */}
           </VStack>
         </HStack>
       </VStack>

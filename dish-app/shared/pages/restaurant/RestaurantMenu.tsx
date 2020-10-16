@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { HStack, Paragraph, Spacer, Text, VStack } from '@dish/ui'
+import { Grid, HStack, Paragraph, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
 
@@ -27,8 +27,8 @@ export const RestaurantMenu = memo(
             <SlantedTitle fontWeight="700" alignSelf="center">
               Menu
             </SlantedTitle>
-            <Spacer />
-            <VStack overflow="hidden">
+            <Spacer size="xl" />
+            <Grid itemMinWidth={320}>
               {items.map((item, i) => (
                 <VStack
                   paddingVertical={10}
@@ -80,7 +80,7 @@ export const RestaurantMenu = memo(
                   </HStack>
                 </VStack>
               ))}
-            </VStack>
+            </Grid>
           </VStack>
         )}
       </>
