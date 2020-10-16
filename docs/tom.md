@@ -19,6 +19,8 @@
 Notes:
   - Avoid having this get to be too huge, limit number of tags, limit length of highlighted sentence
 
+- redo GPT3 summaries
+      
 - improve images:
   - we really need to fix our "deepest" flow, images/gallery, but in order to fix it really we need to match a lot more images to dishes.
     - how do we query for dish images? and then be able to get the "rest" of the images in a clean way (non-dish-images)? we may want to think/iterate here

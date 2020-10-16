@@ -69,7 +69,13 @@ export function doesStringContainTag(text: string, tag: Tag) {
   const tag_names = [tag.name, ...(tag.alternates || [])]
   for (const tag_name of tag_names) {
     const regex = new RegExp(`\\b${tag_name}\\b`, 'i')
-    const is_found = regex.test(text)
+    let is_found = false
+    try {
+      is_found = regex.test(text)
+    } catch (e) {
+      console.error(e)
+      return false
+    }
     if (is_found) return true
   }
   return false

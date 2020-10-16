@@ -2478,6 +2478,7 @@ export type t_restaurant = FieldsType<
     score?: t_numeric | null
     score_breakdown: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     slug: t_String
+    source_breakdown: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     sources: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     state?: t_String | null
     summary?: t_String | null
@@ -2590,6 +2591,7 @@ export type restaurant_append_input = {
   photos?: any | null
   rating_factors?: any | null
   score_breakdown?: any | null
+  source_breakdown?: any | null
   sources?: any | null
   tag_names?: any | null
 }
@@ -2655,6 +2657,7 @@ export type restaurant_bool_exp = {
   score?: numeric_comparison_exp | null
   score_breakdown?: jsonb_comparison_exp | null
   slug?: String_comparison_exp | null
+  source_breakdown?: jsonb_comparison_exp | null
   sources?: jsonb_comparison_exp | null
   state?: String_comparison_exp | null
   summary?: String_comparison_exp | null
@@ -2687,6 +2690,7 @@ export type restaurant_delete_at_path_input = {
   photos?: (string | null)[] | null
   rating_factors?: (string | null)[] | null
   score_breakdown?: (string | null)[] | null
+  source_breakdown?: (string | null)[] | null
   sources?: (string | null)[] | null
   tag_names?: (string | null)[] | null
 }
@@ -2701,6 +2705,7 @@ export type restaurant_delete_elem_input = {
   photos?: number | null
   rating_factors?: number | null
   score_breakdown?: number | null
+  source_breakdown?: number | null
   sources?: number | null
   tag_names?: number | null
 }
@@ -2715,6 +2720,7 @@ export type restaurant_delete_key_input = {
   photos?: string | null
   rating_factors?: string | null
   score_breakdown?: string | null
+  source_breakdown?: string | null
   sources?: string | null
   tag_names?: string | null
 }
@@ -2754,6 +2760,7 @@ export type restaurant_insert_input = {
   score?: any | null
   score_breakdown?: any | null
   slug?: string | null
+  source_breakdown?: any | null
   sources?: any | null
   state?: string | null
   summary?: string | null
@@ -2930,6 +2937,7 @@ export type restaurant_order_by = {
   score?: order_by | null
   score_breakdown?: order_by | null
   slug?: order_by | null
+  source_breakdown?: order_by | null
   sources?: order_by | null
   state?: order_by | null
   summary?: order_by | null
@@ -2957,6 +2965,7 @@ export type restaurant_prepend_input = {
   photos?: any | null
   rating_factors?: any | null
   score_breakdown?: any | null
+  source_breakdown?: any | null
   sources?: any | null
   tag_names?: any | null
 }
@@ -2984,6 +2993,7 @@ type t_restaurant_select_column = EnumType<
   | 'score'
   | 'score_breakdown'
   | 'slug'
+  | 'source_breakdown'
   | 'sources'
   | 'state'
   | 'summary'
@@ -3017,6 +3027,7 @@ export type restaurant_set_input = {
   score?: any | null
   score_breakdown?: any | null
   slug?: string | null
+  source_breakdown?: any | null
   sources?: any | null
   state?: string | null
   summary?: string | null
@@ -3179,6 +3190,7 @@ export type t_restaurant_tag = FieldsType<
       },
       t_review_tag_sentence_aggregate
     >
+    source_breakdown: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     tag: t_tag
     tag_id: t_uuid
   },
@@ -3251,6 +3263,7 @@ export type restaurant_tag_aggregate_order_by = {
 export type restaurant_tag_append_input = {
   photos?: any | null
   score_breakdown?: any | null
+  source_breakdown?: any | null
 }
 
 /**
@@ -3307,6 +3320,7 @@ export type restaurant_tag_bool_exp = {
   score?: numeric_comparison_exp | null
   score_breakdown?: jsonb_comparison_exp | null
   sentences?: review_tag_sentence_bool_exp | null
+  source_breakdown?: jsonb_comparison_exp | null
   tag?: tag_bool_exp | null
   tag_id?: uuid_comparison_exp | null
 }
@@ -3326,6 +3340,7 @@ type t_restaurant_tag_constraint = EnumType<
 export type restaurant_tag_delete_at_path_input = {
   photos?: (string | null)[] | null
   score_breakdown?: (string | null)[] | null
+  source_breakdown?: (string | null)[] | null
 }
 
 /**
@@ -3335,6 +3350,7 @@ export type restaurant_tag_delete_at_path_input = {
 export type restaurant_tag_delete_elem_input = {
   photos?: number | null
   score_breakdown?: number | null
+  source_breakdown?: number | null
 }
 
 /**
@@ -3344,6 +3360,7 @@ export type restaurant_tag_delete_elem_input = {
 export type restaurant_tag_delete_key_input = {
   photos?: string | null
   score_breakdown?: string | null
+  source_breakdown?: string | null
 }
 
 /**
@@ -3373,6 +3390,7 @@ export type restaurant_tag_insert_input = {
   score?: any | null
   score_breakdown?: any | null
   sentences?: review_tag_sentence_arr_rel_insert_input | null
+  source_breakdown?: any | null
   tag?: tag_obj_rel_insert_input | null
   tag_id?: any | null
 }
@@ -3489,6 +3507,7 @@ export type restaurant_tag_order_by = {
   score?: order_by | null
   score_breakdown?: order_by | null
   sentences_aggregate?: review_tag_sentence_aggregate_order_by | null
+  source_breakdown?: order_by | null
   tag?: tag_order_by | null
   tag_id?: order_by | null
 }
@@ -3509,6 +3528,7 @@ export type restaurant_tag_pk_columns_input = {
 export type restaurant_tag_prepend_input = {
   photos?: any | null
   score_breakdown?: any | null
+  source_breakdown?: any | null
 }
 
 /**
@@ -3524,6 +3544,7 @@ type t_restaurant_tag_select_column = EnumType<
   | 'review_mentions_count'
   | 'score'
   | 'score_breakdown'
+  | 'source_breakdown'
   | 'tag_id'
 >
 
@@ -3540,6 +3561,7 @@ export type restaurant_tag_set_input = {
   review_mentions_count?: any | null
   score?: any | null
   score_breakdown?: any | null
+  source_breakdown?: any | null
   tag_id?: any | null
 }
 
@@ -3660,6 +3682,7 @@ type t_restaurant_tag_update_column = EnumType<
   | 'review_mentions_count'
   | 'score'
   | 'score_breakdown'
+  | 'source_breakdown'
   | 'tag_id'
 >
 
@@ -3773,6 +3796,7 @@ type t_restaurant_update_column = EnumType<
   | 'score'
   | 'score_breakdown'
   | 'slug'
+  | 'source_breakdown'
   | 'sources'
   | 'state'
   | 'summary'
@@ -7626,6 +7650,7 @@ export enum restaurant_select_column {
   score = 'score',
   score_breakdown = 'score_breakdown',
   slug = 'slug',
+  source_breakdown = 'source_breakdown',
   sources = 'sources',
   state = 'state',
   summary = 'summary',
@@ -7732,6 +7757,7 @@ export enum restaurant_tag_select_column {
   review_mentions_count = 'review_mentions_count',
   score = 'score',
   score_breakdown = 'score_breakdown',
+  source_breakdown = 'source_breakdown',
   tag_id = 'tag_id',
 }
 
@@ -7778,6 +7804,7 @@ export enum restaurant_tag_update_column {
   review_mentions_count = 'review_mentions_count',
   score = 'score',
   score_breakdown = 'score_breakdown',
+  source_breakdown = 'source_breakdown',
   tag_id = 'tag_id',
 }
 
@@ -7828,6 +7855,7 @@ export enum restaurant_update_column {
   score = 'score',
   score_breakdown = 'score_breakdown',
   slug = 'slug',
+  source_breakdown = 'source_breakdown',
   sources = 'sources',
   state = 'state',
   summary = 'summary',

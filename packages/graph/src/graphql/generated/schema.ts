@@ -5213,6 +5213,17 @@ export const schema = {
         get slug() {
           return new FieldNode(schema.String, undefined, false)
         },
+        get source_breakdown() {
+          return new FieldNode(
+            schema.jsonb,
+            new Arguments({
+              get path() {
+                return new ArgumentsField(schema.String, true)
+              },
+            }),
+            true
+          )
+        },
         get sources() {
           return new FieldNode(
             schema.jsonb,
@@ -5512,6 +5523,9 @@ export const schema = {
         get score_breakdown() {
           return new InputNodeField(schema.jsonb, true)
         },
+        get source_breakdown() {
+          return new InputNodeField(schema.jsonb, true)
+        },
         get sources() {
           return new InputNodeField(schema.jsonb, true)
         },
@@ -5651,6 +5665,9 @@ export const schema = {
         get slug() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
+        get source_breakdown() {
+          return new InputNodeField(schema.jsonb_comparison_exp, true)
+        },
         get sources() {
           return new InputNodeField(schema.jsonb_comparison_exp, true)
         },
@@ -5703,6 +5720,9 @@ export const schema = {
         get score_breakdown() {
           return new InputNodeField(new ArrayNode(schema.String, true), true)
         },
+        get source_breakdown() {
+          return new InputNodeField(new ArrayNode(schema.String, true), true)
+        },
         get sources() {
           return new InputNodeField(new ArrayNode(schema.String, true), true)
         },
@@ -5731,6 +5751,9 @@ export const schema = {
         get score_breakdown() {
           return new InputNodeField(schema.Int, true)
         },
+        get source_breakdown() {
+          return new InputNodeField(schema.Int, true)
+        },
         get sources() {
           return new InputNodeField(schema.Int, true)
         },
@@ -5757,6 +5780,9 @@ export const schema = {
           return new InputNodeField(schema.String, true)
         },
         get score_breakdown() {
+          return new InputNodeField(schema.String, true)
+        },
+        get source_breakdown() {
           return new InputNodeField(schema.String, true)
         },
         get sources() {
@@ -5847,6 +5873,9 @@ export const schema = {
         },
         get slug() {
           return new InputNodeField(schema.String, true)
+        },
+        get source_breakdown() {
+          return new InputNodeField(schema.jsonb, true)
         },
         get sources() {
           return new InputNodeField(schema.jsonb, true)
@@ -6247,6 +6276,9 @@ export const schema = {
         get slug() {
           return new InputNodeField(schema.order_by, true)
         },
+        get source_breakdown() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get sources() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6307,6 +6339,9 @@ export const schema = {
           return new InputNodeField(schema.jsonb, true)
         },
         get score_breakdown() {
+          return new InputNodeField(schema.jsonb, true)
+        },
+        get source_breakdown() {
           return new InputNodeField(schema.jsonb, true)
         },
         get sources() {
@@ -6378,6 +6413,9 @@ export const schema = {
         },
         get slug() {
           return new InputNodeField(schema.String, true)
+        },
+        get source_breakdown() {
+          return new InputNodeField(schema.jsonb, true)
         },
         get sources() {
           return new InputNodeField(schema.jsonb, true)
@@ -6715,6 +6753,17 @@ export const schema = {
             false
           )
         },
+        get source_breakdown() {
+          return new FieldNode(
+            schema.jsonb,
+            new Arguments({
+              get path() {
+                return new ArgumentsField(schema.String, true)
+              },
+            }),
+            true
+          )
+        },
         get tag() {
           return new FieldNode(schema.tag, undefined, false)
         },
@@ -6913,6 +6962,9 @@ export const schema = {
         get score_breakdown() {
           return new InputNodeField(schema.jsonb, true)
         },
+        get source_breakdown() {
+          return new InputNodeField(schema.jsonb, true)
+        },
       },
       { name: 'restaurant_tag_append_input' }
     )
@@ -7025,6 +7077,9 @@ export const schema = {
         get sentences() {
           return new InputNodeField(schema.review_tag_sentence_bool_exp, true)
         },
+        get source_breakdown() {
+          return new InputNodeField(schema.jsonb_comparison_exp, true)
+        },
         get tag() {
           return new InputNodeField(schema.tag_bool_exp, true)
         },
@@ -7047,6 +7102,9 @@ export const schema = {
         get score_breakdown() {
           return new InputNodeField(new ArrayNode(schema.String, true), true)
         },
+        get source_breakdown() {
+          return new InputNodeField(new ArrayNode(schema.String, true), true)
+        },
       },
       { name: 'restaurant_tag_delete_at_path_input' }
     )
@@ -7060,6 +7118,9 @@ export const schema = {
         get score_breakdown() {
           return new InputNodeField(schema.Int, true)
         },
+        get source_breakdown() {
+          return new InputNodeField(schema.Int, true)
+        },
       },
       { name: 'restaurant_tag_delete_elem_input' }
     )
@@ -7071,6 +7132,9 @@ export const schema = {
           return new InputNodeField(schema.String, true)
         },
         get score_breakdown() {
+          return new InputNodeField(schema.String, true)
+        },
+        get source_breakdown() {
           return new InputNodeField(schema.String, true)
         },
       },
@@ -7137,6 +7201,9 @@ export const schema = {
             schema.review_tag_sentence_arr_rel_insert_input,
             true
           )
+        },
+        get source_breakdown() {
+          return new InputNodeField(schema.jsonb, true)
         },
         get tag() {
           return new InputNodeField(schema.tag_obj_rel_insert_input, true)
@@ -7357,6 +7424,9 @@ export const schema = {
             true
           )
         },
+        get source_breakdown() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get tag() {
           return new InputNodeField(schema.tag_order_by, true)
         },
@@ -7387,6 +7457,9 @@ export const schema = {
           return new InputNodeField(schema.jsonb, true)
         },
         get score_breakdown() {
+          return new InputNodeField(schema.jsonb, true)
+        },
+        get source_breakdown() {
           return new InputNodeField(schema.jsonb, true)
         },
       },
@@ -7421,6 +7494,9 @@ export const schema = {
           return new InputNodeField(schema.numeric, true)
         },
         get score_breakdown() {
+          return new InputNodeField(schema.jsonb, true)
+        },
+        get source_breakdown() {
           return new InputNodeField(schema.jsonb, true)
         },
         get tag_id() {

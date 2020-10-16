@@ -68,6 +68,7 @@ export class Self extends WorkerJob {
   doordash!: Scrape
   grubhub!: Scrape
   google!: Scrape
+  available_sources: string[] = []
 
   main_db!: DB
   restaurant!: RestaurantWithId
@@ -170,6 +171,7 @@ export class Self extends WorkerJob {
     console.log('Merging: ' + this.restaurant.name)
     this.resetTimer()
     await this.getScrapeData()
+    this.noteAvailableSources()
     this.log('scrapes fetched')
   }
 
@@ -203,8 +205,8 @@ export class Self extends WorkerJob {
   }
 
   async finalScores() {
-    await this.restaurant_base_score.calculateScore()
     await this.restaurant_tag_scores.calculateScores()
+    await this.restaurant_base_score.calculateScore()
   }
 
   async mergeMainData() {
@@ -221,6 +223,10 @@ export class Self extends WorkerJob {
     for (const step of steps) {
       await this._runFailableFunction(step)
     }
+  }
+
+  noteAvailableSources() {
+    this.available_sources = Object.keys(this.restaurant.sources)
   }
 
   async _runFailableFunction(func: Function) {

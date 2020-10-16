@@ -9,6 +9,7 @@ import {
   restaurantUpdate,
   restaurantUpsertOrphanTags,
   reviewFindAllForRestaurant,
+  tagFindOne,
   tagInsert,
   tagUpsert,
 } from '@dish/graph'
@@ -27,6 +28,7 @@ import {
 import { Self } from '../../src/self/Self'
 import { GEM_UIID } from '../../src/self/Tagging'
 import { DB } from '../../src/utils'
+import { breakdown } from '../restaurant_base_breakdown'
 import { yelp_hours } from '../yelp_hours'
 
 interface Context {
@@ -223,7 +225,7 @@ const tripadvisor: Partial<Scrape> = {
         date: 'July 23, 2019',
       },
       {
-        text: 'Testpho was delicious',
+        text: 'Notable Testpho was delicious',
         rating: 5,
         username: 'tauser3',
         date: 'July 23, 2020',
@@ -272,6 +274,11 @@ async function reset(t: ExecutionContext<Context>) {
     {
       name: 'Gem',
       id: GEM_UIID,
+    },
+    {
+      name: 'Unique',
+      alternates: ['notable'],
+      type: 'lense',
     },
   ])
 }
@@ -332,7 +339,7 @@ test('Merging', async (t) => {
   if (!updated) return
   t.is(updated.name, 'Test Name Yelp')
   t.is(updated.address, '123 Street, Big City')
-  t.is(updated.tags.length, 4)
+  t.is(updated.tags.length, 5)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Mexican'), true)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Pizza'), true)
   t.is(updated.photos?.[0], 'https://i.imgur.com/N6YtgRI.jpeg')
@@ -648,7 +655,7 @@ test('Identifying country tags', async (t) => {
   })
   t.assert(updated, 'not found')
   if (!updated) return
-  t.is(updated.tags.length, 4)
+  t.is(updated.tags.length, 5)
   const tag1 =
     updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
   const tag2 =
@@ -736,6 +743,12 @@ test('Finds an existing scrape', async (t) => {
 
 test('Scoring for restaurants', async (t) => {
   const self = new Self()
+  await addTags(t.context.restaurant, [
+    'Test tag',
+    'Testpho',
+    'Test 3',
+    'Test 4',
+  ])
   const restaurant = (await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   })) as RestaurantWithId
@@ -747,20 +760,11 @@ test('Scoring for restaurants', async (t) => {
     id: t.context.restaurant.id,
   })
 
-  t.deepEqual(updated?.score_breakdown.photos, {
-    meeting_criteria_count: 1,
-    score: 0.1,
-  })
-  t.deepEqual(updated?.score_breakdown.reviews, {
-    score: 9,
-    factor: 0.1,
-    _1: { count: 1, score: -2 },
-    _2: { count: 0, score: 0 },
-    _3: { count: 1, score: 0 },
-    _4: { count: 1, score: 1 },
-    _5: { count: 5, score: 10 },
-  })
-  t.is(updated?.score, 9.1)
+  const test_pho = await tagFindOne({ name: 'Testpho' })
+  breakdown.sources.all.summaries.unique_tags[0].id = test_pho.id
+  breakdown.sources.tripadvisor.summaries.unique_tags[0].id = test_pho.id
+
+  t.deepEqual(updated?.source_breakdown, breakdown)
 })
 
 test('Scoring for rishes', async (t) => {
@@ -788,34 +792,39 @@ test('Scoring for rishes', async (t) => {
   t.is(rish1.score, 2)
   t.is(rish1.review_mentions_count, 5)
   t.is(rish2.review_mentions_count, 1)
-  t.deepEqual(rish1.score_breakdown.yelp, {
+  t.deepEqual(rish1.source_breakdown.yelp, {
     score: 0,
-    counts: {
-      negative: 1,
-      positive: 1,
+    summary: {
+      negative: ['This restaurant had terrible Test tag existing 1 dishes!'],
+      positive: [' Vegetarian An amazing photo of Test tag existing 2!'],
     },
+    upvotes: 1,
+    downvotes: 1,
   })
-  t.deepEqual(rish1.score_breakdown.google, {
-    score: null,
-    counts: {
-      negative: 0,
-      positive: 0,
-    },
+  t.deepEqual(rish1.source_breakdown.google, {
+    score: 0,
+    summary: { negative: null, positive: null },
+    upvotes: 0,
+    downvotes: 0,
   })
-  t.deepEqual(rish1.score_breakdown.tripadvisor, {
+  t.deepEqual(rish1.source_breakdown.tripadvisor, {
     score: 2,
-    counts: {
-      negative: 0,
-      positive: 2,
+    summary: {
+      negative: null,
+      positive: [' Test tag was amazing.', 'Test tag was good.'],
     },
+    upvotes: 2,
+    downvotes: 0,
   })
   t.is(rish2.score, 1)
-  t.deepEqual(rish2.score_breakdown.tripadvisor, {
+  t.deepEqual(rish2.source_breakdown.tripadvisor, {
     score: 1,
-    counts: {
-      negative: 0,
-      positive: 1,
+    summary: {
+      negative: null,
+      positive: ['Notable Testpho was delicious'],
     },
+    upvotes: 1,
+    downvotes: 0,
   })
   t.is(rish1.sentences.length, 5)
   t.assert(
