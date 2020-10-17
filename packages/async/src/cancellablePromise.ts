@@ -34,6 +34,7 @@ export const createCancellablePromise = <A>(
 export const cancelPromise = (
   promise: CancellablePromise<any> | Promise<any>
 ) => {
+  if (!promise) return
   if ('cancel' in promise) {
     promise.cancel?.()
   }
