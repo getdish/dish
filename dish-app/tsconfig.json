@@ -38,21 +38,19 @@
 
   "exclude": ["**", "**/_"],
 
-  "references": [
-    {
-      "path": "../packages/async"
-    },
-    {
-      "path": "../packages/graph"
-    },
-    {
-      "path": "../packages/helpers"
-    },
-    {
-      "path": "../packages/use-store"
-    },
-    {
-      "path": "../packages/react-feather"
-    }
-  ]
+  "references": [{
+    "path": "../snackui/packages/snackui"
+  }, {
+    "path": "../packages/async"
+  }, {
+    "path": "../packages/graph"
+  }, {
+    "path": "../packages/helpers"
+  }, {
+    "path": "../packages/use-store"
+  }, {
+    "path": "../packages/react-feather"
+  }, {
+    "path": "../snackui/packages/snackui-static"
+  }]
 }

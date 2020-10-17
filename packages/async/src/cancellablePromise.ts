@@ -34,7 +34,8 @@ export const createCancellablePromise = <A>(
 export const cancelPromise = (
   promise: CancellablePromise<any> | Promise<any>
 ) => {
-  // @ts-ignore
-  promise?.cancel?.()
+  if ('cancel' in promise) {
+    promise.cancel?.()
+  }
   cancelsMap.get(promise)?.()
 }
