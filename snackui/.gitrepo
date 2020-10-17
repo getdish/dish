@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:natew/snackui.git
+	branch = master
+	commit = 844bb2b86c6c44ad9ea2b2aea1e982f49a54ae96
+	parent = 842b50d4afd0bcd3274cd3102ad109105c2b595b
+	method = merge
+	cmdver = 0.4.1
