@@ -3,6 +3,7 @@ import React from 'react'
 import { Text, VStack, memoIsEqualDeep } from 'snackui'
 
 import { rgbString } from '../helpers/rgbString'
+import { useIsNarrow } from '../hooks/useIs'
 import { tagDisplayName } from '../state/tagDisplayName'
 import { LinkButton } from './ui/LinkButton'
 
@@ -24,8 +25,8 @@ export const LenseButton = memoIsEqualDeep(
     size?: LenseButtonSize
     onPress?: Function
   }) => {
-    const lenseColor = rgbString(lense.rgb)
-    const lenseColorLight = rgbString(lense.rgb, 0.3)
+    const isSmall = useIsNarrow()
+    const lenseColorLight = rgbString(lense.rgb, isSmall ? 0.6 : 0.4)
     const scale = size == 'md' ? 1 : size === 'lg' ? 1.2 : 1.3
     const sizePx = 42
 
@@ -35,6 +36,7 @@ export const LenseButton = memoIsEqualDeep(
         className="unselectable"
         disallowDisableWhenActive
         marginRight={6}
+        marginTop={-2}
         pressStyle={{
           opacity: 0.8,
           transform: [{ scale: 0.9 }],
@@ -74,7 +76,7 @@ export const LenseButton = memoIsEqualDeep(
             borderRadius={4}
             paddingHorizontal={4}
             paddingVertical={1}
-            marginTop={-8}
+            marginTop={-10}
             marginBottom={-8}
             backgroundColor="transparent"
             {...(isActive && {
@@ -83,7 +85,7 @@ export const LenseButton = memoIsEqualDeep(
           >
             <VStack
               opacity={
-                size !== 'lg' ? (isActive ? 1 : 0.5) : isActive ? 1 : 0.8
+                size !== 'lg' ? (isActive ? 1 : 0.7) : isActive ? 1 : 0.8
               }
               hoverStyle={{
                 opacity: 1,
@@ -91,9 +93,9 @@ export const LenseButton = memoIsEqualDeep(
               marginHorizontal={-3}
             >
               <Text
-                fontWeight={isActive ? '600' : '400'}
+                fontWeight="600"
                 lineHeight={sizePx * scale * 0.39}
-                color={isActive ? '#fff' : '#000'}
+                color={isSmall || isActive ? '#fff' : '#000'}
                 paddingHorizontal={2}
                 textAlign="center"
                 height={16}

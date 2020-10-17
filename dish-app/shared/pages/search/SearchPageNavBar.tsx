@@ -1,6 +1,7 @@
 import { useStore } from '@dish/use-store'
 import React, { memo } from 'react'
-import { BlurView, HStack, VStack } from 'snackui'
+import Svg, { G, Path } from 'react-native-svg'
+import { AbsoluteVStack, BlurView, HStack, VStack } from 'snackui'
 
 import { BottomDrawerStore } from '../../BottomDrawerStore'
 import { isWeb } from '../../constants'
@@ -13,12 +14,38 @@ import { HomeLenseBar } from '../../views/HomeLenseBar'
 import { SearchPageFilterBar } from './SearchPageFilterBar'
 import { titleHeight } from './titleHeight'
 
+const InverseRoundedEdge = () => {
+  return (
+    <Svg width="20px" height="20px" viewBox="0 0 20 20">
+      <G stroke="none">
+        <Path
+          d="M20,5 L20,20 L5,20 C13.2842712,20 20,13.2842712 20,5 L20,5 Z"
+          fill="#000000"
+        />
+      </G>
+    </Svg>
+  )
+}
+
 export const SearchPageNavBar = (props: { id: string }) => {
   const isSmall = useIsNarrow()
-  const insets = useSafeArea()
-  // const lensergb = useCurrentLenseColor()
   const borderRadius = isSmall ? 20 : 0
-  const drawerStore = useStore(BottomDrawerStore)
+
+  if (isSmall) {
+    return (
+      <VStack position="absolute" bottom={0} left={0} right={0} zIndex={1000}>
+        <AbsoluteVStack top={-20} right={0}>
+          <InverseRoundedEdge />
+        </AbsoluteVStack>
+        <AbsoluteVStack top={-20} left={0} transform={[{ scaleX: -1 }]}>
+          <InverseRoundedEdge />
+        </AbsoluteVStack>
+        <BlurView fallbackBackgroundColor="#000" blurType="dark">
+          <SearchPageNavBarContent stateId={props.id} />
+        </BlurView>
+      </VStack>
+    )
+  }
 
   return (
     <VStack
@@ -34,14 +61,11 @@ export const SearchPageNavBar = (props: { id: string }) => {
       zIndex={1000}
       {...(isSmall && {
         top: 'auto',
-        bottom: insets.bottom + 12 + (drawerStore.snapIndex === 2 ? -10 : 0),
+        bottom: 0,
         left: 6,
         right: 'auto',
         maxWidth: '98.5%',
-        // borderWidth: 2,
-        // borderColor: '#fff',
-        shadowRadius: 7,
-        shadowColor: 'rgba(0,0,0,0.25)',
+        backgroundColor: '#000',
       })}
     >
       <BlurView blurType="light" borderRadius={borderRadius - 2} flex={1}>

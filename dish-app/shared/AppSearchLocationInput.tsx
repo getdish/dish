@@ -90,10 +90,10 @@ export const AppSearchLocationInput = memo(() => {
         borderRadius={100}
       >
         <HStack
-          width="100%"
+          flex={1}
           alignItems="center"
           justifyContent="center"
-          paddingHorizontal={3}
+          paddingHorizontal={8}
         >
           <TouchableOpacity
             onPress={(e) => {

@@ -15,6 +15,7 @@ export const BottomSheetContainer = (props: StackProps) => {
       borderTopLeftRadius={drawerBorderRadius}
       pointerEvents="auto"
       backgroundColor="#fff"
+      position="relative"
       {...props}
     />
   )

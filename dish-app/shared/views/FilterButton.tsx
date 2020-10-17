@@ -21,16 +21,17 @@ export const FilterButton = memo(
     ...rest
   }: LinkButtonProps & { tag: Tag; isActive: boolean; color?: string }) => {
     const isSmall = useIsNarrow()
+    const iconColor = isSmall ? (isActive ? '#000' : '#fff') : color
     let content: any = rest.children ?? tagDisplayNames[tag.name] ?? tag.name
 
     const iconElement = (() => {
       switch (tag.name) {
         case 'Open':
-          return <Clock size={18} color={color} />
+          return <Clock size={18} color={iconColor} />
         case 'Delivery':
-          return <ShoppingBag size={18} color={color} />
+          return <ShoppingBag size={18} color={iconColor} />
         case 'price-low':
-          return <DollarSign size={18} color={color} />
+          return <DollarSign size={18} color={iconColor} />
       }
     })()
 
@@ -65,6 +66,7 @@ export const FilterButton = memo(
         alignItems="center"
         justifyContent="center"
         textAlign="center"
+        borderColor="transparent"
         isActive={isActive}
         tag={tag}
         {...rest}

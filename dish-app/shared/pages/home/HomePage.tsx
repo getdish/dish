@@ -173,9 +173,29 @@ export default memo(function HomePage(props: Props) {
     return (
       <>
         <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
+        <AbsoluteVStack
+          top={-searchBarHeight + 11}
+          right={0}
+          left={0}
+          overflow="hidden"
+          height={searchBarHeight}
+          zIndex={10}
+          opacity={props.isActive ? 1 : 0}
+        >
+          <AbsoluteVStack
+            bottom={10}
+            left={0}
+            right={0}
+            shadowColor="#000"
+            shadowOpacity={0.05}
+            shadowRadius={7}
+            height={searchBarHeight + 10}
+          />
+        </AbsoluteVStack>
         <ContentScrollView id="home">
           {/* cross line */}
           <AbsoluteVStack
+            opacity={isSmall ? 0 : 1}
             contain="strict"
             height={320}
             width={2000}

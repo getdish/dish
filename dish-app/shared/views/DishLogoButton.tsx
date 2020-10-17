@@ -30,11 +30,6 @@ export const DishLogoButton = memo(() => {
         isReallySmall ? logoStyles.reallySmall.width : logoStyles.default.width
       }
       height={logoStyles.default.height}
-      onPress={() => {
-        if (omStatic.state.home.currentStateType === 'home') {
-          // already on home
-        }
-      }}
     >
       <LinkButton
         {...linkButtonProps}

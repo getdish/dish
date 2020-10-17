@@ -190,7 +190,7 @@ const AppSearchBarContents = memo(() => {
           <VStack
             className="ease-in-out"
             overflow="hidden"
-            minWidth={310}
+            minWidth={isSmall ? 240 : 310}
             width="19%"
             maxWidth={
               isSmall
@@ -248,7 +248,7 @@ const SearchBarActionButton = memo(() => {
       return ArrowUp
     }
     if (om.state.home.states.length === 2) {
-      return Home
+      return ChevronLeft // Home
     }
     return ChevronLeft
   })()

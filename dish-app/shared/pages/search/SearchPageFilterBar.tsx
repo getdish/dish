@@ -65,13 +65,7 @@ const HomePageFilterBarSmall = ({ activeTagIds }: FilterBarProps) => {
   const filters = [tagFilters[0], tagFilters[1], tagFilters[2]]
 
   return (
-    <HStack
-      alignItems="center"
-      justifyContent="center"
-      // borderWidth={1}
-      // borderColor="#eee"
-      // borderRadius={100}
-    >
+    <HStack alignItems="center" justifyContent="center" spacing={5}>
       {filters.map((tag, index) => {
         const isActive = activeTagIds[getTagId(tag)]
         const hasPrev = !!filters[index - 1]
@@ -85,7 +79,6 @@ const HomePageFilterBarSmall = ({ activeTagIds }: FilterBarProps) => {
             {...(hasNext && { marginRight: 0 })}
             position="relative"
             zIndex={100 - index + (isActive ? 1 : 0)}
-            borderColor="transparent"
           />
         )
       })}
