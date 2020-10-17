@@ -1,7 +1,7 @@
-import { VStack } from '@dish/ui'
 import { Store, useStore, useStoreSelector } from '@dish/use-store'
 import React, { createContext, forwardRef, useRef } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
+import { VStack } from 'snackui'
 
 import {
   drawerWidthMax,

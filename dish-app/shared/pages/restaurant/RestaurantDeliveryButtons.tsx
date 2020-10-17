@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
-import { HStack, Spacer, StackProps, Text, Tooltip } from '@dish/ui'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
+import { HStack, Spacer, StackProps, Text, Tooltip } from 'snackui'
 
 import { bgLight, blue } from '../../colors'
 import { isWeb } from '../../constants'

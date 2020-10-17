@@ -1,6 +1,6 @@
 import { Tag } from '@dish/graph'
-import { VStack } from '@dish/ui'
 import React, { memo } from 'react'
+import { VStack } from 'snackui'
 
 import { getTagId } from '../state/getTagId'
 import { HomeActiveTagsRecord } from '../state/home-types'

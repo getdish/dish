@@ -1,8 +1,8 @@
 import { graphql } from '@dish/graph'
 import { ellipseText } from '@dish/helpers'
-import { AbsoluteVStack, HStack, Paragraph, Text, VStack } from '@dish/ui'
 import { capitalize } from 'lodash'
 import React, { memo } from 'react'
+import { AbsoluteVStack, HStack, Paragraph, Text, VStack } from 'snackui'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 

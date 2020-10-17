@@ -1,4 +1,6 @@
 import { graphql } from '@dish/graph'
+import React, { Suspense, memo } from 'react'
+import { Image } from 'react-native'
 import {
   Box,
   HStack,
@@ -7,9 +9,7 @@ import {
   Text,
   Tooltip,
   VStack,
-} from '@dish/ui'
-import React, { Suspense, memo } from 'react'
-import { Image } from 'react-native'
+} from 'snackui'
 
 import { bgLight } from '../../colors'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'

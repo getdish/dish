@@ -1,5 +1,5 @@
-import { Text, VStack } from '@dish/ui'
 import React from 'react'
+import { Text, VStack } from 'snackui'
 
 export function NotFoundPage(props: { title?: string }) {
   return (

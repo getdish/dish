@@ -49,9 +49,6 @@
       "path": "../packages/helpers"
     },
     {
-      "path": "../packages/ui"
-    },
-    {
       "path": "../packages/use-store"
     },
     {

@@ -1,4 +1,5 @@
 import { graphql } from '@dish/graph'
+import React, { Suspense, memo } from 'react'
 import {
   Box,
   HStack,
@@ -12,8 +13,7 @@ import {
   TableHeadText,
   TableRow,
   Text,
-} from '@dish/ui'
-import React, { Suspense, memo } from 'react'
+} from 'snackui'
 
 import { getCurrentTagNames } from '../../helpers/getCurrentTagNames'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'

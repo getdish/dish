@@ -6,6 +6,8 @@
     "nohoist": [
       "babel-plugin-transform-inline-environment-variables",
       "babel-plugin-transform-inline-environment-variables/**",
+      "@o/async",
+      "@o/async/**",
       "@expo/html-elements",
       "@expo/html-elements/**",
       "@loadable/component",
@@ -138,10 +140,10 @@
     "build:web:watch": "(TARGET=ssr webpack --watch) & (TARGET=client webpack --watch) & wait"
   },
   "dependencies": {
-    "@dish/async": "*",
+    "snackui": "0.0.2",
+    "@o/async": "*",
     "@dish/graph": "*",
     "@dish/helpers": "*",
-    "@dish/ui": "*",
     "@dish/use-store": "*",
     "@dish/react-feather": "*",
     "@expo/html-elements": "0.0.0",
@@ -192,8 +194,9 @@
     "recyclerlistview": "^3.0.0"
   },
   "devDependencies": {
+    "snackui-static": "0.0.2",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
-    "@dish/babel-preset": "*",
+    "@o/babel-preset": "*",
     "@babel/core": "^7.11.6",
     "react-native-svg-app-icon": "^0.2.0",
     "metro-react-native-babel-preset": "^0.62.0",

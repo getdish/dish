@@ -1,4 +1,4 @@
-import '@dish/react-test-env'
+import '@o/react-test-env'
 
 import test from 'ava'
 import { clone } from 'lodash'

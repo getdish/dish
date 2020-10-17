@@ -1,9 +1,9 @@
 import { LngLat, Restaurant, graphql } from '@dish/graph'
-import { AbsoluteVStack, VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import { isEqual } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
+import { AbsoluteVStack, VStack } from 'snackui'
 
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { MAPBOX_ACCESS_TOKEN } from './constants'

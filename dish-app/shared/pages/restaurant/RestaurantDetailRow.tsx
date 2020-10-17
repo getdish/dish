@@ -1,6 +1,6 @@
 import { RestaurantQuery, graphql } from '@dish/graph'
-import { HStack, StackProps, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
+import { HStack, StackProps, Text, VStack } from 'snackui'
 
 import { isWeb } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'

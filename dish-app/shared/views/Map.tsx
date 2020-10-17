@@ -1,11 +1,11 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 
-import { fullyIdle, series } from '@dish/async'
-import { useGet } from '@dish/ui'
+import { fullyIdle, series } from '@o/async'
 import _, { isEqual } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
+import { useGet } from 'snackui'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'

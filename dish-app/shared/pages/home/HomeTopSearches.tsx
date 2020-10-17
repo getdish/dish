@@ -1,7 +1,7 @@
 import { Tag } from '@dish/graph'
-import { HStack, LinearGradient, Text } from '@dish/ui'
 import { default as React, memo } from 'react'
 import { StyleSheet } from 'react-native'
+import { HStack, LinearGradient, Text } from 'snackui'
 
 import { bgLight, bgLightHover, lightBlue } from '../../colors'
 import { useIsReallyNarrow } from '../../hooks/useIs'

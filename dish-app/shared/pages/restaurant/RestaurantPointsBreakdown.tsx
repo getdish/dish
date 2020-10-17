@@ -1,4 +1,6 @@
 import { graphql } from '@dish/graph'
+import React, { memo, useState } from 'react'
+import { View } from 'react-native'
 import {
   Divider,
   HStack,
@@ -7,9 +9,7 @@ import {
   Text,
   TextProps,
   VStack,
-} from '@dish/ui'
-import React, { memo, useState } from 'react'
-import { View } from 'react-native'
+} from 'snackui'
 
 import { lightGreen, lightYellow } from '../../colors'
 import { numberFormat } from '../../helpers/numberFormat'

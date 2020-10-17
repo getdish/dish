@@ -1,6 +1,6 @@
-import { Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
+import { Text, VStack } from 'snackui'
 
 import { defaultUserImage } from '../../defaultUserImage'
 import { characters } from './characters'

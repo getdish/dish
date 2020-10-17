@@ -1,4 +1,5 @@
 import { graphql } from '@dish/graph'
+import React, { Suspense, memo } from 'react'
 import {
   AbsoluteVStack,
   LoadingItems,
@@ -6,8 +7,7 @@ import {
   SmallTitle,
   Spacer,
   VStack,
-} from '@dish/ui'
-import React, { Suspense, memo } from 'react'
+} from 'snackui'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useOvermind } from '../../state/om'

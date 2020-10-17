@@ -1,5 +1,5 @@
-import { StackProps, VStack } from '@dish/ui'
 import React from 'react'
+import { StackProps, VStack } from 'snackui'
 
 import { useIsNarrow } from '../../hooks/useIs'
 

@@ -1,18 +1,6 @@
-import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
-import {
-  AbsoluteVStack,
-  HStack,
-  LinearGradient,
-  Spacer,
-  StackProps,
-  Text,
-  TextSuperScript,
-  Tooltip,
-  VStack,
-  useGet,
-} from '@dish/ui'
+import { fullyIdle, series } from '@o/async'
 import { debounce } from 'lodash'
 import React, {
   Suspense,
@@ -24,6 +12,18 @@ import React, {
   useState,
 } from 'react'
 import { Dimensions, StyleSheet } from 'react-native'
+import {
+  AbsoluteVStack,
+  HStack,
+  LinearGradient,
+  Spacer,
+  StackProps,
+  Text,
+  TextSuperScript,
+  Tooltip,
+  VStack,
+  useGet,
+} from 'snackui'
 
 import { bgLight, bgLightHover, brandColor } from '../../colors'
 import { isWeb } from '../../constants'

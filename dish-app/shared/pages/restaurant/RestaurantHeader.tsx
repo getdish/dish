@@ -1,8 +1,8 @@
 import { graphql } from '@dish/graph'
 import { Clock } from '@dish/react-feather'
-import { HStack, Spacer, StackProps, Text, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { ScrollView } from 'react-native'
+import { HStack, Spacer, StackProps, Text, VStack } from 'snackui'
 
 import { drawerBorderRadius, isWeb } from '../../constants'
 import { useAppDrawerWidthInner } from '../../hooks/useAppDrawerWidth'

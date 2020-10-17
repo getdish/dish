@@ -1,6 +1,6 @@
 import { graphql, query } from '@dish/graph'
-import { Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
+import { Text, VStack } from 'snackui'
 
 import { RestaurantReview } from './RestaurantReview'
 

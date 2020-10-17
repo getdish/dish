@@ -1,7 +1,7 @@
-import { sleep } from '@dish/async'
 import { Auth } from '@dish/graph'
-import { HStack, Text, Toast, VStack } from '@dish/ui'
+import { sleep } from '@o/async'
 import React, { useState } from 'react'
+import { HStack, Text, Toast, VStack } from 'snackui'
 
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { AppleLogoWhite } from './AppleLogoWhite'

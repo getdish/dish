@@ -1,4 +1,6 @@
 import { AUTH_IMAGE_UPLOAD_ENDPOINT, Auth, graphql } from '@dish/graph'
+import { default as React, useRef, useState } from 'react'
+import { Image } from 'react-native'
 import {
   HStack,
   Input,
@@ -8,9 +10,7 @@ import {
   TextArea,
   Toast,
   VStack,
-} from '@dish/ui'
-import { default as React, useRef, useState } from 'react'
-import { Image } from 'react-native'
+} from 'snackui'
 
 import { divider } from './AppIntroLetter'
 import dishNeon from './assets/dish-neon.jpg'

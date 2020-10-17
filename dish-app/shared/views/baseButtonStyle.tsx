@@ -1,5 +1,5 @@
-import { StackProps } from '@dish/ui'
 import { ViewStyle } from 'react-native'
+import { StackProps } from 'snackui'
 
 import { bgLight, bgLightHover } from '../colors'
 

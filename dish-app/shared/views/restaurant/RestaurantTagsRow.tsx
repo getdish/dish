@@ -1,6 +1,6 @@
 import { graphql, order_by } from '@dish/graph'
-import { Spacer, StackProps } from '@dish/ui'
 import React, { memo } from 'react'
+import { Spacer, StackProps } from 'snackui'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import {

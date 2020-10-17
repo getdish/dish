@@ -1,8 +1,8 @@
-import { series, sleep } from '@dish/async'
 import { NavigateItem } from '@dish/router'
-import { Text, VStack, useForceUpdate } from '@dish/ui'
+import { series, sleep } from '@o/async'
 import React, { useEffect, useRef } from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
+import { Text, VStack, useForceUpdate } from 'snackui'
 
 import { brandColor } from '../../colors'
 import { isWeb } from '../../constants'

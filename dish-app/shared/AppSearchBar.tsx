@@ -6,9 +6,9 @@ import {
   Map,
   Search,
 } from '@dish/react-feather'
-import { AbsoluteVStack, HStack, Spacer, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { Platform } from 'react-native'
+import { AbsoluteVStack, HStack, Spacer, VStack } from 'snackui'
 
 import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'

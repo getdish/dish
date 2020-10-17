@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
-import { HStack, StackProps } from '@dish/ui'
 import { default as React, memo } from 'react'
+import { HStack, StackProps } from 'snackui'
 
 import { tagLenses } from '../../state/tagLenses'
 import { TagSmallButton } from '../../views/TagSmallButton'

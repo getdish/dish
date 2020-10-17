@@ -1,5 +1,5 @@
-import { StackProps, Text, TextSuperScript, VStack } from '@dish/ui'
 import React, { memo } from 'react'
+import { StackProps, Text, TextSuperScript, VStack } from 'snackui'
 
 export const RankingView = memo(
   ({ rank, ...props }: { rank: number } & StackProps) => {

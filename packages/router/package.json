@@ -16,7 +16,7 @@
     "tiny-request-router": "^1.2.2"
   },
   "devDependencies": {
-    "@dish/react-test-env": "*"
+    "@o/react-test-env": "*"
   },
   "peerDependencies": {
     "react": "*"

@@ -1,7 +1,7 @@
 import { Tag } from '@dish/graph'
 import { Clock, DollarSign, ShoppingBag } from '@dish/react-feather'
-import { HStack, HoverablePopover, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
+import { HStack, HoverablePopover, Spacer, Text, VStack } from 'snackui'
 
 import { isWeb } from '../constants'
 import { useIsNarrow } from '../hooks/useIs'

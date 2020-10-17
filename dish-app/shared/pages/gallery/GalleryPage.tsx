@@ -1,4 +1,6 @@
 import { graphql } from '@dish/graph'
+import React, { Suspense, memo, useState } from 'react'
+import { Image, ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
@@ -6,9 +8,7 @@ import {
   Modal,
   Text,
   VStack,
-} from '@dish/ui'
-import React, { Suspense, memo, useState } from 'react'
-import { Image, ScrollView } from 'react-native'
+} from 'snackui'
 
 import { isWeb, pageWidthMax } from '../../constants'
 import { getImageUrl } from '../../helpers/getImageUrl'

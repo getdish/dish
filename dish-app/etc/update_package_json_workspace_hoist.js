@@ -4,6 +4,7 @@ const hoists = {
   '@o/gqless-react': true,
   '@o/gqless-schema': true,
   '@o/gqless': true,
+  snackui: true,
 }
 
 const noHoists = [

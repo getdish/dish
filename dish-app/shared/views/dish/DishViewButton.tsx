@@ -1,6 +1,6 @@
-import { Spacer, StackProps, Text } from '@dish/ui'
 import React, { memo } from 'react'
 import { StyleSheet } from 'react-native'
+import { Spacer, StackProps, Text } from 'snackui'
 
 import { flatButtonStyle } from '../baseButtonStyle'
 import { LinkButton } from '../ui/LinkButton'

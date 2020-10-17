@@ -1,5 +1,5 @@
-import { AbsoluteVStack, StackProps, VStack } from '@dish/ui'
 import React from 'react'
+import { AbsoluteVStack, StackProps, VStack } from 'snackui'
 
 export const Squircle = ({
   width = 100,

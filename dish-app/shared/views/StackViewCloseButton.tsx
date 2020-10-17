@@ -1,5 +1,5 @@
-import { AbsoluteVStack, StackProps } from '@dish/ui'
 import React, { memo } from 'react'
+import { AbsoluteVStack, StackProps } from 'snackui'
 
 import { omStatic } from '../state/omStatic'
 import { CloseButton } from './ui/CloseButton'

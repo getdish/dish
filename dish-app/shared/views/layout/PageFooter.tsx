@@ -1,6 +1,6 @@
-import { AbsoluteVStack, Spacer, VStack } from '@dish/ui'
 import { default as React, memo } from 'react'
 import { Platform } from 'react-native'
+import { AbsoluteVStack, Spacer, VStack } from 'snackui'
 
 import { AppIntroLogin } from '../../AppIntroLetter'
 

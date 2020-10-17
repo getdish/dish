@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp } from '@dish/react-feather'
-import { HStack, Text } from '@dish/ui'
 import React from 'react'
+import { HStack, Text } from 'snackui'
 
 import { RoutesTable } from '../../state/router'
 import { flatButtonStyle } from '../baseButtonStyle'

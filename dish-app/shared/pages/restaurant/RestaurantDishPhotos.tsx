@@ -1,7 +1,7 @@
 import { graphql, slugify } from '@dish/graph'
-import { HStack } from '@dish/ui'
 import React, { memo, useState } from 'react'
 import { ScrollView } from 'react-native'
+import { HStack } from 'snackui'
 
 import { isWeb } from '../../constants'
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'

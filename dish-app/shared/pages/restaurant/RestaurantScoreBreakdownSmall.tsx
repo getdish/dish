@@ -1,9 +1,9 @@
 import { graphql } from '@dish/graph'
 import { HelpCircle } from '@dish/react-feather'
-import { HStack, Spacer, Text, VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import { sortBy } from 'lodash'
 import React, { memo } from 'react'
+import { HStack, Spacer, Text, VStack } from 'snackui'
 
 import { bgLight } from '../../colors'
 import { isWeb } from '../../constants'

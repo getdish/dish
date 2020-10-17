@@ -1,5 +1,5 @@
-import { HStack, Paragraph } from '@dish/ui'
 import React from 'react'
+import { HStack, Paragraph } from 'snackui'
 
 import { PostEntry } from './posts'
 

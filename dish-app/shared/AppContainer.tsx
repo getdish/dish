@@ -1,6 +1,6 @@
-import { AbsoluteVStack, HStack, LinearGradient, VStack } from '@dish/ui'
 import React from 'react'
 import { StyleSheet } from 'react-native'
+import { AbsoluteVStack, HStack, LinearGradient, VStack } from 'snackui'
 
 import { AppSmallDrawer } from './AppSmallDrawer'
 import { bgAlt } from './colors'

@@ -1,7 +1,7 @@
-import { AbsoluteVStack, HStack, SmallTitle, Spacer, VStack } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { ScrollView } from 'react-native'
+import { AbsoluteVStack, HStack, SmallTitle, Spacer, VStack } from 'snackui'
 
 import { bg, bgLight, brandColor } from '../../colors'
 import { drawerWidthMax } from '../../constants'

@@ -10,6 +10,10 @@ import {
   tagDelete,
   tagUpsert,
 } from '@dish/graph'
+import { Store, useStore, useStoreSelector } from '@dish/use-store'
+import { capitalize } from 'lodash'
+import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
+import { ScrollView, StyleSheet, TextInput } from 'react-native'
 import {
   HStack,
   LoadingItems,
@@ -19,11 +23,7 @@ import {
   useDebounce,
   useDebounceValue,
   useForceUpdate,
-} from '@dish/ui'
-import { Store, useStore, useStoreSelector } from '@dish/use-store'
-import { capitalize } from 'lodash'
-import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
-import { ScrollView, StyleSheet, TextInput } from 'react-native'
+} from 'snackui'
 
 import { emojiRegex } from '../../helpers/emojiRegex'
 import { useQueryPaginated } from '../../hooks/useQueryPaginated'

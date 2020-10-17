@@ -1,4 +1,4 @@
-import { useWindowSize } from '@dish/ui'
+import { useWindowSize } from 'snackui'
 
 import { drawerWidthMax } from '../constants'
 import { mediaQueries } from './useIs'

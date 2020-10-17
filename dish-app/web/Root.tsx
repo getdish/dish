@@ -1,6 +1,6 @@
-import { LoadingItems, ToastRoot } from '@dish/ui'
 import { Provider } from 'overmind-react'
 import React, { Suspense } from 'react'
+import { LoadingItems, ToastRoot } from 'snackui'
 
 import App from '../shared/App'
 import { ErrorHandler } from '../shared/ErrorHandler'

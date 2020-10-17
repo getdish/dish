@@ -1,5 +1,5 @@
-import { Divider, Spacer, Title, VStack } from '@dish/ui'
 import React from 'react'
+import { Divider, Spacer, Title, VStack } from 'snackui'
 
 import { SmallButton } from '../../views/ui/SmallButton'
 import { BlogPostMeta } from './BlogPostMeta'

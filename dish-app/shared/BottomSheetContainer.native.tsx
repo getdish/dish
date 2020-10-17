@@ -1,5 +1,5 @@
-import { BlurView, StackProps, VStack } from '@dish/ui'
 import React from 'react'
+import { BlurView, StackProps, VStack } from 'snackui'
 
 import { drawerBorderRadius } from './constants'
 

@@ -1,6 +1,6 @@
 import { Map, RefreshCcw } from '@dish/react-feather'
-import { AbsoluteVStack, HStack } from '@dish/ui'
 import React, { memo } from 'react'
+import { AbsoluteVStack, HStack } from 'snackui'
 
 import { isWeb, searchBarHeight, zIndexDrawer } from './constants'
 import { useIsNarrow } from './hooks/useIs'

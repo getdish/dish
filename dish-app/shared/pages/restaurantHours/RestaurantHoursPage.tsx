@@ -1,4 +1,6 @@
 import { graphql } from '@dish/graph'
+import React, { memo } from 'react'
+import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
   Modal,
@@ -13,9 +15,7 @@ import {
   TableRow,
   Text,
   VStack,
-} from '@dish/ui'
-import React, { memo } from 'react'
-import { ScrollView } from 'react-native'
+} from 'snackui'
 
 import { bgLight } from '../../colors'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'

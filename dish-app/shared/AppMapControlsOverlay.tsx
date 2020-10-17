@@ -1,8 +1,8 @@
-import { AbsoluteVStack, HStack, Tooltip, VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import loadable from '@loadable/component'
 import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
+import { AbsoluteVStack, HStack, Tooltip, VStack } from 'snackui'
 
 import { AppMapRestaurantPeek } from './AppMapRestaurantPeek'
 import DownloadAppIcon from './assets/download-app-ios.svg'

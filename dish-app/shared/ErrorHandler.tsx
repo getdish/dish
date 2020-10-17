@@ -1,5 +1,5 @@
 import { HasuraError, onGraphError } from '@dish/graph'
-import { Toast, useOnMount } from '@dish/ui'
+import { Toast, useOnMount } from 'snackui'
 
 import { useOvermind } from './state/om'
 

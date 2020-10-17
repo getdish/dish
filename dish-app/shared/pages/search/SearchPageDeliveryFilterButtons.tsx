@@ -1,6 +1,6 @@
-import { Box, HStack, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
+import { Box, HStack, Text, VStack } from 'snackui'
 
 import { useOvermind } from '../../state/om'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'

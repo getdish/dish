@@ -1,4 +1,3 @@
-import { fullyIdle, idle, sleep } from '@dish/async'
 import {
   RestaurantOnlyIds,
   RestaurantSearchArgs,
@@ -14,11 +13,12 @@ import {
   stringify,
 } from '@dish/helpers'
 import { HistoryItem, NavigateItem } from '@dish/router'
-import { Toast } from '@dish/ui'
+import { fullyIdle, idle, sleep } from '@o/async'
 import { isEqual } from '@o/fast-compare'
 import _, { clamp, cloneDeep, findLast, isPlainObject, last } from 'lodash'
 import { Action, AsyncAction, Config, IContext, derived } from 'overmind'
 import { Keyboard } from 'react-native'
+import { Toast } from 'snackui'
 
 import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
 import { addTagsToCache, allTags } from './allTags'

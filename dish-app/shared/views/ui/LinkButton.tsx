@@ -1,5 +1,5 @@
-import { HStack, Text } from '@dish/ui'
 import React, { useEffect, useRef, useState } from 'react'
+import { HStack, Text } from 'snackui'
 
 import { omStatic } from '../../state/omStatic'
 import { RoutesTable } from '../../state/router'

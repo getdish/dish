@@ -1,4 +1,6 @@
 import { graphql, query, refetch } from '@dish/graph'
+import { uniqBy } from 'lodash'
+import React, { memo } from 'react'
 import {
   Divider,
   HStack,
@@ -6,9 +8,7 @@ import {
   Text,
   TextProps,
   useLazyEffect,
-} from '@dish/ui'
-import { uniqBy } from 'lodash'
-import React, { memo } from 'react'
+} from 'snackui'
 
 import { lightGreen, lightRed, lightYellow } from '../../colors'
 import { isWeb } from '../../constants'

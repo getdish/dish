@@ -1,12 +1,12 @@
 if (process.env.NODE_ENV === 'development') {
-  require('@dish/ui/style.css')
+  require('snackui/style.css')
 }
 
 import { Auth, query, resolved } from '@dish/graph'
 import { isSafari } from '@dish/helpers'
-import { AbsoluteVStack } from '@dish/ui'
 import loadable from '@loadable/component'
 import React, { Suspense, memo, useEffect } from 'react'
+import { AbsoluteVStack } from 'snackui'
 
 import HomeAutocomplete from './AppAutocomplete'
 import { AppContainer } from './AppContainer'

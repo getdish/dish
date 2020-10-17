@@ -1,4 +1,4 @@
-import { Toast } from '@dish/ui'
+import { Toast } from 'snackui'
 
 import { Om } from './home-types'
 

@@ -1,5 +1,5 @@
-import { Text, TextProps } from '@dish/ui'
 import React from 'react'
+import { Text, TextProps } from 'snackui'
 
 import { lightGreen, lightGrey, lightRed } from '../../colors'
 import { VoteNumber } from '../../hooks/useUserUpvoteDownvoteQuery'

@@ -1,7 +1,7 @@
 import { slugify } from '@dish/graph'
 import { ChevronUp, HelpCircle, Menu } from '@dish/react-feather'
-import { HStack, Popover, Spacer, Text, Tooltip } from '@dish/ui'
 import React, { Suspense, memo, useCallback, useEffect } from 'react'
+import { HStack, Popover, Spacer, Text, Tooltip } from 'snackui'
 
 import { AppMenuContents } from './AppMenuContents'
 import { useIsAboveMedium, useIsNarrow } from './hooks/useIs'

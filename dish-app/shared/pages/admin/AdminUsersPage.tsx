@@ -1,8 +1,8 @@
 import { graphql, order_by, query } from '@dish/graph'
-import { HStack, Text, VStack, useDebounceValue } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
+import { HStack, Text, VStack, useDebounceValue } from 'snackui'
 
 import { useQueryPaginated } from '../../hooks/useQueryPaginated'
 import { AdminListItem } from './AdminListItem'

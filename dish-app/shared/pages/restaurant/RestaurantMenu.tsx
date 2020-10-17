@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
-import { Grid, HStack, Paragraph, Spacer, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
+import { Grid, HStack, Paragraph, Spacer, Text, VStack } from 'snackui'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'

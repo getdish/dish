@@ -1,4 +1,3 @@
-import { fullyIdle, series, sleep } from '@dish/async'
 import {
   SEARCH_DOMAIN,
   TopCuisine,
@@ -8,6 +7,10 @@ import {
   query,
 } from '@dish/graph'
 import { ChevronRight } from '@dish/react-feather'
+import { fullyIdle, series, sleep } from '@o/async'
+import _, { sortBy, uniqBy } from 'lodash'
+import { default as React, Suspense, memo, useEffect, useState } from 'react'
+import { Dimensions, ScrollView, StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
@@ -17,10 +20,7 @@ import {
   Spacer,
   Text,
   VStack,
-} from '@dish/ui'
-import _, { sortBy, uniqBy } from 'lodash'
-import { default as React, Suspense, memo, useEffect, useState } from 'react'
-import { Dimensions, ScrollView, StyleSheet } from 'react-native'
+} from 'snackui'
 
 import { bgLight, bgLightHover, bgLightTranslucent } from '../../colors'
 import { searchBarHeight } from '../../constants'

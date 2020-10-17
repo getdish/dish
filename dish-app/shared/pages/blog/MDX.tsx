@@ -1,3 +1,6 @@
+import { MDXProvider } from '@mdx-js/react'
+import React from 'react'
+import { Image, ImageProps } from 'react-native'
 import {
   H1,
   H2,
@@ -9,10 +12,7 @@ import {
   UnorderedList,
   UnorderedListItem,
   VStack,
-} from '@dish/ui'
-import { MDXProvider } from '@mdx-js/react'
-import React from 'react'
-import { Image, ImageProps } from 'react-native'
+} from 'snackui'
 
 import { lightYellow, yellow } from '../../colors'
 import { Link } from '../../views/ui/Link'

@@ -1,6 +1,6 @@
 import { slugify } from '@dish/graph'
-import { Box, BoxProps, Divider, Spacer, Toast, VStack } from '@dish/ui'
 import React, { memo, useEffect } from 'react'
+import { Box, BoxProps, Divider, Spacer, Toast, VStack } from 'snackui'
 
 import { isWeb } from './constants'
 import { useOvermind } from './state/om'

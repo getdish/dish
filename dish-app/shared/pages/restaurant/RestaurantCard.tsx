@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
-import { AbsoluteVStack, LinearGradient, Paragraph, VStack } from '@dish/ui'
 import React, { Suspense, memo, useCallback, useState } from 'react'
 import { StyleSheet } from 'react-native'
+import { AbsoluteVStack, LinearGradient, Paragraph, VStack } from 'snackui'
 
 import { bgLight, lightYellow, yellow } from '../../colors'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'

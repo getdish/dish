@@ -1,10 +1,10 @@
-import { AbsoluteVStack, Button, Text, VStack } from '@dish/ui'
 import React from 'react'
 import {
   FallbackProps,
   ErrorBoundary as ReactErrorBoundary,
 } from 'react-error-boundary'
 import { ScrollView } from 'react-native'
+import { AbsoluteVStack, Button, Text, VStack } from 'snackui'
 
 import { SmallButton } from './ui/SmallButton'
 

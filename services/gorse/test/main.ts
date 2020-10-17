@@ -1,4 +1,3 @@
-import { sleep } from '@dish/async'
 import {
   Auth,
   Restaurant,
@@ -7,6 +6,7 @@ import {
   restaurantUpsert,
   reviewUpsert,
 } from '@dish/graph'
+import { sleep } from '@o/async'
 import anyTest, { TestInterface } from 'ava'
 import fetch from 'node-fetch'
 

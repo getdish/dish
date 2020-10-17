@@ -1,7 +1,7 @@
-import { VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { memo, useContext, useMemo } from 'react'
 import { ScrollView, ScrollViewProps } from 'react-native'
+import { VStack } from 'snackui'
 
 import { ContentScrollContext, ScrollStore } from './ContentScrollView'
 

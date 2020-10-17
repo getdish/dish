@@ -1,8 +1,8 @@
 import { slugify } from '@dish/graph'
-import { AbsoluteVStack, Box, HStack, StackProps, Text, VStack } from '@dish/ui'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
 import { Image } from 'react-native'
+import { AbsoluteVStack, Box, HStack, StackProps, Text, VStack } from 'snackui'
 
 import { isWeb } from '../../constants'
 import { getImageUrl } from '../../helpers/getImageUrl'

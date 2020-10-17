@@ -1,6 +1,6 @@
-import { HStack, StackProps } from '@dish/ui'
 import _ from 'lodash'
 import React, { memo } from 'react'
+import { HStack, StackProps } from 'snackui'
 
 import { rgbString } from '../../helpers/rgbString'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'

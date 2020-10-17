@@ -8,7 +8,7 @@ const LodashPlugin = require('lodash-webpack-plugin')
 // const ClosurePlugin = require('closure-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 // const ReactRefreshPlugin = require('@webhotelier/webpack-fast-refresh')
-const { UIStaticWebpackPlugin } = require('@dish/ui-static')
+const { UIStaticWebpackPlugin } = require('snackui-static')
 const CircularDependencyPlugin = require('circular-dependency-plugin')
 
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -144,7 +144,7 @@ module.exports = function getWebpackConfig(
                   //   loader: '@webhotelier/webpack-fast-refresh/loader.js',
                   // },
                   isStaticExtracted && {
-                    loader: require.resolve('@dish/ui-static/loader'),
+                    loader: require.resolve('snackui-static/loader'),
                     options: {
                       evaluateImportsWhitelist: ['constants.js', 'colors.js'],
                     },

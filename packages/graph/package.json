@@ -28,7 +28,7 @@
     "react": "*"
   },
   "devDependencies": {
-    "@dish/react-test-env": "*",
+    "@o/react-test-env": "*",
     "@types/node": "*",
     "ts-node": "*"
   }

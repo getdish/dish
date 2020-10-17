@@ -1,6 +1,6 @@
-import { AnimatedVStack, VStack, useDebounceValue } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { Suspense, memo, useLayoutEffect, useMemo } from 'react'
+import { AnimatedVStack, VStack, useDebounceValue } from 'snackui'
 
 import { isWeb, searchBarHeight } from './constants'
 import { getBreadcrumbs } from './helpers/getBreadcrumbs'

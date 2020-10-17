@@ -1,9 +1,9 @@
-import { sleep } from '@dish/async'
 import { Review, reviewUpsert } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Toast } from '@dish/ui'
 import { Store, useStore, useStoreSelector } from '@dish/use-store'
+import { sleep } from '@o/async'
 import { useEffect, useState } from 'react'
+import { Toast } from 'snackui'
 
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { allTags } from '../state/allTags'

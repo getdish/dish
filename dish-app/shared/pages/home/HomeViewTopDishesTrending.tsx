@@ -1,3 +1,4 @@
+import React, { memo } from 'react'
 import {
   AbsoluteVStack,
   HStack,
@@ -6,8 +7,7 @@ import {
   SmallerTitle,
   VStack,
   mediaQueries,
-} from '@dish/ui'
-import React, { memo } from 'react'
+} from 'snackui'
 
 import { useOvermind } from '../../state/om'
 import { LinkButton } from '../../views/ui/LinkButton'

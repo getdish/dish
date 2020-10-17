@@ -1,4 +1,6 @@
 import { graphql } from '@dish/graph'
+import React from 'react'
+import { Image } from 'react-native'
 import {
   AbsoluteVStack,
   Grid,
@@ -7,9 +9,7 @@ import {
   SmallTitle,
   Spacer,
   VStack,
-} from '@dish/ui'
-import React from 'react'
-import { Image } from 'react-native'
+} from 'snackui'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'

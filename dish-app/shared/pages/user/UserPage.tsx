@@ -1,4 +1,6 @@
 import { graphql } from '@dish/graph'
+import React, { Suspense, memo, useEffect, useState } from 'react'
+import { ScrollView } from 'react-native'
 import {
   Divider,
   HStack,
@@ -9,9 +11,7 @@ import {
   Spacer,
   Text,
   VStack,
-} from '@dish/ui'
-import React, { Suspense, memo, useEffect, useState } from 'react'
-import { ScrollView } from 'react-native'
+} from 'snackui'
 
 import { StackItemProps } from '../../AppStackView'
 import { HomeStateItemUser } from '../../state/home-types'

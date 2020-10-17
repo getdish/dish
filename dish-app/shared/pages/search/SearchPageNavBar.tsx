@@ -1,6 +1,6 @@
-import { BlurView, HStack, VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { memo } from 'react'
+import { BlurView, HStack, VStack } from 'snackui'
 
 import { BottomDrawerStore } from '../../BottomDrawerStore'
 import { isWeb } from '../../constants'

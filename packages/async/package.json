@@ -1,10 +1,9 @@
 {
-  "name": "@dish/async",
+  "name": "@o/async",
   "version": "0.0.1",
   "main": "_/index.js",
   "tsmain": "src/index",
   "sideEffects": false,
-  "private": true,
   "scripts": {
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput"

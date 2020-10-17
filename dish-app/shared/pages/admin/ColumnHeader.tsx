@@ -1,4 +1,4 @@
-import { HStack, Spacer, Text } from '@dish/ui'
+import { HStack, Spacer, Text } from 'snackui'
 
 export const ColumnHeader = ({
   children,

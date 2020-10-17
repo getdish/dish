@@ -1,5 +1,8 @@
 import { graphql, order_by, query } from '@dish/graph'
 import { fetchBertSentiment } from '@dish/helpers'
+import { Store, useStore } from '@dish/use-store'
+import React, { useEffect, useState } from 'react'
+import { ScrollView, TextInput } from 'react-native'
 import {
   Divider,
   HStack,
@@ -7,10 +10,7 @@ import {
   Text,
   VStack,
   useDebounceValue,
-} from '@dish/ui'
-import { Store, useStore } from '@dish/use-store'
-import React, { useEffect, useState } from 'react'
-import { ScrollView, TextInput } from 'react-native'
+} from 'snackui'
 
 import { lightGreen, lightRed } from '../../colors'
 import {

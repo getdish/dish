@@ -1,5 +1,5 @@
-import { HStack, ProgressCircle, StackProps, Text, VStack } from '@dish/ui'
 import React, { forwardRef } from 'react'
+import { HStack, ProgressCircle, StackProps, Text, VStack } from 'snackui'
 
 export type RatingViewProps = StackProps & {
   size: 'lg' | 'md' | 'sm' | 'xs'

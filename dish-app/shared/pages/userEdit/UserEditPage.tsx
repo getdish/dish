@@ -1,5 +1,5 @@
-import { AbsoluteVStack, LoadingItems, Modal, VStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
+import { AbsoluteVStack, LoadingItems, Modal, VStack } from 'snackui'
 
 import { DarkModal } from '../../DarkModal'
 import { useOvermind } from '../../state/om'

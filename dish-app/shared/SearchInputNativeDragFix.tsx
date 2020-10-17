@@ -1,4 +1,3 @@
-import { VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { useMemo } from 'react'
 import {
@@ -7,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+import { VStack } from 'snackui'
 
 import { InputStore } from './InputStore'
 

@@ -1,8 +1,7 @@
 {
-  "name": "@dish/babel-preset",
+  "name": "@o/babel-preset",
   "version": "0.0.1",
   "main": "babel.config.js",
-  "private": true,
   "workspaces": {
     "nohoist": [
       "**"

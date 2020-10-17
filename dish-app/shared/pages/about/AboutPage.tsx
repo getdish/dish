@@ -1,3 +1,6 @@
+import { useStore } from '@dish/use-store'
+import React, { useEffect } from 'react'
+import { Image } from 'react-native'
 import {
   AbsoluteVStack,
   Divider,
@@ -7,10 +10,7 @@ import {
   UnorderedList,
   UnorderedListItem,
   VStack,
-} from '@dish/ui'
-import { useStore } from '@dish/use-store'
-import React, { useEffect } from 'react'
-import { Image } from 'react-native'
+} from 'snackui'
 
 import { StackItemProps } from '../../AppStackView'
 import dishWhite from '../../assets/dish-white.jpg'

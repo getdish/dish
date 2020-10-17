@@ -1,5 +1,5 @@
-import { HStack, LoadingItems, StackProps, VStack } from '@dish/ui'
 import React, { Suspense } from 'react'
+import { HStack, LoadingItems, StackProps, VStack } from 'snackui'
 
 import { drawerBorderRadius, drawerWidthMax } from '../constants'
 import { useIsNarrow } from '../hooks/useIs'

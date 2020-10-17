@@ -2,6 +2,8 @@
 // TODO if we can have compiler pick up a few more things speeds will go up a lot
 import { NonNullObject, Tag, TagType } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
+import React, { memo, useState } from 'react'
+import { Image } from 'react-native'
 import {
   HStack,
   Hoverable,
@@ -12,9 +14,7 @@ import {
   TextSuperScript,
   VStack,
   prevent,
-} from '@dish/ui'
-import React, { memo, useState } from 'react'
-import { Image } from 'react-native'
+} from 'snackui'
 
 import {
   blue,

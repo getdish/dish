@@ -1,6 +1,6 @@
-import { fullyIdle } from '@dish/async'
-import { HStack } from '@dish/ui'
+import { fullyIdle } from '@o/async'
 import React, { memo } from 'react'
+import { HStack } from 'snackui'
 
 import {
   focusSearchInput,

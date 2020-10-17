@@ -1,7 +1,7 @@
 import { graphql, order_by, query } from '@dish/graph'
-import { HStack, SmallTitle, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { Image, ScrollView } from 'react-native'
+import { HStack, SmallTitle, Text, VStack } from 'snackui'
 
 import { getActiveTags } from '../../state/getActiveTags'
 import { HomeStateItemSearch } from '../../state/home-types'

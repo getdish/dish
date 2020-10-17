@@ -1,7 +1,6 @@
-import { fullyIdle, idle, series } from '@dish/async'
 import { Loader, Search, X } from '@dish/react-feather'
-import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from '@dish/ui'
 import { useStore } from '@dish/use-store'
+import { fullyIdle, idle, series } from '@o/async'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import {
   Platform,
@@ -11,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from 'snackui'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { AppSearchInputTags } from './AppSearchInputTags'

@@ -1,6 +1,6 @@
 import { HasuraError, onGraphError } from '@dish/graph'
-import { Toast } from '@dish/ui'
 import React, { useEffect } from 'react'
+import { Toast } from 'snackui'
 
 import { AppPortalProvider } from './AppPortal'
 

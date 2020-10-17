@@ -1,5 +1,5 @@
-import { HStack, Hoverable } from '@dish/ui'
 import React, { useRef } from 'react'
+import { HStack, Hoverable } from 'snackui'
 
 import { useIsNarrow } from './hooks/useIs'
 import { useOvermind } from './state/om'

@@ -1,5 +1,5 @@
-import { Text, TextProps } from '@dish/ui'
 import React from 'react'
+import { Text, TextProps } from 'snackui'
 
 export const PointsText = ({
   points,

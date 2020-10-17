@@ -1,6 +1,6 @@
 import { Tag } from '@dish/graph'
-import { Text, VStack, memoIsEqualDeep } from '@dish/ui'
 import React from 'react'
+import { Text, VStack, memoIsEqualDeep } from 'snackui'
 
 import { rgbString } from '../helpers/rgbString'
 import { tagDisplayName } from '../state/tagDisplayName'

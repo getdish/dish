@@ -1,4 +1,3 @@
-import { useForceUpdate } from '@dish/ui'
 import React, {
   createContext,
   useContext,
@@ -7,6 +6,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import { useForceUpdate } from 'snackui'
 
 import { useOvermind } from '../../state/om'
 import { routePathToName, router, routes } from '../../state/router'

@@ -1,8 +1,8 @@
-import { useDebounce } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 import React, { useEffect, useRef, useState } from 'react'
 import { Animated, Dimensions, StyleSheet } from 'react-native'
+import { useDebounce } from 'snackui'
 
 import { BottomDrawerStore } from '../BottomDrawerStore'
 import { MAPBOX_ACCESS_TOKEN } from '../constants'

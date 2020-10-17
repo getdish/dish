@@ -3,7 +3,7 @@ module.exports = function (api) {
 
   if (process.env.TARGET === 'web') {
     return {
-      presets: ['@dish/babel-preset'],
+      presets: ['@o/babel-preset'],
     }
   }
 

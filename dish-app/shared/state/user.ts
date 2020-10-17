@@ -7,8 +7,8 @@ import {
   resolved,
   userFindOne,
 } from '@dish/graph'
-import { Toast } from '@dish/ui'
 import { Action, AsyncAction } from 'overmind'
+import { Toast } from 'snackui'
 
 type UserState = {
   user: Partial<User> | null

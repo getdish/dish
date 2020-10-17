@@ -1,6 +1,6 @@
 import { Heart, Star } from '@dish/react-feather'
-import { HStack, Text, prevent } from '@dish/ui'
 import React from 'react'
+import { HStack, Text, prevent } from 'snackui'
 
 export type FavoriteButtonProps = {
   isFavorite: boolean

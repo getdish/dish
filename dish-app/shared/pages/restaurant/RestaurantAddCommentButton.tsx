@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
-import { Text } from '@dish/ui'
 import React from 'react'
+import { Text } from 'snackui'
 
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { SmallButton, SmallButtonProps } from '../../views/ui/SmallButton'

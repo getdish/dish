@@ -1,9 +1,9 @@
-import { AbsoluteVStack } from '@dish/ui'
 import { StatusBar } from 'expo-status-bar'
 import { Provider } from 'overmind-react'
 import React, { Suspense, useEffect, useState } from 'react'
 import { LogBox, StyleSheet, View } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { AbsoluteVStack } from 'snackui'
 
 import AppAutocomplete from './AppAutocomplete'
 import AppMap from './AppMap'

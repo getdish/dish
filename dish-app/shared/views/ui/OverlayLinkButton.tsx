@@ -1,5 +1,5 @@
-import { BlurView, HStack, Text } from '@dish/ui'
 import React from 'react'
+import { BlurView, HStack, Text } from 'snackui'
 
 import { RoutesTable } from '../../state/router'
 import { LinkButton } from './LinkButton'

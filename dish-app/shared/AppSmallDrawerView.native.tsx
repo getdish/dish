@@ -1,7 +1,7 @@
-import { VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
+import { VStack } from 'snackui'
 
 import { AppSearchBar } from './AppSearchBar'
 import { blurSearchInput } from './AppSearchInput'

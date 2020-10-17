@@ -1,5 +1,7 @@
 import { graphql, query } from '@dish/graph'
 import { fetchBertSentiment } from '@dish/helpers'
+import React, { Suspense, memo, useEffect, useState } from 'react'
+import { Image, ScrollView, TextInput } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
@@ -11,9 +13,7 @@ import {
   Text,
   VStack,
   useDebounceEffect,
-} from '@dish/ui'
-import React, { Suspense, memo, useEffect, useState } from 'react'
-import { Image, ScrollView, TextInput } from 'react-native'
+} from 'snackui'
 
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'

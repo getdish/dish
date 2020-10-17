@@ -1,6 +1,6 @@
 import { isPresent } from '@dish/helpers'
-import { Text } from '@dish/ui'
 import React from 'react'
+import { Text } from 'snackui'
 
 import { isWeb } from '../../constants'
 import { getActiveTags } from '../../state/getActiveTags'

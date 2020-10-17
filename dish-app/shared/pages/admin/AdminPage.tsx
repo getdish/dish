@@ -1,8 +1,8 @@
 import { getGraphEndpointDomain } from '@dish/graph'
-import { HStack, SmallTitle, Spacer, Text, Title, VStack } from '@dish/ui'
 import loadable from '@loadable/component'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
+import { HStack, SmallTitle, Spacer, Text, Title, VStack } from 'snackui'
 
 import { Route, RouteSwitch } from '../../views/router/Route'
 import { Link } from '../../views/ui/Link'

@@ -1,5 +1,5 @@
-import { LoadingItems, StackProps, VStack } from '@dish/ui'
 import { Suspense } from 'react'
+import { LoadingItems, StackProps, VStack } from 'snackui'
 
 import { ColumnHeader } from './ColumnHeader'
 

@@ -1,8 +1,8 @@
 import { MapPin, Navigation } from '@dish/react-feather'
-import { Button, HStack, VStack, prevent } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { TextInput, TouchableOpacity } from 'react-native'
+import { Button, HStack, VStack, prevent } from 'snackui'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { inputTextStyles } from './AppSearchInput'

@@ -1,4 +1,6 @@
 import { graphql } from '@dish/graph'
+import React, { Suspense, memo } from 'react'
+import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
@@ -6,9 +8,7 @@ import {
   LoadingItem,
   Spacer,
   VStack,
-} from '@dish/ui'
-import React, { Suspense, memo } from 'react'
-import { StyleSheet } from 'react-native'
+} from 'snackui'
 
 import { bgLight, bgLightHover, blue, darkBlue, lightBlue } from '../../colors'
 import { getMinLngLat } from '../../helpers/getLngLat'

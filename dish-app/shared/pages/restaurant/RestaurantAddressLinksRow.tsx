@@ -5,9 +5,9 @@ import {
   Link2,
   PhoneCall,
 } from '@dish/react-feather'
-import { Box, HStack, HoverablePopover, Text, VStack } from '@dish/ui'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
+import { Box, HStack, HoverablePopover, Text, VStack } from 'snackui'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { GeocodePlace } from '../../state/home-types'

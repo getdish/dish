@@ -1,5 +1,5 @@
-import { AbsoluteVStack, Text } from '@dish/ui'
 import React from 'react'
+import { AbsoluteVStack, Text } from 'snackui'
 
 export function Splash() {
   return (

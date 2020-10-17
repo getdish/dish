@@ -1,5 +1,5 @@
-import { mediaObjectToString, useMedia, useMediaLayout } from '@dish/ui'
 import { Platform } from 'react-native'
+import { mediaObjectToString, useMedia, useMediaLayout } from 'snackui'
 
 // seems faster probably avoids multiple calls..
 const use = useMediaLayout ?? useMedia

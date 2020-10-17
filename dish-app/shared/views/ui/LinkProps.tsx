@@ -1,6 +1,6 @@
-import { StackProps, TextProps } from '@dish/ui'
 import React from 'react'
 import { TextStyle, ViewStyle } from 'react-native'
+import { StackProps, TextProps } from 'snackui'
 
 import { NavigableTag } from '../../state/NavigableTag'
 import { RouteName } from '../../state/router'

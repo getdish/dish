@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp } from '@dish/react-feather'
-import { StackProps, Text, Tooltip, VStack, prevent } from '@dish/ui'
 import React, { memo, useState } from 'react'
+import { StackProps, Text, Tooltip, VStack, prevent } from 'snackui'
 
 import { bgLight } from '../colors'
 import { useIsNarrow } from '../hooks/useIs'

@@ -2,8 +2,8 @@ import './start'
 import './base.css'
 import './bootstrapEnv'
 
-import { sleep } from '@dish/async'
 import { startLogging } from '@dish/graph'
+import { sleep } from '@o/async'
 import React from 'react'
 // @ts-ignore
 import { createRoot, hydrate, render } from 'react-dom'

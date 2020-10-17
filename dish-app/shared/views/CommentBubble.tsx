@@ -1,7 +1,7 @@
 import { User } from '@dish/react-feather'
-import { Circle, HStack, Paragraph, StackProps, Text, VStack } from '@dish/ui'
 import React, { useState } from 'react'
 import { Image } from 'react-native'
+import { Circle, HStack, Paragraph, StackProps, Text, VStack } from 'snackui'
 
 import { bgLight } from '../colors'
 import { ensureFlexText } from '../pages/restaurant/ensureFlexText'

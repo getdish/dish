@@ -1,4 +1,6 @@
 import { Auth } from '@dish/graph'
+import { Store, useStore } from '@dish/use-store'
+import { default as React, useCallback, useEffect, useState } from 'react'
 import {
   Form,
   HStack,
@@ -8,9 +10,7 @@ import {
   Spacer,
   Text,
   VStack,
-} from '@dish/ui'
-import { Store, useStore } from '@dish/use-store'
-import { default as React, useCallback, useEffect, useState } from 'react'
+} from 'snackui'
 
 import { lightRed } from '../colors'
 import { isWeb } from '../constants'

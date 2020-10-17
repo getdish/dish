@@ -1,5 +1,5 @@
-import { Box, BoxProps, StackProps } from '@dish/ui'
 import React from 'react'
+import { Box, BoxProps, StackProps } from 'snackui'
 
 export const SlantedBox = (props: BoxProps) => {
   return <Box {...slantedBoxStyle} {...props} />

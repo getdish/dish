@@ -1,6 +1,6 @@
 import { MapPin } from '@dish/react-feather'
-import { HStack, Text } from '@dish/ui'
 import React from 'react'
+import { HStack, Text } from 'snackui'
 
 import { GeocodePlace } from '../../../shared/state/home-types'
 import { useIsNarrow } from '../../hooks/useIs'

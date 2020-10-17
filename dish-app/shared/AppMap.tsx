@@ -1,6 +1,5 @@
 import { LngLat, Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { AbsoluteVStack, useDebounce, useDebounceValue, useGet } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import { isEqual, uniqBy } from 'lodash'
 import React, {
@@ -11,6 +10,7 @@ import React, {
   useMemo,
   useState,
 } from 'react'
+import { AbsoluteVStack, useDebounce, useDebounceValue, useGet } from 'snackui'
 
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { searchBarHeight, zIndexMap } from './constants'

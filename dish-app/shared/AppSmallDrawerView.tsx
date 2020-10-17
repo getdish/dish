@@ -1,8 +1,8 @@
 import { supportsTouchWeb } from '@dish/helpers'
-import { AbsoluteVStack, VStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { useEffect, useMemo } from 'react'
 import { Animated, PanResponder, View } from 'react-native'
+import { AbsoluteVStack, VStack } from 'snackui'
 
 import { AppSearchBar } from './AppSearchBar'
 import { blurSearchInput } from './AppSearchInput'

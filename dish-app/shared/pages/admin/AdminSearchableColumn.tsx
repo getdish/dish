@@ -1,7 +1,7 @@
-import { HStack, LoadingItems, VStack } from '@dish/ui'
 import { Suspense } from 'react'
 import React from 'react'
 import { TextInput } from 'react-native'
+import { HStack, LoadingItems, VStack } from 'snackui'
 
 import { ColumnHeader } from './ColumnHeader'
 import { styles } from './styles'

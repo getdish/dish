@@ -1,6 +1,6 @@
-import { HStack } from '@dish/ui'
 import React from 'react'
 import { ScrollView } from 'react-native'
+import { HStack } from 'snackui'
 
 import { SmallButton } from '../../views/ui/SmallButton'
 

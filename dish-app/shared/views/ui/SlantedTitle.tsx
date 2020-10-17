@@ -1,5 +1,5 @@
-import { BoxProps, SizableTextProps, Title } from '@dish/ui'
 import React from 'react'
+import { BoxProps, SizableTextProps, Title } from 'snackui'
 
 import { SlantedBox, slantedBoxStyle } from './SlantedBox'
 

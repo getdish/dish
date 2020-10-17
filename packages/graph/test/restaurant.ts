@@ -1,4 +1,4 @@
-import '@dish/react-test-env'
+import '@o/react-test-env'
 
 import anyTest, { TestInterface } from 'ava'
 import moment from 'moment'

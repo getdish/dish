@@ -1,19 +1,6 @@
-import { sleep } from '@dish/async'
 import { ArrowUp } from '@dish/react-feather'
-import {
-  AbsoluteVStack,
-  AnimatedVStack,
-  Button,
-  HStack,
-  LinearGradient,
-  LoadingItem,
-  Spacer,
-  StackProps,
-  Text,
-  VStack,
-  combineRefs,
-} from '@dish/ui'
 import { useStore } from '@dish/use-store'
+import { sleep } from '@o/async'
 import React, {
   Suspense,
   createContext,
@@ -31,6 +18,19 @@ import {
   LayoutProvider,
   RecyclerListView,
 } from 'recyclerlistview'
+import {
+  AbsoluteVStack,
+  AnimatedVStack,
+  Button,
+  HStack,
+  LinearGradient,
+  LoadingItem,
+  Spacer,
+  StackProps,
+  Text,
+  VStack,
+  combineRefs,
+} from 'snackui'
 
 import { AppPortalItem } from '../../AppPortal'
 import { isWeb, searchBarHeight } from '../../constants'

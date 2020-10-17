@@ -1,4 +1,3 @@
-import { series } from '@dish/async'
 import {
   Review,
   globalTagId,
@@ -8,8 +7,9 @@ import {
   reviewDelete,
   reviewUpsert,
 } from '@dish/graph'
-import { Toast, useForceUpdate, useLazyEffect } from '@dish/ui'
+import { series } from '@o/async'
 import { useEffect, useState } from 'react'
+import { Toast, useForceUpdate, useLazyEffect } from 'snackui'
 
 import { useOvermind } from '../state/om'
 import { omStatic } from '../state/omStatic'

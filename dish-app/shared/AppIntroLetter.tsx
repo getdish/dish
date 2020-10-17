@@ -1,4 +1,3 @@
-import { AbsoluteVStack, Paragraph, Spacer, Text, VStack } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import {
   default as React,
@@ -8,6 +7,7 @@ import {
   useState,
 } from 'react'
 import { Image } from 'react-native'
+import { AbsoluteVStack, Paragraph, Spacer, Text, VStack } from 'snackui'
 
 // @ts-ignore
 import dishNeon from './assets/dish-neon.jpg'

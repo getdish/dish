@@ -1,4 +1,6 @@
 import { RESTAURANT_WEIGHTS, graphql } from '@dish/graph'
+import React, { memo } from 'react'
+import { Image, Linking } from 'react-native'
 import {
   Box,
   HStack,
@@ -10,9 +12,7 @@ import {
   TextProps,
   VStack,
   prevent,
-} from '@dish/ui'
-import React, { memo } from 'react'
-import { Image, Linking } from 'react-native'
+} from 'snackui'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'

@@ -1,5 +1,8 @@
 import { graphql } from '@dish/graph'
 import { HelpCircle } from '@dish/react-feather'
+import { sortBy } from 'lodash'
+import React, { memo } from 'react'
+import { Image } from 'react-native'
 import {
   HStack,
   Spacer,
@@ -12,10 +15,7 @@ import {
   TableRow,
   Text,
   VStack,
-} from '@dish/ui'
-import { sortBy } from 'lodash'
-import React, { memo } from 'react'
-import { Image } from 'react-native'
+} from 'snackui'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { omStatic } from '../../state/omStatic'

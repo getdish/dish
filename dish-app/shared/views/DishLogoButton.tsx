@@ -1,5 +1,5 @@
-import { AbsoluteVStack, VStack } from '@dish/ui'
 import React, { memo } from 'react'
+import { AbsoluteVStack, VStack } from 'snackui'
 
 import { useIsReallyNarrow } from '../hooks/useIs'
 import { omStatic } from '../state/omStatic'

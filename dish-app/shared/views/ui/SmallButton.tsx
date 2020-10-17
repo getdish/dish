@@ -1,6 +1,6 @@
-import { HStack, StackProps, Text, Tooltip } from '@dish/ui'
 import React from 'react'
 import { StyleSheet, TextStyle } from 'react-native'
+import { HStack, StackProps, Text, Tooltip } from 'snackui'
 
 import { bg, bgLight, bgLightLight, lightBlue } from '../../colors'
 import { isWeb } from '../../constants'

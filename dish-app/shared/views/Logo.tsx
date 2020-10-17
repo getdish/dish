@@ -1,6 +1,6 @@
-import { VStack } from '@dish/ui'
 import React from 'react'
 import { G, Path, Svg } from 'react-native-svg'
+import { VStack } from 'snackui'
 
 import { useSearchBarTheme } from '../hooks/useSearchBarTheme'
 import { logoStyles } from './logoStyles'
