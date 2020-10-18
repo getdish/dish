@@ -4,6 +4,7 @@ WORKDIR /app
 COPY packages packages
 COPY services services
 COPY dish-app dish-app
+COPY snackui snackui
 COPY package.json .
 # Remove all files that aren't `package.json`
 RUN find . \! -name "package.json" -type f -print | xargs rm -rf
