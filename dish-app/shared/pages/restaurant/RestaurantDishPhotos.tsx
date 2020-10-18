@@ -1,11 +1,10 @@
-import { graphql, slugify } from '@dish/graph'
-import React, { memo, useState } from 'react'
-import { ScrollView } from 'react-native'
-import { HStack } from 'snackui'
+import { graphql } from '@dish/graph'
+import React, { memo, useMemo, useState } from 'react'
+import { HStack, VStack } from 'snackui'
 
+import { bgLightHover, blue } from '../../colors'
 import { isWeb } from '../../constants'
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
 
@@ -16,7 +15,7 @@ export const RestaurantDishPhotos = memo(
       restaurantId,
       selectable,
       onSelect,
-      defaultSelectedId,
+      selected,
       size = 180,
       max = 30,
     }: {
@@ -24,34 +23,27 @@ export const RestaurantDishPhotos = memo(
       restaurantId?: string
       selectable?: boolean
       onSelect?: (dish: string) => any
-      defaultSelectedId?: string
+      selected?: string
       size?: number
       max?: number
     }) => {
       const dishes = getRestuarantDishes({ restaurantSlug, max })
-      const spacing = 12
+      const spacing = 20
       const [hasScrolled, setHasScrolled] = useState(false)
-      const [selected, setSelected] = useState(
-        selectable
-          ? defaultSelectedId
-            ? dishes.findIndex(
-                (x) => slugify(x.name ?? '') === defaultSelectedId
-              )
-            : 0
-          : 1
-      )
 
       const allPhotos = hasScrolled ? dishes : dishes.slice(0, 6)
 
+      const handleScroll = useMemo(() => {
+        return !hasScrolled
+          ? () => {
+              setHasScrolled(true)
+            }
+          : null
+      }, [hasScrolled])
+
       return (
         <ContentScrollViewHorizontal
-          onScroll={
-            !hasScrolled
-              ? () => {
-                  setHasScrolled(true)
-                }
-              : null
-          }
+          onScroll={handleScroll}
           style={{
             width: isWeb ? 'calc(100% + 30px)' : '98%',
             marginHorizontal: -15,
@@ -60,28 +52,41 @@ export const RestaurantDishPhotos = memo(
           {!!dishes?.length && (
             <HStack
               paddingHorizontal={60}
-              paddingVertical={20}
+              paddingTop={20}
               alignItems="center"
               justifyContent="center"
             >
               {allPhotos.map((photo, index) => {
+                const isSelected = selected === photo.name
                 return (
-                  <DishView
-                    key={index}
-                    size={size}
-                    restaurantSlug={restaurantSlug}
-                    restaurantId={restaurantId}
-                    margin={spacing / 2}
-                    dish={photo}
-                    selected={selected === index}
-                    {...(!!selectable && {
-                      onPress() {
-                        console.warn('ok')
-                        setSelected(index)
-                        onSelect?.(photo.name)
-                      },
+                  <VStack
+                    key={photo.name}
+                    padding={spacing / 2}
+                    paddingBottom={30}
+                    borderTopLeftRadius={28}
+                    borderTopRightRadius={28}
+                    borderWidth={1}
+                    borderColor="transparent"
+                    {...(isSelected && {
+                      backgroundColor: '#fff',
+                      borderColor: bgLightHover,
+                      borderBottomColor: '#fff',
                     })}
-                  />
+                  >
+                    <DishView
+                      size={size}
+                      restaurantSlug={restaurantSlug}
+                      restaurantId={restaurantId}
+                      dish={photo}
+                      selected={isSelected}
+                      {...(!!selectable && {
+                        onPress() {
+                          console.warn('ok')
+                          onSelect?.(photo.name)
+                        },
+                      })}
+                    />
+                  </VStack>
                 )
               })}
             </HStack>

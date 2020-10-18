@@ -25,7 +25,7 @@ import {
   useGet,
 } from 'snackui'
 
-import { bgLight, bgLightHover, brandColor } from '../../colors'
+import { bgLight, bgLightHover, bgLightPress, brandColor } from '../../colors'
 import { isWeb } from '../../constants'
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../helpers/isIOS'
@@ -287,7 +287,7 @@ const RestaurantListItemContent = memo(
                             backgroundColor: bgLightHover,
                           }}
                           pressStyle={{
-                            backgroundColor: bgLightHover,
+                            backgroundColor: bgLightPress,
                           }}
                         >
                           <Text
@@ -310,7 +310,7 @@ const RestaurantListItemContent = memo(
             <VStack
               {...contentSideProps}
               overflow="hidden"
-              zIndex={1000}
+              zIndex={-1}
               paddingLeft={50}
               paddingRight={20}
               marginTop={isSmall ? -6 : 0}

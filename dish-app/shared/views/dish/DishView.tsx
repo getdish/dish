@@ -4,6 +4,7 @@ import React, { Suspense, memo, useState } from 'react'
 import { Image } from 'react-native'
 import { AbsoluteVStack, Box, HStack, StackProps, Text, VStack } from 'snackui'
 
+import { blue } from '../../colors'
 import { isWeb } from '../../constants'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
@@ -58,6 +59,7 @@ export const DishView = memo(
     const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
     const isFallback = _isFallback ?? dish.isFallback
     const backgroundColor = getDishColors(dish.name).lightColor
+    const isActive = isHovered || selected
 
     return (
       <LinkButton
@@ -122,13 +124,10 @@ export const DishView = memo(
           width={width}
           height={height}
           borderRadius={borderRadius}
-          isHovered={isHovered}
+          isHovered={isActive}
           backgroundColor={backgroundColor}
-          borderColor={backgroundColor}
-          // borderWidth={4}
-          // {...(selected && {
-          //   borderColor: 'blue',
-          // })}
+          borderColor="transparent"
+          borderWidth={1}
           outside={
             <HStack
               className="ease-in-out"
@@ -138,7 +137,7 @@ export const DishView = memo(
               alignItems="flex-end"
               justifyContent="center"
               zIndex={4}
-              {...(isHovered && {
+              {...(isActive && {
                 transform: [{ scale: 1.05 }],
                 zIndex: 3,
               })}
@@ -169,7 +168,7 @@ export const DishView = memo(
                 shadowRadius={2}
                 zIndex={1000}
                 bottom={-8}
-                {...(isHovered && {
+                {...(isActive && {
                   backgroundColor: '#000',
                   shadowColor: 'rgba(0,0,0,0.2)',
                   transform: [
@@ -184,7 +183,7 @@ export const DishView = memo(
                   // flex={1} breaks native
                   overflow="hidden"
                   fontWeight="400"
-                  color={isHovered ? '#fff' : '#000'}
+                  color={isActive ? '#fff' : '#000'}
                   fontSize={hasLongWord ? 14 : 16}
                   textAlign="center"
                 >

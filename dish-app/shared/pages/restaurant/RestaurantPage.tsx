@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import React, { Suspense, memo } from 'react'
+import React, { Suspense, memo, useCallback, useMemo, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
@@ -8,6 +8,7 @@ import {
   LoadingItem,
   Spacer,
   VStack,
+  useGet,
 } from 'snackui'
 
 import { bgLight, bgLightHover, blue, darkBlue, lightBlue } from '../../colors'
@@ -47,6 +48,17 @@ const RestaurantPage = memo(
     const { restaurantSlug } = item
     const restaurant = useRestaurantQuery(restaurantSlug)
     const coords = restaurant?.location?.coordinates
+    const [selectedDish, setSelectedDish] = useState(null)
+    const getSelectedDish = useGet(selectedDish)
+
+    const setSelectedDishToggle = useCallback((name: string) => {
+      const cur = getSelectedDish()
+      if (cur === name) {
+        setSelectedDish(null)
+      } else {
+        setSelectedDish(name)
+      }
+    }, [])
 
     usePageLoadEffect(props.isActive && restaurant.id, () => {
       omStatic.actions.home.updateHomeState({
@@ -63,6 +75,49 @@ const RestaurantPage = memo(
       })
     })
 
+    const headerElement = useMemo(() => {
+      return (
+        <RestaurantHeader
+          color={darkBlue}
+          minHeight={450}
+          showImages
+          restaurantSlug={restaurantSlug}
+          after={
+            <VStack
+              className="ease-in-out"
+              hoverStyle={{
+                transform: [{ scale: 1.0125 }],
+              }}
+              marginBottom={-50}
+              marginTop={0}
+              marginRight={20}
+            >
+              <RestaurantCard
+                restaurantSlug={restaurantSlug}
+                restaurantId={restaurant.id}
+              />
+            </VStack>
+          }
+          below={
+            <Suspense fallback={null}>
+              <RestaurantOverview restaurantSlug={restaurantSlug} />
+              <Spacer size="xl" />
+              <HStack maxHeight={100} overflow="hidden" flexWrap="wrap">
+                <RestaurantTagsRow
+                  size="sm"
+                  restaurantSlug={restaurantSlug}
+                  restaurantId={restaurant.id}
+                  spacing={6}
+                  grid
+                  max={10}
+                />
+              </HStack>
+            </Suspense>
+          }
+        />
+      )
+    }, [restaurantSlug, restaurant.id])
+
     return (
       <>
         <PageTitleTag>
@@ -70,19 +125,6 @@ const RestaurantPage = memo(
         </PageTitleTag>
 
         <ContentScrollView id="restaurant">
-          {/* <LinearGradient
-            colors={[bgLight, 'rgba(255,255,255,0)']}
-            style={[
-              StyleSheet.absoluteFill,
-              {
-                maxHeight: 400,
-                left: -100,
-                right: -100,
-                transform: [{ rotate: '-12.5deg' }, { translateY: -100 }],
-              },
-            ]}
-          /> */}
-
           {/* HEADER */}
           <VStack
             backgroundColor={bgLight}
@@ -96,44 +138,7 @@ const RestaurantPage = memo(
                 </VStack>
               }
             >
-              <RestaurantHeader
-                color={darkBlue}
-                minHeight={450}
-                showImages
-                restaurantSlug={restaurantSlug}
-                after={
-                  <VStack
-                    className="ease-in-out"
-                    hoverStyle={{
-                      transform: [{ scale: 1.0125 }],
-                    }}
-                    marginBottom={-50}
-                    marginTop={0}
-                    marginRight={20}
-                  >
-                    <RestaurantCard
-                      restaurantSlug={restaurantSlug}
-                      restaurantId={restaurant.id}
-                    />
-                  </VStack>
-                }
-                below={
-                  <Suspense fallback={null}>
-                    <RestaurantOverview restaurantSlug={restaurantSlug} />
-                    <Spacer size="xl" />
-                    <HStack maxHeight={100} overflow="hidden" flexWrap="wrap">
-                      <RestaurantTagsRow
-                        size="sm"
-                        restaurantSlug={restaurantSlug}
-                        restaurantId={restaurant.id}
-                        spacing={6}
-                        grid
-                        max={10}
-                      />
-                    </HStack>
-                  </Suspense>
-                }
-              />
+              {headerElement}
             </Suspense>
 
             <Spacer size="lg" />
@@ -142,28 +147,34 @@ const RestaurantPage = memo(
               <SlantedTitle fontWeight="700">Best dishes</SlantedTitle>
             </HStack>
             <Spacer size="xs" />
-            <Suspense
-              fallback={
-                <VStack height={150}>
-                  <LoadingItem />
-                </VStack>
-              }
-            >
-              <RestaurantDishPhotos
-                size={150}
-                max={40}
-                restaurantSlug={restaurantSlug}
-                restaurantId={restaurant.id ?? undefined}
-              />
-            </Suspense>
 
-            <Spacer size="xs" />
+            {/* -1 margin bottom to overlap bottom border */}
+            <VStack marginBottom={-1} position="relative" zIndex={1}>
+              <Suspense
+                fallback={
+                  <VStack height={150}>
+                    <LoadingItem />
+                  </VStack>
+                }
+              >
+                <RestaurantDishPhotos
+                  size={150}
+                  max={40}
+                  restaurantSlug={restaurantSlug}
+                  restaurantId={restaurant.id ?? undefined}
+                  selectable
+                  selected={selectedDish}
+                  onSelect={setSelectedDishToggle}
+                />
+              </Suspense>
+            </VStack>
           </VStack>
 
           <Spacer size="xl" />
 
           <Suspense fallback={null}>
             <RestaurantRatingBreakdown
+              title={selectedDish ?? 'Overview'}
               borderless
               showScoreTable
               restaurantSlug={restaurantSlug}

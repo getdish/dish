@@ -28,12 +28,14 @@ export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
 
 export const RestaurantRatingBreakdown = memo(
   ({
+    title = 'Overview',
     restaurantId,
     restaurantSlug,
     closable,
     borderless,
     showScoreTable,
   }: {
+    title?: string
     restaurantId: string
     restaurantSlug: string
     closable?: boolean
@@ -57,7 +59,7 @@ export const RestaurantRatingBreakdown = memo(
           alignItems="center"
           justifyContent="center"
         >
-          <SlantedTitle fontWeight="700">Overview</SlantedTitle>
+          <SlantedTitle fontWeight="700">{title}</SlantedTitle>
 
           <AbsoluteVStack top={0} right={0}>
             <Suspense fallback={null}>
@@ -107,7 +109,7 @@ export const RestaurantRatingBreakdown = memo(
             borderWidth={1}
             borderColor="#eee"
             padding={10}
-            minWidth={260}
+            minWidth={220}
             margin={10}
             flex={1}
             backgroundColor={bgLight}

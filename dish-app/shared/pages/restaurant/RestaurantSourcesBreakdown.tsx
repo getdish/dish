@@ -58,14 +58,14 @@ export const RestaurantSourcesBreakdown = memo(
               <TableHeadText>Source</TableHeadText>
             </TableCell>
 
-            <TableCell {...col2Props}>
+            {/* <TableCell {...col2Props}>
               <TableHeadText marginRight={5}>Weight</TableHeadText>
               <HelpCircle
                 size={14}
                 color={'rgba(0,0,0,0.3)'}
                 style={{ margin: -2 }}
               />
-            </TableCell>
+            </TableCell> */}
 
             <TableCell {...col3Props}>
               <TableHeadText>Points</TableHeadText>
@@ -97,12 +97,12 @@ export const RestaurantSourcesBreakdown = memo(
                       {info?.name ?? source}
                     </Text>
                   </TableCell>
-
+                  {/*
                   <TableCell {...col2Props}>
                     <Text fontSize={14} opacity={0.65}>
                       {Math.round(i / 4)}
                     </Text>
-                  </TableCell>
+                  </TableCell> */}
 
                   <TableCell {...col3Props}>
                     <Text fontSize={13}>{item['total']}</Text>

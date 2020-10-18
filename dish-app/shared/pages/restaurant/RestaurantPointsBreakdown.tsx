@@ -73,9 +73,9 @@ export const RestaurantPointsBreakdown = memo(
           </Paragraph>
           <Spacer />
           <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
-            {numberFormat(Math.round(reviewsBreakdown['score']))} points from{' '}
+            {numberFormat(Math.round(reviewsBreakdown['score']))} pts from{' '}
             {numberFormat(totalReviews)} reviews and{' '}
-            {numberFormat(Math.round(photosBreakdown['score']))} points from{' '}
+            {numberFormat(Math.round(photosBreakdown['score']))} pts from{' '}
             {photosBreakdown['meeting_criteria_count']} high quality photos.
           </Paragraph>
 
