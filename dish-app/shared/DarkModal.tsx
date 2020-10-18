@@ -2,7 +2,6 @@ import { default as React } from 'react'
 import { ScrollView } from 'react-native'
 import { AbsoluteVStack, AnimatedVStack, VStack } from 'snackui'
 
-import { brandColor } from './colors'
 import { useIsNarrow } from './hooks/useIs'
 
 export const DarkModal = ({
@@ -24,7 +23,7 @@ export const DarkModal = ({
       justifyContent="center"
       paddingHorizontal={isSmall ? 0 : '2%'}
       paddingVertical={isSmall ? 0 : '2%'}
-      backgroundColor="rgba(60,30,50,0.9)"
+      backgroundColor="rgba(0,0,0,0.8)"
       opacity={hide ? 0 : 1}
       pointerEvents={hide ? 'none' : 'auto'}
       transform={[{ translateY: 0 }]}
@@ -40,10 +39,9 @@ export const DarkModal = ({
           flex={1}
           margin={-8}
           borderWidth={1}
-          borderColor={`${brandColor}88`}
           position="relative"
           backgroundColor="#000"
-          borderRadius={12}
+          borderRadius={20}
           shadowColor="rgba(0,0,0,1)"
           shadowRadius={150}
           shadowOffset={{ height: 10, width: 0 }}
@@ -58,8 +56,6 @@ export const DarkModal = ({
           >
             <VStack
               flex={1}
-              paddingVertical={20}
-              paddingHorizontal={5}
               justifyContent="center"
               minHeight="100%"
               alignItems="center"

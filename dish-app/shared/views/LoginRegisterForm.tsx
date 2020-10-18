@@ -119,7 +119,9 @@ export const LoginRegisterForm = ({
     <VStack alignItems="center">
       {isWeb && (
         <>
-          <SignInAppleButton />
+          <VStack transform={[{ scale: 0.75 }]}>
+            <SignInAppleButton />
+          </VStack>
           <Spacer />
           <HStack width="100%" alignItems="center">
             <VStack
@@ -227,7 +229,7 @@ export const LoginRegisterForm = ({
 
           {!isRegister && (
             <HStack alignSelf="flex-end">
-              <Text fontSize={16}>
+              <Text fontSize={14}>
                 <Link name="forgotPassword">Forgot password?</Link>{' '}
               </Text>
             </HStack>

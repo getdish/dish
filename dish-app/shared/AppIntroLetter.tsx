@@ -6,12 +6,27 @@ import {
   useLayoutEffect,
   useState,
 } from 'react'
-import { Image } from 'react-native'
-import { AbsoluteVStack, Paragraph, Spacer, Text, VStack } from 'snackui'
+import { Image, StyleSheet } from 'react-native'
+import { Line } from 'react-native-svg'
+import {
+  AbsoluteVStack,
+  LinearGradient,
+  Paragraph,
+  Spacer,
+  Text,
+  VStack,
+} from 'snackui'
 
 // @ts-ignore
 import dishNeon from './assets/dish-neon.jpg'
-import { brandColorLighter, lightGreen, lightYellow, yellow } from './colors'
+import {
+  brandColorLighter,
+  lightGreen,
+  lightPurple,
+  lightYellow,
+  purple,
+  yellow,
+} from './colors'
 import { DarkModal } from './DarkModal'
 import { useOvermind } from './state/om'
 import { UserOnboard } from './UserOnboard'
@@ -66,7 +81,7 @@ export const AppIntroLetter = memo(() => {
             zIndex={1000}
             top={15}
             right={15}
-            opacity={0.9}
+            opacity={0.5}
             backgroundColor="transparent"
             onPress={() => {
               store.setHidden(true)
@@ -77,14 +92,14 @@ export const AppIntroLetter = memo(() => {
             right={-20}
             transform={[{ rotate: '-10deg' }]}
           >
-            <Text fontSize={60}>🌮</Text>
+            <Text fontSize={70}>🌮</Text>
           </AbsoluteVStack>
           <AbsoluteVStack
             bottom={-20}
             left={-20}
             transform={[{ rotate: '10deg' }]}
           >
-            <Text fontSize={60}>🍜</Text>
+            <Text fontSize={70}>🍜</Text>
           </AbsoluteVStack>
         </>
       }
@@ -118,65 +133,85 @@ export const AppIntroLogin = memo(() => {
   const store = useStore(IntroModal)
   return (
     <>
-      <VStack spacing="lg" alignItems="center" width="100%">
+      <VStack
+        overflow="hidden"
+        borderRadius={20}
+        spacing="xl"
+        alignItems="center"
+        width="100%"
+      >
         <Image
           source={{ uri: dishNeon }}
           style={{
-            marginTop: -20,
-            marginBottom: -40,
-            width: 261 * 1,
-            height: 161 * 1,
+            marginTop: -70,
+            marginBottom: -110,
+            marginRight: -20,
+            width: 261 * 3,
+            height: 161 * 3,
+            transform: [{ rotate: '10deg' }],
+            zIndex: -2,
+            position: 'relative',
           }}
+        />
+        <LinearGradient
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              zIndex: -1,
+            },
+          ]}
+          colors={['rgba(0,0,0,0)', '#E2A5D922']}
         />
 
         <Paragraph
-          color="rgba(255,255,255,0.6)"
+          color="#fff"
           zIndex={10}
           textAlign="center"
           fontWeight="300"
-          size={1.2}
+          size={2}
         >
-          the better restaurant recommender
+          <Text opacity={0.5}>the</Text>
+          <Text>fun</Text>
+          <Text opacity={0.5}>food</Text>
+          <Text>pokédex</Text>
         </Paragraph>
 
         <Paragraph
-          color="rgba(255,255,255,0.8)"
+          color="#E2A5D9"
+          paddingHorizontal="3%"
+          maxWidth={320}
           fontWeight="500"
-          paddingHorizontal="2%"
-          sizeLineHeight={1.02}
+          size="xl"
           textAlign="center"
         >
-          Bring fun to exploring the world.
+          better rankings
           <br />
-          A&nbsp;community finding
-          <LinkButton
-            display="inline"
-            fontSize={16}
-            marginLeft={5}
-            lineHeight={26}
-            paddingVertical={2}
-            borderRadius={8}
-            paddingHorizontal={8}
-            color={yellow}
-            backgroundColor={`${lightYellow}22`}
-            fontWeight="400"
-            hoverStyle={{
-              backgroundColor: `${lightYellow}33`,
-            }}
-            name="about"
-            onPressOut={() => {
-              store.setHidden(true)
-            }}
-          >
-            hidden gems 💎
-          </LinkButton>
+          ratings down to the dish
+          <br />
+          search every delivery spot at once
         </Paragraph>
 
-        <Spacer size="xs" />
+        <LinkButton
+          display="inline"
+          fontSize={18}
+          paddingVertical={4}
+          borderRadius={8}
+          paddingHorizontal={6}
+          color={lightYellow}
+          backgroundColor={`${lightYellow}22`}
+          fontWeight="700"
+          hoverStyle={{
+            backgroundColor: `${lightYellow}33`,
+          }}
+          name="about"
+          onPressOut={() => {
+            store.setHidden(true)
+          }}
+        >
+          learn more
+        </LinkButton>
 
-        {/* <Text color="rgba(255,255,255,0.4)" fontSize={16} fontWeight="600">
-          early access
-        </Text> */}
+        <Spacer size="xs" />
 
         <LoginRegisterForm />
       </VStack>

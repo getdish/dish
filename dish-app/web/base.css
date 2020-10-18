@@ -201,6 +201,7 @@ textarea {
 }
 
 ::placeholder {
+  color: rgba(200, 200, 200, 0.5);
   text-overflow: ellipsis;
 }
 
