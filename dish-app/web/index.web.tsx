@@ -1,3 +1,4 @@
+import './whydidyourender'
 import './start'
 import './base.css'
 import './bootstrapEnv'

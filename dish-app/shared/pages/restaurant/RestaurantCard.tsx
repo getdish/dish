@@ -62,7 +62,7 @@ export const RestaurantCardContent = memo(
 
       return (
         <CardFrame>
-          <VStack borderRadius={borderRadius - 2} overflow="hidden">
+          <VStack borderRadius={borderRadius - 2}>
             <VStack
               className="safari-overflow-fix"
               width="100%"
@@ -103,7 +103,7 @@ export const RestaurantCardContent = memo(
             >
               <AbsoluteVStack top={-10} left={-10} zIndex={20}>
                 <RestaurantRatingView
-                  size="md"
+                  size="lg"
                   restaurantSlug={restaurantSlug}
                 />
               </AbsoluteVStack>

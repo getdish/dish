@@ -2,8 +2,8 @@ import { Review, reviewUpsert } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Store, useStore, useStoreSelector } from '@dish/use-store'
 import { sleep } from '@o/async'
-import { useEffect, useState } from 'react'
-import { Toast } from 'snackui'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Toast, useGet } from 'snackui'
 
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { allTags } from '../state/allTags'
@@ -47,6 +47,7 @@ export const useUserUpvoteDownvoteQuery = (
   const [votes] = useUserTagVotes(restaurantId)
   const vote = getTagUpvoteDownvote(votes, activeTags)
   const tagKeyList = Object.keys(activeTags).filter((x) => activeTags[x])
+  const getTagKeyList = useGet(tagKeyList)
   const voteStores = {}
   for (const key of tagKeyList) {
     voteStores[key] = useStore(UserVotes, { key: `${key}${restaurantId}` })
@@ -57,20 +58,22 @@ export const useUserUpvoteDownvoteQuery = (
     setStoreVotes(voteStores, vote)
   }, [vote])
 
+  const setVote = useCallback(async (vote: VoteNumber) => {
+    if (omStatic.actions.home.promptLogin()) {
+      return
+    }
+    setStoreVotes(voteStores, vote)
+    const tagsList = getTagKeyList().map((id) => allTags[id])
+    const saved = await voteForTags(restaurantId, userId, tagsList, vote)
+    if (saved?.length) {
+      Toast.show(`Saved`)
+    }
+  }, [])
+
   return {
     votes,
     vote: userVote ?? vote,
-    setVote: async (vote: VoteNumber) => {
-      if (omStatic.actions.home.promptLogin()) {
-        return
-      }
-      setStoreVotes(voteStores, vote)
-      const tagsList = tagKeyList.map((id) => allTags[id])
-      const saved = await voteForTags(restaurantId, userId, tagsList, vote)
-      if (saved?.length) {
-        Toast.show(`Saved`)
-      }
-    },
+    setVote,
   }
 }
 

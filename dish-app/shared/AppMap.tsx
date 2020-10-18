@@ -303,68 +303,63 @@ const AppMapContent = memo(function AppMap({
     [isSmall]
   )
 
-  const handleDoubleClick = useCallback(
-    (id) => {
+  const getRestaurants = useGet(restaurants)
+
+  const handleDoubleClick = useCallback((id) => {
+    const restaurant = getRestaurants()?.find((x) => x.id === id)
+    if (restaurant) {
+      router.navigate({
+        name: 'restaurant',
+        params: {
+          slug: restaurant.slug,
+        },
+      })
+    }
+  }, [])
+
+  const handleHover = useCallback((id) => {
+    if (id == null) {
+      om.actions.home.setHoveredRestaurant(null)
+      return
+    }
+    const { hoveredRestaurant } = omStatic.state.home
+    const restaurants = getRestaurants()
+    if (!hoveredRestaurant || id !== hoveredRestaurant?.id) {
       const restaurant = restaurants?.find((x) => x.id === id)
       if (restaurant) {
-        router.navigate({
-          name: 'restaurant',
-          params: {
-            slug: restaurant.slug,
-          },
+        om.actions.home.setHoveredRestaurant({
+          id: restaurant.id,
+          slug: restaurant.slug,
         })
-      }
-    },
-    [restaurants]
-  )
-
-  const handleHover = useCallback(
-    (id) => {
-      if (id == null) {
-        om.actions.home.setHoveredRestaurant(null)
-        return
-      }
-      const { hoveredRestaurant } = omStatic.state.home
-      if (!hoveredRestaurant || id !== hoveredRestaurant?.id) {
-        const restaurant = restaurants?.find((x) => x.id === id)
-        if (restaurant) {
-          om.actions.home.setHoveredRestaurant({
-            id: restaurant.id,
-            slug: restaurant.slug,
-          })
-        } else {
-          console.warn('not found?', restaurants, id)
-        }
-      }
-    },
-    [restaurants]
-  )
-
-  const handleSelect = useCallback(
-    (id) => {
-      const restaurant = restaurants?.find((x) => x.id === id)
-      if (!restaurant) {
-        console.warn('not found', id)
-        return
-      }
-      if (omStatic.state.home.currentStateType === 'search') {
-        if (id !== omStatic.state.home.selectedRestaurant?.id) {
-          om.actions.home.setSelectedRestaurant({
-            id: restaurant.id,
-            slug: restaurant.slug ?? '',
-          })
-        }
       } else {
-        router.navigate({
-          name: 'restaurant',
-          params: {
-            slug: restaurant.slug,
-          },
+        console.warn('not found?', restaurants, id)
+      }
+    }
+  }, [])
+
+  const handleSelect = useCallback((id) => {
+    const restaurants = getRestaurants()
+    const restaurant = restaurants?.find((x) => x.id === id)
+    if (!restaurant) {
+      console.warn('not found', id)
+      return
+    }
+    if (omStatic.state.home.currentStateType === 'search') {
+      if (id !== omStatic.state.home.selectedRestaurant?.id) {
+        om.actions.home.setSelectedRestaurant({
+          id: restaurant.id,
+          slug: restaurant.slug ?? '',
         })
       }
-    },
-    [restaurants]
-  )
+    } else {
+      router.navigate({
+        name: 'restaurant',
+        params: {
+          slug: restaurant.slug,
+        },
+      })
+    }
+  }, [])
 
   return (
     <AbsoluteVStack

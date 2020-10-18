@@ -36,7 +36,7 @@ export const RatingView = forwardRef(
 
     // size!
     let size =
-      sizeIn == 'xs' ? 32 : sizeIn === 'sm' ? 38 : sizeIn == 'md' ? 44 : 52
+      sizeIn == 'xs' ? 32 : sizeIn === 'sm' ? 38 : sizeIn == 'md' ? 48 : 62
 
     const badgeOffset =
       sizeIn === 'xs' || sizeIn === 'sm' ? Math.max(-size * 0.0025, -3) : 0
@@ -54,23 +54,23 @@ export const RatingView = forwardRef(
       <HStack>
         <Text
           fontSize={Math.max(12, size * 0.65)}
-          fontWeight={subtle ? '300' : '400'}
+          fontWeight={subtle ? '300' : '600'}
           color={color}
           textAlign="center"
         >
           {rankingPre}
         </Text>
-        {!!rankingPost && !hideDecimal && (
+        {/* {!!rankingPost && !hideDecimal && (
           <Text
             fontWeight="500"
             marginTop="25%"
-            fontSize={size * 0.25}
-            letterSpacing={-1}
+            fontSize={size * 0.34}
+            letterSpacing={-1 * size}
             opacity={(1 / size) * 10}
           >
             {rankingPost}
           </Text>
-        )}
+        )} */}
       </HStack>
     )
 

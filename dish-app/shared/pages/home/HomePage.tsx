@@ -9,7 +9,14 @@ import {
 import { ChevronRight } from '@dish/react-feather'
 import { fullyIdle, series, sleep } from '@o/async'
 import _, { sortBy, uniqBy } from 'lodash'
-import { default as React, Suspense, memo, useEffect, useState } from 'react'
+import {
+  default as React,
+  Suspense,
+  memo,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { Dimensions, ScrollView, StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
@@ -343,6 +350,55 @@ const dishHeight = 130
 
 const TopDishesCuisineItem = memo(
   ({ country, index }: { index: number; country: TopCuisine }) => {
+    const countryDishes = useMemo(() => {
+      return (country.dishes || []).slice(0, 12).map((top_dish, index) => {
+        return (
+          <HStack
+            transform={[{ translateY: index % 2 == 0 ? -3 : 3 }]}
+            hoverStyle={{
+              zIndex: 1000,
+            }}
+            key={index}
+          >
+            <DishView
+              size={dishHeight}
+              isFallback
+              dish={top_dish}
+              cuisine={{
+                id: country.country,
+                name: country.country,
+                type: 'country',
+              }}
+            />
+
+            {/* Shows top restaurants per-dish */}
+            {/* <VStack>
+            {top_dish.best_restaurants?.map((restaurant) => {
+              if (!restaurant.slug) {
+                return null
+              }
+              return (
+                <VStack key={restaurant.slug}>
+                  <RestaurantButton
+                    restaurantSlug={restaurant.slug}
+                    subtle
+                    onHoverIn={() => {
+                      // lastHoveredId = restaurant.id
+                      // setHoveredRestaurant({
+                      //   id: restaurant.id,
+                      //   slug: restaurant.slug,
+                      // })
+                    }}
+                  />
+                </VStack>
+              )
+            })}
+          </VStack> */}
+          </HStack>
+        )
+      })
+    }, [country.dishes])
+
     return (
       <VStack className="home-top-dish" position="relative">
         {index % 2 !== 0 && (
@@ -418,52 +474,7 @@ const TopDishesCuisineItem = memo(
                 <TopDishesTrendingRestaurants country={country} />
               </VStack>
 
-              {(country.dishes || []).slice(0, 12).map((top_dish, index) => {
-                return (
-                  <HStack
-                    transform={[{ translateY: index % 2 == 0 ? -3 : 3 }]}
-                    hoverStyle={{
-                      zIndex: 1000,
-                    }}
-                    key={index}
-                  >
-                    <DishView
-                      size={dishHeight}
-                      isFallback
-                      dish={top_dish}
-                      cuisine={{
-                        id: country.country,
-                        name: country.country,
-                        type: 'country',
-                      }}
-                    />
-
-                    {/* Shows top restaurants per-dish */}
-                    {/* <VStack>
-                    {top_dish.best_restaurants?.map((restaurant) => {
-                      if (!restaurant.slug) {
-                        return null
-                      }
-                      return (
-                        <VStack key={restaurant.slug}>
-                          <RestaurantButton
-                            restaurantSlug={restaurant.slug}
-                            subtle
-                            onHoverIn={() => {
-                              // lastHoveredId = restaurant.id
-                              // setHoveredRestaurant({
-                              //   id: restaurant.id,
-                              //   slug: restaurant.slug,
-                              // })
-                            }}
-                          />
-                        </VStack>
-                      )
-                    })}
-                  </VStack> */}
-                  </HStack>
-                )
-              })}
+              {countryDishes}
               <LinkButton
                 className="see-through"
                 width={dishHeight * 0.8}
