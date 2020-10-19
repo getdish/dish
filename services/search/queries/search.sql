@@ -220,16 +220,49 @@ final AS (
     FROM main
   ) s
   ORDER BY (restaurant_rank_score + rishes_rank_score) DESC
+),
+
+tag_matches AS (
+  SELECT tag.id AS tag_id, tag.name AS name, parent.name AS cuisine FROM tag
+    JOIN tag parent ON tag."parentId" = parent.id
+    WHERE ?3 != ''
+    AND
+    (
+      LOWER(?3) = LOWER(tag.name)
+      -- TODO wait for all alternates to be JSON
+      -- OR
+      -- LOWER(?3) = ANY(
+        -- SELECT LOWER(
+          -- jsonb_array_elements_text(
+            -- alternates
+          -- )
+        -- )
+      -- )
+    )
 )
 
-SELECT jsonb_agg(
-  json_build_object(
-    'id', final.restaurant_id,
-    'slug', final.slug,
-    'restaurant_rank', final.restaurant_rank,
-    'restaurant_rank_score', final.restaurant_rank_score,
-    'rish_rank', final.rishes_rank,
-    'rish_rank_score', final.rishes_rank_score
+SELECT json_build_object(
+  'restaurants', (
+    SELECT jsonb_agg(
+      json_build_object(
+        'id', final.restaurant_id,
+        'slug', final.slug,
+        'restaurant_rank', final.restaurant_rank,
+        'restaurant_rank_score', final.restaurant_rank_score,
+        'rish_rank', final.rishes_rank,
+        'rish_rank_score', final.rishes_rank_score
+      )
+    ) FROM final
+    LIMIT ?5
+  ),
+  'tags', (
+    SELECT jsonb_agg(
+      json_build_object(
+        'id', tag_matches.tag_id,
+        'name', tag_matches.name,
+        'cuisine', tag_matches.cuisine
+      )
+    ) FROM tag_matches
+    LIMIT ?5
   )
-) FROM final
-LIMIT ?5
+)

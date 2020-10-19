@@ -28,8 +28,9 @@ export async function search({
   const url = SEARCH_DOMAIN + '/search?' + params.join('&')
   const x = Date.now()
   const response = await fetch(url).then((res) => res.json())
-  console.log('search', Date.now() - x + 'ms', url, response.length)
-  return response
+  const results = response.restaurants
+  console.log('search', Date.now() - x + 'ms', url, results.length)
+  return results
 }
 
 export async function getHomeDishes(
