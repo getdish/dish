@@ -40,17 +40,15 @@ export const DishLogoButton = memo(() => {
         <Logo />
       </LinkButton>
       <AbsoluteVStack
-        pointerEvents="none"
+        pointerEvents={isReallySmall ? 'auto' : 'none'}
         fullscreen
         alignItems="center"
         justifyContent="center"
+        transform={[{ translateY: -2 }]}
+        {...logoStyles.reallySmall}
         zIndex={-1}
       >
-        <LinkButton
-          {...linkButtonProps}
-          {...logoStyles.reallySmall}
-          opacity={!isReallySmall ? 0 : 1}
-        >
+        <LinkButton {...linkButtonProps} opacity={!isReallySmall ? 0 : 1}>
           <LogoSmall />
         </LinkButton>
       </AbsoluteVStack>
