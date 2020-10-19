@@ -701,7 +701,7 @@ function _buildkit_build() {
       --opt build-arg:DISH_BASE_VERSION=$dish_base_version \
       --export-cache type=registry,ref=$name-buildcache \
       --import-cache type=registry,ref=$name-buildcache \
-      --output type=$type,name=$name$push | $output | >$redirect
+      --output type=$type,name=$name$push | $output | cat - >$redirect
   echo "\`buildctl\` ($name) exited with: $?"
 }
 
