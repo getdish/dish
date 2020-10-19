@@ -1,4 +1,4 @@
-- fix latest build issue
+✔️ fix latest build issue
 - ratio more important in ranking (not popularity contest)
 - fix yelp not crawling all reviews (slugs: coqueta, mong-thu-cafe)
 - add test case for lily image tag matching:
@@ -6,28 +6,6 @@
 - take a deep dive fixing crawl:
   - look at memory issues, really take a deep dive for one day
   - try and bring down cost
-
-
-- incorporate popular tags and high/low sentiment, high/low tag-mentioning reviews into restaurant.summaries (edit)
-  - specifically, should be separate from "summary" ("ratings_summary" may be fine)
-  - should return an object like so:
-
-```
-{
-  "yelp": {
-    "vibe": {
-      "points": 100,
-      "positive": "",
-      "negative": "",
-    },
-    ...otherTags
-  },
-  ...otherSources
-}
-```
-
-Notes:
-  - Avoid having this get to be too huge, limit number of tags, limit length of highlighted sentence
 
 - redo GPT3 summaries
   - table style:
@@ -47,7 +25,7 @@ Notes:
 - explore the ongoing memory issues with the internal crawler
 - look into empty restaurant.headlines bug
 - google crawler
-- crawl new cities in san fran area
+✔️ crawl new cities in san fran area
 - recrawl internal merge for sanfran
 - improve local dev setup (edited)
 - when i search for nopalito to try and find the restaurant with that name that has gpt3 - i think we can safely say "near exact match names" can rank highly for plain (non-tag) search http://d1live.com/gems/san-francisco/-/nopalito
