@@ -35,6 +35,7 @@ COPY ava.config.js .
 COPY packages packages
 COPY services services
 COPY dish-app dish-app
+COPY snackui snackui
 
 RUN yarn build
 
