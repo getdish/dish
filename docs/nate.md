@@ -1,4 +1,4 @@
-- thorough runthrough of scrolling/map/mobile fixes
+- [admin] alternates are being set as stringified json not just json
   - overall just runthrough everything a few times and fix a lot
   - scrolling horizontal should disable vertical drag
 - show the current selected lense (just icon, votable) at front of tagrow in listitem

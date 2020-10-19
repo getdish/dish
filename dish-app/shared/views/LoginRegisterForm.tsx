@@ -119,7 +119,7 @@ export const LoginRegisterForm = ({
     <VStack alignItems="center">
       {isWeb && (
         <>
-          <VStack transform={[{ scale: 0.75 }]}>
+          <VStack transform={[{ scale: 0.8 }]}>
             <SignInAppleButton />
           </VStack>
           <Spacer />

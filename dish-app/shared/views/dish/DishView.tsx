@@ -124,10 +124,10 @@ export const DishView = memo(
           width={width}
           height={height}
           borderRadius={borderRadius}
-          isHovered={isActive}
+          isHovered={isHovered}
           backgroundColor={backgroundColor}
-          borderColor="transparent"
-          borderWidth={1}
+          borderColor={selected ? '#000' : 'transparent'}
+          borderWidth={2}
           outside={
             <HStack
               className="ease-in-out"

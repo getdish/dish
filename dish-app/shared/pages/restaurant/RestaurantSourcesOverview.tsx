@@ -42,7 +42,10 @@ export const RestaurantSourcesOverview = graphql(
                 margin={spacing}
                 position="relative"
               >
-                <SmallTitle>{name}</SmallTitle>
+                <SmallTitle color="#000" divider="off" fontSize={20}>
+                  {name}
+                </SmallTitle>
+                <Spacer size="sm" />
                 <AbsoluteVStack top={-10} right={-10}>
                   <Image
                     source={{ uri: image }}
@@ -56,7 +59,7 @@ export const RestaurantSourcesOverview = graphql(
                 <Spacer />
                 <HStack justifyContent="center">
                   <SentimentText sentiment={1}>Positive</SentimentText>
-                  <Spacer />
+                  <Spacer size="xs" />
                   <SentimentText sentiment={-1}>Negative</SentimentText>
                 </HStack>
                 <Spacer />

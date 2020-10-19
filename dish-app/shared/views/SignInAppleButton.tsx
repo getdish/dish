@@ -20,9 +20,9 @@ export const SignInAppleButton = () => {
         }, 3000)
         await sleep(40)
         const { auth } = require('../../web/apple-sign-in')
-        const res = auth.signIn()
-        if (!res) return // in-browser
         try {
+          const res = await auth.signIn()
+          if (!res) return // in-browser
           const { authorization } = await res
           const [status] = await Auth.appleAuth(authorization)
           if (status == 200) {

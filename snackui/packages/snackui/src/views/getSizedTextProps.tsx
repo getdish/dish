@@ -14,7 +14,7 @@ export const getSizedTextProps = ({
   const sizeAmt = getSize(size)
   // get a little less spaced as we go higher
   const lineHeightScaleWithSize = -(2 - sizeAmt) * 0.6
-  const lineHeight = (26.5 + lineHeightScaleWithSize) * sizeAmt * sizeLineHeight
+  const lineHeight = (26 + lineHeightScaleWithSize) * sizeAmt * sizeLineHeight
   return {
     fontSize: 16 * sizeAmt,
     lineHeight,

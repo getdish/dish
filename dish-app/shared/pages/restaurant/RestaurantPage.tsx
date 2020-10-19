@@ -141,15 +141,19 @@ const RestaurantPage = memo(
               {headerElement}
             </Suspense>
 
-            <Spacer size="lg" />
-
+            {/* <Spacer size="sm" /> */}
+            {/*
             <HStack justifyContent="center">
               <SlantedTitle fontWeight="700">Best dishes</SlantedTitle>
-            </HStack>
-            <Spacer size="xs" />
+            </HStack> */}
 
             {/* -1 margin bottom to overlap bottom border */}
-            <VStack marginBottom={-1} position="relative" zIndex={1}>
+            <VStack
+              marginTop={-10}
+              marginBottom={-1}
+              position="relative"
+              zIndex={1}
+            >
               <Suspense
                 fallback={
                   <VStack height={150}>
