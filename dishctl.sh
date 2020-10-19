@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -o pipefail
 
  #Does this put our `set -e` into all the functions?
 export SHELLOPTS
@@ -671,16 +672,17 @@ function yaml_to_env() {
 }
 
 function _buildkit_build() {
-  set -e
   dockerfile_path=$2
   name=$3
   dish_base_version=${4:-$DOCKER_TAG_NAMESPACE}
   context=${5:-.}
   if [[ "$1" == "pull" ]]; then
     output="docker load"
+    redirect="/dev/stdout"
     type="docker"
   else
-    output="true"
+    output="cat -"
+    redirect="/dev/null"
     push=",push=true"
     type="image"
   fi
@@ -699,7 +701,7 @@ function _buildkit_build() {
       --opt build-arg:DISH_BASE_VERSION=$dish_base_version \
       --export-cache type=registry,ref=$name-buildcache \
       --import-cache type=registry,ref=$name-buildcache \
-      --output type=$type,name=$name$push | $output
+      --output type=$type,name=$name$push | $output | >$redirect
   echo "\`buildctl\` ($name) exited with: $?"
 }
 
