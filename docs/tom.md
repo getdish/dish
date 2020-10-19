@@ -1,3 +1,13 @@
+- fix latest build issue
+- ratio more important in ranking (not popularity contest)
+- fix yelp not crawling all reviews (slugs: coqueta, mong-thu-cafe)
+- add test case for lily image tag matching:
+  - https://www.yelp.com/biz/lily-san-francisco
+- take a deep dive fixing crawl:
+  - look at memory issues, really take a deep dive for one day
+  - try and bring down cost
+
+
 - incorporate popular tags and high/low sentiment, high/low tag-mentioning reviews into restaurant.summaries (edit)
   - specifically, should be separate from "summary" ("ratings_summary" may be fine)
   - should return an object like so:
@@ -20,7 +30,9 @@ Notes:
   - Avoid having this get to be too huge, limit number of tags, limit length of highlighted sentence
 
 - redo GPT3 summaries
-      
+  - table style:
+    - | dish | rating | short summary |
+
 - improve images:
   - we really need to fix our "deepest" flow, images/gallery, but in order to fix it really we need to match a lot more images to dishes.
     - how do we query for dish images? and then be able to get the "rest" of the images in a clean way (non-dish-images)? we may want to think/iterate here
