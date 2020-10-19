@@ -132,7 +132,6 @@ export class Tagging {
   }
 
   async getRankForTag(tag_id: string) {
-    console.log(tag_id)
     const RADIUS = 0.1
     const query = `
       SELECT * FROM (

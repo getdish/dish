@@ -35,25 +35,26 @@ export function isPresent<T extends Object>(
 // entire scoring system. Any changes to it could potentially alter the scores
 // for all restaurants and rishes.
 export async function fetchBertSentiment(sentence: string) {
-  return fetch(
-    `https://bert.k8s.dishapp.com/?text="${encodeURIComponent(sentence)}"`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
+  const url = `https://bert.k8s.dishapp.com/?text=${encodeURIComponent(
+    sentence
+  )}`
+  return fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
     .then((res) => res.json())
     .then((x) => x)
 }
 
 export function bertResultToNumber(bert_sentiment: [string, number]) {
-  const score = bert_sentiment[1]
+  const confidence = bert_sentiment[1]
+  if (confidence < 0.9) return 0
   switch (bert_sentiment[0]) {
     case 'Positive':
-      return 1 * score
+      return 1 * confidence
     case 'Negative':
-      return -1 * score
+      return -1 * confidence
     default:
       return 0
   }
@@ -68,11 +69,12 @@ export async function fetchBertSentimentNumber(text: string) {
 export function doesStringContainTag(text: string, tag: Tag) {
   const tag_names = [tag.name, ...(tag.alternates || [])]
   for (const tag_name of tag_names) {
-    const regex = new RegExp(`\\b${tag_name}\\b`, 'i')
     let is_found = false
     try {
+      const regex = new RegExp(`\\b${tag_name}\\b`, 'i')
       is_found = regex.test(text)
     } catch (e) {
+      console.log('Tag has bad characters for regex: ' + tag_name, tag.id)
       console.error(e)
       return false
     }

@@ -83,7 +83,7 @@ test('Review analyzer', async (t) => {
   const analysis = JSON.parse(text)
   t.deepEqual(analysis.sentences, [
     {
-      score: 0.9998691082000732,
+      score: 0.9998608827590942,
       sentence: 'Test tag is amazing',
       tags: ['Test tag'],
     },

@@ -39,6 +39,7 @@
   - this is because of the full-text search across reviews and menu_items tables. there's a
     a bit of research i could to improve the index. but maybe we need to look at a dedicated
     full-text engine. but remember that searching for tags is still as fast as ever
+- ensure all review pages are crawled, don't let OOM-caused job stalls prevent job retries
 
 ## Indexing
 
