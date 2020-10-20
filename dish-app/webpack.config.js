@@ -29,7 +29,12 @@ const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
 const isProduction = process.env.NODE_ENV === 'production'
 // const isClient = TARGET === 'client'
 const isSSR = TARGET === 'ssr'
-// const isHot = !isProduction
+const isHot =
+  !isProduction &&
+  !isSSR &&
+  !isSSRClient &&
+  TARGET !== 'worker' &&
+  target !== 'node'
 const isStaticExtracted = !process.env.NO_EXTRACT
 
 const hashFileNamePart = isProduction ? '[contenthash]' : '[hash]'
@@ -61,8 +66,6 @@ module.exports = function getWebpackConfig(
       entry: {
         main: appEntry,
       },
-      // webpack5
-      // isHot && '@webhotelier/webpack-fast-refresh/runtime.js',
       output: {
         path: path.resolve(__dirname),
         filename: `static/js/app.${hashFileNamePart}.js`,
@@ -137,12 +140,13 @@ module.exports = function getWebpackConfig(
                 use: [
                   {
                     loader: 'babel-loader',
-                    options: { cacheDirectory: true },
+                    options: {
+                      cacheDirectory: true,
+                      plugins: [
+                        isHot && require.resolve('react-refresh/babel'),
+                      ].filter(Boolean),
+                    },
                   },
-                  // webpack 5
-                  // isHot && {
-                  //   loader: '@webhotelier/webpack-fast-refresh/loader.js',
-                  // },
                   isStaticExtracted && {
                     loader: require.resolve('snackui-static/loader'),
                     options: {
@@ -254,18 +258,6 @@ module.exports = function getWebpackConfig(
           template: path.join(__dirname, 'web/index.html'),
         }),
 
-        // webpack 5
-        // env.mode === 'development' &&
-        //   TARGET !== 'worker' &&
-        //   new ReactRefreshPlugin(),
-
-        env.mode === 'development' &&
-          TARGET !== 'worker' &&
-          !isSSRClient &&
-          new ReactRefreshWebpack4Plugin({
-            overlay: false,
-          }),
-
         !!process.env.INSPECT &&
           new DuplicatesPlugin({
             emitErrors: false,
@@ -287,6 +279,12 @@ module.exports = function getWebpackConfig(
           // set the current working directory for displaying module paths
           cwd: process.cwd(),
         }),
+
+        isHot &&
+          new ReactRefreshWebpack4Plugin({
+            overlay: false,
+            exclude: /gqless|bootstrap|react-refresh/,
+          }),
       ].filter(Boolean),
 
       // webpack 4
@@ -299,7 +297,7 @@ module.exports = function getWebpackConfig(
         // It will still show compile warnings and errors with this setting.
         clientLogLevel: 'none',
         contentBase: path.join(__dirname, 'web'),
-        hot: !isProduction,
+        hot: isHot,
         historyApiFallback: {
           disableDotRule: true,
         },

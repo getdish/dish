@@ -202,7 +202,7 @@
     "react-native-svg-app-icon": "^0.2.0",
     "metro-react-native-babel-preset": "^0.62.0",
     "@loadable/webpack-plugin": "^5.13.0",
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.4.1",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.4.2",
     "@types/jsdom": "^16.2.0",
     "@types/lodash": "^4.14.155",
     "@types/mapbox-gl": "1.11.2",
