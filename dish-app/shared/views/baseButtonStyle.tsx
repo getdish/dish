@@ -5,7 +5,8 @@ import { bgLight, bgLightHover } from '../colors'
 
 export const baseButtonStyle: ViewStyle = {
   // @ts-ignore
-  cursor: 'pointer',
+  // I disabled this get Android working
+  //cursor: 'pointer',
   paddingVertical: 5,
   paddingHorizontal: 8,
   borderRadius: 5,
