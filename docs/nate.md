@@ -1,7 +1,6 @@
 - other lense tags:
-  - family run
+  - "family run"
 
-- update search to use new endpoint
 - [admin] alternates are being set as stringified json not just json
   - overall just runthrough everything a few times and fix a lot
   - scrolling horizontal should disable vertical drag

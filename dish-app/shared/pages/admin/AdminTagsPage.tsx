@@ -429,25 +429,26 @@ const TagEdit = memo(
     if (tagStore.selectedId) {
       const tag = queryTag(tagStore.selectedId)
       console.log('got now', tag)
+      const fullTag = {
+        id: tagStore.selectedId,
+        name: tag.name,
+        type: tag.type,
+        parentId: tag.parentId,
+        icon: tag.icon,
+        alternates: parseJSONB(tag.alternates() ?? []),
+      }
       return (
         <TagCRUD
           key={tagStore.selectedId}
-          tag={{
-            id: tagStore.selectedId,
-            name: tag.name,
-            type: tag.type,
-            parentId: tag.parentId,
-            icon: tag.icon,
-            alternates: parseJSONB(tag.alternates() ?? []),
-          }}
-          onChange={(x) => {
-            for (const key in x) {
-              tag[key] = x[key]
-            }
-            clearTimeout(refetchTm.current)
-            refetchTm.current = setTimeout(() => {
-              refetch(tag)
-            }, 2000)
+          tag={fullTag}
+          onChange={async (x) => {
+            await tagUpsert([
+              {
+                ...fullTag,
+                ...x,
+              },
+            ])
+            refetch(tag)
             Toast.show('Saved')
           }}
         />
