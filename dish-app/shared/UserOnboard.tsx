@@ -1,5 +1,5 @@
-import { AUTH_IMAGE_UPLOAD_ENDPOINT, Auth, graphql } from '@dish/graph'
-import { default as React, useRef, useState } from 'react'
+import { Auth, graphql } from '@dish/graph'
+import { default as React, useEffect, useRef, useState } from 'react'
 import { Image } from 'react-native'
 import {
   HStack,
@@ -31,6 +31,32 @@ export const UserOnboard = graphql(({ hideLogo }: { hideLogo?: boolean }) => {
   const [charIndex, setCharIndex] = useState(0)
   const username = om.state.user.user?.username ?? ''
   const user = useUserQuery(username)
+  const inputAvatar = useRef(null)
+
+  useEffect(() => {
+    const handleUpload = async () => {
+      const form = imageFormRef.current!
+      const formData = new FormData(form)
+      try {
+        const avatar = await Auth.uploadAvatar(formData)
+        console.log('avatar', avatar)
+        if (avatar) {
+          user.avatar = avatar
+          Toast.show('Saved image!')
+        } else {
+          Toast.show('Error saving  image!', { type: 'error' })
+        }
+      } catch (err) {
+        Toast.show('Error saving image')
+      }
+    }
+
+    // fixes safari not working with onChange={}
+    inputAvatar.current.addEventListener('change', handleUpload)
+    return () => {
+      inputAvatar.current.removeEventListener('change', handleUpload)
+    }
+  }, [])
 
   return (
     <>
@@ -77,27 +103,12 @@ export const UserOnboard = graphql(({ hideLogo }: { hideLogo?: boolean }) => {
             <input type="hidden" name="username" value={username} />
             <label htmlFor="file">Upload a file</label>
             <input
+              ref={inputAvatar}
               type="file"
               name="avatar"
               style={{
                 fontSize: 18,
                 padding: 10,
-              }}
-              onChange={async () => {
-                const form = imageFormRef.current!
-                const formData = new FormData(form)
-                try {
-                  const avatar = await Auth.uploadAvatar(formData)
-                  console.log('avatar', avatar)
-                  if (avatar) {
-                    user.avatar = avatar
-                    Toast.show('Saved image!')
-                  } else {
-                    Toast.show('Error saving  image!', { type: 'error' })
-                  }
-                } catch (err) {
-                  Toast.show('Error saving image')
-                }
               }}
             />
           </form>

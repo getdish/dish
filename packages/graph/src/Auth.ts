@@ -106,7 +106,7 @@ class AuthModel {
   }
 
   async uploadAvatar(body: FormData) {
-    const response = await this.api('POST', '`/user/uploadAvatar`', body)
+    const response = await this.api('POST', '/user/uploadAvatar', body)
     if (response.status !== 200) {
       console.error(`Error updating: ${response.status} ${response.statusText}`)
       return null
