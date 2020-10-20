@@ -88,6 +88,7 @@ export const UserOnboard = graphql(({ hideLogo }: { hideLogo?: boolean }) => {
                 const formData = new FormData(form)
                 try {
                   const avatar = await Auth.uploadAvatar(formData)
+                  console.log('avatar', avatar)
                   if (avatar) {
                     user.avatar = avatar
                     Toast.show('Saved image!')

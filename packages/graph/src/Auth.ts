@@ -42,7 +42,10 @@ class AuthModel {
     if (json != null) {
       const auth = JSON.parse(json)
       this.jwt = auth.token
-      this.user = auth.user
+      this.user = {
+        ...auth.user,
+        has_onboarded: true,
+      }
       this.isLoggedIn = true
     }
   }

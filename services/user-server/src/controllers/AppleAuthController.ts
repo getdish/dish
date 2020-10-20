@@ -101,7 +101,6 @@ class AppleAuthController {
       ignoreExpiration: true, // default is false
     })
 
-    // TODO STORE INFO ON USER
     const apple_token = tokens.access_token
     const apple_secret = clientSecret
     const apple_refresh_token = tokens.refresh_token
