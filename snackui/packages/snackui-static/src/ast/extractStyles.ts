@@ -294,6 +294,9 @@ export function extractStyles(
           )
         }
 
+        let didFailStaticallyExtractingSpread = false
+        let numberNonStaticSpreads = 0
+
         node.attributes.forEach((attr, index) => {
           if (!t.isJSXSpreadAttribute(attr)) {
             flattenedAttributes.push(attr)
@@ -319,6 +322,8 @@ export function extractStyles(
                 consequent: cStyle,
               })
               return
+            } else {
+              didFailStaticallyExtractingSpread = true
             }
           }
 
@@ -335,6 +340,8 @@ export function extractStyles(
                 })
                 return
               }
+            } else {
+              didFailStaticallyExtractingSpread = true
             }
           }
 
@@ -353,9 +360,11 @@ export function extractStyles(
               } else {
                 for (const k in spreadValue) {
                   const value = spreadValue[k]
+                  // this is a null spread:
                   if (value && typeof value === 'object') {
                     continue
                   }
+                  numberNonStaticSpreads++
                   flattenedAttributes.push(
                     t.jsxAttribute(
                       t.jsxIdentifier(k),
@@ -366,6 +375,7 @@ export function extractStyles(
               }
             } catch (err) {
               console.warn('caught object err', err)
+              didFailStaticallyExtractingSpread = true
               couldntParse = true
             }
           }
@@ -384,16 +394,19 @@ export function extractStyles(
           t.isJSXSpreadAttribute(x)
         )
         const hasOneEndingSpread =
-          staticTernaries.length === 0 &&
+          !didFailStaticallyExtractingSpread &&
+          numberNonStaticSpreads <= 1 &&
           lastSpreadIndex > -1 &&
           foundLastSpreadIndex === lastSpreadIndex
         let simpleSpreadIdentifier: t.Identifier | null = null
         const isSingleSimpleSpread =
           hasOneEndingSpread &&
           flattenedAttributes.some((x) => {
-            if (t.isJSXSpreadAttribute(x) && t.isIdentifier(x.argument)) {
-              simpleSpreadIdentifier = x.argument
-              return true
+            if (t.isJSXSpreadAttribute(x)) {
+              if (t.isIdentifier(x.argument)) {
+                simpleSpreadIdentifier = x.argument
+                return true
+              }
             }
           })
 
@@ -406,6 +419,7 @@ export function extractStyles(
             isSingleSimpleSpread,
             lastSpreadIndex,
             foundLastSpreadIndex,
+            inlinePropCount,
           })
           console.log('attrs:', node.attributes.map(attrGetName).join(', '))
         }
@@ -421,10 +435,17 @@ export function extractStyles(
             // haven't hit the last spread operator (we can optimize single simple spreads still)
             notToLastSpread
           ) {
-            if (shouldPrintDebug) {
-              console.log('attr inline via non normal attr', notToLastSpread)
+            if (t.isJSXSpreadAttribute(attribute)) {
+              // spread fine
+            } else {
+              if (shouldPrintDebug) {
+                console.log(
+                  'inline (non normal attr)',
+                  attribute['name']?.['name']
+                )
+              }
+              inlinePropCount++
             }
-            inlinePropCount++
             return true
           }
 
@@ -644,7 +665,7 @@ export function extractStyles(
 
         // if all style props have been extracted, gloss component can be
         // converted to a div or the specified component
-        if (inlinePropCount === 0) {
+        if (inlinePropCount === 0 && !isSingleSimpleSpread) {
           if (
             process.env.NODE_ENV === 'development' ||
             process.env.DEBUG ||

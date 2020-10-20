@@ -22,7 +22,8 @@ export const FilterButton = memo(
   }: LinkButtonProps & { tag: Tag; isActive: boolean; color?: string }) => {
     const isSmall = useIsNarrow()
     const iconColor = isSmall ? (isActive ? '#000' : '#fff') : color
-    let content: any = rest.children ?? tagDisplayNames[tag.name] ?? tag.name
+    let content: any =
+      rest.children ?? (tag.name ? tagDisplayNames[tag.name] : null) ?? tag.name
 
     const iconElement = (() => {
       switch (tag.name) {

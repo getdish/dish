@@ -16,7 +16,7 @@ export const RestaurantAddCommentButton = graphql(
   }: SmallButtonProps & {
     size?: number
     hideLabel?: boolean
-    restaurantId?: string
+    restaurantId: string
     restaurantSlug?: string
   }) => {
     const { review } = useUserReviewCommentQuery(restaurantId)

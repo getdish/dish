@@ -1,13 +1,11 @@
+// debug
 import React from 'react'
-import { StyleSheet, TextStyle } from 'react-native'
-import { HStack, StackProps, Text, Tooltip } from 'snackui'
+import { HStack, Text, Tooltip } from 'snackui'
 
 import { bg, bgLight, bgLightLight, lightBlue } from '../../colors'
 import { isWeb } from '../../constants'
-import { RoutesTable } from '../../state/router'
-import { baseButtonStyle } from '../baseButtonStyle'
 import { isStringChild } from './isStringChild'
-import { LinkButton } from './LinkButton'
+import { Link } from './Link'
 import { LinkButtonProps } from './LinkProps'
 
 export type SmallButtonProps = LinkButtonProps & {
@@ -27,6 +25,10 @@ export const SmallButton = ({
   tooltip,
   ellipse,
   before,
+  name,
+  tag,
+  tags,
+  params,
   ...rest
 }: SmallButtonProps) => {
   let contents = isStringChild(children) ? (
@@ -50,22 +52,50 @@ export const SmallButton = ({
   )
 
   contents = (
-    <LinkButton
-      className={rest.className}
-      style={[
-        smallButtonStyles.base,
-        isWeb ? smallButtonStyles.isWeb : smallButtonStyles.isTouch,
-        isActive ? smallButtonStyles.isActive : null,
-      ]}
+    <HStack
+      alignItems="center"
+      justifyContent="center"
+      cursor="pointer"
+      paddingHorizontal={11}
+      paddingVertical={8}
+      borderRadius={20}
+      borderWidth={1}
+      backgroundColor="transparent"
+      borderColor={bgLight}
       hoverStyle={{
-        backgroundColor: isActive ? bgLight : bgLightLight,
+        backgroundColor: bgLightLight,
       }}
+      {...(isWeb && {
+        minHeight: 36,
+        minWidth: 44,
+      })}
+      {...(!isWeb && {
+        height: 44,
+        minWidth: 48,
+        alignItems: 'center',
+        justifyContent: 'center',
+      })}
+      {...(isActive && {
+        backgroundColor: bgLight,
+        borderColor: lightBlue,
+        hoverStyle: {
+          backgroundColor: bgLight,
+        },
+      })}
       {...rest}
     >
       {before}
       {contents}
-    </LinkButton>
+    </HStack>
   )
+
+  if (name || tag || tags || params) {
+    contents = (
+      <Link name={name} tag={tag} tags={tags} params={params}>
+        {contents}
+      </Link>
+    )
+  }
 
   if (tooltip) {
     return <Tooltip contents={tooltip}>{contents}</Tooltip>
@@ -73,31 +103,3 @@ export const SmallButton = ({
 
   return contents
 }
-
-export const smallButtonStyles = StyleSheet.create({
-  base: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...baseButtonStyle,
-    paddingHorizontal: 11,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    backgroundColor: 'transparent',
-    borderColor: bgLight,
-  },
-  isWeb: {
-    minHeight: 36,
-    minWidth: 44,
-  },
-  isTouch: {
-    height: 44,
-    minWidth: 48,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  isActive: {
-    backgroundColor: bgLight,
-    borderColor: lightBlue,
-  },
-})

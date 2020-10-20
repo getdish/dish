@@ -526,7 +526,6 @@ const RankView = memo(({ rank }: { rank: number }) => {
         marginTop: -10,
         marginRight: 0,
       })}
-      // marginBottom={-22}
       position="relative"
       backgroundColor={bgLight}
       borderRadius={1000}

@@ -1,5 +1,4 @@
 import { ArrowUp } from '@dish/react-feather'
-import { useStore } from '@dish/use-store'
 import { sleep } from '@o/async'
 import React, {
   Suspense,
@@ -33,7 +32,7 @@ import {
 } from 'snackui'
 
 import { AppPortalItem } from '../../AppPortal'
-import { isWeb, searchBarHeight } from '../../constants'
+import { isWeb } from '../../constants'
 import { rgbString } from '../../helpers/rgbString'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
@@ -53,13 +52,7 @@ import {
 import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
-import {
-  ContentScrollView,
-  ScrollStore,
-  setIsScrollAtTop,
-  usePreventContentScroll,
-} from '../../views/ContentScrollView'
-import { HomeLenseBar } from '../../views/HomeLenseBar'
+import { ContentScrollView } from '../../views/ContentScrollView'
 import { StackDrawer } from '../../views/StackDrawer'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import {
@@ -70,7 +63,6 @@ import { StackViewProps } from '../StackViewProps'
 import { getTitleForState } from './getTitleForState'
 import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
-import { titleHeight } from './titleHeight'
 
 type Props = StackViewProps<HomeStateItemSearch>
 
@@ -445,16 +437,9 @@ const SearchFooter = ({
       minHeight={300}
       width="100%"
     >
-      {isWeb && (
-        <>
-          <HStack alignItems="center" justifyContent="center">
-            <HomeLenseBar size="lg" activeTagIds={searchState.activeTagIds} />
-          </HStack>
-          <Spacer size={40} />
-        </>
-      )}
       <Button
         alignSelf="center"
+        borderRadius={1000}
         onPress={() => {
           scrollToTop()
         }}

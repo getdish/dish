@@ -68,15 +68,11 @@ const HomePageFilterBarSmall = ({ activeTagIds }: FilterBarProps) => {
     <HStack alignItems="center" justifyContent="center" spacing={5}>
       {filters.map((tag, index) => {
         const isActive = activeTagIds[getTagId(tag)]
-        const hasPrev = !!filters[index - 1]
-        const hasNext = !!filters[index + 1]
         return (
           <FilterButton
             key={`tag-${tag.id}`}
             tag={tag}
             isActive={isActive}
-            {...(hasPrev && { marginLeft: -1 })}
-            {...(hasNext && { marginRight: 0 })}
             position="relative"
             zIndex={100 - index + (isActive ? 1 : 0)}
           />
