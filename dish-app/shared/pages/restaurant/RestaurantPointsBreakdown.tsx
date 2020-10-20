@@ -14,8 +14,11 @@ import {
 import { lightGreen, lightYellow } from '../../colors'
 import { numberFormat } from '../../helpers/numberFormat'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { getTagId } from '../../state/getTagId'
 import { omStatic } from '../../state/omStatic'
+import { tagLenses } from '../../state/tagLenses'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
+import { RestaurantTagsScore } from '../../views/restaurant/RestaurantTagsScore'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { TextStrong } from '../../views/ui/TextStrong'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
@@ -26,7 +29,7 @@ import {
 } from './useTotalReviews'
 
 const TextHighlight = (props: TextProps) => (
-  <Text padding={2} margin={-2} borderRadius={6} {...props} />
+  <Text paddingHorizontal={4} borderRadius={8} {...props} />
 )
 
 // Include and retrieve this from the breakdown JSONB
@@ -47,81 +50,96 @@ const sourceNames = (sources: any[]) => {
 }
 
 export const RestaurantPointsBreakdown = memo(
-  graphql((props: { restaurantSlug: string; showTable?: boolean }) => {
-    const restaurant = useRestaurantQuery(props.restaurantSlug)
-    const sources = restaurant.sources() ?? {}
-    const [showTable, setShowTable] = useState(props.showTable)
-    const tags = omStatic.state.home.lastActiveTags
-    const totalReviews = useTotalReviews(restaurant)
-    const totalNativeReviews = useTotalNativeReviews(restaurant)
-    const nativeReviewPoints =
-      Math.round(totalNativeReviews * REVIEW_FACTOR * 10) / 10
-    const totalExternalReviews = useTotalExternalReviews(restaurant)
-    const externalReviewPoints =
-      Math.round(totalExternalReviews * REVIEW_FACTOR * 10) / 10
-    const reviewsBreakdown = restaurant.score_breakdown()?.['reviews'] ?? {}
-    const photosBreakdown = restaurant.score_breakdown()?.['photos'] ?? {}
-    return (
-      <HStack overflow="hidden" paddingVertical={12}>
-        <VStack alignItems="stretch" flex={1}>
-          <Paragraph size={1} color="rgba(0,0,0,0.7)">
-            <TextStrong>{restaurant.name}</TextStrong> has{' '}
-            <TextStrong>
+  graphql(
+    ({
+      restaurantSlug,
+      restaurantId,
+      showTable: showTableDefault,
+    }: {
+      restaurantSlug: string
+      restaurantId: string
+      showTable?: boolean
+    }) => {
+      const restaurant = useRestaurantQuery(restaurantSlug)
+      const sources = restaurant.sources() ?? {}
+      const [showTable, setShowTable] = useState(showTableDefault)
+      const totalReviews = useTotalReviews(restaurant)
+      const totalNativeReviews = useTotalNativeReviews(restaurant)
+      const nativeReviewPoints =
+        Math.round(totalNativeReviews * REVIEW_FACTOR * 10) / 10
+      const totalExternalReviews = useTotalExternalReviews(restaurant)
+      const externalReviewPoints =
+        Math.round(totalExternalReviews * REVIEW_FACTOR * 10) / 10
+      const reviewsBreakdown = restaurant.score_breakdown()?.['reviews'] ?? {}
+      const photosBreakdown = restaurant.score_breakdown()?.['photos'] ?? {}
+      return (
+        <HStack overflow="hidden" paddingVertical={12}>
+          <VStack alignItems="stretch" flex={1}>
+            <Text textAlign="center" fontSize={40} fontWeight="600">
               {numberFormat(Math.round(restaurant.score))}
-            </TextStrong>{' '}
-            points.{' '}
-          </Paragraph>
-          <Spacer />
-          <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
-            {numberFormat(Math.round(reviewsBreakdown['score']))} pts from{' '}
-            {numberFormat(totalReviews)} reviews and{' '}
-            {numberFormat(Math.round(photosBreakdown['score']))} pts from{' '}
-            {photosBreakdown['meeting_criteria_count']} high quality photos.
-          </Paragraph>
+            </Text>
+            <Spacer />
+            <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
+              <TextHighlight backgroundColor={lightGreen}>
+                {numberFormat(Math.round(reviewsBreakdown['score']))}
+              </TextHighlight>{' '}
+              from {numberFormat(totalReviews)} reviews
+            </Paragraph>
+            <Spacer size="xs" />
+            <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
+              <TextHighlight backgroundColor={lightGreen}>
+                {numberFormat(Math.round(photosBreakdown['score']))}
+              </TextHighlight>{' '}
+              from {photosBreakdown['meeting_criteria_count']} good photos
+            </Paragraph>
 
-          <Spacer size="lg" />
-          <Divider />
-          <Spacer size="lg" />
+            <Spacer size="lg" />
+            <Divider />
+            <Spacer size="lg" />
 
-          <Paragraph textAlign="center" size={0.9} color="rgba(0,0,0,0.6)">
-            <TextHighlight backgroundColor={lightGreen}>
-              <TextStrong color="#000">
+            <Paragraph textAlign="center" size={0.9} color="rgba(0,0,0,0.6)">
+              <TextHighlight fontWeight="700" backgroundColor={lightGreen}>
                 {numberFormat(Math.round(nativeReviewPoints))}
-              </TextStrong>
-            </TextHighlight>{' '}
-            points from {numberFormat(totalNativeReviews)} Dish reviews and{' '}
-            <View />
-            <TextHighlight backgroundColor={lightYellow}>
-              <TextStrong color="#000">
+              </TextHighlight>{' '}
+              points from {numberFormat(totalNativeReviews)} Dish reviews and{' '}
+              <View />
+              <TextHighlight fontWeight="700" backgroundColor={lightYellow}>
                 {numberFormat(Math.round(externalReviewPoints))}
-              </TextStrong>
-            </TextHighlight>{' '}
-            from {numberFormat(totalExternalReviews)} {sourceNames(sources)}{' '}
-            reviews.
-          </Paragraph>
+              </TextHighlight>{' '}
+              from {numberFormat(totalExternalReviews)} {sourceNames(sources)}{' '}
+              reviews.
+            </Paragraph>
 
-          <Spacer size="lg" />
-          <Divider />
-          <Spacer size="lg" />
+            {/* <RestaurantTagsScore
+              userVote={0}
+              restaurantSlug={restaurantSlug}
+              activeTagIds={tagLenses.reduce((acc, cur) => {
+                acc[getTagId(cur)] = true
+                return acc
+              }, {})}
+            /> */}
 
-          {showTable && (
-            <RestaurantSourcesBreakdown restaurantSlug={props.restaurantSlug} />
-          )}
+            <Spacer size="lg" />
 
-          {!props.showTable && (
-            <>
-              <Spacer size="lg" />
+            {showTable && (
+              <RestaurantSourcesBreakdown restaurantSlug={restaurantSlug} />
+            )}
 
-              <SmallButton
-                alignSelf="center"
-                onPress={() => setShowTable((x) => !x)}
-              >
-                {showTable ? 'Hide breakdown' : 'Points breakdown'}
-              </SmallButton>
-            </>
-          )}
-        </VStack>
-      </HStack>
-    )
-  })
+            {!showTable && (
+              <>
+                <Spacer size="lg" />
+
+                <SmallButton
+                  alignSelf="center"
+                  onPress={() => setShowTable((x) => !x)}
+                >
+                  {showTable ? 'Hide breakdown' : 'Points breakdown'}
+                </SmallButton>
+              </>
+            )}
+          </VStack>
+        </HStack>
+      )
+    }
+  )
 )

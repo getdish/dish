@@ -47,6 +47,10 @@ export const useLink = (props: LinkProps<any, any>) => {
     }
 
     e.preventDefault()
+    if (props.stopPropagation) {
+      e.stopPropagation()
+    }
+
     if (props.asyncClick) {
       cancel.current = series([
         () => sleep(50),

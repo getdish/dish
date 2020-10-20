@@ -1,18 +1,14 @@
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
-import { ScrollView } from 'react-native'
-import { AbsoluteVStack, HStack, SmallTitle, Spacer, VStack } from 'snackui'
+import { AbsoluteVStack, HStack, SmallTitle, VStack } from 'snackui'
 
-import { bg, bgLight, brandColor } from '../../colors'
+import { bgLight } from '../../colors'
 import { drawerWidthMax } from '../../constants'
 import { useIsNarrow } from '../../hooks/useIs'
-import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { CloseButton } from '../../views/ui/CloseButton'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
-import { RestaurantLenseVote } from './RestaurantLenseVote'
 import { RestaurantPointsBreakdown } from './RestaurantPointsBreakdown'
-import { RestaurantReviewsList } from './RestaurantReviewsList'
 import { RestaurantSourcesOverview } from './RestaurantSourcesOverview'
 
 export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
@@ -115,10 +111,11 @@ export const RestaurantRatingBreakdown = memo(
             backgroundColor={bgLight}
             overflow="hidden"
           >
-            <SmallTitle>Overall</SmallTitle>
+            <SmallTitle>Base Score</SmallTitle>
             <RestaurantPointsBreakdown
               showTable={showScoreTable}
               restaurantSlug={restaurantSlug}
+              restaurantId={restaurantId}
             />
             {/*
             <Spacer size="sm" />

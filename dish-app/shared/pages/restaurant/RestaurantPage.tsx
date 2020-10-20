@@ -188,28 +188,12 @@ const RestaurantPage = memo(
 
           <Spacer size="xl" />
 
-          <VStack paddingHorizontal={15}>
-            <HStack
-              position="relative"
-              marginHorizontal={10}
-              marginBottom={-10}
-              alignItems="center"
-              justifyContent="center"
-            >
-              <SlantedTitle fontWeight="700">Reviews</SlantedTitle>
-
-              <AbsoluteVStack top={0} right={0}>
-                <Suspense fallback={null}>
-                  <RestaurantAddCommentButton
-                    restaurantId={restaurant.id}
-                    restaurantSlug={restaurantSlug}
-                  />
-                </Suspense>
-              </AbsoluteVStack>
-            </HStack>
-            <Spacer />
-            <RestaurantReviewsList restaurantId={restaurant.id} />
-          </VStack>
+          <Suspense fallback={null}>
+            <RestaurantReviewsList
+              restaurantSlug={restaurantSlug}
+              restaurantId={restaurant.id}
+            />
+          </Suspense>
 
           <Spacer size="xl" />
 

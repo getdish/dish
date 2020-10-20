@@ -23,6 +23,7 @@ export type LinkSharedProps = Pick<
   tag?: NavigableTag
   tags?: NavigableTag[]
   replace?: boolean
+  stopPropagation?: boolean
   ellipse?: boolean
   replaceSearch?: boolean
   disallowDisableWhenActive?: boolean

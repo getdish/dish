@@ -24,7 +24,7 @@ export const RestaurantSourcesOverview = graphql(
 
     return (
       <VStack marginVertical={-spacing}>
-        <Grid>
+        <Grid itemMinWidth={240}>
           {sourceNames.map((sourceName) => {
             const sourceInfo = thirdPartyCrawlSources[sourceName]
             if (!sourceInfo) {
