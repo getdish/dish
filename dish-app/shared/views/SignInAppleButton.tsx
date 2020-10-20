@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { HStack, Text, Toast, VStack } from 'snackui'
 
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
+import { omStatic } from '../state/omStatic'
 import { AppleLogoWhite } from './AppleLogoWhite'
 
 export const SignInAppleButton = () => {
@@ -22,15 +23,16 @@ export const SignInAppleButton = () => {
         const { auth } = require('../../web/apple-sign-in')
         try {
           const res = await auth.signIn()
-          if (!res) return // in-browser
-          const { authorization } = await res
-          const [status] = await Auth.appleAuth(authorization)
-          if (status == 200) {
-            Toast.show('Logged in!')
-          } else {
-            Toast.show('Error loggin in 😭', { type: 'error' })
+          if (!res) {
+            console.log('no res')
+            return // in-browser
           }
+          const { authorization } = await res
+          const user = await Auth.appleAuth(authorization)
+          Toast.show('Logged in!')
+          omStatic.actions.user.postLogin(user)
         } catch (err) {
+          Toast.show('Error loggin in 😭', { type: 'error' })
           console.error('signin err', err)
         }
       }}

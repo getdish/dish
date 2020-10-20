@@ -175,7 +175,7 @@ class AuthModel {
     })
     if (response.status != 201 && response.status != 200) {
       console.error(`Couldn't login apple auth`)
-      return [response.status, response.statusText] as const
+      throw new Error(response.statusText)
     }
 
     const data = await response.json()
@@ -190,7 +190,12 @@ class AuthModel {
       })
     )
     this.has_been_logged_out = false
-    return [response.status, data.user] as const
+    return data.user as {
+      username: string
+      location: string
+      about: string
+      avatar: string
+    }
   }
 
   async logout() {

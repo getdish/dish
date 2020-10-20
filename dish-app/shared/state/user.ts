@@ -169,4 +169,5 @@ export const actions = {
   checkForExistingLogin,
   ensureLoggedIn,
   updateUser,
+  postLogin,
 }

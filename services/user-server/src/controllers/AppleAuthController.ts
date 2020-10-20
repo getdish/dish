@@ -62,7 +62,9 @@ class AppleAuthController {
 
   static verify = async (req: Request, res: Response) => {
     const { id_token, code, redirectUri } = req.body
-    if (!id_token || !code) return res.sendStatus(500)
+    if (!id_token || !code) {
+      return res.sendStatus(500)
+    }
     const tokens = await appleSignIn.getAuthorizationToken(clientSecret, code, {
       // Optional, use the same value which you passed to authorisation URL. In case of iOS you skip the value
       redirectUri,
