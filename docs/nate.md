@@ -1,34 +1,17 @@
 - other lense tags:
   - "family run"
-
-- [admin] alternates are being set as stringified json not just json
-  - overall just runthrough everything a few times and fix a lot
-  - scrolling horizontal should disable vertical drag
-- show the current selected lense (just icon, votable) at front of tagrow in listitem
+- overall just runthrough everything a few times and fix a lot
+- scrolling horizontal should disable vertical drag
 - small listitem improvements
-- runthrough/fix login/register flows again
 - gallery v2
   - resolve dish images
   - clicking a dish takes you to the gallery but there are no photos of that dish
-- performance runthrough in prod mode
 - fix small delivery/price filters
-- autocomplete
-  - filter dishes within cuisine, sorted by popularity
 - fix hmr for useStore in react native
 - get reviewing fully working with votes/sentiment on tags
 - fix up points breakdown and dish/tag breakdown
 - location <=> url
 
-* There's currently a discrepancy between the points we initially gave
-  to a single review and the points we now give. Because we haven't done
-  a full recrawl since this change, there's a mix of point factors in
-  the DB. I've opted to use the current factor, which means a lot of
-  restaurants won't seem to add up their points correctly. First thing
-  is to do the recrawl. But secondly, this commit also includes an
-  addition to the breakdown JSON that specifies the factor give to a
-  single review at the time of aggreation, so this problem won't happen
-  again.
-* @natew I don't suppose the weights are relevant anymore?
 Home page
 - generally home page query and layout, but that's a whole other kettle of fish
 - is the plan for the site to be login only? i think it's better to allow anonymous use of the site
@@ -40,7 +23,7 @@ Restaurant page
 
 ---
 
-- the long run, a wiki of our world:
+- the long run, a wikiatlas of our world:
   - there exists no community map of the world
     - what happened to the atlas?
     - aggregation theory - theres no great aggregator of real world things - netflix for shows (originally), airbnb (places), craigslist (market), but for restaurants its just lots of individual sources like yelp, etc.

@@ -1,4 +1,4 @@
-import { query, resolved } from '@dish/graph'
+import { order_by, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'
@@ -694,30 +694,45 @@ function searchCuisines(searchQuery: string) {
 
 function searchDishTags(searchQuery: string, cuisine?: string) {
   return [
-    ...searchDishes({
-      name: {
-        _ilike: `${searchQuery}%`,
-      },
-      ...(cuisine && {
-        parent: {
+    ...searchDishes(
+      {
+        ...(searchQuery && {
           name: {
-            _eq: cuisine,
+            _ilike: `${searchQuery}%`,
           },
-        },
-      }),
-    }),
-    ...searchDishes({
-      name: {
-        _ilike: getFuzzyMatchQuery(searchQuery),
+        }),
+        ...(cuisine && {
+          parent: {
+            name: {
+              _eq: cuisine,
+            },
+          },
+        }),
       },
-      ...(cuisine && {
-        parent: {
+      searchQuery
+        ? null
+        : {
+            order_by: [
+              {
+                popularity: order_by.desc,
+              },
+            ],
+          }
+    ),
+    ...(searchQuery
+      ? searchDishes({
           name: {
-            _eq: cuisine,
+            _ilike: getFuzzyMatchQuery(searchQuery),
           },
-        },
-      }),
-    }),
+          ...(cuisine && {
+            parent: {
+              name: {
+                _eq: cuisine,
+              },
+            },
+          }),
+        })
+      : []),
   ].map((r) =>
     createAutocomplete({
       id: r.id,
@@ -729,8 +744,9 @@ function searchDishTags(searchQuery: string, cuisine?: string) {
   )
 }
 
-const searchDishes = (whereCondition: any, limit = 5) => {
+const searchDishes = (whereCondition: any, extraQuery: any = {}, limit = 5) => {
   return query.tag({
+    ...extraQuery,
     where: {
       ...whereCondition,
       type: {
