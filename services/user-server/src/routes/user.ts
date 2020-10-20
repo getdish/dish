@@ -44,6 +44,6 @@ router.post(
 )
 
 // upload image
-router.post('/image_upload', UserImageController.uploadImage)
+router.post('/uploadAvatar', UserImageController.uploadImage)
 
 export default router
