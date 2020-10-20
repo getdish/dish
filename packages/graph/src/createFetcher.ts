@@ -45,9 +45,11 @@ const buildRequest = (
   })
   const request: RequestInit = {
     method: 'POST',
+    cache: 'no-cache',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
+      'Cache-Control': 'no-cache',
       ...Auth.getHeaders(),
     },
     body,

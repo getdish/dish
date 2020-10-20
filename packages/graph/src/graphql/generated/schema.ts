@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { lazyGetters } from '@gqless/utils'
+import { lazyGetters } from '@o/gqless-utils'
 import {
   Arguments,
   ArgumentsField,

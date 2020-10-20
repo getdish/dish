@@ -20,7 +20,7 @@
     "@o/gqless-schema": "0.0.9",
     "@o/gqless-logger": "0.0.9",
     "patch-package": "^6.2.2",
-    "isomorphic-unfetch": "^3.0.0",
+    "isomorphic-unfetch": "3.1.0",
     "ava": "^3.8.2",
     "lodash": "*"
   },
