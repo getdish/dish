@@ -21,7 +21,7 @@ export const PageFooter = memo(() => {
         transform={[{ rotate: '-4deg' }]}
       />
       <VStack paddingVertical={20} alignItems="center" paddingHorizontal="5%">
-        <VStack maxWidth={450}>
+        <VStack>
           <AppIntroLogin />
           <Spacer size="xxl" />
         </VStack>

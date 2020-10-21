@@ -153,7 +153,7 @@ export const AppIntroLogin = memo(() => {
             position: 'relative',
           }}
         />
-        <LinearGradient
+        {/* <LinearGradient
           style={[
             StyleSheet.absoluteFill,
             {
@@ -161,7 +161,7 @@ export const AppIntroLogin = memo(() => {
             },
           ]}
           colors={['rgba(0,0,0,0)', '#E2A5D922']}
-        />
+        /> */}
 
         <Paragraph
           color="#fff"

@@ -132,7 +132,6 @@ export default memo(function HomePage(props: Props) {
             })
           })
           .catch((err) => {
-            console.log('SEARCH_DOMAIN', SEARCH_DOMAIN)
             console.error('error fetching home', err)
           })
       }
@@ -346,12 +345,12 @@ const HomeTopDishesTitle = () => {
   )
 }
 
-const dishHeight = 130
+const dishHeight = 150
 
 const TopDishesCuisineItem = memo(
   ({ country, index }: { index: number; country: TopCuisine }) => {
     const countryDishes = useMemo(() => {
-      return (country.dishes || []).slice(0, 12).map((top_dish, index) => {
+      return (country.dishes || []).map((top_dish, index) => {
         return (
           <HStack
             transform={[{ translateY: index % 2 == 0 ? -5 : 5 }]}
