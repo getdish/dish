@@ -1,3 +1,5 @@
+- improve memory gqless node
+  - SLUG=coqueta ./dishctl.sh local_node_with_prod_env services/crawlers/_/self/sandbox.js
 - other lense tags:
   - "family run"
 - overall just runthrough everything a few times and fix a lot

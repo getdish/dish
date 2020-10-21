@@ -27,7 +27,6 @@
 - google crawler
 ✔️ crawl new cities in san fran area
 - recrawl internal merge for sanfran
-- improve local dev setup (edited)
 - when i search for nopalito to try and find the restaurant with that name that has gpt3 - i think we can safely say "near exact match names" can rank highly for plain (non-tag) search http://d1live.com/gems/san-francisco/-/nopalito
 - some restaurants have good scores, good dishes, but no headline review, must be a bug
 - onboard fiverr worker with instructions on admin

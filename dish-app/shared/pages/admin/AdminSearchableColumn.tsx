@@ -1,5 +1,4 @@
-import { Suspense } from 'react'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { TextInput } from 'react-native'
 import { HStack, LoadingItems, VStack } from 'snackui'
 
