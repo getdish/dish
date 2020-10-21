@@ -3,6 +3,8 @@ import '@dish/common'
 import {
   TagWithId,
   ZeroUUID,
+  restaurantFindOne,
+  restaurantUpsert,
   tagGetAllCuisinesWithDishes,
   tagUpdate,
 } from '@dish/graph'
@@ -36,7 +38,7 @@ const axios = axios_base.create({
 })
 
 export class GoogleImages extends WorkerJob {
-  max_images = 100
+  max_images = 10
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -56,6 +58,7 @@ export class GoogleImages extends WorkerJob {
   async main() {
     const batch_size = 100
     let page = 0
+    await this.checkForZeroUUIDRestaurant()
     while (true) {
       console.log('GOOGLE IMAGES: Dish batch...')
       const dishes_batch = await tagGetAllCuisinesWithDishes(batch_size, page)
@@ -65,6 +68,18 @@ export class GoogleImages extends WorkerJob {
       }
       page += 1
     }
+  }
+
+  async checkForZeroUUIDRestaurant() {
+    const restaurant = await restaurantFindOne({ id: ZeroUUID })
+    if (restaurant) return
+    await restaurantUpsert([
+      {
+        id: ZeroUUID,
+        name: 'ZeroUUID',
+        location: { type: 'Point', coordinates: [0, 0] },
+      },
+    ])
   }
 
   async imagesForDish(dish: TagWithId) {
