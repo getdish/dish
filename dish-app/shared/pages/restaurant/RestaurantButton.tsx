@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { default as React, memo } from 'react'
+import React, { memo } from 'react'
 import { HStack, Spacer, Text, VStack } from 'snackui'
 
 import { isWeb } from '../../constants'

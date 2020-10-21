@@ -18,11 +18,10 @@ import {
 } from '../photo-helpers'
 
 // Prototype:
-// ```
-// curl 'https://6rw3mhsrsb.execute-api.us-west-2.amazonaws.com/fireprox/search?q=kitten\
-//   &client=firefox-b-d&gbv=2&source=lnms&tbm=isch&sa=X&biw=1920&bih=1138'
-//   -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'
-// ```
+/*
+curl 'https://6rw3mhsrsb.execute-api.us-west-2.amazonaws.com/fireprox/search?q=kitten&client=firefox-b-d&gbv=2&source=lnms&tbm=isch&sa=X&biw=1920&bih=1138'\
+   -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0'
+*/
 
 if (!process.env.GOOGLE_SEARCH_PROXY) throw 'No GOOGLE_SEARCH_PROXY'
 

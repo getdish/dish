@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { default as React, memo } from 'react'
+import React, { memo } from 'react'
 import { HStack, StackProps } from 'snackui'
 
 import { tagLenses } from '../../state/tagLenses'

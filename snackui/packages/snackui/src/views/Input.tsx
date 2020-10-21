@@ -1,4 +1,4 @@
-import { default as React, useLayoutEffect, useRef } from 'react'
+import React, { useLayoutEffect, useRef } from 'react'
 import { StyleSheet, TextInput, TextInputProps, TextStyle } from 'react-native'
 
 import { isWeb } from '../constants'

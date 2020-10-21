@@ -1,5 +1,5 @@
 import { Auth, graphql } from '@dish/graph'
-import { default as React, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Image } from 'react-native'
 import {
   HStack,

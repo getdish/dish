@@ -1,5 +1,5 @@
 import { Tag } from '@dish/graph'
-import { default as React, memo } from 'react'
+import React, { memo } from 'react'
 import { StyleSheet } from 'react-native'
 import { HStack, LinearGradient, Text } from 'snackui'
 

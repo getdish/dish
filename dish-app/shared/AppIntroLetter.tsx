@@ -1,32 +1,11 @@
 import { Store, useStore } from '@dish/use-store'
-import {
-  default as React,
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from 'react'
-import { Image, StyleSheet } from 'react-native'
-import { Line } from 'react-native-svg'
-import {
-  AbsoluteVStack,
-  LinearGradient,
-  Paragraph,
-  Spacer,
-  Text,
-  VStack,
-} from 'snackui'
+import React, { memo, useLayoutEffect } from 'react'
+import { Image } from 'react-native'
+import { AbsoluteVStack, Paragraph, Spacer, Text, VStack } from 'snackui'
 
 // @ts-ignore
 import dishNeon from './assets/dish-neon.jpg'
-import {
-  brandColorLighter,
-  lightGreen,
-  lightPurple,
-  lightYellow,
-  purple,
-  yellow,
-} from './colors'
+import { lightYellow } from './colors'
 import { DarkModal } from './DarkModal'
 import { useOvermind } from './state/om'
 import { UserOnboard } from './UserOnboard'

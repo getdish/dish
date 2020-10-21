@@ -1,4 +1,3 @@
-// debug
 import React, { memo } from 'react'
 import { AbsoluteVStack, StackProps } from 'snackui'
 

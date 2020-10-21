@@ -1,6 +1,6 @@
 import { Auth } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
-import { default as React, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   Form,
   HStack,

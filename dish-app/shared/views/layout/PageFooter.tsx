@@ -1,4 +1,4 @@
-import { default as React, memo } from 'react'
+import React, { memo } from 'react'
 import { Platform } from 'react-native'
 import { AbsoluteVStack, Spacer, VStack } from 'snackui'
 

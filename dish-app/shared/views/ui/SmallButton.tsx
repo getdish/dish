@@ -1,4 +1,3 @@
-// debug
 import React from 'react'
 import { HStack, Text, Tooltip } from 'snackui'
 

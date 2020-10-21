@@ -51,11 +51,16 @@ export const RestaurantOverview = memo(
             lineHeight={lineHeight}
             opacity={1}
           >
-            {summary
-              .replace(/(\s{2,}|\n)/g, ' ')
-              .split('. ')
-              .map((sentence) => capitalize(sentence.trim()))
-              .join('. ')}
+            {ellipseText(
+              summary
+                .replace(/(\s{2,}|\n)/g, ' ')
+                .split('. ')
+                .map((sentence) => capitalize(sentence.trim()))
+                .join('. '),
+              {
+                maxLength: 420,
+              }
+            )}
           </Text>
         </HStack>
       )

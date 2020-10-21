@@ -9,14 +9,7 @@ import {
 import { ChevronRight } from '@dish/react-feather'
 import { fullyIdle, series, sleep } from '@o/async'
 import _, { sortBy, uniqBy } from 'lodash'
-import {
-  default as React,
-  Suspense,
-  memo,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
 import { Dimensions, ScrollView, StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,

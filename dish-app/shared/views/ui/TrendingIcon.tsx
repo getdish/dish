@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp, Minus } from '@dish/react-feather'
-import { default as React } from 'react'
+import React from 'react'
 import { StackProps, VStack } from 'snackui'
 export const TrendingIcon = ({
   trending,
