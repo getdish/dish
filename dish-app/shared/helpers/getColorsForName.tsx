@@ -1,6 +1,6 @@
-import { allColors, allLightColors } from '../../colors'
+import { allColors, allLightColors } from '../colors'
 
-export const getDishColors = (name: string) => {
+export const getColorsForName = (name: string) => {
   const index = (name ?? '').charCodeAt(0) % allLightColors.length
   return {
     lightColor: allLightColors[index],

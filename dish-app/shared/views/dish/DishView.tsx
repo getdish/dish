@@ -13,12 +13,12 @@ import {
 } from 'snackui'
 
 import { isWeb } from '../../constants'
+import { getColorsForName } from '../../helpers/getColorsForName'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { NavigableTag } from '../../state/NavigableTag'
 import { Link } from '../ui/Link'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
-import { getDishColors } from './getDishBackgroundColor'
 
 // avoid too many different image sizes
 const getRoundedDishViewSize = (size: number) => {
@@ -64,7 +64,7 @@ export const DishView = memo(
     const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
     const isFallback = _isFallback ?? dish.isFallback
     const sizeInner = Math.round(isFallback ? size * 0.85 : size * 0.98)
-    const { lightColor, color } = getDishColors(dish.name)
+    const { lightColor, color } = getColorsForName(dish.name)
     const backgroundColor = lightColor
     const isActive = isHovered || selected
 

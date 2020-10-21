@@ -306,7 +306,9 @@ const RestaurantListItemContent = memo(
               </VStack>
             </Link>
 
-            {/* RANKING ROW */}
+            <Spacer size="xs" />
+
+            {/* SECOND ROW TITLE */}
             <VStack
               {...contentSideProps}
               overflow="hidden"

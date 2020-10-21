@@ -1,12 +1,9 @@
 import React, { memo } from 'react'
-import { StyleSheet } from 'react-native'
 import { HStack, Spacer, StackProps, Text } from 'snackui'
 
-import { flatButtonStyle } from '../baseButtonStyle'
+import { getColorsForName } from '../../helpers/getColorsForName'
 import { Link } from '../ui/Link'
-import { LinkButton } from '../ui/LinkButton'
 import { LinkButtonNamedProps } from '../ui/LinkProps'
-import { getDishColors } from './getDishBackgroundColor'
 
 export const DishViewButton = memo(
   ({
@@ -18,7 +15,7 @@ export const DishViewButton = memo(
     icon: string
     size?: number
   } & StackProps) => {
-    const { lightColor, color } = getDishColors(name)
+    const { lightColor, color } = getColorsForName(name)
     return (
       <Link tag={{ type: 'dish', name }}>
         <HStack

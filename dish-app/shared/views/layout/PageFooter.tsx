@@ -18,7 +18,7 @@ export const PageFooter = memo(() => {
         right={-100}
         bottom={-55}
         backgroundColor="#000"
-        transform={[{ rotate: '-4deg' }]}
+        transform={[{ rotate: '-2deg' }]}
       />
       <VStack paddingVertical={20} alignItems="center" paddingHorizontal="5%">
         <VStack>

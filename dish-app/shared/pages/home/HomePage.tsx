@@ -24,6 +24,7 @@ import {
 
 import { bgLight, bgLightHover, bgLightTranslucent } from '../../colors'
 import { searchBarHeight } from '../../constants'
+import { getColorsForName } from '../../helpers/getColorsForName'
 import { useIsNarrow } from '../../hooks/useIs'
 import { addTagsToCache } from '../../state/allTags'
 import { HomeStateItemHome } from '../../state/home-types'
@@ -396,11 +397,13 @@ const TopDishesCuisineItem = memo(
       <VStack className="home-top-dish" position="relative">
         {index % 2 !== 0 && (
           <AbsoluteVStack
-            top={-15}
+            top={15}
             left={-100}
             right={-100}
             bottom={-15}
-            backgroundColor={bgLightTranslucent}
+            backgroundColor={`${
+              getColorsForName(country.country).lightColor
+            }55`}
             transform={[{ rotate: '-2deg' }]}
           >
             {/* <LinearGradient
@@ -455,7 +458,7 @@ const TopDishesCuisineItem = memo(
         <Spacer size="sm" />
 
         <VStack
-          paddingBottom={30}
+          paddingBottom={20}
           pointerEvents="none"
           flex={1}
           overflow="hidden"
