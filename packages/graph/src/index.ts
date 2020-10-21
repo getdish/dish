@@ -1,5 +1,5 @@
 import 'isomorphic-unfetch'
-import '@dish/helpers' // ensure polyfills
+import '@dish/helpers/polyfill'
 
 export { graphql } from '@o/gqless-react'
 export { client, query, schema, resetQueryCache } from './graphql'

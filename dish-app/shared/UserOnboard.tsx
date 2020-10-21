@@ -12,7 +12,6 @@ import {
   VStack,
 } from 'snackui'
 
-import { divider } from './AppIntroLetter'
 import dishNeon from './assets/dish-neon.jpg'
 import { characters } from './pages/user/characters'
 import { UserAvatar } from './pages/user/UserAvatar'
@@ -193,3 +192,14 @@ export const UserOnboard = graphql(({ hideLogo }: { hideLogo?: boolean }) => {
     </>
   )
 })
+
+const divider = (
+  <VStack
+    marginVertical={8}
+    width="80%"
+    minHeight={1}
+    backgroundColor="#fff"
+    alignSelf="center"
+    opacity={0.1}
+  />
+)

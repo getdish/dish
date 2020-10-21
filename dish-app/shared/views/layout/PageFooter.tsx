@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import { Platform } from 'react-native'
 import { AbsoluteVStack, Spacer, VStack } from 'snackui'
 
-import { AppIntroLogin } from '../../AppIntroLetter'
+import { AppIntroLogin } from '../../AppIntroLogin'
 
 export const PageFooter = memo(() => {
   if (Platform.OS !== 'web') {

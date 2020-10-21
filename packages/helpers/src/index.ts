@@ -1,7 +1,5 @@
 import './polyfill-localStorage'
 
-import { Tag } from '@dish/graph'
-
 export * from './constants'
 export * from './assertHelpers'
 
@@ -69,7 +67,7 @@ export async function fetchBertSentimentNumber(text: string) {
   return number
 }
 
-export function doesStringContainTag(text: string, tag: Tag) {
+export function doesStringContainTag(text: string, tag: any) {
   const tag_names = [tag.name, ...(tag.alternates || [])]
   for (const tag_name of tag_names) {
     let is_found = false

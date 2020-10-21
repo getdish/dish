@@ -1,0 +1,1 @@
+require('./_/polyfill-localStorage')

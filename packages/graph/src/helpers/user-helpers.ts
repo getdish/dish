@@ -1,4 +1,3 @@
-import { user_constraint } from '../graphql'
 import { User } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
 
