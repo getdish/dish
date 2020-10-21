@@ -15,8 +15,10 @@ export async function resolvedMutation<T extends Function>(
     : any
 > {
   resetMutationCache()
+  const next = await resolved(resolver)
+  resetMutationCache()
   // @ts-ignore
-  return await resolved(resolver)
+  return next
 }
 
 export async function resolvedMutationWithFields<T extends Function>(
@@ -42,16 +44,20 @@ export async function resolvedWithFields<T extends Function>(
   options?: CollectOptions
 ): Promise<any> {
   resetQueryCache()
-  return await resolvedWithoutCache(() => {
+  const next = await resolvedWithoutCache(() => {
     const res = resolver()
     return collectAll(res, options) as any
   })
+  resetQueryCache()
+  return next
 }
 
 export async function resolvedWithoutCache<T extends Function>(
   resolver: T
 ): Promise<T extends () => infer U ? U : any> {
   resetQueryCache()
+  const next = await resolved(resolver)
+  resetQueryCache()
   // @ts-ignore
-  return await resolved(resolver)
+  return next
 }

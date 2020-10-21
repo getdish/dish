@@ -289,7 +289,10 @@ function local_node_with_prod_env() {
   export TIMESCALE_PASSWORD=$TF_VAR_TIMESCALE_SU_PASS
   export HASURA_ENDPOINT=https://hasura.dishapp.com
   export HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
-  node --inspect --max-old-space-size=4096 $1
+  node \
+    --max-old-space-size=4096 \
+    --expose-gc \
+    $1
 }
 
 function remove_evicted_pods() {
@@ -427,9 +430,9 @@ function timescale_proxy() {
   kubectl port-forward pod/timescale-timescaledb-0 $PORT:5432 -n timescale &
   TS_PROXY_PID=$!
   trap _kill_port_forwarder EXIT
-  # while ! netstat -tna | grep 'LISTEN\>' | grep -q ":$PORT\>"; do
-  #   sleep 0.1
-  # done
+  while ! netstat -tna | grep 'LISTEN' | grep -q "$PORT"; do
+    sleep 0.1
+  done
   echo "...connected to timescale."
 }
 
@@ -450,9 +453,9 @@ function postgres_proxy() {
   kubectl port-forward svc/postgres-ha-postgresql-ha-pgpool $PORT:5432 -n postgres-ha &
   PG_PROXY_PID=$!
   trap _kill_port_forwarder EXIT
-  # while ! netstat -tna | grep 'LISTEN\>' | grep -q ":$PORT\>"; do
-  #   sleep 0.1
-  # done
+  while ! netstat -tna | grep 'LISTEN' | grep -q "$PORT"; do
+    sleep 0.1
+  done
   echo "...connected to Postgres."
 }
 
@@ -494,9 +497,9 @@ function redis_proxy() {
   kubectl port-forward svc/redis-master $REDIS_PROXY_PORT:6379 -n redis &
   REDIS_PROXY_PID=$!
   trap _kill_port_forwarder EXIT
-  # while ! netstat -tna | grep 'LISTEN\>' | grep -q ":$REDIS_PROXY_PORT\>"; do
-  #   sleep 0.1
-  # done
+  while ! netstat -tna | grep 'LISTEN' | grep -q "$REDIS_PROXY_PORT"; do
+    sleep 0.1
+  done
   echo "...connected to redis."
 }
 

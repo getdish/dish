@@ -9,7 +9,6 @@ import {
   globalTagId,
   menuItemsUpsertMerge,
   onGraphError,
-  restaurantFindOneWithTags,
   restaurantUpdate,
   restaurantUpsertManyTags,
 } from '@dish/graph'
@@ -37,6 +36,8 @@ import {
   googlePermalink,
   restaurantCountForCity,
   restaurantFindIDBatchForCity,
+  restaurantFindOneWithTagsSQL,
+  roughSizeOfObject,
 } from '../utils'
 import { GPT3 } from './GPT3'
 import { checkMaybeDeletePhoto, remove404Images } from './remove_404_images'
@@ -132,7 +133,10 @@ export class Self extends WorkerJob {
 
   async mergeAll(id: string) {
     this._job_identifier_restaurant_id = id
-    const restaurant = await restaurantFindOneWithTags({ id: id })
+    const restaurant = await restaurantFindOneWithTagsSQL(id)
+    console.log(
+      '`restaurant.tag` bytes: ' + roughSizeOfObject(restaurant?.tags)
+    )
     if (!restaurant) {
       sentryMessage('SELF CRAWLER restaurantFindOneWithTags() null', {
         hasura: global['latestUnhandledGQLessRejection']?.errors[0]?.message,
@@ -742,7 +746,7 @@ export class Self extends WorkerJob {
 
   async generateGPT3Summary(id: string) {
     this._job_identifier_restaurant_id = id
-    const restaurant = await restaurantFindOneWithTags({ id: id })
+    const restaurant = await restaurantFindOneWithTagsSQL(id)
     if (restaurant) {
       this.main_db = DB.main_db()
       this.restaurant = restaurant
@@ -792,7 +796,8 @@ export class Self extends WorkerJob {
     const time = this.elapsedTime() + 's'
     const memory =
       Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + 'Mb'
-    console.log(`${this.restaurant.slug}: ${message} | ${time} | ${memory}`)
+    const restaurant = this.restaurant?.name || '...'
+    console.log(`${restaurant}: ${message} | ${time} | ${memory}`)
   }
 
   _debugDaemon() {
@@ -803,17 +808,19 @@ export class Self extends WorkerJob {
     this._debugRamIntervalFunction = setInterval(fn, 5000)
   }
 
-  _checkRAM() {
+  _checkRAM(marker?: string) {
     const ram_value = Math.round(process.memoryUsage().heapUsed / 1024 / 1024)
     const ram = ram_value + 'Mb'
-    if (ram_value > 1000 && !this._high_ram_message_sent) {
-      sentryMessage('Worker RAM over 1Gi', {
+    const limit = 5000
+    if (ram_value > limit && !this._high_ram_message_sent) {
+      sentryMessage(`Worker RAM over ${limit}Mb`, {
         ram,
         restaurant: this.restaurant,
       })
       this._high_ram_message_sent = true
     }
-    this.log(`Worker RAM usage: ${ram}`)
+    marker = marker ? `(${marker})` : ''
+    this.log(`Worker RAM usage ${marker}: ${ram}`)
   }
 
   _checkNulls() {

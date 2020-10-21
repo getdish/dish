@@ -27,7 +27,7 @@ import {
 } from '../../src/scrape-helpers'
 import { Self } from '../../src/self/Self'
 import { GEM_UIID } from '../../src/self/Tagging'
-import { DB } from '../../src/utils'
+import { DB, restaurantFindOneWithTagsSQL } from '../../src/utils'
 import { breakdown } from '../restaurant_base_breakdown'
 import { yelp_hours } from '../yelp_hours'
 
@@ -258,9 +258,9 @@ async function reset(t: ExecutionContext<Context>) {
     restaurant_fixture,
     restaurant_fixture_nearly_matches,
   ])
-  t.context.restaurant = (await restaurantFindOneWithTags({
-    id: restaurant.id,
-  })) as RestaurantWithId
+  t.context.restaurant = (await restaurantFindOneWithTagsSQL(
+    restaurant.id
+  )) as RestaurantWithId
   const zero_coord = { lat: 0, lon: 0 }
   const scrapes = [
     { restaurant_id: restaurant.id, location: zero_coord, ...google },
@@ -489,10 +489,10 @@ test('Tag rankings', async (t) => {
       score: 30,
     },
   ])
-  self.restaurant = await restaurantFindOneWithTags(self.restaurant)
+  self.restaurant = await restaurantFindOneWithTagsSQL(self.restaurant.id)
   await self.preMerge(self.restaurant)
   await self.finishTagsEtc()
-  self.restaurant = await restaurantFindOneWithTags(self.restaurant)
+  self.restaurant = await restaurantFindOneWithTagsSQL(self.restaurant.id)
   t.is(!!self.restaurant, true)
   if (!self.restaurant) return
   t.is(self.restaurant.tags[0].tag.name, tag_name)
@@ -503,10 +503,10 @@ test('Tag rankings', async (t) => {
       score: 50,
     },
   ])
-  self.restaurant = await restaurantFindOneWithTags(self.restaurant)
+  self.restaurant = await restaurantFindOneWithTagsSQL(self.restaurant.id)
   await self.preMerge(self.restaurant)
   await self.finishTagsEtc()
-  self.restaurant = await restaurantFindOneWithTags(self.restaurant)
+  self.restaurant = await restaurantFindOneWithTagsSQL(self.restaurant.id)
   t.is(self.restaurant.tags[0].rank, 1)
 })
 
@@ -519,16 +519,14 @@ test('Finding dishes in the corpus', async (t) => {
     existing_tag4,
   ] = await addTags(t.context.restaurant)
 
-  t.context.restaurant = (await restaurantFindOneWithTags({
-    id: t.context.restaurant.id,
-  }))!
+  t.context.restaurant = (await restaurantFindOneWithTagsSQL(
+    t.context.restaurant.id
+  ))!
   await self.preMerge(t.context.restaurant)
   await self.getUberDishes()
   await self.scanCorpus()
   await self.finishTagsEtc()
-  const updated = await restaurantFindOneWithTags({
-    id: t.context.restaurant.id,
-  })
+  const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
   t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag1.id))
   t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag2.id))
   t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag3.id))
@@ -538,9 +536,9 @@ test('Finding dishes in the corpus', async (t) => {
 test('Review naive sentiments', async (t) => {
   const self = new Self()
   await addTags(t.context.restaurant)
-  const restaurant = (await restaurantFindOneWithTags({
-    id: t.context.restaurant.id,
-  })) as RestaurantWithId
+  const restaurant = (await restaurantFindOneWithTagsSQL(
+    t.context.restaurant.id
+  )) as RestaurantWithId
   await self.preMerge(restaurant)
   await self.scanCorpus()
   await self.finishTagsEtc()
@@ -586,9 +584,7 @@ test('Finding filters and alternates in reviews', async (t) => {
   await self.getScrapeData()
   await self.scanCorpus()
   await self.finishTagsEtc()
-  const updated = await restaurantFindOneWithTags({
-    id: t.context.restaurant.id,
-  })
+  const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
   t.assert(!!updated, 'not found')
   if (!updated) return
   t.assert(updated.tag_names.includes('test-veg'))
@@ -609,9 +605,7 @@ test('Find photos of dishes', async (t) => {
     },
   ])
   await restaurantUpsertOrphanTags(t.context.restaurant, [tag.name])
-  const restaurant = await restaurantFindOneWithTags({
-    id: t.context.restaurant.id,
-  })
+  const restaurant = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
   t.assert(!!restaurant, 'not found')
   if (!restaurant) return
   t.context.restaurant = restaurant as RestaurantWithId
@@ -619,9 +613,7 @@ test('Find photos of dishes', async (t) => {
   await self.findPhotosForTags()
   await self.finishTagsEtc()
   await restaurantUpdate(self.restaurant)
-  const updated = await restaurantFindOneWithTags({
-    id: t.context.restaurant.id,
-  })
+  const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
   t.is(updated?.id, t.context.restaurant.id)
   if (!updated) return
   const tag1 =
@@ -650,9 +642,7 @@ test('Identifying country tags', async (t) => {
   ])
   const dish = new Self()
   await dish.mergeAll(t.context.restaurant.id)
-  const updated = await restaurantFindOneWithTags({
-    id: t.context.restaurant.id,
-  })
+  const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
   t.assert(updated, 'not found')
   if (!updated) return
   t.is(updated.tags.length, 5)
@@ -749,16 +739,14 @@ test('Scoring for restaurants', async (t) => {
     'Test 3',
     'Test 4',
   ])
-  const restaurant = (await restaurantFindOneWithTags({
-    id: t.context.restaurant.id,
-  })) as RestaurantWithId
+  const restaurant = (await restaurantFindOneWithTagsSQL(
+    t.context.restaurant.id
+  )) as RestaurantWithId
   await self.preMerge(restaurant)
   await self.mergePhotos()
   await self.scanCorpus()
   await self.postMerge()
-  const updated = await restaurantFindOneWithTags({
-    id: t.context.restaurant.id,
-  })
+  const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
 
   const test_pho = await tagFindOne({ name: 'Testpho' })
   breakdown.sources.all.summaries.unique_tags[0].id = test_pho.id
@@ -775,9 +763,9 @@ test('Scoring for rishes', async (t) => {
     'Test 3',
     'Test 4',
   ])
-  const restaurant = (await restaurantFindOneWithTags({
-    id: t.context.restaurant.id,
-  })) as RestaurantWithId
+  const restaurant = (await restaurantFindOneWithTagsSQL(
+    t.context.restaurant.id
+  )) as RestaurantWithId
   await self.preMerge(restaurant)
   await self.doTags()
   await self.scanCorpus()

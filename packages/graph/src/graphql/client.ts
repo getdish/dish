@@ -1,5 +1,6 @@
 import { Client } from '@o/gqless'
 
+import { isNode } from '../constants'
 import { createFetcher } from '../createFetcher'
 import { query_root, schema } from './generated'
 
@@ -25,4 +26,7 @@ export function resetQueryCache(options?: { ifAbove?: number }) {
   }
   client.cache.entries.clear()
   client = createQueryClient()
+  if (isNode && global.gc) {
+    global.gc()
+  }
 }

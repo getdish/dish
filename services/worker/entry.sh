@@ -5,4 +5,4 @@ while true; do
   killall chrome
 done &
 
-xvfb-run node /app/services/worker/_/index.js
+xvfb-run node --expose-gc /app/services/worker/_/index.js

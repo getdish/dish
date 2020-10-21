@@ -337,3 +337,59 @@ export async function restaurantDeleteOrUpdateByGeocoderID(
   `
   await DB.one_query_on_main(query)
 }
+
+export async function restaurantFindOneWithTagsSQL(restaurant_id: string) {
+  const query = `
+    SELECT json_agg(s) FROM (
+      SELECT
+        *,
+        st_asgeojson(location) AS location,
+        (
+          SELECT array_agg(rtags_subquery) FROM (
+            SELECT
+              *,
+              (
+                SELECT (json_agg(ts))->0 FROM (
+                  SELECT * FROM tag
+                  WHERE tag.id = restaurant_tag.tag_id
+                ) ts
+              ) as tag
+            FROM restaurant_tag
+            WHERE restaurant_tag.restaurant_id = restaurant.id
+          ) rtags_subquery
+        ) AS tags
+      FROM restaurant
+      WHERE restaurant.id = '${restaurant_id}'
+    ) s
+  `
+  const response = await DB.one_query_on_main(query)
+  const restaurant = response.rows[0].json_agg[0]
+  if (!restaurant.tags) restaurant.tags = []
+  restaurant.location = JSON.parse(restaurant.location)
+  return restaurant
+}
+
+export function roughSizeOfObject(object) {
+  var objectList: any[] = []
+  var stack = [object]
+  var bytes = 0
+
+  while (stack.length) {
+    var value = stack.pop()
+
+    if (typeof value === 'boolean') {
+      bytes += 4
+    } else if (typeof value === 'string') {
+      bytes += value.length * 2
+    } else if (typeof value === 'number') {
+      bytes += 8
+    } else if (typeof value === 'object' && objectList.indexOf(value) === -1) {
+      objectList.push(value)
+
+      for (var i in value) {
+        stack.push(value[i])
+      }
+    }
+  }
+  return bytes
+}

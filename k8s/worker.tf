@@ -33,8 +33,8 @@ resource "kubernetes_deployment" "worker" {
           image = "docker.k8s.dishapp.com/dish/worker"
           resources {
             limits {
-              cpu    = "2"
-              memory = "4Gi"
+              cpu    = "1.15"
+              memory = "5Gi"
             }
           }
           env {
@@ -159,7 +159,7 @@ resource "kubernetes_deployment" "worker" {
           }
           env {
             name = "NODE_OPTIONS"
-            value = "--max_old_space_size=4096"
+            value = "--max_old_space_size=5120"
           }
           env {
             name = "GORSE_ENDPOINT"
