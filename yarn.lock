@@ -8787,6 +8787,11 @@ expo-linear-gradient@^8.2.1, expo-linear-gradient@~8.2.1:
   dependencies:
     prop-types "15.7.2"
 
+expo-linear-gradient@^8.3.1:
+  version "8.3.1"
+  resolved "https://registry.npmjs.org/expo-linear-gradient/-/expo-linear-gradient-8.3.1.tgz#5dd3878c0700035d55241a4a453c5e224acc60ff"
+  integrity sha512-zlWGua8vm7+af4otaSpJlzu0SYIr0aWbL0qICySCDUEKkqig6MqfuI69NYHC0w9ocWZuh2xyj6Rbfy01UqcVSg==
+
 expo-linking@~1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/expo-linking/-/expo-linking-1.0.3.tgz#8c0f68e89262d09d4b280479010ac21ccfa1e971"

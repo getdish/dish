@@ -105,9 +105,18 @@ export function Link<
     target,
     tags,
     tag,
+    children,
     // rest
     ...textProps
   } = allProps
   const { wrapWithLinkElement } = useLink(allProps)
-  return wrapWithLinkElement(<Text color={brandColor} {...textProps} />)
+  return wrapWithLinkElement(
+    typeof children === 'string' ? (
+      <Text color={brandColor} {...textProps}>
+        {children}
+      </Text>
+    ) : (
+      children
+    )
+  )
 }

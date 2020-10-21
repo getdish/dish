@@ -155,7 +155,6 @@
     "body-parser": "^1.19.0",
     "canvas": "2.6.1",
     "expo": "^38.0.10",
-    "expo-linear-gradient": "^8.2.1",
     "expo-splash-screen": "^0.5.0",
     "expo-status-bar": "^1.0.2",
     "expo-updates": "^0.2.14",

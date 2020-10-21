@@ -93,6 +93,9 @@ module.exports = function getWebpackConfig(
           '@dish/react-feather': 'react-feather',
           '@o/gqless': path.join(require.resolve('@o/gqless'), '..'),
           recyclerlistview: 'recyclerlistview/web',
+          // bugfix until merged
+          'react-native-web/src/modules/normalizeColor':
+            'react-native-web/dist/modules/normalizeColor',
         },
       },
       resolveLoader: {
@@ -140,12 +143,6 @@ module.exports = function getWebpackConfig(
                 use: [
                   {
                     loader: 'babel-loader',
-                    options: {
-                      cacheDirectory: true,
-                      plugins: [
-                        isHot && require.resolve('react-refresh/babel'),
-                      ].filter(Boolean),
-                    },
                   },
                   isStaticExtracted && {
                     loader: require.resolve('snackui-static/loader'),
@@ -436,6 +433,9 @@ function babelInclude(inputPath) {
     return true
   }
   if (inputPath.includes('react-native-animatable')) {
+    return true
+  }
+  if (inputPath.includes('expo-linear-gradient')) {
     return true
   }
   if (

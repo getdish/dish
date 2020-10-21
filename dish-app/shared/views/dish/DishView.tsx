@@ -1,17 +1,22 @@
 import { slugify } from '@dish/graph'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
-import { Image } from 'react-native'
-import { AbsoluteVStack, Box, HStack, StackProps, Text, VStack } from 'snackui'
+import { Image, StyleSheet } from 'react-native'
+import {
+  AbsoluteVStack,
+  Box,
+  Hoverable,
+  LinearGradient,
+  StackProps,
+  Text,
+  VStack,
+} from 'snackui'
 
-import { blue } from '../../colors'
 import { isWeb } from '../../constants'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { NavigableTag } from '../../state/NavigableTag'
 import { Link } from '../ui/Link'
-import { LinkButton } from '../ui/LinkButton'
-import { Squircle } from '../ui/Squircle'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
 import { getDishColors } from './getDishBackgroundColor'
 
@@ -56,10 +61,11 @@ export const DishView = memo(
       ...getRoundedDishViewSize(size),
       100
     )
-    const borderRadius = Math.round(size * 0.08)
     const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
     const isFallback = _isFallback ?? dish.isFallback
-    const backgroundColor = getDishColors(dish.name).lightColor
+    const sizeInner = Math.round(isFallback ? size * 0.85 : size * 0.98)
+    const { lightColor, color } = getDishColors(dish.name)
+    const backgroundColor = lightColor
     const isActive = isHovered || selected
 
     return (
@@ -103,7 +109,7 @@ export const DishView = memo(
                 ] as NavigableTag[],
               })}
         >
-          <HStack
+          <Hoverable
             onHoverIn={() => setIsHovered(true)}
             onHoverOut={() => setIsHovered(false)}
           >
@@ -134,7 +140,7 @@ export const DishView = memo(
             <AbsoluteVStack
               className="ease-in-out"
               fullscreen
-              borderRadius={borderRadius - 1}
+              pointerEvents="none"
               alignItems="flex-end"
               justifyContent="center"
               zIndex={4}
@@ -148,8 +154,8 @@ export const DishView = memo(
                   className="ease-in-out"
                   zIndex={10}
                   position="absolute"
-                  top="2%"
-                  right="2%"
+                  bottom="15%"
+                  left="0%"
                   fontSize={40}
                   transform={[{ scale: 1 }]}
                 >
@@ -185,7 +191,7 @@ export const DishView = memo(
                   className="unskewX ease-in-out-fast"
                   // flex={1} breaks native
                   overflow="hidden"
-                  fontWeight="600"
+                  fontWeight="700"
                   color={isActive ? '#fff' : '#000'}
                   fontSize={hasLongWord ? 14 : 16}
                   textAlign="center"
@@ -195,26 +201,31 @@ export const DishView = memo(
               </Box>
             </AbsoluteVStack>
             {!!dish.image && (
-              <VStack
-                overflow="hidden"
-                borderRadius={100}
-                {...(isFallback && {
-                  width: Math.round(size * 0.95),
-                  height: Math.round(size * 0.95),
-                })}
-              >
+              <VStack overflow="hidden" borderRadius={100}>
                 <ImageAlt
                   source={{ uri: imageUrl }}
                   style={{
-                    width: '100%',
-                    height: '100%',
+                    width: sizeInner,
+                    height: sizeInner,
                   }}
                   resizeMode="cover"
                 />
               </VStack>
             )}
+            <AbsoluteVStack fullscreen borderRadius={10000} overflow="hidden">
+              <LinearGradient
+                style={[StyleSheet.absoluteFill]}
+                colors={[
+                  `${backgroundColor}${isFallback ? '88' : '22'}`,
+                  `${backgroundColor}00`,
+                  `${color}${isFallback ? '88' : '22'}`,
+                ]}
+                start={[0, 0.5]}
+                end={[0.5, 0.5]}
+              />
+            </AbsoluteVStack>
             {!dish.image && <Text fontSize={80}>🥗</Text>}
-          </HStack>
+          </Hoverable>
         </Link>
       </VStack>
     )

@@ -1,7 +1,8 @@
 module.exports = function (api) {
   const isWorker = process.env.TARGET === 'worker'
   const isSSR = process.env.TARGET === 'ssr'
-  api.cache.using(() => process.env.NODE_ENV)
+
+  api.cache.using(() => `${process.env.NODE_ENV}${process.env.TARGET}`)
 
   return {
     plugins: [
@@ -26,7 +27,10 @@ module.exports = function (api) {
       .filter(Boolean)
       .map(resolvePlugin),
     presets: [
-      ['@babel/preset-typescript', { onlyRemoveTypeImports: true }],
+      [
+        '@babel/preset-typescript',
+        { onlyRemoveTypeImports: true, isTSX: true, allExtensions: true },
+      ],
       [
         '@babel/preset-react',
         {

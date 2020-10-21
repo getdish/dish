@@ -612,7 +612,7 @@ const RestaurantPeekDishes = memo(
                 restaurantSlug={props.restaurantSlug}
                 restaurantId={props.restaurantId}
                 dish={dish}
-                marginRight={-25}
+                marginRight={-20}
                 marginTop={isEven ? -10 : 10}
               />
             )
