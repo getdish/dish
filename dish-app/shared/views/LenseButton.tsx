@@ -27,6 +27,7 @@ export const LenseButton = memoIsEqualDeep(
   }) => {
     const isSmall = useIsNarrow()
     const lenseColorLight = rgbString(lense.rgb, isSmall ? 0.6 : 0.4)
+    const lenseColorDark = rgbString(lense.rgb.map((x) => x * 1.2))
     const scale = size == 'md' ? 1 : size === 'lg' ? 1.2 : 1.3
     const sizePx = 42
 
@@ -80,13 +81,10 @@ export const LenseButton = memoIsEqualDeep(
             marginBottom={-8}
             backgroundColor="transparent"
             {...(isActive && {
-              backgroundColor: rgbString(lense.rgb.map((x) => x * 1.2)),
+              backgroundColor: lenseColorDark,
             })}
           >
             <VStack
-              opacity={
-                size !== 'lg' ? (isActive ? 1 : 0.7) : isActive ? 1 : 0.8
-              }
               hoverStyle={{
                 opacity: 1,
               }}
@@ -95,7 +93,7 @@ export const LenseButton = memoIsEqualDeep(
               <Text
                 fontWeight="600"
                 lineHeight={sizePx * scale * 0.39}
-                color={isSmall || isActive ? '#fff' : '#000'}
+                color={isSmall || isActive ? '#fff' : lenseColorDark}
                 paddingHorizontal={2}
                 textAlign="center"
                 height={16}

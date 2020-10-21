@@ -61,7 +61,7 @@ export const HomeTopSearches = memo(() => {
                   color="#444"
                   fontSize={14}
                   borderRadius={50}
-                  fontWeight="500"
+                  fontWeight="600"
                   {...(hasLenseColor && {
                     color: `rgb(${rgbString})`,
                   })}
