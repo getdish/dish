@@ -408,8 +408,8 @@ const TopDishesCuisineItem = memo(
           >
             {/* <LinearGradient
               colors={[bgLightTranslucent, '#fff']}
-              startPoint={[1, 0]}
-              endPoint={[0, 0]}
+              start={[1, 0]}
+              end={[0, 0]}
               style={StyleSheet.absoluteFill}
             /> */}
           </AbsoluteVStack>

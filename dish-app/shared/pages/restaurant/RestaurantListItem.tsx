@@ -505,7 +505,7 @@ const fadeOutRightElement = (
     <LinearGradient
       style={StyleSheet.absoluteFill}
       colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
-      startPoint={[0, 0]}
+      start={[0, 0]}
       endPoint={[1, 0]}
     />
   </VStack>

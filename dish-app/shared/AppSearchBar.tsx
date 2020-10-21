@@ -7,8 +7,8 @@ import {
   Search,
 } from '@dish/react-feather'
 import React, { Suspense, memo } from 'react'
-import { Platform } from 'react-native'
-import { AbsoluteVStack, HStack, Spacer, VStack } from 'snackui'
+import { Platform, StyleSheet } from 'react-native'
+import { AbsoluteVStack, HStack, LinearGradient, Spacer, VStack } from 'snackui'
 
 import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
@@ -49,7 +49,7 @@ export const parentIds = {
 
 export const AppSearchBarFloating = () => {
   const isSmall = useIsNarrow()
-  const { background } = useSearchBarTheme()
+  const { background, backgroundRgb } = useSearchBarTheme()
 
   if (isSmall) {
     return null
@@ -102,7 +102,14 @@ export const AppSearchBarFloating = () => {
             // opacity={0.76}
             backgroundColor={background}
             fullscreen
-          />
+          >
+            <LinearGradient
+              style={[StyleSheet.absoluteFill, { left: '80%' }]}
+              start={[0.5, 0.5]}
+              end={[1, 1]}
+              colors={[background, `rgb(${backgroundRgb.map((x) => x * 0.8)})`]}
+            />
+          </AbsoluteVStack>
         </AbsoluteVStack>
         <VStack
           position="relative"

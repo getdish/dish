@@ -50,8 +50,8 @@ export const HomeTopSearches = memo(() => {
             {hasLenseColor && (
               <LinearGradient
                 colors={[`rgba(${rgbString}, 0.1)`, `rgba(${rgbString},0.07)`]}
-                startPoint={[1, 1]}
-                endPoint={[-1, 1]}
+                start={[1, 1]}
+                end={[-1, 1]}
                 style={StyleSheet.absoluteFill}
               />
             )}

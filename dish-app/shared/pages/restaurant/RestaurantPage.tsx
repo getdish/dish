@@ -154,7 +154,7 @@ const RestaurantPage = memo(
                 }
               >
                 <RestaurantDishPhotos
-                  size={150}
+                  size={140}
                   max={40}
                   restaurantSlug={restaurantSlug}
                   restaurantId={restaurant.id ?? undefined}

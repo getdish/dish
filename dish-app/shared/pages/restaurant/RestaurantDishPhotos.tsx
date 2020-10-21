@@ -16,7 +16,7 @@ export const RestaurantDishPhotos = memo(
       selectable,
       onSelect,
       selected,
-      size = 180,
+      size = 170,
       max = 30,
     }: {
       restaurantSlug: string
@@ -74,6 +74,7 @@ export const RestaurantDishPhotos = memo(
                     })}
                   >
                     <DishView
+                      noLink
                       size={size}
                       restaurantSlug={restaurantSlug}
                       restaurantId={restaurantId}
