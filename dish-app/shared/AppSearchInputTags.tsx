@@ -35,6 +35,7 @@ export const AppSearchInputTags = memo(
                   shadowRadius={10}
                   shadowOffset={{ height: 2, width: 0 }}
                   borderColor={'transparent'}
+                  borderRadius={100}
                   hoverStyle={{
                     backgroundColor: 'rgba(0,0,0,0.3)',
                   }}

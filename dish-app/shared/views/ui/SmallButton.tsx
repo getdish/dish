@@ -19,7 +19,7 @@ export const SmallButton = ({
   children,
   color,
   fontSize,
-  fontWeight,
+  fontWeight = '600',
   lineHeight,
   textAlign,
   tooltip,
@@ -35,7 +35,6 @@ export const SmallButton = ({
     <Text
       color={isActive ? '#000' : bg}
       fontSize={14}
-      fontWeight="600"
       {...{
         color,
         fontSize,

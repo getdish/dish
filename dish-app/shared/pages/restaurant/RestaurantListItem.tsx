@@ -230,7 +230,7 @@ const RestaurantListItemContent = memo(
         <VStack flex={1} alignItems="flex-start" maxWidth="100%">
           {/* ROW: TITLE */}
           <VStack
-            hoverStyle={{ backgroundColor: '#fafafa' }}
+            hoverStyle={{ backgroundColor: 'rgba(0,0,0,0.025)' }}
             paddingTop={10}
             marginLeft={-pad}
             paddingLeft={pad}
@@ -314,7 +314,6 @@ const RestaurantListItemContent = memo(
               paddingLeft={50}
               paddingRight={20}
               marginTop={isSmall ? -6 : 0}
-              marginBottom={isSmall ? -12 : 0}
               transform={[{ translateY: -10 }]}
             >
               <HStack alignItems="center" cursor="pointer" spacing="lg">
@@ -572,16 +571,17 @@ const RestaurantPeekDishes = memo(
     const foundMatchingSearchedDish = firstDishName
       ? tagNames.includes(firstDishName)
       : false
-    const dishSize = 165
+    const dishSize = 160
     return (
       <HStack
         contain="paint layout"
         pointerEvents="auto"
         padding={20}
         paddingVertical={40}
+        alignItems="center"
         marginVertical={-40}
         height={dishSize + 80}
-        spacing={size == 'lg' ? 18 : 6}
+        // spacing={size == 'lg' ? 18 : 6}
         width={dishSize * 5}
       >
         {/* <AbsoluteVStack top={1} left={20}>
@@ -592,6 +592,12 @@ const RestaurantPeekDishes = memo(
 
         {!!dishes[0]?.name &&
           dishes.map((dish, i) => {
+            const isEven = i % 2 === 0
+            const baseSize = foundMatchingSearchedDish
+              ? i == 0
+                ? dishSize
+                : dishSize * 0.95
+              : dishSize
             if (!isLoaded) {
               if (i > 2) {
                 return (
@@ -602,17 +608,12 @@ const RestaurantPeekDishes = memo(
             return (
               <DishView
                 key={i}
-                size={
-                  foundMatchingSearchedDish
-                    ? i == 0
-                      ? dishSize
-                      : dishSize * 0.95
-                    : dishSize
-                }
-                marginTop={foundMatchingSearchedDish ? (i > 0 ? 0 : -5) : 0}
+                size={baseSize * (isEven ? 1.2 : 1)}
                 restaurantSlug={props.restaurantSlug}
                 restaurantId={props.restaurantId}
                 dish={dish}
+                marginRight={-25}
+                marginTop={isEven ? -10 : 10}
               />
             )
           })}

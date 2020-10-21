@@ -20,6 +20,7 @@
     "app": "yarn workspace @dish/dish-app start",
     "web": "yarn workspace @dish/dish-app web",
     "web:prod": "yarn workspace @dish/dish-app web:prod",
+    "web:prod:profile": "yarn workspace @dish/dish-app web:prod",
     "ios": "yarn workspace @dish/dish-app ios",
     "postinstall": "./bin/postinstall.sh",
     "preinstall": "./bin/preinstall.sh; ",

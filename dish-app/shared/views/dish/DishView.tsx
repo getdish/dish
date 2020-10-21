@@ -9,6 +9,7 @@ import { isWeb } from '../../constants'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { NavigableTag } from '../../state/NavigableTag'
+import { Link } from '../ui/Link'
 import { LinkButton } from '../ui/LinkButton'
 import { Squircle } from '../ui/Squircle'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
@@ -48,90 +49,90 @@ export const DishView = memo(
       .map((x) => capitalize(x))
       .join(' ')
 
-    const width = size * 0.9
+    const width = size
     const height = size
     const imageUrl = getImageUrl(
       dish.image,
       ...getRoundedDishViewSize(size),
       100
     )
-    const borderRadius = size * 0.08
+    const borderRadius = Math.round(size * 0.08)
     const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
     const isFallback = _isFallback ?? dish.isFallback
     const backgroundColor = getDishColors(dish.name).lightColor
     const isActive = isHovered || selected
 
     return (
-      <LinkButton
+      <VStack
+        position="relative"
+        zIndex={isHovered ? 1 : 0}
         className="ease-in-out-faster"
         alignItems="center"
-        position="relative"
         justifyContent="center"
-        // width={width}
-        height={height}
         pressStyle={{
           transform: [{ scale: 0.98 }],
           opacity: 1,
         }}
         hoverStyle={{
-          zIndex: 2,
           transform: [{ scale: 1.02 }],
         }}
-        onHoverIn={() => setIsHovered(true)}
-        onHoverOut={() => setIsHovered(false)}
-        {...(restaurantSlug
-          ? {
-              name: 'gallery',
-              params: {
-                restaurantSlug,
-                dishId: slugify(dish.name ?? ''),
-              },
-            }
-          : {
-              tags: [
-                cuisine,
-                { type: 'dish', name: dish.name },
-              ] as NavigableTag[],
-            })}
+        width={width}
+        height={height}
+        borderRadius={1000}
+        // isHovered={isHovered}
+        backgroundColor={backgroundColor}
+        borderColor={selected ? '#000' : 'transparent'}
+        shadowColor="#000"
+        shadowOpacity={0.1}
+        shadowRadius={10}
         {...rest}
       >
-        {typeof dish.score === 'number' && (
-          <AbsoluteVStack
-            width={20}
-            height={20}
-            pointerEvents="none"
-            zIndex={1000000}
-            top={-8}
-            left={-8}
+        <Link
+          {...(restaurantSlug
+            ? {
+                name: 'gallery',
+                params: {
+                  restaurantSlug,
+                  dishId: slugify(dish.name ?? ''),
+                },
+              }
+            : {
+                tags: [
+                  cuisine,
+                  { type: 'dish', name: dish.name },
+                ] as NavigableTag[],
+              })}
+        >
+          <HStack
+            onHoverIn={() => setIsHovered(true)}
+            onHoverOut={() => setIsHovered(false)}
           >
-            <Suspense fallback={null}>
-              {!!dish.name && (
-                <DishUpvoteDownvote
-                  size="sm"
-                  name={dish.name}
-                  subtle
-                  score={dish.score}
-                  restaurantId={restaurantId}
-                  restaurantSlug={restaurantSlug}
-                />
-              )}
-            </Suspense>
-          </AbsoluteVStack>
-        )}
+            {typeof dish.score === 'number' && (
+              <AbsoluteVStack
+                width={20}
+                height={20}
+                pointerEvents="none"
+                zIndex={1000000}
+                top={2}
+                left={2}
+              >
+                <Suspense fallback={null}>
+                  {!!dish.name && (
+                    <DishUpvoteDownvote
+                      size="sm"
+                      name={dish.name}
+                      subtle
+                      score={dish.score}
+                      restaurantId={restaurantId}
+                      restaurantSlug={restaurantSlug}
+                    />
+                  )}
+                </Suspense>
+              </AbsoluteVStack>
+            )}
 
-        <Squircle
-          className={!isFallback ? 'dish-inset-shadow' : ''}
-          width={width}
-          height={height}
-          borderRadius={borderRadius}
-          isHovered={isHovered}
-          backgroundColor={backgroundColor}
-          borderColor={selected ? '#000' : 'transparent'}
-          borderWidth={2}
-          outside={
-            <HStack
+            <AbsoluteVStack
               className="ease-in-out"
-              position="absolute"
               fullscreen
               borderRadius={borderRadius - 1}
               alignItems="flex-end"
@@ -156,25 +157,27 @@ export const DishView = memo(
                 </Text>
               )}
               <Box
-                position="relative"
-                className="skewX ease-in-out-fast"
+                position="absolute"
+                bottom="10%"
+                left="5%"
+                className="ease-in-out-fast"
                 backgroundColor="#fff"
                 borderRadius={8}
                 paddingVertical={3}
                 paddingHorizontal={8}
                 maxWidth="100%"
                 overflow="hidden"
+                transform={[{ translateX: -10 }, { skewX: '-12deg' }]}
                 shadowColor="rgba(0,0,0,0.1)"
                 shadowRadius={2}
                 zIndex={1000}
-                bottom={-8}
                 {...(isActive && {
                   backgroundColor: '#000',
                   shadowColor: 'rgba(0,0,0,0.2)',
                   transform: [
                     { scale: 1.05 },
+                    { translateX: -10 },
                     { skewX: '-12deg' },
-                    { translateY: -5 },
                   ],
                 })}
               >
@@ -182,7 +185,7 @@ export const DishView = memo(
                   className="unskewX ease-in-out-fast"
                   // flex={1} breaks native
                   overflow="hidden"
-                  fontWeight="400"
+                  fontWeight="600"
                   color={isActive ? '#fff' : '#000'}
                   fontSize={hasLongWord ? 14 : 16}
                   textAlign="center"
@@ -190,43 +193,30 @@ export const DishView = memo(
                   {dishName}
                 </Text>
               </Box>
-            </HStack>
-          }
-        >
-          {!!dish.image && (
-            <>
-              <AbsoluteVStack
-                backgroundColor="rgba(0,0,0,0.1)"
+            </AbsoluteVStack>
+            {!!dish.image && (
+              <VStack
+                overflow="hidden"
                 borderRadius={100}
-                width={size * 0.8}
-                height={size * 0.8}
-                zIndex={-1}
-              />
-              <ImageAlt
-                source={{ uri: imageUrl }}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  opacity: 1,
-                  ...(isFallback && {
-                    borderRadius: 100,
-                    width: size * 0.9,
-                    height: size * 0.9,
-                  }),
-                  ...(!isFallback &&
-                    {
-                      // width: size * 0.8,
-                      // height: size * 0.8,
-                      // transform: [{ translateX: 20 }, { translateY: 20 }],
-                    }),
-                }}
-                resizeMode="cover"
-              />
-            </>
-          )}
-          {!dish.image && <Text fontSize={80}>🥗</Text>}
-        </Squircle>
-      </LinkButton>
+                {...(isFallback && {
+                  width: Math.round(size * 0.95),
+                  height: Math.round(size * 0.95),
+                })}
+              >
+                <ImageAlt
+                  source={{ uri: imageUrl }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  resizeMode="cover"
+                />
+              </VStack>
+            )}
+            {!dish.image && <Text fontSize={80}>🥗</Text>}
+          </HStack>
+        </Link>
+      </VStack>
     )
   }
 )

@@ -354,10 +354,11 @@ const TopDishesCuisineItem = memo(
       return (country.dishes || []).slice(0, 12).map((top_dish, index) => {
         return (
           <HStack
-            transform={[{ translateY: index % 2 == 0 ? -3 : 3 }]}
+            transform={[{ translateY: index % 2 == 0 ? -5 : 5 }]}
             hoverStyle={{
               zIndex: 1000,
             }}
+            marginRight={-8}
             key={index}
           >
             <DishView
@@ -469,12 +470,15 @@ const TopDishesCuisineItem = memo(
           position="relative"
         >
           <ContentScrollViewHorizontal style={{ paddingVertical: 15 }}>
-            <HStack alignItems="center" spacing={14} paddingRight={20}>
+            <HStack alignItems="center" paddingRight={20}>
               <VStack marginRight={6}>
                 <TopDishesTrendingRestaurants country={country} />
               </VStack>
 
+              <Spacer />
+
               {countryDishes}
+
               <LinkButton
                 className="see-through"
                 width={dishHeight * 0.8}
