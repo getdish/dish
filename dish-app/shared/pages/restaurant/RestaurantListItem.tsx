@@ -19,13 +19,12 @@ import {
   Spacer,
   StackProps,
   Text,
-  TextSuperScript,
   Tooltip,
   VStack,
   useGet,
 } from 'snackui'
 
-import { bgLight, bgLightHover, bgLightPress, brandColor } from '../../colors'
+import { bgLightHover, bgLightPress, brandColor } from '../../colors'
 import { isWeb } from '../../constants'
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../helpers/isIOS'
@@ -44,6 +43,7 @@ import { Link } from '../../views/ui/Link'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { Squircle } from '../../views/ui/Squircle'
 import { ensureFlexText } from './ensureFlexText'
+import { RankView } from './RankView'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours, priceRange } from './RestaurantDetailRow'
@@ -448,7 +448,7 @@ const RestaurantListItemContent = memo(
 
             {/* PEEK / TAGS (RIGHT SIDE) */}
             {/* margin top: negative the titles second row height */}
-            <VStack paddingLeft={10} position="relative" marginTop={-30}>
+            <VStack paddingLeft={10} position="relative" marginTop={-40}>
               <Suspense fallback={null}>
                 <RestaurantPeekDishes
                   restaurantSlug={props.restaurantSlug}
@@ -510,50 +510,6 @@ const fadeOutRightElement = (
   </VStack>
 )
 
-const RankView = memo(({ rank }: { rank: number }) => {
-  return (
-    <VStack
-      width={42}
-      height={42}
-      {...(isWeb && {
-        marginLeft: -16,
-        marginBottom: -10,
-        transform: [{ translateY: -15 }],
-        marginRight: -4,
-      })}
-      {...(!isWeb && {
-        marginLeft: -6,
-        marginTop: -10,
-        marginRight: 0,
-      })}
-      position="relative"
-      backgroundColor={bgLight}
-      borderRadius={1000}
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Text
-        color="#777"
-        transform={[{ translateY: -0 }]}
-        textAlign="center"
-        lineHeight={38}
-      >
-        <TextSuperScript transform={[{ translateY: -4 }]} fontSize={11}>
-          #
-        </TextSuperScript>
-        <Text
-          letterSpacing={-1}
-          fontSize={+rank > 9 ? 18 : 26}
-          fontWeight="300"
-          color="#000"
-        >
-          {rank}
-        </Text>
-      </Text>
-    </VStack>
-  )
-})
-
 const RestaurantPeekDishes = memo(
   graphql(function RestaurantPeekDishes(props: {
     size?: 'lg' | 'md'
@@ -578,7 +534,6 @@ const RestaurantPeekDishes = memo(
         return type != 'lense' && type != 'filter' && type != 'outlier'
       }),
     ].filter((x) => !!x)
-    const spacing = size == 'lg' ? 22 : 18
     // const restaurant = useRestaurantQuery(props.restaurantSlug)
     // // get them all as once to avoid double query limit on gqless
     const tagNames = tagSlugs
@@ -617,7 +572,7 @@ const RestaurantPeekDishes = memo(
     const foundMatchingSearchedDish = firstDishName
       ? tagNames.includes(firstDishName)
       : false
-    const dishSize = 140
+    const dishSize = 165
     return (
       <HStack
         contain="paint layout"
@@ -626,7 +581,7 @@ const RestaurantPeekDishes = memo(
         paddingVertical={40}
         marginVertical={-40}
         height={dishSize + 80}
-        spacing={spacing}
+        spacing={size == 'lg' ? 18 : 6}
         width={dishSize * 5}
       >
         {/* <AbsoluteVStack top={1} left={20}>
@@ -651,10 +606,10 @@ const RestaurantPeekDishes = memo(
                   foundMatchingSearchedDish
                     ? i == 0
                       ? dishSize
-                      : dishSize * 0.9
+                      : dishSize * 0.95
                     : dishSize
                 }
-                marginTop={foundMatchingSearchedDish ? (i > 0 ? 0 : -10) : 0}
+                marginTop={foundMatchingSearchedDish ? (i > 0 ? 0 : -5) : 0}
                 restaurantSlug={props.restaurantSlug}
                 restaurantId={props.restaurantId}
                 dish={dish}

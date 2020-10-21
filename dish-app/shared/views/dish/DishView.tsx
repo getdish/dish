@@ -55,7 +55,7 @@ export const DishView = memo(
       ...getRoundedDishViewSize(size),
       100
     )
-    const borderRadius = size * 0.15
+    const borderRadius = size * 0.08
     const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
     const isFallback = _isFallback ?? dish.isFallback
     const backgroundColor = getDishColors(dish.name).lightColor
@@ -200,6 +200,7 @@ export const DishView = memo(
                 borderRadius={100}
                 width={size * 0.8}
                 height={size * 0.8}
+                zIndex={-1}
               />
               <ImageAlt
                 source={{ uri: imageUrl }}
@@ -209,8 +210,8 @@ export const DishView = memo(
                   opacity: 1,
                   ...(isFallback && {
                     borderRadius: 100,
-                    width: size * 0.8,
-                    height: size * 0.8,
+                    width: size * 0.9,
+                    height: size * 0.9,
                   }),
                   ...(!isFallback &&
                     {

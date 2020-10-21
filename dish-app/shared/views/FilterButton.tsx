@@ -67,7 +67,6 @@ export const FilterButton = memo(
         alignItems="center"
         justifyContent="center"
         textAlign="center"
-        borderColor="transparent"
         isActive={isActive}
         tag={tag}
         {...rest}

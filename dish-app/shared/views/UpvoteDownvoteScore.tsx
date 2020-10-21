@@ -22,8 +22,8 @@ export const UpvoteDownvoteScore = memo(
   } & StackProps) => {
     score = Math.round(score)
     const voteButtonColor = subtle ? '#f2f2f2' : null
-    const scale = size === 'sm' ? 0.75 : 1
-    const sizePx = 58 * scale
+    const scale = size === 'sm' ? 0.7 : 1
+    const sizePx = 56 * scale
     const isOpenProp =
       vote === 0
         ? null
@@ -79,7 +79,7 @@ export const UpvoteDownvoteScore = memo(
           </Tooltip>
         )}
         <Text
-          fontSize={Math.min(16, sizePx / `${score}`.length) * scale}
+          fontSize={Math.min(16, sizePx / `${score}`.length) * scale * 1.075}
           fontWeight="600"
           marginVertical={-2 * scale}
           letterSpacing={-0.5}

@@ -148,7 +148,7 @@ export const TagButton = memo((props: TagButtonProps) => {
         className="ease-in-out-faster"
         height={size === 'sm' ? 28 : 34}
         borderRadius={size === 'sm' ? 8 : 10}
-        paddingHorizontal={size === 'sm' ? 4 : 10}
+        paddingHorizontal={size === 'sm' ? 4 : 8}
         overflow="hidden"
         alignItems="center"
         justifyContent="center"
