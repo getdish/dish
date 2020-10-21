@@ -33,7 +33,7 @@ export const AppMenuContents = memo(
             </MenuLinkButton>
           )}
 
-          {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>}
+          {/* {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>} */}
           <MenuLinkButton name="about">About</MenuLinkButton>
           {!om.state.user.isLoggedIn && (
             <>

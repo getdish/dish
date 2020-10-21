@@ -119,20 +119,12 @@ export const ContentScrollView = forwardRef(
           disableScrollViewPanResponder={preventScrolling}
           style={[styles.scroll, style]}
         >
-          <VStack
-            maxWidth={isSmall ? '100%' : drawerWidthMax}
-            alignSelf="flex-end"
-            overflow="hidden"
-            width="100%"
-            flex={1}
-          >
-            {children}
+          {children}
 
-            {/* for drawer, pad bottom */}
-            <VStack
-              height={isSmall && om.state.home.drawerSnapPoint > 0 ? 300 : 0}
-            />
-          </VStack>
+          {/* for drawer, pad bottom */}
+          <VStack
+            height={isSmall && om.state.home.drawerSnapPoint > 0 ? 300 : 0}
+          />
         </ScrollView>
       </ContentScrollContext.Provider>
     )
@@ -143,5 +135,6 @@ const styles = StyleSheet.create({
   scroll: {
     flex: 1,
     height: '100%',
+    maxHeight: '100%',
   },
 })

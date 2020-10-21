@@ -50,13 +50,7 @@ export default function AboutPage({
 
   return (
     <StackDrawer closable title="About Dish">
-      <ContentScrollView
-        id="aboutPage"
-        paddingTop={20}
-        style={{
-          flex: 1,
-        }}
-      >
+      <ContentScrollView id="about">
         <VStack spacing="xl">
           <VStack
             marginLeft={-60}
