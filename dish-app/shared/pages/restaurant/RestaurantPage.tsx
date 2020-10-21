@@ -1,17 +1,8 @@
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo, useCallback, useMemo, useState } from 'react'
-import { StyleSheet } from 'react-native'
-import {
-  AbsoluteVStack,
-  HStack,
-  LinearGradient,
-  LoadingItem,
-  Spacer,
-  VStack,
-  useGet,
-} from 'snackui'
+import { HStack, LoadingItem, Spacer, VStack, useGet } from 'snackui'
 
-import { bgLight, bgLightHover, blue, darkBlue, lightBlue } from '../../colors'
+import { bgLight, bgLightHover, darkBlue } from '../../colors'
 import { getMinLngLat } from '../../helpers/getLngLat'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -22,9 +13,7 @@ import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { StackDrawer } from '../../views/StackDrawer'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { StackViewProps } from '../StackViewProps'
-import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
 import { RestaurantCard } from './RestaurantCard'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
@@ -77,44 +66,55 @@ const RestaurantPage = memo(
 
     const headerElement = useMemo(() => {
       return (
-        <RestaurantHeader
-          color={darkBlue}
-          minHeight={450}
-          showImages
-          restaurantSlug={restaurantSlug}
-          after={
-            <VStack
-              className="ease-in-out"
-              hoverStyle={{
-                transform: [{ scale: 1.0125 }],
-              }}
-              marginBottom={-50}
-              marginTop={0}
-              marginRight={20}
-            >
-              <RestaurantCard
-                restaurantSlug={restaurantSlug}
-                restaurantId={restaurant.id}
-              />
+        <Suspense
+          fallback={
+            <VStack height={497} width="100%">
+              <LoadingItem size="lg" />
             </VStack>
           }
-          below={
-            <Suspense fallback={null}>
-              <RestaurantOverview restaurantSlug={restaurantSlug} />
-              <Spacer size="xl" />
-              <HStack maxHeight={100} overflow="hidden" flexWrap="wrap">
-                <RestaurantTagsRow
-                  size="sm"
+        >
+          <RestaurantHeader
+            color={darkBlue}
+            minHeight={450}
+            showImages
+            restaurantSlug={restaurantSlug}
+            after={
+              <VStack
+                className="ease-in-out"
+                hoverStyle={{
+                  transform: [{ scale: 1.0125 }],
+                }}
+                marginBottom={-50}
+                marginTop={0}
+                marginRight={20}
+              >
+                <RestaurantCard
                   restaurantSlug={restaurantSlug}
                   restaurantId={restaurant.id}
-                  spacing={6}
-                  grid
-                  max={10}
                 />
-              </HStack>
-            </Suspense>
-          }
-        />
+              </VStack>
+            }
+            below={
+              <>
+                <RestaurantOverview
+                  fullHeight
+                  restaurantSlug={restaurantSlug}
+                />
+                <Spacer size="xl" />
+                <HStack maxHeight={100} overflow="hidden" flexWrap="wrap">
+                  <RestaurantTagsRow
+                    size="sm"
+                    restaurantSlug={restaurantSlug}
+                    restaurantId={restaurant.id}
+                    spacing={6}
+                    grid
+                    max={10}
+                  />
+                </HStack>
+              </>
+            }
+          />
+        </Suspense>
       )
     }, [restaurantSlug, restaurant.id])
 
@@ -131,15 +131,7 @@ const RestaurantPage = memo(
             borderBottomColor={bgLightHover}
             borderBottomWidth={1}
           >
-            <Suspense
-              fallback={
-                <VStack height={497} width="100%">
-                  <LoadingItem size="lg" />
-                </VStack>
-              }
-            >
-              {headerElement}
-            </Suspense>
+            {headerElement}
 
             {/* <Spacer size="sm" /> */}
             {/*

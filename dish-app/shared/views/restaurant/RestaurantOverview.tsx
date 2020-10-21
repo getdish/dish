@@ -17,10 +17,10 @@ const quote = (
 export const RestaurantOverview = memo(
   graphql(function RestaurantOverview({
     restaurantSlug,
-    height,
+    fullHeight,
   }: {
     restaurantSlug: string
-    height?: number
+    fullHeight?: boolean
   }) {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const headlines = (restaurant.headlines() ?? [])
@@ -34,7 +34,7 @@ export const RestaurantOverview = memo(
     if (summary) {
       return (
         <HStack
-          maxHeight={lineHeight * 4 - 2}
+          maxHeight={fullHeight ? 'auto' : lineHeight * 4 - 2}
           overflow="hidden"
           paddingHorizontal={30}
           marginHorizontal={-30}
