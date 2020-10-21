@@ -169,6 +169,8 @@ export default memo(function HomePage(props: Props) {
     }
   }, [isOnHome])
 
+  const aboveContentHeight = searchBarHeight - 8
+
   if (isLoaded) {
     return (
       <>
@@ -217,7 +219,12 @@ export default memo(function HomePage(props: Props) {
             paddingTop={isSmall ? 20 : 28}
           >
             <VStack>
-              {!isSmall && <VStack height={searchBarHeight} />}
+              {!isSmall && <VStack height={aboveContentHeight} />}
+
+              <HomeTopDishesTitle />
+
+              <Spacer />
+
               <HomeTopSearches />
 
               {/* <Suspense fallback={null}>
@@ -226,6 +233,8 @@ export default memo(function HomePage(props: Props) {
                     <Spacer size="lg" />
                   </>
                 </Suspense> */}
+
+              <Spacer size="sm" />
 
               <Suspense fallback={null}>
                 <HomeTopDishesContent topDishes={topDishes} />
@@ -286,9 +295,6 @@ const HomeRecentReviews = memo(
 const HomeTopDishesContent = memo(({ topDishes }: { topDishes: any[] }) => {
   return (
     <>
-      <HomeTopDishesTitle />
-      <Spacer size="lg" />
-
       <VStack minHeight={Dimensions.get('window').height * 0.95}>
         {!topDishes.length && (
           <>
