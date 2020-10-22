@@ -1,6 +1,7 @@
 export * from './menu_item-helpers'
 export * from './flushTestData'
 export * from './getGraphEndpoint'
+export * from './reviewAnalyze'
 export * from './graphqlGet'
 export * from './levenshteinDistance'
 export * from './queryHelpers'

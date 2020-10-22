@@ -39,6 +39,22 @@ const LOCAL_ORIGIN =
       : window.location?.origin ?? 'http://localhost'
     : 'http://localhost'
 
+export const ORIGIN = (() => {
+  if (isNode) {
+    return LOCAL_ORIGIN
+  } else {
+    if (isDevProd) {
+      return PROD_ORIGIN
+    } else {
+      if (isHasuraLive) {
+        return PROD_ORIGIN
+      } else {
+        return LOCAL_ORIGIN
+      }
+    }
+  }
+})()
+
 export let SEARCH_DOMAIN = (() => {
   const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
   const LOCAL_SEARCH_DOMAIN = `${LOCAL_ORIGIN}:10000`

@@ -23,7 +23,7 @@ import {
 } from 'snackui'
 
 import { bgLight, bgLightHover, bgLightTranslucent } from '../../colors'
-import { searchBarHeight } from '../../constants'
+import { drawerWidthMax, searchBarHeight } from '../../constants'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { useIsNarrow } from '../../hooks/useIs'
 import { addTagsToCache } from '../../state/allTags'
@@ -194,54 +194,57 @@ export default memo(function HomePage(props: Props) {
             height={searchBarHeight + 10}
           />
         </AbsoluteVStack>
-        <ContentScrollView id="home">
-          {/* cross line */}
-          <AbsoluteVStack
-            opacity={isSmall ? 0 : 1}
-            contain="strict"
-            height={320}
-            width={2000}
-            right="-10%"
-            zIndex={-1}
-            top={-120}
-            transform={[{ rotate: '-2deg' }]}
-            overflow="hidden" // fixes chrome rendering line at bottom glitch
-          >
-            <LinearGradient
-              style={[StyleSheet.absoluteFill]}
-              colors={[bgLightHover, '#fff']}
-            />
-          </AbsoluteVStack>
-          <VStack
-            flex={1}
-            overflow="hidden"
-            maxWidth="100%"
-            paddingTop={isSmall ? 20 : 28}
-          >
-            <VStack>
-              {!isSmall && <VStack height={aboveContentHeight} />}
 
-              <HomeTopDishesTitle />
+        <VStack flex={1} maxWidth={drawerWidthMax} alignSelf="flex-end">
+          <ContentScrollView id="home">
+            {/* cross line */}
+            <AbsoluteVStack
+              opacity={isSmall ? 0 : 1}
+              contain="strict"
+              height={320}
+              width={2000}
+              right="-10%"
+              zIndex={-1}
+              top={-120}
+              transform={[{ rotate: '-2deg' }]}
+              overflow="hidden" // fixes chrome rendering line at bottom glitch
+            >
+              <LinearGradient
+                style={[StyleSheet.absoluteFill]}
+                colors={[bgLightHover, '#fff']}
+              />
+            </AbsoluteVStack>
+            <VStack
+              flex={1}
+              overflow="hidden"
+              maxWidth="100%"
+              paddingTop={isSmall ? 20 : 28}
+            >
+              <VStack>
+                {!isSmall && <VStack height={aboveContentHeight} />}
 
-              <Spacer />
+                <HomeTopDishesTitle />
 
-              <HomeTopSearches />
+                <Spacer />
 
-              {/* <Suspense fallback={null}>
+                <HomeTopSearches />
+
+                {/* <Suspense fallback={null}>
                   <>
                     <HomeRecentReviews />
                     <Spacer size="lg" />
                   </>
                 </Suspense> */}
 
-              <Spacer size="sm" />
+                <Spacer size="sm" />
 
-              <Suspense fallback={null}>
-                <HomeTopDishesContent topDishes={topDishes} />
-              </Suspense>
+                <Suspense fallback={null}>
+                  <HomeTopDishesContent topDishes={topDishes} />
+                </Suspense>
+              </VStack>
             </VStack>
-          </VStack>
-        </ContentScrollView>
+          </ContentScrollView>
+        </VStack>
       </>
     )
   }
@@ -345,7 +348,7 @@ const HomeTopDishesTitle = () => {
   )
 }
 
-const dishHeight = 150
+const dishHeight = 140
 
 const TopDishesCuisineItem = memo(
   ({ country, index }: { index: number; country: TopCuisine }) => {
@@ -357,12 +360,13 @@ const TopDishesCuisineItem = memo(
             hoverStyle={{
               zIndex: 1000,
             }}
-            marginRight={-8}
+            marginRight={-6}
             key={index}
           >
             <DishView
               size={dishHeight}
               isFallback
+              disableFallbackFade
               dish={top_dish}
               cuisine={{
                 id: country.country,
@@ -404,9 +408,11 @@ const TopDishesCuisineItem = memo(
         {index % 2 !== 0 && (
           <AbsoluteVStack
             top={15}
-            left={-100}
+            left={0}
             right={-100}
             bottom={-15}
+            borderTopLeftRadius={30}
+            borderBottomLeftRadius={30}
             backgroundColor={`${
               getColorsForName(country.country).lightColor
             }55`}
@@ -437,9 +443,9 @@ const TopDishesCuisineItem = memo(
             }}
           >
             <Text
-              fontSize={22}
+              fontSize={18}
               lineHeight={28}
-              fontWeight="300"
+              fontWeight="600"
               paddingRight={country.icon ? 32 : 0}
               color="#666"
             >

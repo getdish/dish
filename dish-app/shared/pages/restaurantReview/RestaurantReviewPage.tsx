@@ -1,4 +1,4 @@
-import { graphql, query } from '@dish/graph'
+import { graphql, query, reviewAnalyze } from '@dish/graph'
 import { fetchBertSentiment } from '@dish/helpers'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image, ScrollView, TextInput } from 'react-native'
@@ -105,7 +105,7 @@ const HomePageReviewContent = memo(
         <SmallTitle fontWeight="600">Review {restaurant.name}</SmallTitle>
 
         <Suspense fallback={<LoadingItems />}>
-          <RestaurantReviewComment
+          <RestaurantReviewCommentForm
             restaurantSlug={state.restaurantSlug}
             restaurantId={restaurant.id}
           />
@@ -115,7 +115,7 @@ const HomePageReviewContent = memo(
   })
 )
 
-export const RestaurantReviewComment = memo(
+export const RestaurantReviewCommentForm = memo(
   graphql(
     ({
       restaurantId,
@@ -144,24 +144,16 @@ export const RestaurantReviewComment = memo(
       const lineHeight = 22
       const [height, setHeight] = useState(lineHeight)
       const dishTags = getRestuarantDishes({ restaurantSlug })
-      const [sentiments, setSentiments] = useState<
-        {
-          name: string
-          vote: -1 | 1
-        }[]
-      >([])
 
       useDebounceEffect(
         () => {
           let isMounted = true
 
-          // TODO: Split review into sentences matching each tag
-          // const allTagNames = [...dishTags, ...tagLenses].map((x) => x.name)
-          // const aspects = allTagNames.map((name) => name.toLowerCase())
-
-          fetchBertSentiment(reviewText).then((tagSentiments) => {
-            if (!isMounted) return
-            console.log('got sentiments', tagSentiments)
+          reviewAnalyze({
+            text: reviewText,
+            restaurantId,
+          }).then((res) => {
+            console.log('got', res)
           })
 
           return () => {

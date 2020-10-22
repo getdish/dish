@@ -36,6 +36,7 @@ export const DishView = memo(
     restaurantSlug,
     restaurantId,
     selected,
+    disableFallbackFade,
     isFallback: _isFallback,
     noLink,
     ...rest
@@ -47,6 +48,7 @@ export const DishView = memo(
     dish: DishTagItem
     size?: number
     isFallback?: boolean
+    disableFallbackFade?: boolean
     selected?: boolean
     noLink?: boolean
   } & StackProps) => {
@@ -126,8 +128,8 @@ export const DishView = memo(
           )}
           <Box
             position="absolute"
-            bottom="10%"
-            left="5%"
+            bottom="8%"
+            left="10%"
             className="ease-in-out-fast"
             backgroundColor="#fff"
             borderRadius={8}
@@ -178,9 +180,13 @@ export const DishView = memo(
           <LinearGradient
             style={[StyleSheet.absoluteFill]}
             colors={[
-              `${backgroundColor}${isFallback ? '88' : '22'}`,
-              `${backgroundColor}${isFallback ? '55' : '00'}`,
-              `${color}${isFallback ? '88' : '22'}`,
+              `${backgroundColor}${
+                isFallback && !disableFallbackFade ? '88' : '44'
+              }`,
+              `${backgroundColor}${
+                isFallback && !disableFallbackFade ? '55' : '00'
+              }`,
+              `${color}${isFallback && !disableFallbackFade ? '88' : '44'}`,
             ]}
             start={[0, 0.5]}
             end={[0.5, 0.5]}
