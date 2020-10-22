@@ -8,7 +8,7 @@ export const SentimentText = ({
   sentiment,
   children,
   ...props
-}: TextProps & { sentiment: VoteNumber }) => {
+}: TextProps & { sentiment: number }) => {
   return (
     <Text
       lineHeight={26}

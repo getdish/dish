@@ -25,6 +25,7 @@ export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
 export const RestaurantRatingBreakdown = memo(
   ({
     title = 'Overview',
+    tagName,
     restaurantId,
     restaurantSlug,
     closable,
@@ -32,6 +33,7 @@ export const RestaurantRatingBreakdown = memo(
     showScoreTable,
   }: {
     title?: string
+    tagName?: string
     restaurantId: string
     restaurantSlug: string
     closable?: boolean
@@ -95,7 +97,10 @@ export const RestaurantRatingBreakdown = memo(
             spacing={10}
           >
             <Suspense fallback={null}>
-              <RestaurantSourcesOverview restaurantSlug={restaurantSlug} />
+              <RestaurantSourcesOverview
+                tagName={tagName}
+                restaurantSlug={restaurantSlug}
+              />
             </Suspense>
           </VStack>
 

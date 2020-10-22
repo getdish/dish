@@ -1,4 +1,8 @@
+- broken title wrap listitem
+  - https://dishapp.com/gems/san-francisco/dish~curries
 - gqless memory reduction
+  - 3GB
+    - SLUG=momo-masalas ../../dishctl.sh local_node_with_prod_env _/self/sandbox.js
 - scrolling horizontal / vertical fixes
 - https://dishapp.com/drink/san-francisco/open_price-low_country~thai
   - initial search seems not to load

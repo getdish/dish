@@ -504,3 +504,10 @@ body > div {
 .safari-overflow-fix {
   transform: translateZ(0px);
 }
+ mark {
+   display: inline !important;
+ }
+
+ .block {
+   display: block;
+ }

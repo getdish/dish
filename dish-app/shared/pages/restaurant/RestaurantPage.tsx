@@ -171,6 +171,7 @@ const RestaurantPage = memo(
           <Suspense fallback={null}>
             <RestaurantRatingBreakdown
               title={selectedDish ?? 'Overview'}
+              tagName={selectedDish}
               borderless
               showScoreTable
               restaurantSlug={restaurantSlug}
