@@ -117,12 +117,6 @@ export const RestaurantRatingBreakdown = memo(
               restaurantSlug={restaurantSlug}
               restaurantId={restaurantId}
             />
-            {/*
-            <Spacer size="sm" />
-
-            <SmallTitle>Lense Votes</SmallTitle>
-            <Spacer />
-            <RestaurantLenseVote restaurantId={restaurantId} /> */}
           </VStack>
         </HStack>
       </VStack>

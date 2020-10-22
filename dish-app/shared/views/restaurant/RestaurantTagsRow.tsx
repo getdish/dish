@@ -79,7 +79,7 @@ export const RestaurantTagsRow = memo(
                   size={size ?? 'sm'}
                   {...getTagButtonProps(tag)}
                   votable
-                  restaurantId={props.restaurantId}
+                  restaurantSlug={props.restaurantSlug}
                   marginBottom={props.spacing ?? 5}
                 />
                 {!!props.spacing && <Spacer size={props.spacing} />}

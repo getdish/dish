@@ -966,9 +966,6 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
   lastNav = Date.now()
   let curNav = lastNav
   om.state.home.isOptimisticUpdating = false
-  if (navState.tags) {
-    addTagsToCache(navState.tags)
-  }
 
   // do a quick update first
   const curType = curState.type

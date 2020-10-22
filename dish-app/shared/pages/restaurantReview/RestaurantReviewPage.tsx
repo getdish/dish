@@ -53,7 +53,7 @@ export default memo(function RestaurantReviewPage() {
           borderWidth={1}
           position="relative"
           backgroundColor="#fff"
-          borderRadius={25}
+          borderRadius={15}
           shadowColor="#000"
           shadowRadius={150}
           shadowOffset={{ height: 10, width: 0 }}
@@ -76,7 +76,7 @@ export default memo(function RestaurantReviewPage() {
               overflow="hidden"
               alignItems="center"
             >
-              <AbsoluteVStack zIndex={10} top={5} right={30}>
+              <AbsoluteVStack zIndex={10} top={5} right={32}>
                 <StackViewCloseButton />
               </AbsoluteVStack>
               <Suspense fallback={<LoadingItems />}>
@@ -129,16 +129,22 @@ export const RestaurantReviewCommentForm = memo(
       const { review, upsertReview, deleteReview } = useUserReviewCommentQuery(
         restaurantId
       )
-      const allVotes = query.review({
-        where: {
-          restaurant_id: {
-            _eq: restaurantId,
-          },
-          type: {
-            _eq: 'vote',
-          },
-        },
-      })
+      const allVotes =
+        restaurantId && !!user?.id
+          ? query.review({
+              where: {
+                restaurant_id: {
+                  _eq: restaurantId,
+                },
+                user_id: {
+                  _eq: user.id,
+                },
+                type: {
+                  _eq: 'vote',
+                },
+              },
+            })
+          : []
       const [reviewText, setReviewText] = useState('')
       const [isSaved, setIsSaved] = useState(false)
       const lineHeight = 22
@@ -215,6 +221,7 @@ export const RestaurantReviewCommentForm = memo(
                   setReviewText(text)
                 }}
                 multiline
+                numberOfLines={5}
                 placeholder="Write a comment. You can just leave a tip or a whole review, up to you."
                 style={{
                   borderWidth: 1,
@@ -262,7 +269,7 @@ export const RestaurantReviewCommentForm = memo(
             >
               <SmallTitle divider="off">Lenses</SmallTitle>
               <Suspense fallback={null}>
-                <RestaurantLenseVote restaurantId={restaurantId} />
+                <RestaurantLenseVote restaurantSlug={restaurantSlug} />
               </Suspense>
             </VStack>
 
@@ -286,7 +293,7 @@ export const RestaurantReviewCommentForm = memo(
                     return (
                       <TagSmallButton
                         tag={tag as any}
-                        restaurantId={restaurantId}
+                        restaurantSlug={restaurantSlug}
                         key={tag.name}
                         image={
                           <Image

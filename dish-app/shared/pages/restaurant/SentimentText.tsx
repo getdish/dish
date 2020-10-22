@@ -2,7 +2,7 @@ import React from 'react'
 import { Text, TextProps } from 'snackui'
 
 import { lightGreen, lightGrey, lightRed } from '../../colors'
-import { VoteNumber } from '../../hooks/useUserUpvoteDownvoteQuery'
+import { VoteNumber } from '../../hooks/useUserTagVotes'
 
 export const SentimentText = ({
   sentiment,

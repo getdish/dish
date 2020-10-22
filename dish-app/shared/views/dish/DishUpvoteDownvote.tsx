@@ -2,7 +2,7 @@ import { graphql, slugify } from '@dish/graph'
 import React from 'react'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { useUserUpvoteDownvoteQuery } from '../../hooks/useUserUpvoteDownvoteQuery'
+import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { UpvoteDownvoteScore } from '../UpvoteDownvoteScore'
 
 export const DishUpvoteDownvote = graphql(function DishUpvoteDownvote({
@@ -38,7 +38,7 @@ export const DishUpvoteDownvote = graphql(function DishUpvoteDownvote({
         })[0]?.score ?? 0
       : 0)
 
-  const { vote, setVote } = useUserUpvoteDownvoteQuery(restaurantId, {
+  const { vote, setVote } = useUserTagVotes(restaurantSlug, {
     [slugify(name)]: true,
   })
   return (

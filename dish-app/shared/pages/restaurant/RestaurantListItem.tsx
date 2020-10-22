@@ -1,3 +1,4 @@
+// debug
 import { graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
 import { fullyIdle, series } from '@o/async'
@@ -180,13 +181,16 @@ const RestaurantListItemContent = memo(
     }, [props.rank])
 
     const contentSideProps: StackProps = {
-      width: isSmall ? '82%' : '60%',
+      width: isSmall ? '75%' : '60%',
       minWidth: isSmall
         ? isWeb
           ? '40vw'
           : Dimensions.get('window').width * 0.75
         : 320,
-      maxWidth: Math.min(Dimensions.get('window').width * 0.75, 420),
+      maxWidth: Math.min(
+        Dimensions.get('window').width * 0.75,
+        isSmall ? 360 : 420
+      ),
     }
 
     const [open_text, open_color, opening_hours] = openingHours(restaurant)
@@ -355,6 +359,7 @@ const RestaurantListItemContent = memo(
           <HStack flex={1}>
             <VStack
               {...contentSideProps}
+              width="5%"
               className="fix-safari-shrink-height"
               justifyContent="center"
               flex={1}
@@ -369,10 +374,7 @@ const RestaurantListItemContent = memo(
                 paddingLeft={20}
                 paddingRight={10}
               >
-                <RestaurantOverview
-                  height={100}
-                  restaurantSlug={restaurantSlug}
-                />
+                <RestaurantOverview restaurantSlug={restaurantSlug} />
               </VStack>
 
               {/* BOTTOM ROW */}

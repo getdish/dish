@@ -37,6 +37,7 @@ export const DarkModal = ({
       >
         <VStack
           flex={1}
+          maxHeight="100%" // needed for chrome
           margin={-8}
           borderWidth={1}
           position="relative"

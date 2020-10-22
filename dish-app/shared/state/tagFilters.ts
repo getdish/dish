@@ -1,22 +1,24 @@
 import { Tag } from '@dish/graph'
 
+// TODO pull these from backend (script? babel preval?)
+
 export const tagFilters: Tag[] = [
   {
-    id: '41',
+    id: 'x1000000-0000-0000-0000-000000000000',
     name: 'Open',
     type: 'filter',
     // @ts-ignore
     groupId: 'basics',
   },
   {
-    id: '61',
+    id: 'x2000000-0000-0000-0000-000000000000',
     name: 'Delivery',
     type: 'filter',
     // @ts-ignore
     groupId: 'basics',
   },
   {
-    id: '01',
+    id: 'x3000000-0000-0000-0000-000000000000',
     name: 'price-low',
     type: 'filter',
     // @ts-ignore
@@ -24,14 +26,14 @@ export const tagFilters: Tag[] = [
     stack: true,
   },
   {
-    id: '21',
+    id: 'x4000000-0000-0000-0000-000000000000',
     name: 'price-mid',
     type: 'filter',
     // @ts-ignore
     groupId: 'price',
   },
   {
-    id: '31',
+    id: 'x5000000-0000-0000-0000-000000000000',
     name: 'price-high',
     type: 'filter',
     // @ts-ignore

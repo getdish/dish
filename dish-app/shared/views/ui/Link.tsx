@@ -7,6 +7,7 @@ import { Text, VStack, useForceUpdate } from 'snackui'
 import { brandColor } from '../../colors'
 import { isWeb } from '../../constants'
 import { RoutesTable, router } from '../../state/router'
+import { isStringChild } from './isStringChild'
 import { LinkProps } from './LinkProps'
 import { getNormalizeLinkProps } from './useNormalizedLink'
 
@@ -51,16 +52,18 @@ export const useLink = (props: LinkProps<any, any>) => {
       e.stopPropagation()
     }
 
+    const newLinkProps = getNormalizeLinkProps(props, forceUpdate)
+
     if (props.asyncClick) {
       cancel.current = series([
         () => sleep(50),
         () => {
           cancel.current = null
-          nav(navItem, linkProps, props, e)
+          nav(navItem, newLinkProps, props, e)
         },
       ])
     } else {
-      nav(navItem, linkProps, props, e)
+      nav(navItem, newLinkProps, props, e)
     }
   }
 
@@ -75,9 +78,11 @@ export const useLink = (props: LinkProps<any, any>) => {
           {
             onClick: onPress,
             className: `display-contents dish-link ${props.className ?? ''}`,
-            href: props.href ?? router.getPathFromParams(navItem),
             target: props.target,
-            onMouseEnter: linkProps.onMouseEnter,
+            ...(element === 'a' && {
+              href: props.href ?? router.getPathFromParams(navItem),
+              onMouseEnter: linkProps.onMouseEnter,
+            }),
           },
           children
         )
@@ -111,7 +116,7 @@ export function Link<
   } = allProps
   const { wrapWithLinkElement } = useLink(allProps)
   return wrapWithLinkElement(
-    typeof children === 'string' ? (
+    isStringChild(children) ? (
       <Text color={brandColor} {...textProps}>
         {children}
       </Text>

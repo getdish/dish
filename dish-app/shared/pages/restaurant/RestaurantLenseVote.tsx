@@ -7,7 +7,7 @@ import { TagSmallButton } from '../../views/TagSmallButton'
 
 export const RestaurantLenseVote = memo(
   graphql(
-    ({ restaurantId, ...props }: StackProps & { restaurantId: string }) => {
+    ({ restaurantSlug, ...props }: StackProps & { restaurantSlug: string }) => {
       return (
         <HStack
           flexWrap="wrap"
@@ -21,7 +21,7 @@ export const RestaurantLenseVote = memo(
               <TagSmallButton
                 key={lense.id}
                 tag={lense}
-                restaurantId={restaurantId}
+                restaurantSlug={restaurantSlug}
               />
             )
           })}

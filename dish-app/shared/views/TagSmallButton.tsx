@@ -3,34 +3,27 @@ import { ThumbsDown, ThumbsUp } from '@dish/react-feather'
 import React from 'react'
 import { AbsoluteVStack, HStack, Spacer, Text, VStack } from 'snackui'
 
-import {
-  bg,
-  bgHover,
-  darkGreen,
-  darkGrey,
-  darkRed,
-  green,
-  grey,
-  red,
-} from '../colors'
-import { useUserTagVotes } from '../hooks/useUserUpvoteDownvoteQuery'
+import { darkGreen, darkGrey, darkRed, green, grey, red } from '../colors'
+import { useUserTagVote } from '../hooks/useUserTagVotes'
+import { getTagId } from '../state/getTagId'
 import { tagDisplayName } from '../state/tagDisplayName'
 import { FullTag } from '../state/tagLenses'
 import { SmallButton } from './ui/SmallButton'
 
 export const TagSmallButton = graphql(
   ({
-    restaurantId,
+    restaurantSlug,
     tag,
     image,
   }: {
-    restaurantId: string
+    restaurantSlug: string
     tag: FullTag
     image?: any
   }) => {
-    const [votes, setVote] = useUserTagVotes(restaurantId, tag.id)
-    const review = votes[0]
-    const vote = review?.vote ?? 0
+    const [vote, setVote] = useUserTagVote({
+      restaurantSlug,
+      tagKey: getTagId(tag),
+    })
     const hasVoted = vote === 1 || vote === -1
     const VoteIcon = vote == 1 || vote === 0 ? ThumbsUp : ThumbsDown
     const backgroundColor = vote === 1 ? green : vote === -1 ? red : grey
@@ -39,7 +32,7 @@ export const TagSmallButton = graphql(
 
     return (
       <SmallButton
-        onPress={() => setVote(tag, vote === -1 ? 0 : vote === 1 ? -1 : 1)}
+        onPress={() => setVote(vote === -1 ? 0 : vote === 1 ? -1 : 1)}
         marginBottom={8}
         backgroundColor={backgroundColor}
         hoverStyle={{

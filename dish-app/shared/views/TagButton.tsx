@@ -28,7 +28,7 @@ import {
   red,
 } from '../colors'
 import { isWeb } from '../constants'
-import { useUserUpvoteDownvoteQuery } from '../hooks/useUserUpvoteDownvoteQuery'
+import { useUserTagVotes } from '../hooks/useUserTagVotes'
 import { getTagId } from '../state/getTagId'
 import { tagDisplayName } from '../state/tagDisplayName'
 import { LinkButton } from './ui/LinkButton'
@@ -85,6 +85,7 @@ export const getTagColors = ({ rgb, type }: Partial<Tag>) => {
 export type TagButtonProps = Omit<StackProps & TagButtonTagProps, 'rgb'> & {
   rgb?: [number, number, number]
   rank?: number
+  restaurantSlug?: string
   size?: 'lg' | 'md' | 'sm'
   votable?: boolean
   closable?: boolean
@@ -98,7 +99,6 @@ export type TagButtonProps = Omit<StackProps & TagButtonTagProps, 'rgb'> & {
   replace?: boolean
   replaceSearch?: boolean
   onPress?: Function
-  restaurantId?: string
 }
 
 export const TagButton = memo((props: TagButtonProps) => {
@@ -212,7 +212,9 @@ export const TagButton = memo((props: TagButtonProps) => {
             </Text>
           )}
         </Text>
-        {!!votable && <TagButtonVote {...props} color={fg} scale={scale} />}
+        {!!votable && !!props.restaurantSlug && (
+          <TagButtonVote {...props} color={fg} scale={scale} />
+        )}
         {!!closable && (
           <VStack onPress={prevent} onPressIn={prevent} onPressOut={onClose}>
             <VStack
@@ -257,12 +259,9 @@ export const TagButton = memo((props: TagButtonProps) => {
 const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   const { scale } = props
   const [hovered, setHovered] = useState(false)
-  const { vote, setVote } = useUserUpvoteDownvoteQuery(
-    props.restaurantId ?? '',
-    {
-      [getTagId(props)]: true,
-    }
-  )
+  const { vote, setVote } = useUserTagVotes(props.restaurantSlug, {
+    [getTagId(props)]: true,
+  })
   const Icon = vote ? ThumbsDown : ThumbsUp
   const color = props.color ?? 'rgba(0,0,0,0.7)'
   const iconProps = {

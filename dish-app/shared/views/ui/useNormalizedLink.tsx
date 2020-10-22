@@ -2,8 +2,10 @@ import { isPresent } from '@dish/helpers'
 import { isEqual, omit } from 'lodash'
 
 import { memoize } from '../../helpers/memoizeWeak'
+import { allTags } from '../../state/allTags'
 import { getNavigateItemForState } from '../../state/getNavigateItemForState'
 import { getNextState } from '../../state/getNextState'
+import { getTagId } from '../../state/getTagId'
 import { HomeStateItem, HomeStateNav } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic } from '../../state/omStatic'
@@ -53,7 +55,9 @@ const getNormalizedLink = (
     }
   }
 
-  tags = tags.filter(isPresent)
+  tags = tags.filter(isPresent).map((tag) => {
+    return allTags[getTagId(tag)] ?? tag
+  })
 
   if (tags.length) {
     const tagProps = getNavigateTo({
@@ -85,7 +89,7 @@ const getNormalizedLink = (
 const getNavigateTo = (props: HomeStateNav): LinkButtonProps | null => {
   let nextState = getNextState(props)
   if (nextState) {
-    const navigateItem = getNavigateItemForState(om, nextState)
+    const navigateItem = getNavigateItemForState(omStatic, nextState)
     return {
       ...navigateItem,
       preventNavigate: true,

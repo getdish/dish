@@ -1,6 +1,7 @@
 import { HistoryItem } from '@dish/router'
 import { capitalize } from 'lodash'
 
+import { getFullTags } from './getFullTags'
 import { NavigableTag } from './NavigableTag'
 import { SPLIT_TAG, SPLIT_TAG_TYPE } from './SPLIT_TAG'
 
@@ -21,6 +22,7 @@ export const getTagsFromRoute = (
       }
     }
   }
+  getFullTags(tags)
   return tags
 }
 

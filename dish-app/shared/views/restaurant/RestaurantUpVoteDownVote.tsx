@@ -2,7 +2,7 @@ import { graphql } from '@dish/graph'
 import React, { Suspense, memo } from 'react'
 import { HoverablePopover } from 'snackui'
 
-import { useUserUpvoteDownvoteQuery } from '../../hooks/useUserUpvoteDownvoteQuery'
+import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { Link } from '../ui/Link'
 import { UpvoteDownvoteScore } from '../UpvoteDownvoteScore'
@@ -38,10 +38,7 @@ const RestaurantUpVoteDownVoteContents = memo(
     score: baseScore,
     activeTagIds,
   }: UpvoteDownvoteProps) {
-    const { vote, setVote } = useUserUpvoteDownvoteQuery(
-      restaurantId,
-      activeTagIds
-    )
+    const { vote, setVote } = useUserTagVotes(restaurantSlug, activeTagIds)
     const score = baseScore + vote
     return (
       <Link

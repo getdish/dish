@@ -195,7 +195,12 @@ export default memo(function HomePage(props: Props) {
           />
         </AbsoluteVStack>
 
-        <VStack flex={1} maxWidth={drawerWidthMax} alignSelf="flex-end">
+        <VStack
+          flex={1}
+          width="100%"
+          maxWidth={drawerWidthMax}
+          alignSelf="flex-end"
+        >
           <ContentScrollView id="home">
             {/* cross line */}
             <AbsoluteVStack
@@ -571,7 +576,6 @@ function updateHomeTagsCache(all: any) {
   // update tags
   for (const topDishes of all) {
     tags.push({
-      id: `${topDishes.country}`,
       name: topDishes.country,
       type: 'country',
       icon: topDishes.icon,
@@ -579,7 +583,6 @@ function updateHomeTagsCache(all: any) {
     tags = [
       ...tags,
       ...(topDishes.dishes ?? []).map((dish) => ({
-        id: dish.name ?? '',
         name: dish.name ?? '',
         type: 'dish',
       })),
