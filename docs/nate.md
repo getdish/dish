@@ -1,10 +1,12 @@
+- gqless memory reduction
+- scrolling horizontal / vertical fixes
+- https://dishapp.com/drink/san-francisco/open_price-low_country~thai
+  - initial search seems not to load
 - improve memory gqless node
   - SLUG=coqueta ./dishctl.sh local_node_with_prod_env services/crawlers/_/self/sandbox.js
 - other lense tags:
   - "family run"
 - overall just runthrough everything a few times and fix a lot
-- scrolling horizontal should disable vertical drag
-- small listitem improvements
 - gallery v2
   - resolve dish images
   - clicking a dish takes you to the gallery but there are no photos of that dish

@@ -1,3 +1,5 @@
+- searching "bobos" doesn't bring up "bobo's" restaurant which is popular
+  - should we file this under "things that may need a search refactor?"
 ✔️ fix latest build issue
 - ratio more important in ranking (not popularity contest)
 - fix yelp not crawling all reviews (slugs: coqueta, mong-thu-cafe)
