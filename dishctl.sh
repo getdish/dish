@@ -943,6 +943,26 @@ function redis_pvc_wipe() {
   kubectl rollout restart deployment/worker
 }
 
+function get_github_actions_runs() {
+  curl -u "tombh:$GITHUB_TOKEN" \
+    -H "Accept: application/vnd.github.v3+json" \
+    https://api.github.com/repos/getdish/dish/actions/runs
+}
+
+function get_sha_build_status() {
+  current_sha=$(git rev-parse HEAD)
+  response=$(get_github_actions_runs)
+  statuses=$(
+    echo $response | jq '.workflow_runs[] | .head_sha + " " + .conclusion'
+  )
+  current_commit_status=$(echo "$statuses" | grep $current_sha)
+  if echo "$current_commit_status" | grep -q "success"; then
+    echo "passed"
+  else
+    echo "failed"
+  fi
+}
+
 if command -v git &> /dev/null; then
   export PROJECT_ROOT=$(git rev-parse --show-toplevel)
   branch=$(git rev-parse --abbrev-ref HEAD)
