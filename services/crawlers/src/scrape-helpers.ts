@@ -1,5 +1,6 @@
 import {
   RestaurantWithId,
+  ZeroUUID,
   ensureJSONSyntax,
   restaurantFindOne,
 } from '@dish/graph'
@@ -55,6 +56,7 @@ export async function scrapeFindOneBySourceID(
     FROM scrape
       WHERE source = '${source}'
       AND id_from_source = '${id}'
+      AND restaurant_id != '${ZeroUUID}'
     ORDER BY time DESC
     LIMIT 1;
   `
