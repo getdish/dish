@@ -691,6 +691,49 @@ function _buildkit_build() {
   fi
   dish_docker_login
   echo "Building image: $name |$dish_base_version|$push|"
+  tries=0
+  while [ $tries -lt 4 ]; do
+    build_log="$(mktemp)"
+    exit_code=$(
+      _buildkit_build_command \
+        "$context" \
+        "$dockerfile_path" \
+        "$dish_base_version" \
+        "$name" \
+        "$type" \
+        "$push" \
+        "$output" \
+        "$redirect" 2> >(tee $build_log >&2)
+    )
+    re='^[0-9]+$'
+    if ! [[ $exit_code =~ $re ]] ; then
+      exit_code=0
+    fi
+    if [[ $((exit_code)) > 0 ]]; then
+      if grep -q "transport is closing" "$build_log"; then
+        ((tries++))
+        echo "retrying build for $name..."
+        continue
+      else
+        echo "`buildctl` failed"
+        exit $exit_code
+      fi
+    else
+      echo "\`buildctl\` ($name) successful"
+      break
+    fi
+  done
+}
+
+function _buildkit_build_command() {
+  context="$1"
+  dockerfile_path="$2"
+  dish_base_version="$3"
+  name="$4"
+  type="$5"
+  push="$6"
+  output="$7"
+  redirect="$8"
   buildctl \
     --addr tcp://buildkit.k8s.dishapp.com:1234 \
     --tlscacert k8s/etc/certs/buildkit/client/ca.pem \
@@ -704,8 +747,9 @@ function _buildkit_build() {
       --opt build-arg:DISH_BASE_VERSION=$dish_base_version \
       --export-cache type=registry,ref=$name-buildcache \
       --import-cache type=registry,ref=$name-buildcache \
-      --output type=$type,name=$name$push | $output | cat - >$redirect
-  echo "\`buildctl\` ($name) exited with: $?"
+      --output type=$type,name=$name$push \
+        | $output | cat - >$redirect \
+  || echo $?
 }
 
 function buildkit_build() {
@@ -772,6 +816,9 @@ function ci_push_images_to_latest() {
   dish_docker_login
   for image in "${ALL_IMAGES[@]}"
   do
+    if [[ "$image" == "worker" ]]; then
+      continue
+    fi
     new=$DISH_REGISTRY/dish/$image:latest
     docker push $new
   done
