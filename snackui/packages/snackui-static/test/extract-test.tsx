@@ -247,6 +247,9 @@ async function extractStaticApp() {
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
       mainFields: ['tsmain', 'browser', 'module', 'main'],
+      alias: {
+        'react-native': 'react-native-web',
+      },
     },
     module: {
       rules: [
@@ -280,6 +283,7 @@ async function extractStaticApp() {
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         'process.env.DEBUG': JSON.stringify(process.env.DEBUG),
+        'process.env.SNACKUI_COMPILE_PROCESS': JSON.stringify(1),
       }),
     ],
   })
