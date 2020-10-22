@@ -16,6 +16,23 @@ export async function search({
   tags = [],
   limit = 50,
 }: RestaurantSearchArgs): Promise<RestaurantOnlyIds[]> {
+  const result = await searchMain({
+    center: { lat, lng },
+    span,
+    query,
+    tags,
+    limit,
+  })
+  return result.restaurants
+}
+
+export async function searchMain({
+  center: { lat, lng },
+  span,
+  query,
+  tags = [],
+  limit = 50,
+}: RestaurantSearchArgs): Promise<any> {
   const params = [
     'query=' + query,
     'lon=' + lng,
@@ -27,10 +44,9 @@ export async function search({
   ]
   const url = SEARCH_DOMAIN + '/search?' + params.join('&')
   const x = Date.now()
-  const response = await fetch(url).then((res) => res.json())
-  const results = response.restaurants
-  console.log('search', Date.now() - x + 'ms', url, results.length)
-  return results
+  const result = await fetch(url).then((res) => res.json())
+  console.log('search', Date.now() - x + 'ms', url, result.restaurants?.length)
+  return result
 }
 
 export async function getHomeDishes(

@@ -9,6 +9,7 @@ import {
   restaurantUpsertOrphanTags,
   restaurantUpsertRestaurantTags,
   search,
+  searchMain,
   tagInsert,
 } from '../src'
 import { restaurant_fixture } from './etc/fixtures'
@@ -19,7 +20,7 @@ test.beforeEach(async (t) => {
 
 test('Searching for a restaurant by name', async (t) => {
   const [restaurant] = await restaurantUpsert([restaurant_fixture])
-  const results = await search({
+  const results = await searchMain({
     center: {
       lat: 50.09,
       lng: 0.09,
@@ -30,7 +31,7 @@ test('Searching for a restaurant by name', async (t) => {
     },
     query: 'Test',
   })
-  t.is(results[0].id, restaurant.id)
+  t.is(results.name_matches[0].id, restaurant.id)
 })
 
 test('Searching for a restaurant by tag', async (t) => {
@@ -66,7 +67,7 @@ test('Orders by restaurant score if no dish tags queried', async (t) => {
   await restaurantUpsertRestaurantTags(rr1, [{ tag_id: tag.id, score: 3 }])
   await restaurantUpsertRestaurantTags(rr2, [{ tag_id: tag.id, score: 1 }])
   await restaurantUpsertRestaurantTags(rr3, [{ tag_id: tag.id, score: 5 }])
-  const results = await search({
+  const result = await searchMain({
     center: {
       lat: 50.24,
       lng: 0.24,
@@ -77,6 +78,7 @@ test('Orders by restaurant score if no dish tags queried', async (t) => {
     },
     query: 'test',
   })
+  const results = result.name_matches
   t.is(results?.length, 3)
   t.is(results?.[0].id, rr1.id)
   t.is(results?.[1].id, rr2.id)

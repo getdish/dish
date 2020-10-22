@@ -46,67 +46,9 @@ main AS (
   AND (
 
     (
-      (?3 = '' AND ?4 = '')
-      OR
-      (
-        ?3 != ''
-        AND (
-          -- Search restaurant titles
-          name ILIKE '%' || ?3 || '%'
-
-          -- Search reviews
-          OR restaurant.id IN (
-            SELECT
-              restaurant_id
-            FROM review
-            WHERE
-              (
-                (ST_DWithin(review.location, ST_MakePoint(?0, ?1), ?2) OR ?2 = '0')
-                AND
-                (
-                  ST_Within(
-                    review.location,
-                    ST_MakeEnvelope(?6, ?7, ?8, ?9, 0)
-                  )
-                  OR ?10 = 'IGNORE BB'
-                )
-              )
-              AND review.text ILIKE '%' || ?3 || '%'
-            GROUP BY review.restaurant_id
-            ORDER BY count(review.restaurant_id)
-          )
-
-          -- Search menu items
-          OR restaurant.id IN (
-            SELECT
-              restaurant_id
-            FROM menu_item
-            WHERE
-              (
-                (ST_DWithin(menu_item.location, ST_MakePoint(?0, ?1), ?2) OR ?2 = '0')
-                AND
-                (
-                  ST_Within(
-                    menu_item.location,
-                    ST_MakeEnvelope(?6, ?7, ?8, ?9, 0)
-                  )
-                  OR ?10 = 'IGNORE BB'
-                )
-              )
-              AND (
-                menu_item.description ILIKE '%' || ?3 || '%'
-                OR
-                menu_item.name ILIKE '%' || ?3 || '%'
-              )
-            GROUP BY menu_item.restaurant_id
-            ORDER BY count(menu_item.restaurant_id)
-          )
-        )
-      ) OR (
-        ?4 != ''
-        AND
-        tag_names @> to_json(string_to_array(?4, ','))::jsonb
-      )
+      ?4 != ''
+      AND
+      tag_names @> to_json(string_to_array(?4, ','))::jsonb
     )
 
     AND (
@@ -178,19 +120,13 @@ main AS (
   GROUP BY restaurant.id
 
   ORDER BY
-
-    CASE
-      -- Default sort order is by the _restaurant's_ score
-      WHEN NOT EXISTS (SELECT 1 FROM dish_ids) THEN score
-      -- However, if a known dish(es) is being searched for, then order the restaurants
-      -- based on the number of mentions of those dishes
-      ELSE (
-        SELECT SUM(review_mentions_count)
-          FROM restaurant_tag rt
-          WHERE rt.restaurant_id = restaurant.id
-            AND rt.tag_id IN (SELECT id FROM dish_ids)
-      )
-    END DESC NULLS LAST
+    (
+      SELECT SUM(review_mentions_count)
+        FROM restaurant_tag rt
+        WHERE rt.restaurant_id = restaurant.id
+          AND rt.tag_id IN (SELECT id FROM dish_ids)
+    )
+    DESC NULLS LAST
 ),
 
 -- Convert a rank like 1/10 into a unit that can be later multiplied consistently
@@ -220,6 +156,82 @@ final AS (
     FROM main
   ) s
   ORDER BY (restaurant_rank_score + rishes_rank_score) DESC
+  LIMIT ?5
+),
+
+title_matches AS (
+  SELECT * FROM (
+    SELECT id, slug FROM restaurant
+      WHERE name ILIKE '%' || regexp_replace(?3, '\W+', '%', 'g') || '%'
+      AND
+      (
+        (ST_DWithin(restaurant.location, ST_MakePoint(?0, ?1), ?2) OR ?2 = '0')
+        AND
+        (
+          ST_Within(
+            restaurant.location,
+            ST_MakeEnvelope(?6, ?7, ?8, ?9, 0)
+          )
+          OR ?10 = 'IGNORE BB'
+        )
+      )
+    ORDER BY score DESC NULLS LAST
+    LIMIT ?5
+  ) stitlem
+  WHERE ?3 != ''
+),
+
+text_matches AS (
+  SELECT * FROM (
+    SELECT id, slug FROM restaurant WHERE
+
+    -- Search reviews
+    restaurant.id IN (
+      SELECT restaurant_id FROM review
+        WHERE
+        (
+          (ST_DWithin(review.location, ST_MakePoint(?0, ?1), ?2) OR ?2 = '0')
+          AND
+          (
+            ST_Within(
+              review.location,
+              ST_MakeEnvelope(?6, ?7, ?8, ?9, 0)
+            )
+            OR ?10 = 'IGNORE BB'
+          )
+        )
+        AND review.text ILIKE '%' || ?3 || '%'
+      GROUP BY review.restaurant_id
+      ORDER BY count(review.restaurant_id)
+    )
+
+    -- Search menu items
+    OR restaurant.id IN (
+      SELECT restaurant_id FROM menu_item
+        WHERE
+        (
+          (ST_DWithin(menu_item.location, ST_MakePoint(?0, ?1), ?2) OR ?2 = '0')
+          AND
+          (
+            ST_Within(
+              menu_item.location,
+              ST_MakeEnvelope(?6, ?7, ?8, ?9, 0)
+            )
+            OR ?10 = 'IGNORE BB'
+          )
+        )
+        AND (
+          menu_item.description ILIKE '%' || ?3 || '%'
+          OR
+          menu_item.name ILIKE '%' || ?3 || '%'
+        )
+      GROUP BY menu_item.restaurant_id
+      ORDER BY count(menu_item.restaurant_id)
+    )
+
+    LIMIT ?5
+  ) stextm
+  WHERE ?3 != ''
 ),
 
 tag_matches AS (
@@ -229,15 +241,14 @@ tag_matches AS (
     AND
     (
       LOWER(?3) = LOWER(tag.name)
-      -- TODO wait for all alternates to be JSON
-      -- OR
-      -- LOWER(?3) = ANY(
-        -- SELECT LOWER(
-          -- jsonb_array_elements_text(
-            -- alternates
-          -- )
-        -- )
-      -- )
+      OR
+      LOWER(?3) = ANY(
+        SELECT LOWER(
+          jsonb_array_elements_text(
+            tag.alternates
+          )
+        )
+      )
     )
 )
 
@@ -253,7 +264,22 @@ SELECT json_build_object(
         'rish_rank_score', final.rishes_rank_score
       )
     ) FROM final
-    LIMIT ?5
+  ),
+  'name_matches', (
+    SELECT jsonb_agg(
+      json_build_object(
+        'id', title_matches.id,
+        'slug', title_matches.slug
+      )
+    ) FROM title_matches
+  ),
+  'text_matches', (
+    SELECT jsonb_agg(
+      json_build_object(
+        'id', text_matches.id,
+        'slug', text_matches.slug
+      )
+    ) FROM text_matches
   ),
   'tags', (
     SELECT jsonb_agg(
@@ -263,6 +289,12 @@ SELECT json_build_object(
         'cuisine', tag_matches.cuisine
       )
     ) FROM tag_matches
-    LIMIT ?5
+  ),
+  'meta', (
+    SELECT json_build_object(
+      'query', ?3,
+      'tags', ?4,
+      'limit', ?5
+    )
   )
 )
