@@ -26,8 +26,6 @@
       "canvas/**",
       "expo",
       "expo/**",
-      "expo-linear-gradient",
-      "expo-linear-gradient/**",
       "expo-splash-screen",
       "expo-splash-screen/**",
       "expo-status-bar",

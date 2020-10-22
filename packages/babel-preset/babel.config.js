@@ -1,6 +1,7 @@
 module.exports = function (api) {
   const isWorker = process.env.TARGET === 'worker'
   const isSSR = process.env.TARGET === 'ssr'
+  const isLegacy = process.env.LEGACY === '1'
 
   api.cache.using(() => `${process.env.NODE_ENV}${process.env.TARGET}`)
 
@@ -40,7 +41,17 @@ module.exports = function (api) {
           development: api.env('development'),
         },
       ],
-    ].map(resolvePlugin),
+      isLegacy && [
+        '@babel/preset-env',
+        {
+          targets: {
+            browsers: ['>1%', 'last 4 versions', 'Firefox ESR', 'not ie < 9'],
+          },
+        },
+      ],
+    ]
+      .filter(Boolean)
+      .map(resolvePlugin),
   }
 }
 

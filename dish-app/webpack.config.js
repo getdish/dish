@@ -64,7 +64,7 @@ module.exports = function getWebpackConfig(
       devtool:
         env.mode === 'production' ? 'source-map' : 'cheap-module-source-map',
       entry: {
-        main: appEntry,
+        main: process.env.LEGACY ? ['babel-polyfill', appEntry] : appEntry,
       },
       output: {
         path: path.resolve(__dirname),
