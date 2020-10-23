@@ -94,6 +94,7 @@ function start_all_crawlers_for_city() {
   start_crawler_for_city "infatuated" "$1"
   start_crawler_for_city "tripadvisor" "$1"
   start_crawler_for_city "yelp" "$1"
+  start_crawler_for_city "ubereats" "$1"
 }
 
 function start_all_crawlers() {
@@ -103,6 +104,7 @@ function start_all_crawlers() {
   start_crawler "infatuated"
   start_crawler "tripadvisor"
   start_crawler "yelp"
+  start_crawler "ubereats"
 }
 
 function all_crawlers_for_cities() {
