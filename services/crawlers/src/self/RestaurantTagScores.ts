@@ -7,6 +7,8 @@ import { chunk } from 'lodash'
 
 import { Self } from './Self'
 
+const BERT_NEGATIVE_SENTIMENT_CRITERIA = -0.999
+
 export class RestaurantTagScores {
   crawler: Self
   breakdown: any = {}
@@ -190,7 +192,11 @@ export class RestaurantTagScores {
           'upvotes',
           (${this.sqlForPerSourceSentiment(tag_id, source, '> 0')}),
           'downvotes',
-          (${this.sqlForPerSourceSentiment(tag_id, source, '< 0')}),
+          (${this.sqlForPerSourceSentiment(
+            tag_id,
+            source,
+            '< ' + BERT_NEGATIVE_SENTIMENT_CRITERIA
+          )}),
           'summary', json_build_object(
             'positive',
             (${this.sqlForPerSourceSummary(tag_id, source, 'postive')}),
@@ -243,7 +249,8 @@ export class RestaurantTagScores {
 
   sqlForPerSourceSummary(tag_id: string, source: string, vector: string) {
     const order = vector == 'postive' ? 'DESC' : 'ASC'
-    const vector_filter = vector == 'postive' ? '> 0' : '< 0'
+    const vector_filter =
+      vector == 'postive' ? '> 0' : '< ' + BERT_NEGATIVE_SENTIMENT_CRITERIA
     const sub_query_name = `${source}_summaries`
     if (source) {
       source = `AND source = '${source}'`

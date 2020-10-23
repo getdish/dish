@@ -963,6 +963,17 @@ function get_sha_build_status() {
   fi
 }
 
+function urlencode() {
+  singles=${1//\'/\\\'}
+  python -c "import sys, urllib.parse as ul; print(ul.quote('$singles'))"
+}
+
+function bert_sentiment() {
+  text=$(urlencode "$1")
+  url="https://bert.k8s.dishapp.com/?text=$text"
+  curl "$url"
+}
+
 if command -v git &> /dev/null; then
   export PROJECT_ROOT=$(git rev-parse --show-toplevel)
   branch=$(git rev-parse --abbrev-ref HEAD)

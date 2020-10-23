@@ -50,7 +50,6 @@ export async function fetchBertSentiment(sentence: string) {
 
 export function bertResultToNumber(bert_sentiment: [string, number]) {
   const confidence = bert_sentiment[1]
-  if (confidence < 0.9) return 0
   switch (bert_sentiment[0]) {
     case 'Positive':
       return 1 * confidence

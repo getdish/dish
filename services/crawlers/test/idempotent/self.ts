@@ -108,7 +108,7 @@ const yelp: Partial<Scrape> = {
         userId: 'FsLRE98uOHkBNzO1Ta5hIw',
         comment: {
           text:
-            'This restaurant had terrible Test tag existing 1 dishes! Vegetarian',
+            'This restaurant had the worst Test tag existing 1 dishes! Vegetarian',
           language: 'en',
         },
         lightboxMediaItems: [
@@ -783,7 +783,7 @@ test('Scoring for rishes', async (t) => {
   t.deepEqual(rish1.source_breakdown.yelp, {
     score: 0,
     summary: {
-      negative: ['This restaurant had terrible Test tag existing 1 dishes!'],
+      negative: ['This restaurant had the worst Test tag existing 1 dishes!'],
       positive: [' Vegetarian An amazing photo of Test tag existing 2!'],
     },
     upvotes: 1,
@@ -818,7 +818,8 @@ test('Scoring for rishes', async (t) => {
   t.assert(
     rish1.sentences.find(
       (s) =>
-        s.sentence == 'This restaurant had terrible Test tag existing 1 dishes!'
+        s.sentence ==
+        'This restaurant had the worst Test tag existing 1 dishes!'
     )
   )
   t.assert(rish1.sentences.find((s) => s.sentence == 'Test tag was good.'))

@@ -51,9 +51,6 @@
   - how boundaries work with tilejson / tilejson viability research
 
 # search quality (lower priority)
-
-- plain text searches are coming up with just ok results
-- "bobos" autocomplete not finding "bobo's"
 - when i search for nopalito to try and find the restaurant with that name that has gpt3 - i think we can safely say "near exact match names" can rank highly for plain (non-tag) search http://d1live.com/gems/san-francisco/-/nopalito
 - searching without tag is slow - try "birria taco" in sf
   - this is because of the full-text search across reviews and menu_items tables. there's a bit of research i could to improve the index. but maybe we need to look at a dedicated full-text engine. but remember that searching for tags is still as fast as ever

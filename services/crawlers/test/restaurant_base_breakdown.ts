@@ -23,7 +23,7 @@ export const breakdown = {
         },
         sentences: {
           best: ['Notable Testpho was delicious', ' Test tag was amazing.'],
-          worst: ['This restaurant had terrible Test tag existing 1 dishes!'],
+          worst: ['This restaurant had the worst Test tag existing 1 dishes!'],
         },
         unique_tags: [
           {
@@ -52,13 +52,13 @@ export const breakdown = {
       summaries: {
         reviews: {
           best:
-            'This restaurant had terrible Test tag existing 1 dishes! Vegetarian An amazing photo of Test tag existing 2!',
+            'This restaurant had the worst Test tag existing 1 dishes! Vegetarian An amazing photo of Test tag existing 2!',
           worst:
-            'This restaurant had terrible Test tag existing 1 dishes! Vegetarian An amazing photo of Test tag existing 2!',
+            'This restaurant had the worst Test tag existing 1 dishes! Vegetarian An amazing photo of Test tag existing 2!',
         },
         sentences: {
           best: [' Vegetarian An amazing photo of Test tag existing 2!'],
-          worst: ['This restaurant had terrible Test tag existing 1 dishes!'],
+          worst: ['This restaurant had the worst Test tag existing 1 dishes!'],
         },
         unique_tags: null,
       },
