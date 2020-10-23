@@ -1,3 +1,6 @@
+- breakdown should have image grid on right side when on "dish" breakdown
+- home page with "delivery" and other filters? want to encourage that you can search across delivery from there
+- 3d map that turns 2d when off home is fun
 - url piece for selected dish on restaurant page / restaurantreview page
 - broken title wrap listitem
   - https://dishapp.com/gems/san-francisco/dish~curries
@@ -20,15 +23,6 @@
 - get reviewing fully working with votes/sentiment on tags
 - fix up points breakdown and dish/tag breakdown
 - location <=> url
-
-Home page
-- generally home page query and layout, but that's a whole other kettle of fish
-- is the plan for the site to be login only? i think it's better to allow anonymous use of the site
-Restaurant page
-
-- would be cool to show other dishes related to your current dish
-  - so on "taco"
-    - "fish taco", "birria taco", "crispy taco", etc
 
 ---
 
