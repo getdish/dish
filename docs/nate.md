@@ -1,3 +1,4 @@
+- url piece for selected dish on restaurant page / restaurantreview page
 - broken title wrap listitem
   - https://dishapp.com/gems/san-francisco/dish~curries
 - gqless memory reduction

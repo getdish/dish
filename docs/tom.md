@@ -1,3 +1,7 @@
+- run big crawl bump price for now
+- uber eats crawl
+- tag slugs
+- tilejson homepage
 - searching "bobos" doesn't bring up "bobo's" restaurant which is popular
   - should we file this under "things that may need a search refactor?"
 ✔️ fix latest build issue
