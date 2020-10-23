@@ -50,6 +50,10 @@ import {
   updateGeocoderID,
 } from './update_all_geocoder_ids'
 
+process.on('unhandledRejection', (reason, promise) => {
+  process.exit(1)
+})
+
 export class Self extends WorkerJob {
   ALL_SOURCES = [
     'yelp',
@@ -302,8 +306,14 @@ export class Self extends WorkerJob {
   }
 
   async getScrapeData() {
+    let at_least_one_scrape = false
     for (const source of this.ALL_SOURCES) {
-      this[source] = await latestScrapeForRestaurant(this.restaurant, source)
+      const scrape = await latestScrapeForRestaurant(this.restaurant, source)
+      if (scrape) at_least_one_scrape = true
+      this[source] = scrape
+    }
+    if (!at_least_one_scrape) {
+      throw new Error('No scrapes found for restaurant')
     }
   }
 
