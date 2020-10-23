@@ -291,7 +291,8 @@ export class Self extends WorkerJob {
       const match = this.tagging.restaurant_tags.find(
         (rt) => rt.tag_id == photo_xref.tag_id
       )
-      //@ts-ignore
+      if (!match) continue
+      if (!match?.photos) match.photos = []
       match?.photos.push(photo_xref.photo?.url)
     }
   }
