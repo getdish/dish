@@ -3,12 +3,7 @@ import React, { createContext, forwardRef, useRef } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 import { VStack } from 'snackui'
 
-import {
-  drawerWidthMax,
-  isWeb,
-  searchBarHeight,
-  supportsTouchWeb,
-} from '../constants'
+import { isWeb, supportsTouchWeb } from '../constants'
 import { useIsNarrow, useIsReallyNarrow } from '../hooks/useIs'
 import { useOvermind } from '../state/om'
 
