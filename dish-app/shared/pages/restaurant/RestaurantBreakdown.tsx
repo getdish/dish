@@ -49,7 +49,6 @@ export const RestaurantBreakdown = memo(
     showScoreTable?: boolean
     borderless?: boolean
   }) => {
-    console.log('tagName', tagName)
     const isSmall = useIsNarrow()
     const store = useStore(RestaurantReviewsDisplayStore, { id: restaurantId })
 
