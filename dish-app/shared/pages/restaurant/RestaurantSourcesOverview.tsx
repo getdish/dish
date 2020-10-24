@@ -231,10 +231,12 @@ export const RestaurantSourcesOverview = graphql(
                     <div
                       className="block"
                       dangerouslySetInnerHTML={{
-                        __html: sentence.replace(
-                          new RegExp(tagName, 'gi'),
-                          (match) => `<mark>${match}</mark>`
-                        ),
+                        __html: sentence
+                          .replace(/\s+/g, ' ')
+                          .replace(
+                            new RegExp(tagName, 'gi'),
+                            (match) => `<mark>${match}</mark>`
+                          ),
                       }}
                     />
                   </Paragraph>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { HStack, Text, Tooltip } from 'snackui'
 
-import { bg, bgLight, bgLightLight, lightBlue } from '../../colors'
+import { bgLight, bgLightLight, brandColor, lightBlue } from '../../colors'
 import { isWeb } from '../../constants'
 import { isStringChild } from './isStringChild'
 import { Link } from './Link'
@@ -32,7 +32,7 @@ export const SmallButton = ({
 }: SmallButtonProps) => {
   let contents = isStringChild(children) ? (
     <Text
-      color={isActive ? '#000' : bg}
+      color={isActive ? '#000' : brandColor}
       fontSize={14}
       {...{
         color,

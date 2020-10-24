@@ -1,5 +1,6 @@
 import { graphql, query, reviewAnalyze } from '@dish/graph'
 import { fetchBertSentiment } from '@dish/helpers'
+import { getStore } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image, ScrollView, TextInput } from 'react-native'
 import {
@@ -18,6 +19,7 @@ import {
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
+import { TagVoteStore } from '../../hooks/useUserTagVotes'
 import { HomeStateItemReview } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { tagLenses } from '../../state/tagLenses'
@@ -129,22 +131,6 @@ export const RestaurantReviewCommentForm = memo(
       const { review, upsertReview, deleteReview } = useUserReviewCommentQuery(
         restaurantId
       )
-      const allVotes =
-        restaurantId && !!user?.id
-          ? query.review({
-              where: {
-                restaurant_id: {
-                  _eq: restaurantId,
-                },
-                user_id: {
-                  _eq: user.id,
-                },
-                type: {
-                  _eq: 'vote',
-                },
-              },
-            })
-          : []
       const [reviewText, setReviewText] = useState('')
       const [isSaved, setIsSaved] = useState(false)
       const lineHeight = 22
@@ -160,13 +146,14 @@ export const RestaurantReviewCommentForm = memo(
             restaurantId,
           }).then((res) => {
             console.log('got', res)
+            // getStore(TagVoteStore)
           })
 
           return () => {
             isMounted = false
           }
         },
-        2000,
+        3000,
         [reviewText]
       )
 
@@ -237,21 +224,9 @@ export const RestaurantReviewCommentForm = memo(
             }
           />
 
-          <HStack padding={10} alignItems="center" flexWrap="wrap">
-            <Text color="#999">Saved votes:</Text>
-            <Spacer />
-            {allVotes.map((vote) => {
-              return (
-                <SentimentText
-                  marginRight={4}
-                  key={vote.id}
-                  sentiment={vote.vote ?? 0}
-                >
-                  {vote.tag.name}
-                </SentimentText>
-              )
-            })}
-          </HStack>
+          <Suspense fallback={null}>
+            <UserReviewVotesRow restaurantId={restaurantId} userId={user?.id} />
+          </Suspense>
 
           <Spacer />
 
@@ -350,4 +325,42 @@ export const RestaurantReviewCommentForm = memo(
       )
     }
   )
+)
+
+const UserReviewVotesRow = graphql(
+  ({ restaurantId, userId }: { restaurantId: string; userId: string }) => {
+    const allVotes =
+      restaurantId && !!userId
+        ? query.review({
+            where: {
+              restaurant_id: {
+                _eq: restaurantId,
+              },
+              user_id: {
+                _eq: userId,
+              },
+              type: {
+                _eq: 'vote',
+              },
+            },
+          })
+        : []
+    return (
+      <HStack padding={10} alignItems="center" flexWrap="wrap">
+        <Text color="#999">Saved votes:</Text>
+        <Spacer />
+        {allVotes.map((vote) => {
+          return (
+            <SentimentText
+              marginRight={4}
+              key={vote.id}
+              sentiment={vote.vote ?? 0}
+            >
+              {vote.tag.name}
+            </SentimentText>
+          )
+        })}
+      </HStack>
+    )
+  }
 )

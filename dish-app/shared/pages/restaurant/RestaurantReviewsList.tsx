@@ -30,7 +30,6 @@ export const RestaurantReviewsList = memo(
           <HStack
             position="relative"
             marginHorizontal={10}
-            marginBottom={-10}
             alignItems="center"
             justifyContent="center"
           >

@@ -4,6 +4,7 @@ import { Image } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
+  LoadingItems,
   SmallTitle,
   Spacer,
   Text,
@@ -105,7 +106,7 @@ export const RestaurantBreakdown = memo(
             alignItems="center"
             spacing={10}
           >
-            <Suspense fallback={null}>
+            <Suspense fallback={<LoadingItems />}>
               <RestaurantSourcesOverview
                 tagName={tagName}
                 restaurantSlug={restaurantSlug}
@@ -125,27 +126,29 @@ export const RestaurantBreakdown = memo(
             backgroundColor={bgLight}
             overflow="hidden"
           >
-            {!!tagName && (
-              <>
-                <SmallTitle>{tagName}</SmallTitle>
-                <Spacer />
-                <RestaurantTagPhotos
-                  tagName={tagName}
-                  restaurantSlug={restaurantSlug}
-                />
-                <Spacer />
-              </>
-            )}
-            {!tagName && (
-              <>
-                <SmallTitle>Base Score</SmallTitle>
-                <RestaurantPointsBreakdown
-                  showTable={showScoreTable}
-                  restaurantSlug={restaurantSlug}
-                  restaurantId={restaurantId}
-                />
-              </>
-            )}
+            <Suspense fallback={<LoadingItems />}>
+              {!!tagName && (
+                <>
+                  <SmallTitle>{tagName}</SmallTitle>
+                  <Spacer />
+                  <RestaurantTagPhotos
+                    tagName={tagName}
+                    restaurantSlug={restaurantSlug}
+                  />
+                  <Spacer />
+                </>
+              )}
+              {!tagName && (
+                <>
+                  <SmallTitle>Base Score</SmallTitle>
+                  <RestaurantPointsBreakdown
+                    showTable={showScoreTable}
+                    restaurantSlug={restaurantSlug}
+                    restaurantId={restaurantId}
+                  />
+                </>
+              )}
+            </Suspense>
           </VStack>
         </HStack>
       </VStack>

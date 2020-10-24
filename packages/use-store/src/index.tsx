@@ -5,18 +5,6 @@ import { DebugComponents, DebugStores, shouldDebug } from './shouldDebug'
 import { Store, TRIGGER_UPDATE } from './Store'
 import { StoreInfo } from './types'
 
-// sanity check types here
-// class StoreTest extends Store<{ id: number }> {}
-// const useStoreTest = createUseStore(StoreTest)
-// const useStoreSelectorTest = createUseStoreSelector(
-//   StoreTest,
-//   (s) => s.props.id
-// )
-// const num = useStoreSelectorTest({ id: 0 })
-// const ya = useStoreTest({ id: 1 })
-// const yb = useStoreTest({ id: 1 }, (x) => x.props.id)
-// const z = useStore(StoreTest)
-
 // @ts-ignore
 const createMutableSource = React.unstable_createMutableSource
 // @ts-ignore
@@ -24,7 +12,44 @@ const useMutableSource = React.unstable_useMutableSource
 
 export * from './Store'
 
+// the main hook
+export function useStore<A extends Store<B>, B>(
+  StoreKlass: new (props: B) => A | (new () => A),
+  props?: B,
+  options: { selector?: any; once?: boolean } = defaultOptions
+): A {
+  const cachedSelector = options.selector
+    ? useCallback(options.selector, [])
+    : undefined
+
+  if (options.once) {
+    const info = useMemo(() => {
+      return createStoreWithInfo(StoreKlass, props, { avoidCache: true })
+    }, [JSON.stringify(props)])
+    return useStoreInstance(info, cachedSelector)
+  }
+  const info = createStoreWithInfo(StoreKlass, props)
+  return useStoreInstance(info, cachedSelector)
+}
+
+// for usage outside react
+export function getStore<A extends Store<B>, B>(
+  StoreKlass: new (props: B) => A | (new () => A),
+  props?: B
+) {
+  const info = createStoreWithInfo(StoreKlass, props)
+  return createProxiedStore(info)
+}
+
+const cache = new WeakMap<any, { [key: string]: StoreInfo }>()
+const defaultOptions = {
+  once: false,
+  selector: undefined,
+}
+
 type Selector<A = unknown, B = unknown> = (x: A) => B
+
+// for creating a usable store hook
 export function createUseStore<Props, Store>(
   StoreKlass: new (props: Props) => Store | (new () => Store)
 ) {
@@ -38,6 +63,7 @@ export function createUseStore<Props, Store>(
   }
 }
 
+// for creating a usable selector hook
 export function createUseStoreSelector<A extends Store<Props>, Props, Selected>(
   StoreKlass: new (props: Props) => A | (new () => A),
   selector: Selector<A, Selected>
@@ -47,6 +73,7 @@ export function createUseStoreSelector<A extends Store<Props>, Props, Selected>(
   }
 }
 
+// selector hook
 export function useStoreSelector<
   A extends Store<B>,
   B,
@@ -60,12 +87,7 @@ export function useStoreSelector<
   return useStore(StoreKlass, props, { selector }) as any
 }
 
-const cache = new WeakMap<any, { [key: string]: StoreInfo }>()
-const defaultOptions = {
-  once: false,
-  selector: undefined,
-}
-
+// for ephemeral stores (alpha, not working correctly yet)
 export function useStoreOnce<A extends Store<B>, B>(
   StoreKlass: new (props: B) => A | (new () => A),
   props?: B,
@@ -74,43 +96,23 @@ export function useStoreOnce<A extends Store<B>, B>(
   return useStore(StoreKlass, props, { selector, once: true })
 }
 
-export function useStore<A extends Store<B>, B>(
-  StoreKlass: new (props: B) => A | (new () => A),
-  props?: B,
-  options: { selector?: any; once?: boolean } = defaultOptions
-): A {
-  const cachedSelector = options.selector
-    ? useCallback(options.selector, [])
-    : undefined
-
-  if (options.once) {
-    const info = useMemo(() => createStoreInstance(StoreKlass, props), [
-      JSON.stringify(props),
-    ])
-    return useStoreInstance(info, cachedSelector)
-  }
-
+function createStoreWithInfo(
+  StoreKlass: any,
+  props: any,
+  opts?: { avoidCache: boolean }
+) {
   const storeName = StoreKlass.name
   const propsKey = props ? getKey(props) : ''
-  const cached = cache.get(StoreKlass)
   const uid = `${storeName}_${propsKey}_`
 
-  // avoid work after init
-  const info = cached?.[uid]
-  if (info) {
-    return useStoreInstance(info, cachedSelector)
+  if (!opts?.avoidCache) {
+    const cached = cache.get(StoreKlass)
+    const info = cached?.[uid]
+    if (info) {
+      return info
+    }
   }
 
-  const value = createStoreInstance(StoreKlass, props)
-  if (!cache.get(StoreKlass)) {
-    cache.set(StoreKlass, {})
-  }
-  cache.get(StoreKlass)![uid] = value
-
-  return useStoreInstance(value, cachedSelector)
-}
-
-function createStoreInstance(StoreKlass: any, props: any) {
   // init
   const storeInstance = new StoreKlass(props!)
   const getters = {}
@@ -139,6 +141,14 @@ function createStoreInstance(StoreKlass: any, props: any) {
     actions,
     source: createMutableSource(storeInstance, () => value.version),
   }
+
+  if (!opts?.avoidCache) {
+    if (!cache.get(StoreKlass)) {
+      cache.set(StoreKlass, {})
+    }
+    cache.get(StoreKlass)![uid] = value
+  }
+
   return value
 }
 
@@ -190,74 +200,9 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
     }
   })
 
-  // mount once
-  useLayoutEffect(() => {
-    if (!info.hasMounted) {
-      info.hasMounted = true
-
-      try {
-        return storeProxy.mount()
-      } finally {
-        if (
-          process.env.NODE_ENV === 'development' &&
-          shouldDebug(component, info)
-        ) {
-          console.log('📤 mounted, info:', info)
-        }
-      }
-    }
-  }, [])
-
-  const storeProxy = useConstant(() => {
-    const proxiedStore = new Proxy(info.storeInstance, {
-      get(target, key) {
-        if (typeof key === 'string') {
-          if (info.getters[key]) {
-            return info.getters[key].call(proxiedStore)
-          }
-          if (info.actions[key]) {
-            if (
-              process.env.NODE_ENV === 'development' &&
-              shouldDebug(component, info)
-            ) {
-              return new Proxy(info.actions[key], {
-                apply(a, b, c) {
-                  console.log(`📤 ACTION ${key}`, c)
-                  return Reflect.apply(a, b, c)
-                },
-              })
-            }
-            return info.actions[key].bind(proxiedStore)
-          }
-          if (internal.current.isRendering) {
-            internal.current.tracked.add(key)
-            const val = state[key]
-            if (typeof val !== 'undefined') {
-              return val
-            }
-          }
-        }
-        return Reflect.get(target, key)
-      },
-      set(target, key, value, receiver) {
-        const cur = Reflect.get(target, key)
-        const res = Reflect.set(target, key, value, receiver)
-        // only update if changed, simple compare
-        if (res && cur !== value) {
-          if (
-            process.env.NODE_ENV === 'development' &&
-            DebugStores.has(info.storeInstance.constructor)
-          ) {
-            console.log(`📤 SET ${String(key)}`, value)
-          }
-          info.version++
-          info.storeInstance[TRIGGER_UPDATE]()
-        }
-        return res
-      },
-    })
-    return proxiedStore
-  })
+  const storeProxy = useConstant(() =>
+    createProxiedStore(info, { internal, component, state })
+  )
 
   internal.current.isRendering = true
 
@@ -266,6 +211,82 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
   }
 
   return storeProxy
+}
+
+function createProxiedStore(
+  info: StoreInfo,
+  renderOpts?: {
+    internal: { current: { isRendering: boolean; tracked: Set<string> } }
+    component: any
+    state: any
+  }
+) {
+  const proxiedStore = new Proxy(info.storeInstance, {
+    get(target, key) {
+      if (typeof key === 'string') {
+        if (info.getters[key]) {
+          return info.getters[key].call(proxiedStore)
+        }
+        if (info.actions[key]) {
+          if (
+            process.env.NODE_ENV === 'development' &&
+            renderOpts &&
+            shouldDebug(renderOpts.component, info)
+          ) {
+            return new Proxy(info.actions[key], {
+              apply(a, b, c) {
+                console.log(`📤 ACTION ${key}`, c)
+                return Reflect.apply(a, b, c)
+              },
+            })
+          }
+          return info.actions[key].bind(proxiedStore)
+        }
+        if (renderOpts) {
+          if (renderOpts.internal.current.isRendering) {
+            renderOpts.internal.current.tracked.add(key)
+            const val = renderOpts.state[key]
+            if (typeof val !== 'undefined') {
+              return val
+            }
+          }
+        }
+      }
+      return Reflect.get(target, key)
+    },
+    set(target, key, value, receiver) {
+      const cur = Reflect.get(target, key)
+      const res = Reflect.set(target, key, value, receiver)
+      // only update if changed, simple compare
+      if (res && cur !== value) {
+        if (
+          process.env.NODE_ENV === 'development' &&
+          DebugStores.has(info.storeInstance.constructor)
+        ) {
+          console.log(`📤 SET ${String(key)}`, value)
+        }
+        info.version++
+        info.storeInstance[TRIGGER_UPDATE]()
+      }
+      return res
+    },
+  })
+  if (!info.hasMounted) {
+    info.hasMounted = true
+    try {
+      // TODO support as an effect?
+      proxiedStore.mount()
+    } finally {
+      if (
+        process.env.NODE_ENV === 'development' &&
+        renderOpts &&
+        shouldDebug(renderOpts.component, info)
+      ) {
+        console.log('📤 mounted, info:', info)
+      }
+    }
+  }
+  return proxiedStore
 }
 
 const {
@@ -337,3 +358,15 @@ export default function useConstant<T>(fn: () => T): T {
   }
   return ref.current.v
 }
+
+// sanity check types here
+// class StoreTest extends Store<{ id: number }> {}
+// const useStoreTest = createUseStore(StoreTest)
+// const useStoreSelectorTest = createUseStoreSelector(
+//   StoreTest,
+//   (s) => s.props.id
+// )
+// const num = useStoreSelectorTest({ id: 0 })
+// const ya = useStoreTest({ id: 1 })
+// const yb = useStoreTest({ id: 1 }, (x) => x.props.id)
+// const z = useStore(StoreTest)

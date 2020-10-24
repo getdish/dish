@@ -17,7 +17,7 @@ export type VoteNumber = -1 | 0 | 1
 type VoteStoreProps = { tagKey: string; restaurantSlug: string }
 
 // using this for now until gqless optimistic update gets better
-class VoteStore extends Store<VoteStoreProps> {
+export class TagVoteStore extends Store<VoteStoreProps> {
   vote: VoteNumber = 0
 
   setVote(vote: VoteNumber) {
@@ -75,7 +75,7 @@ export const useUserTagVotes = (
 export const useUserTagVote = (props: VoteStoreProps) => {
   const om = useOvermind()
   const userId = om.state.user.user?.id
-  const voteStore = useStore(VoteStore, props)
+  const voteStore = useStore(TagVoteStore, props)
   const restaurant = useRestaurantQuery(props.restaurantSlug)
   const forceUpdate = useForceUpdate()
   const tag = allTags[props.tagKey]
@@ -125,10 +125,6 @@ export const useUserTagVote = (props: VoteStoreProps) => {
       unmounted = true
     }
   }, [tagId])
-
-  if (props.tagKey === 'pesto') {
-    console.log('voteStore', props, voteStore, voteStore.vote)
-  }
 
   return [
     voteStore.vote,

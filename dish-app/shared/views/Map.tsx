@@ -445,17 +445,24 @@ function setupMapEffect({
           type: 'circle',
           source: RESTAURANTS_SOURCE_ID,
           paint: {
-            'circle-radius': [
-              'step',
-              ['get', 'point_count'],
-              15,
-              20,
-              20,
-              50,
-              25,
-              100,
-              30,
-            ],
+            'circle-radius': {
+              stops: [
+                [8, 1],
+                [11, 5],
+                [16, 10],
+              ],
+            },
+            // [
+            //   'step',
+            //   ['get', 'point_count'],
+            //   15,
+            //   20,
+            //   20,
+            //   50,
+            //   25,
+            //   100,
+            //   30,
+            // ],
             'circle-color': `rgba(${r},${g},${b}, 0.5)`,
           },
         })

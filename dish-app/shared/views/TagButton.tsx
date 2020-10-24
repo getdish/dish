@@ -141,6 +141,8 @@ export const TagButton = memo((props: TagButtonProps) => {
   const smallerFontSize: any =
     typeof fontSize === 'number' ? fontSize * 0.85 : fontSize
 
+  const backgroundColorHover = `${bg}99`
+
   const contents = (
     <>
       <HStack
@@ -156,7 +158,7 @@ export const TagButton = memo((props: TagButtonProps) => {
         // used again down below
         minHeight={size == 'sm' ? 22 : 26}
         hoverStyle={{
-          backgroundColor: `${bg}99`,
+          backgroundColor: backgroundColorHover,
         }}
         {...rest}
       >
