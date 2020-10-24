@@ -1,4 +1,3 @@
-// debug
 import { graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
 import { fullyIdle, series } from '@o/async'
