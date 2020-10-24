@@ -6,7 +6,7 @@ import {
   ScalarNode,
   UFieldsNode,
   getAccessor,
-} from '@o/gqless'
+} from 'gqless'
 import { isObject } from 'lodash'
 
 import { isMutableReturningField } from './isMutatableField'

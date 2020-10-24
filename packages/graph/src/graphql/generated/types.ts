@@ -4,7 +4,7 @@ import {
   FieldsTypeArg,
   ScalarType,
   TypeData,
-} from '@o/gqless'
+} from 'gqless'
 
 import * as extensions from '../extensions'
 

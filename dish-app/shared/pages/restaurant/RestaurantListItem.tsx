@@ -299,6 +299,7 @@ const RestaurantListItemContent = memo(
                             lineHeight={titleHeight}
                             height={titleHeight}
                             color="#000"
+                            ellipse
                           >
                             {restaurantName}
                           </Text>

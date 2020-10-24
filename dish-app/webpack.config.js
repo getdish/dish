@@ -91,7 +91,7 @@ module.exports = function getWebpackConfig(
           'react-dom': path.join(require.resolve('react-dom'), '..'),
           'react-native': 'react-native-web',
           '@dish/react-feather': 'react-feather',
-          '@o/gqless': path.join(require.resolve('@o/gqless'), '..'),
+          gqless: path.join(require.resolve('gqless'), '..'),
           recyclerlistview: 'recyclerlistview/web',
           // bugfix until merged
           'react-native-web/src/modules/normalizeColor':

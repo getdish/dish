@@ -1,4 +1,4 @@
-import { Client } from '@o/gqless'
+import { Client } from 'gqless'
 
 import { isNode } from '../constants'
 import { createFetcher } from '../createFetcher'

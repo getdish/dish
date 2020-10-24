@@ -1,10 +1,10 @@
 import 'isomorphic-unfetch'
 import '@dish/helpers/polyfill'
 
-export { graphql } from '@o/gqless-react'
+export { graphql } from '@gqless/react'
 export { client, query, schema, resetQueryCache } from './graphql'
 export { mutation } from './graphql/mutation'
-export { resolved, refetch, update, matchUpdate, preload } from '@o/gqless'
+export { resolved, refetch, update, matchUpdate, preload } from 'gqless'
 export * from './startLogging'
 export * from './types'
 export * from './types-extra'

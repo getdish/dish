@@ -23,7 +23,7 @@ export const RestaurantDishPhotos = memo(
       restaurantId?: string
       selectable?: boolean
       onSelect?: (dish: string) => any
-      selected?: string
+      selected?: string | null
       size?: number
       max?: number
     }) => {
@@ -38,7 +38,7 @@ export const RestaurantDishPhotos = memo(
           ? () => {
               setHasScrolled(true)
             }
-          : null
+          : undefined
       }, [hasScrolled])
 
       return (

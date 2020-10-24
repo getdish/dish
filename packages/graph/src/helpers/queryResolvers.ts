@@ -1,4 +1,4 @@
-import { resolved } from '@o/gqless'
+import { resolved } from 'gqless'
 
 import { resetQueryCache } from '../graphql/client'
 import { resetMutationCache } from '../graphql/mutation'

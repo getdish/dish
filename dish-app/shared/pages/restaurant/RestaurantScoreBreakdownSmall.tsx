@@ -13,7 +13,7 @@ import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
 import { omStatic } from '../../state/omStatic'
 import { tagDisplayName } from '../../state/tagDisplayName'
 import { PointsText } from '../../views/PointsText'
-import { RestaurantReviewsDisplayStore } from './RestaurantRatingBreakdown'
+import { RestaurantReviewsDisplayStore } from './RestaurantBreakdown'
 
 export const RestaurantScoreBreakdownSmall = memo(
   graphql(

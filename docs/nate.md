@@ -1,9 +1,7 @@
+- gpt3 table breakdown v2
 - breakdown should have image grid on right side when on "dish" breakdown
 - home page with "delivery" and other filters? want to encourage that you can search across delivery from there
-- 3d map that turns 2d when off home is fun
 - url piece for selected dish on restaurant page / restaurantreview page
-- broken title wrap listitem
-  - https://dishapp.com/gems/san-francisco/dish~curries
 - gqless memory reduction
   - 3GB
     - SLUG=momo-masalas ../../dishctl.sh local_node_with_prod_env _/self/sandbox.js

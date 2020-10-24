@@ -241,7 +241,7 @@ export const DishView = memo(
         borderColor={selected ? '#000' : 'transparent'}
         shadowColor="#000"
         shadowOpacity={0.1}
-        shadowRadius={10}
+        shadowRadius={4}
         {...rest}
       >
         {contents}

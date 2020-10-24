@@ -14,11 +14,11 @@ import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { StackDrawer } from '../../views/StackDrawer'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { StackViewProps } from '../StackViewProps'
+import { RestaurantBreakdown } from './RestaurantBreakdown'
 import { RestaurantCard } from './RestaurantCard'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
-import { RestaurantRatingBreakdown } from './RestaurantRatingBreakdown'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
 
 type Props = StackViewProps<HomeStateItemRestaurant>
@@ -133,12 +133,6 @@ const RestaurantPage = memo(
           >
             {headerElement}
 
-            {/* <Spacer size="sm" /> */}
-            {/*
-            <HStack justifyContent="center">
-              <SlantedTitle fontWeight="700">Best dishes</SlantedTitle>
-            </HStack> */}
-
             {/* -1 margin bottom to overlap bottom border */}
             <VStack
               marginTop={-10}
@@ -169,7 +163,7 @@ const RestaurantPage = memo(
           <Spacer size="xl" />
 
           <Suspense fallback={null}>
-            <RestaurantRatingBreakdown
+            <RestaurantBreakdown
               title={selectedDish ?? 'Overview'}
               tagName={selectedDish}
               borderless

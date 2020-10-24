@@ -1,10 +1,20 @@
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
-import { AbsoluteVStack, HStack, SmallTitle, VStack } from 'snackui'
+import { Image } from 'react-native'
+import {
+  AbsoluteVStack,
+  HStack,
+  SmallTitle,
+  Spacer,
+  Text,
+  VStack,
+} from 'snackui'
 
+import { graphql } from '../../../../packages/graph/_'
 import { bgLight } from '../../colors'
 import { drawerWidthMax } from '../../constants'
 import { useIsNarrow } from '../../hooks/useIs'
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { CloseButton } from '../../views/ui/CloseButton'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
@@ -19,10 +29,9 @@ export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
   }
 }
 
-// BRING BACK LENSE VOTING
-// ADD IN DISH BREAKDOWN
+const maxSideWidth = drawerWidthMax / 2.5 - 40
 
-export const RestaurantRatingBreakdown = memo(
+export const RestaurantBreakdown = memo(
   ({
     title = 'Overview',
     tagName,
@@ -33,7 +42,7 @@ export const RestaurantRatingBreakdown = memo(
     showScoreTable,
   }: {
     title?: string
-    tagName?: string
+    tagName?: string | null
     restaurantId: string
     restaurantSlug: string
     closable?: boolean
@@ -106,25 +115,90 @@ export const RestaurantRatingBreakdown = memo(
 
           <VStack
             borderRadius={10}
-            maxWidth={isSmall ? 400 : drawerWidthMax / 2.5 - 40}
             borderWidth={1}
             borderColor="#eee"
+            maxWidth={isSmall ? 400 : maxSideWidth}
             padding={10}
             minWidth={220}
             margin={10}
-            flex={1}
+            width="33%"
             backgroundColor={bgLight}
             overflow="hidden"
           >
-            <SmallTitle>Base Score</SmallTitle>
-            <RestaurantPointsBreakdown
-              showTable={showScoreTable}
-              restaurantSlug={restaurantSlug}
-              restaurantId={restaurantId}
-            />
+            {!!tagName && (
+              <>
+                <SmallTitle>{tagName}</SmallTitle>
+                <Spacer />
+                <RestaurantTagPhotos
+                  tagName={tagName}
+                  restaurantSlug={restaurantSlug}
+                />
+                <Spacer />
+              </>
+            )}
+            {!tagName && (
+              <>
+                <SmallTitle>Base Score</SmallTitle>
+                <RestaurantPointsBreakdown
+                  showTable={showScoreTable}
+                  restaurantSlug={restaurantSlug}
+                  restaurantId={restaurantId}
+                />
+              </>
+            )}
           </VStack>
         </HStack>
       </VStack>
+    )
+  }
+)
+
+const RestaurantTagPhotos = graphql(
+  ({
+    tagName,
+    restaurantSlug,
+  }: {
+    restaurantSlug: string
+    tagName: string
+  }) => {
+    const restaurant = useRestaurantQuery(restaurantSlug)
+    const tag = restaurant.tags({
+      where: {
+        tag: {
+          name: {
+            _eq: tagName,
+          },
+        },
+      },
+    })[0]
+    const tagPhotos = tag.photos() ?? []
+    console.log('tagPhotos', tagPhotos)
+
+    if (!tagPhotos.length) {
+      return (
+        <VStack minHeight={200} alignItems="center" justifyContent="center">
+          <Text>No photos</Text>
+        </VStack>
+      )
+    }
+
+    return (
+      <HStack alignItems="center" justifyContent="center" flexWrap="wrap">
+        {tagPhotos.map((photo) => {
+          console.log('photo', photo)
+          return (
+            <VStack key={photo} width={110} height={110} margin={5}>
+              <Image
+                source={{ uri: photo }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                }}
+              />
+            </VStack>
+          )
+        })}
+      </HStack>
     )
   }
 )

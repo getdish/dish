@@ -14,7 +14,7 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useOvermind } from '../../state/om'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { RestaurantRatingBreakdown } from '../restaurant/RestaurantRatingBreakdown'
+import { RestaurantRatingBreakdown } from '../restaurant/RestaurantBreakdown'
 import { RestaurantReviewsList } from '../restaurant/RestaurantReviewsList'
 
 export default memo(function RestaurantReviewsPage() {

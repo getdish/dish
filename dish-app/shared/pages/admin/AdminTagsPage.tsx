@@ -261,7 +261,7 @@ const TagListContent = memo(
       const tagStore = useStore(AdminTagStore)
       const forceUpdate = useForceUpdate()
 
-      const allResults = [{ id: 0, name: '' } as WithID<Tag>, ...results]
+      const allResults = [{ id: '', name: '' } as WithID<Tag>, ...results]
 
       // refetch on every re-render so we dont have stale reads from gqless
       useEffect(() => {

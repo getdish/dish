@@ -164,7 +164,7 @@ export const RestaurantSourcesOverview = graphql(
     tagName,
     restaurantSlug,
   }: {
-    tagName?: string
+    tagName?: string | null
     restaurantSlug: string
   }) => {
     const restaurant = useRestaurantQuery(restaurantSlug)
