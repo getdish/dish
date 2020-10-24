@@ -149,7 +149,7 @@ export type HomeStateItemSearch = HomeStateItemBase & {
 export type HomeStateItemRestaurant = HomeStateItemBase & {
   type: 'restaurant'
   restaurantSlug: string
-  restaurantId: string | null
+  tagName?: string
 }
 
 export type HomeStateItemUser = HomeStateItemBase & {
@@ -175,8 +175,8 @@ export type HomeStateItemUserEdit = HomeStateItemBase & {
 
 export type HomeStateItemReviews = HomeStateItemBase & {
   type: 'restaurantReviews'
-  restaurantSlug: string
-  restaurantId: string
+  slug: string
+  tagName?: string
 }
 
 export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>

@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
-import React, { Suspense, memo, useCallback, useMemo, useState } from 'react'
-import { HStack, LoadingItem, Spacer, VStack, useGet } from 'snackui'
+import React, { Suspense, memo, useMemo } from 'react'
+import { HStack, LoadingItem, Spacer, VStack } from 'snackui'
 
 import { bgLight, bgLightHover, darkBlue } from '../../colors'
 import { getMinLngLat } from '../../helpers/getLngLat'
@@ -20,6 +20,7 @@ import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
+import { useSelectedDish } from './useSelectedDish'
 
 type Props = StackViewProps<HomeStateItemRestaurant>
 
@@ -34,20 +35,10 @@ export default function RestaurantPageContainer(props: Props) {
 const RestaurantPage = memo(
   graphql((props: Props) => {
     const { item } = props
-    const { restaurantSlug } = item
+    const { restaurantSlug, tagName } = item
     const restaurant = useRestaurantQuery(restaurantSlug)
     const coords = restaurant?.location?.coordinates
-    const [selectedDish, setSelectedDish] = useState(null)
-    const getSelectedDish = useGet(selectedDish)
-
-    const setSelectedDishToggle = useCallback((name: string) => {
-      const cur = getSelectedDish()
-      if (cur === name) {
-        setSelectedDish(null)
-      } else {
-        setSelectedDish(name)
-      }
-    }, [])
+    const { selectedDish, setSelectedDishToggle } = useSelectedDish(tagName)
 
     usePageLoadEffect(props.isActive && restaurant.id, () => {
       omStatic.actions.home.updateHomeState({
@@ -55,7 +46,6 @@ const RestaurantPage = memo(
         type: 'restaurant',
         searchQuery: item.searchQuery,
         restaurantSlug: item.restaurantSlug,
-        restaurantId: restaurant.id,
         center: {
           lng: coords?.[0],
           lat: coords?.[1],
@@ -164,7 +154,6 @@ const RestaurantPage = memo(
 
           <Suspense fallback={null}>
             <RestaurantBreakdown
-              title={selectedDish ?? 'Overview'}
               tagName={selectedDish}
               borderless
               showScoreTable

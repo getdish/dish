@@ -635,7 +635,7 @@ const pushHomeState: AsyncAction<
     case 'restaurant': {
       const prev = om.state.home.states[om.state.home.states.length - 1]
       nextState = {
-        restaurantId: null,
+        tagName: item.params.tagName,
         restaurantSlug: item.params.slug,
         center: prev.mapAt?.center ?? prev.center,
         span: prev.mapAt?.span ?? prev.span,
@@ -669,8 +669,8 @@ const pushHomeState: AsyncAction<
 
     case 'restaurantReviews': {
       nextState = {
-        restaurantSlug: item.params.slug,
-        restaurantId: item.params.id,
+        slug: item.params.slug,
+        tagName: item.params.tagName,
       }
       break
     }

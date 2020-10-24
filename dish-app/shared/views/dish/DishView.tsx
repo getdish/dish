@@ -16,8 +16,10 @@ import { isWeb } from '../../constants'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
+import { getTagId } from '../../state/getTagId'
 import { NavigableTag } from '../../state/NavigableTag'
 import { Link } from '../ui/Link'
+import { ColoredCircle } from './ColoredCircle'
 import { DishUpvoteDownvote } from './DishUpvoteDownvote'
 
 // avoid too many different image sizes
@@ -58,8 +60,6 @@ export const DishView = memo(
       .map((x) => capitalize(x))
       .join(' ')
 
-    const width = size
-    const height = size
     const imageUrl = getImageUrl(
       dish.image,
       ...getRoundedDishViewSize(size),
@@ -201,10 +201,10 @@ export const DishView = memo(
         <Link
           {...(restaurantSlug
             ? {
-                name: 'gallery',
+                name: 'restaurantReviews',
                 params: {
-                  restaurantSlug,
-                  dishId: slugify(dish.name ?? ''),
+                  slug: restaurantSlug,
+                  tagName: getTagId(dish),
                 },
               }
             : {
@@ -220,32 +220,18 @@ export const DishView = memo(
     }
 
     return (
-      <VStack
-        position="relative"
-        zIndex={isHovered ? 1 : 0}
-        className="ease-in-out-faster"
-        alignItems="center"
-        justifyContent="center"
-        pressStyle={{
-          transform: [{ scale: 0.98 }],
-          opacity: 1,
-        }}
-        hoverStyle={{
-          transform: [{ scale: 1.02 }],
-        }}
-        width={width}
-        height={height}
-        borderRadius={1000}
-        // isHovered={isHovered}
+      <ColoredCircle
+        isHovered={isHovered}
         backgroundColor={backgroundColor}
         borderColor={selected ? '#000' : 'transparent'}
         shadowColor="#000"
         shadowOpacity={0.1}
         shadowRadius={4}
+        size={size}
         {...rest}
       >
         {contents}
-      </VStack>
+      </ColoredCircle>
     )
   }
 )

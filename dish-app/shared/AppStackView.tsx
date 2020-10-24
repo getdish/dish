@@ -91,6 +91,13 @@ const AppStackViewItem = memo(
       }
     }, [isActive])
 
+    useLayoutEffect(() => {
+      if (isActive) {
+        console.log('setActiveId', item.type)
+        contentParentStore.setActiveId(item.type)
+      }
+    }, [isActive])
+
     const contents = (
       <VStack
         position="absolute"

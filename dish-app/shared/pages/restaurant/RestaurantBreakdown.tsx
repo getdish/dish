@@ -34,7 +34,6 @@ const maxSideWidth = drawerWidthMax / 2.5 - 40
 
 export const RestaurantBreakdown = memo(
   ({
-    title = 'Overview',
     tagName,
     restaurantId,
     restaurantSlug,
@@ -67,7 +66,7 @@ export const RestaurantBreakdown = memo(
           alignItems="center"
           justifyContent="center"
         >
-          <SlantedTitle fontWeight="700">{title}</SlantedTitle>
+          <SlantedTitle fontWeight="700">{tagName ?? 'Overview'}</SlantedTitle>
 
           <AbsoluteVStack top={0} right={0}>
             <Suspense fallback={null}>
@@ -174,8 +173,7 @@ const RestaurantTagPhotos = graphql(
         },
       },
     })[0]
-    const tagPhotos = tag.photos() ?? []
-    console.log('tagPhotos', tagPhotos)
+    const tagPhotos = tag?.photos() ?? []
 
     if (!tagPhotos.length) {
       return (

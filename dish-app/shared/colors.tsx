@@ -44,7 +44,7 @@ export const darkGreen = `#11692D`
 export const darkRed = `#791D1D`
 export const darkOrange = `#934914`
 export const darkGrey = `#555`
-export const darkBlue = `#1F5979`
+export const darkBlue = `#204493`
 export const darkPurple = `#542084`
 export const allDarkColor = [
   darkYellow,

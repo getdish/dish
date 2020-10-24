@@ -9,6 +9,7 @@ import {
   Paragraph,
   SmallTitle,
   Spacer,
+  Text,
   VStack,
 } from 'snackui'
 
@@ -177,17 +178,21 @@ export const RestaurantSourcesOverview = graphql(
               where: {
                 tag: {
                   name: {
-                    _eq: tagName,
+                    _ilike: tagName,
                   },
                 },
               },
             })[0]
-            .source_breakdown()
+            ?.source_breakdown()
         )
       : getSourceBreakdowns(restaurant.source_breakdown()?.sources)
 
     if (!items) {
-      return null
+      return (
+        <VStack minHeight={200} alignItems="center" justifyContent="center">
+          <Text opacity={0.5}>No reviews</Text>
+        </VStack>
+      )
     }
 
     return (
