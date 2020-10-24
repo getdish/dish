@@ -1,8 +1,9 @@
 import { graphql } from '@dish/graph'
-import React, { Suspense, memo } from 'react'
+import React, { Suspense, memo, useState } from 'react'
 import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
+  LoadingItem,
   LoadingItems,
   Modal,
   SmallTitle,
@@ -10,34 +11,35 @@ import {
   VStack,
 } from 'snackui'
 
+import { bgLight, bgLightHover } from '../../colors'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { HomeStateItemReviews } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { RestaurantRatingBreakdown } from '../restaurant/RestaurantBreakdown'
+import { RestaurantBreakdown } from '../restaurant/RestaurantBreakdown'
+import { RestaurantDishPhotos } from '../restaurant/RestaurantDishPhotos'
 import { RestaurantReviewsList } from '../restaurant/RestaurantReviewsList'
+import { useSelectedDish } from '../restaurant/useSelectedDish'
 
 export default memo(function RestaurantReviewsPage() {
   const om = useOvermind()
   const state = om.state.home.currentState
 
   if (state.type === 'restaurantReviews') {
-    return (
-      <RestaurantReviewsPageContent
-        restaurantId={state.restaurantId}
-        restaurantSlug={state.restaurantSlug}
-      />
-    )
+    return <RestaurantReviewsPageContent {...state} />
   }
 
   return null
 })
 
 const RestaurantReviewsPageContent = memo(
-  graphql((props: { restaurantId: string; restaurantSlug: string }) => {
-    const { restaurantId, restaurantSlug } = props
-    const restaurant = useRestaurantQuery(restaurantSlug)
+  graphql((props: HomeStateItemReviews) => {
+    const { tagName, slug } = props
+    const restaurant = useRestaurantQuery(slug)
     const title = `${restaurant.name} Reviews`
+    const { selectedDish, setSelectedDishToggle } = useSelectedDish(tagName)
+
     return (
       <>
         <PageTitleTag>{title}</PageTitleTag>
@@ -61,22 +63,54 @@ const RestaurantReviewsPageContent = memo(
               <VStack paddingTop={10}>
                 <SmallTitle>{restaurant.name}</SmallTitle>
 
-                <Spacer size="lg" />
+                {!!restaurant.id && (
+                  <>
+                    <VStack
+                      backgroundColor={bgLight}
+                      borderBottomColor={bgLightHover}
+                      borderBottomWidth={1}
+                    >
+                      <VStack marginBottom={-1}>
+                        <Suspense
+                          fallback={
+                            <VStack height={150}>
+                              <LoadingItem />
+                            </VStack>
+                          }
+                        >
+                          <RestaurantDishPhotos
+                            size={130}
+                            max={40}
+                            restaurantSlug={slug}
+                            restaurantId={restaurant.id ?? undefined}
+                            selectable
+                            selected={selectedDish}
+                            onSelect={setSelectedDishToggle}
+                          />
+                        </Suspense>
+                      </VStack>
+                    </VStack>
 
-                <Suspense fallback={<LoadingItems />}>
-                  <RestaurantRatingBreakdown
-                    borderless
-                    showScoreTable
-                    {...props}
-                  />
-                </Suspense>
+                    <Spacer />
 
-                <Suspense fallback={null}>
-                  <RestaurantReviewsList
-                    restaurantSlug={restaurantSlug}
-                    restaurantId={restaurantId}
-                  />
-                </Suspense>
+                    <Suspense fallback={<LoadingItems />}>
+                      <RestaurantBreakdown
+                        borderless
+                        showScoreTable
+                        tagName={selectedDish ?? tagName}
+                        restaurantId={restaurant.id}
+                        restaurantSlug={slug}
+                      />
+                    </Suspense>
+
+                    <Suspense fallback={null}>
+                      <RestaurantReviewsList
+                        restaurantSlug={slug}
+                        restaurantId={restaurant.id}
+                      />
+                    </Suspense>
+                  </>
+                )}
               </VStack>
             </VStack>
           </ScrollView>

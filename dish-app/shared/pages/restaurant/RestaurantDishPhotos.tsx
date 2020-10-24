@@ -5,7 +5,9 @@ import { HStack, VStack } from 'snackui'
 import { bgLightHover, blue } from '../../colors'
 import { isWeb } from '../../constants'
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
+import { getTagId } from '../../state/getTagId'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
+import { ColoredCircle } from '../../views/dish/ColoredCircle'
 import { DishView } from '../../views/dish/DishView'
 
 export const RestaurantDishPhotos = memo(
@@ -31,8 +33,6 @@ export const RestaurantDishPhotos = memo(
       const spacing = 20
       const [hasScrolled, setHasScrolled] = useState(false)
 
-      const allPhotos = hasScrolled ? dishes : dishes.slice(0, 6)
-
       const handleScroll = useMemo(() => {
         return !hasScrolled
           ? () => {
@@ -56,11 +56,11 @@ export const RestaurantDishPhotos = memo(
               alignItems="center"
               justifyContent="center"
             >
-              {allPhotos.map((photo, index) => {
-                const isSelected = selected === photo.name
+              {dishes.map((dish, index) => {
+                const isSelected = selected === getTagId(dish)
                 return (
                   <VStack
-                    key={photo.name}
+                    key={dish.name}
                     padding={spacing / 2}
                     paddingBottom={30}
                     borderTopLeftRadius={28}
@@ -73,20 +73,23 @@ export const RestaurantDishPhotos = memo(
                       borderBottomColor: '#fff',
                     })}
                   >
-                    <DishView
-                      noLink
-                      size={size}
-                      restaurantSlug={restaurantSlug}
-                      restaurantId={restaurantId}
-                      dish={photo}
-                      selected={isSelected}
-                      {...(!!selectable && {
-                        onPress() {
-                          console.warn('ok')
-                          onSelect?.(photo.name)
-                        },
-                      })}
-                    />
+                    {index > 5 && !hasScrolled ? (
+                      <ColoredCircle size={size} backgroundColor="#eee" />
+                    ) : (
+                      <DishView
+                        noLink
+                        size={size}
+                        restaurantSlug={restaurantSlug}
+                        restaurantId={restaurantId}
+                        dish={dish}
+                        selected={isSelected}
+                        {...(!!selectable && {
+                          onPress() {
+                            onSelect?.(getTagId(dish))
+                          },
+                        })}
+                      />
+                    )}
                   </VStack>
                 )
               })}
