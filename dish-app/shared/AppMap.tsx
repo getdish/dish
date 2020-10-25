@@ -1,7 +1,7 @@
 import { LngLat, Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { useStore } from '@dish/use-store'
-import { isEqual, uniqBy } from 'lodash'
+import { isEqual, rest, uniqBy } from 'lodash'
 import React, {
   Suspense,
   memo,
@@ -67,8 +67,9 @@ const AppMapDataLoader = memo(
       let single: RestaurantOnlyIds | null = null
 
       if (isRestaurantState(state)) {
+        const restaurant = useRestaurantQuery(state.restaurantSlug)
         single = {
-          id: state.restaurantId ?? '',
+          id: restaurant.id ?? '',
           slug: state.restaurantSlug ?? '',
         }
         const last = findLastHomeOrSearch(omStatic.state.home.states)
@@ -96,7 +97,7 @@ const AppMapDataLoader = memo(
             }
             const coords = r?.location?.coordinates
             return {
-              id: id ?? r.id,
+              id: id || r.id,
               slug,
               name: r.name,
               location: {
@@ -108,7 +109,7 @@ const AppMapDataLoader = memo(
         (x) => `${x.location.coordinates[0]}${x.location.coordinates[1]}`
       )
         // ensure has location
-        .filter((x) => !!x.location.coordinates[0])
+        .filter((x) => x.id && !!x.location.coordinates[0])
 
       useEffect(() => {
         props.onLoadedRestaurants?.(restaurants)
@@ -117,6 +118,7 @@ const AppMapDataLoader = memo(
       const restaurantDetail = single
         ? restaurants.find((x) => x.id === single!.id)
         : null
+
       useEffect(() => {
         props.onLoadedRestaurantDetail?.(restaurantDetail)
       }, [JSON.stringify(restaurantDetail?.location?.coordinates ?? null)])
@@ -208,7 +210,9 @@ const AppMapContent = memo(function AppMap({
   const isLoading = restaurants[0]?.location?.coordinates[0] === null
   const key = useLastValueWhen(
     () =>
-      `${internal.id}${restaurantDetail?.location.coordinates}${JSON.stringify(
+      `${internal.id ?? ''}${
+        restaurantDetail?.location.coordinates ?? ''
+      }${JSON.stringify(
         restaurants.map((x) => x.location?.coordinates ?? '-')
       )}`,
     isLoading || (!restaurants.length && !restaurantDetail)
@@ -276,7 +280,12 @@ const AppMapContent = memo(function AppMap({
         }
   }, [isSmall, paddingLeft, currentSnapPoint])
 
-  const features = useMemo(() => getRestaurantMarkers(restaurants), [key])
+  const features = useMemo(() => {
+    return getRestaurantMarkers(
+      restaurants,
+      internal.id ?? restaurantDetail?.id
+    )
+  }, [key])
 
   const handleMoveEnd = useCallback(
     ({ center, span }) => {
@@ -398,7 +407,10 @@ const getNumId = (id: string): number => {
   return ids[id]
 }
 
-const getRestaurantMarkers = (restaurants: Restaurant[] | null) => {
+const getRestaurantMarkers = (
+  restaurants: Restaurant[] | null,
+  selectedId?: string | null
+) => {
   const result: GeoJSON.Feature[] = []
   if (!restaurants) {
     return result
@@ -409,6 +421,11 @@ const getRestaurantMarkers = (restaurants: Restaurant[] | null) => {
     }
     const percent = getRestaurantRating(restaurant.rating)
     // const color = getRankingColor(percent)
+
+    if (!restaurant.id) {
+      throw new Error('No id for restaurant')
+    }
+
     result.push({
       type: 'Feature',
       id: getNumId(restaurant.id),
@@ -421,6 +438,7 @@ const getRestaurantMarkers = (restaurants: Restaurant[] | null) => {
         title: restaurant.name ?? 'none',
         subtitle: 'Pho, Banh Mi',
         color: '#fbb03b',
+        selected: selectedId === restaurant.id ? 1 : 0,
       },
     })
   }
