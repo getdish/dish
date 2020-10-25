@@ -2,7 +2,7 @@ import { graphql } from '@dish/graph'
 import React, { Suspense, memo, useMemo } from 'react'
 import { HStack, LoadingItem, Spacer, VStack } from 'snackui'
 
-import { bgLight, bgLightHover, darkBlue } from '../../colors'
+import { bgLight, bgLightHover, darkBlue, grey, lightGrey } from '../../colors'
 import { getMinLngLat } from '../../helpers/getLngLat'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -88,6 +88,7 @@ const RestaurantPage = memo(
               <>
                 <RestaurantOverview
                   fullHeight
+                  size="lg"
                   restaurantSlug={restaurantSlug}
                 />
                 <Spacer size="xl" />
@@ -124,12 +125,7 @@ const RestaurantPage = memo(
             {headerElement}
 
             {/* -1 margin bottom to overlap bottom border */}
-            <VStack
-              marginTop={-10}
-              marginBottom={-1}
-              position="relative"
-              zIndex={1}
-            >
+            <VStack marginBottom={-1} position="relative" zIndex={1}>
               <Suspense
                 fallback={
                   <VStack height={150}>
@@ -164,12 +160,20 @@ const RestaurantPage = memo(
 
           <Spacer size="xl" />
 
-          <Suspense fallback={null}>
-            <RestaurantReviewsList
-              restaurantSlug={restaurantSlug}
-              restaurantId={restaurant.id}
-            />
-          </Suspense>
+          <VStack
+            backgroundColor="#fcfcfc"
+            borderTopWidth={1}
+            borderBottomWidth={1}
+            borderColor="#f2f2f2"
+            paddingVertical={20}
+          >
+            <Suspense fallback={null}>
+              <RestaurantReviewsList
+                restaurantSlug={restaurantSlug}
+                restaurantId={restaurant.id}
+              />
+            </Suspense>
+          </VStack>
 
           <Spacer size="xl" />
 

@@ -40,7 +40,14 @@ export const FilterButton = memo(
       content = iconElement
     } else {
       content = (
-        <Text {...{ color, fontSize, fontWeight, lineHeight }}>{content}</Text>
+        <Text
+          color={color}
+          fontSize={fontSize}
+          fontWeight={fontWeight}
+          lineHeight={lineHeight}
+        >
+          {content}
+        </Text>
       )
 
       if (tag.name !== 'price-low') {

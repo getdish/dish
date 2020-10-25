@@ -452,7 +452,12 @@ const RestaurantListItemContent = memo(
 
             {/* PEEK / TAGS (RIGHT SIDE) */}
             {/* margin top: negative the titles second row height */}
-            <VStack paddingLeft={10} position="relative" marginTop={-40}>
+            <VStack
+              paddingLeft={10}
+              position="relative"
+              marginTop={-50}
+              transform={[{ translateY: -10 }]}
+            >
               <Suspense fallback={null}>
                 <RestaurantPeekDishes
                   restaurantSlug={props.restaurantSlug}

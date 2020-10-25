@@ -236,6 +236,7 @@ const DishViewContent = ({
       isHovered={isHovered}
       backgroundColor={backgroundColor}
       borderColor={selected ? '#000' : 'transparent'}
+      borderWidth={1}
       size={size}
       {...rest}
     >

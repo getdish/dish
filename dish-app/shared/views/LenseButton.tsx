@@ -90,7 +90,7 @@ export const LenseButton = memoIsEqualDeep(
               marginHorizontal={-3}
             >
               <Text
-                fontWeight="600"
+                fontWeight="500"
                 lineHeight={sizePx * scale * 0.39}
                 color={isSmall || isActive ? '#fff' : lenseColorDark}
                 paddingHorizontal={2}

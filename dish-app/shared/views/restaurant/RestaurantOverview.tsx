@@ -18,9 +18,11 @@ export const RestaurantOverview = memo(
   graphql(function RestaurantOverview({
     restaurantSlug,
     fullHeight,
+    size,
   }: {
     restaurantSlug: string
     fullHeight?: boolean
+    size?: 'lg'
   }) {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const headlines = (restaurant.headlines() ?? [])
@@ -29,7 +31,8 @@ export const RestaurantOverview = memo(
       .join(' ')
     const summary = restaurant.summary || headlines
     const scale = 2.1 - Math.max(1.0, Math.min(1.1, summary.length / 250))
-    const lineHeight = 26 * scale
+    const lineHeight = (size === 'lg' ? 28 : 26) * scale
+    const fontSize = (size === 'lg' ? 18 : 16) * scale
 
     if (summary) {
       return (
@@ -47,7 +50,7 @@ export const RestaurantOverview = memo(
             display="flex"
             marginTop="auto"
             marginBottom="auto"
-            fontSize={16 * scale}
+            fontSize={fontSize}
             lineHeight={lineHeight}
             opacity={1}
           >
@@ -58,7 +61,7 @@ export const RestaurantOverview = memo(
                 .map((sentence) => capitalize(sentence.trim()))
                 .join('. '),
               {
-                maxLength: 420,
+                maxLength: 380,
               }
             )}
           </Text>

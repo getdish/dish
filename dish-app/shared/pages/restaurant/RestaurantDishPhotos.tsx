@@ -62,6 +62,7 @@ export const RestaurantDishPhotos = memo(
                   <VStack
                     key={dish.name}
                     padding={spacing / 2}
+                    marginRight={-spacing / 4}
                     paddingBottom={30}
                     borderTopLeftRadius={28}
                     borderTopRightRadius={28}
