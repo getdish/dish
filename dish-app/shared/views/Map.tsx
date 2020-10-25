@@ -104,7 +104,7 @@ export const Map = memo((props: MapProps) => {
     // mapSetIconHovered(map, index)
     // const index = features.findIndex((x) => x.properties?.id === hovered)
     map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', hovered])
-    return animateMarker(map)
+    // return animateMarker(map)
   }, [map, hovered])
 
   // style
@@ -547,8 +547,14 @@ function setupMapEffect({
           type: 'circle',
           filter: ['==', 'id', ''],
           paint: {
-            'circle-radius': initialRadius,
-            'circle-color': 'pink',
+            'circle-radius': {
+              stops: [
+                [8, 1],
+                [10, 4],
+                [16, 8],
+              ],
+            },
+            'circle-color': 'red',
             // 'icon-allow-overlap': true,
             // 'icon-ignore-placement': true,
             // 'icon-size': 0.25,
