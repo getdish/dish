@@ -9,7 +9,8 @@ import {
   VStack,
 } from 'snackui'
 
-import { bgLight, lightYellow, yellow } from '../../colors'
+import { bgLight, brandColorLight, lightYellow, yellow } from '../../colors'
+import { getColorsForName } from '../../helpers/getColorsForName'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
@@ -33,6 +34,7 @@ export const RestaurantCard = (props: RestaurantCardProps) => {
 const width = 260
 const height = 360
 const borderRadius = 12
+const borderRadiusSmaller = 10
 
 const CardFrame = (props: any) => {
   return (
@@ -60,6 +62,9 @@ export const RestaurantCardContent = memo(
       const scale = size === 'lg' ? 1.2 : 1
       const [hideInfo, setHideInfo] = useState(false)
       const [price_label, price_color, price_range] = priceRange(restaurant)
+      const { lightColor, color } = getColorsForName(restaurant.name)
+
+      console.log('lightColor', lightColor, color)
 
       const handleOnIsAtStart = useCallback((x) => {
         setHideInfo(!x)
@@ -67,14 +72,14 @@ export const RestaurantCardContent = memo(
 
       return (
         <CardFrame>
-          <VStack borderRadius={borderRadius - 2}>
+          <VStack backgroundColor={color} borderRadius={borderRadiusSmaller}>
             <VStack
               className="safari-overflow-fix"
               width="100%"
               overflow="hidden"
               alignSelf="center"
               position="relative"
-              borderRadius={borderRadius - 2}
+              borderRadius={borderRadiusSmaller}
             >
               <AbsoluteVStack
                 className="ease-in-out"
@@ -91,13 +96,19 @@ export const RestaurantCardContent = memo(
                     'rgba(0,0,0,0.4)',
                   ]}
                 />
+                <LinearGradient
+                  style={StyleSheet.absoluteFill}
+                  colors={[`${lightColor}99`, `${color}99`]}
+                />
               </AbsoluteVStack>
-              <RestaurantPhotosRow
-                onIsAtStart={handleOnIsAtStart}
-                restaurantSlug={restaurantSlug}
-                width={width}
-                height={height}
-              />
+              <VStack opacity={0.5} className="filter-image">
+                <RestaurantPhotosRow
+                  onIsAtStart={handleOnIsAtStart}
+                  restaurantSlug={restaurantSlug}
+                  width={width}
+                  height={height}
+                />
+              </VStack>
             </VStack>
             <AbsoluteVStack
               alignItems="flex-end"

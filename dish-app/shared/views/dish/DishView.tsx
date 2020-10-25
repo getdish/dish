@@ -1,4 +1,3 @@
-import { slugify } from '@dish/graph'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'

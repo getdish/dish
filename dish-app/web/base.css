@@ -511,3 +511,7 @@ body > div {
  .block {
    display: block;
  }
+
+ .filter-image {
+   filter: sepia(100%) hue-rotate(90deg);
+ }
