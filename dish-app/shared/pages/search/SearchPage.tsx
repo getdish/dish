@@ -389,7 +389,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
               letterSpacing={-0.25}
               fontSize={titleFontSize}
               fontWeight="700"
-              color={rgbString(lenseColor.map((x) => x * 0.8))}
+              color={rgbString(lenseColor.map((x) => x * 0.95))}
             >
               {pageTitleElements}{' '}
               <Text

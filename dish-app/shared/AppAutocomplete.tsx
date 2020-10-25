@@ -235,7 +235,7 @@ const AutocompleteContentsInner = memo(
                 shadowColor="rgba(0,0,0,0.4)"
                 shadowRadius={18}
                 width="100%"
-                backgroundColor={isWeb ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.5)'}
+                backgroundColor={isWeb ? '#fff' : 'rgba(255,255,255,0.5)'}
                 height={isWeb ? 'auto' : '100%'}
                 minHeight={200}
                 padding={5}
@@ -245,21 +245,21 @@ const AutocompleteContentsInner = memo(
                   om.actions.home.setShowAutocomplete(false)
                 }}
               >
+                <CloseButton
+                  position="absolute"
+                  top={-6}
+                  right={-6}
+                  onPressOut={prevent}
+                  zIndex={1000}
+                  onPress={(e) => {
+                    e.stopPropagation()
+                    omStatic.actions.home.setShowAutocomplete(false)
+                  }}
+                />
                 <ScrollView
                   keyboardShouldPersistTaps="always"
                   style={{ opacity: isLoading ? 0.5 : 1 }}
                 >
-                  <CloseButton
-                    position="absolute"
-                    top={4}
-                    right={4}
-                    onPressOut={prevent}
-                    zIndex={1000}
-                    onPress={(e) => {
-                      e.stopPropagation()
-                      omStatic.actions.home.setShowAutocomplete(false)
-                    }}
-                  />
                   <AutocompleteResults />
                 </ScrollView>
               </VStack>
@@ -364,12 +364,12 @@ const AutocompleteResults = memo(() => {
               fontWeight="600"
               borderRadius={5}
               hoverStyle={{
-                backgroundColor: 'rgba(255,255,255,0.1)',
+                backgroundColor: 'rgba(0,0,0,0.025)',
               }}
               {...(isActive && {
-                backgroundColor: 'rgba(255,255,255,0.2)',
+                backgroundColor: 'rgba(0,0,0,0.05)',
                 hoverStyle: {
-                  backgroundColor: 'rgba(255,255,255,0.2)',
+                  backgroundColor: 'rgba(0,0,0,0.05)',
                 },
               })}
             >
@@ -389,12 +389,12 @@ const AutocompleteResults = memo(() => {
                   ) : null}
                 </VStack>
                 <VStack>
-                  <Text fontWeight="600" ellipse color={'#fff'} fontSize={16}>
+                  <Text fontWeight="600" ellipse color={'#000'} fontSize={16}>
                     {result.name} {plusButtonEl}
                   </Text>
                   <Spacer size="xs" />
                   {!!result.description && (
-                    <Text ellipse color="rgba(255,255,255,0.5)" fontSize={12}>
+                    <Text ellipse color="rgba(0,0,0,0.5)" fontSize={12}>
                       {result.description}
                     </Text>
                   )}
@@ -448,7 +448,7 @@ const HomeAutocompleteDefault = memo(() => {
             justifyContent="center"
             overflow="hidden"
             hoverStyle={{
-              backgroundColor: 'rgba(255,255,255,0.3)',
+              backgroundColor: 'rgba(0,0,0,0.1)',
             }}
           >
             <LinkButton
@@ -467,7 +467,7 @@ const HomeAutocompleteDefault = memo(() => {
                   textAlign="center"
                   fontSize={12}
                   width="100%"
-                  color="#fff"
+                  color="#000"
                 >
                   {tagDisplayName(tag)}
                 </Text>
