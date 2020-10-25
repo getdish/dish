@@ -182,7 +182,6 @@ export const Map = memo((props: MapProps) => {
       const cancelSeries = series([
         () => fullyIdle({ max: 500 }),
         () => {
-          console.log('fitbounds')
           map?.fitBounds(next, {
             duration: 650,
           })
@@ -208,6 +207,7 @@ export const Map = memo((props: MapProps) => {
   useEffect(() => {
     if (!map) return
     const source = map.getSource(RESTAURANTS_SOURCE_ID)
+
     if (source?.type === 'geojson') {
       source.setData({
         type: 'FeatureCollection',
@@ -439,7 +439,7 @@ function setupMapEffect({
           generateId: true,
         })
 
-        const [r, g, b] = tagLenses[0].rgb
+        const rgb = tagLenses[0].rgb
         map.addLayer({
           id: POINT_LAYER_ID,
           type: 'circle',
@@ -448,10 +448,33 @@ function setupMapEffect({
             'circle-radius': {
               stops: [
                 [8, 1],
-                [11, 5],
-                [16, 10],
+                [10, 4],
+                [16, 8],
               ],
             },
+
+            'circle-stroke-width': {
+              stops: [
+                [8, 1],
+                [11, 1],
+                [16, 2],
+              ],
+            },
+
+            'circle-stroke-color': `rgba(${rgb
+              .map((x) => x * 0.5)
+              .join(',')}, 0.5)`,
+
+            'circle-color': [
+              'match',
+              ['get', 'selected'],
+              1,
+              'yellow',
+              0,
+              `rgba(${rgb.join(',')}, 0.25)`,
+              `rgba(${rgb.join(',')}, 0.25)`,
+            ],
+
             // [
             //   'step',
             //   ['get', 'point_count'],
@@ -463,7 +486,6 @@ function setupMapEffect({
             //   100,
             //   30,
             // ],
-            'circle-color': `rgba(${r},${g},${b}, 0.5)`,
           },
         })
         cancels.add(() => {
@@ -481,7 +503,7 @@ function setupMapEffect({
             'text-field': ['format', ['get', 'title']],
             'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
             'text-size': 12,
-            'text-offset': [0, 0.75],
+            'text-offset': [0, 1],
             'text-anchor': 'top',
           },
           paint: {
@@ -643,7 +665,6 @@ function setupMapEffect({
         })
 
         const handleDoubleClick: Listener = (e) => {
-          console.log('double clicking', e.features?.[0]?.id)
           const id = e.features?.[0]?.id ?? -1
           const feature = props.features[+id]
           if (feature) {
