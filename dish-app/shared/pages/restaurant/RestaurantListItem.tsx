@@ -35,6 +35,7 @@ import { allTags } from '../../state/allTags'
 import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
+import { ColoredCircle } from '../../views/dish/ColoredCircle'
 import { DishView } from '../../views/dish/DishView'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
@@ -602,16 +603,9 @@ const RestaurantPeekDishes = memo(
                 ? dishSize
                 : dishSize * 0.95
               : dishSize
-            if (!isLoaded) {
-              if (i > 2) {
-                return (
-                  <Squircle width={dishSize * 0.8} height={dishSize} key={i} />
-                )
-              }
-            }
             return (
               <DishView
-                key={i}
+                preventLoad={!isLoaded && i > 2}
                 size={baseSize * (isEven ? 1.2 : 1)}
                 restaurantSlug={props.restaurantSlug}
                 restaurantId={props.restaurantId}

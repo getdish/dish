@@ -73,23 +73,20 @@ export const RestaurantDishPhotos = memo(
                       borderBottomColor: '#fff',
                     })}
                   >
-                    {index > 5 && !hasScrolled ? (
-                      <ColoredCircle size={size} backgroundColor="#eee" />
-                    ) : (
-                      <DishView
-                        noLink
-                        size={size}
-                        restaurantSlug={restaurantSlug}
-                        restaurantId={restaurantId}
-                        dish={dish}
-                        selected={isSelected}
-                        {...(!!selectable && {
-                          onPress() {
-                            onSelect?.(getTagId(dish))
-                          },
-                        })}
-                      />
-                    )}
+                    <DishView
+                      noLink
+                      preventLoad={index > 5 && !hasScrolled}
+                      size={size}
+                      restaurantSlug={restaurantSlug}
+                      restaurantId={restaurantId}
+                      dish={dish}
+                      selected={isSelected}
+                      {...(!!selectable && {
+                        onPress() {
+                          onSelect?.(getTagId(dish))
+                        },
+                      })}
+                    />
                   </VStack>
                 )
               })}
