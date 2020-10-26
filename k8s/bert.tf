@@ -32,7 +32,7 @@ resource "kubernetes_deployment" "bert" {
           resources {
             limits {
               cpu    = "2"
-              memory = "5Gi"
+              memory = "1Gi"
             }
           }
           port {
