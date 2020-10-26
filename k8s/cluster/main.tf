@@ -30,7 +30,7 @@ resource "digitalocean_kubernetes_cluster" "dish" {
 resource "digitalocean_kubernetes_node_pool" "db" {
   cluster_id = digitalocean_kubernetes_cluster.dish.id
   name       = "dish-db-pool"
-  size       = "g-2vcpu-8gb"
+  size       = "s-6vcpu-16gb"
   auto_scale = true
   min_nodes = 2
   max_nodes = 5
