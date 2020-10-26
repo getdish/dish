@@ -7,7 +7,9 @@
       - what this does:
         - ratios are nice to see "quality" vs popularity
         - being able to scan "99%" vs "92%" is much easier than "1200pts" vs "1500pts".
-    - Option 2: weigh the rankings based on "most recent X points"
+    - Option 2: weigh the rankings more based on "most recent X points"
+      - by taking a sample we avoid popularity contests
+      - weighing by recent points actually is even better - if a restaurant changes ownership or slacks off, they won't be stuck to an older rating
 
 # keeping product focus
 

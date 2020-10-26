@@ -1,15 +1,19 @@
 - gpt3 table breakdown v2
 - breakdown should have image grid on right side when on "dish" breakdown
 - home page with "delivery" and other filters? want to encourage that you can search across delivery from there
+- discussions
+  - add comment => show comment
+  - upvote/downvote comments
 - url piece for selected dish on restaurant page / restaurantreview page
 - gqless memory reduction
   - 3GB
     - SLUG=momo-masalas ../../dishctl.sh local_node_with_prod_env _/self/sandbox.js
+    -  SLUG=coqueta ./dishctl.sh local_node_with_prod_env services/crawlers/_/self/sandbox.js
 - scrolling horizontal / vertical fixes
-- https://dishapp.com/drink/san-francisco/open_price-low_country~thai
-  - initial search seems not to load
-- improve memory gqless node
-  - SLUG=coqueta ./dishctl.sh local_node_with_prod_env services/crawlers/_/self/sandbox.js
+- touch mobile web app runthrough fix scrolling issues
+- search changing filters shows old results / sometimes gets stuck
+  - https://dishapp.com/drink/san-francisco/open_price-low_country~thai
+    - initial search seems not to load
 - other lense tags:
   - "family run"
 - overall just runthrough everything a few times and fix a lot
