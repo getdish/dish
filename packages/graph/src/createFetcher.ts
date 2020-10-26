@@ -1,4 +1,4 @@
-import { QueryResponse } from 'gqless'
+import { QueryResponse } from '@o/gqless'
 
 import { Auth } from './Auth'
 import { isDevProd } from './constants'

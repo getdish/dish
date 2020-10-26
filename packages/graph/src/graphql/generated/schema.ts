@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { lazyGetters } from '@gqless/utils'
+import { lazyGetters } from '@o/gqless-utils'
 import {
   Arguments,
   ArgumentsField,
@@ -11,7 +11,7 @@ import {
   InputNodeField,
   ObjectNode,
   ScalarNode,
-} from 'gqless'
+} from '@o/gqless'
 
 import * as extensions from '../extensions'
 

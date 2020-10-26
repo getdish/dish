@@ -10,7 +10,7 @@ export function startLogging(verbose = false) {
     if (isLogging) return
     isLogging = true
     if (!isSafari) {
-      const { Logger } = require('@gqless/logger')
+      const { Logger } = require('@o/gqless-logger')
       new Logger(client, verbose)
     }
   }

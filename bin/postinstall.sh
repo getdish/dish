@@ -7,19 +7,6 @@ pushd $PROJECT_ROOT/dish-app
 yarn patch-package
 popd
 pushd $PROJECT_ROOT/node_modules
-# hacky fix for gqless dev branch for now
-if [[ -d "./gqless/gqless" ]]; then
-  echo "fix gqless"
-  mv ./gqless ./gqless2
-  rm -r ./@gqless
-  mkdir ./@gqless
-  mv ./gqless2/gqless ./gqless
-  mv ./gqless2/packages/react ./@gqless/react
-  mv ./gqless2/packages/utils ./@gqless/utils
-  mv ./gqless2/packages/logger ./@gqless/logger
-  mv ./gqless2/packages/schema ./@gqless/schema
-  echo "finished fixing gqless"
-fi
 rm -r react-native || true
 rm -r react || true
 rm -r react-dom || true
