@@ -3,6 +3,7 @@ WITH by_country AS (
     (SELECT DISTINCT cuisine_tag.name) AS country,
     (SELECT icon FROM tag WHERE id = (SELECT DISTINCT cuisine_tag.id) LIMIT 1) AS icon,
     (SELECT id FROM tag WHERE id = (SELECT DISTINCT cuisine_tag.id) LIMIT 1) AS tag_id,
+    (SELECT slug FROM tag WHERE id = (SELECT DISTINCT cuisine_tag.id) LIMIT 1) AS tag_slug,
     COUNT(restaurant.id) AS frequency,
     AVG(restaurant.score) AS avg_score,
     (
@@ -46,7 +47,7 @@ WITH by_country AS (
         FROM (
           SELECT
             *,
-            REPLACE(LOWER(tag.name), ' ', '-') AS tag_slug
+            tag.slug as tag_slug
             FROM tag
             WHERE "parentId" IN (
               SELECT id FROM tag WHERE tag.id = (SELECT DISTINCT cuisine_tag.id)

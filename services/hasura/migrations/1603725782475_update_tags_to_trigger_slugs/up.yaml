@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: update tag set updated_at = now();
+  type: run_sql

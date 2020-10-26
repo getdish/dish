@@ -653,6 +653,7 @@ test('Identifying country tags', async (t) => {
   const tag3 =
     updated.tags.find((i) => i.tag.name == 'Test Pizza') || ({} as Tag)
   t.is(tag1.tag.name, 'Test Mexican')
+  t.is(tag1.tag.type, 'country')
   t.is(tag2.tag.name, 'Test Spanish')
   t.is(tag2.tag.type, 'country')
   t.assert(tag3.tag.type != 'country')

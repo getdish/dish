@@ -5583,6 +5583,7 @@ export type t_tag = FieldsType<
       t_restaurant_tag_aggregate
     >
     rgb: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
+    slug?: t_String | null
     type?: t_String | null
     updated_at: t_timestamptz
   },
@@ -5715,6 +5716,7 @@ export type tag_bool_exp = {
   popularity?: Int_comparison_exp | null
   restaurant_taxonomies?: restaurant_tag_bool_exp | null
   rgb?: jsonb_comparison_exp | null
+  slug?: String_comparison_exp | null
   type?: String_comparison_exp | null
   updated_at?: timestamptz_comparison_exp | null
 }
@@ -5724,7 +5726,11 @@ export type tag_bool_exp = {
  * @type ENUM
  */
 type t_tag_constraint = EnumType<
-  'tag_id_key1' | 'tag_order_key' | 'tag_parentId_name_key' | 'tag_pkey'
+  | 'tag_id_key1'
+  | 'tag_order_key'
+  | 'tag_parentId_name_key'
+  | 'tag_pkey'
+  | 'tag_slug_key'
 >
 
 /**
@@ -5793,6 +5799,7 @@ export type tag_insert_input = {
   popularity?: number | null
   restaurant_taxonomies?: restaurant_tag_arr_rel_insert_input | null
   rgb?: any | null
+  slug?: string | null
   type?: string | null
   updated_at?: any | null
 }
@@ -5814,6 +5821,7 @@ export type t_tag_max_fields = FieldsType<
     order?: t_Int | null
     parentId?: t_uuid | null
     popularity?: t_Int | null
+    slug?: t_String | null
     type?: t_String | null
     updated_at?: t_timestamptz | null
   },
@@ -5835,6 +5843,7 @@ export type tag_max_order_by = {
   order?: order_by | null
   parentId?: order_by | null
   popularity?: order_by | null
+  slug?: order_by | null
   type?: order_by | null
   updated_at?: order_by | null
 }
@@ -5856,6 +5865,7 @@ export type t_tag_min_fields = FieldsType<
     order?: t_Int | null
     parentId?: t_uuid | null
     popularity?: t_Int | null
+    slug?: t_String | null
     type?: t_String | null
     updated_at?: t_timestamptz | null
   },
@@ -5877,6 +5887,7 @@ export type tag_min_order_by = {
   order?: order_by | null
   parentId?: order_by | null
   popularity?: order_by | null
+  slug?: order_by | null
   type?: order_by | null
   updated_at?: order_by | null
 }
@@ -5936,6 +5947,7 @@ export type tag_order_by = {
   popularity?: order_by | null
   restaurant_taxonomies_aggregate?: restaurant_tag_aggregate_order_by | null
   rgb?: order_by | null
+  slug?: order_by | null
   type?: order_by | null
   updated_at?: order_by | null
 }
@@ -5977,6 +5989,7 @@ type t_tag_select_column = EnumType<
   | 'parentId'
   | 'popularity'
   | 'rgb'
+  | 'slug'
   | 'type'
   | 'updated_at'
 >
@@ -6001,6 +6014,7 @@ export type tag_set_input = {
   parentId?: any | null
   popularity?: number | null
   rgb?: any | null
+  slug?: string | null
   type?: string | null
   updated_at?: any | null
 }
@@ -6330,6 +6344,7 @@ type t_tag_update_column = EnumType<
   | 'parentId'
   | 'popularity'
   | 'rgb'
+  | 'slug'
   | 'type'
   | 'updated_at'
 >
@@ -8280,6 +8295,7 @@ export enum tag_constraint {
   tag_order_key = 'tag_order_key',
   tag_parentId_name_key = 'tag_parentId_name_key',
   tag_pkey = 'tag_pkey',
+  tag_slug_key = 'tag_slug_key',
 }
 
 /**
@@ -8320,6 +8336,7 @@ export enum tag_select_column {
   parentId = 'parentId',
   popularity = 'popularity',
   rgb = 'rgb',
+  slug = 'slug',
   type = 'type',
   updated_at = 'updated_at',
 }
@@ -8430,6 +8447,7 @@ export enum tag_update_column {
   parentId = 'parentId',
   popularity = 'popularity',
   rgb = 'rgb',
+  slug = 'slug',
   type = 'type',
   updated_at = 'updated_at',
 }

@@ -32,7 +32,9 @@ export async function tagGetAllChildren(
   })
 }
 
-export async function tagFindCountries(countries: string[]): Promise<Tag[]> {
+export async function tagFindCountryMatches(
+  countries: string[]
+): Promise<Tag[]> {
   return await resolvedWithFields(() => {
     return query.tag({
       where: {
