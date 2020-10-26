@@ -76,7 +76,8 @@
   "dependencies": {
     "react-native-web": "0.0.0-466063b7e",
     "react": "0.0.0-experimental-94c0244ba",
-    "react-dom": "0.0.0-experimental-94c0244ba"
+    "react-dom": "0.0.0-experimental-94c0244ba",
+    "tsdx": "^0.14.1"
   },
   "devDependencies": {
     "@unimodules/core": "^5.3.0",
