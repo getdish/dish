@@ -50,7 +50,11 @@ export async function tagGetAllGenerics(): Promise<Tag[]> {
   return await resolvedWithFields(() => {
     return query.tag({
       where: {
-        _or: [{ type: { _eq: 'filter' } }, { type: { _eq: 'lense' } }],
+        _or: [
+          { type: { _eq: 'filter' } },
+          { type: { _eq: 'lense' } },
+          { type: { _eq: 'category' } },
+        ],
       },
     })
   })
