@@ -8,35 +8,34 @@ import { slugify } from './slugify'
 export type TagWithParent = Tag & { parent: Tag }
 
 export const tagSlug = (tag: Tag) => {
-  if (!tag?.name) {
-    throw new Error(`No tag name on tag: ${JSON.stringify(tag)}`)
-  }
-  return slugify(tag.name)
+  if (!tag.slug) return 'no-slug'
+  return tag.slug
 }
 
-export const tagSlugDisambiguated = (tag: TagWithParent) => {
-  if (!tag.parent?.name) {
-    throw new Error(`Tag needs parent with name`)
-  }
-  return `${tagSlug(tag.parent)}__${tagSlug(tag)}`
+export const tagSlugWithoutParent = (tag: Tag) => {
+  const parts = tagSlug(tag).split('__')
+  if (!parts) return tagSlug(tag)
+  return parts[1]
+}
+
+export const tagSlugWithAndWithoutParent = (tag: Tag) => {
+  return [tag.slug, tagSlugWithoutParent(tag)]
 }
 
 export const tagSlugs = (tag: Tag) => {
-  let parentage: string[] = []
+  let parentage = [tagSlugWithoutParent(tag)]
+  parentage.push()
   if (!tagIsOrphan(tag)) {
-    const tag_with_parent = tag as TagWithParent
     parentage = [
-      tagSlug(tag_with_parent.parent),
-      tagSlugDisambiguated(tag_with_parent),
+      ...parentage,
+      tagSlug(tag),
+      tagSlugWithoutParent(tag.parent as Tag),
     ]
   }
   const category_names = (tag.categories || []).map((cat) => {
-    if (typeof cat.category?.name !== 'string') {
-      throw new Error(`tag.category.name must exist as string`)
-    }
-    return slugify(cat.category.name)
+    return tagSlugWithoutParent(cat.category)
   })
-  const all = [tagSlug(tag), ...parentage, ...category_names].flat()
+  const all = [...parentage, ...category_names].flat()
   return [...new Set(all)]
 }
 

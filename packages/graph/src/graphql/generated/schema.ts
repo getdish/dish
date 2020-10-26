@@ -1,5 +1,6 @@
 // @ts-nocheck
 
+import { lazyGetters } from '@gqless/utils'
 import {
   Arguments,
   ArgumentsField,
@@ -11,7 +12,6 @@ import {
   ObjectNode,
   ScalarNode,
 } from '@o/gqless'
-import { lazyGetters } from '@o/gqless-utils'
 
 import * as extensions from '../extensions'
 
@@ -11405,6 +11405,9 @@ export const schema = {
             true
           )
         },
+        get slug() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get type() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -11674,6 +11677,9 @@ export const schema = {
         get rgb() {
           return new InputNodeField(schema.jsonb_comparison_exp, true)
         },
+        get slug() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
         get type() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
@@ -11820,6 +11826,9 @@ export const schema = {
         get rgb() {
           return new InputNodeField(schema.jsonb, true)
         },
+        get slug() {
+          return new InputNodeField(schema.String, true)
+        },
         get type() {
           return new InputNodeField(schema.String, true)
         },
@@ -11862,6 +11871,9 @@ export const schema = {
         },
         get popularity() {
           return new FieldNode(schema.Int, undefined, true)
+        },
+        get slug() {
+          return new FieldNode(schema.String, undefined, true)
         },
         get type() {
           return new FieldNode(schema.String, undefined, true)
@@ -11909,6 +11921,9 @@ export const schema = {
         get popularity() {
           return new InputNodeField(schema.order_by, true)
         },
+        get slug() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get type() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -11951,6 +11966,9 @@ export const schema = {
         },
         get popularity() {
           return new FieldNode(schema.Int, undefined, true)
+        },
+        get slug() {
+          return new FieldNode(schema.String, undefined, true)
         },
         get type() {
           return new FieldNode(schema.String, undefined, true)
@@ -11996,6 +12014,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get popularity() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get slug() {
           return new InputNodeField(schema.order_by, true)
         },
         get type() {
@@ -12120,6 +12141,9 @@ export const schema = {
         get rgb() {
           return new InputNodeField(schema.order_by, true)
         },
+        get slug() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get type() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -12209,6 +12233,9 @@ export const schema = {
         },
         get rgb() {
           return new InputNodeField(schema.jsonb, true)
+        },
+        get slug() {
+          return new InputNodeField(schema.String, true)
         },
         get type() {
           return new InputNodeField(schema.String, true)

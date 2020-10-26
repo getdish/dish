@@ -117,32 +117,53 @@ const recentSearches: { tags: Tag[] }[] = [
   },
   {
     tags: [
-      { displayName: '$', name: 'price-low', type: 'filter' },
-      { name: 'Pho', icon: '🍜', type: 'dish' },
+      {
+        displayName: '$',
+        name: 'price-low',
+        type: 'filter',
+        slug: 'filters__price-low',
+      },
+      { name: 'Pho', icon: '🍜', type: 'dish', slug: 'vietnamese__pho' },
     ],
   },
   {
     tags: [
       { ...tagLenses[1], displayName: 'Fancy', type: 'lense' },
-      { name: 'Steak', icon: '🥩', type: 'dish' },
+      { name: 'Steak', icon: '🥩', type: 'dish', slug: 'american__steak' },
     ],
   },
   {
     tags: [
-      { name: 'Delivery', icon: '🚗', type: 'filter' },
-      { name: 'Sushi', icon: '🍣', type: 'dish' },
+      {
+        name: 'Delivery',
+        icon: '🚗',
+        type: 'filter',
+        slug: 'filters__delivery',
+      },
+      { name: 'Sushi', icon: '🍣', type: 'dish', slug: 'japanese__sushi' },
     ],
   },
   {
     tags: [
       { ...tagLenses[0], displayName: 'Top', type: 'lense' },
-      { name: 'Thai', icon: '🇹🇭', type: 'country' },
+      { name: 'Thai', icon: '🇹🇭', type: 'couny', slug: 'asia__thai' },
     ],
   },
   {
     tags: [
-      { name: 'Delivery', icon: '🚗', type: 'filter' },
-      { ...tagLenses[3], displayName: 'Vegetarian', icon: '🥬', type: 'lense' },
+      {
+        name: 'Delivery',
+        icon: '🚗',
+        type: 'filter',
+        slug: 'filters__delivery',
+      },
+      {
+        ...tagLenses[3],
+        displayName: 'Vegetarian',
+        icon: '🥬',
+        type: 'lense',
+        slug: 'global__vegetarian',
+      },
     ],
   },
 ]

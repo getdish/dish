@@ -603,6 +603,7 @@ tables:
       - parentId
       - popularity
       - rgb
+      - slug
       - type
       - updated_at
       filter: {}
@@ -624,6 +625,7 @@ tables:
       - parentId
       - popularity
       - rgb
+      - slug
       - type
       - updated_at
       filter: {}
@@ -644,6 +646,7 @@ tables:
       - parentId
       - popularity
       - rgb
+      - slug
       - type
       - updated_at
       filter: {}
