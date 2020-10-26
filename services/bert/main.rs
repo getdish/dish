@@ -36,18 +36,7 @@ async fn server() -> io::Result<()> {
         };
         loop {
             let text = web_rx.recv().unwrap();
-            let sentiments = sentiment_classifier.predict(&[&text]);
-            let mut results = vec![];
-            for sentiment in sentiments {
-                let result = format!(
-                    "[\"{:?}\", {}]",
-                    sentiment.polarity,
-                    sentiment.score.to_string()
-                );
-                results.push(result);
-            }
-            let body = format!("{{\"result\": [{}]}}", results.join(","),);
-            bert_tx.send(body).unwrap();
+            analyse(text, &sentiment_classifier, &bert_tx);
         }
     });
 
@@ -65,6 +54,25 @@ async fn server() -> io::Result<()> {
     .client_timeout(30000)
     .run()
     .await
+}
+
+fn analyse(
+    text: String,
+    sentiment_classifier: &SentimentModel,
+    bert_tx: &crossbeam_channel::Sender<String>,
+) {
+    let sentiments = sentiment_classifier.predict(&[&text]);
+    let mut results = vec![];
+    for sentiment in sentiments {
+        let result = format!(
+            "[\"{:?}\", {}]",
+            sentiment.polarity,
+            sentiment.score.to_string()
+        );
+        results.push(result);
+    }
+    let body = format!("{{\"result\": [{}]}}", results.join(","),);
+    bert_tx.send(body).unwrap();
 }
 
 #[actix_web::main]
