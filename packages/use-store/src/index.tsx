@@ -188,10 +188,18 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
     [selector]
   )
   const state = useMutableSource(info.source, getSnapshot, subscribe)
+  const storeProxy = useConstant(() =>
+    createProxiedStore(info, { internal, component, state })
+  )
+
+  // before each render
+  internal.current.isRendering = true
 
   // after each render
   useLayoutEffect(() => {
     internal.current.isRendering = false
+    mountStore(info, storeProxy)
+
     if (
       process.env.NODE_ENV === 'development' &&
       shouldDebug(component, info)
@@ -200,17 +208,19 @@ function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
     }
   })
 
-  const storeProxy = useConstant(() =>
-    createProxiedStore(info, { internal, component, state })
-  )
-
-  internal.current.isRendering = true
-
   if (userSelector) {
     return state
   }
 
   return storeProxy
+}
+
+// TODO only do as an optional effect? probably worthwhile
+function mountStore(info: StoreInfo, store: any) {
+  if (!info.hasMounted) {
+    info.hasMounted = true
+    store.mount()
+  }
 }
 
 function createProxiedStore(
@@ -271,21 +281,6 @@ function createProxiedStore(
       return res
     },
   })
-  if (!info.hasMounted) {
-    info.hasMounted = true
-    try {
-      // TODO support as an effect?
-      proxiedStore.mount()
-    } finally {
-      if (
-        process.env.NODE_ENV === 'development' &&
-        renderOpts &&
-        shouldDebug(renderOpts.component, info)
-      ) {
-        console.log('📤 mounted, info:', info)
-      }
-    }
-  }
   return proxiedStore
 }
 
@@ -306,7 +301,8 @@ export function useStoreDebug<A extends Store<B>, B>(
   selector?: any
 ): A {
   const cmp = useCurrentComponent()
-  React.useLayoutEffect(() => {
+
+  useLayoutEffect(() => {
     DebugStores.add(StoreKlass)
     if (!DebugComponents.has(cmp)) {
       DebugComponents.set(cmp, new Set())
@@ -318,6 +314,7 @@ export function useStoreDebug<A extends Store<B>, B>(
       stores.delete(StoreKlass)
     }
   }, [])
+
   return useStore(StoreKlass, props, selector)
 }
 
