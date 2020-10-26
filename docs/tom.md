@@ -1,56 +1,60 @@
-- run big crawl bump price for now
-- uber eats crawl
-- tag slugs
-- tilejson homepage
-- searching "bobos" doesn't bring up "bobo's" restaurant which is popular
-  - should we file this under "things that may need a search refactor?"
-✔️ fix latest build issue
+# ranking
+
 - ratio more important in ranking (not popularity contest)
+  - options:
+    - Option 1: bring back the concept of an overall ranking: 1-100% or 1-5 stars or something, this is our "ratio" rating
+      - use ratio rating in search to avoid popularity contest
+      - what this does:
+        - ratios are nice to see "quality" vs popularity
+        - being able to scan "99%" vs "92%" is much easier than "1200pts" vs "1500pts".
+    - Option 2: weigh the rankings based on "most recent X points"
+
+# keeping product focus
+
+- runthrough frontend, document as many broken things as possible on all aspects as you see it
+- runthrough a variety of searches and document all broken searches
+- runthrough on improving source_breakdowns
+- ideate on solution for tagging restaurants as hot/new
+  - may want to tie this into discussion on new homepage
+
+# finishing a succesful full new crawl
+
 - fix yelp not crawling all reviews (slugs: coqueta, mong-thu-cafe)
-- add test case for lily image tag matching:
+- run big crawl bump price for now
+- uber eats fix/crawl
+- recrawl internal merge for sanfran
+- (low priority) google crawler, caviar crawler
+
+# validating/improving dish images
+
+- generally validate our image tag matching, document our current stats somewhere of "tagged images"
+- image quality API seems to not be super great
+- add admin panel page for tracking some stats:
+  - show count of # images found per-dish (avg per dish to start + total)
+- test case to ensure lily image tag matching:
   - https://www.yelp.com/biz/lily-san-francisco
-- take a deep dive fixing crawl:
-  - look at memory issues, really take a deep dive for one day
-  - try and bring down cost
+
+# important bugs/adjustments
+
+- tag slugs
+- BERT very slow - see /review/analyze, i'm seeing 10s+ response for matching just a single tag
+
+# next features
 
 - redo GPT3 summaries
   - table style:
     - | dish | rating | short summary |
+- getting ready for v2 homepage
+  - mapbox boundaries
+  - how boundaries work with tilejson / tilejson viability research
 
-- improve images:
-  - we really need to fix our "deepest" flow, images/gallery, but in order to fix it really we need to match a lot more images to dishes.
-    - how do we query for dish images? and then be able to get the "rest" of the images in a clean way (non-dish-images)? we may want to think/iterate here
-  - part of this may be just crawling google if they do provide tagged images
-  - alternative is starting to train a neural net for detection of certain things, we can also build an interface to help us tag images quickly
-  - not sure what else we can do really here, but likewise it would be nice to split out "inside" and "outside"
-  - futher, getting the image quality api to be even better (can we sort by quality? basically, ensuring truly high quality images are selected first makes a huge diff)
+# search quality (lower priority)
 
-
-
-
-- explore the ongoing memory issues with the internal crawler
-- look into empty restaurant.headlines bug
-- google crawler
-✔️ crawl new cities in san fran area
-- recrawl internal merge for sanfran
+- plain text searches are coming up with just ok results
+- "bobos" autocomplete not finding "bobo's"
 - when i search for nopalito to try and find the restaurant with that name that has gpt3 - i think we can safely say "near exact match names" can rank highly for plain (non-tag) search http://d1live.com/gems/san-francisco/-/nopalito
-- some restaurants have good scores, good dishes, but no headline review, must be a bug
-- onboard fiverr worker with instructions on admin
-  - set up permissions and an account for them
-  - add a way to set the wiki description
-  - try and fix any bugs with saving/editing
-  - instruct them to clean up names and icons basically
 - searching without tag is slow - try "birria taco" in sf
-  - this is because of the full-text search across reviews and menu_items tables. there's a
-    a bit of research i could to improve the index. but maybe we need to look at a dedicated
-    full-text engine. but remember that searching for tags is still as fast as ever
-- ensure all review pages are crawled, don't let OOM-caused job stalls prevent job retries
-
-## Indexing
-
-- Use Dish account for AWS proxies
-- Use Dish account for HereMaps/Geolocator API
-- Fix all the minor Sentry exceptions
+  - this is because of the full-text search across reviews and menu_items tables. there's a bit of research i could to improve the index. but maybe we need to look at a dedicated full-text engine. but remember that searching for tags is still as fast as ever
 
 ## Users
 
@@ -59,9 +63,6 @@
 ## Monitoring
 
 - More Grafana alerts
-
-## Explore
--
 
 ---
 
