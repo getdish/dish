@@ -25,3 +25,40 @@ BEGIN
   RETURN NEW;
 END
 $$ language plpgsql;
+
+CREATE OR REPLACE FUNCTION public.tag_triggers()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+  IF EXISTS (SELECT COUNT(*) > 0 FROM tag WHERE name = NEW.name) THEN
+    UPDATE tag SET is_ambiguous = TRUE
+      WHERE name = NEW.name
+      AND id != NEW.id
+      AND is_ambiguous = FALSE;
+  ELSE
+    UPDATE tag SET is_ambiguous = FALSE
+      AND id = NEW.id;
+  END IF;
+
+  IF NEW."displayName" IS NULL THEN
+    UPDATE tag SET "displayName" = NEW.name WHERE id = NEW.id;
+  END IF;
+
+  UPDATE tag SET
+    slug = new_slug.slug
+  FROM (
+    SELECT slugify(parent.name) || '__' || slugify(child.name) AS slug
+    FROM tag child JOIN tag parent ON child."parentId" = parent.id
+      WHERE child.id = NEW.id
+  ) new_slug
+    WHERE tag.id = NEW.id
+    AND (
+      tag.slug <> new_slug.slug
+      OR
+      tag.slug IS NULL
+    );
+
+  RETURN NEW;
+END
+$function$;

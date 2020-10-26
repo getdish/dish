@@ -12,7 +12,7 @@ import {
   globalTagId,
   restaurantGetAllPossibleTags,
   reviewExternalUpsert,
-  tagFindCountries,
+  tagFindCountryMatches,
   tagSlug,
 } from '@dish/graph'
 import { breakIntoSentences, doesStringContainTag } from '@dish/helpers'
@@ -84,7 +84,7 @@ export class Tagging {
 
   async upsertCountryTags(tags: string[]) {
     this.crawler._start_time = process.hrtime()
-    const country_tags = await tagFindCountries(tags)
+    const country_tags = await tagFindCountryMatches(tags)
     this.addRestaurantTags(
       country_tags.map((tag: Tag) => {
         return {

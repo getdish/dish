@@ -579,12 +579,14 @@ function updateHomeTagsCache(all: any) {
       name: topDishes.country,
       type: 'country',
       icon: topDishes.icon,
+      slug: topDishes.tag_slug,
     })
     tags = [
       ...tags,
       ...(topDishes.dishes ?? []).map((dish) => ({
         name: dish.name ?? '',
         type: 'dish',
+        slug: dish.slug,
       })),
     ]
   }

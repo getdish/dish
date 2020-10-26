@@ -125,6 +125,13 @@ function _db_migrate() {
   postgres_password=$3
   postgres_port=$4
   pushd $PROJECT_ROOT/services/hasura
+  cat functions/*.sql | \
+    PGPASSWORD=$postgres_password psql \
+    -p $postgres_port \
+    -h localhost \
+    -U postgres \
+    -d dish \
+    --single-transaction
   hasura --skip-update-check \
     migrate apply \
     --endpoint $hasura_endpoint \
