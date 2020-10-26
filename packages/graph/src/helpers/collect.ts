@@ -120,7 +120,8 @@ function getFieldsObject(object: any) {
     const parentNode = accessor.node
     let fieldsObject: Record<string, FieldNode<UFieldsNode>> | null = null
     if (parentNode instanceof ObjectNode) {
-      fieldsObject = parentNode.fields
+      // why did this type regress with local gqless?
+      fieldsObject = parentNode['fields']
     } else if (parentNode instanceof ArrayNode) {
       // @ts-ignore
       fieldsObject = parentNode.innerNode.fields

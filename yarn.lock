@@ -1978,9 +1978,9 @@
     pouchdb-collections "^1.0.1"
     tiny-queue "^0.2.1"
 
-"@gqless/logger@git://github.com/gqless/gqless.git#21b9d4080", "@gqless/react@git://github.com/gqless/gqless.git#21b9d4080", "@gqless/schema@git://github.com/gqless/gqless.git#21b9d4080", "gqless@git://github.com/gqless/gqless.git#21b9d4080":
+"@gqless/logger@git://github.com/natew/gqless.git#c85090f1e", "@gqless/react@git://github.com/natew/gqless.git#c85090f1e", "@gqless/schema@git://github.com/natew/gqless.git#c85090f1e", "gqless@git://github.com/natew/gqless.git#c85090f1e":
   version "0.0.0"
-  resolved "git://github.com/gqless/gqless.git#21b9d408072271fe1f68585d9cd27c08a3f334a7"
+  resolved "git://github.com/natew/gqless.git#c85090f1e906e881cdc2384075a65e69a5b80e21"
 
 "@hapi/address@2.x.x", "@hapi/address@^2.1.2":
   version "2.1.4"
