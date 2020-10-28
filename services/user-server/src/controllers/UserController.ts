@@ -52,7 +52,7 @@ class UserController {
     try {
       await userRepository.save(user)
     } catch (e) {
-      res.status(409).send('Username already in use')
+      res.status(409).json(['Username/email already in use'])
       return
     }
 

@@ -89,17 +89,14 @@ class AuthModel {
         this.has_been_logged_out = true
         this.logout()
       } else {
-        const error = {
-          method: method,
+        console.error('Auth fetch() error', {
+          method,
           domain: AUTH_DOMAIN,
           path,
           data,
           status: response.status,
           statusText: response.statusText,
-        }
-        throw new Error(
-          `Auth fetch() error:\n${JSON.stringify(error, null, 2)}`
-        )
+        })
       }
     }
     return response
@@ -133,8 +130,12 @@ class AuthModel {
       console.error(
         `Error registering: ${response.status} ${response.statusText}`
       )
+
+      const data = await response.json()
+      return [response.status, data] as const
+    } else {
+      localStorage.setItem(HAS_LOGGED_IN_BEFORE, 'true')
     }
-    localStorage.setItem(HAS_LOGGED_IN_BEFORE, 'true')
     return [response.status, response.statusText] as const
   }
 
