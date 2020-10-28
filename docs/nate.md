@@ -1,3 +1,6 @@
+- collect top lists
+  - vietnamese: pho, banh xeo, banh mi
+  - mexican: taco, guacamole, salsa
 - gpt3 table breakdown v2
 - breakdown should have image grid on right side when on "dish" breakdown
 - home page with "delivery" and other filters? want to encourage that you can search across delivery from there

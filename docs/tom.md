@@ -1,3 +1,8 @@
+- admin panel for crawling a specific subset of results
+  - for now i'm looking at:
+    - vietnamese: pho, banh xeo, banh mi
+    - mexican: taco, guacamole, salsa
+
 # ranking
 
 - ratio more important in ranking (not popularity contest)
