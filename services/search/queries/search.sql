@@ -52,48 +52,17 @@ main AS (
     )
 
     AND (
-      -- TODO: do some actual "this restaurant is unique" query
-      ?11 != 'FILTER BY UNIQUE'
+      ?11 != 'FILTER BY DELIVERY'
       OR
-      rating > 2
+      sources->>'ubereats' IS NOT NULL AND ?12 LIKE '%ubereats%'
+      OR
+      sources->>'grubhub' IS NOT NULL AND ?12 LIKE '%grubhub%'
+      OR
+      sources->>'doordash' IS NOT NULL AND ?12 LIKE '%doordash%'
     )
 
     AND (
-      ?12 != 'FILTER BY DELIVERY'
-      OR
-      sources->>'ubereats' IS NOT NULL
-      OR
-      sources->>'grubhub' IS NOT NULL
-      OR
-      sources->>'doordash' IS NOT NULL
-    )
-
-    AND (
-      ?13 != 'FILTER BY GEMS'
-      OR
-      rating > 4
-    )
-
-    AND (
-      ?14 != 'FILTER BY VIBE'
-      OR
-      (rating_factors->>'ambience')::numeric > 4
-    )
-
-    AND (
-      ?15 != 'FILTER BY VEGETARIAN'
-      OR
-      TRUE
-    )
-
-    AND (
-      ?16 != 'FILTER BY QUIET'
-      OR
-      TRUE
-    )
-
-    AND (
-      ?17 != 'FILTER BY OPEN'
+      ?13 != 'FILTER BY OPEN'
       OR
       opening_hours.hours @> f_opening_hours_normalised_time(
         timezone('America/Los_Angeles', now())::timestamptz
@@ -101,18 +70,18 @@ main AS (
     )
 
     AND (
-      ?18 != 'FILTER BY PRICE'
+      ?14 != 'FILTER BY PRICE'
       OR
       (
-        (tag_names @> '["price-low"]' AND ?19 LIKE '%price-low%')
+        (tag_names @> '["price-low"]' AND ?15 LIKE '%price-low%')
         OR
-        (tag_names @> '["price-mid"]' AND ?19 LIKE '%price-mid%')
+        (tag_names @> '["price-mid"]' AND ?15 LIKE '%price-mid%')
         OR
-        (tag_names @> '["price-high"]' AND ?19 LIKE '%price-high%')
+        (tag_names @> '["price-high"]' AND ?15 LIKE '%price-high%')
         OR
-        (tag_names @> '["price-higher"]' AND ?19 LIKE '%price-higher%')
+        (tag_names @> '["price-higher"]' AND ?15 LIKE '%price-higher%')
         OR
-        (tag_names @> '["price-highest"]' AND ?19 LIKE '%price-highest%')
+        (tag_names @> '["price-highest"]' AND ?15 LIKE '%price-highest%')
       )
     )
   )
@@ -294,6 +263,8 @@ SELECT json_build_object(
     SELECT json_build_object(
       'query', ?3,
       'tags', ?4,
+      'deliveries', ?12,
+      'prices', ?15,
       'limit', ?5
     )
   )

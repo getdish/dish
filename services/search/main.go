@@ -86,6 +86,7 @@ func search(w http.ResponseWriter, r *http.Request) {
 		distance = getParam("distance", r)
 	}
 	prices := getPrices(r)
+	deliveries := getDeliveries(r)
 	filter_by, tags = handleSpecialTags(tags, r)
 	_, err := db.Query(
 		pg.Scan(&json),
@@ -98,12 +99,8 @@ func search(w http.ResponseWriter, r *http.Request) {
 		limit,
 		x1, y1, x2, y2,
 		ignore_bounding_box,
-		filter_by["unique"],
 		filter_by["delivery"],
-		filter_by["gems"],
-		filter_by["vibe"],
-		filter_by["vegetarian"],
-		filter_by["quiet"],
+		deliveries,
 		filter_by["open"],
 		filter_by["price"],
 		prices,
@@ -121,12 +118,7 @@ func search(w http.ResponseWriter, r *http.Request) {
 func handleSpecialTags(tags string, r *http.Request) (map[string]string, string) {
 	filter_by := make(map[string]string)
 	special_tags := [...]string{
-		"unique",
 		"delivery",
-		"gems",
-		"vibe",
-		"vegetarian",
-		"quiet",
 		"open",
 		"price",
 	}
@@ -138,8 +130,8 @@ func handleSpecialTags(tags string, r *http.Request) (map[string]string, string)
 		} else {
 			filter_by[tag] = ""
 		}
-
 	}
+	tags = removeDeliveryTags(tags)
 	return filter_by, tags
 }
 
@@ -204,6 +196,9 @@ func tagsHas(target_tag string, r *http.Request) bool {
 		if target_tag == "price" && strings.HasPrefix(tag, "price-") {
 			return true
 		}
+		if target_tag == "delivery" && isDeliveryTag(tag) {
+			return true
+		}
 		if tag == target_tag {
 			return true
 		}
@@ -224,17 +219,51 @@ func getPrices(r *http.Request) string {
 	return prices
 }
 
+func getDeliveries(r *http.Request) string {
+	deliveries := ""
+	tags := strings.Split(getParam("tags", r), ",")
+	is_delivery_tag_found := false
+	for _, tag := range tags {
+		if tag == "delivery" {
+			is_delivery_tag_found = true
+		}
+		tag = strings.TrimSpace(tag)
+		tag = strings.ToLower(tag)
+		if isDeliveryTag(tag) {
+			deliveries = deliveries + tag + ","
+		}
+	}
+	if is_delivery_tag_found && deliveries == "" {
+		deliveries = "ubereats,grubhub,doordash"
+	}
+	return deliveries
+}
+
+func removeDeliveryTags(tags_string string) string {
+	tags := strings.Split(tags_string, ",")
+	for _, tag := range tags {
+		if isDeliveryTag(tag) {
+			tags_string = removeTag(tags_string, tag)
+		}
+	}
+	return tags_string
+}
+
 func removeTag(tags_param string, tag_to_remove string) string {
 	tags := strings.Split(tags_param, ",")
 	var updated_tags []string
 	for _, tag := range tags {
 		is_matched_tag := tag == tag_to_remove
 		is_price_tag := tag_to_remove == "price" && strings.Contains(tag, "price-")
-		if !(is_matched_tag || is_price_tag) {
+		if !(is_matched_tag || is_price_tag || isDeliveryTag(tag)) {
 			updated_tags = append(updated_tags, tag)
 		}
 	}
 	return strings.Join(updated_tags, ",")
+}
+
+func isDeliveryTag(tag string) bool {
+	return tag == "ubereats" || tag == "grubhub" || tag == "doordash"
 }
 
 func handleRequests() {
