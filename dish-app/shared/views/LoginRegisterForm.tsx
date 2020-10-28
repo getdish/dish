@@ -1,11 +1,20 @@
 import { Auth } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
+import { capitalize } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
+import {
+  Controller,
+  FieldError,
+  ValidationRules,
+  useForm,
+} from 'react-hook-form'
 import {
   Form,
   HStack,
   Input,
+  InputProps,
   InteractiveContainer,
+  Paragraph,
   SmallTitle,
   Spacer,
   Text,
@@ -69,6 +78,7 @@ export const LoginRegisterForm = ({
   const [isRegister, setIsRegister] = useState(
     showForm ? showForm !== 'login' : Auth.hasEverLoggedIn ? false : true
   )
+  const { handleSubmit, errors, control } = useForm()
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -76,10 +86,9 @@ export const LoginRegisterForm = ({
     }
   }, [isLoggedIn])
 
-  const handleSubmit = useCallback(
+  const onSubmit = useCallback(
     async (e) => {
       console.log('got login')
-      e.preventDefault()
       if (isRegister) {
         const result = await om.actions.user.register(store.state)
         if (result) {
@@ -119,7 +128,7 @@ export const LoginRegisterForm = ({
     <VStack alignItems="center">
       {isWeb && (
         <>
-          <VStack transform={[{ scale: 0.8 }]}>
+          <VStack>
             <SignInAppleButton />
           </VStack>
           <Spacer />
@@ -142,8 +151,8 @@ export const LoginRegisterForm = ({
         </>
       )}
 
-      <Form onSubmit={handleSubmit}>
-        <VStack spacing="sm" height={260} minWidth={260}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <VStack spacing="sm" minWidth={260}>
           <InteractiveContainer height={43} alignSelf="center">
             <LinkButton
               {...navButtonProps}
@@ -167,15 +176,27 @@ export const LoginRegisterForm = ({
 
           {isRegister && (
             <>
-              <Input
+              <ValidatedInput
+                control={control}
+                errors={errors.email}
+                defaultValue=""
                 name="email"
                 spellCheck={false}
                 placeholder="Email"
                 autoCapitalize="none"
-                onChangeText={(val) => store.setState({ email: val })}
                 autoFocus={autofocus}
+                onChangeText={(val) => store.setState({ email: val })}
+                rules={{
+                  required: true,
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: 'invalid email address',
+                  },
+                }}
               />
+
               <Spacer size="sm" />
+
               <Input
                 name="username"
                 spellCheck={false}
@@ -188,24 +209,44 @@ export const LoginRegisterForm = ({
 
           {!isRegister && (
             <>
-              <Input
+              {/* email or username */}
+              <ValidatedInput
+                control={control}
+                errors={errors.email}
+                defaultValue=""
                 name="email"
                 spellCheck={false}
+                placeholder="Email or usename"
                 autoCapitalize="none"
-                placeholder="Email or username"
+                autoFocus={autofocus}
                 onChangeText={(value) => store.setState({ login: value })}
+                rules={{
+                  required: true,
+                }}
               />
             </>
           )}
 
-          <Input
-            name="password"
+          <ValidatedInput
+            control={control}
+            errors={errors.password}
             secureTextEntry
-            onChangeText={(val) => store.setState({ password: val })}
+            defaultValue=""
+            name="password"
             placeholder="Password"
+            onChangeText={(value) => store.setState({ password: value })}
+            rules={{
+              required: true,
+            }}
           />
 
-          {isWeb && <input type="submit" style={{ display: 'none' }} />}
+          {isWeb && (
+            <input
+              onSubmit={handleSubmit(onSubmit)}
+              type="submit"
+              style={{ display: 'none' }}
+            />
+          )}
 
           <SmallButton
             accessibilityComponentType="button"
@@ -218,14 +259,10 @@ export const LoginRegisterForm = ({
             hoverStyle={{
               backgroundColor: '#333',
             }}
-            onPress={handleSubmit}
+            onPress={handleSubmit(onSubmit)}
           >
             {button_text()}
           </SmallButton>
-
-          {!!om.state.user.messages.length && (
-            <Text color={lightRed}>{om.state.user.messages.join(', ')}</Text>
-          )}
 
           {!isRegister && (
             <HStack alignSelf="flex-end">
@@ -236,6 +273,78 @@ export const LoginRegisterForm = ({
           )}
         </VStack>
       </Form>
+
+      <Spacer />
+
+      <VStack maxWidth={320}>
+        {!!om.state.user.messages.length && (
+          <ErrorParagraph>{om.state.user.messages.join(', ')}</ErrorParagraph>
+        )}
+      </VStack>
+
+      <Spacer size={40} />
     </VStack>
   )
 }
+
+const ValidatedInput = ({
+  control,
+  name,
+  defaultValue,
+  rules,
+  errors,
+  ...rest
+}: InputProps & {
+  control: any
+  rules?: ValidationRules
+  errors?: FieldError | null
+}) => {
+  return (
+    <>
+      <Controller
+        control={control}
+        name={name}
+        defaultValue={defaultValue}
+        rules={rules}
+        render={({ onChange, onBlur, value }) => {
+          return (
+            <Input
+              {...rest}
+              name={name}
+              defaultValue={defaultValue}
+              onBlur={onBlur}
+              value={value}
+              onChangeText={(val) => {
+                onChange(val)
+                rest?.onChangeText(val)
+              }}
+            />
+          )
+        }}
+      />
+      {errors && <FormError error={errors} />}
+    </>
+  )
+}
+
+const FormError = ({ error }: { error: FieldError | null }) => {
+  if (!error) {
+    return null
+  }
+
+  const name = capitalize(error.ref.name)
+
+  if (error.type === 'required') {
+    return <ErrorParagraph>{name} is required.</ErrorParagraph>
+  }
+
+  return (
+    <Paragraph>
+      {name} error: {error.message}
+    </Paragraph>
+  )
+}
+
+const ErrorParagraph = (props) => (
+  <Paragraph color="red" fontWeight="500" marginVertical={10} {...props} />
+)

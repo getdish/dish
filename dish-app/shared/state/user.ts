@@ -49,15 +49,15 @@ const register: AsyncAction<
       result = true
       break
     case 409:
-      om.state.user.messages = [data]
-      break
-    // @ts-ignore
-    case status >= 400:
-      om.state.user.messages = formatErrors(data)
+      om.state.user.messages = data
       break
     default:
       break
   }
+  if (status >= 400) {
+    om.state.user.messages = formatErrors(data)
+  }
+  console.log('data', data)
   om.state.user.loading = false
   return result
 }
