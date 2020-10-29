@@ -8,7 +8,8 @@ import * as Sentry from '@sentry/node'
 // export * from '@dish/common-web'
 
 Sentry.init({
-  dsn: 'https://af86c8f6e90e4afe8f5d1a13ab8e9279@sentry.k8s.dishapp.com/2',
+  dsn:
+    'https://453762dd4e3b4aa1bdad5154ef1e0acb@o1.ingest.sentry.k8s.dishapp.com/2',
   release:
     process.env.REACT_APP_COMMIT_HASH ||
     process.env.COMMIT_HASH ||
