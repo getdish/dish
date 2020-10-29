@@ -23,9 +23,10 @@ export const DishViewButton = memo(
           paddingVertical={6}
           paddingHorizontal={12}
           alignItems="center"
-          borderRadius={8}
+          borderRadius={4}
           borderColor={`${color}22`}
-          backgroundColor={lightColor}
+          borderBottomWidth={2}
+          // backgroundColor={lightColor}
           hoverStyle={{
             backgroundColor: `${lightColor}cc`,
           }}

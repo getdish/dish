@@ -11,7 +11,8 @@ type UpvoteDownvoteProps = {
   restaurantId: string
   restaurantSlug: string
   score: number
-  activeTags: HomeActiveTagsRecord
+  ratio: number
+  activeTagIds: HomeActiveTagsRecord
 }
 
 export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
@@ -19,7 +20,7 @@ export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
     <Suspense
       fallback={
         <UpvoteDownvoteScore
-          marginLeft={-22}
+          marginLeft={-20}
           marginRight={-4}
           score={0}
           vote={0}
@@ -36,7 +37,8 @@ const RestaurantUpVoteDownVoteContents = memo(
     restaurantId,
     restaurantSlug,
     score: baseScore,
-    activeTags,
+    ratio,
+    activeTagIds,
   }: UpvoteDownvoteProps) {
     const { vote, setVote } = useUserTagVotes(restaurantSlug, activeTags)
     const score = baseScore + vote
@@ -50,9 +52,10 @@ const RestaurantUpVoteDownVoteContents = memo(
         stopPropagation
       >
         <UpvoteDownvoteScore
-          marginLeft={-22}
+          marginLeft={-20}
           marginRight={-4}
           score={score}
+          ratio={ratio}
           vote={vote}
           setVote={setVote}
         />

@@ -19,7 +19,7 @@ export const lightRed = '#F6DDCC'
 export const lightBlue = '#D4E6F1'
 export const lightPurple = '#F5EEF8'
 export const lightOrange = '#FFE3D7'
-export const lightGrey = '#eee'
+export const lightGrey = '#eeeeee'
 export const allLightColors = [
   lightYellow,
   lightGreen,
@@ -36,14 +36,14 @@ export const red = `#D06868`
 export const orange = '#D16A20'
 export const blue = '#3688B0'
 export const purple = '#7F42B8'
-export const grey = `#999`
+export const grey = `#999999`
 export const allColors = [yellow, green, red, orange, blue, purple, grey]
 
 export const darkYellow = '#98894C'
 export const darkGreen = `#11692D`
 export const darkRed = `#791D1D`
 export const darkOrange = `#934914`
-export const darkGrey = `#555`
+export const darkGrey = `#555555`
 export const darkBlue = `#204493`
 export const darkPurple = `#542084`
 export const allDarkColor = [
