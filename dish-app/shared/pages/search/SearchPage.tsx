@@ -336,7 +336,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         : titleLen > 50
         ? 0.9
         : 1
-    const titleFontSize = 28 * titleScale * (isSmall ? 0.75 : 1)
+    const titleFontSize = 26 * titleScale * (isSmall ? 0.75 : 1)
     const lenseColor = useCurrentLenseColor()
     const scrollRef = useRef<ScrollView>()
 
@@ -389,7 +389,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
               letterSpacing={-0.25}
               fontSize={titleFontSize}
               fontWeight="700"
-              color={rgbString(lenseColor.map((x) => x * 0.95))}
+              color={rgbString(lenseColor.map((x) => x * 0.92))}
             >
               {pageTitleElements}{' '}
               <Text

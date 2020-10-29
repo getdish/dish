@@ -77,7 +77,7 @@ export const RestaurantSourcesBreakdownRow = memo(
                   href={item.url}
                 >
                   <HStack>
-                    {info?.image ? (
+                    {/* {info?.image ? (
                       <VStack className="faded-out">
                         <Image
                           source={info.image}
@@ -88,8 +88,8 @@ export const RestaurantSourcesBreakdownRow = memo(
                           }}
                         />
                       </VStack>
-                    ) : null}
-                    <Spacer size={3} />
+                    ) : null} */}
+                    {/* <Spacer size={3} /> */}
                     <Text fontSize={14} color="rgba(0,0,0,0.7)">
                       {info?.name}
                     </Text>
