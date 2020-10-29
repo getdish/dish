@@ -20,7 +20,7 @@ export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
     <Suspense
       fallback={
         <UpvoteDownvoteScore
-          marginLeft={-20}
+          marginLeft={-18}
           marginRight={-4}
           score={0}
           vote={0}
@@ -52,7 +52,7 @@ const RestaurantUpVoteDownVoteContents = memo(
         stopPropagation
       >
         <UpvoteDownvoteScore
-          marginLeft={-20}
+          marginLeft={-18}
           marginRight={-4}
           score={score}
           ratio={ratio}

@@ -59,7 +59,7 @@ export const useUserTagVotes = (
   }
 
   return {
-    vote: votes[0], // use the first one when querying multiple
+    vote: votes[0] ?? 0, // use the first one when querying multiple
     setVote: (vote: VoteNumber) => {
       if (omStatic.actions.home.promptLogin()) {
         return
