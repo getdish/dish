@@ -27,12 +27,11 @@ resource "helm_release" "sentry" {
   namespace  = "sentry"
   repository = "sentry"
   chart      = "sentry"
-  version    = "4.7.2"
+  version    = "6.2.1"
 
-  set {
-    name ="config.configYml"
-    value = file("yaml/sentry.yaml")
-  }
+  values = [
+    file("yaml/sentry.yaml")
+  ]
 
   set {
     name ="postgresql.postgresqlPassword"
@@ -40,13 +39,13 @@ resource "helm_release" "sentry" {
   }
 
   set {
-    name  = "persistence.size"
-    value = "25Gi"
+    name  = "postgresql.persistence.size"
+    value = "50Gi"
   }
 
   set {
-    name  = "service.type"
-    value = "ClusterIP"
+    name  = "nginx.enabled"
+    value = "false"
   }
 
   set {
@@ -98,18 +97,20 @@ resource "kubernetes_ingress" "sentry-ingress" {
       "kubernetes.io/ingress.class" = "nginx"
       "cert-manager.io/cluster-issuer": "letsencrypt-prod"
       "cert-manager.io/acme-challenge-type": "http01"
+      "nginx.ingress.kubernetes.io/use-regex": "true"
     }
   }
   spec {
     tls {
       hosts = [
         "sentry.k8s.${var.dish_domain}",
+        "*.ingest.sentry.k8s.${var.dish_domain}",
       ]
       secret_name = "sentry-tls"
     }
     backend {
-      service_name = "sentry-web"
-      service_port = 9000
+      service_name = "sentry-relay"
+      service_port = 3000
     }
     rule {
       host = "sentry.k8s.${var.dish_domain}"
@@ -119,6 +120,18 @@ resource "kubernetes_ingress" "sentry-ingress" {
           backend {
             service_name = "sentry-web"
             service_port = 9000
+          }
+        }
+      }
+    }
+    rule {
+      host = "*.ingest.sentry.k8s.${var.dish_domain}"
+      http {
+        path {
+          path = "/*"
+          backend {
+            service_name = "sentry-relay"
+            service_port = 3000
           }
         }
       }
