@@ -11,10 +11,9 @@ resource "helm_release" "redis" {
   chart = "bitnami/redis"
   version = "10.7.12"
 
-  set {
-    name ="config.configYml"
-    value = file("yaml/redis.yaml")
-  }
+  values = [
+    file("yaml/redis.yaml")
+  ]
 
   set {
     name = "cluster.enabled"
