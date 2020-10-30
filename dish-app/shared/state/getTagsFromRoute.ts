@@ -14,7 +14,9 @@ export const getTagsFromRoute = async (
   }
   const tmpTags: TagWithNameAndType[] = []
   if (item.params.lense) {
-    tmpTags.push(getUrlTagInfo(item.params.lense, 'lense'))
+    tmpTags.push(
+      getUrlTagInfo(item.params.lense.replace('lenses__', ''), 'lense')
+    )
   }
   if (item.params.tags) {
     for (const tag of item.params.tags.split(SPLIT_TAG)) {

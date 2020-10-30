@@ -6,18 +6,24 @@ import { Link } from '../ui/Link'
 import { LinkButtonNamedProps } from '../ui/LinkProps'
 
 export const DishViewButton = memo(
-  ({
-    name,
-    icon,
-    ...rest
-  }: {
-    name: LinkButtonNamedProps['name']
-    icon: string
-    size?: number
-  } & StackProps) => {
+  (
+    props: {
+      name: LinkButtonNamedProps['name']
+      slug: string
+      icon: string
+      size?: number
+    } & StackProps
+  ) => {
+    const { name, icon, slug, ...rest } = props
     const { lightColor, color } = getColorsForName(name)
+
+    if (!name) {
+      console.warn('no name', props)
+      return null
+    }
+
     return (
-      <Link tag={{ type: 'dish', name }}>
+      <Link tag={{ type: 'dish', name, slug }}>
         <HStack
           borderWidth={1}
           paddingVertical={6}

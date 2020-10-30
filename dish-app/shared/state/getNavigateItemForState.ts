@@ -91,11 +91,10 @@ const getRouteFromState = (state: HomeStateTagNavigable): SearchRouteParams => {
   const params: any = {
     location: slugify(state.currentLocationName ?? 'here'),
   }
-  const lenseTag =
-    allActiveTags.find((x) => x.type === 'lense')?.name ??
-    getTagSlug(tagLenses[0])
+  const lenseTag = allActiveTags.find((x) => x.type === 'lense') ?? tagLenses[0]
+
   if (lenseTag) {
-    params.lense = slugify(lenseTag)
+    params.lense = getTagSlug(lenseTag).replace('lenses__', '')
   }
   if (tags.length) {
     params.tags = tags

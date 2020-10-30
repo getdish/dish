@@ -298,7 +298,7 @@ const runSearch: AsyncAction<{
     center: roundLngLat(center),
     span: roundLngLat(span),
     query: state!.searchQuery,
-    tags: [...tags.map((tag) => getTagSlug(tag))],
+    tags: [...tags.map((tag) => getTagSlug(tag).replace('lenses__', ''))],
   }
 
   // prevent duplicate searches
@@ -314,11 +314,13 @@ const runSearch: AsyncAction<{
 
   // temp code to handle both types of api response at once
   let restaurants = [] as RestaurantOnlyIds[]
-  if ('restaurants' in res) {
-    restaurants = res['restaurants']
-    // add res.tags to active tags here...
-  } else {
-    restaurants = res
+  if (res) {
+    if ('restaurants' in res) {
+      restaurants = res['restaurants']
+      // add res.tags to active tags here...
+    } else {
+      restaurants = res
+    }
   }
 
   // only update searchkey once finished
