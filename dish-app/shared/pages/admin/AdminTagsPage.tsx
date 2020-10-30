@@ -33,6 +33,8 @@ import { ColumnHeader } from './ColumnHeader'
 import { PaginationNav } from './PaginationNav'
 import { VerticalColumn } from './VerticalColumn'
 
+const allTagsTag = { id: '', name: 'all', type: 'lense' } as const
+
 export default graphql(function AdminTagsPage() {
   return <AdminTagsPageContent />
 })
@@ -40,7 +42,7 @@ export default graphql(function AdminTagsPage() {
 class AdminTagStore extends Store {
   showCreate = false
   selectedId = ''
-  selectedByColumn: { name: string; type: TagType }[] = []
+  selectedByColumn: { name: string; type: TagType }[] = [allTagsTag]
   forceRefreshColumnByType = ''
 
   draft: TagRecord = {
@@ -158,7 +160,6 @@ const TagList = memo(
     const type = lastRowSelection.type ?? 'root'
     const [searchRaw, setSearch] = useState('')
     const store = useStore(AdminTagStore)
-    console.log('lastRowSelection', lastRowSelection, store.selectedByColumn)
     const search = useDebounceValue(searchRaw, 100)
 
     return (
@@ -194,6 +195,7 @@ const TagList = memo(
         </ColumnHeader>
         <Suspense fallback={<LoadingItems />}>
           <TagListContent
+            key={lastRowSelection}
             search={search}
             // newTag={newTag}
             column={column}
@@ -228,12 +230,13 @@ const TagListContent = memo(
         queryAggregate: query.tag_aggregate,
         params: {
           where: {
-            ...(lastRowSelection && {
-              parent: {
-                name: { _eq: lastRowSelection.name },
-                type: { _eq: type },
-              },
-            }),
+            ...(lastRowSelection &&
+              lastRowSelection?.name !== 'all' && {
+                parent: {
+                  name: { _eq: lastRowSelection.name },
+                  type: { _eq: type },
+                },
+              }),
             ...(!lastRowSelection && {
               type: {
                 _eq: 'null',
@@ -261,7 +264,7 @@ const TagListContent = memo(
       const tagStore = useStore(AdminTagStore)
       const forceUpdate = useForceUpdate()
 
-      const allResults = [{ id: '', name: '' } as WithID<Tag>, ...results]
+      const allResults = column === 0 ? [allTagsTag, ...results] : results
 
       // refetch on every re-render so we dont have stale reads from gqless
       useEffect(() => {
@@ -314,6 +317,7 @@ const TagListContent = memo(
                   row={row}
                   column={column}
                   onSelect={() => {
+                    console.log('on slect', column, tag)
                     tagStore.setDraft({
                       parentId: tag.id,
                       type: 'dish',
@@ -368,7 +372,9 @@ const TagListItem = graphql(
       )
     }
 
-    return <AdminListItem id="tags" column={column} row={row} text="All" />
+    return (
+      <AdminListItem id="tags" column={column} row={row} text="All" {...rest} />
+    )
   }
 )
 
@@ -612,7 +618,9 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
           <TextInput
             style={styles.textInput}
             onChange={(e) => {
-              onChange?.({ rgb: e.target['value'].split(',').map(x => +x.trim()) })
+              onChange?.({
+                rgb: e.target['value'].split(',').map((x) => +x.trim()),
+              })
             }}
             defaultValue={(tag.rgb ?? [0, 0, 0]).join(', ')}
           />
