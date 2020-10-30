@@ -1,8 +1,4 @@
-import { Tag } from '@dish/graph'
-
-export type FullTag = Required<
-  Pick<Tag, 'name' | 'id' | 'icon' | 'type' | 'rgb' | 'slug'>
->
+import { FullTag } from './FullTag'
 
 export const tagLenses: FullTag[] = [
   {
@@ -38,52 +34,8 @@ export const tagLenses: FullTag[] = [
     type: 'lense',
     slug: 'lenses__veg',
   },
-  // {
-  //   id: '1',
-  //   name: 'Service',
-  //   icon: '💁‍♂️',
-  //   rgb: pctTo255([0.3, 0.4, 0.3]),
-  //   type: 'lense',
-  // },
-  // {
-  //   id: '2',
-  //   name: 'Speed',
-  //   icon: '🏃‍♀️',
-  //   rgb: pctTo255([0.3, 0.4, 0.3]),
-  //   type: 'lense',
-  // },
-  // {
-  //   id: '3',
-  //   name: 'Authentic',
-  //   icon: '🦙',
-  //   rgb: pctTo255([0.3, 0.4, 0.3]),
-  //   type: 'lense',
-  // },
 ]
 
 function pctTo255(x: number[]) {
   return x.map((x) => x * 255) as typeof x
-}
-
-export const tagDescriptions = {
-  gems: {
-    dish: 'The best 🍔',
-    cuisine: 'The Best 🍔 Restaurants',
-    plain: 'Uniquely Good',
-  },
-  vibe: {
-    dish: 'Nice 🍔',
-    cuisine: 'Vibey 🍔',
-    plain: 'Vibes',
-  },
-  drink: {
-    dish: '🍔 & drinks',
-    cuisine: '🍔 with a bar',
-    plain: 'Good Drinks',
-  },
-  veg: {
-    dish: 'The best Vegetarian 🍔',
-    cuisine: 'Vegetarian 🍔 Restaurants',
-    plain: 'Vegetarian',
-  },
 }

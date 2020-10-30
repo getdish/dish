@@ -137,7 +137,8 @@
     "build:web:client": "SSR_CLIENT=1 TARGET=web VERBOSE=1 NODE_ENV=production webpack",
     "build:web:client:analyze": "ONLY_MODERN=1 ANALYZE_BUNDLE=1 yarn build:web:client",
     "build:web:worker": "TARGET=worker webpack",
-    "build:web:watch": "(TARGET=ssr webpack --watch) & (TARGET=client webpack --watch) & wait"
+    "build:web:watch": "(TARGET=ssr webpack --watch) & (TARGET=client webpack --watch) & wait",
+    "generate:tags": "eval $(../dishctl.sh yaml_to_env) IS_LIVE=1 ts-node --transpile-only ./etc/prefetch_tags.ts"
   },
   "dependencies": {
     "snackui": "0.0.2",

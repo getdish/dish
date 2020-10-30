@@ -1,8 +1,10 @@
 export const constants = 0
 export const isNode = typeof window == 'undefined'
 
+export const isLive = process.env.IS_LIVE === '1'
+
 export const isHasuraLive =
-  !isNode && window.location?.hostname.includes('live')
+  (!isNode && window.location?.hostname.includes('live')) || isLive
 export const isDevProd =
   process.env.TARGET === 'native' ||
   (!isNode && window.location?.hostname.includes('dish'))
