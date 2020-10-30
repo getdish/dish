@@ -10,8 +10,13 @@ export const getTagSlug = (tag: NavigableTag) => {
   return tag.slug
 }
 
-export const guessTagSlug = (tag: TagWithNameAndType) => {
-  return `${parentSlugsByType[tag.type] ?? 'global'}__${slugify(tag.name)}`
+export const guessTagSlug = (
+  tag: TagWithNameAndType | { slug: string; name?: string; type?: string }
+) => {
+  return (
+    tag.slug ??
+    `${parentSlugsByType[tag.type] ?? 'global'}__${slugify(tag.name)}`
+  )
 }
 
 const parentSlugsByType = {

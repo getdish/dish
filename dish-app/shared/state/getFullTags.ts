@@ -24,14 +24,17 @@ export function getFullTag(tag: Tag): FullTag | null {
   }
 }
 
-export async function getFullTags(
-  tags: TagWithNameAndType[]
-): Promise<FullTag[]> {
-  if (tags.some((x) => !x.name || !x.type)) {
-    throw new Error(`Needs name + type to find`)
+type TagPartial =
+  | TagWithNameAndType
+  | { name?: string; type?: string; slug: string }
+
+export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
+  const missingTag = tags.some((x) => !x.slug && !x.name && !x.type)
+  if (missingTag) {
+    throw new Error(`Needs name + type or slug: ${JSON.stringify(missingTag)}`)
   }
   const cached: FullTag[] = []
-  const uncached: TagWithNameAndType[] = []
+  const uncached: TagPartial[] = []
 
   for (const tag of tags) {
     const found = allTags[guessTagSlug(tag)]
@@ -42,11 +45,11 @@ export async function getFullTags(
     }
   }
 
-  console.log('got', tags, cached, uncached)
-
   if (!uncached.length) {
     return cached
   }
+
+  console.log('fetching', tags)
 
   const res = [
     ...cached,

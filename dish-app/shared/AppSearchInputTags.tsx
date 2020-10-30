@@ -56,6 +56,7 @@ export const AppSearchInputTags = memo(
                   type={tag.type}
                   icon={tag.icon ?? ''}
                   rgb={tag.rgb}
+                  slug={tag.slug}
                   onPress={() => {
                     om.actions.home.setSearchBarFocusedTag(tag)
                   }}
