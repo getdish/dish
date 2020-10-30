@@ -1,11 +1,12 @@
 import { join } from 'path'
 
-import { order_by, query, resolved } from '@dish/graph'
+import { order_by, query, resolved, startLogging } from '@dish/graph'
 import { writeJSON } from 'fs-extra'
 import { sortBy } from 'lodash'
 
-import { getFullTag } from '../shared/state/getFullTags'
+import { getFullTag } from '../shared/state/getFullTag'
 
+startLogging()
 main()
 
 async function main() {

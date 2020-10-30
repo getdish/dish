@@ -5012,6 +5012,9 @@ export const schema = {
         get description() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get downvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
         get geocoder_id() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -5351,6 +5354,12 @@ export const schema = {
         get updated_at() {
           return new FieldNode(schema.timestamptz, undefined, false)
         },
+        get upvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
+        get votes_ratio() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
         get website() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -5555,10 +5564,19 @@ export const schema = {
   get restaurant_avg_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get zip() {
@@ -5574,10 +5592,19 @@ export const schema = {
   get restaurant_avg_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
         get zip() {
@@ -5616,6 +5643,9 @@ export const schema = {
         },
         get description() {
           return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get downvotes() {
+          return new InputNodeField(schema.numeric_comparison_exp, true)
         },
         get geocoder_id() {
           return new InputNodeField(schema.String_comparison_exp, true)
@@ -5688,6 +5718,12 @@ export const schema = {
         },
         get updated_at() {
           return new InputNodeField(schema.timestamptz_comparison_exp, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.numeric_comparison_exp, true)
+        },
+        get votes_ratio() {
+          return new InputNodeField(schema.numeric_comparison_exp, true)
         },
         get website() {
           return new InputNodeField(schema.String_comparison_exp, true)
@@ -5798,10 +5834,19 @@ export const schema = {
   get restaurant_inc_input() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.numeric, true)
+        },
         get rating() {
           return new InputNodeField(schema.numeric, true)
         },
         get score() {
+          return new InputNodeField(schema.numeric, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.numeric, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.numeric, true)
         },
         get zip() {
@@ -5825,6 +5870,9 @@ export const schema = {
         },
         get description() {
           return new InputNodeField(schema.String, true)
+        },
+        get downvotes() {
+          return new InputNodeField(schema.numeric, true)
         },
         get geocoder_id() {
           return new InputNodeField(schema.String, true)
@@ -5901,6 +5949,12 @@ export const schema = {
         get updated_at() {
           return new InputNodeField(schema.timestamptz, true)
         },
+        get upvotes() {
+          return new InputNodeField(schema.numeric, true)
+        },
+        get votes_ratio() {
+          return new InputNodeField(schema.numeric, true)
+        },
         get website() {
           return new InputNodeField(schema.String, true)
         },
@@ -5925,6 +5979,9 @@ export const schema = {
         },
         get description() {
           return new FieldNode(schema.String, undefined, true)
+        },
+        get downvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
         },
         get geocoder_id() {
           return new FieldNode(schema.String, undefined, true)
@@ -5961,6 +6018,12 @@ export const schema = {
         },
         get updated_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
+        get votes_ratio() {
+          return new FieldNode(schema.numeric, undefined, true)
         },
         get website() {
           return new FieldNode(schema.String, undefined, true)
@@ -5990,6 +6053,9 @@ export const schema = {
         get description() {
           return new InputNodeField(schema.order_by, true)
         },
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get geocoder_id() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6026,6 +6092,12 @@ export const schema = {
         get updated_at() {
           return new InputNodeField(schema.order_by, true)
         },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get website() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6050,6 +6122,9 @@ export const schema = {
         },
         get description() {
           return new FieldNode(schema.String, undefined, true)
+        },
+        get downvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
         },
         get geocoder_id() {
           return new FieldNode(schema.String, undefined, true)
@@ -6087,6 +6162,12 @@ export const schema = {
         get updated_at() {
           return new FieldNode(schema.timestamptz, undefined, true)
         },
+        get upvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
+        get votes_ratio() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
         get website() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -6113,6 +6194,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get description() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get downvotes() {
           return new InputNodeField(schema.order_by, true)
         },
         get geocoder_id() {
@@ -6149,6 +6233,12 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get updated_at() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
         get website() {
@@ -6228,6 +6318,9 @@ export const schema = {
         get description() {
           return new InputNodeField(schema.order_by, true)
         },
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get geocoder_id() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6303,6 +6396,12 @@ export const schema = {
         get updated_at() {
           return new InputNodeField(schema.order_by, true)
         },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get website() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6372,6 +6471,9 @@ export const schema = {
         get description() {
           return new InputNodeField(schema.String, true)
         },
+        get downvotes() {
+          return new InputNodeField(schema.numeric, true)
+        },
         get geocoder_id() {
           return new InputNodeField(schema.String, true)
         },
@@ -6435,6 +6537,12 @@ export const schema = {
         get updated_at() {
           return new InputNodeField(schema.timestamptz, true)
         },
+        get upvotes() {
+          return new InputNodeField(schema.numeric, true)
+        },
+        get votes_ratio() {
+          return new InputNodeField(schema.numeric, true)
+        },
         get website() {
           return new InputNodeField(schema.String, true)
         },
@@ -6448,10 +6556,19 @@ export const schema = {
   get restaurant_stddev_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get zip() {
@@ -6467,10 +6584,19 @@ export const schema = {
   get restaurant_stddev_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
         get zip() {
@@ -6483,10 +6609,19 @@ export const schema = {
   get restaurant_stddev_pop_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get zip() {
@@ -6502,10 +6637,19 @@ export const schema = {
   get restaurant_stddev_pop_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
         get zip() {
@@ -6518,10 +6662,19 @@ export const schema = {
   get restaurant_stddev_samp_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get zip() {
@@ -6537,10 +6690,19 @@ export const schema = {
   get restaurant_stddev_samp_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
         get zip() {
@@ -6553,10 +6715,19 @@ export const schema = {
   get restaurant_sum_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
         get rating() {
           return new FieldNode(schema.numeric, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.numeric, undefined, true)
         },
         get zip() {
@@ -6572,10 +6743,19 @@ export const schema = {
   get restaurant_sum_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
         get zip() {
@@ -6588,6 +6768,9 @@ export const schema = {
   get restaurant_tag() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
         get id() {
           return new FieldNode(schema.uuid, undefined, false)
         },
@@ -6769,6 +6952,12 @@ export const schema = {
         },
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, false)
+        },
+        get upvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
+        get votes_ratio() {
+          return new FieldNode(schema.numeric, undefined, true)
         },
       },
       {
@@ -6988,6 +7177,9 @@ export const schema = {
   get restaurant_tag_avg_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get rank() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -6998,6 +7190,12 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -7010,6 +7208,9 @@ export const schema = {
   get restaurant_tag_avg_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rank() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7020,6 +7221,12 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -7043,6 +7250,9 @@ export const schema = {
             new ArrayNode(schema.restaurant_tag_bool_exp, true),
             true
           )
+        },
+        get downvotes() {
+          return new InputNodeField(schema.numeric_comparison_exp, true)
         },
         get id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
@@ -7085,6 +7295,12 @@ export const schema = {
         },
         get tag_id() {
           return new InputNodeField(schema.uuid_comparison_exp, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.numeric_comparison_exp, true)
+        },
+        get votes_ratio() {
+          return new InputNodeField(schema.numeric_comparison_exp, true)
         },
       },
       { name: 'restaurant_tag_bool_exp' }
@@ -7144,6 +7360,9 @@ export const schema = {
   get restaurant_tag_inc_input() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.numeric, true)
+        },
         get rank() {
           return new InputNodeField(schema.Int, true)
         },
@@ -7156,6 +7375,12 @@ export const schema = {
         get score() {
           return new InputNodeField(schema.numeric, true)
         },
+        get upvotes() {
+          return new InputNodeField(schema.numeric, true)
+        },
+        get votes_ratio() {
+          return new InputNodeField(schema.numeric, true)
+        },
       },
       { name: 'restaurant_tag_inc_input' }
     )
@@ -7163,6 +7388,9 @@ export const schema = {
   get restaurant_tag_insert_input() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.numeric, true)
+        },
         get id() {
           return new InputNodeField(schema.uuid, true)
         },
@@ -7211,6 +7439,12 @@ export const schema = {
         get tag_id() {
           return new InputNodeField(schema.uuid, true)
         },
+        get upvotes() {
+          return new InputNodeField(schema.numeric, true)
+        },
+        get votes_ratio() {
+          return new InputNodeField(schema.numeric, true)
+        },
       },
       { name: 'restaurant_tag_insert_input' }
     )
@@ -7218,6 +7452,9 @@ export const schema = {
   get restaurant_tag_max_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
         get id() {
           return new FieldNode(schema.uuid, undefined, true)
         },
@@ -7238,6 +7475,12 @@ export const schema = {
         },
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
+        get votes_ratio() {
+          return new FieldNode(schema.numeric, undefined, true)
         },
       },
       {
@@ -7249,6 +7492,9 @@ export const schema = {
   get restaurant_tag_max_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get id() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7270,6 +7516,12 @@ export const schema = {
         get tag_id() {
           return new InputNodeField(schema.order_by, true)
         },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'restaurant_tag_max_order_by' }
     )
@@ -7277,6 +7529,9 @@ export const schema = {
   get restaurant_tag_min_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
         get id() {
           return new FieldNode(schema.uuid, undefined, true)
         },
@@ -7298,6 +7553,12 @@ export const schema = {
         get tag_id() {
           return new FieldNode(schema.uuid, undefined, true)
         },
+        get upvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
+        get votes_ratio() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
       },
       {
         name: 'restaurant_tag_min_fields',
@@ -7308,6 +7569,9 @@ export const schema = {
   get restaurant_tag_min_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get id() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7327,6 +7591,12 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get tag_id() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -7388,6 +7658,9 @@ export const schema = {
   get restaurant_tag_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get id() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7433,6 +7706,12 @@ export const schema = {
         get tag_id() {
           return new InputNodeField(schema.order_by, true)
         },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'restaurant_tag_order_by' }
     )
@@ -7472,6 +7751,9 @@ export const schema = {
   get restaurant_tag_set_input() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.numeric, true)
+        },
         get id() {
           return new InputNodeField(schema.uuid, true)
         },
@@ -7502,6 +7784,12 @@ export const schema = {
         get tag_id() {
           return new InputNodeField(schema.uuid, true)
         },
+        get upvotes() {
+          return new InputNodeField(schema.numeric, true)
+        },
+        get votes_ratio() {
+          return new InputNodeField(schema.numeric, true)
+        },
       },
       { name: 'restaurant_tag_set_input' }
     )
@@ -7509,6 +7797,9 @@ export const schema = {
   get restaurant_tag_stddev_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get rank() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -7519,6 +7810,12 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -7531,6 +7828,9 @@ export const schema = {
   get restaurant_tag_stddev_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rank() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7541,6 +7841,12 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -7550,6 +7856,9 @@ export const schema = {
   get restaurant_tag_stddev_pop_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get rank() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -7560,6 +7869,12 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -7572,6 +7887,9 @@ export const schema = {
   get restaurant_tag_stddev_pop_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rank() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7582,6 +7900,12 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -7591,6 +7915,9 @@ export const schema = {
   get restaurant_tag_stddev_samp_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get rank() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -7601,6 +7928,12 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -7614,6 +7947,9 @@ export const schema = {
   get restaurant_tag_stddev_samp_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rank() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7626,6 +7962,12 @@ export const schema = {
         get score() {
           return new InputNodeField(schema.order_by, true)
         },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
+          return new InputNodeField(schema.order_by, true)
+        },
       },
       { name: 'restaurant_tag_stddev_samp_order_by' }
     )
@@ -7633,6 +7975,9 @@ export const schema = {
   get restaurant_tag_sum_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
         get rank() {
           return new FieldNode(schema.Int, undefined, true)
         },
@@ -7645,6 +7990,12 @@ export const schema = {
         get score() {
           return new FieldNode(schema.numeric, undefined, true)
         },
+        get upvotes() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
+        get votes_ratio() {
+          return new FieldNode(schema.numeric, undefined, true)
+        },
       },
       {
         name: 'restaurant_tag_sum_fields',
@@ -7655,6 +8006,9 @@ export const schema = {
   get restaurant_tag_sum_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rank() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7665,6 +8019,12 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -7677,6 +8037,9 @@ export const schema = {
   get restaurant_tag_var_pop_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get rank() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -7687,6 +8050,12 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -7699,6 +8068,9 @@ export const schema = {
   get restaurant_tag_var_pop_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rank() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7709,6 +8081,12 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -7718,6 +8096,9 @@ export const schema = {
   get restaurant_tag_var_samp_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get rank() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -7728,6 +8109,12 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -7740,6 +8127,9 @@ export const schema = {
   get restaurant_tag_var_samp_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rank() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7750,6 +8140,12 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -7759,6 +8155,9 @@ export const schema = {
   get restaurant_tag_variance_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get rank() {
           return new FieldNode(schema.Float, undefined, true)
         },
@@ -7769,6 +8168,12 @@ export const schema = {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.Float, undefined, true)
         },
       },
@@ -7781,6 +8186,9 @@ export const schema = {
   get restaurant_tag_variance_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rank() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -7791,6 +8199,12 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
       },
@@ -7816,10 +8230,19 @@ export const schema = {
   get restaurant_var_pop_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get zip() {
@@ -7835,10 +8258,19 @@ export const schema = {
   get restaurant_var_pop_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
         get zip() {
@@ -7851,10 +8283,19 @@ export const schema = {
   get restaurant_var_samp_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get zip() {
@@ -7870,10 +8311,19 @@ export const schema = {
   get restaurant_var_samp_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
         get zip() {
@@ -7886,10 +8336,19 @@ export const schema = {
   get restaurant_variance_fields() {
     return new ObjectNode(
       {
+        get downvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
         get rating() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get score() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get upvotes() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get votes_ratio() {
           return new FieldNode(schema.Float, undefined, true)
         },
         get zip() {
@@ -7905,10 +8364,19 @@ export const schema = {
   get restaurant_variance_order_by() {
     return new InputNode(
       {
+        get downvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get rating() {
           return new InputNodeField(schema.order_by, true)
         },
         get score() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get upvotes() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get votes_ratio() {
           return new InputNodeField(schema.order_by, true)
         },
         get zip() {
