@@ -1,7 +1,7 @@
 import { Review, query, reviewUpsert } from '@dish/graph'
-import { Store, useStore, useStoreOnce } from '@dish/use-store'
+import { Store, useStore } from '@dish/use-store'
 import { isNumber } from 'lodash'
-import { useCallback, useEffect, useLayoutEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import { Toast, useForceUpdate } from 'snackui'
 
 import { allTags } from '../state/allTags'
@@ -14,7 +14,7 @@ import { useRestaurantQuery } from './useRestaurantQuery'
 
 export type VoteNumber = -1 | 0 | 1
 
-type VoteStoreProps = { tagKey: string; restaurantSlug: string }
+type VoteStoreProps = { tagSlug: string; restaurantSlug: string }
 
 // using this for now until gqless optimistic update gets better
 export class TagVoteStore extends Store<VoteStoreProps> {
@@ -26,7 +26,7 @@ export class TagVoteStore extends Store<VoteStoreProps> {
 
   async writeVote(restaurantId: string, vote: VoteNumber) {
     // insert into db
-    const [tag] = await getFullTags([{ name: this.props.tagKey }])
+    const [tag] = await getFullTags([{ slug: this.props.tagSlug }])
     if (!tag) {
       console.error('error writing vote')
       return
@@ -47,13 +47,13 @@ export const useUserTagVotes = (
   activeTags: HomeActiveTagsRecord
 ) => {
   // ⚠️ cant change bad hooks practice
-  const tagKeyList = Object.keys(activeTags).filter((x) => activeTags[x])
+  const tagSlugList = Object.keys(activeTags).filter((x) => activeTags[x])
 
   // handles multiple
   const votes: VoteNumber[] = []
   const setVotes: Function[] = []
-  for (const tagKey of tagKeyList) {
-    const [vote, setVote] = useUserTagVote({ restaurantSlug, tagKey })
+  for (const tagSlug of tagSlugList) {
+    const [vote, setVote] = useUserTagVote({ restaurantSlug, tagSlug })
     votes.push(vote)
     setVotes.push(setVote)
   }
@@ -78,7 +78,7 @@ export const useUserTagVote = (props: VoteStoreProps) => {
   const voteStore = useStore(TagVoteStore, props)
   const restaurant = useRestaurantQuery(props.restaurantSlug)
   const forceUpdate = useForceUpdate()
-  const tag = allTags[props.tagKey]
+  const tag = allTags[props.tagSlug]
   const tagId = tag?.id
   let review: Review | null = null
 

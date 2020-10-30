@@ -24,6 +24,7 @@
     "ios": "yarn workspace @dish/dish-app ios",
     "postinstall": "./bin/postinstall.sh",
     "preinstall": "./bin/preinstall.sh; ",
+    "t": "eval $(./dishctl.sh yaml_to_env) echo $TF_VAR_HASURA_ENDPOINT",
     "docker:start": "eval $(./dishctl.sh yaml_to_env) docker-compose up",
     "docker:build:base": "eval $(./dishctl.sh yaml_to_env) docker-compose build base",
     "docker:build": "eval $(./dishctl.sh yaml_to_env) docker-compose build",
