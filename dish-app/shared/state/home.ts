@@ -298,7 +298,7 @@ const runSearch: AsyncAction<{
     center: roundLngLat(center),
     span: roundLngLat(span),
     query: state!.searchQuery,
-    tags: [...tags.map((tag) => getTagSlug(tag).replace(/[a-z]+_/g, ''))],
+    tags: [...tags.map((tag) => getTagSlug(tag))],
   }
 
   // prevent duplicate searches
@@ -569,9 +569,7 @@ const pushHomeState: AsyncAction<
       }
       nextState = {
         searchQuery: '',
-        activeTags: {
-          [tagLenses[0].slug]: true,
-        },
+        activeTags: {},
         ...prevLocation,
         mapAt: null,
       }
@@ -600,9 +598,9 @@ const pushHomeState: AsyncAction<
 
       // use last home or search to get most up to date
       if (prev.type === 'home') {
-        const tags = getTagsFromRoute(router.curPage)
+        const tags = await getTagsFromRoute(router.curPage)
         console.log('tags', tags)
-        addTagsToCache(tags)
+        addTagsToCache(tags.filter((x) => x.type !== 'lense'))
         activeTags = {}
         for (const tag of tags) {
           activeTags[getTagSlug(tag)] = true

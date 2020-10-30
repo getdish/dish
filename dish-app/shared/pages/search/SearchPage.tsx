@@ -83,14 +83,13 @@ export default memo(function SearchPage(props: Props) {
     // if initial load on a search page, process url => state
     let isCancelled = false
     if (!isRefreshing) {
-      const fakeTags = getTagsFromRoute(router.curPage)
       const location = getLocationFromRoute()
       // TODO UPDATE HOME TOO...
       om.actions.home.updateCurrentState({
         ...state,
         ...location,
       })
-      getFullTags(fakeTags).then((tags) => {
+      getTagsFromRoute(router.curPage).then((tags) => {
         if (isCancelled) return
         addTagsToCache(tags)
         const activeTags: HomeActiveTagsRecord = tags.reduce<any>(
