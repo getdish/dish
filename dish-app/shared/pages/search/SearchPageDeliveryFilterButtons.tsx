@@ -12,17 +12,17 @@ export const SearchPageDeliveryFilterButtons = memo(() => {
   if (currentState.type !== 'search') {
     return null
   }
-  const { activeTagIds } = currentState
+  const { activeTags } = currentState
   const sources = Object.keys(thirdPartyCrawlSources).filter(
     (key) => thirdPartyCrawlSources[key].delivery
   )
-  const noneActive = sources.every((x) => !activeTagIds[x])
+  const noneActive = sources.every((x) => !activeTags[x])
   return (
     <Box pointerEvents="auto" width={200}>
       <VStack spacing={4} padding={10} alignItems="stretch">
         {sources.map((key) => {
           const item = thirdPartyCrawlSources[key]
-          const isActive = activeTagIds[key]
+          const isActive = activeTags[key]
           return (
             <FilterButton
               tag={{

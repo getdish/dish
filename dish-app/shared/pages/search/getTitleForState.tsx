@@ -4,11 +4,9 @@ import { Text } from 'snackui'
 
 import { isWeb } from '../../constants'
 import { getActiveTags } from '../../state/getActiveTags'
-import { getTagId } from '../../state/getTagId'
 import { HomeStateItem } from '../../state/home-types'
+import { tagDescriptions } from '../../state/tagDescriptions'
 import { tagDisplayName } from '../../state/tagDisplayName'
-import { tagDescriptions } from '../../state/tagLenses'
-import { TagButton, getTagButtonProps } from '../../views/TagButton'
 
 const getTitleForQuery = (query: string) => {
   return query

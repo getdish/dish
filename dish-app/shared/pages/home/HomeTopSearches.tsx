@@ -3,10 +3,10 @@ import React, { memo } from 'react'
 import { StyleSheet } from 'react-native'
 import { HStack, LinearGradient, Text } from 'snackui'
 
-import { bgLight, bgLightHover, lightBlue } from '../../colors'
+import { bgLightHover } from '../../colors'
 import { useIsReallyNarrow } from '../../hooks/useIs'
+import { tagLenses } from '../../state/localTags.json'
 import { tagDisplayName } from '../../state/tagDisplayName'
-import { tagLenses } from '../../state/tagLenses'
 import { LinkButton } from '../../views/ui/LinkButton'
 
 export const HomeTopSearches = memo(() => {

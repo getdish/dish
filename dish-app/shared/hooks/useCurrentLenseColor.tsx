@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 
+import { tagLenses } from '../state/localTags.json'
 import { useOvermind } from '../state/om'
-import { tagLenses } from '../state/tagLenses'
 
 export const useCurrentLenseColor = (): [number, number, number] => {
   const om = useOvermind()

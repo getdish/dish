@@ -2,14 +2,14 @@ import { Tag } from '@dish/graph'
 import React, { memo } from 'react'
 import { VStack } from 'snackui'
 
-import { getTagId } from '../state/getTagId'
+import { getTagSlug } from '../state/getTagSlug'
 import { HomeActiveTagsRecord } from '../state/home-types'
-import { tagLenses } from '../state/tagLenses'
+import { tagLenses } from '../state/localTags.json'
 import { LenseButton, LenseButtonSize } from './LenseButton'
 
 export const HomeLenseBar = memo(
   (props: {
-    activeTagIds?: HomeActiveTagsRecord
+    activeTags?: HomeActiveTagsRecord
     size?: LenseButtonSize
     minimal?: boolean
     backgroundColor?: string
@@ -18,7 +18,7 @@ export const HomeLenseBar = memo(
     return (
       <>
         {tagLenses.map((lense, index) => {
-          const isActive = props.activeTagIds?.[getTagId(lense)] ?? false
+          const isActive = props.activeTags?.[getTagSlug(lense)] ?? false
           return (
             <VStack
               zIndex={isActive ? 1 : 0}

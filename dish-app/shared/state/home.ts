@@ -27,8 +27,8 @@ import { getActiveTags } from './getActiveTags'
 import { setDefaultLocation } from './getDefaultLocation'
 import { getNavigateItemForState } from './getNavigateItemForState'
 import { getNextState } from './getNextState'
-import { getTagId } from './getTagId'
 import { getTagsFromRoute } from './getTagsFromRoute'
+import { getTagSlug } from './getTagSlug'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
 import {
   ActiveEvent,
@@ -47,6 +47,7 @@ import {
 } from './home-types'
 import { initialHomeState } from './initialHomeState'
 import { isSearchBarTag } from './isSearchBarTag'
+import { tagLenses } from './localTags.json'
 import { NavigableTag } from './NavigableTag'
 import { reverseGeocode } from './reverseGeocode'
 import { router } from './router'
@@ -151,15 +152,15 @@ export const state: HomeState = {
   }),
   currentStateLense: derived<HomeState, OmState, NavigableTag | null>(
     (state) => {
-      if ('activeTagIds' in state.currentState) {
-        for (const id in state.currentState.activeTagIds) {
+      if ('activeTags' in state.currentState) {
+        for (const id in state.currentState.activeTags) {
           const tag = allTags[id]
           if (tag?.type == 'lense') {
             return tag
           }
         }
       }
-      return null
+      return tagLenses[0]
     }
   ),
 }
@@ -297,7 +298,7 @@ const runSearch: AsyncAction<{
     center: roundLngLat(center),
     span: roundLngLat(span),
     query: state!.searchQuery,
-    tags: [...tags.map((tag) => getTagId(tag).replace(/[a-z]+_/g, ''))],
+    tags: [...tags.map((tag) => getTagSlug(tag).replace(/[a-z]+_/g, ''))],
   }
 
   // prevent duplicate searches
@@ -552,7 +553,7 @@ const pushHomeState: AsyncAction<
 
   let nextState: Partial<HomeStateItem> | null = null
   let fetchData: PageAction | null = null
-  let activeTagIds: HomeActiveTagsRecord
+  let activeTags: HomeActiveTagsRecord
   const type = item.name
 
   switch (type) {
@@ -568,7 +569,9 @@ const pushHomeState: AsyncAction<
       }
       nextState = {
         searchQuery: '',
-        activeTagIds: {},
+        activeTags: {
+          [tagLenses[0].slug]: true,
+        },
         ...prevLocation,
         mapAt: null,
       }
@@ -600,12 +603,12 @@ const pushHomeState: AsyncAction<
         const tags = getTagsFromRoute(router.curPage)
         console.log('tags', tags)
         addTagsToCache(tags)
-        activeTagIds = tags.reduce((acc, tag) => {
-          acc[getTagId(tag)] = true
-          return acc
-        }, {})
+        activeTags = {}
+        for (const tag of tags) {
+          activeTags[getTagSlug(tag)] = true
+        }
       } else {
-        activeTagIds = prev.activeTagIds
+        activeTags = prev.activeTags
       }
 
       const username =
@@ -623,7 +626,7 @@ const pushHomeState: AsyncAction<
             results: prev.results,
           }),
         username,
-        activeTagIds,
+        activeTags,
         center: prev.mapAt?.center ?? prev.center,
         span: prev.mapAt?.span ?? prev.span,
         mapAt: null,
@@ -810,7 +813,7 @@ const setSearchBarFocusedTag: Action<NavigableTag | null> = (om, val) => {
     return
   }
   const tags = om.state.home.searchBarTags
-  const tagIndex = tags.findIndex((x) => getTagId(x) === getTagId(val))
+  const tagIndex = tags.findIndex((x) => getTagSlug(x) === getTagSlug(val))
   om.state.home.autocompleteIndex = -tags.length + tagIndex
 }
 
@@ -859,11 +862,9 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
   )
   if (!state) return
   try {
-    assert('activeTagIds' in next)
-    const stateActiveTagIds =
-      'activeTagIds' in state ? state.activeTagIds : null
-    const sameTagIds =
-      stringify(stateActiveTagIds) === stringify(next.activeTagIds)
+    assert('activeTags' in next)
+    const stateactiveTags = 'activeTags' in state ? state.activeTags : null
+    const sameTagIds = stringify(stateactiveTags) === stringify(next.activeTags)
     const sameSearchQuery = isEqual(state.searchQuery, next.searchQuery)
     assert(!sameTagIds || !sameSearchQuery)
     const nextState = {
@@ -904,19 +905,19 @@ const clearTags: AsyncAction = async (om) => {
   await om.actions.home.navigate({
     state: {
       ...om.state.home.currentState,
-      activeTagIds: {},
+      activeTags: {},
     },
   })
 }
 
 const clearTag: AsyncAction<NavigableTag> = async (om, tag) => {
   const state = om.state.home.currentState
-  if ('activeTagIds' in state) {
+  if ('activeTags' in state) {
     const nextState = {
       ...state,
-      activeTagIds: {
-        ...state.activeTagIds,
-        [getTagId(tag)]: false,
+      activeTags: {
+        ...state.activeTags,
+        [getTagSlug(tag)]: false,
       },
     }
     await om.actions.home.navigate({
@@ -952,7 +953,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
       id: curState.id,
       type,
       searchQuery: nextState.searchQuery,
-      activeTagIds: nextState.activeTagIds,
+      activeTags: nextState.activeTags,
     })
   }
 

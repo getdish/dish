@@ -683,12 +683,6 @@ function yaml_to_env() {
   parse_yaml $PROJECT_ROOT/env.enc.production.yaml | sed 's/\$/\\$/g' | xargs -0
 }
 
-function node_prod_env() {
-  yaml_to_env
-  local HASURA_ENDPOINT=https://hasura.dishapp.com
-  local HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
-}
-
 function _buildkit_build() {
   dockerfile_path=$2
   name=$3

@@ -1,0 +1,216 @@
+{
+  "tagDefaultAutocomplete": [
+    {
+      "id": "97517a08-c2f1-4d38-8c50-d7932b3787da",
+      "name": "Pho",
+      "type": "dish",
+      "icon": null,
+      "rgb": null,
+      "slug": "vietnamese__pho"
+    },
+    {
+      "id": "1212987b-580f-4733-beee-e4cf3a6155b8",
+      "name": "Taco",
+      "type": "dish",
+      "icon": "🌮",
+      "rgb": null,
+      "slug": "mexican__taco"
+    },
+    {
+      "id": "caa833fd-0f81-4fde-b5f3-457bca68cf56",
+      "name": "Steak",
+      "type": "dish",
+      "icon": null,
+      "rgb": null,
+      "slug": "american__steak"
+    },
+    {
+      "id": "bead10d3-f8e2-4e99-934d-e85b92ae1a8c",
+      "name": "Poke",
+      "type": "dish",
+      "icon": null,
+      "rgb": null,
+      "slug": "hawaiian__poke"
+    },
+    {
+      "id": "82844f8c-8084-4724-bc27-c7acdc87ac40",
+      "name": "Dim sum",
+      "type": "dish",
+      "icon": null,
+      "rgb": null,
+      "slug": "chinese__dim-sum"
+    },
+    {
+      "id": "d57bf047-54d5-4a4b-9f69-c511fe26e0f8",
+      "name": "Banh mi op la",
+      "type": "dish",
+      "icon": null,
+      "rgb": null,
+      "slug": "vietnamese__banh-mi-op-la"
+    },
+    {
+      "id": "ed0cf73a-674d-429e-a15c-35bb046ccf6a",
+      "name": "Pizza",
+      "type": null,
+      "icon": null,
+      "rgb": null,
+      "slug": "global__pizza"
+    },
+    {
+      "id": "f2d4f64d-9cdb-4511-ad9e-b6714b439d01",
+      "name": "Boba milk tea",
+      "type": "dish",
+      "icon": null,
+      "rgb": null,
+      "slug": "taiwanese__boba-milk-tea"
+    },
+    {
+      "id": "564cb1aa-3359-4dd9-afe7-64d5403b4592",
+      "name": "Oysters Rockefeller",
+      "type": "dish",
+      "icon": null,
+      "rgb": null,
+      "slug": "american__oysters-rockefeller"
+    },
+    {
+      "id": "319fc413-fd33-4e16-9471-325b988d1359",
+      "name": "Coffee",
+      "type": "dish",
+      "icon": null,
+      "rgb": null,
+      "slug": "mediterranean__coffee"
+    },
+    {
+      "id": "7bef7997-267c-4656-ab72-d28155a6f0e7",
+      "name": "Breakfast",
+      "type": "category",
+      "icon": null,
+      "rgb": null,
+      "slug": "categories__breakfast"
+    },
+    {
+      "id": "a751dfb0-ff55-4702-b162-be0136fb3764",
+      "name": "Curry",
+      "type": "dish",
+      "icon": null,
+      "rgb": null,
+      "slug": "malaysian__curry"
+    },
+    {
+      "id": "7f557eed-521c-42c7-9c84-36b936f9e97d",
+      "name": "Burgers",
+      "type": null,
+      "icon": null,
+      "rgb": null,
+      "slug": "global__burgers"
+    },
+    {
+      "id": "bdf7edcc-397d-42f5-9e95-fc3450cad170",
+      "name": "Salad",
+      "type": null,
+      "icon": null,
+      "rgb": null,
+      "slug": "global__salad"
+    },
+    {
+      "id": "87747f18-25fe-45d1-abbc-96741bfefeb1",
+      "name": "Cookies",
+      "type": "category",
+      "icon": null,
+      "rgb": null,
+      "slug": "categories__cookies"
+    }
+  ],
+  "tagLenses": [
+    {
+      "id": "da0e0c85-86b5-4b9e-b372-97e133eccb43",
+      "name": "Gems",
+      "type": "lense",
+      "icon": "💎",
+      "rgb": [
+        "199",
+        " 58",
+        " 107"
+      ],
+      "slug": "lenses__gems"
+    },
+    {
+      "id": "b1580bd8-4f60-45e3-a5a9-c31effe8e7a3",
+      "name": "Drinks",
+      "type": "lense",
+      "icon": "🍷",
+      "rgb": [
+        "153",
+        " 76",
+        " 76"
+      ],
+      "slug": "lenses__drinks"
+    },
+    {
+      "id": "5da93fbe-5715-43b4-8b15-6521e3897bd9",
+      "name": "Vibe",
+      "type": "lense",
+      "icon": "🌃",
+      "rgb": [
+        "30",
+        " 83",
+        " 141"
+      ],
+      "slug": "lenses__vibe"
+    },
+    {
+      "id": "4768116c-bca3-4936-970b-5f2570a9e8f8",
+      "name": "Veg",
+      "type": "lense",
+      "icon": "🥬",
+      "rgb": [
+        "51",
+        " 153",
+        " 51"
+      ],
+      "slug": "lenses__veg"
+    }
+  ],
+  "tagFilters": [
+    {
+      "id": "507e6614-3265-4857-8911-a9ffbd45e212",
+      "name": "price-high",
+      "type": "filter",
+      "icon": null,
+      "rgb": null,
+      "slug": "filters__price-high"
+    },
+    {
+      "id": "ed6de29e-2dc1-4f2a-98a1-bd99e24406e8",
+      "name": "price-low",
+      "type": "filter",
+      "icon": null,
+      "rgb": null,
+      "slug": "filters__price-low"
+    },
+    {
+      "id": "19610cd0-cc12-401a-bc65-f2289c92ef2b",
+      "name": "price-mid",
+      "type": "filter",
+      "icon": null,
+      "rgb": null,
+      "slug": "filters__price-mid"
+    },
+    {
+      "id": "c5318460-a925-4f88-aaa8-232ec3faa893",
+      "name": "Delivery",
+      "type": "filter",
+      "icon": "🚗",
+      "rgb": null,
+      "slug": "filters__delivery"
+    },
+    {
+      "id": "6ba8fef3-25fb-4494-91f5-3c44cdbb8f4b",
+      "name": "Open",
+      "type": "filter",
+      "icon": "🕐",
+      "rgb": null,
+      "slug": "filters__open"
+    }
+  ]
+}

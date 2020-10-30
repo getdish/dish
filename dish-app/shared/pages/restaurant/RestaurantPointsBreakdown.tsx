@@ -14,13 +14,8 @@ import {
 import { lightGreen, lightYellow } from '../../colors'
 import { numberFormat } from '../../helpers/numberFormat'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { getTagId } from '../../state/getTagId'
-import { omStatic } from '../../state/omStatic'
-import { tagLenses } from '../../state/tagLenses'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
-import { RestaurantTagsScore } from '../../views/restaurant/RestaurantTagsScore'
 import { SmallButton } from '../../views/ui/SmallButton'
-import { TextStrong } from '../../views/ui/TextStrong'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
 import {
   useTotalExternalReviews,
@@ -113,8 +108,8 @@ export const RestaurantPointsBreakdown = memo(
             {/* <RestaurantTagsScore
               userVote={0}
               restaurantSlug={restaurantSlug}
-              activeTagIds={tagLenses.reduce((acc, cur) => {
-                acc[getTagId(cur)] = true
+              activeTags={tagLenses.reduce((acc, cur) => {
+                acc[getTagSlug(cur)] = true
                 return acc
               }, {})}
             /> */}

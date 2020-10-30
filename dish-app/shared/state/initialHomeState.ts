@@ -1,12 +1,13 @@
 import { getDefaultLocation } from './getDefaultLocation'
-import { getTagId } from './getTagId'
 import { HomeStateItemHome } from './home-types'
-import { tagLenses } from './tagLenses'
+import { tagLenses } from './localTags.json'
 
 export const initialHomeState: HomeStateItemHome = {
   id: '0',
   type: 'home',
-  activeTagIds: {},
+  activeTags: {
+    [tagLenses[0].slug]: true,
+  },
   searchQuery: '',
   results: [],
   ...getDefaultLocation(),

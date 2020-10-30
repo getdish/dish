@@ -9,7 +9,7 @@ import { useGet } from 'snackui'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
-import { tagLenses } from '../state/tagLenses'
+import { tagLenses } from '../state/localTags.json'
 import { hasMovedAtLeast } from './hasMovedAtLeast'
 import { MapProps } from './MapProps'
 

@@ -436,6 +436,7 @@ const TagEdit = memo(
         parentId: tag.parentId,
         icon: tag.icon,
         alternates: parseJSONB(tag.alternates() ?? []),
+        rgb: parseJSONB(tag.rgb() ?? []),
       }
       return (
         <TagCRUD
@@ -554,11 +555,11 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
       spacing={10}
     >
       <TableRow label="ID">
-        <Text>{tag.id}</Text>
+        <Text opacity={0.5}>{tag.id}</Text>
       </TableRow>
 
       <TableRow label="Parent">
-        <Text>Parent: {parentTag?.name}</Text>
+        <Text opacity={0.5}>Parent: {parentTag?.name}</Text>
         <SmallButton
           onPress={() => {
             onChange({
@@ -606,6 +607,18 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
         </select>
       </TableRow>
 
+      {tag.type === 'lense' && (
+        <TableRow label="RGB">
+          <TextInput
+            style={styles.textInput}
+            onChange={(e) => {
+              onChange?.({ rgb: e.target['value'].split(',').map(x => +x.trim()) })
+            }}
+            defaultValue={(tag.rgb ?? [0, 0, 0]).join(', ')}
+          />
+        </TableRow>
+      )}
+
       <TableRow label="Icon">
         <TextInput
           style={styles.textInput}
@@ -632,23 +645,22 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
             ))}
           </VStack>
         </ScrollView>
+      </TableRow>
 
-        <TableRow label="ParentID">
-          <TextInput
-            style={styles.textInput}
-            onChange={(e) => onChange?.({ parentId: e.target['value'] })}
-            defaultValue={tag.parentId}
-          />
-        </TableRow>
+      <TableRow label="ParentID">
+        <TextInput
+          style={styles.textInput}
+          onChange={(e) => onChange?.({ parentId: e.target['value'] })}
+          defaultValue={tag.parentId}
+        />
+      </TableRow>
 
-        <TableRow label="Description">
-          <TextInput
-            style={styles.textInput}
-            onChange={(e) => onChange?.({ description: e.target['value'] })}
-            defaultValue={tag.description ?? ''}
-          />
-        </TableRow>
-
+      <TableRow label="Description">
+        <TextInput
+          style={styles.textInput}
+          onChange={(e) => onChange?.({ description: e.target['value'] })}
+          defaultValue={tag.description ?? ''}
+        />
         {!!info.length && (
           <ScrollView style={{ marginTop: 20, maxHeight: 300 }}>
             {info.map(({ name, description }, index) => {
@@ -674,7 +686,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
 
 const TableRow = ({ label, children }: { label: string; children: any }) => {
   return (
-    <VStack>
+    <VStack marginBottom={10}>
       <Text fontSize={13}>{label}</Text>
       {children}
     </VStack>

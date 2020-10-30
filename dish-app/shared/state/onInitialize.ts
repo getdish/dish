@@ -2,8 +2,7 @@ import { OnInitialize, rehydrate } from 'overmind'
 
 import { OVERMIND_MUTATIONS } from '../constants'
 import { addTagsToCache } from './allTags'
-import { tagFilters } from './tagFilters'
-import { tagLenses } from './tagLenses'
+import { tagDefaultAutocomplete, tagFilters, tagLenses } from './localTags.json'
 
 const LOG_OVERMIND =
   typeof document !== 'undefined' && window.location?.search === '?verbose'
@@ -31,7 +30,7 @@ export const onInitialize: OnInitialize = async (
     })
   }
 
-  addTagsToCache([...tagFilters, ...tagLenses])
+  addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
 
   actions.user.checkForExistingLogin()
   actions.router.start()

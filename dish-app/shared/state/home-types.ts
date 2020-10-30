@@ -113,7 +113,7 @@ export type HomeStateItem =
 export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
   id: HomeStateItemBase['id']
   searchQuery: HomeStateItemBase['searchQuery']
-  activeTagIds?: HomeActiveTagsRecord
+  activeTags?: HomeActiveTagsRecord
   type: HomeStateItem['type']
 }
 
@@ -121,7 +121,7 @@ export type HomeActiveTagsRecord = { [id: string]: boolean }
 
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
-  activeTagIds: HomeActiveTagsRecord
+  activeTags: HomeActiveTagsRecord
   results: RestaurantOnlyIds[]
 }
 
@@ -136,7 +136,7 @@ export type HomeStateItemAbout = HomeStateItemBase & {
 
 export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search' | 'userSearch'
-  activeTagIds: HomeActiveTagsRecord
+  activeTags: HomeActiveTagsRecord
   status: 'loading' | 'complete'
   results: RestaurantOnlyIds[]
   // for not forcing map to be always synced

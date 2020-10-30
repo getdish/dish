@@ -15,7 +15,7 @@ import { isWeb } from '../../constants'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
-import { getTagId } from '../../state/getTagId'
+import { getTagSlug } from '../../state/getTagSlug'
 import { NavigableTag } from '../../state/NavigableTag'
 import { Link } from '../ui/Link'
 import { ColoredCircle } from './ColoredCircle'
@@ -215,7 +215,7 @@ const DishViewContent = ({
               name: 'restaurantReviews',
               params: {
                 slug: restaurantSlug,
-                tagName: getTagId(dish),
+                tagName: getTagSlug(dish),
               },
             }
           : {
