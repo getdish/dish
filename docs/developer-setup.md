@@ -111,7 +111,7 @@ You'll need a few things set up first:
 
     - `buildkitd`, `kubectl` and `doctl` installed
     - `doctl auth init -t $TF_VAR_DO_DISH_KEY` token is avaiable in enc.env.production.yaml
-    - `doctl kubernetes cluster kubeconfig save dish`
+    - `doctl kubernetes cluster kubeconfig save dish[blue/green]`
     - Login to our Docker registry:
         `docker login docker.k8s.dishapp.com -u dish -p $password`
         Password is in `env.enc.production.yaml`
