@@ -5,7 +5,7 @@ import { HStack, VStack } from 'snackui'
 import { bgLightHover, blue } from '../../colors'
 import { isWeb } from '../../constants'
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
-import { getTagId } from '../../state/getTagId'
+import { getTagSlug } from '../../state/getTagSlug'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { ColoredCircle } from '../../views/dish/ColoredCircle'
 import { DishView } from '../../views/dish/DishView'
@@ -57,7 +57,7 @@ export const RestaurantDishPhotos = memo(
               justifyContent="center"
             >
               {dishes.map((dish, index) => {
-                const isSelected = selected === getTagId(dish)
+                const isSelected = selected === getTagSlug(dish)
                 return (
                   <VStack
                     key={dish.name}
@@ -84,7 +84,7 @@ export const RestaurantDishPhotos = memo(
                       selected={isSelected}
                       {...(!!selectable && {
                         onPress() {
-                          onSelect?.(getTagId(dish))
+                          onSelect?.(getTagSlug(dish))
                         },
                       })}
                     />

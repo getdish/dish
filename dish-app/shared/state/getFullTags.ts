@@ -1,31 +1,43 @@
-import { Tag } from '@dish/graph'
+import { Tag, query, resolved } from '@dish/graph'
 
-import { LIVE_SEARCH_DOMAIN } from '../constants'
-import { addTagsToCache, allTags } from './allTags'
-import { getTagId } from './getTagId'
-import { NavigableTag } from './NavigableTag'
+import { FullTag } from './FullTag'
 
-export const getFullTags = async (tags: NavigableTag[]): Promise<Tag[]> => {
-  return await Promise.all(
-    tags.map(async (tag) => {
-      const existing = allTags[getTagId(tag)]
-      if (!existing?.id) {
-        const full = await getFullTag(tag)
-        if (full) {
-          addTagsToCache([full])
-          return full
-        }
-      }
-      return existing ?? tag
-    })
-  )
+export type TagWithNameAndType = Tag & {
+  name: FullTag['name']
+  type: FullTag['type']
 }
 
-const getFullTag = (tag: NavigableTag): Promise<Tag | null> =>
-  fetch(
-    `${LIVE_SEARCH_DOMAIN}/tags?query=${encodeURIComponent(
-      tag.name?.replace(/-/g, ' ') ?? ''
-    )}&type=${tag.type ?? ''}&limit=1`
-  )
-    .then((res) => res.json())
-    .then((tags) => tags?.[0] ?? null)
+export function getFullTag(tag: Tag): FullTag | null {
+  if (!tag) {
+    return null
+  }
+  return {
+    id: tag.id,
+    name: tag.name!,
+    type: tag.type!,
+    icon: tag.icon!,
+    rgb: typeof tag.rgb === 'function' ? tag.rgb() : tag.rgb,
+    slug: tag.slug!,
+  }
+}
+
+export async function getFullTags(
+  tags: TagWithNameAndType[]
+): Promise<FullTag[]> {
+  if (tags.some((x) => !x.name || !x.type)) {
+    throw new Error(`Needs name + type to find`)
+  }
+  return await resolved(() => {
+    return tags.map((tag) => {
+      return getFullTag(
+        query.tag({
+          where: {
+            name: { _eq: tag.name },
+            type: { _eq: tag.type },
+          },
+          limit: 1,
+        })[0]
+      )
+    })
+  })
+}

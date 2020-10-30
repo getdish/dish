@@ -27,6 +27,11 @@ import { drawerWidthMax, searchBarHeight } from '../../constants'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { useIsNarrow } from '../../hooks/useIs'
 import { addTagsToCache } from '../../state/allTags'
+import {
+  TagWithNameAndType,
+  getFullTag,
+  getFullTags,
+} from '../../state/getFullTags'
 import { HomeStateItemHome } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { useOvermind } from '../../state/om'
@@ -117,12 +122,14 @@ export default memo(function HomePage(props: Props) {
               }
             }
             all = sortBy(all, (x) => -x.avg_rating)
-            updateHomeTagsCache(all)
-            setTopDishes(all)
-            om.actions.home.updateCurrentState({
-              results: _.flatten(all.map((x) => x.top_restaurants))
-                .filter((x) => x?.id)
-                .map((x) => ({ id: x.id, slug: x.slug })),
+            updateHomeTagsCache(all).then(() => {
+              if (!isMounted) return
+              setTopDishes(all)
+              om.actions.home.updateCurrentState({
+                results: _.flatten(all.map((x) => x.top_restaurants))
+                  .filter((x) => x?.id)
+                  .map((x) => ({ id: x.id, slug: x.slug })),
+              })
             })
           })
           .catch((err) => {
@@ -571,8 +578,8 @@ const TopDishesTrendingRestaurants = memo(
   }
 )
 
-function updateHomeTagsCache(all: any) {
-  let tags: NavigableTag[] = []
+async function updateHomeTagsCache(all: any) {
+  let tags: TagWithNameAndType[] = []
   // update tags
   for (const topDishes of all) {
     tags.push({
@@ -590,5 +597,7 @@ function updateHomeTagsCache(all: any) {
       })),
     ]
   }
-  addTagsToCache(tags)
+  const fullTags = await getFullTags(tags)
+  console.log('adding full tags to cache', fullTags)
+  addTagsToCache(fullTags)
 }

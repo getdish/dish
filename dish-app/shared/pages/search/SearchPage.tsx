@@ -42,8 +42,8 @@ import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { addTagsToCache } from '../../state/allTags'
 import { getFullTags } from '../../state/getFullTags'
-import { getTagId } from '../../state/getTagId'
 import { getTagsFromRoute } from '../../state/getTagsFromRoute'
+import { getTagSlug } from '../../state/getTagSlug'
 import { getLocationFromRoute } from '../../state/home-location.helpers'
 import {
   HomeActiveTagsRecord,
@@ -93,9 +93,9 @@ export default memo(function SearchPage(props: Props) {
       getFullTags(fakeTags).then((tags) => {
         if (isCancelled) return
         addTagsToCache(tags)
-        const activeTagIds: HomeActiveTagsRecord = tags.reduce<any>(
+        const activeTags: HomeActiveTagsRecord = tags.reduce<any>(
           (acc, tag) => {
-            acc[getTagId(tag)] = true
+            acc[getTagSlug(tag)] = true
             return acc
           },
           {}
@@ -103,7 +103,7 @@ export default memo(function SearchPage(props: Props) {
         om.actions.home.updateActiveTags({
           ...state,
           searchQuery: decodeURIComponent(router.curPage.params.search ?? ''),
-          activeTagIds,
+          activeTags,
         })
         om.actions.home.runSearch()
       })

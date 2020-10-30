@@ -3,9 +3,9 @@ import { HomeActiveTagsRecord } from '../state/home-types'
 import { omStatic } from '../state/omStatic'
 
 export function getCurrentTagNames(tagsRecord?: HomeActiveTagsRecord) {
-  const activeTagIds =
-    tagsRecord ?? omStatic.state.home.currentState['activeTagIds'] ?? {}
-  return Object.keys(activeTagIds ?? {}).map((tagId) => {
+  const activeTags =
+    tagsRecord ?? omStatic.state.home.currentState['activeTags'] ?? {}
+  return Object.keys(activeTags ?? {}).map((tagId) => {
     return allTags[tagId].name
   })
 }

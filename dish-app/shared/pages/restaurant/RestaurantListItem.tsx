@@ -159,7 +159,7 @@ const RestaurantListItemContent = memo(
 
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
     const curState = omStatic.state.home.currentState
-    const tagIds = 'activeTagIds' in curState ? curState.activeTagIds : {}
+    const tagIds = 'activeTags' in curState ? curState.activeTags : {}
     const score = restaurant.score ?? 0
     const [isActive, setIsActive] = useState(false)
 
@@ -258,7 +258,7 @@ const RestaurantListItemContent = memo(
                         score={score}
                         restaurantId={restaurantId}
                         restaurantSlug={restaurantSlug}
-                        activeTagIds={tagIds}
+                        activeTags={tagIds}
                       />
                     )}
                   </VStack>
@@ -525,15 +525,15 @@ const RestaurantPeekDishes = memo(
     searchState: HomeStateItemSearch
     isLoaded: boolean
   }) {
-    // const activeTags = omStatic.state.home.lastSearchState?.activeTagIds ?? {}
+    // const activeTags = omStatic.state.home.lastSearchState?.activeTags ?? {}
     // const dishSearchedTag = Object.keys(activeTags).find(
     //   (k) => allTags[k]?.type === 'dish'
     // )
     const { isLoaded, searchState, size = 'md' } = props
     const tagSlugs = [
       searchState.searchQuery.toLowerCase(),
-      ...Object.keys(searchState?.activeTagIds || {}).filter((x) => {
-        const isActive = searchState?.activeTagIds[x]
+      ...Object.keys(searchState?.activeTags || {}).filter((x) => {
+        const isActive = searchState?.activeTags[x]
         if (!isActive) {
           return false
         }

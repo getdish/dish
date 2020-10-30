@@ -11,7 +11,7 @@ type UpvoteDownvoteProps = {
   restaurantId: string
   restaurantSlug: string
   score: number
-  activeTagIds: HomeActiveTagsRecord
+  activeTags: HomeActiveTagsRecord
 }
 
 export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
@@ -36,9 +36,9 @@ const RestaurantUpVoteDownVoteContents = memo(
     restaurantId,
     restaurantSlug,
     score: baseScore,
-    activeTagIds,
+    activeTags,
   }: UpvoteDownvoteProps) {
-    const { vote, setVote } = useUserTagVotes(restaurantSlug, activeTagIds)
+    const { vote, setVote } = useUserTagVotes(restaurantSlug, activeTags)
     const score = baseScore + vote
     return (
       <Link

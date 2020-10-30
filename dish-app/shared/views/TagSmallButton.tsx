@@ -5,9 +5,9 @@ import { AbsoluteVStack, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { darkGreen, darkGrey, darkRed, green, red } from '../colors'
 import { useUserTagVote } from '../hooks/useUserTagVotes'
-import { getTagId } from '../state/getTagId'
+import { FullTag } from '../state/FullTag'
+import { getTagSlug } from '../state/getTagSlug'
 import { tagDisplayName } from '../state/tagDisplayName'
-import { FullTag } from '../state/tagLenses'
 
 type TagSmallButtonProps = {
   restaurantSlug: string
@@ -27,7 +27,7 @@ export const TagSmallButtonContent = graphql(
   ({ restaurantSlug, tag, image }: TagSmallButtonProps) => {
     const [vote, setVote] = useUserTagVote({
       restaurantSlug,
-      tagKey: getTagId(tag),
+      tagSlug: getTagSlug(tag),
     })
     const hasVoted = vote === 1 || vote === -1
     const VoteIcon = vote === 0 ? Minus : vote == 1 ? ThumbsUp : ThumbsDown

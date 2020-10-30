@@ -2,7 +2,7 @@ import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
 import { HStack, StackProps } from 'snackui'
 
-import { tagLenses } from '../../state/tagLenses'
+import { tagLenses } from '../../state/localTags.json'
 import { TagSmallButton } from '../../views/TagSmallButton'
 
 export const RestaurantLenseVote = memo(

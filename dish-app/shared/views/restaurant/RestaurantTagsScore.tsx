@@ -23,18 +23,18 @@ import { PointsText } from '../PointsText'
 
 export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
   restaurantSlug,
-  activeTagIds,
+  activeTags,
   userVote,
 }: {
   restaurantSlug: string
-  activeTagIds: HomeActiveTagsRecord
+  activeTags: HomeActiveTagsRecord
   userVote: number
 }) {
   const restaurant = useRestaurantQuery(restaurantSlug)
   const breakdown = restaurant.score_breakdown()
   const tagScores = useRestaurantTagScores({
     restaurantSlug,
-    tagNames: getCurrentTagNames(activeTagIds),
+    tagNames: getCurrentTagNames(activeTags),
   })
   return (
     <Box

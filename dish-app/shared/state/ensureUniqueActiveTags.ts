@@ -1,5 +1,5 @@
 import { allTags } from './allTags'
-import { getTagId } from './getTagId'
+import { getTagSlug } from './getTagSlug'
 import { HomeActiveTagsRecord } from './home-types'
 import { NavigableTag } from './NavigableTag'
 
@@ -7,15 +7,15 @@ import { NavigableTag } from './NavigableTag'
 
 const ensureUniqueTagOfType = new Set(['lense', 'country', 'dish'])
 
-export function ensureUniqueActiveTagIds(
-  activeTagIds: HomeActiveTagsRecord,
+export function ensureUniqueActiveTags(
+  activeTags: HomeActiveTagsRecord,
   nextActiveTag: NavigableTag
 ) {
   if (!nextActiveTag) {
     throw new Error(`Missing tag...`)
   }
-  for (const key in activeTagIds) {
-    if (key === getTagId(nextActiveTag)) {
+  for (const key in activeTags) {
+    if (key === getTagSlug(nextActiveTag)) {
       continue
     }
     const type = allTags[key]?.type
@@ -24,7 +24,7 @@ export function ensureUniqueActiveTagIds(
       ensureUniqueTagOfType.has(type) &&
       type === nextActiveTag.type
     ) {
-      delete activeTagIds[key]
+      delete activeTags[key]
     }
   }
 }
