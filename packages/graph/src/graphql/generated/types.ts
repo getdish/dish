@@ -2423,6 +2423,7 @@ export type t_restaurant = FieldsType<
     city?: t_String | null
     created_at: t_timestamptz
     description?: t_String | null
+    downvotes?: t_numeric | null
     geocoder_id?: t_String | null
     headlines: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     hours: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
@@ -2516,6 +2517,8 @@ export type t_restaurant = FieldsType<
       t_restaurant_tag[] | null
     >
     updated_at: t_timestamptz
+    upvotes?: t_numeric | null
+    votes_ratio?: t_numeric | null
     website?: t_String | null
     zip?: t_numeric | null
   },
@@ -2612,8 +2615,11 @@ export type restaurant_arr_rel_insert_input = {
 export type t_restaurant_avg_fields = FieldsType<
   {
     __typename: t_String<'restaurant_avg_fields'>
+    downvotes?: t_Float | null
     rating?: t_Float | null
     score?: t_Float | null
+    upvotes?: t_Float | null
+    votes_ratio?: t_Float | null
     zip?: t_Float | null
   },
   Extension<'restaurant_avg_fields'>
@@ -2624,8 +2630,11 @@ export type t_restaurant_avg_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_avg_order_by = {
+  downvotes?: order_by | null
   rating?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
   zip?: order_by | null
 }
 
@@ -2641,6 +2650,7 @@ export type restaurant_bool_exp = {
   city?: String_comparison_exp | null
   created_at?: timestamptz_comparison_exp | null
   description?: String_comparison_exp | null
+  downvotes?: numeric_comparison_exp | null
   geocoder_id?: String_comparison_exp | null
   headlines?: jsonb_comparison_exp | null
   hours?: jsonb_comparison_exp | null
@@ -2665,6 +2675,8 @@ export type restaurant_bool_exp = {
   tags?: restaurant_tag_bool_exp | null
   telephone?: String_comparison_exp | null
   updated_at?: timestamptz_comparison_exp | null
+  upvotes?: numeric_comparison_exp | null
+  votes_ratio?: numeric_comparison_exp | null
   website?: String_comparison_exp | null
   zip?: numeric_comparison_exp | null
 }
@@ -2730,8 +2742,11 @@ export type restaurant_delete_key_input = {
  * @type INPUT_OBJECT
  */
 export type restaurant_inc_input = {
+  downvotes?: any | null
   rating?: any | null
   score?: any | null
+  upvotes?: any | null
+  votes_ratio?: any | null
   zip?: any | null
 }
 
@@ -2744,6 +2759,7 @@ export type restaurant_insert_input = {
   city?: string | null
   created_at?: any | null
   description?: string | null
+  downvotes?: any | null
   geocoder_id?: string | null
   headlines?: any | null
   hours?: any | null
@@ -2768,6 +2784,8 @@ export type restaurant_insert_input = {
   tags?: restaurant_tag_arr_rel_insert_input | null
   telephone?: string | null
   updated_at?: any | null
+  upvotes?: any | null
+  votes_ratio?: any | null
   website?: string | null
   zip?: any | null
 }
@@ -2783,6 +2801,7 @@ export type t_restaurant_max_fields = FieldsType<
     city?: t_String | null
     created_at?: t_timestamptz | null
     description?: t_String | null
+    downvotes?: t_numeric | null
     geocoder_id?: t_String | null
     id?: t_uuid | null
     image?: t_String | null
@@ -2795,6 +2814,8 @@ export type t_restaurant_max_fields = FieldsType<
     summary?: t_String | null
     telephone?: t_String | null
     updated_at?: t_timestamptz | null
+    upvotes?: t_numeric | null
+    votes_ratio?: t_numeric | null
     website?: t_String | null
     zip?: t_numeric | null
   },
@@ -2810,6 +2831,7 @@ export type restaurant_max_order_by = {
   city?: order_by | null
   created_at?: order_by | null
   description?: order_by | null
+  downvotes?: order_by | null
   geocoder_id?: order_by | null
   id?: order_by | null
   image?: order_by | null
@@ -2822,6 +2844,8 @@ export type restaurant_max_order_by = {
   summary?: order_by | null
   telephone?: order_by | null
   updated_at?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
   website?: order_by | null
   zip?: order_by | null
 }
@@ -2837,6 +2861,7 @@ export type t_restaurant_min_fields = FieldsType<
     city?: t_String | null
     created_at?: t_timestamptz | null
     description?: t_String | null
+    downvotes?: t_numeric | null
     geocoder_id?: t_String | null
     id?: t_uuid | null
     image?: t_String | null
@@ -2849,6 +2874,8 @@ export type t_restaurant_min_fields = FieldsType<
     summary?: t_String | null
     telephone?: t_String | null
     updated_at?: t_timestamptz | null
+    upvotes?: t_numeric | null
+    votes_ratio?: t_numeric | null
     website?: t_String | null
     zip?: t_numeric | null
   },
@@ -2864,6 +2891,7 @@ export type restaurant_min_order_by = {
   city?: order_by | null
   created_at?: order_by | null
   description?: order_by | null
+  downvotes?: order_by | null
   geocoder_id?: order_by | null
   id?: order_by | null
   image?: order_by | null
@@ -2876,6 +2904,8 @@ export type restaurant_min_order_by = {
   summary?: order_by | null
   telephone?: order_by | null
   updated_at?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
   website?: order_by | null
   zip?: order_by | null
 }
@@ -2921,6 +2951,7 @@ export type restaurant_order_by = {
   city?: order_by | null
   created_at?: order_by | null
   description?: order_by | null
+  downvotes?: order_by | null
   geocoder_id?: order_by | null
   headlines?: order_by | null
   hours?: order_by | null
@@ -2945,6 +2976,8 @@ export type restaurant_order_by = {
   tags_aggregate?: restaurant_tag_aggregate_order_by | null
   telephone?: order_by | null
   updated_at?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
   website?: order_by | null
   zip?: order_by | null
 }
@@ -2979,6 +3012,7 @@ type t_restaurant_select_column = EnumType<
   | 'city'
   | 'created_at'
   | 'description'
+  | 'downvotes'
   | 'geocoder_id'
   | 'headlines'
   | 'hours'
@@ -3000,6 +3034,8 @@ type t_restaurant_select_column = EnumType<
   | 'tag_names'
   | 'telephone'
   | 'updated_at'
+  | 'upvotes'
+  | 'votes_ratio'
   | 'website'
   | 'zip'
 >
@@ -3013,6 +3049,7 @@ export type restaurant_set_input = {
   city?: string | null
   created_at?: any | null
   description?: string | null
+  downvotes?: any | null
   geocoder_id?: string | null
   headlines?: any | null
   hours?: any | null
@@ -3034,6 +3071,8 @@ export type restaurant_set_input = {
   tag_names?: any | null
   telephone?: string | null
   updated_at?: any | null
+  upvotes?: any | null
+  votes_ratio?: any | null
   website?: string | null
   zip?: any | null
 }
@@ -3045,8 +3084,11 @@ export type restaurant_set_input = {
 export type t_restaurant_stddev_fields = FieldsType<
   {
     __typename: t_String<'restaurant_stddev_fields'>
+    downvotes?: t_Float | null
     rating?: t_Float | null
     score?: t_Float | null
+    upvotes?: t_Float | null
+    votes_ratio?: t_Float | null
     zip?: t_Float | null
   },
   Extension<'restaurant_stddev_fields'>
@@ -3057,8 +3099,11 @@ export type t_restaurant_stddev_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_stddev_order_by = {
+  downvotes?: order_by | null
   rating?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
   zip?: order_by | null
 }
 
@@ -3069,8 +3114,11 @@ export type restaurant_stddev_order_by = {
 export type t_restaurant_stddev_pop_fields = FieldsType<
   {
     __typename: t_String<'restaurant_stddev_pop_fields'>
+    downvotes?: t_Float | null
     rating?: t_Float | null
     score?: t_Float | null
+    upvotes?: t_Float | null
+    votes_ratio?: t_Float | null
     zip?: t_Float | null
   },
   Extension<'restaurant_stddev_pop_fields'>
@@ -3081,8 +3129,11 @@ export type t_restaurant_stddev_pop_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_stddev_pop_order_by = {
+  downvotes?: order_by | null
   rating?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
   zip?: order_by | null
 }
 
@@ -3093,8 +3144,11 @@ export type restaurant_stddev_pop_order_by = {
 export type t_restaurant_stddev_samp_fields = FieldsType<
   {
     __typename: t_String<'restaurant_stddev_samp_fields'>
+    downvotes?: t_Float | null
     rating?: t_Float | null
     score?: t_Float | null
+    upvotes?: t_Float | null
+    votes_ratio?: t_Float | null
     zip?: t_Float | null
   },
   Extension<'restaurant_stddev_samp_fields'>
@@ -3105,8 +3159,11 @@ export type t_restaurant_stddev_samp_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_stddev_samp_order_by = {
+  downvotes?: order_by | null
   rating?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
   zip?: order_by | null
 }
 
@@ -3117,8 +3174,11 @@ export type restaurant_stddev_samp_order_by = {
 export type t_restaurant_sum_fields = FieldsType<
   {
     __typename: t_String<'restaurant_sum_fields'>
+    downvotes?: t_numeric | null
     rating?: t_numeric | null
     score?: t_numeric | null
+    upvotes?: t_numeric | null
+    votes_ratio?: t_numeric | null
     zip?: t_numeric | null
   },
   Extension<'restaurant_sum_fields'>
@@ -3129,8 +3189,11 @@ export type t_restaurant_sum_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_sum_order_by = {
+  downvotes?: order_by | null
   rating?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
   zip?: order_by | null
 }
 
@@ -3141,6 +3204,7 @@ export type restaurant_sum_order_by = {
 export type t_restaurant_tag = FieldsType<
   {
     __typename: t_String<'restaurant_tag'>
+    downvotes?: t_numeric | null
     id: t_uuid
     photos: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     rank?: t_Int | null
@@ -3193,6 +3257,8 @@ export type t_restaurant_tag = FieldsType<
     source_breakdown: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     tag: t_tag
     tag_id: t_uuid
+    upvotes?: t_numeric | null
+    votes_ratio?: t_numeric | null
   },
   Extension<'restaurant_tag'>
 >
@@ -3282,10 +3348,13 @@ export type restaurant_tag_arr_rel_insert_input = {
 export type t_restaurant_tag_avg_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_avg_fields'>
+    downvotes?: t_Float | null
     rank?: t_Float | null
     rating?: t_Float | null
     review_mentions_count?: t_Float | null
     score?: t_Float | null
+    upvotes?: t_Float | null
+    votes_ratio?: t_Float | null
   },
   Extension<'restaurant_tag_avg_fields'>
 >
@@ -3295,10 +3364,13 @@ export type t_restaurant_tag_avg_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_avg_order_by = {
+  downvotes?: order_by | null
   rank?: order_by | null
   rating?: order_by | null
   review_mentions_count?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
 }
 
 /**
@@ -3309,6 +3381,7 @@ export type restaurant_tag_bool_exp = {
   _and?: (restaurant_tag_bool_exp | null)[] | null
   _not?: restaurant_tag_bool_exp | null
   _or?: (restaurant_tag_bool_exp | null)[] | null
+  downvotes?: numeric_comparison_exp | null
   id?: uuid_comparison_exp | null
   photos?: jsonb_comparison_exp | null
   rank?: Int_comparison_exp | null
@@ -3323,6 +3396,8 @@ export type restaurant_tag_bool_exp = {
   source_breakdown?: jsonb_comparison_exp | null
   tag?: tag_bool_exp | null
   tag_id?: uuid_comparison_exp | null
+  upvotes?: numeric_comparison_exp | null
+  votes_ratio?: numeric_comparison_exp | null
 }
 
 /**
@@ -3368,10 +3443,13 @@ export type restaurant_tag_delete_key_input = {
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_inc_input = {
+  downvotes?: any | null
   rank?: number | null
   rating?: any | null
   review_mentions_count?: any | null
   score?: any | null
+  upvotes?: any | null
+  votes_ratio?: any | null
 }
 
 /**
@@ -3379,6 +3457,7 @@ export type restaurant_tag_inc_input = {
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_insert_input = {
+  downvotes?: any | null
   id?: any | null
   photos?: any | null
   rank?: number | null
@@ -3393,6 +3472,8 @@ export type restaurant_tag_insert_input = {
   source_breakdown?: any | null
   tag?: tag_obj_rel_insert_input | null
   tag_id?: any | null
+  upvotes?: any | null
+  votes_ratio?: any | null
 }
 
 /**
@@ -3402,6 +3483,7 @@ export type restaurant_tag_insert_input = {
 export type t_restaurant_tag_max_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_max_fields'>
+    downvotes?: t_numeric | null
     id?: t_uuid | null
     rank?: t_Int | null
     rating?: t_numeric | null
@@ -3409,6 +3491,8 @@ export type t_restaurant_tag_max_fields = FieldsType<
     review_mentions_count?: t_numeric | null
     score?: t_numeric | null
     tag_id?: t_uuid | null
+    upvotes?: t_numeric | null
+    votes_ratio?: t_numeric | null
   },
   Extension<'restaurant_tag_max_fields'>
 >
@@ -3418,6 +3502,7 @@ export type t_restaurant_tag_max_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_max_order_by = {
+  downvotes?: order_by | null
   id?: order_by | null
   rank?: order_by | null
   rating?: order_by | null
@@ -3425,6 +3510,8 @@ export type restaurant_tag_max_order_by = {
   review_mentions_count?: order_by | null
   score?: order_by | null
   tag_id?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
 }
 
 /**
@@ -3434,6 +3521,7 @@ export type restaurant_tag_max_order_by = {
 export type t_restaurant_tag_min_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_min_fields'>
+    downvotes?: t_numeric | null
     id?: t_uuid | null
     rank?: t_Int | null
     rating?: t_numeric | null
@@ -3441,6 +3529,8 @@ export type t_restaurant_tag_min_fields = FieldsType<
     review_mentions_count?: t_numeric | null
     score?: t_numeric | null
     tag_id?: t_uuid | null
+    upvotes?: t_numeric | null
+    votes_ratio?: t_numeric | null
   },
   Extension<'restaurant_tag_min_fields'>
 >
@@ -3450,6 +3540,7 @@ export type t_restaurant_tag_min_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_min_order_by = {
+  downvotes?: order_by | null
   id?: order_by | null
   rank?: order_by | null
   rating?: order_by | null
@@ -3457,6 +3548,8 @@ export type restaurant_tag_min_order_by = {
   review_mentions_count?: order_by | null
   score?: order_by | null
   tag_id?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
 }
 
 /**
@@ -3496,6 +3589,7 @@ export type restaurant_tag_on_conflict = {
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_order_by = {
+  downvotes?: order_by | null
   id?: order_by | null
   photos?: order_by | null
   rank?: order_by | null
@@ -3510,6 +3604,8 @@ export type restaurant_tag_order_by = {
   source_breakdown?: order_by | null
   tag?: tag_order_by | null
   tag_id?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
 }
 
 /**
@@ -3536,6 +3632,7 @@ export type restaurant_tag_prepend_input = {
  * @type ENUM
  */
 type t_restaurant_tag_select_column = EnumType<
+  | 'downvotes'
   | 'id'
   | 'photos'
   | 'rank'
@@ -3546,6 +3643,8 @@ type t_restaurant_tag_select_column = EnumType<
   | 'score_breakdown'
   | 'source_breakdown'
   | 'tag_id'
+  | 'upvotes'
+  | 'votes_ratio'
 >
 
 /**
@@ -3553,6 +3652,7 @@ type t_restaurant_tag_select_column = EnumType<
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_set_input = {
+  downvotes?: any | null
   id?: any | null
   photos?: any | null
   rank?: number | null
@@ -3563,6 +3663,8 @@ export type restaurant_tag_set_input = {
   score_breakdown?: any | null
   source_breakdown?: any | null
   tag_id?: any | null
+  upvotes?: any | null
+  votes_ratio?: any | null
 }
 
 /**
@@ -3572,10 +3674,13 @@ export type restaurant_tag_set_input = {
 export type t_restaurant_tag_stddev_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_stddev_fields'>
+    downvotes?: t_Float | null
     rank?: t_Float | null
     rating?: t_Float | null
     review_mentions_count?: t_Float | null
     score?: t_Float | null
+    upvotes?: t_Float | null
+    votes_ratio?: t_Float | null
   },
   Extension<'restaurant_tag_stddev_fields'>
 >
@@ -3585,10 +3690,13 @@ export type t_restaurant_tag_stddev_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_stddev_order_by = {
+  downvotes?: order_by | null
   rank?: order_by | null
   rating?: order_by | null
   review_mentions_count?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
 }
 
 /**
@@ -3598,10 +3706,13 @@ export type restaurant_tag_stddev_order_by = {
 export type t_restaurant_tag_stddev_pop_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_stddev_pop_fields'>
+    downvotes?: t_Float | null
     rank?: t_Float | null
     rating?: t_Float | null
     review_mentions_count?: t_Float | null
     score?: t_Float | null
+    upvotes?: t_Float | null
+    votes_ratio?: t_Float | null
   },
   Extension<'restaurant_tag_stddev_pop_fields'>
 >
@@ -3611,10 +3722,13 @@ export type t_restaurant_tag_stddev_pop_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_stddev_pop_order_by = {
+  downvotes?: order_by | null
   rank?: order_by | null
   rating?: order_by | null
   review_mentions_count?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
 }
 
 /**
@@ -3624,10 +3738,13 @@ export type restaurant_tag_stddev_pop_order_by = {
 export type t_restaurant_tag_stddev_samp_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_stddev_samp_fields'>
+    downvotes?: t_Float | null
     rank?: t_Float | null
     rating?: t_Float | null
     review_mentions_count?: t_Float | null
     score?: t_Float | null
+    upvotes?: t_Float | null
+    votes_ratio?: t_Float | null
   },
   Extension<'restaurant_tag_stddev_samp_fields'>
 >
@@ -3637,10 +3754,13 @@ export type t_restaurant_tag_stddev_samp_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_stddev_samp_order_by = {
+  downvotes?: order_by | null
   rank?: order_by | null
   rating?: order_by | null
   review_mentions_count?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
 }
 
 /**
@@ -3650,10 +3770,13 @@ export type restaurant_tag_stddev_samp_order_by = {
 export type t_restaurant_tag_sum_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_sum_fields'>
+    downvotes?: t_numeric | null
     rank?: t_Int | null
     rating?: t_numeric | null
     review_mentions_count?: t_numeric | null
     score?: t_numeric | null
+    upvotes?: t_numeric | null
+    votes_ratio?: t_numeric | null
   },
   Extension<'restaurant_tag_sum_fields'>
 >
@@ -3663,10 +3786,13 @@ export type t_restaurant_tag_sum_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_sum_order_by = {
+  downvotes?: order_by | null
   rank?: order_by | null
   rating?: order_by | null
   review_mentions_count?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
 }
 
 /**
@@ -3674,6 +3800,7 @@ export type restaurant_tag_sum_order_by = {
  * @type ENUM
  */
 type t_restaurant_tag_update_column = EnumType<
+  | 'downvotes'
   | 'id'
   | 'photos'
   | 'rank'
@@ -3684,6 +3811,8 @@ type t_restaurant_tag_update_column = EnumType<
   | 'score_breakdown'
   | 'source_breakdown'
   | 'tag_id'
+  | 'upvotes'
+  | 'votes_ratio'
 >
 
 /**
@@ -3693,10 +3822,13 @@ type t_restaurant_tag_update_column = EnumType<
 export type t_restaurant_tag_var_pop_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_var_pop_fields'>
+    downvotes?: t_Float | null
     rank?: t_Float | null
     rating?: t_Float | null
     review_mentions_count?: t_Float | null
     score?: t_Float | null
+    upvotes?: t_Float | null
+    votes_ratio?: t_Float | null
   },
   Extension<'restaurant_tag_var_pop_fields'>
 >
@@ -3706,10 +3838,13 @@ export type t_restaurant_tag_var_pop_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_var_pop_order_by = {
+  downvotes?: order_by | null
   rank?: order_by | null
   rating?: order_by | null
   review_mentions_count?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
 }
 
 /**
@@ -3719,10 +3854,13 @@ export type restaurant_tag_var_pop_order_by = {
 export type t_restaurant_tag_var_samp_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_var_samp_fields'>
+    downvotes?: t_Float | null
     rank?: t_Float | null
     rating?: t_Float | null
     review_mentions_count?: t_Float | null
     score?: t_Float | null
+    upvotes?: t_Float | null
+    votes_ratio?: t_Float | null
   },
   Extension<'restaurant_tag_var_samp_fields'>
 >
@@ -3732,10 +3870,13 @@ export type t_restaurant_tag_var_samp_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_var_samp_order_by = {
+  downvotes?: order_by | null
   rank?: order_by | null
   rating?: order_by | null
   review_mentions_count?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
 }
 
 /**
@@ -3745,10 +3886,13 @@ export type restaurant_tag_var_samp_order_by = {
 export type t_restaurant_tag_variance_fields = FieldsType<
   {
     __typename: t_String<'restaurant_tag_variance_fields'>
+    downvotes?: t_Float | null
     rank?: t_Float | null
     rating?: t_Float | null
     review_mentions_count?: t_Float | null
     score?: t_Float | null
+    upvotes?: t_Float | null
+    votes_ratio?: t_Float | null
   },
   Extension<'restaurant_tag_variance_fields'>
 >
@@ -3758,10 +3902,13 @@ export type t_restaurant_tag_variance_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_tag_variance_order_by = {
+  downvotes?: order_by | null
   rank?: order_by | null
   rating?: order_by | null
   review_mentions_count?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
 }
 
 /**
@@ -3782,6 +3929,7 @@ type t_restaurant_update_column = EnumType<
   | 'city'
   | 'created_at'
   | 'description'
+  | 'downvotes'
   | 'geocoder_id'
   | 'headlines'
   | 'hours'
@@ -3803,6 +3951,8 @@ type t_restaurant_update_column = EnumType<
   | 'tag_names'
   | 'telephone'
   | 'updated_at'
+  | 'upvotes'
+  | 'votes_ratio'
   | 'website'
   | 'zip'
 >
@@ -3814,8 +3964,11 @@ type t_restaurant_update_column = EnumType<
 export type t_restaurant_var_pop_fields = FieldsType<
   {
     __typename: t_String<'restaurant_var_pop_fields'>
+    downvotes?: t_Float | null
     rating?: t_Float | null
     score?: t_Float | null
+    upvotes?: t_Float | null
+    votes_ratio?: t_Float | null
     zip?: t_Float | null
   },
   Extension<'restaurant_var_pop_fields'>
@@ -3826,8 +3979,11 @@ export type t_restaurant_var_pop_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_var_pop_order_by = {
+  downvotes?: order_by | null
   rating?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
   zip?: order_by | null
 }
 
@@ -3838,8 +3994,11 @@ export type restaurant_var_pop_order_by = {
 export type t_restaurant_var_samp_fields = FieldsType<
   {
     __typename: t_String<'restaurant_var_samp_fields'>
+    downvotes?: t_Float | null
     rating?: t_Float | null
     score?: t_Float | null
+    upvotes?: t_Float | null
+    votes_ratio?: t_Float | null
     zip?: t_Float | null
   },
   Extension<'restaurant_var_samp_fields'>
@@ -3850,8 +4009,11 @@ export type t_restaurant_var_samp_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_var_samp_order_by = {
+  downvotes?: order_by | null
   rating?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
   zip?: order_by | null
 }
 
@@ -3862,8 +4024,11 @@ export type restaurant_var_samp_order_by = {
 export type t_restaurant_variance_fields = FieldsType<
   {
     __typename: t_String<'restaurant_variance_fields'>
+    downvotes?: t_Float | null
     rating?: t_Float | null
     score?: t_Float | null
+    upvotes?: t_Float | null
+    votes_ratio?: t_Float | null
     zip?: t_Float | null
   },
   Extension<'restaurant_variance_fields'>
@@ -3874,8 +4039,11 @@ export type t_restaurant_variance_fields = FieldsType<
  * @type INPUT_OBJECT
  */
 export type restaurant_variance_order_by = {
+  downvotes?: order_by | null
   rating?: order_by | null
   score?: order_by | null
+  upvotes?: order_by | null
+  votes_ratio?: order_by | null
   zip?: order_by | null
 }
 
@@ -7651,6 +7819,7 @@ export enum restaurant_select_column {
   city = 'city',
   created_at = 'created_at',
   description = 'description',
+  downvotes = 'downvotes',
   geocoder_id = 'geocoder_id',
   headlines = 'headlines',
   hours = 'hours',
@@ -7672,6 +7841,8 @@ export enum restaurant_select_column {
   tag_names = 'tag_names',
   telephone = 'telephone',
   updated_at = 'updated_at',
+  upvotes = 'upvotes',
+  votes_ratio = 'votes_ratio',
   website = 'website',
   zip = 'zip',
 }
@@ -7764,6 +7935,7 @@ export type restaurant_tag_mutation_response = TypeData<
  * @type ENUM
  */
 export enum restaurant_tag_select_column {
+  downvotes = 'downvotes',
   id = 'id',
   photos = 'photos',
   rank = 'rank',
@@ -7774,6 +7946,8 @@ export enum restaurant_tag_select_column {
   score_breakdown = 'score_breakdown',
   source_breakdown = 'source_breakdown',
   tag_id = 'tag_id',
+  upvotes = 'upvotes',
+  votes_ratio = 'votes_ratio',
 }
 
 /**
@@ -7811,6 +7985,7 @@ export type restaurant_tag_sum_fields = TypeData<t_restaurant_tag_sum_fields>
  * @type ENUM
  */
 export enum restaurant_tag_update_column {
+  downvotes = 'downvotes',
   id = 'id',
   photos = 'photos',
   rank = 'rank',
@@ -7821,6 +7996,8 @@ export enum restaurant_tag_update_column {
   score_breakdown = 'score_breakdown',
   source_breakdown = 'source_breakdown',
   tag_id = 'tag_id',
+  upvotes = 'upvotes',
+  votes_ratio = 'votes_ratio',
 }
 
 /**
@@ -7856,6 +8033,7 @@ export enum restaurant_update_column {
   city = 'city',
   created_at = 'created_at',
   description = 'description',
+  downvotes = 'downvotes',
   geocoder_id = 'geocoder_id',
   headlines = 'headlines',
   hours = 'hours',
@@ -7877,6 +8055,8 @@ export enum restaurant_update_column {
   tag_names = 'tag_names',
   telephone = 'telephone',
   updated_at = 'updated_at',
+  upvotes = 'upvotes',
+  votes_ratio = 'votes_ratio',
   website = 'website',
   zip = 'zip',
 }

@@ -3,25 +3,12 @@ import { isPresent } from '@dish/helpers/_'
 
 import { allTags } from './allTags'
 import { FullTag } from './FullTag'
+import { getFullTag } from './getFullTag'
 import { guessTagSlug } from './getTagSlug'
 
 export type TagWithNameAndType = Tag & {
   name: FullTag['name']
   type: FullTag['type']
-}
-
-export function getFullTag(tag: Tag): FullTag | null {
-  if (!tag) {
-    return null
-  }
-  return {
-    id: tag.id,
-    name: tag.name!,
-    type: tag.type!,
-    icon: tag.icon!,
-    rgb: typeof tag.rgb === 'function' ? tag.rgb() : tag.rgb,
-    slug: tag.slug!,
-  }
 }
 
 type TagPartial =
