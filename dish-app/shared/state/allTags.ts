@@ -27,6 +27,9 @@ export async function addTagsToCache(tags: FullTag[]) {
 }
 
 export function tagNameKey(name: string) {
+  if (typeof name !== 'string') {
+    debugger
+  }
   return slugify(name.toLowerCase(), ' ').replace(/\./g, '-')
 }
 
