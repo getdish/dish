@@ -5,19 +5,19 @@ import { HStack, StackProps } from 'snackui'
 import { rgbString } from '../../helpers/rgbString'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useIsNarrow } from '../../hooks/useIs'
-import { getTagId } from '../../state/getTagId'
+import { getTagSlug } from '../../state/getTagSlug'
 import { HomeActiveTagsRecord } from '../../state/home-types'
-import { tagFilters } from '../../state/tagFilters'
+import { tagFilters } from '../../state/localTags.json'
 import { FilterButton } from '../../views/FilterButton'
 
-type FilterBarProps = { activeTagIds: HomeActiveTagsRecord }
+type FilterBarProps = { activeTags: HomeActiveTagsRecord }
 
-export const SearchPageFilterBar = memo(({ activeTagIds }: FilterBarProps) => {
+export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
   const isSmall = useIsNarrow()
   const color = useCurrentLenseColor()
 
   if (isSmall) {
-    return <HomePageFilterBarSmall activeTagIds={activeTagIds} />
+    return <HomePageFilterBarSmall activeTags={activeTags} />
   }
 
   let last = 0
@@ -37,7 +37,7 @@ export const SearchPageFilterBar = memo(({ activeTagIds }: FilterBarProps) => {
               extraProps.borderBottomLeftRadius = hasPrev ? 0 : 30
               extraProps.borderTopRightRadius = hasNext ? 0 : 30
               extraProps.borderBottomRightRadius = hasNext ? 0 : 30
-              const isActive = activeTagIds[getTagId(tag)]
+              const isActive = activeTags[getTagSlug(tag)]
               const button = (
                 <FilterButton
                   key={`tag-${tag.id}`}
@@ -61,13 +61,13 @@ export const SearchPageFilterBar = memo(({ activeTagIds }: FilterBarProps) => {
   )
 })
 
-const HomePageFilterBarSmall = ({ activeTagIds }: FilterBarProps) => {
+const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
   const filters = [tagFilters[0], tagFilters[1], tagFilters[2]]
 
   return (
     <HStack alignItems="center" justifyContent="center" spacing={5}>
       {filters.map((tag, index) => {
-        const isActive = activeTagIds[getTagId(tag)]
+        const isActive = activeTags[getTagSlug(tag)]
         return (
           <FilterButton
             key={`tag-${tag.id}`}

@@ -5,7 +5,7 @@ import { memoize } from '../../helpers/memoizeWeak'
 import { allTags } from '../../state/allTags'
 import { getNavigateItemForState } from '../../state/getNavigateItemForState'
 import { getNextState } from '../../state/getNextState'
-import { getTagId } from '../../state/getTagId'
+import { getTagSlug } from '../../state/getTagSlug'
 import { HomeStateItem, HomeStateNav } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic } from '../../state/omStatic'
@@ -56,7 +56,7 @@ const getNormalizedLink = (
   }
 
   tags = tags.filter(isPresent).map((tag) => {
-    return allTags[getTagId(tag)] ?? tag
+    return allTags[getTagSlug(tag)] ?? tag
   })
 
   if (tags.length) {

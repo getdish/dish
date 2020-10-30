@@ -29,7 +29,7 @@ import {
 } from '../colors'
 import { isWeb } from '../constants'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
-import { getTagId } from '../state/getTagId'
+import { getTagSlug } from '../state/getTagSlug'
 import { tagDisplayName } from '../state/tagDisplayName'
 import { LinkButton } from './ui/LinkButton'
 import { LinkButtonProps } from './ui/LinkProps'
@@ -262,7 +262,7 @@ const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   const { scale } = props
   const [hovered, setHovered] = useState(false)
   const { vote, setVote } = useUserTagVotes(props.restaurantSlug, {
-    [getTagId(props)]: true,
+    [getTagSlug(props)]: true,
   })
   const Icon = vote ? ThumbsDown : ThumbsUp
   const color = props.color ?? 'rgba(0,0,0,0.7)'

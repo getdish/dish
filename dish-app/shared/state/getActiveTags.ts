@@ -6,10 +6,10 @@ import { isValidTag } from './isValidTag'
 
 export const getActiveTags = (state: Partial<HomeStateItem>) => {
   state = state ?? window['om']?.state.home.currentState
-  if ('activeTagIds' in state) {
-    const { activeTagIds } = state
-    const tagIds = Object.keys(activeTagIds)
-      .filter((x) => !!activeTagIds[x])
+  if ('activeTags' in state) {
+    const { activeTags } = state
+    const tagIds = Object.keys(activeTags)
+      .filter((x) => !!activeTags[x])
       .filter(isValidTag)
     const tags: Tag[] = tagIds.map(
       (x) =>

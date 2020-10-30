@@ -1,6 +1,4 @@
 import { graphql, query, reviewAnalyze } from '@dish/graph'
-import { fetchBertSentiment } from '@dish/helpers'
-import { getStore } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image, ScrollView, TextInput } from 'react-native'
 import {
@@ -8,7 +6,6 @@ import {
   HStack,
   LoadingItem,
   LoadingItems,
-  Modal,
   SmallTitle,
   Spacer,
   Text,
@@ -19,14 +16,11 @@ import {
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
-import { TagVoteStore } from '../../hooks/useUserTagVotes'
 import { HomeStateItemReview } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
-import { tagLenses } from '../../state/tagLenses'
 import { CommentBubble } from '../../views/CommentBubble'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { TagSmallButton } from '../../views/TagSmallButton'
-import { LinkButton } from '../../views/ui/LinkButton'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { RestaurantLenseVote } from '../restaurant/RestaurantLenseVote'
 import { RestaurantReview } from '../restaurant/RestaurantReview'

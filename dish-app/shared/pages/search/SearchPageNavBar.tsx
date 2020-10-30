@@ -106,12 +106,12 @@ const SearchPageNavBarContent = memo(({ stateId }: { stateId: string }) => {
             alignItems="center"
             justifyContent="center"
           >
-            <HomeLenseBar activeTagIds={state.activeTagIds} />
+            <HomeLenseBar activeTags={state.activeTags} />
           </HStack>
 
           <VStack flex={1} minWidth={20} />
 
-          <SearchPageFilterBar activeTagIds={state.activeTagIds} />
+          <SearchPageFilterBar activeTags={state.activeTags} />
         </HStack>
       </VStack>
     </>

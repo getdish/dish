@@ -6,7 +6,7 @@ import { Toast, useForceUpdate } from 'snackui'
 
 import { allTags } from '../state/allTags'
 import { getFullTags } from '../state/getFullTags'
-import { getTagId } from '../state/getTagId'
+import { getTagSlug } from '../state/getTagSlug'
 import { HomeActiveTagsRecord } from '../state/home-types'
 import { useOvermind } from '../state/om'
 import { omStatic } from '../state/omStatic'
@@ -116,7 +116,7 @@ export const useUserTagVote = (props: VoteStoreProps) => {
       getFullTags([tag]).then(([fullTag]) => {
         console.log('fullTag', tag, fullTag)
         if (!unmounted) {
-          allTags[getTagId(tag)] = fullTag
+          allTags[getTagSlug(tag)] = fullTag
           forceUpdate()
         }
       })

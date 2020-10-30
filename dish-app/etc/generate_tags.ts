@@ -1,12 +1,23 @@
-import { Tag, order_by, query, resolved } from '@dish/graph'
+import { join } from 'path'
 
-import { FullTag } from '../shared/state/FullTag'
+import { order_by, query, resolved } from '@dish/graph'
+import { writeJSON } from 'fs-extra'
+import { sortBy } from 'lodash'
+
+import { getFullTag } from '../shared/state/getFullTags'
 
 main()
 
 async function main() {
   const tags = await getAllTags()
-  console.log('got tags', tags)
+  await writeJSON(
+    join(__dirname, '..', 'shared', 'state', 'localTags.json'),
+    tags,
+    {
+      spaces: 2,
+    }
+  )
+  console.log('wrote tags', tags)
 }
 
 async function getAllTags() {
@@ -19,7 +30,7 @@ async function getAllTags() {
           },
         },
       })
-      .map(getTag)
+      .map(getFullTag)
   })
 
   const tagDefaultAutocomplete = await resolved(() => {
@@ -42,11 +53,11 @@ async function getAllTags() {
     ]
 
     return names.map((name) => {
-      return getTag(
+      return getFullTag(
         query.tag({
           where: {
             name: {
-              _eq: name,
+              _ilike: `%${name}%`,
             },
           },
           limit: 1,
@@ -58,7 +69,7 @@ async function getAllTags() {
     return
   })
 
-  const tagLenses = await resolved(() => {
+  const tagLensesAll = await resolved(() => {
     return query
       .tag({
         where: {
@@ -67,26 +78,19 @@ async function getAllTags() {
           },
         },
       })
-      .map(getTag)
+      .map(getFullTag)
   })
+
+  const tagLenses = sortBy(
+    tagLensesAll.filter((x) => !!x.icon),
+    (x) => {
+      return x.name === 'Gems' ? 0 : 1
+    }
+  )
 
   return {
     tagDefaultAutocomplete,
     tagLenses,
     tagFilters,
-  }
-}
-
-function getTag(tag: Tag): FullTag {
-  if (!tag) {
-    return null
-  }
-  return {
-    id: tag.id,
-    name: tag.name,
-    type: tag.type,
-    icon: tag.icon,
-    rgb: tag.rgb,
-    slug: tag.slug,
   }
 }

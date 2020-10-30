@@ -1,8 +1,6 @@
-import { isPresent } from '@dish/helpers'
-
-import { allTagsNameToID, tagNameKey } from './allTags'
-import { ensureUniqueActiveTagIds } from './ensureUniqueActiveTagIds'
-import { getTagId } from './getTagId'
+import { allTagsNameToSlug, tagNameKey } from './allTags'
+import { ensureUniqueActiveTags } from './ensureUniqueActiveTags'
+import { getTagSlug } from './getTagSlug'
 import { HomeActiveTagsRecord, HomeStateNav } from './home-types'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 
@@ -10,7 +8,7 @@ let navStateCache = {}
 let inserts = 0
 
 const nextStateKey = (navState: HomeStateNav) => {
-  const tagIds = navState.state?.activeTagIds
+  const tagIds = navState.state?.activeTags
   const tagsKey = tagIds ? Object.entries(tagIds).join(',') : '-'
   const tagsKey2 = navState.tags?.map((x) => `${x.name}${x.type}`)
   const disallowKey = navState.disallowDisableWhenActive ?? ''
@@ -33,25 +31,25 @@ export const getNextState = (navState: HomeStateNav) => {
     replaceSearch = false,
   } = navState ?? {}
   let searchQuery = state.searchQuery ?? ''
-  let activeTagIds: HomeActiveTagsRecord = replaceSearch
+  let activeTags: HomeActiveTagsRecord = replaceSearch
     ? {}
-    : 'activeTagIds' in state
-    ? { ...state.activeTagIds }
+    : 'activeTags' in state
+    ? { ...state.activeTags }
     : {}
 
   // if they words match tag exactly, convert to tags
   let words = searchQuery.toLowerCase().trim().split(' ').filter(Boolean)
   while (words.length) {
     const [word, ...rest] = words
-    const foundTagId = allTagsNameToID[tagNameKey(word)]
-    if (foundTagId === 'no-slug') {
+    const foundTagSlug = allTagsNameToSlug[tagNameKey(word)]
+    if (foundTagSlug === 'no-slug') {
       debugger
     }
-    if (foundTagId) {
+    if (foundTagSlug) {
       // remove from words
       words = rest
       // add to active tags
-      activeTagIds[foundTagId] = true
+      activeTags[foundTagSlug] = true
     } else {
       break
     }
@@ -64,24 +62,24 @@ export const getNextState = (navState: HomeStateNav) => {
   const allTags = [...tags]
 
   for (const tag of allTags) {
-    const key = getTagId(tag)
+    const key = getTagSlug(tag)
     if (key === 'no-slug') {
       console.warn('unusable tag for next state:', tag)
       continue
     }
-    if (activeTagIds[key] === true && !disallowDisableWhenActive) {
-      activeTagIds[key] = false
+    if (activeTags[key] === true && !disallowDisableWhenActive) {
+      activeTags[key] = false
     } else {
-      activeTagIds[key] = true
+      activeTags[key] = true
       // disable others
-      ensureUniqueActiveTagIds(activeTagIds, tag)
+      ensureUniqueActiveTags(activeTags, tag)
     }
   }
 
   const nextState = {
     id: state.id,
     searchQuery,
-    activeTagIds,
+    activeTags,
     type: state.type,
   }
   nextState.type = shouldBeOnSearch(nextState) ? 'search' : 'home'

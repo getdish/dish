@@ -2,13 +2,13 @@ import { slugify } from '@dish/graph'
 import { NavigateItem } from '@dish/router'
 
 import { getActiveTags } from './getActiveTags'
-import { getTagId } from './getTagId'
+import { getTagSlug } from './getTagSlug'
 import { isHomeState, isSearchState } from './home-helpers'
 import { HomeStateTagNavigable } from './home-types'
+import { tagLenses } from './localTags.json'
 import { SearchRouteParams } from './router'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 import { SPLIT_TAG, SPLIT_TAG_TYPE } from './SPLIT_TAG'
-import { tagLenses } from './tagLenses'
 
 export const getNavigateItemForState = (
   om: any,
@@ -93,7 +93,7 @@ const getRouteFromState = (state: HomeStateTagNavigable): SearchRouteParams => {
   }
   const lenseTag =
     allActiveTags.find((x) => x.type === 'lense')?.name ??
-    getTagId(tagLenses[0])
+    getTagSlug(tagLenses[0])
   if (lenseTag) {
     params.lense = slugify(lenseTag)
   }

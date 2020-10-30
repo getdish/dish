@@ -7,7 +7,7 @@ import {
   setAvoidNextAutocompleteShowOnFocus,
 } from './AppSearchInput'
 import { isWeb } from './constants'
-import { getTagId } from './state/getTagId'
+import { getTagSlug } from './state/getTagSlug'
 import { useOvermind } from './state/om'
 import { TagButton } from './views/TagButton'
 
@@ -26,7 +26,7 @@ export const AppSearchInputTags = memo(
               return (
                 <TagButton
                   className="no-transition"
-                  key={getTagId(tag)}
+                  key={getTagSlug(tag)}
                   subtleIcon
                   backgroundColor="rgba(0,0,0,0.25)"
                   color={'#fff'}
