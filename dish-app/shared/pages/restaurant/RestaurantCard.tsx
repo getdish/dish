@@ -122,7 +122,7 @@ export const RestaurantCardContent = memo(
             >
               <AbsoluteVStack top={-10} left={-10} zIndex={20}>
                 <RestaurantUpVoteDownVote
-                  activeTagIds={{}}
+                  activeTags={{}}
                   restaurantSlug={restaurantSlug}
                   restaurantId={restaurantId}
                   score={restaurant.score ?? 0}

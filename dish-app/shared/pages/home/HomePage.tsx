@@ -604,6 +604,5 @@ async function updateHomeTagsCache(all: any) {
     ]
   }
   const fullTags = await getFullTags(tags)
-  console.log('adding full tags to cache', fullTags)
   addTagsToCache(fullTags)
 }
