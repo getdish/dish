@@ -57,7 +57,10 @@ CREATE OR REPLACE FUNCTION restaurant_top_tags(
     score,
     score_breakdown,
     review_mentions_count,
-    source_breakdown
+    source_breakdown,
+    upvotes,
+    downvotes,
+    votes_ratio
   FROM (
     SELECT *
       FROM restaurant_tags
