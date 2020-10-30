@@ -26,7 +26,11 @@ import { bgLight, bgLightHover, bgLightTranslucent } from '../../colors'
 import { drawerWidthMax, searchBarHeight } from '../../constants'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { useIsNarrow } from '../../hooks/useIs'
-import { addTagsToCache } from '../../state/allTags'
+import {
+  addTagsToCache,
+  allTags,
+  getFullTagFromNameAndType,
+} from '../../state/allTags'
 import {
   TagWithNameAndType,
   getFullTag,
@@ -415,6 +419,11 @@ const TopDishesCuisineItem = memo(
       })
     }, [country.dishes])
 
+    const countryTag = getFullTagFromNameAndType({
+      type: 'country',
+      name: country.country,
+    })
+
     return (
       <VStack className="home-top-dish" position="relative">
         {index % 2 !== 0 && (
@@ -446,10 +455,7 @@ const TopDishesCuisineItem = memo(
             paddingHorizontal={10}
             position="relative"
             alignSelf="center"
-            tag={{
-              type: 'country',
-              name: country.country,
-            }}
+            tag={countryTag}
             hoverStyle={{
               transform: [{ scale: 1.05 }, { rotate: '-3.5deg' }],
             }}
@@ -504,7 +510,7 @@ const TopDishesCuisineItem = memo(
                 height={dishHeight}
                 alignItems="center"
                 justifyContent="center"
-                tag={{ type: 'country', name: country.country ?? '' }}
+                tag={countryTag}
               >
                 <ChevronRight size={40} color="black" />
               </LinkButton>

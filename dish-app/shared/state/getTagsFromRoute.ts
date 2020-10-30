@@ -1,32 +1,35 @@
 import { HistoryItem } from '@dish/router'
 import { capitalize } from 'lodash'
 
-import { getFullTags } from './getFullTags'
-import { NavigableTag } from './NavigableTag'
+import { FullTag } from './FullTag'
+import { TagWithNameAndType, getFullTags } from './getFullTags'
 import { SPLIT_TAG, SPLIT_TAG_TYPE } from './SPLIT_TAG'
 
-export const getTagsFromRoute = (
+export const getTagsFromRoute = async (
   item: HistoryItem<'userSearch'>
-): NavigableTag[] => {
-  const tags: NavigableTag[] = []
+): Promise<FullTag[]> => {
+  const tags: FullTag[] = []
   if (!item?.params) {
     return tags
   }
+  const tmpTags: TagWithNameAndType[] = []
   if (item.params.lense) {
-    tags.push(getUrlTagInfo(item.params.lense, 'lense'))
+    tmpTags.push(getUrlTagInfo(item.params.lense, 'lense'))
   }
   if (item.params.tags) {
     for (const tag of item.params.tags.split(SPLIT_TAG)) {
       if (tag !== '-') {
-        tags.push(getUrlTagInfo(tag, 'filter'))
+        tmpTags.push(getUrlTagInfo(tag, 'filter'))
       }
     }
   }
-  getFullTags(tags)
-  return tags
+  return await getFullTags(tmpTags)
 }
 
-const getUrlTagInfo = (part: string, defaultType: any = ''): NavigableTag => {
+const getUrlTagInfo = (
+  part: string,
+  defaultType: any = ''
+): TagWithNameAndType => {
   if (part.indexOf(SPLIT_TAG_TYPE) > -1) {
     const [type, nameLower] = part.split(SPLIT_TAG_TYPE)
     const name = nameLower

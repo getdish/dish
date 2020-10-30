@@ -52,12 +52,15 @@ export const getRestuarantDishes = ({
         id: tag.tag.id,
         name: tag.tag.name ?? '',
         icon: tag.tag.icon ?? '',
+        slug: tag.tag.slug ?? '',
         score: tag.score ?? 0,
         image: tagImage ?? tagFallbackImage,
         isFallback: !tagImage,
       }
     })
-    .filter(isPresent)
+    .filter((x) => {
+      return x && !!x.slug
+    })
 }
 
 // const getRestuarantDishesWithPhotos = (

@@ -51,6 +51,7 @@ export const RestaurantTagsRow = memo(
         rgb: tag.tag.rgb,
         name: tag.tag.name,
         icon: tag.tag.icon,
+        slug: tag.tag.slug,
         type: tag.tag.type,
         score: tag.score,
       }))

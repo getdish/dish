@@ -51,6 +51,7 @@ export const getTagButtonProps = (tag: TagButtonTagProps): TagButtonProps => {
     rgb: Array.isArray(tag.rgb) ? tag.rgb : tag.rgb?.(),
     rank: tag.rank,
     score: tag.score,
+    slug: tag.slug,
   }
 }
 
@@ -85,6 +86,7 @@ export const getTagColors = ({ rgb, type }: Partial<Tag>) => {
 export type TagButtonProps = Omit<StackProps & TagButtonTagProps, 'rgb'> & {
   rgb?: [number, number, number]
   rank?: number
+  slug?: string
   restaurantSlug?: string
   size?: 'lg' | 'md' | 'sm'
   votable?: boolean
@@ -107,6 +109,7 @@ export const TagButton = memo((props: TagButtonProps) => {
     name,
     type,
     size,
+    slug,
     noColor,
     closable,
     onClose,
@@ -129,7 +132,7 @@ export const TagButton = memo((props: TagButtonProps) => {
   if (name === null) {
     return null
   }
-  const tag = { name, type: type as TagType, icon, rgb }
+  const tag = { name, type: type as TagType, icon, rgb, slug }
   const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1 : 1
 
   const colors = getTagColors(tag)

@@ -150,6 +150,7 @@ const RestaurantListItemContent = memo(
     const pad = 18
     const isSmall = useIsNarrow()
     const restaurant = useRestaurantQuery(restaurantSlug)
+
     restaurant.location
 
     useEffect(() => {
@@ -481,7 +482,7 @@ const RestaurantListItemContent = memo(
                   <RestaurantTagsRow
                     size="sm"
                     restaurantSlug={restaurantSlug}
-                    restaurantId={restaurant.id}
+                    restaurantId={restaurantId}
                     spacing={8}
                     grid
                     max={4}
@@ -612,6 +613,7 @@ const RestaurantPeekDishes = memo(
               : dishSize
             return (
               <DishView
+                key={i}
                 preventLoad={!isLoaded && i > 2}
                 size={baseSize * (isEven ? 1.2 : 1)}
                 restaurantSlug={props.restaurantSlug}

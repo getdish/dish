@@ -2,7 +2,7 @@ import { isPresent } from '@dish/helpers'
 import { isEqual, omit } from 'lodash'
 
 import { memoize } from '../../helpers/memoizeWeak'
-import { allTags } from '../../state/allTags'
+import { allTags, getFullTagFromNameAndType } from '../../state/allTags'
 import { getNavigateItemForState } from '../../state/getNavigateItemForState'
 import { getNextState } from '../../state/getNextState'
 import { getTagSlug } from '../../state/getTagSlug'
@@ -56,7 +56,10 @@ const getNormalizedLink = (
   }
 
   tags = tags.filter(isPresent).map((tag) => {
-    return allTags[getTagSlug(tag)] ?? tag
+    // TEMP bugfix, until we do new home, we need to fallback to getFullTagFromNameAndType
+    return tag.slug
+      ? allTags[tag.slug] ?? tag
+      : getFullTagFromNameAndType(tag as any) ?? tag
   })
 
   if (tags.length) {
