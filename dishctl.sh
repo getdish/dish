@@ -304,6 +304,14 @@ function local_node_with_prod_env() {
     $1
 }
 
+function dish_app_generate_tags() {
+  export HASURA_ENDPOINT=https://hasura.dishapp.com
+  export HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
+  export IS_LIVE=1
+  pushd $PROJECT_ROOT/dish-app
+  ../node_modules/.bin/ts-node --transpile-only ./etc/generate_tags.ts
+}
+
 function remove_evicted_pods() {
   namespace=${1:-default}
   kubectl get pods -n $namespace \
