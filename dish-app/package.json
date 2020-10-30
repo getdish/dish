@@ -138,7 +138,7 @@
     "build:web:client:analyze": "ONLY_MODERN=1 ANALYZE_BUNDLE=1 yarn build:web:client",
     "build:web:worker": "TARGET=worker webpack",
     "build:web:watch": "(TARGET=ssr webpack --watch) & (TARGET=client webpack --watch) & wait",
-    "generate:tags": "./etc/generate_tags.sh"
+    "generate:tags": "../dishctl.sh dish_app_generate_tags"
   },
   "dependencies": {
     "snackui": "0.0.2",
