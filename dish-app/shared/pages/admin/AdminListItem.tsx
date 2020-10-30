@@ -79,6 +79,7 @@ export const AdminListItem = memo(
               setIsEditing(true)
             }
           } else {
+            console.log('selecting', onSelect)
             lastTap.current = Date.now()
             // @ts-ignore
             columnStore.setColumn(column)
