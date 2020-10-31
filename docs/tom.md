@@ -1,3 +1,4 @@
+- fix test `// TODO @tom`
 - admin panel for crawling a specific subset of results
   - for now i'm looking at:
     - vietnamese: pho, banh xeo, banh mi
@@ -59,6 +60,11 @@
 - when i search for nopalito to try and find the restaurant with that name that has gpt3 - i think we can safely say "near exact match names" can rank highly for plain (non-tag) search http://d1live.com/gems/san-francisco/-/nopalito
 - searching without tag is slow - try "birria taco" in sf
   - this is because of the full-text search across reviews and menu_items tables. there's a bit of research i could to improve the index. but maybe we need to look at a dedicated full-text engine. but remember that searching for tags is still as fast as ever
+
+# images
+
+- script to export all dish-tagged images into local folders
+  - folder name for each "cuisine__dish"
 
 ## Users
 
