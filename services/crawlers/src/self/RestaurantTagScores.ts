@@ -14,9 +14,11 @@ export class RestaurantTagScores {
   breakdown: any = {}
   total_sentences = 0
   current_sentence = 0
+  ALL_SOURCES: string[] = []
 
   constructor(crawler: Self) {
     this.crawler = crawler
+    this.ALL_SOURCES = [...this.crawler.ALL_SOURCES, 'dish']
   }
 
   async calculateScores() {
@@ -123,11 +125,25 @@ export class RestaurantTagScores {
       const all_sources_score_sql = this._scoreSQL(tag_id)
       const breakdown_sql = this.generateBreakdownSQL(tag_id)
       const mention_count_sql = this.generateMentionsCountSQL(tag_id)
+      const updown_sql = this.generateUpDownSQL()
       const sql = `
+        WITH
+        breakdown_builder AS (
+          ${breakdown_sql}
+        ),
+        updown AS (
+          ${updown_sql}
+        )
         UPDATE restaurant_tag SET
           score = (${all_sources_score_sql}),
-          source_breakdown = (${breakdown_sql}),
-          review_mentions_count = (${mention_count_sql})
+          source_breakdown = (SELECT breakdown FROM breakdown_builder),
+          review_mentions_count = (${mention_count_sql}),
+          upvotes = (SELECT upvotes FROM updown),
+          downvotes = (SELECT downvotes FROM updown),
+          votes_ratio = (
+            SELECT NULLIF(upvotes, 0) / NULLIF(downvotes, 0)
+            FROM updown
+          )
         WHERE restaurant_id = '${this.crawler.restaurant.id}'
         AND tag_id = '${tag_id}';
       `
@@ -183,8 +199,7 @@ export class RestaurantTagScores {
 
   generateBreakdownSQL(tag_id: string) {
     let sources_sql: string[] = []
-    const sources = [...this.crawler.ALL_SOURCES, 'dish']
-    for (const source of sources) {
+    for (const source of this.ALL_SOURCES) {
       const source_sql = `
         '${source}', json_build_object(
           'score',
@@ -209,7 +224,7 @@ export class RestaurantTagScores {
     const all = `
       SELECT json_build_object(
         ${sources_sql.join(',')}
-      )
+      )::jsonb AS breakdown
     `
     return all
   }
@@ -268,6 +283,30 @@ export class RestaurantTagScores {
         ORDER BY naive_sentiment ${order} NULLS LAST
         LIMIT 2
       ) ${sub_query_name}
+    `
+  }
+
+  generateUpDownSQL() {
+    let ups: string[] = []
+    let downs: string[] = []
+    for (const source of this.ALL_SOURCES) {
+      ups.push(`(breakdown->'${source}'->'upvotes')::numeric`)
+      downs.push(`(breakdown->'${source}'->'downvotes')::numeric`)
+    }
+    return `
+      SELECT
+        *,
+        (SELECT NULLIF(upvotes, 0) / NULLIF(downvotes, 0)) AS ratio
+        FROM (
+          SELECT
+            (
+              SELECT ${ups.join('+')}
+            ) AS upvotes,
+            (
+              SELECT ${downs.join('+')}
+            ) AS downvotes
+          FROM breakdown_builder
+        ) s
     `
   }
 }

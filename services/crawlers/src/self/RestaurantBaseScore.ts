@@ -35,6 +35,23 @@ export class RestaurantBaseScore {
     await this.scoreFromPhotos()
     this.sumScores()
     this.crawler.restaurant.source_breakdown = this.breakdown
+    this.upvotesDownvotes()
+  }
+
+  upvotesDownvotes() {
+    const upvotes =
+      this.breakdown.sources.all.ratings['_4'].score +
+      this.breakdown.sources.all.ratings['_5'].score +
+      this.breakdown.votes.upvotes +
+      this.breakdown.photos.score
+    const downvotes = -(
+      this.breakdown.sources.all.ratings['_1'].score -
+      this.breakdown.sources.all.ratings['_2'].score -
+      this.breakdown.votes.downvotes
+    )
+    this.crawler.restaurant.upvotes = upvotes
+    this.crawler.restaurant.downvotes = downvotes
+    this.crawler.restaurant.votes_ratio = upvotes / downvotes
   }
 
   async scoreFromPhotos() {

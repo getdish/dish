@@ -232,7 +232,7 @@ const tripadvisor: Partial<Scrape> = {
       },
       {
         text: 'Test tag was good. Test tag was amazing. Test tag was delicious',
-        rating: 5,
+        rating: 1,
         username: 'tauser4',
         date: 'July 23, 2020',
       },
@@ -753,6 +753,9 @@ test('Scoring for restaurants', async (t) => {
   breakdown.sources.all.summaries.unique_tags[0].id = test_pho.id
   breakdown.sources.tripadvisor.summaries.unique_tags[0].id = test_pho.id
 
+  t.deepEqual(updated?.upvotes, 8.1)
+  t.deepEqual(updated?.downvotes, 2)
+  t.deepEqual(updated?.votes_ratio, 4.05)
   t.deepEqual(updated?.source_breakdown, breakdown)
 })
 
@@ -779,6 +782,9 @@ test('Scoring for rishes', async (t) => {
   const rish1 = updated?.tags.filter((t) => t.tag.name == 'Test tag')[0]
   const rish2 = updated?.tags.filter((t) => t.tag.name == 'Testpho')[0]
   t.is(rish1.score, 2)
+  t.is(rish1.upvotes, 3)
+  t.is(rish1.downvotes, 1)
+  t.is(rish1.votes_ratio, 3)
   t.is(rish1.review_mentions_count, 5)
   t.is(rish2.review_mentions_count, 1)
   t.deepEqual(rish1.source_breakdown.yelp, {

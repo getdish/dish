@@ -9,12 +9,12 @@ export const breakdown = {
   sources: {
     all: {
       ratings: {
-        _1: { count: 0, score: 0 },
+        _1: { count: 1, score: -2 },
         _2: { count: 0, score: 0 },
         _3: { count: 0, score: 0 },
         _4: { count: 0, score: 0 },
-        _5: { count: 5, score: 10 },
-        score: 10,
+        _5: { count: 4, score: 8 },
+        score: 6,
       },
       summaries: {
         reviews: {
@@ -65,12 +65,12 @@ export const breakdown = {
     },
     tripadvisor: {
       ratings: {
-        _1: { count: 0, score: 0 },
+        _1: { count: 1, score: -2 },
         _2: { count: 0, score: 0 },
         _3: { count: 0, score: 0 },
         _4: { count: 0, score: 0 },
-        _5: { count: 4, score: 8 },
-        score: 8,
+        _5: { count: 3, score: 6 },
+        score: 4,
       },
       summaries: {
         reviews: {
