@@ -1,4 +1,6 @@
 - general ordering of importance here:
+  - set up a good test case for pablo to run for crawlers
+    - should let him focus on getting a few queries to work + pass if memory reduces a lot.
   - lets get a subset working well:
     - admin panel for crawling a specific subset of results
       - for now i'm thinking limit it to SF + cuisine/dish:
@@ -15,6 +17,7 @@
   - getting ready for v2 homepage
     - mapbox boundaries
     - how boundaries work with tilejson / tilejson viability research
+      - https://gist.github.com/cdolek/d08cac2fa3f6338d84ea
   - android setup
   - a script to export images into labeled folders for ML training
   - fix test `// TODO @tom`
