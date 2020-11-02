@@ -104,6 +104,7 @@ func search(w http.ResponseWriter, r *http.Request) {
 		filter_by["open"],
 		filter_by["price"],
 		prices,
+		getParam("main_tag", r),
 	)
 	if err != nil {
 		fmt.Println(err)

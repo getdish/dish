@@ -49,6 +49,7 @@ export type RestaurantSearchArgs = {
   query: string
   tags?: string[]
   limit?: number
+  main_tag?: string
 }
 
 export type RatingFactors = {

@@ -15,6 +15,7 @@ export async function search({
   query,
   tags = [],
   limit = 50,
+  main_tag = '',
 }: RestaurantSearchArgs): Promise<RestaurantOnlyIds[]> {
   const result = await searchMain({
     center: { lat, lng },
@@ -22,6 +23,7 @@ export async function search({
     query,
     tags,
     limit,
+    main_tag,
   })
   return result.restaurants
 }
@@ -32,6 +34,7 @@ export async function searchMain({
   query,
   tags = [],
   limit = 50,
+  main_tag = '',
 }: RestaurantSearchArgs): Promise<any> {
   const params = [
     'query=' + query,
@@ -41,6 +44,7 @@ export async function searchMain({
     'span_lat=' + span.lat,
     `limit=${limit}`,
     'tags=' + tags.map((t) => t.toLowerCase().trim()).join(','),
+    'main_tag=' + main_tag,
   ]
   const url = SEARCH_DOMAIN + '/search?' + params.join('&')
   const x = Date.now()

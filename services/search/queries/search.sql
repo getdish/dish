@@ -14,6 +14,10 @@ dish_ids AS (
     AND type != 'country'
 ),
 
+main_tag_id AS (
+  SELECT id FROM tag WHERE slug = ?16
+),
+
 main AS (
   SELECT
     restaurant.id as restaurant_id,
@@ -26,6 +30,24 @@ main AS (
     DENSE_RANK() OVER(
       ORDER BY restaurant.votes_ratio DESC NULLS LAST
     ) AS restaurant_votes_ratio_rank,
+    DENSE_RANK() OVER(
+      ORDER BY (
+        SELECT SUM(COALESCE(rt.score, 0))
+          FROM restaurant_tag rt
+          WHERE rt.restaurant_id = restaurant.id
+            AND rt.tag_id = (SELECT id FROM main_tag_id)
+            AND rt.score IS NOT NULL
+      ) DESC NULLS LAST
+    ) AS main_tag_rank,
+    DENSE_RANK() OVER(
+      ORDER BY (
+        SELECT SUM(COALESCE(rt.votes_ratio, 0))
+          FROM restaurant_tag rt
+          WHERE rt.restaurant_id = restaurant.id
+            AND rt.tag_id = (SELECT id FROM main_tag_id)
+            AND rt.score IS NOT NULL
+      ) DESC NULLS LAST
+    ) AS main_tag_votes_ratio_rank,
     DENSE_RANK() OVER(
       ORDER BY (
         SELECT SUM(COALESCE(rt.score, 0))
@@ -61,9 +83,17 @@ main AS (
   AND (
 
     (
-      ?4 != ''
-      AND
-      tag_names @> to_json(string_to_array(?4, ','))::jsonb
+      (
+        ?4 != ''
+        AND
+        tag_names @> to_json(string_to_array(?4, ','))::jsonb
+      )
+      OR
+      (
+        ?16 != ''
+        AND
+        tag_names @> to_json(?16::text)::jsonb
+      )
     )
 
     AND (
@@ -118,8 +148,10 @@ main AS (
 rank_units AS (
   SELECT
     (1.0 / MAX(restaurant_rank)) AS restaurant_rank_unit,
+    (1.0 / MAX(main_tag_rank)) AS main_tag_rank_unit,
     (1.0 / MAX(rishes_rank)) AS rishes_rank_unit,
     (1.0 / MAX(restaurant_votes_ratio_rank)) AS restaurant_votes_ratio_unit,
+    (1.0 / MAX(main_tag_votes_ratio_rank)) AS main_tag_votes_ratio_unit,
     (1.0 / MAX(rishes_votes_ratio_rank)) AS rishes_votes_ratio_unit
   FROM main
 ),
@@ -133,22 +165,32 @@ final AS (
         SELECT (
           1.0 - ((main.restaurant_rank - 1.0) * restaurant_rank_unit)
         ) FROM rank_units
-      ) as restaurant_total_votes_rank_normalised_score,
+      ) AS restaurant_total_votes_rank_normalised_score,
       (
         SELECT (
           1.0 - ((main.restaurant_votes_ratio_rank - 1.0) * restaurant_votes_ratio_unit)
         ) FROM rank_units
-      ) as restaurant_votes_ratio_rank_normalised_score,
+      ) AS restaurant_votes_ratio_rank_normalised_score,
+      (
+        SELECT (
+          1.0 - ((main.main_tag_rank - 1.0) * main_tag_rank_unit)
+        ) FROM rank_units
+      ) AS main_tag_rank_normalised_score,
+      (
+        SELECT (
+          1.0 - ((main.main_tag_votes_ratio_rank - 1.0) * main_tag_votes_ratio_unit)
+        ) FROM rank_units
+      ) AS main_tag_votes_ratio_normalised_score,
       (
         SELECT (
           1.0 - ((main.rishes_rank - 1.0) * rishes_rank_unit)
         ) FROM rank_units
-      ) as rishes_rank_normalised_score,
+      ) AS rishes_rank_normalised_score,
       (
         SELECT (
           1.0 - ((main.rishes_votes_ratio_rank - 1.0) * rishes_votes_ratio_unit)
         ) FROM rank_units
-      ) as rishes_votes_ratio_rank_normalised_score
+      ) AS rishes_votes_ratio_rank_normalised_score
     FROM main
   ) s
   ORDER BY (
@@ -156,7 +198,11 @@ final AS (
     +
     (restaurant_votes_ratio_rank_normalised_score * 1)
     +
-    (rishes_rank_normalised_score * 2)
+    (main_tag_rank_normalised_score * 2)
+    +
+    (main_tag_votes_ratio_normalised_score * 3)
+    +
+    (rishes_rank_normalised_score * 0.5)
     +
     (rishes_votes_ratio_rank_normalised_score * 1)
   ) DESC
@@ -264,22 +310,32 @@ SELECT json_build_object(
           final.restaurant_id,
         'slug',
           final.slug,
-        'restaurant_rank',
+        'meta', json_build_object(
+          'restaurant_rank',
           final.restaurant_rank,
-        'restaurant_total_votes_rank_normalised_score',
+          'restaurant_total_votes_rank_normalised_score',
           final.restaurant_total_votes_rank_normalised_score,
-        'restaurant_votes_ratio_rank',
+          'restaurant_votes_ratio_rank',
           final.restaurant_votes_ratio_rank,
-        'restaurant_votes_ratio_rank_normalised_score',
+          'restaurant_votes_ratio_rank_normalised_score',
           final.restaurant_votes_ratio_rank_normalised_score,
-        'rish_rank',
+          'main_tag_rank',
+          final.main_tag_rank,
+          'main_tag_rank_normalised_score',
+          final.main_tag_rank_normalised_score,
+          'main_tag_votes_ratio_rank',
+          final.main_tag_votes_ratio_rank,
+          'main_tag_votes_ratio_normalised_score',
+          final.main_tag_votes_ratio_normalised_score,
+          'rish_rank',
           final.rishes_rank,
-        'rishes_rank_normalised_score',
+          'rishes_rank_normalised_score',
           final.rishes_rank_normalised_score,
-        'rishes_votes_ratio_rank',
+          'rishes_votes_ratio_rank',
           final.rishes_votes_ratio_rank,
-        'rishes_votes_ratio_rank_normalised_score',
+          'rishes_votes_ratio_rank_normalised_score',
           final.rishes_votes_ratio_rank_normalised_score
+        )
       )
     ) FROM final
   ),
@@ -312,6 +368,7 @@ SELECT json_build_object(
     SELECT json_build_object(
       'query', ?3,
       'tags', ?4,
+      'main_tag', ?16,
       'deliveries', ?12,
       'prices', ?15,
       'limit', ?5
