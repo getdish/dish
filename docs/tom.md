@@ -1,8 +1,24 @@
-- fix test `// TODO @tom`
-- admin panel for crawling a specific subset of results
-  - for now i'm looking at:
-    - vietnamese: pho, banh xeo, banh mi
-    - mexican: taco, guacamole, salsa
+- general ordering of importance here:
+  - lets get a subset working well:
+    - admin panel for crawling a specific subset of results
+      - for now i'm thinking limit it to SF + cuisine/dish:
+        - vietnamese: pho, banh xeo, banh mi
+        - mexican: taco, guacamole, salsa
+    - fix/add final crawlers (google, uber eats, caviar?) on subset
+  - further small ratio fixes (add the priority option, set it to dish by default, maybe deprioritize base ranking when dish active)
+  - run through early user experience:
+    - login/signup/onboarding fixing any bugs
+    - see if any easy bugs to fix on user profiles
+  - product focused fixes from your previous runthrough
+    - any major fixes for breakdowns (especially focused on subset)
+  - gpt3 better summaries
+  - getting ready for v2 homepage
+    - mapbox boundaries
+    - how boundaries work with tilejson / tilejson viability research
+  - android setup
+  - a script to export images into labeled folders for ML training
+  - fix test `// TODO @tom`
+
 
 # ranking
 
@@ -44,7 +60,6 @@
 
 # important bugs/adjustments
 
-- tag slugs
 - BERT very slow - see /review/analyze, i'm seeing 10s+ response for matching just a single tag
 
 # next features
@@ -52,9 +67,6 @@
 - redo GPT3 summaries
   - table style:
     - | dish | rating | short summary |
-- getting ready for v2 homepage
-  - mapbox boundaries
-  - how boundaries work with tilejson / tilejson viability research
 
 # search quality (lower priority)
 - when i search for nopalito to try and find the restaurant with that name that has gpt3 - i think we can safely say "near exact match names" can rank highly for plain (non-tag) search http://d1live.com/gems/san-francisco/-/nopalito
