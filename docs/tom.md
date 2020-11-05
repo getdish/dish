@@ -7,7 +7,7 @@
         - vietnamese: pho, banh xeo, banh mi
         - mexican: taco, guacamole, salsa
     - fix/add final crawlers (google, uber eats, caviar?) on subset
-  - further small ratio fixes (add the priority option, set it to dish by default, maybe deprioritize base ranking when dish active)
+  ✔️ further small ratio fixes (add the priority option, set it to dish by default, maybe deprioritize base ranking when dish active)
   - run through early user experience:
     - login/signup/onboarding fixing any bugs
     - see if any easy bugs to fix on user profiles
@@ -25,7 +25,7 @@
 
 # ranking
 
-- ratio more important in ranking (not popularity contest)
+✔️ ratio more important in ranking (not popularity contest)
   - options:
     - Option 1: bring back the concept of an overall ranking: 1-100% or 1-5 stars or something, this is our "ratio" rating
       - use ratio rating in search to avoid popularity contest

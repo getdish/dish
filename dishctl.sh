@@ -298,9 +298,12 @@ function local_node_with_prod_env() {
   export TIMESCALE_PASSWORD=$TF_VAR_TIMESCALE_SU_PASS
   export HASURA_ENDPOINT=https://hasura.dishapp.com
   export HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
+  if [[ $DISABLE_GC != "1" ]]; then
+    export GC_FLAG="--expose-gc"
+  fi
   node \
     --max-old-space-size=4096 \
-    --expose-gc \
+    $GC_FLAG \
     $1
 }
 
