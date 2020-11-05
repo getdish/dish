@@ -20,12 +20,9 @@ CREATE OR REPLACE FUNCTION restaurant_top_tags(
   _tag_types TEXT DEFAULT 'dish'
 ) RETURNS SETOF restaurant_tag AS $$
   WITH
-  -- TODO use our formal slugify() format.
-  -- Speed optimisation isn't so important here because the tag
-  -- table should always be relatively small
   tag_slugs AS (
     SELECT UNNEST(
-      string_to_array(LOWER(REPLACE(tag_names, '-', ' ')), ',')
+      string_to_array(tag_names, ',')
     )
   ),
   tag_types AS (
@@ -64,10 +61,10 @@ CREATE OR REPLACE FUNCTION restaurant_top_tags(
   FROM (
     SELECT *
       FROM restaurant_tags
-      WHERE restaurant_tags.name ILIKE ANY (SELECT * FROM tag_slugs)
+      WHERE restaurant_tags.slug IN (SELECT * FROM tag_slugs)
     UNION ALL
     SELECT *
       FROM restaurant_tags
-      WHERE NOT (restaurant_tags.name ILIKE ANY (SELECT * FROM tag_slugs))
+      WHERE NOT (restaurant_tags.slug IN (SELECT * FROM tag_slugs))
   ) s
 $$ LANGUAGE sql STABLE;

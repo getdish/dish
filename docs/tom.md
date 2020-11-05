@@ -20,7 +20,7 @@
       - https://gist.github.com/cdolek/d08cac2fa3f6338d84ea
   - android setup
   - a script to export images into labeled folders for ML training
-  - fix test `// TODO @tom`
+  ✔️ fix test `// TODO @tom`
 
 
 # ranking

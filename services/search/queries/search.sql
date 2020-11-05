@@ -198,9 +198,9 @@ final AS (
     +
     (restaurant_votes_ratio_rank_normalised_score * 1)
     +
-    (main_tag_rank_normalised_score * 2)
+    (main_tag_rank_normalised_score * 3)
     +
-    (main_tag_votes_ratio_normalised_score * 3)
+    (main_tag_votes_ratio_normalised_score * 6)
     +
     (rishes_rank_normalised_score * 0.5)
     +
