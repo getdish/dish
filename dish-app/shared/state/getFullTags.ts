@@ -1,5 +1,5 @@
 import { Tag, query, resolved } from '@dish/graph'
-import { isPresent } from '@dish/helpers/_'
+import { isPresent } from '@dish/helpers'
 
 import { allTags } from './allTags'
 import { FullTag } from './FullTag'
