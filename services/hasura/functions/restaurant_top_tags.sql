@@ -14,6 +14,12 @@ DROP FUNCTION IF EXISTS restaurant_top_tags(
   tag_types TEXT
 );
 
+DROP FUNCTION IF EXISTS restaurant_top_tags(
+  _restaurant restaurant,
+  tag_names TEXT,
+  _tag_types TEXT
+);
+
 CREATE OR REPLACE FUNCTION restaurant_top_tags(
   _restaurant restaurant,
   tag_names TEXT,
@@ -38,7 +44,6 @@ CREATE OR REPLACE FUNCTION restaurant_top_tags(
         WHERE restaurant_tag.restaurant_id = _restaurant.id
           AND tag.type IN (SELECT * FROM tag_types)
     ) s
-      ORDER BY score DESC NULLS LAST
   )
 
   -- TODO: How to programmtically choose just the restaurant_tag fields?
@@ -59,12 +64,18 @@ CREATE OR REPLACE FUNCTION restaurant_top_tags(
     downvotes,
     votes_ratio
   FROM (
-    SELECT *
-      FROM restaurant_tags
-      WHERE restaurant_tags.slug IN (SELECT * FROM tag_slugs)
-    UNION ALL
-    SELECT *
-      FROM restaurant_tags
-      WHERE NOT (restaurant_tags.slug IN (SELECT * FROM tag_slugs))
-  ) s
+    SELECT * FROM (
+      (
+        SELECT *, 1 AS ord FROM restaurant_tags
+        WHERE restaurant_tags.slug IN (SELECT * FROM tag_slugs)
+      )
+      UNION ALL
+      (
+        SELECT *, 2 AS ord FROM restaurant_tags
+        WHERE NOT (restaurant_tags.slug IN (SELECT * FROM tag_slugs))
+        ORDER BY score DESC
+      )
+    ) s1
+    ORDER BY ord ASC
+  ) s2
 $$ LANGUAGE sql STABLE;
