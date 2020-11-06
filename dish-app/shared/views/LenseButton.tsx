@@ -1,10 +1,10 @@
-import { Tag } from '@dish/graph'
 import React from 'react'
 import { Text, VStack, memoIsEqualDeep } from 'snackui'
 
 import { rgbString } from '../helpers/rgbString'
 import { useIsNarrow } from '../hooks/useIs'
-import { tagDisplayName } from '../state/tagDisplayName'
+import { NavigableTag } from '../state/NavigableTag'
+import { tagDisplayName } from '../state/tagMeta'
 import { LinkButton } from './ui/LinkButton'
 
 export type LenseButtonSize = 'md' | 'lg' | 'xl'
@@ -18,7 +18,7 @@ export const LenseButton = memoIsEqualDeep(
     backgroundColor,
     onPress,
   }: {
-    lense: Tag
+    lense: NavigableTag
     isActive?: boolean
     backgroundColor?: string
     minimal?: boolean
@@ -97,7 +97,7 @@ export const LenseButton = memoIsEqualDeep(
               <Text
                 fontWeight="500"
                 lineHeight={lineHeight}
-                fontSize={10}
+                fontSize={isSmall ? 10 : 14}
                 color={color}
                 paddingHorizontal={2}
                 textAlign="center"

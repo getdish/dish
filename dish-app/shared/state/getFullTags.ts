@@ -57,6 +57,8 @@ export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
   if (res.length !== tags.length) {
     console.warn(
       'didnt find some tags',
+      tags,
+      res,
       differenceBy(res, tags, (x) => x.name)
     )
   }

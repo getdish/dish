@@ -30,7 +30,7 @@ import {
 import { isWeb } from '../constants'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
 import { getTagSlug } from '../state/getTagSlug'
-import { tagDisplayName } from '../state/tagDisplayName'
+import { tagDisplayName } from '../state/tagMeta'
 import { LinkButton } from './ui/LinkButton'
 import { LinkButtonProps } from './ui/LinkProps'
 
@@ -264,7 +264,7 @@ export const TagButton = memo((props: TagButtonProps) => {
 const TagButtonVote = (props: TagButtonProps & { scale: number }) => {
   const { scale } = props
   const [hovered, setHovered] = useState(false)
-  const { vote, setVote } = useUserTagVotes(props.restaurantSlug, {
+  const { vote, setVote } = useUserTagVotes(props.restaurantSlug ?? '', {
     [getTagSlug(props)]: true,
   })
   const Icon = vote ? ThumbsDown : ThumbsUp

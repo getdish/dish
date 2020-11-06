@@ -302,7 +302,11 @@ const runSearch: AsyncAction<{
   )
   let otherTags = [
     ...tags
-      .map((tag) => getTagSlug(tag).replace('lenses__', ''))
+      .map((tag) =>
+        getTagSlug(tag)
+          .replace('lenses__', '')
+          .replace('filters__delivery', 'delivery')
+      )
       .filter((t) => !t.includes(dishSearchedTag)),
   ]
 
@@ -358,7 +362,6 @@ const deepAssign = (a: Object, b: Object) => {
       if (a[key] && b[key] && isEqual(a[key], b[key])) {
         continue
       }
-      console.log('not equal', key, a[key], b[key])
       const val = b[key]
       if (val) {
         a[key] = Array.isArray(val)

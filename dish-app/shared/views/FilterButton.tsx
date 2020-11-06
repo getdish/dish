@@ -1,12 +1,11 @@
 import { Tag } from '@dish/graph'
 import { Clock, DollarSign, ShoppingBag } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { HStack, HoverablePopover, Spacer, Text, VStack } from 'snackui'
+import { HStack, HoverablePopover, Text, VStack } from 'snackui'
 
-import { isWeb } from '../constants'
 import { useIsNarrow } from '../hooks/useIs'
 import { SearchPageDeliveryFilterButtons } from '../pages/search/SearchPageDeliveryFilterButtons'
-import { tagDisplayNames } from '../state/tagDisplayName'
+import { tagDisplayNames } from '../state/tagMeta'
 import { LinkButtonProps } from './ui/LinkProps'
 import { SmallButton } from './ui/SmallButton'
 
@@ -22,6 +21,8 @@ export const FilterButton = memo(
   }: LinkButtonProps & { tag: Tag; isActive: boolean; color?: string }) => {
     const isSmall = useIsNarrow()
     const iconColor = isSmall ? (isActive ? '#000' : '#fff') : color
+    const textColor = isSmall ? color : isActive ? '#000' : color
+
     let content: any =
       rest.children ?? (tag.name ? tagDisplayNames[tag.name] : null) ?? tag.name
 
@@ -41,7 +42,7 @@ export const FilterButton = memo(
     } else {
       content = (
         <Text
-          color={color}
+          color={textColor}
           fontSize={fontSize}
           fontWeight={fontWeight}
           lineHeight={lineHeight}
@@ -68,7 +69,6 @@ export const FilterButton = memo(
 
     content = (
       <SmallButton
-        backgroundColor="transparent"
         borderColor={isSmall ? 'transparent' : '#eee'}
         fontSize={14}
         fontWeight="700"
