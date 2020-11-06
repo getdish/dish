@@ -135,7 +135,11 @@ export const CommentBubble = ({
                       setIsExpanded((x) => !x)
                     }}
                   >
-                    {isExpanded ? <>&laquo; Less</> : <>Read more &raquo;</>}
+                    {isExpanded ? (
+                      <Text>&laquo; Less</Text>
+                    ) : (
+                      <Text>Read more &raquo;</Text>
+                    )}
                   </Link>
                 )}
               </>

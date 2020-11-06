@@ -62,7 +62,7 @@ export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
 })
 
 const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
-  const filters = [tagFilters[0], tagFilters[1], tagFilters[2]]
+  const filters = [tagFilters[1], tagFilters[3], tagFilters[4]]
 
   return (
     <HStack alignItems="center" justifyContent="center" spacing={5}>
@@ -75,6 +75,7 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
             isActive={isActive}
             position="relative"
             zIndex={100 - index + (isActive ? 1 : 0)}
+            color="#fff"
           />
         )
       })}

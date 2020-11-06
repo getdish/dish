@@ -25,5 +25,21 @@ export function Grid({ children, itemMinWidth = 200 }: GridProps) {
     )
   }
 
-  return <HStack flexWrap="wrap">{children}</HStack>
+  const childrenList = React.Children.toArray(children)
+
+  return (
+    <HStack flexWrap="wrap">
+      {childrenList.map((child) => {
+        if (!child) {
+          return null
+        }
+
+        return (
+          <HStack key={child} flex={1} width={itemMinWidth}>
+            {child}
+          </HStack>
+        )
+      })}
+    </HStack>
+  )
 }

@@ -7,7 +7,7 @@ import {
   Search,
 } from '@dish/react-feather'
 import React, { Suspense, memo } from 'react'
-import { Platform, StyleSheet } from 'react-native'
+import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
 import { AbsoluteVStack, HStack, LinearGradient, Spacer, VStack } from 'snackui'
 
 import { AppMenu } from './AppMenu'
@@ -216,20 +216,21 @@ const AppSearchBarContents = memo(() => {
       )}
 
       {isReallySmall && (
-        <LinkButton
-          onPress={() => {
-            omStatic.actions.home.setShowAutocomplete(
-              showLocation ? 'search' : 'location'
-            )
-          }}
-          padding={12}
-        >
-          {showLocation ? (
-            <Search color={color} size={22} opacity={0.65} />
-          ) : (
-            <Map color={color} size={22} opacity={0.65} />
-          )}
-        </LinkButton>
+        <HStack padding={12}>
+          <TouchableOpacity
+            onPress={() => {
+              omStatic.actions.home.setShowAutocomplete(
+                showLocation ? 'search' : 'location'
+              )
+            }}
+          >
+            {showLocation ? (
+              <Search color={color} size={22} opacity={0.65} />
+            ) : (
+              <Map color={color} size={22} opacity={0.65} />
+            )}
+          </TouchableOpacity>
+        </HStack>
       )}
 
       {!isReallySmall && (

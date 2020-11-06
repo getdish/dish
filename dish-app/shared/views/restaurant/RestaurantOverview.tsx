@@ -72,18 +72,3 @@ export const RestaurantOverview = memo(
     return null
   })
 )
-
-const defaultListItems = [
-  {
-    category: '🍽',
-    sentence: `Don't miss the lychee tempura ice cream and Wednesday two-for-one`,
-  },
-  {
-    category: '🌃',
-    sentence: 'Traditional. Big bar area outside with shade',
-  },
-  // {
-  //   category: 'Tips',
-  //   sentence: 'Quick, cheap, local favorite',
-  // },
-]

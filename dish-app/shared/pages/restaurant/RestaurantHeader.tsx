@@ -1,14 +1,12 @@
 import { graphql } from '@dish/graph'
 import { Clock } from '@dish/react-feather'
 import React, { Suspense, memo } from 'react'
-import { ScrollView } from 'react-native'
-import { HStack, Spacer, StackProps, Text, VStack } from 'snackui'
+import { HStack, Spacer, Text, VStack } from 'snackui'
 
 import { drawerBorderRadius, isWeb } from '../../constants'
 import { useAppDrawerWidthInner } from '../../hooks/useAppDrawerWidth'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemRestaurant } from '../../state/home-types'
-import { useOvermind } from '../../state/om'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { RestaurantAddress } from './RestaurantAddress'
@@ -91,6 +89,7 @@ const RestaurantHeaderContent = memo(
                   flex={1}
                   paddingTop={paddingPx * 1.5}
                   alignItems="flex-start"
+                  minWidth={280}
                 >
                   {spacer}
                   <VStack flex={10} overflow="hidden">

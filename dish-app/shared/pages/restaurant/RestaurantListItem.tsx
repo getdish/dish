@@ -185,10 +185,10 @@ const RestaurantListItemContent = memo(
       minWidth: isSmall
         ? isWeb
           ? '40vw'
-          : Dimensions.get('window').width * 0.75
+          : Dimensions.get('window').width * 0.65
         : 320,
       maxWidth: Math.min(
-        Dimensions.get('window').width * 0.75,
+        Dimensions.get('window').width * 0.65,
         isSmall ? 360 : 420
       ),
     }
