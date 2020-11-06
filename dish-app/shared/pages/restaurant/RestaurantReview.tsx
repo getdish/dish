@@ -77,9 +77,8 @@ export const RestaurantReview = memo(
               {review.rating === 1 ? 'Upvote' : 'Downvote'}
             </Text>
           )}
-          &nbsp; &nbsp;
           {!!review.authored_at && (
-            <Text {...bottomMetaTextProps}>
+            <Text {...bottomMetaTextProps} marginLeft={6}>
               {new Intl.DateTimeFormat().format(new Date(review.authored_at))}{' '}
               &nbsp; &nbsp;
             </Text>
@@ -102,7 +101,7 @@ export const RestaurantReview = memo(
                     name="restaurant"
                     params={{ slug: review.restaurant.slug }}
                   >
-                    {review.restaurant.name}
+                    {review.restaurant.name ?? ''}
                   </Link>
                 </Text>
                 <Spacer />

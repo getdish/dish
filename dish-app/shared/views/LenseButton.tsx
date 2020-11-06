@@ -29,8 +29,13 @@ export const LenseButton = memoIsEqualDeep(
     const lenseColorLight = rgbString(lense.rgb, isSmall ? 0.6 : 0.4)
     const lenseColorDark = rgbString(lense.rgb.map((x) => x * 1.2))
     const scale = size == 'md' ? 1 : size === 'lg' ? 1.2 : 1.3
-    const sizePx = 42
+    const sizePx = isSmall ? 38 : 42
     const bg = backgroundColor ?? (isActive ? lenseColorLight : 'transparent')
+    const iconSize = sizePx * (isActive ? 0.7 : 0.6) * scale
+    const scaledSize = sizePx * scale
+    const marginVertical = -4 * scale
+    const color = isSmall || isActive ? '#fff' : lenseColorDark
+    const lineHeight = sizePx * scale * 0.39
 
     return (
       <LinkButton
@@ -48,9 +53,9 @@ export const LenseButton = memoIsEqualDeep(
           className="ease-in-out-fast"
           alignItems="center"
           justifyContent="center"
-          marginVertical={-4 * scale}
-          width={sizePx * scale}
-          height={sizePx * scale}
+          marginVertical={marginVertical}
+          width={scaledSize}
+          height={scaledSize}
           backgroundColor={bg}
           borderRadius={100}
           transform={[{ scale: 1 }]}
@@ -62,8 +67,8 @@ export const LenseButton = memoIsEqualDeep(
           })}
         >
           <Text
-            fontSize={sizePx * (isActive ? 0.7 : 0.6) * scale}
-            lineHeight={sizePx * scale}
+            fontSize={iconSize}
+            lineHeight={scaledSize}
             fontWeight="400"
             textAlign="center"
           >
@@ -91,8 +96,9 @@ export const LenseButton = memoIsEqualDeep(
             >
               <Text
                 fontWeight="500"
-                lineHeight={sizePx * scale * 0.39}
-                color={isSmall || isActive ? '#fff' : lenseColorDark}
+                lineHeight={lineHeight}
+                fontSize={10}
+                color={color}
                 paddingHorizontal={2}
                 textAlign="center"
                 height={16}

@@ -26,12 +26,12 @@ export const FilterButton = memo(
       rest.children ?? (tag.name ? tagDisplayNames[tag.name] : null) ?? tag.name
 
     const iconElement = (() => {
-      switch (tag.name) {
-        case 'Open':
+      switch (tag.slug) {
+        case 'filters__open':
           return <Clock size={18} color={iconColor} />
-        case 'Delivery':
+        case 'filters__delivery':
           return <ShoppingBag size={18} color={iconColor} />
-        case 'price-low':
+        case 'filters__price-low':
           return <DollarSign size={18} color={iconColor} />
       }
     })()
@@ -69,6 +69,7 @@ export const FilterButton = memo(
     content = (
       <SmallButton
         backgroundColor="transparent"
+        borderColor={isSmall ? 'transparent' : '#eee'}
         fontSize={14}
         fontWeight="700"
         alignItems="center"
@@ -78,11 +79,7 @@ export const FilterButton = memo(
         tag={tag}
         {...rest}
       >
-        {isWeb ? (
-          content
-        ) : (
-          <VStack transform={[{ translateY: 7 }]}>{content}</VStack>
-        )}
+        {content}
       </SmallButton>
     )
 

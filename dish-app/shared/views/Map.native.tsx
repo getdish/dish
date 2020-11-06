@@ -123,7 +123,8 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
             features,
           }}
           cluster
-          clusterRadius={10}
+          clusterRadius={4}
+          clusterMaxZoomLevel={2}
         >
           <MapboxGL.SymbolLayer
             id="pointCount"
@@ -140,7 +141,7 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
             belowLayerID="pointCount"
             filter={['has', 'point_count']}
             style={{
-              circleColor: 'rgba(200,150,0,0.5)',
+              circleColor: 'rgba(150,10,40,0.5)',
               circleRadius: 15,
             }}
           />
@@ -149,8 +150,26 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
             layerIndex={200}
             filter={['!', ['has', 'point_count']]}
             style={{
-              circleColor: 'rgba(15,150,0,0.5)',
-              circleRadius: 4,
+              circleColor: [
+                'match',
+                ['get', 'selected'],
+                1,
+                'yellow',
+                0,
+                'rgba(20,30,240,0.5)',
+                'rgba(20,30,240,0.5)',
+              ],
+              circleRadius: [
+                'interpolate',
+                ['exponential', 1.5],
+                ['zoom'],
+                9,
+                2,
+                11,
+                8,
+                16,
+                30,
+              ],
             }}
           />
         </MapboxGL.ShapeSource>

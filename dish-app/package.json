@@ -120,7 +120,8 @@
     "web:ssr:development": "NODE_ENV=development yarn web:ssr",
     "preinstall": "node ./etc/update_package_json_workspace_hoist.js",
     "postinstall": "patch-package; expo-yarn-workspaces postinstall",
-    "devtools": "npx overmind-devtools@26.0.1",
+    "dev:overmind": "yarn overmind-devtools",
+    "dev:react": "yarn react-devtools",
     "test": "true",
     "build": "npm-run-all --parallel build:types build:output",
     "build:types": "tsc",
@@ -195,6 +196,8 @@
     "react-hook-form": "^6.9.6"
   },
   "devDependencies": {
+    "overmind-devtools": "26.0.1",
+    "react-devtools": "^4.9.0",
     "@welldone-software/why-did-you-render": "^5.0.0-rc.1",
     "snackui-static": "0.0.2",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",

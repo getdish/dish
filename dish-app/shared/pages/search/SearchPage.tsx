@@ -158,8 +158,8 @@ export default memo(function SearchPage(props: Props) {
 
   return (
     <>
+      <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
       <StackDrawer closable>
-        <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
         <Suspense fallback={<HomeLoading />}>
           <VStack
             flex={1}
@@ -196,27 +196,9 @@ const SearchNavBarContainer = ({
 
   if (!isWeb) {
     contents = (
-      <AnimatedVStack>
-        <AbsoluteVStack
-          pointerEvents="none"
-          bottom={0}
-          height={150}
-          width="100%"
-        >
-          <LinearGradient
-            pointerEvents="none"
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-            }}
-            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.25)']}
-          />
-          {contents}
-        </AbsoluteVStack>
-      </AnimatedVStack>
+      <AbsoluteVStack pointerEvents="none" bottom={0} height={150} width="100%">
+        {contents}
+      </AbsoluteVStack>
     )
   }
 

@@ -1,5 +1,5 @@
 import { Tag, query, resolved } from '@dish/graph'
-import { isPresent } from '@dish/helpers/_'
+import { isPresent } from '@dish/helpers'
 
 import { allTags } from './allTags'
 import { FullTag } from './FullTag'
@@ -36,8 +36,6 @@ export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
     return cached
   }
 
-  console.log('fetching', tags)
-
   const res = [
     ...cached,
     ...(await resolved(() => {
@@ -56,7 +54,10 @@ export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
   ].filter(isPresent)
 
   if (res.length !== tags.length) {
-    debugger
+    console.warn(
+      'didnt find some tags',
+      tags.filter((x) => !res.some((y) => y.name === x.name))
+    )
   }
 
   return res
