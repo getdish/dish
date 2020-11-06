@@ -1,5 +1,4 @@
 import React from 'react'
-import { View } from 'react-native'
 
 import { isWeb } from '../constants'
 import { HStack } from './Stacks'
