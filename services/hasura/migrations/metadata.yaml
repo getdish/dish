@@ -2,6 +2,12 @@ version: 2
 tables:
 - table:
     schema: public
+    name: boundaries
+- table:
+    schema: public
+    name: hrr
+- table:
+    schema: public
     name: menu_item
   object_relationships:
   - name: restaurant
@@ -773,3 +779,6 @@ tables:
       - role
       - username
       filter: {}
+- table:
+    schema: public
+    name: zcta5
