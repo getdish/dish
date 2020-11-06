@@ -1869,10 +1869,10 @@
   dependencies:
     arrify "^1.0.1"
 
-"@dish/gqless-cli@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-0.1.4.tgz#08c71ffc5ec8ceb72ce19fd98b5a46d4719e9d35"
-  integrity sha512-iLRoEPGYUyrUTrktHUVqI1RovvGbieAsuL4qBNiD9x0m+2yqFmgxc9eY+2kydc2EkxIksqTs4Mzc3X2fJR4X3A==
+"@dish/gqless-cli@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-0.1.6.tgz#d5e7af710b444ca75cf2a8bd08193c075b95314d"
+  integrity sha512-IzgQ2WQv7habEWRzesk57RdCnqqfGZP3Z57mMdGuZzJl8h8E+JvW7IjukJKegprTx7iue2NQIxDl+kQCejpN3g==
   dependencies:
     "@dish/gqless" "^1.0.0"
     "@graphql-codegen/core" "^1.17.8"

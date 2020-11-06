@@ -3253,7 +3253,269 @@ const scalarsEnumsHash: ScalarsEnumsHash = {
   uuid: true,
 }
 const generatedSchema: Schema = {
-  query: {},
+  query: {
+    menu_item: {
+      __type: '[menu_item!]!',
+      __args: {
+        distinct_on: '[menu_item_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[menu_item_order_by!]',
+        where: 'menu_item_bool_exp',
+      },
+    },
+    menu_item_aggregate: {
+      __type: 'menu_item_aggregate!',
+      __args: {
+        distinct_on: '[menu_item_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[menu_item_order_by!]',
+        where: 'menu_item_bool_exp',
+      },
+    },
+    menu_item_by_pk: { __type: 'menu_item', __args: { id: 'uuid!' } },
+    opening_hours: {
+      __type: '[opening_hours!]!',
+      __args: {
+        distinct_on: '[opening_hours_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[opening_hours_order_by!]',
+        where: 'opening_hours_bool_exp',
+      },
+    },
+    opening_hours_aggregate: {
+      __type: 'opening_hours_aggregate!',
+      __args: {
+        distinct_on: '[opening_hours_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[opening_hours_order_by!]',
+        where: 'opening_hours_bool_exp',
+      },
+    },
+    opening_hours_by_pk: { __type: 'opening_hours', __args: { id: 'uuid!' } },
+    photo: {
+      __type: '[photo!]!',
+      __args: {
+        distinct_on: '[photo_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[photo_order_by!]',
+        where: 'photo_bool_exp',
+      },
+    },
+    photo_aggregate: {
+      __type: 'photo_aggregate!',
+      __args: {
+        distinct_on: '[photo_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[photo_order_by!]',
+        where: 'photo_bool_exp',
+      },
+    },
+    photo_by_pk: { __type: 'photo', __args: { id: 'uuid!' } },
+    photo_xref: {
+      __type: '[photo_xref!]!',
+      __args: {
+        distinct_on: '[photo_xref_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[photo_xref_order_by!]',
+        where: 'photo_xref_bool_exp',
+      },
+    },
+    photo_xref_aggregate: {
+      __type: 'photo_xref_aggregate!',
+      __args: {
+        distinct_on: '[photo_xref_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[photo_xref_order_by!]',
+        where: 'photo_xref_bool_exp',
+      },
+    },
+    photo_xref_by_pk: { __type: 'photo_xref', __args: { id: 'uuid!' } },
+    restaurant: {
+      __type: '[restaurant!]!',
+      __args: {
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_by_pk: { __type: 'restaurant', __args: { id: 'uuid!' } },
+    restaurant_tag: {
+      __type: '[restaurant_tag!]!',
+      __args: {
+        distinct_on: '[restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_tag_order_by!]',
+        where: 'restaurant_tag_bool_exp',
+      },
+    },
+    restaurant_tag_aggregate: {
+      __type: 'restaurant_tag_aggregate!',
+      __args: {
+        distinct_on: '[restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_tag_order_by!]',
+        where: 'restaurant_tag_bool_exp',
+      },
+    },
+    restaurant_tag_by_pk: {
+      __type: 'restaurant_tag',
+      __args: { restaurant_id: 'uuid!', tag_id: 'uuid!' },
+    },
+    review: {
+      __type: '[review!]!',
+      __args: {
+        distinct_on: '[review_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
+      },
+    },
+    review_aggregate: {
+      __type: 'review_aggregate!',
+      __args: {
+        distinct_on: '[review_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
+      },
+    },
+    review_by_pk: { __type: 'review', __args: { id: 'uuid!' } },
+    review_tag_sentence: {
+      __type: '[review_tag_sentence!]!',
+      __args: {
+        distinct_on: '[review_tag_sentence_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_tag_sentence_order_by!]',
+        where: 'review_tag_sentence_bool_exp',
+      },
+    },
+    review_tag_sentence_aggregate: {
+      __type: 'review_tag_sentence_aggregate!',
+      __args: {
+        distinct_on: '[review_tag_sentence_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_tag_sentence_order_by!]',
+        where: 'review_tag_sentence_bool_exp',
+      },
+    },
+    review_tag_sentence_by_pk: {
+      __type: 'review_tag_sentence',
+      __args: { id: 'uuid!' },
+    },
+    setting: {
+      __type: '[setting!]!',
+      __args: {
+        distinct_on: '[setting_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[setting_order_by!]',
+        where: 'setting_bool_exp',
+      },
+    },
+    setting_aggregate: {
+      __type: 'setting_aggregate!',
+      __args: {
+        distinct_on: '[setting_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[setting_order_by!]',
+        where: 'setting_bool_exp',
+      },
+    },
+    setting_by_pk: { __type: 'setting', __args: { key: 'String!' } },
+    tag: {
+      __type: '[tag!]!',
+      __args: {
+        distinct_on: '[tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[tag_order_by!]',
+        where: 'tag_bool_exp',
+      },
+    },
+    tag_aggregate: {
+      __type: 'tag_aggregate!',
+      __args: {
+        distinct_on: '[tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[tag_order_by!]',
+        where: 'tag_bool_exp',
+      },
+    },
+    tag_by_pk: { __type: 'tag', __args: { id: 'uuid!' } },
+    tag_tag: {
+      __type: '[tag_tag!]!',
+      __args: {
+        distinct_on: '[tag_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[tag_tag_order_by!]',
+        where: 'tag_tag_bool_exp',
+      },
+    },
+    tag_tag_aggregate: {
+      __type: 'tag_tag_aggregate!',
+      __args: {
+        distinct_on: '[tag_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[tag_tag_order_by!]',
+        where: 'tag_tag_bool_exp',
+      },
+    },
+    tag_tag_by_pk: {
+      __type: 'tag_tag',
+      __args: { category_tag_id: 'uuid!', tag_id: 'uuid!' },
+    },
+    user: {
+      __type: '[user!]!',
+      __args: {
+        distinct_on: '[user_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[user_order_by!]',
+        where: 'user_bool_exp',
+      },
+    },
+    user_aggregate: {
+      __type: 'user_aggregate!',
+      __args: {
+        distinct_on: '[user_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[user_order_by!]',
+        where: 'user_bool_exp',
+      },
+    },
+    user_by_pk: { __type: 'user', __args: { id: 'uuid!' } },
+  },
   Boolean_comparison_exp: {
     _eq: { __type: 'Boolean' },
     _gt: { __type: 'Boolean' },
@@ -3515,470 +3777,6 @@ const generatedSchema: Schema = {
   menu_item_var_samp_order_by: { price: { __type: 'order_by' } },
   menu_item_variance_fields: { price: { __type: 'Float' } },
   menu_item_variance_order_by: { price: { __type: 'order_by' } },
-  mutation_root: {
-    delete_menu_item: {
-      __type: 'menu_item_mutation_response',
-      __args: { where: 'menu_item_bool_exp!' },
-    },
-    delete_menu_item_by_pk: { __type: 'menu_item', __args: { id: 'uuid!' } },
-    delete_opening_hours: {
-      __type: 'opening_hours_mutation_response',
-      __args: { where: 'opening_hours_bool_exp!' },
-    },
-    delete_opening_hours_by_pk: {
-      __type: 'opening_hours',
-      __args: { id: 'uuid!' },
-    },
-    delete_photo: {
-      __type: 'photo_mutation_response',
-      __args: { where: 'photo_bool_exp!' },
-    },
-    delete_photo_by_pk: { __type: 'photo', __args: { id: 'uuid!' } },
-    delete_photo_xref: {
-      __type: 'photo_xref_mutation_response',
-      __args: { where: 'photo_xref_bool_exp!' },
-    },
-    delete_photo_xref_by_pk: { __type: 'photo_xref', __args: { id: 'uuid!' } },
-    delete_restaurant: {
-      __type: 'restaurant_mutation_response',
-      __args: { where: 'restaurant_bool_exp!' },
-    },
-    delete_restaurant_by_pk: { __type: 'restaurant', __args: { id: 'uuid!' } },
-    delete_restaurant_tag: {
-      __type: 'restaurant_tag_mutation_response',
-      __args: { where: 'restaurant_tag_bool_exp!' },
-    },
-    delete_restaurant_tag_by_pk: {
-      __type: 'restaurant_tag',
-      __args: { restaurant_id: 'uuid!', tag_id: 'uuid!' },
-    },
-    delete_review: {
-      __type: 'review_mutation_response',
-      __args: { where: 'review_bool_exp!' },
-    },
-    delete_review_by_pk: { __type: 'review', __args: { id: 'uuid!' } },
-    delete_review_tag_sentence: {
-      __type: 'review_tag_sentence_mutation_response',
-      __args: { where: 'review_tag_sentence_bool_exp!' },
-    },
-    delete_review_tag_sentence_by_pk: {
-      __type: 'review_tag_sentence',
-      __args: { id: 'uuid!' },
-    },
-    delete_setting: {
-      __type: 'setting_mutation_response',
-      __args: { where: 'setting_bool_exp!' },
-    },
-    delete_setting_by_pk: { __type: 'setting', __args: { key: 'String!' } },
-    delete_tag: {
-      __type: 'tag_mutation_response',
-      __args: { where: 'tag_bool_exp!' },
-    },
-    delete_tag_by_pk: { __type: 'tag', __args: { id: 'uuid!' } },
-    delete_tag_tag: {
-      __type: 'tag_tag_mutation_response',
-      __args: { where: 'tag_tag_bool_exp!' },
-    },
-    delete_tag_tag_by_pk: {
-      __type: 'tag_tag',
-      __args: { category_tag_id: 'uuid!', tag_id: 'uuid!' },
-    },
-    delete_user: {
-      __type: 'user_mutation_response',
-      __args: { where: 'user_bool_exp!' },
-    },
-    delete_user_by_pk: { __type: 'user', __args: { id: 'uuid!' } },
-    insert_menu_item: {
-      __type: 'menu_item_mutation_response',
-      __args: {
-        objects: '[menu_item_insert_input!]!',
-        on_conflict: 'menu_item_on_conflict',
-      },
-    },
-    insert_menu_item_one: {
-      __type: 'menu_item',
-      __args: {
-        object: 'menu_item_insert_input!',
-        on_conflict: 'menu_item_on_conflict',
-      },
-    },
-    insert_opening_hours: {
-      __type: 'opening_hours_mutation_response',
-      __args: {
-        objects: '[opening_hours_insert_input!]!',
-        on_conflict: 'opening_hours_on_conflict',
-      },
-    },
-    insert_opening_hours_one: {
-      __type: 'opening_hours',
-      __args: {
-        object: 'opening_hours_insert_input!',
-        on_conflict: 'opening_hours_on_conflict',
-      },
-    },
-    insert_photo: {
-      __type: 'photo_mutation_response',
-      __args: {
-        objects: '[photo_insert_input!]!',
-        on_conflict: 'photo_on_conflict',
-      },
-    },
-    insert_photo_one: {
-      __type: 'photo',
-      __args: {
-        object: 'photo_insert_input!',
-        on_conflict: 'photo_on_conflict',
-      },
-    },
-    insert_photo_xref: {
-      __type: 'photo_xref_mutation_response',
-      __args: {
-        objects: '[photo_xref_insert_input!]!',
-        on_conflict: 'photo_xref_on_conflict',
-      },
-    },
-    insert_photo_xref_one: {
-      __type: 'photo_xref',
-      __args: {
-        object: 'photo_xref_insert_input!',
-        on_conflict: 'photo_xref_on_conflict',
-      },
-    },
-    insert_restaurant: {
-      __type: 'restaurant_mutation_response',
-      __args: {
-        objects: '[restaurant_insert_input!]!',
-        on_conflict: 'restaurant_on_conflict',
-      },
-    },
-    insert_restaurant_one: {
-      __type: 'restaurant',
-      __args: {
-        object: 'restaurant_insert_input!',
-        on_conflict: 'restaurant_on_conflict',
-      },
-    },
-    insert_restaurant_tag: {
-      __type: 'restaurant_tag_mutation_response',
-      __args: {
-        objects: '[restaurant_tag_insert_input!]!',
-        on_conflict: 'restaurant_tag_on_conflict',
-      },
-    },
-    insert_restaurant_tag_one: {
-      __type: 'restaurant_tag',
-      __args: {
-        object: 'restaurant_tag_insert_input!',
-        on_conflict: 'restaurant_tag_on_conflict',
-      },
-    },
-    insert_review: {
-      __type: 'review_mutation_response',
-      __args: {
-        objects: '[review_insert_input!]!',
-        on_conflict: 'review_on_conflict',
-      },
-    },
-    insert_review_one: {
-      __type: 'review',
-      __args: {
-        object: 'review_insert_input!',
-        on_conflict: 'review_on_conflict',
-      },
-    },
-    insert_review_tag_sentence: {
-      __type: 'review_tag_sentence_mutation_response',
-      __args: {
-        objects: '[review_tag_sentence_insert_input!]!',
-        on_conflict: 'review_tag_sentence_on_conflict',
-      },
-    },
-    insert_review_tag_sentence_one: {
-      __type: 'review_tag_sentence',
-      __args: {
-        object: 'review_tag_sentence_insert_input!',
-        on_conflict: 'review_tag_sentence_on_conflict',
-      },
-    },
-    insert_setting: {
-      __type: 'setting_mutation_response',
-      __args: {
-        objects: '[setting_insert_input!]!',
-        on_conflict: 'setting_on_conflict',
-      },
-    },
-    insert_setting_one: {
-      __type: 'setting',
-      __args: {
-        object: 'setting_insert_input!',
-        on_conflict: 'setting_on_conflict',
-      },
-    },
-    insert_tag: {
-      __type: 'tag_mutation_response',
-      __args: {
-        objects: '[tag_insert_input!]!',
-        on_conflict: 'tag_on_conflict',
-      },
-    },
-    insert_tag_one: {
-      __type: 'tag',
-      __args: { object: 'tag_insert_input!', on_conflict: 'tag_on_conflict' },
-    },
-    insert_tag_tag: {
-      __type: 'tag_tag_mutation_response',
-      __args: {
-        objects: '[tag_tag_insert_input!]!',
-        on_conflict: 'tag_tag_on_conflict',
-      },
-    },
-    insert_tag_tag_one: {
-      __type: 'tag_tag',
-      __args: {
-        object: 'tag_tag_insert_input!',
-        on_conflict: 'tag_tag_on_conflict',
-      },
-    },
-    insert_user: {
-      __type: 'user_mutation_response',
-      __args: {
-        objects: '[user_insert_input!]!',
-        on_conflict: 'user_on_conflict',
-      },
-    },
-    insert_user_one: {
-      __type: 'user',
-      __args: { object: 'user_insert_input!', on_conflict: 'user_on_conflict' },
-    },
-    update_menu_item: {
-      __type: 'menu_item_mutation_response',
-      __args: {
-        _inc: 'menu_item_inc_input',
-        _set: 'menu_item_set_input',
-        where: 'menu_item_bool_exp!',
-      },
-    },
-    update_menu_item_by_pk: {
-      __type: 'menu_item',
-      __args: {
-        _inc: 'menu_item_inc_input',
-        _set: 'menu_item_set_input',
-        pk_columns: 'menu_item_pk_columns_input!',
-      },
-    },
-    update_opening_hours: {
-      __type: 'opening_hours_mutation_response',
-      __args: {
-        _set: 'opening_hours_set_input',
-        where: 'opening_hours_bool_exp!',
-      },
-    },
-    update_opening_hours_by_pk: {
-      __type: 'opening_hours',
-      __args: {
-        _set: 'opening_hours_set_input',
-        pk_columns: 'opening_hours_pk_columns_input!',
-      },
-    },
-    update_photo: {
-      __type: 'photo_mutation_response',
-      __args: {
-        _inc: 'photo_inc_input',
-        _set: 'photo_set_input',
-        where: 'photo_bool_exp!',
-      },
-    },
-    update_photo_by_pk: {
-      __type: 'photo',
-      __args: {
-        _inc: 'photo_inc_input',
-        _set: 'photo_set_input',
-        pk_columns: 'photo_pk_columns_input!',
-      },
-    },
-    update_photo_xref: {
-      __type: 'photo_xref_mutation_response',
-      __args: { _set: 'photo_xref_set_input', where: 'photo_xref_bool_exp!' },
-    },
-    update_photo_xref_by_pk: {
-      __type: 'photo_xref',
-      __args: {
-        _set: 'photo_xref_set_input',
-        pk_columns: 'photo_xref_pk_columns_input!',
-      },
-    },
-    update_restaurant: {
-      __type: 'restaurant_mutation_response',
-      __args: {
-        _append: 'restaurant_append_input',
-        _delete_at_path: 'restaurant_delete_at_path_input',
-        _delete_elem: 'restaurant_delete_elem_input',
-        _delete_key: 'restaurant_delete_key_input',
-        _inc: 'restaurant_inc_input',
-        _prepend: 'restaurant_prepend_input',
-        _set: 'restaurant_set_input',
-        where: 'restaurant_bool_exp!',
-      },
-    },
-    update_restaurant_by_pk: {
-      __type: 'restaurant',
-      __args: {
-        _append: 'restaurant_append_input',
-        _delete_at_path: 'restaurant_delete_at_path_input',
-        _delete_elem: 'restaurant_delete_elem_input',
-        _delete_key: 'restaurant_delete_key_input',
-        _inc: 'restaurant_inc_input',
-        _prepend: 'restaurant_prepend_input',
-        _set: 'restaurant_set_input',
-        pk_columns: 'restaurant_pk_columns_input!',
-      },
-    },
-    update_restaurant_tag: {
-      __type: 'restaurant_tag_mutation_response',
-      __args: {
-        _append: 'restaurant_tag_append_input',
-        _delete_at_path: 'restaurant_tag_delete_at_path_input',
-        _delete_elem: 'restaurant_tag_delete_elem_input',
-        _delete_key: 'restaurant_tag_delete_key_input',
-        _inc: 'restaurant_tag_inc_input',
-        _prepend: 'restaurant_tag_prepend_input',
-        _set: 'restaurant_tag_set_input',
-        where: 'restaurant_tag_bool_exp!',
-      },
-    },
-    update_restaurant_tag_by_pk: {
-      __type: 'restaurant_tag',
-      __args: {
-        _append: 'restaurant_tag_append_input',
-        _delete_at_path: 'restaurant_tag_delete_at_path_input',
-        _delete_elem: 'restaurant_tag_delete_elem_input',
-        _delete_key: 'restaurant_tag_delete_key_input',
-        _inc: 'restaurant_tag_inc_input',
-        _prepend: 'restaurant_tag_prepend_input',
-        _set: 'restaurant_tag_set_input',
-        pk_columns: 'restaurant_tag_pk_columns_input!',
-      },
-    },
-    update_review: {
-      __type: 'review_mutation_response',
-      __args: {
-        _append: 'review_append_input',
-        _delete_at_path: 'review_delete_at_path_input',
-        _delete_elem: 'review_delete_elem_input',
-        _delete_key: 'review_delete_key_input',
-        _inc: 'review_inc_input',
-        _prepend: 'review_prepend_input',
-        _set: 'review_set_input',
-        where: 'review_bool_exp!',
-      },
-    },
-    update_review_by_pk: {
-      __type: 'review',
-      __args: {
-        _append: 'review_append_input',
-        _delete_at_path: 'review_delete_at_path_input',
-        _delete_elem: 'review_delete_elem_input',
-        _delete_key: 'review_delete_key_input',
-        _inc: 'review_inc_input',
-        _prepend: 'review_prepend_input',
-        _set: 'review_set_input',
-        pk_columns: 'review_pk_columns_input!',
-      },
-    },
-    update_review_tag_sentence: {
-      __type: 'review_tag_sentence_mutation_response',
-      __args: {
-        _inc: 'review_tag_sentence_inc_input',
-        _set: 'review_tag_sentence_set_input',
-        where: 'review_tag_sentence_bool_exp!',
-      },
-    },
-    update_review_tag_sentence_by_pk: {
-      __type: 'review_tag_sentence',
-      __args: {
-        _inc: 'review_tag_sentence_inc_input',
-        _set: 'review_tag_sentence_set_input',
-        pk_columns: 'review_tag_sentence_pk_columns_input!',
-      },
-    },
-    update_setting: {
-      __type: 'setting_mutation_response',
-      __args: {
-        _append: 'setting_append_input',
-        _delete_at_path: 'setting_delete_at_path_input',
-        _delete_elem: 'setting_delete_elem_input',
-        _delete_key: 'setting_delete_key_input',
-        _prepend: 'setting_prepend_input',
-        _set: 'setting_set_input',
-        where: 'setting_bool_exp!',
-      },
-    },
-    update_setting_by_pk: {
-      __type: 'setting',
-      __args: {
-        _append: 'setting_append_input',
-        _delete_at_path: 'setting_delete_at_path_input',
-        _delete_elem: 'setting_delete_elem_input',
-        _delete_key: 'setting_delete_key_input',
-        _prepend: 'setting_prepend_input',
-        _set: 'setting_set_input',
-        pk_columns: 'setting_pk_columns_input!',
-      },
-    },
-    update_tag: {
-      __type: 'tag_mutation_response',
-      __args: {
-        _append: 'tag_append_input',
-        _delete_at_path: 'tag_delete_at_path_input',
-        _delete_elem: 'tag_delete_elem_input',
-        _delete_key: 'tag_delete_key_input',
-        _inc: 'tag_inc_input',
-        _prepend: 'tag_prepend_input',
-        _set: 'tag_set_input',
-        where: 'tag_bool_exp!',
-      },
-    },
-    update_tag_by_pk: {
-      __type: 'tag',
-      __args: {
-        _append: 'tag_append_input',
-        _delete_at_path: 'tag_delete_at_path_input',
-        _delete_elem: 'tag_delete_elem_input',
-        _delete_key: 'tag_delete_key_input',
-        _inc: 'tag_inc_input',
-        _prepend: 'tag_prepend_input',
-        _set: 'tag_set_input',
-        pk_columns: 'tag_pk_columns_input!',
-      },
-    },
-    update_tag_tag: {
-      __type: 'tag_tag_mutation_response',
-      __args: { _set: 'tag_tag_set_input', where: 'tag_tag_bool_exp!' },
-    },
-    update_tag_tag_by_pk: {
-      __type: 'tag_tag',
-      __args: {
-        _set: 'tag_tag_set_input',
-        pk_columns: 'tag_tag_pk_columns_input!',
-      },
-    },
-    update_user: {
-      __type: 'user_mutation_response',
-      __args: {
-        _inc: 'user_inc_input',
-        _set: 'user_set_input',
-        where: 'user_bool_exp!',
-      },
-    },
-    update_user_by_pk: {
-      __type: 'user',
-      __args: {
-        _inc: 'user_inc_input',
-        _set: 'user_set_input',
-        pk_columns: 'user_pk_columns_input!',
-      },
-    },
-  },
   numeric_comparison_exp: {
     _eq: { __type: 'numeric' },
     _gt: { __type: 'numeric' },
@@ -4323,269 +4121,6 @@ const generatedSchema: Schema = {
     restaurant_id: { __type: 'uuid' },
     tag_id: { __type: 'uuid' },
     type: { __type: 'String' },
-  },
-  query_root: {
-    menu_item: {
-      __type: '[menu_item!]!',
-      __args: {
-        distinct_on: '[menu_item_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[menu_item_order_by!]',
-        where: 'menu_item_bool_exp',
-      },
-    },
-    menu_item_aggregate: {
-      __type: 'menu_item_aggregate!',
-      __args: {
-        distinct_on: '[menu_item_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[menu_item_order_by!]',
-        where: 'menu_item_bool_exp',
-      },
-    },
-    menu_item_by_pk: { __type: 'menu_item', __args: { id: 'uuid!' } },
-    opening_hours: {
-      __type: '[opening_hours!]!',
-      __args: {
-        distinct_on: '[opening_hours_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[opening_hours_order_by!]',
-        where: 'opening_hours_bool_exp',
-      },
-    },
-    opening_hours_aggregate: {
-      __type: 'opening_hours_aggregate!',
-      __args: {
-        distinct_on: '[opening_hours_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[opening_hours_order_by!]',
-        where: 'opening_hours_bool_exp',
-      },
-    },
-    opening_hours_by_pk: { __type: 'opening_hours', __args: { id: 'uuid!' } },
-    photo: {
-      __type: '[photo!]!',
-      __args: {
-        distinct_on: '[photo_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[photo_order_by!]',
-        where: 'photo_bool_exp',
-      },
-    },
-    photo_aggregate: {
-      __type: 'photo_aggregate!',
-      __args: {
-        distinct_on: '[photo_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[photo_order_by!]',
-        where: 'photo_bool_exp',
-      },
-    },
-    photo_by_pk: { __type: 'photo', __args: { id: 'uuid!' } },
-    photo_xref: {
-      __type: '[photo_xref!]!',
-      __args: {
-        distinct_on: '[photo_xref_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[photo_xref_order_by!]',
-        where: 'photo_xref_bool_exp',
-      },
-    },
-    photo_xref_aggregate: {
-      __type: 'photo_xref_aggregate!',
-      __args: {
-        distinct_on: '[photo_xref_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[photo_xref_order_by!]',
-        where: 'photo_xref_bool_exp',
-      },
-    },
-    photo_xref_by_pk: { __type: 'photo_xref', __args: { id: 'uuid!' } },
-    restaurant: {
-      __type: '[restaurant!]!',
-      __args: {
-        distinct_on: '[restaurant_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[restaurant_order_by!]',
-        where: 'restaurant_bool_exp',
-      },
-    },
-    restaurant_aggregate: {
-      __type: 'restaurant_aggregate!',
-      __args: {
-        distinct_on: '[restaurant_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[restaurant_order_by!]',
-        where: 'restaurant_bool_exp',
-      },
-    },
-    restaurant_by_pk: { __type: 'restaurant', __args: { id: 'uuid!' } },
-    restaurant_tag: {
-      __type: '[restaurant_tag!]!',
-      __args: {
-        distinct_on: '[restaurant_tag_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[restaurant_tag_order_by!]',
-        where: 'restaurant_tag_bool_exp',
-      },
-    },
-    restaurant_tag_aggregate: {
-      __type: 'restaurant_tag_aggregate!',
-      __args: {
-        distinct_on: '[restaurant_tag_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[restaurant_tag_order_by!]',
-        where: 'restaurant_tag_bool_exp',
-      },
-    },
-    restaurant_tag_by_pk: {
-      __type: 'restaurant_tag',
-      __args: { restaurant_id: 'uuid!', tag_id: 'uuid!' },
-    },
-    review: {
-      __type: '[review!]!',
-      __args: {
-        distinct_on: '[review_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[review_order_by!]',
-        where: 'review_bool_exp',
-      },
-    },
-    review_aggregate: {
-      __type: 'review_aggregate!',
-      __args: {
-        distinct_on: '[review_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[review_order_by!]',
-        where: 'review_bool_exp',
-      },
-    },
-    review_by_pk: { __type: 'review', __args: { id: 'uuid!' } },
-    review_tag_sentence: {
-      __type: '[review_tag_sentence!]!',
-      __args: {
-        distinct_on: '[review_tag_sentence_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[review_tag_sentence_order_by!]',
-        where: 'review_tag_sentence_bool_exp',
-      },
-    },
-    review_tag_sentence_aggregate: {
-      __type: 'review_tag_sentence_aggregate!',
-      __args: {
-        distinct_on: '[review_tag_sentence_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[review_tag_sentence_order_by!]',
-        where: 'review_tag_sentence_bool_exp',
-      },
-    },
-    review_tag_sentence_by_pk: {
-      __type: 'review_tag_sentence',
-      __args: { id: 'uuid!' },
-    },
-    setting: {
-      __type: '[setting!]!',
-      __args: {
-        distinct_on: '[setting_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[setting_order_by!]',
-        where: 'setting_bool_exp',
-      },
-    },
-    setting_aggregate: {
-      __type: 'setting_aggregate!',
-      __args: {
-        distinct_on: '[setting_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[setting_order_by!]',
-        where: 'setting_bool_exp',
-      },
-    },
-    setting_by_pk: { __type: 'setting', __args: { key: 'String!' } },
-    tag: {
-      __type: '[tag!]!',
-      __args: {
-        distinct_on: '[tag_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[tag_order_by!]',
-        where: 'tag_bool_exp',
-      },
-    },
-    tag_aggregate: {
-      __type: 'tag_aggregate!',
-      __args: {
-        distinct_on: '[tag_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[tag_order_by!]',
-        where: 'tag_bool_exp',
-      },
-    },
-    tag_by_pk: { __type: 'tag', __args: { id: 'uuid!' } },
-    tag_tag: {
-      __type: '[tag_tag!]!',
-      __args: {
-        distinct_on: '[tag_tag_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[tag_tag_order_by!]',
-        where: 'tag_tag_bool_exp',
-      },
-    },
-    tag_tag_aggregate: {
-      __type: 'tag_tag_aggregate!',
-      __args: {
-        distinct_on: '[tag_tag_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[tag_tag_order_by!]',
-        where: 'tag_tag_bool_exp',
-      },
-    },
-    tag_tag_by_pk: {
-      __type: 'tag_tag',
-      __args: { category_tag_id: 'uuid!', tag_id: 'uuid!' },
-    },
-    user: {
-      __type: '[user!]!',
-      __args: {
-        distinct_on: '[user_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[user_order_by!]',
-        where: 'user_bool_exp',
-      },
-    },
-    user_aggregate: {
-      __type: 'user_aggregate!',
-      __args: {
-        distinct_on: '[user_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[user_order_by!]',
-        where: 'user_bool_exp',
-      },
-    },
-    user_by_pk: { __type: 'user', __args: { id: 'uuid!' } },
   },
   restaurant: {
     address: { __type: 'String' },
@@ -6213,269 +5748,6 @@ const generatedSchema: Schema = {
     distance: { __type: 'Float!' },
     from: { __type: 'geometry!' },
   },
-  subscription_root: {
-    menu_item: {
-      __type: '[menu_item!]!',
-      __args: {
-        distinct_on: '[menu_item_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[menu_item_order_by!]',
-        where: 'menu_item_bool_exp',
-      },
-    },
-    menu_item_aggregate: {
-      __type: 'menu_item_aggregate!',
-      __args: {
-        distinct_on: '[menu_item_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[menu_item_order_by!]',
-        where: 'menu_item_bool_exp',
-      },
-    },
-    menu_item_by_pk: { __type: 'menu_item', __args: { id: 'uuid!' } },
-    opening_hours: {
-      __type: '[opening_hours!]!',
-      __args: {
-        distinct_on: '[opening_hours_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[opening_hours_order_by!]',
-        where: 'opening_hours_bool_exp',
-      },
-    },
-    opening_hours_aggregate: {
-      __type: 'opening_hours_aggregate!',
-      __args: {
-        distinct_on: '[opening_hours_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[opening_hours_order_by!]',
-        where: 'opening_hours_bool_exp',
-      },
-    },
-    opening_hours_by_pk: { __type: 'opening_hours', __args: { id: 'uuid!' } },
-    photo: {
-      __type: '[photo!]!',
-      __args: {
-        distinct_on: '[photo_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[photo_order_by!]',
-        where: 'photo_bool_exp',
-      },
-    },
-    photo_aggregate: {
-      __type: 'photo_aggregate!',
-      __args: {
-        distinct_on: '[photo_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[photo_order_by!]',
-        where: 'photo_bool_exp',
-      },
-    },
-    photo_by_pk: { __type: 'photo', __args: { id: 'uuid!' } },
-    photo_xref: {
-      __type: '[photo_xref!]!',
-      __args: {
-        distinct_on: '[photo_xref_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[photo_xref_order_by!]',
-        where: 'photo_xref_bool_exp',
-      },
-    },
-    photo_xref_aggregate: {
-      __type: 'photo_xref_aggregate!',
-      __args: {
-        distinct_on: '[photo_xref_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[photo_xref_order_by!]',
-        where: 'photo_xref_bool_exp',
-      },
-    },
-    photo_xref_by_pk: { __type: 'photo_xref', __args: { id: 'uuid!' } },
-    restaurant: {
-      __type: '[restaurant!]!',
-      __args: {
-        distinct_on: '[restaurant_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[restaurant_order_by!]',
-        where: 'restaurant_bool_exp',
-      },
-    },
-    restaurant_aggregate: {
-      __type: 'restaurant_aggregate!',
-      __args: {
-        distinct_on: '[restaurant_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[restaurant_order_by!]',
-        where: 'restaurant_bool_exp',
-      },
-    },
-    restaurant_by_pk: { __type: 'restaurant', __args: { id: 'uuid!' } },
-    restaurant_tag: {
-      __type: '[restaurant_tag!]!',
-      __args: {
-        distinct_on: '[restaurant_tag_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[restaurant_tag_order_by!]',
-        where: 'restaurant_tag_bool_exp',
-      },
-    },
-    restaurant_tag_aggregate: {
-      __type: 'restaurant_tag_aggregate!',
-      __args: {
-        distinct_on: '[restaurant_tag_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[restaurant_tag_order_by!]',
-        where: 'restaurant_tag_bool_exp',
-      },
-    },
-    restaurant_tag_by_pk: {
-      __type: 'restaurant_tag',
-      __args: { restaurant_id: 'uuid!', tag_id: 'uuid!' },
-    },
-    review: {
-      __type: '[review!]!',
-      __args: {
-        distinct_on: '[review_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[review_order_by!]',
-        where: 'review_bool_exp',
-      },
-    },
-    review_aggregate: {
-      __type: 'review_aggregate!',
-      __args: {
-        distinct_on: '[review_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[review_order_by!]',
-        where: 'review_bool_exp',
-      },
-    },
-    review_by_pk: { __type: 'review', __args: { id: 'uuid!' } },
-    review_tag_sentence: {
-      __type: '[review_tag_sentence!]!',
-      __args: {
-        distinct_on: '[review_tag_sentence_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[review_tag_sentence_order_by!]',
-        where: 'review_tag_sentence_bool_exp',
-      },
-    },
-    review_tag_sentence_aggregate: {
-      __type: 'review_tag_sentence_aggregate!',
-      __args: {
-        distinct_on: '[review_tag_sentence_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[review_tag_sentence_order_by!]',
-        where: 'review_tag_sentence_bool_exp',
-      },
-    },
-    review_tag_sentence_by_pk: {
-      __type: 'review_tag_sentence',
-      __args: { id: 'uuid!' },
-    },
-    setting: {
-      __type: '[setting!]!',
-      __args: {
-        distinct_on: '[setting_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[setting_order_by!]',
-        where: 'setting_bool_exp',
-      },
-    },
-    setting_aggregate: {
-      __type: 'setting_aggregate!',
-      __args: {
-        distinct_on: '[setting_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[setting_order_by!]',
-        where: 'setting_bool_exp',
-      },
-    },
-    setting_by_pk: { __type: 'setting', __args: { key: 'String!' } },
-    tag: {
-      __type: '[tag!]!',
-      __args: {
-        distinct_on: '[tag_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[tag_order_by!]',
-        where: 'tag_bool_exp',
-      },
-    },
-    tag_aggregate: {
-      __type: 'tag_aggregate!',
-      __args: {
-        distinct_on: '[tag_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[tag_order_by!]',
-        where: 'tag_bool_exp',
-      },
-    },
-    tag_by_pk: { __type: 'tag', __args: { id: 'uuid!' } },
-    tag_tag: {
-      __type: '[tag_tag!]!',
-      __args: {
-        distinct_on: '[tag_tag_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[tag_tag_order_by!]',
-        where: 'tag_tag_bool_exp',
-      },
-    },
-    tag_tag_aggregate: {
-      __type: 'tag_tag_aggregate!',
-      __args: {
-        distinct_on: '[tag_tag_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[tag_tag_order_by!]',
-        where: 'tag_tag_bool_exp',
-      },
-    },
-    tag_tag_by_pk: {
-      __type: 'tag_tag',
-      __args: { category_tag_id: 'uuid!', tag_id: 'uuid!' },
-    },
-    user: {
-      __type: '[user!]!',
-      __args: {
-        distinct_on: '[user_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[user_order_by!]',
-        where: 'user_bool_exp',
-      },
-    },
-    user_aggregate: {
-      __type: 'user_aggregate!',
-      __args: {
-        distinct_on: '[user_select_column!]',
-        limit: 'Int',
-        offset: 'Int',
-        order_by: '[user_order_by!]',
-        where: 'user_bool_exp',
-      },
-    },
-    user_by_pk: { __type: 'user', __args: { id: 'uuid!' } },
-  },
   tag: {
     alternates: { __type: 'jsonb', __args: { path: 'String' } },
     categories: {
@@ -7227,594 +6499,736 @@ const generatedSchema: Schema = {
     _neq: { __type: 'uuid' },
     _nin: { __type: '[uuid!]' },
   },
+  mutation: {
+    delete_menu_item: {
+      __type: 'menu_item_mutation_response',
+      __args: { where: 'menu_item_bool_exp!' },
+    },
+    delete_menu_item_by_pk: { __type: 'menu_item', __args: { id: 'uuid!' } },
+    delete_opening_hours: {
+      __type: 'opening_hours_mutation_response',
+      __args: { where: 'opening_hours_bool_exp!' },
+    },
+    delete_opening_hours_by_pk: {
+      __type: 'opening_hours',
+      __args: { id: 'uuid!' },
+    },
+    delete_photo: {
+      __type: 'photo_mutation_response',
+      __args: { where: 'photo_bool_exp!' },
+    },
+    delete_photo_by_pk: { __type: 'photo', __args: { id: 'uuid!' } },
+    delete_photo_xref: {
+      __type: 'photo_xref_mutation_response',
+      __args: { where: 'photo_xref_bool_exp!' },
+    },
+    delete_photo_xref_by_pk: { __type: 'photo_xref', __args: { id: 'uuid!' } },
+    delete_restaurant: {
+      __type: 'restaurant_mutation_response',
+      __args: { where: 'restaurant_bool_exp!' },
+    },
+    delete_restaurant_by_pk: { __type: 'restaurant', __args: { id: 'uuid!' } },
+    delete_restaurant_tag: {
+      __type: 'restaurant_tag_mutation_response',
+      __args: { where: 'restaurant_tag_bool_exp!' },
+    },
+    delete_restaurant_tag_by_pk: {
+      __type: 'restaurant_tag',
+      __args: { restaurant_id: 'uuid!', tag_id: 'uuid!' },
+    },
+    delete_review: {
+      __type: 'review_mutation_response',
+      __args: { where: 'review_bool_exp!' },
+    },
+    delete_review_by_pk: { __type: 'review', __args: { id: 'uuid!' } },
+    delete_review_tag_sentence: {
+      __type: 'review_tag_sentence_mutation_response',
+      __args: { where: 'review_tag_sentence_bool_exp!' },
+    },
+    delete_review_tag_sentence_by_pk: {
+      __type: 'review_tag_sentence',
+      __args: { id: 'uuid!' },
+    },
+    delete_setting: {
+      __type: 'setting_mutation_response',
+      __args: { where: 'setting_bool_exp!' },
+    },
+    delete_setting_by_pk: { __type: 'setting', __args: { key: 'String!' } },
+    delete_tag: {
+      __type: 'tag_mutation_response',
+      __args: { where: 'tag_bool_exp!' },
+    },
+    delete_tag_by_pk: { __type: 'tag', __args: { id: 'uuid!' } },
+    delete_tag_tag: {
+      __type: 'tag_tag_mutation_response',
+      __args: { where: 'tag_tag_bool_exp!' },
+    },
+    delete_tag_tag_by_pk: {
+      __type: 'tag_tag',
+      __args: { category_tag_id: 'uuid!', tag_id: 'uuid!' },
+    },
+    delete_user: {
+      __type: 'user_mutation_response',
+      __args: { where: 'user_bool_exp!' },
+    },
+    delete_user_by_pk: { __type: 'user', __args: { id: 'uuid!' } },
+    insert_menu_item: {
+      __type: 'menu_item_mutation_response',
+      __args: {
+        objects: '[menu_item_insert_input!]!',
+        on_conflict: 'menu_item_on_conflict',
+      },
+    },
+    insert_menu_item_one: {
+      __type: 'menu_item',
+      __args: {
+        object: 'menu_item_insert_input!',
+        on_conflict: 'menu_item_on_conflict',
+      },
+    },
+    insert_opening_hours: {
+      __type: 'opening_hours_mutation_response',
+      __args: {
+        objects: '[opening_hours_insert_input!]!',
+        on_conflict: 'opening_hours_on_conflict',
+      },
+    },
+    insert_opening_hours_one: {
+      __type: 'opening_hours',
+      __args: {
+        object: 'opening_hours_insert_input!',
+        on_conflict: 'opening_hours_on_conflict',
+      },
+    },
+    insert_photo: {
+      __type: 'photo_mutation_response',
+      __args: {
+        objects: '[photo_insert_input!]!',
+        on_conflict: 'photo_on_conflict',
+      },
+    },
+    insert_photo_one: {
+      __type: 'photo',
+      __args: {
+        object: 'photo_insert_input!',
+        on_conflict: 'photo_on_conflict',
+      },
+    },
+    insert_photo_xref: {
+      __type: 'photo_xref_mutation_response',
+      __args: {
+        objects: '[photo_xref_insert_input!]!',
+        on_conflict: 'photo_xref_on_conflict',
+      },
+    },
+    insert_photo_xref_one: {
+      __type: 'photo_xref',
+      __args: {
+        object: 'photo_xref_insert_input!',
+        on_conflict: 'photo_xref_on_conflict',
+      },
+    },
+    insert_restaurant: {
+      __type: 'restaurant_mutation_response',
+      __args: {
+        objects: '[restaurant_insert_input!]!',
+        on_conflict: 'restaurant_on_conflict',
+      },
+    },
+    insert_restaurant_one: {
+      __type: 'restaurant',
+      __args: {
+        object: 'restaurant_insert_input!',
+        on_conflict: 'restaurant_on_conflict',
+      },
+    },
+    insert_restaurant_tag: {
+      __type: 'restaurant_tag_mutation_response',
+      __args: {
+        objects: '[restaurant_tag_insert_input!]!',
+        on_conflict: 'restaurant_tag_on_conflict',
+      },
+    },
+    insert_restaurant_tag_one: {
+      __type: 'restaurant_tag',
+      __args: {
+        object: 'restaurant_tag_insert_input!',
+        on_conflict: 'restaurant_tag_on_conflict',
+      },
+    },
+    insert_review: {
+      __type: 'review_mutation_response',
+      __args: {
+        objects: '[review_insert_input!]!',
+        on_conflict: 'review_on_conflict',
+      },
+    },
+    insert_review_one: {
+      __type: 'review',
+      __args: {
+        object: 'review_insert_input!',
+        on_conflict: 'review_on_conflict',
+      },
+    },
+    insert_review_tag_sentence: {
+      __type: 'review_tag_sentence_mutation_response',
+      __args: {
+        objects: '[review_tag_sentence_insert_input!]!',
+        on_conflict: 'review_tag_sentence_on_conflict',
+      },
+    },
+    insert_review_tag_sentence_one: {
+      __type: 'review_tag_sentence',
+      __args: {
+        object: 'review_tag_sentence_insert_input!',
+        on_conflict: 'review_tag_sentence_on_conflict',
+      },
+    },
+    insert_setting: {
+      __type: 'setting_mutation_response',
+      __args: {
+        objects: '[setting_insert_input!]!',
+        on_conflict: 'setting_on_conflict',
+      },
+    },
+    insert_setting_one: {
+      __type: 'setting',
+      __args: {
+        object: 'setting_insert_input!',
+        on_conflict: 'setting_on_conflict',
+      },
+    },
+    insert_tag: {
+      __type: 'tag_mutation_response',
+      __args: {
+        objects: '[tag_insert_input!]!',
+        on_conflict: 'tag_on_conflict',
+      },
+    },
+    insert_tag_one: {
+      __type: 'tag',
+      __args: { object: 'tag_insert_input!', on_conflict: 'tag_on_conflict' },
+    },
+    insert_tag_tag: {
+      __type: 'tag_tag_mutation_response',
+      __args: {
+        objects: '[tag_tag_insert_input!]!',
+        on_conflict: 'tag_tag_on_conflict',
+      },
+    },
+    insert_tag_tag_one: {
+      __type: 'tag_tag',
+      __args: {
+        object: 'tag_tag_insert_input!',
+        on_conflict: 'tag_tag_on_conflict',
+      },
+    },
+    insert_user: {
+      __type: 'user_mutation_response',
+      __args: {
+        objects: '[user_insert_input!]!',
+        on_conflict: 'user_on_conflict',
+      },
+    },
+    insert_user_one: {
+      __type: 'user',
+      __args: { object: 'user_insert_input!', on_conflict: 'user_on_conflict' },
+    },
+    update_menu_item: {
+      __type: 'menu_item_mutation_response',
+      __args: {
+        _inc: 'menu_item_inc_input',
+        _set: 'menu_item_set_input',
+        where: 'menu_item_bool_exp!',
+      },
+    },
+    update_menu_item_by_pk: {
+      __type: 'menu_item',
+      __args: {
+        _inc: 'menu_item_inc_input',
+        _set: 'menu_item_set_input',
+        pk_columns: 'menu_item_pk_columns_input!',
+      },
+    },
+    update_opening_hours: {
+      __type: 'opening_hours_mutation_response',
+      __args: {
+        _set: 'opening_hours_set_input',
+        where: 'opening_hours_bool_exp!',
+      },
+    },
+    update_opening_hours_by_pk: {
+      __type: 'opening_hours',
+      __args: {
+        _set: 'opening_hours_set_input',
+        pk_columns: 'opening_hours_pk_columns_input!',
+      },
+    },
+    update_photo: {
+      __type: 'photo_mutation_response',
+      __args: {
+        _inc: 'photo_inc_input',
+        _set: 'photo_set_input',
+        where: 'photo_bool_exp!',
+      },
+    },
+    update_photo_by_pk: {
+      __type: 'photo',
+      __args: {
+        _inc: 'photo_inc_input',
+        _set: 'photo_set_input',
+        pk_columns: 'photo_pk_columns_input!',
+      },
+    },
+    update_photo_xref: {
+      __type: 'photo_xref_mutation_response',
+      __args: { _set: 'photo_xref_set_input', where: 'photo_xref_bool_exp!' },
+    },
+    update_photo_xref_by_pk: {
+      __type: 'photo_xref',
+      __args: {
+        _set: 'photo_xref_set_input',
+        pk_columns: 'photo_xref_pk_columns_input!',
+      },
+    },
+    update_restaurant: {
+      __type: 'restaurant_mutation_response',
+      __args: {
+        _append: 'restaurant_append_input',
+        _delete_at_path: 'restaurant_delete_at_path_input',
+        _delete_elem: 'restaurant_delete_elem_input',
+        _delete_key: 'restaurant_delete_key_input',
+        _inc: 'restaurant_inc_input',
+        _prepend: 'restaurant_prepend_input',
+        _set: 'restaurant_set_input',
+        where: 'restaurant_bool_exp!',
+      },
+    },
+    update_restaurant_by_pk: {
+      __type: 'restaurant',
+      __args: {
+        _append: 'restaurant_append_input',
+        _delete_at_path: 'restaurant_delete_at_path_input',
+        _delete_elem: 'restaurant_delete_elem_input',
+        _delete_key: 'restaurant_delete_key_input',
+        _inc: 'restaurant_inc_input',
+        _prepend: 'restaurant_prepend_input',
+        _set: 'restaurant_set_input',
+        pk_columns: 'restaurant_pk_columns_input!',
+      },
+    },
+    update_restaurant_tag: {
+      __type: 'restaurant_tag_mutation_response',
+      __args: {
+        _append: 'restaurant_tag_append_input',
+        _delete_at_path: 'restaurant_tag_delete_at_path_input',
+        _delete_elem: 'restaurant_tag_delete_elem_input',
+        _delete_key: 'restaurant_tag_delete_key_input',
+        _inc: 'restaurant_tag_inc_input',
+        _prepend: 'restaurant_tag_prepend_input',
+        _set: 'restaurant_tag_set_input',
+        where: 'restaurant_tag_bool_exp!',
+      },
+    },
+    update_restaurant_tag_by_pk: {
+      __type: 'restaurant_tag',
+      __args: {
+        _append: 'restaurant_tag_append_input',
+        _delete_at_path: 'restaurant_tag_delete_at_path_input',
+        _delete_elem: 'restaurant_tag_delete_elem_input',
+        _delete_key: 'restaurant_tag_delete_key_input',
+        _inc: 'restaurant_tag_inc_input',
+        _prepend: 'restaurant_tag_prepend_input',
+        _set: 'restaurant_tag_set_input',
+        pk_columns: 'restaurant_tag_pk_columns_input!',
+      },
+    },
+    update_review: {
+      __type: 'review_mutation_response',
+      __args: {
+        _append: 'review_append_input',
+        _delete_at_path: 'review_delete_at_path_input',
+        _delete_elem: 'review_delete_elem_input',
+        _delete_key: 'review_delete_key_input',
+        _inc: 'review_inc_input',
+        _prepend: 'review_prepend_input',
+        _set: 'review_set_input',
+        where: 'review_bool_exp!',
+      },
+    },
+    update_review_by_pk: {
+      __type: 'review',
+      __args: {
+        _append: 'review_append_input',
+        _delete_at_path: 'review_delete_at_path_input',
+        _delete_elem: 'review_delete_elem_input',
+        _delete_key: 'review_delete_key_input',
+        _inc: 'review_inc_input',
+        _prepend: 'review_prepend_input',
+        _set: 'review_set_input',
+        pk_columns: 'review_pk_columns_input!',
+      },
+    },
+    update_review_tag_sentence: {
+      __type: 'review_tag_sentence_mutation_response',
+      __args: {
+        _inc: 'review_tag_sentence_inc_input',
+        _set: 'review_tag_sentence_set_input',
+        where: 'review_tag_sentence_bool_exp!',
+      },
+    },
+    update_review_tag_sentence_by_pk: {
+      __type: 'review_tag_sentence',
+      __args: {
+        _inc: 'review_tag_sentence_inc_input',
+        _set: 'review_tag_sentence_set_input',
+        pk_columns: 'review_tag_sentence_pk_columns_input!',
+      },
+    },
+    update_setting: {
+      __type: 'setting_mutation_response',
+      __args: {
+        _append: 'setting_append_input',
+        _delete_at_path: 'setting_delete_at_path_input',
+        _delete_elem: 'setting_delete_elem_input',
+        _delete_key: 'setting_delete_key_input',
+        _prepend: 'setting_prepend_input',
+        _set: 'setting_set_input',
+        where: 'setting_bool_exp!',
+      },
+    },
+    update_setting_by_pk: {
+      __type: 'setting',
+      __args: {
+        _append: 'setting_append_input',
+        _delete_at_path: 'setting_delete_at_path_input',
+        _delete_elem: 'setting_delete_elem_input',
+        _delete_key: 'setting_delete_key_input',
+        _prepend: 'setting_prepend_input',
+        _set: 'setting_set_input',
+        pk_columns: 'setting_pk_columns_input!',
+      },
+    },
+    update_tag: {
+      __type: 'tag_mutation_response',
+      __args: {
+        _append: 'tag_append_input',
+        _delete_at_path: 'tag_delete_at_path_input',
+        _delete_elem: 'tag_delete_elem_input',
+        _delete_key: 'tag_delete_key_input',
+        _inc: 'tag_inc_input',
+        _prepend: 'tag_prepend_input',
+        _set: 'tag_set_input',
+        where: 'tag_bool_exp!',
+      },
+    },
+    update_tag_by_pk: {
+      __type: 'tag',
+      __args: {
+        _append: 'tag_append_input',
+        _delete_at_path: 'tag_delete_at_path_input',
+        _delete_elem: 'tag_delete_elem_input',
+        _delete_key: 'tag_delete_key_input',
+        _inc: 'tag_inc_input',
+        _prepend: 'tag_prepend_input',
+        _set: 'tag_set_input',
+        pk_columns: 'tag_pk_columns_input!',
+      },
+    },
+    update_tag_tag: {
+      __type: 'tag_tag_mutation_response',
+      __args: { _set: 'tag_tag_set_input', where: 'tag_tag_bool_exp!' },
+    },
+    update_tag_tag_by_pk: {
+      __type: 'tag_tag',
+      __args: {
+        _set: 'tag_tag_set_input',
+        pk_columns: 'tag_tag_pk_columns_input!',
+      },
+    },
+    update_user: {
+      __type: 'user_mutation_response',
+      __args: {
+        _inc: 'user_inc_input',
+        _set: 'user_set_input',
+        where: 'user_bool_exp!',
+      },
+    },
+    update_user_by_pk: {
+      __type: 'user',
+      __args: {
+        _inc: 'user_inc_input',
+        _set: 'user_set_input',
+        pk_columns: 'user_pk_columns_input!',
+      },
+    },
+  },
+  subscription: {
+    menu_item: {
+      __type: '[menu_item!]!',
+      __args: {
+        distinct_on: '[menu_item_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[menu_item_order_by!]',
+        where: 'menu_item_bool_exp',
+      },
+    },
+    menu_item_aggregate: {
+      __type: 'menu_item_aggregate!',
+      __args: {
+        distinct_on: '[menu_item_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[menu_item_order_by!]',
+        where: 'menu_item_bool_exp',
+      },
+    },
+    menu_item_by_pk: { __type: 'menu_item', __args: { id: 'uuid!' } },
+    opening_hours: {
+      __type: '[opening_hours!]!',
+      __args: {
+        distinct_on: '[opening_hours_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[opening_hours_order_by!]',
+        where: 'opening_hours_bool_exp',
+      },
+    },
+    opening_hours_aggregate: {
+      __type: 'opening_hours_aggregate!',
+      __args: {
+        distinct_on: '[opening_hours_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[opening_hours_order_by!]',
+        where: 'opening_hours_bool_exp',
+      },
+    },
+    opening_hours_by_pk: { __type: 'opening_hours', __args: { id: 'uuid!' } },
+    photo: {
+      __type: '[photo!]!',
+      __args: {
+        distinct_on: '[photo_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[photo_order_by!]',
+        where: 'photo_bool_exp',
+      },
+    },
+    photo_aggregate: {
+      __type: 'photo_aggregate!',
+      __args: {
+        distinct_on: '[photo_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[photo_order_by!]',
+        where: 'photo_bool_exp',
+      },
+    },
+    photo_by_pk: { __type: 'photo', __args: { id: 'uuid!' } },
+    photo_xref: {
+      __type: '[photo_xref!]!',
+      __args: {
+        distinct_on: '[photo_xref_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[photo_xref_order_by!]',
+        where: 'photo_xref_bool_exp',
+      },
+    },
+    photo_xref_aggregate: {
+      __type: 'photo_xref_aggregate!',
+      __args: {
+        distinct_on: '[photo_xref_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[photo_xref_order_by!]',
+        where: 'photo_xref_bool_exp',
+      },
+    },
+    photo_xref_by_pk: { __type: 'photo_xref', __args: { id: 'uuid!' } },
+    restaurant: {
+      __type: '[restaurant!]!',
+      __args: {
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_by_pk: { __type: 'restaurant', __args: { id: 'uuid!' } },
+    restaurant_tag: {
+      __type: '[restaurant_tag!]!',
+      __args: {
+        distinct_on: '[restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_tag_order_by!]',
+        where: 'restaurant_tag_bool_exp',
+      },
+    },
+    restaurant_tag_aggregate: {
+      __type: 'restaurant_tag_aggregate!',
+      __args: {
+        distinct_on: '[restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_tag_order_by!]',
+        where: 'restaurant_tag_bool_exp',
+      },
+    },
+    restaurant_tag_by_pk: {
+      __type: 'restaurant_tag',
+      __args: { restaurant_id: 'uuid!', tag_id: 'uuid!' },
+    },
+    review: {
+      __type: '[review!]!',
+      __args: {
+        distinct_on: '[review_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
+      },
+    },
+    review_aggregate: {
+      __type: 'review_aggregate!',
+      __args: {
+        distinct_on: '[review_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
+      },
+    },
+    review_by_pk: { __type: 'review', __args: { id: 'uuid!' } },
+    review_tag_sentence: {
+      __type: '[review_tag_sentence!]!',
+      __args: {
+        distinct_on: '[review_tag_sentence_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_tag_sentence_order_by!]',
+        where: 'review_tag_sentence_bool_exp',
+      },
+    },
+    review_tag_sentence_aggregate: {
+      __type: 'review_tag_sentence_aggregate!',
+      __args: {
+        distinct_on: '[review_tag_sentence_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_tag_sentence_order_by!]',
+        where: 'review_tag_sentence_bool_exp',
+      },
+    },
+    review_tag_sentence_by_pk: {
+      __type: 'review_tag_sentence',
+      __args: { id: 'uuid!' },
+    },
+    setting: {
+      __type: '[setting!]!',
+      __args: {
+        distinct_on: '[setting_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[setting_order_by!]',
+        where: 'setting_bool_exp',
+      },
+    },
+    setting_aggregate: {
+      __type: 'setting_aggregate!',
+      __args: {
+        distinct_on: '[setting_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[setting_order_by!]',
+        where: 'setting_bool_exp',
+      },
+    },
+    setting_by_pk: { __type: 'setting', __args: { key: 'String!' } },
+    tag: {
+      __type: '[tag!]!',
+      __args: {
+        distinct_on: '[tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[tag_order_by!]',
+        where: 'tag_bool_exp',
+      },
+    },
+    tag_aggregate: {
+      __type: 'tag_aggregate!',
+      __args: {
+        distinct_on: '[tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[tag_order_by!]',
+        where: 'tag_bool_exp',
+      },
+    },
+    tag_by_pk: { __type: 'tag', __args: { id: 'uuid!' } },
+    tag_tag: {
+      __type: '[tag_tag!]!',
+      __args: {
+        distinct_on: '[tag_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[tag_tag_order_by!]',
+        where: 'tag_tag_bool_exp',
+      },
+    },
+    tag_tag_aggregate: {
+      __type: 'tag_tag_aggregate!',
+      __args: {
+        distinct_on: '[tag_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[tag_tag_order_by!]',
+        where: 'tag_tag_bool_exp',
+      },
+    },
+    tag_tag_by_pk: {
+      __type: 'tag_tag',
+      __args: { category_tag_id: 'uuid!', tag_id: 'uuid!' },
+    },
+    user: {
+      __type: '[user!]!',
+      __args: {
+        distinct_on: '[user_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[user_order_by!]',
+        where: 'user_bool_exp',
+      },
+    },
+    user_aggregate: {
+      __type: 'user_aggregate!',
+      __args: {
+        distinct_on: '[user_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[user_order_by!]',
+        where: 'user_bool_exp',
+      },
+    },
+    user_by_pk: { __type: 'user', __args: { id: 'uuid!' } },
+  },
 }
 
-export interface Query {}
-
-export interface menu_item {
-  created_at: ScalarsEnums['timestamptz']
-  description: Maybe<ScalarsEnums['String']>
-  id: ScalarsEnums['uuid']
-  image: Maybe<ScalarsEnums['String']>
-  location: Maybe<ScalarsEnums['geometry']>
-  name: ScalarsEnums['String']
-  price: Maybe<ScalarsEnums['Int']>
-  restaurant: restaurant
-  restaurant_id: ScalarsEnums['uuid']
-  updated_at: ScalarsEnums['timestamptz']
-}
-
-export interface menu_item_aggregate {
-  aggregate: Maybe<menu_item_aggregate_fields>
-  nodes: Array<menu_item>
-}
-
-export interface menu_item_aggregate_fields {
-  avg: Maybe<menu_item_avg_fields>
-  count: (args?: {
-    columns?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
-    distinct?: Maybe<ScalarsEnums['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<menu_item_max_fields>
-  min: Maybe<menu_item_min_fields>
-  stddev: Maybe<menu_item_stddev_fields>
-  stddev_pop: Maybe<menu_item_stddev_pop_fields>
-  stddev_samp: Maybe<menu_item_stddev_samp_fields>
-  sum: Maybe<menu_item_sum_fields>
-  var_pop: Maybe<menu_item_var_pop_fields>
-  var_samp: Maybe<menu_item_var_samp_fields>
-  variance: Maybe<menu_item_variance_fields>
-}
-
-export interface menu_item_avg_fields {
-  price: Maybe<ScalarsEnums['Float']>
-}
-
-export interface menu_item_max_fields {
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  description: Maybe<ScalarsEnums['String']>
-  id: Maybe<ScalarsEnums['uuid']>
-  image: Maybe<ScalarsEnums['String']>
-  name: Maybe<ScalarsEnums['String']>
-  price: Maybe<ScalarsEnums['Int']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
-}
-
-export interface menu_item_min_fields {
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  description: Maybe<ScalarsEnums['String']>
-  id: Maybe<ScalarsEnums['uuid']>
-  image: Maybe<ScalarsEnums['String']>
-  name: Maybe<ScalarsEnums['String']>
-  price: Maybe<ScalarsEnums['Int']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
-}
-
-export interface menu_item_mutation_response {
-  affected_rows: ScalarsEnums['Int']
-  returning: Array<menu_item>
-}
-
-export interface menu_item_stddev_fields {
-  price: Maybe<ScalarsEnums['Float']>
-}
-
-export interface menu_item_stddev_pop_fields {
-  price: Maybe<ScalarsEnums['Float']>
-}
-
-export interface menu_item_stddev_samp_fields {
-  price: Maybe<ScalarsEnums['Float']>
-}
-
-export interface menu_item_sum_fields {
-  price: Maybe<ScalarsEnums['Int']>
-}
-
-export interface menu_item_var_pop_fields {
-  price: Maybe<ScalarsEnums['Float']>
-}
-
-export interface menu_item_var_samp_fields {
-  price: Maybe<ScalarsEnums['Float']>
-}
-
-export interface menu_item_variance_fields {
-  price: Maybe<ScalarsEnums['Float']>
-}
-
-export interface mutation_root {
-  delete_menu_item: (args: {
-    where: menu_item_bool_exp
-  }) => Maybe<menu_item_mutation_response>
-  delete_menu_item_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<menu_item>
-  delete_opening_hours: (args: {
-    where: opening_hours_bool_exp
-  }) => Maybe<opening_hours_mutation_response>
-  delete_opening_hours_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<opening_hours>
-  delete_photo: (args: {
-    where: photo_bool_exp
-  }) => Maybe<photo_mutation_response>
-  delete_photo_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<photo>
-  delete_photo_xref: (args: {
-    where: photo_xref_bool_exp
-  }) => Maybe<photo_xref_mutation_response>
-  delete_photo_xref_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<photo_xref>
-  delete_restaurant: (args: {
-    where: restaurant_bool_exp
-  }) => Maybe<restaurant_mutation_response>
-  delete_restaurant_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<restaurant>
-  delete_restaurant_tag: (args: {
-    where: restaurant_tag_bool_exp
-  }) => Maybe<restaurant_tag_mutation_response>
-  delete_restaurant_tag_by_pk: (args: {
-    restaurant_id: ScalarsEnums['uuid']
-    tag_id: ScalarsEnums['uuid']
-  }) => Maybe<restaurant_tag>
-  delete_review: (args: {
-    where: review_bool_exp
-  }) => Maybe<review_mutation_response>
-  delete_review_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<review>
-  delete_review_tag_sentence: (args: {
-    where: review_tag_sentence_bool_exp
-  }) => Maybe<review_tag_sentence_mutation_response>
-  delete_review_tag_sentence_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<review_tag_sentence>
-  delete_setting: (args: {
-    where: setting_bool_exp
-  }) => Maybe<setting_mutation_response>
-  delete_setting_by_pk: (args: {
-    key: ScalarsEnums['String']
-  }) => Maybe<setting>
-  delete_tag: (args: { where: tag_bool_exp }) => Maybe<tag_mutation_response>
-  delete_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<tag>
-  delete_tag_tag: (args: {
-    where: tag_tag_bool_exp
-  }) => Maybe<tag_tag_mutation_response>
-  delete_tag_tag_by_pk: (args: {
-    category_tag_id: ScalarsEnums['uuid']
-    tag_id: ScalarsEnums['uuid']
-  }) => Maybe<tag_tag>
-  delete_user: (args: { where: user_bool_exp }) => Maybe<user_mutation_response>
-  delete_user_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<user>
-  insert_menu_item: (args: {
-    objects: Array<menu_item_insert_input>
-    on_conflict?: Maybe<menu_item_on_conflict>
-  }) => Maybe<menu_item_mutation_response>
-  insert_menu_item_one: (args: {
-    object: menu_item_insert_input
-    on_conflict?: Maybe<menu_item_on_conflict>
-  }) => Maybe<menu_item>
-  insert_opening_hours: (args: {
-    objects: Array<opening_hours_insert_input>
-    on_conflict?: Maybe<opening_hours_on_conflict>
-  }) => Maybe<opening_hours_mutation_response>
-  insert_opening_hours_one: (args: {
-    object: opening_hours_insert_input
-    on_conflict?: Maybe<opening_hours_on_conflict>
-  }) => Maybe<opening_hours>
-  insert_photo: (args: {
-    objects: Array<photo_insert_input>
-    on_conflict?: Maybe<photo_on_conflict>
-  }) => Maybe<photo_mutation_response>
-  insert_photo_one: (args: {
-    object: photo_insert_input
-    on_conflict?: Maybe<photo_on_conflict>
-  }) => Maybe<photo>
-  insert_photo_xref: (args: {
-    objects: Array<photo_xref_insert_input>
-    on_conflict?: Maybe<photo_xref_on_conflict>
-  }) => Maybe<photo_xref_mutation_response>
-  insert_photo_xref_one: (args: {
-    object: photo_xref_insert_input
-    on_conflict?: Maybe<photo_xref_on_conflict>
-  }) => Maybe<photo_xref>
-  insert_restaurant: (args: {
-    objects: Array<restaurant_insert_input>
-    on_conflict?: Maybe<restaurant_on_conflict>
-  }) => Maybe<restaurant_mutation_response>
-  insert_restaurant_one: (args: {
-    object: restaurant_insert_input
-    on_conflict?: Maybe<restaurant_on_conflict>
-  }) => Maybe<restaurant>
-  insert_restaurant_tag: (args: {
-    objects: Array<restaurant_tag_insert_input>
-    on_conflict?: Maybe<restaurant_tag_on_conflict>
-  }) => Maybe<restaurant_tag_mutation_response>
-  insert_restaurant_tag_one: (args: {
-    object: restaurant_tag_insert_input
-    on_conflict?: Maybe<restaurant_tag_on_conflict>
-  }) => Maybe<restaurant_tag>
-  insert_review: (args: {
-    objects: Array<review_insert_input>
-    on_conflict?: Maybe<review_on_conflict>
-  }) => Maybe<review_mutation_response>
-  insert_review_one: (args: {
-    object: review_insert_input
-    on_conflict?: Maybe<review_on_conflict>
-  }) => Maybe<review>
-  insert_review_tag_sentence: (args: {
-    objects: Array<review_tag_sentence_insert_input>
-    on_conflict?: Maybe<review_tag_sentence_on_conflict>
-  }) => Maybe<review_tag_sentence_mutation_response>
-  insert_review_tag_sentence_one: (args: {
-    object: review_tag_sentence_insert_input
-    on_conflict?: Maybe<review_tag_sentence_on_conflict>
-  }) => Maybe<review_tag_sentence>
-  insert_setting: (args: {
-    objects: Array<setting_insert_input>
-    on_conflict?: Maybe<setting_on_conflict>
-  }) => Maybe<setting_mutation_response>
-  insert_setting_one: (args: {
-    object: setting_insert_input
-    on_conflict?: Maybe<setting_on_conflict>
-  }) => Maybe<setting>
-  insert_tag: (args: {
-    objects: Array<tag_insert_input>
-    on_conflict?: Maybe<tag_on_conflict>
-  }) => Maybe<tag_mutation_response>
-  insert_tag_one: (args: {
-    object: tag_insert_input
-    on_conflict?: Maybe<tag_on_conflict>
-  }) => Maybe<tag>
-  insert_tag_tag: (args: {
-    objects: Array<tag_tag_insert_input>
-    on_conflict?: Maybe<tag_tag_on_conflict>
-  }) => Maybe<tag_tag_mutation_response>
-  insert_tag_tag_one: (args: {
-    object: tag_tag_insert_input
-    on_conflict?: Maybe<tag_tag_on_conflict>
-  }) => Maybe<tag_tag>
-  insert_user: (args: {
-    objects: Array<user_insert_input>
-    on_conflict?: Maybe<user_on_conflict>
-  }) => Maybe<user_mutation_response>
-  insert_user_one: (args: {
-    object: user_insert_input
-    on_conflict?: Maybe<user_on_conflict>
-  }) => Maybe<user>
-  update_menu_item: (args: {
-    _inc?: Maybe<menu_item_inc_input>
-    _set?: Maybe<menu_item_set_input>
-    where: menu_item_bool_exp
-  }) => Maybe<menu_item_mutation_response>
-  update_menu_item_by_pk: (args: {
-    _inc?: Maybe<menu_item_inc_input>
-    _set?: Maybe<menu_item_set_input>
-    pk_columns: menu_item_pk_columns_input
-  }) => Maybe<menu_item>
-  update_opening_hours: (args: {
-    _set?: Maybe<opening_hours_set_input>
-    where: opening_hours_bool_exp
-  }) => Maybe<opening_hours_mutation_response>
-  update_opening_hours_by_pk: (args: {
-    _set?: Maybe<opening_hours_set_input>
-    pk_columns: opening_hours_pk_columns_input
-  }) => Maybe<opening_hours>
-  update_photo: (args: {
-    _inc?: Maybe<photo_inc_input>
-    _set?: Maybe<photo_set_input>
-    where: photo_bool_exp
-  }) => Maybe<photo_mutation_response>
-  update_photo_by_pk: (args: {
-    _inc?: Maybe<photo_inc_input>
-    _set?: Maybe<photo_set_input>
-    pk_columns: photo_pk_columns_input
-  }) => Maybe<photo>
-  update_photo_xref: (args: {
-    _set?: Maybe<photo_xref_set_input>
-    where: photo_xref_bool_exp
-  }) => Maybe<photo_xref_mutation_response>
-  update_photo_xref_by_pk: (args: {
-    _set?: Maybe<photo_xref_set_input>
-    pk_columns: photo_xref_pk_columns_input
-  }) => Maybe<photo_xref>
-  update_restaurant: (args: {
-    _append?: Maybe<restaurant_append_input>
-    _delete_at_path?: Maybe<restaurant_delete_at_path_input>
-    _delete_elem?: Maybe<restaurant_delete_elem_input>
-    _delete_key?: Maybe<restaurant_delete_key_input>
-    _inc?: Maybe<restaurant_inc_input>
-    _prepend?: Maybe<restaurant_prepend_input>
-    _set?: Maybe<restaurant_set_input>
-    where: restaurant_bool_exp
-  }) => Maybe<restaurant_mutation_response>
-  update_restaurant_by_pk: (args: {
-    _append?: Maybe<restaurant_append_input>
-    _delete_at_path?: Maybe<restaurant_delete_at_path_input>
-    _delete_elem?: Maybe<restaurant_delete_elem_input>
-    _delete_key?: Maybe<restaurant_delete_key_input>
-    _inc?: Maybe<restaurant_inc_input>
-    _prepend?: Maybe<restaurant_prepend_input>
-    _set?: Maybe<restaurant_set_input>
-    pk_columns: restaurant_pk_columns_input
-  }) => Maybe<restaurant>
-  update_restaurant_tag: (args: {
-    _append?: Maybe<restaurant_tag_append_input>
-    _delete_at_path?: Maybe<restaurant_tag_delete_at_path_input>
-    _delete_elem?: Maybe<restaurant_tag_delete_elem_input>
-    _delete_key?: Maybe<restaurant_tag_delete_key_input>
-    _inc?: Maybe<restaurant_tag_inc_input>
-    _prepend?: Maybe<restaurant_tag_prepend_input>
-    _set?: Maybe<restaurant_tag_set_input>
-    where: restaurant_tag_bool_exp
-  }) => Maybe<restaurant_tag_mutation_response>
-  update_restaurant_tag_by_pk: (args: {
-    _append?: Maybe<restaurant_tag_append_input>
-    _delete_at_path?: Maybe<restaurant_tag_delete_at_path_input>
-    _delete_elem?: Maybe<restaurant_tag_delete_elem_input>
-    _delete_key?: Maybe<restaurant_tag_delete_key_input>
-    _inc?: Maybe<restaurant_tag_inc_input>
-    _prepend?: Maybe<restaurant_tag_prepend_input>
-    _set?: Maybe<restaurant_tag_set_input>
-    pk_columns: restaurant_tag_pk_columns_input
-  }) => Maybe<restaurant_tag>
-  update_review: (args: {
-    _append?: Maybe<review_append_input>
-    _delete_at_path?: Maybe<review_delete_at_path_input>
-    _delete_elem?: Maybe<review_delete_elem_input>
-    _delete_key?: Maybe<review_delete_key_input>
-    _inc?: Maybe<review_inc_input>
-    _prepend?: Maybe<review_prepend_input>
-    _set?: Maybe<review_set_input>
-    where: review_bool_exp
-  }) => Maybe<review_mutation_response>
-  update_review_by_pk: (args: {
-    _append?: Maybe<review_append_input>
-    _delete_at_path?: Maybe<review_delete_at_path_input>
-    _delete_elem?: Maybe<review_delete_elem_input>
-    _delete_key?: Maybe<review_delete_key_input>
-    _inc?: Maybe<review_inc_input>
-    _prepend?: Maybe<review_prepend_input>
-    _set?: Maybe<review_set_input>
-    pk_columns: review_pk_columns_input
-  }) => Maybe<review>
-  update_review_tag_sentence: (args: {
-    _inc?: Maybe<review_tag_sentence_inc_input>
-    _set?: Maybe<review_tag_sentence_set_input>
-    where: review_tag_sentence_bool_exp
-  }) => Maybe<review_tag_sentence_mutation_response>
-  update_review_tag_sentence_by_pk: (args: {
-    _inc?: Maybe<review_tag_sentence_inc_input>
-    _set?: Maybe<review_tag_sentence_set_input>
-    pk_columns: review_tag_sentence_pk_columns_input
-  }) => Maybe<review_tag_sentence>
-  update_setting: (args: {
-    _append?: Maybe<setting_append_input>
-    _delete_at_path?: Maybe<setting_delete_at_path_input>
-    _delete_elem?: Maybe<setting_delete_elem_input>
-    _delete_key?: Maybe<setting_delete_key_input>
-    _prepend?: Maybe<setting_prepend_input>
-    _set?: Maybe<setting_set_input>
-    where: setting_bool_exp
-  }) => Maybe<setting_mutation_response>
-  update_setting_by_pk: (args: {
-    _append?: Maybe<setting_append_input>
-    _delete_at_path?: Maybe<setting_delete_at_path_input>
-    _delete_elem?: Maybe<setting_delete_elem_input>
-    _delete_key?: Maybe<setting_delete_key_input>
-    _prepend?: Maybe<setting_prepend_input>
-    _set?: Maybe<setting_set_input>
-    pk_columns: setting_pk_columns_input
-  }) => Maybe<setting>
-  update_tag: (args: {
-    _append?: Maybe<tag_append_input>
-    _delete_at_path?: Maybe<tag_delete_at_path_input>
-    _delete_elem?: Maybe<tag_delete_elem_input>
-    _delete_key?: Maybe<tag_delete_key_input>
-    _inc?: Maybe<tag_inc_input>
-    _prepend?: Maybe<tag_prepend_input>
-    _set?: Maybe<tag_set_input>
-    where: tag_bool_exp
-  }) => Maybe<tag_mutation_response>
-  update_tag_by_pk: (args: {
-    _append?: Maybe<tag_append_input>
-    _delete_at_path?: Maybe<tag_delete_at_path_input>
-    _delete_elem?: Maybe<tag_delete_elem_input>
-    _delete_key?: Maybe<tag_delete_key_input>
-    _inc?: Maybe<tag_inc_input>
-    _prepend?: Maybe<tag_prepend_input>
-    _set?: Maybe<tag_set_input>
-    pk_columns: tag_pk_columns_input
-  }) => Maybe<tag>
-  update_tag_tag: (args: {
-    _set?: Maybe<tag_tag_set_input>
-    where: tag_tag_bool_exp
-  }) => Maybe<tag_tag_mutation_response>
-  update_tag_tag_by_pk: (args: {
-    _set?: Maybe<tag_tag_set_input>
-    pk_columns: tag_tag_pk_columns_input
-  }) => Maybe<tag_tag>
-  update_user: (args: {
-    _inc?: Maybe<user_inc_input>
-    _set?: Maybe<user_set_input>
-    where: user_bool_exp
-  }) => Maybe<user_mutation_response>
-  update_user_by_pk: (args: {
-    _inc?: Maybe<user_inc_input>
-    _set?: Maybe<user_set_input>
-    pk_columns: user_pk_columns_input
-  }) => Maybe<user>
-}
-
-export interface opening_hours {
-  hours: ScalarsEnums['tsrange']
-  id: ScalarsEnums['uuid']
-  restaurant: restaurant
-  restaurant_id: ScalarsEnums['uuid']
-}
-
-export interface opening_hours_aggregate {
-  aggregate: Maybe<opening_hours_aggregate_fields>
-  nodes: Array<opening_hours>
-}
-
-export interface opening_hours_aggregate_fields {
-  count: (args?: {
-    columns?: Maybe<Array<ScalarsEnums['opening_hours_select_column']>>
-    distinct?: Maybe<ScalarsEnums['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<opening_hours_max_fields>
-  min: Maybe<opening_hours_min_fields>
-}
-
-export interface opening_hours_max_fields {
-  id: Maybe<ScalarsEnums['uuid']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-}
-
-export interface opening_hours_min_fields {
-  id: Maybe<ScalarsEnums['uuid']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-}
-
-export interface opening_hours_mutation_response {
-  affected_rows: ScalarsEnums['Int']
-  returning: Array<opening_hours>
-}
-
-export interface photo {
-  created_at: ScalarsEnums['timestamptz']
-  id: ScalarsEnums['uuid']
-  origin: Maybe<ScalarsEnums['String']>
-  quality: Maybe<ScalarsEnums['numeric']>
-  updated_at: ScalarsEnums['timestamptz']
-  url: Maybe<ScalarsEnums['String']>
-}
-
-export interface photo_aggregate {
-  aggregate: Maybe<photo_aggregate_fields>
-  nodes: Array<photo>
-}
-
-export interface photo_aggregate_fields {
-  avg: Maybe<photo_avg_fields>
-  count: (args?: {
-    columns?: Maybe<Array<ScalarsEnums['photo_select_column']>>
-    distinct?: Maybe<ScalarsEnums['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<photo_max_fields>
-  min: Maybe<photo_min_fields>
-  stddev: Maybe<photo_stddev_fields>
-  stddev_pop: Maybe<photo_stddev_pop_fields>
-  stddev_samp: Maybe<photo_stddev_samp_fields>
-  sum: Maybe<photo_sum_fields>
-  var_pop: Maybe<photo_var_pop_fields>
-  var_samp: Maybe<photo_var_samp_fields>
-  variance: Maybe<photo_variance_fields>
-}
-
-export interface photo_avg_fields {
-  quality: Maybe<ScalarsEnums['Float']>
-}
-
-export interface photo_max_fields {
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  id: Maybe<ScalarsEnums['uuid']>
-  origin: Maybe<ScalarsEnums['String']>
-  quality: Maybe<ScalarsEnums['numeric']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
-  url: Maybe<ScalarsEnums['String']>
-}
-
-export interface photo_min_fields {
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  id: Maybe<ScalarsEnums['uuid']>
-  origin: Maybe<ScalarsEnums['String']>
-  quality: Maybe<ScalarsEnums['numeric']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
-  url: Maybe<ScalarsEnums['String']>
-}
-
-export interface photo_mutation_response {
-  affected_rows: ScalarsEnums['Int']
-  returning: Array<photo>
-}
-
-export interface photo_stddev_fields {
-  quality: Maybe<ScalarsEnums['Float']>
-}
-
-export interface photo_stddev_pop_fields {
-  quality: Maybe<ScalarsEnums['Float']>
-}
-
-export interface photo_stddev_samp_fields {
-  quality: Maybe<ScalarsEnums['Float']>
-}
-
-export interface photo_sum_fields {
-  quality: Maybe<ScalarsEnums['numeric']>
-}
-
-export interface photo_var_pop_fields {
-  quality: Maybe<ScalarsEnums['Float']>
-}
-
-export interface photo_var_samp_fields {
-  quality: Maybe<ScalarsEnums['Float']>
-}
-
-export interface photo_variance_fields {
-  quality: Maybe<ScalarsEnums['Float']>
-}
-
-export interface photo_xref {
-  id: ScalarsEnums['uuid']
-  photo: photo
-  photo_id: ScalarsEnums['uuid']
-  restaurant_id: ScalarsEnums['uuid']
-  tag_id: ScalarsEnums['uuid']
-  type: Maybe<ScalarsEnums['String']>
-}
-
-export interface photo_xref_aggregate {
-  aggregate: Maybe<photo_xref_aggregate_fields>
-  nodes: Array<photo_xref>
-}
-
-export interface photo_xref_aggregate_fields {
-  count: (args?: {
-    columns?: Maybe<Array<ScalarsEnums['photo_xref_select_column']>>
-    distinct?: Maybe<ScalarsEnums['Boolean']>
-  }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<photo_xref_max_fields>
-  min: Maybe<photo_xref_min_fields>
-}
-
-export interface photo_xref_max_fields {
-  id: Maybe<ScalarsEnums['uuid']>
-  photo_id: Maybe<ScalarsEnums['uuid']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-  tag_id: Maybe<ScalarsEnums['uuid']>
-  type: Maybe<ScalarsEnums['String']>
-}
-
-export interface photo_xref_min_fields {
-  id: Maybe<ScalarsEnums['uuid']>
-  photo_id: Maybe<ScalarsEnums['uuid']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-  tag_id: Maybe<ScalarsEnums['uuid']>
-  type: Maybe<ScalarsEnums['String']>
-}
-
-export interface photo_xref_mutation_response {
-  affected_rows: ScalarsEnums['Int']
-  returning: Array<photo_xref>
-}
-
-export interface query_root {
+export interface Query {
   menu_item: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -8009,6 +7423,266 @@ export interface query_root {
     where?: Maybe<user_bool_exp>
   }) => user_aggregate
   user_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<user>
+}
+
+export interface menu_item {
+  created_at: ScalarsEnums['timestamptz']
+  description: Maybe<ScalarsEnums['String']>
+  id: ScalarsEnums['uuid']
+  image: Maybe<ScalarsEnums['String']>
+  location: Maybe<ScalarsEnums['geometry']>
+  name: ScalarsEnums['String']
+  price: Maybe<ScalarsEnums['Int']>
+  restaurant: restaurant
+  restaurant_id: ScalarsEnums['uuid']
+  updated_at: ScalarsEnums['timestamptz']
+}
+
+export interface menu_item_aggregate {
+  aggregate: Maybe<menu_item_aggregate_fields>
+  nodes: Array<menu_item>
+}
+
+export interface menu_item_aggregate_fields {
+  avg: Maybe<menu_item_avg_fields>
+  count: (args?: {
+    columns?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
+    distinct?: Maybe<ScalarsEnums['Boolean']>
+  }) => Maybe<ScalarsEnums['Int']>
+  max: Maybe<menu_item_max_fields>
+  min: Maybe<menu_item_min_fields>
+  stddev: Maybe<menu_item_stddev_fields>
+  stddev_pop: Maybe<menu_item_stddev_pop_fields>
+  stddev_samp: Maybe<menu_item_stddev_samp_fields>
+  sum: Maybe<menu_item_sum_fields>
+  var_pop: Maybe<menu_item_var_pop_fields>
+  var_samp: Maybe<menu_item_var_samp_fields>
+  variance: Maybe<menu_item_variance_fields>
+}
+
+export interface menu_item_avg_fields {
+  price: Maybe<ScalarsEnums['Float']>
+}
+
+export interface menu_item_max_fields {
+  created_at: Maybe<ScalarsEnums['timestamptz']>
+  description: Maybe<ScalarsEnums['String']>
+  id: Maybe<ScalarsEnums['uuid']>
+  image: Maybe<ScalarsEnums['String']>
+  name: Maybe<ScalarsEnums['String']>
+  price: Maybe<ScalarsEnums['Int']>
+  restaurant_id: Maybe<ScalarsEnums['uuid']>
+  updated_at: Maybe<ScalarsEnums['timestamptz']>
+}
+
+export interface menu_item_min_fields {
+  created_at: Maybe<ScalarsEnums['timestamptz']>
+  description: Maybe<ScalarsEnums['String']>
+  id: Maybe<ScalarsEnums['uuid']>
+  image: Maybe<ScalarsEnums['String']>
+  name: Maybe<ScalarsEnums['String']>
+  price: Maybe<ScalarsEnums['Int']>
+  restaurant_id: Maybe<ScalarsEnums['uuid']>
+  updated_at: Maybe<ScalarsEnums['timestamptz']>
+}
+
+export interface menu_item_mutation_response {
+  affected_rows: ScalarsEnums['Int']
+  returning: Array<menu_item>
+}
+
+export interface menu_item_stddev_fields {
+  price: Maybe<ScalarsEnums['Float']>
+}
+
+export interface menu_item_stddev_pop_fields {
+  price: Maybe<ScalarsEnums['Float']>
+}
+
+export interface menu_item_stddev_samp_fields {
+  price: Maybe<ScalarsEnums['Float']>
+}
+
+export interface menu_item_sum_fields {
+  price: Maybe<ScalarsEnums['Int']>
+}
+
+export interface menu_item_var_pop_fields {
+  price: Maybe<ScalarsEnums['Float']>
+}
+
+export interface menu_item_var_samp_fields {
+  price: Maybe<ScalarsEnums['Float']>
+}
+
+export interface menu_item_variance_fields {
+  price: Maybe<ScalarsEnums['Float']>
+}
+
+export interface opening_hours {
+  hours: ScalarsEnums['tsrange']
+  id: ScalarsEnums['uuid']
+  restaurant: restaurant
+  restaurant_id: ScalarsEnums['uuid']
+}
+
+export interface opening_hours_aggregate {
+  aggregate: Maybe<opening_hours_aggregate_fields>
+  nodes: Array<opening_hours>
+}
+
+export interface opening_hours_aggregate_fields {
+  count: (args?: {
+    columns?: Maybe<Array<ScalarsEnums['opening_hours_select_column']>>
+    distinct?: Maybe<ScalarsEnums['Boolean']>
+  }) => Maybe<ScalarsEnums['Int']>
+  max: Maybe<opening_hours_max_fields>
+  min: Maybe<opening_hours_min_fields>
+}
+
+export interface opening_hours_max_fields {
+  id: Maybe<ScalarsEnums['uuid']>
+  restaurant_id: Maybe<ScalarsEnums['uuid']>
+}
+
+export interface opening_hours_min_fields {
+  id: Maybe<ScalarsEnums['uuid']>
+  restaurant_id: Maybe<ScalarsEnums['uuid']>
+}
+
+export interface opening_hours_mutation_response {
+  affected_rows: ScalarsEnums['Int']
+  returning: Array<opening_hours>
+}
+
+export interface photo {
+  created_at: ScalarsEnums['timestamptz']
+  id: ScalarsEnums['uuid']
+  origin: Maybe<ScalarsEnums['String']>
+  quality: Maybe<ScalarsEnums['numeric']>
+  updated_at: ScalarsEnums['timestamptz']
+  url: Maybe<ScalarsEnums['String']>
+}
+
+export interface photo_aggregate {
+  aggregate: Maybe<photo_aggregate_fields>
+  nodes: Array<photo>
+}
+
+export interface photo_aggregate_fields {
+  avg: Maybe<photo_avg_fields>
+  count: (args?: {
+    columns?: Maybe<Array<ScalarsEnums['photo_select_column']>>
+    distinct?: Maybe<ScalarsEnums['Boolean']>
+  }) => Maybe<ScalarsEnums['Int']>
+  max: Maybe<photo_max_fields>
+  min: Maybe<photo_min_fields>
+  stddev: Maybe<photo_stddev_fields>
+  stddev_pop: Maybe<photo_stddev_pop_fields>
+  stddev_samp: Maybe<photo_stddev_samp_fields>
+  sum: Maybe<photo_sum_fields>
+  var_pop: Maybe<photo_var_pop_fields>
+  var_samp: Maybe<photo_var_samp_fields>
+  variance: Maybe<photo_variance_fields>
+}
+
+export interface photo_avg_fields {
+  quality: Maybe<ScalarsEnums['Float']>
+}
+
+export interface photo_max_fields {
+  created_at: Maybe<ScalarsEnums['timestamptz']>
+  id: Maybe<ScalarsEnums['uuid']>
+  origin: Maybe<ScalarsEnums['String']>
+  quality: Maybe<ScalarsEnums['numeric']>
+  updated_at: Maybe<ScalarsEnums['timestamptz']>
+  url: Maybe<ScalarsEnums['String']>
+}
+
+export interface photo_min_fields {
+  created_at: Maybe<ScalarsEnums['timestamptz']>
+  id: Maybe<ScalarsEnums['uuid']>
+  origin: Maybe<ScalarsEnums['String']>
+  quality: Maybe<ScalarsEnums['numeric']>
+  updated_at: Maybe<ScalarsEnums['timestamptz']>
+  url: Maybe<ScalarsEnums['String']>
+}
+
+export interface photo_mutation_response {
+  affected_rows: ScalarsEnums['Int']
+  returning: Array<photo>
+}
+
+export interface photo_stddev_fields {
+  quality: Maybe<ScalarsEnums['Float']>
+}
+
+export interface photo_stddev_pop_fields {
+  quality: Maybe<ScalarsEnums['Float']>
+}
+
+export interface photo_stddev_samp_fields {
+  quality: Maybe<ScalarsEnums['Float']>
+}
+
+export interface photo_sum_fields {
+  quality: Maybe<ScalarsEnums['numeric']>
+}
+
+export interface photo_var_pop_fields {
+  quality: Maybe<ScalarsEnums['Float']>
+}
+
+export interface photo_var_samp_fields {
+  quality: Maybe<ScalarsEnums['Float']>
+}
+
+export interface photo_variance_fields {
+  quality: Maybe<ScalarsEnums['Float']>
+}
+
+export interface photo_xref {
+  id: ScalarsEnums['uuid']
+  photo: photo
+  photo_id: ScalarsEnums['uuid']
+  restaurant_id: ScalarsEnums['uuid']
+  tag_id: ScalarsEnums['uuid']
+  type: Maybe<ScalarsEnums['String']>
+}
+
+export interface photo_xref_aggregate {
+  aggregate: Maybe<photo_xref_aggregate_fields>
+  nodes: Array<photo_xref>
+}
+
+export interface photo_xref_aggregate_fields {
+  count: (args?: {
+    columns?: Maybe<Array<ScalarsEnums['photo_xref_select_column']>>
+    distinct?: Maybe<ScalarsEnums['Boolean']>
+  }) => Maybe<ScalarsEnums['Int']>
+  max: Maybe<photo_xref_max_fields>
+  min: Maybe<photo_xref_min_fields>
+}
+
+export interface photo_xref_max_fields {
+  id: Maybe<ScalarsEnums['uuid']>
+  photo_id: Maybe<ScalarsEnums['uuid']>
+  restaurant_id: Maybe<ScalarsEnums['uuid']>
+  tag_id: Maybe<ScalarsEnums['uuid']>
+  type: Maybe<ScalarsEnums['String']>
+}
+
+export interface photo_xref_min_fields {
+  id: Maybe<ScalarsEnums['uuid']>
+  photo_id: Maybe<ScalarsEnums['uuid']>
+  restaurant_id: Maybe<ScalarsEnums['uuid']>
+  tag_id: Maybe<ScalarsEnums['uuid']>
+  type: Maybe<ScalarsEnums['String']>
+}
+
+export interface photo_xref_mutation_response {
+  affected_rows: ScalarsEnums['Int']
+  returning: Array<photo_xref>
 }
 
 export interface restaurant {
@@ -8730,203 +8404,6 @@ export interface setting_mutation_response {
   returning: Array<setting>
 }
 
-export interface subscription_root {
-  menu_item: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<menu_item_order_by>>
-    where?: Maybe<menu_item_bool_exp>
-  }) => Array<menu_item>
-  menu_item_aggregate: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<menu_item_order_by>>
-    where?: Maybe<menu_item_bool_exp>
-  }) => menu_item_aggregate
-  menu_item_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<menu_item>
-  opening_hours: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['opening_hours_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<opening_hours_order_by>>
-    where?: Maybe<opening_hours_bool_exp>
-  }) => Array<opening_hours>
-  opening_hours_aggregate: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['opening_hours_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<opening_hours_order_by>>
-    where?: Maybe<opening_hours_bool_exp>
-  }) => opening_hours_aggregate
-  opening_hours_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<opening_hours>
-  photo: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['photo_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<photo_order_by>>
-    where?: Maybe<photo_bool_exp>
-  }) => Array<photo>
-  photo_aggregate: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['photo_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<photo_order_by>>
-    where?: Maybe<photo_bool_exp>
-  }) => photo_aggregate
-  photo_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<photo>
-  photo_xref: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['photo_xref_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<photo_xref_order_by>>
-    where?: Maybe<photo_xref_bool_exp>
-  }) => Array<photo_xref>
-  photo_xref_aggregate: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['photo_xref_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<photo_xref_order_by>>
-    where?: Maybe<photo_xref_bool_exp>
-  }) => photo_xref_aggregate
-  photo_xref_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<photo_xref>
-  restaurant: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<restaurant_order_by>>
-    where?: Maybe<restaurant_bool_exp>
-  }) => Array<restaurant>
-  restaurant_aggregate: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<restaurant_order_by>>
-    where?: Maybe<restaurant_bool_exp>
-  }) => restaurant_aggregate
-  restaurant_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<restaurant>
-  restaurant_tag: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<restaurant_tag_order_by>>
-    where?: Maybe<restaurant_tag_bool_exp>
-  }) => Array<restaurant_tag>
-  restaurant_tag_aggregate: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<restaurant_tag_order_by>>
-    where?: Maybe<restaurant_tag_bool_exp>
-  }) => restaurant_tag_aggregate
-  restaurant_tag_by_pk: (args: {
-    restaurant_id: ScalarsEnums['uuid']
-    tag_id: ScalarsEnums['uuid']
-  }) => Maybe<restaurant_tag>
-  review: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['review_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<review_order_by>>
-    where?: Maybe<review_bool_exp>
-  }) => Array<review>
-  review_aggregate: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['review_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<review_order_by>>
-    where?: Maybe<review_bool_exp>
-  }) => review_aggregate
-  review_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<review>
-  review_tag_sentence: (args?: {
-    distinct_on?: Maybe<
-      Array<ScalarsEnums['review_tag_sentence_select_column']>
-    >
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<review_tag_sentence_order_by>>
-    where?: Maybe<review_tag_sentence_bool_exp>
-  }) => Array<review_tag_sentence>
-  review_tag_sentence_aggregate: (args?: {
-    distinct_on?: Maybe<
-      Array<ScalarsEnums['review_tag_sentence_select_column']>
-    >
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<review_tag_sentence_order_by>>
-    where?: Maybe<review_tag_sentence_bool_exp>
-  }) => review_tag_sentence_aggregate
-  review_tag_sentence_by_pk: (args: {
-    id: ScalarsEnums['uuid']
-  }) => Maybe<review_tag_sentence>
-  setting: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['setting_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<setting_order_by>>
-    where?: Maybe<setting_bool_exp>
-  }) => Array<setting>
-  setting_aggregate: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['setting_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<setting_order_by>>
-    where?: Maybe<setting_bool_exp>
-  }) => setting_aggregate
-  setting_by_pk: (args: { key: ScalarsEnums['String'] }) => Maybe<setting>
-  tag: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['tag_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<tag_order_by>>
-    where?: Maybe<tag_bool_exp>
-  }) => Array<tag>
-  tag_aggregate: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['tag_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<tag_order_by>>
-    where?: Maybe<tag_bool_exp>
-  }) => tag_aggregate
-  tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<tag>
-  tag_tag: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['tag_tag_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<tag_tag_order_by>>
-    where?: Maybe<tag_tag_bool_exp>
-  }) => Array<tag_tag>
-  tag_tag_aggregate: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['tag_tag_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<tag_tag_order_by>>
-    where?: Maybe<tag_tag_bool_exp>
-  }) => tag_tag_aggregate
-  tag_tag_by_pk: (args: {
-    category_tag_id: ScalarsEnums['uuid']
-    tag_id: ScalarsEnums['uuid']
-  }) => Maybe<tag_tag>
-  user: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['user_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<user_order_by>>
-    where?: Maybe<user_bool_exp>
-  }) => Array<user>
-  user_aggregate: (args?: {
-    distinct_on?: Maybe<Array<ScalarsEnums['user_select_column']>>
-    limit?: Maybe<ScalarsEnums['Int']>
-    offset?: Maybe<ScalarsEnums['Int']>
-    order_by?: Maybe<Array<user_order_by>>
-    where?: Maybe<user_bool_exp>
-  }) => user_aggregate
-  user_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<user>
-}
-
 export interface tag {
   alternates: (args?: {
     path?: Maybe<ScalarsEnums['String']>
@@ -9254,6 +8731,526 @@ export interface user_var_samp_fields {
 
 export interface user_variance_fields {
   charIndex: Maybe<ScalarsEnums['Float']>
+}
+
+export interface mutation {
+  delete_menu_item: (args: {
+    where: menu_item_bool_exp
+  }) => Maybe<menu_item_mutation_response>
+  delete_menu_item_by_pk: (args: {
+    id: ScalarsEnums['uuid']
+  }) => Maybe<menu_item>
+  delete_opening_hours: (args: {
+    where: opening_hours_bool_exp
+  }) => Maybe<opening_hours_mutation_response>
+  delete_opening_hours_by_pk: (args: {
+    id: ScalarsEnums['uuid']
+  }) => Maybe<opening_hours>
+  delete_photo: (args: {
+    where: photo_bool_exp
+  }) => Maybe<photo_mutation_response>
+  delete_photo_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<photo>
+  delete_photo_xref: (args: {
+    where: photo_xref_bool_exp
+  }) => Maybe<photo_xref_mutation_response>
+  delete_photo_xref_by_pk: (args: {
+    id: ScalarsEnums['uuid']
+  }) => Maybe<photo_xref>
+  delete_restaurant: (args: {
+    where: restaurant_bool_exp
+  }) => Maybe<restaurant_mutation_response>
+  delete_restaurant_by_pk: (args: {
+    id: ScalarsEnums['uuid']
+  }) => Maybe<restaurant>
+  delete_restaurant_tag: (args: {
+    where: restaurant_tag_bool_exp
+  }) => Maybe<restaurant_tag_mutation_response>
+  delete_restaurant_tag_by_pk: (args: {
+    restaurant_id: ScalarsEnums['uuid']
+    tag_id: ScalarsEnums['uuid']
+  }) => Maybe<restaurant_tag>
+  delete_review: (args: {
+    where: review_bool_exp
+  }) => Maybe<review_mutation_response>
+  delete_review_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<review>
+  delete_review_tag_sentence: (args: {
+    where: review_tag_sentence_bool_exp
+  }) => Maybe<review_tag_sentence_mutation_response>
+  delete_review_tag_sentence_by_pk: (args: {
+    id: ScalarsEnums['uuid']
+  }) => Maybe<review_tag_sentence>
+  delete_setting: (args: {
+    where: setting_bool_exp
+  }) => Maybe<setting_mutation_response>
+  delete_setting_by_pk: (args: {
+    key: ScalarsEnums['String']
+  }) => Maybe<setting>
+  delete_tag: (args: { where: tag_bool_exp }) => Maybe<tag_mutation_response>
+  delete_tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<tag>
+  delete_tag_tag: (args: {
+    where: tag_tag_bool_exp
+  }) => Maybe<tag_tag_mutation_response>
+  delete_tag_tag_by_pk: (args: {
+    category_tag_id: ScalarsEnums['uuid']
+    tag_id: ScalarsEnums['uuid']
+  }) => Maybe<tag_tag>
+  delete_user: (args: { where: user_bool_exp }) => Maybe<user_mutation_response>
+  delete_user_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<user>
+  insert_menu_item: (args: {
+    objects: Array<menu_item_insert_input>
+    on_conflict?: Maybe<menu_item_on_conflict>
+  }) => Maybe<menu_item_mutation_response>
+  insert_menu_item_one: (args: {
+    object: menu_item_insert_input
+    on_conflict?: Maybe<menu_item_on_conflict>
+  }) => Maybe<menu_item>
+  insert_opening_hours: (args: {
+    objects: Array<opening_hours_insert_input>
+    on_conflict?: Maybe<opening_hours_on_conflict>
+  }) => Maybe<opening_hours_mutation_response>
+  insert_opening_hours_one: (args: {
+    object: opening_hours_insert_input
+    on_conflict?: Maybe<opening_hours_on_conflict>
+  }) => Maybe<opening_hours>
+  insert_photo: (args: {
+    objects: Array<photo_insert_input>
+    on_conflict?: Maybe<photo_on_conflict>
+  }) => Maybe<photo_mutation_response>
+  insert_photo_one: (args: {
+    object: photo_insert_input
+    on_conflict?: Maybe<photo_on_conflict>
+  }) => Maybe<photo>
+  insert_photo_xref: (args: {
+    objects: Array<photo_xref_insert_input>
+    on_conflict?: Maybe<photo_xref_on_conflict>
+  }) => Maybe<photo_xref_mutation_response>
+  insert_photo_xref_one: (args: {
+    object: photo_xref_insert_input
+    on_conflict?: Maybe<photo_xref_on_conflict>
+  }) => Maybe<photo_xref>
+  insert_restaurant: (args: {
+    objects: Array<restaurant_insert_input>
+    on_conflict?: Maybe<restaurant_on_conflict>
+  }) => Maybe<restaurant_mutation_response>
+  insert_restaurant_one: (args: {
+    object: restaurant_insert_input
+    on_conflict?: Maybe<restaurant_on_conflict>
+  }) => Maybe<restaurant>
+  insert_restaurant_tag: (args: {
+    objects: Array<restaurant_tag_insert_input>
+    on_conflict?: Maybe<restaurant_tag_on_conflict>
+  }) => Maybe<restaurant_tag_mutation_response>
+  insert_restaurant_tag_one: (args: {
+    object: restaurant_tag_insert_input
+    on_conflict?: Maybe<restaurant_tag_on_conflict>
+  }) => Maybe<restaurant_tag>
+  insert_review: (args: {
+    objects: Array<review_insert_input>
+    on_conflict?: Maybe<review_on_conflict>
+  }) => Maybe<review_mutation_response>
+  insert_review_one: (args: {
+    object: review_insert_input
+    on_conflict?: Maybe<review_on_conflict>
+  }) => Maybe<review>
+  insert_review_tag_sentence: (args: {
+    objects: Array<review_tag_sentence_insert_input>
+    on_conflict?: Maybe<review_tag_sentence_on_conflict>
+  }) => Maybe<review_tag_sentence_mutation_response>
+  insert_review_tag_sentence_one: (args: {
+    object: review_tag_sentence_insert_input
+    on_conflict?: Maybe<review_tag_sentence_on_conflict>
+  }) => Maybe<review_tag_sentence>
+  insert_setting: (args: {
+    objects: Array<setting_insert_input>
+    on_conflict?: Maybe<setting_on_conflict>
+  }) => Maybe<setting_mutation_response>
+  insert_setting_one: (args: {
+    object: setting_insert_input
+    on_conflict?: Maybe<setting_on_conflict>
+  }) => Maybe<setting>
+  insert_tag: (args: {
+    objects: Array<tag_insert_input>
+    on_conflict?: Maybe<tag_on_conflict>
+  }) => Maybe<tag_mutation_response>
+  insert_tag_one: (args: {
+    object: tag_insert_input
+    on_conflict?: Maybe<tag_on_conflict>
+  }) => Maybe<tag>
+  insert_tag_tag: (args: {
+    objects: Array<tag_tag_insert_input>
+    on_conflict?: Maybe<tag_tag_on_conflict>
+  }) => Maybe<tag_tag_mutation_response>
+  insert_tag_tag_one: (args: {
+    object: tag_tag_insert_input
+    on_conflict?: Maybe<tag_tag_on_conflict>
+  }) => Maybe<tag_tag>
+  insert_user: (args: {
+    objects: Array<user_insert_input>
+    on_conflict?: Maybe<user_on_conflict>
+  }) => Maybe<user_mutation_response>
+  insert_user_one: (args: {
+    object: user_insert_input
+    on_conflict?: Maybe<user_on_conflict>
+  }) => Maybe<user>
+  update_menu_item: (args: {
+    _inc?: Maybe<menu_item_inc_input>
+    _set?: Maybe<menu_item_set_input>
+    where: menu_item_bool_exp
+  }) => Maybe<menu_item_mutation_response>
+  update_menu_item_by_pk: (args: {
+    _inc?: Maybe<menu_item_inc_input>
+    _set?: Maybe<menu_item_set_input>
+    pk_columns: menu_item_pk_columns_input
+  }) => Maybe<menu_item>
+  update_opening_hours: (args: {
+    _set?: Maybe<opening_hours_set_input>
+    where: opening_hours_bool_exp
+  }) => Maybe<opening_hours_mutation_response>
+  update_opening_hours_by_pk: (args: {
+    _set?: Maybe<opening_hours_set_input>
+    pk_columns: opening_hours_pk_columns_input
+  }) => Maybe<opening_hours>
+  update_photo: (args: {
+    _inc?: Maybe<photo_inc_input>
+    _set?: Maybe<photo_set_input>
+    where: photo_bool_exp
+  }) => Maybe<photo_mutation_response>
+  update_photo_by_pk: (args: {
+    _inc?: Maybe<photo_inc_input>
+    _set?: Maybe<photo_set_input>
+    pk_columns: photo_pk_columns_input
+  }) => Maybe<photo>
+  update_photo_xref: (args: {
+    _set?: Maybe<photo_xref_set_input>
+    where: photo_xref_bool_exp
+  }) => Maybe<photo_xref_mutation_response>
+  update_photo_xref_by_pk: (args: {
+    _set?: Maybe<photo_xref_set_input>
+    pk_columns: photo_xref_pk_columns_input
+  }) => Maybe<photo_xref>
+  update_restaurant: (args: {
+    _append?: Maybe<restaurant_append_input>
+    _delete_at_path?: Maybe<restaurant_delete_at_path_input>
+    _delete_elem?: Maybe<restaurant_delete_elem_input>
+    _delete_key?: Maybe<restaurant_delete_key_input>
+    _inc?: Maybe<restaurant_inc_input>
+    _prepend?: Maybe<restaurant_prepend_input>
+    _set?: Maybe<restaurant_set_input>
+    where: restaurant_bool_exp
+  }) => Maybe<restaurant_mutation_response>
+  update_restaurant_by_pk: (args: {
+    _append?: Maybe<restaurant_append_input>
+    _delete_at_path?: Maybe<restaurant_delete_at_path_input>
+    _delete_elem?: Maybe<restaurant_delete_elem_input>
+    _delete_key?: Maybe<restaurant_delete_key_input>
+    _inc?: Maybe<restaurant_inc_input>
+    _prepend?: Maybe<restaurant_prepend_input>
+    _set?: Maybe<restaurant_set_input>
+    pk_columns: restaurant_pk_columns_input
+  }) => Maybe<restaurant>
+  update_restaurant_tag: (args: {
+    _append?: Maybe<restaurant_tag_append_input>
+    _delete_at_path?: Maybe<restaurant_tag_delete_at_path_input>
+    _delete_elem?: Maybe<restaurant_tag_delete_elem_input>
+    _delete_key?: Maybe<restaurant_tag_delete_key_input>
+    _inc?: Maybe<restaurant_tag_inc_input>
+    _prepend?: Maybe<restaurant_tag_prepend_input>
+    _set?: Maybe<restaurant_tag_set_input>
+    where: restaurant_tag_bool_exp
+  }) => Maybe<restaurant_tag_mutation_response>
+  update_restaurant_tag_by_pk: (args: {
+    _append?: Maybe<restaurant_tag_append_input>
+    _delete_at_path?: Maybe<restaurant_tag_delete_at_path_input>
+    _delete_elem?: Maybe<restaurant_tag_delete_elem_input>
+    _delete_key?: Maybe<restaurant_tag_delete_key_input>
+    _inc?: Maybe<restaurant_tag_inc_input>
+    _prepend?: Maybe<restaurant_tag_prepend_input>
+    _set?: Maybe<restaurant_tag_set_input>
+    pk_columns: restaurant_tag_pk_columns_input
+  }) => Maybe<restaurant_tag>
+  update_review: (args: {
+    _append?: Maybe<review_append_input>
+    _delete_at_path?: Maybe<review_delete_at_path_input>
+    _delete_elem?: Maybe<review_delete_elem_input>
+    _delete_key?: Maybe<review_delete_key_input>
+    _inc?: Maybe<review_inc_input>
+    _prepend?: Maybe<review_prepend_input>
+    _set?: Maybe<review_set_input>
+    where: review_bool_exp
+  }) => Maybe<review_mutation_response>
+  update_review_by_pk: (args: {
+    _append?: Maybe<review_append_input>
+    _delete_at_path?: Maybe<review_delete_at_path_input>
+    _delete_elem?: Maybe<review_delete_elem_input>
+    _delete_key?: Maybe<review_delete_key_input>
+    _inc?: Maybe<review_inc_input>
+    _prepend?: Maybe<review_prepend_input>
+    _set?: Maybe<review_set_input>
+    pk_columns: review_pk_columns_input
+  }) => Maybe<review>
+  update_review_tag_sentence: (args: {
+    _inc?: Maybe<review_tag_sentence_inc_input>
+    _set?: Maybe<review_tag_sentence_set_input>
+    where: review_tag_sentence_bool_exp
+  }) => Maybe<review_tag_sentence_mutation_response>
+  update_review_tag_sentence_by_pk: (args: {
+    _inc?: Maybe<review_tag_sentence_inc_input>
+    _set?: Maybe<review_tag_sentence_set_input>
+    pk_columns: review_tag_sentence_pk_columns_input
+  }) => Maybe<review_tag_sentence>
+  update_setting: (args: {
+    _append?: Maybe<setting_append_input>
+    _delete_at_path?: Maybe<setting_delete_at_path_input>
+    _delete_elem?: Maybe<setting_delete_elem_input>
+    _delete_key?: Maybe<setting_delete_key_input>
+    _prepend?: Maybe<setting_prepend_input>
+    _set?: Maybe<setting_set_input>
+    where: setting_bool_exp
+  }) => Maybe<setting_mutation_response>
+  update_setting_by_pk: (args: {
+    _append?: Maybe<setting_append_input>
+    _delete_at_path?: Maybe<setting_delete_at_path_input>
+    _delete_elem?: Maybe<setting_delete_elem_input>
+    _delete_key?: Maybe<setting_delete_key_input>
+    _prepend?: Maybe<setting_prepend_input>
+    _set?: Maybe<setting_set_input>
+    pk_columns: setting_pk_columns_input
+  }) => Maybe<setting>
+  update_tag: (args: {
+    _append?: Maybe<tag_append_input>
+    _delete_at_path?: Maybe<tag_delete_at_path_input>
+    _delete_elem?: Maybe<tag_delete_elem_input>
+    _delete_key?: Maybe<tag_delete_key_input>
+    _inc?: Maybe<tag_inc_input>
+    _prepend?: Maybe<tag_prepend_input>
+    _set?: Maybe<tag_set_input>
+    where: tag_bool_exp
+  }) => Maybe<tag_mutation_response>
+  update_tag_by_pk: (args: {
+    _append?: Maybe<tag_append_input>
+    _delete_at_path?: Maybe<tag_delete_at_path_input>
+    _delete_elem?: Maybe<tag_delete_elem_input>
+    _delete_key?: Maybe<tag_delete_key_input>
+    _inc?: Maybe<tag_inc_input>
+    _prepend?: Maybe<tag_prepend_input>
+    _set?: Maybe<tag_set_input>
+    pk_columns: tag_pk_columns_input
+  }) => Maybe<tag>
+  update_tag_tag: (args: {
+    _set?: Maybe<tag_tag_set_input>
+    where: tag_tag_bool_exp
+  }) => Maybe<tag_tag_mutation_response>
+  update_tag_tag_by_pk: (args: {
+    _set?: Maybe<tag_tag_set_input>
+    pk_columns: tag_tag_pk_columns_input
+  }) => Maybe<tag_tag>
+  update_user: (args: {
+    _inc?: Maybe<user_inc_input>
+    _set?: Maybe<user_set_input>
+    where: user_bool_exp
+  }) => Maybe<user_mutation_response>
+  update_user_by_pk: (args: {
+    _inc?: Maybe<user_inc_input>
+    _set?: Maybe<user_set_input>
+    pk_columns: user_pk_columns_input
+  }) => Maybe<user>
+}
+
+export interface subscription {
+  menu_item: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<menu_item_order_by>>
+    where?: Maybe<menu_item_bool_exp>
+  }) => Array<menu_item>
+  menu_item_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<menu_item_order_by>>
+    where?: Maybe<menu_item_bool_exp>
+  }) => menu_item_aggregate
+  menu_item_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<menu_item>
+  opening_hours: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['opening_hours_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<opening_hours_order_by>>
+    where?: Maybe<opening_hours_bool_exp>
+  }) => Array<opening_hours>
+  opening_hours_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['opening_hours_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<opening_hours_order_by>>
+    where?: Maybe<opening_hours_bool_exp>
+  }) => opening_hours_aggregate
+  opening_hours_by_pk: (args: {
+    id: ScalarsEnums['uuid']
+  }) => Maybe<opening_hours>
+  photo: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['photo_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<photo_order_by>>
+    where?: Maybe<photo_bool_exp>
+  }) => Array<photo>
+  photo_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['photo_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<photo_order_by>>
+    where?: Maybe<photo_bool_exp>
+  }) => photo_aggregate
+  photo_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<photo>
+  photo_xref: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['photo_xref_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<photo_xref_order_by>>
+    where?: Maybe<photo_xref_bool_exp>
+  }) => Array<photo_xref>
+  photo_xref_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['photo_xref_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<photo_xref_order_by>>
+    where?: Maybe<photo_xref_bool_exp>
+  }) => photo_xref_aggregate
+  photo_xref_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<photo_xref>
+  restaurant: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => Array<restaurant>
+  restaurant_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => restaurant_aggregate
+  restaurant_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<restaurant>
+  restaurant_tag: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_tag_order_by>>
+    where?: Maybe<restaurant_tag_bool_exp>
+  }) => Array<restaurant_tag>
+  restaurant_tag_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<restaurant_tag_order_by>>
+    where?: Maybe<restaurant_tag_bool_exp>
+  }) => restaurant_tag_aggregate
+  restaurant_tag_by_pk: (args: {
+    restaurant_id: ScalarsEnums['uuid']
+    tag_id: ScalarsEnums['uuid']
+  }) => Maybe<restaurant_tag>
+  review: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['review_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<review_order_by>>
+    where?: Maybe<review_bool_exp>
+  }) => Array<review>
+  review_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['review_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<review_order_by>>
+    where?: Maybe<review_bool_exp>
+  }) => review_aggregate
+  review_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<review>
+  review_tag_sentence: (args?: {
+    distinct_on?: Maybe<
+      Array<ScalarsEnums['review_tag_sentence_select_column']>
+    >
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<review_tag_sentence_order_by>>
+    where?: Maybe<review_tag_sentence_bool_exp>
+  }) => Array<review_tag_sentence>
+  review_tag_sentence_aggregate: (args?: {
+    distinct_on?: Maybe<
+      Array<ScalarsEnums['review_tag_sentence_select_column']>
+    >
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<review_tag_sentence_order_by>>
+    where?: Maybe<review_tag_sentence_bool_exp>
+  }) => review_tag_sentence_aggregate
+  review_tag_sentence_by_pk: (args: {
+    id: ScalarsEnums['uuid']
+  }) => Maybe<review_tag_sentence>
+  setting: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['setting_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<setting_order_by>>
+    where?: Maybe<setting_bool_exp>
+  }) => Array<setting>
+  setting_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['setting_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<setting_order_by>>
+    where?: Maybe<setting_bool_exp>
+  }) => setting_aggregate
+  setting_by_pk: (args: { key: ScalarsEnums['String'] }) => Maybe<setting>
+  tag: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<tag_order_by>>
+    where?: Maybe<tag_bool_exp>
+  }) => Array<tag>
+  tag_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<tag_order_by>>
+    where?: Maybe<tag_bool_exp>
+  }) => tag_aggregate
+  tag_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<tag>
+  tag_tag: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['tag_tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<tag_tag_order_by>>
+    where?: Maybe<tag_tag_bool_exp>
+  }) => Array<tag_tag>
+  tag_tag_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['tag_tag_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<tag_tag_order_by>>
+    where?: Maybe<tag_tag_bool_exp>
+  }) => tag_tag_aggregate
+  tag_tag_by_pk: (args: {
+    category_tag_id: ScalarsEnums['uuid']
+    tag_id: ScalarsEnums['uuid']
+  }) => Maybe<tag_tag>
+  user: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['user_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<user_order_by>>
+    where?: Maybe<user_bool_exp>
+  }) => Array<user>
+  user_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['user_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<user_order_by>>
+    where?: Maybe<user_bool_exp>
+  }) => user_aggregate
+  user_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<user>
 }
 
 export interface GeneratedSchema {
