@@ -61,6 +61,15 @@ services:
       - 'postgres'
       - 'redis'
       - 'dish-hooks'
+  tileserver:
+    image: urbica/martin
+    ports:
+      - 3005:3000
+    environment:
+      - WATCH_MODE=true
+      - DATABASE_URL=postgres://postgres:postgres@postgres/dish
+    depends_on:
+      - 'postgres'
   user-server:
     image: docker.k8s.dishapp.com/dish/user-server
     build:

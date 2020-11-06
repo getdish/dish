@@ -415,6 +415,88 @@ function setupMapEffect({
       () => {
         if (!map) return
 
+        map.addSource('public.zcta5', {
+          type: 'vector',
+          url: 'http://localhost:3005/public.zcta5.json',
+        })
+        map.addLayer({
+          id: 'public.zcta5.fill',
+          type: 'fill',
+          source: 'public.zcta5',
+          minzoom: 11,
+          paint: {
+            'fill-color': '#880088',
+            'fill-opacity': 0.1,
+          },
+          'source-layer': 'public.zcta5',
+        })
+        map.addLayer({
+          id: 'public.zcta5.line',
+          type: 'line',
+          source: 'public.zcta5',
+          minzoom: 11,
+          paint: {
+            'line-color': '#880088',
+            'line-opacity': 0.2,
+            'line-width': 1,
+          },
+          'source-layer': 'public.zcta5',
+        })
+        cancels.add(() => {
+          map?.removeLayer('public.zcta5.fill')
+          map?.removeLayer('public.zcta5.line')
+          map?.removeSource('public.zcta5')
+        })
+
+        map.addSource('public.hrr', {
+          type: 'vector',
+          url: 'http://localhost:3005/public.hrr.json',
+        })
+        map.addLayer({
+          id: 'public.hrr.fill',
+          type: 'fill',
+          source: 'public.hrr',
+          maxzoom: 11,
+          paint: {
+            'fill-color': '#008888',
+            'fill-opacity': 0.1,
+          },
+          'source-layer': 'public.hrr',
+        })
+        map.addLayer({
+          id: 'public.hrr.label',
+          source: 'public.hrr',
+          'source-layer': 'public.hrr',
+          type: 'symbol',
+          layout: {
+            'text-field': ['format', ['get', 'hrrcity']],
+            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+            'text-size': 14,
+          },
+          paint: {
+            'text-halo-color': '#fff',
+            'text-halo-width': 1,
+          },
+        })
+        map.addLayer({
+          id: 'public.hrr.line',
+          type: 'line',
+          source: 'public.hrr',
+          maxzoom: 11,
+          paint: {
+            'line-color': '#008888',
+            'line-opacity': 0.2,
+            'line-width': 1,
+          },
+          'source-layer': 'public.hrr',
+        })
+        cancels.add(() => {
+          map?.removeLayer('public.hrr.fill')
+          map?.removeLayer('public.hrr.label')
+          map?.removeLayer('public.hrr.line')
+          map?.removeSource('public.hrr')
+        })
+
         map.addSource(RESTAURANTS_SOURCE_ID, {
           type: 'geojson',
           data: {
