@@ -37,7 +37,10 @@ eval $(./dishctl.sh yaml_to_env) some_command_that_needs_dish_ENV
 The core stack contains the minimum services needed to run the web app locally. This stack
 can be easily run with Docker Compose: https://docs.docker.com/compose/install/
 
-Once you have Docker Compose installed, go to the root of this repo and run:
+When working with Dish's Docker images you'll often need to be logged into our Docker
+Registry: `./dishctl.sh dish_docker_login`
+
+Once you're logged in and have Docker Compose installed, go to the root of this repo and run:
 
 `docker-compose up`
 

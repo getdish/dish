@@ -319,6 +319,7 @@ async function addTags(
 test.beforeEach(async (t) => {
   sinon.restore()
   await reset(t)
+  t.timeout(30000)
 })
 
 test('Merging', async (t) => {

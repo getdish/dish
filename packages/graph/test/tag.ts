@@ -4,6 +4,7 @@ import {
   RestaurantWithId,
   TagWithId,
   flushTestData,
+  query,
   restaurantFindOneWithTags,
   restaurantUpsert,
   restaurantUpsertOrphanTags,
@@ -109,4 +110,38 @@ test('Ambiguous tags get marked', async (t) => {
   const tag5 = await tagFindOne({ id: tag3.id })
   t.is(tag4?.is_ambiguous, true)
   t.is(tag5?.is_ambiguous, true)
+})
+
+test.skip('Getting top tags for a restaurant', async (t) => {
+  let restaurant = await restaurantFindOneWithTags({
+    name: 'Test Restaurant',
+  })
+  await restaurantUpsertOrphanTags(restaurant, [
+    'Test tag',
+    'Test tag existing',
+  ])
+  const [tag] = await tagInsert([
+    { name: 'Test tag', parentId: t.context.existing_tag.id },
+  ])
+  restaurant = (await restaurantUpsertRestaurantTags(restaurant, [
+    { tag_id: tag.id },
+  ]))!
+  const restaurant_query = await query.restaurant({
+    where: {
+      slug: {
+        _eq: restaurant.slug,
+      },
+    },
+    limit: 1,
+  })[0]
+  console.log(restaurant.slug)
+  const results = await restaurant_query.top_tags({
+    args: {
+      tag_names: [''],
+      tag_types: 'dish',
+    },
+    limit: 10,
+  })
+  console.log(results)
+  t.is(restaurant?.name ?? '', 'Test Restaurant')
 })

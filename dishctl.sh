@@ -298,9 +298,12 @@ function local_node_with_prod_env() {
   export TIMESCALE_PASSWORD=$TF_VAR_TIMESCALE_SU_PASS
   export HASURA_ENDPOINT=https://hasura.dishapp.com
   export HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
+  if [[ $DISABLE_GC != "1" ]]; then
+    export GC_FLAG="--expose-gc"
+  fi
   node \
     --max-old-space-size=4096 \
-    --expose-gc \
+    $GC_FLAG \
     $1
 }
 
@@ -646,9 +649,24 @@ function self_crawl_by_query() {
   query="SELECT id FROM restaurant $1"
   echo "Running self crawler with SQL: $query"
   worker "
-    QUERY=\"$query\" \
+    QUERY=${query@Q} \
       node /app/services/crawlers/_/self/sandbox.js
   "
+}
+
+# Watch progress at https://worker-ui.k8s.dishapp.com/ui
+function limited_self_crawl_by_sanfran_cuisine() {
+  query="
+    WHERE st_dwithin(
+      location, st_makepoint(-122.42, 37.76), 0.2
+    )
+    AND (
+      tag_names @> '\"mexican__taco\"'
+      OR
+      tag_names @> '\"vietnamese__pho\"'
+    )
+  "
+  self_crawl_by_query "$query"
 }
 
 function update_node_taints_for() {

@@ -294,11 +294,22 @@ const runSearch: AsyncAction<{
     mapAt: null,
   })
 
+  const activeTags = state.activeTags ?? {}
+  const dishSearchedTag = Object.keys(activeTags).find(
+    (k) => allTags[k]?.type === 'dish'
+  )
+  let otherTags = [
+    ...tags
+      .map((tag) => getTagSlug(tag).replace('lenses__', ''))
+      .filter((t) => !t.includes(dishSearchedTag)),
+  ]
+
   const searchArgs: RestaurantSearchArgs = {
     center: roundLngLat(center),
     span: roundLngLat(span),
     query: state!.searchQuery,
-    tags: [...tags.map((tag) => getTagSlug(tag).replace('lenses__', ''))],
+    tags: otherTags,
+    main_tag: dishSearchedTag,
   }
 
   // prevent duplicate searches
