@@ -13,16 +13,19 @@ export const thirdPartyCrawlSources = {
     name: 'UberEats',
     image: require('./assets/ubereats.jpg').default,
     delivery: true,
+    tagSlug: 'filters__ubereats',
   },
   grubhub: {
     name: 'GrubHub',
     image: require('./assets/grubhub.jpg').default,
     delivery: true,
+    tagSlug: 'filters__grubhub',
   },
   doordash: {
     name: 'DoorDash',
     image: require('./assets/doordash.jpg').default,
     delivery: true,
+    tagSlug: 'filters__doordash',
   },
   yelp: {
     name: 'Yelp',

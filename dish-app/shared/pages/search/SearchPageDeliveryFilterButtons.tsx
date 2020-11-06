@@ -28,6 +28,7 @@ export const SearchPageDeliveryFilterButtons = memo(() => {
               tag={{
                 name: key,
                 type: 'filter',
+                slug: item.tagSlug,
               }}
               key={key}
               isActive={noneActive ? true : isActive}

@@ -15,6 +15,7 @@ export const guessTagSlug = (
 ) => {
   return (
     tag.slug ??
+    // @ts-ignore
     `${parentSlugsByType[tag.type] ?? 'global'}__${slugify(tag.name)}`
   )
 }

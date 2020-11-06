@@ -6,12 +6,11 @@ import React, { memo } from 'react'
 import { HStack, Spacer, Text, VStack } from 'snackui'
 
 import { bgLight } from '../../colors'
-import { isWeb } from '../../constants'
 import { getCurrentTagNames } from '../../helpers/getCurrentTagNames'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
 import { omStatic } from '../../state/omStatic'
-import { tagDisplayName } from '../../state/tagDisplayName'
+import { tagDisplayName } from '../../state/tagMeta'
 import { PointsText } from '../../views/PointsText'
 import { RestaurantReviewsDisplayStore } from './RestaurantBreakdown'
 

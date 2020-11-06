@@ -41,7 +41,7 @@ import { tagDefaultAutocomplete } from './state/localTags.json'
 import { NavigableTag } from './state/NavigableTag'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
-import { tagDisplayName } from './state/tagDisplayName'
+import { tagDisplayName } from './state/tagMeta'
 import { CloseButton, SmallCircleButton } from './views/ui/CloseButton'
 import { LinkButton } from './views/ui/LinkButton'
 

@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { groupBy, sortBy } from 'lodash'
 import React, { memo } from 'react'
 import { HStack, StackProps } from 'snackui'
 
@@ -8,6 +8,7 @@ import { useIsNarrow } from '../../hooks/useIs'
 import { getTagSlug } from '../../state/getTagSlug'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { tagFilters } from '../../state/localTags.json'
+import { tagGroup, tagSort } from '../../state/tagMeta'
 import { FilterButton } from '../../views/FilterButton'
 
 type FilterBarProps = { activeTags: HomeActiveTagsRecord }
@@ -21,7 +22,10 @@ export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
   }
 
   let last = 0
-  const grouped = _.groupBy(tagFilters, (x) => x?.['groupId'] ?? ++last)
+  const grouped = groupBy(
+    sortBy(tagFilters, (x) => tagSort[x.slug]),
+    (x) => tagGroup[x.slug] ?? ++last
+  )
   const groupedList = Object.keys(grouped).map((k) => grouped[k])
 
   return (
@@ -37,7 +41,15 @@ export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
               extraProps.borderBottomLeftRadius = hasPrev ? 0 : 30
               extraProps.borderTopRightRadius = hasNext ? 0 : 30
               extraProps.borderBottomRightRadius = hasNext ? 0 : 30
-              const isActive = activeTags[getTagSlug(tag)]
+              const isActive = activeTags[getTagSlug(tag)] ?? false
+              console.log(
+                'activeTags',
+                isActive,
+                tag,
+                getTagSlug(tag),
+                activeTags[getTagSlug(tag)],
+                activeTags
+              )
               const button = (
                 <FilterButton
                   key={`tag-${tag.id}`}
