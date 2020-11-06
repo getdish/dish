@@ -32,7 +32,7 @@ export const RestaurantOverview = memo(
     const summary = restaurant.summary || headlines
     const scale = 2.1 - Math.max(1.0, Math.min(1.1, summary.length / 250))
     const lineHeight = (size === 'lg' ? 28 : 26) * scale
-    const fontSize = (size === 'lg' ? 18 : 16) * scale
+    const fontSize = 16 * scale
 
     if (summary) {
       return (

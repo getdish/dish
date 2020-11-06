@@ -62,12 +62,7 @@ const RestaurantHeaderContent = memo(
           (size === 'sm' ? 0.8 : 1))
 
       return (
-        <VStack
-          width="100%"
-          position="relative"
-          zIndex={100}
-          minWidth={minWidth}
-        >
+        <VStack width="100%" position="relative" zIndex={100}>
           <ContentScrollViewHorizontal
             style={{
               width: '100%',
@@ -79,6 +74,7 @@ const RestaurantHeaderContent = memo(
             }}
           >
             <VStack
+              minWidth={minWidth}
               borderTopRightRadius={drawerBorderRadius - 1}
               borderTopLeftRadius={drawerBorderRadius - 1}
               width="100%"

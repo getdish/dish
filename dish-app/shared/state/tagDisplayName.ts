@@ -10,7 +10,7 @@ export const tagDisplayNames = {
   'price-higher': '$$$',
   Vibe: 'Vibe',
   Veg: 'Green',
-  Drink: 'Bar',
+  Drinks: 'Drink',
   Gems: 'Top',
 }
 
@@ -20,6 +20,6 @@ export const tagDisplayIcons = {
   'price-high': '$$$',
   Vibe: 'Date',
   Veg: 'Green',
-  Drink: 'Drink',
+  Drinks: 'Drink',
   Gems: 'Top',
 }

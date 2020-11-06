@@ -28,14 +28,15 @@ export function Grid({ children, itemMinWidth = 200 }: GridProps) {
   const childrenList = React.Children.toArray(children)
 
   return (
-    <HStack flexWrap="wrap">
-      {childrenList.map((child) => {
+    <HStack alignItems="center" justifyContent="center" flexWrap="wrap">
+      {childrenList.map((child, i) => {
         if (!child) {
           return null
         }
 
+        // index key bad
         return (
-          <HStack key={child} flex={1} width={itemMinWidth}>
+          <HStack key={i} flex={1} minWidth={itemMinWidth}>
             {child}
           </HStack>
         )

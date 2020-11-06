@@ -153,7 +153,7 @@
     "@loadable/server": "^5.13.1",
     "@o/fast-compare": "2.7.6",
     "@react-native-community/cli-platform-ios": "^4.13.0",
-    "@react-native-mapbox-gl/maps": "^8.1.0-rc.4",
+    "@react-native-mapbox-gl/maps": "^8.1.0-rc.9",
     "body-parser": "^1.19.0",
     "canvas": "2.6.1",
     "expo": "^38.0.10",
