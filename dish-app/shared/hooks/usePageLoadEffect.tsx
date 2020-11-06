@@ -1,24 +1,29 @@
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 
-import { useIsMountedRef } from '../helpers/useIsMountedRef'
+import { HomeStateItem } from '../state/home-types'
 import { useOvermind } from '../state/om'
 
+export type PageLoadEffectCallback = (opts: {
+  isRefreshing: boolean
+  item: HomeStateItem
+}) => (() => any) | void
+
 export const usePageLoadEffect = (
-  isReady: boolean,
-  cb: (opts: { isRefreshing: boolean }) => (() => any) | void,
+  props: { isActive: boolean; item: HomeStateItem },
+  cb: PageLoadEffectCallback,
   mountArgs: any[] = []
 ) => {
   const om = useOvermind()
 
-  useEffect(() => {
-    if (isReady) {
-      const dispose = cb({ isRefreshing: false })
+  useLayoutEffect(() => {
+    if (props.isActive) {
+      const dispose = cb({ isRefreshing: false, item: props.item })
 
       const dispose2 = om.reaction(
         () => om.state.home.refreshCurrentPage,
         () => {
           console.warn('refresh')
-          cb({ isRefreshing: true })
+          cb({ isRefreshing: true, item: props.item })
         }
       )
 
@@ -27,5 +32,5 @@ export const usePageLoadEffect = (
         dispose2()
       }
     }
-  }, [isReady, ...mountArgs])
+  }, [props.isActive, ...mountArgs])
 }

@@ -19,10 +19,8 @@ import {
 } from 'recyclerlistview'
 import {
   AbsoluteVStack,
-  AnimatedVStack,
   Button,
   HStack,
-  LinearGradient,
   LoadingItem,
   Spacer,
   StackProps,
@@ -39,9 +37,11 @@ import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
-import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
+import {
+  PageLoadEffectCallback,
+  usePageLoadEffect,
+} from '../../hooks/usePageLoadEffect'
 import { addTagsToCache } from '../../state/allTags'
-import { getFullTags } from '../../state/getFullTags'
 import { getTagsFromRoute } from '../../state/getTagsFromRoute'
 import { getTagSlug } from '../../state/getTagSlug'
 import { getLocationFromRoute } from '../../state/home-location.helpers'
@@ -68,25 +68,14 @@ type Props = StackViewProps<HomeStateItemSearch>
 
 const SearchPagePropsContext = createContext<Props | null>(null)
 
-export default memo(function SearchPage(props: Props) {
-  // const isEditingUserList = !!isEditingUserPage(om.state)
-  const om = useOvermind()
-  const state = om.state.home.allStates[props.item.id] as HomeStateItemSearch
-  const isOptimisticUpdating = om.state.home.isOptimisticUpdating
-  const wasOptimisticUpdating = useLastValue(isOptimisticUpdating)
-
-  const changingFilters = wasOptimisticUpdating && state.status === 'loading'
-  const shouldAvoidContentUpdates =
-    isOptimisticUpdating || !props.isActive || changingFilters
-
-  usePageLoadEffect(props.isActive, ({ isRefreshing }) => {
-    // if initial load on a search page, process url => state
-    let isCancelled = false
-    if (!isRefreshing) {
-      const location = getLocationFromRoute()
+const loadSearchPage: PageLoadEffectCallback = ({ isRefreshing, item }) => {
+  // if initial load on a search page, process url => state
+  let isCancelled = false
+  if (!isRefreshing) {
+    getLocationFromRoute().then((location) => {
+      if (isCancelled) return
       // TODO UPDATE HOME TOO...
-      om.actions.home.updateCurrentState({
-        ...state,
+      omStatic.actions.home.updateCurrentState({
         ...location,
       })
       getTagsFromRoute(router.curPage).then((tags) => {
@@ -99,20 +88,34 @@ export default memo(function SearchPage(props: Props) {
           },
           {}
         )
-        om.actions.home.updateActiveTags({
-          ...state,
+        omStatic.actions.home.updateActiveTags({
+          ...item,
           searchQuery: decodeURIComponent(router.curPage.params.search ?? ''),
           activeTags,
         })
-        om.actions.home.runSearch()
+        omStatic.actions.home.runSearch()
       })
-    } else {
-      om.actions.home.runSearch({ force: true })
-    }
-    return () => {
-      isCancelled = true
-    }
-  })
+    })
+  } else {
+    omStatic.actions.home.runSearch({ force: true })
+  }
+  return () => {
+    isCancelled = true
+  }
+}
+
+export default memo(function SearchPage(props: Props) {
+  // const isEditingUserList = !!isEditingUserPage(om.state)
+  const om = useOvermind()
+  const state = om.state.home.allStates[props.item.id] as HomeStateItemSearch
+  const isOptimisticUpdating = om.state.home.isOptimisticUpdating
+  const wasOptimisticUpdating = useLastValue(isOptimisticUpdating)
+
+  const changingFilters = wasOptimisticUpdating && state.status === 'loading'
+  const shouldAvoidContentUpdates =
+    isOptimisticUpdating || !props.isActive || changingFilters
+
+  usePageLoadEffect(props, loadSearchPage)
 
   useEffect(() => {
     let isCancelled = false
@@ -186,9 +189,10 @@ const SearchNavBarContainer = ({
 
   if (!isSmall) {
     return (
-      <VStack marginTop={10}>
+      <>
         <SearchPageNavBar id={id} />
-      </VStack>
+        <VStack width={100} height={10} />
+      </>
     )
   }
 
@@ -357,7 +361,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         >
           <HStack
             paddingHorizontal={15}
-            paddingTop={isSmall ? 12 : 12 + 52}
+            paddingTop={isSmall ? 12 : 12 + 52 + 10}
             paddingBottom={12}
             overflow="hidden"
             justifyContent="center"

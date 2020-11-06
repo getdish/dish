@@ -35,7 +35,7 @@ import { LinkButton } from './ui/LinkButton'
 import { LinkButtonProps } from './ui/LinkProps'
 
 export type TagButtonTagProps = NonNullObject<
-  Required<Pick<Tag, 'name' | 'type'>>
+  Required<Pick<Tag, 'name' | 'type' | 'slug'>>
 > & {
   icon?: Exclude<Tag['icon'], null>
   rgb?: Exclude<Tag['rgb'], null>

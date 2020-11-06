@@ -4,9 +4,7 @@ import { OVERMIND_MUTATIONS, isWeb } from '../constants'
 import { addTagsToCache } from './allTags'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './localTags.json'
 
-const LOG_OVERMIND =
-  (typeof document !== 'undefined' && window.location?.search === '?verbose') ||
-  !isWeb
+const LOG_OVERMIND = process.env.NODE_ENV === 'development' || !isWeb
 
 export const onInitialize: OnInitialize = async (
   { state, actions, effects },

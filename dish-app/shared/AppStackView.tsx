@@ -26,10 +26,12 @@ export function AppStackView<A extends HomeStateItem>(props: {
   const breadcrumbs = getBreadcrumbs(om.state.home.states)
   const key = JSON.stringify(breadcrumbs.map((x) => x.id))
   const homeStates = useMemo(() => breadcrumbs, [key])
-  const currentStates = useDebounceValue(homeStates, 80) ?? homeStates
+  const currentStates = useDebounceValue(homeStates, 20) ?? homeStates
   const isRemoving = currentStates.length > homeStates.length
   const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
+
+  console.log('AppStackView.items', items)
 
   return (
     <>
@@ -86,14 +88,6 @@ const AppStackViewItem = memo(
 
     useLayoutEffect(() => {
       if (isActive) {
-        console.log('setActiveId', item.type)
-        contentParentStore.setActiveId(item.type)
-      }
-    }, [isActive])
-
-    useLayoutEffect(() => {
-      if (isActive) {
-        console.log('setActiveId', item.type)
         contentParentStore.setActiveId(item.type)
       }
     }, [isActive])

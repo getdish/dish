@@ -1,5 +1,6 @@
 import { Tag, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
+import { differenceBy } from 'lodash'
 
 import { allTags } from './allTags'
 import { FullTag } from './FullTag'
@@ -56,7 +57,7 @@ export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
   if (res.length !== tags.length) {
     console.warn(
       'didnt find some tags',
-      tags.filter((x) => !res.some((y) => y.name === x.name))
+      differenceBy(res, tags, (x) => x.name)
     )
   }
 
