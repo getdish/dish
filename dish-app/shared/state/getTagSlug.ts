@@ -1,4 +1,4 @@
-import { slugify } from '@dish/graph/_'
+import { slugify } from '@dish/graph'
 
 import { TagWithNameAndType } from './getFullTags'
 import { NavigableTag } from './NavigableTag'

@@ -50,6 +50,7 @@ export const SearchPageNavBar = (props: { id: string }) => {
 
   return (
     <VStack
+      className="test123"
       position="absolute"
       top={0}
       left={0}
@@ -59,19 +60,9 @@ export const SearchPageNavBar = (props: { id: string }) => {
       shadowRadius={8}
       borderRadius={borderRadius}
       shadowOffset={{ height: 3, width: 0 }}
-      zIndex={1000}
-      {...(isSmall && {
-        top: 'auto',
-        bottom: 0,
-        left: 6,
-        right: 'auto',
-        maxWidth: '98.5%',
-        backgroundColor: '#000',
-      })}
+      zIndex={10000}
     >
-      <BlurView blurType="light" borderRadius={borderRadius - 2} flex={1}>
-        <SearchPageNavBarContent stateId={props.id} />
-      </BlurView>
+      <SearchPageNavBarContent stateId={props.id} />
     </VStack>
   )
 }

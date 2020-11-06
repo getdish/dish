@@ -55,6 +55,7 @@ export const AppIntroLetter = memo(() => {
           />
           <AbsoluteVStack
             bottom={-20}
+            zIndex={1000}
             right={-20}
             transform={[{ rotate: '-10deg' }]}
           >
@@ -62,6 +63,7 @@ export const AppIntroLetter = memo(() => {
           </AbsoluteVStack>
           <AbsoluteVStack
             bottom={-20}
+            zIndex={1000}
             left={-20}
             transform={[{ rotate: '10deg' }]}
           >

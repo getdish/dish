@@ -60,7 +60,7 @@ export default memo(function HomePage(props: Props) {
   const om = useOvermind()
   const isOnHome = props.isActive
   const [isLoaded, setIsLoaded] = useState(false)
-  const [topDishes, setTopDishes] = useState([])
+  const [topDishes, setTopDishes] = useState<TopCuisine[]>([])
   const state = props.item
   const { center, span } = state
   const isSmall = useIsNarrow()
@@ -132,7 +132,7 @@ export default memo(function HomePage(props: Props) {
               om.actions.home.updateCurrentState({
                 results: _.flatten(all.map((x) => x.top_restaurants))
                   .filter((x) => x?.id)
-                  .map((x) => ({ id: x.id, slug: x.slug })),
+                  .map((x) => ({ id: x.id, slug: x.slug ?? '' })),
               })
             })
           })

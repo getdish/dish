@@ -76,7 +76,7 @@ const UserPageContent = graphql(
       console.log('we here', item.id, userState)
       if (userState) {
         om.actions.home.updateHomeState({
-          ...userState,
+          id: userState.id,
           results: reviews.map(({ restaurantId, restaurantSlug }) => {
             return {
               id: restaurantId,
@@ -94,7 +94,7 @@ const UserPageContent = graphql(
     const hasReviews = !!reviews.length && reviews[0].id !== null
 
     return (
-      <ContentScrollView id="user" paddingTop={0}>
+      <ContentScrollView id="user">
         <VStack spacing="xl" paddingHorizontal="2.5%" paddingVertical={20}>
           <VStack>
             {tab === 'review' && (

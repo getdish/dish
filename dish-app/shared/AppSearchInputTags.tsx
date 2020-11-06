@@ -9,7 +9,7 @@ import {
 import { isWeb } from './constants'
 import { getTagSlug } from './state/getTagSlug'
 import { useOvermind } from './state/om'
-import { TagButton } from './views/TagButton'
+import { TagButton, getTagButtonProps } from './views/TagButton'
 
 export const AppSearchInputTags = memo(
   ({ input }: { input: HTMLInputElement | null }) => {
@@ -50,13 +50,7 @@ export const AppSearchInputTags = memo(
                     transform: [{ translateY: 2 }],
                   })}
                   size="lg"
-                  // @ts-ignore
-                  name={tag.name}
-                  // @ts-ignore
-                  type={tag.type}
-                  icon={tag.icon ?? ''}
-                  rgb={tag.rgb}
-                  slug={tag.slug}
+                  {...getTagButtonProps(tag)}
                   onPress={() => {
                     om.actions.home.setSearchBarFocusedTag(tag)
                   }}
