@@ -17,7 +17,7 @@ import { searchBarHeight, zIndexMap } from './constants'
 import { getLngLat, getMinLngLat } from './helpers/getLngLat'
 import { getRestaurantRating } from './helpers/getRestaurantRating'
 import { getWindowHeight } from './helpers/getWindow'
-import { useIsNarrow } from './hooks/useIs'
+import { getIs, useIsNarrow } from './hooks/useIs'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { useRestaurantQuery } from './hooks/useRestaurantQuery'
@@ -361,12 +361,20 @@ const AppMapContent = memo(function AppMap({
         })
       }
     } else {
-      router.navigate({
+      const route = {
         name: 'restaurant',
         params: {
           slug: restaurant.slug,
         },
-      })
+      }
+
+      if (router.isRouteActive(route)) {
+        if (getIs('sm')) {
+          drawerStore.setSnapPoint(0)
+        }
+      } else {
+        router.navigate(route)
+      }
     }
   }, [])
 

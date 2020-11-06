@@ -68,10 +68,8 @@ export const SmallButton = ({
         minWidth: 44,
       })}
       {...(!isWeb && {
-        height: 44,
+        minHeight: 42,
         minWidth: 48,
-        alignItems: 'center',
-        justifyContent: 'center',
       })}
       {...(isActive && {
         backgroundColor: bgLight,

@@ -18,7 +18,7 @@ const paddingHorizontal = 16
 export const AppSearchLocationInput = memo(() => {
   const inputStore = useStore(InputStore, { name: 'location' })
   const om = useOvermind()
-  const { theme, color, background } = useSearchBarTheme()
+  const { theme, color, background, isSmall } = useSearchBarTheme()
   const [locationSearch, setLocationSearch] = useState('')
   const { currentLocationName } = om.state.home.currentState
 
@@ -87,10 +87,13 @@ export const AppSearchLocationInput = memo(() => {
         input={inputStore.node}
         autocompleteTarget="location"
         backgroundColor="rgba(255,255,255,0.15)"
-        borderRadius={100}
+        {...(!isSmall && {
+          borderRadius: 100,
+        })}
       >
         <HStack
           flex={1}
+          minHeight={44}
           alignItems="center"
           justifyContent="center"
           paddingHorizontal={8}

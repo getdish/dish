@@ -117,14 +117,13 @@ const RestaurantPage = memo(
 
         <ContentScrollView id="restaurant">
           {/* HEADER */}
+          {/* -1 margin bottom to overlap bottom border */}
           <VStack
             backgroundColor={bgLight}
             borderBottomColor={bgLightHover}
             borderBottomWidth={1}
           >
             {headerElement}
-
-            {/* -1 margin bottom to overlap bottom border */}
             <VStack marginBottom={-1} position="relative" zIndex={1}>
               <Suspense
                 fallback={

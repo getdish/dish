@@ -219,6 +219,7 @@ const AppSearchBarContents = memo(() => {
         <HStack padding={12}>
           <TouchableOpacity
             onPress={() => {
+              console.log('toggling', showLocation)
               omStatic.actions.home.setShowAutocomplete(
                 showLocation ? 'search' : 'location'
               )
