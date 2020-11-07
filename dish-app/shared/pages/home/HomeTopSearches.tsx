@@ -6,7 +6,8 @@ import { HStack, LinearGradient, Text } from 'snackui'
 import { bgLightHover } from '../../colors'
 import { useIsReallyNarrow } from '../../hooks/useIs'
 import { tagLenses } from '../../state/localTags.json'
-import { tagDisplayName } from '../../state/tagDisplayName'
+import { NavigableTag } from '../../state/NavigableTag'
+import { tagDisplayName } from '../../state/tagMeta'
 import { LinkButton } from '../../views/ui/LinkButton'
 
 export const HomeTopSearches = memo(() => {
@@ -27,7 +28,8 @@ export const HomeTopSearches = memo(() => {
       overflow="hidden"
     >
       {recentSearches.slice(0, isReallySmall ? 6 : 8).map((search, index) => {
-        const lenseTag = search.tags.find((x) => x.type === 'lense')
+        const lenseTag =
+          search.tags.find((x) => x.type === 'lense') ?? tagLenses[0]
         const hasLenseColor = !!lenseTag?.rgb
         const rgbString = hasLenseColor ? lenseTag.rgb.join(',') : ''
         return (
@@ -102,7 +104,7 @@ export const HomeTopSearches = memo(() => {
   )
 })
 
-const recentSearches: { tags: Tag[] }[] = [
+const recentSearches: { tags: NavigableTag[] }[] = [
   {
     tags: [tagLenses[0]],
   },

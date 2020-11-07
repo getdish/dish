@@ -1,8 +1,9 @@
-import { Tag, slugify } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
 
 import { allTags } from './allTags'
 import { HomeStateItem } from './home-types'
 import { isValidTag } from './isValidTag'
+import { NavigableTag } from './NavigableTag'
 
 export const getActiveTags = (state: Partial<HomeStateItem>) => {
   state = state ?? window['om']?.state.home.currentState
@@ -11,14 +12,7 @@ export const getActiveTags = (state: Partial<HomeStateItem>) => {
     const tagIds = Object.keys(activeTags)
       .filter((x) => !!activeTags[x])
       .filter(isValidTag)
-    const tags: Tag[] = tagIds.map(
-      (x) =>
-        allTags[x] ?? {
-          id: slugify(x),
-          name: x,
-          type: 'dish',
-        }
-    )
+    const tags: NavigableTag[] = tagIds.map((x) => allTags[x]).filter(isPresent)
     return tags
   }
   return []

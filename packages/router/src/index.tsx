@@ -216,6 +216,10 @@ export class Router extends Store<RouterProps> {
     return !sameName || !sameParams
   }
 
+  isRouteActive(navItem: NavigateItem) {
+    return !this.getShouldNavigate(navItem)
+  }
+
   async navigate(navItem: NavigateItem) {
     const item = this.navItemToHistoryItem(navItem)
     if (this.notFound) {

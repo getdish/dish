@@ -36,8 +36,6 @@ export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
     return cached
   }
 
-  console.log('fetching', tags)
-
   const res = [
     ...cached,
     ...(await resolved(() => {
@@ -56,7 +54,12 @@ export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
   ].filter(isPresent)
 
   if (res.length !== tags.length) {
-    debugger
+    console.warn(
+      'didnt find some tags',
+      tags,
+      res,
+      differenceBy(res, tags, (x) => x.name)
+    )
   }
 
   return res

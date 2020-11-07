@@ -133,14 +133,15 @@ const updateUser: AsyncAction<UpdateUserProps, boolean> = async (om, props) => {
 }
 
 const refreshUser: AsyncAction = async (om) => {
-  if (!Auth.user.id) return
+  const id = Auth.user.id
+  if (!id) return
   const user = await resolved(
     () =>
       query
         .user({
           where: {
             id: {
-              _eq: Auth.user.id,
+              _eq: id,
             },
           },
         })

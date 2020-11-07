@@ -1,12 +1,10 @@
 import { graphql } from '@dish/graph'
-import { HelpCircle } from '@dish/react-feather'
 import { sortBy } from 'lodash'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
 import {
   HStack,
   Spacer,
-  StackProps,
   Table,
   TableCell,
   TableCellProps,
@@ -18,8 +16,9 @@ import {
 } from 'snackui'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic } from '../../state/omStatic'
-import { tagDisplayName } from '../../state/tagDisplayName'
+import { tagDisplayName } from '../../state/tagMeta'
 import { thirdPartyCrawlSources } from '../../thirdPartyCrawlSources'
 import { useBreakdownsBySources } from './useBreakdownsBySources'
 
@@ -40,7 +39,7 @@ export const RestaurantSourcesBreakdown = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const sources = restaurant?.sources?.() ?? {}
-    const tags = omStatic.state.home.lastActiveTags
+    const tags = omStatic.state.home.lastActiveTags as NavigableTag[]
     const reviewTags = sortBy(
       tags.filter((tag) => tag.name !== 'Gems'),
       (a) => (a.type === 'lense' ? 0 : a.type === 'dish' ? 2 : 1)
@@ -110,7 +109,7 @@ export const RestaurantSourcesBreakdown = memo(
                 </TableRow>
 
                 {reviewTags.map((tag) => (
-                  <TableRow height={20} key={tag.name + tag.type}>
+                  <TableRow height={20} key={tag.slug}>
                     <TableCell {...col0Props} />
 
                     <TableCell>

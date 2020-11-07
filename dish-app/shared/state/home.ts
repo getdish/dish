@@ -128,7 +128,7 @@ export const state: HomeState = {
     }
     return state.states[0]
   }),
-  searchBarTags: derived<HomeState, OmState, Tag[]>((state) => {
+  searchBarTags: derived<HomeState, OmState, NavigableTag[]>((state) => {
     const curState = state.states[state.stateIndex]
     return getActiveTags(curState).filter(isSearchBarTag)
   }),
@@ -282,13 +282,15 @@ const runSearch: AsyncAction<{
 
   state = om.state.home.lastSearchState
   if (shouldCancel()) return
+  state = state!
 
   // overmind seems unhappy to just let us mutate
-  const center = state?.mapAt?.center ?? state!.center
-  const span = state?.mapAt?.span ?? state!.span
+  const center = state.mapAt?.center ?? state!.center
+  const span = state.mapAt?.span ?? state!.span
+  const id = state.id
 
   om.actions.home.updateHomeState({
-    ...state,
+    id: state.id,
     center,
     span,
     mapAt: null,
@@ -300,7 +302,11 @@ const runSearch: AsyncAction<{
   )
   let otherTags = [
     ...tags
-      .map((tag) => getTagSlug(tag).replace('lenses__', ''))
+      .map((tag) =>
+        getTagSlug(tag)
+          .replace('lenses__', '')
+          .replace('filters__delivery', 'delivery')
+      )
       .filter((t) => !t.includes(dishSearchedTag)),
   ]
 
@@ -341,7 +347,7 @@ const runSearch: AsyncAction<{
 
   // console.log('search found restaurants', restaurants)
   om.actions.home.updateHomeState({
-    ...state,
+    id: state.id,
     status: 'complete',
     // limit to 80 for now
     results: restaurants.filter(isPresent).slice(0, 80),
@@ -368,23 +374,29 @@ const deepAssign = (a: Object, b: Object) => {
       }
     }
   }
-  for (const key in a) {
-    if (!(key in b)) {
-      delete a[key]
-    }
-  }
+  // DONT DELETE
+  // for (const key in a) {
+  //   if (!(key in b)) {
+  //     delete a[key]
+  //   }
+  // }
 }
 
-const updateHomeState: Action<HomeStateItem> = (om, val) => {
+const updateHomeState: Action<{ id: string; [key: string]: any }> = (
+  om,
+  val
+) => {
+  if (!val.id) {
+    throw new Error(`Must have id`)
+  }
   const state = om.state.home.allStates[val.id]
   if (state) {
-    if (state.type !== val.type) {
-      console.warn('shouldnt update the type...')
-      return
+    if (val.type && state.type !== val.type) {
+      throw new Error(`Cant change the type`)
     }
     deepAssign(state, val)
   } else {
-    om.state.home.allStates[val.id] = { ...val }
+    om.state.home.allStates[val.id] = { ...val } as any
     // cleanup old from backward
     if (om.state.home.stateIds.length - 1 > om.state.home.stateIndex) {
       om.state.home.stateIds = om.state.home.stateIds.slice(
@@ -542,6 +554,11 @@ export const findLastHomeOrSearch = (states: HomeStateItem[]) => {
   return prev
 }
 
+/*
+ *
+ * TODO: move this all into usePageLoadEffect and remove this
+ *
+ */
 const pushHomeState: AsyncAction<
   HistoryItem,
   {
@@ -604,28 +621,14 @@ const pushHomeState: AsyncAction<
     // search or userSearch
     case 'userSearch':
     case 'search': {
+      const username =
+        type == 'userSearch' ? om.state.router.curPage.params.username : ''
       const prev = findLastHomeOrSearch(om.state.home.states)
       if (!prev) {
         throw new Error('unreachable')
       }
-
-      // use last home or search to get most up to date
-      if (prev.type === 'home') {
-        const tags = await getTagsFromRoute(router.curPage)
-        console.log('tags', tags)
-        addTagsToCache(tags.filter((x) => x.type !== 'lense'))
-        activeTags = {}
-        for (const tag of tags) {
-          activeTags[getTagSlug(tag)] = true
-        }
-      } else {
-        activeTags = prev.activeTags
-      }
-
-      const username =
-        type == 'userSearch' ? om.state.router.curPage.params.username : ''
-
       nextState = {
+        type: 'search',
         status: 'loading',
         results: [],
         // if we have a previous existing one thats valid, use it
@@ -637,7 +640,7 @@ const pushHomeState: AsyncAction<
             results: prev.results,
           }),
         username,
-        activeTags,
+        activeTags: prev.activeTags ?? {},
         center: prev.mapAt?.center ?? prev.center,
         span: prev.mapAt?.span ?? prev.span,
         mapAt: null,
@@ -1094,10 +1097,13 @@ const syncStateToRoute: AsyncAction<HomeStateTagNavigable, boolean> = async (
   return false
 }
 
-const updateCurrentState: Action<Partial<HomeStateItem>> = (om, val) => {
+const updateCurrentState: Action<Partial<Omit<HomeStateItem, 'type'>>> = (
+  om,
+  val
+) => {
   om.actions.home.updateHomeState({
-    ...om.state.home.currentState,
-    ...(val as any),
+    id: om.state.home.currentState.id,
+    ...val,
   })
 }
 

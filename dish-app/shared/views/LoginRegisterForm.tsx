@@ -179,7 +179,6 @@ export const LoginRegisterForm = ({
               <ValidatedInput
                 control={control}
                 errors={errors.email}
-                defaultValue=""
                 name="email"
                 spellCheck={false}
                 placeholder="Email"
@@ -213,7 +212,6 @@ export const LoginRegisterForm = ({
               <ValidatedInput
                 control={control}
                 errors={errors.email}
-                defaultValue=""
                 name="email"
                 spellCheck={false}
                 placeholder="Email or usename"
@@ -231,7 +229,6 @@ export const LoginRegisterForm = ({
             control={control}
             errors={errors.password}
             secureTextEntry
-            defaultValue=""
             name="password"
             placeholder="Password"
             onChangeText={(value) => store.setState({ password: value })}
@@ -304,14 +301,13 @@ const ValidatedInput = ({
       <Controller
         control={control}
         name={name}
-        defaultValue={defaultValue}
+        defaultValue={defaultValue ?? ''}
         rules={rules}
         render={({ onChange, onBlur, value }) => {
           return (
             <Input
               {...rest}
               name={name}
-              defaultValue={defaultValue}
               onBlur={onBlur}
               value={value}
               onChangeText={(val) => {

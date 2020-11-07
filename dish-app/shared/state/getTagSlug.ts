@@ -1,4 +1,4 @@
-import { slugify } from '@dish/graph/_'
+import { slugify } from '@dish/graph'
 
 import { TagWithNameAndType } from './getFullTags'
 import { NavigableTag } from './NavigableTag'
@@ -15,6 +15,7 @@ export const guessTagSlug = (
 ) => {
   return (
     tag.slug ??
+    // @ts-ignore
     `${parentSlugsByType[tag.type] ?? 'global'}__${slugify(tag.name)}`
   )
 }

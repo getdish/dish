@@ -41,7 +41,7 @@ export type HomeState = {
   refreshCurrentPage: number
   searchbarFocusedTag: Tag | null
   searchBarTagIndex: number
-  searchBarTags: Tag[]
+  searchBarTags: NavigableTag[]
   searchBarY: number
   selectedRestaurant: RestaurantOnlyIds | null
   showAutocomplete: ShowAutocomplete

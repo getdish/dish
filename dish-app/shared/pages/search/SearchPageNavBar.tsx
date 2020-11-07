@@ -29,6 +29,7 @@ const InverseRoundedEdge = () => {
 
 export const SearchPageNavBar = (props: { id: string }) => {
   const isSmall = useIsNarrow()
+  const safeArea = useSafeArea()
   const borderRadius = isSmall ? 20 : 0
 
   if (isSmall) {
@@ -40,15 +41,16 @@ export const SearchPageNavBar = (props: { id: string }) => {
         <AbsoluteVStack top={-20} left={0} transform={[{ scaleX: -1 }]}>
           <InverseRoundedEdge />
         </AbsoluteVStack>
-        <BlurView fallbackBackgroundColor="#000" blurType="dark">
+        <VStack backgroundColor="#000" paddingBottom={safeArea.bottom}>
           <SearchPageNavBarContent stateId={props.id} />
-        </BlurView>
+        </VStack>
       </VStack>
     )
   }
 
   return (
     <VStack
+      className="test123"
       position="absolute"
       top={0}
       left={0}
@@ -58,19 +60,9 @@ export const SearchPageNavBar = (props: { id: string }) => {
       shadowRadius={8}
       borderRadius={borderRadius}
       shadowOffset={{ height: 3, width: 0 }}
-      zIndex={1000}
-      {...(isSmall && {
-        top: 'auto',
-        bottom: 0,
-        left: 6,
-        right: 'auto',
-        maxWidth: '98.5%',
-        backgroundColor: '#000',
-      })}
+      zIndex={10000}
     >
-      <BlurView blurType="light" borderRadius={borderRadius - 2} flex={1}>
-        <SearchPageNavBarContent stateId={props.id} />
-      </BlurView>
+      <SearchPageNavBarContent stateId={props.id} />
     </VStack>
   )
 }

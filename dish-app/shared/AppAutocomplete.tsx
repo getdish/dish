@@ -3,7 +3,7 @@ import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'
 import { fullyIdle, series, sleep } from '@o/async'
-import { groupBy, uniqBy } from 'lodash'
+import { debounce, groupBy, uniqBy } from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
 import { Image, Keyboard, ScrollView } from 'react-native'
 import {
@@ -41,7 +41,7 @@ import { tagDefaultAutocomplete } from './state/localTags.json'
 import { NavigableTag } from './state/NavigableTag'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
-import { tagDisplayName } from './state/tagDisplayName'
+import { tagDisplayName } from './state/tagMeta'
 import { CloseButton, SmallCircleButton } from './views/ui/CloseButton'
 import { LinkButton } from './views/ui/LinkButton'
 
@@ -70,7 +70,7 @@ export default memo(function AppAutocomplete() {
   if (isNative) {
     useEffect(() => {
       // debounce to go after press event
-      const handleHide = () => {
+      const handleHide = debounce(() => {
         console.log('handleHideKeyboard')
         if (omStatic.state.home.showAutocomplete) {
           omStatic.actions.home.setShowAutocomplete(false)
@@ -78,10 +78,16 @@ export default memo(function AppAutocomplete() {
         if (drawerStore.snapIndex === 0) {
           drawerStore.setSnapPoint(1)
         }
+      }, 100)
+      const handleShow = () => {
+        console.log('handleShowKeyboard')
+        handleHide.cancel()
       }
-      Keyboard.addListener('keyboardWillHide', handleHide)
+      Keyboard.addListener('keyboardDidHide', handleHide)
+      Keyboard.addListener('keyboardWillShow', handleShow)
       return () => {
-        Keyboard.removeListener('keyboardWillHide', handleHide)
+        Keyboard.removeListener('keyboardDidHide', handleHide)
+        Keyboard.removeListener('keyboardWillShow', handleShow)
       }
     }, [])
   }
@@ -191,11 +197,11 @@ const AutocompleteContentsInner = memo(
       >
         <AbsoluteVStack
           backgroundColor={'transparent'}
-          pointerEvents="auto"
           width="100%"
           height="100%"
           overflow="hidden"
           alignItems="center"
+          pointerEvents="none"
           top={top}
           paddingTop={isSmall ? 0 : 10}
           paddingHorizontal={isSmall ? 0 : 15}
@@ -208,6 +214,7 @@ const AutocompleteContentsInner = memo(
             width="100%"
             height="100%"
             position="relative"
+            pointerEvents="auto"
             {...(!isSmall && {
               maxWidth: 540,
               maxHeight: `calc(100vh - ${top + 20}px)`,

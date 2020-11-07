@@ -3,6 +3,7 @@ import { Tag, slugify } from '@dish/graph'
 import { FullTag } from './FullTag'
 import { TagWithNameAndType } from './getFullTags'
 import { getTagSlug } from './getTagSlug'
+import { NavigableTag } from './NavigableTag'
 
 // cache for lookups in various places
 
@@ -20,7 +21,10 @@ export async function addTagsToCache(tags: FullTag[]) {
     }
     const slug = getTagSlug(tag)
     const existing = allTags[slug]
-    allTags[slug] = { ...existing, ...tag }
+    if (existing) {
+      continue
+    }
+    allTags[slug] = tag
     allTagsNameToSlug[tagNameKey(tag.name)] = slug
   }
   return tags
@@ -33,11 +37,13 @@ export function tagNameKey(name: string) {
   return slugify(name.toLowerCase(), ' ').replace(/\./g, '-')
 }
 
-export function getFullTagFromNameAndType(tag: TagWithNameAndType): Tag {
-  return (
-    allTags[allTagsNameToSlug[tagNameKey(tag.name)]] ?? {
-      slug: getTagSlug(tag),
-      ...tag,
-    }
-  )
+export function getFullTagFromNameAndType(
+  tag: TagWithNameAndType
+): NavigableTag {
+  const res = allTags[allTagsNameToSlug[tagNameKey(tag.name)]]
+  if (res) return res
+  if ('slug' in tag && 'type' in tag && 'name' in tag) {
+    return tag as NavigableTag
+  }
+  throw new Error('No slugifiable')
 }

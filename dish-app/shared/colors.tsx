@@ -5,7 +5,6 @@ export const bgLight = 'rgb(240, 250, 255)'
 export const bgLightTranslucent = 'rgba(220, 234, 255, 0.25)'
 export const bgLightHover = `rgba(230, 245, 250, 1)`
 export const bgLightPress = `rgba(220, 235, 245, 1)`
-export const bgHover = `#7154ADee`
 
 export const brandColor = `#CA3366`
 export const brandColorDark = `#A61C4A`

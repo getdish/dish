@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { MessageSquare } from '@dish/react-feather'
+import { Edit, MessageSquare } from '@dish/react-feather'
 import React from 'react'
 import { Text } from 'snackui'
 
@@ -31,14 +31,14 @@ export const RestaurantAddCommentButton = graphql(
         {...props}
       >
         <Text fontWeight="700" fontSize={14}>
-          {hideLabel ? '' : !!review?.text ? 'Edit review' : 'Add review'}
+          {hideLabel ? '' : !!review?.text ? 'Edit review' : 'Review'}
         </Text>
-        <MessageSquare
+        <Edit
           size={size ?? 16}
           style={{
             opacity: 0.5,
-            margin: -4,
-            marginLeft: 5,
+            marginRight: -2,
+            marginLeft: 8,
           }}
         />
       </SmallButton>

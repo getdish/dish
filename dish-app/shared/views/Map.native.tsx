@@ -14,7 +14,13 @@ MapboxGL.setTelemetryEnabled(false)
 
 const idFn = (_) => _
 
-export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
+export const Map = ({
+  center,
+  span,
+  features,
+  onMoveEnd,
+  onSelect,
+}: MapProps) => {
   const { width, height } = Dimensions.get('screen')
   const drawerStore = useStore(BottomDrawerStore)
   const drawerHeight = drawerStore.currentHeight
@@ -72,8 +78,10 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
           if (!features || !features.features?.length) return
           console.log('features', point, features)
           if (features.features.length === 1) {
+            onSelect?.(features.features[0]!.properties?.id)
             // single point
           } else {
+            onSelect?.(features.features[0]!.properties?.id)
             // multi-point
           }
         }}
@@ -123,25 +131,45 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
             features,
           }}
           cluster
-          clusterRadius={10}
+          clusterRadius={4}
+          clusterMaxZoomLevel={2}
         >
+          <MapboxGL.CircleLayer
+            id="circleClustersLayer"
+            belowLayerID="pointCount"
+            filter={['has', 'point_count']}
+            style={{
+              circleColor: 'rgba(150,10,40,0.5)',
+              circleRadius: 15,
+            }}
+          />
           <MapboxGL.SymbolLayer
             id="pointCount"
             style={{
-              textField: '{point_count}',
+              textField: [
+                'case',
+                ['has', 'point_count'],
+                '{point_count}',
+                ['get', 'rank'],
+              ],
               textSize: 12,
               textColor: '#000',
               textAllowOverlap: true,
               iconAllowOverlap: true,
             }}
           />
-          <MapboxGL.CircleLayer
-            id="circleClustersLayer"
-            belowLayerID="pointCount"
-            filter={['has', 'point_count']}
+          <MapboxGL.SymbolLayer
+            id="pointLabel"
+            filter={['!', ['has', 'point_count']]}
             style={{
-              circleColor: 'rgba(200,150,0,0.5)',
-              circleRadius: 15,
+              textField: ['format', ['get', 'title']],
+              textSize: 12,
+              textFont: ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+              textColor: '#000',
+              // doesnt support interpolate for now
+              textOffset: [0, 1.25],
+              textAnchor: 'top',
+              textAllowOverlap: false,
             }}
           />
           <MapboxGL.CircleLayer
@@ -149,8 +177,26 @@ export const Map = ({ center, span, features, onMoveEnd }: MapProps) => {
             layerIndex={200}
             filter={['!', ['has', 'point_count']]}
             style={{
-              circleColor: 'rgba(15,150,0,0.5)',
-              circleRadius: 4,
+              circleColor: [
+                'match',
+                ['get', 'selected'],
+                1,
+                'rgba(60,80,255,1)',
+                0,
+                'rgba(20,30,240,0.5)',
+                'rgba(20,30,240,0.5)',
+              ],
+              circleRadius: [
+                'interpolate',
+                ['exponential', 1.5],
+                ['zoom'],
+                9,
+                4,
+                11,
+                8,
+                16,
+                22,
+              ],
             }}
           />
         </MapboxGL.ShapeSource>

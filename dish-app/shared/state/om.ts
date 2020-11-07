@@ -22,7 +22,7 @@ export const config = merge(
 export const om =
   window['om'] ??
   createOvermind(config, {
-    devtools: false,
+    devtools: false, // '192.168.7.166:3031',
     logProxies: true,
     hotReloading: process.env.NODE_ENV !== 'production',
   })

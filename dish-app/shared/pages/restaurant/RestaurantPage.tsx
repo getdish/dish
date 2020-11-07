@@ -40,19 +40,20 @@ const RestaurantPage = memo(
     const coords = restaurant?.location?.coordinates
     const { selectedDish, setSelectedDishToggle } = useSelectedDish(tagName)
 
-    usePageLoadEffect(props.isActive && restaurant.id, () => {
-      omStatic.actions.home.updateHomeState({
-        id: item.id,
-        type: 'restaurant',
-        searchQuery: item.searchQuery,
-        restaurantSlug: item.restaurantSlug,
-        center: {
-          lng: coords?.[0],
-          lat: coords?.[1],
-        },
-        span: getMinLngLat(item.span, 0.0025, 0.0025),
-      })
-    })
+    usePageLoadEffect(
+      props,
+      () => {
+        omStatic.actions.home.updateHomeState({
+          id: item.id,
+          center: {
+            lng: coords?.[0],
+            lat: coords?.[1],
+          },
+          span: getMinLngLat(item.span, 0.0025, 0.0025),
+        })
+      },
+      [coords]
+    )
 
     const headerElement = useMemo(() => {
       return (
@@ -117,14 +118,13 @@ const RestaurantPage = memo(
 
         <ContentScrollView id="restaurant">
           {/* HEADER */}
+          {/* -1 margin bottom to overlap bottom border */}
           <VStack
             backgroundColor={bgLight}
             borderBottomColor={bgLightHover}
             borderBottomWidth={1}
           >
             {headerElement}
-
-            {/* -1 margin bottom to overlap bottom border */}
             <VStack marginBottom={-1} position="relative" zIndex={1}>
               <Suspense
                 fallback={

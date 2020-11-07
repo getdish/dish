@@ -7,7 +7,7 @@ import { darkGreen, darkGrey, darkRed, green, red } from '../colors'
 import { useUserTagVote } from '../hooks/useUserTagVotes'
 import { FullTag } from '../state/FullTag'
 import { getTagSlug } from '../state/getTagSlug'
-import { tagDisplayName } from '../state/tagDisplayName'
+import { tagDisplayName } from '../state/tagMeta'
 
 type TagSmallButtonProps = {
   restaurantSlug: string

@@ -196,7 +196,7 @@ export const RestaurantSourcesOverview = graphql(
     }
 
     return (
-      <VStack marginVertical={-spacing}>
+      <VStack width="100%" marginVertical={-spacing}>
         <Grid itemMinWidth={240}>
           {items.map(({ name, sentence, image, positive, negative }) => {
             return (
@@ -204,11 +204,13 @@ export const RestaurantSourcesOverview = graphql(
                 key={name}
                 shadowColor="#000"
                 shadowOpacity={0.1}
+                backgroundColor="#fff"
                 shadowRadius={10}
                 shadowOffset={{ height: 3, width: 0 }}
                 padding={15}
                 margin={spacing}
                 position="relative"
+                flex={1}
               >
                 <SmallTitle color="#000" divider="off" fontSize={20}>
                   {name}

@@ -23,7 +23,7 @@ import {
 } from 'snackui'
 
 import { bgLight, bgLightHover, bgLightTranslucent } from '../../colors'
-import { drawerWidthMax, searchBarHeight } from '../../constants'
+import { drawerWidthMax, isWeb, searchBarHeight } from '../../constants'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { useIsNarrow } from '../../hooks/useIs'
 import {
@@ -60,7 +60,7 @@ export default memo(function HomePage(props: Props) {
   const om = useOvermind()
   const isOnHome = props.isActive
   const [isLoaded, setIsLoaded] = useState(false)
-  const [topDishes, setTopDishes] = useState([])
+  const [topDishes, setTopDishes] = useState<TopCuisine[]>([])
   const state = props.item
   const { center, span } = state
   const isSmall = useIsNarrow()
@@ -132,7 +132,7 @@ export default memo(function HomePage(props: Props) {
               om.actions.home.updateCurrentState({
                 results: _.flatten(all.map((x) => x.top_restaurants))
                   .filter((x) => x?.id)
-                  .map((x) => ({ id: x.id, slug: x.slug })),
+                  .map((x) => ({ id: x.id, slug: x.slug ?? '' })),
               })
             })
           })
@@ -194,6 +194,7 @@ export default memo(function HomePage(props: Props) {
           height={searchBarHeight}
           zIndex={10}
           opacity={props.isActive ? 1 : 0}
+          pointerEvents="none"
         >
           <AbsoluteVStack
             bottom={10}
@@ -237,7 +238,9 @@ export default memo(function HomePage(props: Props) {
               paddingTop={isSmall ? 20 : 28}
             >
               <VStack>
-                {!isSmall && <VStack height={aboveContentHeight} />}
+                {!isSmall && (
+                  <VStack pointerEvents="none" height={aboveContentHeight} />
+                )}
 
                 <HomeTopDishesTitle />
 
@@ -452,7 +455,6 @@ const TopDishesCuisineItem = memo(
           <SlantedLinkButton
             marginHorizontal="auto"
             zIndex={1000}
-            paddingHorizontal={10}
             position="relative"
             alignSelf="center"
             tag={countryTag}
@@ -466,6 +468,8 @@ const TopDishesCuisineItem = memo(
               fontWeight="600"
               paddingRight={country.icon ? 32 : 0}
               color="#666"
+              // not sure why extra right padding on ios
+              marginRight={isWeb ? 0 : -30}
             >
               {country.country}
               {country.icon ? (

@@ -1,3 +1,4 @@
+import { graphql } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { Image } from 'react-native'
@@ -11,7 +12,6 @@ import {
   VStack,
 } from 'snackui'
 
-import { graphql } from '../../../../packages/graph/_'
 import { bgLight } from '../../colors'
 import { drawerWidthMax } from '../../constants'
 import { useIsNarrow } from '../../hooks/useIs'
