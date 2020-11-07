@@ -15,9 +15,9 @@ export const onInitialize: OnInitialize = async (
     rehydrate(state, OVERMIND_MUTATIONS)
   }
   if (LOG_OVERMIND) {
-    overmind.eventHub.on('component:update' as any, (all) => {
-      console.debug('[om] component:update', all)
-    })
+    // overmind.eventHub.on('component:update' as any, (all) => {
+    //   console.debug('[om] component:update', all)
+    // })
     overmind.eventHub.on('action:start' as any, (execution) => {
       const name = `[om] >> ${execution.actionName}`
       const logType = name.indexOf('.get') > 0 ? 'info' : 'warn'
