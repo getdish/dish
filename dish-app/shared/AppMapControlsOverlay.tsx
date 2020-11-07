@@ -79,7 +79,7 @@ export const AppMapControlsOverlay = memo(() => {
               </>
             )}
 
-            {isWeb && (
+            {/* {isWeb && (
               <VStack>
                 <Tooltip contents="Soon!">
                   <VStack
@@ -105,7 +105,7 @@ export const AppMapControlsOverlay = memo(() => {
                   </VStack>
                 </Tooltip>
               </VStack>
-            )}
+            )} */}
           </HStack>
         </HStack>
       </AbsoluteVStack>

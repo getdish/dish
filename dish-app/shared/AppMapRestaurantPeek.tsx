@@ -68,8 +68,8 @@ export const AppMapRestaurantPeek = memo(
         </AbsoluteVStack>
         <HStack
           flex={1}
-          paddingHorizontal={12}
-          paddingVertical={12}
+          paddingHorizontal={8}
+          paddingVertical={8}
           overflow="hidden"
           alignItems="center"
           borderRadius={20}
@@ -88,8 +88,8 @@ export const AppMapRestaurantPeek = memo(
                 fontWeight="600"
                 paddingRight={30}
               >
-                {restaurant.name} &nbsp;
-                <RestaurantAddressLinksRow
+                {restaurant.name}
+                {/* <RestaurantAddressLinksRow
                   currentLocationInfo={
                     state?.currentLocationInfo ??
                     om.state.home.currentState.currentLocationInfo
@@ -97,17 +97,17 @@ export const AppMapRestaurantPeek = memo(
                   showMenu
                   size="sm"
                   restaurantSlug={slug}
-                />
+                /> */}
               </Text>
             </LinkButton>
-            <Spacer size="xs" />
+            {/* <Spacer size="xs" />
             <HStack>
               <RestaurantAddress
                 size="sm"
                 address={restaurant.address ?? ''}
                 currentLocationInfo={state?.currentLocationInfo ?? null}
               />
-            </HStack>
+            </HStack> */}
           </VStack>
 
           {!!restaurant.image && (
