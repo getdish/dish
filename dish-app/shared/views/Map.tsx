@@ -417,10 +417,6 @@ function setupMapEffect({
       () => {
         if (!map) return
 
-        const NEIGHORHOOD_TILES = 'public.zcta5'
-        const COUNTY_TILES = 'public.hrr'
-        const STATE_TILES = 'public.state'
-
         const tiles = [
           {
             maxZoom: 20,
@@ -430,9 +426,20 @@ function setupMapEffect({
             activeColor: purple,
             hoverColor: 'yellow',
             color: lightPurple,
-            label: null,
-            name: NEIGHORHOOD_TILES,
+            label: 'nhood',
+            name: 'public.zcta5',
           },
+          // {
+          //   maxZoom: 11,
+          //   minZoom: 9,
+          //   lineColor: '#880088',
+          //   promoteId: 'ogc_fid',
+          //   activeColor: purple,
+          //   hoverColor: 'yellow',
+          //   color: lightPurple,
+          //   label: 'nhood',
+          //   name: 'public.hca',
+          // },
           {
             maxZoom: 11,
             minZoom: 7,
@@ -442,7 +449,7 @@ function setupMapEffect({
             hoverColor: 'yellow',
             color: lightGreen,
             label: 'hrr_city',
-            name: COUNTY_TILES,
+            name: 'public.hrr',
           },
           {
             maxZoom: 7,
@@ -453,7 +460,7 @@ function setupMapEffect({
             hoverColor: 'yellow',
             color: lightGreen,
             label: null,
-            name: STATE_TILES,
+            name: 'public.state',
           },
         ]
 
@@ -522,7 +529,7 @@ function setupMapEffect({
               minzoom: minZoom,
               maxzoom: maxZoom,
               layout: {
-                'text-field': ['format', ['get', 'hrrcity']],
+                'text-field': ['format', ['get', label]],
                 'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
                 'text-size': 14,
               },
@@ -576,6 +583,7 @@ function setupMapEffect({
           }
           const feature = features[0]
           if (!feature) return
+          if (feature.id === activeLayerId) return
           const id = feature.properties.ogc_fid
           activeLayerId = id
           map.setFeatureState(
