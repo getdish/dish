@@ -1,12 +1,13 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 import { fullyIdle, series } from '@o/async'
-import _, { isEqual } from 'lodash'
+import _, { isEqual, throttle } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
 
+import { green, lightGreen, lightPurple, purple } from '../colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { tagLenses } from '../state/localTags.json'
@@ -418,15 +419,23 @@ function setupMapEffect({
         map.addSource('public.zcta5', {
           type: 'vector',
           url: 'http://localhost:3005/public.zcta5.json',
+          promoteId: 'ogc_fid',
         })
         map.addLayer({
           id: 'public.zcta5.fill',
           type: 'fill',
           source: 'public.zcta5',
-          minzoom: 11,
+          minzoom: 10,
           paint: {
-            'fill-color': '#880088',
-            'fill-opacity': 0.1,
+            'fill-color': [
+              'case',
+              ['==', ['feature-state', 'hover'], null],
+              lightPurple,
+              ['==', ['feature-state', 'hover'], true],
+              purple,
+              'green',
+            ],
+            'fill-opacity': 0.5,
           },
           'source-layer': 'public.zcta5',
         })
@@ -434,7 +443,7 @@ function setupMapEffect({
           id: 'public.zcta5.line',
           type: 'line',
           source: 'public.zcta5',
-          minzoom: 11,
+          minzoom: 10,
           paint: {
             'line-color': '#880088',
             'line-opacity': 0.2,
@@ -448,18 +457,77 @@ function setupMapEffect({
           map?.removeSource('public.zcta5')
         })
 
+        let hoveredLayerId
+
+        const handleMoveThrottled = throttle(() => {
+          const zoom = map.getZoom()
+          const size = {
+            width: map.getContainer().clientWidth,
+            height: map.getContainer().clientHeight,
+          }
+
+          const layerName = zoom > 11 ? `public.zcta5` : `public.hrr`
+          const features = map.queryRenderedFeatures(
+            new mapboxgl.Point(size.width / 2, size.height / 2),
+            {
+              layers: [`${layerName}.fill`],
+            }
+          )
+          const featureProps = {
+            source: `${layerName}`,
+            sourceLayer: `${layerName}`,
+          }
+
+          if (hoveredLayerId) {
+            map.setFeatureState(
+              {
+                ...featureProps,
+                id: hoveredLayerId,
+              },
+              {
+                hover: null,
+              }
+            )
+            hoveredLayerId = null
+          }
+
+          if (features.length) {
+            const id = features[0].properties.ogc_fid
+            hoveredLayerId = id
+            map.setFeatureState(
+              {
+                ...featureProps,
+                id,
+              },
+              {
+                hover: true,
+              }
+            )
+          }
+
+          console.log('features', features)
+        }, 300)
+
         map.addSource('public.hrr', {
           type: 'vector',
           url: 'http://localhost:3005/public.hrr.json',
+          promoteId: 'ogc_fid',
         })
         map.addLayer({
           id: 'public.hrr.fill',
           type: 'fill',
           source: 'public.hrr',
-          maxzoom: 11,
+          maxzoom: 10,
           paint: {
-            'fill-color': '#008888',
-            'fill-opacity': 0.1,
+            'fill-color': [
+              'case',
+              ['==', ['feature-state', 'hover'], null],
+              lightGreen,
+              ['==', ['feature-state', 'hover'], true],
+              green,
+              'green',
+            ],
+            'fill-opacity': 0.5,
           },
           'source-layer': 'public.hrr',
         })
@@ -743,6 +811,7 @@ function setupMapEffect({
         })
 
         const handleMove: Listener = () => {
+          handleMoveThrottled()
           handleMoveEndDebounced.cancel()
         }
         map.on('move', handleMove)
