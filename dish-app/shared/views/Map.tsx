@@ -417,48 +417,125 @@ function setupMapEffect({
       () => {
         if (!map) return
 
-        map.addSource('public.zcta5', {
-          type: 'vector',
-          url: 'http://localhost:3005/public.zcta5.json',
-          promoteId: 'ogc_fid',
-        })
-        map.addLayer({
-          id: 'public.zcta5.fill',
-          type: 'fill',
-          source: 'public.zcta5',
-          minzoom: 10,
-          paint: {
-            'fill-color': [
-              'case',
-              ['==', ['feature-state', 'active'], true],
-              purple,
-              ['==', ['feature-state', 'hover'], true],
-              'yellow',
-              ['==', ['feature-state', 'active'], null],
-              lightPurple,
-              'green',
-            ],
-            'fill-opacity': 0.5,
+        const NEIGHORHOOD_TILES = 'public.zcta5'
+        const COUNTY_TILES = 'public.hrr'
+        const STATE_TILES = 'public.state'
+
+        const tiles = [
+          {
+            maxZoom: 20,
+            minZoom: 11,
+            lineColor: '#880088',
+            promoteId: 'ogc_fid',
+            activeColor: purple,
+            hoverColor: 'yellow',
+            color: lightPurple,
+            label: null,
+            name: NEIGHORHOOD_TILES,
           },
-          'source-layer': 'public.zcta5',
-        })
-        map.addLayer({
-          id: 'public.zcta5.line',
-          type: 'line',
-          source: 'public.zcta5',
-          minzoom: 10,
-          paint: {
-            'line-color': '#880088',
-            'line-opacity': 0.2,
-            'line-width': 1,
+          {
+            maxZoom: 11,
+            minZoom: 7,
+            lineColor: '#008888',
+            promoteId: 'ogc_fid',
+            activeColor: green,
+            hoverColor: 'yellow',
+            color: lightGreen,
+            label: 'hrr_city',
+            name: COUNTY_TILES,
           },
-          'source-layer': 'public.zcta5',
-        })
-        cancels.add(() => {
-          map.removeLayer('public.zcta5.fill')
-          map.removeLayer('public.zcta5.line')
-          map.removeSource('public.zcta5')
-        })
+          {
+            maxZoom: 7,
+            minZoom: 0,
+            lineColor: '#880088',
+            promoteId: 'ogc_fid',
+            activeColor: green,
+            hoverColor: 'yellow',
+            color: lightGreen,
+            label: null,
+            name: STATE_TILES,
+          },
+        ]
+
+        for (const {
+          maxZoom,
+          minZoom,
+          label,
+          name,
+          promoteId,
+          lineColor,
+          color,
+          hoverColor,
+          activeColor,
+        } of tiles) {
+          console.log('adding', name)
+          map.addSource(name, {
+            type: 'vector',
+            url: `http://localhost:3005/${name}.json`,
+            promoteId,
+          })
+          map.addLayer({
+            id: `${name}.fill`,
+            type: 'fill',
+            source: name,
+            minzoom: minZoom,
+            maxzoom: maxZoom,
+            paint: {
+              'fill-color': [
+                'case',
+                ['==', ['feature-state', 'active'], true],
+                activeColor,
+                ['==', ['feature-state', 'hover'], true],
+                hoverColor,
+                ['==', ['feature-state', 'active'], null],
+                color,
+                'green',
+              ],
+              'fill-opacity': 0.5,
+            },
+            'source-layer': name,
+          })
+          map.addLayer({
+            id: `${name}.line`,
+            type: 'line',
+            source: name,
+            minzoom: minZoom,
+            maxzoom: maxZoom,
+            paint: {
+              'line-color': lineColor,
+              'line-opacity': 0.2,
+              'line-width': 1,
+            },
+            'source-layer': name,
+          })
+          cancels.add(() => {
+            map.removeLayer(`${name}.fill`)
+            map.removeLayer(`${name}.line`)
+            map.removeSource(name)
+          })
+          if (label) {
+            map.addLayer({
+              id: `${name}.label`,
+              source: name,
+              'source-layer': name,
+              type: 'symbol',
+              minzoom: minZoom,
+              maxzoom: maxZoom,
+              layout: {
+                'text-field': ['format', ['get', 'hrrcity']],
+                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                'text-size': 14,
+              },
+              paint: {
+                'text-halo-color': '#fff',
+                'text-halo-width': 1,
+              },
+            })
+            cancels.add(() => {
+              map.removeLayer(`${name}.label`)
+            })
+          }
+        }
 
         let activeLayerId
         const handleMoveThrottled = throttle(() => {
@@ -467,7 +544,14 @@ function setupMapEffect({
             width: map.getContainer().clientWidth,
             height: map.getContainer().clientHeight,
           }
-          const layerName = zoom > 11 ? `public.zcta5` : `public.hrr`
+          let layerName = ''
+          for (const tile of tiles) {
+            if (zoom > tile.minZoom && zoom < tile.maxZoom) {
+              layerName = tile.name
+              break
+            }
+          }
+          if (!layerName) return
           const features = map.queryRenderedFeatures(
             new mapboxgl.Point(size.width / 2, size.height / 2),
             {
@@ -475,8 +559,8 @@ function setupMapEffect({
             }
           )
           const featureProps = {
-            source: `${layerName}`,
-            sourceLayer: `${layerName}`,
+            source: layerName,
+            sourceLayer: layerName,
           }
           if (activeLayerId) {
             map.setFeatureState(
@@ -505,69 +589,19 @@ function setupMapEffect({
           )
         }, 300)
 
-        map.addSource('public.hrr', {
-          type: 'vector',
-          url: 'http://localhost:3005/public.hrr.json',
-          promoteId: 'ogc_fid',
-        })
-        map.addLayer({
-          id: 'public.hrr.fill',
-          type: 'fill',
-          source: 'public.hrr',
-          maxzoom: 10,
-          paint: {
-            'fill-color': [
-              'case',
-              ['==', ['feature-state', 'hover'], null],
-              lightGreen,
-              ['==', ['feature-state', 'hover'], true],
-              green,
-              'green',
-            ],
-            'fill-opacity': 0.5,
-          },
-          'source-layer': 'public.hrr',
-        })
-        map.addLayer({
-          id: 'public.hrr.label',
-          source: 'public.hrr',
-          'source-layer': 'public.hrr',
-          type: 'symbol',
-          layout: {
-            'text-field': ['format', ['get', 'hrrcity']],
-            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-            'text-size': 14,
-          },
-          paint: {
-            'text-halo-color': '#fff',
-            'text-halo-width': 1,
-          },
-        })
-        map.addLayer({
-          id: 'public.hrr.line',
-          type: 'line',
-          source: 'public.hrr',
-          maxzoom: 11,
-          paint: {
-            'line-color': '#008888',
-            'line-opacity': 0.2,
-            'line-width': 1,
-          },
-          'source-layer': 'public.hrr',
-        })
-        cancels.add(() => {
-          map.removeLayer('public.hrr.fill')
-          map.removeLayer('public.hrr.label')
-          map.removeLayer('public.hrr.line')
-          map.removeSource('public.hrr')
-        })
-
         let hovered
         const handleHover = throttle((e) => {
           const [feature] = map.queryRenderedFeatures(e.point, {
-            layers: [`public.hrr.fill`, `public.zcta5.fill`],
+            layers: tiles.map((t) => `${t.name}.fill`),
           })
-          if (feature == hovered) return
+          if (
+            feature &&
+            hovered &&
+            feature.source === hovered.source &&
+            feature.id == hovered.id
+          ) {
+            return
+          }
           if (hovered) {
             map.setFeatureState(
               {
@@ -592,7 +626,6 @@ function setupMapEffect({
               hover: true,
             }
           )
-          console.log('feature', feature)
         }, 50)
         map.on('mousemove', handleHover)
         cancels.add(() => {
@@ -626,13 +659,20 @@ function setupMapEffect({
             }
           }
           const boundaries = map.queryRenderedFeatures(e.point, {
-            layers: ['public.hrr.fill', 'public.zcta5.fill'],
+            layers: tiles.map((t) => `${t.name}.fill`),
           })
           const boundary = boundaries[0]
           if (boundary) {
             console.log('go to boundary', boundary)
-            if (boundary.geometry.type === 'Polygon') {
-              const center = polylabel(boundary.geometry.coordinates, 1.0)
+
+            const coordinates =
+              boundary.geometry.type === 'MultiPolygon'
+                ? boundary.geometry.coordinates[0]
+                : boundary.geometry.type === 'Polygon'
+                ? boundary.geometry.coordinates
+                : null
+            if (coordinates) {
+              const center = polylabel(coordinates, 1.0)
               console.log('center', center)
               map.easeTo({
                 center: center,
