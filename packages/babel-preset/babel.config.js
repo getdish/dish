@@ -45,8 +45,9 @@ module.exports = function (api) {
         '@babel/preset-env',
         {
           targets: {
-            browsers: ['>1%', 'last 4 versions', 'Firefox ESR', 'not ie < 9'],
+            browsers: ['>3%'],
           },
+          exclude: ['@babel/plugin-transform-regenerator'],
         },
       ],
     ]
