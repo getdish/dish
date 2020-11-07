@@ -3,6 +3,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import { fullyIdle, series } from '@o/async'
 import _, { isEqual, throttle } from 'lodash'
 import mapboxgl from 'mapbox-gl'
+import polylabel from 'polylabel'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
@@ -429,10 +430,12 @@ function setupMapEffect({
           paint: {
             'fill-color': [
               'case',
-              ['==', ['feature-state', 'hover'], null],
-              lightPurple,
-              ['==', ['feature-state', 'hover'], true],
+              ['==', ['feature-state', 'active'], true],
               purple,
+              ['==', ['feature-state', 'hover'], true],
+              'yellow',
+              ['==', ['feature-state', 'active'], null],
+              lightPurple,
               'green',
             ],
             'fill-opacity': 0.5,
@@ -452,20 +455,18 @@ function setupMapEffect({
           'source-layer': 'public.zcta5',
         })
         cancels.add(() => {
-          map?.removeLayer('public.zcta5.fill')
-          map?.removeLayer('public.zcta5.line')
-          map?.removeSource('public.zcta5')
+          map.removeLayer('public.zcta5.fill')
+          map.removeLayer('public.zcta5.line')
+          map.removeSource('public.zcta5')
         })
 
-        let hoveredLayerId
-
+        let activeLayerId
         const handleMoveThrottled = throttle(() => {
           const zoom = map.getZoom()
           const size = {
             width: map.getContainer().clientWidth,
             height: map.getContainer().clientHeight,
           }
-
           const layerName = zoom > 11 ? `public.zcta5` : `public.hrr`
           const features = map.queryRenderedFeatures(
             new mapboxgl.Point(size.width / 2, size.height / 2),
@@ -477,35 +478,31 @@ function setupMapEffect({
             source: `${layerName}`,
             sourceLayer: `${layerName}`,
           }
-
-          if (hoveredLayerId) {
+          if (activeLayerId) {
             map.setFeatureState(
               {
                 ...featureProps,
-                id: hoveredLayerId,
+                id: activeLayerId,
               },
               {
-                hover: null,
+                active: null,
               }
             )
-            hoveredLayerId = null
+            activeLayerId = null
           }
-
-          if (features.length) {
-            const id = features[0].properties.ogc_fid
-            hoveredLayerId = id
-            map.setFeatureState(
-              {
-                ...featureProps,
-                id,
-              },
-              {
-                hover: true,
-              }
-            )
-          }
-
-          console.log('features', features)
+          const feature = features[0]
+          if (!feature) return
+          const id = feature.properties.ogc_fid
+          activeLayerId = id
+          map.setFeatureState(
+            {
+              ...featureProps,
+              id,
+            },
+            {
+              active: true,
+            }
+          )
         }, 300)
 
         map.addSource('public.hrr', {
@@ -559,10 +556,93 @@ function setupMapEffect({
           'source-layer': 'public.hrr',
         })
         cancels.add(() => {
-          map?.removeLayer('public.hrr.fill')
-          map?.removeLayer('public.hrr.label')
-          map?.removeLayer('public.hrr.line')
-          map?.removeSource('public.hrr')
+          map.removeLayer('public.hrr.fill')
+          map.removeLayer('public.hrr.label')
+          map.removeLayer('public.hrr.line')
+          map.removeSource('public.hrr')
+        })
+
+        let hovered
+        const handleHover = throttle((e) => {
+          const [feature] = map.queryRenderedFeatures(e.point, {
+            layers: [`public.hrr.fill`, `public.zcta5.fill`],
+          })
+          if (feature == hovered) return
+          if (hovered) {
+            map.setFeatureState(
+              {
+                source: hovered.source,
+                sourceLayer: hovered.sourceLayer,
+                id: hovered.id,
+              },
+              {
+                hover: null,
+              }
+            )
+          }
+          if (!feature) return
+          hovered = feature
+          map.setFeatureState(
+            {
+              source: feature.source,
+              sourceLayer: feature.sourceLayer,
+              id: feature.id,
+            },
+            {
+              hover: true,
+            }
+          )
+          console.log('feature', feature)
+        }, 50)
+        map.on('mousemove', handleHover)
+        cancels.add(() => {
+          map.off('mousemove', handleHover)
+        })
+
+        const handleClick = (e) => {
+          console.log('clik')
+          if (!map) return
+          const points = map.queryRenderedFeatures(e.point, {
+            layers: [POINT_LAYER_ID],
+          })
+          const point = points[0]
+          if (point) {
+            const clusterId = point.properties?.cluster_id
+            if (clusterId) {
+              const source = map.getSource(RESTAURANTS_SOURCE_ID)
+              if (source.type !== 'geojson') {
+                return
+              }
+              source.getClusterExpansionZoom(clusterId, function (err, zoom) {
+                if (err) return
+                map.easeTo({
+                  center: points[0].geometry['coordinates'],
+                  zoom: zoom * 1.1,
+                })
+              })
+            } else {
+              // click
+              setActive(map, getProps(), internal.current, +e.features[0].id)
+            }
+          }
+          const boundaries = map.queryRenderedFeatures(e.point, {
+            layers: ['public.hrr.fill', 'public.zcta5.fill'],
+          })
+          const boundary = boundaries[0]
+          if (boundary) {
+            console.log('go to boundary', boundary)
+            if (boundary.geometry.type === 'Polygon') {
+              const center = polylabel(boundary.geometry.coordinates, 1.0)
+              console.log('center', center)
+              map.easeTo({
+                center: center,
+              })
+            }
+          }
+        }
+        map.on('click', handleClick)
+        cancels.add(() => {
+          map?.off('click', handleClick)
         })
 
         map.addSource(RESTAURANTS_SOURCE_ID, {
@@ -612,7 +692,7 @@ function setupMapEffect({
             },
 
             'circle-stroke-color': `rgba(${rgb
-              .map((x) => x * 0.5)
+              .map((x) => +x * 0.5)
               .join(',')}, 0.5)`,
 
             'circle-color': [
@@ -831,35 +911,6 @@ function setupMapEffect({
         map.on('dblclick', CLUSTER_LABEL_LAYER_ID, handleDoubleClick)
         cancels.add(() => {
           map?.off('dblclick', CLUSTER_LABEL_LAYER_ID, handleDoubleClick)
-        })
-
-        const handleClick = (e) => {
-          if (!map) return
-          const features = map.queryRenderedFeatures(e.point, {
-            layers: [POINT_LAYER_ID],
-          })
-          const clusterId = features[0].properties?.cluster_id
-          if (clusterId) {
-            const source = map.getSource(RESTAURANTS_SOURCE_ID)
-            if (source.type === 'geojson') {
-              source.getClusterExpansionZoom(clusterId, function (err, zoom) {
-                if (err) return
-                map?.easeTo({
-                  center: features[0].geometry['coordinates'],
-                  zoom: zoom * 1.1,
-                })
-              })
-            }
-          } else {
-            // click
-            setActive(map, getProps(), internal.current, +e.features[0].id)
-          }
-        }
-        map.on('click', CLUSTER_LABEL_LAYER_ID, handleClick)
-        map.on('click', POINT_LAYER_ID, handleClick)
-        cancels.add(() => {
-          map?.off('click', CLUSTER_LABEL_LAYER_ID, handleClick)
-          map?.off('click', POINT_LAYER_ID, handleClick)
         })
 
         // remove sources last
