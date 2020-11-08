@@ -20,6 +20,7 @@ export type DishTagItem = {
   icon?: string
   score?: number
   image: string
+  slug: string
   isFallback?: boolean
 }
 

@@ -43,13 +43,16 @@ const RestaurantPage = memo(
     usePageLoadEffect(
       props,
       () => {
+        if (!coords?.[0]) {
+          return
+        }
         omStatic.actions.home.updateHomeState({
           id: item.id,
           center: {
             lng: coords?.[0],
             lat: coords?.[1],
           },
-          span: getMinLngLat(item.span, 0.0025, 0.0025),
+          span: getMinLngLat(item.span, 0.05, 0.05),
         })
       },
       [coords]

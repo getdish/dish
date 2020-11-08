@@ -14,47 +14,27 @@ import { bgLight, brandColorLight, lightYellow, yellow } from '../../colors'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
+import { CardFrame, borderRadiusSmaller, height, width } from './CardFrame'
 import { ratingToRatio } from './ratingToRatio'
 import { priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 import RestaurantRatingView from './RestaurantRatingView'
 
-type RestaurantCardProps = {
+export type RestaurantCardProps = {
   size?: 'lg' | 'md'
   restaurantSlug: string
   restaurantId: string
 }
 
 export const RestaurantCard = (props: RestaurantCardProps) => {
+  if (!props.restaurantSlug) {
+    return <CardFrame />
+  }
   return (
     <Suspense fallback={<CardFrame />}>
       <RestaurantCardContent {...props} />
     </Suspense>
-  )
-}
-
-const width = 260
-const height = 360
-const borderRadius = 12
-const borderRadiusSmaller = 10
-
-const CardFrame = (props: any) => {
-  return (
-    <VStack
-      borderRadius={borderRadius}
-      width={width}
-      height={height}
-      backgroundColor="#fff"
-      shadowColor="#000"
-      shadowOpacity={0.1}
-      shadowRadius={5}
-      shadowOffset={{ height: 2, width: 0 }}
-      borderWidth={3}
-      borderColor="#fff"
-      position="relative"
-      {...props}
-    />
   )
 }
 

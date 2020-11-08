@@ -1,8 +1,10 @@
 import React from 'react'
 import { Box, BoxProps, StackProps, extendStaticConfig } from 'snackui'
 
+// @todo fix in static
+const NoEval = Box
 export const SlantedBox = (props: BoxProps) => {
-  return <Box {...slantedBoxStyle} {...props} />
+  return <NoEval {...slantedBoxStyle} {...props} />
 }
 
 export const slantedBoxStyle: StackProps = {
