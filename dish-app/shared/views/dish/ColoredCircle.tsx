@@ -2,19 +2,17 @@ import React from 'react'
 import { StackProps, VStack } from 'snackui'
 
 export const ColoredCircle = ({
-  isHovered,
   size,
   isSelected,
   ...rest
 }: StackProps & {
-  isHovered?: boolean
   isSelected?: boolean
   size: number
 }) => {
   return (
     <VStack
       position="relative"
-      zIndex={isHovered ? 1 : 0}
+      zIndex={0}
       className="ease-in-out-faster"
       alignItems="center"
       justifyContent="center"
@@ -23,6 +21,7 @@ export const ColoredCircle = ({
         opacity: 1,
       }}
       hoverStyle={{
+        zIndex: 1,
         transform: [{ scale: 1.02 }],
       }}
       width={size}

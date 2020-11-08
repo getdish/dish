@@ -158,7 +158,7 @@ export default memo(function HomePage(props: Props) {
 
               <Suspense fallback={null}>
                 <VStack minHeight={Dimensions.get('window').height * 0.9}>
-                  <HomeFeed {...props} />
+                  {props.item.region && <HomeFeed {...props} />}
                 </VStack>
 
                 {/* pad bottom */}

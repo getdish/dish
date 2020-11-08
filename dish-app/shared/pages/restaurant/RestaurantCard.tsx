@@ -14,6 +14,7 @@ import { bgLight, brandColorLight, lightYellow, yellow } from '../../colors'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
+import { Link } from '../../views/ui/Link'
 import { CardFrame, borderRadiusSmaller, height, width } from './CardFrame'
 import { ratingToRatio } from './ratingToRatio'
 import { priceRange } from './RestaurantDetailRow'
@@ -54,88 +55,94 @@ export const RestaurantCardContent = memo(
       }, [])
 
       return (
-        <CardFrame>
-          <VStack backgroundColor={color} borderRadius={borderRadiusSmaller}>
-            <VStack
-              className="safari-overflow-fix"
-              width="100%"
-              overflow="hidden"
-              alignSelf="center"
-              position="relative"
-              borderRadius={borderRadiusSmaller}
-            >
+        <Link name="restaurant" params={{ slug: restaurantSlug }}>
+          <CardFrame hoverable>
+            <VStack backgroundColor={color} borderRadius={borderRadiusSmaller}>
+              <VStack
+                className="safari-overflow-fix"
+                width="100%"
+                overflow="hidden"
+                alignSelf="center"
+                position="relative"
+                borderRadius={borderRadiusSmaller}
+              >
+                <AbsoluteVStack
+                  className="ease-in-out"
+                  opacity={hideInfo ? 0 : 1}
+                  pointerEvents="none"
+                  fullscreen
+                  zIndex={10}
+                >
+                  <LinearGradient
+                    style={StyleSheet.absoluteFill}
+                    colors={[
+                      'rgba(0,0,0,0)',
+                      'rgba(0,0,0,0.1)',
+                      'rgba(0,0,0,0.4)',
+                    ]}
+                  />
+                  <LinearGradient
+                    style={StyleSheet.absoluteFill}
+                    colors={[`${lightColor}22`, `${color}99`]}
+                  />
+                </AbsoluteVStack>
+                {/* <VStack opacity={0.5} className="filter-image"> */}
+                <RestaurantPhotosRow
+                  onIsAtStart={handleOnIsAtStart}
+                  restaurantSlug={restaurantSlug}
+                  width={width}
+                  height={height}
+                />
+                {/* </VStack> */}
+              </VStack>
               <AbsoluteVStack
-                className="ease-in-out"
-                opacity={hideInfo ? 0 : 1}
-                pointerEvents="none"
+                alignItems="flex-end"
                 fullscreen
+                justifyContent="flex-end"
+                pointerEvents="none"
                 zIndex={10}
               >
-                <LinearGradient
-                  style={StyleSheet.absoluteFill}
-                  colors={[
-                    'rgba(0,0,0,0)',
-                    'rgba(0,0,0,0.1)',
-                    'rgba(0,0,0,0.4)',
-                  ]}
-                />
-                <LinearGradient
-                  style={StyleSheet.absoluteFill}
-                  colors={[`${lightColor}22`, `${color}99`]}
-                />
-              </AbsoluteVStack>
-              {/* <VStack opacity={0.5} className="filter-image"> */}
-              <RestaurantPhotosRow
-                onIsAtStart={handleOnIsAtStart}
-                restaurantSlug={restaurantSlug}
-                width={width}
-                height={height}
-              />
-              {/* </VStack> */}
-            </VStack>
-            <AbsoluteVStack
-              alignItems="flex-end"
-              fullscreen
-              justifyContent="flex-end"
-              pointerEvents="none"
-              zIndex={10}
-            >
-              <AbsoluteVStack top={-10} left={-10} zIndex={20}>
-                <RestaurantUpVoteDownVote
-                  activeTags={{}}
-                  restaurantSlug={restaurantSlug}
-                  restaurantId={restaurantId}
-                  score={restaurant.score ?? 0}
-                  ratio={ratingToRatio(restaurant.rating ?? 1)}
-                />
-              </AbsoluteVStack>
-
-              <VStack
-                className="ease-in-out"
-                opacity={hideInfo ? 0 : 1}
-                padding={20}
-                alignItems="flex-end"
-                spacing
-              >
-                <Paragraph size={1.1} color="#fff" fontWeight="800">
-                  {restaurant.name}
-                </Paragraph>
-                <Paragraph color="#fff" fontWeight="500">
-                  {price_range}
-                </Paragraph>
-              </VStack>
-
-              <CircleButton zIndex={10} alignSelf="center" marginVertical={-18}>
-                <Suspense fallback={null}>
-                  <RestaurantFavoriteButton
+                <AbsoluteVStack top={-10} left={-10} zIndex={20}>
+                  <RestaurantUpVoteDownVote
+                    activeTags={{}}
+                    restaurantSlug={restaurantSlug}
                     restaurantId={restaurantId}
-                    size="md"
+                    score={restaurant.score ?? 0}
+                    ratio={ratingToRatio(restaurant.rating ?? 1)}
                   />
-                </Suspense>
-              </CircleButton>
-            </AbsoluteVStack>
-          </VStack>
-        </CardFrame>
+                </AbsoluteVStack>
+
+                <VStack
+                  className="ease-in-out"
+                  opacity={hideInfo ? 0 : 1}
+                  padding={20}
+                  alignItems="flex-end"
+                  spacing
+                >
+                  <Paragraph size={1.1} color="#fff" fontWeight="800">
+                    {restaurant.name}
+                  </Paragraph>
+                  <Paragraph color="#fff" fontWeight="500">
+                    {price_range}
+                  </Paragraph>
+                </VStack>
+
+                <CircleButton
+                  zIndex={10}
+                  alignSelf="center"
+                  marginVertical={-18}
+                >
+                  <Suspense fallback={null}>
+                    <RestaurantFavoriteButton
+                      restaurantId={restaurantId}
+                      size="md"
+                    />
+                  </Suspense>
+                </CircleButton>
+              </AbsoluteVStack>
+            </VStack>
+          </CardFrame>
+        </Link>
       )
     }
   )

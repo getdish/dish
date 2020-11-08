@@ -238,7 +238,6 @@ const DishViewContent = ({
 
   return (
     <ColoredCircle
-      isHovered={isHovered}
       backgroundColor={backgroundColor}
       borderColor={selected ? '#000' : 'transparent'}
       borderWidth={1}
