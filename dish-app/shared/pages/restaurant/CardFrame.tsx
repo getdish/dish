@@ -1,14 +1,16 @@
 import React from 'react'
-import { VStack } from 'snackui'
+import { StackProps, VStack } from 'snackui'
 
 export const width = 260
 export const height = 360
 const borderRadius = 20
 export const borderRadiusSmaller = borderRadius * 0.95
 
-export const CardFrame = (props: any) => {
+export const CardFrame = (props: StackProps & { hoverable?: boolean }) => {
   return (
     <VStack
+      className="ease-in-out-faster"
+      contain="layout"
       borderRadius={borderRadius}
       width={width}
       height={height}
@@ -20,6 +22,11 @@ export const CardFrame = (props: any) => {
       // borderWidth={3}
       // borderColor="#fff"
       position="relative"
+      {...(props.hoverable && {
+        hoverStyle: {
+          transform: [{ scale: 1.02 }],
+        },
+      })}
       {...props}
     />
   )
