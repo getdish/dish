@@ -1,6 +1,11 @@
+import { Tag } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 
 import { useRestaurantQuery } from '../hooks/useRestaurantQuery'
+import {
+  selectDishViewSimple,
+  selectRishDishViewSimple,
+} from './selectDishViewSimple'
 
 /**
  * Careful with query helpers, they need to be DETERMINISTIC
@@ -47,17 +52,7 @@ export const getRestuarantDishes = ({
   return (topTags ?? [])
     .map((tag) => {
       if (!tag) return null
-      const tagImage = tag.photos()?.[0]
-      const tagFallbackImage = tagImage ? null : tag.tag?.default_images()?.[0]
-      return {
-        id: tag.tag.id,
-        name: tag.tag.name ?? '',
-        icon: tag.tag.icon ?? '',
-        slug: tag.tag.slug ?? '',
-        score: tag.score ?? 0,
-        image: tagImage ?? tagFallbackImage,
-        isFallback: !tagImage,
-      }
+      return selectRishDishViewSimple(tag)
     })
     .filter((x) => {
       return x && !!x.slug

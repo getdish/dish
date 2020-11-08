@@ -17,8 +17,8 @@ export const CardFrame = (props: any) => {
       shadowOpacity={0.1}
       shadowRadius={5}
       shadowOffset={{ height: 2, width: 0 }}
-      borderWidth={3}
-      borderColor="#fff"
+      // borderWidth={3}
+      // borderColor="#fff"
       position="relative"
       {...props}
     />

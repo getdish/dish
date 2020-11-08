@@ -20,6 +20,7 @@ export const RestaurantButton = memo(
       subtle,
       color,
       onHoverIn,
+      maxInnerWidth = isWeb ? 200 : 180,
       ...props
     }: {
       active?: boolean
@@ -27,6 +28,7 @@ export const RestaurantButton = memo(
       restaurantSlug: string
       trending?: 'up' | 'down' | 'neutral'
       subtle?: boolean
+      maxInnerWidth?: number
     } & LinkButtonProps) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
       if (!restaurant) {
@@ -59,7 +61,7 @@ export const RestaurantButton = memo(
           }}
         >
           <HStack
-            maxWidth={isWeb ? 200 : 180}
+            maxWidth={maxInnerWidth}
             flex={1}
             alignItems="center"
             justifyContent="flex-end"
