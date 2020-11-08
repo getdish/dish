@@ -35,15 +35,12 @@ async function start() {
   // can render splash here
 
   let done = false
-  await Promise.race([
-    om.initialized,
-    sleep(1000).then(() => {
-      if (!done) {
-        console.warn('\n\n\nOM TIMED OUT!!!\n\n\n')
-      }
-    }),
-  ])
-  done = true
+  sleep(3000).then(() => {
+    if (!done) {
+      console.warn('\n\n\nOM TIMED OUT!!!\n\n\n')
+    }
+  })
+  await om.initialized, (done = true)
 
   if (OVERMIND_MUTATIONS) {
     hydrate(<Root overmind={om} />, document.getElementById('root'))
