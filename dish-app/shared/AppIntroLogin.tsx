@@ -23,12 +23,12 @@ export const AppIntroLogin = memo(() => {
         <Image
           source={{ uri: dishNeon }}
           style={{
-            marginTop: -70,
-            marginBottom: -110,
+            marginTop: -30,
+            marginBottom: -80,
             marginRight: -20,
-            width: 261 * 3,
-            height: 161 * 3,
-            transform: [{ rotate: '10deg' }],
+            width: 261 * 2,
+            height: 161 * 2,
+            transform: [{ rotate: '6deg' }],
             zIndex: -2,
             position: 'relative',
           }}

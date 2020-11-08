@@ -21,19 +21,17 @@ import { Keyboard } from 'react-native'
 import { Toast } from 'snackui'
 
 import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
-import { addTagsToCache, allTags } from './allTags'
+import { allTags } from './allTags'
 import { defaultLocationAutocompleteResults } from './defaultLocationAutocompleteResults'
 import { getActiveTags } from './getActiveTags'
 import { setDefaultLocation } from './getDefaultLocation'
 import { getNavigateItemForState } from './getNavigateItemForState'
 import { getNextState } from './getNextState'
-import { getTagsFromRoute } from './getTagsFromRoute'
 import { getTagSlug } from './getTagSlug'
 import { isHomeState, isRestaurantState, isSearchState } from './home-helpers'
 import {
   ActiveEvent,
   AutocompleteItem,
-  HomeActiveTagsRecord,
   HomeState,
   HomeStateItem,
   HomeStateItemHome,
@@ -583,7 +581,6 @@ const pushHomeState: AsyncAction<
 
   let nextState: Partial<HomeStateItem> | null = null
   let fetchData: PageAction | null = null
-  let activeTags: HomeActiveTagsRecord
   const type = item.name
 
   switch (type) {

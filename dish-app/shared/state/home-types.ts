@@ -119,10 +119,19 @@ export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
 
 export type HomeActiveTagsRecord = { [id: string]: boolean }
 
+type Region = {
+  name: string
+  slug: string
+  geometry: {
+    type: 'Polygon' | 'MultiPolygon'
+    coordinates: any[]
+  }
+}
+
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
   activeTags: HomeActiveTagsRecord
-  results: RestaurantOnlyIds[]
+  region: Region
 }
 
 export type HomeStateItemBlog = HomeStateItemBase & {

@@ -598,10 +598,13 @@ function setupMapEffect({
         }, 300)
 
         let hovered
-        const handleHover = throttle((e) => {
-          const [feature] = map.queryRenderedFeatures(e.point, {
+        const getFeatures = (e) => {
+          return map.queryRenderedFeatures(e.point, {
             layers: tiles.map((t) => `${t.name}.fill`),
           })
+        }
+        const handleHover = throttle((e) => {
+          const [feature] = getFeatures(e)
           if (
             feature &&
             hovered &&
@@ -634,7 +637,7 @@ function setupMapEffect({
               hover: true,
             }
           )
-        }, 50)
+        }, 32)
         map.on('mousemove', handleHover)
         cancels.add(() => {
           map.off('mousemove', handleHover)

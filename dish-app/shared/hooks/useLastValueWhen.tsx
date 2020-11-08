@@ -1,5 +1,7 @@
 import { useMemo, useRef } from 'react'
 
+// not concurrent safe
+
 export const useLastValueWhen = <A extends () => any>(
   memoFn: A,
   conditional: boolean
