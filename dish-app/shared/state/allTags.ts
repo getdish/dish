@@ -39,11 +39,12 @@ export function tagNameKey(name: string) {
 
 export function getFullTagFromNameAndType(
   tag: TagWithNameAndType
-): NavigableTag {
+): NavigableTag | null {
   const res = allTags[allTagsNameToSlug[tagNameKey(tag.name)]]
   if (res) return res
   if ('slug' in tag && 'type' in tag && 'name' in tag) {
     return tag as NavigableTag
   }
-  throw new Error('No slugifiable')
+  return null
+  // throw new Error('No slugifiable')
 }

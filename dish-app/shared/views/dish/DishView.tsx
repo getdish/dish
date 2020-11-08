@@ -29,7 +29,7 @@ const getRoundedDishViewSize = (size: number) => {
   return [size * 0.9, size] as const
 }
 
-type DishViewProps = {
+export type DishViewProps = {
   restaurantId?: string
   restaurantSlug?: string
   name?: any
@@ -44,7 +44,9 @@ type DishViewProps = {
 } & StackProps
 
 export const DishView = memo((props: DishViewProps) => {
-  const fallback = <ColoredCircle size={props.size} backgroundColor="#ccc" />
+  const fallback = (
+    <ColoredCircle size={props.size ?? 150} backgroundColor="#ccc" />
+  )
 
   if (props.preventLoad) {
     return fallback
@@ -98,7 +100,7 @@ const DishViewContent = ({
           left={2}
         >
           <Suspense fallback={null}>
-            {!!dish.name && (
+            {restaurantId && restaurantSlug && !!dish.name && (
               <DishUpvoteDownvote
                 size="sm"
                 name={dish.name}
@@ -206,6 +208,10 @@ const DishViewContent = ({
       {!dish.image && <Text fontSize={80}>🥗</Text>}
     </Hoverable>
   )
+
+  if (!dish.slug) {
+    console.warn('dish', dish)
+  }
 
   if (!noLink) {
     contents = (
