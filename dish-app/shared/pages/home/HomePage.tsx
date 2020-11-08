@@ -1,23 +1,32 @@
 import {
   LngLat,
   RestaurantOnlyIds,
+  Tag,
   TopCuisine,
+  TopCuisineDish,
   getHomeDishes,
   graphql,
   order_by,
   query,
 } from '@dish/graph'
 import { fullyIdle, series } from '@o/async'
-import { random, sortBy, uniqBy } from 'lodash'
-import React, { Suspense, memo, useEffect, useState } from 'react'
-import { Dimensions, StyleSheet } from 'react-native'
+import { sortBy, uniqBy } from 'lodash'
+import React, {
+  Suspense,
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
+import { Dimensions, ScrollView, StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
   LinearGradient,
-  LoadingItem,
   LoadingItems,
   Spacer,
+  StackProps,
   Text,
   VStack,
 } from 'snackui'
@@ -25,16 +34,18 @@ import {
 import { bgLightHover } from '../../colors'
 import { drawerWidthMax, searchBarHeight } from '../../constants'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
+import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useAsyncEffect } from '../../hooks/useAsync'
 import { useIsNarrow } from '../../hooks/useIs'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { HomeStateItemHome } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { DishView, DishViewProps } from '../../views/dish/DishView'
+import { DishView } from '../../views/dish/DishView'
 import { PageFooter } from '../../views/layout/PageFooter'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { SlantedBox } from '../../views/ui/SlantedBox'
+import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { CardFrame } from '../restaurant/CardFrame'
 import { RestaurantButton } from '../restaurant/RestaurantButton'
 import { RestaurantCard } from '../restaurant/RestaurantCard'
@@ -170,6 +181,8 @@ type FeedItemDish = {
   restaurants: RestaurantOnlyIds[]
 }
 
+type FeedItemCuisine = TopCuisine & { type: 'cuisine'; id: string }
+
 type FeedItems =
   | {
       type: 'restaurant'
@@ -177,7 +190,7 @@ type FeedItems =
       restaurantSlug: string
       restaurantId: string
     }
-  | ({ type: 'cuisine'; id: string } & TopCuisine)
+  | FeedItemCuisine
   | FeedItemDish
 
 const HomeFeed = memo(
@@ -187,8 +200,10 @@ const HomeFeed = memo(
         location: {
           _st_within: props.item.region.geometry,
         },
+        downvotes: { _is_null: false },
+        votes_ratio: { _is_null: false },
       },
-      order_by: [{ score: order_by.desc }],
+      order_by: [{ votes_ratio: order_by.desc }],
       limit: 8,
     })
 
@@ -253,7 +268,7 @@ const HomeFeed = memo(
           } as const
         }),
       ].filter((x) => x.id),
-      (x) => (x.rank < 3 ? random() : x.rank)
+      (x) => x.rank
     )
 
     console.log('items', items)
@@ -267,6 +282,8 @@ const HomeFeed = memo(
                 return <RestaurantCard {...item} />
               case 'dish':
                 return <DishFeedCard {...item} />
+              case 'cuisine':
+                return <CuisineFeedCard {...item} />
             }
           })()
           if (!content) {
@@ -283,21 +300,141 @@ const HomeFeed = memo(
   })
 )
 
+const CuisineFeedCard = graphql((props: FeedItemCuisine) => {
+  const [restaurants, setRestaurants] = useState<
+    TopCuisineDish['best_restaurants']
+  >([])
+  const scrollRef = useRef<ScrollView>()
+  const dishes = query.tag({
+    where: {
+      name: {
+        _in: props.dishes.map((x) => x.name),
+      },
+    },
+  })
+
+  const r = props.dishes[0]?.best_restaurants
+  useEffect(() => {
+    setRestaurants(r)
+  }, [r])
+
+  useLayoutEffect(() => {
+    const scroll = scrollRef.current
+    if (!scroll) return
+    scroll.scrollTo({ x: 15 })
+  }, [])
+
+  const perCol = 2
+
+  return (
+    <CardFrame overflow="hidden">
+      <VStack height="100%" maxWidth="100%">
+        <AbsoluteVStack zIndex={10} top={10} left={10}>
+          <SlantedTitle fontWeight="500">{props.country}</SlantedTitle>
+        </AbsoluteVStack>
+        <ScrollView
+          ref={scrollRef}
+          style={{ maxWidth: '100%', overflow: 'hidden' }}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
+          <VStack paddingTop={35} paddingLeft={10}>
+            <HStack flexWrap="nowrap">
+              <DishCol>{dishes.slice(0, perCol).map(getDishColInner)}</DishCol>
+              <DishCol transform={[{ translateY: -15 }]}>
+                {dishes.slice(perCol, perCol * 2).map(getDishColInner)}
+              </DishCol>
+              <DishCol transform={[{ translateY: -30 }]}>
+                {dishes.slice(perCol * 2, perCol * 3).map(getDishColInner)}
+              </DishCol>
+              <DishCol transform={[{ translateY: -45 }]}>
+                {dishes.slice(perCol * 3, perCol * 4).map(getDishColInner)}
+              </DishCol>
+            </HStack>
+          </VStack>
+        </ScrollView>
+
+        <AbsoluteVStack bottom={0} left={0} backgroundColor="#fff">
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ maxWidth: '100%', overflow: 'hidden' }}
+          >
+            <VStack padding={5}>
+              <HStack spacing={5}>
+                {restaurants.slice(0, 3).map(getRestaurantButton)}
+              </HStack>
+              <Spacer size="sm" />
+              <HStack spacing={5}>
+                {restaurants.slice(2, 5).map(getRestaurantButton)}
+              </HStack>
+            </VStack>
+          </ScrollView>
+        </AbsoluteVStack>
+      </VStack>
+    </CardFrame>
+  )
+})
+
+const getRestaurantButton = (r, i) => {
+  if (!r.slug) {
+    return null
+  }
+  return (
+    <RestaurantButton
+      // subtle
+      key={r.id}
+      // trending="up"
+      // rank={0}
+      restaurantSlug={r.slug}
+    />
+  )
+}
+
+const getDishColInner = (dish: Tag, i: number) => {
+  return (
+    <VStack marginBottom={5} key={i}>
+      <DishView size={115} dish={selectTagDishViewSimple(dish)} />
+    </VStack>
+  )
+}
+const DishCol = (props: StackProps) => {
+  return <VStack marginRight={5} {...props} />
+}
+
 const DishFeedCard = (props: FeedItemDish) => {
   return (
     <CardFrame>
-      <DishView size={180} {...props} />
-      {props.restaurants.map((r) => {
-        return (
-          <RestaurantButton
-            subtle
-            key={r.id}
-            trending="up"
-            rank={0}
-            restaurantSlug={r.slug}
-          />
-        )
-      })}
+      <AbsoluteVStack
+        zIndex={10}
+        top={0}
+        right={0}
+        transform={[{ translateX: 10 }, { translateY: -10 }]}
+      >
+        <DishView size={180} {...props} />
+      </AbsoluteVStack>
+      <VStack
+        flexWrap="nowrap"
+        flex={1}
+        paddingTop={180}
+        borderRadius={20}
+        overflow="hidden"
+      >
+        {props.restaurants.map((r) => {
+          if (!r.slug) {
+            return null
+          }
+          return (
+            <RestaurantButton
+              maxInnerWidth={220}
+              subtle
+              key={r.id}
+              trending="up"
+              restaurantSlug={r.slug}
+            />
+          )
+        })}
+      </VStack>
     </CardFrame>
   )
 }
