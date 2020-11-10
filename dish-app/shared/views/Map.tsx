@@ -319,7 +319,7 @@ function setupMapEffect({
   setMap: React.Dispatch<React.SetStateAction<mapboxgl.Map>>
   props: MapProps
   mapNode: HTMLElement
-  internal: MapInternalState
+  internal: React.MutableRefObject<MapInternalState>
   isMounted?: React.RefObject<boolean>
   getProps: () => MapProps
 }) {
@@ -481,26 +481,19 @@ function setupMapEffect({
           })
 
           if (label) {
-            map.addSource(`${name}-centroids`, {
-              type: 'geojson',
-              data: {
-                type: 'FeatureCollection',
-                features: [],
-              },
-            })
-
             map.addLayer({
               id: `${name}.label`,
-              source: `${name}-centroids`,
-              // 'source-layer': name,
+              // TODO move it to a centroid computed source
+              source: name,
+              'source-layer': name,
               type: 'symbol',
               minzoom: minZoom,
               maxzoom: maxZoom,
               layout: {
                 'text-field': `{${label}}`,
                 'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                'text-allow-overlap': true,
-                'icon-allow-overlap': true,
+                // 'text-allow-overlap': true,
+                // 'icon-allow-overlap': true,
                 'text-size': {
                   base: 1,
                   stops: [
@@ -521,127 +514,9 @@ function setupMapEffect({
             cancels.add(() => {
               map.removeLayer(`${name}.label`)
             })
-
-            // map.addLayer({
-            //   id: `${name}.label.fixed`,
-            //   source: `${name}-centroids`,
-            //   type: 'circle',
-            //   minzoom: minZoom,
-            //   maxzoom: maxZoom,
-            //   // layout: {
-            //   //   'text-field': `{${label}}`,
-            //   //   'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-            //   //   'text-allow-overlap': true,
-            //   //   'text-padding': 3,
-            //   //   'text-size': {
-            //   //     base: 1,
-            //   //     stops: [
-            //   //       [12, 12],
-            //   //       [16, 16],
-            //   //     ],
-            //   //   },
-            //   //   // 'text-justify': 'center',
-            //   //   // 'text-variable-anchor': ['center', 'center'],
-            //   //   // 'text-radial-offset': 10000,
-            //   //   // 'symbol-placement': 'point',
-            //   // },
-            //   paint: {
-            //     'circle-color': 'red',
-            //     'circle-radius': 10,
-            //     // 'text-color': 'rgba(0,0,0,0.85)',
-            //     // 'text-halo-color': 'rgba(255,255,255,0.1)',
-            //     // 'text-halo-width': 1,
-            //   },
-            // })
-            cancels.add(() => {
-              map.removeLayer(`${name}.label`)
-            })
           }
-
-          const moveEnd = (e) => {
-            const features = map.queryRenderedFeatures(e.point, {
-              layers: [`${name}.fill`],
-            })
-            if (!features.length) return
-            console.log('', features)
-            const src = map.getSource(`${name}-centroids`)
-            if (src?.type !== 'geojson') return
-
-            const next = []
-            const sw = map.getBounds().getSouthWest()
-            const ne = map.getBounds().getNorthEast()
-            const mapViewBound = {
-              type: 'Feature',
-              geometry: {
-                type: 'Polygon',
-                coordinates: [
-                  [
-                    [sw.lng, sw.lat],
-                    [sw.lng, ne.lat],
-                    [ne.lng, ne.lat],
-                    [ne.lng, sw.lat],
-                    [sw.lng, sw.lat],
-                  ],
-                ],
-              },
-            }
-
-            const visualCenterList = []
-            const places = groupBy(features, (x) => x.properties.ogc_fid)
-            // const fixedLabelFilter = ['!in', 'ogc_fid']
-
-            Object.keys(places).forEach(function (key) {
-              const value = places[key]
-              console.log('value[0].properties', value[0])
-              const [lngOfCentroid, latOfCentroid] = polylabel(
-                value[0].geometry['coordinates']
-              )
-              // if (
-              //   lngOfCentroid <= sw.lng ||
-              //   lngOfCentroid >= ne.lng ||
-              //   latOfCentroid <= sw.lat ||
-              //   latOfCentroid >= ne.lat
-              // ) {
-              // fixedLabelFilter.push(key)
-              // console.log(key);
-              // console.log(key,value);
-              const visualCenter = value
-                .map((obj) => getVisualCenter(obj, mapViewBound))
-                .filter(isPresent)
-              if (visualCenter.length) {
-                visualCenterList.push(visualCenter)
-              }
-              // }
-            })
-            visualCenterList.map((obj) => {
-              const coordinatesList = []
-              obj.forEach(function (feature) {
-                coordinatesList.push(feature.geometry.coordinates)
-              })
-              const center = getCenterCoords(coordinatesList)
-              const neighborhoodCenterFeature = {
-                type: 'Feature',
-                geometry: {
-                  type: 'Point',
-                  coordinates: center,
-                },
-                properties: obj[0].properties,
-              }
-              next.push(neighborhoodCenterFeature)
-            })
-
-            console.log('next', next)
-            // map.setFilter(`${name}.label.fixed`, fixedLabelFilter)
-            src.setData({
-              type: 'FeatureCollection',
-              features: next,
-            })
-          }
-
-          map.on('moveend', moveEnd)
 
           cancels.add(() => {
-            map.off('moveend', moveEnd)
             map.removeLayer(`${name}.fill`)
             map.removeLayer(`${name}.line`)
             map.removeSource(name)
@@ -779,7 +654,7 @@ function setupMapEffect({
               })
             } else {
               // click
-              setActive(map, getProps(), internal, +e.features[0].id)
+              setActive(map, getProps(), internal.current, +e.features[0].id)
             }
           }
           const boundaries = map.queryRenderedFeatures(e.point, {
@@ -1028,13 +903,13 @@ function setupMapEffect({
         }, 20)
 
         const handleMoveEnd = () => {
-          if (internal.isAwaitingNextMove) {
+          if (internal.current.isAwaitingNextMove) {
             return
           }
           handleMoveEndDebounced()
         }
 
-        internal.currentMoveCancel = handleMoveEndDebounced.cancel
+        internal.current.currentMoveCancel = handleMoveEndDebounced.cancel
 
         const cancelMoveEnd = () => {
           handleMoveEndDebounced.cancel()
