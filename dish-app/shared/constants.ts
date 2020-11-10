@@ -21,13 +21,11 @@ export const drawerBorderRadius = 16
 export const drawerWidthMax = 940
 export const drawerExtraLeftScrollSpace = 500
 
-export const pageWidthMax = 1600
+export const pageWidthMax = 2000
 
 export const searchBarTopOffset = 4
 export const searchBarHeight = 50
 export const searchBarMaxWidth = pageWidthMax - 500
-
-export const frameWidthMax = 2280
 
 export const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
 export const IMAGE_PROXY_DOMAIN = 'https://images.dishapp.com'

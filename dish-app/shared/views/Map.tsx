@@ -1,7 +1,9 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 
+import { isPresent } from '@dish/helpers/_'
 import { fullyIdle, series } from '@o/async'
-import _, { isEqual, throttle } from 'lodash'
+import intersect from '@turf/intersect'
+import _, { groupBy, isEqual, throttle, uniqBy } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import polylabel from 'polylabel'
 import React, { memo, useEffect, useRef, useState } from 'react'
@@ -38,7 +40,7 @@ type MapInternalState = {
   isAwaitingNextMove: boolean
 }
 
-export const Map = memo((props: MapProps) => {
+export const MapView = memo((props: MapProps) => {
   const { center, span, padding, features, style, hovered, selected } = props
   const isMounted = useIsMountedRef()
   const mapNode = useRef<HTMLDivElement>(null)
@@ -55,24 +57,24 @@ export const Map = memo((props: MapProps) => {
   const getProps = useGet(props)
 
   // window resize
-  useEffect(() => {
-    if (!map) return
-    let tm
-    const handleResize = _.debounce(() => {
-      if (!map) return
-      map.resize()
-      // occasionally it wasnt resizing in chrome who knows why...
-      tm = setTimeout(() => {
-        map?.resize()
-      }, 200)
-    }, 300)
-    Dimensions.addEventListener('change', handleResize)
-    return () => {
-      clearTimeout(tm)
-      handleResize.cancel()
-      Dimensions.removeEventListener('change', handleResize)
-    }
-  }, [map])
+  // useEffect(() => {
+  //   if (!map) return
+  //   let tm
+  //   const handleResize = _.debounce(() => {
+  //     if (!map) return
+  //     map.resize()
+  //     // occasionally it wasnt resizing in chrome who knows why...
+  //     tm = setTimeout(() => {
+  //       map?.resize()
+  //     }, 200)
+  //   }, 300)
+  //   Dimensions.addEventListener('change', handleResize)
+  //   return () => {
+  //     clearTimeout(tm)
+  //     handleResize.cancel()
+  //     Dimensions.removeEventListener('change', handleResize)
+  //   }
+  // }, [map])
 
   useEffect(() => {
     if (!mapNode.current) return
@@ -318,7 +320,7 @@ function setupMapEffect({
   props: MapProps
   mapNode: HTMLElement
   internal: MapInternalState
-  isMounted?: React.Ref<boolean>
+  isMounted?: React.RefObject<boolean>
   getProps: () => MapProps
 }) {
   const map = new mapboxgl.Map({
@@ -422,23 +424,26 @@ function setupMapEffect({
           },
         ]
 
-        for (const {
-          maxZoom,
-          minZoom,
-          label,
-          name,
-          promoteId,
-          lineColor,
-          color,
-          hoverColor,
-          activeColor,
-        } of tiles) {
-          console.log('adding', name)
+        // start making regions
+        for (const tile of tiles) {
+          const {
+            maxZoom,
+            minZoom,
+            label,
+            name,
+            promoteId,
+            lineColor,
+            color,
+            hoverColor,
+            activeColor,
+          } = tile
+
           map.addSource(name, {
             type: 'vector',
             url: `http://localhost:3005/${name}.json`,
             promoteId,
           })
+
           map.addLayer({
             id: `${name}.fill`,
             type: 'fill',
@@ -460,6 +465,7 @@ function setupMapEffect({
             },
             'source-layer': name,
           })
+
           map.addLayer({
             id: `${name}.line`,
             type: 'line',
@@ -473,34 +479,175 @@ function setupMapEffect({
             },
             'source-layer': name,
           })
-          cancels.add(() => {
-            map.removeLayer(`${name}.fill`)
-            map.removeLayer(`${name}.line`)
-            map.removeSource(name)
-          })
+
           if (label) {
+            map.addSource(`${name}-centroids`, {
+              type: 'geojson',
+              data: {
+                type: 'FeatureCollection',
+                features: [],
+              },
+            })
+
             map.addLayer({
               id: `${name}.label`,
-              source: name,
-              'source-layer': name,
+              source: `${name}-centroids`,
+              // 'source-layer': name,
               type: 'symbol',
               minzoom: minZoom,
               maxzoom: maxZoom,
               layout: {
-                'text-field': ['format', ['get', label]],
+                'text-field': `{${label}}`,
                 'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                'text-size': 14,
+                'text-allow-overlap': true,
+                'icon-allow-overlap': true,
+                'text-size': {
+                  base: 1,
+                  stops: [
+                    [12, 10],
+                    [16, 19],
+                  ],
+                },
+                'text-justify': 'center',
+                'text-variable-anchor': ['center', 'center'],
+                'symbol-placement': 'point',
               },
               paint: {
-                'text-halo-color': '#fff',
+                'text-color': 'rgba(0,0,0,0.85)',
+                'text-halo-color': 'rgba(255,255,255,0.1)',
                 'text-halo-width': 1,
               },
             })
             cancels.add(() => {
               map.removeLayer(`${name}.label`)
             })
+
+            // map.addLayer({
+            //   id: `${name}.label.fixed`,
+            //   source: `${name}-centroids`,
+            //   type: 'circle',
+            //   minzoom: minZoom,
+            //   maxzoom: maxZoom,
+            //   // layout: {
+            //   //   'text-field': `{${label}}`,
+            //   //   'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+            //   //   'text-allow-overlap': true,
+            //   //   'text-padding': 3,
+            //   //   'text-size': {
+            //   //     base: 1,
+            //   //     stops: [
+            //   //       [12, 12],
+            //   //       [16, 16],
+            //   //     ],
+            //   //   },
+            //   //   // 'text-justify': 'center',
+            //   //   // 'text-variable-anchor': ['center', 'center'],
+            //   //   // 'text-radial-offset': 10000,
+            //   //   // 'symbol-placement': 'point',
+            //   // },
+            //   paint: {
+            //     'circle-color': 'red',
+            //     'circle-radius': 10,
+            //     // 'text-color': 'rgba(0,0,0,0.85)',
+            //     // 'text-halo-color': 'rgba(255,255,255,0.1)',
+            //     // 'text-halo-width': 1,
+            //   },
+            // })
+            cancels.add(() => {
+              map.removeLayer(`${name}.label`)
+            })
           }
+
+          const moveEnd = (e) => {
+            const features = map.queryRenderedFeatures(e.point, {
+              layers: [`${name}.fill`],
+            })
+            if (!features.length) return
+            console.log('', features)
+            const src = map.getSource(`${name}-centroids`)
+            if (src?.type !== 'geojson') return
+
+            const next = []
+            const sw = map.getBounds().getSouthWest()
+            const ne = map.getBounds().getNorthEast()
+            const mapViewBound = {
+              type: 'Feature',
+              geometry: {
+                type: 'Polygon',
+                coordinates: [
+                  [
+                    [sw.lng, sw.lat],
+                    [sw.lng, ne.lat],
+                    [ne.lng, ne.lat],
+                    [ne.lng, sw.lat],
+                    [sw.lng, sw.lat],
+                  ],
+                ],
+              },
+            }
+
+            const visualCenterList = []
+            const places = groupBy(features, (x) => x.properties.ogc_fid)
+            // const fixedLabelFilter = ['!in', 'ogc_fid']
+
+            Object.keys(places).forEach(function (key) {
+              const value = places[key]
+              console.log('value[0].properties', value[0])
+              const [lngOfCentroid, latOfCentroid] = polylabel(
+                value[0].geometry['coordinates']
+              )
+              // if (
+              //   lngOfCentroid <= sw.lng ||
+              //   lngOfCentroid >= ne.lng ||
+              //   latOfCentroid <= sw.lat ||
+              //   latOfCentroid >= ne.lat
+              // ) {
+              // fixedLabelFilter.push(key)
+              // console.log(key);
+              // console.log(key,value);
+              const visualCenter = value
+                .map((obj) => getVisualCenter(obj, mapViewBound))
+                .filter(isPresent)
+              if (visualCenter.length) {
+                visualCenterList.push(visualCenter)
+              }
+              // }
+            })
+            visualCenterList.map((obj) => {
+              const coordinatesList = []
+              obj.forEach(function (feature) {
+                coordinatesList.push(feature.geometry.coordinates)
+              })
+              const center = getCenterCoords(coordinatesList)
+              const neighborhoodCenterFeature = {
+                type: 'Feature',
+                geometry: {
+                  type: 'Point',
+                  coordinates: center,
+                },
+                properties: obj[0].properties,
+              }
+              next.push(neighborhoodCenterFeature)
+            })
+
+            console.log('next', next)
+            // map.setFilter(`${name}.label.fixed`, fixedLabelFilter)
+            src.setData({
+              type: 'FeatureCollection',
+              features: next,
+            })
+          }
+
+          map.on('moveend', moveEnd)
+
+          cancels.add(() => {
+            map.off('moveend', moveEnd)
+            map.removeLayer(`${name}.fill`)
+            map.removeLayer(`${name}.line`)
+            map.removeSource(name)
+          })
         }
+        // end making regions
 
         let activeLayerId
         const handleMoveThrottled = throttle(() => {
@@ -632,7 +779,7 @@ function setupMapEffect({
               })
             } else {
               // click
-              setActive(map, getProps(), internal.current, +e.features[0].id)
+              setActive(map, getProps(), internal, +e.features[0].id)
             }
           }
           const boundaries = map.queryRenderedFeatures(e.point, {
@@ -642,15 +789,8 @@ function setupMapEffect({
           if (boundary) {
             console.log('go to boundary', boundary)
 
-            const coordinates =
-              boundary.geometry.type === 'MultiPolygon'
-                ? boundary.geometry.coordinates[0]
-                : boundary.geometry.type === 'Polygon'
-                ? boundary.geometry.coordinates
-                : null
-            if (coordinates) {
-              const center = polylabel(coordinates, 1.0)
-              console.log('center', center)
+            const center = getCenter(boundary.geometry)
+            if (center) {
               map.easeTo({
                 center: center,
               })
@@ -885,16 +1025,16 @@ function setupMapEffect({
           }
           lastLoc = next
           props.onMoveEnd?.(next)
-        }, 150)
+        }, 20)
 
         const handleMoveEnd = () => {
-          if (internal.current.isAwaitingNextMove) {
+          if (internal.isAwaitingNextMove) {
             return
           }
           handleMoveEndDebounced()
         }
 
-        internal.current.currentMoveCancel = handleMoveEndDebounced.cancel
+        internal.currentMoveCancel = handleMoveEndDebounced.cancel
 
         const cancelMoveEnd = () => {
           handleMoveEndDebounced.cancel()
@@ -946,8 +1086,8 @@ function setupMapEffect({
 
   return () => {
     cancels.forEach((c) => c())
-    if (mapNode.current) {
-      mapNode.current.innerHTML = ''
+    if (mapNode) {
+      mapNode.innerHTML = ''
     }
   }
 }
@@ -1085,3 +1225,59 @@ window['getCurrentLocation'] = getCurrentLocation
 //     }
 //   }
 // }
+
+function getCoordinates(geometry: mapboxgl.MapboxGeoJSONFeature['geometry']) {
+  return geometry.type === 'MultiPolygon'
+    ? geometry.coordinates[0]
+    : geometry.type === 'Polygon'
+    ? geometry.coordinates
+    : null
+}
+
+function getCenter(geometry: mapboxgl.MapboxGeoJSONFeature['geometry']) {
+  const coordinates = getCoordinates(geometry)
+  return coordinates ? polylabel(coordinates, 1.0) : null
+}
+// get visual center
+function getVisualCenter(feature, mapViewBound) {
+  console.log('features', feature, mapViewBound)
+  if (feature.geometry.type == 'Polygon') {
+    var intersection = intersect(mapViewBound, feature.geometry)
+    if (intersection) {
+      var visualCenter = {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [],
+        },
+        properties: {},
+      }
+      if (intersection.geometry.coordinates.length > 1) {
+        var intersections = []
+        intersection.geometry.coordinates.forEach(function (coordinate) {
+          intersections.push(polylabel(coordinate))
+        })
+        visualCenter.geometry.coordinates = getCenterCoords(intersections)
+      } else {
+        visualCenter.geometry.coordinates = polylabel(
+          intersection.geometry.coordinates
+        )
+      }
+      visualCenter.properties = feature.properties
+      return visualCenter
+    }
+  }
+}
+
+// get the center of a coordinates list
+function getCenterCoords(coordinates) {
+  var lngList = []
+  var latList = []
+  coordinates.map((coordinate) => {
+    lngList.push(coordinate[0])
+    latList.push(coordinate[1])
+  })
+  var meanLng = lngList.reduce((p, c) => p + c, 0) / lngList.length
+  var meanLat = latList.reduce((p, c) => p + c, 0) / latList.length
+  return [meanLng, meanLat]
+}
