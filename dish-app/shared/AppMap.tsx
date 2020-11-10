@@ -23,6 +23,7 @@ import { useMapSize } from './hooks/useMapSize'
 import { useRestaurantQuery } from './hooks/useRestaurantQuery'
 import { findLastHomeOrSearch } from './state/home'
 import { isRestaurantState } from './state/home-helpers'
+import { Region } from './state/home-types'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { router } from './state/router'
@@ -346,7 +347,7 @@ const AppMapContent = memo(function AppMap({
     }
   }, [])
 
-  const handleSelect = useCallback((id) => {
+  const handleSelect = useCallback((id: string) => {
     const restaurants = getRestaurants()
     const restaurant = restaurants?.find((x) => x.id === id)
     if (!restaurant) {
@@ -378,6 +379,20 @@ const AppMapContent = memo(function AppMap({
     }
   }, [])
 
+  const handleSelectRegion = useCallback((region: Region | null) => {
+    if (!region) return
+    if (!region.slug) {
+      console.log('no slug', region)
+      return
+    }
+    router.navigate({
+      name: 'home',
+      params: {
+        region: region.slug,
+      },
+    })
+  }, [])
+
   return (
     <AbsoluteVStack
       className="map-container"
@@ -404,6 +419,7 @@ const AppMapContent = memo(function AppMap({
         onDoubleClick={handleDoubleClick}
         onHover={handleHover}
         onSelect={handleSelect}
+        onSelectRegion={handleSelectRegion}
       />
     </AbsoluteVStack>
   )

@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 import { Image } from 'react-native'
 import { Paragraph, Spacer, Text, VStack } from 'snackui'
 
-import dishNeon from './assets/dish-neon.jpg'
+import dishLogo from './assets/dish-neon.jpg'
 import { lightYellow } from './colors'
 import { IntroModal } from './IntroModal'
 import { LoginRegisterForm } from './views/LoginRegisterForm'
@@ -16,19 +16,18 @@ export const AppIntroLogin = memo(() => {
       <VStack
         overflow="hidden"
         borderRadius={20}
+        paddingVertical={20}
         spacing="xl"
         alignItems="center"
         width="100%"
       >
         <Image
-          source={{ uri: dishNeon }}
+          source={{ uri: dishLogo }}
           style={{
-            marginTop: -30,
-            marginBottom: -80,
-            marginRight: -20,
-            width: 261 * 2,
-            height: 161 * 2,
-            transform: [{ rotate: '6deg' }],
+            marginBottom: -30,
+            width: 892 * 0.25,
+            height: 492 * 0.25,
+            // transform: [{ rotate: '6deg' }],
             zIndex: -2,
             position: 'relative',
           }}
@@ -38,10 +37,10 @@ export const AppIntroLogin = memo(() => {
           color="#fff"
           zIndex={10}
           textAlign="center"
-          fontWeight="300"
+          fontWeight="200"
           size={2}
         >
-          <Text opacity={0.5}>the</Text>
+          <Text opacity={0.5}>a</Text>
           <Text>fun</Text>
           <Text opacity={0.5}>food</Text>
           <Text>pokédex</Text>
@@ -51,21 +50,20 @@ export const AppIntroLogin = memo(() => {
           color="#E2A5D9"
           paddingHorizontal="3%"
           maxWidth={320}
-          fontWeight="500"
+          fontWeight="300"
           size="xl"
           textAlign="center"
         >
-          better rankings
+          find better food
           <br />
-          ratings down to the dish
-          <br />
-          search every delivery spot at once
+          w/ ratings down to the dish
+          <br />& search across delivery
         </Paragraph>
 
         <LinkButton
           display="inline"
           fontSize={18}
-          paddingVertical={4}
+          paddingVertical={6}
           borderRadius={8}
           paddingHorizontal={6}
           color={lightYellow}
@@ -81,8 +79,6 @@ export const AppIntroLogin = memo(() => {
         >
           learn more
         </LinkButton>
-
-        <Spacer size="xs" />
 
         <LoginRegisterForm />
       </VStack>

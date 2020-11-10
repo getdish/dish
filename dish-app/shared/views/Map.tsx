@@ -130,55 +130,6 @@ export const Map = memo((props: MapProps) => {
       center.lat + span.lat,
     ]
 
-    // // show center/sw/ne points on map for debugging
-    // if (process.env.NODE_ENV === 'development') {
-    //   if (false) {
-    //     const source = map.getSource(RESTAURANTS_SOURCE_ID)
-    //     if (source?.type === 'geojson') {
-    //       source.setData({
-    //         type: 'FeatureCollection',
-    //         features: [
-    //           ...features,
-    //           // debug: add the sw, ne points
-    //           {
-    //             type: 'Feature',
-    //             id: Math.random(),
-    //             geometry: {
-    //               type: 'Point',
-    //               coordinates: [center.lng, center.lat],
-    //             },
-    //             properties: {
-    //               color: 'orange',
-    //             },
-    //           },
-    //           {
-    //             type: 'Feature',
-    //             id: Math.random(),
-    //             geometry: {
-    //               type: 'Point',
-    //               coordinates: [next[0], next[1]],
-    //             },
-    //             properties: {
-    //               color: 'blue',
-    //             },
-    //           },
-    //           {
-    //             type: 'Feature',
-    //             id: Math.random(),
-    //             geometry: {
-    //               type: 'Point',
-    //               coordinates: [next[2], next[3]],
-    //             },
-    //             properties: {
-    //               color: 'blue',
-    //             },
-    //           },
-    //         ],
-    //       })
-    //     }
-    //   }
-    // }
-
     if (hasMovedAtLeast(getCurrentLocation(map), { center, span })) {
       internal.current.isAwaitingNextMove = true
       const cancelSeries = series([
@@ -362,7 +313,14 @@ function setupMapEffect({
   internal,
   isMounted,
   getProps,
-}: any) {
+}: {
+  setMap: React.Dispatch<React.SetStateAction<mapboxgl.Map>>
+  props: MapProps
+  mapNode: HTMLElement
+  internal: MapInternalState
+  isMounted?: React.Ref<boolean>
+  getProps: () => MapProps
+}) {
   const map = new mapboxgl.Map({
     container: mapNode,
     style: 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy',
@@ -582,7 +540,10 @@ function setupMapEffect({
             activeLayerId = null
           }
           const feature = features[0]
-          if (!feature) return
+          if (!feature) {
+            // getProps().onSelectRegion?.(null)
+            return
+          }
           if (feature.id === activeLayerId) return
           const id = feature.properties.ogc_fid
           activeLayerId = id
@@ -595,6 +556,11 @@ function setupMapEffect({
               active: true,
             }
           )
+          getProps().onSelectRegion?.({
+            geometry: feature.geometry as any,
+            name: feature.properties.nhood,
+            slug: '',
+          })
         }, 300)
 
         let hovered
@@ -1070,3 +1036,52 @@ window['getCurrentLocation'] = getCurrentLocation
 //   '#3bb2d0',
 //   /* other */ '#ccc'
 //   ]
+
+// // show center/sw/ne points on map for debugging
+// if (process.env.NODE_ENV === 'development') {
+//   if (false) {
+//     const source = map.getSource(RESTAURANTS_SOURCE_ID)
+//     if (source?.type === 'geojson') {
+//       source.setData({
+//         type: 'FeatureCollection',
+//         features: [
+//           ...features,
+//           // debug: add the sw, ne points
+//           {
+//             type: 'Feature',
+//             id: Math.random(),
+//             geometry: {
+//               type: 'Point',
+//               coordinates: [center.lng, center.lat],
+//             },
+//             properties: {
+//               color: 'orange',
+//             },
+//           },
+//           {
+//             type: 'Feature',
+//             id: Math.random(),
+//             geometry: {
+//               type: 'Point',
+//               coordinates: [next[0], next[1]],
+//             },
+//             properties: {
+//               color: 'blue',
+//             },
+//           },
+//           {
+//             type: 'Feature',
+//             id: Math.random(),
+//             geometry: {
+//               type: 'Point',
+//               coordinates: [next[2], next[3]],
+//             },
+//             properties: {
+//               color: 'blue',
+//             },
+//           },
+//         ],
+//       })
+//     }
+//   }
+// }

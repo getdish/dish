@@ -87,7 +87,7 @@ export const AppSearchBarFloating = () => {
       >
         <AbsoluteVStack
           className="blur skewX"
-          borderRadius={12}
+          borderRadius={10}
           overflow="hidden"
           zIndex={102}
           fullscreen

@@ -1,6 +1,8 @@
 import { LngLat } from '@dish/graph'
 import mapboxgl from 'mapbox-gl'
 
+import { Region } from '../state/home-types'
+
 export type MapProps = {
   center: LngLat
   span: LngLat
@@ -10,6 +12,7 @@ export type MapProps = {
   style?: string
   onHover?: (id: string | null) => void
   onSelect?: (id: string) => void
+  onSelectRegion?: (region: Region) => void
   onDoubleClick?: (id: string) => void
   onMoveEnd?: (props: MapPosition) => void
   selected?: string
