@@ -2452,6 +2452,7 @@ export type t_restaurant = FieldsType<
       t_menu_item_aggregate
     >
     name: t_String
+    oldest_review_date?: t_timestamptz | null
     photos: FieldsTypeArg<{ path?: string | null }, t_jsonb | null>
     price_range?: t_String | null
     rating?: t_numeric | null
@@ -2659,6 +2660,7 @@ export type restaurant_bool_exp = {
   location?: geometry_comparison_exp | null
   menu_items?: menu_item_bool_exp | null
   name?: String_comparison_exp | null
+  oldest_review_date?: timestamptz_comparison_exp | null
   photos?: jsonb_comparison_exp | null
   price_range?: String_comparison_exp | null
   rating?: numeric_comparison_exp | null
@@ -2768,6 +2770,7 @@ export type restaurant_insert_input = {
   location?: any | null
   menu_items?: menu_item_arr_rel_insert_input | null
   name?: string | null
+  oldest_review_date?: any | null
   photos?: any | null
   price_range?: string | null
   rating?: any | null
@@ -2806,6 +2809,7 @@ export type t_restaurant_max_fields = FieldsType<
     id?: t_uuid | null
     image?: t_String | null
     name?: t_String | null
+    oldest_review_date?: t_timestamptz | null
     price_range?: t_String | null
     rating?: t_numeric | null
     score?: t_numeric | null
@@ -2836,6 +2840,7 @@ export type restaurant_max_order_by = {
   id?: order_by | null
   image?: order_by | null
   name?: order_by | null
+  oldest_review_date?: order_by | null
   price_range?: order_by | null
   rating?: order_by | null
   score?: order_by | null
@@ -2866,6 +2871,7 @@ export type t_restaurant_min_fields = FieldsType<
     id?: t_uuid | null
     image?: t_String | null
     name?: t_String | null
+    oldest_review_date?: t_timestamptz | null
     price_range?: t_String | null
     rating?: t_numeric | null
     score?: t_numeric | null
@@ -2896,6 +2902,7 @@ export type restaurant_min_order_by = {
   id?: order_by | null
   image?: order_by | null
   name?: order_by | null
+  oldest_review_date?: order_by | null
   price_range?: order_by | null
   rating?: order_by | null
   score?: order_by | null
@@ -2960,6 +2967,7 @@ export type restaurant_order_by = {
   location?: order_by | null
   menu_items_aggregate?: menu_item_aggregate_order_by | null
   name?: order_by | null
+  oldest_review_date?: order_by | null
   photos?: order_by | null
   price_range?: order_by | null
   rating?: order_by | null
@@ -3020,6 +3028,7 @@ type t_restaurant_select_column = EnumType<
   | 'image'
   | 'location'
   | 'name'
+  | 'oldest_review_date'
   | 'photos'
   | 'price_range'
   | 'rating'
@@ -3057,6 +3066,7 @@ export type restaurant_set_input = {
   image?: string | null
   location?: any | null
   name?: string | null
+  oldest_review_date?: any | null
   photos?: any | null
   price_range?: string | null
   rating?: any | null
@@ -3937,6 +3947,7 @@ type t_restaurant_update_column = EnumType<
   | 'image'
   | 'location'
   | 'name'
+  | 'oldest_review_date'
   | 'photos'
   | 'price_range'
   | 'rating'
@@ -7827,6 +7838,7 @@ export enum restaurant_select_column {
   image = 'image',
   location = 'location',
   name = 'name',
+  oldest_review_date = 'oldest_review_date',
   photos = 'photos',
   price_range = 'price_range',
   rating = 'rating',
@@ -8041,6 +8053,7 @@ export enum restaurant_update_column {
   image = 'image',
   location = 'location',
   name = 'name',
+  oldest_review_date = 'oldest_review_date',
   photos = 'photos',
   price_range = 'price_range',
   rating = 'rating',

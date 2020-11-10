@@ -191,6 +191,7 @@ export class Self extends WorkerJob {
       })
       return
     }
+    await this.oldestReview()
     await this._runFailableFunction(this.finishTagsEtc)
     await this._runFailableFunction(this.finalScores)
     await restaurantUpdate(this.restaurant)
@@ -458,6 +459,18 @@ export class Self extends WorkerJob {
     const mDate = moment(`1996 01 ${doftw} ${time}`, 'YYYY MM D hh:mmA')
     const timestamp = mDate.format(`YYYY-MM-DD HH:mm:ss${CALIFORNIAN_TZ}`)
     return timestamp
+  }
+
+  async oldestReview() {
+    const query = `
+      SELECT MIN(authored_at) oldest_review
+      FROM review
+        WHERE restaurant_id = '${this.restaurant.id}'
+      ORDER BY oldest_review DESC
+    `
+    const result = await this.main_db.query(query)
+    const oldest_review = result.rows[0].oldest_review
+    this.restaurant.oldest_review_date = oldest_review
   }
 
   addSources() {
