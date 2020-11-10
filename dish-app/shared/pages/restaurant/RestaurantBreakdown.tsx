@@ -118,11 +118,11 @@ export const RestaurantBreakdown = memo(
             borderRadius={10}
             borderWidth={1}
             borderColor="#eee"
-            maxWidth={isSmall ? 400 : maxSideWidth}
+            maxWidth={isSmall ? '100%' : maxSideWidth}
             padding={10}
             minWidth={220}
             margin={10}
-            width="33%"
+            width={isSmall ? '100%' : '33%'}
             backgroundColor={bgLight}
             overflow="hidden"
           >
