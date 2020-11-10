@@ -9,8 +9,8 @@ async function main() {
 
 async function one() {
   const range = 0.001
-  const name = 'LILY'
-  const coords = [37.782853, -122.461696]
+  const name = 'Little Heaven'
+  const coords = [37.75948, -122.41943]
   const t = new Yelp()
   await t.getRestaurants(
     [coords[0] - range, coords[1] - range],
@@ -18,8 +18,6 @@ async function one() {
     0,
     name
   )
-  const restaurant = await restaurantFindOne({ name })
-  console.log('restaurant', restaurant)
 }
 
 one()
