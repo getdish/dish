@@ -10,10 +10,18 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import { AbsoluteVStack, useDebounce, useDebounceValue, useGet } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  Text,
+  VStack,
+  useDebounce,
+  useDebounceValue,
+  useGet,
+} from 'snackui'
 
 import { BottomDrawerStore } from './BottomDrawerStore'
-import { searchBarHeight, zIndexMap } from './constants'
+import { pageWidthMax, searchBarHeight, zIndexMap } from './constants'
 import { getLngLat, getMinLngLat } from './helpers/getLngLat'
 import { getRestaurantRating } from './helpers/getRestaurantRating'
 import { getWindowHeight } from './helpers/getWindow'
@@ -27,7 +35,7 @@ import { Region } from './state/home-types'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { router } from './state/router'
-import { Map } from './views/Map'
+import { MapView } from './views/Map'
 
 export default memo(function AppMap() {
   const [restaurants, setRestaurantsFast] = useState<Restaurant[]>([])
@@ -74,7 +82,7 @@ const AppMapDataLoader = memo(
           slug: state.restaurantSlug ?? '',
         }
         const last = findLastHomeOrSearch(omStatic.state.home.states)
-        all = [single, ...(last?.results ?? [])]
+        all = [single, ...(last?.['results'] ?? [])]
       } else if ('results' in state) {
         all = state?.results ?? []
       }
@@ -394,34 +402,53 @@ const AppMapContent = memo(function AppMap({
   }, [])
 
   return (
-    <AbsoluteVStack
-      className="map-container"
+    <HStack
       position="absolute"
-      pointerEvents="auto"
-      contain="strict"
-      top={0}
-      right={0}
-      bottom={0}
-      zIndex={zIndexMap}
-      width={width}
+      fullscreen
+      alignItems="center"
+      justifyContent="center"
     >
-      <Map
-        center={center}
-        span={span}
-        padding={padding}
-        features={features}
-        centerToResults={om.state.home.centerToResults}
-        selected={internal.id}
-        hovered={
-          om.state.home.hoveredRestaurant && om.state.home.hoveredRestaurant.id
-        }
-        onMoveEnd={handleMoveEnd}
-        onDoubleClick={handleDoubleClick}
-        onHover={handleHover}
-        onSelect={handleSelect}
-        onSelectRegion={handleSelectRegion}
-      />
-    </AbsoluteVStack>
+      <HStack height="100%" maxWidth={pageWidthMax} width="100%">
+        <VStack height="100%" flex={2}>
+          <Text>
+            Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
+            Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
+            Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
+            Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
+            Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
+            Lorem Lorem Lorem Lorem Lorem Lorem Lorem{' '}
+          </Text>
+        </VStack>
+        <VStack
+          pointerEvents="auto"
+          contain="strict"
+          zIndex={zIndexMap}
+          maxHeight="100%"
+          width={width}
+          borderTopRightRadius={12}
+          borderBottomLeftRadius={12}
+          overflow="hidden"
+        >
+          <MapView
+            center={center}
+            span={span}
+            padding={padding}
+            features={features}
+            centerToResults={om.state.home.centerToResults}
+            selected={internal.id}
+            hovered={
+              om.state.home.hoveredRestaurant &&
+              om.state.home.hoveredRestaurant.id
+            }
+            onMoveEnd={handleMoveEnd}
+            onDoubleClick={handleDoubleClick}
+            onHover={handleHover}
+            onSelect={handleSelect}
+            onSelectRegion={handleSelectRegion}
+          />
+        </VStack>
+      </HStack>
+    </HStack>
   )
 })
 

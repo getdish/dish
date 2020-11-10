@@ -105,7 +105,7 @@ export default memo(function HomePage(props: Props) {
           right={0}
           shadowColor="#fff"
           shadowOpacity={1}
-          borderBottomColor="#f2f2f2"
+          borderBottomColor="#f8f8f8"
           borderBottomWidth={1}
           shadowRadius={10}
           height={searchBarHeight + 10}
@@ -121,23 +121,6 @@ export default memo(function HomePage(props: Props) {
         alignSelf="flex-end"
       >
         <ContentScrollView id="home">
-          {/* cross line */}
-          <AbsoluteVStack
-            opacity={isSmall ? 0 : 1}
-            contain="strict"
-            height={320}
-            width={2000}
-            right="-10%"
-            zIndex={-1}
-            top={-120}
-            transform={[{ rotate: '-2deg' }]}
-            overflow="hidden" // fixes chrome rendering line at bottom glitch
-          >
-            <LinearGradient
-              style={[StyleSheet.absoluteFill]}
-              colors={[bgLightHover, '#fff']}
-            />
-          </AbsoluteVStack>
           <VStack flex={1} overflow="hidden" maxWidth="100%">
             <VStack>
               <VStack pointerEvents="none" height={topContentHeight} />

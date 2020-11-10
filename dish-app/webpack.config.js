@@ -62,10 +62,7 @@ module.exports = function getWebpackConfig(
         : [],
       stats: 'normal',
       // @ts-ignore
-      devtool:
-        env.mode === 'production'
-          ? 'source-map'
-          : 'eval-cheap-module-source-map',
+      devtool: env.mode === 'production' ? 'source-map' : 'inline-source-map',
       entry: {
         main: process.env.LEGACY ? ['babel-polyfill', appEntry] : appEntry,
       },
