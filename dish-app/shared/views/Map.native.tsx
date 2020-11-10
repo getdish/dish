@@ -14,7 +14,7 @@ MapboxGL.setTelemetryEnabled(false)
 
 const idFn = (_) => _
 
-export const Map = ({
+export const MapView = ({
   center,
   span,
   features,
