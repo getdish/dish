@@ -594,7 +594,7 @@ async function setAutocompleteResults(
   }
   matched = uniqBy([...matched, ...results].filter(isPresent), (x) => x.id)
   if (showAutocomplete === 'location') {
-    om.actions.home.setLocationAutocompleteResults(matched)
+    omStatic.actions.home.setLocationAutocompleteResults(matched)
   } else if (showAutocomplete === 'search') {
     // add in a deduped entry
     // if multiple countries have "steak" we show a single "generic steak" entry at top
@@ -634,7 +634,7 @@ async function setAutocompleteResults(
       matched.splice(0, 0, countryTag) // insert into higher place
     }
 
-    om.actions.home.setAutocompleteResults(matched)
+    omStatic.actions.home.setAutocompleteResults(matched)
   }
 }
 

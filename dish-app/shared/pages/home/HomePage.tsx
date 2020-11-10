@@ -103,9 +103,11 @@ export default memo(function HomePage(props: Props) {
           bottom={10}
           left={0}
           right={0}
-          shadowColor="#000"
-          shadowOpacity={0.05}
-          shadowRadius={7}
+          shadowColor="#fff"
+          shadowOpacity={1}
+          borderBottomColor="#f2f2f2"
+          borderBottomWidth={1}
+          shadowRadius={10}
           height={searchBarHeight + 10}
         />
       </AbsoluteVStack>
@@ -113,6 +115,8 @@ export default memo(function HomePage(props: Props) {
       <VStack
         flex={1}
         width="100%"
+        maxHeight="100%"
+        overflow="hidden"
         maxWidth={drawerWidthMax}
         alignSelf="flex-end"
       >
