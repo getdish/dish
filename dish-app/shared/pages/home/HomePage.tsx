@@ -84,6 +84,8 @@ export default memo(function HomePage(props: Props) {
     }
   })
 
+  const topContentHeight = 20 + (isSmall ? 0 : searchBarHeight + 10)
+
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
@@ -134,11 +136,7 @@ export default memo(function HomePage(props: Props) {
           </AbsoluteVStack>
           <VStack flex={1} overflow="hidden" maxWidth="100%">
             <VStack>
-              <VStack
-                pointerEvents="none"
-                height={20 + (isSmall ? 0 : searchBarHeight + 10)}
-              />
-
+              <VStack pointerEvents="none" height={topContentHeight} />
               <VStack alignItems="center">
                 <SlantedBox>
                   <Text

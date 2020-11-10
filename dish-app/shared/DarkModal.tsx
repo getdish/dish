@@ -16,33 +16,31 @@ export const DarkModal = ({
   const isSmall = useIsNarrow()
   return (
     <AbsoluteVStack
-      className="inset-shadow-xxxl ease-in-out-slow"
+      className="dark inset-shadow-xxxl ease-in-out-slow"
       fullscreen
       zIndex={10000000000}
       alignItems="center"
       justifyContent="center"
       paddingHorizontal={isSmall ? 0 : '2%'}
-      paddingVertical={isSmall ? 0 : '2%'}
-      backgroundColor="rgba(0,0,0,0.8)"
+      backgroundColor="rgba(30,0,12,0.5)"
       opacity={hide ? 0 : 1}
       pointerEvents={hide ? 'none' : 'auto'}
-      transform={[{ translateY: 0 }]}
     >
+      <VStack flex={1} />
       <AnimatedVStack
         maxWidth={450}
-        maxHeight={680}
+        maxHeight="80%"
         width="100%"
-        height="100%"
         animateState={hide ? 'out' : 'in'}
       >
         <VStack
           flex={1}
           maxHeight="100%" // needed for chrome
-          margin={-8}
           borderWidth={1}
           position="relative"
           backgroundColor="#000"
-          borderRadius={20}
+          borderTopLeftRadius={20}
+          borderTopRightRadius={20}
           shadowColor="rgba(0,0,0,1)"
           shadowRadius={150}
           shadowOffset={{ height: 10, width: 0 }}

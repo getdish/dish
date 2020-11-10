@@ -1,3 +1,4 @@
+import { ArrowUp, Home } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'
 import React, { memo, useLayoutEffect } from 'react'
 import { AbsoluteVStack, Text } from 'snackui'
@@ -8,7 +9,7 @@ import { DarkModal } from './DarkModal'
 import { IntroModal } from './IntroModal'
 import { useOvermind } from './state/om'
 import { UserOnboard } from './UserOnboard'
-import { CloseButton } from './views/ui/CloseButton'
+import { CloseButton, SmallCircleButton } from './views/ui/CloseButton'
 
 export const AppIntroLetter = memo(() => {
   const om = useOvermind()
@@ -42,17 +43,20 @@ export const AppIntroLetter = memo(() => {
       hide={store.hidden}
       outside={
         <>
-          <CloseButton
+          <SmallCircleButton
             position="absolute"
             zIndex={1000}
             top={15}
             right={15}
             opacity={0.5}
             backgroundColor="transparent"
+            padding={10}
             onPress={() => {
               store.setHidden(true)
             }}
-          />
+          >
+            <ArrowUp size={24} color="rgba(255,255,255,0.5)" />
+          </SmallCircleButton>
           <AbsoluteVStack
             bottom={-20}
             zIndex={1000}

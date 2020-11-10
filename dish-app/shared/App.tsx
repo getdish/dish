@@ -2,11 +2,11 @@ if (process.env.NODE_ENV === 'development') {
   require('snackui/style.css')
 }
 
-import { Auth, query, resolved } from '@dish/graph'
+import { Auth } from '@dish/graph'
 import { isSafari } from '@dish/helpers'
 import loadable from '@loadable/component'
 import React, { Suspense, memo, useEffect } from 'react'
-import { AbsoluteVStack } from 'snackui'
+import { VStack } from 'snackui'
 
 import HomeAutocomplete from './AppAutocomplete'
 import { AppContainer } from './AppContainer'
@@ -17,16 +17,12 @@ import { AppMenuFloating } from './AppMenuFloating'
 import { AppRoot } from './AppRoot'
 import { AppSearchBarFloating } from './AppSearchBar'
 import { AppStackView } from './AppStackView'
-import { bgLight } from './colors'
 import { isSSR, isWeb } from './constants'
-import { useIsNarrow } from './hooks/useIs'
 import { PagesStackView } from './pages/PagesStackView'
 import { ErrorBoundary } from './views/ErrorBoundary'
 import { Route } from './views/router/Route'
 
 export default memo(function App() {
-  const isSmall = useIsNarrow()
-
   // dont run if in ssr mode
   if (isWeb) {
     const { auth } = require('../web/apple-sign-in')
@@ -40,32 +36,14 @@ export default memo(function App() {
     }, [])
   }
 
-  return (
-    <AbsoluteVStack
-      fullscreen
-      overflow="hidden"
-      backgroundColor={bgLight} // map color
-      {...(isSmall && {
-        borderRadius: 10,
-      })}
-    >
-      <AppContent />
-    </AbsoluteVStack>
-  )
+  return <AppContent />
 })
 
 const AppContent = memo(() => {
   return (
     <AppRoot>
-      {/* WARNING: DONT PUT ANYTHING ABOVE THIS IN MARKUP ^^ */}
       <Suspense fallback={null}>
-        <AppContainer>
-          <AppStackView>
-            {(props) => {
-              return <PagesStackView {...props} />
-            }}
-          </AppStackView>
-        </AppContainer>
+        <AppSearchBarFloating />
       </Suspense>
 
       <Suspense fallback={null}>
@@ -73,48 +51,65 @@ const AppContent = memo(() => {
       </Suspense>
 
       <Suspense fallback={null}>
-        {!isSSR && (
-          <ErrorBoundary name="main-map">
-            <Suspense fallback={null}>
-              <AppMap />
-            </Suspense>
-          </ErrorBoundary>
-        )}
-
-        <Suspense fallback={null}>
-          <AppIntroLetter />
-        </Suspense>
-
-        <Suspense fallback={null}>
-          <AppMapControlsUnderlay />
-          <AppMapControlsOverlay />
-        </Suspense>
-
-        <Suspense fallback={null}>
-          <AppSearchBarFloating />
-        </Suspense>
-        <Suspense fallback={null}>
-          <HomeAutocomplete />
-        </Suspense>
-
-        <Suspense fallback={null}>
-          <GalleryPage />
-        </Suspense>
-        <Suspense fallback={null}>
-          <RestaurantReviewPage />
-        </Suspense>
-        <Suspense fallback={null}>
-          <RestaurantReviewsPage />
-        </Suspense>
-        <Suspense fallback={null}>
-          <UserEditPage />
-        </Suspense>
-        <Suspense fallback={null}>
-          <Route name="restaurantHours">
-            <RestaurantHoursPage />
-          </Route>
-        </Suspense>
+        <HomeAutocomplete />
       </Suspense>
+
+      <VStack
+        zIndex={0}
+        borderRadius={12}
+        flex={1}
+        maxWidth="100%"
+        maxHeight="100%"
+        overflow="hidden"
+      >
+        {/* WARNING: DONT PUT ANYTHING ABOVE THIS IN MARKUP ^^ */}
+        <Suspense fallback={null}>
+          <AppContainer>
+            <AppStackView>
+              {(props) => {
+                return <PagesStackView {...props} />
+              }}
+            </AppStackView>
+          </AppContainer>
+        </Suspense>
+
+        <Suspense fallback={null}>
+          {!isSSR && (
+            <ErrorBoundary name="main-map">
+              <Suspense fallback={null}>
+                <AppMap />
+              </Suspense>
+            </ErrorBoundary>
+          )}
+
+          <Suspense fallback={null}>
+            <AppIntroLetter />
+          </Suspense>
+
+          <Suspense fallback={null}>
+            <AppMapControlsUnderlay />
+            <AppMapControlsOverlay />
+          </Suspense>
+
+          <Suspense fallback={null}>
+            <GalleryPage />
+          </Suspense>
+          <Suspense fallback={null}>
+            <RestaurantReviewPage />
+          </Suspense>
+          <Suspense fallback={null}>
+            <RestaurantReviewsPage />
+          </Suspense>
+          <Suspense fallback={null}>
+            <UserEditPage />
+          </Suspense>
+          <Suspense fallback={null}>
+            <Route name="restaurantHours">
+              <RestaurantHoursPage />
+            </Route>
+          </Suspense>
+        </Suspense>
+      </VStack>
     </AppRoot>
   )
 })
