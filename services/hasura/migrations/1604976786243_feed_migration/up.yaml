@@ -1,0 +1,12 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: |-
+      create index review_newest_idx on review (restaurant_id, authored_at DESC NULLS LAST);
+      update restaurant set oldest_review_date = (select oldest_review from (
+        SELECT MIN(authored_at) oldest_review
+          FROM review
+            WHERE restaurant_id = restaurant.id
+          ORDER BY oldest_review DESC
+      ) s);
+  type: run_sql

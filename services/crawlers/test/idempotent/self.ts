@@ -832,3 +832,17 @@ test('Scoring for rishes', async (t) => {
   )
   t.assert(rish1.sentences.find((s) => s.sentence == 'Test tag was good.'))
 })
+
+test('Sets oldest review date', async (t) => {
+  const self = new Self()
+  const restaurant = (await restaurantFindOneWithTagsSQL(
+    t.context.restaurant.id
+  )) as RestaurantWithId
+  await self.preMerge(restaurant)
+  await self.scanCorpus()
+  await self.oldestReview()
+  await self.postMerge()
+  const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
+
+  t.is(updated.oldest_review_date, '2019-07-23T00:00:00+00:00')
+})

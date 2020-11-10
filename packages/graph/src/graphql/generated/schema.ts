@@ -5113,6 +5113,9 @@ export const schema = {
         get name() {
           return new FieldNode(schema.String, undefined, false)
         },
+        get oldest_review_date() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
         get photos() {
           return new FieldNode(
             schema.jsonb,
@@ -5671,6 +5674,9 @@ export const schema = {
         get name() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
+        get oldest_review_date() {
+          return new InputNodeField(schema.timestamptz_comparison_exp, true)
+        },
         get photos() {
           return new InputNodeField(schema.jsonb_comparison_exp, true)
         },
@@ -5898,6 +5904,9 @@ export const schema = {
         get name() {
           return new InputNodeField(schema.String, true)
         },
+        get oldest_review_date() {
+          return new InputNodeField(schema.timestamptz, true)
+        },
         get photos() {
           return new InputNodeField(schema.jsonb, true)
         },
@@ -5995,6 +6004,9 @@ export const schema = {
         get name() {
           return new FieldNode(schema.String, undefined, true)
         },
+        get oldest_review_date() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
         get price_range() {
           return new FieldNode(schema.String, undefined, true)
         },
@@ -6068,6 +6080,9 @@ export const schema = {
         get name() {
           return new InputNodeField(schema.order_by, true)
         },
+        get oldest_review_date() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get price_range() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -6137,6 +6152,9 @@ export const schema = {
         },
         get name() {
           return new FieldNode(schema.String, undefined, true)
+        },
+        get oldest_review_date() {
+          return new FieldNode(schema.timestamptz, undefined, true)
         },
         get price_range() {
           return new FieldNode(schema.String, undefined, true)
@@ -6209,6 +6227,9 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get name() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get oldest_review_date() {
           return new InputNodeField(schema.order_by, true)
         },
         get price_range() {
@@ -6343,6 +6364,9 @@ export const schema = {
           return new InputNodeField(schema.menu_item_aggregate_order_by, true)
         },
         get name() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get oldest_review_date() {
           return new InputNodeField(schema.order_by, true)
         },
         get photos() {
@@ -6494,6 +6518,9 @@ export const schema = {
         },
         get name() {
           return new InputNodeField(schema.String, true)
+        },
+        get oldest_review_date() {
+          return new InputNodeField(schema.timestamptz, true)
         },
         get photos() {
           return new InputNodeField(schema.jsonb, true)
