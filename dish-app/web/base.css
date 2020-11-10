@@ -17,7 +17,6 @@ body {
   display: flex;
   flex: 1;
   z-index: 0;
-  border-radius: 12px;
   overflow: hidden;
   position: relative;
 }
@@ -387,8 +386,18 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active  {
+  -webkit-text-fill-color: #000 !important;
+  /* no transparent */
+  -webkit-box-shadow: 0 0 0 30px rgba(240,240,240,1) inset !important;
+}
+
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active  {
   -webkit-text-fill-color: #fff !important;
-  -webkit-box-shadow: 0 0 0 30px rgba(150,150,150,1) inset !important;
+  /* no transparent */
+  -webkit-box-shadow: 0 0 0 30px rgb(20,20,20) inset !important;
 }
 
 @media screen and (max-width: 860px) {

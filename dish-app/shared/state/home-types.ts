@@ -119,7 +119,7 @@ export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
 
 export type HomeActiveTagsRecord = { [id: string]: boolean }
 
-type Region = {
+export type Region = {
   name: string
   slug: string
   geometry: {

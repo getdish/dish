@@ -188,6 +188,7 @@ const AutocompleteContentsInner = memo(
 
     return (
       <AnimatedVStack
+        position="absolute"
         className="animate-delay-some"
         pointerEvents="none"
         fullscreen
@@ -240,8 +241,8 @@ const AutocompleteContentsInner = memo(
                 className="ease-in-out"
                 position="relative"
                 left={isSmall ? 0 : showLocation ? 250 : -160}
-                shadowColor="rgba(0,0,0,0.4)"
-                shadowRadius={18}
+                shadowColor="rgba(0,0,0,0.27)"
+                shadowRadius={22}
                 width="100%"
                 backgroundColor={isWeb ? '#fff' : 'rgba(255,255,255,0.5)'}
                 height={isWeb ? 'auto' : '100%'}
