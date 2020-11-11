@@ -115,6 +115,7 @@ export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
   searchQuery: HomeStateItemBase['searchQuery']
   activeTags?: HomeActiveTagsRecord
   type: HomeStateItem['type']
+  region?: string
 }
 
 export type HomeActiveTagsRecord = { [id: string]: boolean }

@@ -14,7 +14,7 @@ window['allTags'] = allTags
 window['allTagsNameToSlug'] = allTagsNameToSlug
 
 // adds to allTags + allTagsNameToSlug
-export async function addTagsToCache(tags: FullTag[]) {
+export async function addTagsToCache(tags: (FullTag | NavigableTag)[]) {
   for (const tag of tags ?? []) {
     if (!tag.name) {
       console.warn('no tag name')
@@ -24,7 +24,7 @@ export async function addTagsToCache(tags: FullTag[]) {
     if (existing) {
       continue
     }
-    allTags[slug] = tag
+    allTags[slug] = tag as any
     allTagsNameToSlug[tagNameKey(tag.name)] = slug
   }
   return tags

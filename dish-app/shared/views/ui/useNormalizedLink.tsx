@@ -2,10 +2,15 @@ import { isPresent } from '@dish/helpers'
 import { isEqual, omit } from 'lodash'
 
 import { memoize } from '../../helpers/memoizeWeak'
-import { allTags, getFullTagFromNameAndType } from '../../state/allTags'
+import {
+  addTagsToCache,
+  allTags,
+  getFullTagFromNameAndType,
+} from '../../state/allTags'
 import { getNavigateItemForState } from '../../state/getNavigateItemForState'
 import { getNextState } from '../../state/getNextState'
 import { HomeStateNav } from '../../state/home-types'
+import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic } from '../../state/omStatic'
 import { LinkButtonProps } from './LinkProps'
 
@@ -26,7 +31,6 @@ export const getNormalizeLinkProps = memoize(
     function onMouseEnter(e) {
       // get latest on mouseenter, lets you update tags without re-rendering every link
       const next = getNormalizedLink(props)
-      console.log('getting new link', props, next)
       if (!isEqual(omit(next, 'onPress'), omit(linkProps, 'onPress'))) {
         forceUpdate()
       }
@@ -37,27 +41,30 @@ export const getNormalizeLinkProps = memoize(
 
 const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
   if (props.tags || props.tag) {
-    const nextState = getNextState({
-      state: omStatic.state.home.currentState,
-      ...props,
-      tags: (props.tags ?? [props.tag]).filter(isPresent).map((tag) => {
+    const tags: NavigableTag[] = (props.tags ?? [props.tag])
+      .filter(isPresent)
+      .map((tag) => {
         // TEMP bugfix, until we do new home, we need to fallback to getFullTagFromNameAndType
         return tag.slug
           ? allTags[tag.slug] ?? tag
           : getFullTagFromNameAndType(tag as any) ?? tag
-      }),
+      })
+
+    // add to cache
+    addTagsToCache(tags)
+
+    const nextState = getNextState({
+      ...props,
+      state: omStatic.state.home.currentState,
+      tags,
     })
-    if (!nextState) {
-      return null
-    }
     return {
-      ...getNavigateItemForState(omStatic, nextState),
+      ...(nextState && getNavigateItemForState(omStatic, nextState)),
       preventNavigate: true,
       onPress() {
         omStatic.actions.home.navigate({
-          ...props,
-          // use latest state
           state: omStatic.state.home.currentState,
+          tags,
         })
       },
     }

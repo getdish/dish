@@ -26,7 +26,6 @@ export const getNavigateItemForState = (
 
   // if going home, just go there
   const shouldBeSearching = shouldBeOnSearch(nextState)
-  console.log('shouldBeSearching', shouldBeSearching)
 
   let name = nextState.type
   if (name === 'home' && shouldBeSearching) {
@@ -40,6 +39,15 @@ export const getNavigateItemForState = (
   const replace = !isChangingType
 
   if (name === 'home') {
+    if (nextState.region) {
+      return {
+        name: 'homeRegion',
+        params: {
+          region: nextState.region,
+        },
+        replace: true,
+      }
+    }
     return {
       name: 'home',
       replace,
@@ -48,15 +56,7 @@ export const getNavigateItemForState = (
 
   // build params
   const params = getRouteFromState(nextState)
-
-  params.location =
-    nextState.region ??
-    slugify(
-      nextState.currentLocationName ??
-        home.currentState.currentLocationName ??
-        'here'
-    )
-
+  console.log(nextState, params)
   if (nextState.searchQuery) {
     params.search = nextState.searchQuery
   }

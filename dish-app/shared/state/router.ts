@@ -5,7 +5,7 @@ import { OmState } from './home-types'
 
 export type SearchRouteParams = {
   username?: string
-  location: string
+  region: string
   lense: string
   search?: string
   tags?: string
@@ -51,10 +51,10 @@ export const routes = {
   // NOTE keep userSearch and search in sync
   // after user/restaurant
   userSearch: new Route<SearchRouteParams>(
-    '/u/:username/:lense/:location/:tags?/:search?'
+    '/u/:username/:lense/:region/:tags?/:search?'
   ),
   // search after userSearch
-  search: new Route<SearchRouteParams>('/:lense/:location/:tags?/:search?'),
+  search: new Route<SearchRouteParams>('/:lense/:region/:tags?/:search?'),
 
   homeRegion: new Route<{ region?: string }>('/:region?'),
 

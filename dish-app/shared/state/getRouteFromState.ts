@@ -30,7 +30,7 @@ export const getRouteFromState = (
       .join(SPLIT_TAG)}`
   }
   const params: any = {
-    location: slugify(state.currentLocationName ?? 'here'),
+    region: state.region ?? slugify(state.currentLocationName ?? 'here'),
   }
   const lenseTag = allActiveTags.find((x) => x.type === 'lense') ?? tagLenses[0]
 

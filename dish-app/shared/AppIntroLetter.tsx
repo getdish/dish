@@ -55,7 +55,7 @@ export const AppIntroLetter = memo(() => {
               store.setHidden(true)
             }}
           >
-            <ArrowUp size={24} color="rgba(255,255,255,0.5)" />
+            <Home size={24} color="#fff" />
           </SmallCircleButton>
           <AbsoluteVStack
             bottom={-20}
