@@ -45,6 +45,9 @@ function _get_function_body() {
 function _build_script() {
   script=$(echo "$all_env" | sed 's/.*/export &/')
   for f in $(declare -F | cut -d ' ' -f3); do
+    if [[ "$f" == "_buildkit_build" ]]; then
+      continue
+    fi
     script+=$(echo -e "\nfunction $(declare -f $f)")
   done
   echo -e "$script\n"
@@ -255,6 +258,12 @@ function dump_scrape_data_to_s3() {
     -c "$copy_out" \
   | s3 put - $DISH_BACKUP_BUCKET/scrape.csv
   echo "...scrape table dumped tpo S3."
+}
+
+function psql_s3_for_big_data() {
+  _run_on_cluster postgres:12-alpine && return 0
+  _setup_s3
+  sh
 }
 
 function redis_command() {

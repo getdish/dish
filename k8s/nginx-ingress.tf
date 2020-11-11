@@ -126,6 +126,18 @@ resource "kubernetes_ingress" "k8s-services-ingress" {
       }
     }
     rule {
+      host = "martin-tiles.${var.dish_domain}"
+      http {
+        path {
+          path = "/"
+          backend {
+            service_name = "martin-tiles"
+            service_port = "http"
+          }
+        }
+      }
+    }
+    rule {
       host = "worker-ui.k8s.${var.dish_domain}"
       http {
         path {

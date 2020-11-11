@@ -1,5 +1,0 @@
-- args:
-    table:
-      name: hrr
-      schema: public
-  type: untrack_table
