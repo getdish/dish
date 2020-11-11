@@ -79,6 +79,8 @@ const DishViewContent = ({
 
   const imageUrl = getImageUrl(dish.image, ...getRoundedDishViewSize(size), 100)
   const hasLongWord = !!dishName.split(' ').find((x) => x.length >= 8)
+  const isTiny = size < 115
+  const fontSize = (hasLongWord ? 14 : 16) * (isTiny ? 0.8 : 1)
   const isFallback = _isFallback ?? dish.isFallback
   const sizeInner = Math.round(isFallback ? size * 0.8 : size * 0.98)
   const { lightColor, color } = getColorsForName(dish.name)
@@ -170,7 +172,7 @@ const DishViewContent = ({
             overflow="hidden"
             fontWeight="700"
             color={isActive ? '#fff' : '#000'}
-            fontSize={hasLongWord ? 14 : 16}
+            fontSize={fontSize}
             textAlign="center"
           >
             {dishName}

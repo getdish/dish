@@ -1,7 +1,7 @@
 import { LngLat, Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { useStore } from '@dish/use-store'
-import { isEqual, rest, uniqBy } from 'lodash'
+import { Store, getStore, useStore } from '@dish/use-store'
+import { debounce, isEqual, rest, uniqBy } from 'lodash'
 import React, {
   Suspense,
   memo,
@@ -29,6 +29,7 @@ import { getIs, useIsNarrow } from './hooks/useIs'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { useRestaurantQuery } from './hooks/useRestaurantQuery'
+import { sfRegion } from './sfRegion'
 import { findLastHomeOrSearch } from './state/home'
 import { isRestaurantState } from './state/home-helpers'
 import { Region } from './state/home-types'
@@ -36,6 +37,19 @@ import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { router } from './state/router'
 import { MapView } from './views/Map'
+
+export class AppMapStore extends Store {
+  regions: { [slug: string]: Region | undefined } = {
+    'san-francisco': sfRegion,
+  }
+
+  setRegion(slug: string, region: Region) {
+    this.regions = {
+      ...this.regions,
+      [slug]: region,
+    }
+  }
+}
 
 export default memo(function AppMap() {
   const [restaurants, setRestaurantsFast] = useState<Restaurant[]>([])
@@ -134,6 +148,19 @@ const AppMapDataLoader = memo(
     }
   )
 )
+
+const updateRegion = debounce((region: Region) => {
+  const appMapStore = getStore(AppMapStore)
+  appMapStore.setRegion(region.slug, region)
+  console.warn('>>>> NEW REGION', region)
+  router.navigate({
+    replace: true,
+    name: 'homeRegion',
+    params: {
+      region: region.slug,
+    },
+  })
+}, 150)
 
 const AppMapContent = memo(function AppMap({
   restaurants,
@@ -247,6 +274,7 @@ const AppMapContent = memo(function AppMap({
       },
       (spanCenter) => {
         const { span, center } = JSON.parse(spanCenter)
+        console.log('got new map pos: center', center, 'span', span)
         setState({
           span,
           center,
@@ -327,6 +355,7 @@ const AppMapContent = memo(function AppMap({
     const restaurant = getRestaurants()?.find((x) => x.id === id)
     if (restaurant) {
       router.navigate({
+        replace: true,
         name: 'restaurant',
         params: {
           slug: restaurant.slug,
@@ -390,15 +419,11 @@ const AppMapContent = memo(function AppMap({
   const handleSelectRegion = useCallback((region: Region | null) => {
     if (!region) return
     if (!region.slug) {
-      console.log('no slug', region)
+      console.log('no region slug', region)
       return
     }
-    router.navigate({
-      name: 'home',
-      params: {
-        region: region.slug,
-      },
-    })
+    console.log('setting to region', region)
+    updateRegion(region)
   }, [])
 
   return (

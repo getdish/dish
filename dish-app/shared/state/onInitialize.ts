@@ -19,12 +19,11 @@ export const onInitialize: OnInitialize = async (
     //   console.debug('[om] component:update', all)
     // })
     overmind.eventHub.on('action:start' as any, (execution) => {
-      const name = `[om] >> ${execution.actionName}`
-      const logType = name.indexOf('.get') > 0 ? 'info' : 'warn'
+      const name = `🕉 om.${execution.actionName}`
       if (typeof execution.value !== 'undefined') {
-        console[logType](name, execution.value)
+        console.log(name, execution.value)
       } else {
-        console[logType](name)
+        console.log(name)
       }
     })
   }
@@ -33,7 +32,7 @@ export const onInitialize: OnInitialize = async (
 
   actions.user.checkForExistingLogin()
   actions.router.start()
-  await actions.home.updateCurrentMapAreaInformation()
+  actions.home.updateCurrentMapAreaInformation()
 }
 
 if (process.env.NODE_ENV === 'development') {
