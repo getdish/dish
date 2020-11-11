@@ -9,6 +9,7 @@ import {
   order_by,
   query,
 } from '@dish/graph'
+import { getStore, useStore } from '@dish/use-store'
 import { fullyIdle, series } from '@o/async'
 import { sortBy, uniqBy } from 'lodash'
 import React, {
@@ -30,13 +31,14 @@ import {
   VStack,
 } from 'snackui'
 
+import { AppMapStore } from '../../AppMap'
 import { drawerWidthMax, searchBarHeight } from '../../constants'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useAsyncEffect } from '../../hooks/useAsync'
 import { useIsNarrow } from '../../hooks/useIs'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
-import { HomeStateItemHome } from '../../state/home-types'
+import { HomeStateItemHome, Region } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { DishView } from '../../views/dish/DishView'
@@ -83,6 +85,7 @@ export default memo(function HomePage(props: Props) {
   })
 
   const topContentHeight = 20 + (isSmall ? 0 : searchBarHeight + 10)
+  const region = getStore(AppMapStore).regions[props.item.region]
 
   return (
     <>
@@ -122,33 +125,7 @@ export default memo(function HomePage(props: Props) {
           <VStack flex={1} overflow="hidden" maxWidth="100%">
             <VStack>
               <VStack pointerEvents="none" height={topContentHeight} />
-              <VStack alignItems="center">
-                <SlantedBox>
-                  <Text
-                    paddingHorizontal={6}
-                    fontSize={22}
-                    color="#000"
-                    fontWeight="600"
-                  >
-                    San Francisco
-                  </Text>
-                </SlantedBox>
-              </VStack>
-
-              <HomeTopSearches />
-
-              <Spacer size="sm" />
-
-              <Suspense fallback={null}>
-                <VStack minHeight={Dimensions.get('window').height * 0.9}>
-                  {props.item.region && <HomeFeed {...props} />}
-                </VStack>
-
-                {/* pad bottom */}
-                <VStack height={20} />
-
-                <PageFooter />
-              </Suspense>
+              <HomeFeed region={region} item={props.item} />
             </VStack>
           </VStack>
         </ContentScrollView>
@@ -177,11 +154,11 @@ type FeedItems =
   | FeedItemDish
 
 const HomeFeed = memo(
-  graphql((props: Props) => {
+  graphql(({ region, item }: { region: Region; item: HomeStateItemHome }) => {
     const restaurants = query.restaurant({
       where: {
         location: {
-          _st_within: props.item.region.geometry,
+          _st_within: region?.geometry,
         },
         downvotes: { _is_null: false },
         votes_ratio: { _is_null: false },
@@ -190,8 +167,7 @@ const HomeFeed = memo(
       limit: 8,
     })
 
-    const cuisines = useTopCuisines(props.item.center) ?? []
-    console.log('cuisines', cuisines)
+    const cuisines = useTopCuisines(item.center) ?? []
 
     const dishes = query.tag({
       where: {
@@ -203,7 +179,7 @@ const HomeFeed = memo(
       limit: 8,
     })
 
-    if (!props.item.region) {
+    if (!region || !item.region) {
       return (
         <>
           <LoadingItems />
@@ -254,31 +230,55 @@ const HomeFeed = memo(
       (x) => x.rank
     )
 
-    console.log('items', items)
-
     return (
-      <HStack paddingHorizontal={10} justifyContent="center" flexWrap="wrap">
-        {items.map((item) => {
-          const content = (() => {
-            switch (item.type) {
-              case 'restaurant':
-                return <RestaurantCard {...item} />
-              case 'dish':
-                return <DishFeedCard {...item} />
-              case 'cuisine':
-                return <CuisineFeedCard {...item} />
-            }
-          })()
-          if (!content) {
-            return null
-          }
-          return (
-            <VStack key={item.id} margin={10}>
-              {content}
-            </VStack>
-          )
-        })}
-      </HStack>
+      <>
+        <VStack alignItems="center">
+          <SlantedBox>
+            <Text
+              paddingHorizontal={6}
+              fontSize={22}
+              color="#000"
+              fontWeight="600"
+            >
+              {region.name ?? '...'}
+            </Text>
+          </SlantedBox>
+        </VStack>
+
+        <HomeTopSearches />
+
+        <Suspense fallback={null}>
+          <VStack minHeight={Dimensions.get('window').height * 0.9}>
+            <HStack justifyContent="center" flexWrap="wrap">
+              {items.slice(0, 6).map((item) => {
+                const content = (() => {
+                  switch (item.type) {
+                    case 'restaurant':
+                      return <RestaurantCard {...item} />
+                    case 'dish':
+                      return <DishFeedCard {...item} />
+                    case 'cuisine':
+                      return <CuisineFeedCard {...item} />
+                  }
+                })()
+                if (!content) {
+                  return null
+                }
+                return (
+                  <VStack key={item.id} margin="1%">
+                    {content}
+                  </VStack>
+                )
+              })}
+            </HStack>
+          </VStack>
+
+          {/* pad bottom */}
+          <VStack height={20} />
+
+          <PageFooter />
+        </Suspense>
+      </>
     )
   })
 )
@@ -301,11 +301,11 @@ const CuisineFeedCard = graphql((props: FeedItemCuisine) => {
     setRestaurants(r)
   }, [r])
 
-  useLayoutEffect(() => {
-    const scroll = scrollRef.current
-    if (!scroll) return
-    scroll.scrollTo({ x: 15 })
-  }, [])
+  // useLayoutEffect(() => {
+  //   const scroll = scrollRef.current
+  //   if (!scroll) return
+  //   scroll.scrollTo({ x: 15 })
+  // }, [])
 
   const perCol = 2
 
@@ -313,7 +313,9 @@ const CuisineFeedCard = graphql((props: FeedItemCuisine) => {
     <CardFrame overflow="hidden">
       <VStack height="100%" maxWidth="100%">
         <AbsoluteVStack zIndex={10} top={10} left={10}>
-          <SlantedTitle fontWeight="500">{props.country}</SlantedTitle>
+          <SlantedBox>
+            <Text fontWeight="600">{props.country}</Text>
+          </SlantedBox>
         </AbsoluteVStack>
         <ScrollView
           ref={scrollRef}
@@ -321,7 +323,7 @@ const CuisineFeedCard = graphql((props: FeedItemCuisine) => {
           horizontal
           showsHorizontalScrollIndicator={false}
         >
-          <VStack paddingTop={35} paddingLeft={10}>
+          <VStack paddingTop={48} paddingLeft={15}>
             <HStack flexWrap="nowrap">
               <DishCol>{dishes.slice(0, perCol).map(getDishColInner)}</DishCol>
               <DishCol transform={[{ translateY: -15 }]}>
@@ -365,9 +367,9 @@ const getRestaurantButton = (r, i) => {
   }
   return (
     <RestaurantButton
-      // subtle
+      subtle
       key={r.id}
-      // trending="up"
+      trending="up"
       // rank={0}
       restaurantSlug={r.slug}
     />
@@ -377,7 +379,7 @@ const getRestaurantButton = (r, i) => {
 const getDishColInner = (dish: Tag, i: number) => {
   return (
     <VStack marginBottom={5} key={i}>
-      <DishView size={115} dish={selectTagDishViewSimple(dish)} />
+      <DishView size={100} dish={selectTagDishViewSimple(dish)} />
     </VStack>
   )
 }
@@ -394,7 +396,7 @@ const DishFeedCard = (props: FeedItemDish) => {
         right={0}
         transform={[{ translateX: 10 }, { translateY: -10 }]}
       >
-        <DishView size={180} {...props} />
+        <DishView size={160} {...props} />
       </AbsoluteVStack>
       <VStack
         flexWrap="nowrap"

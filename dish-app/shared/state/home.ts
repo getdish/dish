@@ -499,6 +499,7 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
     }
 
     switch (item.name) {
+      case 'homeRegion':
       case 'home':
       case 'about':
       case 'blog':
@@ -568,11 +569,6 @@ const pushHomeState: AsyncAction<
     return null
   }
 
-  if (item.name === 'home' && om.state.home.states.length === 1) {
-    // dont push another initial home
-    return
-  }
-
   // start loading
   om.actions.home.setIsLoading(true)
 
@@ -585,20 +581,17 @@ const pushHomeState: AsyncAction<
 
   switch (type) {
     // home
+    case 'homeRegion':
     case 'home': {
-      const prev: HomeStateItemHome = _.findLast(
-        om.state.home.states,
-        isHomeState
+      const prev: HomeStateItemHome = _.findLast(om.state.home.states, (x) =>
+        isHomeState(x)
       ) as any
-      const prevLocation = {
-        center: prev.mapAt?.center ?? prev.center,
-        span: prev.mapAt?.span ?? prev.span,
-      }
       nextState = {
+        type: 'home',
         searchQuery: '',
         activeTags: {},
-        ...prevLocation,
-        mapAt: null,
+        mapAt: prev?.mapAt,
+        region: item.params?.region,
       }
       break
     }
@@ -700,11 +693,11 @@ const pushHomeState: AsyncAction<
   const finalState = {
     currentLocationName: currentState?.currentLocationName,
     currentLocationInfo: currentState?.currentLocationInfo,
-    center: currentState?.center ?? initialHomeState.center,
-    span: currentState?.span ?? initialHomeState.span,
+    center: currentState?.mapAt?.center ?? currentState?.center,
+    span: currentState?.mapAt?.span ?? currentState?.span,
     searchQuery,
-    ...nextState,
     type,
+    ...nextState,
     id: nextState?.id ?? item.id ?? uid(),
   } as HomeStateItem
 

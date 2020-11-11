@@ -24,7 +24,6 @@ export function Root({ overmind }: { overmind?: any }) {
             <PrivateRoute name="admin">
               <AdminPage />
             </PrivateRoute>
-
             <Route name="home">
               <App />
             </Route>

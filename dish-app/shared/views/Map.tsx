@@ -156,7 +156,6 @@ export const MapView = memo((props: MapProps) => {
     if (!map) return
     // @ts-ignore no types for this yet
     map?.easeTo({ padding })
-    console.log('easing to', padding)
   }, [map, JSON.stringify(padding)])
 
   // features
@@ -381,7 +380,7 @@ function setupMapEffect({
         const tiles = [
           {
             maxZoom: 20,
-            minZoom: 11,
+            minZoom: 12,
             lineColor: '#880088',
             promoteId: 'ogc_fid',
             activeColor: purple,
@@ -402,7 +401,7 @@ function setupMapEffect({
           //   name: 'public.hca',
           // },
           {
-            maxZoom: 11,
+            maxZoom: 12,
             minZoom: 7,
             lineColor: '#008888',
             promoteId: 'ogc_fid',
@@ -550,6 +549,9 @@ function setupMapEffect({
             source: layerName,
             sourceLayer: layerName,
           }
+          const feature = features[0]
+          if (!feature) return
+          if (feature.id === activeLayerId) return
           if (activeLayerId) {
             map.setFeatureState(
               {
@@ -562,14 +564,9 @@ function setupMapEffect({
             )
             activeLayerId = null
           }
-          const feature = features[0]
-          if (!feature) {
-            // getProps().onSelectRegion?.(null)
-            return
-          }
-          if (feature.id === activeLayerId) return
+          console.log('new one', feature, activeLayerId)
           const id = feature.properties.ogc_fid
-          activeLayerId = id
+          activeLayerId = feature.id
           map.setFeatureState(
             {
               ...featureProps,
@@ -581,8 +578,10 @@ function setupMapEffect({
           )
           getProps().onSelectRegion?.({
             geometry: feature.geometry as any,
-            name: feature.properties.nhood,
-            slug: feature.properties.slug ?? slugify(feature.properties.nhood),
+            name: feature.properties.nhood ?? 'San Francisco',
+            slug:
+              feature.properties.slug ??
+              slugify(feature.properties.nhood ?? 'san-francisco'),
           })
         }, 300)
 
