@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: SELECT UpdateGeometrySRID('public', 'nhood_labels', 'center', 4326);
+  type: run_sql
