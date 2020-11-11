@@ -1,13 +1,21 @@
 import _ from 'lodash'
 
 import { globalTagId } from '../constants'
-import { order_by, query } from '../graphql'
+import {
+  client,
+  order_by,
+  resolved,
+  restaurant,
+} from '../graphql/new-generated'
+// import { order_by, query } from '../graphql'
 import { Restaurant, RestaurantTag, RestaurantWithId, Tag } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
-import { resolvedWithFields } from './queryResolvers'
+// import { resolvedWithFields } from './queryResolvers'
 import { restaurantTagUpsert } from './restaurantTag'
 import { tagSlugs } from './tag-extension-helpers'
 import { tagGetAllChildren, tagGetAllGenerics, tagUpsert } from './tag-helpers'
+
+const query = client.query
 
 const QueryHelpers = createQueryHelpersFor<Restaurant>('restaurant')
 export const restaurantInsert = QueryHelpers.insert
@@ -39,15 +47,15 @@ export async function restaurantFindOneWithTags(
       ...extra_relations,
     ],
   }
-  return await restaurantFindOne(restaurant, options)
+  return await restaurantFindOne(restaurant)
 }
 
 export async function restaurantFindBatch(
   size: number,
   previous_id: string,
   extra_where: {} = {}
-): Promise<Restaurant[]> {
-  return await resolvedWithFields(() => {
+): Promise<restaurant[]> {
+  return await resolved(() => {
     return query.restaurant({
       where: {
         id: { _gt: previous_id },
@@ -63,9 +71,9 @@ export async function restaurantFindNear(
   lat: number,
   lng: number,
   distance: number
-): Promise<Restaurant[]> {
-  return await resolvedWithFields(() => {
-    return query.restaurant({
+): Promise<restaurant[]> {
+  return await resolved(() => {
+    const restaurant = query.restaurant({
       where: {
         location: {
           _st_d_within: {
@@ -78,6 +86,8 @@ export async function restaurantFindNear(
         },
       },
     })
+
+    return restaurant
   })
 }
 
@@ -136,14 +146,11 @@ async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
         .flat()
     ),
   ]
-  return await restaurantUpdate(
-    {
-      ...restaurant,
-      // @ts-ignore
-      tag_names: tag_names,
-    },
-    tagDataRelations
-  )
+  return await restaurantUpdate({
+    ...restaurant,
+    // @ts-ignore
+    tag_names: tag_names,
+  })
 }
 
 function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {

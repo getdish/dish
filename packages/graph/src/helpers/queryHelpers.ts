@@ -1,18 +1,21 @@
+// TODO: Remove dependency on old gqless
+import { schema } from '../graphql'
 import {
+  Scalars,
   photo_constraint,
   photo_xref_constraint,
   query,
   restaurant_constraint,
   review_constraint,
   review_tag_sentence_constraint,
-  schema,
+  selectFields,
   setting_constraint,
   tag_constraint,
   tag_tag_constraint,
   user_constraint,
-  uuid,
-} from '../graphql'
-import { mutation } from '../graphql/mutation'
+} from '../graphql/new-generated'
+import { mutation } from '../graphql/new-generated'
+// import { mutation } from '../graphql/mutation'
 import { ModelName, ModelType, WithID } from '../types'
 import { CollectOptions } from './collect'
 import { isMutatableField, isMutatableRelation } from './isMutatableField'
@@ -21,6 +24,8 @@ import {
   resolvedMutationWithFields,
   resolvedWithFields,
 } from './queryResolvers'
+
+type uuid = Scalars['uuid']
 
 export function objectToWhere(hash: { [key: string]: any }): any {
   // default if id exists just use id
@@ -112,6 +117,7 @@ export async function insert<T extends ModelType>(
   objects: T[]
 ): Promise<WithID<T>[]> {
   const action = `insert_${table}` as any
+
   // @ts-ignore
   return await resolvedMutationWithFields(() => {
     return mutation[action]({
@@ -131,13 +137,15 @@ export async function upsert<T extends ModelType>(
   const action = `insert_${table}` as any
   // @ts-ignore
   return await resolvedMutationWithFields(() => {
-    return mutation[action]({
+    const m = mutation[action]({
       objects,
       on_conflict: {
         constraint,
         update_columns,
       },
     })
+
+    return m
   })
 }
 
@@ -167,9 +175,17 @@ export async function deleteAllFuzzyBy(
   value: string
 ): Promise<void> {
   await resolvedMutation(() => {
-    return mutation[`delete_${table}`]?.({
+    const m = mutation[`delete_${table}`]?.({
       where: { [key]: { _ilike: `%${value}%` } },
     })
+
+    console.log(1822, m)
+
+    const r = selectFields(m, '*', 3)
+
+    console.log(188, r)
+
+    return r
   })
 }
 
@@ -179,9 +195,11 @@ export async function deleteAllBy(
   value: string
 ): Promise<void> {
   await resolvedMutation(() => {
-    return mutation[`delete_${table}`]?.({
+    const m = mutation[`delete_${table}`]?.({
       where: { [key]: { _eq: value } },
     })
+
+    return selectFields(m, '*', 3)
   })
 }
 
@@ -194,22 +212,9 @@ export async function deleteByIDs(table: string, ids: uuid[]): Promise<void> {
 }
 
 export function prepareData<T>(table: string, objects: T[]): T[] {
-  objects = removeReadOnlyProperties<T>(table, objects)
   objects = formatRelationData<T>(table, objects)
   objects = objects.map((o) => ensureJSONSyntax(o) as T)
   return objects
-}
-
-function removeReadOnlyProperties<T>(table: string, objects: T[]): T[] {
-  return objects.map((cur) => {
-    return Object.keys(cur).reduce((acc, key) => {
-      const field = schema[table].fields[key]
-      if (isMutatableField(field)) {
-        acc[key] = cur[key]
-      }
-      return acc
-    }, {} as T)
-  })
 }
 
 function formatRelationData<T>(table: string, objects: T[]) {

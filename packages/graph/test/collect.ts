@@ -30,7 +30,7 @@ test('Collecting the root fields', async (t) => {
 
 test('Collecting a one-to-one relation', async (t) => {
   const [existing_tag] = await tagUpsert([{ name: 'Test tag existing' }])
-  const tag = await tagFindOne(existing_tag, { relations: ['parent'] })
+  const tag = await tagFindOne(existing_tag)
   if (!tag) return
   t.assert(Object.keys(tag).length > 5)
   t.is(tag.name, 'Test tag existing')
@@ -45,9 +45,9 @@ test('Collecting a one-to-many relation', async (t) => {
   const restaurant = await restaurantFindOne(r, {
     relations: ['tags'],
   })
-  t.is(restaurant.tags.length, 1)
-  t.assert(Object.keys(restaurant.tags[0]).length > 3)
-  t.is(restaurant.tags[0].restaurant_id, restaurant.id)
+  t.is(restaurant!.tags.length, 1)
+  t.assert(Object.keys(restaurant!.tags[0]).length > 3)
+  t.is(restaurant!.tags[0].restaurant_id, restaurant!.id)
 })
 
 test('Collecting a deep relation', async (t) => {
@@ -56,5 +56,5 @@ test('Collecting a deep relation', async (t) => {
   const restaurant = await restaurantFindOne(r, {
     relations: ['tags.tag'],
   })
-  t.is(restaurant.tags[0].tag.name, 'Test tag')
+  t.is(restaurant!.tags[0].tag.name, 'Test tag')
 })

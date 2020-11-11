@@ -21,6 +21,7 @@ export function resetMutationCache() {
 
 export const mutation: mutation_root = new Proxy(mutateClientInternal.query, {
   get(_, key) {
+    throw Error('use new gqless')
     return mutateClientInternal.query[key]
   },
 })

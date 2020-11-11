@@ -16,6 +16,7 @@ export let client = createQueryClient()
 // main query interface
 export const query: query_root = new Proxy(client.query, {
   get(_, key) {
+    throw Error('use new gqless')
     return client.query[key]
   },
 })

@@ -12,7 +12,9 @@
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "TARGET=node DISH_ENV=test ava test/* --verbose --serial",
     "test:debug": "TARGET=node DEBUG=1 DISH_ENV=test ava test/* --verbose --serial",
-    "test:watch": "TARGET=node DISH_ENV=test ava test/* --watch --verbose --serial"
+    "test:watch": "TARGET=node DISH_ENV=test ava test/* --watch --verbose --serial",
+    "test-restaurant-new": "TARGET=node DISH_ENV=test ava test/restaurant-new.ts --verbose",
+    "test-restaurant": "TARGET=node DISH_ENV=test ava test/restaurant.ts --verbose"
   },
   "dependencies": {
     "@dish/helpers": "*",
@@ -24,7 +26,7 @@
     "isomorphic-unfetch": "3.1.0",
     "ava": "^3.8.2",
     "lodash": "*",
-    "@dish/gqless": "^1.0.0"
+    "@dish/gqless": "^1.0.5"
   },
   "peerDependencies": {
     "react": "*"
@@ -33,6 +35,6 @@
     "@o/react-test-env": "*",
     "@types/node": "*",
     "ts-node": "*",
-    "@dish/gqless-cli": "^0.1.6"
+    "@dish/gqless-cli": "^0.1.9"
   }
 }
