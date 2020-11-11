@@ -1,7 +1,7 @@
 resource "kubernetes_deployment" "dish-hooks" {
   lifecycle {
     ignore_changes = [
-      "spec[0].replicas"
+      spec[0].replicas
     ]
   }
 

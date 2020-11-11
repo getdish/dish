@@ -1,7 +1,7 @@
 resource "kubernetes_deployment" "image-proxy" {
   lifecycle {
     ignore_changes = [
-      "spec[0].replicas"
+      spec[0].replicas
     ]
   }
   metadata {
@@ -100,7 +100,7 @@ resource "kubernetes_service" "image-proxy" {
 resource "kubernetes_deployment" "image-quality-api" {
   lifecycle {
     ignore_changes = [
-      "spec[0].replicas"
+      spec[0].replicas
     ]
   }
   metadata {
