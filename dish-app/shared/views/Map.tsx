@@ -564,7 +564,6 @@ function setupMapEffect({
             )
             activeLayerId = null
           }
-          console.log('new one', feature, activeLayerId)
           const id = feature.properties.ogc_fid
           activeLayerId = feature.id
           map.setFeatureState(

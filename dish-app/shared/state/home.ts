@@ -249,18 +249,19 @@ const runSearch: AsyncAction<{
 
   const curState = om.state.home.currentState
   const searchQuery = opts.searchQuery ?? curState.searchQuery ?? ''
-  if (
-    await om.actions.home.navigate({
-      state: {
-        ...curState,
-        searchQuery,
-      },
-    })
-  ) {
-    console.log('did nav from search')
-    // nav will trigger search
-    return
-  }
+
+  // if (
+  //   await om.actions.home.navigate({
+  //     state: {
+  //       ...curState,
+  //       searchQuery,
+  //     },
+  //   })
+  // ) {
+  //   console.log('did nav from search')
+  //   // nav will trigger search
+  //   return
+  // }
 
   let state = om.state.home.lastSearchState
   const tags = getActiveTags(curState)
@@ -868,10 +869,11 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
   )
   if (!state) return
   try {
-    assert('activeTags' in next)
-    const stateactiveTags = 'activeTags' in state ? state.activeTags : null
-    const sameTagIds = stringify(stateactiveTags) === stringify(next.activeTags)
+    assert(!!next['activeTags'])
+    const ids = 'activeTags' in state ? state.activeTags : null
+    const sameTagIds = stringify(ids) === stringify(next.activeTags)
     const sameSearchQuery = isEqual(state.searchQuery, next.searchQuery)
+    console.log(sameTagIds, sameSearchQuery)
     assert(!sameTagIds || !sameSearchQuery)
     const nextState = {
       ...state,
@@ -881,6 +883,7 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
     // @ts-ignore
     om.actions.home.updateHomeState(nextState)
   } catch (err) {
+    console.log('assert failed', err)
     handleAssertionError(err)
   }
 }
@@ -949,7 +952,6 @@ const setIsLoading: Action<boolean> = (om, val) => {
 // we definitely can clean up / name better some of this once things settle
 let lastNav = Date.now()
 const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
-  navState.state = navState.state ?? om.state.home.currentState
   const nextState = getNextState(navState)
   const curState = om.state.home.currentState
 
@@ -959,10 +961,11 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
       id: curState.id,
       type,
       searchQuery: nextState.searchQuery,
-      activeTags: nextState.activeTags,
+      activeTags: nextState['activeTags'],
     })
   }
 
+  console.log('nextState', nextState)
   if (!om.actions.home.getShouldNavigate(nextState)) {
     updateTags()
     return false
@@ -992,6 +995,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
   }
 
   console.warn('home.navigate', navState, nextState)
+
   const didNav = await syncStateToRoute(om, nextState)
   if (curNav !== lastNav) return false
   om.actions.home.updateActiveTags(nextState)
@@ -1057,6 +1061,7 @@ const getShouldNavigate: Action<HomeStateTagNavigable, boolean> = (
   return router.getShouldNavigate(navItem)
 }
 
+// avoid nasty two way sync bugs as much as possible
 let recentTries = 0
 let synctm
 const syncStateToRoute: AsyncAction<HomeStateTagNavigable, boolean> = async (

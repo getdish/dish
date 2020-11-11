@@ -42,14 +42,6 @@ export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
               extraProps.borderTopRightRadius = hasNext ? 0 : 30
               extraProps.borderBottomRightRadius = hasNext ? 0 : 30
               const isActive = activeTags[getTagSlug(tag)] ?? false
-              console.log(
-                'activeTags',
-                isActive,
-                tag,
-                getTagSlug(tag),
-                activeTags[getTagSlug(tag)],
-                activeTags
-              )
               const button = (
                 <FilterButton
                   key={`tag-${tag.id}`}

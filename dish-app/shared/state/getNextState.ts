@@ -6,26 +6,7 @@ import { getTagSlug } from './getTagSlug'
 import { HomeActiveTagsRecord, HomeStateItem, HomeStateNav } from './home-types'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 
-let navStateCache = {}
-let inserts = 0
-
-const nextStateKey = (navState: HomeStateNav) => {
-  const tagIds = navState.state?.activeTags
-  const tagsKey = tagIds ? Object.entries(tagIds).join(',') : '-'
-  const tagsKey2 = navState.tags?.map((x) => `${x?.name}${x?.type}`)
-  const disallowKey = navState.disallowDisableWhenActive ?? ''
-  const replaceKey = navState.replaceSearch ?? '-'
-  const searchKey = navState.state?.searchQuery ?? ''
-  const key = `${replaceKey}${tagsKey}${tagsKey2}${disallowKey}${searchKey}`
-  return key
-}
-
 export const getNextState = (navState: HomeStateNav): HomeStateItem => {
-  const key = nextStateKey(navState)
-  if (navStateCache[key]) {
-    return navStateCache[key]
-  }
-
   const {
     state,
     tags = [],
@@ -88,16 +69,10 @@ export const getNextState = (navState: HomeStateNav): HomeStateItem => {
     id: state.id,
     searchQuery,
     activeTags,
+    region: state.region,
     type: state.type,
   }
   nextState.type = shouldBeOnSearch(nextState) ? 'search' : 'home'
-
-  navStateCache[key] = nextState
-  inserts++
-  if (inserts > 300) {
-    navStateCache = {}
-    inserts = 0
-  }
 
   return nextState as any
 }

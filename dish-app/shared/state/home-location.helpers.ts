@@ -13,13 +13,13 @@ export async function getLocationFromRoute(): Promise<HomeStateItemLocation | nu
   if (page.name === 'search') {
     const params = page.params as SearchRouteParams
 
-    if (params.location === 'here') {
+    if (params.region === 'here') {
       return null
     }
 
     // lat _ lng _ span
-    if (+params.location[0] >= 0) {
-      const [latStr, lngStr, spanStr] = params.location.split('_')
+    if (+params.region[0] >= 0) {
+      const [latStr, lngStr, spanStr] = params.region.split('_')
       return {
         center: {
           lat: +latStr,
@@ -33,7 +33,7 @@ export async function getLocationFromRoute(): Promise<HomeStateItemLocation | nu
     }
 
     // otherwise, using "nice name"
-    const locations = await searchLocations(params.location)
+    const locations = await searchLocations(params.region)
 
     if (locations.length) {
       const [nearest] = locations
