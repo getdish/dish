@@ -1,7 +1,9 @@
+import { isPresent } from '@dish/helpers'
+
 import { allTagsNameToSlug, tagNameKey } from './allTags'
 import { ensureUniqueActiveTags } from './ensureUniqueActiveTags'
 import { getTagSlug } from './getTagSlug'
-import { HomeActiveTagsRecord, HomeStateNav } from './home-types'
+import { HomeActiveTagsRecord, HomeStateItem, HomeStateNav } from './home-types'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 
 let navStateCache = {}
@@ -10,7 +12,7 @@ let inserts = 0
 const nextStateKey = (navState: HomeStateNav) => {
   const tagIds = navState.state?.activeTags
   const tagsKey = tagIds ? Object.entries(tagIds).join(',') : '-'
-  const tagsKey2 = navState.tags?.map((x) => `${x.name}${x.type}`)
+  const tagsKey2 = navState.tags?.map((x) => `${x?.name}${x?.type}`)
   const disallowKey = navState.disallowDisableWhenActive ?? ''
   const replaceKey = navState.replaceSearch ?? '-'
   const searchKey = navState.state?.searchQuery ?? ''
@@ -18,7 +20,7 @@ const nextStateKey = (navState: HomeStateNav) => {
   return key
 }
 
-export const getNextState = (navState: HomeStateNav) => {
+export const getNextState = (navState: HomeStateNav): HomeStateItem => {
   const key = nextStateKey(navState)
   if (navStateCache[key]) {
     return navStateCache[key]
@@ -29,7 +31,13 @@ export const getNextState = (navState: HomeStateNav) => {
     tags = [],
     disallowDisableWhenActive = false,
     replaceSearch = false,
-  } = navState ?? {}
+  } = navState
+
+  if (!state) {
+    console.error('getNextState, no state', state)
+    return null
+  }
+
   let searchQuery = state.searchQuery ?? ''
   let activeTags: HomeActiveTagsRecord = replaceSearch
     ? {}
@@ -59,7 +67,7 @@ export const getNextState = (navState: HomeStateNav) => {
   searchQuery = words.join(' ')
 
   // ensure has a lense
-  const allTags = [...tags]
+  const allTags = [...tags].filter(isPresent)
 
   for (const tag of allTags) {
     const key = getTagSlug(tag)
@@ -90,5 +98,6 @@ export const getNextState = (navState: HomeStateNav) => {
     navStateCache = {}
     inserts = 0
   }
-  return nextState
+
+  return nextState as any
 }

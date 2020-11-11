@@ -148,6 +148,7 @@ export type HomeStateItemSearch = HomeStateItemBase & {
   activeTags: HomeActiveTagsRecord
   status: 'loading' | 'complete'
   results: RestaurantOnlyIds[]
+  region?: string
   // for not forcing map to be always synced
   searchedCenter?: LngLat
   searchedSpan?: LngLat
@@ -158,7 +159,8 @@ export type HomeStateItemSearch = HomeStateItemBase & {
 export type HomeStateItemRestaurant = HomeStateItemBase & {
   type: 'restaurant'
   restaurantSlug: string
-  tagName?: string
+  section?: string
+  sectionSlug?: string
 }
 
 export type HomeStateItemUser = HomeStateItemBase & {

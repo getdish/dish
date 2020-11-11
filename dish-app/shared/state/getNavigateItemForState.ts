@@ -1,36 +1,34 @@
 import { slugify } from '@dish/graph'
 import { NavigateItem } from '@dish/router'
 
-import { getActiveTags } from './getActiveTags'
-import { getTagSlug } from './getTagSlug'
+import { getRouteFromState } from './getRouteFromState'
 import { isHomeState, isSearchState } from './home-helpers'
 import { HomeStateTagNavigable } from './home-types'
-import { tagLenses } from './localTags.json'
-import { SearchRouteParams } from './router'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
-import { SPLIT_TAG, SPLIT_TAG_TYPE } from './SPLIT_TAG'
 
 export const getNavigateItemForState = (
   om: any,
-  _state: HomeStateTagNavigable
+  _nextState: HomeStateTagNavigable
 ): NavigateItem => {
   const { home, router } = om.state
-  const state = _state || home.currentState
-  const isHome = isHomeState(state)
-  const isSearch = isSearchState(state)
+  const nextState = _nextState ?? home.currentState
+  const isHome = isHomeState(nextState)
+  const isSearch = isSearchState(nextState)
   const curParams = router.curPage.params
 
   // we only handle "special" states here (home/search)
   if (!isHome && !isSearch) {
     return {
-      name: state.type,
+      name: nextState.type,
       params: curParams,
     }
   }
-  // if going home, just go there
-  const shouldBeSearching = shouldBeOnSearch(state)
 
-  let name = state.type
+  // if going home, just go there
+  const shouldBeSearching = shouldBeOnSearch(nextState)
+  console.log('shouldBeSearching', shouldBeSearching)
+
+  let name = nextState.type
   if (name === 'home' && shouldBeSearching) {
     name = 'search'
   } else if (name === 'search' && !shouldBeSearching) {
@@ -49,16 +47,20 @@ export const getNavigateItemForState = (
   }
 
   // build params
-  const params = getRouteFromState(state)
+  const params = getRouteFromState(nextState)
 
-  params.location = slugify(
-    state.currentLocationName ?? home.currentState.currentLocationName ?? 'here'
-  )
+  params.location =
+    nextState.region ??
+    slugify(
+      nextState.currentLocationName ??
+        home.currentState.currentLocationName ??
+        'here'
+    )
 
-  if (state.searchQuery) {
-    params.search = state.searchQuery
+  if (nextState.searchQuery) {
+    params.search = nextState.searchQuery
   }
-  if (state.type === 'userSearch') {
+  if (nextState.type === 'userSearch') {
     params.username = curParams.username
   }
 
@@ -67,39 +69,4 @@ export const getNavigateItemForState = (
     params,
     replace,
   }
-}
-
-const getRouteFromState = (state: HomeStateTagNavigable): SearchRouteParams => {
-  if (!isHomeState(state) && !isSearchState(state)) {
-    throw new Error(`Getting route on bad state`)
-  }
-  const allActiveTags = getActiveTags(state)
-  // build our final path segment
-  const filterTags = allActiveTags.filter((x) => x.type === 'filter')
-  const otherTags = allActiveTags.filter(
-    (x) => x.type !== 'lense' && x.type !== 'filter'
-  )
-  let tags = `${filterTags.map((x) => slugify(x.name ?? '')).join(SPLIT_TAG)}`
-  if (otherTags.length) {
-    if (tags.length) {
-      tags += SPLIT_TAG
-    }
-    tags += `${otherTags
-      .map((t) => `${t.type}${SPLIT_TAG_TYPE}${slugify(t.name ?? '')}`)
-      .join(SPLIT_TAG)}`
-  }
-  const params: any = {
-    location: slugify(state.currentLocationName ?? 'here'),
-  }
-  const lenseTag = allActiveTags.find((x) => x.type === 'lense') ?? tagLenses[0]
-
-  if (lenseTag) {
-    params.lense = getTagSlug(lenseTag).replace('lenses__', '')
-  }
-  if (tags.length) {
-    params.tags = tags
-  } else {
-    params.tags = '-'
-  }
-  return params
 }
