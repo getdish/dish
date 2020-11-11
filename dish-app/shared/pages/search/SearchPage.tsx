@@ -71,34 +71,36 @@ const SearchPagePropsContext = createContext<Props | null>(null)
 const loadSearchPage: PageLoadEffectCallback = ({ isRefreshing, item }) => {
   // if initial load on a search page, process url => state
   let isCancelled = false
-  if (!isRefreshing) {
-    getLocationFromRoute().then((location) => {
-      if (isCancelled) return
-      // TODO UPDATE HOME TOO...
-      omStatic.actions.home.updateCurrentState({
-        ...location,
-      })
-      getTagsFromRoute(router.curPage).then((tags) => {
-        if (isCancelled) return
-        addTagsToCache(tags)
-        const activeTags: HomeActiveTagsRecord = tags.reduce<any>(
-          (acc, tag) => {
-            acc[getTagSlug(tag)] = true
-            return acc
-          },
-          {}
-        )
-        omStatic.actions.home.updateActiveTags({
-          ...item,
-          searchQuery: decodeURIComponent(router.curPage.params.search ?? ''),
-          activeTags,
-        })
-        omStatic.actions.home.runSearch()
-      })
-    })
-  } else {
+
+  if (isRefreshing) {
     omStatic.actions.home.runSearch({ force: true })
+    return
   }
+
+  getLocationFromRoute().then((location) => {
+    if (isCancelled) return
+    // TODO UPDATE HOME TOO...
+    omStatic.actions.home.updateCurrentState({
+      ...location,
+    })
+    getTagsFromRoute(router.curPage).then((tags) => {
+      if (isCancelled) return
+      addTagsToCache(tags)
+      const activeTags: HomeActiveTagsRecord = tags.reduce<any>((acc, tag) => {
+        acc[getTagSlug(tag)] = true
+        return acc
+      }, {})
+      const searchQuery = decodeURIComponent(router.curPage.params.search ?? '')
+      console.log('activeTags', activeTags, item, searchQuery, 'run search')
+      omStatic.actions.home.updateActiveTags({
+        ...item,
+        searchQuery,
+        activeTags,
+      })
+      omStatic.actions.home.runSearch()
+    })
+  })
+
   return () => {
     isCancelled = true
   }

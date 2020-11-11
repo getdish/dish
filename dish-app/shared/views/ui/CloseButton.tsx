@@ -31,7 +31,7 @@ export const SmallCircleButton = (props: StackProps) => {
       alignItems="center"
       justifyContent="center"
       hoverStyle={{
-        backgroundColor: '#888',
+        backgroundColor: 'rgba(150,150,150,0.85)',
       }}
       pressStyle={{
         backgroundColor: '#222',

@@ -152,14 +152,16 @@ const AppMapDataLoader = memo(
 const updateRegion = debounce((region: Region) => {
   const appMapStore = getStore(AppMapStore)
   appMapStore.setRegion(region.slug, region)
-  console.warn('>>>> NEW REGION', region)
-  router.navigate({
-    replace: true,
-    name: 'homeRegion',
-    params: {
-      region: region.slug,
-    },
-  })
+  const { currentState } = omStatic.state.home
+  const type = currentState.type
+  if (type === 'home' || type === 'search') {
+    omStatic.actions.home.navigate({
+      state: {
+        ...currentState,
+        region: region.slug,
+      },
+    })
+  }
 }, 150)
 
 const AppMapContent = memo(function AppMap({
@@ -422,7 +424,7 @@ const AppMapContent = memo(function AppMap({
       console.log('no region slug', region)
       return
     }
-    console.log('setting to region', region)
+
     updateRegion(region)
   }, [])
 

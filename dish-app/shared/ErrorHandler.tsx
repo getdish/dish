@@ -1,11 +1,9 @@
 import { HasuraError, onGraphError } from '@dish/graph'
 import { Toast, useOnMount } from 'snackui'
 
-import { useOvermind } from './state/om'
+import { omStatic } from './state/omStatic'
 
 export function ErrorHandler() {
-  const om = useOvermind()
-
   useOnMount(() => {
     onGraphError((error: HasuraError) => {
       const errors = error.errors
@@ -15,7 +13,7 @@ export function ErrorHandler() {
         for (const err of errors) {
           console.warn('HANDLING JWT ERR')
           Toast.show(`Login has expired`)
-          om.actions.user.logout()
+          omStatic.actions.user.logout()
         }
     })
   })
