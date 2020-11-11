@@ -20,6 +20,8 @@ import {
 import { chunk, clone, uniqBy } from 'lodash'
 import fetch, { Response } from 'node-fetch'
 
+import { DB } from './utils'
+
 const PhotoBaseQueryHelpers = createQueryHelpersFor<PhotoBase>('photo')
 const PhotoXrefQueryHelpers = createQueryHelpersFor<PhotoXref>('photo_xref')
 const photoBaseUpsert = PhotoBaseQueryHelpers.upsert
@@ -231,26 +233,32 @@ async function unassessedPhotosForRestaurantTag(
 export async function bestPhotosForRestaurant(
   restaurant_id: uuid
 ): Promise<PhotoXref[]> {
-  const photos = await resolvedWithFields(
-    () =>
-      query.photo_xref({
-        where: {
-          restaurant_id: {
-            _eq: restaurant_id,
-          },
-        },
-        order_by: [
-          {
-            photo: {
-              quality: order_by.desc,
-            },
-          },
-        ],
-        limit: 50,
-      }),
-    { relations: ['photo'] }
-  )
-  return uniqBy(photos, (p) => p.photo_id)
+  const TOP_FRACTION_CUTOFF = process.env.NODE_ENV == 'test' ? 1 : 0.2
+  const result = await DB.one_query_on_main(`
+    SELECT json_agg(j1) FROM (
+      SELECT * FROM (
+        SELECT
+          *,
+          (
+            SELECT json_agg(j2) FROM (
+              SELECT * FROM photo WHERE photo.id = photo_id LIMIT 1
+            ) j2
+          )->>0 AS photo,
+          percent_rank() OVER (ORDER BY photo.quality DESC NULLS LAST) AS rank_by_percent
+          FROM photo_xref
+          JOIN photo ON photo_xref.photo_id = photo.id
+            WHERE photo_xref.restaurant_id = '${restaurant_id}'
+      ) s
+      WHERE rank_by_percent <= ${TOP_FRACTION_CUTOFF}
+      ORDER by random()
+      LIMIT 50
+    ) j1;
+  `)
+  const photos = result.rows[0].json_agg.map((p) => {
+    p.photo = JSON.parse(p.photo)
+    return p
+  })
+  return photos
 }
 
 export async function bestPhotosForTag(tag_id: uuid): Promise<PhotoXref[]> {
