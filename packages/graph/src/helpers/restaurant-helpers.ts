@@ -6,6 +6,7 @@ import {
   order_by,
   resolved,
   restaurant,
+  selectFields,
 } from '../graphql/new-generated'
 // import { order_by, query } from '../graphql'
 import { Restaurant, RestaurantTag, RestaurantWithId, Tag } from '../types'
@@ -87,7 +88,7 @@ export async function restaurantFindNear(
       },
     })
 
-    return restaurant
+    return selectFields(restaurant, '*', 1)
   })
 }
 

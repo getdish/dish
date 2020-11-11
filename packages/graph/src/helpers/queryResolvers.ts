@@ -2,7 +2,7 @@
 import { resolved, selectFields } from '../graphql/new-generated'
 // import { resetQueryCache } from '../graphql/client'
 // import { resetMutationCache } from '../graphql/mutation'
-import { CollectOptions, collectAll } from './collect'
+import { CollectOptions } from './collect'
 
 // just a helper that clears our cache after mutations for now
 export async function resolvedMutation<T extends () => unknown>(
@@ -14,18 +14,19 @@ export async function resolvedMutation<T extends () => unknown>(
     ? X
     : any
 > {
-  // resetMutationCache()
   const next = await resolved(resolver, {
-    noCache: true,
+    // refetch: true, noCache: false | undefined => cache-and-network
+    // refetch: false, noCache: false => cache-first
+    // noCache: true => no-cache
+    noCache: true, // it will modify global cache
   })
-  // resetMutationCache()
   // @ts-ignore
   return next
 }
 
 export async function resolvedMutationWithFields<T extends () => unknown>(
   resolver: T,
-  options?: CollectOptions
+  fields: string[]
 ): Promise<
   T extends () => {
     returning: infer X
@@ -36,7 +37,7 @@ export async function resolvedMutationWithFields<T extends () => unknown>(
   //@ts-expect-error
   return await resolvedMutation(() => {
     const res = resolver()
-    return selectFields((res as any).returning as any, '*', 3) as any
+    return selectFields((res as any).returning as any, fields) as any
     // return collectAll(res.returning, { ...options, type: 'mutation' })
   })
 }

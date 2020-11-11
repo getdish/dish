@@ -2,6 +2,7 @@
 import { schema } from '../graphql'
 import {
   Scalars,
+  generatedSchema,
   photo_constraint,
   photo_xref_constraint,
   query,
@@ -135,6 +136,11 @@ export async function upsert<T extends ModelType>(
   const objects = prepareData(table, objectsIn)
   const update_columns = updateableColumns(table, objects[0])
   const action = `insert_${table}` as any
+
+  // input type fields are the direct name of object types
+  // 1 to 1
+  const keys = Object.keys(generatedSchema[table + '_set_input'])
+
   // @ts-ignore
   return await resolvedMutationWithFields(() => {
     const m = mutation[action]({
@@ -146,7 +152,7 @@ export async function upsert<T extends ModelType>(
     })
 
     return m
-  })
+  }, keys)
 }
 
 export async function update<T extends WithID<ModelType>>(
@@ -159,13 +165,15 @@ export async function update<T extends WithID<ModelType>>(
   for (const key of Object.keys(object)) {
     if (object[key] == null) delete object[key]
   }
+  const keys = Object.keys(generatedSchema[table + '_set_input'])
+  console.log(164, keys)
   const [resolved] = await resolvedMutationWithFields(() => {
     const res = mutation[action]({
       where: { id: { _eq: object.id } },
       _set: object,
     })
     return res as WithID<T>[]
-  }, options)
+  }, keys)
   return resolved
 }
 
@@ -179,11 +187,11 @@ export async function deleteAllFuzzyBy(
       where: { [key]: { _ilike: `%${value}%` } },
     })
 
-    console.log(1822, m)
+    // console.log(1822, m)
 
     const r = selectFields(m, '*', 3)
 
-    console.log(188, r)
+    // console.log(188, r)
 
     return r
   })
@@ -217,6 +225,7 @@ export function prepareData<T>(table: string, objects: T[]): T[] {
   return objects
 }
 
+// TODO: NO IDEA
 function formatRelationData<T>(table: string, objects: T[]) {
   return objects.map((cur) => {
     return Object.keys(cur).reduce((acc, key) => {

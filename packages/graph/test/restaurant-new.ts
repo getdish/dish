@@ -1,6 +1,7 @@
 import '@o/react-test-env'
 
 import anyTest, { TestInterface } from 'ava'
+import { pick } from 'lodash'
 import { isObject } from 'lodash'
 import moment from 'moment'
 
@@ -15,7 +16,7 @@ import {
   restaurantUpdate,
   restaurantUpsert,
 } from '../src'
-import { mutation, query } from '../src/graphql/new-generated'
+import { generatedSchema, mutation, query } from '../src/graphql/new-generated'
 import { menu_item_fixture, restaurant_fixture } from './etc/fixtures'
 
 interface Context {
@@ -65,15 +66,19 @@ test('Avoiding cache', async (t) => {
     name: 'Test Restaurant',
   })
   t.context.restaurant.city = 'New City'
+
   await restaurantUpdate(t.context.restaurant as RestaurantWithId)
+
   const restaurant = await restaurantFindOne({
     name: 'Test Restaurant',
   })
+
   t.is(restaurant?.city ?? '', 'New City')
 })
 
 test('Finding a restaurant by location', async (t) => {
   const restaurants = await restaurantFindNear(50, 0, 0.025)
+
   t.is(restaurants[0].name, 'Test Restaurant')
 })
 

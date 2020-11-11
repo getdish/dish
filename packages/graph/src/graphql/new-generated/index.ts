@@ -3254,7 +3254,7 @@ const scalarsEnumsHash: ScalarsEnumsHash = {
   user_update_column: true,
   uuid: true,
 }
-const generatedSchema: Schema = {
+export const generatedSchema = {
   query: {
     menu_item: {
       __type: '[menu_item!]!',
@@ -7228,7 +7228,7 @@ const generatedSchema: Schema = {
     _neq: { __type: 'uuid' },
     _nin: { __type: '[uuid!]' },
   },
-}
+} as const
 
 export interface Query {
   menu_item: (args?: {
@@ -9302,8 +9302,8 @@ export interface ScalarsEnums extends Scalars {
 }
 
 const queryFetcher: QueryFetcher = async function (query, variables) {
-  console.log('query', query)
-  console.log('variables', variables)
+  // console.log('query', query)
+  // console.log('variables', variables)
   const response = await fetch(getGraphEndpoint(), {
     method: 'POST',
     headers: {
