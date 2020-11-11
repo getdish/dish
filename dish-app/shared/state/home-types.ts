@@ -131,7 +131,7 @@ export type Region = {
 export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
   activeTags: HomeActiveTagsRecord
-  region: Region
+  region: string
 }
 
 export type HomeStateItemBlog = HomeStateItemBase & {
