@@ -4,7 +4,7 @@ import { isNumber } from 'lodash'
 import { useEffect, useLayoutEffect } from 'react'
 import { Toast, useForceUpdate } from 'snackui'
 
-import { allTags } from '../state/allTags'
+import { addTagsToCache, allTags } from '../state/allTags'
 import { getFullTags } from '../state/getFullTags'
 import { getTagSlug } from '../state/getTagSlug'
 import { HomeActiveTagsRecord } from '../state/home-types'
@@ -114,9 +114,8 @@ export const useUserTagVote = (props: VoteStoreProps) => {
     let unmounted = false
     if (!tagId && tag) {
       getFullTags([tag]).then(([fullTag]) => {
-        console.log('fullTag', tag, fullTag)
-        if (!unmounted) {
-          allTags[getTagSlug(tag)] = fullTag
+        if (unmounted) return
+        if (addTagsToCache([fullTag])) {
           forceUpdate()
         }
       })

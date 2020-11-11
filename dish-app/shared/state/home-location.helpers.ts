@@ -1,4 +1,10 @@
+import { getStore } from '@dish/use-store'
+import bbox from '@turf/bbox'
+
+import { AppMapStore } from '../AppMap'
 import { searchLocations } from '../helpers/searchLocations'
+import { getCenter } from '../views/getCenter'
+import { getCoordinates } from '../views/getCoordinates'
 import { HomeStateItemLocation } from './HomeStateItemLocation'
 import { initialHomeState } from './initialHomeState'
 import { SearchRouteParams, router } from './router'
@@ -33,16 +39,29 @@ export async function getLocationFromRoute(): Promise<HomeStateItemLocation | nu
     }
 
     // otherwise, using "nice name"
-    const locations = await searchLocations(params.region)
+    // @nate temp until we get full region querying in
+    const region = getStore(AppMapStore).regions[params.region]
+    if (region) {
+      const center = getCenter(region.geometry)
+      if (!center) {
+        return
+      }
+      return {
+        center: {
+          lng: center[0],
+          lat: center[1],
+        },
+        span: bboxToSpan(bbox(region.geometry)),
+      }
+    }
+
+    const locations = await searchLocations(params.region.split('-').join(' '))
 
     if (locations.length) {
       const [nearest] = locations
       return {
         center: nearest.center,
-        span: {
-          lat: dist(nearest.bbox[0], nearest.bbox[2]) / 2,
-          lng: dist(nearest.bbox[1], nearest.bbox[3]) / 2,
-        },
+        span: bboxToSpan(nearest.bbox),
       }
     }
   }
@@ -50,5 +69,12 @@ export async function getLocationFromRoute(): Promise<HomeStateItemLocation | nu
   return {
     center: initialHomeState.center,
     span: initialHomeState.span,
+  }
+}
+
+function bboxToSpan(bbox: number[]) {
+  return {
+    lat: dist(bbox[0], bbox[2]) / 2,
+    lng: dist(bbox[1], bbox[3]) / 2,
   }
 }

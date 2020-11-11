@@ -36,7 +36,7 @@ export function useStore<A extends Store<B>, B>(
 export function getStore<A extends Store<B>, B>(
   StoreKlass: new (props: B) => A | (new () => A),
   props?: B
-) {
+): A {
   const info = createStoreWithInfo(StoreKlass, props)
   return createProxiedStore(info)
 }

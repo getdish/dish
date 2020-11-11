@@ -20,13 +20,13 @@ export const getRouteFromState = (
   const otherTags = allActiveTags.filter(
     (x) => x.type !== 'lense' && x.type !== 'filter'
   )
-  let tags = `${filterTags.map((x) => slugify(x.name ?? '')).join(SPLIT_TAG)}`
+  let tags = `${filterTags.map((x) => x.slug).join(SPLIT_TAG)}`
   if (otherTags.length) {
     if (tags.length) {
       tags += SPLIT_TAG
     }
     tags += `${otherTags
-      .map((t) => `${t.type}${SPLIT_TAG_TYPE}${slugify(t.name ?? '')}`)
+      .map((t) => `${t.type}${SPLIT_TAG_TYPE}${t.slug}`)
       .join(SPLIT_TAG)}`
   }
   const params: any = {

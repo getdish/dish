@@ -56,7 +56,6 @@ export const getNavigateItemForState = (
 
   // build params
   const params = getRouteFromState(nextState)
-  console.log(nextState, params)
   if (nextState.searchQuery) {
     params.search = nextState.searchQuery
   }

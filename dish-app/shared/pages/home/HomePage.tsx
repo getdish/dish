@@ -155,17 +155,19 @@ type FeedItems =
 
 const HomeFeed = memo(
   graphql(({ region, item }: { region: Region; item: HomeStateItemHome }) => {
-    const restaurants = query.restaurant({
-      where: {
-        location: {
-          _st_within: region?.geometry,
-        },
-        downvotes: { _is_null: false },
-        votes_ratio: { _is_null: false },
-      },
-      order_by: [{ votes_ratio: order_by.desc }],
-      limit: 8,
-    })
+    const restaurants = region?.geometry
+      ? query.restaurant({
+          where: {
+            location: {
+              _st_within: region?.geometry,
+            },
+            downvotes: { _is_null: false },
+            votes_ratio: { _is_null: false },
+          },
+          order_by: [{ votes_ratio: order_by.desc }],
+          limit: 8,
+        })
+      : []
 
     const cuisines = useTopCuisines(item.center) ?? []
 
