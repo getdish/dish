@@ -41,7 +41,7 @@ export const RestaurantCard = (props: RestaurantCardProps) => {
 
 export const RestaurantCardContent = memo(
   graphql(
-    ({ size = 'md', restaurantSlug, restaurantId }: RestaurantCardProps) => {
+    ({ size = 'lg', restaurantSlug, restaurantId }: RestaurantCardProps) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
       const scale = size === 'lg' ? 1.2 : 1
       const [hideInfo, setHideInfo] = useState(false)
