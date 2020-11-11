@@ -621,19 +621,20 @@ const pushHomeState: AsyncAction<
         type: 'search',
         status: 'loading',
         results: [],
+        region: prev.region,
+        // @nate testing disabling
         // if we have a previous existing one thats valid, use it
-        ...(prev.type === 'search' &&
-          getBreadcrumbs(om.state.home.states).some(
-            (x) => x.id === prev.id
-          ) && {
-            status: prev.status,
-            results: prev.results,
-          }),
+        // ...(prev.type === 'search' &&
+        //   getBreadcrumbs(om.state.home.states).some(
+        //     (x) => x.id === prev.id
+        //   ) && {
+        //     status: prev.status,
+        //     results: prev.results,
+        //   }),
         username,
         activeTags: prev.activeTags ?? {},
         center: prev.mapAt?.center ?? prev.center,
         span: prev.mapAt?.span ?? prev.span,
-        mapAt: null,
       }
       break
     }
@@ -642,7 +643,8 @@ const pushHomeState: AsyncAction<
     case 'restaurant': {
       const prev = om.state.home.states[om.state.home.states.length - 1]
       nextState = {
-        tagName: item.params.tagName,
+        section: item.params.section,
+        sectionSlug: item.params.sectionSlug,
         restaurantSlug: item.params.slug,
         center: prev.mapAt?.center ?? prev.center,
         span: prev.mapAt?.span ?? prev.span,

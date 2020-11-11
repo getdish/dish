@@ -220,10 +220,11 @@ const DishViewContent = ({
       <Link
         {...(restaurantSlug
           ? {
-              name: 'restaurantReviews',
+              name: 'restaurant',
               params: {
                 slug: restaurantSlug,
-                tagName: getTagSlug(dish),
+                section: 'reviews',
+                sectionSlug: getTagSlug(dish),
               },
             }
           : {

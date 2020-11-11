@@ -53,7 +53,7 @@ import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { StackDrawer } from '../../views/StackDrawer'
+import { StackCloseButton, StackDrawer } from '../../views/StackDrawer'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import {
   ITEM_HEIGHT,
@@ -160,9 +160,10 @@ export default memo(function SearchPage(props: Props) {
   }, [key])
 
   return (
-    <>
+    <VStack position="relative" height="100%">
+      <StackCloseButton />
       <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
-      <StackDrawer closable>
+      <StackDrawer>
         <Suspense fallback={<HomeLoading />}>
           <VStack
             flex={1}
@@ -174,7 +175,7 @@ export default memo(function SearchPage(props: Props) {
           </VStack>
         </Suspense>
       </StackDrawer>
-    </>
+    </VStack>
   )
 })
 

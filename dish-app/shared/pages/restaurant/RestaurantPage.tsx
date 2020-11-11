@@ -35,10 +35,13 @@ export default function RestaurantPageContainer(props: Props) {
 const RestaurantPage = memo(
   graphql((props: Props) => {
     const { item } = props
-    const { restaurantSlug, tagName } = item
+    const { restaurantSlug, section, sectionSlug } = item
     const restaurant = useRestaurantQuery(restaurantSlug)
     const coords = restaurant?.location?.coordinates
-    const { selectedDish, setSelectedDishToggle } = useSelectedDish(tagName)
+    const { selectedDish, setSelectedDishToggle } = useSelectedDish(
+      section === 'dishes' ? sectionSlug : null
+    )
+    console.log('sectionsection', sectionSlug, section)
 
     usePageLoadEffect(
       props,
