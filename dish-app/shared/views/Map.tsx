@@ -28,7 +28,9 @@ const CLUSTER_LABEL_LAYER_ID = 'CLUSTER_LABEL_LAYER_ID'
 const POINT_LAYER_ID = 'POINT_LAYER_ID'
 const POINT_HOVER_LAYER_ID = 'POINT_HOVER_LAYER_ID'
 
-const MARTIN_TILES_HOST = 'https://martin-tiles.dishapp.com' //http://localhost:3005
+const MARTIN_TILES_HOST = !window.location?.hostname.includes('live')
+  ? 'http://localhost:3005'
+  : 'https://martin-tiles.dishapp.com'
 
 const round = (val: number, dec = 100000) => {
   return Math.round(val * dec) / dec
@@ -389,8 +391,13 @@ function setupMapEffect({
             activeColor: purple,
             hoverColor: 'yellow',
             color: lightPurple,
-            label: 'nhood',
             name: 'public.zcta5',
+          },
+          {
+            maxZoom: 20,
+            minZoom: 12,
+            label: 'name',
+            name: 'public.nhood_labels',
           },
           // {
           //   maxZoom: 11,
