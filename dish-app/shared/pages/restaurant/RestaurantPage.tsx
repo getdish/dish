@@ -19,6 +19,7 @@ import { RestaurantCard } from './RestaurantCard'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
+import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
 import { useSelectedDish } from './useSelectedDish'
 
@@ -70,6 +71,11 @@ const RestaurantPage = memo(
             </VStack>
           }
         >
+          <RestaurantPhotosRow
+            restaurantSlug={restaurantSlug}
+            width={200}
+            height={200}
+          />
           <RestaurantHeader
             color={darkBlue}
             minHeight={450}
@@ -83,11 +89,12 @@ const RestaurantPage = memo(
                 }}
                 marginBottom={-50}
                 marginTop={0}
-                marginRight={20}
+                marginRight={15}
               >
                 <RestaurantCard
                   restaurantSlug={restaurantSlug}
                   restaurantId={restaurant.id}
+                  size="md"
                 />
               </VStack>
             }
