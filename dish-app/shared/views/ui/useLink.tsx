@@ -1,6 +1,12 @@
 import { isPresent } from '@dish/helpers'
+import { NavigateItem } from '@dish/router'
+import { series, sleep } from '@o/async'
 import { isEqual, omit } from 'lodash'
+import React, { useEffect, useRef } from 'react'
+import { Platform, TouchableOpacity } from 'react-native'
+import { useForceUpdate } from 'snackui'
 
+import { isWeb } from '../../constants'
 import { memoize } from '../../helpers/memoizeWeak'
 import {
   addTagsToCache,
@@ -12,9 +18,81 @@ import { getNextState } from '../../state/getNextState'
 import { HomeStateNav } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic } from '../../state/omStatic'
+import { router } from '../../state/router'
+import { nav } from './Link'
+import { LinkProps } from './LinkProps'
 import { LinkButtonProps } from './LinkProps'
 
-export const getNormalizeLinkProps = memoize(
+export const useLink = (props: LinkProps<any, any>) => {
+  const forceUpdate = useForceUpdate()
+  const linkProps = getNormalizeLinkProps(props, forceUpdate)
+  const cancel = useRef<Function | null>(null)
+  const navItem: NavigateItem = {
+    name: linkProps.name,
+    params: linkProps.params,
+    replace: linkProps.replace,
+  }
+
+  useEffect(() => {
+    return () => {
+      cancel.current?.()
+    }
+  }, [])
+
+  const onPress = (e: any) => {
+    if (isWeb) {
+      if (props.href || e.metaKey || e.ctrlKey) {
+        window.open(props.href ?? e.currentTarget.href, '_blank')
+        return
+      }
+    }
+
+    e.preventDefault()
+    if (props.stopPropagation) {
+      e.stopPropagation()
+    }
+
+    const newLinkProps = getNormalizeLinkProps(props, forceUpdate)
+
+    if (props.asyncClick) {
+      cancel.current = series([
+        () => sleep(50),
+        () => {
+          cancel.current = null
+          nav(navItem, newLinkProps, props, e)
+        },
+      ])
+    } else {
+      nav(navItem, newLinkProps, props, e)
+    }
+  }
+
+  return {
+    onPress,
+    navItem,
+    wrapWithLinkElement(children: any) {
+      if (Platform.OS === 'web') {
+        const element = props.tagName ?? 'a'
+        return React.createElement(
+          element,
+          {
+            onClick: onPress,
+            className: `display-contents dish-link ${props.className ?? ''}`,
+            target: props.target,
+            ...(element === 'a' && {
+              href: props.href ?? router.getPathFromParams(navItem),
+              onMouseEnter: linkProps.onMouseEnter,
+            }),
+          },
+          children
+        )
+      }
+      return <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>
+    },
+  }
+}
+
+const getNormalizeLinkProps = memoize(
   (
     props: Partial<LinkButtonProps>,
     forceUpdate: Function

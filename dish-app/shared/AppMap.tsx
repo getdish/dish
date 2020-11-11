@@ -276,7 +276,6 @@ const AppMapContent = memo(function AppMap({
       },
       (spanCenter) => {
         const { span, center } = JSON.parse(spanCenter)
-        console.log('got new map pos: center', center, 'span', span)
         setState({
           span,
           center,
