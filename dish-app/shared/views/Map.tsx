@@ -653,8 +653,12 @@ function setupMapEffect({
                 })
               })
             } else {
-              // click
-              setActive(map, getProps(), internal.current, +e.features[0].id)
+              if (e.features) {
+                // click
+                setActive(map, getProps(), internal.current, +e.features[0].id)
+              } else {
+                console.warn('no features', e)
+              }
             }
           }
           const boundaries = map.queryRenderedFeatures(e.point, {

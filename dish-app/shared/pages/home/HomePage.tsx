@@ -190,16 +190,16 @@ const HomeFeed = memo(
 
     const items: FeedItems[] = sortBy(
       [
-        ...dishes.map((item, index) => {
+        ...dishes.map((dish, index) => {
           return {
             type: 'dish',
-            id: item.id,
+            id: dish.id,
             rank: index + (index % 2 ? 10 : 0),
             dish: {
-              slug: item.slug ?? '',
-              name: item.name ?? '',
-              icon: item.icon ?? '',
-              image: item.default_images()?.[0] ?? '',
+              slug: dish.slug ?? '',
+              name: dish.name ?? '',
+              icon: dish.icon ?? '',
+              image: dish.default_images()?.[0] ?? '',
             },
             restaurants: restaurants.map((r) => {
               return {

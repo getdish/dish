@@ -33,13 +33,12 @@ export const routes = {
   about: new Route<{ pane: string }>('/about'),
   blog: new Route<{ pane: string }>('/blog/:slug?'),
   restaurantReview: new Route<{ slug: string }>('/restaurant/:slug/review'),
-  restaurantReviews: new Route<{ slug: string; tagName?: string }>(
-    '/restaurant/:slug/reviews/:tagName?'
-  ),
   restaurantHours: new Route<{ slug: string }>('/restaurant/:slug/hours'),
-  restaurant: new Route<{ slug: string; tagName?: string }>(
-    '/restaurant/:slug/:tagName?'
-  ),
+  restaurant: new Route<{
+    slug: string
+    section?: string
+    sectionSlug?: string
+  }>('/restaurant/:slug/:section?/:sectionSlug?'),
 
   // admin
   admin: new Route('/admin'),

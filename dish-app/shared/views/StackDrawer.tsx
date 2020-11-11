@@ -6,6 +6,13 @@ import { useIsNarrow } from '../hooks/useIs'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { PageTitleTag } from './ui/PageTitleTag'
 
+export const StackCloseButton = () => {
+  const isSmall = useIsNarrow()
+  return (
+    <StackViewCloseButton right={isSmall ? 10 : -14} top={isSmall ? 10 : -3} />
+  )
+}
+
 export const StackDrawer = ({
   title,
   closable,
@@ -31,12 +38,7 @@ export const StackDrawer = ({
       shadowRadius={isSmall ? 6 : 10}
       shadowColor={isSmall ? 'rgba(0,0,0,0.125)' : 'rgba(0,0,0,0.22)'}
     >
-      {closable && (
-        <StackViewCloseButton
-          right={isSmall ? 10 : -14}
-          top={isSmall ? 10 : -3}
-        />
-      )}
+      {closable && <StackCloseButton />}
       {!!title && <PageTitleTag>{title}</PageTitleTag>}
       <VStack
         position="relative"

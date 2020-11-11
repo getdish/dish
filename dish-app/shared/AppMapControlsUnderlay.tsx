@@ -28,7 +28,7 @@ export const AppMapControlsUnderlay = memo(() => {
       <AbsoluteVStack
         fullscreen
         paddingHorizontal={30}
-        top={searchBarHeight + 10}
+        // top={searchBarHeight + 10}
         left={paddingLeft + 20}
         right={0}
         pointerEvents="none"
