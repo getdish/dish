@@ -4,8 +4,8 @@ import { HStack, Text } from 'snackui'
 import { omStatic } from '../../state/omStatic'
 import { RoutesTable } from '../../state/router'
 import { isStringChild } from './isStringChild'
-import { useLink } from './Link'
 import { LinkButtonProps } from './LinkProps'
+import { useLink } from './useLink'
 
 export function LinkButton<
   Name extends keyof RoutesTable = keyof RoutesTable,

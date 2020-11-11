@@ -314,7 +314,7 @@ const runSearch: AsyncAction<{
     span: roundLngLat(span),
     query: state!.searchQuery,
     tags: otherTags,
-    main_tag: dishSearchedTag,
+    main_tag: dishSearchedTag ?? otherTags[0],
   }
 
   // prevent duplicate searches
@@ -324,7 +324,6 @@ const runSearch: AsyncAction<{
   }
 
   // fetch
-  console.log('searching', searchArgs)
   let res = await search(searchArgs)
   if (shouldCancel()) return
 
@@ -873,7 +872,6 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
     const ids = 'activeTags' in state ? state.activeTags : null
     const sameTagIds = stringify(ids) === stringify(next.activeTags)
     const sameSearchQuery = isEqual(state.searchQuery, next.searchQuery)
-    console.log(sameTagIds, sameSearchQuery)
     assert(!sameTagIds || !sameSearchQuery)
     const nextState = {
       ...state,
@@ -883,7 +881,6 @@ const updateActiveTags: Action<HomeStateTagNavigable> = (om, next) => {
     // @ts-ignore
     om.actions.home.updateHomeState(nextState)
   } catch (err) {
-    console.log('assert failed', err)
     handleAssertionError(err)
   }
 }
