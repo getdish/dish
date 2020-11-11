@@ -426,7 +426,7 @@ const AppMapContent = memo(function AppMap({
           maxHeight="100%"
           width={width}
           borderTopRightRadius={12}
-          borderBottomLeftRadius={12}
+          borderBottomRightRadius={12}
           overflow="hidden"
         >
           <MapView

@@ -12,8 +12,6 @@ export type SearchRouteParams = {
 }
 
 export const routes = {
-  home: new Route('/'),
-
   // all pages go here
   user: new Route<{ username: string; pane?: string }>('/u/:username/:pane?'),
   userEdit: new Route<{ username: string; pane?: string }>('/edit-profile'),
@@ -55,6 +53,9 @@ export const routes = {
   ),
   // search after userSearch
   search: new Route<SearchRouteParams>('/:lense/:location/:tags?/:search?'),
+
+  // should be last
+  home: new Route<{ region?: string }>('/:region?'),
 
   notFound: new Route('*'),
 }

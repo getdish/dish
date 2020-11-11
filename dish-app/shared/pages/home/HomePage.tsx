@@ -19,11 +19,10 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Dimensions, ScrollView, StyleSheet } from 'react-native'
+import { Dimensions, ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
-  LinearGradient,
   LoadingItems,
   Spacer,
   StackProps,
@@ -31,7 +30,6 @@ import {
   VStack,
 } from 'snackui'
 
-import { bgLightHover } from '../../colors'
 import { drawerWidthMax, searchBarHeight } from '../../constants'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'

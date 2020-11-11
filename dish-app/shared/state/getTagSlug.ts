@@ -4,7 +4,7 @@ import { TagWithNameAndType } from './getFullTags'
 import { NavigableTag } from './NavigableTag'
 
 export const getTagSlug = (tag: NavigableTag) => {
-  if (!tag.slug) {
+  if (tag.slug === null) {
     console.warn('no tag slug')
     return ''
     // throw new Error('No tag slug')
