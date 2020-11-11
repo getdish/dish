@@ -1,5 +1,6 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 
+import { slugify } from '@dish/graph/_'
 import { isPresent } from '@dish/helpers/_'
 import { fullyIdle, series } from '@o/async'
 import intersect from '@turf/intersect'
@@ -497,8 +498,8 @@ function setupMapEffect({
                 'text-size': {
                   base: 1,
                   stops: [
-                    [12, 10],
-                    [16, 19],
+                    [10, 10],
+                    [16, 22],
                   ],
                 },
                 'text-justify': 'center',
@@ -581,7 +582,7 @@ function setupMapEffect({
           getProps().onSelectRegion?.({
             geometry: feature.geometry as any,
             name: feature.properties.nhood,
-            slug: '',
+            slug: feature.properties.slug ?? slugify(feature.properties.nhood),
           })
         }, 300)
 

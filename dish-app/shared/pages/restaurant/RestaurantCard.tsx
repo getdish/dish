@@ -48,8 +48,6 @@ export const RestaurantCardContent = memo(
       const [price_label, price_color, price_range] = priceRange(restaurant)
       const { lightColor, color } = getColorsForName(restaurant.name)
 
-      console.log('lightColor', lightColor, color)
-
       const handleOnIsAtStart = useCallback((x) => {
         setHideInfo(!x)
       }, [])

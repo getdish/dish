@@ -209,7 +209,7 @@ const DishViewContent = ({
     </Hoverable>
   )
 
-  if (!dish.slug) {
+  if (dish.name && !dish.slug) {
     console.warn('dish', dish)
   }
 
