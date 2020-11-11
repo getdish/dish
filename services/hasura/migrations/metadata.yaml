@@ -73,6 +73,9 @@ tables:
       filter: {}
 - table:
     schema: public
+    name: nhood_labels
+- table:
+    schema: public
     name: opening_hours
   object_relationships:
   - name: restaurant

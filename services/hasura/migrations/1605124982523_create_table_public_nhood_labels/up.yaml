@@ -1,0 +1,10 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE TABLE "public"."nhood_labels"("center" geometry NOT NULL, "name" text
+      NOT NULL, "ogc_fid" integer NOT NULL, PRIMARY KEY ("ogc_fid") );
+  type: run_sql
+- args:
+    name: nhood_labels
+    schema: public
+  type: add_existing_table_or_view
