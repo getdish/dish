@@ -1,5 +1,0 @@
-- args:
-    table:
-      name: zcta5
-      schema: public
-  type: untrack_table

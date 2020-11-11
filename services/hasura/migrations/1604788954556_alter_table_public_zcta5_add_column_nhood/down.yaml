@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."zcta5" DROP COLUMN "nhood";
-  type: run_sql

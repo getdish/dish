@@ -1,7 +1,7 @@
 resource "kubernetes_deployment" "bert" {
   lifecycle {
     ignore_changes = [
-      "spec[0].replicas"
+      spec[0].replicas
     ]
   }
   metadata {
