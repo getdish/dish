@@ -504,7 +504,7 @@ function setupMapEffect({
               maxzoom: maxZoom,
               layout: {
                 'text-field': `{${label}}`,
-                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                'text-font': ['PT Serif Bold', 'Arial Unicode MS Bold'],
                 // 'text-allow-overlap': true,
                 // 'icon-allow-overlap': true,
                 'text-size': {
