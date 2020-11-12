@@ -392,6 +392,18 @@ const updateHomeState: Action<{ id: string; [key: string]: any }> = (
     if (val.type && state.type !== val.type) {
       throw new Error(`Cant change the type`)
     }
+    // sanity checks
+    if (process.env.NODE_ENV === 'development') {
+      if (val['activeTags']) {
+        if (
+          Object.keys(val['activeTags']).some(
+            (x) => x === '' || x === 'no-slug'
+          )
+        ) {
+          debugger
+        }
+      }
+    }
     deepAssign(state, val)
   } else {
     om.state.home.allStates[val.id] = { ...val } as any
