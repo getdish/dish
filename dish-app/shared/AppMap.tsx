@@ -1,7 +1,7 @@
 import { LngLat, Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Store, getStore, useStore } from '@dish/use-store'
-import { debounce, isEqual, rest, uniqBy } from 'lodash'
+import { getStore, useStore } from '@dish/use-store'
+import { debounce, isEqual, uniqBy } from 'lodash'
 import React, {
   Suspense,
   memo,
@@ -11,7 +11,6 @@ import React, {
   useState,
 } from 'react'
 import {
-  AbsoluteVStack,
   HStack,
   Text,
   VStack,
@@ -20,6 +19,7 @@ import {
   useGet,
 } from 'snackui'
 
+import { AppMapStore } from './AppMapStore'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { pageWidthMax, searchBarHeight, zIndexMap } from './constants'
 import { getLngLat, getMinLngLat } from './helpers/getLngLat'
@@ -29,7 +29,6 @@ import { getIs, useIsNarrow } from './hooks/useIs'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { useRestaurantQuery } from './hooks/useRestaurantQuery'
-import { sfRegion } from './sfRegion'
 import { findLastHomeOrSearch } from './state/home'
 import { isRestaurantState } from './state/home-helpers'
 import { Region } from './state/home-types'
@@ -37,19 +36,6 @@ import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { router } from './state/router'
 import { MapView } from './views/Map'
-
-export class AppMapStore extends Store {
-  regions: { [slug: string]: Region | undefined } = {
-    'san-francisco': sfRegion,
-  }
-
-  setRegion(slug: string, region: Region) {
-    this.regions = {
-      ...this.regions,
-      [slug]: region,
-    }
-  }
-}
 
 export default memo(function AppMap() {
   const [restaurants, setRestaurantsFast] = useState<Restaurant[]>([])

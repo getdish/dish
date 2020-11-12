@@ -9,17 +9,10 @@ import {
   order_by,
   query,
 } from '@dish/graph'
-import { getStore, useStore } from '@dish/use-store'
+import { getStore } from '@dish/use-store'
 import { fullyIdle, series } from '@o/async'
 import { sortBy, uniqBy } from 'lodash'
-import React, {
-  Suspense,
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
@@ -31,7 +24,7 @@ import {
   VStack,
 } from 'snackui'
 
-import { AppMapStore } from '../../AppMap'
+import { AppMapStore } from '../../AppMapStore'
 import { drawerWidthMax, searchBarHeight } from '../../constants'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
@@ -45,7 +38,6 @@ import { DishView } from '../../views/dish/DishView'
 import { PageFooter } from '../../views/layout/PageFooter'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { SlantedBox } from '../../views/ui/SlantedBox'
-import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { CardFrame } from '../restaurant/CardFrame'
 import { RestaurantButton } from '../restaurant/RestaurantButton'
 import { RestaurantCard } from '../restaurant/RestaurantCard'

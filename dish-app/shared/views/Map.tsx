@@ -1,14 +1,10 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 
-import { slugify } from '@dish/graph/_'
-import { isPresent } from '@dish/helpers/_'
+import { slugify } from '@dish/graph'
 import { fullyIdle, series } from '@o/async'
-import intersect from '@turf/intersect'
-import _, { groupBy, isEqual, throttle, uniqBy } from 'lodash'
+import _, { isEqual, throttle } from 'lodash'
 import mapboxgl from 'mapbox-gl'
-import polylabel from 'polylabel'
 import React, { memo, useEffect, useRef, useState } from 'react'
-import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
 
 import { green, lightGreen, lightPurple, purple } from '../colors'
@@ -1050,3 +1046,72 @@ const getCurrentLocation = (map: mapboxgl.Map) => {
 }
 window['mapboxgl'] = mapboxgl
 window['getCurrentLocation'] = getCurrentLocation
+
+//['get', 'color'],
+// rgbString(tagLenses[0].rgb.map((x) => x + 45)),
+// [
+//   'get',
+//   'color',
+//   // rgbString(tagLenses[0].rgb.map((x) => x + 45)),
+// ],
+// [
+//   'match',
+//   ['get', 'ethnicity'],
+//   'White',
+//   '#fbb03b',
+//   'Black',
+//   '#223b53',
+//   'Hispanic',
+//   '#e55e5e',
+//   'Asian',
+//   '#3bb2d0',
+//   /* other */ '#ccc'
+//   ]
+// // show center/sw/ne points on map for debugging
+// if (process.env.NODE_ENV === 'development') {
+//   if (false) {
+//     const source = map.getSource(RESTAURANTS_SOURCE_ID)
+//     if (source?.type === 'geojson') {
+//       source.setData({
+//         type: 'FeatureCollection',
+//         features: [
+//           ...features,
+//           // debug: add the sw, ne points
+//           {
+//             type: 'Feature',
+//             id: Math.random(),
+//             geometry: {
+//               type: 'Point',
+//               coordinates: [center.lng, center.lat],
+//             },
+//             properties: {
+//               color: 'orange',
+//             },
+//           },
+//           {
+//             type: 'Feature',
+//             id: Math.random(),
+//             geometry: {
+//               type: 'Point',
+//               coordinates: [next[0], next[1]],
+//             },
+//             properties: {
+//               color: 'blue',
+//             },
+//           },
+//           {
+//             type: 'Feature',
+//             id: Math.random(),
+//             geometry: {
+//               type: 'Point',
+//               coordinates: [next[2], next[3]],
+//             },
+//             properties: {
+//               color: 'blue',
+//             },
+//           },
+//         ],
+//       })
+//     }
+//   }
+// }
