@@ -13,7 +13,7 @@ import {
   prevent,
 } from 'snackui'
 
-import { bgLight, green, lightOrange, lightRed } from '../../colors'
+import { bgLight, green, lightGreen, lightOrange, lightRed } from '../../colors'
 import { rgbString } from '../../helpers/rgbString'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useIsNarrow } from '../../hooks/useIs'
@@ -28,6 +28,7 @@ type UpvoteDownvoteProps = {
   score: number
   ratio: number
   activeTags: HomeActiveTagsRecord
+  backgroundColor?: string
 }
 
 export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
@@ -43,6 +44,7 @@ const RestaurantUpVoteDownVoteContents = memo(
     restaurantId,
     restaurantSlug,
     score: baseScore,
+    backgroundColor = '#fff',
     ratio,
     activeTags,
   }: UpvoteDownvoteProps) {
@@ -53,10 +55,13 @@ const RestaurantUpVoteDownVoteContents = memo(
     return (
       <VStack position="relative">
         <AbsoluteVStack
-          top={-20}
-          right={-30}
-          opacity={0.8}
-          // transform={[{ scale: 0.95 }]}
+          top={-14}
+          right={-32}
+          borderRadius={1000}
+          backgroundColor={backgroundColor}
+          shadowColor="#000"
+          shadowOpacity={0.1}
+          shadowRadius={3}
         >
           <CircularProgress
             fill={ratio * 100}
@@ -64,10 +69,18 @@ const RestaurantUpVoteDownVoteContents = memo(
             width={2}
             tintColor={green}
             lineCap="round"
-            backgroundColor="#fff"
+            backgroundColor={backgroundColor}
             rotation={(1 - ratio) * 180}
           >
-            {() => <Text fontSize={12}>{Math.round(ratio * 100)}</Text>}
+            {() => (
+              <Text
+                fontSize={ratio === 1 ? 11 : 12}
+                color={green}
+                fontWeight="700"
+              >
+                {Math.round(ratio * 100)}
+              </Text>
+            )}
           </CircularProgress>
         </AbsoluteVStack>
         <VStack
@@ -80,7 +93,6 @@ const RestaurantUpVoteDownVoteContents = memo(
             shadowOpacity={0.1}
             shadowRadius={10}
             borderRadius={12}
-            width={62}
             overflow="hidden"
             padding={2}
             paddingHorizontal={2}

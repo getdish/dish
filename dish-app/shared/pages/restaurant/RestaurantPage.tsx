@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
-import React, { Suspense, memo, useMemo } from 'react'
-import { HStack, LoadingItem, Spacer, VStack } from 'snackui'
+import React, { Suspense, memo, useCallback, useMemo, useState } from 'react'
+import { AbsoluteVStack, HStack, LoadingItem, Spacer, VStack } from 'snackui'
 
 import { bgLight, bgLightHover, darkBlue, grey, lightGrey } from '../../colors'
 import { getMinLngLat } from '../../helpers/getLngLat'
@@ -62,51 +62,13 @@ const RestaurantPage = memo(
       [coords]
     )
 
-    const headerElement = useMemo(() => {
-      return (
-        <Suspense
-          fallback={
-            <VStack height={497} width="100%">
-              <LoadingItem size="lg" />
-            </VStack>
-          }
-        >
-          <RestaurantHeader
-            color={darkBlue}
-            minHeight={450}
-            showImages
-            restaurantSlug={restaurantSlug}
-            below={
-              <HStack marginTop={10} flexWrap="wrap">
-                <VStack flex={1} minWidth={280} maxWidth={400}>
-                  <RestaurantOverview
-                    fullHeight
-                    size="lg"
-                    restaurantSlug={restaurantSlug}
-                  />
-                </VStack>
-                <Spacer size="xl" />
-                <HStack
-                  maxWidth={300}
-                  maxHeight={100}
-                  overflow="hidden"
-                  flexWrap="wrap"
-                >
-                  <RestaurantTagsRow
-                    size="sm"
-                    restaurantSlug={restaurantSlug}
-                    restaurantId={restaurant.id}
-                    spacing={6}
-                    grid
-                    max={10}
-                  />
-                </HStack>
-              </HStack>
-            }
-          />
-        </Suspense>
-      )
-    }, [restaurantSlug, restaurant.id])
+    const [isScrolled, setIsScrolled] = useState(false)
+    const handleScroll = (y: number) => {
+      const next = y !== 0
+      if (isScrolled != next) {
+        setIsScrolled(next)
+      }
+    }
 
     return (
       <>
@@ -114,7 +76,7 @@ const RestaurantPage = memo(
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
 
-        <ContentScrollView id="restaurant">
+        <ContentScrollView onScrollYThrottled={handleScroll} id="restaurant">
           {/* HEADER */}
           {/* -1 margin bottom to overlap bottom border */}
           <VStack
@@ -122,7 +84,23 @@ const RestaurantPage = memo(
             borderBottomColor={bgLightHover}
             borderBottomWidth={1}
           >
-            {headerElement}
+            <Suspense
+              fallback={
+                <VStack height={497} width="100%">
+                  <LoadingItem size="lg" />
+                </VStack>
+              }
+            >
+              <RestaurantHeader
+                color={darkBlue}
+                minHeight={450}
+                showImages
+                restaurantSlug={restaurantSlug}
+              />
+            </Suspense>
+
+            <Spacer />
+
             <VStack marginBottom={-1} position="relative" zIndex={1}>
               <Suspense
                 fallback={
