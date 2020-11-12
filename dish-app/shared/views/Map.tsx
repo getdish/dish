@@ -378,6 +378,18 @@ function setupMapEffect({
       () => {
         if (!map) return
 
+        const firstSymbolLayerId = (() => {
+          const layers = map.getStyle().layers
+          let val
+          for (var i = 0; i < layers.length; i++) {
+            if (layers[i].type === 'symbol') {
+              val = layers[i].id
+              break
+            }
+          }
+          return val
+        })()
+
         const tiles = [
           {
             maxZoom: 20,
@@ -447,41 +459,47 @@ function setupMapEffect({
             promoteId,
           })
 
-          map.addLayer({
-            id: `${name}.fill`,
-            type: 'fill',
-            source: name,
-            minzoom: minZoom,
-            maxzoom: maxZoom,
-            paint: {
-              'fill-color': [
-                'case',
-                ['==', ['feature-state', 'active'], true],
-                activeColor,
-                ['==', ['feature-state', 'hover'], true],
-                hoverColor,
-                ['==', ['feature-state', 'active'], null],
-                color,
-                'green',
-              ],
-              'fill-opacity': 0.5,
+          map.addLayer(
+            {
+              id: `${name}.fill`,
+              type: 'fill',
+              source: name,
+              minzoom: minZoom,
+              maxzoom: maxZoom,
+              paint: {
+                'fill-color': [
+                  'case',
+                  ['==', ['feature-state', 'active'], true],
+                  activeColor,
+                  ['==', ['feature-state', 'hover'], true],
+                  hoverColor,
+                  ['==', ['feature-state', 'active'], null],
+                  color,
+                  'green',
+                ],
+                'fill-opacity': 0.5,
+              },
+              'source-layer': name,
             },
-            'source-layer': name,
-          })
+            firstSymbolLayerId
+          )
 
-          map.addLayer({
-            id: `${name}.line`,
-            type: 'line',
-            source: name,
-            minzoom: minZoom,
-            maxzoom: maxZoom,
-            paint: {
-              'line-color': lineColor,
-              'line-opacity': 0.2,
-              'line-width': 1,
+          map.addLayer(
+            {
+              id: `${name}.line`,
+              type: 'line',
+              source: name,
+              minzoom: minZoom,
+              maxzoom: maxZoom,
+              paint: {
+                'line-color': lineColor,
+                'line-opacity': 0.2,
+                'line-width': 1,
+              },
+              'source-layer': name,
             },
-            'source-layer': name,
-          })
+            firstSymbolLayerId
+          )
 
           if (label) {
             if (labelSource) {
@@ -520,6 +538,7 @@ function setupMapEffect({
                 'text-halo-width': 1,
               },
             })
+
             cancels.add(() => {
               if (labelSource) {
                 map.removeSource(labelSource)
