@@ -1,7 +1,7 @@
 import { getStore } from '@dish/use-store'
 import bbox from '@turf/bbox'
 
-import { AppMapStore } from '../AppMap'
+import { AppMapStore } from '../AppMapStore'
 import { searchLocations } from '../helpers/searchLocations'
 import { getCenter } from '../views/getCenter'
 import { getCoordinates } from '../views/getCoordinates'
