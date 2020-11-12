@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
 import React, { memo, useRef } from 'react'
-import { Image, ScrollView } from 'react-native'
-import { HStack, Text, VStack } from 'snackui'
+import { Image, ScrollView, StyleSheet } from 'react-native'
+import { AbsoluteVStack, HStack, LinearGradient, Text, VStack } from 'snackui'
 
 import { bgLight } from '../../colors'
 import { getImageUrl } from '../../helpers/getImageUrl'
