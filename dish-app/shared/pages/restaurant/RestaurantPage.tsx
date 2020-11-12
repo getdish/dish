@@ -71,42 +71,27 @@ const RestaurantPage = memo(
             </VStack>
           }
         >
-          <RestaurantPhotosRow
-            restaurantSlug={restaurantSlug}
-            width={200}
-            height={200}
-          />
           <RestaurantHeader
             color={darkBlue}
             minHeight={450}
             showImages
             restaurantSlug={restaurantSlug}
-            after={
-              <VStack
-                className="ease-in-out"
-                hoverStyle={{
-                  transform: [{ scale: 1.0125 }],
-                }}
-                marginBottom={-50}
-                marginTop={0}
-                marginRight={15}
-              >
-                <RestaurantCard
-                  restaurantSlug={restaurantSlug}
-                  restaurantId={restaurant.id}
-                  size="md"
-                />
-              </VStack>
-            }
             below={
-              <>
-                <RestaurantOverview
-                  fullHeight
-                  size="lg"
-                  restaurantSlug={restaurantSlug}
-                />
+              <HStack marginTop={10} flexWrap="wrap">
+                <VStack flex={1} minWidth={280} maxWidth={400}>
+                  <RestaurantOverview
+                    fullHeight
+                    size="lg"
+                    restaurantSlug={restaurantSlug}
+                  />
+                </VStack>
                 <Spacer size="xl" />
-                <HStack maxHeight={100} overflow="hidden" flexWrap="wrap">
+                <HStack
+                  maxWidth={300}
+                  maxHeight={100}
+                  overflow="hidden"
+                  flexWrap="wrap"
+                >
                   <RestaurantTagsRow
                     size="sm"
                     restaurantSlug={restaurantSlug}
@@ -116,7 +101,7 @@ const RestaurantPage = memo(
                     max={10}
                   />
                 </HStack>
-              </>
+              </HStack>
             }
           />
         </Suspense>

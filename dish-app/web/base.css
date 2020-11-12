@@ -495,6 +495,36 @@ body > div {
   scroll-snap-align: center;
 }
 
+.scroll-snap-photo {
+  transition: all ease-in 100ms;
+  opacity: 0.6;
+  /* filter: sepia(100%) hue-rotate(140deg) brightness(520%) contrast(90%); */
+}
+
+.scroll-snap-photo:hover {
+  opacity: 1;
+  filter: none;
+}
+
+.scroll-snap-photo:hover::after {
+  opacity: 0;
+}
+
+.scroll-snap-photo::after {
+  display: block;
+  opacity: 1;
+  transition: all ease-in 100ms;
+  content: ' ';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+  pointer-events: none;
+  background: linear-gradient(rgba(240, 250, 255, 0), rgb(240, 250, 255));
+}
+
 .animate-in {
   transition: all ease-in-out 300ms;
   opacity: 0;
