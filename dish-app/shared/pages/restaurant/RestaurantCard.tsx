@@ -94,7 +94,7 @@ export const RestaurantCardContent = memo(
                 {/* </VStack> */}
               </VStack>
               <AbsoluteVStack
-                alignItems="flex-end"
+                alignItems="flex-start"
                 fullscreen
                 justifyContent="flex-end"
                 pointerEvents="none"
@@ -103,6 +103,7 @@ export const RestaurantCardContent = memo(
                 <AbsoluteVStack top={-10} left={-10} zIndex={20}>
                   <RestaurantUpVoteDownVote
                     activeTags={{}}
+                    backgroundColor={bgLight}
                     restaurantSlug={restaurantSlug}
                     restaurantId={restaurantId}
                     score={restaurant.score ?? 0}
@@ -114,7 +115,7 @@ export const RestaurantCardContent = memo(
                   className="ease-in-out"
                   opacity={hideInfo ? 0 : 1}
                   padding={20}
-                  alignItems="flex-end"
+                  alignItems="flex-start"
                   spacing
                 >
                   <Paragraph size={1.1} color="#fff" fontWeight="800">

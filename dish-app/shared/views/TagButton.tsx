@@ -28,6 +28,7 @@ import {
   red,
 } from '../colors'
 import { isWeb } from '../constants'
+import { rgbString } from '../helpers/rgbString'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
 import { getTagSlug } from '../state/getTagSlug'
 import { tagDisplayName } from '../state/tagMeta'
@@ -63,11 +64,11 @@ const tagColors = {
   other: [lightGreen, green],
 }
 
-export const getTagColors = ({ rgb, type }: Partial<Tag>) => {
+const getTagColors = ({ rgb, type }: Partial<Tag>) => {
   if (rgb) {
     return {
-      backgroundColor: `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`,
-      color: '#fff',
+      backgroundColor: `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.15)`,
+      color: rgbString(rgb),
     }
   }
   if (type === 'dish') {
@@ -165,6 +166,7 @@ export const TagButton = memo((props: TagButtonProps) => {
         }}
         {...rest}
       >
+        <Spacer size={5} />
         {!!rank ? (
           <Text
             fontSize={smallerFontSize}

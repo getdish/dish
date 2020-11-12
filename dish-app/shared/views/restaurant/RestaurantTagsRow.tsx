@@ -1,4 +1,5 @@
 import { graphql, order_by } from '@dish/graph'
+import { sortBy } from 'lodash'
 import React, { memo } from 'react'
 import { Spacer, StackProps } from 'snackui'
 
@@ -62,31 +63,27 @@ export const RestaurantTagsRow = memo(
     tags = tags.slice(0, props.max ?? Infinity)
     return (
       <>
-        {tags
-          .sort((a, b) =>
-            a.type === 'lense'
-              ? -2
-              : a.type === 'cuisine'
-              ? -1
-              : a.score > b.score
-              ? 1
-              : 2
+        {sortBy(tags, (a) =>
+          a.type === 'lense'
+            ? -2
+            : a.type === 'cuisine' || a.type === 'country'
+            ? -3
+            : a.score
+        ).map((tag, index) => {
+          return (
+            <React.Fragment key={`${index}${tag.name}`}>
+              <TagButton
+                replaceSearch
+                size={size ?? 'sm'}
+                {...getTagButtonProps(tag)}
+                votable
+                restaurantSlug={props.restaurantSlug}
+                marginBottom={props.spacing ?? 5}
+              />
+              {!!props.spacing && <Spacer size={props.spacing} />}
+            </React.Fragment>
           )
-          .map((tag, index) => {
-            return (
-              <React.Fragment key={`${index}${tag.name}`}>
-                <TagButton
-                  replaceSearch
-                  size={size ?? 'sm'}
-                  {...getTagButtonProps(tag)}
-                  votable
-                  restaurantSlug={props.restaurantSlug}
-                  marginBottom={props.spacing ?? 5}
-                />
-                {!!props.spacing && <Spacer size={props.spacing} />}
-              </React.Fragment>
-            )
-          })}
+        })}
       </>
     )
   })

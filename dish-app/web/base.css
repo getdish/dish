@@ -495,22 +495,25 @@ body > div {
   scroll-snap-align: center;
 }
 
-.scroll-snap-photo {
+.fade-photo {
   transition: all ease-in 100ms;
   opacity: 0.6;
   /* filter: sepia(100%) hue-rotate(140deg) brightness(520%) contrast(90%); */
 }
 
-.scroll-snap-photo:hover {
+.fade-photo:hover {
   opacity: 1;
   filter: none;
+  z-index: 10;
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-.scroll-snap-photo:hover::after {
+.fade-photo:hover::after {
   opacity: 0;
 }
 
-.scroll-snap-photo::after {
+.fade-photo::after {
   display: block;
   opacity: 1;
   transition: all ease-in 100ms;
