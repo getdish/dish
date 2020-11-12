@@ -1,4 +1,3 @@
-import { slugify } from '@dish/graph'
 import { NavigateItem } from '@dish/router'
 
 import { getRouteFromState } from './getRouteFromState'

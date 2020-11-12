@@ -4,6 +4,7 @@ import React, { Suspense, memo, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
+  HStack,
   HoverablePopover,
   LinearGradient,
   StackProps,
@@ -55,31 +56,43 @@ const RestaurantUpVoteDownVoteContents = memo(
     return (
       <VStack position="relative">
         <AbsoluteVStack
-          top={-14}
-          right={-32}
+          bottom={-19}
+          right={-14}
           borderRadius={1000}
-          backgroundColor={backgroundColor}
+          backgroundColor="#fff"
           shadowColor="#000"
           shadowOpacity={0.1}
           shadowRadius={3}
         >
           <CircularProgress
             fill={ratio * 100}
-            size={35}
+            size={33}
             width={2}
             tintColor={green}
             lineCap="round"
-            backgroundColor={backgroundColor}
+            backgroundColor="#fff"
             rotation={(1 - ratio) * 180}
           >
             {() => (
-              <Text
-                fontSize={ratio === 1 ? 11 : 12}
-                color={green}
-                fontWeight="700"
-              >
-                {Math.round(ratio * 100)}
-              </Text>
+              <HStack>
+                <Text
+                  fontSize={ratio === 1 ? 11 : 12}
+                  color={green}
+                  fontWeight="900"
+                  letterSpacing={-1}
+                >
+                  {Math.round(ratio * 100)}
+                </Text>
+                <Text
+                  marginRight={-4}
+                  transform={[{ scale: 0.9 }]}
+                  fontWeight="700"
+                  fontSize={8}
+                  opacity={0.2}
+                >
+                  %
+                </Text>
+              </HStack>
             )}
           </CircularProgress>
         </AbsoluteVStack>
@@ -91,7 +104,8 @@ const RestaurantUpVoteDownVoteContents = memo(
             shadowColor="#000"
             backgroundColor="#fff"
             shadowOpacity={0.1}
-            shadowRadius={10}
+            shadowOffset={{ height: 2, width: 0 }}
+            shadowRadius={7}
             borderRadius={12}
             overflow="hidden"
             padding={2}
@@ -192,7 +206,7 @@ export const TotalScore = memo(
         )}
         <Text
           fontSize={Math.min(16, sizePx / `${score}`.length) * scale * 1.075}
-          fontWeight="700"
+          fontWeight="600"
           marginVertical={-2 * scale}
           letterSpacing={-0.5}
           color={color}

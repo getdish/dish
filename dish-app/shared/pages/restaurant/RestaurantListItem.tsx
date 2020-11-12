@@ -232,7 +232,7 @@ const RestaurantListItemContent = memo(
         />
 
         {tagIds && (
-          <AbsoluteVStack top={30} left={-12} zIndex={1000}>
+          <AbsoluteVStack top={34} left={-12} zIndex={1000}>
             <RestaurantUpVoteDownVote
               key={JSON.stringify(tagIds)}
               score={score}
@@ -247,7 +247,7 @@ const RestaurantListItemContent = memo(
         <VStack flex={1} alignItems="flex-start" maxWidth="100%">
           {/* ROW: TITLE */}
           <VStack
-            hoverStyle={{ backgroundColor: 'rgba(0,0,0,0.025)' }}
+            hoverStyle={{ backgroundColor: 'rgba(0,0,0,0.015)' }}
             paddingTop={10}
             marginLeft={-pad}
             paddingLeft={pad}
@@ -260,7 +260,7 @@ const RestaurantListItemContent = memo(
               name="restaurant"
               params={{ slug: restaurantSlug }}
             >
-              <VStack paddingLeft={50} paddingTop={25}>
+              <VStack paddingLeft={30} paddingTop={25}>
                 <HStack alignItems="center">
                   <Spacer size="xs" />
 
@@ -275,9 +275,7 @@ const RestaurantListItemContent = memo(
                   >
                     <Link name="restaurant" params={{ slug: restaurantSlug }}>
                       <HStack>
-                        <Spacer size="sm" />
                         <HStack
-                          transform={[{ translateY: -10 }]}
                           paddingHorizontal={8}
                           borderRadius={8}
                           alignItems="center"
@@ -307,14 +305,14 @@ const RestaurantListItemContent = memo(
               </VStack>
             </Link>
 
-            <Spacer size="xs" />
+            <Spacer size="md" />
 
             {/* SECOND ROW TITLE */}
             <VStack
               {...contentSideProps}
               overflow="hidden"
               zIndex={-1}
-              paddingLeft={50}
+              paddingLeft={60}
               paddingRight={20}
               marginTop={isSmall ? -6 : 0}
               transform={[{ translateY: -10 }]}

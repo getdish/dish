@@ -1,5 +1,4 @@
 import { HistoryItem } from '@dish/router'
-import { capitalize } from 'lodash'
 
 import { FullTag } from './FullTag'
 import { TagWithNameAndType, getFullTags } from './getFullTags'
@@ -34,11 +33,7 @@ const getUrlTagInfo = (
 ): TagWithNameAndType => {
   if (part.indexOf(SPLIT_TAG_TYPE) > -1) {
     const [type, nameLower] = part.split(SPLIT_TAG_TYPE)
-    const name = nameLower
-      .split('-')
-      .map((x) => capitalize(x))
-      .join(' ')
-    return { type: type as any, name }
+    return { type: type as any, name: null, slug: part }
   }
-  return { type: defaultType, name: part }
+  return { type: defaultType, name: null, slug: part }
 }
