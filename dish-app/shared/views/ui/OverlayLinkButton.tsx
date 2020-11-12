@@ -26,7 +26,7 @@ export function OverlayLinkButton<
       <BlurView borderRadius={20}>
         <HStack
           alignItems="center"
-          backgroundColor="rgba(0,0,0,0.65)"
+          backgroundColor="rgba(0,0,0,0.75)"
           paddingVertical={7}
           paddingHorizontal={11}
         >
@@ -35,7 +35,7 @@ export function OverlayLinkButton<
             color="rgba(255,255,255,0.5)"
             style={{ marginRight: 6 }}
           />
-          <Text color="#fff" fontSize={12} fontWeight="400" opacity={0.85}>
+          <Text color="#fff" fontSize={13} fontWeight="500" opacity={0.85}>
             {children}
           </Text>
         </HStack>
