@@ -1,8 +1,8 @@
 import React from 'react'
 import { StackProps, VStack } from 'snackui'
 
-export const width = 250
-export const height = 340
+export const width = 230
+export const height = 320
 const borderRadius = 20
 export const borderRadiusSmaller = borderRadius * 0.95
 

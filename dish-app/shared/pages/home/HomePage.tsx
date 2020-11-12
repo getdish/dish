@@ -267,7 +267,13 @@ const HomeFeed = memo(
                   return null
                 }
                 return (
-                  <VStack key={item.id} margin="1%">
+                  <VStack
+                    key={item.id}
+                    padding="0.5%"
+                    paddingVertical={15}
+                    flex={1}
+                    alignItems="center"
+                  >
                     {content}
                   </VStack>
                 )

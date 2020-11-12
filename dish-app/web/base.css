@@ -510,9 +510,10 @@ body > div {
   transition-delay: 150ms;
 }
 
-.safari-overflow-fix {
-  transform: translateZ(0px);
+.safari-fix-overflow {
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
+
  mark {
    display: inline !important;
  }
