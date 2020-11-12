@@ -387,17 +387,13 @@ function setupMapEffect({
             maxZoom: 20,
             minZoom: 12,
             lineColor: '#880088',
+            label: 'name',
+            labelSource: 'public.nhood_labels',
             promoteId: 'ogc_fid',
             activeColor: purple,
             hoverColor: 'yellow',
             color: lightPurple,
             name: 'public.zcta5',
-          },
-          {
-            maxZoom: 20,
-            minZoom: 12,
-            label: 'name',
-            name: 'public.nhood_labels',
           },
           // {
           //   maxZoom: 11,
@@ -440,6 +436,7 @@ function setupMapEffect({
             maxZoom,
             minZoom,
             label,
+            labelSource,
             name,
             promoteId,
             lineColor,
@@ -491,11 +488,17 @@ function setupMapEffect({
           })
 
           if (label) {
+            if (labelSource) {
+              map.addSource(labelSource, {
+                type: 'vector',
+                url: `${MARTIN_TILES_HOST}/${labelSource}.json`,
+              })
+            }
             map.addLayer({
               id: `${name}.label`,
               // TODO move it to a centroid computed source
-              source: name,
-              'source-layer': name,
+              source: labelSource ?? name,
+              'source-layer': labelSource ?? name,
               type: 'symbol',
               minzoom: minZoom,
               maxzoom: maxZoom,
@@ -522,6 +525,9 @@ function setupMapEffect({
               },
             })
             cancels.add(() => {
+              if (labelSource) {
+                map.removeSource(labelSource)
+              }
               map.removeLayer(`${name}.label`)
             })
           }
@@ -610,6 +616,7 @@ function setupMapEffect({
           ) {
             return
           }
+          console.log('hover', feature)
           if (hovered) {
             map.setFeatureState(
               {
