@@ -73,7 +73,7 @@ const AppStackViewItem = memo(
     const isSmall = useIsNarrow()
     const top = isSmall
       ? Math.max(0, index - 1) * 5 + (index > 0 ? 5 : 0)
-      : index * 5 + (index > 0 ? searchBarHeight : 0)
+      : index * 5 + (index > 0 ? searchBarHeight - 2 : 0)
     const left = 0
 
     let children = useMemo(() => {
