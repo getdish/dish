@@ -1,3 +1,4 @@
+import { Search } from '@dish/react-feather'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
@@ -9,6 +10,7 @@ import {
   StackProps,
   Text,
   VStack,
+  prevent,
 } from 'snackui'
 
 import { isWeb } from '../../constants'
@@ -41,6 +43,7 @@ export type DishViewProps = {
   selected?: boolean
   noLink?: boolean
   preventLoad?: boolean
+  showSearchButton?: boolean
 } & StackProps
 
 export const DishView = memo((props: DishViewProps) => {
@@ -69,6 +72,7 @@ const DishViewContent = ({
   disableFallbackFade,
   isFallback: _isFallback,
   noLink,
+  showSearchButton,
   ...rest
 }: DishViewProps) => {
   const [isHovered, setIsHovered] = useState(false)
@@ -82,7 +86,7 @@ const DishViewContent = ({
   const isTiny = size < 115
   const fontSize = (hasLongWord ? 14 : 16) * (isTiny ? 0.8 : 1)
   const isFallback = _isFallback ?? dish.isFallback
-  const sizeInner = Math.round(isFallback ? size * 0.8 : size * 0.98)
+  const sizeInner = Math.round(isFallback ? size * 0.8 : size * 0.925)
   const { lightColor, color } = getColorsForName(dish.name)
   const backgroundColor = lightColor
   const isActive = isHovered || selected
@@ -92,6 +96,35 @@ const DishViewContent = ({
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
     >
+      {showSearchButton && (
+        <AbsoluteVStack
+          onPress={prevent}
+          zIndex={10000}
+          bottom="7.5%"
+          right="7.5%"
+        >
+          <Link tag={dish}>
+            <VStack
+              width={32}
+              height={32}
+              borderRadius={1000}
+              backgroundColor={backgroundColor}
+              shadowColor="#000"
+              shadowOpacity={0.1}
+              shadowRadius={5}
+              shadowOffset={{ height: 1, width: 0 }}
+              alignItems="center"
+              justifyContent="center"
+              hoverStyle={{
+                transform: [{ scale: 1.1 }],
+              }}
+            >
+              <Search size={18} color={color} />
+            </VStack>
+          </Link>
+        </AbsoluteVStack>
+      )}
+
       {typeof dish.score === 'number' && (
         <AbsoluteVStack
           width={20}

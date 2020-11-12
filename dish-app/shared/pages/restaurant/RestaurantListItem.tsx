@@ -205,7 +205,7 @@ const RestaurantListItemContent = memo(
         ? 0.975
         : 1.15
     const titleFontSize = 1.2 * (isSmall ? 18 : 22) * titleFontScale
-    const titleHeight = titleFontSize + 8 * 2 + 2
+    const titleHeight = titleFontSize + 8 * 2
 
     return (
       <VStack
@@ -231,6 +231,19 @@ const RestaurantListItemContent = memo(
           backgroundColor={isActive ? brandColor : 'transparent'}
         />
 
+        {tagIds && (
+          <AbsoluteVStack top={30} left={-12} zIndex={1000}>
+            <RestaurantUpVoteDownVote
+              key={JSON.stringify(tagIds)}
+              score={score}
+              ratio={ratingToRatio(restaurant.rating ?? 1)}
+              restaurantId={restaurantId}
+              restaurantSlug={restaurantSlug}
+              activeTags={tagIds}
+            />
+          </AbsoluteVStack>
+        )}
+
         <VStack flex={1} alignItems="flex-start" maxWidth="100%">
           {/* ROW: TITLE */}
           <VStack
@@ -247,25 +260,8 @@ const RestaurantListItemContent = memo(
               name="restaurant"
               params={{ slug: restaurantSlug }}
             >
-              <VStack paddingTop={20}>
-                <HStack marginLeft={-4} alignItems="center">
-                  <VStack
-                    position="relative"
-                    marginVertical={-14}
-                    zIndex={1000}
-                  >
-                    {tagIds && (
-                      <RestaurantUpVoteDownVote
-                        key={JSON.stringify(tagIds)}
-                        score={score}
-                        ratio={ratingToRatio(restaurant.rating ?? 1)}
-                        restaurantId={restaurantId}
-                        restaurantSlug={restaurantSlug}
-                        activeTags={tagIds}
-                      />
-                    )}
-                  </VStack>
-
+              <VStack paddingLeft={50} paddingTop={25}>
+                <HStack alignItems="center">
                   <Spacer size="xs" />
 
                   {/* SECOND LINK WITH actual <a /> */}
@@ -279,7 +275,6 @@ const RestaurantListItemContent = memo(
                   >
                     <Link name="restaurant" params={{ slug: restaurantSlug }}>
                       <HStack>
-                        <RankView rank={rank} />
                         <Spacer size="sm" />
                         <HStack
                           transform={[{ translateY: -10 }]}
@@ -621,6 +616,7 @@ const RestaurantPeekDishes = memo(
                 dish={dish}
                 marginRight={-20}
                 marginTop={isEven ? -10 : 10}
+                showSearchButton
               />
             )
           })}

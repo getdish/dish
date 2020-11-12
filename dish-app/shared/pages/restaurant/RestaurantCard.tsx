@@ -57,7 +57,7 @@ export const RestaurantCardContent = memo(
           <CardFrame hoverable>
             <VStack backgroundColor={color} borderRadius={borderRadiusSmaller}>
               <VStack
-                className="safari-overflow-fix"
+                className="safari-fix-overflow"
                 width="100%"
                 overflow="hidden"
                 alignSelf="center"
