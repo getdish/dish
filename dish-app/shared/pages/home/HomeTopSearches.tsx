@@ -1,4 +1,3 @@
-import { Tag } from '@dish/graph'
 import React, { memo } from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
 import { HStack, LinearGradient, Text } from 'snackui'

@@ -25,9 +25,7 @@ export const getRouteFromState = (
     if (tags.length) {
       tags += SPLIT_TAG
     }
-    tags += `${otherTags
-      .map((t) => `${t.type}${SPLIT_TAG_TYPE}${t.slug}`)
-      .join(SPLIT_TAG)}`
+    tags += `${otherTags.map((t) => t.slug).join(SPLIT_TAG)}`
   }
   const params: any = {
     region: state.region ?? slugify(state.currentLocationName ?? 'here'),

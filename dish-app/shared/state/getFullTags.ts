@@ -7,10 +7,13 @@ import { FullTag } from './FullTag'
 import { getFullTag } from './getFullTag'
 import { guessTagSlug } from './getTagSlug'
 
-export type TagWithNameAndType = Tag & {
-  name: FullTag['name']
-  type: FullTag['type']
-}
+export type TagWithNameAndType =
+  | Tag
+  | {
+      name: FullTag['name']
+      type: FullTag['type']
+      slug?: string
+    }
 
 type TagPartial =
   | TagWithNameAndType
@@ -25,7 +28,7 @@ export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
   const uncached: TagPartial[] = []
 
   for (const tag of tags) {
-    const found = allTags[guessTagSlug(tag)]
+    const found = allTags[tag.slug]
     if (found) {
       cached.push(found)
     } else {
@@ -44,8 +47,15 @@ export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
         return getFullTag(
           query.tag({
             where: {
-              name: { _eq: tag.name },
-              type: { _eq: tag.type },
+              ...(tag.slug && {
+                slug: {
+                  _eq: tag.slug,
+                },
+              }),
+              ...(!tag.slug && {
+                name: { _eq: tag.name },
+                type: { _eq: tag.type },
+              }),
             },
             limit: 1,
           })[0]

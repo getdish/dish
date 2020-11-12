@@ -42,6 +42,7 @@ import {
   usePageLoadEffect,
 } from '../../hooks/usePageLoadEffect'
 import { addTagsToCache } from '../../state/allTags'
+import { getActiveTags } from '../../state/getActiveTags'
 import { getTagsFromRoute } from '../../state/getTagsFromRoute'
 import { getTagSlug } from '../../state/getTagSlug'
 import { getLocationFromRoute } from '../../state/home-location.helpers'
@@ -54,6 +55,7 @@ import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { StackCloseButton, StackDrawer } from '../../views/StackDrawer'
+import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import {
   ITEM_HEIGHT,
@@ -392,9 +394,23 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             </Text>
             <VStack backgroundColor="#f2f2f2" height={1} flex={1} />
           </HStack>
+
           <Suspense fallback={null}>
             <SearchPageResultsInfoBox state={curProps.item} />
           </Suspense>
+
+          <HStack>
+            {getActiveTags(curProps.item).map((tag) => {
+              return (
+                <TagButton
+                  replaceSearch
+                  size="sm"
+                  {...getTagButtonProps(tag)}
+                />
+              )
+            })}
+          </HStack>
+
           <VStack position="relative" flex={1} minHeight={600}>
             {children}
           </VStack>
