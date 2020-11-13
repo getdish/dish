@@ -7,5 +7,5 @@ export function getCenter(geometry: {
   coordinates: number[]
 }): [number, number] | null {
   const coordinates = getCoordinates(geometry)
-  return coordinates ? polylabel(coordinates, 1.0) : null
+  return coordinates ? polylabel(coordinates) : null
 }

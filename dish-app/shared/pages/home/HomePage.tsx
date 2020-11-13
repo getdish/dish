@@ -33,12 +33,17 @@ import { useIsNarrow } from '../../hooks/useIs'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { HomeStateItemHome, Region } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
+import { omStatic } from '../../state/omStatic'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { DishView } from '../../views/dish/DishView'
 import { PageFooter } from '../../views/layout/PageFooter'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { SlantedBox } from '../../views/ui/SlantedBox'
-import { CardFrame } from '../restaurant/CardFrame'
+import {
+  CardFrame,
+  cardFrameHeight,
+  cardFrameWidth,
+} from '../restaurant/CardFrame'
 import { RestaurantButton } from '../restaurant/RestaurantButton'
 import { RestaurantCard } from '../restaurant/RestaurantCard'
 import { StackViewProps } from '../StackViewProps'
@@ -130,12 +135,19 @@ type FeedItemDish = {
   type: 'dish'
   id: string
   dish: DishTagItem
+}
+
+type FeedItemDishRestaurants = {
+  type: 'dish-restaurants'
+  id: string
+  dish: DishTagItem
   restaurants: RestaurantOnlyIds[]
 }
 
 type FeedItemCuisine = TopCuisine & { type: 'cuisine'; id: string }
 
 type FeedItems =
+  | FeedItemDish
   | {
       type: 'restaurant'
       id: string
@@ -143,7 +155,7 @@ type FeedItems =
       restaurantId: string
     }
   | FeedItemCuisine
-  | FeedItemDish
+  | FeedItemDishRestaurants
 
 const HomeFeed = memo(
   graphql(({ region, item }: { region: Region; item: HomeStateItemHome }) => {
@@ -173,7 +185,80 @@ const HomeFeed = memo(
       limit: 8,
     })
 
-    if (!region || !item.region) {
+    const items: FeedItems[] =
+      !region || !item.region
+        ? null
+        : sortBy(
+            [
+              ...dishes.map((dish, index) => {
+                return {
+                  type: 'dish',
+                  id: dish.id,
+                  rank: Math.random() * 10,
+                  dish: {
+                    slug: dish.slug ?? '',
+                    name: dish.name ?? '',
+                    icon: dish.icon ?? '',
+                    image: dish.default_images()?.[0] ?? '',
+                  },
+                } as const
+              }),
+              ...dishes.map((dish, index) => {
+                return {
+                  type: 'dish-restaurants',
+                  id: dish.id,
+                  rank: index + (index % 2 ? 10 : 0),
+                  dish: {
+                    slug: dish.slug ?? '',
+                    name: dish.name ?? '',
+                    icon: dish.icon ?? '',
+                    image: dish.default_images()?.[0] ?? '',
+                  },
+                  restaurants: restaurants.map((r) => {
+                    return {
+                      id: r.id,
+                      slug: r.slug,
+                    }
+                  }),
+                } as const
+              }),
+              ...cuisines.map((item, index) => {
+                return {
+                  type: 'cuisine',
+                  id: item.country,
+                  rank: index + (index % 3 ? 30 : 0),
+                  ...item,
+                } as const
+              }),
+              ...restaurants.map((item, index) => {
+                return {
+                  id: item.id,
+                  type: 'restaurant',
+                  restaurantId: item.id,
+                  restaurantSlug: item.slug,
+                  rank: index,
+                } as const
+              }),
+            ].filter((x) => x.id),
+            (x) => x.rank
+          )
+
+    const results = items
+      ?.filter((x) => x.type === 'restaurant')
+      .map((x) => ({ id: x['restaurantId'], slug: x['restaurantSlug'] }))
+
+    const isLoading = !items || items[0]?.id === null
+
+    useEffect(() => {
+      if (isLoading) return
+      console.log('set results', results)
+      omStatic.actions.home.updateHomeState({
+        id: item.id,
+        results,
+      })
+    }, [JSON.stringify(results)])
+
+    if (isLoading) {
       return (
         <>
           <LoadingItems />
@@ -181,48 +266,6 @@ const HomeFeed = memo(
         </>
       )
     }
-
-    const items: FeedItems[] = sortBy(
-      [
-        ...dishes.map((dish, index) => {
-          return {
-            type: 'dish',
-            id: dish.id,
-            rank: index + (index % 2 ? 10 : 0),
-            dish: {
-              slug: dish.slug ?? '',
-              name: dish.name ?? '',
-              icon: dish.icon ?? '',
-              image: dish.default_images()?.[0] ?? '',
-            },
-            restaurants: restaurants.map((r) => {
-              return {
-                id: r.id,
-                slug: r.slug,
-              }
-            }),
-          } as const
-        }),
-        ...cuisines.map((item, index) => {
-          return {
-            type: 'cuisine',
-            id: item.country,
-            rank: index + (index % 3 ? 30 : 0),
-            ...item,
-          } as const
-        }),
-        ...restaurants.map((item, index) => {
-          return {
-            id: item.id,
-            type: 'restaurant',
-            restaurantId: item.id,
-            restaurantSlug: item.slug,
-            rank: index,
-          } as const
-        }),
-      ].filter((x) => x.id),
-      (x) => x.rank
-    )
 
     return (
       <>
@@ -244,13 +287,15 @@ const HomeFeed = memo(
         <Suspense fallback={null}>
           <VStack minHeight={Dimensions.get('window').height * 0.9}>
             <HStack justifyContent="center" flexWrap="wrap">
-              {items.slice(0, 6).map((item) => {
+              {items.slice(0, 11).map((item) => {
                 const content = (() => {
                   switch (item.type) {
                     case 'restaurant':
                       return <RestaurantCard {...item} />
                     case 'dish':
                       return <DishFeedCard {...item} />
+                    case 'dish-restaurants':
+                      return <DishRestaurantsFeedCard {...item} />
                     case 'cuisine':
                       return <CuisineFeedCard {...item} />
                   }
@@ -388,6 +433,18 @@ const DishCol = (props: StackProps) => {
 }
 
 const DishFeedCard = (props: FeedItemDish) => {
+  return (
+    <VStack
+      height={cardFrameHeight}
+      alignItems="center"
+      justifyContent="center"
+    >
+      <DishView size={cardFrameWidth} {...props} />
+    </VStack>
+  )
+}
+
+const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
   return (
     <CardFrame>
       <AbsoluteVStack
