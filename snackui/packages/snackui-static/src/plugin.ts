@@ -16,21 +16,23 @@ declare module 'webpack' {
   }
 }
 
-const snackFilePath = `../node_modules/${SNACK_CSS_FILE}`
-
 export class UIStaticWebpackPlugin implements Plugin {
   public static loader = require.resolve('./loader')
   private pluginName = 'GlossPlugin'
-  private virtualModule = new VirtualModulesPlugin({
-    [snackFilePath]: '',
-  })
+  private virtualModule = new VirtualModulesPlugin()
   private ctx: PluginContext
 
   constructor() {
     this.ctx = {
       fileList: new Set(),
       writeCSS: (css) => {
-        this.virtualModule.writeModule(snackFilePath, css)
+        // so this needs to go up a lot in certain cases, for now hardcoding but
+        // need to add logic to figure out where it ideal
+        // snackui-static tests wants it to be 3 higher, dish needs 1 higher
+        this.virtualModule.writeModule(
+          `../../../node_modules/${SNACK_CSS_FILE}`,
+          css
+        )
       },
     }
   }
