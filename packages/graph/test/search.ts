@@ -197,5 +197,9 @@ test('Home page feed', async (t) => {
   ])
   const response = await fetch(SEARCH_DOMAIN + '/feed')
   const json = await response.json()
-  t.deepEqual(Object.keys(json), ['trending', 'newest'])
+  t.deepEqual(Object.keys(json), [
+    'trending',
+    'newest',
+    'total_restaurants_in_region',
+  ])
 })

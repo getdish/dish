@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."hrr" ADD COLUMN "slug" text NULL UNIQUE;
+  type: run_sql
