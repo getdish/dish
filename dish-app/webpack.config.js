@@ -357,16 +357,12 @@ module.exports = function getWebpackConfig(
     return config
   }
 
-  function getAllConfigs() {
+  function getFinalConfig() {
     if (TARGET === 'ssr' || TARGET === 'worker') {
       return getConfig()
     }
 
     if (process.env.LEGACY) {
-      return getLegacyConfig()
-    }
-
-    function getLegacyConfig() {
       const config = getConfig()
       return {
         ...config,
@@ -376,40 +372,20 @@ module.exports = function getWebpackConfig(
           path: path.join(__dirname, 'web-build-legacy'),
         },
         entry: [path.join(__dirname, 'web', 'polyfill.legacy.js'), appEntry],
-
-        // {
-        //   // before main
-        //   ,
-        //   main: appEntry,
-        // },
       }
     }
 
-    function getModernConfig() {
-      const config = getConfig()
-      return {
-        ...config,
-        output: {
-          ...config.output,
-          path: path.join(__dirname, 'web-build'),
-        },
-      }
-    }
-
-    if (process.env.ONLY_MODERN) {
-      return getModernConfig()
-    }
-
-    if (isProduction || isSSRClient) {
-      // lets generate a legacy and modern build
-      return [getModernConfig(), getLegacyConfig()]
-    } else {
-      // just serve larger legacy bundle in development
-      return getLegacyConfig()
+    const config = getConfig()
+    return {
+      ...config,
+      output: {
+        ...config.output,
+        path: path.join(__dirname, 'web-build'),
+      },
     }
   }
 
-  const finalConfig = getAllConfigs()
+  const finalConfig = getFinalConfig()
 
   if (process.env.VERBOSE) {
     console.log('Config:\n', finalConfig)
@@ -448,15 +424,3 @@ function babelInclude(inputPath) {
   }
   return true
 }
-
-// test closure compiler, could be more performant if it extracts functions from render better
-// config.optimization.minimizer = [
-//   new ClosurePlugin({
-//     // 'AGGRESSIVE_BUNDLE' seems to fail on mjs files in webpack
-//     mode: 'STANDARD',
-//     // See: https://github.com/webpack-contrib/closure-webpack-plugin/issues/82
-//     // Unfortunately, compared to the default 'java', this is really slow and prone
-//     // to RAM exhaustion
-//     platform: 'javascript',
-//   }),
-// ]

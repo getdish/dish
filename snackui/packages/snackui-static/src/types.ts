@@ -14,7 +14,6 @@ export interface LoaderOptions extends ExtractStylesOptions {
 
 export interface PluginContext {
   writeCSS: (css: string) => void
-  fileList: Set<string>
 }
 
 export type StyleObject = {
