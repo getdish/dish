@@ -62,19 +62,20 @@ export const DishView = memo((props: DishViewProps) => {
   )
 })
 
-const DishViewContent = ({
-  dish,
-  cuisine,
-  size = 100,
-  restaurantSlug,
-  restaurantId,
-  selected,
-  disableFallbackFade,
-  isFallback: _isFallback,
-  noLink,
-  showSearchButton,
-  ...rest
-}: DishViewProps) => {
+const DishViewContent = (props: DishViewProps) => {
+  const {
+    dish,
+    cuisine,
+    size = 100,
+    restaurantSlug,
+    restaurantId,
+    selected,
+    disableFallbackFade,
+    isFallback: _isFallback,
+    noLink,
+    showSearchButton,
+    ...rest
+  } = props
   const [isHovered, setIsHovered] = useState(false)
   const dishName = (dish.name ?? '')
     .split(' ')
@@ -90,6 +91,13 @@ const DishViewContent = ({
   const { lightColor, color } = getColorsForName(dish.name)
   const backgroundColor = lightColor
   const isActive = isHovered || selected
+
+  const showVote =
+    typeof dish.score === 'number' &&
+    !!restaurantId &&
+    !!restaurantSlug &&
+    !!dish.name
+  console.log('dish', props, showVote)
 
   let contents = (
     <Hoverable
@@ -125,7 +133,7 @@ const DishViewContent = ({
         </AbsoluteVStack>
       )}
 
-      {typeof dish.score === 'number' && (
+      {showVote && (
         <AbsoluteVStack
           width={20}
           height={20}
@@ -135,16 +143,14 @@ const DishViewContent = ({
           left={2}
         >
           <Suspense fallback={null}>
-            {restaurantId && restaurantSlug && !!dish.name && (
-              <DishUpvoteDownvote
-                size="sm"
-                name={dish.name}
-                subtle
-                score={dish.score}
-                restaurantId={restaurantId}
-                restaurantSlug={restaurantSlug}
-              />
-            )}
+            <DishUpvoteDownvote
+              size="sm"
+              name={dish.name}
+              subtle
+              score={dish.score}
+              restaurantId={restaurantId}
+              restaurantSlug={restaurantSlug}
+            />
           </Suspense>
         </AbsoluteVStack>
       )}
