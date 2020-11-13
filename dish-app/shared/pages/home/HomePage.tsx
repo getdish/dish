@@ -204,8 +204,8 @@ const HomeFeed = memo(
                   type: 'dish',
                   id: dish.id,
                   rank: Math.random() * 10,
-                  restaurantId: restaurants[0].id,
-                  restaurantSlug: restaurants[0].slug,
+                  restaurantId: restaurants[0].id ?? '',
+                  restaurantSlug: restaurants[0].slug ?? '',
                   dish: {
                     slug: dish.slug ?? '',
                     name: dish.name ?? '',
@@ -258,7 +258,6 @@ const HomeFeed = memo(
               .value(),
           ]
 
-    console.log('items', items)
     const results = items
       ?.filter((x) => x.type === 'restaurant')
       .map((x) => ({ id: x['restaurantId'], slug: x['restaurantSlug'] }))
@@ -309,7 +308,6 @@ const HomeFeed = memo(
                     case 'restaurant':
                       return <RestaurantCard {...item} />
                     case 'dish':
-                      console.log('item>>', item)
                       return <DishFeedCard {...item} />
                     case 'dish-restaurants':
                       return <DishRestaurantsFeedCard {...item} />
@@ -452,7 +450,6 @@ const DishCol = (props: StackProps) => {
 }
 
 const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
-  console.log('props', props)
   const restaurant = useRestaurantQuery(props.restaurantSlug)
   return (
     <CardFrame>
