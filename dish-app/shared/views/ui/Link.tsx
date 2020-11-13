@@ -2,22 +2,10 @@ import React from 'react'
 import { Text, VStack } from 'snackui'
 
 import { brandColor } from '../../colors'
-import { RoutesTable, router } from '../../state/router'
+import { RoutesTable } from '../../state/router'
 import { isStringChild } from './isStringChild'
 import { LinkProps } from './LinkProps'
 import { useLink } from './useLink'
-
-export function nav(navItem: any, linkProps: any, props: any, e: any) {
-  if (linkProps.onPress || props.onClick) {
-    e.navigate = () => router.navigate(navItem)
-    props.onClick?.(e!)
-    linkProps.onPress?.(e)
-  } else {
-    if (!props.preventNavigate && !!navItem.name) {
-      router.navigate(navItem)
-    }
-  }
-}
 
 export function Link<
   Name extends keyof RoutesTable = keyof RoutesTable,

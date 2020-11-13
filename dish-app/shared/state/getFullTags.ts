@@ -1,4 +1,4 @@
-import { Tag, query, resolved } from '@dish/graph'
+import { query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { differenceBy } from 'lodash'
 
@@ -6,14 +6,7 @@ import { allTags } from './allTags'
 import { FullTag } from './FullTag'
 import { getFullTag } from './getFullTag'
 import { guessTagSlug } from './getTagSlug'
-
-export type TagWithNameAndType =
-  | Tag
-  | {
-      name: FullTag['name']
-      type: FullTag['type']
-      slug?: string
-    }
+import { TagWithNameAndType } from './TagWithNameAndType'
 
 type TagPartial =
   | TagWithNameAndType
@@ -28,7 +21,7 @@ export async function getFullTags(tags: TagPartial[]): Promise<FullTag[]> {
   const uncached: TagPartial[] = []
 
   for (const tag of tags) {
-    const found = allTags[tag.slug]
+    const found = tag.slug && allTags[tag.slug]
     if (found) {
       cached.push(found)
     } else {

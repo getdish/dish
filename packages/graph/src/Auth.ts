@@ -1,7 +1,6 @@
 import { isSafari } from '@dish/helpers'
 
 import { AUTH_DOMAIN, isNode } from './constants'
-import { User } from './types'
 
 const LOGIN_KEY = 'auth'
 const HAS_LOGGED_IN_BEFORE = 'HAS_LOGGED_IN_BEFORE'
@@ -111,7 +110,16 @@ class AuthModel {
     return await response.json()
   }
 
-  async updateUser(user: UpdateUserProps): Promise<User | null> {
+  async updateUser(
+    user: UpdateUserProps
+  ): Promise<{
+    email: string
+    has_onboarded: boolean
+    about: string
+    location: string
+    charIndex: number
+    username: string
+  } | null> {
     const response = await this.api('POST', '/user/updateUser', user)
     if (response.status !== 200) {
       console.error(`Error updating: ${response.status} ${response.statusText}`)

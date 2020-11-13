@@ -161,7 +161,13 @@ type FeedItems =
   | FeedItemDishRestaurants
 
 const HomeFeed = memo(
-  graphql(({ region, item }: { region: Region; item: HomeStateItemHome }) => {
+  graphql(function HomeFeed({
+    region,
+    item,
+  }: {
+    region: Region
+    item: HomeStateItemHome
+  }) {
     const restaurants = region?.geometry
       ? query.restaurant({
           where: {
@@ -339,7 +345,9 @@ const HomeFeed = memo(
   })
 )
 
-const CuisineFeedCard = graphql((props: FeedItemCuisine) => {
+const CuisineFeedCard = graphql(function CuisineFeedCard(
+  props: FeedItemCuisine
+) {
   const [restaurants, setRestaurants] = useState<
     TopCuisineDish['best_restaurants']
   >([])
@@ -443,7 +451,7 @@ const DishCol = (props: StackProps) => {
   return <VStack marginRight={5} {...props} />
 }
 
-const DishFeedCard = graphql((props: FeedItemDish) => {
+const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
   console.log('props', props)
   const restaurant = useRestaurantQuery(props.restaurantSlug)
   return (

@@ -1,7 +1,7 @@
 import { slugify } from '@dish/graph'
 
-import { TagWithNameAndType } from './getFullTags'
 import { NavigableTag } from './NavigableTag'
+import { TagWithNameAndType } from './TagWithNameAndType'
 
 export const getTagSlug = (tag: NavigableTag) => {
   if (!tag || tag.slug === null) {
