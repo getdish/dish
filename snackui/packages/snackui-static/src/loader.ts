@@ -1,6 +1,3 @@
-import path from 'path'
-import util from 'util'
-
 import invariant from 'invariant'
 import loaderUtils from 'loader-utils'
 
@@ -26,7 +23,12 @@ export default function GlossWebpackLoader(this: any, content) {
     return content
   }
 
-  const rv = extractStyles(content, this.resourcePath, options, pluginContext)
+  const rv = extractStyles(
+    content,
+    this.resourcePath,
+    options,
+    pluginContext.writeCSS
+  )
 
   if (!rv) {
     return content

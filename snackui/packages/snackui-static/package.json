@@ -24,6 +24,7 @@
     "loader-utils": "^2.0.0",
     "memory-fs": "*",
     "react-native-web": "*",
+    "webpack-virtual-modules": "^0.3.2",
     "webpack": "^4.44.2"
   },
   "devDependencies": {

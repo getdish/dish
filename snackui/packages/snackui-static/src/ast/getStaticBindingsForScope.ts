@@ -152,7 +152,6 @@ export function getStaticBindingsForScope(
 
     // evaluate
     try {
-      console.log('get for', sourceFileName, cacheKey, k)
       ret[k] = evaluateAstNode(dec.init)
       bindingCache[cacheKey] = ret[k]
       continue

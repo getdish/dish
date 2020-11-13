@@ -13,8 +13,7 @@ export interface LoaderOptions extends ExtractStylesOptions {
 }
 
 export interface PluginContext {
-  cacheObject: CacheObject
-  memoryFS: any
+  writeCSS: (css: string) => void
   fileList: Set<string>
 }
 

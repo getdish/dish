@@ -1,7 +1,3 @@
-if (process.env.NODE_ENV === 'development') {
-  require('snackui/style.css')
-}
-
 import { Auth } from '@dish/graph'
 import { isSafari } from '@dish/helpers'
 import loadable from '@loadable/component'
