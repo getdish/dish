@@ -11,11 +11,7 @@ import * as AllExports from 'snackui/node'
 
 import { SNACK_CSS_FILE } from '../constants'
 import { getStylesAtomic, pseudos } from '../style/getStylesAtomic'
-import {
-  ClassNameToStyleObj,
-  ExtractStylesOptions,
-  PluginContext,
-} from '../types'
+import { ClassNameToStyleObj, ExtractStylesOptions } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
 import {
   Ternary,
@@ -80,7 +76,7 @@ export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
   userOptions: ExtractStylesOptions,
-  writeStyles: (css: string) => void
+  writeCSS: (css: string) => void
 ): {
   js: string | Buffer
   ast: t.File
@@ -1005,7 +1001,7 @@ export function extractStyles(
       .join(' ')
 
   if (didAddGlobal) {
-    writeStyles(getGlobalCSS())
+    writeCSS(getGlobalCSS())
   }
 
   ast.program.body.unshift(
@@ -1029,14 +1025,14 @@ export function extractStyles(
 
   if (shouldPrintDebug) {
     console.log(
-      'output code >> ',
+      '\n\noutput code >> ',
       result.code
         .split('\n')
         .filter((line) => !line.startsWith('//'))
         .join('\n')
     )
-    console.log('output css >> ', css)
-    console.log('output global css >> ', getGlobalCSS())
+    console.log('\n\noutput css >> ', css)
+    console.log('\n\noutput global css >> ', getGlobalCSS())
   }
 
   return {
