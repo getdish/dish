@@ -212,6 +212,23 @@ func feed(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, json)
 }
 
+func regions(w http.ResponseWriter, r *http.Request) {
+	var json string
+	_, err := db.Query(
+		pg.Scan(&json),
+		regions_query,
+		getParam("slug", r),
+	)
+	if err != nil {
+		fmt.Println(err)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	if json == "" {
+		json = "[]"
+	}
+	fmt.Fprintf(w, json)
+}
+
 func tagsHas(target_tag string, r *http.Request) bool {
 	tags := strings.Split(getParam("tags", r), ",")
 	for _, tag := range tags {
@@ -297,6 +314,7 @@ func handleRequests() {
 	mux.HandleFunc("/top_cuisines", top_cuisines)
 	mux.HandleFunc("/tags", tags)
 	mux.HandleFunc("/feed", feed)
+	mux.HandleFunc("/regions", regions)
 	handler := cors.Default().Handler(mux)
 	log.Fatal(http.ListenAndServe(":"+port, handler))
 }
