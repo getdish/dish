@@ -5,15 +5,13 @@ import vm from 'vm'
 import generate from '@babel/generator'
 import traverse from '@babel/traverse'
 import * as t from '@babel/types'
-import { writeFileSync } from 'fs-extra'
 import invariant from 'invariant'
 import { TextStyle, ViewStyle } from 'react-native'
 import * as AllExports from 'snackui/node'
 
-import { GLOSS_CSS_FILE } from '../constants'
+import { SNACK_CSS_FILE } from '../constants'
 import { getStylesAtomic, pseudos } from '../style/getStylesAtomic'
 import {
-  CacheObject,
   ClassNameToStyleObj,
   ExtractStylesOptions,
   PluginContext,
@@ -28,9 +26,6 @@ import { getPropValueFromAttributes } from './getPropValueFromAttributes'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
 import { literalToAst } from './literalToAst'
 import { parse } from './parse'
-
-const UI_PATH = require.resolve('snackui')
-const UI_STYLE_PATH = path.join(UI_PATH, '..', '..', 'style.css')
 
 type OptimizableComponent = Function & {
   staticConfig: {
@@ -85,7 +80,7 @@ export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
   userOptions: ExtractStylesOptions,
-  { cacheObject, memoryFS }: PluginContext
+  writeStyles: (css: string) => void
 ): {
   js: string | Buffer
   ast: t.File
@@ -97,10 +92,6 @@ export function extractStyles(
   invariant(
     typeof sourceFileName === 'string' && path.isAbsolute(sourceFileName),
     '`sourceFileName` must be an absolute path to a .js file'
-  )
-  invariant(
-    typeof cacheObject === 'object' && cacheObject !== null,
-    '`cacheObject` must be an object'
   )
 
   const shouldPrintDebug =
@@ -118,6 +109,7 @@ export function extractStyles(
   // Using a map for (officially supported) guaranteed insertion order
   const ast = parse(src)
 
+  let didAddGlobal = false
   let didExtract = false
   let doesImport = false
   let doesUseValidImport = false
@@ -255,9 +247,12 @@ export function extractStyles(
             return []
           }
           const res = getStylesAtomic(style, null, shouldPrintDebug)
-          res.forEach((x) => {
+          if (shouldPrintDebug) {
+            console.log('addStylesAtomic', style, 'to', res)
+          }
+          for (const x of res) {
             stylesByClassName[x.identifier] = x
-          })
+          }
           return res
         }
 
@@ -812,7 +807,7 @@ export function extractStyles(
           }
         }
 
-        const ternaries = extractStaticTernaries(staticTernaries, cacheObject)
+        const ternaries = extractStaticTernaries(staticTernaries)
         if (shouldPrintDebug) {
           console.log(JSON.stringify({ staticTernaries, ternaries }, null, 2))
         }
@@ -950,25 +945,35 @@ export function extractStyles(
           originalNodeName
         )
 
+        if (shouldPrintDebug) {
+          console.log('final styled classnames', stylesByClassName)
+        }
+
         for (const className in stylesByClassName) {
           if (stylesByClassName[className]) {
             const { rules } = stylesByClassName[className]
+            if (shouldPrintDebug) {
+              console.log('checking rules for', className, rules)
+            }
             if (rules.length !== 1) {
               console.log(rules)
               throw new Error(`should only have one rule`)
             }
             didExtract = true
+            // for debugging output css
+            if (process.env.NODE_ENV === 'development') {
+              css += rules[0] + '\n'
+            }
             // if you want granular stylesheets, can remove this globalCSSMap code
             if (globalCSSMap.has(className)) {
               globalCSSMap.get(className)!.comments.add(comment)
               continue
-            }
-            globalCSSMap.set(className, {
-              css: rules[0],
-              comments: new Set([comment]),
-            })
-            if (process.env.NODE_ENV === 'development') {
-              css += rules[0] + '\n'
+            } else {
+              didAddGlobal = true
+              globalCSSMap.set(className, {
+                css: rules[0],
+                comments: new Set([comment]),
+              })
             }
           }
         }
@@ -994,23 +999,17 @@ export function extractStyles(
   //   cssFileName = path.join(sourceDir, cssImportFileName)
   // }
 
-  // dedupe into one big global sheet
-  const cssImportFileName = 'snackui/style.css'
-  const cssOut = Array.from(globalCSSMap.values())
-    .map((v) => [...v.comments].map((txt) => `${txt}\n`).join('') + v.css)
-    .join(' ')
+  const getGlobalCSS = () =>
+    Array.from(globalCSSMap.values())
+      .map((v) => [...v.comments].map((txt) => `${txt}\n`).join('') + v.css)
+      .join(' ')
 
-  const snackUIGlobalStyleSheet = path.join(
-    require.resolve('snackui/node'),
-    '..',
-    'style.css'
-  )
-
-  memoryFS.mkdirpSync(path.join(snackUIGlobalStyleSheet, '..'))
-  memoryFS.writeFileSync(snackUIGlobalStyleSheet, cssOut)
+  if (didAddGlobal) {
+    writeStyles(getGlobalCSS())
+  }
 
   ast.program.body.unshift(
-    t.importDeclaration([], t.stringLiteral(cssImportFileName))
+    t.importDeclaration([], t.stringLiteral(SNACK_CSS_FILE))
   )
 
   const result = generate(
@@ -1030,13 +1029,14 @@ export function extractStyles(
 
   if (shouldPrintDebug) {
     console.log(
-      'output >> ',
+      'output code >> ',
       result.code
         .split('\n')
         .filter((line) => !line.startsWith('//'))
         .join('\n')
     )
     console.log('output css >> ', css)
+    console.log('output global css >> ', getGlobalCSS())
   }
 
   return {

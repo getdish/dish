@@ -1,8 +1,8 @@
+// debug
 import {
   ArrowDown,
   ArrowUp,
   ChevronLeft,
-  Home,
   Map,
   Search,
 } from '@dish/react-feather'
@@ -68,14 +68,13 @@ export const AppSearchBarFloating = () => {
   return (
     <AbsoluteVStack
       className="searchbar-container ease-in-out"
+      left={26}
+      right={26}
       zIndex={zIndexSearchBarFloating}
       position="absolute"
-      fullscreen
       marginTop={searchBarTopOffset}
       alignItems="center"
       pointerEvents="none"
-      left={26}
-      right={26}
     >
       <VStack
         position="relative"
