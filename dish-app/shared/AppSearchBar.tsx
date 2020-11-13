@@ -74,8 +74,8 @@ export const AppSearchBarFloating = () => {
       marginTop={searchBarTopOffset}
       alignItems="center"
       pointerEvents="none"
-      left={16}
-      right={16}
+      left={26}
+      right={26}
     >
       <VStack
         position="relative"

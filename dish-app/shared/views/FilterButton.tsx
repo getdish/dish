@@ -1,11 +1,13 @@
 import { Tag } from '@dish/graph'
 import { Clock, DollarSign, ShoppingBag } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { HStack, HoverablePopover, Text, VStack } from 'snackui'
+import { Image } from 'react-native'
+import { Box, HStack, HoverablePopover, Text, VStack } from 'snackui'
 
 import { useIsNarrow } from '../hooks/useIs'
-import { SearchPageDeliveryFilterButtons } from '../pages/search/SearchPageDeliveryFilterButtons'
+import { useOvermind } from '../state/om'
 import { tagDisplayNames } from '../state/tagMeta'
+import { thirdPartyCrawlSources } from '../thirdPartyCrawlSources'
 import { LinkButtonProps } from './ui/LinkProps'
 import { SmallButton } from './ui/SmallButton'
 
@@ -88,7 +90,7 @@ export const FilterButton = memo(
         <HoverablePopover
           noArrow
           allowHoverOnContent
-          contents={<SearchPageDeliveryFilterButtons {...rest} />}
+          contents={<SearchPageDeliveryFilterButtons />}
         >
           {content}
         </HoverablePopover>
@@ -98,3 +100,57 @@ export const FilterButton = memo(
     return content
   }
 )
+
+const SearchPageDeliveryFilterButtons = memo(() => {
+  const om = useOvermind()
+  const currentState = om.state.home.currentState
+  if (currentState.type !== 'search') {
+    return null
+  }
+  const { activeTags } = currentState
+  const sources = Object.keys(thirdPartyCrawlSources).filter(
+    (key) => thirdPartyCrawlSources[key].delivery
+  )
+  const noneActive = sources.every((x) => !activeTags[x])
+  return (
+    <Box pointerEvents="auto" width={200}>
+      <VStack spacing={4} padding={10} alignItems="stretch">
+        {sources.map((key) => {
+          const item = thirdPartyCrawlSources[key]
+          const isActive = activeTags[key]
+          return (
+            <FilterButton
+              tag={{
+                name: key,
+                type: 'filter',
+                slug: item.tagSlug,
+              }}
+              key={key}
+              isActive={noneActive ? true : isActive}
+              width={200 - 10 * 2}
+              borderRadius={100}
+              cursor="pointer"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <HStack spacing={6} alignItems="center">
+                <Image
+                  source={item.image}
+                  style={{
+                    width: 20,
+                    height: 20,
+                    marginVertical: -4,
+                    borderRadius: 100,
+                  }}
+                />
+                <Text fontSize={14} fontWeight="500">
+                  {item.name}
+                </Text>
+              </HStack>
+            </FilterButton>
+          )
+        })}
+      </VStack>
+    </Box>
+  )
+})

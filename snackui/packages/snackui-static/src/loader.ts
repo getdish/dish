@@ -21,31 +21,16 @@ export default function GlossWebpackLoader(this: any, content) {
   )
 
   const options: LoaderOptions = loaderUtils.getOptions(this) || {}
-  const { memoryFS, cacheObject } = pluginContext
 
   if (content.startsWith('// static-ui-ignore')) {
     return content
   }
 
-  const rv = extractStyles(
-    content,
-    this.resourcePath,
-    {
-      cacheObject,
-      errorCallback: (str: string, ...args: any[]) =>
-        this.emitError(new Error(util.format(str, ...args))),
-      warnCallback: (str: string, ...args: any[]) =>
-        this.emitWarning(new Error(util.format(str, ...args))),
-    },
-    options
-  )
+  const rv = extractStyles(content, this.resourcePath, options, pluginContext)
 
-  if (!rv.cssFileName || rv.css.length === 0) {
+  if (!rv) {
     return content
   }
-
-  memoryFS.mkdirpSync(path.dirname(rv.cssFileName))
-  memoryFS.writeFileSync(rv.cssFileName, rv.css)
 
   this.callback(null, rv.js, rv.map)
 }
