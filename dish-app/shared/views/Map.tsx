@@ -393,13 +393,13 @@ function setupMapEffect({
         const tiles = [
           {
             maxZoom: 20,
-            minZoom: 12,
+            minZoom: 11,
             lineColor: '#880088',
             label: 'name',
             labelSource: 'public.nhood_labels',
             promoteId: 'ogc_fid',
-            activeColor: purple,
-            hoverColor: 'yellow',
+            activeColor: 'rgba(255, 255, 255, 0)',
+            hoverColor: 'rgba(255,255,255,0.2)',
             color: lightPurple,
             name: 'public.zcta5',
           },
@@ -415,7 +415,7 @@ function setupMapEffect({
           //   name: 'public.hca',
           // },
           {
-            maxZoom: 12,
+            maxZoom: 11,
             minZoom: 7,
             lineColor: '#008888',
             promoteId: 'ogc_fid',
@@ -477,7 +477,7 @@ function setupMapEffect({
                   color,
                   'green',
                 ],
-                'fill-opacity': 0.5,
+                'fill-opacity': 1,
               },
               'source-layer': name,
             },
@@ -506,6 +506,7 @@ function setupMapEffect({
               map.addSource(labelSource, {
                 type: 'vector',
                 url: `${MARTIN_TILES_HOST}/${labelSource}.json`,
+                promoteId: 'ogc_fid',
               })
             }
             map.addLayer({
@@ -520,20 +521,30 @@ function setupMapEffect({
                 'text-field': `{${label}}`,
                 'text-font': ['PT Serif Bold', 'Arial Unicode MS Bold'],
                 // 'text-allow-overlap': true,
+                'text-variable-anchor': ['center', 'center'],
+                'text-radial-offset': 10,
                 // 'icon-allow-overlap': true,
                 'text-size': {
                   base: 1,
                   stops: [
-                    [10, 10],
+                    [10, 6],
                     [16, 22],
                   ],
                 },
                 'text-justify': 'center',
-                'text-variable-anchor': ['center', 'center'],
                 'symbol-placement': 'point',
               },
               paint: {
-                'text-color': 'rgba(0,0,0,0.85)',
+                'text-color': [
+                  'case',
+                  ['==', ['feature-state', 'active'], true],
+                  '#000',
+                  ['==', ['feature-state', 'hover'], true],
+                  green,
+                  ['==', ['feature-state', 'active'], null],
+                  'rgba(0,0,0,0.8)',
+                  'green',
+                ],
                 'text-halo-color': 'rgba(255,255,255,0.1)',
                 'text-halo-width': 1,
               },
@@ -555,7 +566,21 @@ function setupMapEffect({
         }
         // end making regions
 
-        let activeLayerId
+        const tileSetter = (
+          feature: mapboxgl.FeatureIdentifier | mapboxgl.MapboxGeoJSONFeature
+        ) => (state: { [key: string]: any }) => {
+          map.setFeatureState(feature, state)
+          map.setFeatureState(
+            {
+              ...feature,
+              source: 'public.nhood_labels',
+              sourceLayer: 'public.nhood_labels',
+            },
+            state
+          )
+        }
+
+        let curId
         const handleMoveThrottled = throttle(() => {
           const zoom = map.getZoom()
           const size = {
@@ -576,36 +601,29 @@ function setupMapEffect({
               layers: [`${layerName}.fill`],
             }
           )
-          const featureProps = {
-            source: layerName,
-            sourceLayer: layerName,
-          }
           const feature = features[0]
           if (!feature) return
-          if (feature.id === activeLayerId) return
-          if (activeLayerId) {
-            map.setFeatureState(
-              {
-                ...featureProps,
-                id: activeLayerId,
-              },
-              {
-                active: null,
-              }
-            )
-            activeLayerId = null
+          if (feature.id === curId) return
+
+          if (curId) {
+            tileSetter({
+              source: layerName,
+              sourceLayer: layerName,
+              id: curId,
+            })({
+              active: null,
+            })
+            curId = null
           }
           const id = feature.properties.ogc_fid
-          activeLayerId = feature.id
-          map.setFeatureState(
-            {
-              ...featureProps,
-              id,
-            },
-            {
-              active: true,
-            }
-          )
+          curId = feature.id
+          tileSetter({
+            source: layerName,
+            sourceLayer: layerName,
+            id: curId,
+          })({
+            active: true,
+          })
           getProps().onSelectRegion?.({
             geometry: feature.geometry as any,
             name: feature.properties.nhood ?? 'San Francisco',
@@ -631,31 +649,25 @@ function setupMapEffect({
           ) {
             return
           }
-          console.log('hover', feature)
+
           if (hovered) {
-            map.setFeatureState(
-              {
-                source: hovered.source,
-                sourceLayer: hovered.sourceLayer,
-                id: hovered.id,
-              },
-              {
-                hover: null,
-              }
-            )
+            tileSetter({
+              source: hovered.source,
+              sourceLayer: hovered.sourceLayer,
+              id: hovered.id,
+            })({
+              hover: null,
+            })
           }
           if (!feature) return
           hovered = feature
-          map.setFeatureState(
-            {
-              source: feature.source,
-              sourceLayer: feature.sourceLayer,
-              id: feature.id,
-            },
-            {
-              hover: true,
-            }
-          )
+          tileSetter({
+            source: feature.source,
+            sourceLayer: feature.sourceLayer,
+            id: feature.id,
+          })({
+            hover: true,
+          })
         }, 32)
         map.on('mousemove', handleHover)
         cancels.add(() => {
@@ -668,8 +680,10 @@ function setupMapEffect({
           const points = map.queryRenderedFeatures(e.point, {
             layers: [POINT_LAYER_ID],
           })
-          const point = points[0]
+          console.log('points', points)
+          const [point] = points
           if (point) {
+            // zoom into a cluster
             const clusterId = point.properties?.cluster_id
             if (clusterId) {
               const source = map.getSource(RESTAURANTS_SOURCE_ID)
@@ -682,14 +696,16 @@ function setupMapEffect({
                   center: points[0].geometry['coordinates'],
                   zoom: zoom * 1.1,
                 })
+                return
               })
+            }
+            if (point.properties.id) {
+              console.log('click set active')
+              // click
+              setActive(map, getProps(), internal.current, +point.id)
+              return
             } else {
-              if (e.features) {
-                // click
-                setActive(map, getProps(), internal.current, +e.features[0].id)
-              } else {
-                console.warn('no features', e)
-              }
+              console.warn('no features', e)
             }
           }
           const boundaries = map.queryRenderedFeatures(e.point, {
@@ -699,6 +715,7 @@ function setupMapEffect({
           if (boundary) {
             console.log('go to boundary', boundary)
 
+            // @ts-ignore
             const center = getCenter(boundary.geometry)
             if (center) {
               map.easeTo({
@@ -746,7 +763,8 @@ function setupMapEffect({
               stops: [
                 [8, 1],
                 [10, 4],
-                [16, 8],
+                [14, 8],
+                [16, 16],
               ],
             },
 

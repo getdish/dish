@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
-import React, { memo, useRef } from 'react'
-import { Image, ScrollView, StyleSheet } from 'react-native'
-import { AbsoluteVStack, HStack, LinearGradient, Text, VStack } from 'snackui'
+import React, { memo } from 'react'
+import { Image } from 'react-native'
+import { HStack, Text, VStack } from 'snackui'
 
 import { bgLight } from '../../colors'
 import { getImageUrl } from '../../helpers/getImageUrl'
@@ -21,7 +21,6 @@ export const RestaurantPhotosRow = memo(
       width: number
       height: number
     }) => {
-      const isAtStart = useRef(true)
       const restaurant = useRestaurantQuery(restaurantSlug)
       const photos = restaurant.photos() ?? []
       return (
@@ -36,7 +35,7 @@ export const RestaurantPhotosRow = memo(
               {photos.slice(0, 9).map((photo, key) => (
                 <VStack
                   key={key}
-                  className={`scroll-snap-phot ${key < 4 ? 'fade-photo' : ''}`}
+                  // className={`scroll-snap-photo ${key < 4 ? 'fade-photo' : ''}`}
                 >
                   <LinkButton name="gallery" params={{ restaurantSlug }}>
                     <Image
