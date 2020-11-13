@@ -34,9 +34,12 @@ test('Searching for a restaurant by name', async (t) => {
   t.is(results.name_matches[0].id, restaurant.id)
 })
 
-test('Searching for a restaurant by tag', async (t) => {
+test.only('Searching for a restaurant by tag', async (t) => {
+  console.log(38)
   let [restaurant] = await restaurantUpsert([restaurant_fixture])
+  console.log(39)
   restaurant = (await restaurantUpsertOrphanTags(restaurant, ['Test tag']))!
+  console.log(42, restaurant)
   const results = await search({
     center: {
       lat: 50.24,
@@ -49,6 +52,7 @@ test('Searching for a restaurant by tag', async (t) => {
     query: '',
     tags: ['test-tag'],
   })
+  console.log(53, results)
   t.is(results?.[0].id, restaurant.id)
 })
 
@@ -112,6 +116,7 @@ test('Orders by restaurant+tag score if dish tags queried', async (t) => {
     query: '',
     tags: ['test-rated-tag'],
   })
+
   t.is(results?.length, 3)
   t.is(results?.[0].id, rr1.id)
   t.is(results?.[0].meta.restaurant_rank, 1)

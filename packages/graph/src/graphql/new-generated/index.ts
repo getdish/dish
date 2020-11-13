@@ -3203,7 +3203,7 @@ export interface uuid_comparison_exp {
   _nin?: Maybe<Array<Scalars['uuid']>>
 }
 
-const scalarsEnumsHash: ScalarsEnumsHash = {
+export const scalarsEnumsHash: ScalarsEnumsHash = {
   Boolean: true,
   Float: true,
   ID: true,
@@ -9302,8 +9302,8 @@ export interface ScalarsEnums extends Scalars {
 }
 
 const queryFetcher: QueryFetcher = async function (query, variables) {
-  // console.log('query', query)
-  // console.log('variables', variables)
+  console.log('query', query)
+  console.log('variables', variables)
   const response = await fetch(getGraphEndpoint(), {
     method: 'POST',
     headers: {

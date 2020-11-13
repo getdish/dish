@@ -1,5 +1,5 @@
-// TODO: Remove dependency on old gqless
-import { schema } from '../graphql'
+import { parseSchemaType } from '@dish/gqless'
+
 import {
   Scalars,
   generatedSchema,
@@ -72,14 +72,14 @@ export function createQueryHelpersFor<A>(
         constraint ?? defaultUpsertConstraint
       )
     },
-    async update(a: WithID<A>, o?: CollectOptions) {
-      return await update<WithID<A>>(modelName, a, o)
+    async update(a: WithID<A>, fn?: (v: any) => unknown) {
+      return await update<WithID<A>>(modelName, a, fn)
     },
-    async findOne(a: A, o?: CollectOptions) {
-      return await findOne<WithID<A>>(modelName, a, o)
+    async findOne(a: A, fn?: (v: any) => unknown) {
+      return await findOne<WithID<A>>(modelName, a, fn)
     },
-    async findAll(a: A, o?: CollectOptions) {
-      return await findAll<WithID<A>>(modelName, a, o)
+    async findAll(a: A, fn?: (v: any) => unknown) {
+      return await findAll<WithID<A>>(modelName, a, fn)
     },
     async refresh(a: WithID<A>) {
       const next = await findOne(modelName, { id: a.id })
@@ -95,36 +95,43 @@ export function createQueryHelpersFor<A>(
 export async function findOne<T extends ModelType>(
   table: ModelName,
   hash: Partial<T>,
-  options?: CollectOptions
+  fn?: (v: any) => unknown
 ): Promise<T | null> {
-  const [first] = await findAll(table, hash, options)
+  const [first] = await findAll(table, hash, fn)
   return first ?? null
 }
 
 export async function findAll<T extends ModelType>(
   table: ModelName,
   hash: Partial<T>,
-  options?: CollectOptions
+  fn?: (v: any) => unknown
 ): Promise<T[]> {
   const results = await resolvedWithFields(() => {
     const args = objectToWhere(hash)
     return query[table](args)
-  }, options)
+  }, fn)
   return results ?? []
 }
 
 export async function insert<T extends ModelType>(
   table: ModelName,
-  objects: T[]
+  objects: T[],
+  fn?: (v: any) => unknown
 ): Promise<WithID<T>[]> {
   const action = `insert_${table}` as any
 
+  const keys = Object.keys(generatedSchema[table + '_set_input'])
+
   // @ts-ignore
-  return await resolvedMutationWithFields(() => {
-    return mutation[action]({
-      objects: prepareData(table, objects),
-    })
-  })
+  return await resolvedMutationWithFields(
+    () => {
+      return mutation[action]({
+        objects: prepareData(table, objects),
+      })
+    },
+    keys,
+    fn
+  )
 }
 
 export async function upsert<T extends ModelType>(
@@ -158,7 +165,7 @@ export async function upsert<T extends ModelType>(
 export async function update<T extends WithID<ModelType>>(
   table: ModelName,
   objectIn: T,
-  options: CollectOptions = {}
+  fn?: (v: any) => unknown
 ): Promise<WithID<T>> {
   const action = `update_${table}` as any
   const [object] = prepareData(table, [objectIn])
@@ -167,13 +174,17 @@ export async function update<T extends WithID<ModelType>>(
   }
   const keys = Object.keys(generatedSchema[table + '_set_input'])
   console.log(164, keys)
-  const [resolved] = await resolvedMutationWithFields(() => {
-    const res = mutation[action]({
-      where: { id: { _eq: object.id } },
-      _set: object,
-    })
-    return res as WithID<T>[]
-  }, keys)
+  const [resolved] = await resolvedMutationWithFields(
+    () => {
+      const res = mutation[action]({
+        where: { id: { _eq: object.id } },
+        _set: object,
+      })
+      return res as WithID<T>[]
+    },
+    keys,
+    fn
+  )
   return resolved
 }
 
@@ -225,18 +236,24 @@ export function prepareData<T>(table: string, objects: T[]): T[] {
   return objects
 }
 
-// TODO: NO IDEA
 function formatRelationData<T>(table: string, objects: T[]) {
+  const inputKeys = Object.keys(generatedSchema[table + '_set_input'])
+
   return objects.map((cur) => {
     return Object.keys(cur).reduce((acc, key) => {
-      const field_meta_data = schema[table].fields[key]
-      if (isMutatableRelation(field_meta_data)) {
+      const typeNameToParse = generatedSchema[table][key]['__type']
+      const { pureType: typeName } = parseSchemaType(typeNameToParse)
+
+      const fieldName = key
+
+      if (isMutatableRelation(fieldName, typeName)) {
         let relation_table: string
-        if (field_meta_data.ofNode.innerNode) {
-          relation_table = field_meta_data.ofNode.innerNode.name
-        } else {
-          relation_table = key
-        }
+        // if (field_meta_data.ofNode.innerNode) {
+        //   relation_table = field_meta_data.ofNode.innerNode.name
+        // } else {
+        relation_table = key
+        // }
+        console.log(256, relation_table)
         const constraint = defaultConstraints[relation_table]
         const update_columns = updateableColumns(relation_table, cur[key])
         acc[key] = {
@@ -294,6 +311,14 @@ function deJSONStringify(object: {}, key: string, value: any) {
 }
 
 export function updateableColumns(table: string, object: any) {
+  const {} = parseSchemaType(table)
+  console.log(311, generatedSchema[table])
+  const inputKeys = Object.keys(
+    generatedSchema[table + '_set_input'] ||
+      generatedSchema[table] ||
+      generatedSchema[table.slice(0, table.length - 1)]
+  )
+
   if (!object || object.length == 0) return []
   let columns: string[] = []
   let candidates: string[] = []
@@ -303,8 +328,10 @@ export function updateableColumns(table: string, object: any) {
     candidates = Object.keys(object[0])
   }
   for (const key of candidates) {
-    const field = schema[table].fields[key]
-    if (!isMutatableRelation(field)) columns.push(key)
+    console.log(inputKeys, key)
+    if (inputKeys.includes(key)) columns.push(key)
+    // const field = inputKeys[table].fields[key]
+    // if (!isMutatableRelation(field)) columns.push(key)
   }
   return columns
 }

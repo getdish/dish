@@ -1869,12 +1869,12 @@
   dependencies:
     arrify "^1.0.1"
 
-"@dish/gqless-cli@^0.1.9":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-0.1.9.tgz#576b5c3577e946ee9493e70fa1d6d102e882394f"
-  integrity sha512-H2iaK4UoMjX9hJlszwy8juhlDEpVtHeADndn+/MDdqxiK3tbw2k7VC5/q3eb9N43o6B1FhCS93EhmFdH1A4ejw==
+"@dish/gqless-cli@^0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-0.1.12.tgz#f7d348ba93ea1529ad81cfd8da5349c7b6488efa"
+  integrity sha512-1t/cuO2F6wnNoLK6N2ePKrf+06vOHcn/a9B7vQlwMrpc84BasAaxMiNQArioli+UgJfPRlFc7s0hE1WDlsdQUQ==
   dependencies:
-    "@dish/gqless" "^1.0.3"
+    "@dish/gqless" "^1.0.8"
     "@graphql-codegen/core" "^1.17.8"
     "@graphql-codegen/typescript" "^1.17.11"
     "@graphql-tools/delegate" "^7.0.4"
@@ -1888,20 +1888,10 @@
     prettier "^2.1.2"
     regenerator-runtime "^0.13.7"
 
-"@dish/gqless@^1.0.3":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-1.0.4.tgz#246afb547bbb0bf13e8ccfecf55528b26bfcc35d"
-  integrity sha512-YyvX5zQMgckeeTcfagvL4cr/+yRTinnmYt028hkWzCQHLmOev4A89Qj1o3u4YvkO0YmKDiP6Kt3sdmqSybgKEQ==
-  dependencies:
-    graphql "^15.4.0"
-    lodash "^4.17.20"
-    lodash-es "^4.17.15"
-    regenerator-runtime "^0.13.7"
-
-"@dish/gqless@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-1.0.5.tgz#dc8ea87f051184fead496b43cc6095004889bfce"
-  integrity sha512-ObIg9Cd7QP4lYZzkz3oQQUq+Q2Tr8eadQ7aMSHWCMPjvJD9ug+RDjCwotg1OVnnIHR0O2bgu45fAZ7cpbnCjvg==
+"@dish/gqless@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-1.0.8.tgz#e5744a82597783b01229feaaaeedd347731de4a1"
+  integrity sha512-INL3aeBm/jvMZ2+y9VU33x+nE++FOSyHPb5xQ9kw2MW3EtUb7OqXxIBWn2l7au6RI/Zi7WUMh57c2vgEFKJfeA==
   dependencies:
     graphql "^15.4.0"
     lodash "^4.17.20"

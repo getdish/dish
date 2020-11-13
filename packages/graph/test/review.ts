@@ -75,7 +75,7 @@ test('Voting triggers restaurant score change', async (t) => {
     },
   ])
   const restaurant = await restaurantFindOne({ id: t.context.restaurant.id })
-  t.deepEqual(restaurant.score, 1)
+  t.deepEqual(restaurant?.score, 1)
 })
 
 test('Voting triggers restaurant_tag score change', async (t) => {
@@ -96,7 +96,7 @@ test('Voting triggers restaurant_tag score change', async (t) => {
   const restaurant = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   })
-  const rtag = restaurant.tags[0]
+  const rtag = restaurant?.tags[0]
   t.deepEqual(rtag.score, 11)
 })
 

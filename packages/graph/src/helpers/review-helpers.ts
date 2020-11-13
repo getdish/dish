@@ -1,10 +1,20 @@
 import { uniqBy } from 'lodash'
 
 import { globalTagId } from '../constants'
-import { order_by, query, review_constraint, uuid } from '../graphql'
+import {
+  Scalars,
+  order_by,
+  query,
+  review,
+  review_constraint,
+  selectFields,
+} from '../graphql/new-generated'
+// import { order_by, query, review_constraint, uuid } from '../graphql'
 import { Review } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
+
+export type uuid = Scalars['uuid']
 
 const QueryHelpers = createQueryHelpersFor<Review>('review')
 export const reviewInsert = QueryHelpers.insert
@@ -28,10 +38,13 @@ String.prototype.replaceAll = function (search, replacement) {
   return target.replace(new RegExp(search, 'g'), replacement)
 }
 
-export async function reviewFindAllForRestaurant(restaurant_id: uuid) {
+export async function reviewFindAllForRestaurant(
+  restaurant_id: uuid,
+  fn?: (v: any) => unknown
+) {
   return await resolvedWithFields(
     () => {
-      return query.review({
+      const r = query.review({
         where: {
           restaurant_id: { _eq: restaurant_id },
         },
@@ -41,8 +54,16 @@ export async function reviewFindAllForRestaurant(restaurant_id: uuid) {
           },
         ],
       })
+
+      return r
     },
-    { relations: ['sentiments'] }
+    (r: review[]) => {
+      return r.map((review) => {
+        return {
+          sentiments: selectFields(review.sentiments()),
+        }
+      })
+    }
   )
 }
 

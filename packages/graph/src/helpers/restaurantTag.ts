@@ -1,15 +1,22 @@
+// import {
+//   restaurant_tag_constraint,
+//   restaurant_tag_update_column,
+// } from '../graphql'
 import {
+  mutation,
+  query,
+  restaurant_tag,
   restaurant_tag_constraint,
   restaurant_tag_update_column,
-} from '../graphql'
-import { mutation } from '../graphql/mutation'
+  selectFields,
+} from '../graphql/new-generated'
+// import { mutation } from '../graphql/mutation'
 import { RestaurantTag, RestaurantWithId } from '../types'
 import { resolvedMutationWithFields } from './queryResolvers'
 
 export async function restaurantTagUpsert(
   restaurant_id: string,
-  tags: RestaurantTag[],
-  extra_relations: string[] = []
+  tags: RestaurantTag[]
 ): Promise<RestaurantWithId> {
   if (!tags.length) throw new Error('No tags given to restaurantTagUpsert')
   const objects: RestaurantTag[] = tags.map((tag) => {
@@ -23,9 +30,10 @@ export async function restaurantTagUpsert(
   })
   const response = await resolvedMutationWithFields(
     () => {
-      const insert = mutation.insert_restaurant_tag as any
-      return insert({
-        objects,
+      const insert = mutation.insert_restaurant_tag
+
+      const obj = insert({
+        objects: objects as any,
         on_conflict: {
           constraint: restaurant_tag_constraint.restaurant_tag_pkey,
           update_columns: [
@@ -36,14 +44,38 @@ export async function restaurantTagUpsert(
           ],
         },
       })
+
+      return obj
     },
-    {
-      relations: [
-        'restaurant.tags.tag.categories.category',
-        'restaurant.tags.tag.parent',
-        ...extra_relations,
-      ],
+    '*',
+    (returning: restaurant_tag[]) => {
+      return returning.map((r_t) => {
+        r_t.restaurant
+        return {
+          restaurant: {
+            tags: r_t.restaurant.tags().map((r_t_2) => {
+              return {
+                tag: {
+                  categories: r_t_2.tag.categories().map((cat) => {
+                    return {
+                      category: selectFields(cat.category),
+                    }
+                  }),
+                  parent: selectFields(r_t_2.tag.parent),
+                },
+              }
+            }),
+          },
+        }
+      })
     }
+    // {
+    //   relations: [
+    //     'restaurant.tags.tag.categories.category',
+    //     'restaurant.tags.tag.parent',
+    //     ...extra_relations,
+    //   ],
+    // }
   )
   return (response as any)[0].restaurant
 }

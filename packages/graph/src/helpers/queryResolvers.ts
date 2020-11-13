@@ -1,3 +1,5 @@
+import { merge } from 'lodash'
+
 // import { resolved } from '@o/gqless'
 import { resolved, selectFields } from '../graphql/new-generated'
 // import { resetQueryCache } from '../graphql/client'
@@ -26,7 +28,8 @@ export async function resolvedMutation<T extends () => unknown>(
 
 export async function resolvedMutationWithFields<T extends () => unknown>(
   resolver: T,
-  fields: string[]
+  fields: (string | number)[] | '*',
+  fn?: (v: any) => unknown
 ): Promise<
   T extends () => {
     returning: infer X
@@ -37,7 +40,14 @@ export async function resolvedMutationWithFields<T extends () => unknown>(
   //@ts-expect-error
   return await resolvedMutation(() => {
     const res = resolver()
-    return selectFields((res as any).returning as any, fields) as any
+
+    const returning = (res as any).returning
+    const obj = selectFields(returning, fields as any) as any
+
+    if (fn) {
+      merge(obj, fn(returning))
+    }
+    return obj
     // return collectAll(res.returning, { ...options, type: 'mutation' })
   })
 }
@@ -46,12 +56,16 @@ export async function resolvedMutationWithFields<T extends () => unknown>(
 // if you infer the return it destroys performance... :(
 export async function resolvedWithFields<T extends () => unknown>(
   resolver: T,
-  options?: CollectOptions
+  fn?: (v: any) => unknown
 ): Promise<any> {
   // resetQueryCache()
   const next = await resolvedWithoutCache(() => {
     const res = resolver()
-    return selectFields(res as object, '*', 3)
+    const obj = selectFields(res as object, '*', 3)
+    if (fn) {
+      merge(obj, fn(res))
+    }
+    return obj
     // return collectAll(res, options) as any
   })
   // resetQueryCache()

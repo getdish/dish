@@ -2,6 +2,7 @@ import _ from 'lodash'
 
 import { globalTagId } from '../constants'
 import {
+  Maybe,
   client,
   order_by,
   resolved,
@@ -25,10 +26,6 @@ export const restaurantUpdate = QueryHelpers.update
 export const restaurantFindOne = QueryHelpers.findOne
 export const restaurantRefresh = QueryHelpers.refresh
 
-const tagDataRelations = {
-  relations: ['tags.tag.categories.category', 'tags.tag.parent'],
-}
-
 export const restaurant_fixture = {
   name: 'Test Restaurant',
   address: 'On The Street',
@@ -36,19 +33,28 @@ export const restaurant_fixture = {
   location: { type: 'Point', coordinates: [0, 0] },
 }
 
-export async function restaurantFindOneWithTags(
-  restaurant: RestaurantWithId,
-  extra_relations: string[] = []
-) {
-  const options = {
-    ...tagDataRelations,
-    relations: [
-      ...tagDataRelations.relations,
-      ...['tags.sentences'],
-      ...extra_relations,
-    ],
-  }
-  return await restaurantFindOne(restaurant)
+export async function restaurantFindOneWithTags(restaurant: RestaurantWithId) {
+  return await restaurantFindOne(restaurant, (v: Maybe<restaurant>[]) => {
+    return v.map((rest) => {
+      return {
+        ...selectFields(rest),
+        tags: rest?.tags().map((tagV) => {
+          return {
+            ...selectFields(tagV),
+            tag: {
+              categories: tagV.tag.categories().map((catV) => {
+                return {
+                  category: selectFields(catV.category),
+                }
+              }),
+              parent: selectFields(tagV.tag.parent),
+            },
+            sentences: selectFields(tagV.sentences()),
+          }
+        }),
+      } as any
+    })
+  })
 }
 
 export async function restaurantFindBatch(
@@ -131,6 +137,7 @@ export async function restaurantUpsertRestaurantTags(
     restaurant.id,
     restaurant_tags
   )
+  console.log(140, JSON.stringify(updated_restaurant))
   return await restaurantUpdateTagNames(updated_restaurant)
 }
 
