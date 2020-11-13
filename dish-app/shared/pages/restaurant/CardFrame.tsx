@@ -1,10 +1,10 @@
 import React from 'react'
 import { StackProps, VStack } from 'snackui'
 
-export const width = 230
-export const height = 320
+export const cardFrameWidth = 230
+export const cardFrameHeight = 320
 const borderRadius = 20
-export const borderRadiusSmaller = borderRadius * 0.95
+export const cardnFrameBorderRadiusSmaller = borderRadius * 0.95
 
 export const CardFrame = (props: StackProps & { hoverable?: boolean }) => {
   return (
@@ -12,8 +12,8 @@ export const CardFrame = (props: StackProps & { hoverable?: boolean }) => {
       className="ease-in-out-faster"
       contain="layout"
       borderRadius={borderRadius}
-      width={width}
-      height={height}
+      width={cardFrameWidth}
+      height={cardFrameHeight}
       backgroundColor="#fff"
       shadowColor="#000"
       shadowOpacity={0.1}

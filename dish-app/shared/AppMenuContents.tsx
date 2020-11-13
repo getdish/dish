@@ -1,8 +1,7 @@
 import { slugify } from '@dish/graph'
-import React, { memo, useEffect } from 'react'
+import React, { memo } from 'react'
 import { Box, BoxProps, Divider, Spacer, Toast, VStack } from 'snackui'
 
-import { isWeb } from './constants'
 import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { flatButtonStyle } from './views/baseButtonStyle'
