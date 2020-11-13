@@ -96,28 +96,30 @@ const RestaurantUpVoteDownVoteContents = memo(
           shadowOpacity={0.1}
           shadowRadius={3}
         >
-          <CircularProgress
-            fill={ratio * 100}
-            size={33}
-            width={4}
-            tintColor={colors[key]}
-            lineCap="round"
-            backgroundColor="#fff"
-            rotation={(1 - ratio) * 180}
-          >
-            {() => (
-              <HStack>
-                <Text
-                  fontSize={22}
-                  color={green}
-                  fontWeight="900"
-                  letterSpacing={-1}
-                >
-                  {sentiments[key]}
-                </Text>
-              </HStack>
-            )}
-          </CircularProgress>
+          <VStack transform={[{ scale: 0.97 }]}>
+            <CircularProgress
+              fill={ratio * 100}
+              size={33}
+              width={5}
+              tintColor={colors[key]}
+              lineCap="round"
+              backgroundColor="#fff"
+              rotation={(1 - ratio) * 180}
+            >
+              {() => (
+                <HStack>
+                  <Text
+                    fontSize={29}
+                    color={green}
+                    fontWeight="900"
+                    letterSpacing={-1}
+                  >
+                    {sentiments[key]}
+                  </Text>
+                </HStack>
+              )}
+            </CircularProgress>
+          </VStack>
         </AbsoluteVStack>
         <VStack
           // className="safari-fix-overflow"

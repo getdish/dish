@@ -11,7 +11,7 @@ import {
 } from '@dish/graph'
 import { getStore } from '@dish/use-store'
 import { fullyIdle, series } from '@o/async'
-import { sortBy, uniqBy } from 'lodash'
+import { chain, sortBy, uniqBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
 import {
@@ -31,6 +31,7 @@ import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useAsyncEffect } from '../../hooks/useAsync'
 import { useIsNarrow } from '../../hooks/useIs'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemHome, Region } from '../../state/home-types'
 import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
@@ -135,6 +136,8 @@ type FeedItemDish = {
   type: 'dish'
   id: string
   dish: DishTagItem
+  restaurantId: string
+  restaurantSlug: string
 }
 
 type FeedItemDishRestaurants = {
@@ -188,18 +191,21 @@ const HomeFeed = memo(
     const items: FeedItems[] =
       !region || !item.region
         ? null
-        : sortBy(
-            [
+        : [
+            ...chain([
               ...dishes.map((dish, index) => {
                 return {
                   type: 'dish',
                   id: dish.id,
                   rank: Math.random() * 10,
+                  restaurantId: restaurants[0].id,
+                  restaurantSlug: restaurants[0].slug,
                   dish: {
                     slug: dish.slug ?? '',
                     name: dish.name ?? '',
                     icon: dish.icon ?? '',
                     image: dish.default_images()?.[0] ?? '',
+                    score: 100,
                   },
                 } as const
               }),
@@ -239,10 +245,14 @@ const HomeFeed = memo(
                   rank: index,
                 } as const
               }),
-            ].filter((x) => x.id),
-            (x) => x.rank
-          )
+            ])
+              .filter((x) => x.id)
+              .sortBy((x) => x.rank)
+              .uniqBy((x) => x.id)
+              .value(),
+          ]
 
+    console.log('items', items)
     const results = items
       ?.filter((x) => x.type === 'restaurant')
       .map((x) => ({ id: x['restaurantId'], slug: x['restaurantSlug'] }))
@@ -269,7 +279,7 @@ const HomeFeed = memo(
 
     return (
       <>
-        <VStack alignItems="center">
+        <VStack marginTop={-10} alignItems="center">
           <SlantedBox>
             <Text
               paddingHorizontal={6}
@@ -293,6 +303,7 @@ const HomeFeed = memo(
                     case 'restaurant':
                       return <RestaurantCard {...item} />
                     case 'dish':
+                      console.log('item>>', item)
                       return <DishFeedCard {...item} />
                     case 'dish-restaurants':
                       return <DishRestaurantsFeedCard {...item} />
@@ -432,17 +443,46 @@ const DishCol = (props: StackProps) => {
   return <VStack marginRight={5} {...props} />
 }
 
-const DishFeedCard = (props: FeedItemDish) => {
+const DishFeedCard = graphql((props: FeedItemDish) => {
+  console.log('props', props)
+  const restaurant = useRestaurantQuery(props.restaurantSlug)
   return (
-    <VStack
-      height={cardFrameHeight}
-      alignItems="center"
-      justifyContent="center"
-    >
-      <DishView size={cardFrameWidth} {...props} />
-    </VStack>
+    <CardFrame>
+      <VStack
+        height={cardFrameHeight}
+        borderRadius={20}
+        alignItems="center"
+        justifyContent="space-between"
+        overflow="hidden"
+        flexWrap="nowrap"
+      >
+        <Text
+          alignSelf="flex-start"
+          selectable
+          lineHeight={28}
+          maxHeight={28}
+          fontSize={18}
+          fontWeight="400"
+          color="#fff"
+          padding={10}
+          backgroundColor="rgba(0,0,0,0.85)"
+          shadowColor="#000"
+          shadowOpacity={0.2}
+          shadowRadius={5}
+          shadowOffset={{ height: 3, width: 0 }}
+          borderRadius={7}
+        >
+          {restaurant.name}
+        </Text>
+        <DishView showSearchButton size={cardFrameWidth - 10} {...props} />
+        <Text fontSize={14} lineHeight={22} opacity={0.4} margin={4}>
+          lorem ipsume dolor sit amet lorem ipsume dolor sit amet lorem ipsume
+          dolor sit amet lorem ipsume dolor sit amet.
+        </Text>
+      </VStack>
+    </CardFrame>
   )
-}
+})
 
 const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
   return (
