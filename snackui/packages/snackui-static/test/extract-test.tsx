@@ -288,7 +288,7 @@ async function extractStaticApp() {
     ],
   })
 
-  await new Promise((res) => {
+  await new Promise<void>((res) => {
     compiler.run((err, result) => {
       console.log({ err })
       console.log(result?.toString())

@@ -1,4 +1,3 @@
-// debug
 import {
   ArrowDown,
   ArrowUp,
