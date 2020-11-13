@@ -11,7 +11,7 @@ import {
 } from '@dish/graph'
 import { getStore } from '@dish/use-store'
 import { fullyIdle, series } from '@o/async'
-import { chain, sortBy, uniqBy } from 'lodash'
+import { chain, filter, sortBy, uniqBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
 import {
@@ -135,6 +135,7 @@ export default memo(function HomePage(props: Props) {
 type FeedItemDish = {
   type: 'dish'
   id: string
+  rank: number
   dish: DishTagItem
   restaurantId: string
   restaurantSlug: string
@@ -143,11 +144,16 @@ type FeedItemDish = {
 type FeedItemDishRestaurants = {
   type: 'dish-restaurants'
   id: string
+  rank: number
   dish: DishTagItem
   restaurants: RestaurantOnlyIds[]
 }
 
-type FeedItemCuisine = TopCuisine & { type: 'cuisine'; id: string }
+type FeedItemCuisine = TopCuisine & {
+  type: 'cuisine'
+  id: string
+  rank: number
+}
 
 type FeedItems =
   | FeedItemDish
@@ -156,6 +162,7 @@ type FeedItems =
       id: string
       restaurantSlug: string
       restaurantId: string
+      rank: number
     }
   | FeedItemCuisine
   | FeedItemDishRestaurants
@@ -194,75 +201,73 @@ const HomeFeed = memo(
       limit: 8,
     })
 
-    const items: FeedItems[] =
+    let items: FeedItems[] =
       !region || !item.region
-        ? null
+        ? []
         : [
-            ...chain([
-              ...dishes.map((dish, index) => {
-                return {
-                  type: 'dish',
-                  id: dish.id,
-                  rank: Math.random() * 10,
-                  restaurantId: restaurants[0].id ?? '',
-                  restaurantSlug: restaurants[0].slug ?? '',
-                  dish: {
-                    slug: dish.slug ?? '',
-                    name: dish.name ?? '',
-                    icon: dish.icon ?? '',
-                    image: dish.default_images()?.[0] ?? '',
-                    score: 100,
-                  },
-                } as const
-              }),
-              ...dishes.map((dish, index) => {
-                return {
-                  type: 'dish-restaurants',
-                  id: dish.id,
-                  rank: index + (index % 2 ? 10 : 0),
-                  dish: {
-                    slug: dish.slug ?? '',
-                    name: dish.name ?? '',
-                    icon: dish.icon ?? '',
-                    image: dish.default_images()?.[0] ?? '',
-                  },
-                  restaurants: restaurants.map((r) => {
-                    return {
-                      id: r.id,
-                      slug: r.slug,
-                    }
-                  }),
-                } as const
-              }),
-              ...cuisines.map((item, index) => {
-                return {
-                  type: 'cuisine',
-                  id: item.country,
-                  rank: index + (index % 3 ? 30 : 0),
-                  ...item,
-                } as const
-              }),
-              ...restaurants.map((item, index) => {
-                return {
-                  id: item.id,
-                  type: 'restaurant',
-                  restaurantId: item.id,
-                  restaurantSlug: item.slug,
-                  rank: index,
-                } as const
-              }),
-            ])
-              .filter((x) => x.id)
-              .sortBy((x) => x.rank)
-              .uniqBy((x) => x.id)
-              .value(),
+            ...dishes.map((dish, index) => {
+              return {
+                type: 'dish',
+                id: dish.id,
+                rank: Math.random() * 10,
+                restaurantId: restaurants[0].id ?? '',
+                restaurantSlug: restaurants[0].slug ?? '',
+                dish: {
+                  slug: dish.slug ?? '',
+                  name: dish.name ?? '',
+                  icon: dish.icon ?? '',
+                  image: dish.default_images()?.[0] ?? '',
+                  score: 100,
+                },
+              } as const
+            }),
+            ...dishes.map((dish, index) => {
+              return {
+                type: 'dish-restaurants',
+                id: dish.id,
+                rank: index + (index % 2 ? 10 : 0),
+                dish: {
+                  slug: dish.slug ?? '',
+                  name: dish.name ?? '',
+                  icon: dish.icon ?? '',
+                  image: dish.default_images()?.[0] ?? '',
+                },
+                restaurants: restaurants.map((r) => {
+                  return {
+                    id: r.id,
+                    slug: r.slug,
+                  }
+                }),
+              } as const
+            }),
+            ...cuisines.map((item, index) => {
+              return {
+                type: 'cuisine',
+                id: item.country,
+                rank: index + (index % 3 ? 30 : 0),
+                ...item,
+              } as const
+            }),
+            ...restaurants.map((item, index) => {
+              return {
+                id: item.id,
+                type: 'restaurant',
+                restaurantId: item.id,
+                restaurantSlug: item.slug,
+                rank: index,
+              } as const
+            }),
           ]
 
+    items = items.filter((x) => x.id)
+    items = sortBy(items, (x) => x.rank)
+    items = uniqBy(items, (x) => x.id)
+
     const results = items
-      ?.filter((x) => x.type === 'restaurant')
+      .filter((x) => x.type === 'restaurant')
       .map((x) => ({ id: x['restaurantId'], slug: x['restaurantSlug'] }))
 
-    const isLoading = !items || items[0]?.id === null
+    const isLoading = !region || items[0]?.id === null
 
     useEffect(() => {
       if (isLoading) return
