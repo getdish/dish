@@ -808,6 +808,30 @@ function setupMapEffect({
         })
 
         map.addLayer({
+          id: POINT_HOVER_LAYER_ID,
+          source: RESTAURANTS_UNCLUSTERED_SOURCE_ID,
+          type: 'circle',
+          filter: ['==', 'id', ''],
+          paint: {
+            'circle-radius': {
+              stops: [
+                [8, 1],
+                [10, 4],
+                [16, 8],
+                [22, 12],
+              ],
+            },
+            'circle-color': 'red',
+            // 'icon-allow-overlap': true,
+            // 'icon-ignore-placement': true,
+            // 'icon-size': 0.25,
+          },
+        })
+        cancels.add(() => {
+          map?.removeLayer(POINT_HOVER_LAYER_ID)
+        })
+
+        map.addLayer({
           id: UNCLUSTERED_LABEL_LAYER_ID,
           source: RESTAURANTS_SOURCE_ID,
           type: 'symbol',
@@ -818,7 +842,8 @@ function setupMapEffect({
             'text-field': ['format', ['get', 'title']],
             'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
             'text-size': 12,
-            'text-offset': [0, 1],
+            'text-variable-anchor': ['bottom', 'top', 'right', 'left'],
+            // 'text-offset': [0, 2],
             'text-anchor': 'top',
           },
           paint: {
@@ -854,29 +879,6 @@ function setupMapEffect({
         })
         cancels.add(() => {
           map?.removeLayer(CLUSTER_LABEL_LAYER_ID)
-        })
-
-        map.addLayer({
-          id: POINT_HOVER_LAYER_ID,
-          source: RESTAURANTS_UNCLUSTERED_SOURCE_ID,
-          type: 'circle',
-          filter: ['==', 'id', ''],
-          paint: {
-            'circle-radius': {
-              stops: [
-                [8, 1],
-                [10, 4],
-                [16, 8],
-              ],
-            },
-            'circle-color': 'red',
-            // 'icon-allow-overlap': true,
-            // 'icon-ignore-placement': true,
-            // 'icon-size': 0.25,
-          },
-        })
-        cancels.add(() => {
-          map?.removeLayer(POINT_HOVER_LAYER_ID)
         })
 
         type Event = mapboxgl.MapMouseEvent & {
