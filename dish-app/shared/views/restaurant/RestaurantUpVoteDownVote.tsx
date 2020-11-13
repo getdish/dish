@@ -14,7 +14,16 @@ import {
   prevent,
 } from 'snackui'
 
-import { bgLight, green, lightGreen, lightOrange, lightRed } from '../../colors'
+import {
+  bgLight,
+  blue,
+  green,
+  lightGreen,
+  lightOrange,
+  lightRed,
+  orange,
+  red,
+} from '../../colors'
 import { rgbString } from '../../helpers/rgbString'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useIsNarrow } from '../../hooks/useIs'
@@ -29,7 +38,6 @@ type UpvoteDownvoteProps = {
   score: number
   ratio: number
   activeTags: HomeActiveTagsRecord
-  backgroundColor?: string
 }
 
 export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
@@ -40,18 +48,42 @@ export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
   )
 }
 
+const sentiments = {
+  0: '😞',
+  1: '😕',
+  2: '🙂',
+  3: '😊',
+  4: '🤤',
+}
+
+const colors = {
+  0: red,
+  1: orange,
+  2: orange,
+  3: green,
+  4: blue,
+}
+
 const RestaurantUpVoteDownVoteContents = memo(
   graphql(function RestaurantUpVoteDownVote({
     restaurantId,
     restaurantSlug,
     score: baseScore,
-    backgroundColor = '#fff',
     ratio,
     activeTags,
   }: UpvoteDownvoteProps) {
     const { vote, setVote } = useUserTagVotes(restaurantSlug, activeTags)
     const score = baseScore + vote
-    const rgb = [220, 241, 229]
+    const key =
+      ratio <= 0.25
+        ? 0
+        : ratio <= 0.5
+        ? 1
+        : ratio <= 0.75
+        ? 2
+        : ratio < 0.9
+        ? 3
+        : 4
 
     return (
       <VStack position="relative">
@@ -67,8 +99,8 @@ const RestaurantUpVoteDownVoteContents = memo(
           <CircularProgress
             fill={ratio * 100}
             size={33}
-            width={2}
-            tintColor={green}
+            width={4}
+            tintColor={colors[key]}
             lineCap="round"
             backgroundColor="#fff"
             rotation={(1 - ratio) * 180}
@@ -76,21 +108,12 @@ const RestaurantUpVoteDownVoteContents = memo(
             {() => (
               <HStack>
                 <Text
-                  fontSize={ratio === 1 ? 11 : 12}
+                  fontSize={22}
                   color={green}
                   fontWeight="900"
                   letterSpacing={-1}
                 >
-                  {Math.round(ratio * 100)}
-                </Text>
-                <Text
-                  marginRight={-4}
-                  transform={[{ scale: 0.9 }]}
-                  fontWeight="700"
-                  fontSize={8}
-                  opacity={0.2}
-                >
-                  %
+                  {sentiments[key]}
                 </Text>
               </HStack>
             )}
