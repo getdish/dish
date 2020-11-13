@@ -2,6 +2,7 @@ import { HistoryItem } from '@dish/router'
 
 import { FullTag } from './FullTag'
 import { getFullTags } from './getFullTags'
+import { tagLenses } from './localTags.json'
 import { SPLIT_TAG, SPLIT_TAG_TYPE } from './SPLIT_TAG'
 import { TagWithNameAndType } from './TagWithNameAndType'
 
@@ -14,9 +15,13 @@ export const getTagsFromRoute = async (
   }
   const tmpTags: TagWithNameAndType[] = []
   if (item.params.lense) {
-    tmpTags.push(
-      getUrlTagInfo(item.params.lense.replace('lenses__', ''), 'lense')
-    )
+    const slug = `lenses__${item.params.lense}`
+    let lenseTag = tagLenses.find((x) => x.slug == slug)
+    if (!lenseTag) {
+      console.warn('No known lense! reverting to default', slug, item.params)
+      lenseTag = tagLenses[0]
+    }
+    tmpTags.push(lenseTag)
   }
   if (item.params.tags) {
     for (const tag of item.params.tags.split(SPLIT_TAG)) {

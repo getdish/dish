@@ -1,7 +1,7 @@
 import { query } from '@dish/graph'
 
 export const restaurantQuery = (slug: string) => {
-  if (!slug) {
+  if (typeof slug !== 'string') {
     throw new Error(`No slug`)
   }
   return query.restaurant({
