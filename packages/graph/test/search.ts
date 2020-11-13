@@ -203,3 +203,9 @@ test('Home page feed', async (t) => {
     'total_restaurants_in_region',
   ])
 })
+
+test('Regions', async (t) => {
+  const response = await fetch(SEARCH_DOMAIN + '/regions?slug=xxx')
+  const json = await response.json()
+  t.deepEqual(Object.keys(json), ['bbox', 'centroid', 'name'])
+})
