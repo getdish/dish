@@ -33,10 +33,7 @@ export const RestaurantPhotosRow = memo(
           {!!photos.length && (
             <>
               {photos.slice(0, 9).map((photo, key) => (
-                <VStack
-                  key={key}
-                  // className={`scroll-snap-photo ${key < 4 ? 'fade-photo' : ''}`}
-                >
+                <VStack key={key} className={`scroll-snap-photo`}>
                   <LinkButton name="gallery" params={{ restaurantSlug }}>
                     <Image
                       source={{ uri: getImageUrl(photo, width, height, 100) }}
