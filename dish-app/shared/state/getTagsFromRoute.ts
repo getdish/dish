@@ -1,8 +1,9 @@
 import { HistoryItem } from '@dish/router'
 
 import { FullTag } from './FullTag'
-import { TagWithNameAndType, getFullTags } from './getFullTags'
+import { getFullTags } from './getFullTags'
 import { SPLIT_TAG, SPLIT_TAG_TYPE } from './SPLIT_TAG'
+import { TagWithNameAndType } from './TagWithNameAndType'
 
 export const getTagsFromRoute = async (
   item: HistoryItem<'userSearch'>

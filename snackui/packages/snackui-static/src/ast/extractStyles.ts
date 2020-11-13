@@ -16,6 +16,7 @@ import {
   CacheObject,
   ClassNameToStyleObj,
   ExtractStylesOptions,
+  PluginContext,
 } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
 import {
@@ -60,12 +61,6 @@ if (!!process.env.DEBUG) {
   console.log('validComponents', Object.keys(validComponents))
 }
 
-export interface Options {
-  cacheObject: CacheObject
-  errorCallback?: (str: string, ...args: any[]) => void
-  warnCallback?: (str: string, ...args: any[]) => void
-}
-
 type ClassNameObject = t.StringLiteral | t.Expression
 
 interface TraversePath<TNode = any> {
@@ -84,20 +79,18 @@ const UNTOUCHED_PROPS = {
 // per-file cache of evaluated bindings
 const bindingCache: Record<string, string | null> = {}
 
-const globalCSSMap = new Map<string, string>()
+const globalCSSMap = new Map<string, { css: string; comments: Set<string> }>()
 
 export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
-  { cacheObject, errorCallback }: Options,
-  userOptions: ExtractStylesOptions
+  userOptions: ExtractStylesOptions,
+  { cacheObject, memoryFS }: PluginContext
 ): {
   js: string | Buffer
-  css: string
-  cssFileName: string | null
   ast: t.File
   map: any // RawSourceMap from 'source-map'
-} {
+} | null {
   if (typeof src !== 'string') {
     throw new Error('`src` must be a string of javascript')
   }
@@ -122,10 +115,7 @@ export function extractStyles(
     ...userOptions,
   }
 
-  const sourceDir = path.dirname(sourceFileName)
-
   // Using a map for (officially supported) guaranteed insertion order
-  const cssMap = new Map<string, { css: string; commentTexts: string[] }>()
   const ast = parse(src)
 
   let didExtract = false
@@ -153,13 +143,7 @@ export function extractStyles(
 
   // gloss isn't included anywhere, so let's bail
   if (!doesImport || !doesUseValidImport) {
-    return {
-      ast,
-      css: '',
-      cssFileName: null,
-      js: src,
-      map: null,
-    }
+    return null
   }
 
   if (shouldPrintDebug) {
@@ -168,6 +152,7 @@ export function extractStyles(
 
   const existingHoists = {}
   let couldntParse = false
+  let css = ''
 
   /**
    * Step 2: Statically extract from JSX < /> nodes
@@ -966,32 +951,24 @@ export function extractStyles(
         )
 
         for (const className in stylesByClassName) {
-          if (cssMap.has(className)) {
-            if (comment) {
-              const val = cssMap.get(className)!
-              val.commentTexts.push(comment)
-              cssMap.set(className, val)
+          if (stylesByClassName[className]) {
+            const { rules } = stylesByClassName[className]
+            if (rules.length !== 1) {
+              console.log(rules)
+              throw new Error(`should only have one rule`)
             }
-          } else {
-            if (stylesByClassName[className]) {
-              const { rules } = stylesByClassName[className]
-              if (rules.length > 1) {
-                console.log(rules)
-                throw new Error(`huh?`)
-              }
-              if (rules.length) {
-                didExtract = true
-                if (process.env.NODE_ENV !== 'production') {
-                  if (globalCSSMap.has(className)) {
-                    continue
-                  }
-                  globalCSSMap.set(className, rules[0])
-                }
-                cssMap.set(className, {
-                  css: rules[0],
-                  commentTexts: [comment],
-                })
-              }
+            didExtract = true
+            // if you want granular stylesheets, can remove this globalCSSMap code
+            if (globalCSSMap.has(className)) {
+              globalCSSMap.get(className)!.comments.add(comment)
+              continue
+            }
+            globalCSSMap.set(className, {
+              css: rules[0],
+              comments: new Set([comment]),
+            })
+            if (process.env.NODE_ENV === 'development') {
+              css += rules[0] + '\n'
             }
           }
         }
@@ -1006,42 +983,35 @@ export function extractStyles(
     }
     return {
       ast,
-      css: '',
-      cssFileName: null,
       js: src,
       map: null,
     }
   }
 
-  const css = Array.from(cssMap.values())
-    .map((v) => v.commentTexts.map((txt) => `${txt}\n`).join('') + v.css)
+  // if you want split stylesheets
+  // if (process.env.NODE_ENV === 'production') {
+  //   cssImportFileName = `./${baseName}${GLOSS_CSS_FILE}`
+  //   cssFileName = path.join(sourceDir, cssImportFileName)
+  // }
+
+  // dedupe into one big global sheet
+  const cssImportFileName = 'snackui/style.css'
+  const cssOut = Array.from(globalCSSMap.values())
+    .map((v) => [...v.comments].map((txt) => `${txt}\n`).join('') + v.css)
     .join(' ')
-  const extName = path.extname(sourceFileName)
-  const baseName = path.basename(sourceFileName, extName)
 
-  let cssFileName: string
-  let cssImportFileName: string
+  const snackUIGlobalStyleSheet = path.join(
+    require.resolve('snackui/node'),
+    '..',
+    'style.css'
+  )
 
-  if (process.env.NODE_ENV === 'production') {
-    cssImportFileName = `./${baseName}${GLOSS_CSS_FILE}`
-    cssFileName = path.join(sourceDir, cssImportFileName)
-  } else {
-    // in dev mode dedupe into one big global sheet
-    cssImportFileName = 'snackui/style.css'
-    cssFileName = UI_STYLE_PATH
+  memoryFS.mkdirpSync(path.join(snackUIGlobalStyleSheet, '..'))
+  memoryFS.writeFileSync(snackUIGlobalStyleSheet, cssOut)
 
-    // only writes if new values found since last write
-    if (cssMap.size) {
-      const cssOut = Array.from(globalCSSMap.values()).join('\n')
-      writeFileSync(UI_STYLE_PATH, cssOut)
-    }
-  }
-
-  if (css !== '') {
-    ast.program.body.unshift(
-      t.importDeclaration([], t.stringLiteral(cssImportFileName))
-    )
-  }
+  ast.program.body.unshift(
+    t.importDeclaration([], t.stringLiteral(cssImportFileName))
+  )
 
   const result = generate(
     ast,
@@ -1071,8 +1041,6 @@ export function extractStyles(
 
   return {
     ast,
-    css,
-    cssFileName,
     js: result.code,
     map: result.map,
   }

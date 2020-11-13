@@ -19,9 +19,9 @@ import { HomeStateNav } from '../../state/home-types'
 import { NavigableTag } from '../../state/NavigableTag'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
-import { nav } from './Link'
 import { LinkProps } from './LinkProps'
 import { LinkButtonProps } from './LinkProps'
+import { nav } from './nav'
 
 export const useLink = (props: LinkProps<any, any>) => {
   const forceUpdate = useForceUpdate()
