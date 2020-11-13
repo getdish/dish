@@ -62,3 +62,23 @@ BEGIN
   RETURN NEW;
 END
 $function$;
+
+CREATE OR REPLACE FUNCTION public.nhood_triggers()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+  NEW.slug = slugify(NEW.nhood);
+  RETURN NEW;
+END
+$function$;
+
+CREATE OR REPLACE FUNCTION public.region_triggers()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+  NEW.slug = slugify(NEW.hrrcity);
+  RETURN NEW;
+END
+$function$;
