@@ -87,11 +87,13 @@ const RestaurantHeaderContent = memo(
             }}
           >
             <VStack>
-              <RestaurantPhotosRow
-                restaurantSlug={restaurantSlug}
-                width={200}
-                height={200}
-              />
+              <VStack className="fade-photos">
+                <RestaurantPhotosRow
+                  restaurantSlug={restaurantSlug}
+                  width={200}
+                  height={200}
+                />
+              </VStack>
               <VStack
                 marginTop={-110}
                 minWidth={minWidth}
