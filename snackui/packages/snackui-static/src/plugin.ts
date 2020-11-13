@@ -24,10 +24,9 @@ export class UIStaticWebpackPlugin implements Plugin {
 
   constructor() {
     this.ctx = {
-      fileList: new Set(),
       writeCSS: (css) => {
-        // so this needs to go up a lot in certain cases, for now hardcoding but
-        // need to add logic to figure out where it ideal
+        // hack alert
+        // need to add logic to figure out where to put the file
         // snackui-static tests wants it to be 3 higher, dish needs 1 higher
         this.virtualModule.writeModule(
           `../../../node_modules/${SNACK_CSS_FILE}`,
