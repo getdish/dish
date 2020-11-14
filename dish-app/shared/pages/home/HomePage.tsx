@@ -309,9 +309,12 @@ const HomeFeed = memo(
         <HomeTopSearches />
 
         <Suspense fallback={null}>
-          <VStack minHeight={Dimensions.get('window').height * 0.9}>
-            <HStack justifyContent="center" flexWrap="wrap">
-              {items.slice(0, 11).map((item) => {
+          <VStack
+            paddingBottom={100}
+            minHeight={Dimensions.get('window').height * 0.9}
+          >
+            <HStack justifyContent="space-around" flexWrap="wrap">
+              {items.slice(0, 12).map((item) => {
                 const content = (() => {
                   switch (item.type) {
                     case 'restaurant':
@@ -332,7 +335,7 @@ const HomeFeed = memo(
                     key={item.id}
                     padding="0.5%"
                     paddingVertical={15}
-                    flex={1}
+                    // flex={1}
                     alignItems="center"
                   >
                     {content}

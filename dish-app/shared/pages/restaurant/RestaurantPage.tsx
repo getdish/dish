@@ -62,21 +62,13 @@ const RestaurantPage = memo(
       [coords]
     )
 
-    const [isScrolled, setIsScrolled] = useState(false)
-    const handleScroll = (y: number) => {
-      const next = y !== 0
-      if (isScrolled != next) {
-        setIsScrolled(next)
-      }
-    }
-
     return (
       <>
         <PageTitleTag>
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
 
-        <ContentScrollView onScrollYThrottled={handleScroll} id="restaurant">
+        <ContentScrollView id="restaurant">
           {/* HEADER */}
           {/* -1 margin bottom to overlap bottom border */}
           <VStack
@@ -110,7 +102,7 @@ const RestaurantPage = memo(
                 }
               >
                 <RestaurantDishPhotos
-                  size={140}
+                  size={110}
                   max={40}
                   restaurantSlug={restaurantSlug}
                   restaurantId={restaurant.id ?? undefined}

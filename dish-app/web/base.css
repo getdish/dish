@@ -495,10 +495,11 @@ body > div {
   scroll-snap-align: center;
 }
 
+/* filter: sepia(100%) hue-rotate(140deg) brightness(520%) contrast(90%); */
+/*
 .fade-photos .scroll-snap-photo {
   transition: all ease-in 100ms;
   opacity: 0.6;
-  /* filter: sepia(100%) hue-rotate(140deg) brightness(520%) contrast(90%); */
 }
 
 .fade-photos .scroll-snap-photo:hover {
@@ -507,11 +508,11 @@ body > div {
   z-index: 10;
 }
 
-.fade-photos:hover .scroll-snap-photo::after {
+.fade-photos .scroll-snap-photo:hover::after {
   opacity: 0;
-}
+} */
 
-.fade-photos .scroll-snap-photo::after {
+.fade-photos::after {
   display: block;
   opacity: 1;
   transition: all ease-in 100ms;
@@ -523,7 +524,7 @@ body > div {
   bottom: 0;
   z-index: 10;
   pointer-events: none;
-  background: linear-gradient(rgba(240, 250, 255, 0), rgb(240, 250, 255));
+  background: linear-gradient(rgba(240, 250, 255, 0), rgb(240, 250, 255) 70%);
 }
 
 .animate-in {

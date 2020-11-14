@@ -65,7 +65,7 @@ const RestaurantHeaderContent = memo(
         ((nameLen > 24 ? 26 : nameLen > 18 ? 30 : 40) *
           (size === 'sm' ? 0.8 : 1))
 
-      const contentLeftWidth = width - 220
+      const contentLeftWidth = width - 250
 
       return (
         <VStack
@@ -87,7 +87,7 @@ const RestaurantHeaderContent = memo(
             }}
           >
             <VStack>
-              <VStack className="fade-photos">
+              <VStack zIndex={-1} position="relative" className="fade-photos">
                 <RestaurantPhotosRow
                   restaurantSlug={restaurantSlug}
                   width={200}
@@ -210,11 +210,11 @@ const RestaurantHeaderContent = memo(
                           <Spacer size="xxl" />
 
                           <VStack
-                            marginTop={-120}
-                            marginRight={-40}
+                            marginTop={-90}
+                            marginBottom={-30}
                             className="ease-in-out"
                             // opacity={isScrolled ? 0 : 1}
-                            // transform={[{ scale: 0.8 }]}
+                            transform={[{ scale: 0.8 }]}
                             // hoverStyle={{
                             //   transform: [{ scale: 1 }, { translateY: -20 }],
                             // }}
