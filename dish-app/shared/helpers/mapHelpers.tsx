@@ -1,7 +1,7 @@
 import { LngLat } from '@dish/graph'
 
-import { useOvermind } from '../state/om'
 import { omStatic } from '../state/omStatic'
+import { useOvermind } from '../state/useOvermind'
 
 export const mapHelpers = null
 

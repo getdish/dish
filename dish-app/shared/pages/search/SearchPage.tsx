@@ -50,9 +50,9 @@ import {
   HomeActiveTagsRecord,
   HomeStateItemSearch,
 } from '../../state/home-types'
-import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
+import { useOvermind } from '../../state/useOvermind'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { StackCloseButton, StackDrawer } from '../../views/StackDrawer'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'

@@ -20,9 +20,9 @@ import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { getTagSlug } from './state/getTagSlug'
-import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { router } from './state/router'
+import { useOvermind } from './state/useOvermind'
 import { TagButton, getTagButtonProps } from './views/TagButton'
 
 const placeholders = [
@@ -162,7 +162,14 @@ export const AppSearchInput = memo(() => {
   // }, [])
 
   return (
-    <AppAutocompleteHoverableInput input={input} autocompleteTarget="search">
+    <AppAutocompleteHoverableInput
+      input={input}
+      autocompleteTarget="search"
+      backgroundColor="rgba(255,255,255,0.15)"
+      {...(!isSmall && {
+        borderRadius: 100,
+      })}
+    >
       <HStack
         alignItems="center"
         borderRadius={100}

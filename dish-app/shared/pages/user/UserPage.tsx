@@ -15,7 +15,7 @@ import {
 
 import { StackItemProps } from '../../AppStackView'
 import { HomeStateItemUser } from '../../state/home-types'
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { StackDrawer } from '../../views/StackDrawer'

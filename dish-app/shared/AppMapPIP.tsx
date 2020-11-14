@@ -2,15 +2,15 @@ import { LngLat, Restaurant, graphql } from '@dish/graph'
 import { useStore } from '@dish/use-store'
 import { isEqual } from 'lodash'
 import mapboxgl from 'mapbox-gl'
-import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
+import React, { Suspense, memo, useEffect, useRef } from 'react'
 import { AbsoluteVStack, VStack } from 'snackui'
 
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { MAPBOX_ACCESS_TOKEN } from './constants'
 import { getZoomLevel, mapZoomToMedium } from './helpers/mapHelpers'
-import { useIsNarrow, useIsReallyNarrow } from './hooks/useIs'
+import { useIsReallyNarrow } from './hooks/useIs'
 import { restaurantQuery } from './hooks/useRestaurantQuery'
-import { useOvermind } from './state/om'
+import { useOvermind } from './state/useOvermind'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 

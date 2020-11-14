@@ -286,7 +286,6 @@ const runSearch: AsyncAction<{
   // overmind seems unhappy to just let us mutate
   const center = state.mapAt?.center ?? state!.center
   const span = state.mapAt?.span ?? state!.span
-  const id = state.id
 
   om.actions.home.updateHomeState({
     id: state.id,
@@ -352,6 +351,7 @@ const runSearch: AsyncAction<{
   })
 }
 
+// doesn't delete
 const deepAssign = (a: Object, b: Object) => {
   for (const key in b) {
     if (a[key] != b[key]) {
@@ -372,12 +372,6 @@ const deepAssign = (a: Object, b: Object) => {
       }
     }
   }
-  // DONT DELETE
-  // for (const key in a) {
-  //   if (!(key in b)) {
-  //     delete a[key]
-  //   }
-  // }
 }
 
 const updateHomeState: Action<{ id: string; [key: string]: any }> = (

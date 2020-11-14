@@ -2,7 +2,7 @@ import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, LoadingItems, Modal, VStack } from 'snackui'
 
 import { DarkModal } from '../../DarkModal'
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { UserOnboard } from '../../UserOnboard'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 

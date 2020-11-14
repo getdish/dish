@@ -16,7 +16,7 @@ import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { useIsNarrow, useIsShort } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemGallery } from '../../state/home-types'
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { RestaurantHeader } from '../restaurant/RestaurantHeader'
 

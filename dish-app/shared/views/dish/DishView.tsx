@@ -97,7 +97,6 @@ const DishViewContent = (props: DishViewProps) => {
     !!restaurantId &&
     !!restaurantSlug &&
     !!dish.name
-  console.log('dish', props, showVote)
 
   let contents = (
     <Hoverable

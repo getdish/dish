@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { HStack, Hoverable } from 'snackui'
 
 import { useIsNarrow } from './hooks/useIs'
-import { useOvermind } from './state/om'
+import { useOvermind } from './state/useOvermind'
 
 export const AppAutocompleteHoverableInput = ({
   children,

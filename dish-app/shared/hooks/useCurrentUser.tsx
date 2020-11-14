@@ -1,4 +1,4 @@
-import { useOvermind } from '../state/om'
+import { useOvermind } from '../state/useOvermind'
 
 export function useCurrentUser() {
   const om = useOvermind()
