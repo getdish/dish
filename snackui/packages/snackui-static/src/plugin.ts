@@ -24,16 +24,18 @@ export class UIStaticWebpackPlugin implements Plugin {
 
   constructor() {
     this.ctx = {
-      writeCSS: (css) => {
-        // hack alert
-        // need to add logic to figure out where to put the file
-        // snackui-static tests wants it to be 3 higher, dish needs 1 higher
-        this.virtualModule.writeModule(
-          `../../../node_modules/${SNACK_CSS_FILE}`,
-          css
-        )
-      },
+      writeCSS: this.write,
     }
+  }
+
+  private write = (css: string) => {
+    this.virtualModule.writeModule(
+      // hack alert
+      // need to add logic to figure out where to put the file
+      // snackui-static tests wants it to be 3 higher, dish needs 1 higher
+      `../../../node_modules/${SNACK_CSS_FILE}`,
+      css
+    )
   }
 
   private nmlPlugin = (loaderContext: any): void => {
