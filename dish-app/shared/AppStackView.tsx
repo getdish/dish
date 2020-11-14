@@ -7,7 +7,7 @@ import { getBreadcrumbs } from './helpers/getBreadcrumbs'
 import { useIsNarrow } from './hooks/useIs'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { HomeStateItem, HomeStateItemSimple } from './state/home-types'
-import { useOvermind } from './state/om'
+import { useOvermind } from './state/useOvermind'
 import { ContentParentStore } from './views/ContentScrollView'
 import { ErrorBoundary } from './views/ErrorBoundary'
 

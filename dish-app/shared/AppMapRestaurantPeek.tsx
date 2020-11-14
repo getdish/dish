@@ -7,7 +7,7 @@ import { useRestaurantQuery } from './hooks/useRestaurantQuery'
 import { RestaurantAddress } from './pages/restaurant/RestaurantAddress'
 import { RestaurantAddressLinksRow } from './pages/restaurant/RestaurantAddressLinksRow'
 import { RestaurantRatingViewPopover } from './pages/restaurant/RestaurantRatingViewPopover'
-import { useOvermind } from './state/om'
+import { useOvermind } from './state/useOvermind'
 import { LinkButton } from './views/ui/LinkButton'
 
 export const AppMapRestaurantPeek = memo(

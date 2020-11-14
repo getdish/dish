@@ -20,8 +20,8 @@ import {
 } from './constants'
 import { useIsNarrow, useIsReallyNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
-import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
+import { useOvermind } from './state/useOvermind'
 import { DishLogoButton } from './views/DishLogoButton'
 import { LinkButton } from './views/ui/LinkButton'
 

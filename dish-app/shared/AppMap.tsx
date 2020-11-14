@@ -32,9 +32,9 @@ import { useRestaurantQuery } from './hooks/useRestaurantQuery'
 import { findLastHomeOrSearch } from './state/home'
 import { isRestaurantState } from './state/home-helpers'
 import { Region } from './state/home-types'
-import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { router } from './state/router'
+import { useOvermind } from './state/useOvermind'
 import { MapView } from './views/Map'
 
 export default memo(function AppMap() {
@@ -190,19 +190,19 @@ const AppMapContent = memo(function AppMap({
   const { center, span } = internal
 
   // SELECTED
-  useEffect(() => {
-    return om.reaction(
-      (state) => state.home.selectedRestaurant?.id,
-      (selectedId) => {
-        const nextSpan = getZoomedSpan(span, 0.025)
-        setState({
-          id: selectedId,
-          via: 'select',
-          span: nextSpan,
-        })
-      }
-    )
-  }, [])
+  // useEffect(() => {
+  //   return om.reaction(
+  //     (state) => state.home.selectedRestaurant?.id,
+  //     (selectedId) => {
+  //       const nextSpan = getZoomedSpan(span, 0.025)
+  //       setState({
+  //         id: selectedId,
+  //         via: 'select',
+  //         span: nextSpan,
+  //       })
+  //     }
+  //   )
+  // }, [])
 
   // HOVERED
   // TODO make it zoom just icon
@@ -262,6 +262,7 @@ const AppMapContent = memo(function AppMap({
       },
       (spanCenter) => {
         const { span, center } = JSON.parse(spanCenter)
+        console.log('got new center/span', center, span)
         setState({
           span,
           center,

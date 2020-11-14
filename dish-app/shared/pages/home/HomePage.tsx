@@ -33,8 +33,8 @@ import { useIsNarrow } from '../../hooks/useIs'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemHome, Region } from '../../state/home-types'
-import { useOvermind } from '../../state/om'
 import { omStatic } from '../../state/omStatic'
+import { useOvermind } from '../../state/useOvermind'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { DishView } from '../../views/dish/DishView'
 import { PageFooter } from '../../views/layout/PageFooter'
@@ -81,6 +81,10 @@ export default memo(function HomePage(props: Props) {
       ])
     }
   })
+
+  useEffect(() => {
+    console.log('got region', props.item.region)
+  }, [props.item.region])
 
   const topContentHeight = 20 + (isSmall ? 0 : searchBarHeight + 10)
   const region = getStore(AppMapStore).regions[props.item.region]

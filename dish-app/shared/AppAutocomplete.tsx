@@ -39,9 +39,9 @@ import { defaultLocationAutocompleteResults } from './state/defaultLocationAutoc
 import { AutocompleteItem, LngLat, ShowAutocomplete } from './state/home-types'
 import { tagDefaultAutocomplete } from './state/localTags.json'
 import { NavigableTag } from './state/NavigableTag'
-import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
 import { tagDisplayName } from './state/tagMeta'
+import { useOvermind } from './state/useOvermind'
 import { CloseButton, SmallCircleButton } from './views/ui/CloseButton'
 import { LinkButton } from './views/ui/LinkButton'
 

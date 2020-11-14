@@ -11,8 +11,8 @@ import { series } from '@o/async'
 import { useEffect, useState } from 'react'
 import { Toast, useForceUpdate, useLazyEffect } from 'snackui'
 
-import { useOvermind } from '../state/om'
 import { omStatic } from '../state/omStatic'
+import { useOvermind } from '../state/useOvermind'
 
 export type ReviewWithTag = Pick<
   Review,
@@ -67,8 +67,8 @@ export const useUserReviewsQuery = (
   const reviews = reviewsQuery
     ? reviewsQuery.map<ReviewWithTag>((review) => {
         const tag = {
-          name: review.tag.name,
-          type: review.tag.type,
+          name: review?.tag?.name ?? '',
+          type: review?.tag?.type ?? '',
         }
         return {
           id: review.id,
@@ -120,7 +120,7 @@ export const useUserReviewsQuery = (
       try {
         // optimistic update
         if (review.id) {
-          const cur = reviewsQuery.find((x) => x.id === review.id)
+          const cur = reviewsQuery?.find((x) => x.id === review.id)
           if (cur) {
             for (const key in review) {
               cur[key] = review[key]
@@ -148,7 +148,7 @@ export const useUserReviewsQuery = (
 
         // post-optimistic update
         if (result.id) {
-          const cur = reviewsQuery.find((x) => x.id === result.id)
+          const cur = reviewsQuery?.find((x) => x.id === result.id)
           if (cur) {
             for (const key in result) {
               cur[key] = result[key]

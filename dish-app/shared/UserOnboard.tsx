@@ -16,8 +16,8 @@ import dishNeon from './assets/dish-neon.jpg'
 import { characters } from './pages/user/characters'
 import { UserAvatar } from './pages/user/UserAvatar'
 import { useUserQuery } from './pages/user/useUserQuery'
-import { useOvermind } from './state/om'
 import { omStatic } from './state/omStatic'
+import { useOvermind } from './state/useOvermind'
 import { SmallButton } from './views/ui/SmallButton'
 
 export const UserOnboard = graphql(({ hideLogo }: { hideLogo?: boolean }) => {
