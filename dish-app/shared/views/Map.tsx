@@ -5,6 +5,7 @@ import { fullyIdle, series } from '@o/async'
 import _, { isEqual, throttle } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { memo, useEffect, useRef, useState } from 'react'
+import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
 
 import { green, lightGreen, lightPurple, purple } from '../colors'
@@ -59,24 +60,21 @@ export const MapView = memo((props: MapProps) => {
   const getProps = useGet(props)
 
   // window resize
-  // useEffect(() => {
-  //   if (!map) return
-  //   let tm
-  //   const handleResize = _.debounce(() => {
-  //     if (!map) return
-  //     map.resize()
-  //     // occasionally it wasnt resizing in chrome who knows why...
-  //     tm = setTimeout(() => {
-  //       map?.resize()
-  //     }, 200)
-  //   }, 300)
-  //   Dimensions.addEventListener('change', handleResize)
-  //   return () => {
-  //     clearTimeout(tm)
-  //     handleResize.cancel()
-  //     Dimensions.removeEventListener('change', handleResize)
-  //   }
-  // }, [map])
+  useEffect(() => {
+    if (!map) return
+    let cancel: Function | null = null
+    const handleResize = () => {
+      if (cancel) {
+        cancel()
+      }
+      cancel = series([() => fullyIdle({ max: 200 }), () => map.resize()])
+    }
+    Dimensions.addEventListener('change', handleResize)
+    return () => {
+      cancel?.()
+      Dimensions.removeEventListener('change', handleResize)
+    }
+  }, [map])
 
   useEffect(() => {
     if (!mapNode.current) return
@@ -400,7 +398,7 @@ function setupMapEffect({
             promoteId: 'ogc_fid',
             activeColor: 'rgba(255, 255, 255, 0)',
             hoverColor: 'rgba(255,255,255,0.2)',
-            color: lightPurple,
+            color: 'rgba(248, 238, 248, 0.5)',
             name: 'public.zcta5',
           },
           // {
