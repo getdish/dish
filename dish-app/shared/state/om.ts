@@ -1,5 +1,4 @@
 import { IConfig, createOvermind } from 'overmind'
-import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 
 import * as home from './home'
@@ -41,7 +40,3 @@ type OmState = IConfig<typeof config>
 declare module 'overmind' {
   interface Config extends OmState {}
 }
-
-// helpers
-
-export const useOvermind = createHook<typeof config>()

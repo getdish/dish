@@ -7,7 +7,7 @@ import { AppIntroLogin } from './AppIntroLogin'
 // @ts-ignore
 import { DarkModal } from './DarkModal'
 import { IntroModal } from './IntroModal'
-import { useOvermind } from './state/om'
+import { useOvermind } from './state/useOvermind'
 import { UserOnboard } from './UserOnboard'
 import { CloseButton, SmallCircleButton } from './views/ui/CloseButton'
 

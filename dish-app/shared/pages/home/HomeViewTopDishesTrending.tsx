@@ -9,7 +9,7 @@ import {
   mediaQueries,
 } from 'snackui'
 
-import { useOvermind } from '../../state/om'
+import { useOvermind } from '../../state/useOvermind'
 import { LinkButton } from '../../views/ui/LinkButton'
 import { TrendingButton } from '../../views/ui/TrendingButton'
 

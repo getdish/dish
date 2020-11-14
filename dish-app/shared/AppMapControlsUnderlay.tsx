@@ -6,7 +6,7 @@ import { isWeb, searchBarHeight, zIndexDrawer } from './constants'
 import { useIsNarrow } from './hooks/useIs'
 import { useMapSize } from './hooks/useMapSize'
 import { useSafeArea } from './hooks/useSafeArea'
-import { useOvermind } from './state/om'
+import { useOvermind } from './state/useOvermind'
 import { OverlayLinkButton } from './views/ui/OverlayLinkButton'
 
 export const AppMapControlsUnderlay = memo(() => {

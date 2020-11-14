@@ -8,8 +8,8 @@ import { addTagsToCache, allTags } from '../state/allTags'
 import { getFullTags } from '../state/getFullTags'
 import { getTagSlug } from '../state/getTagSlug'
 import { HomeActiveTagsRecord } from '../state/home-types'
-import { useOvermind } from '../state/om'
 import { omStatic } from '../state/omStatic'
+import { useOvermind } from '../state/useOvermind'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 export type VoteNumber = -1 | 0 | 1

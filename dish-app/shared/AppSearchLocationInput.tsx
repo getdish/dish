@@ -11,7 +11,7 @@ import { isWeb } from './constants'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
-import { useOvermind } from './state/om'
+import { useOvermind } from './state/useOvermind'
 
 const paddingHorizontal = 16
 
@@ -86,10 +86,6 @@ export const AppSearchLocationInput = memo(() => {
       <AppAutocompleteHoverableInput
         input={inputStore.node}
         autocompleteTarget="location"
-        backgroundColor="rgba(255,255,255,0.15)"
-        {...(!isSmall && {
-          borderRadius: 100,
-        })}
       >
         <HStack
           flex={1}

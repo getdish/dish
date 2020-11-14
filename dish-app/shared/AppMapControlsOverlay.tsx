@@ -13,7 +13,7 @@ import { getWindowHeight } from './helpers/getWindow'
 import { useIsNarrow, useIsReallyNarrow } from './hooks/useIs'
 import { useMapSize } from './hooks/useMapSize'
 import { useSafeArea } from './hooks/useSafeArea'
-import { useOvermind } from './state/om'
+import { useOvermind } from './state/useOvermind'
 
 export const AppMapControlsOverlay = memo(() => {
   const om = useOvermind()

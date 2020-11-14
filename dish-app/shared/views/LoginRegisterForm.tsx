@@ -23,7 +23,7 @@ import {
 
 import { lightRed } from '../colors'
 import { isWeb } from '../constants'
-import { useOvermind } from '../state/om'
+import { useOvermind } from '../state/useOvermind'
 import { SignInAppleButton } from './SignInAppleButton'
 import { Link } from './ui/Link'
 import { LinkButton } from './ui/LinkButton'

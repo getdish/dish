@@ -5,7 +5,7 @@ import { VStack } from 'snackui'
 
 import { isWeb, supportsTouchWeb } from '../constants'
 import { useIsNarrow, useIsReallyNarrow } from '../hooks/useIs'
-import { useOvermind } from '../state/om'
+import { useOvermind } from '../state/useOvermind'
 
 export class ScrollStore extends Store<{ id: string }> {
   isScrolling = false
