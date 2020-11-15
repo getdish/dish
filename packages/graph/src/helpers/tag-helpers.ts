@@ -5,7 +5,7 @@ import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 import { tagTagUpsert } from './tag_tag-helpers'
 
-const QueryHelpers = createQueryHelpersFor<Tag>('tag')
+const QueryHelpers = createQueryHelpersFor<tag>('tag')
 export const tagInsert = QueryHelpers.insert
 export const tagUpsert = QueryHelpers.upsert
 export const tagUpdate = QueryHelpers.update
@@ -13,9 +13,17 @@ export const tagFindOne = QueryHelpers.findOne
 export const tagDelete = QueryHelpers.delete
 export const tagRefresh = QueryHelpers.refresh
 
-export const tagFindOneWithCategories = async (tag: Tag) => {
-  return await tagFindOne(tag, {
-    relations: ['categories.category'],
+export const tagFindOneWithCategories = async (tag: tag) => {
+  return await tagFindOne(tag, (tagV: tag) => {
+    tagV.categories
+    return {
+      ...selectFields(tagV),
+      categories: tagV.categories().map((catV) => {
+        return {
+          ...selectFields(catV),
+        }
+      }),
+    }
   })
 }
 

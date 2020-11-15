@@ -8,6 +8,7 @@ import {
   resolved,
   restaurant,
   selectFields,
+  tag,
 } from '../graphql/new-generated'
 // import { order_by, query } from '../graphql'
 import { Restaurant, RestaurantTag, RestaurantWithId, Tag } from '../types'
@@ -129,9 +130,12 @@ export async function restaurantUpsertOrphanTags(
 }
 
 export async function convertSimpleTagsToRestaurantTags(tag_strings: string[]) {
-  const tags = tag_strings.map<Tag>((tag_name) => ({
-    name: tag_name,
-  }))
+  const tags = tag_strings.map<tag>(
+    (tag_name) =>
+      ({
+        name: tag_name,
+      } as tag)
+  )
 
   // console.log(132132, JSON.stringify(tags))
 

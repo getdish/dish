@@ -2,6 +2,7 @@ import '@o/react-test-env'
 
 import anyTest, { TestInterface } from 'ava'
 
+import { tag } from '../_/graphql/new-generated'
 import {
   Auth,
   Restaurant,
@@ -22,7 +23,7 @@ import { restaurant_fixture } from './etc/fixtures'
 
 interface Context {
   restaurant: Restaurant
-  existing_tag: Tag
+  existing_tag: tag
   user: User
 }
 
@@ -32,7 +33,7 @@ test.beforeEach(async (t) => {
   await flushTestData()
   const [restaurant] = await restaurantUpsert([restaurant_fixture])
   t.context.restaurant = restaurant
-  const [existing_tag] = await tagInsert([{ name: 'Test tag existing' }])
+  const [existing_tag] = await tagInsert([{ name: 'Test tag existing' } as tag])
   t.context.existing_tag = existing_tag
   await Auth.register('test', 'test@test.com', 'password')
   const [_, user] = await Auth.login('test', 'password')

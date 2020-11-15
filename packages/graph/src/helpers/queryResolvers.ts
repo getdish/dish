@@ -26,7 +26,7 @@ export async function resolvedMutation<T extends () => unknown>(
 
 export async function resolvedMutationWithFields<T extends () => unknown>(
   resolver: T,
-  fields: (string | number)[] | '*',
+  fields: (string | number)[] | '*' = '*',
   fn?: (v: any) => unknown
 ): Promise<
   T extends () => {
