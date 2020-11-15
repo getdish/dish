@@ -4,8 +4,9 @@ import {
   Schema,
   createClient,
 } from '@dish/gqless'
-import { Auth } from 'src/Auth'
-import { getGraphEndpoint } from 'src/helpers'
+
+import { Auth } from '../../Auth'
+import { getGraphEndpoint } from '../../helpers'
 
 export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = {

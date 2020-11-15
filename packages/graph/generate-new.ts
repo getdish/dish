@@ -11,8 +11,8 @@ const run = async () => {
     headers: Auth.getHeaders(),
     generateOptions: {
       preImport: `
-      import { Auth } from 'src/Auth'
-      import { getGraphEndpoint } from 'src/helpers'
+      import { Auth } from '../../Auth'
+      import { getGraphEndpoint } from '../../helpers'
       `,
       queryFetcher: `
       const queryFetcher: QueryFetcher = async function (query, variables) {
