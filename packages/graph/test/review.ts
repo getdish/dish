@@ -2,12 +2,9 @@ import '@o/react-test-env'
 
 import anyTest, { TestInterface } from 'ava'
 
-import { tag } from '../_/graphql/new-generated'
 import {
   Auth,
-  Restaurant,
   Tag,
-  User,
   flushTestData,
   restaurantFindOne,
   restaurantFindOneWithTags,
@@ -19,12 +16,13 @@ import {
   userFavoriteARestaurant,
   userFavorites,
 } from '../src'
+import { restaurant, user } from '../src/graphql/new-generated'
 import { restaurant_fixture } from './etc/fixtures'
 
 interface Context {
-  restaurant: Restaurant
-  existing_tag: tag
-  user: User
+  restaurant: restaurant
+  existing_tag: Tag
+  user: user
 }
 
 const test = anyTest as TestInterface<Context>
@@ -32,8 +30,8 @@ const test = anyTest as TestInterface<Context>
 test.beforeEach(async (t) => {
   await flushTestData()
   const [restaurant] = await restaurantUpsert([restaurant_fixture])
-  t.context.restaurant = restaurant
-  const [existing_tag] = await tagInsert([{ name: 'Test tag existing' } as tag])
+  t.context.restaurant = restaurant as any
+  const [existing_tag] = await tagInsert([{ name: 'Test tag existing' }])
   t.context.existing_tag = existing_tag
   await Auth.register('test', 'test@test.com', 'password')
   const [_, user] = await Auth.login('test', 'password')

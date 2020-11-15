@@ -20,9 +20,9 @@ import { tagGetAllChildren, tagGetAllGenerics, tagUpsert } from './tag-helpers'
 
 const query = client.query
 
-const tagDataRelations = {
-  relations: ['tags.tag.categories.category', 'tags.tag.parent'],
-}
+// const tagDataRelations = {
+//   relations: ['tags.tag.categories.category', 'tags.tag.parent'],
+// }
 
 const QueryHelpers = createQueryHelpersFor<Restaurant>('restaurant')
 export const restaurantInsert = QueryHelpers.insert
@@ -139,7 +139,7 @@ export async function convertSimpleTagsToRestaurantTags(tag_strings: string[]) {
 
   // console.log(132132, JSON.stringify(tags))
 
-  const full_tags = await tagUpsert(tags)
+  const full_tags = await tagUpsert(tags as Tag[])
 
   // console.log(133133, JSON.stringify(full_tags, null, 2))
   return full_tags.map<RestaurantTag>((tag) => ({

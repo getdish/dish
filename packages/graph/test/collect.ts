@@ -3,7 +3,7 @@ import '@o/react-test-env'
 import anyTest, { TestInterface } from 'ava'
 
 import { restaurantFindOne } from '../_'
-import { restaurant, selectFields, tag } from '../_/graphql/new-generated'
+import { restaurant, selectFields } from '../_/graphql/new-generated'
 import {
   flushTestData,
   restaurantUpsert,
@@ -22,7 +22,7 @@ test.beforeEach(async () => {
 })
 
 test('Collecting the root fields', async (t) => {
-  const [existing_tag] = await tagUpsert([{ name: 'Test tag existing' } as tag])
+  const [existing_tag] = await tagUpsert([{ name: 'Test tag existing' }])
   t.assert(Object.keys(existing_tag).length > 5)
   t.is(existing_tag.name, 'Test tag existing')
   t.assert(existing_tag.parent == null)
@@ -30,7 +30,7 @@ test('Collecting the root fields', async (t) => {
 })
 
 test('Collecting a one-to-one relation', async (t) => {
-  const [existing_tag] = await tagUpsert([{ name: 'Test tag existing' } as tag])
+  const [existing_tag] = await tagUpsert([{ name: 'Test tag existing' }])
   const tag = await tagFindOne(existing_tag)
   if (!tag) return
   t.assert(Object.keys(tag).length > 5)

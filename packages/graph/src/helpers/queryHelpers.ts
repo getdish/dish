@@ -3,6 +3,7 @@ import { parseSchemaType } from '@dish/gqless'
 import {
   Scalars,
   generatedSchema,
+  mutation,
   photo_constraint,
   photo_xref_constraint,
   query,
@@ -15,11 +16,9 @@ import {
   tag_tag_constraint,
   user_constraint,
 } from '../graphql/new-generated'
-import { mutation } from '../graphql/new-generated'
 // import { mutation } from '../graphql/mutation'
 import { ModelName, ModelType, WithID } from '../types'
-import { CollectOptions } from './collect'
-import { isMutatableField, isMutatableRelation } from './isMutatableField'
+import { isMutatableRelation } from './isMutatableField'
 import {
   resolvedMutation,
   resolvedMutationWithFields,
@@ -62,10 +61,10 @@ export function createQueryHelpersFor<A>(
   defaultUpsertConstraint?: string
 ) {
   return {
-    async insert(items: A[]) {
+    async insert(items: Partial<A>[]) {
       return await insert<A>(modelName, items)
     },
-    async upsert(items: A[], constraint?: string) {
+    async upsert(items: Partial<A>[], constraint?: string) {
       return await upsert<A>(
         modelName,
         items,
@@ -75,11 +74,11 @@ export function createQueryHelpersFor<A>(
     async update(a: WithID<A>, fn?: (v: any) => unknown) {
       return await update<WithID<A>>(modelName, a, fn)
     },
-    async findOne(a: A, fn?: (v: any) => unknown) {
-      return await findOne<WithID<A>>(modelName, a, fn)
+    async findOne(a: Partial<A>, fn?: (v: any) => unknown) {
+      return await findOne<WithID<A>>(modelName, a as A, fn)
     },
-    async findAll(a: A, fn?: (v: any) => unknown) {
-      return await findAll<WithID<A>>(modelName, a, fn)
+    async findAll(a: Partial<A>, fn?: (v: any) => unknown) {
+      return await findAll<WithID<A>>(modelName, a as A, fn)
     },
     async refresh(a: WithID<A>) {
       const next = await findOne(modelName, { id: a.id })
@@ -115,7 +114,7 @@ export async function findAll<T extends ModelType>(
 
 export async function insert<T extends ModelType>(
   table: ModelName,
-  objects: T[],
+  objects: Partial<T>[],
   fn?: (v: any) => unknown
 ): Promise<WithID<T>[]> {
   const action = `insert_${table}` as any
@@ -136,7 +135,7 @@ export async function insert<T extends ModelType>(
 
 export async function upsert<T extends ModelType>(
   table: ModelName,
-  objectsIn: T[],
+  objectsIn: Partial<T>[],
   constraint?: string
 ): Promise<WithID<T>[]> {
   constraint = constraint ?? defaultConstraints[table]
