@@ -8806,4 +8806,4 @@ export type user_variance_fields = TypeData<t_user_variance_fields>
  * @name uuid
  * @type SCALAR
  */
-export type uuid = TypeData<t_uuid>
+// export type uuid = TypeData<t_uuid>

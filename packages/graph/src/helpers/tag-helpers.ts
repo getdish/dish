@@ -1,4 +1,5 @@
-import { order_by, query } from '../graphql'
+// import { order_by, query } from '../graphql'
+import { order_by, query, selectFields, tag } from '../graphql/new-generated'
 import { Tag, TagTag, TagWithId } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
@@ -68,7 +69,7 @@ export async function tagGetAllCuisinesWithDishes(
 ) {
   return await resolvedWithFields(
     () => {
-      return query.tag({
+      const r = query.tag({
         where: {
           parent: {
             type: { _eq: 'country' },
@@ -82,8 +83,17 @@ export async function tagGetAllCuisinesWithDishes(
           },
         ],
       })
+
+      return r
     },
-    { relations: ['parent'] }
+    (t: tag[]) => {
+      return t.map((v) => {
+        return {
+          ...selectFields(v),
+          parent: selectFields(v.parent),
+        }
+      })
+    }
   )
 }
 

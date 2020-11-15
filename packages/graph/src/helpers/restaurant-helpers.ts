@@ -19,6 +19,10 @@ import { tagGetAllChildren, tagGetAllGenerics, tagUpsert } from './tag-helpers'
 
 const query = client.query
 
+const tagDataRelations = {
+  relations: ['tags.tag.categories.category', 'tags.tag.parent'],
+}
+
 const QueryHelpers = createQueryHelpersFor<Restaurant>('restaurant')
 export const restaurantInsert = QueryHelpers.insert
 export const restaurantUpsert = QueryHelpers.upsert
@@ -33,15 +37,19 @@ export const restaurant_fixture = {
   location: { type: 'Point', coordinates: [0, 0] },
 }
 
-export async function restaurantFindOneWithTags(restaurant: RestaurantWithId) {
+export async function restaurantFindOneWithTags(
+  restaurant: Partial<RestaurantWithId>
+) {
   return await restaurantFindOne(restaurant, (v: Maybe<restaurant>[]) => {
     return v.map((rest) => {
       return {
         ...selectFields(rest),
+        tag_names: rest?.tag_names(),
         tags: rest?.tags().map((tagV) => {
           return {
             ...selectFields(tagV),
             tag: {
+              ...selectFields(tagV.tag),
               categories: tagV.tag.categories().map((catV) => {
                 return {
                   category: selectFields(catV.category),
@@ -52,7 +60,7 @@ export async function restaurantFindOneWithTags(restaurant: RestaurantWithId) {
             sentences: selectFields(tagV.sentences()),
           }
         }),
-      } as any
+      }
     })
   })
 }
@@ -116,6 +124,7 @@ export async function restaurantUpsertOrphanTags(
   tag_strings: string[]
 ) {
   const restaurant_tags = await convertSimpleTagsToRestaurantTags(tag_strings)
+
   return await restaurantUpsertRestaurantTags(restaurant, restaurant_tags)
 }
 
@@ -123,7 +132,12 @@ export async function convertSimpleTagsToRestaurantTags(tag_strings: string[]) {
   const tags = tag_strings.map<Tag>((tag_name) => ({
     name: tag_name,
   }))
+
+  // console.log(132132, JSON.stringify(tags))
+
   const full_tags = await tagUpsert(tags)
+
+  // console.log(133133, JSON.stringify(full_tags, null, 2))
   return full_tags.map<RestaurantTag>((tag) => ({
     tag_id: tag.id,
   }))
@@ -133,12 +147,17 @@ export async function restaurantUpsertRestaurantTags(
   restaurant: RestaurantWithId,
   restaurant_tags: RestaurantTag[]
 ) {
+  // console.log(14141, restaurant, restaurant_tags)
   const updated_restaurant = await restaurantTagUpsert(
     restaurant.id,
     restaurant_tags
   )
-  console.log(140, JSON.stringify(updated_restaurant))
-  return await restaurantUpdateTagNames(updated_restaurant)
+
+  // console.log(147, JSON.stringify(updated_restaurant, null, 2))
+
+  const d = await restaurantUpdateTagNames(updated_restaurant)
+
+  return d
 }
 
 async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
@@ -148,17 +167,48 @@ async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
     ...new Set(
       tags
         .map((rt: RestaurantTag) => {
+          // console.log(153153, rt)
           // @natew do you know why this has to be manually cast to a Tag?
           return tagSlugs(rt.tag as Tag)
         })
         .flat()
     ),
   ]
-  return await restaurantUpdate({
-    ...restaurant,
-    // @ts-ignore
-    tag_names: tag_names,
-  })
+
+  // console.log(162162, tag_names)
+
+  const dataRestaurantUpdate = await restaurantUpdate(
+    {
+      ...restaurant,
+      // @ts-ignore
+      tag_names: tag_names,
+    },
+    (v: restaurant[]) => {
+      return v.map((rest) => {
+        return {
+          ...selectFields(rest),
+          tag_names: rest.tag_names(),
+          tags: rest.tags().map((r_t) => {
+            const tagInfo = selectFields(r_t.tag)
+
+            return {
+              tag: {
+                ...tagInfo,
+                categories: r_t.tag.categories().map((cat) => {
+                  return {
+                    category: selectFields(cat.category),
+                  }
+                }),
+                parent: selectFields(r_t.tag.parent),
+              },
+            }
+          }),
+        }
+      })
+    }
+  )
+
+  return dataRestaurantUpdate
 }
 
 function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {

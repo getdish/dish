@@ -173,7 +173,7 @@ export async function update<T extends WithID<ModelType>>(
     if (object[key] == null) delete object[key]
   }
   const keys = Object.keys(generatedSchema[table + '_set_input'])
-  console.log(164, keys)
+  // console.log(164, keys)
   const [resolved] = await resolvedMutationWithFields(
     () => {
       const res = mutation[action]({
@@ -237,32 +237,45 @@ export function prepareData<T>(table: string, objects: T[]): T[] {
 }
 
 function formatRelationData<T>(table: string, objects: T[]) {
-  const inputKeys = Object.keys(generatedSchema[table + '_set_input'])
-
   return objects.map((cur) => {
     return Object.keys(cur).reduce((acc, key) => {
-      const typeNameToParse = generatedSchema[table][key]['__type']
-      const { pureType: typeName } = parseSchemaType(typeNameToParse)
+      const hasArgs = !!generatedSchema[table][key]['__args']
+      const schemaType = generatedSchema[table][key]['__type']
+      const {
+        pureType: typeName,
+        isArray,
+        isNullable,
+        nullableItems,
+      } = parseSchemaType(schemaType)
+      const inputKeys = Object.keys(generatedSchema[table + '_set_input'])
 
       const fieldName = key
 
+      if (!inputKeys.includes(fieldName)) return acc
+
       if (isMutatableRelation(fieldName, typeName)) {
         let relation_table: string
-        // if (field_meta_data.ofNode.innerNode) {
-        //   relation_table = field_meta_data.ofNode.innerNode.name
-        // } else {
-        relation_table = key
-        // }
-        console.log(256, relation_table)
+        // ??
+        if (isArray) {
+          if (fieldName === 'tags') {
+            relation_table = 'restaurant_tag'
+          } else {
+            relation_table = typeName
+          }
+        } else {
+          relation_table = fieldName
+        }
+        // undefined
         const constraint = defaultConstraints[relation_table]
         const update_columns = updateableColumns(relation_table, cur[key])
-        acc[key] = {
+        const d = {
           data: cur[key],
           on_conflict: {
             constraint,
             update_columns,
           },
         }
+        acc[key] = d
       } else {
         acc[key] = cur[key]
       }
@@ -311,14 +324,6 @@ function deJSONStringify(object: {}, key: string, value: any) {
 }
 
 export function updateableColumns(table: string, object: any) {
-  const {} = parseSchemaType(table)
-  console.log(311, generatedSchema[table])
-  const inputKeys = Object.keys(
-    generatedSchema[table + '_set_input'] ||
-      generatedSchema[table] ||
-      generatedSchema[table.slice(0, table.length - 1)]
-  )
-
   if (!object || object.length == 0) return []
   let columns: string[] = []
   let candidates: string[] = []
@@ -328,10 +333,14 @@ export function updateableColumns(table: string, object: any) {
     candidates = Object.keys(object[0])
   }
   for (const key of candidates) {
-    console.log(inputKeys, key)
-    if (inputKeys.includes(key)) columns.push(key)
-    // const field = inputKeys[table].fields[key]
-    // if (!isMutatableRelation(field)) columns.push(key)
+    try {
+      const schemaType = generatedSchema[table][key]['__type']
+      const { pureType: typeName } = parseSchemaType(schemaType)
+      const fieldName = key
+      if (!isMutatableRelation(fieldName, typeName)) columns.push(key)
+    } catch (err) {
+      console.error(err)
+    }
   }
   return columns
 }

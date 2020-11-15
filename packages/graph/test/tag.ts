@@ -26,10 +26,8 @@ const test = anyTest as TestInterface<Context>
 test.beforeEach(async (t) => {
   await flushTestData()
   const [restaurant] = await restaurantUpsert([restaurant_fixture])
-  // @ts-ignore
   t.context.restaurant = restaurant
   const [existing_tag] = await tagUpsert([{ name: 'Test tag existing' }])
-  // @ts-ignore
   t.context.existing_tag = existing_tag
 })
 
@@ -116,6 +114,7 @@ test.skip('Getting top tags for a restaurant', async (t) => {
   let restaurant = await restaurantFindOneWithTags({
     name: 'Test Restaurant',
   })
+  if (!restaurant) throw Error('Restaurant not found!')
   await restaurantUpsertOrphanTags(restaurant, [
     'Test tag',
     'Test tag existing',
@@ -137,6 +136,7 @@ test.skip('Getting top tags for a restaurant', async (t) => {
   console.log(restaurant.slug)
   const results = await restaurant_query.top_tags({
     args: {
+      //@ts-expect-error
       tag_names: [''],
       tag_types: 'dish',
     },

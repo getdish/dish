@@ -35,11 +35,8 @@ test('Searching for a restaurant by name', async (t) => {
 })
 
 test.only('Searching for a restaurant by tag', async (t) => {
-  console.log(38)
   let [restaurant] = await restaurantUpsert([restaurant_fixture])
-  console.log(39)
   restaurant = (await restaurantUpsertOrphanTags(restaurant, ['Test tag']))!
-  console.log(42, restaurant)
   const results = await search({
     center: {
       lat: 50.24,
@@ -52,7 +49,6 @@ test.only('Searching for a restaurant by tag', async (t) => {
     query: '',
     tags: ['test-tag'],
   })
-  console.log(53, results)
   t.is(results?.[0].id, restaurant.id)
 })
 
@@ -119,13 +115,19 @@ test('Orders by restaurant+tag score if dish tags queried', async (t) => {
 
   t.is(results?.length, 3)
   t.is(results?.[0].id, rr1.id)
+  //@ts-expect-error
   t.is(results?.[0].meta.restaurant_rank, 1)
+  //@ts-expect-error
   t.is(results?.[0].meta.rish_rank, 2)
   t.is(results?.[1].id, rr3.id)
+  //@ts-expect-error
   t.is(results?.[1].meta.restaurant_rank, 3)
+  //@ts-expect-error
   t.is(results?.[1].meta.rish_rank, 1)
   t.is(results?.[2].id, rr2.id)
+  //@ts-expect-error
   t.is(results?.[2].meta.restaurant_rank, 2)
+  //@ts-expect-error
   t.is(results?.[2].meta.rish_rank, 3)
 })
 
@@ -171,12 +173,18 @@ test('Supports main_tag priority ordering', async (t) => {
   })
   t.is(results?.length, 3)
   t.is(results?.[0].id, rr2.id)
+  //@ts-expect-error
   t.is(results?.[0].meta.main_tag_rank, 1)
+  //@ts-expect-error
   t.is(results?.[0].meta.restaurant_rank, 2)
   t.is(results?.[1].id, rr1.id)
+  //@ts-expect-error
   t.is(results?.[1].meta.main_tag_rank, 2)
+  //@ts-expect-error
   t.is(results?.[1].meta.restaurant_rank, 1)
   t.is(results?.[2].id, rr3.id)
+  //@ts-expect-error
   t.is(results?.[2].meta.main_tag_rank, 3)
+  //@ts-expect-error
   t.is(results?.[2].meta.restaurant_rank, 3)
 })

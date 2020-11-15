@@ -4,13 +4,16 @@ import { scalarsEnumsHash } from '../graphql/new-generated'
 
 const isSimpleField = (typeName: string) => {
   const { pureType } = parseSchemaType(typeName)
-  return scalarsEnumsHash[pureType] || false
+  return scalarsEnumsHash[pureType] ?? false
 }
 
 const isRelation = (typeName: string) => {
   const { pureType, isArray } = parseSchemaType(typeName)
 
-  return !scalarsEnumsHash[pureType] || isArray
+  const isScalar: boolean = scalarsEnumsHash[pureType]
+
+  return isArray ? true : !isScalar
+  // return !scalarsEnumsHash[pureType] || isArray
   // return field.ofNode instanceof ObjectNode || field.ofNode instanceof ArrayNode
 }
 

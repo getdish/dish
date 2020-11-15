@@ -53,9 +53,11 @@ export async function restaurantTagUpsert(
         r_t.restaurant
         return {
           restaurant: {
+            ...selectFields(r_t.restaurant),
             tags: r_t.restaurant.tags().map((r_t_2) => {
               return {
                 tag: {
+                  ...selectFields(r_t_2.tag),
                   categories: r_t_2.tag.categories().map((cat) => {
                     return {
                       category: selectFields(cat.category),

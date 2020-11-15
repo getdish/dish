@@ -13,8 +13,7 @@
     "test": "TARGET=node DISH_ENV=test ava test/* --verbose --serial",
     "test:debug": "TARGET=node DEBUG=1 DISH_ENV=test ava test/* --verbose --serial",
     "test:watch": "TARGET=node DISH_ENV=test ava test/* --watch --verbose --serial",
-    "test-new": "TARGET=node DISH_ENV=test ava test/search.ts --verbose",
-    "test-restaurant": "TARGET=node DISH_ENV=test ava test/restaurant.ts --verbose"
+    "test-new": "TARGET=node DISH_ENV=test ava test/tag.ts --verbose"
   },
   "dependencies": {
     "@dish/helpers": "*",
