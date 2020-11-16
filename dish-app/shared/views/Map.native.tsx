@@ -115,15 +115,19 @@ export const Map = ({
           }
         }}
       >
-        <MapboxGL.Camera
-          ref={cameraRef}
-          minZoomLevel={2}
-          maxZoomLevel={14}
-          defaultSettings={{
-            zoomLevel: span.lng * 200,
-            bounds,
-          }}
-        />
+        {/*
+          // Causes error on Android:
+          // Error while updating property 'stop' of a view managed by: RCTMGLCamera
+          <MapboxGL.Camera
+            ref={cameraRef}
+            minZoomLevel={2}
+            maxZoomLevel={14}
+            defaultSettings={{
+              zoomLevel: span.lng * 200,
+              bounds,
+            }}
+          />
+        */}
         <MapboxGL.ShapeSource
           id="trackClustersSource"
           shape={{
