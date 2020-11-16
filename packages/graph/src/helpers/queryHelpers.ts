@@ -130,7 +130,7 @@ export async function insert<T extends ModelType>(
   return await resolvedMutationWithFields(
     () => {
       return mutation[action]({
-        objects: prepareData(table, objects),
+        objects: prepareData(table, objects, '_insert_input'),
       })
     },
     keys,
@@ -145,7 +145,7 @@ export async function upsert<T extends ModelType>(
   fn?: (v: any) => unknown
 ): Promise<WithID<T>[]> {
   constraint = constraint ?? defaultConstraints[table]
-  const objects = prepareData(table, objectsIn)
+  const objects = prepareData(table, objectsIn, '_insert_input')
   const update_columns = updateableColumns(table, objects[0])
   const action = `insert_${table}` as any
 
@@ -177,12 +177,11 @@ export async function update<T extends WithID<ModelType>>(
   fn?: (v: any) => unknown
 ): Promise<WithID<T>> {
   const action = `update_${table}` as any
-  const [object] = prepareData(table, [objectIn])
+  const [object] = prepareData(table, [objectIn], '_set_input')
   for (const key of Object.keys(object)) {
     if (object[key] == null) delete object[key]
   }
   const keys = Object.keys(generatedSchema[table + '_set_input'])
-  // console.log(164, keys)
   const [resolved] = await resolvedMutationWithFields(
     () => {
       const res = mutation[action]({
@@ -207,11 +206,7 @@ export async function deleteAllFuzzyBy(
       where: { [key]: { _ilike: `%${value}%` } },
     })
 
-    // console.log(1822, m)
-
     const r = selectFields(m, '*', 3)
-
-    // console.log(188, r)
 
     return r
   })
@@ -239,13 +234,21 @@ export async function deleteByIDs(table: string, ids: uuid[]): Promise<void> {
   })
 }
 
-export function prepareData<T>(table: string, objects: T[]): T[] {
-  objects = formatRelationData<T>(table, objects)
+export function prepareData<T>(
+  table: string,
+  objects: T[],
+  inputType: '_set_input' | '_insert_input'
+): T[] {
+  objects = formatRelationData<T>(table, objects, inputType)
   objects = objects.map((o) => ensureJSONSyntax(o) as T)
   return objects
 }
 
-function formatRelationData<T>(table: string, objects: T[]) {
+function formatRelationData<T>(
+  table: string,
+  objects: T[],
+  inputType: '_set_input' | '_insert_input'
+) {
   return objects.map((cur) => {
     return Object.keys(cur).reduce((acc, key) => {
       const hasArgs = !!generatedSchema[table][key]['__args']
@@ -256,13 +259,15 @@ function formatRelationData<T>(table: string, objects: T[]) {
         isNullable,
         nullableItems,
       } = parseSchemaType(schemaType)
-      const inputKeys = Object.keys(generatedSchema[table + '_set_input'])
+      const inputKeys = Object.keys(generatedSchema[table + inputType])
 
       const fieldName = key
 
       if (!inputKeys.includes(fieldName)) return acc
 
       if (isMutatableRelation(fieldName, typeName)) {
+        // console.log('fieldName', fieldName, 'is mutable with type', typeName)
+
         let relation_table: string
         // ??
         if (isArray) {

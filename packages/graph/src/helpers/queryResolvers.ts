@@ -18,23 +18,17 @@ export async function resolvedMutation<T extends () => unknown>(
     : any
 > {
   const next = await resolved(resolver, {
-    noCache: true, // it will modify global cache
+    noCache: true,
   })
   //@ts-expect-error
   return next
 }
 
-export async function resolvedMutationWithFields<T extends () => unknown>(
-  resolver: T,
+export async function resolvedMutationWithFields<T>(
+  resolver: () => T,
   fields: (string | number)[] | '*' = '*',
   fn?: (v: any) => unknown
-): Promise<
-  T extends () => {
-    returning: infer X
-  }
-    ? X
-    : any
-> {
+): Promise<T> {
   //@ts-expect-error
   return await resolvedMutation(() => {
     const res = resolver()
@@ -66,12 +60,9 @@ export async function resolvedWithFields<T extends () => unknown>(
   return next
 }
 
-export async function resolvedWithoutCache<T extends () => unknown>(
-  resolver: T
-): Promise<T extends () => infer U ? U : any> {
+export async function resolvedWithoutCache<T>(resolver: () => T): Promise<T> {
   const next = await resolved(resolver, {
     noCache: true,
   })
-  //@ts-expect-error
   return next
 }

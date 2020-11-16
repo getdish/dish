@@ -61,6 +61,7 @@ export async function restaurantFindOneWithTags(
             sentences: selectFields(tagV.sentences()),
           }
         }),
+        menu_items: selectFields(rest?.menu_items()),
       }
     })
   })
@@ -196,10 +197,12 @@ async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
             const tagInfo = selectFields(r_t.tag)
 
             return {
+              ...selectFields(r_t, '*', 2),
               tag: {
                 ...tagInfo,
                 categories: r_t.tag.categories().map((cat) => {
                   return {
+                    ...selectFields(cat),
                     category: selectFields(cat.category),
                   }
                 }),

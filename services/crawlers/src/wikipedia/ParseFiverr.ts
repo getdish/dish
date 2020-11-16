@@ -100,6 +100,7 @@ export class ParseFiverr {
           return v_t.map((v) => {
             return {
               ...selectFields(v),
+              alternates: v.alternates(),
             }
           })
         }
@@ -122,13 +123,24 @@ export class ParseFiverr {
     if (line == '') return
     line = line.replace(/ *\([^)]*\) */g, '').replace(/,$/, '')
 
-    let [tag] = await tagUpsert([
-      {
-        name: line,
-        type: 'dish',
-        parentId: this.country.id,
-      },
-    ])
+    let [tag] = await tagUpsert(
+      [
+        {
+          name: line,
+          type: 'dish',
+          parentId: this.country.id,
+        },
+      ],
+      undefined,
+      (v_t: tag[]) => {
+        return v_t.map((v) => {
+          return {
+            ...selectFields(v),
+            alternates: v.alternates(),
+          }
+        })
+      }
+    )
     tagAddAlternate(tag, original)
     ;[tag] = await tagUpsert([tag])
 

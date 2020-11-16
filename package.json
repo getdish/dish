@@ -37,7 +37,7 @@
     "build:monitor": "ultra --monitor",
     "build:watch:broken": "yarn tsc -b -w",
     "build:refs": "typescript-monorepo-toolkit inject-refs .",
-    "test": "ultra -r --no-pretty --serial test",
+    "test": "ultra -r --no-pretty test",
     "graph:generate": "yarn workspace @dish/graph generate",
     "clean": "bin/clean.sh",
     "hasura:migrate": "(cd services/hasura && hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password)",

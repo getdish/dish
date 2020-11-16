@@ -325,12 +325,9 @@ test.beforeEach(async (t) => {
 test('Merging', async (t) => {
   const self = new Self()
   await self.mergeAll(t.context.restaurant.id)
-  const updated = await restaurantFindOneWithTags(
-    {
-      id: t.context.restaurant.id,
-    },
-    ['menu_items']
-  )
+  const updated = await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })
   const photos = await bestPhotosForRestaurant(t.context.restaurant.id)
   t.is(photos[0].photo?.origin, 'https://i.imgur.com/N6YtgRI.jpeg')
   t.assert(parseFloat(photos[0].photo?.quality).toFixed(3), '5.374')

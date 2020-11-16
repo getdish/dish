@@ -33,7 +33,7 @@ export async function settingGet(key: string) {
 export async function settingSet(key: string, value: any) {
   const table = 'setting'
   let object = { key, value }
-  object = prepareData(table, [object])[0]
+  object = prepareData(table, [object], '_set_input')[0]
   await resolvedMutationWithFields(() => {
     const result = mutation[`update_${table}`]({
       where: {

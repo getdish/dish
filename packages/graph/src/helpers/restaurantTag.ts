@@ -65,6 +65,7 @@ export async function restaurantTagUpsert(
                   }),
                   parent: selectFields(r_t_2.tag.parent),
                 },
+                reviews: selectFields(r_t_2.reviews(), '*', 2),
               }
             }),
           },

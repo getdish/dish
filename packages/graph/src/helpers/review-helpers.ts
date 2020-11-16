@@ -60,7 +60,12 @@ export async function reviewFindAllForRestaurant(
     (r: review[]) => {
       return r.map((review) => {
         return {
-          sentiments: selectFields(review.sentiments()),
+          ...selectFields(review, '*', 2),
+          restaurant: {
+            ...selectFields(review.restaurant),
+            tags: selectFields(review.restaurant.tags(), '*', 2),
+          },
+          sentiments: selectFields(review.sentiments(), '*', 2),
         }
       })
     }
@@ -68,18 +73,32 @@ export async function reviewFindAllForRestaurant(
 }
 
 export async function reviewFindAllForUser(user_id: uuid) {
-  return await resolvedWithFields(() => {
-    return query.review({
-      where: {
-        user_id: { _eq: user_id },
-      },
-      order_by: [
-        {
-          updated_at: order_by.asc,
+  return await resolvedWithFields(
+    () => {
+      return query.review({
+        where: {
+          user_id: { _eq: user_id },
         },
-      ],
-    })
-  })
+        order_by: [
+          {
+            updated_at: order_by.asc,
+          },
+        ],
+      })
+    },
+    (r: review[]) => {
+      return r.map((review) => {
+        return {
+          ...selectFields(review, '*', 2),
+          restaurant: {
+            ...selectFields(review.restaurant),
+            tags: selectFields(review.restaurant.tags(), '*', 2),
+          },
+          sentiments: selectFields(review.sentiments(), '*', 2),
+        }
+      })
+    }
+  )
 }
 
 export async function userFavoriteARestaurant(
@@ -87,31 +106,60 @@ export async function userFavoriteARestaurant(
   restaurant_id: uuid,
   favorited = true
 ) {
-  const [review] = await reviewUpsert([
-    {
-      restaurant_id: restaurant_id,
-      user_id: user_id,
-      tag_id: globalTagId,
-      favorited: favorited,
-    },
-  ])
+  const [review] = await reviewUpsert(
+    [
+      {
+        restaurant_id: restaurant_id,
+        user_id: user_id,
+        tag_id: globalTagId,
+        favorited: favorited,
+      },
+    ],
+    undefined,
+    (r_v: review[]) => {
+      return r_v.map((review) => {
+        return {
+          ...selectFields(review, '*', 2),
+          restaurant: {
+            ...selectFields(review.restaurant),
+            tags: selectFields(review.restaurant.tags(), '*', 2),
+          },
+          sentiments: selectFields(review.sentiments(), '*', 2),
+        }
+      })
+    }
+  )
   return review
 }
 
 export async function userFavorites(user_id: string) {
-  return await resolvedWithFields(() => {
-    return query.review({
-      where: {
-        user_id: { _eq: user_id },
-        favorited: { _eq: true },
-      },
-      order_by: [
-        {
-          updated_at: order_by.asc,
+  return await resolvedWithFields(
+    () => {
+      return query.review({
+        where: {
+          user_id: { _eq: user_id },
+          favorited: { _eq: true },
         },
-      ],
-    })
-  })
+        order_by: [
+          {
+            updated_at: order_by.asc,
+          },
+        ],
+      })
+    },
+    (r: review[]) => {
+      return r.map((review) => {
+        return {
+          ...selectFields(review, '*', 2),
+          restaurant: {
+            ...selectFields(review.restaurant),
+            tags: selectFields(review.restaurant.tags(), '*', 2),
+          },
+          sentiments: selectFields(review.sentiments(), '*', 2),
+        }
+      })
+    }
+  )
 }
 
 export async function reviewExternalUpsert(reviews: Review[]) {
@@ -119,10 +167,25 @@ export async function reviewExternalUpsert(reviews: Review[]) {
     r.text = cleanReviewText(r.text)
     return r
   })
-  return await reviewUpsert(
+
+  const d = await reviewUpsert(
     reviews,
-    review_constraint.review_username_restaurant_id_tag_id_authored_at_key
+    review_constraint.review_username_restaurant_id_tag_id_authored_at_key,
+    (r_v: review[]) => {
+      return r_v.map((review) => {
+        return {
+          ...selectFields(review, '*', 2),
+          restaurant: {
+            ...selectFields(review.restaurant),
+            tags: selectFields(review.restaurant.tags(), '*', 2),
+          },
+          sentiments: selectFields(review.sentiments(), '*', 2),
+        }
+      })
+    }
   )
+
+  return d
 }
 
 export function cleanReviewText(text: string | null | undefined) {
