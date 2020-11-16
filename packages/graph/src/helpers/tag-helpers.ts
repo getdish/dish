@@ -15,7 +15,6 @@ export const tagRefresh = QueryHelpers.refresh
 
 export const tagFindOneWithCategories = async (tag: Tag) => {
   return await tagFindOne(tag, (tagV: tag) => {
-    tagV.categories
     return {
       ...selectFields(tagV),
       categories: tagV.categories().map((catV) => {
@@ -23,6 +22,7 @@ export const tagFindOneWithCategories = async (tag: Tag) => {
           ...selectFields(catV),
         }
       }),
+      alternates: tagV.alternates(),
     }
   })
 }
@@ -99,6 +99,7 @@ export async function tagGetAllCuisinesWithDishes(
         return {
           ...selectFields(v),
           parent: selectFields(v.parent),
+          alternates: v.alternates(),
         }
       })
     }

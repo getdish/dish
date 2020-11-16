@@ -61,14 +61,19 @@ export function createQueryHelpersFor<A>(
   defaultUpsertConstraint?: string
 ) {
   return {
-    async insert(items: Partial<A>[]) {
-      return await insert<A>(modelName, items)
+    async insert(items: Partial<A>[], fn?: (v: any) => unknown) {
+      return await insert<A>(modelName, items, fn)
     },
-    async upsert(items: Partial<A>[], constraint?: string) {
+    async upsert(
+      items: Partial<A>[],
+      constraint?: string,
+      fn?: (v: any) => unknown
+    ) {
       return await upsert<A>(
         modelName,
         items,
-        constraint ?? defaultUpsertConstraint
+        constraint ?? defaultUpsertConstraint,
+        fn
       )
     },
     async update(a: WithID<A>, fn?: (v: any) => unknown) {
@@ -136,7 +141,8 @@ export async function insert<T extends ModelType>(
 export async function upsert<T extends ModelType>(
   table: ModelName,
   objectsIn: Partial<T>[],
-  constraint?: string
+  constraint?: string,
+  fn?: (v: any) => unknown
 ): Promise<WithID<T>[]> {
   constraint = constraint ?? defaultConstraints[table]
   const objects = prepareData(table, objectsIn)
@@ -148,17 +154,21 @@ export async function upsert<T extends ModelType>(
   const keys = Object.keys(generatedSchema[table + '_set_input'])
 
   // @ts-ignore
-  return await resolvedMutationWithFields(() => {
-    const m = mutation[action]({
-      objects,
-      on_conflict: {
-        constraint,
-        update_columns,
-      },
-    })
+  return await resolvedMutationWithFields(
+    () => {
+      const m = mutation[action]({
+        objects,
+        on_conflict: {
+          constraint,
+          update_columns,
+        },
+      })
 
-    return m
-  }, keys)
+      return m
+    },
+    keys,
+    fn
+  )
 }
 
 export async function update<T extends WithID<ModelType>>(

@@ -6,7 +6,7 @@ import {
 } from '@dish/gqless'
 
 import { Auth } from '../../Auth'
-import { getGraphEndpoint } from '../../helpers'
+import { getGraphEndpoint } from '../../helpers/getGraphEndpoint'
 
 export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = {

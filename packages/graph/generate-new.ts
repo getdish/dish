@@ -12,7 +12,7 @@ const run = async () => {
     generateOptions: {
       preImport: `
       import { Auth } from '../../Auth'
-      import { getGraphEndpoint } from '../../helpers'
+      import { getGraphEndpoint } from '../../helpers/getGraphEndpoint'
       `,
       queryFetcher: `
       const queryFetcher: QueryFetcher = async function (query, variables) {
