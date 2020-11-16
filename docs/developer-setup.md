@@ -95,16 +95,18 @@ If you want to run end to end tests:
     * Make sure the [core stack](#core-stack) is up:
       `docker-compose build && docker-compose up`
 
-    * Run the migrations, from the `services/hasura` path:
+    * Run the migrations:
       ```
-      hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password
+      ./dishctl.sh db_migrate_local
+      ./dishctl.sh timescale_migrate_local
       ```
 
     * To connect to these local services, visit:
       'http://localhost:80'
 
     * Run the tests. from the `dish-app` path:
-      `./test/testcafe.sh`
+      `yarn test` (specs, etc)
+      `./test/testcafe.sh` (integration tests)
 
 ## Hot Deploys
 
