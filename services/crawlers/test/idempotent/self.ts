@@ -356,12 +356,9 @@ test('Merging dishes', async (t) => {
   const self = new Self()
   await self.mergeAll(t.context.restaurant.id)
   await self.finishTagsEtc()
-  const updated = await restaurantFindOneWithTags(
-    {
-      id: t.context.restaurant.id,
-    },
-    ['menu_items']
-  )
+  const updated = await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })
   t.is(!!updated, true)
   if (!updated) return
   t.is(updated.menu_items.length, 2)

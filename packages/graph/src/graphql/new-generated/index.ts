@@ -9303,10 +9303,6 @@ export interface ScalarsEnums extends Scalars {
 }
 
 const queryFetcher: QueryFetcher = async function (query, variables) {
-  // console.log('query', query)
-  // console.log('variables', JSON.stringify(variables, null, 2))
-  // console.log('\n\n')
-
   const response = await fetch(getGraphEndpoint(), {
     method: 'POST',
     headers: {
@@ -9325,6 +9321,13 @@ const queryFetcher: QueryFetcher = async function (query, variables) {
   }
 
   const json = await response.json()
+
+  if (json.errors) {
+    console.log('query', query)
+    console.log('variables', JSON.stringify(variables, null, 2))
+    console.log('json', JSON.stringify(json))
+    console.log('\n\n')
+  }
 
   // console.error(9330, JSON.stringify(json))
 

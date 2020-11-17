@@ -34,7 +34,7 @@ test('Searching for a restaurant by name', async (t) => {
   t.is(results.name_matches[0].id, restaurant.id)
 })
 
-test.only('Searching for a restaurant by tag', async (t) => {
+test('Searching for a restaurant by tag', async (t) => {
   let [restaurant] = await restaurantUpsert([restaurant_fixture])
   restaurant = (await restaurantUpsertOrphanTags(restaurant, ['Test tag']))!
   const results = await search({

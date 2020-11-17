@@ -1,3 +1,5 @@
+import { omit } from 'lodash'
+
 import { menu_item_constraint } from '../graphql'
 import { MenuItem } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
@@ -28,7 +30,7 @@ export const menuItemsUpsertMerge = async (items: MenuItem[]) => {
     if (match) {
       item = merge(match, item)
     }
-    updated_items.push(item)
+    updated_items.push(omit(item, 'restaurant'))
   }
   await menuItemUpsert(updated_items)
 }

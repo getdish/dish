@@ -10,19 +10,19 @@ import {
   createQueryHelpersFor,
   deleteByIDs,
   globalTagId,
+  newGenerated,
   order_by,
   photo_constraint,
   photo_xref_select_column,
   resolvedWithFields,
   uuid,
 } from '@dish/graph'
-import {
-  photo_xref,
-  query,
-  selectFields,
-} from '@dish/graph/_/graphql/new-generated'
 import { chunk, clone, uniqBy } from 'lodash'
 import fetch, { Response } from 'node-fetch'
+
+type photo_xref = newGenerated.photo_xref
+
+const { selectFields, query } = newGenerated
 
 const PhotoBaseQueryHelpers = createQueryHelpersFor<PhotoBase>('photo')
 const PhotoXrefQueryHelpers = createQueryHelpersFor<PhotoXref>('photo_xref')
@@ -256,12 +256,15 @@ async function unassessedPhotosForRestaurantTag(
       }),
     (v: photo_xref[]) => {
       return v.map((p) => {
-        return {
+        const d = {
           ...selectFields(p, '*', 2),
         }
+
+        return d
       })
     }
   )
+
   return photos
 }
 

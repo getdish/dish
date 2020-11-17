@@ -18,7 +18,7 @@ import {
 } from '../graphql/new-generated'
 // import { mutation } from '../graphql/mutation'
 import { ModelName, ModelType, WithID } from '../types'
-import { isMutatableRelation } from './isMutatableField'
+import { isMutatableField, isMutatableRelation } from './isMutatableField'
 import {
   resolvedMutation,
   resolvedMutationWithFields,
@@ -234,11 +234,27 @@ export async function deleteByIDs(table: string, ids: uuid[]): Promise<void> {
   })
 }
 
+function removeReadOnlyProperties<T>(table: string, objects: T[]): T[] {
+  return objects.map((cur) => {
+    return Object.keys(cur).reduce((acc, key) => {
+      const fieldName = key
+      const schemaType = generatedSchema[table][key]['__type']
+      const { pureType: typeName } = parseSchemaType(schemaType)
+      // const field = schema[table].fields[key]
+      if (isMutatableField(fieldName, typeName)) {
+        acc[key] = cur[key]
+      }
+      return acc
+    }, {} as T)
+  })
+}
+
 export function prepareData<T>(
   table: string,
   objects: T[],
   inputType: '_set_input' | '_insert_input'
 ): T[] {
+  objects = removeReadOnlyProperties<T>(table, objects)
   objects = formatRelationData<T>(table, objects, inputType)
   objects = objects.map((o) => ensureJSONSyntax(o) as T)
   return objects
@@ -266,20 +282,14 @@ function formatRelationData<T>(
       if (!inputKeys.includes(fieldName)) return acc
 
       if (isMutatableRelation(fieldName, typeName)) {
-        // console.log('fieldName', fieldName, 'is mutable with type', typeName)
-
         let relation_table: string
-        // ??
+
         if (isArray) {
-          if (fieldName === 'tags') {
-            relation_table = 'restaurant_tag'
-          } else {
-            relation_table = typeName
-          }
+          relation_table = typeName
         } else {
           relation_table = fieldName
         }
-        // undefined
+
         const constraint = defaultConstraints[relation_table]
         const update_columns = updateableColumns(relation_table, cur[key])
         const d = {

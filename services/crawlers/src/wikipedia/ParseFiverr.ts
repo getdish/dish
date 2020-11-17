@@ -9,6 +9,7 @@ import {
 } from '@dish/graph'
 import { selectFields, tag } from '@dish/graph/_/graphql/new-generated'
 import parse from 'csv-parse/lib/sync'
+import { pick } from 'lodash'
 import _ from 'lodash'
 import { transliterate } from 'transliteration'
 
@@ -99,14 +100,17 @@ export class ParseFiverr {
         (v_t: tag[]) => {
           return v_t.map((v) => {
             return {
-              ...selectFields(v),
+              ...selectFields(v, '*', 1),
               alternates: v.alternates(),
             }
           })
         }
       )
       tagAddAlternate(tag, original)
-      ;[tag] = await tagUpsert([tag])
+      ;[tag] = await tagUpsert([
+        pick(tag, ['name', 'alternates', 'type', 'parentId']),
+      ])
+      // ;[tag] = await tagUpsert([tag])
       this.category = tag
     }
   }
@@ -142,7 +146,10 @@ export class ParseFiverr {
       }
     )
     tagAddAlternate(tag, original)
-    ;[tag] = await tagUpsert([tag])
+    ;[tag] = await tagUpsert([
+      pick(tag, ['name', 'alternates', 'type', 'parentId']),
+    ])
+    // ;[tag] = await tagUpsert([tag])
 
     if (this.category) {
       await tagUpsertCategorizations(tag, [this.category.id])

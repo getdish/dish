@@ -43,7 +43,7 @@ export async function restaurantFindOneWithTags(
 ) {
   return await restaurantFindOne(restaurant, (v: Maybe<restaurant>[]) => {
     return v.map((rest) => {
-      return {
+      const d = {
         ...selectFields(rest),
         tag_names: rest?.tag_names(),
         tags: rest?.tags().map((tagV) => {
@@ -59,10 +59,18 @@ export async function restaurantFindOneWithTags(
               parent: selectFields(tagV.tag.parent),
             },
             sentences: selectFields(tagV.sentences()),
+            score_breakdown: tagV.score_breakdown(),
+            source_breakdown: tagV.source_breakdown(),
           }
         }),
         menu_items: selectFields(rest?.menu_items()),
+        score_breakdown: rest?.score_breakdown(),
+        source_breakdown: rest?.source_breakdown(),
+        photos: rest?.photos(),
+        rating_factors: rest?.rating_factors(),
       }
+
+      return d
     })
   })
 }
