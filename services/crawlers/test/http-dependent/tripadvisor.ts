@@ -26,7 +26,7 @@ test('Gets and persists a restaurant', async (t) => {
     lat: 37.759125,
   })
   t.is(scrape.data.overview.contact.phone, '+1 415-826-7000')
-  t.assert(scrape.data.photos.length > 19)
+  t.assert(scrape.data.photos.length > 80)
   t.assert(scrape.data.reviewsp0.length > 9)
   t.assert(scrape.data.reviewsp1.length > 9)
 })

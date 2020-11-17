@@ -3,7 +3,7 @@ import { Restaurant, findOne } from '@dish/graph'
 import { Tripadvisor } from './Tripadvisor'
 
 const FLOUR =
-  '/Restaurant_Review-g32655-d4642715-Reviews-Kowloon_Dimsum-Los_Angeles_California.html'
+  '/Restaurant_Review-g60713-d5086708-Reviews-Little_Heaven-San_Francisco_California.html'
 
 async function one() {
   const t = new Tripadvisor()

@@ -661,7 +661,7 @@ export class Self extends WorkerJob {
     const yelp_data = this.yelp?.data || {}
     // @ts-ignore
     let photos_urls = [
-      // ...scrapeGetData(this.tripadvisor, 'photos', []),
+      ...scrapeGetData(this.tripadvisor, 'photos', []),
       ...this._getGooglePhotos(),
       ...this.getPaginatedData(yelp_data, 'photos').map((i) => i.src),
     ]

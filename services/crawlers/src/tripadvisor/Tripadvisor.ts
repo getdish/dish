@@ -10,7 +10,7 @@ import _ from 'lodash'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
-import { aroundCoords, geocode } from '../utils'
+import { aroundCoords, decodeEntities, geocode } from '../utils'
 
 const TRIPADVISOR_DOMAIN =
   process.env.TRIPADVISOR_PROXY || 'https://www.tripadvisor.com'
@@ -29,6 +29,7 @@ export class Tripadvisor extends WorkerJob {
   public MAPVIEW_SIZE = 1000
   public SEARCH_RADIUS_MULTIPLIER = 10
   public _TESTS__LIMIT_GEO_SEARCH = false
+  public detail_id!: string
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -76,6 +77,7 @@ export class Tripadvisor extends WorkerJob {
   }
 
   async getRestaurant(path: string) {
+    this.detail_id = this.extractDetailID(path)
     const response = await axios.get(TRIPADVISOR_DOMAIN + path)
     let data = this._extractEmbeddedJSONData(response.data)
     const scrape_id = await this.saveRestaurant(data)
@@ -151,19 +153,71 @@ export class Tripadvisor extends WorkerJob {
     }
   }
 
-  // TODO: load further pages on photo carousel as this only loads the first 10 or so
   async savePhotos(html: string, scrape_id: string) {
+    let page = 0
+    let photos: any[] = []
+    while (true) {
+      const result = await this.parsePhotoPage(page)
+      if (!result) break
+      const batch = result
+      photos = [...photos, ...batch]
+      page++
+    }
+    const uris = photos.map((p) => p.url)
+    await scrapeMergeData(scrape_id, {
+      photos: uris, // field is kept for backwards compat
+      photos_with_captions: photos,
+    })
+  }
+
+  async parsePhotoPage(page = 0) {
+    const path = this.buildGalleryURL(page)
+    const response = await axios.get(TRIPADVISOR_DOMAIN + path, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    })
+    const html = response.data
     const $ = cheerio.load(html)
-    const photos = $('.mosaic_photos .basicImg')
-    let uris: string[] = []
+    const photos = $('.tinyThumb')
+    let parsed: any[] = []
+    if (html.includes('Oh, snap! We don&#39;t have any photos for')) {
+      return false
+    }
     for (let i = 0; i < photos.length; i++) {
       const photo = $(photos[i])
-      const uri = photo
-        .attr('data-lazyurl')!
-        .replace(/\/photo-.\//, '/photo-w/')
-      uris.push(uri)
+      const url = $(photo).attr('data-bigurl')
+      let caption = $(photo).attr('data-captiontext')
+      if (caption) {
+        caption = decodeEntities(caption)
+      }
+      parsed.push({
+        url,
+        caption,
+      })
     }
-    await scrapeMergeData(scrape_id, { photos: uris })
+    return parsed
+  }
+
+  buildGalleryURL(page = 0) {
+    let path = '/DynamicPlacementAjax?'
+    const offset = page * 50
+    const params = [
+      'detail=' + this.detail_id,
+      'albumViewMode=hero',
+      'placementRollUps=responsive-photo-viewer',
+      'metaReferer=Restaurant_Review',
+      'offset=' + offset,
+    ].join('&')
+    return path + params
+  }
+
+  extractDetailID(path: string) {
+    const re = new RegExp(/-d([0-9]*)-/)
+    let matches = re.exec(path)
+    if (!matches) throw "Couldn't parse detail_id from Tripadvisor URL"
+    const detail_id = matches[1]
+    return detail_id
   }
 
   static cleanName(name: string) {
