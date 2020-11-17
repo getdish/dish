@@ -141,7 +141,7 @@ export class Tripadvisor extends WorkerJob {
       const response = await axios.get(TRIPADVISOR_DOMAIN + path)
       html = response.data
     }
-    const more = await this._persistReviewData(html, scrape_id, page)
+    const more = await this._persistReviewData(html, scrape_id, page, path)
     if (more) {
       page++
       if (page == 1) {
@@ -229,26 +229,22 @@ export class Tripadvisor extends WorkerJob {
   private async _persistReviewData(
     html: string,
     scrape_id: string,
-    page: number
+    page: number,
+    path: string
   ) {
     if (process.env.DISH_ENV != 'production' && page > 2) return false
-    const { more, data: review_data } = this._extractReviews(html)
+    const { more, data: review_data } = await this._extractReviews(html, path)
     let scrape_data: ScrapeData = {}
     scrape_data['reviewsp' + page] = review_data
     await scrapeMergeData(scrape_id, scrape_data)
     return more
   }
 
-  // TODO: Full review text needs a separate request with something like:
-  // curl 'https://www.tripadvisor.com/OverlayWidgetAjax\
-  //   ?Mode=EXPANDED_HOTEL_REVIEWS_RESP&metaReferer=' \
-  //   --compressed -H 'X-Requested-With: XMLHttpRequest' \
-  //   -H 'Referer: https://www.tripadvisor.com/Restaurant_Review-g60713-d1516973-Reviews-Flour_Water-San_Francisco_California.html' \
-  //   --data 'reviews=733608852,733186400,724243903,720450724,714340566,702434557,700388923,698556394&contextChoice=DETAIL&loadMtHeader=true'
-  private _extractReviews(html: string) {
-    const $ = cheerio.load(html)
-    const reviews = $('#REVIEWS .listContainer .review-container')
-    let more = false
+  private async _extractReviews(html: string, path: string) {
+    const full = await this.getFullReviews(html, path)
+    const updated_html = full.data
+    const $ = cheerio.load(updated_html)
+    const reviews = $('.reviewSelector')
     let data: ScrapeData[] = []
     for (let i = 0; i < reviews.length; i++) {
       const review = $(reviews[i])
@@ -261,6 +257,32 @@ export class Tripadvisor extends WorkerJob {
         date: review.find('.ratingDate').attr('title'),
       })
     }
+    return { more: full.more, data: data }
+  }
+
+  private async getFullReviews(html: string, referer_path: string) {
+    let ids: string[] = []
+    const $ = cheerio.load(html)
+    const reviews = $('#REVIEWS .listContainer .review-container')
+    let more = false
+    for (let i = 0; i < reviews.length; i++) {
+      const review = $(reviews[i])
+      const id = review.find('.reviewSelector').attr('data-reviewid')
+      if (!id) continue
+      ids.push(id)
+    }
+    const params = [
+      'Mode=EXPANDED_HOTEL_REVIEWS_RESP',
+      'metaReferer=',
+      'contextChoice=DETAIL',
+      'reviews=' + ids.join(','),
+    ]
+    const path = '/OverlayWidgetAjax?' + params.join('&')
+    const response = await axios.get(TRIPADVISOR_DOMAIN + path, {
+      headers: {
+        Referer: 'https://www.tripadvisor.com' + referer_path,
+      },
+    })
     try {
       if (!$('.ui_pagination > a.next')!.attr('class')!.includes('disabled')) {
         more = true
@@ -268,10 +290,10 @@ export class Tripadvisor extends WorkerJob {
     } catch (error) {
       sentryException(error)
     }
-    return { more: more, data: data }
+    const updated_html = response.data
+    return { more, data: updated_html }
   }
 
-  // @tom i changed : Cheerio to any to fix an error in types compiling
   private _getRatingFromClasses(review: any) {
     let rating: number | null = null
     const classes = review.find('.ui_bubble_rating').attr('class')!.split(' ')

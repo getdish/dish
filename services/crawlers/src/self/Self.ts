@@ -318,9 +318,6 @@ export class Self extends WorkerJob {
     }
   }
 
-  // TODO: If we really want to be careful about being found out for scraping then we
-  // need at least 2 identical sources and something better than just resorting to the
-  // shortest version.
   merge(strings: string[]) {
     let overlaps: string[] = []
     for (let pair of Self.allPairs(strings)) {
