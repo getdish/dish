@@ -4,8 +4,7 @@ import {
   UserWithId,
   deleteAllBy,
   deleteAllFuzzyBy,
-  mutation,
-  query,
+  newGenerated,
   resolvedMutation,
   resolvedWithoutCache,
   restaurantInsert,
@@ -13,6 +12,8 @@ import {
   userUpdate,
 } from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
+
+const { query, mutation } = newGenerated
 
 interface Context {}
 
@@ -40,10 +41,12 @@ const updateRestaurantSimple = async (restaurant: Restaurant) => {
     if (restaurant[key] == null) delete restaurant[key]
   }
   return await resolvedMutation(() => {
-    mutation.update_restaurant({
+    const m = mutation.update_restaurant({
       where: { id: { _eq: restaurant.id } },
       _set: restaurant,
     })
+
+    return m.affected_rows
   })
 }
 
