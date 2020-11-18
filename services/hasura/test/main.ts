@@ -4,7 +4,8 @@ import {
   UserWithId,
   deleteAllBy,
   deleteAllFuzzyBy,
-  newGenerated,
+  mutation,
+  query,
   resolvedMutation,
   resolvedWithoutCache,
   restaurantInsert,
@@ -12,8 +13,6 @@ import {
   userUpdate,
 } from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
-
-const { query, mutation } = newGenerated
 
 interface Context {}
 
@@ -46,7 +45,7 @@ const updateRestaurantSimple = async (restaurant: Restaurant) => {
       _set: restaurant,
     })
 
-    return m.affected_rows
+    return m?.affected_rows
   })
 }
 

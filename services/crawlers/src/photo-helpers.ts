@@ -10,20 +10,18 @@ import {
   createQueryHelpersFor,
   deleteByIDs,
   globalTagId,
-  newGenerated,
   order_by,
   photo,
   photo_constraint,
+  photo_xref,
   photo_xref_select_column,
+  query,
   resolvedWithFields,
+  selectFields,
   uuid,
 } from '@dish/graph'
 import { chunk, clone, uniqBy } from 'lodash'
 import fetch, { Response } from 'node-fetch'
-
-type photo_xref = newGenerated.photo_xref
-
-const { selectFields, query } = newGenerated
 
 const PhotoBaseQueryHelpers = createQueryHelpersFor<PhotoBase>('photo')
 const PhotoXrefQueryHelpers = createQueryHelpersFor<PhotoXref>('photo_xref')
