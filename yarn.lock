@@ -3040,7 +3040,12 @@
     mix-classes "^1.1.10"
     tslib "^2.0.1"
 
-"@pmmmwh/react-refresh-webpack-plugin@^0.4.2":
+"@o/webpack-virtual-modules@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.npmjs.org/@o/webpack-virtual-modules/-/webpack-virtual-modules-0.4.3.tgz#8ad03c980a7c98909b54d1502f27262572a0450a"
+  integrity sha512-227ogxHygJcycT+eypF8ChFxrgqsxuozMwo1HOCjrqiJztr76nUEs208CRHz9k8ANzAPKcg+3n605Ptny4uQjQ==
+
+"@pmmmwh/react-refresh-webpack-plugin@0.4.2":
   version "0.4.2"
   resolved "https://registry.npmjs.org/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.4.2.tgz#1f9741e0bde9790a0e13272082ed7272a083620d"
   integrity sha512-Loc4UDGutcZ+Bd56hBInkm6JyjyCwWy4t2wcDXzN8EDPANgVRj0VP8Nxn0Zq2pc+WKauZwEivQgbDGg4xZO20A==
@@ -8554,7 +8559,7 @@ debug@=3.1.0:
   dependencies:
     ms "2.0.0"
 
-debug@^3.0.0, debug@^3.1.0, debug@^3.1.1, debug@^3.2.5, debug@^3.2.6:
+debug@^3.1.0, debug@^3.1.1, debug@^3.2.5, debug@^3.2.6:
   version "3.2.6"
   resolved "https://registry.npmjs.org/debug/-/debug-3.2.6.tgz#e83d17de16d8a7efb7717edbe5fb10135eee629b"
   integrity sha512-mel+jf7nrtEl5Pn1Qx46zARXKDpBbvzezse7p7LqINmdoIk8PYP5SySaxEmYv6TZ0JyEKA1hsCId6DIhgITtWQ==
@@ -20712,6 +20717,13 @@ spdy@^4.0.2:
     select-hose "^2.0.0"
     spdy-transport "^3.0.0"
 
+speed-measure-webpack-plugin@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.npmjs.org/speed-measure-webpack-plugin/-/speed-measure-webpack-plugin-1.3.3.tgz#6ff894fc83e8a6310dde3af863a0329cd79da4f5"
+  integrity sha512-2ljD4Ch/rz2zG3HsLsnPfp23osuPBS0qPuz9sGpkNXTN1Ic4M+W9xB8l8rS8ob2cO4b1L+WTJw/0AJwWYVgcxQ==
+  dependencies:
+    chalk "^2.0.1"
+
 splaytree@^0.1.4:
   version "0.1.4"
   resolved "https://registry.npmjs.org/splaytree/-/splaytree-0.1.4.tgz#fc35475248edcc29d4938c9b67e43c6b7e55a659"
@@ -23196,13 +23208,6 @@ webpack-sources@^1.1.0, webpack-sources@^1.4.0, webpack-sources@^1.4.1, webpack-
   dependencies:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
-
-webpack-virtual-modules@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.npmjs.org/webpack-virtual-modules/-/webpack-virtual-modules-0.3.2.tgz#b7baa30971a22d99451f897db053af48ec29ad2c"
-  integrity sha512-RXQXioY6MhzM4CNQwmBwKXYgBs6ulaiQ8bkNQEl2J6Z+V+s7lgl/wGvaI/I0dLnYKB8cKsxQc17QOAVIphPLDw==
-  dependencies:
-    debug "^3.0.0"
 
 webpack@^4.16.5:
   version "4.44.1"

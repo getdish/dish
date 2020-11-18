@@ -15,6 +15,9 @@ const CircularDependencyPlugin = require('circular-dependency-plugin')
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin')
 const DedupeParentCssFromChunksWebpackPlugin = require('dedupe-parent-css-from-chunks-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+
+const smp = new SpeedMeasurePlugin()
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
@@ -50,6 +53,7 @@ module.exports = function getWebpackConfig(
 ) {
   function getConfig() {
     /** @type {Webpack.Configuration} */
+
     const config = {
       mode: env.mode || process.env.NODE_ENV,
       context: __dirname,
@@ -106,12 +110,28 @@ module.exports = function getWebpackConfig(
         minimize: !process.env.NO_MINIFY && isProduction && TARGET !== 'ssr',
         concatenateModules: isProduction && !process.env.ANALYZE_BUNDLE,
         usedExports: isProduction,
-        removeEmptyChunks: true,
+        removeEmptyChunks: isProduction,
         // mergeDuplicateChunks: true,
         splitChunks:
           isProduction && TARGET != 'ssr' && !process.env.NO_MINIFY
             ? {
+                chunks: 'async',
+                minSize: 20000,
+                maxSize: 0,
+                minChunks: 1,
+                maxAsyncRequests: 30,
+                maxInitialRequests: 30,
+                automaticNameDelimiter: '~',
                 cacheGroups: {
+                  default: {
+                    minChunks: 2,
+                    priority: -20,
+                    reuseExistingChunk: true,
+                  },
+                  defaultVendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    priority: -10,
+                  },
                   styles: {
                     name: 'styles',
                     test: /\.css$/,
@@ -264,29 +284,29 @@ module.exports = function getWebpackConfig(
             verbose: false,
           }),
 
-        new CircularDependencyPlugin({
-          // exclude detection of files based on a RegExp
-          exclude: /a\.js|node_modules/,
-          // include specific files based on a RegExp
-          // include: /src/,
-          // add errors to webpack instead of warnings
-          // failOnError: true,
-          // allow import cycles that include an asyncronous import,
-          // e.g. via import(/* webpackMode: "weak" */ './file.js')
-          allowAsyncCycles: false,
-          // set the current working directory for displaying module paths
-          cwd: process.cwd(),
-        }),
+        // somewhat slow for rebuilds
+        isProduction &&
+          new CircularDependencyPlugin({
+            // exclude detection of files based on a RegExp
+            exclude: /a\.js|node_modules/,
+            // include specific files based on a RegExp
+            // include: /src/,
+            // add errors to webpack instead of warnings
+            // failOnError: true,
+            // allow import cycles that include an asyncronous import,
+            // e.g. via import(/* webpackMode: "weak" */ './file.js')
+            allowAsyncCycles: false,
+            // set the current working directory for displaying module paths
+            cwd: process.cwd(),
+          }),
 
         isHot &&
           new ReactRefreshWebpack4Plugin({
             overlay: false,
-            exclude: /gqless|bootstrap|react-refresh/,
+            exclude: /node_modules/,
+            include: /snackui/,
           }),
       ].filter(Boolean),
-
-      // webpack 4
-      // @ts-ignore
       devServer: {
         publicPath: '/',
         host: '0.0.0.0',
@@ -354,7 +374,7 @@ module.exports = function getWebpackConfig(
       config.output.filename = `static/js/app.ssr.${process.env.NODE_ENV}.js`
     }
 
-    return config
+    return smp.wrap(config)
   }
 
   function getFinalConfig() {

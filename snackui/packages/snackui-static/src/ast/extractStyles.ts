@@ -152,25 +152,16 @@ export function extractStyles(
         const ogAttributes = node.attributes
         const componentName = findComponentName(traversePath.scope)
 
-        if (
-          // skip non-identifier opening elements (member expressions, etc.)
-          !t.isJSXIdentifier(node.name) ||
-          // skip non-gloss components
-          !validComponents[node.name.name]
-        ) {
+        // skip non-identifier opening elements (member expressions, etc.)
+        if (!t.isJSXIdentifier(node.name)) {
+          return
+        }
+        const component = validComponents[node.name.name]
+        if (!component || !component.staticConfig) {
           return
         }
 
-        // Remember the source component
-
-        const component = validComponents[node.name.name]!
         const { staticConfig } = component
-
-        if (!staticConfig) {
-          console.log('skipping', node.name.name)
-          return
-        }
-
         const originalNodeName = node.name.name
         const isTextView = originalNodeName.endsWith('Text')
         const validStyles = staticConfig?.validStyles ?? {}
@@ -962,13 +953,18 @@ export function extractStyles(
             }
             // if you want granular stylesheets, can remove this globalCSSMap code
             if (globalCSSMap.has(className)) {
-              globalCSSMap.get(className)!.comments.add(comment)
+              if (process.env.NODE_ENV === 'development') {
+                globalCSSMap.get(className)!.comments.add(comment)
+              }
               continue
             } else {
               didAddGlobal = true
               globalCSSMap.set(className, {
                 css: rules[0],
-                comments: new Set([comment]),
+                comments:
+                  process.env.NODE_ENV === 'development'
+                    ? new Set([comment])
+                    : new Set(),
               })
             }
           }
@@ -1032,7 +1028,7 @@ export function extractStyles(
         .join('\n')
     )
     console.log('\n\noutput css >> ', css)
-    console.log('\n\noutput global css >> ', getGlobalCSS())
+    // console.log('\n\noutput global css >> ', getGlobalCSS())
   }
 
   return {
