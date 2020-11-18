@@ -318,9 +318,6 @@ export class Self extends WorkerJob {
     }
   }
 
-  // TODO: If we really want to be careful about being found out for scraping then we
-  // need at least 2 identical sources and something better than just resorting to the
-  // shortest version.
   merge(strings: string[]) {
     let overlaps: string[] = []
     for (let pair of Self.allPairs(strings)) {
@@ -661,7 +658,7 @@ export class Self extends WorkerJob {
     const yelp_data = this.yelp?.data || {}
     // @ts-ignore
     let photos_urls = [
-      // ...scrapeGetData(this.tripadvisor, 'photos', []),
+      ...scrapeGetData(this.tripadvisor, 'photos', []),
       ...this._getGooglePhotos(),
       ...this.getPaginatedData(yelp_data, 'photos').map((i) => i.src),
     ]

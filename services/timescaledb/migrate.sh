@@ -9,7 +9,7 @@ else
 fi
 
 pushd $path
-USE_SSL=$USE_SSL postgrator \
+USE_SSL=$USE_SSL ./node_modules/.bin/postgrator \
   --host ${PG_HOST:-localhost} \
   --port ${PG_PORT:-5433} \
   --database ${PG_DATABASE:-scrape_data} \

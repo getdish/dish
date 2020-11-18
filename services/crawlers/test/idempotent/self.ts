@@ -209,8 +209,10 @@ const tripadvisor: Partial<Scrape> = {
         ],
       },
     },
-    photosp0: [{ src: 'https://tripadvisor.com/image.jpg' }],
-    photosp1: [{ src: 'https://tripadvisor.com/image2.jpg' }],
+    photos: ['https://i.imgur.com/udwFNWI.jpeg'],
+    photos_with_captions: [
+      { url: 'https://i.imgur.com/udwFNWI.jpeg', caption: 'Test tag' },
+    ],
     reviewsp0: [
       {
         text: 'Test tag existing 3 was ok. Vegan',

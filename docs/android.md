@@ -5,6 +5,7 @@ Dependencies:
 I, @tombh, particularly needed these because of Arch Linux and SwayWM (Wayland):
 ```
 export ANDROID_SDK_ROOT=~/Android/Sdk/
+export ANDROID_HOME=$ANDROID_SDK_ROOT
 export _JAVA_AWT_WM_NONREPARENTING=1
 export STUDIO_JDK=/usr/lib/jvm/java-14-openjdk
 ```

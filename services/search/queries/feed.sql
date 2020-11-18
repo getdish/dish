@@ -37,5 +37,4 @@ SELECT json_build_object(
   'total_restaurants_in_region', (
     SELECT count(*) FROM restaurants_in_region
   )
-
 )
