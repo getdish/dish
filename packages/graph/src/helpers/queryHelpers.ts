@@ -1,4 +1,4 @@
-import { parseSchemaType } from '@dish/gqless'
+import { DeepPartial, parseSchemaType } from '@dish/gqless'
 
 import {
   Scalars,
@@ -76,7 +76,7 @@ export function createQueryHelpersFor<A extends ModelType>(
         fn
       )
     },
-    async update(a: WithID<A>, fn?: (v: any) => unknown) {
+    async update(a: WithID<Partial<A>>, fn?: (v: any) => unknown) {
       //@ts-expect-error
       return await update<WithID<A>>(modelName, a, fn)
     },

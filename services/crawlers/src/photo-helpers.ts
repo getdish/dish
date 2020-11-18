@@ -12,6 +12,7 @@ import {
   globalTagId,
   newGenerated,
   order_by,
+  photo,
   photo_constraint,
   photo_xref_select_column,
   resolvedWithFields,
@@ -38,7 +39,7 @@ const DISH_HOOKS_ENDPOINT =
     ? prod_hooks_endpoint
     : dev_hooks_endpoint
 
-export async function photoUpsert(photos: PhotoXref[]) {
+export async function photoUpsert(photos: Partial<PhotoXref>[]) {
   if (photos.length == 0) return
   if (photos[0].restaurant_id && !photos[0].tag_id) {
     photos.map((p) => (p.tag_id = ZeroUUID))
@@ -52,13 +53,14 @@ export async function photoUpsert(photos: PhotoXref[]) {
   photos.map((p) => {
     if (!p.photo || !p.photo.url) throw 'Photo must have URL'
     p.photo.origin = clone(p.photo?.url)
+    //@ts-expect-error
     delete p.photo.url
   })
   await photoXrefUpsert(photos)
   await postUpsert(photos)
 }
 
-async function postUpsert(photos: PhotoXref[]) {
+async function postUpsert(photos: Partial<PhotoXref>[]) {
   if (process.env.NODE_ENV != 'test') {
     await uploadToDO(photos)
   } else {
@@ -69,7 +71,7 @@ async function postUpsert(photos: PhotoXref[]) {
   await updatePhotoQuality(photos)
 }
 
-export async function uploadToDO(photos: PhotoXref[]) {
+export async function uploadToDO(photos: Partial<PhotoXref>[]) {
   const not_uploaded = await findNotUploadedPhotos(photos)
   if (!not_uploaded) return
   const uploaded = await uploadToDOSpaces(not_uploaded)
@@ -83,7 +85,7 @@ export async function uploadToDO(photos: PhotoXref[]) {
   await photoBaseUpsert(updated, photo_constraint.photos_pkey)
 }
 
-export async function updatePhotoQuality(photos: PhotoXref[]) {
+export async function updatePhotoQuality(photos: Partial<PhotoXref>[]) {
   const unassessed_photos = await findUnassessedPhotos(photos)
   await assessNewPhotos(unassessed_photos)
 }
@@ -364,7 +366,7 @@ export async function bestPhotosForRestaurantTags(
 
 async function assessNewPhotos(unassessed_photos: string[]) {
   const IMAGE_QUALITY_API_BATCH_SIZE = 30
-  let assessed: PhotoBase[] = []
+  let assessed: Partial<PhotoBase>[] = []
   for (const batch of chunk(unassessed_photos, IMAGE_QUALITY_API_BATCH_SIZE)) {
     assessed.push(...(await assessPhotoQuality(batch)))
   }
@@ -408,7 +410,7 @@ async function assessPhotoQualityWithoutRetries(urls: string[]) {
     body: JSON.stringify(urls),
   })
   let results = await response.json()
-  let photo_bases: PhotoBase[] = []
+  let photo_bases: Partial<PhotoBase>[] = []
   for (const url of urls) {
     const result = results.find((r) => {
       const id = crypto.createHash('md5').update(url).digest('hex')
@@ -433,7 +435,9 @@ function proxyYelpCDN(photo: string) {
   )
 }
 
-async function findUnassessedPhotos(photos: PhotoXref[]): Promise<string[]> {
+async function findUnassessedPhotos(
+  photos: Partial<PhotoXref>[]
+): Promise<string[]> {
   let unassessed_photos: PhotoXref[] = []
   if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id == ZeroUUID) {
     unassessed_photos = await unassessedPhotosForRestaurant(
@@ -456,7 +460,7 @@ async function findUnassessedPhotos(photos: PhotoXref[]): Promise<string[]> {
   })
 }
 
-async function findNotUploadedPhotos(photos: PhotoXref[]) {
+async function findNotUploadedPhotos(photos: Partial<PhotoXref>[]) {
   let not_uploaded: PhotoXref[] = []
   if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id == ZeroUUID) {
     not_uploaded = await findNotUploadedRestaurantPhotos(
@@ -591,7 +595,7 @@ export async function uploadHeroImage(url: string, restaurant_id: uuid) {
         photo: {
           origin: url,
           url: do_url,
-        },
+        } as photo,
       },
     ])
   }

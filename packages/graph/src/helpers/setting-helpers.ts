@@ -1,4 +1,4 @@
-import { mutation } from '../graphql'
+import { mutation, selectFields, setting } from '../graphql'
 import { Setting, WithID } from '../types'
 import { createQueryHelpersFor, prepareData } from './queryHelpers'
 import { resolvedMutationWithFields } from './queryResolvers'
@@ -11,8 +11,19 @@ export const _settingFindOne = QueryHelpers.findOne
 export async function settingFindOne(
   requested_setting: Partial<Setting>
 ): Promise<Setting> {
+  console.log(141414)
   if (!requested_setting.key) return {} as Setting
-  let found_setting = await _settingFindOne(requested_setting)
+  let found_setting = await _settingFindOne(
+    requested_setting,
+    (v_s: setting[]) => {
+      return v_s.map((v) => {
+        return {
+          ...selectFields(v, '*', 2),
+          value: v.value(),
+        }
+      })
+    }
+  )
   if (!found_setting || !found_setting.key) {
     found_setting = await initKey(requested_setting.key)
   }

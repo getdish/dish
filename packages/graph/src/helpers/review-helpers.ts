@@ -208,7 +208,7 @@ export function dedupeReviews(reviews: Review[]) {
   return deduped
 }
 
-export function dedupeSentiments(sentiments: ReviewTagSentence[]) {
+export function dedupeSentiments<A extends ReviewTagSentence>(sentiments: A[]) {
   const deduped = uniqBy(sentiments, (sentiment: ReviewTagSentence) => {
     return sentiment.tag_id + sentiment.sentence
   })

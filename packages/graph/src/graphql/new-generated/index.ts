@@ -8885,6 +8885,7 @@ export interface review_variance_fields {
 }
 
 export interface setting {
+  __typename: string
   created_at: Maybe<ScalarsEnums['timestamptz']>
   id: ScalarsEnums['uuid']
   key: ScalarsEnums['String']

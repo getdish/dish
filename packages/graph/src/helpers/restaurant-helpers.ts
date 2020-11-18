@@ -118,7 +118,7 @@ export async function restaurantFindNear(
 
 export async function restaurantUpsertManyTags(
   restaurant: RestaurantWithId,
-  restaurant_tags: RestaurantTag[]
+  restaurant_tags: Partial<RestaurantTag>[]
 ) {
   if (!restaurant_tags.length) return
   const populated = restaurant_tags.map((rt) => {

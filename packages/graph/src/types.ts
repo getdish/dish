@@ -24,8 +24,10 @@ import {
 //     : O[K]
 // }
 export type FlatResolvedModel<O> = {
-  [K in keyof O]: O[K] extends (...args: any) => unknown
-    ? FlatResolvedModel<ReturnType<O[K]>>
+  [K in keyof O]: O[K] extends (...args: any) => any
+    ? ReturnType<O[K]> extends object
+      ? FlatResolvedModel<ReturnType<O[K]>>
+      : ReturnType<O[K]>
     : O[K] extends object
     ? FlatResolvedModel<O[K]>
     : O[K]
@@ -104,3 +106,14 @@ export type RestaurantTagWithID = Partial<RestaurantTag> &
 export type NonNullObject<A extends Object> = {
   [K in keyof A]: Exclude<A[K], null>
 }
+
+export type DeepPartial<T> = T extends Function
+  ? T
+  : T extends Array<infer U>
+  ? _DeepPartialArray<U>
+  : T extends object
+  ? _DeepPartialObject<T>
+  : T | undefined
+
+export interface _DeepPartialArray<T> extends Array<DeepPartial<T>> {}
+export type _DeepPartialObject<T> = { [P in keyof T]?: DeepPartial<T[P]> }

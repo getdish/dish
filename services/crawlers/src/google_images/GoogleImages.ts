@@ -1,6 +1,7 @@
 import '@dish/common'
 
 import {
+  PhotoXref,
   TagWithId,
   ZeroUUID,
   restaurantFindOne,
@@ -92,7 +93,7 @@ export class GoogleImages extends WorkerJob {
         photo: {
           origin: url,
         },
-      }
+      } as PhotoXref
     })
     await photoXrefUpsert(photos_xref)
     await uploadToDO(photos_xref)
@@ -103,11 +104,11 @@ export class GoogleImages extends WorkerJob {
         throw 'imagesForDish(): Photo.url is undefined!?'
       return p.photo.url
     })
-    const updated_dish: TagWithId = {
+    const updated_dish = {
       id: dish.id,
-      //@ts-ignore
       default_images,
     }
+
     await tagUpdate(updated_dish)
   }
 
