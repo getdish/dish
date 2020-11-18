@@ -30,7 +30,7 @@ export const menuItemsUpsertMerge = async (items: MenuItem[]) => {
     if (match) {
       item = merge(match, item)
     }
-    updated_items.push(omit(item, 'restaurant'))
+    updated_items.push(omit(item, 'restaurant') as MenuItem)
   }
   await menuItemUpsert(updated_items)
 }

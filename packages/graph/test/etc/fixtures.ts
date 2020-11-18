@@ -22,11 +22,11 @@ export const restaurant_fixture: Restaurant = {
     { hoursInfo: { hours: ['11:00 am - 8:30 pm'] } },
     { hoursInfo: { hours: ['11:00 am - 8:30 pm'] } },
   ],
-}
+} as any
 
 export const menu_item_fixture: MenuItem = {
   name: 'Test Dish',
   description: 'Not a real dish :(',
   price: 123,
   image: 'https://imgur.com/123abc',
-}
+} as any

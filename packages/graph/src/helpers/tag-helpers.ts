@@ -153,7 +153,7 @@ export async function tagUpsertCategorizations(
   tag: TagWithId,
   category_tag_ids: string[]
 ) {
-  const objects = category_tag_ids.map<TagTag>((tag_id) => ({
+  const objects = category_tag_ids.map((tag_id) => ({
     category_tag_id: tag_id,
     tag_id: tag.id,
   }))

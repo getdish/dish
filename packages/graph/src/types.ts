@@ -1,6 +1,5 @@
 import {
   menu_item,
-  mutation_root,
   photo,
   photo_xref,
   restaurant,
@@ -15,13 +14,20 @@ import {
 // used to infer returns from functions
 // but the problme is extensions... they should be excluded
 // most of the stuff in this file could be folded into gqless and fixed
+// export type FlatResolvedModel<O> = {
+//   [K in keyof O]?: K extends '__typename'
+//     ? any
+//     : O[K] extends { __typename: string }
+//     ? FlatResolvedModel<O[K]>
+//     : O[K] extends (...args: any[]) => any
+//     ? any
+//     : O[K]
+// }
 export type FlatResolvedModel<O> = {
-  [K in keyof O]?: K extends '__typename'
-    ? any
-    : O[K] extends { __typename: string }
+  [K in keyof O]: O[K] extends (...args: any) => unknown
+    ? FlatResolvedModel<ReturnType<O[K]>>
+    : O[K] extends object
     ? FlatResolvedModel<O[K]>
-    : O[K] extends (...args: any[]) => any
-    ? any
     : O[K]
 }
 
@@ -86,11 +92,7 @@ export type ModelType =
 
 // nice names
 export type ModelName = Exclude<GetModelTypeName<ModelType>, undefined>
-type GetModelTypeName<U> = U extends ModelType ? U['__typename'] : never
-
-// mutation
-interface MutationFull extends mutation_root {}
-export type Mutation = Omit<MutationFull, '__typename'>
+type GetModelTypeName<U> = U extends ModelType ? string : never
 
 // helpers for this file
 

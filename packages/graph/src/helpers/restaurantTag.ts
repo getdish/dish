@@ -16,10 +16,10 @@ import { resolvedMutationWithFields } from './queryResolvers'
 
 export async function restaurantTagUpsert(
   restaurant_id: string,
-  tags: RestaurantTag[]
+  tags: Partial<RestaurantTag>[]
 ): Promise<RestaurantWithId> {
   if (!tags.length) throw new Error('No tags given to restaurantTagUpsert')
-  const objects: RestaurantTag[] = tags.map((tag) => {
+  const objects: Partial<RestaurantTag>[] = tags.map((tag) => {
     if (!tag.sentences || tag.sentences.length == 0) {
       delete tag.sentences
     }

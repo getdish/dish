@@ -56,7 +56,7 @@ const defaultConstraints = {
     photo_xref_constraint.photos_xref_photos_id_restaurant_id_tag_id_key,
 }
 
-export function createQueryHelpersFor<A>(
+export function createQueryHelpersFor<A extends ModelType>(
   modelName: ModelName,
   defaultUpsertConstraint?: string
 ) {
@@ -77,13 +77,14 @@ export function createQueryHelpersFor<A>(
       )
     },
     async update(a: WithID<A>, fn?: (v: any) => unknown) {
+      //@ts-expect-error
       return await update<WithID<A>>(modelName, a, fn)
     },
     async findOne(a: Partial<A>, fn?: (v: any) => unknown) {
-      return await findOne<WithID<A>>(modelName, a as A, fn)
+      return await findOne<WithID<A>>(modelName, a as any, fn)
     },
     async findAll(a: Partial<A>, fn?: (v: any) => unknown) {
-      return await findAll<WithID<A>>(modelName, a as A, fn)
+      return await findAll<WithID<A>>(modelName, a as any, fn)
     },
     async refresh(a: WithID<A>) {
       const next = await findOne(modelName, { id: a.id })

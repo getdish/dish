@@ -139,26 +139,23 @@ export async function restaurantUpsertOrphanTags(
 }
 
 export async function convertSimpleTagsToRestaurantTags(tag_strings: string[]) {
-  const tags = tag_strings.map<tag>(
-    (tag_name) =>
-      ({
-        name: tag_name,
-      } as tag)
-  )
+  const tags = tag_strings.map((tag_name) => ({
+    name: tag_name,
+  }))
 
   // console.log(132132, JSON.stringify(tags))
 
-  const full_tags = await tagUpsert(tags as Tag[])
+  const full_tags = await tagUpsert(tags)
 
   // console.log(133133, JSON.stringify(full_tags, null, 2))
-  return full_tags.map<RestaurantTag>((tag) => ({
+  return full_tags.map((tag) => ({
     tag_id: tag.id,
   }))
 }
 
 export async function restaurantUpsertRestaurantTags(
   restaurant: RestaurantWithId,
-  restaurant_tags: RestaurantTag[]
+  restaurant_tags: Partial<RestaurantTag>[]
 ) {
   // console.log(14141, restaurant, restaurant_tags)
   const updated_restaurant = await restaurantTagUpsert(
@@ -175,14 +172,14 @@ export async function restaurantUpsertRestaurantTags(
 
 async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
   if (!restaurant) return
-  const tags: RestaurantTag[] = restaurant.tags ?? []
+  const tags = restaurant.tags ?? []
   const tag_names: string[] = [
     ...new Set(
       tags
-        .map((rt: RestaurantTag) => {
+        .map((rt) => {
           // console.log(153153, rt)
           // @natew do you know why this has to be manually cast to a Tag?
-          return tagSlugs(rt.tag as Tag)
+          return tagSlugs(rt.tag)
         })
         .flat()
     ),
@@ -233,7 +230,9 @@ function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {
   let rt = {} as RestaurantTag
   if (existing) {
     const cloned = _.cloneDeep(existing)
+    //@ts-expect-error
     delete cloned.tag
+    //@ts-expect-error
     delete cloned.restaurant
     rt = cloned
   }
@@ -249,9 +248,9 @@ export async function restaurantGetAllPossibleTags(restaurant: Restaurant) {
   )
   const orphans = restaurant.tags
     .filter((rt) => {
-      return rt.tag.parentId == globalTagId
+      return rt?.tag.parentId == globalTagId
     })
-    .map((rt) => rt.tag)
+    .map((rt) => rt?.tag)
   const generics = await tagGetAllGenerics()
   return [...cuisine_dishes, ...orphans, ...generics]
 }

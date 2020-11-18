@@ -1,10 +1,10 @@
 import anyTest, { TestInterface } from 'ava'
 
 import {
+  RestaurantTag,
   RestaurantWithId,
   TagWithId,
   flushTestData,
-  query,
   restaurantFindOneWithTags,
   restaurantUpsert,
   restaurantUpsertOrphanTags,
@@ -14,6 +14,7 @@ import {
   tagUpsert,
   tagUpsertCategorizations,
 } from '../src'
+import { query } from '../src/graphql/new-generated'
 import { restaurant_fixture } from './etc/fixtures'
 
 interface Context {
