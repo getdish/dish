@@ -6,7 +6,7 @@ loadBalancer:
 
 persistentVolumes:
   data:
-    size: '200Gi'
+    size: '500Gi'
 
 prometheus:
   enabled: true
