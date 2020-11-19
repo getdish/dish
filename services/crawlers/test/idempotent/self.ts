@@ -209,8 +209,10 @@ const tripadvisor: Partial<Scrape> = {
         ],
       },
     },
-    photosp0: [{ src: 'https://tripadvisor.com/image.jpg' }],
-    photosp1: [{ src: 'https://tripadvisor.com/image2.jpg' }],
+    photos: ['https://i.imgur.com/udwFNWI.jpeg'],
+    photos_with_captions: [
+      { url: 'https://i.imgur.com/udwFNWI.jpeg', caption: 'Test tag' },
+    ],
     reviewsp0: [
       {
         text: 'Test tag existing 3 was ok. Vegan',
@@ -329,10 +331,14 @@ test('Merging', async (t) => {
     id: t.context.restaurant.id,
   })
   const photos = await bestPhotosForRestaurant(t.context.restaurant.id)
-  t.is(photos[0].photo?.origin, 'https://i.imgur.com/N6YtgRI.jpeg')
-  t.assert(parseFloat(photos[0].photo?.quality).toFixed(3), '5.374')
-  t.is(photos[1].photo?.origin, 'https://i.imgur.com/92a8cNI.jpg')
-  t.assert(parseFloat(photos[0].photo?.quality).toFixed(3), '4.575')
+  const p0 = photos.find(
+    (p) => p.photo?.origin == 'https://i.imgur.com/N6YtgRI.jpeg'
+  )
+  const p1 = photos.find(
+    (p) => p.photo?.origin == 'https://i.imgur.com/92a8cNI.jpg'
+  )
+  t.assert(parseFloat(p0.photo?.quality).toFixed(3), '5.374')
+  t.assert(parseFloat(p1.photo?.quality).toFixed(3), '4.575')
   t.is(!!updated, true)
   if (!updated) return
   t.is(updated.name, 'Test Name Yelp')
@@ -340,8 +346,8 @@ test('Merging', async (t) => {
   t.is(updated.tags.length, 5)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Mexican'), true)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Pizza'), true)
-  t.is(updated.photos?.[0], 'https://i.imgur.com/N6YtgRI.jpeg')
-  t.is(updated.photos?.[1], 'https://i.imgur.com/92a8cNI.jpg')
+  t.assert(updated.photos?.[0].includes('https://i.imgur.com'))
+  t.assert(updated.photos?.[1].includes('https://i.imgur.com'))
   t.is(updated.rating, 4.1)
   t.deepEqual(updated.rating_factors as any, {
     food: 5,
@@ -825,4 +831,18 @@ test('Scoring for rishes', async (t) => {
     )
   )
   t.assert(rish1.sentences.find((s) => s.sentence == 'Test tag was good.'))
+})
+
+test('Sets oldest review date', async (t) => {
+  const self = new Self()
+  const restaurant = (await restaurantFindOneWithTagsSQL(
+    t.context.restaurant.id
+  )) as RestaurantWithId
+  await self.preMerge(restaurant)
+  await self.scanCorpus()
+  await self.oldestReview()
+  await self.postMerge()
+  const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
+
+  t.is(updated.oldest_review_date, '2019-07-23T00:00:00+00:00')
 })

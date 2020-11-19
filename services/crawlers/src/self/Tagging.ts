@@ -198,37 +198,54 @@ export class Tagging {
     const all_possible_tags = await restaurantGetAllPossibleTags(
       this.crawler.restaurant
     )
-    const all_tag_photos: Partial<PhotoXref>[] = []
-    if (this.crawler.yelp?.data) {
-      const photos = this.crawler.getPaginatedData(
-        this.crawler.yelp?.data,
-        'photos'
-      )
-      for (const tag of all_possible_tags) {
-        let restaurant_tag = {
-          tag_id: tag.id,
-          // @ts-ignore
-          photos: [] as string[],
+    const all_tag_photos: PhotoXref[] = []
+    const photos = this.getPhotosWithText()
+    if (!photos) return []
+    for (const tag of all_possible_tags) {
+      let restaurant_tag: RestaurantTag = {
+        tag_id: tag.id,
+        // @ts-ignore
+        photos: [] as string[],
+      }
+      let is_at_least_one_photo = false
+      for (const photo of photos) {
+        if (doesStringContainTag(photo.text, tag)) {
+          is_at_least_one_photo = true
+          all_tag_photos.push({
+            restaurant_id: this.crawler.restaurant.id,
+            tag_id: tag.id,
+            photo: {
+              url: photo.url,
+            },
+          })
         }
-        let is_at_least_one_photo = false
-        for (const photo of photos) {
-          if (doesStringContainTag(photo.media_data?.caption, tag)) {
-            is_at_least_one_photo = true
-            all_tag_photos.push({
-              restaurant_id: this.crawler.restaurant.id,
-              tag_id: tag.id,
-              photo: {
-                url: photo.src,
-              } as any,
-            })
-          }
-        }
-        if (is_at_least_one_photo) {
-          this.restaurant_tags.push(restaurant_tag)
-        }
+      }
+      if (is_at_least_one_photo) {
+        this.restaurant_tags.push(restaurant_tag)
       }
     }
     return all_tag_photos
+  }
+
+  getPhotosWithText() {
+    let yelps = this.crawler.getPaginatedData(this.crawler.yelp?.data, 'photos')
+    yelps = yelps.map((y) => {
+      return {
+        url: y.src,
+        text: y.media_data?.caption,
+      }
+    })
+    let tripadvisors = scrapeGetData(
+      this.crawler.tripadvisor,
+      'photos_with_captions'
+    )
+    tripadvisors = tripadvisors.map((t) => {
+      return {
+        url: t.url,
+        text: t.caption,
+      }
+    })
+    return [...yelps, ...tripadvisors]
   }
 
   findDishesInText(all_sources: TextSource[]) {

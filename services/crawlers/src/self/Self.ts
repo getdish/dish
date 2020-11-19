@@ -191,6 +191,7 @@ export class Self extends WorkerJob {
       })
       return
     }
+    await this.oldestReview()
     await this._runFailableFunction(this.finishTagsEtc)
     await this._runFailableFunction(this.finalScores)
     await restaurantUpdate(this.restaurant)
@@ -317,9 +318,6 @@ export class Self extends WorkerJob {
     }
   }
 
-  // TODO: If we really want to be careful about being found out for scraping then we
-  // need at least 2 identical sources and something better than just resorting to the
-  // shortest version.
   merge(strings: string[]) {
     let overlaps: string[] = []
     for (let pair of Self.allPairs(strings)) {
@@ -458,6 +456,18 @@ export class Self extends WorkerJob {
     const mDate = moment(`1996 01 ${doftw} ${time}`, 'YYYY MM D hh:mmA')
     const timestamp = mDate.format(`YYYY-MM-DD HH:mm:ss${CALIFORNIAN_TZ}`)
     return timestamp
+  }
+
+  async oldestReview() {
+    const query = `
+      SELECT MIN(authored_at) oldest_review
+      FROM review
+        WHERE restaurant_id = '${this.restaurant.id}'
+      ORDER BY oldest_review DESC
+    `
+    const result = await this.main_db.query(query)
+    const oldest_review = result.rows[0].oldest_review
+    this.restaurant.oldest_review_date = oldest_review
   }
 
   addSources() {
@@ -648,7 +658,7 @@ export class Self extends WorkerJob {
     const yelp_data = this.yelp?.data || {}
     // @ts-ignore
     let photos_urls = [
-      // ...scrapeGetData(this.tripadvisor, 'photos', []),
+      ...scrapeGetData(this.tripadvisor, 'photos', []),
       ...this._getGooglePhotos(),
       ...this.getPaginatedData(yelp_data, 'photos').map((i) => i.src),
     ]

@@ -95,16 +95,18 @@ If you want to run end to end tests:
     * Make sure the [core stack](#core-stack) is up:
       `docker-compose build && docker-compose up`
 
-    * Run the migrations, from the `services/hasura` path:
+    * Run the migrations:
       ```
-      hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password
+      ./dishctl.sh db_migrate_local
+      ./dishctl.sh timescale_migrate_local
       ```
 
     * To connect to these local services, visit:
       'http://localhost:80'
 
     * Run the tests. from the `dish-app` path:
-      `./test/testcafe.sh`
+      `yarn test` (specs, etc)
+      `./test/testcafe.sh` (integration tests)
 
 ## Hot Deploys
 
@@ -233,14 +235,16 @@ A platform-specific load balancer will be created outside the Kubernetes cluster
 In order to synchronise shared credentials between Terraform and Rio, Terraform's deploy command must use `./dishctl.sh yaml_to_env` to provide the necessary ENV vars. So the deployment command, from the `k8s/` path is `eval $(./dishctl.sh yaml_to_env) terraform apply`.
 
 #### Notes on creating a new cluster
+
 When setting up a Blue/Green cluster, I found that:
-  * `nodeSelector` isn't powerful enough to prevent the CI node getting full of other pods. But
-    DO still haven't developed native support for taints/tolerations. Watch:
-    https://github.com/digitalocean/DOKS/issues/3
-  * `./dishctl.sh hot_deploy path/to/Dockerfile` for each service needed to be run. This could be done by doing
-    a Github deploy too.
-  * In Hasura's console, I needed to click the "Reload metadata" button to get Hasura consistent
-    with the DB again. I have no idea why.
+
+- `nodeSelector` isn't powerful enough to prevent the CI node getting full of other pods. But
+  DO still haven't developed native support for taints/tolerations. Watch:
+  https://github.com/digitalocean/DOKS/issues/3
+- `./dishctl.sh hot_deploy path/to/Dockerfile` for each service needed to be run. This could be done by doing
+  a Github deploy too.
+- In Hasura's console, I needed to click the "Reload metadata" button to get Hasura consistent
+  with the DB again. I have no idea why.
 
 ### What's on our cluster?
 

@@ -1,0 +1,5 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."restaurant" DROP COLUMN "oldest_review_date";
+  type: run_sql

@@ -1,21 +1,26 @@
 Dependencies:
-  * Android SDK, gradle, android-tools
-  * Latest Java and Java 8 are needed
+
+- Android SDK, gradle, android-tools
+- Latest Java and Java 8 are needed
 
 I, @tombh, particularly needed these because of Arch Linux and SwayWM (Wayland):
+
 ```
 export ANDROID_SDK_ROOT=~/Android/Sdk/
+export ANDROID_HOME=$ANDROID_SDK_ROOT
 export _JAVA_AWT_WM_NONREPARENTING=1
 export STUDIO_JDK=/usr/lib/jvm/java-14-openjdk
 ```
 
 Accept licenses for certain Android SDK plugins:
+
 ```
 yes | PATH="/usr/lib/jvm/java-8-openjdk/jre/bin/:$PATH" \
   ~/Android/Sdk/tools/bin/sdkmanager --licenses
 ```
 
 Some certificate, I don't know what for:
+
 ```
 keytool -genkey -v -keystore dish-app/android/app/debug.keystore \
   -storepass android -alias androiddebugkey -keypass android \
@@ -23,6 +28,7 @@ keytool -genkey -v -keystore dish-app/android/app/debug.keystore \
 ```
 
 Basic development workflow:
+
 ```
 # Build and watch app as normal (in project root)
 TARGET=native yarn build:watch
@@ -39,6 +45,7 @@ Dev server available at http://localhost:8081/debugger-ui/
 ## Current issues
 
 React Native's `yarn start` generates this. Though doesn't seem to cause any obvious problems.
+
 ```
 Error: EISDIR: illegal operation on a directory, read
     at Object.readSync (fs.js:523:3)

@@ -15,7 +15,7 @@ import {
 } from '../scrape-helpers'
 import { aroundCoords, boundingBoxFromcenter, geocode } from '../utils'
 
-const BB_SEARCH = '/search/snippet?cflt=restaurants&l='
+const BB_SEARCH = '/search/snippet?cflt=food&l='
 
 const YELP_DOMAIN = 'https://www.yelp.com'
 
@@ -33,6 +33,7 @@ const yelpAPI = new ProxiedRequests(
 
 export class Yelp extends WorkerJob {
   current?: string
+  find_only = ''
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -88,6 +89,8 @@ export class Yelp extends WorkerJob {
     const search_results = response?.data.searchPageProps.searchResultsProps
     const objects = search_results.searchResults
     const pagination = search_results.paginationInfo
+    let found_the_one = false
+    this.find_only = only
 
     if (!search_results.searchResults) {
       console.error(
@@ -116,6 +119,7 @@ export class Yelp extends WorkerJob {
         continue
       }
       if (name == only) {
+        found_the_one = true
         console.log('YELP SANDBOX: found ' + name)
       }
       await this.getRestaurant(data)
@@ -129,6 +133,7 @@ export class Yelp extends WorkerJob {
         only,
       ])
     }
+    if (only && !found_the_one) throw `Couldn't find ${only}`
   }
 
   async getRestaurant(data: ScrapeData) {
@@ -208,6 +213,8 @@ export class Yelp extends WorkerJob {
       scrape.data.data_from_map_search.name,
       scrape.data.data_from_map_search.formattedAddress
     )
+    if (this.find_only)
+      console.log(`ID for ${this.find_only} is ${restaurant_id}`)
     scrape.location = {
       lon: lon,
       lat: lat,

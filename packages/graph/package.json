@@ -6,8 +6,7 @@
   "sideEffects": false,
   "private": true,
   "scripts": {
-    "generate": "ts-node --transpile-only ./generate.ts",
-    "generate-new": "ts-node --transpile-only ./generate-new.ts",
+    "generate": "ts-node --transpile-only ./generate-new.ts",
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "TARGET=node DISH_ENV=test ava test/* --verbose --serial",

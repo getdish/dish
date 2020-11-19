@@ -10,7 +10,7 @@ import _ from 'lodash'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
-import { aroundCoords, geocode } from '../utils'
+import { aroundCoords, decodeEntities, geocode } from '../utils'
 
 const TRIPADVISOR_DOMAIN =
   process.env.TRIPADVISOR_PROXY || 'https://www.tripadvisor.com'
@@ -29,6 +29,7 @@ export class Tripadvisor extends WorkerJob {
   public MAPVIEW_SIZE = 1000
   public SEARCH_RADIUS_MULTIPLIER = 10
   public _TESTS__LIMIT_GEO_SEARCH = false
+  public detail_id!: string
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -76,6 +77,7 @@ export class Tripadvisor extends WorkerJob {
   }
 
   async getRestaurant(path: string) {
+    this.detail_id = this.extractDetailID(path)
     const response = await axios.get(TRIPADVISOR_DOMAIN + path)
     let data = this._extractEmbeddedJSONData(response.data)
     const scrape_id = await this.saveRestaurant(data)
@@ -139,7 +141,7 @@ export class Tripadvisor extends WorkerJob {
       const response = await axios.get(TRIPADVISOR_DOMAIN + path)
       html = response.data
     }
-    const more = await this._persistReviewData(html, scrape_id, page)
+    const more = await this._persistReviewData(html, scrape_id, page, path)
     if (more) {
       page++
       if (page == 1) {
@@ -151,19 +153,71 @@ export class Tripadvisor extends WorkerJob {
     }
   }
 
-  // TODO: load further pages on photo carousel as this only loads the first 10 or so
   async savePhotos(html: string, scrape_id: string) {
+    let page = 0
+    let photos: any[] = []
+    while (true) {
+      const result = await this.parsePhotoPage(page)
+      if (!result) break
+      const batch = result
+      photos = [...photos, ...batch]
+      page++
+    }
+    const uris = photos.map((p) => p.url)
+    await scrapeMergeData(scrape_id, {
+      photos: uris, // field is kept for backwards compat
+      photos_with_captions: photos,
+    })
+  }
+
+  async parsePhotoPage(page = 0) {
+    const path = this.buildGalleryURL(page)
+    const response = await axios.get(TRIPADVISOR_DOMAIN + path, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    })
+    const html = response.data
     const $ = cheerio.load(html)
-    const photos = $('.mosaic_photos .basicImg')
-    let uris: string[] = []
+    const photos = $('.tinyThumb')
+    let parsed: any[] = []
+    if (html.includes('Oh, snap! We don&#39;t have any photos for')) {
+      return false
+    }
     for (let i = 0; i < photos.length; i++) {
       const photo = $(photos[i])
-      const uri = photo
-        .attr('data-lazyurl')!
-        .replace(/\/photo-.\//, '/photo-w/')
-      uris.push(uri)
+      const url = $(photo).attr('data-bigurl')
+      let caption = $(photo).attr('data-captiontext')
+      if (caption) {
+        caption = decodeEntities(caption)
+      }
+      parsed.push({
+        url,
+        caption,
+      })
     }
-    await scrapeMergeData(scrape_id, { photos: uris })
+    return parsed
+  }
+
+  buildGalleryURL(page = 0) {
+    let path = '/DynamicPlacementAjax?'
+    const offset = page * 50
+    const params = [
+      'detail=' + this.detail_id,
+      'albumViewMode=hero',
+      'placementRollUps=responsive-photo-viewer',
+      'metaReferer=Restaurant_Review',
+      'offset=' + offset,
+    ].join('&')
+    return path + params
+  }
+
+  extractDetailID(path: string) {
+    const re = new RegExp(/-d([0-9]*)-/)
+    let matches = re.exec(path)
+    if (!matches) throw "Couldn't parse detail_id from Tripadvisor URL"
+    const detail_id = matches[1]
+    return detail_id
   }
 
   static cleanName(name: string) {
@@ -175,26 +229,22 @@ export class Tripadvisor extends WorkerJob {
   private async _persistReviewData(
     html: string,
     scrape_id: string,
-    page: number
+    page: number,
+    path: string
   ) {
     if (process.env.DISH_ENV != 'production' && page > 2) return false
-    const { more, data: review_data } = this._extractReviews(html)
+    const { more, data: review_data } = await this._extractReviews(html, path)
     let scrape_data: ScrapeData = {}
     scrape_data['reviewsp' + page] = review_data
     await scrapeMergeData(scrape_id, scrape_data)
     return more
   }
 
-  // TODO: Full review text needs a separate request with something like:
-  // curl 'https://www.tripadvisor.com/OverlayWidgetAjax\
-  //   ?Mode=EXPANDED_HOTEL_REVIEWS_RESP&metaReferer=' \
-  //   --compressed -H 'X-Requested-With: XMLHttpRequest' \
-  //   -H 'Referer: https://www.tripadvisor.com/Restaurant_Review-g60713-d1516973-Reviews-Flour_Water-San_Francisco_California.html' \
-  //   --data 'reviews=733608852,733186400,724243903,720450724,714340566,702434557,700388923,698556394&contextChoice=DETAIL&loadMtHeader=true'
-  private _extractReviews(html: string) {
-    const $ = cheerio.load(html)
-    const reviews = $('#REVIEWS .listContainer .review-container')
-    let more = false
+  private async _extractReviews(html: string, path: string) {
+    const full = await this.getFullReviews(html, path)
+    const updated_html = full.data
+    const $ = cheerio.load(updated_html)
+    const reviews = $('.reviewSelector')
     let data: ScrapeData[] = []
     for (let i = 0; i < reviews.length; i++) {
       const review = $(reviews[i])
@@ -207,6 +257,32 @@ export class Tripadvisor extends WorkerJob {
         date: review.find('.ratingDate').attr('title'),
       })
     }
+    return { more: full.more, data: data }
+  }
+
+  private async getFullReviews(html: string, referer_path: string) {
+    let ids: string[] = []
+    const $ = cheerio.load(html)
+    const reviews = $('#REVIEWS .listContainer .review-container')
+    let more = false
+    for (let i = 0; i < reviews.length; i++) {
+      const review = $(reviews[i])
+      const id = review.find('.reviewSelector').attr('data-reviewid')
+      if (!id) continue
+      ids.push(id)
+    }
+    const params = [
+      'Mode=EXPANDED_HOTEL_REVIEWS_RESP',
+      'metaReferer=',
+      'contextChoice=DETAIL',
+      'reviews=' + ids.join(','),
+    ]
+    const path = '/OverlayWidgetAjax?' + params.join('&')
+    const response = await axios.get(TRIPADVISOR_DOMAIN + path, {
+      headers: {
+        Referer: 'https://www.tripadvisor.com' + referer_path,
+      },
+    })
     try {
       if (!$('.ui_pagination > a.next')!.attr('class')!.includes('disabled')) {
         more = true
@@ -214,10 +290,10 @@ export class Tripadvisor extends WorkerJob {
     } catch (error) {
       sentryException(error)
     }
-    return { more: more, data: data }
+    const updated_html = response.data
+    return { more, data: updated_html }
   }
 
-  // @tom i changed : Cheerio to any to fix an error in types compiling
   private _getRatingFromClasses(review: any) {
     let rating: number | null = null
     const classes = review.find('.ui_bubble_rating').attr('class')!.split(' ')

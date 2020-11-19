@@ -1,9 +1,4 @@
-import {
-  QueryFetcher,
-  ScalarsEnumsHash,
-  Schema,
-  createClient,
-} from '@dish/gqless'
+import { QueryFetcher, ScalarsEnumsHash, createClient } from '@dish/gqless'
 
 import { Auth } from '../../Auth'
 import { getGraphEndpoint } from '../../helpers/getGraphEndpoint'
@@ -881,6 +876,7 @@ export interface restaurant_bool_exp {
   location?: Maybe<geometry_comparison_exp>
   menu_items?: Maybe<menu_item_bool_exp>
   name?: Maybe<String_comparison_exp>
+  oldest_review_date?: Maybe<timestamptz_comparison_exp>
   photos?: Maybe<jsonb_comparison_exp>
   price_range?: Maybe<String_comparison_exp>
   rating?: Maybe<numeric_comparison_exp>
@@ -976,6 +972,7 @@ export interface restaurant_insert_input {
   location?: Maybe<Scalars['geometry']>
   menu_items?: Maybe<menu_item_arr_rel_insert_input>
   name?: Maybe<Scalars['String']>
+  oldest_review_date?: Maybe<Scalars['timestamptz']>
   photos?: Maybe<Scalars['jsonb']>
   price_range?: Maybe<Scalars['String']>
   rating?: Maybe<Scalars['numeric']>
@@ -1009,6 +1006,7 @@ export interface restaurant_max_order_by {
   id?: Maybe<order_by>
   image?: Maybe<order_by>
   name?: Maybe<order_by>
+  oldest_review_date?: Maybe<order_by>
   price_range?: Maybe<order_by>
   rating?: Maybe<order_by>
   score?: Maybe<order_by>
@@ -1034,6 +1032,7 @@ export interface restaurant_min_order_by {
   id?: Maybe<order_by>
   image?: Maybe<order_by>
   name?: Maybe<order_by>
+  oldest_review_date?: Maybe<order_by>
   price_range?: Maybe<order_by>
   rating?: Maybe<order_by>
   score?: Maybe<order_by>
@@ -1076,6 +1075,7 @@ export interface restaurant_order_by {
   location?: Maybe<order_by>
   menu_items_aggregate?: Maybe<menu_item_aggregate_order_by>
   name?: Maybe<order_by>
+  oldest_review_date?: Maybe<order_by>
   photos?: Maybe<order_by>
   price_range?: Maybe<order_by>
   rating?: Maybe<order_by>
@@ -1142,6 +1142,8 @@ export enum restaurant_select_column {
   /** column name */
   name = 'name',
   /** column name */
+  oldest_review_date = 'oldest_review_date',
+  /** column name */
   photos = 'photos',
   /** column name */
   price_range = 'price_range',
@@ -1193,6 +1195,7 @@ export interface restaurant_set_input {
   image?: Maybe<Scalars['String']>
   location?: Maybe<Scalars['geometry']>
   name?: Maybe<Scalars['String']>
+  oldest_review_date?: Maybe<Scalars['timestamptz']>
   photos?: Maybe<Scalars['jsonb']>
   price_range?: Maybe<Scalars['String']>
   rating?: Maybe<Scalars['numeric']>
@@ -1637,6 +1640,8 @@ export enum restaurant_update_column {
   location = 'location',
   /** column name */
   name = 'name',
+  /** column name */
+  oldest_review_date = 'oldest_review_date',
   /** column name */
   photos = 'photos',
   /** column name */
@@ -4886,6 +4891,7 @@ export const generatedSchema = {
       },
     },
     name: { __type: 'String!' },
+    oldest_review_date: { __type: 'timestamptz' },
     photos: { __type: 'jsonb', __args: { path: 'String' } },
     price_range: { __type: 'String' },
     rating: { __type: 'numeric' },
@@ -5036,6 +5042,7 @@ export const generatedSchema = {
     location: { __type: 'geometry_comparison_exp' },
     menu_items: { __type: 'menu_item_bool_exp' },
     name: { __type: 'String_comparison_exp' },
+    oldest_review_date: { __type: 'timestamptz_comparison_exp' },
     photos: { __type: 'jsonb_comparison_exp' },
     price_range: { __type: 'String_comparison_exp' },
     rating: { __type: 'numeric_comparison_exp' },
@@ -5109,6 +5116,7 @@ export const generatedSchema = {
     location: { __type: 'geometry' },
     menu_items: { __type: 'menu_item_arr_rel_insert_input' },
     name: { __type: 'String' },
+    oldest_review_date: { __type: 'timestamptz' },
     photos: { __type: 'jsonb' },
     price_range: { __type: 'String' },
     rating: { __type: 'numeric' },
@@ -5140,6 +5148,7 @@ export const generatedSchema = {
     id: { __type: 'uuid' },
     image: { __type: 'String' },
     name: { __type: 'String' },
+    oldest_review_date: { __type: 'timestamptz' },
     price_range: { __type: 'String' },
     rating: { __type: 'numeric' },
     score: { __type: 'numeric' },
@@ -5163,6 +5172,7 @@ export const generatedSchema = {
     id: { __type: 'order_by' },
     image: { __type: 'order_by' },
     name: { __type: 'order_by' },
+    oldest_review_date: { __type: 'order_by' },
     price_range: { __type: 'order_by' },
     rating: { __type: 'order_by' },
     score: { __type: 'order_by' },
@@ -5186,6 +5196,7 @@ export const generatedSchema = {
     id: { __type: 'uuid' },
     image: { __type: 'String' },
     name: { __type: 'String' },
+    oldest_review_date: { __type: 'timestamptz' },
     price_range: { __type: 'String' },
     rating: { __type: 'numeric' },
     score: { __type: 'numeric' },
@@ -5209,6 +5220,7 @@ export const generatedSchema = {
     id: { __type: 'order_by' },
     image: { __type: 'order_by' },
     name: { __type: 'order_by' },
+    oldest_review_date: { __type: 'order_by' },
     price_range: { __type: 'order_by' },
     rating: { __type: 'order_by' },
     score: { __type: 'order_by' },
@@ -5249,6 +5261,7 @@ export const generatedSchema = {
     location: { __type: 'order_by' },
     menu_items_aggregate: { __type: 'menu_item_aggregate_order_by' },
     name: { __type: 'order_by' },
+    oldest_review_date: { __type: 'order_by' },
     photos: { __type: 'order_by' },
     price_range: { __type: 'order_by' },
     rating: { __type: 'order_by' },
@@ -5294,6 +5307,7 @@ export const generatedSchema = {
     image: { __type: 'String' },
     location: { __type: 'geometry' },
     name: { __type: 'String' },
+    oldest_review_date: { __type: 'timestamptz' },
     photos: { __type: 'jsonb' },
     price_range: { __type: 'String' },
     rating: { __type: 'numeric' },
@@ -8240,6 +8254,7 @@ export interface restaurant {
     where?: Maybe<menu_item_bool_exp>
   }) => menu_item_aggregate
   name: ScalarsEnums['String']
+  oldest_review_date: Maybe<ScalarsEnums['timestamptz']>
   photos: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
@@ -8349,6 +8364,7 @@ export interface restaurant_max_fields {
   id: Maybe<ScalarsEnums['uuid']>
   image: Maybe<ScalarsEnums['String']>
   name: Maybe<ScalarsEnums['String']>
+  oldest_review_date: Maybe<ScalarsEnums['timestamptz']>
   price_range: Maybe<ScalarsEnums['String']>
   rating: Maybe<ScalarsEnums['numeric']>
   score: Maybe<ScalarsEnums['numeric']>
@@ -8373,6 +8389,7 @@ export interface restaurant_min_fields {
   id: Maybe<ScalarsEnums['uuid']>
   image: Maybe<ScalarsEnums['String']>
   name: Maybe<ScalarsEnums['String']>
+  oldest_review_date: Maybe<ScalarsEnums['timestamptz']>
   price_range: Maybe<ScalarsEnums['String']>
   rating: Maybe<ScalarsEnums['numeric']>
   score: Maybe<ScalarsEnums['numeric']>
@@ -8885,7 +8902,6 @@ export interface review_variance_fields {
 }
 
 export interface setting {
-  __typename: string
   created_at: Maybe<ScalarsEnums['timestamptz']>
   id: ScalarsEnums['uuid']
   key: ScalarsEnums['String']
@@ -9322,15 +9338,6 @@ const queryFetcher: QueryFetcher = async function (query, variables) {
   }
 
   const json = await response.json()
-
-  if (json.errors) {
-    console.log('query', query)
-    console.log('variables', JSON.stringify(variables, null, 2))
-    console.log('json', JSON.stringify(json))
-    console.log('\n\n')
-  }
-
-  // console.error(9330, JSON.stringify(json))
 
   return json
 }

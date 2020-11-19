@@ -5,6 +5,8 @@ import {
   RestaurantWithId,
   TagWithId,
   flushTestData,
+  query,
+  resolved,
   restaurantFindOneWithTags,
   restaurantUpsert,
   restaurantUpsertOrphanTags,
@@ -111,38 +113,49 @@ test('Ambiguous tags get marked', async (t) => {
   t.is(tag5?.is_ambiguous, true)
 })
 
-test.skip('Getting top tags for a restaurant', async (t) => {
+test('Getting top tags for a restaurant', async (t) => {
   let restaurant = await restaurantFindOneWithTags({
     name: 'Test Restaurant',
   })
-  if (!restaurant) throw Error('Restaurant not found!')
-  await restaurantUpsertOrphanTags(restaurant, [
-    'Test tag',
-    'Test tag existing',
-  ])
-  const [tag] = await tagInsert([
-    { name: 'Test tag', parentId: t.context.existing_tag.id },
+  const [t1, t2, t3] = await tagInsert([
+    { name: 'Test tag 1', type: 'dish', parentId: t.context.existing_tag.id },
+    {
+      name: 'Test tag 2',
+      type: 'dish',
+      parentId: t.context.existing_tag.id,
+    },
+    { name: 'Test tag 3', type: 'dish', parentId: t.context.existing_tag.id },
   ])
   restaurant = (await restaurantUpsertRestaurantTags(restaurant, [
-    { tag_id: tag.id },
+    { tag_id: t1.id },
+    { tag_id: t2.id },
+    { tag_id: t3.id },
   ]))!
-  const restaurant_query = await query.restaurant({
-    where: {
-      slug: {
-        _eq: restaurant.slug,
+  const r = await resolved(() => {
+    const restaurant_query = query.restaurant({
+      where: {
+        slug: {
+          _eq: restaurant.slug,
+        },
       },
-    },
-    limit: 1,
-  })[0]
-  console.log(restaurant.slug)
-  const results = await restaurant_query.top_tags({
-    args: {
-      //@ts-expect-error
-      tag_names: [''],
-      tag_types: 'dish',
-    },
-    limit: 10,
+      limit: 1,
+    })
+    const results = restaurant_query[0].top_tags({
+      args: {
+        tag_names: 'test-tag-existing__test-tag-2',
+        _tag_types: 'dish',
+      },
+      limit: 5,
+    })
+    return results.map((r) => {
+      return {
+        slug: r.tag.slug,
+      }
+    })
   })
-  console.log(results)
-  t.is(restaurant?.name ?? '', 'Test Restaurant')
+  t.deepEqual(r, [
+    { slug: 'test-tag-existing__test-tag-2' },
+    { slug: 'test-tag-existing__test-tag-1' },
+    { slug: 'test-tag-existing__test-tag-3' },
+  ])
 })

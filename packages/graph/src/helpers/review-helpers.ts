@@ -192,7 +192,11 @@ export function cleanReviewText(text: string | null | undefined) {
   if (!text) return null
   const br = /<br\s*[\/]?>/gi
   const apostrophe = '&#39;'
-  const cleaned = text.replace(br, '\n').replaceAll(apostrophe, "'")
+  const quote = '&#34;'
+  const cleaned = text
+    .replace(br, '\n')
+    .replaceAll(apostrophe, "'")
+    .replaceAll(quote, '"')
   return cleaned
 }
 

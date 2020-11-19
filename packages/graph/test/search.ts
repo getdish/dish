@@ -4,10 +4,13 @@ import test from 'ava'
 import { clone } from 'lodash'
 
 import {
+  Auth,
+  SEARCH_DOMAIN,
   flushTestData,
   restaurantUpsert,
   restaurantUpsertOrphanTags,
   restaurantUpsertRestaurantTags,
+  reviewUpsert,
   search,
   searchMain,
   tagInsert,
@@ -16,6 +19,9 @@ import { restaurant_fixture } from './etc/fixtures'
 
 test.beforeEach(async (t) => {
   await flushTestData()
+  await Auth.register('test', 'test@test.com', 'password')
+  const [_, user] = await Auth.login('test', 'password')
+  t.context.user = user
 })
 
 test('Searching for a restaurant by name', async (t) => {
@@ -114,16 +120,12 @@ test('Orders by restaurant+tag score if dish tags queried', async (t) => {
   })
 
   t.is(results?.length, 3)
-  t.is(results?.[0].id, rr1.id)
-  //@ts-expect-error
-  t.is(results?.[0].meta.restaurant_rank, 1)
-  //@ts-expect-error
-  t.is(results?.[0].meta.rish_rank, 2)
-  t.is(results?.[1].id, rr3.id)
-  //@ts-expect-error
-  t.is(results?.[1].meta.restaurant_rank, 3)
-  //@ts-expect-error
-  t.is(results?.[1].meta.rish_rank, 1)
+  t.is(results?.[0].id, rr3.id)
+  t.is(results?.[0].meta.restaurant_rank, 3)
+  t.is(results?.[0].meta.rish_rank, 1)
+  t.is(results?.[1].id, rr1.id)
+  t.is(results?.[1].meta.restaurant_rank, 1)
+  t.is(results?.[1].meta.rish_rank, 2)
   t.is(results?.[2].id, rr2.id)
   //@ts-expect-error
   t.is(results?.[2].meta.restaurant_rank, 2)
@@ -187,4 +189,22 @@ test('Supports main_tag priority ordering', async (t) => {
   t.is(results?.[2].meta.main_tag_rank, 3)
   //@ts-expect-error
   t.is(results?.[2].meta.restaurant_rank, 3)
+})
+
+test('Home page feed', async (t) => {
+  restaurant_fixture.location = {
+    type: 'Point',
+    coordinates: [-122, 36],
+  }
+  let [restaurant] = await restaurantUpsert([restaurant_fixture])
+  await reviewUpsert([
+    {
+      user_id: t.context.user.id,
+      restaurant_id: restaurant.id,
+      text: 'test',
+    },
+  ])
+  const response = await fetch(SEARCH_DOMAIN + '/feed')
+  const json = await response.json()
+  t.deepEqual(Object.keys(json), ['trending', 'newest'])
 })
