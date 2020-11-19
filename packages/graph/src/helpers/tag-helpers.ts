@@ -54,7 +54,7 @@ export async function tagGetAllChildren(
       })
     },
     (vTags: tag[]) => {
-      return vTags.map((v_t: tag) => {
+      return vTags.map((v_t) => {
         return {
           ...selectFields(v_t, '*', 2),
           alternates: v_t.alternates(),
@@ -104,7 +104,7 @@ export async function tagGetAllGenerics(): Promise<Tag[]> {
       })
     },
     (vTags: tag[]) => {
-      return vTags.map((v_t: tag) => {
+      return vTags.map((v_t) => {
         return {
           ...selectFields(v_t, '*', 2),
           alternates: v_t.alternates(),

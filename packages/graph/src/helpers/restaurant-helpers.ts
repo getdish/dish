@@ -43,7 +43,7 @@ export async function restaurantFindOneWithTags(
 ) {
   return await restaurantFindOne(restaurant, (v: Maybe<restaurant>[]) => {
     return v.map((rest) => {
-      const d = {
+      return {
         ...selectFields(rest),
         tag_names: rest?.tag_names(),
         tags: rest?.tags().map((tagV) => {
@@ -57,6 +57,7 @@ export async function restaurantFindOneWithTags(
                 }
               }),
               parent: selectFields(tagV.tag.parent),
+              alternates: tagV.tag.alternates(),
             },
             sentences: selectFields(tagV.sentences()),
             score_breakdown: tagV.score_breakdown(),
@@ -69,8 +70,6 @@ export async function restaurantFindOneWithTags(
         photos: rest?.photos(),
         rating_factors: rest?.rating_factors(),
       }
-
-      return d
     })
   })
 }
