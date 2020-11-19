@@ -1,12 +1,11 @@
 import { CITY_LIST } from '../utils'
-import { Google } from './Google'
+import { GoogleReviewAPI } from './GoogleReviewAPI'
 ;(async () => {
   let cities = CITY_LIST
   if (process.env.CITY) {
     cities = [process.env.CITY]
   }
-  const google = new Google()
-  await google.boot()
+  const google = new GoogleReviewAPI()
   for (const city of cities) {
     google.runOnWorker('allForCity', [city])
   }

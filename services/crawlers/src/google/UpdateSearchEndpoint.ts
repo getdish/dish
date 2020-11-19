@@ -7,7 +7,7 @@ import {
   LAT_TOKEN,
   LON_TOKEN,
 } from '../GoogleGeocoder'
-import { GoogleJob } from './GoogleJob'
+import { GooglePuppeteerJob } from './GooglePuppeteerJob'
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 const PLEASE = 'PLEASE'
@@ -17,7 +17,7 @@ String.prototype.replaceAll = function (search, replacement) {
   return target.replace(new RegExp(search, 'g'), replacement)
 }
 
-export class UpdateSearchEndpoint extends GoogleJob {
+export class UpdateSearchEndpoint extends GooglePuppeteerJob {
   searchEndpoint!: string
   lat!: number
   lon!: number

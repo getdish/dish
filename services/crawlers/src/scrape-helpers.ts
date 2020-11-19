@@ -6,7 +6,7 @@ import {
 } from '@dish/graph'
 
 import { DoorDash } from './doordash/DoorDash'
-import { Google } from './google/Google'
+import { GooglePuppeteer } from './google/GooglePuppeteer'
 import { GoogleGeocoder } from './GoogleGeocoder'
 import { GrubHub } from './grubhub/GrubHub'
 import { Infatuated } from './infatuated/Infatuated'

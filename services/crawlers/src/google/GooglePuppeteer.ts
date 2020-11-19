@@ -8,7 +8,7 @@ import { Tabletojson } from 'tabletojson'
 
 import { GoogleGeocoder } from '../GoogleGeocoder'
 import { scrapeInsert } from '../scrape-helpers'
-import { GoogleJob } from './GoogleJob'
+import { GooglePuppeteerJob } from './GooglePuppeteerJob'
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms))
 const GOOGLE_DOMAIN = 'https://www.google.com'
@@ -20,7 +20,7 @@ String.prototype.replaceAll = function (search, replacement) {
   return target.replace(new RegExp(search, 'g'), replacement)
 }
 
-export class Google extends GoogleJob {
+export class GooglePuppeteer extends GooglePuppeteerJob {
   searchEndpoint!: string
   lon!: number
   lat!: number
@@ -102,8 +102,6 @@ export class Google extends GoogleJob {
       this.getWebsite,
       this.getPhone,
       this.getSynopsis,
-      this.getPhotos,
-      this.getReviews,
     ]
     for (const step of steps) {
       await this._runFailableFunction(step, restaurant)
@@ -202,46 +200,6 @@ export class Google extends GoogleJob {
       const selector = '.section-open-hours-container'
       return document.querySelector(selector)?.innerHTML
     })
-    this.scrape_data.hours = Google.convertTableToJSON(html || '')
-  }
-
-  async getPhotos() {
-    const button = '.section-hero-header-image-hero'
-    await this.puppeteer.page.click(button)
-    const selector = '.gallery-image-low-res'
-    await this.puppeteer.getElementText(selector)
-    await this.puppeteer.scrollAllIntoView(selector)
-    const photos = await this.puppeteer.page.evaluate((selector) => {
-      const photos = Array.from(document.querySelectorAll(selector))
-      return photos.map((el) => {
-        const computed = window.getComputedStyle(el)
-        const bg = computed.getPropertyValue('background-image')
-        const url = bg.replace(/^url\(["']?/, '').replace(/["']?\)$/, '')
-        return url
-      })
-    }, selector)
-    this.scrape_data.photos = photos
-  }
-
-  async getReviews() {
-    const url =
-      GOOGLE_DOMAIN +
-      `/maps/place/@${this.lat},${this.lon},17z/` +
-      `data=!4m7!3m6!1s${this.googleRestaurantID}` +
-      `!8m2!3d${this.lat}!4d${this.lon}!9m1!1b1`
-    await this.puppeteer.page.goto(url)
-    await sleep(1000)
-    await this.puppeteer.scrollAllIntoView('.section-review')
-    const reviews = await this.puppeteer.page.evaluate(() => {
-      const reviews = Array.from(document.querySelectorAll('.section-review'))
-      return reviews.map((el) => {
-        const rating = (<HTMLElement>el)
-          .querySelector('.section-review-stars')
-          ?.getAttribute('aria-label')
-        const inner_text = (<HTMLElement>el).innerText
-        return rating + '\n' + inner_text
-      })
-    })
-    this.scrape_data.reviews = reviews
+    this.scrape_data.hours = GooglePuppeteer.convertTableToJSON(html || '')
   }
 }
