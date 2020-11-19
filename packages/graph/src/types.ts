@@ -94,7 +94,7 @@ export type ModelType =
 
 // nice names
 export type ModelName = Exclude<GetModelTypeName<ModelType>, undefined>
-type GetModelTypeName<U> = U extends ModelType ? string : never
+type GetModelTypeName<U> = U extends ModelType ? U['__typename'] : never
 
 // helpers for this file
 

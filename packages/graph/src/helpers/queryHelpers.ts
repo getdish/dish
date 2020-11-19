@@ -61,24 +61,34 @@ export function createQueryHelpersFor<A extends ModelType>(
   defaultUpsertConstraint?: string
 ) {
   return {
-    async insert(items: Partial<A>[], fn?: (v: any) => unknown) {
-      return await insert<A>(modelName, items, fn)
+    async insert(
+      items: Partial<A>[],
+      fn?: (v: any) => unknown,
+      keys?: string[]
+    ) {
+      return await insert<A>(modelName, items, fn, keys)
     },
     async upsert(
       items: Partial<A>[],
       constraint?: string,
-      fn?: (v: any) => unknown
+      fn?: (v: any) => unknown,
+      keys?: string[]
     ) {
       return await upsert<A>(
         modelName,
         items,
         constraint ?? defaultUpsertConstraint,
-        fn
+        fn,
+        keys
       )
     },
-    async update(a: WithID<Partial<A>>, fn?: (v: any) => unknown) {
+    async update(
+      a: WithID<Partial<A>>,
+      fn?: (v: any) => unknown,
+      keys?: string[]
+    ) {
       //@ts-expect-error
-      return await update<WithID<A>>(modelName, a, fn)
+      return await update<WithID<A>>(modelName, a, fn, keys)
     },
     async findOne(a: Partial<A>, fn?: (v: any) => unknown) {
       return await findOne<WithID<A>>(modelName, a as any, fn)
@@ -121,11 +131,12 @@ export async function findAll<T extends ModelType>(
 export async function insert<T extends ModelType>(
   table: ModelName,
   objects: Partial<T>[],
-  fn?: (v: any) => unknown
+  fn?: (v: any) => unknown,
+  keys?: string[]
 ): Promise<WithID<T>[]> {
   const action = `insert_${table}` as any
 
-  const keys = Object.keys(generatedSchema[table + '_set_input'])
+  keys = keys || Object.keys(generatedSchema[table + '_set_input'])
 
   // @ts-ignore
   return await resolvedMutationWithFields(
@@ -143,7 +154,8 @@ export async function upsert<T extends ModelType>(
   table: ModelName,
   objectsIn: Partial<T>[],
   constraint?: string,
-  fn?: (v: any) => unknown
+  fn?: (v: any) => unknown,
+  keys?: string[]
 ): Promise<WithID<T>[]> {
   constraint = constraint ?? defaultConstraints[table]
   const objects = prepareData(table, objectsIn, '_insert_input')
@@ -152,7 +164,7 @@ export async function upsert<T extends ModelType>(
 
   // input type fields are the direct name of object types
   // 1 to 1
-  const keys = Object.keys(generatedSchema[table + '_set_input'])
+  keys = keys || Object.keys(generatedSchema[table + '_set_input'])
 
   // @ts-ignore
   return await resolvedMutationWithFields(
@@ -175,14 +187,15 @@ export async function upsert<T extends ModelType>(
 export async function update<T extends WithID<ModelType>>(
   table: ModelName,
   objectIn: T,
-  fn?: (v: any) => unknown
+  fn?: (v: any) => unknown,
+  keys?: string[]
 ): Promise<WithID<T>> {
   const action = `update_${table}` as any
   const [object] = prepareData(table, [objectIn], '_set_input')
   for (const key of Object.keys(object)) {
     if (object[key] == null) delete object[key]
   }
-  const keys = Object.keys(generatedSchema[table + '_set_input'])
+  keys = keys || Object.keys(generatedSchema[table + '_set_input'])
   const [resolved] = await resolvedMutationWithFields(
     () => {
       const res = mutation[action]({
