@@ -64,6 +64,7 @@ export class Self extends WorkerJob {
     'doordash',
     'grubhub',
     'google',
+    'google_review_api',
   ]
   yelp!: Scrape
   ubereats!: Scrape
@@ -73,6 +74,7 @@ export class Self extends WorkerJob {
   doordash!: Scrape
   grubhub!: Scrape
   google!: Scrape
+  google_review_api!: Scrape
   available_sources: string[] = []
 
   main_db!: DB
@@ -179,7 +181,6 @@ export class Self extends WorkerJob {
     console.log('Merging: ' + this.restaurant.name)
     this.resetTimer()
     await this.getScrapeData()
-    this.noteAvailableSources()
     this.log('scrapes fetched')
   }
 
@@ -226,6 +227,7 @@ export class Self extends WorkerJob {
       this.mergeRatings,
       this.addWebsite,
       this.addSources,
+      this.noteAvailableSources,
       this.addPriceRange,
       this.getRatingFactors,
     ]
@@ -235,6 +237,7 @@ export class Self extends WorkerJob {
   }
 
   noteAvailableSources() {
+    console.log(this.restaurant.sources)
     this.available_sources = Object.keys(this.restaurant.sources)
   }
 
@@ -671,18 +674,20 @@ export class Self extends WorkerJob {
       }
     })
     await photoUpsert(photos)
-    const most_aesthetic = await bestPhotosForRestaurant(this.restaurant.id)
+    const most_aesthetic =
+      (await bestPhotosForRestaurant(this.restaurant.id)) || []
     //@ts-ignore
     this.restaurant.photos = most_aesthetic.map((p) => p.photo?.url)
   }
 
   _getGooglePhotos() {
-    if (!this.google) return []
-    const raw = scrapeGetData(this.google, 'photos')
-    if (!raw) return []
-    const urls = raw.filter((p) => {
-      return p.includes('googleusercontent')
-    })
+    let urls: string[] = []
+    if (!this.google_review_api) return []
+    const reviews = scrapeGetData(this.google_review_api, 'reviews')
+    if (!reviews) return []
+    for (const review of reviews) {
+      urls = [...urls, ...review.photos]
+    }
     return urls
   }
 

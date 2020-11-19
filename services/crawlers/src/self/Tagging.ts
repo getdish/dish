@@ -234,10 +234,8 @@ export class Tagging {
         text: y.media_data?.caption,
       }
     })
-    let tripadvisors = scrapeGetData(
-      this.crawler.tripadvisor,
-      'photos_with_captions'
-    )
+    let tripadvisors =
+      scrapeGetData(this.crawler.tripadvisor, 'photos_with_captions') || []
     tripadvisors = tripadvisors.map((t) => {
       return {
         url: t.url,
@@ -358,23 +356,19 @@ export class Tagging {
 
   _getGoogleReviews() {
     // @ts-ignore
-    const google_reviews = this.crawler.google?.data?.reviews || []
+    const google_reviews = this.crawler.google_review_api?.data?.reviews || []
     let reviews: Review[] = []
-    for (const google_review of google_reviews) {
-      const pieces = google_review.split('\n')
-      const rating = parseFloat(pieces[0].match(/(\d)/)[1])
-      const username = pieces[1]
-      const date = this._quantiseGoogleReviewDate(pieces[3])
-      const text = pieces[4]
+    for (const review of google_reviews) {
+      const date = this._quantiseGoogleReviewDate(review.ago_text)
       reviews.push({
         user_id: externalUserUUID,
         tag_id: globalTagId,
         source: 'google',
-        username: 'google-' + username,
+        username: 'google-' + review.user_id,
         authored_at: date,
         restaurant_id: this.crawler.restaurant.id,
-        text,
-        rating,
+        text: review.text,
+        rating: parseFloat(review.rating),
       })
     }
     return reviews
