@@ -156,13 +156,10 @@ export async function restaurantUpsertRestaurantTags(
   restaurant: RestaurantWithId,
   restaurant_tags: Partial<RestaurantTag>[]
 ) {
-  // console.log(14141, restaurant, restaurant_tags)
   const updated_restaurant = await restaurantTagUpsert(
     restaurant.id,
     restaurant_tags
   )
-
-  // console.log(147, JSON.stringify(updated_restaurant, null, 2))
 
   const d = await restaurantUpdateTagNames(updated_restaurant)
 

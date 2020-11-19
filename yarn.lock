@@ -1869,15 +1869,15 @@
   dependencies:
     arrify "^1.0.1"
 
-"@dish/gqless-cli@^0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-0.1.12.tgz#f7d348ba93ea1529ad81cfd8da5349c7b6488efa"
-  integrity sha512-1t/cuO2F6wnNoLK6N2ePKrf+06vOHcn/a9B7vQlwMrpc84BasAaxMiNQArioli+UgJfPRlFc7s0hE1WDlsdQUQ==
+"@dish/gqless-cli@^0.1.14":
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-0.1.14.tgz#717008b8609ea866236ccfd28c315f33e87d3939"
+  integrity sha512-UaAFUXBcS1frbRf0Am/t5M3plH6TvedmDueAzuGb9FFMEnupTa5EwSarDtP/5C3ivD8C40Wb0hgqWZGh/79N6w==
   dependencies:
-    "@dish/gqless" "^1.0.8"
+    "@dish/gqless" "^1.0.10"
     "@graphql-codegen/core" "^1.17.8"
     "@graphql-codegen/typescript" "^1.17.11"
-    "@graphql-tools/delegate" "^7.0.4"
+    "@graphql-tools/delegate" "^7.0.5"
     "@graphql-tools/wrap" "^7.0.1"
     commander "^6.2.0"
     cross-fetch "^3.0.6"
@@ -1888,10 +1888,10 @@
     prettier "^2.1.2"
     regenerator-runtime "^0.13.7"
 
-"@dish/gqless@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-1.0.8.tgz#e5744a82597783b01229feaaaeedd347731de4a1"
-  integrity sha512-INL3aeBm/jvMZ2+y9VU33x+nE++FOSyHPb5xQ9kw2MW3EtUb7OqXxIBWn2l7au6RI/Zi7WUMh57c2vgEFKJfeA==
+"@dish/gqless@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-1.0.10.tgz#ed9f081b97dc96cc34523e26170e5354b7e9f087"
+  integrity sha512-4a4mfaivMV5xlkoDxLSx2+LkNVkoRLT0BDanSR0aCUGUf+Z2ykK4hvgTzr9qFcO3KKQNA+TwScrj9DQLKArkrQ==
   dependencies:
     graphql "^15.4.0"
     lodash "^4.17.20"
@@ -2160,10 +2160,23 @@
     is-promise "4.0.0"
     tslib "~2.0.1"
 
-"@graphql-tools/delegate@^7.0.0", "@graphql-tools/delegate@^7.0.4":
+"@graphql-tools/delegate@^7.0.0":
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/@graphql-tools/delegate/-/delegate-7.0.4.tgz#9afaef44d39bb7a7bf37dd2e853fd2e85b4b1e96"
   integrity sha512-6/qL9V31FgECNPwc5As1359hpsAt4ASWsiYBSYWL+Iq9/K0YRcNeEmSseXIyCP4oh8k/9HS/w/m2lkMk/YSUpQ==
+  dependencies:
+    "@ardatan/aggregate-error" "0.0.6"
+    "@graphql-tools/batch-execute" "^7.0.0"
+    "@graphql-tools/schema" "^7.0.0"
+    "@graphql-tools/utils" "^7.0.2"
+    dataloader "2.0.0"
+    is-promise "4.0.0"
+    tslib "~2.0.1"
+
+"@graphql-tools/delegate@^7.0.5":
+  version "7.0.5"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/delegate/-/delegate-7.0.5.tgz#624a536255ec4adee7f237821a30003fcb41f7cb"
+  integrity sha512-wkB/L9cRxlPB4m9k9WQJZYPbnRxfEu2bkxvI9pVGHMsmoQxMZiM2GkhCBHDTBYJb7cxCS6Wv3LJb1w0iEqw24w==
   dependencies:
     "@ardatan/aggregate-error" "0.0.6"
     "@graphql-tools/batch-execute" "^7.0.0"

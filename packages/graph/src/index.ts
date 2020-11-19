@@ -7,8 +7,7 @@ export { graphql } from '@o/gqless-react'
 //   query as newQuery,
 //   generatedSchema,
 // } from './graphql/new-generated'
-export { client, query } from './graphql'
-export { resolved, refetch, update, matchUpdate, preload } from '@o/gqless'
+export * from './graphql'
 export * from './startLogging'
 export * from './types'
 export * from './types-extra'

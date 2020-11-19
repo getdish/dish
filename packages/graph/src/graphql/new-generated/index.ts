@@ -3262,6 +3262,7 @@ export const scalarsEnumsHash: ScalarsEnumsHash = {
 }
 export const generatedSchema = {
   query: {
+    __typename: { __type: 'String!' },
     menu_item: {
       __type: '[menu_item!]!',
       __args: {
@@ -3525,6 +3526,7 @@ export const generatedSchema = {
     user_by_pk: { __type: 'user', __args: { id: 'uuid!' } },
   },
   mutation: {
+    __typename: { __type: 'String!' },
     delete_menu_item: {
       __type: 'menu_item_mutation_response',
       __args: { where: 'menu_item_bool_exp!' },
@@ -3989,6 +3991,7 @@ export const generatedSchema = {
     },
   },
   subscription: {
+    __typename: { __type: 'String!' },
     menu_item: {
       __type: '[menu_item!]!',
       __args: {
@@ -4343,6 +4346,7 @@ export const generatedSchema = {
     _nin: { __type: '[jsonb!]' },
   },
   menu_item: {
+    __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz!' },
     description: { __type: 'String' },
     id: { __type: 'uuid!' },
@@ -4355,10 +4359,12 @@ export const generatedSchema = {
     updated_at: { __type: 'timestamptz!' },
   },
   menu_item_aggregate: {
+    __typename: { __type: 'String!' },
     aggregate: { __type: 'menu_item_aggregate_fields' },
     nodes: { __type: '[menu_item!]!' },
   },
   menu_item_aggregate_fields: {
+    __typename: { __type: 'String!' },
     avg: { __type: 'menu_item_avg_fields' },
     count: {
       __type: 'Int',
@@ -4391,7 +4397,10 @@ export const generatedSchema = {
     data: { __type: '[menu_item_insert_input!]!' },
     on_conflict: { __type: 'menu_item_on_conflict' },
   },
-  menu_item_avg_fields: { price: { __type: 'Float' } },
+  menu_item_avg_fields: {
+    __typename: { __type: 'String!' },
+    price: { __type: 'Float' },
+  },
   menu_item_avg_order_by: { price: { __type: 'order_by' } },
   menu_item_bool_exp: {
     _and: { __type: '[menu_item_bool_exp]' },
@@ -4422,6 +4431,7 @@ export const generatedSchema = {
     updated_at: { __type: 'timestamptz' },
   },
   menu_item_max_fields: {
+    __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     id: { __type: 'uuid' },
@@ -4442,6 +4452,7 @@ export const generatedSchema = {
     updated_at: { __type: 'order_by' },
   },
   menu_item_min_fields: {
+    __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     id: { __type: 'uuid' },
@@ -4462,6 +4473,7 @@ export const generatedSchema = {
     updated_at: { __type: 'order_by' },
   },
   menu_item_mutation_response: {
+    __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
     returning: { __type: '[menu_item!]!' },
   },
@@ -4498,19 +4510,40 @@ export const generatedSchema = {
     restaurant_id: { __type: 'uuid' },
     updated_at: { __type: 'timestamptz' },
   },
-  menu_item_stddev_fields: { price: { __type: 'Float' } },
+  menu_item_stddev_fields: {
+    __typename: { __type: 'String!' },
+    price: { __type: 'Float' },
+  },
   menu_item_stddev_order_by: { price: { __type: 'order_by' } },
-  menu_item_stddev_pop_fields: { price: { __type: 'Float' } },
+  menu_item_stddev_pop_fields: {
+    __typename: { __type: 'String!' },
+    price: { __type: 'Float' },
+  },
   menu_item_stddev_pop_order_by: { price: { __type: 'order_by' } },
-  menu_item_stddev_samp_fields: { price: { __type: 'Float' } },
+  menu_item_stddev_samp_fields: {
+    __typename: { __type: 'String!' },
+    price: { __type: 'Float' },
+  },
   menu_item_stddev_samp_order_by: { price: { __type: 'order_by' } },
-  menu_item_sum_fields: { price: { __type: 'Int' } },
+  menu_item_sum_fields: {
+    __typename: { __type: 'String!' },
+    price: { __type: 'Int' },
+  },
   menu_item_sum_order_by: { price: { __type: 'order_by' } },
-  menu_item_var_pop_fields: { price: { __type: 'Float' } },
+  menu_item_var_pop_fields: {
+    __typename: { __type: 'String!' },
+    price: { __type: 'Float' },
+  },
   menu_item_var_pop_order_by: { price: { __type: 'order_by' } },
-  menu_item_var_samp_fields: { price: { __type: 'Float' } },
+  menu_item_var_samp_fields: {
+    __typename: { __type: 'String!' },
+    price: { __type: 'Float' },
+  },
   menu_item_var_samp_order_by: { price: { __type: 'order_by' } },
-  menu_item_variance_fields: { price: { __type: 'Float' } },
+  menu_item_variance_fields: {
+    __typename: { __type: 'String!' },
+    price: { __type: 'Float' },
+  },
   menu_item_variance_order_by: { price: { __type: 'order_by' } },
   numeric_comparison_exp: {
     _eq: { __type: 'numeric' },
@@ -4524,16 +4557,19 @@ export const generatedSchema = {
     _nin: { __type: '[numeric!]' },
   },
   opening_hours: {
+    __typename: { __type: 'String!' },
     hours: { __type: 'tsrange!' },
     id: { __type: 'uuid!' },
     restaurant: { __type: 'restaurant!' },
     restaurant_id: { __type: 'uuid!' },
   },
   opening_hours_aggregate: {
+    __typename: { __type: 'String!' },
     aggregate: { __type: 'opening_hours_aggregate_fields' },
     nodes: { __type: '[opening_hours!]!' },
   },
   opening_hours_aggregate_fields: {
+    __typename: { __type: 'String!' },
     count: {
       __type: 'Int',
       __args: {
@@ -4569,6 +4605,7 @@ export const generatedSchema = {
     restaurant_id: { __type: 'uuid' },
   },
   opening_hours_max_fields: {
+    __typename: { __type: 'String!' },
     id: { __type: 'uuid' },
     restaurant_id: { __type: 'uuid' },
   },
@@ -4577,6 +4614,7 @@ export const generatedSchema = {
     restaurant_id: { __type: 'order_by' },
   },
   opening_hours_min_fields: {
+    __typename: { __type: 'String!' },
     id: { __type: 'uuid' },
     restaurant_id: { __type: 'uuid' },
   },
@@ -4585,6 +4623,7 @@ export const generatedSchema = {
     restaurant_id: { __type: 'order_by' },
   },
   opening_hours_mutation_response: {
+    __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
     returning: { __type: '[opening_hours!]!' },
   },
@@ -4610,6 +4649,7 @@ export const generatedSchema = {
     restaurant_id: { __type: 'uuid' },
   },
   photo: {
+    __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz!' },
     id: { __type: 'uuid!' },
     origin: { __type: 'String' },
@@ -4618,10 +4658,12 @@ export const generatedSchema = {
     url: { __type: 'String' },
   },
   photo_aggregate: {
+    __typename: { __type: 'String!' },
     aggregate: { __type: 'photo_aggregate_fields' },
     nodes: { __type: '[photo!]!' },
   },
   photo_aggregate_fields: {
+    __typename: { __type: 'String!' },
     avg: { __type: 'photo_avg_fields' },
     count: {
       __type: 'Int',
@@ -4654,7 +4696,10 @@ export const generatedSchema = {
     data: { __type: '[photo_insert_input!]!' },
     on_conflict: { __type: 'photo_on_conflict' },
   },
-  photo_avg_fields: { quality: { __type: 'Float' } },
+  photo_avg_fields: {
+    __typename: { __type: 'String!' },
+    quality: { __type: 'Float' },
+  },
   photo_avg_order_by: { quality: { __type: 'order_by' } },
   photo_bool_exp: {
     _and: { __type: '[photo_bool_exp]' },
@@ -4677,6 +4722,7 @@ export const generatedSchema = {
     url: { __type: 'String' },
   },
   photo_max_fields: {
+    __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz' },
     id: { __type: 'uuid' },
     origin: { __type: 'String' },
@@ -4693,6 +4739,7 @@ export const generatedSchema = {
     url: { __type: 'order_by' },
   },
   photo_min_fields: {
+    __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz' },
     id: { __type: 'uuid' },
     origin: { __type: 'String' },
@@ -4709,6 +4756,7 @@ export const generatedSchema = {
     url: { __type: 'order_by' },
   },
   photo_mutation_response: {
+    __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
     returning: { __type: '[photo!]!' },
   },
@@ -4738,21 +4786,43 @@ export const generatedSchema = {
     updated_at: { __type: 'timestamptz' },
     url: { __type: 'String' },
   },
-  photo_stddev_fields: { quality: { __type: 'Float' } },
+  photo_stddev_fields: {
+    __typename: { __type: 'String!' },
+    quality: { __type: 'Float' },
+  },
   photo_stddev_order_by: { quality: { __type: 'order_by' } },
-  photo_stddev_pop_fields: { quality: { __type: 'Float' } },
+  photo_stddev_pop_fields: {
+    __typename: { __type: 'String!' },
+    quality: { __type: 'Float' },
+  },
   photo_stddev_pop_order_by: { quality: { __type: 'order_by' } },
-  photo_stddev_samp_fields: { quality: { __type: 'Float' } },
+  photo_stddev_samp_fields: {
+    __typename: { __type: 'String!' },
+    quality: { __type: 'Float' },
+  },
   photo_stddev_samp_order_by: { quality: { __type: 'order_by' } },
-  photo_sum_fields: { quality: { __type: 'numeric' } },
+  photo_sum_fields: {
+    __typename: { __type: 'String!' },
+    quality: { __type: 'numeric' },
+  },
   photo_sum_order_by: { quality: { __type: 'order_by' } },
-  photo_var_pop_fields: { quality: { __type: 'Float' } },
+  photo_var_pop_fields: {
+    __typename: { __type: 'String!' },
+    quality: { __type: 'Float' },
+  },
   photo_var_pop_order_by: { quality: { __type: 'order_by' } },
-  photo_var_samp_fields: { quality: { __type: 'Float' } },
+  photo_var_samp_fields: {
+    __typename: { __type: 'String!' },
+    quality: { __type: 'Float' },
+  },
   photo_var_samp_order_by: { quality: { __type: 'order_by' } },
-  photo_variance_fields: { quality: { __type: 'Float' } },
+  photo_variance_fields: {
+    __typename: { __type: 'String!' },
+    quality: { __type: 'Float' },
+  },
   photo_variance_order_by: { quality: { __type: 'order_by' } },
   photo_xref: {
+    __typename: { __type: 'String!' },
     id: { __type: 'uuid!' },
     photo: { __type: 'photo!' },
     photo_id: { __type: 'uuid!' },
@@ -4761,10 +4831,12 @@ export const generatedSchema = {
     type: { __type: 'String' },
   },
   photo_xref_aggregate: {
+    __typename: { __type: 'String!' },
     aggregate: { __type: 'photo_xref_aggregate_fields' },
     nodes: { __type: '[photo_xref!]!' },
   },
   photo_xref_aggregate_fields: {
+    __typename: { __type: 'String!' },
     count: {
       __type: 'Int',
       __args: { columns: '[photo_xref_select_column!]', distinct: 'Boolean' },
@@ -4801,6 +4873,7 @@ export const generatedSchema = {
     type: { __type: 'String' },
   },
   photo_xref_max_fields: {
+    __typename: { __type: 'String!' },
     id: { __type: 'uuid' },
     photo_id: { __type: 'uuid' },
     restaurant_id: { __type: 'uuid' },
@@ -4815,6 +4888,7 @@ export const generatedSchema = {
     type: { __type: 'order_by' },
   },
   photo_xref_min_fields: {
+    __typename: { __type: 'String!' },
     id: { __type: 'uuid' },
     photo_id: { __type: 'uuid' },
     restaurant_id: { __type: 'uuid' },
@@ -4829,6 +4903,7 @@ export const generatedSchema = {
     type: { __type: 'order_by' },
   },
   photo_xref_mutation_response: {
+    __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
     returning: { __type: '[photo_xref!]!' },
   },
@@ -4858,6 +4933,7 @@ export const generatedSchema = {
     type: { __type: 'String' },
   },
   restaurant: {
+    __typename: { __type: 'String!' },
     address: { __type: 'String' },
     city: { __type: 'String' },
     created_at: { __type: 'timestamptz!' },
@@ -4963,10 +5039,12 @@ export const generatedSchema = {
     zip: { __type: 'numeric' },
   },
   restaurant_aggregate: {
+    __typename: { __type: 'String!' },
     aggregate: { __type: 'restaurant_aggregate_fields' },
     nodes: { __type: '[restaurant!]!' },
   },
   restaurant_aggregate_fields: {
+    __typename: { __type: 'String!' },
     avg: { __type: 'restaurant_avg_fields' },
     count: {
       __type: 'Int',
@@ -5010,6 +5088,7 @@ export const generatedSchema = {
     on_conflict: { __type: 'restaurant_on_conflict' },
   },
   restaurant_avg_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
     rating: { __type: 'Float' },
     score: { __type: 'Float' },
@@ -5139,6 +5218,7 @@ export const generatedSchema = {
     zip: { __type: 'numeric' },
   },
   restaurant_max_fields: {
+    __typename: { __type: 'String!' },
     address: { __type: 'String' },
     city: { __type: 'String' },
     created_at: { __type: 'timestamptz' },
@@ -5187,6 +5267,7 @@ export const generatedSchema = {
     zip: { __type: 'order_by' },
   },
   restaurant_min_fields: {
+    __typename: { __type: 'String!' },
     address: { __type: 'String' },
     city: { __type: 'String' },
     created_at: { __type: 'timestamptz' },
@@ -5235,6 +5316,7 @@ export const generatedSchema = {
     zip: { __type: 'order_by' },
   },
   restaurant_mutation_response: {
+    __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
     returning: { __type: '[restaurant!]!' },
   },
@@ -5328,6 +5410,7 @@ export const generatedSchema = {
     zip: { __type: 'numeric' },
   },
   restaurant_stddev_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
     rating: { __type: 'Float' },
     score: { __type: 'Float' },
@@ -5344,6 +5427,7 @@ export const generatedSchema = {
     zip: { __type: 'order_by' },
   },
   restaurant_stddev_pop_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
     rating: { __type: 'Float' },
     score: { __type: 'Float' },
@@ -5360,6 +5444,7 @@ export const generatedSchema = {
     zip: { __type: 'order_by' },
   },
   restaurant_stddev_samp_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
     rating: { __type: 'Float' },
     score: { __type: 'Float' },
@@ -5376,6 +5461,7 @@ export const generatedSchema = {
     zip: { __type: 'order_by' },
   },
   restaurant_sum_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'numeric' },
     rating: { __type: 'numeric' },
     score: { __type: 'numeric' },
@@ -5392,6 +5478,7 @@ export const generatedSchema = {
     zip: { __type: 'order_by' },
   },
   restaurant_tag: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'numeric' },
     id: { __type: 'uuid!' },
     photos: { __type: 'jsonb', __args: { path: 'String' } },
@@ -5449,10 +5536,12 @@ export const generatedSchema = {
     votes_ratio: { __type: 'numeric' },
   },
   restaurant_tag_aggregate: {
+    __typename: { __type: 'String!' },
     aggregate: { __type: 'restaurant_tag_aggregate_fields' },
     nodes: { __type: '[restaurant_tag!]!' },
   },
   restaurant_tag_aggregate_fields: {
+    __typename: { __type: 'String!' },
     avg: { __type: 'restaurant_tag_avg_fields' },
     count: {
       __type: 'Int',
@@ -5494,6 +5583,7 @@ export const generatedSchema = {
     on_conflict: { __type: 'restaurant_tag_on_conflict' },
   },
   restaurant_tag_avg_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
     rank: { __type: 'Float' },
     rating: { __type: 'Float' },
@@ -5577,6 +5667,7 @@ export const generatedSchema = {
     votes_ratio: { __type: 'numeric' },
   },
   restaurant_tag_max_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'numeric' },
     id: { __type: 'uuid' },
     rank: { __type: 'Int' },
@@ -5601,6 +5692,7 @@ export const generatedSchema = {
     votes_ratio: { __type: 'order_by' },
   },
   restaurant_tag_min_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'numeric' },
     id: { __type: 'uuid' },
     rank: { __type: 'Int' },
@@ -5625,6 +5717,7 @@ export const generatedSchema = {
     votes_ratio: { __type: 'order_by' },
   },
   restaurant_tag_mutation_response: {
+    __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
     returning: { __type: '[restaurant_tag!]!' },
   },
@@ -5681,6 +5774,7 @@ export const generatedSchema = {
     votes_ratio: { __type: 'numeric' },
   },
   restaurant_tag_stddev_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
     rank: { __type: 'Float' },
     rating: { __type: 'Float' },
@@ -5699,6 +5793,7 @@ export const generatedSchema = {
     votes_ratio: { __type: 'order_by' },
   },
   restaurant_tag_stddev_pop_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
     rank: { __type: 'Float' },
     rating: { __type: 'Float' },
@@ -5717,6 +5812,7 @@ export const generatedSchema = {
     votes_ratio: { __type: 'order_by' },
   },
   restaurant_tag_stddev_samp_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
     rank: { __type: 'Float' },
     rating: { __type: 'Float' },
@@ -5735,6 +5831,7 @@ export const generatedSchema = {
     votes_ratio: { __type: 'order_by' },
   },
   restaurant_tag_sum_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'numeric' },
     rank: { __type: 'Int' },
     rating: { __type: 'numeric' },
@@ -5753,6 +5850,7 @@ export const generatedSchema = {
     votes_ratio: { __type: 'order_by' },
   },
   restaurant_tag_var_pop_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
     rank: { __type: 'Float' },
     rating: { __type: 'Float' },
@@ -5771,6 +5869,7 @@ export const generatedSchema = {
     votes_ratio: { __type: 'order_by' },
   },
   restaurant_tag_var_samp_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
     rank: { __type: 'Float' },
     rating: { __type: 'Float' },
@@ -5789,6 +5888,7 @@ export const generatedSchema = {
     votes_ratio: { __type: 'order_by' },
   },
   restaurant_tag_variance_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
     rank: { __type: 'Float' },
     rating: { __type: 'Float' },
@@ -5811,6 +5911,7 @@ export const generatedSchema = {
     tag_names: { __type: 'String' },
   },
   restaurant_var_pop_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
     rating: { __type: 'Float' },
     score: { __type: 'Float' },
@@ -5827,6 +5928,7 @@ export const generatedSchema = {
     zip: { __type: 'order_by' },
   },
   restaurant_var_samp_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
     rating: { __type: 'Float' },
     score: { __type: 'Float' },
@@ -5843,6 +5945,7 @@ export const generatedSchema = {
     zip: { __type: 'order_by' },
   },
   restaurant_variance_fields: {
+    __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
     rating: { __type: 'Float' },
     score: { __type: 'Float' },
@@ -5859,6 +5962,7 @@ export const generatedSchema = {
     zip: { __type: 'order_by' },
   },
   review: {
+    __typename: { __type: 'String!' },
     authored_at: { __type: 'timestamptz!' },
     categories: { __type: 'jsonb', __args: { path: 'String' } },
     favorited: { __type: 'Boolean' },
@@ -5900,10 +6004,12 @@ export const generatedSchema = {
     vote: { __type: 'numeric' },
   },
   review_aggregate: {
+    __typename: { __type: 'String!' },
     aggregate: { __type: 'review_aggregate_fields' },
     nodes: { __type: '[review!]!' },
   },
   review_aggregate_fields: {
+    __typename: { __type: 'String!' },
     avg: { __type: 'review_avg_fields' },
     count: {
       __type: 'Int',
@@ -5937,7 +6043,11 @@ export const generatedSchema = {
     data: { __type: '[review_insert_input!]!' },
     on_conflict: { __type: 'review_on_conflict' },
   },
-  review_avg_fields: { rating: { __type: 'Float' }, vote: { __type: 'Float' } },
+  review_avg_fields: {
+    __typename: { __type: 'String!' },
+    rating: { __type: 'Float' },
+    vote: { __type: 'Float' },
+  },
   review_avg_order_by: {
     rating: { __type: 'order_by' },
     vote: { __type: 'order_by' },
@@ -5997,6 +6107,7 @@ export const generatedSchema = {
     vote: { __type: 'numeric' },
   },
   review_max_fields: {
+    __typename: { __type: 'String!' },
     authored_at: { __type: 'timestamptz' },
     id: { __type: 'uuid' },
     native_data_unique_key: { __type: 'String' },
@@ -6027,6 +6138,7 @@ export const generatedSchema = {
     vote: { __type: 'order_by' },
   },
   review_min_fields: {
+    __typename: { __type: 'String!' },
     authored_at: { __type: 'timestamptz' },
     id: { __type: 'uuid' },
     native_data_unique_key: { __type: 'String' },
@@ -6057,6 +6169,7 @@ export const generatedSchema = {
     vote: { __type: 'order_by' },
   },
   review_mutation_response: {
+    __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
     returning: { __type: '[review!]!' },
   },
@@ -6112,6 +6225,7 @@ export const generatedSchema = {
     vote: { __type: 'numeric' },
   },
   review_stddev_fields: {
+    __typename: { __type: 'String!' },
     rating: { __type: 'Float' },
     vote: { __type: 'Float' },
   },
@@ -6120,6 +6234,7 @@ export const generatedSchema = {
     vote: { __type: 'order_by' },
   },
   review_stddev_pop_fields: {
+    __typename: { __type: 'String!' },
     rating: { __type: 'Float' },
     vote: { __type: 'Float' },
   },
@@ -6128,6 +6243,7 @@ export const generatedSchema = {
     vote: { __type: 'order_by' },
   },
   review_stddev_samp_fields: {
+    __typename: { __type: 'String!' },
     rating: { __type: 'Float' },
     vote: { __type: 'Float' },
   },
@@ -6136,6 +6252,7 @@ export const generatedSchema = {
     vote: { __type: 'order_by' },
   },
   review_sum_fields: {
+    __typename: { __type: 'String!' },
     rating: { __type: 'numeric' },
     vote: { __type: 'numeric' },
   },
@@ -6144,6 +6261,7 @@ export const generatedSchema = {
     vote: { __type: 'order_by' },
   },
   review_tag_sentence: {
+    __typename: { __type: 'String!' },
     id: { __type: 'uuid!' },
     ml_sentiment: { __type: 'numeric' },
     naive_sentiment: { __type: 'numeric!' },
@@ -6155,10 +6273,12 @@ export const generatedSchema = {
     tag_id: { __type: 'uuid!' },
   },
   review_tag_sentence_aggregate: {
+    __typename: { __type: 'String!' },
     aggregate: { __type: 'review_tag_sentence_aggregate_fields' },
     nodes: { __type: '[review_tag_sentence!]!' },
   },
   review_tag_sentence_aggregate_fields: {
+    __typename: { __type: 'String!' },
     avg: { __type: 'review_tag_sentence_avg_fields' },
     count: {
       __type: 'Int',
@@ -6195,6 +6315,7 @@ export const generatedSchema = {
     on_conflict: { __type: 'review_tag_sentence_on_conflict' },
   },
   review_tag_sentence_avg_fields: {
+    __typename: { __type: 'String!' },
     ml_sentiment: { __type: 'Float' },
     naive_sentiment: { __type: 'Float' },
   },
@@ -6232,6 +6353,7 @@ export const generatedSchema = {
     tag_id: { __type: 'uuid' },
   },
   review_tag_sentence_max_fields: {
+    __typename: { __type: 'String!' },
     id: { __type: 'uuid' },
     ml_sentiment: { __type: 'numeric' },
     naive_sentiment: { __type: 'numeric' },
@@ -6250,6 +6372,7 @@ export const generatedSchema = {
     tag_id: { __type: 'order_by' },
   },
   review_tag_sentence_min_fields: {
+    __typename: { __type: 'String!' },
     id: { __type: 'uuid' },
     ml_sentiment: { __type: 'numeric' },
     naive_sentiment: { __type: 'numeric' },
@@ -6268,6 +6391,7 @@ export const generatedSchema = {
     tag_id: { __type: 'order_by' },
   },
   review_tag_sentence_mutation_response: {
+    __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
     returning: { __type: '[review_tag_sentence!]!' },
   },
@@ -6302,6 +6426,7 @@ export const generatedSchema = {
     tag_id: { __type: 'uuid' },
   },
   review_tag_sentence_stddev_fields: {
+    __typename: { __type: 'String!' },
     ml_sentiment: { __type: 'Float' },
     naive_sentiment: { __type: 'Float' },
   },
@@ -6310,6 +6435,7 @@ export const generatedSchema = {
     naive_sentiment: { __type: 'order_by' },
   },
   review_tag_sentence_stddev_pop_fields: {
+    __typename: { __type: 'String!' },
     ml_sentiment: { __type: 'Float' },
     naive_sentiment: { __type: 'Float' },
   },
@@ -6318,6 +6444,7 @@ export const generatedSchema = {
     naive_sentiment: { __type: 'order_by' },
   },
   review_tag_sentence_stddev_samp_fields: {
+    __typename: { __type: 'String!' },
     ml_sentiment: { __type: 'Float' },
     naive_sentiment: { __type: 'Float' },
   },
@@ -6326,6 +6453,7 @@ export const generatedSchema = {
     naive_sentiment: { __type: 'order_by' },
   },
   review_tag_sentence_sum_fields: {
+    __typename: { __type: 'String!' },
     ml_sentiment: { __type: 'numeric' },
     naive_sentiment: { __type: 'numeric' },
   },
@@ -6334,6 +6462,7 @@ export const generatedSchema = {
     naive_sentiment: { __type: 'order_by' },
   },
   review_tag_sentence_var_pop_fields: {
+    __typename: { __type: 'String!' },
     ml_sentiment: { __type: 'Float' },
     naive_sentiment: { __type: 'Float' },
   },
@@ -6342,6 +6471,7 @@ export const generatedSchema = {
     naive_sentiment: { __type: 'order_by' },
   },
   review_tag_sentence_var_samp_fields: {
+    __typename: { __type: 'String!' },
     ml_sentiment: { __type: 'Float' },
     naive_sentiment: { __type: 'Float' },
   },
@@ -6350,6 +6480,7 @@ export const generatedSchema = {
     naive_sentiment: { __type: 'order_by' },
   },
   review_tag_sentence_variance_fields: {
+    __typename: { __type: 'String!' },
     ml_sentiment: { __type: 'Float' },
     naive_sentiment: { __type: 'Float' },
   },
@@ -6358,6 +6489,7 @@ export const generatedSchema = {
     naive_sentiment: { __type: 'order_by' },
   },
   review_var_pop_fields: {
+    __typename: { __type: 'String!' },
     rating: { __type: 'Float' },
     vote: { __type: 'Float' },
   },
@@ -6366,6 +6498,7 @@ export const generatedSchema = {
     vote: { __type: 'order_by' },
   },
   review_var_samp_fields: {
+    __typename: { __type: 'String!' },
     rating: { __type: 'Float' },
     vote: { __type: 'Float' },
   },
@@ -6374,6 +6507,7 @@ export const generatedSchema = {
     vote: { __type: 'order_by' },
   },
   review_variance_fields: {
+    __typename: { __type: 'String!' },
     rating: { __type: 'Float' },
     vote: { __type: 'Float' },
   },
@@ -6382,6 +6516,7 @@ export const generatedSchema = {
     vote: { __type: 'order_by' },
   },
   setting: {
+    __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz' },
     id: { __type: 'uuid!' },
     key: { __type: 'String!' },
@@ -6389,10 +6524,12 @@ export const generatedSchema = {
     value: { __type: 'jsonb!', __args: { path: 'String' } },
   },
   setting_aggregate: {
+    __typename: { __type: 'String!' },
     aggregate: { __type: 'setting_aggregate_fields' },
     nodes: { __type: '[setting!]!' },
   },
   setting_aggregate_fields: {
+    __typename: { __type: 'String!' },
     count: {
       __type: 'Int',
       __args: { columns: '[setting_select_column!]', distinct: 'Boolean' },
@@ -6431,6 +6568,7 @@ export const generatedSchema = {
     value: { __type: 'jsonb' },
   },
   setting_max_fields: {
+    __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz' },
     id: { __type: 'uuid' },
     key: { __type: 'String' },
@@ -6443,6 +6581,7 @@ export const generatedSchema = {
     updated_at: { __type: 'order_by' },
   },
   setting_min_fields: {
+    __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz' },
     id: { __type: 'uuid' },
     key: { __type: 'String' },
@@ -6455,6 +6594,7 @@ export const generatedSchema = {
     updated_at: { __type: 'order_by' },
   },
   setting_mutation_response: {
+    __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
     returning: { __type: '[setting!]!' },
   },
@@ -6493,6 +6633,7 @@ export const generatedSchema = {
     from: { __type: 'geometry!' },
   },
   tag: {
+    __typename: { __type: 'String!' },
     alternates: { __type: 'jsonb', __args: { path: 'String' } },
     categories: {
       __type: '[tag_tag!]!',
@@ -6554,10 +6695,12 @@ export const generatedSchema = {
     updated_at: { __type: 'timestamptz!' },
   },
   tag_aggregate: {
+    __typename: { __type: 'String!' },
     aggregate: { __type: 'tag_aggregate_fields' },
     nodes: { __type: '[tag!]!' },
   },
   tag_aggregate_fields: {
+    __typename: { __type: 'String!' },
     avg: { __type: 'tag_avg_fields' },
     count: {
       __type: 'Int',
@@ -6597,6 +6740,7 @@ export const generatedSchema = {
     on_conflict: { __type: 'tag_on_conflict' },
   },
   tag_avg_fields: {
+    __typename: { __type: 'String!' },
     frequency: { __type: 'Float' },
     order: { __type: 'Float' },
     popularity: { __type: 'Float' },
@@ -6679,6 +6823,7 @@ export const generatedSchema = {
     updated_at: { __type: 'timestamptz' },
   },
   tag_max_fields: {
+    __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     displayName: { __type: 'String' },
@@ -6709,6 +6854,7 @@ export const generatedSchema = {
     updated_at: { __type: 'order_by' },
   },
   tag_min_fields: {
+    __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     displayName: { __type: 'String' },
@@ -6739,6 +6885,7 @@ export const generatedSchema = {
     updated_at: { __type: 'order_by' },
   },
   tag_mutation_response: {
+    __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
     returning: { __type: '[tag!]!' },
   },
@@ -6804,6 +6951,7 @@ export const generatedSchema = {
     updated_at: { __type: 'timestamptz' },
   },
   tag_stddev_fields: {
+    __typename: { __type: 'String!' },
     frequency: { __type: 'Float' },
     order: { __type: 'Float' },
     popularity: { __type: 'Float' },
@@ -6814,6 +6962,7 @@ export const generatedSchema = {
     popularity: { __type: 'order_by' },
   },
   tag_stddev_pop_fields: {
+    __typename: { __type: 'String!' },
     frequency: { __type: 'Float' },
     order: { __type: 'Float' },
     popularity: { __type: 'Float' },
@@ -6824,6 +6973,7 @@ export const generatedSchema = {
     popularity: { __type: 'order_by' },
   },
   tag_stddev_samp_fields: {
+    __typename: { __type: 'String!' },
     frequency: { __type: 'Float' },
     order: { __type: 'Float' },
     popularity: { __type: 'Float' },
@@ -6834,6 +6984,7 @@ export const generatedSchema = {
     popularity: { __type: 'order_by' },
   },
   tag_sum_fields: {
+    __typename: { __type: 'String!' },
     frequency: { __type: 'Int' },
     order: { __type: 'Int' },
     popularity: { __type: 'Int' },
@@ -6844,16 +6995,19 @@ export const generatedSchema = {
     popularity: { __type: 'order_by' },
   },
   tag_tag: {
+    __typename: { __type: 'String!' },
     category: { __type: 'tag!' },
     category_tag_id: { __type: 'uuid!' },
     main: { __type: 'tag!' },
     tag_id: { __type: 'uuid!' },
   },
   tag_tag_aggregate: {
+    __typename: { __type: 'String!' },
     aggregate: { __type: 'tag_tag_aggregate_fields' },
     nodes: { __type: '[tag_tag!]!' },
   },
   tag_tag_aggregate_fields: {
+    __typename: { __type: 'String!' },
     count: {
       __type: 'Int',
       __args: { columns: '[tag_tag_select_column!]', distinct: 'Boolean' },
@@ -6886,6 +7040,7 @@ export const generatedSchema = {
     tag_id: { __type: 'uuid' },
   },
   tag_tag_max_fields: {
+    __typename: { __type: 'String!' },
     category_tag_id: { __type: 'uuid' },
     tag_id: { __type: 'uuid' },
   },
@@ -6894,6 +7049,7 @@ export const generatedSchema = {
     tag_id: { __type: 'order_by' },
   },
   tag_tag_min_fields: {
+    __typename: { __type: 'String!' },
     category_tag_id: { __type: 'uuid' },
     tag_id: { __type: 'uuid' },
   },
@@ -6902,6 +7058,7 @@ export const generatedSchema = {
     tag_id: { __type: 'order_by' },
   },
   tag_tag_mutation_response: {
+    __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
     returning: { __type: '[tag_tag!]!' },
   },
@@ -6929,6 +7086,7 @@ export const generatedSchema = {
     tag_id: { __type: 'uuid' },
   },
   tag_var_pop_fields: {
+    __typename: { __type: 'String!' },
     frequency: { __type: 'Float' },
     order: { __type: 'Float' },
     popularity: { __type: 'Float' },
@@ -6939,6 +7097,7 @@ export const generatedSchema = {
     popularity: { __type: 'order_by' },
   },
   tag_var_samp_fields: {
+    __typename: { __type: 'String!' },
     frequency: { __type: 'Float' },
     order: { __type: 'Float' },
     popularity: { __type: 'Float' },
@@ -6949,6 +7108,7 @@ export const generatedSchema = {
     popularity: { __type: 'order_by' },
   },
   tag_variance_fields: {
+    __typename: { __type: 'String!' },
     frequency: { __type: 'Float' },
     order: { __type: 'Float' },
     popularity: { __type: 'Float' },
@@ -6981,6 +7141,7 @@ export const generatedSchema = {
     _nin: { __type: '[tsrange!]' },
   },
   user: {
+    __typename: { __type: 'String!' },
     about: { __type: 'String' },
     apple_email: { __type: 'String' },
     apple_refresh_token: { __type: 'String' },
@@ -7019,10 +7180,12 @@ export const generatedSchema = {
     username: { __type: 'String!' },
   },
   user_aggregate: {
+    __typename: { __type: 'String!' },
     aggregate: { __type: 'user_aggregate_fields' },
     nodes: { __type: '[user!]!' },
   },
   user_aggregate_fields: {
+    __typename: { __type: 'String!' },
     avg: { __type: 'user_avg_fields' },
     count: {
       __type: 'Int',
@@ -7055,7 +7218,10 @@ export const generatedSchema = {
     data: { __type: '[user_insert_input!]!' },
     on_conflict: { __type: 'user_on_conflict' },
   },
-  user_avg_fields: { charIndex: { __type: 'Float' } },
+  user_avg_fields: {
+    __typename: { __type: 'String!' },
+    charIndex: { __type: 'Float' },
+  },
   user_avg_order_by: { charIndex: { __type: 'order_by' } },
   user_bool_exp: {
     _and: { __type: '[user_bool_exp]' },
@@ -7100,6 +7266,7 @@ export const generatedSchema = {
     username: { __type: 'String' },
   },
   user_max_fields: {
+    __typename: { __type: 'String!' },
     about: { __type: 'String' },
     apple_email: { __type: 'String' },
     apple_refresh_token: { __type: 'String' },
@@ -7134,6 +7301,7 @@ export const generatedSchema = {
     username: { __type: 'order_by' },
   },
   user_min_fields: {
+    __typename: { __type: 'String!' },
     about: { __type: 'String' },
     apple_email: { __type: 'String' },
     apple_refresh_token: { __type: 'String' },
@@ -7168,6 +7336,7 @@ export const generatedSchema = {
     username: { __type: 'order_by' },
   },
   user_mutation_response: {
+    __typename: { __type: 'String!' },
     affected_rows: { __type: 'Int!' },
     returning: { __type: '[user!]!' },
   },
@@ -7218,19 +7387,40 @@ export const generatedSchema = {
     updated_at: { __type: 'timestamptz' },
     username: { __type: 'String' },
   },
-  user_stddev_fields: { charIndex: { __type: 'Float' } },
+  user_stddev_fields: {
+    __typename: { __type: 'String!' },
+    charIndex: { __type: 'Float' },
+  },
   user_stddev_order_by: { charIndex: { __type: 'order_by' } },
-  user_stddev_pop_fields: { charIndex: { __type: 'Float' } },
+  user_stddev_pop_fields: {
+    __typename: { __type: 'String!' },
+    charIndex: { __type: 'Float' },
+  },
   user_stddev_pop_order_by: { charIndex: { __type: 'order_by' } },
-  user_stddev_samp_fields: { charIndex: { __type: 'Float' } },
+  user_stddev_samp_fields: {
+    __typename: { __type: 'String!' },
+    charIndex: { __type: 'Float' },
+  },
   user_stddev_samp_order_by: { charIndex: { __type: 'order_by' } },
-  user_sum_fields: { charIndex: { __type: 'Int' } },
+  user_sum_fields: {
+    __typename: { __type: 'String!' },
+    charIndex: { __type: 'Int' },
+  },
   user_sum_order_by: { charIndex: { __type: 'order_by' } },
-  user_var_pop_fields: { charIndex: { __type: 'Float' } },
+  user_var_pop_fields: {
+    __typename: { __type: 'String!' },
+    charIndex: { __type: 'Float' },
+  },
   user_var_pop_order_by: { charIndex: { __type: 'order_by' } },
-  user_var_samp_fields: { charIndex: { __type: 'Float' } },
+  user_var_samp_fields: {
+    __typename: { __type: 'String!' },
+    charIndex: { __type: 'Float' },
+  },
   user_var_samp_order_by: { charIndex: { __type: 'order_by' } },
-  user_variance_fields: { charIndex: { __type: 'Float' } },
+  user_variance_fields: {
+    __typename: { __type: 'String!' },
+    charIndex: { __type: 'Float' },
+  },
   user_variance_order_by: { charIndex: { __type: 'order_by' } },
   uuid_comparison_exp: {
     _eq: { __type: 'uuid' },
@@ -7246,6 +7436,7 @@ export const generatedSchema = {
 } as const
 
 export interface Query {
+  __typename: 'Query'
   menu_item: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -7443,6 +7634,7 @@ export interface Query {
 }
 
 export interface Mutation {
+  __typename: 'Mutation'
   delete_menu_item: (args: {
     where: menu_item_bool_exp
   }) => Maybe<menu_item_mutation_response>
@@ -7766,6 +7958,7 @@ export interface Mutation {
 }
 
 export interface Subscription {
+  __typename: 'Subscription'
   menu_item: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -7963,6 +8156,7 @@ export interface Subscription {
 }
 
 export interface menu_item {
+  __typename: 'menu_item'
   created_at: ScalarsEnums['timestamptz']
   description: Maybe<ScalarsEnums['String']>
   id: ScalarsEnums['uuid']
@@ -7976,11 +8170,13 @@ export interface menu_item {
 }
 
 export interface menu_item_aggregate {
+  __typename: 'menu_item_aggregate'
   aggregate: Maybe<menu_item_aggregate_fields>
   nodes: Array<menu_item>
 }
 
 export interface menu_item_aggregate_fields {
+  __typename: 'menu_item_aggregate_fields'
   avg: Maybe<menu_item_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
@@ -7998,10 +8194,12 @@ export interface menu_item_aggregate_fields {
 }
 
 export interface menu_item_avg_fields {
+  __typename: 'menu_item_avg_fields'
   price: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_max_fields {
+  __typename: 'menu_item_max_fields'
   created_at: Maybe<ScalarsEnums['timestamptz']>
   description: Maybe<ScalarsEnums['String']>
   id: Maybe<ScalarsEnums['uuid']>
@@ -8013,6 +8211,7 @@ export interface menu_item_max_fields {
 }
 
 export interface menu_item_min_fields {
+  __typename: 'menu_item_min_fields'
   created_at: Maybe<ScalarsEnums['timestamptz']>
   description: Maybe<ScalarsEnums['String']>
   id: Maybe<ScalarsEnums['uuid']>
@@ -8024,39 +8223,48 @@ export interface menu_item_min_fields {
 }
 
 export interface menu_item_mutation_response {
+  __typename: 'menu_item_mutation_response'
   affected_rows: ScalarsEnums['Int']
   returning: Array<menu_item>
 }
 
 export interface menu_item_stddev_fields {
+  __typename: 'menu_item_stddev_fields'
   price: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_stddev_pop_fields {
+  __typename: 'menu_item_stddev_pop_fields'
   price: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_stddev_samp_fields {
+  __typename: 'menu_item_stddev_samp_fields'
   price: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_sum_fields {
+  __typename: 'menu_item_sum_fields'
   price: Maybe<ScalarsEnums['Int']>
 }
 
 export interface menu_item_var_pop_fields {
+  __typename: 'menu_item_var_pop_fields'
   price: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_var_samp_fields {
+  __typename: 'menu_item_var_samp_fields'
   price: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_variance_fields {
+  __typename: 'menu_item_variance_fields'
   price: Maybe<ScalarsEnums['Float']>
 }
 
 export interface opening_hours {
+  __typename: 'opening_hours'
   hours: ScalarsEnums['tsrange']
   id: ScalarsEnums['uuid']
   restaurant: restaurant
@@ -8064,11 +8272,13 @@ export interface opening_hours {
 }
 
 export interface opening_hours_aggregate {
+  __typename: 'opening_hours_aggregate'
   aggregate: Maybe<opening_hours_aggregate_fields>
   nodes: Array<opening_hours>
 }
 
 export interface opening_hours_aggregate_fields {
+  __typename: 'opening_hours_aggregate_fields'
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['opening_hours_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
@@ -8078,21 +8288,25 @@ export interface opening_hours_aggregate_fields {
 }
 
 export interface opening_hours_max_fields {
+  __typename: 'opening_hours_max_fields'
   id: Maybe<ScalarsEnums['uuid']>
   restaurant_id: Maybe<ScalarsEnums['uuid']>
 }
 
 export interface opening_hours_min_fields {
+  __typename: 'opening_hours_min_fields'
   id: Maybe<ScalarsEnums['uuid']>
   restaurant_id: Maybe<ScalarsEnums['uuid']>
 }
 
 export interface opening_hours_mutation_response {
+  __typename: 'opening_hours_mutation_response'
   affected_rows: ScalarsEnums['Int']
   returning: Array<opening_hours>
 }
 
 export interface photo {
+  __typename: 'photo'
   created_at: ScalarsEnums['timestamptz']
   id: ScalarsEnums['uuid']
   origin: Maybe<ScalarsEnums['String']>
@@ -8102,11 +8316,13 @@ export interface photo {
 }
 
 export interface photo_aggregate {
+  __typename: 'photo_aggregate'
   aggregate: Maybe<photo_aggregate_fields>
   nodes: Array<photo>
 }
 
 export interface photo_aggregate_fields {
+  __typename: 'photo_aggregate_fields'
   avg: Maybe<photo_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['photo_select_column']>>
@@ -8124,10 +8340,12 @@ export interface photo_aggregate_fields {
 }
 
 export interface photo_avg_fields {
+  __typename: 'photo_avg_fields'
   quality: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_max_fields {
+  __typename: 'photo_max_fields'
   created_at: Maybe<ScalarsEnums['timestamptz']>
   id: Maybe<ScalarsEnums['uuid']>
   origin: Maybe<ScalarsEnums['String']>
@@ -8137,6 +8355,7 @@ export interface photo_max_fields {
 }
 
 export interface photo_min_fields {
+  __typename: 'photo_min_fields'
   created_at: Maybe<ScalarsEnums['timestamptz']>
   id: Maybe<ScalarsEnums['uuid']>
   origin: Maybe<ScalarsEnums['String']>
@@ -8146,39 +8365,48 @@ export interface photo_min_fields {
 }
 
 export interface photo_mutation_response {
+  __typename: 'photo_mutation_response'
   affected_rows: ScalarsEnums['Int']
   returning: Array<photo>
 }
 
 export interface photo_stddev_fields {
+  __typename: 'photo_stddev_fields'
   quality: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_stddev_pop_fields {
+  __typename: 'photo_stddev_pop_fields'
   quality: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_stddev_samp_fields {
+  __typename: 'photo_stddev_samp_fields'
   quality: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_sum_fields {
+  __typename: 'photo_sum_fields'
   quality: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface photo_var_pop_fields {
+  __typename: 'photo_var_pop_fields'
   quality: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_var_samp_fields {
+  __typename: 'photo_var_samp_fields'
   quality: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_variance_fields {
+  __typename: 'photo_variance_fields'
   quality: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_xref {
+  __typename: 'photo_xref'
   id: ScalarsEnums['uuid']
   photo: photo
   photo_id: ScalarsEnums['uuid']
@@ -8188,11 +8416,13 @@ export interface photo_xref {
 }
 
 export interface photo_xref_aggregate {
+  __typename: 'photo_xref_aggregate'
   aggregate: Maybe<photo_xref_aggregate_fields>
   nodes: Array<photo_xref>
 }
 
 export interface photo_xref_aggregate_fields {
+  __typename: 'photo_xref_aggregate_fields'
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['photo_xref_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
@@ -8202,6 +8432,7 @@ export interface photo_xref_aggregate_fields {
 }
 
 export interface photo_xref_max_fields {
+  __typename: 'photo_xref_max_fields'
   id: Maybe<ScalarsEnums['uuid']>
   photo_id: Maybe<ScalarsEnums['uuid']>
   restaurant_id: Maybe<ScalarsEnums['uuid']>
@@ -8210,6 +8441,7 @@ export interface photo_xref_max_fields {
 }
 
 export interface photo_xref_min_fields {
+  __typename: 'photo_xref_min_fields'
   id: Maybe<ScalarsEnums['uuid']>
   photo_id: Maybe<ScalarsEnums['uuid']>
   restaurant_id: Maybe<ScalarsEnums['uuid']>
@@ -8218,11 +8450,13 @@ export interface photo_xref_min_fields {
 }
 
 export interface photo_xref_mutation_response {
+  __typename: 'photo_xref_mutation_response'
   affected_rows: ScalarsEnums['Int']
   returning: Array<photo_xref>
 }
 
 export interface restaurant {
+  __typename: 'restaurant'
   address: Maybe<ScalarsEnums['String']>
   city: Maybe<ScalarsEnums['String']>
   created_at: ScalarsEnums['timestamptz']
@@ -8324,11 +8558,13 @@ export interface restaurant {
 }
 
 export interface restaurant_aggregate {
+  __typename: 'restaurant_aggregate'
   aggregate: Maybe<restaurant_aggregate_fields>
   nodes: Array<restaurant>
 }
 
 export interface restaurant_aggregate_fields {
+  __typename: 'restaurant_aggregate_fields'
   avg: Maybe<restaurant_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
@@ -8346,6 +8582,7 @@ export interface restaurant_aggregate_fields {
 }
 
 export interface restaurant_avg_fields {
+  __typename: 'restaurant_avg_fields'
   downvotes: Maybe<ScalarsEnums['Float']>
   rating: Maybe<ScalarsEnums['Float']>
   score: Maybe<ScalarsEnums['Float']>
@@ -8355,6 +8592,7 @@ export interface restaurant_avg_fields {
 }
 
 export interface restaurant_max_fields {
+  __typename: 'restaurant_max_fields'
   address: Maybe<ScalarsEnums['String']>
   city: Maybe<ScalarsEnums['String']>
   created_at: Maybe<ScalarsEnums['timestamptz']>
@@ -8380,6 +8618,7 @@ export interface restaurant_max_fields {
 }
 
 export interface restaurant_min_fields {
+  __typename: 'restaurant_min_fields'
   address: Maybe<ScalarsEnums['String']>
   city: Maybe<ScalarsEnums['String']>
   created_at: Maybe<ScalarsEnums['timestamptz']>
@@ -8405,11 +8644,13 @@ export interface restaurant_min_fields {
 }
 
 export interface restaurant_mutation_response {
+  __typename: 'restaurant_mutation_response'
   affected_rows: ScalarsEnums['Int']
   returning: Array<restaurant>
 }
 
 export interface restaurant_stddev_fields {
+  __typename: 'restaurant_stddev_fields'
   downvotes: Maybe<ScalarsEnums['Float']>
   rating: Maybe<ScalarsEnums['Float']>
   score: Maybe<ScalarsEnums['Float']>
@@ -8419,6 +8660,7 @@ export interface restaurant_stddev_fields {
 }
 
 export interface restaurant_stddev_pop_fields {
+  __typename: 'restaurant_stddev_pop_fields'
   downvotes: Maybe<ScalarsEnums['Float']>
   rating: Maybe<ScalarsEnums['Float']>
   score: Maybe<ScalarsEnums['Float']>
@@ -8428,6 +8670,7 @@ export interface restaurant_stddev_pop_fields {
 }
 
 export interface restaurant_stddev_samp_fields {
+  __typename: 'restaurant_stddev_samp_fields'
   downvotes: Maybe<ScalarsEnums['Float']>
   rating: Maybe<ScalarsEnums['Float']>
   score: Maybe<ScalarsEnums['Float']>
@@ -8437,6 +8680,7 @@ export interface restaurant_stddev_samp_fields {
 }
 
 export interface restaurant_sum_fields {
+  __typename: 'restaurant_sum_fields'
   downvotes: Maybe<ScalarsEnums['numeric']>
   rating: Maybe<ScalarsEnums['numeric']>
   score: Maybe<ScalarsEnums['numeric']>
@@ -8446,6 +8690,7 @@ export interface restaurant_sum_fields {
 }
 
 export interface restaurant_tag {
+  __typename: 'restaurant_tag'
   downvotes: Maybe<ScalarsEnums['numeric']>
   id: ScalarsEnums['uuid']
   photos: (args?: {
@@ -8502,11 +8747,13 @@ export interface restaurant_tag {
 }
 
 export interface restaurant_tag_aggregate {
+  __typename: 'restaurant_tag_aggregate'
   aggregate: Maybe<restaurant_tag_aggregate_fields>
   nodes: Array<restaurant_tag>
 }
 
 export interface restaurant_tag_aggregate_fields {
+  __typename: 'restaurant_tag_aggregate_fields'
   avg: Maybe<restaurant_tag_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
@@ -8524,6 +8771,7 @@ export interface restaurant_tag_aggregate_fields {
 }
 
 export interface restaurant_tag_avg_fields {
+  __typename: 'restaurant_tag_avg_fields'
   downvotes: Maybe<ScalarsEnums['Float']>
   rank: Maybe<ScalarsEnums['Float']>
   rating: Maybe<ScalarsEnums['Float']>
@@ -8534,6 +8782,7 @@ export interface restaurant_tag_avg_fields {
 }
 
 export interface restaurant_tag_max_fields {
+  __typename: 'restaurant_tag_max_fields'
   downvotes: Maybe<ScalarsEnums['numeric']>
   id: Maybe<ScalarsEnums['uuid']>
   rank: Maybe<ScalarsEnums['Int']>
@@ -8547,6 +8796,7 @@ export interface restaurant_tag_max_fields {
 }
 
 export interface restaurant_tag_min_fields {
+  __typename: 'restaurant_tag_min_fields'
   downvotes: Maybe<ScalarsEnums['numeric']>
   id: Maybe<ScalarsEnums['uuid']>
   rank: Maybe<ScalarsEnums['Int']>
@@ -8560,11 +8810,13 @@ export interface restaurant_tag_min_fields {
 }
 
 export interface restaurant_tag_mutation_response {
+  __typename: 'restaurant_tag_mutation_response'
   affected_rows: ScalarsEnums['Int']
   returning: Array<restaurant_tag>
 }
 
 export interface restaurant_tag_stddev_fields {
+  __typename: 'restaurant_tag_stddev_fields'
   downvotes: Maybe<ScalarsEnums['Float']>
   rank: Maybe<ScalarsEnums['Float']>
   rating: Maybe<ScalarsEnums['Float']>
@@ -8575,6 +8827,7 @@ export interface restaurant_tag_stddev_fields {
 }
 
 export interface restaurant_tag_stddev_pop_fields {
+  __typename: 'restaurant_tag_stddev_pop_fields'
   downvotes: Maybe<ScalarsEnums['Float']>
   rank: Maybe<ScalarsEnums['Float']>
   rating: Maybe<ScalarsEnums['Float']>
@@ -8585,6 +8838,7 @@ export interface restaurant_tag_stddev_pop_fields {
 }
 
 export interface restaurant_tag_stddev_samp_fields {
+  __typename: 'restaurant_tag_stddev_samp_fields'
   downvotes: Maybe<ScalarsEnums['Float']>
   rank: Maybe<ScalarsEnums['Float']>
   rating: Maybe<ScalarsEnums['Float']>
@@ -8595,6 +8849,7 @@ export interface restaurant_tag_stddev_samp_fields {
 }
 
 export interface restaurant_tag_sum_fields {
+  __typename: 'restaurant_tag_sum_fields'
   downvotes: Maybe<ScalarsEnums['numeric']>
   rank: Maybe<ScalarsEnums['Int']>
   rating: Maybe<ScalarsEnums['numeric']>
@@ -8605,6 +8860,7 @@ export interface restaurant_tag_sum_fields {
 }
 
 export interface restaurant_tag_var_pop_fields {
+  __typename: 'restaurant_tag_var_pop_fields'
   downvotes: Maybe<ScalarsEnums['Float']>
   rank: Maybe<ScalarsEnums['Float']>
   rating: Maybe<ScalarsEnums['Float']>
@@ -8615,6 +8871,7 @@ export interface restaurant_tag_var_pop_fields {
 }
 
 export interface restaurant_tag_var_samp_fields {
+  __typename: 'restaurant_tag_var_samp_fields'
   downvotes: Maybe<ScalarsEnums['Float']>
   rank: Maybe<ScalarsEnums['Float']>
   rating: Maybe<ScalarsEnums['Float']>
@@ -8625,6 +8882,7 @@ export interface restaurant_tag_var_samp_fields {
 }
 
 export interface restaurant_tag_variance_fields {
+  __typename: 'restaurant_tag_variance_fields'
   downvotes: Maybe<ScalarsEnums['Float']>
   rank: Maybe<ScalarsEnums['Float']>
   rating: Maybe<ScalarsEnums['Float']>
@@ -8635,6 +8893,7 @@ export interface restaurant_tag_variance_fields {
 }
 
 export interface restaurant_var_pop_fields {
+  __typename: 'restaurant_var_pop_fields'
   downvotes: Maybe<ScalarsEnums['Float']>
   rating: Maybe<ScalarsEnums['Float']>
   score: Maybe<ScalarsEnums['Float']>
@@ -8644,6 +8903,7 @@ export interface restaurant_var_pop_fields {
 }
 
 export interface restaurant_var_samp_fields {
+  __typename: 'restaurant_var_samp_fields'
   downvotes: Maybe<ScalarsEnums['Float']>
   rating: Maybe<ScalarsEnums['Float']>
   score: Maybe<ScalarsEnums['Float']>
@@ -8653,6 +8913,7 @@ export interface restaurant_var_samp_fields {
 }
 
 export interface restaurant_variance_fields {
+  __typename: 'restaurant_variance_fields'
   downvotes: Maybe<ScalarsEnums['Float']>
   rating: Maybe<ScalarsEnums['Float']>
   score: Maybe<ScalarsEnums['Float']>
@@ -8662,6 +8923,7 @@ export interface restaurant_variance_fields {
 }
 
 export interface review {
+  __typename: 'review'
   authored_at: ScalarsEnums['timestamptz']
   categories: (args?: {
     path?: Maybe<ScalarsEnums['String']>
@@ -8704,11 +8966,13 @@ export interface review {
 }
 
 export interface review_aggregate {
+  __typename: 'review_aggregate'
   aggregate: Maybe<review_aggregate_fields>
   nodes: Array<review>
 }
 
 export interface review_aggregate_fields {
+  __typename: 'review_aggregate_fields'
   avg: Maybe<review_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['review_select_column']>>
@@ -8726,11 +8990,13 @@ export interface review_aggregate_fields {
 }
 
 export interface review_avg_fields {
+  __typename: 'review_avg_fields'
   rating: Maybe<ScalarsEnums['Float']>
   vote: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_max_fields {
+  __typename: 'review_max_fields'
   authored_at: Maybe<ScalarsEnums['timestamptz']>
   id: Maybe<ScalarsEnums['uuid']>
   native_data_unique_key: Maybe<ScalarsEnums['String']>
@@ -8747,6 +9013,7 @@ export interface review_max_fields {
 }
 
 export interface review_min_fields {
+  __typename: 'review_min_fields'
   authored_at: Maybe<ScalarsEnums['timestamptz']>
   id: Maybe<ScalarsEnums['uuid']>
   native_data_unique_key: Maybe<ScalarsEnums['String']>
@@ -8763,31 +9030,37 @@ export interface review_min_fields {
 }
 
 export interface review_mutation_response {
+  __typename: 'review_mutation_response'
   affected_rows: ScalarsEnums['Int']
   returning: Array<review>
 }
 
 export interface review_stddev_fields {
+  __typename: 'review_stddev_fields'
   rating: Maybe<ScalarsEnums['Float']>
   vote: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_stddev_pop_fields {
+  __typename: 'review_stddev_pop_fields'
   rating: Maybe<ScalarsEnums['Float']>
   vote: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_stddev_samp_fields {
+  __typename: 'review_stddev_samp_fields'
   rating: Maybe<ScalarsEnums['Float']>
   vote: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_sum_fields {
+  __typename: 'review_sum_fields'
   rating: Maybe<ScalarsEnums['numeric']>
   vote: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface review_tag_sentence {
+  __typename: 'review_tag_sentence'
   id: ScalarsEnums['uuid']
   ml_sentiment: Maybe<ScalarsEnums['numeric']>
   naive_sentiment: ScalarsEnums['numeric']
@@ -8800,11 +9073,13 @@ export interface review_tag_sentence {
 }
 
 export interface review_tag_sentence_aggregate {
+  __typename: 'review_tag_sentence_aggregate'
   aggregate: Maybe<review_tag_sentence_aggregate_fields>
   nodes: Array<review_tag_sentence>
 }
 
 export interface review_tag_sentence_aggregate_fields {
+  __typename: 'review_tag_sentence_aggregate_fields'
   avg: Maybe<review_tag_sentence_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['review_tag_sentence_select_column']>>
@@ -8822,11 +9097,13 @@ export interface review_tag_sentence_aggregate_fields {
 }
 
 export interface review_tag_sentence_avg_fields {
+  __typename: 'review_tag_sentence_avg_fields'
   ml_sentiment: Maybe<ScalarsEnums['Float']>
   naive_sentiment: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_max_fields {
+  __typename: 'review_tag_sentence_max_fields'
   id: Maybe<ScalarsEnums['uuid']>
   ml_sentiment: Maybe<ScalarsEnums['numeric']>
   naive_sentiment: Maybe<ScalarsEnums['numeric']>
@@ -8837,6 +9114,7 @@ export interface review_tag_sentence_max_fields {
 }
 
 export interface review_tag_sentence_min_fields {
+  __typename: 'review_tag_sentence_min_fields'
   id: Maybe<ScalarsEnums['uuid']>
   ml_sentiment: Maybe<ScalarsEnums['numeric']>
   naive_sentiment: Maybe<ScalarsEnums['numeric']>
@@ -8847,61 +9125,73 @@ export interface review_tag_sentence_min_fields {
 }
 
 export interface review_tag_sentence_mutation_response {
+  __typename: 'review_tag_sentence_mutation_response'
   affected_rows: ScalarsEnums['Int']
   returning: Array<review_tag_sentence>
 }
 
 export interface review_tag_sentence_stddev_fields {
+  __typename: 'review_tag_sentence_stddev_fields'
   ml_sentiment: Maybe<ScalarsEnums['Float']>
   naive_sentiment: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_stddev_pop_fields {
+  __typename: 'review_tag_sentence_stddev_pop_fields'
   ml_sentiment: Maybe<ScalarsEnums['Float']>
   naive_sentiment: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_stddev_samp_fields {
+  __typename: 'review_tag_sentence_stddev_samp_fields'
   ml_sentiment: Maybe<ScalarsEnums['Float']>
   naive_sentiment: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_sum_fields {
+  __typename: 'review_tag_sentence_sum_fields'
   ml_sentiment: Maybe<ScalarsEnums['numeric']>
   naive_sentiment: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface review_tag_sentence_var_pop_fields {
+  __typename: 'review_tag_sentence_var_pop_fields'
   ml_sentiment: Maybe<ScalarsEnums['Float']>
   naive_sentiment: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_var_samp_fields {
+  __typename: 'review_tag_sentence_var_samp_fields'
   ml_sentiment: Maybe<ScalarsEnums['Float']>
   naive_sentiment: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_variance_fields {
+  __typename: 'review_tag_sentence_variance_fields'
   ml_sentiment: Maybe<ScalarsEnums['Float']>
   naive_sentiment: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_var_pop_fields {
+  __typename: 'review_var_pop_fields'
   rating: Maybe<ScalarsEnums['Float']>
   vote: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_var_samp_fields {
+  __typename: 'review_var_samp_fields'
   rating: Maybe<ScalarsEnums['Float']>
   vote: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_variance_fields {
+  __typename: 'review_variance_fields'
   rating: Maybe<ScalarsEnums['Float']>
   vote: Maybe<ScalarsEnums['Float']>
 }
 
 export interface setting {
+  __typename: 'setting'
   created_at: Maybe<ScalarsEnums['timestamptz']>
   id: ScalarsEnums['uuid']
   key: ScalarsEnums['String']
@@ -8912,11 +9202,13 @@ export interface setting {
 }
 
 export interface setting_aggregate {
+  __typename: 'setting_aggregate'
   aggregate: Maybe<setting_aggregate_fields>
   nodes: Array<setting>
 }
 
 export interface setting_aggregate_fields {
+  __typename: 'setting_aggregate_fields'
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['setting_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
@@ -8926,6 +9218,7 @@ export interface setting_aggregate_fields {
 }
 
 export interface setting_max_fields {
+  __typename: 'setting_max_fields'
   created_at: Maybe<ScalarsEnums['timestamptz']>
   id: Maybe<ScalarsEnums['uuid']>
   key: Maybe<ScalarsEnums['String']>
@@ -8933,6 +9226,7 @@ export interface setting_max_fields {
 }
 
 export interface setting_min_fields {
+  __typename: 'setting_min_fields'
   created_at: Maybe<ScalarsEnums['timestamptz']>
   id: Maybe<ScalarsEnums['uuid']>
   key: Maybe<ScalarsEnums['String']>
@@ -8940,11 +9234,13 @@ export interface setting_min_fields {
 }
 
 export interface setting_mutation_response {
+  __typename: 'setting_mutation_response'
   affected_rows: ScalarsEnums['Int']
   returning: Array<setting>
 }
 
 export interface tag {
+  __typename: 'tag'
   alternates: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
@@ -9003,11 +9299,13 @@ export interface tag {
 }
 
 export interface tag_aggregate {
+  __typename: 'tag_aggregate'
   aggregate: Maybe<tag_aggregate_fields>
   nodes: Array<tag>
 }
 
 export interface tag_aggregate_fields {
+  __typename: 'tag_aggregate_fields'
   avg: Maybe<tag_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['tag_select_column']>>
@@ -9025,12 +9323,14 @@ export interface tag_aggregate_fields {
 }
 
 export interface tag_avg_fields {
+  __typename: 'tag_avg_fields'
   frequency: Maybe<ScalarsEnums['Float']>
   order: Maybe<ScalarsEnums['Float']>
   popularity: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_max_fields {
+  __typename: 'tag_max_fields'
   created_at: Maybe<ScalarsEnums['timestamptz']>
   description: Maybe<ScalarsEnums['String']>
   displayName: Maybe<ScalarsEnums['String']>
@@ -9047,6 +9347,7 @@ export interface tag_max_fields {
 }
 
 export interface tag_min_fields {
+  __typename: 'tag_min_fields'
   created_at: Maybe<ScalarsEnums['timestamptz']>
   description: Maybe<ScalarsEnums['String']>
   displayName: Maybe<ScalarsEnums['String']>
@@ -9063,35 +9364,41 @@ export interface tag_min_fields {
 }
 
 export interface tag_mutation_response {
+  __typename: 'tag_mutation_response'
   affected_rows: ScalarsEnums['Int']
   returning: Array<tag>
 }
 
 export interface tag_stddev_fields {
+  __typename: 'tag_stddev_fields'
   frequency: Maybe<ScalarsEnums['Float']>
   order: Maybe<ScalarsEnums['Float']>
   popularity: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_stddev_pop_fields {
+  __typename: 'tag_stddev_pop_fields'
   frequency: Maybe<ScalarsEnums['Float']>
   order: Maybe<ScalarsEnums['Float']>
   popularity: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_stddev_samp_fields {
+  __typename: 'tag_stddev_samp_fields'
   frequency: Maybe<ScalarsEnums['Float']>
   order: Maybe<ScalarsEnums['Float']>
   popularity: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_sum_fields {
+  __typename: 'tag_sum_fields'
   frequency: Maybe<ScalarsEnums['Int']>
   order: Maybe<ScalarsEnums['Int']>
   popularity: Maybe<ScalarsEnums['Int']>
 }
 
 export interface tag_tag {
+  __typename: 'tag_tag'
   category: tag
   category_tag_id: ScalarsEnums['uuid']
   main: tag
@@ -9099,11 +9406,13 @@ export interface tag_tag {
 }
 
 export interface tag_tag_aggregate {
+  __typename: 'tag_tag_aggregate'
   aggregate: Maybe<tag_tag_aggregate_fields>
   nodes: Array<tag_tag>
 }
 
 export interface tag_tag_aggregate_fields {
+  __typename: 'tag_tag_aggregate_fields'
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['tag_tag_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
@@ -9113,39 +9422,46 @@ export interface tag_tag_aggregate_fields {
 }
 
 export interface tag_tag_max_fields {
+  __typename: 'tag_tag_max_fields'
   category_tag_id: Maybe<ScalarsEnums['uuid']>
   tag_id: Maybe<ScalarsEnums['uuid']>
 }
 
 export interface tag_tag_min_fields {
+  __typename: 'tag_tag_min_fields'
   category_tag_id: Maybe<ScalarsEnums['uuid']>
   tag_id: Maybe<ScalarsEnums['uuid']>
 }
 
 export interface tag_tag_mutation_response {
+  __typename: 'tag_tag_mutation_response'
   affected_rows: ScalarsEnums['Int']
   returning: Array<tag_tag>
 }
 
 export interface tag_var_pop_fields {
+  __typename: 'tag_var_pop_fields'
   frequency: Maybe<ScalarsEnums['Float']>
   order: Maybe<ScalarsEnums['Float']>
   popularity: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_var_samp_fields {
+  __typename: 'tag_var_samp_fields'
   frequency: Maybe<ScalarsEnums['Float']>
   order: Maybe<ScalarsEnums['Float']>
   popularity: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_variance_fields {
+  __typename: 'tag_variance_fields'
   frequency: Maybe<ScalarsEnums['Float']>
   order: Maybe<ScalarsEnums['Float']>
   popularity: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user {
+  __typename: 'user'
   about: Maybe<ScalarsEnums['String']>
   apple_email: Maybe<ScalarsEnums['String']>
   apple_refresh_token: Maybe<ScalarsEnums['String']>
@@ -9179,11 +9495,13 @@ export interface user {
 }
 
 export interface user_aggregate {
+  __typename: 'user_aggregate'
   aggregate: Maybe<user_aggregate_fields>
   nodes: Array<user>
 }
 
 export interface user_aggregate_fields {
+  __typename: 'user_aggregate_fields'
   avg: Maybe<user_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['user_select_column']>>
@@ -9201,10 +9519,12 @@ export interface user_aggregate_fields {
 }
 
 export interface user_avg_fields {
+  __typename: 'user_avg_fields'
   charIndex: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_max_fields {
+  __typename: 'user_max_fields'
   about: Maybe<ScalarsEnums['String']>
   apple_email: Maybe<ScalarsEnums['String']>
   apple_refresh_token: Maybe<ScalarsEnums['String']>
@@ -9223,6 +9543,7 @@ export interface user_max_fields {
 }
 
 export interface user_min_fields {
+  __typename: 'user_min_fields'
   about: Maybe<ScalarsEnums['String']>
   apple_email: Maybe<ScalarsEnums['String']>
   apple_refresh_token: Maybe<ScalarsEnums['String']>
@@ -9241,35 +9562,43 @@ export interface user_min_fields {
 }
 
 export interface user_mutation_response {
+  __typename: 'user_mutation_response'
   affected_rows: ScalarsEnums['Int']
   returning: Array<user>
 }
 
 export interface user_stddev_fields {
+  __typename: 'user_stddev_fields'
   charIndex: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_stddev_pop_fields {
+  __typename: 'user_stddev_pop_fields'
   charIndex: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_stddev_samp_fields {
+  __typename: 'user_stddev_samp_fields'
   charIndex: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_sum_fields {
+  __typename: 'user_sum_fields'
   charIndex: Maybe<ScalarsEnums['Int']>
 }
 
 export interface user_var_pop_fields {
+  __typename: 'user_var_pop_fields'
   charIndex: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_var_samp_fields {
+  __typename: 'user_var_samp_fields'
   charIndex: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_variance_fields {
+  __typename: 'user_variance_fields'
   charIndex: Maybe<ScalarsEnums['Float']>
 }
 
@@ -9339,13 +9668,26 @@ const queryFetcher: QueryFetcher = async function (query, variables) {
 
   const json = await response.json()
 
+  // console.log(
+  //   999,
+  //   JSON.stringify(
+  //     {
+  //       query,
+  //       variables,
+  //       json,
+  //     },
+  //     null,
+  //     2
+  //   )
+  // )
+
   return json
 }
 
-export const { client, resolved, selectFields } = createClient<GeneratedSchema>(
+export const client = createClient<GeneratedSchema>(
   generatedSchema,
   scalarsEnumsHash,
   queryFetcher
 )
 
-export const { query, mutation, subscription } = client
+export const { query, mutation, subscription, resolved, selectFields } = client

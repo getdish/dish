@@ -198,11 +198,11 @@ export class Tagging {
     const all_possible_tags = await restaurantGetAllPossibleTags(
       this.crawler.restaurant
     )
-    const all_tag_photos: PhotoXref[] = []
+    const all_tag_photos: Partial<PhotoXref>[] = []
     const photos = this.getPhotosWithText()
     if (!photos) return []
     for (const tag of all_possible_tags) {
-      let restaurant_tag: RestaurantTag = {
+      let restaurant_tag = {
         tag_id: tag.id,
         // @ts-ignore
         photos: [] as string[],
@@ -216,7 +216,7 @@ export class Tagging {
             tag_id: tag.id,
             photo: {
               url: photo.url,
-            },
+            } as any,
           })
         }
       }
