@@ -12,9 +12,9 @@ export const breakdown = {
         _1: { count: 1, score: -2 },
         _2: { count: 0, score: 0 },
         _3: { count: 0, score: 0 },
-        _4: { count: 0, score: 0 },
+        _4: { count: 1, score: 1 },
         _5: { count: 4, score: 8 },
-        score: 6,
+        score: 7,
       },
       summaries: {
         reviews: {
@@ -27,7 +27,7 @@ export const breakdown = {
         },
         unique_tags: [
           {
-            id: '6831c38e-3680-4d38-a7e2-a9646e162e5d',
+            id: 'fd6ecb0e-03d5-4eb8-b310-b9f11b64d3d0',
             name: 'Testpho',
           },
         ],
@@ -63,6 +63,21 @@ export const breakdown = {
         unique_tags: null,
       },
     },
+    google: {
+      ratings: {
+        _1: { count: 0, score: 0 },
+        _2: { count: 0, score: 0 },
+        _3: { count: 0, score: 0 },
+        _4: { count: 1, score: 1 },
+        _5: { count: 0, score: 0 },
+        score: 1,
+      },
+      summaries: {
+        reviews: { best: 'Test tag was great', worst: 'Test tag was great' },
+        sentences: { best: ['Test tag was great'], worst: null },
+        unique_tags: null,
+      },
+    },
     tripadvisor: {
       ratings: {
         _1: { count: 1, score: -2 },
@@ -83,7 +98,7 @@ export const breakdown = {
         },
         unique_tags: [
           {
-            id: '6831c38e-3680-4d38-a7e2-a9646e162e5d',
+            id: 'fd6ecb0e-03d5-4eb8-b310-b9f11b64d3d0',
             name: 'Testpho',
           },
         ],

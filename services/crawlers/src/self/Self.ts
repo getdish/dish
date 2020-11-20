@@ -174,6 +174,23 @@ export class Self extends WorkerJob {
     await this.main_db.pool.end()
   }
 
+  async mergeMainData() {
+    const steps = [
+      this.mergeName,
+      this.mergeTelephone,
+      this.mergeAddress,
+      this.mergeRatings,
+      this.addWebsite,
+      this.addSources,
+      this.noteAvailableSources,
+      this.addPriceRange,
+      this.getRatingFactors,
+    ]
+    for (const step of steps) {
+      await this._runFailableFunction(step)
+    }
+  }
+
   async preMerge(restaurant: RestaurantWithId) {
     this.main_db = DB.main_db()
     this._debugDaemon()
@@ -181,6 +198,7 @@ export class Self extends WorkerJob {
     console.log('Merging: ' + this.restaurant.name)
     this.resetTimer()
     await this.getScrapeData()
+    this.noteAvailableSources()
     this.log('scrapes fetched')
   }
 
@@ -219,25 +237,7 @@ export class Self extends WorkerJob {
     await this.restaurant_base_score.calculateScore()
   }
 
-  async mergeMainData() {
-    const steps = [
-      this.mergeName,
-      this.mergeTelephone,
-      this.mergeAddress,
-      this.mergeRatings,
-      this.addWebsite,
-      this.addSources,
-      this.noteAvailableSources,
-      this.addPriceRange,
-      this.getRatingFactors,
-    ]
-    for (const step of steps) {
-      await this._runFailableFunction(step)
-    }
-  }
-
   noteAvailableSources() {
-    console.log(this.restaurant.sources)
     this.available_sources = Object.keys(this.restaurant.sources)
   }
 
@@ -557,8 +557,8 @@ export class Self extends WorkerJob {
   }
 
   _getGoogleSource() {
-    if (!this.google) return
-    const id = this.google.id_from_source
+    if (!this.google_review_api) return
+    const id = this.google_review_api.id_from_source
     const lon = this.restaurant.location.coordinates[0]
     const lat = this.restaurant.location.coordinates[1]
     const source = googlePermalink(id, lat, lon)

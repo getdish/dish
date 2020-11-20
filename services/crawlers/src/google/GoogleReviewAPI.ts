@@ -85,6 +85,9 @@ export class GoogleReviewAPI extends WorkerJob {
       if (new_data.length == 0) break
       data = [...data, ...new_data]
       page++
+      if (process.env.RUN_WITHOUT_WORKER == 'true') {
+        break
+      }
     }
     await this.saveRestaurant(restaurant, data)
   }
