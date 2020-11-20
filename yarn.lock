@@ -1869,12 +1869,12 @@
   dependencies:
     arrify "^1.0.1"
 
-"@dish/gqless-cli@^0.1.14":
-  version "0.1.14"
-  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-0.1.14.tgz#717008b8609ea866236ccfd28c315f33e87d3939"
-  integrity sha512-UaAFUXBcS1frbRf0Am/t5M3plH6TvedmDueAzuGb9FFMEnupTa5EwSarDtP/5C3ivD8C40Wb0hgqWZGh/79N6w==
+"@dish/gqless-cli@^0.1.16":
+  version "0.1.16"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-0.1.16.tgz#44a6ab4c1ffe251af98a3d4d39cb1ba13d83d481"
+  integrity sha512-cZDzES/qDpqgNHxw03R307XnKo8IIMQ7CXj+kXoTCx1dlN5eRmlVBzpHL/VrhohYqdBr2olEfoMQj55TJwN1gQ==
   dependencies:
-    "@dish/gqless" "^1.0.10"
+    "@dish/gqless" "^1.0.12"
     "@graphql-codegen/core" "^1.17.8"
     "@graphql-codegen/typescript" "^1.17.11"
     "@graphql-tools/delegate" "^7.0.5"
@@ -1885,13 +1885,21 @@
     lodash "^4.17.20"
     lodash-es "^4.17.15"
     mkdirp "^1.0.4"
-    prettier "^2.1.2"
+    prettier "^2.2.0"
     regenerator-runtime "^0.13.7"
 
-"@dish/gqless@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-1.0.10.tgz#ed9f081b97dc96cc34523e26170e5354b7e9f087"
-  integrity sha512-4a4mfaivMV5xlkoDxLSx2+LkNVkoRLT0BDanSR0aCUGUf+Z2ykK4hvgTzr9qFcO3KKQNA+TwScrj9DQLKArkrQ==
+"@dish/gqless-react@^0.0.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-react/-/gqless-react-0.1.1.tgz#36890ae3595bd7195cc1c3184b44a58868732b14"
+  integrity sha512-tJ/+Pr1ioEcZG23lmXO2EaUn+/6AiY3kVO6YguNMk4ijTFEDPJtsACCYDIS3DNuG53rvRX5Tbx9XEMJaIMf9QQ==
+  dependencies:
+    lodash "^4.17.20"
+    lodash-es "^4.17.15"
+
+"@dish/gqless@^1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-1.0.12.tgz#b85d814a023d9d81e22a2b3f3984c6fc74e11d16"
+  integrity sha512-kqceH89zO6Ig0NUzKcecGElI8Q31ZCybmuQpQefstnmv3FZQGfCbJSgaImCXFouIvbeK/zAvJWQuZzrwgYs55g==
   dependencies:
     graphql "^15.4.0"
     lodash "^4.17.20"
@@ -18708,6 +18716,11 @@ prettier@^2.1.2:
   version "2.1.2"
   resolved "https://registry.npmjs.org/prettier/-/prettier-2.1.2.tgz#3050700dae2e4c8b67c4c3f666cdb8af405e1ce5"
   integrity sha512-16c7K+x4qVlJg9rEbXl7HEGmQyZlG4R9AgP+oHKRMsMsuk8s+ATStlf1NpDqyBI1HpVyfjLOeMhH2LvuNvV5Vg==
+
+prettier@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.2.0.tgz#8a03c7777883b29b37fb2c4348c66a78e980418b"
+  integrity sha512-yYerpkvseM4iKD/BXLYUkQV5aKt4tQPqaGW6EsZjzyu0r7sVZZNPJW4Y8MyKmicp6t42XUPcBVA+H6sB3gqndw==
 
 pretty-bytes@^5.2.0:
   version "5.3.0"
