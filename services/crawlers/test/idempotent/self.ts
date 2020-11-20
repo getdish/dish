@@ -379,7 +379,7 @@ test('Merging', async (t) => {
     ambience: 2,
   })
   t.is(updated.website, 'http://www.intercontinentalsanfrancisco.com/')
-  t.deepEqual(updated.sources(), {
+  t.deepEqual(updated.sources, {
     google: {
       url:
         'https://www.google.com/maps/place/@0,0,11z/data=!3m1!4b1!4m5!3m4!1stest-google123!8m2!3d0!4d0',
