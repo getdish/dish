@@ -69,6 +69,7 @@ export async function restaurantFindOneWithTags(
         source_breakdown: rest?.source_breakdown(),
         photos: rest?.photos(),
         rating_factors: rest?.rating_factors(),
+        sources: rest?.sources(),
       }
     })
   })
