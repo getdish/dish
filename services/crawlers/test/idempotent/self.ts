@@ -48,6 +48,7 @@ const restaurant_fixture: Partial<Restaurant> = {
   sources: {
     yelp: { url: 'https://yelp.com', rating: 3.5 },
     tripadvisor: { url: 'https://tripadvisor.com', rating: 2.5 },
+    google: { url: 'https://google.com', rating: 4.5 },
   },
 }
 
@@ -253,6 +254,23 @@ const google: Partial<Scrape> = {
   },
 }
 
+const google_review_api: Partial<Scrape> = {
+  source: 'google_review_api',
+  id_from_source: 'test-google123',
+  data: {
+    reviews: [
+      {
+        user_id: '123',
+        name: 'Mary Lamb',
+        rating: 4.5,
+        ago_text: '2 months ago',
+        text: 'Test tag was great',
+        photos: ['https://i.imgur.com/N6YtgRI.jpeg'],
+      },
+    ],
+  },
+}
+
 async function reset(t: ExecutionContext<Context>) {
   await flushTestData()
   await deleteAllTestScrapes()
@@ -270,6 +288,11 @@ async function reset(t: ExecutionContext<Context>) {
     { restaurant_id: restaurant.id, location: zero_coord, ...ubereats },
     { restaurant_id: restaurant.id, location: zero_coord, ...doordash },
     { restaurant_id: restaurant.id, location: zero_coord, ...tripadvisor },
+    {
+      restaurant_id: restaurant.id,
+      location: zero_coord,
+      ...google_review_api,
+    },
   ]
   await Promise.all(scrapes.map((s) => scrapeInsert(s)))
   await tagUpsert([
@@ -356,6 +379,12 @@ test('Merging', async (t) => {
     ambience: 2,
   })
   t.is(updated.website, 'http://www.intercontinentalsanfrancisco.com/')
+  t.deepEqual(updated.sources, {
+    google: {
+      url:
+        'https://www.google.com/maps/place/@0,0,11z/data=!3m1!4b1!4m5!3m4!1stest-google123!8m2!3d0!4d0',
+    },
+  })
 })
 
 test('Merging dishes', async (t) => {
@@ -546,12 +575,12 @@ test('Review naive sentiments', async (t) => {
 
   // Ensure upserting/constraints work
   let reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
-  t.is(reviews.length, 7)
+  t.is(reviews.length, 6)
   await self.scanCorpus()
   await self.finishTagsEtc()
 
   reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
-  t.is(reviews.length, 7)
+  t.is(reviews.length, 6)
   const rv1 = reviews.find((rv) => rv.username == 'yelp-FsLRE98uOHkBNzO1Ta5hIw')
   const rv1s1 = rv1.sentiments.find((s) =>
     s.sentence.includes('Test tag existing 1')
@@ -568,8 +597,8 @@ test('Review naive sentiments', async (t) => {
   t.is(rv2s1.naive_sentiment, 0)
   const rv3 = reviews.find((rv) => rv.username == 'tripadvisor-tauser2')
   t.is(rv3.sentiments.length, 0)
-  const rv4 = reviews.find((rv) => rv.username == 'google-Nikhil Mascarenhas')
-  t.is(rv4.rating, 4)
+  const rv4 = reviews.find((rv) => rv.username == 'google-123')
+  t.is(rv4.rating, 4.5)
 })
 
 test('Finding filters and alternates in reviews', async (t) => {
@@ -754,9 +783,9 @@ test('Scoring for restaurants', async (t) => {
   breakdown.sources.all.summaries.unique_tags[0].id = test_pho.id
   breakdown.sources.tripadvisor.summaries.unique_tags[0].id = test_pho.id
 
-  t.deepEqual(updated?.upvotes, 8.1)
+  t.deepEqual(updated?.upvotes, 9.1)
   t.deepEqual(updated?.downvotes, 2)
-  t.deepEqual(updated?.votes_ratio, 4.05)
+  t.deepEqual(updated?.votes_ratio, 4.55)
   t.deepEqual(updated?.source_breakdown, breakdown)
 })
 
@@ -782,11 +811,11 @@ test('Scoring for rishes', async (t) => {
 
   const rish1 = updated?.tags.filter((t) => t.tag.name == 'Test tag')[0]
   const rish2 = updated?.tags.filter((t) => t.tag.name == 'Testpho')[0]
-  t.is(rish1.score, 2)
-  t.is(rish1.upvotes, 3)
+  t.is(rish1.score, 3)
+  t.is(rish1.upvotes, 4)
   t.is(rish1.downvotes, 1)
-  t.is(rish1.votes_ratio, 3)
-  t.is(rish1.review_mentions_count, 5)
+  t.is(rish1.votes_ratio, 4)
+  t.is(rish1.review_mentions_count, 6)
   t.is(rish2.review_mentions_count, 1)
   t.deepEqual(rish1.source_breakdown.yelp, {
     score: 0,
@@ -798,9 +827,9 @@ test('Scoring for rishes', async (t) => {
     downvotes: 1,
   })
   t.deepEqual(rish1.source_breakdown.google, {
-    score: 0,
-    summary: { negative: null, positive: null },
-    upvotes: 0,
+    score: 1,
+    summary: { negative: null, positive: ['Test tag was great'] },
+    upvotes: 1,
     downvotes: 0,
   })
   t.deepEqual(rish1.source_breakdown.tripadvisor, {
@@ -822,7 +851,7 @@ test('Scoring for rishes', async (t) => {
     upvotes: 1,
     downvotes: 0,
   })
-  t.is(rish1.sentences.length, 5)
+  t.is(rish1.sentences.length, 6)
   t.assert(
     rish1.sentences.find(
       (s) =>

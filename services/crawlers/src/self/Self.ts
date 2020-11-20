@@ -64,6 +64,7 @@ export class Self extends WorkerJob {
     'doordash',
     'grubhub',
     'google',
+    'google_review_api',
   ]
   yelp!: Scrape
   ubereats!: Scrape
@@ -73,6 +74,7 @@ export class Self extends WorkerJob {
   doordash!: Scrape
   grubhub!: Scrape
   google!: Scrape
+  google_review_api!: Scrape
   available_sources: string[] = []
 
   main_db!: DB
@@ -172,6 +174,23 @@ export class Self extends WorkerJob {
     await this.main_db.pool.end()
   }
 
+  async mergeMainData() {
+    const steps = [
+      this.mergeName,
+      this.mergeTelephone,
+      this.mergeAddress,
+      this.mergeRatings,
+      this.addWebsite,
+      this.addSources,
+      this.noteAvailableSources,
+      this.addPriceRange,
+      this.getRatingFactors,
+    ]
+    for (const step of steps) {
+      await this._runFailableFunction(step)
+    }
+  }
+
   async preMerge(restaurant: RestaurantWithId) {
     this.main_db = DB.main_db()
     this._debugDaemon()
@@ -220,22 +239,6 @@ export class Self extends WorkerJob {
   async finalScores() {
     await this.restaurant_tag_scores.calculateScores()
     await this.restaurant_base_score.calculateScore()
-  }
-
-  async mergeMainData() {
-    const steps = [
-      this.mergeName,
-      this.mergeTelephone,
-      this.mergeAddress,
-      this.mergeRatings,
-      this.addWebsite,
-      this.addSources,
-      this.addPriceRange,
-      this.getRatingFactors,
-    ]
-    for (const step of steps) {
-      await this._runFailableFunction(step)
-    }
   }
 
   noteAvailableSources() {
@@ -558,8 +561,8 @@ export class Self extends WorkerJob {
   }
 
   _getGoogleSource() {
-    if (!this.google) return
-    const id = this.google.id_from_source
+    if (!this.google_review_api) return
+    const id = this.google_review_api.id_from_source
     const lon = this.restaurant.location.coordinates[0]
     const lat = this.restaurant.location.coordinates[1]
     const source = googlePermalink(id, lat, lon)
@@ -675,18 +678,20 @@ export class Self extends WorkerJob {
       } as PhotoXref
     })
     await photoUpsert(photos)
-    const most_aesthetic = await bestPhotosForRestaurant(this.restaurant.id)
+    const most_aesthetic =
+      (await bestPhotosForRestaurant(this.restaurant.id)) || []
     //@ts-ignore
     this.restaurant.photos = most_aesthetic.map((p) => p.photo?.url)
   }
 
   _getGooglePhotos() {
-    if (!this.google) return []
-    const raw = scrapeGetData(this.google, 'photos')
-    if (!raw) return []
-    const urls = raw.filter((p) => {
-      return p.includes('googleusercontent')
-    })
+    let urls: string[] = []
+    if (!this.google_review_api) return []
+    const reviews = scrapeGetData(this.google_review_api, 'reviews')
+    if (!reviews) return []
+    for (const review of reviews) {
+      urls = [...urls, ...review.photos]
+    }
     return urls
   }
 

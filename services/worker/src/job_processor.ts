@@ -3,8 +3,9 @@
 import {
   CI,
   DoorDash,
-  Google,
   GoogleImages,
+  GooglePuppeteer,
+  GoogleReviewAPI,
   GrubHub,
   Infatuated,
   Michelin,
@@ -31,7 +32,8 @@ const all: typeof WorkerJob[] = [
   Infatuated,
   Michelin,
   Tripadvisor,
-  Google,
+  GooglePuppeteer,
+  GoogleReviewAPI,
   GoogleImages,
   GrubHub,
 ]

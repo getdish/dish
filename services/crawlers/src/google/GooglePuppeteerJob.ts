@@ -5,7 +5,7 @@ import _ from 'lodash'
 
 import { Puppeteer } from '../Puppeteer'
 
-export class GoogleJob extends WorkerJob {
+export class GooglePuppeteerJob extends WorkerJob {
   GOOGLE_DOMAIN = 'https://www.google.com'
   puppeteer: Puppeteer
   booted = false
