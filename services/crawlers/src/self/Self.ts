@@ -201,12 +201,16 @@ export class Self extends WorkerJob {
   }
 
   async finishTagsEtc() {
-    await restaurantUpdate(this.restaurant)
+    await restaurantUpdate(this.restaurant, undefined, ['__typename'])
     this.tagging.deDepulicateTags()
     await this.tagging.updateTagRankings()
     await restaurantUpsertManyTags(
       this.restaurant,
-      this.tagging.restaurant_tags
+      this.tagging.restaurant_tags,
+      () => {
+        return {}
+      },
+      ['__typename']
     )
     if (this.menu_items.length != 0) {
       await menuItemsUpsertMerge(this.menu_items)

@@ -32,7 +32,7 @@ export const menuItemsUpsertMerge = async (items: Partial<MenuItem>[]) => {
     }
     updated_items.push(omit(item, 'restaurant'))
   }
-  await menuItemUpsert(updated_items)
+  await menuItemUpsert(updated_items, undefined, undefined, ['__typename'])
 }
 
 // Only update _missing_ data

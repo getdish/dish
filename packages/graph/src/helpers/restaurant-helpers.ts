@@ -117,14 +117,21 @@ export async function restaurantFindNear(
 
 export async function restaurantUpsertManyTags(
   restaurant: RestaurantWithId,
-  restaurant_tags: Partial<RestaurantTag>[]
+  restaurant_tags: Partial<RestaurantTag>[],
+  fn?: (v: restaurant[]) => any,
+  keys?: '*' | Array<string>
 ) {
   if (!restaurant_tags.length) return
   const populated = restaurant_tags.map((rt) => {
     const existing = getRestaurantTagFromTag(restaurant, rt.tag_id)
     return { ...existing, ...rt }
   })
-  const next = await restaurantUpsertRestaurantTags(restaurant, populated)
+  const next = await restaurantUpsertRestaurantTags(
+    restaurant,
+    populated,
+    fn,
+    keys
+  )
   return next
 }
 
@@ -142,11 +149,8 @@ export async function convertSimpleTagsToRestaurantTags(tag_strings: string[]) {
     name: tag_name,
   }))
 
-  // console.log(132132, JSON.stringify(tags))
-
   const full_tags = await tagUpsert(tags)
 
-  // console.log(133133, JSON.stringify(full_tags, null, 2))
   return full_tags.map((tag) => ({
     tag_id: tag.id,
   }))
@@ -154,66 +158,69 @@ export async function convertSimpleTagsToRestaurantTags(tag_strings: string[]) {
 
 export async function restaurantUpsertRestaurantTags(
   restaurant: RestaurantWithId,
-  restaurant_tags: Partial<RestaurantTag>[]
+  restaurant_tags: Partial<RestaurantTag>[],
+  fn?: (v: restaurant[]) => any,
+  keys?: '*' | Array<string>
 ) {
   const updated_restaurant = await restaurantTagUpsert(
     restaurant.id,
     restaurant_tags
   )
 
-  const d = await restaurantUpdateTagNames(updated_restaurant)
+  const d = await restaurantUpdateTagNames(updated_restaurant, fn, keys)
 
   return d
 }
 
-async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
+async function restaurantUpdateTagNames(
+  restaurant: RestaurantWithId,
+  fn?: (v: restaurant[]) => any,
+  keys?: '*' | Array<string>
+) {
   if (!restaurant) return
   const tags = restaurant.tags ?? []
   const tag_names: string[] = [
     ...new Set(
       tags
         .map((rt) => {
-          // console.log(153153, rt)
-          // @natew do you know why this has to be manually cast to a Tag?
           return tagSlugs(rt.tag)
         })
         .flat()
     ),
   ]
 
-  // console.log(162162, tag_names)
-
   const dataRestaurantUpdate = await restaurantUpdate(
     {
       ...restaurant,
-      // @ts-ignore
-      tag_names: tag_names,
+      tag_names,
     },
-    (v: restaurant[]) => {
-      return v.map((rest) => {
-        return {
-          ...selectFields(rest),
-          tag_names: rest.tag_names(),
-          tags: rest.tags().map((r_t) => {
-            const tagInfo = selectFields(r_t.tag)
+    fn ||
+      ((v: restaurant[]) => {
+        return v.map((rest) => {
+          return {
+            ...selectFields(rest),
+            tag_names: rest.tag_names(),
+            tags: rest.tags().map((r_t) => {
+              const tagInfo = selectFields(r_t.tag)
 
-            return {
-              ...selectFields(r_t, '*', 2),
-              tag: {
-                ...tagInfo,
-                categories: r_t.tag.categories().map((cat) => {
-                  return {
-                    ...selectFields(cat),
-                    category: selectFields(cat.category),
-                  }
-                }),
-                parent: selectFields(r_t.tag.parent),
-              },
-            }
-          }),
-        }
-      })
-    }
+              return {
+                ...selectFields(r_t, '*', 2),
+                tag: {
+                  ...tagInfo,
+                  categories: r_t.tag.categories().map((cat) => {
+                    return {
+                      ...selectFields(cat),
+                      category: selectFields(cat.category),
+                    }
+                  }),
+                  parent: selectFields(r_t.tag.parent),
+                },
+              }
+            }),
+          }
+        })
+      }),
+    keys
   )
 
   return dataRestaurantUpdate

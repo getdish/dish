@@ -72,7 +72,7 @@ export function createQueryHelpersFor<A extends ModelType>(
       items: Partial<A>[],
       constraint?: string,
       fn?: (v: any) => unknown,
-      keys?: string[]
+      keys?: '*' | string[]
     ) {
       return await upsert<A>(
         modelName,
@@ -85,7 +85,7 @@ export function createQueryHelpersFor<A extends ModelType>(
     async update(
       a: WithID<Partial<A>>,
       fn?: (v: any) => unknown,
-      keys?: string[]
+      keys?: '*' | string[]
     ) {
       //@ts-expect-error
       return await update<WithID<A>>(modelName, a, fn, keys)
@@ -155,7 +155,7 @@ export async function upsert<T extends ModelType>(
   objectsIn: Partial<T>[],
   constraint?: string,
   fn?: (v: any) => unknown,
-  keys?: string[]
+  keys?: '*' | string[]
 ): Promise<WithID<T>[]> {
   constraint = constraint ?? defaultConstraints[table]
   const objects = prepareData(table, objectsIn, '_insert_input')
@@ -188,7 +188,7 @@ export async function update<T extends WithID<ModelType>>(
   table: ModelName,
   objectIn: T,
   fn?: (v: any) => unknown,
-  keys?: string[]
+  keys?: '*' | string[]
 ): Promise<WithID<T>> {
   const action = `update_${table}` as any
   const [object] = prepareData(table, [objectIn], '_set_input')
