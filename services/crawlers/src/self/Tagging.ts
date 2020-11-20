@@ -370,7 +370,7 @@ export class Tagging {
         restaurant_id: this.crawler.restaurant.id,
         text: review.text,
         rating: parseFloat(review.rating),
-      })
+      } as Review)
     }
     return reviews
   }
