@@ -25,6 +25,7 @@ export async function search({
     limit,
     main_tag,
   })
+  // console.log(28, result)
   return result.restaurants
 }
 
@@ -36,6 +37,7 @@ export async function searchMain({
   limit = 50,
   main_tag = '',
 }: RestaurantSearchArgs): Promise<any> {
+  // console.log(40, tags)
   const params = [
     'query=' + query,
     'lon=' + lng,

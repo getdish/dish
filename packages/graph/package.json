@@ -6,12 +6,13 @@
   "sideEffects": false,
   "private": true,
   "scripts": {
-    "generate": "ts-node --transpile-only ./generate.ts",
+    "generate": "ts-node --transpile-only ./generate-new.ts",
     "build": "tsc -b || true",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "TARGET=node DISH_ENV=test ava test/* --verbose --serial",
     "test:debug": "TARGET=node DEBUG=1 DISH_ENV=test ava test/* --verbose --serial",
-    "test:watch": "TARGET=node DISH_ENV=test ava test/* --watch --verbose --serial"
+    "test:watch": "TARGET=node DISH_ENV=test ava test/* --watch --verbose --serial",
+    "test-new": "TARGET=node DISH_ENV=test ava test/tag.ts --verbose"
   },
   "dependencies": {
     "@dish/helpers": "*",
@@ -22,7 +23,9 @@
     "patch-package": "^6.2.2",
     "isomorphic-unfetch": "3.1.0",
     "ava": "^3.8.2",
-    "lodash": "*"
+    "lodash": "*",
+    "@dish/gqless": "^1.0.12",
+    "@dish/gqless-react": "^0.1.1"
   },
   "peerDependencies": {
     "react": "*"
@@ -30,6 +33,7 @@
   "devDependencies": {
     "@o/react-test-env": "*",
     "@types/node": "*",
-    "ts-node": "*"
+    "ts-node": "*",
+    "@dish/gqless-cli": "^0.1.16"
   }
 }

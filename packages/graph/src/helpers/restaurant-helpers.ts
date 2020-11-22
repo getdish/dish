@@ -1,13 +1,28 @@
 import _ from 'lodash'
 
 import { globalTagId } from '../constants'
-import { order_by, query } from '../graphql'
+import {
+  Maybe,
+  client,
+  order_by,
+  resolved,
+  restaurant,
+  selectFields,
+  tag,
+} from '../graphql/new-generated'
+// import { order_by, query } from '../graphql'
 import { Restaurant, RestaurantTag, RestaurantWithId, Tag } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
-import { resolvedWithFields } from './queryResolvers'
+// import { resolvedWithFields } from './queryResolvers'
 import { restaurantTagUpsert } from './restaurantTag'
 import { tagSlugs } from './tag-extension-helpers'
 import { tagGetAllChildren, tagGetAllGenerics, tagUpsert } from './tag-helpers'
+
+const query = client.query
+
+// const tagDataRelations = {
+//   relations: ['tags.tag.categories.category', 'tags.tag.parent'],
+// }
 
 const QueryHelpers = createQueryHelpersFor<Restaurant>('restaurant')
 export const restaurantInsert = QueryHelpers.insert
@@ -15,10 +30,6 @@ export const restaurantUpsert = QueryHelpers.upsert
 export const restaurantUpdate = QueryHelpers.update
 export const restaurantFindOne = QueryHelpers.findOne
 export const restaurantRefresh = QueryHelpers.refresh
-
-const tagDataRelations = {
-  relations: ['tags.tag.categories.category', 'tags.tag.parent'],
-}
 
 export const restaurant_fixture = {
   name: 'Test Restaurant',
@@ -28,26 +39,48 @@ export const restaurant_fixture = {
 }
 
 export async function restaurantFindOneWithTags(
-  restaurant: RestaurantWithId,
-  extra_relations: string[] = []
+  restaurant: Partial<RestaurantWithId>
 ) {
-  const options = {
-    ...tagDataRelations,
-    relations: [
-      ...tagDataRelations.relations,
-      ...['tags.sentences'],
-      ...extra_relations,
-    ],
-  }
-  return await restaurantFindOne(restaurant, options)
+  return await restaurantFindOne(restaurant, (v: Maybe<restaurant>[]) => {
+    return v.map((rest) => {
+      return {
+        ...selectFields(rest),
+        tag_names: rest?.tag_names(),
+        tags: rest?.tags().map((tagV) => {
+          return {
+            ...selectFields(tagV),
+            tag: {
+              ...selectFields(tagV.tag),
+              categories: tagV.tag.categories().map((catV) => {
+                return {
+                  category: selectFields(catV.category),
+                }
+              }),
+              parent: selectFields(tagV.tag.parent),
+              alternates: tagV.tag.alternates(),
+            },
+            sentences: selectFields(tagV.sentences()),
+            score_breakdown: tagV.score_breakdown(),
+            source_breakdown: tagV.source_breakdown(),
+          }
+        }),
+        menu_items: selectFields(rest?.menu_items()),
+        score_breakdown: rest?.score_breakdown(),
+        source_breakdown: rest?.source_breakdown(),
+        photos: rest?.photos(),
+        rating_factors: rest?.rating_factors(),
+        sources: rest?.sources(),
+      }
+    })
+  })
 }
 
 export async function restaurantFindBatch(
   size: number,
   previous_id: string,
   extra_where: {} = {}
-): Promise<Restaurant[]> {
-  return await resolvedWithFields(() => {
+): Promise<restaurant[]> {
+  return await resolved(() => {
     return query.restaurant({
       where: {
         id: { _gt: previous_id },
@@ -63,9 +96,9 @@ export async function restaurantFindNear(
   lat: number,
   lng: number,
   distance: number
-): Promise<Restaurant[]> {
-  return await resolvedWithFields(() => {
-    return query.restaurant({
+): Promise<restaurant[]> {
+  return await resolved(() => {
+    const restaurant = query.restaurant({
       where: {
         location: {
           _st_d_within: {
@@ -78,19 +111,28 @@ export async function restaurantFindNear(
         },
       },
     })
+
+    return selectFields(restaurant, '*', 1)
   })
 }
 
 export async function restaurantUpsertManyTags(
   restaurant: RestaurantWithId,
-  restaurant_tags: RestaurantTag[]
+  restaurant_tags: Partial<RestaurantTag>[],
+  fn?: (v: restaurant[]) => any,
+  keys?: '*' | Array<string>
 ) {
   if (!restaurant_tags.length) return
   const populated = restaurant_tags.map((rt) => {
     const existing = getRestaurantTagFromTag(restaurant, rt.tag_id)
     return { ...existing, ...rt }
   })
-  const next = await restaurantUpsertRestaurantTags(restaurant, populated)
+  const next = await restaurantUpsertRestaurantTags(
+    restaurant,
+    populated,
+    fn,
+    keys
+  )
   return next
 }
 
@@ -99,51 +141,90 @@ export async function restaurantUpsertOrphanTags(
   tag_strings: string[]
 ) {
   const restaurant_tags = await convertSimpleTagsToRestaurantTags(tag_strings)
+
   return await restaurantUpsertRestaurantTags(restaurant, restaurant_tags)
 }
 
 export async function convertSimpleTagsToRestaurantTags(tag_strings: string[]) {
-  const tags = tag_strings.map<Tag>((tag_name) => ({
+  const tags = tag_strings.map((tag_name) => ({
     name: tag_name,
   }))
+
   const full_tags = await tagUpsert(tags)
-  return full_tags.map<RestaurantTag>((tag) => ({
+
+  return full_tags.map((tag) => ({
     tag_id: tag.id,
   }))
 }
 
 export async function restaurantUpsertRestaurantTags(
   restaurant: RestaurantWithId,
-  restaurant_tags: RestaurantTag[]
+  restaurant_tags: Partial<RestaurantTag>[],
+  fn?: (v: restaurant[]) => any,
+  keys?: '*' | Array<string>
 ) {
   const updated_restaurant = await restaurantTagUpsert(
     restaurant.id,
     restaurant_tags
   )
-  return await restaurantUpdateTagNames(updated_restaurant)
+
+  const d = await restaurantUpdateTagNames(updated_restaurant, fn, keys)
+
+  return d
 }
 
-async function restaurantUpdateTagNames(restaurant: RestaurantWithId) {
+async function restaurantUpdateTagNames(
+  restaurant: RestaurantWithId,
+  fn?: (v: restaurant[]) => any,
+  keys?: '*' | Array<string>
+) {
   if (!restaurant) return
-  const tags: RestaurantTag[] = restaurant.tags ?? []
+  const tags = restaurant.tags ?? []
   const tag_names: string[] = [
     ...new Set(
       tags
-        .map((rt: RestaurantTag) => {
-          // @natew do you know why this has to be manually cast to a Tag?
-          return tagSlugs(rt.tag as Tag)
+        .map((rt) => {
+          return tagSlugs(rt.tag)
         })
         .flat()
     ),
   ]
-  return await restaurantUpdate(
+
+  const dataRestaurantUpdate = await restaurantUpdate(
     {
       ...restaurant,
-      // @ts-ignore
-      tag_names: tag_names,
+      tag_names,
     },
-    tagDataRelations
+    fn ||
+      ((v: restaurant[]) => {
+        return v.map((rest) => {
+          return {
+            ...selectFields(rest),
+            tag_names: rest.tag_names(),
+            tags: rest.tags().map((r_t) => {
+              const tagInfo = selectFields(r_t.tag)
+
+              return {
+                ...selectFields(r_t, '*', 2),
+                tag: {
+                  ...tagInfo,
+                  categories: r_t.tag.categories().map((cat) => {
+                    return {
+                      ...selectFields(cat),
+                      category: selectFields(cat.category),
+                    }
+                  }),
+                  parent: selectFields(r_t.tag.parent),
+                },
+              }
+            }),
+          }
+        })
+      }),
+    keys
   )
+
+  return dataRestaurantUpdate
 }
 
 function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {
@@ -153,7 +234,9 @@ function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {
   let rt = {} as RestaurantTag
   if (existing) {
     const cloned = _.cloneDeep(existing)
+    //@ts-expect-error
     delete cloned.tag
+    //@ts-expect-error
     delete cloned.restaurant
     rt = cloned
   }
@@ -169,9 +252,9 @@ export async function restaurantGetAllPossibleTags(restaurant: Restaurant) {
   )
   const orphans = restaurant.tags
     .filter((rt) => {
-      return rt.tag.parentId == globalTagId
+      return rt?.tag.parentId == globalTagId
     })
-    .map((rt) => rt.tag)
+    .map((rt) => rt?.tag)
   const generics = await tagGetAllGenerics()
   return [...cuisine_dishes, ...orphans, ...generics]
 }

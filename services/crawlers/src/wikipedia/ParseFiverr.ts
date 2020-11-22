@@ -7,7 +7,9 @@ import {
   tagUpsert,
   tagUpsertCategorizations,
 } from '@dish/graph'
+import { selectFields, tag } from '@dish/graph/_/graphql/new-generated'
 import parse from 'csv-parse/lib/sync'
+import { pick } from 'lodash'
 import _ from 'lodash'
 import { transliterate } from 'transliteration'
 
@@ -86,15 +88,29 @@ export class ParseFiverr {
     if (double_hash_regex.test(line)) {
       const category = this._cleanCategory(line)
       original = this._cleanCategory(original)
-      let [tag] = await tagUpsert([
-        {
-          name: category,
-          type: 'category',
-          parentId: this.country.id,
-        },
-      ])
+      let [tag] = await tagUpsert(
+        [
+          {
+            name: category,
+            type: 'category',
+            parentId: this.country.id,
+          },
+        ],
+        undefined,
+        (v_t: tag[]) => {
+          return v_t.map((v) => {
+            return {
+              ...selectFields(v, '*', 1),
+              alternates: v.alternates(),
+            }
+          })
+        }
+      )
       tagAddAlternate(tag, original)
-      ;[tag] = await tagUpsert([tag])
+      ;[tag] = await tagUpsert([
+        pick(tag, ['name', 'alternates', 'type', 'parentId']),
+      ])
+      // ;[tag] = await tagUpsert([tag])
       this.category = tag
     }
   }
@@ -111,15 +127,29 @@ export class ParseFiverr {
     if (line == '') return
     line = line.replace(/ *\([^)]*\) */g, '').replace(/,$/, '')
 
-    let [tag] = await tagUpsert([
-      {
-        name: line,
-        type: 'dish',
-        parentId: this.country.id,
-      },
-    ])
+    let [tag] = await tagUpsert(
+      [
+        {
+          name: line,
+          type: 'dish',
+          parentId: this.country.id,
+        },
+      ],
+      undefined,
+      (v_t: tag[]) => {
+        return v_t.map((v) => {
+          return {
+            ...selectFields(v),
+            alternates: v.alternates(),
+          }
+        })
+      }
+    )
     tagAddAlternate(tag, original)
-    ;[tag] = await tagUpsert([tag])
+    ;[tag] = await tagUpsert([
+      pick(tag, ['name', 'alternates', 'type', 'parentId']),
+    ])
+    // ;[tag] = await tagUpsert([tag])
 
     if (this.category) {
       await tagUpsertCategorizations(tag, [this.category.id])

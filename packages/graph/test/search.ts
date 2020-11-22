@@ -1,11 +1,12 @@
 import '@o/react-test-env'
 
-import test from 'ava'
+import anyTest, { TestInterface } from 'ava'
 import { clone } from 'lodash'
 
 import {
   Auth,
   SEARCH_DOMAIN,
+  User,
   flushTestData,
   restaurantUpsert,
   restaurantUpsertOrphanTags,
@@ -16,6 +17,12 @@ import {
   tagInsert,
 } from '../src'
 import { restaurant_fixture } from './etc/fixtures'
+
+interface Context {
+  user: User
+}
+
+const test = anyTest as TestInterface<Context>
 
 test.beforeEach(async (t) => {
   await flushTestData()
@@ -118,15 +125,22 @@ test('Orders by restaurant+tag score if dish tags queried', async (t) => {
     query: '',
     tags: ['test-rated-tag'],
   })
+
   t.is(results?.length, 3)
   t.is(results?.[0].id, rr3.id)
+  //@ts-expect-error
   t.is(results?.[0].meta.restaurant_rank, 3)
+  //@ts-expect-error
   t.is(results?.[0].meta.rish_rank, 1)
   t.is(results?.[1].id, rr1.id)
+  //@ts-expect-error
   t.is(results?.[1].meta.restaurant_rank, 1)
+  //@ts-expect-error
   t.is(results?.[1].meta.rish_rank, 2)
   t.is(results?.[2].id, rr2.id)
+  //@ts-expect-error
   t.is(results?.[2].meta.restaurant_rank, 2)
+  //@ts-expect-error
   t.is(results?.[2].meta.rish_rank, 3)
 })
 
@@ -172,13 +186,19 @@ test('Supports main_tag priority ordering', async (t) => {
   })
   t.is(results?.length, 3)
   t.is(results?.[0].id, rr2.id)
+  //@ts-expect-error
   t.is(results?.[0].meta.main_tag_rank, 1)
+  //@ts-expect-error
   t.is(results?.[0].meta.restaurant_rank, 2)
   t.is(results?.[1].id, rr1.id)
+  //@ts-expect-error
   t.is(results?.[1].meta.main_tag_rank, 2)
+  //@ts-expect-error
   t.is(results?.[1].meta.restaurant_rank, 1)
   t.is(results?.[2].id, rr3.id)
+  //@ts-expect-error
   t.is(results?.[2].meta.main_tag_rank, 3)
+  //@ts-expect-error
   t.is(results?.[2].meta.restaurant_rank, 3)
 })
 

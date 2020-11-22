@@ -11,10 +11,8 @@ const coords = region.coordinates
 
 const breakaway = {
   type: 'Polygon',
-  crs: {"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}},
-  coordinates: coords[3]
+  crs: { type: 'name', properties: { name: 'urn:ogc:def:crs:EPSG::4326' } },
+  coordinates: coords[3],
 }
 process.stdout.write(JSON.stringify(breakaway))
 //console.log(breakaway)
-
-

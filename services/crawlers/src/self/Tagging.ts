@@ -1,5 +1,6 @@
 import { sentryMessage } from '@dish/common'
 import {
+  DeepPartial,
   PhotoXref,
   RestaurantTag,
   Review,
@@ -33,7 +34,7 @@ export const GEM_UIID = 'da0e0c85-86b5-4b9e-b372-97e133eccb43'
 
 export class Tagging {
   crawler: Self
-  restaurant_tags: RestaurantTag[] = []
+  restaurant_tags: Partial<RestaurantTag>[] = []
   restaurant_tag_ratings: {
     [key: string]: number[]
   } = {}
@@ -78,7 +79,7 @@ export class Tagging {
     this.addRestaurantTags(await convertSimpleTagsToRestaurantTags(tags))
   }
 
-  addRestaurantTags(restaurant_tags: RestaurantTag[]) {
+  addRestaurantTags(restaurant_tags: Partial<RestaurantTag>[]) {
     this.restaurant_tags = [...this.restaurant_tags, ...restaurant_tags]
   }
 
@@ -163,7 +164,7 @@ export class Tagging {
       ...this._getYelpReviews(),
       ...this._getTripadvisorReviews(),
       ...this._getGoogleReviews(),
-    ]
+    ] as Review[]
     let all_sources = [...this.all_reviews, ...this._scanMenuItemsForTags()]
     all_sources = this.cleanAllSources(all_sources) as TextSource[]
     const reviews_with_sentiments = this.findDishesInText(all_sources)
@@ -197,11 +198,11 @@ export class Tagging {
     const all_possible_tags = await restaurantGetAllPossibleTags(
       this.crawler.restaurant
     )
-    const all_tag_photos: PhotoXref[] = []
+    const all_tag_photos: Partial<PhotoXref>[] = []
     const photos = this.getPhotosWithText()
     if (!photos) return []
     for (const tag of all_possible_tags) {
-      let restaurant_tag: RestaurantTag = {
+      let restaurant_tag = {
         tag_id: tag.id,
         // @ts-ignore
         photos: [] as string[],
@@ -215,7 +216,7 @@ export class Tagging {
             tag_id: tag.id,
             photo: {
               url: photo.url,
-            },
+            } as any,
           })
         }
       }
@@ -234,10 +235,8 @@ export class Tagging {
         text: y.media_data?.caption,
       }
     })
-    let tripadvisors = scrapeGetData(
-      this.crawler.tripadvisor,
-      'photos_with_captions'
-    )
+    let tripadvisors =
+      scrapeGetData(this.crawler.tripadvisor, 'photos_with_captions') || []
     tripadvisors = tripadvisors.map((t) => {
       return {
         url: t.url,
@@ -286,7 +285,7 @@ export class Tagging {
       const rating = this.measureSentiment(sentence)
       this.restaurant_tag_ratings[tag.id].push(rating)
       if (isReview(text_source)) {
-        const sentiment = {
+        const sentiment: any = {
           tag_id: tag.id,
           restaurant_id: this.crawler.restaurant.id,
           sentence,
@@ -311,7 +310,7 @@ export class Tagging {
       this.crawler.yelp?.data,
       'reviews'
     )
-    let reviews: Review[] = []
+    let reviews: Partial<Review>[] = []
     for (const yelp_review of yelp_reviews) {
       reviews.push({
         user_id: externalUserUUID,
@@ -336,7 +335,7 @@ export class Tagging {
       td_data,
       'reviews'
     )
-    let reviews: Review[] = []
+    let reviews: Partial<Review>[] = []
     for (const tripadvisor_review of tripadvisor_reviews) {
       if (!tripadvisor_review.username || tripadvisor_review.username == '') {
         sentryMessage('TRIPADVISOR: Review has no username', tripadvisor_review)
@@ -358,24 +357,20 @@ export class Tagging {
 
   _getGoogleReviews() {
     // @ts-ignore
-    const google_reviews = this.crawler.google?.data?.reviews || []
+    const google_reviews = this.crawler.google_review_api?.data?.reviews || []
     let reviews: Review[] = []
-    for (const google_review of google_reviews) {
-      const pieces = google_review.split('\n')
-      const rating = parseFloat(pieces[0].match(/(\d)/)[1])
-      const username = pieces[1]
-      const date = this._quantiseGoogleReviewDate(pieces[3])
-      const text = pieces[4]
+    for (const review of google_reviews) {
+      const date = this._quantiseGoogleReviewDate(review.ago_text)
       reviews.push({
         user_id: externalUserUUID,
         tag_id: globalTagId,
         source: 'google',
-        username: 'google-' + username,
+        username: 'google-' + review.user_id,
         authored_at: date,
         restaurant_id: this.crawler.restaurant.id,
-        text,
-        rating,
-      })
+        text: review.text,
+        rating: parseFloat(review.rating),
+      } as Review)
     }
     return reviews
   }
@@ -404,7 +399,7 @@ export class Tagging {
 
   deDepulicateTags() {
     const map = new Map()
-    this.restaurant_tags.forEach((rt: RestaurantTag) => {
+    this.restaurant_tags.forEach((rt) => {
       map.set(rt.tag_id, {
         ...rt,
         ...map.get(rt.tag_id),

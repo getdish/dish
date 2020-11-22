@@ -1,6 +1,5 @@
 import { query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { differenceBy } from 'lodash'
 
 import { allTags } from './allTags'
 import { FullTag } from './FullTag'

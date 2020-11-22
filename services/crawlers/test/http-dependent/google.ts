@@ -9,7 +9,7 @@ import {
   deleteAllScrapesBySourceID,
   scrapeFindOneBySourceID,
 } from '../../src/scrape-helpers'
-import { Tripadvisor } from '../../src/tripadvisor/Tripadvisor'
+import { tripadvisorGetFBC } from '../../src/tripadvisor/Tripadvisor'
 
 const name = 'Fresh Brew Coffee'
 
@@ -19,16 +19,7 @@ test.beforeEach(async () => {
   await deleteAllScrapesBySourceID(ID)
 })
 
-async function tripadvisorGetFBC() {
-  console.log('Getting Fresh Brew Coffee from Tripadvisor...')
-  const tripadvisor_fbc =
-    'Restaurant_Review-g60713-d3652374-Reviews-Fresh_Brew_Coffee-San_Francisco_California.html'
-  const t = new Tripadvisor()
-  await t.getRestaurant(tripadvisor_fbc)
-  console.log('...got Fresh Brew Coffee from Tripadvisor.')
-}
-
-test('Gets and persists a restaurant', async (t) => {
+test.skip('Gets and persists a restaurant', async (t) => {
   let restaurant = await restaurantFindOne({ name })
   if (!restaurant) {
     await tripadvisorGetFBC()

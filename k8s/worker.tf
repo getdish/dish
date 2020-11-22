@@ -33,8 +33,8 @@ resource "kubernetes_deployment" "worker" {
           image = "docker.k8s.dishapp.com/dish/worker"
           resources {
             limits {
-              cpu    = "1.15"
-              memory = "5Gi"
+              cpu    = "0.5"
+              memory = "0.5Gi"
             }
           }
           env {

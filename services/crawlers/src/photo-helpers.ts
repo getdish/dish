@@ -11,10 +11,13 @@ import {
   deleteByIDs,
   globalTagId,
   order_by,
+  photo,
   photo_constraint,
+  photo_xref,
   photo_xref_select_column,
   query,
   resolvedWithFields,
+  selectFields,
   uuid,
 } from '@dish/graph'
 import { chunk, clone, uniqBy } from 'lodash'
@@ -36,7 +39,7 @@ const DISH_HOOKS_ENDPOINT =
     ? prod_hooks_endpoint
     : dev_hooks_endpoint
 
-export async function photoUpsert(photos: PhotoXref[]) {
+export async function photoUpsert(photos: Partial<PhotoXref>[]) {
   if (photos.length == 0) return
   if (photos[0].restaurant_id && !photos[0].tag_id) {
     photos.map((p) => (p.tag_id = ZeroUUID))
@@ -50,13 +53,14 @@ export async function photoUpsert(photos: PhotoXref[]) {
   photos.map((p) => {
     if (!p.photo || !p.photo.url) throw 'Photo must have URL'
     p.photo.origin = clone(p.photo?.url)
+    //@ts-expect-error
     delete p.photo.url
   })
   await photoXrefUpsert(photos)
   await postUpsert(photos)
 }
 
-async function postUpsert(photos: PhotoXref[]) {
+async function postUpsert(photos: Partial<PhotoXref>[]) {
   if (process.env.NODE_ENV != 'test') {
     await uploadToDO(photos)
   } else {
@@ -67,7 +71,7 @@ async function postUpsert(photos: PhotoXref[]) {
   await updatePhotoQuality(photos)
 }
 
-export async function uploadToDO(photos: PhotoXref[]) {
+export async function uploadToDO(photos: Partial<PhotoXref>[]) {
   const not_uploaded = await findNotUploadedPhotos(photos)
   if (!not_uploaded) return
   const uploaded = await uploadToDOSpaces(not_uploaded)
@@ -81,7 +85,7 @@ export async function uploadToDO(photos: PhotoXref[]) {
   await photoBaseUpsert(updated, photo_constraint.photos_pkey)
 }
 
-export async function updatePhotoQuality(photos: PhotoXref[]) {
+export async function updatePhotoQuality(photos: Partial<PhotoXref>[]) {
   const unassessed_photos = await findUnassessedPhotos(photos)
   await assessNewPhotos(unassessed_photos)
 }
@@ -90,8 +94,8 @@ async function findNotUploadedRestaurantPhotos(
   restaurant_id: uuid
 ): Promise<PhotoXref[]> {
   const photos = await resolvedWithFields(
-    () =>
-      query.photo_xref({
+    () => {
+      const d = query.photo_xref({
         where: {
           _or: [
             {
@@ -117,8 +121,17 @@ async function findNotUploadedRestaurantPhotos(
           ],
         },
         distinct_on: [photo_xref_select_column.photo_id],
-      }),
-    { relations: ['photo'] }
+      })
+
+      return d
+    },
+    (v: photo_xref[]) => {
+      return v.map((p) => {
+        return {
+          ...selectFields(p, '*', 2),
+        }
+      })
+    }
   )
   return photos
 }
@@ -155,7 +168,13 @@ export async function findNotUploadedTagPhotos(
         },
         distinct_on: [photo_xref_select_column.photo_id],
       }),
-    { relations: ['photo'] }
+    (v: photo_xref[]) => {
+      return v.map((p) => {
+        return {
+          ...selectFields(p, '*', 2),
+        }
+      })
+    }
   )
   return photos
 }
@@ -178,7 +197,13 @@ async function unassessedPhotosForRestaurant(
         },
         distinct_on: [photo_xref_select_column.photo_id],
       }),
-    { relations: ['photo'] }
+    (v: photo_xref[]) => {
+      return v.map((p) => {
+        return {
+          ...selectFields(p, '*', 2),
+        }
+      })
+    }
   )
   return photos
 }
@@ -199,7 +224,13 @@ async function unassessedPhotosForTag(tag_id: uuid): Promise<PhotoXref[]> {
         },
         distinct_on: [photo_xref_select_column.photo_id],
       }),
-    { relations: ['photo'] }
+    (v: photo_xref[]) => {
+      return v.map((p) => {
+        return {
+          ...selectFields(p, '*', 2),
+        }
+      })
+    }
   )
   return photos
 }
@@ -225,8 +256,17 @@ async function unassessedPhotosForRestaurantTag(
         },
         distinct_on: [photo_xref_select_column.photo_id],
       }),
-    { relations: ['photo'] }
+    (v: photo_xref[]) => {
+      return v.map((p) => {
+        const d = {
+          ...selectFields(p, '*', 2),
+        }
+
+        return d
+      })
+    }
   )
+
   return photos
 }
 
@@ -279,7 +319,13 @@ export async function bestPhotosForTag(tag_id: uuid): Promise<PhotoXref[]> {
         ],
         limit: 10,
       }),
-    { relations: ['photo'] }
+    (v: photo_xref[]) => {
+      return v.map((p) => {
+        return {
+          ...selectFields(p, '*', 2),
+        }
+      })
+    }
   )
   return uniqBy(photos, (p) => p.photo_id)
 }
@@ -307,14 +353,20 @@ export async function bestPhotosForRestaurantTags(
         ],
         limit: 10,
       }),
-    { relations: ['photo'] }
+    (v: photo_xref[]) => {
+      return v.map((p) => {
+        return {
+          ...selectFields(p, '*', 2),
+        }
+      })
+    }
   )
   return uniqBy(photos, (p) => p.photo_id)
 }
 
 async function assessNewPhotos(unassessed_photos: string[]) {
   const IMAGE_QUALITY_API_BATCH_SIZE = 30
-  let assessed: PhotoBase[] = []
+  let assessed: Partial<PhotoBase>[] = []
   for (const batch of chunk(unassessed_photos, IMAGE_QUALITY_API_BATCH_SIZE)) {
     assessed.push(...(await assessPhotoQuality(batch)))
   }
@@ -358,7 +410,7 @@ async function assessPhotoQualityWithoutRetries(urls: string[]) {
     body: JSON.stringify(urls),
   })
   let results = await response.json()
-  let photo_bases: PhotoBase[] = []
+  let photo_bases: Partial<PhotoBase>[] = []
   for (const url of urls) {
     const result = results.find((r) => {
       const id = crypto.createHash('md5').update(url).digest('hex')
@@ -383,7 +435,9 @@ function proxyYelpCDN(photo: string) {
   )
 }
 
-async function findUnassessedPhotos(photos: PhotoXref[]): Promise<string[]> {
+async function findUnassessedPhotos(
+  photos: Partial<PhotoXref>[]
+): Promise<string[]> {
   let unassessed_photos: PhotoXref[] = []
   if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id == ZeroUUID) {
     unassessed_photos = await unassessedPhotosForRestaurant(
@@ -406,7 +460,7 @@ async function findUnassessedPhotos(photos: PhotoXref[]): Promise<string[]> {
   })
 }
 
-async function findNotUploadedPhotos(photos: PhotoXref[]) {
+async function findNotUploadedPhotos(photos: Partial<PhotoXref>[]) {
   let not_uploaded: PhotoXref[] = []
   if (photos[0].restaurant_id != ZeroUUID && photos[0].tag_id == ZeroUUID) {
     not_uploaded = await findNotUploadedRestaurantPhotos(
@@ -513,7 +567,13 @@ export async function findHeroImage(restaurant_id: uuid) {
       restaurant_id: restaurant_id,
       type: 'hero',
     },
-    { relations: ['photo'] }
+    (v: photo_xref[]) => {
+      return v.map((p) => {
+        return {
+          ...selectFields(p, '*', 2),
+        }
+      })
+    }
   )
 }
 
@@ -535,7 +595,7 @@ export async function uploadHeroImage(url: string, restaurant_id: uuid) {
         photo: {
           origin: url,
           url: do_url,
-        },
+        } as photo,
       },
     ])
   }

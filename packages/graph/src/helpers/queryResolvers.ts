@@ -1,11 +1,14 @@
-import { resolved } from '@o/gqless'
+import { merge } from 'lodash'
 
-import { resetQueryCache } from '../graphql/client'
-import { resetMutationCache } from '../graphql/mutation'
-import { CollectOptions, collectAll } from './collect'
+// import { resolved } from '@o/gqless'
+import { resolved, selectFields } from '../graphql/new-generated'
+
+// import { resetQueryCache } from '../graphql/client'
+// import { resetMutationCache } from '../graphql/mutation'
+// import { CollectOptions } from './collect'
 
 // just a helper that clears our cache after mutations for now
-export async function resolvedMutation<T extends Function>(
+export async function resolvedMutation<T extends () => unknown>(
   resolver: T
 ): Promise<
   T extends () => {
@@ -14,50 +17,52 @@ export async function resolvedMutation<T extends Function>(
     ? X
     : any
 > {
-  resetMutationCache()
-  const next = await resolved(resolver)
-  resetMutationCache()
-  // @ts-ignore
+  const next = await resolved(resolver, {
+    noCache: true,
+  })
+  //@ts-expect-error
   return next
 }
 
-export async function resolvedMutationWithFields<T extends Function>(
-  resolver: T,
-  options?: CollectOptions
-): Promise<
-  T extends () => {
-    returning: infer X
-  }
-    ? X
-    : any
-> {
+export async function resolvedMutationWithFields<T>(
+  resolver: () => T,
+  fields: (string | number)[] | '*' = '*',
+  fn?: (v: any) => unknown
+): Promise<T> {
+  //@ts-expect-error
   return await resolvedMutation(() => {
     const res = resolver()
-    return collectAll(res.returning, { ...options, type: 'mutation' })
+
+    const returning = (res as any).returning
+    const obj = selectFields(returning, fields as any) as any
+
+    if (fn) {
+      merge(obj, fn(returning))
+    }
+    return obj
   })
 }
 
 // WARNING TYPESCRIPT SLOW CLIFF
 // if you infer the return it destroys performance... :(
-export async function resolvedWithFields<T extends Function>(
+export async function resolvedWithFields<T extends () => unknown>(
   resolver: T,
-  options?: CollectOptions
+  fn?: (v: any) => unknown
 ): Promise<any> {
-  resetQueryCache()
   const next = await resolvedWithoutCache(() => {
     const res = resolver()
-    return collectAll(res, options) as any
+    const obj = selectFields(res as object, '*', 2)
+    if (fn) {
+      merge(obj, fn(res))
+    }
+    return obj
   })
-  resetQueryCache()
   return next
 }
 
-export async function resolvedWithoutCache<T extends Function>(
-  resolver: T
-): Promise<T extends () => infer U ? U : any> {
-  resetQueryCache()
-  const next = await resolved(resolver)
-  resetQueryCache()
-  // @ts-ignore
+export async function resolvedWithoutCache<T>(resolver: () => T): Promise<T> {
+  const next = await resolved(resolver, {
+    noCache: true,
+  })
   return next
 }

@@ -58,7 +58,7 @@ test('Parsing Fiverr text files', async (t) => {
   t.is(khichdi_dish_tag.parentId, country_tag.id)
   t.truthy(
     khichdi_dish_tag.categories
-      .map((i) => i.category.name)
+      .map((i) => i.category?.name)
       .includes('Test Vegetarian')
   )
   const diakritik_dish_tag = (await tagFindOneWithCategories({
