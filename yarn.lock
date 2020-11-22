@@ -1870,7 +1870,7 @@
     prettier "^2.2.0"
     regenerator-runtime "^0.13.7"
 
-"@dish/gqless-react@^0.0.1":
+"@dish/gqless-react@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@dish/gqless-react/-/gqless-react-0.1.1.tgz#36890ae3595bd7195cc1c3184b44a58868732b14"
   integrity sha512-tJ/+Pr1ioEcZG23lmXO2EaUn+/6AiY3kVO6YguNMk4ijTFEDPJtsACCYDIS3DNuG53rvRX5Tbx9XEMJaIMf9QQ==
