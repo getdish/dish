@@ -1869,12 +1869,12 @@
   dependencies:
     arrify "^1.0.1"
 
-"@dish/gqless-cli@^0.1.16":
-  version "0.1.16"
-  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-0.1.16.tgz#44a6ab4c1ffe251af98a3d4d39cb1ba13d83d481"
-  integrity sha512-cZDzES/qDpqgNHxw03R307XnKo8IIMQ7CXj+kXoTCx1dlN5eRmlVBzpHL/VrhohYqdBr2olEfoMQj55TJwN1gQ==
+"@dish/gqless-cli@^0.1.18":
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-0.1.18.tgz#a2835809f6c2e40b47d225974a52d9214a8d6f12"
+  integrity sha512-d3Uto+RLUv9CpNeDlMk2EcKMuwhzB1bSZwKqy6BCfSr7C1d205/MaEIQQT5rqMsXl7VI3IyknxQ5SAAqT90+HQ==
   dependencies:
-    "@dish/gqless" "^1.0.12"
+    "@dish/gqless" "^1.0.14"
     "@graphql-codegen/core" "^1.17.8"
     "@graphql-codegen/typescript" "^1.17.11"
     "@graphql-tools/delegate" "^7.0.5"
@@ -1888,18 +1888,18 @@
     prettier "^2.2.0"
     regenerator-runtime "^0.13.7"
 
-"@dish/gqless-react@^0.0.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@dish/gqless-react/-/gqless-react-0.1.1.tgz#36890ae3595bd7195cc1c3184b44a58868732b14"
-  integrity sha512-tJ/+Pr1ioEcZG23lmXO2EaUn+/6AiY3kVO6YguNMk4ijTFEDPJtsACCYDIS3DNuG53rvRX5Tbx9XEMJaIMf9QQ==
+"@dish/gqless-react@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-react/-/gqless-react-0.1.2.tgz#f906cab27c90941a1b7f10f1be55e443816bc89b"
+  integrity sha512-zQN+5GrwnIgj8L9mh9YJLh7tLo93BQ7/ZAAjc1cudnS4F6T6+EMWAuhFZULeDijvhW3Hf/w6lW7l58VQRAT1Lg==
   dependencies:
     lodash "^4.17.20"
     lodash-es "^4.17.15"
 
-"@dish/gqless@^1.0.12":
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-1.0.12.tgz#b85d814a023d9d81e22a2b3f3984c6fc74e11d16"
-  integrity sha512-kqceH89zO6Ig0NUzKcecGElI8Q31ZCybmuQpQefstnmv3FZQGfCbJSgaImCXFouIvbeK/zAvJWQuZzrwgYs55g==
+"@dish/gqless@^1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-1.0.14.tgz#e56085c06c0e85897235f181d171bfa74fc322fb"
+  integrity sha512-E35R5LDg47Zzv/QelDvwZTJpwVaCwDhMchdHBSVweLnlCtZ+fOMquzKTDjndenXgfiT8iy1b6Gj8WIXI7TqyOg==
   dependencies:
     graphql "^15.4.0"
     lodash "^4.17.20"
