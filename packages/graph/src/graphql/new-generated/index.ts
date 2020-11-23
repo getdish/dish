@@ -8158,12 +8158,12 @@ export interface Subscription {
 export interface menu_item {
   __typename: 'menu_item'
   created_at: ScalarsEnums['timestamptz']
-  description: Maybe<ScalarsEnums['String']>
+  description?: Maybe<ScalarsEnums['String']>
   id: ScalarsEnums['uuid']
-  image: Maybe<ScalarsEnums['String']>
-  location: Maybe<ScalarsEnums['geometry']>
+  image?: Maybe<ScalarsEnums['String']>
+  location?: Maybe<ScalarsEnums['geometry']>
   name: ScalarsEnums['String']
-  price: Maybe<ScalarsEnums['Int']>
+  price?: Maybe<ScalarsEnums['Int']>
   restaurant: restaurant
   restaurant_id: ScalarsEnums['uuid']
   updated_at: ScalarsEnums['timestamptz']
@@ -8171,55 +8171,55 @@ export interface menu_item {
 
 export interface menu_item_aggregate {
   __typename: 'menu_item_aggregate'
-  aggregate: Maybe<menu_item_aggregate_fields>
+  aggregate?: Maybe<menu_item_aggregate_fields>
   nodes: Array<menu_item>
 }
 
 export interface menu_item_aggregate_fields {
   __typename: 'menu_item_aggregate_fields'
-  avg: Maybe<menu_item_avg_fields>
+  avg?: Maybe<menu_item_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
   }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<menu_item_max_fields>
-  min: Maybe<menu_item_min_fields>
-  stddev: Maybe<menu_item_stddev_fields>
-  stddev_pop: Maybe<menu_item_stddev_pop_fields>
-  stddev_samp: Maybe<menu_item_stddev_samp_fields>
-  sum: Maybe<menu_item_sum_fields>
-  var_pop: Maybe<menu_item_var_pop_fields>
-  var_samp: Maybe<menu_item_var_samp_fields>
-  variance: Maybe<menu_item_variance_fields>
+  max?: Maybe<menu_item_max_fields>
+  min?: Maybe<menu_item_min_fields>
+  stddev?: Maybe<menu_item_stddev_fields>
+  stddev_pop?: Maybe<menu_item_stddev_pop_fields>
+  stddev_samp?: Maybe<menu_item_stddev_samp_fields>
+  sum?: Maybe<menu_item_sum_fields>
+  var_pop?: Maybe<menu_item_var_pop_fields>
+  var_samp?: Maybe<menu_item_var_samp_fields>
+  variance?: Maybe<menu_item_variance_fields>
 }
 
 export interface menu_item_avg_fields {
   __typename: 'menu_item_avg_fields'
-  price: Maybe<ScalarsEnums['Float']>
+  price?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_max_fields {
   __typename: 'menu_item_max_fields'
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  description: Maybe<ScalarsEnums['String']>
-  id: Maybe<ScalarsEnums['uuid']>
-  image: Maybe<ScalarsEnums['String']>
-  name: Maybe<ScalarsEnums['String']>
-  price: Maybe<ScalarsEnums['Int']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  description?: Maybe<ScalarsEnums['String']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  image?: Maybe<ScalarsEnums['String']>
+  name?: Maybe<ScalarsEnums['String']>
+  price?: Maybe<ScalarsEnums['Int']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
 }
 
 export interface menu_item_min_fields {
   __typename: 'menu_item_min_fields'
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  description: Maybe<ScalarsEnums['String']>
-  id: Maybe<ScalarsEnums['uuid']>
-  image: Maybe<ScalarsEnums['String']>
-  name: Maybe<ScalarsEnums['String']>
-  price: Maybe<ScalarsEnums['Int']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  description?: Maybe<ScalarsEnums['String']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  image?: Maybe<ScalarsEnums['String']>
+  name?: Maybe<ScalarsEnums['String']>
+  price?: Maybe<ScalarsEnums['Int']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
 }
 
 export interface menu_item_mutation_response {
@@ -8230,37 +8230,37 @@ export interface menu_item_mutation_response {
 
 export interface menu_item_stddev_fields {
   __typename: 'menu_item_stddev_fields'
-  price: Maybe<ScalarsEnums['Float']>
+  price?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_stddev_pop_fields {
   __typename: 'menu_item_stddev_pop_fields'
-  price: Maybe<ScalarsEnums['Float']>
+  price?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_stddev_samp_fields {
   __typename: 'menu_item_stddev_samp_fields'
-  price: Maybe<ScalarsEnums['Float']>
+  price?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_sum_fields {
   __typename: 'menu_item_sum_fields'
-  price: Maybe<ScalarsEnums['Int']>
+  price?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface menu_item_var_pop_fields {
   __typename: 'menu_item_var_pop_fields'
-  price: Maybe<ScalarsEnums['Float']>
+  price?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_var_samp_fields {
   __typename: 'menu_item_var_samp_fields'
-  price: Maybe<ScalarsEnums['Float']>
+  price?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item_variance_fields {
   __typename: 'menu_item_variance_fields'
-  price: Maybe<ScalarsEnums['Float']>
+  price?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface opening_hours {
@@ -8273,7 +8273,7 @@ export interface opening_hours {
 
 export interface opening_hours_aggregate {
   __typename: 'opening_hours_aggregate'
-  aggregate: Maybe<opening_hours_aggregate_fields>
+  aggregate?: Maybe<opening_hours_aggregate_fields>
   nodes: Array<opening_hours>
 }
 
@@ -8283,20 +8283,20 @@ export interface opening_hours_aggregate_fields {
     columns?: Maybe<Array<ScalarsEnums['opening_hours_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
   }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<opening_hours_max_fields>
-  min: Maybe<opening_hours_min_fields>
+  max?: Maybe<opening_hours_max_fields>
+  min?: Maybe<opening_hours_min_fields>
 }
 
 export interface opening_hours_max_fields {
   __typename: 'opening_hours_max_fields'
-  id: Maybe<ScalarsEnums['uuid']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 export interface opening_hours_min_fields {
   __typename: 'opening_hours_min_fields'
-  id: Maybe<ScalarsEnums['uuid']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 export interface opening_hours_mutation_response {
@@ -8309,59 +8309,59 @@ export interface photo {
   __typename: 'photo'
   created_at: ScalarsEnums['timestamptz']
   id: ScalarsEnums['uuid']
-  origin: Maybe<ScalarsEnums['String']>
-  quality: Maybe<ScalarsEnums['numeric']>
+  origin?: Maybe<ScalarsEnums['String']>
+  quality?: Maybe<ScalarsEnums['numeric']>
   updated_at: ScalarsEnums['timestamptz']
-  url: Maybe<ScalarsEnums['String']>
+  url?: Maybe<ScalarsEnums['String']>
 }
 
 export interface photo_aggregate {
   __typename: 'photo_aggregate'
-  aggregate: Maybe<photo_aggregate_fields>
+  aggregate?: Maybe<photo_aggregate_fields>
   nodes: Array<photo>
 }
 
 export interface photo_aggregate_fields {
   __typename: 'photo_aggregate_fields'
-  avg: Maybe<photo_avg_fields>
+  avg?: Maybe<photo_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['photo_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
   }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<photo_max_fields>
-  min: Maybe<photo_min_fields>
-  stddev: Maybe<photo_stddev_fields>
-  stddev_pop: Maybe<photo_stddev_pop_fields>
-  stddev_samp: Maybe<photo_stddev_samp_fields>
-  sum: Maybe<photo_sum_fields>
-  var_pop: Maybe<photo_var_pop_fields>
-  var_samp: Maybe<photo_var_samp_fields>
-  variance: Maybe<photo_variance_fields>
+  max?: Maybe<photo_max_fields>
+  min?: Maybe<photo_min_fields>
+  stddev?: Maybe<photo_stddev_fields>
+  stddev_pop?: Maybe<photo_stddev_pop_fields>
+  stddev_samp?: Maybe<photo_stddev_samp_fields>
+  sum?: Maybe<photo_sum_fields>
+  var_pop?: Maybe<photo_var_pop_fields>
+  var_samp?: Maybe<photo_var_samp_fields>
+  variance?: Maybe<photo_variance_fields>
 }
 
 export interface photo_avg_fields {
   __typename: 'photo_avg_fields'
-  quality: Maybe<ScalarsEnums['Float']>
+  quality?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_max_fields {
   __typename: 'photo_max_fields'
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  id: Maybe<ScalarsEnums['uuid']>
-  origin: Maybe<ScalarsEnums['String']>
-  quality: Maybe<ScalarsEnums['numeric']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
-  url: Maybe<ScalarsEnums['String']>
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  origin?: Maybe<ScalarsEnums['String']>
+  quality?: Maybe<ScalarsEnums['numeric']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  url?: Maybe<ScalarsEnums['String']>
 }
 
 export interface photo_min_fields {
   __typename: 'photo_min_fields'
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  id: Maybe<ScalarsEnums['uuid']>
-  origin: Maybe<ScalarsEnums['String']>
-  quality: Maybe<ScalarsEnums['numeric']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
-  url: Maybe<ScalarsEnums['String']>
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  origin?: Maybe<ScalarsEnums['String']>
+  quality?: Maybe<ScalarsEnums['numeric']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  url?: Maybe<ScalarsEnums['String']>
 }
 
 export interface photo_mutation_response {
@@ -8372,37 +8372,37 @@ export interface photo_mutation_response {
 
 export interface photo_stddev_fields {
   __typename: 'photo_stddev_fields'
-  quality: Maybe<ScalarsEnums['Float']>
+  quality?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_stddev_pop_fields {
   __typename: 'photo_stddev_pop_fields'
-  quality: Maybe<ScalarsEnums['Float']>
+  quality?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_stddev_samp_fields {
   __typename: 'photo_stddev_samp_fields'
-  quality: Maybe<ScalarsEnums['Float']>
+  quality?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_sum_fields {
   __typename: 'photo_sum_fields'
-  quality: Maybe<ScalarsEnums['numeric']>
+  quality?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface photo_var_pop_fields {
   __typename: 'photo_var_pop_fields'
-  quality: Maybe<ScalarsEnums['Float']>
+  quality?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_var_samp_fields {
   __typename: 'photo_var_samp_fields'
-  quality: Maybe<ScalarsEnums['Float']>
+  quality?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_variance_fields {
   __typename: 'photo_variance_fields'
-  quality: Maybe<ScalarsEnums['Float']>
+  quality?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface photo_xref {
@@ -8412,12 +8412,12 @@ export interface photo_xref {
   photo_id: ScalarsEnums['uuid']
   restaurant_id: ScalarsEnums['uuid']
   tag_id: ScalarsEnums['uuid']
-  type: Maybe<ScalarsEnums['String']>
+  type?: Maybe<ScalarsEnums['String']>
 }
 
 export interface photo_xref_aggregate {
   __typename: 'photo_xref_aggregate'
-  aggregate: Maybe<photo_xref_aggregate_fields>
+  aggregate?: Maybe<photo_xref_aggregate_fields>
   nodes: Array<photo_xref>
 }
 
@@ -8427,26 +8427,26 @@ export interface photo_xref_aggregate_fields {
     columns?: Maybe<Array<ScalarsEnums['photo_xref_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
   }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<photo_xref_max_fields>
-  min: Maybe<photo_xref_min_fields>
+  max?: Maybe<photo_xref_max_fields>
+  min?: Maybe<photo_xref_min_fields>
 }
 
 export interface photo_xref_max_fields {
   __typename: 'photo_xref_max_fields'
-  id: Maybe<ScalarsEnums['uuid']>
-  photo_id: Maybe<ScalarsEnums['uuid']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-  tag_id: Maybe<ScalarsEnums['uuid']>
-  type: Maybe<ScalarsEnums['String']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  photo_id?: Maybe<ScalarsEnums['uuid']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  tag_id?: Maybe<ScalarsEnums['uuid']>
+  type?: Maybe<ScalarsEnums['String']>
 }
 
 export interface photo_xref_min_fields {
   __typename: 'photo_xref_min_fields'
-  id: Maybe<ScalarsEnums['uuid']>
-  photo_id: Maybe<ScalarsEnums['uuid']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-  tag_id: Maybe<ScalarsEnums['uuid']>
-  type: Maybe<ScalarsEnums['String']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  photo_id?: Maybe<ScalarsEnums['uuid']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  tag_id?: Maybe<ScalarsEnums['uuid']>
+  type?: Maybe<ScalarsEnums['String']>
 }
 
 export interface photo_xref_mutation_response {
@@ -8457,12 +8457,12 @@ export interface photo_xref_mutation_response {
 
 export interface restaurant {
   __typename: 'restaurant'
-  address: Maybe<ScalarsEnums['String']>
-  city: Maybe<ScalarsEnums['String']>
+  address?: Maybe<ScalarsEnums['String']>
+  city?: Maybe<ScalarsEnums['String']>
   created_at: ScalarsEnums['timestamptz']
-  description: Maybe<ScalarsEnums['String']>
-  downvotes: Maybe<ScalarsEnums['numeric']>
-  geocoder_id: Maybe<ScalarsEnums['String']>
+  description?: Maybe<ScalarsEnums['String']>
+  downvotes?: Maybe<ScalarsEnums['numeric']>
+  geocoder_id?: Maybe<ScalarsEnums['String']>
   headlines: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
@@ -8470,8 +8470,8 @@ export interface restaurant {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
   id: ScalarsEnums['uuid']
-  image: Maybe<ScalarsEnums['String']>
-  is_open_now: Maybe<ScalarsEnums['Boolean']>
+  image?: Maybe<ScalarsEnums['String']>
+  is_open_now?: Maybe<ScalarsEnums['Boolean']>
   location: ScalarsEnums['geometry']
   menu_items: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
@@ -8488,12 +8488,12 @@ export interface restaurant {
     where?: Maybe<menu_item_bool_exp>
   }) => menu_item_aggregate
   name: ScalarsEnums['String']
-  oldest_review_date: Maybe<ScalarsEnums['timestamptz']>
+  oldest_review_date?: Maybe<ScalarsEnums['timestamptz']>
   photos: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
-  price_range: Maybe<ScalarsEnums['String']>
-  rating: Maybe<ScalarsEnums['numeric']>
+  price_range?: Maybe<ScalarsEnums['String']>
+  rating?: Maybe<ScalarsEnums['numeric']>
   rating_factors: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
@@ -8511,7 +8511,7 @@ export interface restaurant {
     order_by?: Maybe<Array<review_order_by>>
     where?: Maybe<review_bool_exp>
   }) => review_aggregate
-  score: Maybe<ScalarsEnums['numeric']>
+  score?: Maybe<ScalarsEnums['numeric']>
   score_breakdown: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
@@ -8522,8 +8522,8 @@ export interface restaurant {
   sources: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
-  state: Maybe<ScalarsEnums['String']>
-  summary: Maybe<ScalarsEnums['String']>
+  state?: Maybe<ScalarsEnums['String']>
+  summary?: Maybe<ScalarsEnums['String']>
   tag_names: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
@@ -8541,7 +8541,7 @@ export interface restaurant {
     order_by?: Maybe<Array<restaurant_tag_order_by>>
     where?: Maybe<restaurant_tag_bool_exp>
   }) => restaurant_tag_aggregate
-  telephone: Maybe<ScalarsEnums['String']>
+  telephone?: Maybe<ScalarsEnums['String']>
   top_tags: (args: {
     args: restaurant_top_tags_args
     distinct_on?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
@@ -8551,96 +8551,96 @@ export interface restaurant {
     where?: Maybe<restaurant_tag_bool_exp>
   }) => Maybe<Array<restaurant_tag>>
   updated_at: ScalarsEnums['timestamptz']
-  upvotes: Maybe<ScalarsEnums['numeric']>
-  votes_ratio: Maybe<ScalarsEnums['numeric']>
-  website: Maybe<ScalarsEnums['String']>
-  zip: Maybe<ScalarsEnums['numeric']>
+  upvotes?: Maybe<ScalarsEnums['numeric']>
+  votes_ratio?: Maybe<ScalarsEnums['numeric']>
+  website?: Maybe<ScalarsEnums['String']>
+  zip?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface restaurant_aggregate {
   __typename: 'restaurant_aggregate'
-  aggregate: Maybe<restaurant_aggregate_fields>
+  aggregate?: Maybe<restaurant_aggregate_fields>
   nodes: Array<restaurant>
 }
 
 export interface restaurant_aggregate_fields {
   __typename: 'restaurant_aggregate_fields'
-  avg: Maybe<restaurant_avg_fields>
+  avg?: Maybe<restaurant_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['restaurant_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
   }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<restaurant_max_fields>
-  min: Maybe<restaurant_min_fields>
-  stddev: Maybe<restaurant_stddev_fields>
-  stddev_pop: Maybe<restaurant_stddev_pop_fields>
-  stddev_samp: Maybe<restaurant_stddev_samp_fields>
-  sum: Maybe<restaurant_sum_fields>
-  var_pop: Maybe<restaurant_var_pop_fields>
-  var_samp: Maybe<restaurant_var_samp_fields>
-  variance: Maybe<restaurant_variance_fields>
+  max?: Maybe<restaurant_max_fields>
+  min?: Maybe<restaurant_min_fields>
+  stddev?: Maybe<restaurant_stddev_fields>
+  stddev_pop?: Maybe<restaurant_stddev_pop_fields>
+  stddev_samp?: Maybe<restaurant_stddev_samp_fields>
+  sum?: Maybe<restaurant_sum_fields>
+  var_pop?: Maybe<restaurant_var_pop_fields>
+  var_samp?: Maybe<restaurant_var_samp_fields>
+  variance?: Maybe<restaurant_variance_fields>
 }
 
 export interface restaurant_avg_fields {
   __typename: 'restaurant_avg_fields'
-  downvotes: Maybe<ScalarsEnums['Float']>
-  rating: Maybe<ScalarsEnums['Float']>
-  score: Maybe<ScalarsEnums['Float']>
-  upvotes: Maybe<ScalarsEnums['Float']>
-  votes_ratio: Maybe<ScalarsEnums['Float']>
-  zip: Maybe<ScalarsEnums['Float']>
+  downvotes?: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  score?: Maybe<ScalarsEnums['Float']>
+  upvotes?: Maybe<ScalarsEnums['Float']>
+  votes_ratio?: Maybe<ScalarsEnums['Float']>
+  zip?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface restaurant_max_fields {
   __typename: 'restaurant_max_fields'
-  address: Maybe<ScalarsEnums['String']>
-  city: Maybe<ScalarsEnums['String']>
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  description: Maybe<ScalarsEnums['String']>
-  downvotes: Maybe<ScalarsEnums['numeric']>
-  geocoder_id: Maybe<ScalarsEnums['String']>
-  id: Maybe<ScalarsEnums['uuid']>
-  image: Maybe<ScalarsEnums['String']>
-  name: Maybe<ScalarsEnums['String']>
-  oldest_review_date: Maybe<ScalarsEnums['timestamptz']>
-  price_range: Maybe<ScalarsEnums['String']>
-  rating: Maybe<ScalarsEnums['numeric']>
-  score: Maybe<ScalarsEnums['numeric']>
-  slug: Maybe<ScalarsEnums['String']>
-  state: Maybe<ScalarsEnums['String']>
-  summary: Maybe<ScalarsEnums['String']>
-  telephone: Maybe<ScalarsEnums['String']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
-  upvotes: Maybe<ScalarsEnums['numeric']>
-  votes_ratio: Maybe<ScalarsEnums['numeric']>
-  website: Maybe<ScalarsEnums['String']>
-  zip: Maybe<ScalarsEnums['numeric']>
+  address?: Maybe<ScalarsEnums['String']>
+  city?: Maybe<ScalarsEnums['String']>
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  description?: Maybe<ScalarsEnums['String']>
+  downvotes?: Maybe<ScalarsEnums['numeric']>
+  geocoder_id?: Maybe<ScalarsEnums['String']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  image?: Maybe<ScalarsEnums['String']>
+  name?: Maybe<ScalarsEnums['String']>
+  oldest_review_date?: Maybe<ScalarsEnums['timestamptz']>
+  price_range?: Maybe<ScalarsEnums['String']>
+  rating?: Maybe<ScalarsEnums['numeric']>
+  score?: Maybe<ScalarsEnums['numeric']>
+  slug?: Maybe<ScalarsEnums['String']>
+  state?: Maybe<ScalarsEnums['String']>
+  summary?: Maybe<ScalarsEnums['String']>
+  telephone?: Maybe<ScalarsEnums['String']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  upvotes?: Maybe<ScalarsEnums['numeric']>
+  votes_ratio?: Maybe<ScalarsEnums['numeric']>
+  website?: Maybe<ScalarsEnums['String']>
+  zip?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface restaurant_min_fields {
   __typename: 'restaurant_min_fields'
-  address: Maybe<ScalarsEnums['String']>
-  city: Maybe<ScalarsEnums['String']>
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  description: Maybe<ScalarsEnums['String']>
-  downvotes: Maybe<ScalarsEnums['numeric']>
-  geocoder_id: Maybe<ScalarsEnums['String']>
-  id: Maybe<ScalarsEnums['uuid']>
-  image: Maybe<ScalarsEnums['String']>
-  name: Maybe<ScalarsEnums['String']>
-  oldest_review_date: Maybe<ScalarsEnums['timestamptz']>
-  price_range: Maybe<ScalarsEnums['String']>
-  rating: Maybe<ScalarsEnums['numeric']>
-  score: Maybe<ScalarsEnums['numeric']>
-  slug: Maybe<ScalarsEnums['String']>
-  state: Maybe<ScalarsEnums['String']>
-  summary: Maybe<ScalarsEnums['String']>
-  telephone: Maybe<ScalarsEnums['String']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
-  upvotes: Maybe<ScalarsEnums['numeric']>
-  votes_ratio: Maybe<ScalarsEnums['numeric']>
-  website: Maybe<ScalarsEnums['String']>
-  zip: Maybe<ScalarsEnums['numeric']>
+  address?: Maybe<ScalarsEnums['String']>
+  city?: Maybe<ScalarsEnums['String']>
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  description?: Maybe<ScalarsEnums['String']>
+  downvotes?: Maybe<ScalarsEnums['numeric']>
+  geocoder_id?: Maybe<ScalarsEnums['String']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  image?: Maybe<ScalarsEnums['String']>
+  name?: Maybe<ScalarsEnums['String']>
+  oldest_review_date?: Maybe<ScalarsEnums['timestamptz']>
+  price_range?: Maybe<ScalarsEnums['String']>
+  rating?: Maybe<ScalarsEnums['numeric']>
+  score?: Maybe<ScalarsEnums['numeric']>
+  slug?: Maybe<ScalarsEnums['String']>
+  state?: Maybe<ScalarsEnums['String']>
+  summary?: Maybe<ScalarsEnums['String']>
+  telephone?: Maybe<ScalarsEnums['String']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  upvotes?: Maybe<ScalarsEnums['numeric']>
+  votes_ratio?: Maybe<ScalarsEnums['numeric']>
+  website?: Maybe<ScalarsEnums['String']>
+  zip?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface restaurant_mutation_response {
@@ -8651,56 +8651,56 @@ export interface restaurant_mutation_response {
 
 export interface restaurant_stddev_fields {
   __typename: 'restaurant_stddev_fields'
-  downvotes: Maybe<ScalarsEnums['Float']>
-  rating: Maybe<ScalarsEnums['Float']>
-  score: Maybe<ScalarsEnums['Float']>
-  upvotes: Maybe<ScalarsEnums['Float']>
-  votes_ratio: Maybe<ScalarsEnums['Float']>
-  zip: Maybe<ScalarsEnums['Float']>
+  downvotes?: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  score?: Maybe<ScalarsEnums['Float']>
+  upvotes?: Maybe<ScalarsEnums['Float']>
+  votes_ratio?: Maybe<ScalarsEnums['Float']>
+  zip?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface restaurant_stddev_pop_fields {
   __typename: 'restaurant_stddev_pop_fields'
-  downvotes: Maybe<ScalarsEnums['Float']>
-  rating: Maybe<ScalarsEnums['Float']>
-  score: Maybe<ScalarsEnums['Float']>
-  upvotes: Maybe<ScalarsEnums['Float']>
-  votes_ratio: Maybe<ScalarsEnums['Float']>
-  zip: Maybe<ScalarsEnums['Float']>
+  downvotes?: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  score?: Maybe<ScalarsEnums['Float']>
+  upvotes?: Maybe<ScalarsEnums['Float']>
+  votes_ratio?: Maybe<ScalarsEnums['Float']>
+  zip?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface restaurant_stddev_samp_fields {
   __typename: 'restaurant_stddev_samp_fields'
-  downvotes: Maybe<ScalarsEnums['Float']>
-  rating: Maybe<ScalarsEnums['Float']>
-  score: Maybe<ScalarsEnums['Float']>
-  upvotes: Maybe<ScalarsEnums['Float']>
-  votes_ratio: Maybe<ScalarsEnums['Float']>
-  zip: Maybe<ScalarsEnums['Float']>
+  downvotes?: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  score?: Maybe<ScalarsEnums['Float']>
+  upvotes?: Maybe<ScalarsEnums['Float']>
+  votes_ratio?: Maybe<ScalarsEnums['Float']>
+  zip?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface restaurant_sum_fields {
   __typename: 'restaurant_sum_fields'
-  downvotes: Maybe<ScalarsEnums['numeric']>
-  rating: Maybe<ScalarsEnums['numeric']>
-  score: Maybe<ScalarsEnums['numeric']>
-  upvotes: Maybe<ScalarsEnums['numeric']>
-  votes_ratio: Maybe<ScalarsEnums['numeric']>
-  zip: Maybe<ScalarsEnums['numeric']>
+  downvotes?: Maybe<ScalarsEnums['numeric']>
+  rating?: Maybe<ScalarsEnums['numeric']>
+  score?: Maybe<ScalarsEnums['numeric']>
+  upvotes?: Maybe<ScalarsEnums['numeric']>
+  votes_ratio?: Maybe<ScalarsEnums['numeric']>
+  zip?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface restaurant_tag {
   __typename: 'restaurant_tag'
-  downvotes: Maybe<ScalarsEnums['numeric']>
+  downvotes?: Maybe<ScalarsEnums['numeric']>
   id: ScalarsEnums['uuid']
   photos: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
-  rank: Maybe<ScalarsEnums['Int']>
-  rating: Maybe<ScalarsEnums['numeric']>
+  rank?: Maybe<ScalarsEnums['Int']>
+  rating?: Maybe<ScalarsEnums['numeric']>
   restaurant: restaurant
   restaurant_id: ScalarsEnums['uuid']
-  review_mentions_count: Maybe<ScalarsEnums['numeric']>
+  review_mentions_count?: Maybe<ScalarsEnums['numeric']>
   reviews: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['review_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -8715,7 +8715,7 @@ export interface restaurant_tag {
     order_by?: Maybe<Array<review_order_by>>
     where?: Maybe<review_bool_exp>
   }) => review_aggregate
-  score: Maybe<ScalarsEnums['numeric']>
+  score?: Maybe<ScalarsEnums['numeric']>
   score_breakdown: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
@@ -8742,71 +8742,71 @@ export interface restaurant_tag {
   }) => Maybe<ScalarsEnums['jsonb']>
   tag: tag
   tag_id: ScalarsEnums['uuid']
-  upvotes: Maybe<ScalarsEnums['numeric']>
-  votes_ratio: Maybe<ScalarsEnums['numeric']>
+  upvotes?: Maybe<ScalarsEnums['numeric']>
+  votes_ratio?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface restaurant_tag_aggregate {
   __typename: 'restaurant_tag_aggregate'
-  aggregate: Maybe<restaurant_tag_aggregate_fields>
+  aggregate?: Maybe<restaurant_tag_aggregate_fields>
   nodes: Array<restaurant_tag>
 }
 
 export interface restaurant_tag_aggregate_fields {
   __typename: 'restaurant_tag_aggregate_fields'
-  avg: Maybe<restaurant_tag_avg_fields>
+  avg?: Maybe<restaurant_tag_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
   }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<restaurant_tag_max_fields>
-  min: Maybe<restaurant_tag_min_fields>
-  stddev: Maybe<restaurant_tag_stddev_fields>
-  stddev_pop: Maybe<restaurant_tag_stddev_pop_fields>
-  stddev_samp: Maybe<restaurant_tag_stddev_samp_fields>
-  sum: Maybe<restaurant_tag_sum_fields>
-  var_pop: Maybe<restaurant_tag_var_pop_fields>
-  var_samp: Maybe<restaurant_tag_var_samp_fields>
-  variance: Maybe<restaurant_tag_variance_fields>
+  max?: Maybe<restaurant_tag_max_fields>
+  min?: Maybe<restaurant_tag_min_fields>
+  stddev?: Maybe<restaurant_tag_stddev_fields>
+  stddev_pop?: Maybe<restaurant_tag_stddev_pop_fields>
+  stddev_samp?: Maybe<restaurant_tag_stddev_samp_fields>
+  sum?: Maybe<restaurant_tag_sum_fields>
+  var_pop?: Maybe<restaurant_tag_var_pop_fields>
+  var_samp?: Maybe<restaurant_tag_var_samp_fields>
+  variance?: Maybe<restaurant_tag_variance_fields>
 }
 
 export interface restaurant_tag_avg_fields {
   __typename: 'restaurant_tag_avg_fields'
-  downvotes: Maybe<ScalarsEnums['Float']>
-  rank: Maybe<ScalarsEnums['Float']>
-  rating: Maybe<ScalarsEnums['Float']>
-  review_mentions_count: Maybe<ScalarsEnums['Float']>
-  score: Maybe<ScalarsEnums['Float']>
-  upvotes: Maybe<ScalarsEnums['Float']>
-  votes_ratio: Maybe<ScalarsEnums['Float']>
+  downvotes?: Maybe<ScalarsEnums['Float']>
+  rank?: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  review_mentions_count?: Maybe<ScalarsEnums['Float']>
+  score?: Maybe<ScalarsEnums['Float']>
+  upvotes?: Maybe<ScalarsEnums['Float']>
+  votes_ratio?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface restaurant_tag_max_fields {
   __typename: 'restaurant_tag_max_fields'
-  downvotes: Maybe<ScalarsEnums['numeric']>
-  id: Maybe<ScalarsEnums['uuid']>
-  rank: Maybe<ScalarsEnums['Int']>
-  rating: Maybe<ScalarsEnums['numeric']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-  review_mentions_count: Maybe<ScalarsEnums['numeric']>
-  score: Maybe<ScalarsEnums['numeric']>
-  tag_id: Maybe<ScalarsEnums['uuid']>
-  upvotes: Maybe<ScalarsEnums['numeric']>
-  votes_ratio: Maybe<ScalarsEnums['numeric']>
+  downvotes?: Maybe<ScalarsEnums['numeric']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  rank?: Maybe<ScalarsEnums['Int']>
+  rating?: Maybe<ScalarsEnums['numeric']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  review_mentions_count?: Maybe<ScalarsEnums['numeric']>
+  score?: Maybe<ScalarsEnums['numeric']>
+  tag_id?: Maybe<ScalarsEnums['uuid']>
+  upvotes?: Maybe<ScalarsEnums['numeric']>
+  votes_ratio?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface restaurant_tag_min_fields {
   __typename: 'restaurant_tag_min_fields'
-  downvotes: Maybe<ScalarsEnums['numeric']>
-  id: Maybe<ScalarsEnums['uuid']>
-  rank: Maybe<ScalarsEnums['Int']>
-  rating: Maybe<ScalarsEnums['numeric']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-  review_mentions_count: Maybe<ScalarsEnums['numeric']>
-  score: Maybe<ScalarsEnums['numeric']>
-  tag_id: Maybe<ScalarsEnums['uuid']>
-  upvotes: Maybe<ScalarsEnums['numeric']>
-  votes_ratio: Maybe<ScalarsEnums['numeric']>
+  downvotes?: Maybe<ScalarsEnums['numeric']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  rank?: Maybe<ScalarsEnums['Int']>
+  rating?: Maybe<ScalarsEnums['numeric']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  review_mentions_count?: Maybe<ScalarsEnums['numeric']>
+  score?: Maybe<ScalarsEnums['numeric']>
+  tag_id?: Maybe<ScalarsEnums['uuid']>
+  upvotes?: Maybe<ScalarsEnums['numeric']>
+  votes_ratio?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface restaurant_tag_mutation_response {
@@ -8817,109 +8817,109 @@ export interface restaurant_tag_mutation_response {
 
 export interface restaurant_tag_stddev_fields {
   __typename: 'restaurant_tag_stddev_fields'
-  downvotes: Maybe<ScalarsEnums['Float']>
-  rank: Maybe<ScalarsEnums['Float']>
-  rating: Maybe<ScalarsEnums['Float']>
-  review_mentions_count: Maybe<ScalarsEnums['Float']>
-  score: Maybe<ScalarsEnums['Float']>
-  upvotes: Maybe<ScalarsEnums['Float']>
-  votes_ratio: Maybe<ScalarsEnums['Float']>
+  downvotes?: Maybe<ScalarsEnums['Float']>
+  rank?: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  review_mentions_count?: Maybe<ScalarsEnums['Float']>
+  score?: Maybe<ScalarsEnums['Float']>
+  upvotes?: Maybe<ScalarsEnums['Float']>
+  votes_ratio?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface restaurant_tag_stddev_pop_fields {
   __typename: 'restaurant_tag_stddev_pop_fields'
-  downvotes: Maybe<ScalarsEnums['Float']>
-  rank: Maybe<ScalarsEnums['Float']>
-  rating: Maybe<ScalarsEnums['Float']>
-  review_mentions_count: Maybe<ScalarsEnums['Float']>
-  score: Maybe<ScalarsEnums['Float']>
-  upvotes: Maybe<ScalarsEnums['Float']>
-  votes_ratio: Maybe<ScalarsEnums['Float']>
+  downvotes?: Maybe<ScalarsEnums['Float']>
+  rank?: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  review_mentions_count?: Maybe<ScalarsEnums['Float']>
+  score?: Maybe<ScalarsEnums['Float']>
+  upvotes?: Maybe<ScalarsEnums['Float']>
+  votes_ratio?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface restaurant_tag_stddev_samp_fields {
   __typename: 'restaurant_tag_stddev_samp_fields'
-  downvotes: Maybe<ScalarsEnums['Float']>
-  rank: Maybe<ScalarsEnums['Float']>
-  rating: Maybe<ScalarsEnums['Float']>
-  review_mentions_count: Maybe<ScalarsEnums['Float']>
-  score: Maybe<ScalarsEnums['Float']>
-  upvotes: Maybe<ScalarsEnums['Float']>
-  votes_ratio: Maybe<ScalarsEnums['Float']>
+  downvotes?: Maybe<ScalarsEnums['Float']>
+  rank?: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  review_mentions_count?: Maybe<ScalarsEnums['Float']>
+  score?: Maybe<ScalarsEnums['Float']>
+  upvotes?: Maybe<ScalarsEnums['Float']>
+  votes_ratio?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface restaurant_tag_sum_fields {
   __typename: 'restaurant_tag_sum_fields'
-  downvotes: Maybe<ScalarsEnums['numeric']>
-  rank: Maybe<ScalarsEnums['Int']>
-  rating: Maybe<ScalarsEnums['numeric']>
-  review_mentions_count: Maybe<ScalarsEnums['numeric']>
-  score: Maybe<ScalarsEnums['numeric']>
-  upvotes: Maybe<ScalarsEnums['numeric']>
-  votes_ratio: Maybe<ScalarsEnums['numeric']>
+  downvotes?: Maybe<ScalarsEnums['numeric']>
+  rank?: Maybe<ScalarsEnums['Int']>
+  rating?: Maybe<ScalarsEnums['numeric']>
+  review_mentions_count?: Maybe<ScalarsEnums['numeric']>
+  score?: Maybe<ScalarsEnums['numeric']>
+  upvotes?: Maybe<ScalarsEnums['numeric']>
+  votes_ratio?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface restaurant_tag_var_pop_fields {
   __typename: 'restaurant_tag_var_pop_fields'
-  downvotes: Maybe<ScalarsEnums['Float']>
-  rank: Maybe<ScalarsEnums['Float']>
-  rating: Maybe<ScalarsEnums['Float']>
-  review_mentions_count: Maybe<ScalarsEnums['Float']>
-  score: Maybe<ScalarsEnums['Float']>
-  upvotes: Maybe<ScalarsEnums['Float']>
-  votes_ratio: Maybe<ScalarsEnums['Float']>
+  downvotes?: Maybe<ScalarsEnums['Float']>
+  rank?: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  review_mentions_count?: Maybe<ScalarsEnums['Float']>
+  score?: Maybe<ScalarsEnums['Float']>
+  upvotes?: Maybe<ScalarsEnums['Float']>
+  votes_ratio?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface restaurant_tag_var_samp_fields {
   __typename: 'restaurant_tag_var_samp_fields'
-  downvotes: Maybe<ScalarsEnums['Float']>
-  rank: Maybe<ScalarsEnums['Float']>
-  rating: Maybe<ScalarsEnums['Float']>
-  review_mentions_count: Maybe<ScalarsEnums['Float']>
-  score: Maybe<ScalarsEnums['Float']>
-  upvotes: Maybe<ScalarsEnums['Float']>
-  votes_ratio: Maybe<ScalarsEnums['Float']>
+  downvotes?: Maybe<ScalarsEnums['Float']>
+  rank?: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  review_mentions_count?: Maybe<ScalarsEnums['Float']>
+  score?: Maybe<ScalarsEnums['Float']>
+  upvotes?: Maybe<ScalarsEnums['Float']>
+  votes_ratio?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface restaurant_tag_variance_fields {
   __typename: 'restaurant_tag_variance_fields'
-  downvotes: Maybe<ScalarsEnums['Float']>
-  rank: Maybe<ScalarsEnums['Float']>
-  rating: Maybe<ScalarsEnums['Float']>
-  review_mentions_count: Maybe<ScalarsEnums['Float']>
-  score: Maybe<ScalarsEnums['Float']>
-  upvotes: Maybe<ScalarsEnums['Float']>
-  votes_ratio: Maybe<ScalarsEnums['Float']>
+  downvotes?: Maybe<ScalarsEnums['Float']>
+  rank?: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  review_mentions_count?: Maybe<ScalarsEnums['Float']>
+  score?: Maybe<ScalarsEnums['Float']>
+  upvotes?: Maybe<ScalarsEnums['Float']>
+  votes_ratio?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface restaurant_var_pop_fields {
   __typename: 'restaurant_var_pop_fields'
-  downvotes: Maybe<ScalarsEnums['Float']>
-  rating: Maybe<ScalarsEnums['Float']>
-  score: Maybe<ScalarsEnums['Float']>
-  upvotes: Maybe<ScalarsEnums['Float']>
-  votes_ratio: Maybe<ScalarsEnums['Float']>
-  zip: Maybe<ScalarsEnums['Float']>
+  downvotes?: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  score?: Maybe<ScalarsEnums['Float']>
+  upvotes?: Maybe<ScalarsEnums['Float']>
+  votes_ratio?: Maybe<ScalarsEnums['Float']>
+  zip?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface restaurant_var_samp_fields {
   __typename: 'restaurant_var_samp_fields'
-  downvotes: Maybe<ScalarsEnums['Float']>
-  rating: Maybe<ScalarsEnums['Float']>
-  score: Maybe<ScalarsEnums['Float']>
-  upvotes: Maybe<ScalarsEnums['Float']>
-  votes_ratio: Maybe<ScalarsEnums['Float']>
-  zip: Maybe<ScalarsEnums['Float']>
+  downvotes?: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  score?: Maybe<ScalarsEnums['Float']>
+  upvotes?: Maybe<ScalarsEnums['Float']>
+  votes_ratio?: Maybe<ScalarsEnums['Float']>
+  zip?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface restaurant_variance_fields {
   __typename: 'restaurant_variance_fields'
-  downvotes: Maybe<ScalarsEnums['Float']>
-  rating: Maybe<ScalarsEnums['Float']>
-  score: Maybe<ScalarsEnums['Float']>
-  upvotes: Maybe<ScalarsEnums['Float']>
-  votes_ratio: Maybe<ScalarsEnums['Float']>
-  zip: Maybe<ScalarsEnums['Float']>
+  downvotes?: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  score?: Maybe<ScalarsEnums['Float']>
+  upvotes?: Maybe<ScalarsEnums['Float']>
+  votes_ratio?: Maybe<ScalarsEnums['Float']>
+  zip?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review {
@@ -8928,11 +8928,11 @@ export interface review {
   categories: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
-  favorited: Maybe<ScalarsEnums['Boolean']>
+  favorited?: Maybe<ScalarsEnums['Boolean']>
   id: ScalarsEnums['uuid']
-  location: Maybe<ScalarsEnums['geometry']>
-  native_data_unique_key: Maybe<ScalarsEnums['String']>
-  rating: Maybe<ScalarsEnums['numeric']>
+  location?: Maybe<ScalarsEnums['geometry']>
+  native_data_unique_key?: Maybe<ScalarsEnums['String']>
+  rating?: Maybe<ScalarsEnums['numeric']>
   restaurant: restaurant
   restaurant_id: ScalarsEnums['uuid']
   sentiments: (args?: {
@@ -8953,80 +8953,80 @@ export interface review {
     order_by?: Maybe<Array<review_tag_sentence_order_by>>
     where?: Maybe<review_tag_sentence_bool_exp>
   }) => review_tag_sentence_aggregate
-  source: Maybe<ScalarsEnums['String']>
-  tag: Maybe<tag>
-  tag_id: Maybe<ScalarsEnums['uuid']>
-  text: Maybe<ScalarsEnums['String']>
-  type: Maybe<ScalarsEnums['String']>
+  source?: Maybe<ScalarsEnums['String']>
+  tag?: Maybe<tag>
+  tag_id?: Maybe<ScalarsEnums['uuid']>
+  text?: Maybe<ScalarsEnums['String']>
+  type?: Maybe<ScalarsEnums['String']>
   updated_at: ScalarsEnums['timestamptz']
   user: user
   user_id: ScalarsEnums['uuid']
-  username: Maybe<ScalarsEnums['String']>
-  vote: Maybe<ScalarsEnums['numeric']>
+  username?: Maybe<ScalarsEnums['String']>
+  vote?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface review_aggregate {
   __typename: 'review_aggregate'
-  aggregate: Maybe<review_aggregate_fields>
+  aggregate?: Maybe<review_aggregate_fields>
   nodes: Array<review>
 }
 
 export interface review_aggregate_fields {
   __typename: 'review_aggregate_fields'
-  avg: Maybe<review_avg_fields>
+  avg?: Maybe<review_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['review_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
   }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<review_max_fields>
-  min: Maybe<review_min_fields>
-  stddev: Maybe<review_stddev_fields>
-  stddev_pop: Maybe<review_stddev_pop_fields>
-  stddev_samp: Maybe<review_stddev_samp_fields>
-  sum: Maybe<review_sum_fields>
-  var_pop: Maybe<review_var_pop_fields>
-  var_samp: Maybe<review_var_samp_fields>
-  variance: Maybe<review_variance_fields>
+  max?: Maybe<review_max_fields>
+  min?: Maybe<review_min_fields>
+  stddev?: Maybe<review_stddev_fields>
+  stddev_pop?: Maybe<review_stddev_pop_fields>
+  stddev_samp?: Maybe<review_stddev_samp_fields>
+  sum?: Maybe<review_sum_fields>
+  var_pop?: Maybe<review_var_pop_fields>
+  var_samp?: Maybe<review_var_samp_fields>
+  variance?: Maybe<review_variance_fields>
 }
 
 export interface review_avg_fields {
   __typename: 'review_avg_fields'
-  rating: Maybe<ScalarsEnums['Float']>
-  vote: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  vote?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_max_fields {
   __typename: 'review_max_fields'
-  authored_at: Maybe<ScalarsEnums['timestamptz']>
-  id: Maybe<ScalarsEnums['uuid']>
-  native_data_unique_key: Maybe<ScalarsEnums['String']>
-  rating: Maybe<ScalarsEnums['numeric']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-  source: Maybe<ScalarsEnums['String']>
-  tag_id: Maybe<ScalarsEnums['uuid']>
-  text: Maybe<ScalarsEnums['String']>
-  type: Maybe<ScalarsEnums['String']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
-  user_id: Maybe<ScalarsEnums['uuid']>
-  username: Maybe<ScalarsEnums['String']>
-  vote: Maybe<ScalarsEnums['numeric']>
+  authored_at?: Maybe<ScalarsEnums['timestamptz']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  native_data_unique_key?: Maybe<ScalarsEnums['String']>
+  rating?: Maybe<ScalarsEnums['numeric']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  source?: Maybe<ScalarsEnums['String']>
+  tag_id?: Maybe<ScalarsEnums['uuid']>
+  text?: Maybe<ScalarsEnums['String']>
+  type?: Maybe<ScalarsEnums['String']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  user_id?: Maybe<ScalarsEnums['uuid']>
+  username?: Maybe<ScalarsEnums['String']>
+  vote?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface review_min_fields {
   __typename: 'review_min_fields'
-  authored_at: Maybe<ScalarsEnums['timestamptz']>
-  id: Maybe<ScalarsEnums['uuid']>
-  native_data_unique_key: Maybe<ScalarsEnums['String']>
-  rating: Maybe<ScalarsEnums['numeric']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-  source: Maybe<ScalarsEnums['String']>
-  tag_id: Maybe<ScalarsEnums['uuid']>
-  text: Maybe<ScalarsEnums['String']>
-  type: Maybe<ScalarsEnums['String']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
-  user_id: Maybe<ScalarsEnums['uuid']>
-  username: Maybe<ScalarsEnums['String']>
-  vote: Maybe<ScalarsEnums['numeric']>
+  authored_at?: Maybe<ScalarsEnums['timestamptz']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  native_data_unique_key?: Maybe<ScalarsEnums['String']>
+  rating?: Maybe<ScalarsEnums['numeric']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  source?: Maybe<ScalarsEnums['String']>
+  tag_id?: Maybe<ScalarsEnums['uuid']>
+  text?: Maybe<ScalarsEnums['String']>
+  type?: Maybe<ScalarsEnums['String']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  user_id?: Maybe<ScalarsEnums['uuid']>
+  username?: Maybe<ScalarsEnums['String']>
+  vote?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface review_mutation_response {
@@ -9037,34 +9037,34 @@ export interface review_mutation_response {
 
 export interface review_stddev_fields {
   __typename: 'review_stddev_fields'
-  rating: Maybe<ScalarsEnums['Float']>
-  vote: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  vote?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_stddev_pop_fields {
   __typename: 'review_stddev_pop_fields'
-  rating: Maybe<ScalarsEnums['Float']>
-  vote: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  vote?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_stddev_samp_fields {
   __typename: 'review_stddev_samp_fields'
-  rating: Maybe<ScalarsEnums['Float']>
-  vote: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  vote?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_sum_fields {
   __typename: 'review_sum_fields'
-  rating: Maybe<ScalarsEnums['numeric']>
-  vote: Maybe<ScalarsEnums['numeric']>
+  rating?: Maybe<ScalarsEnums['numeric']>
+  vote?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface review_tag_sentence {
   __typename: 'review_tag_sentence'
   id: ScalarsEnums['uuid']
-  ml_sentiment: Maybe<ScalarsEnums['numeric']>
+  ml_sentiment?: Maybe<ScalarsEnums['numeric']>
   naive_sentiment: ScalarsEnums['numeric']
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
   review: review
   review_id: ScalarsEnums['uuid']
   sentence: ScalarsEnums['String']
@@ -9074,54 +9074,54 @@ export interface review_tag_sentence {
 
 export interface review_tag_sentence_aggregate {
   __typename: 'review_tag_sentence_aggregate'
-  aggregate: Maybe<review_tag_sentence_aggregate_fields>
+  aggregate?: Maybe<review_tag_sentence_aggregate_fields>
   nodes: Array<review_tag_sentence>
 }
 
 export interface review_tag_sentence_aggregate_fields {
   __typename: 'review_tag_sentence_aggregate_fields'
-  avg: Maybe<review_tag_sentence_avg_fields>
+  avg?: Maybe<review_tag_sentence_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['review_tag_sentence_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
   }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<review_tag_sentence_max_fields>
-  min: Maybe<review_tag_sentence_min_fields>
-  stddev: Maybe<review_tag_sentence_stddev_fields>
-  stddev_pop: Maybe<review_tag_sentence_stddev_pop_fields>
-  stddev_samp: Maybe<review_tag_sentence_stddev_samp_fields>
-  sum: Maybe<review_tag_sentence_sum_fields>
-  var_pop: Maybe<review_tag_sentence_var_pop_fields>
-  var_samp: Maybe<review_tag_sentence_var_samp_fields>
-  variance: Maybe<review_tag_sentence_variance_fields>
+  max?: Maybe<review_tag_sentence_max_fields>
+  min?: Maybe<review_tag_sentence_min_fields>
+  stddev?: Maybe<review_tag_sentence_stddev_fields>
+  stddev_pop?: Maybe<review_tag_sentence_stddev_pop_fields>
+  stddev_samp?: Maybe<review_tag_sentence_stddev_samp_fields>
+  sum?: Maybe<review_tag_sentence_sum_fields>
+  var_pop?: Maybe<review_tag_sentence_var_pop_fields>
+  var_samp?: Maybe<review_tag_sentence_var_samp_fields>
+  variance?: Maybe<review_tag_sentence_variance_fields>
 }
 
 export interface review_tag_sentence_avg_fields {
   __typename: 'review_tag_sentence_avg_fields'
-  ml_sentiment: Maybe<ScalarsEnums['Float']>
-  naive_sentiment: Maybe<ScalarsEnums['Float']>
+  ml_sentiment?: Maybe<ScalarsEnums['Float']>
+  naive_sentiment?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_max_fields {
   __typename: 'review_tag_sentence_max_fields'
-  id: Maybe<ScalarsEnums['uuid']>
-  ml_sentiment: Maybe<ScalarsEnums['numeric']>
-  naive_sentiment: Maybe<ScalarsEnums['numeric']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-  review_id: Maybe<ScalarsEnums['uuid']>
-  sentence: Maybe<ScalarsEnums['String']>
-  tag_id: Maybe<ScalarsEnums['uuid']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  ml_sentiment?: Maybe<ScalarsEnums['numeric']>
+  naive_sentiment?: Maybe<ScalarsEnums['numeric']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  review_id?: Maybe<ScalarsEnums['uuid']>
+  sentence?: Maybe<ScalarsEnums['String']>
+  tag_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 export interface review_tag_sentence_min_fields {
   __typename: 'review_tag_sentence_min_fields'
-  id: Maybe<ScalarsEnums['uuid']>
-  ml_sentiment: Maybe<ScalarsEnums['numeric']>
-  naive_sentiment: Maybe<ScalarsEnums['numeric']>
-  restaurant_id: Maybe<ScalarsEnums['uuid']>
-  review_id: Maybe<ScalarsEnums['uuid']>
-  sentence: Maybe<ScalarsEnums['String']>
-  tag_id: Maybe<ScalarsEnums['uuid']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  ml_sentiment?: Maybe<ScalarsEnums['numeric']>
+  naive_sentiment?: Maybe<ScalarsEnums['numeric']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  review_id?: Maybe<ScalarsEnums['uuid']>
+  sentence?: Maybe<ScalarsEnums['String']>
+  tag_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 export interface review_tag_sentence_mutation_response {
@@ -9132,70 +9132,70 @@ export interface review_tag_sentence_mutation_response {
 
 export interface review_tag_sentence_stddev_fields {
   __typename: 'review_tag_sentence_stddev_fields'
-  ml_sentiment: Maybe<ScalarsEnums['Float']>
-  naive_sentiment: Maybe<ScalarsEnums['Float']>
+  ml_sentiment?: Maybe<ScalarsEnums['Float']>
+  naive_sentiment?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_stddev_pop_fields {
   __typename: 'review_tag_sentence_stddev_pop_fields'
-  ml_sentiment: Maybe<ScalarsEnums['Float']>
-  naive_sentiment: Maybe<ScalarsEnums['Float']>
+  ml_sentiment?: Maybe<ScalarsEnums['Float']>
+  naive_sentiment?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_stddev_samp_fields {
   __typename: 'review_tag_sentence_stddev_samp_fields'
-  ml_sentiment: Maybe<ScalarsEnums['Float']>
-  naive_sentiment: Maybe<ScalarsEnums['Float']>
+  ml_sentiment?: Maybe<ScalarsEnums['Float']>
+  naive_sentiment?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_sum_fields {
   __typename: 'review_tag_sentence_sum_fields'
-  ml_sentiment: Maybe<ScalarsEnums['numeric']>
-  naive_sentiment: Maybe<ScalarsEnums['numeric']>
+  ml_sentiment?: Maybe<ScalarsEnums['numeric']>
+  naive_sentiment?: Maybe<ScalarsEnums['numeric']>
 }
 
 export interface review_tag_sentence_var_pop_fields {
   __typename: 'review_tag_sentence_var_pop_fields'
-  ml_sentiment: Maybe<ScalarsEnums['Float']>
-  naive_sentiment: Maybe<ScalarsEnums['Float']>
+  ml_sentiment?: Maybe<ScalarsEnums['Float']>
+  naive_sentiment?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_var_samp_fields {
   __typename: 'review_tag_sentence_var_samp_fields'
-  ml_sentiment: Maybe<ScalarsEnums['Float']>
-  naive_sentiment: Maybe<ScalarsEnums['Float']>
+  ml_sentiment?: Maybe<ScalarsEnums['Float']>
+  naive_sentiment?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_tag_sentence_variance_fields {
   __typename: 'review_tag_sentence_variance_fields'
-  ml_sentiment: Maybe<ScalarsEnums['Float']>
-  naive_sentiment: Maybe<ScalarsEnums['Float']>
+  ml_sentiment?: Maybe<ScalarsEnums['Float']>
+  naive_sentiment?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_var_pop_fields {
   __typename: 'review_var_pop_fields'
-  rating: Maybe<ScalarsEnums['Float']>
-  vote: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  vote?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_var_samp_fields {
   __typename: 'review_var_samp_fields'
-  rating: Maybe<ScalarsEnums['Float']>
-  vote: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  vote?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface review_variance_fields {
   __typename: 'review_variance_fields'
-  rating: Maybe<ScalarsEnums['Float']>
-  vote: Maybe<ScalarsEnums['Float']>
+  rating?: Maybe<ScalarsEnums['Float']>
+  vote?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface setting {
   __typename: 'setting'
-  created_at: Maybe<ScalarsEnums['timestamptz']>
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
   id: ScalarsEnums['uuid']
   key: ScalarsEnums['String']
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
   value: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => ScalarsEnums['jsonb']
@@ -9203,7 +9203,7 @@ export interface setting {
 
 export interface setting_aggregate {
   __typename: 'setting_aggregate'
-  aggregate: Maybe<setting_aggregate_fields>
+  aggregate?: Maybe<setting_aggregate_fields>
   nodes: Array<setting>
 }
 
@@ -9213,24 +9213,24 @@ export interface setting_aggregate_fields {
     columns?: Maybe<Array<ScalarsEnums['setting_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
   }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<setting_max_fields>
-  min: Maybe<setting_min_fields>
+  max?: Maybe<setting_max_fields>
+  min?: Maybe<setting_min_fields>
 }
 
 export interface setting_max_fields {
   __typename: 'setting_max_fields'
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  id: Maybe<ScalarsEnums['uuid']>
-  key: Maybe<ScalarsEnums['String']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  key?: Maybe<ScalarsEnums['String']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
 }
 
 export interface setting_min_fields {
   __typename: 'setting_min_fields'
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  id: Maybe<ScalarsEnums['uuid']>
-  key: Maybe<ScalarsEnums['String']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  key?: Maybe<ScalarsEnums['String']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
 }
 
 export interface setting_mutation_response {
@@ -9262,10 +9262,10 @@ export interface tag {
   default_images: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
-  description: Maybe<ScalarsEnums['String']>
-  displayName: Maybe<ScalarsEnums['String']>
-  frequency: Maybe<ScalarsEnums['Int']>
-  icon: Maybe<ScalarsEnums['String']>
+  description?: Maybe<ScalarsEnums['String']>
+  displayName?: Maybe<ScalarsEnums['String']>
+  frequency?: Maybe<ScalarsEnums['Int']>
+  icon?: Maybe<ScalarsEnums['String']>
   id: ScalarsEnums['uuid']
   is_ambiguous: ScalarsEnums['Boolean']
   misc: (args?: {
@@ -9273,9 +9273,9 @@ export interface tag {
   }) => Maybe<ScalarsEnums['jsonb']>
   name: ScalarsEnums['String']
   order: ScalarsEnums['Int']
-  parent: Maybe<tag>
-  parentId: Maybe<ScalarsEnums['uuid']>
-  popularity: Maybe<ScalarsEnums['Int']>
+  parent?: Maybe<tag>
+  parentId?: Maybe<ScalarsEnums['uuid']>
+  popularity?: Maybe<ScalarsEnums['Int']>
   restaurant_taxonomies: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['restaurant_tag_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -9293,74 +9293,74 @@ export interface tag {
   rgb: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
-  slug: Maybe<ScalarsEnums['String']>
-  type: Maybe<ScalarsEnums['String']>
+  slug?: Maybe<ScalarsEnums['String']>
+  type?: Maybe<ScalarsEnums['String']>
   updated_at: ScalarsEnums['timestamptz']
 }
 
 export interface tag_aggregate {
   __typename: 'tag_aggregate'
-  aggregate: Maybe<tag_aggregate_fields>
+  aggregate?: Maybe<tag_aggregate_fields>
   nodes: Array<tag>
 }
 
 export interface tag_aggregate_fields {
   __typename: 'tag_aggregate_fields'
-  avg: Maybe<tag_avg_fields>
+  avg?: Maybe<tag_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['tag_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
   }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<tag_max_fields>
-  min: Maybe<tag_min_fields>
-  stddev: Maybe<tag_stddev_fields>
-  stddev_pop: Maybe<tag_stddev_pop_fields>
-  stddev_samp: Maybe<tag_stddev_samp_fields>
-  sum: Maybe<tag_sum_fields>
-  var_pop: Maybe<tag_var_pop_fields>
-  var_samp: Maybe<tag_var_samp_fields>
-  variance: Maybe<tag_variance_fields>
+  max?: Maybe<tag_max_fields>
+  min?: Maybe<tag_min_fields>
+  stddev?: Maybe<tag_stddev_fields>
+  stddev_pop?: Maybe<tag_stddev_pop_fields>
+  stddev_samp?: Maybe<tag_stddev_samp_fields>
+  sum?: Maybe<tag_sum_fields>
+  var_pop?: Maybe<tag_var_pop_fields>
+  var_samp?: Maybe<tag_var_samp_fields>
+  variance?: Maybe<tag_variance_fields>
 }
 
 export interface tag_avg_fields {
   __typename: 'tag_avg_fields'
-  frequency: Maybe<ScalarsEnums['Float']>
-  order: Maybe<ScalarsEnums['Float']>
-  popularity: Maybe<ScalarsEnums['Float']>
+  frequency?: Maybe<ScalarsEnums['Float']>
+  order?: Maybe<ScalarsEnums['Float']>
+  popularity?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_max_fields {
   __typename: 'tag_max_fields'
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  description: Maybe<ScalarsEnums['String']>
-  displayName: Maybe<ScalarsEnums['String']>
-  frequency: Maybe<ScalarsEnums['Int']>
-  icon: Maybe<ScalarsEnums['String']>
-  id: Maybe<ScalarsEnums['uuid']>
-  name: Maybe<ScalarsEnums['String']>
-  order: Maybe<ScalarsEnums['Int']>
-  parentId: Maybe<ScalarsEnums['uuid']>
-  popularity: Maybe<ScalarsEnums['Int']>
-  slug: Maybe<ScalarsEnums['String']>
-  type: Maybe<ScalarsEnums['String']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  description?: Maybe<ScalarsEnums['String']>
+  displayName?: Maybe<ScalarsEnums['String']>
+  frequency?: Maybe<ScalarsEnums['Int']>
+  icon?: Maybe<ScalarsEnums['String']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  name?: Maybe<ScalarsEnums['String']>
+  order?: Maybe<ScalarsEnums['Int']>
+  parentId?: Maybe<ScalarsEnums['uuid']>
+  popularity?: Maybe<ScalarsEnums['Int']>
+  slug?: Maybe<ScalarsEnums['String']>
+  type?: Maybe<ScalarsEnums['String']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
 }
 
 export interface tag_min_fields {
   __typename: 'tag_min_fields'
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  description: Maybe<ScalarsEnums['String']>
-  displayName: Maybe<ScalarsEnums['String']>
-  frequency: Maybe<ScalarsEnums['Int']>
-  icon: Maybe<ScalarsEnums['String']>
-  id: Maybe<ScalarsEnums['uuid']>
-  name: Maybe<ScalarsEnums['String']>
-  order: Maybe<ScalarsEnums['Int']>
-  parentId: Maybe<ScalarsEnums['uuid']>
-  popularity: Maybe<ScalarsEnums['Int']>
-  slug: Maybe<ScalarsEnums['String']>
-  type: Maybe<ScalarsEnums['String']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  description?: Maybe<ScalarsEnums['String']>
+  displayName?: Maybe<ScalarsEnums['String']>
+  frequency?: Maybe<ScalarsEnums['Int']>
+  icon?: Maybe<ScalarsEnums['String']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  name?: Maybe<ScalarsEnums['String']>
+  order?: Maybe<ScalarsEnums['Int']>
+  parentId?: Maybe<ScalarsEnums['uuid']>
+  popularity?: Maybe<ScalarsEnums['Int']>
+  slug?: Maybe<ScalarsEnums['String']>
+  type?: Maybe<ScalarsEnums['String']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
 }
 
 export interface tag_mutation_response {
@@ -9371,30 +9371,30 @@ export interface tag_mutation_response {
 
 export interface tag_stddev_fields {
   __typename: 'tag_stddev_fields'
-  frequency: Maybe<ScalarsEnums['Float']>
-  order: Maybe<ScalarsEnums['Float']>
-  popularity: Maybe<ScalarsEnums['Float']>
+  frequency?: Maybe<ScalarsEnums['Float']>
+  order?: Maybe<ScalarsEnums['Float']>
+  popularity?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_stddev_pop_fields {
   __typename: 'tag_stddev_pop_fields'
-  frequency: Maybe<ScalarsEnums['Float']>
-  order: Maybe<ScalarsEnums['Float']>
-  popularity: Maybe<ScalarsEnums['Float']>
+  frequency?: Maybe<ScalarsEnums['Float']>
+  order?: Maybe<ScalarsEnums['Float']>
+  popularity?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_stddev_samp_fields {
   __typename: 'tag_stddev_samp_fields'
-  frequency: Maybe<ScalarsEnums['Float']>
-  order: Maybe<ScalarsEnums['Float']>
-  popularity: Maybe<ScalarsEnums['Float']>
+  frequency?: Maybe<ScalarsEnums['Float']>
+  order?: Maybe<ScalarsEnums['Float']>
+  popularity?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_sum_fields {
   __typename: 'tag_sum_fields'
-  frequency: Maybe<ScalarsEnums['Int']>
-  order: Maybe<ScalarsEnums['Int']>
-  popularity: Maybe<ScalarsEnums['Int']>
+  frequency?: Maybe<ScalarsEnums['Int']>
+  order?: Maybe<ScalarsEnums['Int']>
+  popularity?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface tag_tag {
@@ -9407,7 +9407,7 @@ export interface tag_tag {
 
 export interface tag_tag_aggregate {
   __typename: 'tag_tag_aggregate'
-  aggregate: Maybe<tag_tag_aggregate_fields>
+  aggregate?: Maybe<tag_tag_aggregate_fields>
   nodes: Array<tag_tag>
 }
 
@@ -9417,20 +9417,20 @@ export interface tag_tag_aggregate_fields {
     columns?: Maybe<Array<ScalarsEnums['tag_tag_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
   }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<tag_tag_max_fields>
-  min: Maybe<tag_tag_min_fields>
+  max?: Maybe<tag_tag_max_fields>
+  min?: Maybe<tag_tag_min_fields>
 }
 
 export interface tag_tag_max_fields {
   __typename: 'tag_tag_max_fields'
-  category_tag_id: Maybe<ScalarsEnums['uuid']>
-  tag_id: Maybe<ScalarsEnums['uuid']>
+  category_tag_id?: Maybe<ScalarsEnums['uuid']>
+  tag_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 export interface tag_tag_min_fields {
   __typename: 'tag_tag_min_fields'
-  category_tag_id: Maybe<ScalarsEnums['uuid']>
-  tag_id: Maybe<ScalarsEnums['uuid']>
+  category_tag_id?: Maybe<ScalarsEnums['uuid']>
+  tag_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 export interface tag_tag_mutation_response {
@@ -9441,39 +9441,39 @@ export interface tag_tag_mutation_response {
 
 export interface tag_var_pop_fields {
   __typename: 'tag_var_pop_fields'
-  frequency: Maybe<ScalarsEnums['Float']>
-  order: Maybe<ScalarsEnums['Float']>
-  popularity: Maybe<ScalarsEnums['Float']>
+  frequency?: Maybe<ScalarsEnums['Float']>
+  order?: Maybe<ScalarsEnums['Float']>
+  popularity?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_var_samp_fields {
   __typename: 'tag_var_samp_fields'
-  frequency: Maybe<ScalarsEnums['Float']>
-  order: Maybe<ScalarsEnums['Float']>
-  popularity: Maybe<ScalarsEnums['Float']>
+  frequency?: Maybe<ScalarsEnums['Float']>
+  order?: Maybe<ScalarsEnums['Float']>
+  popularity?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface tag_variance_fields {
   __typename: 'tag_variance_fields'
-  frequency: Maybe<ScalarsEnums['Float']>
-  order: Maybe<ScalarsEnums['Float']>
-  popularity: Maybe<ScalarsEnums['Float']>
+  frequency?: Maybe<ScalarsEnums['Float']>
+  order?: Maybe<ScalarsEnums['Float']>
+  popularity?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user {
   __typename: 'user'
-  about: Maybe<ScalarsEnums['String']>
-  apple_email: Maybe<ScalarsEnums['String']>
-  apple_refresh_token: Maybe<ScalarsEnums['String']>
-  apple_token: Maybe<ScalarsEnums['String']>
-  apple_uid: Maybe<ScalarsEnums['String']>
-  avatar: Maybe<ScalarsEnums['String']>
+  about?: Maybe<ScalarsEnums['String']>
+  apple_email?: Maybe<ScalarsEnums['String']>
+  apple_refresh_token?: Maybe<ScalarsEnums['String']>
+  apple_token?: Maybe<ScalarsEnums['String']>
+  apple_uid?: Maybe<ScalarsEnums['String']>
+  avatar?: Maybe<ScalarsEnums['String']>
   charIndex: ScalarsEnums['Int']
   created_at: ScalarsEnums['timestamptz']
-  email: Maybe<ScalarsEnums['String']>
+  email?: Maybe<ScalarsEnums['String']>
   has_onboarded: ScalarsEnums['Boolean']
   id: ScalarsEnums['uuid']
-  location: Maybe<ScalarsEnums['String']>
+  location?: Maybe<ScalarsEnums['String']>
   password: ScalarsEnums['String']
   reviews: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['review_select_column']>>
@@ -9489,76 +9489,76 @@ export interface user {
     order_by?: Maybe<Array<review_order_by>>
     where?: Maybe<review_bool_exp>
   }) => review_aggregate
-  role: Maybe<ScalarsEnums['String']>
+  role?: Maybe<ScalarsEnums['String']>
   updated_at: ScalarsEnums['timestamptz']
   username: ScalarsEnums['String']
 }
 
 export interface user_aggregate {
   __typename: 'user_aggregate'
-  aggregate: Maybe<user_aggregate_fields>
+  aggregate?: Maybe<user_aggregate_fields>
   nodes: Array<user>
 }
 
 export interface user_aggregate_fields {
   __typename: 'user_aggregate_fields'
-  avg: Maybe<user_avg_fields>
+  avg?: Maybe<user_avg_fields>
   count: (args?: {
     columns?: Maybe<Array<ScalarsEnums['user_select_column']>>
     distinct?: Maybe<ScalarsEnums['Boolean']>
   }) => Maybe<ScalarsEnums['Int']>
-  max: Maybe<user_max_fields>
-  min: Maybe<user_min_fields>
-  stddev: Maybe<user_stddev_fields>
-  stddev_pop: Maybe<user_stddev_pop_fields>
-  stddev_samp: Maybe<user_stddev_samp_fields>
-  sum: Maybe<user_sum_fields>
-  var_pop: Maybe<user_var_pop_fields>
-  var_samp: Maybe<user_var_samp_fields>
-  variance: Maybe<user_variance_fields>
+  max?: Maybe<user_max_fields>
+  min?: Maybe<user_min_fields>
+  stddev?: Maybe<user_stddev_fields>
+  stddev_pop?: Maybe<user_stddev_pop_fields>
+  stddev_samp?: Maybe<user_stddev_samp_fields>
+  sum?: Maybe<user_sum_fields>
+  var_pop?: Maybe<user_var_pop_fields>
+  var_samp?: Maybe<user_var_samp_fields>
+  variance?: Maybe<user_variance_fields>
 }
 
 export interface user_avg_fields {
   __typename: 'user_avg_fields'
-  charIndex: Maybe<ScalarsEnums['Float']>
+  charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_max_fields {
   __typename: 'user_max_fields'
-  about: Maybe<ScalarsEnums['String']>
-  apple_email: Maybe<ScalarsEnums['String']>
-  apple_refresh_token: Maybe<ScalarsEnums['String']>
-  apple_token: Maybe<ScalarsEnums['String']>
-  apple_uid: Maybe<ScalarsEnums['String']>
-  avatar: Maybe<ScalarsEnums['String']>
-  charIndex: Maybe<ScalarsEnums['Int']>
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  email: Maybe<ScalarsEnums['String']>
-  id: Maybe<ScalarsEnums['uuid']>
-  location: Maybe<ScalarsEnums['String']>
-  password: Maybe<ScalarsEnums['String']>
-  role: Maybe<ScalarsEnums['String']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
-  username: Maybe<ScalarsEnums['String']>
+  about?: Maybe<ScalarsEnums['String']>
+  apple_email?: Maybe<ScalarsEnums['String']>
+  apple_refresh_token?: Maybe<ScalarsEnums['String']>
+  apple_token?: Maybe<ScalarsEnums['String']>
+  apple_uid?: Maybe<ScalarsEnums['String']>
+  avatar?: Maybe<ScalarsEnums['String']>
+  charIndex?: Maybe<ScalarsEnums['Int']>
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  email?: Maybe<ScalarsEnums['String']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  location?: Maybe<ScalarsEnums['String']>
+  password?: Maybe<ScalarsEnums['String']>
+  role?: Maybe<ScalarsEnums['String']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  username?: Maybe<ScalarsEnums['String']>
 }
 
 export interface user_min_fields {
   __typename: 'user_min_fields'
-  about: Maybe<ScalarsEnums['String']>
-  apple_email: Maybe<ScalarsEnums['String']>
-  apple_refresh_token: Maybe<ScalarsEnums['String']>
-  apple_token: Maybe<ScalarsEnums['String']>
-  apple_uid: Maybe<ScalarsEnums['String']>
-  avatar: Maybe<ScalarsEnums['String']>
-  charIndex: Maybe<ScalarsEnums['Int']>
-  created_at: Maybe<ScalarsEnums['timestamptz']>
-  email: Maybe<ScalarsEnums['String']>
-  id: Maybe<ScalarsEnums['uuid']>
-  location: Maybe<ScalarsEnums['String']>
-  password: Maybe<ScalarsEnums['String']>
-  role: Maybe<ScalarsEnums['String']>
-  updated_at: Maybe<ScalarsEnums['timestamptz']>
-  username: Maybe<ScalarsEnums['String']>
+  about?: Maybe<ScalarsEnums['String']>
+  apple_email?: Maybe<ScalarsEnums['String']>
+  apple_refresh_token?: Maybe<ScalarsEnums['String']>
+  apple_token?: Maybe<ScalarsEnums['String']>
+  apple_uid?: Maybe<ScalarsEnums['String']>
+  avatar?: Maybe<ScalarsEnums['String']>
+  charIndex?: Maybe<ScalarsEnums['Int']>
+  created_at?: Maybe<ScalarsEnums['timestamptz']>
+  email?: Maybe<ScalarsEnums['String']>
+  id?: Maybe<ScalarsEnums['uuid']>
+  location?: Maybe<ScalarsEnums['String']>
+  password?: Maybe<ScalarsEnums['String']>
+  role?: Maybe<ScalarsEnums['String']>
+  updated_at?: Maybe<ScalarsEnums['timestamptz']>
+  username?: Maybe<ScalarsEnums['String']>
 }
 
 export interface user_mutation_response {
@@ -9569,37 +9569,37 @@ export interface user_mutation_response {
 
 export interface user_stddev_fields {
   __typename: 'user_stddev_fields'
-  charIndex: Maybe<ScalarsEnums['Float']>
+  charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_stddev_pop_fields {
   __typename: 'user_stddev_pop_fields'
-  charIndex: Maybe<ScalarsEnums['Float']>
+  charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_stddev_samp_fields {
   __typename: 'user_stddev_samp_fields'
-  charIndex: Maybe<ScalarsEnums['Float']>
+  charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_sum_fields {
   __typename: 'user_sum_fields'
-  charIndex: Maybe<ScalarsEnums['Int']>
+  charIndex?: Maybe<ScalarsEnums['Int']>
 }
 
 export interface user_var_pop_fields {
   __typename: 'user_var_pop_fields'
-  charIndex: Maybe<ScalarsEnums['Float']>
+  charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_var_samp_fields {
   __typename: 'user_var_samp_fields'
-  charIndex: Maybe<ScalarsEnums['Float']>
+  charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface user_variance_fields {
   __typename: 'user_variance_fields'
-  charIndex: Maybe<ScalarsEnums['Float']>
+  charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface GeneratedSchema {
@@ -9667,19 +9667,6 @@ const queryFetcher: QueryFetcher = async function (query, variables) {
   }
 
   const json = await response.json()
-
-  // console.log(
-  //   999,
-  //   JSON.stringify(
-  //     {
-  //       query,
-  //       variables,
-  //       json,
-  //     },
-  //     null,
-  //     2
-  //   )
-  // )
 
   return json
 }

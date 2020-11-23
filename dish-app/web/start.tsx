@@ -1,4 +1,4 @@
-import { client, mutation, query, resolved, schema } from '@dish/graph'
+import { client, mutation, query, resolved } from '@dish/graph'
 import * as React from 'react'
 
 import { searchLocations } from '../shared/helpers/searchLocations'
@@ -8,7 +8,6 @@ window['React'] = React
 window['gqless'] = {
   query,
   mutation,
-  schema,
   client,
   resolved,
 }

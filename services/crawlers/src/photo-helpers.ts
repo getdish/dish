@@ -53,7 +53,6 @@ export async function photoUpsert(photos: Partial<PhotoXref>[]) {
   photos.map((p) => {
     if (!p.photo || !p.photo.url) throw 'Photo must have URL'
     p.photo.origin = clone(p.photo?.url)
-    //@ts-expect-error
     delete p.photo.url
   })
   await photoXrefUpsert(photos)

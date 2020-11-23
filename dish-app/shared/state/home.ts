@@ -2,7 +2,6 @@ import {
   RestaurantOnlyIds,
   RestaurantSearchArgs,
   Tag,
-  resetQueryCache,
   search,
   slugify,
 } from '@dish/graph'
@@ -500,7 +499,7 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
       isClearingCache = true
       requestIdleCallback(() => {
         isClearingCache = false
-        resetQueryCache({ ifAbove: 15 })
+        // resetQueryCache({ ifAbove: 15 })
       })
     }
 
@@ -938,7 +937,7 @@ const clearTag: AsyncAction<NavigableTag> = async (om, tag) => {
   }
 }
 
-let tm = null
+let tm: NodeJS.Timeout | null = null
 const setIsLoading: Action<boolean> = (om, val) => {
   om.state.home.isLoading = val
   // prevent infinite spinners
