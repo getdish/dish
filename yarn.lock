@@ -1851,12 +1851,11 @@
   dependencies:
     arrify "^1.0.1"
 
-"@dish/gqless-cli@^0.1.21":
-  version "0.1.21"
-  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-0.1.21.tgz#d1cdc62163b0d1ad9d4331b45382c5243be7cebe"
-  integrity sha512-k1nbPqWftY7nb+Tne4g9cWcPYfrrvzhzfZYv7ELS/4LFFCQDGJnIXDtolLAg5z/DgNyoIn6rZE16wqMmYgrWOg==
+"@dish/gqless-cli@^0.1.22":
+  version "0.1.22"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-0.1.22.tgz#187a6dc0670a831dcfdd908ee63b0af607018760"
+  integrity sha512-G+8ymjrciTRSq9SrHWyOqHUud/F4DfvXcF8fvWIJ/QWDGoJwoaaeypN0mhnv0Z87D/qEhgq3VJmxAHRCZ3iQag==
   dependencies:
-    "@dish/gqless" "^1.0.16"
     "@graphql-codegen/core" "^1.17.8"
     "@graphql-codegen/typescript" "^1.17.11"
     "@graphql-tools/delegate" "^7.0.5"
@@ -1878,10 +1877,10 @@
     lodash "^4.17.20"
     lodash-es "^4.17.15"
 
-"@dish/gqless@^1.0.16":
-  version "1.0.16"
-  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-1.0.16.tgz#b99ae01b82410b89bcf9ff45f8f6d3efe64c31ba"
-  integrity sha512-YOdJGh/8IUMcXULYT8+BXhxlVTWtJuwCcxaMKcjqIeq6/J5dTTEl3kn9p20qMRg8axMqcbDOxA54fAnIkRaqIw==
+"@dish/gqless@^1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-1.0.17.tgz#85a5656d0384e57b868a52f782baf3a62c8c5a38"
+  integrity sha512-Nn3P4wdx3nJl00AEpG8ulqMDM94xZhGom76y2wklBPPze3chVCZwyp9zgrorMxM3YKFm50T9Ge8xQIZOFiAYpg==
   dependencies:
     graphql "^15.4.0"
     lodash "^4.17.20"
