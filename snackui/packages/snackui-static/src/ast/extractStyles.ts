@@ -234,9 +234,6 @@ export function extractStyles(
             return []
           }
           const res = getStylesAtomic(style, null, shouldPrintDebug)
-          if (shouldPrintDebug) {
-            console.log('addStylesAtomic', style, 'to', res)
-          }
           for (const x of res) {
             stylesByClassName[x.identifier] = x
           }
@@ -487,13 +484,7 @@ export function extractStyles(
             // dynamic
           } else {
             if (shouldPrintDebug) {
-              console.log('attr', {
-                name,
-                inlinePropCount,
-                styleValue,
-                value,
-                attribute: attribute?.value?.['expression'],
-              })
+              console.log('attr', name, styleValue)
             }
             viewStyles[name] = styleValue
             return false
@@ -652,7 +643,7 @@ export function extractStyles(
           }
           // since were removing down to div, we need to push the default styles onto this classname
           if (shouldPrintDebug) {
-            console.log({ component, originalNodeName, defaultStyle })
+            console.log('default styles', originalNodeName, defaultStyle)
           }
           viewStyles = {
             ...defaultStyle,
@@ -933,15 +924,12 @@ export function extractStyles(
         )
 
         if (shouldPrintDebug) {
-          console.log('final styled classnames', stylesByClassName)
+          console.log('final styled classnames', Object.keys(stylesByClassName))
         }
 
         for (const className in stylesByClassName) {
           if (stylesByClassName[className]) {
             const { rules } = stylesByClassName[className]
-            if (shouldPrintDebug) {
-              console.log('checking rules for', className, rules)
-            }
             if (rules.length !== 1) {
               console.log(rules)
               throw new Error(`should only have one rule`)
