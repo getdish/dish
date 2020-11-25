@@ -1,20 +1,12 @@
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo, useState } from 'react'
 import { Image, ScrollView } from 'react-native'
-import {
-  AbsoluteVStack,
-  HStack,
-  LoadingItems,
-  Modal,
-  Text,
-  VStack,
-} from 'snackui'
+import { AbsoluteVStack, HStack, LoadingItems, Modal, Text } from 'snackui'
 
 import { isWeb, pageWidthMax } from '../../constants'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { useIsNarrow, useIsShort } from '../../hooks/useIs'
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemGallery } from '../../state/home-types'
 import { useOvermind } from '../../state/useOvermind'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
