@@ -1,5 +1,3 @@
-import { fstat, stat, utimesSync } from 'fs'
-
 import VirtualModulesPlugin from '@o/webpack-virtual-modules'
 import webpack from 'webpack'
 
@@ -57,28 +55,5 @@ export class UIStaticWebpackPlugin implements Plugin {
   public apply(compiler: Compiler) {
     this.virtualModule.apply(compiler)
     compiler.hooks.compilation.tap(this.pluginName, this.compilationPlugin)
-
-    let hasTappedOnce = false
-    compiler.hooks.compilation.tap(this.pluginName, (comp) => {
-      comp.hooks.seal.tap(this.pluginName, () => {
-        for (const module of comp.modules) {
-          console.log('we got a module', module._source)
-        }
-      })
-    })
-
-    // if (!hasTappedOnce) {
-    //   const now = new Date()
-    //   utimesSync(
-    //     '/Users/nw/dish/dish-app/shared/AppSearchBar.tsx',
-    //     now,
-    //     now
-    //   )
-    //   hasTappedOnce = true
-    // }
-
-    // compiler.hooks.emit.tap(this.pluginName, (comp) => {
-    //   console.log('comp.entrypoints', comp.entrypoints)
-    // })
   }
 }

@@ -10,7 +10,7 @@ import { TextStyle, ViewStyle } from 'react-native'
 import * as AllExports from 'snackui/node'
 
 import { SNACK_CSS_FILE } from '../constants'
-import { getStylesAtomic, pseudos } from '../style/getStylesAtomic'
+import { getStylesAtomic, pseudos } from '../getStylesAtomic'
 import { ClassNameToStyleObj, ExtractStylesOptions } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
 import {
