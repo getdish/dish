@@ -991,10 +991,16 @@ export function extractStyles(
   //   cssFileName = path.join(sourceDir, cssImportFileName)
   // }
 
-  const getGlobalCSS = () =>
-    Array.from(globalCSSMap.values())
-      .map((v) => [...v.comments].map((txt) => `${txt}\n`).join('') + v.css)
-      .join(' ')
+  const getGlobalCSS = () => {
+    return Array.from(globalCSSMap.values())
+      .map((v) => {
+        if (process.env.SNACKUI_CSS_COMMENTS) {
+          return [...v.comments].map((txt) => `${txt}\n`).join('') + v.css
+        }
+        return v.css
+      })
+      .join('\n')
+  }
 
   if (didAddGlobal) {
     writeCSS(getGlobalCSS())
