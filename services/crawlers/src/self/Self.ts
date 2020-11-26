@@ -242,7 +242,7 @@ export class Self extends WorkerJob {
   }
 
   noteAvailableSources() {
-    this.available_sources = Object.keys(this.restaurant.sources)
+    this.available_sources = Object.keys(this.restaurant.sources || {})
   }
 
   async _runFailableFunction(func: Function) {
