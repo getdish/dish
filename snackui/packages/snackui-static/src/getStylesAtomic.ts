@@ -94,9 +94,6 @@ export function getStylesAtomic(
       }
       styleObj.className = `.${styleObj.identifier}`
     }
-    if (shouldPrintDebug) {
-      console.log(`getStylesAtomic`, all)
-    }
     return Object.keys(all).map((key) => all[key]) as StyleObject[]
   }
 }
