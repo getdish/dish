@@ -9,7 +9,7 @@ import invariant from 'invariant'
 import { TextStyle, ViewStyle } from 'react-native'
 import * as AllExports from 'snackui/node'
 
-import { SNACK_CSS_FILE } from '../constants'
+import { CSS_FILE_NAME, SNACK_CSS_FILE } from '../constants'
 import { getStylesAtomic, pseudos } from '../getStylesAtomic'
 import { ClassNameToStyleObj, ExtractStylesOptions } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
@@ -995,7 +995,7 @@ export function extractStyles(
   }
 
   ast.program.body.unshift(
-    t.importDeclaration([], t.stringLiteral(SNACK_CSS_FILE))
+    t.importDeclaration([], t.stringLiteral(`snackui/${CSS_FILE_NAME}`))
   )
 
   const result = generate(

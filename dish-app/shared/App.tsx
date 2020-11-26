@@ -111,7 +111,11 @@ const AppContent = memo(() => {
 })
 
 const AppMap =
-  process.env.TARGET === 'ssr' ? null : loadable(() => import('./AppMap'))
+  process.env.TARGET === 'ssr'
+    ? null
+    : process.env.NODE_ENV === 'development'
+    ? require('./AppMap').default
+    : loadable(() => import('./AppMap'))
 
 const UserEditPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'

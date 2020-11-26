@@ -41,11 +41,7 @@ export const AppIntroLogin = memo(() => {
           size="xl"
           textAlign="center"
         >
-          find great restaurants
-          <br />
-          w/ ratings down to the dish
-          <br />
-          across every delivery app
+          the better restaurant guide
         </Paragraph>
 
         <LinkButton

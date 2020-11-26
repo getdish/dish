@@ -1,3 +1,8 @@
-export const GLOSS_CSS_FILE = `__gloss.css`
+import { dirname, join } from 'path'
 
-export const SNACK_CSS_FILE = 'snack-ui-styles/style.css'
+export const CSS_FILE_NAME = 'snackui_style.css'
+
+export const SNACK_CSS_FILE = join(
+  dirname(require.resolve('snackui/node')),
+  CSS_FILE_NAME
+)

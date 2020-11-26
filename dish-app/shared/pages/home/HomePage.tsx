@@ -50,6 +50,8 @@ import { RestaurantCard } from '../restaurant/RestaurantCard'
 import { StackViewProps } from '../StackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
 
+console.log(123, 123)
+
 // top dishes
 
 type Props = StackViewProps<HomeStateItemHome>
