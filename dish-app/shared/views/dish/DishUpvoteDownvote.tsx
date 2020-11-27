@@ -5,21 +5,31 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { UpvoteDownvoteScore } from '../UpvoteDownvoteScore'
 
-export const DishUpvoteDownvote = graphql(function DishUpvoteDownvote({
+type Props = {
+  size: 'sm' | 'md'
+  name: string
+  score?: number
+  subtle?: boolean
+  restaurantSlug?: string
+  restaurantId?: string
+}
+
+export const DishUpvoteDownvote = (props: Props) => {
+  if (!props.restaurantId || !props.restaurantSlug) {
+    return null
+  }
+  // @ts-expect-error
+  return <DishUpvoteDownvoteContent subtle={false} score={0} {...props} />
+}
+
+const DishUpvoteDownvoteContent = graphql(function DishUpvoteDownvote({
   size,
   name,
   subtle,
   score,
   restaurantSlug,
   restaurantId,
-}: {
-  size: 'sm' | 'md'
-  name: string
-  score?: number
-  subtle?: boolean
-  restaurantSlug: string
-  restaurantId: string
-}) {
+}: Required<Props>) {
   const intScore =
     score ??
     (restaurantSlug

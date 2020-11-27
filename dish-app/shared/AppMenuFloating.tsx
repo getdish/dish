@@ -65,20 +65,20 @@ export const AppMenuFloating = () => {
             userMenu.toggle()
           }}
         >
-          <BlurView
+          {/* <BlurView
             borderRadius={24}
             fallbackBackgroundColor="rgba(255,255,255,0.9)"
+          > */}
+          <HStack
+            width={44}
+            height={44}
+            alignItems="center"
+            justifyContent="center"
+            borderRadius={100}
           >
-            <HStack
-              width={44}
-              height={44}
-              alignItems="center"
-              justifyContent="center"
-              borderRadius={100}
-            >
-              <Menu color={color} size={22} />
-            </HStack>
-          </BlurView>
+            <Menu color={color} size={22} />
+          </HStack>
+          {/* </BlurView> */}
         </VStack>
       </AbsoluteVStack>
     </>

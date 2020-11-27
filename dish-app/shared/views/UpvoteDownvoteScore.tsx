@@ -16,7 +16,7 @@ import CircularProgress from './CircularProgress'
 export const UpvoteDownvoteScore = memo(
   ({
     score,
-    ratio,
+    ratio = 0,
     vote,
     subtle,
     setVote,
@@ -27,7 +27,7 @@ export const UpvoteDownvoteScore = memo(
     ratio?: number
     score: number
     vote: -1 | 0 | 1
-    setVote?: (vote: number) => void
+    setVote?: Function
     subtle?: boolean
   } & StackProps) => {
     score = Math.round(score)
@@ -83,14 +83,6 @@ export const UpvoteDownvoteScore = memo(
         borderRadius={1000}
         {...props}
       >
-        {/* <AbsoluteVStack
-          fullscreen
-          borderRadius={1000}
-          backgroundColor={lightGreen}
-          transform={[{ scale: ratio }]}
-          zIndex={-1}
-        /> */}
-
         {typeof ratio === 'number' && (
           <AbsoluteVStack
             fullscreen
