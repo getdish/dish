@@ -176,17 +176,6 @@ const AppMapContent = memo(function AppMap({
     })
   }
 
-  const getZoomedSpan = (span: LngLat, max: number) => {
-    const curState = omStatic.state.home.currentState
-    const curSpan = curState.mapAt?.span ?? curState.span
-    const next = getMinLngLat(
-      span,
-      Math.min(max, curSpan.lng),
-      Math.min(max, curSpan.lat)
-    )
-    return next
-  }
-
   const { center, span } = internal
 
   // SELECTED
@@ -364,7 +353,7 @@ const AppMapContent = memo(function AppMap({
       if (restaurant) {
         om.actions.home.setHoveredRestaurant({
           id: restaurant.id,
-          slug: restaurant.slug,
+          slug: restaurant.slug ?? '',
         })
       } else {
         console.warn('not found?', restaurants, id)
@@ -422,16 +411,18 @@ const AppMapContent = memo(function AppMap({
       justifyContent="center"
     >
       <HStack height="100%" maxWidth={pageWidthMax} width="100%">
-        <VStack height="100%" flex={2}>
-          <Text>
-            Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
-            Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
-            Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
-            Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
-            Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
-            Lorem Lorem Lorem Lorem Lorem Lorem Lorem{' '}
-          </Text>
-        </VStack>
+        {!isSmall && (
+          <VStack height="100%" flex={2}>
+            <Text>
+              Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
+              Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
+              Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
+              Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
+              Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
+              Lorem Lorem Lorem Lorem Lorem Lorem Lorem{' '}
+            </Text>
+          </VStack>
+        )}
         <VStack
           pointerEvents="auto"
           contain="strict"
@@ -450,8 +441,9 @@ const AppMapContent = memo(function AppMap({
             centerToResults={om.state.home.centerToResults}
             selected={internal.id}
             hovered={
-              om.state.home.hoveredRestaurant &&
-              om.state.home.hoveredRestaurant.id
+              (om.state.home.hoveredRestaurant &&
+                om.state.home.hoveredRestaurant.id) ||
+              ''
             }
             onMoveEnd={handleMoveEnd}
             onDoubleClick={handleDoubleClick}

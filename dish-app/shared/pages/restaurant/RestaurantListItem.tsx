@@ -423,7 +423,7 @@ const RestaurantListItemContent = memo(
                   <Spacer />
 
                   <RestaurantDeliveryButtons
-                    label={isSmall ? '' : 'Order:'}
+                    label={isSmall ? '' : '🚗'}
                     restaurantSlug={restaurantSlug}
                   />
 
@@ -449,9 +449,8 @@ const RestaurantListItemContent = memo(
             <VStack
               paddingLeft={10}
               position="relative"
-              marginTop={-50}
               maxHeight={220}
-              marginBottom={-10}
+              marginTop={-50}
               transform={[{ translateY: -8 }]}
             >
               <Suspense fallback={null}>
@@ -467,6 +466,7 @@ const RestaurantListItemContent = memo(
 
               <HStack
                 height={34}
+                paddingTop={20}
                 paddingLeft={25}
                 overflow="hidden"
                 alignItems="center"
@@ -577,7 +577,7 @@ const RestaurantPeekDishes = memo(
     const foundMatchingSearchedDish = firstDishName
       ? tagNames.includes(firstDishName)
       : false
-    const dishSize = 160
+    const dishSize = 145
     return (
       <HStack
         contain="paint layout"
@@ -612,8 +612,8 @@ const RestaurantPeekDishes = memo(
                 restaurantSlug={props.restaurantSlug}
                 restaurantId={props.restaurantId}
                 dish={dish}
-                marginRight={-20}
-                marginTop={isEven ? -10 : 10}
+                marginRight={-15}
+                marginTop={isEven ? 0 : -15}
                 showSearchButton
               />
             )

@@ -87,7 +87,7 @@ const DishViewContent = (props: DishViewProps) => {
   const isTiny = size < 115
   const fontSize = (hasLongWord ? 14 : 16) * (isTiny ? 0.8 : 1)
   const isFallback = _isFallback ?? dish.isFallback
-  const sizeInner = Math.round(isFallback ? size * 0.8 : size * 0.925)
+  const sizeInner = Math.round(isFallback ? size * 0.8 : size * 0.975)
   const { lightColor, color } = getColorsForName(dish.name)
   const backgroundColor = lightColor
   const isActive = isHovered || selected
@@ -103,35 +103,6 @@ const DishViewContent = (props: DishViewProps) => {
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
     >
-      {showSearchButton && (
-        <AbsoluteVStack
-          onPress={prevent}
-          zIndex={10000}
-          bottom="7.5%"
-          right="7.5%"
-        >
-          <Link tag={dish}>
-            <VStack
-              width={32}
-              height={32}
-              borderRadius={1000}
-              backgroundColor={backgroundColor}
-              shadowColor="#000"
-              shadowOpacity={0.1}
-              shadowRadius={5}
-              shadowOffset={{ height: 1, width: 0 }}
-              alignItems="center"
-              justifyContent="center"
-              hoverStyle={{
-                transform: [{ scale: 1.1 }],
-              }}
-            >
-              <Search size={18} color={color} />
-            </VStack>
-          </Link>
-        </AbsoluteVStack>
-      )}
-
       {showVote && (
         <AbsoluteVStack
           width={20}
@@ -147,8 +118,11 @@ const DishViewContent = (props: DishViewProps) => {
               name={dish.name}
               subtle
               score={dish.score}
-              restaurantId={restaurantId}
-              restaurantSlug={restaurantSlug}
+              {...(restaurantId &&
+                restaurantSlug && {
+                  restaurantId,
+                  restaurantSlug,
+                })}
             />
           </Suspense>
         </AbsoluteVStack>
@@ -173,12 +147,42 @@ const DishViewContent = (props: DishViewProps) => {
             position="absolute"
             bottom="15%"
             left="0%"
-            fontSize={40}
+            fontSize={28}
             transform={[{ scale: 1 }]}
           >
             {dish.icon}
           </Text>
         )}
+
+        {showSearchButton && (
+          <AbsoluteVStack
+            onPress={prevent}
+            zIndex={888}
+            bottom="7.5%"
+            right="7.5%"
+          >
+            <Link tag={dish}>
+              <VStack
+                width={28}
+                height={28}
+                borderRadius={1000}
+                backgroundColor={backgroundColor}
+                shadowColor="#000"
+                shadowOpacity={0.1}
+                shadowRadius={5}
+                shadowOffset={{ height: 1, width: 0 }}
+                alignItems="center"
+                justifyContent="center"
+                hoverStyle={{
+                  transform: [{ scale: 1.1 }],
+                }}
+              >
+                <Search size={16} color={color} />
+              </VStack>
+            </Link>
+          </AbsoluteVStack>
+        )}
+
         <Box
           position="absolute"
           bottom="8%"
@@ -188,7 +192,7 @@ const DishViewContent = (props: DishViewProps) => {
           borderRadius={8}
           paddingVertical={3}
           paddingHorizontal={8}
-          maxWidth="100%"
+          maxWidth="60%"
           overflow="hidden"
           transform={[{ translateX: -10 }, { skewX: '-12deg' }]}
           shadowColor="rgba(0,0,0,0.1)"

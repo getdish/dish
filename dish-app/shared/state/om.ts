@@ -18,13 +18,12 @@ export const config = merge(
   })
 )
 
-export const om =
-  window['om'] ??
-  createOvermind(config, {
-    devtools: false, // '192.168.7.166:3031',
-    logProxies: true,
-    hotReloading: process.env.NODE_ENV !== 'production',
-  })
+// window['om'] ??
+export const om = createOvermind(config, {
+  devtools: false, // '192.168.7.166:3031',
+  logProxies: true,
+  hotReloading: process.env.NODE_ENV !== 'production',
+})
 
 if (process.env.NODE_ENV === 'development') {
   if (window['STARTED']) {
