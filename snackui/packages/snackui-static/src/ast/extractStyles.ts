@@ -9,8 +9,8 @@ import invariant from 'invariant'
 import { TextStyle, ViewStyle } from 'react-native'
 import * as AllExports from 'snackui/node'
 
-import { SNACK_CSS_FILE } from '../constants'
-import { getStylesAtomic, pseudos } from '../style/getStylesAtomic'
+import { CSS_FILE_NAME, SNACK_CSS_FILE } from '../constants'
+import { getStylesAtomic, pseudos } from '../getStylesAtomic'
 import { ClassNameToStyleObj, ExtractStylesOptions } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
 import {
@@ -234,9 +234,6 @@ export function extractStyles(
             return []
           }
           const res = getStylesAtomic(style, null, shouldPrintDebug)
-          if (shouldPrintDebug) {
-            console.log('addStylesAtomic', style, 'to', res)
-          }
           for (const x of res) {
             stylesByClassName[x.identifier] = x
           }
@@ -487,13 +484,7 @@ export function extractStyles(
             // dynamic
           } else {
             if (shouldPrintDebug) {
-              console.log('attr', {
-                name,
-                inlinePropCount,
-                styleValue,
-                value,
-                attribute: attribute?.value?.['expression'],
-              })
+              console.log('attr', name, styleValue)
             }
             viewStyles[name] = styleValue
             return false
@@ -652,7 +643,7 @@ export function extractStyles(
           }
           // since were removing down to div, we need to push the default styles onto this classname
           if (shouldPrintDebug) {
-            console.log({ component, originalNodeName, defaultStyle })
+            console.log('default styles', originalNodeName, defaultStyle)
           }
           viewStyles = {
             ...defaultStyle,
@@ -933,15 +924,12 @@ export function extractStyles(
         )
 
         if (shouldPrintDebug) {
-          console.log('final styled classnames', stylesByClassName)
+          console.log('final styled classnames', Object.keys(stylesByClassName))
         }
 
         for (const className in stylesByClassName) {
           if (stylesByClassName[className]) {
             const { rules } = stylesByClassName[className]
-            if (shouldPrintDebug) {
-              console.log('checking rules for', className, rules)
-            }
             if (rules.length !== 1) {
               console.log(rules)
               throw new Error(`should only have one rule`)
@@ -991,17 +979,23 @@ export function extractStyles(
   //   cssFileName = path.join(sourceDir, cssImportFileName)
   // }
 
-  const getGlobalCSS = () =>
-    Array.from(globalCSSMap.values())
-      .map((v) => [...v.comments].map((txt) => `${txt}\n`).join('') + v.css)
-      .join(' ')
+  const getGlobalCSS = () => {
+    return Array.from(globalCSSMap.values())
+      .map((v) => {
+        if (process.env.SNACKUI_CSS_COMMENTS) {
+          return [...v.comments].map((txt) => `${txt}\n`).join('') + v.css
+        }
+        return v.css
+      })
+      .join('\n')
+  }
 
   if (didAddGlobal) {
     writeCSS(getGlobalCSS())
   }
 
   ast.program.body.unshift(
-    t.importDeclaration([], t.stringLiteral(SNACK_CSS_FILE))
+    t.importDeclaration([], t.stringLiteral(`snackui/${CSS_FILE_NAME}`))
   )
 
   const result = generate(

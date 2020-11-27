@@ -285,7 +285,7 @@ module.exports = function getWebpackConfig(
           }),
 
         // somewhat slow for rebuilds
-        isProduction &&
+        !!(process.env.CIRCULAR_DEPS || isProduction) &&
           new CircularDependencyPlugin({
             // exclude detection of files based on a RegExp
             exclude: /a\.js|node_modules/,
@@ -303,8 +303,8 @@ module.exports = function getWebpackConfig(
         isHot &&
           new ReactRefreshWebpack4Plugin({
             overlay: false,
-            exclude: /node_modules/,
-            include: /snackui/,
+            exclude: /gqless|react-refresh/,
+            // include: /snackui/,
           }),
       ].filter(Boolean),
       devServer: {
@@ -374,7 +374,13 @@ module.exports = function getWebpackConfig(
       config.output.filename = `static/js/app.ssr.${process.env.NODE_ENV}.js`
     }
 
-    return smp.wrap(config)
+    // for profiling plugin speed
+    // ⚠️ this breaks HMR! Only use it for debugging
+    if (process.env.PROFILE_WEBPACK) {
+      return smp.wrap(config)
+    }
+
+    return config
   }
 
   function getFinalConfig() {

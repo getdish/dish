@@ -34,19 +34,6 @@ export const AppIntroLogin = memo(() => {
         />
 
         <Paragraph
-          color="#fff"
-          zIndex={10}
-          textAlign="center"
-          fontWeight="200"
-          size={2}
-        >
-          <Text opacity={0.5}>a</Text>
-          <Text>fun</Text>
-          <Text opacity={0.5}>food</Text>
-          <Text>pokédex</Text>
-        </Paragraph>
-
-        <Paragraph
           color="#E2A5D9"
           paddingHorizontal="3%"
           maxWidth={320}
@@ -54,10 +41,7 @@ export const AppIntroLogin = memo(() => {
           size="xl"
           textAlign="center"
         >
-          find better food
-          <br />
-          w/ ratings down to the dish
-          <br />& search across delivery
+          the better restaurant guide
         </Paragraph>
 
         <LinkButton

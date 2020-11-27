@@ -11,7 +11,7 @@ import {
 } from '@dish/graph'
 import { getStore } from '@dish/use-store'
 import { fullyIdle, series } from '@o/async'
-import { chain, filter, sortBy, uniqBy } from 'lodash'
+import { sortBy, uniqBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
 import {
@@ -49,6 +49,8 @@ import { RestaurantButton } from '../restaurant/RestaurantButton'
 import { RestaurantCard } from '../restaurant/RestaurantCard'
 import { StackViewProps } from '../StackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
+
+console.log(123, 123)
 
 // top dishes
 
