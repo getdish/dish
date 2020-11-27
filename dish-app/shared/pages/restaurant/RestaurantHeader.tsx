@@ -10,12 +10,18 @@ import { HomeStateItemRestaurant } from '../../state/home-types'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
+import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { SmallButton } from '../../views/ui/SmallButton'
+import { ratingToRatio } from './ratingToRatio'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantCard } from './RestaurantCard'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours } from './RestaurantDetailRow'
+import {
+  RestaurantFavoriteButton,
+  RestaurantFavoriteStar,
+} from './RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 
 type RestaurantHeaderProps = {
@@ -65,7 +71,8 @@ const RestaurantHeaderContent = memo(
         ((nameLen > 24 ? 26 : nameLen > 18 ? 30 : 40) *
           (size === 'sm' ? 0.8 : 1))
 
-      const contentLeftWidth = width - 250
+      const contentLeftWidth = width - 40
+      const restaurantId = restaurant.id
 
       return (
         <VStack
@@ -87,51 +94,76 @@ const RestaurantHeaderContent = memo(
             }}
           >
             <VStack>
-              <VStack zIndex={-1} position="relative" className="fade-photos">
+              <VStack
+                pointerEvents="auto"
+                position="relative"
+                className="fade-photos"
+              >
                 <RestaurantPhotosRow
                   restaurantSlug={restaurantSlug}
-                  width={200}
+                  width={260}
                   height={200}
                 />
               </VStack>
               <VStack
-                marginTop={-110}
+                marginTop={-20}
                 minWidth={minWidth}
                 borderTopRightRadius={drawerBorderRadius - 1}
                 borderTopLeftRadius={drawerBorderRadius - 1}
                 width="100%"
                 position="relative"
+                pointerEvents="none"
               >
-                <HStack alignItems="center">
+                <VStack flex={1}>
+                  <HStack alignItems="center">
+                    <RestaurantUpVoteDownVote
+                      activeTags={{}}
+                      restaurantSlug={restaurantSlug}
+                      restaurantId={restaurantId}
+                      score={restaurant.score ?? 0}
+                      ratio={ratingToRatio(restaurant.rating ?? 1)}
+                    />
+                    <Spacer size="xl" />
+                    <Text
+                      alignSelf="flex-start"
+                      selectable
+                      lineHeight={20}
+                      maxHeight={20}
+                      fontSize={fontSize}
+                      fontWeight="600"
+                      color="#fff"
+                      padding={20}
+                      backgroundColor="rgba(0,0,0,0.85)"
+                      shadowColor="#000"
+                      shadowOpacity={0.2}
+                      shadowRadius={5}
+                      shadowOffset={{ height: 3, width: 0 }}
+                      borderRadius={10}
+                    >
+                      {restaurant.name}
+                    </Text>
+                  </HStack>
                   <HStack
+                    pointerEvents="auto"
                     flex={1}
-                    paddingTop={paddingPx * 1.5}
                     alignItems="flex-start"
                     minWidth={280}
                   >
                     {spacer}
                     <VStack flex={10} overflow="hidden">
-                      <Text
-                        alignSelf="flex-start"
-                        selectable
-                        lineHeight={28}
-                        maxHeight={28}
-                        fontSize={fontSize}
-                        fontWeight="600"
-                        color="#fff"
-                        padding={20}
-                        backgroundColor="rgba(0,0,0,0.85)"
-                        shadowColor="#000"
-                        shadowOpacity={0.2}
-                        shadowRadius={5}
-                        shadowOffset={{ height: 3, width: 0 }}
-                        borderRadius={10}
-                      >
-                        {restaurant.name}
-                      </Text>
                       <Spacer size="lg" />
-                      <VStack overflow="hidden" paddingRight={20}>
-                        <HStack flexWrap="wrap" maxWidth="100%">
+                      <VStack
+                        pointerEvents="auto"
+                        overflow="hidden"
+                        paddingRight={20}
+                      >
+                        <HStack
+                          alignItems="center"
+                          flexWrap="wrap"
+                          maxWidth="100%"
+                        >
+                          <RestaurantFavoriteStar restaurantId={restaurantId} />
+
                           <Suspense fallback={null}>
                             <RestaurantAddressLinksRow
                               currentLocationInfo={
@@ -193,7 +225,7 @@ const RestaurantHeaderContent = memo(
                               <RestaurantTagsRow
                                 size="sm"
                                 restaurantSlug={restaurantSlug}
-                                restaurantId={restaurant.id}
+                                restaurantId={restaurantId}
                                 spacing={10}
                                 grid
                                 max={10}
@@ -207,9 +239,7 @@ const RestaurantHeaderContent = memo(
                             />
                           </VStack>
 
-                          <Spacer size="xxl" />
-
-                          <VStack
+                          {/* <VStack
                             marginTop={-90}
                             marginBottom={-30}
                             className="ease-in-out"
@@ -224,12 +254,12 @@ const RestaurantHeaderContent = memo(
                               restaurantId={restaurant.id}
                               size="md"
                             />
-                          </VStack>
+                          </VStack> */}
                         </HStack>
                       </VStack>
                     </VStack>
                   </HStack>
-                </HStack>
+                </VStack>
               </VStack>
             </VStack>
           </ContentScrollViewHorizontal>

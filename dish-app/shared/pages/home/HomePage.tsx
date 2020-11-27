@@ -216,8 +216,8 @@ const HomeFeed = memo(
                 type: 'dish',
                 id: dish.id,
                 rank: Math.random() * 10,
-                restaurantId: restaurants[0].id ?? '',
-                restaurantSlug: restaurants[0].slug ?? '',
+                restaurantId: restaurants[0]?.id ?? '',
+                restaurantSlug: restaurants[0]?.slug ?? '',
                 dish: {
                   slug: dish.slug ?? '',
                   name: dish.name ?? '',
@@ -295,17 +295,15 @@ const HomeFeed = memo(
 
     return (
       <>
-        <VStack marginTop={-10} alignItems="center">
-          <SlantedBox>
-            <Text
-              paddingHorizontal={6}
-              fontSize={22}
-              color="#000"
-              fontWeight="600"
-            >
-              {region.name ?? '...'}
-            </Text>
-          </SlantedBox>
+        <VStack alignItems="center">
+          <Text
+            paddingHorizontal={6}
+            fontSize={28}
+            color="#000"
+            fontWeight="800"
+          >
+            {region.name ?? '...'}
+          </Text>
         </VStack>
 
         <HomeTopSearches />
@@ -315,7 +313,7 @@ const HomeFeed = memo(
             paddingBottom={100}
             minHeight={Dimensions.get('window').height * 0.9}
           >
-            <HStack justifyContent="space-around" flexWrap="wrap">
+            <HStack justifyContent="center" flexWrap="wrap">
               {items.slice(0, 12).map((item) => {
                 const content = (() => {
                   switch (item.type) {
@@ -335,7 +333,7 @@ const HomeFeed = memo(
                 return (
                   <VStack
                     key={item.id}
-                    padding="0.5%"
+                    paddingHorizontal={20}
                     paddingVertical={15}
                     // flex={1}
                     alignItems="center"
@@ -386,11 +384,13 @@ const CuisineFeedCard = graphql(function CuisineFeedCard(
   const perCol = 2
 
   return (
-    <CardFrame overflow="hidden">
+    <CardFrame>
       <VStack height="100%" maxWidth="100%">
-        <AbsoluteVStack zIndex={10} top={10} left={10}>
-          <SlantedBox>
-            <Text fontWeight="600">{props.country}</Text>
+        <AbsoluteVStack zIndex={10} top={-5} left={-5}>
+          <SlantedBox backgroundColor="#000">
+            <Text color="#fff" fontWeight="600" lineHeight={20} fontSize={20}>
+              {props.country} {props.icon}
+            </Text>
           </SlantedBox>
         </AbsoluteVStack>
         <ScrollView

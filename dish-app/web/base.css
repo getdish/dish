@@ -511,7 +511,7 @@ body > div {
 .fade-photos .scroll-snap-photo:hover::after {
   opacity: 0;
 } */
-
+/*
 .fade-photos::after {
   display: block;
   opacity: 1;
@@ -524,8 +524,8 @@ body > div {
   bottom: 0;
   z-index: 10;
   pointer-events: none;
-  background: linear-gradient(rgba(240, 250, 255, 0), rgb(240, 250, 255) 70%);
-}
+  background: linear-gradient(rgba(240, 250, 255, 0.5), rgb(240, 250, 255, 0.7));
+} */
 
 .animate-in {
   transition: all ease-in-out 300ms;

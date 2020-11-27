@@ -1,8 +1,8 @@
 import React from 'react'
 import { StackProps, VStack } from 'snackui'
 
-export const cardFrameWidth = 220
-export const cardFrameHeight = 330
+export const cardFrameWidth = 240
+export const cardFrameHeight = 340
 const borderRadius = 20
 export const cardnFrameBorderRadiusSmaller = borderRadius * 0.95
 

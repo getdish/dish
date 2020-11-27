@@ -330,13 +330,17 @@ function setupMapEffect({
     center: props.center,
     zoom: 11,
     attributionControl: false,
-  })
-    .addControl(
-      new mapboxgl.AttributionControl({
-        compact: true,
-      })
-    )
-    .setPadding(getProps().padding)
+  }).addControl(
+    new mapboxgl.AttributionControl({
+      compact: true,
+    })
+  )
+
+  const padding = getProps().padding
+  if (padding) {
+    map.setPadding(padding)
+  }
+
   window['map'] = map
 
   const loadMarker = (name: string, asset: string) => {
@@ -613,7 +617,6 @@ function setupMapEffect({
             })
             curId = null
           }
-          const id = feature.properties.ogc_fid
           curId = feature.id
           tileSetter({
             source: layerName,
