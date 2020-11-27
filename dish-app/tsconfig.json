@@ -32,8 +32,6 @@
     "src",
     "web",
     "shared",
-    "node_modules/@types",
-    "../../node_modules/@types"
   ],
 
   "exclude": ["**", "**/_"],

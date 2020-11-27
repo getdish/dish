@@ -7,18 +7,16 @@ import * as router from './router'
 import * as user from './user'
 
 export const config = merge(
-  {
-    onInitialize,
-    state: {},
-  },
   namespaced({
     home,
     user,
     router,
-  })
+  }),
+  {
+    onInitialize,
+  }
 )
 
-// window['om'] ??
 export const om = createOvermind(config, {
   devtools: false, // '192.168.7.166:3031',
   logProxies: true,
