@@ -250,18 +250,18 @@ const runSearch: AsyncAction<{
   const curState = om.state.home.currentState
   const searchQuery = opts.searchQuery ?? curState.searchQuery ?? ''
 
-  // if (
-  //   await om.actions.home.navigate({
-  //     state: {
-  //       ...curState,
-  //       searchQuery,
-  //     },
-  //   })
-  // ) {
-  //   console.log('did nav from search')
-  //   // nav will trigger search
-  //   return
-  // }
+  if (
+    await om.actions.home.navigate({
+      state: {
+        ...curState,
+        searchQuery,
+      },
+    })
+  ) {
+    console.log('did nav from search')
+    // nav will trigger search
+    return
+  }
 
   let state = om.state.home.lastSearchState
   const tags = getActiveTags(curState)
@@ -1050,7 +1050,7 @@ const promptLogin: Action<undefined, boolean> = (om) => {
   const user = om.state.user.user
   if (!user || !om.state.user.isLoggedIn) {
     om.actions.home.setShowUserMenu(true)
-    Toast.show(`Please signup or login to do this`)
+    Toast.show(`Signup/login to do this`)
     return true
   }
   return false

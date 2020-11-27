@@ -1,5 +1,4 @@
 import { graphql } from '@dish/graph'
-import { rest } from 'lodash'
 import React, { Suspense, memo, useCallback, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import {
@@ -10,7 +9,6 @@ import {
   VStack,
 } from 'snackui'
 
-import { bgLight, brandColorLight, lightYellow, yellow } from '../../colors'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
@@ -25,7 +23,6 @@ import { ratingToRatio } from './ratingToRatio'
 import { priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
-import RestaurantRatingView from './RestaurantRatingView'
 
 export type RestaurantCardProps = {
   size?: 'lg' | 'md'
@@ -128,7 +125,6 @@ export const RestaurantCardContent = memo(
                 <AbsoluteVStack top={-10} left={-10} zIndex={20}>
                   <RestaurantUpVoteDownVote
                     activeTags={{}}
-                    backgroundColor={bgLight}
                     restaurantSlug={restaurantSlug}
                     restaurantId={restaurantId}
                     score={restaurant.score ?? 0}
@@ -151,18 +147,12 @@ export const RestaurantCardContent = memo(
                   </Paragraph>
                 </VStack>
 
-                <CircleButton
-                  zIndex={10}
-                  alignSelf="center"
-                  marginVertical={-18}
-                >
-                  <Suspense fallback={null}>
-                    <RestaurantFavoriteButton
-                      restaurantId={restaurantId}
-                      size="md"
-                    />
-                  </Suspense>
-                </CircleButton>
+                <VStack marginVertical={-18}>
+                  <RestaurantFavoriteButton
+                    size="md"
+                    restaurantId={restaurantId}
+                  />
+                </VStack>
               </AbsoluteVStack>
             </VStack>
           </CardFrame>

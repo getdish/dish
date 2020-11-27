@@ -1,25 +1,21 @@
 import { graphql } from '@dish/graph'
-import React, { Suspense, memo, useCallback, useMemo, useState } from 'react'
-import { AbsoluteVStack, HStack, LoadingItem, Spacer, VStack } from 'snackui'
+import React, { Suspense, memo } from 'react'
+import { LoadingItem, Spacer, VStack } from 'snackui'
 
-import { bgLight, bgLightHover, darkBlue, grey, lightGrey } from '../../colors'
+import { bgLight, bgLightHover, darkBlue } from '../../colors'
 import { getMinLngLat } from '../../helpers/getLngLat'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemRestaurant } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
 import { ContentScrollView } from '../../views/ContentScrollView'
-import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
-import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { StackDrawer } from '../../views/StackDrawer'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { StackViewProps } from '../StackViewProps'
 import { RestaurantBreakdown } from './RestaurantBreakdown'
-import { RestaurantCard } from './RestaurantCard'
 import { RestaurantDishPhotos } from './RestaurantDishPhotos'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantMenu } from './RestaurantMenu'
-import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
 import { useSelectedDish } from './useSelectedDish'
 
@@ -42,7 +38,6 @@ const RestaurantPage = memo(
     const { selectedDish, setSelectedDishToggle } = useSelectedDish(
       section === 'dishes' ? sectionSlug : null
     )
-    console.log('sectionsection', sectionSlug, section)
 
     usePageLoadEffect(
       props,
