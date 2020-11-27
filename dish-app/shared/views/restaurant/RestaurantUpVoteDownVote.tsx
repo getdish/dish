@@ -1,12 +1,8 @@
 import { graphql } from '@dish/graph'
 import { ChevronDown, ChevronUp } from '@dish/react-feather'
 import React, { Suspense, memo, useState } from 'react'
-import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
-  HStack,
-  HoverablePopover,
-  LinearGradient,
   StackProps,
   Text,
   Tooltip,
@@ -14,23 +10,11 @@ import {
   prevent,
 } from 'snackui'
 
-import {
-  bgLight,
-  blue,
-  green,
-  lightGreen,
-  lightOrange,
-  lightRed,
-  orange,
-  red,
-} from '../../colors'
-import { rgbString } from '../../helpers/rgbString'
-import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
+import { bgLight, blue, green, orange, red } from '../../colors'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { HomeActiveTagsRecord } from '../../state/home-types'
-import CircularProgress from '../CircularProgress'
-import { Link } from '../ui/Link'
+import { SentimentCircle } from './SentimentCircle'
 
 type UpvoteDownvoteProps = {
   restaurantId: string
@@ -48,22 +32,6 @@ export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
   )
 }
 
-const sentiments = {
-  0: '😞',
-  1: '😕',
-  2: '🙂',
-  3: '😊',
-  4: '🤤',
-}
-
-const colors = {
-  0: red,
-  1: orange,
-  2: orange,
-  3: green,
-  4: blue,
-}
-
 const RestaurantUpVoteDownVoteContents = memo(
   graphql(function RestaurantUpVoteDownVote({
     restaurantId,
@@ -74,52 +42,20 @@ const RestaurantUpVoteDownVoteContents = memo(
   }: UpvoteDownvoteProps) {
     const { vote, setVote } = useUserTagVotes(restaurantSlug, activeTags)
     const score = baseScore + vote
-    const key =
-      ratio <= 0.25
-        ? 0
-        : ratio <= 0.5
-        ? 1
-        : ratio <= 0.75
-        ? 2
-        : ratio < 0.9
-        ? 3
-        : 4
 
     return (
       <VStack position="relative">
         <AbsoluteVStack
-          bottom={-19}
-          right={-14}
+          bottom={-14}
+          right={-10}
+          zIndex={2}
           borderRadius={1000}
           backgroundColor="#fff"
           shadowColor="#000"
           shadowOpacity={0.1}
           shadowRadius={3}
         >
-          <VStack transform={[{ scale: 0.97 }]}>
-            <CircularProgress
-              fill={ratio * 100}
-              size={33}
-              width={5}
-              tintColor={colors[key]}
-              lineCap="round"
-              backgroundColor="#fff"
-              rotation={(1 - ratio) * 180}
-            >
-              {() => (
-                <HStack>
-                  <Text
-                    fontSize={29}
-                    color={green}
-                    fontWeight="900"
-                    letterSpacing={-1}
-                  >
-                    {sentiments[key]}
-                  </Text>
-                </HStack>
-              )}
-            </CircularProgress>
-          </VStack>
+          <SentimentCircle ratio={ratio} />
         </AbsoluteVStack>
         <VStack
           // className="safari-fix-overflow"
@@ -134,7 +70,7 @@ const RestaurantUpVoteDownVoteContents = memo(
             borderRadius={12}
             overflow="hidden"
             padding={2}
-            paddingHorizontal={2}
+            paddingHorizontal={5}
           >
             <VStack alignItems="flex-end" transform={[{ skewX: '12deg' }]}>
               <TotalScore
@@ -164,7 +100,7 @@ export const TotalScore = memo(
     ratio?: number
     score: number
     vote: -1 | 0 | 1
-    setVote?: (vote: number) => void
+    setVote?: Function
     subtle?: boolean
   } & StackProps) => {
     score = Math.round(score)
