@@ -50,8 +50,6 @@ import { RestaurantCard } from '../restaurant/RestaurantCard'
 import { StackViewProps } from '../StackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
 
-console.log(123, 123)
-
 // top dishes
 
 type Props = StackViewProps<HomeStateItemHome>
@@ -89,7 +87,9 @@ export default memo(function HomePage(props: Props) {
   }, [props.item.region])
 
   const topContentHeight = 20 + (isSmall ? 0 : searchBarHeight + 10)
-  const region = getStore(AppMapStore).regions[props.item.region]
+  const region =
+    getStore(AppMapStore).regions[props.item.region] ??
+    getStore(AppMapStore).regions['san-francisco']
 
   return (
     <>
@@ -129,7 +129,7 @@ export default memo(function HomePage(props: Props) {
           <VStack flex={1} overflow="hidden" maxWidth="100%">
             <VStack>
               <VStack pointerEvents="none" height={topContentHeight} />
-              <HomeFeed region={region} item={props.item} />
+              {!!region && <HomeFeed region={region} item={props.item} />}
             </VStack>
           </VStack>
         </ContentScrollView>
