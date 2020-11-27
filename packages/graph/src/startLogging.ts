@@ -1,6 +1,6 @@
 import { isSafari } from '@dish/helpers'
 
-import { client } from './graphql'
+// import { client } from './graphql'
 
 let isLogging = false
 
@@ -10,8 +10,8 @@ export function startLogging(verbose = false) {
     if (isLogging) return
     isLogging = true
     if (!isSafari) {
-      const { Logger } = require('@o/gqless-logger')
-      new Logger(client, verbose)
+      // const { Logger } = require('@o/gqless-logger')
+      // new Logger(client, verbose)
     }
   }
 }

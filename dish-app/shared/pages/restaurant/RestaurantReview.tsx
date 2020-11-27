@@ -46,7 +46,7 @@ export const RestaurantReview = memo(
       const review = reviews[0]
 
       useLazyEffect(() => {
-        refetch(reviews)
+        // refetch(reviews)
       }, [refetchKey])
 
       const sentiments = review.sentiments()

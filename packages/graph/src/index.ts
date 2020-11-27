@@ -1,7 +1,9 @@
 import 'isomorphic-unfetch'
 import '@dish/helpers/polyfill'
 
-export { graphql } from '@o/gqless-react'
+export * from './react'
+// export * from '@dish/gqless-react'
+// export { graphql } from '@o/gqless-react'
 // export {
 //   client as newClient,
 //   query as newQuery,

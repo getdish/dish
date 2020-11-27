@@ -91,10 +91,10 @@ export const useUserReviewsQuery = (
   // ensure fetched by gqless
   useLazyEffect(() => {
     if (fetchKey && shouldFetch) {
-      const fetcher = refetch(reviewsQuery) as any
-      if (fetcher) {
-        return series([() => resolved(fetcher), forceUpdate])
-      }
+      // const fetcher = refetch(reviewsQuery) as any
+      // if (fetcher) {
+      //   return series([() => resolved(fetcher), forceUpdate])
+      // }
     }
   }, [shouldFetch, fetchKey])
 
@@ -191,7 +191,7 @@ export const useUserReviewCommentQuery = (restaurantId: string) => {
         id: review.id,
       })
       Toast.show(`Deleted!`)
-      refetch()
+      // refetch()
     },
   }
 }

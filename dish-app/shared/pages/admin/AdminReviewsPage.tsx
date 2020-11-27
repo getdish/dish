@@ -1,7 +1,7 @@
 import { graphql, order_by, query } from '@dish/graph'
 import { fetchBertSentiment } from '@dish/helpers'
 import { Store, useStore } from '@dish/use-store'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { ScrollView, TextInput } from 'react-native'
 import {
   Divider,
@@ -315,7 +315,9 @@ const ReviewList = () => {
   const search = useDebounceValue(searchRaw, 100)
   return (
     <AdminSearchableColumn title="Reviews" onChangeSearch={(x) => setSearch(x)}>
+      {/* <Suspense fallback="Loading...xd"> */}
       <ReviewListContent search={search} column={2} />
+      {/* </Suspense> */}
     </AdminSearchableColumn>
   )
 }

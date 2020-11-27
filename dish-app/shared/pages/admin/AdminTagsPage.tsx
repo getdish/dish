@@ -269,16 +269,16 @@ const TagListContent = memo(
       // refetch on every re-render so we dont have stale reads from gqless
       useEffect(() => {
         console.log('refertching')
-        refetch(results)
+        // refetch(results)
       }, [lastRowSelection])
 
       useEffect(() => {
         if (tagStore.forceRefreshColumnByType === type) {
-          const res = refetch(results)
-          console.log('res', res)
-          setTimeout(() => {
-            forceUpdate()
-          }, 1000)
+          // const res = refetch(results)
+          // console.log('res', res)
+          // setTimeout(() => {
+          //   forceUpdate()
+          // }, 1000)
         }
       }, [tagStore.forceRefreshColumnByType])
 
@@ -455,7 +455,7 @@ const TagEdit = memo(
                 ...x,
               },
             ])
-            refetch(tag)
+            // refetch(tag)
             Toast.show('Saved')
           }}
         />
