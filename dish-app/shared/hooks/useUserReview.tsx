@@ -6,6 +6,7 @@ import {
   resolved,
   reviewDelete,
   reviewUpsert,
+  useRefetch,
 } from '@dish/graph'
 import { series } from '@o/async'
 import { useEffect, useState } from 'react'
@@ -42,6 +43,7 @@ export const useUserReviewsQuery = (
   restaurantId: string,
   type?: ReviewTypes
 ) => {
+  const refetchAll = useRefetch()
   const om = useOvermind()
   const forceUpdate = useForceUpdate()
   const userId = (om.state.user.user?.id as string) ?? ''
@@ -95,6 +97,7 @@ export const useUserReviewsQuery = (
       // if (fetcher) {
       //   return series([() => resolved(fetcher), forceUpdate])
       // }
+      // refetchAll()
     }
   }, [shouldFetch, fetchKey])
 

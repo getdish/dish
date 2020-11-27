@@ -9,6 +9,7 @@ const {
   useLazyQuery,
   usePolling,
   useTransactionQuery,
+  useRefetch,
 } = createReactClient(client, {
   defaultSuspense: true,
 })
@@ -20,4 +21,5 @@ export {
   useLazyQuery,
   usePolling,
   useTransactionQuery,
+  useRefetch,
 }

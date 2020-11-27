@@ -9,6 +9,7 @@ import {
   refetch,
   tagDelete,
   tagUpsert,
+  useRefetch,
 } from '@dish/graph'
 import { Store, useStore, useStoreSelector } from '@dish/use-store'
 import { capitalize } from 'lodash'
@@ -223,6 +224,7 @@ const TagListContent = memo(
       newTag?: Tag
       lastRowSelection: { name: string; type: TagType }
     }) => {
+      const refetchAll = useRefetch()
       const perPage = 50
       const { results, total, totalPages, page, setPage } = useQueryPaginated({
         perPage,
@@ -269,11 +271,13 @@ const TagListContent = memo(
       // refetch on every re-render so we dont have stale reads from gqless
       useEffect(() => {
         console.log('refertching')
+        // refetchAll()
         // refetch(results)
       }, [lastRowSelection])
 
       useEffect(() => {
         if (tagStore.forceRefreshColumnByType === type) {
+          // refetchAll()
           // const res = refetch(results)
           // console.log('res', res)
           // setTimeout(() => {
