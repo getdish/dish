@@ -36,16 +36,17 @@ BEGIN
 END
 $func$ LANGUAGE plpgsql IMMUTABLE COST 1000 ROWS 1;
 
-DROP FUNCTION IF EXISTS is_restaurant_open(_restaurant restaurant);
-CREATE OR REPLACE FUNCTION public.is_restaurant_open(_restaurant restaurant)
-  RETURNS boolean AS $$
-BEGIN
-  RETURN EXISTS (
-    SELECT 1
-      FROM opening_hours
-      WHERE _restaurant.id = opening_hours.restaurant_id
-        AND hours @> f_opening_hours_normalised_time(now())
-  );
+BEGIN;
+  DROP FUNCTION IF EXISTS is_restaurant_open(_restaurant restaurant);
+  CREATE OR REPLACE FUNCTION public.is_restaurant_open(_restaurant restaurant)
+    RETURNS boolean AS $$
+  BEGIN
+    RETURN EXISTS (
+      SELECT 1
+        FROM opening_hours
+        WHERE _restaurant.id = opening_hours.restaurant_id
+          AND hours @> f_opening_hours_normalised_time(now())
+    );
+  END;
+  $$ LANGUAGE plpgsql STABLE;
 END;
-$$ LANGUAGE plpgsql STABLE;
-
