@@ -80,6 +80,7 @@ services:
     environment:
       - DO_SPACES_ID=${TF_VAR_DO_SPACES_ID}
       - DO_SPACES_SECRET=${TF_VAR_DO_SPACES_SECRET}
+      - SENDGRID_API_KEY=${TF_VAR_SENDGRID_API_KEY}
       - POSTGRES_HOST=postgres
     depends_on:
       - 'postgres'

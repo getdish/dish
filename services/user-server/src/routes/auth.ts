@@ -7,7 +7,8 @@ import { checkJwt } from '../middlewares/checkJwt'
 
 const router = Router()
 router.post('/login', AuthController.login)
-router.post('/change-password', [checkJwt], AuthController.changePassword)
+router.post('/forgot-password', AuthController.forgotPassword)
+router.post('/password-reset', AuthController.passwordReset)
 
 router.post('/apple_verify', AppleAuthController.verify)
 router.post(

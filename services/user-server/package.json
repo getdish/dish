@@ -19,7 +19,8 @@
     "aws-sdk": "^2.762.0",
     "multer": "^1.4.2",
     "multer-s3": "^2.9.0",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.0",
+    "@sendgrid/mail": "7.4.0"
   },
   "devDependencies": {
     "ava": "^3.8.2",

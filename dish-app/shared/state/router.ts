@@ -24,7 +24,8 @@ export const routes = {
 
   login: new Route('/login'),
   register: new Route('/register'),
-  forgotPassword: new Route('/forgot-password'),
+  forgotPassword: new Route('/forgotten-password'),
+  passwordReset: new Route<{ token: string }>('/password-reset/:token'),
   tag: new Route('/tag'),
   promise: new Route('/promise'),
   pokedex: new Route('/pokedex'),

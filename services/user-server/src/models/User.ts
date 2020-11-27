@@ -9,6 +9,9 @@ import {
   UpdateDateColumn,
   getRepository,
 } from 'typeorm'
+import { v4 } from 'uuid'
+
+import Mailer from '../Mailer'
 
 const DEFAULT_PASSWORD = 'password'
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || DEFAULT_PASSWORD
@@ -62,12 +65,41 @@ export class User {
   @UpdateDateColumn()
   updated_at!: Date
 
+  @Column()
+  password_reset_token!: string
+
+  @Column()
+  password_reset_date!: Date
+
   hashPassword() {
     this.password = bcrypt.hashSync(this.password, 8)
   }
 
   checkIfUnencryptedPasswordIsValid(unencryptedPassword: string) {
     return bcrypt.compareSync(unencryptedPassword, this.password)
+  }
+
+  async sendPasswordResetEmail() {
+    const subject = 'Dish: Password reset'
+    const token = await this.createPasswordResetToken()
+    const message = `
+      Dear ${this.username},
+
+      Please follow this link to reset your password:
+
+      https://dishapp.com/password-reset/${token}
+
+      The Dish Team
+    `
+    await Mailer.send(this.email, subject, message)
+  }
+
+  async createPasswordResetToken() {
+    const userRepository = getRepository(User)
+    this.password_reset_token = v4()
+    this.password_reset_date = new Date()
+    await userRepository.save(this)
+    return this.password_reset_token
   }
 
   static async ensureAdminUser() {
