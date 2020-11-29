@@ -1,9 +1,8 @@
-import { Tag } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 
 import { useRestaurantQuery } from '../hooks/useRestaurantQuery'
 import {
-  selectDishViewSimple,
+  DishTagItemSimple,
   selectRishDishViewSimple,
 } from './selectDishViewSimple'
 
@@ -20,15 +19,6 @@ import {
 //   score?: number
 // }
 
-export type DishTagItem = {
-  name: string
-  icon?: string
-  score?: number
-  image: string
-  slug: string
-  isFallback?: boolean
-}
-
 type Props = {
   restaurantSlug: string
   tag_names?: string[]
@@ -39,7 +29,7 @@ export const getRestuarantDishes = ({
   restaurantSlug,
   tag_names = [],
   max = 6,
-}: Props): DishTagItem[] => {
+}: Props): DishTagItemSimple[] => {
   const restaurant = useRestaurantQuery(restaurantSlug)
   const tagNames = tag_names.filter(Boolean).join(',')
   const topTags = restaurant.top_tags({
@@ -49,14 +39,14 @@ export const getRestuarantDishes = ({
     },
     limit: max,
   })
+
   return (topTags ?? [])
     .map((tag) => {
       if (!tag) return null
       return selectRishDishViewSimple(tag)
     })
-    .filter((x) => {
-      return x && !!x.slug
-    })
+    .filter(isPresent)
+    .filter((x) => !!x.slug)
 }
 
 // const getRestuarantDishesWithPhotos = (

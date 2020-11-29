@@ -2,12 +2,11 @@ import { graphql } from '@dish/graph'
 import React, { memo, useMemo, useState } from 'react'
 import { HStack, VStack } from 'snackui'
 
-import { bgLightHover, blue } from '../../colors'
+import { bgLightHover } from '../../colors'
 import { isWeb } from '../../constants'
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { getTagSlug } from '../../state/getTagSlug'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
-import { ColoredCircle } from '../../views/dish/ColoredCircle'
 import { DishView } from '../../views/dish/DishView'
 
 export const RestaurantDishPhotos = memo(

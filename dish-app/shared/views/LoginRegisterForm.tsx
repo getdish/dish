@@ -21,7 +21,6 @@ import {
   VStack,
 } from 'snackui'
 
-import { lightRed } from '../colors'
 import { isWeb } from '../constants'
 import { useOvermind } from '../state/useOvermind'
 import { SignInAppleButton } from './SignInAppleButton'
