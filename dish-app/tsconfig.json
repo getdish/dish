@@ -18,6 +18,8 @@
     "target": "esnext",
     "allowJs": true,
     "baseUrl": ".",
+    "strict": false,
+    "strictNullChecks": false,
 
     "removeComments": true,
     "typeRoots": [
@@ -32,13 +34,9 @@
 
   // "exclude": ["**/node_modules/**/.*"],
 
-  "include": [
-    "src",
-    "web",
-    "shared",
-  ],
+  "include": ["src", "web", "shared"],
 
-  "exclude": ["**", "**/_"],
+  "exclude": ["**/_"],
 
   "references": [
     {

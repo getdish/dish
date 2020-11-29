@@ -216,8 +216,8 @@ const HomeFeed = memo(
                 type: 'dish',
                 id: dish.id,
                 rank: Math.random() * 10,
-                restaurantId: restaurants[0].id ?? '',
-                restaurantSlug: restaurants[0].slug ?? '',
+                restaurantId: restaurants[0]?.id ?? '',
+                restaurantSlug: restaurants[0]?.slug ?? '',
                 dish: {
                   slug: dish.slug ?? '',
                   name: dish.name ?? '',

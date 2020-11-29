@@ -45,7 +45,7 @@ export const getRestuarantDishes = ({
   const topTags = restaurant.top_tags({
     args: {
       tag_names: tagNames,
-      tag_types: 'dish',
+      _tag_types: 'dish',
     },
     limit: max,
   })
