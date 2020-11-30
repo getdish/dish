@@ -1,4 +1,4 @@
-import { restaurant_tag, tag } from '@dish/graph'
+import { RestaurantTag, Tag } from '@dish/graph'
 
 export type DishTagItemSimple = {
   id: string
@@ -11,7 +11,7 @@ export type DishTagItemSimple = {
 }
 
 export const selectRishDishViewSimple = (
-  tag: restaurant_tag
+  tag: RestaurantTag
 ): DishTagItemSimple => {
   const tagImage = tag.photos()?.[0]
   const tagFallbackImage = tagImage ? null : tag.tag?.default_images()?.[0]
@@ -26,7 +26,7 @@ export const selectRishDishViewSimple = (
   }
 }
 
-export const selectTagDishViewSimple = (tag: tag) => {
+export const selectTagDishViewSimple = (tag: Tag) => {
   const [tagImage, tagFallbackImage] = tag.default_images?.() ?? []
   return {
     id: tag.id,

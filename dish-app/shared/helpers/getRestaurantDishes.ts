@@ -19,9 +19,6 @@ import {
 //   score?: number
 // }
 
-// TODO FIX: This interface was being imported but I don't actually know what it's supposed to have
-export interface DishTagItem {}
-
 type Props = {
   restaurantSlug: string
   tag_names?: string[]

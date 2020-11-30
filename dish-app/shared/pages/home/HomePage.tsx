@@ -72,7 +72,7 @@ export default memo(function HomePage(props: Props) {
   // load effect!
   usePageLoadEffect(props, () => {
     if (props.isActive) {
-      return setIsLoaded(true)
+      setIsLoaded(true)
     } else {
       return series([
         fullyIdle,
@@ -454,7 +454,7 @@ const getRestaurantButton = (r, i) => {
   )
 }
 
-const getDishColInner = (dish: tag, i: number) => {
+const getDishColInner = (dish: Tag, i: number) => {
   return (
     <VStack marginBottom={5} key={i}>
       <DishView size={100} dish={selectTagDishViewSimple(dish)} />
