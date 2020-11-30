@@ -45,6 +45,7 @@ export const AppIntroLogin = memo(() => {
         </Paragraph>
 
         <LinkButton
+          //@ts-expect-error
           display="inline"
           fontSize={18}
           paddingVertical={6}

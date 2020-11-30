@@ -37,6 +37,7 @@ export type DishViewProps = {
   name?: any
   cuisine?: NavigableTag
   dish: DishTagItem
+
   size?: number
   isFallback?: boolean
   disableFallbackFade?: boolean

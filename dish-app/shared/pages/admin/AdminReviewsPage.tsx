@@ -174,6 +174,7 @@ const PlacesList = () => {
 
 const defaultPlaces: AutocompleteItem[] = [
   {
+    is: 'autocomplete',
     name: 'All',
     type: 'all',
   },

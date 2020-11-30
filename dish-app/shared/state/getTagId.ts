@@ -1,7 +1,5 @@
-import { TagWithParent, tagSlug, tagSlugDisambiguated } from '@dish/graph'
+import { tagSlug } from '@dish/graph'
 
-import { NavigableTag } from './NavigableTag'
-
-export const getTagId = (tag: NavigableTag) => {
+export const getTagId = (tag: { slug?: string }) => {
   return tagSlug(tag)
 }

@@ -19,6 +19,11 @@ import {
 //   score?: number
 // }
 
+export interface DishTagItem extends Omit<DishTagItemSimple, 'slug' | 'id'> {
+  id?: string
+  slug?: string
+}
+
 type Props = {
   restaurantSlug: string
   tag_names?: string[]

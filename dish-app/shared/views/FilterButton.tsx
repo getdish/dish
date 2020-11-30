@@ -1,7 +1,7 @@
-import { Tag } from '@dish/graph'
 import { Clock, DollarSign, ShoppingBag } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
+import type { NavigableTag } from 'shared/state/NavigableTag'
 import { Box, HStack, HoverablePopover, Text, VStack } from 'snackui'
 
 import { useIsNarrow } from '../hooks/useIs'
@@ -20,7 +20,11 @@ export const FilterButton = memo(
     fontWeight = '500',
     lineHeight,
     ...rest
-  }: LinkButtonProps & { tag: Tag; isActive: boolean; color?: string }) => {
+  }: LinkButtonProps & {
+    tag: NavigableTag
+    isActive: boolean
+    color?: string
+  }) => {
     const isSmall = useIsNarrow()
     const iconColor = isSmall ? (isActive ? '#000' : '#fff') : color
     const textColor = isSmall ? color : isActive ? '#000' : color
@@ -36,6 +40,8 @@ export const FilterButton = memo(
           return <ShoppingBag size={18} color={iconColor} />
         case 'filters__price-low':
           return <DollarSign size={18} color={iconColor} />
+        default:
+          return null
       }
     })()
 

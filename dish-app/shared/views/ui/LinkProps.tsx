@@ -20,8 +20,8 @@ export type LinkSharedProps = Pick<
   AProps,
   'href' | 'target' | 'children' | 'className' | 'onClick'
 > & {
-  tag?: NavigableTag
-  tags?: NavigableTag[]
+  tag?: Partial<NavigableTag>
+  tags?: Partial<NavigableTag>[]
   replace?: boolean
   stopPropagation?: boolean
   ellipse?: boolean
@@ -32,6 +32,7 @@ export type LinkSharedProps = Pick<
   onMouseDown?: Function
   asyncClick?: boolean
   // text styles
+  display?: TextProps['display']
   color?: TextProps['color']
   fontWeight?: TextProps['fontWeight']
   textAlign?: TextProps['textAlign']

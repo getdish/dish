@@ -101,7 +101,7 @@ export function createQueryHelpersFor<A extends ModelType>(
       if (!next) throw new Error('@dish/graph: object refresh failed')
       return next as WithID<A>
     },
-    async delete(a: WithID<A>) {
+    async delete(a: WithID<Partial<A>>) {
       return await deleteAllBy(modelName, 'id', a.id)
     },
   }

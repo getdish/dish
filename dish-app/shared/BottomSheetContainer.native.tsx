@@ -24,7 +24,6 @@ export const BottomSheetContainer = ({ children, ...props }: StackProps) => {
         right={0}
         blurType="light"
         blurAmount={10}
-        reducedTransparencyFallbackColor="white"
       >
         {children}
       </BlurView>

@@ -2,7 +2,7 @@ import React from 'react'
 import { Image } from 'react-native'
 import { Paragraph, ParagraphProps } from 'snackui'
 
-import markSolid from '../../../shared/assets/d.svg'
+import markSolid from '../../../assets/dish-dark.jpg'
 
 export const IntroText = (props: ParagraphProps) => {
   return (

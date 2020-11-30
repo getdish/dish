@@ -43,6 +43,8 @@ export const AppSmallDrawerView = (props: { children: any }) => {
         node.removeEventListener('click', drawerSnapListener)
       }
     }
+
+    return undefined
   }, [])
 
   const panResponder = useMemo(() => {

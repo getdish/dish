@@ -75,8 +75,9 @@ const loadSearchPage: PageLoadEffectCallback = ({ isRefreshing, item }) => {
   let isCancelled = false
 
   if (isRefreshing) {
+    //@ts-expect-error overmind type error
     omStatic.actions.home.runSearch({ force: true })
-    return
+    return undefined
   }
 
   getLocationFromRoute().then((location) => {

@@ -3,7 +3,7 @@ import { slugify } from '@dish/graph'
 import { NavigableTag } from './NavigableTag'
 import { TagWithNameAndType } from './TagWithNameAndType'
 
-export const getTagSlug = (tag: NavigableTag) => {
+export const getTagSlug = (tag: { slug?: string }) => {
   if (!tag || tag.slug === null) {
     console.warn('no tag, or tag slug', tag)
     return ''

@@ -38,7 +38,11 @@ import { createAutocomplete } from './state/createAutocomplete'
 import { defaultLocationAutocompleteResults } from './state/defaultLocationAutocompleteResults'
 import { AutocompleteItem, LngLat, ShowAutocomplete } from './state/home-types'
 import { tagDefaultAutocomplete } from './state/localTags.json'
-import { NavigableTag } from './state/NavigableTag'
+import {
+  NavigableTag,
+  isNavigableTag,
+  tagsToNavigableTags,
+} from './state/NavigableTag'
 import { omStatic } from './state/omStatic'
 import { tagDisplayName } from './state/tagMeta'
 import { useOvermind } from './state/useOvermind'
@@ -129,13 +133,14 @@ const HomeAutocompleteEffects = memo(
           return [query, state.home.lastActiveTags] as const
         },
         ([query, tags]) => {
+          const navigablesTags = tagsToNavigableTags(tags)
           cancel?.()
           if (om.state.home.showAutocomplete) {
             onChangeStatus(true)
             cancel = runAutocomplete(
               om.state.home.showAutocomplete,
               query.trim(),
-              tags,
+              navigablesTags,
               () => {
                 onChangeStatus(false)
               }
@@ -546,7 +551,7 @@ function runAutocomplete(
       // om.actions.home.setAutocompleteResults([])
     }
     onFinish?.()
-    return
+    return undefined
   }
 
   return series([

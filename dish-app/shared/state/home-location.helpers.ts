@@ -44,7 +44,7 @@ export async function getLocationFromRoute(): Promise<HomeStateItemLocation | nu
     if (region) {
       const center = getCenter(region.geometry)
       if (!center) {
-        return
+        return undefined
       }
       return {
         center: {

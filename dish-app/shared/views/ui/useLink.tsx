@@ -16,7 +16,7 @@ import {
 import { getNavigateItemForState } from '../../state/getNavigateItemForState'
 import { getNextState } from '../../state/getNextState'
 import { HomeStateNav } from '../../state/home-types'
-import { NavigableTag } from '../../state/NavigableTag'
+import { NavigableTag, tagsToNavigableTags } from '../../state/NavigableTag'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
 import { LinkProps } from './LinkProps'
@@ -119,7 +119,7 @@ const getNormalizeLinkProps = memoize(
 
 const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
   if (props.tags || props.tag) {
-    const tags: NavigableTag[] = (props.tags ?? [props.tag])
+    const tags = tagsToNavigableTags(props.tags ?? [props.tag])
       .filter(isPresent)
       .map((tag) => {
         // TEMP bugfix, until we do new home, we need to fallback to getFullTagFromNameAndType

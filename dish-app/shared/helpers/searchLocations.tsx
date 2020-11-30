@@ -45,6 +45,7 @@ export async function searchLocations(
           country: feat.context?.find((x) => x.wikidata === 'Q30'),
         }
       }
+      return undefined
     })
     .filter(isPresent)
 }

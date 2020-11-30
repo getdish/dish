@@ -35,9 +35,10 @@ import { tagDisplayName } from '../state/tagMeta'
 import { LinkButton } from './ui/LinkButton'
 import { LinkButtonProps } from './ui/LinkProps'
 
-export type TagButtonTagProps = NonNullObject<
-  Required<Pick<Tag, 'name' | 'type' | 'slug'>>
-> & {
+export type TagButtonTagProps = {
+  type?: string
+  name?: string
+  slug?: string
   icon?: Exclude<Tag['icon'], null>
   rgb?: Exclude<Tag['rgb'], null>
   score?: number

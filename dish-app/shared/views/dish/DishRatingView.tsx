@@ -11,7 +11,7 @@ export const getDishRatingPercent = (rating: number) => {
 }
 
 export const getRankingColor = (rating: number | undefined) => {
-  if (!rating) return
+  if (!rating) return undefined
   return rating >= 0.8 ? 'green' : rating >= 0.5 ? 'orange' : 'red'
 }
 

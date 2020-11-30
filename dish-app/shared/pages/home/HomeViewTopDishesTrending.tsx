@@ -3,10 +3,8 @@ import {
   AbsoluteVStack,
   HStack,
   LoadingItem,
-  MediaQuery,
   SmallerTitle,
   VStack,
-  mediaQueries,
 } from 'snackui'
 
 import { useOvermind } from '../../state/useOvermind'
@@ -15,6 +13,7 @@ import { TrendingButton } from '../../views/ui/TrendingButton'
 
 export const HomeViewTopDishesTrending = memo(() => {
   const om = useOvermind()
+  //@ts-expect-error
   const topRestaurants = om.state.home.topDishes[0]?.top_restaurants ?? []
   const hasLoaded = topRestaurants.length > 0
 

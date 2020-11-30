@@ -1,9 +1,11 @@
 import {
+  DeepPartial,
   Review,
   globalTagId,
   query,
   refetch,
   resolved,
+  review,
   reviewDelete,
   reviewUpsert,
   useRefetch,
@@ -171,13 +173,11 @@ export const useUserReviewsQuery = (
   }
 }
 
-export const isTagReview = (r: Review) => !!r.tag_id && r.tag_id !== globalTagId
+export const isTagReview = (r: DeepPartial<Review>) =>
+  !!r.tag_id && r.tag_id !== globalTagId
 
 export const useUserReviewCommentQuery = (restaurantId: string) => {
-  const { reviews, upsert, refetch } = useUserReviewsQuery(
-    restaurantId,
-    'comment'
-  )
+  const { reviews, upsert } = useUserReviewsQuery(restaurantId, 'comment')
   const review = reviews.filter((x) => !isTagReview(x) && !!x.text)[0]
   return {
     review,

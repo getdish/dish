@@ -6,7 +6,6 @@ import {
   Divider,
   Paragraph,
   Spacer,
-  Text,
   UnorderedList,
   UnorderedListItem,
   VStack,
@@ -16,7 +15,7 @@ import { StackItemProps } from '../../AppStackView'
 import dishWhite from '../../assets/dish-white.jpg'
 import dontPanic from '../../assets/dont-panic.svg'
 import { BottomDrawerStore } from '../../BottomDrawerStore'
-import { bgLight, brandColorDark, lightGreen, lightYellow } from '../../colors'
+import { lightGreen, lightYellow } from '../../colors'
 import { HomeStateItemAbout } from '../../state/home-types'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { StackDrawer } from '../../views/StackDrawer'
@@ -37,7 +36,7 @@ export default function AboutPage({
   const drawerStore = useStore(BottomDrawerStore)
 
   useEffect(() => {
-    if (!isActive) return
+    if (!isActive) return undefined
     const tm = setTimeout(() => {
       if (drawerStore.snapIndex > 0) {
         drawerStore.setSnapPoint(0)
@@ -243,6 +242,8 @@ export default function AboutPage({
               </AbsoluteVStack>
               If this all sounds interesting and you actually read this far,
               consider{' '}
+              {/** Incompatibility with snack-ui types
+                 //@ts-expect-error */}
               <Link display="inline" href="mailto:team@dishapp.com">
                 sending us an email to join our team
               </Link>

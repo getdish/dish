@@ -1,4 +1,4 @@
-import { Review, query, reviewUpsert } from '@dish/graph'
+import { Review, query, review, reviewUpsert } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
 import { isNumber } from 'lodash'
 import { useEffect, useLayoutEffect } from 'react'
@@ -29,9 +29,9 @@ export class TagVoteStore extends Store<VoteStoreProps> {
     const [tag] = await getFullTags([{ slug: this.props.tagSlug }])
     if (!tag) {
       console.error('error writing vote')
-      return
+      return undefined
     }
-    const review: Review = {
+    const review = {
       tag_id: tag.id,
       user_id: omStatic.state.user.user?.id,
       restaurant_id: restaurantId,
@@ -80,7 +80,7 @@ export const useUserTagVote = (props: VoteStoreProps) => {
   const forceUpdate = useForceUpdate()
   const tag = allTags[props.tagSlug]
   const tagId = tag?.id
-  let review: Review | null = null
+  let review: review | null = null
 
   if (restaurant.id && userId && tagId) {
     review = query.review({

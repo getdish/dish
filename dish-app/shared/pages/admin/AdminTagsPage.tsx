@@ -2,11 +2,9 @@ import {
   Tag,
   TagRecord,
   TagType,
-  WithID,
   graphql,
   order_by,
   query,
-  refetch,
   tagDelete,
   tagUpsert,
   useRefetch,
@@ -553,6 +551,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
         unmounted = true
       }
     }
+    return undefined
   }, [tag.name])
 
   return (

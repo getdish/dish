@@ -61,7 +61,7 @@ export const MapView = memo((props: MapProps) => {
 
   // window resize
   useEffect(() => {
-    if (!map) return
+    if (!map) return undefined
     let cancel: Function | null = null
     const handleResize = () => {
       if (cancel) {
@@ -77,7 +77,7 @@ export const MapView = memo((props: MapProps) => {
   }, [map])
 
   useEffect(() => {
-    if (!mapNode.current) return
+    if (!mapNode.current) return undefined
     return setupMapEffect({
       mapNode: mapNode.current,
       isMounted,
@@ -119,7 +119,7 @@ export const MapView = memo((props: MapProps) => {
 
   // center + span
   useEffect(() => {
-    if (!map) return
+    if (!map) return undefined
 
     // be sure to cancel next move callback
     internal.current.currentMoveCancel?.()
@@ -148,6 +148,8 @@ export const MapView = memo((props: MapProps) => {
         internal.current.isAwaitingNextMove = false
       }
     }
+
+    return undefined
   }, [map, span.lat, span.lng, center.lat, center.lng])
 
   // padding

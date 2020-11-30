@@ -34,7 +34,7 @@
 
   // "exclude": ["**/node_modules/**/.*"],
 
-  "include": ["src", "web", "shared"],
+  "include": ["src", "web", "shared", "shared/**/*.json", "declaration.d.ts"],
 
   "exclude": ["**/_"],
 
