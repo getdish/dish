@@ -19,7 +19,7 @@ import {
 //   score?: number
 // }
 
-// TODO FIX: This interface was being imported but I don't actually what it's supposed to have
+// TODO FIX: This interface was being imported but I don't actually know what it's supposed to have
 export interface DishTagItem {}
 
 type Props = {
