@@ -8,6 +8,7 @@ import {
   graphql,
   order_by,
   query,
+  tag,
 } from '@dish/graph'
 import { getStore } from '@dish/use-store'
 import { fullyIdle, series } from '@o/async'
@@ -452,7 +453,7 @@ const getRestaurantButton = (r, i) => {
   )
 }
 
-const getDishColInner = (dish: Tag, i: number) => {
+const getDishColInner = (dish: tag, i: number) => {
   return (
     <VStack marginBottom={5} key={i}>
       <DishView size={100} dish={selectTagDishViewSimple(dish)} />

@@ -1,6 +1,8 @@
+import { selectFields } from '@dish/gqless'
+
 // import { order_by, query } from '../graphql'
-import { order_by, query, selectFields, tag } from '../graphql/new-generated'
-import { Tag, TagTag, TagWithId } from '../types'
+import { order_by, query, tag } from '../graphql/new-generated'
+import { Tag, TagWithId } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 import { tagTagUpsert } from './tag_tag-helpers'

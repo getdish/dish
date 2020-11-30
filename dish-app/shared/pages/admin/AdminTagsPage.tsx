@@ -361,9 +361,11 @@ const TagListItem = graphql(
         <AdminListItem
           text={text}
           onDelete={() => {
+            //@ts-expect-error
             tagDelete(tag)
           }}
           onEdit={(text) => {
+            //@ts-expect-error
             setTagNameAndIcon(tag, text)
           }}
           column={column}
@@ -397,7 +399,7 @@ const TagEditColumn = memo(() => {
         </SmallButton>
         {tagStore.showCreate && (
           <>
-            <TagCRUD tag={tagStore.draft} onChange={setDraftDebounced} />
+            <TagCRUD tag={tagStore.draft as Tag} onChange={setDraftDebounced} />
             <SmallButton
               onPress={async () => {
                 console.log('upserting', tagStore.draft)
@@ -438,7 +440,6 @@ const TagEdit = memo(
     const refetchTm = useRef(null)
     if (tagStore.selectedId) {
       const tag = queryTag(tagStore.selectedId)
-      console.log('got now', tag)
       const fullTag = {
         id: tagStore.selectedId,
         name: tag.name,
@@ -447,7 +448,7 @@ const TagEdit = memo(
         icon: tag.icon,
         alternates: parseJSONB(tag.alternates() ?? []),
         rgb: parseJSONB(tag.rgb() ?? []),
-      }
+      } as Tag
       return (
         <TagCRUD
           key={tagStore.selectedId}

@@ -1,3 +1,4 @@
+import { selectFields } from '@dish/gqless'
 import _ from 'lodash'
 
 import { globalTagId } from '../constants'
@@ -7,7 +8,6 @@ import {
   order_by,
   resolved,
   restaurant,
-  selectFields,
   tag,
 } from '../graphql/new-generated'
 // import { order_by, query } from '../graphql'

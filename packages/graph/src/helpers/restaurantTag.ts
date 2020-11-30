@@ -1,14 +1,14 @@
+import { selectFields } from '@dish/gqless'
+
 // import {
 //   restaurant_tag_constraint,
 //   restaurant_tag_update_column,
 // } from '../graphql'
 import {
   mutation,
-  query,
   restaurant_tag,
   restaurant_tag_constraint,
   restaurant_tag_update_column,
-  selectFields,
 } from '../graphql/new-generated'
 // import { mutation } from '../graphql/mutation'
 import { RestaurantTag, RestaurantWithId } from '../types'

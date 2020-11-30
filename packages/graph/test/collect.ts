@@ -1,9 +1,10 @@
 import '@o/react-test-env'
 
+import { selectFields } from '@dish/gqless'
 import anyTest, { TestInterface } from 'ava'
 
 import { restaurantFindOne } from '../_'
-import { restaurant, selectFields } from '../_/graphql/new-generated'
+import { restaurant } from '../_/graphql/new-generated'
 import {
   flushTestData,
   restaurantUpsert,

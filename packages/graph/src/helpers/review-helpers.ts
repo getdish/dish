@@ -1,3 +1,4 @@
+import { selectFields } from '@dish/gqless'
 import { uniqBy } from 'lodash'
 
 import { globalTagId } from '../constants'
@@ -7,7 +8,6 @@ import {
   query,
   review,
   review_constraint,
-  selectFields,
 } from '../graphql/new-generated'
 // import { order_by, query, review_constraint, uuid } from '../graphql'
 import { Review } from '../types'

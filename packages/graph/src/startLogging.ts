@@ -11,7 +11,7 @@ export function startLogging(verbose = false) {
     isLogging = true
     if (!isSafari) {
       import('@dish/gqless-logger').then(({ createLogger }) => {
-        const Logger = createLogger(client)
+        const Logger = createLogger(client, { stringifyJSON: false })
 
         Logger.start()
       })

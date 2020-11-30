@@ -3,6 +3,7 @@ import '@dish/common'
 import crypto from 'crypto'
 
 import { sentryException, sentryMessage } from '@dish/common'
+import { selectFields } from '@dish/gqless'
 import {
   PhotoBase,
   PhotoXref,
@@ -17,7 +18,6 @@ import {
   photo_xref_select_column,
   query,
   resolvedWithFields,
-  selectFields,
   uuid,
 } from '@dish/graph'
 import { chunk, clone, uniqBy } from 'lodash'

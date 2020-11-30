@@ -1,4 +1,5 @@
 import { DeepPartial, parseSchemaType } from '@dish/gqless'
+import { selectFields } from '@dish/gqless'
 
 import {
   Scalars,
@@ -10,7 +11,6 @@ import {
   restaurant_constraint,
   review_constraint,
   review_tag_sentence_constraint,
-  selectFields,
   setting_constraint,
   tag_constraint,
   tag_tag_constraint,

@@ -7,6 +7,10 @@ export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K]
 }
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]?: Maybe<T[SubKey]> }
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
+  { [SubKey in K]: Maybe<T[SubKey]> }
 /** All built-in and custom scalars, mapped to their actual values */
 export interface Scalars {
   ID: string
@@ -14,6 +18,7 @@ export interface Scalars {
   Boolean: boolean
   Int: number
   Float: number
+  float8: any
   geography: any
   geometry: any
   jsonb: any
@@ -66,6 +71,19 @@ export interface String_comparison_exp {
   _nlike?: Maybe<Scalars['String']>
   _nsimilar?: Maybe<Scalars['String']>
   _similar?: Maybe<Scalars['String']>
+}
+
+/** expression to compare columns of type float8. All fields are combined with logical 'AND'. */
+export interface float8_comparison_exp {
+  _eq?: Maybe<Scalars['float8']>
+  _gt?: Maybe<Scalars['float8']>
+  _gte?: Maybe<Scalars['float8']>
+  _in?: Maybe<Array<Scalars['float8']>>
+  _is_null?: Maybe<Scalars['Boolean']>
+  _lt?: Maybe<Scalars['float8']>
+  _lte?: Maybe<Scalars['float8']>
+  _neq?: Maybe<Scalars['float8']>
+  _nin?: Maybe<Array<Scalars['float8']>>
 }
 
 /** Expression to compare the result of casting a column of type geography. Multiple cast targets are combined with logical 'AND'. */
@@ -124,6 +142,209 @@ export interface geometry_comparison_exp {
   _st_touches?: Maybe<Scalars['geometry']>
   /** is the column contained in the given geometry value */
   _st_within?: Maybe<Scalars['geometry']>
+}
+
+/** order by aggregate values of table "hrr" */
+export interface hrr_aggregate_order_by {
+  avg?: Maybe<hrr_avg_order_by>
+  count?: Maybe<order_by>
+  max?: Maybe<hrr_max_order_by>
+  min?: Maybe<hrr_min_order_by>
+  stddev?: Maybe<hrr_stddev_order_by>
+  stddev_pop?: Maybe<hrr_stddev_pop_order_by>
+  stddev_samp?: Maybe<hrr_stddev_samp_order_by>
+  sum?: Maybe<hrr_sum_order_by>
+  var_pop?: Maybe<hrr_var_pop_order_by>
+  var_samp?: Maybe<hrr_var_samp_order_by>
+  variance?: Maybe<hrr_variance_order_by>
+}
+
+/** input type for inserting array relation for remote table "hrr" */
+export interface hrr_arr_rel_insert_input {
+  data: Array<hrr_insert_input>
+  on_conflict?: Maybe<hrr_on_conflict>
+}
+
+/** order by avg() on columns of table "hrr" */
+export interface hrr_avg_order_by {
+  hrr_bdry_i?: Maybe<order_by>
+  hrrnum?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** Boolean expression to filter rows from the table "hrr". All fields are combined with a logical 'AND'. */
+export interface hrr_bool_exp {
+  _and?: Maybe<Array<Maybe<hrr_bool_exp>>>
+  _not?: Maybe<hrr_bool_exp>
+  _or?: Maybe<Array<Maybe<hrr_bool_exp>>>
+  hrr_bdry_i?: Maybe<float8_comparison_exp>
+  hrrcity?: Maybe<String_comparison_exp>
+  hrrnum?: Maybe<Int_comparison_exp>
+  ogc_fid?: Maybe<Int_comparison_exp>
+  slug?: Maybe<String_comparison_exp>
+  wkb_geometry?: Maybe<geometry_comparison_exp>
+}
+
+/** unique or primary key constraints on table "hrr" */
+export enum hrr_constraint {
+  /** unique or primary key constraint */
+  hrr_pkey = 'hrr_pkey',
+  /** unique or primary key constraint */
+  hrr_slug_key = 'hrr_slug_key',
+}
+
+/** input type for incrementing integer column in table "hrr" */
+export interface hrr_inc_input {
+  hrr_bdry_i?: Maybe<Scalars['float8']>
+  hrrnum?: Maybe<Scalars['Int']>
+  ogc_fid?: Maybe<Scalars['Int']>
+}
+
+/** input type for inserting data into table "hrr" */
+export interface hrr_insert_input {
+  hrr_bdry_i?: Maybe<Scalars['float8']>
+  hrrcity?: Maybe<Scalars['String']>
+  hrrnum?: Maybe<Scalars['Int']>
+  ogc_fid?: Maybe<Scalars['Int']>
+  slug?: Maybe<Scalars['String']>
+  wkb_geometry?: Maybe<Scalars['geometry']>
+}
+
+/** order by max() on columns of table "hrr" */
+export interface hrr_max_order_by {
+  hrr_bdry_i?: Maybe<order_by>
+  hrrcity?: Maybe<order_by>
+  hrrnum?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+  slug?: Maybe<order_by>
+}
+
+/** order by min() on columns of table "hrr" */
+export interface hrr_min_order_by {
+  hrr_bdry_i?: Maybe<order_by>
+  hrrcity?: Maybe<order_by>
+  hrrnum?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+  slug?: Maybe<order_by>
+}
+
+/** input type for inserting object relation for remote table "hrr" */
+export interface hrr_obj_rel_insert_input {
+  data: hrr_insert_input
+  on_conflict?: Maybe<hrr_on_conflict>
+}
+
+/** on conflict condition type for table "hrr" */
+export interface hrr_on_conflict {
+  constraint: hrr_constraint
+  update_columns: Array<hrr_update_column>
+  where?: Maybe<hrr_bool_exp>
+}
+
+/** ordering options when selecting data from "hrr" */
+export interface hrr_order_by {
+  hrr_bdry_i?: Maybe<order_by>
+  hrrcity?: Maybe<order_by>
+  hrrnum?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+  slug?: Maybe<order_by>
+  wkb_geometry?: Maybe<order_by>
+}
+
+/** primary key columns input for table: "hrr" */
+export interface hrr_pk_columns_input {
+  ogc_fid: Scalars['Int']
+}
+
+/** select columns of table "hrr" */
+export enum hrr_select_column {
+  /** column name */
+  hrr_bdry_i = 'hrr_bdry_i',
+  /** column name */
+  hrrcity = 'hrrcity',
+  /** column name */
+  hrrnum = 'hrrnum',
+  /** column name */
+  ogc_fid = 'ogc_fid',
+  /** column name */
+  slug = 'slug',
+  /** column name */
+  wkb_geometry = 'wkb_geometry',
+}
+
+/** input type for updating data in table "hrr" */
+export interface hrr_set_input {
+  hrr_bdry_i?: Maybe<Scalars['float8']>
+  hrrcity?: Maybe<Scalars['String']>
+  hrrnum?: Maybe<Scalars['Int']>
+  ogc_fid?: Maybe<Scalars['Int']>
+  slug?: Maybe<Scalars['String']>
+  wkb_geometry?: Maybe<Scalars['geometry']>
+}
+
+/** order by stddev() on columns of table "hrr" */
+export interface hrr_stddev_order_by {
+  hrr_bdry_i?: Maybe<order_by>
+  hrrnum?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by stddev_pop() on columns of table "hrr" */
+export interface hrr_stddev_pop_order_by {
+  hrr_bdry_i?: Maybe<order_by>
+  hrrnum?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by stddev_samp() on columns of table "hrr" */
+export interface hrr_stddev_samp_order_by {
+  hrr_bdry_i?: Maybe<order_by>
+  hrrnum?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by sum() on columns of table "hrr" */
+export interface hrr_sum_order_by {
+  hrr_bdry_i?: Maybe<order_by>
+  hrrnum?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** update columns of table "hrr" */
+export enum hrr_update_column {
+  /** column name */
+  hrr_bdry_i = 'hrr_bdry_i',
+  /** column name */
+  hrrcity = 'hrrcity',
+  /** column name */
+  hrrnum = 'hrrnum',
+  /** column name */
+  ogc_fid = 'ogc_fid',
+  /** column name */
+  slug = 'slug',
+  /** column name */
+  wkb_geometry = 'wkb_geometry',
+}
+
+/** order by var_pop() on columns of table "hrr" */
+export interface hrr_var_pop_order_by {
+  hrr_bdry_i?: Maybe<order_by>
+  hrrnum?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by var_samp() on columns of table "hrr" */
+export interface hrr_var_samp_order_by {
+  hrr_bdry_i?: Maybe<order_by>
+  hrrnum?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by variance() on columns of table "hrr" */
+export interface hrr_variance_order_by {
+  hrr_bdry_i?: Maybe<order_by>
+  hrrnum?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
 }
 
 /** expression to compare columns of type jsonb. All fields are combined with logical 'AND'. */
@@ -365,6 +586,159 @@ export interface menu_item_var_samp_order_by {
 /** order by variance() on columns of table "menu_item" */
 export interface menu_item_variance_order_by {
   price?: Maybe<order_by>
+}
+
+/** order by aggregate values of table "nhood_labels" */
+export interface nhood_labels_aggregate_order_by {
+  avg?: Maybe<nhood_labels_avg_order_by>
+  count?: Maybe<order_by>
+  max?: Maybe<nhood_labels_max_order_by>
+  min?: Maybe<nhood_labels_min_order_by>
+  stddev?: Maybe<nhood_labels_stddev_order_by>
+  stddev_pop?: Maybe<nhood_labels_stddev_pop_order_by>
+  stddev_samp?: Maybe<nhood_labels_stddev_samp_order_by>
+  sum?: Maybe<nhood_labels_sum_order_by>
+  var_pop?: Maybe<nhood_labels_var_pop_order_by>
+  var_samp?: Maybe<nhood_labels_var_samp_order_by>
+  variance?: Maybe<nhood_labels_variance_order_by>
+}
+
+/** input type for inserting array relation for remote table "nhood_labels" */
+export interface nhood_labels_arr_rel_insert_input {
+  data: Array<nhood_labels_insert_input>
+  on_conflict?: Maybe<nhood_labels_on_conflict>
+}
+
+/** order by avg() on columns of table "nhood_labels" */
+export interface nhood_labels_avg_order_by {
+  ogc_fid?: Maybe<order_by>
+}
+
+/** Boolean expression to filter rows from the table "nhood_labels". All fields are combined with a logical 'AND'. */
+export interface nhood_labels_bool_exp {
+  _and?: Maybe<Array<Maybe<nhood_labels_bool_exp>>>
+  _not?: Maybe<nhood_labels_bool_exp>
+  _or?: Maybe<Array<Maybe<nhood_labels_bool_exp>>>
+  center?: Maybe<geometry_comparison_exp>
+  name?: Maybe<String_comparison_exp>
+  ogc_fid?: Maybe<Int_comparison_exp>
+}
+
+/** unique or primary key constraints on table "nhood_labels" */
+export enum nhood_labels_constraint {
+  /** unique or primary key constraint */
+  nhood_labels_pkey = 'nhood_labels_pkey',
+}
+
+/** input type for incrementing integer column in table "nhood_labels" */
+export interface nhood_labels_inc_input {
+  ogc_fid?: Maybe<Scalars['Int']>
+}
+
+/** input type for inserting data into table "nhood_labels" */
+export interface nhood_labels_insert_input {
+  center?: Maybe<Scalars['geometry']>
+  name?: Maybe<Scalars['String']>
+  ogc_fid?: Maybe<Scalars['Int']>
+}
+
+/** order by max() on columns of table "nhood_labels" */
+export interface nhood_labels_max_order_by {
+  name?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by min() on columns of table "nhood_labels" */
+export interface nhood_labels_min_order_by {
+  name?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** input type for inserting object relation for remote table "nhood_labels" */
+export interface nhood_labels_obj_rel_insert_input {
+  data: nhood_labels_insert_input
+  on_conflict?: Maybe<nhood_labels_on_conflict>
+}
+
+/** on conflict condition type for table "nhood_labels" */
+export interface nhood_labels_on_conflict {
+  constraint: nhood_labels_constraint
+  update_columns: Array<nhood_labels_update_column>
+  where?: Maybe<nhood_labels_bool_exp>
+}
+
+/** ordering options when selecting data from "nhood_labels" */
+export interface nhood_labels_order_by {
+  center?: Maybe<order_by>
+  name?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** primary key columns input for table: "nhood_labels" */
+export interface nhood_labels_pk_columns_input {
+  ogc_fid: Scalars['Int']
+}
+
+/** select columns of table "nhood_labels" */
+export enum nhood_labels_select_column {
+  /** column name */
+  center = 'center',
+  /** column name */
+  name = 'name',
+  /** column name */
+  ogc_fid = 'ogc_fid',
+}
+
+/** input type for updating data in table "nhood_labels" */
+export interface nhood_labels_set_input {
+  center?: Maybe<Scalars['geometry']>
+  name?: Maybe<Scalars['String']>
+  ogc_fid?: Maybe<Scalars['Int']>
+}
+
+/** order by stddev() on columns of table "nhood_labels" */
+export interface nhood_labels_stddev_order_by {
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by stddev_pop() on columns of table "nhood_labels" */
+export interface nhood_labels_stddev_pop_order_by {
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by stddev_samp() on columns of table "nhood_labels" */
+export interface nhood_labels_stddev_samp_order_by {
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by sum() on columns of table "nhood_labels" */
+export interface nhood_labels_sum_order_by {
+  ogc_fid?: Maybe<order_by>
+}
+
+/** update columns of table "nhood_labels" */
+export enum nhood_labels_update_column {
+  /** column name */
+  center = 'center',
+  /** column name */
+  name = 'name',
+  /** column name */
+  ogc_fid = 'ogc_fid',
+}
+
+/** order by var_pop() on columns of table "nhood_labels" */
+export interface nhood_labels_var_pop_order_by {
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by var_samp() on columns of table "nhood_labels" */
+export interface nhood_labels_var_samp_order_by {
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by variance() on columns of table "nhood_labels" */
+export interface nhood_labels_variance_order_by {
+  ogc_fid?: Maybe<order_by>
 }
 
 /** expression to compare columns of type numeric. All fields are combined with logical 'AND'. */
@@ -3209,18 +3583,298 @@ export interface uuid_comparison_exp {
   _nin?: Maybe<Array<Scalars['uuid']>>
 }
 
+/** order by aggregate values of table "zcta5" */
+export interface zcta5_aggregate_order_by {
+  avg?: Maybe<zcta5_avg_order_by>
+  count?: Maybe<order_by>
+  max?: Maybe<zcta5_max_order_by>
+  min?: Maybe<zcta5_min_order_by>
+  stddev?: Maybe<zcta5_stddev_order_by>
+  stddev_pop?: Maybe<zcta5_stddev_pop_order_by>
+  stddev_samp?: Maybe<zcta5_stddev_samp_order_by>
+  sum?: Maybe<zcta5_sum_order_by>
+  var_pop?: Maybe<zcta5_var_pop_order_by>
+  var_samp?: Maybe<zcta5_var_samp_order_by>
+  variance?: Maybe<zcta5_variance_order_by>
+}
+
+/** input type for inserting array relation for remote table "zcta5" */
+export interface zcta5_arr_rel_insert_input {
+  data: Array<zcta5_insert_input>
+  on_conflict?: Maybe<zcta5_on_conflict>
+}
+
+/** order by avg() on columns of table "zcta5" */
+export interface zcta5_avg_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** Boolean expression to filter rows from the table "zcta5". All fields are combined with a logical 'AND'. */
+export interface zcta5_bool_exp {
+  _and?: Maybe<Array<Maybe<zcta5_bool_exp>>>
+  _not?: Maybe<zcta5_bool_exp>
+  _or?: Maybe<Array<Maybe<zcta5_bool_exp>>>
+  aland10?: Maybe<float8_comparison_exp>
+  awater10?: Maybe<float8_comparison_exp>
+  classfp10?: Maybe<String_comparison_exp>
+  funcstat10?: Maybe<String_comparison_exp>
+  geoid10?: Maybe<String_comparison_exp>
+  intptlat10?: Maybe<String_comparison_exp>
+  intptlon10?: Maybe<String_comparison_exp>
+  mtfcc10?: Maybe<String_comparison_exp>
+  nhood?: Maybe<String_comparison_exp>
+  ogc_fid?: Maybe<Int_comparison_exp>
+  slug?: Maybe<String_comparison_exp>
+  wkb_geometry?: Maybe<geometry_comparison_exp>
+  zcta5ce10?: Maybe<String_comparison_exp>
+}
+
+/** unique or primary key constraints on table "zcta5" */
+export enum zcta5_constraint {
+  /** unique or primary key constraint */
+  zcta5_pkey = 'zcta5_pkey',
+  /** unique or primary key constraint */
+  zcta5_slug_key = 'zcta5_slug_key',
+}
+
+/** input type for incrementing integer column in table "zcta5" */
+export interface zcta5_inc_input {
+  aland10?: Maybe<Scalars['float8']>
+  awater10?: Maybe<Scalars['float8']>
+  ogc_fid?: Maybe<Scalars['Int']>
+}
+
+/** input type for inserting data into table "zcta5" */
+export interface zcta5_insert_input {
+  aland10?: Maybe<Scalars['float8']>
+  awater10?: Maybe<Scalars['float8']>
+  classfp10?: Maybe<Scalars['String']>
+  funcstat10?: Maybe<Scalars['String']>
+  geoid10?: Maybe<Scalars['String']>
+  intptlat10?: Maybe<Scalars['String']>
+  intptlon10?: Maybe<Scalars['String']>
+  mtfcc10?: Maybe<Scalars['String']>
+  nhood?: Maybe<Scalars['String']>
+  ogc_fid?: Maybe<Scalars['Int']>
+  slug?: Maybe<Scalars['String']>
+  wkb_geometry?: Maybe<Scalars['geometry']>
+  zcta5ce10?: Maybe<Scalars['String']>
+}
+
+/** order by max() on columns of table "zcta5" */
+export interface zcta5_max_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
+  classfp10?: Maybe<order_by>
+  funcstat10?: Maybe<order_by>
+  geoid10?: Maybe<order_by>
+  intptlat10?: Maybe<order_by>
+  intptlon10?: Maybe<order_by>
+  mtfcc10?: Maybe<order_by>
+  nhood?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+  slug?: Maybe<order_by>
+  zcta5ce10?: Maybe<order_by>
+}
+
+/** order by min() on columns of table "zcta5" */
+export interface zcta5_min_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
+  classfp10?: Maybe<order_by>
+  funcstat10?: Maybe<order_by>
+  geoid10?: Maybe<order_by>
+  intptlat10?: Maybe<order_by>
+  intptlon10?: Maybe<order_by>
+  mtfcc10?: Maybe<order_by>
+  nhood?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+  slug?: Maybe<order_by>
+  zcta5ce10?: Maybe<order_by>
+}
+
+/** input type for inserting object relation for remote table "zcta5" */
+export interface zcta5_obj_rel_insert_input {
+  data: zcta5_insert_input
+  on_conflict?: Maybe<zcta5_on_conflict>
+}
+
+/** on conflict condition type for table "zcta5" */
+export interface zcta5_on_conflict {
+  constraint: zcta5_constraint
+  update_columns: Array<zcta5_update_column>
+  where?: Maybe<zcta5_bool_exp>
+}
+
+/** ordering options when selecting data from "zcta5" */
+export interface zcta5_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
+  classfp10?: Maybe<order_by>
+  funcstat10?: Maybe<order_by>
+  geoid10?: Maybe<order_by>
+  intptlat10?: Maybe<order_by>
+  intptlon10?: Maybe<order_by>
+  mtfcc10?: Maybe<order_by>
+  nhood?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+  slug?: Maybe<order_by>
+  wkb_geometry?: Maybe<order_by>
+  zcta5ce10?: Maybe<order_by>
+}
+
+/** primary key columns input for table: "zcta5" */
+export interface zcta5_pk_columns_input {
+  ogc_fid: Scalars['Int']
+}
+
+/** select columns of table "zcta5" */
+export enum zcta5_select_column {
+  /** column name */
+  aland10 = 'aland10',
+  /** column name */
+  awater10 = 'awater10',
+  /** column name */
+  classfp10 = 'classfp10',
+  /** column name */
+  funcstat10 = 'funcstat10',
+  /** column name */
+  geoid10 = 'geoid10',
+  /** column name */
+  intptlat10 = 'intptlat10',
+  /** column name */
+  intptlon10 = 'intptlon10',
+  /** column name */
+  mtfcc10 = 'mtfcc10',
+  /** column name */
+  nhood = 'nhood',
+  /** column name */
+  ogc_fid = 'ogc_fid',
+  /** column name */
+  slug = 'slug',
+  /** column name */
+  wkb_geometry = 'wkb_geometry',
+  /** column name */
+  zcta5ce10 = 'zcta5ce10',
+}
+
+/** input type for updating data in table "zcta5" */
+export interface zcta5_set_input {
+  aland10?: Maybe<Scalars['float8']>
+  awater10?: Maybe<Scalars['float8']>
+  classfp10?: Maybe<Scalars['String']>
+  funcstat10?: Maybe<Scalars['String']>
+  geoid10?: Maybe<Scalars['String']>
+  intptlat10?: Maybe<Scalars['String']>
+  intptlon10?: Maybe<Scalars['String']>
+  mtfcc10?: Maybe<Scalars['String']>
+  nhood?: Maybe<Scalars['String']>
+  ogc_fid?: Maybe<Scalars['Int']>
+  slug?: Maybe<Scalars['String']>
+  wkb_geometry?: Maybe<Scalars['geometry']>
+  zcta5ce10?: Maybe<Scalars['String']>
+}
+
+/** order by stddev() on columns of table "zcta5" */
+export interface zcta5_stddev_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by stddev_pop() on columns of table "zcta5" */
+export interface zcta5_stddev_pop_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by stddev_samp() on columns of table "zcta5" */
+export interface zcta5_stddev_samp_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by sum() on columns of table "zcta5" */
+export interface zcta5_sum_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** update columns of table "zcta5" */
+export enum zcta5_update_column {
+  /** column name */
+  aland10 = 'aland10',
+  /** column name */
+  awater10 = 'awater10',
+  /** column name */
+  classfp10 = 'classfp10',
+  /** column name */
+  funcstat10 = 'funcstat10',
+  /** column name */
+  geoid10 = 'geoid10',
+  /** column name */
+  intptlat10 = 'intptlat10',
+  /** column name */
+  intptlon10 = 'intptlon10',
+  /** column name */
+  mtfcc10 = 'mtfcc10',
+  /** column name */
+  nhood = 'nhood',
+  /** column name */
+  ogc_fid = 'ogc_fid',
+  /** column name */
+  slug = 'slug',
+  /** column name */
+  wkb_geometry = 'wkb_geometry',
+  /** column name */
+  zcta5ce10 = 'zcta5ce10',
+}
+
+/** order by var_pop() on columns of table "zcta5" */
+export interface zcta5_var_pop_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by var_samp() on columns of table "zcta5" */
+export interface zcta5_var_samp_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
+/** order by variance() on columns of table "zcta5" */
+export interface zcta5_variance_order_by {
+  aland10?: Maybe<order_by>
+  awater10?: Maybe<order_by>
+  ogc_fid?: Maybe<order_by>
+}
+
 export const scalarsEnumsHash: ScalarsEnumsHash = {
   Boolean: true,
   Float: true,
   ID: true,
   Int: true,
   String: true,
+  float8: true,
   geography: true,
   geometry: true,
+  hrr_constraint: true,
+  hrr_select_column: true,
+  hrr_update_column: true,
   jsonb: true,
   menu_item_constraint: true,
   menu_item_select_column: true,
   menu_item_update_column: true,
+  nhood_labels_constraint: true,
+  nhood_labels_select_column: true,
+  nhood_labels_update_column: true,
   numeric: true,
   opening_hours_constraint: true,
   opening_hours_select_column: true,
@@ -3259,10 +3913,34 @@ export const scalarsEnumsHash: ScalarsEnumsHash = {
   user_select_column: true,
   user_update_column: true,
   uuid: true,
+  zcta5_constraint: true,
+  zcta5_select_column: true,
+  zcta5_update_column: true,
 }
 export const generatedSchema = {
   query: {
     __typename: { __type: 'String!' },
+    hrr: {
+      __type: '[hrr!]!',
+      __args: {
+        distinct_on: '[hrr_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[hrr_order_by!]',
+        where: 'hrr_bool_exp',
+      },
+    },
+    hrr_aggregate: {
+      __type: 'hrr_aggregate!',
+      __args: {
+        distinct_on: '[hrr_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[hrr_order_by!]',
+        where: 'hrr_bool_exp',
+      },
+    },
+    hrr_by_pk: { __type: 'hrr', __args: { ogc_fid: 'Int!' } },
     menu_item: {
       __type: '[menu_item!]!',
       __args: {
@@ -3284,6 +3962,27 @@ export const generatedSchema = {
       },
     },
     menu_item_by_pk: { __type: 'menu_item', __args: { id: 'uuid!' } },
+    nhood_labels: {
+      __type: '[nhood_labels!]!',
+      __args: {
+        distinct_on: '[nhood_labels_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[nhood_labels_order_by!]',
+        where: 'nhood_labels_bool_exp',
+      },
+    },
+    nhood_labels_aggregate: {
+      __type: 'nhood_labels_aggregate!',
+      __args: {
+        distinct_on: '[nhood_labels_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[nhood_labels_order_by!]',
+        where: 'nhood_labels_bool_exp',
+      },
+    },
+    nhood_labels_by_pk: { __type: 'nhood_labels', __args: { ogc_fid: 'Int!' } },
     opening_hours: {
       __type: '[opening_hours!]!',
       __args: {
@@ -3524,14 +4223,48 @@ export const generatedSchema = {
       },
     },
     user_by_pk: { __type: 'user', __args: { id: 'uuid!' } },
+    zcta5: {
+      __type: '[zcta5!]!',
+      __args: {
+        distinct_on: '[zcta5_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[zcta5_order_by!]',
+        where: 'zcta5_bool_exp',
+      },
+    },
+    zcta5_aggregate: {
+      __type: 'zcta5_aggregate!',
+      __args: {
+        distinct_on: '[zcta5_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[zcta5_order_by!]',
+        where: 'zcta5_bool_exp',
+      },
+    },
+    zcta5_by_pk: { __type: 'zcta5', __args: { ogc_fid: 'Int!' } },
   },
   mutation: {
     __typename: { __type: 'String!' },
+    delete_hrr: {
+      __type: 'hrr_mutation_response',
+      __args: { where: 'hrr_bool_exp!' },
+    },
+    delete_hrr_by_pk: { __type: 'hrr', __args: { ogc_fid: 'Int!' } },
     delete_menu_item: {
       __type: 'menu_item_mutation_response',
       __args: { where: 'menu_item_bool_exp!' },
     },
     delete_menu_item_by_pk: { __type: 'menu_item', __args: { id: 'uuid!' } },
+    delete_nhood_labels: {
+      __type: 'nhood_labels_mutation_response',
+      __args: { where: 'nhood_labels_bool_exp!' },
+    },
+    delete_nhood_labels_by_pk: {
+      __type: 'nhood_labels',
+      __args: { ogc_fid: 'Int!' },
+    },
     delete_opening_hours: {
       __type: 'opening_hours_mutation_response',
       __args: { where: 'opening_hours_bool_exp!' },
@@ -3599,6 +4332,22 @@ export const generatedSchema = {
       __args: { where: 'user_bool_exp!' },
     },
     delete_user_by_pk: { __type: 'user', __args: { id: 'uuid!' } },
+    delete_zcta5: {
+      __type: 'zcta5_mutation_response',
+      __args: { where: 'zcta5_bool_exp!' },
+    },
+    delete_zcta5_by_pk: { __type: 'zcta5', __args: { ogc_fid: 'Int!' } },
+    insert_hrr: {
+      __type: 'hrr_mutation_response',
+      __args: {
+        objects: '[hrr_insert_input!]!',
+        on_conflict: 'hrr_on_conflict',
+      },
+    },
+    insert_hrr_one: {
+      __type: 'hrr',
+      __args: { object: 'hrr_insert_input!', on_conflict: 'hrr_on_conflict' },
+    },
     insert_menu_item: {
       __type: 'menu_item_mutation_response',
       __args: {
@@ -3611,6 +4360,20 @@ export const generatedSchema = {
       __args: {
         object: 'menu_item_insert_input!',
         on_conflict: 'menu_item_on_conflict',
+      },
+    },
+    insert_nhood_labels: {
+      __type: 'nhood_labels_mutation_response',
+      __args: {
+        objects: '[nhood_labels_insert_input!]!',
+        on_conflict: 'nhood_labels_on_conflict',
+      },
+    },
+    insert_nhood_labels_one: {
+      __type: 'nhood_labels',
+      __args: {
+        object: 'nhood_labels_insert_input!',
+        on_conflict: 'nhood_labels_on_conflict',
       },
     },
     insert_opening_hours: {
@@ -3761,6 +4524,36 @@ export const generatedSchema = {
       __type: 'user',
       __args: { object: 'user_insert_input!', on_conflict: 'user_on_conflict' },
     },
+    insert_zcta5: {
+      __type: 'zcta5_mutation_response',
+      __args: {
+        objects: '[zcta5_insert_input!]!',
+        on_conflict: 'zcta5_on_conflict',
+      },
+    },
+    insert_zcta5_one: {
+      __type: 'zcta5',
+      __args: {
+        object: 'zcta5_insert_input!',
+        on_conflict: 'zcta5_on_conflict',
+      },
+    },
+    update_hrr: {
+      __type: 'hrr_mutation_response',
+      __args: {
+        _inc: 'hrr_inc_input',
+        _set: 'hrr_set_input',
+        where: 'hrr_bool_exp!',
+      },
+    },
+    update_hrr_by_pk: {
+      __type: 'hrr',
+      __args: {
+        _inc: 'hrr_inc_input',
+        _set: 'hrr_set_input',
+        pk_columns: 'hrr_pk_columns_input!',
+      },
+    },
     update_menu_item: {
       __type: 'menu_item_mutation_response',
       __args: {
@@ -3775,6 +4568,22 @@ export const generatedSchema = {
         _inc: 'menu_item_inc_input',
         _set: 'menu_item_set_input',
         pk_columns: 'menu_item_pk_columns_input!',
+      },
+    },
+    update_nhood_labels: {
+      __type: 'nhood_labels_mutation_response',
+      __args: {
+        _inc: 'nhood_labels_inc_input',
+        _set: 'nhood_labels_set_input',
+        where: 'nhood_labels_bool_exp!',
+      },
+    },
+    update_nhood_labels_by_pk: {
+      __type: 'nhood_labels',
+      __args: {
+        _inc: 'nhood_labels_inc_input',
+        _set: 'nhood_labels_set_input',
+        pk_columns: 'nhood_labels_pk_columns_input!',
       },
     },
     update_opening_hours: {
@@ -3989,9 +4798,46 @@ export const generatedSchema = {
         pk_columns: 'user_pk_columns_input!',
       },
     },
+    update_zcta5: {
+      __type: 'zcta5_mutation_response',
+      __args: {
+        _inc: 'zcta5_inc_input',
+        _set: 'zcta5_set_input',
+        where: 'zcta5_bool_exp!',
+      },
+    },
+    update_zcta5_by_pk: {
+      __type: 'zcta5',
+      __args: {
+        _inc: 'zcta5_inc_input',
+        _set: 'zcta5_set_input',
+        pk_columns: 'zcta5_pk_columns_input!',
+      },
+    },
   },
   subscription: {
     __typename: { __type: 'String!' },
+    hrr: {
+      __type: '[hrr!]!',
+      __args: {
+        distinct_on: '[hrr_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[hrr_order_by!]',
+        where: 'hrr_bool_exp',
+      },
+    },
+    hrr_aggregate: {
+      __type: 'hrr_aggregate!',
+      __args: {
+        distinct_on: '[hrr_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[hrr_order_by!]',
+        where: 'hrr_bool_exp',
+      },
+    },
+    hrr_by_pk: { __type: 'hrr', __args: { ogc_fid: 'Int!' } },
     menu_item: {
       __type: '[menu_item!]!',
       __args: {
@@ -4013,6 +4859,27 @@ export const generatedSchema = {
       },
     },
     menu_item_by_pk: { __type: 'menu_item', __args: { id: 'uuid!' } },
+    nhood_labels: {
+      __type: '[nhood_labels!]!',
+      __args: {
+        distinct_on: '[nhood_labels_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[nhood_labels_order_by!]',
+        where: 'nhood_labels_bool_exp',
+      },
+    },
+    nhood_labels_aggregate: {
+      __type: 'nhood_labels_aggregate!',
+      __args: {
+        distinct_on: '[nhood_labels_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[nhood_labels_order_by!]',
+        where: 'nhood_labels_bool_exp',
+      },
+    },
+    nhood_labels_by_pk: { __type: 'nhood_labels', __args: { ogc_fid: 'Int!' } },
     opening_hours: {
       __type: '[opening_hours!]!',
       __args: {
@@ -4253,6 +5120,27 @@ export const generatedSchema = {
       },
     },
     user_by_pk: { __type: 'user', __args: { id: 'uuid!' } },
+    zcta5: {
+      __type: '[zcta5!]!',
+      __args: {
+        distinct_on: '[zcta5_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[zcta5_order_by!]',
+        where: 'zcta5_bool_exp',
+      },
+    },
+    zcta5_aggregate: {
+      __type: 'zcta5_aggregate!',
+      __args: {
+        distinct_on: '[zcta5_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[zcta5_order_by!]',
+        where: 'zcta5_bool_exp',
+      },
+    },
+    zcta5_by_pk: { __type: 'zcta5', __args: { ogc_fid: 'Int!' } },
   },
   Boolean_comparison_exp: {
     _eq: { __type: 'Boolean' },
@@ -4293,6 +5181,17 @@ export const generatedSchema = {
     _nsimilar: { __type: 'String' },
     _similar: { __type: 'String' },
   },
+  float8_comparison_exp: {
+    _eq: { __type: 'float8' },
+    _gt: { __type: 'float8' },
+    _gte: { __type: 'float8' },
+    _in: { __type: '[float8!]' },
+    _is_null: { __type: 'Boolean' },
+    _lt: { __type: 'float8' },
+    _lte: { __type: 'float8' },
+    _neq: { __type: 'float8' },
+    _nin: { __type: '[float8!]' },
+  },
   geography_cast_exp: { geometry: { __type: 'geometry_comparison_exp' } },
   geography_comparison_exp: {
     _cast: { __type: 'geography_cast_exp' },
@@ -4328,6 +5227,227 @@ export const generatedSchema = {
     _st_overlaps: { __type: 'geometry' },
     _st_touches: { __type: 'geometry' },
     _st_within: { __type: 'geometry' },
+  },
+  hrr: {
+    __typename: { __type: 'String!' },
+    hrr_bdry_i: { __type: 'float8' },
+    hrrcity: { __type: 'String' },
+    hrrnum: { __type: 'Int' },
+    ogc_fid: { __type: 'Int!' },
+    slug: { __type: 'String' },
+    wkb_geometry: { __type: 'geometry' },
+  },
+  hrr_aggregate: {
+    __typename: { __type: 'String!' },
+    aggregate: { __type: 'hrr_aggregate_fields' },
+    nodes: { __type: '[hrr!]!' },
+  },
+  hrr_aggregate_fields: {
+    __typename: { __type: 'String!' },
+    avg: { __type: 'hrr_avg_fields' },
+    count: {
+      __type: 'Int',
+      __args: { columns: '[hrr_select_column!]', distinct: 'Boolean' },
+    },
+    max: { __type: 'hrr_max_fields' },
+    min: { __type: 'hrr_min_fields' },
+    stddev: { __type: 'hrr_stddev_fields' },
+    stddev_pop: { __type: 'hrr_stddev_pop_fields' },
+    stddev_samp: { __type: 'hrr_stddev_samp_fields' },
+    sum: { __type: 'hrr_sum_fields' },
+    var_pop: { __type: 'hrr_var_pop_fields' },
+    var_samp: { __type: 'hrr_var_samp_fields' },
+    variance: { __type: 'hrr_variance_fields' },
+  },
+  hrr_aggregate_order_by: {
+    avg: { __type: 'hrr_avg_order_by' },
+    count: { __type: 'order_by' },
+    max: { __type: 'hrr_max_order_by' },
+    min: { __type: 'hrr_min_order_by' },
+    stddev: { __type: 'hrr_stddev_order_by' },
+    stddev_pop: { __type: 'hrr_stddev_pop_order_by' },
+    stddev_samp: { __type: 'hrr_stddev_samp_order_by' },
+    sum: { __type: 'hrr_sum_order_by' },
+    var_pop: { __type: 'hrr_var_pop_order_by' },
+    var_samp: { __type: 'hrr_var_samp_order_by' },
+    variance: { __type: 'hrr_variance_order_by' },
+  },
+  hrr_arr_rel_insert_input: {
+    data: { __type: '[hrr_insert_input!]!' },
+    on_conflict: { __type: 'hrr_on_conflict' },
+  },
+  hrr_avg_fields: {
+    __typename: { __type: 'String!' },
+    hrr_bdry_i: { __type: 'Float' },
+    hrrnum: { __type: 'Float' },
+    ogc_fid: { __type: 'Float' },
+  },
+  hrr_avg_order_by: {
+    hrr_bdry_i: { __type: 'order_by' },
+    hrrnum: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  hrr_bool_exp: {
+    _and: { __type: '[hrr_bool_exp]' },
+    _not: { __type: 'hrr_bool_exp' },
+    _or: { __type: '[hrr_bool_exp]' },
+    hrr_bdry_i: { __type: 'float8_comparison_exp' },
+    hrrcity: { __type: 'String_comparison_exp' },
+    hrrnum: { __type: 'Int_comparison_exp' },
+    ogc_fid: { __type: 'Int_comparison_exp' },
+    slug: { __type: 'String_comparison_exp' },
+    wkb_geometry: { __type: 'geometry_comparison_exp' },
+  },
+  hrr_inc_input: {
+    hrr_bdry_i: { __type: 'float8' },
+    hrrnum: { __type: 'Int' },
+    ogc_fid: { __type: 'Int' },
+  },
+  hrr_insert_input: {
+    hrr_bdry_i: { __type: 'float8' },
+    hrrcity: { __type: 'String' },
+    hrrnum: { __type: 'Int' },
+    ogc_fid: { __type: 'Int' },
+    slug: { __type: 'String' },
+    wkb_geometry: { __type: 'geometry' },
+  },
+  hrr_max_fields: {
+    __typename: { __type: 'String!' },
+    hrr_bdry_i: { __type: 'float8' },
+    hrrcity: { __type: 'String' },
+    hrrnum: { __type: 'Int' },
+    ogc_fid: { __type: 'Int' },
+    slug: { __type: 'String' },
+  },
+  hrr_max_order_by: {
+    hrr_bdry_i: { __type: 'order_by' },
+    hrrcity: { __type: 'order_by' },
+    hrrnum: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+    slug: { __type: 'order_by' },
+  },
+  hrr_min_fields: {
+    __typename: { __type: 'String!' },
+    hrr_bdry_i: { __type: 'float8' },
+    hrrcity: { __type: 'String' },
+    hrrnum: { __type: 'Int' },
+    ogc_fid: { __type: 'Int' },
+    slug: { __type: 'String' },
+  },
+  hrr_min_order_by: {
+    hrr_bdry_i: { __type: 'order_by' },
+    hrrcity: { __type: 'order_by' },
+    hrrnum: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+    slug: { __type: 'order_by' },
+  },
+  hrr_mutation_response: {
+    __typename: { __type: 'String!' },
+    affected_rows: { __type: 'Int!' },
+    returning: { __type: '[hrr!]!' },
+  },
+  hrr_obj_rel_insert_input: {
+    data: { __type: 'hrr_insert_input!' },
+    on_conflict: { __type: 'hrr_on_conflict' },
+  },
+  hrr_on_conflict: {
+    constraint: { __type: 'hrr_constraint!' },
+    update_columns: { __type: '[hrr_update_column!]!' },
+    where: { __type: 'hrr_bool_exp' },
+  },
+  hrr_order_by: {
+    hrr_bdry_i: { __type: 'order_by' },
+    hrrcity: { __type: 'order_by' },
+    hrrnum: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+    slug: { __type: 'order_by' },
+    wkb_geometry: { __type: 'order_by' },
+  },
+  hrr_pk_columns_input: { ogc_fid: { __type: 'Int!' } },
+  hrr_set_input: {
+    hrr_bdry_i: { __type: 'float8' },
+    hrrcity: { __type: 'String' },
+    hrrnum: { __type: 'Int' },
+    ogc_fid: { __type: 'Int' },
+    slug: { __type: 'String' },
+    wkb_geometry: { __type: 'geometry' },
+  },
+  hrr_stddev_fields: {
+    __typename: { __type: 'String!' },
+    hrr_bdry_i: { __type: 'Float' },
+    hrrnum: { __type: 'Float' },
+    ogc_fid: { __type: 'Float' },
+  },
+  hrr_stddev_order_by: {
+    hrr_bdry_i: { __type: 'order_by' },
+    hrrnum: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  hrr_stddev_pop_fields: {
+    __typename: { __type: 'String!' },
+    hrr_bdry_i: { __type: 'Float' },
+    hrrnum: { __type: 'Float' },
+    ogc_fid: { __type: 'Float' },
+  },
+  hrr_stddev_pop_order_by: {
+    hrr_bdry_i: { __type: 'order_by' },
+    hrrnum: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  hrr_stddev_samp_fields: {
+    __typename: { __type: 'String!' },
+    hrr_bdry_i: { __type: 'Float' },
+    hrrnum: { __type: 'Float' },
+    ogc_fid: { __type: 'Float' },
+  },
+  hrr_stddev_samp_order_by: {
+    hrr_bdry_i: { __type: 'order_by' },
+    hrrnum: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  hrr_sum_fields: {
+    __typename: { __type: 'String!' },
+    hrr_bdry_i: { __type: 'float8' },
+    hrrnum: { __type: 'Int' },
+    ogc_fid: { __type: 'Int' },
+  },
+  hrr_sum_order_by: {
+    hrr_bdry_i: { __type: 'order_by' },
+    hrrnum: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  hrr_var_pop_fields: {
+    __typename: { __type: 'String!' },
+    hrr_bdry_i: { __type: 'Float' },
+    hrrnum: { __type: 'Float' },
+    ogc_fid: { __type: 'Float' },
+  },
+  hrr_var_pop_order_by: {
+    hrr_bdry_i: { __type: 'order_by' },
+    hrrnum: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  hrr_var_samp_fields: {
+    __typename: { __type: 'String!' },
+    hrr_bdry_i: { __type: 'Float' },
+    hrrnum: { __type: 'Float' },
+    ogc_fid: { __type: 'Float' },
+  },
+  hrr_var_samp_order_by: {
+    hrr_bdry_i: { __type: 'order_by' },
+    hrrnum: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  hrr_variance_fields: {
+    __typename: { __type: 'String!' },
+    hrr_bdry_i: { __type: 'Float' },
+    hrrnum: { __type: 'Float' },
+    ogc_fid: { __type: 'Float' },
+  },
+  hrr_variance_order_by: {
+    hrr_bdry_i: { __type: 'order_by' },
+    hrrnum: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
   },
   jsonb_comparison_exp: {
     _contained_in: { __type: 'jsonb' },
@@ -4545,6 +5665,148 @@ export const generatedSchema = {
     price: { __type: 'Float' },
   },
   menu_item_variance_order_by: { price: { __type: 'order_by' } },
+  nhood_labels: {
+    __typename: { __type: 'String!' },
+    center: { __type: 'geometry!' },
+    name: { __type: 'String!' },
+    ogc_fid: { __type: 'Int!' },
+  },
+  nhood_labels_aggregate: {
+    __typename: { __type: 'String!' },
+    aggregate: { __type: 'nhood_labels_aggregate_fields' },
+    nodes: { __type: '[nhood_labels!]!' },
+  },
+  nhood_labels_aggregate_fields: {
+    __typename: { __type: 'String!' },
+    avg: { __type: 'nhood_labels_avg_fields' },
+    count: {
+      __type: 'Int',
+      __args: { columns: '[nhood_labels_select_column!]', distinct: 'Boolean' },
+    },
+    max: { __type: 'nhood_labels_max_fields' },
+    min: { __type: 'nhood_labels_min_fields' },
+    stddev: { __type: 'nhood_labels_stddev_fields' },
+    stddev_pop: { __type: 'nhood_labels_stddev_pop_fields' },
+    stddev_samp: { __type: 'nhood_labels_stddev_samp_fields' },
+    sum: { __type: 'nhood_labels_sum_fields' },
+    var_pop: { __type: 'nhood_labels_var_pop_fields' },
+    var_samp: { __type: 'nhood_labels_var_samp_fields' },
+    variance: { __type: 'nhood_labels_variance_fields' },
+  },
+  nhood_labels_aggregate_order_by: {
+    avg: { __type: 'nhood_labels_avg_order_by' },
+    count: { __type: 'order_by' },
+    max: { __type: 'nhood_labels_max_order_by' },
+    min: { __type: 'nhood_labels_min_order_by' },
+    stddev: { __type: 'nhood_labels_stddev_order_by' },
+    stddev_pop: { __type: 'nhood_labels_stddev_pop_order_by' },
+    stddev_samp: { __type: 'nhood_labels_stddev_samp_order_by' },
+    sum: { __type: 'nhood_labels_sum_order_by' },
+    var_pop: { __type: 'nhood_labels_var_pop_order_by' },
+    var_samp: { __type: 'nhood_labels_var_samp_order_by' },
+    variance: { __type: 'nhood_labels_variance_order_by' },
+  },
+  nhood_labels_arr_rel_insert_input: {
+    data: { __type: '[nhood_labels_insert_input!]!' },
+    on_conflict: { __type: 'nhood_labels_on_conflict' },
+  },
+  nhood_labels_avg_fields: {
+    __typename: { __type: 'String!' },
+    ogc_fid: { __type: 'Float' },
+  },
+  nhood_labels_avg_order_by: { ogc_fid: { __type: 'order_by' } },
+  nhood_labels_bool_exp: {
+    _and: { __type: '[nhood_labels_bool_exp]' },
+    _not: { __type: 'nhood_labels_bool_exp' },
+    _or: { __type: '[nhood_labels_bool_exp]' },
+    center: { __type: 'geometry_comparison_exp' },
+    name: { __type: 'String_comparison_exp' },
+    ogc_fid: { __type: 'Int_comparison_exp' },
+  },
+  nhood_labels_inc_input: { ogc_fid: { __type: 'Int' } },
+  nhood_labels_insert_input: {
+    center: { __type: 'geometry' },
+    name: { __type: 'String' },
+    ogc_fid: { __type: 'Int' },
+  },
+  nhood_labels_max_fields: {
+    __typename: { __type: 'String!' },
+    name: { __type: 'String' },
+    ogc_fid: { __type: 'Int' },
+  },
+  nhood_labels_max_order_by: {
+    name: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  nhood_labels_min_fields: {
+    __typename: { __type: 'String!' },
+    name: { __type: 'String' },
+    ogc_fid: { __type: 'Int' },
+  },
+  nhood_labels_min_order_by: {
+    name: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  nhood_labels_mutation_response: {
+    __typename: { __type: 'String!' },
+    affected_rows: { __type: 'Int!' },
+    returning: { __type: '[nhood_labels!]!' },
+  },
+  nhood_labels_obj_rel_insert_input: {
+    data: { __type: 'nhood_labels_insert_input!' },
+    on_conflict: { __type: 'nhood_labels_on_conflict' },
+  },
+  nhood_labels_on_conflict: {
+    constraint: { __type: 'nhood_labels_constraint!' },
+    update_columns: { __type: '[nhood_labels_update_column!]!' },
+    where: { __type: 'nhood_labels_bool_exp' },
+  },
+  nhood_labels_order_by: {
+    center: { __type: 'order_by' },
+    name: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  nhood_labels_pk_columns_input: { ogc_fid: { __type: 'Int!' } },
+  nhood_labels_set_input: {
+    center: { __type: 'geometry' },
+    name: { __type: 'String' },
+    ogc_fid: { __type: 'Int' },
+  },
+  nhood_labels_stddev_fields: {
+    __typename: { __type: 'String!' },
+    ogc_fid: { __type: 'Float' },
+  },
+  nhood_labels_stddev_order_by: { ogc_fid: { __type: 'order_by' } },
+  nhood_labels_stddev_pop_fields: {
+    __typename: { __type: 'String!' },
+    ogc_fid: { __type: 'Float' },
+  },
+  nhood_labels_stddev_pop_order_by: { ogc_fid: { __type: 'order_by' } },
+  nhood_labels_stddev_samp_fields: {
+    __typename: { __type: 'String!' },
+    ogc_fid: { __type: 'Float' },
+  },
+  nhood_labels_stddev_samp_order_by: { ogc_fid: { __type: 'order_by' } },
+  nhood_labels_sum_fields: {
+    __typename: { __type: 'String!' },
+    ogc_fid: { __type: 'Int' },
+  },
+  nhood_labels_sum_order_by: { ogc_fid: { __type: 'order_by' } },
+  nhood_labels_var_pop_fields: {
+    __typename: { __type: 'String!' },
+    ogc_fid: { __type: 'Float' },
+  },
+  nhood_labels_var_pop_order_by: { ogc_fid: { __type: 'order_by' } },
+  nhood_labels_var_samp_fields: {
+    __typename: { __type: 'String!' },
+    ogc_fid: { __type: 'Float' },
+  },
+  nhood_labels_var_samp_order_by: { ogc_fid: { __type: 'order_by' } },
+  nhood_labels_variance_fields: {
+    __typename: { __type: 'String!' },
+    ogc_fid: { __type: 'Float' },
+  },
+  nhood_labels_variance_order_by: { ogc_fid: { __type: 'order_by' } },
   numeric_comparison_exp: {
     _eq: { __type: 'numeric' },
     _gt: { __type: 'numeric' },
@@ -7433,10 +8695,309 @@ export const generatedSchema = {
     _neq: { __type: 'uuid' },
     _nin: { __type: '[uuid!]' },
   },
+  zcta5: {
+    __typename: { __type: 'String!' },
+    aland10: { __type: 'float8' },
+    awater10: { __type: 'float8' },
+    classfp10: { __type: 'String' },
+    funcstat10: { __type: 'String' },
+    geoid10: { __type: 'String' },
+    intptlat10: { __type: 'String' },
+    intptlon10: { __type: 'String' },
+    mtfcc10: { __type: 'String' },
+    nhood: { __type: 'String' },
+    ogc_fid: { __type: 'Int!' },
+    slug: { __type: 'String' },
+    wkb_geometry: { __type: 'geometry' },
+    zcta5ce10: { __type: 'String' },
+  },
+  zcta5_aggregate: {
+    __typename: { __type: 'String!' },
+    aggregate: { __type: 'zcta5_aggregate_fields' },
+    nodes: { __type: '[zcta5!]!' },
+  },
+  zcta5_aggregate_fields: {
+    __typename: { __type: 'String!' },
+    avg: { __type: 'zcta5_avg_fields' },
+    count: {
+      __type: 'Int',
+      __args: { columns: '[zcta5_select_column!]', distinct: 'Boolean' },
+    },
+    max: { __type: 'zcta5_max_fields' },
+    min: { __type: 'zcta5_min_fields' },
+    stddev: { __type: 'zcta5_stddev_fields' },
+    stddev_pop: { __type: 'zcta5_stddev_pop_fields' },
+    stddev_samp: { __type: 'zcta5_stddev_samp_fields' },
+    sum: { __type: 'zcta5_sum_fields' },
+    var_pop: { __type: 'zcta5_var_pop_fields' },
+    var_samp: { __type: 'zcta5_var_samp_fields' },
+    variance: { __type: 'zcta5_variance_fields' },
+  },
+  zcta5_aggregate_order_by: {
+    avg: { __type: 'zcta5_avg_order_by' },
+    count: { __type: 'order_by' },
+    max: { __type: 'zcta5_max_order_by' },
+    min: { __type: 'zcta5_min_order_by' },
+    stddev: { __type: 'zcta5_stddev_order_by' },
+    stddev_pop: { __type: 'zcta5_stddev_pop_order_by' },
+    stddev_samp: { __type: 'zcta5_stddev_samp_order_by' },
+    sum: { __type: 'zcta5_sum_order_by' },
+    var_pop: { __type: 'zcta5_var_pop_order_by' },
+    var_samp: { __type: 'zcta5_var_samp_order_by' },
+    variance: { __type: 'zcta5_variance_order_by' },
+  },
+  zcta5_arr_rel_insert_input: {
+    data: { __type: '[zcta5_insert_input!]!' },
+    on_conflict: { __type: 'zcta5_on_conflict' },
+  },
+  zcta5_avg_fields: {
+    __typename: { __type: 'String!' },
+    aland10: { __type: 'Float' },
+    awater10: { __type: 'Float' },
+    ogc_fid: { __type: 'Float' },
+  },
+  zcta5_avg_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  zcta5_bool_exp: {
+    _and: { __type: '[zcta5_bool_exp]' },
+    _not: { __type: 'zcta5_bool_exp' },
+    _or: { __type: '[zcta5_bool_exp]' },
+    aland10: { __type: 'float8_comparison_exp' },
+    awater10: { __type: 'float8_comparison_exp' },
+    classfp10: { __type: 'String_comparison_exp' },
+    funcstat10: { __type: 'String_comparison_exp' },
+    geoid10: { __type: 'String_comparison_exp' },
+    intptlat10: { __type: 'String_comparison_exp' },
+    intptlon10: { __type: 'String_comparison_exp' },
+    mtfcc10: { __type: 'String_comparison_exp' },
+    nhood: { __type: 'String_comparison_exp' },
+    ogc_fid: { __type: 'Int_comparison_exp' },
+    slug: { __type: 'String_comparison_exp' },
+    wkb_geometry: { __type: 'geometry_comparison_exp' },
+    zcta5ce10: { __type: 'String_comparison_exp' },
+  },
+  zcta5_inc_input: {
+    aland10: { __type: 'float8' },
+    awater10: { __type: 'float8' },
+    ogc_fid: { __type: 'Int' },
+  },
+  zcta5_insert_input: {
+    aland10: { __type: 'float8' },
+    awater10: { __type: 'float8' },
+    classfp10: { __type: 'String' },
+    funcstat10: { __type: 'String' },
+    geoid10: { __type: 'String' },
+    intptlat10: { __type: 'String' },
+    intptlon10: { __type: 'String' },
+    mtfcc10: { __type: 'String' },
+    nhood: { __type: 'String' },
+    ogc_fid: { __type: 'Int' },
+    slug: { __type: 'String' },
+    wkb_geometry: { __type: 'geometry' },
+    zcta5ce10: { __type: 'String' },
+  },
+  zcta5_max_fields: {
+    __typename: { __type: 'String!' },
+    aland10: { __type: 'float8' },
+    awater10: { __type: 'float8' },
+    classfp10: { __type: 'String' },
+    funcstat10: { __type: 'String' },
+    geoid10: { __type: 'String' },
+    intptlat10: { __type: 'String' },
+    intptlon10: { __type: 'String' },
+    mtfcc10: { __type: 'String' },
+    nhood: { __type: 'String' },
+    ogc_fid: { __type: 'Int' },
+    slug: { __type: 'String' },
+    zcta5ce10: { __type: 'String' },
+  },
+  zcta5_max_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    classfp10: { __type: 'order_by' },
+    funcstat10: { __type: 'order_by' },
+    geoid10: { __type: 'order_by' },
+    intptlat10: { __type: 'order_by' },
+    intptlon10: { __type: 'order_by' },
+    mtfcc10: { __type: 'order_by' },
+    nhood: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+    slug: { __type: 'order_by' },
+    zcta5ce10: { __type: 'order_by' },
+  },
+  zcta5_min_fields: {
+    __typename: { __type: 'String!' },
+    aland10: { __type: 'float8' },
+    awater10: { __type: 'float8' },
+    classfp10: { __type: 'String' },
+    funcstat10: { __type: 'String' },
+    geoid10: { __type: 'String' },
+    intptlat10: { __type: 'String' },
+    intptlon10: { __type: 'String' },
+    mtfcc10: { __type: 'String' },
+    nhood: { __type: 'String' },
+    ogc_fid: { __type: 'Int' },
+    slug: { __type: 'String' },
+    zcta5ce10: { __type: 'String' },
+  },
+  zcta5_min_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    classfp10: { __type: 'order_by' },
+    funcstat10: { __type: 'order_by' },
+    geoid10: { __type: 'order_by' },
+    intptlat10: { __type: 'order_by' },
+    intptlon10: { __type: 'order_by' },
+    mtfcc10: { __type: 'order_by' },
+    nhood: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+    slug: { __type: 'order_by' },
+    zcta5ce10: { __type: 'order_by' },
+  },
+  zcta5_mutation_response: {
+    __typename: { __type: 'String!' },
+    affected_rows: { __type: 'Int!' },
+    returning: { __type: '[zcta5!]!' },
+  },
+  zcta5_obj_rel_insert_input: {
+    data: { __type: 'zcta5_insert_input!' },
+    on_conflict: { __type: 'zcta5_on_conflict' },
+  },
+  zcta5_on_conflict: {
+    constraint: { __type: 'zcta5_constraint!' },
+    update_columns: { __type: '[zcta5_update_column!]!' },
+    where: { __type: 'zcta5_bool_exp' },
+  },
+  zcta5_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    classfp10: { __type: 'order_by' },
+    funcstat10: { __type: 'order_by' },
+    geoid10: { __type: 'order_by' },
+    intptlat10: { __type: 'order_by' },
+    intptlon10: { __type: 'order_by' },
+    mtfcc10: { __type: 'order_by' },
+    nhood: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+    slug: { __type: 'order_by' },
+    wkb_geometry: { __type: 'order_by' },
+    zcta5ce10: { __type: 'order_by' },
+  },
+  zcta5_pk_columns_input: { ogc_fid: { __type: 'Int!' } },
+  zcta5_set_input: {
+    aland10: { __type: 'float8' },
+    awater10: { __type: 'float8' },
+    classfp10: { __type: 'String' },
+    funcstat10: { __type: 'String' },
+    geoid10: { __type: 'String' },
+    intptlat10: { __type: 'String' },
+    intptlon10: { __type: 'String' },
+    mtfcc10: { __type: 'String' },
+    nhood: { __type: 'String' },
+    ogc_fid: { __type: 'Int' },
+    slug: { __type: 'String' },
+    wkb_geometry: { __type: 'geometry' },
+    zcta5ce10: { __type: 'String' },
+  },
+  zcta5_stddev_fields: {
+    __typename: { __type: 'String!' },
+    aland10: { __type: 'Float' },
+    awater10: { __type: 'Float' },
+    ogc_fid: { __type: 'Float' },
+  },
+  zcta5_stddev_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  zcta5_stddev_pop_fields: {
+    __typename: { __type: 'String!' },
+    aland10: { __type: 'Float' },
+    awater10: { __type: 'Float' },
+    ogc_fid: { __type: 'Float' },
+  },
+  zcta5_stddev_pop_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  zcta5_stddev_samp_fields: {
+    __typename: { __type: 'String!' },
+    aland10: { __type: 'Float' },
+    awater10: { __type: 'Float' },
+    ogc_fid: { __type: 'Float' },
+  },
+  zcta5_stddev_samp_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  zcta5_sum_fields: {
+    __typename: { __type: 'String!' },
+    aland10: { __type: 'float8' },
+    awater10: { __type: 'float8' },
+    ogc_fid: { __type: 'Int' },
+  },
+  zcta5_sum_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  zcta5_var_pop_fields: {
+    __typename: { __type: 'String!' },
+    aland10: { __type: 'Float' },
+    awater10: { __type: 'Float' },
+    ogc_fid: { __type: 'Float' },
+  },
+  zcta5_var_pop_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  zcta5_var_samp_fields: {
+    __typename: { __type: 'String!' },
+    aland10: { __type: 'Float' },
+    awater10: { __type: 'Float' },
+    ogc_fid: { __type: 'Float' },
+  },
+  zcta5_var_samp_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
+  zcta5_variance_fields: {
+    __typename: { __type: 'String!' },
+    aland10: { __type: 'Float' },
+    awater10: { __type: 'Float' },
+    ogc_fid: { __type: 'Float' },
+  },
+  zcta5_variance_order_by: {
+    aland10: { __type: 'order_by' },
+    awater10: { __type: 'order_by' },
+    ogc_fid: { __type: 'order_by' },
+  },
 } as const
 
 export interface Query {
   __typename: 'Query'
+  hrr: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['hrr_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<hrr_order_by>>
+    where?: Maybe<hrr_bool_exp>
+  }) => Array<hrr>
+  hrr_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['hrr_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<hrr_order_by>>
+    where?: Maybe<hrr_bool_exp>
+  }) => hrr_aggregate
+  hrr_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<hrr>
   menu_item: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -7452,6 +9013,23 @@ export interface Query {
     where?: Maybe<menu_item_bool_exp>
   }) => menu_item_aggregate
   menu_item_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<menu_item>
+  nhood_labels: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['nhood_labels_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<nhood_labels_order_by>>
+    where?: Maybe<nhood_labels_bool_exp>
+  }) => Array<nhood_labels>
+  nhood_labels_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['nhood_labels_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<nhood_labels_order_by>>
+    where?: Maybe<nhood_labels_bool_exp>
+  }) => nhood_labels_aggregate
+  nhood_labels_by_pk: (args: {
+    ogc_fid: ScalarsEnums['Int']
+  }) => Maybe<nhood_labels>
   opening_hours: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['opening_hours_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -7631,16 +9209,39 @@ export interface Query {
     where?: Maybe<user_bool_exp>
   }) => user_aggregate
   user_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<user>
+  zcta5: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['zcta5_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<zcta5_order_by>>
+    where?: Maybe<zcta5_bool_exp>
+  }) => Array<zcta5>
+  zcta5_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['zcta5_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<zcta5_order_by>>
+    where?: Maybe<zcta5_bool_exp>
+  }) => zcta5_aggregate
+  zcta5_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<zcta5>
 }
 
 export interface Mutation {
   __typename: 'Mutation'
+  delete_hrr: (args: { where: hrr_bool_exp }) => Maybe<hrr_mutation_response>
+  delete_hrr_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<hrr>
   delete_menu_item: (args: {
     where: menu_item_bool_exp
   }) => Maybe<menu_item_mutation_response>
   delete_menu_item_by_pk: (args: {
     id: ScalarsEnums['uuid']
   }) => Maybe<menu_item>
+  delete_nhood_labels: (args: {
+    where: nhood_labels_bool_exp
+  }) => Maybe<nhood_labels_mutation_response>
+  delete_nhood_labels_by_pk: (args: {
+    ogc_fid: ScalarsEnums['Int']
+  }) => Maybe<nhood_labels>
   delete_opening_hours: (args: {
     where: opening_hours_bool_exp
   }) => Maybe<opening_hours_mutation_response>
@@ -7697,6 +9298,18 @@ export interface Mutation {
   }) => Maybe<tag_tag>
   delete_user: (args: { where: user_bool_exp }) => Maybe<user_mutation_response>
   delete_user_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<user>
+  delete_zcta5: (args: {
+    where: zcta5_bool_exp
+  }) => Maybe<zcta5_mutation_response>
+  delete_zcta5_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<zcta5>
+  insert_hrr: (args: {
+    objects: Array<hrr_insert_input>
+    on_conflict?: Maybe<hrr_on_conflict>
+  }) => Maybe<hrr_mutation_response>
+  insert_hrr_one: (args: {
+    object: hrr_insert_input
+    on_conflict?: Maybe<hrr_on_conflict>
+  }) => Maybe<hrr>
   insert_menu_item: (args: {
     objects: Array<menu_item_insert_input>
     on_conflict?: Maybe<menu_item_on_conflict>
@@ -7705,6 +9318,14 @@ export interface Mutation {
     object: menu_item_insert_input
     on_conflict?: Maybe<menu_item_on_conflict>
   }) => Maybe<menu_item>
+  insert_nhood_labels: (args: {
+    objects: Array<nhood_labels_insert_input>
+    on_conflict?: Maybe<nhood_labels_on_conflict>
+  }) => Maybe<nhood_labels_mutation_response>
+  insert_nhood_labels_one: (args: {
+    object: nhood_labels_insert_input
+    on_conflict?: Maybe<nhood_labels_on_conflict>
+  }) => Maybe<nhood_labels>
   insert_opening_hours: (args: {
     objects: Array<opening_hours_insert_input>
     on_conflict?: Maybe<opening_hours_on_conflict>
@@ -7793,6 +9414,24 @@ export interface Mutation {
     object: user_insert_input
     on_conflict?: Maybe<user_on_conflict>
   }) => Maybe<user>
+  insert_zcta5: (args: {
+    objects: Array<zcta5_insert_input>
+    on_conflict?: Maybe<zcta5_on_conflict>
+  }) => Maybe<zcta5_mutation_response>
+  insert_zcta5_one: (args: {
+    object: zcta5_insert_input
+    on_conflict?: Maybe<zcta5_on_conflict>
+  }) => Maybe<zcta5>
+  update_hrr: (args: {
+    _inc?: Maybe<hrr_inc_input>
+    _set?: Maybe<hrr_set_input>
+    where: hrr_bool_exp
+  }) => Maybe<hrr_mutation_response>
+  update_hrr_by_pk: (args: {
+    _inc?: Maybe<hrr_inc_input>
+    _set?: Maybe<hrr_set_input>
+    pk_columns: hrr_pk_columns_input
+  }) => Maybe<hrr>
   update_menu_item: (args: {
     _inc?: Maybe<menu_item_inc_input>
     _set?: Maybe<menu_item_set_input>
@@ -7803,6 +9442,16 @@ export interface Mutation {
     _set?: Maybe<menu_item_set_input>
     pk_columns: menu_item_pk_columns_input
   }) => Maybe<menu_item>
+  update_nhood_labels: (args: {
+    _inc?: Maybe<nhood_labels_inc_input>
+    _set?: Maybe<nhood_labels_set_input>
+    where: nhood_labels_bool_exp
+  }) => Maybe<nhood_labels_mutation_response>
+  update_nhood_labels_by_pk: (args: {
+    _inc?: Maybe<nhood_labels_inc_input>
+    _set?: Maybe<nhood_labels_set_input>
+    pk_columns: nhood_labels_pk_columns_input
+  }) => Maybe<nhood_labels>
   update_opening_hours: (args: {
     _set?: Maybe<opening_hours_set_input>
     where: opening_hours_bool_exp
@@ -7955,10 +9604,35 @@ export interface Mutation {
     _set?: Maybe<user_set_input>
     pk_columns: user_pk_columns_input
   }) => Maybe<user>
+  update_zcta5: (args: {
+    _inc?: Maybe<zcta5_inc_input>
+    _set?: Maybe<zcta5_set_input>
+    where: zcta5_bool_exp
+  }) => Maybe<zcta5_mutation_response>
+  update_zcta5_by_pk: (args: {
+    _inc?: Maybe<zcta5_inc_input>
+    _set?: Maybe<zcta5_set_input>
+    pk_columns: zcta5_pk_columns_input
+  }) => Maybe<zcta5>
 }
 
 export interface Subscription {
   __typename: 'Subscription'
+  hrr: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['hrr_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<hrr_order_by>>
+    where?: Maybe<hrr_bool_exp>
+  }) => Array<hrr>
+  hrr_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['hrr_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<hrr_order_by>>
+    where?: Maybe<hrr_bool_exp>
+  }) => hrr_aggregate
+  hrr_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<hrr>
   menu_item: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['menu_item_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -7974,6 +9648,23 @@ export interface Subscription {
     where?: Maybe<menu_item_bool_exp>
   }) => menu_item_aggregate
   menu_item_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<menu_item>
+  nhood_labels: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['nhood_labels_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<nhood_labels_order_by>>
+    where?: Maybe<nhood_labels_bool_exp>
+  }) => Array<nhood_labels>
+  nhood_labels_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['nhood_labels_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<nhood_labels_order_by>>
+    where?: Maybe<nhood_labels_bool_exp>
+  }) => nhood_labels_aggregate
+  nhood_labels_by_pk: (args: {
+    ogc_fid: ScalarsEnums['Int']
+  }) => Maybe<nhood_labels>
   opening_hours: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['opening_hours_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -8153,6 +9844,135 @@ export interface Subscription {
     where?: Maybe<user_bool_exp>
   }) => user_aggregate
   user_by_pk: (args: { id: ScalarsEnums['uuid'] }) => Maybe<user>
+  zcta5: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['zcta5_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<zcta5_order_by>>
+    where?: Maybe<zcta5_bool_exp>
+  }) => Array<zcta5>
+  zcta5_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['zcta5_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<zcta5_order_by>>
+    where?: Maybe<zcta5_bool_exp>
+  }) => zcta5_aggregate
+  zcta5_by_pk: (args: { ogc_fid: ScalarsEnums['Int'] }) => Maybe<zcta5>
+}
+
+export interface hrr {
+  __typename: 'hrr'
+  hrr_bdry_i?: Maybe<ScalarsEnums['float8']>
+  hrrcity?: Maybe<ScalarsEnums['String']>
+  hrrnum?: Maybe<ScalarsEnums['Int']>
+  ogc_fid: ScalarsEnums['Int']
+  slug?: Maybe<ScalarsEnums['String']>
+  wkb_geometry?: Maybe<ScalarsEnums['geometry']>
+}
+
+export interface hrr_aggregate {
+  __typename: 'hrr_aggregate'
+  aggregate?: Maybe<hrr_aggregate_fields>
+  nodes: Array<hrr>
+}
+
+export interface hrr_aggregate_fields {
+  __typename: 'hrr_aggregate_fields'
+  avg?: Maybe<hrr_avg_fields>
+  count: (args?: {
+    columns?: Maybe<Array<ScalarsEnums['hrr_select_column']>>
+    distinct?: Maybe<ScalarsEnums['Boolean']>
+  }) => Maybe<ScalarsEnums['Int']>
+  max?: Maybe<hrr_max_fields>
+  min?: Maybe<hrr_min_fields>
+  stddev?: Maybe<hrr_stddev_fields>
+  stddev_pop?: Maybe<hrr_stddev_pop_fields>
+  stddev_samp?: Maybe<hrr_stddev_samp_fields>
+  sum?: Maybe<hrr_sum_fields>
+  var_pop?: Maybe<hrr_var_pop_fields>
+  var_samp?: Maybe<hrr_var_samp_fields>
+  variance?: Maybe<hrr_variance_fields>
+}
+
+export interface hrr_avg_fields {
+  __typename: 'hrr_avg_fields'
+  hrr_bdry_i?: Maybe<ScalarsEnums['Float']>
+  hrrnum?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface hrr_max_fields {
+  __typename: 'hrr_max_fields'
+  hrr_bdry_i?: Maybe<ScalarsEnums['float8']>
+  hrrcity?: Maybe<ScalarsEnums['String']>
+  hrrnum?: Maybe<ScalarsEnums['Int']>
+  ogc_fid?: Maybe<ScalarsEnums['Int']>
+  slug?: Maybe<ScalarsEnums['String']>
+}
+
+export interface hrr_min_fields {
+  __typename: 'hrr_min_fields'
+  hrr_bdry_i?: Maybe<ScalarsEnums['float8']>
+  hrrcity?: Maybe<ScalarsEnums['String']>
+  hrrnum?: Maybe<ScalarsEnums['Int']>
+  ogc_fid?: Maybe<ScalarsEnums['Int']>
+  slug?: Maybe<ScalarsEnums['String']>
+}
+
+export interface hrr_mutation_response {
+  __typename: 'hrr_mutation_response'
+  affected_rows: ScalarsEnums['Int']
+  returning: Array<hrr>
+}
+
+export interface hrr_stddev_fields {
+  __typename: 'hrr_stddev_fields'
+  hrr_bdry_i?: Maybe<ScalarsEnums['Float']>
+  hrrnum?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface hrr_stddev_pop_fields {
+  __typename: 'hrr_stddev_pop_fields'
+  hrr_bdry_i?: Maybe<ScalarsEnums['Float']>
+  hrrnum?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface hrr_stddev_samp_fields {
+  __typename: 'hrr_stddev_samp_fields'
+  hrr_bdry_i?: Maybe<ScalarsEnums['Float']>
+  hrrnum?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface hrr_sum_fields {
+  __typename: 'hrr_sum_fields'
+  hrr_bdry_i?: Maybe<ScalarsEnums['float8']>
+  hrrnum?: Maybe<ScalarsEnums['Int']>
+  ogc_fid?: Maybe<ScalarsEnums['Int']>
+}
+
+export interface hrr_var_pop_fields {
+  __typename: 'hrr_var_pop_fields'
+  hrr_bdry_i?: Maybe<ScalarsEnums['Float']>
+  hrrnum?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface hrr_var_samp_fields {
+  __typename: 'hrr_var_samp_fields'
+  hrr_bdry_i?: Maybe<ScalarsEnums['Float']>
+  hrrnum?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface hrr_variance_fields {
+  __typename: 'hrr_variance_fields'
+  hrr_bdry_i?: Maybe<ScalarsEnums['Float']>
+  hrrnum?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface menu_item {
@@ -8261,6 +10081,95 @@ export interface menu_item_var_samp_fields {
 export interface menu_item_variance_fields {
   __typename: 'menu_item_variance_fields'
   price?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface nhood_labels {
+  __typename: 'nhood_labels'
+  center: ScalarsEnums['geometry']
+  name: ScalarsEnums['String']
+  ogc_fid: ScalarsEnums['Int']
+}
+
+export interface nhood_labels_aggregate {
+  __typename: 'nhood_labels_aggregate'
+  aggregate?: Maybe<nhood_labels_aggregate_fields>
+  nodes: Array<nhood_labels>
+}
+
+export interface nhood_labels_aggregate_fields {
+  __typename: 'nhood_labels_aggregate_fields'
+  avg?: Maybe<nhood_labels_avg_fields>
+  count: (args?: {
+    columns?: Maybe<Array<ScalarsEnums['nhood_labels_select_column']>>
+    distinct?: Maybe<ScalarsEnums['Boolean']>
+  }) => Maybe<ScalarsEnums['Int']>
+  max?: Maybe<nhood_labels_max_fields>
+  min?: Maybe<nhood_labels_min_fields>
+  stddev?: Maybe<nhood_labels_stddev_fields>
+  stddev_pop?: Maybe<nhood_labels_stddev_pop_fields>
+  stddev_samp?: Maybe<nhood_labels_stddev_samp_fields>
+  sum?: Maybe<nhood_labels_sum_fields>
+  var_pop?: Maybe<nhood_labels_var_pop_fields>
+  var_samp?: Maybe<nhood_labels_var_samp_fields>
+  variance?: Maybe<nhood_labels_variance_fields>
+}
+
+export interface nhood_labels_avg_fields {
+  __typename: 'nhood_labels_avg_fields'
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface nhood_labels_max_fields {
+  __typename: 'nhood_labels_max_fields'
+  name?: Maybe<ScalarsEnums['String']>
+  ogc_fid?: Maybe<ScalarsEnums['Int']>
+}
+
+export interface nhood_labels_min_fields {
+  __typename: 'nhood_labels_min_fields'
+  name?: Maybe<ScalarsEnums['String']>
+  ogc_fid?: Maybe<ScalarsEnums['Int']>
+}
+
+export interface nhood_labels_mutation_response {
+  __typename: 'nhood_labels_mutation_response'
+  affected_rows: ScalarsEnums['Int']
+  returning: Array<nhood_labels>
+}
+
+export interface nhood_labels_stddev_fields {
+  __typename: 'nhood_labels_stddev_fields'
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface nhood_labels_stddev_pop_fields {
+  __typename: 'nhood_labels_stddev_pop_fields'
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface nhood_labels_stddev_samp_fields {
+  __typename: 'nhood_labels_stddev_samp_fields'
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface nhood_labels_sum_fields {
+  __typename: 'nhood_labels_sum_fields'
+  ogc_fid?: Maybe<ScalarsEnums['Int']>
+}
+
+export interface nhood_labels_var_pop_fields {
+  __typename: 'nhood_labels_var_pop_fields'
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface nhood_labels_var_samp_fields {
+  __typename: 'nhood_labels_var_samp_fields'
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface nhood_labels_variance_fields {
+  __typename: 'nhood_labels_variance_fields'
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
 }
 
 export interface opening_hours {
@@ -9602,6 +11511,141 @@ export interface user_variance_fields {
   charIndex?: Maybe<ScalarsEnums['Float']>
 }
 
+export interface zcta5 {
+  __typename: 'zcta5'
+  aland10?: Maybe<ScalarsEnums['float8']>
+  awater10?: Maybe<ScalarsEnums['float8']>
+  classfp10?: Maybe<ScalarsEnums['String']>
+  funcstat10?: Maybe<ScalarsEnums['String']>
+  geoid10?: Maybe<ScalarsEnums['String']>
+  intptlat10?: Maybe<ScalarsEnums['String']>
+  intptlon10?: Maybe<ScalarsEnums['String']>
+  mtfcc10?: Maybe<ScalarsEnums['String']>
+  nhood?: Maybe<ScalarsEnums['String']>
+  ogc_fid: ScalarsEnums['Int']
+  slug?: Maybe<ScalarsEnums['String']>
+  wkb_geometry?: Maybe<ScalarsEnums['geometry']>
+  zcta5ce10?: Maybe<ScalarsEnums['String']>
+}
+
+export interface zcta5_aggregate {
+  __typename: 'zcta5_aggregate'
+  aggregate?: Maybe<zcta5_aggregate_fields>
+  nodes: Array<zcta5>
+}
+
+export interface zcta5_aggregate_fields {
+  __typename: 'zcta5_aggregate_fields'
+  avg?: Maybe<zcta5_avg_fields>
+  count: (args?: {
+    columns?: Maybe<Array<ScalarsEnums['zcta5_select_column']>>
+    distinct?: Maybe<ScalarsEnums['Boolean']>
+  }) => Maybe<ScalarsEnums['Int']>
+  max?: Maybe<zcta5_max_fields>
+  min?: Maybe<zcta5_min_fields>
+  stddev?: Maybe<zcta5_stddev_fields>
+  stddev_pop?: Maybe<zcta5_stddev_pop_fields>
+  stddev_samp?: Maybe<zcta5_stddev_samp_fields>
+  sum?: Maybe<zcta5_sum_fields>
+  var_pop?: Maybe<zcta5_var_pop_fields>
+  var_samp?: Maybe<zcta5_var_samp_fields>
+  variance?: Maybe<zcta5_variance_fields>
+}
+
+export interface zcta5_avg_fields {
+  __typename: 'zcta5_avg_fields'
+  aland10?: Maybe<ScalarsEnums['Float']>
+  awater10?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface zcta5_max_fields {
+  __typename: 'zcta5_max_fields'
+  aland10?: Maybe<ScalarsEnums['float8']>
+  awater10?: Maybe<ScalarsEnums['float8']>
+  classfp10?: Maybe<ScalarsEnums['String']>
+  funcstat10?: Maybe<ScalarsEnums['String']>
+  geoid10?: Maybe<ScalarsEnums['String']>
+  intptlat10?: Maybe<ScalarsEnums['String']>
+  intptlon10?: Maybe<ScalarsEnums['String']>
+  mtfcc10?: Maybe<ScalarsEnums['String']>
+  nhood?: Maybe<ScalarsEnums['String']>
+  ogc_fid?: Maybe<ScalarsEnums['Int']>
+  slug?: Maybe<ScalarsEnums['String']>
+  zcta5ce10?: Maybe<ScalarsEnums['String']>
+}
+
+export interface zcta5_min_fields {
+  __typename: 'zcta5_min_fields'
+  aland10?: Maybe<ScalarsEnums['float8']>
+  awater10?: Maybe<ScalarsEnums['float8']>
+  classfp10?: Maybe<ScalarsEnums['String']>
+  funcstat10?: Maybe<ScalarsEnums['String']>
+  geoid10?: Maybe<ScalarsEnums['String']>
+  intptlat10?: Maybe<ScalarsEnums['String']>
+  intptlon10?: Maybe<ScalarsEnums['String']>
+  mtfcc10?: Maybe<ScalarsEnums['String']>
+  nhood?: Maybe<ScalarsEnums['String']>
+  ogc_fid?: Maybe<ScalarsEnums['Int']>
+  slug?: Maybe<ScalarsEnums['String']>
+  zcta5ce10?: Maybe<ScalarsEnums['String']>
+}
+
+export interface zcta5_mutation_response {
+  __typename: 'zcta5_mutation_response'
+  affected_rows: ScalarsEnums['Int']
+  returning: Array<zcta5>
+}
+
+export interface zcta5_stddev_fields {
+  __typename: 'zcta5_stddev_fields'
+  aland10?: Maybe<ScalarsEnums['Float']>
+  awater10?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface zcta5_stddev_pop_fields {
+  __typename: 'zcta5_stddev_pop_fields'
+  aland10?: Maybe<ScalarsEnums['Float']>
+  awater10?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface zcta5_stddev_samp_fields {
+  __typename: 'zcta5_stddev_samp_fields'
+  aland10?: Maybe<ScalarsEnums['Float']>
+  awater10?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface zcta5_sum_fields {
+  __typename: 'zcta5_sum_fields'
+  aland10?: Maybe<ScalarsEnums['float8']>
+  awater10?: Maybe<ScalarsEnums['float8']>
+  ogc_fid?: Maybe<ScalarsEnums['Int']>
+}
+
+export interface zcta5_var_pop_fields {
+  __typename: 'zcta5_var_pop_fields'
+  aland10?: Maybe<ScalarsEnums['Float']>
+  awater10?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface zcta5_var_samp_fields {
+  __typename: 'zcta5_var_samp_fields'
+  aland10?: Maybe<ScalarsEnums['Float']>
+  awater10?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
+export interface zcta5_variance_fields {
+  __typename: 'zcta5_variance_fields'
+  aland10?: Maybe<ScalarsEnums['Float']>
+  awater10?: Maybe<ScalarsEnums['Float']>
+  ogc_fid?: Maybe<ScalarsEnums['Float']>
+}
+
 export interface GeneratedSchema {
   query: Query
   mutation: Mutation
@@ -9609,9 +11653,15 @@ export interface GeneratedSchema {
 }
 
 export interface ScalarsEnums extends Scalars {
+  hrr_constraint: hrr_constraint
+  hrr_select_column: hrr_select_column
+  hrr_update_column: hrr_update_column
   menu_item_constraint: menu_item_constraint
   menu_item_select_column: menu_item_select_column
   menu_item_update_column: menu_item_update_column
+  nhood_labels_constraint: nhood_labels_constraint
+  nhood_labels_select_column: nhood_labels_select_column
+  nhood_labels_update_column: nhood_labels_update_column
   opening_hours_constraint: opening_hours_constraint
   opening_hours_select_column: opening_hours_select_column
   opening_hours_update_column: opening_hours_update_column
@@ -9646,6 +11696,9 @@ export interface ScalarsEnums extends Scalars {
   user_constraint: user_constraint
   user_select_column: user_select_column
   user_update_column: user_update_column
+  zcta5_constraint: zcta5_constraint
+  zcta5_select_column: zcta5_select_column
+  zcta5_update_column: zcta5_update_column
 }
 
 const queryFetcher: QueryFetcher = async function (query, variables) {
@@ -9677,11 +11730,4 @@ export const client = createClient<GeneratedSchema>(
   queryFetcher
 )
 
-export const {
-  query,
-  mutation,
-  subscription,
-  resolved,
-  refetch,
-  selectFields,
-} = client
+export const { query, mutation, subscription, resolved, refetch } = client

@@ -74,9 +74,7 @@ const AppMapDataLoader = memo(
     let all: RestaurantOnlyIds[] = []
     let single: RestaurantOnlyIds | null = null
 
-    console.log(123123, state.type)
     if (isRestaurantState(state)) {
-      console.log(123)
       const restaurant = useRestaurantQuery(state.restaurantSlug)
       single = {
         id: restaurant.id ?? '',
@@ -85,13 +83,8 @@ const AppMapDataLoader = memo(
       const last = findLastHomeOrSearch(omStatic.state.home.states)
       all = [single, ...(last?.['results'] ?? [])]
     } else if ('results' in state) {
-      console.log(88)
       all = state?.results ?? []
-    } else {
-      console.log('ELSE', state)
     }
-
-    console.log(9696, all)
 
     all = all.filter(isPresent)
 
@@ -316,6 +309,7 @@ const AppMapContent = memo(function AppMap({
       }
       if (omStatic.state.home.centerToResults) {
         // we just re-centered, ignore
+        //@ts-expect-error
         om.actions.home.setCenterToResults(0)
       }
       setState({

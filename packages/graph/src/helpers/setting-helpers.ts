@@ -1,4 +1,6 @@
-import { mutation, selectFields, setting } from '../graphql'
+import { selectFields } from '@dish/gqless'
+
+import { mutation, setting } from '../graphql'
 import { Setting, WithID } from '../types'
 import { createQueryHelpersFor, prepareData } from './queryHelpers'
 import { resolvedMutationWithFields } from './queryResolvers'

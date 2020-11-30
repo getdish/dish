@@ -1,7 +1,8 @@
+import { selectFields } from '@dish/gqless'
 import { merge } from 'lodash'
 
 // import { resolved } from '@o/gqless'
-import { resolved, selectFields } from '../graphql/new-generated'
+import { resolved } from '../graphql/new-generated'
 
 // import { resetQueryCache } from '../graphql/client'
 // import { resetMutationCache } from '../graphql/mutation'

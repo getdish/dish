@@ -129,6 +129,7 @@ export const state: HomeState = {
     const curState = state.states[state.stateIndex]
     return getActiveTags(curState).filter(isSearchBarTag)
   }),
+  //@ts-expect-error
   lastActiveTags: derived<HomeState, OmState, Tag[]>((state) => {
     const lastTaggable = _.findLast(
       state.states,
@@ -136,6 +137,7 @@ export const state: HomeState = {
     ) as HomeStateItemSearch | HomeStateItemHome
     return getActiveTags(lastTaggable)
   }),
+  //@ts-expect-error
   searchbarFocusedTag: derived<HomeState, OmState, Tag | null>((state) => {
     const { searchBarTagIndex } = state
     if (searchBarTagIndex > -1) return null

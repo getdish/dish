@@ -1,5 +1,6 @@
 import fs from 'fs'
 
+import { selectFields } from '@dish/gqless'
 import {
   Tag,
   tagAddAlternate,
@@ -7,7 +8,7 @@ import {
   tagUpsert,
   tagUpsertCategorizations,
 } from '@dish/graph'
-import { selectFields, tag } from '@dish/graph/_/graphql/new-generated'
+import { tag } from '@dish/graph/_/graphql/new-generated'
 import parse from 'csv-parse/lib/sync'
 import { pick } from 'lodash'
 import _ from 'lodash'
