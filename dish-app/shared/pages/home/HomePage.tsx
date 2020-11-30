@@ -72,7 +72,7 @@ export default memo(function HomePage(props: Props) {
   // load effect!
   usePageLoadEffect(props, () => {
     if (props.isActive) {
-      setIsLoaded(true)
+      return setIsLoaded(true)
     } else {
       return series([
         fullyIdle,
