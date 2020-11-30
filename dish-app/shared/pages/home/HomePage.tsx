@@ -333,8 +333,9 @@ const HomeFeed = memo(
                 return (
                   <VStack
                     key={item.id}
-                    paddingHorizontal={20}
-                    paddingVertical={15}
+                    paddingHorizontal={15}
+                    paddingBottom={25}
+                    paddingTop={5}
                     // flex={1}
                     alignItems="center"
                   >
