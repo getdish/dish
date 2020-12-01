@@ -102,11 +102,11 @@ export const LoginRegisterForm = ({
   const isLoggedIn = om.state.user.isLoggedIn
   const store = useStore(AuthFormStore)
   const curPageName = om.state.router.curPage.name
-  let formPage = Object.keys(form_page_details).includes(curPageName)
+  let defaultFormPage = Object.keys(form_page_details).includes(curPageName)
     ? curPageName
     : 'login'
+  const [formPage, setFormPage] = useState(defaultFormPage)
   const [successText, setSuccessText] = useState('')
-  if (successText != '') formPage = 'success'
   const { handleSubmit, errors, control, watch } = useForm()
 
   useEffect(() => {
@@ -136,6 +136,7 @@ export const LoginRegisterForm = ({
           })
           if (result) {
             setSuccessText(form_page_details[formPage].success_text)
+            setFormPage('success')
           }
           break
         case 'passwordReset':
@@ -145,6 +146,7 @@ export const LoginRegisterForm = ({
           })
           if (result) {
             setSuccessText(form_page_details[formPage].success_text)
+            setFormPage('success')
           }
           break
       }
@@ -198,14 +200,14 @@ export const LoginRegisterForm = ({
               <LinkButton
                 {...navButtonProps}
                 {...(formPage == 'login' && activeStyle)}
-                name="login"
+                onPress={() => setFormPage('login')}
               >
                 Login
               </LinkButton>
               <LinkButton
                 {...navButtonProps}
                 {...(formPage == 'register' && activeStyle)}
-                name="register"
+                onPress={() => setFormPage('register')}
               >
                 Signup
               </LinkButton>
@@ -267,6 +269,16 @@ export const LoginRegisterForm = ({
                   }}
                 />
               </>
+            )}
+
+            {formPage == 'forgotPassword' && (
+              <HStack alignSelf="flex-end">
+                <Text fontSize={14}>
+                  <Link onPress={(e) => setFormPage('login')}>
+                    Back to login
+                  </Link>{' '}
+                </Text>
+              </HStack>
             )}
 
             {(formPage == 'register' || formPage == 'login') && (
@@ -349,7 +361,9 @@ export const LoginRegisterForm = ({
             {formPage == 'login' && (
               <HStack alignSelf="flex-end">
                 <Text fontSize={14}>
-                  <Link name="forgotPassword">Forgot password?</Link>{' '}
+                  <Link onPress={(e) => setFormPage('forgotPassword')}>
+                    Forgot password?
+                  </Link>{' '}
                 </Text>
               </HStack>
             )}
