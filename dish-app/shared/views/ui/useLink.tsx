@@ -76,16 +76,18 @@ export const useLink = (props: LinkProps<any, any>) => {
     wrapWithLinkElement(children: any) {
       if (Platform.OS === 'web') {
         const element = props.tagName ?? 'a'
+        const href = props.href ?? router.getPathFromParams(navItem)
         return React.createElement(
           element,
           {
             onClick: onPress,
             className: `display-contents dish-link ${props.className ?? ''}`,
             target: props.target,
-            ...(element === 'a' && {
-              href: props.href ?? router.getPathFromParams(navItem),
-              onMouseEnter: linkProps.onMouseEnter,
-            }),
+            ...(element === 'a' &&
+              href && {
+                href,
+                onMouseEnter: linkProps.onMouseEnter,
+              }),
           },
           children
         )
