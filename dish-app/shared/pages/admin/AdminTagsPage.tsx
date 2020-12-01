@@ -5,6 +5,7 @@ import {
   graphql,
   order_by,
   query,
+  refetch,
   tagDelete,
   tagUpsert,
   useRefetch,
@@ -270,13 +271,13 @@ const TagListContent = memo(
       useEffect(() => {
         console.log('refertching')
         // refetchAll()
-        // refetch(results)
+        refetch(results).then(forceUpdate).catch(console.error)
       }, [lastRowSelection])
 
       useEffect(() => {
         if (tagStore.forceRefreshColumnByType === type) {
           // refetchAll()
-          // const res = refetch(results)
+          refetch(results).then(forceUpdate).catch(console.error)
           // console.log('res', res)
           // setTimeout(() => {
           //   forceUpdate()
@@ -436,6 +437,7 @@ const TagEdit = memo(
   graphql<any>(() => {
     const tagStore = useStore(AdminTagStore)
     const refetchTm = useRef(null)
+    const forceUpdate = useForceUpdate()
     if (tagStore.selectedId) {
       const tag = queryTag(tagStore.selectedId)
       const fullTag = {
@@ -452,13 +454,16 @@ const TagEdit = memo(
           key={tagStore.selectedId}
           tag={fullTag}
           onChange={async (x) => {
+            console.log(455)
             await tagUpsert([
               {
                 ...fullTag,
                 ...x,
               },
             ])
-            // refetch(tag)
+            refetch(tag)
+              .then(() => forceUpdate())
+              .catch(console.error)
             Toast.show('Saved')
           }}
         />

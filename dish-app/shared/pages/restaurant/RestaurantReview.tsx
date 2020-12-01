@@ -8,6 +8,7 @@ import {
   Spacer,
   Text,
   TextProps,
+  useForceUpdate,
   useLazyEffect,
 } from 'snackui'
 
@@ -36,7 +37,7 @@ export const RestaurantReview = memo(
       hideUsername?: boolean
       showRestaurant?: boolean
     }) => {
-      const refetchAll = useRefetch()
+      const forceUpdate = useForceUpdate()
       const reviews = query.review({
         limit: 1,
         where: {
@@ -49,7 +50,7 @@ export const RestaurantReview = memo(
 
       useLazyEffect(() => {
         // refetchAll()
-        // refetch(reviews)
+        refetch(reviews).then(forceUpdate).catch(console.error)
       }, [refetchKey])
 
       const sentiments = review.sentiments()

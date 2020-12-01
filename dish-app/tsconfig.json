@@ -58,9 +58,6 @@
     },
     {
       "path": "../snackui/packages/snackui-static"
-    },
-    {
-      "path": "../packages/router"
     }
   ]
 }
