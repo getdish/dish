@@ -429,6 +429,7 @@ tables:
       - source
       - tag_id
       - text
+      - type
       - updated_at
       - user_id
       - username
@@ -439,14 +440,18 @@ tables:
       columns:
       - authored_at
       - categories
+      - favorited
       - id
       - rating
       - restaurant_id
+      - source
       - tag_id
       - text
+      - type
       - updated_at
       - user_id
       - username
+      - vote
       filter: {}
       allow_aggregations: true
   - role: user
@@ -461,9 +466,11 @@ tables:
       - source
       - tag_id
       - text
+      - type
       - updated_at
       - user_id
       - username
+      - vote
       filter: {}
       allow_aggregations: true
   update_permissions:

@@ -1,0 +1,31 @@
+- args:
+    role: user
+    table:
+      name: review
+      schema: public
+  type: drop_select_permission
+- args:
+    permission:
+      allow_aggregations: true
+      columns:
+      - authored_at
+      - categories
+      - favorited
+      - id
+      - rating
+      - restaurant_id
+      - source
+      - tag_id
+      - text
+      - type
+      - updated_at
+      - user_id
+      - username
+      - vote
+      computed_fields: []
+      filter: {}
+    role: user
+    table:
+      name: review
+      schema: public
+  type: create_select_permission
