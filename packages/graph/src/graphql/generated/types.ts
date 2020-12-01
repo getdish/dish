@@ -244,6 +244,28 @@ type t___TypeKind = EnumType<
 >
 
 /**
+ * @name float8
+ * @type SCALAR
+ */
+type t_float8<T extends any = any> = ScalarType<T, Extension<'float8'>>
+
+/**
+ * @name float8_comparison_exp
+ * @type INPUT_OBJECT
+ */
+export type float8_comparison_exp = {
+  _eq?: any | null
+  _gt?: any | null
+  _gte?: any | null
+  _in?: any[] | null
+  _is_null?: boolean | null
+  _lt?: any | null
+  _lte?: any | null
+  _neq?: any | null
+  _nin?: any[] | null
+}
+
+/**
  * @name geography
  * @type SCALAR
  */
@@ -309,6 +331,461 @@ export type geometry_comparison_exp = {
   _st_overlaps?: any | null
   _st_touches?: any | null
   _st_within?: any | null
+}
+
+/**
+ * @name hrr
+ * @type OBJECT
+ */
+export type t_hrr = FieldsType<
+  {
+    __typename: t_String<'hrr'>
+    hrr_bdry_i?: t_float8 | null
+    hrrcity?: t_String | null
+    hrrnum?: t_Int | null
+    ogc_fid: t_Int
+    slug?: t_String | null
+    wkb_geometry?: t_geometry | null
+  },
+  Extension<'hrr'>
+>
+
+/**
+ * @name hrr_aggregate
+ * @type OBJECT
+ */
+export type t_hrr_aggregate = FieldsType<
+  {
+    __typename: t_String<'hrr_aggregate'>
+    aggregate?: t_hrr_aggregate_fields | null
+    nodes: t_hrr[]
+  },
+  Extension<'hrr_aggregate'>
+>
+
+/**
+ * @name hrr_aggregate_fields
+ * @type OBJECT
+ */
+export type t_hrr_aggregate_fields = FieldsType<
+  {
+    __typename: t_String<'hrr_aggregate_fields'>
+    avg?: t_hrr_avg_fields | null
+    count: FieldsTypeArg<
+      { columns?: hrr_select_column[] | null; distinct?: boolean | null },
+      t_Int | null
+    >
+    max?: t_hrr_max_fields | null
+    min?: t_hrr_min_fields | null
+    stddev?: t_hrr_stddev_fields | null
+    stddev_pop?: t_hrr_stddev_pop_fields | null
+    stddev_samp?: t_hrr_stddev_samp_fields | null
+    sum?: t_hrr_sum_fields | null
+    var_pop?: t_hrr_var_pop_fields | null
+    var_samp?: t_hrr_var_samp_fields | null
+    variance?: t_hrr_variance_fields | null
+  },
+  Extension<'hrr_aggregate_fields'>
+>
+
+/**
+ * @name hrr_aggregate_order_by
+ * @type INPUT_OBJECT
+ */
+export type hrr_aggregate_order_by = {
+  avg?: hrr_avg_order_by | null
+  count?: order_by | null
+  max?: hrr_max_order_by | null
+  min?: hrr_min_order_by | null
+  stddev?: hrr_stddev_order_by | null
+  stddev_pop?: hrr_stddev_pop_order_by | null
+  stddev_samp?: hrr_stddev_samp_order_by | null
+  sum?: hrr_sum_order_by | null
+  var_pop?: hrr_var_pop_order_by | null
+  var_samp?: hrr_var_samp_order_by | null
+  variance?: hrr_variance_order_by | null
+}
+
+/**
+ * @name hrr_arr_rel_insert_input
+ * @type INPUT_OBJECT
+ */
+export type hrr_arr_rel_insert_input = {
+  data: hrr_insert_input[]
+  on_conflict?: hrr_on_conflict | null
+}
+
+/**
+ * @name hrr_avg_fields
+ * @type OBJECT
+ */
+export type t_hrr_avg_fields = FieldsType<
+  {
+    __typename: t_String<'hrr_avg_fields'>
+    hrr_bdry_i?: t_Float | null
+    hrrnum?: t_Float | null
+    ogc_fid?: t_Float | null
+  },
+  Extension<'hrr_avg_fields'>
+>
+
+/**
+ * @name hrr_avg_order_by
+ * @type INPUT_OBJECT
+ */
+export type hrr_avg_order_by = {
+  hrr_bdry_i?: order_by | null
+  hrrnum?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name hrr_bool_exp
+ * @type INPUT_OBJECT
+ */
+export type hrr_bool_exp = {
+  _and?: (hrr_bool_exp | null)[] | null
+  _not?: hrr_bool_exp | null
+  _or?: (hrr_bool_exp | null)[] | null
+  hrr_bdry_i?: float8_comparison_exp | null
+  hrrcity?: String_comparison_exp | null
+  hrrnum?: Int_comparison_exp | null
+  ogc_fid?: Int_comparison_exp | null
+  slug?: String_comparison_exp | null
+  wkb_geometry?: geometry_comparison_exp | null
+}
+
+/**
+ * @name hrr_constraint
+ * @type ENUM
+ */
+type t_hrr_constraint = EnumType<'hrr_pkey' | 'hrr_slug_key'>
+
+/**
+ * @name hrr_inc_input
+ * @type INPUT_OBJECT
+ */
+export type hrr_inc_input = {
+  hrr_bdry_i?: any | null
+  hrrnum?: number | null
+  ogc_fid?: number | null
+}
+
+/**
+ * @name hrr_insert_input
+ * @type INPUT_OBJECT
+ */
+export type hrr_insert_input = {
+  hrr_bdry_i?: any | null
+  hrrcity?: string | null
+  hrrnum?: number | null
+  ogc_fid?: number | null
+  slug?: string | null
+  wkb_geometry?: any | null
+}
+
+/**
+ * @name hrr_max_fields
+ * @type OBJECT
+ */
+export type t_hrr_max_fields = FieldsType<
+  {
+    __typename: t_String<'hrr_max_fields'>
+    hrr_bdry_i?: t_float8 | null
+    hrrcity?: t_String | null
+    hrrnum?: t_Int | null
+    ogc_fid?: t_Int | null
+    slug?: t_String | null
+  },
+  Extension<'hrr_max_fields'>
+>
+
+/**
+ * @name hrr_max_order_by
+ * @type INPUT_OBJECT
+ */
+export type hrr_max_order_by = {
+  hrr_bdry_i?: order_by | null
+  hrrcity?: order_by | null
+  hrrnum?: order_by | null
+  ogc_fid?: order_by | null
+  slug?: order_by | null
+}
+
+/**
+ * @name hrr_min_fields
+ * @type OBJECT
+ */
+export type t_hrr_min_fields = FieldsType<
+  {
+    __typename: t_String<'hrr_min_fields'>
+    hrr_bdry_i?: t_float8 | null
+    hrrcity?: t_String | null
+    hrrnum?: t_Int | null
+    ogc_fid?: t_Int | null
+    slug?: t_String | null
+  },
+  Extension<'hrr_min_fields'>
+>
+
+/**
+ * @name hrr_min_order_by
+ * @type INPUT_OBJECT
+ */
+export type hrr_min_order_by = {
+  hrr_bdry_i?: order_by | null
+  hrrcity?: order_by | null
+  hrrnum?: order_by | null
+  ogc_fid?: order_by | null
+  slug?: order_by | null
+}
+
+/**
+ * @name hrr_mutation_response
+ * @type OBJECT
+ */
+export type t_hrr_mutation_response = FieldsType<
+  {
+    __typename: t_String<'hrr_mutation_response'>
+    affected_rows: t_Int
+    returning: t_hrr[]
+  },
+  Extension<'hrr_mutation_response'>
+>
+
+/**
+ * @name hrr_obj_rel_insert_input
+ * @type INPUT_OBJECT
+ */
+export type hrr_obj_rel_insert_input = {
+  data: hrr_insert_input
+  on_conflict?: hrr_on_conflict | null
+}
+
+/**
+ * @name hrr_on_conflict
+ * @type INPUT_OBJECT
+ */
+export type hrr_on_conflict = {
+  constraint: hrr_constraint
+  update_columns: hrr_update_column[]
+  where?: hrr_bool_exp | null
+}
+
+/**
+ * @name hrr_order_by
+ * @type INPUT_OBJECT
+ */
+export type hrr_order_by = {
+  hrr_bdry_i?: order_by | null
+  hrrcity?: order_by | null
+  hrrnum?: order_by | null
+  ogc_fid?: order_by | null
+  slug?: order_by | null
+  wkb_geometry?: order_by | null
+}
+
+/**
+ * @name hrr_pk_columns_input
+ * @type INPUT_OBJECT
+ */
+export type hrr_pk_columns_input = { ogc_fid: number }
+
+/**
+ * @name hrr_select_column
+ * @type ENUM
+ */
+type t_hrr_select_column = EnumType<
+  'hrr_bdry_i' | 'hrrcity' | 'hrrnum' | 'ogc_fid' | 'slug' | 'wkb_geometry'
+>
+
+/**
+ * @name hrr_set_input
+ * @type INPUT_OBJECT
+ */
+export type hrr_set_input = {
+  hrr_bdry_i?: any | null
+  hrrcity?: string | null
+  hrrnum?: number | null
+  ogc_fid?: number | null
+  slug?: string | null
+  wkb_geometry?: any | null
+}
+
+/**
+ * @name hrr_stddev_fields
+ * @type OBJECT
+ */
+export type t_hrr_stddev_fields = FieldsType<
+  {
+    __typename: t_String<'hrr_stddev_fields'>
+    hrr_bdry_i?: t_Float | null
+    hrrnum?: t_Float | null
+    ogc_fid?: t_Float | null
+  },
+  Extension<'hrr_stddev_fields'>
+>
+
+/**
+ * @name hrr_stddev_order_by
+ * @type INPUT_OBJECT
+ */
+export type hrr_stddev_order_by = {
+  hrr_bdry_i?: order_by | null
+  hrrnum?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name hrr_stddev_pop_fields
+ * @type OBJECT
+ */
+export type t_hrr_stddev_pop_fields = FieldsType<
+  {
+    __typename: t_String<'hrr_stddev_pop_fields'>
+    hrr_bdry_i?: t_Float | null
+    hrrnum?: t_Float | null
+    ogc_fid?: t_Float | null
+  },
+  Extension<'hrr_stddev_pop_fields'>
+>
+
+/**
+ * @name hrr_stddev_pop_order_by
+ * @type INPUT_OBJECT
+ */
+export type hrr_stddev_pop_order_by = {
+  hrr_bdry_i?: order_by | null
+  hrrnum?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name hrr_stddev_samp_fields
+ * @type OBJECT
+ */
+export type t_hrr_stddev_samp_fields = FieldsType<
+  {
+    __typename: t_String<'hrr_stddev_samp_fields'>
+    hrr_bdry_i?: t_Float | null
+    hrrnum?: t_Float | null
+    ogc_fid?: t_Float | null
+  },
+  Extension<'hrr_stddev_samp_fields'>
+>
+
+/**
+ * @name hrr_stddev_samp_order_by
+ * @type INPUT_OBJECT
+ */
+export type hrr_stddev_samp_order_by = {
+  hrr_bdry_i?: order_by | null
+  hrrnum?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name hrr_sum_fields
+ * @type OBJECT
+ */
+export type t_hrr_sum_fields = FieldsType<
+  {
+    __typename: t_String<'hrr_sum_fields'>
+    hrr_bdry_i?: t_float8 | null
+    hrrnum?: t_Int | null
+    ogc_fid?: t_Int | null
+  },
+  Extension<'hrr_sum_fields'>
+>
+
+/**
+ * @name hrr_sum_order_by
+ * @type INPUT_OBJECT
+ */
+export type hrr_sum_order_by = {
+  hrr_bdry_i?: order_by | null
+  hrrnum?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name hrr_update_column
+ * @type ENUM
+ */
+type t_hrr_update_column = EnumType<
+  'hrr_bdry_i' | 'hrrcity' | 'hrrnum' | 'ogc_fid' | 'slug' | 'wkb_geometry'
+>
+
+/**
+ * @name hrr_var_pop_fields
+ * @type OBJECT
+ */
+export type t_hrr_var_pop_fields = FieldsType<
+  {
+    __typename: t_String<'hrr_var_pop_fields'>
+    hrr_bdry_i?: t_Float | null
+    hrrnum?: t_Float | null
+    ogc_fid?: t_Float | null
+  },
+  Extension<'hrr_var_pop_fields'>
+>
+
+/**
+ * @name hrr_var_pop_order_by
+ * @type INPUT_OBJECT
+ */
+export type hrr_var_pop_order_by = {
+  hrr_bdry_i?: order_by | null
+  hrrnum?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name hrr_var_samp_fields
+ * @type OBJECT
+ */
+export type t_hrr_var_samp_fields = FieldsType<
+  {
+    __typename: t_String<'hrr_var_samp_fields'>
+    hrr_bdry_i?: t_Float | null
+    hrrnum?: t_Float | null
+    ogc_fid?: t_Float | null
+  },
+  Extension<'hrr_var_samp_fields'>
+>
+
+/**
+ * @name hrr_var_samp_order_by
+ * @type INPUT_OBJECT
+ */
+export type hrr_var_samp_order_by = {
+  hrr_bdry_i?: order_by | null
+  hrrnum?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name hrr_variance_fields
+ * @type OBJECT
+ */
+export type t_hrr_variance_fields = FieldsType<
+  {
+    __typename: t_String<'hrr_variance_fields'>
+    hrr_bdry_i?: t_Float | null
+    hrrnum?: t_Float | null
+    ogc_fid?: t_Float | null
+  },
+  Extension<'hrr_variance_fields'>
+>
+
+/**
+ * @name hrr_variance_order_by
+ * @type INPUT_OBJECT
+ */
+export type hrr_variance_order_by = {
+  hrr_bdry_i?: order_by | null
+  hrrnum?: order_by | null
+  ogc_fid?: order_by | null
 }
 
 /**
@@ -797,11 +1274,24 @@ export type menu_item_variance_order_by = { price?: order_by | null }
 export type t_mutation_root = FieldsType<
   {
     __typename: t_String<'mutation_root'>
+    delete_hrr: FieldsTypeArg<
+      { where: hrr_bool_exp },
+      t_hrr_mutation_response | null
+    >
+    delete_hrr_by_pk: FieldsTypeArg<{ ogc_fid: number }, t_hrr | null>
     delete_menu_item: FieldsTypeArg<
       { where: menu_item_bool_exp },
       t_menu_item_mutation_response | null
     >
     delete_menu_item_by_pk: FieldsTypeArg<{ id: any }, t_menu_item | null>
+    delete_nhood_labels: FieldsTypeArg<
+      { where: nhood_labels_bool_exp },
+      t_nhood_labels_mutation_response | null
+    >
+    delete_nhood_labels_by_pk: FieldsTypeArg<
+      { ogc_fid: number },
+      t_nhood_labels | null
+    >
     delete_opening_hours: FieldsTypeArg<
       { where: opening_hours_bool_exp },
       t_opening_hours_mutation_response | null
@@ -869,6 +1359,19 @@ export type t_mutation_root = FieldsType<
       t_user_mutation_response | null
     >
     delete_user_by_pk: FieldsTypeArg<{ id: any }, t_user | null>
+    delete_zcta5: FieldsTypeArg<
+      { where: zcta5_bool_exp },
+      t_zcta5_mutation_response | null
+    >
+    delete_zcta5_by_pk: FieldsTypeArg<{ ogc_fid: number }, t_zcta5 | null>
+    insert_hrr: FieldsTypeArg<
+      { objects: hrr_insert_input[]; on_conflict?: hrr_on_conflict | null },
+      t_hrr_mutation_response | null
+    >
+    insert_hrr_one: FieldsTypeArg<
+      { object: hrr_insert_input; on_conflict?: hrr_on_conflict | null },
+      t_hrr | null
+    >
     insert_menu_item: FieldsTypeArg<
       {
         objects: menu_item_insert_input[]
@@ -882,6 +1385,20 @@ export type t_mutation_root = FieldsType<
         on_conflict?: menu_item_on_conflict | null
       },
       t_menu_item | null
+    >
+    insert_nhood_labels: FieldsTypeArg<
+      {
+        objects: nhood_labels_insert_input[]
+        on_conflict?: nhood_labels_on_conflict | null
+      },
+      t_nhood_labels_mutation_response | null
+    >
+    insert_nhood_labels_one: FieldsTypeArg<
+      {
+        object: nhood_labels_insert_input
+        on_conflict?: nhood_labels_on_conflict | null
+      },
+      t_nhood_labels | null
     >
     insert_opening_hours: FieldsTypeArg<
       {
@@ -1016,6 +1533,30 @@ export type t_mutation_root = FieldsType<
       { object: user_insert_input; on_conflict?: user_on_conflict | null },
       t_user | null
     >
+    insert_zcta5: FieldsTypeArg<
+      { objects: zcta5_insert_input[]; on_conflict?: zcta5_on_conflict | null },
+      t_zcta5_mutation_response | null
+    >
+    insert_zcta5_one: FieldsTypeArg<
+      { object: zcta5_insert_input; on_conflict?: zcta5_on_conflict | null },
+      t_zcta5 | null
+    >
+    update_hrr: FieldsTypeArg<
+      {
+        _inc?: hrr_inc_input | null
+        _set?: hrr_set_input | null
+        where: hrr_bool_exp
+      },
+      t_hrr_mutation_response | null
+    >
+    update_hrr_by_pk: FieldsTypeArg<
+      {
+        _inc?: hrr_inc_input | null
+        _set?: hrr_set_input | null
+        pk_columns: hrr_pk_columns_input
+      },
+      t_hrr | null
+    >
     update_menu_item: FieldsTypeArg<
       {
         _inc?: menu_item_inc_input | null
@@ -1031,6 +1572,22 @@ export type t_mutation_root = FieldsType<
         pk_columns: menu_item_pk_columns_input
       },
       t_menu_item | null
+    >
+    update_nhood_labels: FieldsTypeArg<
+      {
+        _inc?: nhood_labels_inc_input | null
+        _set?: nhood_labels_set_input | null
+        where: nhood_labels_bool_exp
+      },
+      t_nhood_labels_mutation_response | null
+    >
+    update_nhood_labels_by_pk: FieldsTypeArg<
+      {
+        _inc?: nhood_labels_inc_input | null
+        _set?: nhood_labels_set_input | null
+        pk_columns: nhood_labels_pk_columns_input
+      },
+      t_nhood_labels | null
     >
     update_opening_hours: FieldsTypeArg<
       { _set?: opening_hours_set_input | null; where: opening_hours_bool_exp },
@@ -1238,9 +1795,400 @@ export type t_mutation_root = FieldsType<
       },
       t_user | null
     >
+    update_zcta5: FieldsTypeArg<
+      {
+        _inc?: zcta5_inc_input | null
+        _set?: zcta5_set_input | null
+        where: zcta5_bool_exp
+      },
+      t_zcta5_mutation_response | null
+    >
+    update_zcta5_by_pk: FieldsTypeArg<
+      {
+        _inc?: zcta5_inc_input | null
+        _set?: zcta5_set_input | null
+        pk_columns: zcta5_pk_columns_input
+      },
+      t_zcta5 | null
+    >
   },
   Extension<'mutation_root'>
 >
+
+/**
+ * @name nhood_labels
+ * @type OBJECT
+ */
+export type t_nhood_labels = FieldsType<
+  {
+    __typename: t_String<'nhood_labels'>
+    center: t_geometry
+    name: t_String
+    ogc_fid: t_Int
+  },
+  Extension<'nhood_labels'>
+>
+
+/**
+ * @name nhood_labels_aggregate
+ * @type OBJECT
+ */
+export type t_nhood_labels_aggregate = FieldsType<
+  {
+    __typename: t_String<'nhood_labels_aggregate'>
+    aggregate?: t_nhood_labels_aggregate_fields | null
+    nodes: t_nhood_labels[]
+  },
+  Extension<'nhood_labels_aggregate'>
+>
+
+/**
+ * @name nhood_labels_aggregate_fields
+ * @type OBJECT
+ */
+export type t_nhood_labels_aggregate_fields = FieldsType<
+  {
+    __typename: t_String<'nhood_labels_aggregate_fields'>
+    avg?: t_nhood_labels_avg_fields | null
+    count: FieldsTypeArg<
+      {
+        columns?: nhood_labels_select_column[] | null
+        distinct?: boolean | null
+      },
+      t_Int | null
+    >
+    max?: t_nhood_labels_max_fields | null
+    min?: t_nhood_labels_min_fields | null
+    stddev?: t_nhood_labels_stddev_fields | null
+    stddev_pop?: t_nhood_labels_stddev_pop_fields | null
+    stddev_samp?: t_nhood_labels_stddev_samp_fields | null
+    sum?: t_nhood_labels_sum_fields | null
+    var_pop?: t_nhood_labels_var_pop_fields | null
+    var_samp?: t_nhood_labels_var_samp_fields | null
+    variance?: t_nhood_labels_variance_fields | null
+  },
+  Extension<'nhood_labels_aggregate_fields'>
+>
+
+/**
+ * @name nhood_labels_aggregate_order_by
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_aggregate_order_by = {
+  avg?: nhood_labels_avg_order_by | null
+  count?: order_by | null
+  max?: nhood_labels_max_order_by | null
+  min?: nhood_labels_min_order_by | null
+  stddev?: nhood_labels_stddev_order_by | null
+  stddev_pop?: nhood_labels_stddev_pop_order_by | null
+  stddev_samp?: nhood_labels_stddev_samp_order_by | null
+  sum?: nhood_labels_sum_order_by | null
+  var_pop?: nhood_labels_var_pop_order_by | null
+  var_samp?: nhood_labels_var_samp_order_by | null
+  variance?: nhood_labels_variance_order_by | null
+}
+
+/**
+ * @name nhood_labels_arr_rel_insert_input
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_arr_rel_insert_input = {
+  data: nhood_labels_insert_input[]
+  on_conflict?: nhood_labels_on_conflict | null
+}
+
+/**
+ * @name nhood_labels_avg_fields
+ * @type OBJECT
+ */
+export type t_nhood_labels_avg_fields = FieldsType<
+  {
+    __typename: t_String<'nhood_labels_avg_fields'>
+    ogc_fid?: t_Float | null
+  },
+  Extension<'nhood_labels_avg_fields'>
+>
+
+/**
+ * @name nhood_labels_avg_order_by
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_avg_order_by = { ogc_fid?: order_by | null }
+
+/**
+ * @name nhood_labels_bool_exp
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_bool_exp = {
+  _and?: (nhood_labels_bool_exp | null)[] | null
+  _not?: nhood_labels_bool_exp | null
+  _or?: (nhood_labels_bool_exp | null)[] | null
+  center?: geometry_comparison_exp | null
+  name?: String_comparison_exp | null
+  ogc_fid?: Int_comparison_exp | null
+}
+
+/**
+ * @name nhood_labels_constraint
+ * @type ENUM
+ */
+type t_nhood_labels_constraint = EnumType<'nhood_labels_pkey'>
+
+/**
+ * @name nhood_labels_inc_input
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_inc_input = { ogc_fid?: number | null }
+
+/**
+ * @name nhood_labels_insert_input
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_insert_input = {
+  center?: any | null
+  name?: string | null
+  ogc_fid?: number | null
+}
+
+/**
+ * @name nhood_labels_max_fields
+ * @type OBJECT
+ */
+export type t_nhood_labels_max_fields = FieldsType<
+  {
+    __typename: t_String<'nhood_labels_max_fields'>
+    name?: t_String | null
+    ogc_fid?: t_Int | null
+  },
+  Extension<'nhood_labels_max_fields'>
+>
+
+/**
+ * @name nhood_labels_max_order_by
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_max_order_by = {
+  name?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name nhood_labels_min_fields
+ * @type OBJECT
+ */
+export type t_nhood_labels_min_fields = FieldsType<
+  {
+    __typename: t_String<'nhood_labels_min_fields'>
+    name?: t_String | null
+    ogc_fid?: t_Int | null
+  },
+  Extension<'nhood_labels_min_fields'>
+>
+
+/**
+ * @name nhood_labels_min_order_by
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_min_order_by = {
+  name?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name nhood_labels_mutation_response
+ * @type OBJECT
+ */
+export type t_nhood_labels_mutation_response = FieldsType<
+  {
+    __typename: t_String<'nhood_labels_mutation_response'>
+    affected_rows: t_Int
+    returning: t_nhood_labels[]
+  },
+  Extension<'nhood_labels_mutation_response'>
+>
+
+/**
+ * @name nhood_labels_obj_rel_insert_input
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_obj_rel_insert_input = {
+  data: nhood_labels_insert_input
+  on_conflict?: nhood_labels_on_conflict | null
+}
+
+/**
+ * @name nhood_labels_on_conflict
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_on_conflict = {
+  constraint: nhood_labels_constraint
+  update_columns: nhood_labels_update_column[]
+  where?: nhood_labels_bool_exp | null
+}
+
+/**
+ * @name nhood_labels_order_by
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_order_by = {
+  center?: order_by | null
+  name?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name nhood_labels_pk_columns_input
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_pk_columns_input = { ogc_fid: number }
+
+/**
+ * @name nhood_labels_select_column
+ * @type ENUM
+ */
+type t_nhood_labels_select_column = EnumType<'center' | 'name' | 'ogc_fid'>
+
+/**
+ * @name nhood_labels_set_input
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_set_input = {
+  center?: any | null
+  name?: string | null
+  ogc_fid?: number | null
+}
+
+/**
+ * @name nhood_labels_stddev_fields
+ * @type OBJECT
+ */
+export type t_nhood_labels_stddev_fields = FieldsType<
+  {
+    __typename: t_String<'nhood_labels_stddev_fields'>
+    ogc_fid?: t_Float | null
+  },
+  Extension<'nhood_labels_stddev_fields'>
+>
+
+/**
+ * @name nhood_labels_stddev_order_by
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_stddev_order_by = { ogc_fid?: order_by | null }
+
+/**
+ * @name nhood_labels_stddev_pop_fields
+ * @type OBJECT
+ */
+export type t_nhood_labels_stddev_pop_fields = FieldsType<
+  {
+    __typename: t_String<'nhood_labels_stddev_pop_fields'>
+    ogc_fid?: t_Float | null
+  },
+  Extension<'nhood_labels_stddev_pop_fields'>
+>
+
+/**
+ * @name nhood_labels_stddev_pop_order_by
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_stddev_pop_order_by = { ogc_fid?: order_by | null }
+
+/**
+ * @name nhood_labels_stddev_samp_fields
+ * @type OBJECT
+ */
+export type t_nhood_labels_stddev_samp_fields = FieldsType<
+  {
+    __typename: t_String<'nhood_labels_stddev_samp_fields'>
+    ogc_fid?: t_Float | null
+  },
+  Extension<'nhood_labels_stddev_samp_fields'>
+>
+
+/**
+ * @name nhood_labels_stddev_samp_order_by
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_stddev_samp_order_by = { ogc_fid?: order_by | null }
+
+/**
+ * @name nhood_labels_sum_fields
+ * @type OBJECT
+ */
+export type t_nhood_labels_sum_fields = FieldsType<
+  {
+    __typename: t_String<'nhood_labels_sum_fields'>
+    ogc_fid?: t_Int | null
+  },
+  Extension<'nhood_labels_sum_fields'>
+>
+
+/**
+ * @name nhood_labels_sum_order_by
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_sum_order_by = { ogc_fid?: order_by | null }
+
+/**
+ * @name nhood_labels_update_column
+ * @type ENUM
+ */
+type t_nhood_labels_update_column = EnumType<'center' | 'name' | 'ogc_fid'>
+
+/**
+ * @name nhood_labels_var_pop_fields
+ * @type OBJECT
+ */
+export type t_nhood_labels_var_pop_fields = FieldsType<
+  {
+    __typename: t_String<'nhood_labels_var_pop_fields'>
+    ogc_fid?: t_Float | null
+  },
+  Extension<'nhood_labels_var_pop_fields'>
+>
+
+/**
+ * @name nhood_labels_var_pop_order_by
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_var_pop_order_by = { ogc_fid?: order_by | null }
+
+/**
+ * @name nhood_labels_var_samp_fields
+ * @type OBJECT
+ */
+export type t_nhood_labels_var_samp_fields = FieldsType<
+  {
+    __typename: t_String<'nhood_labels_var_samp_fields'>
+    ogc_fid?: t_Float | null
+  },
+  Extension<'nhood_labels_var_samp_fields'>
+>
+
+/**
+ * @name nhood_labels_var_samp_order_by
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_var_samp_order_by = { ogc_fid?: order_by | null }
+
+/**
+ * @name nhood_labels_variance_fields
+ * @type OBJECT
+ */
+export type t_nhood_labels_variance_fields = FieldsType<
+  {
+    __typename: t_String<'nhood_labels_variance_fields'>
+    ogc_fid?: t_Float | null
+  },
+  Extension<'nhood_labels_variance_fields'>
+>
+
+/**
+ * @name nhood_labels_variance_order_by
+ * @type INPUT_OBJECT
+ */
+export type nhood_labels_variance_order_by = { ogc_fid?: order_by | null }
 
 /**
  * @name numeric
@@ -2147,6 +3095,27 @@ type t_photo_xref_update_column = EnumType<
 export type t_query_root = FieldsType<
   {
     __typename: t_String<'query_root'>
+    hrr: FieldsTypeArg<
+      {
+        distinct_on?: hrr_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: hrr_order_by[] | null
+        where?: hrr_bool_exp | null
+      },
+      t_hrr[]
+    >
+    hrr_aggregate: FieldsTypeArg<
+      {
+        distinct_on?: hrr_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: hrr_order_by[] | null
+        where?: hrr_bool_exp | null
+      },
+      t_hrr_aggregate
+    >
+    hrr_by_pk: FieldsTypeArg<{ ogc_fid: number }, t_hrr | null>
     menu_item: FieldsTypeArg<
       {
         distinct_on?: menu_item_select_column[] | null
@@ -2168,6 +3137,30 @@ export type t_query_root = FieldsType<
       t_menu_item_aggregate
     >
     menu_item_by_pk: FieldsTypeArg<{ id: any }, t_menu_item | null>
+    nhood_labels: FieldsTypeArg<
+      {
+        distinct_on?: nhood_labels_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: nhood_labels_order_by[] | null
+        where?: nhood_labels_bool_exp | null
+      },
+      t_nhood_labels[]
+    >
+    nhood_labels_aggregate: FieldsTypeArg<
+      {
+        distinct_on?: nhood_labels_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: nhood_labels_order_by[] | null
+        where?: nhood_labels_bool_exp | null
+      },
+      t_nhood_labels_aggregate
+    >
+    nhood_labels_by_pk: FieldsTypeArg<
+      { ogc_fid: number },
+      t_nhood_labels | null
+    >
     opening_hours: FieldsTypeArg<
       {
         distinct_on?: opening_hours_select_column[] | null
@@ -2408,6 +3401,27 @@ export type t_query_root = FieldsType<
       t_user_aggregate
     >
     user_by_pk: FieldsTypeArg<{ id: any }, t_user | null>
+    zcta5: FieldsTypeArg<
+      {
+        distinct_on?: zcta5_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: zcta5_order_by[] | null
+        where?: zcta5_bool_exp | null
+      },
+      t_zcta5[]
+    >
+    zcta5_aggregate: FieldsTypeArg<
+      {
+        distinct_on?: zcta5_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: zcta5_order_by[] | null
+        where?: zcta5_bool_exp | null
+      },
+      t_zcta5_aggregate
+    >
+    zcta5_by_pk: FieldsTypeArg<{ ogc_fid: number }, t_zcta5 | null>
   },
   Extension<'query_root'>
 >
@@ -3927,7 +4941,7 @@ export type restaurant_tag_variance_order_by = {
  */
 export type restaurant_top_tags_args = {
   _tag_types?: string | null
-  tag_names?: string | null
+  tag_slugs?: string | null
 }
 
 /**
@@ -5434,6 +6448,27 @@ export type st_d_within_input = { distance: number; from: any }
 export type t_subscription_root = FieldsType<
   {
     __typename: t_String<'subscription_root'>
+    hrr: FieldsTypeArg<
+      {
+        distinct_on?: hrr_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: hrr_order_by[] | null
+        where?: hrr_bool_exp | null
+      },
+      t_hrr[]
+    >
+    hrr_aggregate: FieldsTypeArg<
+      {
+        distinct_on?: hrr_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: hrr_order_by[] | null
+        where?: hrr_bool_exp | null
+      },
+      t_hrr_aggregate
+    >
+    hrr_by_pk: FieldsTypeArg<{ ogc_fid: number }, t_hrr | null>
     menu_item: FieldsTypeArg<
       {
         distinct_on?: menu_item_select_column[] | null
@@ -5455,6 +6490,30 @@ export type t_subscription_root = FieldsType<
       t_menu_item_aggregate
     >
     menu_item_by_pk: FieldsTypeArg<{ id: any }, t_menu_item | null>
+    nhood_labels: FieldsTypeArg<
+      {
+        distinct_on?: nhood_labels_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: nhood_labels_order_by[] | null
+        where?: nhood_labels_bool_exp | null
+      },
+      t_nhood_labels[]
+    >
+    nhood_labels_aggregate: FieldsTypeArg<
+      {
+        distinct_on?: nhood_labels_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: nhood_labels_order_by[] | null
+        where?: nhood_labels_bool_exp | null
+      },
+      t_nhood_labels_aggregate
+    >
+    nhood_labels_by_pk: FieldsTypeArg<
+      { ogc_fid: number },
+      t_nhood_labels | null
+    >
     opening_hours: FieldsTypeArg<
       {
         distinct_on?: opening_hours_select_column[] | null
@@ -5695,6 +6754,27 @@ export type t_subscription_root = FieldsType<
       t_user_aggregate
     >
     user_by_pk: FieldsTypeArg<{ id: any }, t_user | null>
+    zcta5: FieldsTypeArg<
+      {
+        distinct_on?: zcta5_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: zcta5_order_by[] | null
+        where?: zcta5_bool_exp | null
+      },
+      t_zcta5[]
+    >
+    zcta5_aggregate: FieldsTypeArg<
+      {
+        distinct_on?: zcta5_select_column[] | null
+        limit?: number | null
+        offset?: number | null
+        order_by?: zcta5_order_by[] | null
+        where?: zcta5_bool_exp | null
+      },
+      t_zcta5_aggregate
+    >
+    zcta5_by_pk: FieldsTypeArg<{ ogc_fid: number }, t_zcta5 | null>
   },
   Extension<'subscription_root'>
 >
@@ -6667,6 +7747,8 @@ export type t_user = FieldsType<
     id: t_uuid
     location?: t_String | null
     password: t_String
+    password_reset_date?: t_timestamptz | null
+    password_reset_token?: t_String | null
     reviews: FieldsTypeArg<
       {
         distinct_on?: review_select_column[] | null
@@ -6798,6 +7880,8 @@ export type user_bool_exp = {
   id?: uuid_comparison_exp | null
   location?: String_comparison_exp | null
   password?: String_comparison_exp | null
+  password_reset_date?: timestamptz_comparison_exp | null
+  password_reset_token?: String_comparison_exp | null
   reviews?: review_bool_exp | null
   role?: String_comparison_exp | null
   updated_at?: timestamptz_comparison_exp | null
@@ -6836,6 +7920,8 @@ export type user_insert_input = {
   id?: any | null
   location?: string | null
   password?: string | null
+  password_reset_date?: any | null
+  password_reset_token?: string | null
   reviews?: review_arr_rel_insert_input | null
   role?: string | null
   updated_at?: any | null
@@ -6861,6 +7947,8 @@ export type t_user_max_fields = FieldsType<
     id?: t_uuid | null
     location?: t_String | null
     password?: t_String | null
+    password_reset_date?: t_timestamptz | null
+    password_reset_token?: t_String | null
     role?: t_String | null
     updated_at?: t_timestamptz | null
     username?: t_String | null
@@ -6885,6 +7973,8 @@ export type user_max_order_by = {
   id?: order_by | null
   location?: order_by | null
   password?: order_by | null
+  password_reset_date?: order_by | null
+  password_reset_token?: order_by | null
   role?: order_by | null
   updated_at?: order_by | null
   username?: order_by | null
@@ -6909,6 +7999,8 @@ export type t_user_min_fields = FieldsType<
     id?: t_uuid | null
     location?: t_String | null
     password?: t_String | null
+    password_reset_date?: t_timestamptz | null
+    password_reset_token?: t_String | null
     role?: t_String | null
     updated_at?: t_timestamptz | null
     username?: t_String | null
@@ -6933,6 +8025,8 @@ export type user_min_order_by = {
   id?: order_by | null
   location?: order_by | null
   password?: order_by | null
+  password_reset_date?: order_by | null
+  password_reset_token?: order_by | null
   role?: order_by | null
   updated_at?: order_by | null
   username?: order_by | null
@@ -6988,6 +8082,8 @@ export type user_order_by = {
   id?: order_by | null
   location?: order_by | null
   password?: order_by | null
+  password_reset_date?: order_by | null
+  password_reset_token?: order_by | null
   reviews_aggregate?: review_aggregate_order_by | null
   role?: order_by | null
   updated_at?: order_by | null
@@ -7018,6 +8114,8 @@ type t_user_select_column = EnumType<
   | 'id'
   | 'location'
   | 'password'
+  | 'password_reset_date'
+  | 'password_reset_token'
   | 'role'
   | 'updated_at'
   | 'username'
@@ -7041,6 +8139,8 @@ export type user_set_input = {
   id?: any | null
   location?: string | null
   password?: string | null
+  password_reset_date?: any | null
+  password_reset_token?: string | null
   role?: string | null
   updated_at?: any | null
   username?: string | null
@@ -7136,6 +8236,8 @@ type t_user_update_column = EnumType<
   | 'id'
   | 'location'
   | 'password'
+  | 'password_reset_date'
+  | 'password_reset_token'
   | 'role'
   | 'updated_at'
   | 'username'
@@ -7215,6 +8317,548 @@ export type uuid_comparison_exp = {
   _lte?: any | null
   _neq?: any | null
   _nin?: any[] | null
+}
+
+/**
+ * @name zcta5
+ * @type OBJECT
+ */
+export type t_zcta5 = FieldsType<
+  {
+    __typename: t_String<'zcta5'>
+    aland10?: t_float8 | null
+    awater10?: t_float8 | null
+    classfp10?: t_String | null
+    funcstat10?: t_String | null
+    geoid10?: t_String | null
+    intptlat10?: t_String | null
+    intptlon10?: t_String | null
+    mtfcc10?: t_String | null
+    nhood?: t_String | null
+    ogc_fid: t_Int
+    slug?: t_String | null
+    wkb_geometry?: t_geometry | null
+    zcta5ce10?: t_String | null
+  },
+  Extension<'zcta5'>
+>
+
+/**
+ * @name zcta5_aggregate
+ * @type OBJECT
+ */
+export type t_zcta5_aggregate = FieldsType<
+  {
+    __typename: t_String<'zcta5_aggregate'>
+    aggregate?: t_zcta5_aggregate_fields | null
+    nodes: t_zcta5[]
+  },
+  Extension<'zcta5_aggregate'>
+>
+
+/**
+ * @name zcta5_aggregate_fields
+ * @type OBJECT
+ */
+export type t_zcta5_aggregate_fields = FieldsType<
+  {
+    __typename: t_String<'zcta5_aggregate_fields'>
+    avg?: t_zcta5_avg_fields | null
+    count: FieldsTypeArg<
+      { columns?: zcta5_select_column[] | null; distinct?: boolean | null },
+      t_Int | null
+    >
+    max?: t_zcta5_max_fields | null
+    min?: t_zcta5_min_fields | null
+    stddev?: t_zcta5_stddev_fields | null
+    stddev_pop?: t_zcta5_stddev_pop_fields | null
+    stddev_samp?: t_zcta5_stddev_samp_fields | null
+    sum?: t_zcta5_sum_fields | null
+    var_pop?: t_zcta5_var_pop_fields | null
+    var_samp?: t_zcta5_var_samp_fields | null
+    variance?: t_zcta5_variance_fields | null
+  },
+  Extension<'zcta5_aggregate_fields'>
+>
+
+/**
+ * @name zcta5_aggregate_order_by
+ * @type INPUT_OBJECT
+ */
+export type zcta5_aggregate_order_by = {
+  avg?: zcta5_avg_order_by | null
+  count?: order_by | null
+  max?: zcta5_max_order_by | null
+  min?: zcta5_min_order_by | null
+  stddev?: zcta5_stddev_order_by | null
+  stddev_pop?: zcta5_stddev_pop_order_by | null
+  stddev_samp?: zcta5_stddev_samp_order_by | null
+  sum?: zcta5_sum_order_by | null
+  var_pop?: zcta5_var_pop_order_by | null
+  var_samp?: zcta5_var_samp_order_by | null
+  variance?: zcta5_variance_order_by | null
+}
+
+/**
+ * @name zcta5_arr_rel_insert_input
+ * @type INPUT_OBJECT
+ */
+export type zcta5_arr_rel_insert_input = {
+  data: zcta5_insert_input[]
+  on_conflict?: zcta5_on_conflict | null
+}
+
+/**
+ * @name zcta5_avg_fields
+ * @type OBJECT
+ */
+export type t_zcta5_avg_fields = FieldsType<
+  {
+    __typename: t_String<'zcta5_avg_fields'>
+    aland10?: t_Float | null
+    awater10?: t_Float | null
+    ogc_fid?: t_Float | null
+  },
+  Extension<'zcta5_avg_fields'>
+>
+
+/**
+ * @name zcta5_avg_order_by
+ * @type INPUT_OBJECT
+ */
+export type zcta5_avg_order_by = {
+  aland10?: order_by | null
+  awater10?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name zcta5_bool_exp
+ * @type INPUT_OBJECT
+ */
+export type zcta5_bool_exp = {
+  _and?: (zcta5_bool_exp | null)[] | null
+  _not?: zcta5_bool_exp | null
+  _or?: (zcta5_bool_exp | null)[] | null
+  aland10?: float8_comparison_exp | null
+  awater10?: float8_comparison_exp | null
+  classfp10?: String_comparison_exp | null
+  funcstat10?: String_comparison_exp | null
+  geoid10?: String_comparison_exp | null
+  intptlat10?: String_comparison_exp | null
+  intptlon10?: String_comparison_exp | null
+  mtfcc10?: String_comparison_exp | null
+  nhood?: String_comparison_exp | null
+  ogc_fid?: Int_comparison_exp | null
+  slug?: String_comparison_exp | null
+  wkb_geometry?: geometry_comparison_exp | null
+  zcta5ce10?: String_comparison_exp | null
+}
+
+/**
+ * @name zcta5_constraint
+ * @type ENUM
+ */
+type t_zcta5_constraint = EnumType<'zcta5_pkey' | 'zcta5_slug_key'>
+
+/**
+ * @name zcta5_inc_input
+ * @type INPUT_OBJECT
+ */
+export type zcta5_inc_input = {
+  aland10?: any | null
+  awater10?: any | null
+  ogc_fid?: number | null
+}
+
+/**
+ * @name zcta5_insert_input
+ * @type INPUT_OBJECT
+ */
+export type zcta5_insert_input = {
+  aland10?: any | null
+  awater10?: any | null
+  classfp10?: string | null
+  funcstat10?: string | null
+  geoid10?: string | null
+  intptlat10?: string | null
+  intptlon10?: string | null
+  mtfcc10?: string | null
+  nhood?: string | null
+  ogc_fid?: number | null
+  slug?: string | null
+  wkb_geometry?: any | null
+  zcta5ce10?: string | null
+}
+
+/**
+ * @name zcta5_max_fields
+ * @type OBJECT
+ */
+export type t_zcta5_max_fields = FieldsType<
+  {
+    __typename: t_String<'zcta5_max_fields'>
+    aland10?: t_float8 | null
+    awater10?: t_float8 | null
+    classfp10?: t_String | null
+    funcstat10?: t_String | null
+    geoid10?: t_String | null
+    intptlat10?: t_String | null
+    intptlon10?: t_String | null
+    mtfcc10?: t_String | null
+    nhood?: t_String | null
+    ogc_fid?: t_Int | null
+    slug?: t_String | null
+    zcta5ce10?: t_String | null
+  },
+  Extension<'zcta5_max_fields'>
+>
+
+/**
+ * @name zcta5_max_order_by
+ * @type INPUT_OBJECT
+ */
+export type zcta5_max_order_by = {
+  aland10?: order_by | null
+  awater10?: order_by | null
+  classfp10?: order_by | null
+  funcstat10?: order_by | null
+  geoid10?: order_by | null
+  intptlat10?: order_by | null
+  intptlon10?: order_by | null
+  mtfcc10?: order_by | null
+  nhood?: order_by | null
+  ogc_fid?: order_by | null
+  slug?: order_by | null
+  zcta5ce10?: order_by | null
+}
+
+/**
+ * @name zcta5_min_fields
+ * @type OBJECT
+ */
+export type t_zcta5_min_fields = FieldsType<
+  {
+    __typename: t_String<'zcta5_min_fields'>
+    aland10?: t_float8 | null
+    awater10?: t_float8 | null
+    classfp10?: t_String | null
+    funcstat10?: t_String | null
+    geoid10?: t_String | null
+    intptlat10?: t_String | null
+    intptlon10?: t_String | null
+    mtfcc10?: t_String | null
+    nhood?: t_String | null
+    ogc_fid?: t_Int | null
+    slug?: t_String | null
+    zcta5ce10?: t_String | null
+  },
+  Extension<'zcta5_min_fields'>
+>
+
+/**
+ * @name zcta5_min_order_by
+ * @type INPUT_OBJECT
+ */
+export type zcta5_min_order_by = {
+  aland10?: order_by | null
+  awater10?: order_by | null
+  classfp10?: order_by | null
+  funcstat10?: order_by | null
+  geoid10?: order_by | null
+  intptlat10?: order_by | null
+  intptlon10?: order_by | null
+  mtfcc10?: order_by | null
+  nhood?: order_by | null
+  ogc_fid?: order_by | null
+  slug?: order_by | null
+  zcta5ce10?: order_by | null
+}
+
+/**
+ * @name zcta5_mutation_response
+ * @type OBJECT
+ */
+export type t_zcta5_mutation_response = FieldsType<
+  {
+    __typename: t_String<'zcta5_mutation_response'>
+    affected_rows: t_Int
+    returning: t_zcta5[]
+  },
+  Extension<'zcta5_mutation_response'>
+>
+
+/**
+ * @name zcta5_obj_rel_insert_input
+ * @type INPUT_OBJECT
+ */
+export type zcta5_obj_rel_insert_input = {
+  data: zcta5_insert_input
+  on_conflict?: zcta5_on_conflict | null
+}
+
+/**
+ * @name zcta5_on_conflict
+ * @type INPUT_OBJECT
+ */
+export type zcta5_on_conflict = {
+  constraint: zcta5_constraint
+  update_columns: zcta5_update_column[]
+  where?: zcta5_bool_exp | null
+}
+
+/**
+ * @name zcta5_order_by
+ * @type INPUT_OBJECT
+ */
+export type zcta5_order_by = {
+  aland10?: order_by | null
+  awater10?: order_by | null
+  classfp10?: order_by | null
+  funcstat10?: order_by | null
+  geoid10?: order_by | null
+  intptlat10?: order_by | null
+  intptlon10?: order_by | null
+  mtfcc10?: order_by | null
+  nhood?: order_by | null
+  ogc_fid?: order_by | null
+  slug?: order_by | null
+  wkb_geometry?: order_by | null
+  zcta5ce10?: order_by | null
+}
+
+/**
+ * @name zcta5_pk_columns_input
+ * @type INPUT_OBJECT
+ */
+export type zcta5_pk_columns_input = { ogc_fid: number }
+
+/**
+ * @name zcta5_select_column
+ * @type ENUM
+ */
+type t_zcta5_select_column = EnumType<
+  | 'aland10'
+  | 'awater10'
+  | 'classfp10'
+  | 'funcstat10'
+  | 'geoid10'
+  | 'intptlat10'
+  | 'intptlon10'
+  | 'mtfcc10'
+  | 'nhood'
+  | 'ogc_fid'
+  | 'slug'
+  | 'wkb_geometry'
+  | 'zcta5ce10'
+>
+
+/**
+ * @name zcta5_set_input
+ * @type INPUT_OBJECT
+ */
+export type zcta5_set_input = {
+  aland10?: any | null
+  awater10?: any | null
+  classfp10?: string | null
+  funcstat10?: string | null
+  geoid10?: string | null
+  intptlat10?: string | null
+  intptlon10?: string | null
+  mtfcc10?: string | null
+  nhood?: string | null
+  ogc_fid?: number | null
+  slug?: string | null
+  wkb_geometry?: any | null
+  zcta5ce10?: string | null
+}
+
+/**
+ * @name zcta5_stddev_fields
+ * @type OBJECT
+ */
+export type t_zcta5_stddev_fields = FieldsType<
+  {
+    __typename: t_String<'zcta5_stddev_fields'>
+    aland10?: t_Float | null
+    awater10?: t_Float | null
+    ogc_fid?: t_Float | null
+  },
+  Extension<'zcta5_stddev_fields'>
+>
+
+/**
+ * @name zcta5_stddev_order_by
+ * @type INPUT_OBJECT
+ */
+export type zcta5_stddev_order_by = {
+  aland10?: order_by | null
+  awater10?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name zcta5_stddev_pop_fields
+ * @type OBJECT
+ */
+export type t_zcta5_stddev_pop_fields = FieldsType<
+  {
+    __typename: t_String<'zcta5_stddev_pop_fields'>
+    aland10?: t_Float | null
+    awater10?: t_Float | null
+    ogc_fid?: t_Float | null
+  },
+  Extension<'zcta5_stddev_pop_fields'>
+>
+
+/**
+ * @name zcta5_stddev_pop_order_by
+ * @type INPUT_OBJECT
+ */
+export type zcta5_stddev_pop_order_by = {
+  aland10?: order_by | null
+  awater10?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name zcta5_stddev_samp_fields
+ * @type OBJECT
+ */
+export type t_zcta5_stddev_samp_fields = FieldsType<
+  {
+    __typename: t_String<'zcta5_stddev_samp_fields'>
+    aland10?: t_Float | null
+    awater10?: t_Float | null
+    ogc_fid?: t_Float | null
+  },
+  Extension<'zcta5_stddev_samp_fields'>
+>
+
+/**
+ * @name zcta5_stddev_samp_order_by
+ * @type INPUT_OBJECT
+ */
+export type zcta5_stddev_samp_order_by = {
+  aland10?: order_by | null
+  awater10?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name zcta5_sum_fields
+ * @type OBJECT
+ */
+export type t_zcta5_sum_fields = FieldsType<
+  {
+    __typename: t_String<'zcta5_sum_fields'>
+    aland10?: t_float8 | null
+    awater10?: t_float8 | null
+    ogc_fid?: t_Int | null
+  },
+  Extension<'zcta5_sum_fields'>
+>
+
+/**
+ * @name zcta5_sum_order_by
+ * @type INPUT_OBJECT
+ */
+export type zcta5_sum_order_by = {
+  aland10?: order_by | null
+  awater10?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name zcta5_update_column
+ * @type ENUM
+ */
+type t_zcta5_update_column = EnumType<
+  | 'aland10'
+  | 'awater10'
+  | 'classfp10'
+  | 'funcstat10'
+  | 'geoid10'
+  | 'intptlat10'
+  | 'intptlon10'
+  | 'mtfcc10'
+  | 'nhood'
+  | 'ogc_fid'
+  | 'slug'
+  | 'wkb_geometry'
+  | 'zcta5ce10'
+>
+
+/**
+ * @name zcta5_var_pop_fields
+ * @type OBJECT
+ */
+export type t_zcta5_var_pop_fields = FieldsType<
+  {
+    __typename: t_String<'zcta5_var_pop_fields'>
+    aland10?: t_Float | null
+    awater10?: t_Float | null
+    ogc_fid?: t_Float | null
+  },
+  Extension<'zcta5_var_pop_fields'>
+>
+
+/**
+ * @name zcta5_var_pop_order_by
+ * @type INPUT_OBJECT
+ */
+export type zcta5_var_pop_order_by = {
+  aland10?: order_by | null
+  awater10?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name zcta5_var_samp_fields
+ * @type OBJECT
+ */
+export type t_zcta5_var_samp_fields = FieldsType<
+  {
+    __typename: t_String<'zcta5_var_samp_fields'>
+    aland10?: t_Float | null
+    awater10?: t_Float | null
+    ogc_fid?: t_Float | null
+  },
+  Extension<'zcta5_var_samp_fields'>
+>
+
+/**
+ * @name zcta5_var_samp_order_by
+ * @type INPUT_OBJECT
+ */
+export type zcta5_var_samp_order_by = {
+  aland10?: order_by | null
+  awater10?: order_by | null
+  ogc_fid?: order_by | null
+}
+
+/**
+ * @name zcta5_variance_fields
+ * @type OBJECT
+ */
+export type t_zcta5_variance_fields = FieldsType<
+  {
+    __typename: t_String<'zcta5_variance_fields'>
+    aland10?: t_Float | null
+    awater10?: t_Float | null
+    ogc_fid?: t_Float | null
+  },
+  Extension<'zcta5_variance_fields'>
+>
+
+/**
+ * @name zcta5_variance_order_by
+ * @type INPUT_OBJECT
+ */
+export type zcta5_variance_order_by = {
+  aland10?: order_by | null
+  awater10?: order_by | null
+  ogc_fid?: order_by | null
 }
 
 /**
@@ -7324,6 +8968,12 @@ export enum __TypeKind {
 }
 
 /**
+ * @name float8
+ * @type SCALAR
+ */
+export type float8 = TypeData<t_float8>
+
+/**
  * @name geography
  * @type SCALAR
  */
@@ -7334,6 +8984,125 @@ export type geography = TypeData<t_geography>
  * @type SCALAR
  */
 export type geometry = TypeData<t_geometry>
+
+/**
+ * @name hrr
+ * @type OBJECT
+ */
+export type hrr = TypeData<t_hrr>
+
+/**
+ * @name hrr_aggregate
+ * @type OBJECT
+ */
+export type hrr_aggregate = TypeData<t_hrr_aggregate>
+
+/**
+ * @name hrr_aggregate_fields
+ * @type OBJECT
+ */
+export type hrr_aggregate_fields = TypeData<t_hrr_aggregate_fields>
+
+/**
+ * @name hrr_avg_fields
+ * @type OBJECT
+ */
+export type hrr_avg_fields = TypeData<t_hrr_avg_fields>
+
+/**
+ * @name hrr_constraint
+ * @type ENUM
+ */
+export enum hrr_constraint {
+  hrr_pkey = 'hrr_pkey',
+  hrr_slug_key = 'hrr_slug_key',
+}
+
+/**
+ * @name hrr_max_fields
+ * @type OBJECT
+ */
+export type hrr_max_fields = TypeData<t_hrr_max_fields>
+
+/**
+ * @name hrr_min_fields
+ * @type OBJECT
+ */
+export type hrr_min_fields = TypeData<t_hrr_min_fields>
+
+/**
+ * @name hrr_mutation_response
+ * @type OBJECT
+ */
+export type hrr_mutation_response = TypeData<t_hrr_mutation_response>
+
+/**
+ * @name hrr_select_column
+ * @type ENUM
+ */
+export enum hrr_select_column {
+  hrr_bdry_i = 'hrr_bdry_i',
+  hrrcity = 'hrrcity',
+  hrrnum = 'hrrnum',
+  ogc_fid = 'ogc_fid',
+  slug = 'slug',
+  wkb_geometry = 'wkb_geometry',
+}
+
+/**
+ * @name hrr_stddev_fields
+ * @type OBJECT
+ */
+export type hrr_stddev_fields = TypeData<t_hrr_stddev_fields>
+
+/**
+ * @name hrr_stddev_pop_fields
+ * @type OBJECT
+ */
+export type hrr_stddev_pop_fields = TypeData<t_hrr_stddev_pop_fields>
+
+/**
+ * @name hrr_stddev_samp_fields
+ * @type OBJECT
+ */
+export type hrr_stddev_samp_fields = TypeData<t_hrr_stddev_samp_fields>
+
+/**
+ * @name hrr_sum_fields
+ * @type OBJECT
+ */
+export type hrr_sum_fields = TypeData<t_hrr_sum_fields>
+
+/**
+ * @name hrr_update_column
+ * @type ENUM
+ */
+export enum hrr_update_column {
+  hrr_bdry_i = 'hrr_bdry_i',
+  hrrcity = 'hrrcity',
+  hrrnum = 'hrrnum',
+  ogc_fid = 'ogc_fid',
+  slug = 'slug',
+  wkb_geometry = 'wkb_geometry',
+}
+
+/**
+ * @name hrr_var_pop_fields
+ * @type OBJECT
+ */
+export type hrr_var_pop_fields = TypeData<t_hrr_var_pop_fields>
+
+/**
+ * @name hrr_var_samp_fields
+ * @type OBJECT
+ */
+export type hrr_var_samp_fields = TypeData<t_hrr_var_samp_fields>
+
+/**
+ * @name hrr_variance_fields
+ * @type OBJECT
+ */
+export type hrr_variance_fields = TypeData<t_hrr_variance_fields>
 
 /**
  * @name jsonb
@@ -7477,6 +9246,132 @@ export type menu_item_variance_fields = TypeData<t_menu_item_variance_fields>
  * @type OBJECT
  */
 export type mutation_root = TypeData<t_mutation_root>
+
+/**
+ * @name nhood_labels
+ * @type OBJECT
+ */
+export type nhood_labels = TypeData<t_nhood_labels>
+
+/**
+ * @name nhood_labels_aggregate
+ * @type OBJECT
+ */
+export type nhood_labels_aggregate = TypeData<t_nhood_labels_aggregate>
+
+/**
+ * @name nhood_labels_aggregate_fields
+ * @type OBJECT
+ */
+export type nhood_labels_aggregate_fields = TypeData<
+  t_nhood_labels_aggregate_fields
+>
+
+/**
+ * @name nhood_labels_avg_fields
+ * @type OBJECT
+ */
+export type nhood_labels_avg_fields = TypeData<t_nhood_labels_avg_fields>
+
+/**
+ * @name nhood_labels_constraint
+ * @type ENUM
+ */
+export enum nhood_labels_constraint {
+  nhood_labels_pkey = 'nhood_labels_pkey',
+}
+
+/**
+ * @name nhood_labels_max_fields
+ * @type OBJECT
+ */
+export type nhood_labels_max_fields = TypeData<t_nhood_labels_max_fields>
+
+/**
+ * @name nhood_labels_min_fields
+ * @type OBJECT
+ */
+export type nhood_labels_min_fields = TypeData<t_nhood_labels_min_fields>
+
+/**
+ * @name nhood_labels_mutation_response
+ * @type OBJECT
+ */
+export type nhood_labels_mutation_response = TypeData<
+  t_nhood_labels_mutation_response
+>
+
+/**
+ * @name nhood_labels_select_column
+ * @type ENUM
+ */
+export enum nhood_labels_select_column {
+  center = 'center',
+  name = 'name',
+  ogc_fid = 'ogc_fid',
+}
+
+/**
+ * @name nhood_labels_stddev_fields
+ * @type OBJECT
+ */
+export type nhood_labels_stddev_fields = TypeData<t_nhood_labels_stddev_fields>
+
+/**
+ * @name nhood_labels_stddev_pop_fields
+ * @type OBJECT
+ */
+export type nhood_labels_stddev_pop_fields = TypeData<
+  t_nhood_labels_stddev_pop_fields
+>
+
+/**
+ * @name nhood_labels_stddev_samp_fields
+ * @type OBJECT
+ */
+export type nhood_labels_stddev_samp_fields = TypeData<
+  t_nhood_labels_stddev_samp_fields
+>
+
+/**
+ * @name nhood_labels_sum_fields
+ * @type OBJECT
+ */
+export type nhood_labels_sum_fields = TypeData<t_nhood_labels_sum_fields>
+
+/**
+ * @name nhood_labels_update_column
+ * @type ENUM
+ */
+export enum nhood_labels_update_column {
+  center = 'center',
+  name = 'name',
+  ogc_fid = 'ogc_fid',
+}
+
+/**
+ * @name nhood_labels_var_pop_fields
+ * @type OBJECT
+ */
+export type nhood_labels_var_pop_fields = TypeData<
+  t_nhood_labels_var_pop_fields
+>
+
+/**
+ * @name nhood_labels_var_samp_fields
+ * @type OBJECT
+ */
+export type nhood_labels_var_samp_fields = TypeData<
+  t_nhood_labels_var_samp_fields
+>
+
+/**
+ * @name nhood_labels_variance_fields
+ * @type OBJECT
+ */
+export type nhood_labels_variance_fields = TypeData<
+  t_nhood_labels_variance_fields
+>
 
 /**
  * @name numeric
@@ -8745,6 +10640,8 @@ export enum user_select_column {
   id = 'id',
   location = 'location',
   password = 'password',
+  password_reset_date = 'password_reset_date',
+  password_reset_token = 'password_reset_token',
   role = 'role',
   updated_at = 'updated_at',
   username = 'username',
@@ -8792,6 +10689,8 @@ export enum user_update_column {
   id = 'id',
   location = 'location',
   password = 'password',
+  password_reset_date = 'password_reset_date',
+  password_reset_token = 'password_reset_token',
   role = 'role',
   updated_at = 'updated_at',
   username = 'username',
@@ -8820,3 +10719,136 @@ export type user_variance_fields = TypeData<t_user_variance_fields>
  * @type SCALAR
  */
 export type uuid = TypeData<t_uuid>
+
+/**
+ * @name zcta5
+ * @type OBJECT
+ */
+export type zcta5 = TypeData<t_zcta5>
+
+/**
+ * @name zcta5_aggregate
+ * @type OBJECT
+ */
+export type zcta5_aggregate = TypeData<t_zcta5_aggregate>
+
+/**
+ * @name zcta5_aggregate_fields
+ * @type OBJECT
+ */
+export type zcta5_aggregate_fields = TypeData<t_zcta5_aggregate_fields>
+
+/**
+ * @name zcta5_avg_fields
+ * @type OBJECT
+ */
+export type zcta5_avg_fields = TypeData<t_zcta5_avg_fields>
+
+/**
+ * @name zcta5_constraint
+ * @type ENUM
+ */
+export enum zcta5_constraint {
+  zcta5_pkey = 'zcta5_pkey',
+  zcta5_slug_key = 'zcta5_slug_key',
+}
+
+/**
+ * @name zcta5_max_fields
+ * @type OBJECT
+ */
+export type zcta5_max_fields = TypeData<t_zcta5_max_fields>
+
+/**
+ * @name zcta5_min_fields
+ * @type OBJECT
+ */
+export type zcta5_min_fields = TypeData<t_zcta5_min_fields>
+
+/**
+ * @name zcta5_mutation_response
+ * @type OBJECT
+ */
+export type zcta5_mutation_response = TypeData<t_zcta5_mutation_response>
+
+/**
+ * @name zcta5_select_column
+ * @type ENUM
+ */
+export enum zcta5_select_column {
+  aland10 = 'aland10',
+  awater10 = 'awater10',
+  classfp10 = 'classfp10',
+  funcstat10 = 'funcstat10',
+  geoid10 = 'geoid10',
+  intptlat10 = 'intptlat10',
+  intptlon10 = 'intptlon10',
+  mtfcc10 = 'mtfcc10',
+  nhood = 'nhood',
+  ogc_fid = 'ogc_fid',
+  slug = 'slug',
+  wkb_geometry = 'wkb_geometry',
+  zcta5ce10 = 'zcta5ce10',
+}
+
+/**
+ * @name zcta5_stddev_fields
+ * @type OBJECT
+ */
+export type zcta5_stddev_fields = TypeData<t_zcta5_stddev_fields>
+
+/**
+ * @name zcta5_stddev_pop_fields
+ * @type OBJECT
+ */
+export type zcta5_stddev_pop_fields = TypeData<t_zcta5_stddev_pop_fields>
+
+/**
+ * @name zcta5_stddev_samp_fields
+ * @type OBJECT
+ */
+export type zcta5_stddev_samp_fields = TypeData<t_zcta5_stddev_samp_fields>
+
+/**
+ * @name zcta5_sum_fields
+ * @type OBJECT
+ */
+export type zcta5_sum_fields = TypeData<t_zcta5_sum_fields>
+
+/**
+ * @name zcta5_update_column
+ * @type ENUM
+ */
+export enum zcta5_update_column {
+  aland10 = 'aland10',
+  awater10 = 'awater10',
+  classfp10 = 'classfp10',
+  funcstat10 = 'funcstat10',
+  geoid10 = 'geoid10',
+  intptlat10 = 'intptlat10',
+  intptlon10 = 'intptlon10',
+  mtfcc10 = 'mtfcc10',
+  nhood = 'nhood',
+  ogc_fid = 'ogc_fid',
+  slug = 'slug',
+  wkb_geometry = 'wkb_geometry',
+  zcta5ce10 = 'zcta5ce10',
+}
+
+/**
+ * @name zcta5_var_pop_fields
+ * @type OBJECT
+ */
+export type zcta5_var_pop_fields = TypeData<t_zcta5_var_pop_fields>
+
+/**
+ * @name zcta5_var_samp_fields
+ * @type OBJECT
+ */
+export type zcta5_var_samp_fields = TypeData<t_zcta5_var_samp_fields>
+
+/**
+ * @name zcta5_variance_fields
+ * @type OBJECT
+ */
+export type zcta5_variance_fields = TypeData<t_zcta5_variance_fields>

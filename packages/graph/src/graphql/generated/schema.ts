@@ -367,6 +367,46 @@ export const schema = {
   get __TypeKind() {
     return new EnumNode({ name: '__TypeKind' })
   },
+  get float8() {
+    return new ScalarNode({
+      name: 'float8',
+      extension: ((extensions as any) || {}).float8,
+    })
+  },
+  get float8_comparison_exp() {
+    return new InputNode(
+      {
+        get _eq() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get _gt() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get _gte() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get _in() {
+          return new InputNodeField(new ArrayNode(schema.float8, true), true)
+        },
+        get _is_null() {
+          return new InputNodeField(schema.Boolean, true)
+        },
+        get _lt() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get _lte() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get _neq() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get _nin() {
+          return new InputNodeField(new ArrayNode(schema.float8, true), true)
+        },
+      },
+      { name: 'float8_comparison_exp' }
+    )
+  },
   get geography() {
     return new ScalarNode({
       name: 'geography',
@@ -501,6 +541,740 @@ export const schema = {
         },
       },
       { name: 'geometry_comparison_exp' }
+    )
+  },
+  get hrr() {
+    return new ObjectNode(
+      {
+        get hrr_bdry_i() {
+          return new FieldNode(schema.float8, undefined, true)
+        },
+        get hrrcity() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get hrrnum() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Int, undefined, false)
+        },
+        get slug() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get wkb_geometry() {
+          return new FieldNode(schema.geometry, undefined, true)
+        },
+      },
+      { name: 'hrr', extension: ((extensions as any) || {}).hrr }
+    )
+  },
+  get hrr_aggregate() {
+    return new ObjectNode(
+      {
+        get aggregate() {
+          return new FieldNode(schema.hrr_aggregate_fields, undefined, true)
+        },
+        get nodes() {
+          return new FieldNode(
+            new ArrayNode(schema.hrr, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'hrr_aggregate',
+        extension: ((extensions as any) || {}).hrr_aggregate,
+      }
+    )
+  },
+  get hrr_aggregate_fields() {
+    return new ObjectNode(
+      {
+        get avg() {
+          return new FieldNode(schema.hrr_avg_fields, undefined, true)
+        },
+        get count() {
+          return new FieldNode(
+            schema.Int,
+            new Arguments({
+              get columns() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.hrr_select_column, true),
+                  true
+                )
+              },
+              get distinct() {
+                return new ArgumentsField(schema.Boolean, true)
+              },
+            }),
+            true
+          )
+        },
+        get max() {
+          return new FieldNode(schema.hrr_max_fields, undefined, true)
+        },
+        get min() {
+          return new FieldNode(schema.hrr_min_fields, undefined, true)
+        },
+        get stddev() {
+          return new FieldNode(schema.hrr_stddev_fields, undefined, true)
+        },
+        get stddev_pop() {
+          return new FieldNode(schema.hrr_stddev_pop_fields, undefined, true)
+        },
+        get stddev_samp() {
+          return new FieldNode(schema.hrr_stddev_samp_fields, undefined, true)
+        },
+        get sum() {
+          return new FieldNode(schema.hrr_sum_fields, undefined, true)
+        },
+        get var_pop() {
+          return new FieldNode(schema.hrr_var_pop_fields, undefined, true)
+        },
+        get var_samp() {
+          return new FieldNode(schema.hrr_var_samp_fields, undefined, true)
+        },
+        get variance() {
+          return new FieldNode(schema.hrr_variance_fields, undefined, true)
+        },
+      },
+      {
+        name: 'hrr_aggregate_fields',
+        extension: ((extensions as any) || {}).hrr_aggregate_fields,
+      }
+    )
+  },
+  get hrr_aggregate_order_by() {
+    return new InputNode(
+      {
+        get avg() {
+          return new InputNodeField(schema.hrr_avg_order_by, true)
+        },
+        get count() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get max() {
+          return new InputNodeField(schema.hrr_max_order_by, true)
+        },
+        get min() {
+          return new InputNodeField(schema.hrr_min_order_by, true)
+        },
+        get stddev() {
+          return new InputNodeField(schema.hrr_stddev_order_by, true)
+        },
+        get stddev_pop() {
+          return new InputNodeField(schema.hrr_stddev_pop_order_by, true)
+        },
+        get stddev_samp() {
+          return new InputNodeField(schema.hrr_stddev_samp_order_by, true)
+        },
+        get sum() {
+          return new InputNodeField(schema.hrr_sum_order_by, true)
+        },
+        get var_pop() {
+          return new InputNodeField(schema.hrr_var_pop_order_by, true)
+        },
+        get var_samp() {
+          return new InputNodeField(schema.hrr_var_samp_order_by, true)
+        },
+        get variance() {
+          return new InputNodeField(schema.hrr_variance_order_by, true)
+        },
+      },
+      { name: 'hrr_aggregate_order_by' }
+    )
+  },
+  get hrr_arr_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(
+            new ArrayNode(schema.hrr_insert_input, false),
+            false
+          )
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.hrr_on_conflict, true)
+        },
+      },
+      { name: 'hrr_arr_rel_insert_input' }
+    )
+  },
+  get hrr_avg_fields() {
+    return new ObjectNode(
+      {
+        get hrr_bdry_i() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get hrrnum() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'hrr_avg_fields',
+        extension: ((extensions as any) || {}).hrr_avg_fields,
+      }
+    )
+  },
+  get hrr_avg_order_by() {
+    return new InputNode(
+      {
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'hrr_avg_order_by' }
+    )
+  },
+  get hrr_bool_exp() {
+    return new InputNode(
+      {
+        get _and() {
+          return new InputNodeField(
+            new ArrayNode(schema.hrr_bool_exp, true),
+            true
+          )
+        },
+        get _not() {
+          return new InputNodeField(schema.hrr_bool_exp, true)
+        },
+        get _or() {
+          return new InputNodeField(
+            new ArrayNode(schema.hrr_bool_exp, true),
+            true
+          )
+        },
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.float8_comparison_exp, true)
+        },
+        get hrrcity() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.Int_comparison_exp, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.Int_comparison_exp, true)
+        },
+        get slug() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get wkb_geometry() {
+          return new InputNodeField(schema.geometry_comparison_exp, true)
+        },
+      },
+      { name: 'hrr_bool_exp' }
+    )
+  },
+  get hrr_constraint() {
+    return new EnumNode({ name: 'hrr_constraint' })
+  },
+  get hrr_inc_input() {
+    return new InputNode(
+      {
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.Int, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.Int, true)
+        },
+      },
+      { name: 'hrr_inc_input' }
+    )
+  },
+  get hrr_insert_input() {
+    return new InputNode(
+      {
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get hrrcity() {
+          return new InputNodeField(schema.String, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.Int, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.Int, true)
+        },
+        get slug() {
+          return new InputNodeField(schema.String, true)
+        },
+        get wkb_geometry() {
+          return new InputNodeField(schema.geometry, true)
+        },
+      },
+      { name: 'hrr_insert_input' }
+    )
+  },
+  get hrr_max_fields() {
+    return new ObjectNode(
+      {
+        get hrr_bdry_i() {
+          return new FieldNode(schema.float8, undefined, true)
+        },
+        get hrrcity() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get hrrnum() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+        get slug() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+      },
+      {
+        name: 'hrr_max_fields',
+        extension: ((extensions as any) || {}).hrr_max_fields,
+      }
+    )
+  },
+  get hrr_max_order_by() {
+    return new InputNode(
+      {
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get hrrcity() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get slug() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'hrr_max_order_by' }
+    )
+  },
+  get hrr_min_fields() {
+    return new ObjectNode(
+      {
+        get hrr_bdry_i() {
+          return new FieldNode(schema.float8, undefined, true)
+        },
+        get hrrcity() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get hrrnum() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+        get slug() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+      },
+      {
+        name: 'hrr_min_fields',
+        extension: ((extensions as any) || {}).hrr_min_fields,
+      }
+    )
+  },
+  get hrr_min_order_by() {
+    return new InputNode(
+      {
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get hrrcity() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get slug() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'hrr_min_order_by' }
+    )
+  },
+  get hrr_mutation_response() {
+    return new ObjectNode(
+      {
+        get affected_rows() {
+          return new FieldNode(schema.Int, undefined, false)
+        },
+        get returning() {
+          return new FieldNode(
+            new ArrayNode(schema.hrr, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'hrr_mutation_response',
+        extension: ((extensions as any) || {}).hrr_mutation_response,
+      }
+    )
+  },
+  get hrr_obj_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(schema.hrr_insert_input, false)
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.hrr_on_conflict, true)
+        },
+      },
+      { name: 'hrr_obj_rel_insert_input' }
+    )
+  },
+  get hrr_on_conflict() {
+    return new InputNode(
+      {
+        get constraint() {
+          return new InputNodeField(schema.hrr_constraint, false)
+        },
+        get update_columns() {
+          return new InputNodeField(
+            new ArrayNode(schema.hrr_update_column, false),
+            false
+          )
+        },
+        get where() {
+          return new InputNodeField(schema.hrr_bool_exp, true)
+        },
+      },
+      { name: 'hrr_on_conflict' }
+    )
+  },
+  get hrr_order_by() {
+    return new InputNode(
+      {
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get hrrcity() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get slug() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get wkb_geometry() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'hrr_order_by' }
+    )
+  },
+  get hrr_pk_columns_input() {
+    return new InputNode(
+      {
+        get ogc_fid() {
+          return new InputNodeField(schema.Int, false)
+        },
+      },
+      { name: 'hrr_pk_columns_input' }
+    )
+  },
+  get hrr_select_column() {
+    return new EnumNode({ name: 'hrr_select_column' })
+  },
+  get hrr_set_input() {
+    return new InputNode(
+      {
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get hrrcity() {
+          return new InputNodeField(schema.String, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.Int, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.Int, true)
+        },
+        get slug() {
+          return new InputNodeField(schema.String, true)
+        },
+        get wkb_geometry() {
+          return new InputNodeField(schema.geometry, true)
+        },
+      },
+      { name: 'hrr_set_input' }
+    )
+  },
+  get hrr_stddev_fields() {
+    return new ObjectNode(
+      {
+        get hrr_bdry_i() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get hrrnum() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'hrr_stddev_fields',
+        extension: ((extensions as any) || {}).hrr_stddev_fields,
+      }
+    )
+  },
+  get hrr_stddev_order_by() {
+    return new InputNode(
+      {
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'hrr_stddev_order_by' }
+    )
+  },
+  get hrr_stddev_pop_fields() {
+    return new ObjectNode(
+      {
+        get hrr_bdry_i() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get hrrnum() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'hrr_stddev_pop_fields',
+        extension: ((extensions as any) || {}).hrr_stddev_pop_fields,
+      }
+    )
+  },
+  get hrr_stddev_pop_order_by() {
+    return new InputNode(
+      {
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'hrr_stddev_pop_order_by' }
+    )
+  },
+  get hrr_stddev_samp_fields() {
+    return new ObjectNode(
+      {
+        get hrr_bdry_i() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get hrrnum() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'hrr_stddev_samp_fields',
+        extension: ((extensions as any) || {}).hrr_stddev_samp_fields,
+      }
+    )
+  },
+  get hrr_stddev_samp_order_by() {
+    return new InputNode(
+      {
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'hrr_stddev_samp_order_by' }
+    )
+  },
+  get hrr_sum_fields() {
+    return new ObjectNode(
+      {
+        get hrr_bdry_i() {
+          return new FieldNode(schema.float8, undefined, true)
+        },
+        get hrrnum() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+      },
+      {
+        name: 'hrr_sum_fields',
+        extension: ((extensions as any) || {}).hrr_sum_fields,
+      }
+    )
+  },
+  get hrr_sum_order_by() {
+    return new InputNode(
+      {
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'hrr_sum_order_by' }
+    )
+  },
+  get hrr_update_column() {
+    return new EnumNode({ name: 'hrr_update_column' })
+  },
+  get hrr_var_pop_fields() {
+    return new ObjectNode(
+      {
+        get hrr_bdry_i() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get hrrnum() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'hrr_var_pop_fields',
+        extension: ((extensions as any) || {}).hrr_var_pop_fields,
+      }
+    )
+  },
+  get hrr_var_pop_order_by() {
+    return new InputNode(
+      {
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'hrr_var_pop_order_by' }
+    )
+  },
+  get hrr_var_samp_fields() {
+    return new ObjectNode(
+      {
+        get hrr_bdry_i() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get hrrnum() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'hrr_var_samp_fields',
+        extension: ((extensions as any) || {}).hrr_var_samp_fields,
+      }
+    )
+  },
+  get hrr_var_samp_order_by() {
+    return new InputNode(
+      {
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'hrr_var_samp_order_by' }
+    )
+  },
+  get hrr_variance_fields() {
+    return new ObjectNode(
+      {
+        get hrr_bdry_i() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get hrrnum() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'hrr_variance_fields',
+        extension: ((extensions as any) || {}).hrr_variance_fields,
+      }
+    )
+  },
+  get hrr_variance_order_by() {
+    return new InputNode(
+      {
+        get hrr_bdry_i() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get hrrnum() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'hrr_variance_order_by' }
     )
   },
   get jsonb() {
@@ -1309,6 +2083,34 @@ export const schema = {
   get mutation_root() {
     return new ObjectNode(
       {
+        get delete_hrr() {
+          return new FieldNode(
+            schema.hrr_mutation_response,
+            new Arguments(
+              {
+                get where() {
+                  return new ArgumentsField(schema.hrr_bool_exp, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get delete_hrr_by_pk() {
+          return new FieldNode(
+            schema.hrr,
+            new Arguments(
+              {
+                get ogc_fid() {
+                  return new ArgumentsField(schema.Int, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
         get delete_menu_item() {
           return new FieldNode(
             schema.menu_item_mutation_response,
@@ -1330,6 +2132,34 @@ export const schema = {
               {
                 get id() {
                   return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get delete_nhood_labels() {
+          return new FieldNode(
+            schema.nhood_labels_mutation_response,
+            new Arguments(
+              {
+                get where() {
+                  return new ArgumentsField(schema.nhood_labels_bool_exp, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get delete_nhood_labels_by_pk() {
+          return new FieldNode(
+            schema.nhood_labels,
+            new Arguments(
+              {
+                get ogc_fid() {
+                  return new ArgumentsField(schema.Int, false)
                 },
               },
               true
@@ -1660,6 +2490,65 @@ export const schema = {
             true
           )
         },
+        get delete_zcta5() {
+          return new FieldNode(
+            schema.zcta5_mutation_response,
+            new Arguments(
+              {
+                get where() {
+                  return new ArgumentsField(schema.zcta5_bool_exp, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get delete_zcta5_by_pk() {
+          return new FieldNode(
+            schema.zcta5,
+            new Arguments(
+              {
+                get ogc_fid() {
+                  return new ArgumentsField(schema.Int, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get insert_hrr() {
+          return new FieldNode(
+            schema.hrr_mutation_response,
+            new Arguments({
+              get objects() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.hrr_insert_input, false),
+                  false
+                )
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.hrr_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get insert_hrr_one() {
+          return new FieldNode(
+            schema.hrr,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(schema.hrr_insert_input, false)
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.hrr_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
         get insert_menu_item() {
           return new FieldNode(
             schema.menu_item_mutation_response,
@@ -1686,6 +2575,40 @@ export const schema = {
               },
               get on_conflict() {
                 return new ArgumentsField(schema.menu_item_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get insert_nhood_labels() {
+          return new FieldNode(
+            schema.nhood_labels_mutation_response,
+            new Arguments({
+              get objects() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.nhood_labels_insert_input, false),
+                  false
+                )
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.nhood_labels_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get insert_nhood_labels_one() {
+          return new FieldNode(
+            schema.nhood_labels,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(
+                  schema.nhood_labels_insert_input,
+                  false
+                )
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.nhood_labels_on_conflict, true)
               },
             }),
             true
@@ -2059,6 +2982,71 @@ export const schema = {
             true
           )
         },
+        get insert_zcta5() {
+          return new FieldNode(
+            schema.zcta5_mutation_response,
+            new Arguments({
+              get objects() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.zcta5_insert_input, false),
+                  false
+                )
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.zcta5_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get insert_zcta5_one() {
+          return new FieldNode(
+            schema.zcta5,
+            new Arguments({
+              get object() {
+                return new ArgumentsField(schema.zcta5_insert_input, false)
+              },
+              get on_conflict() {
+                return new ArgumentsField(schema.zcta5_on_conflict, true)
+              },
+            }),
+            true
+          )
+        },
+        get update_hrr() {
+          return new FieldNode(
+            schema.hrr_mutation_response,
+            new Arguments({
+              get _inc() {
+                return new ArgumentsField(schema.hrr_inc_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.hrr_set_input, true)
+              },
+              get where() {
+                return new ArgumentsField(schema.hrr_bool_exp, false)
+              },
+            }),
+            true
+          )
+        },
+        get update_hrr_by_pk() {
+          return new FieldNode(
+            schema.hrr,
+            new Arguments({
+              get _inc() {
+                return new ArgumentsField(schema.hrr_inc_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.hrr_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(schema.hrr_pk_columns_input, false)
+              },
+            }),
+            true
+          )
+        },
         get update_menu_item() {
           return new FieldNode(
             schema.menu_item_mutation_response,
@@ -2089,6 +3077,43 @@ export const schema = {
               get pk_columns() {
                 return new ArgumentsField(
                   schema.menu_item_pk_columns_input,
+                  false
+                )
+              },
+            }),
+            true
+          )
+        },
+        get update_nhood_labels() {
+          return new FieldNode(
+            schema.nhood_labels_mutation_response,
+            new Arguments({
+              get _inc() {
+                return new ArgumentsField(schema.nhood_labels_inc_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.nhood_labels_set_input, true)
+              },
+              get where() {
+                return new ArgumentsField(schema.nhood_labels_bool_exp, false)
+              },
+            }),
+            true
+          )
+        },
+        get update_nhood_labels_by_pk() {
+          return new FieldNode(
+            schema.nhood_labels,
+            new Arguments({
+              get _inc() {
+                return new ArgumentsField(schema.nhood_labels_inc_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.nhood_labels_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(
+                  schema.nhood_labels_pk_columns_input,
                   false
                 )
               },
@@ -2698,11 +3723,633 @@ export const schema = {
             true
           )
         },
+        get update_zcta5() {
+          return new FieldNode(
+            schema.zcta5_mutation_response,
+            new Arguments({
+              get _inc() {
+                return new ArgumentsField(schema.zcta5_inc_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.zcta5_set_input, true)
+              },
+              get where() {
+                return new ArgumentsField(schema.zcta5_bool_exp, false)
+              },
+            }),
+            true
+          )
+        },
+        get update_zcta5_by_pk() {
+          return new FieldNode(
+            schema.zcta5,
+            new Arguments({
+              get _inc() {
+                return new ArgumentsField(schema.zcta5_inc_input, true)
+              },
+              get _set() {
+                return new ArgumentsField(schema.zcta5_set_input, true)
+              },
+              get pk_columns() {
+                return new ArgumentsField(schema.zcta5_pk_columns_input, false)
+              },
+            }),
+            true
+          )
+        },
       },
       {
         name: 'mutation_root',
         extension: ((extensions as any) || {}).mutation_root,
       }
+    )
+  },
+  get nhood_labels() {
+    return new ObjectNode(
+      {
+        get center() {
+          return new FieldNode(schema.geometry, undefined, false)
+        },
+        get name() {
+          return new FieldNode(schema.String, undefined, false)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Int, undefined, false)
+        },
+      },
+      {
+        name: 'nhood_labels',
+        extension: ((extensions as any) || {}).nhood_labels,
+      }
+    )
+  },
+  get nhood_labels_aggregate() {
+    return new ObjectNode(
+      {
+        get aggregate() {
+          return new FieldNode(
+            schema.nhood_labels_aggregate_fields,
+            undefined,
+            true
+          )
+        },
+        get nodes() {
+          return new FieldNode(
+            new ArrayNode(schema.nhood_labels, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'nhood_labels_aggregate',
+        extension: ((extensions as any) || {}).nhood_labels_aggregate,
+      }
+    )
+  },
+  get nhood_labels_aggregate_fields() {
+    return new ObjectNode(
+      {
+        get avg() {
+          return new FieldNode(schema.nhood_labels_avg_fields, undefined, true)
+        },
+        get count() {
+          return new FieldNode(
+            schema.Int,
+            new Arguments({
+              get columns() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.nhood_labels_select_column, true),
+                  true
+                )
+              },
+              get distinct() {
+                return new ArgumentsField(schema.Boolean, true)
+              },
+            }),
+            true
+          )
+        },
+        get max() {
+          return new FieldNode(schema.nhood_labels_max_fields, undefined, true)
+        },
+        get min() {
+          return new FieldNode(schema.nhood_labels_min_fields, undefined, true)
+        },
+        get stddev() {
+          return new FieldNode(
+            schema.nhood_labels_stddev_fields,
+            undefined,
+            true
+          )
+        },
+        get stddev_pop() {
+          return new FieldNode(
+            schema.nhood_labels_stddev_pop_fields,
+            undefined,
+            true
+          )
+        },
+        get stddev_samp() {
+          return new FieldNode(
+            schema.nhood_labels_stddev_samp_fields,
+            undefined,
+            true
+          )
+        },
+        get sum() {
+          return new FieldNode(schema.nhood_labels_sum_fields, undefined, true)
+        },
+        get var_pop() {
+          return new FieldNode(
+            schema.nhood_labels_var_pop_fields,
+            undefined,
+            true
+          )
+        },
+        get var_samp() {
+          return new FieldNode(
+            schema.nhood_labels_var_samp_fields,
+            undefined,
+            true
+          )
+        },
+        get variance() {
+          return new FieldNode(
+            schema.nhood_labels_variance_fields,
+            undefined,
+            true
+          )
+        },
+      },
+      {
+        name: 'nhood_labels_aggregate_fields',
+        extension: ((extensions as any) || {}).nhood_labels_aggregate_fields,
+      }
+    )
+  },
+  get nhood_labels_aggregate_order_by() {
+    return new InputNode(
+      {
+        get avg() {
+          return new InputNodeField(schema.nhood_labels_avg_order_by, true)
+        },
+        get count() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get max() {
+          return new InputNodeField(schema.nhood_labels_max_order_by, true)
+        },
+        get min() {
+          return new InputNodeField(schema.nhood_labels_min_order_by, true)
+        },
+        get stddev() {
+          return new InputNodeField(schema.nhood_labels_stddev_order_by, true)
+        },
+        get stddev_pop() {
+          return new InputNodeField(
+            schema.nhood_labels_stddev_pop_order_by,
+            true
+          )
+        },
+        get stddev_samp() {
+          return new InputNodeField(
+            schema.nhood_labels_stddev_samp_order_by,
+            true
+          )
+        },
+        get sum() {
+          return new InputNodeField(schema.nhood_labels_sum_order_by, true)
+        },
+        get var_pop() {
+          return new InputNodeField(schema.nhood_labels_var_pop_order_by, true)
+        },
+        get var_samp() {
+          return new InputNodeField(schema.nhood_labels_var_samp_order_by, true)
+        },
+        get variance() {
+          return new InputNodeField(schema.nhood_labels_variance_order_by, true)
+        },
+      },
+      { name: 'nhood_labels_aggregate_order_by' }
+    )
+  },
+  get nhood_labels_arr_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(
+            new ArrayNode(schema.nhood_labels_insert_input, false),
+            false
+          )
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.nhood_labels_on_conflict, true)
+        },
+      },
+      { name: 'nhood_labels_arr_rel_insert_input' }
+    )
+  },
+  get nhood_labels_avg_fields() {
+    return new ObjectNode(
+      {
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'nhood_labels_avg_fields',
+        extension: ((extensions as any) || {}).nhood_labels_avg_fields,
+      }
+    )
+  },
+  get nhood_labels_avg_order_by() {
+    return new InputNode(
+      {
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'nhood_labels_avg_order_by' }
+    )
+  },
+  get nhood_labels_bool_exp() {
+    return new InputNode(
+      {
+        get _and() {
+          return new InputNodeField(
+            new ArrayNode(schema.nhood_labels_bool_exp, true),
+            true
+          )
+        },
+        get _not() {
+          return new InputNodeField(schema.nhood_labels_bool_exp, true)
+        },
+        get _or() {
+          return new InputNodeField(
+            new ArrayNode(schema.nhood_labels_bool_exp, true),
+            true
+          )
+        },
+        get center() {
+          return new InputNodeField(schema.geometry_comparison_exp, true)
+        },
+        get name() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.Int_comparison_exp, true)
+        },
+      },
+      { name: 'nhood_labels_bool_exp' }
+    )
+  },
+  get nhood_labels_constraint() {
+    return new EnumNode({ name: 'nhood_labels_constraint' })
+  },
+  get nhood_labels_inc_input() {
+    return new InputNode(
+      {
+        get ogc_fid() {
+          return new InputNodeField(schema.Int, true)
+        },
+      },
+      { name: 'nhood_labels_inc_input' }
+    )
+  },
+  get nhood_labels_insert_input() {
+    return new InputNode(
+      {
+        get center() {
+          return new InputNodeField(schema.geometry, true)
+        },
+        get name() {
+          return new InputNodeField(schema.String, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.Int, true)
+        },
+      },
+      { name: 'nhood_labels_insert_input' }
+    )
+  },
+  get nhood_labels_max_fields() {
+    return new ObjectNode(
+      {
+        get name() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+      },
+      {
+        name: 'nhood_labels_max_fields',
+        extension: ((extensions as any) || {}).nhood_labels_max_fields,
+      }
+    )
+  },
+  get nhood_labels_max_order_by() {
+    return new InputNode(
+      {
+        get name() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'nhood_labels_max_order_by' }
+    )
+  },
+  get nhood_labels_min_fields() {
+    return new ObjectNode(
+      {
+        get name() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+      },
+      {
+        name: 'nhood_labels_min_fields',
+        extension: ((extensions as any) || {}).nhood_labels_min_fields,
+      }
+    )
+  },
+  get nhood_labels_min_order_by() {
+    return new InputNode(
+      {
+        get name() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'nhood_labels_min_order_by' }
+    )
+  },
+  get nhood_labels_mutation_response() {
+    return new ObjectNode(
+      {
+        get affected_rows() {
+          return new FieldNode(schema.Int, undefined, false)
+        },
+        get returning() {
+          return new FieldNode(
+            new ArrayNode(schema.nhood_labels, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'nhood_labels_mutation_response',
+        extension: ((extensions as any) || {}).nhood_labels_mutation_response,
+      }
+    )
+  },
+  get nhood_labels_obj_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(schema.nhood_labels_insert_input, false)
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.nhood_labels_on_conflict, true)
+        },
+      },
+      { name: 'nhood_labels_obj_rel_insert_input' }
+    )
+  },
+  get nhood_labels_on_conflict() {
+    return new InputNode(
+      {
+        get constraint() {
+          return new InputNodeField(schema.nhood_labels_constraint, false)
+        },
+        get update_columns() {
+          return new InputNodeField(
+            new ArrayNode(schema.nhood_labels_update_column, false),
+            false
+          )
+        },
+        get where() {
+          return new InputNodeField(schema.nhood_labels_bool_exp, true)
+        },
+      },
+      { name: 'nhood_labels_on_conflict' }
+    )
+  },
+  get nhood_labels_order_by() {
+    return new InputNode(
+      {
+        get center() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get name() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'nhood_labels_order_by' }
+    )
+  },
+  get nhood_labels_pk_columns_input() {
+    return new InputNode(
+      {
+        get ogc_fid() {
+          return new InputNodeField(schema.Int, false)
+        },
+      },
+      { name: 'nhood_labels_pk_columns_input' }
+    )
+  },
+  get nhood_labels_select_column() {
+    return new EnumNode({ name: 'nhood_labels_select_column' })
+  },
+  get nhood_labels_set_input() {
+    return new InputNode(
+      {
+        get center() {
+          return new InputNodeField(schema.geometry, true)
+        },
+        get name() {
+          return new InputNodeField(schema.String, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.Int, true)
+        },
+      },
+      { name: 'nhood_labels_set_input' }
+    )
+  },
+  get nhood_labels_stddev_fields() {
+    return new ObjectNode(
+      {
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'nhood_labels_stddev_fields',
+        extension: ((extensions as any) || {}).nhood_labels_stddev_fields,
+      }
+    )
+  },
+  get nhood_labels_stddev_order_by() {
+    return new InputNode(
+      {
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'nhood_labels_stddev_order_by' }
+    )
+  },
+  get nhood_labels_stddev_pop_fields() {
+    return new ObjectNode(
+      {
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'nhood_labels_stddev_pop_fields',
+        extension: ((extensions as any) || {}).nhood_labels_stddev_pop_fields,
+      }
+    )
+  },
+  get nhood_labels_stddev_pop_order_by() {
+    return new InputNode(
+      {
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'nhood_labels_stddev_pop_order_by' }
+    )
+  },
+  get nhood_labels_stddev_samp_fields() {
+    return new ObjectNode(
+      {
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'nhood_labels_stddev_samp_fields',
+        extension: ((extensions as any) || {}).nhood_labels_stddev_samp_fields,
+      }
+    )
+  },
+  get nhood_labels_stddev_samp_order_by() {
+    return new InputNode(
+      {
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'nhood_labels_stddev_samp_order_by' }
+    )
+  },
+  get nhood_labels_sum_fields() {
+    return new ObjectNode(
+      {
+        get ogc_fid() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+      },
+      {
+        name: 'nhood_labels_sum_fields',
+        extension: ((extensions as any) || {}).nhood_labels_sum_fields,
+      }
+    )
+  },
+  get nhood_labels_sum_order_by() {
+    return new InputNode(
+      {
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'nhood_labels_sum_order_by' }
+    )
+  },
+  get nhood_labels_update_column() {
+    return new EnumNode({ name: 'nhood_labels_update_column' })
+  },
+  get nhood_labels_var_pop_fields() {
+    return new ObjectNode(
+      {
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'nhood_labels_var_pop_fields',
+        extension: ((extensions as any) || {}).nhood_labels_var_pop_fields,
+      }
+    )
+  },
+  get nhood_labels_var_pop_order_by() {
+    return new InputNode(
+      {
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'nhood_labels_var_pop_order_by' }
+    )
+  },
+  get nhood_labels_var_samp_fields() {
+    return new ObjectNode(
+      {
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'nhood_labels_var_samp_fields',
+        extension: ((extensions as any) || {}).nhood_labels_var_samp_fields,
+      }
+    )
+  },
+  get nhood_labels_var_samp_order_by() {
+    return new InputNode(
+      {
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'nhood_labels_var_samp_order_by' }
+    )
+  },
+  get nhood_labels_variance_fields() {
+    return new ObjectNode(
+      {
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'nhood_labels_variance_fields',
+        extension: ((extensions as any) || {}).nhood_labels_variance_fields,
+      }
+    )
+  },
+  get nhood_labels_variance_order_by() {
+    return new InputNode(
+      {
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'nhood_labels_variance_order_by' }
     )
   },
   get numeric() {
@@ -4117,6 +5764,78 @@ export const schema = {
   get query_root() {
     return new ObjectNode(
       {
+        get hrr() {
+          return new FieldNode(
+            new ArrayNode(schema.hrr, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.hrr_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.hrr_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.hrr_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get hrr_aggregate() {
+          return new FieldNode(
+            schema.hrr_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.hrr_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.hrr_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.hrr_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get hrr_by_pk() {
+          return new FieldNode(
+            schema.hrr,
+            new Arguments(
+              {
+                get ogc_fid() {
+                  return new ArgumentsField(schema.Int, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
         get menu_item() {
           return new FieldNode(
             new ArrayNode(schema.menu_item, false),
@@ -4182,6 +5901,78 @@ export const schema = {
               {
                 get id() {
                   return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get nhood_labels() {
+          return new FieldNode(
+            new ArrayNode(schema.nhood_labels, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.nhood_labels_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.nhood_labels_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.nhood_labels_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get nhood_labels_aggregate() {
+          return new FieldNode(
+            schema.nhood_labels_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.nhood_labels_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.nhood_labels_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.nhood_labels_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get nhood_labels_by_pk() {
+          return new FieldNode(
+            schema.nhood_labels,
+            new Arguments(
+              {
+                get ogc_fid() {
+                  return new ArgumentsField(schema.Int, false)
                 },
               },
               true
@@ -4986,6 +6777,78 @@ export const schema = {
               {
                 get id() {
                   return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get zcta5() {
+          return new FieldNode(
+            new ArrayNode(schema.zcta5, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.zcta5_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.zcta5_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.zcta5_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get zcta5_aggregate() {
+          return new FieldNode(
+            schema.zcta5_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.zcta5_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.zcta5_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.zcta5_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get zcta5_by_pk() {
+          return new FieldNode(
+            schema.zcta5,
+            new Arguments(
+              {
+                get ogc_fid() {
+                  return new ArgumentsField(schema.Int, false)
                 },
               },
               true
@@ -8244,7 +10107,7 @@ export const schema = {
         get _tag_types() {
           return new InputNodeField(schema.String, true)
         },
-        get tag_names() {
+        get tag_slugs() {
           return new InputNodeField(schema.String, true)
         },
       },
@@ -10818,6 +12681,78 @@ export const schema = {
   get subscription_root() {
     return new ObjectNode(
       {
+        get hrr() {
+          return new FieldNode(
+            new ArrayNode(schema.hrr, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.hrr_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.hrr_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.hrr_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get hrr_aggregate() {
+          return new FieldNode(
+            schema.hrr_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.hrr_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.hrr_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.hrr_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get hrr_by_pk() {
+          return new FieldNode(
+            schema.hrr,
+            new Arguments(
+              {
+                get ogc_fid() {
+                  return new ArgumentsField(schema.Int, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
         get menu_item() {
           return new FieldNode(
             new ArrayNode(schema.menu_item, false),
@@ -10883,6 +12818,78 @@ export const schema = {
               {
                 get id() {
                   return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get nhood_labels() {
+          return new FieldNode(
+            new ArrayNode(schema.nhood_labels, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.nhood_labels_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.nhood_labels_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.nhood_labels_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get nhood_labels_aggregate() {
+          return new FieldNode(
+            schema.nhood_labels_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.nhood_labels_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.nhood_labels_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.nhood_labels_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get nhood_labels_by_pk() {
+          return new FieldNode(
+            schema.nhood_labels,
+            new Arguments(
+              {
+                get ogc_fid() {
+                  return new ArgumentsField(schema.Int, false)
                 },
               },
               true
@@ -11687,6 +13694,78 @@ export const schema = {
               {
                 get id() {
                   return new ArgumentsField(schema.uuid, false)
+                },
+              },
+              true
+            ),
+            true
+          )
+        },
+        get zcta5() {
+          return new FieldNode(
+            new ArrayNode(schema.zcta5, false),
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.zcta5_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.zcta5_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.zcta5_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get zcta5_aggregate() {
+          return new FieldNode(
+            schema.zcta5_aggregate,
+            new Arguments({
+              get distinct_on() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.zcta5_select_column, true),
+                  true
+                )
+              },
+              get limit() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get offset() {
+                return new ArgumentsField(schema.Int, true)
+              },
+              get order_by() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.zcta5_order_by, true),
+                  true
+                )
+              },
+              get where() {
+                return new ArgumentsField(schema.zcta5_bool_exp, true)
+              },
+            }),
+            false
+          )
+        },
+        get zcta5_by_pk() {
+          return new FieldNode(
+            schema.zcta5,
+            new Arguments(
+              {
+                get ogc_fid() {
+                  return new ArgumentsField(schema.Int, false)
                 },
               },
               true
@@ -13439,6 +15518,12 @@ export const schema = {
         get password() {
           return new FieldNode(schema.String, undefined, false)
         },
+        get password_reset_date() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get password_reset_token() {
+          return new FieldNode(schema.String, undefined, true)
+        },
         get reviews() {
           return new FieldNode(
             new ArrayNode(schema.review, false),
@@ -13723,6 +15808,12 @@ export const schema = {
         get password() {
           return new InputNodeField(schema.String_comparison_exp, true)
         },
+        get password_reset_date() {
+          return new InputNodeField(schema.timestamptz_comparison_exp, true)
+        },
+        get password_reset_token() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
         get reviews() {
           return new InputNodeField(schema.review_bool_exp, true)
         },
@@ -13794,6 +15885,12 @@ export const schema = {
         get password() {
           return new InputNodeField(schema.String, true)
         },
+        get password_reset_date() {
+          return new InputNodeField(schema.timestamptz, true)
+        },
+        get password_reset_token() {
+          return new InputNodeField(schema.String, true)
+        },
         get reviews() {
           return new InputNodeField(schema.review_arr_rel_insert_input, true)
         },
@@ -13847,6 +15944,12 @@ export const schema = {
           return new FieldNode(schema.String, undefined, true)
         },
         get password() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get password_reset_date() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get password_reset_token() {
           return new FieldNode(schema.String, undefined, true)
         },
         get role() {
@@ -13904,6 +16007,12 @@ export const schema = {
         get password() {
           return new InputNodeField(schema.order_by, true)
         },
+        get password_reset_date() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get password_reset_token() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get role() {
           return new InputNodeField(schema.order_by, true)
         },
@@ -13954,6 +16063,12 @@ export const schema = {
           return new FieldNode(schema.String, undefined, true)
         },
         get password() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get password_reset_date() {
+          return new FieldNode(schema.timestamptz, undefined, true)
+        },
+        get password_reset_token() {
           return new FieldNode(schema.String, undefined, true)
         },
         get role() {
@@ -14009,6 +16124,12 @@ export const schema = {
           return new InputNodeField(schema.order_by, true)
         },
         get password() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get password_reset_date() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get password_reset_token() {
           return new InputNodeField(schema.order_by, true)
         },
         get role() {
@@ -14118,6 +16239,12 @@ export const schema = {
         get password() {
           return new InputNodeField(schema.order_by, true)
         },
+        get password_reset_date() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get password_reset_token() {
+          return new InputNodeField(schema.order_by, true)
+        },
         get reviews_aggregate() {
           return new InputNodeField(schema.review_aggregate_order_by, true)
         },
@@ -14187,6 +16314,12 @@ export const schema = {
           return new InputNodeField(schema.String, true)
         },
         get password() {
+          return new InputNodeField(schema.String, true)
+        },
+        get password_reset_date() {
+          return new InputNodeField(schema.timestamptz, true)
+        },
+        get password_reset_token() {
           return new InputNodeField(schema.String, true)
         },
         get role() {
@@ -14404,6 +16537,929 @@ export const schema = {
         },
       },
       { name: 'uuid_comparison_exp' }
+    )
+  },
+  get zcta5() {
+    return new ObjectNode(
+      {
+        get aland10() {
+          return new FieldNode(schema.float8, undefined, true)
+        },
+        get awater10() {
+          return new FieldNode(schema.float8, undefined, true)
+        },
+        get classfp10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get funcstat10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get geoid10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get intptlat10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get intptlon10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get mtfcc10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get nhood() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Int, undefined, false)
+        },
+        get slug() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get wkb_geometry() {
+          return new FieldNode(schema.geometry, undefined, true)
+        },
+        get zcta5ce10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+      },
+      { name: 'zcta5', extension: ((extensions as any) || {}).zcta5 }
+    )
+  },
+  get zcta5_aggregate() {
+    return new ObjectNode(
+      {
+        get aggregate() {
+          return new FieldNode(schema.zcta5_aggregate_fields, undefined, true)
+        },
+        get nodes() {
+          return new FieldNode(
+            new ArrayNode(schema.zcta5, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'zcta5_aggregate',
+        extension: ((extensions as any) || {}).zcta5_aggregate,
+      }
+    )
+  },
+  get zcta5_aggregate_fields() {
+    return new ObjectNode(
+      {
+        get avg() {
+          return new FieldNode(schema.zcta5_avg_fields, undefined, true)
+        },
+        get count() {
+          return new FieldNode(
+            schema.Int,
+            new Arguments({
+              get columns() {
+                return new ArgumentsField(
+                  new ArrayNode(schema.zcta5_select_column, true),
+                  true
+                )
+              },
+              get distinct() {
+                return new ArgumentsField(schema.Boolean, true)
+              },
+            }),
+            true
+          )
+        },
+        get max() {
+          return new FieldNode(schema.zcta5_max_fields, undefined, true)
+        },
+        get min() {
+          return new FieldNode(schema.zcta5_min_fields, undefined, true)
+        },
+        get stddev() {
+          return new FieldNode(schema.zcta5_stddev_fields, undefined, true)
+        },
+        get stddev_pop() {
+          return new FieldNode(schema.zcta5_stddev_pop_fields, undefined, true)
+        },
+        get stddev_samp() {
+          return new FieldNode(schema.zcta5_stddev_samp_fields, undefined, true)
+        },
+        get sum() {
+          return new FieldNode(schema.zcta5_sum_fields, undefined, true)
+        },
+        get var_pop() {
+          return new FieldNode(schema.zcta5_var_pop_fields, undefined, true)
+        },
+        get var_samp() {
+          return new FieldNode(schema.zcta5_var_samp_fields, undefined, true)
+        },
+        get variance() {
+          return new FieldNode(schema.zcta5_variance_fields, undefined, true)
+        },
+      },
+      {
+        name: 'zcta5_aggregate_fields',
+        extension: ((extensions as any) || {}).zcta5_aggregate_fields,
+      }
+    )
+  },
+  get zcta5_aggregate_order_by() {
+    return new InputNode(
+      {
+        get avg() {
+          return new InputNodeField(schema.zcta5_avg_order_by, true)
+        },
+        get count() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get max() {
+          return new InputNodeField(schema.zcta5_max_order_by, true)
+        },
+        get min() {
+          return new InputNodeField(schema.zcta5_min_order_by, true)
+        },
+        get stddev() {
+          return new InputNodeField(schema.zcta5_stddev_order_by, true)
+        },
+        get stddev_pop() {
+          return new InputNodeField(schema.zcta5_stddev_pop_order_by, true)
+        },
+        get stddev_samp() {
+          return new InputNodeField(schema.zcta5_stddev_samp_order_by, true)
+        },
+        get sum() {
+          return new InputNodeField(schema.zcta5_sum_order_by, true)
+        },
+        get var_pop() {
+          return new InputNodeField(schema.zcta5_var_pop_order_by, true)
+        },
+        get var_samp() {
+          return new InputNodeField(schema.zcta5_var_samp_order_by, true)
+        },
+        get variance() {
+          return new InputNodeField(schema.zcta5_variance_order_by, true)
+        },
+      },
+      { name: 'zcta5_aggregate_order_by' }
+    )
+  },
+  get zcta5_arr_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(
+            new ArrayNode(schema.zcta5_insert_input, false),
+            false
+          )
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.zcta5_on_conflict, true)
+        },
+      },
+      { name: 'zcta5_arr_rel_insert_input' }
+    )
+  },
+  get zcta5_avg_fields() {
+    return new ObjectNode(
+      {
+        get aland10() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get awater10() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'zcta5_avg_fields',
+        extension: ((extensions as any) || {}).zcta5_avg_fields,
+      }
+    )
+  },
+  get zcta5_avg_order_by() {
+    return new InputNode(
+      {
+        get aland10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'zcta5_avg_order_by' }
+    )
+  },
+  get zcta5_bool_exp() {
+    return new InputNode(
+      {
+        get _and() {
+          return new InputNodeField(
+            new ArrayNode(schema.zcta5_bool_exp, true),
+            true
+          )
+        },
+        get _not() {
+          return new InputNodeField(schema.zcta5_bool_exp, true)
+        },
+        get _or() {
+          return new InputNodeField(
+            new ArrayNode(schema.zcta5_bool_exp, true),
+            true
+          )
+        },
+        get aland10() {
+          return new InputNodeField(schema.float8_comparison_exp, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.float8_comparison_exp, true)
+        },
+        get classfp10() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get funcstat10() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get geoid10() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get intptlat10() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get intptlon10() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get mtfcc10() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get nhood() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.Int_comparison_exp, true)
+        },
+        get slug() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+        get wkb_geometry() {
+          return new InputNodeField(schema.geometry_comparison_exp, true)
+        },
+        get zcta5ce10() {
+          return new InputNodeField(schema.String_comparison_exp, true)
+        },
+      },
+      { name: 'zcta5_bool_exp' }
+    )
+  },
+  get zcta5_constraint() {
+    return new EnumNode({ name: 'zcta5_constraint' })
+  },
+  get zcta5_inc_input() {
+    return new InputNode(
+      {
+        get aland10() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.Int, true)
+        },
+      },
+      { name: 'zcta5_inc_input' }
+    )
+  },
+  get zcta5_insert_input() {
+    return new InputNode(
+      {
+        get aland10() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get classfp10() {
+          return new InputNodeField(schema.String, true)
+        },
+        get funcstat10() {
+          return new InputNodeField(schema.String, true)
+        },
+        get geoid10() {
+          return new InputNodeField(schema.String, true)
+        },
+        get intptlat10() {
+          return new InputNodeField(schema.String, true)
+        },
+        get intptlon10() {
+          return new InputNodeField(schema.String, true)
+        },
+        get mtfcc10() {
+          return new InputNodeField(schema.String, true)
+        },
+        get nhood() {
+          return new InputNodeField(schema.String, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.Int, true)
+        },
+        get slug() {
+          return new InputNodeField(schema.String, true)
+        },
+        get wkb_geometry() {
+          return new InputNodeField(schema.geometry, true)
+        },
+        get zcta5ce10() {
+          return new InputNodeField(schema.String, true)
+        },
+      },
+      { name: 'zcta5_insert_input' }
+    )
+  },
+  get zcta5_max_fields() {
+    return new ObjectNode(
+      {
+        get aland10() {
+          return new FieldNode(schema.float8, undefined, true)
+        },
+        get awater10() {
+          return new FieldNode(schema.float8, undefined, true)
+        },
+        get classfp10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get funcstat10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get geoid10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get intptlat10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get intptlon10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get mtfcc10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get nhood() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+        get slug() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get zcta5ce10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+      },
+      {
+        name: 'zcta5_max_fields',
+        extension: ((extensions as any) || {}).zcta5_max_fields,
+      }
+    )
+  },
+  get zcta5_max_order_by() {
+    return new InputNode(
+      {
+        get aland10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get classfp10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get funcstat10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get geoid10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get intptlat10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get intptlon10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get mtfcc10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get nhood() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get slug() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get zcta5ce10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'zcta5_max_order_by' }
+    )
+  },
+  get zcta5_min_fields() {
+    return new ObjectNode(
+      {
+        get aland10() {
+          return new FieldNode(schema.float8, undefined, true)
+        },
+        get awater10() {
+          return new FieldNode(schema.float8, undefined, true)
+        },
+        get classfp10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get funcstat10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get geoid10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get intptlat10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get intptlon10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get mtfcc10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get nhood() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+        get slug() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+        get zcta5ce10() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+      },
+      {
+        name: 'zcta5_min_fields',
+        extension: ((extensions as any) || {}).zcta5_min_fields,
+      }
+    )
+  },
+  get zcta5_min_order_by() {
+    return new InputNode(
+      {
+        get aland10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get classfp10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get funcstat10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get geoid10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get intptlat10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get intptlon10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get mtfcc10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get nhood() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get slug() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get zcta5ce10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'zcta5_min_order_by' }
+    )
+  },
+  get zcta5_mutation_response() {
+    return new ObjectNode(
+      {
+        get affected_rows() {
+          return new FieldNode(schema.Int, undefined, false)
+        },
+        get returning() {
+          return new FieldNode(
+            new ArrayNode(schema.zcta5, false),
+            undefined,
+            false
+          )
+        },
+      },
+      {
+        name: 'zcta5_mutation_response',
+        extension: ((extensions as any) || {}).zcta5_mutation_response,
+      }
+    )
+  },
+  get zcta5_obj_rel_insert_input() {
+    return new InputNode(
+      {
+        get data() {
+          return new InputNodeField(schema.zcta5_insert_input, false)
+        },
+        get on_conflict() {
+          return new InputNodeField(schema.zcta5_on_conflict, true)
+        },
+      },
+      { name: 'zcta5_obj_rel_insert_input' }
+    )
+  },
+  get zcta5_on_conflict() {
+    return new InputNode(
+      {
+        get constraint() {
+          return new InputNodeField(schema.zcta5_constraint, false)
+        },
+        get update_columns() {
+          return new InputNodeField(
+            new ArrayNode(schema.zcta5_update_column, false),
+            false
+          )
+        },
+        get where() {
+          return new InputNodeField(schema.zcta5_bool_exp, true)
+        },
+      },
+      { name: 'zcta5_on_conflict' }
+    )
+  },
+  get zcta5_order_by() {
+    return new InputNode(
+      {
+        get aland10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get classfp10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get funcstat10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get geoid10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get intptlat10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get intptlon10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get mtfcc10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get nhood() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get slug() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get wkb_geometry() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get zcta5ce10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'zcta5_order_by' }
+    )
+  },
+  get zcta5_pk_columns_input() {
+    return new InputNode(
+      {
+        get ogc_fid() {
+          return new InputNodeField(schema.Int, false)
+        },
+      },
+      { name: 'zcta5_pk_columns_input' }
+    )
+  },
+  get zcta5_select_column() {
+    return new EnumNode({ name: 'zcta5_select_column' })
+  },
+  get zcta5_set_input() {
+    return new InputNode(
+      {
+        get aland10() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.float8, true)
+        },
+        get classfp10() {
+          return new InputNodeField(schema.String, true)
+        },
+        get funcstat10() {
+          return new InputNodeField(schema.String, true)
+        },
+        get geoid10() {
+          return new InputNodeField(schema.String, true)
+        },
+        get intptlat10() {
+          return new InputNodeField(schema.String, true)
+        },
+        get intptlon10() {
+          return new InputNodeField(schema.String, true)
+        },
+        get mtfcc10() {
+          return new InputNodeField(schema.String, true)
+        },
+        get nhood() {
+          return new InputNodeField(schema.String, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.Int, true)
+        },
+        get slug() {
+          return new InputNodeField(schema.String, true)
+        },
+        get wkb_geometry() {
+          return new InputNodeField(schema.geometry, true)
+        },
+        get zcta5ce10() {
+          return new InputNodeField(schema.String, true)
+        },
+      },
+      { name: 'zcta5_set_input' }
+    )
+  },
+  get zcta5_stddev_fields() {
+    return new ObjectNode(
+      {
+        get aland10() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get awater10() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'zcta5_stddev_fields',
+        extension: ((extensions as any) || {}).zcta5_stddev_fields,
+      }
+    )
+  },
+  get zcta5_stddev_order_by() {
+    return new InputNode(
+      {
+        get aland10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'zcta5_stddev_order_by' }
+    )
+  },
+  get zcta5_stddev_pop_fields() {
+    return new ObjectNode(
+      {
+        get aland10() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get awater10() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'zcta5_stddev_pop_fields',
+        extension: ((extensions as any) || {}).zcta5_stddev_pop_fields,
+      }
+    )
+  },
+  get zcta5_stddev_pop_order_by() {
+    return new InputNode(
+      {
+        get aland10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'zcta5_stddev_pop_order_by' }
+    )
+  },
+  get zcta5_stddev_samp_fields() {
+    return new ObjectNode(
+      {
+        get aland10() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get awater10() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'zcta5_stddev_samp_fields',
+        extension: ((extensions as any) || {}).zcta5_stddev_samp_fields,
+      }
+    )
+  },
+  get zcta5_stddev_samp_order_by() {
+    return new InputNode(
+      {
+        get aland10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'zcta5_stddev_samp_order_by' }
+    )
+  },
+  get zcta5_sum_fields() {
+    return new ObjectNode(
+      {
+        get aland10() {
+          return new FieldNode(schema.float8, undefined, true)
+        },
+        get awater10() {
+          return new FieldNode(schema.float8, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Int, undefined, true)
+        },
+      },
+      {
+        name: 'zcta5_sum_fields',
+        extension: ((extensions as any) || {}).zcta5_sum_fields,
+      }
+    )
+  },
+  get zcta5_sum_order_by() {
+    return new InputNode(
+      {
+        get aland10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'zcta5_sum_order_by' }
+    )
+  },
+  get zcta5_update_column() {
+    return new EnumNode({ name: 'zcta5_update_column' })
+  },
+  get zcta5_var_pop_fields() {
+    return new ObjectNode(
+      {
+        get aland10() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get awater10() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'zcta5_var_pop_fields',
+        extension: ((extensions as any) || {}).zcta5_var_pop_fields,
+      }
+    )
+  },
+  get zcta5_var_pop_order_by() {
+    return new InputNode(
+      {
+        get aland10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'zcta5_var_pop_order_by' }
+    )
+  },
+  get zcta5_var_samp_fields() {
+    return new ObjectNode(
+      {
+        get aland10() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get awater10() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'zcta5_var_samp_fields',
+        extension: ((extensions as any) || {}).zcta5_var_samp_fields,
+      }
+    )
+  },
+  get zcta5_var_samp_order_by() {
+    return new InputNode(
+      {
+        get aland10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'zcta5_var_samp_order_by' }
+    )
+  },
+  get zcta5_variance_fields() {
+    return new ObjectNode(
+      {
+        get aland10() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get awater10() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+        get ogc_fid() {
+          return new FieldNode(schema.Float, undefined, true)
+        },
+      },
+      {
+        name: 'zcta5_variance_fields',
+        extension: ((extensions as any) || {}).zcta5_variance_fields,
+      }
+    )
+  },
+  get zcta5_variance_order_by() {
+    return new InputNode(
+      {
+        get aland10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get awater10() {
+          return new InputNodeField(schema.order_by, true)
+        },
+        get ogc_fid() {
+          return new InputNodeField(schema.order_by, true)
+        },
+      },
+      { name: 'zcta5_variance_order_by' }
     )
   },
 }

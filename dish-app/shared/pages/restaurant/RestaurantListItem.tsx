@@ -570,7 +570,7 @@ const RestaurantPeekDishes = memo(
     //   : null
     const dishes = getRestuarantDishes({
       restaurantSlug: props.restaurantSlug,
-      tag_names: tagSlugs,
+      tag_slugs: tagSlugs,
       max: 5,
     })
     const firstDishName = dishes[0]?.name

@@ -96,13 +96,13 @@ const HomePageGalleryContent = memo(
     //       limit: 1,
     //     })[0]
     //   : null
-    const tag_names = state.dishId ? [state.dishId] : []
+    const tag_slugs = state.dishId ? [state.dishId] : []
 
     // TODO replace, need to split into two things
     const photos = getRestuarantDishes({
       restaurantSlug: state.restaurantSlug,
       max: hasScrolled ? 50 : 20,
-      tag_names,
+      tag_slugs,
     })
 
     return (

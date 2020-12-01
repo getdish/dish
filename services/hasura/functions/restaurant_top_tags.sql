@@ -22,18 +22,18 @@ DROP FUNCTION IF EXISTS restaurant_top_tags(
 
 CREATE OR REPLACE FUNCTION restaurant_top_tags(
   _restaurant restaurant,
-  tag_names TEXT,
+  tag_slugs TEXT,
   _tag_types TEXT DEFAULT 'dish'
 ) RETURNS SETOF restaurant_tag AS $$
   WITH
-  tag_slugs AS (
+  tag_slugs_array AS (
     SELECT UNNEST(
-      string_to_array(tag_names, ',')
+      string_to_array(tag_slugs, ',')
     )
   ),
   tag_types AS (
     SELECT UNNEST(
-      string_to_array(LOWER(REPLACE(_tag_types, '-', ' ')),',')
+      string_to_array(LOWER(REPLACE(_tag_types, '-', ' ')), ',')
     )
   ),
   restaurant_tags AS (
@@ -67,15 +67,17 @@ CREATE OR REPLACE FUNCTION restaurant_top_tags(
     SELECT * FROM (
       (
         SELECT *, 1 AS ord FROM restaurant_tags
-        WHERE restaurant_tags.slug IN (SELECT * FROM tag_slugs)
+        WHERE restaurant_tags.slug IN (SELECT * FROM tag_slugs_array)
       )
       UNION ALL
       (
         SELECT *, 2 AS ord FROM restaurant_tags
-        WHERE NOT (restaurant_tags.slug IN (SELECT * FROM tag_slugs))
-        ORDER BY score DESC
+        WHERE NOT (restaurant_tags.slug IN (SELECT * FROM tag_slugs_array))
+        ORDER BY score DESC NULLS LAST
       )
     ) s1
+    -- TODO: Whether it is Postgres or Hasura, ordering by `ord` is not preserved!
+    --       Ordering is handled in our @graph package
     ORDER BY ord ASC
   ) s2
 $$ LANGUAGE sql STABLE;
