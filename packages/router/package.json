@@ -2,6 +2,7 @@
   "name": "@dish/router",
   "version": "0.0.1",
   "main": "_/index.js",
+  "types": "_/index.d.ts",
   "tsmain": "src/index",
   "sideEffects": false,
   "private": true,
