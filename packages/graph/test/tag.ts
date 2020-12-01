@@ -114,7 +114,7 @@ test('Ambiguous tags get marked', async (t) => {
   t.is(tag5?.is_ambiguous, true)
 })
 
-test.skip('Getting top tags for a restaurant', async (t) => {
+test('Getting top tags for a restaurant', async (t) => {
   let restaurant = await restaurantFindOneWithTags({
     name: 'Test Restaurant',
   })
