@@ -95,7 +95,7 @@ export function extractStyles(
       (process.env.DEBUG_FILE
         ? sourceFileName.includes(process.env.DEBUG_FILE)
         : true)) ||
-    src.startsWith('// debug')
+    (src[0] === '/' && src.startsWith('// debug'))
 
   const options: ExtractStylesOptions = {
     evaluateVars: true,
@@ -973,12 +973,6 @@ export function extractStyles(
     }
   }
 
-  // if you want split stylesheets
-  // if (process.env.NODE_ENV === 'production') {
-  //   cssImportFileName = `./${baseName}${GLOSS_CSS_FILE}`
-  //   cssFileName = path.join(sourceDir, cssImportFileName)
-  // }
-
   const getGlobalCSS = () => {
     return Array.from(globalCSSMap.values())
       .map((v) => {
@@ -1022,7 +1016,6 @@ export function extractStyles(
         .join('\n')
     )
     console.log('\n\noutput css >> ', css)
-    // console.log('\n\noutput global css >> ', getGlobalCSS())
   }
 
   return {
