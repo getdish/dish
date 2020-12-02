@@ -24,10 +24,13 @@ export default function GlossWebpackLoader(this: any, content) {
     return content
   }
 
-  const rv = extractStyles(content, this.resourcePath, options, (...args) => {
-    this.addDependency(SNACK_CSS_FILE)
-    return pluginContext.writeCSS(...args)
-  })
+  const rv = extractStyles(
+    content,
+    this.resourcePath,
+    options,
+    pluginContext.writeCSS,
+    this.addDependency.bind(this)
+  )
 
   if (!rv) {
     return content

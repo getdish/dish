@@ -76,7 +76,8 @@ export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
   userOptions: ExtractStylesOptions,
-  writeCSS: (css: string) => void
+  writeCSS: (css: string) => void,
+  addDependency: (path: string) => void
 ): {
   js: string | Buffer
   ast: t.File
@@ -988,8 +989,10 @@ export function extractStyles(
     writeCSS(getGlobalCSS())
   }
 
+  const importStylesheetPath = `snackui/${CSS_FILE_NAME}`
+  addDependency(importStylesheetPath)
   ast.program.body.unshift(
-    t.importDeclaration([], t.stringLiteral(`snackui/${CSS_FILE_NAME}`))
+    t.importDeclaration([], t.stringLiteral(importStylesheetPath))
   )
 
   const result = generate(

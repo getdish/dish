@@ -162,10 +162,10 @@ server.get('*', async (req, res) => {
   res.send(out)
 })
 
-const port = 4444
+const port = process.env.PORT ? +process.env.PORT : 4444
 const host = '0.0.0.0'
 server.listen(port, host)
-console.log(`Listening on ${host}:${4444}`)
+console.log(`Listening on ${host}:${port}`)
 
 function cors() {
   const HEADER_ALLOWED =
