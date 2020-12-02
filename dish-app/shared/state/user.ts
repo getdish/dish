@@ -109,6 +109,7 @@ const logout: AsyncAction = async (om) => {
   Toast.show('Logged out')
 }
 
+//@ts-expect-error overmind type error
 const forgotPassword: AsyncAction<{
   usernameOrEmail: string
 }> = async (om, { usernameOrEmail }) => {
@@ -128,6 +129,7 @@ const forgotPassword: AsyncAction<{
   return false
 }
 
+//@ts-expect-error overmind type error
 const passwordReset: AsyncAction<{
   password: string
   confirmation: string

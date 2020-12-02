@@ -1,3 +1,4 @@
+import { restaurant_tag } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 
 import { useRestaurantQuery } from '../hooks/useRestaurantQuery'
@@ -45,7 +46,7 @@ export const getRestuarantDishes = ({
     limit: max,
   })
 
-  topTags = prependSearchedForTags(topTags, tagSlugs)
+  topTags = prependSearchedForTags(topTags, tag_slugs)
 
   return (topTags ?? [])
     .map((tag) => {
@@ -61,7 +62,7 @@ export const getRestuarantDishes = ({
 // reason Postgres or Hasura takes it on itself to choose a different field to order on. Hence
 // we force the ordering back to its intended ordering here.
 const prependSearchedForTags = (
-  topTags: RestaurantTags[],
+  topTags: restaurant_tag[],
   tagSlugs: string[]
 ) => {
   const searchedForTags = topTags.filter((t) => tagSlugs.includes(t.tag.slug))

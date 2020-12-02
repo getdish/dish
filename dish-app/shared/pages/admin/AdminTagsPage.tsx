@@ -5,7 +5,6 @@ import {
   graphql,
   order_by,
   query,
-  refetch,
   tagDelete,
   tagUpsert,
   useRefetch,
@@ -464,7 +463,7 @@ const TagEdit = memo(
                 ...x,
               },
             ])
-            refetch(tag).catch(console.error)
+            refetch(query).catch(console.error)
             Toast.show('Saved')
           }}
         />
