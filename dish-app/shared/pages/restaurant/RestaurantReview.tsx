@@ -37,7 +37,7 @@ export const RestaurantReview = memo(
       hideUsername?: boolean
       showRestaurant?: boolean
     }) => {
-      const forceUpdate = useForceUpdate()
+      const refetch = useRefetch()
       const reviews = query.review({
         limit: 1,
         where: {
@@ -50,7 +50,7 @@ export const RestaurantReview = memo(
 
       useLazyEffect(() => {
         // refetchAll()
-        refetch(reviews).then(forceUpdate).catch(console.error)
+        refetch(reviews).catch(console.error)
       }, [refetchKey])
 
       const sentiments = review.sentiments()

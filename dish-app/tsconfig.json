@@ -48,6 +48,9 @@
       "path": "../packages/graph"
     },
     {
+      "path": "../packages/router"
+    },
+    {
       "path": "../packages/helpers"
     },
     {

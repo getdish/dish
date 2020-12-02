@@ -1877,19 +1877,19 @@
     prettier "^2.2.1"
     regenerator-runtime "^0.13.7"
 
-"@dish/gqless-react@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@dish/gqless-react/-/gqless-react-1.0.1.tgz#591b6e6e101c20b9749c81485fa52b69c4e21080"
-  integrity sha512-qYxaqEpJNVPyTZz+CfpjayhHfc6TbqiMFODIElZ9JY1TRRlFfOQlng4mSO91U+Ay565WtsL72w6wwofv1awWHw==
+"@dish/gqless-react@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-react/-/gqless-react-1.0.2.tgz#e8c6e66b6b73b3ff3d60707159553c56ff085417"
+  integrity sha512-WXjfi1Ku6GeX7B0UXLyicGD0P4nsEmmDSgCFzbtJENGR9I3eKFJ0j6U3G2IrBBBbcsL9xiwJd3qlnrYD1VwT7w==
   dependencies:
     lodash "^4.17.20"
     lodash-es "^4.17.15"
     regenerator-runtime "^0.13.7"
 
-"@dish/gqless@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-2.0.2.tgz#eade51cb9f8d5391976120669c422b57c89940a1"
-  integrity sha512-vxkG3f5ScSdOyQBsrjDEacQXGD7FhHS3/+O76weEBJlGmWyHDFcSdGyo5cNWp1u53Scq+lWrhH477/eFAymy8g==
+"@dish/gqless@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-2.0.3.tgz#6f4fd7cb5c178834f531e055c86f167382a44a12"
+  integrity sha512-9Ha4FiNY+95YvPbESixn4liDeUz6pdwYyzTAe6hsLNzafyzMdrgjkcne/hF94Ay4vt+U3SJkfd7WiswJNlCkcA==
   dependencies:
     graphql "^15.4.0"
     lodash "^4.17.20"

@@ -152,6 +152,7 @@
     "snackui": "0.0.2",
     "@o/async": "*",
     "@dish/graph": "*",
+    "@dish/router": "*",
     "@dish/helpers": "*",
     "@dish/use-store": "*",
     "@dish/react-feather": "*",

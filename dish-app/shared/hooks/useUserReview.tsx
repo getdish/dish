@@ -45,9 +45,8 @@ export const useUserReviewsQuery = (
   restaurantId: string,
   type?: ReviewTypes
 ) => {
-  const refetchAll = useRefetch()
+  const refetch = useRefetch()
   const om = useOvermind()
-  const forceUpdate = useForceUpdate()
   const userId = (om.state.user.user?.id as string) ?? ''
   const [fetchKey, setFetchKey] = useState(0)
   const shouldFetch = userId && restaurantId
@@ -95,6 +94,7 @@ export const useUserReviewsQuery = (
   // ensure fetched by gqless
   useLazyEffect(() => {
     if (fetchKey && shouldFetch) {
+      refetch(reviewsQuery).catch(console.error)
       // const fetcher = refetch(reviewsQuery) as any
       // if (fetcher) {
       //   return series([() => resolved(fetcher), forceUpdate])

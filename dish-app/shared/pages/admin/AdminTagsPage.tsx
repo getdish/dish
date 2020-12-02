@@ -223,7 +223,7 @@ const TagListContent = memo(
       newTag?: Tag
       lastRowSelection: { name: string; type: TagType }
     }) => {
-      const refetchAll = useRefetch()
+      const refetch = useRefetch()
       const perPage = 50
       const { results, total, totalPages, page, setPage } = useQueryPaginated({
         perPage,
@@ -263,7 +263,6 @@ const TagListContent = memo(
         },
       })
       const tagStore = useStore(AdminTagStore)
-      const forceUpdate = useForceUpdate()
 
       const allResults = column === 0 ? [allTagsTag, ...results] : results
 
@@ -271,13 +270,13 @@ const TagListContent = memo(
       useEffect(() => {
         console.log('refertching')
         // refetchAll()
-        refetch(results).then(forceUpdate).catch(console.error)
+        refetch(results).catch(console.error)
       }, [lastRowSelection])
 
       useEffect(() => {
         if (tagStore.forceRefreshColumnByType === type) {
           // refetchAll()
-          refetch(results).then(forceUpdate).catch(console.error)
+          refetch(results).catch(console.error)
           // console.log('res', res)
           // setTimeout(() => {
           //   forceUpdate()
@@ -387,6 +386,8 @@ const TagEditColumn = memo(() => {
   const tagStore = useStore(AdminTagStore)
   const setDraftDebounced = useDebounce((x) => tagStore.setDraft(x), 200)
 
+  const refetch = useRefetch()
+
   return (
     <VStack spacing="lg">
       <>
@@ -403,6 +404,8 @@ const TagEditColumn = memo(() => {
               onPress={async () => {
                 console.log('upserting', tagStore.draft)
                 const reply = await tagUpsert([tagStore.draft])
+
+                refetch(tagStore.draft)
                 console.log('reply', reply)
                 Toast.show('Saved')
                 tagStore.forceRefreshColumnByType = tagStore.draft.type ?? ''
@@ -437,7 +440,8 @@ const TagEdit = memo(
   graphql<any>(() => {
     const tagStore = useStore(AdminTagStore)
     const refetchTm = useRef(null)
-    const forceUpdate = useForceUpdate()
+
+    const refetch = useRefetch()
     if (tagStore.selectedId) {
       const tag = queryTag(tagStore.selectedId)
       const fullTag = {
@@ -454,16 +458,13 @@ const TagEdit = memo(
           key={tagStore.selectedId}
           tag={fullTag}
           onChange={async (x) => {
-            console.log(455)
             await tagUpsert([
               {
                 ...fullTag,
                 ...x,
               },
             ])
-            refetch(tag)
-              .then(() => forceUpdate())
-              .catch(console.error)
+            refetch(tag).catch(console.error)
             Toast.show('Saved')
           }}
         />
