@@ -1886,10 +1886,10 @@
     lodash-es "^4.17.15"
     regenerator-runtime "^0.13.7"
 
-"@dish/gqless@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-2.0.3.tgz#6f4fd7cb5c178834f531e055c86f167382a44a12"
-  integrity sha512-9Ha4FiNY+95YvPbESixn4liDeUz6pdwYyzTAe6hsLNzafyzMdrgjkcne/hF94Ay4vt+U3SJkfd7WiswJNlCkcA==
+"@dish/gqless@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-2.0.4.tgz#f96b966c83082374a633161a3784ca2a1d01d6ac"
+  integrity sha512-zozTSVz2CU/bISB9b+mbskBaPDiH2qDJBKEDrz0rKDHYv84mwzI5i8AIC15j5aG9NAS8rNMDmZJROYu7AbREvQ==
   dependencies:
     graphql "^15.4.0"
     lodash "^4.17.20"

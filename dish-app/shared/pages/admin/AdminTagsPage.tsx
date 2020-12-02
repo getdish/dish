@@ -463,7 +463,7 @@ const TagEdit = memo(
                 ...x,
               },
             ])
-            refetch(query).catch(console.error)
+            refetch(tag).catch(console.error)
             Toast.show('Saved')
           }}
         />
