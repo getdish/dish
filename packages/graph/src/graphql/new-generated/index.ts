@@ -1985,7 +1985,7 @@ export interface restaurant_tag_variance_order_by {
 
 export interface restaurant_top_tags_args {
   _tag_types?: Maybe<Scalars['String']>
-  tag_names?: Maybe<Scalars['String']>
+  tag_slugs?: Maybe<Scalars['String']>
 }
 
 /** update columns of table "restaurant" */
@@ -3324,6 +3324,8 @@ export interface user_bool_exp {
   id?: Maybe<uuid_comparison_exp>
   location?: Maybe<String_comparison_exp>
   password?: Maybe<String_comparison_exp>
+  password_reset_date?: Maybe<timestamptz_comparison_exp>
+  password_reset_token?: Maybe<String_comparison_exp>
   reviews?: Maybe<review_bool_exp>
   role?: Maybe<String_comparison_exp>
   updated_at?: Maybe<timestamptz_comparison_exp>
@@ -3360,6 +3362,8 @@ export interface user_insert_input {
   id?: Maybe<Scalars['uuid']>
   location?: Maybe<Scalars['String']>
   password?: Maybe<Scalars['String']>
+  password_reset_date?: Maybe<Scalars['timestamptz']>
+  password_reset_token?: Maybe<Scalars['String']>
   reviews?: Maybe<review_arr_rel_insert_input>
   role?: Maybe<Scalars['String']>
   updated_at?: Maybe<Scalars['timestamptz']>
@@ -3380,6 +3384,8 @@ export interface user_max_order_by {
   id?: Maybe<order_by>
   location?: Maybe<order_by>
   password?: Maybe<order_by>
+  password_reset_date?: Maybe<order_by>
+  password_reset_token?: Maybe<order_by>
   role?: Maybe<order_by>
   updated_at?: Maybe<order_by>
   username?: Maybe<order_by>
@@ -3399,6 +3405,8 @@ export interface user_min_order_by {
   id?: Maybe<order_by>
   location?: Maybe<order_by>
   password?: Maybe<order_by>
+  password_reset_date?: Maybe<order_by>
+  password_reset_token?: Maybe<order_by>
   role?: Maybe<order_by>
   updated_at?: Maybe<order_by>
   username?: Maybe<order_by>
@@ -3432,6 +3440,8 @@ export interface user_order_by {
   id?: Maybe<order_by>
   location?: Maybe<order_by>
   password?: Maybe<order_by>
+  password_reset_date?: Maybe<order_by>
+  password_reset_token?: Maybe<order_by>
   reviews_aggregate?: Maybe<review_aggregate_order_by>
   role?: Maybe<order_by>
   updated_at?: Maybe<order_by>
@@ -3472,6 +3482,10 @@ export enum user_select_column {
   /** column name */
   password = 'password',
   /** column name */
+  password_reset_date = 'password_reset_date',
+  /** column name */
+  password_reset_token = 'password_reset_token',
+  /** column name */
   role = 'role',
   /** column name */
   updated_at = 'updated_at',
@@ -3494,6 +3508,8 @@ export interface user_set_input {
   id?: Maybe<Scalars['uuid']>
   location?: Maybe<Scalars['String']>
   password?: Maybe<Scalars['String']>
+  password_reset_date?: Maybe<Scalars['timestamptz']>
+  password_reset_token?: Maybe<Scalars['String']>
   role?: Maybe<Scalars['String']>
   updated_at?: Maybe<Scalars['timestamptz']>
   username?: Maybe<Scalars['String']>
@@ -3547,6 +3563,10 @@ export enum user_update_column {
   location = 'location',
   /** column name */
   password = 'password',
+  /** column name */
+  password_reset_date = 'password_reset_date',
+  /** column name */
+  password_reset_token = 'password_reset_token',
   /** column name */
   role = 'role',
   /** column name */
@@ -7170,7 +7190,7 @@ export const generatedSchema = {
   },
   restaurant_top_tags_args: {
     _tag_types: { __type: 'String' },
-    tag_names: { __type: 'String' },
+    tag_slugs: { __type: 'String' },
   },
   restaurant_var_pop_fields: {
     __typename: { __type: 'String!' },
@@ -8417,6 +8437,8 @@ export const generatedSchema = {
     id: { __type: 'uuid!' },
     location: { __type: 'String' },
     password: { __type: 'String!' },
+    password_reset_date: { __type: 'timestamptz' },
+    password_reset_token: { __type: 'String' },
     reviews: {
       __type: '[review!]!',
       __args: {
@@ -8502,6 +8524,8 @@ export const generatedSchema = {
     id: { __type: 'uuid_comparison_exp' },
     location: { __type: 'String_comparison_exp' },
     password: { __type: 'String_comparison_exp' },
+    password_reset_date: { __type: 'timestamptz_comparison_exp' },
+    password_reset_token: { __type: 'String_comparison_exp' },
     reviews: { __type: 'review_bool_exp' },
     role: { __type: 'String_comparison_exp' },
     updated_at: { __type: 'timestamptz_comparison_exp' },
@@ -8522,6 +8546,8 @@ export const generatedSchema = {
     id: { __type: 'uuid' },
     location: { __type: 'String' },
     password: { __type: 'String' },
+    password_reset_date: { __type: 'timestamptz' },
+    password_reset_token: { __type: 'String' },
     reviews: { __type: 'review_arr_rel_insert_input' },
     role: { __type: 'String' },
     updated_at: { __type: 'timestamptz' },
@@ -8541,6 +8567,8 @@ export const generatedSchema = {
     id: { __type: 'uuid' },
     location: { __type: 'String' },
     password: { __type: 'String' },
+    password_reset_date: { __type: 'timestamptz' },
+    password_reset_token: { __type: 'String' },
     role: { __type: 'String' },
     updated_at: { __type: 'timestamptz' },
     username: { __type: 'String' },
@@ -8558,6 +8586,8 @@ export const generatedSchema = {
     id: { __type: 'order_by' },
     location: { __type: 'order_by' },
     password: { __type: 'order_by' },
+    password_reset_date: { __type: 'order_by' },
+    password_reset_token: { __type: 'order_by' },
     role: { __type: 'order_by' },
     updated_at: { __type: 'order_by' },
     username: { __type: 'order_by' },
@@ -8576,6 +8606,8 @@ export const generatedSchema = {
     id: { __type: 'uuid' },
     location: { __type: 'String' },
     password: { __type: 'String' },
+    password_reset_date: { __type: 'timestamptz' },
+    password_reset_token: { __type: 'String' },
     role: { __type: 'String' },
     updated_at: { __type: 'timestamptz' },
     username: { __type: 'String' },
@@ -8593,6 +8625,8 @@ export const generatedSchema = {
     id: { __type: 'order_by' },
     location: { __type: 'order_by' },
     password: { __type: 'order_by' },
+    password_reset_date: { __type: 'order_by' },
+    password_reset_token: { __type: 'order_by' },
     role: { __type: 'order_by' },
     updated_at: { __type: 'order_by' },
     username: { __type: 'order_by' },
@@ -8625,6 +8659,8 @@ export const generatedSchema = {
     id: { __type: 'order_by' },
     location: { __type: 'order_by' },
     password: { __type: 'order_by' },
+    password_reset_date: { __type: 'order_by' },
+    password_reset_token: { __type: 'order_by' },
     reviews_aggregate: { __type: 'review_aggregate_order_by' },
     role: { __type: 'order_by' },
     updated_at: { __type: 'order_by' },
@@ -8645,6 +8681,8 @@ export const generatedSchema = {
     id: { __type: 'uuid' },
     location: { __type: 'String' },
     password: { __type: 'String' },
+    password_reset_date: { __type: 'timestamptz' },
+    password_reset_token: { __type: 'String' },
     role: { __type: 'String' },
     updated_at: { __type: 'timestamptz' },
     username: { __type: 'String' },
@@ -11384,6 +11422,8 @@ export interface user {
   id: ScalarsEnums['uuid']
   location?: Maybe<ScalarsEnums['String']>
   password: ScalarsEnums['String']
+  password_reset_date?: Maybe<ScalarsEnums['timestamptz']>
+  password_reset_token?: Maybe<ScalarsEnums['String']>
   reviews: (args?: {
     distinct_on?: Maybe<Array<ScalarsEnums['review_select_column']>>
     limit?: Maybe<ScalarsEnums['Int']>
@@ -11446,6 +11486,8 @@ export interface user_max_fields {
   id?: Maybe<ScalarsEnums['uuid']>
   location?: Maybe<ScalarsEnums['String']>
   password?: Maybe<ScalarsEnums['String']>
+  password_reset_date?: Maybe<ScalarsEnums['timestamptz']>
+  password_reset_token?: Maybe<ScalarsEnums['String']>
   role?: Maybe<ScalarsEnums['String']>
   updated_at?: Maybe<ScalarsEnums['timestamptz']>
   username?: Maybe<ScalarsEnums['String']>
@@ -11465,6 +11507,8 @@ export interface user_min_fields {
   id?: Maybe<ScalarsEnums['uuid']>
   location?: Maybe<ScalarsEnums['String']>
   password?: Maybe<ScalarsEnums['String']>
+  password_reset_date?: Maybe<ScalarsEnums['timestamptz']>
+  password_reset_token?: Maybe<ScalarsEnums['String']>
   role?: Maybe<ScalarsEnums['String']>
   updated_at?: Maybe<ScalarsEnums['timestamptz']>
   username?: Maybe<ScalarsEnums['String']>
