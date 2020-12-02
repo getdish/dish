@@ -12,6 +12,7 @@
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "outDir": "_",
+    "noEmit": true,
     "noEmitHelpers": true,
     "noImplicitReturns": true,
     "skipLibCheck": true,
