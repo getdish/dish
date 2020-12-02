@@ -23,7 +23,11 @@ export const AppMenu = memo(() => {
 
   useEffect(() => {
     // open menu on nav to login/register
-    if (pageName == 'login' || pageName == 'register') {
+    if (
+      pageName == 'login' ||
+      pageName == 'register' ||
+      pageName == 'passwordReset'
+    ) {
       setShowUserMenu(true)
     }
   }, [pageName])

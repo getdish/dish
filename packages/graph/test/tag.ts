@@ -1,5 +1,6 @@
 import anyTest, { TestInterface } from 'ava'
 
+import { getRestuarantDishes } from '../../../dish-app/shared/helpers/getRestaurantDishes'
 import {
   RestaurantWithId,
   TagWithId,
@@ -124,36 +125,21 @@ test.skip('Getting top tags for a restaurant', async (t) => {
     },
     { name: 'Test tag 3', type: 'dish', parentId: t.context.existing_tag.id },
   ])
-  restaurant = (await restaurantUpsertRestaurantTags(restaurant!, [
-    { tag_id: t1.id },
-    { tag_id: t2.id },
-    { tag_id: t3.id },
+  restaurant = (await restaurantUpsertRestaurantTags(restaurant, [
+    { tag_id: t1.id, score: 10 },
+    { tag_id: t2.id, score: -10 },
+    { tag_id: t3.id, score: 0 },
   ]))!
-  const r = await resolved(() => {
-    const restaurant_query = query.restaurant({
-      where: {
-        slug: {
-          _eq: restaurant!.slug,
-        },
-      },
-      limit: 1,
-    })
-    const results = restaurant_query[0].top_tags({
-      args: {
-        tag_names: 'test-tag-existing__test-tag-2',
-        _tag_types: 'dish',
-      },
-      limit: 5,
-    })
-    return results!.map((r) => {
-      return {
-        slug: r.tag.slug,
-      }
+  let top_tags = await resolved(() => {
+    return getRestuarantDishes({
+      restaurantSlug: restaurant.slug,
+      tag_slugs: ['test-tag-existing__test-tag-2'],
     })
   })
-  t.deepEqual(r, [
-    { slug: 'test-tag-existing__test-tag-2' },
-    { slug: 'test-tag-existing__test-tag-1' },
-    { slug: 'test-tag-existing__test-tag-3' },
+  top_tags = top_tags.map((tt) => tt.slug)
+  t.deepEqual(top_tags, [
+    'test-tag-existing__test-tag-2',
+    'test-tag-existing__test-tag-1',
+    'test-tag-existing__test-tag-3',
   ])
 })

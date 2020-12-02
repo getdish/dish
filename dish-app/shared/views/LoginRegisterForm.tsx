@@ -29,6 +29,35 @@ import { LinkButton } from './ui/LinkButton'
 import { LinkButtonProps } from './ui/LinkProps'
 import { SmallButton } from './ui/SmallButton'
 
+type FormPage =
+  | 'login'
+  | 'register'
+  | 'forgotPassword'
+  | 'passwordReset'
+  | 'success'
+
+const form_page_details = {
+  login: {
+    submit_text: 'Login',
+    submitting_text: 'Loginng in...',
+  },
+  register: {
+    submit_text: 'Register',
+    submitting_text: 'Registering...',
+  },
+  forgotPassword: {
+    submit_text: 'Send',
+    submitting_text: 'Sending...',
+    success_text:
+      'If we have your details in our database you will receive an email shortly',
+  },
+  passwordReset: {
+    submit_text: 'Reset',
+    submitting_text: 'Resetting...',
+    success_text: 'Your password has been reset, you can now login',
+  },
+}
+
 const activeStyle: LinkButtonProps = {
   backgroundColor: 'rgba(150,150,150,0.35)',
 }
@@ -63,21 +92,22 @@ class AuthFormStore extends Store {
 }
 
 export const LoginRegisterForm = ({
-  showForm,
   onDidLogin,
   autofocus,
 }: {
-  showForm?: 'login' | 'register'
   onDidLogin?: Function
   autofocus?: boolean
 }) => {
   const om = useOvermind()
   const isLoggedIn = om.state.user.isLoggedIn
   const store = useStore(AuthFormStore)
-  const [isRegister, setIsRegister] = useState(
-    showForm ? showForm !== 'login' : Auth.hasEverLoggedIn ? false : true
-  )
-  const { handleSubmit, errors, control } = useForm()
+  const curPageName = om.state.router.curPage.name
+  let defaultFormPage = Object.keys(form_page_details).includes(curPageName)
+    ? curPageName
+    : 'login'
+  const [formPage, setFormPage] = useState(defaultFormPage)
+  const [successText, setSuccessText] = useState('')
+  const { handleSubmit, errors, control, watch } = useForm()
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -87,20 +117,41 @@ export const LoginRegisterForm = ({
 
   const onSubmit = useCallback(
     async (e) => {
-      console.log('got login')
-      if (isRegister) {
-        const result = await om.actions.user.register(store.state)
-        if (result) {
-          store.resetState()
-        }
-      } else {
-        await om.actions.user.login({
-          usernameOrEmail: store.state.login,
-          password: store.state.password,
-        })
+      console.log('got login page submission')
+      let result
+      switch (formPage) {
+        case 'register':
+          result = await om.actions.user.register(store.state)
+          if (result) store.resetState()
+          break
+        case 'login':
+          await om.actions.user.login({
+            usernameOrEmail: store.state.login,
+            password: store.state.password,
+          })
+          break
+        case 'forgotPassword':
+          result = await om.actions.user.forgotPassword({
+            usernameOrEmail: store.state.login,
+          })
+          if (result) {
+            setSuccessText(form_page_details[formPage].success_text)
+            setFormPage('success')
+          }
+          break
+        case 'passwordReset':
+          result = await om.actions.user.passwordReset({
+            password: store.state.password,
+            confirmation: store.state.confirmation,
+          })
+          if (result) {
+            setSuccessText(form_page_details[formPage].success_text)
+            setFormPage('success')
+          }
+          break
       }
     },
-    [isRegister]
+    [formPage]
   )
 
   if (isLoggedIn) {
@@ -109,17 +160,9 @@ export const LoginRegisterForm = ({
 
   const button_text = () => {
     if (om.state.user.loading) {
-      if (isRegister) {
-        return 'Registering...'
-      } else {
-        return 'Logging in...'
-      }
+      return form_page_details[formPage].submitting_text
     } else {
-      if (isRegister) {
-        return 'Go'
-      } else {
-        return 'Login'
-      }
+      return form_page_details[formPage].submit_text
     }
   }
 
@@ -150,125 +193,189 @@ export const LoginRegisterForm = ({
         </>
       )}
 
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <VStack spacing="sm" minWidth={260}>
-          <InteractiveContainer height={43} alignSelf="center">
-            <LinkButton
-              {...navButtonProps}
-              {...(!isRegister && activeStyle)}
-              onPress={() => {
-                setIsRegister(false)
-              }}
-            >
-              Login
-            </LinkButton>
-            <LinkButton
-              {...navButtonProps}
-              {...(isRegister && activeStyle)}
-              onPress={() => {
-                setIsRegister(true)
-              }}
-            >
-              Signup
-            </LinkButton>
-          </InteractiveContainer>
+      {formPage != 'success' && (
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <VStack spacing="sm" minWidth={260}>
+            <InteractiveContainer height={43} alignSelf="center">
+              <LinkButton
+                {...navButtonProps}
+                {...(formPage == 'login' && activeStyle)}
+                onPress={() => setFormPage('login')}
+              >
+                Login
+              </LinkButton>
+              <LinkButton
+                {...navButtonProps}
+                {...(formPage == 'register' && activeStyle)}
+                onPress={() => setFormPage('register')}
+              >
+                Signup
+              </LinkButton>
+            </InteractiveContainer>
 
-          {isRegister && (
-            <>
-              <ValidatedInput
-                control={control}
-                errors={errors.email}
-                name="email"
-                spellCheck={false}
-                placeholder="Email"
-                autoCapitalize="none"
-                autoFocus={autofocus}
-                onChangeText={(val) => store.setState({ email: val })}
-                rules={{
-                  required: true,
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: 'invalid email address',
-                  },
-                }}
-              />
+            {formPage == 'register' && (
+              <>
+                <ValidatedInput
+                  control={control}
+                  errors={errors.email}
+                  name="email"
+                  spellCheck={false}
+                  placeholder="Email"
+                  autoCapitalize="none"
+                  autoFocus={autofocus}
+                  onChangeText={(val) => store.setState({ email: val })}
+                  rules={{
+                    required: true,
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: 'invalid email address',
+                    },
+                  }}
+                />
 
-              <Spacer size="sm" />
+                <Spacer size="sm" />
 
-              <Input
-                name="username"
-                spellCheck={false}
-                autoCapitalize="none"
-                placeholder="Username"
-                onChangeText={(val) => store.setState({ username: val })}
-              />
-            </>
-          )}
+                <Input
+                  name="username"
+                  spellCheck={false}
+                  autoCapitalize="none"
+                  placeholder="Username"
+                  onChangeText={(val) => store.setState({ username: val })}
+                />
+              </>
+            )}
 
-          {!isRegister && (
-            <>
-              {/* email or username */}
-              <ValidatedInput
-                control={control}
-                errors={errors.email}
-                name="email"
-                spellCheck={false}
-                placeholder="Email or usename"
-                autoCapitalize="none"
-                autoFocus={autofocus}
-                onChangeText={(value) => store.setState({ login: value })}
-                rules={{
-                  required: true,
-                }}
-              />
-            </>
-          )}
-
-          <ValidatedInput
-            control={control}
-            errors={errors.password}
-            secureTextEntry
-            name="password"
-            placeholder="Password"
-            onChangeText={(value) => store.setState({ password: value })}
-            rules={{
-              required: true,
-            }}
-          />
-
-          {isWeb && (
-            <input
-              onSubmit={handleSubmit(onSubmit)}
-              type="submit"
-              style={{ display: 'none' }}
-            />
-          )}
-
-          <SmallButton
-            accessibilityComponentType="button"
-            accessible
-            accessibilityRole="button"
-            alignSelf="flex-end"
-            backgroundColor="#222"
-            borderColor="#444"
-            color="#fff"
-            hoverStyle={{
-              backgroundColor: '#333',
-            }}
-            onPress={handleSubmit(onSubmit)}
-          >
-            {button_text()}
-          </SmallButton>
-
-          {!isRegister && (
-            <HStack alignSelf="flex-end">
-              <Text fontSize={14}>
-                <Link name="forgotPassword">Forgot password?</Link>{' '}
+            {formPage == 'forgotPassword' && (
+              <Text fontSize={14} width={300}>
+                Enter your username or email, if it exists in our database,
+                we'll send you an email with a reset link:
               </Text>
-            </HStack>
-          )}
-        </VStack>
-      </Form>
+            )}
+
+            {(formPage == 'login' || formPage == 'forgotPassword') && (
+              <>
+                {/* email or username */}
+                <ValidatedInput
+                  control={control}
+                  errors={errors.email}
+                  name="email"
+                  spellCheck={false}
+                  placeholder="Email or username"
+                  autoCapitalize="none"
+                  autoFocus={autofocus}
+                  onChangeText={(value) => store.setState({ login: value })}
+                  rules={{
+                    required: true,
+                  }}
+                />
+              </>
+            )}
+
+            {formPage == 'forgotPassword' && (
+              <HStack alignSelf="flex-end">
+                <Text fontSize={14}>
+                  <Link onPress={(e) => setFormPage('login')}>
+                    Back to login
+                  </Link>{' '}
+                </Text>
+              </HStack>
+            )}
+
+            {(formPage == 'register' || formPage == 'login') && (
+              <>
+                <ValidatedInput
+                  control={control}
+                  errors={errors.password}
+                  secureTextEntry
+                  name="password"
+                  placeholder="Password"
+                  onChangeText={(value) => store.setState({ password: value })}
+                  rules={{
+                    required: true,
+                  }}
+                />
+              </>
+            )}
+
+            {formPage == 'passwordReset' && (
+              <>
+                <Text>Enter your new password:</Text>
+                <Spacer size="sm" />
+                <ValidatedInput
+                  control={control}
+                  errors={errors.password}
+                  secureTextEntry
+                  name="password"
+                  placeholder="Password"
+                  onChangeText={(value) => store.setState({ password: value })}
+                  rules={{
+                    required: true,
+                  }}
+                />
+                <Spacer size="sm" />
+                <ValidatedInput
+                  control={control}
+                  errors={errors.confirmation}
+                  secureTextEntry
+                  name="confirmation"
+                  placeholder="Confirmation"
+                  onChangeText={(value) =>
+                    store.setState({ confirmation: value })
+                  }
+                  rules={{
+                    required: true,
+                    validate: (value) => {
+                      return (
+                        value == watch('password') || "Passwords don't match"
+                      )
+                    },
+                  }}
+                />
+              </>
+            )}
+
+            {isWeb && (
+              <input
+                onSubmit={handleSubmit(onSubmit)}
+                type="submit"
+                style={{ display: 'none' }}
+              />
+            )}
+
+            <SmallButton
+              accessibilityComponentType="button"
+              accessible
+              accessibilityRole="button"
+              alignSelf="flex-end"
+              backgroundColor="#222"
+              borderColor="#444"
+              color="#fff"
+              hoverStyle={{
+                backgroundColor: '#333',
+              }}
+              onPress={handleSubmit(onSubmit)}
+            >
+              {button_text()}
+            </SmallButton>
+
+            {formPage == 'login' && (
+              <HStack alignSelf="flex-end">
+                <Text fontSize={14}>
+                  <Link onPress={(e) => setFormPage('forgotPassword')}>
+                    Forgot password?
+                  </Link>{' '}
+                </Text>
+              </HStack>
+            )}
+          </VStack>
+        </Form>
+      )}
+
+      {formPage == 'success' && (
+        <Text fontSize={14} width={300}>
+          {successText}
+        </Text>
+      )}
 
       <Spacer />
 

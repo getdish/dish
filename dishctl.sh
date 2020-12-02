@@ -92,7 +92,7 @@ function start_crawler_for_city() {
 
 function start_all_crawlers_for_city() {
   start_crawler_for_city "doordash" "$1"
-  #start_crawler "google" "$1"
+  start_crawler_for_city "google" "$1"
   start_crawler_for_city "grubhub" "$1"
   start_crawler_for_city "infatuated" "$1"
   start_crawler_for_city "tripadvisor" "$1"
@@ -102,7 +102,7 @@ function start_all_crawlers_for_city() {
 
 function start_all_crawlers() {
   start_crawler "doordash"
-  #start_crawler "google"
+  start_crawler "google"
   start_crawler "grubhub"
   start_crawler "infatuated"
   start_crawler "tripadvisor"

@@ -26,24 +26,26 @@ export interface DishTagItem extends Omit<DishTagItemSimple, 'slug' | 'id'> {
 
 type Props = {
   restaurantSlug: string
-  tag_names?: string[]
+  tag_slugs?: string[]
   max?: number
 }
 
 export const getRestuarantDishes = ({
   restaurantSlug,
-  tag_names = [],
+  tag_slugs = [],
   max = 6,
 }: Props): DishTagItemSimple[] => {
   const restaurant = useRestaurantQuery(restaurantSlug)
-  const tagNames = tag_names.filter(Boolean).join(',')
-  const topTags = restaurant.top_tags({
+  const tagSlugs = tag_slugs.filter(Boolean).join(',')
+  let topTags = restaurant.top_tags({
     args: {
-      tag_names: tagNames,
+      tag_slugs: tagSlugs,
       _tag_types: 'dish',
     },
     limit: max,
   })
+
+  topTags = prependSearchedForTags(topTags, tagSlugs)
 
   return (topTags ?? [])
     .map((tag) => {
@@ -52,6 +54,20 @@ export const getRestuarantDishes = ({
     })
     .filter(isPresent)
     .filter((x) => !!x.slug)
+}
+
+// TODO: Whether it is Postgres or Hasura, having to set the ordering here should not
+// be necessary. Postgres is perfectly capabale of doing this itself. However, for whatever
+// reason Postgres or Hasura takes it on itself to choose a different field to order on. Hence
+// we force the ordering back to its intended ordering here.
+const prependSearchedForTags = (
+  topTags: RestaurantTags[],
+  tagSlugs: string[]
+) => {
+  const searchedForTags = topTags.filter((t) => tagSlugs.includes(t.tag.slug))
+  const allOthers = topTags.filter((t) => !tagSlugs.includes(t.tag.slug))
+  const ordered = [...searchedForTags, ...allOthers]
+  return ordered
 }
 
 // const getRestuarantDishesWithPhotos = (

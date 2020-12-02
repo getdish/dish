@@ -16,6 +16,8 @@ export const AppIntroLetter = memo(() => {
   const hasOnboarded = om.state.user.user?.has_onboarded
   const isLoggedIn = om.state.user.isLoggedIn
   const store = useStore(IntroModal)
+  const curPageName = om.state.router.curPage.name
+  const isPasswordReset = curPageName == 'passwordReset'
   // const curPage = om.state.router.curPage
   // const isPublicPage = curPage.name === 'about' || curPage.name === 'blog'
   // make it private only
@@ -76,7 +78,7 @@ export const AppIntroLetter = memo(() => {
         </>
       }
     >
-      {!isLoggedIn && (
+      {!isLoggedIn && !isPasswordReset && (
         <>
           <AppIntroLogin />
         </>

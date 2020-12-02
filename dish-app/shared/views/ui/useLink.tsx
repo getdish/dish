@@ -42,6 +42,9 @@ export const useLink = (props: LinkProps<any, any>) => {
   const onPress = (e: any) => {
     if (isWeb) {
       if (props.href || e.metaKey || e.ctrlKey) {
+        if (props.preventNavigate) {
+          return
+        }
         window.open(props.href ?? e.currentTarget.href, '_blank')
         return
       }
@@ -73,16 +76,18 @@ export const useLink = (props: LinkProps<any, any>) => {
     wrapWithLinkElement(children: any) {
       if (Platform.OS === 'web') {
         const element = props.tagName ?? 'a'
+        const href = props.href ?? router.getPathFromParams(navItem)
         return React.createElement(
           element,
           {
             onClick: onPress,
             className: `display-contents dish-link ${props.className ?? ''}`,
             target: props.target,
-            ...(element === 'a' && {
-              href: props.href ?? router.getPathFromParams(navItem),
-              onMouseEnter: linkProps.onMouseEnter,
-            }),
+            ...(element === 'a' &&
+              href && {
+                href,
+                onMouseEnter: linkProps.onMouseEnter,
+              }),
           },
           children
         )
@@ -138,13 +143,15 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
     })
     return {
       ...(nextState && getNavigateItemForState(omStatic, nextState)),
-      preventNavigate: true,
-      onPress() {
-        omStatic.actions.home.navigate({
-          state: omStatic.state.home.currentState,
-          tags,
-        })
-      },
+      ...(!props.preventNavigate && {
+        preventNavigate: true,
+        onPress() {
+          omStatic.actions.home.navigate({
+            state: omStatic.state.home.currentState,
+            tags,
+          })
+        },
+      }),
     }
   }
   return props

@@ -210,6 +210,43 @@ class AuthModel {
     }
   }
 
+  async forgotPassword(username: string) {
+    if (!username) {
+      throw new Error(`no username/email`)
+    }
+    const response = await this.api('POST', '/auth/forgot-password', {
+      username,
+    })
+
+    if (response.status != 204) {
+      console.error(`Couldn't send forgotten password request`)
+      return [response.status, response.statusText] as const
+    }
+
+    return [response.status] as const
+  }
+
+  async passwordReset(token: string, password: string) {
+    if (!token) {
+      throw new Error(`no password reset token`)
+    }
+
+    if (!password) {
+      throw new Error(`no password to reset`)
+    }
+    const response = await this.api('POST', '/auth/password-reset', {
+      token,
+      password,
+    })
+
+    if (response.status != 201) {
+      console.error(`Couldn't reset password`)
+      return [response.status, response.statusText] as const
+    }
+
+    return [response.status] as const
+  }
+
   async logout() {
     console.warn('logout')
     this.isLoggedIn = false

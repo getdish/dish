@@ -109,6 +109,50 @@ const logout: AsyncAction = async (om) => {
   Toast.show('Logged out')
 }
 
+const forgotPassword: AsyncAction<{
+  usernameOrEmail: string
+}> = async (om, { usernameOrEmail }) => {
+  om.state.user.loading = true
+  try {
+    const [status] = await Auth.forgotPassword(usernameOrEmail)
+    om.state.user.loading = false
+    if (status == 204) {
+      Toast.show('Password reset request sent')
+      return true
+    } else {
+      Toast.show('Error requesting password reset', { type: 'error' })
+    }
+  } finally {
+    om.state.user.loading = false
+  }
+  return false
+}
+
+const passwordReset: AsyncAction<{
+  password: string
+  confirmation: string
+}> = async (om, { password, confirmation }) => {
+  if (password != confirmation) {
+    Toast.show("Passwords don't match")
+    return false
+  }
+  om.state.user.loading = true
+  const token = om.state.router.curPage.params.token
+  try {
+    const [status] = await Auth.passwordReset(token, password)
+    om.state.user.loading = false
+    if (status == 201) {
+      Toast.show('Password updated')
+      return true
+    } else {
+      Toast.show('Error updating password', { type: 'error' })
+    }
+  } finally {
+    om.state.user.loading = false
+  }
+  return true
+}
+
 const ensureLoggedIn: Action<void, boolean> = (om) => {
   if (om.state.user.isLoggedIn) {
     return true
@@ -167,6 +211,8 @@ export const actions = {
   register,
   login,
   logout,
+  forgotPassword,
+  passwordReset,
   checkForExistingLogin,
   ensureLoggedIn,
   updateUser,

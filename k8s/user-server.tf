@@ -40,6 +40,7 @@ resource "kubernetes_deployment" "user-server" {
         container {
           name  = "user-server"
           image = "docker.k8s.dishapp.com/dish/user-server"
+          image_pull_policy = "Always"
           env {
             name = "DISH_ENV"
             value = "production"
@@ -75,6 +76,10 @@ resource "kubernetes_deployment" "user-server" {
           env {
             name = "DO_SPACES_SECRET"
             value = var.DO_SPACES_SECRET
+          }
+          env {
+            name = "SENDGRID_API_KEY"
+            value = var.SENDGRID_API_KEY
           }
         }
       }
