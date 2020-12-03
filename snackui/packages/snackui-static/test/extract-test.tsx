@@ -8,7 +8,7 @@ import React from 'react'
 // import { ViewStyle } from 'react-native'
 import webpack from 'webpack'
 
-import { UIStaticWebpackPlugin, getStylesAtomic } from '../src'
+import { getStylesAtomic } from '../src'
 
 // @ts-ignore
 window.matchMedia = function () {}
@@ -279,7 +279,6 @@ async function extractStaticApp() {
       ],
     },
     plugins: [
-      new UIStaticWebpackPlugin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         'process.env.DEBUG': JSON.stringify(process.env.DEBUG),
