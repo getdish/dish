@@ -20,6 +20,7 @@ const rootDir = Path.join(__dirname, '..', '..')
 
 global['React'] = React
 global['__DEV__'] = false
+//@ts-ignore
 global['requestIdleCallback'] = global['requestIdleCallback'] || setTimeout
 
 // fake a browser!
