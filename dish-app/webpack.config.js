@@ -6,7 +6,6 @@ const Webpack = require('webpack')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 // const LodashPlugin = require('lodash-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
-const { UIStaticWebpackPlugin } = require('snackui-static')
 const CircularDependencyPlugin = require('circular-dependency-plugin')
 
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
