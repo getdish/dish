@@ -271,7 +271,7 @@ async function extractStaticApp() {
         {
           test: /\.css$/,
           use: [
-            { loader: 'file-loader', options: { name: 'out.[hash].css' } },
+            { loader: 'file-loader', options: { name: 'out.[fullhash].css' } },
             'extract-loader',
             'css-loader',
           ],
