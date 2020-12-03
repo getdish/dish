@@ -9159,9 +9159,7 @@ export type menu_item_min_fields = TypeData<t_menu_item_min_fields>
  * @name menu_item_mutation_response
  * @type OBJECT
  */
-export type menu_item_mutation_response = TypeData<
-  t_menu_item_mutation_response
->
+export type menu_item_mutation_response = TypeData<t_menu_item_mutation_response>
 
 /**
  * @name menu_item_select_column
@@ -9189,17 +9187,13 @@ export type menu_item_stddev_fields = TypeData<t_menu_item_stddev_fields>
  * @name menu_item_stddev_pop_fields
  * @type OBJECT
  */
-export type menu_item_stddev_pop_fields = TypeData<
-  t_menu_item_stddev_pop_fields
->
+export type menu_item_stddev_pop_fields = TypeData<t_menu_item_stddev_pop_fields>
 
 /**
  * @name menu_item_stddev_samp_fields
  * @type OBJECT
  */
-export type menu_item_stddev_samp_fields = TypeData<
-  t_menu_item_stddev_samp_fields
->
+export type menu_item_stddev_samp_fields = TypeData<t_menu_item_stddev_samp_fields>
 
 /**
  * @name menu_item_sum_fields
@@ -9263,9 +9257,7 @@ export type nhood_labels_aggregate = TypeData<t_nhood_labels_aggregate>
  * @name nhood_labels_aggregate_fields
  * @type OBJECT
  */
-export type nhood_labels_aggregate_fields = TypeData<
-  t_nhood_labels_aggregate_fields
->
+export type nhood_labels_aggregate_fields = TypeData<t_nhood_labels_aggregate_fields>
 
 /**
  * @name nhood_labels_avg_fields
@@ -9297,9 +9289,7 @@ export type nhood_labels_min_fields = TypeData<t_nhood_labels_min_fields>
  * @name nhood_labels_mutation_response
  * @type OBJECT
  */
-export type nhood_labels_mutation_response = TypeData<
-  t_nhood_labels_mutation_response
->
+export type nhood_labels_mutation_response = TypeData<t_nhood_labels_mutation_response>
 
 /**
  * @name nhood_labels_select_column
@@ -9321,17 +9311,13 @@ export type nhood_labels_stddev_fields = TypeData<t_nhood_labels_stddev_fields>
  * @name nhood_labels_stddev_pop_fields
  * @type OBJECT
  */
-export type nhood_labels_stddev_pop_fields = TypeData<
-  t_nhood_labels_stddev_pop_fields
->
+export type nhood_labels_stddev_pop_fields = TypeData<t_nhood_labels_stddev_pop_fields>
 
 /**
  * @name nhood_labels_stddev_samp_fields
  * @type OBJECT
  */
-export type nhood_labels_stddev_samp_fields = TypeData<
-  t_nhood_labels_stddev_samp_fields
->
+export type nhood_labels_stddev_samp_fields = TypeData<t_nhood_labels_stddev_samp_fields>
 
 /**
  * @name nhood_labels_sum_fields
@@ -9353,25 +9339,19 @@ export enum nhood_labels_update_column {
  * @name nhood_labels_var_pop_fields
  * @type OBJECT
  */
-export type nhood_labels_var_pop_fields = TypeData<
-  t_nhood_labels_var_pop_fields
->
+export type nhood_labels_var_pop_fields = TypeData<t_nhood_labels_var_pop_fields>
 
 /**
  * @name nhood_labels_var_samp_fields
  * @type OBJECT
  */
-export type nhood_labels_var_samp_fields = TypeData<
-  t_nhood_labels_var_samp_fields
->
+export type nhood_labels_var_samp_fields = TypeData<t_nhood_labels_var_samp_fields>
 
 /**
  * @name nhood_labels_variance_fields
  * @type OBJECT
  */
-export type nhood_labels_variance_fields = TypeData<
-  t_nhood_labels_variance_fields
->
+export type nhood_labels_variance_fields = TypeData<t_nhood_labels_variance_fields>
 
 /**
  * @name numeric
@@ -9395,9 +9375,7 @@ export type opening_hours_aggregate = TypeData<t_opening_hours_aggregate>
  * @name opening_hours_aggregate_fields
  * @type OBJECT
  */
-export type opening_hours_aggregate_fields = TypeData<
-  t_opening_hours_aggregate_fields
->
+export type opening_hours_aggregate_fields = TypeData<t_opening_hours_aggregate_fields>
 
 /**
  * @name opening_hours_constraint
@@ -9423,9 +9401,7 @@ export type opening_hours_min_fields = TypeData<t_opening_hours_min_fields>
  * @name opening_hours_mutation_response
  * @type OBJECT
  */
-export type opening_hours_mutation_response = TypeData<
-  t_opening_hours_mutation_response
->
+export type opening_hours_mutation_response = TypeData<t_opening_hours_mutation_response>
 
 /**
  * @name opening_hours_select_column
@@ -9596,9 +9572,7 @@ export type photo_xref_aggregate = TypeData<t_photo_xref_aggregate>
  * @name photo_xref_aggregate_fields
  * @type OBJECT
  */
-export type photo_xref_aggregate_fields = TypeData<
-  t_photo_xref_aggregate_fields
->
+export type photo_xref_aggregate_fields = TypeData<t_photo_xref_aggregate_fields>
 
 /**
  * @name photo_xref_constraint
@@ -9625,9 +9599,7 @@ export type photo_xref_min_fields = TypeData<t_photo_xref_min_fields>
  * @name photo_xref_mutation_response
  * @type OBJECT
  */
-export type photo_xref_mutation_response = TypeData<
-  t_photo_xref_mutation_response
->
+export type photo_xref_mutation_response = TypeData<t_photo_xref_mutation_response>
 
 /**
  * @name photo_xref_select_column
@@ -9675,9 +9647,7 @@ export type restaurant_aggregate = TypeData<t_restaurant_aggregate>
  * @name restaurant_aggregate_fields
  * @type OBJECT
  */
-export type restaurant_aggregate_fields = TypeData<
-  t_restaurant_aggregate_fields
->
+export type restaurant_aggregate_fields = TypeData<t_restaurant_aggregate_fields>
 
 /**
  * @name restaurant_avg_fields
@@ -9712,9 +9682,7 @@ export type restaurant_min_fields = TypeData<t_restaurant_min_fields>
  * @name restaurant_mutation_response
  * @type OBJECT
  */
-export type restaurant_mutation_response = TypeData<
-  t_restaurant_mutation_response
->
+export type restaurant_mutation_response = TypeData<t_restaurant_mutation_response>
 
 /**
  * @name restaurant_select_column
@@ -9764,17 +9732,13 @@ export type restaurant_stddev_fields = TypeData<t_restaurant_stddev_fields>
  * @name restaurant_stddev_pop_fields
  * @type OBJECT
  */
-export type restaurant_stddev_pop_fields = TypeData<
-  t_restaurant_stddev_pop_fields
->
+export type restaurant_stddev_pop_fields = TypeData<t_restaurant_stddev_pop_fields>
 
 /**
  * @name restaurant_stddev_samp_fields
  * @type OBJECT
  */
-export type restaurant_stddev_samp_fields = TypeData<
-  t_restaurant_stddev_samp_fields
->
+export type restaurant_stddev_samp_fields = TypeData<t_restaurant_stddev_samp_fields>
 
 /**
  * @name restaurant_sum_fields
@@ -9798,9 +9762,7 @@ export type restaurant_tag_aggregate = TypeData<t_restaurant_tag_aggregate>
  * @name restaurant_tag_aggregate_fields
  * @type OBJECT
  */
-export type restaurant_tag_aggregate_fields = TypeData<
-  t_restaurant_tag_aggregate_fields
->
+export type restaurant_tag_aggregate_fields = TypeData<t_restaurant_tag_aggregate_fields>
 
 /**
  * @name restaurant_tag_avg_fields
@@ -9833,9 +9795,7 @@ export type restaurant_tag_min_fields = TypeData<t_restaurant_tag_min_fields>
  * @name restaurant_tag_mutation_response
  * @type OBJECT
  */
-export type restaurant_tag_mutation_response = TypeData<
-  t_restaurant_tag_mutation_response
->
+export type restaurant_tag_mutation_response = TypeData<t_restaurant_tag_mutation_response>
 
 /**
  * @name restaurant_tag_select_column
@@ -9861,25 +9821,19 @@ export enum restaurant_tag_select_column {
  * @name restaurant_tag_stddev_fields
  * @type OBJECT
  */
-export type restaurant_tag_stddev_fields = TypeData<
-  t_restaurant_tag_stddev_fields
->
+export type restaurant_tag_stddev_fields = TypeData<t_restaurant_tag_stddev_fields>
 
 /**
  * @name restaurant_tag_stddev_pop_fields
  * @type OBJECT
  */
-export type restaurant_tag_stddev_pop_fields = TypeData<
-  t_restaurant_tag_stddev_pop_fields
->
+export type restaurant_tag_stddev_pop_fields = TypeData<t_restaurant_tag_stddev_pop_fields>
 
 /**
  * @name restaurant_tag_stddev_samp_fields
  * @type OBJECT
  */
-export type restaurant_tag_stddev_samp_fields = TypeData<
-  t_restaurant_tag_stddev_samp_fields
->
+export type restaurant_tag_stddev_samp_fields = TypeData<t_restaurant_tag_stddev_samp_fields>
 
 /**
  * @name restaurant_tag_sum_fields
@@ -9911,25 +9865,19 @@ export enum restaurant_tag_update_column {
  * @name restaurant_tag_var_pop_fields
  * @type OBJECT
  */
-export type restaurant_tag_var_pop_fields = TypeData<
-  t_restaurant_tag_var_pop_fields
->
+export type restaurant_tag_var_pop_fields = TypeData<t_restaurant_tag_var_pop_fields>
 
 /**
  * @name restaurant_tag_var_samp_fields
  * @type OBJECT
  */
-export type restaurant_tag_var_samp_fields = TypeData<
-  t_restaurant_tag_var_samp_fields
->
+export type restaurant_tag_var_samp_fields = TypeData<t_restaurant_tag_var_samp_fields>
 
 /**
  * @name restaurant_tag_variance_fields
  * @type OBJECT
  */
-export type restaurant_tag_variance_fields = TypeData<
-  t_restaurant_tag_variance_fields
->
+export type restaurant_tag_variance_fields = TypeData<t_restaurant_tag_variance_fields>
 
 /**
  * @name restaurant_update_column
@@ -10097,25 +10045,19 @@ export type review_tag_sentence = TypeData<t_review_tag_sentence>
  * @name review_tag_sentence_aggregate
  * @type OBJECT
  */
-export type review_tag_sentence_aggregate = TypeData<
-  t_review_tag_sentence_aggregate
->
+export type review_tag_sentence_aggregate = TypeData<t_review_tag_sentence_aggregate>
 
 /**
  * @name review_tag_sentence_aggregate_fields
  * @type OBJECT
  */
-export type review_tag_sentence_aggregate_fields = TypeData<
-  t_review_tag_sentence_aggregate_fields
->
+export type review_tag_sentence_aggregate_fields = TypeData<t_review_tag_sentence_aggregate_fields>
 
 /**
  * @name review_tag_sentence_avg_fields
  * @type OBJECT
  */
-export type review_tag_sentence_avg_fields = TypeData<
-  t_review_tag_sentence_avg_fields
->
+export type review_tag_sentence_avg_fields = TypeData<t_review_tag_sentence_avg_fields>
 
 /**
  * @name review_tag_sentence_constraint
@@ -10130,25 +10072,19 @@ export enum review_tag_sentence_constraint {
  * @name review_tag_sentence_max_fields
  * @type OBJECT
  */
-export type review_tag_sentence_max_fields = TypeData<
-  t_review_tag_sentence_max_fields
->
+export type review_tag_sentence_max_fields = TypeData<t_review_tag_sentence_max_fields>
 
 /**
  * @name review_tag_sentence_min_fields
  * @type OBJECT
  */
-export type review_tag_sentence_min_fields = TypeData<
-  t_review_tag_sentence_min_fields
->
+export type review_tag_sentence_min_fields = TypeData<t_review_tag_sentence_min_fields>
 
 /**
  * @name review_tag_sentence_mutation_response
  * @type OBJECT
  */
-export type review_tag_sentence_mutation_response = TypeData<
-  t_review_tag_sentence_mutation_response
->
+export type review_tag_sentence_mutation_response = TypeData<t_review_tag_sentence_mutation_response>
 
 /**
  * @name review_tag_sentence_select_column
@@ -10168,33 +10104,25 @@ export enum review_tag_sentence_select_column {
  * @name review_tag_sentence_stddev_fields
  * @type OBJECT
  */
-export type review_tag_sentence_stddev_fields = TypeData<
-  t_review_tag_sentence_stddev_fields
->
+export type review_tag_sentence_stddev_fields = TypeData<t_review_tag_sentence_stddev_fields>
 
 /**
  * @name review_tag_sentence_stddev_pop_fields
  * @type OBJECT
  */
-export type review_tag_sentence_stddev_pop_fields = TypeData<
-  t_review_tag_sentence_stddev_pop_fields
->
+export type review_tag_sentence_stddev_pop_fields = TypeData<t_review_tag_sentence_stddev_pop_fields>
 
 /**
  * @name review_tag_sentence_stddev_samp_fields
  * @type OBJECT
  */
-export type review_tag_sentence_stddev_samp_fields = TypeData<
-  t_review_tag_sentence_stddev_samp_fields
->
+export type review_tag_sentence_stddev_samp_fields = TypeData<t_review_tag_sentence_stddev_samp_fields>
 
 /**
  * @name review_tag_sentence_sum_fields
  * @type OBJECT
  */
-export type review_tag_sentence_sum_fields = TypeData<
-  t_review_tag_sentence_sum_fields
->
+export type review_tag_sentence_sum_fields = TypeData<t_review_tag_sentence_sum_fields>
 
 /**
  * @name review_tag_sentence_update_column
@@ -10214,25 +10142,19 @@ export enum review_tag_sentence_update_column {
  * @name review_tag_sentence_var_pop_fields
  * @type OBJECT
  */
-export type review_tag_sentence_var_pop_fields = TypeData<
-  t_review_tag_sentence_var_pop_fields
->
+export type review_tag_sentence_var_pop_fields = TypeData<t_review_tag_sentence_var_pop_fields>
 
 /**
  * @name review_tag_sentence_var_samp_fields
  * @type OBJECT
  */
-export type review_tag_sentence_var_samp_fields = TypeData<
-  t_review_tag_sentence_var_samp_fields
->
+export type review_tag_sentence_var_samp_fields = TypeData<t_review_tag_sentence_var_samp_fields>
 
 /**
  * @name review_tag_sentence_variance_fields
  * @type OBJECT
  */
-export type review_tag_sentence_variance_fields = TypeData<
-  t_review_tag_sentence_variance_fields
->
+export type review_tag_sentence_variance_fields = TypeData<t_review_tag_sentence_variance_fields>
 
 /**
  * @name review_update_column

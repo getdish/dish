@@ -345,9 +345,11 @@ const TagListItem = graphql(
     row,
     column,
     ...rest
-  }: { tagId?: string; column: number; row: number } & Partial<
-    AdminListItemProps
-  >) => {
+  }: {
+    tagId?: string
+    column: number
+    row: number
+  } & Partial<AdminListItemProps>) => {
     if (tagId) {
       const tag = queryTag(tagId)
       // be sure to get id
