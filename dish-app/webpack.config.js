@@ -4,10 +4,8 @@ const ReactRefreshWebpack4Plugin = require('@pmmmwh/react-refresh-webpack-plugin
 const path = require('path')
 const Webpack = require('webpack')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
-const LodashPlugin = require('lodash-webpack-plugin')
-// const ClosurePlugin = require('closure-webpack-plugin')
+// const LodashPlugin = require('lodash-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
-// const ReactRefreshPlugin = require('@webhotelier/webpack-fast-refresh')
 const { UIStaticWebpackPlugin } = require('snackui-static')
 const CircularDependencyPlugin = require('circular-dependency-plugin')
 
@@ -42,7 +40,7 @@ const isStaticExtracted = !process.env.NO_EXTRACT
 
 const hashFileNamePart = isProduction ? '[contenthash]' : '[hash]'
 
-console.log('webpack.config', { isProduction, TARGET })
+console.log('webpack.config', { isProduction, target })
 
 module.exports = function getWebpackConfig(
   env = {
@@ -67,7 +65,9 @@ module.exports = function getWebpackConfig(
       stats: 'normal',
       // @ts-ignore
       devtool:
-        env.mode === 'production' ? 'source-map' : 'cheap-module-sourcemap',
+        env.mode === 'production'
+          ? 'source-map'
+          : 'eval-cheap-module-source-map',
       entry: {
         main: process.env.LEGACY ? ['babel-polyfill', appEntry] : appEntry,
       },
@@ -80,11 +80,11 @@ module.exports = function getWebpackConfig(
       // webpack 4
       node: {
         global: true,
-        process: 'mock',
-        Buffer: false,
-        util: false,
-        console: false,
-        setImmediate: false,
+        // process: false,
+        // Buffer: false,
+        // util: false,
+        // console: false,
+        // setImmediate: false,
         __filename: false,
         __dirname: false,
       },
@@ -146,42 +146,8 @@ module.exports = function getWebpackConfig(
           TARGET === 'ssr' || !isProduction
             ? []
             : [
-                // new ClosurePlugin(),
                 new TerserPlugin({
                   parallel: true,
-                  sourceMap: true,
-                  // terserOptions: {
-                  //   compress: {
-                  //     passes: 2,
-                  //     arrows: true,
-                  //     collapse_vars: true,
-                  //     comparisons: true,
-                  //     computed_props: true,
-                  //     hoist_funs: true,
-                  //     hoist_props: true,
-                  //     hoist_vars: true,
-                  //     inline: true,
-                  //     loops: true,
-                  //     negate_iife: true,
-                  //     properties: true,
-                  //     reduce_funcs: true,
-                  //     reduce_vars: true,
-                  //     switches: true,
-                  //     toplevel: false,
-                  //     typeofs: true,
-                  //     booleans: true,
-                  //     if_return: true,
-                  //     sequences: true,
-                  //     unused: true,
-                  //     conditionals: true,
-                  //     dead_code: true,
-                  //     evaluate: true,
-                  //   },
-                  //   mangle: {
-                  //     safari10: true,
-                  //     properties: true,
-                  //   },
-                  // },
                 }),
                 new OptimizeCSSAssetsPlugin({}),
               ],
@@ -277,10 +243,10 @@ module.exports = function getWebpackConfig(
 
         ...((isProduction &&
           TARGET != 'ssr' && [
-            new LodashPlugin({
-              // fixes issue i had https://github.com/lodash/lodash/issues/3101
-              shorthands: true,
-            }),
+            // new LodashPlugin({
+            //   // fixes issue i had https://github.com/lodash/lodash/issues/3101
+            //   shorthands: true,
+            // }),
             new ExtractCssChunks(),
             new DedupeParentCssFromChunksWebpackPlugin({
               assetNameRegExp: /\.optimize\.css$/g, // the default is /\.css$/g
@@ -293,9 +259,13 @@ module.exports = function getWebpackConfig(
         isStaticExtracted && new UIStaticWebpackPlugin(),
 
         new Webpack.DefinePlugin({
+          process: '{}',
+          'process.env': '{}',
+          'process.env.DISABLE_CACHE': false,
           'process.env.IS_STATIC': false,
           'process.env.TARGET': JSON.stringify(TARGET || null),
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+          'process.env.IS_LIVE': JSON.stringify(process.env.IS_LIVE),
           'process.env.DEBUG': JSON.stringify(process.env.DEBUG || false),
           'process.env.DEBUG_ASSERT': JSON.stringify(
             process.env.DEBUG_ASSERT || false
@@ -335,36 +305,20 @@ module.exports = function getWebpackConfig(
         isHot &&
           new ReactRefreshWebpack4Plugin({
             overlay: false,
-            exclude: /gqless|react-refresh/,
+            exclude: /gqless|react-refresh|node_modules/,
             // include: /snackui/,
           }),
       ].filter(Boolean),
       devServer: {
-        publicPath: '/',
-        host: '0.0.0.0',
-        compress: true,
-        // watchContentBase: true,
-        // It will still show compile warnings and errors with this setting.
-        clientLogLevel: 'none',
-        contentBase: path.join(__dirname, 'web'),
         hot: isHot,
+        static: false,
+        firewall: false,
+        injectHot: true,
+        host: '0.0.0.0',
         historyApiFallback: {
           disableDotRule: true,
         },
-        disableHostCheck: true,
         overlay: false,
-        quiet: false,
-        stats: {
-          colors: true,
-          assets: true,
-          chunks: false,
-          modules: true,
-          reasons: false,
-          children: true,
-          errors: true,
-          errorDetails: true,
-          warnings: true,
-        },
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods':

@@ -4,7 +4,7 @@ import { getActiveTags } from './getActiveTags'
 import { getTagSlug } from './getTagSlug'
 import { isHomeState, isSearchState } from './home-helpers'
 import { HomeStateTagNavigable } from './home-types'
-import { tagLenses } from './localTags.json'
+import { tagLenses } from './localTags'
 import { SearchRouteParams } from './router'
 import { SPLIT_TAG, SPLIT_TAG_TYPE } from './SPLIT_TAG'
 
