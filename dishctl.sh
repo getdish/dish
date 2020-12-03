@@ -934,17 +934,27 @@ function hot_deploy() {
 
   echo "Hot deploying $1 service..."
 
-  if [[ $2 = 'with-base' ]]; then
-    build_dish_base
-  else
-    echo "Excluding base image build"
-  fi
+  echo "Building the base image first..."
+  build_dish_base
+  echo "Base image built."
 
   NAME=$DISH_REGISTRY/dish/$service_name
 
   ./dishctl.sh buildkit_build $service_path $NAME
 
   kubectl rollout restart deployment/$service_name
+}
+
+function buildkit_build_local() {
+  service_path=$1
+  service_name="${service_path##*/}"
+  echo "Building the base image first..."
+  buildkit_build_output_local . $BASE_IMAGE
+  echo "Base image built."
+  NAME=$DISH_REGISTRY/dish/$service_name
+  echo "Building $NAME..."
+  buildkit_build_output_local $service_path $NAME
+  echo "$NAME built."
 }
 
 function volume_debugger() {

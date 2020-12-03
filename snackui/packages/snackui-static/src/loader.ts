@@ -19,7 +19,7 @@ export default function GlossWebpackLoader(this: any, content) {
 
   const options: LoaderOptions = loaderUtils.getOptions(this) || {}
 
-  if (content.startsWith('// static-ui-ignore')) {
+  if (content[0] === '/' && content.startsWith('// static-ui-ignore')) {
     return content
   }
 
