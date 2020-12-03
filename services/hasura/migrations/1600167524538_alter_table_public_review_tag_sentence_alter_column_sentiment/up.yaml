@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: alter table "public"."review_tag_sentence" rename column "sentiment" to "naive_sentiment";
-  type: run_sql

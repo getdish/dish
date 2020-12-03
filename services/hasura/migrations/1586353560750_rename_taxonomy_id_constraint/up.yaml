@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE tag RENAME CONSTRAINT taxonomy_id_key1 TO tag_id_key1;
-  type: run_sql

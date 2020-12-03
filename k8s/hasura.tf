@@ -33,7 +33,7 @@ resource "kubernetes_deployment" "hasura" {
 
         container {
           name  = "hasura"
-          image = "hasura/graphql-engine:v1.2.2"
+          image = "hasura/graphql-engine:v1.3.3"
 
           env {
             name = "HASURA_GRAPHQL_DATABASE_URL"

@@ -1,7 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: |-
-      ALTER TABLE tag RENAME CONSTRAINT taxonomy_name_key TO tag_name_key;
-      ALTER TABLE tag RENAME CONSTRAINT taxonomy_order_key TO tag_order_key;
-  type: run_sql

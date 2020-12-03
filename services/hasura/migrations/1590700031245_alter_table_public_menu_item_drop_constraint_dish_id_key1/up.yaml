@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: alter table "public"."menu_item" drop constraint "dish_id_key1";
-  type: run_sql

@@ -1,3 +1,0 @@
-- args:
-    sql: ALTER TABLE "public"."restaurant" DROP COLUMN "location";
-  type: run_sql

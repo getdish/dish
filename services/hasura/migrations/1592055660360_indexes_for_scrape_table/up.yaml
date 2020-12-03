@@ -1,7 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: |-
-      create index scrape_created_at_desc on scrape (created_at desc nulls last);
-      create index scrape_source_idx on scrape (source);
-  type: run_sql

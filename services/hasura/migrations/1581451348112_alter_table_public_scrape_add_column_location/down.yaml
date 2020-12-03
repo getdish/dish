@@ -1,3 +1,0 @@
-- args:
-    sql: ALTER TABLE "public"."scrape" DROP COLUMN "location";
-  type: run_sql

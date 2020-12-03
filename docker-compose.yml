@@ -45,7 +45,7 @@ services:
     depends_on:
       - 'gorse'
   hasura:
-    image: hasura/graphql-engine:v1.2.2
+    image: hasura/graphql-engine:v1.3.3
     ports:
       - 8080:8080
     environment:

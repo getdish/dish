@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: "alter table \"public\".\"menu_item\"\n    add constraint \"dish_pkey\" \n
-      \   primary key ( \"id\" );"
-  type: run_sql

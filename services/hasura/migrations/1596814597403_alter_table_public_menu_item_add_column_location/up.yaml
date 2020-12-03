@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."menu_item" ADD COLUMN "location" geometry NULL;
-  type: run_sql

@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: CREATE INDEX restaurant_sources_index ON restaurant USING GIN (sources jsonb_path_ops);
-  type: run_sql

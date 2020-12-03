@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: INSERT INTO restaurant (id, name, location) VALUES ('00000000-0000-0000-0000-000000000000',
-      'Global Stub, Do not Delete me!', ST_MakePoint(0,0));
-  type: run_sql

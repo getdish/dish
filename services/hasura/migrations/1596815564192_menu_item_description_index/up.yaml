@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: CREATE INDEX menu_item_description_trgm_idx ON menu_item USING gin (description
-      gin_trgm_ops);
-  type: run_sql

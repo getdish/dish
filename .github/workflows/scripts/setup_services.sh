@@ -25,7 +25,7 @@ sleep 10 # Postgres needs 2 starts to get everything set up
 docker-compose down
 docker-compose up -d hasura postgres timescaledb
 
-./dishctl.sh db_migrate_local
+./dishctl.sh db_migrate_local init
 docker run --net host docker.k8s.dishapp.com/dish/base \
   bash -c 'cd services/timescaledb && DISH_ENV=not-production ./migrate.sh'
 # JWT server won't start until migrations have been applied

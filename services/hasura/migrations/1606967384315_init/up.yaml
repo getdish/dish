@@ -1,0 +1,791 @@
+- args:
+    tables:
+    - table:
+        name: hrr
+        schema: public
+    - delete_permissions:
+      - permission:
+          filter: {}
+        role: contributor
+      insert_permissions:
+      - permission:
+          check: {}
+          columns:
+          - description
+          - image
+          - name
+          - price
+          - restaurant_id
+        role: contributor
+      object_relationships:
+      - name: restaurant
+        using:
+          foreign_key_constraint_on: restaurant_id
+      select_permissions:
+      - permission:
+          columns:
+          - description
+          - id
+          - image
+          - name
+          - price
+          - restaurant_id
+          filter: {}
+        role: anon
+      - permission:
+          columns:
+          - price
+          - description
+          - image
+          - name
+          - created_at
+          - updated_at
+          - id
+          - restaurant_id
+          filter: {}
+        role: contributor
+      - permission:
+          columns:
+          - name
+          - created_at
+          - updated_at
+          - id
+          - restaurant_id
+          - image
+          - price
+          - description
+          filter: {}
+          limit: 500
+        role: user
+      table:
+        name: menu_item
+        schema: public
+      update_permissions:
+      - permission:
+          check: null
+          columns:
+          - description
+          - image
+          - name
+          - price
+          - restaurant_id
+          filter: {}
+        role: contributor
+    - table:
+        name: nhood_labels
+        schema: public
+    - object_relationships:
+      - name: restaurant
+        using:
+          foreign_key_constraint_on: restaurant_id
+      table:
+        name: opening_hours
+        schema: public
+    - table:
+        name: photo
+        schema: public
+    - object_relationships:
+      - name: photo
+        using:
+          foreign_key_constraint_on: photo_id
+      table:
+        name: photo_xref
+        schema: public
+    - array_relationships:
+      - name: menu_items
+        using:
+          foreign_key_constraint_on:
+            column: restaurant_id
+            table:
+              name: menu_item
+              schema: public
+      - name: reviews
+        using:
+          foreign_key_constraint_on:
+            column: restaurant_id
+            table:
+              name: review
+              schema: public
+      - name: tags
+        using:
+          foreign_key_constraint_on:
+            column: restaurant_id
+            table:
+              name: restaurant_tag
+              schema: public
+      computed_fields:
+      - definition:
+          function:
+            name: is_restaurant_open
+            schema: public
+        name: is_open_now
+      - comment: ""
+        definition:
+          function:
+            name: restaurant_top_tags
+            schema: public
+        name: top_tags
+      delete_permissions:
+      - permission:
+          filter: {}
+        role: contributor
+      select_permissions:
+      - permission:
+          columns:
+          - address
+          - city
+          - created_at
+          - description
+          - downvotes
+          - headlines
+          - hours
+          - id
+          - image
+          - location
+          - name
+          - photos
+          - price_range
+          - rating
+          - rating_factors
+          - score
+          - score_breakdown
+          - slug
+          - source_breakdown
+          - sources
+          - state
+          - summary
+          - tag_names
+          - telephone
+          - updated_at
+          - upvotes
+          - votes_ratio
+          - website
+          - zip
+          computed_fields:
+          - is_open_now
+          filter: {}
+        role: anon
+      - permission:
+          columns:
+          - address
+          - city
+          - created_at
+          - description
+          - downvotes
+          - headlines
+          - hours
+          - id
+          - image
+          - location
+          - name
+          - photos
+          - price_range
+          - rating
+          - rating_factors
+          - score
+          - score_breakdown
+          - slug
+          - source_breakdown
+          - sources
+          - state
+          - summary
+          - tag_names
+          - telephone
+          - updated_at
+          - upvotes
+          - votes_ratio
+          - website
+          - zip
+          computed_fields:
+          - is_open_now
+          filter: {}
+        role: contributor
+      - permission:
+          columns:
+          - address
+          - city
+          - created_at
+          - description
+          - downvotes
+          - headlines
+          - hours
+          - id
+          - image
+          - location
+          - name
+          - photos
+          - price_range
+          - rating
+          - rating_factors
+          - score
+          - score_breakdown
+          - slug
+          - source_breakdown
+          - sources
+          - state
+          - summary
+          - tag_names
+          - telephone
+          - updated_at
+          - upvotes
+          - votes_ratio
+          - website
+          - zip
+          computed_fields:
+          - is_open_now
+          filter: {}
+          limit: 100
+        role: user
+      table:
+        name: restaurant
+        schema: public
+      update_permissions:
+      - permission:
+          check: null
+          columns:
+          - address
+          - city
+          - created_at
+          - description
+          - hours
+          - id
+          - image
+          - location
+          - name
+          - photos
+          - price_range
+          - rating
+          - rating_factors
+          - slug
+          - sources
+          - state
+          - telephone
+          - updated_at
+          - website
+          - zip
+          filter: {}
+        role: contributor
+    - array_relationships:
+      - name: reviews
+        using:
+          manual_configuration:
+            column_mapping:
+              restaurant_id: restaurant_id
+              tag_id: tag_id
+            remote_table:
+              name: review
+              schema: public
+      - name: sentences
+        using:
+          manual_configuration:
+            column_mapping:
+              restaurant_id: restaurant_id
+              tag_id: tag_id
+            remote_table:
+              name: review_tag_sentence
+              schema: public
+      delete_permissions:
+      - permission:
+          filter: {}
+        role: contributor
+      insert_permissions:
+      - permission:
+          check: {}
+          columns:
+          - rating
+          - restaurant_id
+          - tag_id
+        role: contributor
+      object_relationships:
+      - name: restaurant
+        using:
+          foreign_key_constraint_on: restaurant_id
+      - name: tag
+        using:
+          foreign_key_constraint_on: tag_id
+      select_permissions:
+      - permission:
+          columns:
+          - downvotes
+          - photos
+          - rank
+          - rating
+          - restaurant_id
+          - score
+          - score_breakdown
+          - source_breakdown
+          - tag_id
+          - upvotes
+          - votes_ratio
+          filter: {}
+        role: anon
+      - permission:
+          columns:
+          - downvotes
+          - photos
+          - rank
+          - rating
+          - restaurant_id
+          - score
+          - score_breakdown
+          - source_breakdown
+          - tag_id
+          - upvotes
+          - votes_ratio
+          filter: {}
+        role: contributor
+      - permission:
+          columns:
+          - downvotes
+          - photos
+          - rank
+          - rating
+          - restaurant_id
+          - score
+          - score_breakdown
+          - source_breakdown
+          - tag_id
+          - upvotes
+          - votes_ratio
+          filter: {}
+        role: user
+      table:
+        name: restaurant_tag
+        schema: public
+      update_permissions:
+      - permission:
+          check: null
+          columns:
+          - rating
+          - restaurant_id
+          - tag_id
+          filter: {}
+        role: contributor
+    - array_relationships:
+      - name: sentiments
+        using:
+          foreign_key_constraint_on:
+            column: review_id
+            table:
+              name: review_tag_sentence
+              schema: public
+      delete_permissions:
+      - permission:
+          filter:
+            user_id:
+              _eq: X-Hasura-User-Id
+        role: contributor
+      - permission:
+          filter:
+            user_id:
+              _eq: X-Hasura-User-Id
+        role: user
+      event_triggers:
+      - definition:
+          delete:
+            columns: '*'
+          enable_manual: true
+          insert:
+            columns: '*'
+          update:
+            columns:
+            - rating
+            - username
+            - id
+            - restaurant_id
+            - tag_id
+            - user_id
+            - favorited
+        name: gorse_sync
+        retry_conf:
+          interval_sec: 10
+          num_retries: 3
+          timeout_sec: 60
+        webhook_from_env: GORSE_SYNC_HOOK
+      insert_permissions:
+      - permission:
+          check:
+            user_id:
+              _eq: X-Hasura-User-Id
+          columns:
+          - categories
+          - authored_at
+          - favorited
+          - id
+          - rating
+          - restaurant_id
+          - tag_id
+          - text
+          - updated_at
+          - user_id
+        role: contributor
+      - permission:
+          check:
+            user_id:
+              _eq: X-Hasura-User-Id
+          columns:
+          - categories
+          - authored_at
+          - favorited
+          - id
+          - rating
+          - restaurant_id
+          - tag_id
+          - text
+          - updated_at
+          - user_id
+        role: user
+      object_relationships:
+      - name: restaurant
+        using:
+          foreign_key_constraint_on: restaurant_id
+      - name: tag
+        using:
+          foreign_key_constraint_on: tag_id
+      - name: user
+        using:
+          foreign_key_constraint_on: user_id
+      select_permissions:
+      - permission:
+          allow_aggregations: true
+          columns:
+          - authored_at
+          - categories
+          - id
+          - rating
+          - restaurant_id
+          - source
+          - tag_id
+          - text
+          - type
+          - updated_at
+          - user_id
+          - username
+          filter: {}
+        role: anon
+      - permission:
+          allow_aggregations: true
+          columns:
+          - authored_at
+          - categories
+          - favorited
+          - id
+          - rating
+          - restaurant_id
+          - source
+          - tag_id
+          - text
+          - type
+          - updated_at
+          - user_id
+          - username
+          - vote
+          filter: {}
+        role: contributor
+      - permission:
+          allow_aggregations: true
+          columns:
+          - authored_at
+          - categories
+          - favorited
+          - id
+          - rating
+          - restaurant_id
+          - source
+          - tag_id
+          - text
+          - type
+          - updated_at
+          - user_id
+          - username
+          - vote
+          filter: {}
+        role: user
+      table:
+        name: review
+        schema: public
+      update_permissions:
+      - permission:
+          check: null
+          columns:
+          - categories
+          - authored_at
+          - id
+          - rating
+          - restaurant_id
+          - tag_id
+          - text
+          - updated_at
+          - user_id
+          filter:
+            user_id:
+              _eq: X-Hasura-User-Id
+        role: contributor
+      - permission:
+          check: null
+          columns:
+          - categories
+          - authored_at
+          - favorited
+          - id
+          - rating
+          - restaurant_id
+          - tag_id
+          - text
+          - updated_at
+          - user_id
+          filter:
+            user_id:
+              _eq: X-Hasura-User-Id
+        role: user
+    - object_relationships:
+      - name: review
+        using:
+          foreign_key_constraint_on: review_id
+      - name: tag
+        using:
+          foreign_key_constraint_on: tag_id
+      select_permissions:
+      - permission:
+          columns:
+          - ml_sentiment
+          - naive_sentiment
+          - sentence
+          filter: {}
+        role: anon
+      - permission:
+          columns:
+          - ml_sentiment
+          - naive_sentiment
+          - sentence
+          filter: {}
+        role: contributor
+      - permission:
+          columns:
+          - ml_sentiment
+          - naive_sentiment
+          - sentence
+          filter: {}
+        role: user
+      table:
+        name: review_tag_sentence
+        schema: public
+    - table:
+        name: setting
+        schema: public
+    - array_relationships:
+      - name: categories
+        using:
+          foreign_key_constraint_on:
+            column: tag_id
+            table:
+              name: tag_tag
+              schema: public
+      - name: restaurant_taxonomies
+        using:
+          foreign_key_constraint_on:
+            column: tag_id
+            table:
+              name: restaurant_tag
+              schema: public
+      delete_permissions:
+      - permission:
+          filter: {}
+        role: contributor
+      insert_permissions:
+      - permission:
+          check: {}
+          columns:
+          - alternates
+          - created_at
+          - default_images
+          - description
+          - displayName
+          - icon
+          - id
+          - misc
+          - name
+          - order
+          - parentId
+          - rgb
+          - type
+          - updated_at
+        role: contributor
+      object_relationships:
+      - name: parent
+        using:
+          foreign_key_constraint_on: parentId
+      select_permissions:
+      - permission:
+          columns:
+          - alternates
+          - created_at
+          - default_images
+          - description
+          - displayName
+          - icon
+          - id
+          - is_ambiguous
+          - misc
+          - name
+          - order
+          - parentId
+          - popularity
+          - rgb
+          - slug
+          - type
+          - updated_at
+          filter: {}
+        role: anon
+      - permission:
+          columns:
+          - alternates
+          - created_at
+          - default_images
+          - description
+          - displayName
+          - frequency
+          - icon
+          - id
+          - is_ambiguous
+          - misc
+          - name
+          - order
+          - parentId
+          - popularity
+          - rgb
+          - slug
+          - type
+          - updated_at
+          filter: {}
+        role: contributor
+      - permission:
+          columns:
+          - alternates
+          - created_at
+          - default_images
+          - description
+          - displayName
+          - icon
+          - id
+          - is_ambiguous
+          - misc
+          - name
+          - order
+          - parentId
+          - popularity
+          - rgb
+          - slug
+          - type
+          - updated_at
+          filter: {}
+        role: user
+      table:
+        name: tag
+        schema: public
+      update_permissions:
+      - permission:
+          check: null
+          columns:
+          - alternates
+          - created_at
+          - default_images
+          - description
+          - displayName
+          - icon
+          - id
+          - misc
+          - name
+          - order
+          - parentId
+          - rgb
+          - type
+          - updated_at
+          filter: {}
+        role: contributor
+    - insert_permissions:
+      - permission:
+          check: {}
+          columns:
+          - category_tag_id
+          - tag_id
+        role: contributor
+      object_relationships:
+      - name: category
+        using:
+          foreign_key_constraint_on: category_tag_id
+      - name: main
+        using:
+          foreign_key_constraint_on: tag_id
+      select_permissions:
+      - permission:
+          columns:
+          - category_tag_id
+          - tag_id
+          filter: {}
+        role: anon
+      - permission:
+          columns:
+          - category_tag_id
+          - tag_id
+          filter: {}
+        role: contributor
+      - permission:
+          columns:
+          - category_tag_id
+          - tag_id
+          filter: {}
+        role: user
+      table:
+        name: tag_tag
+        schema: public
+    - array_relationships:
+      - name: reviews
+        using:
+          foreign_key_constraint_on:
+            column: user_id
+            table:
+              name: review
+              schema: public
+      select_permissions:
+      - permission:
+          columns:
+          - about
+          - avatar
+          - charIndex
+          - created_at
+          - id
+          - location
+          - role
+          - updated_at
+          - username
+          filter: {}
+        role: anon
+      - permission:
+          columns:
+          - id
+          - role
+          - username
+          filter: {}
+        role: contributor
+      - permission:
+          columns:
+          - about
+          - avatar
+          - charIndex
+          - created_at
+          - has_onboarded
+          - id
+          - location
+          - role
+          - username
+          filter: {}
+        role: user
+      table:
+        name: user
+        schema: public
+    - table:
+        name: zcta5
+        schema: public
+    version: 2
+  type: replace_metadata

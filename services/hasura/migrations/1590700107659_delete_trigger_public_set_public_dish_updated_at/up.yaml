@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: DROP TRIGGER "set_public_dish_updated_at" ON "public"."menu_item";
-  type: run_sql

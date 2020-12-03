@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: alter table "public"."review" add constraint "review_user_id_restaurant_id_taxonomy_id_key"
-      unique ("user_id", "restaurant_id", "taxonomy_id");
-  type: run_sql

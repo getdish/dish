@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."user" DROP COLUMN "apple_refresh_token";
-  type: run_sql

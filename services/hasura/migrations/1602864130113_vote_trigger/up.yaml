@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: CREATE TRIGGER vote_trigger BEFORE INSERT OR UPDATE ON review FOR EACH ROW
-      EXECUTE PROCEDURE review_score_sync();
-  type: run_sql

@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: alter table "public"."photos_xref" rename to "photo_xref";
-  type: run_sql

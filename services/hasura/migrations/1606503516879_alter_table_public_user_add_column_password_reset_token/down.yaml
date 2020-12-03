@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."user" DROP COLUMN "password_reset_token";
-  type: run_sql

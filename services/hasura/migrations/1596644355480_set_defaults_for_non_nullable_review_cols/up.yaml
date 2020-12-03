@@ -1,7 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: |-
-      UPDATE review as r SET username = u.username FROM "user" as u WHERE r.user_id = u.id;
-      UPDATE review as r SET location = rst.location FROM restaurant as rst WHERE r.restaurant_id = rst.id;
-  type: run_sql

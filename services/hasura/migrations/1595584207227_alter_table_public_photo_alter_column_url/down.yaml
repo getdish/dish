@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."photo" DROP CONSTRAINT "photo_url_key";
-  type: run_sql

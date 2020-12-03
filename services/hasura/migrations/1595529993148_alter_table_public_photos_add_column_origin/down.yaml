@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."photos" DROP COLUMN "origin";
-  type: run_sql

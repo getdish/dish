@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: alter table "public"."user" rename column "apple_secret" to "apple_token";
-  type: run_sql

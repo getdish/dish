@@ -1,4 +1,0 @@
-- args:
-    name: restaurant_top_tags
-    schema: public
-  type: track_function

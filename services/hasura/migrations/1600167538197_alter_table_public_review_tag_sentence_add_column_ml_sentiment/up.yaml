@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."review_tag_sentence" ADD COLUMN "ml_sentiment" numeric
-      NULL;
-  type: run_sql

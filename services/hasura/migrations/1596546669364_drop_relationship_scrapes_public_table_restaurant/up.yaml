@@ -1,6 +1,0 @@
-- args:
-    relationship: scrapes
-    table:
-      name: restaurant
-      schema: public
-  type: drop_relationship

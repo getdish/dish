@@ -1,6 +1,0 @@
-- args:
-    relationship: reviews
-    table:
-      name: restaurant_tag
-      schema: public
-  type: drop_relationship

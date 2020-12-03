@@ -1,7 +1,0 @@
-- args:
-    name: restaurant_taxonomies
-    new_name: tags
-    table:
-      name: restaurant
-      schema: public
-  type: rename_relationship
