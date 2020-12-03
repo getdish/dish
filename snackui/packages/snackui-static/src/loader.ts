@@ -2,7 +2,6 @@ import invariant from 'invariant'
 import loaderUtils from 'loader-utils'
 
 import { extractStyles } from './ast/extractStyles'
-import { SNACK_CSS_FILE } from './constants'
 import { LoaderOptions, PluginContext } from './types'
 
 Error.stackTraceLimit = Infinity
@@ -28,8 +27,7 @@ export default function GlossWebpackLoader(this: any, content) {
     content,
     this.resourcePath,
     options,
-    pluginContext.writeCSS,
-    this.addDependency.bind(this)
+    pluginContext.writeCSS
   )
 
   if (!rv) {

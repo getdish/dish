@@ -1,7 +1,9 @@
-import { dirname } from 'path'
+import * as fs from 'fs'
 
-import { mkdirpSync, writeFileSync } from 'fs-extra'
+import { fs as memfs } from 'memfs'
+import { ufs } from 'unionfs'
 import webpack from 'webpack'
+import NodeWatchFileSystem from 'webpack/lib/node/NodeWatchFileSystem'
 
 import { SNACK_CSS_FILE } from './constants'
 import { PluginContext } from './types'
@@ -26,11 +28,16 @@ export class UIStaticWebpackPlugin implements webpack.Plugin {
   }
 
   private write = (css: string) => {
-    mkdirpSync(dirname(SNACK_CSS_FILE))
-    writeFileSync(SNACK_CSS_FILE, css)
+    memfs.writeFileSync(SNACK_CSS_FILE, css)
   }
 
   public apply(compiler: webpack.Compiler) {
+    compiler.hooks.environment.tap(this.pluginName, () => {
+      // @ts-expect-error
+      const virtualFs = ufs.use(memfs).use(fs)
+      compiler.inputFileSystem = virtualFs
+      compiler.watchFileSystem = new NodeWatchFileSystem(virtualFs)
+    })
     compiler.hooks.compilation.tap(this.pluginName, (compilation) => {
       compilation.hooks.normalModuleLoader.tap(
         this.pluginName,

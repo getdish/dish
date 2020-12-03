@@ -2,7 +2,6 @@ import React, { memo } from 'react'
 import { AbsoluteVStack, VStack } from 'snackui'
 
 import { useIsReallyNarrow } from '../hooks/useIs'
-import { omStatic } from '../state/omStatic'
 import { Logo, LogoSmall } from './Logo'
 import { logoStyles } from './logoStyles'
 import { LinkButton } from './ui/LinkButton'
