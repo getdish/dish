@@ -1,3 +1,5 @@
+import { IFs } from 'memfs'
+
 export interface CacheObject {
   [key: string]: any
 }
@@ -13,7 +15,7 @@ export interface LoaderOptions extends ExtractStylesOptions {
 }
 
 export interface PluginContext {
-  writeCSS: (css: string) => void
+  fs: IFs
 }
 
 export type StyleObject = {

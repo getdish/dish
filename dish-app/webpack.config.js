@@ -38,7 +38,7 @@ const isHot =
   target !== 'node'
 const isStaticExtracted = !process.env.NO_EXTRACT
 
-const hashFileNamePart = isProduction ? '[contenthash]' : '[hash]'
+const hashFileNamePart = isProduction ? '[contenthash]' : '[fullhash]'
 
 console.log('webpack.config', { isProduction, target })
 
@@ -64,10 +64,8 @@ module.exports = function getWebpackConfig(
         : [],
       stats: 'normal',
       // @ts-ignore
-      devtool:
-        env.mode === 'production'
-          ? 'source-map'
-          : 'eval-cheap-module-source-map',
+      devtool: env.mode === 'production' ? 'source-map' : 'cheap-source-map',
+      //'eval-cheap-module-source-map' is fast but debugging original source becomes hard
       entry: {
         main: process.env.LEGACY ? ['babel-polyfill', appEntry] : appEntry,
       },
@@ -77,14 +75,9 @@ module.exports = function getWebpackConfig(
         publicPath: '/',
         // globalObject: 'this',
       },
-      // webpack 4
       node: {
         global: true,
-        // process: false,
-        // Buffer: false,
-        // util: false,
-        // console: false,
-        // setImmediate: false,
+        // process: isProduction ? false : true,
         __filename: false,
         __dirname: false,
       },
@@ -185,7 +178,7 @@ module.exports = function getWebpackConfig(
                     loader: 'url-loader',
                     options: {
                       limit: 1000,
-                      name: `static/media/[name].${hashFileNamePart}.[ext]`,
+                      name: `static/media/[name].[hash].[ext]`,
                     },
                   },
                   {
@@ -255,12 +248,11 @@ module.exports = function getWebpackConfig(
           ]) ||
           []),
 
-        // extract static styles in production
-        isStaticExtracted && new UIStaticWebpackPlugin(),
-
         new Webpack.DefinePlugin({
-          process: '{}',
-          'process.env': '{}',
+          ...(isProduction && {
+            process: '{}',
+            'process.env': '{}',
+          }),
           'process.env.DISABLE_CACHE': false,
           'process.env.IS_STATIC': false,
           'process.env.TARGET': JSON.stringify(TARGET || null),
