@@ -1851,15 +1851,15 @@
   dependencies:
     arrify "^1.0.1"
 
-"@dish/gqless-cli@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-1.0.0.tgz#f222113b8af4a75222e45030982861b0f152d03b"
-  integrity sha512-2qOYIRXz/nidfXJVwETCGfJiyChyq+JocZ2IHGDA1hMEy4kJviaHUHhLu0+GeXfZkOxb+Mr8ApKqfeqr2SAf0A==
+"@dish/gqless-cli@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-2.0.0.tgz#ef8ba40b93baa1e40548f84ce581a2c117e22b0f"
+  integrity sha512-znka/I1G6XhbR792oH7F+fHnmNXgnVrNKPOZcqwBaZ+9GIdP7STxDTm7T3oPHUrd9HIabh1oYXY4aKgQ0x1xsw==
   dependencies:
     "@graphql-codegen/core" "^1.17.9"
     "@graphql-codegen/typescript" "^1.19.0"
     "@graphql-tools/delegate" "^7.0.7"
-    "@graphql-tools/wrap" "^7.0.2"
+    "@graphql-tools/wrap" "^7.0.4"
     commander "^6.2.0"
     cross-fetch "^3.0.6"
     graphql "^15.4.0"
@@ -1867,7 +1867,6 @@
     lodash-es "^4.17.15"
     mkdirp "^1.0.4"
     prettier "^2.2.1"
-    regenerator-runtime "^0.13.7"
 
 "@dish/gqless-logger@^0.1.1":
   version "0.1.1"
@@ -1877,24 +1876,22 @@
     prettier "^2.2.1"
     regenerator-runtime "^0.13.7"
 
-"@dish/gqless-react@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@dish/gqless-react/-/gqless-react-1.0.2.tgz#e8c6e66b6b73b3ff3d60707159553c56ff085417"
-  integrity sha512-WXjfi1Ku6GeX7B0UXLyicGD0P4nsEmmDSgCFzbtJENGR9I3eKFJ0j6U3G2IrBBBbcsL9xiwJd3qlnrYD1VwT7w==
+"@dish/gqless-react@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-react/-/gqless-react-2.0.0.tgz#d77211edcf8d78d36a4abe4968e936db4d0176ca"
+  integrity sha512-jUEO2/mcuLnnrBhdfexvESoZuW0bU/kstln2B1SSg084ZEdGm2xJojn6QdRNCLKlYlTWbO/5+loAi7gS0unMGw==
   dependencies:
     lodash "^4.17.20"
     lodash-es "^4.17.15"
-    regenerator-runtime "^0.13.7"
+    react-ssr-prepass "^1.2.1"
 
-"@dish/gqless@^2.0.4":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-2.0.4.tgz#f96b966c83082374a633161a3784ca2a1d01d6ac"
-  integrity sha512-zozTSVz2CU/bISB9b+mbskBaPDiH2qDJBKEDrz0rKDHYv84mwzI5i8AIC15j5aG9NAS8rNMDmZJROYu7AbREvQ==
+"@dish/gqless@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-3.0.0.tgz#bc4316959c0be000e99641951a3b078d04c2caf0"
+  integrity sha512-mc7u+iuUFAk3fEfDlAkgZ9LC5JBFx4lbcvkZSFoVcGXFuzuNUmGR9Z6CWV/4w9H5nVy3HKqzpUQJnNP9c9fmNQ==
   dependencies:
-    graphql "^15.4.0"
     lodash "^4.17.20"
     lodash-es "^4.17.15"
-    regenerator-runtime "^0.13.7"
 
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
@@ -2205,6 +2202,14 @@
     "@graphql-tools/utils" "^7.0.0"
     tslib "~2.0.1"
 
+"@graphql-tools/schema@^7.1.2":
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-7.1.2.tgz#5084eaef893719ad01329f77673d102e7710542e"
+  integrity sha512-GabNT51ErVHE2riDH4EQdRusUsI+nMElT8LdFHyuP53v8gwtleAj+LePQ9jif4NYUe/JQVqO8V28vPcHrA7gfQ==
+  dependencies:
+    "@graphql-tools/utils" "^7.1.2"
+    tslib "~2.0.1"
+
 "@graphql-tools/utils@^6":
   version "6.2.4"
   resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-6.2.4.tgz#38a2314d2e5e229ad4f78cca44e1199e18d55856"
@@ -2223,14 +2228,23 @@
     camel-case "4.1.1"
     tslib "~2.0.1"
 
-"@graphql-tools/wrap@^7.0.2":
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/@graphql-tools/wrap/-/wrap-7.0.2.tgz#f7ab04b8cb7db2191af3ef69dfb770e6bcad4d0c"
-  integrity sha512-+JUPbCtqIuAWTPk5cpCxOGiC6+hNCn9r+AWPdkuxDdJlrC1yGg9TOgps1LIhuScSnPeVVrk+/vwgPA/pV0aq9w==
+"@graphql-tools/utils@^7.1.2", "@graphql-tools/utils@^7.1.4":
+  version "7.1.4"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-7.1.4.tgz#5baf27e908aa56c44ed3992f4607718a37f186a0"
+  integrity sha512-4lxmstMpgHSM1ULD+1X5AcPFaizkdBubB7H9Rqr7Wh6L9bxUHBHFB3bhaFXT7FI0xE01Pt0IMsZadOIlhVTXrg==
+  dependencies:
+    "@ardatan/aggregate-error" "0.0.6"
+    camel-case "4.1.2"
+    tslib "~2.0.1"
+
+"@graphql-tools/wrap@^7.0.4":
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/wrap/-/wrap-7.0.4.tgz#436fc1a8febe23e57036ae21be0476dc8e5d9984"
+  integrity sha512-txBs0W4k3WR86aEzBYXtKdGeeUXCNdRNxjQA/95T6ywNYoM8pw2mvpoXrWOvzbeaH3zwhbHY7kwii4atrC9irg==
   dependencies:
     "@graphql-tools/delegate" "^7.0.7"
-    "@graphql-tools/schema" "^7.0.0"
-    "@graphql-tools/utils" "^7.0.0"
+    "@graphql-tools/schema" "^7.1.2"
+    "@graphql-tools/utils" "^7.1.4"
     is-promise "4.0.0"
     tslib "~2.0.1"
 
@@ -7343,6 +7357,14 @@ camel-case@4.1.1, camel-case@^4.1.1:
   dependencies:
     pascal-case "^3.1.1"
     tslib "^1.10.0"
+
+camel-case@4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/camel-case/-/camel-case-4.1.2.tgz#9728072a954f805228225a6deea6b38461e1bd5a"
+  integrity sha512-gxGWBrTT1JuMx6R+o5PTXMmUnhnVzLQ9SNutD4YqKtI6ap897t3tKECYla6gCWEkplXnlNybEkZg9GEGxKFCgw==
+  dependencies:
+    pascal-case "^3.1.2"
+    tslib "^2.0.3"
 
 camelcase-css@2.0.1:
   version "2.0.1"
@@ -15542,6 +15564,13 @@ lower-case@2.0.1, lower-case@^2.0.1:
   dependencies:
     tslib "^1.10.0"
 
+lower-case@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/lower-case/-/lower-case-2.0.2.tgz#6fa237c63dbdc4a82ca0fd882e4722dc5e634e28"
+  integrity sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==
+  dependencies:
+    tslib "^2.0.3"
+
 lowercase-keys@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/lowercase-keys/-/lowercase-keys-1.0.0.tgz#4e3366b39e7f5457e35f1324bdf6f88d0bfc7306"
@@ -16766,6 +16795,14 @@ no-case@^3.0.3:
     lower-case "^2.0.1"
     tslib "^1.10.0"
 
+no-case@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/no-case/-/no-case-3.0.4.tgz#d361fd5c9800f558551a8369fc0dcd4662b6124d"
+  integrity sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==
+  dependencies:
+    lower-case "^2.0.2"
+    tslib "^2.0.3"
+
 nocache@2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/nocache/-/nocache-2.1.0.tgz#120c9ffec43b5729b1d5de88cd71aa75a0ba491f"
@@ -17911,6 +17948,14 @@ pascal-case@3.1.1, pascal-case@^3.1.1:
   dependencies:
     no-case "^3.0.3"
     tslib "^1.10.0"
+
+pascal-case@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/pascal-case/-/pascal-case-3.1.2.tgz#b48e0ef2b98e205e7c1dae747d0b1508237660eb"
+  integrity sha512-uWlGT3YSnK9x3BQJaOdcZwrnV6hPpd8jFH1/ucpiLRPh/2zCVJKS19E4GvYHvaCcACn3foXZ0cLB9Wrx1KGe5g==
+  dependencies:
+    no-case "^3.0.4"
+    tslib "^2.0.3"
 
 pascalcase@^0.1.1:
   version "0.1.1"
@@ -22642,7 +22687,7 @@ tsdx@^0.14.1:
     tslib "^1.9.3"
     typescript "^3.7.3"
 
-tslib@1.11.2, tslib@2.0.1, tslib@2.0.3, tslib@^1.10.0, tslib@^1.11.1, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3, tslib@^2.0.0, tslib@^2.0.1, tslib@~2.0.1:
+tslib@1.11.2, tslib@2.0.1, tslib@2.0.3, tslib@^1.10.0, tslib@^1.11.1, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3, tslib@^2.0.0, tslib@^2.0.1, tslib@^2.0.3, tslib@~2.0.1:
   version "1.11.2"
   resolved "https://registry.npmjs.org/tslib/-/tslib-1.11.2.tgz#9c79d83272c9a7aaf166f73915c9667ecdde3cc9"
   integrity sha512-tTSkux6IGPnUGUd1XAZHcpu85MOkIl5zX49pO+jfsie3eP0B6pyhOlLXm3cAC6T7s+euSDDUUV+Acop5WmtkVg==

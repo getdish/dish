@@ -24,8 +24,8 @@
     "isomorphic-unfetch": "3.1.0",
     "ava": "^3.8.2",
     "lodash": "*",
-    "@dish/gqless": "^2.0.4",
-    "@dish/gqless-react": "^1.0.2",
+    "@dish/gqless": "^3.0.0",
+    "@dish/gqless-react": "^2.0.0",
     "@dish/gqless-logger": "^0.1.1"
   },
   "peerDependencies": {
@@ -35,6 +35,6 @@
     "@o/react-test-env": "*",
     "@types/node": "*",
     "ts-node": "*",
-    "@dish/gqless-cli": "^1.0.0"
+    "@dish/gqless-cli": "^2.0.0"
   }
 }

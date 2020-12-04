@@ -5,6 +5,7 @@ import './serverEnv'
 import { existsSync, readFileSync, renameSync } from 'fs'
 import Path from 'path'
 
+import { prepareReactRender } from '@dish/graph'
 import { ChunkExtractor } from '@loadable/server'
 import bodyParser from 'body-parser'
 import { matchesUA } from 'browserslist-useragent'
@@ -99,12 +100,16 @@ server.get('*', async (req, res) => {
   global['window']['om'] = overmind
 
   const app = <App overmind={overmind} />
-  const jsx = extractor.collectChunks(app)
 
-  console.log('scripts are', extractor.getScriptTags())
-
+  const { cacheSnapshot } = await prepareReactRender(app)
   // async suspense rendering
   // await ssrPrepass(app)
+
+  const jsx = extractor.collectChunks(
+    <App overmind={overmind} cacheSnapshot={cacheSnapshot} />
+  )
+
+  console.log('scripts are', extractor.getScriptTags())
 
   const appHtml = ReactDOMServer.renderToString(jsx)
 
