@@ -26,7 +26,7 @@
     "lodash": "*",
     "@dish/gqless": "^3.0.0",
     "@dish/gqless-react": "^2.0.1",
-    "@dish/gqless-logger": "^0.1.1"
+    "@dish/gqless-logger": "^0.1.2"
   },
   "peerDependencies": {
     "react": "*"

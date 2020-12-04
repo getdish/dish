@@ -1102,13 +1102,12 @@
     mkdirp "^1.0.4"
     prettier "^2.2.1"
 
-"@dish/gqless-logger@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@dish/gqless-logger/-/gqless-logger-0.1.1.tgz#f55b4fc6d844a34f4903c39b0d6d2ca313b0d570"
-  integrity sha512-rnRtK3/yQ8YE4ktMQPwJAD5c8JvWfidqRAbZtLKKZLQjgMMFZx3keXqYr1Sa6X9aayM0E+biCG1gLbHvC6OToQ==
+"@dish/gqless-logger@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-logger/-/gqless-logger-0.1.2.tgz#d85d6610ee3bd3e12a9fc21a2ea5027902e7fa36"
+  integrity sha512-vG+XKJE43KzEgd3EUj7hpjSxBEuilZgCfQOtlI/dAqOhI8cZh0qkD4ETM6Vz+E0/lFd06E+ylGA8cGGiQozNxA==
   dependencies:
     prettier "^2.2.1"
-    regenerator-runtime "^0.13.7"
 
 "@dish/gqless-react@^2.0.1":
   version "2.0.1"
