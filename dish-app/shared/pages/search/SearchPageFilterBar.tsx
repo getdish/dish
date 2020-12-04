@@ -7,7 +7,7 @@ import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
 import { useIsNarrow } from '../../hooks/useIs'
 import { getTagSlug } from '../../state/getTagSlug'
 import { HomeActiveTagsRecord } from '../../state/home-types'
-import { tagFilters } from '../../state/localTags.json'
+import { tagFilters } from '../../state/localTags'
 import { tagGroup, tagSort } from '../../state/tagMeta'
 import { FilterButton } from '../../views/FilterButton'
 

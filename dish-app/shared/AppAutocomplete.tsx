@@ -37,12 +37,8 @@ import { useIsNarrow } from './hooks/useIs'
 import { createAutocomplete } from './state/createAutocomplete'
 import { defaultLocationAutocompleteResults } from './state/defaultLocationAutocompleteResults'
 import { AutocompleteItem, LngLat, ShowAutocomplete } from './state/home-types'
-import { tagDefaultAutocomplete } from './state/localTags.json'
-import {
-  NavigableTag,
-  isNavigableTag,
-  tagsToNavigableTags,
-} from './state/NavigableTag'
+import { tagDefaultAutocomplete } from './state/localTags'
+import { NavigableTag, tagsToNavigableTags } from './state/NavigableTag'
 import { omStatic } from './state/omStatic'
 import { tagDisplayName } from './state/tagMeta'
 import { useOvermind } from './state/useOvermind'

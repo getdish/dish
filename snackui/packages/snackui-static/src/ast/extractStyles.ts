@@ -9,7 +9,7 @@ import invariant from 'invariant'
 import { TextStyle, ViewStyle } from 'react-native'
 import * as AllExports from 'snackui/node'
 
-import { CSS_FILE_NAME, SNACK_CSS_FILE } from '../constants'
+import { CSS_FILE_NAME } from '../constants'
 import { getStylesAtomic, pseudos } from '../getStylesAtomic'
 import { ClassNameToStyleObj, ExtractStylesOptions } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
@@ -70,18 +70,17 @@ const UNTOUCHED_PROPS = {
 // per-file cache of evaluated bindings
 const bindingCache: Record<string, string | null> = {}
 
-const globalCSSMap = new Map<string, { css: string; comments: Set<string> }>()
-
 export function extractStyles(
   src: string | Buffer,
   sourceFileName: string,
-  userOptions: ExtractStylesOptions,
-  writeCSS: (css: string) => void
-): {
+  userOptions: ExtractStylesOptions
+): null | {
   js: string | Buffer
+  css: string
+  cssFileName: string
   ast: t.File
   map: any // RawSourceMap from 'source-map'
-} | null {
+} {
   if (typeof src !== 'string') {
     throw new Error('`src` must be a string of javascript')
   }
@@ -103,6 +102,7 @@ export function extractStyles(
   }
 
   // Using a map for (officially supported) guaranteed insertion order
+  const cssMap = new Map<string, { css: string; commentTexts: string[] }>()
   const ast = parse(src)
 
   let didAddGlobal = false
@@ -140,7 +140,6 @@ export function extractStyles(
 
   const existingHoists = {}
   let couldntParse = false
-  let css = ''
 
   /**
    * Step 2: Statically extract from JSX < /> nodes
@@ -928,32 +927,26 @@ export function extractStyles(
         }
 
         for (const className in stylesByClassName) {
-          if (stylesByClassName[className]) {
-            const { rules } = stylesByClassName[className]
-            if (rules.length !== 1) {
-              console.log(rules)
-              throw new Error(`should only have one rule`)
+          if (cssMap.has(className)) {
+            if (comment) {
+              const val = cssMap.get(className)!
+              val.commentTexts.push(comment)
+              cssMap.set(className, val)
             }
-            didExtract = true
-            // for debugging output css
-            if (process.env.NODE_ENV === 'development') {
-              css += rules[0] + '\n'
-            }
-            // if you want granular stylesheets, can remove this globalCSSMap code
-            if (globalCSSMap.has(className)) {
-              if (process.env.NODE_ENV === 'development') {
-                globalCSSMap.get(className)!.comments.add(comment)
+          } else {
+            if (stylesByClassName[className]) {
+              const { rules } = stylesByClassName[className]
+              if (rules.length) {
+                if (rules.length > 1) {
+                  console.log(rules)
+                  throw new Error(`Shouldn't have more than one rule`)
+                }
+                didExtract = true
+                cssMap.set(className, {
+                  css: rules[0],
+                  commentTexts: [comment],
+                })
               }
-              continue
-            } else {
-              didAddGlobal = true
-              globalCSSMap.set(className, {
-                css: rules[0],
-                comments:
-                  process.env.NODE_ENV === 'development'
-                    ? new Set([comment])
-                    : new Set(),
-              })
             }
           }
         }
@@ -966,32 +959,23 @@ export function extractStyles(
     if (shouldPrintDebug) {
       console.log('END - nothing extracted!', sourceFileName, '\n', src)
     }
-    return {
-      ast,
-      js: src,
-      map: null,
-    }
+    return null
   }
 
-  const getGlobalCSS = () => {
-    return Array.from(globalCSSMap.values())
-      .map((v) => {
-        if (process.env.SNACKUI_CSS_COMMENTS) {
-          return [...v.comments].map((txt) => `${txt}\n`).join('') + v.css
-        }
-        return v.css
-      })
-      .join('\n')
-  }
+  const css = Array.from(cssMap.values())
+    .map((v) => v.commentTexts.map((txt) => `${txt}\n`).join('') + v.css)
+    .join(' ')
+  const extName = path.extname(sourceFileName)
+  const baseName = path.basename(sourceFileName, extName)
+  const cssImportFileName = `./${baseName}${CSS_FILE_NAME}`
+  const sourceDir = path.dirname(sourceFileName)
+  const cssFileName = path.join(sourceDir, cssImportFileName)
 
-  if (didAddGlobal) {
-    writeCSS(getGlobalCSS())
+  if (css !== '') {
+    ast.program.body.unshift(
+      t.importDeclaration([], t.stringLiteral(cssImportFileName))
+    )
   }
-
-  const relativePath = path.relative(sourceFileName, SNACK_CSS_FILE)
-  ast.program.body.unshift(
-    t.importDeclaration([], t.stringLiteral(relativePath))
-  )
 
   const result = generate(
     ast,
@@ -1021,6 +1005,8 @@ export function extractStyles(
 
   return {
     ast,
+    cssFileName,
+    css,
     js: result.code,
     map: result.map,
   }

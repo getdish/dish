@@ -9,6 +9,8 @@ import { IntroModal } from './IntroModal'
 import { LoginRegisterForm } from './views/LoginRegisterForm'
 import { LinkButton } from './views/ui/LinkButton'
 
+console.log('dishLogo', dishLogo)
+
 export const AppIntroLogin = memo(() => {
   const store = useStore(IntroModal)
   return (

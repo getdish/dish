@@ -2,7 +2,7 @@ import { OnInitialize, rehydrate } from 'overmind'
 
 import { OVERMIND_MUTATIONS, isWeb } from '../constants'
 import { addTagsToCache } from './allTags'
-import { tagDefaultAutocomplete, tagFilters, tagLenses } from './localTags.json'
+import { tagDefaultAutocomplete, tagFilters, tagLenses } from './localTags'
 
 const LOG_OVERMIND = process.env.NODE_ENV === 'development' || !isWeb
 

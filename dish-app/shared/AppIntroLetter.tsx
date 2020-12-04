@@ -1,4 +1,4 @@
-import { ArrowUp, Home } from '@dish/react-feather'
+import { Home } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'
 import React, { memo, useLayoutEffect } from 'react'
 import { AbsoluteVStack, Text } from 'snackui'
@@ -9,7 +9,7 @@ import { DarkModal } from './DarkModal'
 import { IntroModal } from './IntroModal'
 import { useOvermind } from './state/useOvermind'
 import { UserOnboard } from './UserOnboard'
-import { CloseButton, SmallCircleButton } from './views/ui/CloseButton'
+import { SmallCircleButton } from './views/ui/CloseButton'
 
 export const AppIntroLetter = memo(() => {
   const om = useOvermind()

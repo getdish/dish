@@ -1,7 +1,7 @@
 import { join } from 'path'
 
 import { order_by, query, resolved, startLogging } from '@dish/graph'
-import { writeJSON } from 'fs-extra'
+import { writeFile, writeJSON } from 'fs-extra'
 import { sortBy } from 'lodash'
 
 import { getFullTag } from '../shared/state/getFullTag'
@@ -11,12 +11,13 @@ main()
 
 async function main() {
   const tags = await getAllTags()
-  await writeJSON(
+  let output = ''
+  for (const key in tags) {
+    output += `const ${key} = ${JSON.stringify(tags[key], null, 2)}\n`
+  }
+  await writeFile(
     join(__dirname, '..', 'shared', 'state', 'localTags.json'),
-    tags,
-    {
-      spaces: 2,
-    }
+    output
   )
   console.log('wrote tags', tags)
 }

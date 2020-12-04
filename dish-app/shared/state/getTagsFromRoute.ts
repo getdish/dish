@@ -2,7 +2,7 @@ import { HistoryItem } from '@dish/router'
 
 import { FullTag } from './FullTag'
 import { getFullTags } from './getFullTags'
-import { tagLenses } from './localTags.json'
+import { tagLenses } from './localTags'
 import { SPLIT_TAG, SPLIT_TAG_TYPE } from './SPLIT_TAG'
 import { TagWithNameAndType } from './TagWithNameAndType'
 
