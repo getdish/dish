@@ -63,7 +63,10 @@ module.exports = function getWebpackConfig(
         : [],
       stats: 'normal',
       // @ts-ignore
-      devtool: env.mode === 'production' ? 'source-map' : 'cheap-source-map',
+      devtool:
+        env.mode === 'production'
+          ? 'source-map'
+          : 'eval-cheap-module-source-map',
       //'eval-cheap-module-source-map' is fast but debugging original source becomes hard
       entry: {
         main: process.env.LEGACY ? ['babel-polyfill', appEntry] : appEntry,
