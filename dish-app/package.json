@@ -130,6 +130,7 @@
     "dev:react": "yarn react-devtools",
     "test": "true",
     "build": "npm-run-all --parallel build:types build:output",
+    "build:docker": "cd .. && docker build -t dish/app -f dish-app/Dockerfile .",
     "build:types": "tsc",
     "build:output": "tsc -p tsconfig.build.json",
     "build:splash": "expo-splash-screen -r contain '#000000' ./assets/splash.png",
