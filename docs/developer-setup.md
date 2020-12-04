@@ -123,9 +123,6 @@ You'll need a few things set up first:
 
 Then you can use the `./dishctl.sh hot_deploy path/to/Dockerfile`
 
-Where `$service` is the name of a service in your `Riofile`. And optionally specify 'with-base'
-if you've changed anything relevant in our packages.
-
 ## Hasura
 
 ### Hasura CLI

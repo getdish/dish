@@ -26,7 +26,7 @@ const POINT_LAYER_ID = 'POINT_LAYER_ID'
 const POINT_HOVER_LAYER_ID = 'POINT_HOVER_LAYER_ID'
 
 const MARTIN_TILES_PROD = 'https://martin-tiles.dishapp.com'
-const MARTIN_TILES_STAGING = 'https://martin-tiles.staging.dishapp.com'
+const MARTIN_TILES_STAGING = 'https://martin-tiles-staging.dishapp.com'
 const MARTIN_TILES_DEV = 'http://localhost:3005'
 
 let MARTIN_TILES_HOST = MARTIN_TILES_PROD

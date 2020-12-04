@@ -127,14 +127,17 @@ function _db_migrate() {
   admin_secret=$2
   postgres_password=$3
   postgres_port=$4
+  init=$5
   pushd $PROJECT_ROOT/services/hasura
-  cat functions/*.sql | \
-    PGPASSWORD=$postgres_password psql \
-    -p $postgres_port \
-    -h localhost \
-    -U postgres \
-    -d dish \
-    --single-transaction
+  if [[ "$init" != "init" ]]; then
+    cat functions/*.sql | \
+      PGPASSWORD=$postgres_password psql \
+      -p $postgres_port \
+      -h localhost \
+      -U postgres \
+      -d dish \
+      --single-transaction
+  fi
   hasura --skip-update-check \
     migrate apply \
     --endpoint $hasura_endpoint \
@@ -170,7 +173,8 @@ function db_migrate_local() {
     http://localhost:8080 \
     password \
     postgres \
-    5432
+    5432 \
+    "$1"
 }
 
 function timescale_migrate() {
@@ -384,6 +388,13 @@ get_latest_main_backup() {
   echo $(
     s3 ls $DISH_BACKUP_BUCKET | grep 'dish-db' | tail -1 | awk '{ print $4 }'
   )
+}
+
+restore_latest_main_backup_to_local() {
+  latest_backup=$(get_latest_main_backup)
+  dump_file="/tmp/latest_dish_backup.dump"
+  s3 get "$latest_backup" "$dump_file"
+  cat "$dump_file" | PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5432 -d dish
 }
 
 get_latest_scrape_backup() {
@@ -1026,6 +1037,31 @@ function bert_sentiment() {
   text=$(urlencode "$1")
   url="https://bert.k8s.dishapp.com/?text=$text"
   curl "$url"
+}
+
+function setup_staging_droplet() {
+  apt-get update
+  curl -fsSL https://get.docker.com | sh
+  apt-get install -y docker-compose git-crypt postgresql-client tmux s3cmd
+  curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+  curl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl > nginx.tmpl
+  # rsync -avP --filter=':- .gitignore' . root@staging.dishapp.com:/app
+  cd /app
+  ./dishctl.sh dish_docker_login
+  mkdir -p ~/.dish/postgres
+  chown 1001:1001 -R ~/.dish/postgres
+  docker-compose up
+}
+
+function docker_compose_up_for_devs() {
+  extra=$1
+  services=$(
+    docker-compose config --services \
+      | grep -E -v 'base|nginx|dish-app-web|image-quality|image-proxy|bert' \
+      | tr '\r\n' ' '
+  )
+  echo "Starting the following services: $services"
+  eval $(./dishctl.sh yaml_to_env) docker-compose up "$extra" $services
 }
 
 if command -v git &> /dev/null; then

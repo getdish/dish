@@ -62,7 +62,7 @@ export const ORIGIN = (() => {
 })()
 
 export let SEARCH_DOMAIN = (() => {
-  const STAGING_SEARCH_DOMAIN = 'https://search.staging.dishapp.com'
+  const STAGING_SEARCH_DOMAIN = 'https://search-staging.dishapp.com'
   //const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
   const LIVE_SEARCH_DOMAIN = STAGING_SEARCH_DOMAIN
   const LOCAL_SEARCH_DOMAIN = `${LOCAL_ORIGIN}:10000`
@@ -82,7 +82,7 @@ export let SEARCH_DOMAIN = (() => {
 })()
 
 export const AUTH_DOMAIN = (() => {
-  const AUTH_STAGING = 'https://user-server.staging.dishapp.com'
+  const AUTH_STAGING = 'https://user-server-staging.dishapp.com'
   const LOCAL_AUTH_SERVER = `${
     LOCAL_ORIGIN === PROD_ORIGIN ? PROD_ORIGIN : LOCAL_ORIGIN + ':3000'
   }`

@@ -36,7 +36,7 @@ export function isPresent<T extends Object>(
 // entire scoring system. Any changes to it could potentially alter the scores
 // for all restaurants and rishes.
 export async function fetchBertSentiment(sentence: string) {
-  const url = `https://bert.k8s.dishapp.com/?text=${encodeURIComponent(
+  const url = `https://bert-staging.dishapp.com/?text=${encodeURIComponent(
     sentence
   )}`
   return fetch(url, {
