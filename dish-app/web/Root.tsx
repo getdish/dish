@@ -10,17 +10,18 @@ import { Shortcuts } from '../shared/Shortcuts'
 import { NotFoundPage } from '../shared/views/NotFoundPage'
 import { PrivateRoute, Route, RouteSwitch } from '../shared/views/router/Route'
 
-export function Root({
-  overmind,
-  cacheSnapshot,
-}: {
-  overmind?: any
-  cacheSnapshot?: string
-}) {
+const cacheSnapshot =
+  //@ts-expect-error
+  typeof window !== 'undefined' ? window.__CACHE_SNAPSHOT : undefined
+
+export function Root({ overmind }: { overmind?: any }) {
   if (cacheSnapshot) {
+    console.log('cacheSnapshot', cacheSnapshot)
     useHydrateCache({
       cacheSnapshot,
     })
+  } else {
+    console.log('no cache snapshot')
   }
 
   return (

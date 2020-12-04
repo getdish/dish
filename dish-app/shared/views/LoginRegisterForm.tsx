@@ -1,11 +1,10 @@
-import { Auth } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
 import { capitalize } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import {
   Controller,
   FieldError,
-  ValidationRules,
+  RegisterOptions,
   useForm,
 } from 'react-hook-form'
 import {
@@ -400,7 +399,7 @@ const ValidatedInput = ({
   ...rest
 }: InputProps & {
   control: any
-  rules?: ValidationRules
+  rules?: RegisterOptions
   errors?: FieldError | null
 }) => {
   return (

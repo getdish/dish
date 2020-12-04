@@ -36,6 +36,7 @@ export default memo(function App() {
 })
 
 const AppContent = memo(() => {
+  console.log('APP CONTENT')
   return (
     <AppRoot>
       <Suspense fallback={null}>

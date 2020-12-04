@@ -105,6 +105,8 @@ server.get('*', async (req, res) => {
   // async suspense rendering
   // await ssrPrepass(app)
 
+  console.log(108, 'CACHE SNAPSHOT', cacheSnapshot)
+
   const jsx = extractor.collectChunks(
     <App overmind={overmind} cacheSnapshot={cacheSnapshot} />
   )
@@ -148,6 +150,9 @@ server.get('*', async (req, res) => {
       out += `
       <script>
         window.__OVERMIND_MUTATIONS = ${JSON.stringify(overmind.hydrate())}
+        window.__CACHE_SNAPSHOT = "${cacheSnapshot}"
+
+        console.log("HELLO WORLD")
       </script>
       ${clientScripts.join('\n')}\n`
       continue
