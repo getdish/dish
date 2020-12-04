@@ -4,7 +4,7 @@ import { HStack, LinearGradient, Text } from 'snackui'
 
 import { bgLightHover } from '../../colors'
 import { useIsReallyNarrow } from '../../hooks/useIs'
-import { tagLenses } from '../../state/localTags.json'
+import { tagLenses } from '../../state/localTags'
 import { NavigableTag } from '../../state/NavigableTag'
 import { tagDisplayName } from '../../state/tagMeta'
 import { LinkButton } from '../../views/ui/LinkButton'

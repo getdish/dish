@@ -33,6 +33,7 @@
     "docker:logs:web": "docker logs -f dish-app",
     "docker:stop:web": "docker rm -f dish-app || true",
     "build": "ultra -r --no-pretty --concurrency 16 build",
+    "build:docker": "./dishctl.sh buildkit_build_local",
     "build:watch": "ultra -r --no-pretty --concurrency 500 watch",
     "build:monitor": "ultra --monitor",
     "build:watch:broken": "yarn tsc -b -w",
@@ -43,6 +44,7 @@
     "hasura:migrate": "(cd services/hasura && hasura migrate apply --endpoint http://localhost:8080 --admin-secret=password)",
     "hasura:admin": "(cd services/hasura && hasura console --endpoint http://localhost:8080 --admin-secret=password)",
     "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
+    "prettier:check": "prettier --check \"**/*.{ts,tsx}\"",
     "expo:check-deps": "expo-yarn-workspaces check-workspace-dependencies",
     "snackui:pull": "git subrepo pull snackui",
     "snackui:push": "git subrepo push snackui"

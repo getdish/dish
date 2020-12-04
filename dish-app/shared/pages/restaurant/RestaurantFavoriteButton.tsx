@@ -3,7 +3,7 @@ import React, { Suspense, memo } from 'react'
 
 import { useUserFavoriteQuery } from '../../hooks/useUserReview'
 import { FavoriteButton, FavoriteButtonProps } from '../../views/FavoriteButton'
-import { CircleButton } from './RestaurantCard'
+import { CircleButton } from './CircleButton'
 
 export type RestaurantFavoriteButtonProps = {
   size?: FavoriteButtonProps['size']

@@ -44,7 +44,7 @@ import {
 } from './home-types'
 import { initialHomeState } from './initialHomeState'
 import { isSearchBarTag } from './isSearchBarTag'
-import { tagLenses } from './localTags.json'
+import { tagLenses } from './localTags'
 import { NavigableTag } from './NavigableTag'
 import { reverseGeocode } from './reverseGeocode'
 import { router } from './router'
