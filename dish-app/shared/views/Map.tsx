@@ -1,6 +1,6 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 
-import { slugify } from '@dish/graph'
+import { isHasuraLive, isStaging, slugify } from '@dish/graph'
 import { fullyIdle, series } from '@o/async'
 import _, { isEqual, throttle } from 'lodash'
 import mapboxgl from 'mapbox-gl'
@@ -25,9 +25,19 @@ const CLUSTER_LABEL_LAYER_ID = 'CLUSTER_LABEL_LAYER_ID'
 const POINT_LAYER_ID = 'POINT_LAYER_ID'
 const POINT_HOVER_LAYER_ID = 'POINT_HOVER_LAYER_ID'
 
-const MARTIN_TILES_HOST = !window.location?.hostname.includes('live')
-  ? 'http://localhost:3005'
-  : 'https://martin-tiles.dishapp.com'
+const MARTIN_TILES_PROD = 'https://martin-tiles.dishapp.com'
+const MARTIN_TILES_STAGING = 'https://martin-tiles.staging.dishapp.com'
+const MARTIN_TILES_DEV = 'http://localhost:3005'
+
+let MARTIN_TILES_HOST = MARTIN_TILES_PROD
+
+if (isStaging) {
+  MARTIN_TILES_HOST = MARTIN_TILES_STAGING
+}
+
+if (isHasuraLive) {
+  MARTIN_TILES_HOST = MARTIN_TILES_DEV
+}
 
 const round = (val: number, dec = 100000) => {
   return Math.round(val * dec) / dec
