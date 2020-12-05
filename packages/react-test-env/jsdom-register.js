@@ -19,6 +19,7 @@ KEYS.forEach(function (key) {
 
 global['document'] = window.document
 global['window'] = window
+global['MessageChannel'] = require('worker_threads').MessageChannel
 window.console = global.console
 
 global['MutationObserver'] = global['window']['MutationObserver']

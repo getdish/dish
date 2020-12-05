@@ -9,6 +9,7 @@
       "dish-app",
       "packages/*",
       "services/*",
+      "snackui",
       "snackui/packages/*"
     ]
   },
