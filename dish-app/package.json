@@ -141,6 +141,7 @@
     "watch:web:ssr": "yarn build:web:ssr --watch",
     "build:web": "./etc/build_web.sh",
     "build:web:ssr": "TARGET=ssr VERBOSE=1 NODE_ENV=production webpack",
+    "build:web:ssr:watch": "LEGACY=1 TARGET=ssr VERBOSE=1 NODE_ENV=production webpack --watch",
     "build:web:ssr:development": "SSR_CLIENT=1 TARGET=ssr VERBOSE=1 NODE_ENV=development webpack",
     "build:web:client": "SSR_CLIENT=1 TARGET=web VERBOSE=1 NODE_ENV=production webpack",
     "build:web:client:legacy": "LEGACY=1 yarn build:web:client",
