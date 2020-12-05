@@ -1119,10 +1119,10 @@
     react-ssr-prepass "^1.2.1"
     regenerator-runtime "^0.13.7"
 
-"@dish/gqless@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-3.0.0.tgz#bc4316959c0be000e99641951a3b078d04c2caf0"
-  integrity sha512-mc7u+iuUFAk3fEfDlAkgZ9LC5JBFx4lbcvkZSFoVcGXFuzuNUmGR9Z6CWV/4w9H5nVy3HKqzpUQJnNP9c9fmNQ==
+"@dish/gqless@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-3.0.1.tgz#ef70f5bdf3fc5aab6dd17f321dbd92e331ffc5d0"
+  integrity sha512-uCvrAwu8fHlzbAGROyvpKJtQc4gmWMlReRLiFdO8mFc1+eWOxEQIc3Tbd1Q4JCc+RF7l+sAyBE5whIXvN3escw==
   dependencies:
     lodash "^4.17.20"
     lodash-es "^4.17.15"
