@@ -3,7 +3,13 @@ import 'mutationobserver-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-export { render, fireEvent, waitFor, screen } from '@testing-library/react'
+export {
+  render,
+  cleanup,
+  fireEvent,
+  waitFor,
+  screen,
+} from '@testing-library/react'
 export { default as TestRenderer, act } from 'react-test-renderer'
 
 global['React'] = React
