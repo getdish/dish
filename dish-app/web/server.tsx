@@ -6,6 +6,7 @@ import { existsSync, readFileSync, renameSync } from 'fs'
 import Path from 'path'
 
 import { prepareReactRender } from '@dish/graph'
+import { client } from '@dish/graph'
 import { ChunkExtractor } from '@loadable/server'
 import bodyParser from 'body-parser'
 import { matchesUA } from 'browserslist-useragent'
@@ -27,10 +28,11 @@ global['requestIdleCallback'] = global['requestIdleCallback'] || setTimeout
 // fake a browser!
 const jsdom = new JSDOM(``, {
   pretendToBeVisual: true,
-  url: 'http://dishapp.com/',
+  url: 'http://dishapp.com/mission',
   referrer: 'http://dishapp.com/',
   contentType: 'text/html',
 })
+
 // @ts-ignore
 global['window'] = jsdom.window
 global['window']['IS_SSR_RENDERING'] = true
@@ -99,9 +101,22 @@ server.get('*', async (req, res) => {
   await overmind.initialized
   global['window']['om'] = overmind
 
+  jsdom.reconfigure({
+    url: 'http://dishapp.com' + req.path,
+  })
   const app = <App overmind={overmind} />
 
-  const { cacheSnapshot } = await prepareReactRender(app)
+  delete client.cache.query
+
+  try {
+    ReactDOMServer.renderToString(app)
+  } catch (err) {}
+
+  await client.scheduler.resolving?.promise
+
+  const cacheSnapshot = JSON.stringify(client.cache)
+
+  // const { cacheSnapshot } = await prepareReactRender(app)
   // async suspense rendering
   // await ssrPrepass(app)
 

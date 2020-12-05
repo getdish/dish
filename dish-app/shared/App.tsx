@@ -20,7 +20,7 @@ import { Route } from './views/router/Route'
 
 export default memo(function App() {
   // dont run if in ssr mode
-  if (isWeb) {
+  if (isWeb && !isSSR) {
     const { auth } = require('../web/apple-sign-in')
     useEffect(() => {
       auth.init({

@@ -497,13 +497,13 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
 
   // actions per-route
   if (item.type === 'push' || item.type === 'replace') {
-    if (!isClearingCache) {
-      isClearingCache = true
-      requestIdleCallback(() => {
-        isClearingCache = false
-        // resetQueryCache({ ifAbove: 15 })
-      })
-    }
+    // if (!isClearingCache) {
+    // isClearingCache = true
+    // requestIdleCallback(() => {
+    // isClearingCache = false
+    // resetQueryCache({ ifAbove: 15 })
+    // })
+    // }
 
     switch (item.name) {
       case 'homeRegion':

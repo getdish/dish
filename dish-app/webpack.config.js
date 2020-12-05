@@ -59,6 +59,8 @@ module.exports = function getWebpackConfig(
         ? {
             react: 'react',
             'react-dom': 'react-dom',
+            overmind: 'overmind',
+            'overmind-react': 'overmind-react',
           }
         : [],
       stats: 'normal',
