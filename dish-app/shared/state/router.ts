@@ -97,6 +97,7 @@ type RouterState = {
 export const state: RouterState = {
   _update: 0,
   curPage: derived<RouterState, OmState, HistoryItem>((state) => {
+    console.log('deriving curpage', router.curPage)
     state._update
     return router.curPage
   }),

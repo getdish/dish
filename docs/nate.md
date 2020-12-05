@@ -1,3 +1,26 @@
+- feed endpoint:
+
+```
+curl 'https://search.dishapp.com/feed?region=mission&limit=1' | jq
+{
+  "trending": [
+    {
+      "id": "374d1ba7-5e74-4c87-9499-a94a7a215610",
+      "slug": "khamsa",
+      "count": 4
+    }
+  ],
+  "newest": [
+    {
+      "id": "fd82745e-f257-45ae-a897-ed35e3df4208",
+      "slug": "base-camp",
+      "oldest_review_date": "2020-05-15T00:00:00+00:00"
+    }
+  ],
+  "total_restaurants_in_region": 516
+}
+```
+
 - collect top lists
   - vietnamese: pho, banh xeo, banh mi
   - mexican: taco, guacamole, salsa
@@ -10,8 +33,8 @@
 - url piece for selected dish on restaurant page / restaurantreview page
 - gqless memory reduction
   - 3GB
-    - SLUG=momo-masalas ../../dishctl.sh local_node_with_prod_env _/self/sandbox.js
-    -  SLUG=coqueta ./dishctl.sh local_node_with_prod_env services/crawlers/_/self/sandbox.js
+    - SLUG=momo-masalas ../../dishctl.sh local*node_with_prod_env */self/sandbox.js
+    - SLUG=coqueta ./dishctl.sh local*node_with_prod_env services/crawlers/*/self/sandbox.js
 - scrolling horizontal / vertical fixes
 - touch mobile web app runthrough fix scrolling issues
 - search changing filters shows old results / sometimes gets stuck
@@ -32,6 +55,7 @@
 ---
 
 - the long run, a wikiatlas of our world:
+
   - there exists no community map of the world
     - what happened to the atlas?
     - aggregation theory - theres no great aggregator of real world things - netflix for shows (originally), airbnb (places), craigslist (market), but for restaurants its just lots of individual sources like yelp, etc.
@@ -48,10 +72,9 @@
     - want to invest in communities and have local champions, invest in local popups
   - by breaking down things by the factors that matter, not just a single 5 star ratings, we want to foster the japanese style in a sense - do "one thing well" - or the portland style of embracing quirkyness - let restaurants and shops avoid tyranny of the majority and specialize without negative effects
 
-
 - blog post: A new world (of AI): personality in our online apps.
   - make the point that todays apps are very generic: designed to please everyone
-  - Hitchhikers guide to the galaxy was prescient: AI can bring us *personality*
+  - Hitchhikers guide to the galaxy was prescient: AI can bring us _personality_
   - the biggest breakthrough (gpt3) is great at sarcasm, wit, humor
   - apps of the future will feel much more fun, personal, and human-like because of this
   - the biggest effect will be we'll look back and think the old internet was much more boring - wheres the fun?
