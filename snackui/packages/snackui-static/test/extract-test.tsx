@@ -81,7 +81,7 @@ test('converts a style object to class names', async (t) => {
   t.assert(!!style2)
   t.assert(!!style3)
   t.assert(
-    styles.find((x) => x.property === 'borderBottomStyle').value === 'solid'
+    styles.find((x) => x.property === 'borderBottomStyle')?.value === 'solid'
   )
   t.deepEqual(style1!.rules, [
     '.r-backgroundColor-1g6456j{background-color:rgba(255,0,0,1.00);}',
