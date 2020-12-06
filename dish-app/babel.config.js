@@ -9,6 +9,9 @@ module.exports = function (api) {
 
   return {
     presets: ['module:metro-react-native-babel-preset'],
-    plugins: ['transform-inline-environment-variables'],
+    plugins: [
+      '@snackui/babel-plugin',
+      'transform-inline-environment-variables',
+    ],
   }
 }

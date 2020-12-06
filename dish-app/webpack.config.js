@@ -159,7 +159,7 @@ module.exports = function getWebpackConfig(
                     loader: 'babel-loader',
                   },
                   isStaticExtracted && {
-                    loader: require.resolve('snackui-static/loader'),
+                    loader: require.resolve('@snackui/static/loader'),
                     options: {
                       evaluateImportsWhitelist: ['constants.js', 'colors.js'],
                     },
