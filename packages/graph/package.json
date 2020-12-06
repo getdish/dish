@@ -24,7 +24,7 @@
     "isomorphic-unfetch": "3.1.0",
     "ava": "^3.8.2",
     "lodash": "*",
-    "@dish/gqless": "^3.0.1",
+    "@dish/gqless": "^3.0.2",
     "@dish/gqless-react": "^2.0.2",
     "@dish/gqless-logger": "^0.1.2"
   },

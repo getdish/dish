@@ -1,6 +1,6 @@
 import { createReactClient } from '@dish/gqless-react'
 
-import { client } from './graphql/new-generated'
+import { GeneratedSchema, client } from './graphql/new-generated'
 
 export const {
   graphql,
@@ -12,6 +12,6 @@ export const {
   useRefetch,
   prepareReactRender,
   useHydrateCache,
-} = createReactClient(client, {
+} = createReactClient<GeneratedSchema>(client, {
   defaultSuspense: true,
 })

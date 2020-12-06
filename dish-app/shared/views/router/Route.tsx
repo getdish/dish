@@ -104,16 +104,16 @@ export function Route(props: { name: string; exact?: boolean; children: any }) {
   const isParentMatching = childRouteNames.some((x) => x === activeName)
   const isMatched = !!(isParentMatching || isExactMatching)
 
-  console.log(
-    9393,
-    om.state.router,
-    om.state.router.curPage.name,
-    typeof activeName,
-    isExactMatching,
-    isParentMatching,
-    routePath,
-    props
-  )
+  // console.log(
+  //   9393,
+  //   om.state.router,
+  //   om.state.router.curPage.name,
+  //   typeof activeName,
+  //   isExactMatching,
+  //   isParentMatching,
+  //   routePath,
+  //   props
+  // )
 
   useLayoutEffect(() => {
     return routeContext?.onChangeState((state) => {

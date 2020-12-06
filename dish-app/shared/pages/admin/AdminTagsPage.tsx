@@ -5,10 +5,13 @@ import {
   graphql,
   order_by,
   query,
+  tag,
   tagDelete,
   tagUpsert,
+  useMutation,
   useRefetch,
 } from '@dish/graph'
+import { client } from '@dish/graph/src/graphql/new-generated'
 import { Store, useStore, useStoreSelector } from '@dish/use-store'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
@@ -263,7 +266,8 @@ const TagListContent = memo(
       })
       const tagStore = useStore(AdminTagStore)
 
-      const allResults = column === 0 ? [allTagsTag, ...results] : results
+      const allResults =
+        column === 0 ? [allTagsTag as tag, ...results] : results
 
       // refetch on every re-render so we dont have stale reads from gqless
       useEffect(() => {
@@ -309,6 +313,7 @@ const TagListContent = memo(
                 id: tag.id,
                 type: tag.type as TagType,
                 name: tag.name ?? '',
+                description: tag.description,
               }
               return (
                 <TagListItem
@@ -442,12 +447,14 @@ const TagEdit = memo(
     const tagStore = useStore(AdminTagStore)
     const refetchTm = useRef(null)
 
+    const [mutate] = useMutation<tag>()
     const refetch = useRefetch()
     if (tagStore.selectedId) {
       const tag = queryTag(tagStore.selectedId)
       const fullTag = {
         id: tagStore.selectedId,
         name: tag.name,
+        description: tag.description,
         type: tag.type,
         parentId: tag.parentId,
         icon: tag.icon,
@@ -459,13 +466,37 @@ const TagEdit = memo(
           key={tagStore.selectedId}
           tag={fullTag}
           onChange={async (x) => {
-            await tagUpsert([
-              {
-                ...fullTag,
-                ...x,
-              },
-            ])
-            refetch(tag).catch(console.error)
+            console.log(470, fullTag, x)
+            mutate((mutation) => {
+              const tag = mutation.update_tag_by_pk({
+                pk_columns: {
+                  id: tagStore.selectedId,
+                },
+                _set: x,
+              })
+
+              tag.id
+              tag.name
+              tag.description
+              tag.type
+              tag.parentId
+              tag.icon
+              tag.alternates()
+              tag.rgb()
+
+              return tag
+            }).then((data) => {
+              console.log(487, client.cache)
+              client.setCache(tag, data)
+              console.log('OPTIMISTIC UPDATE', data, client.cache)
+            })
+            // await tagUpsert([
+            //   {
+            //     ...fullTag,
+            //     ...x,
+            //   },
+            // ])
+            // refetch(tag).catch(console.error)
             Toast.show('Saved')
           }}
         />
@@ -678,7 +709,10 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
         <TextInput
           style={styles.textInput}
           onChange={(e) => onChange?.({ description: e.target['value'] })}
-          defaultValue={tag.description ?? ''}
+          defaultValue={(() => {
+            console.log('tag', tag.name, tag.description)
+            return tag.description ?? ''
+          })()}
         />
         {!!info.length && (
           <ScrollView style={{ marginTop: 20, maxHeight: 300 }}>
