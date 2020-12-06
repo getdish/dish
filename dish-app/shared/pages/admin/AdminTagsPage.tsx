@@ -8,13 +8,12 @@ import {
   tag,
   tagDelete,
   tagUpsert,
-  useMutation,
   useRefetch,
 } from '@dish/graph'
-import { client } from '@dish/graph/src/graphql/new-generated'
+import { mutate, setCache } from '@dish/graph'
 import { Store, useStore, useStoreSelector } from '@dish/use-store'
 import { capitalize } from 'lodash'
-import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
+import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
 import {
   HStack,
@@ -24,7 +23,6 @@ import {
   VStack,
   useDebounce,
   useDebounceValue,
-  useForceUpdate,
 } from 'snackui'
 
 import { emojiRegex } from '../../helpers/emojiRegex'
@@ -445,10 +443,7 @@ const queryTag = (id: string) => {
 const TagEdit = memo(
   graphql<any>(() => {
     const tagStore = useStore(AdminTagStore)
-    const refetchTm = useRef(null)
 
-    const [mutate] = useMutation<tag>()
-    const refetch = useRefetch()
     if (tagStore.selectedId) {
       const tag = queryTag(tagStore.selectedId)
       const fullTag = {
@@ -466,37 +461,23 @@ const TagEdit = memo(
           key={tagStore.selectedId}
           tag={fullTag}
           onChange={async (x) => {
-            console.log(470, fullTag, x)
-            mutate((mutation) => {
-              const tag = mutation.update_tag_by_pk({
-                pk_columns: {
-                  id: tagStore.selectedId,
-                },
-                _set: x,
-              })
+            const tagMutation = await mutate(
+              (mutation, { assignSelections }) => {
+                const tagMutation = mutation.update_tag_by_pk({
+                  pk_columns: {
+                    id: tagStore.selectedId,
+                  },
+                  _set: x,
+                })
 
-              tag.id
-              tag.name
-              tag.description
-              tag.type
-              tag.parentId
-              tag.icon
-              tag.alternates()
-              tag.rgb()
+                assignSelections(tag, tagMutation)
 
-              return tag
-            }).then((data) => {
-              console.log(487, client.cache)
-              client.setCache(tag, data)
-              console.log('OPTIMISTIC UPDATE', data, client.cache)
-            })
-            // await tagUpsert([
-            //   {
-            //     ...fullTag,
-            //     ...x,
-            //   },
-            // ])
-            // refetch(tag).catch(console.error)
+                return tagMutation
+              }
+            )
+
+            setCache(tag, tagMutation)
+
             Toast.show('Saved')
           }}
         />
@@ -671,6 +652,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
 
       <TableRow label="Icon">
         <TextInput
+          key={tag.icon}
           style={styles.textInput}
           onChange={(e) => onChange?.({ icon: e.target['value'] })}
           defaultValue={tag.icon ?? ''}
@@ -709,10 +691,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
         <TextInput
           style={styles.textInput}
           onChange={(e) => onChange?.({ description: e.target['value'] })}
-          defaultValue={(() => {
-            console.log('tag', tag.name, tag.description)
-            return tag.description ?? ''
-          })()}
+          defaultValue={tag.description ?? ''}
         />
         {!!info.length && (
           <ScrollView style={{ marginTop: 20, maxHeight: 300 }}>

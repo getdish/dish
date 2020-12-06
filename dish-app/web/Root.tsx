@@ -10,6 +10,10 @@ import { Shortcuts } from '../shared/Shortcuts'
 import { NotFoundPage } from '../shared/views/NotFoundPage'
 import { PrivateRoute, Route, RouteSwitch } from '../shared/views/router/Route'
 
+if (typeof window !== 'undefined') {
+  window['requestIdleCallback'] = window['requestIdleCallback'] || setTimeout
+}
+
 const cacheSnapshot =
   //@ts-expect-error
   typeof window !== 'undefined' ? window.__CACHE_SNAPSHOT : undefined

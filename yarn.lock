@@ -1102,32 +1102,32 @@
     mkdirp "^1.0.4"
     prettier "^2.2.1"
 
-"@dish/gqless-logger@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@dish/gqless-logger/-/gqless-logger-0.1.2.tgz#d85d6610ee3bd3e12a9fc21a2ea5027902e7fa36"
-  integrity sha512-vG+XKJE43KzEgd3EUj7hpjSxBEuilZgCfQOtlI/dAqOhI8cZh0qkD4ETM6Vz+E0/lFd06E+ylGA8cGGiQozNxA==
+"@dish/gqless-logger@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-logger/-/gqless-logger-0.1.3.tgz#b3bf78546da2c1f5805b6bfbcd42b804bc1ce6f3"
+  integrity sha512-P1ia0CnKeMEDVW2rx19Cla2CPdnpSh8rvULeudzJ8jzgXBRffFzoJWTlmbhFAlSXr3KENjEqiViQbmugu18d2A==
   dependencies:
     prettier "^2.2.1"
 
-"@dish/gqless-react@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@dish/gqless-react/-/gqless-react-2.0.2.tgz#781cafd6ff69428e3314fb77d58b6d70adaffbfc"
-  integrity sha512-fBmcVnu3OxJ8A5ouAZejzHuZYLyUMClBfu2NgH6l3dX8N6ouVWSbPvhBiOQjbXJEqC+wb+fbK4oQdzwRP7ADMQ==
+"@dish/gqless-react@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-react/-/gqless-react-2.0.3.tgz#d77e63bb58e05b244b9af17f208650c444604866"
+  integrity sha512-pSkqC7lJaGr57roYAoRjLdBOKyXMIoeW23FmKLaUcoflIroDLcyMXnQKf3F0iDQpbM581INLalyPUwp/iAVD9g==
   dependencies:
-    "@dish/react-ssr-prepass" "^1.3.0"
+    "@dish/react-ssr-prepass" "^1.3.1"
 
-"@dish/gqless@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-3.0.2.tgz#7827a29c7c616877c87c122d1f28cc5bef90d6bf"
-  integrity sha512-4XcilGeUzLqxyiOczv2ZwNsNAExayXFnsatvQDwfe0zFgx3FKA4hBWhscGphZHJFmTrxA/ODQu0XI8/Mot6paA==
+"@dish/gqless@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@dish/gqless/-/gqless-3.0.3.tgz#da5e70a488d27df336fd2c0f5bcc8b349c8b0697"
+  integrity sha512-rwTLhsNwEwf3lq6YRbHWSCzvAgk/u0WH8piO9BtqX38PXPHr27HMhAPUjhV9gyAyqTcZaVYWzAYsMitIFxisjQ==
   dependencies:
     lodash "^4.17.20"
     lodash-es "^4.17.15"
 
-"@dish/react-ssr-prepass@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@dish/react-ssr-prepass/-/react-ssr-prepass-1.3.0.tgz#fbf50c494af23a3b5289c050a73561901f9c7fe1"
-  integrity sha512-BFYZBB4CWjSbuNMZNzE0V9505mEUwe0NtmaPMwaPTnLMIXWy9xdb0mIK1Eqv46KtpDvqquqLQMDioGPMW8Sv8g==
+"@dish/react-ssr-prepass@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@dish/react-ssr-prepass/-/react-ssr-prepass-1.3.1.tgz#d471587c138bd85813a9c4452c33ddc001ae532b"
+  integrity sha512-UWQ+9mXY/iMAL9D72QtHBFGZBzgYRB55hk4dbbO+v5Hnbw0d1Kc3nTw2Ab8Zr1WyNelQ0BIe4ywcQuE/OzI4Hg==
 
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"

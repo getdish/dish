@@ -11775,4 +11775,12 @@ export const client = createClient<GeneratedSchema>({
   catchSelectionsTimeMS: 10,
 })
 
-export const { query, mutation, subscription, resolved, refetch } = client
+export const {
+  query,
+  mutation,
+  subscription,
+  resolved,
+  refetch,
+  mutate,
+  setCache,
+} = client
