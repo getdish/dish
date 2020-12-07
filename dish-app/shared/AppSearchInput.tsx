@@ -177,7 +177,6 @@ export const AppSearchInput = memo(() => {
         alignItems="center"
         borderRadius={100}
         borderWidth={0.5}
-        backgroundColor="red"
         borderColor="transparent"
         flex={1}
         maxWidth="100%"
