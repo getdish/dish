@@ -162,7 +162,7 @@ module.exports = function getWebpackConfig(
               {
                 test: /\.css$/i,
                 use:
-                  TARGET !== 'ssr'
+                  isProduction && TARGET !== 'ssr'
                     ? [
                         {
                           loader: ExtractCssChunks.loader,
