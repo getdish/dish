@@ -114,14 +114,13 @@ module.exports = function getWebpackConfig(
             ? {
                 chunks: 'async',
                 minSize: 20000,
-                maxSize: 0,
                 minChunks: 1,
-                maxAsyncRequests: 30,
-                maxInitialRequests: 30,
+                maxAsyncRequests: 20,
+                maxInitialRequests: 10,
                 automaticNameDelimiter: '~',
                 cacheGroups: {
                   default: {
-                    minChunks: 2,
+                    minChunks: 1,
                     priority: -20,
                     reuseExistingChunk: true,
                   },
@@ -171,8 +170,16 @@ module.exports = function getWebpackConfig(
               {
                 test: /\.css$/i,
                 use:
-                  isProduction && TARGET !== 'ssr'
-                    ? [ExtractCssChunks.loader, 'css-loader']
+                  TARGET !== 'ssr'
+                    ? [
+                        {
+                          loader: ExtractCssChunks.loader,
+                          options: {
+                            hmr: isHot,
+                          },
+                        },
+                        'css-loader',
+                      ]
                     : ['style-loader', 'css-loader'],
               },
               {
@@ -244,7 +251,10 @@ module.exports = function getWebpackConfig(
             //   // fixes issue i had https://github.com/lodash/lodash/issues/3101
             //   shorthands: true,
             // }),
-            new ExtractCssChunks(),
+            new ExtractCssChunks({
+              esModule: true,
+              ignoreOrder: false,
+            }),
             new DedupeParentCssFromChunksWebpackPlugin({
               assetNameRegExp: /\.optimize\.css$/g, // the default is /\.css$/g
               canPrint: true, // the default is true
