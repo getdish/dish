@@ -1,3 +1,4 @@
+// debug
 import { Loader, Search, X } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'
 import { fullyIdle, idle, series } from '@o/async'
@@ -176,6 +177,7 @@ export const AppSearchInput = memo(() => {
         alignItems="center"
         borderRadius={100}
         borderWidth={0.5}
+        backgroundColor="red"
         borderColor="transparent"
         flex={1}
         maxWidth="100%"
@@ -293,7 +295,7 @@ export const AppSearchInput = memo(() => {
 
         <SearchCancelButton />
 
-        <Spacer direction="horizontal" size={8} />
+        <Spacer size={8} />
       </HStack>
     </AppAutocompleteHoverableInput>
   )
