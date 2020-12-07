@@ -47,7 +47,10 @@ import { ratingToRatio } from './ratingToRatio'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours, priceRange } from './RestaurantDetailRow'
-import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
+import {
+  RestaurantFavoriteButton,
+  RestaurantFavoriteStar,
+} from './RestaurantFavoriteButton'
 import { RestaurantSourcesBreakdownRow } from './RestaurantSourcesBreakdownRow'
 import { useTotalReviews } from './useTotalReviews'
 
@@ -415,7 +418,7 @@ const RestaurantListItemContent = memo(
                   <Spacer />
 
                   <Suspense fallback={<Spacer size={44} />}>
-                    <RestaurantFavoriteButton
+                    <RestaurantFavoriteStar
                       size="md"
                       restaurantId={restaurantId}
                     />
@@ -588,15 +591,8 @@ const RestaurantPeekDishes = memo(
         alignItems="center"
         marginVertical={-40}
         height={dishSize + 80}
-        // spacing={size == 'lg' ? 18 : 6}
         width={dishSize * 5}
       >
-        {/* <AbsoluteVStack top={1} left={20}>
-          <TableHeadText color="#555">
-            {dishSearchedTag ? 'Dishes' : 'Best Dishes'}
-          </TableHeadText>
-        </AbsoluteVStack> */}
-
         {!!dishes[0]?.name &&
           dishes.map((dish, i) => {
             const isEven = i % 2 === 0
@@ -616,6 +612,7 @@ const RestaurantPeekDishes = memo(
                 marginRight={-15}
                 marginTop={isEven ? 0 : -15}
                 showSearchButton
+                // zIndex={100 - i}
               />
             )
           })}

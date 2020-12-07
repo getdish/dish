@@ -100,7 +100,6 @@ module.exports = function getWebpackConfig(
         concatenateModules: isProduction && !process.env.ANALYZE_BUNDLE,
         usedExports: isProduction,
         removeEmptyChunks: isProduction,
-        // mergeDuplicateChunks: true,
         splitChunks:
           isProduction && TARGET != 'ssr' && !process.env.NO_MINIFY
             ? {
@@ -368,11 +367,11 @@ module.exports = function getWebpackConfig(
   }
 
   function getFinalConfig() {
-    if (TARGET === 'ssr' || TARGET === 'worker') {
+    if (TARGET === 'worker') {
       return getConfig()
     }
 
-    if (process.env.LEGACY) {
+    if (TARGET === 'ssr' || process.env.LEGACY) {
       const config = getConfig()
       return {
         ...config,

@@ -319,15 +319,15 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     const titleLen = (title + subTitle).length
     const titleScale =
       titleLen > 80
-        ? 0.6
-        : titleLen > 70
         ? 0.7
+        : titleLen > 70
+        ? 0.75
         : titleLen > 60
         ? 0.8
         : titleLen > 50
         ? 0.9
         : 1
-    const titleFontSize = 26 * titleScale * (isSmall ? 0.75 : 1)
+    const titleFontSize = 26 * titleScale * (isSmall ? 0.75 : 1.2)
     const lenseColor = useCurrentLenseColor()
     const scrollRef = useRef<ScrollView>()
 
@@ -400,7 +400,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             <SearchPageResultsInfoBox state={curProps.item} />
           </Suspense>
 
-          <HStack>
+          <HStack alignItems="center" justifyContent="center" spacing>
             {getActiveTags(curProps.item).map((tag) => {
               return (
                 <TagButton

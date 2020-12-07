@@ -289,6 +289,7 @@ const DishViewContent = (props: DishViewProps) => {
       borderWidth={1}
       size={size}
       {...rest}
+      // zIndex={isHovered ? 10000000 : rest.zIndex}
     >
       {contents}
     </ColoredCircle>
