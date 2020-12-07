@@ -4,11 +4,9 @@ const ReactRefreshWebpack4Plugin = require('@pmmmwh/react-refresh-webpack-plugin
 const path = require('path')
 const Webpack = require('webpack')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
-// const LodashPlugin = require('lodash-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const CircularDependencyPlugin = require('circular-dependency-plugin')
 
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin')
 const DedupeParentCssFromChunksWebpackPlugin = require('dedupe-parent-css-from-chunks-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
@@ -27,7 +25,7 @@ const target =
 const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
 
 const isProduction = process.env.NODE_ENV === 'production'
-// const isClient = TARGET === 'client'
+const isDevelopment = process.env.NODE_ENV === 'development'
 const isSSR = TARGET === 'ssr'
 const isHot =
   !isProduction &&
@@ -64,12 +62,7 @@ module.exports = function getWebpackConfig(
           }
         : [],
       stats: 'normal',
-      // @ts-ignore
-      devtool:
-        env.mode === 'production'
-          ? 'source-map'
-          : 'eval-cheap-module-source-map',
-      //'eval-cheap-module-source-map' is fast but debugging original source becomes hard
+      devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
       entry: {
         main: process.env.LEGACY ? ['babel-polyfill', appEntry] : appEntry,
       },
@@ -77,11 +70,10 @@ module.exports = function getWebpackConfig(
         path: path.resolve(__dirname),
         filename: `static/js/app.${hashFileNamePart}.js`,
         publicPath: '/',
-        // globalObject: 'this',
+        pathinfo: !!(isDevelopment || process.env.DEBUG_PATHS),
       },
       node: {
         global: true,
-        // process: isProduction ? false : true,
         __filename: false,
         __dirname: false,
       },
@@ -264,8 +256,8 @@ module.exports = function getWebpackConfig(
 
         new Webpack.DefinePlugin({
           ...(isProduction && {
-            process: '{}',
-            'process.env': '{}',
+            process: '({})',
+            'process.env': '({})',
           }),
           'process.env.DISABLE_CACHE': false,
           'process.env.IS_STATIC': false,
