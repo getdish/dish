@@ -4,9 +4,7 @@ import anyTest, { TestInterface } from 'ava'
 
 import {
   Auth,
-  Restaurant,
   Tag,
-  User,
   flushTestData,
   restaurantFindOne,
   restaurantFindOneWithTags,
@@ -18,12 +16,13 @@ import {
   userFavoriteARestaurant,
   userFavorites,
 } from '../src'
+import { restaurant, user } from '../src/graphql/new-generated'
 import { restaurant_fixture } from './etc/fixtures'
 
 interface Context {
-  restaurant: Restaurant
+  restaurant: restaurant
   existing_tag: Tag
-  user: User
+  user: user
 }
 
 const test = anyTest as TestInterface<Context>
@@ -31,7 +30,7 @@ const test = anyTest as TestInterface<Context>
 test.beforeEach(async (t) => {
   await flushTestData()
   const [restaurant] = await restaurantUpsert([restaurant_fixture])
-  t.context.restaurant = restaurant
+  t.context.restaurant = restaurant as any
   const [existing_tag] = await tagInsert([{ name: 'Test tag existing' }])
   t.context.existing_tag = existing_tag
   await Auth.register('test', 'test@test.com', 'password')
@@ -75,7 +74,7 @@ test('Voting triggers restaurant score change', async (t) => {
     },
   ])
   const restaurant = await restaurantFindOne({ id: t.context.restaurant.id })
-  t.deepEqual(restaurant.score, 1)
+  t.deepEqual(restaurant?.score, 1)
 })
 
 test('Voting triggers restaurant_tag score change', async (t) => {
@@ -96,7 +95,7 @@ test('Voting triggers restaurant_tag score change', async (t) => {
   const restaurant = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
   })
-  const rtag = restaurant.tags[0]
+  const rtag = restaurant?.tags[0]
   t.deepEqual(rtag.score, 11)
 })
 

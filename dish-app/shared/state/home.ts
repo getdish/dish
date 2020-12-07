@@ -2,7 +2,6 @@ import {
   RestaurantOnlyIds,
   RestaurantSearchArgs,
   Tag,
-  resetQueryCache,
   search,
   slugify,
 } from '@dish/graph'
@@ -130,6 +129,7 @@ export const state: HomeState = {
     const curState = state.states[state.stateIndex]
     return getActiveTags(curState).filter(isSearchBarTag)
   }),
+  //@ts-expect-error
   lastActiveTags: derived<HomeState, OmState, Tag[]>((state) => {
     const lastTaggable = _.findLast(
       state.states,
@@ -137,6 +137,7 @@ export const state: HomeState = {
     ) as HomeStateItemSearch | HomeStateItemHome
     return getActiveTags(lastTaggable)
   }),
+  //@ts-expect-error
   searchbarFocusedTag: derived<HomeState, OmState, Tag | null>((state) => {
     const { searchBarTagIndex } = state
     if (searchBarTagIndex > -1) return null
@@ -496,13 +497,13 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
 
   // actions per-route
   if (item.type === 'push' || item.type === 'replace') {
-    if (!isClearingCache) {
-      isClearingCache = true
-      requestIdleCallback(() => {
-        isClearingCache = false
-        resetQueryCache({ ifAbove: 15 })
-      })
-    }
+    // if (!isClearingCache) {
+    // isClearingCache = true
+    // requestIdleCallback(() => {
+    // isClearingCache = false
+    // resetQueryCache({ ifAbove: 15 })
+    // })
+    // }
 
     switch (item.name) {
       case 'homeRegion':
@@ -938,7 +939,7 @@ const clearTag: AsyncAction<NavigableTag> = async (om, tag) => {
   }
 }
 
-let tm = null
+let tm: NodeJS.Timeout | null = null
 const setIsLoading: Action<boolean> = (om, val) => {
   om.state.home.isLoading = val
   // prevent infinite spinners

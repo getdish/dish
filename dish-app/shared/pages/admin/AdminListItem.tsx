@@ -52,6 +52,7 @@ export const AdminListItem = memo(
           },
         ])
       }
+      return undefined
     }, [isEditing])
 
     useEffect(() => {

@@ -13,7 +13,7 @@ export const HomeLenseBar = memo(
     size?: LenseButtonSize
     minimal?: boolean
     backgroundColor?: string
-    onPressLense?: (lense: Tag) => void
+    onPressLense?: (lense: typeof tagLenses[number]) => void
   }) => {
     return (
       <>

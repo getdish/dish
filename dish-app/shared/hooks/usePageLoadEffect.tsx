@@ -32,5 +32,6 @@ export const usePageLoadEffect = (
         dispose2()
       }
     }
+    return undefined
   }, [props.isActive, ...mountArgs])
 }

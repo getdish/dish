@@ -50,6 +50,7 @@ export class UpdateSearchEndpoint extends GooglePuppeteerJob {
     await settingUpsert([
       {
         key: GOOGLE_SEARCH_ENDPOINT_KEY,
+        // TODO: FIX, FlatResolvedModel not working
         value: this.searchEndpoint,
       },
     ])

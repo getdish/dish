@@ -17,7 +17,7 @@ export function useAsyncEffect<V>(
       })
     } catch (err) {
       if (err instanceof AsyncCancellation) {
-        return
+        return undefined
       }
       throw err
     }

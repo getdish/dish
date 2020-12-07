@@ -1,5 +1,8 @@
-import { order_by, query } from '../graphql'
-import { Tag, TagTag, TagWithId } from '../types'
+import { selectFields } from '@dish/gqless'
+
+// import { order_by, query } from '../graphql'
+import { order_by, query, tag } from '../graphql/new-generated'
+import { Tag, TagWithId } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
 import { tagTagUpsert } from './tag_tag-helpers'
@@ -13,53 +16,104 @@ export const tagDelete = QueryHelpers.delete
 export const tagRefresh = QueryHelpers.refresh
 
 export const tagFindOneWithCategories = async (tag: Tag) => {
-  return await tagFindOne(tag, {
-    relations: ['categories.category'],
+  return await tagFindOne(tag, (tagV: tag) => {
+    if (Array.isArray(tagV)) {
+      return tagV.map((tagV) => {
+        return {
+          ...selectFields(tagV),
+          categories: tagV.categories().map((catV) => {
+            return {
+              ...selectFields(catV, '*', 2),
+            }
+          }),
+          alternates: tagV.alternates(),
+        }
+      })
+    }
+    return {
+      ...selectFields(tagV, '*', 2),
+      categories: tagV.categories().map((catV) => {
+        return {
+          ...selectFields(catV, '*', 2),
+        }
+      }),
+      alternates: tagV.alternates(),
+    }
   })
 }
 
 export async function tagGetAllChildren(
   parents: Pick<Tag, 'id'>[]
 ): Promise<Tag[]> {
-  return await resolvedWithFields(() => {
-    return query.tag({
-      where: {
-        parentId: {
-          _in: parents,
+  return await resolvedWithFields(
+    () => {
+      return query.tag({
+        where: {
+          parentId: {
+            _in: parents,
+          },
         },
-      },
-    })
-  })
+      })
+    },
+    (vTags: tag[]) => {
+      return vTags.map((v_t) => {
+        return {
+          ...selectFields(v_t, '*', 2),
+          alternates: v_t.alternates(),
+        }
+      })
+    }
+  )
 }
 
 export async function tagFindCountryMatches(
   countries: string[]
 ): Promise<Tag[]> {
-  return await resolvedWithFields(() => {
-    return query.tag({
-      where: {
-        _or: [
-          { name: { _in: countries } },
-          { alternates: { _has_keys_any: countries } },
-        ],
-        type: { _eq: 'country' },
-      },
-    })
-  })
+  return await resolvedWithFields(
+    () => {
+      return query.tag({
+        where: {
+          _or: [
+            { name: { _in: countries } },
+            { alternates: { _has_keys_any: countries } },
+          ],
+          type: { _eq: 'country' },
+        },
+      })
+    },
+    (vTags: tag[]) => {
+      return vTags.map((v_t: tag) => {
+        return {
+          ...selectFields(v_t, '*', 2),
+          alternates: v_t.alternates(),
+        }
+      })
+    }
+  )
 }
 
 export async function tagGetAllGenerics(): Promise<Tag[]> {
-  return await resolvedWithFields(() => {
-    return query.tag({
-      where: {
-        _or: [
-          { type: { _eq: 'filter' } },
-          { type: { _eq: 'lense' } },
-          { type: { _eq: 'category' } },
-        ],
-      },
-    })
-  })
+  return await resolvedWithFields(
+    () => {
+      return query.tag({
+        where: {
+          _or: [
+            { type: { _eq: 'filter' } },
+            { type: { _eq: 'lense' } },
+            { type: { _eq: 'category' } },
+          ],
+        },
+      })
+    },
+    (vTags: tag[]) => {
+      return vTags.map((v_t) => {
+        return {
+          ...selectFields(v_t, '*', 2),
+          alternates: v_t.alternates(),
+        }
+      })
+    }
+  )
 }
 
 export async function tagGetAllCuisinesWithDishes(
@@ -68,7 +122,7 @@ export async function tagGetAllCuisinesWithDishes(
 ) {
   return await resolvedWithFields(
     () => {
-      return query.tag({
+      const r = query.tag({
         where: {
           parent: {
             type: { _eq: 'country' },
@@ -82,8 +136,18 @@ export async function tagGetAllCuisinesWithDishes(
           },
         ],
       })
+
+      return r
     },
-    { relations: ['parent'] }
+    (t: tag[]) => {
+      return t.map((v) => {
+        return {
+          ...selectFields(v, '*', 2),
+          parent: selectFields(v.parent),
+          alternates: v.alternates(),
+        }
+      })
+    }
   )
 }
 
@@ -91,7 +155,7 @@ export async function tagUpsertCategorizations(
   tag: TagWithId,
   category_tag_ids: string[]
 ) {
-  const objects = category_tag_ids.map<TagTag>((tag_id) => ({
+  const objects = category_tag_ids.map((tag_id) => ({
     category_tag_id: tag_id,
     tag_id: tag.id,
   }))

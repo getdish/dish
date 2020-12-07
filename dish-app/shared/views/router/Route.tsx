@@ -22,6 +22,7 @@ type RouteContextI = {
 const RouteContext = createContext<RouteContextI | null>(null)
 
 export function RouteSwitch(props: { children: any }) {
+  console.log('ROUTE SWITCH')
   const children = React.Children.toArray(props.children)
   const [activeRoutes, setActiveRoutes] = useState({})
   const names = children.map((x) => x['props'].name)
@@ -70,6 +71,8 @@ export function RouteSwitch(props: { children: any }) {
     })
   }, [])
 
+  console.log('activeRoutes', activeRoutes)
+
   //  we could have the stratey here of first hiding the prev route, then later
   //  on requestIdle unmounting things... but concurrent should sovle for us right?
 
@@ -89,10 +92,10 @@ export function RouteSwitch(props: { children: any }) {
 export function Route(props: { name: string; exact?: boolean; children: any }) {
   const om = useOvermind()
   const activeName = om.state.router.curPageName
-  const stateRef = useRef<RouteState>('inactive')
+  const stateRef = useRef<RouteState>('active')
   const forceUpdate = useForceUpdate()
   const routeContext = useContext(RouteContext)
-  const isExactMatching = props.exact && activeName === props.name
+  const isExactMatching = !!props.exact && activeName === props.name
   const routePath = routes[props.name].path
   const routePaths: string[] = Object.keys(routes).map((x) => routes[x].path)
   const childRouteNames = routePaths
@@ -100,6 +103,17 @@ export function Route(props: { name: string; exact?: boolean; children: any }) {
     .map((path) => routePathToName[path])
   const isParentMatching = childRouteNames.some((x) => x === activeName)
   const isMatched = !!(isParentMatching || isExactMatching)
+
+  // console.log(
+  //   9393,
+  //   om.state.router,
+  //   om.state.router.curPage.name,
+  //   typeof activeName,
+  //   isExactMatching,
+  //   isParentMatching,
+  //   routePath,
+  //   props
+  // )
 
   useLayoutEffect(() => {
     return routeContext?.onChangeState((state) => {
@@ -137,6 +151,10 @@ export function Route(props: { name: string; exact?: boolean; children: any }) {
   ])
 
   const state = stateRef.current
+  console.log(children, {
+    isParentMatching,
+    state,
+  })
   if (state === 'inactive' || state === 'collect') {
     return null
   }

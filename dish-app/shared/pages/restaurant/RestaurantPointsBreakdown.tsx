@@ -67,6 +67,7 @@ export const RestaurantPointsBreakdown = memo(
         Math.round(totalExternalReviews * REVIEW_FACTOR * 10) / 10
       const reviewsBreakdown = restaurant.score_breakdown()?.['reviews'] ?? {}
       const photosBreakdown = restaurant.score_breakdown()?.['photos'] ?? {}
+
       return (
         <HStack overflow="hidden" paddingVertical={12}>
           <VStack alignItems="stretch" flex={1}>
@@ -74,19 +75,27 @@ export const RestaurantPointsBreakdown = memo(
               {numberFormat(Math.round(restaurant.score))}
             </Text>
             <Spacer />
-            <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
-              <TextHighlight backgroundColor={lightGreen}>
-                {numberFormat(Math.round(reviewsBreakdown['score']))}
-              </TextHighlight>{' '}
-              from {numberFormat(totalReviews)} reviews
-            </Paragraph>
-            <Spacer size="xs" />
-            <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
-              <TextHighlight backgroundColor={lightGreen}>
-                {numberFormat(Math.round(photosBreakdown['score']))}
-              </TextHighlight>{' '}
-              from {photosBreakdown['meeting_criteria_count']} good photos
-            </Paragraph>
+            {reviewsBreakdown.score != null ? (
+              <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
+                <TextHighlight backgroundColor={lightGreen}>
+                  {numberFormat(Math.round(reviewsBreakdown['score']))}
+                </TextHighlight>{' '}
+                from {numberFormat(totalReviews)} reviews
+              </Paragraph>
+            ) : null}
+
+            {photosBreakdown.score != null && reviewsBreakdown.score != null ? (
+              <Spacer size="xs" />
+            ) : null}
+
+            {photosBreakdown.score != null ? (
+              <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
+                <TextHighlight backgroundColor={lightGreen}>
+                  {numberFormat(Math.round(photosBreakdown['score']))}
+                </TextHighlight>{' '}
+                from {photosBreakdown['meeting_criteria_count']} good photos
+              </Paragraph>
+            ) : null}
 
             <Spacer size="lg" />
             <Divider />

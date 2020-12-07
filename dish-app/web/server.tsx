@@ -5,6 +5,8 @@ import './serverEnv'
 import { existsSync, readFileSync, renameSync } from 'fs'
 import Path from 'path'
 
+import { prepareReactRender } from '@dish/graph'
+import { client } from '@dish/graph'
 import { ChunkExtractor } from '@loadable/server'
 import bodyParser from 'body-parser'
 import { matchesUA } from 'browserslist-useragent'
@@ -20,15 +22,17 @@ const rootDir = Path.join(__dirname, '..', '..')
 
 global['React'] = React
 global['__DEV__'] = false
+//@ts-ignore
 global['requestIdleCallback'] = global['requestIdleCallback'] || setTimeout
 
 // fake a browser!
 const jsdom = new JSDOM(``, {
   pretendToBeVisual: true,
-  url: 'http://dishapp.com/',
+  url: 'http://dishapp.com/mission',
   referrer: 'http://dishapp.com/',
   contentType: 'text/html',
 })
+
 // @ts-ignore
 global['window'] = jsdom.window
 global['window']['IS_SSR_RENDERING'] = true
@@ -97,13 +101,32 @@ server.get('*', async (req, res) => {
   await overmind.initialized
   global['window']['om'] = overmind
 
+  jsdom.reconfigure({
+    url: 'http://dishapp.com' + req.path,
+  })
   const app = <App overmind={overmind} />
-  const jsx = extractor.collectChunks(app)
 
-  console.log('scripts are', extractor.getScriptTags())
+  delete client.cache.query
 
+  try {
+    ReactDOMServer.renderToString(app)
+  } catch (err) {}
+
+  await client.scheduler.resolving?.promise
+
+  const cacheSnapshot = JSON.stringify(client.cache)
+
+  // const { cacheSnapshot } = await prepareReactRender(app)
   // async suspense rendering
   // await ssrPrepass(app)
+
+  console.log(108, 'CACHE SNAPSHOT', cacheSnapshot)
+
+  const jsx = extractor.collectChunks(
+    <App overmind={overmind} cacheSnapshot={cacheSnapshot} />
+  )
+
+  console.log('scripts are', extractor.getScriptTags())
 
   const appHtml = ReactDOMServer.renderToString(jsx)
 
@@ -142,6 +165,9 @@ server.get('*', async (req, res) => {
       out += `
       <script>
         window.__OVERMIND_MUTATIONS = ${JSON.stringify(overmind.hydrate())}
+        window.__CACHE_SNAPSHOT = "${cacheSnapshot}"
+
+        console.log("HELLO WORLD")
       </script>
       ${clientScripts.join('\n')}\n`
       continue

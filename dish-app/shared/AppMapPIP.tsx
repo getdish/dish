@@ -1,4 +1,4 @@
-import { LngLat, Restaurant, graphql } from '@dish/graph'
+import { LngLat, Restaurant, graphql, restaurant } from '@dish/graph'
 import { useStore } from '@dish/use-store'
 import { isEqual } from 'lodash'
 import mapboxgl from 'mapbox-gl'
@@ -48,7 +48,7 @@ const HomeMapPIPContent = graphql(({ isSmall }: { isSmall: boolean }) => {
   const focusedRestaurant =
     om.state.home.hoveredRestaurant ?? om.state.home.selectedRestaurant
 
-  let restaurants: Restaurant[] | null = null
+  let restaurants: restaurant[] | null = null
   let slug: string | null = null
   let span: LngLat = state.span
 
@@ -100,6 +100,7 @@ const HomeMapPIPContent = graphql(({ isSmall }: { isSmall: boolean }) => {
       return mapZoomToMedium
     } else {
       // none
+      return undefined
     }
   })()
 

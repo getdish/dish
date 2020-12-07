@@ -12,13 +12,15 @@
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "outDir": "_",
+    "noEmit": true,
     "noEmitHelpers": true,
     "noImplicitReturns": true,
     "skipLibCheck": true,
     "target": "esnext",
     "allowJs": true,
     "baseUrl": ".",
-
+    "strict": false,
+    "strictNullChecks": false,
     "removeComments": true,
     "typeRoots": [
       "node_modules/@types",
@@ -28,27 +30,38 @@
     "composite": true
   },
 
-  "include": [
-    "src",
-    "web",
-    "shared",
-  ],
+  // "include": ["src", "web", "shared"],
 
-  "exclude": ["**", "**/_"],
+  // "exclude": ["**/node_modules/**/.*"],
 
-  "references": [{
-    "path": "../snackui/packages/snackui"
-  }, {
-    "path": "../packages/async"
-  }, {
-    "path": "../packages/graph"
-  }, {
-    "path": "../packages/helpers"
-  }, {
-    "path": "../packages/use-store"
-  }, {
-    "path": "../packages/react-feather"
-  }, {
-    "path": "../snackui/packages/snackui-static"
-  }]
+  "include": ["src", "web", "shared", "shared/**/*.json", "declaration.d.ts"],
+
+  "exclude": ["**/_"],
+
+  "references": [
+    {
+      "path": "../snackui/packages/snackui"
+    },
+    {
+      "path": "../packages/async"
+    },
+    {
+      "path": "../packages/graph"
+    },
+    {
+      "path": "../packages/router"
+    },
+    {
+      "path": "../packages/helpers"
+    },
+    {
+      "path": "../packages/use-store"
+    },
+    {
+      "path": "../packages/react-feather"
+    },
+    {
+      "path": "../snackui/packages/snackui-static"
+    }
+  ]
 }

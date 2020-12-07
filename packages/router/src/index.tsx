@@ -369,11 +369,14 @@ export class Route<A extends Object | void = void> {
 
 // state
 
-const defaultPage = {
+const defaultPage: HistoryItem = {
   id: '0',
   name: 'home',
   path: '/',
   params: {},
+  type: 'push',
+  search: '',
+  direction: 'none',
 }
 
 const uid = () => `${Math.random()}`.replace('.', '')

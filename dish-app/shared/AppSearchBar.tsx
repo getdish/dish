@@ -64,6 +64,8 @@ export const AppSearchBarFloating = () => {
   //   sendReparentableChild(parent, newParent, 0, 0)
   // }, [isSmall])
 
+  console.log('background', background)
+
   return (
     <AbsoluteVStack
       className="searchbar-container ease-in-out"
@@ -84,7 +86,7 @@ export const AppSearchBarFloating = () => {
         maxWidth={searchBarMaxWidth + 20}
       >
         <AbsoluteVStack
-          className="blur skewX"
+          className="skewX findme123"
           borderRadius={10}
           overflow="hidden"
           zIndex={102}
@@ -97,6 +99,7 @@ export const AppSearchBarFloating = () => {
           shadowRadius={12}
         >
           <AbsoluteVStack
+            className="findme123"
             // opacity={0.76}
             backgroundColor={background}
             fullscreen

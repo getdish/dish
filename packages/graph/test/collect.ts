@@ -1,8 +1,10 @@
 import '@o/react-test-env'
 
+import { selectFields } from '@dish/gqless'
 import anyTest, { TestInterface } from 'ava'
 
 import { restaurantFindOne } from '../_'
+import { restaurant } from '../_/graphql/new-generated'
 import {
   flushTestData,
   restaurantUpsert,
@@ -30,7 +32,7 @@ test('Collecting the root fields', async (t) => {
 
 test('Collecting a one-to-one relation', async (t) => {
   const [existing_tag] = await tagUpsert([{ name: 'Test tag existing' }])
-  const tag = await tagFindOne(existing_tag, { relations: ['parent'] })
+  const tag = await tagFindOne(existing_tag)
   if (!tag) return
   t.assert(Object.keys(tag).length > 5)
   t.is(tag.name, 'Test tag existing')
@@ -42,19 +44,43 @@ test('Collecting a one-to-one relation', async (t) => {
 test('Collecting a one-to-many relation', async (t) => {
   const [r] = await restaurantUpsert([restaurant_fixture])
   await restaurantUpsertOrphanTags(r, ['Test tag'])
-  const restaurant = await restaurantFindOne(r, {
-    relations: ['tags'],
+  const restaurant = await restaurantFindOne(r, (rs: restaurant[]) => {
+    return rs.map((r) => {
+      return {
+        ...selectFields(r),
+        tags: r.tags().map((t) => {
+          return {
+            ...selectFields(t),
+          }
+        }),
+      }
+    })
   })
-  t.is(restaurant.tags.length, 1)
-  t.assert(Object.keys(restaurant.tags[0]).length > 3)
-  t.is(restaurant.tags[0].restaurant_id, restaurant.id)
+  t.is(restaurant!.tags.length, 1)
+  t.assert(Object.keys(restaurant!.tags[0]).length > 3)
+  t.is(restaurant!.tags[0].restaurant_id, restaurant!.id)
 })
 
 test('Collecting a deep relation', async (t) => {
   const [r] = await restaurantUpsert([restaurant_fixture])
   await restaurantUpsertOrphanTags(r, ['Test tag'])
-  const restaurant = await restaurantFindOne(r, {
-    relations: ['tags.tag'],
-  })
-  t.is(restaurant.tags[0].tag.name, 'Test tag')
+  const restaurant = await restaurantFindOne(
+    r,
+    (rs: restaurant[]) => {
+      return rs.map((r) => {
+        return {
+          ...selectFields(r),
+          tags: r.tags().map((t) => {
+            return {
+              ...selectFields(t, '*', 2),
+            }
+          }),
+        }
+      })
+    }
+    //   {
+    //   relations: ['tags.tag'],
+    // }
+  )
+  t.is(restaurant!.tags[0].tag.name, 'Test tag')
 })

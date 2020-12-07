@@ -20,7 +20,7 @@ import { Route } from './views/router/Route'
 
 export default memo(function App() {
   // dont run if in ssr mode
-  if (isWeb) {
+  if (isWeb && !isSSR) {
     const { auth } = require('../web/apple-sign-in')
     useEffect(() => {
       auth.init({
@@ -36,6 +36,7 @@ export default memo(function App() {
 })
 
 const AppContent = memo(() => {
+  console.log('APP CONTENT')
   return (
     <AppRoot>
       <Suspense fallback={null}>

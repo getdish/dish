@@ -1,4 +1,4 @@
-import { RestaurantTag, Tag } from '@dish/graph'
+import { RestaurantTag, Tag, restaurant_tag } from '@dish/graph'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 
@@ -9,8 +9,8 @@ export const useBreakdownsBySources = (
   let total = 0
   const restaurant = useRestaurantQuery(restaurantSlug)
   const sources = restaurant?.sources?.() ?? {}
-  const rtags = restaurant?.tags
-  let scoreContributingTags: RestaurantTag[] = []
+  const rtags = restaurant?.tags()
+  let scoreContributingTags: restaurant_tag[] = []
   if (reviewTags.length) {
     scoreContributingTags = reviewTags.map((t) =>
       rtags.find((rt) => rt.tag.name == t.name)

@@ -30,7 +30,9 @@ export const TrendingButton = <
       >
         {rank ? <Text>`${rank}. `</Text> : null}
         <TrendingIcon direction="up" />
-        <Text style={{ fontWeight: '400', lineHeight: 17 }}>{children}</Text>
+        <Text fontWeight="400" lineHeight={17}>
+          {children}
+        </Text>
       </LinkButton>
     </HStack>
   )

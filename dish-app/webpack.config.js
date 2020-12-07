@@ -4,11 +4,9 @@ const ReactRefreshWebpack4Plugin = require('@pmmmwh/react-refresh-webpack-plugin
 const path = require('path')
 const Webpack = require('webpack')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
-// const LodashPlugin = require('lodash-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const CircularDependencyPlugin = require('circular-dependency-plugin')
 
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin')
 const DedupeParentCssFromChunksWebpackPlugin = require('dedupe-parent-css-from-chunks-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
@@ -27,7 +25,7 @@ const target =
 const appEntry = path.resolve(path.join(__dirname, 'web', 'index.web.tsx'))
 
 const isProduction = process.env.NODE_ENV === 'production'
-// const isClient = TARGET === 'client'
+const isDevelopment = process.env.NODE_ENV === 'development'
 const isSSR = TARGET === 'ssr'
 const isHot =
   !isProduction &&
@@ -59,12 +57,12 @@ module.exports = function getWebpackConfig(
         ? {
             react: 'react',
             'react-dom': 'react-dom',
+            overmind: 'overmind',
+            'overmind-react': 'overmind-react',
           }
         : [],
       stats: 'normal',
-      // @ts-ignore
-      devtool: env.mode === 'production' ? 'source-map' : 'cheap-source-map',
-      //'eval-cheap-module-source-map' is fast but debugging original source becomes hard
+      devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
       entry: {
         main: process.env.LEGACY ? ['babel-polyfill', appEntry] : appEntry,
       },
@@ -72,11 +70,10 @@ module.exports = function getWebpackConfig(
         path: path.resolve(__dirname),
         filename: `static/js/app.${hashFileNamePart}.js`,
         publicPath: '/',
-        // globalObject: 'this',
+        pathinfo: !!(isDevelopment || process.env.DEBUG_PATHS),
       },
       node: {
         global: true,
-        // process: isProduction ? false : true,
         __filename: false,
         __dirname: false,
       },
@@ -109,14 +106,13 @@ module.exports = function getWebpackConfig(
             ? {
                 chunks: 'async',
                 minSize: 20000,
-                maxSize: 0,
                 minChunks: 1,
-                maxAsyncRequests: 30,
-                maxInitialRequests: 30,
+                maxAsyncRequests: 20,
+                maxInitialRequests: 10,
                 automaticNameDelimiter: '~',
                 cacheGroups: {
                   default: {
-                    minChunks: 2,
+                    minChunks: 1,
                     priority: -20,
                     reuseExistingChunk: true,
                   },
@@ -156,7 +152,7 @@ module.exports = function getWebpackConfig(
                     loader: 'babel-loader',
                   },
                   isStaticExtracted && {
-                    loader: require.resolve('snackui-static/loader'),
+                    loader: require.resolve('@snackui/static/loader'),
                     options: {
                       evaluateImportsWhitelist: ['constants.js', 'colors.js'],
                     },
@@ -166,8 +162,16 @@ module.exports = function getWebpackConfig(
               {
                 test: /\.css$/i,
                 use:
-                  isProduction && TARGET !== 'ssr'
-                    ? [ExtractCssChunks.loader, 'css-loader']
+                  TARGET !== 'ssr'
+                    ? [
+                        {
+                          loader: ExtractCssChunks.loader,
+                          options: {
+                            hmr: isHot,
+                          },
+                        },
+                        'css-loader',
+                      ]
                     : ['style-loader', 'css-loader'],
               },
               {
@@ -239,7 +243,10 @@ module.exports = function getWebpackConfig(
             //   // fixes issue i had https://github.com/lodash/lodash/issues/3101
             //   shorthands: true,
             // }),
-            new ExtractCssChunks(),
+            new ExtractCssChunks({
+              esModule: true,
+              ignoreOrder: false,
+            }),
             new DedupeParentCssFromChunksWebpackPlugin({
               assetNameRegExp: /\.optimize\.css$/g, // the default is /\.css$/g
               canPrint: true, // the default is true
@@ -249,8 +256,8 @@ module.exports = function getWebpackConfig(
 
         new Webpack.DefinePlugin({
           ...(isProduction && {
-            process: '{}',
-            'process.env': '{}',
+            process: '({})',
+            'process.env': '({})',
           }),
           'process.env.DISABLE_CACHE': false,
           'process.env.IS_STATIC': false,

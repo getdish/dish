@@ -65,74 +65,74 @@ export default memo(function AppMap() {
 })
 
 const AppMapDataLoader = memo(
-  graphql(
-    (props: {
-      onLoadedRestaurantDetail: Function
-      onLoadedRestaurants: Function
-    }) => {
-      const om = useOvermind()
-      const state = om.state.home.currentState
-      let all: RestaurantOnlyIds[] = []
-      let single: RestaurantOnlyIds | null = null
+  graphql(function AppMapDataLoader(props: {
+    onLoadedRestaurantDetail: Function
+    onLoadedRestaurants: Function
+  }) {
+    const om = useOvermind()
+    const state = om.state.home.currentState
+    let all: RestaurantOnlyIds[] = []
+    let single: RestaurantOnlyIds | null = null
 
-      if (isRestaurantState(state)) {
-        const restaurant = useRestaurantQuery(state.restaurantSlug)
-        single = {
-          id: restaurant.id ?? '',
-          slug: state.restaurantSlug ?? '',
-        }
-        const last = findLastHomeOrSearch(omStatic.state.home.states)
-        all = [single, ...(last?.['results'] ?? [])]
-      } else if ('results' in state) {
-        all = state?.results ?? []
+    if (isRestaurantState(state)) {
+      const restaurant = useRestaurantQuery(state.restaurantSlug)
+      single = {
+        id: restaurant.id ?? '',
+        slug: state.restaurantSlug ?? '',
       }
-
-      all = all.filter(isPresent)
-
-      const allIds = [...new Set(all.map((x) => x.id))]
-      const allResults = allIds
-        .map((id) => all.find((x) => x.id === id))
-        .filter(isPresent)
-
-      const restaurants = uniqBy(
-        allResults
-          .map(({ id, slug }) => {
-            if (!slug) {
-              return null
-            }
-            const r = useRestaurantQuery(slug)
-            if (!r) {
-              return null
-            }
-            const coords = r?.location?.coordinates
-            return {
-              id: id || r.id,
-              slug,
-              name: r.name,
-              location: {
-                coordinates: [coords?.[0], coords?.[1]],
-              },
-            }
-          })
-          .filter(isPresent),
-        (x) => `${x.location.coordinates[0]}${x.location.coordinates[1]}`
-      )
-        // ensure has location
-        .filter((x) => x.id && !!x.location.coordinates[0])
-
-      useEffect(() => {
-        props.onLoadedRestaurants?.(restaurants)
-      }, [JSON.stringify(restaurants.map((x) => x.location?.coordinates))])
-
-      const restaurantDetail = single
-        ? restaurants.find((x) => x.id === single!.id)
-        : null
-
-      useEffect(() => {
-        props.onLoadedRestaurantDetail?.(restaurantDetail)
-      }, [JSON.stringify(restaurantDetail?.location?.coordinates ?? null)])
+      const last = findLastHomeOrSearch(omStatic.state.home.states)
+      all = [single, ...(last?.['results'] ?? [])]
+    } else if ('results' in state) {
+      all = state?.results ?? []
     }
-  )
+
+    all = all.filter(isPresent)
+
+    const allIds = [...new Set(all.map((x) => x.id))]
+    const allResults = allIds
+      .map((id) => all.find((x) => x.id === id))
+      .filter(isPresent)
+
+    const restaurants = uniqBy(
+      allResults
+        .map(({ id, slug }) => {
+          if (!slug) {
+            return null
+          }
+          const r = useRestaurantQuery(slug)
+          if (!r) {
+            return null
+          }
+          const coords = r?.location?.coordinates
+          return {
+            id: id || r.id,
+            slug,
+            name: r.name,
+            location: {
+              coordinates: [coords?.[0], coords?.[1]],
+            },
+          }
+        })
+        .filter(isPresent),
+      (x) => `${x.location.coordinates[0]}${x.location.coordinates[1]}`
+    )
+      // ensure has location
+      .filter((x) => x.id && !!x.location.coordinates[0])
+
+    useEffect(() => {
+      props.onLoadedRestaurants?.(restaurants)
+    }, [JSON.stringify(restaurants.map((x) => x.location?.coordinates))])
+
+    const restaurantDetail = single
+      ? restaurants.find((x) => x.id === single!.id)
+      : null
+
+    useEffect(() => {
+      props.onLoadedRestaurantDetail?.(restaurantDetail)
+    }, [JSON.stringify(restaurantDetail?.location?.coordinates ?? null)])
+
+    return null
+  })
 )
 
 const updateRegion = debounce((region: Region) => {
@@ -309,6 +309,7 @@ const AppMapContent = memo(function AppMap({
       }
       if (omStatic.state.home.centerToResults) {
         // we just re-centered, ignore
+        //@ts-expect-error
         om.actions.home.setCenterToResults(0)
       }
       setState({

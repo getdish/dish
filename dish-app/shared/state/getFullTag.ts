@@ -1,8 +1,8 @@
-import { Tag } from '@dish/graph'
+import { tag } from '@dish/graph'
 
 import { FullTag } from './FullTag'
 
-export function getFullTag(tag: Tag): FullTag | null {
+export function getFullTag(tag: tag): FullTag | null {
   if (!tag) {
     return null
   }

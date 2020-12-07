@@ -350,12 +350,9 @@ test.beforeEach(async (t) => {
 test('Merging', async (t) => {
   const self = new Self()
   await self.mergeAll(t.context.restaurant.id)
-  const updated = await restaurantFindOneWithTags(
-    {
-      id: t.context.restaurant.id,
-    },
-    ['menu_items']
-  )
+  const updated = await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })
   const photos = await bestPhotosForRestaurant(t.context.restaurant.id)
   const p0 = photos.find(
     (p) => p.photo?.origin == 'https://i.imgur.com/N6YtgRI.jpeg'
@@ -394,12 +391,9 @@ test('Merging dishes', async (t) => {
   const self = new Self()
   await self.mergeAll(t.context.restaurant.id)
   await self.finishTagsEtc()
-  const updated = await restaurantFindOneWithTags(
-    {
-      id: t.context.restaurant.id,
-    },
-    ['menu_items']
-  )
+  const updated = await restaurantFindOneWithTags({
+    id: t.context.restaurant.id,
+  })
   t.is(!!updated, true)
   if (!updated) return
   t.is(updated.menu_items.length, 2)

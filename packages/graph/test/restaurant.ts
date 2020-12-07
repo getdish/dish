@@ -63,15 +63,19 @@ test('Avoiding cache', async (t) => {
     name: 'Test Restaurant',
   })
   t.context.restaurant.city = 'New City'
+
   await restaurantUpdate(t.context.restaurant as RestaurantWithId)
+
   const restaurant = await restaurantFindOne({
     name: 'Test Restaurant',
   })
+
   t.is(restaurant?.city ?? '', 'New City')
 })
 
 test('Finding a restaurant by location', async (t) => {
   const restaurants = await restaurantFindNear(50, 0, 0.025)
+
   t.is(restaurants[0].name, 'Test Restaurant')
 })
 

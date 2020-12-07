@@ -3,11 +3,10 @@
 
 import { globalTagId } from '../constants'
 import { Tag } from '../types'
-import { slugify } from './slugify'
 
 export type TagWithParent = Tag & { parent: Tag }
 
-export const tagSlug = (tag: Tag) => {
+export const tagSlug = (tag: Pick<Tag, 'slug'>) => {
   if (!tag.slug) return 'no-slug'
   return tag.slug
 }
@@ -29,7 +28,8 @@ export const tagSlugs = (tag: Tag) => {
     parentage = [
       ...parentage,
       tagSlug(tag),
-      tagSlugWithoutParent(tag.parent as Tag),
+      //@ts-expect-error
+      tagSlugWithoutParent(tag.parent),
     ]
   }
   const category_names = (tag.categories || []).map((cat) => {

@@ -20,6 +20,7 @@ import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { getTagSlug } from './state/getTagSlug'
+import { tagsToNavigableTags } from './state/NavigableTag'
 import { omStatic } from './state/omStatic'
 import { router } from './state/router'
 import { useOvermind } from './state/useOvermind'
@@ -120,6 +121,7 @@ export const AppSearchInput = memo(() => {
         clearTimeout(tm)
       }
     }
+    return undefined
   }, [showAutocomplete])
 
   // one way sync down for more perf
@@ -291,7 +293,7 @@ export const AppSearchInput = memo(() => {
 
         <SearchCancelButton />
 
-        <Spacer direction="horizontal" size={8} />
+        <Spacer size={8} />
       </HStack>
     </AppAutocompleteHoverableInput>
   )
@@ -401,6 +403,7 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
           })
         }
       } else {
+        //@ts-expect-error overmind type error
         omStatic.actions.home.runSearch({
           searchQuery: e.target.value,
           force: true,
@@ -416,7 +419,7 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
       if (omStatic.state.home.searchbarFocusedTag) {
         // will remove it if active
         omStatic.actions.home.navigate({
-          tags: [omStatic.state.home.searchbarFocusedTag],
+          tags: tagsToNavigableTags([omStatic.state.home.searchbarFocusedTag]),
         })
         next()
         return

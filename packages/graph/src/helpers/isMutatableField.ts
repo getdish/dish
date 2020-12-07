@@ -1,11 +1,20 @@
-import { ArrayNode, FieldNode, ObjectNode, ScalarNode } from '@o/gqless'
+import { parseSchemaType } from '@dish/gqless'
 
-const isSimpleField = (field: FieldNode) => {
-  return field.ofNode instanceof ScalarNode && !field.args?.required
+import { scalarsEnumsHash } from '../graphql/new-generated'
+
+const isSimpleField = (typeName: string) => {
+  const { pureType } = parseSchemaType(typeName)
+  return scalarsEnumsHash[pureType] ?? false
 }
 
-const isRelation = (field: FieldNode) => {
-  return field.ofNode instanceof ObjectNode || field.ofNode instanceof ArrayNode
+const isRelation = (typeName: string) => {
+  const { pureType, isArray } = parseSchemaType(typeName)
+
+  const isScalar: boolean = scalarsEnumsHash[pureType]
+
+  return isArray ? true : !isScalar
+  // return !scalarsEnumsHash[pureType] || isArray
+  // return field.ofNode instanceof ObjectNode || field.ofNode instanceof ArrayNode
 }
 
 const FILTER_FIELDS = {
@@ -27,16 +36,16 @@ const MUTATION_NON_RETURNING_FIELDS = {
   ...COMPUTED_FIELDS,
 }
 
-export const isMutatableField = (field: FieldNode) => {
+export const isMutatableField = (fieldName: string, typeName: string) => {
   return (
-    !FILTER_FIELDS[field.name] &&
-    !READ_ONLY_FIELDS[field.name] &&
-    (isSimpleField(field) || isRelation(field))
+    !FILTER_FIELDS[fieldName] &&
+    !READ_ONLY_FIELDS[fieldName] &&
+    (isSimpleField(typeName) || isRelation(typeName))
   )
 }
 
-export const isMutatableRelation = (field: FieldNode) => {
-  return isMutatableField(field) && isRelation(field)
+export const isMutatableRelation = (fieldName: string, typeName: string) => {
+  return isMutatableField(fieldName, typeName) && isRelation(typeName)
 }
 
 export const isMutableReturningField = (name: string) => {

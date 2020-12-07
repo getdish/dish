@@ -1,30 +1,29 @@
 name: Scheduled recurring tests
 on:
   schedule:
-    - cron:  '0 0 * * *'
+    - cron: '0 0 * * *'
 jobs:
   daily:
     runs-on: ubuntu-latest
     env:
       DOCKER_BUILDKIT: 1
-      DISH_ENV: "test"
-      DISH_REGISTRY: "docker.k8s.dishapp.com"
-      CURRENT_DISH_CLUSTER: "dish-blue"
-      HASURA_ENDPOINT: "http://localhost:8080"
+      DISH_ENV: 'test'
+      DISH_REGISTRY: 'docker.k8s.dishapp.com'
+      CURRENT_DISH_CLUSTER: 'dish-blue'
+      HASURA_ENDPOINT: 'http://localhost:8080'
       GITCRYPT_KEY: ${{ secrets.GITCRYPT_KEY }}
     steps:
-    - uses: actions/checkout@master
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '12.16.1'
-    - name: Setup dependencies
-      run: .github/workflows/scripts/setup_deps.sh
-    - name: Build docker images
-      run: ./dishctl.sh build_all_dish_services
-    - name: Prettier linting
-      run: ./dishctl.sh ci_prettier
-    - name: Setup services
-      run: .github/workflows/scripts/setup_services.sh
-    - name: HTTP-dependent crawler tasks
-      run: .github/workflows/scripts/recurring.sh
-
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.16.1'
+      - name: Setup dependencies
+        run: .github/workflows/scripts/setup_deps.sh
+      - name: Build docker images
+        run: ./dishctl.sh build_all_dish_services
+      - name: Prettier linting
+        run: ./dishctl.sh ci_prettier
+      - name: Setup services
+        run: .github/workflows/scripts/setup_services.sh
+      - name: HTTP-dependent crawler tasks
+        run: .github/workflows/scripts/recurring.sh

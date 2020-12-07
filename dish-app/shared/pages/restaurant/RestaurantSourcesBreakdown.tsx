@@ -39,7 +39,7 @@ export const RestaurantSourcesBreakdown = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
     const restaurant = useRestaurantQuery(restaurantSlug)
     const sources = restaurant?.sources?.() ?? {}
-    const tags = omStatic.state.home.lastActiveTags as NavigableTag[]
+    const tags = omStatic.state.home.lastActiveTags
     const reviewTags = sortBy(
       tags.filter((tag) => tag.name !== 'Gems'),
       (a) => (a.type === 'lense' ? 0 : a.type === 'dish' ? 2 : 1)

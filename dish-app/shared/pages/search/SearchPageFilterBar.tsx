@@ -43,6 +43,7 @@ export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
               extraProps.borderBottomRightRadius = hasNext ? 0 : 30
               const isActive = activeTags[getTagSlug(tag)] ?? false
               const button = (
+                // @ts-expect-error Incompatibility with snack-ui types
                 <FilterButton
                   key={`tag-${tag.id}`}
                   tag={tag}

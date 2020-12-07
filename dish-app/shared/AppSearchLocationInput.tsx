@@ -33,6 +33,7 @@ export const AppSearchLocationInput = memo(() => {
         clearTimeout(tm)
       }
     }
+    return undefined
   }, [showAutocomplete])
 
   // one way sync down for more perf

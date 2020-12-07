@@ -1,11 +1,14 @@
 import {
+  DeepPartial,
   Review,
   globalTagId,
   query,
   refetch,
   resolved,
+  review,
   reviewDelete,
   reviewUpsert,
+  useRefetch,
 } from '@dish/graph'
 import { series } from '@o/async'
 import { useEffect, useState } from 'react'
@@ -42,8 +45,8 @@ export const useUserReviewsQuery = (
   restaurantId: string,
   type?: ReviewTypes
 ) => {
+  const refetch = useRefetch()
   const om = useOvermind()
-  const forceUpdate = useForceUpdate()
   const userId = (om.state.user.user?.id as string) ?? ''
   const [fetchKey, setFetchKey] = useState(0)
   const shouldFetch = userId && restaurantId
@@ -91,10 +94,12 @@ export const useUserReviewsQuery = (
   // ensure fetched by gqless
   useLazyEffect(() => {
     if (fetchKey && shouldFetch) {
-      const fetcher = refetch(reviewsQuery) as any
-      if (fetcher) {
-        return series([() => resolved(fetcher), forceUpdate])
-      }
+      refetch(reviewsQuery).catch(console.error)
+      // const fetcher = refetch(reviewsQuery) as any
+      // if (fetcher) {
+      //   return series([() => resolved(fetcher), forceUpdate])
+      // }
+      // refetchAll()
     }
   }, [shouldFetch, fetchKey])
 
@@ -168,13 +173,11 @@ export const useUserReviewsQuery = (
   }
 }
 
-export const isTagReview = (r: Review) => !!r.tag_id && r.tag_id !== globalTagId
+export const isTagReview = (r: DeepPartial<Review>) =>
+  !!r.tag_id && r.tag_id !== globalTagId
 
 export const useUserReviewCommentQuery = (restaurantId: string) => {
-  const { reviews, upsert, refetch } = useUserReviewsQuery(
-    restaurantId,
-    'comment'
-  )
+  const { reviews, upsert } = useUserReviewsQuery(restaurantId, 'comment')
   const review = reviews.filter((x) => !isTagReview(x) && !!x.text)[0]
   return {
     review,
@@ -191,7 +194,7 @@ export const useUserReviewCommentQuery = (restaurantId: string) => {
         id: review.id,
       })
       Toast.show(`Deleted!`)
-      refetch()
+      // refetch()
     },
   }
 }

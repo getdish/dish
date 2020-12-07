@@ -157,6 +157,7 @@ const RestaurantListItemContent = memo(
       if (!!restaurant.name && props.onFinishRender) {
         return series([() => fullyIdle({ min: 50 }), props.onFinishRender!])
       }
+      return undefined
     }, [restaurant.name])
 
     const restaurantName = (restaurant.name ?? '').slice(0, 300)

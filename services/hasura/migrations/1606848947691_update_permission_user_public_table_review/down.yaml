@@ -8,18 +8,18 @@
     permission:
       allow_aggregations: true
       columns:
-      - authored_at
-      - categories
-      - favorited
-      - id
-      - rating
-      - restaurant_id
-      - source
-      - tag_id
-      - text
-      - updated_at
-      - user_id
-      - username
+        - authored_at
+        - categories
+        - favorited
+        - id
+        - rating
+        - restaurant_id
+        - source
+        - tag_id
+        - text
+        - updated_at
+        - user_id
+        - username
       computed_fields: []
       filter: {}
     role: user

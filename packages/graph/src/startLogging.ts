@@ -10,8 +10,13 @@ export function startLogging(verbose = false) {
     if (isLogging) return
     isLogging = true
     if (!isSafari) {
-      const { Logger } = require('@o/gqless-logger')
-      new Logger(client, verbose)
+      import('@dish/gqless-logger').then(({ createLogger }) => {
+        const Logger = createLogger(client, { stringifyJSON: false })
+
+        Logger.start()
+      })
+      // const { Logger } = require('@o/gqless-logger')
+      // new Logger(client, verbose)
     }
   }
 }

@@ -220,12 +220,16 @@ export class Self extends WorkerJob {
   }
 
   async finishTagsEtc() {
-    await restaurantUpdate(this.restaurant)
+    await restaurantUpdate(this.restaurant, undefined, ['__typename'])
     this.tagging.deDepulicateTags()
     await this.tagging.updateTagRankings()
     await restaurantUpsertManyTags(
       this.restaurant,
-      this.tagging.restaurant_tags
+      this.tagging.restaurant_tags,
+      () => {
+        return {}
+      },
+      ['__typename']
     )
     if (this.menu_items.length != 0) {
       await menuItemsUpsertMerge(this.menu_items)
@@ -418,13 +422,13 @@ export class Self extends WorkerJob {
   }
 
   async addHours() {
-    this.restaurant.hours = scrapeGetData(
+    let hoursData = (this.restaurant.hours = scrapeGetData(
       this.yelp,
       'data_from_html_embed.bizHoursProps.hoursInfoRows',
       []
-    )
+    ))
     let records: string[] = []
-    for (const hours of this.restaurant.hours ?? ([] as any)) {
+    for (const hours of hoursData ?? ([] as any)) {
       for (const session of hours.hoursInfo.hours) {
         const times = session.split(' - ')
         if (!times || times.length == 0) continue
@@ -595,7 +599,7 @@ export class Self extends WorkerJob {
     }
 
     if (hero != '') {
-      this.restaurant.image = await uploadHeroImage(hero, this.restaurant.id)
+      this.restaurant.image = (await uploadHeroImage(hero, this.restaurant.id))!
     }
   }
 
@@ -613,7 +617,7 @@ export class Self extends WorkerJob {
           description: data.description,
           price: data.price,
           image: data.imageUrl,
-        })
+        } as MenuItem)
       }
     }
   }
@@ -633,7 +637,7 @@ export class Self extends WorkerJob {
             description: data.description,
             price: data.price,
             image: data.imageUrl,
-          })
+          } as MenuItem)
         }
       }
     }
@@ -650,7 +654,7 @@ export class Self extends WorkerJob {
             name: data.name,
             description: data.description,
             price: data.price.amount,
-          })
+          } as MenuItem)
         }
       }
     }
@@ -671,7 +675,7 @@ export class Self extends WorkerJob {
         photo: {
           url: url,
         },
-      }
+      } as PhotoXref
     })
     await photoUpsert(photos)
     const most_aesthetic =

@@ -1,26 +1,31 @@
+import { DeepPartial, parseSchemaType } from '@dish/gqless'
+import { selectFields } from '@dish/gqless'
+
 import {
+  Scalars,
+  generatedSchema,
+  mutation,
   photo_constraint,
   photo_xref_constraint,
   query,
   restaurant_constraint,
   review_constraint,
   review_tag_sentence_constraint,
-  schema,
   setting_constraint,
   tag_constraint,
   tag_tag_constraint,
   user_constraint,
-  uuid,
-} from '../graphql'
-import { mutation } from '../graphql/mutation'
+} from '../graphql/new-generated'
+// import { mutation } from '../graphql/mutation'
 import { ModelName, ModelType, WithID } from '../types'
-import { CollectOptions } from './collect'
 import { isMutatableField, isMutatableRelation } from './isMutatableField'
 import {
   resolvedMutation,
   resolvedMutationWithFields,
   resolvedWithFields,
 } from './queryResolvers'
+
+type uuid = Scalars['uuid']
 
 export function objectToWhere(hash: { [key: string]: any }): any {
   // default if id exists just use id
@@ -51,36 +56,52 @@ const defaultConstraints = {
     photo_xref_constraint.photos_xref_photos_id_restaurant_id_tag_id_key,
 }
 
-export function createQueryHelpersFor<A>(
+export function createQueryHelpersFor<A extends ModelType>(
   modelName: ModelName,
   defaultUpsertConstraint?: string
 ) {
   return {
-    async insert(items: A[]) {
-      return await insert<A>(modelName, items)
+    async insert(
+      items: Partial<A>[],
+      fn?: (v: any) => unknown,
+      keys?: string[]
+    ) {
+      return await insert<A>(modelName, items, fn, keys)
     },
-    async upsert(items: A[], constraint?: string) {
+    async upsert(
+      items: Partial<A>[],
+      constraint?: string,
+      fn?: (v: any) => unknown,
+      keys?: '*' | string[]
+    ) {
       return await upsert<A>(
         modelName,
         items,
-        constraint ?? defaultUpsertConstraint
+        constraint ?? defaultUpsertConstraint,
+        fn,
+        keys
       )
     },
-    async update(a: WithID<A>, o?: CollectOptions) {
-      return await update<WithID<A>>(modelName, a, o)
+    async update(
+      a: WithID<Partial<A>>,
+      fn?: (v: any) => unknown,
+      keys?: '*' | string[]
+    ) {
+      //@ts-expect-error
+      return await update<WithID<A>>(modelName, a, fn, keys)
     },
-    async findOne(a: A, o?: CollectOptions) {
-      return await findOne<WithID<A>>(modelName, a, o)
+    async findOne(a: Partial<A>, fn?: (v: any) => unknown) {
+      return await findOne<WithID<A>>(modelName, a as any, fn)
     },
-    async findAll(a: A, o?: CollectOptions) {
-      return await findAll<WithID<A>>(modelName, a, o)
+    async findAll(a: Partial<A>, fn?: (v: any) => unknown) {
+      return await findAll<WithID<A>>(modelName, a as any, fn)
     },
     async refresh(a: WithID<A>) {
       const next = await findOne(modelName, { id: a.id })
       if (!next) throw new Error('@dish/graph: object refresh failed')
       return next as WithID<A>
     },
-    async delete(a: WithID<A>) {
+    async delete(a: WithID<Partial<A>>) {
       return await deleteAllBy(modelName, 'id', a.id)
     },
   }
@@ -89,75 +110,103 @@ export function createQueryHelpersFor<A>(
 export async function findOne<T extends ModelType>(
   table: ModelName,
   hash: Partial<T>,
-  options?: CollectOptions
+  fn?: (v: any) => unknown
 ): Promise<T | null> {
-  const [first] = await findAll(table, hash, options)
+  const [first] = await findAll(table, hash, fn)
   return first ?? null
 }
 
 export async function findAll<T extends ModelType>(
   table: ModelName,
   hash: Partial<T>,
-  options?: CollectOptions
+  fn?: (v: any) => unknown
 ): Promise<T[]> {
   const results = await resolvedWithFields(() => {
     const args = objectToWhere(hash)
     return query[table](args)
-  }, options)
+  }, fn)
   return results ?? []
 }
 
 export async function insert<T extends ModelType>(
   table: ModelName,
-  objects: T[]
+  objects: Partial<T>[],
+  fn?: (v: any) => unknown,
+  keys?: string[]
 ): Promise<WithID<T>[]> {
   const action = `insert_${table}` as any
+
+  keys = keys || Object.keys(generatedSchema[table + '_set_input'])
+
   // @ts-ignore
-  return await resolvedMutationWithFields(() => {
-    return mutation[action]({
-      objects: prepareData(table, objects),
-    })
-  })
+  return await resolvedMutationWithFields(
+    () => {
+      return mutation[action]({
+        objects: prepareData(table, objects, '_insert_input'),
+      })
+    },
+    keys,
+    fn
+  )
 }
 
 export async function upsert<T extends ModelType>(
   table: ModelName,
-  objectsIn: T[],
-  constraint?: string
+  objectsIn: Partial<T>[],
+  constraint?: string,
+  fn?: (v: any) => unknown,
+  keys?: '*' | string[]
 ): Promise<WithID<T>[]> {
   constraint = constraint ?? defaultConstraints[table]
-  const objects = prepareData(table, objectsIn)
+  const objects = prepareData(table, objectsIn, '_insert_input')
   const update_columns = updateableColumns(table, objects[0])
   const action = `insert_${table}` as any
+
+  // input type fields are the direct name of object types
+  // 1 to 1
+  keys = keys || Object.keys(generatedSchema[table + '_set_input'])
+
   // @ts-ignore
-  return await resolvedMutationWithFields(() => {
-    return mutation[action]({
-      objects,
-      on_conflict: {
-        constraint,
-        update_columns,
-      },
-    })
-  })
+  return await resolvedMutationWithFields(
+    () => {
+      const m = mutation[action]({
+        objects,
+        on_conflict: {
+          constraint,
+          update_columns,
+        },
+      })
+
+      return m
+    },
+    keys,
+    fn
+  )
 }
 
 export async function update<T extends WithID<ModelType>>(
   table: ModelName,
   objectIn: T,
-  options: CollectOptions = {}
+  fn?: (v: any) => unknown,
+  keys?: '*' | string[]
 ): Promise<WithID<T>> {
   const action = `update_${table}` as any
-  const [object] = prepareData(table, [objectIn])
+  const [object] = prepareData(table, [objectIn], '_set_input')
   for (const key of Object.keys(object)) {
     if (object[key] == null) delete object[key]
   }
-  const [resolved] = await resolvedMutationWithFields(() => {
-    const res = mutation[action]({
-      where: { id: { _eq: object.id } },
-      _set: object,
-    })
-    return res as WithID<T>[]
-  }, options)
+  keys = keys || Object.keys(generatedSchema[table + '_set_input'])
+  const [resolved] = await resolvedMutationWithFields(
+    () => {
+      const res = mutation[action]({
+        where: { id: { _eq: object.id } },
+        _set: object,
+      })
+      return res as WithID<T>[]
+    },
+    keys,
+    fn
+  )
   return resolved
 }
 
@@ -167,9 +216,13 @@ export async function deleteAllFuzzyBy(
   value: string
 ): Promise<void> {
   await resolvedMutation(() => {
-    return mutation[`delete_${table}`]?.({
+    const m = mutation[`delete_${table}`]?.({
       where: { [key]: { _ilike: `%${value}%` } },
     })
+
+    const r = selectFields(m, '*', 3)
+
+    return r
   })
 }
 
@@ -179,9 +232,11 @@ export async function deleteAllBy(
   value: string
 ): Promise<void> {
   await resolvedMutation(() => {
-    return mutation[`delete_${table}`]?.({
+    const m = mutation[`delete_${table}`]?.({
       where: { [key]: { _eq: value } },
     })
+
+    return selectFields(m, '*', 3)
   })
 }
 
@@ -193,18 +248,14 @@ export async function deleteByIDs(table: string, ids: uuid[]): Promise<void> {
   })
 }
 
-export function prepareData<T>(table: string, objects: T[]): T[] {
-  objects = removeReadOnlyProperties<T>(table, objects)
-  objects = formatRelationData<T>(table, objects)
-  objects = objects.map((o) => ensureJSONSyntax(o) as T)
-  return objects
-}
-
 function removeReadOnlyProperties<T>(table: string, objects: T[]): T[] {
   return objects.map((cur) => {
     return Object.keys(cur).reduce((acc, key) => {
-      const field = schema[table].fields[key]
-      if (isMutatableField(field)) {
+      const fieldName = key
+      const schemaType = generatedSchema[table][key]['__type']
+      const { pureType: typeName } = parseSchemaType(schemaType)
+      // const field = schema[table].fields[key]
+      if (isMutatableField(fieldName, typeName)) {
         acc[key] = cur[key]
       }
       return acc
@@ -212,26 +263,57 @@ function removeReadOnlyProperties<T>(table: string, objects: T[]): T[] {
   })
 }
 
-function formatRelationData<T>(table: string, objects: T[]) {
+export function prepareData<T>(
+  table: string,
+  objects: T[],
+  inputType: '_set_input' | '_insert_input'
+): T[] {
+  objects = removeReadOnlyProperties<T>(table, objects)
+  objects = formatRelationData<T>(table, objects, inputType)
+  objects = objects.map((o) => ensureJSONSyntax(o) as T)
+  return objects
+}
+
+function formatRelationData<T>(
+  table: string,
+  objects: T[],
+  inputType: '_set_input' | '_insert_input'
+) {
   return objects.map((cur) => {
     return Object.keys(cur).reduce((acc, key) => {
-      const field_meta_data = schema[table].fields[key]
-      if (isMutatableRelation(field_meta_data)) {
+      const hasArgs = !!generatedSchema[table][key]['__args']
+      const schemaType = generatedSchema[table][key]['__type']
+      const {
+        pureType: typeName,
+        isArray,
+        isNullable,
+        nullableItems,
+      } = parseSchemaType(schemaType)
+      const inputKeys = Object.keys(generatedSchema[table + inputType])
+
+      const fieldName = key
+
+      if (!inputKeys.includes(fieldName)) return acc
+
+      if (isMutatableRelation(fieldName, typeName)) {
         let relation_table: string
-        if (field_meta_data.ofNode.innerNode) {
-          relation_table = field_meta_data.ofNode.innerNode.name
+
+        if (isArray) {
+          relation_table = typeName
         } else {
-          relation_table = key
+          relation_table = fieldName
         }
+
         const constraint = defaultConstraints[relation_table]
         const update_columns = updateableColumns(relation_table, cur[key])
-        acc[key] = {
+        const d = {
           data: cur[key],
           on_conflict: {
             constraint,
             update_columns,
           },
         }
+        acc[key] = d
       } else {
         acc[key] = cur[key]
       }
@@ -289,8 +371,14 @@ export function updateableColumns(table: string, object: any) {
     candidates = Object.keys(object[0])
   }
   for (const key of candidates) {
-    const field = schema[table].fields[key]
-    if (!isMutatableRelation(field)) columns.push(key)
+    try {
+      const schemaType = generatedSchema[table][key]['__type']
+      const { pureType: typeName } = parseSchemaType(schemaType)
+      const fieldName = key
+      if (!isMutatableRelation(fieldName, typeName)) columns.push(key)
+    } catch (err) {
+      console.error(err)
+    }
   }
   return columns
 }

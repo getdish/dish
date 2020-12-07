@@ -8,6 +8,7 @@ import {
   graphql,
   order_by,
   query,
+  tag,
 } from '@dish/graph'
 import { getStore } from '@dish/use-store'
 import { fullyIdle, series } from '@o/async'
@@ -73,7 +74,7 @@ export default memo(function HomePage(props: Props) {
     if (props.isActive) {
       setIsLoaded(true)
     } else {
-      return series([
+      series([
         fullyIdle,
         () => {
           setIsLoaded(true)
@@ -211,58 +212,68 @@ const HomeFeed = memo(
       !region || !item.region
         ? []
         : [
-            ...dishes.map((dish, index) => {
-              return {
-                type: 'dish',
-                id: dish.id,
-                rank: Math.random() * 10,
-                restaurantId: restaurants[0]?.id ?? '',
-                restaurantSlug: restaurants[0]?.slug ?? '',
-                dish: {
-                  slug: dish.slug ?? '',
-                  name: dish.name ?? '',
-                  icon: dish.icon ?? '',
-                  image: dish.default_images()?.[0] ?? '',
-                  score: 100,
-                },
-              } as const
-            }),
-            ...dishes.map((dish, index) => {
-              return {
-                type: 'dish-restaurants',
-                id: dish.id,
-                rank: index + (index % 2 ? 10 : 0),
-                dish: {
-                  slug: dish.slug ?? '',
-                  name: dish.name ?? '',
-                  icon: dish.icon ?? '',
-                  image: dish.default_images()?.[0] ?? '',
-                },
-                restaurants: restaurants.map((r) => {
-                  return {
-                    id: r.id,
-                    slug: r.slug,
-                  }
-                }),
-              } as const
-            }),
-            ...cuisines.map((item, index) => {
-              return {
-                type: 'cuisine',
-                id: item.country,
-                rank: index + (index % 3 ? 30 : 0),
-                ...item,
-              } as const
-            }),
-            ...restaurants.map((item, index) => {
-              return {
-                id: item.id,
-                type: 'restaurant',
-                restaurantId: item.id,
-                restaurantSlug: item.slug,
-                rank: index,
-              } as const
-            }),
+            ...dishes.map(
+              (dish, index): FeedItems => {
+                return {
+                  type: 'dish',
+                  id: dish.id,
+                  rank: Math.random() * 10,
+                  restaurantId: restaurants[0]?.id ?? '',
+                  restaurantSlug: restaurants[0]?.slug ?? '',
+                  dish: {
+                    id: dish.id ?? '',
+                    slug: dish.slug ?? '',
+                    name: dish.name ?? '',
+                    icon: dish.icon ?? '',
+                    image: dish.default_images()?.[0] ?? '',
+                    score: 100,
+                  },
+                } as const
+              }
+            ),
+            ...dishes.map(
+              (dish, index): FeedItems => {
+                return {
+                  type: 'dish-restaurants',
+                  id: dish.id,
+                  rank: index + (index % 2 ? 10 : 0),
+                  dish: {
+                    id: dish.id ?? '',
+                    slug: dish.slug ?? '',
+                    name: dish.name ?? '',
+                    icon: dish.icon ?? '',
+                    image: dish.default_images()?.[0] ?? '',
+                  },
+                  restaurants: restaurants.map((r) => {
+                    return {
+                      id: r.id,
+                      slug: r.slug,
+                    }
+                  }),
+                } as const
+              }
+            ),
+            ...cuisines.map(
+              (item, index): FeedItems => {
+                return {
+                  type: 'cuisine',
+                  id: item.country,
+                  rank: index + (index % 3 ? 30 : 0),
+                  ...item,
+                } as const
+              }
+            ),
+            ...restaurants.map(
+              (item, index): FeedItems => {
+                return {
+                  id: item.id,
+                  type: 'restaurant',
+                  restaurantId: item.id,
+                  restaurantSlug: item.slug,
+                  rank: index,
+                } as const
+              }
+            ),
           ]
 
     items = items.filter((x) => x.id)
@@ -453,7 +464,7 @@ const getRestaurantButton = (r, i) => {
   )
 }
 
-const getDishColInner = (dish: Tag, i: number) => {
+const getDishColInner = (dish: tag, i: number) => {
   return (
     <VStack marginBottom={5} key={i}>
       <DishView size={100} dish={selectTagDishViewSimple(dish)} />

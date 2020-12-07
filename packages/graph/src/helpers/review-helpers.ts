@@ -1,10 +1,20 @@
+import { selectFields } from '@dish/gqless'
 import { uniqBy } from 'lodash'
 
 import { globalTagId } from '../constants'
-import { order_by, query, review_constraint, uuid } from '../graphql'
+import {
+  Scalars,
+  order_by,
+  query,
+  review,
+  review_constraint,
+} from '../graphql/new-generated'
+// import { order_by, query, review_constraint, uuid } from '../graphql'
 import { Review } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'
+
+export type uuid = Scalars['uuid']
 
 const QueryHelpers = createQueryHelpersFor<Review>('review')
 export const reviewInsert = QueryHelpers.insert
@@ -28,10 +38,13 @@ String.prototype.replaceAll = function (search, replacement) {
   return target.replace(new RegExp(search, 'g'), replacement)
 }
 
-export async function reviewFindAllForRestaurant(restaurant_id: uuid) {
+export async function reviewFindAllForRestaurant(
+  restaurant_id: uuid,
+  fn?: (v: any) => unknown
+) {
   return await resolvedWithFields(
     () => {
-      return query.review({
+      const r = query.review({
         where: {
           restaurant_id: { _eq: restaurant_id },
         },
@@ -41,24 +54,51 @@ export async function reviewFindAllForRestaurant(restaurant_id: uuid) {
           },
         ],
       })
+
+      return r
     },
-    { relations: ['sentiments'] }
+    (r: review[]) => {
+      return r.map((review) => {
+        return {
+          ...selectFields(review, '*', 2),
+          restaurant: {
+            ...selectFields(review.restaurant),
+            tags: selectFields(review.restaurant.tags(), '*', 2),
+          },
+          sentiments: selectFields(review.sentiments(), '*', 2),
+        }
+      })
+    }
   )
 }
 
 export async function reviewFindAllForUser(user_id: uuid) {
-  return await resolvedWithFields(() => {
-    return query.review({
-      where: {
-        user_id: { _eq: user_id },
-      },
-      order_by: [
-        {
-          updated_at: order_by.asc,
+  return await resolvedWithFields(
+    () => {
+      return query.review({
+        where: {
+          user_id: { _eq: user_id },
         },
-      ],
-    })
-  })
+        order_by: [
+          {
+            updated_at: order_by.asc,
+          },
+        ],
+      })
+    },
+    (r: review[]) => {
+      return r.map((review) => {
+        return {
+          ...selectFields(review, '*', 2),
+          restaurant: {
+            ...selectFields(review.restaurant),
+            tags: selectFields(review.restaurant.tags(), '*', 2),
+          },
+          sentiments: selectFields(review.sentiments(), '*', 2),
+        }
+      })
+    }
+  )
 }
 
 export async function userFavoriteARestaurant(
@@ -66,31 +106,60 @@ export async function userFavoriteARestaurant(
   restaurant_id: uuid,
   favorited = true
 ) {
-  const [review] = await reviewUpsert([
-    {
-      restaurant_id: restaurant_id,
-      user_id: user_id,
-      tag_id: globalTagId,
-      favorited: favorited,
-    },
-  ])
+  const [review] = await reviewUpsert(
+    [
+      {
+        restaurant_id: restaurant_id,
+        user_id: user_id,
+        tag_id: globalTagId,
+        favorited: favorited,
+      },
+    ],
+    undefined,
+    (r_v: review[]) => {
+      return r_v.map((review) => {
+        return {
+          ...selectFields(review, '*', 2),
+          restaurant: {
+            ...selectFields(review.restaurant),
+            tags: selectFields(review.restaurant.tags(), '*', 2),
+          },
+          sentiments: selectFields(review.sentiments(), '*', 2),
+        }
+      })
+    }
+  )
   return review
 }
 
 export async function userFavorites(user_id: string) {
-  return await resolvedWithFields(() => {
-    return query.review({
-      where: {
-        user_id: { _eq: user_id },
-        favorited: { _eq: true },
-      },
-      order_by: [
-        {
-          updated_at: order_by.asc,
+  return await resolvedWithFields(
+    () => {
+      return query.review({
+        where: {
+          user_id: { _eq: user_id },
+          favorited: { _eq: true },
         },
-      ],
-    })
-  })
+        order_by: [
+          {
+            updated_at: order_by.asc,
+          },
+        ],
+      })
+    },
+    (r: review[]) => {
+      return r.map((review) => {
+        return {
+          ...selectFields(review, '*', 2),
+          restaurant: {
+            ...selectFields(review.restaurant),
+            tags: selectFields(review.restaurant.tags(), '*', 2),
+          },
+          sentiments: selectFields(review.sentiments(), '*', 2),
+        }
+      })
+    }
+  )
 }
 
 export async function reviewExternalUpsert(reviews: Review[]) {
@@ -98,10 +167,15 @@ export async function reviewExternalUpsert(reviews: Review[]) {
     r.text = cleanReviewText(r.text)
     return r
   })
-  return await reviewUpsert(
+
+  const d = await reviewUpsert(
     reviews,
-    review_constraint.review_username_restaurant_id_tag_id_authored_at_key
+    review_constraint.review_username_restaurant_id_tag_id_authored_at_key,
+    undefined,
+    ['__typename']
   )
+
+  return d
 }
 
 export function cleanReviewText(text: string | null | undefined) {
@@ -128,7 +202,7 @@ export function dedupeReviews(reviews: Review[]) {
   return deduped
 }
 
-export function dedupeSentiments(sentiments: ReviewTagSentence[]) {
+export function dedupeSentiments<A extends ReviewTagSentence>(sentiments: A[]) {
   const deduped = uniqBy(sentiments, (sentiment: ReviewTagSentence) => {
     return sentiment.tag_id + sentiment.sentence
   })

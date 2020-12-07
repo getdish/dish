@@ -1,4 +1,5 @@
 import { graphql, query, refetch } from '@dish/graph'
+import { useRefetch } from '@dish/graph/src/react'
 import { uniqBy } from 'lodash'
 import React, { memo } from 'react'
 import {
@@ -7,6 +8,7 @@ import {
   Spacer,
   Text,
   TextProps,
+  useForceUpdate,
   useLazyEffect,
 } from 'snackui'
 
@@ -35,6 +37,7 @@ export const RestaurantReview = memo(
       hideUsername?: boolean
       showRestaurant?: boolean
     }) => {
+      const refetch = useRefetch()
       const reviews = query.review({
         limit: 1,
         where: {
@@ -46,7 +49,8 @@ export const RestaurantReview = memo(
       const review = reviews[0]
 
       useLazyEffect(() => {
-        refetch(reviews)
+        // refetchAll()
+        refetch(reviews).catch(console.error)
       }, [refetchKey])
 
       const sentiments = review.sentiments()

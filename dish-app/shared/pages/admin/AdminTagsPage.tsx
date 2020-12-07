@@ -2,17 +2,18 @@ import {
   Tag,
   TagRecord,
   TagType,
-  WithID,
   graphql,
   order_by,
   query,
-  refetch,
+  tag,
   tagDelete,
   tagUpsert,
+  useRefetch,
 } from '@dish/graph'
+import { mutate, setCache } from '@dish/graph'
 import { Store, useStore, useStoreSelector } from '@dish/use-store'
 import { capitalize } from 'lodash'
-import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
+import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
 import {
   HStack,
@@ -22,7 +23,6 @@ import {
   VStack,
   useDebounce,
   useDebounceValue,
-  useForceUpdate,
 } from 'snackui'
 
 import { emojiRegex } from '../../helpers/emojiRegex'
@@ -223,6 +223,7 @@ const TagListContent = memo(
       newTag?: Tag
       lastRowSelection: { name: string; type: TagType }
     }) => {
+      const refetch = useRefetch()
       const perPage = 50
       const { results, total, totalPages, page, setPage } = useQueryPaginated({
         perPage,
@@ -262,23 +263,25 @@ const TagListContent = memo(
         },
       })
       const tagStore = useStore(AdminTagStore)
-      const forceUpdate = useForceUpdate()
 
-      const allResults = column === 0 ? [allTagsTag, ...results] : results
+      const allResults =
+        column === 0 ? [allTagsTag as tag, ...results] : results
 
       // refetch on every re-render so we dont have stale reads from gqless
       useEffect(() => {
         console.log('refertching')
-        refetch(results)
+        // refetchAll()
+        refetch(results).catch(console.error)
       }, [lastRowSelection])
 
       useEffect(() => {
         if (tagStore.forceRefreshColumnByType === type) {
-          const res = refetch(results)
-          console.log('res', res)
-          setTimeout(() => {
-            forceUpdate()
-          }, 1000)
+          // refetchAll()
+          refetch(results).catch(console.error)
+          // console.log('res', res)
+          // setTimeout(() => {
+          //   forceUpdate()
+          // }, 1000)
         }
       }, [tagStore.forceRefreshColumnByType])
 
@@ -308,6 +311,7 @@ const TagListContent = memo(
                 id: tag.id,
                 type: tag.type as TagType,
                 name: tag.name ?? '',
+                description: tag.description,
               }
               return (
                 <TagListItem
@@ -359,9 +363,11 @@ const TagListItem = graphql(
         <AdminListItem
           text={text}
           onDelete={() => {
+            //@ts-expect-error
             tagDelete(tag)
           }}
           onEdit={(text) => {
+            //@ts-expect-error
             setTagNameAndIcon(tag, text)
           }}
           column={column}
@@ -384,6 +390,8 @@ const TagEditColumn = memo(() => {
   const tagStore = useStore(AdminTagStore)
   const setDraftDebounced = useDebounce((x) => tagStore.setDraft(x), 200)
 
+  const refetch = useRefetch()
+
   return (
     <VStack spacing="lg">
       <>
@@ -395,11 +403,13 @@ const TagEditColumn = memo(() => {
         </SmallButton>
         {tagStore.showCreate && (
           <>
-            <TagCRUD tag={tagStore.draft} onChange={setDraftDebounced} />
+            <TagCRUD tag={tagStore.draft as Tag} onChange={setDraftDebounced} />
             <SmallButton
               onPress={async () => {
                 console.log('upserting', tagStore.draft)
                 const reply = await tagUpsert([tagStore.draft])
+
+                refetch(tagStore.draft)
                 console.log('reply', reply)
                 Toast.show('Saved')
                 tagStore.forceRefreshColumnByType = tagStore.draft.type ?? ''
@@ -433,31 +443,41 @@ const queryTag = (id: string) => {
 const TagEdit = memo(
   graphql<any>(() => {
     const tagStore = useStore(AdminTagStore)
-    const refetchTm = useRef(null)
+
     if (tagStore.selectedId) {
       const tag = queryTag(tagStore.selectedId)
-      console.log('got now', tag)
       const fullTag = {
         id: tagStore.selectedId,
         name: tag.name,
+        description: tag.description,
         type: tag.type,
         parentId: tag.parentId,
         icon: tag.icon,
         alternates: parseJSONB(tag.alternates() ?? []),
         rgb: parseJSONB(tag.rgb() ?? []),
-      }
+      } as Tag
       return (
         <TagCRUD
           key={tagStore.selectedId}
           tag={fullTag}
           onChange={async (x) => {
-            await tagUpsert([
-              {
-                ...fullTag,
-                ...x,
-              },
-            ])
-            refetch(tag)
+            const tagMutation = await mutate(
+              (mutation, { assignSelections }) => {
+                const tagMutation = mutation.update_tag_by_pk({
+                  pk_columns: {
+                    id: tagStore.selectedId,
+                  },
+                  _set: x,
+                })
+
+                assignSelections(tag, tagMutation)
+
+                return tagMutation
+              }
+            )
+
+            setCache(tag, tagMutation)
+
             Toast.show('Saved')
           }}
         />
@@ -550,6 +570,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
         unmounted = true
       }
     }
+    return undefined
   }, [tag.name])
 
   return (
@@ -631,6 +652,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
 
       <TableRow label="Icon">
         <TextInput
+          key={tag.icon}
           style={styles.textInput}
           onChange={(e) => onChange?.({ icon: e.target['value'] })}
           defaultValue={tag.icon ?? ''}

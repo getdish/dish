@@ -1,11 +1,10 @@
-import { Auth } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
 import { capitalize } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import {
   Controller,
   FieldError,
-  ValidationRules,
+  RegisterOptions,
   useForm,
 } from 'react-hook-form'
 import {
@@ -78,6 +77,7 @@ class AuthFormStore extends Store {
     username: '',
     email: '',
     password: '',
+    confirmation: '',
   }
 
   state = AuthFormStore.defaultState
@@ -274,7 +274,7 @@ export const LoginRegisterForm = ({
             {formPage == 'forgotPassword' && (
               <HStack alignSelf="flex-end">
                 <Text fontSize={14}>
-                  <Link onPress={(e) => setFormPage('login')}>
+                  <Link onClick={(e) => setFormPage('login')}>
                     Back to login
                   </Link>{' '}
                 </Text>
@@ -361,7 +361,7 @@ export const LoginRegisterForm = ({
             {formPage == 'login' && (
               <HStack alignSelf="flex-end">
                 <Text fontSize={14}>
-                  <Link onPress={(e) => setFormPage('forgotPassword')}>
+                  <Link onClick={(e) => setFormPage('forgotPassword')}>
                     Forgot password?
                   </Link>{' '}
                 </Text>
@@ -399,7 +399,7 @@ const ValidatedInput = ({
   ...rest
 }: InputProps & {
   control: any
-  rules?: ValidationRules
+  rules?: RegisterOptions
   errors?: FieldError | null
 }) => {
   return (

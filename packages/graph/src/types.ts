@@ -1,6 +1,5 @@
 import {
   menu_item,
-  mutation_root,
   photo,
   photo_xref,
   restaurant,
@@ -15,13 +14,22 @@ import {
 // used to infer returns from functions
 // but the problme is extensions... they should be excluded
 // most of the stuff in this file could be folded into gqless and fixed
+// export type FlatResolvedModel<O> = {
+//   [K in keyof O]?: K extends '__typename'
+//     ? any
+//     : O[K] extends { __typename: string }
+//     ? FlatResolvedModel<O[K]>
+//     : O[K] extends (...args: any[]) => any
+//     ? any
+//     : O[K]
+// }
 export type FlatResolvedModel<O> = {
-  [K in keyof O]?: K extends '__typename'
-    ? any
-    : O[K] extends { __typename: string }
+  [K in keyof O]: O[K] extends (...args: any) => any
+    ? ReturnType<O[K]> extends object
+      ? FlatResolvedModel<ReturnType<O[K]>>
+      : ReturnType<O[K]>
+    : O[K] extends object
     ? FlatResolvedModel<O[K]>
-    : O[K] extends (...args: any[]) => any
-    ? any
     : O[K]
 }
 
@@ -88,10 +96,6 @@ export type ModelType =
 export type ModelName = Exclude<GetModelTypeName<ModelType>, undefined>
 type GetModelTypeName<U> = U extends ModelType ? U['__typename'] : never
 
-// mutation
-interface MutationFull extends mutation_root {}
-export type Mutation = Omit<MutationFull, '__typename'>
-
 // helpers for this file
 
 export type WithID<A> = A & { id: string }
@@ -102,3 +106,14 @@ export type RestaurantTagWithID = Partial<RestaurantTag> &
 export type NonNullObject<A extends Object> = {
   [K in keyof A]: Exclude<A[K], null>
 }
+
+export type DeepPartial<T> = T extends Function
+  ? T
+  : T extends Array<infer U>
+  ? _DeepPartialArray<U>
+  : T extends object
+  ? _DeepPartialObject<T>
+  : T | undefined
+
+export interface _DeepPartialArray<T> extends Array<DeepPartial<T>> {}
+export type _DeepPartialObject<T> = { [P in keyof T]?: DeepPartial<T[P]> }

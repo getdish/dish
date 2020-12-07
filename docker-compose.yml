@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   base:
-    image: "docker.k8s.dishapp.com/dish/base${DISH_BASE_VERSION}"
+    image: 'docker.k8s.dishapp.com/dish/base${DISH_BASE_VERSION}'
     build:
       context: .
       dockerfile: ./Dockerfile

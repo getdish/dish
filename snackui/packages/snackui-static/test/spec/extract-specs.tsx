@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { AbsoluteVStack, Box, Spacer, Text, VStack } from 'snackui'
 
 import { testColor } from './constants'
@@ -11,15 +11,20 @@ type TestProps = {
   altConditional?: boolean
 }
 
+const child = <Text>hello world</Text>
+
 export function Test1() {
   return (
     <VStack
+      className="test1"
       flex={1}
       borderRadius={100}
       backgroundColor="red"
       shadowRadius={10}
       shadowColor="#000"
-    />
+    >
+      {child}
+    </VStack>
   )
 }
 
@@ -37,7 +42,9 @@ export function Test2(props: TestProps) {
           top: -14,
           backgroundColor: '#fff',
         })}
-      />
+      >
+        {child}
+      </Box>
     </>
   )
 }
@@ -46,7 +53,7 @@ export function Test2(props: TestProps) {
 export function Test3(props: any) {
   return (
     <VStack onLayout={() => {}} overflow="hidden" {...props}>
-      <div>hi</div>
+      {child}
     </VStack>
   )
 }
@@ -94,9 +101,11 @@ export function Test6(props: TestProps) {
         ? {
             backgroundColor: 'blue',
           }
-        : null)}
+        : {
+            backgroundColor: 'red',
+          })}
     >
-      <div />
+      {child}
     </VStack>
   )
 }
@@ -161,14 +170,16 @@ export function Test11(props: TestProps) {
       height={(props.conditional ? 1 : 0) * 31}
       borderRadius={8 * (props.conditional ? 1 : 0)}
       borderWidth={1}
-      borderColor={props.altConditional ? 'transparent' : 'rgba(0,0,0,0.15)'}
+      borderColor={props.altConditional ? 'red' : 'rgba(0,0,0,0.15)'}
       overflow="hidden"
       alignItems="center"
       position="relative"
       minHeight={lineHeight}
       {...props}
       backgroundColor="blue"
-    />
+    >
+      {child}
+    </VStack>
   )
 }
 

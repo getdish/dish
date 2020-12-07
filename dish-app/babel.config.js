@@ -1,7 +1,9 @@
 module.exports = function (api) {
   api.cache(true)
 
-  if (process.env.TARGET === 'web') {
+  const useOurBabel =
+    process.env.TARGET === 'web' || process.env.TARGET === 'ssr'
+  if (useOurBabel) {
     return {
       presets: ['@o/babel-preset'],
     }
@@ -9,6 +11,9 @@ module.exports = function (api) {
 
   return {
     presets: ['module:metro-react-native-babel-preset'],
-    plugins: ['transform-inline-environment-variables'],
+    plugins: [
+      '@snackui/babel-plugin',
+      'transform-inline-environment-variables',
+    ],
   }
 }
