@@ -9,6 +9,9 @@ popd
 pushd $PROJECT_ROOT
 rm -r snackui/node_modules/@babel/types || true # fix babel single version
 rm -r snackui/node_modules/@o || true
+rm -r snackui/node_modules/react || true
+rm -r snackui/node_modules/react-dom || true
+rm -r snackui/node_modules/react-native-web || true
 popd
 pushd $PROJECT_ROOT/node_modules
 rm -r react-native || true
