@@ -1,4 +1,3 @@
-// debug
 import { Loader, Search, X } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'
 import { fullyIdle, idle, series } from '@o/async'
