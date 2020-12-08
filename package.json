@@ -52,7 +52,6 @@
   },
   "resolutions": {
     "typescript": "4.1.2",
-    "snackui": "0.0.2",
     "terser": "5.3.2",
     "lodash": "4.17.20",
     "resolve": "1.17.0",
