@@ -36,7 +36,6 @@ export default memo(function App() {
 })
 
 const AppContent = memo(() => {
-  console.log('APP CONTENT')
   return (
     <AppRoot>
       <Suspense fallback={null}>
@@ -58,6 +57,7 @@ const AppContent = memo(() => {
         maxWidth="100%"
         maxHeight="100%"
         overflow="hidden"
+        backgroundColor="#D7DFFC"
       >
         {/* WARNING: DONT PUT ANYTHING ABOVE THIS IN MARKUP ^^ */}
         <Suspense fallback={null}>

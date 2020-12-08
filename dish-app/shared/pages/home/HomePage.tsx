@@ -87,7 +87,6 @@ export default memo(function HomePage(props: Props) {
     console.log('got region', props.item.region)
   }, [props.item.region])
 
-  const topContentHeight = 20 + (isSmall ? 0 : searchBarHeight + 10)
   const region =
     getStore(AppMapStore).regions[props.item.region] ??
     getStore(AppMapStore).regions['san-francisco']
@@ -129,7 +128,11 @@ export default memo(function HomePage(props: Props) {
         <ContentScrollView id="home">
           <VStack flex={1} overflow="hidden" maxWidth="100%">
             <VStack>
-              <VStack pointerEvents="none" height={topContentHeight} />
+              {/* SPACER ABOVE TITLE */}
+              <VStack
+                pointerEvents="none"
+                height={15 + (isSmall ? 0 : searchBarHeight + 10)}
+              />
               {!!region && <HomeFeed region={region} item={props.item} />}
             </VStack>
           </VStack>
@@ -295,23 +298,14 @@ const HomeFeed = memo(
       })
     }, [JSON.stringify(results)])
 
-    if (isLoading) {
-      return (
-        <>
-          <LoadingItems />
-          <LoadingItems />
-        </>
-      )
-    }
-
     return (
       <>
         <VStack alignItems="center">
           <Text
             paddingHorizontal={6}
-            fontSize={28}
+            fontSize={24}
             color="#000"
-            fontWeight="800"
+            fontWeight="300"
           >
             {region.name ?? '...'}
           </Text>
@@ -319,49 +313,58 @@ const HomeFeed = memo(
 
         <HomeTopSearches />
 
-        <Suspense fallback={null}>
-          <VStack
-            paddingBottom={100}
-            minHeight={Dimensions.get('window').height * 0.9}
-          >
-            <HStack justifyContent="center" flexWrap="wrap">
-              {items.slice(0, 12).map((item) => {
-                const content = (() => {
-                  switch (item.type) {
-                    case 'restaurant':
-                      return <RestaurantCard {...item} />
-                    case 'dish':
-                      return <DishFeedCard {...item} />
-                    case 'dish-restaurants':
-                      return <DishRestaurantsFeedCard {...item} />
-                    case 'cuisine':
-                      return <CuisineFeedCard {...item} />
+        {isLoading && (
+          <>
+            <LoadingItems />
+            <LoadingItems />
+          </>
+        )}
+
+        {!isLoading && (
+          <Suspense fallback={null}>
+            <VStack
+              paddingBottom={100}
+              minHeight={Dimensions.get('window').height * 0.9}
+            >
+              <HStack justifyContent="center" flexWrap="wrap">
+                {items.slice(0, 12).map((item) => {
+                  const content = (() => {
+                    switch (item.type) {
+                      case 'restaurant':
+                        return <RestaurantCard {...item} />
+                      case 'dish':
+                        return <DishFeedCard {...item} />
+                      case 'dish-restaurants':
+                        return <DishRestaurantsFeedCard {...item} />
+                      case 'cuisine':
+                        return <CuisineFeedCard {...item} />
+                    }
+                  })()
+                  if (!content) {
+                    return null
                   }
-                })()
-                if (!content) {
-                  return null
-                }
-                return (
-                  <VStack
-                    key={item.id}
-                    paddingHorizontal={15}
-                    paddingBottom={25}
-                    paddingTop={5}
-                    // flex={1}
-                    alignItems="center"
-                  >
-                    {content}
-                  </VStack>
-                )
-              })}
-            </HStack>
-          </VStack>
+                  return (
+                    <VStack
+                      key={item.id}
+                      paddingHorizontal={15}
+                      paddingBottom={25}
+                      paddingTop={5}
+                      // flex={1}
+                      alignItems="center"
+                    >
+                      {content}
+                    </VStack>
+                  )
+                })}
+              </HStack>
+            </VStack>
 
-          {/* pad bottom */}
-          <VStack height={20} />
+            {/* pad bottom */}
+            <VStack height={20} />
 
-          <PageFooter />
-        </Suspense>
+            <PageFooter />
+          </Suspense>
+        )}
       </>
     )
   })

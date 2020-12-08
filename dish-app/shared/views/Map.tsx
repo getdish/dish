@@ -200,7 +200,7 @@ const mapStyle = {
   maxHeight: '100%',
   maxWidth: '100%',
   overflow: 'hidden',
-  background: '#CAEAF8', // water bg color
+  // background: '#CAEAF8', // water bg color
 }
 
 const mapSetFeature = (map: mapboxgl.Map, id: any, obj: any) => {
