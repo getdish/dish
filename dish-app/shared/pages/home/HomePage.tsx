@@ -380,14 +380,14 @@ const CuisineFeedCard = graphql(function CuisineFeedCard(
   const dishes = query.tag({
     where: {
       name: {
-        _in: props.dishes.map((x) => x.name),
+        _in: props.dishes?.map((x) => x.name) ?? [],
       },
     },
   })
 
-  const r = props.dishes[0]?.best_restaurants
+  const r = props.dishes?.[0]?.best_restaurants
   useEffect(() => {
-    setRestaurants(r)
+    if (r) setRestaurants(r)
   }, [r])
 
   // useLayoutEffect(() => {
