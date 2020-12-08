@@ -4,6 +4,7 @@
   "description": "React Native component for Feather icons",
   "main": "_/index.js",
   "scripts": {
+    "prebuild": "rm -f tsconfig.tsbuildinfo",
     "generate": "node ./bin/build",
     "build": "tsc -b",
     "build:watch": "tsc -b --watch --preserveWatchOutput"
