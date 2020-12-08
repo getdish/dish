@@ -231,7 +231,7 @@ module.exports = function getWebpackConfig(
         ],
       },
       plugins: [
-        // isSSR && new LoadablePlugin(),
+        isSSR && new LoadablePlugin(),
 
         // breaks a couple things, possible to ignore
         // isClient && isProduction && new ShakePlugin({}),
