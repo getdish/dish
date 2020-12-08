@@ -83,8 +83,10 @@ export let SEARCH_DOMAIN = (() => {
 
 export const AUTH_DOMAIN = (() => {
   const AUTH_STAGING = 'https://user-server-staging.dishapp.com'
+  //const AUTH_PROD = PROD_ORIGIN
+  const AUTH_PROD = AUTH_STAGING
   const LOCAL_AUTH_SERVER = `${
-    LOCAL_ORIGIN === PROD_ORIGIN ? PROD_ORIGIN : LOCAL_ORIGIN + ':3000'
+    LOCAL_ORIGIN === AUTH_PROD ? AUTH_PROD : LOCAL_ORIGIN + ':3000'
   }`
   if (isNode) {
     return process.env.AUTH_ENDPOINT || LOCAL_AUTH_SERVER
@@ -92,10 +94,10 @@ export const AUTH_DOMAIN = (() => {
     if (isStaging) {
       return AUTH_STAGING
     } else if (isDevProd) {
-      return PROD_ORIGIN
+      return AUTH_PROD
     } else {
       if (isHasuraLive) {
-        return PROD_ORIGIN
+        return AUTH_PROD
       } else {
         return process.env.REACT_APP_AUTH_ENDPOINT || LOCAL_AUTH_SERVER
       }
