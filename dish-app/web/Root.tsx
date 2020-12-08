@@ -4,7 +4,6 @@ import React, { Suspense } from 'react'
 import { LoadingItems, ToastRoot } from 'snackui'
 
 import App from '../shared/App'
-import { ErrorHandler } from '../shared/ErrorHandler'
 import AdminPage from '../shared/pages/admin/AdminPage'
 import { Shortcuts } from '../shared/Shortcuts'
 import { NotFoundPage } from '../shared/views/NotFoundPage'
@@ -33,7 +32,6 @@ export function Root({ overmind }: { overmind?: any }) {
       <ToastRoot />
       <Shortcuts />
       <Provider value={overmind}>
-        <ErrorHandler />
         <Suspense fallback={<LoadingItems />}>
           <RouteSwitch>
             <Route name="notFound">

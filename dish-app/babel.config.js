@@ -5,7 +5,7 @@ module.exports = function (api) {
     process.env.TARGET === 'web' || process.env.TARGET === 'ssr'
   if (useOurBabel) {
     return {
-      presets: ['@o/babel-preset'],
+      presets: ['@dish/babel-preset'],
     }
   }
 

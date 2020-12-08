@@ -6,13 +6,14 @@
   "sideEffects": false,
   "private": true,
   "scripts": {
+    "prebuild": "rm -f tsconfig.tsbuildinfo",
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "jest --preset ts-jest/presets/js-with-ts tests"
   },
   "dependencies": {},
   "devDependencies": {
-    "@o/react-test-env": "*",
+    "@dish/react-test-env": "*",
     "jest": "^26.4.0",
     "ts-jest": "^26.2.0"
   },

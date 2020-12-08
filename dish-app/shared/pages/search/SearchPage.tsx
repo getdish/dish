@@ -1,5 +1,5 @@
+import { sleep } from '@dish/async'
 import { ArrowUp } from '@dish/react-feather'
-import { sleep } from '@o/async'
 import React, {
   Suspense,
   createContext,

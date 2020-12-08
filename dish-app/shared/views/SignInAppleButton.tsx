@@ -1,5 +1,5 @@
+import { sleep } from '@dish/async'
 import { Auth } from '@dish/graph'
-import { sleep } from '@o/async'
 import React, { useState } from 'react'
 import { HStack, Text, Toast, VStack } from 'snackui'
 

@@ -1,5 +1,6 @@
 import 'isomorphic-unfetch'
 
+import { sleep } from '@dish/async'
 import {
   flushTestData,
   restaurantInsert,
@@ -9,7 +10,6 @@ import {
   userFindOne,
   userUpdate,
 } from '@dish/graph'
-import { sleep } from '@o/async'
 import Sendgrid from '@sendgrid/mail'
 import anyTest, { TestInterface } from 'ava'
 import sinon from 'sinon'

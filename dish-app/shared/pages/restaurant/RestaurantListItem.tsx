@@ -1,6 +1,6 @@
+import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
-import { fullyIdle, series } from '@o/async'
 import { debounce } from 'lodash'
 import React, {
   Suspense,

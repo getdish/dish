@@ -1,12 +1,7 @@
 import { selectFields } from '@dish/gqless'
 import { merge } from 'lodash'
 
-// import { resolved } from '@o/gqless'
 import { resolved } from '../graphql/new-generated'
-
-// import { resetQueryCache } from '../graphql/client'
-// import { resetMutationCache } from '../graphql/mutation'
-// import { CollectOptions } from './collect'
 
 // just a helper that clears our cache after mutations for now
 export async function resolvedMutation<T extends () => unknown>(

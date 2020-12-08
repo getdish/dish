@@ -1,6 +1,6 @@
+import { fullyIdle, idle, series } from '@dish/async'
 import { Loader, Search, X } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'
-import { fullyIdle, idle, series } from '@o/async'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import {
   Platform,

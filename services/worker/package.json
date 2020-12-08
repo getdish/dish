@@ -5,6 +5,7 @@
   "sideEffects": false,
   "license": "none",
   "scripts": {
+    "prebuild": "rm -f tsconfig.tsbuildinfo",
     "start": "node _/index.js",
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",

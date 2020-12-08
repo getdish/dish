@@ -6,6 +6,7 @@
   "sideEffects": false,
   "private": true,
   "scripts": {
+    "prebuild": "rm -f tsconfig.tsbuildinfo",
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "true"
