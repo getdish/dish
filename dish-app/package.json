@@ -147,7 +147,7 @@
     "generate:tags": "../dishctl.sh dish_app_generate_tags"
   },
   "dependencies": {
-    "snackui": "^0.0.3",
+    "snackui": "^0.0.4",
     "@dish/async": "*",
     "@dish/graph": "*",
     "@dish/router": "*",
@@ -205,10 +205,10 @@
     "react-hook-form": "^6.9.6"
   },
   "devDependencies": {
+    "@snackui/static": "^0.0.4",
     "overmind-devtools": "27.0.0",
     "react-devtools": "4.10.0",
     "@welldone-software/why-did-you-render": "^6.0.3",
-    "@snackui/static": "^0.0.3",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "@dish/babel-preset": "*",
     "@babel/core": "^7.12.9",
