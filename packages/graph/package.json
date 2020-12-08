@@ -6,6 +6,7 @@
   "sideEffects": false,
   "private": true,
   "scripts": {
+    "prebuild": "rm -f tsconfig.tsbuildinfo",
     "generate": "ts-node --transpile-only ./generate.ts",
     "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
