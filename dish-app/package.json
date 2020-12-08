@@ -147,7 +147,7 @@
     "generate:tags": "../dishctl.sh dish_app_generate_tags"
   },
   "dependencies": {
-    "snackui": "0.0.2",
+    "snackui": "^0.0.3",
     "@dish/async": "*",
     "@dish/graph": "*",
     "@dish/router": "*",

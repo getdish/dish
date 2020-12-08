@@ -2050,6 +2050,16 @@
   resolved "https://registry.npmjs.org/@npmcli/name-from-folder/-/name-from-folder-1.0.1.tgz#77ecd0a4fcb772ba6fe927e2e2e155fbec2e6b1a"
   integrity sha512-qq3oEfcLFwNfEYOQ8HLimRGKlD8WSeGEdtUa7hmzpR8Sa7haL1KVQrvgO6wqMjhWFFVjgtrh1gIxDz+P8sjUaA==
 
+"@o/async@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.npmjs.org/@o/async/-/async-0.0.1.tgz#84c22f10c68762c240a201be524b661a79356969"
+  integrity sha512-WX33QHF5BnQji1E9LmBntg7/3BuMsN09yJCW17spviE1D8lwbR3KZAaVTjjF9m5pUAcAupGyjLzjNwKBpBI6qQ==
+
+"@o/fast-compare@^2.7.6":
+  version "2.7.6"
+  resolved "https://registry.npmjs.org/@o/fast-compare/-/fast-compare-2.7.6.tgz#1d0fedcb27b44e212aafd9e7f94499930499bfb9"
+  integrity sha512-YACb8iZqClwjxUBQyjQuXT5L0T/iYOGdkD58q31P04iXyq27BZjdE0k3MiszQ7XezeAdO+WsdmTqaotBbjkbLw==
+
 "@pmmmwh/react-refresh-webpack-plugin@^0.4.3":
   version "0.4.3"
   resolved "https://registry.npmjs.org/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.4.3.tgz#1eec460596d200c0236bf195b078a5d1df89b766"
@@ -8794,7 +8804,7 @@ expo-keep-awake@~8.2.1:
   resolved "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-8.2.1.tgz#a7956ad0fa80eb6ac6a28bb7242408e87c493677"
   integrity sha512-m644YH7R/3n6dcn03aZcmHGTk4hDDIiEiImTKsSjbXIIRuW5tfdRqLCHnja5DwBT+4sxUn58wTpK6QnTfXichA==
 
-expo-linear-gradient@^8.3.1:
+expo-linear-gradient@^8.2.1, expo-linear-gradient@^8.3.1:
   version "8.3.1"
   resolved "https://registry.npmjs.org/expo-linear-gradient/-/expo-linear-gradient-8.3.1.tgz#5dd3878c0700035d55241a4a453c5e224acc60ff"
   integrity sha512-zlWGua8vm7+af4otaSpJlzu0SYIr0aWbL0qICySCDUEKkqig6MqfuI69NYHC0w9ocWZuh2xyj6Rbfy01UqcVSg==
@@ -18889,6 +18899,21 @@ slugify@^1.3.4:
   version "1.4.6"
   resolved "https://registry.npmjs.org/slugify/-/slugify-1.4.6.tgz#ef288d920a47fb01c2be56b3487b6722f5e34ace"
   integrity sha512-ZdJIgv9gdrYwhXqxsH9pv7nXxjUEyQ6nqhngRxoAAOlmMGA28FDq5O4/5US4G2/Nod7d1ovNcgURQJ7kHq50KQ==
+
+snackui@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.npmjs.org/snackui/-/snackui-0.0.2.tgz#539cd6b221b6d2ce92f197c67d1fee5292e8f7b2"
+  integrity sha512-G3HJGHNBdU1CVtTymTdEPe/nTgIJcT7vNW1olNhfiSbXPCNWBjat/IRZNqiOoH8HdS7SOw0eKBRfrLhA2rQyWw==
+  dependencies:
+    "@o/async" "^0.0.1"
+    "@o/fast-compare" "^2.7.6"
+    "@react-native-community/blur" "^3.6.0"
+    expo-linear-gradient "^8.2.1"
+    lodash "^4.17.20"
+    react-feather "2.0.8"
+    react-laag "^1.7.3"
+    react-native-web "*"
+    react-storage-hooks "^4.0.0"
 
 snapdragon-node@^2.0.1:
   version "2.1.1"
