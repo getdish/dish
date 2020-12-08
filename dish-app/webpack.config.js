@@ -371,8 +371,9 @@ module.exports = function getWebpackConfig(
       return getConfig()
     }
 
-    if (TARGET === 'ssr' || process.env.LEGACY) {
-      const config = getConfig()
+    const config = getConfig()
+
+    if (process.env.LEGACY) {
       return {
         ...config,
         output: {
@@ -384,14 +385,17 @@ module.exports = function getWebpackConfig(
       }
     }
 
-    const config = getConfig()
-    return {
-      ...config,
-      output: {
-        ...config.output,
-        path: path.join(__dirname, 'web-build'),
-      },
+    if (TARGET !== 'ssr') {
+      return {
+        ...config,
+        output: {
+          ...config.output,
+          path: path.join(__dirname, 'web-build'),
+        },
+      }
     }
+
+    return config
   }
 
   const finalConfig = getFinalConfig()
