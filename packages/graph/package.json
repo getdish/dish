@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "generate": "ts-node --transpile-only ./generate-new.ts",
-    "build": "tsc -b || true",
+    "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "TARGET=node DISH_ENV=test ava test/* --verbose --serial",
     "test:debug": "TARGET=node DEBUG=1 DISH_ENV=test ava test/* --verbose --serial",

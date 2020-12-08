@@ -6,7 +6,7 @@
   "sideEffects": false,
   "private": true,
   "scripts": {
-    "build": "tsc -b || true",
+    "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "jest --preset ts-jest/presets/js-with-ts tests"
   },

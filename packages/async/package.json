@@ -5,7 +5,7 @@
   "tsmain": "src/index",
   "sideEffects": false,
   "scripts": {
-    "build": "tsc -b || true",
+    "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "devDependencies": {
