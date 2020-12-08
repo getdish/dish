@@ -12,6 +12,7 @@ rm -r snackui/node_modules/@o || true
 rm -r snackui/node_modules/react || true
 rm -r snackui/node_modules/react-dom || true
 rm -r snackui/node_modules/react-native-web || true
+rm -r snackui/packages/snackui-static/node_modules/snackui || true # fix dup install
 popd
 pushd $PROJECT_ROOT/node_modules
 rm -r react-native || true
