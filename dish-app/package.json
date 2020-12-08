@@ -208,7 +208,7 @@
     "overmind-devtools": "27.0.0",
     "react-devtools": "4.10.0",
     "@welldone-software/why-did-you-render": "^6.0.3",
-    "@snackui/static": "0.0.2",
+    "@snackui/static": "^0.0.3",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "@dish/babel-preset": "*",
     "@babel/core": "^7.12.9",
