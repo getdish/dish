@@ -5,6 +5,9 @@
   "main": "_/fastCompare.js",
   "module": "_/esm/fastCompare.js",
   "ts:main": "src/fastCompare.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "prebuild": "rm -f tsconfig.tsbuildinfo",
     "build": "npm-run-all --parallel build:main build:module",
