@@ -45,7 +45,7 @@ services:
     depends_on:
       - 'gorse'
   hasura:
-    image: hasura/graphql-engine:v1.2.2
+    image: hasura/graphql-engine:v1.3.3
     ports:
       - 8080:8080
     environment:
@@ -57,6 +57,7 @@ services:
       - HASURA_GRAPHQL_JWT_SECRET={"type":"HS256", "key":"12345678901234567890123456789012"}
       - DISH_HOOKS_ENDPOINT=http://dish-hooks:6154
       - GORSE_SYNC_HOOK=http://dish-hooks:6154/gorse_sync
+      - VIRTUAL_HOST=hasura-staging.dishapp.com
     depends_on:
       - 'postgres'
       - 'redis'
@@ -68,6 +69,7 @@ services:
     environment:
       - WATCH_MODE=true
       - DATABASE_URL=postgres://postgres:postgres@postgres/dish
+      - VIRTUAL_HOST=martin-tiles-staging.dishapp.com
     depends_on:
       - 'postgres'
   user-server:
@@ -81,7 +83,9 @@ services:
       - DO_SPACES_ID=${TF_VAR_DO_SPACES_ID}
       - DO_SPACES_SECRET=${TF_VAR_DO_SPACES_SECRET}
       - SENDGRID_API_KEY=${TF_VAR_SENDGRID_API_KEY}
+      - VIRTUAL_PORT=3000
       - POSTGRES_HOST=postgres
+      - VIRTUAL_HOST=user-server-staging.dishapp.com
     depends_on:
       - 'postgres'
   search:
@@ -92,6 +96,7 @@ services:
     ports:
       - 10000:10000
     environment:
+      - VIRTUAL_HOST=search-staging.dishapp.com
       - POSTGRES_HOST=postgres
     depends_on:
       - 'postgres'
@@ -102,10 +107,76 @@ services:
     image: docker.k8s.dishapp.com/dish/gorse
     ports:
       - 9000:9000
+  bert:
+    image: docker.k8s.dishapp.com/dish/bert
+    ports:
+      - 8888:8080
+    environment:
+      - VIRTUAL_HOST=bert-staging.dishapp.com
+  image-quality-api:
+    image: docker.k8s.dishapp.com/dish/image-quality-server
+    ports:
+      - 8883:5005
+    environment:
+      - VIRTUAL_HOST=image-quality-staging.dishapp.com
+  image-proxy:
+    image: docker.k8s.dishapp.com/dish/imageproxy
+    ports:
+      - 8881:8080
+    command: "-addr 0.0.0.0:8080 -cache /image-cache"
+    environment:
+      - VIRTUAL_HOST=images-staging.dishapp.com
   dish-app-web:
     image: docker.k8s.dishapp.com/dish/dish-app
     build:
       context: ./
       dockerfile: ./dish-app/Dockerfile
+    environment:
+      - VIRTUAL_HOST=staging.dishapp.com
+      - VIRTUAL_PORT=4444
     ports:
       - 4444:4444
+  nginx-web:
+    image: nginx:stable-alpine
+    labels:
+        com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+    container_name: ${NGINX_WEB:-nginx-web}
+    restart: always
+    ports:
+      - "${IP:-0.0.0.0}:${DOCKER_HTTP:-80}:80"
+      - "${IP:-0.0.0.0}:${DOCKER_HTTPS:-443}:443"
+    volumes:
+      - ${NGINX_FILES_PATH:-./data}/conf.d:/etc/nginx/conf.d
+      - ${NGINX_FILES_PATH:-./data}/vhost.d:/etc/nginx/vhost.d
+      - ${NGINX_FILES_PATH:-./data}/html:/usr/share/nginx/html
+      - ${NGINX_FILES_PATH:-./data}/certs:/etc/nginx/certs:ro
+      - ${NGINX_FILES_PATH:-./data}/htpasswd:/etc/nginx/htpasswd:ro
+    logging:
+      driver: ${NGINX_WEB_LOG_DRIVER:-json-file}
+      options:
+        max-size: ${NGINX_WEB_LOG_MAX_SIZE:-4m}
+        max-file: ${NGINX_WEB_LOG_MAX_FILE:-10}
+    depends_on:
+      - 'hasura'
+  nginx-gen:
+    image: jwilder/docker-gen
+    command: -notify-sighup ${NGINX_WEB:-nginx-web} -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
+    container_name: ${DOCKER_GEN:-nginx-gen}
+    restart: always
+    environment:
+      SSL_POLICY: ${SSL_POLICY:-Mozilla-Intermediate}
+    volumes:
+      - ${NGINX_FILES_PATH:-./data}/conf.d:/etc/nginx/conf.d
+      - ${NGINX_FILES_PATH:-./data}/vhost.d:/etc/nginx/vhost.d
+      - ${NGINX_FILES_PATH:-./data}/html:/usr/share/nginx/html
+      - ${NGINX_FILES_PATH:-./data}/certs:/etc/nginx/certs:ro
+      - ${NGINX_FILES_PATH:-./data}/htpasswd:/etc/nginx/htpasswd:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro
+    logging:
+      driver: ${NGINX_GEN_LOG_DRIVER:-json-file}
+      options:
+        max-size: ${NGINX_GEN_LOG_MAX_SIZE:-2m}
+        max-file: ${NGINX_GEN_LOG_MAX_FILE:-10}
+    depends_on:
+      - 'hasura'

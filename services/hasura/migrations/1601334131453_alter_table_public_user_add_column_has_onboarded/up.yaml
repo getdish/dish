@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."user" ADD COLUMN "has_onboarded" boolean NULL DEFAULT
-      false;
-  type: run_sql

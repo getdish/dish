@@ -8,6 +8,8 @@ export const isHasuraLive =
 export const isDevProd =
   process.env.TARGET === 'native' ||
   (!isNode && window.location?.hostname.includes('dish'))
+export const isStaging =
+  !isNode && window.location?.hostname.includes('staging')
 
 export const isNative = process.env.TARGET === 'native'
 export const isWorker =
@@ -33,7 +35,9 @@ export const RESTAURANT_WEIGHTS = {
 
 const IS_LIVE =
   typeof window !== 'undefined' && window.location?.origin.includes('live')
-const PROD_ORIGIN = 'https://dishapp.com'
+const STAGING_ORIGIN = 'https://staging.dishapp.com'
+//const PROD_ORIGIN = 'https://dishapp.com'
+const PROD_ORIGIN = STAGING_ORIGIN
 const LOCAL_ORIGIN =
   typeof window !== 'undefined'
     ? IS_LIVE
@@ -58,14 +62,18 @@ export const ORIGIN = (() => {
 })()
 
 export let SEARCH_DOMAIN = (() => {
-  const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
+  const STAGING_SEARCH_DOMAIN = 'https://search-staging.dishapp.com'
+  //const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
+  const LIVE_SEARCH_DOMAIN = STAGING_SEARCH_DOMAIN
   const LOCAL_SEARCH_DOMAIN = `${LOCAL_ORIGIN}:10000`
   if (isWorker || isNative || IS_LIVE) {
     return LIVE_SEARCH_DOMAIN
   } else if (isNode) {
     return LOCAL_SEARCH_DOMAIN
   } else {
-    if (isDevProd || isHasuraLive) {
+    if (isStaging) {
+      return STAGING_SEARCH_DOMAIN
+    } else if (isDevProd || isHasuraLive) {
       return LIVE_SEARCH_DOMAIN
     } else {
       return LOCAL_SEARCH_DOMAIN
@@ -74,17 +82,22 @@ export let SEARCH_DOMAIN = (() => {
 })()
 
 export const AUTH_DOMAIN = (() => {
+  const AUTH_STAGING = 'https://user-server-staging.dishapp.com'
+  //const AUTH_PROD = PROD_ORIGIN
+  const AUTH_PROD = AUTH_STAGING
   const LOCAL_AUTH_SERVER = `${
-    LOCAL_ORIGIN === PROD_ORIGIN ? PROD_ORIGIN : LOCAL_ORIGIN + ':3000'
+    LOCAL_ORIGIN === AUTH_PROD ? AUTH_PROD : LOCAL_ORIGIN + ':3000'
   }`
   if (isNode) {
     return process.env.AUTH_ENDPOINT || LOCAL_AUTH_SERVER
   } else {
-    if (isDevProd) {
-      return PROD_ORIGIN
+    if (isStaging) {
+      return AUTH_STAGING
+    } else if (isDevProd) {
+      return AUTH_PROD
     } else {
       if (isHasuraLive) {
-        return PROD_ORIGIN
+        return AUTH_PROD
       } else {
         return process.env.REACT_APP_AUTH_ENDPOINT || LOCAL_AUTH_SERVER
       }

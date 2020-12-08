@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: alter table "public"."review" drop constraint "review_user_id_restaurant_id_taxonomy_id_key";
-  type: run_sql

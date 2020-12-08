@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: alter table "public"."restaurant_tag" rename column "tag_id" to "taxonomy_id";
-  type: run_sql

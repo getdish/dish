@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    sql: |-
-      CREATE extension pg_trgm;
-      CREATE INDEX restaurant_trgm_idx ON restaurant USING gin (name gin_trgm_ops);
-  type: run_sql

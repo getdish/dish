@@ -25,16 +25,13 @@ sleep 10 # Postgres needs 2 starts to get everything set up
 docker-compose down
 docker-compose up -d hasura postgres timescaledb
 
-./dishctl.sh db_migrate_local
+./dishctl.sh db_migrate_local init
 docker run --net host docker.k8s.dishapp.com/dish/base \
   bash -c 'cd services/timescaledb && DISH_ENV=not-production ./migrate.sh'
 # JWT server won't start until migrations have been applied
 docker-compose down
 
-# Exclude the base service, as that's just a dev convienience to build the base image
-services=$(docker-compose config --services | grep -v base | tr '\r\n' ' ')
-echo "Starting the following services: $services"
-eval $(./dishctl.sh yaml_to_env) docker-compose up -d $services
+./dishctl.sh docker_compose_up_for_devs -d
 
 if ! timeout --preserve-status 20 bash -c wait_until_hasura_ready; then
   echo "Timed out waiting for Hasura container to start"

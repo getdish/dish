@@ -1,8 +1,0 @@
-- args:
-    name: taxonomy
-    table:
-      name: review
-      schema: public
-    using:
-      foreign_key_constraint_on: taxonomy_id
-  type: create_object_relationship

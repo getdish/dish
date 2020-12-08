@@ -1,8 +1,0 @@
-- args:
-    name: main
-    table:
-      name: tag_tag
-      schema: public
-    using:
-      foreign_key_constraint_on: tag_id
-  type: create_object_relationship

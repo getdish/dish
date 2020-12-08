@@ -1,6 +1,0 @@
-- args:
-    relationship: restaurant_parent
-    table:
-      name: dish
-      schema: public
-  type: drop_relationship

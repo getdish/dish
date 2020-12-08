@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."review" ADD COLUMN "vote" numeric NULL;
-  type: run_sql

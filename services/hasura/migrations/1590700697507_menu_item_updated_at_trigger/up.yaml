@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: CREATE TRIGGER set_public_menu_item_updated_at BEFORE UPDATE ON menu_item
-      FOR EACH ROW EXECUTE FUNCTION set_current_timestamp_updated_at();
-  type: run_sql

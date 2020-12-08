@@ -1,4 +1,0 @@
-- args:
-    cascade: false
-    sql: CREATE INDEX restaurant_id_ordered_index ON restaurant (id ASC);
-  type: run_sql

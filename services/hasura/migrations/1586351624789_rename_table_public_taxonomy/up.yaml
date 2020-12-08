@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: alter table "public"."taxonomy" rename to "tag";
-  type: run_sql

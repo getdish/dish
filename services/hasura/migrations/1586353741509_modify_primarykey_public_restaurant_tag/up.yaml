@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: "alter table \"public\".\"restaurant_tag\"\n    add constraint \"restaurant_tag_pkey\"
-      \n    primary key ( \"tag_id\", \"restaurant_id\" );"
-  type: run_sql

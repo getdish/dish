@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."menu_item" ALTER COLUMN "updated_at" TYPE timestamp
-      with time zone;
-  type: run_sql

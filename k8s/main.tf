@@ -10,6 +10,7 @@ variable "DOCKER_CONFIG_JSON" {}
 variable "JWT_KEY" {}
 variable "JWT_ADMIN_PASSWORD" {}
 variable "GRAFANA_PASSWORD" {}
+variable "GRAFANA_API_KEY" {}
 variable "CLOUDFLARE_DNS_API_TOKEN" {}
 variable "GMAIL_APP_PASSWORD" {}
 variable "K8S_DSN" {}

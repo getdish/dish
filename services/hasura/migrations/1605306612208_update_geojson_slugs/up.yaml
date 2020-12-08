@@ -1,7 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: |-
-      update zcta5 set ogc_fid = ogc_fid where nhood is not null;
-      update hrr set hrrcity = hrrcity;
-  type: run_sql

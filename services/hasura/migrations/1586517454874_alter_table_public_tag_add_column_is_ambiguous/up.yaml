@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."tag" ADD COLUMN "is_ambiguous" boolean NOT NULL DEFAULT
-      FALSE;
-  type: run_sql

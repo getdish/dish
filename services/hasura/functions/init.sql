@@ -1,0 +1,7 @@
+INSERT INTO tag (id, name)
+VALUES('00000000-0000-0000-0000-000000000000', 'Global')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO "user" (id, username, password)
+VALUES('00000000-0000-0000-0000-000000000001', '_dish_external_user', '')
+ON CONFLICT (id) DO NOTHING;

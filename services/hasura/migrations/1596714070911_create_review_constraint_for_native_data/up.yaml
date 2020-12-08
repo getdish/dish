@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: CREATE UNIQUE INDEX review_native_data_unique_constraint ON review (user_id,restaurant_id,tag_id)
-      WHERE user_id != '00000000-0000-0000-0000-000000000001';
-  type: run_sql

@@ -54,6 +54,10 @@ resource "kubernetes_deployment" "cron" {
             name = "TF_VAR_DO_SPACES_SECRET"
             value = var.DO_SPACES_SECRET
           }
+          env {
+            name = "GRAFANA_API_KEY"
+            value = var.GRAFANA_API_KEY
+          }
         }
       }
     }

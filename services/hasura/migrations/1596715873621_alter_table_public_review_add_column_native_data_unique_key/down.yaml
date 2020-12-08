@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."review" DROP COLUMN "native_data_unique_key";
-  type: run_sql

@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."tag" ADD COLUMN "rgb" jsonb NULL;
-  type: run_sql

@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."review" ADD COLUMN "native_data_unique_key" text NULL
-      UNIQUE;
-  type: run_sql

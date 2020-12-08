@@ -1,7 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql:
-      DROP FUNCTION "public"."top_dishes"("pg_catalog"."numeric", "pg_catalog"."numeric",
-      "pg_catalog"."numeric");
-  type: run_sql

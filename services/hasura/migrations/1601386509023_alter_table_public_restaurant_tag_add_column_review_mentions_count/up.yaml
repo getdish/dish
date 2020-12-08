@@ -1,6 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."restaurant_tag" ADD COLUMN "review_mentions_count"
-      numeric NULL;
-  type: run_sql

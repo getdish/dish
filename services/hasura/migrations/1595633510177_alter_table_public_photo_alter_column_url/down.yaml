@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."photo" ALTER COLUMN "url" SET NOT NULL;
-  type: run_sql

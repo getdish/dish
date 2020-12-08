@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."restaurant" ADD COLUMN "tag_photos" jsonb NULL;
-  type: run_sql

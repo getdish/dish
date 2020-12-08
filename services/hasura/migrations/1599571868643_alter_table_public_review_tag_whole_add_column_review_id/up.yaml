@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."review_tag_whole" ADD COLUMN "review_id" uuid NOT NULL;
-  type: run_sql
