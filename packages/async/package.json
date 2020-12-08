@@ -1,5 +1,5 @@
 {
-  "name": "@o/async",
+  "name": "@dish/async",
   "version": "0.0.1",
   "main": "_/index.js",
   "tsmain": "src/index",

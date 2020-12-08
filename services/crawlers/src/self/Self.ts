@@ -2,13 +2,11 @@ import '@dish/common'
 
 import { sentryException, sentryMessage } from '@dish/common'
 import {
-  HasuraError,
   MenuItem,
   PhotoXref,
   RestaurantWithId,
   globalTagId,
   menuItemsUpsertMerge,
-  onGraphError,
   restaurantUpdate,
   restaurantUpsertManyTags,
 } from '@dish/graph'
@@ -105,7 +103,6 @@ export class Self extends WorkerJob {
 
   constructor() {
     super()
-    this._listenForGraphErrors()
     this.tagging = new Tagging(this)
     this.restaurant_ratings = new RestaurantRatings(this)
     this.restaurant_base_score = new RestaurantBaseScore(this)
@@ -860,20 +857,5 @@ export class Self extends WorkerJob {
       })
       process.exit(1)
     }
-  }
-
-  _listenForGraphErrors() {
-    onGraphError((e: HasuraError) => {
-      if (!e.errors) return
-      for (const error of e.errors) {
-        if (process.env.DISH_ENV == 'production') {
-          sentryMessage('SELF CRAWL Graph Error', {
-            error: error,
-          })
-        } else {
-          console.error(error)
-        }
-      }
-    })
   }
 }

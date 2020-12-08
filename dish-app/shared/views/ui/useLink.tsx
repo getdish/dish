@@ -1,6 +1,6 @@
+import { series, sleep } from '@dish/async'
 import { isPresent } from '@dish/helpers'
 import { NavigateItem } from '@dish/router'
-import { series, sleep } from '@o/async'
 import { isEqual, omit } from 'lodash'
 import React, { useEffect, useRef } from 'react'
 import { Platform, TouchableOpacity } from 'react-native'

@@ -33,7 +33,6 @@ export function Root({ overmind }: { overmind?: any }) {
       <ToastRoot />
       <Shortcuts />
       <Provider value={overmind}>
-        <ErrorHandler />
         <Suspense fallback={<LoadingItems />}>
           <RouteSwitch>
             <Route name="notFound">

@@ -33,7 +33,7 @@
     "docker:start:web:simple": "docker run --name dish-app -it -d -p 4444:4444 --rm dish/app",
     "docker:logs:web": "docker logs -f dish-app",
     "docker:stop:web": "docker rm -f dish-app || true",
-    "build": "ultra -r --no-pretty --concurrency 16 build",
+    "build": "ultra -r --no-pretty --concurrency 1 build",
     "build:docker": "./dishctl.sh buildkit_build_local",
     "build:watch": "ultra -r --no-pretty --concurrency 500 watch",
     "build:monitor": "ultra --monitor",

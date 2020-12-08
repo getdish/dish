@@ -13,7 +13,7 @@
     "node-localstorage": "^2.1.6",
     "react-native-sync-localstorage": "^0.0.3",
     "lodash": "*",
-    "@o/fast-compare": "^2.7.6"
+    "@dish/fast-compare": "^2.7.6"
   },
   "peerDependencies": {
     "react": "*"

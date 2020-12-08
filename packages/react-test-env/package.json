@@ -1,5 +1,5 @@
 {
-  "name": "@o/react-test-env",
+  "name": "@dish/react-test-env",
   "version": "0.0.1",
   "main": "_/index.js",
   "tsmain": "src/index",

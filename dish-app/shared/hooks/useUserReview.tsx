@@ -1,3 +1,4 @@
+import { series } from '@dish/async'
 import {
   DeepPartial,
   Review,
@@ -10,7 +11,6 @@ import {
   reviewUpsert,
   useRefetch,
 } from '@dish/graph'
-import { series } from '@o/async'
 import { useEffect, useState } from 'react'
 import { Toast, useForceUpdate, useLazyEffect } from 'snackui'
 

@@ -3,7 +3,7 @@ import '@dish/helpers/polyfill'
 
 export * from './react'
 // export * from '@dish/gqless-react'
-// export { graphql } from '@o/gqless-react'
+// export { graphql } from '@dish/gqless-react'
 // export {
 //   client as newClient,
 //   query as newQuery,
@@ -15,6 +15,5 @@ export * from './types'
 export * from './types-extra'
 export * from './helpers'
 export * from './constants'
-export * from './createFetcher'
 export * from './graphql'
 export * from './Auth'

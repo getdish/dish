@@ -1,7 +1,7 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 
+import { fullyIdle, series } from '@dish/async'
 import { isHasuraLive, isStaging, slugify } from '@dish/graph'
-import { fullyIdle, series } from '@o/async'
 import _, { isEqual, throttle } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { memo, useEffect, useRef, useState } from 'react'
