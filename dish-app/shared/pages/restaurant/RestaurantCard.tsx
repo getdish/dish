@@ -13,11 +13,9 @@ import {
   cardFrameWidth,
   cardnFrameBorderRadiusSmaller,
 } from './CardFrame'
-import { ratingToRatio } from './ratingToRatio'
 import { priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
-import { restaurantRatio } from './restaurantRatio'
 
 export type RestaurantCardProps = {
   size?: 'lg' | 'md'
@@ -118,13 +116,7 @@ export const RestaurantCardContent = memo(
                 zIndex={10}
               >
                 <AbsoluteVStack top={-10} left={-10} zIndex={20}>
-                  <RestaurantUpVoteDownVote
-                    activeTags={{}}
-                    restaurantSlug={restaurantSlug}
-                    restaurantId={restaurantId}
-                    score={restaurant.score ?? 0}
-                    ratio={restaurantRatio(restaurant)}
-                  />
+                  <RestaurantUpVoteDownVote restaurantSlug={restaurantSlug} />
                 </AbsoluteVStack>
 
                 <VStack

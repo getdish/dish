@@ -116,13 +116,7 @@ const RestaurantHeaderContent = memo(
               >
                 <VStack flex={1}>
                   <HStack alignItems="center">
-                    <RestaurantUpVoteDownVote
-                      activeTags={{}}
-                      restaurantSlug={restaurantSlug}
-                      restaurantId={restaurantId}
-                      score={restaurant.score ?? 0}
-                      ratio={ratingToRatio(restaurant.rating ?? 1)}
-                    />
+                    <RestaurantUpVoteDownVote restaurantSlug={restaurantSlug} />
                     <Spacer size="xl" />
                     <Text
                       alignSelf="flex-start"

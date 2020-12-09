@@ -14,38 +14,46 @@ import {
 import { bgLight, blue, green, orange, red } from '../../colors'
 import { numberFormat } from '../../helpers/numberFormat'
 import { useIsNarrow } from '../../hooks/useIs'
+import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { HomeActiveTagsRecord } from '../../state/home-types'
+import { tagLenses } from '../../state/localTags'
+import { restaurantRatio } from './restaurantsRatio'
 import { SentimentCircle } from './SentimentCircle'
 
 type UpvoteDownvoteProps = {
-  restaurantId: string
   restaurantSlug: string
-  score: number
-  ratio: number
-  activeTags: HomeActiveTagsRecord
+  activeTags?: HomeActiveTagsRecord
   onClickPoints?: (event: GestureResponderEvent) => void
+  // only to override
+  score?: number
+  ratio?: number
 }
 
 export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
   return (
     <Suspense fallback={null}>
-      <RestaurantUpVoteDownVoteContents {...props} />
+      <RestaurantUpVoteDownVoteContents
+        activeTags={{ [tagLenses[0].slug]: true }}
+        {...props}
+      />
     </Suspense>
   )
 }
 
 const RestaurantUpVoteDownVoteContents = memo(
   graphql(function RestaurantUpVoteDownVote({
-    restaurantId,
     restaurantSlug,
     onClickPoints,
-    score: baseScore,
-    ratio,
     activeTags,
+    score,
+    ratio,
   }: UpvoteDownvoteProps) {
+    const restaurant = useRestaurantQuery(restaurantSlug)
     const { vote, setVote } = useUserTagVotes(restaurantSlug, activeTags)
-    const score = baseScore + vote
+
+    ratio = ratio ?? restaurantRatio(restaurant)
+    score = (score ?? restaurant.score) + vote
 
     return (
       <VStack position="relative">
