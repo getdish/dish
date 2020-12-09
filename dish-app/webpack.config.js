@@ -393,9 +393,12 @@ module.exports = function getWebpackConfig(
           path: path.join(__dirname, 'web-build'),
         },
       }
+    } else {
+      return {
+        ...config,
+        entry: [path.join(__dirname, 'web', 'polyfill.legacy.js'), appEntry],
+      }
     }
-
-    return config
   }
 
   const finalConfig = getFinalConfig()
