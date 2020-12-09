@@ -57,6 +57,7 @@ import { ContentScrollView } from '../../views/ContentScrollView'
 import { StackCloseButton, StackDrawer } from '../../views/StackDrawer'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
+import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import {
   ITEM_HEIGHT,
   RestaurantListItem,
@@ -358,6 +359,9 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       onSizeChanged({ width, height })
     }, [])
 
+    const meta = curProps.item.meta
+    console.log('meta', meta)
+
     return (
       <VStack onLayout={handleLayout} flex={1}>
         <ContentScrollView
@@ -400,16 +404,37 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             <SearchPageResultsInfoBox state={curProps.item} />
           </Suspense>
 
-          <HStack alignItems="center" justifyContent="center" spacing>
-            {getActiveTags(curProps.item).map((tag) => {
-              return (
-                <TagButton
-                  replaceSearch
-                  size="sm"
-                  {...getTagButtonProps(tag)}
-                />
-              )
-            })}
+          <HStack
+            alignItems="center"
+            spacing
+            borderWidth={1}
+            borderColor="#f2f2f2"
+            padding={10}
+            borderRadius={100}
+            marginHorizontal={20}
+          >
+            <SlantedTitle>Scoring</SlantedTitle>
+            {!!meta && (
+              <>
+                {getActiveTags(curProps.item).map((tag, index) => {
+                  return (
+                    <HStack alignItems="center" key={tag.slug ?? index}>
+                      <TagButton
+                        replaceSearch
+                        size="sm"
+                        {...getTagButtonProps(tag)}
+                      />
+                      <Spacer size="sm" />
+                      <Text fontSize={13} color="#999">
+                        {meta.main_tag === tag.slug.replace('lenses__', '')
+                          ? `${meta.scores.weights.main_tag}x`
+                          : `${meta.scores.weights.rishes}x`}
+                      </Text>
+                    </HStack>
+                  )
+                })}
+              </>
+            )}
           </HStack>
 
           <VStack position="relative" flex={1} minHeight={600}>

@@ -12,6 +12,7 @@ import {
 } from 'snackui'
 
 import { bgLight, blue, green, orange, red } from '../../colors'
+import { numberFormat } from '../../helpers/numberFormat'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { HomeActiveTagsRecord } from '../../state/home-types'
@@ -60,10 +61,7 @@ const RestaurantUpVoteDownVoteContents = memo(
         >
           <SentimentCircle ratio={ratio} />
         </AbsoluteVStack>
-        <VStack
-          // className="safari-fix-overflow"
-          transform={[{ skewX: '-12deg' }]}
-        >
+        <VStack transform={[{ skewX: '-12deg' }]}>
           <VStack
             shadowColor="#000"
             backgroundColor="#fff"
@@ -173,7 +171,7 @@ export const TotalScore = memo(
           cursor="default"
           onPress={onClickPoints}
         >
-          {score ?? ''}
+          {numberFormat(score ?? 0)}
         </Text>
         {subtle ? (
           downvote

@@ -323,18 +323,10 @@ const runSearch: AsyncAction<{
 
   // fetch
   let res = await search(searchArgs)
-  if (shouldCancel()) return
+  if (shouldCancel() || !res) return
 
   // temp code to handle both types of api response at once
-  let restaurants = [] as RestaurantOnlyIds[]
-  if (res) {
-    if ('restaurants' in res) {
-      restaurants = res['restaurants']
-      // add res.tags to active tags here...
-    } else {
-      restaurants = res
-    }
-  }
+  let restaurants = res.restaurants
 
   // only update searchkey once finished
   lastSearchKey = searchKey
@@ -347,6 +339,7 @@ const runSearch: AsyncAction<{
     status: 'complete',
     // limit to 80 for now
     results: restaurants.filter(isPresent).slice(0, 80),
+    meta: res.meta,
   })
 }
 

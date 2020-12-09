@@ -1,12 +1,5 @@
-import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
-import React, {
-  Suspense,
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-} from 'react'
+import React, { Suspense, memo, useEffect, useRef } from 'react'
 import { ScrollView } from 'react-native'
 import { LoadingItem, LoadingItems, Spacer, VStack } from 'snackui'
 

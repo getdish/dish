@@ -17,6 +17,7 @@ import { ratingToRatio } from './ratingToRatio'
 import { priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
+import { restaurantRatio } from './restaurantRatio'
 
 export type RestaurantCardProps = {
   size?: 'lg' | 'md'
@@ -122,7 +123,7 @@ export const RestaurantCardContent = memo(
                     restaurantSlug={restaurantSlug}
                     restaurantId={restaurantId}
                     score={restaurant.score ?? 0}
-                    ratio={ratingToRatio(restaurant.rating ?? 1)}
+                    ratio={restaurantRatio(restaurant)}
                   />
                 </AbsoluteVStack>
 

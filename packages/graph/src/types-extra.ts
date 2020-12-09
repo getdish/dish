@@ -34,6 +34,26 @@ export type TopCuisineDish = {
   reviews?: Review[]
 }
 
+export type HomeMeta = {
+  query: string
+  tags: string
+  main_tag: string
+  deliveries: string
+  prices: string
+  limit: string
+  scores: {
+    highest_score: number
+    weights: {
+      rishes: number
+      main_tag: number
+      restaurant_base: number
+      rishes_votes_ratio: number
+      main_tag_votes_ratio: number
+      restaurant_base_votes_ratio: number
+    }
+  }
+}
+
 export type TopCuisine = {
   country: string
   icon: string
