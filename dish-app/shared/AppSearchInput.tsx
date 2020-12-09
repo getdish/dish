@@ -184,7 +184,7 @@ export const AppSearchInput = memo(() => {
     >
       {!isSmall && (
         <AbsoluteVStack
-          opacity={0.5}
+          opacity={0.2}
           fullscreen
           borderRadius={100}
           overflow="hidden"

@@ -1,3 +1,13 @@
+the idea for fixing ratings btw is as follows:
+
+- left side REMOVE all the rating stuff, just show RANKING (#1, #2, etc) in big bubble
+- but hang off of it the same smiley/% rating bubble - JUST SHOWS THE RESTAURANT
+  dishes bubbles also ONLY show smiley/%
+  for ANY bubble, if they have a ton of upvotes recently we can show a :fire: emoji, that can stand in for the popularity factor
+- so basically for dishes + restaurants we just show the quality meter, no points, but we can show a little fire emoji if its recently been doing well
+  to the left of the FIRST DISH VIEW - a bigger bubble/parallelogram that is directly left of the first dish view rating bubble (underneath it a bit), overlaps a bit leftwards towards the title/content area: shows the combined score. this one i'm not sure exactly how to show, but points is possible, it would then just be a direct sum of cumulative points across everything perhaps... but could be something else, not 100% sure. basically, the left side has no voting functionality at all, this would still vote across all factors
+  in the ideal it could be just like that
+
 - feed endpoint:
 
 ```

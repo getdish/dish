@@ -64,13 +64,29 @@ module.exports = function getWebpackConfig(
       stats: 'normal',
       devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
       entry: {
-        main: process.env.LEGACY ? ['babel-polyfill', appEntry] : appEntry,
+        main:
+          process.env.LEGACY || isSSR
+            ? [
+                'babel-polyfill',
+                path.join(__dirname, 'web', 'polyfill.legacy.js'),
+                appEntry,
+              ]
+            : appEntry,
       },
       output: {
-        path: path.resolve(__dirname),
+        path: path.join(__dirname, 'web-build'),
         filename: `static/js/app.${hashFileNamePart}.js`,
         publicPath: '/',
         pathinfo: !!(isDevelopment || process.env.DEBUG_PATHS),
+        ...(isSSR && {
+          libraryTarget: 'commonjs',
+          filename: `static/js/app.ssr.${process.env.NODE_ENV}.js`,
+          path: path.join(__dirname, 'web-build-ssr'),
+        }),
+        ...(process.env.LEGACY && {
+          filename: `static/js/app.legacy.${hashFileNamePart}.js`,
+          path: path.join(__dirname, 'web-build-legacy'),
+        }),
       },
       node: {
         global: true,
@@ -305,6 +321,11 @@ module.exports = function getWebpackConfig(
             exclude: /gqless|react-refresh|node_modules/,
             // include: /snackui/,
           }),
+
+        process.env.ANALYZE_BUNDLE &&
+          new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)({
+            analyzerMode: 'static',
+          }),
       ].filter(Boolean),
       devServer: {
         hot: isHot,
@@ -326,37 +347,6 @@ module.exports = function getWebpackConfig(
       },
     }
 
-    // PLUGINS
-
-    if (process.env.ANALYZE_BUNDLE) {
-      config.plugins.push(
-        new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)({
-          analyzerMode: 'static',
-        })
-      )
-    }
-
-    if (TARGET === 'worker') {
-      // exec patch
-      const exec = require('child_process').exec
-      config.plugins.push({
-        apply: (compiler) => {
-          compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
-            exec('node ./etc/worker-patch.js', (err, stdout, stderr) => {
-              if (stdout) process.stdout.write(stdout)
-              if (stderr) process.stderr.write(stderr)
-            })
-          })
-        },
-      })
-    }
-
-    if (TARGET === 'ssr') {
-      config.output.path = path.join(__dirname, 'web-build-ssr')
-      config.output.libraryTarget = 'commonjs'
-      config.output.filename = `static/js/app.ssr.${process.env.NODE_ENV}.js`
-    }
-
     // for profiling plugin speed
     // ⚠️ this breaks HMR! Only use it for debugging
     if (process.env.PROFILE_WEBPACK) {
@@ -366,50 +356,18 @@ module.exports = function getWebpackConfig(
     return config
   }
 
-  function getFinalConfig() {
-    if (TARGET === 'worker') {
-      return getConfig()
-    }
-
-    const config = getConfig()
-
-    if (process.env.LEGACY) {
-      return {
-        ...config,
-        output: {
-          ...config.output,
-          filename: `static/js/app.legacy.${hashFileNamePart}.js`,
-          path: path.join(__dirname, 'web-build-legacy'),
-        },
-        entry: [path.join(__dirname, 'web', 'polyfill.legacy.js'), appEntry],
-      }
-    }
-
-    if (TARGET !== 'ssr') {
-      return {
-        ...config,
-        output: {
-          ...config.output,
-          path: path.join(__dirname, 'web-build'),
-        },
-      }
-    }
-
-    return config
-  }
-
-  const finalConfig = getFinalConfig()
+  const conf = getConfig()
 
   if (process.env.VERBOSE) {
-    console.log('Config:\n', finalConfig)
-    if (!Array.isArray(finalConfig)) {
-      console.log('rules', JSON.stringify(finalConfig.module.rules, null, 2))
+    console.log('Config:\n', conf)
+    if (!Array.isArray(conf)) {
+      console.log('rules', JSON.stringify(conf.module.rules, null, 2))
     }
   } else {
     console.log(`Start building ${TARGET}...`)
   }
 
-  return finalConfig
+  return conf
 }
 
 const excludedRootPaths = [
