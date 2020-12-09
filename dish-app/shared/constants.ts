@@ -25,7 +25,7 @@ export const pageWidthMax = 2000
 
 export const searchBarTopOffset = 3
 export const searchBarHeight = 50
-export const searchBarMaxWidth = pageWidthMax - 500
+export const searchBarMaxWidth = pageWidthMax - 600
 
 export const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'
 export const IMAGE_PROXY_DOMAIN = 'https://images-staging.dishapp.com'

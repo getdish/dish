@@ -34,9 +34,9 @@ export const Logo = (props: { scale?: number; color?: string }) => {
 }
 
 export const LogoColor = (props: { scale?: number }) => {
-  const scale = props.scale ?? 1.1
-  const width = 1303 * 0.064
-  const height = 608 * 0.064
+  const scale = props.scale ?? 1
+  const width = logoStyles.default.width
+  const height = logoStyles.default.height
   return (
     <VStack transform={[{ scale }]}>
       <Svg width={width} height={height} viewBox={`0 0 1303 608`}>

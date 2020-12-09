@@ -161,7 +161,7 @@ const AppSearchBarContents = memo(() => {
       <HStack
         className="ease-in-out"
         position="relative"
-        width="50%"
+        width="43%"
         maxWidth={
           isReallySmall
             ? 'auto'
@@ -171,6 +171,8 @@ const AppSearchBarContents = memo(() => {
         }
         alignItems="center"
       >
+        {!isReallySmall && <AppSearchInput />}
+
         {/* Search Input Start */}
         {isReallySmall && !isWeb && (
           <>
@@ -190,7 +192,6 @@ const AppSearchBarContents = memo(() => {
             </VStack>
           </>
         )}
-        {!isReallySmall && <AppSearchInput />}
       </HStack>
 
       {!isReallySmall && (

@@ -305,6 +305,9 @@ const runSearch: AsyncAction<{
         getTagSlug(tag)
           .replace('lenses__', '')
           .replace('filters__delivery', 'delivery')
+          .replace('filters__price-low', 'price-low')
+          .replace('filters__price-mid', 'price-mid')
+          .replace('filters__price-high', 'price-high')
       )
       .filter((t) => !t.includes(dishSearchedTag)),
   ]

@@ -16,8 +16,8 @@ export const FilterButton = memo(
     tag,
     isActive,
     color,
-    fontSize,
-    fontWeight = '500',
+    fontSize = 14,
+    fontWeight = '700',
     lineHeight,
     ...rest
   }: LinkButtonProps & {
@@ -149,7 +149,7 @@ const SearchPageDeliveryFilterButtons = memo(() => {
                     borderRadius: 100,
                   }}
                 />
-                <Text fontSize={14} fontWeight="500">
+                <Text fontSize={14} fontWeight="600">
                   {item.name}
                 </Text>
               </HStack>
