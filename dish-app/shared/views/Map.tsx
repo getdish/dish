@@ -114,17 +114,60 @@ export const MapView = (props: MapProps) => {
     setActive(map, props, internal.current, index, false)
   }, [map, features, selected])
 
+  const [isMapLoaded, setIsMapLoaded] = useState(false)
+
+  useEffect(() => {
+    if (!map) {
+      setIsMapLoaded(false)
+      return undefined
+    }
+
+    const isMapLoaded = map.isStyleLoaded()
+
+    setIsMapLoaded(isMapLoaded)
+
+    if (!isMapLoaded) {
+      const checkInterval = setInterval(() => {
+        const isMapLoaded = map.isStyleLoaded()
+
+        if (isMapLoaded) {
+          setIsMapLoaded(isMapLoaded)
+          clearInterval(checkInterval)
+        }
+      }, 500)
+
+      return () => {
+        clearInterval(checkInterval)
+      }
+    }
+
+    return undefined
+  }, [map, setIsMapLoaded])
+
+  const prevHoveredId = useRef<number>()
+
   // hovered
   useEffect(() => {
     if (!map) return
-    const isMapLoaded = map.isStyleLoaded()
     if (!isMapLoaded) return
     if (!hovered) return
     // mapSetIconHovered(map, index)
     // const index = features.findIndex((x) => x.properties?.id === hovered)
     map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', hovered])
+
+    if (prevHoveredId.current != null) {
+      mapSetFeature(map, prevHoveredId.current, { hover: false })
+    }
+    const featureId = features.findIndex(
+      (feature) => feature.properties.id === hovered
+    )
+
+    if (featureId) {
+      prevHoveredId.current = featureId
+      mapSetFeature(map, +featureId, { hover: true })
+    }
     // return animateMarker(map)
-  }, [map, hovered])
+  }, [map, hovered, isMapLoaded, features])
 
   // style
   useEffect(() => {
