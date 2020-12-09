@@ -46,6 +46,7 @@ import { DishView } from '../../views/dish/DishView'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
+import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { Link } from '../../views/ui/Link'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { SmallButton } from '../../views/ui/SmallButton'
@@ -251,6 +252,7 @@ const RestaurantListItemContent = memo(
           overflow="hidden"
         >
           <SlantedTitle alignSelf="center">Breakdown</SlantedTitle>
+          <Spacer />
           {isExpanded && (
             <Suspense fallback={<LoadingItemsSmall />}>
               <RestaurantListItemScoreBreakdown {...props} meta={meta} />
@@ -562,23 +564,31 @@ const RestaurantListItemScoreBreakdown = memo(
       restaurantSlug,
     }: RestaurantListItemProps & { meta: HomeSearchItemMeta }) => {
       const tagSlugs = getActiveTagSlugs(searchState.activeTags)
+      const restaurant = useRestaurantQuery(restaurantSlug)
       const restaurantTags = useRestaurantTagScores({
         restaurantSlug,
         tagSlugs,
       })
-      console.log('restaurantTags', tagSlugs, restaurantTags)
+      // console.log(
+      //   'restaurantTags',
+      //   tagSlugs,
+      //   restaurantTags,
+      //   restaurant.score_breakdown(),
+      //   restaurant.source_breakdown()
+      // )
       return (
-        <VStack>
-          <Text>
-            {restaurantTags.map((rtag) => {
-              return (
-                <Text key={rtag.name}>
-                  {rtag.name}: {rtag.score}
-                </Text>
-              )
-            })}
-            {JSON.stringify(meta ?? null, null, 2)}
-          </Text>
+        <VStack spacing>
+          {restaurantTags.map((rtag) => {
+            return (
+              <TagButton
+                key={rtag.slug}
+                {...getTagButtonProps(rtag)}
+                votable
+                restaurantSlug={restaurantSlug}
+              />
+            )
+          })}
+          <Text fontSize={12}>{JSON.stringify(meta ?? null, null, 2)}</Text>
         </VStack>
       )
     }

@@ -1,6 +1,7 @@
 import { order_by } from '@dish/graph'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { selectTagButtonProps } from './selectTagButtonProps'
 
 export const useRestaurantTags = ({
   restaurantSlug,
@@ -21,13 +22,5 @@ export const useRestaurantTags = ({
     },
     order_by: [{ score: order_by.desc }],
   })
-  return restaurantTags.map((tag) => ({
-    rank: tag.rank,
-    rgb: tag.tag.rgb,
-    name: tag.tag.name,
-    icon: tag.tag.icon,
-    slug: tag.tag.slug,
-    type: tag.tag.type,
-    score: tag.score,
-  }))
+  return restaurantTags.map(selectTagButtonProps)
 }
