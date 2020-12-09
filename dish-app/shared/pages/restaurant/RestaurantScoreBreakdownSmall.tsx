@@ -6,7 +6,7 @@ import React, { memo } from 'react'
 import { HStack, Spacer, Text, VStack } from 'snackui'
 
 import { bgLight } from '../../colors'
-import { getCurrentTagNames } from '../../helpers/getCurrentTagNames'
+import { getActiveTagSlugs } from '../../helpers/getActiveTagSlugs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
 import { omStatic } from '../../state/omStatic'
@@ -33,10 +33,9 @@ export const RestaurantScoreBreakdownSmall = memo(
         id: restaurantId,
       })
       const tags = omStatic.state.home.lastActiveTags
-      const tagNames = getCurrentTagNames()
       const tagScores = useRestaurantTagScores({
         restaurantSlug,
-        tagNames,
+        tagSlugs: getActiveTagSlugs(),
       })
       const searchQuery = omStatic.state.home.currentState.searchQuery
       const searchQueryText = searchQuery ? ` ${searchQuery}` : ''

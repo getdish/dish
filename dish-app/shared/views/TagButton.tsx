@@ -1,5 +1,5 @@
 // TODO if we can have compiler pick up a few more things speeds will go up a lot
-import { NonNullObject, Tag, TagType } from '@dish/graph'
+import { Tag, TagType } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import React, { memo, useState } from 'react'
 import { Image } from 'react-native'
@@ -135,7 +135,8 @@ export const TagButton = memo((props: TagButtonProps) => {
     return null
   }
   const tag = { name, type: type as TagType, icon, rgb, slug }
-  const scale = size === 'sm' ? 0.85 : size == 'lg' ? 1 : 1
+  const isSmall = size === 'sm'
+  const scale = isSmall ? 0.85 : size == 'lg' ? 1 : 1
 
   const colors = getTagColors(tag)
   const bg = backgroundColor ?? colors.backgroundColor
@@ -152,16 +153,16 @@ export const TagButton = memo((props: TagButtonProps) => {
     <>
       <HStack
         className="ease-in-out-faster"
-        height={size === 'sm' ? 28 : 34}
-        borderRadius={size === 'sm' ? 8 : 10}
-        paddingHorizontal={size === 'sm' ? 4 : 8}
+        height={isSmall ? 28 : 34}
+        borderRadius={isSmall ? 8 : 10}
+        paddingHorizontal={isSmall ? 4 : 8}
         overflow="hidden"
         alignItems="center"
         justifyContent="center"
         backgroundColor={bg}
         position="relative"
         // used again down below
-        minHeight={size == 'sm' ? 22 : 26}
+        minHeight={isSmall ? 22 : 26}
         hoverStyle={{
           backgroundColor: backgroundColorHover,
         }}
@@ -209,7 +210,7 @@ export const TagButton = memo((props: TagButtonProps) => {
           fontSize={fontSize}
           // @ts-ignore
           fontWeight={fontWeight ?? '600'}
-          lineHeight={size == 'sm' ? 22 : 26}
+          lineHeight={isSmall ? 22 : 26}
           paddingHorizontal={7 * scale}
           color={fg}
         >

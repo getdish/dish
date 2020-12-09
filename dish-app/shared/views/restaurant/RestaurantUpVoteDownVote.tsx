@@ -1,6 +1,7 @@
 import { graphql } from '@dish/graph'
 import { ChevronDown, ChevronUp } from '@dish/react-feather'
 import React, { Suspense, memo, useState } from 'react'
+import { GestureResponderEvent } from 'react-native'
 import {
   AbsoluteVStack,
   StackProps,
@@ -22,6 +23,7 @@ type UpvoteDownvoteProps = {
   score: number
   ratio: number
   activeTags: HomeActiveTagsRecord
+  onClickPoints?: (event: GestureResponderEvent) => void
 }
 
 export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
@@ -36,6 +38,7 @@ const RestaurantUpVoteDownVoteContents = memo(
   graphql(function RestaurantUpVoteDownVote({
     restaurantId,
     restaurantSlug,
+    onClickPoints,
     score: baseScore,
     ratio,
     activeTags,
@@ -78,6 +81,7 @@ const RestaurantUpVoteDownVoteContents = memo(
                 ratio={ratio}
                 vote={vote}
                 setVote={setVote}
+                onClickPoints={onClickPoints}
               />
             </VStack>
           </VStack>
@@ -93,6 +97,7 @@ export const TotalScore = memo(
     vote,
     subtle,
     setVote,
+    onClickPoints,
     size,
     ...props
   }: {
@@ -101,6 +106,7 @@ export const TotalScore = memo(
     score: number
     vote: -1 | 0 | 1
     setVote?: Function
+    onClickPoints?: (event: GestureResponderEvent) => void
     subtle?: boolean
   } & StackProps) => {
     score = Math.round(score)
@@ -151,13 +157,6 @@ export const TotalScore = memo(
         height={sizePx}
         {...props}
       >
-        {/* <AbsoluteVStack
-          fullscreen
-          borderRadius={1000}
-          backgroundColor={lightGreen}
-          transform={[{ scale: ratio }]}
-          zIndex={-1}
-        /> */}
         {subtle ? (
           upvote
         ) : (
@@ -168,9 +167,11 @@ export const TotalScore = memo(
         <Text
           fontSize={Math.min(16, sizePx / `${score}`.length) * scale * 1.075}
           fontWeight="600"
-          marginVertical={-2 * scale}
+          marginVertical={2 * scale}
           letterSpacing={-0.5}
           color={color}
+          cursor="default"
+          onPress={onClickPoints}
         >
           {score ?? ''}
         </Text>

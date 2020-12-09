@@ -16,6 +16,7 @@ import {
   AbsoluteVStack,
   HStack,
   LinearGradient,
+  LoadingItemsSmall,
   Spacer,
   StackProps,
   Text,
@@ -24,15 +25,21 @@ import {
   useGet,
 } from 'snackui'
 
-import { bgLightHover, bgLightPress, brandColor } from '../../colors'
+import { bgLight, bgLightHover, bgLightPress, brandColor } from '../../colors'
 import { isWeb } from '../../constants'
+import { getActiveTagSlugs } from '../../helpers/getActiveTagSlugs'
 import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../helpers/isIOS'
 import { numberFormat } from '../../helpers/numberFormat'
 import { useIsNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
 import { allTags } from '../../state/allTags'
-import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
+import {
+  GeocodePlace,
+  HomeSearchItemMeta,
+  HomeStateItemSearch,
+} from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
@@ -40,6 +47,7 @@ import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { Link } from '../../views/ui/Link'
+import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { ensureFlexText } from './ensureFlexText'
 import { RankView } from './RankView'
@@ -47,10 +55,7 @@ import { ratingToRatio } from './ratingToRatio'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours, priceRange } from './RestaurantDetailRow'
-import {
-  RestaurantFavoriteButton,
-  RestaurantFavoriteStar,
-} from './RestaurantFavoriteButton'
+import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { RestaurantSourcesBreakdownRow } from './RestaurantSourcesBreakdownRow'
 import { useTotalReviews } from './useTotalReviews'
 
@@ -149,6 +154,7 @@ const RestaurantListItemContent = memo(
       restaurantSlug,
       currentLocationInfo,
       isLoaded,
+      searchState,
     } = props
     const pad = 18
     const isSmall = useIsNarrow()
@@ -168,6 +174,8 @@ const RestaurantListItemContent = memo(
     const tagIds = 'activeTags' in curState ? curState.activeTags : {}
     const score = restaurant.score ?? 0
     const [isActive, setIsActive] = useState(false)
+    const [isExpanded, setIsExpanded] = useState(false)
+    const meta = searchState.results[rank]?.meta
 
     const getIsActive = useGet(isActive)
     useLayoutEffect(() => {
@@ -218,7 +226,7 @@ const RestaurantListItemContent = memo(
 
     return (
       <VStack
-        className="hover-faded-in-parent"
+        className="ease-in-out-slow hover-faded-in-parent"
         alignItems="flex-start"
         justifyContent="flex-start"
         height={ITEM_HEIGHT}
@@ -229,7 +237,27 @@ const RestaurantListItemContent = memo(
         display={restaurant.name === null ? 'none' : 'flex'}
         paddingHorizontal={pad}
         position="relative"
+        {...(isExpanded && {
+          transform: [{ translateX: 300 }],
+        })}
       >
+        {/* expanded content */}
+        <AbsoluteVStack
+          backgroundColor={bgLight}
+          width={300 - 40}
+          transform={[{ translateX: -320 }]}
+          height="100%"
+          padding={20}
+          overflow="hidden"
+        >
+          <SlantedTitle alignSelf="center">Breakdown</SlantedTitle>
+          {isExpanded && (
+            <Suspense fallback={<LoadingItemsSmall />}>
+              <RestaurantListItemScoreBreakdown {...props} meta={meta} />
+            </Suspense>
+          )}
+        </AbsoluteVStack>
+
         {/* border left */}
         <AbsoluteVStack
           top={0}
@@ -244,12 +272,18 @@ const RestaurantListItemContent = memo(
           <AbsoluteVStack top={34} left={-12} zIndex={1000}>
             <RestaurantUpVoteDownVote
               key={JSON.stringify(tagIds)}
-              score={score}
+              score={Math.round(meta?.effective_score ?? 0)}
               ratio={ratingToRatio(restaurant.rating ?? 1)}
               restaurantId={restaurantId}
               restaurantSlug={restaurantSlug}
               activeTags={tagIds}
+              onClickPoints={() => {
+                setIsExpanded((x) => !x)
+              }}
             />
+            <AbsoluteVStack top={-6} right={-20} zIndex={-1}>
+              <RankView rank={rank} />
+            </AbsoluteVStack>
           </AbsoluteVStack>
         )}
 
@@ -269,7 +303,7 @@ const RestaurantListItemContent = memo(
               name="restaurant"
               params={{ slug: restaurantSlug }}
             >
-              <VStack paddingLeft={30} paddingTop={25}>
+              <VStack paddingLeft={50} paddingTop={25}>
                 <HStack alignItems="center">
                   <Spacer size="xs" />
 
@@ -520,6 +554,37 @@ const fadeOutRightElement = (
   </VStack>
 )
 
+const RestaurantListItemScoreBreakdown = memo(
+  graphql(
+    ({
+      searchState,
+      meta,
+      restaurantSlug,
+    }: RestaurantListItemProps & { meta: HomeSearchItemMeta }) => {
+      const tagSlugs = getActiveTagSlugs(searchState.activeTags)
+      const restaurantTags = useRestaurantTagScores({
+        restaurantSlug,
+        tagSlugs,
+      })
+      console.log('restaurantTags', restaurantTags)
+      return (
+        <VStack>
+          <Text>
+            {restaurantTags.map((rtag) => {
+              return (
+                <Text key={rtag.name}>
+                  {rtag.name}: {rtag.score}
+                </Text>
+              )
+            })}
+            {JSON.stringify(meta ?? null, null, 2)}
+          </Text>
+        </VStack>
+      )
+    }
+  )
+)
+
 const RestaurantPeekDishes = memo(
   graphql(function RestaurantPeekDishes(props: {
     size?: 'lg' | 'md'
@@ -535,8 +600,8 @@ const RestaurantPeekDishes = memo(
     const { isLoaded, searchState, size = 'md' } = props
     const tagSlugs = [
       searchState.searchQuery.toLowerCase(),
-      ...Object.keys(searchState?.activeTags || {}).filter((x) => {
-        const isActive = searchState?.activeTags[x]
+      ...Object.keys(searchState.activeTags || {}).filter((x) => {
+        const isActive = searchState.activeTags[x]
         if (!isActive) {
           return false
         }

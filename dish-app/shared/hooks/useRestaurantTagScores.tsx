@@ -4,23 +4,20 @@ import { useRestaurantQuery } from './useRestaurantQuery'
 
 export function useRestaurantTagScores({
   restaurantSlug,
-  tagNames,
+  tagSlugs,
 }: {
   restaurantSlug: string
-  tagNames: string[]
+  tagSlugs: string[]
 }) {
   const restaurant = useRestaurantQuery(restaurantSlug)
-  return tagNames
+  return tagSlugs
     .map((tagName) => {
       const rtag = restaurant.tags({
         limit: 1,
         where: {
           tag: {
-            name: {
+            slug: {
               _eq: tagName,
-            },
-            type: {
-              _neq: 'country',
             },
           },
         },
