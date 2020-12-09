@@ -1,3 +1,4 @@
+import { fullyIdle, series } from '@dish/async'
 import {
   LngLat,
   RestaurantOnlyIds,
@@ -11,7 +12,6 @@ import {
   tag,
 } from '@dish/graph'
 import { getStore } from '@dish/use-store'
-import { fullyIdle, series } from '@o/async'
 import { sortBy, uniqBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'

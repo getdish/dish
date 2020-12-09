@@ -1,5 +1,5 @@
+import { fullyIdle, series } from '@dish/async'
 import { X } from '@dish/react-feather'
-import { fullyIdle, series } from '@o/async'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { TextInput } from 'react-native'
 import { HStack, Text, VStack } from 'snackui'

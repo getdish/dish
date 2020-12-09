@@ -6,7 +6,8 @@
   "sideEffects": false,
   "private": true,
   "scripts": {
-    "build": "tsc -b || true",
+    "prebuild": "rm -f tsconfig.tsbuildinfo",
+    "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput",
     "test": "DISH_ENV=test ava tests/* --verbose",
     "test:watch": "DISH_ENV=test ava tests/* --watch"

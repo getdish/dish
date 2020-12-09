@@ -1,5 +1,6 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 
+import { fullyIdle, series } from '@dish/async'
 import { isHasuraLive, isStaging, slugify } from '@dish/graph'
 import { useStore } from '@dish/use-store'
 import { fullyIdle, series } from '@o/async'

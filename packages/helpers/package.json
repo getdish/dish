@@ -6,14 +6,15 @@
   "sideEffects": false,
   "private": true,
   "scripts": {
-    "build": "tsc -b || true",
+    "prebuild": "rm -f tsconfig.tsbuildinfo",
+    "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "dependencies": {
     "node-localstorage": "^2.1.6",
     "react-native-sync-localstorage": "^0.0.3",
     "lodash": "*",
-    "@o/fast-compare": "^2.7.6"
+    "@dish/fast-compare": "^2.7.6"
   },
   "peerDependencies": {
     "react": "*"

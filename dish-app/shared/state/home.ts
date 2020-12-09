@@ -1,3 +1,5 @@
+import { fullyIdle, idle, sleep } from '@dish/async'
+import { isEqual } from '@dish/fast-compare'
 import {
   RestaurantOnlyIds,
   RestaurantSearchArgs,
@@ -12,8 +14,6 @@ import {
   stringify,
 } from '@dish/helpers'
 import { HistoryItem, NavigateItem } from '@dish/router'
-import { fullyIdle, idle, sleep } from '@o/async'
-import { isEqual } from '@o/fast-compare'
 import _, { clamp, cloneDeep, findLast, isPlainObject, last } from 'lodash'
 import { Action, AsyncAction, Config, IContext, derived } from 'overmind'
 import { Keyboard } from 'react-native'

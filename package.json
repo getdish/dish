@@ -33,7 +33,7 @@
     "docker:start:web:simple": "docker run --name dish-app -it -d -p 4444:4444 --rm dish/app",
     "docker:logs:web": "docker logs -f dish-app",
     "docker:stop:web": "docker rm -f dish-app || true",
-    "build": "ultra -r --no-pretty --concurrency 16 build",
+    "build": "ultra -r --no-pretty --concurrency 1 build",
     "build:docker": "./dishctl.sh buildkit_build_local",
     "build:watch": "ultra -r --no-pretty --concurrency 500 watch",
     "build:monitor": "ultra --monitor",
@@ -48,11 +48,10 @@
     "prettier:check": "prettier --check \"**/*.{ts,tsx}\"",
     "expo:check-deps": "expo-yarn-workspaces check-workspace-dependencies",
     "snackui:pull": "git subrepo pull snackui",
-    "snackui:push": "git subrepo push snackui"
+    "snackui:push": "git subrepo clean snackui && git subrepo push snackui"
   },
   "resolutions": {
     "typescript": "4.1.2",
-    "snackui": "0.0.2",
     "terser": "5.3.2",
     "lodash": "4.17.20",
     "resolve": "1.17.0",
@@ -94,7 +93,6 @@
     "@types/node": "13.11.1",
     "@unimodules/core": "^5.3.0",
     "@unimodules/react-native-adapter": "^5.4.0",
-    "@zerollup/ts-transform-paths": "^1.7.18",
     "ava": "^3.8.2",
     "esm": "^3.2.25",
     "expo-yarn-workspaces": "*",

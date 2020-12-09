@@ -10,5 +10,9 @@
   },
   "include": ["./src"],
   "exclude": ["_"],
-  "references": []
+  "references": [
+    {
+      "path": "../fast-compare"
+    }
+  ]
 }

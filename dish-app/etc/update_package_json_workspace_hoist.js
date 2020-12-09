@@ -1,10 +1,9 @@
 const package = require('../package.json')
 
 const hoists = {
-  '@o/gqless-react': true,
-  '@o/gqless-schema': true,
-  '@o/gqless-utils': true,
-  '@o/gqless': true,
+  '@dish/gqless-react': true,
+  '@dish/gqless-utils': true,
+  '@dish/gqless': true,
   snackui: true,
 }
 

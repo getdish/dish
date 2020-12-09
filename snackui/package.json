@@ -1,27 +1,33 @@
 {
   "name": "snackui-monorepo",
   "private": true,
+  "version": "0.0.0",
   "engines": {
     "node": "12.16.1"
   },
   "workspaces": {
     "packages": [
       "packages/*"
+    ],
+    "nohoist": [
+      "@dish/proxy-worm",
+      "@dish/proxy-worm/**"
     ]
   },
   "scripts": {
     "build": "ultra -r --no-pretty --concurrency 16 build",
     "build:watch": "ultra -r --no-pretty --concurrency 500 watch",
     "test": "ultra -r --no-pretty --serial test",
-    "prettier": "prettier --write \"**/*.{ts,tsx}\" || true"
+    "prettier": "prettier --write \"**/*.{ts,tsx}\" || true",
+    "publish:all": "lerna publish"
   },
   "devDependencies": {
-    "@zerollup/ts-transform-paths": "^1.7.18",
     "ava": "^3.8.2",
+    "lerna": "^3.22.1",
     "prettier": "^2.1.2",
     "prettier-plugin-import-sort": "^0.0.4",
     "ts-node": "9.0.0",
-    "ultra-runner": "^3.5.0"
+    "ultra-runner": "^3.6.0"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {

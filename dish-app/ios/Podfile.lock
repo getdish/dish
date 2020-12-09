@@ -4,7 +4,7 @@ PODS:
   - CocoaAsyncSocket (7.6.4)
   - CocoaLibEvent (1.0.0)
   - DoubleConversion (1.1.6)
-  - EXConstants (9.1.1):
+  - EXConstants (9.2.0):
     - UMConstantsInterface
     - UMCore
   - EXErrorRecovery (1.2.2):
@@ -21,7 +21,7 @@ PODS:
     - UMImageLoaderInterface
   - EXKeepAwake (8.2.1):
     - UMCore
-  - EXLinearGradient (8.2.1):
+  - EXLinearGradient (8.2.2):
     - UMCore
   - EXLocation (8.2.1):
     - UMCore
@@ -294,7 +294,7 @@ PODS:
     - Mapbox-iOS-SDK (~> 6.1)
     - React
     - React-Core
-  - react-native-safe-area-context (3.1.8):
+  - react-native-safe-area-context (3.1.9):
     - React-Core
   - React-RCTActionSheet (0.63.2):
     - React-Core/RCTActionSheetHeaders (= 0.63.2)
@@ -387,7 +387,7 @@ PODS:
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - EXConstants (from `../node_modules/expo-constants/ios`)
+  - EXConstants (from `../node_modules/expo-linking/node_modules/expo-constants/ios`)
   - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
@@ -488,7 +488,7 @@ EXTERNAL SOURCES:
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EXConstants:
-    :path: "../node_modules/expo-constants/ios"
+    :path: "../node_modules/expo-linking/node_modules/expo-constants/ios"
   EXErrorRecovery:
     :path: "../node_modules/expo-error-recovery/ios"
   EXFileSystem:
@@ -608,13 +608,13 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
   DoubleConversion: cde416483dac037923206447da6e1454df403714
-  EXConstants: f907b3b6ce16e20d1750f22af1e095e924574bcb
+  EXConstants: f486f6b4a36b86e47ab258d4d2b7b2699786fdce
   EXErrorRecovery: ff58873bf2714fcd5290935d49b74d9fc589d575
   EXFileSystem: 76875135b61708b9afa7e6a89b72a60ba0fdfa20
   EXFont: e583875d5d37a9e272d1cdba7f383bd576952919
   EXImageLoader: 02ca02c9cd5cc8a97b423207a73a791e0a86bea5
   EXKeepAwake: 8b0f68242f036b971f9f8976341823cbe6f50812
-  EXLinearGradient: 663bf3b9009a96567e98498016e40422631be81d
+  EXLinearGradient: fd56f6e9fca133329f190d75bfa28dc57ed7a1dc
   EXLocation: e93020e255f52a1cc031e0f45b0a24eb20fc4b55
   EXPermissions: 80ac3acbdb145930079810fe5b08c022b3428aa8
   EXSplashScreen: 9423d258b71afa5bf128a83dcb57b636d9900a74
@@ -646,7 +646,7 @@ SPEC CHECKSUMS:
   React-jsinspector: b14e62ebe7a66e9231e9581279909f2fc3db6606
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-mapbox-gl: fef5e17f45b66d93241766436d1fa613c850db2b
-  react-native-safe-area-context: 79fea126c6830c85f65947c223a5e3058a666937
+  react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   React-RCTActionSheet: 910163b6b09685a35c4ebbc52b66d1bfbbe39fc5
   React-RCTAnimation: 9a883bbe1e9d2e158d4fb53765ed64c8dc2200c6
   React-RCTBlob: 39cf0ece1927996c4466510e25d2105f67010e13

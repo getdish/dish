@@ -1,11 +1,15 @@
 {
-  "name": "@o/async",
+  "name": "@dish/async",
   "version": "0.0.1",
   "main": "_/index.js",
   "tsmain": "src/index",
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "build": "tsc -b || true",
+    "prebuild": "rm -f tsconfig.tsbuildinfo",
+    "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "devDependencies": {

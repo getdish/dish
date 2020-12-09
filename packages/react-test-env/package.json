@@ -1,11 +1,12 @@
 {
-  "name": "@o/react-test-env",
+  "name": "@dish/react-test-env",
   "version": "0.0.1",
   "main": "_/index.js",
   "tsmain": "src/index",
   "sideEffects": false,
   "scripts": {
-    "build": "tsc -b || true",
+    "prebuild": "rm -f tsconfig.tsbuildinfo",
+    "build": "tsc -b",
     "watch": "tsc -b --watch --preserveWatchOutput"
   },
   "devDependencies": {
