@@ -48,21 +48,14 @@ export const usePreventContentScroll = (id: string) => {
 
 export const ContentScrollContext = createContext('id')
 
-export const ContentScrollView = forwardRef(
-  (
-    {
-      children,
-      onScrollYThrottled,
-      style,
-      id,
-      ...props
-    }: ScrollViewProps & {
-      id: string
-      children: any
-      onScrollYThrottled?: Function
-    },
-    ref
-  ) => {
+type ContentScrollViewProps = ScrollViewProps & {
+  id: string
+  children: any
+  onScrollYThrottled?: Function
+}
+
+export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
+  ({ children, onScrollYThrottled, style, id, ...props }, ref) => {
     const preventScrolling = usePreventContentScroll(id)
     const scrollStore = useStore(ScrollStore, { id })
     const isSmall = useIsNarrow()
@@ -106,7 +99,7 @@ export const ContentScrollView = forwardRef(
     return (
       <ContentScrollContext.Provider value={id}>
         <ScrollView
-          ref={ref as any}
+          ref={ref}
           {...props}
           onScroll={setIsScrolling}
           scrollEventThrottle={16}

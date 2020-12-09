@@ -71,7 +71,7 @@ const RestaurantHeaderContent = memo(
         ((nameLen > 24 ? 26 : nameLen > 18 ? 30 : 40) *
           (size === 'sm' ? 0.8 : 1))
 
-      const contentLeftWidth = width - 40
+      const contentLeftWidth = width - 60
       const restaurantId = restaurant.id
 
       return (
@@ -238,23 +238,6 @@ const RestaurantHeaderContent = memo(
                               restaurantSlug={restaurantSlug}
                             />
                           </VStack>
-
-                          {/* <VStack
-                            marginTop={-90}
-                            marginBottom={-30}
-                            className="ease-in-out"
-                            // opacity={isScrolled ? 0 : 1}
-                            transform={[{ scale: 0.8 }]}
-                            // hoverStyle={{
-                            //   transform: [{ scale: 1 }, { translateY: -20 }],
-                            // }}
-                          >
-                            <RestaurantCard
-                              restaurantSlug={restaurantSlug}
-                              restaurantId={restaurant.id}
-                              size="md"
-                            />
-                          </VStack> */}
                         </HStack>
                       </VStack>
                     </VStack>

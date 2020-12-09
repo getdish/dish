@@ -1,6 +1,14 @@
+import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
-import React, { Suspense, memo } from 'react'
-import { LoadingItem, Spacer, VStack } from 'snackui'
+import React, {
+  Suspense,
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from 'react'
+import { ScrollView } from 'react-native'
+import { LoadingItem, LoadingItems, Spacer, VStack } from 'snackui'
 
 import { bgLight, bgLightHover, darkBlue } from '../../colors'
 import { getMinLngLat } from '../../helpers/getLngLat'
@@ -35,8 +43,9 @@ const RestaurantPage = memo(
     const { restaurantSlug, section, sectionSlug } = item
     const restaurant = useRestaurantQuery(restaurantSlug)
     const coords = restaurant?.location?.coordinates
+    const scrollView = useRef<ScrollView>()
     const { selectedDish, setSelectedDishToggle } = useSelectedDish(
-      section === 'dishes' ? sectionSlug : null
+      section === 'reviews' ? sectionSlug : null
     )
 
     usePageLoadEffect(
@@ -57,13 +66,27 @@ const RestaurantPage = memo(
       [coords]
     )
 
+    // TODO it wont scroll on initial load, maybe suspense issue
+    const scroller = scrollView.current
+    useEffect(() => {
+      if (!scroller) return
+      if (!item.sectionSlug) return
+      scroller.scrollTo({ y: 550, animated: true })
+      // return series([
+      //   () => fullyIdle({ max: 1000 }),
+      //   () => {
+
+      //   },
+      // ])
+    }, [scroller, item.sectionSlug])
+
     return (
       <>
         <PageTitleTag>
           Dish - {restaurant?.name ?? ''} has the best [...tags] dishes.
         </PageTitleTag>
 
-        <ContentScrollView id="restaurant">
+        <ContentScrollView ref={scrollView} id="restaurant">
           {/* HEADER */}
           {/* -1 margin bottom to overlap bottom border */}
           <VStack
@@ -73,7 +96,7 @@ const RestaurantPage = memo(
           >
             <Suspense
               fallback={
-                <VStack height={497} width="100%">
+                <VStack height={600} width="100%">
                   <LoadingItem size="lg" />
                 </VStack>
               }
@@ -97,7 +120,7 @@ const RestaurantPage = memo(
                 }
               >
                 <RestaurantDishPhotos
-                  size={110}
+                  size={120}
                   max={40}
                   restaurantSlug={restaurantSlug}
                   restaurantId={restaurant.id ?? undefined}
@@ -111,9 +134,9 @@ const RestaurantPage = memo(
 
           <Spacer size="xl" />
 
-          <Suspense fallback={null}>
+          <Suspense fallback={<LoadingItems />}>
             <RestaurantBreakdown
-              tagName={selectedDish}
+              tagSlug={selectedDish}
               borderless
               showScoreTable
               restaurantSlug={restaurantSlug}
