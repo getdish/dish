@@ -16,15 +16,26 @@
 
 SnackUI is a UI kit for react native and react native web that builds on the ideas of [JSXStyle](https://github.com/jsxstyle/jsxstyle) and SwiftUI. It's a great way to build cross platform app UI's on React that scale well - with smaller bundle sizes and faster rendering performance than StyleSheet.create() on the web.
 
-## Features
+SnackUI is light. It doesn't prescribe much beyond providing a few basic views that help you lay things out and providing the optimizing compiler.
 
-SnackUI is light. It doesn't prescribe much beyond providing a few basic views that help you lay things out and providing the optimizing compiler. It aims to be a **win-win-win-win-win**:
+## Tradeoffs
+
+#### Pros
 
 - **Nicer base views**: Stacks are easy to learn and use
 - **Less up front time**: No more jumping between style/view, no time spent thinking about naming things.
 - **Less long term maintenance**: No dead code to clean up, no thinking about merging shared styles.
 - **Smaller bundle sizes**: Because everything is extracted to atomic CSS and theres no managing duplicate styles, you ship less JS and lighten your bundle.
 - **Faster runtime performance**: Your browser can parse the CSS as it loads the page, view flattening means React trees are far more shallow.
+- **Devtools**: Compiler outputs helpful information to DOM
+
+#### Cons
+
+- **More setup**: Need to configure a webpack plugin and babel plugin
+- **Is Beta**: Will run into edge cases
+- **Testing**: Needs to implement some testing helpers
+
+## Features
 
 SnackUI views flatten all style props onto the base props so there's no separate `style` prop to use, if you want to read reasoning on why, [see why JSXStyle does it](https://github.com/jsxstyle/jsxstyle#why-write-styles-inline-with-jsxstyle), SnackUI has all the same upsides listed there.
 
@@ -86,7 +97,7 @@ Why is this beneficial? React Native Web's views like `<View />` and `<Text />` 
 Add snackui to your project:
 
 ```bash
-yarn add snackui @snackui/static
+yarn add snackui @snackui/babel-plugin
 ```
 
 You'll likely want to gitignore the outputted style files, though it's not necessary. In your `.gitignore`:
@@ -97,7 +108,9 @@ You'll likely want to gitignore the outputted style files, though it's not neces
 
 ### Babel - Native / Simple extraction (experimental)
 
-For a simpler setup you can just add `@snackui/static` as a babel plugin to get extraction just to StyleSheet.create(). This isn't as performant as going to CSS, but works with anything that supports babel.
+For a simpler setup you can just add `@snackui/babel-plugin` as a babel plugin to your babel config to get extraction just to StyleSheet.create(). This isn't as performant as going to CSS, but works with anything that supports babel.
+
+You can technically just use the babel plugin, but if you want much better flattening and CSS extraction, read on.
 
 ### Webpack - CSS extraction
 
