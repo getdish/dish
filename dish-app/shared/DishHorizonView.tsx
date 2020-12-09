@@ -6,7 +6,7 @@ import { green, pink, purple, yellow } from './colors'
 export function DishHorizonView() {
   return (
     <AbsoluteVStack
-      opacity={0.25}
+      opacity={0.35}
       fullscreen
       borderRadius={100}
       overflow="hidden"

@@ -200,12 +200,17 @@ const RestaurantListItemContent = memo(
     const [open_text, open_color, opening_hours] = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const totalReviews = useTotalReviews(restaurant)
+    const nameLen = restaurantName.length
     const titleFontScale =
-      restaurantName.length > 30
+      nameLen > 50
+        ? 0.7
+        : nameLen > 40
+        ? 0.8
+        : nameLen > 30
         ? 0.9
-        : restaurantName.length > 25
+        : nameLen > 25
         ? 0.925
-        : restaurantName.length > 15
+        : nameLen > 15
         ? 0.975
         : 1.15
     const titleFontSize = 1.2 * (isSmall ? 18 : 22) * titleFontScale
@@ -271,37 +276,33 @@ const RestaurantListItemContent = memo(
                   {/* SECOND LINK WITH actual <a /> */}
                   <Text
                     selectable
-                    maxWidth="100%"
-                    width="100%"
                     lineHeight={26}
                     textDecorationColor="transparent"
                     fontWeight="600"
                   >
                     <Link name="restaurant" params={{ slug: restaurantSlug }}>
-                      <HStack>
-                        <HStack
-                          paddingHorizontal={8}
-                          borderRadius={8}
-                          alignItems="center"
-                          marginVertical={-5}
-                          // @ts-ignore
-                          hoverStyle={{
-                            backgroundColor: bgLightHover,
-                          }}
-                          pressStyle={{
-                            backgroundColor: bgLightPress,
-                          }}
+                      <HStack
+                        paddingHorizontal={8}
+                        borderRadius={8}
+                        alignItems="center"
+                        marginVertical={-5}
+                        maxWidth={contentSideProps.maxWidth}
+                        hoverStyle={{
+                          backgroundColor: bgLightHover,
+                        }}
+                        pressStyle={{
+                          backgroundColor: bgLightPress,
+                        }}
+                      >
+                        <Text
+                          fontSize={titleFontSize}
+                          lineHeight={titleHeight}
+                          height={titleHeight}
+                          color="#000"
+                          ellipse
                         >
-                          <Text
-                            fontSize={titleFontSize}
-                            lineHeight={titleHeight}
-                            height={titleHeight}
-                            color="#000"
-                            ellipse
-                          >
-                            {restaurantName}
-                          </Text>
-                        </HStack>
+                          {restaurantName}
+                        </Text>
                       </HStack>
                     </Link>
                   </Text>

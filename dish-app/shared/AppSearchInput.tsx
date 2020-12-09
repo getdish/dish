@@ -168,7 +168,7 @@ export const AppSearchInput = memo(() => {
     <AppAutocompleteHoverableInput
       input={input}
       autocompleteTarget="search"
-      backgroundColor="rgba(5,5,5,0.9)"
+      backgroundColor="rgba(5,5,5,0.6)"
       {...(!isSmall && {
         borderRadius: 100,
       })}
