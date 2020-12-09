@@ -10,9 +10,19 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from 'snackui'
+import {
+  AbsoluteVStack,
+  Circle,
+  HStack,
+  Spacer,
+  Toast,
+  VStack,
+  useGet,
+  useOnMount,
+} from 'snackui'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
+import { green, pink, purple, yellow } from './colors'
 import { isWeb, searchBarHeight } from './constants'
 import { isWebIOS } from './helpers/isIOS'
 import { getIs, useIsNarrow } from './hooks/useIs'
@@ -172,6 +182,27 @@ export const AppSearchInput = memo(() => {
         borderRadius: 100,
       })}
     >
+      {!isSmall && (
+        <AbsoluteVStack
+          opacity={0.5}
+          fullscreen
+          borderRadius={100}
+          overflow="hidden"
+        >
+          <AbsoluteVStack top={-50} left={-30} right={0}>
+            <Circle size={300} backgroundColor={pink} />
+            <AbsoluteVStack left="20%">
+              <Circle size={400} backgroundColor={green} />
+            </AbsoluteVStack>
+            <AbsoluteVStack left="40%">
+              <Circle size={500} backgroundColor={yellow} />
+            </AbsoluteVStack>
+            <AbsoluteVStack left="60%">
+              <Circle size={500} backgroundColor={purple} />
+            </AbsoluteVStack>
+          </AbsoluteVStack>
+        </AbsoluteVStack>
+      )}
       <HStack
         alignItems="center"
         borderRadius={100}

@@ -7,7 +7,14 @@ import {
 } from '@dish/react-feather'
 import React, { Suspense, memo } from 'react'
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
-import { AbsoluteVStack, HStack, LinearGradient, Spacer, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  Circle,
+  HStack,
+  LinearGradient,
+  Spacer,
+  VStack,
+} from 'snackui'
 
 import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
@@ -96,11 +103,7 @@ export const AppSearchBarFloating = () => {
           shadowOffset={{ height: 3, width: 0 }}
           shadowRadius={12}
         >
-          <AbsoluteVStack
-            // opacity={0.76}
-            backgroundColor={background}
-            fullscreen
-          >
+          <AbsoluteVStack backgroundColor={background} fullscreen>
             <LinearGradient
               style={[StyleSheet.absoluteFill, { left: '80%' }]}
               start={[0.5, 0.5]}

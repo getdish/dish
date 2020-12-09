@@ -57,7 +57,7 @@ const AppContent = memo(() => {
         maxWidth="100%"
         maxHeight="100%"
         overflow="hidden"
-        backgroundColor="#ECF0FE"
+        backgroundColor="#dbdeeb"
       >
         {/* WARNING: DONT PUT ANYTHING ABOVE THIS IN MARKUP ^^ */}
         <Suspense fallback={null}>

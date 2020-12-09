@@ -13,7 +13,7 @@ export function getGraphEndpointDomain() {
   const STAGING_HASURA = 'https://hasura-staging.dishapp.com'
 
   // TODO can we simplify this
-  if (isWorker || isNative || isHasuraLive || isDevProd) {
+  if (isWorker || isNative || isHasuraLive || isDevProd || isStaging) {
     return STAGING_HASURA
   }
 
