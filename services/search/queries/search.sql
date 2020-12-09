@@ -99,7 +99,7 @@ main AS (
         AND
         tag_names @> to_json(string_to_array(?4, ','))::jsonb
       )
-      OR
+      AND
       (
         ?16 != ''
         AND
