@@ -66,12 +66,7 @@ export const LenseButton = memoIsEqualDeep(
             },
           })}
         >
-          <Text
-            fontSize={iconSize}
-            lineHeight={scaledSize}
-            fontWeight="400"
-            textAlign="center"
-          >
+          <Text fontSize={iconSize} lineHeight={scaledSize} textAlign="center">
             {(lense.icon ?? '').trim()}
           </Text>
           <VStack
@@ -95,7 +90,7 @@ export const LenseButton = memoIsEqualDeep(
               marginHorizontal={-3}
             >
               <Text
-                fontWeight="500"
+                fontWeight="700"
                 lineHeight={lineHeight}
                 fontSize={isSmall ? 10 : 14}
                 color={color}

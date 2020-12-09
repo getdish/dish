@@ -7,7 +7,14 @@ import {
 } from '@dish/react-feather'
 import React, { Suspense, memo } from 'react'
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
-import { AbsoluteVStack, HStack, LinearGradient, Spacer, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  Circle,
+  HStack,
+  LinearGradient,
+  Spacer,
+  VStack,
+} from 'snackui'
 
 import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
@@ -49,6 +56,7 @@ export const parentIds = {
 export const AppSearchBarFloating = () => {
   const isSmall = useIsNarrow()
   const { background, backgroundRgb } = useSearchBarTheme()
+  const height = searchBarHeight + 4
 
   if (isSmall) {
     return null
@@ -64,13 +72,11 @@ export const AppSearchBarFloating = () => {
   //   sendReparentableChild(parent, newParent, 0, 0)
   // }, [isSmall])
 
-  console.log('background', background)
-
   return (
     <AbsoluteVStack
       className="searchbar-container ease-in-out"
-      left={26}
-      right={26}
+      left={6}
+      right={6}
       zIndex={zIndexSearchBarFloating}
       position="absolute"
       marginTop={searchBarTopOffset}
@@ -82,33 +88,31 @@ export const AppSearchBarFloating = () => {
         alignItems="center"
         justifyContent="center"
         width="100%"
-        height={searchBarHeight}
+        height={height}
         maxWidth={searchBarMaxWidth + 20}
       >
         <AbsoluteVStack
-          className="skewX findme123"
-          borderRadius={10}
+          borderRadius={100}
           overflow="hidden"
           zIndex={102}
           fullscreen
-          height={searchBarHeight}
+          height={height}
           justifyContent="center"
           alignItems="center"
           shadowColor="rgba(0,0,0,0.24)"
           shadowOffset={{ height: 3, width: 0 }}
           shadowRadius={12}
         >
-          <AbsoluteVStack
-            className="findme123"
-            // opacity={0.76}
-            backgroundColor={background}
-            fullscreen
-          >
+          <AbsoluteVStack backgroundColor={background} fullscreen>
             <LinearGradient
               style={[StyleSheet.absoluteFill, { left: '80%' }]}
               start={[0.5, 0.5]}
               end={[1, 1]}
               colors={[background, `rgb(${backgroundRgb.map((x) => x * 0.8)})`]}
+            />
+            <LinearGradient
+              style={[StyleSheet.absoluteFill]}
+              colors={['rgba(255,255,255,0.03)', `rgba(255,255,255,0)`]}
             />
           </AbsoluteVStack>
         </AbsoluteVStack>
@@ -117,7 +121,7 @@ export const AppSearchBarFloating = () => {
           zIndex={104}
           flex={1}
           paddingHorizontal={12}
-          height={searchBarHeight}
+          height={height}
           justifyContent="center"
           overflow="hidden"
           width="100%"
@@ -160,7 +164,7 @@ const AppSearchBarContents = memo(() => {
       <HStack
         className="ease-in-out"
         position="relative"
-        flex={1.5}
+        width="43%"
         maxWidth={
           isReallySmall
             ? 'auto'
@@ -170,6 +174,8 @@ const AppSearchBarContents = memo(() => {
         }
         alignItems="center"
       >
+        {!isReallySmall && <AppSearchInput />}
+
         {/* Search Input Start */}
         {isReallySmall && !isWeb && (
           <>
@@ -189,7 +195,6 @@ const AppSearchBarContents = memo(() => {
             </VStack>
           </>
         )}
-        {!isReallySmall && <AppSearchInput />}
       </HStack>
 
       {!isReallySmall && (

@@ -55,6 +55,41 @@ import { HomeTopSearches } from './HomeTopSearches'
 
 type Props = StackViewProps<HomeStateItemHome>
 
+type FeedItemDish = {
+  type: 'dish'
+  id: string
+  rank: number
+  dish: DishTagItem
+  restaurantId: string
+  restaurantSlug: string
+}
+
+type FeedItemDishRestaurants = {
+  type: 'dish-restaurants'
+  id: string
+  rank: number
+  dish: DishTagItem
+  restaurants: RestaurantOnlyIds[]
+}
+
+type FeedItemCuisine = TopCuisine & {
+  type: 'cuisine'
+  id: string
+  rank: number
+}
+
+type FeedItems =
+  | FeedItemDish
+  | {
+      type: 'restaurant'
+      id: string
+      restaurantSlug: string
+      restaurantId: string
+      rank: number
+    }
+  | FeedItemCuisine
+  | FeedItemDishRestaurants
+
 export default memo(function HomePage(props: Props) {
   const om = useOvermind()
   const [isLoaded, setIsLoaded] = useState(false)
@@ -83,17 +118,19 @@ export default memo(function HomePage(props: Props) {
     }
   })
 
-  useEffect(() => {
-    console.log('got region', props.item.region)
-  }, [props.item.region])
-
   const region =
     getStore(AppMapStore).regions[props.item.region] ??
     getStore(AppMapStore).regions['san-francisco']
 
+  useEffect(() => {
+    console.log('got region', region)
+  }, [region])
+
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
+
+      {/* TOP FADE */}
       <AbsoluteVStack
         top={-searchBarHeight + 11}
         right={0}
@@ -131,9 +168,9 @@ export default memo(function HomePage(props: Props) {
               {/* SPACER ABOVE TITLE */}
               <VStack
                 pointerEvents="none"
-                height={15 + (isSmall ? 0 : searchBarHeight + 10)}
+                height={5 + (isSmall ? 0 : searchBarHeight)}
               />
-              {!!region && <HomeFeed region={region} item={props.item} />}
+              <HomePageContent region={region} item={props.item} />
             </VStack>
           </VStack>
         </ContentScrollView>
@@ -142,156 +179,22 @@ export default memo(function HomePage(props: Props) {
   )
 })
 
-type FeedItemDish = {
-  type: 'dish'
-  id: string
-  rank: number
-  dish: DishTagItem
-  restaurantId: string
-  restaurantSlug: string
-}
-
-type FeedItemDishRestaurants = {
-  type: 'dish-restaurants'
-  id: string
-  rank: number
-  dish: DishTagItem
-  restaurants: RestaurantOnlyIds[]
-}
-
-type FeedItemCuisine = TopCuisine & {
-  type: 'cuisine'
-  id: string
-  rank: number
-}
-
-type FeedItems =
-  | FeedItemDish
-  | {
-      type: 'restaurant'
-      id: string
-      restaurantSlug: string
-      restaurantId: string
-      rank: number
-    }
-  | FeedItemCuisine
-  | FeedItemDishRestaurants
-
-const HomeFeed = memo(
-  graphql(function HomeFeed({
+const HomePageContent = memo(
+  graphql(function HomePageContent({
     region,
     item,
   }: {
-    region: Region
+    region?: Region
     item: HomeStateItemHome
   }) {
-    const restaurants = region?.geometry
-      ? query.restaurant({
-          where: {
-            location: {
-              _st_within: region?.geometry,
-            },
-            downvotes: { _is_null: false },
-            votes_ratio: { _is_null: false },
-          },
-          order_by: [{ votes_ratio: order_by.desc }],
-          limit: 8,
-        })
-      : []
-
-    const cuisines = useTopCuisines(item.center) ?? []
-
-    const dishes = query.tag({
-      where: {
-        type: {
-          _eq: 'dish',
-        },
-      },
-      order_by: [{ popularity: order_by.desc }],
-      limit: 8,
-    })
-
-    let items: FeedItems[] =
-      !region || !item.region
-        ? []
-        : [
-            ...dishes.map(
-              (dish, index): FeedItems => {
-                return {
-                  type: 'dish',
-                  id: dish.id,
-                  rank: Math.random() * 10,
-                  restaurantId: restaurants[0]?.id ?? '',
-                  restaurantSlug: restaurants[0]?.slug ?? '',
-                  dish: {
-                    id: dish.id ?? '',
-                    slug: dish.slug ?? '',
-                    name: dish.name ?? '',
-                    icon: dish.icon ?? '',
-                    image: dish.default_images()?.[0] ?? '',
-                    score: 100,
-                  },
-                } as const
-              }
-            ),
-            ...dishes.map(
-              (dish, index): FeedItems => {
-                return {
-                  type: 'dish-restaurants',
-                  id: dish.id,
-                  rank: index + (index % 2 ? 10 : 0),
-                  dish: {
-                    id: dish.id ?? '',
-                    slug: dish.slug ?? '',
-                    name: dish.name ?? '',
-                    icon: dish.icon ?? '',
-                    image: dish.default_images()?.[0] ?? '',
-                  },
-                  restaurants: restaurants.map((r) => {
-                    return {
-                      id: r.id,
-                      slug: r.slug,
-                    }
-                  }),
-                } as const
-              }
-            ),
-            ...cuisines.map(
-              (item, index): FeedItems => {
-                return {
-                  type: 'cuisine',
-                  id: item.country,
-                  rank: index + (index % 3 ? 30 : 0),
-                  ...item,
-                } as const
-              }
-            ),
-            ...restaurants.map(
-              (item, index): FeedItems => {
-                return {
-                  id: item.id,
-                  type: 'restaurant',
-                  restaurantId: item.id,
-                  restaurantSlug: item.slug,
-                  rank: index,
-                } as const
-              }
-            ),
-          ]
-
-    items = items.filter((x) => x.id)
-    items = sortBy(items, (x) => x.rank)
-    items = uniqBy(items, (x) => x.id)
-
+    const items = useHomeFeed(item, region)
     const results = items
       .filter((x) => x.type === 'restaurant')
       .map((x) => ({ id: x['restaurantId'], slug: x['restaurantSlug'] }))
-
     const isLoading = !region || items[0]?.id === null
 
     useEffect(() => {
       if (isLoading) return
-      console.log('set results', results)
       omStatic.actions.home.updateHomeState({
         id: item.id,
         results,
@@ -300,6 +203,8 @@ const HomeFeed = memo(
 
     return (
       <>
+        <HomeTopSearches />
+
         <VStack alignItems="center">
           <Text
             paddingHorizontal={6}
@@ -307,11 +212,9 @@ const HomeFeed = memo(
             color="#000"
             fontWeight="300"
           >
-            {region.name ?? '...'}
+            {region?.name ?? '...'}
           </Text>
         </VStack>
-
-        <HomeTopSearches />
 
         {isLoading && (
           <>
@@ -369,6 +272,108 @@ const HomeFeed = memo(
     )
   })
 )
+
+function useHomeFeed(item: HomeStateItemHome, region?: Region) {
+  const restaurants = region?.geometry
+    ? query.restaurant({
+        where: {
+          location: {
+            _st_within: region?.geometry,
+          },
+          downvotes: { _is_null: false },
+          votes_ratio: { _is_null: false },
+        },
+        order_by: [{ votes_ratio: order_by.desc }],
+        limit: 8,
+      })
+    : []
+
+  const cuisines = useTopCuisines(item.center) ?? []
+
+  const dishes = query.tag({
+    where: {
+      type: {
+        _eq: 'dish',
+      },
+    },
+    order_by: [{ popularity: order_by.desc }],
+    limit: 8,
+  })
+
+  let items: FeedItems[] =
+    !region || !item.region
+      ? []
+      : [
+          ...dishes.map(
+            (dish, index): FeedItems => {
+              return {
+                type: 'dish',
+                id: dish.id,
+                rank: Math.random() * 10,
+                restaurantId: restaurants[0]?.id ?? '',
+                restaurantSlug: restaurants[0]?.slug ?? '',
+                dish: {
+                  id: dish.id ?? '',
+                  slug: dish.slug ?? '',
+                  name: dish.name ?? '',
+                  icon: dish.icon ?? '',
+                  image: dish.default_images()?.[0] ?? '',
+                  score: 100,
+                },
+              } as const
+            }
+          ),
+          ...dishes.map(
+            (dish, index): FeedItems => {
+              return {
+                type: 'dish-restaurants',
+                id: dish.id,
+                rank: index + (index % 2 ? 10 : 0),
+                dish: {
+                  id: dish.id ?? '',
+                  slug: dish.slug ?? '',
+                  name: dish.name ?? '',
+                  icon: dish.icon ?? '',
+                  image: dish.default_images()?.[0] ?? '',
+                },
+                restaurants: restaurants.map((r) => {
+                  return {
+                    id: r.id,
+                    slug: r.slug,
+                  }
+                }),
+              } as const
+            }
+          ),
+          ...cuisines.map(
+            (item, index): FeedItems => {
+              return {
+                type: 'cuisine',
+                id: item.country,
+                rank: index + (index % 3 ? 30 : 0),
+                ...item,
+              } as const
+            }
+          ),
+          ...restaurants.map(
+            (item, index): FeedItems => {
+              return {
+                id: item.id,
+                type: 'restaurant',
+                restaurantId: item.id,
+                restaurantSlug: item.slug,
+                rank: index,
+              } as const
+            }
+          ),
+        ]
+
+  items = items.filter((x) => x.id)
+  items = sortBy(items, (x) => x.rank)
+  items = uniqBy(items, (x) => x.id)
+
+  return items
+}
 
 const CuisineFeedCard = graphql(function CuisineFeedCard(
   props: FeedItemCuisine

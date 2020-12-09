@@ -48,17 +48,17 @@ const LOCAL_ORIGIN =
 export const ORIGIN = (() => {
   if (isNode) {
     return LOCAL_ORIGIN
-  } else {
-    if (isDevProd) {
-      return PROD_ORIGIN
-    } else {
-      if (isHasuraLive) {
-        return PROD_ORIGIN
-      } else {
-        return LOCAL_ORIGIN
-      }
-    }
   }
+  if (isDevProd) {
+    return PROD_ORIGIN
+  }
+  if (isHasuraLive) {
+    return PROD_ORIGIN
+  }
+  if (isStaging) {
+    return STAGING_ORIGIN
+  }
+  return LOCAL_ORIGIN
 })()
 
 export let SEARCH_DOMAIN = (() => {
@@ -68,17 +68,17 @@ export let SEARCH_DOMAIN = (() => {
   const LOCAL_SEARCH_DOMAIN = `${LOCAL_ORIGIN}:10000`
   if (isWorker || isNative || IS_LIVE) {
     return LIVE_SEARCH_DOMAIN
-  } else if (isNode) {
-    return LOCAL_SEARCH_DOMAIN
-  } else {
-    if (isStaging) {
-      return STAGING_SEARCH_DOMAIN
-    } else if (isDevProd || isHasuraLive) {
-      return LIVE_SEARCH_DOMAIN
-    } else {
-      return LOCAL_SEARCH_DOMAIN
-    }
   }
+  if (isNode) {
+    return LOCAL_SEARCH_DOMAIN
+  }
+  if (isStaging) {
+    return STAGING_SEARCH_DOMAIN
+  }
+  if (isDevProd || isHasuraLive) {
+    return LIVE_SEARCH_DOMAIN
+  }
+  return LOCAL_SEARCH_DOMAIN
 })()
 
 export const AUTH_DOMAIN = (() => {
@@ -90,17 +90,15 @@ export const AUTH_DOMAIN = (() => {
   }`
   if (isNode) {
     return process.env.AUTH_ENDPOINT || LOCAL_AUTH_SERVER
-  } else {
-    if (isStaging) {
-      return AUTH_STAGING
-    } else if (isDevProd) {
-      return AUTH_PROD
-    } else {
-      if (isHasuraLive) {
-        return AUTH_PROD
-      } else {
-        return process.env.REACT_APP_AUTH_ENDPOINT || LOCAL_AUTH_SERVER
-      }
-    }
   }
+  if (isStaging) {
+    return AUTH_STAGING
+  }
+  if (isDevProd) {
+    return AUTH_PROD
+  }
+  if (isHasuraLive) {
+    return AUTH_PROD
+  }
+  return process.env.REACT_APP_AUTH_ENDPOINT || LOCAL_AUTH_SERVER
 })()

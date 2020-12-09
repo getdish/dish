@@ -2,7 +2,7 @@ import { useStore } from '@dish/use-store'
 import React, { Suspense, memo, useLayoutEffect, useMemo } from 'react'
 import { AnimatedVStack, VStack, useDebounceValue } from 'snackui'
 
-import { isWeb, searchBarHeight } from './constants'
+import { isWeb, searchBarHeight, searchBarTopOffset } from './constants'
 import { getBreadcrumbs } from './helpers/getBreadcrumbs'
 import { useIsNarrow } from './hooks/useIs'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
@@ -73,7 +73,7 @@ const AppStackViewItem = memo(
     const isSmall = useIsNarrow()
     const top = isSmall
       ? Math.max(0, index - 1) * 5 + (index > 0 ? 5 : 0)
-      : index * 5 + (index > 0 ? searchBarHeight - 2 : 0)
+      : index * 5 + (index > 0 ? searchBarHeight + searchBarTopOffset : 0)
     const left = 0
 
     let children = useMemo(() => {

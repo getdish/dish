@@ -15,8 +15,6 @@ export function startLogging(verbose = false) {
 
         Logger.start()
       })
-      // const { Logger } = require('@dish/gqless-logger')
-      // new Logger(client, verbose)
     }
   }
 }
