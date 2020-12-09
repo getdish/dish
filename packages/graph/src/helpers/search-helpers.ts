@@ -17,6 +17,15 @@ export async function search({
   limit = 50,
   main_tag = '',
 }: RestaurantSearchArgs): Promise<RestaurantOnlyIds[]> {
+  console.log('searching', {
+    center: { lat, lng },
+    span,
+    query,
+    tags,
+    limit,
+    main_tag,
+  })
+
   const result = await searchMain({
     center: { lat, lng },
     span,

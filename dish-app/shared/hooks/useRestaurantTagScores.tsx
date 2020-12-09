@@ -11,13 +11,13 @@ export function useRestaurantTagScores({
 }) {
   const restaurant = useRestaurantQuery(restaurantSlug)
   return tagSlugs
-    .map((tagName) => {
+    .map((slug) => {
       const rtag = restaurant.tags({
         limit: 1,
         where: {
           tag: {
             slug: {
-              _eq: tagName,
+              _eq: slug,
             },
           },
         },

@@ -566,7 +566,7 @@ const RestaurantListItemScoreBreakdown = memo(
         restaurantSlug,
         tagSlugs,
       })
-      console.log('restaurantTags', restaurantTags)
+      console.log('restaurantTags', tagSlugs, restaurantTags)
       return (
         <VStack>
           <Text>
