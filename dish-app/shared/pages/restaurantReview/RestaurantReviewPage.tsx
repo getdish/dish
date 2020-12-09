@@ -35,7 +35,7 @@ export default memo(function RestaurantReviewPage() {
       <AbsoluteVStack
         className="inset-shadow-xxxl ease-in-out-slow"
         fullscreen
-        zIndex={10000000000}
+        zIndex={1000000}
         alignItems="center"
         justifyContent="center"
         paddingHorizontal="2%"

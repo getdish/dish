@@ -58,7 +58,7 @@ export const RestaurantBreakdown = memo(
         },
         limit: 1,
       })[0]
-      const tagName = tag.displayName ?? tag.name
+      const tagName = tag?.displayName ?? tag?.name ?? null
       const isSmall = useIsNarrow()
       const store = useStore(RestaurantReviewsDisplayStore, {
         id: restaurantId,
