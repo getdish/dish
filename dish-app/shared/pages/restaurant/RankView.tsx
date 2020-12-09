@@ -7,8 +7,8 @@ import { isWeb } from '../../constants'
 export const RankView = memo(({ rank }: { rank: number }) => {
   return (
     <VStack
-      width={42}
-      height={42}
+      width={38}
+      height={38}
       {...(isWeb && {
         marginLeft: -16,
         marginBottom: -10,
@@ -38,7 +38,7 @@ export const RankView = memo(({ rank }: { rank: number }) => {
         <Text
           letterSpacing={-1}
           fontSize={+rank > 9 ? 18 : 22}
-          fontWeight="300"
+          fontWeight="500"
           color="#000"
         >
           {rank}

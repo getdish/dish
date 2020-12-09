@@ -180,7 +180,43 @@ export default memo(function HomePage(props: Props) {
 })
 
 const HomePageContent = memo(
-  graphql(function HomePageContent({
+  graphql(function HomePageContent(props: {
+    region?: Region
+    item: HomeStateItemHome
+  }) {
+    return (
+      <>
+        <Spacer size="lg" />
+        <HomeTopSearches />
+        <Spacer size="sm" />
+        <VStack alignItems="center">
+          <Text
+            paddingHorizontal={6}
+            fontSize={24}
+            color="#000"
+            fontWeight="300"
+          >
+            {props.region?.name ?? '...'}
+          </Text>
+        </VStack>
+        <Spacer size="xl" />
+        <Suspense
+          fallback={
+            <>
+              <LoadingItems />
+              <LoadingItems />
+            </>
+          }
+        >
+          <HomePageContentInner {...props} />
+        </Suspense>
+      </>
+    )
+  })
+)
+
+const HomePageContentInner = memo(
+  graphql(function HomePageContentInner({
     region,
     item,
   }: {
@@ -203,19 +239,6 @@ const HomePageContent = memo(
 
     return (
       <>
-        <HomeTopSearches />
-
-        <VStack alignItems="center">
-          <Text
-            paddingHorizontal={6}
-            fontSize={24}
-            color="#000"
-            fontWeight="300"
-          >
-            {region?.name ?? '...'}
-          </Text>
-        </VStack>
-
         {isLoading && (
           <>
             <LoadingItems />

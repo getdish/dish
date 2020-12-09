@@ -41,18 +41,21 @@ body {
   -ms-overflow-style: scrollbar;
 }
 
-body, pre, input, textarea {
+body,
+pre,
+input,
+textarea {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
 a {
   text-decoration: none;
-  color: #4B2EA8;
+  color: #4b2ea8;
 }
 
 a:hover {
-  color: #4B2EA8cc;
+  color: #4b2ea8cc;
 }
 
 p a {
@@ -117,27 +120,9 @@ textarea {
   position: relative;
 }
 
-/* .shine:after {
-  animation: shine 1.5s linear infinite;
-  animation-fill-mode: forwards;
-  content: ' ';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  background: rgba(255, 255, 255, 0.3);
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0.13) 0%,
-    rgba(255, 255, 255, 0.4) 92%,
-    rgba(255, 255, 255, 0) 100%
-  );
-} */
-
 @keyframes shine {
-  0%, 10% {
+  0%,
+  10% {
     opacity: 1;
     top: 0;
     left: -100%;
@@ -247,7 +232,6 @@ textarea {
   max-height: 100%;
 }
 
-
 .inline-flex {
   display: inline-flex;
 }
@@ -280,7 +264,8 @@ div,
   cursor: pointer;
 }
 
-ul, ol {
+ul,
+ol {
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
 }
@@ -322,7 +307,7 @@ li {
 }
 
 .searchbar-inner-shadow {
-  box-shadow: inset 0 0 30px rgba(255,255,255,0.1);
+  box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.1);
 }
 
 .hover-to-reveal-parent .hover-to-reveal-child {
@@ -338,7 +323,8 @@ li {
   pointer-events: none;
 }
 
-.untouchable, .untouchable * {
+.untouchable,
+.untouchable * {
   pointer-events: none !important;
 }
 
@@ -347,7 +333,7 @@ li {
 }
 
 .box-shadow-inset-large {
-  box-shadow: inset 0 0 25px rgba(0,0,0,0.1);
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.1);
 }
 
 .scroll-bounce > div {
@@ -360,7 +346,7 @@ li {
 }
 
 .inset-shadow-xxxl {
-  box-shadow: inset 0 0 10000px rgba(0,0,0,0.15);
+  box-shadow: inset 0 0 10000px rgba(0, 0, 0, 0.15);
 }
 
 .dish-inset-shadow::after {
@@ -372,7 +358,7 @@ li {
   left: 0;
   bottom: 0;
   right: 0;
-  box-shadow: inset 0 0 10px 5px rgba(255,255,255,0.25);
+  box-shadow: inset 0 0 10px 5px rgba(255, 255, 255, 0.25);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -385,19 +371,19 @@ li {
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
-input:-webkit-autofill:active  {
+input:-webkit-autofill:active {
   -webkit-text-fill-color: #000 !important;
   /* no transparent */
-  -webkit-box-shadow: 0 0 0 30px rgba(240,240,240,1) inset !important;
+  -webkit-box-shadow: 0 0 0 30px rgba(240, 240, 240, 1) inset !important;
 }
 
 .dark input:-webkit-autofill,
 .dark input:-webkit-autofill:hover,
 .dark input:-webkit-autofill:focus,
-.dark input:-webkit-autofill:active  {
+.dark input:-webkit-autofill:active {
   -webkit-text-fill-color: #fff !important;
   /* no transparent */
-  -webkit-box-shadow: 0 0 0 30px rgb(20,20,20) inset !important;
+  -webkit-box-shadow: 0 0 0 30px rgb(20, 20, 20) inset !important;
 }
 
 @media screen and (max-width: 860px) {
@@ -406,13 +392,13 @@ input:-webkit-autofill:active  {
   }
 }
 
-
 .preserve-whitespace {
   white-space: pre-wrap;
 }
 
 @media (hover: hover) {
-  .hover-faded-in-parent:hover .faded-out, .hover-faded-in-parent:hover .greyed-out {
+  .hover-faded-in-parent:hover .faded-out,
+  .hover-faded-in-parent:hover .greyed-out {
     filter: grayscale(0%);
     opacity: 1;
   }
@@ -465,7 +451,7 @@ body > div {
 
 .scale-hover:hover {
   transform: scale(1.025);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
   z-index: 10;
 }
 /*
@@ -546,14 +532,14 @@ body > div {
   -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
- mark {
-   display: inline !important;
- }
+mark {
+  display: inline !important;
+}
 
- .block {
-   display: block;
- }
+.block {
+  display: block;
+}
 
- .filter-image {
-   filter: sepia(100%) hue-rotate(90deg);
- }
+.filter-image {
+  filter: sepia(100%) hue-rotate(90deg);
+}

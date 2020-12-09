@@ -42,8 +42,8 @@ export const SentimentCircle = memo(({ ratio }: { ratio: number }) => {
       rotation={(1 - ratio) * 180}
     >
       {() => (
-        <HStack>
-          <Text fontSize={26} color={green} fontWeight="900">
+        <HStack alignItems="center" justifyContent="center">
+          <Text fontSize={23} color={green} fontWeight="900">
             {sentiments[key]}
           </Text>
         </HStack>

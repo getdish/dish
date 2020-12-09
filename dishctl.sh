@@ -321,8 +321,8 @@ function local_node_with_prod_env() {
 }
 
 function dish_app_generate_tags() {
-  export HASURA_ENDPOINT=https://hasura.dishapp.com
-  export HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
+  export HASURA_ENDPOINT=https://hasura-staging.dishapp.com
+  export HASURA_SECRET="password"
   export IS_LIVE=1
   pushd $PROJECT_ROOT/dish-app
   ../node_modules/.bin/ts-node --transpile-only ./etc/generate_tags.ts

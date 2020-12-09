@@ -1,26 +1,24 @@
 import { isPresent } from '@dish/helpers'
 
+import { selectTagButtonProps } from '../views/restaurant/selectTagButtonProps'
 import { useRestaurantQuery } from './useRestaurantQuery'
 
 export function useRestaurantTagScores({
   restaurantSlug,
-  tagNames,
+  tagSlugs,
 }: {
   restaurantSlug: string
-  tagNames: string[]
+  tagSlugs: string[]
 }) {
   const restaurant = useRestaurantQuery(restaurantSlug)
-  return tagNames
-    .map((tagName) => {
+  return tagSlugs
+    .map((slug) => {
       const rtag = restaurant.tags({
         limit: 1,
         where: {
           tag: {
-            name: {
-              _eq: tagName,
-            },
-            type: {
-              _neq: 'country',
+            slug: {
+              _eq: slug,
             },
           },
         },
@@ -28,11 +26,7 @@ export function useRestaurantTagScores({
       if (!rtag) {
         return null
       }
-      return {
-        name: rtag.tag.name,
-        icon: rtag.tag.icon,
-        score: rtag.score,
-      }
+      return selectTagButtonProps(rtag)
     })
     .filter(isPresent)
 }

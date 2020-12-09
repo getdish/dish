@@ -1,13 +1,10 @@
 import { useStore } from '@dish/use-store'
 import loadable from '@loadable/component'
 import React, { Suspense, memo } from 'react'
-import { Image } from 'react-native'
-import { AbsoluteVStack, HStack, Tooltip, VStack } from 'snackui'
+import { AbsoluteVStack, HStack } from 'snackui'
 
 import { AppMapRestaurantPeek } from './AppMapRestaurantPeek'
-import DownloadAppIcon from './assets/download-app-ios.svg'
 import { BottomDrawerStore } from './BottomDrawerStore'
-import { isWeb } from './constants'
 import { searchBarHeight, zIndexMapControls } from './constants'
 import { getWindowHeight } from './helpers/getWindow'
 import { useIsNarrow, useIsReallyNarrow } from './hooks/useIs'
@@ -78,34 +75,6 @@ export const AppMapControlsOverlay = memo(() => {
                 </Suspense>
               </>
             )}
-
-            {/* {isWeb && (
-              <VStack>
-                <Tooltip contents="Soon!">
-                  <VStack
-                    pointerEvents="auto"
-                    opacity={0.6}
-                    alignSelf="flex-end"
-                    borderRadius={6}
-                    shadowColor="rgba(0,0,0,0.35)"
-                    shadowRadius={20}
-                    shadowOffset={{ height: 3, width: 0 }}
-                    marginVertical={5}
-                    marginHorizontal={15}
-                    overflow="hidden"
-                  >
-                    <Image
-                      source={{ uri: DownloadAppIcon }}
-                      style={{
-                        width: 119.66407,
-                        height: 40,
-                        margin: -1.5,
-                      }}
-                    />
-                  </VStack>
-                </Tooltip>
-              </VStack>
-            )} */}
           </HStack>
         </HStack>
       </AbsoluteVStack>
@@ -113,5 +82,36 @@ export const AppMapControlsOverlay = memo(() => {
   )
 })
 
+// DOWNLOAD APP ICON
+// {/* {isWeb && (
+//               <VStack>
+//                 <Tooltip contents="Soon!">
+//                   <VStack
+//                     pointerEvents="auto"
+//                     opacity={0.6}
+//                     alignSelf="flex-end"
+//                     borderRadius={6}
+//                     shadowColor="rgba(0,0,0,0.35)"
+//                     shadowRadius={20}
+//                     shadowOffset={{ height: 3, width: 0 }}
+//                     marginVertical={5}
+//                     marginHorizontal={15}
+//                     overflow="hidden"
+//                   >
+//                     <Image
+//                       source={{ uri: DownloadAppIcon }}
+//                       style={{
+//                         width: 119.66407,
+//                         height: 40,
+//                         margin: -1.5,
+//                       }}
+//                     />
+//                   </VStack>
+//                 </Tooltip>
+//               </VStack>
+//             )} */}
+
 const AppMapPIP =
-  process.env.TARGET === 'ssr' ? null : loadable(() => import('./AppMapPIP'))
+  process.env.TARGET === 'ssr'
+    ? () => null
+    : loadable(() => import('./AppMapPIP'))

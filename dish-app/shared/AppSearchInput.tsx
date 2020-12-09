@@ -10,20 +10,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {
-  AbsoluteVStack,
-  Circle,
-  HStack,
-  Spacer,
-  Toast,
-  VStack,
-  useGet,
-  useOnMount,
-} from 'snackui'
+import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from 'snackui'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
-import { green, pink, purple, yellow } from './colors'
 import { isWeb, searchBarHeight } from './constants'
+import { DishHorizonView } from './DishHorizonView'
 import { isWebIOS } from './helpers/isIOS'
 import { getIs, useIsNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
@@ -177,32 +168,12 @@ export const AppSearchInput = memo(() => {
     <AppAutocompleteHoverableInput
       input={input}
       autocompleteTarget="search"
-      backgroundColor="rgba(255,255,255,0.15)"
+      backgroundColor="rgba(5,5,5,0.6)"
       {...(!isSmall && {
         borderRadius: 100,
       })}
     >
-      {!isSmall && (
-        <AbsoluteVStack
-          opacity={0.5}
-          fullscreen
-          borderRadius={100}
-          overflow="hidden"
-        >
-          <AbsoluteVStack top={-50} left={-30} right={0}>
-            <Circle size={300} backgroundColor={pink} />
-            <AbsoluteVStack left="20%">
-              <Circle size={400} backgroundColor={green} />
-            </AbsoluteVStack>
-            <AbsoluteVStack left="40%">
-              <Circle size={500} backgroundColor={yellow} />
-            </AbsoluteVStack>
-            <AbsoluteVStack left="60%">
-              <Circle size={500} backgroundColor={purple} />
-            </AbsoluteVStack>
-          </AbsoluteVStack>
-        </AbsoluteVStack>
-      )}
+      {/* {!isSmall && <DishHorizonView />} */}
       <HStack
         alignItems="center"
         borderRadius={100}
@@ -528,7 +499,7 @@ const AppSearchInputTags = memo(
                   className="no-transition"
                   key={getTagSlug(tag)}
                   subtleIcon
-                  backgroundColor="rgba(0,0,0,0.25)"
+                  backgroundColor="rgba(90,90,90,0.5)"
                   color={'#fff'}
                   shadowColor="#00000022"
                   fontWeight="600"
@@ -537,7 +508,7 @@ const AppSearchInputTags = memo(
                   borderColor={'transparent'}
                   borderRadius={100}
                   hoverStyle={{
-                    backgroundColor: 'rgba(0,0,0,0.3)',
+                    backgroundColor: 'rgba(90,90,90,0.6)',
                   }}
                   {...(isActive && {
                     backgroundColor: 'rgba(255,255,255,0.1)',

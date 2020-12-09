@@ -144,11 +144,29 @@ export type HomeStateItemAbout = HomeStateItemBase & {
   type: 'about'
 }
 
+export type HomeSearchItemMeta = {
+  effective_score: number
+  main_tag_normalised_score: number
+  main_tag_rank: number
+  main_tag_votes_ratio_normalised_score: number
+  main_tag_votes_ratio_rank: number
+  restaurant_base_normalised_score: number
+  restaurant_base_votes_ratio_normalised_score: number
+  restaurant_base_votes_ratio_rank: number
+  restaurant_rank: number
+  rish_rank: number
+  rishes_normalised_score: number
+  rishes_votes_ratio_normalised_score: number
+  rishes_votes_ratio_rank: number
+}
+
 export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search' | 'userSearch'
   activeTags: HomeActiveTagsRecord
   status: 'loading' | 'complete'
-  results: RestaurantOnlyIds[]
+  results: (RestaurantOnlyIds & {
+    meta: HomeSearchItemMeta
+  })[]
   region?: string
   // for not forcing map to be always synced
   searchedCenter?: LngLat

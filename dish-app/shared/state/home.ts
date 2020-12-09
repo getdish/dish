@@ -302,12 +302,7 @@ const runSearch: AsyncAction<{
   let otherTags = [
     ...tags
       .map((tag) =>
-        getTagSlug(tag)
-          .replace('lenses__', '')
-          .replace('filters__delivery', 'delivery')
-          .replace('filters__price-low', 'price-low')
-          .replace('filters__price-mid', 'price-mid')
-          .replace('filters__price-high', 'price-high')
+        getTagSlug(tag).replace('lenses__', '').replace('filters__', '')
       )
       .filter((t) => !t.includes(dishSearchedTag)),
   ]

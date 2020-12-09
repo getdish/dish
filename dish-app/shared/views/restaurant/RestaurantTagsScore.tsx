@@ -14,7 +14,7 @@ import {
   Text,
 } from 'snackui'
 
-import { getCurrentTagNames } from '../../helpers/getCurrentTagNames'
+import { getActiveTagSlugs } from '../../helpers/getActiveTagSlugs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
 import { ensureFlexText } from '../../pages/restaurant/ensureFlexText'
@@ -34,7 +34,7 @@ export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
   const breakdown = restaurant.score_breakdown()
   const tagScores = useRestaurantTagScores({
     restaurantSlug,
-    tagNames: getCurrentTagNames(activeTags),
+    tagSlugs: getActiveTagSlugs(activeTags),
   })
   return (
     <Box

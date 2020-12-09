@@ -1,15 +1,15 @@
-import { graphql, order_by } from '@dish/graph'
+import { graphql } from '@dish/graph'
 import { sortBy } from 'lodash'
 import React, { memo } from 'react'
 import { Spacer, StackProps } from 'snackui'
 
-import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import {
   TagButton,
   TagButtonProps,
   TagButtonTagProps,
   getTagButtonProps,
 } from '../TagButton'
+import { useRestaurantTags } from './useRestaurantTags'
 
 type TagRowProps = {
   restaurantSlug: string
@@ -32,30 +32,11 @@ export const RestaurantTagsRow = memo(
       return null
     }
     let tags: TagButtonTagProps[] = []
+    // 🚨 BAD HOOKS ALERT
     if (props.tags) {
       tags = props.tags
     } else {
-      const restaurant = useRestaurantQuery(restaurantSlug)
-      const restaurantTags = restaurant.tags({
-        limit: props.max,
-        where: {
-          tag: {
-            type: {
-              _neq: 'dish',
-            },
-          },
-        },
-        order_by: [{ score: order_by.desc }],
-      })
-      tags = restaurantTags.map((tag) => ({
-        rank: tag.rank,
-        rgb: tag.tag.rgb,
-        name: tag.tag.name,
-        icon: tag.tag.icon,
-        slug: tag.tag.slug,
-        type: tag.tag.type,
-        score: tag.score,
-      }))
+      tags = useRestaurantTags({ restaurantSlug, limit: props.max })
     }
     if (showMore) {
       tags = tags.slice(0, 2)

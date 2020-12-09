@@ -13,10 +13,10 @@ async function main() {
   const tags = await getAllTags()
   let output = ''
   for (const key in tags) {
-    output += `const ${key} = ${JSON.stringify(tags[key], null, 2)}\n`
+    output += `export const ${key} = ${JSON.stringify(tags[key], null, 2)}\n`
   }
   await writeFile(
-    join(__dirname, '..', 'shared', 'state', 'localTags.json'),
+    join(__dirname, '..', 'shared', 'state', 'localTags.ts'),
     output
   )
   console.log('wrote tags', tags)
@@ -42,7 +42,7 @@ async function getAllTags() {
       'Steak',
       'Poke',
       'Dim Sum',
-      'Banh Mi',
+      'Banh mi',
       'Pizza',
       'Boba',
       'Oysters',
@@ -55,20 +55,32 @@ async function getAllTags() {
     ]
 
     return names.map((name) => {
-      return getFullTag(
-        query.tag({
-          where: {
-            name: {
-              _ilike: `%${name}%`,
-            },
+      const exact = query.tag({
+        where: {
+          name: {
+            _eq: name,
           },
-          limit: 1,
-          order_by: [{ popularity: order_by.desc }],
-        })[0]
-      )
+          icon: {
+            _neq: '',
+          },
+        },
+        limit: 1,
+        order_by: [{ popularity: order_by.desc }],
+      })[0]
+      const fuzzy = query.tag({
+        where: {
+          name: {
+            _ilike: `%${name}%`,
+          },
+          icon: {
+            _neq: '',
+          },
+        },
+        limit: 1,
+        order_by: [{ popularity: order_by.desc }],
+      })[0]
+      return getFullTag(exact || fuzzy)
     })
-
-    return
   })
 
   const tagLensesAll = await resolved(() => {
