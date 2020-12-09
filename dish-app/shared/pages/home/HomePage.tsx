@@ -203,7 +203,11 @@ const HomePageContent = memo(
 
     return (
       <>
+        <Spacer size="lg" />
+
         <HomeTopSearches />
+
+        <Spacer size="sm" />
 
         <VStack alignItems="center">
           <Text
@@ -215,6 +219,8 @@ const HomePageContent = memo(
             {region?.name ?? '...'}
           </Text>
         </VStack>
+
+        <Spacer size="xl" />
 
         {isLoading && (
           <>

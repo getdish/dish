@@ -25,6 +25,7 @@ import {
   searchBarTopOffset,
   zIndexSearchBarFloating,
 } from './constants'
+import { DishHorizonView } from './DishHorizonView'
 import { useIsNarrow, useIsReallyNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { omStatic } from './state/omStatic'
@@ -99,11 +100,17 @@ export const AppSearchBarFloating = () => {
           height={height}
           justifyContent="center"
           alignItems="center"
-          shadowColor="rgba(0,0,0,0.24)"
-          shadowOffset={{ height: 3, width: 0 }}
-          shadowRadius={12}
+          shadowColor="rgba(0,0,0,0.34)"
+          shadowOffset={{ height: 2, width: 0 }}
+          shadowRadius={8}
         >
-          <AbsoluteVStack backgroundColor={background} fullscreen>
+          <AbsoluteVStack
+            borderWidth={2}
+            borderColor="rgba(255,255,255,0.1)"
+            borderRadius={100}
+            backgroundColor={background}
+            fullscreen
+          >
             <LinearGradient
               style={[StyleSheet.absoluteFill, { left: '80%' }]}
               start={[0.5, 0.5]}
@@ -112,9 +119,11 @@ export const AppSearchBarFloating = () => {
             />
             <LinearGradient
               style={[StyleSheet.absoluteFill]}
-              colors={['rgba(255,255,255,0.03)', `rgba(255,255,255,0)`]}
+              colors={['rgba(255,255,255,0.04)', `rgba(255,255,255,0)`]}
             />
           </AbsoluteVStack>
+
+          <DishHorizonView />
         </AbsoluteVStack>
         <VStack
           position="relative"
