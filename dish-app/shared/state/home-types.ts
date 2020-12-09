@@ -105,7 +105,6 @@ export type HomeStateItem =
   | HomeStateItemUser
   | HomeStateItemGallery
   | HomeStateItemReview
-  | HomeStateItemReviews
   | HomeStateItemAbout
   | HomeStateItemBlog
   | HomeStateItemUserEdit
@@ -202,12 +201,6 @@ export type HomeStateItemReview = HomeStateItemBase & {
 
 export type HomeStateItemUserEdit = HomeStateItemBase & {
   type: 'userEdit'
-}
-
-export type HomeStateItemReviews = HomeStateItemBase & {
-  type: 'restaurantReviews'
-  slug: string
-  tagName?: string
 }
 
 export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>

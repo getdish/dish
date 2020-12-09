@@ -95,9 +95,6 @@ const AppContent = memo(() => {
             <RestaurantReviewPage />
           </Suspense>
           <Suspense fallback={null}>
-            <RestaurantReviewsPage />
-          </Suspense>
-          <Suspense fallback={null}>
             <UserEditPage />
           </Suspense>
           <Suspense fallback={null}>
@@ -132,11 +129,6 @@ const RestaurantReviewPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./pages/restaurantReview/RestaurantReviewPage').default
     : loadable(() => import('./pages/restaurantReview/RestaurantReviewPage'))
-
-const RestaurantReviewsPage =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./pages/restaurantReviews/RestaurantReviewsPage').default
-    : loadable(() => import('./pages/restaurantReviews/RestaurantReviewsPage'))
 
 const RestaurantHoursPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'

@@ -506,7 +506,6 @@ const handleRouteChange: AsyncAction<HistoryItem> = async (om, item) => {
       case 'userEdit':
       case 'gallery':
       case 'restaurantReview':
-      case 'restaurantReviews':
       case 'restaurantHours':
       case 'userSearch':
       case 'restaurant': {
@@ -670,14 +669,6 @@ const pushHomeState: AsyncAction<
     case 'restaurantReview': {
       nextState = {
         restaurantSlug: item.params.slug,
-      }
-      break
-    }
-
-    case 'restaurantReviews': {
-      nextState = {
-        slug: item.params.slug,
-        tagName: item.params.tagName,
       }
       break
     }
