@@ -8,7 +8,9 @@ export SHELLOPTS
 PG_PROXY_PID=
 TS_PROXY_PID=
 REDIS_PROXY_PID=
-DISH_REGISTRY=docker.k8s.dishapp.com
+GCLOUD_PROJECT="dish-258800"
+DISH_REGISTRY="gcr.io/$GCLOUD_PROJECT"
+PATH=$PATH:~/bin/google-cloud-sdk/bin
 
 function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
@@ -201,43 +203,6 @@ function timescale_pg_password() {
       -o jsonpath="{.data.PATRONI_SUPERUSER_PASSWORD}" \
       | base64 --decode
   )
-}
-
-function copy_scrape_data_to_timescale() {
-  _run_on_cluster postgres:12-alpine && return 0
-  set -e
-  copy_out="copy (select
-      created_at,
-      source,
-      id_from_source,
-      restaurant_id,
-      location,
-      data
-      from scrape
-    )
-    to stdout with csv"
-  copy_in="copy scrape (
-      time,
-      source,
-      id_from_source,
-      restaurant_id,
-      location,
-      data
-    ) from stdin csv"
-  echo "Migrating scrape table..."
-  PGPASSWORD=$TF_VAR_POSTGRES_PASSWORD psql \
-    -h $TF_VAR_POSTGRES_HOST \
-    -U postgres \
-    -d dish \
-    -c "$copy_out" \
-  | \
-  PGPASSWORD=$TF_VAR_TIMESCALE_SU_PASS psql \
-    --set=sslmode=require \
-    -h $TF_VAR_TIMESCALE_HOST \
-    -U postgres \
-    -d scrape_data \
-    -c "$copy_in"
-  echo "...scrape table migrated."
 }
 
 function dump_scrape_data_to_s3() {
@@ -563,6 +528,16 @@ function run_local_search_endpoint() {
   popd
 }
 
+function run_local_search_endpoint_staging() {
+  export PORT=10001
+  export POSTGRES_PASSWORD=postgres
+  export PGPORT=15432
+  pushd $PROJECT_ROOT/services/search
+  go generate
+  go run ./main.go ./embedded.go
+  popd
+}
+
 function bull_console() {
   redis_proxy
   $PROJECT_ROOT/services/crawlers/node_modules/.bin/bull-repl \
@@ -599,6 +574,23 @@ function install_kubectl() {
   echo "Installing \`kubectl\` binary v$VERSION..."
   curl -sL -o $INSTALL_PATH/kubectl $BINARY
   chmod a+x $INSTALL_PATH/kubectl
+}
+
+function install_gcloud_sdk() {
+  # 297.0.1 is needed on Github Actions
+  # see: https://github.com/google-github-actions/setup-gcloud/issues/128
+  GCLOUD_VERSION="297.0.1"
+  base=https://dl.google.com/dl/cloudsdk/channels/rapid/downloads
+  archive=$base/google-cloud-sdk-$GCLOUD_VERSION-linux-x86_64.tar.gz
+  install_path=$HOME/bin
+  echo "Installing GCloud SDK v$GCLOUD_VERSION..."
+  curl -sL "$archive" | tar xzf - -C /tmp
+  cp -a /tmp/google-cloud-sdk $install_path
+  # This service account needs the "Project Owner" role! Way too much power.
+  # Follow this issue for any fixes: https://issuetracker.google.com/issues/134928412
+  gcloud auth activate-service-account --key-file k8s/etc/dish-gcloud.enc.json
+  gcloud config set core/project "$GCLOUD_PROJECT"
+  gcloud config set builds/use_kaniko True
 }
 
 function ping_home_page() {
@@ -729,97 +721,51 @@ function yaml_to_env() {
   parse_yaml $PROJECT_ROOT/env.enc.production.yaml | sed 's/\$/\\$/g' | xargs -0
 }
 
-function _buildkit_build() {
+function _gcloud_build_submit() {
+  path="$1"
+  image="$2"
+  dish_base_version="$3"
+  base_arg="'--build-arg', 'DISH_BASE_VERSION=$dish_base_version'"
+  yaml="
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', '$image', '-f', '$path/Dockerfile', '.', $base_arg]
+images: ['$image']
+options:
+  machineType: 'N1_HIGHCPU_8'
+"
+  config="$(mktemp)"
+  echo "$yaml" > "$config"
+  pushd $PROJECT_ROOT
+  gcloud builds submit --timeout 1h --config "$config"
+  popd
+}
+
+function _gcloud_build() {
   dockerfile_path=$2
   name=$3
   dish_base_version=${4:-$DOCKER_TAG_NAMESPACE}
-  context=${5:-.}
-  if [[ "$1" == "pull" ]]; then
-    output="docker load"
-    redirect="/dev/stdout"
-    type="docker"
-  else
-    output="cat -"
-    redirect="/dev/null"
-    push=",push=true"
-    type="image"
-  fi
   dish_docker_login
   echo "Building image: $name |$dish_base_version|$push|"
-  tries=0
-  while [ $tries -lt 4 ]; do
-    build_log="$(mktemp)"
-    exit_code=$(
-      _buildkit_build_command \
-        "$context" \
-        "$dockerfile_path" \
-        "$dish_base_version" \
-        "$name" \
-        "$type" \
-        "$push" \
-        "$output" \
-        "$redirect" 2> >(tee $build_log >&2)
-    )
-    re='^[0-9]+$'
-    if ! [[ $exit_code =~ $re ]] ; then
-      exit_code=0
-    fi
-    if [[ $((exit_code)) > 0 ]]; then
-      if grep -q "transport is closing" "$build_log"; then
-        ((tries++))
-        echo "retrying build for $name..."
-        continue
-      else
-        echo "`buildctl` failed"
-        exit $exit_code
-      fi
-    else
-      echo "\`buildctl\` ($name) successful"
-      break
-    fi
-  done
+  _gcloud_build_submit "$dockerfile_path" "$name" "$dish_base_version"
+  if [[ "$1" == "pull" ]]; then
+    docker pull "$name"
+  fi
 }
 
-function _buildkit_build_command() {
-  context="$1"
-  dockerfile_path="$2"
-  dish_base_version="$3"
-  name="$4"
-  type="$5"
-  push="$6"
-  output="$7"
-  redirect="$8"
-  buildctl \
-    --addr tcp://buildkit.k8s.dishapp.com:1234 \
-    --tlscacert k8s/etc/certs/buildkit/client/ca.pem \
-    --tlscert k8s/etc/certs/buildkit/client/cert.pem \
-    --tlskey k8s/etc/certs/buildkit/client/key.pem \
-    --tlsservername buildkit.k8s.dishapp.com \
-    build \
-      --frontend=dockerfile.v0 \
-      --local context=$context \
-      --local dockerfile=$dockerfile_path \
-      --opt build-arg:DISH_BASE_VERSION=$dish_base_version \
-      --export-cache type=registry,ref=$name-buildcache \
-      --import-cache type=registry,ref=$name-buildcache \
-      --output type=$type,name=$name$push \
-        | $output | cat - >$redirect \
-  || echo $?
+function gcloud_build() {
+  _gcloud_build push "$@"
 }
 
-function buildkit_build() {
-  _buildkit_build push "$@"
-}
-
-function buildkit_build_output_local() {
-  _buildkit_build pull "$@"
+function gcloud_build_output_local() {
+  _gcloud_build pull "$@"
 }
 
 function build_dish_service() {
   path=$1
   name=$(echo $path | cut -d / -f 2)
-  image=$DISH_REGISTRY/dish/$name:$DOCKER_TAG_NAMESPACE
-  buildkit_build_output_local $path $image
+  image=$DISH_REGISTRY/$name:$DOCKER_TAG_NAMESPACE
+  gcloud_build_output_local $path $image
 }
 
 function _build_dish_service() {
@@ -828,12 +774,10 @@ function _build_dish_service() {
 export -f _build_dish_service
 
 function build_dish_base() {
-  buildkit_build . $BASE_IMAGE
+  gcloud_build . $BASE_IMAGE
 }
 
 function build_all_dish_services() {
-  ./k8s/etc/docker_registry_gc.sh
-
   echo "Building all Dish services..."
   build_dish_base
   docker pull $BASE_IMAGE
@@ -851,7 +795,7 @@ function build_all_dish_services() {
 
 function ci_prettier() {
   docker run \
-    docker.k8s.dishapp.com/dish/base:$DOCKER_TAG_NAMESPACE \
+    $DISH_REGISTRY/base:$DOCKER_TAG_NAMESPACE \
     prettier --check "**/*.{ts,tsx}"
 }
 
@@ -859,8 +803,8 @@ function ci_rename_tagged_images_to_latest() {
   dish_docker_login
   for image in "${ALL_IMAGES[@]}"
   do
-    current=$DISH_REGISTRY/dish/$image:$DOCKER_TAG_NAMESPACE
-    new=$DISH_REGISTRY/dish/$image
+    current=$DISH_REGISTRY/$image:$DOCKER_TAG_NAMESPACE
+    new=$DISH_REGISTRY/$image
     docker tag $current $new:latest
   done
   docker images
@@ -874,7 +818,7 @@ function ci_push_images_to_latest() {
     if [[ "$image" == "worker" ]]; then
       continue
     fi
-    new=$DISH_REGISTRY/dish/$image:latest
+    new=$DISH_REGISTRY/$image:latest
     docker push $new
   done
 }
@@ -899,19 +843,19 @@ function push_repo_image() {
 }
 
 function push_auxillary_images() {
-  push_repo_image 'git@github.com:getdish/image-quality-api.git' dish/image-quality-server
-  push_repo_image 'git@github.com:getdish/grafana-backup-tool.git' dish/grafana-backup-tool
-  push_repo_image 'git@github.com:getdish/imageproxy.git' dish/imageproxy
-  buildkit_build $PROJECT_ROOT/services/gorse $DISH_REGISTRY/dish/gorse
-  buildkit_build $PROJECT_ROOT/services/cron $DISH_REGISTRY/dish/cron
+  push_repo_image 'git@github.com:getdish/image-quality-api.git' image-quality-server
+  push_repo_image 'git@github.com:getdish/grafana-backup-tool.git' grafana-backup-tool
+  push_repo_image 'git@github.com:getdish/imageproxy.git' imageproxy
+  buildkit_build $PROJECT_ROOT/services/gorse $DISH_REGISTRY/gorse
+  buildkit_build $PROJECT_ROOT/services/cron $DISH_REGISTRY/cron
 }
 
 function dish_docker_login() {
-  echo "$DOCKER_REGISTRY_PASSWORD" | docker login $DISH_REGISTRY -u dish --password-stdin
+  yes | gcloud auth configure-docker gcr.io || true
 }
 
 function grafana_backup() {
-  _run_on_cluster $DISH_REGISTRY/dish/grafana-backup-tool && return 0
+  _run_on_cluster $DISH_REGISTRY/grafana-backup-tool && return 0
   set -e
   export GRAFANA_TOKEN="$GRAFANA_API_KEY"
   export GRAFANA_URL=https://grafana.k8s.dishapp.com
@@ -949,7 +893,7 @@ function hot_deploy() {
   build_dish_base
   echo "Base image built."
 
-  NAME=$DISH_REGISTRY/dish/$service_name
+  NAME=$DISH_REGISTRY/$service_name
 
   ./dishctl.sh buildkit_build $service_path $NAME
 
@@ -962,7 +906,7 @@ function buildkit_build_local() {
   echo "Building the base image first..."
   buildkit_build_output_local . $BASE_IMAGE
   echo "Base image built."
-  NAME=$DISH_REGISTRY/dish/$service_name
+  NAME=$DISH_REGISTRY/$service_name
   echo "Building $NAME..."
   buildkit_build_output_local $service_path $NAME
   echo "$NAME built."
@@ -1068,7 +1012,7 @@ if command -v git &> /dev/null; then
   export PROJECT_ROOT=$(git rev-parse --show-toplevel)
   branch=$(git rev-parse --abbrev-ref HEAD)
   export DOCKER_TAG_NAMESPACE=${branch//\//-}
-  export BASE_IMAGE=$DISH_REGISTRY/dish/base:$DOCKER_TAG_NAMESPACE
+  export BASE_IMAGE=$DISH_REGISTRY/base:$DOCKER_TAG_NAMESPACE
   pushd $PROJECT_ROOT >/dev/null
     if [ -f "env.enc.production.yaml" ]; then
       export all_env="$(yaml_to_env)"
