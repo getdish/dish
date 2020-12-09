@@ -23,7 +23,7 @@ export const drawerExtraLeftScrollSpace = 500
 
 export const pageWidthMax = 2000
 
-export const searchBarTopOffset = 4
+export const searchBarTopOffset = 3
 export const searchBarHeight = 50
 export const searchBarMaxWidth = pageWidthMax - 500
 

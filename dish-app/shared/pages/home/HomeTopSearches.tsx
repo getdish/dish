@@ -15,7 +15,7 @@ export const HomeTopSearches = memo(() => {
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <HStack
         paddingHorizontal={20}
-        paddingVertical={20}
+        paddingVertical={15}
         spacing={6}
         marginHorizontal="auto"
         alignItems="center"

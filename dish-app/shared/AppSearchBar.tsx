@@ -49,6 +49,7 @@ export const parentIds = {
 export const AppSearchBarFloating = () => {
   const isSmall = useIsNarrow()
   const { background, backgroundRgb } = useSearchBarTheme()
+  const height = searchBarHeight + 4
 
   if (isSmall) {
     return null
@@ -64,13 +65,11 @@ export const AppSearchBarFloating = () => {
   //   sendReparentableChild(parent, newParent, 0, 0)
   // }, [isSmall])
 
-  console.log('background', background)
-
   return (
     <AbsoluteVStack
       className="searchbar-container ease-in-out"
-      left={26}
-      right={26}
+      left={6}
+      right={6}
       zIndex={zIndexSearchBarFloating}
       position="absolute"
       marginTop={searchBarTopOffset}
@@ -82,16 +81,15 @@ export const AppSearchBarFloating = () => {
         alignItems="center"
         justifyContent="center"
         width="100%"
-        height={searchBarHeight}
+        height={height}
         maxWidth={searchBarMaxWidth + 20}
       >
         <AbsoluteVStack
-          className="skewX findme123"
-          borderRadius={10}
+          borderRadius={100}
           overflow="hidden"
           zIndex={102}
           fullscreen
-          height={searchBarHeight}
+          height={height}
           justifyContent="center"
           alignItems="center"
           shadowColor="rgba(0,0,0,0.24)"
@@ -99,7 +97,6 @@ export const AppSearchBarFloating = () => {
           shadowRadius={12}
         >
           <AbsoluteVStack
-            className="findme123"
             // opacity={0.76}
             backgroundColor={background}
             fullscreen
@@ -110,6 +107,10 @@ export const AppSearchBarFloating = () => {
               end={[1, 1]}
               colors={[background, `rgb(${backgroundRgb.map((x) => x * 0.8)})`]}
             />
+            <LinearGradient
+              style={[StyleSheet.absoluteFill]}
+              colors={['rgba(255,255,255,0.03)', `rgba(255,255,255,0)`]}
+            />
           </AbsoluteVStack>
         </AbsoluteVStack>
         <VStack
@@ -117,7 +118,7 @@ export const AppSearchBarFloating = () => {
           zIndex={104}
           flex={1}
           paddingHorizontal={12}
-          height={searchBarHeight}
+          height={height}
           justifyContent="center"
           overflow="hidden"
           width="100%"
@@ -160,7 +161,7 @@ const AppSearchBarContents = memo(() => {
       <HStack
         className="ease-in-out"
         position="relative"
-        flex={1.5}
+        width="50%"
         maxWidth={
           isReallySmall
             ? 'auto'

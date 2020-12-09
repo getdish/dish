@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import { AbsoluteVStack, VStack } from 'snackui'
 
 import { useIsReallyNarrow } from '../hooks/useIs'
-import { Logo, LogoSmall } from './Logo'
+import { Logo, LogoColor, LogoSmall } from './Logo'
 import { logoStyles } from './logoStyles'
 import { LinkButton } from './ui/LinkButton'
 import { LinkButtonProps } from './ui/LinkProps'
@@ -36,7 +36,7 @@ export const DishLogoButton = memo(() => {
         opacity={isReallySmall ? 0 : 1}
         pointerEvents={isReallySmall ? 'none' : 'auto'}
       >
-        <Logo />
+        <LogoColor />
       </LinkButton>
       <AbsoluteVStack
         pointerEvents={isReallySmall ? 'auto' : 'none'}
