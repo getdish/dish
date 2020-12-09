@@ -39,24 +39,7 @@ export default memo(function GalleryPage() {
           <StackViewCloseButton />
         </AbsoluteVStack>
         <Suspense fallback={<LoadingItems />}>
-          <HomePageGalleryContent
-            state={state}
-            header={
-              <HStack
-                alignItems="center"
-                justifyContent="space-between"
-                position="relative"
-                zIndex={100}
-                paddingHorizontal={20}
-                paddingBottom={10}
-              >
-                <RestaurantHeader
-                  size="sm"
-                  restaurantSlug={state.restaurantSlug}
-                />
-              </HStack>
-            }
-          />
+          <HomePageGalleryContent state={state} />
           {isSmall ? (
             <AbsoluteVStack
               backgroundColor="#fff"

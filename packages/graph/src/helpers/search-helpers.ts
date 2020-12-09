@@ -1,5 +1,6 @@
 import { SEARCH_DOMAIN } from '../constants'
 import {
+  HomeMeta,
   RestaurantOnlyIds,
   RestaurantSearchArgs,
   TopCuisine,
@@ -9,6 +10,11 @@ import {
 const TILE_BASED_CACHE_ZOOM = 11
 const TILE_WIDTH = 0.176
 
+export type SearchResults = {
+  restaurants: RestaurantOnlyIds[]
+  meta: HomeMeta
+}
+
 export async function search({
   center: { lat, lng },
   span,
@@ -16,16 +22,7 @@ export async function search({
   tags = [],
   limit = 50,
   main_tag = '',
-}: RestaurantSearchArgs): Promise<RestaurantOnlyIds[]> {
-  console.log('searching', {
-    center: { lat, lng },
-    span,
-    query,
-    tags,
-    limit,
-    main_tag,
-  })
-
+}: RestaurantSearchArgs): Promise<SearchResults> {
   const result = await searchMain({
     center: { lat, lng },
     span,
@@ -34,8 +31,7 @@ export async function search({
     limit,
     main_tag,
   })
-  // console.log(28, result)
-  return result.restaurants
+  return result
 }
 
 export async function searchMain({

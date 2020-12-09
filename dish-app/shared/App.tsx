@@ -59,7 +59,6 @@ const AppContent = memo(() => {
         overflow="hidden"
         backgroundColor="#dbdeeb"
       >
-        {/* WARNING: DONT PUT ANYTHING ABOVE THIS IN MARKUP ^^ */}
         <Suspense fallback={null}>
           <AppContainer>
             <AppStackView>
@@ -87,26 +86,24 @@ const AppContent = memo(() => {
             <AppMapControlsUnderlay />
             <AppMapControlsOverlay />
           </Suspense>
-
-          <Suspense fallback={null}>
-            <GalleryPage />
-          </Suspense>
-          <Suspense fallback={null}>
-            <RestaurantReviewPage />
-          </Suspense>
-          <Suspense fallback={null}>
-            <RestaurantReviewsPage />
-          </Suspense>
-          <Suspense fallback={null}>
-            <UserEditPage />
-          </Suspense>
-          <Suspense fallback={null}>
-            <Route name="restaurantHours">
-              <RestaurantHoursPage />
-            </Route>
-          </Suspense>
         </Suspense>
       </VStack>
+
+      {/* Modals outside the above VStack to stay above */}
+      <Suspense fallback={null}>
+        <UserEditPage />
+      </Suspense>
+      <Suspense fallback={null}>
+        <GalleryPage />
+      </Suspense>
+      <Suspense fallback={null}>
+        <RestaurantReviewPage />
+      </Suspense>
+      <Suspense fallback={null}>
+        <Route name="restaurantHours">
+          <RestaurantHoursPage />
+        </Route>
+      </Suspense>
     </AppRoot>
   )
 })
@@ -132,11 +129,6 @@ const RestaurantReviewPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./pages/restaurantReview/RestaurantReviewPage').default
     : loadable(() => import('./pages/restaurantReview/RestaurantReviewPage'))
-
-const RestaurantReviewsPage =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./pages/restaurantReviews/RestaurantReviewsPage').default
-    : loadable(() => import('./pages/restaurantReviews/RestaurantReviewsPage'))
 
 const RestaurantHoursPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'

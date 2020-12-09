@@ -1,4 +1,4 @@
-import { RestaurantOnlyIds, Tag, TopCuisine, User } from '@dish/graph'
+import { HomeMeta, RestaurantOnlyIds, Tag, User } from '@dish/graph'
 import { NavigateItem } from '@dish/router'
 import { Config, IContext } from 'overmind'
 
@@ -105,7 +105,6 @@ export type HomeStateItem =
   | HomeStateItemUser
   | HomeStateItemGallery
   | HomeStateItemReview
-  | HomeStateItemReviews
   | HomeStateItemAbout
   | HomeStateItemBlog
   | HomeStateItemUserEdit
@@ -164,6 +163,7 @@ export type HomeStateItemSearch = HomeStateItemBase & {
   type: 'search' | 'userSearch'
   activeTags: HomeActiveTagsRecord
   status: 'loading' | 'complete'
+  meta?: HomeMeta
   results: (RestaurantOnlyIds & {
     meta: HomeSearchItemMeta
   })[]
@@ -201,12 +201,6 @@ export type HomeStateItemReview = HomeStateItemBase & {
 
 export type HomeStateItemUserEdit = HomeStateItemBase & {
   type: 'userEdit'
-}
-
-export type HomeStateItemReviews = HomeStateItemBase & {
-  type: 'restaurantReviews'
-  slug: string
-  tagName?: string
 }
 
 export type HomeStateItemSimple = Pick<HomeStateItem, 'id' | 'type'>

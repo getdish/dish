@@ -132,7 +132,7 @@ const recentSearches: { tags: NavigableTag[] }[] = [
   },
   {
     tags: [
-      { ...tagLenses[1], displayName: 'Fancy', type: 'lense' },
+      tagLenses[1],
       { name: 'Steak', icon: '🥩', type: 'dish', slug: 'american__steak' },
     ],
   },

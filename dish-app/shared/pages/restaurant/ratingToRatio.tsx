@@ -5,7 +5,7 @@ export const ratingToRatio = (rating: number) => {
   }
   return num / 8
 }
-const scaleValue = (
+export const scaleValue = (
   value: number,
   from: [number, number],
   to: [number, number]

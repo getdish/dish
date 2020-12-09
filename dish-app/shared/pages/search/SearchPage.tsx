@@ -59,6 +59,7 @@ import { ContentScrollView } from '../../views/ContentScrollView'
 import { StackCloseButton, StackDrawer } from '../../views/StackDrawer'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
+import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import {
   ITEM_HEIGHT,
   RestaurantListItem,
@@ -370,6 +371,9 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       onSizeChanged({ width, height })
     }, [])
 
+    const meta = curProps.item.meta
+    console.log('meta', meta)
+
     return (
       <VStack onLayout={handleLayout} flex={1}>
         <ContentScrollView
@@ -412,16 +416,62 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             <SearchPageResultsInfoBox state={curProps.item} />
           </Suspense>
 
-          <HStack alignItems="center" justifyContent="center" spacing>
-            {getActiveTags(curProps.item).map((tag) => {
-              return (
-                <TagButton
-                  replaceSearch
-                  size="sm"
-                  {...getTagButtonProps(tag)}
+          <HStack alignItems="center">
+            <HStack flex={1} position="relative">
+              <HStack position="absolute" fullscreen>
+                <VStack
+                  // borderTopWidth={1}
+                  borderLeftWidth={1}
+                  borderColor="#eee"
+                  width={40}
+                  height={40}
+                  marginBottom={-40}
+                  marginRight={-20}
+                  borderRadius={40}
+                  marginLeft={20}
+                  transform={[{ rotate: '45deg' }]}
                 />
-              )
-            })}
+                <VStack
+                  borderBottomWidth={1}
+                  borderBottomColor="#eee"
+                  flex={1}
+                />
+              </HStack>
+            </HStack>
+            <HStack
+              alignItems="center"
+              borderWidth={1}
+              borderColor="#f2f2f2"
+              padding={10}
+              paddingHorizontal={15}
+              borderRadius={100}
+              maxWidth="80%"
+            >
+              <VStack marginLeft={-25} marginRight={5}>
+                <SlantedTitle>Scoring</SlantedTitle>
+              </VStack>
+              <HStack spacing="lg">
+                {!!meta &&
+                  getActiveTags(curProps.item).map((tag, index) => {
+                    return (
+                      <HStack alignItems="center" key={tag.slug ?? index}>
+                        <TagButton
+                          replaceSearch
+                          size="sm"
+                          {...getTagButtonProps(tag)}
+                        />
+                        <Spacer size="xs" />
+                        <Text fontSize={13} color="#999">
+                          {meta.main_tag === tag.slug.replace('lenses__', '')
+                            ? `${meta.scores.weights.main_tag}x`
+                            : `${meta.scores.weights.rishes}x`}
+                        </Text>
+                      </HStack>
+                    )
+                  })}
+              </HStack>
+            </HStack>
+            <HStack flex={1} />
           </HStack>
 
           <VStack position="relative" flex={1} minHeight={600}>

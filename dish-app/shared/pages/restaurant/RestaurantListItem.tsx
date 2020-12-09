@@ -52,7 +52,6 @@ import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { ensureFlexText } from './ensureFlexText'
 import { RankView } from './RankView'
-import { ratingToRatio } from './ratingToRatio'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours, priceRange } from './RestaurantDetailRow'
@@ -274,9 +273,7 @@ const RestaurantListItemContent = memo(
           <AbsoluteVStack top={34} left={-12} zIndex={1000}>
             <RestaurantUpVoteDownVote
               key={JSON.stringify(tagIds)}
-              score={Math.round(meta?.effective_score ?? 0)}
-              ratio={ratingToRatio(restaurant.rating ?? 1)}
-              restaurantId={restaurantId}
+              score={Math.round((meta?.effective_score ?? 0) / 10)}
               restaurantSlug={restaurantSlug}
               activeTags={tagIds}
               onClickPoints={() => {
