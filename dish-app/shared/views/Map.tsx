@@ -162,9 +162,9 @@ export const MapView = (props: MapProps) => {
       (feature) => feature.properties.id === hovered
     )
 
-    if (featureId) {
+    if (featureId !== -1) {
       prevHoveredId.current = featureId
-      mapSetFeature(map, +featureId, { hover: true })
+      mapSetFeature(map, featureId, { hover: true })
     }
     // return animateMarker(map)
   }, [map, hovered, isMapLoaded, features])
