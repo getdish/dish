@@ -785,7 +785,7 @@ test('Scoring for restaurants', async (t) => {
 
   t.deepEqual(updated?.upvotes, 9.1)
   t.deepEqual(updated?.downvotes, 2)
-  t.deepEqual(updated?.votes_ratio, 4.55)
+  t.deepEqual(updated?.votes_ratio, 0.8198198198198198)
   t.deepEqual(updated?.source_breakdown, breakdown)
 })
 
@@ -814,7 +814,7 @@ test('Scoring for rishes', async (t) => {
   t.is(rish1.score, 3)
   t.is(rish1.upvotes, 4)
   t.is(rish1.downvotes, 1)
-  t.is(rish1.votes_ratio, 4)
+  t.is(rish1.votes_ratio, 0.8)
   t.is(rish1.review_mentions_count, 6)
   t.is(rish2.review_mentions_count, 1)
   t.deepEqual(rish1.source_breakdown.yelp, {
