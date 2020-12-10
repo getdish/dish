@@ -22,12 +22,10 @@ export const tagSlugWithAndWithoutParent = (tag: Tag) => {
 }
 
 export const tagSlugs = (tag: Tag) => {
-  let parentage = [tagSlugWithoutParent(tag)]
-  parentage.push()
+  let parentage = [tagSlugWithoutParent(tag), tagSlug(tag)]
   if (!tagIsOrphan(tag)) {
     parentage = [
       ...parentage,
-      tagSlug(tag),
       //@ts-expect-error
       tagSlugWithoutParent(tag.parent),
     ]
