@@ -124,9 +124,7 @@ export default memo(function HomePage(props: Props) {
     }
   })
 
-  const region =
-    getStore(AppMapStore).regions[props.item.region] ??
-    getStore(AppMapStore).regions['san-francisco']
+  const region = getStore(AppMapStore).regions[props.item.region]
 
   useEffect(() => {
     console.log('got region', region)

@@ -5,7 +5,7 @@ import { Region } from './state/home-types'
 
 export class AppMapStore extends Store {
   regions: { [slug: string]: Region | undefined } = {
-    'san-francisco': sfRegion,
+    // 'san-francisco': sfRegion,
   }
 
   setRegion(slug: string, region: Region) {

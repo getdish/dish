@@ -62,7 +62,8 @@ export const RestaurantReviewsList = memo(
               </VStack>
             )}
             <Grid itemMinWidth={280}>
-              <RestaurantReview reviewId={ownReview.id} />
+              {ownReview && <RestaurantReview reviewId={ownReview.id} />}
+
               {topReviews.map((review, i) => {
                 return (
                   <VStack flex={1} key={i}>
