@@ -181,7 +181,7 @@ test('Supports main_tag priority ordering', async (t) => {
       lng: 1,
     },
     query: '',
-    tags: ['test-rated-tag'],
+    tags: ['global__test-rated-tag'],
     main_tag: 'global__test-main-tag',
   })
   t.is(results?.length, 3)

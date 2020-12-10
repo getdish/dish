@@ -1,7 +1,13 @@
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo, useCallback, useState } from 'react'
 import { StyleSheet } from 'react-native'
-import { AbsoluteVStack, LinearGradient, Paragraph, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  LinearGradient,
+  Paragraph,
+  VStack,
+} from 'snackui'
 
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -14,13 +20,17 @@ import {
   cardnFrameBorderRadiusSmaller,
 } from './CardFrame'
 import { priceRange } from './RestaurantDetailRow'
-import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
+import {
+  RestaurantFavoriteButton,
+  RestaurantFavoriteStar,
+} from './RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 
 export type RestaurantCardProps = {
-  size?: 'lg' | 'md'
+  // size?: 'lg' | 'md' | 'sm'
   restaurantSlug: string
   restaurantId: string
+  below?: any
 }
 
 export const RestaurantCard = (props: RestaurantCardProps) => {
@@ -36,9 +46,14 @@ export const RestaurantCard = (props: RestaurantCardProps) => {
 
 export const RestaurantCardContent = memo(
   graphql(
-    ({ size = 'lg', restaurantSlug, restaurantId }: RestaurantCardProps) => {
+    ({
+      // size = 'lg',
+      restaurantSlug,
+      restaurantId,
+      below,
+    }: RestaurantCardProps) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
-      const scale = size === 'lg' ? 1.2 : 1
+      // const scale = size === 'lg' ? 1.2 : size == 'sm' ? 0.6 : 1
       const [hideInfo, setHideInfo] = useState(false)
       const [price_label, price_color, price_range] = priceRange(restaurant)
       const { lightColor, color, altColor } = getColorsForName(restaurant.name)
@@ -125,21 +140,43 @@ export const RestaurantCardContent = memo(
                   padding={20}
                   alignItems="flex-start"
                   spacing
+                  height="100%"
                 >
-                  <Paragraph size={1.1} color="#fff" fontWeight="800">
-                    {restaurant.name}
-                  </Paragraph>
-                  <Paragraph color="#fff" fontWeight="500">
-                    {price_range}
-                  </Paragraph>
+                  <HStack flex={1} marginLeft={40}>
+                    <VStack flex={1} />
+                    <VStack alignItems="flex-end">
+                      <Paragraph
+                        textAlign="right"
+                        size={1.1}
+                        sizeLineHeight={0.9}
+                        textShadowColor="#00000033"
+                        textShadowRadius={1}
+                        textShadowOffset={{ height: 2, width: 0 }}
+                        color="#fff"
+                        fontWeight="800"
+                      >
+                        {restaurant.name}
+                      </Paragraph>
+                      <Paragraph
+                        textAlign="right"
+                        color="#fff"
+                        fontWeight="500"
+                      >
+                        {price_range}
+                      </Paragraph>
+                    </VStack>
+                    <VStack marginTop={-16} marginRight={-16}>
+                      <RestaurantFavoriteStar
+                        size="md"
+                        restaurantId={restaurantId}
+                      />
+                    </VStack>
+                  </HStack>
+                  <VStack flex={1} />
+                  {below}
                 </VStack>
 
-                <VStack marginVertical={-18}>
-                  <RestaurantFavoriteButton
-                    size="md"
-                    restaurantId={restaurantId}
-                  />
-                </VStack>
+                <AbsoluteVStack top={15} right={15}></AbsoluteVStack>
               </AbsoluteVStack>
             </VStack>
           </CardFrame>

@@ -2,14 +2,14 @@
 # And also there is a JSON schema for validating in your local editor:
 # http://json.schemastore.org/github-workflow
 
-name: "On-push tests"
+name: 'On-push tests'
 on: [push]
 env:
   DOCKER_BUILDKIT: 1
-  DISH_ENV: "test"
-  DISH_REGISTRY: "docker.k8s.dishapp.com"
-  CURRENT_DISH_CLUSTER: "dish-blue"
-  HASURA_ENDPOINT: "http://localhost:8080"
+  DISH_ENV: 'test'
+  DISH_REGISTRY: 'gcr.io/dish-258800'
+  CURRENT_DISH_CLUSTER: 'dish-blue'
+  HASURA_ENDPOINT: 'http://localhost:8080'
   GITCRYPT_KEY: ${{ secrets.GITCRYPT_KEY }}
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
       - name: Setup services
         run: .github/workflows/scripts/setup_services.sh
       - name: Run unit tests, specs, etc
-        run: docker run --net host docker.k8s.dishapp.com/dish/base yarn test
+        run: docker run --net host ${DISH_REGISTRY}/base yarn test
       - name: Run integration tests
         run: .github/workflows/scripts/integration_tests.sh
       - name: Deploy
@@ -38,4 +38,3 @@ jobs:
       - name: 'On fail: Output container logs'
         run: .github/workflows/scripts/on_failure.sh
         if: failure()
-

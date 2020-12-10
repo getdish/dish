@@ -37,11 +37,13 @@ import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemHome, Region } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
 import { useOvermind } from '../../state/useOvermind'
+import { CommentBubble } from '../../views/CommentBubble'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { DishView } from '../../views/dish/DishView'
 import { PageFooter } from '../../views/layout/PageFooter'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { SlantedBox } from '../../views/ui/SlantedBox'
+import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import {
   CardFrame,
   cardFrameHeight,
@@ -49,6 +51,8 @@ import {
 } from '../restaurant/CardFrame'
 import { RestaurantButton } from '../restaurant/RestaurantButton'
 import { RestaurantCard } from '../restaurant/RestaurantCard'
+import { RestaurantReview } from '../restaurant/RestaurantReview'
+import { peachAvatar } from '../search/avatar'
 import { StackViewProps } from '../StackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
 
@@ -267,7 +271,7 @@ const HomePageContentInner = memo(
                   const content = (() => {
                     switch (item.type) {
                       case 'restaurant':
-                        return <RestaurantCard {...item} />
+                        return <RestaurantFeedCard {...item} />
                       case 'dish':
                         return <DishFeedCard {...item} />
                       case 'dish-restaurants':
@@ -557,37 +561,51 @@ const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
 const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
   return (
     <>
-      <AbsoluteVStack
-        zIndex={10}
-        top={0}
-        right={0}
-        transform={[{ translateX: 10 }, { translateY: -10 }]}
-      >
-        <DishView size={160} {...props} />
-      </AbsoluteVStack>
-      <VStack
-        flexWrap="nowrap"
-        flex={1}
-        paddingTop={180}
-        borderRadius={20}
-        overflow="hidden"
-      >
-        {props.restaurants.map((r) => {
-          if (!r.slug) {
-            return null
-          }
-          return (
-            <RestaurantButton
-              maxInnerWidth={220}
-              subtle
-              key={r.id}
-              trending="up"
-              restaurantSlug={r.slug}
-            />
-          )
-        })}
-      </VStack>
+      <SlantedTitle fontWeight="600" alignSelf="center" marginTop={-10}>
+        {props.dish.icon ?? null} {props.dish.name}
+      </SlantedTitle>
+      <HStack>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {props.restaurants.map((r) => {
+            if (!r.slug) {
+              return null
+            }
+            return (
+              <HStack key={r.id}>
+                <VStack transform={[{ scale: 0.66 }]} margin={-30}>
+                  <RestaurantCard
+                    restaurantId={r.id}
+                    restaurantSlug={r.slug}
+                    below={
+                      <CommentBubble
+                        name="Test"
+                        avatar={peachAvatar}
+                        text="Lorem ipsum dolor sit amet"
+                      />
+                    }
+                  />
+                </VStack>
+              </HStack>
+            )
+          })}
+        </ScrollView>
+      </HStack>
     </>
+  )
+}
+
+const RestaurantFeedCard = (props: FeedItemRestaurant) => {
+  return (
+    <RestaurantCard
+      {...props}
+      below={
+        <CommentBubble
+          name="Test"
+          avatar={peachAvatar}
+          text="Lorem ipsum dolor sit amet"
+        />
+      }
+    />
   )
 }
 

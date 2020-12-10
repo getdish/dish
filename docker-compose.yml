@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   base:
-    image: 'docker.k8s.dishapp.com/dish/base${DISH_BASE_VERSION}'
+    image: 'gcr.io/dish-258800/base${DISH_BASE_VERSION}'
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -31,7 +31,7 @@ services:
     ports:
       - 6379:6379
   dish-hooks:
-    image: docker.k8s.dishapp.com/dish/dish-hooks
+    image: gcr.io/dish-258800/dish-hooks
     build:
       context: ./
       dockerfile: ./services/dish-hooks/Dockerfile
@@ -55,6 +55,7 @@ services:
       - HASURA_GRAPHQL_ADMIN_SECRET=password
       - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anon
       - HASURA_GRAPHQL_JWT_SECRET={"type":"HS256", "key":"12345678901234567890123456789012"}
+      - HASURA_GRAPHQL_ENABLE_CONSOLE=true
       - DISH_HOOKS_ENDPOINT=http://dish-hooks:6154
       - GORSE_SYNC_HOOK=http://dish-hooks:6154/gorse_sync
       - VIRTUAL_HOST=hasura-staging.dishapp.com
@@ -73,7 +74,7 @@ services:
     depends_on:
       - 'postgres'
   user-server:
-    image: docker.k8s.dishapp.com/dish/user-server
+    image: gcr.io/dish-258800/user-server
     build:
       context: ./
       dockerfile: ./services/user-server/Dockerfile
@@ -89,7 +90,7 @@ services:
     depends_on:
       - 'postgres'
   search:
-    image: docker.k8s.dishapp.com/dish/search
+    image: gcr.io/dish-258800/dish/search
     build:
       context: ./
       dockerfile: ./services/search/Dockerfile
@@ -104,30 +105,30 @@ services:
     volumes:
       - ${HOME}/.dish/gorse:/data
       - ./services/gorse/config.local.toml:/app/config.toml
-    image: docker.k8s.dishapp.com/dish/gorse
+    image: gcr.io/dish-258800/gorse
     ports:
       - 9000:9000
   bert:
-    image: docker.k8s.dishapp.com/dish/bert
+    image: gcr.io/dish-258800/dish/bert
     ports:
       - 8888:8080
     environment:
       - VIRTUAL_HOST=bert-staging.dishapp.com
   image-quality-api:
-    image: docker.k8s.dishapp.com/dish/image-quality-server
+    image: gcr.io/dish-258800/image-quality-server
     ports:
       - 8883:5005
     environment:
       - VIRTUAL_HOST=image-quality-staging.dishapp.com
   image-proxy:
-    image: docker.k8s.dishapp.com/dish/imageproxy
+    image: gcr.io/dish-258800/imageproxy
     ports:
       - 8881:8080
-    command: "-addr 0.0.0.0:8080 -cache /image-cache"
+    command: '-addr 0.0.0.0:8080 -cache /image-cache'
     environment:
       - VIRTUAL_HOST=images-staging.dishapp.com
   dish-app-web:
-    image: docker.k8s.dishapp.com/dish/dish-app
+    image: gcr.io/dish-258800/dish-app
     build:
       context: ./
       dockerfile: ./dish-app/Dockerfile
@@ -139,12 +140,12 @@ services:
   nginx-web:
     image: nginx:stable-alpine
     labels:
-        com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: 'true'
     container_name: ${NGINX_WEB:-nginx-web}
     restart: always
     ports:
-      - "${IP:-0.0.0.0}:${DOCKER_HTTP:-80}:80"
-      - "${IP:-0.0.0.0}:${DOCKER_HTTPS:-443}:443"
+      - '${IP:-0.0.0.0}:${DOCKER_HTTP:-80}:80'
+      - '${IP:-0.0.0.0}:${DOCKER_HTTPS:-443}:443'
     volumes:
       - ${NGINX_FILES_PATH:-./data}/conf.d:/etc/nginx/conf.d
       - ${NGINX_FILES_PATH:-./data}/vhost.d:/etc/nginx/vhost.d

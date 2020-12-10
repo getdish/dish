@@ -1,1 +1,1 @@
-export const avatar = require('../../assets/peach.jpg').default
+export const peachAvatar = require('../../assets/peach.jpg').default

@@ -95,14 +95,14 @@ main AS (
 
     (
       (
-        ?4 != ''
-        AND
+        ?4 = ''
+        OR
         tag_names @> to_json(string_to_array(?4, ','))::jsonb
       )
       AND
       (
-        ?16 != ''
-        AND
+        ?16 = ''
+        OR
         tag_names @> to_json(?16::text)::jsonb
       )
     )

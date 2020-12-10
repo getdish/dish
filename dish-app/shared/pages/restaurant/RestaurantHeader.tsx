@@ -94,19 +94,20 @@ const RestaurantHeaderContent = memo(
             }}
           >
             <VStack>
-              <VStack
+              <AbsoluteVStack
+                zIndex={0}
                 pointerEvents="auto"
-                position="relative"
                 className="fade-photos"
               >
                 <RestaurantPhotosRow
                   restaurantSlug={restaurantSlug}
                   width={260}
-                  height={200}
+                  height={170}
+                  escalating
                 />
-              </VStack>
+              </AbsoluteVStack>
               <VStack
-                marginTop={-20}
+                marginTop={150}
                 minWidth={minWidth}
                 borderTopRightRadius={drawerBorderRadius - 1}
                 borderTopLeftRadius={drawerBorderRadius - 1}

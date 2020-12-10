@@ -11,11 +11,13 @@ import { LinkButton } from '../../views/ui/LinkButton'
 export const RestaurantPhotosRow = memo(
   graphql(
     ({
+      escalating,
       restaurantSlug,
       onIsAtStart,
       width,
       height,
     }: {
+      escalating?: boolean
       restaurantSlug: string
       onIsAtStart?: (x: boolean) => void
       width: number
@@ -32,20 +34,27 @@ export const RestaurantPhotosRow = memo(
           )}
           {!!photos.length && (
             <>
-              {photos.slice(0, 9).map((photo, key) => (
-                <VStack key={key} className={`scroll-snap-photo`}>
-                  <LinkButton name="gallery" params={{ restaurantSlug }}>
-                    <Image
-                      source={{ uri: getImageUrl(photo, width, height, 100) }}
-                      style={{
-                        height,
-                        width,
-                      }}
-                      resizeMode="cover"
-                    />
-                  </LinkButton>
-                </VStack>
-              ))}
+              {photos.slice(0, 9).map((photo, index) => {
+                const photoHeight = escalating
+                  ? Math.min(height + index * (index < 3 ? 25 : 150), 500)
+                  : height
+                return (
+                  <VStack key={index} className={`scroll-snap-photo`}>
+                    <LinkButton name="gallery" params={{ restaurantSlug }}>
+                      <Image
+                        source={{
+                          uri: getImageUrl(photo, width, photoHeight, 100),
+                        }}
+                        style={{
+                          height: photoHeight,
+                          width: width,
+                        }}
+                        resizeMode="cover"
+                      />
+                    </LinkButton>
+                  </VStack>
+                )
+              })}
               <VStack className="scroll-snap-photo">
                 <LinkButton
                   width={width}

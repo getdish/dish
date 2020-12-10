@@ -26,7 +26,7 @@ docker-compose down
 docker-compose up -d hasura postgres timescaledb
 
 ./dishctl.sh db_migrate_local init
-docker run --net host docker.k8s.dishapp.com/dish/base \
+docker run --net host $DISH_REGISTRY/base \
   bash -c 'cd services/timescaledb && DISH_ENV=not-production ./migrate.sh'
 # JWT server won't start until migrations have been applied
 docker-compose down

@@ -141,7 +141,7 @@ export class RestaurantTagScores {
           upvotes = (SELECT upvotes FROM updown),
           downvotes = (SELECT downvotes FROM updown),
           votes_ratio = (
-            SELECT NULLIF(upvotes, 0) / NULLIF(downvotes, 0)
+            SELECT NULLIF(upvotes, 0) / NULLIF(downvotes + upvotes, 0)
             FROM updown
           )
         WHERE restaurant_id = '${this.crawler.restaurant.id}'
@@ -296,7 +296,7 @@ export class RestaurantTagScores {
     return `
       SELECT
         *,
-        (SELECT NULLIF(upvotes, 0) / NULLIF(downvotes, 0)) AS ratio
+        (SELECT NULLIF(upvotes, 0) / NULLIF(upvotes + downvotes, 0)) AS ratio
         FROM (
           SELECT
             (
