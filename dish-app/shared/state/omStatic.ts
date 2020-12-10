@@ -19,5 +19,3 @@ export const omStatic = new Proxy(
 ) as IContext<Config> & {
   reaction: any // TODO
 }
-
-//Overmind<typeof config> //

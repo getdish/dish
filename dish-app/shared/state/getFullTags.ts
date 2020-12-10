@@ -5,7 +5,6 @@ import { differenceBy } from 'lodash'
 import { allTags } from './allTags'
 import { FullTag } from './FullTag'
 import { getFullTag } from './getFullTag'
-import { guessTagSlug } from './getTagSlug'
 import { TagWithNameAndType } from './TagWithNameAndType'
 
 type TagPartial =
