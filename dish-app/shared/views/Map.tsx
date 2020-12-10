@@ -127,17 +127,14 @@ export const MapView = (props: MapProps) => {
     setIsMapLoaded(isMapLoaded)
 
     if (!isMapLoaded) {
-      const checkInterval = setInterval(() => {
-        const isMapLoaded = map.isStyleLoaded()
-
-        if (isMapLoaded) {
-          setIsMapLoaded(isMapLoaded)
-          clearInterval(checkInterval)
-        }
-      }, 500)
+      const onStyleLoad = () => {
+        setIsMapLoaded(true)
+        map.off('idle', onStyleLoad)
+      }
+      map.on('idle', onStyleLoad)
 
       return () => {
-        clearInterval(checkInterval)
+        map.off('idle', onStyleLoad)
       }
     }
 
@@ -694,12 +691,16 @@ function setupMapEffect({
           })({
             active: true,
           })
+
+          if (!feature.properties.nhood) {
+            console.warn('No available region')
+            return
+          }
+
           getProps().onSelectRegion?.({
             geometry: feature.geometry as any,
-            name: feature.properties.nhood ?? 'San Francisco',
-            slug:
-              feature.properties.slug ??
-              slugify(feature.properties.nhood ?? 'san-francisco'),
+            name: feature.properties.nhood,
+            slug: feature.properties.slug ?? slugify(feature.properties.nhood),
           })
         }, 300)
 
