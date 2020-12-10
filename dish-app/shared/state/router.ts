@@ -1,5 +1,5 @@
 import { HistoryItem, Route, Router } from '@dish/router'
-import { Action, AsyncAction, derived } from 'overmind'
+import { Action, derived } from 'overmind'
 
 import { OmState } from './home-types'
 
