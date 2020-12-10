@@ -5,7 +5,6 @@ import './serverEnv'
 import { existsSync, readFileSync, renameSync } from 'fs'
 import Path from 'path'
 
-import { prepareReactRender } from '@dish/graph'
 import { client } from '@dish/graph'
 import { ChunkExtractor } from '@loadable/server'
 import bodyParser from 'body-parser'
@@ -16,7 +15,6 @@ import { JSDOM } from 'jsdom'
 import { createOvermindSSR } from 'overmind'
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import ssrPrepass from 'react-ssr-prepass'
 
 const rootDir = Path.join(__dirname, '..', '..')
 
