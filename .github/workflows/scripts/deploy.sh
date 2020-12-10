@@ -3,6 +3,8 @@ set -e
 
 echo "Deploying production branch to production..."
 
+./dishctl.sh install_doctl
+./dishctl.sh init_doctl
 ./dishctl.sh db_migrate
 ./dishctl.sh ci_push_images_to_latest
 ./dishctl.sh rollout_all_services
