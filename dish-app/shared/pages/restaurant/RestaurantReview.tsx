@@ -119,13 +119,16 @@ export const RestaurantReview = memo(
                 <Spacer />
                 {meta}
               </HStack>
-            ) : (
-              authoredAt
-            )
+            ) : null
           }
           after={
             !!review.text ? (
-              <HStack width="100%" alignItems="center" maxWidth="100%">
+              <HStack
+                width="100%"
+                alignItems="center"
+                maxWidth="100%"
+                flexWrap="wrap"
+              >
                 {!!sentiments?.length
                   ? uniqBy(sentiments, (x) => x.tag.name).map((x, i) => {
                       const snt = x.ml_sentiment
