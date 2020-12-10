@@ -113,3 +113,6 @@ dish-app/test/screenshots
 
 # asdf local node version
 .tool-versions
+
+# Docker compose data
+data/

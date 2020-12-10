@@ -39,7 +39,7 @@ resource "kubernetes_deployment" "dish-hooks" {
 
         container {
           name  = "dish-hooks"
-          image = "docker.k8s.dishapp.com/dish/dish-hooks"
+          image = "${var.DOCKER_REGISTRY}/dish-hooks:production"
           env {
             name = "DISH_ENV"
             value = "production"
