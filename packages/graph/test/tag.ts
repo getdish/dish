@@ -54,9 +54,11 @@ test('Tagging a restaurant with orphaned tags', async (t) => {
     restaurant.tags?.map((t) => t.tag.displayName).includes('Test tag'),
     true
   )
-  t.is(restaurant.tag_names.length, 2)
+  t.is(restaurant.tag_names.length, 4)
   t.is(restaurant.tag_names.includes('test-tag'), true)
+  t.is(restaurant.tag_names.includes('global__test-tag'), true)
   t.is(restaurant.tag_names.includes('test-tag-existing'), true)
+  t.is(restaurant.tag_names.includes('global__test-tag-existing'), true)
 })
 
 test('Tagging a restaurant with a tag that has a parent', async (t) => {
@@ -73,9 +75,11 @@ test('Tagging a restaurant with a tag that has a parent', async (t) => {
   ]))!
   t.is(restaurant.tags?.length, 3)
   t.is(restaurant.tags?.map((t) => t.tag.name).includes('Test tag'), true)
-  t.is(restaurant.tag_names.length, 3)
+  t.is(restaurant.tag_names.length, 5)
   t.is(restaurant.tag_names.includes('test-tag'), true)
+  t.is(restaurant.tag_names.includes('global__test-tag'), true)
   t.is(restaurant.tag_names.includes('test-tag-existing'), true)
+  t.is(restaurant.tag_names.includes('global__test-tag-existing'), true)
   t.is(restaurant.tag_names.includes('test-tag-existing__test-tag'), true)
 })
 
@@ -90,11 +94,12 @@ test('Tagging a restaurant with a tag that has categories', async (t) => {
   t.is(restaurant.tags?.length, 1)
   t.is(restaurant.tags?.map((t) => t.tag?.name).includes(tag_name), true)
   t.is(restaurant.tag_names.includes('test-tag-with-category'), true)
+  t.is(restaurant.tag_names.includes('global__test-tag-with-category'), true)
   t.is(restaurant.tag_names.includes('test-tag-existing'), true)
-  if (restaurant.tag_names.length > 2) {
+  if (restaurant.tag_names.length > 3) {
     console.log(restaurant.tag_names)
   }
-  t.is(restaurant.tag_names.length, 2)
+  t.is(restaurant.tag_names.length, 3)
 })
 
 test('Ambiguous tags get marked', async (t) => {

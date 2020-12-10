@@ -95,14 +95,14 @@ main AS (
 
     (
       (
-        ?4 != ''
-        AND
+        ?4 = ''
+        OR
         tag_names @> to_json(string_to_array(?4, ','))::jsonb
       )
-      OR
+      AND
       (
-        ?16 != ''
-        AND
+        ?16 = ''
+        OR
         tag_names @> to_json(?16::text)::jsonb
       )
     )
@@ -129,15 +129,15 @@ main AS (
       ?14 != 'FILTER BY PRICE'
       OR
       (
-        (tag_names @> '["price-low"]' AND ?15 LIKE '%price-low%')
+        (tag_names @> '"price-low"' AND ?15 LIKE '%price-low%')
         OR
-        (tag_names @> '["price-mid"]' AND ?15 LIKE '%price-mid%')
+        (tag_names @> '"price-mid"' AND ?15 LIKE '%price-mid%')
         OR
-        (tag_names @> '["price-high"]' AND ?15 LIKE '%price-high%')
+        (tag_names @> '"price-high"' AND ?15 LIKE '%price-high%')
         OR
-        (tag_names @> '["price-higher"]' AND ?15 LIKE '%price-higher%')
+        (tag_names @> '"price-higher"' AND ?15 LIKE '%price-higher%')
         OR
-        (tag_names @> '["price-highest"]' AND ?15 LIKE '%price-highest%')
+        (tag_names @> '"price-highest"' AND ?15 LIKE '%price-highest%')
       )
     )
   )

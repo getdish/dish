@@ -1,5 +1,5 @@
 ARG DISH_BASE_VERSION=latest
-FROM docker.k8s.dishapp.com/dish/base:$DISH_BASE_VERSION
+FROM gcr.io/dish-258800/base:$DISH_BASE_VERSION
 
 RUN apt-get update && apt-get install -y \
       gconf-service libasound2 libatk1.0-0 libatk-bridge2.0-0 \
