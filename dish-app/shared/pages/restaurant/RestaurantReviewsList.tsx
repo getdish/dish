@@ -2,6 +2,7 @@ import { graphql, query } from '@dish/graph'
 import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, HStack, Spacer, Text, VStack } from 'snackui'
 
+import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
 import { RestaurantReview } from './RestaurantReview'
@@ -24,6 +25,8 @@ export const RestaurantReviewsList = memo(
           },
         },
       })
+
+      const { review: ownReview } = useUserReviewCommentQuery(restaurantId)
 
       return (
         <VStack paddingHorizontal="3%">
@@ -48,6 +51,7 @@ export const RestaurantReviewsList = memo(
 
           <Suspense fallback={null}>
             <VStack spacing="xl" maxWidth="100%" overflow="hidden">
+              {ownReview && <RestaurantReview reviewId={ownReview.id} />}
               {topReviews.map((review, i) => {
                 return <RestaurantReview key={i} reviewId={review.id} />
               })}

@@ -27,6 +27,9 @@ export const CommentBubble = ({
   expandable?: boolean
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
+
+  if (!name) return null
+
   const isTripAdvisor = name.startsWith('tripadvisor-')
   const isYelp = name.startsWith('yelp-')
 

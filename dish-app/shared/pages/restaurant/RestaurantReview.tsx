@@ -55,6 +55,13 @@ export const RestaurantReview = memo(
 
       const sentiments = review.sentiments()
 
+      const authoredAt = review.authored_at ? (
+        <Text {...bottomMetaTextProps} marginLeft={6}>
+          {new Intl.DateTimeFormat().format(new Date(review.authored_at))}{' '}
+          &nbsp; &nbsp;
+        </Text>
+      ) : null
+
       const meta = (
         <>
           {!!review.rating && (
@@ -81,12 +88,7 @@ export const RestaurantReview = memo(
               {review.rating === 1 ? 'Upvote' : 'Downvote'}
             </Text>
           )}
-          {!!review.authored_at && (
-            <Text {...bottomMetaTextProps} marginLeft={6}>
-              {new Intl.DateTimeFormat().format(new Date(review.authored_at))}{' '}
-              &nbsp; &nbsp;
-            </Text>
-          )}
+          {authoredAt}
         </>
       )
 
@@ -111,7 +113,9 @@ export const RestaurantReview = memo(
                 <Spacer />
                 {meta}
               </HStack>
-            ) : null
+            ) : (
+              authoredAt
+            )
           }
           after={
             !!review.text ? (
