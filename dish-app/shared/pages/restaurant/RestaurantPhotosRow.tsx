@@ -11,11 +11,13 @@ import { LinkButton } from '../../views/ui/LinkButton'
 export const RestaurantPhotosRow = memo(
   graphql(
     ({
+      escalating,
       restaurantSlug,
       onIsAtStart,
       width,
       height,
     }: {
+      escalating?: boolean
       restaurantSlug: string
       onIsAtStart?: (x: boolean) => void
       width: number
@@ -33,10 +35,9 @@ export const RestaurantPhotosRow = memo(
           {!!photos.length && (
             <>
               {photos.slice(0, 9).map((photo, index) => {
-                const photoHeight = Math.min(
-                  height + index * (index < 3 ? 25 : 150),
-                  500
-                )
+                const photoHeight = escalating
+                  ? Math.min(height + index * (index < 3 ? 25 : 150), 500)
+                  : height
                 return (
                   <VStack key={index} className={`scroll-snap-photo`}>
                     <LinkButton name="gallery" params={{ restaurantSlug }}>

@@ -103,6 +103,7 @@ const RestaurantHeaderContent = memo(
                   restaurantSlug={restaurantSlug}
                   width={260}
                   height={170}
+                  escalating
                 />
               </AbsoluteVStack>
               <VStack
