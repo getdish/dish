@@ -13,7 +13,7 @@ import {
   useDebounceEffect,
 } from 'snackui'
 
-import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
+import { getRestaurantDishes } from '../../helpers/getRestaurantDishes'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { HomeStateItemReview } from '../../state/home-types'
@@ -139,7 +139,7 @@ export const RestaurantReviewCommentForm = memo(
       const [isSaved, setIsSaved] = useState(false)
       const lineHeight = 22
       const [height, setHeight] = useState(lineHeight)
-      const dishTags = getRestuarantDishes({ restaurantSlug })
+      const dishTags = getRestaurantDishes({ restaurantSlug })
 
       useDebounceEffect(
         () => {

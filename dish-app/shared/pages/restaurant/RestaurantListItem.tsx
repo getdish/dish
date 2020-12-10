@@ -28,7 +28,7 @@ import {
 import { bgLight, bgLightHover, bgLightPress, brandColor } from '../../colors'
 import { isWeb } from '../../constants'
 import { getActiveTagSlugs } from '../../helpers/getActiveTagSlugs'
-import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
+import { getRestaurantDishes } from '../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../helpers/isIOS'
 import { numberFormat } from '../../helpers/numberFormat'
 import { useIsNarrow } from '../../hooks/useIs'
@@ -645,7 +645,7 @@ const RestaurantPeekDishes = memo(
     //         image: tag.tag.default_images()?.[0],
     //       }))
     //   : null
-    const dishes = getRestuarantDishes({
+    const dishes = getRestaurantDishes({
       restaurantSlug: props.restaurantSlug,
       tag_slugs: tagSlugs,
       max: 5,

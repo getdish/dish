@@ -1,5 +1,6 @@
 import { restaurant_tag } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
+import { useMemo } from 'react'
 
 import { useRestaurantQuery } from '../hooks/useRestaurantQuery'
 import {
@@ -31,7 +32,7 @@ type Props = {
   max?: number
 }
 
-export const getRestuarantDishes = ({
+export const getRestaurantDishes = ({
   restaurantSlug,
   tag_slugs = [],
   max = 6,
@@ -48,13 +49,17 @@ export const getRestuarantDishes = ({
 
   topTags = prependSearchedForTags(topTags, tag_slugs)
 
-  return (topTags ?? [])
-    .map((tag) => {
-      if (!tag) return null
-      return selectRishDishViewSimple(tag)
-    })
-    .filter(isPresent)
-    .filter((x) => !!x.slug)
+  return useMemo(
+    () =>
+      (topTags ?? [])
+        .map((tag) => {
+          if (!tag) return null
+          return selectRishDishViewSimple(tag)
+        })
+        .filter(isPresent)
+        .filter((x) => !!x.slug),
+    [topTags]
+  )
 }
 
 // TODO: Whether it is Postgres or Hasura, having to set the ordering here should not
