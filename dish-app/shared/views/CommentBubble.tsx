@@ -1,31 +1,48 @@
 import { User } from '@dish/react-feather'
 import React, { useState } from 'react'
 import { Image } from 'react-native'
-import { Circle, HStack, Paragraph, StackProps, Text, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  Circle,
+  HStack,
+  Paragraph,
+  Spacer,
+  StackProps,
+  Text,
+  VStack,
+} from 'snackui'
 
 import { bgLight } from '../colors'
+import { getColorsForName } from '../helpers/getColorsForName'
 import { ensureFlexText } from '../pages/restaurant/ensureFlexText'
 import { thirdPartyCrawlSources } from '../thirdPartyCrawlSources'
 import { Link } from './ui/Link'
 
 export const CommentBubble = ({
   name,
+  avatar,
   ellipseContentAbove,
+  bubbleHeight,
   expandable,
   text,
   before,
   after,
   afterName,
+  fullWidth,
   ...rest
 }: Omit<StackProps, 'children'> & {
-  name?: string
-  text?: string
+  name: string
+  avatar: string
+  text: string
   before?: any
   after?: any
   ellipseContentAbove?: number
+  fullWidth?: boolean
   afterName?: any
+  bubbleHeight?: number
   expandable?: boolean
 }) => {
+  const colors = getColorsForName(`hi${name}`)
   const [isExpanded, setIsExpanded] = useState(false)
   const isTripAdvisor = name.startsWith('tripadvisor-')
   const isYelp = name.startsWith('yelp-')
@@ -34,8 +51,11 @@ export const CommentBubble = ({
     name = name.replace('tripadvisor-', '')
   }
   if (isYelp) {
-    name = name.replace('yelp-', '')
+    name = name.replace('yelp-', '').replace(/[_-].*/, '')
   }
+
+  const circleSize = 80
+  const imageSize = circleSize * 0.6
 
   return (
     <VStack
@@ -48,79 +68,43 @@ export const CommentBubble = ({
       maxWidth="100%"
       {...rest}
     >
-      {!!name && (
-        <HStack
-          width="100%"
-          maxWidth="100%"
-          overflow="hidden"
-          alignItems="center"
-        >
-          <Circle
-            size={26}
-            marginRight={4}
-            marginVertical={-4}
-            marginBottom={-6}
-          >
-            {isTripAdvisor ? (
-              <Image
-                source={{ uri: thirdPartyCrawlSources.tripadvisor.image }}
-                style={{
-                  width: 26,
-                  height: 26,
-                  borderRadius: 100,
-                }}
-              />
-            ) : isYelp ? (
-              <Image
-                source={{ uri: thirdPartyCrawlSources.yelp.image }}
-                style={{
-                  width: 26,
-                  height: 26,
-                  borderRadius: 100,
-                }}
-              />
-            ) : (
-              <User color="#999" size={16} />
-            )}
-          </Circle>
-          <HStack
-            flex={1}
-            alignItems="center"
-            maxWidth="100%"
-            overflow="hidden"
-            marginBottom={-3}
-          >
-            <Link
-              ellipse
-              backgroundColor={bgLight}
-              borderRadius={100}
-              paddingHorizontal={8}
-              paddingVertical={5}
-              name="user"
-              params={{ username: name }}
-              fontWeight="600"
-              color="#222"
-            >
-              {name}
-            </Link>
-            {afterName}
-          </HStack>
-        </HStack>
-      )}
-
-      {ensureFlexText}
+      {fullWidth && ensureFlexText}
 
       <VStack maxWidth="100%" overflow="hidden" width="100%" spacing>
         {before}
 
-        {!!text && (
+        <VStack
+          padding={10}
+          marginBottom={-30}
+          marginLeft={20}
+          backgroundColor="#fff"
+          borderRadius={20}
+          position="relative"
+          zIndex={10}
+          shadowColor="rgba(0,0,0,0.1)"
+          shadowRadius={10}
+          shadowOffset={{ height: 3, width: 0 }}
+          height={bubbleHeight}
+        >
+          {/* little bubble */}
+          <AbsoluteVStack
+            bottom={-10}
+            left={0}
+            width={20}
+            height={20}
+            borderRadius={100}
+            backgroundColor="#fff"
+            shadowColor="rgba(0,0,0,0.2)"
+            shadowRadius={4}
+            shadowOffset={{ height: 3, width: -3 }}
+          />
           <Paragraph
             className="preserve-whitespace"
             selectable
             maxWidth="100%"
             overflow="hidden"
-            opacity={0.8}
-            size={1.1}
+            sizeLineHeight={0.85}
+            size={1}
           >
             {ellipseContentAbove && text.length > ellipseContentAbove ? (
               <>
@@ -147,9 +131,64 @@ export const CommentBubble = ({
               text
             )}
           </Paragraph>
-        )}
+        </VStack>
 
-        {after}
+        <HStack>
+          <VStack alignItems="center" width={circleSize}>
+            <VStack marginBottom={-10}>
+              <Circle backgroundColor={colors.color} size={circleSize}>
+                {isTripAdvisor ? (
+                  <Image
+                    source={{ uri: thirdPartyCrawlSources.tripadvisor.image }}
+                    style={{
+                      width: imageSize,
+                      height: imageSize,
+                      borderRadius: 100,
+                    }}
+                  />
+                ) : isYelp ? (
+                  <Image
+                    source={{ uri: thirdPartyCrawlSources.yelp.image }}
+                    style={{
+                      width: imageSize,
+                      height: imageSize,
+                      borderRadius: 100,
+                    }}
+                  />
+                ) : (
+                  <User color="#fff" size={imageSize} />
+                )}
+              </Circle>
+            </VStack>
+
+            <HStack
+              backgroundColor="#000"
+              borderRadius={10}
+              paddingHorizontal={5}
+              paddingVertical={3}
+              position="relative"
+              overflow="hidden"
+              maxWidth={90}
+              zIndex={2}
+            >
+              <Link
+                ellipse
+                flex={1}
+                name="user"
+                params={{ username: name }}
+                fontWeight="400"
+                fontSize={13}
+                maxWidth="100%"
+                color="#fff"
+              >
+                {name}
+              </Link>
+              {afterName}
+            </HStack>
+          </VStack>
+          <Spacer size="lg" />
+          {after}
+        </HStack>
       </VStack>
     </VStack>
   )

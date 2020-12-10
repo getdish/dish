@@ -16,6 +16,7 @@ import { lightGreen, lightRed, lightYellow } from '../../colors'
 import { isWeb } from '../../constants'
 import { CommentBubble } from '../../views/CommentBubble'
 import { Link } from '../../views/ui/Link'
+import { peachAvatar } from '../search/avatar'
 import { SentimentText } from './SentimentText'
 
 const bottomMetaTextProps: TextProps = {
@@ -31,11 +32,13 @@ export const RestaurantReview = memo(
       refetchKey,
       hideUsername,
       showRestaurant,
+      height,
     }: {
       reviewId: string
       refetchKey?: string
       hideUsername?: boolean
       showRestaurant?: boolean
+      height?: number
     }) => {
       const refetch = useRefetch()
       const reviews = query.review({
@@ -93,7 +96,10 @@ export const RestaurantReview = memo(
       return (
         <CommentBubble
           expandable
-          ellipseContentAbove={400}
+          bubbleHeight={height}
+          avatar={review.user.avatar ?? peachAvatar}
+          height={height}
+          ellipseContentAbove={200}
           text={review.text ?? ''}
           name={hideUsername ? null : review.username ?? ''}
           afterName={
@@ -115,12 +121,7 @@ export const RestaurantReview = memo(
           }
           after={
             !!review.text ? (
-              <HStack
-                width="100%"
-                alignItems="center"
-                flexWrap="wrap"
-                maxWidth="100%"
-              >
+              <HStack width="100%" alignItems="center" maxWidth="100%">
                 {!!sentiments?.length
                   ? uniqBy(sentiments, (x) => x.tag.name).map((x, i) => {
                       const snt = x.ml_sentiment
