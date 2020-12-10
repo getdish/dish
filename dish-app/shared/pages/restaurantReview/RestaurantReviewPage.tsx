@@ -1,4 +1,4 @@
-import { graphql, query, reviewAnalyze } from '@dish/graph'
+import { graphql, query, refetch, reviewAnalyze } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Image, ScrollView, TextInput } from 'react-native'
 import {
@@ -122,9 +122,19 @@ export const RestaurantReviewCommentForm = memo(
     }) => {
       const om = useOvermind()
       const user = om.state.user.user
-      const { review, upsertReview, deleteReview } = useUserReviewCommentQuery(
-        restaurantId
-      )
+      const {
+        review,
+        upsertReview,
+        deleteReview,
+        reviewsQuery,
+      } = useUserReviewCommentQuery(restaurantId, {
+        onUpsert: () => {
+          refetch(reviewsQuery).catch(console.error)
+        },
+        onDelete: () => {
+          refetch(reviewsQuery).catch(console.error)
+        },
+      })
       const [reviewText, setReviewText] = useState('')
       const [isSaved, setIsSaved] = useState(false)
       const lineHeight = 22
