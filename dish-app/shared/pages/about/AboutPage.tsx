@@ -18,6 +18,7 @@ import { BottomDrawerStore } from '../../BottomDrawerStore'
 import { lightGreen, lightYellow } from '../../colors'
 import { HomeStateItemAbout } from '../../state/home-types'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import { LogoColor } from '../../views/Logo'
 import { StackDrawer } from '../../views/StackDrawer'
 import { Link } from '../../views/ui/Link'
 import { LinkButton } from '../../views/ui/LinkButton'
@@ -60,15 +61,8 @@ export default function AboutPage({
             alignItems="center"
             position="relative"
           >
-            <Image
-              source={{ uri: dishWhite }}
-              style={{
-                width: 261 * 1.25,
-                height: 161 * 1.25,
-                marginTop: -30,
-                marginBottom: -40,
-              }}
-            />
+            <Spacer />
+            <LogoColor scale={3} />
             <Paragraph
               zIndex={10}
               color="#999"
@@ -120,44 +114,13 @@ export default function AboutPage({
                 date night 🌃
               </LinkButton>{' '}
               is <em>unique</em>: one night it's an authentic dish and delivery
-              speed, the next it's the atmosphere and service.
-            </Paragraph>
-
-            <Paragraph size="xxl" fontStyle="italic">
-              Dish rates specific things, like the dish you're craving.
+              speed, the next it's the atmosphere and service. Dish breaks
+              ratings down exactly across tags. For example 💎 uniqueness, 🥬
+              green-friendly, and 🌃 vibes.
             </Paragraph>
 
             <Paragraph size="lg">
-              When you search "pho delivery cheap", we look at positive and
-              negative sentiment from reviews towards <em>pho</em>,{' '}
-              <em>delivery</em> and <em>cheap</em>, then add it up as points and
-              show you the best within that narrow selection. We support all
-              sorts of interesting tags, here's a few:
-            </Paragraph>
-
-            <UnorderedList>
-              <UnorderedListItem size="lg">
-                💎 Authenticity, Uniqueness
-              </UnorderedListItem>
-              <UnorderedListItem size="lg">
-                🥬 Vegetarian, Vegan
-              </UnorderedListItem>
-              <UnorderedListItem size="lg">
-                🍷 Open Bar, Unique Drinks
-              </UnorderedListItem>
-              <UnorderedListItem size="lg">
-                🌃 Nice to meet, Ambiance
-              </UnorderedListItem>
-              <UnorderedListItem size="lg">
-                🇮🇹 🇹🇭 🇪🇹 Authenticity within every cuisine.
-              </UnorderedListItem>
-              <UnorderedListItem size="lg">
-                🥟 Dim Sum and thousands of other dish categories.
-              </UnorderedListItem>
-            </UnorderedList>
-
-            <Paragraph size="lg">
-              In fact, when you write a review on Dish{' '}
+              When you write a review on Dish{' '}
               <TextStrong>
                 we automatically turn what you say into votes
               </TextStrong>{' '}
@@ -165,21 +128,11 @@ export default function AboutPage({
               the rest.
             </Paragraph>
 
-            <Paragraph size="xl" fontStyle="italic">
-              What about different tastes?
+            <Paragraph size="xxl" fontWeight="600" fontStyle="italic">
+              Our goal: a more personal, fun & collaborative map of the world.
             </Paragraph>
 
-            <Paragraph size="lg">
-              <TextStrong>
-                Food search apps today aren't tuned to taste.
-              </TextStrong>{' '}
-              We're building a way to match you to chefs and experts in every
-              cuisine in each city who share your taste so no matter where you
-              visit, you have reliable picks from someone who you can see if you
-              agree with. No opaque algorithms!
-            </Paragraph>
-
-            <Paragraph size="xl" fontStyle="italic">
+            <Paragraph size="md" fontWeight="600">
               You mentioned delivery?
             </Paragraph>
 
@@ -191,31 +144,19 @@ export default function AboutPage({
               so you can start from finding something good and then go order it.
             </Paragraph>
 
-            <Paragraph size="xl" fontStyle="italic">
-              Our goals
+            <Paragraph size="md" fontWeight="600">
+              Long term
             </Paragraph>
 
             <Paragraph size="lg">
               We want to build a mix of a Hitchhiker's Guide to the Galaxy (a
               smarter world guide with personality) and a Pokédex (a pocket map
-              curating your favorite things) that encourages our world to have
-              more uniquely good and focused things to do.
+              curating your favorite things) that is built around lists that
+              anyone can create and vote on. We think the dish model of breaking
+              down ratings can enable specialization ✨ which would mean less
+              massive menus of average food, and more places do a few things
+              well.
             </Paragraph>
-
-            <UnorderedList spacing>
-              <UnorderedListItem size="lg">
-                <TextStrong>Design a new type of guide 🎙</TextStrong> - With
-                natural langauge analysis, a taste profile you control,
-                discussions, voting, and specialization, we want to prove that
-                you turn an active community into a current best of guide.
-              </UnorderedListItem>
-              <UnorderedListItem size="lg">
-                <TextStrong>Enable restaurant specialization ✨</TextStrong>-
-                Instead of having to please everyone to try for 5 stars overall,
-                restaurants should be rewarded for doing one or two things
-                exceptionally well.
-              </UnorderedListItem>
-            </UnorderedList>
 
             <Spacer />
 
