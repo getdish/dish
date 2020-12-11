@@ -1012,7 +1012,8 @@ function docker_compose_up_for_devs() {
       | tr '\r\n' ' '
   )
   echo "Starting the following services: $services"
-  eval $(./dishctl.sh yaml_to_env) docker-compose up "$extra" $services
+  export HASURA_GRAPHQL_ADMIN_SECRET=password
+  docker-compose up "$extra" $services
 }
 
 function staging_ssh() {

@@ -280,6 +280,6 @@ cd /app
 ./dishctl.sh dish_docker_login
 mkdir -p ~/.dish/postgres
 chown 1001:1001 -R ~/.dish/postgres
-docker-compose up -d
+eval $(./dishctl.sh yaml_to_env) docker-compose up -d
 docker-compose logs
 ```
