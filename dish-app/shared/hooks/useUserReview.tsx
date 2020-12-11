@@ -5,6 +5,7 @@ import {
   query,
   reviewDelete,
   reviewUpsert,
+  setCache,
   useRefetch,
 } from '@dish/graph'
 import { useState } from 'react'
@@ -190,16 +191,16 @@ export const useUserReviewCommentQuery = (
   return {
     review,
     reviewsQuery,
-    upsertReview(review: Partial<Review>) {
-      const result = upsert({
+    async upsertReview(review: Partial<Review>) {
+      const result = await upsert({
         type: 'comment',
         ...review,
         restaurant_id: restaurantId,
       })
 
-      result.then(() => {
-        onUpsert?.()
-      })
+      setCache(reviewsQuery, result[0])
+
+      onUpsert?.()
 
       return result
     },
@@ -208,6 +209,7 @@ export const useUserReviewCommentQuery = (
       await reviewDelete({
         id: review.id,
       })
+      setCache(reviewsQuery, null)
       onDelete?.()
       Toast.show(`Deleted!`)
       // refetch()
