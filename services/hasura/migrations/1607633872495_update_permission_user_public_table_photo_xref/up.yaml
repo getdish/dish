@@ -1,0 +1,18 @@
+- args:
+    permission:
+      allow_aggregations: false
+      backend_only: false
+      columns:
+        - id
+        - photo_id
+        - restaurant_id
+        - tag_id
+        - type
+      computed_fields: []
+      filter: {}
+      limit: null
+    role: user
+    table:
+      name: photo_xref
+      schema: public
+  type: create_select_permission

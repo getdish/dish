@@ -30,7 +30,7 @@ resource "kubernetes_deployment" "worker" {
 
         container {
           name  = "worker"
-          image = "docker.k8s.dishapp.com/dish/worker"
+          image = "${var.DOCKER_REGISTRY}/worker:production"
           resources {
             limits {
               cpu    = "0.5"

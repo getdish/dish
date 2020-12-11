@@ -1251,6 +1251,7 @@ export interface restaurant_bool_exp {
   menu_items?: Maybe<menu_item_bool_exp>
   name?: Maybe<String_comparison_exp>
   oldest_review_date?: Maybe<timestamptz_comparison_exp>
+  photo_table?: Maybe<photo_xref_bool_exp>
   photos?: Maybe<jsonb_comparison_exp>
   price_range?: Maybe<String_comparison_exp>
   rating?: Maybe<numeric_comparison_exp>
@@ -1347,6 +1348,7 @@ export interface restaurant_insert_input {
   menu_items?: Maybe<menu_item_arr_rel_insert_input>
   name?: Maybe<Scalars['String']>
   oldest_review_date?: Maybe<Scalars['timestamptz']>
+  photo_table?: Maybe<photo_xref_arr_rel_insert_input>
   photos?: Maybe<Scalars['jsonb']>
   price_range?: Maybe<Scalars['String']>
   rating?: Maybe<Scalars['numeric']>
@@ -1450,6 +1452,7 @@ export interface restaurant_order_by {
   menu_items_aggregate?: Maybe<menu_item_aggregate_order_by>
   name?: Maybe<order_by>
   oldest_review_date?: Maybe<order_by>
+  photo_table_aggregate?: Maybe<photo_xref_aggregate_order_by>
   photos?: Maybe<order_by>
   price_range?: Maybe<order_by>
   rating?: Maybe<order_by>
@@ -6250,6 +6253,26 @@ export const generatedSchema = {
     },
     name: { __type: 'String!' },
     oldest_review_date: { __type: 'timestamptz' },
+    photo_table: {
+      __type: '[photo_xref!]!',
+      __args: {
+        distinct_on: '[photo_xref_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[photo_xref_order_by!]',
+        where: 'photo_xref_bool_exp',
+      },
+    },
+    photo_table_aggregate: {
+      __type: 'photo_xref_aggregate!',
+      __args: {
+        distinct_on: '[photo_xref_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[photo_xref_order_by!]',
+        where: 'photo_xref_bool_exp',
+      },
+    },
     photos: { __type: 'jsonb', __args: { path: 'String' } },
     price_range: { __type: 'String' },
     rating: { __type: 'numeric' },
@@ -6404,6 +6427,7 @@ export const generatedSchema = {
     menu_items: { __type: 'menu_item_bool_exp' },
     name: { __type: 'String_comparison_exp' },
     oldest_review_date: { __type: 'timestamptz_comparison_exp' },
+    photo_table: { __type: 'photo_xref_bool_exp' },
     photos: { __type: 'jsonb_comparison_exp' },
     price_range: { __type: 'String_comparison_exp' },
     rating: { __type: 'numeric_comparison_exp' },
@@ -6478,6 +6502,7 @@ export const generatedSchema = {
     menu_items: { __type: 'menu_item_arr_rel_insert_input' },
     name: { __type: 'String' },
     oldest_review_date: { __type: 'timestamptz' },
+    photo_table: { __type: 'photo_xref_arr_rel_insert_input' },
     photos: { __type: 'jsonb' },
     price_range: { __type: 'String' },
     rating: { __type: 'numeric' },
@@ -6626,6 +6651,7 @@ export const generatedSchema = {
     menu_items_aggregate: { __type: 'menu_item_aggregate_order_by' },
     name: { __type: 'order_by' },
     oldest_review_date: { __type: 'order_by' },
+    photo_table_aggregate: { __type: 'photo_xref_aggregate_order_by' },
     photos: { __type: 'order_by' },
     price_range: { __type: 'order_by' },
     rating: { __type: 'order_by' },
@@ -10436,6 +10462,20 @@ export interface restaurant {
   }) => menu_item_aggregate
   name: ScalarsEnums['String']
   oldest_review_date?: Maybe<ScalarsEnums['timestamptz']>
+  photo_table: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['photo_xref_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<photo_xref_order_by>>
+    where?: Maybe<photo_xref_bool_exp>
+  }) => Array<photo_xref>
+  photo_table_aggregate: (args?: {
+    distinct_on?: Maybe<Array<ScalarsEnums['photo_xref_select_column']>>
+    limit?: Maybe<ScalarsEnums['Int']>
+    offset?: Maybe<ScalarsEnums['Int']>
+    order_by?: Maybe<Array<photo_xref_order_by>>
+    where?: Maybe<photo_xref_bool_exp>
+  }) => photo_xref_aggregate
   photos: (args?: {
     path?: Maybe<ScalarsEnums['String']>
   }) => Maybe<ScalarsEnums['jsonb']>
@@ -11772,7 +11812,6 @@ export const client = createClient<GeneratedSchema>({
   schema: generatedSchema,
   scalarsEnumsHash,
   queryFetcher,
-  catchSelectionsTimeMS: 10,
 })
 
 export const {

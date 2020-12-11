@@ -32,8 +32,11 @@ jobs:
         run: docker run --net host ${DISH_REGISTRY}/base yarn test
       - name: Run integration tests
         run: .github/workflows/scripts/integration_tests.sh
-      - name: Deploy
-        run: .github/workflows/scripts/deploy.sh
+      - name: Deploy Staging
+        run: .github/workflows/scripts/deploy_staging.sh
+        if: github.ref == 'refs/heads/staging'
+      - name: Deploy Production
+        run: .github/workflows/scripts/deploy_prod.sh
         if: github.ref == 'refs/heads/production'
       - name: 'On fail: Output container logs'
         run: .github/workflows/scripts/on_failure.sh
