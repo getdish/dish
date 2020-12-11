@@ -585,7 +585,6 @@ async function setAutocompleteResults(
   results: AutocompleteItem[]
 ) {
   let matched: AutocompleteItem[] = []
-  console.log('starts with', results)
   if (results.length) {
     matched = await fuzzySearch({
       items: results,
