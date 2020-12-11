@@ -1,26 +1,75 @@
 import { photo, useQuery } from '@dish/graph'
-import { useEffect, useMemo, useState } from 'react'
-import { Image } from 'react-native'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Dimensions, Image, ScaledSize, ScrollView } from 'react-native'
 import useKeyPressEvent from 'react-use/lib/useKeyPressEvent'
 import { HStack, VStack } from 'snackui'
 
 import { isWeb } from '../constants'
-import { ContentScrollViewHorizontal } from './ContentScrollViewHorizontal'
+
+const useScreenSize = () => {
+  const [screenSize, setScreenSize] = useState(() => {
+    const { width, height } = Dimensions.get('screen')
+
+    return {
+      width,
+      height,
+    }
+  })
+
+  useEffect(() => {
+    const listener = ({
+      screen: { width, height },
+    }: {
+      screen: ScaledSize
+    }) => {
+      setScreenSize({ height, width })
+    }
+    Dimensions.addEventListener('change', listener)
+    return () => {
+      Dimensions.removeEventListener('change', listener)
+    }
+  }, [setScreenSize])
+
+  return screenSize
+}
+
+const ThumbnailSize = 150
 
 const PhotosList = ({
   photos,
   onPhotoPress,
+  activeIndex,
 }: {
   photos: photo[]
   onPhotoPress: (photo: photo, index: number) => void
+  activeIndex: number
 }) => {
+  const scrollView = useRef<ScrollView>()
+
+  const { width } = useScreenSize()
+
+  useEffect(() => {
+    if (!scrollView.current) return
+
+    scrollView.current.scrollTo({
+      animated: true,
+      x: Math.max(
+        0,
+        activeIndex * ThumbnailSize -
+          (width / ThumbnailSize / 2) * ThumbnailSize
+      ),
+    })
+  }, [activeIndex, width])
+
   return (
-    <ContentScrollViewHorizontal
+    <ScrollView
       style={{
         width: isWeb ? 'calc(100% + 30px)' : '98%',
         marginHorizontal: -15,
         maxWidth: '100vw',
       }}
+      horizontal
+      ref={scrollView}
     >
       <HStack paddingTop={20} alignItems="center" justifyContent="center">
         {photos.map((photo, index) => {
@@ -35,14 +84,17 @@ const PhotosList = ({
             >
               <Image
                 source={{ uri: photo.url }}
-                style={{ width: '100px', height: '100px' }}
+                style={{
+                  width: ThumbnailSize + 'px',
+                  height: ThumbnailSize + 'px',
+                }}
                 resizeMode="cover"
               />
             </VStack>
           )
         })}
       </HStack>
-    </ContentScrollViewHorizontal>
+    </ScrollView>
   )
 }
 
@@ -136,6 +188,7 @@ export const Lightbox = ({
             index,
           })
         }}
+        activeIndex={activeImage?.index ?? index}
       />
     </VStack>
   )
