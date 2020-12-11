@@ -33,7 +33,7 @@ export const CommentBubble = ({
 }: Omit<StackProps, 'children'> & {
   name: string
   avatar: string
-  text: string
+  text: any
   before?: any
   after?: any
   ellipseContentAbove?: number
@@ -44,14 +44,14 @@ export const CommentBubble = ({
 }) => {
   const colors = getColorsForName(`hi${name}`)
   const [isExpanded, setIsExpanded] = useState(false)
-  const isTripAdvisor = name.startsWith('tripadvisor-')
-  const isYelp = name.startsWith('yelp-')
+  const isTripAdvisor = name?.startsWith('tripadvisor-')
+  const isYelp = name?.startsWith('yelp-')
 
   if (isTripAdvisor) {
-    name = name.replace('tripadvisor-', '')
+    name = name?.replace('tripadvisor-', '')
   }
   if (isYelp) {
-    name = name.replace('yelp-', '').replace(/[_-].*/, '')
+    name = name?.replace('yelp-', '').replace(/[_-].*/, '')
   }
 
   const circleSize = 80
@@ -65,12 +65,18 @@ export const CommentBubble = ({
       justifyContent="flex-start"
       spacing="sm"
       overflow="hidden"
-      maxWidth="100%"
+      margin={-10}
       {...rest}
     >
       {fullWidth && ensureFlexText}
 
-      <VStack maxWidth="100%" overflow="hidden" width="100%" spacing>
+      <VStack
+        maxWidth="100%"
+        overflow="hidden"
+        padding={10}
+        width="100%"
+        spacing
+      >
         {before}
 
         <VStack

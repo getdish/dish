@@ -326,7 +326,10 @@ const runSearch: AsyncAction<{
   if (shouldCancel() || !res) return
 
   // temp code to handle both types of api response at once
-  let restaurants = res.restaurants
+  if (!res.restaurants) {
+    console.log('no restaurants', res)
+  }
+  let restaurants = res.restaurants ?? []
 
   // only update searchkey once finished
   lastSearchKey = searchKey
