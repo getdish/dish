@@ -13,7 +13,8 @@ import {
   useDebounceEffect,
 } from 'snackui'
 
-import { getRestaurantDishes } from '../../helpers/getRestaurantDishes'
+import { lightRed, red } from '../../colors'
+import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { HomeStateItemReview } from '../../state/home-types'
@@ -66,12 +67,7 @@ export default memo(function RestaurantReviewPage() {
               maxWidth: '100%',
             }}
           >
-            <VStack
-              flex={1}
-              maxWidth="100%"
-              overflow="hidden"
-              alignItems="center"
-            >
+            <VStack flex={1} maxWidth="100%" alignItems="center">
               <AbsoluteVStack zIndex={10} top={5} right={32}>
                 <StackViewCloseButton />
               </AbsoluteVStack>
@@ -176,28 +172,8 @@ export const RestaurantReviewCommentForm = memo(
         <VStack minHeight="100%">
           <CommentBubble
             name={user.username ?? ''}
-            afterName={
-              <HStack marginVertical={-10} flex={1}>
-                <Spacer flex={1} />
-                <SmallButton
-                  accessible
-                  accessibilityRole="button"
-                  disabled={isSaved}
-                  alignSelf="center"
-                  fontWeight="700"
-                  marginVertical={10}
-                  onPress={() => {
-                    upsertReview({
-                      text: reviewText,
-                    })
-                    setIsSaved(true)
-                  }}
-                >
-                  Save
-                </SmallButton>
-              </HStack>
-            }
-            after={
+            avatar={''}
+            text={
               <TextInput
                 value={reviewText}
                 onChange={(e) => {
@@ -226,11 +202,58 @@ export const RestaurantReviewCommentForm = memo(
                 }}
               />
             }
+            after={
+              <HStack flex={1}>
+                <Suspense fallback={null}>
+                  <UserReviewVotesRow
+                    restaurantId={restaurantId}
+                    userId={user?.id}
+                  />
+                </Suspense>
+                <VStack flex={1} />
+                <HStack
+                  alignItems="center"
+                  justifyContent="center"
+                  marginVertical={-10}
+                  flex={1}
+                >
+                  <Spacer flex={1} />
+                  <SmallButton
+                    accessible
+                    accessibilityRole="button"
+                    fontWeight="400"
+                    color={red}
+                    onPress={() => {
+                      if (
+                        confirm('Are you sure you want to delete the review?')
+                      ) {
+                        deleteReview()
+                      }
+                    }}
+                  >
+                    Delete
+                  </SmallButton>
+                  <Spacer size="sm" />
+                  <SmallButton
+                    accessible
+                    accessibilityRole="button"
+                    disabled={isSaved}
+                    alignSelf="center"
+                    fontWeight="700"
+                    marginVertical={10}
+                    onPress={() => {
+                      upsertReview({
+                        text: reviewText,
+                      })
+                      setIsSaved(true)
+                    }}
+                  >
+                    Save
+                  </SmallButton>
+                </HStack>
+              </HStack>
+            }
           />
-
-          <Suspense fallback={null}>
-            <UserReviewVotesRow restaurantId={restaurantId} userId={user?.id} />
-          </Suspense>
 
           <Spacer />
 
@@ -238,8 +261,6 @@ export const RestaurantReviewCommentForm = memo(
           <Spacer />
           <HStack spacing="xl">
             <VStack
-              borderWidth={1}
-              borderColor="#eee"
               borderRadius={10}
               paddingHorizontal={45}
               paddingVertical={15}
@@ -252,14 +273,7 @@ export const RestaurantReviewCommentForm = memo(
               </Suspense>
             </VStack>
 
-            <VStack
-              borderWidth={1}
-              borderColor="#eee"
-              borderRadius={10}
-              paddingTop={15}
-              flex={1}
-              spacing
-            >
+            <VStack borderRadius={10} paddingTop={15} flex={1} spacing>
               <SmallTitle divider="off">Dishes</SmallTitle>
               <ScrollView style={{ width: '100%', maxHeight: 300 }}>
                 <HStack
@@ -292,7 +306,7 @@ export const RestaurantReviewCommentForm = memo(
             </VStack>
           </HStack>
 
-          {review && (
+          {/* {review && (
             <>
               <Spacer size="xl" />
               <VStack
@@ -310,21 +324,10 @@ export const RestaurantReviewCommentForm = memo(
                     reviewId={review.id}
                   />
                 </Suspense>
-                <SmallButton
-                  alignSelf="flex-end"
-                  onPress={() => {
-                    if (
-                      confirm('Are you sure you want to delete the review?')
-                    ) {
-                      deleteReview()
-                    }
-                  }}
-                >
-                  Delete
-                </SmallButton>
+
               </VStack>
             </>
-          )}
+          )} */}
         </VStack>
       )
     }
@@ -353,17 +356,19 @@ const UserReviewVotesRow = graphql(
       <HStack padding={10} alignItems="center" flexWrap="wrap">
         <Text color="#999">Saved votes:</Text>
         <Spacer />
-        {allVotes.map((vote) => {
-          return (
-            <SentimentText
-              marginRight={4}
-              key={vote.id}
-              sentiment={vote.vote ?? 0}
-            >
-              {vote.tag.name}
-            </SentimentText>
-          )
-        })}
+        <HStack spacing="xs">
+          {allVotes.map((vote) => {
+            return (
+              <SentimentText
+                marginRight={4}
+                key={vote.id}
+                sentiment={vote.vote ?? 0}
+              >
+                {vote.tag.name}
+              </SentimentText>
+            )
+          })}
+        </HStack>
       </HStack>
     )
   }

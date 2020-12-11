@@ -38,7 +38,7 @@ resource "kubernetes_deployment" "search" {
 
         container {
           name  = "search"
-          image = "docker.k8s.dishapp.com/dish/search"
+          image = "${var.DOCKER_REGISTRY}/search:production"
           env {
             name = "POSTGRES_HOST"
             value = var.POSTGRES_HOST

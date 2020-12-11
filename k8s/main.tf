@@ -5,8 +5,7 @@ variable "POSTGRES_HOST" {}
 variable "POSTGRES_PASSWORD" {}
 variable "HASURA_GRAPHQL_ADMIN_SECRET" {}
 variable "HASURA_ENDPOINT" {}
-variable "DOCKER_REGISTRY_HTTP_AUTH" {}
-variable "DOCKER_CONFIG_JSON" {}
+variable "DOCKER_REGISTRY" {}
 variable "JWT_KEY" {}
 variable "JWT_ADMIN_PASSWORD" {}
 variable "GRAFANA_PASSWORD" {}
