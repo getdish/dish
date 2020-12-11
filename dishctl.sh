@@ -1004,22 +1004,6 @@ function bert_sentiment() {
   curl "$url"
 }
 
-function setup_staging_droplet() {
-  apt-get update
-  curl -fsSL https://get.docker.com | sh
-  apt-get install -y docker-compose git-crypt postgresql-client tmux s3cmd
-  curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
-  curl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl > nginx.tmpl
-  # rsync -avP --filter=':- .gitignore' . root@staging.dishapp.com:/app
-  # Install gcloud sdk: https://cloud.google.com/sdk/docs/install
-  cd /app
-  ./dishctl.sh dish_docker_login
-  mkdir -p ~/.dish/postgres
-  chown 1001:1001 -R ~/.dish/postgres
-  docker-compose up -d
-  docker-compose logs
-}
-
 function docker_compose_up_for_devs() {
   extra=$1
   services=$(
@@ -1029,6 +1013,13 @@ function docker_compose_up_for_devs() {
   )
   echo "Starting the following services: $services"
   eval $(./dishctl.sh yaml_to_env) docker-compose up "$extra" $services
+}
+
+function staging_ssh() {
+  ssh root@ssh.staging.dishapp.com \
+    -t \
+    -i $PROJECT_ROOT/k8s/etc/ssh/dish-staging.priv \
+    'tmux attach'
 }
 
 if command -v git &> /dev/null; then

@@ -7,6 +7,7 @@ Contents:
 - [Web app](#web-app)
 - [Hasura](#hasura)
 - [Kubernetes](#kubernetes)
+- [Staging](#staging)
 
 ## Getting Started
 
@@ -18,7 +19,7 @@ All Dish's credentials are stored in `.env.enc.production.yaml`. Even third-part
 - If you're GPG key hasn't been added to the repo then ask your nearest Dish dev to either be added to the repo or ask for the decryption key.
 - If you're GPG key is in the repo and you have `git-crypt` installed, then just run
   `git-crypt unlock` and use the repo as normal.
-- However, if you're using the raw decryption key it will likely be base64 encoded for ease of communication. If the key ends with a "==" this means you can run `base64 -d [long string of random character==]` to get the raw key.
+- However, if you're GPG isn't in the repo, you'll need to use a raw decryption key, which will likely be base64 encoded for ease of communication. If the key ends with a "==" this means you can run `base64 -d [long string of random character==]` to get the raw key.
 - Copy the raw key to a file, eg `/tmp/master/key`
 - Within the path of the repo run `git-crypt unlock /tmp/master/key`
 - You can now just use `git` as normal, all the encryption/decryption happens
@@ -38,7 +39,7 @@ The core stack contains the minimum services needed to run the web app locally. 
 can be easily run with Docker Compose: https://docs.docker.com/compose/install/
 
 When working with Dish's Docker images you'll often need to be logged into our Docker
-Registry: `./dishctl.sh dish_docker_login`
+Registry: `./dishctl.sh dish_docker_login`. Currently we use Google Cloud's Docker registry, so you'll likely be asked to install the GCloud SDK. 
 
 Once you're logged in and have Docker Compose installed, go to the root of this repo and run:
 
@@ -114,23 +115,21 @@ If you need to deploy something quickly and are willing to skip CI, you can run 
 
 You'll need a few things set up first:
 
-    - `buildkitd`, `kubectl` and `doctl` installed
+    - On production: `kubectl` and `doctl` installed
     - `doctl auth init -t $TF_VAR_DO_DISH_KEY` token is avaiable in enc.env.production.yaml
     - `doctl kubernetes cluster kubeconfig save dish[blue/green]`
-    - Login to our Docker registry:
-        `docker login docker.k8s.dishapp.com -u dish -p $password`
-        Password is in `env.enc.production.yaml`
+    - On production and staging, you'll need `gcloud` in order to login to our Docker registry.
 
-Then you can use the `./dishctl.sh hot_deploy path/to/Dockerfile`
+Then you can use the `./dishctl.sh hot_deploy path/to/Dockerfile/folder`
 
 ## Hasura
 
 ### Hasura CLI
 
 The Hasura CLI is useful for a variety of admin tasks such as creating/running
-migrations and serving an admin web UI.
+migrations and serving an admin web UI. We have both local and live instances of the Hasura console, NB: never change schema or metadata on the live Hasura console, these changes will not get persisted between deploys and can potentially cause out of sync issues. Instead, always make DB changes on your local Hasura console, this will create new files in the `services/hasura/migrations` path of the repo. You should commit them and so that they'll be automatically deployed by CI.
 
-Install the Hasura CLI:
+#### Installing the Hasura CLI:
 
 ```
 curl -L https://github.com/hasura/graphql-engine/raw/master/cli/get.sh | bash
@@ -151,44 +150,19 @@ Then run the admin UI using:
 This will set up two way persistence so when you modify tables it persists to
 your migrations.
 
-You might want to try the experimental migration squasher as the console tends
-to verbosely create a new migration for every single unit of change.
+After a while the migrations folder can get very full. Apart from being noisy, this also adds time to CI builds. It can be good to sometimes consolidate all the migrations into a single one. I've had success with this method: https://hasura.io/blog/resetting-hasura-migrations/
 
-`hasura migrate squash --from <timestamp of most recently committed migration> --endpoint http://localhost:8080 --admin-secret=password`
+### Seed/Live data
 
-### Seed data
-
-#### Importing
-
-If you have a dump file named 'restaurants.dump' you can load it from the current working
-directory with the following command:
-
-`psql -d dish -c "TRUNCATE TABLE restaurant CASCADE" && psql -d dish -c "\copy restaurant FROM './restaurants.dump'"`
-
-### Exporting
-
-First make sure you have a port open to the live DB (see our Kubernetes docs for more info)
-
-```
-kubectl port-forward svc/postgres-ha-postgresql-ha-pgpool.postgres-ha 15432:5432 -n postgres
-```
-
-Then run the following (the password is in `.env.enc.production`):
-
-```
-PGPASSWORD=$DISH_PG_PASS psql -p15432 -h localhost -U postgres -d dish -c "\copy \
-(select * from restaurant WHERE ST_DWithin(location, ST_MakePoint(-122.42,37.76), 1)) \
-TO './restaurants.dump'"
-```
+This is a big dump, can potentially take nearly an hour to import:
+`./dishctl.sh restore_latest_main_backup_to_local`
 
 ### Misc
 
 #### Using the live DB from your local machine
 
 Note that the `@dish/graph` package is set up to use the live Hasura instance if the
-domain name contains 'hasura_live'. This was setup because the React Native framework, Expo,
-cannot easily get its config recognised by our internal packages. The domain can be achieved by setting your local machine's `/etc/hosts` file with an entry like
-`127.0.0.1 d1sh_hasura_live.com`. You may want to avoid spelling 'dish' with a real 'i' as that is a keyword for triggering other production features.
+domain name contains 'live'. You can set such a domain up on your local machine using the `/etc/hosts` file with an entry like `127.0.0.1 d1sh_hasura_live.com`. You may want to avoid spelling 'dish' with a real 'i' as that might be a keyword for triggering other production features.
 
 ## Kubernetes
 
@@ -220,44 +194,41 @@ All of these should be installable through your OS's standard package manager (B
 #### Connecting to an existing cluster
 
 - `terraform init` Connects to DO Spaces to save state. Downloads modules
-- `doctl kubernetes cluster kubeconfig save dish` Sets up `kubectl`
+- `doctl kubernetes cluster kubeconfig save dish[blue/green]` Sets up `kubectl`
 
 ##### Load Balancer IP
 
-A platform-specific load balancer will be created outside the Kubernetes cluster. On DO it doesn't currently seem possible to associate a specific IP address. So you will need to look at the DO UI under Networking->Load Balancers to find the new IP address and assign it as an A record to the appropriate domain. NB: Though at the time of writing I can't seem to prevent Rio from setting up its own load balancer, so you might have to figure out which load balancer is actually the main one: it's the one created by Helm's Nginx Ingress
-(see `k8s/nginx-ingress.tf`).
+A platform-specific load balancer will be created outside the Kubernetes cluster. On DO it doesn't currently seem possible to associate a specific IP address. So you will need to look at the DO UI under Networking->Load Balancers to find the new IP address and assign it as an A record to the appropriate domain.
 
 #### Deploying
 
-In order to synchronise shared credentials between Terraform and Rio, Terraform's deploy command must use `./dishctl.sh yaml_to_env` to provide the necessary ENV vars. So the deployment command, from the `k8s/` path is `eval $(./dishctl.sh yaml_to_env) terraform apply`.
-
-#### Notes on creating a new cluster
+##### Notes on creating a new Kubernetes cluster
 
 When setting up a Blue/Green cluster, I found that:
 
 - `nodeSelector` isn't powerful enough to prevent the CI node getting full of other pods. But
   DO still haven't developed native support for taints/tolerations. Watch:
   https://github.com/digitalocean/DOKS/issues/3
-- `./dishctl.sh hot_deploy path/to/Dockerfile` for each service needed to be run. This could be done by doing
-  a Github deploy too.
+- `./dishctl.sh hot_deploy path/to/Dockerfile` for each service needed to be run. This could be done by doing a Github deploy too.
 - In Hasura's console, I needed to click the "Reload metadata" button to get Hasura consistent
   with the DB again. I have no idea why.
 
 ### What's on our cluster?
 
+Most importantly the main services like the web app, worker, user server, ML endpoints etc.
+
+Of particular note:
+
 #### Databases
 
 The main DB is Postgres (under the `postgres-ha` namespace), it is setup in High Availability
-mode with replication and failover. There is also another Postgres DB that just keeps our
-scrape data. And Redis is installed to keep worker jobs.
+mode with replication and failover. There is also another Postgres DB (Timescale) that just keeps our scrape data. And Redis is installed to keep worker jobs.
 
 #### Nginx Ingress
 
 This is basically our interface to the public internet. It's hooked up
 to Lets Encrypt via a Helm-installed cert-manager service to automatically manage SSL certs.
-We have wildcard certs and rules for `*.rio.dishapp.com` and `*.k8s.dishapp.com`. If you want
-lower level subdomains (eg; `super.dishapp.com`), you wil need to add rules in the relevant
-`kubernetes_ingress` Terraform resource. Nginx Ingress can also do everything that Nginx can do.
+We have wildcard certs `*.k8s.dishapp.com`. If you want lower level subdomains (eg; `super.dishapp.com`), you wil need to add rules in the relevant `kubernetes_ingress` Terraform resource. Nginx Ingress can also do everything that Nginx can do.
 
 #### Prometheus
 
@@ -265,14 +236,6 @@ Prometheus is a monitoring framework. It collects metrics from all kinds of plac
 the cluster itself and the various apps and services running on the cluster. The main access
 to Prometheus is via its Grafana UI: https://grafana.k8s.dishapp.com The username is `admin`
 and the password is in `env.enc.production.yaml`
-
-#### Private Docker registry and Buildkitd
-
-This allows us to publish and pull private Docker images. Available at:
-https://docker.k8s.dishapp.com Username and password available in `env.enc.production.yaml`.
-
-Buildkit builds images remotely on our cluster. It's mostly used by CI. But you can use
-with the `./dishctl.sh hot_deploy path/to/Dockerfile` script
 
 #### Sentry error tracking and management
 
@@ -288,3 +251,35 @@ very helpful for debugging. Though do remember `kubectl` can do everything the d
 does and more. The dashboard is provided by Digital Ocean:
 https://cloud.digitalocean.com/kubernetes/clusters/f2db42e5-2407-4422-920d-b307bc5f636d/dashboard/ Though they don't seem to update the underlying dashboard version very often, so
 we could deploy our own at somepoint with a Helm chart.
+
+## Staging
+
+Our staging VM is completely independent of our Kubernetes cluster. The staging VM runs on a single Digital Ocean droplet. It simply runs the same `docker-compose` setup used by local devs. The SSH private key is stored encrypted in our repo so you should be able to SSH in with:
+
+`./dishctl.sh staging_ssh`
+
+Deployment should happen automatically for all succesful builds on the staging branch. However, if you want changes to `docker-compose.yaml` to take affect you'll need to SSH in and manually deal with it.
+
+### Notes
+
+These are the steps needed to set up the staging VM on Digital Ocean:
+```
+# Add `webish` firewall
+# Add your SSH key if you want and SSH in:
+apt-get update
+curl -fsSL https://get.docker.com | sh
+apt-get install -y docker-compose git-crypt postgresql-client tmux s3cmd
+curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+curl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl > nginx.tmpl
+# Install gcloud sdk: https://cloud.google.com/sdk/docs/install
+# On your own local machine:
+#   `rsync -avP --filter=':- .gitignore' . root@staging.dishapp.com:/app`
+# Back on the VM:
+tmux # Just for developer convenience
+cd /app
+./dishctl.sh dish_docker_login
+mkdir -p ~/.dish/postgres
+chown 1001:1001 -R ~/.dish/postgres
+docker-compose up -d
+docker-compose logs
+```
