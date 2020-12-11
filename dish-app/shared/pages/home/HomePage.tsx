@@ -12,10 +12,12 @@ import {
   tag,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers/src'
+import { useRouter } from '@dish/router'
 import { getStore } from '@dish/use-store'
 import { chunk, partition, sortBy, uniqBy, unzip, zip } from 'lodash'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
+import { useQuery } from 'react-query'
 import {
   AbsoluteVStack,
   HStack,
@@ -26,16 +28,18 @@ import {
   VStack,
 } from 'snackui'
 
-import { AppMapStore } from '../../AppMapStore'
 import { drawerWidthMax, searchBarHeight } from '../../constants'
+import { useRegionQuery } from '../../helpers/fetchRegion'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useAsyncEffect } from '../../hooks/useAsync'
 import { useIsNarrow } from '../../hooks/useIs'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import { sfRegion } from '../../sfRegion'
 import { HomeStateItemHome, Region } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
+import { router } from '../../state/router'
 import { useOvermind } from '../../state/useOvermind'
 import { CommentBubble } from '../../views/CommentBubble'
 import { ContentScrollView } from '../../views/ContentScrollView'
@@ -100,18 +104,22 @@ export default memo(function HomePage(props: Props) {
   const om = useOvermind()
   const [isLoaded, setIsLoaded] = useState(false)
   const isSmall = useIsNarrow()
-
-  // on load home clear search effect!
-  useEffect(() => {
-    // not on first load
-    if (props.isActive && isLoaded) {
-      om.actions.home.clearSearch()
-      om.actions.home.clearTags()
-    }
-  }, [props.isActive])
+  const region = useRegionQuery(props.item.region, {
+    enabled: !!props.item.region,
+  })
 
   // load effect!
   usePageLoadEffect(props, () => {
+    // default navigate to a region (TODO make it the nearest one to current map..)
+    if (!props.item.region) {
+      router.navigate({
+        name: 'homeRegion',
+        params: {
+          region: sfRegion.slug,
+        },
+      })
+    }
+
     if (props.isActive) {
       setIsLoaded(true)
     } else {
@@ -124,11 +132,14 @@ export default memo(function HomePage(props: Props) {
     }
   })
 
-  const region = getStore(AppMapStore).regions[props.item.region]
-
+  // on load home clear search effect!
   useEffect(() => {
-    console.log('got region', region)
-  }, [region])
+    // not on first load
+    if (props.isActive && isLoaded) {
+      om.actions.home.clearSearch()
+      om.actions.home.clearTags()
+    }
+  }, [props.isActive])
 
   return (
     <>
@@ -174,7 +185,30 @@ export default memo(function HomePage(props: Props) {
                 pointerEvents="none"
                 height={5 + (isSmall ? 0 : searchBarHeight)}
               />
-              <HomePageContent region={region} item={props.item} />
+              <Spacer size="lg" />
+              <HomeTopSearches />
+              <Spacer size="sm" />
+              <VStack alignItems="center">
+                <Text
+                  paddingHorizontal={6}
+                  fontSize={24}
+                  color="#000"
+                  fontWeight="300"
+                >
+                  {region?.name ?? '...'}
+                </Text>
+              </VStack>
+              <Spacer size="xl" />
+              <Suspense
+                fallback={
+                  <>
+                    <LoadingItems />
+                    <LoadingItems />
+                  </>
+                }
+              >
+                <HomePageContent {...props} />
+              </Suspense>
             </VStack>
           </VStack>
         </ContentScrollView>
@@ -184,43 +218,7 @@ export default memo(function HomePage(props: Props) {
 })
 
 const HomePageContent = memo(
-  graphql(function HomePageContent(props: {
-    region?: Region
-    item: HomeStateItemHome
-  }) {
-    return (
-      <>
-        <Spacer size="lg" />
-        <HomeTopSearches />
-        <Spacer size="sm" />
-        <VStack alignItems="center">
-          <Text
-            paddingHorizontal={6}
-            fontSize={24}
-            color="#000"
-            fontWeight="300"
-          >
-            {props.region?.name ?? '...'}
-          </Text>
-        </VStack>
-        <Spacer size="xl" />
-        <Suspense
-          fallback={
-            <>
-              <LoadingItems />
-              <LoadingItems />
-            </>
-          }
-        >
-          <HomePageContentInner {...props} />
-        </Suspense>
-      </>
-    )
-  })
-)
-
-const HomePageContentInner = memo(
-  graphql(function HomePageContentInner({
+  graphql(function HomePageContent({
     region,
     item,
   }: {
@@ -310,6 +308,10 @@ const HomePageContentInner = memo(
   })
 )
 
+const useTopCuisines = (center: LngLat) => {
+  return useQuery('topcuisine', () => getHomeCuisines(center))
+}
+
 function useHomeFeed(item: HomeStateItemHome, region?: Region) {
   const restaurants = region?.geometry
     ? query.restaurant({
@@ -325,7 +327,7 @@ function useHomeFeed(item: HomeStateItemHome, region?: Region) {
       })
     : []
 
-  const cuisines = useTopCuisines(item.center) ?? []
+  const cuisines = useTopCuisines(item.center)
 
   const dishes = query.tag({
     where: {
@@ -384,7 +386,7 @@ function useHomeFeed(item: HomeStateItemHome, region?: Region) {
               } as const
             }
           ),
-          ...cuisines.map(
+          ...(cuisines.data ?? []).map(
             (item, index): FeedItems => {
               return {
                 type: 'cuisine',
@@ -419,9 +421,6 @@ function useHomeFeed(item: HomeStateItemHome, region?: Region) {
 const CuisineFeedCard = graphql(function CuisineFeedCard(
   props: FeedItemCuisine
 ) {
-  const [restaurants, setRestaurants] = useState<
-    TopCuisineDish['best_restaurants']
-  >([])
   const scrollRef = useRef<ScrollView>()
   const dishes = props.dishes
     ? query.tag({
@@ -433,11 +432,7 @@ const CuisineFeedCard = graphql(function CuisineFeedCard(
       })
     : []
 
-  const r = props.dishes?.[0]?.best_restaurants
-  useEffect(() => {
-    if (r) setRestaurants(r)
-  }, [r])
-
+  const restaurants = props.dishes?.[0]?.best_restaurants ?? []
   const perCol = 2
 
   return (
@@ -605,18 +600,6 @@ const RestaurantFeedCard = (props: FeedItemRestaurant) => {
       }
     />
   )
-}
-
-const useTopCuisines = (center: LngLat) => {
-  const [state, setState] = useState<TopCuisine[]>()
-
-  useAsyncEffect(async (ok) => {
-    let res = await getHomeCuisines(center)
-    ok()
-    setState(res)
-  }, [])
-
-  return state
 }
 
 const getHomeCuisines = async (center: LngLat) => {
