@@ -1,16 +1,15 @@
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useState } from 'react'
-import { Image, ScrollView } from 'react-native'
-import { AbsoluteVStack, HStack, LoadingItems, Modal, Text } from 'snackui'
+import { ScrollView } from 'react-native'
+import { AbsoluteVStack, HStack, LoadingItems, Modal } from 'snackui'
 
-import { isWeb, pageWidthMax } from '../../constants'
-import { getImageUrl } from '../../helpers/getImageUrl'
+import { pageWidthMax } from '../../constants'
 import { getRestaurantDishes } from '../../helpers/getRestaurantDishes'
 import { useIsNarrow, useIsShort } from '../../hooks/useIs'
 import { HomeStateItemGallery } from '../../state/home-types'
 import { useOvermind } from '../../state/useOvermind'
+import { Lightbox } from '../../views/Lightbox'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
-import { RestaurantHeader } from '../restaurant/RestaurantHeader'
 
 export default memo(function GalleryPage() {
   const om = useOvermind()
@@ -39,7 +38,8 @@ export default memo(function GalleryPage() {
           <StackViewCloseButton />
         </AbsoluteVStack>
         <Suspense fallback={<LoadingItems />}>
-          <HomePageGalleryContent state={state} />
+          <Lightbox restaurantSlug={state.restaurantSlug} />
+          {/* <HomePageGalleryContent state={state} />
           {isSmall ? (
             <AbsoluteVStack
               backgroundColor="#fff"
@@ -50,7 +50,7 @@ export default memo(function GalleryPage() {
             >
               {dishPhotosElement}
             </AbsoluteVStack>
-          ) : null}
+          ) : null} */}
         </Suspense>
       </Modal>
     )
@@ -132,7 +132,7 @@ const HomePageGalleryContent = memo(
               justifyContent="flex-start"
               backgroundColor="#eee"
             >
-              {Array.from(images).map((photoImage, i) => {
+              {/* {Array.from(images).map((photoImage, i) => {
                 return (
                   <HStack key={i} width={isSmall ? '100%' : '50%'}>
                     <Image
@@ -149,7 +149,7 @@ const HomePageGalleryContent = memo(
                 )
               })}
 
-              {!images.size && <Text>No photos found!</Text>}
+              {!images.size && <Text>No photos found!</Text>} */}
             </HStack>
           </ScrollView>
         </>

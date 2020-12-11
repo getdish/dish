@@ -393,6 +393,10 @@ function babelInclude(inputPath) {
   if (inputPath.includes('expo-linear-gradient')) {
     return true
   }
+  if (inputPath.includes('react-native-reanimated')) {
+    return true
+  }
+
   if (
     excludedRootPaths.some((excluded) =>
       inputPath.includes(path.normalize(excluded))
