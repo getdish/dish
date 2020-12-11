@@ -6,6 +6,8 @@
     "nohoist": [
       "babel-plugin-transform-inline-environment-variables",
       "babel-plugin-transform-inline-environment-variables/**",
+      "react-query",
+      "react-query/**",
       "@expo/html-elements",
       "@expo/html-elements/**",
       "@loadable/component",
@@ -153,6 +155,7 @@
     "@dish/helpers": "*",
     "@dish/use-store": "*",
     "@dish/react-feather": "*",
+    "react-query": "^2.26.4",
     "@expo/html-elements": "0.0.0",
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.0",

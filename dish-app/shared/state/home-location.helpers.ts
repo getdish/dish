@@ -1,10 +1,9 @@
 import { getStore } from '@dish/use-store'
 import bbox from '@turf/bbox'
 
-import { AppMapStore } from '../AppMapStore'
+import { fetchRegion } from '../helpers/fetchRegion'
 import { searchLocations } from '../helpers/searchLocations'
 import { getCenter } from '../views/getCenter'
-import { getCoordinates } from '../views/getCoordinates'
 import { HomeStateItemLocation } from './HomeStateItemLocation'
 import { initialHomeState } from './initialHomeState'
 import { SearchRouteParams, router } from './router'
@@ -40,9 +39,10 @@ export async function getLocationFromRoute(): Promise<HomeStateItemLocation | nu
 
     // otherwise, using "nice name"
     // @nate temp until we get full region querying in
-    const region = getStore(AppMapStore).regions[params.region]
+    const region = await fetchRegion(params.region)
+
     if (region) {
-      const center = getCenter(region.geometry)
+      const center = region.centroid
       if (!center) {
         return undefined
       }
@@ -51,7 +51,7 @@ export async function getLocationFromRoute(): Promise<HomeStateItemLocation | nu
           lng: center[0],
           lat: center[1],
         },
-        span: bboxToSpan(bbox(region.geometry)),
+        span: bboxToSpan(region.bbox),
       }
     }
 

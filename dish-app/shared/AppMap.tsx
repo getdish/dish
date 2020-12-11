@@ -19,7 +19,6 @@ import {
   useGet,
 } from 'snackui'
 
-import { AppMapStore } from './AppMapStore'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { pageWidthMax, searchBarHeight, zIndexMap } from './constants'
 import { getLngLat, getMinLngLat } from './helpers/getLngLat'
@@ -136,8 +135,6 @@ const AppMapDataLoader = memo(
 )
 
 const updateRegion = debounce((region: Region) => {
-  const appMapStore = getStore(AppMapStore)
-  appMapStore.setRegion(region.slug, region)
   const { currentState } = omStatic.state.home
   const type = currentState.type
   if (type === 'home' || type === 'search') {
