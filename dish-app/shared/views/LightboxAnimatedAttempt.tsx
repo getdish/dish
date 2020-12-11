@@ -1,5 +1,5 @@
 import { photo, useQuery } from '@dish/graph'
-import { Fragment, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Dimensions, Image, StyleSheet } from 'react-native'
 import {
   ScrollView,
