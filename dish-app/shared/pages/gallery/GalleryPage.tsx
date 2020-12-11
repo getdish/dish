@@ -17,47 +17,24 @@ export default memo(function GalleryPage() {
   const isSmall = useIsNarrow()
 
   if (state.type === 'gallery') {
-    const dishPhotosElement = null
-    // (
-    //   <Suspense fallback={null}>
-    //     <RestaurantDishPhotos
-    //       size={100}
-    //       restaurantSlug={state.restaurantSlug}
-    //       selectable
-    //       defaultSelectedId={state.dishId}
-    //       onSelect={(selected) => {
-    //         console.log('got em', selected)
-    //       }}
-    //     />
-    //   </Suspense>
-    // )
-
     return (
-      <Modal
-        maxWidth={pageWidthMax}
-        width="98%"
-        paddingVertical={10}
-        maxHeight="100vh"
+      <AbsoluteVStack
+        top={0}
+        left={0}
+        width="100vw"
+        height="100vh"
+        fullscreen
+        backgroundColor="black"
+        zIndex={1000}
+        pointerEvents="auto"
       >
         <AbsoluteVStack top={5} right={30} zIndex={100000}>
           <StackViewCloseButton />
         </AbsoluteVStack>
         <Suspense fallback={<LoadingItems />}>
           <Lightbox restaurantSlug={state.restaurantSlug} />
-          {/* <HomePageGalleryContent state={state} />
-          {isSmall ? (
-            <AbsoluteVStack
-              backgroundColor="#fff"
-              padding={0}
-              bottom={0}
-              left={0}
-              right={0}
-            >
-              {dishPhotosElement}
-            </AbsoluteVStack>
-          ) : null} */}
         </Suspense>
-      </Modal>
+      </AbsoluteVStack>
     )
   }
 

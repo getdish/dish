@@ -154,16 +154,14 @@ const PhotosList = ({
       >
         <Text color="black">{'<-'}</Text>
       </Button>
-      <ScrollView
-        style={{
-          width: isWeb ? 'calc(100% + 30px)' : '98%',
-          marginHorizontal: -15,
-          maxWidth: '100vw',
-        }}
-        horizontal
-        ref={scrollView}
-      >
-        <HStack paddingTop={20} alignItems="center" justifyContent="center">
+      <ScrollView horizontal ref={scrollView}>
+        <HStack
+          bottom={0}
+          position="absolute"
+          paddingTop={2}
+          alignItems="center"
+          justifyContent="center"
+        >
           {photos.map((photo, index) => {
             const { url } = photo
             if (!url) return null
@@ -372,46 +370,46 @@ export const Lightbox = ({
   }
 
   return (
-    <ScrollView>
-      <VStack maxHeight="100%">
+    <>
+      <VStack marginTop={3}>
         {activeImage.url && (
           <VStack>
             <Image
               source={{ uri: activeImage.url }}
               style={{
                 width: '100%',
-                height: '600px',
-                maxHeight: `calc(100vh - ${ThumbnailSize}px - 50px)`,
+                maxWidth: '99vw',
+                height: `calc(100vh - ${ThumbnailSize}px - 50px)`,
               }}
               resizeMode="contain"
             />
           </VStack>
         )}
-        <PhotosList
-          photos={photosList}
-          onPhotoPress={(photo, index) => {
-            setActiveImage({
-              url: photo.url,
-              index,
-            })
-          }}
-          onFetchMore={() => {
-            if (hasMore) {
-              fetchMore({
-                args: pagination,
-              }).then((data) => {
-                setPagination({
-                  limit: pagination.limit,
-                  offset: pagination.offset + data.length,
-                })
-              })
-            } else {
-              // No more photos left
-            }
-          }}
-          activeImage={activeImage}
-        />
       </VStack>
-    </ScrollView>
+      <PhotosList
+        photos={photosList}
+        onPhotoPress={(photo, index) => {
+          setActiveImage({
+            url: photo.url,
+            index,
+          })
+        }}
+        onFetchMore={() => {
+          if (hasMore) {
+            fetchMore({
+              args: pagination,
+            }).then((data) => {
+              setPagination({
+                limit: pagination.limit,
+                offset: pagination.offset + data.length,
+              })
+            })
+          } else {
+            // No more photos left
+          }
+        }}
+        activeImage={activeImage}
+      />
+    </>
   )
 }
