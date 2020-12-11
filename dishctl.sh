@@ -67,6 +67,17 @@ function _setup_s3() {
   apk add --no-cache -X http://dl-cdn.alpinelinux.org/alpine/edge/testing s3cmd
 }
 
+function send_slack_monitoring_message() {
+  message=$1
+  curl -X POST $SLACK_MONITORING_HOOK \
+    -H 'Content-type: application/json' \
+    --data @- <<EOF
+    {
+      "text": "$message",
+    }
+EOF
+}
+
 function worker() {
   kubectl exec -it \
     $(kubectl get pods \
@@ -586,11 +597,15 @@ function install_gcloud_sdk() {
   echo "Installing GCloud SDK v$GCLOUD_VERSION..."
   curl -sL "$archive" | tar xzf - -C /tmp
   cp -a /tmp/google-cloud-sdk $install_path
+  gcloud_init
+}
+
+function gcloud_init() {
   # This service account needs the "Project Owner" role! Way too much power.
   # Follow this issue for any fixes: https://issuetracker.google.com/issues/134928412
   gcloud auth activate-service-account --key-file k8s/etc/dish-gcloud.enc.json
   gcloud config set core/project "$GCLOUD_PROJECT"
-  gcloud config set builds/use_kaniko True
+  gcloud config set builds/use_kaniko False
 }
 
 function ping_home_page() {
@@ -729,7 +744,12 @@ function _gcloud_build_submit() {
   yaml="
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', '$image', '-f', '$path/Dockerfile', '.', $base_arg]
+  args: [
+    'build',
+    '-t', '$image',
+    '--cache-from', '$image',
+    '-f', '$path/Dockerfile',
+    '.', $base_arg]
 images: ['$image']
 options:
   machineType: 'N1_HIGHCPU_8'
@@ -810,15 +830,16 @@ function ci_rename_tagged_images_to_latest() {
   docker images
 }
 
-function ci_push_images_to_latest() {
-  echo "Pushing new docker images to production registry..."
+function ci_push_images_to() {
+  tag=$1
+  echo "Pushing new docker images to $tag registry..."
   dish_docker_login
   for image in "${ALL_IMAGES[@]}"
   do
     if [[ "$image" == "worker" ]]; then
       continue
     fi
-    new=$DISH_REGISTRY/$image:latest
+    new=$DISH_REGISTRY/$image:$tag
     docker push $new
   done
 }
@@ -990,11 +1011,13 @@ function setup_staging_droplet() {
   curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
   curl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl > nginx.tmpl
   # rsync -avP --filter=':- .gitignore' . root@staging.dishapp.com:/app
+  # Install gcloud sdk: https://cloud.google.com/sdk/docs/install
   cd /app
   ./dishctl.sh dish_docker_login
   mkdir -p ~/.dish/postgres
   chown 1001:1001 -R ~/.dish/postgres
-  docker-compose up
+  docker-compose up -d
+  docker-compose logs
 }
 
 function docker_compose_up_for_devs() {

@@ -39,7 +39,7 @@ resource "kubernetes_deployment" "user-server" {
 
         container {
           name  = "user-server"
-          image = "docker.k8s.dishapp.com/dish/user-server"
+          image = "${var.DOCKER_REGISTRY}/user-server:production"
           image_pull_policy = "Always"
           env {
             name = "DISH_ENV"

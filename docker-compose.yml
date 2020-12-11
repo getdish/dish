@@ -31,7 +31,7 @@ services:
     ports:
       - 6379:6379
   dish-hooks:
-    image: gcr.io/dish-258800/dish-hooks
+    image: gcr.io/dish-258800/dish-hooks${DISH_IMAGE_TAG}
     build:
       context: ./
       dockerfile: ./services/dish-hooks/Dockerfile
@@ -74,7 +74,7 @@ services:
     depends_on:
       - 'postgres'
   user-server:
-    image: gcr.io/dish-258800/user-server
+    image: gcr.io/dish-258800/user-server${DISH_IMAGE_TAG}
     build:
       context: ./
       dockerfile: ./services/user-server/Dockerfile
@@ -90,7 +90,7 @@ services:
     depends_on:
       - 'postgres'
   search:
-    image: gcr.io/dish-258800/dish/search
+    image: gcr.io/dish-258800/dish/search${DISH_IMAGE_TAG}
     build:
       context: ./
       dockerfile: ./services/search/Dockerfile
@@ -109,7 +109,7 @@ services:
     ports:
       - 9000:9000
   bert:
-    image: gcr.io/dish-258800/dish/bert
+    image: gcr.io/dish-258800/bert
     ports:
       - 8888:8080
     environment:
@@ -128,7 +128,7 @@ services:
     environment:
       - VIRTUAL_HOST=images-staging.dishapp.com
   dish-app-web:
-    image: gcr.io/dish-258800/dish-app
+    image: gcr.io/dish-258800/dish-app${DISH_IMAGE_TAG}
     build:
       context: ./
       dockerfile: ./dish-app/Dockerfile
