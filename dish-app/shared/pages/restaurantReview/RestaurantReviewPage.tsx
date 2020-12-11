@@ -4,7 +4,6 @@ import { Image, ScrollView, TextInput } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
-  LoadingItem,
   LoadingItems,
   SmallTitle,
   Spacer,
@@ -13,8 +12,8 @@ import {
   useDebounceEffect,
 } from 'snackui'
 
-import { lightRed, red } from '../../colors'
-import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
+import { red } from '../../colors'
+import { getRestaurantDishes } from '../../helpers/getRestaurantDishes'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { HomeStateItemReview } from '../../state/home-types'
@@ -24,7 +23,6 @@ import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { TagSmallButton } from '../../views/TagSmallButton'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { RestaurantLenseVote } from '../restaurant/RestaurantLenseVote'
-import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { SentimentText } from '../restaurant/SentimentText'
 
 export default memo(function RestaurantReviewPage() {
