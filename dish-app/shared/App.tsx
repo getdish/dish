@@ -1,7 +1,5 @@
-import { Auth } from '@dish/graph'
-import { isSafari } from '@dish/helpers'
 import loadable from '@loadable/component'
-import React, { Suspense, memo, useEffect } from 'react'
+import React, { Suspense, memo } from 'react'
 import { VStack } from 'snackui'
 
 import HomeAutocomplete from './AppAutocomplete'
@@ -13,25 +11,12 @@ import { AppMenuFloating } from './AppMenuFloating'
 import { AppRoot } from './AppRoot'
 import { AppSearchBarFloating } from './AppSearchBar'
 import { AppStackView } from './AppStackView'
-import { isSSR, isWeb } from './constants'
+import { isSSR } from './constants'
 import { PagesStackView } from './pages/PagesStackView'
 import { ErrorBoundary } from './views/ErrorBoundary'
 import { Route } from './views/router/Route'
 
 export default memo(function App() {
-  // dont run if in ssr mode
-  if (isWeb && !isSSR) {
-    const { auth } = require('../web/apple-sign-in')
-    useEffect(() => {
-      auth.init({
-        clientId: 'com.dishapp',
-        scope: 'name email',
-        redirectURI: Auth.getRedirectUri(),
-        usePopup: isSafari,
-      })
-    }, [])
-  }
-
   return <AppContent />
 })
 

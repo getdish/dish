@@ -1,3 +1,4 @@
+const LodashPlugin = require('lodash-webpack-plugin')
 const LoadablePlugin = require('@loadable/webpack-plugin')
 const { DuplicatesPlugin } = require('inspectpack/plugin')
 const ReactRefreshWebpack4Plugin = require('@pmmmwh/react-refresh-webpack-plugin')
@@ -249,15 +250,21 @@ module.exports = function getWebpackConfig(
       plugins: [
         isSSR && new LoadablePlugin(),
 
-        // breaks a couple things, possible to ignore
+        // slim down unused react-native-web modules
+        new Webpack.NormalModuleReplacementPlugin(
+          /react-native-web.*Virtualized(Section)?List.*/,
+          require.resolve('@dish/proxy-worm')
+        ),
+
+        // breaks a couple things, possible to ignore them to fix
         // isClient && isProduction && new ShakePlugin({}),
 
         ...((isProduction &&
           TARGET != 'ssr' && [
-            // new LodashPlugin({
-            //   // fixes issue i had https://github.com/lodash/lodash/issues/3101
-            //   shorthands: true,
-            // }),
+            new LodashPlugin({
+              // fixes issue i had https://github.com/lodash/lodash/issues/3101
+              shorthands: true,
+            }),
             new ExtractCssChunks({
               esModule: true,
               ignoreOrder: false,

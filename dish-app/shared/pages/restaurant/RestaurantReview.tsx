@@ -103,7 +103,7 @@ export const RestaurantReview = memo(
           height={height}
           ellipseContentAbove={200}
           text={review.text ?? ''}
-          name={hideUsername ? null : review.username ?? ''}
+          name={hideUsername ? '' : review.username ?? ''}
           afterName={
             showRestaurant ? (
               <HStack alignItems="center">
