@@ -1,7 +1,7 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 import { fullyIdle, series } from '@dish/async'
-import { isHasuraLive, isStaging, slugify } from '@dish/graph'
+import { isDev, isStaging, slugify } from '@dish/graph'
 import { useStore } from '@dish/use-store'
 import { produce } from 'immer'
 import _, { isEqual, throttle } from 'lodash'
@@ -30,8 +30,9 @@ const CLUSTER_LABEL_LAYER_ID = 'CLUSTER_LABEL_LAYER_ID'
 const POINT_LAYER_ID = 'POINT_LAYER_ID'
 const POINT_HOVER_LAYER_ID = 'POINT_HOVER_LAYER_ID'
 
-const MARTIN_TILES_PROD = 'https://martin-tiles.dishapp.com'
+//const MARTIN_TILES_PROD = 'https://martin-tiles.dishapp.com'
 const MARTIN_TILES_STAGING = 'https://martin-tiles-staging.dishapp.com'
+const MARTIN_TILES_PROD = MARTIN_TILES_STAGING
 const MARTIN_TILES_DEV = 'http://localhost:3005'
 
 let MARTIN_TILES_HOST = MARTIN_TILES_PROD
@@ -40,7 +41,7 @@ if (isStaging) {
   MARTIN_TILES_HOST = MARTIN_TILES_STAGING
 }
 
-if (isHasuraLive) {
+if (isDev) {
   MARTIN_TILES_HOST = MARTIN_TILES_DEV
 }
 
