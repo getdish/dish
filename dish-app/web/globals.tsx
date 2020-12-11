@@ -1,5 +1,5 @@
 import { client, mutation, query, resolved } from '@dish/graph'
-import * as React from 'react'
+import React from 'react'
 
 import { isSSR } from '../shared/constants'
 
