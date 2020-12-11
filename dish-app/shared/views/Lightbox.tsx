@@ -1,8 +1,8 @@
 import { photo, useQuery } from '@dish/graph'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { Dimensions, Image, ScaledSize, ScrollView } from 'react-native'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Dimensions, Image, ScaledSize, ScrollView, View } from 'react-native'
 import useKeyPressEvent from 'react-use/lib/useKeyPressEvent'
-import { HStack, VStack } from 'snackui'
+import { Box, Button, HStack, Text, VStack } from 'snackui'
 
 import { isWeb } from '../constants'
 
@@ -38,63 +38,159 @@ const ThumbnailSize = 150
 const PhotosList = ({
   photos,
   onPhotoPress,
-  activeIndex,
+  activeImage: { index: activeIndex, url: activeImageUrl },
 }: {
   photos: photo[]
   onPhotoPress: (photo: photo, index: number) => void
-  activeIndex: number
+  activeImage: {
+    index: number
+    url: string
+  }
 }) => {
   const scrollView = useRef<ScrollView>()
 
+  const currentScroll = useRef(0)
+
+  const [borderScroll, setBorderScroll] = useState<
+    'left' | 'right' | undefined
+  >()
+
   const { width } = useScreenSize()
+
+  const maxScrollRight = useMemo(() => {
+    return (photos.length - width / ThumbnailSize / 2 - 2) * ThumbnailSize
+  }, [photos.length, width])
 
   useEffect(() => {
     if (!scrollView.current) return
 
+    const x = Math.max(
+      0,
+      activeIndex * ThumbnailSize -
+        (width / ThumbnailSize / 3 - (width > 1000 ? 1 : 0)) * ThumbnailSize
+    )
+
+    if (x >= maxScrollRight) {
+      setBorderScroll('right')
+    } else if (x === 0) {
+      setBorderScroll('left')
+    } else {
+      setBorderScroll(undefined)
+    }
+
+    currentScroll.current = x
+
     scrollView.current.scrollTo({
       animated: true,
-      x: Math.max(
-        0,
-        activeIndex * ThumbnailSize -
-          (width / ThumbnailSize / 2) * ThumbnailSize
-      ),
+      x,
     })
-  }, [activeIndex, width])
+  }, [activeIndex, width, maxScrollRight])
+
+  const scrollLeft = useCallback(() => {
+    if (!scrollView.current) return
+
+    const x = Math.max(currentScroll.current - 300, 0)
+
+    if (x === 0) {
+      setBorderScroll('left')
+    } else {
+      setBorderScroll(undefined)
+    }
+
+    currentScroll.current = x
+
+    scrollView.current.scrollTo({
+      animated: true,
+      x,
+    })
+  }, [scrollView, photos])
+
+  const scrollRight = useCallback(() => {
+    if (!scrollView.current) return
+
+    const x = Math.min(currentScroll.current + 300, maxScrollRight)
+
+    if (x >= maxScrollRight) {
+      setBorderScroll('right')
+    } else {
+      setBorderScroll(undefined)
+    }
+
+    currentScroll.current = x
+
+    scrollView.current.scrollTo({
+      animated: true,
+      x,
+    })
+  }, [scrollView, photos, width, maxScrollRight])
 
   return (
-    <ScrollView
-      style={{
-        width: isWeb ? 'calc(100% + 30px)' : '98%',
-        marginHorizontal: -15,
-        maxWidth: '100vw',
-      }}
-      horizontal
-      ref={scrollView}
-    >
-      <HStack paddingTop={20} alignItems="center" justifyContent="center">
-        {photos.map((photo, index) => {
-          if (!photo.url) return null
+    <>
+      <Button
+        onPress={scrollLeft}
+        position="absolute"
+        zIndex={10000000}
+        left={1}
+        bottom={70}
+        backgroundColor="white"
+        hoverStyle={{
+          backgroundColor: 'white',
+        }}
+        display={borderScroll === 'left' ? 'none' : undefined}
+      >
+        <Text color="black">{'<-'}</Text>
+      </Button>
+      <ScrollView
+        style={{
+          width: isWeb ? 'calc(100% + 30px)' : '98%',
+          marginHorizontal: -15,
+          maxWidth: '100vw',
+        }}
+        horizontal
+        ref={scrollView}
+      >
+        <HStack paddingTop={20} alignItems="center" justifyContent="center">
+          {photos.map((photo, index) => {
+            const { url } = photo
+            if (!url) return null
 
-          return (
-            <VStack
-              key={index}
-              onPress={() => {
-                onPhotoPress(photo, index)
-              }}
-            >
-              <Image
-                source={{ uri: photo.url }}
-                style={{
-                  width: ThumbnailSize + 'px',
-                  height: ThumbnailSize + 'px',
+            return (
+              <VStack
+                key={index}
+                onPress={() => {
+                  onPhotoPress(photo, index)
                 }}
-                resizeMode="cover"
-              />
-            </VStack>
-          )
-        })}
-      </HStack>
-    </ScrollView>
+                paddingHorizontal="2px"
+              >
+                <Image
+                  source={{ uri: url }}
+                  style={{
+                    width: ThumbnailSize + 'px',
+                    height: ThumbnailSize + 'px',
+                    opacity: activeImageUrl === url ? 1 : 0.7,
+                  }}
+                  resizeMode="cover"
+                />
+              </VStack>
+            )
+          })}
+        </HStack>
+      </ScrollView>
+      <Button
+        onPress={scrollRight}
+        position="absolute"
+        zIndex={10000000}
+        right={1}
+        bottom={70}
+        backgroundColor="white"
+        hoverStyle={{
+          backgroundColor: 'white',
+        }}
+        display={borderScroll === 'right' ? 'none' : undefined}
+      >
+        <Text color="black">{'->'}</Text>
+      </Button>
+    </>
   )
 }
 
@@ -108,7 +204,12 @@ export const Lightbox = ({
   const [activeImage, setActiveImage] = useState<{
     index: number
     url: string
-  }>(null)
+  }>(() => {
+    return {
+      url: '',
+      index,
+    }
+  })
   const query = useQuery()
 
   const restaurant = query.restaurant({
@@ -134,62 +235,77 @@ export const Lightbox = ({
   )
 
   useEffect(() => {
-    if (index != null) {
-      if (photos[index]?.url) {
-        setActiveImage({
-          url: photos[index].url,
-          index,
-        })
-      }
+    if (photos[index]?.url) {
+      setActiveImage({
+        url: photos[index].url,
+        index,
+      })
     }
   }, [index, setActiveImage, photos])
 
   if (isWeb) {
-    const currentIndex = activeImage?.index ?? index
-
     useKeyPressEvent('ArrowLeft', () => {
-      let newIndex = currentIndex - 1 < 0 ? photos.length - 1 : currentIndex - 1
-      if (photos[newIndex]?.url && activeImage.index !== newIndex) {
-        setActiveImage({
-          url: photos[newIndex].url,
-          index: newIndex,
-        })
-      }
+      setActiveImage((prevActive) => {
+        const currentIndex = prevActive.index
+
+        let newIndex =
+          currentIndex - 1 < 0 ? photos.length - 1 : currentIndex - 1
+        if (photos[newIndex]?.url) {
+          return {
+            url: photos[newIndex].url,
+            index: newIndex,
+          }
+        }
+
+        return prevActive
+      })
     })
 
     useKeyPressEvent('ArrowRight', () => {
-      let newIndex =
-        currentIndex + 1 >= photos.length - 1 ? 0 : currentIndex + 1
-      if (photos[newIndex]?.url && activeImage.url !== photos[newIndex]?.url) {
-        setActiveImage({
-          url: photos[newIndex].url,
-          index: newIndex,
-        })
-      }
+      setActiveImage((prevActive) => {
+        const currentIndex = prevActive.index
+
+        let newIndex =
+          currentIndex + 1 >= photos.length - 1 ? 0 : currentIndex + 1
+        if (photos[newIndex]?.url) {
+          return {
+            url: photos[newIndex].url,
+            index: newIndex,
+          }
+        }
+
+        return prevActive
+      })
     })
   }
 
   return (
-    <VStack>
-      {activeImage && (
-        <VStack>
-          <Image
-            source={{ uri: activeImage.url }}
-            style={{ width: '100%', height: '600px' }}
-            resizeMode="contain"
-          />
-        </VStack>
-      )}
-      <PhotosList
-        photos={photos}
-        onPhotoPress={(photo, index) => {
-          setActiveImage({
-            url: photo.url,
-            index,
-          })
-        }}
-        activeIndex={activeImage?.index ?? index}
-      />
-    </VStack>
+    <ScrollView>
+      <VStack maxHeight="100%">
+        {activeImage.url && (
+          <VStack>
+            <Image
+              source={{ uri: activeImage.url }}
+              style={{
+                width: '100%',
+                height: '600px',
+                maxHeight: `calc(100vh - ${ThumbnailSize}px - 50px)`,
+              }}
+              resizeMode="contain"
+            />
+          </VStack>
+        )}
+        <PhotosList
+          photos={photos}
+          onPhotoPress={(photo, index) => {
+            setActiveImage({
+              url: photo.url,
+              index,
+            })
+          }}
+          activeImage={activeImage}
+        />
+      </VStack>
+    </ScrollView>
   )
 }

@@ -33,7 +33,12 @@ export default memo(function GalleryPage() {
     // )
 
     return (
-      <Modal maxWidth={pageWidthMax} width="98%" height="98%" maxHeight="98%">
+      <Modal
+        maxWidth={pageWidthMax}
+        width="98%"
+        paddingVertical={10}
+        maxHeight="100vh"
+      >
         <AbsoluteVStack top={5} right={30} zIndex={100000}>
           <StackViewCloseButton />
         </AbsoluteVStack>
