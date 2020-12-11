@@ -15,7 +15,7 @@ export function getTitleForState(
   state: HomeStateItem,
   options?: { lowerCase: boolean }
 ) {
-  const { currentLocationName = 'San Francisco' } = state
+  const { currentLocationName = '...' } = state
   const tags = getActiveTags(state)
   const lense = tags.find((x) => x.type === 'lense')
   const countryTag = tags.find((x) => x.type === 'country')

@@ -120,7 +120,7 @@ export const AppSearchLocationInput = memo(() => {
             <TextInput
               ref={inputStore.setNode}
               value={locationSearch}
-              placeholder={currentLocationName ?? 'San Francisco'}
+              placeholder={currentLocationName ?? '...'}
               style={[
                 inputTextStyles.textInput,
                 { flex: 1, color, paddingHorizontal, fontSize: 16 },

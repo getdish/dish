@@ -2,16 +2,19 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 
 import { fullyIdle, series } from '@dish/async'
 import { isHasuraLive, isStaging, slugify } from '@dish/graph'
+import { useStore } from '@dish/use-store'
+import { produce } from 'immer'
 import _, { isEqual, throttle } from 'lodash'
 import mapboxgl from 'mapbox-gl'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet } from 'snackui'
 
-import { green, lightGreen, lightPurple, purple } from '../colors'
+import { green, lightGreen } from '../colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { tagLenses } from '../state/localTags'
+import { SearchResultsStore } from '../state/searchResult'
 import { getCenter } from './getCenter'
 import { hasMovedAtLeast } from './hasMovedAtLeast'
 import { MapProps } from './MapProps'
@@ -20,6 +23,8 @@ mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
 const RESTAURANTS_SOURCE_ID = 'RESTAURANTS_SOURCE_ID'
 const RESTAURANTS_UNCLUSTERED_SOURCE_ID = 'RESTAURANTS_UNCLUSTERED_SOURCE_ID'
+const RESTAURANT_SEARCH_POSITION_LABEL_ID =
+  'RESTAURANT_SEARCH_POSITION_LABEL_ID'
 const UNCLUSTERED_LABEL_LAYER_ID = 'UNCLUSTERED_LABEL_LAYER_ID'
 const CLUSTER_LABEL_LAYER_ID = 'CLUSTER_LABEL_LAYER_ID'
 const POINT_LAYER_ID = 'POINT_LAYER_ID'
@@ -53,7 +58,7 @@ type MapInternalState = {
   isAwaitingNextMove: boolean
 }
 
-export const MapView = memo((props: MapProps) => {
+export const MapView = (props: MapProps) => {
   const { center, span, padding, features, style, hovered, selected } = props
   const isMounted = useIsMountedRef()
   const mapNode = useRef<HTMLDivElement>(null)
@@ -109,17 +114,57 @@ export const MapView = memo((props: MapProps) => {
     setActive(map, props, internal.current, index, false)
   }, [map, features, selected])
 
+  const [isMapLoaded, setIsMapLoaded] = useState(false)
+
+  useEffect(() => {
+    if (!map) {
+      setIsMapLoaded(false)
+      return undefined
+    }
+
+    const isMapLoaded = map.isStyleLoaded()
+
+    setIsMapLoaded(isMapLoaded)
+
+    if (!isMapLoaded) {
+      const onStyleLoad = () => {
+        setIsMapLoaded(true)
+        map.off('idle', onStyleLoad)
+      }
+      map.on('idle', onStyleLoad)
+
+      return () => {
+        map.off('idle', onStyleLoad)
+      }
+    }
+
+    return undefined
+  }, [map, setIsMapLoaded])
+
+  const prevHoveredId = useRef<number>()
+
   // hovered
   useEffect(() => {
     if (!map) return
-    const isMapLoaded = map.isStyleLoaded()
     if (!isMapLoaded) return
     if (!hovered) return
     // mapSetIconHovered(map, index)
     // const index = features.findIndex((x) => x.properties?.id === hovered)
     map.setFilter(POINT_HOVER_LAYER_ID, ['==', 'id', hovered])
+
+    if (prevHoveredId.current != null) {
+      mapSetFeature(map, prevHoveredId.current, { hover: false })
+    }
+    const featureId = features.findIndex(
+      (feature) => feature.properties.id === hovered
+    )
+
+    if (featureId !== -1) {
+      prevHoveredId.current = featureId
+      mapSetFeature(map, featureId, { hover: true })
+    }
     // return animateMarker(map)
-  }, [map, hovered])
+  }, [map, hovered, isMapLoaded, features])
 
   // style
   useEffect(() => {
@@ -169,15 +214,24 @@ export const MapView = memo((props: MapProps) => {
     map?.easeTo({ padding })
   }, [map, JSON.stringify(padding)])
 
+  const { restaurantPositions } = useStore(SearchResultsStore)
+
   // features
   useEffect(() => {
     if (!map) return
     const source = map.getSource(RESTAURANTS_SOURCE_ID)
 
+    const featuresWithPositions = produce(features, (draft) => {
+      for (const feature of draft) {
+        const position = restaurantPositions[feature.properties.id]
+        if (position != null) feature.properties.searchPosition = position
+      }
+    })
+
     if (source?.type === 'geojson') {
       source.setData({
         type: 'FeatureCollection',
-        features,
+        features: featuresWithPositions,
       })
     }
 
@@ -185,10 +239,10 @@ export const MapView = memo((props: MapProps) => {
     if (source2?.type === 'geojson') {
       source2.setData({
         type: 'FeatureCollection',
-        features,
+        features: featuresWithPositions,
       })
     }
-  }, [features, map])
+  }, [features, map, restaurantPositions])
 
   // centerToResults
   const lastCenter = useRef(0)
@@ -202,7 +256,7 @@ export const MapView = memo((props: MapProps) => {
   }, [map, features, props.centerToResults])
 
   return <div ref={mapNode} style={mapStyle} />
-})
+}
 
 const mapStyle = {
   width: '100%',
@@ -637,12 +691,16 @@ function setupMapEffect({
           })({
             active: true,
           })
+
+          if (!feature.properties.nhood) {
+            console.warn('No available region')
+            return
+          }
+
           getProps().onSelectRegion?.({
             geometry: feature.geometry as any,
-            name: feature.properties.nhood ?? 'San Francisco',
-            slug:
-              feature.properties.slug ??
-              slugify(feature.properties.nhood ?? 'san-francisco'),
+            name: feature.properties.nhood,
+            slug: feature.properties.slug ?? slugify(feature.properties.nhood),
           })
         }, 300)
 
@@ -688,7 +746,7 @@ function setupMapEffect({
         })
 
         const handleClick = (e) => {
-          console.log('clik')
+          console.log('clik', e)
           if (!map) return
           const points = map.queryRenderedFeatures(e.point, {
             layers: [POINT_LAYER_ID],
@@ -772,14 +830,20 @@ function setupMapEffect({
           type: 'circle',
           source: RESTAURANTS_SOURCE_ID,
           paint: {
-            'circle-radius': {
-              stops: [
-                [8, 1],
-                [10, 4],
-                [14, 8],
-                [16, 16],
-              ],
-            },
+            // 'circle-radius': {
+            //   stops: [
+            //     [8, 1],
+            //     [10, 4],
+            //     [14, 8],
+            //     [16, 16],
+            //   ],
+            // },
+            'circle-radius': [
+              'case',
+              ['boolean', ['feature-state', 'hover'], false],
+              25,
+              10,
+            ],
 
             'circle-stroke-width': {
               stops: [
@@ -826,14 +890,7 @@ function setupMapEffect({
           type: 'circle',
           filter: ['==', 'id', ''],
           paint: {
-            'circle-radius': {
-              stops: [
-                [8, 1],
-                [10, 4],
-                [16, 8],
-                [22, 12],
-              ],
-            },
+            'circle-radius': 20,
             'circle-color': 'red',
             // 'icon-allow-overlap': true,
             // 'icon-ignore-placement': true,
@@ -864,8 +921,34 @@ function setupMapEffect({
             'text-halo-width': 1,
           },
         })
+
         cancels.add(() => {
           map?.removeLayer(UNCLUSTERED_LABEL_LAYER_ID)
+        })
+
+        map.addLayer({
+          id: RESTAURANT_SEARCH_POSITION_LABEL_ID,
+          source: RESTAURANTS_SOURCE_ID,
+          type: 'symbol',
+          filter: ['has', 'searchPosition'],
+          layout: {
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'text-field': ['format', ['get', 'searchPosition']],
+            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+            'text-size': 18,
+            'text-variable-anchor': ['bottom', 'top', 'right', 'left'],
+            'text-offset': [0, 1],
+            'text-anchor': 'top',
+          },
+          paint: {
+            'text-halo-color': '#70b600',
+            'text-halo-width': 1,
+          },
+        })
+
+        cancels.add(() => {
+          map?.removeLayer(RESTAURANT_SEARCH_POSITION_LABEL_ID)
         })
 
         map.addLayer({

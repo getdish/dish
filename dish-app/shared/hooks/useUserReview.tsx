@@ -1,18 +1,15 @@
-import { series } from '@dish/async'
 import {
   DeepPartial,
   Review,
   globalTagId,
   query,
-  refetch,
-  resolved,
-  review,
   reviewDelete,
   reviewUpsert,
+  setCache,
   useRefetch,
 } from '@dish/graph'
-import { useEffect, useState } from 'react'
-import { Toast, useForceUpdate, useLazyEffect } from 'snackui'
+import { useState } from 'react'
+import { Toast, useLazyEffect } from 'snackui'
 
 import { omStatic } from '../state/omStatic'
 import { useOvermind } from '../state/useOvermind'
@@ -176,23 +173,44 @@ export const useUserReviewsQuery = (
 export const isTagReview = (r: DeepPartial<Review>) =>
   !!r.tag_id && r.tag_id !== globalTagId
 
-export const useUserReviewCommentQuery = (restaurantId: string) => {
-  const { reviews, upsert } = useUserReviewsQuery(restaurantId, 'comment')
+export const useUserReviewCommentQuery = (
+  restaurantId: string,
+  {
+    onUpsert,
+    onDelete,
+  }: {
+    onUpsert?: () => void
+    onDelete?: () => void
+  } = {}
+) => {
+  const { reviews, upsert, reviewsQuery } = useUserReviewsQuery(
+    restaurantId,
+    'comment'
+  )
   const review = reviews.filter((x) => !isTagReview(x) && !!x.text)[0]
   return {
     review,
-    upsertReview(review: Partial<Review>) {
-      return upsert({
+    reviewsQuery,
+    async upsertReview(review: Partial<Review>) {
+      const result = await upsert({
         type: 'comment',
         ...review,
         restaurant_id: restaurantId,
       })
+
+      setCache(reviewsQuery, result[0])
+
+      onUpsert?.()
+
+      return result
     },
     async deleteReview() {
       Toast.show(`Deleting...`)
       await reviewDelete({
         id: review.id,
       })
+      setCache(reviewsQuery, null)
+      onDelete?.()
       Toast.show(`Deleted!`)
       // refetch()
     },

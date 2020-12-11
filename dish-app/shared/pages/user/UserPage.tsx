@@ -60,7 +60,7 @@ const UserPageContent = graphql(
     const om = useOvermind()
     const user = useUserQuery(item?.username ?? '')
     const reviews = user
-      .reviews({
+      ?.reviews({
         limit: 50,
       })
       .map((x) => ({
@@ -71,7 +71,7 @@ const UserPageContent = graphql(
       }))
 
     useEffect(() => {
-      if (!reviews.length || reviews[0] === null) return
+      if (!reviews || !reviews.length || reviews[0] === null) return
       const userState = om.state.home.allStates[item.id] as HomeStateItemUser
       console.log('we here', item.id, userState)
       if (userState) {
@@ -91,7 +91,7 @@ const UserPageContent = graphql(
       return <NotFoundPage />
     }
 
-    const hasReviews = !!reviews.length && reviews[0].id !== null
+    const hasReviews = !!reviews?.length && reviews[0].id !== null
 
     return (
       <ContentScrollView id="user">
@@ -136,8 +136,10 @@ const UserHeader = memo(
     }) => {
       const om = useOvermind()
       const user = useUserQuery(item?.username ?? '')
-      const isOwnProfile = om.state.user.user?.username === user.username
-      console.log(om.state.user.user?.username, user.username)
+      const isOwnProfile = om.state.user?.user?.username === user?.username
+      console.log(om.state.user?.user?.username, user?.username)
+
+      if (!user) return null
 
       return (
         <ScrollView

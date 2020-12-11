@@ -46,7 +46,6 @@ export const CommentBubble = ({
   const [isExpanded, setIsExpanded] = useState(false)
   const isTripAdvisor = name?.startsWith('tripadvisor-')
   const isYelp = name?.startsWith('yelp-')
-
   if (isTripAdvisor) {
     name = name?.replace('tripadvisor-', '')
   }

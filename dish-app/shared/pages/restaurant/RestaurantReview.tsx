@@ -58,6 +58,13 @@ export const RestaurantReview = memo(
 
       const sentiments = review.sentiments()
 
+      const authoredAt = review.authored_at ? (
+        <Text {...bottomMetaTextProps} marginLeft={6}>
+          {new Intl.DateTimeFormat().format(new Date(review.authored_at))}{' '}
+          &nbsp; &nbsp;
+        </Text>
+      ) : null
+
       const meta = (
         <>
           {!!review.rating && (
@@ -84,12 +91,7 @@ export const RestaurantReview = memo(
               {review.rating === 1 ? 'Upvote' : 'Downvote'}
             </Text>
           )}
-          {!!review.authored_at && (
-            <Text {...bottomMetaTextProps} marginLeft={6}>
-              {new Intl.DateTimeFormat().format(new Date(review.authored_at))}{' '}
-              &nbsp; &nbsp;
-            </Text>
-          )}
+          {authoredAt}
         </>
       )
 
@@ -121,7 +123,12 @@ export const RestaurantReview = memo(
           }
           after={
             !!review.text ? (
-              <HStack width="100%" alignItems="center" maxWidth="100%">
+              <HStack
+                width="100%"
+                alignItems="center"
+                maxWidth="100%"
+                flexWrap="wrap"
+              >
                 {!!sentiments?.length
                   ? uniqBy(sentiments, (x) => x.tag.name).map((x, i) => {
                       const snt = x.ml_sentiment

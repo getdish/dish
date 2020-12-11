@@ -1,5 +1,6 @@
 import { sleep } from '@dish/async'
 import { ArrowUp } from '@dish/react-feather'
+import { useStore } from '@dish/use-store'
 import React, {
   Suspense,
   createContext,
@@ -52,6 +53,7 @@ import {
 } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
 import { router } from '../../state/router'
+import { SearchResultsStore } from '../../state/searchResult'
 import { useOvermind } from '../../state/useOvermind'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { StackCloseButton, StackDrawer } from '../../views/StackDrawer'
@@ -267,6 +269,16 @@ const SearchResultsContent = (props: Props) => {
       </Suspense>
     )
   }, [])
+
+  const searchResultsStore = useStore(SearchResultsStore)
+
+  useEffect(() => {
+    const searchResultsPositions: Record<string, number> = {}
+    searchState.results.forEach((v, index) => {
+      searchResultsPositions[v.id] = index + 1
+    })
+    searchResultsStore.setRestaurantPositions(searchResultsPositions)
+  }, [searchState.results])
 
   if (searchState.status !== 'loading' && searchState.results.length === 0) {
     return (

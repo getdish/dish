@@ -1,6 +1,6 @@
 import anyTest, { TestInterface } from 'ava'
 
-import { getRestuarantDishes } from '../../../dish-app/shared/helpers/getRestaurantDishes'
+import { getRestaurantDishes } from '../../../dish-app/shared/helpers/getRestaurantDishes'
 import {
   RestaurantWithId,
   TagWithId,
@@ -136,7 +136,7 @@ test.skip('Getting top tags for a restaurant', async (t) => {
     { tag_id: t3.id, score: 0 },
   ]))!
   let top_tags = await resolved(() => {
-    return getRestuarantDishes({
+    return getRestaurantDishes({
       restaurantSlug: restaurant.slug,
       tag_slugs: ['test-tag-existing__test-tag-2'],
     })

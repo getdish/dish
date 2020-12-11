@@ -4,7 +4,7 @@ import { HStack, VStack } from 'snackui'
 
 import { bgLightHover } from '../../colors'
 import { isWeb } from '../../constants'
-import { getRestuarantDishes } from '../../helpers/getRestaurantDishes'
+import { getRestaurantDishes } from '../../helpers/getRestaurantDishes'
 import { getTagSlug } from '../../state/getTagSlug'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
@@ -28,7 +28,7 @@ export const RestaurantDishPhotos = memo(
       size?: number
       max?: number
     }) => {
-      const dishes = getRestuarantDishes({ restaurantSlug, max })
+      const dishes = getRestaurantDishes({ restaurantSlug, max })
       const spacing = 20
       const [hasScrolled, setHasScrolled] = useState(false)
 
