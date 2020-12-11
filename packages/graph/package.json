@@ -22,7 +22,7 @@
     "ava": "^3.8.2",
     "lodash": "*",
     "@dish/gqless": "^3.0.3",
-    "@dish/gqless-react": "^2.0.3",
+    "@dish/gqless-react": "^2.0.4",
     "@dish/gqless-logger": "^0.1.3"
   },
   "peerDependencies": {

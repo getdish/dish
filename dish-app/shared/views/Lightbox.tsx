@@ -1,14 +1,24 @@
-import { photo, useQuery } from '@dish/graph'
+import {
+  client,
+  order_by,
+  photo,
+  photo_xref,
+  resolved,
+  useLazyQuery,
+  useQuery,
+  useTransactionQuery,
+} from '@dish/graph'
+import { orderBy, sortBy, uniqBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Dimensions, Image, ScaledSize, ScrollView, View } from 'react-native'
 import useKeyPressEvent from 'react-use/lib/useKeyPressEvent'
-import { Box, Button, HStack, Text, VStack } from 'snackui'
+import { Button, HStack, Text, VStack } from 'snackui'
 
 import { isWeb } from '../constants'
 
 const useScreenSize = () => {
   const [screenSize, setScreenSize] = useState(() => {
-    const { width, height } = Dimensions.get('screen')
+    const { width, height } = Dimensions.get('window')
 
     return {
       width,
@@ -39,6 +49,7 @@ const PhotosList = ({
   photos,
   onPhotoPress,
   activeImage: { index: activeIndex, url: activeImageUrl },
+  onFetchMore,
 }: {
   photos: photo[]
   onPhotoPress: (photo: photo, index: number) => void
@@ -46,6 +57,7 @@ const PhotosList = ({
     index: number
     url: string
   }
+  onFetchMore: () => void
 }) => {
   const scrollView = useRef<ScrollView>()
 
@@ -54,6 +66,12 @@ const PhotosList = ({
   const [borderScroll, setBorderScroll] = useState<
     'left' | 'right' | undefined
   >()
+
+  useEffect(() => {
+    if (borderScroll === 'right') {
+      onFetchMore()
+    }
+  }, [borderScroll, currentScroll.current])
 
   const { width } = useScreenSize()
 
@@ -64,11 +82,7 @@ const PhotosList = ({
   useEffect(() => {
     if (!scrollView.current) return
 
-    const x = Math.max(
-      0,
-      activeIndex * ThumbnailSize -
-        (width / ThumbnailSize / 3 - (width > 1000 ? 1 : 0)) * ThumbnailSize
-    )
+    const x = Math.max(0, activeIndex * ThumbnailSize)
 
     if (x >= maxScrollRight) {
       setBorderScroll('right')
@@ -196,7 +210,7 @@ const PhotosList = ({
 
 export const Lightbox = ({
   restaurantSlug,
-  index = 0,
+  index: defaultIndex = 0,
 }: {
   restaurantSlug: string
   index?: number
@@ -207,7 +221,7 @@ export const Lightbox = ({
   }>(() => {
     return {
       url: '',
-      index,
+      index: defaultIndex,
     }
   })
   const query = useQuery()
@@ -220,28 +234,106 @@ export const Lightbox = ({
     },
   })[0]
 
-  if (!restaurant) return null
+  if (!restaurant) throw Error('No restaurant available')
 
-  const photos_xref = restaurant.photo_table({
-    limit: 30,
-  })
+  restaurant.id
 
-  const photos = useMemo(
-    () =>
-      photos_xref
-        .map(({ photo }) => photo)
-        .filter((photo) => Boolean(photo.url)),
-    [photos_xref]
+  const [pagination, setPagination] = useState(() => ({ limit: 20, offset: 0 }))
+
+  const [photosList, setPhotosList] = useState<photo[]>(() => [])
+
+  useTransactionQuery(
+    () => {
+      const photosxRef = restaurant.photo_table({
+        limit: pagination.limit,
+        offset: 0,
+        order_by: [
+          {
+            photo: {
+              quality: order_by.desc,
+            },
+          },
+        ],
+      })
+
+      photosxRef.forEach(({ photo }) => {
+        photo.id
+        photo.url
+        photo.quality
+      })
+
+      return photosxRef.map((v) => v.photo)
+    },
+    {
+      onCompleted(data) {
+        setPhotosList(uniqBy(data, (v) => v.url))
+      },
+    }
   )
 
+  const { data: hasMore } = useTransactionQuery(
+    (_query, { pagination, restaurant_id }) => {
+      return (
+        (query
+          .photo_xref_aggregate({
+            where: {
+              restaurant_id: {
+                _eq: restaurant_id,
+              },
+            },
+            ...pagination,
+          })
+          .aggregate.count() ?? 0) > 0
+      )
+    },
+    {
+      variables: { pagination, restaurant_id: restaurant.id },
+    }
+  )
+
+  const [fetchMore] = useLazyQuery(
+    (_query, { limit, offset }: typeof pagination) => {
+      const photo_table = restaurant.photo_table({
+        limit,
+        offset,
+        order_by: [
+          {
+            photo: {
+              quality: order_by.desc,
+            },
+          },
+        ],
+      })
+
+      return photo_table.map(({ photo }) => {
+        photo.id
+        photo.url
+        photo.quality
+        return photo
+      })
+    },
+    {
+      onCompleted(data) {
+        setPhotosList((prev) =>
+          orderBy(
+            uniqBy([...prev, ...data], (v) => v.url),
+            (v) => v.quality,
+            'desc'
+          )
+        )
+      },
+    }
+  )
+
+  const activeIndex = activeImage.index
   useEffect(() => {
-    if (photos[index]?.url) {
+    if (photosList[activeIndex]?.url) {
       setActiveImage({
-        url: photos[index].url,
-        index,
+        url: photosList[activeIndex].url,
+        index: activeIndex,
       })
     }
-  }, [index, setActiveImage, photos])
+  }, [activeIndex, setActiveImage, photosList])
 
   if (isWeb) {
     useKeyPressEvent('ArrowLeft', () => {
@@ -249,10 +341,10 @@ export const Lightbox = ({
         const currentIndex = prevActive.index
 
         let newIndex =
-          currentIndex - 1 < 0 ? photos.length - 1 : currentIndex - 1
-        if (photos[newIndex]?.url) {
+          currentIndex - 1 < 0 ? photosList.length - 1 : currentIndex - 1
+        if (photosList[newIndex]?.url) {
           return {
-            url: photos[newIndex].url,
+            url: photosList[newIndex].url,
             index: newIndex,
           }
         }
@@ -266,10 +358,10 @@ export const Lightbox = ({
         const currentIndex = prevActive.index
 
         let newIndex =
-          currentIndex + 1 >= photos.length - 1 ? 0 : currentIndex + 1
-        if (photos[newIndex]?.url) {
+          currentIndex + 1 >= photosList.length - 1 ? 0 : currentIndex + 1
+        if (photosList[newIndex]?.url) {
           return {
-            url: photos[newIndex].url,
+            url: photosList[newIndex].url,
             index: newIndex,
           }
         }
@@ -296,12 +388,26 @@ export const Lightbox = ({
           </VStack>
         )}
         <PhotosList
-          photos={photos}
+          photos={photosList}
           onPhotoPress={(photo, index) => {
             setActiveImage({
               url: photo.url,
               index,
             })
+          }}
+          onFetchMore={() => {
+            if (hasMore) {
+              fetchMore({
+                args: pagination,
+              }).then((data) => {
+                setPagination({
+                  limit: pagination.limit,
+                  offset: pagination.offset + data.length,
+                })
+              })
+            } else {
+              // No more photos left
+            }
           }}
           activeImage={activeImage}
         />
