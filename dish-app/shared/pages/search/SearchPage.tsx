@@ -70,7 +70,6 @@ import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
 
 type Props = StackViewProps<HomeStateItemSearch>
-
 const SearchPagePropsContext = createContext<Props | null>(null)
 
 const loadSearchPage: PageLoadEffectCallback = ({ isRefreshing, item }) => {

@@ -1,4 +1,3 @@
-// debug
 import { isPresent } from '@dish/helpers'
 import React from 'react'
 import { Text } from 'snackui'
@@ -81,14 +80,14 @@ export function getTitleForState(
   subTitleParts.push(`@ ${currentLocationName}`)
 
   const subTitle = subTitleParts.join(' ')
+  //   native extraction failing?
+
   const subTitleElements = (
-    <>
-      <Text fontSize={14} fontWeight="300" {...(isWeb && { color: 'inherit' })}>
-        {subTitleParts[0]}
-        &nbsp;
-        {subTitleParts.slice(1).join(' ')}
-      </Text>
-    </>
+    <Text fontSize={14} fontWeight="300" {...(isWeb && { color: 'inherit' })}>
+      {subTitleParts[0]}
+      &nbsp;
+      {subTitleParts.slice(1).join(' ')}
+    </Text>
   )
 
   const title = `${userPrefix} ${titleSubject} ${subTitleParts.join(' ')}`
