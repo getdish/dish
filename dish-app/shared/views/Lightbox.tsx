@@ -8,11 +8,19 @@ import {
   useQuery,
   useTransactionQuery,
 } from '@dish/graph'
+import { ChevronLeft, ChevronRight } from '@dish/react-feather'
 import { orderBy, sortBy, uniqBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Dimensions, Image, ScaledSize, ScrollView, View } from 'react-native'
+import {
+  Dimensions,
+  Image,
+  NativeScrollEvent,
+  ScaledSize,
+  ScrollView,
+  View,
+} from 'react-native'
 import useKeyPressEvent from 'react-use/lib/useKeyPressEvent'
-import { Button, HStack, Text, VStack } from 'snackui'
+import { Box, Button, HStack, Text, VStack } from 'snackui'
 
 import { isWeb } from '../constants'
 
@@ -45,6 +53,18 @@ const useScreenSize = () => {
 
 const ThumbnailSize = 150
 
+const isCloseToBottom = ({
+  layoutMeasurement,
+  contentOffset,
+  contentSize,
+}: NativeScrollEvent) => {
+  const paddingToBottom = 20
+  return (
+    layoutMeasurement.height + contentOffset.y >=
+    contentSize.height - paddingToBottom
+  )
+}
+
 const PhotosList = ({
   photos,
   onPhotoPress,
@@ -63,98 +83,67 @@ const PhotosList = ({
 
   const currentScroll = useRef(0)
 
-  const [borderScroll, setBorderScroll] = useState<
-    'left' | 'right' | undefined
-  >()
-
-  useEffect(() => {
-    if (borderScroll === 'right') {
-      onFetchMore()
-    }
-  }, [borderScroll, currentScroll.current])
-
   const { width } = useScreenSize()
 
   const maxScrollRight = useMemo(() => {
-    return (photos.length - width / ThumbnailSize / 2 - 2) * ThumbnailSize
+    return (photos.length - width / ThumbnailSize / 1) * ThumbnailSize
   }, [photos.length, width])
+
+  const maxScrollRightRef = useRef(maxScrollRight)
+  maxScrollRightRef.current = maxScrollRight
 
   useEffect(() => {
     if (!scrollView.current) return
 
     const x = Math.max(0, activeIndex * ThumbnailSize)
 
-    if (x >= maxScrollRight) {
-      setBorderScroll('right')
-    } else if (x === 0) {
-      setBorderScroll('left')
-    } else {
-      setBorderScroll(undefined)
-    }
-
     currentScroll.current = x
 
     scrollView.current.scrollTo({
       animated: true,
       x,
     })
-  }, [activeIndex, width, maxScrollRight])
+  }, [activeIndex, width])
 
-  const scrollLeft = useCallback(() => {
-    if (!scrollView.current) return
+  // const scrollLeft = useCallback(() => {
+  //   if (!scrollView.current) return
 
-    const x = Math.max(currentScroll.current - 300, 0)
+  //   const x = Math.max(currentScroll.current - 300, 0)
 
-    if (x === 0) {
-      setBorderScroll('left')
-    } else {
-      setBorderScroll(undefined)
-    }
+  //   currentScroll.current = x
 
-    currentScroll.current = x
+  //   scrollView.current.scrollTo({
+  //     animated: true,
+  //     x,
+  //   })
+  // }, [scrollView, photos])
 
-    scrollView.current.scrollTo({
-      animated: true,
-      x,
-    })
-  }, [scrollView, photos])
+  // const scrollRight = useCallback(() => {
+  //   if (!scrollView.current) return
 
-  const scrollRight = useCallback(() => {
-    if (!scrollView.current) return
+  //   const x = Math.min(currentScroll.current + 300, maxScrollRight)
 
-    const x = Math.min(currentScroll.current + 300, maxScrollRight)
+  //   currentScroll.current = x
 
-    if (x >= maxScrollRight) {
-      setBorderScroll('right')
-    } else {
-      setBorderScroll(undefined)
-    }
-
-    currentScroll.current = x
-
-    scrollView.current.scrollTo({
-      animated: true,
-      x,
-    })
-  }, [scrollView, photos, width, maxScrollRight])
+  //   scrollView.current.scrollTo({
+  //     animated: true,
+  //     x,
+  //   })
+  // }, [scrollView, photos, width, maxScrollRight])
 
   return (
     <>
-      <Button
-        onPress={scrollLeft}
-        position="absolute"
-        zIndex={10000000}
-        left={1}
-        bottom={70}
-        backgroundColor="white"
-        hoverStyle={{
-          backgroundColor: 'white',
+      <ScrollView
+        horizontal
+        ref={scrollView}
+        onScroll={(ev) => {
+          currentScroll.current = ev.nativeEvent.contentOffset.x
+          if (ev.nativeEvent.contentOffset.x >= maxScrollRight) {
+            onFetchMore()
+          }
         }}
-        display={borderScroll === 'left' ? 'none' : undefined}
+        scrollEventThrottle={1}
       >
-        <Text color="black">{'<-'}</Text>
-      </Button>
-      <ScrollView horizontal ref={scrollView}>
         <HStack
           bottom={0}
           position="absolute"
@@ -179,7 +168,7 @@ const PhotosList = ({
                   style={{
                     width: ThumbnailSize + 'px',
                     height: ThumbnailSize + 'px',
-                    opacity: activeImageUrl === url ? 1 : 0.7,
+                    opacity: activeImageUrl === url ? 1 : 0.6,
                   }}
                   resizeMode="cover"
                 />
@@ -188,20 +177,6 @@ const PhotosList = ({
           })}
         </HStack>
       </ScrollView>
-      <Button
-        onPress={scrollRight}
-        position="absolute"
-        zIndex={10000000}
-        right={1}
-        bottom={70}
-        backgroundColor="white"
-        hoverStyle={{
-          backgroundColor: 'white',
-        }}
-        display={borderScroll === 'right' ? 'none' : undefined}
-      >
-        <Text color="black">{'->'}</Text>
-      </Button>
     </>
   )
 }
@@ -289,7 +264,7 @@ export const Lightbox = ({
     }
   )
 
-  const [fetchMore] = useLazyQuery(
+  let [fetchMore, { isLoading: isFetchingMore }] = useLazyQuery(
     (_query, { limit, offset }: typeof pagination) => {
       const photo_table = restaurant.photo_table({
         limit,
@@ -333,40 +308,42 @@ export const Lightbox = ({
     }
   }, [activeIndex, setActiveImage, photosList])
 
+  const setLeftImage = () =>
+    setActiveImage((prevActive) => {
+      const currentIndex = prevActive.index
+
+      let newIndex =
+        currentIndex - 1 < 0 ? photosList.length - 1 : currentIndex - 1
+      if (photosList[newIndex]?.url) {
+        return {
+          url: photosList[newIndex].url,
+          index: newIndex,
+        }
+      }
+
+      return prevActive
+    })
+
+  const setRightImage = () => {
+    setActiveImage((prevActive) => {
+      const currentIndex = prevActive.index
+
+      let newIndex =
+        currentIndex + 1 >= photosList.length - 1 ? 0 : currentIndex + 1
+      if (photosList[newIndex]?.url) {
+        return {
+          url: photosList[newIndex].url,
+          index: newIndex,
+        }
+      }
+
+      return prevActive
+    })
+  }
   if (isWeb) {
-    useKeyPressEvent('ArrowLeft', () => {
-      setActiveImage((prevActive) => {
-        const currentIndex = prevActive.index
+    useKeyPressEvent('ArrowLeft', setLeftImage)
 
-        let newIndex =
-          currentIndex - 1 < 0 ? photosList.length - 1 : currentIndex - 1
-        if (photosList[newIndex]?.url) {
-          return {
-            url: photosList[newIndex].url,
-            index: newIndex,
-          }
-        }
-
-        return prevActive
-      })
-    })
-
-    useKeyPressEvent('ArrowRight', () => {
-      setActiveImage((prevActive) => {
-        const currentIndex = prevActive.index
-
-        let newIndex =
-          currentIndex + 1 >= photosList.length - 1 ? 0 : currentIndex + 1
-        if (photosList[newIndex]?.url) {
-          return {
-            url: photosList[newIndex].url,
-            index: newIndex,
-          }
-        }
-
-        return prevActive
-      })
-    })
+    useKeyPressEvent('ArrowRight', setRightImage)
   }
 
   return (
@@ -386,6 +363,27 @@ export const Lightbox = ({
           </VStack>
         )}
       </VStack>
+
+      <Box
+        onPress={setLeftImage}
+        position="absolute"
+        left={1}
+        top="calc(50vh - 100px)"
+        backgroundColor="white"
+        cursor="pointer"
+      >
+        <ChevronLeft size={30} />
+      </Box>
+      <Box
+        onPress={setRightImage}
+        position="absolute"
+        right={1}
+        top="calc(50vh - 100px)"
+        backgroundColor="white"
+        cursor="pointer"
+      >
+        <ChevronRight size={30} />
+      </Box>
       <PhotosList
         photos={photosList}
         onPhotoPress={(photo, index) => {
@@ -395,15 +393,18 @@ export const Lightbox = ({
           })
         }}
         onFetchMore={() => {
-          if (hasMore) {
+          if (hasMore && !isFetchingMore) {
+            isFetchingMore = true
             fetchMore({
               args: pagination,
-            }).then((data) => {
-              setPagination({
-                limit: pagination.limit,
-                offset: pagination.offset + data.length,
-              })
             })
+              .then((data) => {
+                setPagination({
+                  limit: pagination.limit,
+                  offset: pagination.offset + data.length,
+                })
+              })
+              .catch(console.error)
           } else {
             // No more photos left
           }
