@@ -2,9 +2,7 @@ import { fullyIdle, series } from '@dish/async'
 import {
   LngLat,
   RestaurantOnlyIds,
-  Tag,
   TopCuisine,
-  TopCuisineDish,
   getHomeDishes,
   graphql,
   order_by,
@@ -12,9 +10,7 @@ import {
   tag,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers/src'
-import { useRouter } from '@dish/router'
-import { getStore } from '@dish/use-store'
-import { chunk, partition, sortBy, uniqBy, unzip, zip } from 'lodash'
+import { chunk, partition, sortBy, uniqBy, zip } from 'lodash'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
 import { useQuery } from 'react-query'
@@ -32,7 +28,6 @@ import { drawerWidthMax, searchBarHeight } from '../../constants'
 import { useRegionQuery } from '../../helpers/fetchRegion'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
-import { useAsyncEffect } from '../../hooks/useAsync'
 import { useIsNarrow } from '../../hooks/useIs'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -55,12 +50,9 @@ import {
 } from '../restaurant/CardFrame'
 import { RestaurantButton } from '../restaurant/RestaurantButton'
 import { RestaurantCard } from '../restaurant/RestaurantCard'
-import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { peachAvatar } from '../search/avatar'
 import { StackViewProps } from '../StackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
-
-// top dishes
 
 type Props = StackViewProps<HomeStateItemHome>
 
@@ -132,6 +124,17 @@ export default memo(function HomePage(props: Props) {
     }
   })
 
+  // center map to region
+  useEffect(() => {
+    if (!region.data) return
+    const { center, span } = region.data
+    if (!center || !span) return
+    om.actions.home.updateCurrentState({
+      center,
+      span,
+    })
+  }, [region.data])
+
   // on load home clear search effect!
   useEffect(() => {
     // not on first load
@@ -195,7 +198,7 @@ export default memo(function HomePage(props: Props) {
                   color="#000"
                   fontWeight="300"
                 >
-                  {region?.name ?? '...'}
+                  {region.data?.name.toLowerCase() ?? '...'}
                 </Text>
               </VStack>
               <Spacer size="xl" />
@@ -207,7 +210,7 @@ export default memo(function HomePage(props: Props) {
                   </>
                 }
               >
-                <HomePageContent {...props} />
+                <HomePageContent {...props} region={region.data} />
               </Suspense>
             </VStack>
           </VStack>
