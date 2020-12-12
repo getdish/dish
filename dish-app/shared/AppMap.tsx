@@ -1,6 +1,6 @@
-import { LngLat, Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
+import { Restaurant, RestaurantOnlyIds, graphql } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { getStore, useStore } from '@dish/use-store'
+import { useStore } from '@dish/use-store'
 import { debounce, isEqual, uniqBy } from 'lodash'
 import React, {
   Suspense,
@@ -21,7 +21,7 @@ import {
 
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { pageWidthMax, searchBarHeight, zIndexMap } from './constants'
-import { getLngLat, getMinLngLat } from './helpers/getLngLat'
+import { getLngLat } from './helpers/getLngLat'
 import { getRestaurantRating } from './helpers/getRestaurantRating'
 import { getWindowHeight } from './helpers/getWindow'
 import { getIs, useIsNarrow } from './hooks/useIs'
