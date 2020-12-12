@@ -19,12 +19,8 @@ import {
 } from 'snackui'
 
 import { BottomDrawerStore } from './BottomDrawerStore'
-import {
-  isNative,
-  isWeb,
-  searchBarHeight,
-  searchBarTopOffset,
-} from './constants'
+import { searchBarHeight, searchBarTopOffset } from './constants'
+import { isNative, isWeb } from './constants'
 import { fuzzySearch } from './helpers/fuzzySearch'
 import { getFuzzyMatchQuery } from './helpers/getFuzzyMatchQuery'
 import { getWindowHeight } from './helpers/getWindow'

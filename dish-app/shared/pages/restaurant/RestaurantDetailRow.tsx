@@ -126,12 +126,6 @@ export const RestaurantDetailRow = memo(
                   </VStack>
                 </VStack>
                 {after}
-                {!sizeSm && index !== rows.length - 1 && (
-                  <>
-                    {/* <Spacer size="xl" /> */}
-                    {/* <Divider vertical height={25} /> */}
-                  </>
-                )}
               </HStack>
             ))}
         </HStack>

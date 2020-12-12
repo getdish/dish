@@ -1,6 +1,7 @@
 import { OnInitialize, rehydrate } from 'overmind'
 
-import { OVERMIND_MUTATIONS, isWeb } from '../constants'
+import { isWeb } from '../constants'
+import { OVERMIND_MUTATIONS } from '../overmindMutations'
 import { addTagsToCache } from './allTags'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './localTags'
 

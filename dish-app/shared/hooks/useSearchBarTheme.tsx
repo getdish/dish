@@ -7,9 +7,9 @@ export const useSearchBarTheme = () => {
   const rgb = useCurrentLenseColor()
   return {
     theme: isSmall ? 'light' : 'dark',
-    color: '#fff', //isSmall ? rgbString(rgb) ?? '#444' : '#fff',
-    background: '#000', //isSmall ? '#fff' : rgbString(rgb),
-    backgroundRgb: [20, 20, 20], //isSmall ? [255, 255, 255] : rgb,
+    color: isSmall ? rgbString(rgb) ?? '#444' : '#fff',
+    background: isSmall ? '#fff' : '#000',
+    backgroundRgb: isSmall ? [255, 255, 255] : [20, 20, 20], //isSmall ? [255, 255, 255] : rgb,
     isSmall,
   }
 }

@@ -7,8 +7,8 @@ import invariant from 'invariant'
 import { TextStyle, ViewStyle } from 'react-native'
 import * as AllExports from 'snackui/node'
 
-import { pseudos } from '../getStylesAtomic'
-import { ExtractStylesOptions } from '../types'
+import { pseudos } from '../css/getStylesAtomic'
+import { PluginOptions } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
 import {
   Ternary,
@@ -24,8 +24,6 @@ const UNTOUCHED_PROPS = {
   style: true,
   className: true,
 }
-
-type ClassNameObject = t.StringLiteral | t.Expression
 
 type OptimizableComponent = Function & {
   staticConfig: {
@@ -66,37 +64,32 @@ type ExtractTagProps = {
   }
 }
 
-export function createExtractor({
-  shouldPrintDebug = false,
-  options,
-  sourceFileName,
-}: {
+export type Extractor = ReturnType<typeof createExtractor>
+
+export type ExtractorParseProps = PluginOptions & {
+  sourceFileName?: string
   shouldPrintDebug?: boolean
-  options: ExtractStylesOptions
-  sourceFileName: string
-}) {
+  onExtractTag: (props: ExtractTagProps) => void
+  getFlattenedNode: (props: { isTextView: boolean }) => string
+}
+
+export function createExtractor() {
   const bindingCache: Record<string, string | null> = {}
-
-  options = {
-    evaluateVars: true,
-    ...options,
-  }
-
-  const deoptProps = new Set(options.deoptProps ?? [])
-  const excludeProps = new Set(options.excludeProps ?? [])
-
-  if (shouldPrintDebug) {
-    console.log('createExtractor', { options })
-  }
-
   return {
     parse: (
       path: NodePath<t.Program>,
-      props: {
-        onExtractTag: (props: ExtractTagProps) => void
-        getFlattenedNode: (props: { isTextView: boolean }) => string
-      }
+      {
+        evaluateImportsWhitelist = [],
+        evaluateVars = true,
+        shouldPrintDebug = false,
+        sourceFileName = '',
+        onExtractTag,
+        getFlattenedNode,
+        ...props
+      }: ExtractorParseProps
     ) => {
+      const deoptProps = new Set(props.deoptProps ?? [])
+      const excludeProps = new Set(props.excludeProps ?? [])
       let doesUseValidImport = false
 
       /**
@@ -113,6 +106,10 @@ export function createExtractor({
           }
         },
       })
+
+      if (shouldPrintDebug) {
+        console.log(sourceFileName, { doesUseValidImport })
+      }
 
       if (!doesUseValidImport) {
         return null
@@ -142,7 +139,7 @@ export function createExtractor({
           const originalNodeName = node.name.name
           const isTextView = originalNodeName.endsWith('Text')
           const validStyles = staticConfig?.validStyles ?? {}
-          const domNode = props.getFlattenedNode({ isTextView })
+          const domNode = getFlattenedNode({ isTextView })
 
           if (shouldPrintDebug) {
             console.log(`\n<${originalNodeName} />`)
@@ -156,19 +153,20 @@ export function createExtractor({
             )
           }
 
-          const attemptEval = !options.evaluateVars
+          // Generate scope object at this level
+          const staticNamespace = getStaticBindingsForScope(
+            traversePath.scope,
+            evaluateImportsWhitelist ?? ['constants.js'],
+            sourceFileName,
+            bindingCache,
+            shouldPrintDebug
+          )
+
+          const attemptEval = !evaluateVars
             ? evaluateAstNode
             : (() => {
-                // Generate scope object at this level
-                const staticNamespace = getStaticBindingsForScope(
-                  traversePath.scope,
-                  options.evaluateImportsWhitelist ?? ['constants.js'],
-                  sourceFileName,
-                  bindingCache,
-                  shouldPrintDebug
-                )
                 if (shouldPrintDebug) {
-                  console.log('  staticNamespace', staticNamespace)
+                  console.log('  attemptEval staticNamespace', staticNamespace)
                 }
                 const evalContext = vm.createContext(staticNamespace)
 
@@ -271,10 +269,15 @@ export function createExtractor({
               }
 
               if (aStyle !== FAILED_EVAL && cStyle !== FAILED_EVAL) {
+                const alt = omitExcludeStyles(aStyle)
+                const cons = omitExcludeStyles(cStyle)
+                if (shouldPrintDebug) {
+                  console.log(' conditionalExpression', test, alt, cons)
+                }
                 staticTernaries.push({
                   test,
-                  alternate: omitExcludeStyles(aStyle),
-                  consequent: omitExcludeStyles(cStyle),
+                  alternate: alt,
+                  consequent: cons,
                 })
                 return
               } else {
@@ -283,18 +286,28 @@ export function createExtractor({
             }
 
             // <VStack {...isSmall && { color: 'red' }}
-            if (t.isLogicalExpression(attr.argument)) {
+            if (
+              t.isLogicalExpression(attr.argument) &&
+              attr.argument.operator === '&&'
+            ) {
               if (isStyleObject(attr.argument.right)) {
                 const spreadStyle = attemptEvalSafe(attr.argument.right)
                 if (spreadStyle !== FAILED_EVAL) {
-                  const test = (attr.argument as t.LogicalExpression).left
                   if (hasDeopt(spreadStyle)) {
                     shouldDeopt = true
                     return
                   }
+                  const test = (attr.argument as t.LogicalExpression).left
+                  if (!attemptEvalSafe(test)) {
+                    if (shouldPrintDebug) {
+                      console.log('evaluated false, leave empty')
+                    }
+                    return
+                  }
+                  const cons = omitExcludeStyles(spreadStyle)
                   staticTernaries.push({
                     test,
-                    consequent: omitExcludeStyles(spreadStyle),
+                    consequent: cons,
                     alternate: null,
                   })
                   return
@@ -341,7 +354,9 @@ export function createExtractor({
           })
 
           if (couldntParse || shouldDeopt) {
-            console.log('  COULDNT PARSE / DEOPT')
+            if (shouldPrintDebug) {
+              console.log(`  `, { couldntParse, shouldDeopt })
+            }
             return
           }
 
@@ -550,16 +565,19 @@ export function createExtractor({
               cond: t.ConditionalExpression
             ) {
               if (getStaticConditional(cond)) {
-                const alternate = attemptEval(
+                const alt = attemptEval(
                   t.binaryExpression(operator, staticExpr, cond.alternate)
                 )
-                const consequent = attemptEval(
+                const cons = attemptEval(
                   t.binaryExpression(operator, staticExpr, cond.consequent)
                 )
+                if (shouldPrintDebug) {
+                  console.log('  binaryConditional', cond.test, cons, alt)
+                }
                 staticTernaries.push({
                   test: cond.test,
-                  alternate: { [name]: alternate },
-                  consequent: { [name]: consequent },
+                  alternate: { [name]: alt },
+                  consequent: { [name]: cons },
                 })
                 return true
               }
@@ -570,6 +588,9 @@ export function createExtractor({
                 try {
                   const aVal = attemptEval(value.alternate)
                   const cVal = attemptEval(value.consequent)
+                  if (shouldPrintDebug) {
+                    console.log('  staticConditional', value.test, cVal, aVal)
+                  }
                   return {
                     test: value.test,
                     consequent: { [name]: cVal },
@@ -592,6 +613,9 @@ export function createExtractor({
                 if (value.operator === '&&') {
                   try {
                     const val = attemptEval(value.right)
+                    if (shouldPrintDebug) {
+                      console.log('  staticLogical', value.left, name, val)
+                    }
                     return {
                       test: value.left,
                       consequent: { [name]: val },
@@ -808,7 +832,7 @@ export function createExtractor({
 
           const ternaries = extractStaticTernaries(staticTernaries)
 
-          props.onExtractTag({
+          onExtractTag({
             attemptEval,
             jsxPath: traversePath,
             node,

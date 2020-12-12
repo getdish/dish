@@ -3,8 +3,9 @@ import template from '@babel/template'
 import { Visitor } from '@babel/traverse'
 import * as t from '@babel/types'
 
-import { createExtractor } from './ast/createExtractor'
-import { literalToAst } from './ast/literalToAst'
+import { createExtractor } from './extractor/createExtractor'
+import { literalToAst } from './extractor/literalToAst'
+import { PluginOptions } from './types'
 
 const importNativeView = template(`
 import { View as __ReactNativeView, Text as __ReactNativeText } from 'react-native';
@@ -14,38 +15,31 @@ const importStyleSheet = template(`
 import { StyleSheet as ReactNativeStyleSheet } from 'react-native';
 `)
 
-export const babelPlugin = declare((api): {
+const extractor = createExtractor()
+
+export const babelPlugin = declare((api, options: PluginOptions): {
   name: string
   visitor: Visitor
 } => {
   api.assertVersion(7)
-
-  const extractor = createExtractor({
-    shouldPrintDebug: process.env.DEBUG ? true : false,
-    options: {
-      evaluateImportsWhitelist: ['constants.ts'],
-      deoptProps: ['hoverStyle', 'pressStyle', 'focusStyle', 'pointerEvents'],
-      excludeProps: [
-        'display',
-        'userSelect',
-        'whiteSpace',
-        'textOverflow',
-        'cursor',
-        'contain',
-      ],
-    },
-    sourceFileName: '',
-  })
 
   return {
     name: 'snackui-stylesheet',
 
     visitor: {
       Program: {
-        enter(root) {
+        enter(this: any, root, state) {
+          const sourceFileName = this.file.opts.filename
+
+          if (options.exclude?.test(sourceFileName)) {
+            return
+          }
+
           let hasImportedView = false
           let sheetStyles = {}
           const sheetIdentifier = root.scope.generateUidIdentifier('sheet')
+          const shouldPrintDebug =
+            root.node.body[0]?.leadingComments?.[0]?.value === ' debug'
 
           function addSheetStyle(style: any) {
             const key = `${Object.keys(sheetStyles).length}`
@@ -61,6 +55,24 @@ export const babelPlugin = declare((api): {
           }
 
           extractor.parse(root, {
+            sourceFileName,
+            shouldPrintDebug,
+            evaluateImportsWhitelist: ['constants.js', 'colors.js'],
+            deoptProps: [
+              'hoverStyle',
+              'pressStyle',
+              'focusStyle',
+              'pointerEvents',
+            ],
+            excludeProps: [
+              'display',
+              'userSelect',
+              'whiteSpace',
+              'textOverflow',
+              'cursor',
+              'contain',
+            ],
+            ...options,
             getFlattenedNode(props) {
               if (!hasImportedView) {
                 hasImportedView = true

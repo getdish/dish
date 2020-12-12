@@ -12,7 +12,12 @@ module.exports = function (api) {
   return {
     presets: ['module:metro-react-native-babel-preset'],
     plugins: [
-      '@snackui/babel-plugin',
+      [
+        '@snackui/babel-plugin',
+        {
+          exclude: /node_modules/,
+        },
+      ],
       'transform-inline-environment-variables',
     ],
   }

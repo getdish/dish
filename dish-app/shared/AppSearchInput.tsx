@@ -13,7 +13,8 @@ import {
 import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from 'snackui'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
-import { isWeb, searchBarHeight } from './constants'
+import { searchBarHeight } from './constants'
+import { isWeb } from './constants'
 import { DishHorizonView } from './DishHorizonView'
 import { isWebIOS } from './helpers/isIOS'
 import { getIs, useIsNarrow } from './hooks/useIs'

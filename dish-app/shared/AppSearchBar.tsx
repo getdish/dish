@@ -7,14 +7,7 @@ import {
 } from '@dish/react-feather'
 import React, { Suspense, memo } from 'react'
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
-import {
-  AbsoluteVStack,
-  Circle,
-  HStack,
-  LinearGradient,
-  Spacer,
-  VStack,
-} from 'snackui'
+import { AbsoluteVStack, HStack, LinearGradient, Spacer, VStack } from 'snackui'
 
 import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
@@ -173,7 +166,8 @@ const AppSearchBarContents = memo(() => {
       <HStack
         className="ease-in-out"
         position="relative"
-        width="43%"
+        width={isReallySmall ? 'auto' : '43%'}
+        flex={1}
         maxWidth={
           isReallySmall
             ? 'auto'
