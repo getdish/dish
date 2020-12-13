@@ -1,9 +1,9 @@
 import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, LoadingItems, Modal, VStack } from 'snackui'
 
-import { DarkModal } from '../../DarkModal'
 import { useOvermind } from '../../state/useOvermind'
 import { UserOnboard } from '../../UserOnboard'
+import { DarkModal } from '../../views/DarkModal'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 
 export default memo(function UserEditPage() {

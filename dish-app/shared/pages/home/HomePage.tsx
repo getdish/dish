@@ -165,9 +165,9 @@ export default memo(function HomePage(props: Props) {
           right={0}
           shadowColor="#fff"
           shadowOpacity={1}
+          shadowRadius={10}
           borderBottomColor="#f8f8f8"
           borderBottomWidth={1}
-          shadowRadius={10}
           height={searchBarHeight + 10}
         />
       </AbsoluteVStack>

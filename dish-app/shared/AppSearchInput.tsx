@@ -13,9 +13,7 @@ import {
 import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from 'snackui'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
-import { searchBarHeight } from './constants'
-import { isWeb } from './constants'
-import { DishHorizonView } from './DishHorizonView'
+import { isWeb, searchBarHeight } from './constants'
 import { isWebIOS } from './helpers/isIOS'
 import { getIs, useIsNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
@@ -159,12 +157,6 @@ export const AppSearchInput = memo(() => {
     handleKeyPress(e, inputStore)
   }, [])
 
-  // this was going to measure and ensure scrollview width
-  // but i had to restart webpack and for some reason it works fine now with just css
-  // useEffect(() => {
-  //   console.log('searchInputContainer', searchInputContainer)
-  // }, [])
-
   return (
     <AppAutocompleteHoverableInput
       input={input}
@@ -174,7 +166,6 @@ export const AppSearchInput = memo(() => {
         borderRadius: 100,
       })}
     >
-      {/* {!isSmall && <DishHorizonView />} */}
       <HStack
         alignItems="center"
         borderRadius={100}
@@ -301,30 +292,6 @@ export const AppSearchInput = memo(() => {
     </AppAutocompleteHoverableInput>
   )
 })
-
-// function searchInputEffect(input: HTMLInputElement) {
-//   // debounce so it happens after location if location input is next active
-//   const hideAutocomplete = _.debounce(() => {
-//     if (omStatic.state.home.showAutocomplete === 'search') {
-//       omStatic.actions.home.setShowAutocomplete(false)
-//     }
-//   }, 100)
-//   const handleBlur = () => {
-//     hideAutocomplete()
-//     isFocused = false
-//   }
-
-//   if ('addEventListener' in input) {
-//     input.addEventListener('keydown', handleKeyPress)
-//     input.addEventListener('click', handleClick)
-//     input.addEventListener('blur', handleBlur)
-//     return () => {
-//       input.removeEventListener('keydown', handleKeyPress)
-//       input.removeEventListener('click', handleClick)
-//       input.removeEventListener('blur', handleBlur)
-//     }
-//   }
-// }
 
 const SearchCancelButton = memo(() => {
   const om = useOvermind()
