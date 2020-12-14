@@ -92,16 +92,11 @@ const SearchPageNavBarContent = memo(({ stateId }: { stateId: string }) => {
           justifyContent="space-between"
           height="100%"
         >
-          <HStack
-            height="100%"
-            marginTop={10}
-            alignItems="center"
-            justifyContent="center"
-          >
+          <HStack height="100%" alignItems="center" justifyContent="center">
             <HomeLenseBar activeTags={state.activeTags} />
           </HStack>
 
-          <VStack flex={1} minWidth={20} />
+          <VStack flex={1} />
 
           <SearchPageFilterBar activeTags={state.activeTags} />
         </HStack>
