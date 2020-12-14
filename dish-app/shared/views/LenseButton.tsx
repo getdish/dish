@@ -34,7 +34,7 @@ export const LenseButton = memoIsEqualDeep(
     const iconSize = sizePx * (isActive ? 0.7 : 0.6) * scale
     const scaledSize = sizePx * scale
     const marginVertical = -4 * scale
-    const color = isSmall || isActive ? '#fff' : lenseColorDark
+    const color = isSmall || isActive ? '#ffffff' : lenseColorDark
     const lineHeight = sizePx * scale * 0.39
 
     return (
