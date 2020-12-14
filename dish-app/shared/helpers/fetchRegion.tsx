@@ -1,7 +1,8 @@
 import { LngLat, SEARCH_DOMAIN } from '@dish/graph'
-import { QueryConfig, queryCache, useQuery } from 'react-query'
+import { UseQueryOptions, useQuery } from 'react-query'
 
 import { bboxToSpan } from './bboxToSpan'
+import { queryClient } from './queryClient'
 
 export type Point = [number, number]
 
@@ -44,7 +45,7 @@ export const fetchRegion = async (slug: string) => {
         center,
         span,
       }
-      queryCache.setQueryData(key, response)
+      queryClient.setQueryData(key, response)
       return response
     }
 
@@ -55,6 +56,6 @@ export const fetchRegion = async (slug: string) => {
   }
 }
 
-export const useRegionQuery = (slug: string, config?: QueryConfig<any>) => {
+export const useRegionQuery = (slug: string, config?: UseQueryOptions<any>) => {
   return useQuery(key, () => fetchRegion(slug), config)
 }
