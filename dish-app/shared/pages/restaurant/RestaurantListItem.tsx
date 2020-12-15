@@ -23,6 +23,7 @@ import {
   Tooltip,
   VStack,
   useGet,
+  useMedia,
 } from 'snackui'
 
 import { bgLight, bgLightHover, bgLightPress, brandColor } from '../../colors'
@@ -31,7 +32,6 @@ import { getActiveTagSlugs } from '../../helpers/getActiveTagSlugs'
 import { getRestaurantDishes } from '../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../helpers/isIOS'
 import { numberFormat } from '../../helpers/numberFormat'
-import { useIsNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
 import { allTags } from '../../state/allTags'
@@ -153,7 +153,7 @@ const RestaurantListItemContent = memo(
       searchState,
     } = props
     const pad = 18
-    const isSmall = useIsNarrow()
+    const media = useMedia()
     const restaurant = useRestaurantQuery(restaurantSlug)
 
     restaurant.location
@@ -189,15 +189,15 @@ const RestaurantListItemContent = memo(
     }, [props.rank])
 
     const contentSideProps: StackProps = {
-      width: isSmall ? '75%' : '60%',
-      minWidth: isSmall
+      width: media.sm ? '75%' : '60%',
+      minWidth: media.sm
         ? isWeb
           ? '40vw'
           : Dimensions.get('window').width * 0.65
         : 320,
       maxWidth: Math.min(
         Dimensions.get('window').width * 0.65,
-        isSmall ? 360 : 420
+        media.sm ? 360 : 420
       ),
     }
 
@@ -217,7 +217,7 @@ const RestaurantListItemContent = memo(
         : nameLen > 15
         ? 0.975
         : 1.15
-    const titleFontSize = 1.2 * (isSmall ? 18 : 22) * titleFontScale
+    const titleFontSize = 1.2 * (media.sm ? 18 : 22) * titleFontScale
     const titleHeight = titleFontSize + 8 * 2
 
     return (
@@ -350,7 +350,7 @@ const RestaurantListItemContent = memo(
               zIndex={-1}
               paddingLeft={60}
               paddingRight={20}
-              marginTop={isSmall ? -6 : 0}
+              marginTop={media.sm ? -6 : 0}
               transform={[{ translateY: -10 }]}
             >
               <HStack alignItems="center" cursor="pointer" spacing="lg">
@@ -459,7 +459,7 @@ const RestaurantListItemContent = memo(
                   <Spacer />
 
                   <RestaurantDeliveryButtons
-                    label={isSmall ? '' : '🚗'}
+                    label="🚗"
                     restaurantSlug={restaurantSlug}
                   />
 

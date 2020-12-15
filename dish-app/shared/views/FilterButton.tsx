@@ -2,9 +2,8 @@ import { Clock, DollarSign, ShoppingBag } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
 import type { NavigableTag } from 'shared/state/NavigableTag'
-import { Box, HStack, HoverablePopover, Text, VStack } from 'snackui'
+import { Box, HStack, HoverablePopover, Text, VStack, useMedia } from 'snackui'
 
-import { useIsNarrow } from '../hooks/useIs'
 import { tagDisplayNames } from '../state/tagMeta'
 import { useOvermind } from '../state/useOvermind'
 import { thirdPartyCrawlSources } from '../thirdPartyCrawlSources'
@@ -25,9 +24,9 @@ export const FilterButton = memo(
     isActive: boolean
     color?: string
   }) => {
-    const isSmall = useIsNarrow()
-    const iconColor = isSmall ? (isActive ? '#000' : '#fff') : color
-    const textColor = isSmall ? color : isActive ? '#000' : color
+    const media = useMedia()
+    const iconColor = media.sm ? (isActive ? '#000' : '#fff') : color
+    const textColor = media.sm ? color : isActive ? '#000' : color
 
     let content: any =
       rest.children ?? (tag.name ? tagDisplayNames[tag.name] : null) ?? tag.name
@@ -35,17 +34,17 @@ export const FilterButton = memo(
     const iconElement = (() => {
       switch (tag.slug) {
         case 'filters__open':
-          return <Clock size={isSmall ? 22 : 18} color={iconColor} />
+          return <Clock size={media.sm ? 22 : 18} color={iconColor} />
         case 'filters__delivery':
-          return <ShoppingBag size={isSmall ? 22 : 18} color={iconColor} />
+          return <ShoppingBag size={media.sm ? 22 : 18} color={iconColor} />
         case 'filters__price-low':
-          return <DollarSign size={isSmall ? 22 : 18} color={iconColor} />
+          return <DollarSign size={media.sm ? 22 : 18} color={iconColor} />
         default:
           return null
       }
     })()
 
-    if (isSmall) {
+    if (media.sm) {
       content = iconElement
     } else {
       content = (
@@ -62,7 +61,7 @@ export const FilterButton = memo(
       if (tag.name !== 'price-low') {
         content = (
           <HStack>
-            {isSmall ? (
+            {media.sm ? (
               iconElement
             ) : iconElement ? (
               <VStack opacity={0.45} marginRight={6}>
@@ -77,7 +76,7 @@ export const FilterButton = memo(
 
     content = (
       <SmallButton
-        borderColor={isSmall ? 'transparent' : '#eee'}
+        borderColor={media.sm ? 'transparent' : '#eee'}
         fontSize={14}
         fontWeight="700"
         alignItems="center"

@@ -18,7 +18,7 @@ const paddingHorizontal = 16
 export const AppSearchLocationInput = memo(() => {
   const inputStore = useStore(InputStore, { name: 'location' })
   const om = useOvermind()
-  const { theme, color, background, isSmall } = useSearchBarTheme()
+  const { color } = useSearchBarTheme()
   const [locationSearch, setLocationSearch] = useState('')
   const { currentLocationName } = om.state.home.currentState
 

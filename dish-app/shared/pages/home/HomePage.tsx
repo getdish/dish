@@ -10,7 +10,7 @@ import {
   tag,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers/src'
-import { chunk, partition, sortBy, uniqBy, zip } from 'lodash'
+import { capitalize, chunk, partition, sortBy, uniqBy, zip } from 'lodash'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
 import { useQuery } from 'react-query'
@@ -22,13 +22,13 @@ import {
   StackProps,
   Text,
   VStack,
+  useMedia,
 } from 'snackui'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants'
 import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
-import { useIsNarrow } from '../../hooks/useIs'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { sfRegion } from '../../sfRegion'
@@ -91,8 +91,8 @@ type FeedItems =
 
 export default memo(function HomePage(props: Props) {
   const om = useOvermind()
+  const media = useMedia()
   const [isLoaded, setIsLoaded] = useState(false)
-  const isSmall = useIsNarrow()
   const region = useRegionQuery(props.item.region, {
     enabled: !!props.item.region,
   })
@@ -141,6 +141,14 @@ export default memo(function HomePage(props: Props) {
     }
   }, [props.isActive])
 
+  const regionName =
+    region.data?.name
+      .toLowerCase()
+      .replace('ca- ', '')
+      .split(' ')
+      .map((x) => capitalize(x))
+      .join(' ') ?? '...'
+
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
@@ -180,22 +188,18 @@ export default memo(function HomePage(props: Props) {
         <ContentScrollView id="home">
           <VStack flex={1} overflow="hidden" maxWidth="100%">
             <VStack>
-              {/* SPACER ABOVE TITLE */}
-              <VStack
-                pointerEvents="none"
-                height={5 + (isSmall ? 0 : searchBarHeight)}
-              />
+              <HomeTopSpacer />
               <Spacer size="lg" />
               <HomeTopSearches />
               <Spacer />
               <VStack alignItems="center">
                 <Text
                   paddingHorizontal={6}
-                  fontSize={34}
+                  fontSize={media.sm ? 28 : 44}
                   color="#000"
                   fontWeight="300"
                 >
-                  {region.data?.name.toLowerCase() ?? '...'}
+                  {regionName}
                 </Text>
               </VStack>
               <Spacer size="xl" />
@@ -217,6 +221,17 @@ export default memo(function HomePage(props: Props) {
     </>
   )
 })
+
+// TODO tricky snackui extraction
+const HomeTopSpacer = () => {
+  const media = useMedia()
+  return (
+    <VStack
+      pointerEvents="none"
+      height={5 + (media.sm ? 0 : searchBarHeight)}
+    />
+  )
+}
 
 const HomePageContent = memo(
   graphql(function HomePageContent({

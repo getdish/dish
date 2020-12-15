@@ -14,9 +14,11 @@ import {
   HStack,
   Text,
   VStack,
+  getMedia,
   useDebounce,
   useDebounceValue,
   useGet,
+  useMedia,
 } from 'snackui'
 
 import { BottomDrawerStore } from './BottomDrawerStore'
@@ -24,7 +26,6 @@ import { pageWidthMax, searchBarHeight, zIndexMap } from './constants'
 import { getLngLat } from './helpers/getLngLat'
 import { getRestaurantRating } from './helpers/getRestaurantRating'
 import { getWindowHeight } from './helpers/getWindow'
-import { getIs, useIsNarrow } from './hooks/useIs'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { useRestaurantQuery } from './hooks/useRestaurantQuery'
@@ -155,8 +156,8 @@ const AppMapContent = memo(function AppMap({
   restaurants: Restaurant[]
 }) {
   const om = useOvermind()
-  const isSmall = useIsNarrow()
-  const { width, paddingLeft } = useMapSize(isSmall)
+  const media = useMedia()
+  const { width, paddingLeft } = useMapSize(media.sm)
   const [internal, setInternal] = useState(() => ({
     id: omStatic.state.home.selectedRestaurant?.id,
     span: omStatic.state.home.currentState.span,
@@ -276,7 +277,7 @@ const AppMapContent = memo(function AppMap({
   const currentSnapIndex = Math.max(1, delayedIndex)
   const currentSnapPoint = drawerStore.snapPoints[currentSnapIndex]
   const padding = useMemo(() => {
-    return isSmall
+    return media.sm
       ? {
           left: 10,
           top: 10,
@@ -289,7 +290,7 @@ const AppMapContent = memo(function AppMap({
           bottom: 10,
           right: 10,
         }
-  }, [isSmall, paddingLeft, currentSnapPoint])
+  }, [media.sm, paddingLeft, currentSnapPoint])
 
   const features = useMemo(() => {
     return getRestaurantMarkers(
@@ -300,7 +301,7 @@ const AppMapContent = memo(function AppMap({
 
   const handleMoveEnd = useCallback(
     ({ center, span }) => {
-      if (isSmall && (drawerStore.isDragging || drawerStore.snapIndex === 0)) {
+      if (media.sm && (drawerStore.isDragging || drawerStore.snapIndex === 0)) {
         console.log('avoid move stuff when snapped to top')
         return
       }
@@ -321,7 +322,7 @@ const AppMapContent = memo(function AppMap({
       })
       om.actions.home.updateCurrentMapAreaInformation()
     },
-    [isSmall]
+    [media.sm]
   )
 
   const getRestaurants = useGet(restaurants)
@@ -382,7 +383,7 @@ const AppMapContent = memo(function AppMap({
       }
 
       if (router.isRouteActive(route)) {
-        if (getIs('sm')) {
+        if (media.sm) {
           drawerStore.setSnapPoint(0)
         }
       } else {
@@ -409,7 +410,7 @@ const AppMapContent = memo(function AppMap({
       justifyContent="center"
     >
       <HStack height="100%" maxWidth={pageWidthMax} width="100%">
-        {!isSmall && (
+        {!media.sm && (
           <VStack height="100%" flex={2}>
             <Text>
               Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem

@@ -1,19 +1,24 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { AbsoluteVStack, HStack, LinearGradient, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  LinearGradient,
+  VStack,
+  useMedia,
+} from 'snackui'
 
 import { AppSmallDrawer } from './AppSmallDrawer'
 import { bgAlt } from './colors'
 import { searchBarHeight, zIndexDrawer } from './constants'
 import { useAppDrawerWidth } from './hooks/useAppDrawerWidth'
-import { useIsNarrow } from './hooks/useIs'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 
 // import { Reparentable, sendReparentableChild } from 'react-reparenting'
 // const getParent = (isSmall: boolean) => (isSmall ? 'sm' : 'lg')
 
 export function AppContainer(props: { children: any }) {
-  const isSmall = useIsNarrow()
+  const media = useMedia()
   // const [parent, setParent] = useState()
   // const children = [<React.Fragment key="1">{props.children}</React.Fragment>]
 
@@ -27,8 +32,8 @@ export function AppContainer(props: { children: any }) {
 
   return (
     <AbsoluteVStack fullscreen pointerEvents="none" zIndex={zIndexDrawer}>
-      {isSmall && <AppSmallDrawer>{props.children}</AppSmallDrawer>}
-      {!isSmall && <HomeContainerLarge>{props.children}</HomeContainerLarge>}
+      {media.sm && <AppSmallDrawer>{props.children}</AppSmallDrawer>}
+      {!media.sm && <HomeContainerLarge>{props.children}</HomeContainerLarge>}
       {/* {getParent(isSmall)} */}
       {/* <AppSmallDrawer>
         <Reparentable id="sm">{parent === 'sm' ? children : []}</Reparentable>
@@ -42,9 +47,9 @@ export function AppContainer(props: { children: any }) {
 }
 
 const HomeContainerLarge = (props) => {
-  const isSmall = useIsNarrow()
+  const media = useMedia()
   const drawerWidth = useAppDrawerWidth(Infinity)
-  const lastWidth = useLastValueWhen(() => drawerWidth, isSmall)
+  const lastWidth = useLastValueWhen(() => drawerWidth, media.sm)
 
   return (
     <VStack
@@ -56,10 +61,10 @@ const HomeContainerLarge = (props) => {
       top={0}
       pointerEvents="none"
       alignItems="flex-end"
-      className={isSmall ? 'invisible untouchable' : ''}
+      className={media.sm ? 'invisible untouchable' : ''}
     >
       <HStack
-        pointerEvents={isSmall ? 'none' : 'auto'}
+        pointerEvents={media.sm ? 'none' : 'auto'}
         position="absolute"
         top={0}
         bottom={0}
@@ -74,7 +79,7 @@ const HomeContainerLarge = (props) => {
       >
         {/* overlay / under searchbar */}
         <AbsoluteVStack
-          opacity={isSmall ? 0 : 1}
+          opacity={media.sm ? 0 : 1}
           pointerEvents="none"
           fullscreen
           zIndex={1}
@@ -93,7 +98,7 @@ const HomeContainerLarge = (props) => {
           marginLeft="auto"
           position="relative"
           opacity={1}
-          {...(isSmall && {
+          {...(media.sm && {
             opacity: 0,
             pointerEvents: 'none',
           })}

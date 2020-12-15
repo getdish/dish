@@ -28,6 +28,7 @@ export const SmallButton = ({
   tag,
   tags,
   params,
+  href,
   ...rest
 }: SmallButtonProps) => {
   let contents = isStringChild(children) ? (
@@ -85,9 +86,9 @@ export const SmallButton = ({
     </HStack>
   )
 
-  if (name || tag || tags || params) {
+  if (name || tag || tags || params || href) {
     contents = (
-      <Link name={name} tag={tag} tags={tags} params={params}>
+      <Link name={name} tag={tag} tags={tags} params={params} href={href}>
         {contents}
       </Link>
     )

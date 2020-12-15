@@ -1,13 +1,14 @@
-import {
-  ArrowDown,
-  ArrowUp,
-  ChevronLeft,
-  Map,
-  Search,
-} from '@dish/react-feather'
+import { ArrowUp, ChevronLeft, Map, Search } from '@dish/react-feather'
 import React, { Suspense, memo } from 'react'
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
-import { AbsoluteVStack, HStack, LinearGradient, Spacer, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  LinearGradient,
+  Spacer,
+  VStack,
+  useMedia,
+} from 'snackui'
 
 import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
@@ -19,7 +20,6 @@ import {
   zIndexSearchBarFloating,
 } from './constants'
 import { DishHorizonView } from './DishHorizonView'
-import { useIsNarrow, useIsReallyNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { omStatic } from './state/omStatic'
 import { useOvermind } from './state/useOvermind'
@@ -29,14 +29,14 @@ import { LinkButton } from './views/ui/LinkButton'
 const isWeb = Platform.OS === 'web'
 
 export const AppSearchBar = () => {
-  const isSmall = useIsNarrow()
-
-  if (!isSmall) {
-    return null
-  }
-
+  const media = useMedia()
   return (
-    <VStack width="100%" paddingVertical={2} minHeight={searchBarHeight}>
+    <VStack
+      display={media.sm ? 'flex' : 'none'}
+      width="100%"
+      paddingVertical={2}
+      minHeight={searchBarHeight}
+    >
       <AppSearchBarContents />
     </VStack>
   )
@@ -48,11 +48,11 @@ export const parentIds = {
 }
 
 export const AppSearchBarFloating = () => {
-  const isSmall = useIsNarrow()
+  const media = useMedia()
   const { background, backgroundRgb } = useSearchBarTheme()
   const height = searchBarHeight + 4
 
-  if (isSmall) {
+  if (media.sm) {
     return null
   }
 
@@ -61,10 +61,10 @@ export const AppSearchBarFloating = () => {
   //     isInitial.current = false
   //     return
   //   }
-  //   const parent = parentIds[isSmall ? 'large' : 'small']
-  //   const newParent = parentIds[isSmall ? 'small' : 'large']
+  //   const parent = parentIds[media.sm ? 'large' : 'small']
+  //   const newParent = parentIds[media.sm ? 'small' : 'large']
   //   sendReparentableChild(parent, newParent, 0, 0)
-  // }, [isSmall])
+  // }, [media.sm])
 
   return (
     <AbsoluteVStack
@@ -141,8 +141,7 @@ export const AppSearchBarFloating = () => {
 const AppSearchBarContents = memo(() => {
   const om = useOvermind()
   const focus = om.state.home.showAutocomplete
-  const isSmall = useIsNarrow()
-  const isReallySmall = useIsReallyNarrow()
+  const media = useMedia()
   const { color, background } = useSearchBarTheme()
   const showLocation = om.state.home.showAutocomplete === 'location'
 
@@ -161,33 +160,33 @@ const AppSearchBarContents = memo(() => {
         <DishLogoButton />
       </VStack>
 
-      {!isReallySmall && <SearchBarActionButton />}
+      {!media.xs && <SearchBarActionButton />}
 
       <HStack
         className="ease-in-out"
         position="relative"
-        width={isReallySmall ? 'auto' : '43%'}
+        width={media.xs ? 'auto' : '43%'}
         flex={1}
         maxWidth={
-          isReallySmall
+          media.xs
             ? 'auto'
-            : isSmall && om.state.home.showAutocomplete === 'location'
+            : media.sm && om.state.home.showAutocomplete === 'location'
             ? 120
             : '100%'
         }
         alignItems="center"
       >
-        {!isReallySmall && <AppSearchInput />}
+        {!media.xs && <AppSearchInput />}
 
         {/* Search Input Start */}
-        {isReallySmall && !isWeb && (
+        {media.xs && !isWeb && (
           <>
             {showLocation && <AppSearchLocationInput />}
             {!showLocation && <AppSearchInput />}
           </>
         )}
 
-        {isReallySmall && isWeb && (
+        {media.xs && isWeb && (
           <>
             {/* keep both in dom so we have access to ref */}
             <VStack display={showLocation ? 'contents' : 'none'}>
@@ -200,16 +199,16 @@ const AppSearchBarContents = memo(() => {
         )}
       </HStack>
 
-      {!isReallySmall && (
+      {!media.xs && (
         <>
           <Spacer size={6} />
           <VStack
             className="ease-in-out"
             overflow="hidden"
-            minWidth={isSmall ? 240 : 310}
+            minWidth={media.sm ? 240 : 310}
             width="19%"
             maxWidth={
-              isSmall
+              media.sm
                 ? focus === 'search'
                   ? 120
                   : focus === 'location'
@@ -224,11 +223,10 @@ const AppSearchBarContents = memo(() => {
         </>
       )}
 
-      {isReallySmall && (
+      {media.xs && (
         <HStack padding={12}>
           <TouchableOpacity
             onPress={() => {
-              console.log('toggling', showLocation)
               omStatic.actions.home.setShowAutocomplete(
                 showLocation ? 'search' : 'location'
               )
@@ -243,7 +241,7 @@ const AppSearchBarContents = memo(() => {
         </HStack>
       )}
 
-      {!isReallySmall && (
+      {!media.xs && (
         <Suspense fallback={null}>
           <AppMenu />
         </Suspense>
@@ -253,7 +251,7 @@ const AppSearchBarContents = memo(() => {
 })
 
 const SearchBarActionButton = memo(() => {
-  const isSmall = useIsNarrow()
+  // const media = useMedia()
   const { color } = useSearchBarTheme()
   const om = useOvermind()
   const { showAutocomplete } = om.state.home
@@ -262,7 +260,9 @@ const SearchBarActionButton = memo(() => {
 
   const Icon = (() => {
     if (showAutocomplete) {
-      if (isSmall) return ArrowDown
+      // if (media.sm) {
+      //   return ArrowDown
+      // }
       return ArrowUp
     }
     if (om.state.home.states.length === 2) {

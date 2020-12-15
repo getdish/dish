@@ -1,10 +1,9 @@
 import { groupBy, sortBy } from 'lodash'
 import React, { memo } from 'react'
-import { HStack, StackProps } from 'snackui'
+import { HStack, StackProps, useMedia } from 'snackui'
 
 import { rgbString } from '../../helpers/rgbString'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
-import { useIsNarrow } from '../../hooks/useIs'
 import { getTagSlug } from '../../state/getTagSlug'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { tagFilters } from '../../state/localTags'
@@ -14,10 +13,10 @@ import { FilterButton } from '../../views/FilterButton'
 type FilterBarProps = { activeTags: HomeActiveTagsRecord }
 
 export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
-  const isSmall = useIsNarrow()
+  const media = useMedia()
   const color = useCurrentLenseColor()
 
-  if (isSmall) {
+  if (media.sm) {
     return <HomePageFilterBarSmall activeTags={activeTags} />
   }
 

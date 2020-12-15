@@ -1,5 +1,5 @@
 import React from 'react'
-import { StackProps, VStack } from 'snackui'
+import { StackProps, VStack, useMedia } from 'snackui'
 
 import { useCardFrame } from '../home/useCardFrame'
 
@@ -11,9 +11,10 @@ export const CardFrame = ({
   expandable,
   ...props
 }: StackProps & { expandable?: boolean; hoverable?: boolean }) => {
-  const { isReallyNarrow, width, height } = useCardFrame()
+  const { width, height } = useCardFrame()
+  const media = useMedia()
   const cardFrameWidthLarge = width * 2
-  const expanded = !isReallyNarrow && expandable
+  const expanded = !media.xs && expandable
   return (
     <VStack
       className="ease-in-out-faster"

@@ -1,11 +1,10 @@
 import { useStore } from '@dish/use-store'
 import React, { Suspense, memo, useLayoutEffect, useMemo } from 'react'
-import { AnimatedVStack, VStack, useDebounceValue } from 'snackui'
+import { AnimatedVStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
 import { searchBarHeight, searchBarTopOffset } from './constants'
 import { isWeb } from './constants'
 import { getBreadcrumbs } from './helpers/getBreadcrumbs'
-import { useIsNarrow } from './hooks/useIs'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { HomeStateItem, HomeStateItemSimple } from './state/home-types'
 import { useOvermind } from './state/useOvermind'
@@ -71,8 +70,8 @@ const AppStackViewItem = memo(
     isAdding: boolean
   }) => {
     const contentParentStore = useStore(ContentParentStore)
-    const isSmall = useIsNarrow()
-    const top = isSmall
+    const media = useMedia()
+    const top = media.sm
       ? Math.max(0, index - 1) * 5 + (index > 0 ? 5 : 0)
       : index * 5 + (index > 0 ? searchBarHeight + searchBarTopOffset : 0)
     const left = 0

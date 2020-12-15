@@ -1,11 +1,10 @@
 import { Menu } from '@dish/react-feather'
 import { Store, useStore } from '@dish/use-store'
 import React from 'react'
-import { AbsoluteVStack, BlurView, HStack, Modal, VStack } from 'snackui'
+import { AbsoluteVStack, HStack, Modal, VStack, useMedia } from 'snackui'
 
 import { AppMenuContents } from './AppMenuContents'
-import { zIndexDrawer, zIndexMapControls } from './constants'
-import { useIsReallyNarrow } from './hooks/useIs'
+import { zIndexDrawer } from './constants'
 import { useSafeArea } from './hooks/useSafeArea'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 
@@ -22,12 +21,12 @@ class UserMenuStore extends Store {
 }
 
 export const AppMenuFloating = () => {
-  const isReallySmall = useIsReallyNarrow()
+  const media = useMedia()
   const userMenu = useStore(UserMenuStore)
   const safeArea = useSafeArea()
   const { color } = useSearchBarTheme()
 
-  if (!isReallySmall) {
+  if (!media.xs) {
     return null
   }
 

@@ -52,7 +52,7 @@
   },
   "resolutions": {
     "typescript": "4.1.2",
-    "webpack": "5.10.0",
+    "webpack": "5.10.2",
     "terser": "5.3.2",
     "lodash": "4.17.20",
     "resolve": "1.17.0",

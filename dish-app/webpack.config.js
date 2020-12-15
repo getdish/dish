@@ -261,10 +261,10 @@ module.exports = function getWebpackConfig(
 
         ...((isProduction &&
           TARGET != 'ssr' && [
-            new LodashPlugin({
-              // fixes issue i had https://github.com/lodash/lodash/issues/3101
-              shorthands: true,
-            }),
+            // new LodashPlugin({
+            //   // fixes issue i had https://github.com/lodash/lodash/issues/3101
+            //   shorthands: true,
+            // }),
             new ExtractCssChunks({
               esModule: true,
               ignoreOrder: false,
@@ -391,6 +391,9 @@ function babelInclude(inputPath) {
     return true
   }
   if (inputPath.includes('expo-linear-gradient')) {
+    return true
+  }
+  if (inputPath.includes('match-media')) {
     return true
   }
   if (inputPath.includes('react-native-reanimated')) {

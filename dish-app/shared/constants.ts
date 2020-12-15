@@ -12,6 +12,13 @@ export const drawerBorderRadius = 16
 export const drawerWidthMax = 940
 export const drawerExtraLeftScrollSpace = 500
 
+export const listItemMaxSideWidth = drawerWidthMax / 2.5 - 40
+
+export const logoWidth = 1303 * 0.064
+export const logoHeight = 608 * 0.064
+export const logoXsWidth = 723 * 0.044
+export const logoXsHeight = 898 * 0.044
+
 export const pageWidthMax = 2000
 
 export const searchBarTopOffset = 3

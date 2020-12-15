@@ -16,6 +16,7 @@ import {
   VStack,
   prevent,
   useDebounce,
+  useMedia,
 } from 'snackui'
 
 import { BottomDrawerStore } from './BottomDrawerStore'
@@ -29,7 +30,6 @@ import {
   searchLocations,
 } from './helpers/searchLocations'
 import { searchRestaurants } from './helpers/searchRestaurants'
-import { useIsNarrow } from './hooks/useIs'
 import { createAutocomplete } from './state/createAutocomplete'
 import { defaultLocationAutocompleteResults } from './state/defaultLocationAutocompleteResults'
 import { AutocompleteItem, LngLat, ShowAutocomplete } from './state/home-types'
@@ -172,7 +172,7 @@ const AutocompleteContentsInner = memo(
     const drawerStore = useStore(BottomDrawerStore)
     const om = useOvermind()
     const { showAutocomplete } = om.state.home
-    const isSmall = useIsNarrow()
+    const media = useMedia()
     const showLocation = showAutocomplete == 'location'
     const hideAutocomplete = useDebounce(
       () => om.actions.home.setShowAutocomplete(false),
@@ -181,7 +181,7 @@ const AutocompleteContentsInner = memo(
     const top =
       searchBarTopOffset +
       searchBarHeight +
-      (isSmall ? getWindowHeight() * drawerStore.snapPoints[0] : 0)
+      (media.sm ? getWindowHeight() * drawerStore.snapPoints[0] : 0)
 
     return (
       <AnimatedVStack
@@ -201,8 +201,8 @@ const AutocompleteContentsInner = memo(
           alignItems="center"
           pointerEvents="none"
           top={top}
-          paddingTop={isSmall ? 0 : 10}
-          paddingHorizontal={isSmall ? 0 : 15}
+          paddingTop={media.sm ? 0 : 10}
+          paddingHorizontal={media.sm ? 0 : 15}
           onPress={() => {
             om.actions.home.setShowAutocomplete(false)
           }}
@@ -213,7 +213,7 @@ const AutocompleteContentsInner = memo(
             height="100%"
             position="relative"
             pointerEvents="auto"
-            {...(!isSmall && {
+            {...(!media.sm && {
               maxWidth: 540,
               maxHeight: `calc(100vh - ${top + 20}px)`,
               // @ts-ignore
@@ -237,7 +237,7 @@ const AutocompleteContentsInner = memo(
               <VStack
                 className="ease-in-out"
                 position="relative"
-                left={isSmall ? 0 : showLocation ? 250 : -160}
+                left={media.sm ? 0 : showLocation ? 250 : -160}
                 shadowColor="rgba(0,0,0,0.27)"
                 shadowRadius={22}
                 width="100%"
@@ -245,8 +245,8 @@ const AutocompleteContentsInner = memo(
                 height={isWeb ? 'auto' : '100%'}
                 minHeight={200}
                 padding={5}
-                borderRadius={isSmall ? 0 : 10}
-                flex={isSmall ? 1 : 0}
+                borderRadius={media.sm ? 0 : 10}
+                flex={media.sm ? 1 : 0}
                 onPress={() => {
                   om.actions.home.setShowAutocomplete(false)
                 }}

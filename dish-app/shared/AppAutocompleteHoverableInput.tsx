@@ -1,7 +1,6 @@
 import React, { useRef } from 'react'
-import { HStack, Hoverable } from 'snackui'
+import { HStack, Hoverable, useMedia } from 'snackui'
 
-import { useIsNarrow } from './hooks/useIs'
 import { useOvermind } from './state/useOvermind'
 
 export const AppAutocompleteHoverableInput = ({
@@ -20,7 +19,7 @@ export const AppAutocompleteHoverableInput = ({
   const om = useOvermind()
   const tm = useRef<any>(null)
   const tm2 = useRef<any>(null)
-  const isSmall = useIsNarrow()
+  const media = useMedia()
 
   return (
     <Hoverable
@@ -41,7 +40,7 @@ export const AppAutocompleteHoverableInput = ({
     >
       <HStack
         backgroundColor={
-          isSmall ? 'rgba(0,0,0,0.05)' : backgroundColor ?? 'transparent'
+          media.sm ? 'rgba(0,0,0,0.05)' : backgroundColor ?? 'transparent'
         }
         borderRadius={borderRadius}
         width="100%"

@@ -1,10 +1,9 @@
 import { Store, useStore, useStoreSelector } from '@dish/use-store'
 import React, { createContext, forwardRef, useRef } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
-import { VStack } from 'snackui'
+import { VStack, useMedia } from 'snackui'
 
 import { isWeb } from '../constants'
-import { useIsNarrow, useIsReallyNarrow } from '../hooks/useIs'
 import { supportsTouchWeb } from '../platforms'
 import { useOvermind } from '../state/useOvermind'
 
@@ -35,14 +34,14 @@ export const usePreventContentScroll = (id: string) => {
     ContentParentStore,
     (store) => store.activeId === id
   )
-  const isReallySmall = useIsReallyNarrow()
+  const media = useMedia()
   const om = useOvermind()
   if (!isActive) {
     return true
   }
   return (
     (!isWeb || supportsTouchWeb) &&
-    isReallySmall &&
+    media.xs &&
     om.state.home.drawerSnapPoint >= 1
   )
 }
@@ -59,10 +58,9 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
   ({ children, onScrollYThrottled, style, id, ...props }, ref) => {
     const preventScrolling = usePreventContentScroll(id)
     const scrollStore = useStore(ScrollStore, { id })
-    const isSmall = useIsNarrow()
+    const media = useMedia()
     const lastUpdate = useRef<any>(0)
     const finish = useRef<any>(0)
-    const om = useOvermind()
 
     const doUpdate = (y: number, e: any) => {
       clearTimeout(finish.current)
@@ -111,9 +109,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           {children}
 
           {/* for drawer, pad bottom */}
-          <VStack
-            height={isSmall && om.state.home.drawerSnapPoint > 0 ? 300 : 0}
-          />
+          <VStack height={media.sm ? 300 : 0} />
         </ScrollView>
       </ContentScrollContext.Provider>
     )

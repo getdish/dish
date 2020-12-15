@@ -1,3 +1,4 @@
+// debug
 import { sleep } from '@dish/async'
 import { ArrowUp } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'
@@ -28,6 +29,7 @@ import {
   Text,
   VStack,
   combineRefs,
+  useMedia,
 } from 'snackui'
 
 import { AppPortalItem } from '../../AppPortal'
@@ -35,7 +37,6 @@ import { isWeb } from '../../constants'
 import { rgbString } from '../../helpers/rgbString'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
-import { useIsNarrow } from '../../hooks/useIs'
 import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import {
@@ -193,18 +194,17 @@ const SearchNavBarContainer = ({
   isActive: boolean
   id: string
 }) => {
-  const isSmall = useIsNarrow()
+  const media = useMedia()
+  let contents = <SearchPageNavBar id={id} />
 
-  if (!isSmall) {
+  if (!media.sm) {
     return (
       <>
-        <SearchPageNavBar id={id} />
+        {contents}
         <VStack width={100} height={10} />
       </>
     )
   }
-
-  let contents = <SearchPageNavBar id={id} />
 
   if (!isWeb) {
     contents = (
@@ -214,9 +214,12 @@ const SearchNavBarContainer = ({
     )
   }
 
+  if (!media.sm) {
+  }
+
   return (
     <AppPortalItem key={isActive ? '1' : '0'}>
-      {isActive ? contents : null}
+      {!!isActive && <>{contents}</>}
     </AppPortalItem>
   )
 }
@@ -321,7 +324,7 @@ type SearchPageScrollViewProps = ScrollViewProps & {
 const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
   ({ children, onSizeChanged, ...props }, ref) => {
     const curProps = useContext(SearchPagePropsContext)
-    const isSmall = useIsNarrow()
+    const media = useMedia()
     const { title, subTitle, pageTitleElements } = getTitleForState(
       curProps.item,
       {
@@ -339,7 +342,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         : titleLen > 50
         ? 0.9
         : 1
-    const titleFontSize = 26 * titleScale * (isSmall ? 0.75 : 1.2)
+    const titleFontSize = 26 * titleScale * (media.sm ? 0.75 : 1.2)
     const lenseColor = useCurrentLenseColor()
     const scrollRef = useRef<ScrollView>()
 
@@ -382,7 +385,8 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         >
           <HStack
             paddingHorizontal={15}
-            paddingTop={isSmall ? 12 : 12 + 52 + 10}
+            // TODO snackui verify working
+            paddingTop={media.sm ? 12 : 12 + 52 + 10}
             paddingBottom={12}
             overflow="hidden"
             justifyContent="center"

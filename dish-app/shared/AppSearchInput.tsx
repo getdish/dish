@@ -10,12 +10,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from 'snackui'
+import {
+  HStack,
+  Spacer,
+  Toast,
+  VStack,
+  getMedia,
+  useGet,
+  useMedia,
+  useOnMount,
+} from 'snackui'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { isWeb, searchBarHeight } from './constants'
 import { isWebIOS } from './helpers/isIOS'
-import { getIs, useIsNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
@@ -86,7 +94,8 @@ export const isSearchInputFocused = () => {
 export const AppSearchInput = memo(() => {
   const inputStore = useStore(InputStore, { name: 'search' })
   const om = useOvermind()
-  const { color, backgroundRgb, isSmall } = useSearchBarTheme()
+  const { color, backgroundRgb } = useSearchBarTheme()
+  const media = useMedia()
   const [search, setSearch] = useState('')
   const getSearch = useGet(search)
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
@@ -104,7 +113,7 @@ export const AppSearchInput = memo(() => {
     return series([
       () => fullyIdle({ max: 1000 }),
       () => {
-        if (!getIs('sm')) {
+        if (!getMedia().sm) {
           focusSearchInput()
         }
       },
@@ -162,7 +171,7 @@ export const AppSearchInput = memo(() => {
       input={input}
       autocompleteTarget="search"
       backgroundColor="rgba(5,5,5,0.6)"
-      {...(!isSmall && {
+      {...(!media.sm && {
         borderRadius: 100,
       })}
     >
@@ -272,7 +281,7 @@ export const AppSearchInput = memo(() => {
                     {
                       color,
                       flex: 1,
-                      fontSize: isSmall ? 18 : 20,
+                      fontSize: media.sm ? 18 : 20,
                       fontWeight: '500',
                       height,
                       lineHeight: height * 0.45,
@@ -298,7 +307,7 @@ const SearchCancelButton = memo(() => {
   const hasSearch = om.state.home.currentStateSearchQuery !== ''
   const hasSearchTags = !!om.state.home.searchBarTags.length
   const isActive = hasSearch || hasSearchTags
-  const isSmall = useIsNarrow()
+  const media = useMedia()
   return (
     <VStack
       opacity={isActive ? 0.6 : 0}
@@ -317,7 +326,11 @@ const SearchCancelButton = memo(() => {
         }
       }}
     >
-      <X size={16} color={isSmall ? '#888' : '#fff'} style={{ marginTop: 1 }} />
+      <X
+        size={16}
+        color={media.sm ? '#888' : '#fff'}
+        style={{ marginTop: 1 }}
+      />
     </VStack>
   )
 })

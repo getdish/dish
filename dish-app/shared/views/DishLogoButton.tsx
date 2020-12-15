@@ -1,15 +1,13 @@
 import React, { memo } from 'react'
-import { AbsoluteVStack, VStack } from 'snackui'
+import { AbsoluteVStack, VStack, useMedia } from 'snackui'
 
-import { useIsReallyNarrow } from '../hooks/useIs'
-import { Logo, LogoColor, LogoSmall } from './Logo'
-import { logoStyles } from './logoStyles'
+import { logoHeight, logoWidth, logoXsHeight, logoXsWidth } from '../constants'
+import { LogoColor, LogoSmall } from './Logo'
 import { LinkButton } from './ui/LinkButton'
 import { LinkButtonProps } from './ui/LinkProps'
 
 const linkButtonProps: LinkButtonProps = {
   className: 'ease-in-out-fast',
-  opacity: 0,
   name: 'home',
   hoverStyle: {
     transform: [{ scale: 1.05 }],
@@ -21,33 +19,33 @@ const linkButtonProps: LinkButtonProps = {
 }
 
 export const DishLogoButton = memo(() => {
-  const isReallySmall = useIsReallyNarrow()
+  const media = useMedia()
   return (
     <VStack
       className="ease-in-out-fast"
-      width={
-        isReallySmall ? logoStyles.reallySmall.width : logoStyles.default.width
-      }
-      height={logoStyles.default.height}
+      width={media.xs ? logoXsWidth : logoWidth}
+      height={logoHeight}
     >
-      <LinkButton
-        {...linkButtonProps}
-        {...logoStyles.default}
-        opacity={isReallySmall ? 0 : 1}
-        pointerEvents={isReallySmall ? 'none' : 'auto'}
+      <VStack
+        opacity={media.xs ? 0 : 1}
+        pointerEvents={media.xs ? 'none' : 'auto'}
       >
-        <LogoColor />
-      </LinkButton>
+        <LinkButton {...linkButtonProps}>
+          <LogoColor />
+        </LinkButton>
+      </VStack>
       <AbsoluteVStack
-        pointerEvents={isReallySmall ? 'auto' : 'none'}
+        pointerEvents={media.xs ? 'auto' : 'none'}
         fullscreen
         alignItems="center"
         justifyContent="center"
         transform={[{ translateY: -2 }]}
-        {...logoStyles.reallySmall}
+        width={logoXsWidth}
+        height={logoXsHeight}
         zIndex={-1}
+        opacity={media.notXs ? 0 : 1}
       >
-        <LinkButton {...linkButtonProps} opacity={!isReallySmall ? 0 : 1}>
+        <LinkButton {...linkButtonProps}>
           <LogoSmall />
         </LinkButton>
       </AbsoluteVStack>

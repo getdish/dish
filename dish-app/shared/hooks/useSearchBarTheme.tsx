@@ -1,15 +1,15 @@
+import { useMedia } from 'snackui'
+
 import { rgbString } from '../helpers/rgbString'
 import { useCurrentLenseColor } from './useCurrentLenseColor'
-import { useIsNarrow } from './useIs'
 
 export const useSearchBarTheme = () => {
-  const isSmall = useIsNarrow()
+  const media = useMedia()
   const rgb = useCurrentLenseColor()
   return {
-    theme: isSmall ? 'light' : 'dark',
-    color: isSmall ? rgbString(rgb) ?? '#444' : '#fff',
-    background: isSmall ? '#fff' : '#000',
-    backgroundRgb: isSmall ? [255, 255, 255] : [20, 20, 20], //isSmall ? [255, 255, 255] : rgb,
-    isSmall,
+    theme: media.sm ? 'light' : 'dark',
+    color: media.sm ? rgbString(rgb) ?? '#444' : '#fff',
+    background: media.sm ? '#fff' : '#000',
+    backgroundRgb: media.sm ? [255, 255, 255] : [20, 20, 20], //isSmall ? [255, 255, 255] : rgb,
   }
 }

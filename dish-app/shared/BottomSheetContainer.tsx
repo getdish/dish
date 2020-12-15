@@ -1,9 +1,9 @@
 import React from 'react'
-import { StackProps, VStack } from 'snackui'
+import { VStack } from 'snackui'
 
 import { drawerBorderRadius } from './constants'
 
-export const BottomSheetContainer = (props: StackProps) => {
+export const BottomSheetContainer = (props: { children: any }) => {
   return (
     <VStack
       width="100%"
@@ -16,7 +16,8 @@ export const BottomSheetContainer = (props: StackProps) => {
       pointerEvents="auto"
       backgroundColor="#fff"
       position="relative"
-      {...props}
-    />
+    >
+      {props.children}
+    </VStack>
   )
 }

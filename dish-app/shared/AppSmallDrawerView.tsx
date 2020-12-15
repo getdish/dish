@@ -1,8 +1,8 @@
 import { supportsTouchWeb } from '@dish/helpers'
 import { useStore } from '@dish/use-store'
 import React, { useEffect, useMemo } from 'react'
-import { Animated, PanResponder, View } from 'react-native'
-import { AbsoluteVStack, VStack } from 'snackui'
+import { Animated, PanResponder, StyleSheet, View } from 'react-native'
+import { AbsoluteVStack, VStack, useMedia } from 'snackui'
 
 import { AppSearchBar } from './AppSearchBar'
 import { blurSearchInput } from './AppSearchInput'
@@ -11,7 +11,6 @@ import { BottomDrawerStore } from './BottomDrawerStore'
 import { BottomSheetContainer } from './BottomSheetContainer'
 import { pageWidthMax, searchBarHeight, zIndexDrawer } from './constants'
 import { isWebIOS } from './helpers/isIOS'
-import { useIsNarrow } from './hooks/useIs'
 import { omStatic } from './state/omStatic'
 
 export const AppSmallDrawerView = (props: { children: any }) => {
@@ -20,7 +19,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
   }
 
   const drawerStore = useStore(BottomDrawerStore)
-  const isSmall = useIsNarrow()
+  const media = useMedia()
 
   // attaching this as a direct onPress event breaks dragging
   // instead doing a more hacky useEffect
@@ -78,8 +77,8 @@ export const AppSmallDrawerView = (props: { children: any }) => {
 
   return (
     <VStack
-      className={`${isSmall ? '' : 'untouchable invisible'}`}
-      zIndex={isSmall ? zIndexDrawer : -1}
+      className={media.sm ? '' : 'untouchable invisible'}
+      zIndex={media.sm ? zIndexDrawer : -1}
       width="100%"
       height="100%"
     >
@@ -102,9 +101,8 @@ export const AppSmallDrawerView = (props: { children: any }) => {
         }}
       >
         <View
+          pointerEvents="auto"
           style={{
-            // @ts-ignore
-            pointerEvents: 'auto',
             position: 'absolute',
             top: -40,
             padding: 15,
@@ -131,16 +129,7 @@ export const AppSmallDrawerView = (props: { children: any }) => {
         </View>
 
         <BottomSheetContainer>
-          <View
-            style={{
-              zIndex: 100,
-              position: 'relative',
-              flexShrink: 1,
-              width: '100%',
-              minHeight: searchBarHeight,
-            }}
-            {...panResponder.panHandlers}
-          >
+          <View style={sheet.searchBarContainer} {...panResponder.panHandlers}>
             <AppSearchBar />
           </View>
 
@@ -171,3 +160,13 @@ export const AppSmallDrawerView = (props: { children: any }) => {
     </VStack>
   )
 }
+
+const sheet = StyleSheet.create({
+  searchBarContainer: {
+    zIndex: 100,
+    position: 'relative',
+    flexShrink: 1,
+    width: '100%',
+    minHeight: searchBarHeight,
+  },
+})

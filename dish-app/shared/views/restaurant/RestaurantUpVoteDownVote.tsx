@@ -1,25 +1,17 @@
 import { graphql } from '@dish/graph'
 import { ChevronDown, ChevronUp } from '@dish/react-feather'
-import React, { Suspense, memo, useState } from 'react'
+import React, { Suspense, memo } from 'react'
 import { GestureResponderEvent } from 'react-native'
-import {
-  AbsoluteVStack,
-  StackProps,
-  Text,
-  Tooltip,
-  VStack,
-  prevent,
-} from 'snackui'
+import { AbsoluteVStack, StackProps, Text, Tooltip, VStack } from 'snackui'
 
-import { bgLight, blue, green, orange, red } from '../../colors'
 import { numberFormat } from '../../helpers/numberFormat'
-import { useIsNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { tagLenses } from '../../state/localTags'
 import { restaurantRatio } from './restaurantsRatio'
 import { SentimentCircle } from './SentimentCircle'
+import { VoteButton } from './VoteButton'
 
 type UpvoteDownvoteProps = {
   restaurantSlug: string
@@ -192,44 +184,3 @@ export const TotalScore = memo(
     )
   }
 )
-
-export const VoteButton = ({
-  color,
-  Icon,
-  size = 18,
-  voted,
-  hoverColor,
-  ...props
-}: StackProps & {
-  hoverColor?: string
-  voted?: boolean
-  Icon: any
-  color?: string | null
-  size?: number
-}) => {
-  const isSmall = useIsNarrow()
-  const scale = isSmall ? 1.1 : 1
-  const [hovered, setHovered] = useState(false)
-  return (
-    <VStack
-      width={22 * scale}
-      height={22 * scale}
-      borderRadius={100}
-      alignItems="center"
-      justifyContent="center"
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
-      onPressIn={prevent}
-      pressStyle={{
-        backgroundColor: bgLight,
-        borderColor: '#aaa',
-      }}
-      {...props}
-    >
-      <Icon
-        size={size * (voted ? 1.2 : 1)}
-        color={hovered ? hoverColor ?? '#000' : color ?? '#ccc'}
-      />
-    </VStack>
-  )
-}

@@ -3,14 +3,12 @@ import { ScrollView, StyleSheet } from 'react-native'
 import { HStack, LinearGradient, Text } from 'snackui'
 
 import { bgLightHover } from '../../colors'
-import { useIsReallyNarrow } from '../../hooks/useIs'
 import { tagLenses } from '../../state/localTags'
 import { NavigableTag } from '../../state/NavigableTag'
 import { tagDisplayName } from '../../state/tagMeta'
 import { LinkButton } from '../../views/ui/LinkButton'
 
 export const HomeTopSearches = memo(() => {
-  const isReallySmall = useIsReallyNarrow()
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <HStack
@@ -24,7 +22,7 @@ export const HomeTopSearches = memo(() => {
         justifyContent="center"
         overflow="hidden"
       >
-        {recentSearches.slice(0, isReallySmall ? 6 : 8).map((search, index) => {
+        {recentSearches.map((search, index) => {
           const lenseTag =
             search.tags.find((x) => x.type === 'lense') ?? tagLenses[0]
           const hasLenseColor = !!lenseTag?.rgb
