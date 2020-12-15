@@ -1,40 +1,13 @@
-- general ordering of importance here:
-  - set up a good test case for pablo to run for crawlers
-    - should let him focus on getting a few queries to work + pass if memory reduces a lot.
-  - lets get a subset working well:
-    - admin panel for crawling a specific subset of results
-      - for now i'm thinking limit it to SF + cuisine/dish:
-        - vietnamese: pho, banh xeo, banh mi
-        - mexican: taco, guacamole, salsa
-    - fix/add final crawlers (google, uber eats, caviar?) on subset
-  ✔️ further small ratio fixes (add the priority option, set it to dish by default, maybe deprioritize base ranking when dish active)
-  - run through early user experience:
-    - login/signup/onboarding fixing any bugs
-    - see if any easy bugs to fix on user profiles
-  - product focused fixes from your previous runthrough
-    - any major fixes for breakdowns (especially focused on subset)
-  - gpt3 better summaries
-  - getting ready for v2 homepage
-    - mapbox boundaries
-    - how boundaries work with tilejson / tilejson viability research
-      - https://gist.github.com/cdolek/d08cac2fa3f6338d84ea
-  - android setup
-  - a script to export images into labeled folders for ML training
-  ✔️ fix test `// TODO @tom`
-
-
-# ranking
-
-✔️ ratio more important in ranking (not popularity contest)
-  - options:
-    - Option 1: bring back the concept of an overall ranking: 1-100% or 1-5 stars or something, this is our "ratio" rating
-      - use ratio rating in search to avoid popularity contest
-      - what this does:
-        - ratios are nice to see "quality" vs popularity
-        - being able to scan "99%" vs "92%" is much easier than "1200pts" vs "1500pts".
-    - Option 2: weigh the rankings more based on "most recent X points"
-      - by taking a sample we avoid popularity contests
-      - weighing by recent points actually is even better - if a restaurant changes ownership or slacks off, they won't be stuck to an older rating
+  - admin panel for crawling a specific subset of results
+    - for now i'm thinking limit it to SF + cuisine/dish:
+      - vietnamese: pho, banh xeo, banh mi
+      - mexican: taco, guacamole, salsa
+  - fix/add final crawlers (google, uber eats, caviar?) on subset
+  - see if any easy bugs to fix on user profiles
+- product focused fixes from your previous runthrough
+  - any major fixes for breakdowns (especially focused on subset)
+- gpt3 better summaries
+- a script to export images into labeled folders for ML training
 
 # keeping product focus
 

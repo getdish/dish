@@ -1,13 +1,3 @@
-the idea for fixing ratings btw is as follows:
-
-- left side REMOVE all the rating stuff, just show RANKING (#1, #2, etc) in big bubble
-- but hang off of it the same smiley/% rating bubble - JUST SHOWS THE RESTAURANT
-  dishes bubbles also ONLY show smiley/%
-  for ANY bubble, if they have a ton of upvotes recently we can show a :fire: emoji, that can stand in for the popularity factor
-- so basically for dishes + restaurants we just show the quality meter, no points, but we can show a little fire emoji if its recently been doing well
-  to the left of the FIRST DISH VIEW - a bigger bubble/parallelogram that is directly left of the first dish view rating bubble (underneath it a bit), overlaps a bit leftwards towards the title/content area: shows the combined score. this one i'm not sure exactly how to show, but points is possible, it would then just be a direct sum of cumulative points across everything perhaps... but could be something else, not 100% sure. basically, the left side has no voting functionality at all, this would still vote across all factors
-  in the ideal it could be just like that
-
 - feed endpoint:
 
 ```
@@ -41,10 +31,6 @@ curl 'https://search.dishapp.com/feed?region=mission&limit=1' | jq
   - add comment => show comment
   - upvote/downvote comments
 - url piece for selected dish on restaurant page / restaurantreview page
-- gqless memory reduction
-  - 3GB
-    - SLUG=momo-masalas ../../dishctl.sh local*node_with_prod_env */self/sandbox.js
-    - SLUG=coqueta ./dishctl.sh local*node_with_prod_env services/crawlers/*/self/sandbox.js
 - scrolling horizontal / vertical fixes
 - touch mobile web app runthrough fix scrolling issues
 - search changing filters shows old results / sometimes gets stuck
@@ -53,25 +39,15 @@ curl 'https://search.dishapp.com/feed?region=mission&limit=1' | jq
 - other lense tags:
   - "family run"
 - overall just runthrough everything a few times and fix a lot
-- gallery v2
-  - resolve dish images
-  - clicking a dish takes you to the gallery but there are no photos of that dish
 - fix small delivery/price filters
 - fix hmr for useStore in react native
-- get reviewing fully working with votes/sentiment on tags
-- fix up points breakdown and dish/tag breakdown
 - location <=> url
 
 ---
 
-- the long run, a wikiatlas of our world:
-
-  - there exists no community map of the world
-    - what happened to the atlas?
-    - aggregation theory - theres no great aggregator of real world things - netflix for shows (originally), airbnb (places), craigslist (market), but for restaurants its just lots of individual sources like yelp, etc.
-  - foursquare left us with no more fun community of curators
+  - playlists for play
   - pokedex strikes the right balance: polished, personal, fun
-    - trading cards - stats on each thing broken down, data driven, create "stacks" of favorite coffee shops
+  - trading cards - stats on each thing broken down, data driven, create "stacks" of favorite coffee shops
   - hitchhikers guide to the galaxy - whats unique, a place to store real opinion
   - ultimately the concerns wouldnt just be commercial like yelp or google, but also exploration, activity, outdoors, culture, history - wikipedia for a map
   - but the community aspect should drive it - "map reduce" from discussions into a "current best of page"
@@ -81,13 +57,6 @@ curl 'https://search.dishapp.com/feed?region=mission&limit=1' | jq
     - we are exploring paid-for models for upgraded features to avoid advertising pressures
     - want to invest in communities and have local champions, invest in local popups
   - by breaking down things by the factors that matter, not just a single 5 star ratings, we want to foster the japanese style in a sense - do "one thing well" - or the portland style of embracing quirkyness - let restaurants and shops avoid tyranny of the majority and specialize without negative effects
-
-- blog post: A new world (of AI): personality in our online apps.
-  - make the point that todays apps are very generic: designed to please everyone
-  - Hitchhikers guide to the galaxy was prescient: AI can bring us _personality_
-  - the biggest breakthrough (gpt3) is great at sarcasm, wit, humor
-  - apps of the future will feel much more fun, personal, and human-like because of this
-  - the biggest effect will be we'll look back and think the old internet was much more boring - wheres the fun?
 
 ---
 
