@@ -43,16 +43,13 @@ import { PageFooter } from '../../views/layout/PageFooter'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { SlantedBox } from '../../views/ui/SlantedBox'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
-import {
-  CardFrame,
-  cardFrameHeight,
-  cardFrameWidth,
-} from '../restaurant/CardFrame'
+import { CardFrame } from '../restaurant/CardFrame'
 import { RestaurantButton } from '../restaurant/RestaurantButton'
 import { RestaurantCard } from '../restaurant/RestaurantCard'
 import { peachAvatar } from '../search/avatar'
 import { StackViewProps } from '../StackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
+import { useCardFrame } from './useCardFrame'
 
 type Props = StackViewProps<HomeStateItemHome>
 
@@ -518,9 +515,10 @@ const DishCol = (props: StackProps) => {
 
 const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
   const restaurant = useRestaurantQuery(props.restaurantSlug)
+  const cardFrame = useCardFrame()
   return (
     <VStack
-      height={cardFrameHeight}
+      height={cardFrame.height}
       borderRadius={20}
       alignItems="center"
       justifyContent="space-between"
@@ -545,7 +543,7 @@ const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
       >
         {restaurant.name}
       </Text>
-      <DishView showSearchButton size={cardFrameWidth - 20} {...props} />
+      <DishView showSearchButton size={cardFrame.width - 20} {...props} />
       <Text fontSize={14} lineHeight={22} opacity={0.4} margin={4}>
         lorem ipsume dolor sit amet lorem ipsume dolor sit amet lorem ipsume
         dolor sit amet lorem ipsume dolor sit amet.

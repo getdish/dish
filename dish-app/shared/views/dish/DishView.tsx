@@ -224,7 +224,7 @@ const DishViewContent = (props: DishViewProps) => {
         </Box>
       </AbsoluteVStack>
       {!!dish.image && (
-        <VStack overflow="hidden" borderRadius={100}>
+        <VStack overflow="hidden" borderRadius={1000}>
           <ImageAlt
             source={{ uri: imageUrl }}
             style={{
