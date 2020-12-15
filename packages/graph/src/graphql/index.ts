@@ -1,1 +1,1 @@
-export * from './new-generated'
+export * from './generated'

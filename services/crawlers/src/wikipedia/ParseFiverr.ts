@@ -3,12 +3,12 @@ import fs from 'fs'
 import { selectFields } from '@dish/gqless'
 import {
   Tag,
+  tag,
   tagAddAlternate,
   tagFindOne,
   tagUpsert,
   tagUpsertCategorizations,
 } from '@dish/graph'
-import { tag } from '@dish/graph/_/graphql/new-generated'
 import parse from 'csv-parse/lib/sync'
 import { pick } from 'lodash'
 import _ from 'lodash'

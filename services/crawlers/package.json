@@ -45,7 +45,7 @@
     "@types/lodash": "^4.14.149",
     "@types/puppeteer": "^3.0.1",
     "@zeit/ncc": "^0.20.5",
-    "ava": "^3.8.2",
+    "ava": "^3.14.0",
     "bull-repl": "^0.26.0",
     "nodemon": "^2.0.2",
     "typescript": "*"

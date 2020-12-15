@@ -8,7 +8,7 @@ import {
   query,
   review,
   review_constraint,
-} from '../graphql/new-generated'
+} from '../graphql/generated'
 // import { order_by, query, review_constraint, uuid } from '../graphql'
 import { Review } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'

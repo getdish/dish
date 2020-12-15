@@ -9,7 +9,8 @@ export const isDevProd =
   process.env.TARGET === 'native' ||
   (!isNode && window.location?.hostname.includes('dish'))
 export const isStaging =
-  !isNode && window.location?.hostname.includes('staging')
+  process.env.NODE_ENV === 'staging' ||
+  (!isNode && window.location?.hostname.includes('staging'))
 
 export const isNative = process.env.TARGET === 'native'
 export const isWorker =

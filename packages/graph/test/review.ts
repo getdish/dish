@@ -16,7 +16,7 @@ import {
   userFavoriteARestaurant,
   userFavorites,
 } from '../src'
-import { restaurant, user } from '../src/graphql/new-generated'
+import { restaurant, user } from '../src/graphql/generated'
 import { restaurant_fixture } from './etc/fixtures'
 
 interface Context {

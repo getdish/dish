@@ -3404,7 +3404,7 @@
     "@types/connect" "*"
     "@types/node" "*"
 
-"@types/bull@^3.12.0", "@types/bull@^3.14.2":
+"@types/bull@^3.14.2", "@types/bull@^3.14.4":
   version "3.14.4"
   resolved "https://registry.npmjs.org/@types/bull/-/bull-3.14.4.tgz#8a787ad4582b1a6cf2bfa6cca5f72428330c455e"
   integrity sha512-XAYSV6A/r9GX+TgWwjF0WgpKK9/WAiSfVe3q6+2JrRW+3hLDjIU5MQL9HQZet3my98VA3kNWjEYrJCeRmJ5a5w==
@@ -4792,7 +4792,7 @@ auto-bind@~4.0.0:
   resolved "https://registry.npmjs.org/auto-bind/-/auto-bind-4.0.0.tgz#e3589fc6c2da8f7ca43ba9f84fa52a744fc997fb"
   integrity sha512-Hdw8qdNiqdJ8LqT0iK0sVzkFbzg6fhnQqqfWhBDxcHZvU75+B+ayzTy8x+k5Ix0Y92XOhOUlx74ps+bA6BeYMQ==
 
-ava@*, ava@^3.14.0, ava@^3.8.2:
+ava@*, ava@^3.14.0:
   version "3.14.0"
   resolved "https://registry.npmjs.org/ava/-/ava-3.14.0.tgz#d519bc9abce9a44ead34c86b98bbe72771a6bd81"
   integrity sha512-AkXNi3DBXZE8A1z1JiNvdK6WmpN8oJQcZLkaWU24C3knCN9WVaxoDy90IVQlwjjPySeyQFqWDrsW9KomSNlRmQ==

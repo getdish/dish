@@ -9,7 +9,7 @@ import {
   resolved,
   restaurant,
   tag,
-} from '../graphql/new-generated'
+} from '../graphql/generated'
 // import { order_by, query } from '../graphql'
 import { Restaurant, RestaurantTag, RestaurantWithId, Tag } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'

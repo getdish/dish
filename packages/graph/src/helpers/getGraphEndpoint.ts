@@ -17,17 +17,15 @@ export function getGraphEndpointDomain() {
     return STAGING_HASURA
   }
 
-  let domain: string
   if (isNode) {
-    domain =
+    return (
       process.env.HASURA_ENDPOINT ||
       process.env.REACT_APP_HASURA_ENDPOINT ||
       LOCAL_HASURA
-  } else {
-    domain = process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA
+    )
   }
 
-  return domain
+  return process.env.REACT_APP_HASURA_ENDPOINT || LOCAL_HASURA
 }
 
 export function getGraphEndpoint() {

@@ -9,7 +9,7 @@ import {
   restaurant_tag,
   restaurant_tag_constraint,
   restaurant_tag_update_column,
-} from '../graphql/new-generated'
+} from '../graphql/generated'
 // import { mutation } from '../graphql/mutation'
 import { RestaurantTag, RestaurantWithId } from '../types'
 import { resolvedMutationWithFields } from './queryResolvers'
