@@ -61,7 +61,7 @@ test('Searching for a restaurant by tag', async (t) => {
     query: '',
     tags: ['test-tag'],
   })
-  t.is(results?.[0].id, restaurant.id)
+  t.is(results?.restaurants?.[0].id, restaurant.id)
 })
 
 test('Orders by restaurant score if no dish tags queried', async (t) => {
