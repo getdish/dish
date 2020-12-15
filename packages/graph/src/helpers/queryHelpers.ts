@@ -1,5 +1,4 @@
-import { DeepPartial, parseSchemaType } from '@dish/gqless'
-import { selectFields } from '@dish/gqless'
+import { parseSchemaType, selectFields } from '@dish/gqless'
 
 import {
   Scalars,
@@ -15,7 +14,7 @@ import {
   tag_constraint,
   tag_tag_constraint,
   user_constraint,
-} from '../graphql/generated'
+} from '../graphql'
 // import { mutation } from '../graphql/mutation'
 import { ModelName, ModelType, WithID } from '../types'
 import { isMutatableField, isMutatableRelation } from './isMutatableField'

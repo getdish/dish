@@ -2,27 +2,14 @@ import { selectFields } from '@dish/gqless'
 import _ from 'lodash'
 
 import { globalTagId } from '../constants'
-import {
-  Maybe,
-  client,
-  order_by,
-  resolved,
-  restaurant,
-  tag,
-} from '../graphql/generated'
-// import { order_by, query } from '../graphql'
-import { Restaurant, RestaurantTag, RestaurantWithId, Tag } from '../types'
+import { Maybe, client, order_by, resolved, restaurant } from '../graphql'
+import { Restaurant, RestaurantTag, RestaurantWithId } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
-// import { resolvedWithFields } from './queryResolvers'
 import { restaurantTagUpsert } from './restaurantTag'
 import { tagSlugs } from './tag-extension-helpers'
 import { tagGetAllChildren, tagGetAllGenerics, tagUpsert } from './tag-helpers'
 
 const query = client.query
-
-// const tagDataRelations = {
-//   relations: ['tags.tag.categories.category', 'tags.tag.parent'],
-// }
 
 const QueryHelpers = createQueryHelpersFor<Restaurant>('restaurant')
 export const restaurantInsert = QueryHelpers.insert
@@ -122,7 +109,9 @@ export async function restaurantUpsertManyTags(
   fn?: (v: restaurant[]) => any,
   keys?: '*' | Array<string>
 ) {
-  if (!restaurant_tags.length) return
+  if (!restaurant_tags.length) {
+    return null
+  }
   const populated = restaurant_tags.map((rt) => {
     const existing = getRestaurantTagFromTag(restaurant, rt.tag_id)
     return { ...existing, ...rt }
@@ -178,7 +167,9 @@ async function restaurantUpdateTagNames(
   fn?: (v: restaurant[]) => any,
   keys?: '*' | Array<string>
 ) {
-  if (!restaurant) return
+  if (!restaurant) {
+    return null
+  }
   const tags = restaurant.tags ?? []
   const tag_names: string[] = [
     ...new Set(
@@ -234,9 +225,9 @@ function getRestaurantTagFromTag(restaurant: Restaurant, tag_id: string) {
   let rt = {} as RestaurantTag
   if (existing) {
     const cloned = _.cloneDeep(existing)
-    //@ts-expect-error
+    //@ts-ignore
     delete cloned.tag
-    //@ts-expect-error
+    //@ts-ignore
     delete cloned.restaurant
     rt = cloned
   }

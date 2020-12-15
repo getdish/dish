@@ -2,14 +2,28 @@ import '@dish/react-test-env'
 
 import anyTest, { TestInterface } from 'ava'
 
-import { Auth, flushTestData } from '../src'
+import { AUTH_DOMAIN, Auth, flushTestData, getGraphEndpoint } from '../src'
 
 interface Context {}
 
 const test = anyTest as TestInterface<Context>
 
+const ogFetch = fetch
+global['fetch'] = (...args) => {
+  console.log('args', args)
+  // @ts-ignore
+  return ogFetch(...args)
+}
+
 test.beforeEach(async () => {
   await flushTestData()
+})
+
+// keep this, make it easier on us debugging tests
+console.log({
+  AuthHeaders: Auth.getHeaders(),
+  AUTH_DOMAIN,
+  graphEndpoint: getGraphEndpoint(),
 })
 
 test('Creating a user', async (t) => {

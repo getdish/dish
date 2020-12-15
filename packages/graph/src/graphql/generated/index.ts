@@ -1,4 +1,4 @@
-import { QueryFetcher, ScalarsEnumsHash, createClient } from '@dish/gqless'
+import { ScalarsEnumsHash } from '@dish/gqless'
 
 export type Maybe<T> = T | null
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -11781,41 +11781,3 @@ export interface ScalarsEnums extends Scalars {
   zcta5_select_column: zcta5_select_column
   zcta5_update_column: zcta5_update_column
 }
-
-const queryFetcher: QueryFetcher = async function (query, variables) {
-  const response = await fetch('/graphql', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      query,
-      variables,
-    }),
-    mode: 'cors',
-  })
-
-  if (!response.ok) {
-    throw new Error(`Network error, received status code ${response.status}`)
-  }
-
-  const json = await response.json()
-
-  return json
-}
-
-export const client = createClient<GeneratedSchema>({
-  schema: generatedSchema,
-  scalarsEnumsHash,
-  queryFetcher,
-})
-
-export const {
-  query,
-  mutation,
-  subscription,
-  resolved,
-  refetch,
-  setCache,
-  mutate,
-} = client

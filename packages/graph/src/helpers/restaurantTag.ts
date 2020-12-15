@@ -1,16 +1,11 @@
 import { selectFields } from '@dish/gqless'
 
-// import {
-//   restaurant_tag_constraint,
-//   restaurant_tag_update_column,
-// } from '../graphql'
 import {
   mutation,
   restaurant_tag,
   restaurant_tag_constraint,
   restaurant_tag_update_column,
-} from '../graphql/generated'
-// import { mutation } from '../graphql/mutation'
+} from '../graphql'
 import { RestaurantTag, RestaurantWithId } from '../types'
 import { resolvedMutationWithFields } from './queryResolvers'
 
@@ -75,13 +70,6 @@ export async function restaurantTagUpsert(
           }
         })
       })
-    // {
-    //   relations: [
-    //     'restaurant.tags.tag.categories.category',
-    //     'restaurant.tags.tag.parent',
-    //     ...extra_relations,
-    //   ],
-    // }
   )
   return (response as any)[0].restaurant
 }

@@ -2,14 +2,7 @@ import { selectFields } from '@dish/gqless'
 import { uniqBy } from 'lodash'
 
 import { globalTagId } from '../constants'
-import {
-  Scalars,
-  order_by,
-  query,
-  review,
-  review_constraint,
-} from '../graphql/generated'
-// import { order_by, query, review_constraint, uuid } from '../graphql'
+import { Scalars, order_by, query, review, review_constraint } from '../graphql'
 import { Review } from '../types'
 import { createQueryHelpersFor } from './queryHelpers'
 import { resolvedWithFields } from './queryResolvers'

@@ -1,6 +1,7 @@
 import { createReactClient } from '@dish/gqless-react'
 
-import { GeneratedSchema, client } from './graphql/generated'
+import { client } from './graphql'
+import { GeneratedSchema } from './graphql/generated'
 
 export const {
   graphql,

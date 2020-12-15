@@ -1,6 +1,3 @@
-// 🚨
-// technically this should all use TagQuery but it breaks ts (slow)
-
 import { globalTagId } from '../constants'
 import { Tag } from '../types'
 
@@ -26,7 +23,7 @@ export const tagSlugs = (tag: Tag) => {
   if (!tagIsOrphan(tag)) {
     parentage = [
       ...parentage,
-      //@ts-expect-error
+      //@ts-ignore
       tagSlugWithoutParent(tag.parent),
     ]
   }
