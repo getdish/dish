@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { graphql } from '@dish/graph'
+import { RestaurantItemMeta, graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
 import { debounce } from 'lodash'
 import React, {
@@ -35,11 +35,7 @@ import { useIsNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
 import { allTags } from '../../state/allTags'
-import {
-  GeocodePlace,
-  HomeSearchItemMeta,
-  HomeStateItemSearch,
-} from '../../state/home-types'
+import { GeocodePlace, HomeStateItemSearch } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
@@ -332,6 +328,8 @@ const RestaurantListItemContent = memo(
                           lineHeight={titleHeight}
                           height={titleHeight}
                           color="#000"
+                          fontWeight="800"
+                          letterSpacing={-1.25}
                           ellipse
                         >
                           {restaurantName}
@@ -559,7 +557,7 @@ const RestaurantListItemScoreBreakdown = memo(
       searchState,
       meta,
       restaurantSlug,
-    }: RestaurantListItemProps & { meta: HomeSearchItemMeta }) => {
+    }: RestaurantListItemProps & { meta: RestaurantItemMeta }) => {
       const tagSlugs = getActiveTagSlugs(searchState.activeTags)
       const restaurant = useRestaurantQuery(restaurantSlug)
       const restaurantTags = useRestaurantTagScores({

@@ -214,7 +214,7 @@ const DishViewContent = (props: DishViewProps) => {
             className="unskewX ease-in-out-fast"
             // flex={1} breaks native
             overflow="hidden"
-            fontWeight="700"
+            fontWeight="800"
             color={isActive ? '#fff' : '#000'}
             fontSize={fontSize}
             textAlign="center"

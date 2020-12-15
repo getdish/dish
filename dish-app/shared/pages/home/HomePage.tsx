@@ -187,11 +187,11 @@ export default memo(function HomePage(props: Props) {
               />
               <Spacer size="lg" />
               <HomeTopSearches />
-              <Spacer size="sm" />
+              <Spacer />
               <VStack alignItems="center">
                 <Text
                   paddingHorizontal={6}
-                  fontSize={24}
+                  fontSize={34}
                   color="#000"
                   fontWeight="300"
                 >
@@ -199,6 +199,7 @@ export default memo(function HomePage(props: Props) {
                 </Text>
               </VStack>
               <Spacer size="xl" />
+              <Spacer />
               <Suspense
                 fallback={
                   <>
@@ -554,19 +555,24 @@ const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
 
 const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
   return (
-    <>
-      <SlantedTitle fontWeight="600" alignSelf="center" marginTop={-10}>
+    <VStack>
+      <SlantedTitle
+        position="absolute"
+        fontWeight="800"
+        alignSelf="center"
+        marginTop={-10}
+      >
         {props.dish.icon ?? null} {props.dish.name}
       </SlantedTitle>
-      <HStack>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <HStack paddingVertical={5} paddingHorizontal={20}>
           {props.restaurants.map((r) => {
             if (!r.slug) {
               return null
             }
             return (
               <HStack key={r.id}>
-                <VStack transform={[{ scale: 0.66 }]} margin={-30}>
+                <VStack marginHorizontal={-15} transform={[{ scale: 0.8 }]}>
                   <RestaurantCard
                     restaurantId={r.id}
                     restaurantSlug={r.slug}
@@ -582,9 +588,9 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
               </HStack>
             )
           })}
-        </ScrollView>
-      </HStack>
-    </>
+        </HStack>
+      </ScrollView>
+    </VStack>
   )
 }
 

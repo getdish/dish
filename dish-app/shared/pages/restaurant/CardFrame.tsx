@@ -34,7 +34,7 @@ export const CardFrame = ({
       position="relative"
       {...(hoverable && {
         hoverStyle: {
-          transform: [{ scale: 1.02 }],
+          transform: [{ scale: 1.015 }],
         },
       })}
       {...props}

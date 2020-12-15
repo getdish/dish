@@ -6,6 +6,7 @@ import {
   HStack,
   LinearGradient,
   Paragraph,
+  Spacer,
   VStack,
 } from 'snackui'
 
@@ -107,9 +108,9 @@ export const RestaurantCardContent = memo(
                   /> */}
                   <LinearGradient
                     style={StyleSheet.absoluteFill}
-                    colors={[`${lightColor}22`, `${color}99`]}
+                    colors={[`${lightColor}`, `${color}99`]}
                     start={[0, 0]}
-                    end={[0.4, 0.4]}
+                    end={[0.2, 0.2]}
                   />
                   <LinearGradient
                     style={StyleSheet.absoluteFill}
@@ -141,26 +142,28 @@ export const RestaurantCardContent = memo(
                 <VStack
                   className="ease-in-out"
                   opacity={hideInfo ? 0 : 1}
-                  padding={20}
+                  padding={15}
                   alignItems="flex-start"
                   spacing
                   height="100%"
                 >
-                  <HStack flex={1} marginLeft={40}>
-                    <VStack flex={1} />
+                  <HStack width="100%">
+                    <VStack minWidth={40} flex={1} />
                     <VStack alignItems="flex-end">
                       <Paragraph
                         textAlign="right"
-                        size={1.1}
-                        sizeLineHeight={0.9}
+                        size={1.2}
+                        sizeLineHeight={0.8}
                         textShadowColor="#00000033"
                         textShadowRadius={1}
                         textShadowOffset={{ height: 2, width: 0 }}
                         color="#fff"
                         fontWeight="800"
+                        letterSpacing={-1.25}
                       >
                         {restaurant.name}
                       </Paragraph>
+                      <Spacer size="xs" />
                       <Paragraph
                         textAlign="right"
                         color="#fff"
@@ -169,12 +172,12 @@ export const RestaurantCardContent = memo(
                         {price_range}
                       </Paragraph>
                     </VStack>
-                    <VStack marginTop={-16} marginRight={-16}>
+                    {/* <VStack marginTop={-16} marginRight={-16}>
                       <RestaurantFavoriteStar
                         size="md"
                         restaurantId={restaurantId}
                       />
-                    </VStack>
+                    </VStack> */}
                   </HStack>
                   <VStack flex={1} />
                   {below}
