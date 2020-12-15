@@ -2,9 +2,13 @@ import { QueryFetcher, createClient } from '@dish/gqless'
 
 import { Auth } from '../Auth'
 import { getGraphEndpoint } from '../helpers'
-import { GeneratedSchema, generatedSchema, scalarsEnumsHash } from './generated'
+import {
+  GeneratedSchema,
+  generatedSchema,
+  scalarsEnumsHash,
+} from './schema.generated'
 
-export * from './generated'
+export * from './schema.generated'
 
 export const queryFetcher: QueryFetcher = async function (query, variables) {
   const response = await fetch(getGraphEndpoint(), {

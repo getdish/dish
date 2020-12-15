@@ -15,7 +15,6 @@ import {
   tag_tag_constraint,
   user_constraint,
 } from '../graphql'
-// import { mutation } from '../graphql/mutation'
 import { ModelName, ModelType, WithID } from '../types'
 import { isMutatableField, isMutatableRelation } from './isMutatableField'
 import {

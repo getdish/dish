@@ -6,7 +6,7 @@ import { getGraphEndpoint } from './src/helpers/getGraphEndpoint'
 const run = async () => {
   await inspectWriteGenerate({
     endpoint: getGraphEndpoint(),
-    destination: 'src/graphql/generated/index.ts',
+    destination: 'src/graphql/schema.generated.ts',
     overwrite: true,
     headers: Auth.getHeaders(),
     generateOptions: {},
