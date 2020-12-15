@@ -1170,16 +1170,16 @@
   dependencies:
     arrify "^1.0.1"
 
-"@dish/gqless-cli@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.npmjs.org/@dish/gqless-cli/-/gqless-cli-2.0.0.tgz#ef8ba40b93baa1e40548f84ce581a2c117e22b0f"
-  integrity sha512-znka/I1G6XhbR792oH7F+fHnmNXgnVrNKPOZcqwBaZ+9GIdP7STxDTm7T3oPHUrd9HIabh1oYXY4aKgQ0x1xsw==
+"@dish/gqless-cli@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@dish/gqless-cli/-/gqless-cli-3.0.0.tgz#4bc42f48ef35de60e580d1b54953538f6e02ab57"
+  integrity sha512-I+Pmqqd1MzFvbVgnCbpZGT/iNKVnwAKIFgfX7k9vjfR1z1ltzVZJALdpDF205FzK36jocSmlIRh9E5H0ogZv2w==
   dependencies:
     "@graphql-codegen/core" "^1.17.9"
     "@graphql-codegen/typescript" "^1.19.0"
     "@graphql-tools/delegate" "^7.0.7"
     "@graphql-tools/wrap" "^7.0.4"
-    commander "^6.2.0"
+    commander "^6.2.1"
     cross-fetch "^3.0.6"
     graphql "^15.4.0"
     lodash "^4.17.20"
@@ -7122,6 +7122,11 @@ commander@^6.1.0, commander@^6.2.0:
   version "6.2.0"
   resolved "https://registry.npmjs.org/commander/-/commander-6.2.0.tgz#b990bfb8ac030aedc6d11bc04d1488ffef56db75"
   integrity sha512-zP4jEKbe8SHzKJYQmq8Y9gYjtO/POJLgIdKgV7B9qNmABVFVc+ctqSX6iXh4mCpJfRBOabiZ2YKPg8ciDw6C+Q==
+
+commander@^6.2.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-6.2.1.tgz#0792eb682dfbc325999bb2b84fddddba110ac73c"
+  integrity sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==
 
 commander@~2.13.0:
   version "2.13.0"
