@@ -13,7 +13,6 @@ import {
   restaurantUpsertRestaurantTags,
   reviewUpsert,
   search,
-  searchMain,
   tagInsert,
 } from '../src'
 import { restaurant_fixture } from './etc/fixtures'
@@ -33,7 +32,7 @@ test.beforeEach(async (t) => {
 
 test('Searching for a restaurant by name', async (t) => {
   const [restaurant] = await restaurantUpsert([restaurant_fixture])
-  const results = await searchMain({
+  const results = await search({
     center: {
       lat: 50.09,
       lng: 0.09,
@@ -80,7 +79,7 @@ test('Orders by restaurant score if no dish tags queried', async (t) => {
   await restaurantUpsertRestaurantTags(rr1, [{ tag_id: tag.id, score: 3 }])
   await restaurantUpsertRestaurantTags(rr2, [{ tag_id: tag.id, score: 1 }])
   await restaurantUpsertRestaurantTags(rr3, [{ tag_id: tag.id, score: 5 }])
-  const result = await searchMain({
+  const result = await search({
     center: {
       lat: 50.24,
       lng: 0.24,
@@ -126,22 +125,16 @@ test('Orders by restaurant+tag score if dish tags queried', async (t) => {
     tags: ['test-rated-tag'],
   })
 
-  t.is(results?.length, 3)
-  t.is(results?.[0].id, rr3.id)
-  //@ts-expect-error
-  t.is(results?.[0].meta.restaurant_rank, 3)
-  //@ts-expect-error
-  t.is(results?.[0].meta.rish_rank, 1)
-  t.is(results?.[1].id, rr1.id)
-  //@ts-expect-error
-  t.is(results?.[1].meta.restaurant_rank, 1)
-  //@ts-expect-error
-  t.is(results?.[1].meta.rish_rank, 2)
-  t.is(results?.[2].id, rr2.id)
-  //@ts-expect-error
-  t.is(results?.[2].meta.restaurant_rank, 2)
-  //@ts-expect-error
-  t.is(results?.[2].meta.rish_rank, 3)
+  t.is(results?.restaurants.length, 3)
+  t.is(results?.restaurants?.[0].id, rr3.id)
+  t.is(results?.restaurants?.[0].meta.restaurant_rank, 3)
+  t.is(results?.restaurants?.[0].meta.rish_rank, 1)
+  t.is(results?.restaurants?.[1].id, rr1.id)
+  t.is(results?.restaurants?.[1].meta.restaurant_rank, 1)
+  t.is(results?.restaurants?.[1].meta.rish_rank, 2)
+  t.is(results?.restaurants?.[2].id, rr2.id)
+  t.is(results?.restaurants?.[2].meta.restaurant_rank, 2)
+  t.is(results?.restaurants?.[2].meta.rish_rank, 3)
 })
 
 test('Supports main_tag priority ordering', async (t) => {
@@ -184,22 +177,16 @@ test('Supports main_tag priority ordering', async (t) => {
     tags: ['global__test-rated-tag'],
     main_tag: 'global__test-main-tag',
   })
-  t.is(results?.length, 3)
-  t.is(results?.[0].id, rr2.id)
-  //@ts-expect-error
-  t.is(results?.[0].meta.main_tag_rank, 1)
-  //@ts-expect-error
-  t.is(results?.[0].meta.restaurant_rank, 2)
-  t.is(results?.[1].id, rr1.id)
-  //@ts-expect-error
-  t.is(results?.[1].meta.main_tag_rank, 2)
-  //@ts-expect-error
-  t.is(results?.[1].meta.restaurant_rank, 1)
-  t.is(results?.[2].id, rr3.id)
-  //@ts-expect-error
-  t.is(results?.[2].meta.main_tag_rank, 3)
-  //@ts-expect-error
-  t.is(results?.[2].meta.restaurant_rank, 3)
+  t.is(results?.restaurants?.length, 3)
+  t.is(results?.restaurants?.[0].id, rr2.id)
+  t.is(results?.restaurants?.[0].meta.main_tag_rank, 1)
+  t.is(results?.restaurants?.[0].meta.restaurant_rank, 2)
+  t.is(results?.restaurants?.[1].id, rr1.id)
+  t.is(results?.restaurants?.[1].meta.main_tag_rank, 2)
+  t.is(results?.restaurants?.[1].meta.restaurant_rank, 1)
+  t.is(results?.restaurants?.[2].id, rr3.id)
+  t.is(results?.restaurants?.[2].meta.main_tag_rank, 3)
+  t.is(results?.restaurants?.[2].meta.restaurant_rank, 3)
 })
 
 test('Home page feed', async (t) => {
