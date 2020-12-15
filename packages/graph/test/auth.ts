@@ -8,13 +8,6 @@ interface Context {}
 
 const test = anyTest as TestInterface<Context>
 
-const ogFetch = fetch
-global['fetch'] = (...args) => {
-  console.log('args', args)
-  // @ts-ignore
-  return ogFetch(...args)
-}
-
 test.beforeEach(async () => {
   await flushTestData()
 })
