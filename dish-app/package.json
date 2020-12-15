@@ -76,6 +76,8 @@
       "react-native-gesture-handler/**",
       "react-native-reanimated",
       "react-native-reanimated/**",
+      "react-native-screens",
+      "react-native-screens/**",
       "react-native-unimodules",
       "react-native-unimodules/**",
       "react-native-web",
@@ -100,12 +102,12 @@
       "react-native-animatable/**",
       "recyclerlistview",
       "recyclerlistview/**",
-      "react-hook-form",
-      "react-hook-form/**",
       "react-native-gesture-handler-compiled",
       "react-native-gesture-handler-compiled/**",
       "react-use",
-      "react-use/**"
+      "react-use/**",
+      "react-hook-form",
+      "react-hook-form/**"
     ]
   },
   "scripts": {
@@ -191,10 +193,9 @@
     "react-laag": "^2.0.0",
     "react-native": "^0.63.2",
     "react-native-dotenv": "^2.4.0",
-    "react-native-gesture-handler": "~1.6.1",
+    "react-native-gesture-handler": "^1.9.0",
     "react-native-reanimated": "2.0.0-rc.0",
     "react-native-screens": "~2.9.0",
-    "react-native-gesture-handler": "^1.9.0",
     "react-native-unimodules": "^0.12.0",
     "react-native-web": "0.0.0-466063b7e",
     "react-native-svg": "^12.1.0",
