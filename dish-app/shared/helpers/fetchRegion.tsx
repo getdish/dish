@@ -1,22 +1,66 @@
-import { SEARCH_DOMAIN } from '@dish/graph'
-import { QueryConfig, queryCache, useQuery } from 'react-query'
+import { LngLat, SEARCH_DOMAIN } from '@dish/graph'
+import { UseQueryOptions, useQuery } from 'react-query'
 
-type RegionApiResponse = {
-  bbox: number[]
-  centroid: [number, number]
+import { bboxToSpan } from './bboxToSpan'
+import { queryClient } from './queryClient'
+
+export type Point = [number, number]
+
+export type RegionApiResponse = {
+  bbox: {
+    type: 'Polygon'
+    coordinates: [[Point, Point, Point, Point, Point]]
+  }
+  centroid: {
+    type: 'Point'
+    coordinates: Point
+  }
   name: string
 }
 
 const key = 'useRegionQuery'
 
-export const fetchRegion = async (slug: string) => {
-  const res = await fetch(
-    `${SEARCH_DOMAIN}/regions?slug=${encodeURIComponent(slug)}`
-  ).then((res) => res.json())
-  queryCache.setQueryData(key, res)
-  return res as RegionApiResponse
+export type RegionNormalized = RegionApiResponse & {
+  center: LngLat
+  span: LngLat
 }
 
-export const useRegionQuery = (slug: string, config?: QueryConfig<any>) => {
-  return useQuery(key, () => fetchRegion(slug), config)
+export const fetchRegion = async (slug: string) => {
+  try {
+    const res: RegionApiResponse = await fetch(
+      `${SEARCH_DOMAIN}/regions?slug=${encodeURIComponent(slug)}`
+    ).then((x) => x.json())
+
+    const centerAt = res?.centroid?.coordinates
+    if (!!centerAt) {
+      const center: LngLat = {
+        lng: centerAt[0],
+        lat: centerAt[1],
+      }
+      const coords = res.bbox.coordinates[0]
+      const simpleBbox = [
+        coords[0][0],
+        coords[0][1],
+        coords[2][0],
+        coords[2][1],
+      ] as const
+      const span: LngLat = bboxToSpan(simpleBbox)
+      const response: RegionNormalized = {
+        ...res,
+        center,
+        span,
+      }
+      queryClient.setQueryData(key, response)
+      return response
+    }
+
+    return null
+  } catch (err) {
+    console.error(err)
+    return null
+  }
+}
+
+export const useRegionQuery = (slug: string, config?: UseQueryOptions<any>) => {
+  return useQuery<RegionNormalized>(key, () => fetchRegion(slug), config)
 }

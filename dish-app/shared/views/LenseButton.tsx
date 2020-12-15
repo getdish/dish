@@ -29,12 +29,13 @@ export const LenseButton = memoIsEqualDeep(
     const lenseColorLight = rgbString(lense.rgb, isSmall ? 0.6 : 0.4)
     const lenseColorDark = rgbString(lense.rgb.map((x) => x * 1.2))
     const scale = size == 'md' ? 1 : size === 'lg' ? 1.2 : 1.3
-    const sizePx = isSmall ? 38 : 42
+    const sizePx = isSmall ? 42 : 42
     const bg = backgroundColor ?? (isActive ? lenseColorLight : 'transparent')
     const iconSize = sizePx * (isActive ? 0.7 : 0.6) * scale
     const scaledSize = sizePx * scale
+    const scaledWidth = scaledSize
     const marginVertical = -4 * scale
-    const color = isSmall || isActive ? '#fff' : lenseColorDark
+    const color = isSmall || isActive ? '#ffffff' : lenseColorDark
     const lineHeight = sizePx * scale * 0.39
 
     return (
@@ -43,7 +44,6 @@ export const LenseButton = memoIsEqualDeep(
         className="unselectable"
         disallowDisableWhenActive
         marginRight={6}
-        marginTop={-2}
         pressStyle={{
           opacity: 0.8,
           transform: [{ scale: 0.9 }],
@@ -54,7 +54,7 @@ export const LenseButton = memoIsEqualDeep(
           alignItems="center"
           justifyContent="center"
           marginVertical={marginVertical}
-          width={scaledSize}
+          width={scaledWidth}
           height={scaledSize}
           backgroundColor={bg}
           borderRadius={100}
@@ -76,8 +76,7 @@ export const LenseButton = memoIsEqualDeep(
             borderRadius={4}
             paddingHorizontal={4}
             paddingVertical={1}
-            marginTop={-10}
-            marginBottom={-8}
+            marginTop={-8}
             backgroundColor="transparent"
             {...(isActive && {
               backgroundColor: lenseColorDark,
@@ -87,12 +86,12 @@ export const LenseButton = memoIsEqualDeep(
               hoverStyle={{
                 opacity: 1,
               }}
-              marginHorizontal={-3}
+              marginHorizontal={-5}
             >
               <Text
                 fontWeight="700"
                 lineHeight={lineHeight}
-                fontSize={isSmall ? 10 : 14}
+                fontSize={14}
                 color={color}
                 paddingHorizontal={2}
                 textAlign="center"

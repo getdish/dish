@@ -2,9 +2,7 @@ import { fullyIdle, series } from '@dish/async'
 import {
   LngLat,
   RestaurantOnlyIds,
-  Tag,
   TopCuisine,
-  TopCuisineDish,
   getHomeDishes,
   graphql,
   order_by,
@@ -12,9 +10,7 @@ import {
   tag,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers/src'
-import { useRouter } from '@dish/router'
-import { getStore } from '@dish/use-store'
-import { chunk, partition, sortBy, uniqBy, unzip, zip } from 'lodash'
+import { chunk, partition, sortBy, uniqBy, zip } from 'lodash'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
 import { useQuery } from 'react-query'
@@ -29,10 +25,9 @@ import {
 } from 'snackui'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants'
-import { useRegionQuery } from '../../helpers/fetchRegion'
+import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
-import { useAsyncEffect } from '../../hooks/useAsync'
 import { useIsNarrow } from '../../hooks/useIs'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
@@ -48,19 +43,13 @@ import { PageFooter } from '../../views/layout/PageFooter'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { SlantedBox } from '../../views/ui/SlantedBox'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
-import {
-  CardFrame,
-  cardFrameHeight,
-  cardFrameWidth,
-} from '../restaurant/CardFrame'
+import { CardFrame } from '../restaurant/CardFrame'
 import { RestaurantButton } from '../restaurant/RestaurantButton'
 import { RestaurantCard } from '../restaurant/RestaurantCard'
-import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { peachAvatar } from '../search/avatar'
 import { StackViewProps } from '../StackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
-
-// top dishes
+import { useCardFrame } from './useCardFrame'
 
 type Props = StackViewProps<HomeStateItemHome>
 
@@ -132,6 +121,17 @@ export default memo(function HomePage(props: Props) {
     }
   })
 
+  // center map to region
+  useEffect(() => {
+    if (!region.data) return
+    const { center, span } = region.data
+    if (!center || !span) return
+    om.actions.home.updateCurrentState({
+      center,
+      span,
+    })
+  }, [region.data])
+
   // on load home clear search effect!
   useEffect(() => {
     // not on first load
@@ -162,9 +162,9 @@ export default memo(function HomePage(props: Props) {
           right={0}
           shadowColor="#fff"
           shadowOpacity={1}
+          shadowRadius={10}
           borderBottomColor="#f8f8f8"
           borderBottomWidth={1}
-          shadowRadius={10}
           height={searchBarHeight + 10}
         />
       </AbsoluteVStack>
@@ -195,7 +195,7 @@ export default memo(function HomePage(props: Props) {
                   color="#000"
                   fontWeight="300"
                 >
-                  {region?.name ?? '...'}
+                  {region.data?.name.toLowerCase() ?? '...'}
                 </Text>
               </VStack>
               <Spacer size="xl" />
@@ -207,7 +207,7 @@ export default memo(function HomePage(props: Props) {
                   </>
                 }
               >
-                <HomePageContent {...props} />
+                <HomePageContent {...props} region={region.data} />
               </Suspense>
             </VStack>
           </VStack>
@@ -222,7 +222,7 @@ const HomePageContent = memo(
     region,
     item,
   }: {
-    region?: Region
+    region?: RegionNormalized
     item: HomeStateItemHome
   }) {
     const items = useHomeFeed(item, region)
@@ -312,12 +312,12 @@ const useTopCuisines = (center: LngLat) => {
   return useQuery('topcuisine', () => getHomeCuisines(center))
 }
 
-function useHomeFeed(item: HomeStateItemHome, region?: Region) {
-  const restaurants = region?.geometry
+function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
+  const restaurants = region?.bbox
     ? query.restaurant({
         where: {
           location: {
-            _st_within: region?.geometry,
+            _st_within: region?.bbox,
           },
           downvotes: { _is_null: false },
           votes_ratio: { _is_null: false },
@@ -515,9 +515,10 @@ const DishCol = (props: StackProps) => {
 
 const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
   const restaurant = useRestaurantQuery(props.restaurantSlug)
+  const cardFrame = useCardFrame()
   return (
     <VStack
-      height={cardFrameHeight}
+      height={cardFrame.height}
       borderRadius={20}
       alignItems="center"
       justifyContent="space-between"
@@ -542,7 +543,7 @@ const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
       >
         {restaurant.name}
       </Text>
-      <DishView showSearchButton size={cardFrameWidth - 20} {...props} />
+      <DishView showSearchButton size={cardFrame.width - 20} {...props} />
       <Text fontSize={14} lineHeight={22} opacity={0.4} margin={4}>
         lorem ipsume dolor sit amet lorem ipsume dolor sit amet lorem ipsume
         dolor sit amet lorem ipsume dolor sit amet.

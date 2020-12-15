@@ -3,8 +3,9 @@ import React, { createContext, forwardRef, useRef } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 import { VStack } from 'snackui'
 
-import { isWeb, supportsTouchWeb } from '../constants'
+import { isWeb } from '../constants'
 import { useIsNarrow, useIsReallyNarrow } from '../hooks/useIs'
+import { supportsTouchWeb } from '../platforms'
 import { useOvermind } from '../state/useOvermind'
 
 export class ScrollStore extends Store<{ id: string }> {

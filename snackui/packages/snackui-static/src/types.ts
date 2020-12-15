@@ -4,16 +4,14 @@ export interface CacheObject {
   [key: string]: any
 }
 
-export interface ExtractStylesOptions {
-  // options here
+export interface PluginOptions {
+  // user options
   evaluateVars?: boolean
   evaluateImportsWhitelist?: string[]
+  exclude?: RegExp
+  // more internal
   deoptProps?: string[]
   excludeProps?: string[]
-}
-
-export interface LoaderOptions extends ExtractStylesOptions {
-  cacheFile?: string
 }
 
 export interface PluginContext {

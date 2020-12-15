@@ -23,6 +23,8 @@ global['__DEV__'] = false
 //@ts-ignore
 global['requestIdleCallback'] = global['requestIdleCallback'] || setTimeout
 
+process.env.TARGET = process.env.TARGET || 'SSR'
+
 // fake a browser!
 const jsdom = new JSDOM(``, {
   pretendToBeVisual: true,

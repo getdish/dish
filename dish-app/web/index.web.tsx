@@ -9,7 +9,8 @@ import React from 'react'
 import { createRoot, hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
-import { OVERMIND_MUTATIONS, isSSR } from '../shared/constants'
+import { isSSR } from '../shared/constants'
+import { OVERMIND_MUTATIONS } from '../shared/overmindMutations'
 import { config, om } from '../shared/state/om'
 import { Root } from './Root'
 

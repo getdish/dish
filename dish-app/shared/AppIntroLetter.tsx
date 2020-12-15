@@ -4,11 +4,11 @@ import React, { memo, useLayoutEffect } from 'react'
 import { AbsoluteVStack, Text } from 'snackui'
 
 import { AppIntroLogin } from './AppIntroLogin'
-// @ts-ignore
-import { DarkModal } from './DarkModal'
 import { IntroModal } from './IntroModal'
 import { useOvermind } from './state/useOvermind'
 import { UserOnboard } from './UserOnboard'
+// @ts-ignore
+import { DarkModal } from './views/DarkModal'
 import { SmallCircleButton } from './views/ui/CloseButton'
 
 export const AppIntroLetter = memo(() => {

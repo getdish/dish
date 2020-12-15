@@ -13,12 +13,8 @@ import { getColorsForName } from '../../helpers/getColorsForName'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { Link } from '../../views/ui/Link'
-import {
-  CardFrame,
-  cardFrameHeight,
-  cardFrameWidth,
-  cardnFrameBorderRadiusSmaller,
-} from './CardFrame'
+import { useCardFrame } from '../home/useCardFrame'
+import { CardFrame, cardFrameBorderRadiusSmaller } from './CardFrame'
 import { priceRange } from './RestaurantDetailRow'
 import {
   RestaurantFavoriteButton,
@@ -52,6 +48,7 @@ export const RestaurantCardContent = memo(
       restaurantId,
       below,
     }: RestaurantCardProps) => {
+      const cardFrame = useCardFrame()
       const restaurant = useRestaurantQuery(restaurantSlug)
       // const scale = size === 'lg' ? 1.2 : size == 'sm' ? 0.6 : 1
       const [hideInfo, setHideInfo] = useState(false)
@@ -67,7 +64,7 @@ export const RestaurantCardContent = memo(
           <CardFrame hoverable>
             <VStack
               backgroundColor={color}
-              borderRadius={cardnFrameBorderRadiusSmaller}
+              borderRadius={cardFrameBorderRadiusSmaller}
             >
               <VStack
                 className="safari-fix-overflow"
@@ -75,7 +72,7 @@ export const RestaurantCardContent = memo(
                 overflow="hidden"
                 alignSelf="center"
                 position="relative"
-                borderRadius={cardnFrameBorderRadiusSmaller}
+                borderRadius={cardFrameBorderRadiusSmaller}
               >
                 <AbsoluteVStack
                   fullscreen
@@ -84,7 +81,7 @@ export const RestaurantCardContent = memo(
                   pointerEvents="none"
                   transform={[{ scaleX: 0.98 }, { scaleY: 0.98 }]}
                   zIndex={10}
-                  borderRadius={cardnFrameBorderRadiusSmaller - 2}
+                  borderRadius={cardFrameBorderRadiusSmaller - 2}
                   shadowColor="#000"
                   shadowRadius={40}
                 ></AbsoluteVStack>
@@ -119,8 +116,8 @@ export const RestaurantCardContent = memo(
                 <RestaurantPhotosRow
                   onIsAtStart={handleOnIsAtStart}
                   restaurantSlug={restaurantSlug}
-                  width={cardFrameWidth}
-                  height={cardFrameHeight}
+                  width={cardFrame.width}
+                  height={cardFrame.height}
                 />
               </VStack>
               <AbsoluteVStack

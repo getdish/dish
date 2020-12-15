@@ -1,20 +1,11 @@
-// dont import react-native
-
-export const OVERMIND_MUTATIONS =
-  typeof window !== 'undefined' && window['__OVERMIND_MUTATIONS']
-
-export const rootEl =
-  typeof document !== 'undefined' && document.getElementById('root')
+// dont do anything funny
+// this file is statically extracted so only things that can be
+// fully optmized away during compile time should go here
 
 export const isSSR =
-  typeof window !== 'undefined' && !!window['IS_SSR_RENDERING']
-export const isWorker = !rootEl && !isSSR
-export const isWeb =
-  typeof document !== 'undefined' || process.env.TARGET === 'web'
+  process.env.IS_SSR_RENDERING || process.env.TARGET === 'ssr'
+export const isWeb = process.env.TARGET === 'web'
 export const isNative = process.env.TARGET === 'native'
-
-export const supportsTouchWeb =
-  typeof window !== 'undefined' && 'ontouchstart' in window
 
 export const drawerPad = 8
 export const drawerBorderRadius = 16

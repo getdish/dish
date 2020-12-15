@@ -2,7 +2,7 @@ import { Region } from './state/home-types'
 
 export const sfRegion: Region = {
   name: 'San Francisco',
-  slug: 'san-francisco',
+  slug: 'ca-san-francisco',
   geometry: {
     type: 'Polygon',
     coordinates: [

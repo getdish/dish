@@ -35,11 +35,11 @@ export const FilterButton = memo(
     const iconElement = (() => {
       switch (tag.slug) {
         case 'filters__open':
-          return <Clock size={18} color={iconColor} />
+          return <Clock size={isSmall ? 22 : 18} color={iconColor} />
         case 'filters__delivery':
-          return <ShoppingBag size={18} color={iconColor} />
+          return <ShoppingBag size={isSmall ? 22 : 18} color={iconColor} />
         case 'filters__price-low':
-          return <DollarSign size={18} color={iconColor} />
+          return <DollarSign size={isSmall ? 22 : 18} color={iconColor} />
         default:
           return null
       }

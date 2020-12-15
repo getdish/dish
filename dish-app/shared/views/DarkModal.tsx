@@ -2,7 +2,7 @@ import React from 'react'
 import { ScrollView } from 'react-native'
 import { AbsoluteVStack, AnimatedVStack, VStack } from 'snackui'
 
-import { useIsNarrow } from './hooks/useIs'
+import { useIsNarrow } from '../hooks/useIs'
 
 export const DarkModal = ({
   hide,

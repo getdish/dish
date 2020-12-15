@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img margin="auto" width="612px" src="https://raw.githubusercontent.com/natew/snackui/master/snackui.jpg" alt="SnackUI">
+  <img margin="auto" width="612px" src="https://raw.githubusercontent.com/natew/snackui/master/snackui.png" alt="SnackUI">
   <br>
   SnackUI
   <br>
@@ -168,8 +168,16 @@ module.exports = {
           {
             loader: require.resolve('@snackui/static/loader'),
             options: {
-              // file names that you import for shared constants/colors extraction
+              // use this to add files to be statically evaluated
+              // default:
               evaluateImportsWhitelist: ['constants.js', 'colors.js'],
+              // exclude files from processing
+              // default null
+              exclude: /node_modules/,
+              // attempts to statically follow variables to compile
+              // default true
+              evaluateVars: true
+
             },
           },
         ].filter(Boolean),

@@ -24,6 +24,7 @@ export const HomeLenseBar = memo(
               zIndex={isActive ? 1 : 0}
               height="100%"
               key={lense.id + index}
+              justifyContent="center"
             >
               <LenseButton
                 lense={lense}

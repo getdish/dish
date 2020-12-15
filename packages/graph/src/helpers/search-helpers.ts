@@ -31,7 +31,7 @@ export async function search({
     limit,
     main_tag,
   })
-  return result.restaurants
+  return result
 }
 
 export async function searchMain({
