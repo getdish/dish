@@ -32,6 +32,6 @@
     "@dish/react-test-env": "*",
     "@types/node": "*",
     "ts-node": "*",
-    "@dish/gqless-cli": "^2.0.0"
+    "@dish/gqless-cli": "^3.0.0"
   }
 }
