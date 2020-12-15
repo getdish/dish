@@ -1,6 +1,6 @@
-import { graphql } from '@dish/graph'
+import { graphql, order_by } from '@dish/graph'
 import React, { Suspense, memo, useCallback, useState } from 'react'
-import { StyleSheet } from 'react-native'
+import { Image, StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
@@ -59,6 +59,11 @@ export const RestaurantCardContent = memo(
         setHideInfo(!x)
       }, [])
 
+      const restaurantPhoto = restaurant.photo_table({
+        order_by: [{ photo: { quality: order_by.desc } }],
+        limit: 1,
+      })[0].photo.url
+
       return (
         <Link name="restaurant" params={{ slug: restaurantSlug }}>
           <CardFrame hoverable>
@@ -113,11 +118,13 @@ export const RestaurantCardContent = memo(
                     end={[0.6, 0.6]}
                   />
                 </AbsoluteVStack>
-                <RestaurantPhotosRow
-                  onIsAtStart={handleOnIsAtStart}
-                  restaurantSlug={restaurantSlug}
-                  width={cardFrame.width}
-                  height={cardFrame.height}
+                <Image
+                  resizeMode="cover"
+                  style={{
+                    width: cardFrame.width,
+                    height: cardFrame.height,
+                  }}
+                  source={{ uri: restaurantPhoto }}
                 />
               </VStack>
               <AbsoluteVStack

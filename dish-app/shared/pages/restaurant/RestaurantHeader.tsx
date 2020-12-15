@@ -67,11 +67,9 @@ const RestaurantHeaderContent = memo(
       const minWidth = 600
       const [width, setWidth] = useState(Math.max(minWidth, drawerWidth))
       const scale = width < 601 ? 0.75 : drawerWidth < 700 ? 0.85 : 1
-      const fontSize =
-        scale *
-        ((nameLen > 24 ? 26 : nameLen > 18 ? 30 : 40) *
-          (size === 'sm' ? 0.8 : 1))
-
+      const fontScale = size === 'sm' ? 0.8 : 1
+      const fontSizeBase = nameLen > 24 ? 28 : nameLen > 18 ? 34 : 40
+      const fontSize = scale * fontSizeBase * fontScale
       const contentLeftWidth = width - 60
       const restaurantId = restaurant.id
 
@@ -125,8 +123,9 @@ const RestaurantHeaderContent = memo(
                       selectable
                       lineHeight={20}
                       maxHeight={20}
+                      letterSpacing={-1.2}
                       fontSize={fontSize}
-                      fontWeight="600"
+                      fontWeight="800"
                       color="#fff"
                       padding={20}
                       backgroundColor="rgba(0,0,0,0.85)"

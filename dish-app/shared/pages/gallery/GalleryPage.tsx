@@ -1,9 +1,8 @@
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
-import { AbsoluteVStack, HStack, LoadingItems, Modal } from 'snackui'
+import { AbsoluteVStack, HStack, LoadingItems } from 'snackui'
 
-import { pageWidthMax } from '../../constants'
 import { getRestaurantDishes } from '../../helpers/getRestaurantDishes'
 import { useIsNarrow, useIsShort } from '../../hooks/useIs'
 import { HomeStateItemGallery } from '../../state/home-types'
@@ -14,7 +13,6 @@ import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 export default memo(function GalleryPage() {
   const om = useOvermind()
   const state = om.state.home.currentState
-  const isSmall = useIsNarrow()
 
   if (state.type === 'gallery') {
     return (
@@ -24,11 +22,11 @@ export default memo(function GalleryPage() {
         width="100vw"
         height="100vh"
         fullscreen
-        backgroundColor="black"
+        backgroundColor="rgba(0,0,0,0.85)"
         zIndex={1000}
         pointerEvents="auto"
       >
-        <AbsoluteVStack top={5} right={30} zIndex={100000}>
+        <AbsoluteVStack top={15} right={45} zIndex={100000}>
           <StackViewCloseButton />
         </AbsoluteVStack>
         <Suspense fallback={<LoadingItems />}>

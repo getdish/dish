@@ -1,33 +1,22 @@
 import {
-  client,
   order_by,
   photo,
-  photo_xref,
-  resolved,
   useLazyQuery,
   useQuery,
   useTransactionQuery,
 } from '@dish/graph'
 import { ChevronLeft, ChevronRight } from '@dish/react-feather'
-import { orderBy, sortBy, uniqBy } from 'lodash'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import {
-  Dimensions,
-  Image,
-  NativeScrollEvent,
-  ScaledSize,
-  ScrollView,
-  View,
-} from 'react-native'
+import { orderBy, uniqBy } from 'lodash'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Dimensions, Image, ScaledSize, ScrollView } from 'react-native'
 import useKeyPressEvent from 'react-use/lib/useKeyPressEvent'
-import { Box, Button, HStack, Text, VStack } from 'snackui'
+import { HStack, VStack } from 'snackui'
 
 import { isWeb } from '../constants'
 
 const useScreenSize = () => {
   const [screenSize, setScreenSize] = useState(() => {
     const { width, height } = Dimensions.get('window')
-
     return {
       width,
       height,
@@ -53,18 +42,6 @@ const useScreenSize = () => {
 
 const ThumbnailSize = 150
 
-const isCloseToBottom = ({
-  layoutMeasurement,
-  contentOffset,
-  contentSize,
-}: NativeScrollEvent) => {
-  const paddingToBottom = 20
-  return (
-    layoutMeasurement.height + contentOffset.y >=
-    contentSize.height - paddingToBottom
-  )
-}
-
 const PhotosList = ({
   photos,
   onPhotoPress,
@@ -80,9 +57,7 @@ const PhotosList = ({
   onFetchMore: () => void
 }) => {
   const scrollView = useRef<ScrollView>()
-
   const currentScroll = useRef(0)
-
   const { width } = useScreenSize()
 
   const maxScrollRight = useMemo(() => {
@@ -93,43 +68,16 @@ const PhotosList = ({
   maxScrollRightRef.current = maxScrollRight
 
   useEffect(() => {
-    if (!scrollView.current) return
-
+    if (!scrollView.current) {
+      return
+    }
     const x = Math.max(0, activeIndex * ThumbnailSize)
-
     currentScroll.current = x
-
     scrollView.current.scrollTo({
       animated: true,
       x,
     })
   }, [activeIndex, width])
-
-  // const scrollLeft = useCallback(() => {
-  //   if (!scrollView.current) return
-
-  //   const x = Math.max(currentScroll.current - 300, 0)
-
-  //   currentScroll.current = x
-
-  //   scrollView.current.scrollTo({
-  //     animated: true,
-  //     x,
-  //   })
-  // }, [scrollView, photos])
-
-  // const scrollRight = useCallback(() => {
-  //   if (!scrollView.current) return
-
-  //   const x = Math.min(currentScroll.current + 300, maxScrollRight)
-
-  //   currentScroll.current = x
-
-  //   scrollView.current.scrollTo({
-  //     animated: true,
-  //     x,
-  //   })
-  // }, [scrollView, photos, width, maxScrollRight])
 
   return (
     <>
@@ -207,17 +155,18 @@ export const Lightbox = ({
     },
   })[0]
 
-  if (!restaurant) throw Error('No restaurant available')
+  if (!restaurant) {
+    throw Error('No restaurant available')
+  }
 
   restaurant.id
 
   const [pagination, setPagination] = useState(() => ({ limit: 20, offset: 0 }))
-
   const [photosList, setPhotosList] = useState<photo[]>(() => [])
 
   useTransactionQuery(
     () => {
-      const photosxRef = restaurant.photo_table({
+      const photoTable = restaurant.photo_table({
         limit: pagination.limit,
         offset: 0,
         order_by: [
@@ -228,14 +177,13 @@ export const Lightbox = ({
           },
         ],
       })
-
-      photosxRef.forEach(({ photo }) => {
+      photoTable.forEach(({ photo }) => {
         photo.id
         photo.url
         photo.quality
       })
 
-      return photosxRef.map((v) => v.photo)
+      return photoTable.map((v) => v.photo)
     },
     {
       onCompleted(data) {
@@ -349,14 +297,14 @@ export const Lightbox = ({
   return (
     <>
       <VStack marginTop={3}>
-        {activeImage.url && (
+        {!!activeImage.url && (
           <VStack>
             <Image
               source={{ uri: activeImage.url }}
               style={{
                 width: '100%',
                 maxWidth: '99vw',
-                height: `calc(100vh - ${ThumbnailSize}px - 50px)`,
+                height: `calc(100vh - ${ThumbnailSize}px - 10px)`,
               }}
               resizeMode="contain"
             />
@@ -364,26 +312,26 @@ export const Lightbox = ({
         )}
       </VStack>
 
-      <Box
+      <VStack
         onPress={setLeftImage}
         position="absolute"
-        left={1}
-        top="calc(50vh - 100px)"
-        backgroundColor="white"
+        left={10}
+        top="50%"
+        transform={[{ translateY: -ThumbnailSize / 2 - 30 / 2 }]}
         cursor="pointer"
       >
-        <ChevronLeft size={30} />
-      </Box>
-      <Box
+        <ChevronLeft color="#fff" size={30} />
+      </VStack>
+      <VStack
         onPress={setRightImage}
         position="absolute"
-        right={1}
-        top="calc(50vh - 100px)"
-        backgroundColor="white"
+        right={10}
+        top="50%"
+        transform={[{ translateY: -ThumbnailSize / 2 - 30 / 2 }]}
         cursor="pointer"
       >
-        <ChevronRight size={30} />
-      </Box>
+        <ChevronRight color="#fff" size={30} />
+      </VStack>
       <PhotosList
         photos={photosList}
         onPhotoPress={(photo, index) => {
