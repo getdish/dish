@@ -6,7 +6,7 @@ import { queryClient } from './queryClient'
 
 export type Point = [number, number]
 
-type RegionApiResponse = {
+export type RegionApiResponse = {
   bbox: {
     type: 'Polygon'
     coordinates: [[Point, Point, Point, Point, Point]]
@@ -19,6 +19,11 @@ type RegionApiResponse = {
 }
 
 const key = 'useRegionQuery'
+
+export type RegionNormalized = RegionApiResponse & {
+  center: LngLat
+  span: LngLat
+}
 
 export const fetchRegion = async (slug: string) => {
   try {
@@ -40,7 +45,7 @@ export const fetchRegion = async (slug: string) => {
         coords[2][1],
       ] as const
       const span: LngLat = bboxToSpan(simpleBbox)
-      const response = {
+      const response: RegionNormalized = {
         ...res,
         center,
         span,
@@ -57,5 +62,5 @@ export const fetchRegion = async (slug: string) => {
 }
 
 export const useRegionQuery = (slug: string, config?: UseQueryOptions<any>) => {
-  return useQuery(key, () => fetchRegion(slug), config)
+  return useQuery<RegionNormalized>(key, () => fetchRegion(slug), config)
 }

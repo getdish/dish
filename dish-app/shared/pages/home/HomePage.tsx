@@ -25,7 +25,7 @@ import {
 } from 'snackui'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants'
-import { useRegionQuery } from '../../helpers/fetchRegion'
+import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useIsNarrow } from '../../hooks/useIs'
@@ -225,7 +225,7 @@ const HomePageContent = memo(
     region,
     item,
   }: {
-    region?: Region
+    region?: RegionNormalized
     item: HomeStateItemHome
   }) {
     const items = useHomeFeed(item, region)
@@ -315,12 +315,12 @@ const useTopCuisines = (center: LngLat) => {
   return useQuery('topcuisine', () => getHomeCuisines(center))
 }
 
-function useHomeFeed(item: HomeStateItemHome, region?: Region) {
-  const restaurants = region?.geometry
+function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
+  const restaurants = region?.bbox
     ? query.restaurant({
         where: {
           location: {
-            _st_within: region?.geometry,
+            _st_within: region?.bbox,
           },
           downvotes: { _is_null: false },
           votes_ratio: { _is_null: false },
