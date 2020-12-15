@@ -1,6 +1,6 @@
 import { parseSchemaType } from '@dish/gqless'
 
-import { scalarsEnumsHash } from '../graphql/generated'
+import { scalarsEnumsHash } from '../graphql'
 
 const isSimpleField = (typeName: string) => {
   const { pureType } = parseSchemaType(typeName)
