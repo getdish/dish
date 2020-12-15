@@ -1,17 +1,15 @@
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useState } from 'react'
-import { Image, ScrollView } from 'react-native'
-import { AbsoluteVStack, HStack, LoadingItems, Modal, Text } from 'snackui'
+import { ScrollView } from 'react-native'
+import { AbsoluteVStack, HStack, LoadingItems, Modal } from 'snackui'
 
 import { pageWidthMax } from '../../constants'
-import { isWeb } from '../../constants'
-import { getImageUrl } from '../../helpers/getImageUrl'
 import { getRestaurantDishes } from '../../helpers/getRestaurantDishes'
 import { useIsNarrow, useIsShort } from '../../hooks/useIs'
 import { HomeStateItemGallery } from '../../state/home-types'
 import { useOvermind } from '../../state/useOvermind'
+import { Lightbox } from '../../views/Lightbox'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
-import { RestaurantHeader } from '../restaurant/RestaurantHeader'
 
 export default memo(function GalleryPage() {
   const om = useOvermind()
@@ -19,41 +17,24 @@ export default memo(function GalleryPage() {
   const isSmall = useIsNarrow()
 
   if (state.type === 'gallery') {
-    const dishPhotosElement = null
-    // (
-    //   <Suspense fallback={null}>
-    //     <RestaurantDishPhotos
-    //       size={100}
-    //       restaurantSlug={state.restaurantSlug}
-    //       selectable
-    //       defaultSelectedId={state.dishId}
-    //       onSelect={(selected) => {
-    //         console.log('got em', selected)
-    //       }}
-    //     />
-    //   </Suspense>
-    // )
-
     return (
-      <Modal maxWidth={pageWidthMax} width="98%" height="98%" maxHeight="98%">
+      <AbsoluteVStack
+        top={0}
+        left={0}
+        width="100vw"
+        height="100vh"
+        fullscreen
+        backgroundColor="black"
+        zIndex={1000}
+        pointerEvents="auto"
+      >
         <AbsoluteVStack top={5} right={30} zIndex={100000}>
           <StackViewCloseButton />
         </AbsoluteVStack>
         <Suspense fallback={<LoadingItems />}>
-          <HomePageGalleryContent state={state} />
-          {isSmall ? (
-            <AbsoluteVStack
-              backgroundColor="#fff"
-              padding={0}
-              bottom={0}
-              left={0}
-              right={0}
-            >
-              {dishPhotosElement}
-            </AbsoluteVStack>
-          ) : null}
+          <Lightbox restaurantSlug={state.restaurantSlug} />
         </Suspense>
-      </Modal>
+      </AbsoluteVStack>
     )
   }
 
@@ -133,7 +114,7 @@ const HomePageGalleryContent = memo(
               justifyContent="flex-start"
               backgroundColor="#eee"
             >
-              {Array.from(images).map((photoImage, i) => {
+              {/* {Array.from(images).map((photoImage, i) => {
                 return (
                   <HStack key={i} width={isSmall ? '100%' : '50%'}>
                     <Image
@@ -150,7 +131,7 @@ const HomePageGalleryContent = memo(
                 )
               })}
 
-              {!images.size && <Text>No photos found!</Text>}
+              {!images.size && <Text>No photos found!</Text>} */}
             </HStack>
           </ScrollView>
         </>
