@@ -213,6 +213,7 @@
     "react-hook-form": "^6.13.0"
   },
   "devDependencies": {
+    "@snackui/babel-plugin": "*",
     "@types/jsdom": "^16.2.5",
     "@types/lodash": "^4.14.165",
     "@types/mapbox-gl": "^2.0.0",
