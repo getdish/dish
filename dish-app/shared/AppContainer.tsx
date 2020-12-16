@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
@@ -6,10 +6,10 @@ import {
   LinearGradient,
   VStack,
   useMedia,
+  useTheme,
 } from 'snackui'
 
 import { AppSmallDrawer } from './AppSmallDrawer'
-import { bgAlt } from './colors'
 import { searchBarHeight, zIndexDrawer } from './constants'
 import { useAppDrawerWidth } from './hooks/useAppDrawerWidth'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
@@ -50,6 +50,7 @@ const HomeContainerLarge = (props) => {
   const media = useMedia()
   const drawerWidth = useAppDrawerWidth(Infinity)
   const lastWidth = useLastValueWhen(() => drawerWidth, media.sm)
+  const theme = useTheme()
 
   return (
     <VStack
@@ -71,26 +72,13 @@ const HomeContainerLarge = (props) => {
         zIndex={10}
         width="100%"
         flex={1}
-        backgroundColor="#fff"
+        backgroundColor={theme.backgroundColor}
         shadowColor="rgba(0,0,0,0.08)"
         shadowRadius={10}
         shadowOffset={{ width: 10, height: 0 }}
         justifyContent="flex-end"
       >
-        {/* overlay / under searchbar */}
-        <AbsoluteVStack
-          opacity={media.sm ? 0 : 1}
-          pointerEvents="none"
-          fullscreen
-          zIndex={1}
-          bottom="auto"
-          height={searchBarHeight + 20}
-        >
-          <LinearGradient
-            colors={[bgAlt, 'rgba(255,255,255,0)']}
-            style={[StyleSheet.absoluteFill]}
-          />
-        </AbsoluteVStack>
+        <UnderFade />
 
         <VStack
           flex={1}
@@ -109,3 +97,23 @@ const HomeContainerLarge = (props) => {
     </VStack>
   )
 }
+
+const UnderFade = memo(() => {
+  const theme = useTheme()
+  const media = useMedia()
+  return (
+    <AbsoluteVStack
+      opacity={media.sm ? 0 : 1}
+      pointerEvents="none"
+      fullscreen
+      zIndex={1}
+      bottom="auto"
+      height={searchBarHeight + 20}
+    >
+      <LinearGradient
+        colors={[theme.backgroundColor, theme.backgroundColorTransparent]}
+        style={[StyleSheet.absoluteFill]}
+      />
+    </AbsoluteVStack>
+  )
+})

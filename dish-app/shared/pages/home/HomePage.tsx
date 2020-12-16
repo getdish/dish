@@ -23,6 +23,7 @@ import {
   Text,
   VStack,
   useMedia,
+  useTheme,
 } from 'snackui'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants'
@@ -92,6 +93,7 @@ type FeedItems =
 export default memo(function HomePage(props: Props) {
   const om = useOvermind()
   const media = useMedia()
+  const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
   const region = useRegionQuery(props.item.region, {
     enabled: !!props.item.region,
@@ -168,10 +170,10 @@ export default memo(function HomePage(props: Props) {
           bottom={10}
           left={0}
           right={0}
-          shadowColor="#fff"
+          shadowColor={theme.backgroundColor}
           shadowOpacity={1}
           shadowRadius={10}
-          borderBottomColor="#f8f8f8"
+          borderBottomColor={theme.backgroundColorSecondary}
           borderBottomWidth={1}
           height={searchBarHeight + 10}
         />
@@ -196,7 +198,7 @@ export default memo(function HomePage(props: Props) {
                 <Text
                   paddingHorizontal={6}
                   fontSize={media.sm ? 28 : 44}
-                  color="#000"
+                  color={theme.color}
                   fontWeight="300"
                 >
                   {regionName}

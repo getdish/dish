@@ -17,10 +17,6 @@ import { ErrorBoundary } from './views/ErrorBoundary'
 import { Route } from './views/router/Route'
 
 export default memo(function App() {
-  return <AppContent />
-})
-
-const AppContent = memo(() => {
   return (
     <AppRoot>
       <Suspense fallback={null}>

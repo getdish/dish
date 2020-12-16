@@ -24,6 +24,8 @@ function delete_and_link_duplicate_modules() {
 
 function delete_duplicate_snack_modules() {
   pushd $PROJECT_ROOT
+  rm -r snackui/examples/nextjs/node_modules/react || true
+  rm -r snackui/examples/nextjs/node_modules/react-dom || true
   rm -r snackui/node_modules/@babel/types || true # fix babel single version
   rm -r snackui/node_modules/@o || true
   rm -r snackui/node_modules/react || true

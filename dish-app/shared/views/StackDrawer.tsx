@@ -6,6 +6,7 @@ import {
   StackProps,
   VStack,
   useMedia,
+  useTheme,
 } from 'snackui'
 
 import { drawerBorderRadius, drawerWidthMax } from '../constants'
@@ -29,6 +30,7 @@ export const StackDrawer = ({
   ...props
 }: StackProps & { title?: string; closable?: boolean; fallback?: any }) => {
   const media = useMedia()
+  const theme = useTheme()
   return (
     <HStack
       position="absolute"
@@ -53,7 +55,7 @@ export const StackDrawer = ({
         flex={1}
         borderRadius={drawerBorderRadius}
         maxWidth={media.sm ? '100%' : drawerWidthMax}
-        backgroundColor="#fff"
+        backgroundColor={theme.backgroundColor}
         overflow="hidden"
         {...props}
       >

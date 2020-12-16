@@ -24,6 +24,7 @@ import {
   VStack,
   useGet,
   useMedia,
+  useTheme,
 } from 'snackui'
 
 import { bgLight, bgLightHover, bgLightPress, brandColor } from '../../colors'
@@ -219,6 +220,7 @@ const RestaurantListItemContent = memo(
         : 1.15
     const titleFontSize = Math.round((media.sm ? 20 : 28) * titleFontScale)
     const titleHeight = titleFontSize + 8 * 2
+    const theme = useTheme()
 
     return (
       <VStack
@@ -327,7 +329,7 @@ const RestaurantListItemContent = memo(
                           fontSize={titleFontSize}
                           lineHeight={titleHeight}
                           height={titleHeight}
-                          color="#000"
+                          color={theme.color}
                           fontWeight="800"
                           letterSpacing={-1.25}
                           ellipse

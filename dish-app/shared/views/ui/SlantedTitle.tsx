@@ -1,7 +1,8 @@
+// TODO useTheme here and fix bugs
 import React from 'react'
 import { BoxProps, SizableTextProps, Title } from 'snackui'
 
-import { SlantedBox, slantedBoxStyle } from './SlantedBox'
+import { SlantedBox } from './SlantedBox'
 
 export const SlantedTitle = ({
   children,

@@ -4296,7 +4296,7 @@ ansi-styles@^2.2.1:
   resolved "https://registry.npmjs.org/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
   integrity sha1-tDLdM1i2NM914eRmQ2gkBTPB3b4=
 
-ansi-styles@^3.0.0, ansi-styles@^3.2.0, ansi-styles@^3.2.1:
+ansi-styles@^3.2.0, ansi-styles@^3.2.1:
   version "3.2.1"
   resolved "https://registry.npmjs.org/ansi-styles/-/ansi-styles-3.2.1.tgz#41fbb20243e50b12be0f04b8dedbf07520ce841d"
   integrity sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==
@@ -4606,14 +4606,6 @@ assign-symbols@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/assign-symbols/-/assign-symbols-1.0.0.tgz#59667f41fadd4f20ccbc2bb96b8d4f7f78ec0367"
   integrity sha1-WWZ/QfrdTyDMvCu5a41Pf3jsA2c=
-
-ast-pretty-print@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.npmjs.org/ast-pretty-print/-/ast-pretty-print-2.0.1.tgz#e3a0f443b8f9414d7925dea18d125362e4f6a372"
-  integrity sha1-46D0Q7j5QU15Jd6hjRJTYuT2o3I=
-  dependencies:
-    pretty-format-ast "^1.0.1"
-    pretty-format2 "^2.0.3"
 
 ast-types@0.14.2:
   version "0.14.2"
@@ -9920,7 +9912,7 @@ fs-minipass@^1.2.5:
   dependencies:
     minipass "^2.6.0"
 
-fs-monkey@1.0.1, fs-monkey@^1.0.0:
+fs-monkey@1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/fs-monkey/-/fs-monkey-1.0.1.tgz#4a82f36944365e619f4454d9fff106553067b781"
   integrity sha512-fcSa+wyTqZa46iWweI7/ZiUfegOZl0SG8+dltIwFXo7+zYU9J9kpS3NB6pZcSlJdhvIwp81Adx2XhZorncxiaA==
@@ -16579,20 +16571,6 @@ pretty-error@^2.1.1:
     lodash "^4.17.20"
     renderkid "^2.0.4"
 
-pretty-format-ast@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/pretty-format-ast/-/pretty-format-ast-1.0.1.tgz#1d8cff9adeeaad5376aa80997952a55a2907ca8d"
-  integrity sha1-HYz/mt7qrVN2qoCZeVKlWikHyo0=
-  dependencies:
-    pretty-format2 "^2.0.3"
-
-pretty-format2@^2.0.3:
-  version "2.0.4"
-  resolved "https://registry.npmjs.org/pretty-format2/-/pretty-format2-2.0.4.tgz#4a76e0b0a91eb0907ded86763d83af44f5e42dc3"
-  integrity sha512-Tl/GgFDw5IcHMgbjEhqS4BZ713KXkCRQp+FcKhYpXZ56cZv/G/m3XqoL9cUi1nPRVJ3TPNvrV3szDMQ39cQRvg==
-  dependencies:
-    ansi-styles "^3.0.0"
-
 pretty-format@^23.6.0:
   version "23.6.0"
   resolved "https://registry.npmjs.org/pretty-format/-/pretty-format-23.6.0.tgz#5eaac8eeb6b33b987b7fe6097ea6a8a146ab5760"
@@ -20590,13 +20568,6 @@ union-value@^1.0.0:
     get-value "^2.0.6"
     is-extendable "^0.1.1"
     set-value "^2.0.1"
-
-unionfs@^4.4.0:
-  version "4.4.0"
-  resolved "https://registry.npmjs.org/unionfs/-/unionfs-4.4.0.tgz#b671112e505f70678052345cf5c2a33f0e6edde9"
-  integrity sha512-N+TuJHJ3PjmzIRCE1d2N3VN4qg/P78eh/nxzwHnzpg3W2Mvf8Wvi7J1mvv6eNkb8neUeSdFSQsKna0eXVyF4+w==
-  dependencies:
-    fs-monkey "^1.0.0"
 
 uniq@^1.0.1:
   version "1.0.1"

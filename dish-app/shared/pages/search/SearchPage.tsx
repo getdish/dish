@@ -1,4 +1,3 @@
-// debug
 import { sleep } from '@dish/async'
 import { ArrowUp } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'

@@ -1,8 +1,8 @@
 import React, { memo } from 'react'
 import Svg, { G, Path } from 'react-native-svg'
-import { AbsoluteVStack, HStack, VStack, useMedia } from 'snackui'
+import { AbsoluteVStack, HStack, VStack, useMedia, useTheme } from 'snackui'
 
-import { isWeb } from '../../constants'
+import { drawerWidthMax, isWeb } from '../../constants'
 import { useSafeArea } from '../../hooks/useSafeArea'
 import { isSearchState } from '../../state/home-helpers'
 import { useOvermind } from '../../state/useOvermind'
@@ -25,6 +25,7 @@ const InverseRoundedEdge = () => {
 
 export const SearchPageNavBar = (props: { id: string }) => {
   const media = useMedia()
+  const theme = useTheme()
   const safeArea = useSafeArea()
 
   if (media.sm) {
@@ -49,7 +50,8 @@ export const SearchPageNavBar = (props: { id: string }) => {
       top={0}
       left={0}
       right={0}
-      backgroundColor={isWeb ? '#fff' : `rgba(255,255,255,0.25)`}
+      maxWidth={drawerWidthMax}
+      backgroundColor={theme.backgroundColor}
       shadowColor="rgba(0,0,0,0.04)"
       shadowRadius={6}
       borderRadius={media.sm ? 20 : 0}

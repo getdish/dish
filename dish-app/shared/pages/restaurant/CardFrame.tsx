@@ -1,5 +1,6 @@
+// TODO theme extraction
 import React from 'react'
-import { StackProps, VStack, useMedia } from 'snackui'
+import { StackProps, VStack, useMedia, useTheme } from 'snackui'
 
 import { useCardFrame } from '../home/useCardFrame'
 
@@ -12,6 +13,7 @@ export const CardFrame = ({
   ...props
 }: StackProps & { expandable?: boolean; hoverable?: boolean }) => {
   const { width, height } = useCardFrame()
+  const theme = useTheme()
   const media = useMedia()
   const cardFrameWidthLarge = width * 2
   const expanded = !media.xs && expandable
@@ -25,7 +27,7 @@ export const CardFrame = ({
       {...(expanded && {
         width: cardFrameWidthLarge,
       })}
-      backgroundColor="#fff"
+      backgroundColor={theme.backgroundColorSecondary}
       shadowColor="#000"
       shadowOpacity={0.1}
       shadowRadius={5}

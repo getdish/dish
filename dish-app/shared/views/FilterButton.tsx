@@ -1,8 +1,17 @@
+// debug
 import { Clock, DollarSign, ShoppingBag } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { Image } from 'react-native'
 import type { NavigableTag } from 'shared/state/NavigableTag'
-import { Box, HStack, HoverablePopover, Text, VStack, useMedia } from 'snackui'
+import {
+  Box,
+  HStack,
+  HoverablePopover,
+  Text,
+  VStack,
+  useMedia,
+  useTheme,
+} from 'snackui'
 
 import { tagDisplayNames } from '../state/tagMeta'
 import { useOvermind } from '../state/useOvermind'
@@ -25,6 +34,7 @@ export const FilterButton = memo(
     color?: string
   }) => {
     const media = useMedia()
+    const theme = useTheme()
     const iconColor = media.sm ? (isActive ? '#000' : '#fff') : color
     const textColor = media.sm ? color : isActive ? '#000' : color
 
@@ -76,7 +86,7 @@ export const FilterButton = memo(
 
     content = (
       <SmallButton
-        borderColor={media.sm ? 'transparent' : '#eee'}
+        borderColor={theme.borderColor}
         fontSize={14}
         fontWeight="700"
         alignItems="center"
