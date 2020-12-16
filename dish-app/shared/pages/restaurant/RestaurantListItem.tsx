@@ -217,7 +217,7 @@ const RestaurantListItemContent = memo(
         : nameLen > 15
         ? 0.975
         : 1.15
-    const titleFontSize = 1.2 * (media.sm ? 18 : 22) * titleFontScale
+    const titleFontSize = Math.round((media.sm ? 20 : 28) * titleFontScale)
     const titleHeight = titleFontSize + 8 * 2
 
     return (
@@ -266,7 +266,7 @@ const RestaurantListItemContent = memo(
         />
 
         {tagIds && (
-          <AbsoluteVStack top={34} left={-12} zIndex={1000}>
+          <AbsoluteVStack top={34} left={-12} zIndex={-1}>
             <RestaurantUpVoteDownVote
               key={JSON.stringify(tagIds)}
               score={Math.round((meta?.effective_score ?? 0) / 10)}
@@ -298,7 +298,7 @@ const RestaurantListItemContent = memo(
               name="restaurant"
               params={{ slug: restaurantSlug }}
             >
-              <VStack paddingLeft={50} paddingTop={25}>
+              <VStack paddingLeft={47} paddingTop={25}>
                 <HStack alignItems="center">
                   <Spacer size="xs" />
 

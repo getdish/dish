@@ -38,6 +38,7 @@ export const UpvoteDownvoteScore = memo(
       <VoteButton
         size={18 * scale}
         Icon={ChevronUp}
+        shadowDirection="up"
         voted={vote == 1}
         color={vote === 1 ? 'green' : voteButtonColor}
         onPress={(e) => {

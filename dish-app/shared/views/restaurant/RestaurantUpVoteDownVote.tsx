@@ -1,5 +1,13 @@
 import { graphql } from '@dish/graph'
-import { ChevronDown, ChevronUp } from '@dish/react-feather'
+import {
+  ChevronDown,
+  ChevronUp,
+  ChevronsDown,
+  ChevronsUp,
+  Frown,
+  Heart,
+  ThumbsDown,
+} from '@dish/react-feather'
 import React, { Suspense, memo } from 'react'
 import { GestureResponderEvent } from 'react-native'
 import { AbsoluteVStack, StackProps, Text, Tooltip, VStack } from 'snackui'
@@ -61,27 +69,25 @@ const RestaurantUpVoteDownVoteContents = memo(
         >
           <SentimentCircle ratio={ratio} />
         </AbsoluteVStack>
-        <VStack transform={[{ skewX: '-12deg' }]}>
-          <VStack
-            shadowColor="#000"
-            backgroundColor="#fff"
-            shadowOpacity={0.1}
-            shadowOffset={{ height: 2, width: 0 }}
-            shadowRadius={7}
-            borderRadius={12}
-            overflow="hidden"
-            padding={2}
-            paddingHorizontal={5}
-          >
-            <VStack alignItems="flex-end" transform={[{ skewX: '12deg' }]}>
-              <TotalScore
-                score={score}
-                ratio={ratio}
-                vote={vote}
-                setVote={setVote}
-                onClickPoints={onClickPoints}
-              />
-            </VStack>
+        <VStack
+          shadowColor="#000"
+          backgroundColor="#fff"
+          shadowOpacity={0.1}
+          shadowOffset={{ height: 2, width: 0 }}
+          shadowRadius={7}
+          borderRadius={12}
+          padding={2}
+          paddingHorizontal={5}
+          transform={[{ skewX: '-12deg' }]}
+        >
+          <VStack alignItems="flex-end" transform={[{ skewX: '12deg' }]}>
+            <TotalScore
+              score={score}
+              ratio={ratio}
+              vote={vote}
+              setVote={setVote}
+              onClickPoints={onClickPoints}
+            />
           </VStack>
         </VStack>
       </VStack>
@@ -121,7 +127,8 @@ export const TotalScore = memo(
     const upvote = (
       <VoteButton
         size={18 * scale}
-        Icon={ChevronUp}
+        Icon={ChevronsUp}
+        shadowDirection="up"
         voted={vote == 1}
         color={vote === 1 ? 'green' : voteButtonColor}
         onPress={(e) => {
@@ -134,7 +141,7 @@ export const TotalScore = memo(
     const downvote = (
       <VoteButton
         size={18 * scale}
-        Icon={ChevronDown}
+        Icon={ChevronsDown}
         voted={vote == -1}
         color={vote === -1 ? 'red' : voteButtonColor}
         onPress={(e) => {
@@ -165,7 +172,7 @@ export const TotalScore = memo(
         <Text
           fontSize={Math.min(16, sizePx / `${score}`.length) * scale * 1.075}
           fontWeight="600"
-          marginVertical={2 * scale}
+          marginVertical={6.5 * scale}
           letterSpacing={-0.5}
           color={color}
           cursor="default"

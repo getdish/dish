@@ -2,6 +2,7 @@
 import { sleep } from '@dish/async'
 import { ArrowUp } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'
+import { sortBy } from 'lodash'
 import React, {
   Suspense,
   createContext,
@@ -342,7 +343,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         : titleLen > 50
         ? 0.9
         : 1
-    const titleFontSize = 26 * titleScale * (media.sm ? 0.75 : 1.2)
+    const titleFontSize = 28 * titleScale * (media.sm ? 0.75 : 1.2)
     const lenseColor = useCurrentLenseColor()
     const scrollRef = useRef<ScrollView>()
 
@@ -374,7 +375,24 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     }, [])
 
     const meta = curProps.item.meta
-    console.log('meta', meta)
+    const activeTags = getActiveTags(curProps.item)
+    const weights = activeTags.map((tag) => {
+      return !meta
+        ? 1
+        : meta.main_tag === tag.slug.replace('lenses__', '')
+        ? meta.scores.weights.main_tag * 2
+        : meta.scores.weights.rishes * 2
+    })
+    const totalWeight = weights.reduce((a, c) => a + c, 0)
+    const tagsWithPct = sortBy(
+      activeTags.map((tag, i) => {
+        return {
+          pct: Math.round((weights[i] / totalWeight) * 100),
+          tag,
+        }
+      }),
+      (x) => -x.pct
+    )
 
     return (
       <VStack onLayout={handleLayout} flex={1}>
@@ -398,7 +416,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
               textAlign="center"
               letterSpacing={-0.25}
               fontSize={titleFontSize}
-              fontWeight="700"
+              fontWeight="800"
               color={rgbString(lenseColor.map((x) => x * 0.92))}
             >
               {pageTitleElements}{' '}
@@ -445,33 +463,26 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
               alignItems="center"
               borderWidth={1}
               borderColor="#f2f2f2"
-              padding={10}
               paddingHorizontal={15}
               borderRadius={100}
               maxWidth="80%"
+              height={52}
             >
               <VStack marginLeft={-25} marginRight={5}>
                 <SlantedTitle>Scoring</SlantedTitle>
               </VStack>
-              <HStack spacing="lg">
-                {!!meta &&
-                  getActiveTags(curProps.item).map((tag, index) => {
-                    return (
-                      <HStack alignItems="center" key={tag.slug ?? index}>
-                        <TagButton
-                          replaceSearch
-                          size="sm"
-                          {...getTagButtonProps(tag)}
-                        />
-                        <Spacer size="xs" />
-                        <Text fontSize={13} color="#999">
-                          {meta.main_tag === tag.slug.replace('lenses__', '')
-                            ? `${meta.scores.weights.main_tag}x`
-                            : `${meta.scores.weights.rishes}x`}
-                        </Text>
-                      </HStack>
-                    )
-                  })}
+              <HStack spacing="sm">
+                {tagsWithPct.map(({ tag, pct }, index) => {
+                  return (
+                    <TagButton
+                      key={tag.slug ?? index}
+                      replaceSearch
+                      size="sm"
+                      {...getTagButtonProps(tag)}
+                      after={`(${pct}%)`}
+                    />
+                  )
+                })}
               </HStack>
             </HStack>
             <HStack flex={1} />
