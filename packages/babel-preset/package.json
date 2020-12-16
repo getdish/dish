@@ -2,6 +2,9 @@
   "name": "@dish/babel-preset",
   "version": "0.0.1",
   "main": "babel.config.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "true",
     "watch": "true"
