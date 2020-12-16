@@ -6,10 +6,11 @@ export type MyThemes = typeof themes
 const dark = {
   backgroundColorTransparent: 'rgba(0,0,0,0)',
   backgroundColor: '#111',
-  backgroundColorSecondary: '#151515',
-  borderColor: '#222',
+  backgroundColorSecondary: '#222',
+  borderColor: '#252525',
   color: '#fefefe',
   colorSecondary: '#eee',
+  cardBackgroundColor: '#333',
 }
 
 const light: MyTheme = {
@@ -19,6 +20,7 @@ const light: MyTheme = {
   borderColor: '#eee',
   color: '#000',
   colorSecondary: '#222',
+  cardBackgroundColor: '#fff',
 }
 
 const themes = {

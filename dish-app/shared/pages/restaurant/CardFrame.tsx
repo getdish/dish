@@ -1,3 +1,4 @@
+// debug
 // TODO theme extraction
 import React from 'react'
 import { StackProps, VStack, useMedia, useTheme } from 'snackui'
@@ -27,7 +28,7 @@ export const CardFrame = ({
       {...(expanded && {
         width: cardFrameWidthLarge,
       })}
-      backgroundColor={theme.backgroundColorSecondary}
+      backgroundColor={theme.cardBackgroundColor}
       shadowColor="#000"
       shadowOpacity={0.1}
       shadowRadius={5}
@@ -38,6 +39,9 @@ export const CardFrame = ({
       {...(hoverable && {
         hoverStyle: {
           transform: [{ scale: 1.015 }],
+        },
+        pressStyle: {
+          transform: [{ scale: 0.95 }],
         },
       })}
       {...props}

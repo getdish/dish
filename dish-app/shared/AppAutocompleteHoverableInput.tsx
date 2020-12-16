@@ -38,15 +38,7 @@ export const AppAutocompleteHoverableInput = ({
         }
       }}
     >
-      <HStack
-        backgroundColor={
-          media.sm ? 'rgba(0,0,0,0.05)' : backgroundColor ?? 'transparent'
-        }
-        borderRadius={borderRadius}
-        width="100%"
-      >
-        {children}
-      </HStack>
+      {children}
     </Hoverable>
   )
 }

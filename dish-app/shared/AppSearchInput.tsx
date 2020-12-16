@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native'
 import {
+  AbsoluteVStack,
   HStack,
   Spacer,
   Toast,
@@ -23,6 +24,7 @@ import {
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { isWeb, searchBarHeight } from './constants'
+import { DishHorizonView } from './DishHorizonView'
 import { isWebIOS } from './helpers/isIOS'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
@@ -167,39 +169,50 @@ export const AppSearchInput = memo(() => {
   }, [])
 
   return (
-    <AppAutocompleteHoverableInput
-      input={input}
-      autocompleteTarget="search"
-      backgroundColor="rgba(5,5,5,0.6)"
-      {...(!media.sm && {
-        borderRadius: 100,
-      })}
-    >
+    <AppAutocompleteHoverableInput input={input} autocompleteTarget="search">
       <HStack
         alignItems="center"
-        borderRadius={100}
-        borderWidth={0.5}
-        borderColor="transparent"
+        borderRadius={20}
+        borderWidth={1}
+        borderColor="rgba(255,255,255,0.2)"
+        shadowColor="#000"
+        shadowRadius={15}
+        shadowOpacity={0.1}
         flex={1}
         maxWidth="100%"
         paddingLeft={10}
         overflow="hidden"
+        position="relative"
         hoverStyle={{
-          borderColor: 'rgba(255,255,255,0.2)',
+          borderColor: 'rgba(255,255,255,0.125)',
+          backgroundColor: 'rgba(255,255,255,0.05)',
         }}
         focusStyle={{
-          borderColor: 'rgba(255,255,255,0.5)',
+          borderColor: 'rgba(255,255,255,0.135)',
+          backgroundColor: 'rgba(255,255,255,0.085)',
           shadowColor: '#000',
-          shadowRadius: 4,
-          shadowOpacity: 0.2,
+          shadowRadius: 15,
+          shadowOpacity: 0.1,
         }}
       >
+        <AbsoluteVStack
+          top={-90}
+          bottom={-90}
+          right={-90}
+          left={0}
+          transform={[{ translateX: 160 }, { scale: 0.9 }]}
+          opacity={0.8}
+        >
+          <DishHorizonView />
+        </AbsoluteVStack>
         {/* Loading / Search Icon */}
         <VStack
           width={16}
-          marginRight={-2}
           marginLeft={3}
-          transform={[{ scale: om.state.home.isLoading ? 1.2 : 1 }]}
+          transform={[
+            { scale: om.state.home.isLoading ? 1.2 : 1 },
+            { translateY: 0.5 },
+          ]}
         >
           <TouchableOpacity onPress={focusSearchInput}>
             {om.state.home.isLoading ? (
@@ -209,7 +222,7 @@ export const AppSearchInput = memo(() => {
             ) : (
               <Search
                 color={color}
-                size={16}
+                size={20}
                 style={{
                   opacity: 0.8,
                 }}
@@ -480,7 +493,7 @@ const AppSearchInputTags = memo(
                   className="no-transition"
                   key={getTagSlug(tag)}
                   subtleIcon
-                  backgroundColor="rgba(90,90,90,0.5)"
+                  backgroundColor="rgba(150,150,150,0.25)"
                   color={'#fff'}
                   shadowColor="#00000022"
                   fontWeight="600"
@@ -489,13 +502,13 @@ const AppSearchInputTags = memo(
                   borderColor={'transparent'}
                   borderRadius={100}
                   hoverStyle={{
-                    backgroundColor: 'rgba(90,90,90,0.6)',
+                    backgroundColor: 'rgba(150,150,150,0.3)',
                   }}
                   {...(isActive && {
-                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    backgroundColor: 'rgba(150,150,150,0.1)',
                     color: '#fff',
                     hoverStyle: {
-                      backgroundColor: 'rgba(255,255,255,0.1)',
+                      backgroundColor: 'rgba(150,150,150,0.1)',
                     },
                   })}
                   {...(!isWeb && {

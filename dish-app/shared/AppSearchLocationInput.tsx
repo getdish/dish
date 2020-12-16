@@ -2,12 +2,13 @@ import { MapPin, Navigation } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { TextInput, TouchableOpacity } from 'react-native'
-import { Button, HStack, VStack, prevent } from 'snackui'
+import { AbsoluteVStack, Button, HStack, VStack, prevent } from 'snackui'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { inputTextStyles } from './AppSearchInput'
 import { blue } from './colors'
 import { isWeb } from './constants'
+import { DishHorizonView } from './DishHorizonView'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
@@ -92,8 +93,18 @@ export const AppSearchLocationInput = memo(() => {
           flex={1}
           minHeight={44}
           alignItems="center"
+          backgroundColor="rgba(0,0,0,0.2)"
           justifyContent="center"
           paddingHorizontal={8}
+          position="relative"
+          borderRadius={12}
+          overflow="hidden"
+          hoverStyle={{
+            backgroundColor: 'rgba(0,0,0,0.5)',
+          }}
+          focusStyle={{
+            backgroundColor: 'rgba(0,0,0,0.6)',
+          }}
         >
           <TouchableOpacity
             onPress={(e) => {

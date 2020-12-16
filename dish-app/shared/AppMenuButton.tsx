@@ -1,7 +1,14 @@
 import { Menu } from '@dish/react-feather'
 import { Store, useStore } from '@dish/use-store'
 import React from 'react'
-import { AbsoluteVStack, HStack, Modal, VStack, useMedia } from 'snackui'
+import {
+  AbsoluteVStack,
+  BlurView,
+  HStack,
+  Modal,
+  VStack,
+  useMedia,
+} from 'snackui'
 
 import { AppMenuContents } from './AppMenuContents'
 import { zIndexDrawer } from './constants'
@@ -20,7 +27,7 @@ class UserMenuStore extends Store {
   }
 }
 
-export const AppMenuFloating = () => {
+export const AppMenuButton = () => {
   const media = useMedia()
   const userMenu = useStore(UserMenuStore)
   const safeArea = useSafeArea()
@@ -64,20 +71,20 @@ export const AppMenuFloating = () => {
             userMenu.toggle()
           }}
         >
-          {/* <BlurView
+          <BlurView
             borderRadius={24}
             fallbackBackgroundColor="rgba(255,255,255,0.9)"
-          > */}
-          <HStack
-            width={44}
-            height={44}
-            alignItems="center"
-            justifyContent="center"
-            borderRadius={100}
           >
-            <Menu color={color} size={22} />
-          </HStack>
-          {/* </BlurView> */}
+            <HStack
+              width={44}
+              height={44}
+              alignItems="center"
+              justifyContent="center"
+              borderRadius={100}
+            >
+              <Menu color={color} size={22} />
+            </HStack>
+          </BlurView>
         </VStack>
       </AbsoluteVStack>
     </>

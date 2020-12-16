@@ -169,9 +169,8 @@ export default memo(function SearchPage(props: Props) {
 
   return (
     <VStack position="relative" height="100%">
-      <StackCloseButton />
-      <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
-      <StackDrawer>
+      <StackDrawer closable>
+        <SearchNavBarContainer isActive={props.isActive} id={props.item.id} />
         <Suspense fallback={<HomeLoading />}>
           <VStack
             flex={1}
@@ -199,10 +198,10 @@ const SearchNavBarContainer = ({
 
   if (!media.sm) {
     return (
-      <>
+      <HStack>
         {contents}
         <VStack width={100} height={10} />
-      </>
+      </HStack>
     )
   }
 
@@ -212,9 +211,6 @@ const SearchNavBarContainer = ({
         {contents}
       </AbsoluteVStack>
     )
-  }
-
-  if (!media.sm) {
   }
 
   return (
@@ -468,7 +464,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
               height={52}
             >
               <VStack marginLeft={-25} marginRight={5}>
-                <SlantedTitle>Scoring</SlantedTitle>
+                <SlantedTitle size="xs">Scoring</SlantedTitle>
               </VStack>
               <HStack spacing="sm">
                 {tagsWithPct.map(({ tag, pct }, index) => {

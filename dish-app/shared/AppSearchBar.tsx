@@ -49,7 +49,7 @@ export const parentIds = {
 
 export const AppSearchBarFloating = () => {
   const media = useMedia()
-  const { background, backgroundRgb } = useSearchBarTheme()
+  // const { background, backgroundRgb } = useSearchBarTheme()
   const height = searchBarHeight + 4
 
   if (media.sm) {
@@ -86,43 +86,61 @@ export const AppSearchBarFloating = () => {
         maxWidth={searchBarMaxWidth + 20}
       >
         <AbsoluteVStack
-          borderRadius={100}
+          borderRadius={15}
+          transform={[{ skewX: '-12deg' }]}
           overflow="hidden"
           zIndex={102}
           fullscreen
           height={height}
           justifyContent="center"
           alignItems="center"
-          shadowColor="rgba(0,0,0,0.34)"
-          shadowOffset={{ height: 2, width: 0 }}
-          shadowRadius={8}
+          backgroundColor="#111"
+          shadowColor="rgba(0,0,0,0.3)"
+          shadowOffset={{ height: 1, width: 0 }}
+          shadowRadius={15}
         >
-          <AbsoluteVStack
-            borderWidth={2}
-            borderColor="rgba(255,255,255,0.1)"
-            borderRadius={100}
-            backgroundColor={background}
+          {/* <BlurView
+            position="absolute"
             fullscreen
+            fallbackBackgroundColor="#000"
+          /> */}
+          <AbsoluteVStack
+            borderWidth={3}
+            borderColor="rgba(255,255,255,0.2)"
+            borderRadius={14}
+            fullscreen
+          />
+          <AbsoluteVStack
+            borderWidth={1}
+            borderColor="rgba(0,0,0,0.35)"
+            borderRadius={14}
+            fullscreen
+          />
+          <LinearGradient
+            style={[StyleSheet.absoluteFill]}
+            colors={[
+              'rgba(255,255,255,0.1)',
+              `rgba(0,0,0,0.1)`,
+              'rgba(255,255,255,0.1)',
+            ]}
+          />
+          <AbsoluteVStack
+            opacity={0.5}
+            fullscreen
+            transform={[{ translateX: 200 }]}
           >
-            <LinearGradient
-              style={[StyleSheet.absoluteFill, { left: '80%' }]}
-              start={[0.5, 0.5]}
-              end={[1, 1]}
-              colors={[background, `rgb(${backgroundRgb.map((x) => x * 0.8)})`]}
-            />
-            <LinearGradient
-              style={[StyleSheet.absoluteFill]}
-              colors={['rgba(255,255,255,0.04)', `rgba(255,255,255,0)`]}
-            />
+            <DishHorizonView />
           </AbsoluteVStack>
-
-          <DishHorizonView />
+          <AbsoluteVStack
+            fullscreen
+            transform={[{ skewX: '12deg' }]}
+          ></AbsoluteVStack>
         </AbsoluteVStack>
         <VStack
           position="relative"
           zIndex={104}
           flex={1}
-          paddingHorizontal={12}
+          paddingHorizontal={3}
           height={height}
           justifyContent="center"
           overflow="hidden"
@@ -201,7 +219,7 @@ const AppSearchBarContents = memo(() => {
 
       {!media.xs && (
         <>
-          <Spacer size={6} />
+          <Spacer size={16} />
           <VStack
             className="ease-in-out"
             overflow="hidden"
@@ -220,6 +238,7 @@ const AppSearchBarContents = memo(() => {
           >
             <AppSearchLocationInput />
           </VStack>
+          <Spacer size={16} />
         </>
       )}
 

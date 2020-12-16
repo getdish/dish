@@ -13,7 +13,7 @@
   "dependencies": {
     "react-native-web": "*",
     "@babel/core": "^7.12.9",
-    "react-refresh": "^0.8.3",
+    "react-refresh": "0.0.0-experimental-94c0244ba",
     "@loadable/babel-plugin": "^5.13.2",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/plugin-proposal-decorators": "^7.12.1",
@@ -25,7 +25,7 @@
     "@babel/preset-react": "^7.12.1",
     "@babel/preset-typescript": "^7.12.1",
     "babel-plugin-lodash": "^3.3.4",
-    "babel-plugin-react-native-web": "^0.13.14",
+    "babel-plugin-react-native-web": "^0.14.9",
     "@babel/preset-env": "^7.12.1"
   }
 }

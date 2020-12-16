@@ -7,7 +7,7 @@ import { AppContainer } from './AppContainer'
 import { AppIntroLetter } from './AppIntroLetter'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
-import { AppMenuFloating } from './AppMenuFloating'
+import { AppMenuButton } from './AppMenuButton'
 import { AppRoot } from './AppRoot'
 import { AppSearchBarFloating } from './AppSearchBar'
 import { AppStackView } from './AppStackView'
@@ -24,7 +24,7 @@ export default memo(function App() {
       </Suspense>
 
       <Suspense fallback={null}>
-        <AppMenuFloating />
+        <AppMenuButton />
       </Suspense>
 
       <Suspense fallback={null}>

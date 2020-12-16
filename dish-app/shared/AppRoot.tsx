@@ -15,7 +15,7 @@ configureThemes(themes)
 
 export function AppRoot(props: { children: any }) {
   return (
-    <ThemeProvider themes={themes} defaultTheme="dark">
+    <ThemeProvider themes={themes} defaultTheme="light">
       <QueryClientProvider client={queryClient}>
         <AppPortalProvider>{props.children}</AppPortalProvider>
       </QueryClientProvider>

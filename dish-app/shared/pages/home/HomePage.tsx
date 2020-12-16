@@ -195,14 +195,9 @@ export default memo(function HomePage(props: Props) {
               <HomeTopSearches />
               <Spacer />
               <VStack alignItems="center">
-                <Text
-                  paddingHorizontal={6}
-                  fontSize={media.sm ? 28 : 44}
-                  color={theme.color}
-                  fontWeight="300"
-                >
+                <SlantedTitle size="xl" alignSelf="center">
                   {regionName}
-                </Text>
+                </SlantedTitle>
               </VStack>
               <Spacer size="xl" />
               <Spacer />
@@ -456,11 +451,15 @@ const CuisineFeedCard = graphql(function CuisineFeedCard(
   return (
     <VStack height="100%" maxWidth="100%">
       <AbsoluteVStack zIndex={10} top={-5} left={-5}>
-        <SlantedBox backgroundColor="#000">
-          <Text color="#fff" fontWeight="600" lineHeight={20} fontSize={20}>
-            {props.country} {props.icon}
-          </Text>
-        </SlantedBox>
+        <SlantedTitle
+          color="#fff"
+          fontWeight="600"
+          lineHeight={20}
+          fontSize={20}
+          backgroundColor="#000"
+        >
+          {props.country} {props.icon}
+        </SlantedTitle>
       </AbsoluteVStack>
       <ScrollView
         ref={scrollRef}
@@ -578,6 +577,7 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
         fontWeight="800"
         alignSelf="center"
         marginTop={-10}
+        size="xs"
       >
         {props.dish.icon ?? null} {props.dish.name}
       </SlantedTitle>

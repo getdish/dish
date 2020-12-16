@@ -17,6 +17,7 @@ import {
   prevent,
   useDebounce,
   useMedia,
+  useTheme,
 } from 'snackui'
 
 import { BottomDrawerStore } from './BottomDrawerStore'
@@ -173,6 +174,7 @@ const AutocompleteContentsInner = memo(
     const om = useOvermind()
     const { showAutocomplete } = om.state.home
     const media = useMedia()
+    const theme = useTheme()
     const showLocation = showAutocomplete == 'location'
     const hideAutocomplete = useDebounce(
       () => om.actions.home.setShowAutocomplete(false),
@@ -207,14 +209,14 @@ const AutocompleteContentsInner = memo(
             om.actions.home.setShowAutocomplete(false)
           }}
         >
-          <BlurView
+          <VStack
             maxWidth="100%"
             width="100%"
             height="100%"
             position="relative"
             pointerEvents="auto"
             {...(!media.sm && {
-              maxWidth: 540,
+              maxWidth: 640,
               maxHeight: `calc(100vh - ${top + 20}px)`,
               // @ts-ignore
               onMouseLeave: () => {
@@ -239,9 +241,9 @@ const AutocompleteContentsInner = memo(
                 position="relative"
                 left={media.sm ? 0 : showLocation ? 250 : -160}
                 shadowColor="rgba(0,0,0,0.27)"
-                shadowRadius={22}
+                shadowRadius={42}
                 width="100%"
-                backgroundColor={isWeb ? '#fff' : 'rgba(255,255,255,0.5)'}
+                backgroundColor={theme.backgroundColor}
                 height={isWeb ? 'auto' : '100%'}
                 minHeight={200}
                 padding={5}
@@ -270,7 +272,7 @@ const AutocompleteContentsInner = memo(
                 </ScrollView>
               </VStack>
             </VStack>
-          </BlurView>
+          </VStack>
         </AbsoluteVStack>
       </AnimatedVStack>
     )
@@ -416,6 +418,7 @@ const AutocompleteResults = memo(() => {
 })
 
 const HomeAutocompleteDefault = memo(() => {
+  const theme = useTheme()
   return (
     <HStack
       width="100%"
@@ -426,8 +429,8 @@ const HomeAutocompleteDefault = memo(() => {
       {tagDefaultAutocomplete.map((tag) => {
         return (
           <VStack
-            width={80}
-            height={80}
+            width={100}
+            height={100}
             borderRadius={10}
             paddingHorizontal={5}
             margin={5}
@@ -446,16 +449,17 @@ const HomeAutocompleteDefault = memo(() => {
               pointerEvents="auto"
             >
               <VStack>
-                <Text textAlign="center" width="100%" fontSize={40}>
+                <Text textAlign="center" width="100%" fontSize={46}>
                   {tag.icon}
                 </Text>
                 <Spacer size="sm" />
                 <Text
                   ellipse
                   textAlign="center"
-                  fontSize={12}
+                  fontSize={13}
                   width="100%"
-                  color="#000"
+                  fontWeight="600"
+                  color={theme.color}
                 >
                   {tagDisplayName(tag)}
                 </Text>

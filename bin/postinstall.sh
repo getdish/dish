@@ -28,6 +28,8 @@ function delete_duplicate_snack_modules() {
   rm -r snackui/examples/nextjs/node_modules/react-dom || true
   rm -r snackui/node_modules/@babel/types || true # fix babel single version
   rm -r snackui/node_modules/@o || true
+  rm -r snackui/node_modules/@types/react || true
+  rm -r snackui/node_modules/@types/react-dom || true
   rm -r snackui/node_modules/react || true
   rm -r snackui/node_modules/react-dom || true
   rm -r snackui/node_modules/react-native-web || true

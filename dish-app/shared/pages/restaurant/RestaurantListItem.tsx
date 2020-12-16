@@ -654,15 +654,16 @@ const RestaurantPeekDishes = memo(
     const foundMatchingSearchedDish = firstDishName
       ? tagNames.includes(firstDishName)
       : false
-    const dishSize = 145
+    const dishSize = 165
     return (
       <HStack
         contain="paint layout"
         pointerEvents="auto"
         padding={20}
-        paddingVertical={40}
+        paddingVertical={30}
         alignItems="center"
-        marginVertical={-40}
+        marginTop={-55}
+        marginBottom={-35}
         height={dishSize + 80}
         width={dishSize * 5}
       >

@@ -62,7 +62,7 @@
     "react-dom": "0.0.0-experimental-94c0244ba",
     "react-test-renderer": "0.0.0-experimental-94c0244ba",
     "react-refresh": "0.0.0-experimental-94c0244ba",
-    "react-native": "0.63.2",
+    "react-native": "0.63.4",
     "react-native-web": "0.0.0-466063b7e",
     "react-native-svg": "12.1.0",
     "metro": "0.62.0",

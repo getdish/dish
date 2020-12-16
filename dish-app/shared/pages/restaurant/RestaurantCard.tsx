@@ -17,11 +17,6 @@ import { Link } from '../../views/ui/Link'
 import { useCardFrame } from '../home/useCardFrame'
 import { CardFrame, cardFrameBorderRadiusSmaller } from './CardFrame'
 import { priceRange } from './RestaurantDetailRow'
-import {
-  RestaurantFavoriteButton,
-  RestaurantFavoriteStar,
-} from './RestaurantFavoriteButton'
-import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 
 export type RestaurantCardProps = {
   // size?: 'lg' | 'md' | 'sm'
