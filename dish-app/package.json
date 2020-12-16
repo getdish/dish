@@ -6,8 +6,6 @@
     "nohoist": [
       "babel-plugin-transform-inline-environment-variables",
       "babel-plugin-transform-inline-environment-variables/**",
-      "@snackui/babel-plugin",
-      "@snackui/babel-plugin/**",
       "react-query",
       "react-query/**",
       "@expo/html-elements",
@@ -108,8 +106,6 @@
       "react-native-gesture-handler-compiled/**",
       "react-use",
       "react-use/**",
-      "@snackui/babel-plugin",
-      "@snackui/babel-plugin/**",
       "react-hook-form",
       "react-hook-form/**"
     ]
@@ -214,10 +210,11 @@
     "recyclerlistview": "^3.0.0",
     "react-native-gesture-handler-compiled": "^1.8.0",
     "react-use": "^15.3.4",
-    "@snackui/babel-plugin": "*",
     "react-hook-form": "^6.13.0"
   },
   "devDependencies": {
+    "@snackui/babel-plugin": "*",
+    "@snackui/static": "*",
     "@types/jsdom": "^16.2.5",
     "@types/lodash": "^4.14.165",
     "@types/mapbox-gl": "^2.0.0",
@@ -225,7 +222,6 @@
     "@types/react-native": "*",
     "@types/requestidlecallback": "0.3.1",
     "@dish/babel-preset": "*",
-    "@snackui/static": "*",
     "overmind-devtools": "27.0.0",
     "react-devtools": "^4.10.1",
     "@welldone-software/why-did-you-render": "^6.0.3",
