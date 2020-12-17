@@ -29,7 +29,7 @@
     "chrono-node": "^2.1.6",
     "csv-parse": "^4.9.0",
     "js-base64": "^2.5.2",
-    "lodash": "^4.17.20",
+    "lodash": "*",
     "moment": "^2.27.0",
     "pg": "^7.18.2",
     "proxy-chain": "^0.4.4",
@@ -42,7 +42,6 @@
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.22",
-    "@types/lodash": "^4.14.149",
     "@types/puppeteer": "^3.0.1",
     "@zeit/ncc": "^0.20.5",
     "ava": "^3.14.0",

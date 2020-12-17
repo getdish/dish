@@ -1,4 +1,4 @@
-FROM node:12.16.1-buster
+FROM node:15.4.0-buster
 WORKDIR /app
 
 COPY packages packages
@@ -9,7 +9,7 @@ COPY package.json .
 # Remove all files that aren't `package.json`
 RUN find . \! -name "package.json" -type f -print | xargs rm -rf
 
-FROM node:12.16.1-buster
+FROM node:15.4.0-buster
 WORKDIR /app
 ENV PATH=$PATH:/app/node_modules/.bin:node_modules/.bin
 ENV NODE_OPTIONS="--max_old_space_size=4096"
