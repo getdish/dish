@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@v1
         with:
-          node-version: '15.4.0'
+          node-version: '12.16.1'
       - name: Setup dependencies
         run: .github/workflows/scripts/setup_deps.sh
       - name: Build docker images
