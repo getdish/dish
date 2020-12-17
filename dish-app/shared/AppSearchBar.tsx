@@ -30,13 +30,11 @@ const isWeb = Platform.OS === 'web'
 
 export const AppSearchBar = () => {
   const media = useMedia()
+  if (!media.sm) {
+    return null
+  }
   return (
-    <VStack
-      display={media.sm ? 'flex' : 'none'}
-      width="100%"
-      paddingVertical={2}
-      minHeight={searchBarHeight}
-    >
+    <VStack width="100%" paddingVertical={2} minHeight={searchBarHeight}>
       <AppSearchBarContents />
     </VStack>
   )
@@ -174,7 +172,7 @@ const AppSearchBarContents = memo(() => {
       paddingHorizontal={10}
       minHeight={searchBarHeight}
     >
-      <VStack paddingHorizontal={8}>
+      <VStack paddingHorizontal={media.xs ? 0 : 6}>
         <DishLogoButton />
       </VStack>
 
@@ -184,7 +182,6 @@ const AppSearchBarContents = memo(() => {
         className="ease-in-out"
         position="relative"
         width={media.xs ? 'auto' : '43%'}
-        flex={1}
         maxWidth={
           media.xs
             ? 'auto'
@@ -192,6 +189,7 @@ const AppSearchBarContents = memo(() => {
             ? 120
             : '100%'
         }
+        flex={1}
         alignItems="center"
       >
         {!media.xs && <AppSearchInput />}
@@ -200,7 +198,11 @@ const AppSearchBarContents = memo(() => {
         {media.xs && !isWeb && (
           <>
             {showLocation && <AppSearchLocationInput />}
-            {!showLocation && <AppSearchInput />}
+            {!showLocation && (
+              <VStack flex={1}>
+                <AppSearchInput />
+              </VStack>
+            )}
           </>
         )}
 

@@ -16,8 +16,8 @@ export function ErrorBoundary({
   } | null>(null)
   return (
     <ReactErrorBoundary
-      onError={(error, { componentStack }) => {
-        setErrorState({ error, componentStack })
+      onError={(error, stack) => {
+        setErrorState({ error, componentStack: stack?.componentStack })
       }}
       onReset={() => {
         setErrorState(null)
@@ -48,7 +48,7 @@ export function ErrorBoundary({
                 {tryButton}
                 <Text color="#fff">
                   {error?.message}
-                  {errorState.componentStack}
+                  {errorState?.componentStack}
                   {error?.stack}
                 </Text>
                 {tryButton}

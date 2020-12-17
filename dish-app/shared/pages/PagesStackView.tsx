@@ -25,27 +25,25 @@ export const PagesStackView = (props: StackViewProps) => {
   )
 }
 
-const RestaurantPage =
+const isntLoadable =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./restaurant/RestaurantPage').default
-    : loadable(() => import('./restaurant/RestaurantPage'))
 
-const SearchPage =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./search/SearchPage').default
-    : loadable(() => import('./search/SearchPage'))
+const RestaurantPage = isntLoadable
+  ? require('./restaurant/RestaurantPage').default
+  : loadable(() => import('./restaurant/RestaurantPage'))
 
-const HomePage =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./home/HomePage').default
-    : loadable(() => import('./home/HomePage'))
+const SearchPage = isntLoadable
+  ? require('./search/SearchPage').default
+  : loadable(() => import('./search/SearchPage'))
 
-const UserPage =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./user/UserPage').default
-    : loadable(() => import('./user/UserPage'))
+const HomePage = isntLoadable
+  ? require('./home/HomePage').default
+  : loadable(() => import('./home/HomePage'))
 
-const AboutPage =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./about/AboutPage').default
-    : loadable(() => import('./about/AboutPage'))
+const UserPage = isntLoadable
+  ? require('./user/UserPage').default
+  : loadable(() => import('./user/UserPage'))
+
+const AboutPage = isntLoadable
+  ? require('./about/AboutPage').default
+  : loadable(() => import('./about/AboutPage'))

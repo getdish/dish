@@ -1,9 +1,4 @@
 import { registerRootComponent } from 'expo'
-import { activateKeepAwake } from 'expo-keep-awake'
-
-if (__DEV__) {
-  activateKeepAwake()
-}
 
 try {
   const App = require('./shared/App').default

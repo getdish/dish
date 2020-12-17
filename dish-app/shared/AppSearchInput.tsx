@@ -222,7 +222,7 @@ export const AppSearchInput = memo(() => {
             ) : (
               <Search
                 color={color}
-                size={20}
+                size={media.xs ? 16 : 20}
                 style={{
                   opacity: 0.8,
                 }}

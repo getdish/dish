@@ -36,6 +36,7 @@ export const DishLogoButton = memo(() => {
       </VStack>
       <AbsoluteVStack
         pointerEvents={media.xs ? 'auto' : 'none'}
+        opacity={media.xs ? 1 : 0}
         fullscreen
         alignItems="center"
         justifyContent="center"
@@ -43,7 +44,6 @@ export const DishLogoButton = memo(() => {
         width={logoXsWidth}
         height={logoXsHeight}
         zIndex={-1}
-        opacity={media.notXs ? 0 : 1}
       >
         <LinkButton {...linkButtonProps}>
           <LogoSmall />

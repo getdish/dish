@@ -167,12 +167,6 @@ export const RestaurantCardContent = memo(
                         {price_range}
                       </Paragraph>
                     </VStack>
-                    {/* <VStack marginTop={-16} marginRight={-16}>
-                      <RestaurantFavoriteStar
-                        size="md"
-                        restaurantId={restaurantId}
-                      />
-                    </VStack> */}
                   </HStack>
                   <VStack flex={1} />
                   {below}

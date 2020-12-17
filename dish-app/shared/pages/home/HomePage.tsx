@@ -194,7 +194,7 @@ export default memo(function HomePage(props: Props) {
               <Spacer size="lg" />
               <HomeTopSearches />
               <Spacer />
-              <VStack alignItems="center">
+              <VStack position="relative" alignItems="center">
                 <SlantedTitle size="xl" alignSelf="center">
                   {regionName}
                 </SlantedTitle>
