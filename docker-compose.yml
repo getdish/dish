@@ -1,14 +1,14 @@
-version: '3.7'
+version: '2.4'
 services:
   base:
     image: 'gcr.io/dish-258800/base${DISH_BASE_VERSION}'
-    platform: linux/arm64/v8
+    platform: linux/amd64
     build:
       context: .
       dockerfile: ./Dockerfile
   postgres:
     image: bitnami/postgresql:12.1.0-debian-9-r53 # See k8s/yaml/postgres.yaml
-    platform: linux/arm64/v8
+    platform: linux/amd64
     volumes:
       - ${HOME}/.dish/postgres:/bitnami/postgresql
     environment:
@@ -20,7 +20,7 @@ services:
       - 5432:5432
   timescaledb:
     image: timescale/timescaledb-postgis:1.7.2-pg11
-    platform: linux/arm64/v8
+    platform: linux/amd64
     volumes:
       - ${HOME}/.dish/timescaledb:/var/lib/postgresql/data
     environment:
@@ -31,12 +31,12 @@ services:
       - 5433:5432
   redis:
     image: redis
-    platform: linux/arm64/v8
+    platform: linux/amd64
     ports:
       - 6379:6379
   dish-hooks:
     image: gcr.io/dish-258800/dish-hooks${DISH_IMAGE_TAG}
-    platform: linux/arm64/v8
+    platform: linux/amd64
     build:
       context: ./
       dockerfile: ./services/dish-hooks/Dockerfile
@@ -51,7 +51,7 @@ services:
       - 'gorse'
   hasura:
     image: hasura/graphql-engine:v1.3.3
-    platform: linux/arm64/v8
+    platform: linux/amd64
     ports:
       - 8080:8080
     environment:
@@ -71,7 +71,7 @@ services:
       - 'dish-hooks'
   tileserver:
     image: urbica/martin
-    platform: linux/arm64/v8
+    platform: linux/amd64
     ports:
       - 3005:3000
     environment:
@@ -82,7 +82,7 @@ services:
       - 'postgres'
   user-server:
     image: gcr.io/dish-258800/user-server${DISH_IMAGE_TAG}
-    platform: linux/arm64/v8
+    platform: linux/amd64
     build:
       context: ./
       dockerfile: ./services/user-server/Dockerfile
@@ -99,7 +99,7 @@ services:
       - 'postgres'
   search:
     image: gcr.io/dish-258800/dish/search${DISH_IMAGE_TAG}
-    platform: linux/arm64/v8
+    platform: linux/amd64
     build:
       context: ./
       dockerfile: ./services/search/Dockerfile
@@ -111,37 +111,38 @@ services:
     depends_on:
       - 'postgres'
   gorse:
-    platform: linux/arm64/v8
+    image: gcr.io/dish-258800/gorse
+    platform: linux/amd64
     volumes:
       - ${HOME}/.dish/gorse:/data
       - ./services/gorse/config.local.toml:/app/config.toml
-    image: gcr.io/dish-258800/gorse
     ports:
       - 9000:9000
   bert:
-    platform: linux/arm64/v8
     image: gcr.io/dish-258800/bert
+    platform: linux/amd64
     ports:
       - 8888:8080
     environment:
       - VIRTUAL_HOST=bert-staging.dishapp.com
   image-quality-api:
-    platform: linux/arm64/v8
     image: gcr.io/dish-258800/image-quality-server
+    platform: linux/amd64
     ports:
       - 8883:5005
     environment:
       - VIRTUAL_HOST=image-quality-staging.dishapp.com
   image-proxy:
     image: gcr.io/dish-258800/imageproxy
+    platform: linux/amd64
     ports:
       - 8881:8080
     command: '-addr 0.0.0.0:8080 -cache /image-cache'
     environment:
       - VIRTUAL_HOST=images-staging.dishapp.com
   dish-app-web:
-    platform: linux/arm64/v8
     image: gcr.io/dish-258800/dish-app${DISH_IMAGE_TAG}
+    platform: linux/amd64
     build:
       context: ./
       dockerfile: ./dish-app/Dockerfile
@@ -151,8 +152,8 @@ services:
     ports:
       - 4444:4444
   nginx-web:
-    platform: linux/arm64/v8
     image: nginx:stable-alpine
+    platform: linux/amd64
     labels:
       com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: 'true'
     container_name: ${NGINX_WEB:-nginx-web}
@@ -174,8 +175,8 @@ services:
     depends_on:
       - 'hasura'
   nginx-gen:
-    platform: linux/arm64/v8
     image: jwilder/docker-gen
+    platform: linux/amd64
     command: -notify-sighup ${NGINX_WEB:-nginx-web} -watch -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
     container_name: ${DOCKER_GEN:-nginx-gen}
     restart: always
