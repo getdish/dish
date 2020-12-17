@@ -92,7 +92,6 @@ type FeedItems =
 
 export default memo(function HomePage(props: Props) {
   const om = useOvermind()
-  const media = useMedia()
   const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
   const region = useRegionQuery(props.item.region, {
