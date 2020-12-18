@@ -2969,72 +2969,72 @@
     "@sendgrid/client" "^7.4.0"
     "@sendgrid/helpers" "^7.4.0"
 
-"@sentry/core@5.29.1":
-  version "5.29.1"
-  resolved "https://registry.npmjs.org/@sentry/core/-/core-5.29.1.tgz#c56cfb6747005413d194f4cfe9a5bbdf5d5e377f"
-  integrity sha512-SMybIx9IlswkJ7a61ez/zjdiMdAo51Adpo4nVrzke2k84U/t726/EbJj0FJ4vVgsGdLCvSSZ6v7BQlINcwWupg==
+"@sentry/core@5.29.2":
+  version "5.29.2"
+  resolved "https://registry.npmjs.org/@sentry/core/-/core-5.29.2.tgz#9e05fe197234161d57aabaf52fab336a7c520d81"
+  integrity sha512-7WYkoxB5IdlNEbwOwqSU64erUKH4laavPsM0/yQ+jojM76ErxlgEF0u//p5WaLPRzh3iDSt6BH+9TL45oNZeZw==
   dependencies:
-    "@sentry/hub" "5.29.1"
-    "@sentry/minimal" "5.29.1"
-    "@sentry/types" "5.29.1"
-    "@sentry/utils" "5.29.1"
+    "@sentry/hub" "5.29.2"
+    "@sentry/minimal" "5.29.2"
+    "@sentry/types" "5.29.2"
+    "@sentry/utils" "5.29.2"
     tslib "^1.9.3"
 
-"@sentry/hub@5.29.1":
-  version "5.29.1"
-  resolved "https://registry.npmjs.org/@sentry/hub/-/hub-5.29.1.tgz#64c738af308c909fe8fcf7c5da9e0685343385bb"
-  integrity sha512-Ig/vqCiJcsnGaWajkWRFH+5IKeo50ZtsjM0zJb8IfTadLjQuF/gTQst0aXO3l6q4HzveeGsELY8jlm6WVcq9Aw==
+"@sentry/hub@5.29.2":
+  version "5.29.2"
+  resolved "https://registry.npmjs.org/@sentry/hub/-/hub-5.29.2.tgz#208f10fe6674695575ad74182a1151f71d6df00a"
+  integrity sha512-LaAIo2hwUk9ykeh9RF0cwLy6IRw+DjEee8l1HfEaDFUM6TPGlNNGObMJNXb9/95jzWp7jWwOpQjoIE3jepdQJQ==
   dependencies:
-    "@sentry/types" "5.29.1"
-    "@sentry/utils" "5.29.1"
+    "@sentry/types" "5.29.2"
+    "@sentry/utils" "5.29.2"
     tslib "^1.9.3"
 
-"@sentry/minimal@5.29.1":
-  version "5.29.1"
-  resolved "https://registry.npmjs.org/@sentry/minimal/-/minimal-5.29.1.tgz#0f1eab0eccc9d38cb0ff3b17b81dbf9c909cd383"
-  integrity sha512-lAa3+Duxum1qQvR0tKiBUsH6Ehit3g/vO53SqBib7YK3qdvIUWHacmkJvfz/AeSvVnpJ9bsBMCVRJNSVe8BPVA==
+"@sentry/minimal@5.29.2":
+  version "5.29.2"
+  resolved "https://registry.npmjs.org/@sentry/minimal/-/minimal-5.29.2.tgz#420bebac8d03d30980fdb05c72d7b253d8aa541b"
+  integrity sha512-0aINSm8fGA1KyM7PavOBe1GDZDxrvnKt+oFnU0L+bTcw8Lr+of+v6Kwd97rkLRNOLw621xP076dL/7LSIzMuhw==
   dependencies:
-    "@sentry/hub" "5.29.1"
-    "@sentry/types" "5.29.1"
+    "@sentry/hub" "5.29.2"
+    "@sentry/types" "5.29.2"
     tslib "^1.9.3"
 
 "@sentry/node@^5.16.1":
-  version "5.29.1"
-  resolved "https://registry.npmjs.org/@sentry/node/-/node-5.29.1.tgz#3805176a398dcbb1234ea60c809e3cb14663fe40"
-  integrity sha512-j8PzW+Fk84UZJkxPSnyEE4HTQxphSAAauGbeLiEJ69ZZGKD7/O1CBxEsvPel3n4jGe/9bK+AIuEpLHwoZjex0Q==
+  version "5.29.2"
+  resolved "https://registry.npmjs.org/@sentry/node/-/node-5.29.2.tgz#f0f0b4b2be63c9ddd702729fab998cead271dff1"
+  integrity sha512-98m1ZejmJgA+eiz6jEFyYYfp6kJZQnx6d6KrJDMxGfss4YTmmJY57bE4xStnjjk7WINDGzlCiHuk+wJFMBjuoA==
   dependencies:
-    "@sentry/core" "5.29.1"
-    "@sentry/hub" "5.29.1"
-    "@sentry/tracing" "5.29.1"
-    "@sentry/types" "5.29.1"
-    "@sentry/utils" "5.29.1"
+    "@sentry/core" "5.29.2"
+    "@sentry/hub" "5.29.2"
+    "@sentry/tracing" "5.29.2"
+    "@sentry/types" "5.29.2"
+    "@sentry/utils" "5.29.2"
     cookie "^0.4.1"
     https-proxy-agent "^5.0.0"
     lru_map "^0.3.3"
     tslib "^1.9.3"
 
-"@sentry/tracing@5.29.1":
-  version "5.29.1"
-  resolved "https://registry.npmjs.org/@sentry/tracing/-/tracing-5.29.1.tgz#ce97fa749bd80534bf084479fd60ba64043a19f0"
-  integrity sha512-iWfPtDhf5X7N9R5WB3vX/wlyFVsGG8iMx4hLIP+6bj8EcPYnZfeP6Sxn65a0ACT/FKv7SMBoZ1qPDzmvk0bviw==
+"@sentry/tracing@5.29.2":
+  version "5.29.2"
+  resolved "https://registry.npmjs.org/@sentry/tracing/-/tracing-5.29.2.tgz#6012788547d2ab7893799d82c4941bda145dcd47"
+  integrity sha512-iumYbVRpvoU3BUuIooxibydeaOOjl5ysc+mzsqhRs2NGW/C3uKAsFXdvyNfqt3bxtRQwJEhwJByLP2u3pLThpw==
   dependencies:
-    "@sentry/hub" "5.29.1"
-    "@sentry/minimal" "5.29.1"
-    "@sentry/types" "5.29.1"
-    "@sentry/utils" "5.29.1"
+    "@sentry/hub" "5.29.2"
+    "@sentry/minimal" "5.29.2"
+    "@sentry/types" "5.29.2"
+    "@sentry/utils" "5.29.2"
     tslib "^1.9.3"
 
-"@sentry/types@5.29.1":
-  version "5.29.1"
-  resolved "https://registry.npmjs.org/@sentry/types/-/types-5.29.1.tgz#ecc65909ac72d4f8024e26a64129e09d14a0a67f"
-  integrity sha512-QXZBA1gJheMYTGFV+UUhr3+jKpGZqPx8kEJABs8htlKabCDJlEeoFNmeqPuVxCxukoy5ZaaHACoE+2Z87T0g2A==
+"@sentry/types@5.29.2":
+  version "5.29.2"
+  resolved "https://registry.npmjs.org/@sentry/types/-/types-5.29.2.tgz#ac87383df1222c2d9b9f8f9ed7a6b86ea41a098a"
+  integrity sha512-dM9wgt8wy4WRty75QkqQgrw9FV9F+BOMfmc0iaX13Qos7i6Qs2Q0dxtJ83SoR4YGtW8URaHzlDtWlGs5egBiMA==
 
-"@sentry/utils@5.29.1":
-  version "5.29.1"
-  resolved "https://registry.npmjs.org/@sentry/utils/-/utils-5.29.1.tgz#889498950f6bde8ce054186096a3c95c0afb0fe4"
-  integrity sha512-FOhWxASvIQREAlSuWf3Vmb4uIkG0fmRdHkULpuv5dFmrMX2PpudYAppQtS8K9V4BYxFy6KFdUht1Qz5zYTecMw==
+"@sentry/utils@5.29.2":
+  version "5.29.2"
+  resolved "https://registry.npmjs.org/@sentry/utils/-/utils-5.29.2.tgz#99a5cdda2ea19d34a41932f138d470adcb3ee673"
+  integrity sha512-nEwQIDjtFkeE4k6yIk4Ka5XjGRklNLThWLs2xfXlL7uwrYOH2B9UBBOOIRUraBm/g/Xrra3xsam/kRxuiwtXZQ==
   dependencies:
-    "@sentry/types" "5.29.1"
+    "@sentry/types" "5.29.2"
     tslib "^1.9.3"
 
 "@sindresorhus/is@^0.14.0":
@@ -4739,9 +4739,9 @@ available-typed-arrays@^1.0.2:
     array-filter "^1.0.0"
 
 aws-sdk@^2.37.0, aws-sdk@^2.719.0, aws-sdk@^2.762.0:
-  version "2.812.0"
-  resolved "https://registry.npmjs.org/aws-sdk/-/aws-sdk-2.812.0.tgz#c7dc1690eb8df4d66e039a524487136254e81694"
-  integrity sha512-8usszPY2AGtC0+bO2iJY9u3DILsW8g+zzfumYQxQqMTc0C4vMJKi52Yuh22mP9Nm1DCNfFlHNbdQMJfKlRLaTA==
+  version "2.813.0"
+  resolved "https://registry.npmjs.org/aws-sdk/-/aws-sdk-2.813.0.tgz#16104b91a286c1fc8ca6480ac32ccebb955f6148"
+  integrity sha512-uOeJ6DgsImQLv0eC0KHloFgDP788A1MEYTKdSV+1Bjv1iqQHH3bJcH5DPPX2NSyeaXJAjkVSVT2Fqe4s5Vf9TA==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -4912,9 +4912,9 @@ babel-plugin-optimize-react@^0.0.4:
   integrity sha512-I3o7GW66dIpXraND0ZAYXEDQ/wOiuefUQqn1PZZcub2flREANb2NXejL52iTMUWtKM++lu5OasVtZewn+WvkNg==
 
 babel-plugin-react-native-web@^0.14.9:
-  version "0.14.9"
-  resolved "https://registry.npmjs.org/babel-plugin-react-native-web/-/babel-plugin-react-native-web-0.14.9.tgz#431d492c2eab00b7cd12acf27aaac2743163c6cc"
-  integrity sha512-9Xmv9BGQoAKlwYGDWkTtmqGrGq8XBHchDIsnzRUuKxledZKn6bebPY6mJV8J/8S00St2B5M/IQMV5QwKe1OxNw==
+  version "0.14.10"
+  resolved "https://registry.npmjs.org/babel-plugin-react-native-web/-/babel-plugin-react-native-web-0.14.10.tgz#7b5e5a6aaeaf35d6901be3e3cb8e2335a28507d7"
+  integrity sha512-wVYVYWKEO9zqwdVU9gR+8XqCtAb5F051VnAEQd2mFJTv2FGok07M8UsvnsUpbQGupnjwTRSXBnFfNF8rezb4mQ==
 
 babel-plugin-react-native-web@~0.13.6:
   version "0.13.18"
@@ -7765,9 +7765,9 @@ electron-prompt@^1.5.1:
     doc-ready "^1.0.4"
 
 electron-to-chromium@^1.3.621:
-  version "1.3.628"
-  resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.628.tgz#be5a14ddf3a455de876274c84de0926439a287a7"
-  integrity sha512-fmhO4YGo/kapy+xL9Eq/cZwDASaTHZu3psIFYo4yc+RY1LzbZr84xjKlDImDrlrmWhOxsrDi98nX097U/xK/cQ==
+  version "1.3.629"
+  resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.629.tgz#a08d13b64d90e3c77ec5b9bffa3efbc5b4a00969"
+  integrity sha512-iSPPJtPvHrMAvYOt+9cdbDmTasPqwnwz4lkP8Dn200gDNUBQOLQ96xUsWXBwXslAo5XxdoXAoQQ3RAy4uao9IQ==
 
 electron@^8.0.0:
   version "8.5.5"
@@ -9231,9 +9231,9 @@ get-func-name@^2.0.0:
   integrity sha1-6td0q+5y4gQJQzoGY2YCPdaIekE=
 
 get-intrinsic@^1.0.0, get-intrinsic@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.0.1.tgz#94a9768fcbdd0595a1c9273aacf4c89d075631be"
-  integrity sha512-ZnWP+AmS1VUaLgTRy47+zKtjTxz+0xMpx3I52i+aalBK1QP19ggLF3Db89KJX7kjfOfP2eoa01qc++GwPgufPg==
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.0.2.tgz#6820da226e50b24894e08859469dc68361545d49"
+  integrity sha512-aeX0vrFm21ILl3+JpFFRNe9aUvp6VFZb2/CTbgLb8j75kOhvoNYjt9d8KA/tJG4gSo8nzEDedRl0h7vDmBYRVg==
   dependencies:
     function-bind "^1.1.1"
     has "^1.0.3"
@@ -16470,9 +16470,9 @@ react-native@0.63.2:
     whatwg-fetch "^3.0.0"
 
 react-query@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.npmjs.org/react-query/-/react-query-3.3.0.tgz#a52ea140134295531b6f04cd52975e4e49244423"
-  integrity sha512-vuYoAs8qFjROk6BDR7TZKR4DJwF0ZuA09xA+cCgBokRtd9zTfZ6ql0Zqbr0POgVJofQFuf7IfrcP4j5G/kujwQ==
+  version "3.3.2"
+  resolved "https://registry.npmjs.org/react-query/-/react-query-3.3.2.tgz#9cc75962ec8f6f3b4468a46d1b0ef160b97ef37d"
+  integrity sha512-SeAtekP/D3Eaf/715LmAnneSufn9Q4eGQkuOzOQ08/UtCQ58P4pkAevHu/WIBwCjtffZDTHMJRMeCeeUyouubg==
   dependencies:
     "@babel/runtime" "^7.5.5"
     match-sorter "^6.0.2"

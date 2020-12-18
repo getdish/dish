@@ -7,6 +7,7 @@ import {
 } from '@dish/graph'
 import { ChevronLeft, ChevronRight } from '@dish/react-feather'
 import { orderBy, uniqBy } from 'lodash'
+import React from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Dimensions, Image, ScaledSize, ScrollView } from 'react-native'
 import useKeyPressEvent from 'react-use/lib/useKeyPressEvent'
@@ -303,8 +304,8 @@ export const Lightbox = ({
               source={{ uri: activeImage.url }}
               style={{
                 width: '100%',
-                maxWidth: '99vw',
-                height: `calc(100vh - ${ThumbnailSize}px - 10px)`,
+                maxWidth: '95%',
+                height: `100%`,
               }}
               resizeMode="contain"
             />
