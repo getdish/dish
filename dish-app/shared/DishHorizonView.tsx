@@ -15,17 +15,17 @@ import {
 export function DishHorizonView() {
   return (
     <AbsoluteVStack opacity={1} fullscreen overflow="hidden">
-      <AbsoluteVStack top={-200} left={100} right={0}>
-        <AbsoluteVStack top={-120} opacity={0.5}>
+      <AbsoluteVStack top={-270} left={100} right={0}>
+        <AbsoluteVStack top={-120} opacity={0.7}>
           <Circle size={450} backgroundColor={pink} />
         </AbsoluteVStack>
-        <AbsoluteVStack top={-50} opacity={0.6} left="20%">
+        <AbsoluteVStack top={-50} opacity={0.46} left="20%">
           <Circle size={400} backgroundColor={darkGreen} />
         </AbsoluteVStack>
-        <AbsoluteVStack top={0} opacity={0.25} left="40%">
+        <AbsoluteVStack top={0} opacity={0.45} left="40%">
           <Circle size={500} backgroundColor={darkYellow} />
         </AbsoluteVStack>
-        <AbsoluteVStack opacity={0.75} left="65%">
+        <AbsoluteVStack opacity={0.7} left="65%">
           <Circle size={700} backgroundColor={darkPurple} />
         </AbsoluteVStack>
       </AbsoluteVStack>

@@ -104,7 +104,7 @@ export const AppSearchBarFloating = () => {
           /> */}
           <AbsoluteVStack
             borderWidth={3}
-            borderColor="rgba(255,255,255,0.2)"
+            borderColor="rgba(0,0,0,0.2)"
             borderRadius={14}
             fullscreen
           />
@@ -117,15 +117,15 @@ export const AppSearchBarFloating = () => {
           <LinearGradient
             style={[StyleSheet.absoluteFill]}
             colors={[
-              'rgba(255,255,255,0.1)',
+              'rgba(255,255,255,0.05)',
               `rgba(0,0,0,0.1)`,
-              'rgba(255,255,255,0.1)',
+              'rgba(255,255,255,0.05)',
             ]}
           />
           <AbsoluteVStack
-            opacity={0.5}
+            opacity={0.45}
             fullscreen
-            transform={[{ translateX: 200 }]}
+            transform={[{ translateX: 240 }]}
           >
             <DishHorizonView />
           </AbsoluteVStack>

@@ -172,36 +172,42 @@ export const AppSearchInput = memo(() => {
     <AppAutocompleteHoverableInput input={input} autocompleteTarget="search">
       <HStack
         alignItems="center"
-        borderRadius={20}
-        borderWidth={1}
-        borderColor="rgba(255,255,255,0.2)"
+        borderRadius={180}
+        borderWidth={2}
+        borderColor="rgba(0,0,0,0.3)"
         shadowColor="#000"
         shadowRadius={15}
-        shadowOpacity={0.1}
+        shadowOpacity={0.2}
         flex={1}
         maxWidth="100%"
         paddingLeft={10}
         overflow="hidden"
         position="relative"
         hoverStyle={{
-          borderColor: 'rgba(255,255,255,0.125)',
+          borderColor: 'rgba(255,255,255,0.08)',
           backgroundColor: 'rgba(255,255,255,0.05)',
         }}
         focusStyle={{
-          borderColor: 'rgba(255,255,255,0.135)',
-          backgroundColor: 'rgba(255,255,255,0.085)',
+          borderColor: 'rgba(255,255,255,0.1)',
+          backgroundColor: 'rgba(255,255,255,0.02)',
           shadowColor: '#000',
           shadowRadius: 15,
           shadowOpacity: 0.1,
         }}
       >
         <AbsoluteVStack
+          fullscreen
+          borderRadius={1000}
+          borderWidth={1}
+          borderColor="rgba(255,255,255,0.2)"
+        />
+        <AbsoluteVStack
           top={-90}
           bottom={-90}
           right={-90}
-          left={0}
-          transform={[{ translateX: 160 }, { scale: 0.9 }]}
-          opacity={0.8}
+          left={90}
+          transform={[{ translateY: 40 }, { scale: 0.75 }]}
+          // opacity={0.8}
         >
           <DishHorizonView />
         </AbsoluteVStack>
@@ -209,10 +215,7 @@ export const AppSearchInput = memo(() => {
         <VStack
           width={16}
           marginLeft={3}
-          transform={[
-            { scale: om.state.home.isLoading ? 1.2 : 1 },
-            { translateY: 0.5 },
-          ]}
+          transform={[{ scale: om.state.home.isLoading ? 1.2 : 1 }]}
         >
           <TouchableOpacity onPress={focusSearchInput}>
             {om.state.home.isLoading ? (

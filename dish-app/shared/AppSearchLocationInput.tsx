@@ -93,14 +93,14 @@ export const AppSearchLocationInput = memo(() => {
           flex={1}
           minHeight={44}
           alignItems="center"
-          backgroundColor="rgba(0,0,0,0.2)"
+          backgroundColor="rgba(0,0,0,0.7)"
           justifyContent="center"
           paddingHorizontal={8}
           position="relative"
           borderRadius={12}
           overflow="hidden"
           hoverStyle={{
-            backgroundColor: 'rgba(0,0,0,0.5)',
+            backgroundColor: 'rgba(0,0,0,0.8)',
           }}
           focusStyle={{
             backgroundColor: 'rgba(0,0,0,0.6)',
