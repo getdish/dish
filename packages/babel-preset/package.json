@@ -6,10 +6,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {
-    "build": "true",
-    "watch": "true"
-  },
   "dependencies": {
     "react-native-web": "*",
     "@babel/core": "^7.12.9",

@@ -1,8 +1,9 @@
 import { LngLat, SEARCH_DOMAIN } from '@dish/graph'
-import { UseQueryOptions, useQuery } from 'react-query'
+import { UseQueryOptions } from 'react-query'
 
 import { bboxToSpan } from './bboxToSpan'
 import { queryClient } from './queryClient'
+import { useQueryLoud } from './useQueryLoud'
 
 export type Point = [number, number]
 
@@ -62,5 +63,5 @@ export const fetchRegion = async (slug: string) => {
 }
 
 export const useRegionQuery = (slug: string, config?: UseQueryOptions<any>) => {
-  return useQuery<RegionNormalized>(key, () => fetchRegion(slug), config)
+  return useQueryLoud<RegionNormalized>(key, () => fetchRegion(slug), config)
 }

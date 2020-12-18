@@ -17,7 +17,7 @@
     "start": "echo 'run:\n yarn db\n yarn user-server\n yarn web'",
     "db": "yarn docker:start hasura",
     "db:migrate": "./dishctl.sh db_migrate_local",
-    "user-server": "ultra -r --no-pretty --filter 'services/user-server' start",
+    "user-server": "yarn workspace @dish/user-server start",
     "app": "yarn workspace @dish/dish-app start",
     "web": "yarn workspace @dish/dish-app web",
     "web:prod": "yarn workspace @dish/dish-app web:prod",
