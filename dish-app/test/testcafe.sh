@@ -10,6 +10,14 @@ fi
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
 
 pushd $PROJECT_ROOT/dish-app
+
+echo "where"
+ls -la node_modules/@snackui || true
+echo "where2"
+ls -la ../node_modules/@snackui || true
+echo "test installing it then..."
+yarn install @snackui/babel-plugin
+
 $testcafe_bin \
   chrome:headless \
   --skip-js-errors \
