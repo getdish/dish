@@ -1,3 +1,4 @@
+// debug
 import { graphql, order_by } from '@dish/graph'
 import React, { Suspense, memo, useCallback, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
@@ -93,14 +94,6 @@ export const RestaurantCardContent = memo(
                   fullscreen
                   zIndex={10}
                 >
-                  {/* <LinearGradient
-                    style={StyleSheet.absoluteFill}
-                    colors={[
-                      'rgba(0,0,0,0)',
-                      'rgba(0,0,0,0.1)',
-                      'rgba(0,0,0,0.4)',
-                    ]}
-                  /> */}
                   <LinearGradient
                     style={StyleSheet.absoluteFill}
                     colors={[`${lightColor}`, `${color}99`]}
@@ -171,8 +164,6 @@ export const RestaurantCardContent = memo(
                   <VStack flex={1} />
                   {below}
                 </VStack>
-
-                <AbsoluteVStack top={15} right={15}></AbsoluteVStack>
               </AbsoluteVStack>
             </VStack>
           </CardFrame>

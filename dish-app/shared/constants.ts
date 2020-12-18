@@ -47,7 +47,7 @@ export const slantedBoxStyle = {
   zIndex: 10,
   paddingVertical: 7,
   paddingHorizontal: 10,
-  shadowColor: 'rgba(0,0,0)',
+  shadowColor: '#000',
   shadowOpacity: 0.12,
   shadowRadius: 6,
   shadowOffset: { height: 2, width: 0 },
