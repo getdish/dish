@@ -9,7 +9,8 @@ const dark = {
   backgroundColorSecondary: '#222',
   borderColor: '#252525',
   color: '#fefefe',
-  colorSecondary: '#eee',
+  colorSecondary: '#ccc',
+  colorTertiary: '#777',
   cardBackgroundColor: '#333',
 }
 
@@ -18,8 +19,9 @@ const light: MyTheme = {
   backgroundColor: '#fff',
   backgroundColorSecondary: '#f2f2f2',
   borderColor: '#eee',
-  color: '#000',
-  colorSecondary: '#222',
+  color: '#111',
+  colorSecondary: '#444',
+  colorTertiary: '#777',
   cardBackgroundColor: '#fff',
 }
 

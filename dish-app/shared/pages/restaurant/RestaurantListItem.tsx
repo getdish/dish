@@ -268,9 +268,8 @@ const RestaurantListItemContent = memo(
         />
 
         {tagIds && (
-          <AbsoluteVStack top={34} left={-12} zIndex={-1}>
+          <AbsoluteVStack top={34} left={-12} zIndex={2000000}>
             <RestaurantUpVoteDownVote
-              key={JSON.stringify(tagIds)}
               score={Math.round((meta?.effective_score ?? 0) / 10)}
               restaurantSlug={restaurantSlug}
               activeTags={tagIds}
@@ -278,9 +277,6 @@ const RestaurantListItemContent = memo(
                 setIsExpanded((x) => !x)
               }}
             />
-            <AbsoluteVStack top={-6} right={-20} zIndex={-1}>
-              <RankView rank={rank} />
-            </AbsoluteVStack>
           </AbsoluteVStack>
         )}
 
@@ -289,8 +285,6 @@ const RestaurantListItemContent = memo(
           <VStack
             hoverStyle={{ backgroundColor: 'rgba(0,0,0,0.015)' }}
             paddingTop={10}
-            marginLeft={-pad}
-            paddingLeft={pad}
             width={950}
             position="relative"
           >
@@ -301,7 +295,11 @@ const RestaurantListItemContent = memo(
               params={{ slug: restaurantSlug }}
             >
               <VStack paddingLeft={47} paddingTop={25}>
-                <HStack alignItems="center">
+                <HStack position="relative" alignItems="center">
+                  <AbsoluteVStack top={-16} left={-34} zIndex={-1}>
+                    <RankView rank={rank} />
+                  </AbsoluteVStack>
+
                   <Spacer size="xs" />
 
                   {/* SECOND LINK WITH actual <a /> */}
@@ -343,39 +341,41 @@ const RestaurantListItemContent = memo(
               </VStack>
             </Link>
 
-            <Spacer size="md" />
+            <Spacer size="lg" />
 
             {/* SECOND ROW TITLE */}
             <VStack
               {...contentSideProps}
               overflow="hidden"
-              zIndex={-1}
+              zIndex={2}
               paddingLeft={60}
               paddingRight={20}
               marginTop={media.sm ? -6 : 0}
               transform={[{ translateY: -10 }]}
+              pointerEvents="auto"
             >
-              <HStack alignItems="center" cursor="pointer" spacing="lg">
+              <HStack alignItems="center" cursor="pointer" spacing="xs">
                 {!!price_range && (
                   <Text
                     fontSize={14}
-                    fontWeight="500"
-                    color={`rgba(0,0,0,0.6)`}
+                    fontWeight="700"
+                    color={theme.colorTertiary}
+                    marginRight={4}
                   >
                     {price_range}
                   </Text>
                 )}
 
                 {!!opening_hours && (
-                  <Link
+                  <SmallButton
                     name="restaurantHours"
-                    fontSize={14}
                     params={{ slug: restaurantSlug }}
+                    fontSize={14}
                     color="rgba(0,0,0,0.6)"
                     ellipse
                   >
                     {opening_hours}
-                  </Link>
+                  </SmallButton>
                 )}
 
                 {!!restaurant.address && (

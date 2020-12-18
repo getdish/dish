@@ -56,7 +56,7 @@ const RestaurantUpVoteDownVoteContents = memo(
     score = (score ?? restaurant.score) + vote
 
     return (
-      <VStack position="relative">
+      <VStack pointerEvents="auto" position="relative">
         <AbsoluteVStack
           bottom={-14}
           right={-10}
@@ -87,6 +87,7 @@ const RestaurantUpVoteDownVoteContents = memo(
               vote={vote}
               setVote={setVote}
               onClickPoints={onClickPoints}
+              isMultiple={Object.keys(activeTags).length > 1}
             />
           </VStack>
         </VStack>
@@ -95,15 +96,15 @@ const RestaurantUpVoteDownVoteContents = memo(
   })
 )
 
-export const TotalScore = memo(
+const TotalScore = memo(
   ({
     score,
     vote,
     subtle,
     setVote,
     onClickPoints,
+    isMultiple,
     size,
-    ...props
   }: {
     size?: 'sm' | 'md'
     ratio?: number
@@ -112,7 +113,8 @@ export const TotalScore = memo(
     setVote?: Function
     onClickPoints?: (event: GestureResponderEvent) => void
     subtle?: boolean
-  } & StackProps) => {
+    isMultiple?: boolean
+  }) => {
     score = Math.round(score)
     const voteButtonColor = subtle ? '#f2f2f2' : null
     const scale = size === 'sm' ? 0.75 : 1
@@ -127,7 +129,7 @@ export const TotalScore = memo(
     const upvote = (
       <VoteButton
         size={18 * scale}
-        Icon={ChevronsUp}
+        Icon={isMultiple ? ChevronsUp : ChevronUp}
         shadowDirection="up"
         voted={vote == 1}
         color={vote === 1 ? 'green' : voteButtonColor}
@@ -141,7 +143,7 @@ export const TotalScore = memo(
     const downvote = (
       <VoteButton
         size={18 * scale}
-        Icon={ChevronsDown}
+        Icon={isMultiple ? ChevronsDown : ChevronDown}
         voted={vote == -1}
         color={vote === -1 ? 'red' : voteButtonColor}
         onPress={(e) => {
@@ -155,24 +157,23 @@ export const TotalScore = memo(
 
     return (
       <VStack
-        pointerEvents="auto"
         alignItems="center"
         justifyContent="center"
         width={sizePx}
         height={sizePx}
-        {...props}
       >
-        {subtle ? (
-          upvote
-        ) : (
-          <Tooltip position="right" contents="Upvote" {...isOpenProp}>
-            {upvote}
-          </Tooltip>
-        )}
+        <AbsoluteVStack top={-10}>
+          {subtle ? (
+            upvote
+          ) : (
+            <Tooltip position="right" contents="Upvote" {...isOpenProp}>
+              {upvote}
+            </Tooltip>
+          )}
+        </AbsoluteVStack>
         <Text
           fontSize={Math.min(16, sizePx / `${score}`.length) * scale * 1.075}
           fontWeight="600"
-          marginVertical={6.5 * scale}
           letterSpacing={-0.5}
           color={color}
           cursor="default"
@@ -180,13 +181,15 @@ export const TotalScore = memo(
         >
           {numberFormat(score ?? 0)}
         </Text>
-        {subtle ? (
-          downvote
-        ) : (
-          <Tooltip position="right" contents="Downvote" {...isOpenProp}>
-            {downvote}
-          </Tooltip>
-        )}
+        <AbsoluteVStack bottom={-10}>
+          {subtle ? (
+            downvote
+          ) : (
+            <Tooltip position="right" contents="Downvote" {...isOpenProp}>
+              {downvote}
+            </Tooltip>
+          )}
+        </AbsoluteVStack>
       </VStack>
     )
   }

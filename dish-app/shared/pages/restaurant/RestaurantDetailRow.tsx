@@ -168,9 +168,15 @@ export function openingHours(restaurant: RestaurantQuery) {
 const getHours = (hours: string) => {
   const [opens, closes] = hours.split(' - ')
   if (opens && closes) {
-    const opens_at = opens.replace(' ', '').replace(':00', '')
-    const closes_at = closes.replace(' ', '').replace(':00', '')
-    return `${opens_at} - ${closes_at}`
+    let opens_at = opens.replace(' ', '').replace(':00', '')
+    let closes_at = closes.replace(' ', '').replace(':00', '')
+    if (opens_at.includes('pm') && closes_at.includes('pm')) {
+      opens_at = opens_at.replace('pm', '')
+    }
+    if (opens_at.includes('am') && closes_at.includes('am')) {
+      opens_at = opens_at.replace('am', '')
+    }
+    return `${opens_at}-${closes_at}`
   }
   return ''
 }

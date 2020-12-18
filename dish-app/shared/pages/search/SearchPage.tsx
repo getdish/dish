@@ -1,5 +1,5 @@
 import { sleep } from '@dish/async'
-import { ArrowUp } from '@dish/react-feather'
+import { ArrowDown, ArrowUp } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'
 import { sortBy } from 'lodash'
 import React, {
@@ -13,7 +13,8 @@ import React, {
   useMemo,
   useRef,
 } from 'react'
-import { ScrollView, ScrollViewProps } from 'react-native'
+import { Dimensions, ScrollView, ScrollViewProps } from 'react-native'
+import Svg, { Polygon } from 'react-native-svg'
 import {
   DataProvider,
   LayoutProvider,
@@ -436,8 +437,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             <HStack flex={1} position="relative">
               <HStack position="absolute" fullscreen>
                 <VStack
-                  // borderTopWidth={1}
-                  borderLeftWidth={1}
+                  borderLeftWidth={2}
                   borderColor="#eee"
                   width={40}
                   height={40}
@@ -447,8 +447,18 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
                   marginLeft={20}
                   transform={[{ rotate: '45deg' }]}
                 />
+                <AbsoluteVStack
+                  bottom={-32}
+                  left={15}
+                  transform={[{ rotate: '180deg' }]}
+                >
+                  <Svg width={12} height={12} viewBox="0 0 100 100">
+                    <Polygon points="50 15, 100 100, 0 100" fill="#ddd" />
+                  </Svg>
+                </AbsoluteVStack>
                 <VStack
-                  borderBottomWidth={1}
+                  borderBottomWidth={2}
+                  transform={[{ translateY: -1 }]}
                   borderBottomColor="#eee"
                   flex={1}
                 />
@@ -458,27 +468,34 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
               alignItems="center"
               borderWidth={1}
               borderColor="#f2f2f2"
-              paddingHorizontal={15}
+              paddingHorizontal={18}
               borderRadius={100}
               maxWidth="80%"
               height={52}
+              position="relative"
             >
-              <VStack marginLeft={-25} marginRight={5}>
+              <AbsoluteVStack left={-65}>
                 <SlantedTitle size="xs">Scoring</SlantedTitle>
-              </VStack>
-              <HStack spacing="sm">
-                {tagsWithPct.map(({ tag, pct }, index) => {
-                  return (
-                    <TagButton
-                      key={tag.slug ?? index}
-                      replaceSearch
-                      size="sm"
-                      {...getTagButtonProps(tag)}
-                      after={`(${pct}%)`}
-                    />
-                  )
-                })}
-              </HStack>
+              </AbsoluteVStack>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ maxWidth: 300 }}
+              >
+                <HStack spacing="sm">
+                  {tagsWithPct.map(({ tag, pct }, index) => {
+                    return (
+                      <TagButton
+                        key={tag.slug ?? index}
+                        replaceSearch
+                        size="sm"
+                        {...getTagButtonProps(tag)}
+                        after={`(${pct}%)`}
+                      />
+                    )
+                  })}
+                </HStack>
+              </ScrollView>
             </HStack>
             <HStack flex={1} />
           </HStack>
