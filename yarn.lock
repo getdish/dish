@@ -11611,7 +11611,7 @@ jest-get-type@^26.3.0:
   resolved "https://registry.npmjs.org/jest-get-type/-/jest-get-type-26.3.0.tgz#e97dc3c3f53c2b406ca7afaed4493b1d099199e0"
   integrity sha512-TpfaviN1R2pQWkIihlfEanwOXK0zcxrKEE4MlU6Tn7keoXdN6/3gK/xl0yEh8DOunn5pOVGKf8hB4R9gVh04ig==
 
-jest-haste-map@^26.0.1, jest-haste-map@^26.5.2, jest-haste-map@^26.6.2:
+jest-haste-map@^26.0.1, jest-haste-map@^26.6.2:
   version "26.6.2"
   resolved "https://registry.npmjs.org/jest-haste-map/-/jest-haste-map-26.6.2.tgz#dd7e60fe7dc0e9f911a23d79c5ff7fb5c2cafeaa"
   integrity sha512-easWIJXIw71B2RdR8kgqpjQrbMRWQBgiBwXYEhtGUTaX+doCjBheluShdDMeR8IMfJiTqH4+zfhtg29apJf/8w==
@@ -11831,7 +11831,7 @@ jest-util@^26.1.0, jest-util@^26.6.2:
     is-ci "^2.0.0"
     micromatch "^4.0.2"
 
-jest-validate@^26.0.1, jest-validate@^26.5.2, jest-validate@^26.6.2:
+jest-validate@^26.0.1, jest-validate@^26.6.2:
   version "26.6.2"
   resolved "https://registry.npmjs.org/jest-validate/-/jest-validate-26.6.2.tgz#23d380971587150467342911c3d7b4ac57ab20ec"
   integrity sha512-NEYZ9Aeyj0i5rQqbq+tpIOom0YS1u2MVu6+euBsvpgIme+FOfRmoC4R5p0JiAUpaFvFy24xgrpMknarR/93XjQ==
@@ -13038,7 +13038,7 @@ methods@~1.1.2:
   resolved "https://registry.npmjs.org/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
   integrity sha1-VSmk1nZUE07cxSZmVoNbD4Ua/O4=
 
-metro-babel-register@0.59.0, metro-babel-register@0.62.0, metro-babel-register@^0.64.0:
+metro-babel-register@0.59.0, metro-babel-register@0.62.0:
   version "0.62.0"
   resolved "https://registry.npmjs.org/metro-babel-register/-/metro-babel-register-0.62.0.tgz#33b05f89282c75c7dc7d4c16c563f64936dc2738"
   integrity sha512-6umr/Xy8hh7Lz0SXVWa21IH2ybQbqfFgdxrJ0eoRYSdOJVzse3CNWvn6u/ZEBn7FesCLCMSoK7Nd3yaetzdrfw==
@@ -13085,16 +13085,7 @@ metro-cache@0.62.0:
     mkdirp "^0.5.1"
     rimraf "^2.5.4"
 
-metro-cache@0.64.0:
-  version "0.64.0"
-  resolved "https://registry.npmjs.org/metro-cache/-/metro-cache-0.64.0.tgz#a769503e12521d9e9d95ce5840ffb2efdb4e8703"
-  integrity sha512-QvGfxe/1QQYM9XOlR8W1xqE9eHDw/AgJIgYGn/TxZxBu9Zga+Rgs1omeSZju45D8w5VWgMr83ma5kACgzvOecg==
-  dependencies:
-    metro-core "0.64.0"
-    mkdirp "^0.5.1"
-    rimraf "^2.5.4"
-
-metro-config@0.62.0, metro-config@^0.58.0, metro-config@^0.64.0:
+metro-config@0.62.0, metro-config@^0.58.0:
   version "0.62.0"
   resolved "https://registry.npmjs.org/metro-config/-/metro-config-0.62.0.tgz#f5434b63e9bb8c1fff75a8039fe4860c722dd5a0"
   integrity sha512-R9WfLI4Kusb9pg5T/4bSjjZyWrB+VLnaLJ8xyxfHK+5xRYfz9aoQ6SjqEc2rQ08RzrykBcghCmD6Pp3dOmBTqg==
@@ -13105,7 +13096,7 @@ metro-config@0.62.0, metro-config@^0.58.0, metro-config@^0.64.0:
     metro-cache "0.62.0"
     metro-core "0.62.0"
 
-metro-core@0.62.0, metro-core@0.64.0, metro-core@^0.58.0, metro-core@^0.64.0:
+metro-core@0.62.0, metro-core@^0.58.0:
   version "0.62.0"
   resolved "https://registry.npmjs.org/metro-core/-/metro-core-0.62.0.tgz#ed645b0ec6679fa49133f30ad31c652262a2b0d6"
   integrity sha512-n38RBceDIZ2VAaEV4j/cxGsH06VWE4jTSj4lFzNY0u7T23JMGwU5+aCGVifVOV/fm94rfvpKu+SMbcSXK9inVg==
@@ -13210,24 +13201,12 @@ metro-resolver@0.62.0:
   dependencies:
     absolute-path "^0.0.0"
 
-metro-resolver@0.64.0:
-  version "0.64.0"
-  resolved "https://registry.npmjs.org/metro-resolver/-/metro-resolver-0.64.0.tgz#21126b44f31346ac2ce0b06b77ef65e8c9e2294a"
-  integrity sha512-cJ26Id8Zf+HmS/1vFwu71K3u7ep/+HeXXAJIeVDYf+niE7AWB9FijyMtAlQgbD8elWqv1leJCnQ/xHRFBfGKYA==
-  dependencies:
-    absolute-path "^0.0.0"
-
 metro-resolver@^0.58.0:
   version "0.58.0"
   resolved "https://registry.npmjs.org/metro-resolver/-/metro-resolver-0.58.0.tgz#4d03edc52e2e25d45f16688adf3b3f268ea60df9"
   integrity sha512-XFbAKvCHN2iWqKeiRARzEXn69eTDdJVJC7lu16S4dPQJ+Dy82dZBr5Es12iN+NmbJuFgrAuIHbpWrdnA9tOf6Q==
   dependencies:
     absolute-path "^0.0.0"
-
-metro-runtime@0.64.0:
-  version "0.64.0"
-  resolved "https://registry.npmjs.org/metro-runtime/-/metro-runtime-0.64.0.tgz#cdaa1121d91041bf6345f2a69eb7c2fb289eff7b"
-  integrity sha512-m7XbWOaIOeFX7YcxUhmnOi6Pg8EaeL89xyZ+quZyZVF1aNoTr4w8FfbKxvijpjsytKHIZtd+43m2Wt5JrqyQmQ==
 
 metro-source-map@0.58.0:
   version "0.58.0"
@@ -13328,7 +13307,7 @@ metro-transform-worker@0.62.0:
     metro-source-map "0.62.0"
     metro-transform-plugins "0.62.0"
 
-metro@0.62.0, metro@0.64.0, metro@^0.58.0:
+metro@0.62.0, metro@^0.58.0:
   version "0.62.0"
   resolved "https://registry.npmjs.org/metro/-/metro-0.62.0.tgz#22b16e9996a896ad1b3c60d85d7e71103b43c3e8"
   integrity sha512-4QMc9tCJ4EuP0mmXS4ZHG8XKuotzfgbtlV4z+7U1itpaKe6BiVRaaOv1pe8WDwITetitOYdOWoleLLd4bBlYZA==
