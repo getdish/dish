@@ -3,6 +3,10 @@ const useOurBabel = process.env.TARGET === 'web' || process.env.TARGET === 'ssr'
 module.exports = function (api) {
   api.cache(true)
 
+  if (process.env.NODE_ENV === 'test') {
+    return {}
+  }
+
   if (useOurBabel) {
     return {
       presets: ['@dish/babel-preset'],

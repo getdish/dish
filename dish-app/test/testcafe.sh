@@ -11,12 +11,7 @@ PROJECT_ROOT=$(git rev-parse --show-toplevel)
 
 pushd $PROJECT_ROOT/dish-app
 
-echo "where"
-ls -la node_modules/@snackui || true
-echo "where2"
-ls -la ../node_modules/@snackui || true
-echo "test installing it then..."
-yarn add @snackui/babel-plugin
+export NODE_ENV=test
 
 $testcafe_bin \
   chrome:headless \
