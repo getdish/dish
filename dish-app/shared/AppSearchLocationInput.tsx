@@ -1,8 +1,16 @@
+// debug
 import { MapPin, Navigation } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { TextInput, TouchableOpacity } from 'react-native'
-import { AbsoluteVStack, Button, HStack, VStack, prevent } from 'snackui'
+import {
+  AbsoluteVStack,
+  Button,
+  HStack,
+  VStack,
+  prevent,
+  useMedia,
+} from 'snackui'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { inputTextStyles } from './AppSearchInput'
@@ -17,6 +25,7 @@ import { useOvermind } from './state/useOvermind'
 const paddingHorizontal = 16
 
 export const AppSearchLocationInput = memo(() => {
+  const media = useMedia()
   const inputStore = useStore(InputStore, { name: 'location' })
   const om = useOvermind()
   const { color } = useSearchBarTheme()
@@ -105,6 +114,15 @@ export const AppSearchLocationInput = memo(() => {
           focusStyle={{
             backgroundColor: 'rgba(0,0,0,0.6)',
           }}
+          {...(media.sm && {
+            backgroundColor: '#eee',
+            hoverStyle: {
+              backgroundColor: '#eee',
+            },
+            focusStyle: {
+              backgroundColor: '#eee',
+            },
+          })}
         >
           <TouchableOpacity
             onPress={(e) => {

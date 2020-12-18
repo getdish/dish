@@ -1,4 +1,4 @@
-// debug
+// // debug
 import { Clock, DollarSign, ShoppingBag } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { Image } from 'react-native'

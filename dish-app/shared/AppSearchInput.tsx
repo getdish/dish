@@ -184,15 +184,12 @@ export const AppSearchInput = memo(() => {
         overflow="hidden"
         position="relative"
         hoverStyle={{
-          borderColor: 'rgba(255,255,255,0.08)',
-          backgroundColor: 'rgba(255,255,255,0.05)',
+          borderColor: 'rgba(255,255,255,0.125)',
+          backgroundColor: 'rgba(45,45,45,0.25)',
         }}
         focusStyle={{
-          borderColor: 'rgba(255,255,255,0.1)',
-          backgroundColor: 'rgba(255,255,255,0.02)',
-          shadowColor: '#000',
-          shadowRadius: 15,
-          shadowOpacity: 0.1,
+          borderColor: 'rgba(255,255,255,0.14)',
+          backgroundColor: 'rgba(45,45,45,0.5)',
         }}
       >
         <AbsoluteVStack

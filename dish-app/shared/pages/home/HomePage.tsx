@@ -237,6 +237,7 @@ const HomePageContent = memo(
     region?: RegionNormalized
     item: HomeStateItemHome
   }) {
+    const media = useMedia()
     const items = useHomeFeed(item, region)
     const results = items
       .filter((x) => x.type === 'restaurant')
@@ -274,7 +275,11 @@ const HomePageContent = memo(
               paddingBottom={100}
               minHeight={Dimensions.get('window').height * 0.9}
             >
-              <HStack justifyContent="center" flexWrap="wrap">
+              <HStack
+                justifyContent="space-around"
+                flexWrap="wrap"
+                paddingHorizontal={media.xl ? '3%' : 0}
+              >
                 {allItems.map((item, index) => {
                   const content = (() => {
                     switch (item.type) {
