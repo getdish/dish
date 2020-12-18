@@ -173,7 +173,7 @@ export const AppSearchInput = memo(() => {
       <HStack
         alignItems="center"
         borderRadius={180}
-        borderWidth={2}
+        borderWidth={media.sm ? 0 : 2}
         borderColor="rgba(0,0,0,0.3)"
         shadowColor="#000"
         shadowRadius={15}
@@ -204,6 +204,7 @@ export const AppSearchInput = memo(() => {
           right={-90}
           left={90}
           transform={[{ translateY: 40 }, { scale: 0.75 }]}
+          display={media.sm ? 'none' : 'flex'}
           // opacity={0.8}
         >
           <DishHorizonView />
