@@ -56,7 +56,6 @@ export const CommentBubble = ({
   const circleSize = 80
   const imageSize = circleSize * 0.6
 
-  return null
   return (
     <VStack
       borderRadius={10}
