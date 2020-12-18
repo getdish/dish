@@ -16,7 +16,7 @@ ls -la node_modules/@snackui || true
 echo "where2"
 ls -la ../node_modules/@snackui || true
 echo "test installing it then..."
-yarn install @snackui/babel-plugin
+yarn add @snackui/babel-plugin
 
 $testcafe_bin \
   chrome:headless \
