@@ -278,6 +278,8 @@ const HomePageContent = memo(
               <HStack
                 justifyContent="space-around"
                 flexWrap="wrap"
+                maxWidth={830}
+                alignSelf="center"
                 paddingHorizontal={media.xl ? '3%' : 0}
               >
                 {allItems.map((item, index) => {
@@ -300,8 +302,7 @@ const HomePageContent = memo(
                     <VStack
                       key={item.id}
                       paddingHorizontal={8}
-                      paddingBottom={25}
-                      paddingTop={5}
+                      paddingBottom="6%"
                       // flex={1}
                       alignItems="center"
                     >

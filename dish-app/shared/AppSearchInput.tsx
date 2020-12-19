@@ -23,6 +23,7 @@ import {
 } from 'snackui'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
+import { darkPink } from './colors'
 import { isWeb, searchBarHeight } from './constants'
 import { DishHorizonView } from './DishHorizonView'
 import { isWebIOS } from './helpers/isIOS'
@@ -174,6 +175,7 @@ export const AppSearchInput = memo(() => {
         alignItems="center"
         borderRadius={180}
         borderWidth={media.sm ? 0 : 2}
+        backgroundColor={darkPink}
         borderColor="rgba(0,0,0,0.3)"
         shadowColor="#000"
         shadowRadius={15}
