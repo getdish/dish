@@ -136,18 +136,18 @@ export const RestaurantCardContent = memo(
                   height="100%"
                 >
                   <HStack width="100%">
-                    <VStack minWidth={40} flex={1} />
+                    <VStack minWidth={60} flex={1} />
                     <VStack alignItems="flex-end">
                       <Paragraph
                         textAlign="right"
-                        size={1.2}
-                        sizeLineHeight={0.8}
+                        size="xxxl"
+                        sizeLineHeight={0.7}
                         textShadowColor="#00000033"
                         textShadowRadius={1}
                         textShadowOffset={{ height: 2, width: 0 }}
                         color="#fff"
                         fontWeight="800"
-                        letterSpacing={-1.25}
+                        letterSpacing={-1}
                       >
                         {restaurant.name}
                       </Paragraph>

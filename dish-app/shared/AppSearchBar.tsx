@@ -1,6 +1,7 @@
 import { ArrowUp, ChevronLeft, Map, Search } from '@dish/react-feather'
 import React, { Suspense, memo } from 'react'
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
+import { Line } from 'react-native-svg'
 import {
   AbsoluteVStack,
   HStack,
@@ -67,14 +68,23 @@ export const AppSearchBarFloating = () => {
   return (
     <AbsoluteVStack
       className="searchbar-container ease-in-out"
-      left={6}
-      right={6}
       zIndex={zIndexSearchBarFloating}
       position="absolute"
-      marginTop={searchBarTopOffset}
       alignItems="center"
       pointerEvents="none"
+      paddingLeft={6}
+      paddingRight={6}
+      paddingTop={searchBarTopOffset}
+      left={0}
+      right={0}
+      top={0}
     >
+      <AbsoluteVStack fullscreen zIndex={-1}>
+        <LinearGradient
+          style={[StyleSheet.absoluteFill]}
+          colors={['rgba(0,0,0,0.15)', `rgba(0,0,0,0.0)`]}
+        />
+      </AbsoluteVStack>
       <VStack
         position="relative"
         alignItems="center"
@@ -84,7 +94,7 @@ export const AppSearchBarFloating = () => {
         maxWidth={searchBarMaxWidth + 20}
       >
         <AbsoluteVStack
-          borderRadius={15}
+          borderRadius={13}
           transform={[{ skewX: '-12deg' }]}
           overflow="hidden"
           zIndex={102}
@@ -92,7 +102,7 @@ export const AppSearchBarFloating = () => {
           height={height}
           justifyContent="center"
           alignItems="center"
-          backgroundColor="#111"
+          backgroundColor="#151515"
           shadowColor="rgba(0,0,0,0.3)"
           shadowOffset={{ height: 1, width: 0 }}
           shadowRadius={15}
@@ -105,20 +115,20 @@ export const AppSearchBarFloating = () => {
           <AbsoluteVStack
             borderWidth={3}
             borderColor="rgba(0,0,0,0.2)"
-            borderRadius={14}
+            borderRadius={12}
             fullscreen
           />
           <AbsoluteVStack
             borderWidth={1}
             borderColor="rgba(0,0,0,0.35)"
-            borderRadius={14}
+            borderRadius={12}
             fullscreen
           />
           <LinearGradient
             style={[StyleSheet.absoluteFill]}
             colors={[
               'rgba(0,0,0,0.05)',
-              `rgba(255,255,255,0.05)`,
+              `rgba(0,0,0,0.05)`,
               'rgba(0,0,0,0.05)',
             ]}
           />
