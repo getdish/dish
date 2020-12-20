@@ -296,6 +296,28 @@ function local_node_with_prod_env() {
     $1
 }
 
+function staging_ports_tunnel() {
+  ssh \
+    -L 15432:localhost:5432 \
+    -L 15433:localhost:5433 \
+    root@ssh.staging.dishapp.com
+}
+
+# NB this needs the function `staging_ports_tunnel` to have been run
+function local_node_with_staging_env() {
+  export DISH_DEBUG=1
+  export RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
+  export PGPORT=15432
+  export PGPASSWORD=postgres
+  export TIMESCALE_PORT=15433
+  export TIMESCALE_PASSWORD=postgres
+  export HASURA_ENDPOINT=https://hasura-staging.dishapp.com
+  export HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
+  node \
+    --max-old-space-size=4096 \
+    $1
+}
+
 function dish_app_generate_tags() {
   export HASURA_ENDPOINT=https://hasura-staging.dishapp.com
   export HASURA_SECRET="password"
@@ -373,13 +395,20 @@ restore_latest_main_backup_to_local() {
   cat "$dump_file" | PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5432 -d dish
 }
 
+restore_latest_scrapes_backup_to_local() {
+  latest_backup=$(get_latest_scrape_backup)
+  dump_file="/tmp/latest_scrape_backup.dump"
+  s3 get "$latest_backup" "$dump_file"
+  cat "$dump_file" | PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5433 -d dish
+}
+
 get_latest_scrape_backup() {
   echo $(
     s3 ls $DISH_BACKUP_BUCKET \
+      | grep "dish-scrape-backup" \
       | tail -1 \
-      | awk '{ print $4 }' \
-      | grep "dish-scrape-backup"
-    )
+      | awk '{ print $4 }'
+  )
 }
 
 function _restore_main_backup() {
@@ -1021,6 +1050,10 @@ function staging_ssh() {
     -t \
     -i $PROJECT_ROOT/k8s/etc/ssh/dish-staging.priv \
     'tmux attach'
+}
+
+function sync_local_code_to_staging() {
+  rsync -avP --filter=':- .gitignore' . root@ssh.staging.dishapp.com:/app
 }
 
 if command -v git &> /dev/null; then
