@@ -3,44 +3,44 @@ import { useStore } from '@dish/use-store'
 import { isEqual } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { Suspense, memo, useEffect, useRef } from 'react'
-import { AbsoluteVStack, VStack } from 'snackui'
+import { AbsoluteVStack, VStack, getMedia, useMedia } from 'snackui'
 
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { MAPBOX_ACCESS_TOKEN } from './constants'
 import { getZoomLevel, mapZoomToMedium } from './helpers/mapHelpers'
-import { useIsReallyNarrow } from './hooks/useIs'
 import { restaurantQuery } from './hooks/useRestaurantQuery'
 import { useOvermind } from './state/useOvermind'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
 export default memo(() => {
-  const isReallySmall = useIsReallyNarrow()
+  const media = useMedia()
   const om = useOvermind()
   const drawerSnapPoint = om.state.home.drawerSnapPoint
 
-  if (!isReallySmall) {
+  if (!media.xs) {
     return null
   }
+
+  const isHidden = media.xs && drawerSnapPoint > 0
 
   return (
     <Suspense fallback={null}>
       <VStack
         className="ease-in-out"
         transform={[{ scale: 0.8 }, { translateX: 15 }, { translateY: 15 }]}
-        {...(isReallySmall &&
-          drawerSnapPoint > 0 && {
-            opacity: 0,
-            pointerEvents: 'none',
-          })}
+        {...(isHidden && {
+          opacity: 0,
+          pointerEvents: 'none',
+        })}
       >
-        <HomeMapPIPContent isSmall={isReallySmall} />
+        <HomeMapPIPContent />
       </VStack>
     </Suspense>
   )
 })
 
-const HomeMapPIPContent = graphql(({ isSmall }: { isSmall: boolean }) => {
+const HomeMapPIPContent = graphql(() => {
   const om = useOvermind()
   const mapNode = useRef<HTMLDivElement>(null)
   const state = om.state.home.currentState
@@ -83,7 +83,7 @@ const HomeMapPIPContent = graphql(({ isSmall }: { isSmall: boolean }) => {
   }
 
   const pipAction = (() => {
-    if (isSmall && drawerStore.snapIndex === 0) {
+    if (getMedia().xs && drawerStore.snapIndex === 0) {
       // move drawer down
       return () => {
         drawerStore.setSnapPoint(2)

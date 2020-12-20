@@ -8,7 +8,7 @@ import { AbsoluteVStack, VStack } from 'snackui'
 import AppAutocomplete from './AppAutocomplete'
 import AppMap from './AppMap'
 import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
-import { AppMenuFloating } from './AppMenuFloating'
+import { AppMenuButton } from './AppMenuButton'
 import { AppRoot } from './AppRoot'
 import { AppSmallDrawer } from './AppSmallDrawer'
 import { AppStackView } from './AppStackView'
@@ -62,7 +62,7 @@ export default function App() {
                 {/* <AppMapControlsOverlay /> */}
               </Suspense>
 
-              <AppMenuFloating />
+              <AppMenuButton />
 
               <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1001}>
                 <AppAutocomplete />

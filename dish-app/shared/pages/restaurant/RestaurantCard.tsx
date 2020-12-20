@@ -1,3 +1,4 @@
+// debug
 import { graphql, order_by } from '@dish/graph'
 import React, { Suspense, memo, useCallback, useState } from 'react'
 import { Image, StyleSheet } from 'react-native'
@@ -17,11 +18,6 @@ import { Link } from '../../views/ui/Link'
 import { useCardFrame } from '../home/useCardFrame'
 import { CardFrame, cardFrameBorderRadiusSmaller } from './CardFrame'
 import { priceRange } from './RestaurantDetailRow'
-import {
-  RestaurantFavoriteButton,
-  RestaurantFavoriteStar,
-} from './RestaurantFavoriteButton'
-import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 
 export type RestaurantCardProps = {
   // size?: 'lg' | 'md' | 'sm'
@@ -98,14 +94,6 @@ export const RestaurantCardContent = memo(
                   fullscreen
                   zIndex={10}
                 >
-                  {/* <LinearGradient
-                    style={StyleSheet.absoluteFill}
-                    colors={[
-                      'rgba(0,0,0,0)',
-                      'rgba(0,0,0,0.1)',
-                      'rgba(0,0,0,0.4)',
-                    ]}
-                  /> */}
                   <LinearGradient
                     style={StyleSheet.absoluteFill}
                     colors={[`${lightColor}`, `${color}99`]}
@@ -148,18 +136,18 @@ export const RestaurantCardContent = memo(
                   height="100%"
                 >
                   <HStack width="100%">
-                    <VStack minWidth={40} flex={1} />
+                    <VStack minWidth={60} flex={1} />
                     <VStack alignItems="flex-end">
                       <Paragraph
                         textAlign="right"
-                        size={1.2}
-                        sizeLineHeight={0.8}
+                        size="xxxl"
+                        sizeLineHeight={0.7}
                         textShadowColor="#00000033"
                         textShadowRadius={1}
                         textShadowOffset={{ height: 2, width: 0 }}
                         color="#fff"
                         fontWeight="800"
-                        letterSpacing={-1.25}
+                        letterSpacing={-1}
                       >
                         {restaurant.name}
                       </Paragraph>
@@ -172,18 +160,10 @@ export const RestaurantCardContent = memo(
                         {price_range}
                       </Paragraph>
                     </VStack>
-                    {/* <VStack marginTop={-16} marginRight={-16}>
-                      <RestaurantFavoriteStar
-                        size="md"
-                        restaurantId={restaurantId}
-                      />
-                    </VStack> */}
                   </HStack>
                   <VStack flex={1} />
                   {below}
                 </VStack>
-
-                <AbsoluteVStack top={15} right={15}></AbsoluteVStack>
               </AbsoluteVStack>
             </VStack>
           </CardFrame>

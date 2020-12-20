@@ -66,16 +66,10 @@ const tagColors = {
 }
 
 const getTagColors = ({ rgb, type }: Partial<Tag>) => {
-  if (rgb) {
+  if (rgb?.[0]) {
     return {
       backgroundColor: `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.15)`,
       color: rgbString(rgb),
-    }
-  }
-  if (type === 'dish') {
-    return {
-      backgroundColor: '#f2f2f2',
-      color: '#000',
     }
   }
   const [backgroundColor, color] = tagColors[type] ?? tagColors.other
@@ -103,6 +97,7 @@ export type TagButtonProps = Omit<StackProps & TagButtonTagProps, 'rgb'> & {
   replace?: boolean
   replaceSearch?: boolean
   onPress?: Function
+  after?: any
 }
 
 export const TagButton = memo((props: TagButtonProps) => {
@@ -126,6 +121,7 @@ export const TagButton = memo((props: TagButtonProps) => {
     score,
     subtleIcon,
     hideIcon,
+    after,
     replace,
     onPress,
     ...rest
@@ -137,10 +133,11 @@ export const TagButton = memo((props: TagButtonProps) => {
   const tag = { name, type: type as TagType, icon, rgb, slug }
   const isSmall = size === 'sm'
   const scale = isSmall ? 0.85 : size == 'lg' ? 1 : 1
-
   const colors = getTagColors(tag)
   const bg = backgroundColor ?? colors.backgroundColor
   const fg = color ?? colors.color
+
+  console.log('tag', tag, colors)
 
   const fontSize = fontSizeProp ? fontSizeProp : 16 * scale
 
@@ -218,6 +215,11 @@ export const TagButton = memo((props: TagButtonProps) => {
           {typeof score === 'number' && (
             <Text marginLeft={4} fontWeight="300" fontSize={smallerFontSize}>
               {score > 0 ? `+${score}` : score}
+            </Text>
+          )}
+          {!!after && (
+            <Text marginLeft={4} fontWeight="300" fontSize={smallerFontSize}>
+              {after}
             </Text>
           )}
         </Text>

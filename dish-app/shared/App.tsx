@@ -7,7 +7,7 @@ import { AppContainer } from './AppContainer'
 import { AppIntroLetter } from './AppIntroLetter'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
-import { AppMenuFloating } from './AppMenuFloating'
+import { AppMenuButton } from './AppMenuButton'
 import { AppRoot } from './AppRoot'
 import { AppSearchBarFloating } from './AppSearchBar'
 import { AppStackView } from './AppStackView'
@@ -17,10 +17,6 @@ import { ErrorBoundary } from './views/ErrorBoundary'
 import { Route } from './views/router/Route'
 
 export default memo(function App() {
-  return <AppContent />
-})
-
-const AppContent = memo(() => {
   return (
     <AppRoot>
       <Suspense fallback={null}>
@@ -28,7 +24,7 @@ const AppContent = memo(() => {
       </Suspense>
 
       <Suspense fallback={null}>
-        <AppMenuFloating />
+        <AppMenuButton />
       </Suspense>
 
       <Suspense fallback={null}>

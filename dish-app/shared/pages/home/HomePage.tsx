@@ -10,7 +10,7 @@ import {
   tag,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers/src'
-import { chunk, partition, sortBy, uniqBy, zip } from 'lodash'
+import { capitalize, chunk, partition, sortBy, uniqBy, zip } from 'lodash'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Dimensions, ScrollView } from 'react-native'
 import { useQuery } from 'react-query'
@@ -22,13 +22,14 @@ import {
   StackProps,
   Text,
   VStack,
+  useMedia,
+  useTheme,
 } from 'snackui'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants'
 import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
-import { useIsNarrow } from '../../hooks/useIs'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { sfRegion } from '../../sfRegion'
@@ -91,8 +92,8 @@ type FeedItems =
 
 export default memo(function HomePage(props: Props) {
   const om = useOvermind()
+  const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
-  const isSmall = useIsNarrow()
   const region = useRegionQuery(props.item.region, {
     enabled: !!props.item.region,
   })
@@ -141,6 +142,14 @@ export default memo(function HomePage(props: Props) {
     }
   }, [props.isActive])
 
+  const regionName =
+    region.data?.name
+      .toLowerCase()
+      .replace('ca- ', '')
+      .split(' ')
+      .map((x) => capitalize(x))
+      .join(' ') ?? '...'
+
   return (
     <>
       <PageTitleTag>Dish - Uniquely Good Food</PageTitleTag>
@@ -160,10 +169,10 @@ export default memo(function HomePage(props: Props) {
           bottom={10}
           left={0}
           right={0}
-          shadowColor="#fff"
+          shadowColor={theme.backgroundColor}
           shadowOpacity={1}
           shadowRadius={10}
-          borderBottomColor="#f8f8f8"
+          borderBottomColor={theme.backgroundColorSecondary}
           borderBottomWidth={1}
           height={searchBarHeight + 10}
         />
@@ -180,23 +189,14 @@ export default memo(function HomePage(props: Props) {
         <ContentScrollView id="home">
           <VStack flex={1} overflow="hidden" maxWidth="100%">
             <VStack>
-              {/* SPACER ABOVE TITLE */}
-              <VStack
-                pointerEvents="none"
-                height={5 + (isSmall ? 0 : searchBarHeight)}
-              />
+              <HomeTopSpacer />
               <Spacer size="lg" />
               <HomeTopSearches />
               <Spacer />
-              <VStack alignItems="center">
-                <Text
-                  paddingHorizontal={6}
-                  fontSize={34}
-                  color="#000"
-                  fontWeight="300"
-                >
-                  {region.data?.name.toLowerCase() ?? '...'}
-                </Text>
+              <VStack position="relative" alignItems="center">
+                <SlantedTitle size="xxl" alignSelf="center">
+                  {regionName}
+                </SlantedTitle>
               </VStack>
               <Spacer size="xl" />
               <Spacer />
@@ -218,6 +218,17 @@ export default memo(function HomePage(props: Props) {
   )
 })
 
+// TODO tricky snackui extraction
+const HomeTopSpacer = () => {
+  const media = useMedia()
+  return (
+    <VStack
+      pointerEvents="none"
+      height={5 + (media.sm ? 0 : searchBarHeight)}
+    />
+  )
+}
+
 const HomePageContent = memo(
   graphql(function HomePageContent({
     region,
@@ -226,6 +237,7 @@ const HomePageContent = memo(
     region?: RegionNormalized
     item: HomeStateItemHome
   }) {
+    const media = useMedia()
     const items = useHomeFeed(item, region)
     const results = items
       .filter((x) => x.type === 'restaurant')
@@ -263,7 +275,13 @@ const HomePageContent = memo(
               paddingBottom={100}
               minHeight={Dimensions.get('window').height * 0.9}
             >
-              <HStack justifyContent="center" flexWrap="wrap">
+              <HStack
+                justifyContent="space-around"
+                flexWrap="wrap"
+                maxWidth={830}
+                alignSelf="center"
+                paddingHorizontal={media.xl ? '3%' : 0}
+              >
                 {allItems.map((item, index) => {
                   const content = (() => {
                     switch (item.type) {
@@ -284,8 +302,7 @@ const HomePageContent = memo(
                     <VStack
                       key={item.id}
                       paddingHorizontal={8}
-                      paddingBottom={25}
-                      paddingTop={5}
+                      paddingBottom="6%"
                       // flex={1}
                       alignItems="center"
                     >
@@ -439,11 +456,15 @@ const CuisineFeedCard = graphql(function CuisineFeedCard(
   return (
     <VStack height="100%" maxWidth="100%">
       <AbsoluteVStack zIndex={10} top={-5} left={-5}>
-        <SlantedBox backgroundColor="#000">
-          <Text color="#fff" fontWeight="600" lineHeight={20} fontSize={20}>
-            {props.country} {props.icon}
-          </Text>
-        </SlantedBox>
+        <SlantedTitle
+          color="#fff"
+          fontWeight="600"
+          lineHeight={20}
+          fontSize={20}
+          backgroundColor="#000"
+        >
+          {props.country} {props.icon}
+        </SlantedTitle>
       </AbsoluteVStack>
       <ScrollView
         ref={scrollRef}
@@ -561,6 +582,7 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
         fontWeight="800"
         alignSelf="center"
         marginTop={-10}
+        size="xs"
       >
         {props.dish.icon ?? null} {props.dish.name}
       </SlantedTitle>

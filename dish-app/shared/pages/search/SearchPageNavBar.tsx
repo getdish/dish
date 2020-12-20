@@ -1,12 +1,8 @@
-import { useStore } from '@dish/use-store'
 import React, { memo } from 'react'
 import Svg, { G, Path } from 'react-native-svg'
-import { AbsoluteVStack, BlurView, HStack, VStack } from 'snackui'
+import { AbsoluteVStack, HStack, VStack, useMedia, useTheme } from 'snackui'
 
-import { BottomDrawerStore } from '../../BottomDrawerStore'
-import { isWeb } from '../../constants'
-import { useCurrentLenseColor } from '../../hooks/useCurrentLenseColor'
-import { useIsNarrow } from '../../hooks/useIs'
+import { drawerWidthMax, isWeb } from '../../constants'
 import { useSafeArea } from '../../hooks/useSafeArea'
 import { isSearchState } from '../../state/home-helpers'
 import { useOvermind } from '../../state/useOvermind'
@@ -28,11 +24,11 @@ const InverseRoundedEdge = () => {
 }
 
 export const SearchPageNavBar = (props: { id: string }) => {
-  const isSmall = useIsNarrow()
+  const media = useMedia()
+  const theme = useTheme()
   const safeArea = useSafeArea()
-  const borderRadius = isSmall ? 20 : 0
 
-  if (isSmall) {
+  if (media.sm) {
     return (
       <VStack position="absolute" bottom={0} left={0} right={0} zIndex={1000}>
         <AbsoluteVStack top={-20} right={0}>
@@ -50,15 +46,15 @@ export const SearchPageNavBar = (props: { id: string }) => {
 
   return (
     <VStack
-      className="test123"
       position="absolute"
       top={0}
       left={0}
       right={0}
-      backgroundColor={isWeb ? '#fff' : `rgba(255,255,255,0.25)`}
+      maxWidth={drawerWidthMax}
+      backgroundColor={theme.backgroundColor}
       shadowColor="rgba(0,0,0,0.04)"
       shadowRadius={6}
-      borderRadius={borderRadius}
+      borderRadius={media.sm ? 20 : 0}
       shadowOffset={{ height: 3, width: 0 }}
       zIndex={10000}
     >

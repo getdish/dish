@@ -1,8 +1,7 @@
-import React from 'react'
-import { Text, VStack, memoIsEqualDeep } from 'snackui'
+import React, { useMemo } from 'react'
+import { Text, VStack, memoIsEqualDeep, useMedia } from 'snackui'
 
 import { rgbString } from '../helpers/rgbString'
-import { useIsNarrow } from '../hooks/useIs'
 import { NavigableTag } from '../state/NavigableTag'
 import { tagDisplayName } from '../state/tagMeta'
 import { LinkButton } from './ui/LinkButton'
@@ -25,17 +24,17 @@ export const LenseButton = memoIsEqualDeep(
     size?: LenseButtonSize
     onPress?: Function
   }) => {
-    const isSmall = useIsNarrow()
-    const lenseColorLight = rgbString(lense.rgb, isSmall ? 0.6 : 0.4)
+    const media = useMedia()
+    const lenseColorLight = rgbString(lense.rgb, media.sm ? 0.6 : 0.4)
     const lenseColorDark = rgbString(lense.rgb.map((x) => x * 1.2))
     const scale = size == 'md' ? 1 : size === 'lg' ? 1.2 : 1.3
-    const sizePx = isSmall ? 42 : 42
+    const sizePx = media.sm ? 42 : 42
     const bg = backgroundColor ?? (isActive ? lenseColorLight : 'transparent')
     const iconSize = sizePx * (isActive ? 0.7 : 0.6) * scale
     const scaledSize = sizePx * scale
     const scaledWidth = scaledSize
     const marginVertical = -4 * scale
-    const color = isSmall || isActive ? '#ffffff' : lenseColorDark
+    const color = media.sm || isActive ? '#ffffff' : lenseColorDark
     const lineHeight = sizePx * scale * 0.39
 
     return (

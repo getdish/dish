@@ -18,6 +18,7 @@ import {
 import { isWeb } from '../constants'
 import { combineRefs } from '../helpers/combineRefs'
 import { StaticComponent } from '../helpers/extendStaticConfig'
+import { useGetCssVariable } from '../hooks/useTheme'
 import { stylePropsView } from '../styleProps'
 import { Spacer, Spacing } from './Spacer'
 
@@ -34,15 +35,23 @@ const disabledStyle: StackProps = {
 }
 
 const useViewStylePropsSplit = (props: { [key: string]: any }) => {
+  const getVariable = useGetCssVariable()
   return useMemo(() => {
     const styleProps: ViewStyle = {}
     const viewProps: ViewProps = {}
     for (const key in props) {
       if (stylePropsView[key]) {
-        styleProps[key] = props[key]
+        styleProps[key] = getVariable(props[key])
       } else {
         viewProps[key] = props[key]
       }
+    }
+    // temp bugfix - we need to figure out a better way than inversing theme vars
+    if (
+      styleProps.shadowColor !== props.shadowColor &&
+      typeof styleProps.shadowOpacity !== 'undefined'
+    ) {
+      styleProps.shadowColor = props.shadowColor
     }
     return { styleProps, viewProps }
   }, [props])
@@ -113,7 +122,7 @@ const createStack = (defaultProps?: ViewStyle) => {
       onPressIn,
       onPressOut,
       hoverStyle = null,
-      focusStyle,
+      focusStyle, // TODO
       onHoverIn,
       onHoverOut,
       spacing,
@@ -123,7 +132,6 @@ const createStack = (defaultProps?: ViewStyle) => {
       onMouseEnter,
       // @ts-ignore
       onMouseLeave,
-      ...restProps
     } = props
 
     const { styleProps, viewProps } = useViewStylePropsSplit(props)

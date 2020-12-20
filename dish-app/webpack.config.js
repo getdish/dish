@@ -171,6 +171,7 @@ module.exports = function getWebpackConfig(
                     loader: require.resolve('@snackui/static/loader'),
                     options: {
                       evaluateImportsWhitelist: ['constants.js', 'colors.js'],
+                      themesFile: require.resolve('./shared/themes.ts'),
                     },
                   },
                 ].filter(Boolean),
@@ -203,6 +204,7 @@ module.exports = function getWebpackConfig(
                   {
                     loader: 'image-webpack-loader',
                     options: {
+                      disable: isDevelopment,
                       mozjpeg: {
                         progressive: true,
                         quality: 98,
@@ -261,10 +263,10 @@ module.exports = function getWebpackConfig(
 
         ...((isProduction &&
           TARGET != 'ssr' && [
-            new LodashPlugin({
-              // fixes issue i had https://github.com/lodash/lodash/issues/3101
-              shorthands: true,
-            }),
+            // new LodashPlugin({
+            //   // fixes issue i had https://github.com/lodash/lodash/issues/3101
+            //   shorthands: true,
+            // }),
             new ExtractCssChunks({
               esModule: true,
               ignoreOrder: false,
@@ -391,6 +393,9 @@ function babelInclude(inputPath) {
     return true
   }
   if (inputPath.includes('expo-linear-gradient')) {
+    return true
+  }
+  if (inputPath.includes('match-media')) {
     return true
   }
   if (inputPath.includes('react-native-reanimated')) {

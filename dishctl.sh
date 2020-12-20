@@ -757,7 +757,7 @@ options:
   config="$(mktemp)"
   echo "$yaml" > "$config"
   pushd $PROJECT_ROOT
-  gcloud builds submit --timeout 1h --config "$config"
+  BUILDKIT_INLINE_CACHE=1 DOCKER_BUILDKIT=1 gcloud builds submit --timeout 1h --config "$config"
   popd
 }
 

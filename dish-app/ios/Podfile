@@ -5,7 +5,7 @@ platform :ios, '10.0'
 
 target 'dish' do
   # faster mapbox on simulator
-  $ReactNativeMapboxGLIOSVersion = '~> 6.1'
+  $ReactNativeMapboxGLIOSVersion = '~> 6.3'
   config = use_native_modules!
   use_react_native!(:path => config["reactNativePath"])
   use_unimodules!

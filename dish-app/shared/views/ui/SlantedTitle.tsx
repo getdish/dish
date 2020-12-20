@@ -1,16 +1,12 @@
+// TODO useTheme here and fix bugs
 import React from 'react'
-import { BoxProps, SizableTextProps, Title } from 'snackui'
+import { BoxProps, SizableTextProps, Title, useTextStyle } from 'snackui'
 
-import { SlantedBox, slantedBoxStyle } from './SlantedBox'
+import { SlantedBox } from './SlantedBox'
 
 export const SlantedTitle = ({
-  children,
   size,
   sizeLineHeight,
-  color,
-  lineHeight,
-  fontSize,
-  fontWeight,
   ...props
 }: Omit<BoxProps, 'color'> &
   Partial<
@@ -24,18 +20,17 @@ export const SlantedTitle = ({
       | 'fontWeight'
     >
   >) => {
-  const textProps = {
-    children,
-    size,
-    sizeLineHeight,
-    color: color as any,
-    lineHeight,
-    fontSize,
-    fontWeight,
-  }
+  const [{ children, ...rest }, textProps] = useTextStyle(props as any, true)
   return (
-    <SlantedBox alignSelf="flex-start" {...props}>
-      <Title {...textProps} />
+    <SlantedBox alignSelf="flex-start" {...(rest as any)}>
+      <Title
+        fontWeight="900"
+        size={size}
+        sizeLineHeight={sizeLineHeight}
+        {...textProps}
+      >
+        {children}
+      </Title>
     </SlantedBox>
   )
 }

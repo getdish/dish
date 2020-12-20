@@ -1,15 +1,24 @@
 import React, { Suspense } from 'react'
-import { HStack, LoadingItems, StackProps, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  LoadingItems,
+  StackProps,
+  VStack,
+  useMedia,
+  useTheme,
+} from 'snackui'
 
 import { drawerBorderRadius, drawerWidthMax } from '../constants'
-import { useIsNarrow } from '../hooks/useIs'
 import { StackViewCloseButton } from './StackViewCloseButton'
 import { PageTitleTag } from './ui/PageTitleTag'
 
 export const StackCloseButton = () => {
-  const isSmall = useIsNarrow()
+  const media = useMedia()
   return (
-    <StackViewCloseButton right={isSmall ? 10 : -14} top={isSmall ? 10 : -3} />
+    <AbsoluteVStack right={media.sm ? 10 : 10} top={media.sm ? 10 : -3}>
+      <StackViewCloseButton />
+    </AbsoluteVStack>
   )
 }
 
@@ -20,23 +29,24 @@ export const StackDrawer = ({
   fallback,
   ...props
 }: StackProps & { title?: string; closable?: boolean; fallback?: any }) => {
-  const isSmall = useIsNarrow()
+  const media = useMedia()
+  const theme = useTheme()
   return (
     <HStack
       position="absolute"
-      left={isSmall ? 0 : 'auto'}
-      right={isSmall ? 0 : 0}
+      left={media.sm ? 0 : 'auto'}
+      right={media.sm ? 0 : 0}
       flex={1}
       maxHeight="100%"
       height="100%"
       minHeight="100%"
       width="100%"
       borderRadius={drawerBorderRadius}
-      maxWidth={isSmall ? '100%' : drawerWidthMax}
-      minWidth={isSmall ? '100%' : 200}
+      maxWidth={media.sm ? '100%' : drawerWidthMax}
+      minWidth={media.sm ? '100%' : 200}
       justifyContent="flex-end"
-      shadowRadius={isSmall ? 6 : 10}
-      shadowColor={isSmall ? 'rgba(0,0,0,0.125)' : 'rgba(0,0,0,0.22)'}
+      shadowRadius={media.sm ? 6 : 10}
+      shadowColor={media.sm ? 'rgba(0,0,0,0.125)' : 'rgba(0,0,0,0.22)'}
     >
       {closable && <StackCloseButton />}
       {!!title && <PageTitleTag>{title}</PageTitleTag>}
@@ -44,8 +54,8 @@ export const StackDrawer = ({
         position="relative"
         flex={1}
         borderRadius={drawerBorderRadius}
-        maxWidth={isSmall ? '100%' : drawerWidthMax}
-        backgroundColor="#fff"
+        maxWidth={media.sm ? '100%' : drawerWidthMax}
+        backgroundColor={theme.backgroundColor}
         overflow="hidden"
         {...props}
       >

@@ -16,7 +16,7 @@
     "axios": "^0.19.2",
     "bull": "^3.12.1",
     "https-proxy-agent": "^5.0.0",
-    "lodash": "^4.17.20"
+    "lodash": "*"
   },
   "devDependencies": {
     "@types/bull": "^3.14.4",

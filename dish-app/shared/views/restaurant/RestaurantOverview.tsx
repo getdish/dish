@@ -2,7 +2,14 @@ import { graphql } from '@dish/graph'
 import { ellipseText } from '@dish/helpers'
 import { capitalize } from 'lodash'
 import React, { memo } from 'react'
-import { AbsoluteVStack, HStack, Paragraph, Text, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  Paragraph,
+  Text,
+  VStack,
+  useTheme,
+} from 'snackui'
 
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 
@@ -24,6 +31,7 @@ export const RestaurantOverview = memo(
     fullHeight?: boolean
     size?: 'lg'
   }) {
+    const theme = useTheme()
     const restaurant = useRestaurantQuery(restaurantSlug)
     const headlines = (restaurant.headlines() ?? [])
       .slice(0, 2)
@@ -53,6 +61,7 @@ export const RestaurantOverview = memo(
             fontSize={fontSize}
             lineHeight={lineHeight}
             opacity={1}
+            color={theme.color}
           >
             {ellipseText(
               summary

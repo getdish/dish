@@ -1,19 +1,17 @@
 import React, { memo } from 'react'
 import { Text, TextSuperScript, VStack } from 'snackui'
 
-import { bgLight } from '../../colors'
+import { bgLight, blue, darkBlue, lightBlue } from '../../colors'
 import { isWeb } from '../../constants'
 
 export const RankView = memo(({ rank }: { rank: number }) => {
   return (
     <VStack
-      width={38}
-      height={38}
+      width={48}
+      height={48}
       {...(isWeb && {
-        marginLeft: -16,
-        marginBottom: -10,
-        transform: [{ translateY: -15 }],
-        marginRight: -4,
+        transform: [{ translateY: -10 }],
+        marginRight: -15,
       })}
       {...(!isWeb && {
         marginLeft: -6,
@@ -26,20 +24,19 @@ export const RankView = memo(({ rank }: { rank: number }) => {
       alignItems="center"
       justifyContent="center"
     >
-      <Text
-        color="#777"
-        transform={[{ translateY: -0 }]}
-        textAlign="center"
-        lineHeight={38}
-      >
-        <TextSuperScript transform={[{ translateY: -4 }]} fontSize={11}>
+      <Text transform={[{ translateY: -0 }]} textAlign="center" lineHeight={38}>
+        <TextSuperScript
+          color={blue}
+          transform={[{ translateY: -10 }]}
+          fontSize={11}
+        >
           #
         </TextSuperScript>
         <Text
           letterSpacing={-1}
-          fontSize={+rank > 9 ? 18 : 22}
-          fontWeight="500"
-          color="#000"
+          fontSize={+rank > 9 ? 18 : 24}
+          fontWeight="800"
+          color={blue}
         >
           {rank}
         </Text>

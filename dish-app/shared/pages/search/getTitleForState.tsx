@@ -77,7 +77,7 @@ export function getTitleForState(
   if (searchName) {
     subTitleParts.push(`${searchName[0].toUpperCase()}${searchName.slice(1)}`)
   }
-  subTitleParts.push(`@ ${currentLocationName}`)
+  subTitleParts.push(`${currentLocationName}`)
 
   const subTitle = subTitleParts.join(' ')
   //   native extraction failing?

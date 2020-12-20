@@ -10,11 +10,11 @@ import {
   Spacer,
   Text,
   VStack,
+  useMedia,
 } from 'snackui'
 
 import { bgLight } from '../../colors'
-import { drawerWidthMax } from '../../constants'
-import { useIsNarrow } from '../../hooks/useIs'
+import { listItemMaxSideWidth } from '../../constants'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { CloseButton } from '../../views/ui/CloseButton'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
@@ -29,8 +29,6 @@ export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
     this.showComments = !this.showComments
   }
 }
-
-const maxSideWidth = drawerWidthMax / 2.5 - 40
 
 export const RestaurantBreakdown = memo(
   graphql(
@@ -59,7 +57,7 @@ export const RestaurantBreakdown = memo(
         limit: 1,
       })[0]
       const tagName = tag?.displayName ?? tag?.name ?? null
-      const isSmall = useIsNarrow()
+      const media = useMedia()
       const store = useStore(RestaurantReviewsDisplayStore, {
         id: restaurantId,
       })
@@ -97,7 +95,7 @@ export const RestaurantBreakdown = memo(
             </AbsoluteVStack>
           )}
           <HStack
-            flexWrap={isSmall ? 'wrap' : 'nowrap'}
+            flexWrap={media.sm ? 'wrap' : 'nowrap'}
             overflow="hidden"
             flex={1}
             maxWidth="100%"
@@ -131,11 +129,11 @@ export const RestaurantBreakdown = memo(
               borderRadius={10}
               borderWidth={1}
               borderColor="#eee"
-              maxWidth={isSmall ? '100%' : maxSideWidth}
+              maxWidth={media.sm ? '100%' : listItemMaxSideWidth}
               padding={10}
               minWidth={220}
               margin={10}
-              width={isSmall ? '100%' : '33%'}
+              width={media.sm ? '100%' : '33%'}
               backgroundColor={bgLight}
               overflow="hidden"
             >

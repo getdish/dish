@@ -62,7 +62,7 @@ export default function AboutPage({
             position="relative"
           >
             <Spacer />
-            <LogoColor scale={3} />
+            <LogoColor scale={2.5} />
             <Paragraph
               zIndex={10}
               color="#999"

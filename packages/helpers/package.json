@@ -4,7 +4,9 @@
   "main": "_",
   "tsmain": "src",
   "sideEffects": false,
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "prebuild": "rm -f tsconfig.tsbuildinfo",
     "build": "tsc -b",

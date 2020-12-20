@@ -2,7 +2,7 @@
   "name": "dish-monorepo",
   "private": true,
   "engines": {
-    "node": "12.16.1"
+    "node": ">=12 <=15"
   },
   "workspaces": {
     "packages": [
@@ -17,7 +17,7 @@
     "start": "echo 'run:\n yarn db\n yarn user-server\n yarn web'",
     "db": "yarn docker:start hasura",
     "db:migrate": "./dishctl.sh db_migrate_local",
-    "user-server": "ultra -r --no-pretty --filter 'services/user-server' start",
+    "user-server": "yarn workspace @dish/user-server start",
     "app": "yarn workspace @dish/dish-app start",
     "web": "yarn workspace @dish/dish-app web",
     "web:prod": "yarn workspace @dish/dish-app web:prod",
@@ -27,15 +27,16 @@
     "preinstall": "./bin/preinstall.sh; ",
     "t": "eval $(./dishctl.sh yaml_to_env) echo $TF_VAR_HASURA_ENDPOINT",
     "docker:start": "eval $(./dishctl.sh yaml_to_env) docker-compose up",
-    "docker:build:base": "eval $(./dishctl.sh yaml_to_env) docker-compose build base",
     "docker:build": "eval $(./dishctl.sh yaml_to_env) docker-compose build",
+    "docker:build:file": "eval $(./dishctl.sh yaml_to_env) docker buildx build --platform linux/amd64",
+    "docker:build:base": "yarn docker:build:file .",
     "docker:start:web": "yarn stop:docker:web && yarn docker:start:web:simple & sleep 2 && yarn logs:docker:web",
     "docker:start:web:simple": "docker run --name dish-app -it -d -p 4444:4444 --rm dish/app",
     "docker:logs:web": "docker logs -f dish-app",
     "docker:stop:web": "docker rm -f dish-app || true",
-    "build": "ultra -r --no-pretty --concurrency 1 build",
+    "build": "ultra -r --no-pretty build",
     "build:docker": "./dishctl.sh buildkit_build_local",
-    "build:watch": "ultra -r --no-pretty --concurrency 500 watch",
+    "build:watch": "ultra -r --no-pretty watch",
     "build:monitor": "ultra --monitor",
     "build:watch:broken": "yarn tsc -b -w",
     "build:refs": "typescript-monorepo-toolkit inject-refs .",
@@ -51,20 +52,20 @@
     "snackui:push": "git subrepo clean snackui && git subrepo push snackui"
   },
   "resolutions": {
-    "typescript": "4.1.2",
-    "webpack": "5.10.0",
-    "terser": "5.3.2",
+    "typescript": "4.1.3",
+    "webpack": "5.10.3",
+    "terser": "5.5.1",
     "lodash": "4.17.20",
     "resolve": "1.17.0",
     "jsdom": "^16.4.0",
-    "tslib": "1.11.2",
+    "tslib": "2.0.3",
     "react": "0.0.0-experimental-94c0244ba",
     "react-dom": "0.0.0-experimental-94c0244ba",
     "react-test-renderer": "0.0.0-experimental-94c0244ba",
     "react-refresh": "0.0.0-experimental-94c0244ba",
-    "react-native": "0.63.2",
     "react-native-web": "0.0.0-466063b7e",
-    "react-native-svg": "12.1.0",
+    "react-native-svg": "",
+    "react-native": "0.63.2",
     "metro": "0.62.0",
     "metro-babel-register": "0.62.0",
     "metro-react-native-babel-preset": "0.62.0",
@@ -105,8 +106,7 @@
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.1.2",
-    "typescript-monorepo-toolkit": "^0.1.1",
-    "ultra-runner": "3.6.0"
+    "ultra-runner": "^3.7.1"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {

@@ -1,8 +1,6 @@
 import React from 'react'
 import { ScrollView } from 'react-native'
-import { AbsoluteVStack, AnimatedVStack, VStack } from 'snackui'
-
-import { useIsNarrow } from '../hooks/useIs'
+import { AbsoluteVStack, AnimatedVStack, VStack, useMedia } from 'snackui'
 
 export const DarkModal = ({
   hide,
@@ -13,7 +11,7 @@ export const DarkModal = ({
   children: any
   outside?: any
 }) => {
-  const isSmall = useIsNarrow()
+  const media = useMedia()
   return (
     <AbsoluteVStack
       className="dark inset-shadow-xxxl ease-in-out-slow"
@@ -21,7 +19,7 @@ export const DarkModal = ({
       zIndex={10000000000}
       alignItems="center"
       justifyContent="center"
-      paddingHorizontal={isSmall ? 0 : '2%'}
+      paddingHorizontal={media.sm ? 0 : '2%'}
       backgroundColor="rgba(30,0,12,0.5)"
       opacity={hide ? 0 : 1}
       pointerEvents={hide ? 'none' : 'auto'}

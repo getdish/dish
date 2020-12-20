@@ -1,12 +1,11 @@
-import { useWindowSize } from 'snackui'
+import { defaultMediaQueries, useWindowSize } from 'snackui'
 
 import { drawerWidthMax } from '../constants'
-import { mediaQueries } from './useIs'
 
 export function useAppDrawerWidth(max = drawerWidthMax): number {
   const [width] = useWindowSize()
 
-  if (width <= mediaQueries.sm.maxWidth) {
+  if (width <= defaultMediaQueries.sm.maxWidth) {
     return width
   }
 

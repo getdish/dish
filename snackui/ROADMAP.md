@@ -1,71 +1,32 @@
 # Roadmap
 
-## Media Query syntax support with compilation to CSS
+## Advanced traversal
 
-Previously was thinking of doing a simple version, with potential for objects:
+Plan is just to better take static objects from anywhere and inline them, especially when combined with theme + media query.
 
-```tsx
-<VStack color={['red', 'blue']} />
-<VStack color={{ small: 'red', medium: 'blue' }} />
-```
-
-But there were a few downsides, especially with how it conflicts with existing React Native array style props. To fix that you'd have to deviate from the React Native style spec, which would then require runtime translation on every view.
-
-New plan is to do this:
+Complex example:
 
 ```tsx
-import { useMedia } from 'snackui'
-
-// can configure useMedia in one place
-
 function Component() {
   const media = useMedia()
+
+  // support extracting this to CSS entirely
+  const color = media.xs ? 'red' : 'blue'
+  const styles = {
+    maxWidth: media.sm ? 100 : 200
+    // ... other extaction semantics support as well
+  }
+
   return (
     <>
-      <VStack
-        color="red"
-        {...(media.small && {
-          color: 'blue',
-        })}
-      />
-      <VStack color={media.small ? 'red' : 'blue'} />
+      <VStack {...styles} color={color} />
+      <VStack width={styles.maxWidth} />
     </>
   )
 }
 ```
 
-Reasons are:
-
-- More flexible to use
-- Far easier to build/support, already supported extractions using existing syntax
-- Falls back gracefully without any need to transform
-- Easy to use for any other logical purpose beside styling
-- TypeScript support for media keys
-- Can define as many media queries as you want
-- Not order dependent
-
-In the future it's potentially possible then to have it simplify and auto-insert the hook for you.
-
-```tsx
-import { Media } from 'snackui'
-
-// can configure useMedia in one place
-
-function Component() {
-  return (
-    <VStack
-      color="red"
-      {...(Media.small && {
-        color: 'blue',
-      })}
-    />
-  )
-}
-```
-
-It also dovetails nicely with Themes:
-
-## Themes:
+## Themes
 
 ```tsx
 import { Theme, useTheme } from 'snackui'
@@ -84,3 +45,80 @@ function Component() {
 ```
 
 Has the same features as useMedia in that it will nicely not need any special fallback case when compilation is not possible.
+
+## Scaling
+
+One of the biggest needs in a UI is the ability to scale components to different sizes. This is not like Media Queries in that this simply having different size buttons, cards, and text on the same media/device.
+
+While scaling is similar to Media Queries and Themes in that it's helped by having a standard, single interface, it presents some unique problems.
+
+One is that it has a unique combinatorial explosion when combined with media queries (if done the same as media queries / themes with a freeform hook). That's hard to overcome: the static extraction would be highly confusing to understand all the cases it covers, and with theme/media already causing some level of combinatorial overhead, scale can't afford to multiply across those.
+
+But the upside of scales is that they are actually better in some ways when they are constrained: easier to think about and to ensure edge cases are covered. Scales also usually only touch a few properties: height/padding/fontSize, so they can afford to be a bit more verbose.
+
+Here's the idea:
+
+```tsx
+const useFontSize = createUseScale({
+  // you can choose as many/few as you'd like
+  sm: 12,
+  md: 14,
+  lg: 16,
+
+  // optional object for media query combination
+  media: {
+    short: {
+      sm: 10,
+      md: 12,
+      lg: 14
+    }
+  }
+})
+
+function Component(props: { scale: 'sm' | 'md' | 'lg' }) {
+  const fontSize = useFontSize(props.scale)
+  return (
+    <Text fontSize={fontSize} />
+  )
+}
+```
+
+And what it'd generate, roughly:
+
+// Component_style.css
+```css
+.fontSize-sm { font-size: 12px; }
+.fontSize-md { font-size: 14px; }
+.fontSize-lg { font-size: 16px; }
+@media screen and (max-size: 500px) { :root .fontSize-sm { font-size: 10px; } }
+@media screen and (max-size: 500px) { :root .fontSize-md { font-size: 12px; } }
+@media screen and (max-size: 500px) { :root .fontSize-lg { font-size: 14px; } }
+```
+
+```js
+import { scale } from 'snackui'
+function Component(props) {
+  return (
+    <span className={
+      props.scale == 'md'
+        ? 'fontSize-md' :
+          props.scale == 'lg'
+            ? 'fontSize-lg' : 'fontSize-sm'
+      }
+    />
+  )
+}
+```
+
+Constraints:
+
+- No dynamic/spread/import stuff in the createUseScale definition
+- No dynamic stuff with the usage site (just fontSize={fontSize} and similar)
+
+Problems:
+
+- Will require tracing imports for export/import support
+- Not the easiest transform behind the scenes
+- Will generate many styles and large conditional chains
+- Can't be combined with existing className style:
+  - `fontSize-[hash]` because it needs to be overriden in media query mode

@@ -1,22 +1,20 @@
 import { useStore } from '@dish/use-store'
 import loadable from '@loadable/component'
 import React, { Suspense, memo } from 'react'
-import { AbsoluteVStack, HStack } from 'snackui'
+import { AbsoluteVStack, HStack, useMedia } from 'snackui'
 
 import { AppMapRestaurantPeek } from './AppMapRestaurantPeek'
 import { BottomDrawerStore } from './BottomDrawerStore'
 import { searchBarHeight, zIndexMapControls } from './constants'
 import { getWindowHeight } from './helpers/getWindow'
-import { useIsNarrow, useIsReallyNarrow } from './hooks/useIs'
 import { useMapSize } from './hooks/useMapSize'
 import { useSafeArea } from './hooks/useSafeArea'
 import { useOvermind } from './state/useOvermind'
 
 export const AppMapControlsOverlay = memo(() => {
   const om = useOvermind()
-  const isReallySmall = useIsReallyNarrow()
-  const isSmall = useIsNarrow()
-  const { paddingLeft, width } = useMapSize(isSmall)
+  const media = useMedia()
+  const { paddingLeft, width } = useMapSize(media.sm)
   const drawerStore = useStore(BottomDrawerStore)
   const edgeInsets = useSafeArea()
 
@@ -40,7 +38,7 @@ export const AppMapControlsOverlay = memo(() => {
         top={searchBarHeight + 10}
         left={paddingLeft}
         right={0}
-        {...(isSmall && {
+        {...(media.sm && {
           maxWidth: '100%',
           left: 0,
           right: 0,
@@ -59,16 +57,16 @@ export const AppMapControlsOverlay = memo(() => {
             overflow="hidden"
             justifyContent="space-between"
             flexWrap="wrap"
-            paddingLeft={isSmall ? 10 : 30}
+            paddingLeft={media.sm ? 10 : 30}
             paddingRight={15}
-            paddingBottom={isReallySmall ? edgeInsets.bottom + 15 : 15}
+            paddingBottom={media.xs ? edgeInsets.bottom + 15 : 15}
             paddingTop={20}
           >
             <Suspense fallback={null}>
               <AppMapPIP />
             </Suspense>
 
-            {!isSmall && (
+            {!media.sm && (
               <>
                 <Suspense fallback={null}>
                   <AppMapRestaurantPeek />

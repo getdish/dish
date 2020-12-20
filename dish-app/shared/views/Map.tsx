@@ -8,7 +8,7 @@ import _, { isEqual, throttle } from 'lodash'
 import mapboxgl from 'mapbox-gl'
 import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
-import { useGet } from 'snackui'
+import { useGet, useTheme } from 'snackui'
 
 import { green, lightGreen } from '../colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
@@ -58,6 +58,11 @@ type MapInternalState = {
   isAwaitingNextMove: boolean
 }
 
+const styles = {
+  light: 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy',
+  dark: 'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja',
+}
+
 export const MapView = (props: MapProps) => {
   const { center, span, padding, features, style, hovered, selected } = props
   const isMounted = useIsMountedRef()
@@ -73,6 +78,14 @@ export const MapView = (props: MapProps) => {
     }
   }
   const getProps = useGet(props)
+
+  // TODO may be worth optimizing so it doesnt re-render
+  const theme = useTheme()
+  const themeName = theme.backgroundColor === '#fff' ? 'light' : 'dark'
+  useEffect(() => {
+    if (!map) return
+    map.setStyle(styles[themeName])
+  }, [map, themeName])
 
   // window resize
   useEffect(() => {
@@ -390,9 +403,7 @@ function setupMapEffect({
 }) {
   const map = new mapboxgl.Map({
     container: mapNode,
-    style: 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy',
-    // 'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja', // dark
-    // 'mapbox://styles/nwienert/ck675hkw702mt1ikstagge6yq', // light
+    style: styles.light,
     center: props.center,
     zoom: 11,
     attributionControl: false,

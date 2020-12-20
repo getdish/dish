@@ -23,6 +23,8 @@ import {
   Tooltip,
   VStack,
   useGet,
+  useMedia,
+  useTheme,
 } from 'snackui'
 
 import { bgLight, bgLightHover, bgLightPress, brandColor } from '../../colors'
@@ -31,7 +33,6 @@ import { getActiveTagSlugs } from '../../helpers/getActiveTagSlugs'
 import { getRestaurantDishes } from '../../helpers/getRestaurantDishes'
 import { isWebIOS } from '../../helpers/isIOS'
 import { numberFormat } from '../../helpers/numberFormat'
-import { useIsNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useRestaurantTagScores } from '../../hooks/useRestaurantTagScores'
 import { allTags } from '../../state/allTags'
@@ -153,7 +154,7 @@ const RestaurantListItemContent = memo(
       searchState,
     } = props
     const pad = 18
-    const isSmall = useIsNarrow()
+    const media = useMedia()
     const restaurant = useRestaurantQuery(restaurantSlug)
 
     restaurant.location
@@ -189,15 +190,15 @@ const RestaurantListItemContent = memo(
     }, [props.rank])
 
     const contentSideProps: StackProps = {
-      width: isSmall ? '75%' : '60%',
-      minWidth: isSmall
+      width: media.sm ? '75%' : '60%',
+      minWidth: media.sm
         ? isWeb
           ? '40vw'
           : Dimensions.get('window').width * 0.65
         : 320,
       maxWidth: Math.min(
         Dimensions.get('window').width * 0.65,
-        isSmall ? 360 : 420
+        media.sm ? 360 : 420
       ),
     }
 
@@ -217,8 +218,9 @@ const RestaurantListItemContent = memo(
         : nameLen > 15
         ? 0.975
         : 1.15
-    const titleFontSize = 1.2 * (isSmall ? 18 : 22) * titleFontScale
+    const titleFontSize = Math.round((media.sm ? 20 : 28) * titleFontScale)
     const titleHeight = titleFontSize + 8 * 2
+    const theme = useTheme()
 
     return (
       <VStack
@@ -266,9 +268,8 @@ const RestaurantListItemContent = memo(
         />
 
         {tagIds && (
-          <AbsoluteVStack top={34} left={-12} zIndex={1000}>
+          <AbsoluteVStack top={34} left={-12} zIndex={2000000}>
             <RestaurantUpVoteDownVote
-              key={JSON.stringify(tagIds)}
               score={Math.round((meta?.effective_score ?? 0) / 10)}
               restaurantSlug={restaurantSlug}
               activeTags={tagIds}
@@ -276,9 +277,6 @@ const RestaurantListItemContent = memo(
                 setIsExpanded((x) => !x)
               }}
             />
-            <AbsoluteVStack top={-6} right={-20} zIndex={-1}>
-              <RankView rank={rank} />
-            </AbsoluteVStack>
           </AbsoluteVStack>
         )}
 
@@ -287,8 +285,6 @@ const RestaurantListItemContent = memo(
           <VStack
             hoverStyle={{ backgroundColor: 'rgba(0,0,0,0.015)' }}
             paddingTop={10}
-            marginLeft={-pad}
-            paddingLeft={pad}
             width={950}
             position="relative"
           >
@@ -298,8 +294,12 @@ const RestaurantListItemContent = memo(
               name="restaurant"
               params={{ slug: restaurantSlug }}
             >
-              <VStack paddingLeft={50} paddingTop={25}>
-                <HStack alignItems="center">
+              <VStack paddingLeft={47} paddingTop={25}>
+                <HStack position="relative" alignItems="center">
+                  <AbsoluteVStack top={-16} left={-34} zIndex={-1}>
+                    <RankView rank={rank} />
+                  </AbsoluteVStack>
+
                   <Spacer size="xs" />
 
                   {/* SECOND LINK WITH actual <a /> */}
@@ -327,7 +327,7 @@ const RestaurantListItemContent = memo(
                           fontSize={titleFontSize}
                           lineHeight={titleHeight}
                           height={titleHeight}
-                          color="#000"
+                          color={theme.color}
                           fontWeight="800"
                           letterSpacing={-1.25}
                           ellipse
@@ -341,39 +341,41 @@ const RestaurantListItemContent = memo(
               </VStack>
             </Link>
 
-            <Spacer size="md" />
+            <Spacer size="lg" />
 
             {/* SECOND ROW TITLE */}
             <VStack
               {...contentSideProps}
               overflow="hidden"
-              zIndex={-1}
+              zIndex={2}
               paddingLeft={60}
               paddingRight={20}
-              marginTop={isSmall ? -6 : 0}
+              marginTop={media.sm ? -6 : 0}
               transform={[{ translateY: -10 }]}
+              pointerEvents="auto"
             >
-              <HStack alignItems="center" cursor="pointer" spacing="lg">
+              <HStack alignItems="center" cursor="pointer" spacing="xs">
                 {!!price_range && (
                   <Text
                     fontSize={14}
-                    fontWeight="500"
-                    color={`rgba(0,0,0,0.6)`}
+                    fontWeight="700"
+                    color={theme.colorTertiary}
+                    marginRight={4}
                   >
                     {price_range}
                   </Text>
                 )}
 
                 {!!opening_hours && (
-                  <Link
+                  <SmallButton
                     name="restaurantHours"
-                    fontSize={14}
                     params={{ slug: restaurantSlug }}
+                    fontSize={14}
                     color="rgba(0,0,0,0.6)"
                     ellipse
                   >
                     {opening_hours}
-                  </Link>
+                  </SmallButton>
                 )}
 
                 {!!restaurant.address && (
@@ -459,7 +461,7 @@ const RestaurantListItemContent = memo(
                   <Spacer />
 
                   <RestaurantDeliveryButtons
-                    label={isSmall ? '' : '🚗'}
+                    label="🚗"
                     restaurantSlug={restaurantSlug}
                   />
 
@@ -652,15 +654,16 @@ const RestaurantPeekDishes = memo(
     const foundMatchingSearchedDish = firstDishName
       ? tagNames.includes(firstDishName)
       : false
-    const dishSize = 145
+    const dishSize = 165
     return (
       <HStack
         contain="paint layout"
         pointerEvents="auto"
         padding={20}
-        paddingVertical={40}
+        paddingVertical={30}
         alignItems="center"
-        marginVertical={-40}
+        marginTop={-55}
+        marginBottom={-35}
         height={dishSize + 80}
         width={dishSize * 5}
       >

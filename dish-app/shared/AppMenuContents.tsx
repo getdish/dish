@@ -1,6 +1,7 @@
 import { slugify } from '@dish/graph'
 import React, { memo } from 'react'
 import { Box, BoxProps, Divider, Spacer, Toast, VStack } from 'snackui'
+import { isWeb } from 'snackui/src/constants'
 
 import { omStatic } from './state/omStatic'
 import { useOvermind } from './state/useOvermind'
@@ -32,7 +33,7 @@ export const AppMenuContents = memo(
             </MenuLinkButton>
           )}
 
-          {/* {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>} */}
+          {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>}
           <MenuLinkButton name="about">About</MenuLinkButton>
           {!om.state.user.isLoggedIn && (
             <>

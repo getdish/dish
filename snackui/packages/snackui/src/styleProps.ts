@@ -27,7 +27,6 @@ export const stylePropsView = {
   borderTopWidth: true,
   borderWidth: true,
   opacity: true,
-  testID: true,
   transform: true,
   transformMatrix: true,
   rotation: true,
@@ -89,8 +88,7 @@ export const stylePropsView = {
   shadowRadius: true,
 }
 
-export const stylePropsText = {
-  ...stylePropsView,
+export const stylePropsTextOnly = {
   color: true,
   fontFamily: true,
   fontSize: true,
@@ -106,4 +104,22 @@ export const stylePropsText = {
   textShadowOffset: true,
   textShadowRadius: true,
   textTransform: true,
+}
+
+export const stylePropsText = {
+  ...stylePropsView,
+  ...stylePropsTextOnly,
+}
+
+// unique shortkey for each style key
+// for atomic styles prefixing and collision dedupe
+export const uniqueStylePrefix = {}
+for (const name in stylePropsText) {
+  let keyLen = 1
+  let key = name.slice(0, keyLen)
+  while (uniqueStylePrefix[key]) {
+    keyLen++
+    key = name.slice(0, keyLen)
+  }
+  uniqueStylePrefix[name] = key
 }

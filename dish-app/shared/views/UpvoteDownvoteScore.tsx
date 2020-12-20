@@ -1,17 +1,10 @@
 import { ChevronDown, ChevronUp } from '@dish/react-feather'
-import React, { memo, useState } from 'react'
-import {
-  AbsoluteVStack,
-  StackProps,
-  Text,
-  Tooltip,
-  VStack,
-  prevent,
-} from 'snackui'
+import React, { memo } from 'react'
+import { AbsoluteVStack, StackProps, Text, Tooltip, VStack } from 'snackui'
 
-import { bgLight, green, orange, red } from '../colors'
-import { useIsNarrow } from '../hooks/useIs'
+import { green, orange, red } from '../colors'
 import CircularProgress from './CircularProgress'
+import { VoteButton } from './restaurant/VoteButton'
 
 export const UpvoteDownvoteScore = memo(
   ({
@@ -45,6 +38,7 @@ export const UpvoteDownvoteScore = memo(
       <VoteButton
         size={18 * scale}
         Icon={ChevronUp}
+        shadowDirection="up"
         voted={vote == 1}
         color={vote === 1 ? 'green' : voteButtonColor}
         onPress={(e) => {
@@ -128,44 +122,3 @@ export const UpvoteDownvoteScore = memo(
     )
   }
 )
-
-export const VoteButton = ({
-  color,
-  Icon,
-  size = 18,
-  voted,
-  hoverColor,
-  ...props
-}: StackProps & {
-  hoverColor?: string
-  voted?: boolean
-  Icon: any
-  color?: string | null
-  size?: number
-}) => {
-  const isSmall = useIsNarrow()
-  const scale = isSmall ? 1.1 : 1
-  const [hovered, setHovered] = useState(false)
-  return (
-    <VStack
-      width={22 * scale}
-      height={22 * scale}
-      borderRadius={100}
-      alignItems="center"
-      justifyContent="center"
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
-      onPressIn={prevent}
-      pressStyle={{
-        backgroundColor: bgLight,
-        borderColor: '#aaa',
-      }}
-      {...props}
-    >
-      <Icon
-        size={size * (voted ? 1.2 : 1)}
-        color={hovered ? hoverColor ?? '#000' : color ?? '#ccc'}
-      />
-    </VStack>
-  )
-}

@@ -10,12 +10,23 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import { HStack, Spacer, Toast, VStack, useGet, useOnMount } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  Spacer,
+  Toast,
+  VStack,
+  getMedia,
+  useGet,
+  useMedia,
+  useOnMount,
+} from 'snackui'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
+import { darkPink } from './colors'
 import { isWeb, searchBarHeight } from './constants'
+import { DishHorizonView } from './DishHorizonView'
 import { isWebIOS } from './helpers/isIOS'
-import { getIs, useIsNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
@@ -86,7 +97,8 @@ export const isSearchInputFocused = () => {
 export const AppSearchInput = memo(() => {
   const inputStore = useStore(InputStore, { name: 'search' })
   const om = useOvermind()
-  const { color, backgroundRgb, isSmall } = useSearchBarTheme()
+  const { color, backgroundRgb } = useSearchBarTheme()
+  const media = useMedia()
   const [search, setSearch] = useState('')
   const getSearch = useGet(search)
   const isSearchingCuisine = !!om.state.home.searchBarTags.length
@@ -104,7 +116,7 @@ export const AppSearchInput = memo(() => {
     return series([
       () => fullyIdle({ max: 1000 }),
       () => {
-        if (!getIs('sm')) {
+        if (!getMedia().sm) {
           focusSearchInput()
         }
       },
@@ -158,37 +170,50 @@ export const AppSearchInput = memo(() => {
   }, [])
 
   return (
-    <AppAutocompleteHoverableInput
-      input={input}
-      autocompleteTarget="search"
-      backgroundColor="rgba(5,5,5,0.6)"
-      {...(!isSmall && {
-        borderRadius: 100,
-      })}
-    >
+    <AppAutocompleteHoverableInput input={input} autocompleteTarget="search">
       <HStack
         alignItems="center"
-        borderRadius={100}
-        borderWidth={0.5}
-        borderColor="transparent"
+        borderRadius={180}
+        borderWidth={media.sm ? 0 : 2}
+        backgroundColor={darkPink}
+        borderColor="rgba(0,0,0,0.3)"
+        shadowColor="#000"
+        shadowRadius={15}
+        shadowOpacity={0.2}
         flex={1}
         maxWidth="100%"
         paddingLeft={10}
         overflow="hidden"
+        position="relative"
         hoverStyle={{
-          borderColor: 'rgba(255,255,255,0.2)',
+          borderColor: 'rgba(255,255,255,0.125)',
+          backgroundColor: 'rgba(45,45,45,0.25)',
         }}
         focusStyle={{
-          borderColor: 'rgba(255,255,255,0.5)',
-          shadowColor: '#000',
-          shadowRadius: 4,
-          shadowOpacity: 0.2,
+          borderColor: 'rgba(255,255,255,0.14)',
+          backgroundColor: 'rgba(45,45,45,0.5)',
         }}
       >
+        <AbsoluteVStack
+          fullscreen
+          borderRadius={1000}
+          borderWidth={1}
+          borderColor="rgba(255,255,255,0.2)"
+        />
+        <AbsoluteVStack
+          top={-90}
+          bottom={-90}
+          right={-90}
+          left={90}
+          transform={[{ translateY: 40 }, { scale: 0.75 }]}
+          display={media.sm ? 'none' : 'flex'}
+          // opacity={0.8}
+        >
+          <DishHorizonView />
+        </AbsoluteVStack>
         {/* Loading / Search Icon */}
         <VStack
           width={16}
-          marginRight={-2}
           marginLeft={3}
           transform={[{ scale: om.state.home.isLoading ? 1.2 : 1 }]}
         >
@@ -200,7 +225,7 @@ export const AppSearchInput = memo(() => {
             ) : (
               <Search
                 color={color}
-                size={16}
+                size={media.xs ? 16 : 20}
                 style={{
                   opacity: 0.8,
                 }}
@@ -272,7 +297,7 @@ export const AppSearchInput = memo(() => {
                     {
                       color,
                       flex: 1,
-                      fontSize: isSmall ? 18 : 20,
+                      fontSize: media.sm ? 18 : 20,
                       fontWeight: '500',
                       height,
                       lineHeight: height * 0.45,
@@ -298,7 +323,7 @@ const SearchCancelButton = memo(() => {
   const hasSearch = om.state.home.currentStateSearchQuery !== ''
   const hasSearchTags = !!om.state.home.searchBarTags.length
   const isActive = hasSearch || hasSearchTags
-  const isSmall = useIsNarrow()
+  const media = useMedia()
   return (
     <VStack
       opacity={isActive ? 0.6 : 0}
@@ -317,7 +342,11 @@ const SearchCancelButton = memo(() => {
         }
       }}
     >
-      <X size={16} color={isSmall ? '#888' : '#fff'} style={{ marginTop: 1 }} />
+      <X
+        size={16}
+        color={media.sm ? '#888' : '#fff'}
+        style={{ marginTop: 1 }}
+      />
     </VStack>
   )
 })
@@ -467,7 +496,7 @@ const AppSearchInputTags = memo(
                   className="no-transition"
                   key={getTagSlug(tag)}
                   subtleIcon
-                  backgroundColor="rgba(90,90,90,0.5)"
+                  backgroundColor="rgba(150,150,150,0.25)"
                   color={'#fff'}
                   shadowColor="#00000022"
                   fontWeight="600"
@@ -476,13 +505,13 @@ const AppSearchInputTags = memo(
                   borderColor={'transparent'}
                   borderRadius={100}
                   hoverStyle={{
-                    backgroundColor: 'rgba(90,90,90,0.6)',
+                    backgroundColor: 'rgba(150,150,150,0.3)',
                   }}
                   {...(isActive && {
-                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    backgroundColor: 'rgba(150,150,150,0.1)',
                     color: '#fff',
                     hoverStyle: {
-                      backgroundColor: 'rgba(255,255,255,0.1)',
+                      backgroundColor: 'rgba(150,150,150,0.1)',
                     },
                   })}
                   {...(!isWeb && {

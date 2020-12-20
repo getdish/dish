@@ -96,12 +96,24 @@ export const babelPlugin = declare((api, options: PluginOptions): {
 
               if (props.ternaries) {
                 for (const ternary of props.ternaries) {
-                  const cons = addSheetStyle(ternary.consequentStyles)
-                  const alt = addSheetStyle(ternary.alternateStyles)
+                  const cons = addSheetStyle(ternary.consequent)
+                  const alt = addSheetStyle(ternary.alternate)
                   stylesExpr.elements.push(
                     t.conditionalExpression(ternary.test, cons, alt)
                   )
                 }
+              }
+
+              if (
+                props.spreadInfo.isSingleSimple &&
+                props.spreadInfo.simpleIdentifier
+              ) {
+                stylesExpr.elements.push(
+                  t.memberExpression(
+                    props.spreadInfo.simpleIdentifier,
+                    t.identifier('style')
+                  )
+                )
               }
 
               props.node.attributes.push(

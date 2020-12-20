@@ -1,9 +1,8 @@
 import { MapPin } from '@dish/react-feather'
 import React from 'react'
-import { HStack, Text } from 'snackui'
+import { HStack, Text, useMedia } from 'snackui'
 
 import { GeocodePlace } from '../../../shared/state/home-types'
-import { useIsNarrow } from '../../hooks/useIs'
 import { SmallButton } from '../../views/ui/SmallButton'
 import { AddressSize, getAddressText } from './RestaurantAddressLinksRow'
 
@@ -18,10 +17,10 @@ export const RestaurantAddress = ({
   currentLocationInfo: GeocodePlace | null
   color?: string
 }) => {
-  const isSmall = useIsNarrow()
+  const media = useMedia()
   return (
     <SmallButton
-      maxWidth={isSmall ? 160 : 200}
+      maxWidth={media.sm ? 160 : 200}
       ellipse
       backgroundColor="transparent"
       href={`https://www.google.com/maps/search/?q=${encodeURIComponent(
@@ -30,18 +29,17 @@ export const RestaurantAddress = ({
     >
       <HStack alignItems="center" maxWidth="100%">
         <MapPin color={color} size={16} style={{ opacity: 0.5 }} />
-        {!isSmall && (
-          <Text
-            marginLeft={4}
-            color={color}
-            ellipse
-            fontSize={14}
-            fontWeight="400"
-            selectable
-          >
-            {getAddressText(currentLocationInfo, address, size)}
-          </Text>
-        )}
+        <Text
+          marginLeft={4}
+          color={color}
+          ellipse
+          fontSize={14}
+          fontWeight="400"
+          selectable
+          display={media.sm ? 'none' : 'flex'}
+        >
+          {getAddressText(currentLocationInfo, address, size)}
+        </Text>
       </HStack>
     </SmallButton>
   )

@@ -5,6 +5,8 @@ const hoists = {
   '@dish/gqless-utils': true,
   '@dish/gqless': true,
   snackui: true,
+  '@snackui/babel-plugin': true,
+  '@snackui/static': true,
 }
 
 const noHoists = [

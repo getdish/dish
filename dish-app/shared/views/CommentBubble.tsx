@@ -112,7 +112,7 @@ export const CommentBubble = ({
             size={1}
           >
             {ellipseContentAbove && text.length > ellipseContentAbove ? (
-              <>
+              <Text>
                 {isExpanded
                   ? text
                   : typeof text === 'string'
@@ -131,7 +131,7 @@ export const CommentBubble = ({
                     )}
                   </Link>
                 )}
-              </>
+              </Text>
             ) : (
               text
             )}

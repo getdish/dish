@@ -1,15 +1,18 @@
 #!/bin/bash
 set -e
 
-PROJECT_ROOT=$(git rev-parse --show-toplevel)
-
 testcafe_bin=$(yarn global bin)/testcafe
 
 if ! [ -f "$testcafe_bin" ]; then
   testcafe_bin=./node_modules/.bin/testcafe
 fi
 
+PROJECT_ROOT=$(git rev-parse --show-toplevel)
+
 pushd $PROJECT_ROOT/dish-app
+
+export NODE_ENV=test
+
 $testcafe_bin \
   chrome:headless \
   --skip-js-errors \

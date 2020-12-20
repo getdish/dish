@@ -1,27 +1,16 @@
+// // debug
 import React from 'react'
-import { Box, BoxProps, StackProps, extendStaticConfig } from 'snackui'
+import { Box, BoxProps, StackProps, useTheme } from 'snackui'
 
-// @todo fix in static
-const NoEval = Box
+import { slantedBoxStyle } from '../../constants'
+
 export const SlantedBox = (props: BoxProps) => {
-  return <NoEval {...slantedBoxStyle} {...props} />
-}
-
-export const slantedBoxStyle: StackProps = {
-  position: 'relative',
-  zIndex: 10,
-  paddingVertical: 7,
-  paddingHorizontal: 10,
-  shadowColor: 'rgba(0,0,0,0.1)',
-  shadowRadius: 6,
-  shadowOffset: { height: 2, width: 0 },
-  backgroundColor: '#fff',
-  borderRadius: 5,
-  transform: [{ rotate: '-2deg' }],
-}
-
-if (process.env.IS_STATIC) {
-  Box.staticConfig = extendStaticConfig(Box, {
-    defaultProps: slantedBoxStyle,
-  })
+  const theme = useTheme()
+  return (
+    <Box
+      {...slantedBoxStyle}
+      backgroundColor={theme.cardBackgroundColor}
+      {...props}
+    />
+  )
 }

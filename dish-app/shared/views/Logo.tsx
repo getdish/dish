@@ -1,18 +1,16 @@
 import React from 'react'
 import { G, Path, Svg } from 'react-native-svg'
-import { VStack } from 'snackui'
+import { VStack, useMedia } from 'snackui'
 
+import { logoHeight, logoWidth, logoXsHeight, logoXsWidth } from '../constants'
 import { useSearchBarTheme } from '../hooks/useSearchBarTheme'
-import { logoStyles } from './logoStyles'
 
 export const Logo = (props: { scale?: number; color?: string }) => {
   const { color } = useSearchBarTheme()
   const scale = props.scale ?? 1
-  const width = logoStyles.default.width
-  const height = logoStyles.default.height
   return (
     <VStack transform={[{ scale }]}>
-      <Svg width={width} height={height} viewBox={`0 0 1201 544`}>
+      <Svg width={logoWidth} height={logoHeight} viewBox={`0 0 1201 544`}>
         <G stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
           <G
             transform="translate(-167.000000, -474.000000)"
@@ -35,8 +33,8 @@ export const Logo = (props: { scale?: number; color?: string }) => {
 
 export const LogoColor = (props: { scale?: number }) => {
   const scale = props.scale ?? 1
-  const width = logoStyles.default.width * scale
-  const height = logoStyles.default.height * scale
+  const width = logoWidth * scale
+  const height = logoHeight * scale
   return (
     <Svg width={width} height={height} viewBox={`0 0 1303 608`}>
       <G transform="translate(-124.000000, -446.000000)">
@@ -66,12 +64,11 @@ export const LogoColor = (props: { scale?: number }) => {
 }
 
 export const LogoSmall = () => {
-  const { isSmall, color } = useSearchBarTheme()
-  const scale = isSmall ? 0.8 : 1
-
+  const { color } = useSearchBarTheme()
+  const media = useMedia()
   return (
-    <VStack transform={[{ scale }]}>
-      <Svg {...logoStyles.reallySmall} viewBox="0 0 723 898">
+    <VStack transform={media.sm ? [{ scale: 0.8 }] : [{ scale: 1 }]}>
+      <Svg width={logoXsWidth} height={logoXsHeight} viewBox="0 0 723 898">
         <G stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
           <G transform="translate(-342.000000, -229.000000)" fill={color}>
             <G transform="translate(342.000000, 229.000000)">

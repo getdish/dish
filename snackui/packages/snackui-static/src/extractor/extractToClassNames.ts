@@ -2,14 +2,16 @@ import path from 'path'
 import util from 'util'
 
 import generate from '@babel/generator'
-import traverse from '@babel/traverse'
+import traverse, { NodePath } from '@babel/traverse'
 import * as t from '@babel/types'
 import invariant from 'invariant'
+import { ViewStyle } from 'react-native'
+import { defaultMediaQueries, mediaObjectToString } from 'snackui/node'
 
 import { CSS_FILE_NAME } from '../constants'
 import { getStylesAtomic } from '../css/getStylesAtomic'
 import { Extractor } from '../extractor/createExtractor'
-import { TernaryRecord } from '../extractor/extractStaticTernaries'
+import { Ternary } from '../extractor/extractStaticTernaries'
 import { ClassNameToStyleObj, PluginOptions } from '../types'
 import { babelParse } from './babelParse'
 import { getPropValueFromAttributes } from './getPropValueFromAttributes'
@@ -62,12 +64,21 @@ export function extractToClassNames(
 
   const cssMap = new Map<string, { css: string; commentTexts: string[] }>()
   const existingHoists = {}
+  const mediaQueries = options.mediaQueries ?? defaultMediaQueries
+
+  // for now order first strongest
+  const mediaKeys = Object.keys(mediaQueries)
+  const mediaKeysLen = mediaKeys.length
+  const mediaKeyPrecendence = mediaKeys.reduce((acc, cur, i) => {
+    acc[cur] = new Array(mediaKeysLen - i).fill(':root').join('')
+    return acc
+  }, {})
 
   let didExtract = false
 
   traverse(ast, {
-    Program(path) {
-      extractor.parse(path, {
+    Program(programPath) {
+      extractor.parse(programPath, {
         sourceFileName,
         shouldPrintDebug,
         ...options,
@@ -81,6 +92,8 @@ export function extractToClassNames(
           ternaries,
           jsxPath,
           originalNodeName,
+          filePath,
+          lineNumbers,
           spreadInfo,
         }) => {
           didExtract = true
@@ -110,11 +123,89 @@ export function extractToClassNames(
             }
           }
 
+          const stylesByClassName: ClassNameToStyleObj = {}
+          const filteredMediaQueries = new Set<string>()
+
+          // convert media query ternaries into media queries
+          if (ternaries) {
+            ternaries = ternaries.filter((ternary) => {
+              const result = getMediaQueryTernary(jsxPath, ternary)
+              if (!result) {
+                if (shouldPrintDebug) {
+                  console.log('  not media query', result)
+                }
+                // cant evaluate as media query, keep it
+                return true
+              }
+              const { key, bindingName } = result
+              const mediaQuery = mediaQueries[key]
+              if (!mediaQuery) {
+                console.error(
+                  `Media query key "${key}" but not found in: ${Object.keys(
+                    mediaQueries
+                  )}`
+                )
+                return true
+              }
+              const getStyleObj = (
+                styleObj: ViewStyle | null,
+                negate = false
+              ) => {
+                return styleObj ? { styleObj, negate } : null
+              }
+              const styleOpts = [
+                getStyleObj(ternary.consequent, false),
+                getStyleObj(ternary.alternate, true),
+              ].filter(isPresent)
+              if (shouldPrintDebug && !styleOpts.length) {
+                console.log('  media query, no styles?')
+                return true
+              }
+              for (const { styleObj, negate } of styleOpts) {
+                const styles = getStylesAtomic(styleObj, null, shouldPrintDebug)
+                const mediaStyles = styles.map((style) => {
+                  const negKey = negate ? '_not' : ''
+                  const identifier = `${style.identifier}_${key}${negKey}`
+                  const className = `.${identifier}`
+                  const mediaSelector = mediaObjectToString(mediaQueries[key])
+                  const screenStr = negate ? ' not' : ''
+                  const mediaStr = `@media${screenStr} screen and ${mediaSelector}`
+                  const precendencePrefix = mediaKeyPrecendence[key]
+                  const styleInner = `${precendencePrefix} ${style.rules[0].replace(
+                    style.className,
+                    className
+                  )}`
+                  const styleRule = `${mediaStr} { ${styleInner} }`
+                  return {
+                    ...style,
+                    identifier,
+                    className,
+                    rules: [styleRule],
+                  }
+                })
+
+                // add to output
+                if (shouldPrintDebug) {
+                  console.log('  media style:', mediaStyles)
+                }
+                for (const mediaStyle of mediaStyles) {
+                  stylesByClassName[mediaStyle.identifier] = mediaStyle
+                  classNameObjects.push(t.stringLiteral(mediaStyle.identifier))
+                }
+              }
+
+              // filter out
+              ternary.remove()
+              filteredMediaQueries.add(bindingName)
+
+              return false
+            })
+          }
+
           let classNamePropValueForReals = buildClassNamePropValue(
             classNameObjects
           )
 
-          const stylesByClassName: ClassNameToStyleObj = {}
           const addStylesAtomic = (style: any) => {
             if (!style || !Object.keys(style).length) {
               return []
@@ -134,19 +225,16 @@ export function extractToClassNames(
             for (const style of styles) {
               classNames.push(style.identifier)
             }
-            if (shouldPrintDebug) {
-              console.log('  ', { classNames, viewStyles })
-            }
           }
 
-          function getTernaryExpression(record: TernaryRecord, idx: number) {
+          function getTernaryExpression(record: Ternary, idx: number) {
             const consInfo = addStylesAtomic({
               ...viewStyles,
-              ...record.consequentStyles,
+              ...record.consequent,
             })
             const altInfo = addStylesAtomic({
               ...viewStyles,
-              ...record.alternateStyles,
+              ...record.alternate,
             })
             const cCN = consInfo.map((x) => x.identifier).join(' ')
             const aCN = altInfo.map((x) => x.identifier).join(' ')
@@ -256,16 +344,9 @@ export function extractToClassNames(
             )
           }
 
-          const lineNumbers =
-            node.loc &&
-            node.loc.start.line +
-              (node.loc.start.line !== node.loc.end.line
-                ? `-${node.loc.end.line}`
-                : '')
-
           const comment = util.format(
             '/* %s:%s (%s) */',
-            sourceFileName.replace(process.cwd(), '.'),
+            filePath,
             lineNumbers,
             originalNodeName
           )
@@ -273,7 +354,7 @@ export function extractToClassNames(
           if (shouldPrintDebug) {
             console.log(
               '  final styled classnames',
-              Object.keys(stylesByClassName)
+              Object.keys(stylesByClassName).join(', ')
             )
           }
 
@@ -292,7 +373,6 @@ export function extractToClassNames(
                     console.log('  ', { rules })
                     throw new Error(`Shouldn't have more than one rule`)
                   }
-                  // didExtract = true
                   cssMap.set(className, {
                     css: rules[0],
                     commentTexts: [comment],
@@ -461,4 +541,51 @@ function hoistClassNames(path: any, existing: any, expr: any) {
     parent.unshiftContainer('body', variable)
     return uid
   }
+}
+
+function getMediaQueryTernary(
+  jsxPath: NodePath<t.JSXElement>,
+  ternary: Ternary
+) {
+  // const media = useMedia()
+  // ... media.sm
+  if (
+    t.isMemberExpression(ternary.test) &&
+    t.isIdentifier(ternary.test.object) &&
+    t.isIdentifier(ternary.test.property)
+  ) {
+    const name = ternary.test.object.name
+    const key = ternary.test.property.name
+    if (!jsxPath.scope.hasBinding(name)) return false
+    const bindingNode = jsxPath.scope.getBinding(name)?.path?.node
+    if (!t.isVariableDeclarator(bindingNode) || !bindingNode.init) return false
+    if (!isValidMediaCall(jsxPath, bindingNode.init)) return false
+    return { key, bindingName: name }
+  }
+  // const { sm } = useMedia()
+  // ... sm
+  if (t.isIdentifier(ternary.test)) {
+    const key = ternary.test.name
+    const node = jsxPath.scope.getBinding(ternary.test.name)?.path?.node
+    if (!t.isVariableDeclarator(node)) return false
+    if (!node.init || !isValidMediaCall(jsxPath, node.init)) return false
+    return { key, bindingName: key }
+  }
+  return false
+}
+
+function isValidMediaCall(jsxPath: NodePath<t.JSXElement>, init: t.Expression) {
+  if (!t.isCallExpression(init)) return false
+  if (!t.isIdentifier(init.callee)) return false
+  // TODO could support renaming useMedia by looking up import first
+  if (init.callee.name !== 'useMedia') return false
+  if (!jsxPath.scope.hasBinding('useMedia')) return false
+  const useMediaImport = jsxPath.scope.getBinding('useMedia')?.path.parent
+  if (!t.isImportDeclaration(useMediaImport)) return false
+  if (useMediaImport.source.value !== 'snackui') return false
+  return true
+}
+
+function isPresent<T extends Object>(input: null | undefined | T): input is T {
+  return input != null
 }

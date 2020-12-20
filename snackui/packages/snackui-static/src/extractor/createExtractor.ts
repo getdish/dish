@@ -5,18 +5,25 @@ import { NodePath } from '@babel/traverse'
 import * as t from '@babel/types'
 import invariant from 'invariant'
 import { TextStyle, ViewStyle } from 'react-native'
+import { StaticComponent } from 'snackui'
 import * as AllExports from 'snackui/node'
 
 import { pseudos } from '../css/getStylesAtomic'
 import { PluginOptions } from '../types'
 import { evaluateAstNode } from './evaluateAstNode'
-import {
-  Ternary,
-  TernaryRecord,
-  extractStaticTernaries,
-} from './extractStaticTernaries'
+import { Ternary, extractStaticTernaries } from './extractStaticTernaries'
+import { findTopmostFunction } from './findTopmostFunction'
 import { getStaticBindingsForScope } from './getStaticBindingsForScope'
 import { literalToAst } from './literalToAst'
+import { removeUnusedHooks } from './removeUnusedHooks'
+
+// used by getStaticBindingsForScope + themeFile
+require('ts-node').register({
+  transpileOnly: true,
+  compilerOptions: {
+    module: 'CommonJS',
+  },
+})
 
 const FAILED_EVAL = Symbol('failed_style_eval')
 const UNTOUCHED_PROPS = {
@@ -25,21 +32,12 @@ const UNTOUCHED_PROPS = {
   className: true,
 }
 
-type OptimizableComponent = Function & {
-  staticConfig: {
-    validStyles: { [key: string]: boolean }
-    defaultProps: any
-    expansionProps?: {
-      // eg: <ZStack fullscreen />, { fullscreen: { position: 'absolute', ... } }
-      [key: string]:
-        | ViewStyle
-        | TextStyle
-        | ((props: any) => ViewStyle | TextStyle)
-    }
-  }
+const validHooks = {
+  useMedia: true,
+  useTheme: true,
 }
 
-const validComponents: { [key: string]: OptimizableComponent } = Object.keys(
+const validComponents: { [key: string]: StaticComponent } = Object.keys(
   AllExports
 )
   .filter((key) => !!AllExports[key]?.staticConfig)
@@ -55,9 +53,11 @@ type ExtractTagProps = {
     evalFn?: ((node: t.Node) => any) | undefined
   ) => any
   viewStyles: ViewStyle
-  ternaries: TernaryRecord[] | null
+  ternaries: Ternary[] | null
   jsxPath: NodePath<t.JSXElement>
   originalNodeName: string
+  lineNumbers: string
+  filePath: string
   spreadInfo: {
     isSingleSimple: boolean
     simpleIdentifier: t.Identifier | null
@@ -75,12 +75,15 @@ export type ExtractorParseProps = PluginOptions & {
 
 export function createExtractor() {
   const bindingCache: Record<string, string | null> = {}
+  const themesByFile = {}
+
   return {
     parse: (
       path: NodePath<t.Program>,
       {
         evaluateImportsWhitelist = ['constants.js'],
         evaluateVars = true,
+        themesFile,
         shouldPrintDebug = false,
         sourceFileName = '',
         onExtractTag,
@@ -88,8 +91,27 @@ export function createExtractor() {
         ...props
       }: ExtractorParseProps
     ) => {
+      if (themesFile) {
+        themesByFile[themesFile] =
+          themesByFile[themesFile] || require(themesFile).default
+      }
+      const themes = themesFile ? themesByFile[themesFile] : null
+      const themeKeys = new Set(
+        themes ? Object.keys(themes[Object.keys(themes)[0]]) : []
+      )
       const deoptProps = new Set(props.deoptProps ?? [])
       const excludeProps = new Set(props.excludeProps ?? [])
+      const isExcludedProp = (name: string) => {
+        const res = excludeProps.has(name)
+        if (res && shouldPrintDebug) console.log(`  excluding ${name}`)
+        return res
+      }
+      const isDeoptedProp = (name: string) => {
+        const res = deoptProps.has(name)
+        if (res && shouldPrintDebug) console.log(`  deopting ${name}`)
+        return res
+      }
+
       let doesUseValidImport = false
 
       if (sourceFileName === '') {
@@ -99,16 +121,21 @@ export function createExtractor() {
       /**
        * Step 1: Determine if importing any statically extractable components
        */
-      path.traverse({
-        ImportDeclaration(path) {
-          if (path.node.source.value === 'snackui') {
-            path.node.specifiers.forEach((specifier) => {
-              if (validComponents[specifier.local.name]) {
-                doesUseValidImport = true
-              }
-            })
-          }
-        },
+      const isInsideSnackUI = sourceFileName.includes('/snackui/')
+      path.get('body').forEach((bodyPath) => {
+        if (!bodyPath.isImportDeclaration()) return
+        const importStr = bodyPath.node.source.value
+        if (
+          importStr === 'snackui' ||
+          (isInsideSnackUI && importStr[0] === '.')
+        ) {
+          bodyPath.node.specifiers.forEach((specifier) => {
+            const name = specifier.local.name
+            if (validComponents[name] || validHooks[name]) {
+              doesUseValidImport = true
+            }
+          })
+        }
       })
 
       if (shouldPrintDebug) {
@@ -120,6 +147,7 @@ export function createExtractor() {
       }
 
       let couldntParse = false
+      const modifiedComponents = new Set<NodePath<any>>()
 
       /**
        * Step 2: Statically extract from JSX < /> nodes
@@ -141,7 +169,7 @@ export function createExtractor() {
 
           const { staticConfig } = component
           const originalNodeName = node.name.name
-          const isTextView = originalNodeName.endsWith('Text')
+          const isTextView = staticConfig.isText ?? false
           const validStyles = staticConfig?.validStyles ?? {}
           const domNode = getFlattenedNode({ isTextView })
 
@@ -176,6 +204,22 @@ export function createExtractor() {
 
                 // called when evaluateAstNode encounters a dynamic-looking prop
                 const evalFn = (n: t.Node) => {
+                  // themes
+                  if (themes) {
+                    if (
+                      t.isMemberExpression(n) &&
+                      t.isIdentifier(n.property) &&
+                      isValidThemeHook(traversePath, n)
+                    ) {
+                      const key = n.property.name
+                      if (!themeKeys.has(key)) {
+                        throw new Error(
+                          `Accessing non-existent theme key: ${key}`
+                        )
+                      }
+                      return `var(--${key})`
+                    }
+                  }
                   // variable
                   if (t.isIdentifier(n)) {
                     invariant(
@@ -219,20 +263,24 @@ export function createExtractor() {
             return (
               t.isObjectExpression(obj) &&
               obj.properties.every((prop) => {
-                return (
-                  t.isObjectProperty(prop) &&
-                  isStaticAttributeName(prop.key['name'])
-                )
+                if (!t.isObjectProperty(prop)) return false
+                const propName = prop.key['name']
+                if (!isStaticAttributeName(propName)) {
+                  if (shouldPrintDebug) {
+                    console.log('  not a valid style prop!', propName)
+                  }
+                  return false
+                }
+                return true
               })
             )
           }
 
           let didFailStaticallyExtractingSpread = false
-          let numberNonStaticSpreads = 0
           let shouldDeopt = false
 
           const hasDeopt = (obj: Object) => {
-            return Object.keys(obj).some((x) => deoptProps.has(x))
+            return Object.keys(obj).some(isDeoptedProp)
           }
 
           const omitExcludeStyles = (obj: Object) => {
@@ -241,7 +289,7 @@ export function createExtractor() {
             }
             const res = {}
             for (const key in obj) {
-              if (excludeProps.has(key)) {
+              if (isExcludedProp(key)) {
                 continue
               }
               res[key] = obj[key]
@@ -249,113 +297,125 @@ export function createExtractor() {
             return res
           }
 
-          node.attributes.forEach((attr, index) => {
-            if (!t.isJSXSpreadAttribute(attr)) {
-              flattenedAttributes.push(attr)
-              return
-            }
-
-            // simple spreads of style objects like ternaries
-
-            // <VStack {...isSmall ? { color: 'red } : { color: 'blue }}
-            if (t.isConditionalExpression(attr.argument)) {
-              const { alternate, consequent, test } = attr.argument
-              const aStyle = isStyleObject(alternate)
-                ? attemptEvalSafe(alternate)
-                : FAILED_EVAL
-              const cStyle = isStyleObject(consequent)
-                ? attemptEvalSafe(consequent)
-                : FAILED_EVAL
-
-              if (hasDeopt(aStyle) || hasDeopt(cStyle)) {
-                shouldDeopt = true
+          traversePath
+            .get('openingElement')
+            .get('attributes')
+            .forEach((path, index) => {
+              const attr = path.node
+              if (!t.isJSXSpreadAttribute(attr)) {
+                flattenedAttributes.push(attr)
                 return
               }
 
-              if (aStyle !== FAILED_EVAL && cStyle !== FAILED_EVAL) {
-                const alt = omitExcludeStyles(aStyle)
-                const cons = omitExcludeStyles(cStyle)
-                if (shouldPrintDebug) {
-                  console.log(' conditionalExpression', test, alt, cons)
-                }
-                staticTernaries.push({
-                  test,
-                  alternate: alt,
-                  consequent: cons,
-                })
-                return
-              } else {
-                didFailStaticallyExtractingSpread = true
-              }
-            }
+              // simple spreads of style objects like ternaries
 
-            // <VStack {...isSmall && { color: 'red' }}
-            if (
-              t.isLogicalExpression(attr.argument) &&
-              attr.argument.operator === '&&'
-            ) {
-              if (isStyleObject(attr.argument.right)) {
-                const spreadStyle = attemptEvalSafe(attr.argument.right)
-                if (spreadStyle !== FAILED_EVAL) {
-                  if (hasDeopt(spreadStyle)) {
-                    shouldDeopt = true
-                    return
-                  }
-                  const test = (attr.argument as t.LogicalExpression).left
-                  if (!attemptEvalSafe(test)) {
-                    if (shouldPrintDebug) {
-                      console.log('evaluated false, leave empty')
-                    }
-                    return
-                  }
-                  const cons = omitExcludeStyles(spreadStyle)
-                  staticTernaries.push({
-                    test,
-                    consequent: cons,
-                    alternate: null,
-                  })
+              // <VStack {...isSmall ? { color: 'red } : { color: 'blue }}
+              if (t.isConditionalExpression(attr.argument)) {
+                const { alternate, consequent, test } = attr.argument
+                const aStyle = isStyleObject(alternate)
+                  ? attemptEvalSafe(alternate)
+                  : FAILED_EVAL
+                const cStyle = isStyleObject(consequent)
+                  ? attemptEvalSafe(consequent)
+                  : FAILED_EVAL
+
+                if (hasDeopt(aStyle) || hasDeopt(cStyle)) {
+                  shouldDeopt = true
                   return
                 }
-              } else {
-                didFailStaticallyExtractingSpread = true
-              }
-            }
 
-            // handle all other spreads
-            let spreadValue: any
-            try {
-              spreadValue = attemptEval(attr.argument)
-            } catch (e) {
-              lastSpreadIndex = flattenedAttributes.push(attr) - 1
-            }
+                if (aStyle !== FAILED_EVAL && cStyle !== FAILED_EVAL) {
+                  const alt = omitExcludeStyles(aStyle)
+                  const cons = omitExcludeStyles(cStyle)
+                  if (shouldPrintDebug) {
+                    console.log(' conditionalExpression', test, alt, cons)
+                  }
 
-            if (spreadValue) {
-              try {
-                if (typeof spreadValue !== 'object' || spreadValue == null) {
-                  lastSpreadIndex = flattenedAttributes.push(attr) - 1
+                  staticTernaries.push({
+                    test,
+                    remove() {
+                      path.remove()
+                    },
+                    alternate: alt,
+                    consequent: cons,
+                  })
+                  return
                 } else {
-                  for (const k in spreadValue) {
-                    const value = spreadValue[k]
-                    // this is a null spread:
-                    if (value && typeof value === 'object') {
-                      continue
+                  didFailStaticallyExtractingSpread = true
+                }
+              }
+
+              // <VStack {...isSmall && { color: 'red' }}
+              if (
+                t.isLogicalExpression(attr.argument) &&
+                attr.argument.operator === '&&'
+              ) {
+                if (isStyleObject(attr.argument.right)) {
+                  const spreadStyle = attemptEvalSafe(attr.argument.right)
+                  if (spreadStyle === FAILED_EVAL) {
+                    didFailStaticallyExtractingSpread = true
+                  } else {
+                    if (hasDeopt(spreadStyle)) {
+                      shouldDeopt = true
+                      return
                     }
-                    numberNonStaticSpreads++
-                    flattenedAttributes.push(
-                      t.jsxAttribute(
-                        t.jsxIdentifier(k),
-                        t.jsxExpressionContainer(literalToAst(value))
-                      )
-                    )
+                    const test = (attr.argument as t.LogicalExpression).left
+                    const testValue = attemptEvalSafe(test)
+                    if (testValue === FAILED_EVAL) {
+                      // its fine we just cant extract all the way
+                    }
+                    if (!testValue) {
+                      // if its value it evaluates to nada
+                      return
+                    }
+                    const cons = omitExcludeStyles(spreadStyle)
+                    staticTernaries.push({
+                      test,
+                      remove() {
+                        path.remove()
+                      },
+                      consequent: cons,
+                      alternate: null,
+                    })
+                    return
                   }
                 }
-              } catch (err) {
-                console.warn('caught object err', err)
-                didFailStaticallyExtractingSpread = true
-                couldntParse = true
               }
-            }
-          })
+
+              // handle all other spreads
+              let spreadValue: any
+              try {
+                spreadValue = attemptEval(attr.argument)
+              } catch (e) {
+                lastSpreadIndex = flattenedAttributes.push(attr) - 1
+              }
+
+              if (typeof spreadValue !== 'undefined') {
+                try {
+                  if (typeof spreadValue !== 'object' || spreadValue == null) {
+                    lastSpreadIndex = flattenedAttributes.push(attr) - 1
+                  } else {
+                    for (const k in spreadValue) {
+                      const value = spreadValue[k]
+                      // this is a null prop:
+                      if (!value && typeof value === 'object') {
+                        continue
+                      }
+                      flattenedAttributes.push(
+                        t.jsxAttribute(
+                          t.jsxIdentifier(k),
+                          t.jsxExpressionContainer(literalToAst(value))
+                        )
+                      )
+                    }
+                  }
+                } catch (err) {
+                  console.warn('caught object err', err)
+                  didFailStaticallyExtractingSpread = true
+                  couldntParse = true
+                }
+              }
+            })
 
           if (couldntParse || shouldDeopt) {
             if (shouldPrintDebug) {
@@ -373,7 +433,6 @@ export function createExtractor() {
           )
           const hasOneEndingSpread =
             !didFailStaticallyExtractingSpread &&
-            numberNonStaticSpreads <= 1 &&
             lastSpreadIndex > -1 &&
             foundLastSpreadIndex === lastSpreadIndex
           let simpleSpreadIdentifier: t.Identifier | null = null
@@ -401,7 +460,25 @@ export function createExtractor() {
             console.log('  attrs:', node.attributes.map(attrGetName).join(', '))
           }
 
-          node.attributes = node.attributes.filter((attribute, idx) => {
+          const attributePaths = traversePath
+            .get('openingElement')
+            .get('attributes')
+          const attributes: (t.JSXAttribute | t.JSXSpreadAttribute)[] = []
+          for (const [idx, path] of attributePaths.entries()) {
+            const shouldKeep = evaluateAttribute(idx, path)
+            if (shouldKeep) {
+              attributes.push(path.node)
+            } else {
+              path.remove()
+            }
+          }
+          node.attributes = attributes
+
+          function evaluateAttribute(
+            idx: number,
+            path: NodePath<t.JSXAttribute | t.JSXSpreadAttribute>
+          ) {
+            const attribute = path.node
             const isntOnLastSpread =
               idx < lastSpreadIndex && !isSingleSimpleSpread
             if (
@@ -418,8 +495,9 @@ export function createExtractor() {
               } else {
                 if (shouldPrintDebug) {
                   console.log(
-                    '  inline (non normal attr)',
-                    attribute['name']?.['name']
+                    '  inline (non normal attr?)',
+                    attribute['name']?.['name'],
+                    { isntOnLastSpread }
                   )
                 }
                 inlinePropCount++
@@ -429,24 +507,24 @@ export function createExtractor() {
 
             const name = attribute.name.name
 
-            if (excludeProps.has(name)) {
-              if (shouldPrintDebug) {
-                console.log(`  excluding ${name}`)
-              }
-              return false
+            if (isExcludedProp(name)) {
+              return true
             }
-
-            if (deoptProps.has(name)) {
-              if (shouldPrintDebug) {
-                console.log(`  deopting ${name}`)
-              }
+            if (isDeoptedProp(name)) {
               inlinePropCount++
               return true
             }
 
-            let value: any = t.isJSXExpressionContainer(attribute?.value)
-              ? attribute.value.expression
-              : attribute.value
+            let value: any
+            let valuePath: any
+
+            if (t.isJSXExpressionContainer(attribute?.value)) {
+              value = attribute.value.expression
+              valuePath = path.get('value')
+            } else {
+              value = attribute.value
+              valuePath = path.get('value')
+            }
 
             // handle expansions, we parse these after all props parsed
             const expansion = staticConfig?.expansionProps?.[name]
@@ -580,6 +658,9 @@ export function createExtractor() {
                 }
                 staticTernaries.push({
                   test: cond.test,
+                  remove() {
+                    valuePath.remove()
+                  },
                   alternate: { [name]: alt },
                   consequent: { [name]: cons },
                 })
@@ -593,10 +674,18 @@ export function createExtractor() {
                   const aVal = attemptEval(value.alternate)
                   const cVal = attemptEval(value.consequent)
                   if (shouldPrintDebug) {
-                    console.log('  staticConditional', value.test, cVal, aVal)
+                    console.log(
+                      '  staticConditional',
+                      value.test.type,
+                      cVal,
+                      aVal
+                    )
                   }
                   return {
                     test: value.test,
+                    remove() {
+                      valuePath.remove()
+                    },
                     consequent: { [name]: cVal },
                     alternate: { [name]: aVal },
                   }
@@ -622,6 +711,9 @@ export function createExtractor() {
                     }
                     return {
                       test: value.left,
+                      remove() {
+                        valuePath.remove()
+                      },
                       consequent: { [name]: val },
                       alternate: null,
                     }
@@ -654,7 +746,13 @@ export function createExtractor() {
             // if we've made it this far, the prop stays inline
             inlinePropCount++
             return true
-          })
+          }
+
+          // before deopt, can still optimize
+          const parentFn = findTopmostFunction(traversePath)
+          if (parentFn) {
+            modifiedComponents.add(parentFn)
+          }
 
           // if inlining + spreading + ternary, deopt fully
           if (
@@ -664,13 +762,13 @@ export function createExtractor() {
           ) {
             if (shouldPrintDebug) {
               console.log(
-                '  deopt due to inline + spread',
+                '  deopt due to inline + spread?',
                 { inlinePropCount },
                 staticTernaries
               )
             }
-            node.attributes = ogAttributes
-            return
+            // node.attributes = ogAttributes
+            // return
           }
 
           const defaultProps = component.staticConfig?.defaultProps ?? {}
@@ -680,7 +778,7 @@ export function createExtractor() {
           // get our expansion props vs our style props
           for (const key in defaultProps) {
             if (validStyles[key]) {
-              if (excludeProps.has(key)) {
+              if (isExcludedProp(key)) {
                 continue
               }
               defaultStyle[key] = defaultProps[key]
@@ -694,26 +792,38 @@ export function createExtractor() {
             console.log('  finish extract', { inlinePropCount })
           }
 
+          const filePath = sourceFileName.replace(process.cwd(), '.')
+          const lineNumbers = node.loc
+            ? node.loc.start.line +
+              (node.loc.start.line !== node.loc.end.line
+                ? `-${node.loc.end.line}`
+                : '')
+            : ''
+
+          // add helpful attr for debugging
+          if (
+            process.env.TARGET !== 'native' &&
+            process.env.IDENTIFY_TAGS !== 'false' &&
+            (process.env.NODE_ENV === 'development' ||
+              process.env.DEBUG ||
+              process.env.IDENTIFY_TAGS)
+          ) {
+            // add name so we can debug it more easily
+            const preName = componentName ? `${componentName}:` : ''
+            // unshift so spreads/nesting overwrite
+            node.attributes.unshift(
+              t.jsxAttribute(
+                t.jsxIdentifier('data-is'),
+                t.stringLiteral(
+                  `${preName}${node.name.name} @ ${filePath}:${lineNumbers}`
+                )
+              )
+            )
+          }
+
           // if all style props have been extracted, component can be
           // converted to a div or the specified component
           if (inlinePropCount === 0 && !isSingleSimpleSpread) {
-            if (
-              process.env.NODE_ENV === 'development' ||
-              process.env.DEBUG ||
-              process.env.IDENTIFY_TAGS
-            ) {
-              // add name so we can debug it more easily
-              node.attributes.push(
-                t.jsxAttribute(
-                  t.jsxIdentifier('data-is'),
-                  t.stringLiteral(
-                    componentName
-                      ? `${componentName}-${node.name.name}`
-                      : node.name.name
-                  )
-                )
-              )
-            }
             // since were removing down to div, we need to push the default styles onto this classname
             if (shouldPrintDebug) {
               console.log('  default styles', originalNodeName, defaultStyle)
@@ -729,7 +839,7 @@ export function createExtractor() {
           // second pass, style expansions
           let styleExpansionError = false
           if (shouldPrintDebug) {
-            console.log('  styleExpansions', { defaultProps, styleExpansions })
+            console.log('  styleExpansions', styleExpansions)
           }
           if (styleExpansions.length) {
             // first build fullStyles to pass in
@@ -798,20 +908,32 @@ export function createExtractor() {
             )
           }
 
-          if (inlinePropCount) {
-            // if only some style props were extracted AND additional props are spread onto the component,
-            // add the props back with null values to prevent spread props from incorrectly overwriting the extracted prop value
-            for (const key in defaultStyle) {
-              if (key in viewStyles) {
-                node.attributes.push(
-                  t.jsxAttribute(
-                    t.jsxIdentifier(key),
-                    t.jsxExpressionContainer(t.nullLiteral())
-                  )
-                )
-              }
-            }
-          }
+          // TODO: we need to handle atomic collisions at runtime
+          // for example:
+
+          // const Paragraph = (props) => <Text color="red" {...props} />
+
+          // needs to turn into:
+
+          // const Paragraph = (props) => <Text {...props} className={mergeClassNames(`clr-red`, props.className)} />
+
+          // where mergeClassNames() uses the `uniqueStylePrefix` in styleProps to properly reduce className
+          // down, overriding the user supplied ones
+
+          // if (inlinePropCount) {
+          //   // if only some style props were extracted AND additional props are spread onto the component,
+          //   // add the props back with null values to prevent spread props from incorrectly overwriting the extracted prop value
+          //   for (const key in defaultStyle) {
+          //     if (key in viewStyles) {
+          //       node.attributes.push(
+          //         t.jsxAttribute(
+          //           t.jsxIdentifier(key),
+          //           t.jsxExpressionContainer(t.nullLiteral())
+          //         )
+          //       )
+          //     }
+          //   }
+          // }
 
           if (traversePath.node.closingElement) {
             // this seems strange
@@ -823,16 +945,28 @@ export function createExtractor() {
             traversePath.node.closingElement.name.name = node.name.name
           }
 
+          const ternaries = extractStaticTernaries(staticTernaries)
+
           if (shouldPrintDebug) {
             console.log(
-              '  EVAL staticTernaries',
-              staticTernaries.map((x) => [x.test, x.alternate, x.consequent])
+              '  ternaries',
+              ternaries
+                ?.map((x) => [
+                  t.isIdentifier(x.test)
+                    ? x.test.name
+                    : t.isMemberExpression(x.test)
+                    ? [x.test.object['name'], x.test.property['name']]
+                    : x.test,
+                  x.consequent,
+                  x.alternate,
+                ])
+                .flat()
             )
           }
 
-          const ternaries = extractStaticTernaries(staticTernaries)
-
           onExtractTag({
+            lineNumbers,
+            filePath,
             attemptEval,
             jsxPath: traversePath,
             node,
@@ -846,6 +980,19 @@ export function createExtractor() {
           })
         },
       })
+
+      /**
+       * Step 3: Remove dead code from removed media query / theme hooks
+       */
+      if (modifiedComponents.size) {
+        const all = Array.from(modifiedComponents)
+        if (shouldPrintDebug) {
+          console.log('  checking', all.length, 'components for dead hooks')
+        }
+        for (const comp of all) {
+          removeUnusedHooks(comp, shouldPrintDebug)
+        }
+      }
     },
   }
 }
@@ -878,4 +1025,22 @@ function findComponentName(scope) {
     return node.id?.name
   }
   return componentName
+}
+
+function isValidThemeHook(
+  jsxPath: NodePath<t.JSXElement>,
+  n: t.MemberExpression
+) {
+  if (!t.isIdentifier(n.object) || !t.isIdentifier(n.property)) return false
+  const binding = jsxPath.scope.bindings[n.object.name]
+  if (!binding.path.isVariableDeclarator()) return false
+  const init = binding.path.node.init
+  if (!t.isCallExpression(init)) return false
+  if (!t.isIdentifier(init.callee)) return false
+  // TODO could support renaming useTheme by looking up import first
+  if (init.callee.name !== 'useTheme') return false
+  const importNode = binding.scope.getBinding('useTheme')?.path.parent
+  if (!t.isImportDeclaration(importNode)) return false
+  if (importNode.source.value !== 'snackui') return false
+  return true
 }

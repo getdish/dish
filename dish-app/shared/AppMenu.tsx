@@ -1,10 +1,9 @@
 import { slugify } from '@dish/graph'
 import { ChevronUp, HelpCircle, Menu } from '@dish/react-feather'
 import React, { Suspense, memo, useCallback, useEffect } from 'react'
-import { HStack, Popover, Spacer, Text, Tooltip } from 'snackui'
+import { HStack, Popover, Spacer, Text, Tooltip, useMedia } from 'snackui'
 
 import { AppMenuContents } from './AppMenuContents'
-import { useIsAboveMedium, useIsNarrow } from './hooks/useIs'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { UserAvatar } from './pages/user/UserAvatar'
 import { omStatic } from './state/omStatic'
@@ -14,8 +13,7 @@ import { LinkButtonProps } from './views/ui/LinkProps'
 
 export const AppMenu = memo(() => {
   const om = useOvermind()
-  const isSmall = useIsNarrow()
-  const isAboveMedium = useIsAboveMedium()
+  const media = useMedia()
   const showUserMenu = om.state.home.showUserMenu
   const setShowUserMenu = om.actions.home.setShowUserMenu
   const pageName = om.state.router.curPage.name
@@ -45,11 +43,11 @@ export const AppMenu = memo(() => {
         <MenuButton
           Icon={Menu}
           onPress={() => setShowUserMenu(!showUserMenu)}
-          text={!isSmall && !om.state.user.isLoggedIn ? 'Signup' : ''}
+          text={!media.sm && !om.state.user.isLoggedIn ? 'Signup' : ''}
         />
       </Popover>
 
-      {isAboveMedium && (
+      {media.md && (
         <>
           {om.state.user.isLoggedIn && (
             <>

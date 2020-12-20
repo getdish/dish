@@ -1,25 +1,25 @@
 import { graphql } from '@dish/graph'
-import { ChevronDown, ChevronUp } from '@dish/react-feather'
-import React, { Suspense, memo, useState } from 'react'
-import { GestureResponderEvent } from 'react-native'
 import {
-  AbsoluteVStack,
-  StackProps,
-  Text,
-  Tooltip,
-  VStack,
-  prevent,
-} from 'snackui'
+  ChevronDown,
+  ChevronUp,
+  ChevronsDown,
+  ChevronsUp,
+  Frown,
+  Heart,
+  ThumbsDown,
+} from '@dish/react-feather'
+import React, { Suspense, memo } from 'react'
+import { GestureResponderEvent } from 'react-native'
+import { AbsoluteVStack, StackProps, Text, Tooltip, VStack } from 'snackui'
 
-import { bgLight, blue, green, orange, red } from '../../colors'
 import { numberFormat } from '../../helpers/numberFormat'
-import { useIsNarrow } from '../../hooks/useIs'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { HomeActiveTagsRecord } from '../../state/home-types'
 import { tagLenses } from '../../state/localTags'
 import { restaurantRatio } from './restaurantsRatio'
 import { SentimentCircle } from './SentimentCircle'
+import { VoteButton } from './VoteButton'
 
 type UpvoteDownvoteProps = {
   restaurantSlug: string
@@ -56,7 +56,7 @@ const RestaurantUpVoteDownVoteContents = memo(
     score = (score ?? restaurant.score) + vote
 
     return (
-      <VStack position="relative">
+      <VStack pointerEvents="auto" position="relative">
         <AbsoluteVStack
           bottom={-14}
           right={-10}
@@ -69,27 +69,26 @@ const RestaurantUpVoteDownVoteContents = memo(
         >
           <SentimentCircle ratio={ratio} />
         </AbsoluteVStack>
-        <VStack transform={[{ skewX: '-12deg' }]}>
-          <VStack
-            shadowColor="#000"
-            backgroundColor="#fff"
-            shadowOpacity={0.1}
-            shadowOffset={{ height: 2, width: 0 }}
-            shadowRadius={7}
-            borderRadius={12}
-            overflow="hidden"
-            padding={2}
-            paddingHorizontal={5}
-          >
-            <VStack alignItems="flex-end" transform={[{ skewX: '12deg' }]}>
-              <TotalScore
-                score={score}
-                ratio={ratio}
-                vote={vote}
-                setVote={setVote}
-                onClickPoints={onClickPoints}
-              />
-            </VStack>
+        <VStack
+          shadowColor="#000"
+          backgroundColor="#fff"
+          shadowOpacity={0.1}
+          shadowOffset={{ height: 2, width: 0 }}
+          shadowRadius={7}
+          borderRadius={12}
+          padding={2}
+          paddingHorizontal={5}
+          transform={[{ skewX: '-12deg' }]}
+        >
+          <VStack alignItems="flex-end" transform={[{ skewX: '12deg' }]}>
+            <TotalScore
+              score={score}
+              ratio={ratio}
+              vote={vote}
+              setVote={setVote}
+              onClickPoints={onClickPoints}
+              isMultiple={Object.keys(activeTags).length > 1}
+            />
           </VStack>
         </VStack>
       </VStack>
@@ -97,15 +96,15 @@ const RestaurantUpVoteDownVoteContents = memo(
   })
 )
 
-export const TotalScore = memo(
+const TotalScore = memo(
   ({
     score,
     vote,
     subtle,
     setVote,
     onClickPoints,
+    isMultiple,
     size,
-    ...props
   }: {
     size?: 'sm' | 'md'
     ratio?: number
@@ -114,7 +113,8 @@ export const TotalScore = memo(
     setVote?: Function
     onClickPoints?: (event: GestureResponderEvent) => void
     subtle?: boolean
-  } & StackProps) => {
+    isMultiple?: boolean
+  }) => {
     score = Math.round(score)
     const voteButtonColor = subtle ? '#f2f2f2' : null
     const scale = size === 'sm' ? 0.75 : 1
@@ -129,7 +129,8 @@ export const TotalScore = memo(
     const upvote = (
       <VoteButton
         size={18 * scale}
-        Icon={ChevronUp}
+        Icon={isMultiple ? ChevronsUp : ChevronUp}
+        shadowDirection="up"
         voted={vote == 1}
         color={vote === 1 ? 'green' : voteButtonColor}
         onPress={(e) => {
@@ -142,7 +143,7 @@ export const TotalScore = memo(
     const downvote = (
       <VoteButton
         size={18 * scale}
-        Icon={ChevronDown}
+        Icon={isMultiple ? ChevronsDown : ChevronDown}
         voted={vote == -1}
         color={vote === -1 ? 'red' : voteButtonColor}
         onPress={(e) => {
@@ -156,24 +157,23 @@ export const TotalScore = memo(
 
     return (
       <VStack
-        pointerEvents="auto"
         alignItems="center"
         justifyContent="center"
         width={sizePx}
         height={sizePx}
-        {...props}
       >
-        {subtle ? (
-          upvote
-        ) : (
-          <Tooltip position="right" contents="Upvote" {...isOpenProp}>
-            {upvote}
-          </Tooltip>
-        )}
+        <AbsoluteVStack top={-10}>
+          {subtle ? (
+            upvote
+          ) : (
+            <Tooltip position="right" contents="Upvote" {...isOpenProp}>
+              {upvote}
+            </Tooltip>
+          )}
+        </AbsoluteVStack>
         <Text
           fontSize={Math.min(16, sizePx / `${score}`.length) * scale * 1.075}
           fontWeight="600"
-          marginVertical={2 * scale}
           letterSpacing={-0.5}
           color={color}
           cursor="default"
@@ -181,55 +181,16 @@ export const TotalScore = memo(
         >
           {numberFormat(score ?? 0)}
         </Text>
-        {subtle ? (
-          downvote
-        ) : (
-          <Tooltip position="right" contents="Downvote" {...isOpenProp}>
-            {downvote}
-          </Tooltip>
-        )}
+        <AbsoluteVStack bottom={-10}>
+          {subtle ? (
+            downvote
+          ) : (
+            <Tooltip position="right" contents="Downvote" {...isOpenProp}>
+              {downvote}
+            </Tooltip>
+          )}
+        </AbsoluteVStack>
       </VStack>
     )
   }
 )
-
-export const VoteButton = ({
-  color,
-  Icon,
-  size = 18,
-  voted,
-  hoverColor,
-  ...props
-}: StackProps & {
-  hoverColor?: string
-  voted?: boolean
-  Icon: any
-  color?: string | null
-  size?: number
-}) => {
-  const isSmall = useIsNarrow()
-  const scale = isSmall ? 1.1 : 1
-  const [hovered, setHovered] = useState(false)
-  return (
-    <VStack
-      width={22 * scale}
-      height={22 * scale}
-      borderRadius={100}
-      alignItems="center"
-      justifyContent="center"
-      onHoverIn={() => setHovered(true)}
-      onHoverOut={() => setHovered(false)}
-      onPressIn={prevent}
-      pressStyle={{
-        backgroundColor: bgLight,
-        borderColor: '#aaa',
-      }}
-      {...props}
-    >
-      <Icon
-        size={size * (voted ? 1.2 : 1)}
-        color={hovered ? hoverColor ?? '#000' : color ?? '#ccc'}
-      />
-    </VStack>
-  )
-}

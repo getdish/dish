@@ -20,9 +20,9 @@ export const posts: PostDirectory = {
   'welcome-to-dish': {
     // @ts-ignore
     View: loadable(() => import('./welcome-to-dish/index.mdx')),
-    title: `It's just food, isn't it? 🌮`,
+    title: `Reviews are broken`,
     date: '2018-09-29T22:12:03.284Z',
-    author: 'Nathan Wienert',
+    author: 'Nate Wienert',
     authorImage: null,
   },
 }

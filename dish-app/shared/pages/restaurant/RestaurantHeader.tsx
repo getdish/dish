@@ -3,8 +3,7 @@ import { Clock } from '@dish/react-feather'
 import React, { Suspense, memo, useState } from 'react'
 import { AbsoluteVStack, HStack, Spacer, Text, VStack } from 'snackui'
 
-import { drawerBorderRadius, searchBarHeight } from '../../constants'
-import { isWeb } from '../../constants'
+import { drawerBorderRadius, isWeb } from '../../constants'
 import { useAppDrawerWidthInner } from '../../hooks/useAppDrawerWidth'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemRestaurant } from '../../state/home-types'
@@ -13,16 +12,11 @@ import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { SmallButton } from '../../views/ui/SmallButton'
-import { ratingToRatio } from './ratingToRatio'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
-import { RestaurantCard } from './RestaurantCard'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours } from './RestaurantDetailRow'
-import {
-  RestaurantFavoriteButton,
-  RestaurantFavoriteStar,
-} from './RestaurantFavoriteButton'
+import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 
 type RestaurantHeaderProps = {
@@ -100,7 +94,7 @@ const RestaurantHeaderContent = memo(
               >
                 <RestaurantPhotosRow
                   restaurantSlug={restaurantSlug}
-                  width={260}
+                  width={330}
                   height={170}
                   escalating
                 />

@@ -1,10 +1,9 @@
 import { Map, RefreshCcw } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { AbsoluteVStack, HStack } from 'snackui'
+import { AbsoluteVStack, HStack, useMedia } from 'snackui'
 
 import { searchBarHeight, zIndexDrawer } from './constants'
 import { isWeb } from './constants'
-import { useIsNarrow } from './hooks/useIs'
 import { useMapSize } from './hooks/useMapSize'
 import { useSafeArea } from './hooks/useSafeArea'
 import { useOvermind } from './state/useOvermind'
@@ -15,12 +14,12 @@ export const AppMapControlsUnderlay = memo(() => {
   const hasMovedMap =
     !!om.state.home.currentState.mapAt &&
     om.state.home.currentStateType === 'search'
-  const isSmall = useIsNarrow()
-  const { paddingLeft, width } = useMapSize(isSmall)
+  const media = useMedia()
+  const { paddingLeft, width } = useMapSize(media.sm)
   const safeArea = useSafeArea()
   return (
     <AbsoluteVStack
-      zIndex={isSmall ? zIndexDrawer - 1 : zIndexDrawer + 1}
+      zIndex={media.sm ? zIndexDrawer - 1 : zIndexDrawer + 1}
       marginLeft="auto"
       fullscreen
       width={width}
@@ -33,7 +32,7 @@ export const AppMapControlsUnderlay = memo(() => {
         left={paddingLeft + 20}
         right={0}
         pointerEvents="none"
-        {...(isSmall && {
+        {...(media.sm && {
           maxWidth: '100%',
           left: 0,
           right: 0,
@@ -45,7 +44,7 @@ export const AppMapControlsUnderlay = memo(() => {
       >
         <HStack
           position="absolute"
-          top={isSmall ? 10 : searchBarHeight + 15}
+          top={media.sm ? 10 : searchBarHeight + 15}
           right={0}
           left={0}
           alignItems="center"

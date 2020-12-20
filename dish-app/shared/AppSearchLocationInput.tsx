@@ -1,13 +1,22 @@
+// debug
 import { MapPin, Navigation } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { TextInput, TouchableOpacity } from 'react-native'
-import { Button, HStack, VStack, prevent } from 'snackui'
+import {
+  AbsoluteVStack,
+  Button,
+  HStack,
+  VStack,
+  prevent,
+  useMedia,
+} from 'snackui'
 
 import { AppAutocompleteHoverableInput } from './AppAutocompleteHoverableInput'
 import { inputTextStyles } from './AppSearchInput'
 import { blue } from './colors'
 import { isWeb } from './constants'
+import { DishHorizonView } from './DishHorizonView'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputStore } from './InputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
@@ -16,9 +25,10 @@ import { useOvermind } from './state/useOvermind'
 const paddingHorizontal = 16
 
 export const AppSearchLocationInput = memo(() => {
+  const media = useMedia()
   const inputStore = useStore(InputStore, { name: 'location' })
   const om = useOvermind()
-  const { theme, color, background, isSmall } = useSearchBarTheme()
+  const { color } = useSearchBarTheme()
   const [locationSearch, setLocationSearch] = useState('')
   const { currentLocationName } = om.state.home.currentState
 
@@ -92,8 +102,27 @@ export const AppSearchLocationInput = memo(() => {
           flex={1}
           minHeight={44}
           alignItems="center"
+          backgroundColor="rgba(0,0,0,0.7)"
           justifyContent="center"
           paddingHorizontal={8}
+          position="relative"
+          borderRadius={12}
+          overflow="hidden"
+          hoverStyle={{
+            backgroundColor: 'rgba(0,0,0,0.8)',
+          }}
+          focusStyle={{
+            backgroundColor: 'rgba(0,0,0,0.6)',
+          }}
+          {...(media.sm && {
+            backgroundColor: '#eee',
+            hoverStyle: {
+              backgroundColor: '#eee',
+            },
+            focusStyle: {
+              backgroundColor: '#eee',
+            },
+          })}
         >
           <TouchableOpacity
             onPress={(e) => {
