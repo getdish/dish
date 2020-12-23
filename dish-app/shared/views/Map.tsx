@@ -30,26 +30,18 @@ const CLUSTER_LABEL_LAYER_ID = 'CLUSTER_LABEL_LAYER_ID'
 const POINT_LAYER_ID = 'POINT_LAYER_ID'
 const POINT_HOVER_LAYER_ID = 'POINT_HOVER_LAYER_ID'
 
-const MARTIN_TILES_PROD = 'https://martin-tiles.dishapp.com'
-const MARTIN_TILES_STAGING = 'https://martin-tiles-staging.dishapp.com'
-const MARTIN_TILES_DEV = 'http://localhost:3005'
-
-let MARTIN_TILES_HOST = MARTIN_TILES_PROD
-
-if (isStaging) {
-  MARTIN_TILES_HOST = MARTIN_TILES_STAGING
-}
-
-if (isHasuraLive) {
-  MARTIN_TILES_HOST = MARTIN_TILES_DEV
-}
+const MARTIN_TILES_HOST = (() => {
+  const prod = 'https://martin-tiles.dishapp.com'
+  const staging = 'https://martin-tiles-staging.dishapp.com'
+  const dev = 'http://localhost:3005'
+  if (isStaging) return staging
+  if (isHasuraLive) return dev
+  return prod
+})()
 
 const round = (val: number, dec = 100000) => {
   return Math.round(val * dec) / dec
 }
-
-const initialRadius = 8
-const maxRadius = 18
 
 type MapInternalState = {
   active: null | number
@@ -95,7 +87,7 @@ export const MapView = (props: MapProps) => {
       if (cancel) {
         cancel()
       }
-      cancel = series([() => fullyIdle({ max: 200 }), () => map.resize()])
+      cancel = series([() => fullyIdle({ max: 300 }), () => map.resize()])
     }
     Dimensions.addEventListener('change', handleResize)
     return () => {
@@ -123,7 +115,6 @@ export const MapView = (props: MapProps) => {
     if (!selected) return
     if (!map) return
     const index = features.findIndex((x) => x.properties?.id === selected)
-    mapSetIconSelected(map, index)
     setActive(map, props, internal.current, index, false)
   }, [map, features, selected])
 
@@ -182,7 +173,11 @@ export const MapView = (props: MapProps) => {
   // style
   useEffect(() => {
     if (!map || !style) return
-    map.setStyle(style)
+    const cur = map.getStyle()?.name
+    console.log('map.getStyle()?.name', map.getStyle()?.name)
+    if (cur !== style) {
+      map.setStyle(style)
+    }
   }, [map, style])
 
   // center + span
@@ -233,6 +228,16 @@ export const MapView = (props: MapProps) => {
   useEffect(() => {
     if (!map) return
     const source = map.getSource(RESTAURANTS_SOURCE_ID)
+    const source2 = map.getSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID)
+
+    if (!source) {
+      console.warn('NO SOURCE??', source)
+      return
+    }
+    if (!source2) {
+      console.warn('NO SOURCE (UNCLUSTERED)???', source2)
+      return
+    }
 
     const featuresWithPositions = produce(features, (draft) => {
       for (const feature of draft) {
@@ -241,6 +246,8 @@ export const MapView = (props: MapProps) => {
       }
     })
 
+    console.log('what is', featuresWithPositions, source)
+
     if (source?.type === 'geojson') {
       source.setData({
         type: 'FeatureCollection',
@@ -248,7 +255,6 @@ export const MapView = (props: MapProps) => {
       })
     }
 
-    const source2 = map.getSource(RESTAURANTS_UNCLUSTERED_SOURCE_ID)
     if (source2?.type === 'geojson') {
       source2.setData({
         type: 'FeatureCollection',
@@ -288,77 +294,6 @@ const mapSetFeature = (map: mapboxgl.Map, id: any, obj: any) => {
     },
     obj
   )
-}
-
-const mapSetIconSelected = (map: mapboxgl.Map, id: any) => {
-  // map.setLayoutProperty(PIN_LAYER_ID, 'icon-size', [
-  //   'match',
-  //   ['id'],
-  //   id,
-  //   0.5,
-  //   0.5,
-  // ])
-  // map.setLayoutProperty(PIN_LAYER_ID, 'icon-image', [
-  //   'match',
-  //   ['id'],
-  //   id,
-  //   'map-pin',
-  //   'icon-sushi',
-  // ])
-}
-
-const mapSetIconHovered = (map: mapboxgl.Map, id: any) => {
-  map.setLayoutProperty(POINT_HOVER_LAYER_ID, 'icon-image', [
-    'match',
-    ['id'],
-    id,
-    'map-pin',
-    'map-pin-blank',
-  ])
-}
-
-function animateMarker(map: mapboxgl.Map) {
-  const fps = 4
-  let radius = initialRadius
-  const initialOpacity = 1
-  let opacity = initialOpacity
-  let animate = true
-  let stopAfterFrames = 12 // its cpu intensive..
-
-  function run() {
-    setTimeout(() => {
-      if (!map) return
-      if (animate) {
-        stopAfterFrames--
-        if (stopAfterFrames === 0) return
-        requestAnimationFrame(run)
-      }
-      radius += (maxRadius - radius) / fps
-      opacity -= 0.9 / fps
-      map.setPaintProperty(
-        POINT_HOVER_LAYER_ID,
-        'circle-radius',
-        Math.max(0, radius)
-      )
-      map.setPaintProperty(
-        POINT_HOVER_LAYER_ID,
-        'circle-opacity',
-        Math.max(0, opacity)
-      )
-      if (opacity <= 0) {
-        radius = initialRadius
-        opacity = initialOpacity
-      }
-    }, 1000 / fps)
-  }
-
-  run()
-
-  return () => {
-    map.setPaintProperty(POINT_HOVER_LAYER_ID, 'circle-radius', 0)
-    map.setPaintProperty(POINT_HOVER_LAYER_ID, 'circle-opacity', 0)
-    animate = false
-  }
 }
 
 // this is inside memo...
@@ -441,6 +376,7 @@ function setupMapEffect({
     })
 
   const cancels = new Set<Function>()
+  console.log('setting up effect')
 
   cancels.add(
     series([
@@ -812,6 +748,7 @@ function setupMapEffect({
           map?.off('click', handleClick)
         })
 
+        console.log('adding a source', RESTAURANTS_SOURCE_ID, props.features)
         map.addSource(RESTAURANTS_SOURCE_ID, {
           type: 'geojson',
           data: {
@@ -1123,6 +1060,7 @@ function setupMapEffect({
   )
 
   return () => {
+    console.log('cleaning up effect')
     cancels.forEach((c) => c())
     if (mapNode) {
       mapNode.innerHTML = ''

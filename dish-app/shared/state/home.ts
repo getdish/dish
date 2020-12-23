@@ -47,7 +47,7 @@ import { isSearchBarTag } from './isSearchBarTag'
 import { tagLenses } from './localTags'
 import { NavigableTag } from './NavigableTag'
 import { reverseGeocode } from './reverseGeocode'
-import { router } from './router'
+import { router } from './router.1'
 
 export const state: HomeState = {
   started: false,

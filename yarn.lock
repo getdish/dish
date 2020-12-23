@@ -16464,10 +16464,10 @@ react-query@^3.3.0:
     "@babel/runtime" "^7.5.5"
     match-sorter "^6.0.2"
 
-react-refresh@0.0.0-experimental-94c0244ba, react-refresh@^0.4.0:
-  version "0.0.0-experimental-94c0244ba"
-  resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.0.0-experimental-94c0244ba.tgz#cba0c4fec5585fb28c799119320629f2b206b470"
-  integrity sha512-YfBBf97x8am3+1ztagNq5VyN4jPHMyMHEb4SkgeemmS9vrsZjlxJcEtRT51S6lujn3rmXtfWvXm7iWnzsITewQ==
+react-refresh@0.0.0-experimental-94c0244ba, react-refresh@0.9.0, react-refresh@^0.4.0:
+  version "0.9.0"
+  resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.9.0.tgz#71863337adc3e5c2f8a6bfddd12ae3bfe32aafbf"
+  integrity sha512-Gvzk7OZpiqKSkxsQvO/mbTN1poglhmAV7gR/DdIrRrSMXraRQQlfikRJOr3Nb9GTMPC5kof948Zy6jJZIFtDvQ==
 
 react-reparenting@^0.5.0:
   version "0.5.0"

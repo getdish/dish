@@ -54,7 +54,7 @@ import {
   HomeStateItemSearch,
 } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
-import { router } from '../../state/router'
+import { router } from '../../state/router.1'
 import { SearchResultsStore } from '../../state/searchResult'
 import { useOvermind } from '../../state/useOvermind'
 import { ContentScrollView } from '../../views/ContentScrollView'

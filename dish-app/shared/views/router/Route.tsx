@@ -1,3 +1,4 @@
+import { useRouter } from '@dish/router'
 import React, {
   createContext,
   useContext,
@@ -8,7 +9,7 @@ import React, {
 } from 'react'
 import { useForceUpdate } from 'snackui'
 
-import { routePathToName, router, routes } from '../../state/router'
+import { routePathToName, router, routes } from '../../state/router.1'
 import { useOvermind } from '../../state/useOvermind'
 
 type RouteState = 'collect' | 'active' | 'inactive'
@@ -87,8 +88,8 @@ export function RouteSwitch(props: { children: any }) {
 }
 
 export function Route(props: { name: string; exact?: boolean; children: any }) {
-  const om = useOvermind()
-  const activeName = om.state.router.curPageName
+  const router = useRouter()
+  const activeName = router.curPage.name
   const stateRef = useRef<RouteState>('active')
   const forceUpdate = useForceUpdate()
   const routeContext = useContext(RouteContext)
@@ -114,7 +115,7 @@ export function Route(props: { name: string; exact?: boolean; children: any }) {
     routeContext?.setRoute?.(props.name, isMatched)
   }, [props.name, isMatched])
 
-  const children = useMemo(() => {
+  const content = useMemo(() => {
     if (props.exact) {
       if (isExactMatching) {
         return getChildren(props.children)
@@ -136,11 +137,15 @@ export function Route(props: { name: string; exact?: boolean; children: any }) {
     isParentMatching,
   ])
 
-  const state = stateRef.current
-  if (state === 'inactive' || state === 'collect') {
-    return null
-  }
+  const children = (() => {
+    const state = stateRef.current
+    if (state === 'inactive' || state === 'collect') {
+      return null
+    }
+    return content
+  })()
 
+  console.log('rendering <Route />', props.name, stateRef.current, children)
   return children
 }
 

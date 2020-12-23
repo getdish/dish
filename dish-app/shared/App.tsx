@@ -1,5 +1,5 @@
 import loadable from '@loadable/component'
-import React, { Suspense, memo } from 'react'
+import React, { Suspense, memo, useEffect } from 'react'
 import { VStack } from 'snackui'
 
 import { AppContainer } from './AppContainer'
@@ -7,7 +7,6 @@ import { AppIntroLetter } from './AppIntroLetter'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
 import { AppMenuButton } from './AppMenuButton'
-import { AppRootProvider } from './AppRootProvider'
 import { AppSearchBarFloating } from './AppSearchBar'
 import { AppStackView } from './AppStackView'
 import { isSSR } from './constants'
@@ -16,8 +15,17 @@ import { ErrorBoundary } from './views/ErrorBoundary'
 import { Route } from './views/router/Route'
 
 export default memo(function App() {
+  // helper that warns on root level unmounts (uncaught suspense)
+  if (process.env.NODE_ENV === 'development') {
+    useEffect(() => {
+      return () => {
+        console.warn('\n\nUNCAUGHT SUSPENSE SOMEWHERE -- FIX IT!!\n\ns')
+      }
+    }, [])
+  }
+
   return (
-    <AppRootProvider>
+    <>
       <Suspense fallback={null}>
         <AppSearchBarFloating />
       </Suspense>
@@ -80,7 +88,7 @@ export default memo(function App() {
           <RestaurantHoursPage />
         </Route>
       </Suspense>
-    </AppRootProvider>
+    </>
   )
 })
 

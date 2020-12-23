@@ -3,7 +3,7 @@ import { fetchRegion } from '../helpers/fetchRegion'
 import { searchLocations } from '../helpers/searchLocations'
 import { HomeStateItemLocation } from './HomeStateItemLocation'
 import { initialHomeState } from './initialHomeState'
-import { SearchRouteParams, router } from './router'
+import { SearchRouteParams, router } from './router.1'
 
 export async function getLocationFromRoute(): Promise<HomeStateItemLocation | null> {
   const page = router.curPage

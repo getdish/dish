@@ -2,7 +2,7 @@ import React from 'react'
 import { Text, VStack } from 'snackui'
 
 import { brandColor } from '../../colors'
-import { RoutesTable } from '../../state/router'
+import { RoutesTable } from '../../state/router.1'
 import { isStringChild } from './isStringChild'
 import { LinkProps } from './LinkProps'
 import { useLink } from './useLink'

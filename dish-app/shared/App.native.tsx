@@ -40,38 +40,36 @@ export default function App() {
       <StatusBar style="dark" />
       <SafeAreaProvider>
         <Provider value={om}>
-          <AppRootProvider>
-            <View style={styles.container}>
-              <Suspense fallback={null}>
-                <AppMap />
-              </Suspense>
+          <View style={styles.container}>
+            <Suspense fallback={null}>
+              <AppMap />
+            </Suspense>
 
-              <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1000}>
-                <AppSmallDrawer>
-                  <AppStackView>
-                    {(props) => {
-                      return <PagesStackView {...props} />
-                    }}
-                  </AppStackView>
-                </AppSmallDrawer>
-              </AbsoluteVStack>
+            <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1000}>
+              <AppSmallDrawer>
+                <AppStackView>
+                  {(props) => {
+                    return <PagesStackView {...props} />
+                  }}
+                </AppStackView>
+              </AppSmallDrawer>
+            </AbsoluteVStack>
 
-              <Suspense fallback={null}>
-                <AppMapControlsUnderlay />
-                {/* <AppMapControlsOverlay /> */}
-              </Suspense>
+            <Suspense fallback={null}>
+              <AppMapControlsUnderlay />
+              {/* <AppMapControlsOverlay /> */}
+            </Suspense>
 
-              <AppMenuButton />
+            <AppMenuButton />
 
-              <Suspense fallback={null}>
-                <GalleryPage />
-                <RestaurantReviewPage />
-                <Route name="restaurantHours">
-                  <RestaurantHoursPage />
-                </Route>
-              </Suspense>
-            </View>
-          </AppRootProvider>
+            <Suspense fallback={null}>
+              <GalleryPage />
+              <RestaurantReviewPage />
+              <Route name="restaurantHours">
+                <RestaurantHoursPage />
+              </Route>
+            </Suspense>
+          </View>
         </Provider>
       </SafeAreaProvider>
     </>

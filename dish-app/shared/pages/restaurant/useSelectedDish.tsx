@@ -2,7 +2,7 @@ import { omit } from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
 import { useGet } from 'snackui'
 
-import { router } from '../../state/router'
+import { router } from '../../state/router.1'
 
 export const useSelectedDish = (tagName?: string | null) => {
   const [selectedDish, setSelectedDish] = useState(tagName ?? '')

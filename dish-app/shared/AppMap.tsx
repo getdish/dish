@@ -32,7 +32,7 @@ import { findLastHomeOrSearch } from './state/home'
 import { isRestaurantState } from './state/home-helpers'
 import { Region } from './state/home-types'
 import { omStatic } from './state/omStatic'
-import { router } from './state/router'
+import { router } from './state/router.1'
 import { useOvermind } from './state/useOvermind'
 import { MapView } from './views/Map'
 
@@ -55,12 +55,10 @@ export default memo(function AppMap() {
           onLoadedRestaurantDetail={setRestaurantDetail}
         />
       </Suspense>
-      <Suspense fallback={null}>
-        <AppMapContent
-          restaurantDetail={restaurantDetail}
-          restaurants={restaurants}
-        />
-      </Suspense>
+      <AppMapContent
+        restaurantDetail={restaurantDetail}
+        restaurants={restaurants}
+      />
     </>
   )
 })
@@ -433,7 +431,7 @@ const AppMapContent = memo(function AppMap({
           borderBottomRightRadius={12}
           overflow="hidden"
         >
-          <MapView
+          {/* <MapView
             center={center}
             span={span}
             padding={padding}
@@ -450,7 +448,7 @@ const AppMapContent = memo(function AppMap({
             onHover={handleHover}
             onSelect={handleSelect}
             onSelectRegion={handleSelectRegion}
-          />
+          /> */}
         </VStack>
       </HStack>
     </HStack>

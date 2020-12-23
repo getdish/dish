@@ -26,10 +26,25 @@ export function useStore<A extends Store<B>, B>(
     const info = useMemo(() => {
       return createStoreWithInfo(StoreKlass, props, { avoidCache: true })
     }, [JSON.stringify(props)])
-    return useStoreInstance(info, cachedSelector)
+    return useStoreFromInfo(info, cachedSelector)
   }
+
   const info = createStoreWithInfo(StoreKlass, props)
-  return useStoreInstance(info, cachedSelector)
+  return useStoreFromInfo(info, cachedSelector)
+}
+
+// using an already instantiated store
+// (either set up as global singleton, or provided through context)
+export function useStoreInstance<A extends Store<B>, B>(
+  StoreInstance: A,
+  options: { selector?: any; once?: boolean } = defaultOptions
+): A {
+  return useStore(
+    // @ts-expect-error
+    StoreInstance.constructor,
+    StoreInstance.props,
+    options
+  )
 }
 
 // for usage outside react
@@ -167,7 +182,7 @@ const selectKeys = (obj: any, keys: string[] = []) => {
   return res
 }
 
-function useStoreInstance(info: StoreInfo, userSelector?: Selector<any>): any {
+function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any>): any {
   const internal = useRef({
     isRendering: false,
     tracked: new Set<string>(),

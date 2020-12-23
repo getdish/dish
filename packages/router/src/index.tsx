@@ -1,4 +1,4 @@
-import { Store, useStore } from '@dish/use-store'
+import { Store, useStore, useStoreInstance } from '@dish/use-store'
 import { createBrowserHistory, createMemoryHistory } from 'history'
 import * as React from 'react'
 import { createContext, useContext } from 'react'
@@ -10,7 +10,7 @@ const history =
     : createMemoryHistory()
 
 // need them to declare the types here
-export type RoutesTable = { [key: string]: Route }
+export type RoutesTable = { [key: string]: Route<any> }
 export type RouteName = keyof RoutesTable
 
 export type HistoryType = 'push' | 'pop' | 'replace'
@@ -326,30 +326,35 @@ export class Router extends Store<RouterProps> {
 
 // react stuff
 
-const RouterContext = createContext<RouterProps['routes'] | null>(null)
+const RouterContext = createContext<Router | null>(null)
 
-export function ProvideRouter({
-  routes,
-  children,
-}: {
-  routes: any
+export type ProvideRouterProps = {
   children: any
-}) {
-  // just sets it up
-  useStore(Router, {
-    routes,
-  })
+} & ({ routes: RoutesTable } | { router: Router })
+
+export function ProvideRouter(props: ProvideRouterProps) {
+  let router: Router
+  if ('routes' in props) {
+    // set it up
+    router = useStore(Router, {
+      routes: props.routes,
+    })
+  } else {
+    router = props.router
+  }
   return (
-    <RouterContext.Provider value={routes}>{children}</RouterContext.Provider>
+    <RouterContext.Provider value={router}>
+      {props.children}
+    </RouterContext.Provider>
   )
 }
 
 export function useRouter() {
-  const routes = useContext(RouterContext)
-  if (!routes) {
-    throw new Error(`no routes`)
+  const router = useContext(RouterContext)
+  if (!router) {
+    throw new Error(`Must <ProvideRouter /> above this component`)
   }
-  return useStore(Router, { routes })
+  return useStoreInstance(router)
 }
 
 // we could enable functionality like this
