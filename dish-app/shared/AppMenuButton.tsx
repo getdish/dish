@@ -37,6 +37,8 @@ export const AppMenuButton = () => {
     return null
   }
 
+  console.warn('hi?')
+
   return (
     <>
       <Modal
@@ -58,8 +60,9 @@ export const AppMenuButton = () => {
       <AbsoluteVStack
         top={safeArea.top ? safeArea.top : 10}
         right={10}
-        zIndex={zIndexDrawer - 1}
+        zIndex={100000000000000000}
         pointerEvents="none"
+        backgroundColor="red"
       >
         <VStack
           shadowColor="rgba(0,0,0,0.095)"

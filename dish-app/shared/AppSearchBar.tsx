@@ -14,6 +14,7 @@ import {
 import { AppMenu } from './AppMenu'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchLocationInput } from './AppSearchLocationInput'
+import { bgLightTranslucent } from './colors'
 import {
   searchBarHeight,
   searchBarMaxWidth,
@@ -82,7 +83,7 @@ export const AppSearchBarFloating = () => {
       <AbsoluteVStack fullscreen zIndex={-1}>
         <LinearGradient
           style={[StyleSheet.absoluteFill]}
-          colors={['rgba(0,0,0,0.15)', `rgba(0,0,0,0.0)`]}
+          colors={[bgLightTranslucent, `rgba(255,255,255,0)`]}
         />
       </AbsoluteVStack>
       <VStack

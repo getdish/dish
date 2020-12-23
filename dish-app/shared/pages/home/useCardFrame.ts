@@ -10,7 +10,7 @@ export const useCardFrame = () => {
 
   if (media.xs) {
     const { width, height } = Dimensions.get('window')
-    const cardWidth = width - 30
+    const cardWidth = width - 60
     return {
       width: cardWidth,
       height: Math.min(cardWidth * 1.2, height - 80),

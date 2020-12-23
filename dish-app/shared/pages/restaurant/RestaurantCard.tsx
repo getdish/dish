@@ -140,14 +140,14 @@ export const RestaurantCardContent = memo(
                     <VStack alignItems="flex-end">
                       <Paragraph
                         textAlign="right"
-                        size="xxxl"
+                        size="xl"
                         sizeLineHeight={0.7}
-                        textShadowColor="#00000033"
+                        textShadowColor="#00000011"
                         textShadowRadius={1}
                         textShadowOffset={{ height: 2, width: 0 }}
                         color="#fff"
                         fontWeight="800"
-                        letterSpacing={-1}
+                        letterSpacing={-0.5}
                       >
                         {restaurant.name}
                       </Paragraph>

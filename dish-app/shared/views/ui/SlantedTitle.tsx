@@ -24,7 +24,7 @@ export const SlantedTitle = ({
   return (
     <SlantedBox alignSelf="flex-start" {...(rest as any)}>
       <Title
-        fontWeight="900"
+        fontWeight="700"
         size={size}
         sizeLineHeight={sizeLineHeight}
         {...textProps}

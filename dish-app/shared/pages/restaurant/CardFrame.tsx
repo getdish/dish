@@ -5,7 +5,7 @@ import { StackProps, VStack, useMedia, useTheme } from 'snackui'
 
 import { useCardFrame } from '../home/useCardFrame'
 
-const borderRadius = 20
+const borderRadius = 17
 export const cardFrameBorderRadiusSmaller = borderRadius * 0.95
 
 export const CardFrame = ({
@@ -31,8 +31,8 @@ export const CardFrame = ({
       backgroundColor={theme.cardBackgroundColor}
       shadowColor="#000"
       shadowOpacity={0.1}
-      shadowRadius={5}
-      shadowOffset={{ height: 2, width: 0 }}
+      shadowRadius={4}
+      shadowOffset={{ height: 1, width: 0 }}
       // borderWidth={3}
       // borderColor="#fff"
       position="relative"
