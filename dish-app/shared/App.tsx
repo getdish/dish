@@ -2,7 +2,6 @@ import loadable from '@loadable/component'
 import React, { Suspense, memo } from 'react'
 import { VStack } from 'snackui'
 
-import HomeAutocomplete from './AppAutocomplete'
 import { AppContainer } from './AppContainer'
 import { AppIntroLetter } from './AppIntroLetter'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
@@ -25,10 +24,6 @@ export default memo(function App() {
 
       <Suspense fallback={null}>
         <AppMenuButton />
-      </Suspense>
-
-      <Suspense fallback={null}>
-        <HomeAutocomplete />
       </Suspense>
 
       <VStack

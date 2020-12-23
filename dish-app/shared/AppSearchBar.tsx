@@ -102,7 +102,7 @@ export const AppSearchBarFloating = () => {
           height={height}
           justifyContent="center"
           alignItems="center"
-          backgroundColor="#151515"
+          backgroundColor="#111"
           shadowColor="rgba(0,0,0,0.3)"
           shadowOffset={{ height: 1, width: 0 }}
           shadowRadius={15}
@@ -231,7 +231,7 @@ const AppSearchBarContents = memo(() => {
 
       {!media.xs && (
         <>
-          <Spacer size={16} />
+          <Spacer size={12} />
           <VStack
             className="ease-in-out"
             overflow="hidden"
@@ -326,7 +326,7 @@ const SearchBarActionButton = memo(() => {
         },
       })}
     >
-      <Icon color={color} size={20} style={{ marginTop: 3 }} />
+      <Icon color={color} size={20} />
     </LinkButton>
   )
 })

@@ -64,10 +64,6 @@ export default function App() {
 
               <AppMenuButton />
 
-              <AbsoluteVStack pointerEvents="none" fullscreen zIndex={1001}>
-                <AppAutocomplete />
-              </AbsoluteVStack>
-
               <Suspense fallback={null}>
                 <GalleryPage />
                 <RestaurantReviewPage />

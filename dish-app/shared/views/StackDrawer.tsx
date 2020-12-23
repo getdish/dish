@@ -16,7 +16,7 @@ import { PageTitleTag } from './ui/PageTitleTag'
 export const StackCloseButton = () => {
   const media = useMedia()
   return (
-    <AbsoluteVStack right={media.sm ? 10 : 10} top={media.sm ? 10 : -3}>
+    <AbsoluteVStack right={media.sm ? 40 : 10} top={media.sm ? 10 : -3}>
       <StackViewCloseButton />
     </AbsoluteVStack>
   )

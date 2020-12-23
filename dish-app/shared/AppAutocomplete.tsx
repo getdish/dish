@@ -21,6 +21,7 @@ import {
 } from 'snackui'
 
 import { BottomDrawerStore } from './BottomDrawerStore'
+import { bgLight } from './colors'
 import { searchBarHeight, searchBarTopOffset } from './constants'
 import { isNative, isWeb } from './constants'
 import { fuzzySearch } from './helpers/fuzzySearch'
@@ -180,102 +181,100 @@ const AutocompleteContentsInner = memo(
       () => om.actions.home.setShowAutocomplete(false),
       200
     )
-    const top =
-      searchBarTopOffset +
-      searchBarHeight +
-      (media.sm ? getWindowHeight() * drawerStore.snapPoints[0] : 0)
+    const top = media.sm ? searchBarHeight : 0
 
-    return (
-      <AnimatedVStack
-        position="absolute"
-        className="animate-delay-some"
-        pointerEvents="none"
+    const content = (
+      <AbsoluteVStack
+        zIndex={100000000}
         fullscreen
-        height="100%"
-        zIndex={10000}
-        flex={1}
+        overflow="hidden"
+        alignItems="center"
+        pointerEvents="none"
+        top={top}
+        onPress={() => {
+          om.actions.home.setShowAutocomplete(false)
+        }}
       >
-        <AbsoluteVStack
-          backgroundColor={'transparent'}
+        <VStack
+          maxWidth="100%"
           width="100%"
           height="100%"
-          overflow="hidden"
-          alignItems="center"
-          pointerEvents="none"
-          top={top}
-          paddingTop={media.sm ? 0 : 10}
-          paddingHorizontal={media.sm ? 0 : 15}
-          onPress={() => {
-            om.actions.home.setShowAutocomplete(false)
-          }}
+          position="relative"
+          pointerEvents="auto"
+          {...(!media.sm && {
+            maxWidth: 640,
+            maxHeight: `calc(100vh - ${top + 20}px)`,
+            // @ts-ignore
+            onMouseLeave: () => {
+              if (curPagePos.y > top) {
+                hideAutocomplete()
+              }
+            },
+            // @ts-ignore
+            onMouseEnter: () => {
+              hideAutocomplete.cancel()
+            },
+          })}
         >
           <VStack
-            maxWidth="100%"
             width="100%"
             height="100%"
-            position="relative"
+            maxWidth="100%"
             pointerEvents="auto"
-            {...(!media.sm && {
-              maxWidth: 640,
-              maxHeight: `calc(100vh - ${top + 20}px)`,
-              // @ts-ignore
-              onMouseLeave: () => {
-                if (curPagePos.y > top) {
-                  hideAutocomplete()
-                }
-              },
-              // @ts-ignore
-              onMouseEnter: () => {
-                hideAutocomplete.cancel()
-              },
-            })}
           >
             <VStack
+              className="ease-in-out"
+              position="relative"
               width="100%"
               height="100%"
-              maxWidth="100%"
-              pointerEvents="auto"
+              backgroundColor={theme.backgroundColor}
+              minHeight={200}
+              padding={5}
+              borderRadius={media.sm ? 0 : 10}
+              flex={media.sm ? 1 : 0}
+              onPress={() => {
+                om.actions.home.setShowAutocomplete(false)
+              }}
             >
-              <VStack
-                className="ease-in-out"
-                position="relative"
-                left={media.sm ? 0 : showLocation ? 250 : -160}
-                shadowColor="rgba(0,0,0,0.27)"
-                shadowRadius={42}
-                width="100%"
-                backgroundColor={theme.backgroundColor}
-                height={isWeb ? 'auto' : '100%'}
-                minHeight={200}
-                padding={5}
-                borderRadius={media.sm ? 0 : 10}
-                flex={media.sm ? 1 : 0}
-                onPress={() => {
-                  om.actions.home.setShowAutocomplete(false)
+              <CloseButton
+                position="absolute"
+                top={6}
+                right={6}
+                onPressOut={prevent}
+                zIndex={1000}
+                onPress={(e) => {
+                  e.stopPropagation()
+                  omStatic.actions.home.setShowAutocomplete(false)
                 }}
+              />
+              <ScrollView
+                keyboardShouldPersistTaps="always"
+                style={{ opacity: isLoading ? 0.5 : 1, padding: 10 }}
               >
-                <CloseButton
-                  position="absolute"
-                  top={-6}
-                  right={-6}
-                  onPressOut={prevent}
-                  zIndex={1000}
-                  onPress={(e) => {
-                    e.stopPropagation()
-                    omStatic.actions.home.setShowAutocomplete(false)
-                  }}
-                />
-                <ScrollView
-                  keyboardShouldPersistTaps="always"
-                  style={{ opacity: isLoading ? 0.5 : 1 }}
-                >
-                  <AutocompleteResults />
-                </ScrollView>
-              </VStack>
+                <AutocompleteResults />
+              </ScrollView>
             </VStack>
           </VStack>
-        </AbsoluteVStack>
-      </AnimatedVStack>
+        </VStack>
+      </AbsoluteVStack>
     )
+
+    if (!isWeb) {
+      return (
+        <AnimatedVStack
+          position="absolute"
+          pointerEvents="none"
+          fullscreen
+          height="100%"
+          zIndex={100000000}
+          flex={1}
+        >
+          {content}
+        </AnimatedVStack>
+      )
+    }
+
+    return content
   }
 )
 
@@ -366,9 +365,9 @@ const AutocompleteResults = memo(() => {
                   slug: result.slug,
                 },
               })}
-              lineHeight={20}
-              paddingHorizontal={8}
-              paddingVertical={6}
+              lineHeight={22}
+              paddingHorizontal={10}
+              paddingVertical={10}
               fontWeight="600"
               borderRadius={5}
               hoverStyle={{
@@ -381,8 +380,13 @@ const AutocompleteResults = memo(() => {
                 },
               })}
             >
-              <HStack alignItems="center">
-                <VStack height={22} width={22} marginRight={10}>
+              <HStack alignItems="center" justifyContent="center">
+                <VStack
+                  alignItems="center"
+                  height={22}
+                  width={22}
+                  marginRight={10}
+                >
                   {result.icon?.indexOf('http') === 0 ? (
                     <Image
                       source={{ uri: result.icon }}
@@ -393,18 +397,20 @@ const AutocompleteResults = memo(() => {
                       }}
                     />
                   ) : result.icon ? (
-                    <Text fontSize={20}>{result.icon} </Text>
+                    <Text fontSize={18}>{result.icon} </Text>
                   ) : null}
                 </VStack>
-                <VStack>
-                  <Text fontWeight="600" ellipse color={'#000'} fontSize={16}>
+                <VStack alignItems="center" justifyContent="center">
+                  <Text fontWeight="600" ellipse color={'#000'} fontSize={18}>
                     {result.name} {plusButtonEl}
                   </Text>
-                  <Spacer size="xs" />
                   {!!result.description && (
-                    <Text ellipse color="rgba(0,0,0,0.5)" fontSize={12}>
-                      {result.description}
-                    </Text>
+                    <>
+                      <Spacer size="xs" />
+                      <Text ellipse color="rgba(0,0,0,0.5)" fontSize={13}>
+                        {result.description}
+                      </Text>
+                    </>
                   )}
                 </VStack>
               </HStack>
@@ -429,9 +435,9 @@ const HomeAutocompleteDefault = memo(() => {
       {tagDefaultAutocomplete.map((tag) => {
         return (
           <VStack
-            width={100}
-            height={100}
-            borderRadius={10}
+            width={120}
+            height={120}
+            borderRadius={12}
             paddingHorizontal={5}
             margin={5}
             key={tag.name}
@@ -439,7 +445,7 @@ const HomeAutocompleteDefault = memo(() => {
             justifyContent="center"
             overflow="hidden"
             hoverStyle={{
-              backgroundColor: 'rgba(0,0,0,0.1)',
+              backgroundColor: bgLight,
             }}
           >
             <LinkButton
@@ -449,16 +455,16 @@ const HomeAutocompleteDefault = memo(() => {
               pointerEvents="auto"
             >
               <VStack>
-                <Text textAlign="center" width="100%" fontSize={46}>
+                <Text textAlign="center" width="100%" fontSize={56}>
                   {tag.icon}
                 </Text>
-                <Spacer size="sm" />
+                <Spacer size="md" />
                 <Text
                   ellipse
                   textAlign="center"
-                  fontSize={13}
+                  fontSize={14}
                   width="100%"
-                  fontWeight="600"
+                  fontWeight="300"
                   color={theme.color}
                 >
                   {tagDisplayName(tag)}

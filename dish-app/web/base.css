@@ -181,7 +181,7 @@ textarea {
 
 .searchbar-container ::placeholder {
   color: rgba(255, 255, 255, 0.9);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.5px;
 }
 
