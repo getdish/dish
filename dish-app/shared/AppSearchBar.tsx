@@ -183,10 +183,10 @@ const AppSearchBarContents = memo(() => {
       alignItems="center"
       justifyContent="center"
       userSelect="none"
-      paddingHorizontal={10}
+      paddingHorizontal={media.xs ? 5 : 10}
       minHeight={searchBarHeight}
     >
-      <VStack paddingHorizontal={media.xs ? 0 : 6}>
+      <VStack paddingHorizontal={6}>
         <DishLogoButton />
       </VStack>
 

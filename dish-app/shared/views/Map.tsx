@@ -469,53 +469,54 @@ function setupMapEffect({
           return val
         })()
 
-        const tiles = [
-          {
-            maxZoom: 20,
-            minZoom: 11,
-            lineColor: '#880088',
-            label: 'name',
-            labelSource: 'public.nhood_labels',
-            promoteId: 'ogc_fid',
-            activeColor: 'rgba(255, 255, 255, 0)',
-            hoverColor: 'rgba(255,255,255,0.2)',
-            color: 'rgba(248, 238, 248, 0.5)',
-            name: 'public.zcta5',
-          },
-          // {
-          //   maxZoom: 11,
-          //   minZoom: 9,
-          //   lineColor: '#880088',
-          //   promoteId: 'ogc_fid',
-          //   activeColor: purple,
-          //   hoverColor: 'yellow',
-          //   color: lightPurple,
-          //   label: 'nhood',
-          //   name: 'public.hca',
-          // },
-          {
-            maxZoom: 11,
-            minZoom: 7,
-            lineColor: '#008888',
-            promoteId: 'ogc_fid',
-            activeColor: `rgba(128, 200, 163, 0.05)`,
-            hoverColor: `rgba(128, 200, 163, 0.7)`,
-            color: `rgba(128, 200, 163, 0.5)`,
-            label: 'hrr_city',
-            name: 'public.hrr',
-          },
-          {
-            maxZoom: 7,
-            minZoom: 0,
-            lineColor: '#880088',
-            promoteId: 'ogc_fid',
-            activeColor: green,
-            hoverColor: 'yellow',
-            color: lightGreen,
-            label: null,
-            name: 'public.state',
-          },
-        ]
+        const tiles = []
+        console.warn('tiles disabled')
+        //   {
+        //     maxZoom: 20,
+        //     minZoom: 11,
+        //     lineColor: '#880088',
+        //     label: 'name',
+        //     labelSource: 'public.nhood_labels',
+        //     promoteId: 'ogc_fid',
+        //     activeColor: 'rgba(255, 255, 255, 0)',
+        //     hoverColor: 'rgba(255,255,255,0.2)',
+        //     color: 'rgba(248, 238, 248, 0.5)',
+        //     name: 'public.zcta5',
+        //   },
+        //   // {
+        //   //   maxZoom: 11,
+        //   //   minZoom: 9,
+        //   //   lineColor: '#880088',
+        //   //   promoteId: 'ogc_fid',
+        //   //   activeColor: purple,
+        //   //   hoverColor: 'yellow',
+        //   //   color: lightPurple,
+        //   //   label: 'nhood',
+        //   //   name: 'public.hca',
+        //   // },
+        //   {
+        //     maxZoom: 11,
+        //     minZoom: 7,
+        //     lineColor: '#008888',
+        //     promoteId: 'ogc_fid',
+        //     activeColor: `rgba(128, 200, 163, 0.05)`,
+        //     hoverColor: `rgba(128, 200, 163, 0.7)`,
+        //     color: `rgba(128, 200, 163, 0.5)`,
+        //     label: 'hrr_city',
+        //     name: 'public.hrr',
+        //   },
+        //   {
+        //     maxZoom: 7,
+        //     minZoom: 0,
+        //     lineColor: '#880088',
+        //     promoteId: 'ogc_fid',
+        //     activeColor: green,
+        //     hoverColor: 'yellow',
+        //     color: lightGreen,
+        //     label: null,
+        //     name: 'public.state',
+        //   },
+        // ]
 
         // start making regions
         for (const tile of tiles) {

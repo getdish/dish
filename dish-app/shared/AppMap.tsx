@@ -14,7 +14,6 @@ import {
   HStack,
   Text,
   VStack,
-  getMedia,
   useDebounce,
   useDebounceValue,
   useGet,
@@ -45,6 +44,8 @@ export default memo(function AppMap() {
   ] = useState<Restaurant | null>(null)
   const setRestaurants = useDebounce(setRestaurantsFast, 150)
   const setRestaurantDetail = useDebounce(setRestaurantDetailFast, 150)
+
+  console.log('📍', { restaurants, restaurantDetail })
 
   return (
     <>
