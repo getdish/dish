@@ -67,11 +67,7 @@ module.exports = function getWebpackConfig(
       entry: {
         main:
           process.env.LEGACY || isSSR
-            ? [
-                'babel-polyfill',
-                path.join(__dirname, 'web', 'polyfill.legacy.js'),
-                appEntry,
-              ]
+            ? [path.join(__dirname, 'web', 'polyfill.legacy.js'), appEntry]
             : appEntry,
       },
       output: {

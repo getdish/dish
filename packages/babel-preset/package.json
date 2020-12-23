@@ -9,6 +9,8 @@
   "dependencies": {
     "react-native-web": "*",
     "@babel/core": "^7.12.9",
+    "@babel/polyfill": "^7.12.1",
+    "core-js": "^3.8.1",
     "react-refresh": "0.0.0-experimental-94c0244ba",
     "@loadable/babel-plugin": "^5.13.2",
     "@babel/plugin-proposal-class-properties": "^7.12.1",

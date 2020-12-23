@@ -44,6 +44,8 @@ module.exports = function (api) {
       isLegacy && [
         '@babel/preset-env',
         {
+          useBuiltIns: 'usage',
+          corejs: 3,
           targets: {
             browsers: ['>3%'],
           },
