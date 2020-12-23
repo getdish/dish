@@ -7,7 +7,7 @@ import { AppIntroLetter } from './AppIntroLetter'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
 import { AppMenuButton } from './AppMenuButton'
-import { AppRoot } from './AppRoot'
+import { AppRootProvider } from './AppRootProvider'
 import { AppSearchBarFloating } from './AppSearchBar'
 import { AppStackView } from './AppStackView'
 import { isSSR } from './constants'
@@ -17,7 +17,7 @@ import { Route } from './views/router/Route'
 
 export default memo(function App() {
   return (
-    <AppRoot>
+    <AppRootProvider>
       <Suspense fallback={null}>
         <AppSearchBarFloating />
       </Suspense>
@@ -28,7 +28,7 @@ export default memo(function App() {
 
       <VStack
         zIndex={0}
-        borderRadius={12}
+        // borderRadius={12}
         flex={1}
         maxWidth="100%"
         maxHeight="100%"
@@ -80,7 +80,7 @@ export default memo(function App() {
           <RestaurantHoursPage />
         </Route>
       </Suspense>
-    </AppRoot>
+    </AppRootProvider>
   )
 })
 

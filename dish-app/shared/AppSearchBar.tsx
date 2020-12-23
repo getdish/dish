@@ -134,7 +134,10 @@ export const AppSearchBarFloating = () => {
           />
           <AbsoluteVStack
             opacity={0.45}
-            fullscreen
+            top={0}
+            right={0}
+            bottom={0}
+            width={300}
             transform={[{ translateX: 240 }]}
           >
             <DishHorizonView />

@@ -27,6 +27,7 @@ import {
 } from 'snackui'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants'
+import { DishHorizonView } from '../../DishHorizonView'
 import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
@@ -187,6 +188,15 @@ export default memo(function HomePage(props: Props) {
         alignSelf="flex-end"
       >
         <ContentScrollView id="home">
+          <AbsoluteVStack
+            opacity={0.05}
+            top={0}
+            right={0}
+            left={0}
+            height={700}
+          >
+            <DishHorizonView />
+          </AbsoluteVStack>
           <VStack flex={1} overflow="hidden" maxWidth="100%">
             <VStack>
               <HomeTopSpacer />

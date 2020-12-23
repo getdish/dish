@@ -4,6 +4,7 @@ import React, { memo, useLayoutEffect } from 'react'
 import { AbsoluteVStack, Text } from 'snackui'
 
 import { AppIntroLogin } from './AppIntroLogin'
+import { useLocalStorageState } from './hooks/useLocalStorageState'
 import { IntroModal } from './IntroModal'
 import { useOvermind } from './state/useOvermind'
 import { UserOnboard } from './UserOnboard'
@@ -13,6 +14,10 @@ import { SmallCircleButton } from './views/ui/CloseButton'
 
 export const AppIntroLetter = memo(() => {
   const om = useOvermind()
+  const [closes, setCloses] = useLocalStorageState('modal-intro-closes', 0)
+
+  console.log('closes', closes)
+
   const hasOnboarded = om.state.user.user?.has_onboarded
   const isLoggedIn = om.state.user.isLoggedIn
   const store = useStore(IntroModal)
@@ -31,10 +36,14 @@ export const AppIntroLetter = memo(() => {
 
   useLayoutEffect(() => {
     if (store.started) return
+    if (closes >= 3) {
+      store.setHidden(true)
+      return
+    }
     if (!isLoggedIn || (isLoggedIn && !hasOnboarded)) {
       store.setHidden(false)
     }
-  }, [store.hidden, isLoggedIn, hasOnboarded])
+  }, [closes, store.hidden, isLoggedIn, hasOnboarded])
 
   if (isLoggedIn && hasOnboarded) {
     return null
@@ -54,6 +63,7 @@ export const AppIntroLetter = memo(() => {
             backgroundColor="transparent"
             padding={10}
             onPress={() => {
+              setCloses(closes + 1)
               store.setHidden(true)
             }}
           >

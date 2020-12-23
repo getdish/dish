@@ -5,11 +5,10 @@ import { LogBox, StyleSheet, View } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { AbsoluteVStack, VStack } from 'snackui'
 
-import AppAutocomplete from './AppAutocomplete'
 import AppMap from './AppMap'
 import { AppMapControlsUnderlay } from './AppMapControlsUnderlay'
 import { AppMenuButton } from './AppMenuButton'
-import { AppRoot } from './AppRoot'
+import { AppRootProvider } from './AppRootProvider'
 import { AppSmallDrawer } from './AppSmallDrawer'
 import { AppStackView } from './AppStackView'
 import GalleryPage from './pages/gallery/GalleryPage'
@@ -41,7 +40,7 @@ export default function App() {
       <StatusBar style="dark" />
       <SafeAreaProvider>
         <Provider value={om}>
-          <AppRoot>
+          <AppRootProvider>
             <View style={styles.container}>
               <Suspense fallback={null}>
                 <AppMap />
@@ -72,7 +71,7 @@ export default function App() {
                 </Route>
               </Suspense>
             </View>
-          </AppRoot>
+          </AppRootProvider>
         </Provider>
       </SafeAreaProvider>
     </>
