@@ -154,310 +154,317 @@ const updateRegion = debounce((region: Region) => {
   }
 }, 150)
 
-const AppMapContent = memo(function AppMap({
-  restaurants,
-  restaurantDetail,
-}: {
-  restaurantDetail: Restaurant | null
-  restaurants: Restaurant[]
-}) {
-  const om = useOvermind()
-  const media = useMedia()
-  const { width, paddingLeft } = useMapSize(media.sm)
-  const [internal, setInternal] = useState(() => ({
-    id: omStatic.state.home.selectedRestaurant?.id,
-    span: omStatic.state.home.currentState.span,
-    center: omStatic.state.home.currentState.center,
-    via: 'select' as 'select' | 'hover' | 'detail',
-  }))
-  const setState = (next: Partial<typeof internal>) => {
-    setInternal((prev) => {
-      const fullNext = { ...prev, ...next }
-      if (isEqual(fullNext, prev)) {
-        return prev
-      }
-      return fullNext
-    })
-  }
-
-  const { center, span } = internal
-
-  // SELECTED
-  // useEffect(() => {
-  //   return om.reaction(
-  //     (state) => state.home.selectedRestaurant?.id,
-  //     (selectedId) => {
-  //       const nextSpan = getZoomedSpan(span, 0.025)
-  //       setState({
-  //         id: selectedId,
-  //         via: 'select',
-  //         span: nextSpan,
-  //       })
-  //     }
-  //   )
-  // }, [])
-
-  // HOVERED
-  // TODO make it zoom just icon
-  // const hoveredId =
-  //   om.state.home.hoveredRestaurant && om.state.home.hoveredRestaurant.id
-  // useEffect(() => {
-  //   if (!hoveredId) return
-  //   setState({
-  //     id: hoveredId,
-  //     via: 'hover',
-  //     span: getMinLngLat(state.span, 0.02),
-  //   })
-  // }, [hoveredId])
-
-  // DETAIL
-  // const detailId = restaurantDetail?.id
-  // useEffect(() => {
-  //   if (!detailId) return
-  //   if (state.type !== 'restaurant') return
-  //   console.log('the detail is.....', detailId)
-  //   setState({
-  //     id: detailId,
-  //     via: 'detail',
-  //     span: getZoomedSpan(state.span, 0.0025),
-  //   })
-  // }, [detailId])
-
-  // gather restaruants
-  const isLoading = restaurants[0]?.location?.coordinates[0] === null
-  const key = useLastValueWhen(
-    () =>
-      `${internal.id ?? ''}${
-        restaurantDetail?.location.coordinates ?? ''
-      }${JSON.stringify(
-        restaurants.map((x) => x.location?.coordinates ?? '-')
-      )}`,
-    isLoading || (!restaurants.length && !restaurantDetail)
-  )
-
-  // sync down location from above state
-  // gqless hack - touch the prop before memo
-  restaurants[0]?.id
-  const restaurantSelected = useMemo(
-    () => (internal.id ? restaurants.find((x) => x.id === internal.id) : null),
-    [key]
-  )
-
-  useEffect(() => {
-    return om.reaction(
-      (omState) => {
-        const stateId = omState.home.currentState.id
-        const state = omState.home.allStates[stateId]
-        const span = state.mapAt?.span ?? state.span
-        const center = state.mapAt?.center ?? state.center
-        // stringify to prevent extra reactions
-        return JSON.stringify({ span, center })
-      },
-      (spanCenter) => {
-        const { span, center } = JSON.parse(spanCenter)
-        console.log('🗺 position', { center, span })
-        setState({
-          span,
-          center,
-        })
-      }
-    )
-  }, [])
-
-  // CENTER (restauarantSelected.location)
-  useEffect(() => {
-    if (!restaurantSelected) {
-      return
+const AppMapContent = memo(
+  ({
+    restaurants,
+    restaurantDetail,
+  }: {
+    restaurantDetail: Restaurant | null
+    restaurants: Restaurant[]
+  }) => {
+    const om = useOvermind()
+    const media = useMedia()
+    const { width, paddingLeft } = useMapSize(media.sm)
+    const [internal, setInternal] = useState(() => ({
+      id: omStatic.state.home.selectedRestaurant?.id,
+      span: omStatic.state.home.currentState.span,
+      center: omStatic.state.home.currentState.center,
+      via: 'select' as 'select' | 'hover' | 'detail',
+    }))
+    const setState = (next: Partial<typeof internal>) => {
+      setInternal((prev) => {
+        const fullNext = { ...prev, ...next }
+        if (isEqual(fullNext, prev)) {
+          return prev
+        }
+        return fullNext
+      })
     }
-    const coords = restaurantSelected.location.coordinates
-    if (!coords) return
-    const center = getLngLat(coords)
-    setState({
-      center,
-    })
-  }, [restaurantSelected])
 
-  const drawerStore = useStore(BottomDrawerStore)
-  // ensure never goes to 0
-  const delayedIndex = useDebounceValue(drawerStore.snapIndex, 250)
-  const currentSnapIndex = Math.max(1, delayedIndex)
-  const currentSnapPoint = drawerStore.snapPoints[currentSnapIndex]
-  const padding = useMemo(() => {
-    return media.sm
-      ? {
-          left: 10,
-          top: 10,
-          bottom: getWindowHeight() - getWindowHeight() * currentSnapPoint + 10,
-          right: 10,
-        }
-      : {
-          left: paddingLeft,
-          top: searchBarHeight + 20,
-          bottom: 10,
-          right: 10,
-        }
-  }, [media.sm, paddingLeft, currentSnapPoint])
+    const { center, span } = internal
 
-  const features = useMemo(() => {
-    return getRestaurantMarkers(
-      restaurants,
-      internal.id ?? restaurantDetail?.id
+    // SELECTED
+    // useEffect(() => {
+    //   return om.reaction(
+    //     (state) => state.home.selectedRestaurant?.id,
+    //     (selectedId) => {
+    //       const nextSpan = getZoomedSpan(span, 0.025)
+    //       setState({
+    //         id: selectedId,
+    //         via: 'select',
+    //         span: nextSpan,
+    //       })
+    //     }
+    //   )
+    // }, [])
+
+    // HOVERED
+    // TODO make it zoom just icon
+    // const hoveredId =
+    //   om.state.home.hoveredRestaurant && om.state.home.hoveredRestaurant.id
+    // useEffect(() => {
+    //   if (!hoveredId) return
+    //   setState({
+    //     id: hoveredId,
+    //     via: 'hover',
+    //     span: getMinLngLat(state.span, 0.02),
+    //   })
+    // }, [hoveredId])
+
+    // DETAIL
+    // const detailId = restaurantDetail?.id
+    // useEffect(() => {
+    //   if (!detailId) return
+    //   if (state.type !== 'restaurant') return
+    //   console.log('the detail is.....', detailId)
+    //   setState({
+    //     id: detailId,
+    //     via: 'detail',
+    //     span: getZoomedSpan(state.span, 0.0025),
+    //   })
+    // }, [detailId])
+
+    // gather restaruants
+    const isLoading = restaurants[0]?.location?.coordinates[0] === null
+    const key = useLastValueWhen(
+      () =>
+        `${internal.id ?? ''}${
+          restaurantDetail?.location.coordinates ?? ''
+        }${JSON.stringify(
+          restaurants.map((x) => x.location?.coordinates ?? '-')
+        )}`,
+      isLoading || (!restaurants.length && !restaurantDetail)
     )
-  }, [key])
 
-  const handleMoveEnd = useCallback(
-    ({ center, span }) => {
-      if (media.sm && (drawerStore.isDragging || drawerStore.snapIndex === 0)) {
-        console.log('avoid move stuff when snapped to top')
+    // sync down location from above state
+    // gqless hack - touch the prop before memo
+    restaurants[0]?.id
+    const restaurantSelected = useMemo(
+      () =>
+        internal.id ? restaurants.find((x) => x.id === internal.id) : null,
+      [key]
+    )
+
+    useEffect(() => {
+      return om.reaction(
+        (omState) => {
+          const stateId = omState.home.currentState.id
+          const state = omState.home.allStates[stateId]
+          const span = state.mapAt?.span ?? state.span
+          const center = state.mapAt?.center ?? state.center
+          // stringify to prevent extra reactions
+          return JSON.stringify({ span, center })
+        },
+        (spanCenter) => {
+          const { span, center } = JSON.parse(spanCenter)
+          console.log('🗺 position', { center, span })
+          setState({
+            span,
+            center,
+          })
+        }
+      )
+    }, [])
+
+    // CENTER (restauarantSelected.location)
+    useEffect(() => {
+      if (!restaurantSelected) {
         return
       }
-      if (omStatic.state.home.centerToResults) {
-        // we just re-centered, ignore
-        //@ts-expect-error
-        om.actions.home.setCenterToResults(0)
-      }
+      const coords = restaurantSelected.location.coordinates
+      if (!coords) return
+      const center = getLngLat(coords)
       setState({
         center,
-        span,
       })
-      om.actions.home.updateCurrentState({
-        mapAt: {
+    }, [restaurantSelected])
+
+    const drawerStore = useStore(BottomDrawerStore)
+    // ensure never goes to 0
+    const delayedIndex = useDebounceValue(drawerStore.snapIndex, 250)
+    const currentSnapIndex = Math.max(1, delayedIndex)
+    const currentSnapPoint = drawerStore.snapPoints[currentSnapIndex]
+    const padding = useMemo(() => {
+      return media.sm
+        ? {
+            left: 10,
+            top: 10,
+            bottom:
+              getWindowHeight() - getWindowHeight() * currentSnapPoint + 10,
+            right: 10,
+          }
+        : {
+            left: paddingLeft,
+            top: searchBarHeight + 20,
+            bottom: 10,
+            right: 10,
+          }
+    }, [media.sm, paddingLeft, currentSnapPoint])
+
+    const features = useMemo(() => {
+      return getRestaurantMarkers(
+        restaurants,
+        internal.id ?? restaurantDetail?.id
+      )
+    }, [key])
+
+    const handleMoveEnd = useCallback(
+      ({ center, span }) => {
+        if (
+          media.sm &&
+          (drawerStore.isDragging || drawerStore.snapIndex === 0)
+        ) {
+          console.log('avoid move stuff when snapped to top')
+          return
+        }
+        if (omStatic.state.home.centerToResults) {
+          // we just re-centered, ignore
+          //@ts-expect-error
+          om.actions.home.setCenterToResults(0)
+        }
+        setState({
           center,
           span,
-        },
-      })
-      om.actions.home.updateCurrentMapAreaInformation()
-    },
-    [media.sm]
-  )
+        })
+        om.actions.home.updateCurrentState({
+          mapAt: {
+            center,
+            span,
+          },
+        })
+        om.actions.home.updateCurrentMapAreaInformation()
+      },
+      [media.sm]
+    )
 
-  const getRestaurants = useGet(restaurants)
+    const getRestaurants = useGet(restaurants)
 
-  const handleDoubleClick = useCallback((id) => {
-    const restaurant = getRestaurants()?.find((x) => x.id === id)
-    if (restaurant) {
-      router.navigate({
-        replace: true,
-        name: 'restaurant',
-        params: {
-          slug: restaurant.slug,
-        },
-      })
-    }
-  }, [])
-
-  const handleHover = useCallback((id) => {
-    if (id == null) {
-      om.actions.home.setHoveredRestaurant(null)
-      return
-    }
-    const { hoveredRestaurant } = omStatic.state.home
-    const restaurants = getRestaurants()
-    if (!hoveredRestaurant || id !== hoveredRestaurant?.id) {
-      const restaurant = restaurants?.find((x) => x.id === id)
+    const handleDoubleClick = useCallback((id) => {
+      const restaurant = getRestaurants()?.find((x) => x.id === id)
       if (restaurant) {
-        om.actions.home.setHoveredRestaurant({
-          id: restaurant.id,
-          slug: restaurant.slug ?? '',
-        })
-      } else {
-        console.warn('not found?', restaurants, id)
-      }
-    }
-  }, [])
-
-  const handleSelect = useCallback((id: string) => {
-    const restaurants = getRestaurants()
-    const restaurant = restaurants?.find((x) => x.id === id)
-    if (!restaurant) {
-      console.warn('not found', id)
-      return
-    }
-    if (omStatic.state.home.currentStateType === 'search') {
-      if (id !== omStatic.state.home.selectedRestaurant?.id) {
-        om.actions.home.setSelectedRestaurant({
-          id: restaurant.id,
-          slug: restaurant.slug ?? '',
+        router.navigate({
+          replace: true,
+          name: 'restaurant',
+          params: {
+            slug: restaurant.slug,
+          },
         })
       }
-    } else {
-      const route = {
-        name: 'restaurant',
-        params: {
-          slug: restaurant.slug,
-        },
-      }
+    }, [])
 
-      if (router.isRouteActive(route)) {
-        if (media.sm) {
-          drawerStore.setSnapPoint(0)
+    const handleHover = useCallback((id) => {
+      if (id == null) {
+        om.actions.home.setHoveredRestaurant(null)
+        return
+      }
+      const { hoveredRestaurant } = omStatic.state.home
+      const restaurants = getRestaurants()
+      if (!hoveredRestaurant || id !== hoveredRestaurant?.id) {
+        const restaurant = restaurants?.find((x) => x.id === id)
+        if (restaurant) {
+          om.actions.home.setHoveredRestaurant({
+            id: restaurant.id,
+            slug: restaurant.slug ?? '',
+          })
+        } else {
+          console.warn('not found?', restaurants, id)
+        }
+      }
+    }, [])
+
+    const handleSelect = useCallback((id: string) => {
+      const restaurants = getRestaurants()
+      const restaurant = restaurants?.find((x) => x.id === id)
+      if (!restaurant) {
+        console.warn('not found', id)
+        return
+      }
+      if (omStatic.state.home.currentStateType === 'search') {
+        if (id !== omStatic.state.home.selectedRestaurant?.id) {
+          om.actions.home.setSelectedRestaurant({
+            id: restaurant.id,
+            slug: restaurant.slug ?? '',
+          })
         }
       } else {
-        router.navigate(route)
+        const route = {
+          name: 'restaurant',
+          params: {
+            slug: restaurant.slug,
+          },
+        }
+
+        if (router.isRouteActive(route)) {
+          if (media.sm) {
+            drawerStore.setSnapPoint(0)
+          }
+        } else {
+          router.navigate(route)
+        }
       }
-    }
-  }, [])
+    }, [])
 
-  const handleSelectRegion = useCallback((region: Region | null) => {
-    if (!region) return
-    if (!region.slug) {
-      console.log('no region slug', region)
-      return
-    }
+    const handleSelectRegion = useCallback((region: Region | null) => {
+      if (!region) return
+      if (!region.slug) {
+        console.log('no region slug', region)
+        return
+      }
 
-    updateRegion(region)
-  }, [])
+      updateRegion(region)
+    }, [])
 
-  const theme = useTheme()
-  const themeName = theme.backgroundColor === '#fff' ? 'light' : 'dark'
+    const theme = useTheme()
+    const themeName = theme.backgroundColor === '#fff' ? 'light' : 'dark'
 
-  return (
-    <HStack
-      position="absolute"
-      fullscreen
-      alignItems="center"
-      justifyContent="center"
-    >
-      <HStack height="100%" maxWidth={pageWidthMax} width="100%">
-        {!media.sm && (
-          <VStack height="100%" flex={2}>
-            {ensureFlexText}
+    return (
+      <HStack
+        position="absolute"
+        fullscreen
+        alignItems="center"
+        justifyContent="center"
+      >
+        <HStack height="100%" maxWidth={pageWidthMax} width="100%">
+          {!media.sm && (
+            <VStack height="100%" flex={2}>
+              {ensureFlexText}
+            </VStack>
+          )}
+          <VStack
+            pointerEvents="auto"
+            contain="strict"
+            zIndex={zIndexMap}
+            maxHeight="100%"
+            width={width}
+            borderTopRightRadius={12}
+            borderBottomRightRadius={12}
+            overflow="hidden"
+          >
+            <MapView
+              center={center}
+              style={styles[themeName]}
+              span={span}
+              padding={padding}
+              features={features}
+              centerToResults={om.state.home.centerToResults}
+              selected={internal.id}
+              hovered={
+                (om.state.home.hoveredRestaurant &&
+                  om.state.home.hoveredRestaurant.id) ||
+                ''
+              }
+              onMoveEnd={handleMoveEnd}
+              onDoubleClick={handleDoubleClick}
+              onHover={handleHover}
+              onSelect={handleSelect}
+              onSelectRegion={handleSelectRegion}
+            />
           </VStack>
-        )}
-        <VStack
-          pointerEvents="auto"
-          contain="strict"
-          zIndex={zIndexMap}
-          maxHeight="100%"
-          width={width}
-          borderTopRightRadius={12}
-          borderBottomRightRadius={12}
-          overflow="hidden"
-        >
-          <MapView
-            center={center}
-            style={styles[themeName]}
-            span={span}
-            padding={padding}
-            features={features}
-            centerToResults={om.state.home.centerToResults}
-            selected={internal.id}
-            hovered={
-              (om.state.home.hoveredRestaurant &&
-                om.state.home.hoveredRestaurant.id) ||
-              ''
-            }
-            onMoveEnd={handleMoveEnd}
-            onDoubleClick={handleDoubleClick}
-            onHover={handleHover}
-            onSelect={handleSelect}
-            onSelectRegion={handleSelectRegion}
-          />
-        </VStack>
+        </HStack>
       </HStack>
-    </HStack>
-  )
-})
+    )
+  }
+)
 
 let ids = {}
 const getNumId = (id: string): number => {
