@@ -9,7 +9,7 @@ import {
 import { Action, AsyncAction } from 'overmind'
 import { Toast } from 'snackui'
 
-import { getRouter } from './router'
+import { router } from './router'
 
 type UserState = {
   user: Partial<User> | null
@@ -140,7 +140,7 @@ const passwordReset: AsyncAction<{
     return false
   }
   om.state.user.loading = true
-  const token = getRouter().curPage.params.token
+  const token = router.curPage.params.token
   try {
     const [status] = await Auth.passwordReset(token, password)
     om.state.user.loading = false

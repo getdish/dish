@@ -366,10 +366,6 @@ export function useRouterSelector<
   return useStoreSelector(Router, selector, { routes }) as Res
 }
 
-export function useRouterCurPage() {
-  return useRouterSelector((router) => router.curPage)
-}
-
 // we could enable functionality like this
 export type LoadableView = React.FunctionComponent & {
   fetchData: (params: HistoryItem) => Promise<any>

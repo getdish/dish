@@ -3,7 +3,7 @@ import { NavigateItem } from '@dish/router'
 import { getRouteFromState } from './getRouteFromState'
 import { isHomeState, isSearchState } from './home-helpers'
 import { HomeStateTagNavigable } from './home-types'
-import { getRouter } from './router'
+import { router } from './router'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 
 export const getNavigateItemForState = (
@@ -11,7 +11,6 @@ export const getNavigateItemForState = (
   _nextState: HomeStateTagNavigable
 ): NavigateItem => {
   const { home } = om.state
-  const router = getRouter()
   const nextState = _nextState ?? home.currentState
   const isHome = isHomeState(nextState)
   const isSearch = isSearchState(nextState)

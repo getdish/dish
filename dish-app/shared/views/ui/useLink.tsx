@@ -18,7 +18,7 @@ import { getNextState } from '../../state/getNextState'
 import { HomeStateNav } from '../../state/home-types'
 import { NavigableTag, tagsToNavigableTags } from '../../state/NavigableTag'
 import { omStatic } from '../../state/omStatic'
-import { getRouter } from '../../state/router'
+import { router } from '../../state/router'
 import { LinkProps } from './LinkProps'
 import { LinkButtonProps } from './LinkProps'
 import { nav } from './nav'
@@ -76,7 +76,7 @@ export const useLink = (props: LinkProps<any, any>) => {
     wrapWithLinkElement(children: any) {
       if (Platform.OS === 'web') {
         const element = props.tagName ?? 'a'
-        const href = props.href ?? getRouter().getPathFromParams(navItem)
+        const href = props.href ?? router.getPathFromParams(navItem)
         return React.createElement(
           element,
           {

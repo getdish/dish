@@ -1,5 +1,3 @@
-import { useRouter, useRouterCurPage } from '@dish/router'
-import { Store } from '@dish/use-store'
 import React, {
   createContext,
   useContext,
@@ -11,7 +9,12 @@ import React, {
 import { useForceUpdate } from 'snackui'
 
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
-import { routePathToName, routes } from '../../state/router'
+import {
+  routePathToName,
+  routes,
+  useRouter,
+  useRouterCurPage,
+} from '../../state/router'
 import { useOvermind } from '../../state/useOvermind'
 
 type RouteState = 'collect' | 'active' | 'inactive'
@@ -23,8 +26,6 @@ type RouteContextI = {
 }
 
 const RouteContext = createContext<RouteContextI | null>(null)
-
-class RouteSwitchStore extends Store {}
 
 export function RouteSwitch(props: { children: any }) {
   const children = React.Children.toArray(props.children)

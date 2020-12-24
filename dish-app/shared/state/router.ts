@@ -1,5 +1,5 @@
 import { Route, Router, RoutesTable as RoutesTableI } from '@dish/router'
-import { getStore } from '@dish/use-store'
+import { createStore, useStoreInstance } from '@dish/use-store'
 
 export type RoutesTable = typeof routes
 export type RouteName = keyof RoutesTable
@@ -54,20 +54,15 @@ export const routes: RoutesTableI = {
   notFound: new Route('*'),
 }
 
-// can only be called after first render...
-export const getRouter = () => {
-  return getStore(Router, { routes })
+export const router = createStore(Router, { routes })
+
+export const useRouter = () => {
+  return useStoreInstance(router)
 }
 
-// temp until we figure this out better
-export const router = new Proxy({} as Router, {
-  get(_, key) {
-    return getRouter()[key]
-  },
-})
-
-// eventually:
-// const router = createStore(Router, { routes })
+export const useRouterCurPage = () => {
+  return useStoreInstance(router, (router) => router.curPage)
+}
 
 export type SearchRouteParams = {
   username?: string

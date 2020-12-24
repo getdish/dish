@@ -1,4 +1,3 @@
-import { useRouterCurPage } from '@dish/router'
 import { Store, useStore } from '@dish/use-store'
 import { capitalize } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -22,6 +21,7 @@ import {
 } from 'snackui'
 
 import { isWeb } from '../constants'
+import { useRouterCurPage } from '../state/router'
 import { useOvermind } from '../state/useOvermind'
 import { SignInAppleButton } from './SignInAppleButton'
 import { Link } from './ui/Link'

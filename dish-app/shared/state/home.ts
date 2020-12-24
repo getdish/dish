@@ -47,7 +47,7 @@ import { isSearchBarTag } from './isSearchBarTag'
 import { tagLenses } from './localTags'
 import { NavigableTag } from './NavigableTag'
 import { reverseGeocode } from './reverseGeocode'
-import { getRouter } from './router'
+import { router } from './router'
 
 export const state: HomeState = {
   started: false,
@@ -166,7 +166,7 @@ export const state: HomeState = {
 
 export const isOnOwnProfile = (state: OmState) => {
   const username = state.user?.user?.username
-  return username && slugify(username) === getRouter().curPage.params?.username
+  return username && slugify(username) === router.curPage.params?.username
 }
 
 export const isEditingUserPage = (
@@ -203,7 +203,6 @@ const popBack: Action = (om) => {
 
 const popTo: Action<HomeStateItem['type']> = (om, type) => {
   const currentState = om.state.home.currentState
-  const router = getRouter()
 
   if (currentState.type === 'home') {
     return
@@ -611,7 +610,7 @@ const pushHomeState: AsyncAction<
     case 'userSearch':
     case 'search': {
       const username =
-        type == 'userSearch' ? getRouter().curPage.params.username : ''
+        type == 'userSearch' ? router.curPage.params.username : ''
       const prev = findLastHomeOrSearch(om.state.home.states)
       if (!prev) {
         throw new Error('unreachable')
@@ -755,7 +754,6 @@ const setShowAutocomplete: Action<ShowAutocomplete> = (om, val) => {
 
 // TODO this sort of duplicates HomeStateItem.center... we should move it there
 const setLocation: AsyncAction<string> = async (om, val) => {
-  const router = getRouter()
   const current = [
     ...om.state.home.locationAutocompleteResults,
     ...defaultLocationAutocompleteResults,
@@ -823,7 +821,6 @@ const forkCurrentList: Action = (om) => {
     Toast.show(`Login please`)
     return
   }
-  const router = getRouter()
   const { curPage } = router
   if (curPage.name !== 'search') {
     Toast.show(`Can't fork a non-search page`)
@@ -1050,7 +1047,7 @@ const getShouldNavigate: Action<HomeStateTagNavigable, boolean> = (
   state
 ) => {
   const navItem = getNavigateItemForState(om, state)
-  return getRouter().getShouldNavigate(navItem)
+  return router.getShouldNavigate(navItem)
 }
 
 // avoid nasty two way sync bugs as much as possible
@@ -1080,7 +1077,7 @@ const syncStateToRoute: AsyncAction<HomeStateTagNavigable, boolean> = async (
         cloneDeep({ should, navItem, state, recentTries })
       )
     }
-    getRouter().navigate(navItem)
+    router.navigate(navItem)
     return true
   }
   return false
