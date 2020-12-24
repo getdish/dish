@@ -3,13 +3,13 @@ import {
   Review,
   UpdateUserProps,
   User,
-  getGraphEndpoint,
   query,
   resolved,
-  userFindOne,
 } from '@dish/graph'
 import { Action, AsyncAction } from 'overmind'
 import { Toast } from 'snackui'
+
+import { getRouter } from './router'
 
 type UserState = {
   user: Partial<User> | null
@@ -140,7 +140,7 @@ const passwordReset: AsyncAction<{
     return false
   }
   om.state.user.loading = true
-  const token = om.state.router.curPage.params.token
+  const token = getRouter().curPage.params.token
   try {
     const [status] = await Auth.passwordReset(token, password)
     om.state.user.loading = false

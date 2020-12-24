@@ -2,6 +2,7 @@ import { fullyIdle, series, sleep } from '@dish/async'
 import { order_by, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
+import { useRouterCurPage } from '@dish/router'
 import { useStore } from '@dish/use-store'
 import { debounce, groupBy, uniqBy } from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
@@ -109,8 +110,7 @@ export const useShowAutocomplete = () => {
 const HomeAutocompleteEffects = memo(
   ({ onChangeStatus }: { onChangeStatus: (isLoading: boolean) => void }) => {
     const om = useOvermind()
-
-    const { curPage } = om.state.router
+    const curPage = useRouterCurPage()
     useEffect(() => {
       om.actions.home.setShowAutocomplete(false)
     }, [curPage])

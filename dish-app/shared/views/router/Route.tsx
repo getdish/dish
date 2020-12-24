@@ -1,4 +1,4 @@
-import { useRouter, useRouterSelector } from '@dish/router'
+import { useRouter, useRouterCurPage } from '@dish/router'
 import { Store } from '@dish/use-store'
 import React, {
   createContext,
@@ -11,7 +11,7 @@ import React, {
 import { useForceUpdate } from 'snackui'
 
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
-import { routePathToName, router, routes } from '../../state/router.1'
+import { routePathToName, routes } from '../../state/router'
 import { useOvermind } from '../../state/useOvermind'
 
 type RouteState = 'collect' | 'active' | 'inactive'
@@ -92,8 +92,8 @@ export function RouteSwitch(props: { children: any }) {
 }
 
 export function Route(props: { name: string; exact?: boolean; children: any }) {
-  const activeName = useRouterSelector((router) => router.curPage.name)
-  console.log('is', activeName)
+  const curPage = useRouterCurPage()
+  const activeName = curPage.name
   const stateRef = useRef<RouteState>('active')
   const forceUpdate = useForceUpdate()
   const routeContext = useContext(RouteContext)
@@ -163,7 +163,8 @@ function getChildren(children: Function | any) {
 export function PrivateRoute(props: { name: string; children: any }) {
   const om = useOvermind()
   const isLoggedIn = om.state.user.isLoggedIn
-  const curPageName = om.state.router.curPage.name
+  const router = useRouter()
+  const curPageName = router.curPage.name
 
   useLayoutEffect(() => {
     if (curPageName === props.name) {

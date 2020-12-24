@@ -20,7 +20,7 @@ import {
 import { bgLight } from '../../colors'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { omStatic } from '../../state/omStatic'
-import { router } from '../../state/router.1'
+import { router } from '../../state/router'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 
 export default memo(

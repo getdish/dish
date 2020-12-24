@@ -207,7 +207,7 @@ function useStoreFromInfo(
   )
   const state = useMutableSource(info.source, getSnapshot, subscribe)
   const storeProxy = useConstant(() =>
-    createProxiedStore(info, { internal, component, state })
+    createProxiedStore(info, { internal, component })
   )
 
   // before each render
@@ -238,7 +238,6 @@ function createProxiedStore(
   renderOpts?: {
     internal: { current: { isRendering: boolean; tracked: Set<string> } }
     component: any
-    state: any
   }
 ) {
   const proxiedStore = new Proxy(info.storeInstance, {
@@ -265,7 +264,7 @@ function createProxiedStore(
         if (renderOpts) {
           if (renderOpts.internal.current.isRendering) {
             renderOpts.internal.current.tracked.add(key)
-            const val = renderOpts.state[key]
+            const val = info.storeInstance[key]
             if (typeof val !== 'undefined') {
               return val
             }

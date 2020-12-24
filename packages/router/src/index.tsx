@@ -355,12 +355,19 @@ export function useRouter() {
   return useStore(Router, { routes })
 }
 
-export function useRouterSelector<A extends (a: Router) => B, B>(selector: A) {
+export function useRouterSelector<
+  A extends (a: Router) => any,
+  Res = A extends (a: Router) => infer B ? B : unknown
+>(selector: A) {
   const routes = useContext(RouterPropsContext)
   if (!routes) {
     throw new Error(`Must <ProvideRouter /> above this component`)
   }
-  return useStoreSelector(Router, selector, { routes }) as B
+  return useStoreSelector(Router, selector, { routes }) as Res
+}
+
+export function useRouterCurPage() {
+  return useRouterSelector((router) => router.curPage)
 }
 
 // we could enable functionality like this

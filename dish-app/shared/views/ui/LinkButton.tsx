@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { HStack, Text } from 'snackui'
 
 import { omStatic } from '../../state/omStatic'
-import { RoutesTable } from '../../state/router.1'
+import { RoutesTable } from '../../state/router'
 import { isStringChild } from './isStringChild'
 import { LinkButtonProps } from './LinkProps'
 import { useLink } from './useLink'

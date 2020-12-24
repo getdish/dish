@@ -32,7 +32,7 @@ import { findLastHomeOrSearch } from './state/home'
 import { isRestaurantState } from './state/home-helpers'
 import { Region } from './state/home-types'
 import { omStatic } from './state/omStatic'
-import { router } from './state/router.1'
+import { router } from './state/router'
 import { useOvermind } from './state/useOvermind'
 import { MapView } from './views/Map'
 

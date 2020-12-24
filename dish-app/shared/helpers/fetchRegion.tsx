@@ -28,9 +28,9 @@ export type RegionNormalized = RegionApiResponse & {
 
 export const fetchRegion = async (slug: string) => {
   try {
-    const res: RegionApiResponse = await fetch(
-      `${SEARCH_DOMAIN}/regions?slug=${encodeURIComponent(slug)}`
-    ).then((x) => x.json())
+    const url = `${SEARCH_DOMAIN}/regions?slug=${encodeURIComponent(slug)}`
+    console.log('fetching', url)
+    const res: RegionApiResponse = await fetch(url).then((x) => x.json())
 
     const centerAt = res?.centroid?.coordinates
     if (!!centerAt) {

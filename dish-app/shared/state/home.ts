@@ -47,7 +47,7 @@ import { isSearchBarTag } from './isSearchBarTag'
 import { tagLenses } from './localTags'
 import { NavigableTag } from './NavigableTag'
 import { reverseGeocode } from './reverseGeocode'
-import { router } from './router.1'
+import { getRouter } from './router'
 
 export const state: HomeState = {
   started: false,
@@ -166,7 +166,7 @@ export const state: HomeState = {
 
 export const isOnOwnProfile = (state: OmState) => {
   const username = state.user?.user?.username
-  return username && slugify(username) === state.router.curPage.params?.username
+  return username && slugify(username) === getRouter().curPage.params?.username
 }
 
 export const isEditingUserPage = (
@@ -203,6 +203,7 @@ const popBack: Action = (om) => {
 
 const popTo: Action<HomeStateItem['type']> = (om, type) => {
   const currentState = om.state.home.currentState
+  const router = getRouter()
 
   if (currentState.type === 'home') {
     return
@@ -583,9 +584,7 @@ const pushHomeState: AsyncAction<
     // home
     case 'homeRegion':
     case 'home': {
-      const prev: HomeStateItemHome = _.findLast(om.state.home.states, (x) =>
-        isHomeState(x)
-      ) as any
+      const prev = _.findLast(om.state.home.states, isHomeState)
       nextState = {
         type: 'home',
         searchQuery: '',
@@ -612,7 +611,7 @@ const pushHomeState: AsyncAction<
     case 'userSearch':
     case 'search': {
       const username =
-        type == 'userSearch' ? om.state.router.curPage.params.username : ''
+        type == 'userSearch' ? getRouter().curPage.params.username : ''
       const prev = findLastHomeOrSearch(om.state.home.states)
       if (!prev) {
         throw new Error('unreachable')
@@ -756,6 +755,7 @@ const setShowAutocomplete: Action<ShowAutocomplete> = (om, val) => {
 
 // TODO this sort of duplicates HomeStateItem.center... we should move it there
 const setLocation: AsyncAction<string> = async (om, val) => {
+  const router = getRouter()
   const current = [
     ...om.state.home.locationAutocompleteResults,
     ...defaultLocationAutocompleteResults,
@@ -823,7 +823,8 @@ const forkCurrentList: Action = (om) => {
     Toast.show(`Login please`)
     return
   }
-  const { curPage } = om.state.router
+  const router = getRouter()
+  const { curPage } = router
   if (curPage.name !== 'search') {
     Toast.show(`Can't fork a non-search page`)
     return
@@ -1049,7 +1050,7 @@ const getShouldNavigate: Action<HomeStateTagNavigable, boolean> = (
   state
 ) => {
   const navItem = getNavigateItemForState(om, state)
-  return router.getShouldNavigate(navItem)
+  return getRouter().getShouldNavigate(navItem)
 }
 
 // avoid nasty two way sync bugs as much as possible
@@ -1079,7 +1080,7 @@ const syncStateToRoute: AsyncAction<HomeStateTagNavigable, boolean> = async (
         cloneDeep({ should, navItem, state, recentTries })
       )
     }
-    router.navigate(navItem)
+    getRouter().navigate(navItem)
     return true
   }
   return false

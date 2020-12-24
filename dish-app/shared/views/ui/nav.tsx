@@ -1,4 +1,4 @@
-import { router } from '../../state/router.1'
+import { router } from '../../state/router'
 
 export function nav(navItem: any, linkProps: any, props: any, e: any) {
   if (linkProps.onPress || props.onClick) {

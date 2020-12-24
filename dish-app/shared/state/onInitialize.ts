@@ -34,7 +34,6 @@ export const onInitialize: OnInitialize = async (
   addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
 
   actions.user.checkForExistingLogin()
-  actions.router.start()
   actions.home.updateCurrentMapAreaInformation()
 }
 

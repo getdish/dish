@@ -33,17 +33,15 @@ import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
-import { sfRegion } from '../../sfRegion'
-import { HomeStateItemHome, Region } from '../../state/home-types'
+import { HomeStateItemHome } from '../../state/home-types'
 import { omStatic } from '../../state/omStatic'
-import { router } from '../../state/router.1'
+import { router } from '../../state/router'
 import { useOvermind } from '../../state/useOvermind'
 import { CommentBubble } from '../../views/CommentBubble'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { DishView } from '../../views/dish/DishView'
 import { PageFooter } from '../../views/layout/PageFooter'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
-import { SlantedBox } from '../../views/ui/SlantedBox'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { CardFrame } from '../restaurant/CardFrame'
 import { RestaurantButton } from '../restaurant/RestaurantButton'
@@ -106,7 +104,7 @@ export default memo(function HomePage(props: Props) {
       router.navigate({
         name: 'homeRegion',
         params: {
-          region: sfRegion.slug,
+          region: 'ca-san-francisco',
         },
       })
     }

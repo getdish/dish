@@ -2,7 +2,7 @@ import { ChevronDown, ChevronUp } from '@dish/react-feather'
 import React from 'react'
 import { HStack, Text } from 'snackui'
 
-import { RoutesTable } from '../../state/router.1'
+import { RoutesTable } from '../../state/router'
 import { flatButtonStyle } from '../baseButtonStyle'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'

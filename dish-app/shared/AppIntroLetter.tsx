@@ -1,4 +1,5 @@
 import { Home } from '@dish/react-feather'
+import { useRouterCurPage } from '@dish/router'
 import { useStore } from '@dish/use-store'
 import React, { memo, useLayoutEffect } from 'react'
 import { AbsoluteVStack, Text } from 'snackui'
@@ -8,7 +9,6 @@ import { useLocalStorageState } from './hooks/useLocalStorageState'
 import { IntroModal } from './IntroModal'
 import { useOvermind } from './state/useOvermind'
 import { UserOnboard } from './UserOnboard'
-// @ts-ignore
 import { DarkModal } from './views/DarkModal'
 import { SmallCircleButton } from './views/ui/CloseButton'
 
@@ -19,18 +19,8 @@ export const AppIntroLetter = memo(() => {
   const hasOnboarded = om.state.user.user?.has_onboarded
   const isLoggedIn = om.state.user.isLoggedIn
   const store = useStore(IntroModal)
-  const curPageName = om.state.router.curPage.name
-  const isPasswordReset = curPageName == 'passwordReset'
-  // const curPage = om.state.router.curPage
-  // const isPublicPage = curPage.name === 'about' || curPage.name === 'blog'
-  // make it private only
-  // isPublicPage
-  //   ? true
-  //   : isLoggedIn
-  //   ? closed
-  //     ? true
-  //     : hasOnboarded
-  //   : false
+  const curPage = useRouterCurPage()
+  const isPasswordReset = curPage.name == 'passwordReset'
 
   useLayoutEffect(() => {
     if (store.started) return

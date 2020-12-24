@@ -1,3 +1,6 @@
+- map fix pins not showing
+- use-store better global support
+  - router work with global
 - need to make the className merge work..
 - Button (is the only really big example that shows everything)
 - fix SlantedBox

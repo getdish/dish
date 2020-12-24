@@ -1,5 +1,6 @@
 import { slugify } from '@dish/graph'
 import { ChevronUp, HelpCircle, Menu } from '@dish/react-feather'
+import { useRouterCurPage } from '@dish/router'
 import React, { Suspense, memo, useCallback, useEffect } from 'react'
 import { HStack, Popover, Spacer, Text, Tooltip, useMedia } from 'snackui'
 
@@ -16,7 +17,7 @@ export const AppMenu = memo(() => {
   const media = useMedia()
   const showUserMenu = om.state.home.showUserMenu
   const setShowUserMenu = om.actions.home.setShowUserMenu
-  const pageName = om.state.router.curPage.name
+  const pageName = useRouterCurPage().name
   const hideUserMenu = useCallback((x) => setShowUserMenu(false), [])
 
   useEffect(() => {

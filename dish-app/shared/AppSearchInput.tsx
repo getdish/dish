@@ -34,7 +34,7 @@ import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { getTagSlug } from './state/getTagSlug'
 import { tagsToNavigableTags } from './state/NavigableTag'
 import { omStatic } from './state/omStatic'
-import { router } from './state/router.1'
+import { router } from './state/router'
 import { useOvermind } from './state/useOvermind'
 import { TagButton, getTagButtonProps } from './views/TagButton'
 

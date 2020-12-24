@@ -1,14 +1,21 @@
 import { useHydrateCache } from '@dish/graph'
-import { ProvideRouter } from '@dish/router'
+import { ProvideRouter, useRouter } from '@dish/router'
 import { Provider } from 'overmind-react'
-import React from 'react'
+import React, {
+  Suspense,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import { QueryClientProvider } from 'react-query'
 import { ThemeProvider, configureThemes } from 'snackui'
 
 import App from '../shared/App'
 import { AppPortalProvider } from '../shared/AppPortal'
 import { queryClient } from '../shared/helpers/queryClient'
-import { router } from '../shared/state/router.1'
+import { routes } from '../shared/state/router'
+import { useOvermind } from '../shared/state/useOvermind'
 import themes, { MyTheme, MyThemes } from '../shared/themes'
 
 if (typeof window !== 'undefined') {
@@ -36,19 +43,79 @@ export function Root({ overmind }: { overmind?: any }) {
     console.debug('no cache snapshot')
   }
 
-  console.log('provide from root', overmind)
-
   return (
     <Provider value={overmind}>
-      <ProvideRouter router={router}>
+      <ProvideRouter routes={routes}>
         <ThemeProvider themes={themes} defaultTheme="light">
           <QueryClientProvider client={queryClient}>
             <AppPortalProvider>
-              <App />
+              <Suspense fallback={null}>
+                <RouterToOmEffect />
+                <RouterPauseEffect />
+                <App />
+              </Suspense>
             </AppPortalProvider>
           </QueryClientProvider>
         </ThemeProvider>
       </ProvideRouter>
     </Provider>
   )
+}
+
+let done = null
+const doneRouting = wrapPromise(
+  new Promise((res) => {
+    done = res
+  })
+)
+
+const RouterPauseEffect = () => {
+  console.log('effect1')
+  doneRouting.read()
+  console.log('effect2')
+  return null
+}
+
+const RouterToOmEffect = () => {
+  const router = useRouter()
+  const om = useOvermind()
+
+  useLayoutEffect(() => {
+    router.onRouteChange((item) => {
+      om.actions.home.handleRouteChange(item)
+      done()
+    })
+  }, [])
+
+  return null
+}
+
+function wrapPromise(promise: Promise<any>) {
+  let status = 'pending'
+  let response
+
+  const suspender = promise.then(
+    (res) => {
+      status = 'success'
+      response = res
+    },
+    (err) => {
+      status = 'error'
+      response = err
+    }
+  )
+
+  const read = () => {
+    switch (status) {
+      case 'pending':
+        console.log('throwing')
+        throw suspender
+      case 'error':
+        throw response
+      default:
+        return response
+    }
+  }
+
+  return { read }
 }

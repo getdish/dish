@@ -1,3 +1,4 @@
+import { useRouterCurPage } from '@dish/router'
 import { Store, useStore } from '@dish/use-store'
 import { capitalize } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -94,7 +95,7 @@ export const LoginRegisterForm = ({
   const om = useOvermind()
   const isLoggedIn = om.state.user.isLoggedIn
   const store = useStore(AuthFormStore)
-  const curPageName = om.state.router.curPage.name
+  const curPageName = useRouterCurPage().name
   let defaultFormPage = Object.keys(form_page_details).includes(curPageName)
     ? curPageName
     : 'login'
