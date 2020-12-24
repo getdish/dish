@@ -17,7 +17,7 @@ import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
 import { PrivateRoute, Route, RouteSwitch } from './views/router/Route'
 
-export default function App() {
+export function App() {
   return (
     <>
       <ToastRoot />

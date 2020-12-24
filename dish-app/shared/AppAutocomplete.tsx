@@ -171,16 +171,9 @@ const HomeAutoCompleteContents = memo(
 
 const AutocompleteContentsInner = memo(
   ({ isLoading }: { isLoading: boolean }) => {
-    const drawerStore = useStore(BottomDrawerStore)
     const om = useOvermind()
-    const { showAutocomplete } = om.state.home
     const media = useMedia()
     const theme = useTheme()
-    const showLocation = showAutocomplete == 'location'
-    const hideAutocomplete = useDebounce(
-      () => om.actions.home.setShowAutocomplete(false),
-      200
-    )
     const top = media.sm ? searchBarHeight : 0
 
     const content = (
@@ -201,20 +194,6 @@ const AutocompleteContentsInner = memo(
           height="100%"
           position="relative"
           pointerEvents="auto"
-          {...(!media.sm && {
-            maxWidth: 640,
-            maxHeight: `calc(100vh - ${top + 20}px)`,
-            // @ts-ignore
-            onMouseLeave: () => {
-              if (curPagePos.y > top) {
-                hideAutocomplete()
-              }
-            },
-            // @ts-ignore
-            onMouseEnter: () => {
-              hideAutocomplete.cancel()
-            },
-          })}
         >
           <VStack
             width="100%"
@@ -227,7 +206,7 @@ const AutocompleteContentsInner = memo(
               position="relative"
               width="100%"
               height="100%"
-              backgroundColor={theme.backgroundColor}
+              backgroundColor={theme.backgroundColorTranslucent}
               minHeight={200}
               padding={5}
               borderRadius={media.sm ? 0 : 10}
@@ -237,9 +216,10 @@ const AutocompleteContentsInner = memo(
               }}
             >
               <CloseButton
+                size={20}
                 position="absolute"
-                top={6}
-                right={6}
+                top={14}
+                right={14}
                 onPressOut={prevent}
                 zIndex={1000}
                 onPress={(e) => {

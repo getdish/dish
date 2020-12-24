@@ -4,6 +4,7 @@ import { isWeb } from '../constants'
 import { OVERMIND_MUTATIONS } from '../overmindMutations'
 import { addTagsToCache } from './allTags'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './localTags'
+import { router } from './router'
 
 const LOG_OVERMIND = process.env.NODE_ENV === 'development' || !isWeb
 
@@ -32,6 +33,10 @@ export const onInitialize: OnInitialize = async (
   }
 
   addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
+
+  router.onRouteChange((item) => {
+    actions.home.handleRouteChange(item)
+  })
 
   actions.user.checkForExistingLogin()
   actions.home.updateCurrentMapAreaInformation()

@@ -20,7 +20,7 @@ import { Route } from './views/router/Route'
 
 LogBox.ignoreAllLogs(true)
 
-export default function App() {
+export function App() {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {

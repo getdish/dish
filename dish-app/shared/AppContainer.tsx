@@ -9,6 +9,7 @@ import {
   useTheme,
 } from 'snackui'
 
+import AppAutocomplete from './AppAutocomplete'
 import { AppSmallDrawer } from './AppSmallDrawer'
 import { searchBarHeight, zIndexDrawer } from './constants'
 import { useAppDrawerWidth } from './hooks/useAppDrawerWidth'
@@ -62,10 +63,9 @@ const HomeContainerLarge = (props) => {
       top={0}
       pointerEvents="none"
       alignItems="flex-end"
-      className={media.sm ? 'invisible untouchable' : ''}
     >
       <HStack
-        pointerEvents={media.sm ? 'none' : 'auto'}
+        pointerEvents="auto"
         position="absolute"
         top={0}
         bottom={0}
@@ -86,11 +86,10 @@ const HomeContainerLarge = (props) => {
           marginLeft="auto"
           position="relative"
           opacity={1}
-          {...(media.sm && {
-            opacity: 0,
-            pointerEvents: 'none',
-          })}
         >
+          <AbsoluteVStack left={0} right={0} bottom={0} top={searchBarHeight}>
+            <AppAutocomplete />
+          </AbsoluteVStack>
           {props.children}
         </VStack>
       </HStack>

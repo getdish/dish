@@ -5,6 +5,7 @@ export type MyThemes = typeof themes
 
 const dark = {
   backgroundColorTransparent: 'rgba(0,0,0,0)',
+  backgroundColorTranslucent: 'rgba(0,0,0,0.9)',
   backgroundColor: '#111',
   backgroundColorSecondary: '#222',
   backgroundColorTertiary: '#333',
@@ -16,6 +17,7 @@ const dark = {
 }
 
 const light: MyTheme = {
+  backgroundColorTranslucent: 'rgba(255,255,255,0.95)',
   backgroundColorTransparent: 'rgba(255,255,255,0)',
   backgroundColor: '#fff',
   backgroundColorSecondary: '#f2f2f2',

@@ -3,7 +3,9 @@ module.exports = function (api) {
   const isSSR = process.env.TARGET === 'ssr'
   const isLegacy = process.env.LEGACY === '1'
 
-  api.cache.using(() => `${process.env.NODE_ENV}${process.env.TARGET}`)
+  api.cache.using(
+    () => `${process.env.NODE_ENV}${process.env.TARGET}${process.env.LEGACY}`
+  )
 
   return {
     plugins: [
