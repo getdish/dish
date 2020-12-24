@@ -82,6 +82,8 @@
       "react-reparenting/**",
       "react-ssr-prepass",
       "react-ssr-prepass/**",
+      "react-fetch",
+      "react-fetch/**",
       "react-storage-hooks",
       "react-storage-hooks/**",
       "expo-linear-gradient",

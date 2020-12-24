@@ -705,12 +705,6 @@ const pushHomeState: AsyncAction<
     }
   }
 
-  if (process.env.NODE_ENV === 'development') {
-    console.groupCollapsed('pushHomeState')
-    console.log(JSON.stringify(finalState, null, 2))
-    console.groupEnd()
-  }
-
   om.actions.home.updateHomeState(finalState)
 
   if (!om.state.home.started) {
@@ -983,9 +977,7 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     om.state.home.isOptimisticUpdating = false
   }
 
-  console.warn('home.navigate', navState, nextState)
-
-  const didNav = await syncStateToRoute(om, nextState)
+  const didNav = await om.actions.home.syncStateToRoute(nextState)
   if (curNav !== lastNav) return false
   om.actions.home.updateActiveTags(nextState)
   return didNav
@@ -1071,12 +1063,6 @@ const syncStateToRoute: AsyncAction<HomeStateTagNavigable, boolean> = async (
       recentTries = 0
     }, 200)
     const navItem = getNavigateItemForState(om, state)
-    if (process.env.NODE_ENV === 'development') {
-      console.log(
-        'syncStateToRoute',
-        cloneDeep({ should, navItem, state, recentTries })
-      )
-    }
     router.navigate(navItem)
     return true
   }
