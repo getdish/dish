@@ -1,4 +1,9 @@
-import { Store, useStore, useStoreInstance } from '@dish/use-store'
+import {
+  Store,
+  UseStoreOptions,
+  useStore,
+  useStoreInstance,
+} from '@dish/use-store'
 import { createBrowserHistory, createMemoryHistory } from 'history'
 import * as React from 'react'
 import { createContext, useContext } from 'react'
@@ -349,16 +354,29 @@ export function ProvideRouter(props: ProvideRouterProps) {
   )
 }
 
-export function useRouter() {
+export function useRouter(options?: UseStoreOptions<Router, any>) {
   const router = useContext(RouterContext)
   if (!router) {
     throw new Error(`Must <ProvideRouter /> above this component`)
   }
-  return useStoreInstance(router)
+  return useStoreInstance(router, options)
+}
+
+export function useRouterSelector<Selection>(
+  selector: (a: Router) => Selection
+): Selection {
+  const router = useContext(RouterContext)
+  if (!router) {
+    throw new Error(`Must <ProvideRouter /> above this component`)
+  }
+  // @ts-expect-error
+  return useStoreInstance(router, {
+    selector,
+  })
 }
 
 // we could enable functionality like this
-export type LoadableView = React.SFC & {
+export type LoadableView = React.FunctionComponent & {
   fetchData: (params: HistoryItem) => Promise<any>
 }
 

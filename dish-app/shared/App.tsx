@@ -1,6 +1,6 @@
 import loadable from '@loadable/component'
 import React, { Suspense, memo, useEffect } from 'react'
-import { VStack } from 'snackui'
+import { LoadingItems, ToastRoot, VStack } from 'snackui'
 
 import { AppContainer } from './AppContainer'
 import { AppIntroLetter } from './AppIntroLetter'
@@ -10,11 +10,36 @@ import { AppMenuButton } from './AppMenuButton'
 import { AppSearchBarFloating } from './AppSearchBar'
 import { AppStackView } from './AppStackView'
 import { isSSR } from './constants'
+import AdminPage from './pages/admin/AdminPage'
 import { PagesStackView } from './pages/PagesStackView'
+import { Shortcuts } from './Shortcuts'
 import { ErrorBoundary } from './views/ErrorBoundary'
-import { Route } from './views/router/Route'
+import { NotFoundPage } from './views/NotFoundPage'
+import { PrivateRoute, Route, RouteSwitch } from './views/router/Route'
 
-export default memo(function App() {
+export default function App() {
+  return (
+    <>
+      <ToastRoot />
+      <Shortcuts />
+      <Suspense fallback={<LoadingItems />}>
+        <RouteSwitch>
+          <Route name="notFound">
+            <NotFoundPage title="404 Not Found" />
+          </Route>
+          <PrivateRoute name="admin">
+            <AdminPage />
+          </PrivateRoute>
+          <Route name="home">
+            <AppMain />
+          </Route>
+        </RouteSwitch>
+      </Suspense>
+    </>
+  )
+}
+
+const AppMain = memo(function AppMain() {
   // helper that warns on root level unmounts (uncaught suspense)
   if (process.env.NODE_ENV === 'development') {
     useEffect(() => {

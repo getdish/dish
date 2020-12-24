@@ -708,7 +708,9 @@ const pushHomeState: AsyncAction<
   }
 
   if (process.env.NODE_ENV === 'development') {
-    console.log('pushHomeState', JSON.stringify(finalState, null, 2))
+    console.groupCollapsed('pushHomeState')
+    console.log(JSON.stringify(finalState, null, 2))
+    console.groupEnd()
   }
 
   om.actions.home.updateHomeState(finalState)

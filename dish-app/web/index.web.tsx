@@ -30,7 +30,6 @@ const ROOT = document.getElementById('root')
 AppRegistry.registerComponent('dish', () => Root)
 
 async function start() {
-  console.log('startin')
   await startOvermind()
 
   if (IS_CONCURRENT) {

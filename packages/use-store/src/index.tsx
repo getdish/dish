@@ -12,11 +12,17 @@ const useMutableSource = React.unstable_useMutableSource
 
 export * from './Store'
 
+export type UseStoreSelector<Store, Res> = (store: Store) => Res
+export type UseStoreOptions<Store, SelectorRes> = {
+  selector?: UseStoreSelector<Store, SelectorRes>
+  once?: boolean
+}
+
 // the main hook
 export function useStore<A extends Store<B>, B>(
   StoreKlass: new (props: B) => A | (new () => A),
   props?: B,
-  options: { selector?: any; once?: boolean } = defaultOptions
+  options: UseStoreOptions<A, any> = defaultOptions
 ): A {
   const cachedSelector = options.selector
     ? useCallback(options.selector, [])
@@ -37,7 +43,7 @@ export function useStore<A extends Store<B>, B>(
 // (either set up as global singleton, or provided through context)
 export function useStoreInstance<A extends Store<B>, B>(
   StoreInstance: A,
-  options: { selector?: any; once?: boolean } = defaultOptions
+  options: UseStoreOptions<A, any> = defaultOptions
 ): A {
   return useStore(
     // @ts-expect-error

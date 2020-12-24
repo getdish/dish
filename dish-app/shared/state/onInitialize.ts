@@ -22,7 +22,9 @@ export const onInitialize: OnInitialize = async (
     overmind.eventHub.on('action:start' as any, (execution) => {
       const name = `🕉 om.${execution.actionName}`
       if (typeof execution.value !== 'undefined') {
-        console.log(name, execution.value)
+        console.groupCollapsed(name)
+        console.log(JSON.stringify(execution.value, null, 2))
+        console.groupEnd()
       } else {
         console.log(name)
       }

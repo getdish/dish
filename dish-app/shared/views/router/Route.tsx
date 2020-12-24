@@ -1,4 +1,5 @@
-import { useRouter } from '@dish/router'
+import { useRouterSelector } from '@dish/router'
+import { Store } from '@dish/use-store'
 import React, {
   createContext,
   useContext,
@@ -9,6 +10,7 @@ import React, {
 } from 'react'
 import { useForceUpdate } from 'snackui'
 
+import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { routePathToName, router, routes } from '../../state/router.1'
 import { useOvermind } from '../../state/useOvermind'
 
@@ -21,6 +23,8 @@ type RouteContextI = {
 }
 
 const RouteContext = createContext<RouteContextI | null>(null)
+
+class RouteSwitchStore extends Store {}
 
 export function RouteSwitch(props: { children: any }) {
   const children = React.Children.toArray(props.children)
@@ -88,8 +92,7 @@ export function RouteSwitch(props: { children: any }) {
 }
 
 export function Route(props: { name: string; exact?: boolean; children: any }) {
-  const router = useRouter()
-  const activeName = router.curPage.name
+  const activeName = useRouterSelector((router) => router.curPage.name)
   const stateRef = useRef<RouteState>('active')
   const forceUpdate = useForceUpdate()
   const routeContext = useContext(RouteContext)
@@ -145,8 +148,8 @@ export function Route(props: { name: string; exact?: boolean; children: any }) {
     return content
   })()
 
-  console.log('rendering <Route />', props.name, stateRef.current, children)
-  return children
+  // during collect dont render null to prevent unecessary unmounts
+  return useLastValueWhen(() => children, stateRef.current === 'collect')
 }
 
 function getChildren(children: Function | any) {

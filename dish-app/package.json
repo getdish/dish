@@ -48,8 +48,6 @@
       "mapbox-gl/**",
       "overmind",
       "overmind/**",
-      "overmind-react",
-      "overmind-react/**",
       "query-string",
       "query-string/**",
       "react",

@@ -431,7 +431,7 @@ const AppMapContent = memo(function AppMap({
           borderBottomRightRadius={12}
           overflow="hidden"
         >
-          {/* <MapView
+          <MapView
             center={center}
             span={span}
             padding={padding}
@@ -448,7 +448,7 @@ const AppMapContent = memo(function AppMap({
             onHover={handleHover}
             onSelect={handleSelect}
             onSelectRegion={handleSelectRegion}
-          /> */}
+          />
         </VStack>
       </HStack>
     </HStack>

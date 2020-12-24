@@ -16,8 +16,6 @@ export const AppIntroLetter = memo(() => {
   const om = useOvermind()
   const [closes, setCloses] = useLocalStorageState('modal-intro-closes', 0)
 
-  console.log('closes', closes)
-
   const hasOnboarded = om.state.user.user?.has_onboarded
   const isLoggedIn = om.state.user.isLoggedIn
   const store = useStore(IntroModal)
