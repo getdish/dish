@@ -1,4 +1,4 @@
-import { useRouterSelector } from '@dish/router'
+import { useRouter, useRouterSelector } from '@dish/router'
 import { Store } from '@dish/use-store'
 import React, {
   createContext,
@@ -93,6 +93,7 @@ export function RouteSwitch(props: { children: any }) {
 
 export function Route(props: { name: string; exact?: boolean; children: any }) {
   const activeName = useRouterSelector((router) => router.curPage.name)
+  console.log('is', activeName)
   const stateRef = useRef<RouteState>('active')
   const forceUpdate = useForceUpdate()
   const routeContext = useContext(RouteContext)

@@ -27,7 +27,7 @@ export function RecoilStoreRouterTest1() {
 
 function Component1() {
   const router = useRouter()
-  console.log('NOW AT', router.curPage.name, router.stack, router.stackIndex)
+  // console.log('NOW AT', router.curPage.name, router.stack, router.stackIndex)
   return (
     <>
       <div id="curPageName">{router.curPage.name}</div>
