@@ -1,7 +1,7 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 import { fullyIdle, series } from '@dish/async'
-import { isHasuraLive, isStaging, slugify } from '@dish/graph'
+import { isDev, isStaging, slugify } from '@dish/graph'
 import { useStore } from '@dish/use-store'
 import { produce } from 'immer'
 import _, { isEqual, sortBy, throttle } from 'lodash'
@@ -35,7 +35,7 @@ const MARTIN_TILES_HOST = (() => {
   const staging = 'https://martin-tiles-staging.dishapp.com'
   const dev = 'http://localhost:3005'
   if (isStaging) return staging
-  if (isHasuraLive) return dev
+  if (isDev) return dev
   return prod
 })()
 

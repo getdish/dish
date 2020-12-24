@@ -12,6 +12,8 @@ export const isStaging =
   process.env.NODE_ENV === 'staging' ||
   (!isNode && window.location?.hostname.includes('staging'))
 
+export const isDev = !isHasuraLive && !isDevProd && !isStaging
+
 export const isNative = process.env.TARGET === 'native'
 export const isWorker =
   typeof document !== 'undefined' && !document.getElementById('root')

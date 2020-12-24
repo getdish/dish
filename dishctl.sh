@@ -296,6 +296,28 @@ function local_node_with_prod_env() {
     $1
 }
 
+function staging_ports_tunnel() {
+  ssh \
+    -L 15432:localhost:5432 \
+    -L 15433:localhost:5433 \
+    root@ssh.staging.dishapp.com
+}
+
+# NB this needs the function `staging_ports_tunnel` to have been run
+function local_node_with_staging_env() {
+  export DISH_DEBUG=1
+  export RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
+  export PGPORT=15432
+  export PGPASSWORD=postgres
+  export TIMESCALE_PORT=15433
+  export TIMESCALE_PASSWORD=postgres
+  export HASURA_ENDPOINT=https://hasura-staging.dishapp.com
+  export HASURA_SECRET="$TF_VAR_HASURA_GRAPHQL_ADMIN_SECRET"
+  node \
+    --max-old-space-size=4096 \
+    $1
+}
+
 function dish_app_generate_tags() {
   export HASURA_ENDPOINT=https://hasura-staging.dishapp.com
   export HASURA_SECRET="password"
@@ -373,13 +395,20 @@ restore_latest_main_backup_to_local() {
   cat "$dump_file" | PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5432 -d dish
 }
 
+restore_latest_scrapes_backup_to_local() {
+  latest_backup=$(get_latest_scrape_backup)
+  dump_file="/tmp/latest_scrape_backup.dump"
+  s3 get "$latest_backup" "$dump_file"
+  cat "$dump_file" | PGPASSWORD=postgres pg_restore -h localhost -U postgres -p 5433 -d dish
+}
+
 get_latest_scrape_backup() {
   echo $(
     s3 ls $DISH_BACKUP_BUCKET \
+      | grep "dish-scrape-backup" \
       | tail -1 \
-      | awk '{ print $4 }' \
-      | grep "dish-scrape-backup"
-    )
+      | awk '{ print $4 }'
+  )
 }
 
 function _restore_main_backup() {
@@ -1004,22 +1033,6 @@ function bert_sentiment() {
   curl "$url"
 }
 
-function setup_staging_droplet() {
-  apt-get update
-  curl -fsSL https://get.docker.com | sh
-  apt-get install -y docker-compose git-crypt postgresql-client tmux s3cmd
-  curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
-  curl https://raw.githubusercontent.com/jwilder/nginx-proxy/master/nginx.tmpl > nginx.tmpl
-  # rsync -avP --filter=':- .gitignore' . root@staging.dishapp.com:/app
-  # Install gcloud sdk: https://cloud.google.com/sdk/docs/install
-  cd /app
-  ./dishctl.sh dish_docker_login
-  mkdir -p ~/.dish/postgres
-  chown 1001:1001 -R ~/.dish/postgres
-  docker-compose up -d
-  docker-compose logs
-}
-
 function docker_compose_up_for_devs() {
   extra=$1
   services=$(
@@ -1028,7 +1041,19 @@ function docker_compose_up_for_devs() {
       | tr '\r\n' ' '
   )
   echo "Starting the following services: $services"
-  eval $(./dishctl.sh yaml_to_env) docker-compose up "$extra" $services
+  export HASURA_GRAPHQL_ADMIN_SECRET=password
+  docker-compose up "$extra" $services
+}
+
+function staging_ssh() {
+  ssh root@ssh.staging.dishapp.com \
+    -t \
+    -i $PROJECT_ROOT/k8s/etc/ssh/dish-staging.priv \
+    'tmux attach'
+}
+
+function sync_local_code_to_staging() {
+  rsync -avP --filter=':- .gitignore' . root@ssh.staging.dishapp.com:/app
 }
 
 if command -v git &> /dev/null; then
