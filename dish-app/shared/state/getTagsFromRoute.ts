@@ -7,7 +7,7 @@ import { SPLIT_TAG, SPLIT_TAG_TYPE } from './SPLIT_TAG'
 import { TagWithNameAndType } from './TagWithNameAndType'
 
 export const getTagsFromRoute = async (
-  item: HistoryItem<'userSearch'>
+  item: HistoryItem<'search'>
 ): Promise<FullTag[]> => {
   const tags: FullTag[] = []
   if (!item?.params) {

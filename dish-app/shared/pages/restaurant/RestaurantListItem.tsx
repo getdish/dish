@@ -426,10 +426,11 @@ const RestaurantListItemContent = memo(
                       contents={`Rating Breakdown (${totalReviews} reviews)`}
                     >
                       <SmallButton
-                        name="restaurantReviews"
+                        name="restaurant"
                         params={{
                           id: props.restaurantId,
                           slug: props.restaurantSlug,
+                          section: 'reviews',
                         }}
                         before={
                           <MessageSquare

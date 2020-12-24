@@ -30,7 +30,7 @@ export const routes: RoutesTableI = {
   restaurantHours: new Route<{ slug: string }>('/restaurant/:slug/hours'),
   restaurant: new Route<{
     slug: string
-    section?: string
+    section?: 'reviews'
     sectionSlug?: string
   }>('/restaurant/:slug/:section?/:sectionSlug?'),
 

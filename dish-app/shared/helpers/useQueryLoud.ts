@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import {
   QueryFunction,
   QueryKey,
+  QueryObserverResult,
   UseQueryOptions,
   UseQueryResult,
   useQuery,
@@ -18,11 +19,22 @@ export function useQueryLoud<
   queryKey: QueryKey,
   queryFn: QueryFunction<TQueryFnData | TData>,
   options?: UseQueryOptions<TData, TError, TQueryFnData>
-): UseQueryResult<TData, TError> {
+): QueryObserverResult<TQueryFnData, TError> {
   const res = useQuery(queryKey, queryFn, options)
+
+  if (process.env.NODE_ENV === 'development') {
+    useEffect(() => {
+      if (res.status === 'success') {
+        console.groupCollapsed(`🔦 ${queryKey.slice(0, 50)}`)
+        console.log(res.data)
+        console.groupEnd()
+      }
+    }, [res.data])
+  }
 
   useEffect(() => {
     if (!res.error) return
+    console.error(res.error)
     Toast.show(`Fetch error: ${res.error}`)
   }, [res.error])
 

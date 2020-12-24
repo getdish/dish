@@ -243,23 +243,22 @@ const runSearch: AsyncAction<{
   searchQuery?: string
   quiet?: boolean
   force?: boolean
-} | void> = async (om, opts) => {
+}> = async (om, opts) => {
   opts = opts || { quiet: false }
   lastSearchAt = Date.now()
   let curId = lastSearchAt
 
   const curState = om.state.home.currentState
   const searchQuery = opts.searchQuery ?? curState.searchQuery ?? ''
+  const navItem = {
+    state: {
+      ...curState,
+      searchQuery,
+    },
+  }
 
-  if (
-    await om.actions.home.navigate({
-      state: {
-        ...curState,
-        searchQuery,
-      },
-    })
-  ) {
-    console.log('did nav from search')
+  if (await om.actions.home.navigate(navItem)) {
+    console.log('did nav from search', navItem)
     // nav will trigger search
     return
   }
@@ -619,16 +618,7 @@ const pushHomeState: AsyncAction<
         type: 'search',
         status: 'loading',
         results: [],
-        region: prev.region,
-        // @nate testing disabling
-        // if we have a previous existing one thats valid, use it
-        // ...(prev.type === 'search' &&
-        //   getBreadcrumbs(om.state.home.states).some(
-        //     (x) => x.id === prev.id
-        //   ) && {
-        //     status: prev.status,
-        //     results: prev.results,
-        //   }),
+        region: router.curPage.params.region ?? prev.region,
         username,
         activeTags: prev.activeTags ?? {},
         center: prev.mapAt?.center ?? prev.center,

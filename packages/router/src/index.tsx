@@ -227,13 +227,6 @@ export class Router extends Store<RouterProps> {
       this.normalize(historyItem.params),
       this.normalize(this.curPage.params)
     )
-    console.log(
-      'wahts the diff',
-      historyItem.params,
-      this.normalize(historyItem.params),
-      this.curPage.params,
-      this.normalize(this.curPage.params)
-    )
     return !sameName || !sameParams
   }
 
@@ -289,11 +282,11 @@ export class Router extends Store<RouterProps> {
     // object to path
     let route = this.routes[name]
     if (!route) {
-      console.debug(`no route`, name, this.routes)
+      console.log(`no route`, name, this.routes)
       return ``
     }
     if (!route.path) {
-      console.debug(`no route path`, route, name, this.routes)
+      console.log(`no route path`, route, name, this.routes)
       return ``
     }
     let path = route.path
