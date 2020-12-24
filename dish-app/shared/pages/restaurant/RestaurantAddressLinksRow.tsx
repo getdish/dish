@@ -33,6 +33,7 @@ export const RestaurantAddressLinksRow = memo(
     }) => {
       const restaurant = useRestaurantQuery(restaurantSlug)
       const fontSize = size == 'lg' ? 16 : 14
+      const iconSize = size === 'lg' ? 18 : 16
 
       const linkElements = (
         <ScrollView
@@ -47,7 +48,7 @@ export const RestaurantAddressLinksRow = memo(
                 tooltip="Menu"
                 href={restaurant.website ?? ''}
               >
-                <AlignCenter size={16} />
+                <AlignCenter size={iconSize} />
               </SmallButton>
             )}
             {!!restaurant.telephone && (
@@ -56,7 +57,7 @@ export const RestaurantAddressLinksRow = memo(
                 tooltip="Call"
                 href={`tel:${restaurant.telephone}`}
               >
-                <PhoneCall size={16} />
+                <PhoneCall size={iconSize} />
               </SmallButton>
             )}
             {!!restaurant.website && (
@@ -65,7 +66,7 @@ export const RestaurantAddressLinksRow = memo(
                 tooltip="Website"
                 href={restaurant.website ?? ''}
               >
-                <Link2 size={16} />
+                <Link2 size={iconSize} />
               </SmallButton>
             )}
             {/* <RestaurantDeliveryButtons

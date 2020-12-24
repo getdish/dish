@@ -268,8 +268,9 @@ const RestaurantListItemContent = memo(
         />
 
         {tagIds && (
-          <AbsoluteVStack top={34} left={-12} zIndex={2000000}>
+          <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
             <RestaurantUpVoteDownVote
+              rounded
               score={Math.round((meta?.effective_score ?? 0) / 10)}
               restaurantSlug={restaurantSlug}
               activeTags={tagIds}

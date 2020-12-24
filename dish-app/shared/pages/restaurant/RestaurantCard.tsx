@@ -124,7 +124,11 @@ export const RestaurantCardContent = memo(
                 zIndex={10}
               >
                 <AbsoluteVStack top={-10} left={-10} zIndex={20}>
-                  <RestaurantUpVoteDownVote restaurantSlug={restaurantSlug} />
+                  <RestaurantUpVoteDownVote
+                    rounded
+                    display="ratio"
+                    restaurantSlug={restaurantSlug}
+                  />
                 </AbsoluteVStack>
 
                 <VStack

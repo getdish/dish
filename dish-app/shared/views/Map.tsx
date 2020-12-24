@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet, useTheme } from 'snackui'
 
-import { green, lightGreen } from '../colors'
+import { blue, green, lightGreen } from '../colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { tagLenses } from '../state/localTags'
@@ -735,7 +735,7 @@ function setupMapEffect({
             'circle-radius': [
               'case',
               ['boolean', ['feature-state', 'hover'], false],
-              25,
+              13,
               10,
             ],
 
@@ -784,8 +784,8 @@ function setupMapEffect({
           type: 'circle',
           filter: ['==', 'id', ''],
           paint: {
-            'circle-radius': 20,
-            'circle-color': 'red',
+            'circle-radius': 12,
+            'circle-color': blue,
             // 'icon-allow-overlap': true,
             // 'icon-ignore-placement': true,
             // 'icon-size': 0.25,
