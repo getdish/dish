@@ -18,6 +18,7 @@ import {
   useDebounceValue,
   useGet,
   useMedia,
+  useTheme,
 } from 'snackui'
 
 import { BottomDrawerStore } from './BottomDrawerStore'
@@ -28,6 +29,7 @@ import { getWindowHeight } from './helpers/getWindow'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { useRestaurantQuery } from './hooks/useRestaurantQuery'
+import { ensureFlexText } from './pages/restaurant/ensureFlexText'
 import { findLastHomeOrSearch } from './state/home'
 import { isRestaurantState } from './state/home-helpers'
 import { Region } from './state/home-types'
@@ -35,6 +37,11 @@ import { omStatic } from './state/omStatic'
 import { router } from './state/router'
 import { useOvermind } from './state/useOvermind'
 import { MapView } from './views/Map'
+
+const styles = {
+  light: 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy',
+  dark: 'mapbox://styles/nwienert/ck68dg2go01jb1it5j2xfsaja',
+}
 
 export default memo(function AppMap() {
   const [restaurants, setRestaurantsFast] = useState<Restaurant[]>([])
@@ -45,7 +52,7 @@ export default memo(function AppMap() {
   const setRestaurants = useDebounce(setRestaurantsFast, 150)
   const setRestaurantDetail = useDebounce(setRestaurantDetailFast, 150)
 
-  console.log('📍', { restaurants, restaurantDetail })
+  console.log('🗺.render', { restaurants, restaurantDetail })
 
   return (
     <>
@@ -248,7 +255,7 @@ const AppMapContent = memo(function AppMap({
       },
       (spanCenter) => {
         const { span, center } = JSON.parse(spanCenter)
-        console.log('got new center/span', center, span)
+        console.log('🗺 position', { center, span })
         setState({
           span,
           center,
@@ -401,6 +408,9 @@ const AppMapContent = memo(function AppMap({
     updateRegion(region)
   }, [])
 
+  const theme = useTheme()
+  const themeName = theme.backgroundColor === '#fff' ? 'light' : 'dark'
+
   return (
     <HStack
       position="absolute"
@@ -411,14 +421,7 @@ const AppMapContent = memo(function AppMap({
       <HStack height="100%" maxWidth={pageWidthMax} width="100%">
         {!media.sm && (
           <VStack height="100%" flex={2}>
-            <Text>
-              Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
-              Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
-              Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
-              Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
-              Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem Lorem
-              Lorem Lorem Lorem Lorem Lorem Lorem Lorem{' '}
-            </Text>
+            {ensureFlexText}
           </VStack>
         )}
         <VStack
@@ -433,6 +436,7 @@ const AppMapContent = memo(function AppMap({
         >
           <MapView
             center={center}
+            style={styles[themeName]}
             span={span}
             padding={padding}
             features={features}

@@ -41,9 +41,7 @@ async function testSimpleStore(id: number) {
 
 // be sure ids are not same across tests...
 
-type RR = RenderResult<
-  typeof import('/Users/n8/dish/node_modules/@testing-library/dom/types/queries')
->
+type RR = RenderResult<typeof import('@testing-library/dom/types/queries')>
 
 const getLastByTitle = (rr: RR, name: string) => last(rr.getAllByTitle(name))!
 const findTitle = (rr: RR, title: string) => getLastByTitle(rr, title).innerHTML
