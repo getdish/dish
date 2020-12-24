@@ -1,3 +1,4 @@
+const WebpackPwaManifest = require('webpack-pwa-manifest')
 const LodashPlugin = require('lodash-webpack-plugin')
 const LoadablePlugin = require('@loadable/webpack-plugin')
 const { DuplicatesPlugin } = require('inspectpack/plugin')
@@ -294,6 +295,20 @@ module.exports = function getWebpackConfig(
           inject: true,
           favicon: 'web/favicon.png',
           template: path.join(__dirname, 'web/index.html'),
+        }),
+
+        new WebpackPwaManifest({
+          name: 'Dish',
+          short_name: 'Dish',
+          description: 'Real World Pokedex',
+          background_color: '#000',
+          crossorigin: 'use-credentials',
+          icons: [
+            {
+              src: path.resolve('web/icon.png'),
+              sizes: [96, 128, 192],
+            },
+          ],
         }),
 
         !!process.env.INSPECT &&

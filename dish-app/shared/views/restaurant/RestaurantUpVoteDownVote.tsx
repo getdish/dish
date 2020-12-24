@@ -67,12 +67,9 @@ const RestaurantUpVoteDownVoteContents = memo(
     const restaurant = useRestaurantQuery(restaurantSlug)
     const { vote, setVote } = useUserTagVotes(restaurantSlug, activeTags)
 
-    ratio = ratio ?? restaurantRatio(restaurant)
+    ratio = Math.round(ratio ?? restaurantRatio(restaurant))
     score =
-      score ??
-      (display === 'ratio'
-        ? Math.round(restaurant.rating * 20)
-        : Math.round(restaurant.score) + vote)
+      display === 'ratio' ? ratio : score ?? Math.round(restaurant.score) + vote
 
     return (
       <VStack pointerEvents="auto" position="relative">
