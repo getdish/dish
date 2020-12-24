@@ -548,10 +548,11 @@ function setupMapEffect({
         let curId
         const handleMoveThrottled = throttle(() => {
           const zoom = map.getZoom()
-          const size = {
-            width: map.getContainer().clientWidth,
-            height: map.getContainer().clientHeight,
-          }
+          const { padding } = getProps()
+          const width = map.getContainer().clientWidth - padding.right
+          const height = map.getContainer().clientHeight - padding.bottom
+          const x = width / 2 + padding.left
+          const y = height / 2 + padding.top
           let layerName = ''
           for (const tile of tiles) {
             if (zoom > tile.minZoom && zoom < tile.maxZoom) {
@@ -560,13 +561,11 @@ function setupMapEffect({
             }
           }
           if (!layerName) return
-          const features = map.queryRenderedFeatures(
-            new mapboxgl.Point(size.width / 2, size.height / 2),
-            {
-              layers: [`${layerName}.fill`],
-            }
-          )
+          const features = map.queryRenderedFeatures(new mapboxgl.Point(x, y), {
+            layers: [`${layerName}.fill`],
+          })
           const feature = features[0]
+          console.log('got feature at', feature, x, y)
           if (!feature) return
           if (feature.id === curId) return
 

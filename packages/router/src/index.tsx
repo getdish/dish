@@ -215,6 +215,9 @@ export class Router extends Store<RouterProps> {
       }
     }
     this.routeChangeListeners.add(cb)
+    return () => {
+      this.routeChangeListeners.delete(cb)
+    }
   }
 
   getShouldNavigate(navItem: NavigateItem) {

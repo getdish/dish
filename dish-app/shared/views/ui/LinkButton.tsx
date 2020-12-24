@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { HStack, Text } from 'snackui'
 
 import { omStatic } from '../../state/omStatic'
-import { RoutesTable } from '../../state/router'
+import { RoutesTable, router } from '../../state/router'
 import { isStringChild } from './isStringChild'
 import { LinkButtonProps } from './LinkProps'
 import { useLink } from './useLink'
@@ -35,7 +35,9 @@ export function LinkButton<
   } = props
 
   useEffect(() => {
-    if (!props.enableActiveStyle) return
+    if (!props.enableActiveStyle) {
+      return
+    }
     if (props.name) {
       let last = false
       const check = (val: string) => {
@@ -44,8 +46,10 @@ export function LinkButton<
         setIsActive(match)
         last = match
       }
-      check(omStatic.state.router.curPageName)
-      return omStatic.reaction((state) => state.router.curPageName, check)
+      check(router.curPage.name)
+      return router.onRouteChange(() => {
+        check(router.curPage.name)
+      })
     }
   }, [props.name])
 
