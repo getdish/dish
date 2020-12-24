@@ -258,6 +258,7 @@ const AppMapContent = memo(
         (spanCenter) => {
           const { span, center } = JSON.parse(spanCenter)
           console.log('🗺 position', { center, span })
+          updateRegion.cancel()
           setState({
             span,
             center,
@@ -310,6 +311,7 @@ const AppMapContent = memo(
 
     const handleMoveEnd = useCallback(
       ({ center, span }) => {
+        updateRegion.cancel()
         if (
           media.sm &&
           (drawerStore.isDragging || drawerStore.snapIndex === 0)
@@ -373,6 +375,7 @@ const AppMapContent = memo(
     }, [])
 
     const handleSelect = useCallback((id: string) => {
+      updateRegion.cancel()
       const restaurants = getRestaurants()
       const restaurant = restaurants?.find((x) => x.id === id)
       if (!restaurant) {
@@ -410,7 +413,7 @@ const AppMapContent = memo(
         console.log('no region slug', region)
         return
       }
-
+      updateRegion.cancel()
       updateRegion(region)
     }, [])
 

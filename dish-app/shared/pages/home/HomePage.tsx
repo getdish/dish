@@ -2,6 +2,7 @@ import { fullyIdle, series } from '@dish/async'
 import {
   LngLat,
   RestaurantOnlyIds,
+  SEARCH_DOMAIN,
   TopCuisine,
   getHomeDishes,
   graphql,
@@ -31,6 +32,7 @@ import { DishHorizonView } from '../../DishHorizonView'
 import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
+import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
 import { HomeStateItemHome } from '../../state/home-types'
@@ -93,9 +95,7 @@ export default memo(function HomePage(props: Props) {
   const om = useOvermind()
   const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
-
   console.log('props.item.region', props.item.region)
-
   const region = useRegionQuery(props.item.region, {
     enabled: !!props.item.region,
   })
@@ -128,6 +128,7 @@ export default memo(function HomePage(props: Props) {
   useEffect(() => {
     if (!region.data) return
     const { center, span } = region.data
+    console.log('we got a region', center, span)
     if (!center || !span) return
     om.actions.home.updateCurrentState({
       center,
@@ -145,7 +146,7 @@ export default memo(function HomePage(props: Props) {
   }, [props.isActive])
 
   const regionName =
-    region.data?.name
+    (region.data?.name ?? '')
       .toLowerCase()
       .replace('ca- ', '')
       .split(' ')
@@ -257,11 +258,12 @@ const HomePageContent = memo(
 
     useEffect(() => {
       if (isLoading) return
+      console.log('home results', items, results)
       omStatic.actions.home.updateHomeState({
         id: item.id,
         results,
       })
-    }, [JSON.stringify(results)])
+    }, [isLoading, JSON.stringify(results)])
 
     const [expandable, unexpandable] = partition(items, (x) => x.expandable)
     const unshuffled = zip(expandable, unexpandable).flat().slice(0, 12)
@@ -342,7 +344,21 @@ const useTopCuisines = (center: LngLat) => {
 }
 
 function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
-  const restaurants = region?.bbox
+  const slug = item.region ?? ''
+  const homeFeed = useQueryLoud<{
+    trending: RestaurantOnlyIds[]
+    newest: RestaurantOnlyIds[]
+  }>(
+    `HOMEFEEDQUERY-${slug}`,
+    () =>
+      fetch(
+        `${SEARCH_DOMAIN}/feed?region=${encodeURIComponent(slug)}&limit=10`
+      ).then((res) => res.json()),
+    { enabled: !!item.region }
+  )
+
+  const feedRestaurants = homeFeed.data?.trending ?? []
+  const backupRestaurants = region?.bbox
     ? query.restaurant({
         where: {
           location: {
@@ -352,9 +368,13 @@ function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
           votes_ratio: { _is_null: false },
         },
         order_by: [{ votes_ratio: order_by.desc }],
-        limit: 8,
+        limit: 10,
       })
     : []
+
+  const restaurants = [...feedRestaurants, ...backupRestaurants].slice(0, 9)
+
+  console.log('trending are', restaurants)
 
   const cuisines = useTopCuisines(item.center)
 
@@ -375,9 +395,9 @@ function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
           ...dishes.map(
             (dish, index): FeedItems => {
               return {
+                id: `dish-${dish.id}`,
                 type: 'dish',
                 expandable: false,
-                id: dish.id,
                 rank: Math.random() * 10,
                 restaurantId: restaurants[0]?.id ?? '',
                 restaurantSlug: restaurants[0]?.slug ?? '',
@@ -395,9 +415,9 @@ function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
           ...dishes.map(
             (dish, index): FeedItems => {
               return {
+                id: `dish-restaurant-${dish.id}`,
                 type: 'dish-restaurants',
                 expandable: true,
-                id: dish.id,
                 rank: index + (index % 2 ? 10 : 0),
                 dish: {
                   id: dish.id ?? '',
@@ -418,9 +438,9 @@ function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
           ...(cuisines.data ?? []).map(
             (item, index): FeedItems => {
               return {
+                id: `cuisine-${item.country}`,
                 type: 'cuisine',
                 expandable: true,
-                id: item.country,
                 rank: index + (index % 3 ? 30 : 0),
                 ...item,
               } as const
@@ -429,7 +449,7 @@ function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
           ...restaurants.map(
             (item, index): FeedItems => {
               return {
-                id: item.id,
+                id: `restaurant-${item.id}`,
                 expandable: false,
                 type: 'restaurant',
                 restaurantId: item.id,

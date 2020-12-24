@@ -29,7 +29,6 @@ export type RegionNormalized = RegionApiResponse & {
 export const fetchRegion = async (slug: string) => {
   try {
     const url = `${SEARCH_DOMAIN}/regions?slug=${encodeURIComponent(slug)}`
-    console.log('fetching', url)
     const res: RegionApiResponse = await fetch(url).then((x) => x.json())
     const centerAt = res?.centroid?.coordinates
     if (!!centerAt) {
@@ -62,5 +61,9 @@ export const fetchRegion = async (slug: string) => {
 }
 
 export const useRegionQuery = (slug: string, config?: UseQueryOptions<any>) => {
-  return useQueryLoud<RegionNormalized>(slug, () => fetchRegion(slug), config)
+  return useQueryLoud<RegionNormalized>(
+    `REGIONQUERY-${slug}`,
+    () => fetchRegion(slug),
+    config
+  )
 }

@@ -300,13 +300,13 @@ module.exports = function getWebpackConfig(
         new WebpackPwaManifest({
           name: 'Dish',
           short_name: 'Dish',
-          description: 'Real World Pokedex',
+          description: 'The Food Pokedex',
           background_color: '#000',
           crossorigin: 'use-credentials',
           icons: [
             {
               src: path.resolve('web/icon.png'),
-              sizes: [96, 128, 192],
+              sizes: [96, 128, 192, 512, 1024],
             },
           ],
         }),

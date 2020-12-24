@@ -201,8 +201,6 @@ export const MapView = (props: MapProps) => {
       }
     })
 
-    console.log('featuresWithPositions', featuresWithPositions, source)
-
     if (source?.type === 'geojson') {
       source.setData({
         type: 'FeatureCollection',
@@ -565,7 +563,6 @@ function setupMapEffect({
             layers: [`${layerName}.fill`],
           })
           const feature = features[0]
-          console.log('got feature at', feature, x, y)
           if (!feature) return
           if (feature.id === curId) return
 
@@ -693,7 +690,6 @@ function setupMapEffect({
           map.off('click', handleClick)
         })
 
-        console.log('adding a source', RESTAURANTS_SOURCE_ID, props.features)
         map.addSource(RESTAURANTS_SOURCE_ID, {
           type: 'geojson',
           data: {
