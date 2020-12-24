@@ -16263,11 +16263,6 @@ react-feather@^2.0.9:
   dependencies:
     prop-types "^15.7.2"
 
-react-fetch@0.0.0-experimental-3310209d0:
-  version "0.0.0-experimental-3310209d0"
-  resolved "https://registry.npmjs.org/react-fetch/-/react-fetch-0.0.0-experimental-3310209d0.tgz#fb7f3a8475ad0f446471282acffbbcecd6fdd155"
-  integrity sha512-AXg1Tv1L6H3EnkyfgEHh9ZZvk4Gl+lMo61qLpU5TBy2oZKUNXvucE4yjTwkgnXu8L5UYtr7g+lJra8QctnmTSg==
-
 react-helmet@^6.1.0:
   version "6.1.0"
   resolved "https://registry.npmjs.org/react-helmet/-/react-helmet-6.1.0.tgz#a750d5165cb13cf213e44747502652e794468726"
@@ -16469,7 +16464,7 @@ react-query@^3.3.0:
     "@babel/runtime" "^7.5.5"
     match-sorter "^6.0.2"
 
-react-refresh@0.0.0-experimental-3310209d0, react-refresh@0.0.0-experimental-94c0244ba, react-refresh@0.9.0, react-refresh@^0.4.0:
+react-refresh@*, react-refresh@0.0.0-experimental-3310209d0, react-refresh@0.0.0-experimental-94c0244ba, react-refresh@^0.4.0:
   version "0.0.0-experimental-3310209d0"
   resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.0.0-experimental-3310209d0.tgz#c54e1f6bb3d86f0d29ea5995b59e785e403e4673"
   integrity sha512-aHFoPdVvrFvHuioXttJez5y6285uc9IYUI462qWV8KjGDSylJH+SLjVQ/cdJLRzM1TgMsDNcDNCjgQHYVPXB+Q==

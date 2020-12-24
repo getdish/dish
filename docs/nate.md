@@ -1,4 +1,8 @@
-- map fix pins not showing
+- fix router back
+- fix map jittering
+- ensure reload to region works
+- fix restaurantpage click dish
+- cleanup restaurantpage a bit
 - need to make the className merge work..
 - Button (is the only really big example that shows everything)
 - fix SlantedBox
