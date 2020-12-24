@@ -40,7 +40,7 @@ export default function SignInAppleButton() {
           const { authorization } = await res
           const user = await Auth.appleAuth(authorization)
           Toast.show('Logged in!')
-          omStatic.actions.user.postLogin(user)
+          omStatic.actions.user.setLogin(user)
         } catch (err) {
           Toast.show('Error loggin in 😭', { type: 'error' })
           console.error('signin err', err)

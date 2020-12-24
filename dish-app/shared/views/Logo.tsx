@@ -1,4 +1,3 @@
-// debug
 import React from 'react'
 import { G, Path, Svg } from 'react-native-svg'
 import { VStack, useMedia } from 'snackui'

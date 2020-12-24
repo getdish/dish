@@ -28,13 +28,6 @@ import { LinkButton } from './ui/LinkButton'
 import { LinkButtonProps } from './ui/LinkProps'
 import { SmallButton } from './ui/SmallButton'
 
-type FormPage =
-  | 'login'
-  | 'register'
-  | 'forgotPassword'
-  | 'passwordReset'
-  | 'success'
-
 const form_page_details = {
   login: {
     submit_text: 'Login',
@@ -338,7 +331,7 @@ export const LoginRegisterForm = ({
               <input
                 onSubmit={handleSubmit(onSubmit)}
                 type="submit"
-                style={{ display: 'none' }}
+                style={{ visibility: 'hidden', height: 0 }}
               />
             )}
 
