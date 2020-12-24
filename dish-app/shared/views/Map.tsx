@@ -720,19 +720,11 @@ function setupMapEffect({
           type: 'circle',
           source: RESTAURANTS_SOURCE_ID,
           paint: {
-            // 'circle-radius': {
-            //   stops: [
-            //     [8, 1],
-            //     [10, 4],
-            //     [14, 8],
-            //     [16, 16],
-            //   ],
-            // },
             'circle-radius': [
               'case',
               ['boolean', ['feature-state', 'hover'], false],
-              13,
-              10,
+              8,
+              6,
             ],
 
             'circle-stroke-width': {
@@ -831,8 +823,9 @@ function setupMapEffect({
             'text-anchor': 'top',
           },
           paint: {
-            'text-halo-color': '#70b600',
-            'text-halo-width': 1,
+            'text-color': blue,
+            // 'text-halo-color': '#70b600',
+            // 'text-halo-width': 1,
           },
         })
         cancels.add(() => {

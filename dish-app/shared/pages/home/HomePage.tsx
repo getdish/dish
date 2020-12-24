@@ -373,9 +373,6 @@ function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
     : []
 
   const restaurants = [...feedRestaurants, ...backupRestaurants].slice(0, 9)
-
-  console.log('trending are', restaurants)
-
   const cuisines = useTopCuisines(item.center)
 
   const dishes = query.tag({

@@ -90,6 +90,7 @@ const loadSearchPage: PageLoadEffectCallback = ({ isRefreshing, item }) => {
     omStatic.actions.home.updateCurrentState({
       ...location,
     })
+    // @ts-expect-error
     getTagsFromRoute(router.curPage).then((tags) => {
       if (isCancelled) return
       addTagsToCache(tags)
@@ -98,7 +99,6 @@ const loadSearchPage: PageLoadEffectCallback = ({ isRefreshing, item }) => {
         return acc
       }, {})
       const searchQuery = decodeURIComponent(router.curPage.params.search ?? '')
-      console.log('activeTags', activeTags, item, searchQuery, 'run search')
       omStatic.actions.home.updateActiveTags({
         ...item,
         searchQuery,

@@ -223,8 +223,29 @@ export class Router extends Store<RouterProps> {
   getShouldNavigate(navItem: NavigateItem) {
     const historyItem = this.navItemToHistoryItem(navItem)
     const sameName = historyItem.name === this.curPage.name
-    const sameParams = isEqual(historyItem.params, this.curPage.params)
+    const sameParams = isEqual(
+      this.normalize(historyItem.params),
+      this.normalize(this.curPage.params)
+    )
+    console.log(
+      'wahts the diff',
+      historyItem.params,
+      this.normalize(historyItem.params),
+      this.curPage.params,
+      this.normalize(this.curPage.params)
+    )
     return !sameName || !sameParams
+  }
+
+  // remove nullish params
+  private normalize(params: Object | null) {
+    const obj = params ?? {}
+    return Object.keys(obj).reduce((acc, cur) => {
+      if (obj[cur]) {
+        acc[cur] = obj[cur]
+      }
+      return acc
+    }, {})
   }
 
   isRouteActive(navItem: NavigateItem) {
