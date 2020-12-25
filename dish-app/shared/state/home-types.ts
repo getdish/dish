@@ -138,6 +138,7 @@ export type HomeStateItemHome = HomeStateItemBase & {
   type: 'home'
   activeTags: HomeActiveTagsRecord
   region: string
+  section: string
 }
 
 export type HomeStateItemBlog = HomeStateItemBase & {

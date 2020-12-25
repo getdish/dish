@@ -47,9 +47,11 @@ export const routes: RoutesTableI = {
     '/u/:username/:lense/:region/:tags?/:search?'
   ),
   // search after userSearch
-  search: new Route<SearchRouteParams>('/:lense/:region/:tags?/:search?'),
+  search: new Route<SearchRouteParams>('/s/:lense/:region/:tags?/:search?'),
 
-  homeRegion: new Route<{ region?: string }>('/:region?'),
+  homeRegion: new Route<{ region?: string; section?: 'new' }>(
+    '/:region?/:section?'
+  ),
 
   notFound: new Route('*'),
 }

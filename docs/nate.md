@@ -10,6 +10,8 @@
 - Button (is the only really big example that shows everything)
 - fix SlantedBox
 - fix pressStyle stopped working on cards, etc
+- router types not working on LinkButtonProps
+  - also in home.ts should work on the big pushHomeState switch
 
 - collect top lists
   - vietnamese: pho, banh xeo, banh mi

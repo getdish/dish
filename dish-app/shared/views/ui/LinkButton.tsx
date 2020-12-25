@@ -31,6 +31,7 @@ export function LinkButton<
     params,
     onPress,
     enableActiveStyle,
+    activeTextStyle,
     ...restProps
   } = props
 
@@ -85,6 +86,7 @@ export function LinkButton<
           color={color}
           cursor={props.disabled ? 'default' : 'pointer'}
           opacity={props.disabled ? 0.5 : 1}
+          {...(isActive && props.activeTextStyle)}
         >
           {getChildren(props, isActive)}
         </Text>

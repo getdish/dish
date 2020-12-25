@@ -578,7 +578,7 @@ const pushHomeState: AsyncAction<
   let fetchData: PageAction | null = null
   const type = item.name
 
-  switch (type) {
+  switch (item.name) {
     // home
     case 'homeRegion':
     case 'home': {
@@ -588,7 +588,8 @@ const pushHomeState: AsyncAction<
         searchQuery: '',
         activeTags: {},
         mapAt: prev?.mapAt,
-        region: item.params?.region,
+        region: item.params.region ?? null,
+        section: item.params.section ?? '',
       }
       break
     }

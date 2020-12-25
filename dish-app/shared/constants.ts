@@ -23,6 +23,8 @@ export const pageWidthMax = 2000
 
 export const searchBarTopOffset = 3
 export const searchBarHeight = 50
+export const searchBarHeightWithPadding =
+  searchBarHeight + searchBarTopOffset + 12
 export const searchBarMaxWidth = pageWidthMax - 640
 
 export const LIVE_SEARCH_DOMAIN = 'https://search.dishapp.com'

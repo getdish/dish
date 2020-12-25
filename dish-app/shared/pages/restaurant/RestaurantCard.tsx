@@ -59,7 +59,7 @@ export const RestaurantCardContent = memo(
       const restaurantPhoto = restaurant.photo_table({
         order_by: [{ photo: { quality: order_by.desc } }],
         limit: 1,
-      })[0].photo.url
+      })?.[0]?.photo.url
 
       return (
         <Link name="restaurant" params={{ slug: restaurantSlug }}>

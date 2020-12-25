@@ -27,9 +27,14 @@ import {
   useTheme,
 } from 'snackui'
 
-import { drawerWidthMax, searchBarHeight } from '../../constants'
+import {
+  drawerWidthMax,
+  searchBarHeight,
+  searchBarHeightWithPadding,
+} from '../../constants'
 import { DishHorizonView } from '../../DishHorizonView'
 import { RegionNormalized, useRegionQuery } from '../../helpers/fetchRegion'
+import { getGroupedButtonProps } from '../../helpers/getGroupedButtonProps'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
@@ -43,6 +48,8 @@ import { CommentBubble } from '../../views/CommentBubble'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { DishView } from '../../views/dish/DishView'
 import { PageFooter } from '../../views/layout/PageFooter'
+import { LinkButton } from '../../views/ui/LinkButton'
+import { LinkButtonProps } from '../../views/ui/LinkProps'
 import { PageTitleTag } from '../../views/ui/PageTitleTag'
 import { SlantedTitle } from '../../views/ui/SlantedTitle'
 import { CardFrame } from '../restaurant/CardFrame'
@@ -95,7 +102,6 @@ export default memo(function HomePage(props: Props) {
   const om = useOvermind()
   const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
-  console.log('props.item.region', props.item.region)
   const region = useRegionQuery(props.item.region, {
     enabled: !!props.item.region,
   })
@@ -145,13 +151,30 @@ export default memo(function HomePage(props: Props) {
     }
   }, [props.isActive])
 
-  const regionName =
-    (region.data?.name ?? '')
-      .toLowerCase()
-      .replace('ca- ', '')
-      .split(' ')
-      .map((x) => capitalize(x))
-      .join(' ') ?? '...'
+  const regionName = (() => {
+    let next =
+      (region.data?.name ?? '')
+        .toLowerCase()
+        .replace('ca- ', '')
+        .split(' ')
+        .map((x) => capitalize(x))
+        .join(' ') ?? ''
+    if (next === '') return '...'
+    return next
+  })()
+
+  const navLinks: LinkButtonProps[] = [
+    {
+      name: 'homeRegion',
+      params: { region: props.item.region, section: '' },
+      children: 'Hot',
+    },
+    {
+      name: 'homeRegion',
+      params: { region: props.item.region, section: 'new' },
+      children: 'New',
+    },
+  ]
 
   return (
     <>
@@ -202,15 +225,53 @@ export default memo(function HomePage(props: Props) {
           <VStack flex={1} overflow="hidden" maxWidth="100%">
             <VStack>
               <HomeTopSpacer />
-              <Spacer size="lg" />
-              <HomeTopSearches />
-              <Spacer />
-              <VStack position="relative" alignItems="center">
-                <SlantedTitle size="xxl" alignSelf="center">
-                  {regionName}
-                </SlantedTitle>
-              </VStack>
-              <Spacer size="xl" />
+
+              <Spacer size="md" />
+
+              <HStack>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  <HStack paddingVertical={10} paddingHorizontal={10}>
+                    <SlantedTitle
+                      position="relative"
+                      overflow="visible"
+                      minWidth={80}
+                      size="xl"
+                    >
+                      {regionName}
+
+                      <HStack position="absolute" bottom="-90%" right="2%">
+                        {navLinks.map((linkProps, index) => {
+                          return (
+                            <LinkButton
+                              key={index}
+                              backgroundColor="#fff"
+                              shadowColor="#000"
+                              shadowOpacity={0.1}
+                              shadowRadius={3}
+                              paddingHorizontal={8}
+                              fontSize={14}
+                              color={
+                                props.item.section === linkProps.params.section
+                                  ? 'red'
+                                  : '#888'
+                              }
+                              {...getGroupedButtonProps({
+                                index,
+                                items: navLinks,
+                              })}
+                              {...linkProps}
+                            />
+                          )
+                        })}
+                      </HStack>
+                    </SlantedTitle>
+                    <HomeTopSearches />
+                  </HStack>
+                </ScrollView>
+              </HStack>
+
+              <Spacer size="md" />
+
               <Spacer />
               <Suspense
                 fallback={
@@ -250,7 +311,8 @@ const HomePageContent = memo(
     item: HomeStateItemHome
   }) {
     const media = useMedia()
-    const items = useHomeFeed(item, region)
+    const isNew = item.section === 'new'
+    const items = useHomeFeed(item, region, isNew)
     const results = items
       .filter((x) => x.type === 'restaurant')
       .map((x) => ({ id: x['restaurantId'], slug: x['restaurantSlug'] }))
@@ -289,7 +351,7 @@ const HomePageContent = memo(
               minHeight={Dimensions.get('window').height * 0.9}
             >
               <HStack
-                justifyContent="space-around"
+                justifyContent="center"
                 flexWrap="wrap"
                 maxWidth={830}
                 alignSelf="center"
@@ -343,7 +405,11 @@ const useTopCuisines = (center: LngLat) => {
   return useQuery('topcuisine', () => getHomeCuisines(center))
 }
 
-function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
+function useHomeFeed(
+  item: HomeStateItemHome,
+  region?: RegionNormalized,
+  isNew?: boolean
+) {
   const slug = item.region ?? ''
   const homeFeed = useQueryLoud<{
     trending: RestaurantOnlyIds[]
@@ -357,7 +423,7 @@ function useHomeFeed(item: HomeStateItemHome, region?: RegionNormalized) {
     { enabled: !!item.region }
   )
 
-  const feedRestaurants = homeFeed.data?.trending ?? []
+  const feedRestaurants = homeFeed.data?.[isNew ? 'new' : 'trending'] ?? []
   const backupRestaurants = region?.bbox
     ? query.restaurant({
         where: {
