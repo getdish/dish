@@ -1,5 +1,4 @@
 // debug
-// TODO theme extraction
 import React from 'react'
 import { Dimensions } from 'react-native'
 import { StackProps, VStack, useMedia, useTheme } from 'snackui'
@@ -30,9 +29,9 @@ export const CardFrame = ({
       shadowRadius={4}
       shadowOffset={{ height: 1, width: 0 }}
       position="relative"
-      // {...(expanded && {
-      //   width: cardFrameWidthLarge,
-      // })}
+      {...(expanded && {
+        width: cardFrameWidthLarge,
+      })}
       {...(hoverable && {
         hoverStyle: {
           transform: [{ scale: 1.015 }],
@@ -49,7 +48,6 @@ export const CardFrame = ({
 export const cardFrameWidth = 240
 export const cardFrameHeight = 340
 
-// TODO tricky snackui extraction
 export const useCardFrame = () => {
   const media = useMedia()
 

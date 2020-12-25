@@ -1,55 +1,54 @@
-import '../test.tsx'
-// import { useHydrateCache } from '@dish/graph'
-// import { ProvideRouter } from '@dish/router'
-// import { Provider } from 'overmind-react'
-// import React, { Suspense } from 'react'
-// import { QueryClientProvider } from 'react-query'
-// import { ThemeProvider, configureThemes } from 'snackui'
+import { useHydrateCache } from '@dish/graph'
+import { ProvideRouter } from '@dish/router'
+import { Provider } from 'overmind-react'
+import React, { Suspense } from 'react'
+import { QueryClientProvider } from 'react-query'
+import { ThemeProvider, configureThemes } from 'snackui'
 
-// import { App } from '../shared/App'
-// import { AppPortalProvider } from '../shared/AppPortal'
-// import { queryClient } from '../shared/helpers/queryClient'
-// import { routes } from '../shared/state/router'
-// import themes, { MyTheme, MyThemes } from '../shared/themes'
+import { App } from '../shared/App'
+import { AppPortalProvider } from '../shared/AppPortal'
+import { queryClient } from '../shared/helpers/queryClient'
+import { routes } from '../shared/state/router'
+import themes, { MyTheme, MyThemes } from '../shared/themes'
 
-// if (typeof window !== 'undefined') {
-//   window['requestIdleCallback'] = window['requestIdleCallback'] || setTimeout
-// }
+if (typeof window !== 'undefined') {
+  window['requestIdleCallback'] = window['requestIdleCallback'] || setTimeout
+}
 
-// declare module 'snackui' {
-//   interface ThemeObject extends MyTheme {}
-//   interface Themes extends MyThemes {}
-// }
+declare module 'snackui' {
+  interface ThemeObject extends MyTheme {}
+  interface Themes extends MyThemes {}
+}
 
-// configureThemes(themes)
+configureThemes(themes)
 
-// const cacheSnapshot =
-//   //@ts-expect-error
-//   typeof window !== 'undefined' ? window.__CACHE_SNAPSHOT : undefined
+const cacheSnapshot =
+  //@ts-expect-error
+  typeof window !== 'undefined' ? window.__CACHE_SNAPSHOT : undefined
 
-// export function Root({ overmind }: { overmind?: any }) {
-//   if (cacheSnapshot) {
-//     console.debug('cacheSnapshot', cacheSnapshot)
-//     useHydrateCache({
-//       cacheSnapshot,
-//     })
-//   } else {
-//     console.debug('no cache snapshot')
-//   }
+export function Root({ overmind }: { overmind?: any }) {
+  if (cacheSnapshot) {
+    console.debug('cacheSnapshot', cacheSnapshot)
+    useHydrateCache({
+      cacheSnapshot,
+    })
+  } else {
+    console.debug('no cache snapshot')
+  }
 
-//   return (
-//     <Provider value={overmind}>
-//       <ProvideRouter routes={routes}>
-//         <ThemeProvider themes={themes} defaultTheme="light">
-//           <QueryClientProvider client={queryClient}>
-//             <AppPortalProvider>
-//               <Suspense fallback={null}>
-//                 <App />
-//               </Suspense>
-//             </AppPortalProvider>
-//           </QueryClientProvider>
-//         </ThemeProvider>
-//       </ProvideRouter>
-//     </Provider>
-//   )
-// }
+  return (
+    <Provider value={overmind}>
+      <ProvideRouter routes={routes}>
+        <ThemeProvider themes={themes} defaultTheme="light">
+          <QueryClientProvider client={queryClient}>
+            <AppPortalProvider>
+              <Suspense fallback={null}>
+                <App />
+              </Suspense>
+            </AppPortalProvider>
+          </QueryClientProvider>
+        </ThemeProvider>
+      </ProvideRouter>
+    </Provider>
+  )
+}
