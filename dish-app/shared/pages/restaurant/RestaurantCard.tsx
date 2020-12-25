@@ -13,10 +13,13 @@ import {
 
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { useRestaurantQuery } from '../../hooks/useRestaurantQuery'
+import {
+  CardFrame,
+  cardFrameBorderRadiusSmaller,
+  useCardFrame,
+} from '../../views/CardFrame'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { Link } from '../../views/ui/Link'
-import { useCardFrame } from '../home/useCardFrame'
-import { CardFrame, cardFrameBorderRadiusSmaller } from './CardFrame'
 import { priceRange } from './RestaurantDetailRow'
 
 export type RestaurantCardProps = {
