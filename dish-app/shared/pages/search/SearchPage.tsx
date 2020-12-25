@@ -81,11 +81,16 @@ type Props = StackViewProps<HomeStateItemSearch>
 const SearchPagePropsContext = createContext<Props | null>(null)
 
 export default memo(function SearchPage(props: Props) {
+  console.warn('render searchpage', JSON.stringify(props, null, 2))
   // const isEditingUserList = !!isEditingUserPage(om.state)
   const om = useOvermind()
   const state = props.item
-  const location = useLocationFromRoute()
-  const tags = useTagsFromRoute()
+  const route = useLastValueWhen(
+    () => router.curPage,
+    router.curPage.name !== 'search'
+  )
+  const location = useLocationFromRoute(route)
+  const tags = useTagsFromRoute(route)
 
   const isOptimisticUpdating = om.state.home.isOptimisticUpdating
   const wasOptimisticUpdating = useLastValue(isOptimisticUpdating)
@@ -117,7 +122,7 @@ export default memo(function SearchPage(props: Props) {
       return acc
     }, {})
     const searchQuery = decodeURIComponent(router.curPage.params.search ?? '')
-    omStatic.actions.home.updateActiveTags({
+    om.actions.home.updateActiveTags({
       ...props.item,
       searchQuery,
       activeTags,
@@ -551,16 +556,16 @@ const HomeLoading = (props: StackProps) => {
   )
 }
 
-function useLocationFromRoute() {
-  const key = `location-${router.curPage.name + router.curPage.params.region}`
-  return useQueryLoud(key, () => getLocationFromRoute())
+function useLocationFromRoute(route: HistoryItem<'search'>) {
+  const key = `location-${route.name + route.params.region}`
+  return useQueryLoud(key, () => getLocationFromRoute(route))
 }
 
-async function getLocationFromRoute(): Promise<HomeStateItemLocation | null> {
-  const page = router.curPage
-
-  if (page.name === 'search') {
-    const params = page.params as SearchRouteParams
+async function getLocationFromRoute(
+  route: HistoryItem<'search'>
+): Promise<HomeStateItemLocation | null> {
+  if (route.name === 'search') {
+    const params = route.params as SearchRouteParams
 
     if (params.region === 'here') {
       // TODO get from localStorage or set to default sf
@@ -609,8 +614,7 @@ async function getLocationFromRoute(): Promise<HomeStateItemLocation | null> {
   }
 }
 
-function useTagsFromRoute() {
-  const curPage = router.curPage as HistoryItem<'search'>
-  const key = `tags-${Object.values(curPage).join(',')}`
-  return useQueryLoud(key, () => getTagsFromRoute(curPage))
+function useTagsFromRoute(route: HistoryItem<'search'>) {
+  const key = `tags-${Object.values(route).join(',')}`
+  return useQueryLoud(key, () => getTagsFromRoute(route))
 }
