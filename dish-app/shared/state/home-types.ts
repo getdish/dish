@@ -139,6 +139,7 @@ export type HomeStateItemHome = HomeStateItemBase & {
   activeTags: HomeActiveTagsRecord
   region: string
   section: string
+  results?: RestaurantOnlyIds[]
 }
 
 export type HomeStateItemBlog = HomeStateItemBase & {

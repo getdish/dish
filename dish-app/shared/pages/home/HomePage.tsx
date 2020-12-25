@@ -70,8 +70,7 @@ type FeedItemBase = {
 type FeedItemDish = FeedItemBase & {
   type: 'dish'
   dish: DishTagItem
-  restaurantId: string
-  restaurantSlug: string
+  restaurant: RestaurantOnlyIds
 }
 
 type FeedItemDishRestaurants = FeedItemBase & {
@@ -87,8 +86,7 @@ type FeedItemCuisine = FeedItemBase &
 
 type FeedItemRestaurant = FeedItemBase & {
   type: 'restaurant'
-  restaurantSlug: string
-  restaurantId: string
+  restaurant: RestaurantOnlyIds
 }
 
 type FeedItems =
@@ -301,6 +299,9 @@ const HomeTopSpacer = () => {
   )
 }
 
+const isRestaurantFeedItem = (x: FeedItems): x is FeedItemRestaurant =>
+  x.type === 'restaurant'
+
 const HomePageContent = memo(
   graphql(function HomePageContent({
     region,
@@ -312,18 +313,16 @@ const HomePageContent = memo(
     const media = useMedia()
     const isNew = item.section === 'new'
     const items = useHomeFeed(item, region, isNew)
-    const results = items
-      .filter((x) => x.type === 'restaurant')
-      .map((x) => ({ id: x['restaurantId'], slug: x['restaurantSlug'] }))
+    const results = items.filter(isRestaurantFeedItem)
     const isLoading = !region || items[0]?.id === null
 
     useEffect(() => {
       if (isLoading) return
-      console.log('home results', items, results)
-      omStatic.actions.home.updateHomeState({
-        id: item.id,
-        results,
-      })
+      const next: HomeStateItemHome = {
+        ...item,
+        results: results.map((x) => x.restaurant),
+      }
+      omStatic.actions.home.updateHomeState(next)
     }, [isLoading, JSON.stringify(results)])
 
     const [expandable, unexpandable] = partition(items, (x) => x.expandable)
@@ -417,7 +416,7 @@ function useHomeFeed(
     `HOMEFEEDQUERY-${slug}`,
     () =>
       fetch(
-        `${SEARCH_DOMAIN}/feed?region=${encodeURIComponent(slug)}&limit=10`
+        `${SEARCH_DOMAIN}/feed?region=${encodeURIComponent(slug)}&limit=20`
       ).then((res) => res.json()),
     { enabled: !!item.region }
   )
@@ -437,7 +436,10 @@ function useHomeFeed(
       })
     : []
 
-  const restaurants = [...feedRestaurants, ...backupRestaurants].slice(0, 9)
+  const restaurants = uniqBy(
+    [...feedRestaurants, ...backupRestaurants],
+    (x) => x.id
+  )
   const cuisines = useTopCuisines(item.center)
 
   const dishes = query.tag({
@@ -461,8 +463,10 @@ function useHomeFeed(
                 type: 'dish',
                 expandable: false,
                 rank: Math.random() * 10,
-                restaurantId: restaurants[0]?.id ?? '',
-                restaurantSlug: restaurants[0]?.slug ?? '',
+                restaurant: {
+                  id: restaurants[0]?.id ?? '',
+                  slug: restaurants[0]?.slug ?? '',
+                },
                 dish: {
                   id: dish.id ?? '',
                   slug: dish.slug ?? '',
@@ -514,9 +518,11 @@ function useHomeFeed(
                 id: `restaurant-${item.id}`,
                 expandable: false,
                 type: 'restaurant',
-                restaurantId: item.id,
-                restaurantSlug: item.slug,
                 rank: index,
+                restaurant: {
+                  id: item.id,
+                  slug: item.slug,
+                },
               } as const
             }
           ),
@@ -629,7 +635,7 @@ const DishCol = (props: StackProps) => {
 }
 
 const DishFeedCard = graphql(function DishFeedCard(props: FeedItemDish) {
-  const restaurant = useRestaurantQuery(props.restaurantSlug)
+  const restaurant = useRestaurantQuery(props.restaurant.slug)
   const cardFrame = useCardFrame()
   return (
     <VStack
@@ -712,7 +718,8 @@ const DishRestaurantsFeedCard = (props: FeedItemDishRestaurants) => {
 const RestaurantFeedCard = (props: FeedItemRestaurant) => {
   return (
     <RestaurantCard
-      {...props}
+      restaurantId={props.restaurant.id}
+      restaurantSlug={props.restaurant.slug}
       below={
         <CommentBubble
           name="Test"
