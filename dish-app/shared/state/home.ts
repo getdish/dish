@@ -924,7 +924,11 @@ const setIsLoading: Action<boolean> = (om, val) => {
 // but then later you hit "enter" and we need to navigate to search (or home)
 // we definitely can clean up / name better some of this once things settle
 let lastNav = Date.now()
-const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
+const navigate: AsyncAction<HomeStateNav, boolean> = async (
+  om,
+  { state, ...rest }
+) => {
+  const navState = { state: state ?? om.state.home.currentState, ...rest }
   const nextState = getNextState(navState)
   const curState = om.state.home.currentState
 
@@ -938,7 +942,6 @@ const navigate: AsyncAction<HomeStateNav, boolean> = async (om, navState) => {
     })
   }
 
-  console.log('nextState', nextState)
   if (!om.actions.home.getShouldNavigate(nextState)) {
     updateTags()
     return false

@@ -406,7 +406,6 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
           })
         }
       } else {
-        //@ts-expect-error overmind type error
         omStatic.actions.home.runSearch({
           searchQuery: e.target.value,
           force: true,
@@ -497,8 +496,8 @@ const AppSearchInputTags = memo(
               const isActive = focusedTag === tag
               return (
                 <TagButton
-                  className="no-transition"
                   key={getTagSlug(tag)}
+                  size="lg"
                   subtleIcon
                   backgroundColor="rgba(150,150,150,0.65)"
                   color={'#fff'}
@@ -521,13 +520,13 @@ const AppSearchInputTags = memo(
                   {...(!isWeb && {
                     transform: [{ translateY: 2 }],
                   })}
-                  size="lg"
                   {...getTagButtonProps(tag)}
                   onPress={() => {
                     om.actions.home.setSearchBarFocusedTag(tag)
                   }}
                   closable
                   onClose={async () => {
+                    console.log('navigate to close', tag)
                     om.actions.home.navigate({ tags: [tag] })
                     await fullyIdle()
                     setAvoidNextAutocompleteShowOnFocus()

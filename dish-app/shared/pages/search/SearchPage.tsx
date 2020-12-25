@@ -197,12 +197,7 @@ const SearchNavBarContainer = ({
   let contents = <SearchPageNavBar id={id} />
 
   if (!media.sm) {
-    return (
-      <HStack>
-        {contents}
-        <VStack width={100} height={10} />
-      </HStack>
-    )
+    return <HStack>{contents}</HStack>
   }
 
   if (!isWeb) {
@@ -300,7 +295,10 @@ const SearchResultsContent = (props: Props) => {
     <>
       <PageTitleTag>{title}</PageTitleTag>
       <RecyclerListView
-        style={{ flex: 1, height: '100%' }}
+        style={{
+          flex: 1,
+          height: '100%',
+        }}
         canChangeSize
         externalScrollView={SearchPageScrollView as any}
         renderAheadOffset={600}
@@ -321,24 +319,21 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
   ({ children, onSizeChanged, ...props }, ref) => {
     const curProps = useContext(SearchPagePropsContext)
     const media = useMedia()
-    const { title, subTitle, pageTitleElements } = getTitleForState(
-      curProps.item,
-      {
-        lowerCase: false,
-      }
-    )
+    const { title, subTitle, pageName } = getTitleForState(curProps.item, {
+      lowerCase: false,
+    })
     const titleLen = (title + subTitle).length
     const titleScale =
-      titleLen > 80
+      titleLen > 65
         ? 0.7
-        : titleLen > 70
+        : titleLen > 55
         ? 0.75
-        : titleLen > 60
-        ? 0.8
-        : titleLen > 50
-        ? 0.9
+        : titleLen > 45
+        ? 0.85
+        : titleLen > 35
+        ? 0.95
         : 1
-    const titleFontSize = 28 * titleScale * (media.sm ? 0.75 : 1.2)
+    const titleFontSize = 28 * titleScale * (media.sm ? 0.75 : 1)
     const lenseColor = useCurrentLenseColor()
     const scrollRef = useRef<ScrollView>()
 
@@ -414,7 +409,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
               fontWeight="800"
               color={rgbString(lenseColor.map((x) => x * 0.92))}
             >
-              {pageTitleElements}{' '}
+              {pageName}{' '}
               <Text
                 // @ts-ignore
                 display="inline" // safari fix
@@ -499,9 +494,10 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             <HStack flex={1} />
           </HStack>
 
-          <VStack position="relative" flex={1} minHeight={600}>
+          <VStack position="relative" flex={10} minHeight={600}>
             {children}
           </VStack>
+
           <Suspense fallback={null}>
             <SearchFooter
               searchState={curProps.item}

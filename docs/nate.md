@@ -1,35 +1,15 @@
+- fix research in area
 - fix router back
 - fix map jittering
+- map toggle between region/area
 - ensure reload to region works
+- region handoff between search/home
 - fix restaurantpage click dish
 - cleanup restaurantpage a bit
 - need to make the className merge work..
 - Button (is the only really big example that shows everything)
 - fix SlantedBox
-
-
-- feed endpoint:
-
-```
-curl 'https://search.dishapp.com/feed?region=mission&limit=1' | jq
-{
-  "trending": [
-    {
-      "id": "374d1ba7-5e74-4c87-9499-a94a7a215610",
-      "slug": "khamsa",
-      "count": 4
-    }
-  ],
-  "newest": [
-    {
-      "id": "fd82745e-f257-45ae-a897-ed35e3df4208",
-      "slug": "base-camp",
-      "oldest_review_date": "2020-05-15T00:00:00+00:00"
-    }
-  ],
-  "total_restaurants_in_region": 516
-}
-```
+- fix pressStyle stopped working on cards, etc
 
 - collect top lists
   - vietnamese: pho, banh xeo, banh mi

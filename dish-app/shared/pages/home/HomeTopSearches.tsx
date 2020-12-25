@@ -148,7 +148,7 @@ const recentSearches: { tags: NavigableTag[] }[] = [
   {
     tags: [
       { ...tagLenses[0], displayName: 'Top', type: 'lense' },
-      { name: 'Thai', icon: '🇹🇭', type: 'couny', slug: 'asia__thai' },
+      { name: 'Thai', icon: '🇹🇭', type: 'country', slug: 'asia__thai' },
     ],
   },
   {
